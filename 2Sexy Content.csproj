@@ -316,6 +316,12 @@
     </Compile>
     <Compile Include="SexyContent\Engines\TokenEngine\FilteredNameValueCollectionPropertyAccess.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\TokenReplace.cs" />
+    <Compile Include="Views\AppView.ascx.cs">
+      <DependentUpon>AppView.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\AppView.ascx.designer.cs">
+      <DependentUpon>AppView.ascx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Administration\GettingStarted.ascx" />
@@ -400,6 +406,7 @@
     <Content Include="TemplateHelpGrid.ascx" />
     <Content Include="View.ascx" />
     <Content Include="Administration\EAVManagement.ascx" />
+    <Content Include="Views\AppView.ascx" />
     <Content Include="WebConfigTemplate.config" />
     <None Include="SqlDataProvider\01.00.01.SqlDataProvider" />
     <EntityDeploy Include="SexyContent\SexyContentContext.edmx">
