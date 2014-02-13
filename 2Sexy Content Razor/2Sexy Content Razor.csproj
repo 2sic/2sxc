@@ -29,7 +29,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\Web\bin\</OutputPath>
+    <OutputPath>..\..\..\bin\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -63,7 +63,7 @@
     <Compile Include="SexyContentWebPage.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Web\DesktopModules\ToSIC_SexyContent\2Sexy Content.csproj">
+    <ProjectReference Include="..\2Sexy Content.csproj">
       <Project>{d4250011-b9be-4326-9736-4f0122c79802}</Project>
       <Name>2Sexy Content</Name>
     </ProjectReference>
