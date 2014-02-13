@@ -1,0 +1,6 @@
+﻿2SexyContent contains ImageResizer from http://imageresizing.net/ (see license.txt for the license)
+
+- While installing 2SexyContent, it is registered in the web.config and a few dll files are created in the bin folder
+- 2SexyContent does not install any plugins that require a paid license of ImageResizer for production use
+- 2SexyContent includes the ImageResizer TinyCache plugin which is not officially released yet (Beta), it may be unstable
+- Use DiskCache for better performance and stability. More information: http://imageresizing.net/licenses

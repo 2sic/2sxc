@@ -1,0 +1,89 @@
+﻿
+-- Script Block for 2SexyContent 05.05.00 Update
+-- ---------------------------------------------
+-- This SQL Script Block must be included in every .SqlDataProvider file
+-- for 2SexyContent <= 05.05.00 because of the rename of the internal
+-- module name. It does not have to be included for newer SQL scripts.
+-- This script changes the module name and the breaks the installation
+-- so the DNN cache is refreshed. After the upgrade is triggered again,
+-- the installation works.
+
+DECLARE @IsUpgradeFromPreviousVersion int
+SELECT @IsUpgradeFromPreviousVersion = CASE WHEN EXISTS(SELECT * FROM DesktopModules WHERE ModuleName = N'2SexyContent') THEN CAST (1 AS BIT) ELSE CAST (0 AS BIT) END
+
+If @IsUpgradeFromPreviousVersion = 1
+BEGIN
+	UPDATE       DesktopModules
+	SET                ModuleName = N'2sxc'
+	WHERE        (ModuleName = N'2SexyContent')
+
+	RAISERROR(N'Please run this upgrade again to finish the process. This is a necessary step because of the internal rename of the 2SexyContent module. ************************************************************************************************************************************************************************** PLEASE RUN THIS UPGRADE AGAIN TO FINISH THE PROCESS. This is a necessary step because of the internal rename of the 2SexyContent module. **************************************************************************************************************************************************************************', 16, 1)
+	RETURN
+END
+
+-- End of the Script Block for 2SexyContent 05.05.00 Update
+
+-- make sure sql rolls back automatically in case of error.
+SET XACT_ABORT ON
+
+BEGIN TRANSACTION SexyContentUpdate;
+
+Declare @ChangeLogID int
+-- Insert ChangeLog and define ChangeLog ID
+Insert Into ToSIC_EAV_ChangeLog ([Timestamp], [User])
+Values (GETDATE(), 'System')
+Set @ChangeLogID = @@Identity
+
+DECLARE @FileAttributeSetID int
+
+SELECT @FileAttributeSetID = AttributeSetID 
+FROM ToSIC_EAV_AttributeSets
+WHERE StaticName = '@File'
+
+If @FileAttributeSetID IS NOT NULL
+Begin
+	Declare @PathsField int
+
+	-- Add "DialogType" field to File Control Parameters
+	Select @PathsField = ToSIC_EAV_Attributes.AttributeID
+	From ToSIC_EAV_Attributes INNER JOIN
+	ToSIC_EAV_AttributesInSets ON ToSIC_EAV_Attributes.AttributeID = ToSIC_EAV_AttributesInSets.AttributeID
+	Where ToSIC_EAV_Attributes.StaticName = 'DialogType' And ToSIC_EAV_AttributesInSets.AttributeSetID = @FileAttributeSetID
+
+	If @PathsField IS NULL
+	Begin
+		INSERT INTO ToSIC_EAV_Attributes (StaticName, [Type], ChangeLogCreated)
+		VALUES ('DialogType', 'String', @ChangeLogID)
+
+		DECLARE @DialogTypeAttributeID int
+		SET @DialogTypeAttributeID = SCOPE_IDENTITY()
+
+		INSERT INTO ToSIC_EAV_AttributesInSets (AttributeSetID, AttributeID, IsTitle, SortOrder, AttributeGroupID)
+		VALUES (@FileAttributeSetID, @DialogTypeAttributeID, 0, 2, 1)
+
+		-- Add DropDown-Values to DialogType field
+
+		DECLARE @StringAttributeSetID int
+		SELECT @StringAttributeSetID = AttributeSetID 
+		FROM ToSIC_EAV_AttributeSets
+		WHERE StaticName = '@String'
+
+		INSERT INTO [dbo].[ToSIC_EAV_Entities]
+				([EntityGUID], [AttributeSetID], [AssignmentObjectTypeID], [KeyNumber], SortOrder, [ChangeLogCreated])
+		VALUES (NEWID(), @StringAttributeSetID, 2, @DialogTypeAttributeID, 0, @ChangeLogID)
+
+		 -- Add @File Metadata for DialogType
+		 INSERT INTO [dbo].[ToSIC_EAV_Values]([EntityID], [AttributeID], [Value], [ChangeLogCreated])
+		 SELECT    SCOPE_IDENTITY(), ToSIC_EAV_Attributes.AttributeID, CASE StaticName WHEN 'InputType' THEN 'DropDown' WHEN 'DropdownValues' THEN 'Document Manager:DocumentManager
+Image Manager:ImageManager' ELSE NULL END AS Value, @ChangeLogID
+		FROM ToSIC_EAV_Attributes INNER JOIN ToSIC_EAV_AttributesInSets ON ToSIC_EAV_Attributes.AttributeID = ToSIC_EAV_AttributesInSets.AttributeID
+		WHERE StaticName IN ('InputType', 'DropdownValues') AND AttributeSetID = @StringAttributeSetID
+
+	END
+
+END
+
+
+-- Commit the transaction
+COMMIT TRANSACTION SexyContentUpdate;
+--ROLLBACK TRANSACTION SexyContentUpdate

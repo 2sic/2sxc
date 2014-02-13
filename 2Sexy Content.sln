@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "2Sexy Content Razor", "2Sexy Content Razor\2Sexy Content Razor.csproj", "{78A558AF-F274-4E3C-95FE-8DE9226E0EBC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "2Sexy Content", "2Sexy Content.csproj", "{D4250011-B9BE-4326-9736-4F0122C79802}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{AEF7310A-FAE4-4A33-AAA9-3D5FBAA9947B}"
+	ProjectSection(SolutionItems) = preProject
+		Build.proj = Build.proj
+		.build\MSBuild.Community.Tasks.dll = .build\MSBuild.Community.Tasks.dll
+		.build\MSBuild.Community.Tasks.targets = .build\MSBuild.Community.Tasks.targets
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{78A558AF-F274-4E3C-95FE-8DE9226E0EBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78A558AF-F274-4E3C-95FE-8DE9226E0EBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78A558AF-F274-4E3C-95FE-8DE9226E0EBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78A558AF-F274-4E3C-95FE-8DE9226E0EBC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4250011-B9BE-4326-9736-4F0122C79802}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4250011-B9BE-4326-9736-4F0122C79802}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4250011-B9BE-4326-9736-4F0122C79802}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4250011-B9BE-4326-9736-4F0122C79802}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

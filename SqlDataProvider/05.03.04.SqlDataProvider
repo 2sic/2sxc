@@ -1,0 +1,148 @@
+﻿
+-- Script Block for 2SexyContent 05.05.00 Update
+-- ---------------------------------------------
+-- This SQL Script Block must be included in every .SqlDataProvider file
+-- for 2SexyContent <= 05.05.00 because of the rename of the internal
+-- module name. It does not have to be included for newer SQL scripts.
+-- This script changes the module name and the breaks the installation
+-- so the DNN cache is refreshed. After the upgrade is triggered again,
+-- the installation works.
+
+DECLARE @IsUpgradeFromPreviousVersion int
+SELECT @IsUpgradeFromPreviousVersion = CASE WHEN EXISTS(SELECT * FROM DesktopModules WHERE ModuleName = N'2SexyContent') THEN CAST (1 AS BIT) ELSE CAST (0 AS BIT) END
+
+If @IsUpgradeFromPreviousVersion = 1
+BEGIN
+	UPDATE       DesktopModules
+	SET                ModuleName = N'2sxc'
+	WHERE        (ModuleName = N'2SexyContent')
+
+	RAISERROR(N'Please run this upgrade again to finish the process. This is a necessary step because of the internal rename of the 2SexyContent module. ************************************************************************************************************************************************************************** PLEASE RUN THIS UPGRADE AGAIN TO FINISH THE PROCESS. This is a necessary step because of the internal rename of the 2SexyContent module. **************************************************************************************************************************************************************************', 16, 1)
+	RETURN
+END
+
+-- End of the Script Block for 2SexyContent 05.05.00 Update
+
+-- make sure sql rolls back automatically in case of error.
+SET XACT_ABORT ON
+
+BEGIN TRANSACTION SexyContentUpdate;
+
+EXEC ToSIC_EAV_ChangeLogAdd 'System'
+DECLARE @ChangeLogID int
+SET @ChangeLogID = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
+SELECT @ChangeLogID
+
+-- Rename Attribute Type "File" to "Hyperlink"
+DECLARE @FileAttributeType varchar(max)
+SELECT @FileAttributeType = ToSIC_EAV_AttributeTypes.Type
+FROM ToSIC_EAV_AttributeTypes WHERE ToSIC_EAV_AttributeTypes.Type = N'File'
+
+IF @FileAttributeType IS NOT NULL
+BEGIN
+	INSERT INTO [dbo].[ToSIC_EAV_AttributeTypes] ([Type]) VALUES ('Hyperlink')
+	UPDATE ToSIC_EAV_Attributes SET [Type] = 'Hyperlink' WHERE [Type] = 'File'
+	DELETE [dbo].[ToSIC_EAV_AttributeTypes] WHERE [Type] = 'File'
+	UPDATE ToSIC_EAV_AttributeSets SET StaticName = '@Hyperlink', Name = '@Hyperlink' WHERE StaticName = '@File' AND Name = '@File'
+END
+
+-- Get @Hyperlink ContentType
+DECLARE @FileAttributeSetID int
+SELECT @FileAttributeSetID = AttributeSetID 
+FROM ToSIC_EAV_AttributeSets
+WHERE StaticName = '@Hyperlink'
+
+-- Insert configuration fields for @Hyperlink
+IF @FileAttributeSetID IS NOT NULL
+BEGIN
+
+	DECLARE @AllAttributeSetID int
+	SELECT @AllAttributeSetID = AttributeSetID FROM ToSIC_EAV_AttributeSets WHERE StaticName = '@All'
+
+	DECLARE @StringAttributeSetID int
+	SELECT @StringAttributeSetID = AttributeSetID FROM ToSIC_EAV_AttributeSets WHERE StaticName = '@String'
+
+	-- Add ShowPagePicker Boolean field
+	DECLARE @ShowPagePickerAttributeID int
+	Select @ShowPagePickerAttributeID = ToSIC_EAV_Attributes.AttributeID
+	From ToSIC_EAV_Attributes INNER JOIN ToSIC_EAV_AttributesInSets ON ToSIC_EAV_Attributes.AttributeID = ToSIC_EAV_AttributesInSets.AttributeID
+	Where ToSIC_EAV_Attributes.StaticName = 'ShowPagePicker' And ToSIC_EAV_AttributesInSets.AttributeSetID = @FileAttributeSetID
+	
+	IF @ShowPagePickerAttributeID IS NULL
+	BEGIN
+	
+		INSERT INTO ToSIC_EAV_Attributes (StaticName, [Type], ChangeLogCreated)
+		VALUES ('ShowPagePicker', 'Boolean', @ChangeLogID)
+		SET @ShowPagePickerAttributeID = SCOPE_IDENTITY()
+		
+		INSERT INTO ToSIC_EAV_AttributesInSets (AttributeSetID, AttributeID, IsTitle, SortOrder, AttributeGroupID)
+		VALUES (@FileAttributeSetID, @ShowPagePickerAttributeID, 0, 3, 1)
+		
+	END
+
+	-- Add ShowImageManager Boolean field
+	DECLARE @ShowImageManagerAttributeID int
+	Select @ShowImageManagerAttributeID = ToSIC_EAV_Attributes.AttributeID
+	From ToSIC_EAV_Attributes INNER JOIN ToSIC_EAV_AttributesInSets ON ToSIC_EAV_Attributes.AttributeID = ToSIC_EAV_AttributesInSets.AttributeID
+	Where ToSIC_EAV_Attributes.StaticName = 'ShowImageManager' And ToSIC_EAV_AttributesInSets.AttributeSetID = @FileAttributeSetID
+	
+	IF @ShowImageManagerAttributeID IS NULL
+	BEGIN
+	
+		INSERT INTO ToSIC_EAV_Attributes (StaticName, [Type], ChangeLogCreated)
+		VALUES ('ShowImageManager', 'Boolean', @ChangeLogID)
+		SET @ShowImageManagerAttributeID = SCOPE_IDENTITY()
+		
+		INSERT INTO ToSIC_EAV_AttributesInSets (AttributeSetID, AttributeID, IsTitle, SortOrder, AttributeGroupID)
+		VALUES (@FileAttributeSetID, @ShowImageManagerAttributeID, 0, 4, 1)		
+
+	END
+
+	-- Add ShowFileManager Boolean field
+	DECLARE @ShowFileManagerAttributeID int
+	Select @ShowFileManagerAttributeID = ToSIC_EAV_Attributes.AttributeID
+	From ToSIC_EAV_Attributes INNER JOIN ToSIC_EAV_AttributesInSets ON ToSIC_EAV_Attributes.AttributeID = ToSIC_EAV_AttributesInSets.AttributeID
+	Where ToSIC_EAV_Attributes.StaticName = 'ShowFileManager' And ToSIC_EAV_AttributesInSets.AttributeSetID = @FileAttributeSetID
+	
+	IF @ShowFileManagerAttributeID IS NULL
+	BEGIN
+	
+		INSERT INTO ToSIC_EAV_Attributes (StaticName, [Type], ChangeLogCreated)
+		VALUES ('ShowFileManager', 'Boolean', @ChangeLogID)
+		SET @ShowFileManagerAttributeID = SCOPE_IDENTITY()
+		
+		INSERT INTO ToSIC_EAV_AttributesInSets (AttributeSetID, AttributeID, IsTitle, SortOrder, AttributeGroupID)
+		VALUES (@FileAttributeSetID, @ShowFileManagerAttributeID, 0, 5, 1)
+
+	END
+
+	-- Rename @Hyperlink Attribute "DialogType" to "DefaultDialog" (change StaticName)
+	UPDATE ToSIC_EAV_Attributes
+	SET StaticName = N'DefaultDialog'
+	FROM ToSIC_EAV_AttributesInSets INNER JOIN ToSIC_EAV_Attributes ON ToSIC_EAV_AttributesInSets.AttributeID = ToSIC_EAV_Attributes.AttributeID
+	WHERE (ToSIC_EAV_AttributesInSets.AttributeSetID = @FileAttributeSetID) AND (ToSIC_EAV_Attributes.StaticName = N'DialogType')
+
+	-- Add new DropDown Values for "DefaultDialog" (None and PagePicker)
+	DECLARE @DialogTypeAttributeID int
+	SELECT @DialogTypeAttributeID = ToSIC_EAV_Attributes.AttributeID
+	FROM ToSIC_EAV_Attributes INNER JOIN ToSIC_EAV_AttributesInSets ON ToSIC_EAV_Attributes.AttributeID = ToSIC_EAV_AttributesInSets.AttributeID
+	WHERE ToSIC_EAV_Attributes.StaticName = 'DefaultDialog' And ToSIC_EAV_AttributesInSets.AttributeSetID = @FileAttributeSetID
+
+	IF @DialogTypeAttributeID IS NOT NULL
+	BEGIN
+		UPDATE ToSIC_EAV_Values
+		SET Value = N'None:None
+Page Picker:PagePicker
+Image Manager:ImageManager
+File Manager:FileManager'
+		FROM ToSIC_EAV_Entities INNER JOIN
+		ToSIC_EAV_Values ON ToSIC_EAV_Entities.EntityID = ToSIC_EAV_Values.EntityID INNER JOIN
+		ToSIC_EAV_Attributes ON ToSIC_EAV_Values.AttributeID = ToSIC_EAV_Attributes.AttributeID
+		WHERE (ToSIC_EAV_Entities.AttributeSetID = @StringAttributeSetID) AND (ToSIC_EAV_Entities.KeyNumber = @DialogTypeAttributeID) AND (ToSIC_EAV_Entities.AssignmentObjectTypeID = 2) AND (ToSIC_EAV_Attributes.StaticName = N'DropdownValues')
+	END
+	
+END
+
+-- Commit the transaction
+COMMIT TRANSACTION SexyContentUpdate;
+--ROLLBACK TRANSACTION SexyContentUpdate;

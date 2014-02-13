@@ -1,0 +1,24 @@
+
+-- Script Block for 2SexyContent 05.05.00 Update
+-- ---------------------------------------------
+-- This SQL Script Block must be included in every .SqlDataProvider file
+-- for 2SexyContent <= 05.05.00 because of the rename of the internal
+-- module name. It does not have to be included for newer SQL scripts.
+-- This script changes the module name and the breaks the installation
+-- so the DNN cache is refreshed. After the upgrade is triggered again,
+-- the installation works.
+
+DECLARE @IsUpgradeFromPreviousVersion int
+SELECT @IsUpgradeFromPreviousVersion = CASE WHEN EXISTS(SELECT * FROM DesktopModules WHERE ModuleName = N'2SexyContent') THEN CAST (1 AS BIT) ELSE CAST (0 AS BIT) END
+
+If @IsUpgradeFromPreviousVersion = 1
+BEGIN
+	UPDATE       DesktopModules
+	SET                ModuleName = N'2sxc'
+	WHERE        (ModuleName = N'2SexyContent')
+
+	RAISERROR(N'Please run this upgrade again to finish the process. This is a necessary step because of the internal rename of the 2SexyContent module. ************************************************************************************************************************************************************************** PLEASE RUN THIS UPGRADE AGAIN TO FINISH THE PROCESS. This is a necessary step because of the internal rename of the 2SexyContent module. **************************************************************************************************************************************************************************', 16, 1)
+	RETURN
+END
+
+-- End of the Script Block for 2SexyContent 05.05.00 Update

@@ -1,0 +1,94 @@
+﻿-- Remove Tables
+
+/****** Object:  Table [dbo].[ToSIC_EAV_EntityRelationships]    Script Date: 07.08.2013 14:32:27 ******/
+DROP TABLE [dbo].[ToSIC_EAV_EntityRelationships]
+GO
+
+/****** Object:  Table [dbo].[ToSIC_SexyContent_ContentGroupItems]    Script Date: 28.06.2013 16:23:10 ******/
+DROP TABLE [dbo].[ToSIC_SexyContent_ContentGroupItems]
+GO
+
+/****** Object:  Table [dbo].[ToSIC_SexyContent_Templates]    Script Date: 28.06.2013 16:23:20 ******/
+DROP TABLE [dbo].[ToSIC_SexyContent_Templates]
+GO
+
+/****** Object:  Table [dbo].[ToSIC_EAV_ValuesDimensions]    Script Date: 28.06.2013 16:24:06 ******/
+DROP TABLE [dbo].[ToSIC_EAV_ValuesDimensions]
+GO
+
+/****** Object:  Table [dbo].[ToSIC_EAV_Dimensions]    Script Date: 28.06.2013 16:24:20 ******/
+DROP TABLE [dbo].[ToSIC_EAV_Dimensions]
+GO
+
+/****** Object:  Table [dbo].[ToSIC_EAV_Values]    Script Date: 28.06.2013 16:24:30 ******/
+DROP TABLE [dbo].[ToSIC_EAV_Values]
+GO
+
+/****** Object:  Table [dbo].[ToSIC_EAV_Entities]    Script Date: 28.06.2013 16:24:38 ******/
+DROP TABLE [dbo].[ToSIC_EAV_Entities]
+GO
+
+/****** Object:  Table [dbo].[ToSIC_EAV_DataTimeline]    Script Date: 28.06.2013 16:24:46 ******/
+DROP TABLE [dbo].[ToSIC_EAV_DataTimeline]
+GO
+
+/****** Object:  Table [dbo].[ToSIC_EAV_AttributesInSets]    Script Date: 28.06.2013 16:49:15 ******/
+DROP TABLE [dbo].[ToSIC_EAV_AttributesInSets]
+GO
+
+/****** Object:  Table [dbo].[ToSIC_EAV_Attributes]    Script Date: 28.06.2013 16:49:27 ******/
+DROP TABLE [dbo].[ToSIC_EAV_Attributes]
+GO
+
+/****** Object:  Table [dbo].[ToSIC_EAV_AttributeTypes]    Script Date: 28.06.2013 16:49:34 ******/
+DROP TABLE [dbo].[ToSIC_EAV_AttributeTypes]
+GO
+
+/****** Object:  Table [dbo].[ToSIC_EAV_AttributeGroups]    Script Date: 28.06.2013 16:49:51 ******/
+DROP TABLE [dbo].[ToSIC_EAV_AttributeGroups]
+GO
+
+/****** Object:  Table [dbo].[ToSIC_EAV_AttributeSets]    Script Date: 28.06.2013 16:49:58 ******/
+DROP TABLE [dbo].[ToSIC_EAV_AttributeSets]
+GO
+
+/****** Object:  Table [dbo].[ToSIC_EAV_Attachments]    Script Date: 28.06.2013 16:50:12 ******/
+DROP TABLE [dbo].[ToSIC_EAV_Attachments]
+GO
+
+/****** Object:  Table [dbo].[ToSIC_EAV_AssignmentObjectTypes]    Script Date: 28.06.2013 16:50:17 ******/
+DROP TABLE [dbo].[ToSIC_EAV_AssignmentObjectTypes]
+GO
+
+/****** Object:  Table [dbo].[ToSIC_EAV_Apps]    Script Date: 28.06.2013 16:50:24 ******/
+DROP TABLE [dbo].[ToSIC_EAV_Apps]
+GO
+
+/****** Object:  Table [dbo].[ToSIC_EAV_Zones]    Script Date: 28.06.2013 16:50:31 ******/
+DROP TABLE [dbo].[ToSIC_EAV_Zones]
+GO
+
+/****** Object:  Table [dbo].[ToSIC_EAV_ChangeLog]    Script Date: 28.06.2013 16:50:51 ******/
+DROP TABLE [dbo].[ToSIC_EAV_ChangeLog]
+GO
+
+
+-- Remove Stored Procedures
+
+/****** Object:  StoredProcedure [dbo].[ToSIC_EAV_ChangeLogAdd]    Script Date: 28.06.2013 17:08:05 ******/
+DROP PROCEDURE [dbo].[ToSIC_EAV_ChangeLogAdd]
+GO
+
+/****** Object:  StoredProcedure [dbo].[ToSIC_EAV_ChangeLogSet]    Script Date: 28.06.2013 17:08:27 ******/
+DROP PROCEDURE [dbo].[ToSIC_EAV_ChangeLogSet]
+GO
+
+/****** Object:  StoredProcedure [dbo].[ToSIC_EAV_LogToTimeline]    Script Date: 28.06.2013 17:08:33 ******/
+DROP PROCEDURE [dbo].[ToSIC_EAV_LogToTimeline]
+GO
+
+
+-- Remove PortalSettings
+
+DELETE FROM PortalSettings
+WHERE (SettingName = N'ToSIC_SexyContent_ZoneID')

@@ -1,0 +1,568 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{D4250011-B9BE-4326-9736-4F0122C79802}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ToSic.SexyContent</RootNamespace>
+    <AssemblyName>ToSic.SexyContent</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <OutputPath>..\..\bin\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>C:\Projects\2Sexy Content\Web\bin\ToSic.SexyContent.xml</DocumentationFile>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <NoWarn>1591</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\bin\</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DotNetNuke, Version=6.1.0.1171, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\DotNetNuke.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetNuke.RadEditorProvider, Version=6.1.0.1171, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\DotNetNuke.RadEditorProvider.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetNuke.Web, Version=6.1.0.1171, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\DotNetNuke.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetNuke.Web.Client, Version=6.1.0.272, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\DotNetNuke.Web.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetNuke.WebUtility, Version=4.2.1.783, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\DotNetNuke.WebUtility.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ApplicationBlocks.Data, Version=2.0.0.0, Culture=neutral">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\Microsoft.ApplicationBlocks.Data.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="SharpZipLib, Version=0.81.0.1407, Culture=neutral">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Telerik.Web.UI, Version=2011.2.915.35, Culture=neutral, PublicKeyToken=121fae78165ba3d4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\Telerik.Web.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="ToSic.Eav, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\ToSic.Eav.dll</HintPath>
+    </Reference>
+    <Reference Include="ToSic.Eav.ManagementUI, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\ToSic.Eav.ManagementUI.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Administration\GettingStarted.ascx.cs">
+      <DependentUpon>GettingStarted.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\GettingStarted.ascx.designer.cs">
+      <DependentUpon>GettingStarted.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Administration\PortalConfiguration.ascx.cs">
+      <DependentUpon>PortalConfiguration.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\PortalConfiguration.ascx.designer.cs">
+      <DependentUpon>PortalConfiguration.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Administration\ContentTypeAndDemoSelector.ascx.cs">
+      <DependentUpon>ContentTypeAndDemoSelector.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\ContentTypeAndDemoSelector.ascx.designer.cs">
+      <DependentUpon>ContentTypeAndDemoSelector.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Administration\Registers.ascx.cs">
+      <DependentUpon>Registers.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\Registers.ascx.designer.cs">
+      <DependentUpon>Registers.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="API\SecurityContext.cs" />
+    <Compile Include="API\Services.asmx.cs">
+      <DependentUpon>Services.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="EditContentGroupItem.ascx.cs">
+      <DependentUpon>EditContentGroupItem.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="EditContentGroupItem.ascx.designer.cs">
+      <DependentUpon>EditContentGroupItem.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="EditDataSource.ascx.cs">
+      <DependentUpon>EditDataSource.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="EditDataSource.ascx.designer.cs">
+      <DependentUpon>EditDataSource.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="EditList.ascx.cs">
+      <DependentUpon>EditList.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="EditList.ascx.designer.cs">
+      <DependentUpon>EditList.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="EditTemplateFile.ascx.cs">
+      <DependentUpon>EditTemplateFile.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="EditTemplateFile.ascx.designer.cs">
+      <DependentUpon>EditTemplateFile.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Administration\Export.ascx.cs">
+      <DependentUpon>Export.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\Export.ascx.designer.cs">
+      <DependentUpon>Export.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Administration\Import.ascx.cs">
+      <DependentUpon>Import.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\Import.ascx.designer.cs">
+      <DependentUpon>Import.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="EditContentGroup.ascx.cs">
+      <DependentUpon>EditContentGroup.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="EditContentGroup.ascx.designer.cs">
+      <DependentUpon>EditContentGroup.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="SexyContent\App.cs" />
+    <Compile Include="SexyContent\ContentGroupItem.cs" />
+    <Compile Include="SexyContent\DataSources\EntitiesFromList.cs" />
+    <Compile Include="SexyContent\DataSources\ModuleDataSource.cs" />
+    <Compile Include="SexyContent\DataSources\Tokens\ModulePropertyAccess.cs" />
+    <Compile Include="SexyContent\DataSources\Tokens\QueryStringPropertyAccess.cs" />
+    <Compile Include="SexyContent\EAV\FieldTemplates\EditorProvider.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SexyContent\EAV\FieldTemplates\Entity_Edit.ascx.cs">
+      <DependentUpon>Entity_Edit.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SexyContent\EAV\FieldTemplates\Entity_Edit.ascx.designer.cs">
+      <DependentUpon>Entity_Edit.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="SexyContent\Element.cs" />
+    <Compile Include="SexyContent\DynamicEntity.cs" />
+    <Compile Include="SexyContent\EAV\FieldTemplates\Number_Edit.ascx.cs">
+      <DependentUpon>Number_Edit.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SexyContent\EAV\FieldTemplates\Number_Edit.ascx.designer.cs">
+      <DependentUpon>Number_Edit.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="SexyContent\EAV\FieldTemplates\Hyperlink_Edit.ascx.cs">
+      <DependentUpon>Hyperlink_Edit.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SexyContent\EAV\FieldTemplates\Hyperlink_Edit.ascx.designer.cs">
+      <DependentUpon>Hyperlink_Edit.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="SexyContent\EAV\FieldTemplates\Boolean_Edit.ascx.cs">
+      <DependentUpon>Boolean_Edit.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SexyContent\EAV\FieldTemplates\Boolean_Edit.ascx.designer.cs">
+      <DependentUpon>Boolean_Edit.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="SexyContent\EAV\FieldTemplates\DateTime_Edit.ascx.cs">
+      <DependentUpon>DateTime_Edit.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SexyContent\EAV\FieldTemplates\DateTime_Edit.ascx.designer.cs">
+      <DependentUpon>DateTime_Edit.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="SexyContent\EAV\FieldTemplates\String_Edit.ascx.cs">
+      <DependentUpon>String_Edit.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SexyContent\EAV\FieldTemplates\String_Edit.ascx.designer.cs">
+      <DependentUpon>String_Edit.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="SexyContent\Engines\IEngine.cs" />
+    <Compile Include="SexyContent\Engines\TokenEngine\AppPropertyAccess.cs" />
+    <Compile Include="SexyContent\Engines\TokenEngine\DynamicEntityPropertyAccess.cs" />
+    <Compile Include="SexyContent\Engines\TokenEngine\TokenEngine.cs" />
+    <Compile Include="SexyContent\ImportExport\ExportImportMessage.cs" />
+    <Compile Include="SexyContent\ImportExport\ImportExport.cs" />
+    <Compile Include="SexyContent\ImportExport\ImportValue.cs" />
+    <Compile Include="SexyContent\ImportExport\XmlExport.cs" />
+    <Compile Include="SexyContent\ImportExport\XmlImport.cs" />
+    <Compile Include="SexyContent\ImportExport\ZipImport.cs" />
+    <Compile Include="SexyContent\SexyContentContext.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SexyContentContext.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="SexyContent\SexyContentException.cs" />
+    <Compile Include="SexyContent\Template.cs" />
+    <Compile Include="SexyContent\TemplateDefault.cs" />
+    <Compile Include="TemplateHelpGrid.ascx.cs">
+      <DependentUpon>TemplateHelpGrid.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="TemplateHelpGrid.ascx.designer.cs">
+      <DependentUpon>TemplateHelpGrid.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="View.ascx.cs">
+      <DependentUpon>View.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="View.ascx.designer.cs">
+      <DependentUpon>View.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Administration\EAVManagement.ascx.designer.cs">
+      <DependentUpon>EAVManagement.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Administration\ManageTemplates.ascx.designer.cs">
+      <DependentUpon>ManageTemplates.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Administration\EditTemplate.ascx.designer.cs">
+      <DependentUpon>EditTemplate.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Settings.ascx.designer.cs">
+      <DependentUpon>Settings.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsWrapper.ascx.designer.cs">
+      <DependentUpon>SettingsWrapper.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="SexyContent\SexyContent.cs" />
+    <Compile Include="SexyContent\SexyContentContext.cs" />
+    <Compile Include="Administration\EAVManagement.ascx.cs">
+      <DependentUpon>EAVManagement.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\ManageTemplates.ascx.cs">
+      <DependentUpon>ManageTemplates.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\EditTemplate.ascx.cs">
+      <DependentUpon>EditTemplate.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings.ascx.cs">
+      <DependentUpon>Settings.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SettingsWrapper.ascx.cs">
+      <DependentUpon>SettingsWrapper.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SexyContent\Engines\TokenEngine\FilteredNameValueCollectionPropertyAccess.cs" />
+    <Compile Include="SexyContent\Engines\TokenEngine\TokenReplace.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Administration\GettingStarted.ascx" />
+    <Content Include="Administration\PortalConfiguration.ascx" />
+    <Content Include="Administration\ContentTypeAndDemoSelector.ascx" />
+    <Content Include="Administration\Registers.ascx" />
+    <Content Include="API\Services.asmx" />
+    <Content Include="EditContentGroupItem.ascx" />
+    <Content Include="EditDataSource.ascx" />
+    <Content Include="EditList.ascx" />
+    <Content Include="EditTemplateFile.ascx" />
+    <Content Include="Administration\Export.ascx" />
+    <Content Include="Extensions\404.png" />
+    <Content Include="Extensions\Imazen_ImageResizer\ImageResizer.txt" />
+    <Content Include="Extensions\Imazen_ImageResizer\license.txt" />
+    <Content Include="icon.png" />
+    <Content Include="Images\Add.png" />
+    <Content Include="Images\Delete.png" />
+    <Content Include="Images\Drag.gif" />
+    <Content Include="Images\Edit.png" />
+    <Content Include="Administration\Import.ascx" />
+    <Content Include="Js\EditDataSource\demo-helper-jquery.js" />
+    <Content Include="Js\EditDataSource\demo-list.js" />
+    <Content Include="Js\EditDataSource\flowchartConnectorsDemo %28original%29.js" />
+    <Content Include="Js\EditDataSource\flowchartConnectorsDemo.js" />
+    <Content Include="Js\EditDataSource\jquery.ui.touch-punch.min.js" />
+    <Content Include="Js\EditDataSource\jsPlumb\jquery.jsPlumb-1.4.0-RC1.js" />
+    <Content Include="Js\EditDataSource\jsPlumb\jsPlumb-1.4.0-RC1.js" />
+    <Content Include="Js\EditDataSource\jsPlumb\jsPlumb-1.4.0-tests.js" />
+    <Content Include="Js\EditDataSource\jsPlumb\jsPlumb-anchors-1.4.0-RC1.js" />
+    <Content Include="Js\EditDataSource\jsPlumb\jsPlumb-apidoc-1.4.0-RC1.js" />
+    <Content Include="Js\EditDataSource\jsPlumb\jsPlumb-connection-1.4.0-RC1.js" />
+    <Content Include="Js\EditDataSource\jsPlumb\jsPlumb-connector-editors-1.4.0-RC1.js" />
+    <Content Include="Js\EditDataSource\jsPlumb\jsPlumb-connectors-flowchart-1.4.0-RC1.js" />
+    <Content Include="Js\EditDataSource\jsPlumb\jsPlumb-connectors-statemachine-1.4.0-RC1.js" />
+    <Content Include="Js\EditDataSource\jsPlumb\jsPlumb-defaults-1.4.0-RC1.js" />
+    <Content Include="Js\EditDataSource\jsPlumb\jsPlumb-dom-adapter-1.4.0-RC1.js" />
+    <Content Include="Js\EditDataSource\jsPlumb\jsPlumb-drag-1.4.0-RC1.js" />
+    <Content Include="Js\EditDataSource\jsPlumb\jsPlumb-endpoint-1.4.0-RC1.js" />
+    <Content Include="Js\EditDataSource\jsPlumb\jsPlumb-overlays-guidelines-1.4.0-RC1.js" />
+    <Content Include="Js\EditDataSource\jsPlumb\jsPlumb-renderers-canvas-1.4.0-RC1.js" />
+    <Content Include="Js\EditDataSource\jsPlumb\jsPlumb-renderers-svg-1.4.0-RC1.js" />
+    <Content Include="Js\EditDataSource\jsPlumb\jsPlumb-renderers-vml-1.4.0-RC1.js" />
+    <Content Include="Js\EditDataSource\jsPlumb\jsPlumb-util-1.4.0-RC1.js" />
+    <Content Include="Js\EditDataSource\jsPlumb\mootools.jsPlumb-1.4.0-RC1.js" />
+    <Content Include="Js\EditDataSource\jsPlumb\yui.jsPlumb-1.4.0-RC1.js" />
+    <Content Include="Js\ItemForm.js" />
+    <Content Include="Js\ViewEdit.js" />
+    <Content Include="Administration\ManageTemplates.ascx" />
+    <Content Include="module.css" />
+    <Content Include="Administration\EditTemplate.ascx" />
+    <Content Include="EditContentGroup.ascx" />
+    <Content Include="Settings.ascx" />
+    <Content Include="SettingsWrapper.ascx" />
+    <Content Include="SexyContent\EAV\Controls\ContentTypeEdit.ascx" />
+    <Content Include="SexyContent\EAV\Controls\ContentTypeFields.ascx" />
+    <Content Include="SexyContent\EAV\Controls\ContentTypesList.ascx" />
+    <Content Include="SexyContent\EAV\Controls\CultureSelector.ascx" />
+    <Content Include="SexyContent\EAV\Controls\DimensionMenu.ascx" />
+    <Content Include="SexyContent\EAV\Controls\EAVManagement.ascx" />
+    <Content Include="SexyContent\EAV\Controls\Images\Locked.png" />
+    <Content Include="SexyContent\EAV\Controls\Images\Unlocked.png" />
+    <Content Include="SexyContent\EAV\Controls\ItemForm.ascx" />
+    <Content Include="SexyContent\EAV\Controls\ItemForm.css" />
+    <Content Include="SexyContent\EAV\Controls\ItemForm.js" />
+    <Content Include="SexyContent\EAV\Controls\ItemFormEntityModelCreator.js" />
+    <Content Include="SexyContent\EAV\Controls\Items.ascx" />
+    <Content Include="SexyContent\EAV\FieldTemplates\Entity_Edit.ascx" />
+    <Content Include="SexyContent\EAV\FieldTemplates\Number_Edit.ascx" />
+    <Content Include="SexyContent\EAV\FieldTemplates\Hyperlink_Edit.ascx" />
+    <Content Include="SexyContent\EAV\FieldTemplates\Boolean_Edit.ascx" />
+    <Content Include="SexyContent\EAV\FieldTemplates\DateTime_Edit.ascx" />
+    <Content Include="SexyContent\EAV\FieldTemplates\String_Edit.ascx" />
+    <Content Include="Extensions\Thumbnailer.aspx" />
+    <Content Include="Js\2sxc.api.js" />
+    <Content Include="Extensions\ToSic_vCard\vCard.ashx" />
+    <Content Include="packages.config" />
+    <None Include="SqlDataProvider\01.00.00.SqlDataProvider" />
+    <Content Include="SqlDataProvider\05.02.01.SqlDataProvider" />
+    <Content Include="Styles\Edit.css" />
+    <Content Include="Styles\EditDataSource\demo-new.css" />
+    <Content Include="Styles\EditDataSource\flowchartDemo.css" />
+    <Content Include="TemplateHelpGrid.ascx" />
+    <Content Include="View.ascx" />
+    <Content Include="Administration\EAVManagement.ascx" />
+    <Content Include="WebConfigTemplate.config" />
+    <None Include="SqlDataProvider\01.00.01.SqlDataProvider" />
+    <EntityDeploy Include="SexyContent\SexyContentContext.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>SexyContentContext.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="SqlDataProvider\02.00.00.SqlDataProvider" />
+    <None Include="SqlDataProvider\03.00.00.SqlDataProvider" />
+    <Content Include="web-Deploy.config" />
+    <None Include="SqlDataProvider\03.03.00.SqlDataProvider" />
+    <None Include="SqlDataProvider\03.04.03.SqlDataProvider" />
+    <None Include="SqlDataProvider\04.00.00.SqlDataProvider" />
+    <None Include="2sic_2SexyContent-Packaging.dnn">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="2sic_2SexyContent.dnn" />
+    <Content Include="SqlDataProvider\04.00.02.SqlDataProvider" />
+    <Content Include="SqlDataProvider\05.01.00.SqlDataProvider" />
+    <Content Include="SqlDataProvider\05.03.01.SqlDataProvider" />
+    <Content Include="SqlDataProvider\05.03.02.SqlDataProvider" />
+    <Content Include="SqlDataProvider\05.03.03.SqlDataProvider" />
+    <Content Include="SqlDataProvider\05.03.04.SqlDataProvider" />
+    <Content Include="SqlDataProvider\05.03.05.SqlDataProvider" />
+    <Content Include="SqlDataProvider\05.05.00.SqlDataProvider" />
+    <None Include="SqlDataProvider\Uninstall.SqlDataProvider" />
+    <Content Include="web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Administration\App_LocalResources\ManageTemplates.ascx.resx" />
+    <Content Include="Administration\App_LocalResources\EditTemplate.ascx.resx" />
+    <Content Include="App_LocalResources\Settings.ascx.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_LocalResources\View.ascx.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Administration\App_LocalResources\EditTemplate.ascx.de-DE.resx" />
+    <Content Include="Administration\App_LocalResources\ManageTemplates.ascx.de-DE.resx" />
+    <Content Include="App_LocalResources\Settings.ascx.de-DE.resx" />
+    <Content Include="App_LocalResources\View.ascx.de-DE.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Administration\App_LocalResources\Export.ascx.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Administration\App_LocalResources\Import.ascx.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_LocalResources\EditTemplateFile.ascx.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_LocalResources\EditTemplateFile.ascx.de-DE.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_LocalResources\SettingsControl.ascx.de-DE.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_LocalResources\SettingsControl.ascx.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Administration\App_LocalResources\Export.ascx.de-DE.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Administration\App_LocalResources\Import.ascx.de-DE.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_LocalResources\EditList.ascx.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_LocalResources\EditList.ascx.de-DE.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_LocalResources\SettingsWrapper.ascx.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_LocalResources\SettingsWrapper.ascx.de-DE.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_LocalResources\EditContentGroup.ascx.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_LocalResources\EditContentGroup.ascx.de-DE.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Administration\App_LocalResources\ContentTypeAndDemoSelector.ascx.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Administration\App_LocalResources\ContentTypeAndDemoSelector.ascx.de-DE.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_LocalResources\EditContentGroupItem.ascx.de-DE.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_LocalResources\EditContentGroupItem.ascx.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_LocalResources\TemplateHelpGrid.ascx.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_LocalResources\TemplateHelpGrid.ascx.de-DE.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Administration\App_LocalResources\PortalConfiguration.ascx.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Administration\App_LocalResources\Registers.ascx.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Administration\App_LocalResources\Registers.ascx.de-DE.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Administration\App_LocalResources\PortalConfiguration.ascx.de-DE.resx" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>62596</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://2flex2sexycontent.local/DesktopModules/ToSIC_SexyContent</IISUrl>
+          <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
+          <IISAppRootUrl>http://2flex2sexycontent.local/</IISAppRootUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "C:\Projects\2Sexy Content\Web\bin\ToSIC.Modules.SexyContent*" "C:\WebMatrix Websites\DotNetNuke 06.02.01\bin" /y
+xcopy "C:\Projects\2Sexy Content\Web\bin\ToSIC.EAV*" "C:\WebMatrix Websites\DotNetNuke 06.02.01\bin" /y
+xcopy "C:\Projects\2Sexy Content\Web\DesktopModules\ToSIC_SexyContent\*" "C:\WebMatrix Websites\DotNetNuke 06.02.01\DesktopModules\ToSIC_SexyContent\" /Y /S
+
+xcopy "C:\Projects\2Sexy Content\Web\bin\ToSic*" "C:\WebMatrix Websites\DotNetNuke 07.00.02\bin" /y
+xcopy "C:\Projects\2Sexy Content\Web\DesktopModules\ToSIC_SexyContent\*" "C:\WebMatrix Websites\DotNetNuke 07.00.02\DesktopModules\ToSIC_SexyContent\" /Y /S
+
+xcopy "C:\Projects\2Sexy Content\Web\bin\ToSic*" "C:\WebMatrix Websites\DotNetNuke_Community_07.01.02_Install\bin" /y
+xcopy "C:\Projects\2Sexy Content\Web\DesktopModules\ToSIC_SexyContent\*" "C:\WebMatrix Websites\DotNetNuke_Community_07.01.02_Install\DesktopModules\ToSIC_SexyContent\" /Y /S</PostBuildEvent>
+  </PropertyGroup>
+</Project>

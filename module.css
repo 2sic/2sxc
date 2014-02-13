@@ -1,0 +1,9 @@
+﻿.sc-element { position:relative; }
+.sc-element .sc-menu { position:absolute; right:5px; top:5px; display:none; }
+.sc-menu { list-style-type:none; margin:0; padding:0px;display: inline;z-index: 99999; }
+.sc-menu li { list-style-type:none; padding:0; margin:0; display:inline; }
+.sc-menu a { display:inline-block; margin-right:4px; }
+.Mod2SexyContentC .dnnFormMessage select { margin-bottom:0; }
+
+.sc-contenttype-selector, .sc-template-selector { width: 100%;position: relative; max-width: 300px!important; }
+.sc-contenttype-selector { margin-bottom: 3px!important; }
