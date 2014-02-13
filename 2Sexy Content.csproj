@@ -392,7 +392,6 @@
     <Content Include="Extensions\Thumbnailer.aspx" />
     <Content Include="Js\2sxc.api.js" />
     <Content Include="Extensions\ToSic_vCard\vCard.ashx" />
-    <Content Include="packages.config" />
     <None Include="SqlDataProvider\01.00.00.SqlDataProvider" />
     <Content Include="SqlDataProvider\05.02.01.SqlDataProvider" />
     <Content Include="Styles\Edit.css" />
@@ -555,14 +554,7 @@
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>
-    <PostBuildEvent>xcopy "C:\Projects\2Sexy Content\Web\bin\ToSIC.Modules.SexyContent*" "C:\WebMatrix Websites\DotNetNuke 06.02.01\bin" /y
-xcopy "C:\Projects\2Sexy Content\Web\bin\ToSIC.EAV*" "C:\WebMatrix Websites\DotNetNuke 06.02.01\bin" /y
-xcopy "C:\Projects\2Sexy Content\Web\DesktopModules\ToSIC_SexyContent\*" "C:\WebMatrix Websites\DotNetNuke 06.02.01\DesktopModules\ToSIC_SexyContent\" /Y /S
-
-xcopy "C:\Projects\2Sexy Content\Web\bin\ToSic*" "C:\WebMatrix Websites\DotNetNuke 07.00.02\bin" /y
-xcopy "C:\Projects\2Sexy Content\Web\DesktopModules\ToSIC_SexyContent\*" "C:\WebMatrix Websites\DotNetNuke 07.00.02\DesktopModules\ToSIC_SexyContent\" /Y /S
-
-xcopy "C:\Projects\2Sexy Content\Web\bin\ToSic*" "C:\WebMatrix Websites\DotNetNuke_Community_07.01.02_Install\bin" /y
-xcopy "C:\Projects\2Sexy Content\Web\DesktopModules\ToSIC_SexyContent\*" "C:\WebMatrix Websites\DotNetNuke_Community_07.01.02_Install\DesktopModules\ToSIC_SexyContent\" /Y /S</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>
