@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="windows-1252"?>
+
+<!-- WARNING, WARNING, WARNING -->
+<!-- REMEMBER THAT IF YOU MODIFY THE TARGETS FILE YOU NEED TO CLOSE/OPEN THE PROJECT FOR THE CHANGES TO TAKE EFFECT -->
+
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="MSBuild.Community.Tasks.Targets" />
+  <Target Name="PackageModule" Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <XmlRead Prefix="n"
+                    Namespace="http://schemas.microsoft.com/developer/msbuild/2003"
+                    XPath="dotnetnuke/packages/package[1]/@version"
+                    XmlFileName="$(DNNFileName).dnn">
+      <Output TaskParameter="Value" PropertyName="Version" />
+    </XmlRead>
+
+    <PropertyGroup>
+      <TempPackageFolder>$(MSBuildProjectDirectory)\ModulePackages\Temp</TempPackageFolder>
+      <TempPackageResourcesFolder>$(MSBuildProjectDirectory)\ModulePackages\TempResources</TempPackageResourcesFolder>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <DefaultExclude Include="**\.svn\**" />
+      <DefaultExclude Include="**\bin\**" />
+      <DefaultExclude Include="**\obj\**" />
+      <DefaultExclude Include="**\Release\**" />
+      <DefaultExclude Include="**\Debug\**" />
+      <DefaultExclude Include="**\Test\**" />
+      <DefaultExclude Include="**\TestResults\**" />
+      <DefaultExclude Include="**\doc\**" />
+      <DefaultExclude Include="**\www\**" />
+      <DefaultExclude Include="**\*.user" />
+      <DefaultExclude Include="**\*.suo" />
+      <DefaultExclude Include="**\*.zip" />
+      <DefaultExclude Include="**\*.txt" />
+      <DefaultExclude Include="**\*ReSharper.*\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <InstallInclude Include="**\*.ascx" />
+      <InstallInclude Include="**\*.asmx" />
+      <InstallInclude Include="**\*.css" />
+      <InstallInclude Include="**\*.html" />
+      <InstallInclude Include="**\*.htm" />
+      <InstallInclude Include="**\*.resx" />
+      <InstallInclude Include="**\*.aspx" />
+      <InstallInclude Include="**\*.js" />
+      <InstallInclude Include="**\*.txt"  Exclude="**\obj\**;**\_ReSharper*\**;" />
+      <InstallInclude Include="**\*.ashx" />
+      <InstallInclude Include="**\*.png" />
+      <InstallInclude Include="**\*.jpg" />
+      <InstallInclude Include="**\*.gif" />
+      <InstallInclude Include="**\*.config" Exclude="**\web-Deploy.config" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.SexyContent.Razor.dll" />
+      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.SexyContent.dll" />
+      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.ManagementUI.dll" />
+      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.dll" />
+      <AssemblyInclude Include="$(MSBuildDnnBinPath)\protobuf-net.dll" />
+      <AssemblyInclude Include="$(MSBuildDnnBinPath)\Microsoft.Practices.Unity.dll" />
+      <AssemblyInclude Include="$(MSBuildDnnBinPath)\Microsoft.Practices.Unity.Configuration.dll" />
+      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ImageResizer.Plugins.TinyCache.dll" />
+      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ImageResizer.dll" />
+    </ItemGroup>
+    
+    <CreateItem Include="$(DNNFileName).dnn">
+      <Output TaskParameter="Include" ItemName="PackageManifestFiles" />
+    </CreateItem>
+
+    <CreateItem Include="**\License.txt">
+      <Output TaskParameter="Include" ItemName="PackageTxtFiles" />
+    </CreateItem>
+
+    <CreateItem Include="**\ReleaseNotes.txt">
+      <Output TaskParameter="Include" ItemName="PackageTxtFiles" />
+    </CreateItem>
+
+
+    <CreateItem Include="**\*.sqldataprovider">
+      <Output TaskParameter="Include" ItemName="SqlDataProviderFiles" />
+    </CreateItem>
+    
+    <Copy SourceFiles="@(AssemblyInclude)" DestinationFolder="$(TempPackageFolder)\bin"/>
+    <Copy SourceFiles="@(SqlDataProviderFiles)" DestinationFolder="$(TempPackageFolder)\%(RecursiveDir)" />
+    <Copy SourceFiles="@(PackageManifestFiles)" DestinationFolder="$(TempPackageFolder)" />
+    <Copy SourceFiles="@(PackageTxtFiles)" DestinationFolder="$(TempPackageFolder)" />
+    
+    
+    <!-- create the INSTALL RESOURCES.ZIP file -->
+    <Copy SourceFiles="@(InstallInclude)" DestinationFolder="$(TempPackageResourcesFolder)\%(RecursiveDir)" />
+
+    <CreateItem Include="$(TempPackageResourcesFolder)\**\*.*">
+      <Output TaskParameter="Include" ItemName="ResourcesContent" />
+    </CreateItem>
+    
+    <Zip Files="@(ResourcesContent)" WorkingDirectory="$(TempPackageResourcesFolder)" ZipFileName="$(TempPackageFolder)\Resources.zip" />
+    <!--<Copy SourceFiles="$(TempPackageResourcesFolder)\Resources.zip" DestinationFolder="$(TempPackageFolder)" />-->
+
+    <CreateItem Include="$(TempPackageFolder)\**\*.*">
+      <Output TaskParameter="Include" ItemName="OutputContent" />
+    </CreateItem>
+    <!-- Create the Install package -->    
+    <Zip Files="@(OutputContent)" WorkingDirectory="$(TempPackageFolder)" ZipFileName="ModulePackages/$(PackageName)_$(Version)_Install.$(Extension)" />
+    <!-- Copy the Install package to the Packages folder -->
+    <!--<Copy SourceFiles="$(TempPackageFolder)\$(PackageName)_$(Version)_Install.$(Extension)" DestinationFolder="ModulePackages/" />-->
+    
+    
+    <!-- Cleanup -->
+    <RemoveDir Directories="$(TempPackageFolder)" />
+    <RemoveDir Directories="$(TempPackageResourcesFolder)" />
+    
+  </Target>
+</Project>
