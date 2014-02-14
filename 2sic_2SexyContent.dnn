@@ -10,8 +10,8 @@
         <url>http://www.2sic.com</url>
         <email>info@2sic.com</email>
       </owner>
-      <license>License.txt</license>
-      <releaseNotes>ReleaseNotes.txt</releaseNotes>
+      <license src="License.txt"></license>
+      <releaseNotes src="ReleaseNotes.txt"></releaseNotes>
       <dependencies>
         <dependency type="type">System.Dynamic.ExpandoObject</dependency>
         <dependency type="CoreVersion">06.01.00</dependency>
@@ -107,7 +107,7 @@
             </script>
           </scripts>
         </component>
-        
+
         <component type="Module">
           <desktopModule>
             <moduleName>2sxc</moduleName>
@@ -285,7 +285,7 @@
             </attributes>
           </eventMessage>
         </component>
-        
+
         <component type="Assembly">
           <assemblies>
             <basePath>bin</basePath>
@@ -318,7 +318,7 @@
             </assembly>
           </assemblies>
         </component>
-        
+
         <component type="ResourceFile">
           <resourceFiles>
             <basePath>DesktopModules/ToSIC_SexyContent</basePath>
@@ -328,21 +328,6 @@
           </resourceFiles>
         </component>
 
-        <component type="Cleanup" version="04.00.00">
-          <files>
-            <file>
-              <name>NewOrEditItem.ascx</name>
-            </file>
-            <file>
-              <path>App_LocalResources</path>
-              <name>NewOrEditItem.ascx.resx</name>
-            </file>
-            <file>
-              <path>App_LocalResources</path>
-              <name>NewOrEditItem.ascx.de-DE.resx</name>
-            </file>
-          </files>
-        </component>
         <component type="Cleanup" version="05.00.00">
           <files>
             <file>
@@ -363,7 +348,139 @@
             </file>
           </files>
         </component>
-        
+        <component type="Cleanup" version="05.05.01">
+          <files>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent\App_LocalResources</path>
+              <name>ContentTypeAndDemoSelector.ascx.de-DE.resx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent\App_LocalResources</path>
+              <name>ContentTypeAndDemoSelector.ascx.resx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent\App_LocalResources</path>
+              <name>EAVManagement.ascx.de-DE.resx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent\App_LocalResources</path>
+              <name>EAVManagement.ascx.resx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent\App_LocalResources</path>
+              <name>EditTemplate.ascx.de-DE.resx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent\App_LocalResources</path>
+              <name>EditTemplate.ascx.resx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent\App_LocalResources</path>
+              <name>Export.ascx.de-DE.resx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent\App_LocalResources</path>
+              <name>Export.ascx.resx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent\App_LocalResources</path>
+              <name>Import.ascx.de-DE.resx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent\App_LocalResources</path>
+              <name>Import.ascx.resx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent\App_LocalResources</path>
+              <name>ManageTemplates.ascx.de-DE.resx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent\App_LocalResources</path>
+              <name>ManageTemplates.ascx.resx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent\App_LocalResources</path>
+              <name>NewOrEditItem.ascx.de-DE.resx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent\App_LocalResources</path>
+              <name>NewOrEditItem.ascx.resx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent\SexyContent\EAV\Controls</path>
+              <name>EditItem.ascx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent\SexyContent\EAV\Controls</path>
+              <name>NewItem.ascx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent\SexyContent\EAV\FieldTemplates</path>
+              <name>File_Edit.ascx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent</path>
+              <name>01.00.00.SqlDataProvider</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent</path>
+              <name>01.00.01.SqlDataProvider</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent</path>
+              <name>02.00.00.SqlDataProvider</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent</path>
+              <name>03.00.00.SqlDataProvider</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent</path>
+              <name>03.03.00.SqlDataProvider</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent</path>
+              <name>03.04.03.SqlDataProvider</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent</path>
+              <name>ContentTypeAndDemoSelector.ascx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent</path>
+              <name>EAVManagement.ascx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent</path>
+              <name>EditTemplate.ascx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent</path>
+              <name>Export.ascx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent</path>
+              <name>Import.ascx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent</path>
+              <name>ManageTemplates.ascx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent</path>
+              <name>NewOrEditItem.ascx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent</path>
+              <name>Uninstall.SqlDataProvider</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent</path>
+              <name>2sic_2SexyContent.dnn</name>
+            </file>
+          </files>
+        </component>
+
         <component type="Config">
           <config>
             <configFile>web.config</configFile>

@@ -425,9 +425,6 @@
     <None Include="SqlDataProvider\03.03.00.SqlDataProvider" />
     <None Include="SqlDataProvider\03.04.03.SqlDataProvider" />
     <None Include="SqlDataProvider\04.00.00.SqlDataProvider" />
-    <None Include="2sic_2SexyContent-Packaging.dnn">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="2sic_2SexyContent.dnn" />
     <Content Include="SqlDataProvider\04.00.02.SqlDataProvider" />
     <Content Include="SqlDataProvider\05.01.00.SqlDataProvider" />
