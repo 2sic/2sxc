@@ -36,7 +36,7 @@
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>C:\Projects\2Sexy Content\Web\bin\ToSic.SexyContent.xml</DocumentationFile>
+    <DocumentationFile>..\..\bin\ToSic.SexyContent.xml</DocumentationFile>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <NoWarn>1591</NoWarn>
   </PropertyGroup>
@@ -330,6 +330,7 @@
     <Content Include="Administration\ContentTypeAndDemoSelector.ascx" />
     <Content Include="Administration\Registers.ascx" />
     <Content Include="API\Services.asmx" />
+    <Content Include="BuildScripts\MSBuild.Community.Tasks.dll" />
     <Content Include="EditContentGroupItem.ascx" />
     <Content Include="EditDataSource.ascx" />
     <Content Include="EditList.ascx" />
@@ -372,9 +373,11 @@
     <Content Include="Js\ItemForm.js" />
     <Content Include="Js\ViewEdit.js" />
     <Content Include="Administration\ManageTemplates.ascx" />
+    <Content Include="license.txt" />
     <Content Include="module.css" />
     <Content Include="Administration\EditTemplate.ascx" />
     <Content Include="EditContentGroup.ascx" />
+    <Content Include="ReleaseNotes.txt" />
     <Content Include="Settings.ascx" />
     <Content Include="SettingsWrapper.ascx" />
     <Content Include="SexyContent\EAV\Controls\ContentTypeEdit.ascx" />
@@ -399,6 +402,8 @@
     <Content Include="Extensions\Thumbnailer.aspx" />
     <Content Include="Js\2sxc.api.js" />
     <Content Include="Extensions\ToSic_vCard\vCard.ashx" />
+    <Content Include="BuildScripts\ModulePackage.Targets" />
+    <Content Include="BuildScripts\MSBuild.Community.Tasks.targets" />
     <None Include="SqlDataProvider\01.00.00.SqlDataProvider" />
     <Content Include="SqlDataProvider\05.02.01.SqlDataProvider" />
     <Content Include="Styles\Edit.css" />
@@ -420,9 +425,6 @@
     <None Include="SqlDataProvider\03.03.00.SqlDataProvider" />
     <None Include="SqlDataProvider\03.04.03.SqlDataProvider" />
     <None Include="SqlDataProvider\04.00.00.SqlDataProvider" />
-    <None Include="2sic_2SexyContent-Packaging.dnn">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="2sic_2SexyContent.dnn" />
     <Content Include="SqlDataProvider\04.00.02.SqlDataProvider" />
     <Content Include="SqlDataProvider\05.01.00.SqlDataProvider" />
@@ -565,4 +567,13 @@
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
+  <PropertyGroup>
+    <Extension>zip</Extension>
+    <DNNFileName>2sic_2SexyContent</DNNFileName>
+    <PackageName>2sic_2SexyContent</PackageName>
+    <MSBuildCommunityTasksPath>$(SolutionDir)\BuildScripts</MSBuildCommunityTasksPath>
+  </PropertyGroup>
+  <Import Project="$(SolutionDir)\BuildScripts\ModulePackage.Targets" />
+  <Target Name="AfterBuild" DependsOnTargets="PackageModule">
+  </Target>
 </Project>
