@@ -1,4 +1,4 @@
-﻿using System;
+﻿  using System;
 using System.IO;
 using System.Web;
 using System.Web.UI;
@@ -26,6 +26,7 @@ namespace ToSic.SexyContent
         /// The Sexy Context
         /// </summary>
         private SexyContent Sexy = new SexyContent();
+
 
         #region Private Properties
 
@@ -95,6 +96,8 @@ namespace ToSic.SexyContent
             // Reset messages visible states
             pnlMessage.Visible = false;
             pnlError.Visible = false;
+
+            //Response.Write(this.ModuleConfiguration.DesktopModule.ModuleName);
 
             // Add ModuleActionHandler
             AddActionHandler(ModuleActions_Click);
