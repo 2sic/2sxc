@@ -517,53 +517,51 @@
       </components>
     </package>
     
-    <packages>
-      <package name="2SexyContent-Apps" type="Module" version="05.05.01">
-        <friendlyName>Apps</friendlyName>
-        <description>2Sexy Content Apps is an extension that allows to insert a 2SexyContent app.</description>
-        <iconFile>icon.png</iconFile>
-        <owner>
-          <name>2sic</name>
-          <organization>2sic Internet Solutions</organization>
-          <url>http://www.2sic.com</url>
-          <email>info@2sic.com</email>
-        </owner>
-        <license src="License.txt"></license>
-        <releaseNotes src="ReleaseNotes.txt"></releaseNotes>
-        <components>
-          <component type="Module">
-            <desktopModule>
-              <moduleName>2sxc-app</moduleName>
-              <foldername>ToSIC_SexyContent</foldername>
-              <businessControllerClass>ToSic.SexyContent.SexyContent</businessControllerClass>
-              <supportedFeatures>
-                <supportedFeature type="Searchable" />
-                <supportedFeature type="Upgradeable" />
-              </supportedFeatures>
-              <moduleDefinitions>
-                <moduleDefinition>
-                  <friendlyName>2Sexy Content App</friendlyName>
-                  <defaultCacheTime>0</defaultCacheTime>
-                  <moduleControls>
-                    <moduleControl>
-                      <controlKey />
-                      <controlSrc>DesktopModules/ToSIC_SexyContent/AppView.ascx</controlSrc>
-                      <supportsPartialRendering>False</supportsPartialRendering>
-                      <controlTitle />
-                      <controlType>View</controlType>
-                      <iconFile />
-                      <helpUrl />
-                      <supportsPopUps>False</supportsPopUps>
-                      <viewOrder>0</viewOrder>
-                    </moduleControl>
-                  </moduleControls>
-                </moduleDefinition>
-              </moduleDefinitions>
-            </desktopModule>
-          </component>
-        </components>
-      </package>
-    </packages>
+    <package name="2SexyContent-Apps" type="Module" version="05.05.01">
+      <friendlyName>Apps</friendlyName>
+      <description>2Sexy Content Apps is an extension that allows to insert a 2SexyContent app.</description>
+      <iconFile>icon.png</iconFile>
+      <owner>
+        <name>2sic</name>
+        <organization>2sic Internet Solutions</organization>
+        <url>http://www.2sic.com</url>
+        <email>info@2sic.com</email>
+      </owner>
+      <license src="License.txt"></license>
+      <releaseNotes src="ReleaseNotes.txt"></releaseNotes>
+      <components>
+        <component type="Module">
+          <desktopModule>
+            <moduleName>2sxc-app</moduleName>
+            <foldername>ToSIC_SexyContent</foldername>
+            <businessControllerClass>ToSic.SexyContent.SexyContent</businessControllerClass>
+            <supportedFeatures>
+              <supportedFeature type="Searchable" />
+              <supportedFeature type="Upgradeable" />
+            </supportedFeatures>
+            <moduleDefinitions>
+              <moduleDefinition>
+                <friendlyName>2Sexy Content App</friendlyName>
+                <defaultCacheTime>0</defaultCacheTime>
+                <moduleControls>
+                  <moduleControl>
+                    <controlKey />
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/AppView.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle />
+                    <controlType>View</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>False</supportsPopUps>
+                    <viewOrder>0</viewOrder>
+                  </moduleControl>
+                </moduleControls>
+              </moduleDefinition>
+            </moduleDefinitions>
+          </desktopModule>
+        </component>
+      </components>
+    </package>
     
   </packages>
 </dotnetnuke>
