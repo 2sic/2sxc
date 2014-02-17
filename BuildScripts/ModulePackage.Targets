@@ -49,6 +49,7 @@
       <InstallInclude Include="**\*.png" />
       <InstallInclude Include="**\*.jpg" />
       <InstallInclude Include="**\*.gif" />
+      <InstallInclude Include="**\*.dnn" />
       <InstallInclude Include="**\*.config" Exclude="**\web-Deploy.config" />
     </ItemGroup>
 
