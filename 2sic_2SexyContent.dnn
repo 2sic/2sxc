@@ -1,0 +1,521 @@
+﻿<dotnetnuke type="Package" version="5.0">
+  <packages>
+    <package name="2SexyContent" type="Module" version="05.05.01">
+      <friendlyName> Content</friendlyName>
+      <description>2Sexy Content is a DotNetNuke Extension to create attractive and designed content. It solves the common problem, allowing the web designer to create designed templates for different content elements, so that the user must only fill in fields and receive a perfectly designed and animated output.</description>
+      <iconFile>icon.png</iconFile>
+      <owner>
+        <name>2sic</name>
+        <organization>2sic Internet Solutions</organization>
+        <url>http://www.2sic.com</url>
+        <email>info@2sic.com</email>
+      </owner>
+      <license src="License.txt"></license>
+      <releaseNotes src="ReleaseNotes.txt"></releaseNotes>
+      <dependencies>
+        <dependency type="type">System.Dynamic.ExpandoObject</dependency>
+        <dependency type="CoreVersion">06.01.00</dependency>
+      </dependencies>
+      <components>
+        <component type="Script">
+          <scripts>
+            <basePath>DesktopModules\ToSIC_SexyContent</basePath>
+            <script type="Install">
+              <path>SqlDataProvider</path>
+              <name>01.00.00.SqlDataProvider</name>
+              <version>01.00.00</version>
+            </script>
+            <script type="Install">
+              <path>SqlDataProvider</path>
+              <name>01.00.01.SqlDataProvider</name>
+              <version>01.00.01</version>
+            </script>
+            <script type="Install">
+              <path>SqlDataProvider</path>
+              <name>02.00.00.SqlDataProvider</name>
+              <version>02.00.00</version>
+            </script>
+            <script type="Install">
+              <path>SqlDataProvider</path>
+              <name>03.00.00.SqlDataProvider</name>
+              <version>03.00.00</version>
+            </script>
+            <script type="Install">
+              <path>SqlDataProvider</path>
+              <name>03.03.00.SqlDataProvider</name>
+              <version>03.03.00</version>
+            </script>
+            <script type="Install">
+              <path>SqlDataProvider</path>
+              <name>03.04.03.SqlDataProvider</name>
+              <version>03.04.03</version>
+            </script>
+            <script type="Install">
+              <path>SqlDataProvider</path>
+              <name>04.00.00.SqlDataProvider</name>
+              <version>04.00.00</version>
+            </script>
+            <script type="Install">
+              <path>SqlDataProvider</path>
+              <name>04.00.02.SqlDataProvider</name>
+              <version>04.00.02</version>
+            </script>
+            <script type="Install">
+              <path>SqlDataProvider</path>
+              <name>05.01.00.SqlDataProvider</name>
+              <version>05.01.00</version>
+            </script>
+            <script type="Install">
+              <path>SqlDataProvider</path>
+              <name>05.02.01.SqlDataProvider</name>
+              <version>05.02.01</version>
+            </script>
+            <script type="Install">
+              <path>SqlDataProvider</path>
+              <name>05.03.01.SqlDataProvider</name>
+              <version>05.03.01</version>
+            </script>
+            <script type="Install">
+              <path>SqlDataProvider</path>
+              <name>05.03.02.SqlDataProvider</name>
+              <version>05.03.02</version>
+            </script>
+            <script type="Install">
+              <path>SqlDataProvider</path>
+              <name>05.03.03.SqlDataProvider</name>
+              <version>05.03.03</version>
+            </script>
+            <script type="Install">
+              <path>SqlDataProvider</path>
+              <name>05.03.04.SqlDataProvider</name>
+              <version>05.03.04</version>
+            </script>
+            <script type="Install">
+              <path>SqlDataProvider</path>
+              <name>05.03.05.SqlDataProvider</name>
+              <version>05.03.05</version>
+            </script>
+            <script type="Install">
+              <path>SqlDataProvider</path>
+              <name>05.05.00.SqlDataProvider</name>
+              <version>05.05.00</version>
+            </script>
+            <script type="UnInstall">
+              <path>SqlDataProvider</path>
+              <name>Uninstall.SqlDataProvider</name>
+              <version>5.5.1</version>
+            </script>
+          </scripts>
+        </component>
+
+        <component type="Module">
+          <desktopModule>
+            <moduleName>2sxc</moduleName>
+            <foldername>ToSIC_SexyContent</foldername>
+            <businessControllerClass>ToSic.SexyContent.SexyContent</businessControllerClass>
+            <supportedFeatures>
+              <supportedFeature type="Searchable" />
+              <supportedFeature type="Upgradeable" />
+            </supportedFeatures>
+            <moduleDefinitions>
+              <moduleDefinition>
+                <friendlyName>2Sexy Content</friendlyName>
+                <defaultCacheTime>0</defaultCacheTime>
+                <moduleControls>
+                  <moduleControl>
+                    <controlKey />
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/View.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle />
+                    <controlType>View</controlType>
+                    <iconFile>icon.png</iconFile>
+                    <helpUrl />
+                    <supportsPopUps>False</supportsPopUps>
+                    <viewOrder>0</viewOrder>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>eavmanagement</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/EAVManagement.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Manage Content Types</controlTitle>
+                    <controlType>Admin</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                    <viewOrder>0</viewOrder>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>editcontentgroup</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/EditContentGroup.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Edit Item</controlTitle>
+                    <controlType>Edit</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>editdatasource</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/EditDataSource.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Edit Datasource</controlTitle>
+                    <controlType>Admin</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>editlist</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/EditList.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Edit List</controlTitle>
+                    <controlType>Edit</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>edittemplate</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/EditTemplate.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Edit Template</controlTitle>
+                    <controlType>Edit</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                    <viewOrder>0</viewOrder>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>edittemplatefile</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/EditTemplateFile.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Edit Template File</controlTitle>
+                    <controlType>Edit</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>export</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/Export.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Export</controlTitle>
+                    <controlType>Admin</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>gettingstarted</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/GettingStarted.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Getting Started</controlTitle>
+                    <controlType>Edit</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>import</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/Import.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Import</controlTitle>
+                    <controlType>Admin</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>managetemplates</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/ManageTemplates.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Manage Templates</controlTitle>
+                    <controlType>Admin</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                    <viewOrder>0</viewOrder>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>portalconfiguration</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/PortalConfiguration.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Portal Configuration</controlTitle>
+                    <controlType>Admin</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>settings</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/Settings.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>2Sexy Content Settings</controlTitle>
+                    <controlType>Edit</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                    <viewOrder>0</viewOrder>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>settingswrapper</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/SettingsWrapper.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>2Sexy Content Settings</controlTitle>
+                    <controlType>Edit</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                    <viewOrder>0</viewOrder>
+                  </moduleControl>
+                </moduleControls>
+              </moduleDefinition>
+            </moduleDefinitions>
+          </desktopModule>
+          <eventMessage>
+            <processorType>
+              DotNetNuke.Entities.Modules.EventMessageProcessor,
+              DotNetNuke
+            </processorType>
+            <processorCommand>UpgradeModule</processorCommand>
+            <attributes>
+              <businessControllerClass>ToSic.SexyContent.SexyContent, ToSic.SexyContent</businessControllerClass>
+              <desktopModuleID>[DESKTOPMODULEID]</desktopModuleID>
+              <upgradeVersionsList>05.05.00</upgradeVersionsList>
+            </attributes>
+          </eventMessage>
+        </component>
+
+        <component type="Assembly">
+          <assemblies>
+            <basePath>bin</basePath>
+            <assembly>
+              <name>ToSic.SexyContent.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.SexyContent.Razor.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Eav.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Eav.ManagementUI.dll</name>
+            </assembly>
+            <assembly>
+              <name>Microsoft.Practices.Unity.dll</name>
+            </assembly>
+            <assembly>
+              <name>Microsoft.Practices.Unity.Configuration.dll</name>
+            </assembly>
+            <assembly>
+              <name>ImageResizer.dll</name>
+            </assembly>
+            <assembly>
+              <name>ImageResizer.Plugins.TinyCache.dll</name>
+            </assembly>
+            <assembly>
+              <name>protobuf-net.dll</name>
+            </assembly>
+          </assemblies>
+        </component>
+
+        <component type="ResourceFile">
+          <resourceFiles>
+            <basePath>DesktopModules/ToSIC_SexyContent</basePath>
+            <resourceFile>
+              <name>Resources.zip</name>
+            </resourceFile>
+          </resourceFiles>
+        </component>
+
+        <component type="Cleanup" version="05.00.00">
+          <files>
+            <file>
+              <path>bin</path>
+              <name>ToSic.EAV.Library.dll</name>
+            </file>
+          </files>
+        </component>
+        <component type="Cleanup" version="05.00.01">
+          <files>
+            <file>
+              <path>bin</path>
+              <name>ToSIC.Modules.SexyContent.dll</name>
+            </file>
+            <file>
+              <path>bin</path>
+              <name>ToSIC.Modules.SexyContent.Razor.dll</name>
+            </file>
+          </files>
+        </component>
+        <component type="Cleanup" version="05.05.01">
+          <files>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent\App_LocalResources</path>
+              <name>ContentTypeAndDemoSelector.ascx.de-DE.resx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent\App_LocalResources</path>
+              <name>ContentTypeAndDemoSelector.ascx.resx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent\App_LocalResources</path>
+              <name>EAVManagement.ascx.de-DE.resx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent\App_LocalResources</path>
+              <name>EAVManagement.ascx.resx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent\App_LocalResources</path>
+              <name>EditTemplate.ascx.de-DE.resx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent\App_LocalResources</path>
+              <name>EditTemplate.ascx.resx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent\App_LocalResources</path>
+              <name>Export.ascx.de-DE.resx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent\App_LocalResources</path>
+              <name>Export.ascx.resx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent\App_LocalResources</path>
+              <name>Import.ascx.de-DE.resx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent\App_LocalResources</path>
+              <name>Import.ascx.resx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent\App_LocalResources</path>
+              <name>ManageTemplates.ascx.de-DE.resx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent\App_LocalResources</path>
+              <name>ManageTemplates.ascx.resx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent\App_LocalResources</path>
+              <name>NewOrEditItem.ascx.de-DE.resx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent\App_LocalResources</path>
+              <name>NewOrEditItem.ascx.resx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent\SexyContent\EAV\Controls</path>
+              <name>EditItem.ascx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent\SexyContent\EAV\Controls</path>
+              <name>NewItem.ascx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent\SexyContent\EAV\FieldTemplates</path>
+              <name>File_Edit.ascx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent</path>
+              <name>01.00.00.SqlDataProvider</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent</path>
+              <name>01.00.01.SqlDataProvider</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent</path>
+              <name>02.00.00.SqlDataProvider</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent</path>
+              <name>03.00.00.SqlDataProvider</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent</path>
+              <name>03.03.00.SqlDataProvider</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent</path>
+              <name>03.04.03.SqlDataProvider</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent</path>
+              <name>ContentTypeAndDemoSelector.ascx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent</path>
+              <name>EAVManagement.ascx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent</path>
+              <name>EditTemplate.ascx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent</path>
+              <name>Export.ascx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent</path>
+              <name>Import.ascx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent</path>
+              <name>ManageTemplates.ascx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent</path>
+              <name>NewOrEditItem.ascx</name>
+            </file>
+            <file>
+              <path>DesktopModules\ToSIC_SexyContent</path>
+              <name>Uninstall.SqlDataProvider</name>
+            </file>
+          </files>
+        </component>
+
+        <component type="Config">
+          <config>
+            <configFile>web.config</configFile>
+            <install>
+              <configuration>
+                <nodes>
+                  <node path="/configuration/configSections" action="update" key="name" collision="ignore">
+                    <section name="resizer" type="ImageResizer.ResizerSection,ImageResizer"  requirePermission="false" />
+                  </node>
+                  <node path="/configuration" targetpath="/configuration/resizer" action="update" collision="ignore">
+                    <resizer>
+                      <pipeline fakeExtensions=".ashx" />
+                      <plugins>
+                        <add name="TinyCache" />
+                      </plugins>
+                    </resizer>
+                  </node>
+                  <node path="/configuration/system.web/httpModules" action="update" key="name" collision="ignore">
+                    <add name="ImageResizingModule" type="ImageResizer.InterceptModule"/>
+                  </node>
+                  <node path="/configuration/system.webServer/modules" action="update" key="name" collision="ignore">
+                    <add name="ImageResizingModule" type="ImageResizer.InterceptModule"/>
+                  </node>
+                </nodes>
+              </configuration>
+            </install>
+            <uninstall>
+              <configuration>
+                <nodes>
+                  <node path="/configuration/configSections/section[@name='resizer']" action="remove" />
+                  <node path="/configuration/resizer" action="remove" />
+                  <node path="/configuration/system.web/httpModules/add[@name='ImageResizingModule']" action="remove" />
+                  <node path="/configuration/system.webServer/modules/add[@name='ImageResizingModule']" action="remove" />
+                </nodes>
+              </configuration>
+            </uninstall>
+          </config>
+        </component>
+      </components>
+    </package>
+  </packages>
+</dotnetnuke>
