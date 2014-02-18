@@ -9,9 +9,8 @@ using DotNetNuke.Web.UI.WebControls;
 
 namespace ToSic.SexyContent
 {
-    public partial class EditTemplateFile : DotNetNuke.Entities.Modules.PortalModuleBase
+    public partial class EditTemplateFile : SexyControlEditBase
     {
-        SexyContent Sexy = new SexyContent();
 
         private const string AdditionalSystemTokens = "[Content:Toolbar],ContentToolbar";
         private const string ListAdditionalSystemTokens = "[List:Index],ListIndex;[List:Index1],ListIndex1;[List:Count],ListCount;[List:IsFirst],ListIsFirst;[List:IsLast],ListIsLast;[List:Alternator2],ListAlternator2;[List:Alternator3],ListAlternator3;[List:Alternator4],ListAlternator4;[List:Alternator5],ListAlternator5;[ListContent:Toolbar],ListToolbar;<repeat>...</repeat>,ListRepeat";

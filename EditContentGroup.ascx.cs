@@ -16,7 +16,7 @@ using ToSic.SexyContent;
 
 namespace ToSic.SexyContent
 {
-    public partial class EditContentGroup : DotNetNuke.Entities.Modules.PortalModuleBase
+    public partial class EditContentGroup : SexyControlEditBase
     {
         #region Properties
         /// <summary>
@@ -97,8 +97,6 @@ namespace ToSic.SexyContent
         }
 
         #endregion
-
-        private SexyContent Sexy = new SexyContent();
 
         protected void Page_Init(object sender, EventArgs e)
         {
@@ -213,7 +211,7 @@ namespace ToSic.SexyContent
 
         protected void btnDelete_Click(object sender, EventArgs e)
         {
-            new SexyContent(false).TemplateContext.DeleteContentGroupItems(ContentGroupID, SortOrder, UserId);
+            SexyUncached.TemplateContext.DeleteContentGroupItems(ContentGroupID, SortOrder, UserId);
             RedirectBack();
         }
 

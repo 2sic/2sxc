@@ -17,7 +17,7 @@ namespace ToSic.SexyContent.ImportExport
     public class XmlExport
     {
         // initialize data context
-        SexyContent Sexy = new SexyContent(false);
+        SexyContent Sexy = new SexyContent(new int(), new int(), true);
         private List<int> _referencedFileIds;
 
         #region Export

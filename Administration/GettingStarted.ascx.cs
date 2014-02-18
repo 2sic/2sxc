@@ -12,7 +12,7 @@ namespace ToSic.SexyContent.Administration
 {
     public partial class GettingStarted : PortalModuleBase
     {
-        SexyContent Sexy = new SexyContent();
+        
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -25,7 +25,7 @@ namespace ToSic.SexyContent.Administration
             // Add Portal ID
             GettingStartedSrc += "&PortalID=" + PortalId.ToString();
             // Add VDB / Zone ID (if set)
-            var ZoneID = Sexy.GetZoneID(PortalId);
+            var ZoneID = SexyContent.GetZoneID(PortalId);
             GettingStartedSrc += ZoneID.HasValue ? "&ZoneID=" + ZoneID.Value.ToString() : "";
             // Add DNN Guid
             var HostSettings = HostController.Instance.GetSettingsDictionary();

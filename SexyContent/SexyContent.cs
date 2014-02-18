@@ -35,6 +35,7 @@ namespace ToSic.SexyContent
         public const string ModuleVersion = "05.05.00";
         public const string TemplateID = "TemplateID";
         public const string ContentGroupIDString = "ContentGroupID";
+        public const string AppIDString = "AppId";
         public const string SettingsPublishDataSource = "ToSic_SexyContent_PublishDataSource";
         public const string SettingsPublishDataSourceStreams = "ToSic_SexyContent_PublishDataSource_Streams";
         public const string ContentGroupItemIDString = "ContentGroupItemID";
@@ -152,15 +153,17 @@ namespace ToSic.SexyContent
         /// Constructor overload for DotNetNuke
         /// (BusinessControllerClass needs parameterless constructor)
         /// </summary>
-        public SexyContent()
-            : this(true, new int?(), new int?())
-        {
-        }
+        // ToDo: uncomment this!
+        //public SexyContent()
+        //    : this(new int?(), new int?(), true)
+        //{
+        //}
+
 
         /// <summary>
         /// Instanciates Content and Template-Contexts
         /// </summary>
-        public SexyContent(bool EnableCaching = true, int? ZoneID = null, int? AppID = new int?())
+        public SexyContent(int? ZoneID, int? AppID, bool EnableCaching = true)
         {
             // Only disable caching of templates and contentgroupitems
             // if AppSetting "ToSIC_SexyContent_EnableCaching" is disabled
@@ -773,7 +776,7 @@ namespace ToSic.SexyContent
             var ZoneID = GetZoneID(ModInfo.PortalID);
 
             // Need a new Context because PortalSettings.Current is null
-            var Sexy = new SexyContent(true, ZoneID);
+            var Sexy = new SexyContent(ZoneID, new int(), true);
 
             var SearchItems = new SearchItemInfoCollection();
 
@@ -807,7 +810,7 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <param name="PortalID"></param>
         /// <returns></returns>
-        public int? GetZoneID(int PortalID)
+        public static int? GetZoneID(int PortalID)
         {
             var ZoneSettingKey = SexyContent.PortalSettingsPrefix + "ZoneID";
             var c = PortalController.GetPortalSettingsDictionary(PortalID);
@@ -828,20 +831,6 @@ namespace ToSic.SexyContent
                 PortalController.UpdatePortalSetting(PortalID, SexyContent.PortalSettingsPrefix + "ZoneID", ZoneID.Value.ToString());
             else
                 PortalController.DeletePortalSetting(PortalID, SexyContent.PortalSettingsPrefix + "ZoneID");
-        }
-
-        #endregion
-
-        #region Apps
-
-        /// <summary>
-        /// Returns the default app id
-        /// </summary>
-        /// <returns></returns>
-        public int GetDefaultAppID()
-        {
-            var ZoneID = GetZoneID(PortalSettings.Current.PortalId);
-            return ContentContext.Apps.Where(a => a.Name == EavContext.DefaultAppName && a.ZoneID == ZoneID).Select(a => a.AppID).First();
         }
 
         #endregion

@@ -10,8 +10,6 @@ namespace ToSic.SexyContent.Administration
 {
     public partial class Registers : UserControl
     {
-        SexyContent Sexy = new SexyContent();
-
         protected void Page_Load(object sender, EventArgs e)
         {
             // Correct Local Resource File
@@ -23,7 +21,7 @@ namespace ToSic.SexyContent.Administration
             Registers.Add(SexyContent.ControlKeys.GettingStarted);
 
             // Add Buttons if ZoneID is set
-            if (Sexy.GetZoneID(ParentModule.PortalId).HasValue)
+            if (SexyContent.GetZoneID(ParentModule.PortalId).HasValue)
             {
                 Registers.Add(SexyContent.ControlKeys.Import);
                 Registers.Add(SexyContent.ControlKeys.ManageTemplates);

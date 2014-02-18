@@ -13,9 +13,8 @@ using ToSic.SexyContent;
 
 namespace ToSic.SexyContent
 {
-    public partial class EditTemplate : DotNetNuke.Entities.Modules.PortalModuleBase
+    public partial class EditTemplate : SexyControlAdminBase
     {
-        SexyContent Sexy;
 
         private bool ModeIsEdit { get { return !String.IsNullOrEmpty(Request.QueryString[SexyContent.TemplateID]); } }
         private int TemplateID { get { return Convert.ToInt32(Request.QueryString[SexyContent.TemplateID]); } }
@@ -28,11 +27,6 @@ namespace ToSic.SexyContent
         /// <param name="e"></param>
         protected void Page_Init(object sender, EventArgs e)
         {
-            Sexy = new SexyContent(false, new int?(),
-                                   Request.QueryString.AllKeys.Contains("AppID")
-                                       ? int.Parse(Request.QueryString["AppID"])
-                                       : new int?());
-
             if (ModeIsEdit)
                 Template = Sexy.TemplateContext.GetTemplate(TemplateID);
         }

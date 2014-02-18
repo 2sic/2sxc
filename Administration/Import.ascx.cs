@@ -12,7 +12,7 @@ using ToSic.SexyContent.ImportExport;
 
 namespace ToSic.SexyContent
 {
-    public partial class Import : DotNetNuke.Entities.Modules.PortalModuleBase
+    public partial class Import : SexyControlAdminBase
     {
 
         private XDocument _releases;
@@ -31,7 +31,6 @@ namespace ToSic.SexyContent
             }
         }
 
-        SexyContent Sexy = new SexyContent();
         protected void Page_Load(object sender, EventArgs e)
         {
             hlkExport.NavigateUrl = EditUrl(SexyContent.ControlKeys.Export);
@@ -90,7 +89,12 @@ namespace ToSic.SexyContent
             var release = Releases.Element("SexyContentReleases").Elements("Release").FirstOrDefault(p => p.Attribute("Version").Value == SexyContent.ModuleVersion);
             var starterPackageUrl = release.Elements("RecommendedPackages").Elements("Package").First().Attribute("PackageUrl").Value;
 
-            var destinationPath = Path.Combine(Server.MapPath(SexyContent.TemporaryDirectory), Path.GetRandomFileName() + ".zip");
+            var tempDirectory = new DirectoryInfo(Server.MapPath(SexyContent.TemporaryDirectory));
+            if (tempDirectory.Exists)
+                Directory.CreateDirectory(tempDirectory.FullName);
+
+            var destinationPath = Path.Combine(tempDirectory.FullName, Path.GetRandomFileName() + ".zip");
+            
             var client = new WebClient();
 
             client.DownloadFile(starterPackageUrl, destinationPath);

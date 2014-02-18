@@ -9,10 +9,9 @@ using ToSic.SexyContent;
 
 namespace ToSic.SexyContent
 {
-    public partial class ContentTypeAndDemoSelector : DotNetNuke.Entities.Modules.PortalModuleBase
+    public partial class ContentTypeAndDemoSelector : SexyControlAdminBase
     {
-        SexyContent Sexy;
-
+        
         public bool ContentTypeRequired { get; set; }
 
         public int? _ContentTypeID;
@@ -51,11 +50,6 @@ namespace ToSic.SexyContent
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            Sexy = new SexyContent(true, new int?(),
-                            Request.QueryString.AllKeys.Contains("AppID")
-                                ? int.Parse(Request.QueryString["AppID"])
-                                : new int?());
-
             // Make sure the correct Resource file is loaded
             LocalResourceFile = LocalResourceFile.Replace(ID, "ContentTypeAndDemoSelector");
 

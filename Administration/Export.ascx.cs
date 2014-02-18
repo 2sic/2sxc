@@ -10,9 +10,8 @@ using ToSic.SexyContent.ImportExport;
 
 namespace ToSic.SexyContent
 {
-    public partial class Export : DotNetNuke.Entities.Modules.PortalModuleBase
+    public partial class Export : SexyControlAdminBase
     {
-        SexyContent Sexy = new SexyContent();
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -20,7 +19,7 @@ namespace ToSic.SexyContent
 
             if (!IsPostBack)
             {
-                var ContentTypes = Sexy.ContentContext.GetAllAttributeSets().Where(a => !a.StaticName.StartsWith("@") && a.AttributesInSets.Count > 0 && a.ChangeLogIDDeleted == null && a.Scope == "2SexyContent" && a.App.ZoneID == Sexy.GetZoneID(PortalId));
+                var ContentTypes = Sexy.ContentContext.GetAllAttributeSets().Where(a => !a.StaticName.StartsWith("@") && a.AttributesInSets.Count > 0 && a.ChangeLogIDDeleted == null && a.Scope == "2SexyContent" && a.App.ZoneID == SexyContent.GetZoneID(PortalId));
                 grdContentTypes.DataSource = ContentTypes;
                 grdContentTypes.DataBind();
 

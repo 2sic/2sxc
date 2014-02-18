@@ -1,4 +1,4 @@
-﻿  using System;
+﻿using System;
 using System.IO;
 using System.Web;
 using System.Web.UI;
@@ -20,15 +20,13 @@ using ToSic.SexyContent;
 
 namespace ToSic.SexyContent
 {
-    public partial class View : PortalModuleBase, IActionable
+    public partial class View : SexyControlEditBase, IActionable
     {
-        /// <summary>
-        /// The Sexy Context
-        /// </summary>
-        private SexyContent Sexy = new SexyContent();
 
-
-        #region Private Properties
+        protected bool IsContentApp
+        {
+            get { return ModuleConfiguration.DesktopModule.ModuleName == "2sxc"; }
+        }
 
         /// <summary>
         /// Holds the List of Elements for the current module.
@@ -53,7 +51,7 @@ namespace ToSic.SexyContent
             {
                 if (!Elements.Any() || !Elements.First().TemplateID.HasValue)
                     return null;
-                if(_Template == null)
+                if (_Template == null)
                     _Template = Sexy.TemplateContext.GetTemplate(Elements.First().TemplateID.Value);
                 return _Template;
             }
@@ -67,11 +65,13 @@ namespace ToSic.SexyContent
             }
         }
 
+        #region Private Properties
+
         private bool UserMayEditThisModule
         {
             get
             {
-                return ModuleContext.IsEditable;// ModulePermissionController.HasModuleAccess(SecurityAccessLevel.Edit, "edit", ModuleConfiguration);
+                return ModuleContext.IsEditable;
             }
         }
 
@@ -80,10 +80,6 @@ namespace ToSic.SexyContent
             get { return Request.QueryString["standalone"] == "true"; }
         }
 
-        private int? ZoneID
-        {
-            get { return Sexy.GetZoneID(PortalId); }
-        }
         #endregion
 
         /// <summary>
@@ -96,8 +92,6 @@ namespace ToSic.SexyContent
             // Reset messages visible states
             pnlMessage.Visible = false;
             pnlError.Visible = false;
-
-            //Response.Write(this.ModuleConfiguration.DesktopModule.ModuleName);
 
             // Add ModuleActionHandler
             AddActionHandler(ModuleActions_Click);
@@ -122,7 +116,7 @@ namespace ToSic.SexyContent
         protected void Page_PreRender(object sender, EventArgs e)
         {
             // If the Zone (VDB) has not been specified in Portal Settings, show message
-            if (!ZoneID.HasValue)
+            if (!ZoneId.HasValue)
             {
                 pnlZoneConfigurationMissing.Visible = true;
                 hlkConfigureZone.NavigateUrl = EditUrl(this.TabId, SexyContent.ControlKeys.PortalConfiguration, false,
@@ -155,8 +149,7 @@ namespace ToSic.SexyContent
                 return;
             }
 
-            //// ToDo: Fix this
-            if (DataSource.GetCache(Sexy.GetZoneID(PortalId).Value).GetContentType(Template.AttributeSetID) == null)
+            if (DataSource.GetCache(ZoneId.Value).GetContentType(Template.AttributeSetID) == null)
             {
                 ShowError("The contents of this module cannot be displayed because it's located in another VDB.");
                 return;
@@ -277,6 +270,8 @@ namespace ToSic.SexyContent
                     ddlContentType.Enabled = false;
             }
 
+            ddlContentType.Visible = IsContentApp;
+            ddlApp.Visible = !IsContentApp;
         }
 
         protected void BindTemplateDropDown()
@@ -313,7 +308,7 @@ namespace ToSic.SexyContent
                 if (Template != null && TemplateID == Template.TemplateID)
                     return;
 
-                new SexyContent(false).UpdateTemplateForGroup(Sexy.GetContentGroupIDFromModule(ModuleId), TemplateID,
+                new SexyContent(ZoneId, AppId, false).UpdateTemplateForGroup(Sexy.GetContentGroupIDFromModule(ModuleId), TemplateID,
                                                               UserId);
 
                 Response.Redirect(Request.RawUrl);
@@ -355,7 +350,7 @@ namespace ToSic.SexyContent
                 switch (hfContentGroupItemAction.Value)
                 {
                     case "add":
-                        new SexyContent(false).AddContentGroupItem(Elements.First().GroupID, UserId, Elements.First().TemplateID, null, Elements.Where(el => el.ID == int.Parse(hfContentGroupItemID.Value)).Single().SortOrder + 1, true, ContentGroupItemType.Content, false);
+                        new SexyContent(ZoneId, AppId, false).AddContentGroupItem(Elements.First().GroupID, UserId, Elements.First().TemplateID, null, Elements.Where(el => el.ID == int.Parse(hfContentGroupItemID.Value)).Single().SortOrder + 1, true, ContentGroupItemType.Content, false);
                         Response.Redirect(DotNetNuke.Common.Globals.NavigateURL(this.TabId, "", null));
                         break;
                 }  
@@ -436,7 +431,7 @@ namespace ToSic.SexyContent
             switch (e.Action.CommandName)
             {
                 case SexyContent.ControlKeys.AddItem:
-                    new SexyContent(false).AddContentGroupItem(Elements.First().GroupID, UserId, Template.TemplateID, null, null, true, ContentGroupItemType.Content, false);
+                    Sexy.AddContentGroupItem(Elements.First().GroupID, UserId, Template.TemplateID, null, null, true, ContentGroupItemType.Content, false);
                     Response.Redirect(Request.RawUrl);
                     break;
             }

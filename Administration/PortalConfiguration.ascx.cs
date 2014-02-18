@@ -10,14 +10,13 @@ using ToSic.Eav;
 
 namespace ToSic.SexyContent.Configuration
 {
-    public partial class PortalConfiguration : DotNetNuke.Entities.Modules.PortalModuleBase
+    public partial class PortalConfiguration : SexyControlAdminBase
     {
-        private SexyContent Sexy = new SexyContent();
-
+        
         #region Properties
 
         private int? CurrentZoneID {
-            get { return Sexy.GetZoneID(PortalId); }
+            get { return SexyContent.GetZoneID(PortalId); }
         }
         private int? SelectedZoneID {
             get {
@@ -103,7 +102,7 @@ namespace ToSic.SexyContent.Configuration
         protected void grdCultures_NeedDatasource(object sender, GridNeedDataSourceEventArgs e)
         {
             // Set DataSource of the Cultures grid
-            grdCultures.DataSource = new SexyContent(true, SelectedZoneID).GetCulturesWithActiveState(PortalId, SelectedZoneID.HasValue ? SelectedZoneID.Value : 1);
+            grdCultures.DataSource = new SexyContent(SelectedZoneID, new int(), true).GetCulturesWithActiveState(PortalId, SelectedZoneID.HasValue ? SelectedZoneID.Value : 1);
         }
 
         protected string GetTooltipMessage(string Code, bool AllowStateChange)

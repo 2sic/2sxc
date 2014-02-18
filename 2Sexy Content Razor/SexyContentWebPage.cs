@@ -73,7 +73,7 @@ namespace ToSic.SexyContent.Razor
             if (inSource != null)
                 return DataSource.GetDataSource(typeName, inSource.ZoneId, inSource.AppId, inSource, configurationProvider);
             
-            var initialSource = new SexyContent().GetInitialDataSource();
+            var initialSource = new SexyContent(new int(), new int()).GetInitialDataSource();
             return typeName != "" ? DataSource.GetDataSource(typeName, initialSource.ZoneId, initialSource.AppId, initialSource, configurationProvider) : initialSource;
         }
     }

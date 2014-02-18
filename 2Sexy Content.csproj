@@ -260,6 +260,12 @@
       <DependentUpon>SexyContentContext.edmx</DependentUpon>
     </Compile>
     <Compile Include="SexyContent\SexyContentException.cs" />
+    <Compile Include="SexyContent\SexyControlAdminBase.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SexyContent\SexyControlEditBase.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="SexyContent\Template.cs" />
     <Compile Include="SexyContent\TemplateDefault.cs" />
     <Compile Include="TemplateHelpGrid.ascx.cs">

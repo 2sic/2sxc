@@ -8,9 +8,8 @@ using DotNetNuke.UI.Utilities;
 
 namespace ToSic.SexyContent
 {
-    public partial class EAVManagement : DotNetNuke.Entities.Modules.PortalModuleBase
+    public partial class EAVManagement : SexyControlAdminBase
     {
-        SexyContent Sexy = new SexyContent();
 
         protected void Page_Init(object sender, EventArgs e)
         {
@@ -36,17 +35,13 @@ namespace ToSic.SexyContent
             // Add DNN Version to body class
             Sexy.AddDNNVersionToBodyClass(this);
 
-            var appId = (Request.QueryString.AllKeys.Contains("AppID")
-                             ? int.Parse(Request.QueryString["AppID"])
-                             : Sexy.GetDefaultAppID());
-
             var eavManagement = (ToSic.Eav.ManagementUI.EavManagement)Page.LoadControl(TemplateControl.TemplateSourceDirectory + "/../SexyContent/EAV/Controls/EAVManagement.ascx");
-            eavManagement.BaseUrl = DotNetNuke.Common.Globals.NavigateURL(TabId, SexyContent.ControlKeys.EavManagement, "mid", ModuleId.ToString()) + "?popUp=true&" + "AppID=" + appId.ToString();
+            eavManagement.BaseUrl = DotNetNuke.Common.Globals.NavigateURL(TabId, SexyContent.ControlKeys.EavManagement, "mid", ModuleId.ToString()) + "?popUp=true&" + "AppID=" + AppId.ToString();
             eavManagement.Scope = SexyContent.AttributeSetScope;
             eavManagement.AssignmentObjectTypeId = Sexy.DefaultAssignmentObjectTypeID;
             eavManagement.DefaultCultureDimension = Sexy.ContentContext.GetLanguageId(PortalSettings.DefaultLanguage);
-            eavManagement.ZoneId = Sexy.GetZoneID(PortalId);
-            eavManagement.AppId = appId;
+            eavManagement.ZoneId = SexyContent.GetZoneID(PortalId);
+            eavManagement.AppId = AppId;
             pnlEAV.Controls.Add(eavManagement);
         }
     }

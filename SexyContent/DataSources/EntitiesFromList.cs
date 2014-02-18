@@ -27,7 +27,7 @@ namespace ToSic.SexyContent.DataSources
             if (!ListID.HasValue)
                 return BaseDataStream.List;
 
-            var sexy = new SexyContent();
+            var sexy = new SexyContent(new int(), new int());
             var entityIDs = (from c in sexy.TemplateContext.GetContentGroupItems(ListID.Value)
                                 where c.Type == ContentGroupItemType.Content.ToString("F") && c.EntityID.HasValue
                                 select c.EntityID.Value).ToArray();

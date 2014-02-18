@@ -8,10 +8,8 @@ using DotNetNuke.Web.UI.WebControls;
 
 namespace ToSic.SexyContent
 {
-    public partial class ManageTemplates : DotNetNuke.Entities.Modules.PortalModuleBase
+    public partial class ManageTemplates : SexyControlAdminBase
     {
-        SexyContent Sexy;
-
         /// <summary>
         /// Set the localized ConfirmText when deleting a template
         /// </summary>
@@ -19,7 +17,7 @@ namespace ToSic.SexyContent
         /// <param name="e"></param>
         protected void Page_Init(object sender, EventArgs e)
         {
-            Sexy = new SexyContent(true, new int?(), Request.QueryString.AllKeys.Contains("AppID") ? int.Parse(Request.QueryString["AppID"]) : new int?());
+            //Sexy = new SexyContent(this.GetZoneId(), Request.QueryString.AllKeys.Contains("AppID") ? int.Parse(Request.QueryString["AppID"]) : new int?(), true);
 
             ((DnnGridButtonColumn)grdTemplates.Columns.FindByUniqueName("DeleteColumn")).ConfirmText = LocalizeString("DeleteColumn.ConfirmText");
         }
@@ -49,7 +47,7 @@ namespace ToSic.SexyContent
         protected void grdTemplates_DeleteCommand(object sender, Telerik.Web.UI.GridCommandEventArgs e)
         {
             int TemplateID = Convert.ToInt32(e.Item.OwnerTableView.DataKeyValues[e.Item.ItemIndex][SexyContent.TemplateID]);
-            new SexyContent(false).TemplateContext.DeleteTemplate(TemplateID, UserId);
+            SexyUncached.TemplateContext.DeleteTemplate(TemplateID, UserId);
             BindGrdTemplates();
         }
 

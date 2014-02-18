@@ -13,10 +13,8 @@ namespace ToSic.SexyContent
     /// <summary>
     /// Change Layout or Content
     /// </summary>
-    public partial class SettingsWrapper : DotNetNuke.Entities.Modules.PortalModuleBase
+    public partial class SettingsWrapper : SexyControlEditBase
     {
-        SexyContent Sexy = new SexyContent(false);
-
         #region Private Properties
         private IEnumerable<ContentGroupItem> _ContentGroupItems;
         private IEnumerable<ContentGroupItem> ContentGroupItems
