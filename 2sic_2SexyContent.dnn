@@ -555,6 +555,162 @@
                     <supportsPopUps>False</supportsPopUps>
                     <viewOrder>0</viewOrder>
                   </moduleControl>
+                  <moduleControl>
+                    <controlKey />
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/View.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle />
+                    <controlType>View</controlType>
+                    <iconFile>icon.png</iconFile>
+                    <helpUrl />
+                    <supportsPopUps>False</supportsPopUps>
+                    <viewOrder>0</viewOrder>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>eavmanagement</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/EAVManagement.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Manage Content Types</controlTitle>
+                    <controlType>Admin</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                    <viewOrder>0</viewOrder>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>editcontentgroup</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/EditContentGroup.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Edit Item</controlTitle>
+                    <controlType>Edit</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>editdatasource</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/EditDataSource.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Edit Datasource</controlTitle>
+                    <controlType>Admin</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>editlist</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/EditList.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Edit List</controlTitle>
+                    <controlType>Edit</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>edittemplate</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/EditTemplate.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Edit Template</controlTitle>
+                    <controlType>Edit</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                    <viewOrder>0</viewOrder>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>edittemplatefile</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/EditTemplateFile.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Edit Template File</controlTitle>
+                    <controlType>Edit</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>export</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/Export.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Export</controlTitle>
+                    <controlType>Admin</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>gettingstarted</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/GettingStarted.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Getting Started</controlTitle>
+                    <controlType>Edit</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>import</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/Import.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Import</controlTitle>
+                    <controlType>Admin</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>managetemplates</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/ManageTemplates.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Manage Templates</controlTitle>
+                    <controlType>Admin</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                    <viewOrder>0</viewOrder>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>portalconfiguration</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/PortalConfiguration.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Portal Configuration</controlTitle>
+                    <controlType>Admin</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>settings</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/Settings.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>2Sexy Content Settings</controlTitle>
+                    <controlType>Edit</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                    <viewOrder>0</viewOrder>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>settingswrapper</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/SettingsWrapper.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>2Sexy Content Settings</controlTitle>
+                    <controlType>Edit</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                    <viewOrder>0</viewOrder>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>appmanagement</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/AppManagement.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>App Management</controlTitle>
+                    <controlType>Admin</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                  </moduleControl>
                 </moduleControls>
               </moduleDefinition>
             </moduleDefinitions>

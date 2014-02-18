@@ -17,6 +17,7 @@ using System.Linq;
 using DotNetNuke.Entities.Modules;
 using ToSic.Eav;
 using ToSic.SexyContent;
+using DotNetNuke.Entities.Modules.Actions;
 
 namespace ToSic.SexyContent
 {
@@ -378,13 +379,13 @@ namespace ToSic.SexyContent
                     {
                         if (Elements.Any() && Elements.First().TemplateID.HasValue)
                         {
-                            Actions.Add(GetNextActionID(), LocalizeString("ActionEdit.Text"), DotNetNuke.Entities.Modules.Actions.ModuleActionType.EditContent, "edititem", "edit.gif", UrlUtils.PopUpUrl(Sexy.GetElementEditLink(Elements.First().GroupID, Elements.First().SortOrder, ModuleId, TabId, ""), this, PortalSettings, false, false), false, DotNetNuke.Security.SecurityAccessLevel.Edit, true, false);
+                            Actions.Add(GetNextActionID(), LocalizeString("ActionEdit.Text"), ModuleActionType.EditContent, "edititem", "edit.gif", UrlUtils.PopUpUrl(Sexy.GetElementEditLink(Elements.First().GroupID, Elements.First().SortOrder, ModuleId, TabId, ""), this, PortalSettings, false, false), false, DotNetNuke.Security.SecurityAccessLevel.Edit, true, false);
                         }
                     }
                     else
                     {
                         // Edit List
-                        Actions.Add(GetNextActionID(), LocalizeString("ActionList.Text"), DotNetNuke.Entities.Modules.Actions.ModuleActionType.ContentOptions, "editlist", "edit.gif", EditUrl(this.TabId, SexyContent.ControlKeys.EditList, false, "mid", this.ModuleId.ToString(), SexyContent.ContentGroupIDString, Elements.First().GroupID.ToString()), false, DotNetNuke.Security.SecurityAccessLevel.Edit, true, false);
+                        Actions.Add(GetNextActionID(), LocalizeString("ActionList.Text"), ModuleActionType.ContentOptions, "editlist", "edit.gif", EditUrl(this.TabId, SexyContent.ControlKeys.EditList, false, "mid", this.ModuleId.ToString(), SexyContent.ContentGroupIDString, Elements.First().GroupID.ToString()), false, DotNetNuke.Security.SecurityAccessLevel.Edit, true, false);
                     }
 
                     if (Elements.Any() && Elements.First().TemplateID.HasValue && Template != null && Template.UseForList)
@@ -396,30 +397,26 @@ namespace ToSic.SexyContent
                     // Settings Button
                     if (Sexy.TemplateContext.GetVisibleTemplates(PortalSettings.PortalId).Any())
                     {
-                        Actions.Add(GetNextActionID(), LocalizeString("ActionChangeLayoutOrContent.Text"), DotNetNuke.Entities.Modules.Actions.ModuleActionType.AddContent, "settings", "action_settings.gif", EditUrl(SexyContent.ControlKeys.SettingsWrapper), false, SecurityAccessLevel.Edit, true, false); }
+                        Actions.Add(GetNextActionID(), LocalizeString("ActionChangeLayoutOrContent.Text"), ModuleActionType.AddContent, "settings", "action_settings.gif", EditUrl(SexyContent.ControlKeys.SettingsWrapper), false, SecurityAccessLevel.Edit, true, false); }
 
                     if (!Sexy.SexyContentDesignersGroupConfigured(PortalId) || Sexy.IsInSexyContentDesignersGroup(UserInfo))
                     {
                         if (Template != null)
                         {
                             // Edit Template Button
-                            Actions.Add(GetNextActionID(), LocalizeString("ActionEditTemplateFile.Text"), DotNetNuke.Entities.Modules.Actions.ModuleActionType.EditContent, "templatehelp", "edit.gif", EditUrl(this.TabId, SexyContent.ControlKeys.EditTemplateFile, false, "mid", this.ModuleId.ToString(), "TemplateID", Template.TemplateID.ToString()), false, DotNetNuke.Security.SecurityAccessLevel.Admin, true, true);
+                            Actions.Add(GetNextActionID(), LocalizeString("ActionEditTemplateFile.Text"), ModuleActionType.EditContent, "templatehelp", "edit.gif", EditUrl(this.TabId, SexyContent.ControlKeys.EditTemplateFile, false, "mid", this.ModuleId.ToString(), "TemplateID", Template.TemplateID.ToString()), false, DotNetNuke.Security.SecurityAccessLevel.Admin, true, true);
                         }
-
-                        // Manage Templates Button
-                        //Actions.Add(GetNextActionID(), LocalizeString("ActionManageTemplates.Text"), "ManageTemplates.Action", "managetemplates", "action_settings.gif", EditUrl(SexyContent.ControlKeys.ManageTemplates), false, DotNetNuke.Security.SecurityAccessLevel.Admin, true, false);
-
-                        // Export Button
-                        // Hide this button temporarily (will be vibsible in a future version)
-                        // Actions.Add(GetNextActionID(), LocalizeString("ActionExport.Text"), DotNetNuke.Entities.Modules.Actions.ModuleActionType.ExportModule, "export", "action_export.gif", EditUrl(SexyContent.ControlKeys.Export), false, DotNetNuke.Security.SecurityAccessLevel.Admin, true, false);
-
-                        // Manage EAV Button
-                        //Actions.Add(GetNextActionID(), LocalizeString("ActionManageContentTypes.Text"), "ManageContentTypes.Action", "eavmanagement", "action_settings.gif", EditUrl("", "", SexyContent.ControlKeys.EavManagement, new string[] { "CultureDimension", Sexy.GetCurrentLanguageID().ToString() }), false, DotNetNuke.Security.SecurityAccessLevel.Admin, true, false);
 
                         // Administrator functions
                         Actions.Add(GetNextActionID(), "Admin", "Admin.Action",
                                     "gettingstarted", "action_settings.gif", EditUrl("", "", "gettingstarted"),
-                                    false, DotNetNuke.Security.SecurityAccessLevel.Admin, true, false);
+                                    false, SecurityAccessLevel.Admin, true, false);
+
+                        // App Management
+                        if(!IsContentApp)
+                            Actions.Add(GetNextActionID(), "App Management", "AppManagement.Action",
+                                    "appmanagement", "action_settings.gif", EditUrl("", "", "appmanagement"),
+                                    false, SecurityAccessLevel.Admin, true, false);
                     }
                 }
                 return _ModuleActions;
