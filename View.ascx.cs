@@ -354,7 +354,7 @@ namespace ToSic.SexyContent
                         new SexyContent(ZoneId, AppId, false).AddContentGroupItem(Elements.First().GroupID, UserId, Elements.First().TemplateID, null, Elements.Where(el => el.ID == int.Parse(hfContentGroupItemID.Value)).Single().SortOrder + 1, true, ContentGroupItemType.Content, false);
                         Response.Redirect(DotNetNuke.Common.Globals.NavigateURL(this.TabId, "", null));
                         break;
-                }  
+                }
 
                 hfContentGroupItemAction.Value = "";
                 hfContentGroupItemID.Value = "";

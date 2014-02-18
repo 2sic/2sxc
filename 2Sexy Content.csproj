@@ -535,6 +535,9 @@
   <ItemGroup>
     <Content Include="Administration\App_LocalResources\PortalConfiguration.ascx.de-DE.resx" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Administration\App_LocalResources\AppManagement.ascx.resx" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

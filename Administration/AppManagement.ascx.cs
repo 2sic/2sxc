@@ -13,5 +13,10 @@ namespace ToSic.SexyContent.Administration
         {
 
         }
+
+        protected void grdApps_NeedDataSource(object sender, EventArgs e)
+        {
+            grdApps.DataSource = Sexy.ContentContext.Apps.Where(p => p.ZoneID == ZoneId);
+        }
     }
 }

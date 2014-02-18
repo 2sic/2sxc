@@ -556,17 +556,6 @@
                     <viewOrder>0</viewOrder>
                   </moduleControl>
                   <moduleControl>
-                    <controlKey />
-                    <controlSrc>DesktopModules/ToSIC_SexyContent/View.ascx</controlSrc>
-                    <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle />
-                    <controlType>View</controlType>
-                    <iconFile>icon.png</iconFile>
-                    <helpUrl />
-                    <supportsPopUps>False</supportsPopUps>
-                    <viewOrder>0</viewOrder>
-                  </moduleControl>
-                  <moduleControl>
                     <controlKey>eavmanagement</controlKey>
                     <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/EAVManagement.ascx</controlSrc>
                     <supportsPartialRendering>False</supportsPartialRendering>
