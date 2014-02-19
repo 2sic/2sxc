@@ -8,7 +8,7 @@
     </h2>
     <fieldset>
         <dnnweb:DnnGrid CssClass="GridApps" ID="grdApps" runat="server" AutoGenerateColumns="false" EnableEmbeddedSkins="True" EnableEmbeddedBaseStylesheet="True" Skin="Default" EnableViewState="true" OnNeedDataSource="grdApps_NeedDataSource">
-            <MasterTableView DataKeyNames="AppID" AllowSorting="True" HeaderStyle-Font-Bold="true">
+            <mastertableview datakeynames="AppID" allowsorting="True" headerstyle-font-bold="true">
                 <Columns>
                     <dnnweb:DnnGridButtonColumn UniqueName="DeleteColumn" ButtonType="ImageButton" ImageUrl="~/Images/Delete.gif" CommandName="delete">
                         <HeaderStyle Width="35px" />
@@ -17,6 +17,9 @@
                         <HeaderStyle Width="35px" />
                     </dnnweb:DnnGridButtonColumn>
                     <dnnweb:DnnGridBoundColumn HeaderText="AppName" DataField="Name"></dnnweb:DnnGridBoundColumn>
+                    <dnnweb:DnnGridBoundColumn HeaderText="Folder" DataField="Name"></dnnweb:DnnGridBoundColumn>
+                    <dnnweb:DnnGridBoundColumn HeaderText="Templates" DataField="Name"></dnnweb:DnnGridBoundColumn>
+
                     <%--<dnnweb:DnnGridTemplateColumn HeaderText="TemplatePath" DataField="TemplatePath">
                         <HeaderStyle Width="160px" />
                         <ItemTemplate>
@@ -38,11 +41,11 @@
                 <NoRecordsTemplate>
                     <asp:Label ID="lblNoRecords" runat="server" resourcekey="lblNoRecords"></asp:Label>
                 </NoRecordsTemplate>
-            </MasterTableView>
-             <ClientSettings>
+            </mastertableview>
+            <clientsettings>
                 <Scrolling AllowScroll="False">
                 </Scrolling>
-            </ClientSettings>
+            </clientsettings>
         </dnnweb:DnnGrid>
         <ul class="dnnActions dnnClear">
             <li><asp:Hyperlink ID="hlkBrowseApps" runat="server" CssClass="dnnPrimaryAction" ResourceKey="hlkBrowseApps"></asp:Hyperlink></li>
