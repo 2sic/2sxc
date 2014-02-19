@@ -46,12 +46,23 @@ namespace ToSic.SexyContent
         {
             get
             {
+                // ToDo: Fix this! (should not return 1, but the correct default-AppId)
+                if (IsContentApp)
+                    return 1;
+
+                // Get AppId from ModuleSettings
                 var appIdString = Settings[SexyContent.AppIDString];
                 int appId;
                 if (appIdString != null && int.TryParse(appIdString.ToString(), out appId))
                     return appId;
+
                 return null;
             }
+        }
+
+        protected bool IsContentApp
+        {
+            get { return ModuleConfiguration.DesktopModule.ModuleName == "2sxc"; }
         }
     }
 }

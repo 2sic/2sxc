@@ -134,7 +134,7 @@ namespace ToSic.SexyContent
             EditItemControl.HideNavigationButtons = true;
             EditItemControl.PreventRedirect = true;
             EditItemControl.AttributeSetId = AttributeSetID;
-            EditItemControl.AssignmentObjectTypeId = Sexy.DefaultAssignmentObjectTypeID;
+            EditItemControl.AssignmentObjectTypeId = Sexy.AssignmentObjectTypeIDDefault;
             EditItemControl.ZoneId = SexyContent.GetZoneID(PortalId);
 	        EditItemControl.AddClientScriptAndCss = false;
 

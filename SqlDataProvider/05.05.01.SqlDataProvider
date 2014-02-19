@@ -1,0 +1,17 @@
+-- make sure sql rolls back automatically in case of error.
+SET XACT_ABORT ON
+
+BEGIN TRANSACTION SexyContentUpdate;
+
+EXEC ToSIC_EAV_ChangeLogAdd 'System'
+
+-- Create new AssignmentObjectTypeId for Apps
+INSERT        
+INTO              ToSIC_EAV_AssignmentObjectTypes(Name, Description)
+VALUES        (N'2SexyContent-App',N'Describes 2SexyContent Apps')
+
+
+
+-- Commit the transaction
+COMMIT TRANSACTION SexyContentUpdate;
+--ROLLBACK TRANSACTION SexyContentUpdate;

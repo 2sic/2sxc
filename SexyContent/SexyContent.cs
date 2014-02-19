@@ -21,6 +21,7 @@ using System.Web.UI.HtmlControls;
 using ToSic.Eav.DataSources;
 using ToSic.SexyContent;
 using FileInfo = System.IO.FileInfo;
+using DotNetNuke.Common;
 
 namespace ToSic.SexyContent
 {
@@ -85,8 +86,9 @@ namespace ToSic.SexyContent
         public const string WebConfigFileName = "web.config";
         public const string SexyContentGroupName = "2SexyContent Designers";
         public const string AttributeSetScope = "2SexyContent";
-        public const string TemplateMetaDataAttributeSetStaticName = "2SexyContent-Template-Metadata";
-        public const string TemplateContentTypesAttributeSetStaticName = "2SexyContent-Template-ContentTypes";
+        public const string AttributeSetStaticNameTemplateMetaData = "2SexyContent-Template-Metadata";
+        public const string AttributeSetStaticNameTemplateContentTypes = "2SexyContent-Template-ContentTypes";
+        public const string AttributeSetStaticNameApps = "2SexyContent-App";
         public const string TemporaryDirectory = "~/DesktopModules/ToSIC_SexyContent/Temporary";
 
         #endregion
@@ -126,7 +128,7 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Returns the Default AssignmentObjectTypeID (no assignment / default)
         /// </summary>
-        public int DefaultAssignmentObjectTypeID
+        public int AssignmentObjectTypeIDDefault
         {
             get
             {
@@ -137,11 +139,22 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Returns the AssignmentObjectTypeID for 2SexyContent Templates
         /// </summary>        
-        public int SexyContentTemplateAssignmentObjectTypeID
+        public int AssignmentObjectTypeIDSexyContentTemplate
         {
             get
             {
                 return DataSource.GetCache(DataSource.DefaultZoneId, DataSource.MetaDataAppId).GetAssignmentObjectTypeId("2SexyContent-Template");
+            }
+        }
+
+        /// <summary>
+        /// Returns the AssignmentObjectTypeID for 2SexyContent Apps
+        /// </summary>        
+        public int AssignmentObjectTypeIDSexyContentApp
+        {
+            get
+            {
+                return DataSource.GetCache(DataSource.DefaultZoneId, DataSource.MetaDataAppId).GetAssignmentObjectTypeId("2SexyContent-App");
             }
         }
 
@@ -358,8 +371,8 @@ namespace ToSic.SexyContent
         public void CreateOrUpdateTemplateDefault(int TemplateID, string ItemType, int? ContentTypeID, int? DemoEntityID)
         {
             //var DefaultAppContext = new SexyContent(true, DataSource.DefaultZoneId);
-            var AttributeSetID = ContentContext.GetAttributeSet(TemplateContentTypesAttributeSetStaticName).AttributeSetID;
-            var Entities = ContentContext.GetEntities(SexyContentTemplateAssignmentObjectTypeID, TemplateID, null, null);
+            var AttributeSetID = ContentContext.GetAttributeSet(AttributeSetStaticNameTemplateContentTypes).AttributeSetID;
+            var Entities = ContentContext.GetEntities(AssignmentObjectTypeIDSexyContentTemplate, TemplateID, null, null);
 
             var Values = new OrderedDictionary()
                                 {
@@ -375,7 +388,7 @@ namespace ToSic.SexyContent
             if (ExistingEntity != null)
                 ContentContext.UpdateEntity(ExistingEntity.EntityID, Values);
             else
-                ContentContext.AddEntity(AttributeSetID, Values, null, TemplateID, SexyContentTemplateAssignmentObjectTypeID, 0);
+                ContentContext.AddEntity(AttributeSetID, Values, null, TemplateID, AssignmentObjectTypeIDSexyContentTemplate, 0);
         }
 
         public TemplateDefault GetTemplateDefault(int TemplateID, ContentGroupItemType ItemType)
@@ -386,7 +399,7 @@ namespace ToSic.SexyContent
         public List<TemplateDefault> GetTemplateDefaults(int TemplateID)
         {
             var Result = new List<TemplateDefault>();
-            var Entities = DataSource.GetMetaDataSource(ContentContext.ZoneId, ContentContext.AppId).GetAssignedEntities(SexyContentTemplateAssignmentObjectTypeID, TemplateID, TemplateContentTypesAttributeSetStaticName);
+            var Entities = DataSource.GetMetaDataSource(ContentContext.ZoneId, ContentContext.AppId).GetAssignedEntities(AssignmentObjectTypeIDSexyContentTemplate, TemplateID, AttributeSetStaticNameTemplateContentTypes);
 
             // Add TemplateDefault configured directly in Template
             var Template = TemplateContext.GetTemplate(TemplateID);
@@ -618,22 +631,24 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Get the URL for editing MetaData
         /// </summary>
-        /// <param name="TabID"></param>
-        /// <param name="ModuleID"></param>
-        /// <param name="ReturnUrl"></param>
-        /// <param name="PortalSettings"></param>
-        /// <param name="Control"></param>
-        /// <param name="AttributeSetStaticName"></param>
-        /// <param name="AssignmentObjectTypeID"></param>
-        /// <param name="KeyNumber"></param>
+        /// <param name="tabId"></param>
+        /// <param name="moduleId"></param>
+        /// <param name="returnUrl"></param>
+        /// <param name="portalSettings"></param>
+        /// <param name="control"></param>
+        /// <param name="attributeSetStaticName"></param>
+        /// <param name="assignmentObjectTypeID"></param>
+        /// <param name="keyNumber"></param>
         /// <returns></returns>
-        public string GetMetaDataEditUrl(int TabID, int ModuleID, string ReturnUrl, PortalSettings PortalSettings, System.Web.UI.Control Control, string AttributeSetStaticName, int AssignmentObjectTypeID, int KeyNumber)
+        public string GetMetaDataEditUrl(int tabId, int moduleId, string returnUrl, Control control, string attributeSetStaticName, int assignmentObjectTypeID, int keyNumber, int appId)
         {
+            var portalSettings = PortalSettings.Current;
+
             //var DefaultAppContext = new SexyContent(true, DataSource.DefaultZoneId);
-            var Set = ContentContext.GetAttributeSet(AttributeSetStaticName);
-            string NewItemUrl = UrlUtils.PopUpUrl(DotNetNuke.Common.Globals.NavigateURL(TabID, ControlKeys.EavManagement, "mid=" + ModuleID.ToString() + "&ManagementMode=NewItem&AttributeSetId=[AttributeSetId]&KeyNumber=[KeyNumber]&AssignmentObjectTypeId=[AssignmentObjectTypeId]&ReturnUrl=[ReturnUrl]"), Control, PortalSettings, false, true);
-            string EditItemUrl = UrlUtils.PopUpUrl(DotNetNuke.Common.Globals.NavigateURL(TabID, ControlKeys.EavManagement, "mid=" + ModuleID.ToString() + "&ManagementMode=EditItem&EntityId=[EntityId]&ReturnUrl=[ReturnUrl]"), Control, PortalSettings, false, true);
-            return ToSic.Eav.ManagementUI.Forms.GetItemFormUrl(KeyNumber, Set.AttributeSetID, AssignmentObjectTypeID, NewItemUrl, EditItemUrl, ReturnUrl);
+            var Set = ContentContext.GetAttributeSet(attributeSetStaticName);
+            string NewItemUrl = UrlUtils.PopUpUrl(Globals.NavigateURL(tabId, ControlKeys.EavManagement, "mid=" + moduleId.ToString() + "&ManagementMode=NewItem&AttributeSetId=[AttributeSetId]&KeyNumber=[KeyNumber]&AssignmentObjectTypeId=[AssignmentObjectTypeId]&ReturnUrl=[ReturnUrl]&" + SexyContent.AppIDString + "=" + appId), control, portalSettings, false, true);
+            string EditItemUrl = UrlUtils.PopUpUrl(Globals.NavigateURL(tabId, ControlKeys.EavManagement, "mid=" + moduleId.ToString() + "&ManagementMode=EditItem&EntityId=[EntityId]&ReturnUrl=[ReturnUrl]&" + SexyContent.AppIDString + "=" + appId), control, portalSettings, false, true);
+            return ToSic.Eav.ManagementUI.Forms.GetItemFormUrl(keyNumber, Set.AttributeSetID, assignmentObjectTypeID, NewItemUrl, EditItemUrl, returnUrl);
         }
 
         /// <summary>
@@ -910,7 +925,7 @@ namespace ToSic.SexyContent
         public void AddDNNVersionToBodyClass(Control Parent)
         {
             // Add DNN Version to body as CSS Class
-            string CssClass = "dnn-" + Assembly.GetAssembly(typeof(DotNetNuke.Common.Globals)).GetName().Version.Major;
+            string CssClass = "dnn-" + System.Reflection.Assembly.GetAssembly(typeof(DotNetNuke.Common.Globals)).GetName().Version.Major;
             HtmlGenericControl body = (HtmlGenericControl)Parent.Page.FindControl("ctl00$body");
             if(body.Attributes["class"] != null)
                 body.Attributes["class"] += CssClass;

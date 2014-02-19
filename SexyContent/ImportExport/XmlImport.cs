@@ -139,7 +139,7 @@ namespace ToSic.SexyContent.ImportExport
             #endregion
 
             var importAttributeSets = GetImportAttributeSets(xmlSource.Element("AttributeSets").Elements("AttributeSet"));
-            var importEntities = GetImportEntities(xmlSource.Elements("Entities").Elements("Entity"), _sexy.DefaultAssignmentObjectTypeID);
+            var importEntities = GetImportEntities(xmlSource.Elements("Entities").Elements("Entity"), _sexy.AssignmentObjectTypeIDDefault);
             
             var import = new ToSic.Eav.Import.Import(SexyContent.GetZoneID(PortalSettings.Current.PortalId), null, PortalSettings.Current.UserInfo.DisplayName);
             import.RunImport(importAttributeSets, importEntities, true, true);
@@ -283,7 +283,7 @@ namespace ToSic.SexyContent.ImportExport
                 _sexy.TemplateContext.AddTemplate(t);
 
                 foreach (XElement xEntity in template.Elements("Entity"))
-                    entities.Add(GetImportEntity(xEntity, _sexy.SexyContentTemplateAssignmentObjectTypeID, t.TemplateID));
+                    entities.Add(GetImportEntity(xEntity, _sexy.AssignmentObjectTypeIDSexyContentTemplate, t.TemplateID));
 
                 ImportLog.Add(new ExportImportMessage("Template '" + t.Name + "' successfully imported.",
                                                      ExportImportMessage.MessageTypes.Information));

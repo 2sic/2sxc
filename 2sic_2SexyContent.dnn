@@ -100,6 +100,11 @@
               <name>05.05.00.SqlDataProvider</name>
               <version>05.05.00</version>
             </script>
+            <script type="Install">
+              <path>SqlDataProvider</path>
+              <name>05.05.01.SqlDataProvider</name>
+              <version>05.05.01</version>
+            </script>
             <script type="UnInstall">
               <path>SqlDataProvider</path>
               <name>Uninstall.SqlDataProvider</name>
@@ -692,9 +697,19 @@
                   </moduleControl>
                   <moduleControl>
                     <controlKey>appmanagement</controlKey>
-                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/AppManagement.ascx</controlSrc>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/Apps/AppManagement.ascx</controlSrc>
                     <supportsPartialRendering>False</supportsPartialRendering>
                     <controlTitle>App Management</controlTitle>
+                    <controlType>Admin</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>neworeditapp</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/Apps/NewOrEditApp.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Edit App</controlTitle>
                     <controlType>Admin</controlType>
                     <iconFile />
                     <helpUrl />

@@ -17,10 +17,19 @@ namespace ToSic.SexyContent.ImportExport
     public class XmlExport
     {
         // initialize data context
-        SexyContent Sexy = new SexyContent(new int(), new int(), true);
+        private SexyContent Sexy;
         private List<int> _referencedFileIds;
+        private int _zoneId;
+        private int _appId;
 
         #region Export
+
+        public XmlExport(int zoneId, int appId)
+        {
+            _zoneId = zoneId;
+            _appId = appId;
+            Sexy = new SexyContent(_zoneId, _appId);
+        }
 
         /// <summary>
         /// Exports given AttributeSets, Entities and Templates to an XML and returns the XML as string.
@@ -127,7 +136,7 @@ namespace ToSic.SexyContent.ImportExport
                     new XAttribute("IsHidden", t.IsHidden.ToString()),
                     new XAttribute("UseForList", t.UseForList.ToString()),
                     new XAttribute("DemoEntityGUID", DemoEntity != null ? DemoEntity.EntityGUID.ToString() : ""),
-                    (from c in Sexy.ContentContext.GetEntities(Sexy.SexyContentTemplateAssignmentObjectTypeID, t.TemplateID, null, null)
+                    (from c in Sexy.ContentContext.GetEntities(Sexy.AssignmentObjectTypeIDSexyContentTemplate, t.TemplateID, null, null)
                      select GetEntityXElement(c))
                 );
 

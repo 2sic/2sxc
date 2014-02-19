@@ -30,11 +30,16 @@ namespace ToSic.SexyContent.Administration
 
             Registers.Add(SexyContent.ControlKeys.PortalConfiguration);
 
+            if(String.IsNullOrEmpty(Request.QueryString[SexyContent.AppIDString]))
+            {
+                throw new ArgumentNullException(SexyContent.AppIDString, "AppId cannot be blank.");
+            }
+
             rptRegisters.DataSource = from c in Registers
                                       select new {
                                         Name = DotNetNuke.Services.Localization.Localization.GetString(c + ".Text",  ResourceFile),
                                         Key = c,
-                                        Url =  ParentModule.EditUrl(ParentModule.TabId, c, true, "mid=" + ParentModule.ModuleId),
+                                        Url =  ParentModule.EditUrl(ParentModule.TabId, c, true, "mid=" + ParentModule.ModuleId + "&" + SexyContent.AppIDString + "=" + Request.QueryString[SexyContent.AppIDString]),
                                         Active = Request.QueryString["ctl"].ToLower() == c.ToLower()
                                       };
             rptRegisters.DataBind();

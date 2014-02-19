@@ -109,11 +109,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Administration\AppManagement.ascx.cs">
+    <Compile Include="Administration\Apps\AppManagement.ascx.cs">
       <DependentUpon>AppManagement.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Administration\AppManagement.ascx.designer.cs">
+    <Compile Include="Administration\Apps\AppManagement.ascx.designer.cs">
       <DependentUpon>AppManagement.ascx</DependentUpon>
     </Compile>
     <Compile Include="Administration\GettingStarted.ascx.cs">
@@ -331,7 +331,7 @@
     <Compile Include="SexyContent\Engines\TokenEngine\TokenReplace.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Administration\AppManagement.ascx" />
+    <Content Include="Administration\Apps\AppManagement.ascx" />
     <Content Include="Administration\GettingStarted.ascx" />
     <Content Include="Administration\PortalConfiguration.ascx" />
     <Content Include="Administration\ContentTypeAndDemoSelector.ascx" />
@@ -440,6 +440,7 @@
     <Content Include="SqlDataProvider\05.03.04.SqlDataProvider" />
     <Content Include="SqlDataProvider\05.03.05.SqlDataProvider" />
     <Content Include="SqlDataProvider\05.05.00.SqlDataProvider" />
+    <Content Include="SqlDataProvider\05.05.01.SqlDataProvider" />
     <None Include="SqlDataProvider\Uninstall.SqlDataProvider" />
     <Content Include="web.config" />
   </ItemGroup>
@@ -536,7 +537,7 @@
     <Content Include="Administration\App_LocalResources\PortalConfiguration.ascx.de-DE.resx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Administration\App_LocalResources\AppManagement.ascx.resx" />
+    <Content Include="Administration\Apps\App_LocalResources\AppManagement.ascx.resx" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

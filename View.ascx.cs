@@ -24,11 +24,6 @@ namespace ToSic.SexyContent
     public partial class View : SexyControlEditBase, IActionable
     {
 
-        protected bool IsContentApp
-        {
-            get { return ModuleConfiguration.DesktopModule.ModuleName == "2sxc"; }
-        }
-
         /// <summary>
         /// Holds the List of Elements for the current module.
         /// </summary>
@@ -273,6 +268,7 @@ namespace ToSic.SexyContent
 
             ddlContentType.Visible = IsContentApp;
             ddlApp.Visible = !IsContentApp;
+            ddlTemplate.Enabled = IsContentApp || AppId.HasValue;
         }
 
         protected void BindTemplateDropDown()
@@ -409,7 +405,7 @@ namespace ToSic.SexyContent
 
                         // Administrator functions
                         Actions.Add(GetNextActionID(), "Admin", "Admin.Action",
-                                    "gettingstarted", "action_settings.gif", EditUrl("", "", "gettingstarted"),
+                                    "gettingstarted", "action_settings.gif", EditUrl("", "", "gettingstarted", SexyContent.AppIDString + "=" + AppId),
                                     false, SecurityAccessLevel.Admin, true, false);
 
                         // App Management

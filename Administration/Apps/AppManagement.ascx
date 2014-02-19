@@ -16,7 +16,11 @@
                     <dnnweb:DnnGridButtonColumn ButtonType="ImageButton" ImageUrl="~/Images/Edit.gif" CommandName="edit">
                         <HeaderStyle Width="35px" />
                     </dnnweb:DnnGridButtonColumn>
-                    <dnnweb:DnnGridBoundColumn HeaderText="AppName" DataField="Name"></dnnweb:DnnGridBoundColumn>
+                    <dnnweb:DnnGridTemplateColumn HeaderText="ContentType" DataField="AttributeSetName">
+                        <ItemTemplate>
+                            <a href="<%# Sexy.GetMetaDataEditUrl(TabId, ModuleId, Request.RawUrl, this, ToSic.SexyContent.SexyContent.AttributeSetStaticNameApps, Sexy.AssignmentObjectTypeIDSexyContentApp, (int)Eval("AppID"), (int)Eval("AppID")) %>"><%# HttpUtility.HtmlEncode(Eval("Name")) %></a>
+                        </ItemTemplate>
+                    </dnnweb:DnnGridTemplateColumn>
                     <dnnweb:DnnGridBoundColumn HeaderText="Folder" DataField="Name"></dnnweb:DnnGridBoundColumn>
                     <dnnweb:DnnGridBoundColumn HeaderText="Templates" DataField="Name"></dnnweb:DnnGridBoundColumn>
 

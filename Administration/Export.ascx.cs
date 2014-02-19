@@ -63,7 +63,7 @@ namespace ToSic.SexyContent
             string[] TemplateIDs = GetTelerikGridSelections(grdTemplates);
 
             List<ExportImportMessage> Messages = new List<ExportImportMessage>();
-            string Xml = new XmlExport().ExportXml(ContentTypeIDs, EntityIDs, TemplateIDs, out Messages);
+            string Xml = new XmlExport(ZoneId.Value, AppId.Value).ExportXml(ContentTypeIDs, EntityIDs, TemplateIDs, out Messages);
             Response.Clear();
             Response.Write(Xml);
             Response.AddHeader("Content-Disposition", string.Format("attachment; filename={0}", "SexyContent-Export.xml"));

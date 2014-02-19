@@ -16,6 +16,10 @@ namespace ToSic.SexyContent
         {
             get
             {
+                // ToDo: Fix this! (should not return 1, but the correct default-AppId)
+                if (IsContentApp)
+                    return 1;
+
                 var appIdString = Request.QueryString[SexyContent.AppIDString];
                 int appId;
                 if (appIdString != null && int.TryParse(appIdString.ToString(), out appId))
