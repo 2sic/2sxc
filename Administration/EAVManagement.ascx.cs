@@ -41,7 +41,7 @@ namespace ToSic.SexyContent
                              : Sexy.GetDefaultAppID());
 
             var eavManagement = (ToSic.Eav.ManagementUI.EavManagement)Page.LoadControl(TemplateControl.TemplateSourceDirectory + "/../SexyContent/EAV/Controls/EAVManagement.ascx");
-            eavManagement.BaseUrl = DotNetNuke.Common.Globals.NavigateURL(TabId, SexyContent.ControlKeys.EavManagement, "mid", ModuleId.ToString()) + "?popUp=true&" + "AppID=" + appId.ToString();
+            eavManagement.BaseUrl = DotNetNuke.Common.Globals.NavigateURL(TabId, SexyContent.ControlKeys.EavManagement, "mid=" + ModuleId.ToString()) + "&popUp=true&" + "AppID=" + appId.ToString();
             eavManagement.Scope = SexyContent.AttributeSetScope;
             eavManagement.AssignmentObjectTypeId = Sexy.DefaultAssignmentObjectTypeID;
             eavManagement.DefaultCultureDimension = Sexy.ContentContext.GetLanguageId(PortalSettings.DefaultLanguage);
