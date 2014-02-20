@@ -113,9 +113,7 @@ namespace ToSic.SexyContent
             {
                 // Show Change Content or Reference Link only if this is the default language
                 var IsDefaultLanguage = LanguageID == DefaultLanguageID;
-                // hlkChangeContent.Visible = IsDefaultLanguage && (Item.ItemType == ContentGroupItemType.Content || Item.ItemType == ContentGroupItemType.ListContent); - moved to EditContentGroup
                 btnReference.Visible = IsDefaultLanguage && (Item.ItemType != ContentGroupItemType.Content && ItemType != ContentGroupItemType.ListContent);
-
                 lblNewOrEditItemHeading.Attributes.Add("title", Item.EntityID.HasValue ? Item.EntityID.Value.ToString() : "");
             }
 
