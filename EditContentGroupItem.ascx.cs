@@ -111,9 +111,6 @@ namespace ToSic.SexyContent
 
             if (Item != null)
             {
-                // Settings link (to change content) - moved to EditContentGroup
-                //hlkChangeContent.NavigateUrl = Sexy.GetElementSettingsLink(ContentGroupItemID.Value, ModuleID, TabID, Request.RawUrl);
-
                 // Show Change Content or Reference Link only if this is the default language
                 var IsDefaultLanguage = LanguageID == DefaultLanguageID;
                 // hlkChangeContent.Visible = IsDefaultLanguage && (Item.ItemType == ContentGroupItemType.Content || Item.ItemType == ContentGroupItemType.ListContent); - moved to EditContentGroup

@@ -115,9 +115,6 @@ namespace ToSic.SexyContent
         protected void Page_Load(object sender, EventArgs e)
         {
 
-            // Register Stylesheet
-            //litAssetsInclude.Text = "<link rel='stylesheet' href='" + ResolveClientUrl("Styles/Edit.css") + "'/>";
-
             // Add DNN Version to body Class
             Sexy.AddDNNVersionToBodyClass(this);
 
