@@ -20,7 +20,23 @@ ToSexyContent.Services.Ajax = function (methodName, opts) {
 Eav.InitializeFormsReadyList.push(function () {	// init application Path
 	ToSexyContent.ApplicationPath = $(".eav-form")[0].Controller.ApplicationPath;
 	if (ToSexyContent.ApplicationPath[ToSexyContent.ApplicationPath.length - 1] != "/")	// ensure trailing slash
-		ToSexyContent.ApplicationPath += "/";
+	    ToSexyContent.ApplicationPath += "/";
+
+    // Prefill values based on QueryString parameter
+	var match = RegExp('[?&]' + "prefill" + '=([^&]*)').exec(window.location.search);
+	var prefillString = match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+	
+	if (prefillString)
+	{
+	    var prefill = $.parseJSON(prefillString);
+	    for (prefillKey in prefill) {
+	        var fieldController = $(".eav-field[data-staticname='" + prefillKey + "']")[0].Controller;
+            if(fieldController && fieldController.SetFieldValue)
+	            fieldController.SetFieldValue(prefill[prefillKey]);
+	    }
+	}
+    
+
 });
 
 ToSexyContent.ItemForm = {
