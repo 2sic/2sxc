@@ -26,6 +26,7 @@
                     </dnnweb:DnnGridTemplateColumn>
                     <dnnweb:DnnGridBoundColumn HeaderText="ID" DataField="EntityID" HeaderStyle-Width="100px" ItemStyle-Width="100px"></dnnweb:DnnGridBoundColumn>
                     <dnnweb:DnnGridButtonColumn UniqueName="AddColumn" ButtonType="ImageButton" ImageUrl="~/Images/Add.gif" CommandName="add" HeaderStyle-Width="25px" ItemStyle-Width="25px"></dnnweb:DnnGridButtonColumn>
+                    <dnnweb:DnnGridButtonColumn UniqueName="AddWithEditColumn" ButtonType="ImageButton" ImageUrl="~/Images/Add.gif" CommandName="addwithedit" HeaderStyle-Width="25px" ItemStyle-Width="25px"></dnnweb:DnnGridButtonColumn>
                 </Columns>
                 <NoRecordsTemplate>
                     <asp:Label ID="lblNoRecords" runat="server" resourcekey="lblNoRecords"></asp:Label>

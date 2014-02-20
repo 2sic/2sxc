@@ -84,7 +84,6 @@ namespace ToSic.SexyContent
             }
         }
 
-
         #endregion
 
         private SexyContent Sexy = new SexyContent(false);
@@ -170,7 +169,7 @@ namespace ToSic.SexyContent
             if (Item != null)
                 NewItem = SexyContext.TemplateContext.GetContentGroupItem(Item.ContentGroupItemID);
             else
-                NewItem = SexyContext.AddContentGroupItem(ContentGroupID, UserId, TemplateID, Entity.EntityID, SortOrder, true, ItemType, true);
+                NewItem = SexyContext.AddContentGroupItem(ContentGroupID, UserId, TemplateID, Entity.EntityID, SortOrder, true, ItemType, ItemType != ContentGroupItemType.Content);
 
             NewItem.EntityID = Entity.EntityID;
             NewItem.SysModified = DateTime.Now;

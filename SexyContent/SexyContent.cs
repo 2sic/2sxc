@@ -21,6 +21,7 @@ using System.Web.UI.HtmlControls;
 using ToSic.Eav.DataSources;
 using ToSic.SexyContent;
 using FileInfo = System.IO.FileInfo;
+using DotNetNuke.Common;
 
 namespace ToSic.SexyContent
 {
@@ -596,17 +597,24 @@ namespace ToSic.SexyContent
         /// <returns></returns>
         public string GetElementToolbar(int ContentGroupID, int SortOrder, int ContentGroupItemID, int ModuleId, string LocalResourcesPath, bool ListEnabled, Control ParentControl, string ReturnUrl)
         {
-            string EditLink = GetElementEditLink(ContentGroupID, SortOrder, ModuleId, PortalSettings.Current.ActiveTab.TabID, ReturnUrl);
+            string editLink = GetElementEditLink(ContentGroupID, SortOrder, ModuleId, PortalSettings.Current.ActiveTab.TabID, ReturnUrl);
             if (PortalSettings.Current.EnablePopUps)
-                EditLink = HttpUtility.UrlDecode(UrlUtils.PopUpUrl(EditLink, ParentControl, PortalSettings.Current, false, false));
+                editLink = HttpUtility.UrlDecode(UrlUtils.PopUpUrl(editLink, ParentControl, PortalSettings.Current, false, false));
+
+            string addLink = GetElementAddWithEditLink(ContentGroupID, SortOrder + 1, ModuleId, PortalSettings.Current.ActiveTab.TabID, ReturnUrl);
+            if (PortalSettings.Current.EnablePopUps)
+                addLink = HttpUtility.UrlDecode(UrlUtils.PopUpUrl(addLink, ParentControl, PortalSettings.Current, false, false));
 
             string Toolbar = "<ul class=\"sc-menu\">";
             
 
-            Toolbar += "<li><a class=\"sc-menu-edit\" href=\"" + EditLink + "\"><img src=\"" + ParentControl.ResolveClientUrl("~/DesktopModules/ToSIC_SexyContent/Images/Edit.png") + "\" /></a></li>";
+            Toolbar += "<li><a class=\"sc-menu-edit\" href=\"" + editLink + "\"><img src=\"" + ParentControl.ResolveClientUrl("~/DesktopModules/ToSIC_SexyContent/Images/Edit.png") + "\" /></a></li>";
 
             if (ListEnabled && SortOrder != -1)
+            {
                 Toolbar += "<li><a class=\"sc-menu-add\" href=\"javascript:void(0);\" onclick='AddContentGroupItem(this, \"" + ContentGroupItemID.ToString() + "\");'><img src=\"" + ParentControl.ResolveClientUrl("~/DesktopModules/ToSIC_SexyContent/Images/Add.png") + "\" /></a></li>";
+                Toolbar += "<li><a class=\"sc-menu-addwithedit\" href=\"" + addLink + "\"><img src=\"" + ParentControl.ResolveClientUrl("~/DesktopModules/ToSIC_SexyContent/Images/Add.png") + "\" /></a></li>";
+            }
 
             Toolbar += "</ul>";
             return Toolbar;
@@ -644,7 +652,7 @@ namespace ToSic.SexyContent
         /// <returns></returns>
         public string GetElementEditLink(int ContentGroupID, int SortOrder, int ModuleID, int TabID, string ReturnUrl)
         {
-            string EditUrl = DotNetNuke.Common.Globals.NavigateURL(TabID, ControlKeys.EditContentGroup, "mid", ModuleID.ToString(), SortOrderString, SortOrder.ToString(), ContentGroupIDString, ContentGroupID.ToString());
+            string EditUrl = Globals.NavigateURL(TabID, ControlKeys.EditContentGroup, "mid", ModuleID.ToString(), SortOrderString, SortOrder.ToString(), ContentGroupIDString, ContentGroupID.ToString());
             EditUrl += (EditUrl.IndexOf("?") == -1 ? "?" : "&") + "popUp=true&ReturnUrl=" + HttpUtility.UrlEncode(ReturnUrl);
 
             // If Culture exists, add CultureDimension
@@ -653,6 +661,11 @@ namespace ToSic.SexyContent
                 EditUrl += "&CultureDimension=" + LanguageID;
 
             return EditUrl;
+        }
+
+        public string GetElementAddWithEditLink(int ContentGroupID, int DestinationSortOrder, int ModuleID, int TabID, string ReturnUrl)
+        {
+            return GetElementEditLink(ContentGroupID, DestinationSortOrder, ModuleID, TabID, ReturnUrl) + "&EditMode=New";
         }
 
         public string GetElementSettingsLink(int ContentGroupItemID, int ModuleID, int TabID, string ReturnUrl)
@@ -921,7 +934,7 @@ namespace ToSic.SexyContent
         public void AddDNNVersionToBodyClass(Control Parent)
         {
             // Add DNN Version to body as CSS Class
-            string CssClass = "dnn-" + Assembly.GetAssembly(typeof(DotNetNuke.Common.Globals)).GetName().Version.Major;
+            string CssClass = "dnn-" + System.Reflection.Assembly.GetAssembly(typeof(DotNetNuke.Common.Globals)).GetName().Version.Major;
             HtmlGenericControl body = (HtmlGenericControl)Parent.Page.FindControl("ctl00$body");
             if(body.Attributes["class"] != null)
                 body.Attributes["class"] += CssClass;

@@ -353,7 +353,7 @@ namespace ToSic.SexyContent
                 {
                     case "add":
                         new SexyContent(false).AddContentGroupItem(Elements.First().GroupID, UserId, Elements.First().TemplateID, null, Elements.Where(el => el.ID == int.Parse(hfContentGroupItemID.Value)).Single().SortOrder + 1, true, ContentGroupItemType.Content, false);
-                        Response.Redirect(DotNetNuke.Common.Globals.NavigateURL(this.TabId, "", null));
+                        Response.Redirect(Request.RawUrl);
                         break;
                 }  
 

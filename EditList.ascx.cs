@@ -71,6 +71,9 @@ namespace ToSic.SexyContent
                     grdEntities.Rebind();
                     grdEntities.Items[Element.SortOrder].Selected = true;
                     break;
+                case "addwithedit":
+                    Response.Redirect(Sexy.GetElementAddWithEditLink(ContentGroupID, Element.SortOrder + 1, ModuleId, TabId, Request.RawUrl));
+                    break;
             }
         }
 

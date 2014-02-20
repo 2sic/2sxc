@@ -93,7 +93,26 @@ namespace ToSic.SexyContent
 
         private List<ContentGroupItem> CurrentlyEditedItems
         {
-            get { return Items.Where(p => p.SortOrder == SortOrder).ToList(); }
+            get {
+                if (NewMode)
+                    return new List<ContentGroupItem>() { new ContentGroupItem()
+                    {
+                        SortOrder = SortOrder,
+                        ContentGroupID = ContentGroupID,
+                        Type = ContentGroupItemType.Content.ToString("F"),
+                        
+                    }};
+                else
+                return Items.Where(p => p.SortOrder == SortOrder).ToList();
+            }
+        }
+
+        /// <summary>
+        /// Returns true if a new ContentGroupItem should be created at the specified location
+        /// </summary>
+        private bool NewMode
+        {
+            get { return Request.QueryString["EditMode"] == "New"; }
         }
 
         #endregion
@@ -149,6 +168,8 @@ namespace ToSic.SexyContent
                 if (UserInfo.IsInRole(PortalSettings.AdministratorRoleName))
                     btnActivateLanguage.Visible = true;
             }
+
+            btnDelete.Visible = !NewMode;
         }
 
         protected void ProcessView()
@@ -173,11 +194,11 @@ namespace ToSic.SexyContent
                     if (TemplateDefault.ContentTypeID.HasValue && TemplateDefault.ContentTypeID.Value > 0)
                     {
                         ContentGroupItem ContentGroupItem = null;
-                        if (CurrentlyEditedItems.Any())
+                        if (CurrentlyEditedItems.Any() && CurrentlyEditedItems.First().ContentGroupItemID != 0)
                             ContentGroupItem = CurrentlyEditedItems.FirstOrDefault(p => p.ItemType == TemplateDefault.ItemType);
 
                         EditContentGroupItem EditControl = (EditContentGroupItem)LoadControl(System.IO.Path.Combine(TemplateSourceDirectory, "EditContentGroupItem.ascx"));
-                        EditControl.ContentGroupItemID = ContentGroupItem != null ? ContentGroupItem.ContentGroupItemID : new int?();
+                        EditControl.ContentGroupItemID = ContentGroupItem != null && ContentGroupItem.ContentGroupID != 0 ? ContentGroupItem.ContentGroupItemID : new int?();
                         EditControl.ContentGroupID = ContentGroupID;
                         EditControl.ItemType = TemplateDefault.ItemType;
                         EditControl.TemplateID = Items.First().TemplateID.Value;
