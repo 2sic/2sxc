@@ -209,8 +209,6 @@ namespace ToSic.SexyContent
             // If this is the list title, or no list-title exists, set module title
             if (GroupItem.ItemType == ContentGroupItemType.ListContent || (ListContentGroupItem == null && GroupItem.ItemType == ContentGroupItemType.Content && GroupItem.SortOrder == 0))
             {
-                //var CultureDimensionID = int.Parse(Request.QueryString["CultureDimension"]);
-                //var LanguageCode = Sexy.ContentContext.GetLanguageExternalKey(CultureDimensionID);
                 var Languages = Sexy.ContentContext.GetLanguages();
 
                 // Update Original Module if no languages active
