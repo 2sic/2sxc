@@ -78,9 +78,9 @@ namespace ToSic.SexyContent
         /// </summary>
         private void BindGrdTemplates()
         {
-            var AttributeSetList = (from a in Sexy.ContentContext.GetAllAttributeSets() select a).ToList();
+            var AttributeSetList = Sexy.GetAvailableAttributeSets().ToList();
             var TemplateList = Sexy.TemplateContext.GetTemplates(PortalId).ToList();
-            var Templates = from c in TemplateList
+            var Templates = from c in  TemplateList
                             join a in AttributeSetList on c.AttributeSetID equals a.AttributeSetID into JoinedList
                             from a in JoinedList.DefaultIfEmpty()
                             select new

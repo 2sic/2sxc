@@ -7,22 +7,42 @@
         <asp:Label runat="server" ResourceKey="lblManageAppsHeading"></asp:Label>
     </h2>
     <fieldset>
-        <dnnweb:DnnGrid CssClass="GridApps" ID="grdApps" runat="server" AutoGenerateColumns="false" EnableEmbeddedSkins="True" EnableEmbeddedBaseStylesheet="True" Skin="Default" EnableViewState="true" OnNeedDataSource="grdApps_NeedDataSource">
+        <dnnweb:DnnGrid CssClass="GridApps" ID="grdApps" runat="server" AutoGenerateColumns="false" EnableEmbeddedSkins="True" EnableEmbeddedBaseStylesheet="True" Skin="Default" EnableViewState="true" OnNeedDataSource="grdApps_NeedDataSource" OnItemDataBound="grdApps_ItemDataBound">
             <mastertableview datakeynames="AppID" allowsorting="True" headerstyle-font-bold="true">
                 <Columns>
                     <dnnweb:DnnGridButtonColumn UniqueName="DeleteColumn" ButtonType="ImageButton" ImageUrl="~/Images/Delete.gif" CommandName="delete">
                         <HeaderStyle Width="35px" />
                     </dnnweb:DnnGridButtonColumn>
-                    <dnnweb:DnnGridButtonColumn ButtonType="ImageButton" ImageUrl="~/Images/Edit.gif" CommandName="edit">
-                        <HeaderStyle Width="35px" />
-                    </dnnweb:DnnGridButtonColumn>
-                    <dnnweb:DnnGridTemplateColumn HeaderText="ContentType" DataField="AttributeSetName">
+                    <dnnweb:DnnGridTemplateColumn HeaderText="ContentType" DataField="Name">
                         <ItemTemplate>
-                            <a href="<%# Sexy.GetMetaDataEditUrl(TabId, ModuleId, Request.RawUrl, this, ToSic.SexyContent.SexyContent.AttributeSetStaticNameApps, Sexy.AssignmentObjectTypeIDSexyContentApp, (int)Eval("AppID"), (int)Eval("AppID")) %>"><%# HttpUtility.HtmlEncode(Eval("Name")) %></a>
+                            <div style='<%# (Eval("Name") != "Content") ? "display:block;" : "display:none;" %>'>
+                                <a href="<%# Sexy.GetMetaDataEditUrl(TabId, ModuleId, Request.RawUrl, this, ToSic.SexyContent.SexyContent.AttributeSetStaticNameApps, Sexy.AssignmentObjectTypeIDSexyContentApp, (int)Eval("AppID"), (int)Eval("AppID")) %>">
+                                    <%# HttpUtility.HtmlEncode(Eval("Name")) %>
+                                </a>
+                            </div>
+                            <div style='<%# (Eval("Name") == "Content") ? "display:block;" : "display:none;" %>'>
+                                Content
+                            </div>
                         </ItemTemplate>
                     </dnnweb:DnnGridTemplateColumn>
-                    <dnnweb:DnnGridBoundColumn HeaderText="Folder" DataField="Name"></dnnweb:DnnGridBoundColumn>
-                    <dnnweb:DnnGridBoundColumn HeaderText="Templates" DataField="Name"></dnnweb:DnnGridBoundColumn>
+                    <dnnweb:DnnGridBoundColumn HeaderText="Folder" DataField="Folder"></dnnweb:DnnGridBoundColumn>
+                    <dnnweb:DnnGridTemplateColumn HeaderText="TokenTemplates">
+                        <ItemTemplate>
+                            <%# ((dynamic)Eval("Configuration")) == null ? "-" : ((dynamic)Eval("Configuration")).AllowTokenTemplates.ToString() %>
+                        </ItemTemplate>
+                    </dnnweb:DnnGridTemplateColumn>
+                    <dnnweb:DnnGridTemplateColumn HeaderText="RazorTemplates">
+                        <ItemTemplate>
+                            <%# ((dynamic)Eval("Configuration")) == null ? "-" : ((dynamic)Eval("Configuration")).AllowRazorTemplates.ToString() %>
+                        </ItemTemplate>
+                    </dnnweb:DnnGridTemplateColumn>
+
+
+                    <dnnweb:DnnGridTemplateColumn HeaderText="ManageApp">
+                        <ItemTemplate>
+                            <a href="<%# EditUrl("", "", "eavmanagement", ToSic.SexyContent.SexyContent.AppIDString + "=" + Eval("AppID")) %>">Manage</a>
+                        </ItemTemplate>
+                    </dnnweb:DnnGridTemplateColumn>
 
                     <%--<dnnweb:DnnGridTemplateColumn HeaderText="TemplatePath" DataField="TemplatePath">
                         <HeaderStyle Width="160px" />
@@ -54,7 +74,23 @@
         <ul class="dnnActions dnnClear">
             <li><asp:Hyperlink ID="hlkBrowseApps" runat="server" CssClass="dnnPrimaryAction" ResourceKey="hlkBrowseApps"></asp:Hyperlink></li>
             <li><asp:Hyperlink ID="hlkImportApp" runat="server" CssClass="dnnSecondaryAction" ResourceKey="hlkImportApp"></asp:Hyperlink></li>
-            <li><asp:Hyperlink ID="hlkCreateApp" runat="server" CssClass="dnnSecondaryAction" ResourceKey="hlkCreateApp"></asp:Hyperlink></li>
+            <li><asp:LinkButton ID="btnCreateApp" runat="server" CssClass="dnnSecondaryAction sc-create-app" ResourceKey="btnCreateApp" OnClientClick="return CreateApp()" OnClick="btnCreateApp_Click"></asp:LinkButton></li>
         </ul>
+        
     </fieldset>
 </div>
+
+<asp:HiddenField runat="server" ID="hfNewAppName" />
+
+<script type="text/javascript">
+    function CreateApp() {
+        var newName = "";
+        do {
+            newName = prompt("Enter a name for the new App", '');
+            if (newName == null || newName == false)
+                return false;
+        } while(newName == "")
+        $("#<%= hfNewAppName.ClientID %>").val(newName);
+        return true;
+    }
+</script>

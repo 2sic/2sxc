@@ -15,10 +15,27 @@ namespace ToSic.SexyContent
             Name = "Content";
         }
 
+        public int AppId { get; internal set; }
         public string Name { get; internal set; }
-        public string Path { get; internal set; }
-        public string PhysicalPath { get; internal set; }
-        // public dynamic Settings { get; internal set; }
-        // public dynamic Resources { get; internal set; }
+        public string Folder { get; internal set; }
+        public bool Hidden { get; internal set; }
+        public dynamic Configuration { get; internal set; }
+        public dynamic Settings { get; internal set; }
+        public dynamic Resources { get; internal set; }
+
+        public string Path
+        {
+            get
+            {
+                return VirtualPathUtility.ToAbsolute(SexyContent.GetTemplatePathRoot(this.Location))
+            }
+        }
+        public string PhysicalPath
+        {
+            get
+            {
+                return HttpContext.Current.Server.MapPath(SexyContent.GetTemplatePathRoot(this.Location))
+            }
+        }
     }
 }

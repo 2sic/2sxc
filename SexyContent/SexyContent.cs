@@ -645,7 +645,7 @@ namespace ToSic.SexyContent
             var portalSettings = PortalSettings.Current;
 
             //var DefaultAppContext = new SexyContent(true, DataSource.DefaultZoneId);
-            var Set = ContentContext.GetAttributeSet(attributeSetStaticName);
+            var Set = new SexyContent(this.ContentContext.ZoneId, appId).ContentContext.GetAttributeSet(attributeSetStaticName);
             string NewItemUrl = UrlUtils.PopUpUrl(Globals.NavigateURL(tabId, ControlKeys.EavManagement, "mid=" + moduleId.ToString() + "&ManagementMode=NewItem&AttributeSetId=[AttributeSetId]&KeyNumber=[KeyNumber]&AssignmentObjectTypeId=[AssignmentObjectTypeId]&ReturnUrl=[ReturnUrl]&" + SexyContent.AppIDString + "=" + appId), control, portalSettings, false, true);
             string EditItemUrl = UrlUtils.PopUpUrl(Globals.NavigateURL(tabId, ControlKeys.EavManagement, "mid=" + moduleId.ToString() + "&ManagementMode=EditItem&EntityId=[EntityId]&ReturnUrl=[ReturnUrl]&" + SexyContent.AppIDString + "=" + appId), control, portalSettings, false, true);
             return ToSic.Eav.ManagementUI.Forms.GetItemFormUrl(keyNumber, Set.AttributeSetID, assignmentObjectTypeID, NewItemUrl, EditItemUrl, returnUrl);
@@ -690,6 +690,67 @@ namespace ToSic.SexyContent
         }
 
         #endregion
+
+        #region
+
+        public List<App> GetApps()
+        {
+            var eavApps = ContentContext.GetApps();
+            var sexyApps = new List<App>();
+            
+            foreach(var eavApp in eavApps)
+            {
+                // Get app-describing entity
+                var appMetaData = DataSource.GetMetaDataSource(ContentContext.ZoneId, eavApp.AppID).GetAssignedEntities(AssignmentObjectTypeIDSexyContentApp, eavApp.AppID, AttributeSetStaticNameApps).SingleOrDefault();
+                App sexyApp;
+                if (appMetaData != null)
+                {
+                    dynamic appMetaDataDynamic = new DynamicEntity(appMetaData, new[] { System.Threading.Thread.CurrentThread.CurrentCulture.Name });
+
+                    sexyApp = new App()
+                    {
+                        AppId = eavApp.AppID,
+                        Name = appMetaDataDynamic.DisplayName,
+                        Folder = appMetaDataDynamic.Folder,
+                        Configuration = appMetaDataDynamic
+                    };
+                }
+                // Handle default app
+                else if(eavApp.Name == EavContext.DefaultAppName)
+                {
+                    sexyApp = new App()
+                    {
+                        AppId = eavApp.AppID,
+                        Name = "Content",
+                        Folder = "Content",
+                        Configuration = null
+                    };
+                }
+                else
+                    throw new Exception("App must be the default app (Content) or have a description-entity.");
+
+                sexyApps.Add(sexyApp);
+            }
+
+            return sexyApps;
+        }
+
+        public void AddApp(string appName)
+        {
+            // Adding app to EAV
+            var app = ContentContext.AddApp(appName);
+
+            // Add app-describing entity
+            var appContext = new SexyContent(ContentContext.ZoneId, app.AppID);
+            var appAttributeSet = appContext.ContentContext.GetAttributeSet(AttributeSetStaticNameApps).AttributeSetID;
+            var Values = new OrderedDictionary() {
+                { "DisplayName", appName },
+                { "Folder", "" }
+            };
+            ContentContext.AddEntity(appAttributeSet, Values, null, app.AppID, AssignmentObjectTypeIDSexyContentApp);
+        }
+
+        #endregion Apps
 
         #region ContentGroupItem Management
 

@@ -40,12 +40,21 @@ namespace ToSic.SexyContent.Administration {
         protected global::System.Web.UI.WebControls.HyperLink hlkImportApp;
         
         /// <summary>
-        /// hlkCreateApp control.
+        /// btnCreateApp control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HyperLink hlkCreateApp;
+        protected global::System.Web.UI.WebControls.LinkButton btnCreateApp;
+        
+        /// <summary>
+        /// hfNewAppName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hfNewAppName;
     }
 }
