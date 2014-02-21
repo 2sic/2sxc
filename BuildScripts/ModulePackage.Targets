@@ -26,6 +26,7 @@
       <DefaultExclude Include="**\*.zip" />
       <DefaultExclude Include="Js\EditDataSource\**" />
       <DefaultExclude Include="Styles\EditDataSource\**" />
+      <DefaultExclude Include="ModulePackages\**" />
     </ItemGroup>
 
     <ItemGroup>
