@@ -71,7 +71,7 @@ namespace ToSic.SexyContent
         public SexyContent SexyUncached {
             get {
                 if (_sexyUncached == null)
-                    _sexyUncached = new SexyContent(ZoneId, AppId);
+                    _sexyUncached = new SexyContent(ZoneId, AppId, false);
                 return _sexyUncached;
             }
         }

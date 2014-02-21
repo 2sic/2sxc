@@ -28,9 +28,9 @@ namespace ToSic.SexyContent
         {
             get
             {
-                if (_sexy == null)
-                    _sexy = new SexyContent(ZoneId, AppId, false);
-                return _sexy;
+                if (_sexyUncached == null)
+                    _sexyUncached = new SexyContent(ZoneId, AppId, false);
+                return _sexyUncached;
             }
         }
 
