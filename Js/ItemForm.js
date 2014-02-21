@@ -20,7 +20,29 @@ ToSexyContent.Services.Ajax = function (methodName, opts) {
 Eav.InitializeFormsReadyList.push(function () {	// init application Path
 	ToSexyContent.ApplicationPath = $(".eav-form")[0].Controller.ApplicationPath;
 	if (ToSexyContent.ApplicationPath[ToSexyContent.ApplicationPath.length - 1] != "/")	// ensure trailing slash
-		ToSexyContent.ApplicationPath += "/";
+	    ToSexyContent.ApplicationPath += "/";
+
+
+    // Prefill values based on QueryString parameter (but only if entity id is not set / new item is created)
+	if (!($(".eav-form:first").attr("data-entityid"))) {
+	    
+	    var match = RegExp('[?&]' + "prefill" + '=([^&]*)', 'i').exec(window.location.search);
+	    var prefillString = match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+
+	    if (prefillString) {
+	        var prefill = $.parseJSON(prefillString);
+	        for (prefillKey in prefill) {
+	            var fields = $(".eav-field[data-staticname='" + prefillKey + "']");
+	            if (fields.length == 1) {
+	                var fieldController = fields[0].Controller;
+	                if (fieldController && fieldController.SetFieldValue && prefill[prefillKey])
+	                    fieldController.SetFieldValue(prefill[prefillKey]);
+	            }
+	        }
+	    }
+	}
+    
+
 });
 
 ToSexyContent.ItemForm = {

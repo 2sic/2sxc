@@ -312,6 +312,12 @@ namespace ToSic.SexyContent
         /// <param name="AutoSave"></param>
         public void ReorderContentGroupItem(ContentGroupItem Item, int DestinationSortOrder, bool AutoSave)
         {
+            
+            // If Destination is more than the highest sortorder, reset to max
+            var maxSortOrder = GetContentGroupItems(Item.ContentGroupID).Max(p => p.SortOrder);
+            if(DestinationSortOrder > maxSortOrder)
+                DestinationSortOrder = maxSortOrder;
+
             // Return if the Item is already at that position
             if (Item.SortOrder == DestinationSortOrder)
                 return;

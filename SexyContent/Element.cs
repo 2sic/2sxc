@@ -7,10 +7,13 @@ namespace ToSic.SexyContent
 {
     public class Element
     {
+        [Obsolete("Deprecated: Use Id instead of ID")]
+        public int ID { get { return this.Id; } set { this.Id = value; } }
+
         /// <summary>
         /// The ContentGroupID of this Element
         /// </summary>
-        public int ID { get; set; }
+        public int Id { get; set; }
 
         /// <summary>
         /// The DynamicContent object, as dynamic
@@ -30,21 +33,28 @@ namespace ToSic.SexyContent
         /// <summary>
         /// The EntityID of the ContentGroupItem
         /// </summary>
-        public int? EntityID { get; set; }
+        public int? EntityId { get; set; }
 
         /// <summary>
         /// The TemplateID of the ContentGroupItem
         /// </summary>
-        public int? TemplateID { get; set; }
+        public int? TemplateId { get; set; }
 
         /// <summary>
         /// The SortOrder of the ContentGroupItem
         /// </summary>
         public int SortOrder { get; set; }
 
+        [Obsolete("Deprecated: Use GroupId instead of GroupID")]
+        public int GroupID
+        {
+            get { return this.GroupId; }
+            set { this.GroupId = value; }
+        }
+
         /// <summary>
         /// The ContentGroupID of the ContentGroupItem
         /// </summary>
-        public int GroupID { get; set; }
+        public int GroupId { get; set; }
     }
 }

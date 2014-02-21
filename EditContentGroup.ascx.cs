@@ -22,10 +22,13 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Return the SortOrder from QueryString
         /// </summary>
-        public int SortOrder
+        public int? SortOrder
         {
             get {
-                return int.Parse(Request.QueryString["SortOrder"]);
+                if (!String.IsNullOrEmpty(Request.QueryString["SortOrder"]))
+                    return int.Parse(Request.QueryString["SortOrder"]);
+                else
+                    return null;
             }
         }
 
@@ -93,7 +96,26 @@ namespace ToSic.SexyContent
 
         private List<ContentGroupItem> CurrentlyEditedItems
         {
-            get { return Items.Where(p => p.SortOrder == SortOrder).ToList(); }
+            get {
+                if (NewMode)
+                    return new List<ContentGroupItem>() { new ContentGroupItem()
+                    {
+                        SortOrder = SortOrder.HasValue ? SortOrder.Value : 0,
+                        ContentGroupID = ContentGroupID,
+                        Type = ContentGroupItemType.Content.ToString("F"),
+                        
+                    }};
+                else
+                return Items.Where(p => p.SortOrder == SortOrder.Value).ToList();
+            }
+        }
+
+        /// <summary>
+        /// Returns true if a new ContentGroupItem should be created at the specified location
+        /// </summary>
+        private bool NewMode
+        {
+            get { return Request.QueryString["EditMode"] == "New"; }
         }
 
         #endregion
@@ -114,9 +136,6 @@ namespace ToSic.SexyContent
         /// <param name="e"></param>
         protected void Page_Load(object sender, EventArgs e)
         {
-
-            // Register Stylesheet
-            //litAssetsInclude.Text = "<link rel='stylesheet' href='" + ResolveClientUrl("Styles/Edit.css") + "'/>";
 
             // Add DNN Version to body Class
             Sexy.AddDNNVersionToBodyClass(this);
@@ -139,7 +158,7 @@ namespace ToSic.SexyContent
 
                 // Show Change Content or Reference Link only if this is the default language
                 var IsDefaultLanguage = LanguageID == DefaultLanguageID;
-                hlkChangeContent.Visible = IsDefaultLanguage && (CurrentlyEditedItems.First().ItemType == ContentGroupItemType.Content || CurrentlyEditedItems.First().ItemType == ContentGroupItemType.ListContent);
+                hlkChangeContent.Visible = !NewMode && IsDefaultLanguage && (CurrentlyEditedItems.First().ItemType == ContentGroupItemType.Content || CurrentlyEditedItems.First().ItemType == ContentGroupItemType.ListContent);
             }
 
             if (!Sexy.ContentContext.HasLanguages() || (LanguageID.HasValue && Sexy.ContentContext.GetDimension(LanguageID.Value).Active))
@@ -152,6 +171,8 @@ namespace ToSic.SexyContent
                 if (UserInfo.IsInRole(PortalSettings.AdministratorRoleName))
                     btnActivateLanguage.Visible = true;
             }
+
+            btnDelete.Visible = !NewMode;
         }
 
         protected void ProcessView()
@@ -176,15 +197,15 @@ namespace ToSic.SexyContent
                     if (TemplateDefault.ContentTypeID.HasValue && TemplateDefault.ContentTypeID.Value > 0)
                     {
                         ContentGroupItem ContentGroupItem = null;
-                        if (CurrentlyEditedItems.Any())
+                        if (CurrentlyEditedItems.Any() && CurrentlyEditedItems.First().ContentGroupItemID != 0)
                             ContentGroupItem = CurrentlyEditedItems.FirstOrDefault(p => p.ItemType == TemplateDefault.ItemType);
 
                         EditContentGroupItem EditControl = (EditContentGroupItem)LoadControl(System.IO.Path.Combine(TemplateSourceDirectory, "EditContentGroupItem.ascx"));
-                        EditControl.ContentGroupItemID = ContentGroupItem != null ? ContentGroupItem.ContentGroupItemID : new int?();
+                        EditControl.ContentGroupItemID = ContentGroupItem != null && ContentGroupItem.ContentGroupID != 0 ? ContentGroupItem.ContentGroupItemID : new int?();
                         EditControl.ContentGroupID = ContentGroupID;
                         EditControl.ItemType = TemplateDefault.ItemType;
                         EditControl.TemplateID = Items.First().TemplateID.Value;
-                        EditControl.SortOrder = CurrentlyEditedItems.Any() ? SortOrder : -1;
+                        EditControl.SortOrder = CurrentlyEditedItems.Any() ? SortOrder : new int?();
                         EditControl.ModuleID = ModuleId;
                         EditControl.TabID = TabId;
                         EditControl.AttributeSetID = TemplateDefault.ContentTypeID.Value;
@@ -213,7 +234,7 @@ namespace ToSic.SexyContent
 
         protected void btnDelete_Click(object sender, EventArgs e)
         {
-            new SexyContent(false).TemplateContext.DeleteContentGroupItems(ContentGroupID, SortOrder, UserId);
+            new SexyContent(false).TemplateContext.DeleteContentGroupItems(ContentGroupID, SortOrder.Value, UserId);
             RedirectBack();
         }
 
@@ -254,7 +275,7 @@ namespace ToSic.SexyContent
         protected void btnActivateLanguage_Click(object sender, EventArgs e)
         {
             Sexy.SetCultureState(System.Threading.Thread.CurrentThread.CurrentCulture.Name, true, PortalId);
-            Response.Redirect(Sexy.GetElementEditLink(ContentGroupID, SortOrder, ModuleId, TabId, ""));
+            Response.Redirect(Sexy.GetElementEditLink(ContentGroupID, SortOrder.Value, ModuleId, TabId, ""));
         }
     }
 }

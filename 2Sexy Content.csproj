@@ -316,13 +316,6 @@
     </Compile>
     <Compile Include="SexyContent\Engines\TokenEngine\FilteredNameValueCollectionPropertyAccess.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\TokenReplace.cs" />
-    <Compile Include="Views\AppView.ascx.cs">
-      <DependentUpon>AppView.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\AppView.ascx.designer.cs">
-      <DependentUpon>AppView.ascx</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Administration\GettingStarted.ascx" />
@@ -341,6 +334,7 @@
     <Content Include="Extensions\Imazen_ImageResizer\license.txt" />
     <Content Include="icon.png" />
     <Content Include="Images\Add.png" />
+    <Content Include="Images\AddWithEdit.png" />
     <Content Include="Images\Delete.png" />
     <Content Include="Images\Drag.gif" />
     <Content Include="Images\Edit.png" />
@@ -412,7 +406,6 @@
     <Content Include="TemplateHelpGrid.ascx" />
     <Content Include="View.ascx" />
     <Content Include="Administration\EAVManagement.ascx" />
-    <Content Include="Views\AppView.ascx" />
     <Content Include="WebConfigTemplate.config" />
     <None Include="SqlDataProvider\01.00.01.SqlDataProvider" />
     <EntityDeploy Include="SexyContent\SexyContentContext.edmx">

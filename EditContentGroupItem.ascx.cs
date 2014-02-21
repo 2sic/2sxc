@@ -38,7 +38,7 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Gets or sets the SortOrder
         /// </summary>
-        public int SortOrder { get; set; }
+        public int? SortOrder { get; set; }
 
         /// <summary>
         /// Gets or sets ModuleID
@@ -84,7 +84,6 @@ namespace ToSic.SexyContent
             }
         }
 
-
         #endregion
 
         private SexyContent Sexy = new SexyContent(false);
@@ -111,14 +110,9 @@ namespace ToSic.SexyContent
 
             if (Item != null)
             {
-                // Settings link (to change content) - moved to EditContentGroup
-                //hlkChangeContent.NavigateUrl = Sexy.GetElementSettingsLink(ContentGroupItemID.Value, ModuleID, TabID, Request.RawUrl);
-
                 // Show Change Content or Reference Link only if this is the default language
                 var IsDefaultLanguage = LanguageID == DefaultLanguageID;
-                // hlkChangeContent.Visible = IsDefaultLanguage && (Item.ItemType == ContentGroupItemType.Content || Item.ItemType == ContentGroupItemType.ListContent); - moved to EditContentGroup
                 btnReference.Visible = IsDefaultLanguage && (Item.ItemType != ContentGroupItemType.Content && ItemType != ContentGroupItemType.ListContent);
-
                 lblNewOrEditItemHeading.Attributes.Add("title", Item.EntityID.HasValue ? Item.EntityID.Value.ToString() : "");
             }
 
@@ -175,7 +169,7 @@ namespace ToSic.SexyContent
             if (Item != null)
                 NewItem = SexyContext.TemplateContext.GetContentGroupItem(Item.ContentGroupItemID);
             else
-                NewItem = SexyContext.AddContentGroupItem(ContentGroupID, UserId, TemplateID, Entity.EntityID, SortOrder, true, ItemType, true);
+                NewItem = SexyContext.AddContentGroupItem(ContentGroupID, UserId, TemplateID, Entity.EntityID, SortOrder, true, ItemType, ItemType != ContentGroupItemType.Content);
 
             NewItem.EntityID = Entity.EntityID;
             NewItem.SysModified = DateTime.Now;
@@ -214,8 +208,6 @@ namespace ToSic.SexyContent
             // If this is the list title, or no list-title exists, set module title
             if (GroupItem.ItemType == ContentGroupItemType.ListContent || (ListContentGroupItem == null && GroupItem.ItemType == ContentGroupItemType.Content && GroupItem.SortOrder == 0))
             {
-                //var CultureDimensionID = int.Parse(Request.QueryString["CultureDimension"]);
-                //var LanguageCode = Sexy.ContentContext.GetLanguageExternalKey(CultureDimensionID);
                 var Languages = Sexy.ContentContext.GetLanguages();
 
                 // Update Original Module if no languages active
