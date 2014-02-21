@@ -39,5 +39,17 @@ namespace ToSic.SexyContent.Administration
                     item.Controls.Cast<GridTableCell>().ToList().ForEach(c => c.Enabled = false);
             }
         }
+
+        /// <summary>
+        /// GridView DeleteCommand, deletes the app that caused the command
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void grdApps_DeleteCommand(object sender, Telerik.Web.UI.GridCommandEventArgs e)
+        {
+            int appId = Convert.ToInt32(e.Item.OwnerTableView.DataKeyValues[e.Item.ItemIndex]["AppID"]);
+            new SexyContent(ZoneId, appId, false).RemoveApp(appId);
+            grdApps.Rebind();
+        }
     }
 }

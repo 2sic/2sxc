@@ -750,7 +750,7 @@ namespace ToSic.SexyContent
         public void AddApp(string appName)
         {
             // Adding app to EAV
-            var app = ContentContext.AddApp(appName);
+            var app = ContentContext.AddApp(new Guid().ToString());
 
             // Add app-describing entity
             var appContext = new SexyContent(ContentContext.ZoneId, app.AppID);
@@ -760,6 +760,30 @@ namespace ToSic.SexyContent
                 { "Folder", "" }
             };
             ContentContext.AddEntity(appAttributeSet, Values, null, app.AppID, AssignmentObjectTypeIDSexyContentApp);
+
+            // Add new (empty) ContentType for Settings
+            ContentContext.AddAttributeSet("App-Settings", "Stores settings for an app", "App-Settings", "2SexyContent-System");
+
+            // Add new (empty) ContentType for Resources
+            ContentContext.AddAttributeSet("App-Resources", "Stores resources like translations for an app", "App-Resources", "2SexyContent-System");
+
+        }
+
+        public void RemoveApp(int appId)
+        {
+            throw new NotImplementedException("An app can not be removed yet.");
+
+            if(appId != this.ContentContext.AppId)
+                throw new Exception("An app can only be removed inside of it's own context.");
+
+            var app = ContentContext.GetApps().Single(a => a.AppID == appId);
+
+            // Delete templates
+
+            // Delete folder
+
+            // Delete the app
+            //ContentContext.RemoveApp(appId);
         }
 
         #endregion Apps
