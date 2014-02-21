@@ -11,7 +11,7 @@ using ToSic.SexyContent;
 
 namespace ToSic.SexyContent
 {
-    public partial class EditContentGroupItem : SexyControlEditBase
+    public partial class EditContentGroupItem : PortalModuleBase
     {
         #region Properties
 
@@ -51,6 +51,30 @@ namespace ToSic.SexyContent
         public int TabID { get; set; }
 
         public int AttributeSetID { get; set; }
+
+        public int ZoneId { get; set;}
+        public int AppId { get; set; }
+
+        private SexyContent _sexy;
+        public SexyContent Sexy {
+            get {
+                if (_sexy == null)
+                {
+                    if (ZoneId == 0 || AppId == 0)
+                        throw new ArgumentNullException("ZoneId and AppId must be set.");
+                    _sexy = new SexyContent(ZoneId, AppId);
+                }
+                return _sexy;
+            }
+        }
+        private SexyContent _sexyUncached;
+        public SexyContent SexyUncached {
+            get {
+                if (_sexyUncached == null)
+                    _sexyUncached = new SexyContent(ZoneId, AppId);
+                return _sexyUncached;
+            }
+        }
 
         private ContentGroupItem _Item;
         /// <summary>
