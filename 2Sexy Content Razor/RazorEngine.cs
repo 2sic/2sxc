@@ -73,7 +73,7 @@ namespace ToSic.SexyContent.Engines
         /// <returns></returns>
         public string Render(Template template, App app, List<Element> Elements, Element ListElement, ModuleInstanceContext HostingModule, string LocalResourcesPath, IDataSource DataSource) 
         {
-            SexyContent Sexy = new SexyContent(new int(), new int());
+            SexyContent Sexy = new SexyContent(new int?(), new int?());
             ModuleContext = HostingModule;
             LocalResourceFile = LocalResourcesPath;
             RazorScriptFile = template.GetTemplatePath();

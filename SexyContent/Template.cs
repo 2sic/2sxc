@@ -76,8 +76,8 @@ namespace ToSic.SexyContent
 
             var app = new App()
                 {
-                    Path =  VirtualPathUtility.ToAbsolute(SexyContent.GetTemplatePathRoot(this.Location)),
-                    PhysicalPath = Server.MapPath(SexyContent.GetTemplatePathRoot(this.Location))
+                    //Path = VirtualPathUtility.ToAbsolute(SexyContent.GetTemplatePathRoot(this.Location)),
+                    //PhysicalPath = Server.MapPath(SexyContent.GetTemplatePathRoot(this.Location))
                 };
 
             // Render elements that have a content (by DemoEntityID or real Entity ID)

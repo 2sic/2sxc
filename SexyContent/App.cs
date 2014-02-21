@@ -27,14 +27,16 @@ namespace ToSic.SexyContent
         {
             get
             {
-                return VirtualPathUtility.ToAbsolute(SexyContent.GetTemplatePathRoot(this.Location))
+                // ToDo: Fix this
+                return null;//VirtualPathUtility.ToAbsolute(SexyContent.GetTemplatePathRoot(this.Location))
             }
         }
         public string PhysicalPath
         {
             get
             {
-                return HttpContext.Current.Server.MapPath(SexyContent.GetTemplatePathRoot(this.Location))
+                // ToDo: Fix this
+                return null;// HttpContext.Current.Server.MapPath(SexyContent.GetTemplatePathRoot(this.Location));
             }
         }
     }

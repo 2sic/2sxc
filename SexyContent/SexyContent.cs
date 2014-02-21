@@ -33,7 +33,7 @@ namespace ToSic.SexyContent
     {
         #region Constants
 
-        public const string ModuleVersion = "05.05.00";
+        public const string ModuleVersion = "05.05.01";
         public const string TemplateID = "TemplateID";
         public const string ContentGroupIDString = "ContentGroupID";
         public const string AppIDString = "AppId";
@@ -558,8 +558,8 @@ namespace ToSic.SexyContent
                                select new Element
                                {
                                    ID = c.ContentGroupItemID,
-                                   EntityID = c.EntityID,
-                                   TemplateID = c.TemplateID,
+                                   EntityId = c.EntityID,
+                                   TemplateId = c.TemplateID,
                                    Content = c.EntityID.HasValue ? new DynamicEntity(Entities[c.EntityID.Value], DimensionIds) :
                                        Defaults.Where(d => d.ItemType == ContentItemType && d.DemoEntityID.HasValue)
                                        .Select(d => new DynamicEntity(Entities[d.DemoEntityID.Value], DimensionIds)).FirstOrDefault(),
@@ -612,17 +612,24 @@ namespace ToSic.SexyContent
         /// <returns></returns>
         public string GetElementToolbar(int ContentGroupID, int SortOrder, int ContentGroupItemID, int ModuleId, string LocalResourcesPath, bool ListEnabled, Control ParentControl, string ReturnUrl)
         {
-            string EditLink = GetElementEditLink(ContentGroupID, SortOrder, ModuleId, PortalSettings.Current.ActiveTab.TabID, ReturnUrl);
+            string editLink = GetElementEditLink(ContentGroupID, SortOrder, ModuleId, PortalSettings.Current.ActiveTab.TabID, ReturnUrl);
             if (PortalSettings.Current.EnablePopUps)
-                EditLink = HttpUtility.UrlDecode(UrlUtils.PopUpUrl(EditLink, ParentControl, PortalSettings.Current, false, false));
+                editLink = HttpUtility.UrlDecode(UrlUtils.PopUpUrl(editLink, ParentControl, PortalSettings.Current, false, false));
+
+            string addLink = GetElementAddWithEditLink(ContentGroupID, SortOrder + 1, ModuleId, PortalSettings.Current.ActiveTab.TabID, ReturnUrl);
+            if (PortalSettings.Current.EnablePopUps)
+                addLink = HttpUtility.UrlDecode(UrlUtils.PopUpUrl(addLink, ParentControl, PortalSettings.Current, false, false));
 
             string Toolbar = "<ul class=\"sc-menu\">";
             
 
-            Toolbar += "<li><a class=\"sc-menu-edit\" href=\"" + EditLink + "\"><img src=\"" + ParentControl.ResolveClientUrl("~/DesktopModules/ToSIC_SexyContent/Images/Edit.png") + "\" /></a></li>";
+            Toolbar += "<li><a class=\"sc-menu-edit\" href=\"" + editLink + "\"><img src=\"" + ParentControl.ResolveClientUrl("~/DesktopModules/ToSIC_SexyContent/Images/Edit.png") + "\" /></a></li>";
 
             if (ListEnabled && SortOrder != -1)
+            {
                 Toolbar += "<li><a class=\"sc-menu-add\" href=\"javascript:void(0);\" onclick='AddContentGroupItem(this, \"" + ContentGroupItemID.ToString() + "\");'><img src=\"" + ParentControl.ResolveClientUrl("~/DesktopModules/ToSIC_SexyContent/Images/Add.png") + "\" /></a></li>";
+                Toolbar += "<li><a class=\"sc-menu-addwithedit\" href=\"" + addLink + "\"><img src=\"" + ParentControl.ResolveClientUrl("~/DesktopModules/ToSIC_SexyContent/Images/AddWithEdit.png") + "\" /></a></li>";
+            }
 
             Toolbar += "</ul>";
             return Toolbar;
@@ -662,7 +669,7 @@ namespace ToSic.SexyContent
         /// <returns></returns>
         public string GetElementEditLink(int ContentGroupID, int SortOrder, int ModuleID, int TabID, string ReturnUrl)
         {
-            string EditUrl = DotNetNuke.Common.Globals.NavigateURL(TabID, ControlKeys.EditContentGroup, "mid", ModuleID.ToString(), SortOrderString, SortOrder.ToString(), ContentGroupIDString, ContentGroupID.ToString());
+            string EditUrl = Globals.NavigateURL(TabID, ControlKeys.EditContentGroup, "mid", ModuleID.ToString(), SortOrderString, SortOrder.ToString(), ContentGroupIDString, ContentGroupID.ToString());
             EditUrl += (EditUrl.IndexOf("?") == -1 ? "?" : "&") + "popUp=true&ReturnUrl=" + HttpUtility.UrlEncode(ReturnUrl);
 
             // If Culture exists, add CultureDimension
@@ -671,6 +678,11 @@ namespace ToSic.SexyContent
                 EditUrl += "&CultureDimension=" + LanguageID;
 
             return EditUrl;
+        }
+
+        public string GetElementAddWithEditLink(int ContentGroupID, int DestinationSortOrder, int ModuleID, int TabID, string ReturnUrl)
+        {
+            return GetElementEditLink(ContentGroupID, DestinationSortOrder, ModuleID, TabID, ReturnUrl) + "&EditMode=New";
         }
 
         public string GetElementSettingsLink(int ContentGroupItemID, int ModuleID, int TabID, string ReturnUrl)
@@ -861,16 +873,16 @@ namespace ToSic.SexyContent
 
             foreach (var Element in Elements)
             {
-                if (Element != null && Element.EntityID.HasValue)
+                if (Element != null && Element.EntityId.HasValue)
                 {
                     var Attributes = ((DynamicEntity)Element.Content).Entity.Attributes;
                     string Content = String.Join(", ", Attributes.Select(x => x.Value[new string[] { Sexy.GetCurrentLanguageName() }]).Where(a => a != null).Select(a => StripHtmlAndHtmlDecode(a.ToString())).Where(x => !String.IsNullOrEmpty(x)));
 
                     var ContentGroupItem = Sexy.TemplateContext.GetContentGroupItem(Element.ID);
-                    var PubDate = Sexy.ContentContext.GetValues(Element.EntityID.Value).Max(p => (DateTime?)p.ChangeLogCreated.Timestamp);
+                    var PubDate = Sexy.ContentContext.GetValues(Element.EntityId.Value).Max(p => (DateTime?)p.ChangeLogCreated.Timestamp);
 
                     if (PubDate.HasValue)
-                        SearchItems.Add(new SearchItemInfo(Element.Content.EntityTitle.ToString(), Content, ContentGroupItem == null ? -1 : ContentGroupItem.SysCreatedBy, PubDate.Value, ModInfo.ModuleID, Element.EntityID.ToString(), Content));
+                        SearchItems.Add(new SearchItemInfo(Element.Content.EntityTitle.ToString(), Content, ContentGroupItem == null ? -1 : ContentGroupItem.SysCreatedBy, PubDate.Value, ModInfo.ModuleID, Element.EntityId.ToString(), Content));
                 }
             }
 
@@ -1007,7 +1019,7 @@ namespace ToSic.SexyContent
                 Default = new
                 {
                     List = (from c in elements
-                            where c.EntityID.HasValue
+                            where c.EntityId.HasValue
                             select new
                             {
                                 Content = GetDictionaryFromEntity(((DynamicEntity)c.Content).Entity, language)

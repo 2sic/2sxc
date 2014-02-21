@@ -45,10 +45,10 @@ namespace ToSic.SexyContent
         {
             get
             {
-                if (!Elements.Any() || !Elements.First().TemplateID.HasValue)
+                if (!Elements.Any() || !Elements.First().TemplateId.HasValue)
                     return null;
-                if (_Template == null)
-                    _Template = Sexy.TemplateContext.GetTemplate(Elements.First().TemplateID.Value);
+                if(_Template == null)
+                    _Template = Sexy.TemplateContext.GetTemplate(Elements.First().TemplateId.Value);
                 return _Template;
             }
         }
@@ -121,13 +121,13 @@ namespace ToSic.SexyContent
             else
             {
                 // If not fully configured, show stuff
-                if (!Elements.Any() || !Elements.First().TemplateID.HasValue || Elements.All(p => !p.EntityID.HasValue))
+                if (!Elements.Any() || !Elements.First().TemplateId.HasValue || Elements.All(p => !p.EntityId.HasValue))
                     ShowTemplateChooser();
 
                 if (!Sexy.PortalIsConfigured(Server, ControlPath))
                     pnlMissingConfiguration.Visible = true;
 
-                if (Elements.Any() && Elements.First().TemplateID.HasValue)
+                if (Elements.Any() && Elements.First().TemplateId.HasValue)
                     ProcessView();
             }
         }
@@ -291,8 +291,8 @@ namespace ToSic.SexyContent
                 ddlTemplate.Items.Insert(0, new ListItem(LocalizeString("ddlTemplateDefaultItem.Text"), "0"));
 
             // If there are elements and the selected template exists in the list, select that
-            if (Elements.Any() && ddlTemplate.Items.FindByValue(Elements.First().TemplateID.ToString()) != null)
-                ddlTemplate.SelectedValue = Elements.First().TemplateID.ToString();
+            if (Elements.Any() && ddlTemplate.Items.FindByValue(Elements.First().TemplateId.ToString()) != null)
+                ddlTemplate.SelectedValue = Elements.First().TemplateId.ToString();
         }
 
         protected void ChangeTemplate()
@@ -347,10 +347,10 @@ namespace ToSic.SexyContent
                 switch (hfContentGroupItemAction.Value)
                 {
                     case "add":
-                        new SexyContent(ZoneId, AppId, false).AddContentGroupItem(Elements.First().GroupID, UserId, Elements.First().TemplateID, null, Elements.Where(el => el.ID == int.Parse(hfContentGroupItemID.Value)).Single().SortOrder + 1, true, ContentGroupItemType.Content, false);
+                        new SexyContent(ZoneId, AppId, false).AddContentGroupItem(Elements.First().GroupId, UserId, Elements.First().TemplateId, null, Elements.Where(el => el.Id == int.Parse(hfContentGroupItemID.Value)).Single().SortOrder + 1, true, ContentGroupItemType.Content, false);
                         Response.Redirect(DotNetNuke.Common.Globals.NavigateURL(this.TabId, "", null));
                         break;
-                }
+                }  
 
                 hfContentGroupItemAction.Value = "";
                 hfContentGroupItemID.Value = "";
@@ -373,7 +373,7 @@ namespace ToSic.SexyContent
 
                     if (!IsList)
                     {
-                        if (Elements.Any() && Elements.First().TemplateID.HasValue)
+                        if (Elements.Any() && Elements.First().TemplateId.HasValue)
                         {
                             Actions.Add(GetNextActionID(), LocalizeString("ActionEdit.Text"), ModuleActionType.EditContent, "edititem", "edit.gif", UrlUtils.PopUpUrl(Sexy.GetElementEditLink(Elements.First().GroupID, Elements.First().SortOrder, ModuleId, TabId, ""), this, PortalSettings, false, false), false, DotNetNuke.Security.SecurityAccessLevel.Edit, true, false);
                         }
@@ -384,7 +384,7 @@ namespace ToSic.SexyContent
                         Actions.Add(GetNextActionID(), LocalizeString("ActionList.Text"), ModuleActionType.ContentOptions, "editlist", "edit.gif", EditUrl(this.TabId, SexyContent.ControlKeys.EditList, false, "mid", this.ModuleId.ToString(), SexyContent.ContentGroupIDString, Elements.First().GroupID.ToString()), false, DotNetNuke.Security.SecurityAccessLevel.Edit, true, false);
                     }
 
-                    if (Elements.Any() && Elements.First().TemplateID.HasValue && Template != null && Template.UseForList)
+                    if (Elements.Any() && Elements.First().TemplateId.HasValue && Template != null && Template.UseForList)
                     {
                         // Add Item (this action will do a postback)
                         Actions.Add(GetNextActionID(), LocalizeString("ActionAdd.Text"), SexyContent.ControlKeys.AddItem, SexyContent.ControlKeys.AddItem, "add.gif", "", true, DotNetNuke.Security.SecurityAccessLevel.Edit, true, false);

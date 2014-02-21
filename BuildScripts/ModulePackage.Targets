@@ -19,38 +19,31 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <DefaultExclude Include="**\.svn\**" />
       <DefaultExclude Include="**\bin\**" />
-      <DefaultExclude Include="**\obj\**" />
-      <DefaultExclude Include="**\Release\**" />
-      <DefaultExclude Include="**\Debug\**" />
-      <DefaultExclude Include="**\Test\**" />
-      <DefaultExclude Include="**\TestResults\**" />
-      <DefaultExclude Include="**\doc\**" />
-      <DefaultExclude Include="**\www\**" />
       <DefaultExclude Include="**\*.user" />
       <DefaultExclude Include="**\*.suo" />
       <DefaultExclude Include="**\*.zip" />
-      <DefaultExclude Include="**\*.txt" />
-      <DefaultExclude Include="**\*ReSharper.*\**" />
+      <DefaultExclude Include="**\*.zip" />
+      <DefaultExclude Include="Js\EditDataSource\**" />
+      <DefaultExclude Include="Styles\EditDataSource\**" />
+      <DefaultExclude Include="ModulePackages\**" />
     </ItemGroup>
 
     <ItemGroup>
-      <InstallInclude Include="**\*.ascx" />
-      <InstallInclude Include="**\*.asmx" />
-      <InstallInclude Include="**\*.css" />
-      <InstallInclude Include="**\*.html" />
-      <InstallInclude Include="**\*.htm" />
-      <InstallInclude Include="**\*.resx" />
-      <InstallInclude Include="**\*.aspx" />
-      <InstallInclude Include="**\*.js" />
-      <InstallInclude Include="**\*.txt"  Exclude="**\obj\**;**\_ReSharper*\**;" />
-      <InstallInclude Include="**\*.ashx" />
-      <InstallInclude Include="**\*.png" />
-      <InstallInclude Include="**\*.jpg" />
-      <InstallInclude Include="**\*.gif" />
-      <InstallInclude Include="**\*.dnn" />
-      <InstallInclude Include="**\*.config" Exclude="**\web-Deploy.config" />
+      <InstallInclude Include="**\*.ascx" Exclude="@(DefaultExclude)" />
+      <InstallInclude Include="**\*.asmx" Exclude="@(DefaultExclude)" />
+      <InstallInclude Include="**\*.css" Exclude="@(DefaultExclude)" />
+      <InstallInclude Include="**\*.html" Exclude="@(DefaultExclude)" />
+      <InstallInclude Include="**\*.htm" Exclude="@(DefaultExclude)" />
+      <InstallInclude Include="**\*.resx" Exclude="@(DefaultExclude)" />
+      <InstallInclude Include="**\*.aspx" Exclude="@(DefaultExclude)" />
+      <InstallInclude Include="**\*.js" Exclude="@(DefaultExclude)" />
+      <InstallInclude Include="**\*.txt"  Exclude="@(DefaultExclude);**\obj\**;**\_ReSharper*\**;License.txt;ReleaseNotes.txt" />
+      <InstallInclude Include="**\*.ashx" Exclude="@(DefaultExclude)" />
+      <InstallInclude Include="**\*.png" Exclude="@(DefaultExclude);icon.png" />
+      <InstallInclude Include="**\*.jpg" Exclude="@(DefaultExclude)" />
+      <InstallInclude Include="**\*.gif" Exclude="@(DefaultExclude)" />
+      <InstallInclude Include="**\*.config" Exclude="@(DefaultExclude);**\web-Deploy.config" />
     </ItemGroup>
 
     <ItemGroup>
@@ -77,6 +70,9 @@
       <Output TaskParameter="Include" ItemName="PackageTxtFiles" />
     </CreateItem>
 
+    <CreateItem Include="icon.png">
+      <Output TaskParameter="Include" ItemName="PackageModuleIcon" />
+    </CreateItem>
 
     <CreateItem Include="**\*.sqldataprovider">
       <Output TaskParameter="Include" ItemName="SqlDataProviderFiles" />
@@ -85,6 +81,7 @@
     <Copy SourceFiles="@(AssemblyInclude)" DestinationFolder="$(TempPackageFolder)\bin"/>
     <Copy SourceFiles="@(SqlDataProviderFiles)" DestinationFolder="$(TempPackageFolder)\%(RecursiveDir)" />
     <Copy SourceFiles="@(PackageManifestFiles)" DestinationFolder="$(TempPackageFolder)" />
+    <Copy SourceFiles="@(PackageModuleIcon)" DestinationFolder="$(TempPackageFolder)" />
     <Copy SourceFiles="@(PackageTxtFiles)" DestinationFolder="$(TempPackageFolder)" />
     
     
