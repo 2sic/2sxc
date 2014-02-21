@@ -38,7 +38,7 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Gets or sets the SortOrder
         /// </summary>
-        public int SortOrder { get; set; }
+        public int? SortOrder { get; set; }
 
         /// <summary>
         /// Gets or sets ModuleID

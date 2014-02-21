@@ -22,10 +22,13 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Return the SortOrder from QueryString
         /// </summary>
-        public int SortOrder
+        public int? SortOrder
         {
             get {
-                return int.Parse(Request.QueryString["SortOrder"]);
+                if (!String.IsNullOrEmpty(Request.QueryString["SortOrder"]))
+                    return int.Parse(Request.QueryString["SortOrder"]);
+                else
+                    return null;
             }
         }
 
@@ -97,13 +100,13 @@ namespace ToSic.SexyContent
                 if (NewMode)
                     return new List<ContentGroupItem>() { new ContentGroupItem()
                     {
-                        SortOrder = SortOrder,
+                        SortOrder = SortOrder.HasValue ? SortOrder.Value : 0,
                         ContentGroupID = ContentGroupID,
                         Type = ContentGroupItemType.Content.ToString("F"),
                         
                     }};
                 else
-                return Items.Where(p => p.SortOrder == SortOrder).ToList();
+                return Items.Where(p => p.SortOrder == SortOrder.Value).ToList();
             }
         }
 
@@ -202,7 +205,7 @@ namespace ToSic.SexyContent
                         EditControl.ContentGroupID = ContentGroupID;
                         EditControl.ItemType = TemplateDefault.ItemType;
                         EditControl.TemplateID = Items.First().TemplateID.Value;
-                        EditControl.SortOrder = CurrentlyEditedItems.Any() ? SortOrder : -1;
+                        EditControl.SortOrder = CurrentlyEditedItems.Any() ? SortOrder : new int?();
                         EditControl.ModuleID = ModuleId;
                         EditControl.TabID = TabId;
                         EditControl.AttributeSetID = TemplateDefault.ContentTypeID.Value;
@@ -231,7 +234,7 @@ namespace ToSic.SexyContent
 
         protected void btnDelete_Click(object sender, EventArgs e)
         {
-            new SexyContent(false).TemplateContext.DeleteContentGroupItems(ContentGroupID, SortOrder, UserId);
+            new SexyContent(false).TemplateContext.DeleteContentGroupItems(ContentGroupID, SortOrder.Value, UserId);
             RedirectBack();
         }
 
@@ -272,7 +275,7 @@ namespace ToSic.SexyContent
         protected void btnActivateLanguage_Click(object sender, EventArgs e)
         {
             Sexy.SetCultureState(System.Threading.Thread.CurrentThread.CurrentCulture.Name, true, PortalId);
-            Response.Redirect(Sexy.GetElementEditLink(ContentGroupID, SortOrder, ModuleId, TabId, ""));
+            Response.Redirect(Sexy.GetElementEditLink(ContentGroupID, SortOrder.Value, ModuleId, TabId, ""));
         }
     }
 }
