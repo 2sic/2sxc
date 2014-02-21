@@ -21,7 +21,7 @@ function AddContentGroupItem(ClickedButton, ContentGroupItemID) {
 
 // Beta-Functionality (not stable yet)
 // Basic usage: 
-//    $2sxc.beta.OpenDialog("add", {
+//    $2sxc.beta.OpenDialog("new", {
 //       moduleId: 391,
 //       tabId: 55,
 //       contentGroupId: 391,
@@ -33,7 +33,7 @@ window.$2sxc = window.$2sxc || {};
 $2sxc.beta = {
     GetUrl: function (urlType, settings) {
 
-        if (urlType == "add") {
+        if (urlType == "new") {
             var s = $.extend({
                 moduleId: null,
                 tabId: null,
@@ -47,7 +47,7 @@ $2sxc.beta = {
                 s.contentGroupId + "&popUp=true&ReturnUrl=" + encodeURIComponent(s.returnUrl) + "&EditMode=New&prefill=" + encodeURIComponent(JSON.stringify(s.prefill));
         }
         else {
-            throw "Url Type '" + url + "' not valid.";
+            throw "Url Type '" + urlType + "' not valid.";
         }
 
     },
