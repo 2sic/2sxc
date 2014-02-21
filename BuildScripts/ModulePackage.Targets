@@ -38,9 +38,9 @@
       <InstallInclude Include="**\*.resx" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="**\*.aspx" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="**\*.js" Exclude="@(DefaultExclude)" />
-      <InstallInclude Include="**\*.txt"  Exclude="@(DefaultExclude);**\obj\**;**\_ReSharper*\**;" />
+      <InstallInclude Include="**\*.txt"  Exclude="@(DefaultExclude);**\obj\**;**\_ReSharper*\**;License.txt;ReleaseNotes.txt" />
       <InstallInclude Include="**\*.ashx" Exclude="@(DefaultExclude)" />
-      <InstallInclude Include="**\*.png" Exclude="@(DefaultExclude)" />
+      <InstallInclude Include="**\*.png" Exclude="@(DefaultExclude);icon.png" />
       <InstallInclude Include="**\*.jpg" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="**\*.gif" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="**\*.config" Exclude="@(DefaultExclude);**\web-Deploy.config" />
@@ -70,6 +70,10 @@
       <Output TaskParameter="Include" ItemName="PackageTxtFiles" />
     </CreateItem>
 
+    <CreateItem Include="icon.png">
+      <Output TaskParameter="Include" ItemName="PackageModuleIcon" />
+    </CreateItem>
+
     <CreateItem Include="**\*.sqldataprovider">
       <Output TaskParameter="Include" ItemName="SqlDataProviderFiles" />
     </CreateItem>
@@ -77,6 +81,7 @@
     <Copy SourceFiles="@(AssemblyInclude)" DestinationFolder="$(TempPackageFolder)\bin"/>
     <Copy SourceFiles="@(SqlDataProviderFiles)" DestinationFolder="$(TempPackageFolder)\%(RecursiveDir)" />
     <Copy SourceFiles="@(PackageManifestFiles)" DestinationFolder="$(TempPackageFolder)" />
+    <Copy SourceFiles="@(PackageModuleIcon)" DestinationFolder="$(TempPackageFolder)" />
     <Copy SourceFiles="@(PackageTxtFiles)" DestinationFolder="$(TempPackageFolder)" />
     
     

@@ -319,6 +319,21 @@
           </assemblies>
         </component>
 
+        <component type="File">
+          <files>
+            <basePath>DesktopModules/ToSIC_SexyContent</basePath>
+            <file>
+              <name>icon.png</name>
+            </file>
+            <file>
+              <name>License.txt</name>
+            </file>
+            <file>
+              <name>ReleaseNotes.txt</name>
+            </file>
+          </files>
+        </component>
+        
         <component type="ResourceFile">
           <resourceFiles>
             <basePath>DesktopModules/ToSIC_SexyContent</basePath>
