@@ -22,17 +22,23 @@ Eav.InitializeFormsReadyList.push(function () {	// init application Path
 	if (ToSexyContent.ApplicationPath[ToSexyContent.ApplicationPath.length - 1] != "/")	// ensure trailing slash
 	    ToSexyContent.ApplicationPath += "/";
 
-    // Prefill values based on QueryString parameter
-	var match = RegExp('[?&]' + "prefill" + '=([^&]*)').exec(window.location.search);
-	var prefillString = match && decodeURIComponent(match[1].replace(/\+/g, ' '));
-	
-	if (prefillString)
-	{
-	    var prefill = $.parseJSON(prefillString);
-	    for (prefillKey in prefill) {
-	        var fieldController = $(".eav-field[data-staticname='" + prefillKey + "']")[0].Controller;
-            if(fieldController && fieldController.SetFieldValue)
-	            fieldController.SetFieldValue(prefill[prefillKey]);
+
+    // Prefill values based on QueryString parameter (but only if entity id is not set / new item is created)
+	if (!($(".eav-form:first").attr("data-entityid"))) {
+	    
+	    var match = RegExp('[?&]' + "prefill" + '=([^&]*)', 'i').exec(window.location.search);
+	    var prefillString = match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+
+	    if (prefillString) {
+	        var prefill = $.parseJSON(prefillString);
+	        for (prefillKey in prefill) {
+	            var fields = $(".eav-field[data-staticname='" + prefillKey + "']");
+	            if (fields.length == 1) {
+	                var fieldController = fields[0].Controller;
+	                if (fieldController && fieldController.SetFieldValue && prefill[prefillKey])
+	                    fieldController.SetFieldValue(prefill[prefillKey]);
+	            }
+	        }
 	    }
 	}
     
