@@ -543,8 +543,8 @@ namespace ToSic.SexyContent
                                select new Element
                                {
                                    ID = c.ContentGroupItemID,
-                                   EntityID = c.EntityID,
-                                   TemplateID = c.TemplateID,
+                                   EntityId = c.EntityID,
+                                   TemplateId = c.TemplateID,
                                    Content = c.EntityID.HasValue ? new DynamicEntity(Entities[c.EntityID.Value], DimensionIds) :
                                        Defaults.Where(d => d.ItemType == ContentItemType && d.DemoEntityID.HasValue)
                                        .Select(d => new DynamicEntity(Entities[d.DemoEntityID.Value], DimensionIds)).FirstOrDefault(),
@@ -613,7 +613,7 @@ namespace ToSic.SexyContent
             if (ListEnabled && SortOrder != -1)
             {
                 Toolbar += "<li><a class=\"sc-menu-add\" href=\"javascript:void(0);\" onclick='AddContentGroupItem(this, \"" + ContentGroupItemID.ToString() + "\");'><img src=\"" + ParentControl.ResolveClientUrl("~/DesktopModules/ToSIC_SexyContent/Images/Add.png") + "\" /></a></li>";
-                Toolbar += "<li><a class=\"sc-menu-addwithedit\" href=\"" + addLink + "\"><img src=\"" + ParentControl.ResolveClientUrl("~/DesktopModules/ToSIC_SexyContent/Images/Add.png") + "\" /></a></li>";
+                Toolbar += "<li><a class=\"sc-menu-addwithedit\" href=\"" + addLink + "\"><img src=\"" + ParentControl.ResolveClientUrl("~/DesktopModules/ToSIC_SexyContent/Images/AddWithEdit.png") + "\" /></a></li>";
             }
 
             Toolbar += "</ul>";
@@ -795,16 +795,16 @@ namespace ToSic.SexyContent
 
             foreach (var Element in Elements)
             {
-                if (Element != null && Element.EntityID.HasValue)
+                if (Element != null && Element.EntityId.HasValue)
                 {
                     var Attributes = ((DynamicEntity)Element.Content).Entity.Attributes;
                     string Content = String.Join(", ", Attributes.Select(x => x.Value[new string[] { Sexy.GetCurrentLanguageName() }]).Where(a => a != null).Select(a => StripHtmlAndHtmlDecode(a.ToString())).Where(x => !String.IsNullOrEmpty(x)));
 
                     var ContentGroupItem = Sexy.TemplateContext.GetContentGroupItem(Element.ID);
-                    var PubDate = Sexy.ContentContext.GetValues(Element.EntityID.Value).Max(p => (DateTime?)p.ChangeLogCreated.Timestamp);
+                    var PubDate = Sexy.ContentContext.GetValues(Element.EntityId.Value).Max(p => (DateTime?)p.ChangeLogCreated.Timestamp);
 
                     if (PubDate.HasValue)
-                        SearchItems.Add(new SearchItemInfo(Element.Content.EntityTitle.ToString(), Content, ContentGroupItem == null ? -1 : ContentGroupItem.SysCreatedBy, PubDate.Value, ModInfo.ModuleID, Element.EntityID.ToString(), Content));
+                        SearchItems.Add(new SearchItemInfo(Element.Content.EntityTitle.ToString(), Content, ContentGroupItem == null ? -1 : ContentGroupItem.SysCreatedBy, PubDate.Value, ModInfo.ModuleID, Element.EntityId.ToString(), Content));
                 }
             }
 
@@ -955,7 +955,7 @@ namespace ToSic.SexyContent
                 Default = new
                 {
                     List = (from c in elements
-                            where c.EntityID.HasValue
+                            where c.EntityId.HasValue
                             select new
                             {
                                 Content = GetDictionaryFromEntity(((DynamicEntity)c.Content).Entity, language)

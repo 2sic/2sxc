@@ -67,7 +67,7 @@ namespace ToSic.SexyContent
             switch (e.CommandName)
             {
                 case "add":
-                    Sexy.AddContentGroupItem(ContentGroupID, UserId, Element.TemplateID.Value, null, Element.SortOrder + 1, true, ContentGroupItemType.Content, false);
+                    Sexy.AddContentGroupItem(ContentGroupID, UserId, Element.TemplateId.Value, null, Element.SortOrder + 1, true, ContentGroupItemType.Content, false);
                     grdEntities.Rebind();
                     grdEntities.Items[Element.SortOrder].Selected = true;
                     break;
@@ -106,7 +106,7 @@ namespace ToSic.SexyContent
             grdEntities.DataSource = from c in Elements
                                      select new
                                      {
-                                         EntityID = c.EntityID,
+                                         EntityID = c.EntityId,
                                          EntityTitle = c.Content != null ? String.IsNullOrEmpty(c.Content.EntityTitle.ToString()) ? "(empty)" : c.Content.EntityTitle : "(no demo row)",
                                          ID = c.ID
                                      };
