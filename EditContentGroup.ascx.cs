@@ -158,7 +158,7 @@ namespace ToSic.SexyContent
 
                 // Show Change Content or Reference Link only if this is the default language
                 var IsDefaultLanguage = LanguageID == DefaultLanguageID;
-                hlkChangeContent.Visible = IsDefaultLanguage && (CurrentlyEditedItems.First().ItemType == ContentGroupItemType.Content || CurrentlyEditedItems.First().ItemType == ContentGroupItemType.ListContent);
+                hlkChangeContent.Visible = !NewMode && IsDefaultLanguage && (CurrentlyEditedItems.First().ItemType == ContentGroupItemType.Content || CurrentlyEditedItems.First().ItemType == ContentGroupItemType.ListContent);
             }
 
             if (!Sexy.ContentContext.HasLanguages() || (LanguageID.HasValue && Sexy.ContentContext.GetDimension(LanguageID.Value).Active))
