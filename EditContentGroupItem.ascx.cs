@@ -153,7 +153,7 @@ namespace ToSic.SexyContent
             EditItemControl.PreventRedirect = true;
             EditItemControl.AttributeSetId = AttributeSetID;
             EditItemControl.AssignmentObjectTypeId = Sexy.AssignmentObjectTypeIDDefault;
-            EditItemControl.ZoneId = SexyContent.GetZoneID(PortalId);
+            EditItemControl.ZoneId = ZoneId;
 	        EditItemControl.AddClientScriptAndCss = false;
 
             // If ContentGroupItem has Entity, edit that; else create new Entity

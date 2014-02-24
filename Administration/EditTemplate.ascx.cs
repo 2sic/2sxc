@@ -29,6 +29,17 @@ namespace ToSic.SexyContent
         {
             if (ModeIsEdit)
                 Template = Sexy.TemplateContext.GetTemplate(TemplateID);
+
+            var contentTypeSelectors = new[] { ctrContentType, ctrPresentationType, ctrListContentType, ctrListPresentationType };
+
+            foreach (var contentTypeSelector in contentTypeSelectors)
+            {
+                contentTypeSelector.AppId = AppId.Value;
+                contentTypeSelector.ZoneId = ZoneId.Value;
+            }
+
+            if (!IsContentApp)
+                ddlTemplateLocations.Enabled = false;
         }
 
         /// <summary>
@@ -40,7 +51,7 @@ namespace ToSic.SexyContent
         protected void Page_Load(object sender, EventArgs e)
         {
             // set DotNetNuke modal window Url for cancel link
-            hlkCancel.NavigateUrl = EditUrl(PortalSettings.ActiveTab.TabID, SexyContent.ControlKeys.ManageTemplates, true, "mid=" + ModuleId);
+            hlkCancel.NavigateUrl = EditUrl(PortalSettings.ActiveTab.TabID, SexyContent.ControlKeys.ManageTemplates, true, "mid=" + ModuleId + "&" + SexyContent.AppIDString + "=" + AppId);
 
             InitializeForm();
 

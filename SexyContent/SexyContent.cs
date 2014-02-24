@@ -356,8 +356,10 @@ namespace ToSic.SexyContent
         /// <param name="locationID"></param>
         /// <param name="PortalSettings"></param>
         /// <returns></returns>
-        public static string GetTemplatePathRoot(string locationID)
+        public static string GetTemplatePathRoot(string locationID, int appId)
         {
+            var app = GetApps().Where(p => p.AppId == appId);
+
             string RootFolder = (locationID == LocationIDCurrentPortal ? PortalSettings.Current.HomeDirectory : PortalHostDirectory);
             // Hard-coded /Content/ app (default app)
             RootFolder += TemplateFolder + "/Content";
@@ -428,7 +430,7 @@ namespace ToSic.SexyContent
             var CurrentTemplate = ContentGroupItems.First().Template;
             var CurrentDefaults = GetTemplateDefaults(CurrentTemplate.TemplateID);
 
-            CompatibleTemplates = TemplateContext.GetTemplates(PortalID).Where(t => t.UseForList || !List).ToList();
+            CompatibleTemplates = GetTemplates(PortalID).Where(t => t.UseForList || !List).ToList();
             CompatibleTemplates = CompatibleTemplates.Where(c =>
                 AreTemplateDefaultsCompatible(ContentGroupItems, CurrentDefaults, GetTemplateDefaults(c.TemplateID))).ToList();
 
@@ -449,6 +451,60 @@ namespace ToSic.SexyContent
                 return true;
 
             return (Current.ItemType == New.ItemType && Current.ContentTypeID == New.ContentTypeID);
+        }
+
+        /// <summary>
+        /// Returns all templates from the specified DotNetNuke portal and the current app
+        /// </summary>
+        /// <param name="PortalID"></param>
+        /// <returns></returns>
+        public IEnumerable<Template> GetTemplates(int PortalID)
+        {
+            var attributeSets = GetAvailableAttributeSets().ToList();
+            return TemplateContext.GetAllTemplates().Where(a => attributeSets.Any(b => b.AttributeSetID == a.AttributeSetID));
+        }
+
+        /// <summary>
+        /// Returns all visible templates with the specified PortalID
+        /// </summary>
+        /// <param name="PortalID"></param>
+        /// <returns></returns>
+        public IEnumerable<Template> GetVisibleTemplates(int PortalID)
+        {
+            return GetTemplates(PortalID).Where(t => !t.IsHidden);
+        }
+
+        /// <summary>
+        /// Returns all visible templates that belongs to the specified portal and use the given AttributeSet.
+        /// </summary>
+        /// <param name="PortalID">The id of the portal to get the templates from</param>
+        /// <param name="AttributeSetID">The id of the AttributeSet</param>
+        /// <returns></returns>
+        public IEnumerable<Template> GetVisibleTemplates(int PortalID, int AttributeSetID)
+        {
+            return GetVisibleTemplates(PortalID).Where(t => t.AttributeSetID == AttributeSetID);
+        }
+
+        /// <summary>
+        /// Returns all visible templates that belongs to the specified portal and use the given AttributeSet, and can be used for lists.
+        /// </summary>
+        /// <param name="PortalID"></param>
+        /// <param name="AttributeSetID"></param>
+        /// <returns></returns>
+        public IEnumerable<Template> GetVisibleListTemplates(int PortalID, int AttributeSetID)
+        {
+            return GetVisibleTemplates(PortalID, AttributeSetID).Where(t => t.UseForList);
+        }
+
+        /// <summary>
+        /// Returns all visible templates that belongs to the specified portal and use the given AttributeSet, and can be used for lists.
+        /// </summary>
+        /// <param name="PortalID"></param>
+        /// <param name="AttributeSetID"></param>
+        /// <returns></returns>
+        public IEnumerable<Template> GetVisibleListTemplates(int PortalID)
+        {
+            return GetVisibleTemplates(PortalID).Where(t => t.UseForList);
         }
 
         #endregion
@@ -713,7 +769,7 @@ namespace ToSic.SexyContent
             foreach(var eavApp in eavApps)
             {
                 // Get app-describing entity
-                var appMetaData = DataSource.GetMetaDataSource(ContentContext.ZoneId, eavApp.AppID).GetAssignedEntities(AssignmentObjectTypeIDSexyContentApp, eavApp.AppID, AttributeSetStaticNameApps).SingleOrDefault();
+                var appMetaData = DataSource.GetMetaDataSource(ContentContext.ZoneId, eavApp.AppID).GetAssignedEntities(AssignmentObjectTypeIDSexyContentApp, eavApp.AppID, AttributeSetStaticNameApps).FirstOrDefault();
                 App sexyApp;
                 if (appMetaData != null)
                 {
@@ -750,8 +806,9 @@ namespace ToSic.SexyContent
         public void AddApp(string appName)
         {
             // Adding app to EAV
-            var app = ContentContext.AddApp(new Guid().ToString());
-
+            var app = ContentContext.AddApp(Guid.NewGuid().ToString());
+            ContentContext.SaveChanges();
+            
             // Add app-describing entity
             var appContext = new SexyContent(ContentContext.ZoneId, app.AppID);
             var appAttributeSet = appContext.ContentContext.GetAttributeSet(AttributeSetStaticNameApps).AttributeSetID;
@@ -759,14 +816,13 @@ namespace ToSic.SexyContent
                 { "DisplayName", appName },
                 { "Folder", "" }
             };
-            ContentContext.AddEntity(appAttributeSet, Values, null, app.AppID, AssignmentObjectTypeIDSexyContentApp);
+            appContext.ContentContext.AddEntity(appAttributeSet, Values, null, app.AppID, AssignmentObjectTypeIDSexyContentApp);
 
             // Add new (empty) ContentType for Settings
-            ContentContext.AddAttributeSet("App-Settings", "Stores settings for an app", "App-Settings", "2SexyContent-System");
+            appContext.ContentContext.AddAttributeSet("App-Settings", "Stores settings for an app", "App-Settings", "2SexyContent-System");
 
             // Add new (empty) ContentType for Resources
-            ContentContext.AddAttributeSet("App-Resources", "Stores resources like translations for an app", "App-Resources", "2SexyContent-System");
-
+            appContext.ContentContext.AddAttributeSet("App-Resources", "Stores resources like translations for an app", "App-Resources", "2SexyContent-System");
         }
 
         public void RemoveApp(int appId)
@@ -864,7 +920,7 @@ namespace ToSic.SexyContent
 
         public IEnumerable<AttributeSet> GetAvailableAttributeSetsForVisibleTemplates(int PortalId)
         {
-            var AvailableTemplates = this.TemplateContext.GetVisibleTemplates(PortalId);
+            var AvailableTemplates = this.GetVisibleTemplates(PortalId);
             return GetAvailableAttributeSets().Where(p => AvailableTemplates.Any(t => t.AttributeSetID == p.AttributeSetID)).OrderBy(p => p.Name);
         }
 

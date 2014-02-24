@@ -43,7 +43,7 @@ namespace ToSic.SexyContent
                 grdData.DataSource = Data;
                 grdData.DataBind();
 
-                grdTemplates.DataSource = from c in Sexy.TemplateContext.GetTemplates(this.PortalId)
+                grdTemplates.DataSource = from c in Sexy.GetTemplates(this.PortalId)
                                           select new {
                                             c.Name,
                                             c.TemplateID,

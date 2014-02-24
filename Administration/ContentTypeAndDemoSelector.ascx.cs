@@ -6,10 +6,11 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using DotNetNuke.UI.Modules;
 using ToSic.SexyContent;
+using DotNetNuke.Entities.Modules;
 
 namespace ToSic.SexyContent
 {
-    public partial class ContentTypeAndDemoSelector : SexyControlAdminBase
+    public partial class ContentTypeAndDemoSelector : PortalModuleBase
     {
         
         public bool ContentTypeRequired { get; set; }
@@ -45,6 +46,34 @@ namespace ToSic.SexyContent
                 ddlContentTypes.Enabled = value;
                 //ddlDemoRows.Enabled = value;
                 pnlLocked.Visible = !value;
+            }
+        }
+
+        public int ZoneId { get; set; }
+        public int AppId { get; set; }
+
+        private SexyContent _sexy;
+        public SexyContent Sexy
+        {
+            get
+            {
+                if (_sexy == null)
+                {
+                    if (ZoneId == 0 || AppId == 0)
+                        throw new ArgumentNullException("ZoneId and AppId must be set.");
+                    _sexy = new SexyContent(ZoneId, AppId);
+                }
+                return _sexy;
+            }
+        }
+        private SexyContent _sexyUncached;
+        public SexyContent SexyUncached
+        {
+            get
+            {
+                if (_sexyUncached == null)
+                    _sexyUncached = new SexyContent(ZoneId, AppId, false);
+                return _sexyUncached;
             }
         }
 

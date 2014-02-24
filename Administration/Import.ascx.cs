@@ -34,7 +34,7 @@ namespace ToSic.SexyContent
         protected void Page_Load(object sender, EventArgs e)
         {
             hlkExport.NavigateUrl = EditUrl(SexyContent.ControlKeys.Export);
-            pnlGettingStartedTemplates.Visible = !Sexy.TemplateContext.GetVisibleTemplates(PortalSettings.PortalId).Any();
+            pnlGettingStartedTemplates.Visible = !Sexy.GetVisibleTemplates(PortalSettings.PortalId).Any();
         }
 
         protected void btnUpload_Click(object sender, EventArgs e)
@@ -52,12 +52,12 @@ namespace ToSic.SexyContent
 
             if (isZip)
             {
-                success = new ZipImport().ImportZip(importStream, Server, PortalSettings, messages);
+                success = new ZipImport(ZoneId.Value, AppId.Value).ImportZip(importStream, Server, PortalSettings, messages);
             }
             else
             {
                 string Xml = new StreamReader(importStream).ReadToEnd();
-                var import = new XmlImport();
+                var import = new XmlImport(ZoneId.Value, AppId.Value);
                 success = import.ImportXml(Xml);
                 messages = import.ImportLog;
             }

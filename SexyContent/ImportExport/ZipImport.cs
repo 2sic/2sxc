@@ -12,6 +12,15 @@ namespace ToSic.SexyContent.ImportExport
 {
     public class ZipImport
     {
+        private int _appId;
+        private int _zoneId;
+
+
+        public ZipImport(int zoneId, int appId)
+        {
+            _appId = appId;
+            _zoneId = zoneId;
+        }
 
         /// <summary>
         /// Imports a ZIP file (from stream)
@@ -69,7 +78,7 @@ namespace ToSic.SexyContent.ImportExport
                                 foreach (string xmlFileName in Directory.GetFiles(appDirectory, "*.xml"))
                                 {
                                     var fileContents = File.ReadAllText(Path.Combine(appDirectory, xmlFileName));
-                                    var import = new XmlImport();
+                                    var import = new XmlImport(_zoneId, _appId);
                                     var xmlImportSuccess = import.ImportXml(fileContents);
                                     messages.AddRange(import.ImportLog);
                                 }

@@ -58,6 +58,11 @@ namespace ToSic.SexyContent
 
                 return null;
             }
+            set
+            {
+                var moduleController = new ModuleController();
+                moduleController.UpdateModuleSetting(ModuleId, SexyContent.AppIDString, value.ToString());
+            }
         }
 
         protected bool IsContentApp

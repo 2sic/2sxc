@@ -242,12 +242,15 @@ namespace ToSic.SexyContent
         /// </summary>
         protected void ShowTemplateChooser()
         {
+            var noTemplatesYet = !Sexy.GetVisibleTemplates(PortalId).Any();
+
             // If there are no templates configured
-            if (!Sexy.TemplateContext.GetVisibleTemplates(PortalId).Any())
+            if (noTemplatesYet)
             {
                 pnlGetStarted.Visible = true;
             }
-            else
+
+            if(!noTemplatesYet || !IsContentApp)
             {
                 if (!Page.IsPostBack && UserMayEditThisModule)
                 {
@@ -260,6 +263,13 @@ namespace ToSic.SexyContent
                         ddlContentType.SelectedValue = Template.AttributeSetID.ToString();
 
                     BindTemplateDropDown();
+
+                    if (!IsContentApp)
+                    {
+                        ddlApp.Visible = !IsContentApp;
+                        BindAppDropDown();
+                    }
+                    
                 }
 
                 if (IsList)
@@ -267,7 +277,6 @@ namespace ToSic.SexyContent
             }
 
             ddlContentType.Visible = IsContentApp;
-            ddlApp.Visible = !IsContentApp;
             ddlTemplate.Enabled = IsContentApp || AppId.HasValue;
         }
 
@@ -276,9 +285,9 @@ namespace ToSic.SexyContent
             IEnumerable<Template> TemplatesToChoose;
 
             if (!IsList)
-                TemplatesToChoose = Sexy.TemplateContext.GetVisibleTemplates(PortalId);
+                TemplatesToChoose = Sexy.GetVisibleTemplates(PortalId);
             else
-                TemplatesToChoose = Sexy.TemplateContext.GetVisibleListTemplates(PortalId);
+                TemplatesToChoose = Sexy.GetVisibleListTemplates(PortalId);
 
             // Make only templates from chosen content type shown if content type is set
             if (ddlContentType.SelectedValue != "0")
@@ -293,6 +302,25 @@ namespace ToSic.SexyContent
             // If there are elements and the selected template exists in the list, select that
             if (Elements.Any() && ddlTemplate.Items.FindByValue(Elements.First().TemplateId.ToString()) != null)
                 ddlTemplate.SelectedValue = Elements.First().TemplateId.ToString();
+            else
+            {
+                if (ddlContentType.SelectedValue != "0")
+                {
+                    if (ddlTemplate.Items.Count > 1)
+                        ddlTemplate.SelectedIndex = 1;
+
+                    ChangeTemplate();
+                }
+            }
+        }
+
+        private void BindAppDropDown()
+        {
+            ddlApp.DataSource = Sexy.GetApps();
+            ddlApp.DataBind();
+
+            if(ddlApp.Items.Cast<ListItem>().Any(p => p.Value == AppId.ToString()))
+                ddlApp.SelectedValue = AppId.ToString();
         }
 
         protected void ChangeTemplate()
@@ -325,14 +353,12 @@ namespace ToSic.SexyContent
         protected void ddlContentType_SelectedIndexChanged(object sender, EventArgs e)
         {
             BindTemplateDropDown();
+        }
 
-            if (ddlContentType.SelectedValue != "0")
-            {
-                if(ddlTemplate.Items.Count > 1)
-                    ddlTemplate.SelectedIndex = 1;
-
-                ChangeTemplate();
-            }
+        protected void ddlApp_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            AppId = int.Parse(ddlApp.SelectedValue);
+            Response.Redirect(Request.RawUrl);
         }
 
         /// <summary>
@@ -391,7 +417,7 @@ namespace ToSic.SexyContent
                     }
 
                     // Settings Button
-                    if (Sexy.TemplateContext.GetVisibleTemplates(PortalSettings.PortalId).Any())
+                    if (Sexy.GetVisibleTemplates(PortalSettings.PortalId).Any())
                     {
                         Actions.Add(GetNextActionID(), LocalizeString("ActionChangeLayoutOrContent.Text"), ModuleActionType.AddContent, "settings", "action_settings.gif", EditUrl(SexyContent.ControlKeys.SettingsWrapper), false, SecurityAccessLevel.Edit, true, false); }
 

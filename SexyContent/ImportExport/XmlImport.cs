@@ -28,14 +28,15 @@ namespace ToSic.SexyContent.ImportExport
         private string _sourceDefaultLanguage;
         private string _sourceDefaultDimensionId;
         private List<Dimension> _targetDimensions;
-        private readonly SexyContent _sexy = new SexyContent(new int(), new int(), false);
+        private readonly SexyContent _sexy;
         private Dictionary<int, int> _fileIdCorrectionList;
 
         #region Prerequisites
-        public XmlImport()
+        public XmlImport(int zoneId, int appId)
         {
             // Prepare
             ImportLog = new List<ExportImportMessage>();
+            _sexy = new SexyContent(new int?(), new int?(), false);
         }
 
         private bool IsCompatible(XDocument doc)
@@ -273,7 +274,7 @@ namespace ToSic.SexyContent.ImportExport
                     t.UseForList = Boolean.Parse(template.Attribute("UseForList").Value);
 
                 // Stop if the same template already exists
-                if (_sexy.TemplateContext.GetTemplates(PortalSettings.Current.PortalId)
+                if (_sexy.GetTemplates(PortalSettings.Current.PortalId)
                          .Any(p => p.AttributeSetID == t.AttributeSetID
                                    && p.Path == t.Path
                                    && p.UseForList == t.UseForList && p.SysDeleted == null))

@@ -93,7 +93,7 @@ namespace ToSic.SexyContent
                     ddlTemplate.SelectedValue = TemplateID.ToString();
             }
             else
-                ddlTemplate.DataSource = Sexy.TemplateContext.GetVisibleTemplates(PortalId);
+                ddlTemplate.DataSource = Sexy.GetVisibleTemplates(PortalId);
 
             ddlTemplate.DataBind();
 

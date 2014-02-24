@@ -32,7 +32,7 @@ namespace ToSic.SexyContent
             if (!Page.IsPostBack)
                 BindGrdTemplates();
 
-            hlkNewTemplate.NavigateUrl = EditUrl(PortalSettings.ActiveTab.TabID, SexyContent.ControlKeys.EditTemplate, true, "mid=" + this.ModuleId);
+            hlkNewTemplate.NavigateUrl = EditUrl(PortalSettings.ActiveTab.TabID, SexyContent.ControlKeys.EditTemplate, true, "mid=" + this.ModuleId + "&" + SexyContent.AppIDString + "=" + AppId);
             hlkCancel.NavigateUrl = DotNetNuke.Common.Globals.NavigateURL(this.TabId, "", null);
 
             if (!Sexy.SexyContentDesignersGroupConfigured(PortalId))
@@ -79,7 +79,7 @@ namespace ToSic.SexyContent
         private void BindGrdTemplates()
         {
             var AttributeSetList = Sexy.GetAvailableAttributeSets().ToList();
-            var TemplateList = Sexy.TemplateContext.GetTemplates(PortalId).ToList();
+            var TemplateList = Sexy.GetTemplates(PortalId).ToList();
             var Templates = from c in  TemplateList
                             join a in AttributeSetList on c.AttributeSetID equals a.AttributeSetID into JoinedList
                             from a in JoinedList.DefaultIfEmpty()
