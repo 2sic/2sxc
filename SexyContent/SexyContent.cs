@@ -819,10 +819,10 @@ namespace ToSic.SexyContent
             appContext.ContentContext.AddEntity(appAttributeSet, Values, null, app.AppID, AssignmentObjectTypeIDSexyContentApp);
 
             // Add new (empty) ContentType for Settings
-            appContext.ContentContext.AddAttributeSet("App-Settings", "Stores settings for an app", "App-Settings", "2SexyContent-System");
+            appContext.ContentContext.AddAttributeSet("App-Settings", "Stores settings for an app", "App-Settings", "2SexyContent-App");
 
             // Add new (empty) ContentType for Resources
-            appContext.ContentContext.AddAttributeSet("App-Resources", "Stores resources like translations for an app", "App-Resources", "2SexyContent-System");
+            appContext.ContentContext.AddAttributeSet("App-Resources", "Stores resources like translations for an app", "App-Resources", "2SexyContent-App");
         }
 
         public void RemoveApp(int appId)
