@@ -720,16 +720,6 @@
                     <helpUrl />
                     <supportsPopUps>True</supportsPopUps>
                   </moduleControl>
-                  <moduleControl>
-                    <controlKey>neworeditapp</controlKey>
-                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/Apps/NewOrEditApp.ascx</controlSrc>
-                    <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle>Edit App</controlTitle>
-                    <controlType>Admin</controlType>
-                    <iconFile />
-                    <helpUrl />
-                    <supportsPopUps>True</supportsPopUps>
-                  </moduleControl>
                 </moduleControls>
               </moduleDefinition>
             </moduleDefinitions>
