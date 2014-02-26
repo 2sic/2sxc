@@ -548,10 +548,9 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <param name="zoneId"></param>
         /// <returns></returns>
-        public static ToSic.Eav.DataSources.IDataSource GetInitialDataSource(int? zoneId = null)
+        public static ToSic.Eav.DataSources.IDataSource GetInitialDataSource(int zoneId, int appId)
         {
-            var useZoneId = zoneId.HasValue ? zoneId.Value : GetZoneID(PortalSettings.Current.PortalId);
-            return DataSource.GetInitialDataSource(zoneId: zoneId);
+            return DataSource.GetInitialDataSource(zoneId, appId);
         }
 
         /// <summary>
@@ -590,10 +589,10 @@ namespace ToSic.SexyContent
                 // Prepare Dimension List (Languages)
                 var DimensionIds = new[] { LanguageName };
                 // Load all Entities to list
-                var InitialSource = GetInitialDataSource(ZoneId);
-                var EntityDataSource = DataSource.GetDataSource("ToSic.Eav.DataSources.EntityIdFilter", InitialSource.ZoneId, InitialSource.AppId, InitialSource);
+                var InitialSource = GetInitialDataSource(ZoneId.Value, AppId.Value);
+                var EntityDataSource = DataSource.GetDataSource("ToSic.Eav.DataSources.EntityIdFilter", ZoneId, AppId, InitialSource);
                 ((EntityIdFilter)EntityDataSource).Configuration["EntityIds"] = String.Join(",", Identities.ToArray());
-                SexyDataSource = DataSource.GetDataSource("ToSic.Eav.DataSources.PassThrough", InitialSource.ZoneId, InitialSource.AppId, EntityDataSource);
+                SexyDataSource = DataSource.GetDataSource("ToSic.Eav.DataSources.PassThrough", ZoneId, AppId, EntityDataSource);
                 var Entities = SexyDataSource.Out["Default"].List;// ContentContext.GetEntityModel(Identities);
 
                 // If no Content Elements exist and type is List, add a ContentGroupItem to List (not to DB)

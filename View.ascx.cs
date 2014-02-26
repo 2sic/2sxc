@@ -147,7 +147,7 @@ namespace ToSic.SexyContent
                 return;
             }
 
-            if (DataSource.GetCache(ZoneId.Value).GetContentType(Template.AttributeSetID) == null)
+            if (DataSource.GetCache(ZoneId.Value, AppId.Value).GetContentType(Template.AttributeSetID) == null)
             {
                 ShowError("The contents of this module cannot be displayed because it's located in another VDB.");
                 return;

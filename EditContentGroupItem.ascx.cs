@@ -154,6 +154,7 @@ namespace ToSic.SexyContent
             EditItemControl.AttributeSetId = AttributeSetID;
             EditItemControl.AssignmentObjectTypeId = SexyContent.AssignmentObjectTypeIDDefault;
             EditItemControl.ZoneId = ZoneId;
+            EditItemControl.AppId = AppId;
 	        EditItemControl.AddClientScriptAndCss = false;
 
             // If ContentGroupItem has Entity, edit that; else create new Entity
