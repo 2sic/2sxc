@@ -116,7 +116,7 @@ namespace ToSic.SexyContent
             {
                 pnlZoneConfigurationMissing.Visible = true;
                 hlkConfigureZone.NavigateUrl = EditUrl(this.TabId, SexyContent.ControlKeys.PortalConfiguration, false,
-                                                       "mid", this.ModuleId.ToString(), SexyContent.AppIDString + "=" + AppId);
+                    "mid", this.ModuleId.ToString());
             }
             else
             {

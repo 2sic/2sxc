@@ -36,7 +36,7 @@ namespace ToSic.SexyContent.ImportExport
         {
             // Prepare
             ImportLog = new List<ExportImportMessage>();
-            _sexy = new SexyContent(new int?(), new int?(), false);
+            _sexy = new SexyContent(zoneId, appId, false);
         }
 
         private bool IsCompatible(XDocument doc)

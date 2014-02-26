@@ -163,7 +163,7 @@ namespace ToSic.SexyContent
         {
             get
             {
-                return DataSource.GetCache(DataSource.DefaultZoneId, DataSource.MetaDataAppId).GetAssignmentObjectTypeId("2SexyContent-App");
+                return DataSource.GetCache(DataSource.DefaultZoneId, DataSource.MetaDataAppId).GetAssignmentObjectTypeId("App");
             }
         }
 
@@ -209,9 +209,6 @@ namespace ToSic.SexyContent
             if (!ZoneID.HasValue && PortalSettings.Current != null)
                 ZoneID = GetZoneID(PortalSettings.Current.PortalId);
 
-            this.ZoneId = ZoneID;
-            this.AppId = AppID;
-
             // Set EAV Connection String
             ToSic.Eav.Configuration.SetConnectionString("SiteSqlServer");
 
@@ -219,6 +216,9 @@ namespace ToSic.SexyContent
             ContentContext.UserName = (HttpContext.Current == null || HttpContext.Current.User == null) ? "Internal" : HttpContext.Current.User.Identity.Name;
             if (AppID.HasValue)
                 ContentContext.AppId = AppID.Value;
+
+            this.ZoneId = ZoneID;
+            this.AppId = ContentContext.AppId;
         }
 
         
@@ -823,7 +823,7 @@ namespace ToSic.SexyContent
 
         public void AddApp(string appName)
         {
-            if(appName == "Content" || appName == "Default" || String.IsNullOrEmpty(appName) || !Regex.IsMatch(appName, "^[0-9A-Za-z]+$"))
+            if(appName == "Content" || appName == "Default" || String.IsNullOrEmpty(appName) || !Regex.IsMatch(appName, "^[0-9A-Za-z -_]+$"))
                 throw new ArgumentOutOfRangeException("appName '" + appName + "' not allowed");
 
             // Adding app to EAV
@@ -866,7 +866,7 @@ namespace ToSic.SexyContent
 
         public static int GetDefaultAppId(int zoneId)
         {
-            return new SexyContent(zoneId, new int?()).ContentContext.AppId;
+            return ((BaseCache)DataSource.GetCache(zoneId, null)).ZoneApps[zoneId].DefaultAppId;
         }
 
         #endregion Apps
@@ -947,7 +947,7 @@ namespace ToSic.SexyContent
 
         public IEnumerable<AttributeSet> GetAvailableAttributeSetsForVisibleTemplates(int PortalId)
         {
-            var AvailableTemplates = this.GetVisibleTemplates(PortalId);
+            var AvailableTemplates = GetVisibleTemplates(PortalId);
             return GetAvailableAttributeSets().Where(p => AvailableTemplates.Any(t => t.AttributeSetID == p.AttributeSetID)).OrderBy(p => p.Name);
         }
 
@@ -971,7 +971,7 @@ namespace ToSic.SexyContent
             var ZoneID = GetZoneID(ModInfo.PortalID);
 
             // Need a new Context because PortalSettings.Current is null
-            var Sexy = new SexyContent(ZoneID, new int(), true);
+            var Sexy = new SexyContent(ZoneID, new int?(), true);
 
             var SearchItems = new SearchItemInfoCollection();
 
