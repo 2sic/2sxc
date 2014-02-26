@@ -266,7 +266,7 @@ namespace ToSic.SexyContent
 
                     if (!IsContentApp)
                     {
-                        ddlApp.Visible = !IsContentApp;
+                        ddlApp.Visible = true;
                         BindAppDropDown();
                     }
                     
@@ -316,7 +316,7 @@ namespace ToSic.SexyContent
 
         private void BindAppDropDown()
         {
-            ddlApp.DataSource = Sexy.GetApps();
+            ddlApp.DataSource = Sexy.GetApps(false);
             ddlApp.DataBind();
 
             if(ddlApp.Items.Cast<ListItem>().Any(p => p.Value == AppId.ToString()))
@@ -417,7 +417,7 @@ namespace ToSic.SexyContent
                     }
 
                     // Settings Button
-                    if (Sexy.GetVisibleTemplates(PortalSettings.PortalId).Any())
+                    if (Sexy.GetVisibleTemplates(PortalSettings.PortalId).Any() && Template != null)
                     {
                         Actions.Add(GetNextActionID(), LocalizeString("ActionChangeLayoutOrContent.Text"), ModuleActionType.AddContent, "settings", "action_settings.gif", EditUrl(SexyContent.ControlKeys.SettingsWrapper), false, SecurityAccessLevel.Edit, true, false); }
 
@@ -430,9 +430,10 @@ namespace ToSic.SexyContent
                         }
 
                         // Administrator functions
-                        Actions.Add(GetNextActionID(), "Admin", "Admin.Action",
-                                    "gettingstarted", "action_settings.gif", EditUrl("", "", "gettingstarted", SexyContent.AppIDString + "=" + AppId),
-                                    false, SecurityAccessLevel.Admin, true, false);
+                        if(AppId.HasValue)
+                            Actions.Add(GetNextActionID(), "Admin", "Admin.Action",
+                                        "gettingstarted", "action_settings.gif", EditUrl("", "", "gettingstarted", SexyContent.AppIDString + "=" + AppId),
+                                        false, SecurityAccessLevel.Admin, true, false);
 
                         // App Management
                         if(!IsContentApp)

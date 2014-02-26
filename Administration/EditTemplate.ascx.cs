@@ -34,7 +34,7 @@ namespace ToSic.SexyContent
 
             foreach (var contentTypeSelector in contentTypeSelectors)
             {
-                contentTypeSelector.AppId = AppId.Value;
+                contentTypeSelector.AppId = AppId;
                 contentTypeSelector.ZoneId = ZoneId.Value;
             }
 
@@ -79,7 +79,6 @@ namespace ToSic.SexyContent
             // DataBind Template Locations
             ddlTemplateLocations.Items.Add(new ListItem(LocalizeString("TemplateLocationPortalFileSystem.Text"), SexyContent.TemplateLocations.PortalFileSystem));
             ddlTemplateLocations.Items.Add(new ListItem(LocalizeString("TemplateLocationHostFileSystem.Text"), SexyContent.TemplateLocations.HostFileSystem));
-            // ToDo: (future version) add DB as Location
 
             // Fill form with values if in edit mode
             if (ModeIsEdit)
@@ -93,7 +92,7 @@ namespace ToSic.SexyContent
                 pnlListConfiguration.Visible = chkEnableList.Checked;
 
                 string ReturnUrl = Request.Url.AbsoluteUri;
-                hlkTemplateMetaData.NavigateUrl = Sexy.GetMetaDataEditUrl(TabId, ModuleId, ReturnUrl, this, SexyContent.AttributeSetStaticNameTemplateMetaData, Sexy.AssignmentObjectTypeIDSexyContentTemplate, TemplateID, AppId.Value);
+                hlkTemplateMetaData.NavigateUrl = Sexy.GetMetaDataEditUrl(TabId, ModuleId, ReturnUrl, this, SexyContent.AttributeSetStaticNameTemplateMetaData, Sexy.AssignmentObjectTypeIDSexyContentTemplate, TemplateID, AppId);
 
                 // Set ContentType / Demo Entity Selectors
                 SetTemplateDefaultSelector(Template.TemplateID, ctrContentType);
@@ -173,7 +172,7 @@ namespace ToSic.SexyContent
             Sexy.CreateOrUpdateTemplateDefault(Template.TemplateID, ContentGroupItemType.ListPresentation.ToString("F"), ctrListPresentationType.ContentTypeID, ctrListPresentationType.DemoEntityID);
 
             // Redirect to the manage templates control
-            string RedirectUrl = DotNetNuke.Common.Utilities.UrlUtils.PopUpUrl(DotNetNuke.Common.Globals.NavigateURL(SexyContent.ControlKeys.ManageTemplates, "mid", ModuleId.ToString()), this, PortalSettings, false, true);
+            string RedirectUrl = DotNetNuke.Common.Utilities.UrlUtils.PopUpUrl(DotNetNuke.Common.Globals.NavigateURL(SexyContent.ControlKeys.ManageTemplates, "mid", ModuleId.ToString(), SexyContent.AppIDString, AppId.ToString()), this, PortalSettings, false, true);
             Response.Redirect(RedirectUrl);
         }
 

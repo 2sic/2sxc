@@ -6,7 +6,7 @@
         </asp:DropDownList>
     </div>
     <div>
-        <asp:DropDownList runat="server" ID="ddlApp" AppendDataBoundItems="true" CssClass="sc-app-selector" DataTextField="Name" DataValueField="AppId" OnSelectedIndexChanged="ddlApp_SelectedIndexChanged" AutoPostBack="true">
+        <asp:DropDownList runat="server" ID="ddlApp" Visible="False" AppendDataBoundItems="true" CssClass="sc-app-selector" DataTextField="Name" DataValueField="AppId" OnSelectedIndexChanged="ddlApp_SelectedIndexChanged" AutoPostBack="true">
             <asp:ListItem Value="0" Text="<Choose App>"></asp:ListItem>
         </asp:DropDownList>
     </div>

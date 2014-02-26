@@ -12,19 +12,20 @@ namespace ToSic.SexyContent
     /// </summary>
     public abstract class SexyControlAdminBase : SexyControlEditBase
     {
-        protected new int? AppId
+        protected new int AppId
         {
             get
             {
                 // ToDo: Fix this! (should not return 1, but the correct default-AppId)
                 if (IsContentApp)
-                    return 1;
+                    return SexyContent.GetDefaultAppId(SexyContent.GetZoneID(PortalId).Value);
 
                 var appIdString = Request.QueryString[SexyContent.AppIDString];
                 int appId;
-                if (appIdString != null && int.TryParse(appIdString.ToString(), out appId))
+                if (appIdString != null && int.TryParse(appIdString, out appId))
                     return appId;
-                return null;
+                
+                throw new ArgumentNullException("AppId is null");
             }
         }
 

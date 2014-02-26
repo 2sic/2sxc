@@ -52,12 +52,12 @@ namespace ToSic.SexyContent
 
             if (isZip)
             {
-                success = new ZipImport(ZoneId.Value, AppId.Value).ImportZip(importStream, Server, PortalSettings, messages);
+                success = new ZipImport(ZoneId.Value, AppId).ImportZip(importStream, Server, PortalSettings, messages);
             }
             else
             {
                 string Xml = new StreamReader(importStream).ReadToEnd();
-                var import = new XmlImport(ZoneId.Value, AppId.Value);
+                var import = new XmlImport(ZoneId.Value, AppId);
                 success = import.ImportXml(Xml);
                 messages = import.ImportLog;
             }

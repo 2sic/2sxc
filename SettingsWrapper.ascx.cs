@@ -24,9 +24,9 @@ namespace ToSic.SexyContent
                 if (_ContentGroupItems == null)
                 {
                     if (DirectEditContentGroupItem)
-                        _ContentGroupItems = Sexy.TemplateContext.GetContentGroupItems(ContentGroupItem.ContentGroupID);
+                        _ContentGroupItems = SexyUncached.TemplateContext.GetContentGroupItems(ContentGroupItem.ContentGroupID);
                     else
-                        _ContentGroupItems = Sexy.TemplateContext.GetContentGroupItems(Sexy.GetContentGroupIDFromModule(ModuleId));
+                        _ContentGroupItems = SexyUncached.TemplateContext.GetContentGroupItems(SexyUncached.GetContentGroupIDFromModule(ModuleId));
                 }
                 return _ContentGroupItems;
             }
@@ -40,7 +40,7 @@ namespace ToSic.SexyContent
                 if (_ContentGroupItem == null)
                 {
                     if (DirectEditContentGroupItem)
-                        _ContentGroupItem = Sexy.TemplateContext.GetContentGroupItem(int.Parse(Request.QueryString[SexyContent.ContentGroupItemIDString]));
+                        _ContentGroupItem = SexyUncached.TemplateContext.GetContentGroupItem(int.Parse(Request.QueryString[SexyContent.ContentGroupItemIDString]));
                     else if (ContentGroupItems.Count() != 0)
                         _ContentGroupItem = ContentGroupItems.First();
                 }
@@ -80,20 +80,20 @@ namespace ToSic.SexyContent
             // AttributeSetId / Content Type. Else show all visible templates.
             if (TemplateID.HasValue)
             {
-                AttributeSetID = Sexy.GetTemplateDefault(TemplateID.Value, ContentGroupItem.ItemType).ContentTypeID;
+                AttributeSetID = SexyUncached.GetTemplateDefault(TemplateID.Value, ContentGroupItem.ItemType).ContentTypeID;
 
                 lblContentTypeText.Text = Sexy.ContentContext.GetAttributeSet(AttributeSetID.Value).Name;
                 lblContentTypeText.Visible = true;
                 lblContentTypeDefaultText.Visible = false;
 
-                IEnumerable<Template> CompatibleTemplates = Sexy.GetCompatibleTemplates(PortalId, ContentGroupItem.ContentGroupID).Where(p => !p.IsHidden);
+                IEnumerable<Template> CompatibleTemplates = SexyUncached.GetCompatibleTemplates(PortalId, ContentGroupItem.ContentGroupID).Where(p => !p.IsHidden);
                 ddlTemplate.DataSource = CompatibleTemplates;
 
                 if (CompatibleTemplates.Any(p => p.TemplateID == TemplateID))
                     ddlTemplate.SelectedValue = TemplateID.ToString();
             }
             else
-                ddlTemplate.DataSource = Sexy.GetVisibleTemplates(PortalId);
+                ddlTemplate.DataSource = SexyUncached.GetVisibleTemplates(PortalId);
 
             ddlTemplate.DataBind();
 
@@ -141,7 +141,7 @@ namespace ToSic.SexyContent
         {
             // Save Template
             if (ddlTemplate.SelectedValue != "-1")
-                Sexy.UpdateTemplateForGroup(ContentGroupItem.ContentGroupID, int.Parse(ddlTemplate.SelectedValue), UserId);
+                SexyUncached.UpdateTemplateForGroup(ContentGroupItem.ContentGroupID, int.Parse(ddlTemplate.SelectedValue), UserId);
 
             // Save Entity (if not list)
             if (ContentGroupItems.Count(c => c.ItemType == ContentGroupItemType.Content) < 2 || DirectEditContentGroupItem)
@@ -154,7 +154,7 @@ namespace ToSic.SexyContent
                 ContentGroupItem.SysModifiedBy = UserId;
             }
 
-            Sexy.TemplateContext.SaveChanges();
+            SexyUncached.TemplateContext.SaveChanges();
 
             RedirectReturn();
         }

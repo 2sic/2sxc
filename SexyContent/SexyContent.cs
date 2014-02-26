@@ -5,9 +5,11 @@ using System.Collections.Specialized;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.Remoting.Channels;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.UI;
+using System.Web.UI.WebControls;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security.Roles;
 using DotNetNuke.Services.FileSystem;
@@ -19,6 +21,7 @@ using DotNetNuke.Entities.Modules;
 using System.Reflection;
 using System.Web.UI.HtmlControls;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.DataSources.Caches;
 using ToSic.SexyContent;
 using FileInfo = System.IO.FileInfo;
 using DotNetNuke.Common;
@@ -120,9 +123,7 @@ namespace ToSic.SexyContent
         public SexyContentContext TemplateContext { get; internal set; }
 
         public App App {
-            get {
-                return GetApps().Where(p => p.AppId == AppId).FirstOrDefault();
-            }
+            get { return GetApp(AppId.Value); }
         }
 
         /// <summary>
@@ -174,11 +175,10 @@ namespace ToSic.SexyContent
         /// Constructor overload for DotNetNuke
         /// (BusinessControllerClass needs parameterless constructor)
         /// </summary>
-        // ToDo: uncomment this!
-        //public SexyContent()
-        //    : this(new int?(), new int?(), true)
-        //{
-        //}
+        public SexyContent()
+            : this(new int?(), new int?(), true)
+        {
+        }
 
 
         /// <summary>
@@ -433,7 +433,7 @@ namespace ToSic.SexyContent
 
             // Prepare some variables
             var List = ContentGroupItems.Count(p => p.ItemType == ContentGroupItemType.Content) > 1;
-            var CurrentTemplate = ContentGroupItems.First().Template;
+            var CurrentTemplate = TemplateContext.GetTemplate(ContentGroupItems.First().TemplateID.Value);
             var CurrentDefaults = GetTemplateDefaults(CurrentTemplate.TemplateID);
 
             CompatibleTemplates = GetTemplates(PortalID).Where(t => t.UseForList || !List).ToList();
@@ -767,50 +767,65 @@ namespace ToSic.SexyContent
 
         #region
 
-        public List<App> GetApps()
+        /// <summary>
+        /// Returns all Apps for the current zone
+        /// </summary>
+        /// <param name="includeDefaultApp"></param>
+        /// <returns></returns>
+        public List<App> GetApps(bool includeDefaultApp)
         {
-            var eavApps = ContentContext.GetApps();
-            var sexyApps = new List<App>();
-            
-            foreach(var eavApp in eavApps)
+            var eavApps = ((BaseCache)DataSource.GetCache(ZoneId.Value, null)).ZoneApps[ZoneId.Value].Apps;
+            var sexyApps = eavApps.Select(eavApp => GetApp(eavApp.Key));
+
+            if (!includeDefaultApp)
+                sexyApps = sexyApps.Where(a => a.Name != "Content");
+
+            return sexyApps.ToList();
+        }
+
+        public App GetApp(int appId)
+        {
+            // Get appName from cache
+            var eavAppName = ((BaseCache) DataSource.GetCache(ZoneId.Value, null)).ZoneApps[ZoneId.Value].Apps[appId];
+
+            // Get app-describing entity
+            var appMetaData = DataSource.GetMetaDataSource(ContentContext.ZoneId, appId).GetAssignedEntities(AssignmentObjectTypeIDSexyContentApp, appId, AttributeSetStaticNameApps).FirstOrDefault();
+            App sexyApp;
+            if (appMetaData != null)
             {
-                // Get app-describing entity
-                var appMetaData = DataSource.GetMetaDataSource(ContentContext.ZoneId, eavApp.AppID).GetAssignedEntities(AssignmentObjectTypeIDSexyContentApp, eavApp.AppID, AttributeSetStaticNameApps).FirstOrDefault();
-                App sexyApp;
-                if (appMetaData != null)
-                {
-                    dynamic appMetaDataDynamic = new DynamicEntity(appMetaData, new[] { System.Threading.Thread.CurrentThread.CurrentCulture.Name });
+                dynamic appMetaDataDynamic = new DynamicEntity(appMetaData, new[] { System.Threading.Thread.CurrentThread.CurrentCulture.Name });
 
-                    sexyApp = new App()
-                    {
-                        AppId = eavApp.AppID,
-                        Name = appMetaDataDynamic.DisplayName,
-                        Folder = appMetaDataDynamic.Folder,
-                        Configuration = appMetaDataDynamic
-                    };
-                }
-                // Handle default app
-                else if(eavApp.Name == EavContext.DefaultAppName)
+                sexyApp = new App()
                 {
-                    sexyApp = new App()
-                    {
-                        AppId = eavApp.AppID,
-                        Name = "Content",
-                        Folder = "Content",
-                        Configuration = null
-                    };
-                }
-                else
-                    throw new Exception("App must be the default app (Content) or have a description-entity.");
-
-                sexyApps.Add(sexyApp);
+                    AppId = appId,
+                    Name = appMetaDataDynamic.DisplayName,
+                    Folder = appMetaDataDynamic.Folder,
+                    Configuration = appMetaDataDynamic
+                    // ToDo: Resources, Settings, Hidden, etc.
+                };
             }
+            // Handle default app
+            else if (eavAppName == EavContext.DefaultAppName)
+            {
+                sexyApp = new App()
+                {
+                    AppId = appId,
+                    Name = "Content",
+                    Folder = "Content",
+                    Configuration = null
+                };
+            }
+            else
+                throw new Exception("App must be the default app (Content) or have a description-entity.");
 
-            return sexyApps;
+            return sexyApp;
         }
 
         public void AddApp(string appName)
         {
+            if(appName == "Content" || appName == "Default" || String.IsNullOrEmpty(appName) || !Regex.IsMatch(appName, "^[0-9A-Za-z]+$"))
+                throw new ArgumentOutOfRangeException("appName '" + appName + "' not allowed");
+
             // Adding app to EAV
             var app = ContentContext.AddApp(Guid.NewGuid().ToString());
             ContentContext.SaveChanges();
@@ -818,17 +833,18 @@ namespace ToSic.SexyContent
             // Add app-describing entity
             var appContext = new SexyContent(ContentContext.ZoneId, app.AppID);
             var appAttributeSet = appContext.ContentContext.GetAttributeSet(AttributeSetStaticNameApps).AttributeSetID;
-            var Values = new OrderedDictionary() {
+            var values = new OrderedDictionary() {
                 { "DisplayName", appName },
-                { "Folder", "" }
+                { "Folder", appName }
             };
-            appContext.ContentContext.AddEntity(appAttributeSet, Values, null, app.AppID, AssignmentObjectTypeIDSexyContentApp);
+            appContext.ContentContext.AddEntity(appAttributeSet, values, null, app.AppID, AssignmentObjectTypeIDSexyContentApp);
 
             // Add new (empty) ContentType for Settings
             appContext.ContentContext.AddAttributeSet("App-Settings", "Stores settings for an app", "App-Settings", "2SexyContent-App");
 
             // Add new (empty) ContentType for Resources
             appContext.ContentContext.AddAttributeSet("App-Resources", "Stores resources like translations for an app", "App-Resources", "2SexyContent-App");
+
         }
 
         public void RemoveApp(int appId)
@@ -846,6 +862,11 @@ namespace ToSic.SexyContent
 
             // Delete the app
             //ContentContext.RemoveApp(appId);
+        }
+
+        public static int GetDefaultAppId(int zoneId)
+        {
+            return new SexyContent(zoneId, new int?()).ContentContext.AppId;
         }
 
         #endregion Apps
@@ -1093,7 +1114,7 @@ namespace ToSic.SexyContent
         }
 
         /// <summary>
-        /// ToDo: Temp
+        /// Returns a JSON string for the elements
         /// </summary>
         /// <param name="elements"></param>
         /// <param name="dimensionID"></param>

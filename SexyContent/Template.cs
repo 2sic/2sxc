@@ -74,7 +74,7 @@ namespace ToSic.SexyContent
 
             IEngine Engine = (IEngine)Activator.CreateInstance(EngineType, null);
 
-            var app = sexy.GetApps().Where(a => a.AppId == appId).Single();
+            var app = sexy.GetApp(appId);
 
             // Render elements that have a content (by DemoEntityID or real Entity ID)
             string RenderedTemplate = Engine.Render(this, templatePath, app, Elements.Where(p => p.Content != null).ToList(), ListElement, ModuleContext, LocalResourceFile, DataSource);

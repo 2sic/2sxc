@@ -17,7 +17,7 @@ namespace ToSic.SexyContent.Administration
 
         protected void grdApps_NeedDataSource(object sender, EventArgs e)
         {
-            grdApps.DataSource = Sexy.GetApps();
+            grdApps.DataSource = Sexy.GetApps(true);
         }
 
         protected void btnCreateApp_Click(object sender, EventArgs e)

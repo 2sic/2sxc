@@ -48,7 +48,7 @@ namespace ToSic.SexyContent
             {
                 // ToDo: Fix this! (should not return 1, but the correct default-AppId)
                 if (IsContentApp)
-                    return 1;
+                    return SexyContent.GetDefaultAppId(SexyContent.GetZoneID(PortalId).Value);
 
                 // Get AppId from ModuleSettings
                 var appIdString = Settings[SexyContent.AppIDString];

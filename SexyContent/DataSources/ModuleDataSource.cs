@@ -19,7 +19,6 @@ namespace ToSic.SexyContent.DataSources
             Out.Add("ListContent", new DataStream(this, "Default", GetListContent));
             Out.Add("ListPresentation", new DataStream(this, "Default", GetListPresentation));
 
-            // ToDo: Review with 2dm
             Configuration.Add("ListId", "[Module:ModuleID]");
             
         }
