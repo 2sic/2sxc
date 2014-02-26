@@ -35,7 +35,7 @@ namespace ToSic.SexyContent
             hlkNewTemplate.NavigateUrl = EditUrl(PortalSettings.ActiveTab.TabID, SexyContent.ControlKeys.EditTemplate, true, "mid=" + this.ModuleId + "&" + SexyContent.AppIDString + "=" + AppId);
             hlkCancel.NavigateUrl = DotNetNuke.Common.Globals.NavigateURL(this.TabId, "", null);
 
-            if (!Sexy.SexyContentDesignersGroupConfigured(PortalId))
+            if (!SexyContent.SexyContentDesignersGroupConfigured(PortalId))
                 pnlSexyContentDesignersInfo.Visible = true;
         }
 
@@ -69,7 +69,7 @@ namespace ToSic.SexyContent
         protected void grdTemplates_EditCommand(object sender, Telerik.Web.UI.GridCommandEventArgs e)
         {
             int TemplateID = Convert.ToInt32(e.Item.OwnerTableView.DataKeyValues[e.Item.ItemIndex][SexyContent.TemplateID]);
-            string EditUrl = ModuleContext.NavigateUrl(TabId, SexyContent.ControlKeys.EditTemplate.ToString(), true, "mid", ModuleId.ToString(), SexyContent.TemplateID, TemplateID.ToString());
+            string EditUrl = ModuleContext.NavigateUrl(TabId, SexyContent.ControlKeys.EditTemplate.ToString(), true, "mid" + "=" + ModuleId.ToString() + "&" + SexyContent.TemplateID + "=" + TemplateID.ToString() + "&" + SexyContent.AppIDString + "=" + AppId.ToString());
             Response.Redirect(EditUrl);
         }
 

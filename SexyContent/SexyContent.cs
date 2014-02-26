@@ -101,17 +101,7 @@ namespace ToSic.SexyContent
         /// <summary>
         /// The Content Data Context
         /// </summary>
-        private EavContext _ContentContext;
-
-        public EavContext ContentContext
-        {
-            get
-            {
-                if (_ContentContext == null)
-                    _ContentContext = EavContext.Instance(ZoneId.HasValue ? ZoneId : DataSource.DefaultZoneId, null);
-                return _ContentContext;
-            }
-        }
+        public EavContext ContentContext;
 
         private int? ZoneId { get; set; }
 
@@ -123,7 +113,7 @@ namespace ToSic.SexyContent
         public SexyContentContext TemplateContext { get; internal set; }
 
         public App App {
-            get { return GetApp(AppId.Value); }
+            get { return GetApp(ZoneId.Value, AppId.Value); }
         }
 
         /// <summary>
@@ -137,7 +127,7 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Returns the Default AssignmentObjectTypeID (no assignment / default)
         /// </summary>
-        public int AssignmentObjectTypeIDDefault
+        public static int AssignmentObjectTypeIDDefault
         {
             get
             {
@@ -148,7 +138,7 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Returns the AssignmentObjectTypeID for 2SexyContent Templates
         /// </summary>        
-        public int AssignmentObjectTypeIDSexyContentTemplate
+        public static int AssignmentObjectTypeIDSexyContentTemplate
         {
             get
             {
@@ -159,7 +149,7 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Returns the AssignmentObjectTypeID for 2SexyContent Apps
         /// </summary>        
-        public int AssignmentObjectTypeIDSexyContentApp
+        public static int AssignmentObjectTypeIDSexyContentApp
         {
             get
             {
@@ -171,28 +161,33 @@ namespace ToSic.SexyContent
 
         #region SexyContent Constructor
 
-        /// <summary>
-        /// Constructor overload for DotNetNuke
-        /// (BusinessControllerClass needs parameterless constructor)
-        /// </summary>
-        public SexyContent()
-            : this(new int?(), new int?(), true)
-        {
-        }
+        // ToDo: needed for DNN search
+        ///// <summary>
+        ///// Constructor overload for DotNetNuke
+        ///// (BusinessControllerClass needs parameterless constructor)
+        ///// </summary>
+        //public SexyContent()
+        //    : this(new int?(), new int?(), true)
+        //{
+            
+        //}
+
 
 
         /// <summary>
         /// Instanciates Content and Template-Contexts
         /// </summary>
-        public SexyContent(int? ZoneID, int? AppID, bool EnableCaching = true)
+        public SexyContent(int zoneId, int appId, bool enableCaching = true)
         {
+            SetEAVConnectionString();
+
             // Only disable caching of templates and contentgroupitems
             // if AppSetting "ToSIC_SexyContent_EnableCaching" is disabled
-            if(EnableCaching)
+            if(enableCaching)
             {
-                var CachingSetting = System.Configuration.ConfigurationManager.AppSettings["ToSIC_SexyContent_EnableCaching"];
-                if (!String.IsNullOrEmpty(CachingSetting) && CachingSetting.ToLower() == "false")
-                    EnableCaching = false;
+                var cachingSetting = System.Configuration.ConfigurationManager.AppSettings["ToSIC_SexyContent_EnableCaching"];
+                if (!String.IsNullOrEmpty(cachingSetting) && cachingSetting.ToLower() == "false")
+                    enableCaching = false;
             }
 
             // Get Entity Framework ConnectionString
@@ -204,24 +199,24 @@ namespace ToSic.SexyContent
             entityBuilder.Provider = "System.Data.SqlClient";
 
             // Create TemplateContext
-            TemplateContext = new SexyContentContext(entityBuilder.ToString(), EnableCaching);
-
-            if (!ZoneID.HasValue && PortalSettings.Current != null)
-                ZoneID = GetZoneID(PortalSettings.Current.PortalId);
-
-            // Set EAV Connection String
-            ToSic.Eav.Configuration.SetConnectionString("SiteSqlServer");
+            TemplateContext = new SexyContentContext(entityBuilder.ToString(), enableCaching);
 
             // Set Properties on ContentContext
+            ContentContext = EavContext.Instance(zoneId, appId);
             ContentContext.UserName = (HttpContext.Current == null || HttpContext.Current.User == null) ? "Internal" : HttpContext.Current.User.Identity.Name;
-            if (AppID.HasValue)
-                ContentContext.AppId = AppID.Value;
-
-            this.ZoneId = ZoneID;
-            this.AppId = ContentContext.AppId;
+            
+            this.ZoneId = zoneId;
+            this.AppId = appId;
         }
 
-        
+        /// <summary>
+        /// Set EAV's connection string to DNN's
+        /// </summary>
+        public static void SetEAVConnectionString()
+        {
+            ToSic.Eav.Configuration.SetConnectionString("SiteSqlServer");
+        }
+
         #endregion
 
         #region Template File Handling
@@ -325,7 +320,7 @@ namespace ToSic.SexyContent
                 File.Copy(server.MapPath(WebConfigTemplatePath), Path.Combine(sexyFolder.FullName, WebConfigFileName));
 
             // Create a Content folder (default app)
-            var contentFolder = new DirectoryInfo(Path.Combine(sexyFolder.FullName, "Content"));
+            var contentFolder = new DirectoryInfo(Path.Combine(sexyFolder.FullName, App.Folder));
             if (!contentFolder.Exists)
                 contentFolder.Create();
         }
@@ -350,7 +345,7 @@ namespace ToSic.SexyContent
         /// <param name="controlPath"></param>
         /// <param name="PortalSettings"></param>
         /// <returns></returns>
-        public bool PortalIsConfigured(HttpServerUtility server, string controlPath)
+        public static bool PortalIsConfigured(HttpServerUtility server, string controlPath)
         {
             var sexyFolder = new DirectoryInfo(server.MapPath(Path.Combine(PortalSettings.Current.HomeDirectory, SexyContent.TemplateFolder)));
             var contentFolder = new DirectoryInfo(Path.Combine(sexyFolder.FullName, "Content"));
@@ -399,15 +394,15 @@ namespace ToSic.SexyContent
                 ContentContext.AddEntity(AttributeSetID, Values, null, TemplateID, AssignmentObjectTypeIDSexyContentTemplate, 0);
         }
 
-        public TemplateDefault GetTemplateDefault(int TemplateID, ContentGroupItemType ItemType)
+        public TemplateDefault GetTemplateDefault(int templateId, ContentGroupItemType ItemType)
         {
-            return GetTemplateDefaults(TemplateID).FirstOrDefault(t => t.ItemType == ItemType);
+            return GetTemplateDefaults(templateId).FirstOrDefault(t => t.ItemType == ItemType);
         }
 
         public List<TemplateDefault> GetTemplateDefaults(int TemplateID)
         {
             var Result = new List<TemplateDefault>();
-            var Entities = DataSource.GetMetaDataSource(ContentContext.ZoneId, ContentContext.AppId).GetAssignedEntities(AssignmentObjectTypeIDSexyContentTemplate, TemplateID, AttributeSetStaticNameTemplateContentTypes);
+            var Entities = DataSource.GetMetaDataSource(ZoneId.Value, AppId.Value).GetAssignedEntities(AssignmentObjectTypeIDSexyContentTemplate, TemplateID, AttributeSetStaticNameTemplateContentTypes);
 
             // Add TemplateDefault configured directly in Template
             var Template = TemplateContext.GetTemplate(TemplateID);
@@ -519,15 +514,15 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Returns true if a DotNetNuke User Group "SexyContent Designers" exists and contains at minumum one user
         /// </summary>
-        /// <param name="PortalID"></param>
+        /// <param name="portalId"></param>
         /// <returns></returns>
-        public bool SexyContentDesignersGroupConfigured(int PortalID)
+        public static bool SexyContentDesignersGroupConfigured(int portalId)
         {
-            DotNetNuke.Security.Roles.RoleController RoleControl = new DotNetNuke.Security.Roles.RoleController();
-            RoleInfo Role = RoleControl.GetRoleByName(PortalID, SexyContentGroupName);
+            var roleControl = new DotNetNuke.Security.Roles.RoleController();
+            RoleInfo Role = roleControl.GetRoleByName(portalId, SexyContentGroupName);
             if (Role != null)
             {
-                System.Collections.ArrayList t = RoleControl.GetUsersByRoleName(PortalID, SexyContentGroupName);
+                System.Collections.ArrayList t = roleControl.GetUsersByRoleName(portalId, SexyContentGroupName);
                 if (t.Count > 0)
                     return true;
             }
@@ -537,19 +532,25 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Returns true if a user is in the SexyContent Designers group
         /// </summary>
-        /// <param name="User"></param>
+        /// <param name="user"></param>
         /// <returns></returns>
-        public bool IsInSexyContentDesignersGroup(DotNetNuke.Entities.Users.UserInfo User)
+        public static bool IsInSexyContentDesignersGroup(DotNetNuke.Entities.Users.UserInfo user)
         {
-            return User.IsInRole(SexyContentGroupName);
+            return user.IsInRole(SexyContentGroupName);
         }
         #endregion
 
         #region Preparation of 2Sexy Elements
 
-        public ToSic.Eav.DataSources.IDataSource GetInitialDataSource()
+        /// <summary>
+        /// Gets the initial DataSource
+        /// Will use the current portal's Zone if no zoneId is set
+        /// </summary>
+        /// <param name="zoneId"></param>
+        /// <returns></returns>
+        public static ToSic.Eav.DataSources.IDataSource GetInitialDataSource(int? zoneId = null)
         {
-            var zoneId = PortalSettings.Current == null ? this.ZoneId : GetZoneID(PortalSettings.Current.PortalId);
+            var useZoneId = zoneId.HasValue ? zoneId.Value : GetZoneID(PortalSettings.Current.PortalId);
             return DataSource.GetInitialDataSource(zoneId: zoneId);
         }
 
@@ -589,7 +590,7 @@ namespace ToSic.SexyContent
                 // Prepare Dimension List (Languages)
                 var DimensionIds = new[] { LanguageName };
                 // Load all Entities to list
-                var InitialSource = GetInitialDataSource();
+                var InitialSource = GetInitialDataSource(ZoneId);
                 var EntityDataSource = DataSource.GetDataSource("ToSic.Eav.DataSources.EntityIdFilter", InitialSource.ZoneId, InitialSource.AppId, InitialSource);
                 ((EntityIdFilter)EntityDataSource).Configuration["EntityIds"] = String.Join(",", Identities.ToArray());
                 SexyDataSource = DataSource.GetDataSource("ToSic.Eav.DataSources.PassThrough", InitialSource.ZoneId, InitialSource.AppId, EntityDataSource);
@@ -709,12 +710,12 @@ namespace ToSic.SexyContent
         /// <param name="assignmentObjectTypeID"></param>
         /// <param name="keyNumber"></param>
         /// <returns></returns>
-        public string GetMetaDataEditUrl(int tabId, int moduleId, string returnUrl, Control control, string attributeSetStaticName, int assignmentObjectTypeID, int keyNumber, int appId)
+        public static string GetMetaDataEditUrl(int tabId, int moduleId, string returnUrl, Control control, string attributeSetStaticName, int assignmentObjectTypeID, int keyNumber, int zoneId, int appId)
         {
             var portalSettings = PortalSettings.Current;
 
             //var DefaultAppContext = new SexyContent(true, DataSource.DefaultZoneId);
-            var Set = new SexyContent(this.ContentContext.ZoneId, appId).ContentContext.GetAttributeSet(attributeSetStaticName);
+            var Set = new SexyContent(zoneId, appId).ContentContext.GetAttributeSet(attributeSetStaticName);
             string NewItemUrl = UrlUtils.PopUpUrl(Globals.NavigateURL(tabId, ControlKeys.EavManagement, "mid=" + moduleId.ToString() + "&ManagementMode=NewItem&AttributeSetId=[AttributeSetId]&KeyNumber=[KeyNumber]&AssignmentObjectTypeId=[AssignmentObjectTypeId]&ReturnUrl=[ReturnUrl]&" + SexyContent.AppIDString + "=" + appId), control, portalSettings, false, true);
             string EditItemUrl = UrlUtils.PopUpUrl(Globals.NavigateURL(tabId, ControlKeys.EavManagement, "mid=" + moduleId.ToString() + "&ManagementMode=EditItem&EntityId=[EntityId]&ReturnUrl=[ReturnUrl]&" + SexyContent.AppIDString + "=" + appId), control, portalSettings, false, true);
             return ToSic.Eav.ManagementUI.Forms.GetItemFormUrl(keyNumber, Set.AttributeSetID, assignmentObjectTypeID, NewItemUrl, EditItemUrl, returnUrl);
@@ -772,10 +773,10 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <param name="includeDefaultApp"></param>
         /// <returns></returns>
-        public List<App> GetApps(bool includeDefaultApp)
+        public static List<App> GetApps(int zoneId, bool includeDefaultApp)
         {
-            var eavApps = ((BaseCache)DataSource.GetCache(ZoneId.Value, null)).ZoneApps[ZoneId.Value].Apps;
-            var sexyApps = eavApps.Select(eavApp => GetApp(eavApp.Key));
+            var eavApps = ((BaseCache)DataSource.GetCache(zoneId, null)).ZoneApps[zoneId].Apps;
+            var sexyApps = eavApps.Select(eavApp => GetApp(zoneId, eavApp.Key));
 
             if (!includeDefaultApp)
                 sexyApps = sexyApps.Where(a => a.Name != "Content");
@@ -783,13 +784,13 @@ namespace ToSic.SexyContent
             return sexyApps.ToList();
         }
 
-        public App GetApp(int appId)
+        public static App GetApp(int zoneId, int appId)
         {
             // Get appName from cache
-            var eavAppName = ((BaseCache) DataSource.GetCache(ZoneId.Value, null)).ZoneApps[ZoneId.Value].Apps[appId];
+            var eavAppName = ((BaseCache) DataSource.GetCache(zoneId, null)).ZoneApps[zoneId].Apps[appId];
 
             // Get app-describing entity
-            var appMetaData = DataSource.GetMetaDataSource(ContentContext.ZoneId, appId).GetAssignedEntities(AssignmentObjectTypeIDSexyContentApp, appId, AttributeSetStaticNameApps).FirstOrDefault();
+            var appMetaData = DataSource.GetMetaDataSource(zoneId, appId).GetAssignedEntities(AssignmentObjectTypeIDSexyContentApp, appId, AttributeSetStaticNameApps).FirstOrDefault();
             App sexyApp;
             if (appMetaData != null)
             {
@@ -821,17 +822,18 @@ namespace ToSic.SexyContent
             return sexyApp;
         }
 
-        public void AddApp(string appName)
+        public static void AddApp(int zoneId, string appName)
         {
             if(appName == "Content" || appName == "Default" || String.IsNullOrEmpty(appName) || !Regex.IsMatch(appName, "^[0-9A-Za-z -_]+$"))
                 throw new ArgumentOutOfRangeException("appName '" + appName + "' not allowed");
 
             // Adding app to EAV
-            var app = ContentContext.AddApp(Guid.NewGuid().ToString());
-            ContentContext.SaveChanges();
+            var sexy = new SexyContent(zoneId, GetDefaultAppId(zoneId));
+            var app = sexy.ContentContext.AddApp(Guid.NewGuid().ToString());
+            sexy.ContentContext.SaveChanges();
             
             // Add app-describing entity
-            var appContext = new SexyContent(ContentContext.ZoneId, app.AppID);
+            var appContext = new SexyContent(zoneId, app.AppID);
             var appAttributeSet = appContext.ContentContext.GetAttributeSet(AttributeSetStaticNameApps).AttributeSetID;
             var values = new OrderedDictionary() {
                 { "DisplayName", appName },
@@ -970,8 +972,10 @@ namespace ToSic.SexyContent
         {
             var ZoneID = GetZoneID(ModInfo.PortalID);
 
+            // ToDo: Fix search (SexyContent Context)
+            throw new NotImplementedException("ToDo: Fix search");
             // Need a new Context because PortalSettings.Current is null
-            var Sexy = new SexyContent(ZoneID, new int?(), true);
+            var Sexy = new SexyContent(ZoneID.Value, 0, true);
 
             var SearchItems = new SearchItemInfoCollection();
 
@@ -1063,20 +1067,20 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Returns all DNN Cultures with active / inactive state
         /// </summary>
-        public List<CulturesWithActiveState> GetCulturesWithActiveState(int PortalID, int ZoneID)
+        public static List<CulturesWithActiveState> GetCulturesWithActiveState(int portalId, int zoneId)
         {
             //var DefaultLanguageID = ContentContext.GetLanguageId();
-            var AvailableEAVLanguages = ContentContext.GetLanguages();
-            var DefaultLanguageCode = new PortalSettings(PortalID).DefaultLanguage;
+            var AvailableEAVLanguages = new SexyContent(zoneId, SexyContent.GetDefaultAppId(zoneId)).ContentContext.GetLanguages();
+            var DefaultLanguageCode = new PortalSettings(portalId).DefaultLanguage;
             var DefaultLanguage = AvailableEAVLanguages.Where(p => p.ExternalKey == DefaultLanguageCode).FirstOrDefault();
             var DefaultLanguageIsActive = DefaultLanguage != null && DefaultLanguage.Active;
 
-            return (from c in LocaleController.Instance.GetLocales(PortalID)
+            return (from c in LocaleController.Instance.GetLocales(portalId)
                     select new CulturesWithActiveState()
                     {
                         Code = c.Value.Code,
                         Text = c.Value.Text,
-                        Active = AvailableEAVLanguages.Any(a => a.Active && a.ExternalKey == c.Value.Code && a.ZoneID == ZoneID),
+                        Active = AvailableEAVLanguages.Any(a => a.Active && a.ExternalKey == c.Value.Code && a.ZoneID == zoneId),
                         // Allow State Change only if
                         // 1. This is the default language and default language is not active or
                         // 2. This is NOT the default language and default language is active
@@ -1093,6 +1097,11 @@ namespace ToSic.SexyContent
             public bool AllowStateChange { get; set; }
         }
 
+        public static int? GetLanguageId(int zoneId, string externalKey)
+        {
+            return new SexyContent(zoneId, GetDefaultAppId(zoneId)).ContentContext.GetLanguageId(externalKey);
+        }
+
         #endregion
 
         #region Helper Methods
@@ -1102,7 +1111,7 @@ namespace ToSic.SexyContent
             return HttpUtility.HtmlDecode(Regex.Replace(Text, "<.*?>", string.Empty));
         }
 
-        public void AddDNNVersionToBodyClass(Control Parent)
+        public static void AddDNNVersionToBodyClass(Control Parent)
         {
             // Add DNN Version to body as CSS Class
             string CssClass = "dnn-" + System.Reflection.Assembly.GetAssembly(typeof(DotNetNuke.Common.Globals)).GetName().Version.Major;

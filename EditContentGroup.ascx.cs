@@ -136,7 +136,7 @@ namespace ToSic.SexyContent
         {
 
             // Add DNN Version to body Class
-            Sexy.AddDNNVersionToBodyClass(this);
+            SexyContent.AddDNNVersionToBodyClass(this);
 
             // Bind Languages Repeater
             var Languages = Sexy.ContentContext.GetLanguages().Where(l => l.Active).OrderByDescending(l => l.DimensionID == DefaultLanguageID).ThenBy(l => l.ExternalKey);

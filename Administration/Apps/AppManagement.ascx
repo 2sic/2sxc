@@ -1,4 +1,5 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="AppManagement.ascx.cs" Inherits="ToSic.SexyContent.Administration.AppManagement" %>
+<%@ Import Namespace="ToSic.SexyContent" %>
 <%@ Register TagPrefix="dnnweb" Assembly="DotNetNuke.Web" Namespace="DotNetNuke.Web.UI.WebControls" %>
 <%@ Register TagPrefix="Telerik" Assembly="Telerik.Web.UI" Namespace="Telerik.Web.UI" %>
 
@@ -16,7 +17,7 @@
                     <dnnweb:DnnGridTemplateColumn HeaderText="ContentType" DataField="Name">
                         <ItemTemplate>
                             <div style='<%# (Eval("Name") != "Content") ? "display:block;" : "display:none;" %>'>
-                                <a href="<%# Sexy.GetMetaDataEditUrl(TabId, ModuleId, Request.RawUrl, this, ToSic.SexyContent.SexyContent.AttributeSetStaticNameApps, Sexy.AssignmentObjectTypeIDSexyContentApp, (int)Eval("AppID"), (int)Eval("AppID")) %>">
+                                <a href="<%# SexyContent.GetMetaDataEditUrl(TabId, ModuleId, Request.RawUrl, this, SexyContent.AttributeSetStaticNameApps, SexyContent.AssignmentObjectTypeIDSexyContentApp, (int)Eval("AppID"), ZoneId.Value, (int)Eval("AppID")) %>">
                                     <%# HttpUtility.HtmlEncode(Eval("Name")) %>
                                 </a>
                             </div>

@@ -17,14 +17,14 @@ namespace ToSic.SexyContent.Administration
 
         protected void grdApps_NeedDataSource(object sender, EventArgs e)
         {
-            grdApps.DataSource = Sexy.GetApps(true);
+            grdApps.DataSource = SexyContent.GetApps(ZoneId.Value, true);
         }
 
         protected void btnCreateApp_Click(object sender, EventArgs e)
         {
             if(!String.IsNullOrEmpty(hfNewAppName.Value))
             {
-                Sexy.AddApp(hfNewAppName.Value);
+                SexyContent.AddApp(ZoneId.Value, hfNewAppName.Value);
                 Response.Redirect(Request.RawUrl);
             }
         }

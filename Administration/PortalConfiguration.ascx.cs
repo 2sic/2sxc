@@ -102,7 +102,7 @@ namespace ToSic.SexyContent.Configuration
         protected void grdCultures_NeedDatasource(object sender, GridNeedDataSourceEventArgs e)
         {
             // Set DataSource of the Cultures grid
-            grdCultures.DataSource = new SexyContent(SelectedZoneID, new int(), true).GetCulturesWithActiveState(PortalId, SelectedZoneID.HasValue ? SelectedZoneID.Value : 1);
+            grdCultures.DataSource = SexyContent.GetCulturesWithActiveState(PortalId, SelectedZoneID.HasValue ? SelectedZoneID.Value : 1);
         }
 
         protected string GetTooltipMessage(string Code, bool AllowStateChange)

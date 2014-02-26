@@ -92,7 +92,7 @@ namespace ToSic.SexyContent
                 pnlListConfiguration.Visible = chkEnableList.Checked;
 
                 string ReturnUrl = Request.Url.AbsoluteUri;
-                hlkTemplateMetaData.NavigateUrl = Sexy.GetMetaDataEditUrl(TabId, ModuleId, ReturnUrl, this, SexyContent.AttributeSetStaticNameTemplateMetaData, Sexy.AssignmentObjectTypeIDSexyContentTemplate, TemplateID, AppId);
+                hlkTemplateMetaData.NavigateUrl = SexyContent.GetMetaDataEditUrl(TabId, ModuleId, ReturnUrl, this, SexyContent.AttributeSetStaticNameTemplateMetaData, SexyContent.AssignmentObjectTypeIDSexyContentTemplate, TemplateID, ZoneId.Value, AppId);
 
                 // Set ContentType / Demo Entity Selectors
                 SetTemplateDefaultSelector(Template.TemplateID, ctrContentType);

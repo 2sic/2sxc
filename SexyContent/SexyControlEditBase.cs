@@ -17,8 +17,8 @@ namespace ToSic.SexyContent
         {
             get
             {
-                if (_sexy == null)
-                    _sexy = new SexyContent(ZoneId, AppId);
+                if (_sexy == null && ZoneId.HasValue && AppId.HasValue)
+                    _sexy = new SexyContent(ZoneId.Value, AppId.Value);
                 return _sexy;
             }
         }
@@ -28,8 +28,8 @@ namespace ToSic.SexyContent
         {
             get
             {
-                if (_sexyUncached == null)
-                    _sexyUncached = new SexyContent(ZoneId, AppId, false);
+                if (_sexyUncached == null && ZoneId.HasValue && AppId.HasValue)
+                    _sexyUncached = new SexyContent(ZoneId.Value, AppId.Value, false);
                 return _sexyUncached;
             }
         }
@@ -46,7 +46,6 @@ namespace ToSic.SexyContent
         {
             get
             {
-                // ToDo: Fix this! (should not return 1, but the correct default-AppId)
                 if (IsContentApp)
                 {
                     if (ZoneId.HasValue)
@@ -66,7 +65,10 @@ namespace ToSic.SexyContent
             set
             {
                 var moduleController = new ModuleController();
-                moduleController.UpdateModuleSetting(ModuleId, SexyContent.AppIDString, value.ToString());
+                if(value == 0 || !value.HasValue)
+                    moduleController.DeleteModuleSetting(ModuleId, SexyContent.AppIDString);
+                else
+                    moduleController.UpdateModuleSetting(ModuleId, SexyContent.AppIDString, value.ToString());
             }
         }
 

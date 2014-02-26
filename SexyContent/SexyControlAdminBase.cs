@@ -16,9 +16,8 @@ namespace ToSic.SexyContent
         {
             get
             {
-                // ToDo: Fix this! (should not return 1, but the correct default-AppId)
-                if (IsContentApp)
-                    return SexyContent.GetDefaultAppId(SexyContent.GetZoneID(PortalId).Value);
+                //if (IsContentApp)
+                //    return SexyContent.GetDefaultAppId(SexyContent.GetZoneID(PortalId).Value);
 
                 var appIdString = Request.QueryString[SexyContent.AppIDString];
                 int appId;

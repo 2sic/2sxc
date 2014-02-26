@@ -136,7 +136,7 @@ namespace ToSic.SexyContent.ImportExport
                     new XAttribute("IsHidden", t.IsHidden.ToString()),
                     new XAttribute("UseForList", t.UseForList.ToString()),
                     new XAttribute("DemoEntityGUID", DemoEntity != null ? DemoEntity.EntityGUID.ToString() : ""),
-                    (from c in Sexy.ContentContext.GetEntities(Sexy.AssignmentObjectTypeIDSexyContentTemplate, t.TemplateID, null, null)
+                    (from c in Sexy.ContentContext.GetEntities(SexyContent.AssignmentObjectTypeIDSexyContentTemplate, t.TemplateID, null, null)
                      select GetEntityXElement(c))
                 );
 
