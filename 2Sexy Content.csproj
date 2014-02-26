@@ -339,7 +339,6 @@
     <Content Include="Images\Drag.gif" />
     <Content Include="Images\Edit.png" />
     <Content Include="Administration\Import.ascx" />
-    <Content Include="JavaScript1.js" />
     <Content Include="Js\EditDataSource\demo-helper-jquery.js" />
     <Content Include="Js\EditDataSource\demo-list.js" />
     <Content Include="Js\EditDataSource\flowchartConnectorsDemo %28original%29.js" />
