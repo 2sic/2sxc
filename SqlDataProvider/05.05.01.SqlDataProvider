@@ -19,6 +19,7 @@ DECLARE @AppAttributeSetID int
 SELECT @AppAttributeSetID = AttributeSetID 
 FROM ToSIC_EAV_AttributeSets
 WHERE StaticName = '2SexyContent-App'
+AND AppID = 1
 
 -- Create new AttributeSet for Apps (if it does not exist yet)
 IF @AppAttributeSetID IS NULL
@@ -26,7 +27,7 @@ BEGIN
 	INSERT INTO ToSIC_EAV_AttributeSets (StaticName, Name, Scope, Description, ChangeLogCreated, ChangeLogDeleted, AppID, UsesConfigurationOfAttributeSet, AlwaysShareConfiguration)
 	VALUES (N'2SexyContent-App', N'2SexyContent-App', N'2SexyContent-App', N'Describes a 2SexyContent app', @ChangeLogID, NULL, 1, NULL, 1)
 
-	SELECT @AppAttributeSetID = AttributeSetID FROM ToSIC_EAV_AttributeSets WHERE StaticName = '2SexyContent-App' AND Scope = N'2SexyContent-System'
+	SELECT @AppAttributeSetID = AttributeSetID FROM ToSIC_EAV_AttributeSets WHERE StaticName = '2SexyContent-App' AND Scope = N'2SexyContent-App'
 
 	DECLARE @AttributeID int
 
