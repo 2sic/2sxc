@@ -105,17 +105,25 @@ namespace ToSic.SexyContent
             get
             {
                 if (_ContentContext == null)
-                    _ContentContext = EavContext.Instance(ContextZoneID.HasValue ? ContextZoneID : DataSource.DefaultZoneId, null);
+                    _ContentContext = EavContext.Instance(ZoneId.HasValue ? ZoneId : DataSource.DefaultZoneId, null);
                 return _ContentContext;
             }
         }
 
-        private int? ContextZoneID { get; set; }
+        private int? ZoneId { get; set; }
+
+        public int? AppId { get; private set; }
 
         /// <summary>
         /// The Template Data Context
         /// </summary>
         public SexyContentContext TemplateContext { get; internal set; }
+
+        public App App {
+            get {
+                return GetApps().Where(p => p.AppId == AppId).FirstOrDefault();
+            }
+        }
 
         /// <summary>
         /// The EAV DataSource
@@ -201,7 +209,8 @@ namespace ToSic.SexyContent
             if (!ZoneID.HasValue && PortalSettings.Current != null)
                 ZoneID = GetZoneID(PortalSettings.Current.PortalId);
 
-            this.ContextZoneID = ZoneID;
+            this.ZoneId = ZoneID;
+            this.AppId = AppID;
 
             // Set EAV Connection String
             ToSic.Eav.Configuration.SetConnectionString("SiteSqlServer");
@@ -282,7 +291,7 @@ namespace ToSic.SexyContent
             }
 
             Template.Path = System.Text.RegularExpressions.Regex.Replace(Name, @"[?:\/*""<>|]", "");
-            var TemplatePath = Server.MapPath(Template.GetTemplatePath());
+            var TemplatePath = Server.MapPath(System.IO.Path.Combine(GetTemplatePathRoot(Template.Location), Template.Path));
 
             if (!File.Exists(TemplatePath))
             {
@@ -350,19 +359,16 @@ namespace ToSic.SexyContent
         }
 
         /// <summary>
-        /// Returns the location, where Templates are stored
-        /// Must be static because used in Template.cs
+        /// Returns the location where Templates are stored for the current app
         /// </summary>
         /// <param name="locationID"></param>
         /// <param name="PortalSettings"></param>
         /// <returns></returns>
-        public static string GetTemplatePathRoot(string locationID, int appId)
+        public string GetTemplatePathRoot(string locationID)
         {
-            var app = GetApps().Where(p => p.AppId == appId);
-
             string RootFolder = (locationID == LocationIDCurrentPortal ? PortalSettings.Current.HomeDirectory : PortalHostDirectory);
             // Hard-coded /Content/ app (default app)
-            RootFolder += TemplateFolder + "/Content";
+            RootFolder += TemplateFolder + "/" + App.Folder;
             return RootFolder;
         }
 
@@ -543,7 +549,7 @@ namespace ToSic.SexyContent
 
         public ToSic.Eav.DataSources.IDataSource GetInitialDataSource()
         {
-            var zoneId = PortalSettings.Current == null ? this.ContextZoneID : GetZoneID(PortalSettings.Current.PortalId);
+            var zoneId = PortalSettings.Current == null ? this.ZoneId : GetZoneID(PortalSettings.Current.PortalId);
             return DataSource.GetInitialDataSource(zoneId: zoneId);
         }
 

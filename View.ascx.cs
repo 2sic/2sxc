@@ -180,7 +180,7 @@ namespace ToSic.SexyContent
                 else
                     RenderedTemplate = Template.RenderTemplate(Page, Server, PortalSettings, ModuleContext,
                                                                LocalResourceFile, Elements, ListElement, this,
-                                                               Sexy.SexyDataSource);
+                                                               Sexy.SexyDataSource, Sexy, AppId.Value);
 
                 // If standalone is specified, output just the template without anything else
                 if (StandAlone)

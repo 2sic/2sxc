@@ -29,7 +29,7 @@ namespace ToSic.SexyContent
         private string TemplatePath
         {
             get {
-                return Server.MapPath(Template.GetTemplatePath());
+                return Server.MapPath(System.IO.Path.Combine(Sexy.GetTemplatePathRoot(Template.Location), Template.Path));
             }
         }
 
