@@ -7,7 +7,7 @@ using System.Web.UI.WebControls;
 
 namespace ToSic.SexyContent.Administration
 {
-    public partial class DataImport : System.Web.UI.UserControl
+    public partial class DataImport : DotNetNuke.Entities.Modules.PortalModuleBase
     {
         protected void Page_Load(object sender, EventArgs e)
         {
