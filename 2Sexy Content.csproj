@@ -109,6 +109,30 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Administration\App_LocalResources\DataExport.ascx.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DataExport.ascx.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Administration\App_LocalResources\DataImport.ascx.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DataImport.ascx.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Administration\DataExport.ascx.cs">
+      <DependentUpon>DataExport.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\DataExport.ascx.designer.cs">
+      <DependentUpon>DataExport.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Administration\DataImport.ascx.cs">
+      <DependentUpon>DataImport.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\DataImport.ascx.designer.cs">
+      <DependentUpon>DataImport.ascx</DependentUpon>
+    </Compile>
     <Compile Include="Administration\GettingStarted.ascx.cs">
       <DependentUpon>GettingStarted.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -318,6 +342,8 @@
     <Compile Include="SexyContent\Engines\TokenEngine\TokenReplace.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Administration\DataExport.ascx" />
+    <Content Include="Administration\DataImport.ascx" />
     <Content Include="Administration\GettingStarted.ascx" />
     <Content Include="Administration\PortalConfiguration.ascx" />
     <Content Include="Administration\ContentTypeAndDemoSelector.ascx" />
@@ -521,6 +547,24 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Administration\App_LocalResources\PortalConfiguration.ascx.de-DE.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Administration\App_LocalResources\DataImport.ascx.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>DataImport.ascx.Designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Administration\App_LocalResources\DataImport.ascx.de-DE.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Administration\App_LocalResources\DataExport.ascx.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>DataExport.ascx.Designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Administration\App_LocalResources\DataExport.ascx.de-DE.resx" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
