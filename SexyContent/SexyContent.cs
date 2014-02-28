@@ -457,12 +457,11 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Returns all templates from the specified DotNetNuke portal and the current app
         /// </summary>
-        /// <param name="PortalID"></param>
+        /// <param name="portalId"></param>
         /// <returns></returns>
-        public IEnumerable<Template> GetTemplates(int PortalID)
+        public IEnumerable<Template> GetTemplates(int portalId)
         {
-            var attributeSets = GetAvailableAttributeSets().ToList();
-            return TemplateContext.GetAllTemplates().Where(a => attributeSets.Any(b => b.AttributeSetID == a.AttributeSetID));
+            return TemplateContext.GetAllTemplates().Where(a => a.PortalID == portalId && a.AppID == AppId);
         }
 
         /// <summary>
@@ -848,21 +847,29 @@ namespace ToSic.SexyContent
 
         }
 
-        public void RemoveApp(int appId)
+        public void RemoveApp(int appId, int userId)
         {
-            throw new NotImplementedException("An app can not be removed yet.");
-
             if(appId != this.ContentContext.AppId)
                 throw new Exception("An app can only be removed inside of it's own context.");
+
+            if(appId == GetDefaultAppId(ZoneId.Value))
+                throw new Exception("The default app of a zone cannot be removed.");
 
             var app = ContentContext.GetApps().Single(a => a.AppID == appId);
 
             // Delete templates
+            var attributeSets = ContentContext.AttributeSets.Where(a => a.AppID == appId).ToList();
+            var templates = TemplateContext.Templates.Where(t => attributeSets.Any(a => a.AttributeSetID == t.AttributeSetID)).ToList();
+            templates.ForEach(t => TemplateContext.HardDeleteTemplate(t.TemplateID, userId));
+
+            //TemplateContext.HardDeleteTemplate();
+            // ToDo: Ask 2dm how I should delete the templates...
 
             // Delete folder
+            // ToDo: Ask 2dm if the template folder should be deleted
 
             // Delete the app
-            //ContentContext.RemoveApp(appId);
+            ContentContext.DeleteApp(appId);
         }
 
         public static int GetDefaultAppId(int zoneId)

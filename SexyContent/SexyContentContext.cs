@@ -5,6 +5,7 @@ using System.Data.Objects.DataClasses;
 using System.Linq;
 using System.Reflection;
 using System.Web;
+using System.Web.UI.WebControls;
 using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.UI.Modules;
@@ -130,6 +131,22 @@ namespace ToSic.SexyContent
             Template Template = GetTemplate(TemplateID);
             Template.SysDeleted = DateTime.Now;
             Template.SysDeletedBy = UserId;
+            SaveChanges();
+        }
+
+        /// <summary>
+        /// Deletes a template and every exiting contengroupitem that uses it completely from the database
+        /// </summary>
+        /// <param name="templateId"></param>
+        /// <param name="userId"></param>
+        public void HardDeleteTemplate(int templateId, int userId)
+        {
+            var template = GetTemplate(templateId);
+            var contentGroupItems = base.ContentGroupItems.Where(c => c.TemplateID == templateId).ToList();
+
+            contentGroupItems.ForEach(DeleteObject);
+            DeleteObject(template);
+
             SaveChanges();
         }
 

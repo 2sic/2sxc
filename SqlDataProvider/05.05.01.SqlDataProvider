@@ -96,6 +96,95 @@ BEGIN
 
 END
 
+-- Wrapped into an EXEC because Create Procedure has to be the first statement in a query batch
+EXEC(N'
+-- =============================================
+-- Author:		Benjamin Gemperle
+-- Create date: 2014-02-26
+-- Description:	Delete an App in the 2sic EAV System
+-- =============================================
+CREATE PROCEDURE ToSIC_EAV_DeleteApp
+	@AppId int
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+	-- Delete Value-Dimensions
+	DELETE FROM ToSIC_EAV_ValuesDimensions
+	FROM            ToSIC_EAV_Values INNER JOIN
+							 ToSIC_EAV_Entities ON ToSIC_EAV_Values.EntityID = ToSIC_EAV_Entities.EntityID INNER JOIN
+							 ToSIC_EAV_AttributeSets ON ToSIC_EAV_Entities.AttributeSetID = ToSIC_EAV_AttributeSets.AttributeSetID INNER JOIN
+							 ToSIC_EAV_ValuesDimensions ON ToSIC_EAV_Values.ValueID = ToSIC_EAV_ValuesDimensions.ValueID
+	WHERE        (ToSIC_EAV_AttributeSets.AppID = @AppID)
+
+	-- Delete Values
+	DELETE FROM ToSIC_EAV_Values
+	FROM            ToSIC_EAV_Values INNER JOIN
+							 ToSIC_EAV_Entities ON ToSIC_EAV_Values.EntityID = ToSIC_EAV_Entities.EntityID INNER JOIN
+							 ToSIC_EAV_AttributeSets ON ToSIC_EAV_Entities.AttributeSetID = ToSIC_EAV_AttributeSets.AttributeSetID
+	WHERE        (ToSIC_EAV_AttributeSets.AppID = @AppID)
+
+	-- Delete Parent-EntityRelationships
+	DELETE FROM ToSIC_EAV_EntityRelationships
+	FROM            ToSIC_EAV_Entities INNER JOIN
+							 ToSIC_EAV_AttributeSets ON ToSIC_EAV_Entities.AttributeSetID = ToSIC_EAV_AttributeSets.AttributeSetID INNER JOIN
+							 ToSIC_EAV_EntityRelationships ON ToSIC_EAV_Entities.EntityID = ToSIC_EAV_EntityRelationships.ParentEntityID
+	WHERE        (ToSIC_EAV_AttributeSets.AppID = @AppID)
+
+	-- Delete Child-EntityRelationships
+	DELETE FROM ToSIC_EAV_EntityRelationships
+	FROM            ToSIC_EAV_Entities INNER JOIN
+							 ToSIC_EAV_AttributeSets ON ToSIC_EAV_Entities.AttributeSetID = ToSIC_EAV_AttributeSets.AttributeSetID INNER JOIN
+							 ToSIC_EAV_EntityRelationships ON ToSIC_EAV_Entities.EntityID = ToSIC_EAV_EntityRelationships.ChildEntityID
+	WHERE        (ToSIC_EAV_AttributeSets.AppID = @AppID)
+
+	-- Delete Entities
+	DELETE FROM ToSIC_EAV_Entities
+	FROM            ToSIC_EAV_Entities INNER JOIN
+							 ToSIC_EAV_AttributeSets ON ToSIC_EAV_Entities.AttributeSetID = ToSIC_EAV_AttributeSets.AttributeSetID
+	WHERE        (ToSIC_EAV_AttributeSets.AppID = @AppId)
+
+	-- Delete Attributes
+	DELETE FROM ToSIC_EAV_Attributes
+	FROM            ToSIC_EAV_Attributes INNER JOIN
+							 ToSIC_EAV_AttributesInSets ON ToSIC_EAV_Attributes.AttributeID = ToSIC_EAV_AttributesInSets.AttributeID INNER JOIN
+							 ToSIC_EAV_AttributeSets ON ToSIC_EAV_AttributesInSets.AttributeSetID = ToSIC_EAV_AttributeSets.AttributeSetID
+	WHERE        (ToSIC_EAV_AttributeSets.AppID = @AppID)
+
+
+	-- Delete Attributes not in use anywhere (Attribute not in any Set, no Values/Related Entities)
+	DELETE FROM ToSIC_EAV_Attributes
+	FROM            ToSIC_EAV_Attributes LEFT OUTER JOIN
+							 ToSIC_EAV_AttributesInSets ON ToSIC_EAV_Attributes.AttributeID = ToSIC_EAV_AttributesInSets.AttributeID LEFT OUTER JOIN
+							 ToSIC_EAV_EntityRelationships ON ToSIC_EAV_Attributes.AttributeID = ToSIC_EAV_EntityRelationships.AttributeID LEFT OUTER JOIN
+							 ToSIC_EAV_Values ON ToSIC_EAV_Attributes.AttributeID = ToSIC_EAV_Values.AttributeID
+	WHERE        (ToSIC_EAV_Values.ValueID IS NULL) AND (ToSIC_EAV_EntityRelationships.AttributeID IS NULL) AND (ToSIC_EAV_AttributesInSets.AttributeID IS NULL)
+
+	-- Delete Attribute-In-Sets
+	DELETE FROM ToSIC_EAV_AttributesInSets
+	FROM            ToSIC_EAV_AttributeSets INNER JOIN
+							 ToSIC_EAV_AttributesInSets ON ToSIC_EAV_AttributeSets.AttributeSetID = ToSIC_EAV_AttributesInSets.AttributeSetID
+	WHERE        (ToSIC_EAV_AttributeSets.AppID = @AppId)
+
+	-- Delete AttributeSets
+	DELETE FROM ToSIC_EAV_AttributeSets WHERE AppID = @AppId
+
+	-- Delete App
+	DELETE FROM ToSIC_EAV_Apps WHERE AppID = @AppId
+
+
+END')
+
+-- Add a new template-app assignment
+ALTER TABLE dbo.ToSIC_SexyContent_Templates ADD	AppID int NULL
+
+-- Assign all templates to an app
+UPDATE       ToSIC_SexyContent_Templates
+SET                AppID = ToSIC_EAV_AttributeSets.AppID
+FROM            ToSIC_SexyContent_Templates INNER JOIN
+                         ToSIC_EAV_AttributeSets ON ToSIC_SexyContent_Templates.AttributeSetID = ToSIC_EAV_AttributeSets.AttributeSetID
 
 
 -- Commit the transaction
