@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Telerik.Web.UI;
+using ToSic.Eav;
 
 namespace ToSic.SexyContent.Administration
 {
@@ -51,5 +52,7 @@ namespace ToSic.SexyContent.Administration
             new SexyContent(ZoneId.Value, appId, false).RemoveApp(appId, UserId);
             grdApps.Rebind();
         }
+
+        
     }
 }

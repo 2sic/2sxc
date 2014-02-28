@@ -45,7 +45,7 @@
           <Property Name="SysModifiedBy" Type="int" Nullable="false" />
           <Property Name="SysDeleted" Type="datetime" />
           <Property Name="SysDeletedBy" Type="int" />
-          <Property Name="AppID" Type="int" />
+          <Property Name="AppID" Type="int" Nullable="false" />
         </EntityType>
         <Association Name="FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_SexyContent_Templates">
           <End Role="ToSIC_SexyContent_Templates" Type="Self.ToSIC_SexyContent_Templates" Multiplicity="0..1" />
@@ -121,7 +121,7 @@
           <Property Name="SysDeleted" Type="DateTime" Precision="3" />
           <Property Name="SysDeletedBy" Type="Int32" />
           <NavigationProperty Name="ContentGroupItems" Relationship="ToSic.SexyContent.FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_SexyContent_Templates" FromRole="ToSIC_SexyContent_Templates" ToRole="ToSIC_SexyContent_ContentGroupItems" />
-          <Property Name="AppID" Type="Int32" />
+          <Property Name="AppID" Type="Int32" Nullable="false" />
         </EntityType>
         <Association Name="FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_SexyContent_Templates">
           <End Role="ToSIC_SexyContent_Templates" Type="ToSic.SexyContent.Template" Multiplicity="0..1" />

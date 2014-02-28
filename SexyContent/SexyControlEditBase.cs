@@ -42,7 +42,7 @@ namespace ToSic.SexyContent
             }
         }
 
-        protected int? AppId
+        protected virtual int? AppId
         {
             get
             {

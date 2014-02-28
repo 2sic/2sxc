@@ -12,7 +12,7 @@ namespace ToSic.SexyContent
     /// </summary>
     public abstract class SexyControlAdminBase : SexyControlEditBase
     {
-        protected new int AppId
+        protected override int? AppId
         {
             get
             {

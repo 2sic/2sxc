@@ -34,7 +34,7 @@ namespace ToSic.SexyContent
 
             foreach (var contentTypeSelector in contentTypeSelectors)
             {
-                contentTypeSelector.AppId = AppId;
+                contentTypeSelector.AppId = AppId.Value;
                 contentTypeSelector.ZoneId = ZoneId.Value;
             }
 
@@ -92,7 +92,7 @@ namespace ToSic.SexyContent
                 pnlListConfiguration.Visible = chkEnableList.Checked;
 
                 string ReturnUrl = Request.Url.AbsoluteUri;
-                hlkTemplateMetaData.NavigateUrl = SexyContent.GetMetaDataEditUrl(TabId, ModuleId, ReturnUrl, this, SexyContent.AttributeSetStaticNameTemplateMetaData, SexyContent.AssignmentObjectTypeIDSexyContentTemplate, TemplateID, ZoneId.Value, AppId);
+                hlkTemplateMetaData.NavigateUrl = SexyContent.GetMetaDataEditUrl(TabId, ModuleId, ReturnUrl, this, SexyContent.AttributeSetStaticNameTemplateMetaData, SexyContent.AssignmentObjectTypeIDSexyContentTemplate, TemplateID, ZoneId.Value, AppId.Value);
 
                 // Set ContentType / Demo Entity Selectors
                 SetTemplateDefaultSelector(Template.TemplateID, ctrContentType);
@@ -138,6 +138,7 @@ namespace ToSic.SexyContent
                 Template.Name = txtTemplateName.Text;
                 Template.IsHidden = chkHidden.Checked;
                 Template.UseForList = chkEnableList.Checked;
+                Template.AppID = AppId.Value;
 
                 Sexy.TemplateContext.UpdateTemplate(Template);
             }
@@ -159,6 +160,7 @@ namespace ToSic.SexyContent
                 Template.Name = txtTemplateName.Text;
                 Template.IsHidden = chkHidden.Checked;
                 Template.UseForList = chkEnableList.Checked;
+                Template.AppID = AppId.Value;
 
                 Sexy.TemplateContext.AddTemplate(Template);
             }

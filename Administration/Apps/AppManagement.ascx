@@ -37,13 +37,34 @@
                             <%# ((dynamic)Eval("Configuration")) == null ? "-" : ((dynamic)Eval("Configuration")).AllowRazorTemplates.ToString() %>
                         </ItemTemplate>
                     </dnnweb:DnnGridTemplateColumn>
-
+                    
+                    <dnnweb:DnnGridTemplateColumn HeaderText="Settings">
+                        <ItemTemplate>
+                            <a href="<%# SexyContent.GetDefaultAppId(ZoneId.Value) == (int)Eval("AppID") ? "" : EditUrl("", "", SexyContent.ControlKeys.EavManagement, SexyContent.AppIDString + "=" + Eval("AppID") + "&" +
+                                "ManagementMode=ContentTypeFields&AttributeSetId=" + SexyContent.GetAppSettingsAttributeSetId(ZoneId.Value, (int)Eval("AppID"))) %>">Conf</a>
+                            <a href="<%# SexyContent.GetDefaultAppId(ZoneId.Value) == (int)Eval("AppID") ? "" : SexyContent.GetMetaDataEditUrl(TabId, ModuleId, Request.RawUrl, this, SexyContent.AttributeSetStaticNameAppSettings,
+                                SexyContent.AssignmentObjectTypeIDSexyContentApp, (int)Eval("AppID"), ZoneId.Value, (int)Eval("AppID")) %>">Edit</a>
+                        </ItemTemplate>
+                    </dnnweb:DnnGridTemplateColumn>
+                    
+                    <dnnweb:DnnGridTemplateColumn HeaderText="Resources">
+                        <ItemTemplate>
+                            <a href="<%# SexyContent.GetDefaultAppId(ZoneId.Value) == (int)Eval("AppID") ? "" :  EditUrl("", "", SexyContent.ControlKeys.EavManagement, SexyContent.AppIDString + "=" + Eval("AppID") + "&" +
+                                "ManagementMode=ContentTypeFields&AttributeSetId=" + SexyContent.GetAppResourcesAttributeSetId(ZoneId.Value, (int)Eval("AppID"))) %>">Conf</a>
+                            <a href="<%# SexyContent.GetDefaultAppId(ZoneId.Value) == (int)Eval("AppID") ? "" :  SexyContent.GetMetaDataEditUrl(TabId, ModuleId, Request.RawUrl, this, SexyContent.AttributeSetStaticNameAppResources,
+                                SexyContent.AssignmentObjectTypeIDSexyContentApp, (int)Eval("AppID"), ZoneId.Value, (int)Eval("AppID")) %>">Edit</a>
+                        </ItemTemplate>
+                    </dnnweb:DnnGridTemplateColumn>
 
                     <dnnweb:DnnGridTemplateColumn HeaderText="ManageApp">
                         <ItemTemplate>
-                            <a href="<%# EditUrl("", "", "eavmanagement", ToSic.SexyContent.SexyContent.AppIDString + "=" + Eval("AppID")) %>">Manage</a>
+                            <a href="<%# EditUrl("", "", SexyContent.ControlKeys.EavManagement, SexyContent.AppIDString + "=" + Eval("AppID")) %>">Manage</a>
                         </ItemTemplate>
                     </dnnweb:DnnGridTemplateColumn>
+                    
+                    <dnnweb:DnnGridCheckBoxColumn ReadOnly="true" DataField="Hidden" HeaderText="Hidden">
+                        <HeaderStyle Width="80px" />
+                    </dnnweb:DnnGridCheckBoxColumn>
 
                     <%--<dnnweb:DnnGridTemplateColumn HeaderText="TemplatePath" DataField="TemplatePath">
                         <HeaderStyle Width="160px" />

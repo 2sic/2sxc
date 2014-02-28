@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using DotNetNuke.Entities.Portals;
 
 namespace ToSic.SexyContent
 {
@@ -10,11 +11,6 @@ namespace ToSic.SexyContent
     /// </summary>
     public class App
     {
-        public App()
-        {
-            Name = "Content";
-        }
-
         public int AppId { get; internal set; }
         public string Name { get; internal set; }
         public string Folder { get; internal set; }
@@ -27,16 +23,16 @@ namespace ToSic.SexyContent
         {
             get
             {
-                // ToDo: Fix this
-                return null;//VirtualPathUtility.ToAbsolute(SexyContent.GetTemplatePathRoot(this.Location))
+                var appPath = System.IO.Path.Combine(SexyContent.AppBasePath(), Folder);
+                return VirtualPathUtility.ToAbsolute(appPath);
             }
         }
         public string PhysicalPath
         {
             get
             {
-                // ToDo: Fix this
-                return null;// HttpContext.Current.Server.MapPath(SexyContent.GetTemplatePathRoot(this.Location));
+                var appPath = System.IO.Path.Combine(SexyContent.AppBasePath(), Folder);
+                return HttpContext.Current.Server.MapPath(appPath);
             }
         }
     }

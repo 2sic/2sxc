@@ -89,9 +89,12 @@ namespace ToSic.SexyContent
         public const string WebConfigFileName = "web.config";
         public const string SexyContentGroupName = "2SexyContent Designers";
         public const string AttributeSetScope = "2SexyContent";
+        public const string AttributeSetScopeApps = "2SexyContent-App";
         public const string AttributeSetStaticNameTemplateMetaData = "2SexyContent-Template-Metadata";
         public const string AttributeSetStaticNameTemplateContentTypes = "2SexyContent-Template-ContentTypes";
         public const string AttributeSetStaticNameApps = "2SexyContent-App";
+        public const string AttributeSetStaticNameAppResources = "App-Resources";
+        public const string AttributeSetStaticNameAppSettings = "App-Settings";
         public const string TemporaryDirectory = "~/DesktopModules/ToSIC_SexyContent/Temporary";
 
         #endregion
@@ -321,6 +324,7 @@ namespace ToSic.SexyContent
 
             // Create a Content folder (default app)
             var contentFolder = new DirectoryInfo(Path.Combine(sexyFolder.FullName, App.Folder));
+
             if (!contentFolder.Exists)
                 contentFolder.Create();
         }
@@ -336,6 +340,11 @@ namespace ToSic.SexyContent
             //var templatePathRootMapPath = server.MapPath(Path.Combine(PortalSettings.Current.HomeDirectory, SexyContent.TemplateFolder));
             //var directory = new DirectoryInfo(templatePathRootMapPath);
             EnsureTemplateFolderExists(server, TemplateLocations.PortalFileSystem);
+        }
+
+        public static string AppBasePath()
+        {
+            return Path.Combine(PortalSettings.Current.HomeDirectory, SexyContent.TemplateFolder);
         }
 
         /// <summary>
@@ -716,7 +725,7 @@ namespace ToSic.SexyContent
             var Set = new SexyContent(zoneId, appId).ContentContext.GetAttributeSet(attributeSetStaticName);
             string NewItemUrl = UrlUtils.PopUpUrl(Globals.NavigateURL(tabId, ControlKeys.EavManagement, "mid=" + moduleId.ToString() + "&ManagementMode=NewItem&AttributeSetId=[AttributeSetId]&KeyNumber=[KeyNumber]&AssignmentObjectTypeId=[AssignmentObjectTypeId]&ReturnUrl=[ReturnUrl]&" + SexyContent.AppIDString + "=" + appId), control, portalSettings, false, true);
             string EditItemUrl = UrlUtils.PopUpUrl(Globals.NavigateURL(tabId, ControlKeys.EavManagement, "mid=" + moduleId.ToString() + "&ManagementMode=EditItem&EntityId=[EntityId]&ReturnUrl=[ReturnUrl]&" + SexyContent.AppIDString + "=" + appId), control, portalSettings, false, true);
-            return ToSic.Eav.ManagementUI.Forms.GetItemFormUrl(keyNumber, Set.AttributeSetID, assignmentObjectTypeID, NewItemUrl, EditItemUrl, returnUrl);
+            return Eav.ManagementUI.Forms.GetItemFormUrl(keyNumber, Set.AttributeSetID, assignmentObjectTypeID, NewItemUrl, EditItemUrl, returnUrl);
         }
 
         /// <summary>
@@ -789,17 +798,24 @@ namespace ToSic.SexyContent
 
             // Get app-describing entity
             var appMetaData = DataSource.GetMetaDataSource(zoneId, appId).GetAssignedEntities(AssignmentObjectTypeIDSexyContentApp, appId, AttributeSetStaticNameApps).FirstOrDefault();
+            var appResources = DataSource.GetMetaDataSource(zoneId, appId).GetAssignedEntities(AssignmentObjectTypeIDSexyContentApp, appId, AttributeSetStaticNameAppResources).FirstOrDefault();
+            var appSettings = DataSource.GetMetaDataSource(zoneId, appId).GetAssignedEntities(AssignmentObjectTypeIDSexyContentApp, appId, AttributeSetStaticNameAppSettings).FirstOrDefault();
             App sexyApp;
             if (appMetaData != null)
             {
                 dynamic appMetaDataDynamic = new DynamicEntity(appMetaData, new[] { System.Threading.Thread.CurrentThread.CurrentCulture.Name });
+                dynamic appResourcesDynamic = appResources != null ? new DynamicEntity(appResources, new[] {System.Threading.Thread.CurrentThread.CurrentCulture.Name}) : null;
+                dynamic appSettingsDynamic = appResources != null ? new DynamicEntity(appSettings, new[] {System.Threading.Thread.CurrentThread.CurrentCulture.Name}) : null;
 
                 sexyApp = new App()
                 {
                     AppId = appId,
                     Name = appMetaDataDynamic.DisplayName,
                     Folder = appMetaDataDynamic.Folder,
-                    Configuration = appMetaDataDynamic
+                    Configuration = appMetaDataDynamic,
+                    Resources = appResources,
+                    Settings = appSettings,
+                    Hidden = appMetaDataDynamic.Hidden is bool ? appMetaDataDynamic.Hidden : false
                     // ToDo: Resources, Settings, Hidden, etc.
                 };
             }
@@ -815,7 +831,9 @@ namespace ToSic.SexyContent
                 };
             }
             else
-                throw new Exception("App must be the default app (Content) or have a description-entity.");
+            {
+                sexyApp = null;
+            }
 
             return sexyApp;
         }
@@ -840,11 +858,31 @@ namespace ToSic.SexyContent
             appContext.ContentContext.AddEntity(appAttributeSet, values, null, app.AppID, AssignmentObjectTypeIDSexyContentApp);
 
             // Add new (empty) ContentType for Settings
-            appContext.ContentContext.AddAttributeSet("App-Settings", "Stores settings for an app", "App-Settings", "2SexyContent-App");
+            var settingsAttributeSet = appContext.ContentContext.AddAttributeSet(AttributeSetStaticNameAppSettings, "Stores settings for an app", AttributeSetStaticNameAppSettings, AttributeSetScopeApps);
+            appContext.ContentContext.AddEntity(settingsAttributeSet, new OrderedDictionary() { }, null, app.AppID, AssignmentObjectTypeIDSexyContentApp);
 
             // Add new (empty) ContentType for Resources
-            appContext.ContentContext.AddAttributeSet("App-Resources", "Stores resources like translations for an app", "App-Resources", "2SexyContent-App");
+            var resourcesAttributeSet = appContext.ContentContext.AddAttributeSet(AttributeSetStaticNameAppResources, "Stores resources like translations for an app", AttributeSetStaticNameAppResources, AttributeSetScopeApps);
+            appContext.ContentContext.AddEntity(resourcesAttributeSet, new OrderedDictionary() { }, null, app.AppID, AssignmentObjectTypeIDSexyContentApp);
 
+        }
+
+        public static int? GetAppSettingsAttributeSetId(int zoneId, int appId)
+        {
+            if (appId == GetDefaultAppId(zoneId))
+                return null;
+
+            return new SexyContent(zoneId, appId).GetAvailableAttributeSets(AttributeSetScopeApps)
+                .Single(p => p.StaticName == AttributeSetStaticNameAppSettings).AttributeSetID;
+        }
+
+        public static int? GetAppResourcesAttributeSetId(int zoneId, int appId)
+        {
+            if (appId == GetDefaultAppId(zoneId))
+                return null;
+
+            return new SexyContent(zoneId, appId).GetAvailableAttributeSets(AttributeSetScopeApps)
+                .Single(p => p.StaticName == AttributeSetStaticNameAppResources).AttributeSetID;
         }
 
         public void RemoveApp(int appId, int userId)
@@ -855,14 +893,17 @@ namespace ToSic.SexyContent
             if(appId == GetDefaultAppId(ZoneId.Value))
                 throw new Exception("The default app of a zone cannot be removed.");
 
-            var app = ContentContext.GetApps().Single(a => a.AppID == appId);
+            var sexyApp = GetApp(ZoneId.Value, appId);
+            var eavApp = ContentContext.GetApps().Single(a => a.AppID == appId);
 
             // Delete templates
             var templates = TemplateContext.Templates.Where(t => t.AppID == appId).ToList();
             templates.ForEach(t => TemplateContext.HardDeleteTemplate(t.TemplateID, userId));
+            TemplateContext.SaveChanges();
 
             // Delete folder
-            
+            if (Directory.Exists(sexyApp.PhysicalPath))
+                Directory.Delete(sexyApp.PhysicalPath, true);
 
             // Delete the app
             ContentContext.DeleteApp(appId);
@@ -939,11 +980,11 @@ namespace ToSic.SexyContent
             TemplateContext.SaveChanges();
         }
 
-        public IEnumerable<AttributeSet> GetAvailableAttributeSets()
+        public IEnumerable<AttributeSet> GetAvailableAttributeSets(string scope = SexyContent.AttributeSetScope)
         {
             return from c in ContentContext.GetAllAttributeSets()
                    where !c.Name.StartsWith("@")
-                         && c.Scope == SexyContent.AttributeSetScope
+                         && c.Scope == scope
                          && !c.ChangeLogIDDeleted.HasValue
                    orderby c.Name
                    select c;

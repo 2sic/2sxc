@@ -90,7 +90,7 @@ namespace ToSic.SexyContent
             // Reset messages visible states
             pnlMessage.Visible = false;
             pnlError.Visible = false;
-
+            
             // Add ModuleActionHandler
             AddActionHandler(ModuleActions_Click);
 
