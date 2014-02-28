@@ -19,7 +19,7 @@ using System.Xml.Serialization;
 [assembly: EdmSchemaAttribute()]
 #region EDM Relationship Metadata
 
-[assembly: EdmRelationshipAttribute("ToSIC.Modules", "FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_SexyContent_Templates", "ToSIC_SexyContent_Templates", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(ToSic.SexyContent.Template), "ToSIC_SexyContent_ContentGroupItems", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(ToSic.SexyContent.ContentGroupItem), true)]
+[assembly: EdmRelationshipAttribute("ToSic.SexyContent", "FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_SexyContent_Templates", "ToSIC_SexyContent_Templates", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(ToSic.SexyContent.Template), "ToSIC_SexyContent_ContentGroupItems", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(ToSic.SexyContent.ContentGroupItem), true)]
 
 #endregion
 
@@ -134,7 +134,7 @@ namespace ToSic.SexyContent
     /// <summary>
     /// No Metadata Documentation available.
     /// </summary>
-    [EdmEntityTypeAttribute(NamespaceName="ToSIC.Modules", Name="ContentGroupItem")]
+    [EdmEntityTypeAttribute(NamespaceName="ToSic.SexyContent", Name="ContentGroupItem")]
     [Serializable()]
     [DataContractAttribute(IsReference=true)]
     public partial class ContentGroupItem : EntityObject
@@ -472,16 +472,16 @@ namespace ToSic.SexyContent
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("ToSIC.Modules", "FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_SexyContent_Templates", "ToSIC_SexyContent_Templates")]
+        [EdmRelationshipNavigationPropertyAttribute("ToSic.SexyContent", "FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_SexyContent_Templates", "ToSIC_SexyContent_Templates")]
         public Template Template
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Template>("ToSIC.Modules.FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_SexyContent_Templates", "ToSIC_SexyContent_Templates").Value;
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Template>("ToSic.SexyContent.FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_SexyContent_Templates", "ToSIC_SexyContent_Templates").Value;
             }
             set
             {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Template>("ToSIC.Modules.FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_SexyContent_Templates", "ToSIC_SexyContent_Templates").Value = value;
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Template>("ToSic.SexyContent.FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_SexyContent_Templates", "ToSIC_SexyContent_Templates").Value = value;
             }
         }
         /// <summary>
@@ -493,13 +493,13 @@ namespace ToSic.SexyContent
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Template>("ToSIC.Modules.FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_SexyContent_Templates", "ToSIC_SexyContent_Templates");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Template>("ToSic.SexyContent.FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_SexyContent_Templates", "ToSIC_SexyContent_Templates");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Template>("ToSIC.Modules.FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_SexyContent_Templates", "ToSIC_SexyContent_Templates", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Template>("ToSic.SexyContent.FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_SexyContent_Templates", "ToSIC_SexyContent_Templates", value);
                 }
             }
         }
@@ -511,7 +511,7 @@ namespace ToSic.SexyContent
     /// <summary>
     /// No Metadata Documentation available.
     /// </summary>
-    [EdmEntityTypeAttribute(NamespaceName="ToSIC.Modules", Name="Template")]
+    [EdmEntityTypeAttribute(NamespaceName="ToSic.SexyContent", Name="Template")]
     [Serializable()]
     [DataContractAttribute(IsReference=true)]
     public partial class Template : EntityObject
@@ -1021,6 +1021,30 @@ namespace ToSic.SexyContent
         private Nullable<global::System.Int32> _SysDeletedBy;
         partial void OnSysDeletedByChanging(Nullable<global::System.Int32> value);
         partial void OnSysDeletedByChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> AppID
+        {
+            get
+            {
+                return _AppID;
+            }
+            set
+            {
+                OnAppIDChanging(value);
+                ReportPropertyChanging("AppID");
+                _AppID = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("AppID");
+                OnAppIDChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _AppID;
+        partial void OnAppIDChanging(Nullable<global::System.Int32> value);
+        partial void OnAppIDChanged();
 
         #endregion
 
@@ -1033,18 +1057,18 @@ namespace ToSic.SexyContent
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("ToSIC.Modules", "FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_SexyContent_Templates", "ToSIC_SexyContent_ContentGroupItems")]
+        [EdmRelationshipNavigationPropertyAttribute("ToSic.SexyContent", "FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_SexyContent_Templates", "ToSIC_SexyContent_ContentGroupItems")]
         public EntityCollection<ContentGroupItem> ContentGroupItems
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<ContentGroupItem>("ToSIC.Modules.FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_SexyContent_Templates", "ToSIC_SexyContent_ContentGroupItems");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<ContentGroupItem>("ToSic.SexyContent.FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_SexyContent_Templates", "ToSIC_SexyContent_ContentGroupItems");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<ContentGroupItem>("ToSIC.Modules.FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_SexyContent_Templates", "ToSIC_SexyContent_ContentGroupItems", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<ContentGroupItem>("ToSic.SexyContent.FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_SexyContent_Templates", "ToSIC_SexyContent_ContentGroupItems", value);
                 }
             }
         }

@@ -858,15 +858,11 @@ namespace ToSic.SexyContent
             var app = ContentContext.GetApps().Single(a => a.AppID == appId);
 
             // Delete templates
-            var attributeSets = ContentContext.AttributeSets.Where(a => a.AppID == appId).ToList();
-            var templates = TemplateContext.Templates.Where(t => attributeSets.Any(a => a.AttributeSetID == t.AttributeSetID)).ToList();
+            var templates = TemplateContext.Templates.Where(t => t.AppID == appId).ToList();
             templates.ForEach(t => TemplateContext.HardDeleteTemplate(t.TemplateID, userId));
 
-            //TemplateContext.HardDeleteTemplate();
-            // ToDo: Ask 2dm how I should delete the templates...
-
             // Delete folder
-            // ToDo: Ask 2dm if the template folder should be deleted
+            
 
             // Delete the app
             ContentContext.DeleteApp(appId);

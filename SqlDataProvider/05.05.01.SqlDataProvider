@@ -186,6 +186,7 @@ SET                AppID = ToSIC_EAV_AttributeSets.AppID
 FROM            ToSIC_SexyContent_Templates INNER JOIN
                          ToSIC_EAV_AttributeSets ON ToSIC_SexyContent_Templates.AttributeSetID = ToSIC_EAV_AttributeSets.AttributeSetID
 
+ALTER TABLE dbo.ToSIC_SexyContent_Templates ALTER COLUMN AppID int NOT NULL
 
 -- Commit the transaction
 COMMIT TRANSACTION SexyContentUpdate;
