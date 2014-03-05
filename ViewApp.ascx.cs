@@ -396,7 +396,7 @@ namespace ToSic.SexyContent
 
                         // Administrator functions
                         if(ZoneId.HasValue && AppId.HasValue)
-                            Actions.Add(GetNextActionID(), "Admin " + App.Name, "Admin.Action",
+                            Actions.Add(GetNextActionID(), "Admin " + Sexy.App.Name, "Admin.Action",
                                         "gettingstarted", "action_settings.gif", EditUrl("", "", "gettingstarted", SexyContent.AppIDString + "=" + AppId),
                                         false, SecurityAccessLevel.Admin, true, false);
 

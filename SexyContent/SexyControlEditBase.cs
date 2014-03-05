@@ -73,16 +73,6 @@ namespace ToSic.SexyContent
             }
         }
 
-        private App _app;
-        protected App App
-        {
-            get
-            {
-                if (_app == null)
-                    _app = SexyContent.GetApp(ZoneId.Value, AppId.Value);
-                return _app;
-            }
-        }
 
         protected bool IsContentApp
         {

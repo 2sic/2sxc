@@ -144,7 +144,7 @@ namespace ToSic.SexyContent
             }
             else
             {
-                Template = Sexy.TemplateContext.GetNewTemplate();
+                Template = Sexy.TemplateContext.GetNewTemplate(AppId.Value);
                 Template.PortalID = this.PortalId;
                 Template.AttributeSetID = ctrContentType.ContentTypeID.Value;
                 Template.DemoEntityID = ctrContentType.DemoEntityID;
@@ -160,7 +160,6 @@ namespace ToSic.SexyContent
                 Template.Name = txtTemplateName.Text;
                 Template.IsHidden = chkHidden.Checked;
                 Template.UseForList = chkEnableList.Checked;
-                Template.AppID = AppId.Value;
 
                 Sexy.TemplateContext.AddTemplate(Template);
             }

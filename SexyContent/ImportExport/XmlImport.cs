@@ -236,7 +236,7 @@ namespace ToSic.SexyContent.ImportExport
                 string attributeSetStaticName = template.Attribute("AttributeSetStaticName").Value;
                 ToSic.Eav.AttributeSet Set = _sexy.ContentContext.GetAttributeSet(attributeSetStaticName);
 
-                Template t = _sexy.TemplateContext.GetNewTemplate();
+                Template t = _sexy.TemplateContext.GetNewTemplate(_sexy.AppId.Value);
                 t.Name = template.Attribute("Name").Value;
                 t.Path = template.Attribute("Path").Value;
 

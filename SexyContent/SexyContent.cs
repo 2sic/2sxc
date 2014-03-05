@@ -773,7 +773,7 @@ namespace ToSic.SexyContent
 
         #endregion
 
-        #region
+        #region Apps
 
         /// <summary>
         /// Returns all Apps for the current zone
@@ -1067,12 +1067,24 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <param name="ZoneID"></param>
         /// <param name="PortalID"></param>
-        public void SetZoneID(int? ZoneID, int PortalID)
+        public static void SetZoneID(int? ZoneID, int PortalID)
         {
             if (ZoneID.HasValue)
                 PortalController.UpdatePortalSetting(PortalID, SexyContent.PortalSettingsPrefix + "ZoneID", ZoneID.Value.ToString());
             else
                 PortalController.DeletePortalSetting(PortalID, SexyContent.PortalSettingsPrefix + "ZoneID");
+        }
+
+        public static List<Zone> GetZones()
+        {
+            return new SexyContent(DataSource.DefaultZoneId, GetDefaultAppId(DataSource.DefaultZoneId)).ContentContext.GetZones();
+        }
+
+        public static Zone AddZone(string zoneName)
+        {
+            return
+                new SexyContent(DataSource.DefaultZoneId, GetDefaultAppId(DataSource.DefaultZoneId)).ContentContext
+                    .AddZone(zoneName).Item1;
         }
 
         #endregion

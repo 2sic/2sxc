@@ -74,10 +74,10 @@ namespace ToSic.SexyContent.Configuration
         private List<Zone> GetAvailableZones()
         {
             if (PortalSettings.UserInfo.IsSuperUser && !CurrentZoneID.HasValue)
-                return Sexy.ContentContext.GetZones();
+                return SexyContent.GetZones();
 
             if(CurrentZoneID.HasValue)
-                return new List<Zone> { Sexy.ContentContext.GetZone(CurrentZoneID.Value) };
+                return new List<Zone> { SexyContent.GetZones().Single(z => z.ZoneID == CurrentZoneID.Value) };
 
             return new List<Zone>();
         }
@@ -124,10 +124,10 @@ namespace ToSic.SexyContent.Configuration
 
         protected void btnCreateZone_Click(object sender, EventArgs e)
         {
-            var NewZone = Sexy.ContentContext.AddZone(hfZoneName.Value);
-            Sexy.SetZoneID(NewZone.Item1.ZoneID, PortalId);
+            var NewZone = SexyContent.AddZone(hfZoneName.Value);
+            SexyContent.SetZoneID(NewZone.ZoneID, PortalId);
             BindZones();
-            ddlZones.SelectedValue = NewZone.Item1.ZoneID.ToString();
+            ddlZones.SelectedValue = NewZone.ZoneID.ToString();
             grdCultures.Rebind();
         }
 
@@ -138,7 +138,7 @@ namespace ToSic.SexyContent.Configuration
         /// <param name="e"></param>
         protected void hlkSave_Click(object sender, EventArgs e)
         {
-            Sexy.SetZoneID(SelectedZoneID, PortalId);
+            SexyContent.SetZoneID(SelectedZoneID, PortalId);
             RedirectBack();
         }
 

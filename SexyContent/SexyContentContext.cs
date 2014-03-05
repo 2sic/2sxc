@@ -89,12 +89,13 @@ namespace ToSic.SexyContent
         /// Returns a new template
         /// </summary>
         /// <returns></returns>
-        public Template GetNewTemplate()
+        public Template GetNewTemplate(int appId)
         {
             Template NewTemplate = new Template();
             NewTemplate.SysModified = DateTime.Now;
             NewTemplate.SysCreated = DateTime.Now;
             NewTemplate.IsFile = true;
+            NewTemplate.AppID = appId;
             return NewTemplate;
         }
 
