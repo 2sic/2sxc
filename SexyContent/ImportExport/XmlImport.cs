@@ -29,6 +29,8 @@ namespace ToSic.SexyContent.ImportExport
         private string _sourceDefaultDimensionId;
         private List<Dimension> _targetDimensions;
         private readonly SexyContent _sexy;
+        private readonly int _appId;
+        private readonly int _zoneId;
         private Dictionary<int, int> _fileIdCorrectionList;
 
         #region Prerequisites
@@ -37,6 +39,8 @@ namespace ToSic.SexyContent.ImportExport
             // Prepare
             ImportLog = new List<ExportImportMessage>();
             _sexy = new SexyContent(zoneId, appId, false);
+            _appId = appId;
+            _zoneId = zoneId;
         }
 
         private bool IsCompatible(XDocument doc)
@@ -142,7 +146,7 @@ namespace ToSic.SexyContent.ImportExport
             var importAttributeSets = GetImportAttributeSets(xmlSource.Element("AttributeSets").Elements("AttributeSet"));
             var importEntities = GetImportEntities(xmlSource.Elements("Entities").Elements("Entity"), SexyContent.AssignmentObjectTypeIDDefault);
             
-            var import = new ToSic.Eav.Import.Import(SexyContent.GetZoneID(PortalSettings.Current.PortalId), null, PortalSettings.Current.UserInfo.DisplayName);
+            var import = new ToSic.Eav.Import.Import(_zoneId, _appId, PortalSettings.Current.UserInfo.DisplayName);
             import.RunImport(importAttributeSets, importEntities, true, true);
             ImportLog.AddRange(GetExportImportMessagesFromImportLog(import.ImportLog));
             
@@ -154,7 +158,7 @@ namespace ToSic.SexyContent.ImportExport
                 List<Entity> templateDescribingEntities;
                 ImportXmlTemplates(xmlSource, out templateDescribingEntities);
 
-                var import2 = new ToSic.Eav.Import.Import(SexyContent.GetZoneID(PortalSettings.Current.PortalId), null, PortalSettings.Current.UserInfo.DisplayName);
+                var import2 = new ToSic.Eav.Import.Import(_zoneId, _appId, PortalSettings.Current.UserInfo.DisplayName);
                 import2.RunImport(new List<AttributeSet>(), templateDescribingEntities, true, true);
                 ImportLog.AddRange(GetExportImportMessagesFromImportLog(import2.ImportLog));
 

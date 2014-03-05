@@ -270,7 +270,7 @@ namespace ToSic.SexyContent
 
         protected void ChangeTemplate()
         {
-            if (UserMayEditThisModule)
+            if (UserMayEditThisModule && !String.IsNullOrEmpty(ddlTemplate.SelectedValue))
             {
                 var TemplateID = int.Parse(ddlTemplate.SelectedValue);
 
@@ -303,6 +303,8 @@ namespace ToSic.SexyContent
         protected void ddlApp_SelectedIndexChanged(object sender, EventArgs e)
         {
             AppId = int.Parse(ddlApp.SelectedValue);
+            ddlTemplate.SelectedValue = "0";
+            ChangeTemplate();
             Response.Redirect(Request.RawUrl);
         }
 

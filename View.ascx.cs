@@ -262,11 +262,14 @@ namespace ToSic.SexyContent
 
         private void BindAppDropDown()
         {
-            ddlApp.DataSource = SexyContent.GetApps(ZoneId.Value, false);
+            ddlApp.DataSource = SexyContent.GetApps(ZoneId.Value, false).Where(a => !a.Hidden);
             ddlApp.DataBind();
 
-            if(ddlApp.Items.Cast<ListItem>().Any(p => p.Value == AppId.ToString()))
+            if (ddlApp.Items.Cast<ListItem>().Any(p => p.Value == AppId.ToString()))
+            {
                 ddlApp.SelectedValue = AppId.ToString();
+                ddlApp.Items.Cast<ListItem>().First().Enabled = false;
+            }
         }
 
         protected void ChangeTemplate()
@@ -279,7 +282,7 @@ namespace ToSic.SexyContent
                 if (Template != null && TemplateID == Template.TemplateID)
                     return;
 
-                new SexyContent(ZoneId.Value, AppId.Value, false).UpdateTemplateForGroup(Sexy.GetContentGroupIDFromModule(ModuleId), TemplateID,
+                SexyUncached.UpdateTemplateForGroup(Sexy.GetContentGroupIDFromModule(ModuleId), TemplateID,
                                                               UserId);
 
                 Response.Redirect(Request.RawUrl);
