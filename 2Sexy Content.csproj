@@ -207,6 +207,16 @@
     </Compile>
     <Compile Include="SexyContent\App.cs" />
     <Compile Include="SexyContent\ContentGroupItem.cs" />
+    <Compile Include="SexyContent\DataImportExport\DataXmlSerializer.cs" />
+    <Compile Include="SexyContent\DataImportExport\EavValueExtension.cs" />
+    <Compile Include="SexyContent\DataImportExport\EntityExtension.cs" />
+    <Compile Include="SexyContent\DataImportExport\RecordExportOption.cs" />
+    <Compile Include="SexyContent\DataImportExport\XElementName.cs" />
+    <Compile Include="SexyContent\DataImportExport\LanguageMissingOption.cs" />
+    <Compile Include="SexyContent\DataImportExport\LanguageReferenceOption.cs" />
+    <Compile Include="SexyContent\DataImportExport\ListExtension.cs" />
+    <Compile Include="SexyContent\DataImportExport\ResourceReferenceOption.cs" />
+    <Compile Include="SexyContent\DataImportExport\XElementExtension.cs" />
     <Compile Include="SexyContent\DataSources\EntitiesFromList.cs" />
     <Compile Include="SexyContent\DataSources\ModuleDataSource.cs" />
     <Compile Include="SexyContent\DataSources\Tokens\ModulePropertyAccess.cs" />
@@ -262,6 +272,7 @@
     <Compile Include="SexyContent\Engines\TokenEngine\AppPropertyAccess.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\DynamicEntityPropertyAccess.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\TokenEngine.cs" />
+    <Compile Include="SexyContent\DataImportExport\AttributeSetExtension.cs" />
     <Compile Include="SexyContent\ImportExport\ExportImportMessage.cs" />
     <Compile Include="SexyContent\ImportExport\ImportExport.cs" />
     <Compile Include="SexyContent\ImportExport\ImportValue.cs" />
@@ -550,9 +561,7 @@
   <ItemGroup>
     <Content Include="Administration\App_LocalResources\DataExport.ascx.de-DE.resx" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="SexyContent\DataImportExport\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
