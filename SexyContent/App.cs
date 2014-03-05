@@ -18,6 +18,7 @@ namespace ToSic.SexyContent
         public dynamic Configuration { get; internal set; }
         public dynamic Settings { get; internal set; }
         public dynamic Resources { get; internal set; }
+        internal string StaticName { get; set; }
 
         public string Path
         {

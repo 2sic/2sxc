@@ -25,60 +25,6 @@ namespace ToSic.SexyContent
     {
 
         /// <summary>
-        /// Holds the List of Elements for the current module.
-        /// </summary>
-        private List<Element> _Elements;
-        private List<Element> Elements
-        {
-            get
-            {
-                if (_Elements == null)
-                {
-                    _Elements = Sexy.GetContentElements(ModuleId, Sexy.GetCurrentLanguageName(), null, PortalId).ToList();
-                }
-                return _Elements;
-            }
-        }
-
-        private Template _Template;
-        private Template Template
-        {
-            get
-            {
-                if (!Elements.Any() || !Elements.First().TemplateId.HasValue)
-                    return null;
-                if(_Template == null)
-                    _Template = Sexy.TemplateContext.GetTemplate(Elements.First().TemplateId.Value);
-                return _Template;
-            }
-        }
-
-        private bool IsList
-        {
-            get
-            {
-                return Elements.Count > 1;
-            }
-        }
-
-        #region Private Properties
-
-        private bool UserMayEditThisModule
-        {
-            get
-            {
-                return ModuleContext.IsEditable;
-            }
-        }
-
-        private bool StandAlone
-        {
-            get { return Request.QueryString["standalone"] == "true"; }
-        }
-
-        #endregion
-
-        /// <summary>
         /// Page Load event - preload template chooser if necessary
         /// </summary>
         /// <param name="sender"></param>
@@ -384,6 +330,7 @@ namespace ToSic.SexyContent
         }
 
         #region ModuleActions
+
         /// <summary>
         /// Causes DNN to create the menu with all actions like edit entity, new, etc.
         /// </summary>

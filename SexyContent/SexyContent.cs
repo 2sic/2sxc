@@ -813,10 +813,10 @@ namespace ToSic.SexyContent
                     Name = appMetaDataDynamic.DisplayName,
                     Folder = appMetaDataDynamic.Folder,
                     Configuration = appMetaDataDynamic,
-                    Resources = appResources,
-                    Settings = appSettings,
-                    Hidden = appMetaDataDynamic.Hidden is bool ? appMetaDataDynamic.Hidden : false
-                    // ToDo: Resources, Settings, Hidden, etc.
+                    Resources = appResourcesDynamic,
+                    Settings = appSettingsDynamic,
+                    Hidden = appMetaDataDynamic.Hidden is bool ? appMetaDataDynamic.Hidden : false,
+                    StaticName = eavAppName
                 };
             }
             // Handle default app

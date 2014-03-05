@@ -13,7 +13,7 @@ namespace ToSic.SexyContent.Administration
         protected void Page_Load(object sender, EventArgs e)
         {
             // Correct Local Resource File
-            var ResourceFile = DotNetNuke.Common.Globals.ResolveUrl("~/DesktopModules/ToSIC_SexyContent/Administration/App_LocalResources/Registers.ascx.resx");   
+            var ResourceFile = DotNetNuke.Common.Globals.ResolveUrl("~/DesktopModules/ToSIC_SexyContent/Administration/App_LocalResources/Registers.ascx.resx");
 
             var ParentModule = (PortalModuleBase)Parent;
 
@@ -35,7 +35,7 @@ namespace ToSic.SexyContent.Administration
                                         Name = DotNetNuke.Services.Localization.Localization.GetString(c + ".Text",  ResourceFile),
                                         Key = c,
                                         Url = ParentModule.EditUrl(ParentModule.TabId, c, true, "mid=" + ParentModule.ModuleId +
-                                            (c == SexyContent.ControlKeys.PortalConfiguration || c== SexyContent.ControlKeys.GettingStarted ? "" : "&" + SexyContent.AppIDString + "=" + Request.QueryString[SexyContent.AppIDString])),
+                                            (String.IsNullOrEmpty(Request.QueryString[SexyContent.AppIDString]) ? "" : "&" + SexyContent.AppIDString + "=" + Request.QueryString[SexyContent.AppIDString])),
                                         Active = Request.QueryString["ctl"].ToLower() == c.ToLower()
                                       };
             rptRegisters.DataBind();

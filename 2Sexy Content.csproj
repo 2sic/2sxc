@@ -282,6 +282,13 @@
     <Compile Include="TemplateHelpGrid.ascx.designer.cs">
       <DependentUpon>TemplateHelpGrid.ascx</DependentUpon>
     </Compile>
+    <Compile Include="ViewApp.ascx.cs">
+      <DependentUpon>ViewApp.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ViewApp.ascx.designer.cs">
+      <DependentUpon>ViewApp.ascx</DependentUpon>
+    </Compile>
     <Compile Include="View.ascx.cs">
       <DependentUpon>View.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -418,6 +425,7 @@
     <Content Include="Styles\EditDataSource\demo-new.css" />
     <Content Include="Styles\EditDataSource\flowchartDemo.css" />
     <Content Include="TemplateHelpGrid.ascx" />
+    <Content Include="ViewApp.ascx" />
     <Content Include="View.ascx" />
     <Content Include="Administration\EAVManagement.ascx" />
     <Content Include="WebConfigTemplate.config" />
@@ -539,6 +547,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Administration\Apps\App_LocalResources\AppManagement.ascx.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_LocalResources\ViewApp.ascx.de-DE.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_LocalResources\ViewApp.ascx.resx" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

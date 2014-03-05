@@ -10,7 +10,7 @@ using System.Web.UI.WebControls;
 
 namespace ToSic.SexyContent.Administration
 {
-    public partial class GettingStarted : PortalModuleBase
+    public partial class GettingStarted : SexyControlAdminBase
     {
         
 
@@ -27,6 +27,14 @@ namespace ToSic.SexyContent.Administration
             // Add VDB / Zone ID (if set)
             var ZoneID = SexyContent.GetZoneID(PortalId);
             GettingStartedSrc += ZoneID.HasValue ? "&ZoneID=" + ZoneID.Value.ToString() : "";
+            // Add AppStaticName and Version
+            if (AppId.HasValue)
+            {
+                var app = SexyContent.GetApp(ZoneId.Value, AppId.Value);
+                GettingStartedSrc += "&AppID=" + app.StaticName;
+                if(app.Configuration != null)
+                    GettingStartedSrc += "&AppVersion=" + app.Configuration.Version;
+            }
             // Add DNN Guid
             var HostSettings = HostController.Instance.GetSettingsDictionary();
             GettingStartedSrc += HostSettings.ContainsKey("GUID") ? "&DnnGUID=" + HostSettings["GUID"].ToString() : "";

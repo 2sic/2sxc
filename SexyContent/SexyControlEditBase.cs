@@ -1,4 +1,5 @@
-﻿using DotNetNuke.Entities.Modules;
+﻿using System.Dynamic;
+using DotNetNuke.Entities.Modules;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -72,9 +73,72 @@ namespace ToSic.SexyContent
             }
         }
 
+        private App _app;
+        protected App App
+        {
+            get
+            {
+                if (_app == null)
+                    _app = SexyContent.GetApp(ZoneId.Value, AppId.Value);
+                return _app;
+            }
+        }
+
         protected bool IsContentApp
         {
             get { return ModuleConfiguration.DesktopModule.ModuleName == "2sxc"; }
         }
+
+
+        /// <summary>
+        /// Holds the List of Elements for the current module.
+        /// </summary>
+        private List<Element> _Elements;
+        protected List<Element> Elements
+        {
+            get
+            {
+                if (_Elements == null)
+                {
+                    _Elements = Sexy.GetContentElements(ModuleId, Sexy.GetCurrentLanguageName(), null, PortalId).ToList();
+                }
+                return _Elements;
+            }
+        }
+
+        private Template _Template;
+        protected Template Template
+        {
+            get
+            {
+                if (!Elements.Any() || !Elements.First().TemplateId.HasValue)
+                    return null;
+                if (_Template == null)
+                    _Template = Sexy.TemplateContext.GetTemplate(Elements.First().TemplateId.Value);
+                return _Template;
+            }
+        }
+
+        protected bool IsList
+        {
+            get
+            {
+                return Elements.Count > 1;
+            }
+        }
+
+        protected bool UserMayEditThisModule
+        {
+            get
+            {
+                return ModuleContext.IsEditable;
+            }
+        }
+
+        protected bool StandAlone
+        {
+            get { return Request.QueryString["standalone"] == "true"; }
+        }
+
     }
 }

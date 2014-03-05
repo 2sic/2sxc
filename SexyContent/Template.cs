@@ -113,7 +113,7 @@ namespace ToSic.SexyContent
             {
                 if (!Regex.IsMatch(Match.Value, EnableClientDependencyRegex, RegexOptions.IgnoreCase))
                     continue;
-
+                
                 // Break If the Rel attribute is not stylesheet
                 if (!Regex.IsMatch(Match.Value, "('|\"|\\s)rel=('|\")stylesheet('|\")", RegexOptions.IgnoreCase))
                     continue;
