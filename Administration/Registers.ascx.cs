@@ -15,7 +15,7 @@ namespace ToSic.SexyContent.Administration
             // Correct Local Resource File
             var ResourceFile = DotNetNuke.Common.Globals.ResolveUrl("~/DesktopModules/ToSIC_SexyContent/Administration/App_LocalResources/Registers.ascx.resx");
 
-            var ParentModule = (PortalModuleBase)Parent;
+            var ParentModule = (SexyControlAdminBase)Parent;
 
             var Registers = new List<string>();
             Registers.Add(SexyContent.ControlKeys.GettingStarted);
@@ -28,7 +28,8 @@ namespace ToSic.SexyContent.Administration
                 Registers.Add(SexyContent.ControlKeys.EavManagement);
             }
 
-            Registers.Add(SexyContent.ControlKeys.PortalConfiguration);
+            if (ParentModule.IsContentApp)
+                Registers.Add(SexyContent.ControlKeys.PortalConfiguration);
 
             rptRegisters.DataSource = from c in Registers
                                       select new {

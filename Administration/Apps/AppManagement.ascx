@@ -9,9 +9,10 @@
     </h2>
     <fieldset>
         <dnnweb:DnnGrid CssClass="GridApps" ID="grdApps" runat="server" AutoGenerateColumns="false" EnableEmbeddedSkins="True" EnableEmbeddedBaseStylesheet="True" Skin="Default" EnableViewState="true" OnDeleteCommand="grdApps_DeleteCommand" OnNeedDataSource="grdApps_NeedDataSource" OnItemDataBound="grdApps_ItemDataBound">
+            <ClientSettings><ClientEvents OnCommand="AppDeleting" /></ClientSettings>
             <mastertableview datakeynames="AppID" allowsorting="True" headerstyle-font-bold="true">
                 <Columns>
-                    <dnnweb:DnnGridButtonColumn UniqueName="DeleteColumn" ButtonType="ImageButton" ImageUrl="~/Images/Delete.gif" CommandName="delete">
+                    <dnnweb:DnnGridButtonColumn UniqueName="DeleteColumn" ButtonType="ImageButton" ImageUrl="~/Images/Delete.gif" CommandName="delete" ButtonCssClass="sc-app-delete">
                         <HeaderStyle Width="35px" />
                     </dnnweb:DnnGridButtonColumn>
                     <dnnweb:DnnGridTemplateColumn HeaderText="ContentType" DataField="Name">
@@ -40,19 +41,23 @@
                     
                     <dnnweb:DnnGridTemplateColumn HeaderText="Settings">
                         <ItemTemplate>
-                            <a href="<%# SexyContent.GetDefaultAppId(ZoneId.Value) == (int)Eval("AppID") ? "" : EditUrl("", "", SexyContent.ControlKeys.EavManagement, SexyContent.AppIDString + "=" + Eval("AppID") + "&" +
-                                "ManagementMode=ContentTypeFields&AttributeSetId=" + SexyContent.GetAppSettingsAttributeSetId(ZoneId.Value, (int)Eval("AppID"))) %>">Conf</a>
-                            <a href="<%# SexyContent.GetDefaultAppId(ZoneId.Value) == (int)Eval("AppID") ? "" : SexyContent.GetMetaDataEditUrl(TabId, ModuleId, Request.RawUrl, this, SexyContent.AttributeSetStaticNameAppSettings,
-                                SexyContent.AssignmentObjectTypeIDSexyContentApp, (int)Eval("AppID"), ZoneId.Value, (int)Eval("AppID")) %>">Edit</a>
+                            <div style='<%# (Eval("Name") != "Content") ? "display:block;" : "display:none;" %>'>
+                                <a href="<%# SexyContent.GetDefaultAppId(ZoneId.Value) == (int)Eval("AppID") ? "" : EditUrl("", "", SexyContent.ControlKeys.EavManagement, SexyContent.AppIDString + "=" + Eval("AppID") + "&" +
+                                    "ManagementMode=ContentTypeFields&AttributeSetId=" + SexyContent.GetAppSettingsAttributeSetId(ZoneId.Value, (int)Eval("AppID"))) %>">Conf</a>
+                                <a href="<%# SexyContent.GetDefaultAppId(ZoneId.Value) == (int)Eval("AppID") ? "" : SexyContent.GetMetaDataEditUrl(TabId, ModuleId, Request.RawUrl, this, SexyContent.AttributeSetStaticNameAppSettings,
+                                    SexyContent.AssignmentObjectTypeIDSexyContentApp, (int)Eval("AppID"), ZoneId.Value, (int)Eval("AppID")) %>">Edit</a>
+                            </div>
                         </ItemTemplate>
                     </dnnweb:DnnGridTemplateColumn>
                     
                     <dnnweb:DnnGridTemplateColumn HeaderText="Resources">
                         <ItemTemplate>
-                            <a href="<%# SexyContent.GetDefaultAppId(ZoneId.Value) == (int)Eval("AppID") ? "" :  EditUrl("", "", SexyContent.ControlKeys.EavManagement, SexyContent.AppIDString + "=" + Eval("AppID") + "&" +
-                                "ManagementMode=ContentTypeFields&AttributeSetId=" + SexyContent.GetAppResourcesAttributeSetId(ZoneId.Value, (int)Eval("AppID"))) %>">Conf</a>
-                            <a href="<%# SexyContent.GetDefaultAppId(ZoneId.Value) == (int)Eval("AppID") ? "" :  SexyContent.GetMetaDataEditUrl(TabId, ModuleId, Request.RawUrl, this, SexyContent.AttributeSetStaticNameAppResources,
-                                SexyContent.AssignmentObjectTypeIDSexyContentApp, (int)Eval("AppID"), ZoneId.Value, (int)Eval("AppID")) %>">Edit</a>
+                            <div style='<%# (Eval("Name") != "Content") ? "display:block;" : "display:none;" %>'>
+                                <a href="<%# SexyContent.GetDefaultAppId(ZoneId.Value) == (int)Eval("AppID") ? "" :  EditUrl("", "", SexyContent.ControlKeys.EavManagement, SexyContent.AppIDString + "=" + Eval("AppID") + "&" +
+                                    "ManagementMode=ContentTypeFields&AttributeSetId=" + SexyContent.GetAppResourcesAttributeSetId(ZoneId.Value, (int)Eval("AppID"))) %>">Conf</a>
+                                <a href="<%# SexyContent.GetDefaultAppId(ZoneId.Value) == (int)Eval("AppID") ? "" :  SexyContent.GetMetaDataEditUrl(TabId, ModuleId, Request.RawUrl, this, SexyContent.AttributeSetStaticNameAppResources,
+                                    SexyContent.AssignmentObjectTypeIDSexyContentApp, (int)Eval("AppID"), ZoneId.Value, (int)Eval("AppID")) %>">Edit</a>
+                            </div>
                         </ItemTemplate>
                     </dnnweb:DnnGridTemplateColumn>
 
@@ -66,23 +71,6 @@
                         <HeaderStyle Width="80px" />
                     </dnnweb:DnnGridCheckBoxColumn>
 
-                    <%--<dnnweb:DnnGridTemplateColumn HeaderText="TemplatePath" DataField="TemplatePath">
-                        <HeaderStyle Width="160px" />
-                        <ItemTemplate>
-                            <span title='<%# HttpUtility.HtmlEncode(Eval("TemplatePath")) %>' class="NoWrapFixedWidth"><%# HttpUtility.HtmlEncode(Eval("TemplatePath")) %></span>
-                        </ItemTemplate>
-                    </dnnweb:DnnGridTemplateColumn>
-                    <dnnweb:DnnGridTemplateColumn HeaderText="ContentType" DataField="AttributeSetName">
-                        <ItemTemplate>
-                            <span title='<%# HttpUtility.HtmlEncode(Eval("AttributeSetName")) %>' class="NoWrapFixedWidth"><%# HttpUtility.HtmlEncode(Eval("AttributeSetName")) %></span>
-                        </ItemTemplate>
-                    </dnnweb:DnnGridTemplateColumn>
-                    <dnnweb:DnnGridBoundColumn HeaderText="DemoRow" DataField="DemoEntityID">
-                        <HeaderStyle Width="110px" />
-                    </dnnweb:DnnGridBoundColumn>
-                    <dnnweb:DnnGridCheckBoxColumn ReadOnly="true" DataField="IsHidden" HeaderText="IsHidden">
-                        <HeaderStyle Width="80px" />
-                    </dnnweb:DnnGridCheckBoxColumn>--%>
                 </Columns>
                 <NoRecordsTemplate>
                     <asp:Label ID="lblNoRecords" runat="server" resourcekey="lblNoRecords"></asp:Label>
@@ -115,4 +103,16 @@
         $("#<%= hfNewAppName.ClientID %>").val(newName);
         return true;
     }
+
+    function AppDeleting(sender, args) {
+        var deleteapp = false;
+        if (eventArgs.get_commandName() == "delete")
+            confirm('<%= LocalizeString("DeleteApp.Confirm") %>');
+        args.set_cancel(!deleteapp);
+    }
+
 </script>
+
+<style type="text/css">
+    .aspNetDisabled .sc-app-delete { display: none; }
+</style>

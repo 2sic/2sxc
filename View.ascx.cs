@@ -31,8 +31,6 @@ namespace ToSic.SexyContent
         /// <param name="e"></param>
         protected void Page_Load(object sender, EventArgs e)
         {
-            SexyContent.SetEAVConnectionString();
-
             // Reset messages visible states
             pnlMessage.Visible = false;
             pnlError.Visible = false;

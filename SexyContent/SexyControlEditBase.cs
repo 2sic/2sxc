@@ -74,7 +74,7 @@ namespace ToSic.SexyContent
         }
 
 
-        protected bool IsContentApp
+        public bool IsContentApp
         {
             get { return ModuleConfiguration.DesktopModule.ModuleName == "2sxc"; }
         }

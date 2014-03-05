@@ -120,6 +120,21 @@
   <data name="btnCreateApp.Text" xml:space="preserve">
     <value>Create App</value>
   </data>
+  <data name="ContentType.Header" xml:space="preserve">
+    <value>Content Type</value>
+  </data>
+  <data name="DeleteApp.ConfirmButton" xml:space="preserve">
+    <value>I understand the consequences, delete this app</value>
+  </data>
+  <data name="DeleteApp.ConfirmText" xml:space="preserve">
+    <value>Are you absolutely sure?\r\nUnexpected bad things will happen if you don't read this!\r\nThis action CANNOT be undone. This will delete the selected app (templates, content types, content, template files) permanently.\r\nPlease type in the name of the repository to confirm.</value>
+  </data>
+  <data name="Folder.Header" xml:space="preserve">
+    <value>Folder</value>
+  </data>
+  <data name="Hidden.Header" xml:space="preserve">
+    <value>Hidden</value>
+  </data>
   <data name="hlkBrowseApps.Text" xml:space="preserve">
     <value>Browse App-Catalog</value>
   </data>
@@ -128,5 +143,20 @@
   </data>
   <data name="lblManageAppsHeading.Text" xml:space="preserve">
     <value>App Management</value>
+  </data>
+  <data name="ManageApp.Header" xml:space="preserve">
+    <value>Manage</value>
+  </data>
+  <data name="RazorTemplates.Header" xml:space="preserve">
+    <value>Allow Razor Templates</value>
+  </data>
+  <data name="Resources.Header" xml:space="preserve">
+    <value>Resources</value>
+  </data>
+  <data name="Settings.Header" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="TokenTemplates.Header" xml:space="preserve">
+    <value>Allow Token Templates</value>
   </data>
 </root>

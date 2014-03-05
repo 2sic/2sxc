@@ -165,25 +165,27 @@ namespace ToSic.SexyContent
         #region SexyContent Constructor
 
         // ToDo: needed for DNN search
-        ///// <summary>
-        ///// Constructor overload for DotNetNuke
-        ///// (BusinessControllerClass needs parameterless constructor)
-        ///// </summary>
+        /// <summary>
+        /// Constructor overload for DotNetNuke
+        /// (BusinessControllerClass needs parameterless constructor)
+        /// </summary>
         //public SexyContent()
         //    : this(new int?(), new int?(), true)
         //{
             
         //}
 
-
+        static SexyContent()
+        {
+            SexyContent.SetEAVConnectionString();
+        }
 
         /// <summary>
         /// Instanciates Content and Template-Contexts
         /// </summary>
         public SexyContent(int zoneId, int appId, bool enableCaching = true)
         {
-            SetEAVConnectionString();
-
+            
             // Only disable caching of templates and contentgroupitems
             // if AppSetting "ToSIC_SexyContent_EnableCaching" is disabled
             if(enableCaching)
@@ -853,7 +855,9 @@ namespace ToSic.SexyContent
             var appAttributeSet = appContext.ContentContext.GetAttributeSet(AttributeSetStaticNameApps).AttributeSetID;
             var values = new OrderedDictionary() {
                 { "DisplayName", appName },
-                { "Folder", appName }
+                { "Folder", appName },
+                { "AllowTokenTemplates", "False" },
+                { "AllowRazorTemplates", "False" }
             };
             appContext.ContentContext.AddEntity(appAttributeSet, values, null, app.AppID, AssignmentObjectTypeIDSexyContentApp);
 

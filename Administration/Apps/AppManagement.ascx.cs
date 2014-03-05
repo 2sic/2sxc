@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using DotNetNuke.Web.UI.WebControls;
 using Telerik.Web.UI;
 using ToSic.Eav;
 
@@ -36,8 +37,10 @@ namespace ToSic.SexyContent.Administration
             if (e.Item is GridDataItem)
             {
                 var item = e.Item as GridDataItem;
-                if (((App)item.DataItem).Name == "Content")
+                if (((App) item.DataItem).Name == "Content")
+                {
                     item.Controls.Cast<GridTableCell>().ToList().ForEach(c => c.Enabled = false);
+                }
             }
         }
 

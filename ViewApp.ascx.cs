@@ -30,8 +30,6 @@ namespace ToSic.SexyContent
         /// <param name="e"></param>
         protected void Page_Load(object sender, EventArgs e)
         {
-            SexyContent.SetEAVConnectionString();
-
             // Reset messages visible states
             pnlMessage.Visible = false;
             pnlError.Visible = false;
@@ -189,27 +187,13 @@ namespace ToSic.SexyContent
         /// </summary>
         protected void ShowTemplateChooser()
         {
-            var noTemplatesYet = !AppId.HasValue || !Sexy.GetVisibleTemplates(PortalId).Any();
-
-            // If there are no templates configured
-            if (noTemplatesYet)
-            {
-                pnlGetStarted.Visible = true;
-            }
-
             if (!Page.IsPostBack && UserMayEditThisModule)
             {
                 pnlTemplateChooser.Visible = true;
+                ddlTemplate.Visible = AppId.HasValue;
 
                 if (AppId.HasValue)
                 {
-                    ddlContentType.DataSource = Sexy.GetAvailableAttributeSetsForVisibleTemplates(PortalId);
-                    ddlContentType.DataBind();
-                    ddlContentType.Enabled = !IsList;
-
-                    if (Template != null)
-                        ddlContentType.SelectedValue = Template.AttributeSetID.ToString();
-
                     BindTemplateDropDown();
                 }
 
@@ -218,11 +202,8 @@ namespace ToSic.SexyContent
                     ddlApp.Visible = true;
                     BindAppDropDown();
                 }
-                    
-            }
 
-            ddlContentType.Visible = IsContentApp;
-            ddlTemplate.Enabled = IsContentApp || AppId.HasValue;
+            }
         }
 
         protected void BindTemplateDropDown()
@@ -233,10 +214,6 @@ namespace ToSic.SexyContent
                 TemplatesToChoose = Sexy.GetVisibleTemplates(PortalId);
             else
                 TemplatesToChoose = Sexy.GetVisibleListTemplates(PortalId);
-
-            // Make only templates from chosen content type shown if content type is set
-            if (ddlContentType.SelectedValue != "0")
-                TemplatesToChoose = TemplatesToChoose.Where(p => p.AttributeSetID == int.Parse(ddlContentType.SelectedValue));
 
             ddlTemplate.DataSource = TemplatesToChoose;
             ddlTemplate.DataBind();
@@ -249,19 +226,19 @@ namespace ToSic.SexyContent
                 ddlTemplate.SelectedValue = Elements.First().TemplateId.ToString();
             else
             {
-                if (ddlContentType.SelectedValue != "0")
-                {
-                    if (ddlTemplate.Items.Count > 1)
-                        ddlTemplate.SelectedIndex = 1;
-
-                    ChangeTemplate();
-                }
+                ddlTemplate.SelectedIndex = 1;
+                ChangeTemplate();
             }
+            if (ddlTemplate.Items.Count == 2)
+            {
+                ddlTemplate.Visible = false;
+            }
+
         }
 
         private void BindAppDropDown()
         {
-            ddlApp.DataSource = SexyContent.GetApps(ZoneId.Value, false);
+            ddlApp.DataSource = SexyContent.GetApps(ZoneId.Value, false).Where(a => !a.Hidden);
             ddlApp.DataBind();
 
             if(ddlApp.Items.Cast<ListItem>().Any(p => p.Value == AppId.ToString()))
@@ -293,11 +270,6 @@ namespace ToSic.SexyContent
         protected void ddlTemplate_SelectedIndexChanged(object sender, EventArgs e)
         {
             ChangeTemplate();
-        }
-
-        protected void ddlContentType_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            BindTemplateDropDown();
         }
 
         protected void ddlApp_SelectedIndexChanged(object sender, EventArgs e)
