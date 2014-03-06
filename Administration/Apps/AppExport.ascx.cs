@@ -7,7 +7,7 @@ using System.Web.UI.WebControls;
 
 namespace ToSic.SexyContent.Administration.Apps
 {
-    public partial class AppExport : System.Web.UI.UserControl
+    public partial class AppExport : SexyControlAdminBase
     {
         protected void Page_Load(object sender, EventArgs e)
         {
