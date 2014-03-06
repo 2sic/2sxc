@@ -15,7 +15,9 @@ namespace ToSic.SexyContent.Administration
         // NOTE2tk: Find the dialog on http://2sexycontent.2tk.2sic/Home/tabid/55/ctl/dataexport/mid/388/Default.aspx?popUp=true
         
         // TODO2tk: Export blank data templates
-        // TODO2tk: Get dimensions from DNN
+        // TODO2tk: Get dimensions from contenContext.GetLanguages()
+        // TODO2tk: Test when no dimension is installed
+        // TODO2tk: When to write real value instead of =ref()
         
         public int? ApplicationId
         {
@@ -65,7 +67,7 @@ namespace ToSic.SexyContent.Administration
             ddlContentType.DataSource = sexyContent.GetAvailableAttributeSets(); ;
             ddlContentType.DataBind();
 
-            ddlLanguage.DataSource = sexyContent.ContentContext.Dimensions.Where(dim => dim.Active);
+            ddlLanguage.DataSource = sexyContent.ContentContext.GetLanguages().Where(dim => dim.Active).OrderBy(dim => dim.ExternalKey);
             ddlLanguage.DataBind();
 
             rblRecordExport.DataSource = EnumToDataSource<RecordExportOption>();

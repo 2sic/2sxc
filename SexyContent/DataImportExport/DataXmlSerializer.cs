@@ -31,8 +31,10 @@ namespace ToSic.SexyContent.DataImportExport
             }
 
             var dimensionFallback = contentContext.GetDimension(dimensionFallbackId);
-            var dimensionsAll = contentContext.Dimensions.Where(dim => dim.Active).OrderBy(dim => dim.ExternalKey).ToList();
-            dimensionsAll.Move(0, dimensionFallback); // Handle dimension fallback first
+            var dimensionsAll = contentContext.Dimensions.Where(dim => dim.Active)
+                                                         .OrderByDescending(dim => dim.DimensionID == dimensionFallbackId)
+                                                         .ThenBy(dim => dim.ExternalKey)
+                                                         .ToList();
             var dimensions = new List<Dimension>();
             var dimensionsSerializeAll = dimensionSerializeId < 0;
             if (dimensionsSerializeAll)
