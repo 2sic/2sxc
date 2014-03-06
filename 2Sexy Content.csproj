@@ -213,9 +213,9 @@
     <Compile Include="SexyContent\DataImportExport\IEnumerableExtension.cs" />
     <Compile Include="SexyContent\DataImportExport\RecordExportOption.cs" />
     <Compile Include="SexyContent\DataImportExport\XElementName.cs" />
-    <Compile Include="SexyContent\DataImportExport\LanguageMissingOption.cs" />
-    <Compile Include="SexyContent\DataImportExport\LanguageReferenceOption.cs" />
-    <Compile Include="SexyContent\DataImportExport\ResourceReferenceOption.cs" />
+    <Compile Include="SexyContent\DataImportExport\LanguageMissingExportOption.cs" />
+    <Compile Include="SexyContent\DataImportExport\LanguageReferenceExportOption.cs" />
+    <Compile Include="SexyContent\DataImportExport\ResourceReferenceExportOption.cs" />
     <Compile Include="SexyContent\DataImportExport\XElementExtension.cs" />
     <Compile Include="SexyContent\DataSources\EntitiesFromList.cs" />
     <Compile Include="SexyContent\DataSources\ModuleDataSource.cs" />

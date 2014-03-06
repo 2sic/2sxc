@@ -29,7 +29,7 @@ namespace ToSic.SexyContent.DataImportExport
             return document.ToString();
         }
 
-        public string Serialize(int? applicationId, int contentTypeId, string languageSelected, string languageFallback, IEnumerable<string> languageScope, LanguageReferenceOption languageReferenceOption, ResourceReferenceOption resourceReferenceOption)
+        public string Serialize(int? applicationId, int contentTypeId, string languageSelected, string languageFallback, IEnumerable<string> languageScope, LanguageReferenceExportOption languageReferenceOption, ResourceReferenceExportOption resourceReferenceOption)
         {
             var contentType = GetContentType(applicationId, contentTypeId);
             if (contentType == null)

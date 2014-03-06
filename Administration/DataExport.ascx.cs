@@ -66,19 +66,19 @@ namespace ToSic.SexyContent.Administration
             get { return ddlLanguage.SelectedValue; }
         }
 
-        public LanguageMissingOption LanguageMissingOptionSelected
+        public LanguageMissingExportOption LanguageMissingOptionSelected
         {
-            get { return ParseEnum<LanguageMissingOption>(rblLanguageMissing.SelectedValue); }
+            get { return ParseEnum<LanguageMissingExportOption>(rblLanguageMissing.SelectedValue); }
         }
 
-        public LanguageReferenceOption LanguageReferenceOptionSelected
+        public LanguageReferenceExportOption LanguageReferenceOptionSelected
         {
-            get { return ParseEnum<LanguageReferenceOption>(rblLanguageReference.SelectedValue); }
+            get { return ParseEnum<LanguageReferenceExportOption>(rblLanguageReference.SelectedValue); }
         }
 
-        public ResourceReferenceOption ResourceReferenceOptionSelected
+        public ResourceReferenceExportOption ResourceReferenceOptionSelected
         {
-            get { return ParseEnum<ResourceReferenceOption>(rblResourceReference.SelectedValue); }
+            get { return ParseEnum<ResourceReferenceExportOption>(rblResourceReference.SelectedValue); }
         }
 
         public RecordExportOption RecordExportOptionSelected
@@ -126,17 +126,17 @@ namespace ToSic.SexyContent.Administration
             rblRecordExport.DataBind();
             rblRecordExport.SelectedValue = RecordExportOption.All.ToString();
 
-            rblLanguageMissing.DataSource = EnumToDataSource<LanguageMissingOption>();
+            rblLanguageMissing.DataSource = EnumToDataSource<LanguageMissingExportOption>();
             rblLanguageMissing.DataBind();
-            rblLanguageMissing.SelectedValue = LanguageMissingOption.Create.ToString();
+            rblLanguageMissing.SelectedValue = LanguageMissingExportOption.Create.ToString();
 
-            rblLanguageReference.DataSource = EnumToDataSource<LanguageReferenceOption>();
+            rblLanguageReference.DataSource = EnumToDataSource<LanguageReferenceExportOption>();
             rblLanguageReference.DataBind();
-            rblLanguageReference.SelectedValue = LanguageReferenceOption.Resolve.ToString();
+            rblLanguageReference.SelectedValue = LanguageReferenceExportOption.Resolve.ToString();
 
-            rblResourceReference.DataSource = EnumToDataSource<ResourceReferenceOption>();
+            rblResourceReference.DataSource = EnumToDataSource<ResourceReferenceExportOption>();
             rblResourceReference.DataBind();
-            rblResourceReference.SelectedValue = ResourceReferenceOption.Resolve.ToString();
+            rblResourceReference.SelectedValue = ResourceReferenceExportOption.Resolve.ToString();
         }
 
 

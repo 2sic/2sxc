@@ -123,16 +123,16 @@
   <data name="btnExportData.Text" xml:space="preserve">
     <value>Export data</value>
   </data>
-  <data name="LanguageMissingOptionCreate.Text" xml:space="preserve">
+  <data name="LanguageMissingExportOptionCreate.Text" xml:space="preserve">
     <value>Create rows for untranslated languages</value>
   </data>
-  <data name="LanguageMissingOptionIgnore.Text" xml:space="preserve">
+  <data name="LanguageMissingExportOptionIgnore.Text" xml:space="preserve">
     <value>Create rows for translated languages only</value>
   </data>
-  <data name="LanguageReferenceOptionLink.Text" xml:space="preserve">
+  <data name="LanguageReferenceExportOptionLink.Text" xml:space="preserve">
     <value>Keep references to languages (for example =ref(lang=en;readonly=true))</value>
   </data>
-  <data name="LanguageReferenceOptionResolve.Text" xml:space="preserve">
+  <data name="LanguageReferenceExportOptionResolve.Text" xml:space="preserve">
     <value>Resolve values to referenced languages</value>
   </data>
   <data name="lblContentType.Text" xml:space="preserve">
@@ -156,10 +156,10 @@
   <data name="lblResourceReference.Text" xml:space="preserve">
     <value>Export referenced file / page</value>
   </data>
-  <data name="ResourceReferenceOptionLink.Text" xml:space="preserve">
+  <data name="ResourceReferenceExportOptionLink.Text" xml:space="preserve">
     <value>Keep references to resources (for example Page:4711)</value>
   </data>
-  <data name="ResourceReferenceOptionResolve.Text" xml:space="preserve">
+  <data name="ResourceReferenceExportOptionResolve.Text" xml:space="preserve">
     <value>Resolve pathes to referenced resources</value>
   </data>
   <data name="lblRecordExport.Text" xml:space="preserve">

@@ -23,7 +23,7 @@ namespace ToSic.SexyContent.DataImportExport
             element.AddFirst(new XElement(name, value));
         }
 
-        public static void AppendValue(this XElement element, XName name, EavValue value, ResourceReferenceOption resourceReferenceOption)
+        public static void AppendValue(this XElement element, XName name, EavValue value, ResourceReferenceExportOption resourceReferenceOption)
         {
             if (resourceReferenceOption.IsResolve())
             {
@@ -35,14 +35,14 @@ namespace ToSic.SexyContent.DataImportExport
             }
         }
 
-        public static void AppendValueResolved(this XElement element, Entity entity, Attribute attribute, string language, string languageFallback, ResourceReferenceOption resourceReferenceOption)
+        public static void AppendValueResolved(this XElement element, Entity entity, Attribute attribute, string language, string languageFallback, ResourceReferenceExportOption resourceReferenceOption)
         {
             var valueName = attribute.StaticName;
             var value = entity.GetAttributeValue(attribute, language, languageFallback);
             element.AppendValue(valueName, value, resourceReferenceOption);
         }
 
-        public static void AppendValueReferenced(this XElement element, Entity entity, Attribute attribute, string language, string languageFallback, IEnumerable<string> languageScope, bool referenceParentLanguagesOnly, ResourceReferenceOption resourceReferenceOption)
+        public static void AppendValueReferenced(this XElement element, Entity entity, Attribute attribute, string language, string languageFallback, IEnumerable<string> languageScope, bool referenceParentLanguagesOnly, ResourceReferenceExportOption resourceReferenceOption)
         {
             var valueName = attribute.StaticName;
             var value = entity.GetAttributeValue(attribute, language);
