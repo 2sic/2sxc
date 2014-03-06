@@ -122,5 +122,43 @@ namespace ToSic.SexyContent.DataImportExport
             var document = new XDocument(new XDeclaration("1.0", "UTF-8", "yes"), rootElement);
             return document.ToString();
         }
+
+        public string SerializeBlank(int? applicationId, int contentTypeId)
+        {
+            var contentType = GetContentType(applicationId, contentTypeId);
+            if (contentType == null)
+            {
+                return null;
+            }
+
+            var entityElement = new XElement(XElementName.Entity); 
+            var rootElement = new XElement(XElementName.Root, entityElement);
+            var document = new XDocument(new XDeclaration("1.0", "UTF-8", "yes"), rootElement);            
+            
+            var attributes = contentType.GetAttributes();
+            foreach (var attribute in attributes)
+            {
+                  entityElement.AddElement(attribute.StaticName, "");      
+            }
+    
+            return document.ToString();
+        }
+
+        public string Serialize(int? applicationId, int contentTypeId, string languageFallback, IEnumerable<string> languages, LanguageMissingOption languageMissingOption, LanguageReferenceOption languageReferenceOption, ResourceReferenceOption resourceReferenceOption)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string Serialize(int? applicationId, int contentTypeId, string language, string languageFallback, IEnumerable<string> languages, LanguageMissingOption languageMissing, LanguageReferenceOption languageReferenceOption, ResourceReferenceOption resourceReferenceOption)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static AttributeSet GetContentType(int? applicationId, int contentTypeId)
+        {
+            var contentContext = new SexyContent(true, new int?(), applicationId).ContentContext;
+            var contentType = contentContext.GetAttributeSet(contentTypeId);
+            return contentType;
+        }
     }
 }

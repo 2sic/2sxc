@@ -214,7 +214,6 @@
     <Compile Include="SexyContent\DataImportExport\XElementName.cs" />
     <Compile Include="SexyContent\DataImportExport\LanguageMissingOption.cs" />
     <Compile Include="SexyContent\DataImportExport\LanguageReferenceOption.cs" />
-    <Compile Include="SexyContent\DataImportExport\ListExtension.cs" />
     <Compile Include="SexyContent\DataImportExport\ResourceReferenceOption.cs" />
     <Compile Include="SexyContent\DataImportExport\XElementExtension.cs" />
     <Compile Include="SexyContent\DataSources\EntitiesFromList.cs" />

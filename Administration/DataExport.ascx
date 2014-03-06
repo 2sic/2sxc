@@ -17,12 +17,10 @@
     <div class="dnnFormItem">
         <dnn:Label runat="server" ID="lblLanguage" ControlName="ddlLanguage"></dnn:Label>
         <asp:DropDownList runat="server" ID="ddlLanguage" 
-            DataValueField="DimensionID" 
-            DataTextField="Name" 
             AutoPostBack="true"
             AppendDataBoundItems="true">
             <Items>
-                <asp:ListItem Value="-1" ResourceKey="lblDropDownListAll" />
+                <asp:ListItem Value="" ResourceKey="lblDropDownListAll" />
             </Items>
         </asp:DropDownList>
     </div>
@@ -42,7 +40,8 @@
             <dnn:Label runat="server" ID="lblLanguageMissing" ControlName="rblLanguageMissing"></dnn:Label>
             <asp:RadioButtonList runat="server" ID="rblLanguageMissing" class="dnnFormRadioButtons" 
                 DataValueField="Value"
-                DataTextField="Name">
+                DataTextField="Name"
+                AutoPostBack="true">
             </asp:RadioButtonList>
         </div>
 
@@ -50,7 +49,8 @@
             <dnn:Label runat="server" ID="lblLanguageReference" ControlName="rblLanguageReference"></dnn:Label>
             <asp:RadioButtonList runat="server" ID="rblLanguageReference" class="dnnFormRadioButtons" 
                 DataValueField="Value"
-                DataTextField="Name">
+                DataTextField="Name"
+                AutoPostBack="true">
             </asp:RadioButtonList>
         </div>
 
@@ -58,7 +58,8 @@
             <dnn:Label runat="server" ID="lblResourceReference" ControlName="rblResourceReference"></dnn:Label>
             <asp:RadioButtonList runat="server" ID="rblResourceReference" class="dnnFormRadioButtons" 
                 DataValueField="Value"
-                DataTextField="Name">
+                DataTextField="Name"
+                AutoPostBack="true">
             </asp:RadioButtonList>
         </div>
     </asp:Panel>

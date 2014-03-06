@@ -35,20 +35,66 @@ namespace ToSic.SexyContent.Administration
             }
         }
 
-        public Dimension DefaultDimension
+        public List<string> Languages
         {
             get
             {
-                if (ViewState["DefaultDimensionId"] == null)
+                if (ViewState["Languages"] == null)
                 {
-                    return null;
+                    return new List<string>();
                 }
-                return (Dimension)ViewState["DefaultDimensionId"];
+                return ViewState["Languages"] as List<string>;
             }
             set
             {
-                ViewState["DefaultDimensionId"] = value;
+                ViewState["Languages"] = value;
             }
+        }
+
+        public string LanguageFallback
+        {
+            get
+            {
+                if (ViewState["LanguageFallback"] == null)
+                {
+                    return null;
+                }
+                return (string)ViewState["LanguageFallback"];
+            }
+            set
+            {
+                ViewState["LanguageFallback"] = value;
+            }
+        }
+
+        public string LanguageSelected
+        {
+            get { return ddlLanguage.SelectedValue; }
+        }
+
+        public LanguageMissingOption LanguageMissingOptionSelected
+        {
+            get { return ParseEnum<LanguageMissingOption>(rblLanguageMissing.SelectedValue); }
+        }
+
+        public LanguageReferenceOption LanguageReferenceOptionSelected
+        {
+            get { return ParseEnum<LanguageReferenceOption>(rblLanguageReference.SelectedValue); }
+        }
+
+        public ResourceReferenceOption ResourceReferenceOptionSelected
+        {
+            get { return ParseEnum<ResourceReferenceOption>(rblResourceReference.SelectedValue); }
+        }
+
+        public RecordExportOption RecordExportOptionSelected
+        {
+            get { return ParseEnum<RecordExportOption>(rblRecordExport.SelectedValue); }
+        }
+
+        public int ContentTypeIdSelected
+        {
+            get { return int.Parse(ddlContentType.SelectedValue); }
         }
 
 
@@ -58,17 +104,24 @@ namespace ToSic.SexyContent.Administration
             {
                 return;
             }
+
             ApplicationId = Request["AppID"] != null ? int.Parse(Request["AppID"]) : new int?();
 
             var sexyContent = new SexyContent(true, new int?(), ApplicationId);
 
-            DefaultDimension = sexyContent.ContentContext.Dimensions.FirstOrDefault(dim => dim.ExternalKey == PortalSettings.DefaultLanguage);
+            LanguageFallback = PortalSettings.DefaultLanguage;
+            Languages = sexyContent.ContentContext.GetLanguages()
+                                                  .Where(language => language.Active)
+                                                  .Select(language => language.ExternalKey)
+                                                  .OrderBy(language => language != LanguageFallback)
+                                                  .ThenBy(language => language)
+                                                  .ToList();
 
+            ddlLanguage.DataSource = Languages;
+            ddlLanguage.DataBind();
+            
             ddlContentType.DataSource = sexyContent.GetAvailableAttributeSets(); ;
             ddlContentType.DataBind();
-
-            ddlLanguage.DataSource = sexyContent.ContentContext.GetLanguages().Where(dim => dim.Active).OrderBy(dim => dim.ExternalKey);
-            ddlLanguage.DataBind();
 
             rblRecordExport.DataSource = EnumToDataSource<RecordExportOption>();
             rblRecordExport.DataBind();
@@ -96,17 +149,21 @@ namespace ToSic.SexyContent.Administration
 
         protected void OnExportDataClick(object sender, EventArgs e)
         {
+            var dataXml = default(string);
             var dataSerializer = new DataXmlSerializer();
-            var dataXml = dataSerializer.Serialize
-                (
-                    ApplicationId,
-                    int.Parse(ddlContentType.SelectedValue),
-                    int.Parse(ddlLanguage.SelectedValue),
-                    DefaultDimension.DimensionID,
-                    ParseEnum<LanguageMissingOption>(rblLanguageMissing.SelectedValue),
-                    ParseEnum<LanguageReferenceOption>(rblLanguageReference.SelectedValue),
-                    ParseEnum<ResourceReferenceOption>(rblResourceReference.SelectedValue)
-                );
+            
+            if (RecordExportOptionSelected.IsBlank())
+            {
+                dataXml = dataSerializer.SerializeBlank(ApplicationId, ContentTypeIdSelected);
+            }
+            else if (LanguageSelected == "")
+            {
+                dataXml = dataSerializer.Serialize(ApplicationId, ContentTypeIdSelected, LanguageFallback, Languages, LanguageMissingOptionSelected, LanguageReferenceOptionSelected, ResourceReferenceOptionSelected);
+            }
+            else
+            {
+                dataXml = dataSerializer.Serialize(ApplicationId, ContentTypeIdSelected, LanguageSelected, LanguageFallback, Languages, LanguageMissingOptionSelected, LanguageReferenceOptionSelected, ResourceReferenceOptionSelected);
+            }
 
             Response.Clear();
             Response.Write(dataXml);
@@ -116,10 +173,6 @@ namespace ToSic.SexyContent.Administration
             Response.End();
         }
 
-        protected void OnExportEmptyClick(object sender, EventArgs e)
-        {
-            // TODO2tk: ...
-        }
 
         private IEnumerable<dynamic> EnumToDataSource<T>() where T : struct
         {
