@@ -210,6 +210,7 @@
     <Compile Include="SexyContent\DataImportExport\DataXmlSerializer.cs" />
     <Compile Include="SexyContent\DataImportExport\EavValueExtension.cs" />
     <Compile Include="SexyContent\DataImportExport\EntityExtension.cs" />
+    <Compile Include="SexyContent\DataImportExport\IEnumerableExtension.cs" />
     <Compile Include="SexyContent\DataImportExport\RecordExportOption.cs" />
     <Compile Include="SexyContent\DataImportExport\XElementName.cs" />
     <Compile Include="SexyContent\DataImportExport\LanguageMissingOption.cs" />

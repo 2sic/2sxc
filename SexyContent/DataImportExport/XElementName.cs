@@ -16,7 +16,7 @@ namespace ToSic.SexyContent.DataImportExport
 
         public const string EntityGuid = "Guid";
 
-        public const string EntityDimension = "Language";
+        public const string EntityLanguage = "Language";
 
         public const string ContentType = "ContentType";
 

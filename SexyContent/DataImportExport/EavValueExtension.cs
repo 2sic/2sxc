@@ -10,9 +10,6 @@ namespace ToSic.SexyContent.DataImportExport
 {
     public static class EavValueExtension
     {
-        /// <summary>
-        /// Resolve resources referenced, for example hyperlinks File:4711 to /file.txt.
-        /// </summary>
         public static string ResolveValueReference(this EavValue value)
         {
             if (value.IsHyperlink())
@@ -44,33 +41,34 @@ namespace ToSic.SexyContent.DataImportExport
         {
             return value.Attribute.Type == "Hyperlink";
         }
-
-        /// <summary>
-        /// Of this EAV value, get reference to the dimension specified. If no reference 
-        /// exists, the result will be null.
-        /// </summary>
-        public static ValueDimension GetValueDimension(this EavValue value, Dimension dimension)
+        
+        public static string GetLanguage(this EavValue value, string valueLanguage)
         {
-            return value.ValuesDimensions.FirstOrDefault(dim => dim.DimensionID == dimension.DimensionID);
+            return value.ValuesDimensions.Select(reference => reference.Dimension.ExternalKey)
+                                         .FirstOrDefault(language => language == valueLanguage);
         }
 
-        /// <summary>
-        /// Get all dimensions this EAV value references.
-        /// </summary>
-        public static IEnumerable<ValueDimension> GetValueDimensions(this EavValue value)
+        public static IEnumerable<string> GetLanguages(this EavValue value)
         {
-            return value.ValuesDimensions;
+            return value.ValuesDimensions.Select(reference => reference.Dimension.ExternalKey);
         }
 
-        /// <summary>
-        /// Get all dimensions this EAV references, but not the dimesnion specified by 
-        /// valueDimension (the valueDimension may also be called the current dimension).
-        /// </summary>
-        public static IEnumerable<ValueDimension> GetValueReferenceDimensions(this EavValue value, Dimension valueDimension)
+        public static IEnumerable<string> GetLanguagesReferenced(this EavValue value, string valueLanguage, bool referenceReadWrite)
         {
-            return value.GetValueDimensions().Where(dim => !dim.ReadOnly)
-                                             .Where(dim => dim.DimensionID != valueDimension.DimensionID)
-                                             .ToList();
+            return value.ValuesDimensions.Where(reference => referenceReadWrite ? !reference.ReadOnly : true)
+                                         .Where(reference => reference.Dimension.ExternalKey != valueLanguage)
+                                         .Select(reference => reference.Dimension.ExternalKey)
+                                         .ToList();
+        }
+
+        public static bool IsLanguageReadOnly(this EavValue value, string language)
+        {
+            var languageReference = value.ValuesDimensions.FirstOrDefault(reference => reference.Dimension.ExternalKey == language);
+            if (languageReference == null)
+            {
+                return false;
+            }
+            return languageReference.ReadOnly;
         }
     }
 }

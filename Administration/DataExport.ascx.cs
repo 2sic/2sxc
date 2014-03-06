@@ -13,12 +13,6 @@ namespace ToSic.SexyContent.Administration
     public partial class DataExport : DotNetNuke.Entities.Modules.PortalModuleBase
     {
         // NOTE2tk: Find the dialog on http://2sexycontent.2tk.2sic/Home/tabid/55/ctl/dataexport/mid/388/Default.aspx?popUp=true
-        
-        // TODO2tk: Export blank data templates
-        // TODO2tk: Get dimensions from contenContext.GetLanguages()
-        // TODO2tk: Test when no dimension is installed
-        // TODO2tk: When to write real value instead of =ref()
-        
         public int? ApplicationId
         {
             get
@@ -97,6 +91,11 @@ namespace ToSic.SexyContent.Administration
             get { return int.Parse(ddlContentType.SelectedValue); }
         }
 
+        public string ContentTypeNameSelected
+        {
+            get { return ddlContentType.SelectedItem.Text; }
+        }
+
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -156,18 +155,22 @@ namespace ToSic.SexyContent.Administration
             {
                 dataXml = dataSerializer.SerializeBlank(ApplicationId, ContentTypeIdSelected);
             }
-            else if (LanguageSelected == "")
-            {
-                dataXml = dataSerializer.Serialize(ApplicationId, ContentTypeIdSelected, LanguageFallback, Languages, LanguageMissingOptionSelected, LanguageReferenceOptionSelected, ResourceReferenceOptionSelected);
-            }
             else
             {
-                dataXml = dataSerializer.Serialize(ApplicationId, ContentTypeIdSelected, LanguageSelected, LanguageFallback, Languages, LanguageMissingOptionSelected, LanguageReferenceOptionSelected, ResourceReferenceOptionSelected);
+                dataXml = dataSerializer.Serialize(ApplicationId, ContentTypeIdSelected, LanguageSelected, LanguageFallback, Languages, LanguageReferenceOptionSelected, ResourceReferenceOptionSelected);
             }
 
+
+            var fileName = string.Format
+                (
+                    "SexyContent_{0}_{1}_{2}.xml",
+                    ContentTypeNameSelected.Replace(" ", "-"),
+                    LanguageSelected.Replace(" ", "-"),
+                    RecordExportOptionSelected.IsBlank() ? "Template" : "Data"                  
+                );
             Response.Clear();
             Response.Write(dataXml);
-            Response.AddHeader("Content-Disposition", string.Format("attachment; filename=SexyContentData {0}.xml", ddlContentType.SelectedItem.Text));
+            Response.AddHeader("Content-Disposition", string.Format("attachment; filename={0}", fileName));
             Response.AddHeader("Content-Length", dataXml.Length.ToString());
             Response.ContentType = "text/xml";
             Response.End();
