@@ -70,6 +70,14 @@
                     <dnnweb:DnnGridCheckBoxColumn ReadOnly="true" DataField="Hidden" HeaderText="Hidden">
                         <HeaderStyle Width="80px" />
                     </dnnweb:DnnGridCheckBoxColumn>
+                    
+                    <dnnweb:DnnGridTemplateColumn HeaderText="ExportApp">
+                        <ItemTemplate>
+                            <div style='<%# (Eval("Name") != "Content") ? "display:block;" : "display:none;" %>'>
+                                <a href="<%# EditUrl("", "", SexyContent.ControlKeys.AppExport, SexyContent.AppIDString + "=" + Eval("AppID")) %>">Export</a>
+                            </div>
+                        </ItemTemplate>
+                    </dnnweb:DnnGridTemplateColumn>
 
                 </Columns>
                 <NoRecordsTemplate>

@@ -13,5 +13,17 @@ namespace ToSic.SexyContent.Administration.Apps
         {
 
         }
+
+        protected void btnExportApp_OnClick(object sender, EventArgs e)
+        {
+            var stream = new ToSic.SexyContent.ImportExport.ZipExport(ZoneId.Value, AppId.Value).ExportApp();
+            Response.AddHeader("content-disposition", "attachment;filename=App.zip");
+            Response.ContentType = "application/zip";
+
+            stream.WriteTo(Response.OutputStream);
+            stream.Close();
+            Response.Flush();
+            Response.Close();
+        }
     }
 }

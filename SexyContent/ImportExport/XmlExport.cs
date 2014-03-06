@@ -19,6 +19,7 @@ namespace ToSic.SexyContent.ImportExport
         // initialize data context
         private SexyContent Sexy;
         private List<int> _referencedFileIds;
+        public List<IFileInfo> ReferencedFiles;
         private int _zoneId;
         private int _appId;
 
@@ -42,6 +43,7 @@ namespace ToSic.SexyContent.ImportExport
         public string ExportXml(string[] AttributeSetIDs, string[] EntityIDs, string[] TemplateIDs, out List<ExportImportMessage> Messages)
         {
             _referencedFileIds = new List<int>();
+            ReferencedFiles = new List<IFileInfo>();
 
             // Create XML document and declaration
             XDocument Doc = new XDocument(new XDeclaration("1.0", "UTF-8", "yes"), null);
@@ -262,10 +264,13 @@ namespace ToSic.SexyContent.ImportExport
             var file = fileController.GetFile(fileId);
             if (file != null)
             {
+                ReferencedFiles.Add(file);
+
                 return new XElement("File",
                         new XAttribute("Id", fileId),
                         new XAttribute("RelativePath", file.RelativePath)
                     );
+
             }
 
             return null;

@@ -264,9 +264,11 @@
     <Compile Include="SexyContent\Engines\TokenEngine\TokenEngine.cs" />
     <Compile Include="SexyContent\ImportExport\ExportImportMessage.cs" />
     <Compile Include="SexyContent\ImportExport\ImportExport.cs" />
+    <Compile Include="SexyContent\ImportExport\ImportExportHelpers.cs" />
     <Compile Include="SexyContent\ImportExport\ImportValue.cs" />
     <Compile Include="SexyContent\ImportExport\XmlExport.cs" />
     <Compile Include="SexyContent\ImportExport\XmlImport.cs" />
+    <Compile Include="SexyContent\ImportExport\ZipExport.cs" />
     <Compile Include="SexyContent\ImportExport\ZipImport.cs" />
     <Compile Include="SexyContent\SexyContentContext.Designer.cs">
       <AutoGen>True</AutoGen>

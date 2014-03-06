@@ -69,6 +69,7 @@ namespace ToSic.SexyContent
             public const string GettingStarted = "gettingstarted";
             public const string PortalConfiguration = "portalconfiguration";
             public const string EditDataSource = "editdatasource";
+            public const string AppExport = "appexport";
         }
 
         public const string PortalHostDirectory = "~/Portals/_default/";
@@ -990,12 +991,12 @@ namespace ToSic.SexyContent
 
         public IEnumerable<AttributeSet> GetAvailableAttributeSets(string scope = SexyContent.AttributeSetScope)
         {
-            return from c in ContentContext.GetAllAttributeSets()
-                   where !c.Name.StartsWith("@")
-                         && c.Scope == scope
-                         && !c.ChangeLogIDDeleted.HasValue
-                   orderby c.Name
-                   select c;
+            return ContentContext.GetAllAttributeSets().Where(p => p.Scope == scope);
+        }
+
+        public IEnumerable<AttributeSet> GetAvailableAttributeSets()
+        {
+            return ContentContext.GetAllAttributeSets().Where(c => !c.Name.StartsWith("@") && !c.ChangeLogIDDeleted.HasValue).OrderBy(c => c.Name);
         }
 
         public IEnumerable<AttributeSet> GetAvailableAttributeSetsForVisibleTemplates(int PortalId)

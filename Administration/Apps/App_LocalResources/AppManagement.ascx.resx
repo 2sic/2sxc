@@ -159,4 +159,7 @@
   <data name="TokenTemplates.Header" xml:space="preserve">
     <value>Allow Token Templates</value>
   </data>
+  <data name="ExportApp.Header" xml:space="preserve">
+    <value>Export</value>
+  </data>
 </root>
