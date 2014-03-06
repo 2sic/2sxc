@@ -142,7 +142,7 @@
     <value>All</value>
   </data>
   <data name="lblIntro.Text" xml:space="preserve">
-    <value>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</value>
+    <value>Export data of a content-type to a simple xml file. The file can be imported again, and in between be edited with Microsoft Excel for example.</value>
   </data>
   <data name="lblLanguage.Text" xml:space="preserve">
     <value>Language</value>
