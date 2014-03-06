@@ -205,7 +205,7 @@ namespace ToSic.SexyContent
                         EditControl.ZoneId = ZoneId.Value;
                         EditControl.ItemType = TemplateDefault.ItemType;
                         EditControl.TemplateID = Items.First().TemplateID.Value;
-                        EditControl.SortOrder = CurrentlyEditedItems.Any() ? SortOrder : new int?();
+                        EditControl.SortOrder = CurrentlyEditedItems.Any() || SortOrder == -1 ? SortOrder : new int?();
                         EditControl.ModuleID = ModuleId;
                         EditControl.TabID = TabId;
                         EditControl.AttributeSetID = TemplateDefault.ContentTypeID.Value;

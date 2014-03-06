@@ -36,7 +36,7 @@ namespace ToSic.SexyContent
     {
         #region Constants
 
-        public const string ModuleVersion = "05.05.01";
+        public const string ModuleVersion = "05.05.02";
         public const string TemplateID = "TemplateID";
         public const string ContentGroupIDString = "ContentGroupID";
         public const string AppIDString = "AppId";
@@ -724,10 +724,10 @@ namespace ToSic.SexyContent
             var portalSettings = PortalSettings.Current;
 
             //var DefaultAppContext = new SexyContent(true, DataSource.DefaultZoneId);
-            var Set = new SexyContent(zoneId, appId).ContentContext.GetAttributeSet(attributeSetStaticName);
-            string NewItemUrl = UrlUtils.PopUpUrl(Globals.NavigateURL(tabId, ControlKeys.EavManagement, "mid=" + moduleId.ToString() + "&ManagementMode=NewItem&AttributeSetId=[AttributeSetId]&KeyNumber=[KeyNumber]&AssignmentObjectTypeId=[AssignmentObjectTypeId]&ReturnUrl=[ReturnUrl]&" + SexyContent.AppIDString + "=" + appId), control, portalSettings, false, true);
-            string EditItemUrl = UrlUtils.PopUpUrl(Globals.NavigateURL(tabId, ControlKeys.EavManagement, "mid=" + moduleId.ToString() + "&ManagementMode=EditItem&EntityId=[EntityId]&ReturnUrl=[ReturnUrl]&" + SexyContent.AppIDString + "=" + appId), control, portalSettings, false, true);
-            return Eav.ManagementUI.Forms.GetItemFormUrl(keyNumber, Set.AttributeSetID, assignmentObjectTypeID, NewItemUrl, EditItemUrl, returnUrl);
+            var set = new SexyContent(zoneId, appId).ContentContext.GetAttributeSet(attributeSetStaticName);
+            string newItemUrl = Globals.NavigateURL(tabId, ControlKeys.EavManagement, "mid=" + moduleId.ToString() + "&ManagementMode=NewItem&AttributeSetId=[AttributeSetId]&KeyNumber=[KeyNumber]&AssignmentObjectTypeId=[AssignmentObjectTypeId]&ReturnUrl=[ReturnUrl]&" + SexyContent.AppIDString + "=" + appId);
+            string editItemUrl = Globals.NavigateURL(tabId, ControlKeys.EavManagement, "mid=" + moduleId.ToString() + "&ManagementMode=EditItem&EntityId=[EntityId]&ReturnUrl=[ReturnUrl]&" + SexyContent.AppIDString + "=" + appId);
+            return UrlUtils.PopUpUrl(Eav.ManagementUI.Forms.GetItemFormUrl(keyNumber, set.AttributeSetID, assignmentObjectTypeID, newItemUrl, editItemUrl, returnUrl), control, portalSettings, false, true);
         }
 
         /// <summary>
@@ -829,7 +829,11 @@ namespace ToSic.SexyContent
                     AppId = appId,
                     Name = "Content",
                     Folder = "Content",
-                    Configuration = null
+                    Configuration = null,
+                    Resources = null,
+                    Settings = null,
+                    Hidden = true,
+                    StaticName = eavAppName
                 };
             }
             else
