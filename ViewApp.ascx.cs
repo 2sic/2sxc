@@ -390,7 +390,7 @@ namespace ToSic.SexyContent
             switch (e.Action.CommandName)
             {
                 case SexyContent.ControlKeys.AddItem:
-                    Sexy.AddContentGroupItem(Elements.First().GroupID, UserId, Template.TemplateID, null, null, true, ContentGroupItemType.Content, false);
+                    SexyUncached.AddContentGroupItem(Elements.First().GroupID, UserId, Template.TemplateID, null, null, true, ContentGroupItemType.Content, false);
                     Response.Redirect(Request.RawUrl);
                     break;
             }

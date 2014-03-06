@@ -414,12 +414,12 @@ namespace ToSic.SexyContent
             }
         }
 
-        protected void ModuleActions_Click(object sender, DotNetNuke.Entities.Modules.Actions.ActionEventArgs e)
+        protected void ModuleActions_Click(object sender, ActionEventArgs e)
         {
             switch (e.Action.CommandName)
             {
                 case SexyContent.ControlKeys.AddItem:
-                    Sexy.AddContentGroupItem(Elements.First().GroupID, UserId, Template.TemplateID, null, null, true, ContentGroupItemType.Content, false);
+                    SexyUncached.AddContentGroupItem(Elements.First().GroupID, UserId, Template.TemplateID, null, null, true, ContentGroupItemType.Content, false);
                     Response.Redirect(Request.RawUrl);
                     break;
             }

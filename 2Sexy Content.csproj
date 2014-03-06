@@ -109,6 +109,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Administration\Apps\AppExport.ascx.cs">
+      <DependentUpon>AppExport.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\Apps\AppExport.ascx.designer.cs">
+      <DependentUpon>AppExport.ascx</DependentUpon>
+    </Compile>
     <Compile Include="Administration\Apps\AppManagement.ascx.cs">
       <DependentUpon>AppManagement.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -338,6 +345,7 @@
     <Compile Include="SexyContent\Engines\TokenEngine\TokenReplace.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Administration\Apps\AppExport.ascx" />
     <Content Include="Administration\Apps\AppManagement.ascx" />
     <Content Include="Administration\GettingStarted.ascx" />
     <Content Include="Administration\PortalConfiguration.ascx" />

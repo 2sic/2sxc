@@ -951,7 +951,7 @@ namespace ToSic.SexyContent
                 Type = ItemType.ToString()
             };
 
-            TemplateContext.AddContentGroupItem(Item);
+            Item = TemplateContext.AddContentGroupItem(Item);
 
             if (AutoSave)
                 TemplateContext.SaveChanges();
