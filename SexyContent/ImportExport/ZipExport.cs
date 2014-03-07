@@ -26,9 +26,10 @@ namespace ToSic.SexyContent.ImportExport
         public MemoryStream ExportApp()
         {
             // Get Export XML
+            var attributeSets = _sexy.GetAvailableAttributeSets();
             var attributeSetIds = _sexy.GetAvailableAttributeSets().Select(p => p.AttributeSetID.ToString()).ToArray();
             var entities = SexyContent.GetInitialDataSource(_zoneId, _appId).Out["Default"].List;
-            var entityIds = entities.Select(e => e.Value.EntityId.ToString()).ToArray();
+            var entityIds = entities.Where(e => attributeSets.Any(a => a.Entities.Any(c => c.EntityID == e.Value.EntityId))).Select(e => e.Value.EntityId.ToString()).ToArray();
             var templateIds = _sexy.GetTemplates(PortalSettings.Current.PortalId).Select(p => p.TemplateID.ToString()).ToArray();
             var messages = new List<ExportImportMessage>();
             var xmlExport = new XmlExport(_zoneId, _appId, true);

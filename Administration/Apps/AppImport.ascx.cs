@@ -31,7 +31,7 @@ namespace ToSic.SexyContent
             var messages = new List<ExportImportMessage>();
             var success = false;
 
-            success = new ZipImport(ZoneId.Value, AppId.Value, false, UserInfo.IsSuperUser).ImportZip(importStream, Server, PortalSettings, messages);
+            success = new ZipImport(ZoneId.Value, null, UserInfo.IsSuperUser).ImportApp(importStream, Server, PortalSettings, messages);
 
             lstvSummary.DataSource = messages;
             lstvSummary.DataBind();

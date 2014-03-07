@@ -1,8 +1,5 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="AppImport.ascx.cs" Inherits="ToSic.SexyContent.AppImport" %>
 <%@ Register TagPrefix="dnn" TagName="Label" Src="~/controls/LabelControl.ascx" %>
-<%@ Register TagName="AdministrationRegisters" TagPrefix="SexyContent" Src="Registers.ascx" %>
-<SexyContent:AdministrationRegisters runat="server"></SexyContent:AdministrationRegisters>
-
 
 <asp:Panel runat="server" class="dnnForm dnnClear" id="pnlUpload">
     <h2 class="dnnFormSectionHead" runat="server">Import App</h2>

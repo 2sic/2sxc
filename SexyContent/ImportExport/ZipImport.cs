@@ -12,17 +12,20 @@ namespace ToSic.SexyContent.ImportExport
 {
     public class ZipImport
     {
-        private int _appId;
+        private int? _appId;
         private int _zoneId;
-        private bool _isAppImport;
         private bool _allowRazor;
         
-        public ZipImport(int zoneId, int appId, bool isAppImport, bool allowRazor)
+        public ZipImport(int zoneId, int? appId, bool allowRazor)
         {
             _appId = appId;
             _zoneId = zoneId;
-            _isAppImport = isAppImport;
             _allowRazor = allowRazor;
+        }
+
+        public bool ImportApp(Stream zipStream, HttpServerUtility server, PortalSettings portalSettings, List<ExportImportMessage> messages)
+        {
+            return ImportZip(zipStream, server, portalSettings, messages, true);
         }
 
         /// <summary>
@@ -33,8 +36,11 @@ namespace ToSic.SexyContent.ImportExport
         /// <param name="portalSettings"></param>
         /// <param name="messages"></param>
         /// <returns></returns>
-        public bool ImportZip(Stream zipStream, HttpServerUtility server, PortalSettings portalSettings, List<ExportImportMessage> messages)
+        public bool ImportZip(Stream zipStream, HttpServerUtility server, PortalSettings portalSettings, List<ExportImportMessage> messages, bool isAppImport)
         {
+            if(!isAppImport && !_appId.HasValue)
+                throw new Exception("Could not import zip: No valid app id");
+
             if (messages == null)
                 messages = new List<ExportImportMessage>();
 
@@ -65,7 +71,7 @@ namespace ToSic.SexyContent.ImportExport
                             foreach (var appDirectory in Directory.GetDirectories(currentWorkingDir))
                             {
                                 var appId = new int?();
-                                var xmlSearchPattern = _isAppImport ? "App.xml" : "*.xml";
+                                var xmlSearchPattern = isAppImport ? "App.xml" : "*.xml";
 
                                 // Import XML file(s)
                                 foreach (string xmlFileName in Directory.GetFiles(appDirectory, "*.xml"))
@@ -73,13 +79,13 @@ namespace ToSic.SexyContent.ImportExport
                                     var fileContents = File.ReadAllText(Path.Combine(appDirectory, xmlFileName));
                                     var import = new XmlImport();
 
-                                    if (_isAppImport)
+                                    if (isAppImport)
                                     {
                                         import.ImportApp(_zoneId, fileContents, out appId);
                                     }
                                     else
                                     {
-                                        import.ImportXml(_zoneId, _appId, fileContents);
+                                        import.ImportXml(_zoneId, _appId.Value, fileContents);
                                     }
 
                                     

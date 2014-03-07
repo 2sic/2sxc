@@ -92,7 +92,7 @@
         </dnnweb:DnnGrid>
         <ul class="dnnActions dnnClear">
             <li><asp:Hyperlink ID="hlkBrowseApps" runat="server" CssClass="dnnPrimaryAction" ResourceKey="hlkBrowseApps"></asp:Hyperlink></li>
-            <li><a href="<%= EditUrl("", "", SexyContent.ControlKeys.AppImport) %>">Import App</a></li>
+            <li><a class="dnnSecondaryAction" href="<%= EditUrl("", "", SexyContent.ControlKeys.AppImport) %>">Import App</a></li>
             <li><asp:LinkButton ID="btnCreateApp" runat="server" CssClass="dnnSecondaryAction sc-create-app" ResourceKey="btnCreateApp" OnClientClick="return CreateApp()" OnClick="btnCreateApp_Click"></asp:LinkButton></li>
         </ul>
         

@@ -52,7 +52,7 @@ namespace ToSic.SexyContent
 
             if (isZip)
             {
-                success = new ZipImport(ZoneId.Value, AppId.Value, false, UserInfo.IsSuperUser).ImportZip(importStream, Server, PortalSettings, messages);
+                success = new ZipImport(ZoneId.Value, AppId.Value, UserInfo.IsSuperUser).ImportZip(importStream, Server, PortalSettings, messages, false);
             }
             else
             {
