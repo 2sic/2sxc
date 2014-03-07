@@ -862,7 +862,8 @@ namespace ToSic.SexyContent
                 { "DisplayName", appName },
                 { "Folder", appName },
                 { "AllowTokenTemplates", "False" },
-                { "AllowRazorTemplates", "False" }
+                { "AllowRazorTemplates", "False" },
+                { "Version", "00.00.01" }
             };
             appContext.ContentContext.AddEntity(appAttributeSet, values, null, app.AppID, AssignmentObjectTypeIDSexyContentApp);
 

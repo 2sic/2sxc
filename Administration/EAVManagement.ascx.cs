@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using DotNetNuke.UI.Utilities;
+using DotNetNuke.Web.Client.ClientResourceManagement;
 
 namespace ToSic.SexyContent
 {
@@ -26,11 +27,19 @@ namespace ToSic.SexyContent
         /// <param name="e"></param>
         protected void Page_Load(object sender, EventArgs e)
         {
+
             // Register Stylesheet & Script
             litAssetsInclude.Text = "<link rel='stylesheet' href='" + ResolveClientUrl("../Styles/Edit.css") + "'/>";
 
-            if (Request.QueryString["ManagementMode"] == "NewItem" || Request.QueryString["ManagementMode"] == "EditItem")
-                litAssetsInclude.Text += "<script src='" + ResolveClientUrl("../Js/ItemForm.js") + "' type='text/javascript' />";
+            if (Request.QueryString["ManagementMode"] == "NewItem" ||
+                Request.QueryString["ManagementMode"] == "EditItem")
+            {
+                //litAssetsInclude.Text += "<script src='" + ResolveClientUrl("../Js/ItemForm.js") + "' type='text/javascript' />";
+                
+                ClientResourceManager.RegisterScript(this.Page, "~/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/Controls/ItemForm.js", 100);
+                ClientResourceManager.RegisterScript(this.Page, "~/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/Controls/ItemFormEntityModelCreator.js", 200);
+                ClientResourceManager.RegisterScript(this.Page, "~/DesktopModules/ToSIC_SexyContent/Js/ItemForm.js", 300);
+            }
 
             // Add DNN Version to body class
             SexyContent.AddDNNVersionToBodyClass(this);
@@ -42,6 +51,7 @@ namespace ToSic.SexyContent
             eavManagement.DefaultCultureDimension = SexyContent.GetLanguageId(ZoneId.Value, PortalSettings.DefaultLanguage);
             eavManagement.ZoneId = ZoneId;
             eavManagement.AppId = AppId;
+            eavManagement.AddFormClientScriptAndCss = false;
             pnlEAV.Controls.Add(eavManagement);
         }
     }

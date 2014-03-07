@@ -23,6 +23,8 @@ namespace ToSic.Eav.ManagementUI
         private const string MetaDataNameKey = "Name";
         private const string MetaDataWysiwygHeightKey = "WysiwygHeight";
         private const string MetaDataWysiwygWidthKey = "WysiwygWidth";
+        private const string MetaDataRegularExpression = "ValidationRegEx";
+        private const string MetaDataRegularExpressionJavaScript = "ValidationRegExJavaScript";
 
         private enum InputTypes { Textbox, Wysiwyg, DropDown, Link }
 
@@ -167,6 +169,10 @@ namespace ToSic.Eav.ManagementUI
                 FieldLabel.Visible = false;
 
             valFieldValue.DataBind();
+
+            if (MetaData.ContainsKey(MetaDataRegularExpression))
+                valRegularExpression.ValidationExpression = MetaData[MetaDataRegularExpression][DimensionIds].ToString();
+            valRegularExpression.DataBind();
         }
 
 
@@ -183,6 +189,8 @@ namespace ToSic.Eav.ManagementUI
             FieldLabel.Text = MetaData.ContainsKey(MetaDataNameKey) ? MetaData[MetaDataNameKey][DimensionIds].ToString() : Attribute.StaticName;
             FieldLabel.HelpText = MetaData.ContainsKey(MetaDataNotesKey) ? MetaData[MetaDataNotesKey][DimensionIds].ToString() : "";
             valFieldValue.Enabled = MetaData.ContainsKey(MetaDataIsRequiredKey) && Boolean.Parse(MetaData[MetaDataIsRequiredKey][DimensionIds].ToString());
+            valRegularExpression.Enabled = MetaData.ContainsKey(MetaDataRegularExpression) && !String.IsNullOrEmpty(MetaData[MetaDataRegularExpression][DimensionIds].ToString());
+            
             // base.OnLoad(e);
         }
 

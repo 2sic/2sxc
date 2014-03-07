@@ -3,6 +3,7 @@
 <%@ Register TagPrefix="dnnweb" Assembly="DotNetNuke.Web" Namespace="DotNetNuke.Web.UI.WebControls" %>
 <%@ Register TagPrefix="Telerik" Assembly="Telerik.Web.UI" Namespace="Telerik.Web.UI" %>
 
+
 <div class="dnnForm dnnSexyContentManageApps dnnClear">
     <h2 class="dnnFormSectionHead">
         <asp:Label runat="server" ResourceKey="lblManageAppsHeading"></asp:Label>

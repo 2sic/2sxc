@@ -71,7 +71,7 @@ namespace ToSic.SexyContent.ImportExport
             // Zip directory and return as stream
             var stream = new MemoryStream();
             var zipStream = new ZipOutputStream(stream);
-            zipStream.SetLevel(0);
+            zipStream.SetLevel(6);
             ZipFolder(tempDirectory.FullName + "\\", tempDirectory.FullName + "\\", zipStream);
             zipStream.Finish();
 
