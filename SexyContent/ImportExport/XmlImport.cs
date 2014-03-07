@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Data;
 using System.Data.Common;
 using System.Data.EntityClient;
@@ -28,19 +29,16 @@ namespace ToSic.SexyContent.ImportExport
         private string _sourceDefaultLanguage;
         private string _sourceDefaultDimensionId;
         private List<Dimension> _targetDimensions;
-        private readonly SexyContent _sexy;
-        private readonly int _appId;
-        private readonly int _zoneId;
+        private SexyContent _sexy;
+        private int _appId;
+        private int _zoneId;
         private Dictionary<int, int> _fileIdCorrectionList;
 
         #region Prerequisites
-        public XmlImport(int zoneId, int appId)
+        public XmlImport()
         {
             // Prepare
             ImportLog = new List<ExportImportMessage>();
-            _sexy = new SexyContent(zoneId, appId, false);
-            _appId = appId;
-            _zoneId = zoneId;
         }
 
         private bool IsCompatible(XDocument doc)
@@ -97,12 +95,53 @@ namespace ToSic.SexyContent.ImportExport
         #endregion
 
         /// <summary>
+        /// Creates an app and then imports the xml
+        /// </summary>
+        /// <param name="xml"></param>
+        /// <returns>AppId of the new imported app</returns>
+        public bool ImportApp(int zoneId, string xml, out int? appId)
+        {
+            appId = new int?();
+
+            // Parse XDocument from string
+            XDocument doc = XDocument.Parse(xml);
+
+            if (!IsCompatible(doc))
+            {
+                ImportLog.Add(new ExportImportMessage("The import file is not compatible with the installed version of 2SexyContent.", ExportImportMessage.MessageTypes.Error));
+                return false;
+            }
+
+            // Get root node "SexyContent"
+            XElement xmlSource = doc.Element("SexyContent");
+            var xApp = xmlSource.Element("Header").Element("App");
+
+            // Adding app to EAV
+            var sexy = new SexyContent(zoneId, SexyContent.GetDefaultAppId(zoneId));
+            var app = sexy.ContentContext.AddApp(xApp.Attribute("Guid").Value);
+            sexy.ContentContext.SaveChanges();
+
+            appId = app.AppID;
+
+            if (!appId.HasValue || appId <= 0)
+            {
+                ImportLog.Add(new ExportImportMessage("App was not created. Please try again or make sure the package you are importing is correct.", ExportImportMessage.MessageTypes.Error));
+                return false;
+            }
+
+            return ImportXml(zoneId, app.AppID, xml);
+        }
+
+        /// <summary>
         /// Do the import
         /// </summary>
         /// <param name="xml">The previously exported XML</param>
         /// <returns></returns>
-        public bool ImportXml(string xml)
+        public bool ImportXml(int zoneId, int appId, string xml)
         {
+            _sexy = new SexyContent(zoneId, appId, false);
+            _appId = appId;
+            _zoneId = zoneId;
 
             // Parse XDocument from string
             XDocument doc = XDocument.Parse(xml);
@@ -320,7 +359,16 @@ namespace ToSic.SexyContent.ImportExport
         /// <returns></returns>
         private Entity GetImportEntity(XElement xEntity, int assignmentObjectTypeId, int? keyNumber = null)
         {
-            
+            var attributeSetStaticName = xEntity.Attribute("AttributeSetStaticName").Value;
+
+            // Special case: App AttributeSets must be assigned to the current app
+            if (attributeSetStaticName == SexyContent.AttributeSetStaticNameApps ||
+                attributeSetStaticName == SexyContent.AttributeSetStaticNameAppSettings ||
+                attributeSetStaticName == SexyContent.AttributeSetStaticNameAppResources)
+            {
+                assignmentObjectTypeId = _appId;
+            }
+
             var targetEntity = new Entity()
                 {
                     AssignmentObjectTypeId = assignmentObjectTypeId,
@@ -393,9 +441,8 @@ namespace ToSic.SexyContent.ImportExport
                     // Process found value
                     if (sourceValue != null)
                     {
-
                         // Special cases for template-describing values
-                        if (xEntity.Attribute("AttributeSetStaticName").Value == "2SexyContent-Template-ContentTypes")
+                        if (attributeSetStaticName == SexyContent.AttributeSetStaticNameTemplateContentTypes)
                         {
                             var sourceValueString = sourceValue.Attribute("Value").Value;
                             if (!String.IsNullOrEmpty(sourceValueString))

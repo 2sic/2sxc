@@ -91,7 +91,7 @@ namespace ToSic.SexyContent
             if (!IsPostBack)
             {
                 // DataBind Content Types
-                var AttributeSets = Sexy.GetAvailableAttributeSets();
+                var AttributeSets = Sexy.GetAvailableAttributeSets(SexyContent.AttributeSetScope);
                 ddlContentTypes.DataSource = AttributeSets;
 
                 if (AttributeSets.Any(a => a.AttributeSetID == _ContentTypeID))

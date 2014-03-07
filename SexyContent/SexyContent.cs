@@ -70,6 +70,7 @@ namespace ToSic.SexyContent
             public const string PortalConfiguration = "portalconfiguration";
             public const string EditDataSource = "editdatasource";
             public const string AppExport = "appexport";
+            public const string AppImport = "appimport";
         }
 
         public const string PortalHostDirectory = "~/Portals/_default/";
@@ -845,7 +846,7 @@ namespace ToSic.SexyContent
             return sexyApp;
         }
 
-        public static void AddApp(int zoneId, string appName)
+        public static App AddApp(int zoneId, string appName)
         {
             if(appName == "Content" || appName == "Default" || String.IsNullOrEmpty(appName) || !Regex.IsMatch(appName, "^[0-9A-Za-z -_]+$"))
                 throw new ArgumentOutOfRangeException("appName '" + appName + "' not allowed");
@@ -874,6 +875,8 @@ namespace ToSic.SexyContent
             // Add new (empty) ContentType for Resources
             var resourcesAttributeSet = appContext.ContentContext.AddAttributeSet(AttributeSetStaticNameAppResources, "Stores resources like translations for an app", AttributeSetStaticNameAppResources, AttributeSetScopeApps);
             appContext.ContentContext.AddEntity(resourcesAttributeSet, new OrderedDictionary() { }, null, app.AppID, AssignmentObjectTypeIDSexyContentApp);
+
+            return GetApp(zoneId, app.AppID);
 
         }
 
@@ -990,7 +993,7 @@ namespace ToSic.SexyContent
             TemplateContext.SaveChanges();
         }
 
-        public IEnumerable<AttributeSet> GetAvailableAttributeSets(string scope = SexyContent.AttributeSetScope)
+        public IEnumerable<AttributeSet> GetAvailableAttributeSets(string scope)
         {
             return ContentContext.GetAllAttributeSets().Where(p => p.Scope == scope);
         }
@@ -1003,7 +1006,7 @@ namespace ToSic.SexyContent
         public IEnumerable<AttributeSet> GetAvailableAttributeSetsForVisibleTemplates(int PortalId)
         {
             var AvailableTemplates = GetVisibleTemplates(PortalId);
-            return GetAvailableAttributeSets().Where(p => AvailableTemplates.Any(t => t.AttributeSetID == p.AttributeSetID)).OrderBy(p => p.Name);
+            return GetAvailableAttributeSets(SexyContent.AttributeSetScope).Where(p => AvailableTemplates.Any(t => t.AttributeSetID == p.AttributeSetID)).OrderBy(p => p.Name);
         }
 
         /// <summary>

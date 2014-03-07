@@ -22,13 +22,15 @@ namespace ToSic.SexyContent.ImportExport
         public List<IFileInfo> ReferencedFiles;
         private int _zoneId;
         private int _appId;
+        private bool _isAppExport;
 
         #region Export
 
-        public XmlExport(int zoneId, int appId)
+        public XmlExport(int zoneId, int appId, bool appExport)
         {
             _zoneId = zoneId;
             _appId = appId;
+            _isAppExport = appExport;
             Sexy = new SexyContent(_zoneId, _appId);
         }
 
@@ -52,6 +54,12 @@ namespace ToSic.SexyContent.ImportExport
 
             var Dimensions = Sexy.ContentContext.GetDimensionChildren("Culture");
             XElement Header = new XElement("Header",
+                _isAppExport ? new XElement("App",
+                    new XAttribute("Guid", Sexy.App.StaticName),
+                    new XAttribute("Name", Sexy.App.Name),
+                    new XAttribute("Version", Sexy.App.Configuration.Version),
+                    new XAttribute("Folder", Sexy.App.Folder)
+                ) : null,
                 new XElement("Language", new XAttribute("Default", PortalSettings.Current.DefaultLanguage)),
                 new XElement("Dimensions", Dimensions.Select(d => new XElement("Dimension",
                         new XAttribute("DimensionID", d.DimensionID),
@@ -59,7 +67,8 @@ namespace ToSic.SexyContent.ImportExport
                         new XAttribute("SystemKey", d.SystemKey ?? String.Empty),
                         new XAttribute("ExternalKey", d.ExternalKey ?? String.Empty),
                         new XAttribute("Active", d.Active)
-                    ))));
+                    )))
+             );
             #endregion
 
             #region Attribute Sets

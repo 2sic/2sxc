@@ -31,7 +31,7 @@ namespace ToSic.SexyContent.ImportExport
             var entityIds = entities.Select(e => e.Value.EntityId.ToString()).ToArray();
             var templateIds = _sexy.GetTemplates(PortalSettings.Current.PortalId).Select(p => p.TemplateID.ToString()).ToArray();
             var messages = new List<ExportImportMessage>();
-            var xmlExport = new XmlExport(_zoneId, _appId);
+            var xmlExport = new XmlExport(_zoneId, _appId, true);
             var xml = xmlExport.ExportXml(attributeSetIds, entityIds, templateIds, out messages);
 
             #region Copy needed files to temporary directory
@@ -64,7 +64,7 @@ namespace ToSic.SexyContent.ImportExport
             }
             
             // Save export xml
-            File.AppendAllText(System.IO.Path.Combine(appDirectory.FullName, "App-" + Regex.Replace(_sexy.App.Name, "[^a-zA-Z]", "")+ ".xml"), xml);
+            File.AppendAllText(System.IO.Path.Combine(appDirectory.FullName, "App.xml"), xml);
 
             #endregion
 

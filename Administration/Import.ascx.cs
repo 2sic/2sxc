@@ -52,13 +52,13 @@ namespace ToSic.SexyContent
 
             if (isZip)
             {
-                success = new ZipImport(ZoneId.Value, AppId.Value).ImportZip(importStream, Server, PortalSettings, messages);
+                success = new ZipImport(ZoneId.Value, AppId.Value, false, UserInfo.IsSuperUser).ImportZip(importStream, Server, PortalSettings, messages);
             }
             else
             {
                 string Xml = new StreamReader(importStream).ReadToEnd();
-                var import = new XmlImport(ZoneId.Value, AppId.Value);
-                success = import.ImportXml(Xml);
+                var import = new XmlImport();
+                success = import.ImportXml(ZoneId.Value, AppId.Value, Xml);
                 messages = import.ImportLog;
             }
 

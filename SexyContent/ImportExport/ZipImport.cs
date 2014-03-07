@@ -14,11 +14,15 @@ namespace ToSic.SexyContent.ImportExport
     {
         private int _appId;
         private int _zoneId;
+        private bool _isAppImport;
+        private bool _allowRazor;
         
-        public ZipImport(int zoneId, int appId)
+        public ZipImport(int zoneId, int appId, bool isAppImport, bool allowRazor)
         {
             _appId = appId;
             _zoneId = zoneId;
+            _isAppImport = isAppImport;
+            _allowRazor = allowRazor;
         }
 
         /// <summary>
@@ -60,8 +64,29 @@ namespace ToSic.SexyContent.ImportExport
                             // Loop through each app directory
                             foreach (var appDirectory in Directory.GetDirectories(currentWorkingDir))
                             {
+                                var appId = new int?();
+                                var xmlSearchPattern = _isAppImport ? "App.xml" : "*.xml";
 
-                                var sexy = new SexyContent(_zoneId, _appId);
+                                // Import XML file(s)
+                                foreach (string xmlFileName in Directory.GetFiles(appDirectory, "*.xml"))
+                                {
+                                    var fileContents = File.ReadAllText(Path.Combine(appDirectory, xmlFileName));
+                                    var import = new XmlImport();
+
+                                    if (_isAppImport)
+                                    {
+                                        import.ImportApp(_zoneId, fileContents, out appId);
+                                    }
+                                    else
+                                    {
+                                        import.ImportXml(_zoneId, _appId, fileContents);
+                                    }
+
+                                    
+                                    messages.AddRange(import.ImportLog);
+                                }
+
+                                var sexy = new SexyContent(_zoneId, appId.Value);
 
                                 // Copy all files in 2sexy folder to (portal file system) 2sexy folder
                                 string templateRoot = server.MapPath(sexy.GetTemplatePathRoot(SexyContent.TemplateLocations.PortalFileSystem));
@@ -74,15 +99,6 @@ namespace ToSic.SexyContent.ImportExport
                                 if (Directory.Exists(portalTempRoot))
                                     CopyAllFilesDnnPortal(portalTempRoot, "", false, messages);
 
-
-                                // Import each XML file which is in the current App folder
-                                foreach (string xmlFileName in Directory.GetFiles(appDirectory, "*.xml"))
-                                {
-                                    var fileContents = File.ReadAllText(Path.Combine(appDirectory, xmlFileName));
-                                    var import = new XmlImport(_zoneId, _appId);
-                                    var xmlImportSuccess = import.ImportXml(fileContents);
-                                    messages.AddRange(import.ImportLog);
-                                }
                             }
 
                             // Reset CurrentWorkingDir

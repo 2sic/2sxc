@@ -123,6 +123,13 @@
     <Compile Include="Administration\Apps\AppManagement.ascx.designer.cs">
       <DependentUpon>AppManagement.ascx</DependentUpon>
     </Compile>
+    <Compile Include="Administration\Apps\AppImport.ascx.cs">
+      <DependentUpon>AppImport.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\Apps\AppImport.ascx.designer.cs">
+      <DependentUpon>AppImport.ascx</DependentUpon>
+    </Compile>
     <Compile Include="Administration\GettingStarted.ascx.cs">
       <DependentUpon>GettingStarted.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -349,6 +356,7 @@
   <ItemGroup>
     <Content Include="Administration\Apps\AppExport.ascx" />
     <Content Include="Administration\Apps\AppManagement.ascx" />
+    <Content Include="Administration\Apps\AppImport.ascx" />
     <Content Include="Administration\GettingStarted.ascx" />
     <Content Include="Administration\PortalConfiguration.ascx" />
     <Content Include="Administration\ContentTypeAndDemoSelector.ascx" />
