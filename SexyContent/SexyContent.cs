@@ -33,7 +33,7 @@ namespace ToSic.SexyContent
     {
         #region Constants
 
-        public const string ModuleVersion = "05.05.01";
+        public const string ModuleVersion = "05.05.02";
         public const string TemplateID = "TemplateID";
         public const string ContentGroupIDString = "ContentGroupID";
         public const string SettingsPublishDataSource = "ToSic_SexyContent_PublishDataSource";

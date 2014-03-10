@@ -1,6 +1,6 @@
 ﻿<dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="2SexyContent" type="Module" version="05.05.01">
+    <package name="2SexyContent" type="Module" version="05.05.02">
       <friendlyName> Content</friendlyName>
       <description>2Sexy Content is a DotNetNuke Extension to create attractive and designed content. It solves the common problem, allowing the web designer to create designed templates for different content elements, so that the user must only fill in fields and receive a perfectly designed and animated output.</description>
       <iconFile>icon.png</iconFile>
@@ -103,7 +103,7 @@
             <script type="UnInstall">
               <path>SqlDataProvider</path>
               <name>Uninstall.SqlDataProvider</name>
-              <version>5.5.1</version>
+              <version>05.05.02</version>
             </script>
           </scripts>
         </component>
