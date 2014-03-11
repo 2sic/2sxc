@@ -166,16 +166,15 @@ namespace ToSic.SexyContent
 
         #region SexyContent Constructor
 
-        // ToDo: needed for DNN search
         /// <summary>
         /// Constructor overload for DotNetNuke
         /// (BusinessControllerClass needs parameterless constructor)
         /// </summary>
-        //public SexyContent()
-        //    : this(new int?(), new int?(), true)
-        //{
-            
-        //}
+        public SexyContent()
+            : this(0, 0, true)
+        {
+
+        }
 
         static SexyContent()
         {
@@ -187,7 +186,15 @@ namespace ToSic.SexyContent
         /// </summary>
         public SexyContent(int zoneId, int appId, bool enableCaching = true)
         {
-            
+            if (zoneId == 0)
+                if (PortalSettings.Current == null || !GetZoneID(PortalSettings.Current.PortalId).HasValue)
+                    zoneId = DataSource.DefaultZoneId;
+                else
+                    zoneId = GetZoneID(PortalSettings.Current.PortalId).Value;
+
+            if (appId == 0)
+                appId = GetDefaultAppId(zoneId);
+
             // Only disable caching of templates and contentgroupitems
             // if AppSetting "ToSIC_SexyContent_EnableCaching" is disabled
             if(enableCaching)

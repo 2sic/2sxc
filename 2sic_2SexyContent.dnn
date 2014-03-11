@@ -102,8 +102,8 @@
             </script>
             <script type="Install">
               <path>SqlDataProvider</path>
-              <name>05.05.02.SqlDataProvider</name>
-              <version>05.05.02</version>
+              <name>05.05.03.SqlDataProvider</name>
+              <version>05.05.03</version>
             </script>
             <script type="UnInstall">
               <path>SqlDataProvider</path>
