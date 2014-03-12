@@ -1002,7 +1002,7 @@ namespace ToSic.SexyContent
 
         public IEnumerable<AttributeSet> GetAvailableAttributeSets(string scope)
         {
-            return ContentContext.GetAllAttributeSets().Where(p => p.Scope == scope);
+            return GetAvailableAttributeSets().Where(p => p.Scope == scope);
         }
 
         public IEnumerable<AttributeSet> GetAvailableAttributeSets()

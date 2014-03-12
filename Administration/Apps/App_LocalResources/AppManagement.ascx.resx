@@ -120,8 +120,8 @@
   <data name="btnCreateApp.Text" xml:space="preserve">
     <value>Create App</value>
   </data>
-  <data name="ContentType.Header" xml:space="preserve">
-    <value>Content Type</value>
+  <data name="Name.Header" xml:space="preserve">
+    <value>Name</value>
   </data>
   <data name="DeleteApp.ConfirmButton" xml:space="preserve">
     <value>I understand the consequences, delete this app</value>
@@ -161,5 +161,8 @@
   </data>
   <data name="ExportApp.Header" xml:space="preserve">
     <value>Export</value>
+  </data>
+  <data name="AppId.Header" xml:space="preserve">
+    <value>App-ID</value>
   </data>
 </root>

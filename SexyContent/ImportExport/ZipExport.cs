@@ -35,8 +35,6 @@ namespace ToSic.SexyContent.ImportExport
             //                    || a.StaticName == SexyContent.AttributeSetStaticNameTemplateMetaData
             //                    || a.StaticName.StartsWith("@"));
 
-            // Thoughts... maybe exclude entities that have assignmentobject type "EAV Field Properties" and "2SexyContent-Template"
-
             var attributeSetIds = attributeSets.Select(p => p.AttributeSetID.ToString()).ToArray();
             var entities = SexyContent.GetInitialDataSource(_zoneId, _appId).Out["Default"].List;
             var entityIds = entities.Where(e => e.Value.AssignmentObjectTypeId != SexyContent.AssignmentObjectTypeIDSexyContentTemplate 

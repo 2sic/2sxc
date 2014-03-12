@@ -16,7 +16,8 @@
                     <dnnweb:DnnGridButtonColumn UniqueName="DeleteColumn" ButtonType="ImageButton" ImageUrl="~/Images/Delete.gif" CommandName="delete" ButtonCssClass="sc-app-delete">
                         <HeaderStyle Width="35px" />
                     </dnnweb:DnnGridButtonColumn>
-                    <dnnweb:DnnGridTemplateColumn HeaderText="ContentType" DataField="Name" UniqueName="Name">
+                    <dnnweb:DnnGridBoundColumn HeaderText="AppId" DataField="AppId"></dnnweb:DnnGridBoundColumn>
+                    <dnnweb:DnnGridTemplateColumn HeaderText="Name" DataField="Name" UniqueName="Name">
                         <ItemTemplate>
                             <div style='<%# (Eval("Name") != "Content") ? "display:block;" : "display:none;" %>'>
                                 <a data-app-name='<%# HttpUtility.HtmlEncode(Eval("Name")) %>' href="<%# SexyContent.GetMetaDataEditUrl(TabId, ModuleId, Request.RawUrl, this, SexyContent.AttributeSetStaticNameApps, SexyContent.AssignmentObjectTypeIDSexyContentApp, (int)Eval("AppID"), ZoneId.Value, (int)Eval("AppID")) %>">
