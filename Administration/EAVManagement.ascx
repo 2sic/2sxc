@@ -8,5 +8,3 @@
     <%-- Optional use the BaseUrl-Property to specify a URL that this Wrapper Module will use --%>
     <asp:Panel runat="server" id="pnlEAV"></asp:Panel>
 </div>
-
-<asp:Literal runat="server" id="litAssetsInclude"></asp:Literal>
