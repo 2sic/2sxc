@@ -28,7 +28,7 @@ namespace ToSic.SexyContent
         protected void Page_Init(object sender, EventArgs e)
         {
             if (ModeIsEdit)
-                Template = Sexy.TemplateContext.GetTemplate(TemplateID);
+                Template = SexyUncached.TemplateContext.GetTemplate(TemplateID);
 
             var contentTypeSelectors = new[] { ctrContentType, ctrPresentationType, ctrListContentType, ctrListPresentationType };
 
@@ -153,7 +153,7 @@ namespace ToSic.SexyContent
                 if (pnlSelectTemplateFile.Visible)
                     Template.Path = ddlTemplateFiles.SelectedValue;
                 else
-                    Sexy.CreateTemplateFileIfNotExists(txtTemplateFileName.Text, Template, Server, LocalizeString("NewTemplateFile.DefaultText"));
+                    SexyUncached.CreateTemplateFileIfNotExists(txtTemplateFileName.Text, Template, Server, LocalizeString("NewTemplateFile.DefaultText"));
                 Template.SysCreatedBy = UserId;
                 Template.SysModifiedBy = UserId;
                 Template.Script = "";
