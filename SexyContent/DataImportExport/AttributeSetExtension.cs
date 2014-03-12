@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using ToSic.Eav;
@@ -7,14 +8,24 @@ namespace ToSic.SexyContent.DataImportExport
 {
     public static class AttributeSetExtension
     {
-        public static IEnumerable<string> GetAttributeNames(this AttributeSet attributeSet)
+        public static IEnumerable<string> GetAttributeNames(this Eav.AttributeSet attributeSet)
         {
             return attributeSet.AttributesInSets.Select(item => item.Attribute.StaticName).ToList();
         }
 
-        public static IEnumerable<Attribute> GetAttributes(this AttributeSet attributeSet)
+        public static IEnumerable<Eav.Attribute> GetAttributes(this Eav.AttributeSet attributeSet)
         {
             return attributeSet.AttributesInSets.Select(item => item.Attribute).ToList();
+        }
+
+        public static Entity GetEntity(this AttributeSet attributeSet, Guid entityGuid)
+        {
+            return attributeSet.Entities.FirstOrDefault(entity => entity.EntityGUID == entityGuid);
+        }  
+        
+        public static bool EntityExists(this AttributeSet attributeSet, Guid entityGuid)
+        {
+            return attributeSet.GetEntity(entityGuid) != null;
         }
     }
 }

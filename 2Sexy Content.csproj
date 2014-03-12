@@ -207,11 +207,23 @@
     </Compile>
     <Compile Include="SexyContent\App.cs" />
     <Compile Include="SexyContent\ContentGroupItem.cs" />
-    <Compile Include="SexyContent\DataImportExport\DataXmlSerializer.cs" />
+    <Compile Include="SexyContent\DataImportExport\AttributeExtension.cs" />
+    <Compile Include="SexyContent\DataImportExport\DataImportErrorProtocol.cs" />
+    <Compile Include="SexyContent\DataImportExport\DataXmlExport.cs" />
+    <Compile Include="SexyContent\DataImportExport\DataXmlImport.cs" />
+    <Compile Include="SexyContent\DataImportExport\EntityGuidManager.cs" />
+    <Compile Include="SexyContent\DataImportExport\EntityImportExtension.cs" />
+    <Compile Include="SexyContent\DataImportExport\IValueImportModelExtension.cs" />
+    <Compile Include="SexyContent\DataImportExport\DataImportError.cs" />
     <Compile Include="SexyContent\DataImportExport\EavValueExtension.cs" />
+    <Compile Include="SexyContent\DataImportExport\LanguageReferenceImportOption.cs" />
+    <Compile Include="SexyContent\DataImportExport\EntityClearImportOption.cs" />
+    <Compile Include="SexyContent\DataImportExport\EntityCreateImportOption.cs" />
     <Compile Include="SexyContent\DataImportExport\EntityExtension.cs" />
     <Compile Include="SexyContent\DataImportExport\IEnumerableExtension.cs" />
-    <Compile Include="SexyContent\DataImportExport\RecordExportOption.cs" />
+    <Compile Include="SexyContent\DataImportExport\RecordCreateExportOption.cs" />
+    <Compile Include="SexyContent\DataImportExport\ResourceReferenceImportOption.cs" />
+    <Compile Include="SexyContent\DataImportExport\StringExtension.cs" />
     <Compile Include="SexyContent\DataImportExport\XElementName.cs" />
     <Compile Include="SexyContent\DataImportExport\LanguageMissingExportOption.cs" />
     <Compile Include="SexyContent\DataImportExport\LanguageReferenceExportOption.cs" />

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -8,7 +10,7 @@ using ToSic.Eav;
 
 namespace ToSic.SexyContent.DataImportExport
 {
-    public class DataXmlSerializer
+    public class DataXmlExport
     {
         public string SerializeBlank(int? applicationId, int contentTypeId)
         {
@@ -17,7 +19,7 @@ namespace ToSic.SexyContent.DataImportExport
                 return null;
 
             var documentElement = GetDocumentEntityElement("", "");
-            var documentRoot = GetDocumentRoot(documentElement);
+            var documentRoot = GetDocumentRoot(contentTypeId, documentElement);
             var document = GetDocument(documentRoot);
 
             var attributes = contentType.GetAttributes();
@@ -49,7 +51,7 @@ namespace ToSic.SexyContent.DataImportExport
                 languages.Add(languageFallback);
             }
 
-            var documentRoot = GetDocumentRoot(null);
+            var documentRoot = GetDocumentRoot(contentTypeId, null);
             var document = GetDocument(documentRoot);
             
             foreach (var entity in contentType.Entities)
@@ -89,9 +91,9 @@ namespace ToSic.SexyContent.DataImportExport
             return new XDocument(new XDeclaration("1.0", "UTF-8", "yes"), content);
         }
 
-        public static XElement GetDocumentRoot(params object[] content)
+        public static XElement GetDocumentRoot(int contentTypeId, params object[] content)
         {
-            return new XElement(XElementName.Root, content);
+            return new XElement(XElementName.Root + contentTypeId, content);
         }
 
         public static XElement GetDocumentEntityElement(object elementGuid, object elementLanguage)

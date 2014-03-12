@@ -149,7 +149,7 @@ namespace ToSic.SexyContent.Administration
         protected void OnExportDataClick(object sender, EventArgs e)
         {
             var dataXml = default(string);
-            var dataSerializer = new DataXmlSerializer();
+            var dataSerializer = new DataXmlExport();
             
             if (RecordExportOptionSelected.IsBlank())
             {
@@ -163,10 +163,11 @@ namespace ToSic.SexyContent.Administration
 
             var fileName = string.Format
                 (
-                    "SexyContent_{0}_{1}_{2}.xml",
+                    "2SexyContent {0} {1} {2} {3}.xml",
                     ContentTypeNameSelected.Replace(" ", "-"),
                     LanguageSelected.Replace(" ", "-"),
-                    RecordExportOptionSelected.IsBlank() ? "Template" : "Data"                  
+                    RecordExportOptionSelected.IsBlank() ? "Template" : "Data",
+                    DateTime.Now.ToString("yyyyMMdd")
                 );
             Response.Clear();
             Response.Write(dataXml);

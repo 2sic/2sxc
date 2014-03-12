@@ -48,7 +48,7 @@ namespace ToSic.SexyContent.DataImportExport
             var value = entity.GetAttributeValue(attribute, language);
             if (value == null)
             {
-                element.Append(valueName, "=ref()");
+                element.Append(valueName, "=default()");
                 return;
             }
 
@@ -89,7 +89,16 @@ namespace ToSic.SexyContent.DataImportExport
                 return;
             }
 
-            element.Append(valueName, string.Format("=ref(lang={0},readonly={1})", valueLanguageReferenced, valueLanguageReadOnly));
+            element.Append(valueName, string.Format("=ref({0},{1})", valueLanguageReferenced, valueLanguageReadOnly ? "ro" : "rw"));
+        }
+    
+        public static string GetChildElementValue(this XElement element, string childElementName)
+        {
+            var childElement = element.Element(childElementName);
+            if (childElement == null)
+                return null;
+
+            return childElement.Value;
         }
     }
 }
