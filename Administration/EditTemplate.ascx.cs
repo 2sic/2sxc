@@ -131,7 +131,7 @@ namespace ToSic.SexyContent
                 if (pnlSelectTemplateFile.Visible)
                     Template.Path = ddlTemplateFiles.SelectedValue;
                 else
-                    Sexy.CreateTemplateFileIfNotExists(txtTemplateFileName.Text, Template, Server, LocalizeString("NewTemplateFile.DefaultText"));
+                    SexyUncached.CreateTemplateFileIfNotExists(txtTemplateFileName.Text, Template, Server, LocalizeString("NewTemplateFile.DefaultText"));
                 Template.SysModifiedBy = UserId;
                 Template.SysModified = DateTime.Now;
                 Template.Script = "";
@@ -140,7 +140,7 @@ namespace ToSic.SexyContent
                 Template.UseForList = chkEnableList.Checked;
                 Template.AppID = AppId.Value;
 
-                Sexy.TemplateContext.UpdateTemplate(Template);
+                SexyUncached.TemplateContext.UpdateTemplate(Template);
             }
             else
             {
@@ -161,16 +161,16 @@ namespace ToSic.SexyContent
                 Template.IsHidden = chkHidden.Checked;
                 Template.UseForList = chkEnableList.Checked;
 
-                Sexy.TemplateContext.AddTemplate(Template);
+                SexyUncached.TemplateContext.AddTemplate(Template);
             }
 
             if (!chkSeparateContentPresentation.Checked)
                 ctrPresentationType.ContentTypeID = new int?();
 
             // Add template configuration entities for presentation, list header content type, list content, etc.    
-            Sexy.CreateOrUpdateTemplateDefault(Template.TemplateID, ContentGroupItemType.Presentation.ToString("F"), ctrPresentationType.ContentTypeID, ctrPresentationType.DemoEntityID);
-            Sexy.CreateOrUpdateTemplateDefault(Template.TemplateID, ContentGroupItemType.ListContent.ToString("F"), ctrListContentType.ContentTypeID, ctrListContentType.DemoEntityID);
-            Sexy.CreateOrUpdateTemplateDefault(Template.TemplateID, ContentGroupItemType.ListPresentation.ToString("F"), ctrListPresentationType.ContentTypeID, ctrListPresentationType.DemoEntityID);
+            SexyUncached.CreateOrUpdateTemplateDefault(Template.TemplateID, ContentGroupItemType.Presentation.ToString("F"), ctrPresentationType.ContentTypeID, ctrPresentationType.DemoEntityID);
+            SexyUncached.CreateOrUpdateTemplateDefault(Template.TemplateID, ContentGroupItemType.ListContent.ToString("F"), ctrListContentType.ContentTypeID, ctrListContentType.DemoEntityID);
+            SexyUncached.CreateOrUpdateTemplateDefault(Template.TemplateID, ContentGroupItemType.ListPresentation.ToString("F"), ctrListPresentationType.ContentTypeID, ctrListPresentationType.DemoEntityID);
 
             // Redirect to the manage templates control
             string RedirectUrl = DotNetNuke.Common.Utilities.UrlUtils.PopUpUrl(DotNetNuke.Common.Globals.NavigateURL(SexyContent.ControlKeys.ManageTemplates, "mid", ModuleId.ToString(), SexyContent.AppIDString, AppId.ToString()), this, PortalSettings, false, true);
