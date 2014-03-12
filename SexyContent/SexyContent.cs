@@ -1035,8 +1035,6 @@ namespace ToSic.SexyContent
         {
             var ZoneID = GetZoneID(ModInfo.PortalID);
 
-            // ToDo: Fix search (SexyContent Context)
-            throw new NotImplementedException("ToDo: Fix search");
             // Need a new Context because PortalSettings.Current is null
             var Sexy = new SexyContent(ZoneID.Value, 0, true);
 
