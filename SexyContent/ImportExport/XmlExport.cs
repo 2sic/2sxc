@@ -55,10 +55,10 @@ namespace ToSic.SexyContent.ImportExport
             var Dimensions = Sexy.ContentContext.GetDimensionChildren("Culture");
             XElement Header = new XElement("Header",
                 _isAppExport ? new XElement("App",
-                    new XAttribute("Guid", Sexy.App.StaticName),
-                    new XAttribute("Name", Sexy.App.Name),
-                    new XAttribute("Version", Sexy.App.Configuration.Version),
-                    new XAttribute("Folder", Sexy.App.Folder)
+                    new XAttribute("Guid", Sexy.App.StaticName)
+                    //new XAttribute("Name", Sexy.App.Name),
+                    //new XAttribute("Version", Sexy.App.Configuration.Version),
+                    //new XAttribute("Folder", Sexy.App.Folder)
                 ) : null,
                 new XElement("Language", new XAttribute("Default", PortalSettings.Current.DefaultLanguage)),
                 new XElement("Dimensions", Dimensions.Select(d => new XElement("Dimension",
