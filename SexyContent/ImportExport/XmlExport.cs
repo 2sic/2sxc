@@ -102,6 +102,7 @@ namespace ToSic.SexyContent.ImportExport
                     new XAttribute("StaticName", Set.StaticName),
                     new XAttribute("Name", Set.Name),
                     new XAttribute("Description", Set.Description),
+                    new XAttribute("Scope", Set.Scope),
                     Attributes);
 
                 AttributeSets.Add(AttributeSet);
@@ -228,7 +229,7 @@ namespace ToSic.SexyContent.ImportExport
                 );
 
             // Special cases for Template ContentTypes
-            if (set.StaticName == "2SexyContent-Template-ContentTypes")
+            if (set.StaticName == "2SexyContent-Template-ContentTypes" && !String.IsNullOrEmpty(value))
             {
                 switch (Key)
                 {

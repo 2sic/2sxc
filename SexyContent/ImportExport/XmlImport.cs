@@ -257,7 +257,7 @@ namespace ToSic.SexyContent.ImportExport
                         Name = attributeSet.Attribute("Name").Value,
                         Description = attributeSet.Attribute("Description").Value,
                         Attributes = attributes,
-                        Scope = SexyContent.AttributeSetScope,
+                        Scope = attributeSet.Attributes("Scope").Any() ? attributeSet.Attribute("Scope").Value : SexyContent.AttributeSetScope,
                         TitleAttribute = titleAttribute
                     });
             }
@@ -362,11 +362,10 @@ namespace ToSic.SexyContent.ImportExport
             var attributeSetStaticName = xEntity.Attribute("AttributeSetStaticName").Value;
 
             // Special case: App AttributeSets must be assigned to the current app
-            if (attributeSetStaticName == SexyContent.AttributeSetStaticNameApps ||
-                attributeSetStaticName == SexyContent.AttributeSetStaticNameAppSettings ||
-                attributeSetStaticName == SexyContent.AttributeSetStaticNameAppResources)
+            if (xEntity.Attribute("AssignmentObjectType").Value == "App")
             {
-                assignmentObjectTypeId = _appId;
+                keyNumber = _appId;
+                assignmentObjectTypeId = SexyContent.AssignmentObjectTypeIDSexyContentApp;
             }
 
             var targetEntity = new Entity()
@@ -451,12 +450,12 @@ namespace ToSic.SexyContent.ImportExport
                                 {
                                     case "ContentTypeID":
                                         var attributeSet = _sexy.ContentContext.AttributeSetExists(sourceValueString, _sexy.ContentContext.AppId) ? _sexy.ContentContext.GetAttributeSet(sourceValueString) : null;
-                                        sourceValue.Attribute("Value").SetValue(attributeSet != null ? attributeSet.AttributeSetID.ToString() : String.Empty);
+                                        sourceValue.Attribute("Value").SetValue(attributeSet != null ? attributeSet.AttributeSetID.ToString() : "0");
                                         break;
                                     case "DemoEntityID":
                                         var entityGuid = new Guid(sourceValue.Attribute("Value").Value);
                                         var demoEntity = _sexy.ContentContext.EntityExists(entityGuid) ? _sexy.ContentContext.GetEntity(entityGuid) : null;
-                                        sourceValue.Attribute("Value").SetValue(demoEntity != null ? demoEntity.EntityID.ToString() : String.Empty);
+                                        sourceValue.Attribute("Value").SetValue(demoEntity != null ? demoEntity.EntityID.ToString() : "0");
                                         break;
                                 }
                             }

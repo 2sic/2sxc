@@ -29,9 +29,20 @@ namespace ToSic.SexyContent.ImportExport
             var attributeSets = _sexy.GetAvailableAttributeSets(SexyContent.AttributeSetScope).ToList();
             attributeSets.AddRange(_sexy.GetAvailableAttributeSets(SexyContent.AttributeSetScopeApps));
             attributeSets = attributeSets.Where(a => !a.UsesConfigurationOfAttributeSet.HasValue).ToList();
+
+            // Special case: Entities of the template attributesets and field properties should not be exported here
+            //var templateAttributeSets = _sexy.GetAvailableAttributeSets().Where(a => a.StaticName == SexyContent.AttributeSetStaticNameTemplateContentTypes
+            //                    || a.StaticName == SexyContent.AttributeSetStaticNameTemplateMetaData
+            //                    || a.StaticName.StartsWith("@"));
+
+            // Thoughts... maybe exclude entities that have assignmentobject type "EAV Field Properties" and "2SexyContent-Template"
+
             var attributeSetIds = attributeSets.Select(p => p.AttributeSetID.ToString()).ToArray();
             var entities = SexyContent.GetInitialDataSource(_zoneId, _appId).Out["Default"].List;
-            var entityIds = entities.Where(e => attributeSets.Any(a => a.Entities.Any(c => c.EntityID == e.Value.EntityId))).Select(e => e.Value.EntityId.ToString()).ToArray();
+            var entityIds = entities.Where(e => e.Value.AssignmentObjectTypeId != SexyContent.AssignmentObjectTypeIDSexyContentTemplate 
+                && e.Value.AssignmentObjectTypeId != DataSource.AssignmentObjectTypeIdFieldProperties)
+                .Select(e => e.Value.EntityId.ToString()).ToArray();
+
             var templateIds = _sexy.GetTemplates(PortalSettings.Current.PortalId).Select(p => p.TemplateID.ToString()).ToArray();
             var messages = new List<ExportImportMessage>();
             var xmlExport = new XmlExport(_zoneId, _appId, true);
