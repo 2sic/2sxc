@@ -75,8 +75,7 @@ namespace ToSic.SexyContent.DataImportExport
                     {
                         if (resolveHyperlink)
                         {
-                            // TODO2tk: Resolve links
-                            // valueString = Ask DNN for reference
+                            // TODO2tk: Resolve file and page references
                         }
                         valueModel = new ValueImportModel<string>(entity) { Value = valueString };
                     }

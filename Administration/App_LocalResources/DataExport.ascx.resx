@@ -121,54 +121,57 @@
     <value>Cancel</value>
   </data>
   <data name="btnExportData.Text" xml:space="preserve">
-    <value>Export data</value>
+    <value>Export to XML</value>
   </data>
   <data name="LanguageMissingExportOptionCreate.Text" xml:space="preserve">
-    <value>Create rows for untranslated languages</value>
+    <value>Yes, also create rows for untranslated languages</value>
   </data>
   <data name="LanguageMissingExportOptionIgnore.Text" xml:space="preserve">
-    <value>Create rows for translated languages only</value>
+    <value>No, only create rows for languages containing values</value>
   </data>
   <data name="LanguageReferenceExportOptionLink.Text" xml:space="preserve">
-    <value>Keep references to languages (for example =ref(lang=en;readonly=true))</value>
+    <value>Keep references to other languages (for re-import)</value>
   </data>
   <data name="LanguageReferenceExportOptionResolve.Text" xml:space="preserve">
-    <value>Resolve values to referenced languages</value>
+    <value>Replace references with values</value>
   </data>
   <data name="lblContentType.Text" xml:space="preserve">
-    <value>Content type</value>
+    <value>Content-type</value>
   </data>
   <data name="lblDropDownListAll.Text" xml:space="preserve">
     <value>All</value>
   </data>
   <data name="lblIntro.Text" xml:space="preserve">
-    <value>Export data of a content-type to a simple xml file. The file can be imported again, and in between be edited with Microsoft Excel for example.</value>
+    <value>This will generate an XML file which you can edit in Excel (or your favorit XML editor). If you just want to import new data, use this to export the data schema that you can fill in using Excel.</value>
   </data>
   <data name="lblLanguage.Text" xml:space="preserve">
     <value>Language</value>
   </data>
   <data name="lblLanguageMissing.Text" xml:space="preserve">
-    <value>Export missing languages </value>
+    <value>Create rows for empty languages</value>
   </data>
   <data name="lblLanguageReference.Text" xml:space="preserve">
-    <value>Export referenced languages</value>
+    <value>Value references to other languages</value>
   </data>
   <data name="lblResourceReference.Text" xml:space="preserve">
-    <value>Export referenced file / page</value>
+    <value>File /page references</value>
   </data>
   <data name="ResourceReferenceExportOptionLink.Text" xml:space="preserve">
-    <value>Keep references to resources (for example Page:4711)</value>
+    <value>Keep references (for re-import, for example Page:4711)</value>
   </data>
   <data name="ResourceReferenceExportOptionResolve.Text" xml:space="preserve">
-    <value>Resolve pathes to referenced resources</value>
+    <value>Replace references with real urls (for example /Portals/0...)</value>
   </data>
   <data name="lblRecordExport.Text" xml:space="preserve">
-    <value>Export records</value>
+    <value>Export data</value>
   </data>
   <data name="RecordExportOptionAll.Text" xml:space="preserve">
-    <value>Export all records</value>
+    <value>Yes, export all records</value>
   </data>
   <data name="RecordExportOptionBlank.Text" xml:space="preserve">
-    <value>Export blank structure</value>
+    <value>No, just export blank data schema (for new data import)</value>
+  </data>
+  <data name="lblTitle.Text" xml:space="preserve">
+    <value>2SexyContent - Export Data</value>
   </data>
 </root>

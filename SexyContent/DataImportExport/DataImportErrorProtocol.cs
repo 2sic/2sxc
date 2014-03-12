@@ -12,6 +12,10 @@ namespace ToSic.SexyContent.DataImportExport
             get { return errors[index]; }
         }
 
+        public List<DataImportError> Errors
+        {
+            get { return errors; }
+        }
         private List<DataImportError> errors = new List<DataImportError>();
 
         public int ErrorCount

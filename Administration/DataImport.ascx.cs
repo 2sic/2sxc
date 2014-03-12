@@ -47,6 +47,22 @@ namespace ToSic.SexyContent.Administration
             get { return PortalSettings.UserInfo.DisplayName; }
         }
 
+        public string FileLocation
+        {
+            get
+            {
+                if (ViewState["FileLocation"] == null)
+                {
+                    return null;
+                }
+                return ViewState["FileLocation"] as string;
+            }
+            set
+            {
+                ViewState["FileLocation"] = value;
+            }
+        }
+
         public List<string> Languages
         {
             get
@@ -68,11 +84,6 @@ namespace ToSic.SexyContent.Administration
             get { return PortalSettings.DefaultLanguage; }
         }
 
-        public EntityCreateImportOption EntityCreateOptionSelected
-        {
-            get { return ParseEnum<EntityCreateImportOption>(rblEntityCreate.SelectedValue); }
-        }
-
         public EntityClearImportOption EntityClearOptionSelected
         {
             get { return ParseEnum<EntityClearImportOption>(rblEntityClear.SelectedValue); }
@@ -81,11 +92,6 @@ namespace ToSic.SexyContent.Administration
         public ResourceReferenceImportOption ResourceReferenceOptionSelected
         {
             get { return ParseEnum<ResourceReferenceImportOption>(rblResourceReference.SelectedValue); }
-        }
-
-        public LanguageReferenceImportOption LanguageReferenceOptionSelected
-        {
-            get { return ParseEnum<LanguageReferenceImportOption>(rblLanguageReference.SelectedValue); }
         }
 
         public int ContentTypeIdSelected
@@ -116,17 +122,9 @@ namespace ToSic.SexyContent.Administration
             ddlContentType.DataSource = sexyContent.GetAvailableAttributeSets(); ;
             ddlContentType.DataBind();
 
-            rblEntityCreate.DataSource = EnumToDataSource<EntityCreateImportOption>();
-            rblEntityCreate.DataBind();
-            rblEntityCreate.SelectedValue = EntityCreateImportOption.Create.ToString();
-
             rblEntityClear.DataSource = EnumToDataSource<EntityClearImportOption>();
             rblEntityClear.DataBind();
             rblEntityClear.SelectedValue = EntityClearImportOption.None.ToString();
-
-            rblLanguageReference.DataSource = EnumToDataSource<LanguageReferenceImportOption>();
-            rblLanguageReference.DataBind();
-            rblLanguageReference.SelectedValue = LanguageReferenceImportOption.Keep.ToString();
 
             rblResourceReference.DataSource = EnumToDataSource<ResourceReferenceImportOption>();
             rblResourceReference.DataBind();
@@ -134,37 +132,37 @@ namespace ToSic.SexyContent.Administration
         }
 
 
-        protected void OnContinueClick(object sender, EventArgs e)
+        protected void OnTestDataClick(object sender, EventArgs e)
         {
-            if (!FileUpload.HasFile)
+            if (!fuFileUpload.HasFile)
             {
                 // TODO2tk: Sow an error message
                 return;
             }
-           
-            var dataStream = FileUpload.FileContent;
-            var dataImport = DataXmlImport.Deserialize(dataStream, ApplicationId, ContentTypeIdSelected, Languages, LanguageFallback, EntityCreateOptionSelected, EntityClearOptionSelected, ResourceReferenceOptionSelected);
+
+            var dataFileName = fuFileUpload.FileName;
+            var dataStream = fuFileUpload.FileContent;
+            var dataImport = DataXmlImport.Deserialize(dataStream, ApplicationId, ContentTypeIdSelected, Languages, LanguageFallback, EntityClearOptionSelected, ResourceReferenceOptionSelected);
             if (dataImport.HasErrors)
             {
-                // TODO2tk: Show error messages
-                lblOutput.Text = "Errors: " + dataImport.ErrorProtocol.ErrorCount;
+                ShowErrorPanel(dataFileName, dataImport);
             }
             else
             {
-                // TODO2tk: Show summary
-                lblOutput.Text = string.Format
-                        (
-                            "Elements:{0}<br>Languages:{1}<br>Columns:{2}<br>Create {3} entities<br>Update {4} entities<br>Delete {5} entities<br><br>Summary<br>{6}",
-                            dataImport.GetDocumentElementCount(),
-                            dataImport.GetLanguagesCount(),
-                            dataImport.GetAttributeNames(","),
-                            dataImport.GetEntitiesCreateCount(),
-                            dataImport.GetEntitiesUpdateCount(),
-                            dataImport.GetEntitiesDeleteCount(),
-                            dataImport.GetEntitiesDebugString()
-                        );
-                //dataImport.Pesrist(ZoneId, UserName);
+                ShowDetailPanel(dataFileName, dataImport);
             }
+        }
+
+        protected void OnImportDataClick(object sender, EventArgs e)
+        {
+            // TODO2tk: Get the file name from the view state
+            // TODO2tk: Persist the import data
+            ShowDonePanel();
+        }
+
+        protected void OnBackClick(object sender, EventArgs e)
+        {
+            ShowSetupPanel();
         }
       
 
@@ -181,6 +179,83 @@ namespace ToSic.SexyContent.Administration
         private T ParseEnum<T>(string value) where T : struct
         {
             return (T)Enum.Parse(typeof(T), value, true);
+        }
+
+
+        private void ShowSetupPanel()
+        {
+            pnlSetup.Visible = true;
+            pnlDetail.Visible = false;
+            pnlError.Visible = false;
+            pnlDone.Visible = false;
+        }
+
+        private void ShowDetailPanel(string dataFileName, DataXmlImport dataImport)
+        {
+            lblDetailInfo.Text = LocalizeFormatString("lblDetailInfo", dataFileName);
+            lblDetailElementCount.Text = LocalizeFormatString
+            (
+                "lblDetailElementCount", dataImport.GetDocumentElementCount()
+            );
+            lblDetailLanguageCount.Text = LocalizeFormatString
+            (
+                "lblDetailLanguageCount", dataImport.GetLanguageCount()
+            );
+            lblDetailAttributes.Text = LocalizeFormatString
+            (
+                "lblDetailAttributes", dataImport.GetAttributeCount(), dataImport.GetAttributeNames(", ")
+            );
+            lblDetailEntitiesCreate.Text = LocalizeFormatString
+            (
+                "lblDetailEntitiesCreate", dataImport.GetEntitiesCreateCount()
+            );
+            lblDetailEntitiesUpdate.Text = LocalizeFormatString
+            (
+                "lblDetailEntitiesUpdate", dataImport.GetEntitiesUpdateCount()
+            );
+            lblDetailDetailsDelete.Text = LocalizeFormatString
+            (
+                "lblDetailDetailsDelete", dataImport.GetEntitiesDeleteCount()
+            );
+            lblDetailAttributeIgnore.Text = LocalizeFormatString
+            (
+                "lblDetailAttributeIgnore", dataImport.GetAttributeIgnoreCount(), dataImport.GetAttributeIgnoredNames(", ")
+            );
+
+            pnlSetup.Visible = false;
+            pnlDetail.Visible = true;
+            pnlError.Visible = false;
+            pnlDone.Visible = false;
+        }
+
+        private void ShowErrorPanel(string dataFileName, DataXmlImport dataImport)
+        {
+            lblErrorInfo.Text = LocalizeFormatString("lblErrorInfo", dataFileName);
+
+            var errorProtocolHtml = string.Empty;
+            foreach(var error in dataImport.ErrorProtocol.Errors)
+            {
+                errorProtocolHtml += string.Format("<li>{0} ({1})</li>", error.ErrorCode, error.ErrorDetail);
+            }
+            ulErrorProtocol.InnerHtml = errorProtocolHtml;
+
+            pnlSetup.Visible = false;
+            pnlDetail.Visible = false;
+            pnlError.Visible = true;
+            pnlDone.Visible = false;
+        }
+
+        private void ShowDonePanel()
+        {
+            pnlSetup.Visible = false;
+            pnlDetail.Visible = false;
+            pnlError.Visible = false;
+            pnlDone.Visible = true;
+        }
+
+        private string LocalizeFormatString(string formatStringKey, params object[] values)
+        {
+            return string.Format(LocalizeString(formatStringKey), values);
         }
     }
 }

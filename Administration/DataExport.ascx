@@ -2,10 +2,10 @@
 <%@ Register TagPrefix="dnn" TagName="Label" Src="~/controls/LabelControl.ascx" %>
 <%@ Register tagPrefix="sexy" tagName="ContentTypeAndDemoSelector" src="ContentTypeAndDemoSelector.ascx" %>
 
+   
 <div class="dnnForm dnnClear">
-    <div class="dnnFormMessage dnnFormInfo">
-        <asp:Label runat="server" ID="lblIntro" ResourceKey="lblIntro"></asp:Label>
-    </div>
+    <h2><asp:Label runat="server" ID="lblTitle" ResourceKey="lblTitle"></asp:Label></h2>   
+    <p><asp:Label runat="server" ID="lblIntro" ResourceKey="lblIntro"></asp:Label></p>
 
      <div class="dnnFormItem">
         <asp:HiddenField runat="server" ID="AppId" />
@@ -41,7 +41,7 @@
     </div>
 
     <asp:Panel runat="server" ID="pnlExportReferenceOptions">
-        <div class="dnnFormItem" style="display: none">
+        <div class="dnnFormItem" runat="server" Visible="false">
             <dnn:Label runat="server" ID="lblLanguageMissing" ControlName="rblLanguageMissing"></dnn:Label>
             <asp:RadioButtonList runat="server" ID="rblLanguageMissing" class="dnnFormRadioButtons" 
                 DataValueField="Value"

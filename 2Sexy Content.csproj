@@ -218,7 +218,6 @@
     <Compile Include="SexyContent\DataImportExport\EavValueExtension.cs" />
     <Compile Include="SexyContent\DataImportExport\LanguageReferenceImportOption.cs" />
     <Compile Include="SexyContent\DataImportExport\EntityClearImportOption.cs" />
-    <Compile Include="SexyContent\DataImportExport\EntityCreateImportOption.cs" />
     <Compile Include="SexyContent\DataImportExport\EntityExtension.cs" />
     <Compile Include="SexyContent\DataImportExport\IEnumerableExtension.cs" />
     <Compile Include="SexyContent\DataImportExport\RecordCreateExportOption.cs" />

@@ -13,6 +13,15 @@ namespace ToSic.SexyContent.Administration {
     public partial class DataImport {
         
         /// <summary>
+        /// pnlSetup control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlSetup;
+        
+        /// <summary>
         /// lblIntro control.
         /// </summary>
         /// <remarks>
@@ -40,13 +49,13 @@ namespace ToSic.SexyContent.Administration {
         protected global::System.Web.UI.UserControl lblFileUpload;
         
         /// <summary>
-        /// FileUpload control.
+        /// fuFileUpload control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.FileUpload FileUpload;
+        protected global::System.Web.UI.WebControls.FileUpload fuFileUpload;
         
         /// <summary>
         /// lblContentType control.
@@ -67,22 +76,22 @@ namespace ToSic.SexyContent.Administration {
         protected global::System.Web.UI.WebControls.DropDownList ddlContentType;
         
         /// <summary>
-        /// lblEntityCreate control.
+        /// lblResourceReference control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UserControl lblEntityCreate;
+        protected global::System.Web.UI.UserControl lblResourceReference;
         
         /// <summary>
-        /// rblEntityCreate control.
+        /// rblResourceReference control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RadioButtonList rblEntityCreate;
+        protected global::System.Web.UI.WebControls.RadioButtonList rblResourceReference;
         
         /// <summary>
         /// lblEntityClear control.
@@ -103,42 +112,6 @@ namespace ToSic.SexyContent.Administration {
         protected global::System.Web.UI.WebControls.RadioButtonList rblEntityClear;
         
         /// <summary>
-        /// lblLanguageReference control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.UserControl lblLanguageReference;
-        
-        /// <summary>
-        /// rblLanguageReference control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RadioButtonList rblLanguageReference;
-        
-        /// <summary>
-        /// lblResourceReference control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.UserControl lblResourceReference;
-        
-        /// <summary>
-        /// rblResourceReference control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RadioButtonList rblResourceReference;
-        
-        /// <summary>
         /// lblWarningBackup control.
         /// </summary>
         /// <remarks>
@@ -146,15 +119,6 @@ namespace ToSic.SexyContent.Administration {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblWarningBackup;
-        
-        /// <summary>
-        /// lblOutput control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblOutput;
         
         /// <summary>
         /// btnContinue control.
@@ -173,5 +137,131 @@ namespace ToSic.SexyContent.Administration {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HyperLink btnCancel;
+        
+        /// <summary>
+        /// pnlDetail control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlDetail;
+        
+        /// <summary>
+        /// lblDetailInfo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblDetailInfo;
+        
+        /// <summary>
+        /// lblDetailElementCount control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblDetailElementCount;
+        
+        /// <summary>
+        /// lblDetailLanguageCount control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblDetailLanguageCount;
+        
+        /// <summary>
+        /// lblDetailAttributes control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblDetailAttributes;
+        
+        /// <summary>
+        /// lblDetailEntitiesCreate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblDetailEntitiesCreate;
+        
+        /// <summary>
+        /// lblDetailEntitiesUpdate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblDetailEntitiesUpdate;
+        
+        /// <summary>
+        /// lblDetailDetailsDelete control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblDetailDetailsDelete;
+        
+        /// <summary>
+        /// lblDetailAttributeIgnore control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblDetailAttributeIgnore;
+        
+        /// <summary>
+        /// pnlError control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlError;
+        
+        /// <summary>
+        /// lblErrorInfo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblErrorInfo;
+        
+        /// <summary>
+        /// ulErrorProtocol control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl ulErrorProtocol;
+        
+        /// <summary>
+        /// pnlDone control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlDone;
+        
+        /// <summary>
+        /// lblDoneInfo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblDoneInfo;
     }
 }
