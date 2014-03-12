@@ -224,11 +224,12 @@ namespace ToSic.SexyContent
             // If there are elements and the selected template exists in the list, select that
             if (Elements.Any() && ddlTemplate.Items.FindByValue(Elements.First().TemplateId.ToString()) != null)
                 ddlTemplate.SelectedValue = Elements.First().TemplateId.ToString();
-            else
+            else if(ddlTemplate.Items.Count > 1)
             {
                 ddlTemplate.SelectedIndex = 1;
                 ChangeTemplate();
             }
+
             if (ddlTemplate.Items.Count == 2)
             {
                 ddlTemplate.Visible = false;

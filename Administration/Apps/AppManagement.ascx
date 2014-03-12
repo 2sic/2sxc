@@ -11,15 +11,15 @@
     <fieldset>
         <dnnweb:DnnGrid CssClass="GridApps" ID="grdApps" runat="server" AutoGenerateColumns="false" EnableEmbeddedSkins="True" EnableEmbeddedBaseStylesheet="True" Skin="Default" EnableViewState="true" OnDeleteCommand="grdApps_DeleteCommand" OnNeedDataSource="grdApps_NeedDataSource" OnItemDataBound="grdApps_ItemDataBound">
             <ClientSettings><ClientEvents OnCommand="AppDeleting" /></ClientSettings>
-            <mastertableview datakeynames="AppID" allowsorting="True" headerstyle-font-bold="true">
+            <mastertableview datakeynames="AppId" allowsorting="True" headerstyle-font-bold="true">
                 <Columns>
                     <dnnweb:DnnGridButtonColumn UniqueName="DeleteColumn" ButtonType="ImageButton" ImageUrl="~/Images/Delete.gif" CommandName="delete" ButtonCssClass="sc-app-delete">
                         <HeaderStyle Width="35px" />
                     </dnnweb:DnnGridButtonColumn>
-                    <dnnweb:DnnGridTemplateColumn HeaderText="ContentType" DataField="Name">
+                    <dnnweb:DnnGridTemplateColumn HeaderText="ContentType" DataField="Name" UniqueName="Name">
                         <ItemTemplate>
                             <div style='<%# (Eval("Name") != "Content") ? "display:block;" : "display:none;" %>'>
-                                <a href="<%# SexyContent.GetMetaDataEditUrl(TabId, ModuleId, Request.RawUrl, this, SexyContent.AttributeSetStaticNameApps, SexyContent.AssignmentObjectTypeIDSexyContentApp, (int)Eval("AppID"), ZoneId.Value, (int)Eval("AppID")) %>">
+                                <a data-app-name='<%# HttpUtility.HtmlEncode(Eval("Name")) %>' href="<%# SexyContent.GetMetaDataEditUrl(TabId, ModuleId, Request.RawUrl, this, SexyContent.AttributeSetStaticNameApps, SexyContent.AssignmentObjectTypeIDSexyContentApp, (int)Eval("AppID"), ZoneId.Value, (int)Eval("AppID")) %>">
                                     <%# HttpUtility.HtmlEncode(Eval("Name")) %>
                                 </a>
                             </div>
@@ -100,24 +100,46 @@
 </div>
 
 <asp:HiddenField runat="server" ID="hfNewAppName" />
+<asp:HiddenField runat="server" ID="hfAppNameToDelete" />
 
 <script type="text/javascript">
+    var appNamePattern = /^[a-zA-Z0-9 -_]+$/g;
+
     function CreateApp() {
         var newName = "";
         do {
             newName = prompt("Enter a name for the new App", '');
-            if (newName == null || newName == false)
+            if (newName == null || newName == false || !(appNamePattern.test(newName))) {
+                alert("App name cannot contain special characters.");
                 return false;
+            }
         } while(newName == "")
         $("#<%= hfNewAppName.ClientID %>").val(newName);
         return true;
     }
 
     function AppDeleting(sender, args) {
-        var deleteapp = false;
-        if (eventArgs.get_commandName() == "delete")
-            confirm('<%= LocalizeString("DeleteApp.Confirm") %>');
-        args.set_cancel(!deleteapp);
+        if (args.get_commandName() == "delete") {
+            args.set_cancel(true);
+
+            var grid = sender;
+            var masterTable = grid.get_masterTableView();
+            var row = masterTable.get_dataItems()[args.get_commandArgument()];
+            var cell = masterTable.getCellByColumnUniqueName(row, "Name");
+            var appName = $(cell).find("a[data-app-name]").attr("data-app-name");
+            //here cell.innerHTML holds the value of the cell  
+
+            var deleteapp = false;
+            var appNameConfirm = prompt('<%= LocalizeString("DeleteApp.ConfirmText") %>');
+
+            // Only delete the app if the app name has been confirmed
+            if (appName == appNameConfirm) {
+                deleteapp = true;
+                $("#<%= hfAppNameToDelete.ClientID %>").val(appName);
+            }
+
+            args.set_cancel(!deleteapp);
+        }
     }
 
 </script>

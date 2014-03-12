@@ -47,5 +47,14 @@ namespace ToSic.SexyContent.Administration {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hfNewAppName;
+        
+        /// <summary>
+        /// hfAppNameToDelete control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hfAppNameToDelete;
     }
 }

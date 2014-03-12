@@ -51,9 +51,22 @@ namespace ToSic.SexyContent.Administration
         /// <param name="e"></param>
         protected void grdApps_DeleteCommand(object sender, Telerik.Web.UI.GridCommandEventArgs e)
         {
-            int appId = Convert.ToInt32(e.Item.OwnerTableView.DataKeyValues[e.Item.ItemIndex]["AppID"]);
-            new SexyContent(ZoneId.Value, appId, false).RemoveApp(appId, UserId);
-            grdApps.Rebind();
+            if (hfAppNameToDelete.Value == "")
+                return;
+
+            var item = grdApps.Items[e.CommandArgument.ToString()];
+            var appId = (int) item.GetDataKeyValue("AppId");
+
+            //int appId = Convert.ToInt32(e.Item.OwnerTableView.DataKeyValues[e.Item.ItemIndex]["AppId"]);
+            var sexy = new SexyContent(ZoneId.Value, appId, false);
+
+            if (sexy.App.Name == hfAppNameToDelete.Value)
+            {
+                sexy.RemoveApp(appId, UserId);
+                grdApps.Rebind();
+            }
+
+            hfAppNameToDelete.Value = "";
         }
 
         
