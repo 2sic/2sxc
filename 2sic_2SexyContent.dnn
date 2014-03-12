@@ -745,6 +745,15 @@
             </moduleDefinitions>
           </desktopModule>
         </component>
+
+        <component type="File">
+          <files>
+            <basePath>DesktopModules/ToSIC_SexyContent</basePath>
+            <file>
+              <name>icon.png</name>
+            </file>
+          </files>
+        </component>
       </components>
     </package>
     
