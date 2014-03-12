@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
+using System.Xml.Linq;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.FileSystem;
@@ -70,6 +71,7 @@ namespace ToSic.SexyContent.ImportExport
                             // Loop through each app directory
                             foreach (var appDirectory in Directory.GetDirectories(currentWorkingDir))
                             {
+
                                 var appId = new int?();
                                 var xmlSearchPattern = isAppImport ? "App.xml" : "*.xml";
 
@@ -81,6 +83,18 @@ namespace ToSic.SexyContent.ImportExport
 
                                     if (isAppImport)
                                     {
+                                        // Do not import (throw error) if the app directory already exists
+                                        var folder =
+                                            XDocument.Parse(fileContents).Element("SexyContent")
+                                                .Element("Entities").Elements("Entity").Single(e =>e.Attribute("AttributeSetStaticName").Value =="2SexyContent-App")
+                                                .Elements("Value").First(v => v.Attribute("Key").Value == "Folder").Attribute("Value").Value;
+                                        var appPath = System.IO.Path.Combine(SexyContent.AppBasePath(), folder);
+
+                                        if(Directory.Exists(HttpContext.Current.Server.MapPath(appPath)))
+                                        {
+                                            throw new Exception("Import not allowed because the specified folder does already exist.");
+                                        }
+
                                         import.ImportApp(_zoneId, fileContents, out appId);
                                     }
                                     else
