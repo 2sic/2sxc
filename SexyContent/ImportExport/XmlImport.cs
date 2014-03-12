@@ -116,9 +116,16 @@ namespace ToSic.SexyContent.ImportExport
             XElement xmlSource = doc.Element("SexyContent");
             var xApp = xmlSource.Element("Header").Element("App");
 
+            // Build Guid (take existing, or create a new)
+            var appGuid = xApp.Attribute("Guid").Value;
+            if (String.IsNullOrEmpty(appGuid) || appGuid == new Guid().ToString())
+            {
+                appGuid = Guid.NewGuid().ToString();
+            }
+
             // Adding app to EAV
             var sexy = new SexyContent(zoneId, SexyContent.GetDefaultAppId(zoneId));
-            var app = sexy.ContentContext.AddApp(xApp.Attribute("Guid").Value);
+            var app = sexy.ContentContext.AddApp();
             sexy.ContentContext.SaveChanges();
 
             appId = app.AppID;
