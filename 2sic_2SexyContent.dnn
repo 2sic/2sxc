@@ -545,7 +545,7 @@
     <package name="2SexyContent-App" type="Module" version="05.06.00">
       <friendlyName> App</friendlyName>
       <description>2Sexy Content App is an extension that allows to insert a 2SexyContent app.</description>
-      <iconFile>icon.png</iconFile>
+      <iconFile>icon-app.png</iconFile>
       <owner>
         <name>2sic</name>
         <organization>2sic Internet Solutions</organization>
@@ -755,7 +755,7 @@
           <files>
             <basePath>DesktopModules/ToSIC_SexyContent</basePath>
             <file>
-              <name>icon.png</name>
+              <name>icon-app.png</name>
             </file>
           </files>
         </component>
