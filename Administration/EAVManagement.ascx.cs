@@ -61,7 +61,7 @@ namespace ToSic.SexyContent
             if (!Sexy.CanDeleteEntity(e.EntityId))
             {
                 e.Cancel = true;
-                e.CancelMessage = " This entity cannot be deleted because it is in use (2SexyContent).";
+                e.CancelMessage += " This entity cannot be deleted because it is in use (2SexyContent).";
             }
         }
     }
