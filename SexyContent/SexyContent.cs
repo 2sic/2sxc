@@ -36,7 +36,7 @@ namespace ToSic.SexyContent
     {
         #region Constants
 
-        public const string ModuleVersion = "05.05.03";
+        public const string ModuleVersion = "05.06.00";
         public const string TemplateID = "TemplateID";
         public const string ContentGroupIDString = "ContentGroupID";
         public const string AppIDString = "AppId";
@@ -827,7 +827,7 @@ namespace ToSic.SexyContent
                     Resources = appResourcesDynamic,
                     Settings = appSettingsDynamic,
                     Hidden = appMetaDataDynamic.Hidden is bool ? appMetaDataDynamic.Hidden : false,
-                    StaticName = eavAppName
+                    AppGuid = eavAppName
                 };
             }
             // Handle default app
@@ -842,7 +842,7 @@ namespace ToSic.SexyContent
                     Resources = null,
                     Settings = null,
                     Hidden = true,
-                    StaticName = eavAppName
+                    AppGuid = eavAppName
                 };
             }
             else
@@ -871,7 +871,8 @@ namespace ToSic.SexyContent
                 { "Folder", appName },
                 { "AllowTokenTemplates", "False" },
                 { "AllowRazorTemplates", "False" },
-                { "Version", "00.00.01" }
+                { "Version", "00.00.01" },
+                { "OriginalId", "" }
             };
             appContext.ContentContext.AddEntity(appAttributeSet, values, null, app.AppID, AssignmentObjectTypeIDSexyContentApp);
 

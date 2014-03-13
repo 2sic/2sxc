@@ -19,8 +19,7 @@ namespace ToSic.SexyContent
         public dynamic Settings { get; internal set; }
         public dynamic Resources { get; internal set; }
         
-        // ToDo: ask Daniel if I can add this
-        public string StaticName { get; set; }
+        public string AppGuid { get; set; }
 
         public string Path
         {

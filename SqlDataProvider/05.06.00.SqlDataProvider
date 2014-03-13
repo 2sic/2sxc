@@ -1,0 +1,27 @@
+-- make sure sql rolls back automatically in case of error.
+SET XACT_ABORT ON
+
+BEGIN TRANSACTION SexyContentUpdate;
+
+EXEC ToSIC_EAV_ChangeLogAdd 'System'
+
+DECLARE @ChangeLogID int
+SET @ChangeLogID = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
+SELECT @ChangeLogID
+
+DECLARE @AppAttributeSetID int
+SELECT @AppAttributeSetID = AttributeSetID FROM ToSIC_EAV_AttributeSets
+WHERE StaticName = '2SexyContent-App' AND Scope = N'2SexyContent-App' AND UsesConfigurationOfAttributeSet IS NULL
+
+-- Insert Attribute OriginalId
+INSERT INTO ToSIC_EAV_Attributes (StaticName, [Type], ChangeLogCreated)
+VALUES ('OriginalId', 'String', @ChangeLogID)
+DECLARE @AttributeID int
+SET @AttributeID = SCOPE_IDENTITY()
+
+INSERT INTO ToSIC_EAV_AttributesInSets (AttributeSetID, AttributeID, IsTitle, SortOrder, AttributeGroupID)
+VALUES (@AppAttributeSetID, @AttributeID, 0, 7, 1)
+
+-- Commit the transaction
+COMMIT TRANSACTION SexyContentUpdate;
+--ROLLBACK TRANSACTION SexyContentUpdate;

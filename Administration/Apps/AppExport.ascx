@@ -11,7 +11,7 @@ Specs:
         Name: <%= Sexy.App.Name %>
     </li>
     <li>
-        Guid:<%= Sexy.App.StaticName %>
+        Guid:<%= Sexy.App.AppGuid %>
     </li>
     <li>
         Version: <%= Sexy.App.Configuration.Version %>

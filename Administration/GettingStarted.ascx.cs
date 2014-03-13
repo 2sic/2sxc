@@ -31,9 +31,12 @@ namespace ToSic.SexyContent.Administration
             if (AppId.HasValue)
             {
                 var app = SexyContent.GetApp(ZoneId.Value, AppId.Value);
-                GettingStartedSrc += "&AppID=" + app.StaticName;
-                if(app.Configuration != null)
+                GettingStartedSrc += "&AppGuid=" + app.AppGuid;
+                if (app.Configuration != null)
+                {
                     GettingStartedSrc += "&AppVersion=" + app.Configuration.Version;
+                    GettingStartedSrc += "&AppOriginalId=" + app.Configuration.OriginalId;
+                }
             }
             // Add DNN Guid
             var HostSettings = HostController.Instance.GetSettingsDictionary();
