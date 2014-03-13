@@ -15,14 +15,12 @@
         <dnn:Label runat="server" ID="lblContentType" ControlName="ddlContentType"></dnn:Label>
         <asp:DropDownList runat="server" ID="ddlContentType" 
             DataValueField="AttributeSetID" 
-            DataTextField="Name" 
-            AutoPostBack="true"></asp:DropDownList>
+            DataTextField="Name"></asp:DropDownList>
     </div>
 
     <div class="dnnFormItem">
         <dnn:Label runat="server" ID="lblLanguage" ControlName="ddlLanguage"></dnn:Label>
         <asp:DropDownList runat="server" ID="ddlLanguage" 
-            AutoPostBack="true"
             AppendDataBoundItems="true">
             <Items>
                 <asp:ListItem Value="" ResourceKey="lblDropDownListAll" />
@@ -45,8 +43,7 @@
             <dnn:Label runat="server" ID="lblLanguageMissing" ControlName="rblLanguageMissing"></dnn:Label>
             <asp:RadioButtonList runat="server" ID="rblLanguageMissing" class="dnnFormRadioButtons" 
                 DataValueField="Value"
-                DataTextField="Name"
-                AutoPostBack="true">
+                DataTextField="Name">
             </asp:RadioButtonList>
         </div>
 
@@ -54,8 +51,7 @@
             <dnn:Label runat="server" ID="lblLanguageReference" ControlName="rblLanguageReference"></dnn:Label>
             <asp:RadioButtonList runat="server" ID="rblLanguageReference" class="dnnFormRadioButtons" 
                 DataValueField="Value"
-                DataTextField="Name"
-                AutoPostBack="true">
+                DataTextField="Name">
             </asp:RadioButtonList>
         </div>
 
@@ -63,8 +59,7 @@
             <dnn:Label runat="server" ID="lblResourceReference" ControlName="rblResourceReference"></dnn:Label>
             <asp:RadioButtonList runat="server" ID="rblResourceReference" class="dnnFormRadioButtons" 
                 DataValueField="Value"
-                DataTextField="Name"
-                AutoPostBack="true">
+                DataTextField="Name">
             </asp:RadioButtonList>
         </div>
     </asp:Panel>

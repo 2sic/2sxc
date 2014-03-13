@@ -86,17 +86,17 @@ namespace ToSic.SexyContent.DataImportExport
             return contentContext.GetAttributeSet(contentTypeId);
         }
 
-        public static XDocument GetDocument(params object[] content)
+        private static XDocument GetDocument(params object[] content)
         {
             return new XDocument(new XDeclaration("1.0", "UTF-8", "yes"), content);
         }
 
-        public static XElement GetDocumentRoot(int contentTypeId, params object[] content)
+        private static XElement GetDocumentRoot(int contentTypeId, params object[] content)
         {
             return new XElement(XElementName.Root + contentTypeId, content);
         }
 
-        public static XElement GetDocumentEntityElement(object elementGuid, object elementLanguage)
+        private static XElement GetDocumentEntityElement(object elementGuid, object elementLanguage)
         {
             return new XElement
                 (

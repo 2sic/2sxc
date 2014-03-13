@@ -117,109 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="btnCancel.Text" xml:space="preserve">
-    <value>Cancel</value>
+  <data name="InvalidContentType" xml:space="preserve">
+    <value>Selected content-type does not exist.</value>
   </data>
-  <data name="btnTestData.Text" xml:space="preserve">
-    <value>Test XML</value>
+  <data name="InvalidDocument" xml:space="preserve">
+    <value>Document is not a valid XML file.</value>
   </data>
-  <data name="lblContentType.Text" xml:space="preserve">
-    <value>Content-type</value>
+  <data name="InvalidLanguage" xml:space="preserve">
+    <value>The language </value>
   </data>
-  <data name="lblDropDownListAuto.Text" xml:space="preserve">
-    <value>Auto</value>
+  <data name="InvalidRoot" xml:space="preserve">
+    <value>Selected content-type does not match the content-type in the XML file.</value>
   </data>
-  <data name="lblFileUpload.Text" xml:space="preserve">
-    <value>Choose file</value>
+  <data name="InvalidValueReference" xml:space="preserve">
+    <value />
   </data>
-  <data name="lblIntro.Text" xml:space="preserve">
-    <value>Help: Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</value>
-  </data>
-  <data name="lblEntityClear.Text" xml:space="preserve">
-    <value>Clear all other entities</value>
-  </data>
-  <data name="lblResourceReference.Text" xml:space="preserve">
-    <value>Page / file references</value>
-  </data>
-  <data name="lblWarningBackup.Text" xml:space="preserve">
-    <value>Remember to backup your DNN first!</value>
-  </data>
-  <data name="EntityClearImportOptionNone.Text" xml:space="preserve">
-    <value>Keep all entities not found in import</value>
-  </data>
-  <data name="EntityClearImportOptionAll.Text" xml:space="preserve">
-    <value>Remove all entities not found in import</value>
-  </data>
-  <data name="ResourceReferenceImportOptionKeep.Text" xml:space="preserve">
-    <value>Import links as written in the file (for example /Portals/...)</value>
-  </data>
-  <data name="ResourceReferenceImportOptionResolve.Text" xml:space="preserve">
-    <value>Try to resolve pathes to references (for example File:4711)</value>
-  </data>
-  <data name="lblSetupTitle.Text" xml:space="preserve">
-    <value>2SexyContent - Import Data Step 1 of 2</value>
-  </data>
-  <data name="btnBack.Text" xml:space="preserve">
-    <value>Back</value>
-  </data>
-  <data name="btnClose.Text" xml:space="preserve">
-    <value>Close</value>
-  </data>
-  <data name="btnImportData.Text" xml:space="preserve">
-    <value>Import file</value>
-  </data>
-  <data name="lblDetailAttributeIgnore.Text" xml:space="preserve">
-    <value>Ignore {0} columns: {1}</value>
-  </data>
-  <data name="lblDetailAttributes.Text" xml:space="preserve">
-    <value>{0} columns: {1}</value>
-  </data>
-  <data name="lblDetailDetailsDelete.Text" xml:space="preserve">
-    <value>Delete {0} entities</value>
-  </data>
-  <data name="lblDetailElementCount.Text" xml:space="preserve">
-    <value>{0} entities</value>
-  </data>
-  <data name="lblDetailEntitiesCreate.Text" xml:space="preserve">
-    <value>Create {0} entities</value>
-  </data>
-  <data name="lblDetailEntitiesTitle.Text" xml:space="preserve">
-    <value>Import would:</value>
-  </data>
-  <data name="lblDetailEntitiesUpdate.Text" xml:space="preserve">
-    <value>Update {0} entities</value>
-  </data>
-  <data name="lblDetailFileTitle.Text" xml:space="preserve">
-    <value>File contains:</value>
-  </data>
-  <data name="lblDetailInfo.Text" xml:space="preserve">
-    <value>Try to import: {0}</value>
-  </data>
-  <data name="lblDetailLanguageCount.Text" xml:space="preserve">
-    <value>{0} languages</value>
-  </data>
-  <data name="lblDetailTitle.Text" xml:space="preserve">
-    <value>2SexyContent - Import Data Step 2 of 3</value>
-  </data>
-  <data name="lblDoneInfo.Text" xml:space="preserve">
-    <value>Import: {0}</value>
-  </data>
-  <data name="lblDoneTitle.Text" xml:space="preserve">
-    <value>2SexyContent - Import Data Step 3 of 3</value>
-  </data>
-  <data name="lblErrorInfo.Text" xml:space="preserve">
-    <value>Try to import: {0}</value>
-  </data>
-  <data name="lblErrorProtocolTitle.Text" xml:space="preserve">
-    <value>File contains the following errors:</value>
-  </data>
-  <data name="lblErrorTitle.Text" xml:space="preserve">
-    <value>2SexyContent - Import Data</value>
-  </data>
-  <data name="lblDoneResultFailed.Text" xml:space="preserve">
-    <value>Failed!&lt;br /&gt;{0}</value>
-  </data>
-  <data name="lblDoneResultSucceeded.Text" xml:space="preserve">
-    <value>Succeeded!</value>
+  <data name="Unknown" xml:space="preserve">
+    <value>Unknown error.</value>
   </data>
 </root>

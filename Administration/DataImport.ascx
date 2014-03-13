@@ -21,16 +21,14 @@
             <dnn:Label runat="server" ID="lblContentType" ControlName="ddlContentType"></dnn:Label>
             <asp:DropDownList runat="server" ID="ddlContentType" 
                 DataValueField="AttributeSetID" 
-                DataTextField="Name" 
-                AutoPostBack="true"></asp:DropDownList>
+                DataTextField="Name"></asp:DropDownList>
         </div>
 
         <div class="dnnFormItem">
             <dnn:Label runat="server" ID="lblResourceReference" ControlName="rblResourceReference"></dnn:Label>
             <asp:RadioButtonList runat="server" ID="rblResourceReference" class="dnnFormRadioButtons" 
                 DataValueField="Value"
-                DataTextField="Name"
-                AutoPostBack="true">
+                DataTextField="Name">
             </asp:RadioButtonList>
         </div>
 
@@ -38,8 +36,7 @@
             <dnn:Label runat="server" ID="lblEntityClear" ControlName="rblEntityClear"></dnn:Label>
             <asp:RadioButtonList runat="server" ID="rblEntityClear" class="dnnFormRadioButtons" 
                 DataValueField="Value"
-                DataTextField="Name"
-                AutoPostBack="true">
+                DataTextField="Name">
             </asp:RadioButtonList>
         </div>
 
@@ -104,9 +101,11 @@
     <div class="dnnForm dnnClear">  
         <h2><asp:Label runat="server" ResourceKey="lblDoneTitle"></asp:Label></h2>  
         <p><asp:Label runat="server" ID="lblDoneInfo"></asp:Label></p>
+        <p><asp:Label runat="server" ID="lblDoneResult"></asp:Label></p>
 
         <ul class="dnnActions dnnClear">
-            <li><asp:LinkButton runat="server" class="dnnPrimaryAction" ResourceKey="btnClose" NavigateUrl="/"></asp:LinkButton></li>
+            <li><asp:LinkButton runat="server" class="dnnPrimaryAction" ResourceKey="btnBack" OnClick="OnBackClick"></asp:LinkButton></li>
+            <li><asp:HyperLink runat="server" class="dnnSecondaryAction" ResourceKey="btnClose" NavigateUrl="/"></asp:HyperLink></li>
         </ul>
     </div>
 </asp:Panel>

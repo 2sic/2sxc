@@ -213,6 +213,7 @@
     <Compile Include="SexyContent\DataImportExport\DataXmlImport.cs" />
     <Compile Include="SexyContent\DataImportExport\EntityGuidManager.cs" />
     <Compile Include="SexyContent\DataImportExport\EntityImportExtension.cs" />
+    <Compile Include="SexyContent\DataImportExport\EnumExtension.cs" />
     <Compile Include="SexyContent\DataImportExport\IValueImportModelExtension.cs" />
     <Compile Include="SexyContent\DataImportExport\DataImportError.cs" />
     <Compile Include="SexyContent\DataImportExport\EavValueExtension.cs" />
@@ -220,6 +221,7 @@
     <Compile Include="SexyContent\DataImportExport\EntityClearImportOption.cs" />
     <Compile Include="SexyContent\DataImportExport\EntityExtension.cs" />
     <Compile Include="SexyContent\DataImportExport\IEnumerableExtension.cs" />
+    <Compile Include="SexyContent\DataImportExport\LocalizedDescriptionAttribute.cs" />
     <Compile Include="SexyContent\DataImportExport\RecordCreateExportOption.cs" />
     <Compile Include="SexyContent\DataImportExport\ResourceReferenceImportOption.cs" />
     <Compile Include="SexyContent\DataImportExport\StringExtension.cs" />
@@ -571,6 +573,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Administration\App_LocalResources\DataExport.ascx.de-DE.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SexyContent\DataImportExport\DataImportErrorCode.de-DE.resx" />
+    <EmbeddedResource Include="SexyContent\DataImportExport\DataImportErrorCode.resx" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>

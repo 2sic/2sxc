@@ -1,4 +1,5 @@
-﻿using DotNetNuke.Services.FileSystem;
+﻿using DotNetNuke.Entities.Tabs;
+using DotNetNuke.Services.FileSystem;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,27 +15,53 @@ namespace ToSic.SexyContent.DataImportExport
         {
             if (value.IsHyperlink())
             {
-                return ReolveHyperlink(value);
+                return ResolveHyperlink(value);
             }
             return value.Value;
         }
 
-        private static string ReolveHyperlink(EavValue value)
+        private static string ResolveHyperlink(EavValue value)
         {
-            var match = Regex.Match(value.Value, @".+\:(?<id>\d+)");
+            var match = Regex.Match(value.Value, @"(?<type>.+)\:(?<id>\d+)");
             if (!match.Success)
             {
                 return value.Value;
             }
 
-            var hyperlinkId = int.Parse(match.Groups["id"].Value);
-            var fileInfo = FileManager.Instance.GetFile(hyperlinkId);
+            var linkId = int.Parse(match.Groups["id"].Value);
+            var linkType = match.Groups["type"].Value;
+
+            if (linkType == "Page")
+            {
+                return ResolvePageLink(linkId, value.Value);
+            }
+            else
+            {
+                return ResolveFileLink(linkId, value.Value);
+            }
+        }
+
+        private static string ResolveFileLink(int linkId, string defaultValue = null)
+        {
+            var fileInfo = FileManager.Instance.GetFile(linkId);
             if (fileInfo == null)
             {
-                return value.Value;
+                return defaultValue;
             }
 
             return fileInfo.RelativePath;
+        }
+
+        private static string ResolvePageLink(int linkId, string defaultValue = null)
+        {
+            var tabController = new TabController();
+            var tabInfo = tabController.GetTab(linkId);
+            if (tabInfo == null)
+            {
+                return defaultValue;
+            }
+
+            return tabInfo.TabPath;
         }
 
         private static bool IsHyperlink(this EavValue value)

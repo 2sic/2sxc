@@ -6,28 +6,26 @@ using System.Text;
 
 namespace ToSic.SexyContent.DataImportExport
 {
+    // TODO2tk: Improve the error handling... and validate the input values.. is a date.. is a boolean...
     public enum DataImportErrorCode
     {
-        // TODO2tk: Translate the enumeration values like described on 
-        // http://stackoverflow.com/questions/17380900/enum-localization
-
-        [Description("Unknown error.")]
+        [LocalizedDescription("Unknown", typeof(DataImportErrorCode), "ToSic.SexyContent.SexyContent.DataImportExport")]
         Unknown,
 
-        [Description("Content type not found.")]
+        [LocalizedDescription("InvalidContentType", typeof(DataImportErrorCode), "ToSic.SexyContent.SexyContent.DataImportExport")]
         InvalidContentType,
 
-        [Description("Cannot load document. It is not a valid XML.")]
+        [LocalizedDescription("InvalidDocument", typeof(DataImportErrorCode), "ToSic.SexyContent.SexyContent.DataImportExport")]
         InvalidDocument,
 
-        [Description("Cannot load document. It has not the content expected.")]
+        [LocalizedDescription("InvalidRoot", typeof(DataImportErrorCode), "ToSic.SexyContent.SexyContent.DataImportExport")]
         InvalidRoot,
 
-        [Description("Language is not supported.")]
+        [LocalizedDescription("InvalidLanguage", typeof(DataImportErrorCode), "ToSic.SexyContent.SexyContent.DataImportExport")]
         InvalidLanguage,
 
-        [Description("Value referenced is not available.")]
-        InvalidValueReference,
+        [LocalizedDescription("InvalidValueReference", typeof(DataImportErrorCode), "ToSic.SexyContent.SexyContent.DataImportExport")]
+        InvalidValueReference
     }
 
     public class DataImportError

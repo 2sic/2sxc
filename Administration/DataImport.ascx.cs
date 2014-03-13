@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -47,20 +48,41 @@ namespace ToSic.SexyContent.Administration
             get { return PortalSettings.UserInfo.DisplayName; }
         }
 
-        public string FileLocation
+        public string FileTemporaryDirectory
         {
             get
             {
-                if (ViewState["FileLocation"] == null)
+                if (ViewState["FileTemporaryDirectory"] == null)
                 {
                     return null;
                 }
-                return ViewState["FileLocation"] as string;
+                return ViewState["FileTemporaryDirectory"] as string;
             }
             set
             {
-                ViewState["FileLocation"] = value;
+                ViewState["FileTemporaryDirectory"] = value;
             }
+        }
+
+        public string FileName
+        {
+            get
+            {
+                if (ViewState["FileName"] == null)
+                {
+                    return null;
+                }
+                return ViewState["FileName"] as string;
+            }
+            set
+            {
+                ViewState["FileName"] = value;
+            }
+        }
+
+        public string FilePath
+        {
+            get { return Path.Combine(FileTemporaryDirectory, FileName); }
         }
 
         public List<string> Languages
@@ -118,6 +140,7 @@ namespace ToSic.SexyContent.Administration
                                                   .OrderBy(language => language != LanguageFallback)
                                                   .ThenBy(language => language)
                                                   .ToList();
+            FileTemporaryDirectory = CreatePhysicalDirectory(SexyContent.TemporaryDirectory);
 
             ddlContentType.DataSource = sexyContent.GetAvailableAttributeSets(); ;
             ddlContentType.DataBind();
@@ -131,7 +154,6 @@ namespace ToSic.SexyContent.Administration
             rblResourceReference.SelectedValue = ResourceReferenceImportOption.Keep.ToString();
         }
 
-
         protected void OnTestDataClick(object sender, EventArgs e)
         {
             if (!fuFileUpload.HasFile)
@@ -140,31 +162,37 @@ namespace ToSic.SexyContent.Administration
                 return;
             }
 
-            var dataFileName = fuFileUpload.FileName;
-            var dataStream = fuFileUpload.FileContent;
-            var dataImport = DataXmlImport.Deserialize(dataStream, ApplicationId, ContentTypeIdSelected, Languages, LanguageFallback, EntityClearOptionSelected, ResourceReferenceOptionSelected);
-            if (dataImport.HasErrors)
+            FileName = fuFileUpload.FileName;
+            var fileContent = fuFileUpload.FileContent;
+            // TODO2tk: Save content to temporary file 
+            // File.WriteStream(FilePath, fileContent);
+
+            var fileImport = DataXmlImport.Deserialize(fileContent, ApplicationId, ContentTypeIdSelected, Languages, LanguageFallback, EntityClearOptionSelected, ResourceReferenceOptionSelected);
+            if (fileImport.HasErrors)
             {
-                ShowErrorPanel(dataFileName, dataImport);
+                ShowErrorPanel(fileImport);
             }
             else
             {
-                ShowDetailPanel(dataFileName, dataImport);
+                ShowDetailPanel(fileImport);
             }
         }
 
         protected void OnImportDataClick(object sender, EventArgs e)
         {
-            // TODO2tk: Get the file name from the view state
-            // TODO2tk: Persist the import data
-            ShowDonePanel();
+            // TODO2tk: Load content from temporary file
+            // var fileData = File.ReadStream(FilePath);
+            // File.Delete(FilePath);
+
+            // TODO2tk: Persist the file content
+            ShowDonePanel(false);
         }
 
         protected void OnBackClick(object sender, EventArgs e)
         {
             ShowSetupPanel();
         }
-      
+
 
         private IEnumerable<dynamic> EnumToDataSource<T>() where T : struct
         {
@@ -181,6 +209,16 @@ namespace ToSic.SexyContent.Administration
             return (T)Enum.Parse(typeof(T), value, true);
         }
 
+        private string CreatePhysicalDirectory(string serverDirectory)
+        {
+            var physicalDirectory = Server.MapPath(serverDirectory).TrimEnd('\\') + "\\";
+            if (!Directory.Exists(physicalDirectory))
+            {
+                Directory.CreateDirectory(physicalDirectory);
+            }
+            return physicalDirectory;
+        }
+
 
         private void ShowSetupPanel()
         {
@@ -190,9 +228,9 @@ namespace ToSic.SexyContent.Administration
             pnlDone.Visible = false;
         }
 
-        private void ShowDetailPanel(string dataFileName, DataXmlImport dataImport)
+        private void ShowDetailPanel(DataXmlImport dataImport)
         {
-            lblDetailInfo.Text = LocalizeFormatString("lblDetailInfo", dataFileName);
+            lblDetailInfo.Text = LocalizeFormatString("lblDetailInfo", FileName);
             lblDetailElementCount.Text = LocalizeFormatString
             (
                 "lblDetailElementCount", dataImport.GetDocumentElementCount()
@@ -222,20 +260,22 @@ namespace ToSic.SexyContent.Administration
                 "lblDetailAttributeIgnore", dataImport.GetAttributeIgnoreCount(), dataImport.GetAttributeIgnoredNames(", ")
             );
 
+            lblDetailAttributeIgnore.Text = dataImport.GetEntitiesDebugString();
+
             pnlSetup.Visible = false;
             pnlDetail.Visible = true;
             pnlError.Visible = false;
             pnlDone.Visible = false;
         }
 
-        private void ShowErrorPanel(string dataFileName, DataXmlImport dataImport)
+        private void ShowErrorPanel(DataXmlImport dataImport)
         {
-            lblErrorInfo.Text = LocalizeFormatString("lblErrorInfo", dataFileName);
+            lblErrorInfo.Text = LocalizeFormatString("lblErrorInfo", FileName);
 
             var errorProtocolHtml = string.Empty;
             foreach(var error in dataImport.ErrorProtocol.Errors)
             {
-                errorProtocolHtml += string.Format("<li>{0} ({1})</li>", error.ErrorCode, error.ErrorDetail);
+                errorProtocolHtml += string.Format("<li>{0}{1}</li>", error.ErrorCode.GetDescription(), error.ErrorDetail != null ? " (" + error.ErrorDetail + ")" : "");
             }
             ulErrorProtocol.InnerHtml = errorProtocolHtml;
 
@@ -245,13 +285,24 @@ namespace ToSic.SexyContent.Administration
             pnlDone.Visible = false;
         }
 
-        private void ShowDonePanel()
+        private void ShowDonePanel(bool importFailed = false, string importFaileReason = null)
         {
+            lblDoneInfo.Text = LocalizeFormatString("lblDoneInfo", FileName);
+            if (importFailed)
+            {
+                lblDoneResult.Text = LocalizeFormatString("lblDoneResultFailed", importFaileReason);
+            }
+            else
+            {
+                lblDoneResult.Text = LocalizeString("lblDoneResultSucceeded");
+            }
+
             pnlSetup.Visible = false;
             pnlDetail.Visible = false;
             pnlError.Visible = false;
             pnlDone.Visible = true;
         }
+
 
         private string LocalizeFormatString(string formatStringKey, params object[] values)
         {

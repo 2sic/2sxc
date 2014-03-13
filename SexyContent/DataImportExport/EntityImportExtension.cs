@@ -1,4 +1,7 @@
-﻿using System;
+﻿using DotNetNuke.Entities.Portals;
+using DotNetNuke.Entities.Tabs;
+using DotNetNuke.Services.FileSystem;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -73,11 +76,24 @@ namespace ToSic.SexyContent.DataImportExport
 
                 case "Hyperlink":
                     {
-                        if (resolveHyperlink)
+                        string valueReference;
+                        if (string.IsNullOrEmpty(valueString))
                         {
-                            // TODO2tk: Resolve file and page references
+                            valueReference = valueString;
                         }
-                        valueModel = new ValueImportModel<string>(entity) { Value = valueString };
+                        else if (!resolveHyperlink)
+                        {
+                            valueReference = valueString;
+                        }
+                        else
+                        {
+                            valueReference = GetFileReference(valueString, valueString);
+                            if (valueReference == valueString)
+                            {   // Maybe it is a page and not a file
+                                valueReference = GetTabReference(valueString, valueString);
+                            }
+                        }
+                        valueModel = new ValueImportModel<string>(entity) { Value = valueReference };
                     }
                     break;
 
@@ -90,6 +106,34 @@ namespace ToSic.SexyContent.DataImportExport
 
             valueModel.AppendValueReference(valueLanguages, valueRedOnly);
             return valueModel;
+        }
+
+
+
+        private static string GetFileReference(string filePath, string fallbackValue = null)
+        {
+            var portalInfo = PortalController.GetCurrentPortalSettings();
+            var fileInfo = FileManager.Instance.GetFile(portalInfo.PortalId, filePath);
+            if (fileInfo != null)
+            {
+                return "File:" + fileInfo.FileId;
+            }
+            return fallbackValue;
+        }
+
+        private static string GetTabReference(string tabPath, string fallbackValue = null)
+        {
+            var portalInfo = PortalController.GetCurrentPortalSettings();
+            var tabController = new TabController();
+            var tabCollection = tabController.GetTabsByPortal(portalInfo.PortalId);
+            var tabInfo = tabCollection.Select(tab => tab.Value)
+                                       .Where(tab => tab.TabPath == tabPath)
+                                       .FirstOrDefault();
+            if (tabInfo != null)
+            {
+                return "Page:" + tabInfo.TabID;
+            }
+            return fallbackValue;
         }
     }
 }

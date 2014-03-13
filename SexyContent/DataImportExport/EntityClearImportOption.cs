@@ -8,7 +8,7 @@ namespace ToSic.SexyContent.DataImportExport
     public enum EntityClearImportOption
     {
         None,
-        Obsolete
+        All
     }
 
     public static class EntityClearImportOptionExtension
@@ -18,9 +18,9 @@ namespace ToSic.SexyContent.DataImportExport
             return option == EntityClearImportOption.None;
         }
 
-        public static bool IsWasted(this EntityClearImportOption option)
+        public static bool IsAll(this EntityClearImportOption option)
         {
-            return option == EntityClearImportOption.Obsolete;
+            return option == EntityClearImportOption.All;
         }
     }
 }
