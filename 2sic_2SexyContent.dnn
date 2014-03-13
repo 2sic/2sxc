@@ -543,7 +543,7 @@
     </package>
     
     <package name="2SexyContent-App" type="Module" version="05.06.00">
-      <friendlyName>App</friendlyName>
+      <friendlyName> App</friendlyName>
       <description>2Sexy Content App is an extension that allows to insert a 2SexyContent app.</description>
       <iconFile>icon.png</iconFile>
       <owner>

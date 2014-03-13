@@ -99,7 +99,8 @@ namespace ToSic.SexyContent.ImportExport
                                     }
                                     else
                                     {
-                                        import.ImportXml(_zoneId, _appId.Value, fileContents);
+                                        appId = _appId.Value;
+                                        import.ImportXml(_zoneId, appId.Value, fileContents);
                                     }
 
                                     
