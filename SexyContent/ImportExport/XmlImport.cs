@@ -125,7 +125,7 @@ namespace ToSic.SexyContent.ImportExport
 
             // Adding app to EAV
             var sexy = new SexyContent(zoneId, SexyContent.GetDefaultAppId(zoneId));
-            var app = sexy.ContentContext.AddApp();
+            var app = sexy.ContentContext.AddApp(appGuid);
             sexy.ContentContext.SaveChanges();
 
             appId = app.AppID;

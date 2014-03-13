@@ -6,6 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using DotNetNuke.UI.Utilities;
 using DotNetNuke.Web.Client.ClientResourceManagement;
+using ToSic.Eav;
 
 namespace ToSic.SexyContent
 {
@@ -51,7 +52,17 @@ namespace ToSic.SexyContent
             eavManagement.ZoneId = ZoneId;
             eavManagement.AppId = AppId;
             eavManagement.AddFormClientScriptAndCss = false;
+            eavManagement.EntityDeleting += EavManagementEntityDeleting;
             pnlEAV.Controls.Add(eavManagement);
+        }
+
+        protected void EavManagementEntityDeleting(EntityDeletingEventArgs e)
+        {
+            if (!Sexy.CanDeleteEntity(e.EntityId))
+            {
+                e.Cancel = true;
+                e.CancelMessage = " This entity cannot be deleted because it is in use (2SexyContent).";
+            }
         }
     }
 }

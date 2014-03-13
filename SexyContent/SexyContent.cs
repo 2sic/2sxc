@@ -1276,6 +1276,27 @@ namespace ToSic.SexyContent
             return resultString;
         }
 
+        public bool CanDeleteEntity(int entityId)
+        {
+            var templates = GetTemplates(PortalSettings.Current.PortalId);
+            var templateDefaults = templates.ToList().Select(t => new {Template = t, Defaults = GetTemplateDefaults(t.TemplateID)});
+            var contentGroupItems = TemplateContext.GetContentGroupItems();
+
+            // Check all templates
+            if (templates.Any(t => t.DemoEntityID == entityId))
+                return false;
+
+            // Check template defaults (Presentation, ListContent, ListPresentation)
+            if(templateDefaults.Any(d => d.Defaults.Any(de => de.DemoEntityID == entityId)))
+                return false;
+
+            // Check ContentGroupItems
+            if (contentGroupItems.Any(c => c.EntityID == entityId))
+                return false;
+
+            return true;
+        }
+
         #endregion
 
         #region Upgrade
