@@ -109,7 +109,10 @@ namespace ToSic.SexyContent
             // Set value of demo-content and template file dropdown if in edit mode
             if (ModeIsEdit)
             {
-                ddlTemplateFiles.SelectedValue = Template.Path;
+                if (ddlTemplateFiles.Items.Cast<ListItem>().Any(l => l.Value == Template.Path))
+                    ddlTemplateFiles.SelectedValue = Template.Path;
+                if (ddlTemplateFiles.Items.Cast<ListItem>().Any(l => l.Value == Template.Path.Replace('\\','/')))
+                    ddlTemplateFiles.SelectedValue = Template.Path.Replace('\\', '/');
             }
         }
 

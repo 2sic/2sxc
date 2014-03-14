@@ -66,7 +66,7 @@ namespace ToSic.SexyContent
             switch (e.CommandName)
             {
                 case "add":
-                    Sexy.AddContentGroupItem(ContentGroupID, UserId, Element.TemplateId.Value, null, Element.SortOrder + 1, true, ContentGroupItemType.Content, false);
+                    SexyUncached.AddContentGroupItem(ContentGroupID, UserId, Element.TemplateId.Value, null, Element.SortOrder + 1, true, ContentGroupItemType.Content, false);
                     grdEntities.Rebind();
                     grdEntities.Items[Element.SortOrder].Selected = true;
                     break;
