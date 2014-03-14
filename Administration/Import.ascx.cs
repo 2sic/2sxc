@@ -34,7 +34,7 @@ namespace ToSic.SexyContent
         protected void Page_Load(object sender, EventArgs e)
         {
             hlkExport.NavigateUrl =  EditUrl(TabId, SexyContent.ControlKeys.Export, true, "mid=" + ModuleId + "&" + SexyContent.AppIDString + "=" + AppId);
-            pnlGettingStartedTemplates.Visible = !Sexy.GetVisibleTemplates(PortalSettings.PortalId).Any();
+            pnlGettingStartedTemplates.Visible = IsContentApp && !Sexy.GetVisibleTemplates(PortalSettings.PortalId).Any();
         }
 
         protected void btnUpload_Click(object sender, EventArgs e)
