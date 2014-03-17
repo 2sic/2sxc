@@ -9,7 +9,6 @@ namespace ToSic.SexyContent.Administration
 {
     public partial class DataImport : DotNetNuke.Entities.Modules.PortalModuleBase
     {
-        // TODO2tk: Comment the classes and methods a little bit
         // TODO2tk: Embedd to user interface
         public int? ApplicationId
         {
