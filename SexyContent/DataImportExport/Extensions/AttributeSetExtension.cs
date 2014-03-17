@@ -4,16 +4,16 @@ using System.Linq;
 using System.Web;
 using ToSic.Eav;
 
-namespace ToSic.SexyContent.DataImportExport
+namespace ToSic.SexyContent.DataImportExport.Extensions
 {
     public static class AttributeSetExtension
     {
-        public static IEnumerable<string> GetAttributeNames(this Eav.AttributeSet attributeSet)
+        public static IEnumerable<string> GetAttributeNames(this ToSic.Eav.AttributeSet attributeSet)
         {
             return attributeSet.AttributesInSets.Select(item => item.Attribute.StaticName).ToList();
         }
 
-        public static IEnumerable<Eav.Attribute> GetAttributes(this Eav.AttributeSet attributeSet)
+        public static IEnumerable<ToSic.Eav.Attribute> GetAttributes(this ToSic.Eav.AttributeSet attributeSet)
         {
             return attributeSet.AttributesInSets.Select(item => item.Attribute).ToList();
         }

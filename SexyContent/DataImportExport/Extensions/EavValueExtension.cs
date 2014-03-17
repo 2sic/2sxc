@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 using System.Web;
 using ToSic.Eav;
 
-namespace ToSic.SexyContent.DataImportExport
+namespace ToSic.SexyContent.DataImportExport.Extensions
 {
     public static class EavValueExtension
     {

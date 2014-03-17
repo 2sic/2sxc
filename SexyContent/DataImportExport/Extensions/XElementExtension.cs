@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Xml.Linq;
 using ToSic.Eav;
 
-namespace ToSic.SexyContent.DataImportExport
+namespace ToSic.SexyContent.DataImportExport.Extensions
 {
     public static class XElementExtension
     {

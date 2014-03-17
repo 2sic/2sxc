@@ -7,7 +7,7 @@ using System.Linq;
 using System.Web;
 using ToSic.Eav.Import;
 
-namespace ToSic.SexyContent.DataImportExport
+namespace ToSic.SexyContent.DataImportExport.Extensions
 {
     public static class EntityImportExtension
     {

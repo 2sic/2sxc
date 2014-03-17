@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Reflection;
-using System.Web;
 
-namespace ToSic.SexyContent.DataImportExport
+namespace ToSic.SexyContent.DataImportExport.Extensions
 {
     public static class EnumExtensions
     {
