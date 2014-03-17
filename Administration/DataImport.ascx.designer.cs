@@ -58,6 +58,15 @@ namespace ToSic.SexyContent.Administration {
         protected global::System.Web.UI.WebControls.FileUpload fuFileUpload;
         
         /// <summary>
+        /// lblFileUploadError control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblFileUploadError;
+        
+        /// <summary>
         /// lblContentType control.
         /// </summary>
         /// <remarks>
@@ -74,6 +83,42 @@ namespace ToSic.SexyContent.Administration {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlContentType;
+        
+        /// <summary>
+        /// lblLanguage control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UserControl lblLanguage;
+        
+        /// <summary>
+        /// lblLanguageInfo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblLanguageInfo;
+        
+        /// <summary>
+        /// lblLanguageReference control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UserControl lblLanguageReference;
+        
+        /// <summary>
+        /// lblLanguageReferenceInfo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblLanguageReferenceInfo;
         
         /// <summary>
         /// lblResourceReference control.

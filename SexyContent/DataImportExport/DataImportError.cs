@@ -6,7 +6,6 @@ using System.Text;
 
 namespace ToSic.SexyContent.DataImportExport
 {
-    // TODO2tk: Improve the error handling... and validate the input values.. is a date.. is a boolean...
     public enum DataImportErrorCode
     {
         [LocalizedDescription("Unknown", typeof(DataImportErrorCode), "ToSic.SexyContent.SexyContent.DataImportExport")]
@@ -25,19 +24,28 @@ namespace ToSic.SexyContent.DataImportExport
         InvalidLanguage,
 
         [LocalizedDescription("InvalidValueReference", typeof(DataImportErrorCode), "ToSic.SexyContent.SexyContent.DataImportExport")]
-        InvalidValueReference
+        InvalidValueReference,
+
+        [LocalizedDescription("InvalidValueFormat", typeof(DataImportErrorCode), "ToSic.SexyContent.SexyContent.DataImportExport")]
+        InvalidValueFormat
     }
 
     public class DataImportError
     {
+        public int? LineNumber { get; private set; }
+
+        public string LineDetail { get; private set; }
+
         public string ErrorDetail { get; private set; }
 
         public DataImportErrorCode ErrorCode { get; private set; }
 
-        public DataImportError(DataImportErrorCode errorCode, string errorDetail = null)
+        public DataImportError(DataImportErrorCode errorCode, string errorDetail = null, int? lineNumber = null, string lineDetail = null)
         {
             this.ErrorCode = errorCode;
             this.ErrorDetail = errorDetail;
+            this.LineNumber = lineNumber;
+            this.LineDetail = lineDetail;
         }
     }
 }

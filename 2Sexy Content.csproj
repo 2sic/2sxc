@@ -214,6 +214,7 @@
     <Compile Include="SexyContent\DataImportExport\EntityGuidManager.cs" />
     <Compile Include="SexyContent\DataImportExport\EntityImportExtension.cs" />
     <Compile Include="SexyContent\DataImportExport\EnumExtension.cs" />
+    <Compile Include="SexyContent\DataImportExport\FileInfoExtension.cs" />
     <Compile Include="SexyContent\DataImportExport\IValueImportModelExtension.cs" />
     <Compile Include="SexyContent\DataImportExport\DataImportError.cs" />
     <Compile Include="SexyContent\DataImportExport\EavValueExtension.cs" />

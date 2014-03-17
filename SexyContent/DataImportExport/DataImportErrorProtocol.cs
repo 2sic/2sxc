@@ -23,9 +23,9 @@ namespace ToSic.SexyContent.DataImportExport
             get { return errors.Count; }
         }
 
-        public void AppendError(DataImportErrorCode errorCode, string errorDetail = null)
+        public void AppendError(DataImportErrorCode errorCode, string errorDetail = null, int? lineNumber = null, string lineDetail = null)
         {
-            errors.Add(new DataImportError(errorCode, errorDetail));
+            errors.Add(new DataImportError(errorCode, errorDetail, lineNumber, lineDetail));
         }
 
         public IEnumerator<DataImportError> GetEnumerator()

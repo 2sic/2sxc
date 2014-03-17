@@ -108,8 +108,6 @@ namespace ToSic.SexyContent.DataImportExport
             return valueModel;
         }
 
-
-
         private static string GetFileReference(string filePath, string fallbackValue = null)
         {
             var portalInfo = PortalController.GetCurrentPortalSettings();

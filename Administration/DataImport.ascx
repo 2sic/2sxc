@@ -14,7 +14,8 @@
     
         <div class="dnnFormItem">
             <dnn:Label runat="server" ID="lblFileUpload" ControlName="fuFileUpload"></dnn:Label>
-            <asp:FileUpload runat="server" ID="fuFileUpload" />
+            <asp:FileUpload runat="server" ID="fuFileUpload" /><br />
+            <asp:Label runat="server" ID="lblFileUploadError" ResourceKey="lblFileUploadError" Visible="false" ForeColor="Red"></asp:Label>
         </div>
 
         <div class="dnnFormItem">
@@ -25,6 +26,16 @@
         </div>
 
         <div class="dnnFormItem">
+            <dnn:Label runat="server" ID="lblLanguage" ControlName="lblLanguageInfo"></dnn:Label>
+            <asp:Label runat="server" ID="lblLanguageInfo" ResourceKey="lblLanguageInfo" style="display:inline-block;padding-top:3px"></asp:Label>
+        </div>
+
+        <div class="dnnFormItem">
+            <dnn:Label runat="server" ID="lblLanguageReference" ControlName="lblLanguageReferenceInfo"></dnn:Label>
+            <asp:Label runat="server" ID="lblLanguageReferenceInfo" ResourceKey="lblLanguageReferenceInfo" style="display:inline-block;padding-top:3px"></asp:Label>
+        </div>
+
+        <div class="dnnFormItem">
             <dnn:Label runat="server" ID="lblResourceReference" ControlName="rblResourceReference"></dnn:Label>
             <asp:RadioButtonList runat="server" ID="rblResourceReference" class="dnnFormRadioButtons" 
                 DataValueField="Value"
@@ -32,7 +43,7 @@
             </asp:RadioButtonList>
         </div>
 
-        <div class="dnnFormItem" runat="server" Enabled="false">
+        <div class="dnnFormItem" runat="server" Visible="false">
             <dnn:Label runat="server" ID="lblEntityClear" ControlName="rblEntityClear"></dnn:Label>
             <asp:RadioButtonList runat="server" ID="rblEntityClear" class="dnnFormRadioButtons" 
                 DataValueField="Value"

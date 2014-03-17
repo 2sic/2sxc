@@ -222,4 +222,28 @@
   <data name="lblDoneResultSucceeded.Text" xml:space="preserve">
     <value>Succeeded!</value>
   </data>
+  <data name="lblErrorProtocolErrorDetail.Text" xml:space="preserve">
+    <value>&lt;br/&gt;&lt;i&gt;Details: {0}&lt;/i&gt;</value>
+  </data>
+  <data name="lblErrorProtocolLineDetail.Text" xml:space="preserve">
+    <value>&lt;br/&gt;&lt;i&gt;Line-details: {0}&lt;/i&gt;</value>
+  </data>
+  <data name="lblErrorProtocolLineNo.Text" xml:space="preserve">
+    <value>&lt;br/&gt;&lt;i&gt;Line-no: {0}&lt;/i&gt;</value>
+  </data>
+  <data name="lblFileUploadError.Text" xml:space="preserve">
+    <value>Please select a file!</value>
+  </data>
+  <data name="lblLanguage.Text" xml:space="preserve">
+    <value>Languages</value>
+  </data>
+  <data name="lblLanguageInfo.Text" xml:space="preserve">
+    <value>Auto: Use languages specified in the file</value>
+  </data>
+  <data name="lblLanguageReference.Text" xml:space="preserve">
+    <value>Value references to other languages</value>
+  </data>
+  <data name="lblLanguageReferenceInfo.Text" xml:space="preserve">
+    <value>Auto: Import as references (for example =ref(en-US,ro))</value>
+  </data>
 </root>

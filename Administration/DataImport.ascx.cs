@@ -11,6 +11,7 @@ namespace ToSic.SexyContent.Administration
 {
     public partial class DataImport : DotNetNuke.Entities.Modules.PortalModuleBase
     {
+        // TODO2tk: Embedd to user interface
         public int? ApplicationId
         {
             get
@@ -158,14 +159,15 @@ namespace ToSic.SexyContent.Administration
         {
             if (!fuFileUpload.HasFile)
             {
-                // TODO2tk: Sow an error message
+                lblFileUploadError.Visible = true;
                 return;
             }
 
             FileName = fuFileUpload.FileName;
+
             var fileContent = fuFileUpload.FileContent;
-            // TODO2tk: Save content to temporary file 
-            // File.WriteStream(FilePath, fileContent);
+            var fileInfo = new FileInfo(FilePath);
+            fileInfo.WriteStream(fileContent);
 
             var fileImport = DataXmlImport.Deserialize(fileContent, ApplicationId, ContentTypeIdSelected, Languages, LanguageFallback, EntityClearOptionSelected, ResourceReferenceOptionSelected);
             if (fileImport.HasErrors)
@@ -180,12 +182,14 @@ namespace ToSic.SexyContent.Administration
 
         protected void OnImportDataClick(object sender, EventArgs e)
         {
-            // TODO2tk: Load content from temporary file
-            // var fileData = File.ReadStream(FilePath);
-            // File.Delete(FilePath);
+            var fileInfo = new FileInfo(FilePath);
+            var fileContent = fileInfo.ReadStream();
+            fileInfo.Delete();
 
-            // TODO2tk: Persist the file content
-            ShowDonePanel(false);
+            var fileImport = DataXmlImport.Deserialize(fileContent, ApplicationId, ContentTypeIdSelected, Languages, LanguageFallback, EntityClearOptionSelected, ResourceReferenceOptionSelected);
+            var fileImported = fileImport.Pesrist(ZoneId, UserName);
+
+            ShowDonePanel(!fileImported);
         }
 
         protected void OnBackClick(object sender, EventArgs e)
@@ -275,7 +279,14 @@ namespace ToSic.SexyContent.Administration
             var errorProtocolHtml = string.Empty;
             foreach(var error in dataImport.ErrorProtocol.Errors)
             {
-                errorProtocolHtml += string.Format("<li>{0}{1}</li>", error.ErrorCode.GetDescription(), error.ErrorDetail != null ? " (" + error.ErrorDetail + ")" : "");
+                errorProtocolHtml += string.Format
+                    (
+                        "<li>{0}{1}{2}{3}</li>", 
+                        error.ErrorCode.GetDescription(), 
+                        error.ErrorDetail != null ? LocalizeFormatString("lblErrorProtocolErrorDetail", error.ErrorDetail) : "",
+                        error.LineNumber != null ? LocalizeFormatString("lblErrorProtocolLineNo", error.LineNumber) : "",
+                        error.LineDetail != null ? LocalizeFormatString("lblErrorProtocolLineDetail", error.LineDetail) : ""
+                    );
             }
             ulErrorProtocol.InnerHtml = errorProtocolHtml;
 

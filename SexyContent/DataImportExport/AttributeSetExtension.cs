@@ -20,7 +20,7 @@ namespace ToSic.SexyContent.DataImportExport
 
         public static Entity GetEntity(this AttributeSet attributeSet, Guid entityGuid)
         {
-            return attributeSet.Entities.FirstOrDefault(entity => entity.EntityGUID == entityGuid);
+            return attributeSet.Entities.FirstOrDefault(entity => entity.EntityGUID == entityGuid && entity.ChangeLogIDDeleted != null);
         }  
         
         public static bool EntityExists(this AttributeSet attributeSet, Guid entityGuid)

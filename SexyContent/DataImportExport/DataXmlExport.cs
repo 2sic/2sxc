@@ -19,7 +19,7 @@ namespace ToSic.SexyContent.DataImportExport
                 return null;
 
             var documentElement = GetDocumentEntityElement("", "");
-            var documentRoot = GetDocumentRoot(contentTypeId, documentElement);
+            var documentRoot = GetDocumentRoot(contentType.Name, documentElement);
             var document = GetDocument(documentRoot);
 
             var attributes = contentType.GetAttributes();
@@ -51,10 +51,11 @@ namespace ToSic.SexyContent.DataImportExport
                 languages.Add(languageFallback);
             }
 
-            var documentRoot = GetDocumentRoot(contentTypeId, null);
+            var documentRoot = GetDocumentRoot(contentType.Name, null);
             var document = GetDocument(documentRoot);
-            
-            foreach (var entity in contentType.Entities)
+
+            var entities = contentType.Entities.Where(entity => entity.ChangeLogIDDeleted != null);
+            foreach (var entity in entities)
             {
                 foreach (var language in languages)
                 {  
@@ -91,9 +92,9 @@ namespace ToSic.SexyContent.DataImportExport
             return new XDocument(new XDeclaration("1.0", "UTF-8", "yes"), content);
         }
 
-        private static XElement GetDocumentRoot(int contentTypeId, params object[] content)
+        private static XElement GetDocumentRoot(string contentTypeName, params object[] content)
         {
-            return new XElement(XElementName.Root + contentTypeId, content);
+            return new XElement(XElementName.Root + contentTypeName.RemoveSpecialCharacters(), content);
         }
 
         private static XElement GetDocumentEntityElement(object elementGuid, object elementLanguage)

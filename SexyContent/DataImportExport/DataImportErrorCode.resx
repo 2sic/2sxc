@@ -129,6 +129,9 @@
   <data name="InvalidRoot" xml:space="preserve">
     <value>Selected content-type does not match the content-type in the XML file.</value>
   </data>
+  <data name="InvalidValueFormat" xml:space="preserve">
+    <value>Value cannot be read, because of it has an invalid format.</value>
+  </data>
   <data name="InvalidValueReference" xml:space="preserve">
     <value />
   </data>
