@@ -4,7 +4,15 @@ using System.Resources;
 
 namespace ToSic.SexyContent.DataImportExport
 {
-    // TODO2tk: Move helper classes (not data import specific) to a common folder
+    /// <summary>
+    /// Attribute to describe enumeration values localized.
+    /// Example:
+    /// public enum MyEnum
+    /// {
+    ///     [LocalizedDescription("MyValue1Resource", typeof(MyEnum)]
+    ///     MyValue1
+    /// }
+    /// </summary>
     public class LocalizedDescriptionAttribute : DescriptionAttribute
     {
         private readonly string resourceKey;

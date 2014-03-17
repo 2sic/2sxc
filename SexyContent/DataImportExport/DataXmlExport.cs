@@ -8,6 +8,12 @@ namespace ToSic.SexyContent.DataImportExport
 {
     public class DataXmlExport
     {
+        /// <summary>
+        /// Serialize the blank scheme (template) of a content-type.
+        /// </summary>
+        /// <param name="applicationId">Application ID</param>
+        /// <param name="contentTypeId">Content-type ID</param>
+        /// <returns></returns>
         public string SerializeBlank(int? applicationId, int contentTypeId)
         {
             var contentType = GetContentType(applicationId, contentTypeId);
@@ -27,6 +33,17 @@ namespace ToSic.SexyContent.DataImportExport
             return document.ToString();
         }
 
+        /// <summary>
+        /// Serialize the data of the conten-type specified to an XML string.
+        /// </summary>
+        /// <param name="applicationId">Application ID</param>
+        /// <param name="contentTypeId">Content-type ID</param>
+        /// <param name="languageSelected">Language of the data to be serialized (null for all languages)</param>
+        /// <param name="languageFallback">Language fallback of the system</param>
+        /// <param name="languageScope">Languages the system supports</param>
+        /// <param name="languageReferenceOption">Option to handle value references to other languages</param>
+        /// <param name="resourceReferenceOption">Option to handle references to files and pages</param>
+        /// <returns>XML string</returns>
         public string Serialize(int? applicationId, int contentTypeId, string languageSelected, string languageFallback, IEnumerable<string> languageScope, LanguageReferenceExportOption languageReferenceOption, ResourceReferenceExportOption resourceReferenceOption)
         {
             var contentType = GetContentType(applicationId, contentTypeId);

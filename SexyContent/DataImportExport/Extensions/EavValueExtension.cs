@@ -11,6 +11,11 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
 {
     public static class EavValueExtension
     {
+        /// <summary>
+        /// Resolve a value reference to the value (for example a file link File:4711 to a file path 
+        /// /Portals/0/Content/file.jpg). If the reference cannot be reoslved, the reference will be 
+        /// returned. 
+        /// </summary>
         public static string ResolveValueReference(this EavValue value)
         {
             if (value.IsHyperlink())
@@ -75,11 +80,18 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
                                          .FirstOrDefault(language => language == valueLanguage);
         }
 
+        /// <summary>
+        /// Get the languages this value is related to.
+        /// </summary>
         public static IEnumerable<string> GetLanguages(this EavValue value)
         {
             return value.ValuesDimensions.Select(reference => reference.Dimension.ExternalKey);
         }
 
+        /// <summary>
+        /// Get the languages this value is related to, but not the language specified by valueLanguage. 
+        /// Set the referenceReadOnly to True, to only get the read-only language references.
+        /// </summary>
         public static IEnumerable<string> GetLanguagesReferenced(this EavValue value, string valueLanguage, bool referenceReadWrite)
         {
             return value.ValuesDimensions.Where(reference => referenceReadWrite ? !reference.ReadOnly : true)

@@ -15,6 +15,9 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
             return list;
         }
 
+        /// <summary>
+        /// Append a ValueDimension to this ValueImportModel.
+        /// </summary>
         public static void AppendValueReference(this IValueImportModel valueModel, string language, bool readOnly)
         {
             var valueDimesnions = valueModel.ValueDimensions as List<ValueDimension>;

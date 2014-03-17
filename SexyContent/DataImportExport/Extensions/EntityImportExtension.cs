@@ -11,11 +11,18 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
 {
     public static class EntityImportExtension
     {
+        /// <summary>
+        /// Get all values of the attribute specified by name, for example all values of the attribute 
+        /// Text, in English, German and French.
+        /// </summary>
         public static IEnumerable<IValueImportModel> GetAttributeValues(this Entity entity, string valueName)
         {
             return entity.Values.Where(item => item.Key == valueName).Select(item => item.Value).FirstOrDefault();
         }
 
+        /// <summary>
+        /// Get the value of the attribute specified, in the language specified.
+        /// </summary>
         public static IValueImportModel GetAttributeValue(this Entity entity, string valueName, string valueLanguage)
         {
             var values = entity.GetAttributeValues(valueName);
