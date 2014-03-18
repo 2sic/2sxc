@@ -26,7 +26,11 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
         /// </summary>
         public static void AppendValue(this XElement element, XName name, EavValue value, ResourceReferenceExportOption resourceReferenceOption)
         {
-            if (resourceReferenceOption.IsResolve())
+            if (value == null)
+            {
+                element.Append(name, "=default()");
+            }
+            else if (resourceReferenceOption.IsResolve())
             {
                 element.Append(name, value.ResolveValueReference());
             }
@@ -37,8 +41,8 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
         }
 
         /// <summary>
-        /// Append an element to this. The element will have the name of the attribute, and the real value of the 
-        /// EavValue in the language specified. File and page references can be resolved optionally.
+        /// Append an element to this. If the attribute is named xxx and the value is 4711 in the language specified, 
+        /// the element appended will be <xxx>4711</xxx>. File and page references can be resolved optionally.
         /// </summary>
         public static void AppendValueResolved(this XElement element, Entity entity, Attribute attribute, string language, string languageFallback, ResourceReferenceExportOption resourceReferenceOption)
         {

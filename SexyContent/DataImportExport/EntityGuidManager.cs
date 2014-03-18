@@ -9,8 +9,8 @@ namespace ToSic.SexyContent.DataImportExport
         private Guid entityGuidLast = Guid.Empty;
 
         /// <summary>
-        /// Get the entity GUID for the document element (maybe the last GUID or the next one... depends on 
-        /// several rules).
+        /// Get the entity GUID for a document element of the XML file (maybe the last GUID or the next 
+        /// one... depends on some rules).
         /// </summary>
         public Guid GetGuid(XElement element, string languageFallback)
         {

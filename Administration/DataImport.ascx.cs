@@ -167,7 +167,8 @@ namespace ToSic.SexyContent.Administration
             var fileInfo = new FileInfo(FilePath);
             fileInfo.WriteStream(fileContent);
 
-            var fileImport = DataXmlImport.Deserialize(fileContent, ApplicationId, ContentTypeIdSelected, Languages, LanguageFallback, EntityClearOptionSelected, ResourceReferenceOptionSelected);
+            var fileImport = new DataXmlImport(ApplicationId, ContentTypeIdSelected, EntityClearOptionSelected, ResourceReferenceOptionSelected);
+            fileImport.Deserialize(Languages, LanguageFallback, fileContent);
             if (fileImport.HasErrors)
             {
                 ShowErrorPanel(fileImport);
@@ -184,7 +185,8 @@ namespace ToSic.SexyContent.Administration
             var fileContent = fileInfo.ReadStream();
             fileInfo.Delete();
 
-            var fileImport = DataXmlImport.Deserialize(fileContent, ApplicationId, ContentTypeIdSelected, Languages, LanguageFallback, EntityClearOptionSelected, ResourceReferenceOptionSelected);
+            var fileImport = new DataXmlImport(ApplicationId, ContentTypeIdSelected, EntityClearOptionSelected, ResourceReferenceOptionSelected);
+            fileImport.Deserialize(Languages, LanguageFallback, fileContent);
             var fileImported = fileImport.Pesrist(ZoneId, UserName);
 
             ShowDonePanel(!fileImported);

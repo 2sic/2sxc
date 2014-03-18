@@ -5,7 +5,8 @@ using System.Resources;
 namespace ToSic.SexyContent.DataImportExport
 {
     /// <summary>
-    /// Attribute to describe enumeration values localized.
+    /// Attribute to describe and localize enumeration values.
+    /// 
     /// Example:
     /// public enum MyEnum
     /// {

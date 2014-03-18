@@ -12,9 +12,9 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
     public static class EavValueExtension
     {
         /// <summary>
-        /// Resolve a value reference to the value (for example a file link File:4711 to a file path 
-        /// /Portals/0/Content/file.jpg). If the reference cannot be reoslved, the reference will be 
-        /// returned. 
+        /// If the value is a file or page reference, resolve it for example from 
+        /// File:4711 to Content/file4711.jpg. If the reference cannot be reoslved, 
+        /// the original value will be returned. 
         /// </summary>
         public static string ResolveValueReference(this EavValue value)
         {
@@ -81,7 +81,7 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
         }
 
         /// <summary>
-        /// Get the languages this value is related to.
+        /// Get all languages this value is referenced from.
         /// </summary>
         public static IEnumerable<string> GetLanguages(this EavValue value)
         {
@@ -89,8 +89,8 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
         }
 
         /// <summary>
-        /// Get the languages this value is related to, but not the language specified by valueLanguage. 
-        /// Set the referenceReadOnly to True, to only get the read-only language references.
+        /// Get languages this value is referenced from, but not the language specified. The 
+        /// method helps to find languages the value belongs to expect the current language.
         /// </summary>
         public static IEnumerable<string> GetLanguagesReferenced(this EavValue value, string valueLanguage, bool referenceReadWrite)
         {
@@ -100,6 +100,9 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
                                          .ToList();
         }
 
+        /// <summary>
+        /// Check if a language reference is read-only.
+        /// </summary>
         public static bool IsLanguageReadOnly(this EavValue value, string language)
         {
             var languageReference = value.ValuesDimensions.FirstOrDefault(reference => reference.Dimension.ExternalKey == language);

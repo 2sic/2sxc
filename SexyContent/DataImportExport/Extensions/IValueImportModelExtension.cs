@@ -16,9 +16,9 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
         }
 
         /// <summary>
-        /// Append a ValueDimension to this ValueImportModel.
+        /// Append a language reference (ValueDimension) to this value (ValueImportModel).
         /// </summary>
-        public static void AppendValueReference(this IValueImportModel valueModel, string language, bool readOnly)
+        public static void AppendLanguageReference(this IValueImportModel valueModel, string language, bool readOnly)
         {
             var valueDimesnions = valueModel.ValueDimensions as List<ValueDimension>;
             if (valueDimesnions == null)

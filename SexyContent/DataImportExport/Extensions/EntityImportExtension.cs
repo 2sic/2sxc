@@ -12,8 +12,8 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
     public static class EntityImportExtension
     {
         /// <summary>
-        /// Get all values of the attribute specified by name, for example all values of the attribute 
-        /// Text, in English, German and French.
+        /// Get values of an attribute in all languages, for example Tobi (German) and Toby (English) of 
+        /// the attribute Name.
         /// </summary>
         public static IEnumerable<IValueImportModel> GetAttributeValues(this Entity entity, string valueName)
         {
@@ -21,7 +21,7 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
         }
 
         /// <summary>
-        /// Get the value of the attribute specified, in the language specified.
+        /// Get the value of an attribute in the language specified.
         /// </summary>
         public static IValueImportModel GetAttributeValue(this Entity entity, string valueName, string valueLanguage)
         {
@@ -33,6 +33,10 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
             return values.Where(value => value.ValueDimensions.Any(dimension => dimension.DimensionExternalKey == valueLanguage)).FirstOrDefault();
         }
 
+        /// <summary>
+        /// Add a value to the attribute specified. To do so, set the name, type and string of the value, as 
+        /// well as some language properties.
+        /// </summary>
         public static IValueImportModel AppendAttributeValue(this Entity entity, string valueName, string valueString, string valueType, string valueLanguage, bool valueReadOnly, bool resolveHyperlink)
         {
             var valueModel = GetValueModel(valueString, valueType, valueLanguage, valueReadOnly, resolveHyperlink, entity);
@@ -111,7 +115,7 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
                     break;
             }
 
-            valueModel.AppendValueReference(valueLanguages, valueRedOnly);
+            valueModel.AppendLanguageReference(valueLanguages, valueRedOnly);
             return valueModel;
         }
 
