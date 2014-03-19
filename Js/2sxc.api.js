@@ -75,10 +75,11 @@ var $2sxc = function (id) {
         id: id,
         source: null,
         isLoaded: false,
-        lastRefresh: null
+        lastRefresh: null,
+        manage: $sxc.getManageController(id)
     };
 
-    // Make sure back-reference to controller gets set
+    // Make sure back-reference to controller is set
     controller.data.controller = controller;
 
     return controller;
@@ -86,4 +87,6 @@ var $2sxc = function (id) {
 
 $2sxc._controllers = {};
 $2sxc.metaName = "The 2SexyContent Controller object";
+$2sxc.metaVersion = "06.00.01";
+$2sxc.beta = {};
 $2sxc._data = {};
