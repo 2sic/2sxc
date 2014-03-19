@@ -16,19 +16,42 @@ $2sxc.getManageController = function(id) {
         config: config,
 
         getLink: function(settings) {
-            
+            var dialogParams = {
+                tabid: settings.tabId,
+                ctl: 'editcontentgroupitem',
+                mid: settings.moduleId,
+                sortOrder: null,
+                contentGroupId: null,
+                cultureDimension: null,
+                returnUrl: ''
+            };
+
+            return settings.dialogUrl
+                + (settings.dialogUrl.indexOf('?') == -1 ? '?' : '&')
+                + $.param(dialogParams);
         },
 
         openDialog: function(settings) {
             //dnnModal.open()
         },
 
-        getButton: function(settings) {
-            return $("<a href=''></a>");
+        getButton: function (settings) {
+
+            settings = $.extend(config, settings);
+            var button = $('<a />', {
+                'class': settings.action
+            });
+
+            // Bind click action
+            button.on('click', function () { manageController.openDialog(settings); });
+
+            return button;
         },
 
-        getToolbar: function(entityId, editSettings, addSettings, addWithEditsettings) {
-            
+        getToolbar: function(entityId, editSettings, addSettings, newSettings) {
+
+            return null;
+
         }
 
     };
