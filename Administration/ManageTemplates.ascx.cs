@@ -8,10 +8,8 @@ using DotNetNuke.Web.UI.WebControls;
 
 namespace ToSic.SexyContent
 {
-    public partial class ManageTemplates : DotNetNuke.Entities.Modules.PortalModuleBase
+    public partial class ManageTemplates : SexyControlAdminBase
     {
-        SexyContent Sexy;
-
         /// <summary>
         /// Set the localized ConfirmText when deleting a template
         /// </summary>
@@ -19,7 +17,7 @@ namespace ToSic.SexyContent
         /// <param name="e"></param>
         protected void Page_Init(object sender, EventArgs e)
         {
-            Sexy = new SexyContent(true, new int?(), Request.QueryString.AllKeys.Contains("AppID") ? int.Parse(Request.QueryString["AppID"]) : new int?());
+            //Sexy = new SexyContent(this.GetZoneId(), Request.QueryString.AllKeys.Contains("AppID") ? int.Parse(Request.QueryString["AppID"]) : new int?(), true);
 
             ((DnnGridButtonColumn)grdTemplates.Columns.FindByUniqueName("DeleteColumn")).ConfirmText = LocalizeString("DeleteColumn.ConfirmText");
         }
@@ -34,10 +32,10 @@ namespace ToSic.SexyContent
             if (!Page.IsPostBack)
                 BindGrdTemplates();
 
-            hlkNewTemplate.NavigateUrl = EditUrl(PortalSettings.ActiveTab.TabID, SexyContent.ControlKeys.EditTemplate, true, "mid=" + this.ModuleId);
+            hlkNewTemplate.NavigateUrl = EditUrl(PortalSettings.ActiveTab.TabID, SexyContent.ControlKeys.EditTemplate, true, "mid=" + this.ModuleId + "&" + SexyContent.AppIDString + "=" + AppId);
             hlkCancel.NavigateUrl = DotNetNuke.Common.Globals.NavigateURL(this.TabId, "", null);
 
-            if (!Sexy.SexyContentDesignersGroupConfigured(PortalId))
+            if (!SexyContent.SexyContentDesignersGroupConfigured(PortalId))
                 pnlSexyContentDesignersInfo.Visible = true;
         }
 
@@ -49,7 +47,7 @@ namespace ToSic.SexyContent
         protected void grdTemplates_DeleteCommand(object sender, Telerik.Web.UI.GridCommandEventArgs e)
         {
             int TemplateID = Convert.ToInt32(e.Item.OwnerTableView.DataKeyValues[e.Item.ItemIndex][SexyContent.TemplateID]);
-            new SexyContent(false).TemplateContext.DeleteTemplate(TemplateID, UserId);
+            SexyUncached.TemplateContext.DeleteTemplate(TemplateID, UserId);
             BindGrdTemplates();
         }
 
@@ -71,7 +69,7 @@ namespace ToSic.SexyContent
         protected void grdTemplates_EditCommand(object sender, Telerik.Web.UI.GridCommandEventArgs e)
         {
             int TemplateID = Convert.ToInt32(e.Item.OwnerTableView.DataKeyValues[e.Item.ItemIndex][SexyContent.TemplateID]);
-            string EditUrl = ModuleContext.NavigateUrl(TabId, SexyContent.ControlKeys.EditTemplate.ToString(), true, "mid", ModuleId.ToString(), SexyContent.TemplateID, TemplateID.ToString());
+            string EditUrl = ModuleContext.NavigateUrl(TabId, SexyContent.ControlKeys.EditTemplate.ToString(), true, "mid" + "=" + ModuleId.ToString() + "&" + SexyContent.TemplateID + "=" + TemplateID.ToString() + "&" + SexyContent.AppIDString + "=" + AppId.ToString());
             Response.Redirect(EditUrl);
         }
 
@@ -80,9 +78,9 @@ namespace ToSic.SexyContent
         /// </summary>
         private void BindGrdTemplates()
         {
-            var AttributeSetList = (from a in Sexy.ContentContext.GetAllAttributeSets() select a).ToList();
-            var TemplateList = Sexy.TemplateContext.GetTemplates(PortalId).ToList();
-            var Templates = from c in TemplateList
+            var AttributeSetList = Sexy.GetAvailableAttributeSets(SexyContent.AttributeSetScope).ToList();
+            var TemplateList = Sexy.GetTemplates(PortalId).ToList();
+            var Templates = from c in  TemplateList
                             join a in AttributeSetList on c.AttributeSetID equals a.AttributeSetID into JoinedList
                             from a in JoinedList.DefaultIfEmpty()
                             select new

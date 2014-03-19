@@ -75,7 +75,7 @@
         var newName = "";
         while (newName == "") {
             newName = prompt("Enter the new name for the Virtual Database (VDB)", '<%= ddlZones.SelectedItem.Text %>');
-            if (newName == null)
+            if (newName == null || newName == false)
                 return false;
         }
         $("#<%= hfZoneName.ClientID %>").val(newName);
@@ -86,7 +86,7 @@
         var newName = "";
         while (newName == "") {
             newName = prompt("Enter the name for the new Virtual Database (VDB)", 'New VDB Portal <%= this.PortalSettings.PortalId %>');
-            if (newName == null)
+            if (newName == null || newName == false)
                 return false;
         }
         $("#<%= hfZoneName.ClientID %>").val(newName);

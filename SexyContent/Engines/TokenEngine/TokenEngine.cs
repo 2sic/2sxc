@@ -19,14 +19,14 @@ namespace ToSic.SexyContent.Engines.TokenEngine
         /// <param name="LocalResourcesPath">Resource path</param>
         /// <param name="Elements">The SexyContent Element list</param>
         /// <returns></returns>
-        public string Render(Template template, App app, List<Element> Elements, Element ListElement, ModuleInstanceContext HostingModule, string LocalResourcesPath, IDataSource DataSource)
+        public string Render(Template template, string templatePath, App app, List<Element> Elements, Element ListElement, ModuleInstanceContext HostingModule, string LocalResourcesPath, IDataSource DataSource)
         {
             //SexyContent Sexy = new SexyContent();
             DynamicEntity ListContent = ListElement != null ? ListElement.Content : null;
             DynamicEntity ListPresentation = ListElement != null ? ListElement.Presentation : null;
 
             // Prepare Source Text
-            string SourceText = System.IO.File.ReadAllText(HttpContext.Current.Server.MapPath(template.GetTemplatePath()));
+            string SourceText = System.IO.File.ReadAllText(HttpContext.Current.Server.MapPath(templatePath));
             string RepeatingPart;
             bool ContainsRepeat = SourceText.Contains("<repeat>") && SourceText.Contains("</repeat>");
             

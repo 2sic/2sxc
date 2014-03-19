@@ -11,10 +11,9 @@ using ToSic.SexyContent;
 
 namespace ToSic.SexyContent
 {
-    public partial class EditList : DotNetNuke.Entities.Modules.PortalModuleBase
+    public partial class EditList : SexyControlEditBase
     {
-        SexyContent Sexy = new SexyContent(false);
-
+        
         #region Private Properties
         /// <summary>
         /// Returns the ContentGroupID from QueryString
@@ -67,7 +66,7 @@ namespace ToSic.SexyContent
             switch (e.CommandName)
             {
                 case "add":
-                    Sexy.AddContentGroupItem(ContentGroupID, UserId, Element.TemplateId.Value, null, Element.SortOrder + 1, true, ContentGroupItemType.Content, false);
+                    SexyUncached.AddContentGroupItem(ContentGroupID, UserId, Element.TemplateId.Value, null, Element.SortOrder + 1, true, ContentGroupItemType.Content, false);
                     grdEntities.Rebind();
                     grdEntities.Items[Element.SortOrder].Selected = true;
                     break;
@@ -81,7 +80,7 @@ namespace ToSic.SexyContent
         {
             if (e.DestDataItem != null)
             {
-                var UncachedSexyContent = new SexyContent(false);
+                var UncachedSexyContent = SexyUncached;
 
                 ContentGroupItem DestItem = UncachedSexyContent.TemplateContext.GetContentGroupItem(((int)e.DestDataItem.GetDataKeyValue("ID")));
                 ContentGroupItem Item = UncachedSexyContent.TemplateContext.GetContentGroupItem(((int)e.DraggedItems[0].GetDataKeyValue("ID")));

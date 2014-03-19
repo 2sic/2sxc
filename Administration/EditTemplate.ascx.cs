@@ -13,9 +13,8 @@ using ToSic.SexyContent;
 
 namespace ToSic.SexyContent
 {
-    public partial class EditTemplate : DotNetNuke.Entities.Modules.PortalModuleBase
+    public partial class EditTemplate : SexyControlAdminBase
     {
-        SexyContent Sexy;
 
         private bool ModeIsEdit { get { return !String.IsNullOrEmpty(Request.QueryString[SexyContent.TemplateID]); } }
         private int TemplateID { get { return Convert.ToInt32(Request.QueryString[SexyContent.TemplateID]); } }
@@ -28,13 +27,19 @@ namespace ToSic.SexyContent
         /// <param name="e"></param>
         protected void Page_Init(object sender, EventArgs e)
         {
-            Sexy = new SexyContent(false, new int?(),
-                                   Request.QueryString.AllKeys.Contains("AppID")
-                                       ? int.Parse(Request.QueryString["AppID"])
-                                       : new int?());
-
             if (ModeIsEdit)
-                Template = Sexy.TemplateContext.GetTemplate(TemplateID);
+                Template = SexyUncached.TemplateContext.GetTemplate(TemplateID);
+
+            var contentTypeSelectors = new[] { ctrContentType, ctrPresentationType, ctrListContentType, ctrListPresentationType };
+
+            foreach (var contentTypeSelector in contentTypeSelectors)
+            {
+                contentTypeSelector.AppId = AppId.Value;
+                contentTypeSelector.ZoneId = ZoneId.Value;
+            }
+
+            if (!IsContentApp)
+                ddlTemplateLocations.Enabled = false;
         }
 
         /// <summary>
@@ -46,7 +51,7 @@ namespace ToSic.SexyContent
         protected void Page_Load(object sender, EventArgs e)
         {
             // set DotNetNuke modal window Url for cancel link
-            hlkCancel.NavigateUrl = EditUrl(PortalSettings.ActiveTab.TabID, SexyContent.ControlKeys.ManageTemplates, true, "mid=" + ModuleId);
+            hlkCancel.NavigateUrl = EditUrl(PortalSettings.ActiveTab.TabID, SexyContent.ControlKeys.ManageTemplates, true, "mid=" + ModuleId + "&" + SexyContent.AppIDString + "=" + AppId);
 
             InitializeForm();
 
@@ -74,7 +79,6 @@ namespace ToSic.SexyContent
             // DataBind Template Locations
             ddlTemplateLocations.Items.Add(new ListItem(LocalizeString("TemplateLocationPortalFileSystem.Text"), SexyContent.TemplateLocations.PortalFileSystem));
             ddlTemplateLocations.Items.Add(new ListItem(LocalizeString("TemplateLocationHostFileSystem.Text"), SexyContent.TemplateLocations.HostFileSystem));
-            // ToDo: (future version) add DB as Location
 
             // Fill form with values if in edit mode
             if (ModeIsEdit)
@@ -88,7 +92,7 @@ namespace ToSic.SexyContent
                 pnlListConfiguration.Visible = chkEnableList.Checked;
 
                 string ReturnUrl = Request.Url.AbsoluteUri;
-                hlkTemplateMetaData.NavigateUrl = Sexy.GetMetaDataEditUrl(TabId, ModuleId, ReturnUrl, PortalSettings, this, SexyContent.TemplateMetaDataAttributeSetStaticName, Sexy.SexyContentTemplateAssignmentObjectTypeID, TemplateID);
+                hlkTemplateMetaData.NavigateUrl = SexyContent.GetMetaDataEditUrl(TabId, ModuleId, ReturnUrl, this, SexyContent.AttributeSetStaticNameTemplateMetaData, SexyContent.AssignmentObjectTypeIDSexyContentTemplate, TemplateID, ZoneId.Value, AppId.Value);
 
                 // Set ContentType / Demo Entity Selectors
                 SetTemplateDefaultSelector(Template.TemplateID, ctrContentType);
@@ -105,7 +109,10 @@ namespace ToSic.SexyContent
             // Set value of demo-content and template file dropdown if in edit mode
             if (ModeIsEdit)
             {
-                ddlTemplateFiles.SelectedValue = Template.Path;
+                if (ddlTemplateFiles.Items.Cast<ListItem>().Any(l => l.Value == Template.Path))
+                    ddlTemplateFiles.SelectedValue = Template.Path;
+                if (ddlTemplateFiles.Items.Cast<ListItem>().Any(l => l.Value == Template.Path.Replace('\\','/')))
+                    ddlTemplateFiles.SelectedValue = Template.Path.Replace('\\', '/');
             }
         }
 
@@ -127,19 +134,20 @@ namespace ToSic.SexyContent
                 if (pnlSelectTemplateFile.Visible)
                     Template.Path = ddlTemplateFiles.SelectedValue;
                 else
-                    Sexy.CreateTemplateFileIfNotExists(txtTemplateFileName.Text, Template, Server, LocalizeString("NewTemplateFile.DefaultText"));
+                    SexyUncached.CreateTemplateFileIfNotExists(txtTemplateFileName.Text, Template, Server, LocalizeString("NewTemplateFile.DefaultText"));
                 Template.SysModifiedBy = UserId;
                 Template.SysModified = DateTime.Now;
                 Template.Script = "";
                 Template.Name = txtTemplateName.Text;
                 Template.IsHidden = chkHidden.Checked;
                 Template.UseForList = chkEnableList.Checked;
+                Template.AppID = AppId.Value;
 
-                Sexy.TemplateContext.UpdateTemplate(Template);
+                SexyUncached.TemplateContext.UpdateTemplate(Template);
             }
             else
             {
-                Template = Sexy.TemplateContext.GetNewTemplate();
+                Template = Sexy.TemplateContext.GetNewTemplate(AppId.Value);
                 Template.PortalID = this.PortalId;
                 Template.AttributeSetID = ctrContentType.ContentTypeID.Value;
                 Template.DemoEntityID = ctrContentType.DemoEntityID;
@@ -148,7 +156,7 @@ namespace ToSic.SexyContent
                 if (pnlSelectTemplateFile.Visible)
                     Template.Path = ddlTemplateFiles.SelectedValue;
                 else
-                    Sexy.CreateTemplateFileIfNotExists(txtTemplateFileName.Text, Template, Server, LocalizeString("NewTemplateFile.DefaultText"));
+                    SexyUncached.CreateTemplateFileIfNotExists(txtTemplateFileName.Text, Template, Server, LocalizeString("NewTemplateFile.DefaultText"));
                 Template.SysCreatedBy = UserId;
                 Template.SysModifiedBy = UserId;
                 Template.Script = "";
@@ -156,19 +164,19 @@ namespace ToSic.SexyContent
                 Template.IsHidden = chkHidden.Checked;
                 Template.UseForList = chkEnableList.Checked;
 
-                Sexy.TemplateContext.AddTemplate(Template);
+                SexyUncached.TemplateContext.AddTemplate(Template);
             }
 
             if (!chkSeparateContentPresentation.Checked)
                 ctrPresentationType.ContentTypeID = new int?();
 
             // Add template configuration entities for presentation, list header content type, list content, etc.    
-            Sexy.CreateOrUpdateTemplateDefault(Template.TemplateID, ContentGroupItemType.Presentation.ToString("F"), ctrPresentationType.ContentTypeID, ctrPresentationType.DemoEntityID);
-            Sexy.CreateOrUpdateTemplateDefault(Template.TemplateID, ContentGroupItemType.ListContent.ToString("F"), ctrListContentType.ContentTypeID, ctrListContentType.DemoEntityID);
-            Sexy.CreateOrUpdateTemplateDefault(Template.TemplateID, ContentGroupItemType.ListPresentation.ToString("F"), ctrListPresentationType.ContentTypeID, ctrListPresentationType.DemoEntityID);
+            SexyUncached.CreateOrUpdateTemplateDefault(Template.TemplateID, ContentGroupItemType.Presentation.ToString("F"), ctrPresentationType.ContentTypeID, ctrPresentationType.DemoEntityID);
+            SexyUncached.CreateOrUpdateTemplateDefault(Template.TemplateID, ContentGroupItemType.ListContent.ToString("F"), ctrListContentType.ContentTypeID, ctrListContentType.DemoEntityID);
+            SexyUncached.CreateOrUpdateTemplateDefault(Template.TemplateID, ContentGroupItemType.ListPresentation.ToString("F"), ctrListPresentationType.ContentTypeID, ctrListPresentationType.DemoEntityID);
 
             // Redirect to the manage templates control
-            string RedirectUrl = DotNetNuke.Common.Utilities.UrlUtils.PopUpUrl(DotNetNuke.Common.Globals.NavigateURL(SexyContent.ControlKeys.ManageTemplates, "mid", ModuleId.ToString()), this, PortalSettings, false, true);
+            string RedirectUrl = DotNetNuke.Common.Utilities.UrlUtils.PopUpUrl(DotNetNuke.Common.Globals.NavigateURL(SexyContent.ControlKeys.ManageTemplates, "mid", ModuleId.ToString(), SexyContent.AppIDString, AppId.ToString()), this, PortalSettings, false, true);
             Response.Redirect(RedirectUrl);
         }
 

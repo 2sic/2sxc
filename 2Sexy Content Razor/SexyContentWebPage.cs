@@ -1,4 +1,6 @@
 ﻿using System.Web.WebPages;
+using DotNetNuke.Common.Utilities;
+using DotNetNuke.Entities.Portals;
 using ToSic.SexyContent.Razor.Helpers;
 using System.Collections.Generic;
 using ToSic.Eav;
@@ -73,7 +75,7 @@ namespace ToSic.SexyContent.Razor
             if (inSource != null)
                 return DataSource.GetDataSource(typeName, inSource.ZoneId, inSource.AppId, inSource, configurationProvider);
             
-            var initialSource = new SexyContent().GetInitialDataSource();
+            var initialSource = SexyContent.GetInitialDataSource(SexyContent.GetZoneID(PortalSettings.Current.PortalId).Value, App.AppId);
             return typeName != "" ? DataSource.GetDataSource(typeName, initialSource.ZoneId, initialSource.AppId, initialSource, configurationProvider) : initialSource;
         }
     }

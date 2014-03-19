@@ -17,4 +17,5 @@
         <dnn:URL ID="DnnUrl1" runat="server" Visible="false" ShowFiles="false" ShowTrack="false" ShowLog="false" ShowTabs="true" ShowUrls="true"></dnn:URL>
     </div>
     <asp:RequiredFieldValidator ID="valFieldValue" runat="server" CssClass="dnnFormMessage dnnFormError" ControlToValidate="TextBox1" Display="Dynamic" EnableClientScript="true" ErrorMessage="Please enter a value."></asp:RequiredFieldValidator>
+    <asp:RegularExpressionValidator ID="valRegularExpression" runat="server" CssClass="dnnFormMessage dnnFormError" ControlToValidate="TextBox1" Display="Dynamic" EnableClientScript="true" ErrorMessage="Please enter a valid value."></asp:RegularExpressionValidator>
 </div>

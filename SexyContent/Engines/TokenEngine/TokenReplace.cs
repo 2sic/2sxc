@@ -39,6 +39,10 @@ namespace ToSic.SexyContent.Engines.TokenEngine
                 }
                 
                 PropertySource.Add("app", new AppPropertyAccess(app));
+                if(app.Settings != null)
+                    PropertySource.Add("appsettings", new DynamicEntityPropertyAccess(app.Settings));
+                if (app.Resources != null)
+                    PropertySource.Add("appresources", new DynamicEntityPropertyAccess(app.Resources));
                 PropertySource.Add("list", new DictionaryPropertyAccess(List));
             }
         }

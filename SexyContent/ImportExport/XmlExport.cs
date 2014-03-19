@@ -17,10 +17,22 @@ namespace ToSic.SexyContent.ImportExport
     public class XmlExport
     {
         // initialize data context
-        SexyContent Sexy = new SexyContent(false);
+        private SexyContent Sexy;
         private List<int> _referencedFileIds;
+        public List<IFileInfo> ReferencedFiles;
+        private int _zoneId;
+        private int _appId;
+        private bool _isAppExport;
 
         #region Export
+
+        public XmlExport(int zoneId, int appId, bool appExport)
+        {
+            _zoneId = zoneId;
+            _appId = appId;
+            _isAppExport = appExport;
+            Sexy = new SexyContent(_zoneId, _appId);
+        }
 
         /// <summary>
         /// Exports given AttributeSets, Entities and Templates to an XML and returns the XML as string.
@@ -33,6 +45,7 @@ namespace ToSic.SexyContent.ImportExport
         public string ExportXml(string[] AttributeSetIDs, string[] EntityIDs, string[] TemplateIDs, out List<ExportImportMessage> Messages)
         {
             _referencedFileIds = new List<int>();
+            ReferencedFiles = new List<IFileInfo>();
 
             // Create XML document and declaration
             XDocument Doc = new XDocument(new XDeclaration("1.0", "UTF-8", "yes"), null);
@@ -41,6 +54,12 @@ namespace ToSic.SexyContent.ImportExport
 
             var Dimensions = Sexy.ContentContext.GetDimensionChildren("Culture");
             XElement Header = new XElement("Header",
+                _isAppExport ? new XElement("App",
+                    new XAttribute("Guid", Sexy.App.AppGuid)
+                    //new XAttribute("Name", Sexy.App.Name),
+                    //new XAttribute("Version", Sexy.App.Configuration.Version),
+                    //new XAttribute("Folder", Sexy.App.Folder)
+                ) : null,
                 new XElement("Language", new XAttribute("Default", PortalSettings.Current.DefaultLanguage)),
                 new XElement("Dimensions", Dimensions.Select(d => new XElement("Dimension",
                         new XAttribute("DimensionID", d.DimensionID),
@@ -48,7 +67,8 @@ namespace ToSic.SexyContent.ImportExport
                         new XAttribute("SystemKey", d.SystemKey ?? String.Empty),
                         new XAttribute("ExternalKey", d.ExternalKey ?? String.Empty),
                         new XAttribute("Active", d.Active)
-                    ))));
+                    )))
+             );
             #endregion
 
             #region Attribute Sets
@@ -82,6 +102,7 @@ namespace ToSic.SexyContent.ImportExport
                     new XAttribute("StaticName", Set.StaticName),
                     new XAttribute("Name", Set.Name),
                     new XAttribute("Description", Set.Description),
+                    new XAttribute("Scope", Set.Scope),
                     Attributes);
 
                 AttributeSets.Add(AttributeSet);
@@ -127,7 +148,7 @@ namespace ToSic.SexyContent.ImportExport
                     new XAttribute("IsHidden", t.IsHidden.ToString()),
                     new XAttribute("UseForList", t.UseForList.ToString()),
                     new XAttribute("DemoEntityGUID", DemoEntity != null ? DemoEntity.EntityGUID.ToString() : ""),
-                    (from c in Sexy.ContentContext.GetEntities(Sexy.SexyContentTemplateAssignmentObjectTypeID, t.TemplateID, null, null)
+                    (from c in Sexy.ContentContext.GetEntities(SexyContent.AssignmentObjectTypeIDSexyContentTemplate, t.TemplateID, null, null)
                      select GetEntityXElement(c))
                 );
 
@@ -208,7 +229,7 @@ namespace ToSic.SexyContent.ImportExport
                 );
 
             // Special cases for Template ContentTypes
-            if (set.StaticName == "2SexyContent-Template-ContentTypes")
+            if (set.StaticName == "2SexyContent-Template-ContentTypes" && !String.IsNullOrEmpty(value))
             {
                 switch (Key)
                 {
@@ -253,10 +274,13 @@ namespace ToSic.SexyContent.ImportExport
             var file = fileController.GetFile(fileId);
             if (file != null)
             {
+                ReferencedFiles.Add(file);
+
                 return new XElement("File",
                         new XAttribute("Id", fileId),
                         new XAttribute("RelativePath", file.RelativePath)
                     );
+
             }
 
             return null;

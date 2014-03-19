@@ -10,9 +10,9 @@ using System.Web.UI.WebControls;
 
 namespace ToSic.SexyContent.Administration
 {
-    public partial class GettingStarted : PortalModuleBase
+    public partial class GettingStarted : SexyControlAdminBase
     {
-        SexyContent Sexy = new SexyContent();
+        
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -25,8 +25,19 @@ namespace ToSic.SexyContent.Administration
             // Add Portal ID
             GettingStartedSrc += "&PortalID=" + PortalId.ToString();
             // Add VDB / Zone ID (if set)
-            var ZoneID = Sexy.GetZoneID(PortalId);
+            var ZoneID = SexyContent.GetZoneID(PortalId);
             GettingStartedSrc += ZoneID.HasValue ? "&ZoneID=" + ZoneID.Value.ToString() : "";
+            // Add AppStaticName and Version
+            if (AppId.HasValue)
+            {
+                var app = SexyContent.GetApp(ZoneId.Value, AppId.Value);
+                GettingStartedSrc += "&AppGuid=" + app.AppGuid;
+                if (app.Configuration != null)
+                {
+                    GettingStartedSrc += "&AppVersion=" + app.Configuration.Version;
+                    GettingStartedSrc += "&AppOriginalId=" + app.Configuration.OriginalId;
+                }
+            }
             // Add DNN Guid
             var HostSettings = HostController.Instance.GetSettingsDictionary();
             GettingStartedSrc += HostSettings.ContainsKey("GUID") ? "&DnnGUID=" + HostSettings["GUID"].ToString() : "";

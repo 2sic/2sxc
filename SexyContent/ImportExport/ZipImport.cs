@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
+using System.Xml.Linq;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.FileSystem;
@@ -12,6 +13,21 @@ namespace ToSic.SexyContent.ImportExport
 {
     public class ZipImport
     {
+        private int? _appId;
+        private int _zoneId;
+        private bool _allowRazor;
+        
+        public ZipImport(int zoneId, int? appId, bool allowRazor)
+        {
+            _appId = appId;
+            _zoneId = zoneId;
+            _allowRazor = allowRazor;
+        }
+
+        public bool ImportApp(Stream zipStream, HttpServerUtility server, PortalSettings portalSettings, List<ExportImportMessage> messages)
+        {
+            return ImportZip(zipStream, server, portalSettings, messages, true);
+        }
 
         /// <summary>
         /// Imports a ZIP file (from stream)
@@ -21,8 +37,11 @@ namespace ToSic.SexyContent.ImportExport
         /// <param name="portalSettings"></param>
         /// <param name="messages"></param>
         /// <returns></returns>
-        public bool ImportZip(Stream zipStream, HttpServerUtility server, PortalSettings portalSettings, List<ExportImportMessage> messages)
+        public bool ImportZip(Stream zipStream, HttpServerUtility server, PortalSettings portalSettings, List<ExportImportMessage> messages, bool isAppImport)
         {
+            if(!isAppImport && !_appId.HasValue)
+                throw new Exception("Could not import zip: No valid app id");
+
             if (messages == null)
                 messages = new List<ExportImportMessage>();
 
@@ -52,27 +71,55 @@ namespace ToSic.SexyContent.ImportExport
                             // Loop through each app directory
                             foreach (var appDirectory in Directory.GetDirectories(currentWorkingDir))
                             {
-                                
+
+                                var appId = new int?();
+                                var xmlSearchPattern = isAppImport ? "App.xml" : "*.xml";
+
+                                // Import XML file(s)
+                                foreach (string xmlFileName in Directory.GetFiles(appDirectory, "*.xml"))
+                                {
+                                    var fileContents = File.ReadAllText(Path.Combine(appDirectory, xmlFileName));
+                                    var import = new XmlImport();
+
+                                    if (isAppImport)
+                                    {
+                                        // Do not import (throw error) if the app directory already exists
+                                        var folder =
+                                            XDocument.Parse(fileContents).Element("SexyContent")
+                                                .Element("Entities").Elements("Entity").Single(e =>e.Attribute("AttributeSetStaticName").Value =="2SexyContent-App")
+                                                .Elements("Value").First(v => v.Attribute("Key").Value == "Folder").Attribute("Value").Value;
+                                        var appPath = System.IO.Path.Combine(SexyContent.AppBasePath(), folder);
+
+                                        if(Directory.Exists(HttpContext.Current.Server.MapPath(appPath)))
+                                        {
+                                            throw new Exception("Import not allowed because the specified folder does already exist.");
+                                        }
+
+                                        import.ImportApp(_zoneId, fileContents, out appId);
+                                    }
+                                    else
+                                    {
+                                        appId = _appId.Value;
+                                        import.ImportXml(_zoneId, appId.Value, fileContents);
+                                    }
+
+                                    
+                                    messages.AddRange(import.ImportLog);
+                                }
+
+                                var sexy = new SexyContent(_zoneId, appId.Value);
+
                                 // Copy all files in 2sexy folder to (portal file system) 2sexy folder
-                                string templateRoot = server.MapPath(SexyContent.GetTemplatePathRoot(SexyContent.TemplateLocations.PortalFileSystem));
+                                string templateRoot = server.MapPath(sexy.GetTemplatePathRoot(SexyContent.TemplateLocations.PortalFileSystem));
                                 string appTemplateRoot = Path.Combine(appDirectory, "2sexy");
                                 if (Directory.Exists(appTemplateRoot))
-                                    CopyAllFiles(appTemplateRoot, templateRoot, false, messages);
+                                    ImportExportHelpers.CopyAllFiles(appTemplateRoot, templateRoot, false, messages);
 
                                 // Handle PortalFiles folder
                                 string portalTempRoot = Path.Combine(appDirectory, "PortalFiles");
                                 if (Directory.Exists(portalTempRoot))
                                     CopyAllFilesDnnPortal(portalTempRoot, "", false, messages);
 
-
-                                // Import each XML file which is in the current App folder
-                                foreach (string xmlFileName in Directory.GetFiles(appDirectory, "*.xml"))
-                                {
-                                    var fileContents = File.ReadAllText(Path.Combine(appDirectory, xmlFileName));
-                                    var import = new XmlImport();
-                                    var xmlImportSuccess = import.ImportXml(fileContents);
-                                    messages.AddRange(import.ImportLog);
-                                }
                             }
 
                             // Reset CurrentWorkingDir
@@ -145,36 +192,6 @@ namespace ToSic.SexyContent.ImportExport
             {
                 var newDestinationFolder = Path.Combine(destinationFolder, sourceFolderPath.Replace(sourceFolder, "").TrimStart('\\')).Replace('\\', '/');
                 CopyAllFilesDnnPortal(sourceFolderPath, newDestinationFolder, overwriteFiles, messages);
-            }
-        }
-
-        /// <summary>
-        /// Copy all files from SourceFolder to DestinationFolder (directly on the file system)
-        /// </summary>
-        /// <param name="sourceFolder"></param>
-        /// <param name="destinationFolder"></param>
-        /// <param name="overwriteFiles"></param>
-        /// <param name="messages"></param>
-        private void CopyAllFiles(string sourceFolder, string destinationFolder, Boolean overwriteFiles, List<ExportImportMessage> messages)
-        {
-            var FileList = from f in Directory.GetFiles(sourceFolder, "*.*", SearchOption.AllDirectories)
-                           select f;
-
-            foreach (string file in FileList)
-            {
-                string relativeFilePath = file.Replace(sourceFolder, "");
-                string destinationFilePath = String.Format("{0}{1}{2}",
-                destinationFolder, Path.DirectorySeparatorChar, relativeFilePath);
-
-                if (!Directory.Exists(Path.GetDirectoryName(destinationFilePath)))
-                {
-                    Directory.CreateDirectory(Path.GetDirectoryName(destinationFilePath));
-                }
-
-                if (!File.Exists(destinationFilePath))
-                    File.Copy(file, destinationFilePath, overwriteFiles);
-                else
-                    messages.Add(new ExportImportMessage("File '" + Path.GetFileName(destinationFilePath) + "' not copied because it already exists", ExportImportMessage.MessageTypes.Warning));
             }
         }
 

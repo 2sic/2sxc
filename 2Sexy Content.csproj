@@ -109,6 +109,27 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Administration\Apps\AppExport.ascx.cs">
+      <DependentUpon>AppExport.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\Apps\AppExport.ascx.designer.cs">
+      <DependentUpon>AppExport.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Administration\Apps\AppManagement.ascx.cs">
+      <DependentUpon>AppManagement.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\Apps\AppManagement.ascx.designer.cs">
+      <DependentUpon>AppManagement.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Administration\Apps\AppImport.ascx.cs">
+      <DependentUpon>AppImport.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\Apps\AppImport.ascx.designer.cs">
+      <DependentUpon>AppImport.ascx</DependentUpon>
+    </Compile>
     <Compile Include="Administration\GettingStarted.ascx.cs">
       <DependentUpon>GettingStarted.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -250,9 +271,11 @@
     <Compile Include="SexyContent\Engines\TokenEngine\TokenEngine.cs" />
     <Compile Include="SexyContent\ImportExport\ExportImportMessage.cs" />
     <Compile Include="SexyContent\ImportExport\ImportExport.cs" />
+    <Compile Include="SexyContent\ImportExport\ImportExportHelpers.cs" />
     <Compile Include="SexyContent\ImportExport\ImportValue.cs" />
     <Compile Include="SexyContent\ImportExport\XmlExport.cs" />
     <Compile Include="SexyContent\ImportExport\XmlImport.cs" />
+    <Compile Include="SexyContent\ImportExport\ZipExport.cs" />
     <Compile Include="SexyContent\ImportExport\ZipImport.cs" />
     <Compile Include="SexyContent\SexyContentContext.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -260,6 +283,12 @@
       <DependentUpon>SexyContentContext.edmx</DependentUpon>
     </Compile>
     <Compile Include="SexyContent\SexyContentException.cs" />
+    <Compile Include="SexyContent\SexyControlAdminBase.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SexyContent\SexyControlEditBase.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="SexyContent\Template.cs" />
     <Compile Include="SexyContent\TemplateDefault.cs" />
     <Compile Include="TemplateHelpGrid.ascx.cs">
@@ -268,6 +297,13 @@
     </Compile>
     <Compile Include="TemplateHelpGrid.ascx.designer.cs">
       <DependentUpon>TemplateHelpGrid.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="ViewApp.ascx.cs">
+      <DependentUpon>ViewApp.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ViewApp.ascx.designer.cs">
+      <DependentUpon>ViewApp.ascx</DependentUpon>
     </Compile>
     <Compile Include="View.ascx.cs">
       <DependentUpon>View.ascx</DependentUpon>
@@ -318,6 +354,9 @@
     <Compile Include="SexyContent\Engines\TokenEngine\TokenReplace.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Administration\Apps\AppExport.ascx" />
+    <Content Include="Administration\Apps\AppManagement.ascx" />
+    <Content Include="Administration\Apps\AppImport.ascx" />
     <Content Include="Administration\GettingStarted.ascx" />
     <Content Include="Administration\PortalConfiguration.ascx" />
     <Content Include="Administration\ContentTypeAndDemoSelector.ascx" />
@@ -332,6 +371,7 @@
     <Content Include="Extensions\404.png" />
     <Content Include="Extensions\Imazen_ImageResizer\ImageResizer.txt" />
     <Content Include="Extensions\Imazen_ImageResizer\license.txt" />
+    <Content Include="icon-app.png" />
     <Content Include="icon.png" />
     <Content Include="Images\Add.png" />
     <Content Include="Images\AddWithEdit.png" />
@@ -404,6 +444,7 @@
     <Content Include="Styles\EditDataSource\demo-new.css" />
     <Content Include="Styles\EditDataSource\flowchartDemo.css" />
     <Content Include="TemplateHelpGrid.ascx" />
+    <Content Include="ViewApp.ascx" />
     <Content Include="View.ascx" />
     <Content Include="Administration\EAVManagement.ascx" />
     <Content Include="WebConfigTemplate.config" />
@@ -427,6 +468,8 @@
     <Content Include="SqlDataProvider\05.03.04.SqlDataProvider" />
     <Content Include="SqlDataProvider\05.03.05.SqlDataProvider" />
     <Content Include="SqlDataProvider\05.05.00.SqlDataProvider" />
+    <Content Include="SqlDataProvider\05.05.03.SqlDataProvider" />
+    <Content Include="SqlDataProvider\05.06.00.SqlDataProvider" />
     <None Include="SqlDataProvider\Uninstall.SqlDataProvider" />
     <Content Include="web.config" />
   </ItemGroup>
@@ -521,6 +564,18 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Administration\App_LocalResources\PortalConfiguration.ascx.de-DE.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Administration\Apps\App_LocalResources\AppManagement.ascx.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_LocalResources\ViewApp.ascx.de-DE.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_LocalResources\ViewApp.ascx.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Administration\Apps\App_LocalResources\AppImport.ascx.resx" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

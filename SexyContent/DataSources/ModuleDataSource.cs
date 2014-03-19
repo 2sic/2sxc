@@ -10,7 +10,7 @@ namespace ToSic.SexyContent.DataSources
     public class ModuleDataSource : BaseDataSource
     {
         public override string Name { get { return "ModuleDataSource"; } }
-        private SexyContent Sexy = new SexyContent();
+        private SexyContent Sexy = new SexyContent(new int(), new int(), true);
 
         public ModuleDataSource()
         {
@@ -19,7 +19,6 @@ namespace ToSic.SexyContent.DataSources
             Out.Add("ListContent", new DataStream(this, "Default", GetListContent));
             Out.Add("ListPresentation", new DataStream(this, "Default", GetListPresentation));
 
-            // ToDo: Review with 2dm
             Configuration.Add("ListId", "[Module:ModuleID]");
             
         }
