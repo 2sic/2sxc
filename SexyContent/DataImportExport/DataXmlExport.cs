@@ -63,7 +63,7 @@ namespace ToSic.SexyContent.DataImportExport
             var documentRoot = GetDocumentRoot(contentType.Name, null);
             var document = GetDocument(documentRoot);
 
-            var entities = contentType.Entities.Where(entity => entity.ChangeLogIDDeleted != null);
+            var entities = contentType.Entities.Where(entity => entity.ChangeLogIDDeleted == null);
             foreach (var entity in entities)
             {
                 foreach (var language in languages)

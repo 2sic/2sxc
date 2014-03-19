@@ -154,7 +154,7 @@
     <value>Value references to other languages</value>
   </data>
   <data name="lblResourceReference.Text" xml:space="preserve">
-    <value>File /page references</value>
+    <value>File / page references</value>
   </data>
   <data name="ResourceReferenceExportOptionLink.Text" xml:space="preserve">
     <value>Keep references (for re-import, for example Page:4711)</value>
