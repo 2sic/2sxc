@@ -264,7 +264,9 @@ namespace ToSic.SexyContent.Administration
                 "lblDetailAttributeIgnore", dataImport.GetAttributeIgnoreCount(), dataImport.GetAttributeIgnoredNames(", ")
             );
 
-            lblDetailAttributeIgnore.Text = dataImport.GetEntitiesDebugString();
+            #if DEBUG
+            lblDetailDebugOutput.Text = dataImport.GetEntitiesDebugString();
+            #endif
 
             pnlSetup.Visible = false;
             pnlDetail.Visible = true;

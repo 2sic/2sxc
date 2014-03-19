@@ -43,7 +43,7 @@
             </asp:RadioButtonList>
         </div>
 
-        <div class="dnnFormItem" runat="server" Visible="false">
+        <div class="dnnFormItem" runat="server">
             <dnn:Label runat="server" ID="lblEntityClear" ControlName="rblEntityClear"></dnn:Label>
             <asp:RadioButtonList runat="server" ID="rblEntityClear" class="dnnFormRadioButtons" 
                 DataValueField="Value"
@@ -83,6 +83,10 @@
             <li><asp:Label runat="server" ID="lblDetailDetailsDelete"></asp:Label></li>
             <li><asp:Label runat="server" ID="lblDetailAttributeIgnore"></asp:Label></li>
         </ul>
+
+        <p>
+            <asp:Label runat="server" ID="lblDetailDebugOutput"></asp:Label>
+        </p>
         
         <ul class="dnnActions dnnClear">
             <li><asp:LinkButton runat="server" class="dnnPrimaryAction" ResourceKey="btnImportData" OnClick="OnImportDataClick"></asp:LinkButton></li>
