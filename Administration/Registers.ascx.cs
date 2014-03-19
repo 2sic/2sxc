@@ -26,6 +26,8 @@ namespace ToSic.SexyContent.Administration
             if (Sexy.GetZoneID(ParentModule.PortalId).HasValue)
             {
                 Registers.Add(SexyContent.ControlKeys.Import);
+                Registers.Add(SexyContent.ControlKeys.DataExport);
+                Registers.Add(SexyContent.ControlKeys.DataImport);
                 Registers.Add(SexyContent.ControlKeys.ManageTemplates);
                 Registers.Add(SexyContent.ControlKeys.EavManagement);
             }

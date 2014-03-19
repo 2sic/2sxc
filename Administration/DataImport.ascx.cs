@@ -9,7 +9,6 @@ namespace ToSic.SexyContent.Administration
 {
     public partial class DataImport : DotNetNuke.Entities.Modules.PortalModuleBase
     {
-        // TODO2tk: Embedd to user interface
         public int? ApplicationId
         {
             get
@@ -150,7 +149,7 @@ namespace ToSic.SexyContent.Administration
 
             rblResourceReference.DataSource = EnumToDataSource<ResourceReferenceImportOption>();
             rblResourceReference.DataBind();
-            rblResourceReference.SelectedValue = ResourceReferenceImportOption.Keep.ToString();
+            rblResourceReference.SelectedValue = ResourceReferenceImportOption.Resolve.ToString();
         }
 
         protected void OnTestDataClick(object sender, EventArgs e)

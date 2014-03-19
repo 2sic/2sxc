@@ -59,6 +59,8 @@ namespace ToSic.SexyContent
             public const string TemplateHelp = "templatehelp";
             public const string Export = "export";
             public const string Import = "import";
+            public const string DataExport = "dataexport";
+            public const string DataImport = "dataimport";
             public const string EditTemplateFile = "edittemplatefile";
             public const string AddItem = "additem";
             public const string EditTemplateDefaults = "edittemplatedefaults";

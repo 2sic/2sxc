@@ -120,6 +120,12 @@
   <data name="ActionExport.Text" xml:space="preserve">
     <value>Export</value>
   </data>
+  <data name="dataexport.Text" xml:space="preserve">
+    <value>Data Export</value>
+  </data>
+  <data name="dataimport.Text" xml:space="preserve">
+    <value>Data Import</value>
+  </data>
   <data name="eavmanagement.Text" xml:space="preserve">
     <value>Manage Content Types</value>
   </data>

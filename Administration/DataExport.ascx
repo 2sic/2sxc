@@ -1,6 +1,7 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="DataExport.ascx.cs" Inherits="ToSic.SexyContent.Administration.DataExport" %>
 <%@ Register TagPrefix="dnn" TagName="Label" Src="~/controls/LabelControl.ascx" %>
 <%@ Register TagName="AdministrationRegisters" TagPrefix="SexyContent" Src="Registers.ascx" %>
+<SexyContent:AdministrationRegisters runat="server"></SexyContent:AdministrationRegisters>
    
 <div class="dnnForm dnnClear">
     <h2><asp:Label runat="server" ID="lblTitle" ResourceKey="lblTitle"></asp:Label></h2>   

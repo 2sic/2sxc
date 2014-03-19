@@ -1,6 +1,7 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="DataImport.ascx.cs" Inherits="ToSic.SexyContent.Administration.DataImport" %>
 <%@ Register TagPrefix="dnn" TagName="Label" Src="~/controls/LabelControl.ascx" %>
 <%@ Register TagName="AdministrationRegisters" TagPrefix="SexyContent" Src="Registers.ascx" %>
+<SexyContent:AdministrationRegisters runat="server"></SexyContent:AdministrationRegisters>
 
 <%-- Setup Panel --%>
 <asp:Panel runat="server" ID="pnlSetup">

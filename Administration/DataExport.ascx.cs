@@ -127,11 +127,11 @@ namespace ToSic.SexyContent.Administration
 
             rblLanguageReference.DataSource = EnumToDataSource<LanguageReferenceExportOption>();
             rblLanguageReference.DataBind();
-            rblLanguageReference.SelectedValue = LanguageReferenceExportOption.Resolve.ToString();
+            rblLanguageReference.SelectedValue = LanguageReferenceExportOption.Link.ToString();
 
             rblResourceReference.DataSource = EnumToDataSource<ResourceReferenceExportOption>();
             rblResourceReference.DataBind();
-            rblResourceReference.SelectedValue = ResourceReferenceExportOption.Resolve.ToString();
+            rblResourceReference.SelectedValue = ResourceReferenceExportOption.Link.ToString();
         }
 
 
@@ -162,7 +162,7 @@ namespace ToSic.SexyContent.Administration
                     ContentTypeNameSelected.Replace(" ", "-"),
                     LanguageSelected.Replace(" ", "-"),
                     RecordExportOptionSelected.IsBlank() ? "Template" : "Data",
-                    DateTime.Now.ToString("yyyyMMdd")
+                    DateTime.Now.ToString("yyyyMMddHHmmss")
                 );
             Response.Clear();
             Response.Write(dataXml);
