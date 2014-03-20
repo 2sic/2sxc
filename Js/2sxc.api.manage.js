@@ -1,28 +1,29 @@
 ﻿
 $2sxc.getManageController = function(id) {
 
-    var moduleElement = $(".DnnModule-" + id);
-    var config = $.parseJSON(moduleElement.attr("data-2sxc"));
+    var moduleElement = $('.DnnModule-' + id);
+    var config = $.parseJSON(moduleElement.find('.Mod2sxcC').attr('data-2sxc')).manage.config;
 
     var manageController = {
 
         isEditMode: function() {
-            // ToDo: Fix isEditMode
-            return false;
+            return config.isEditMode;
         },
 
         // The config object has the following properties:
         // portalId, tabId, moduleId, contentGroupId, dialogUrl, returnUrl, appPath
         config: config,
 
-        getLink: function(settings) {
+        getLink: function (settings) {
+            settings = $.extend(config, settings);
+
             var dialogParams = {
-                tabid: settings.tabId,
-                ctl: 'editcontentgroupitem',
+                //tabid: settings.tabId,
+                ctl: 'editcontentgroup',
                 mid: settings.moduleId,
-                sortOrder: null,
-                contentGroupId: null,
-                cultureDimension: null,
+                sortOrder: settings.sortOrder,
+                contentGroupId: settings.contentGroupId,
+                cultureDimension: settings.cultureDimension,
                 returnUrl: ''
             };
 
@@ -32,25 +33,47 @@ $2sxc.getManageController = function(id) {
         },
 
         openDialog: function(settings) {
-            //dnnModal.open()
+
+            var link = manageController.getLink(settings);
+
+            if (dnnModal && dnnModal.show) {
+                link += (link.indexOf('?') == -1 ? '?' : '&') + "popUp=true";
+                dnnModal.show(link, /*showReturn*/true, 550, 950, true, '');
+            } else {
+                window.location = link;
+            }
+            
         },
 
         getButton: function (settings) {
 
             settings = $.extend(config, settings);
             var button = $('<a />', {
-                'class': settings.action
+                'class': 'sc-' + settings.action
             });
 
             // Bind click action
-            button.on('click', function () { manageController.openDialog(settings); });
+            button.click(function () { manageController.openDialog(settings); });
 
             return button;
         },
 
+        // Builds the toolbar and returns it as jQuery object
         getToolbar: function(entityId, editSettings, addSettings, newSettings) {
 
-            return null;
+            var toolbar = $('<ul />', {
+                'class': 'sc-menu'
+            });
+
+            editSettings = $.extend(editSettings, { action: 'edit', sortOrder: 0 });
+            addSettings = $.extend(addSettings, { action: 'add' });
+            newSettings = $.extend(newSettings, { action: 'new' });
+
+            toolbar.append($('<li />').append(manageController.getButton(editSettings)));
+            toolbar.append($('<li />').append(manageController.getButton(addSettings)));
+            toolbar.append($('<li />').append(manageController.getButton(newSettings)));
+
+            return toolbar;
 
         }
 

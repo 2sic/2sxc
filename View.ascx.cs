@@ -2,6 +2,7 @@
 using System.IO;
 using System.Web;
 using System.Web.UI;
+using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using DotNetNuke.Common.Utilities;
 using DotNetNuke.Security.Permissions;
@@ -12,6 +13,7 @@ using DotNetNuke.Services.Tokens;
 using System.Collections.Specialized;
 using DotNetNuke.Entities.Users;
 using DotNetNuke.Security;
+using DotNetNuke.Web.Client.ClientResourceManagement;
 using Microsoft.CSharp;
 using System.Linq;
 using DotNetNuke.Entities.Modules;
@@ -46,6 +48,30 @@ namespace ToSic.SexyContent
 
                 hfContentGroupItemAction.Visible = true;
                 hfContentGroupItemID.Visible = true;
+
+                // ToDo: The following part must also be implemented into ViewApp.ascx!
+                ((DotNetNuke.UI.Modules.ModuleHost)this.Parent).Attributes.Add("data-2sxc", (new
+                {
+                    moduleId = ModuleId,
+                    manage = new
+                    {
+                        isEditMode = UserMayEditThisModule,
+                        config = new
+                        {
+                            portalId = PortalId,
+                            tabId = TabId,
+                            moduleId = ModuleId,
+                            contentGroupId = Elements.First().GroupId,
+                            dialogUrl = DotNetNuke.Common.Globals.NavigateURL(this.TabId),
+                            returnUrl = Request.RawUrl,
+                            appPath = AppId.HasValue ? Sexy.App.Path : null,
+                            cultureDimension = Sexy.GetCurrentLanguageID()
+                        }
+                    }
+                }).ToJson());
+
+                ClientResourceManager.RegisterScript(this.Page, "~/DesktopModules/ToSIC_SexyContent/Js/2sxc.api.js", 100);
+                ClientResourceManager.RegisterScript(this.Page, "~/DesktopModules/ToSIC_SexyContent/Js/2sxc.api.manage.js", 110);
             }
 
         }
