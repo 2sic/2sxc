@@ -36,7 +36,7 @@ $2sxc.getManageController = function(id) {
 
             var link = manageController.getLink(settings);
 
-            if (dnnModal && dnnModal.show) {
+            if (window.dnnModal && dnnModal.show) {
                 link += (link.indexOf('?') == -1 ? '?' : '&') + "popUp=true";
                 dnnModal.show(link, /*showReturn*/true, 550, 950, true, '');
             } else {
