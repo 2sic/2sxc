@@ -8,6 +8,8 @@ namespace ToSic.SexyContent.Administration
     public partial class DataExport : DotNetNuke.Entities.Modules.PortalModuleBase
     {
         // NOTE2tk: Find the dialog on http://2sexycontent.2tk.2sic/Home/tabid/55/ctl/dataexport/mid/388/Default.aspx?popUp=true
+        // TODO2tk: Make sure the new EAV libraries are checked in
+        // TODO2tk: The language must be enabled in 2SexyContent at the moment
         public int? ApplicationId
         {
             get

@@ -79,6 +79,11 @@ namespace ToSic.SexyContent.DataImportExport
         /// </summary>
         public void Deserialize(IEnumerable<string> languages, string documentLanguageFallback, Stream dataStream)
         {
+            if (languages == null || languages.Count() == 0)
+            {
+                languages = new string[] { documentLanguageFallback };
+            }
+
             if (contentType == null)
             {
                 errorProtocol.AppendError(DataImportErrorCode.InvalidContentType);

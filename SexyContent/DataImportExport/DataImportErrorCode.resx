@@ -124,7 +124,7 @@
     <value>Document is not a valid XML file.</value>
   </data>
   <data name="InvalidLanguage" xml:space="preserve">
-    <value>The language </value>
+    <value>The language is not supported.</value>
   </data>
   <data name="InvalidRoot" xml:space="preserve">
     <value>Selected content-type does not match the content-type in the XML file.</value>
