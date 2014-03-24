@@ -91,6 +91,7 @@ namespace ToSic.SexyContent.DataImportExport
             }
 
             var document = XDocument.Load(dataStream);
+            dataStream.Position = 0;
             if (document == null)
             {
                 errorProtocol.AppendError(DataImportErrorCode.InvalidDocument);

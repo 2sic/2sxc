@@ -6,6 +6,7 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
     {
         public static void WriteStream(this FileInfo fileInfo, Stream fileContent)
         {
+            fileInfo.Delete();  // Clear old content
             using (var fileWriter = fileInfo.OpenWrite())
             {
                 fileContent.CopyTo(fileWriter);

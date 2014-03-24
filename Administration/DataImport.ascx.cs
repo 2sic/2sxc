@@ -163,9 +163,6 @@ namespace ToSic.SexyContent.Administration
             FileName = fuFileUpload.FileName;
 
             var fileContent = fuFileUpload.FileContent;
-            var fileInfo = new FileInfo(FilePath);
-            fileInfo.WriteStream(fileContent);
-
             var fileImport = new DataXmlImport(ApplicationId, ContentTypeIdSelected, EntityClearOptionSelected, ResourceReferenceOptionSelected);
             fileImport.Deserialize(Languages, LanguageFallback, fileContent);
             if (fileImport.HasErrors)
@@ -174,6 +171,9 @@ namespace ToSic.SexyContent.Administration
             }
             else
             {
+                var fileInfo = new FileInfo(FilePath);
+                fileInfo.WriteStream(fileContent);
+                
                 ShowDetailPanel(fileImport);
             }
         }
@@ -182,12 +182,12 @@ namespace ToSic.SexyContent.Administration
         {
             var fileInfo = new FileInfo(FilePath);
             var fileContent = fileInfo.ReadStream();
-            fileInfo.Delete();
-
+            fileInfo.Delete();  
+          
             var fileImport = new DataXmlImport(ApplicationId, ContentTypeIdSelected, EntityClearOptionSelected, ResourceReferenceOptionSelected);
             fileImport.Deserialize(Languages, LanguageFallback, fileContent);
             var fileImported = fileImport.Pesrist(ZoneId, UserName);
-
+           
             ShowDonePanel(!fileImported);
         }
 
