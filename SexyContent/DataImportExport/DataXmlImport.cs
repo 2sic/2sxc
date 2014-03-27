@@ -156,7 +156,13 @@ namespace ToSic.SexyContent.DataImportExport
                         continue;
                     }
 
-                    var valueReadOnly = value.GetValueReadOnly();
+                    var valueReferenceProtection = value.GetValueReferenceProtection();
+                    if (valueReferenceProtection != "rw" && valueReferenceProtection != "ro")
+                    {
+                        errorProtocol.AppendError(DataImportErrorCode.InvalidValueReferenceProtection, value, documentElementNumber);
+                        continue;
+                    }
+                    var valueReadOnly = valueReferenceProtection == "ro";
 
                     var entityValue = entity.GetAttributeValue(valueName, valueReferenceLanguage);
                     if (entityValue != null)
@@ -234,9 +240,28 @@ namespace ToSic.SexyContent.DataImportExport
             return documentElements.Count();
         }
 
-        public int GetLanguageCount()
+        public int GetDocumentElementLanguageCount()
         {
             return documentElements.Select(element => element.Element(XElementName.EntityLanguage).Value).Distinct().Count();
+        }
+
+        public int GetDocumentElementAttributeCount()
+        {
+            return GetDocumentElementAttributeNames().Count();
+        }
+
+        public IEnumerable<string> GetDocumentElementAttributeNames()
+        {
+            return documentElements.SelectMany(element => element.Elements())
+                                   .GroupBy(attribute => attribute.Name.LocalName)
+                                   .Select(group => group.Key)
+                                   .Where(name => name != XElementName.EntityGuid && name != XElementName.EntityLanguage)
+                                   .ToList();
+        }
+
+        public string GetDocumentElementAttributeNames(string nameSeparator)
+        {
+            return string.Join(nameSeparator, GetDocumentElementAttributeNames());
         }
 
         public int GetEntitiesCreateCount()
@@ -269,19 +294,19 @@ namespace ToSic.SexyContent.DataImportExport
             return GetEntityDeleteGuids().Count();
         }
 
-        public int GetAttributeCount()
+        public int GetEntitiesAttributeCount()
         {
-            return contentType.GetAttributeNames().Count();
+            return contentType.GetEntitiesAttributeNames().Count();
         }
 
-        public IEnumerable<string> GetAttributeNames()
+        public IEnumerable<string> GetEntitiesAttributeNames()
         {
-            return contentType.GetAttributeNames();
+            return contentType.GetEntitiesAttributeNames();
         }
 
         public string GetAttributeNames(string nameSeparator)
         {
-            return string.Join(nameSeparator, GetAttributeNames());
+            return string.Join(nameSeparator, GetEntitiesAttributeNames());
         }
 
         public int GetAttributeIgnoreCount()
@@ -291,18 +316,16 @@ namespace ToSic.SexyContent.DataImportExport
 
         public IEnumerable<string> GetAttributeIgnoredNames()
         {
-            var existingAttributes = contentType.GetAttributeNames();
-            var creatdAttributes = documentElements.SelectMany(element => element.Elements())
-                                                   .GroupBy(attribute => attribute.Name.LocalName)
-                                                   .Select(group => group.Key)
-                                                   .Where(name => name != XElementName.EntityGuid && name != XElementName.EntityLanguage);
-            return creatdAttributes.Except(existingAttributes);
+            var existingAttributes = contentType.GetEntitiesAttributeNames();
+            var creatdAttributes = GetDocumentElementAttributeNames();
+            return existingAttributes.Except(creatdAttributes);
         }
 
         public string GetAttributeIgnoredNames(string nameSeparator)
         {
             return string.Join(nameSeparator, GetAttributeIgnoredNames());
         }
+
         #endregion Deserialize statistics methods
 
 

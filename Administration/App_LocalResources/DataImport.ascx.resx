@@ -178,7 +178,7 @@
     <value>Delete {0} entities</value>
   </data>
   <data name="lblDetailElementCount.Text" xml:space="preserve">
-    <value>{0} entities</value>
+    <value>{0} records</value>
   </data>
   <data name="lblDetailEntitiesCreate.Text" xml:space="preserve">
     <value>Create {0} entities</value>
@@ -245,5 +245,8 @@
   </data>
   <data name="lblLanguageReferenceInfo.Text" xml:space="preserve">
     <value>Auto: Import as references (for example =ref(en-US,ro))</value>
+  </data>
+  <data name="btnDetailShowDebug.Text" xml:space="preserve">
+    <value>Show details</value>
   </data>
 </root>

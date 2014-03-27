@@ -133,7 +133,10 @@
     <value>Value cannot be read, because of it has an invalid format.</value>
   </data>
   <data name="InvalidValueReference" xml:space="preserve">
-    <value>Language reference cannot be parsed, maybe the language is not supported.</value>
+    <value>Language reference cannot be parsed, the language is not supported.</value>
+  </data>
+  <data name="InvalidValueReferenceProtection" xml:space="preserve">
+    <value>Language reference cannot be parsed, the read-write protection is not supported.</value>
   </data>
   <data name="Unknown" xml:space="preserve">
     <value>Unknown error.</value>

@@ -196,7 +196,6 @@ namespace ToSic.SexyContent.Administration
             ShowSetupPanel();
         }
 
-
         private IEnumerable<dynamic> EnumToDataSource<T>() where T : struct
         {
             return from Enum enumValue in Enum.GetValues(typeof(T))
@@ -240,11 +239,11 @@ namespace ToSic.SexyContent.Administration
             );
             lblDetailLanguageCount.Text = LocalizeFormatString
             (
-                "lblDetailLanguageCount", dataImport.GetLanguageCount()
+                "lblDetailLanguageCount", dataImport.GetDocumentElementLanguageCount()
             );
             lblDetailAttributes.Text = LocalizeFormatString
             (
-                "lblDetailAttributes", dataImport.GetAttributeCount(), dataImport.GetAttributeNames(", ")
+                "lblDetailAttributes", dataImport.GetDocumentElementAttributeCount(), dataImport.GetDocumentElementAttributeNames(", ")
             );
             lblDetailEntitiesCreate.Text = LocalizeFormatString
             (

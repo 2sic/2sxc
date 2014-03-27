@@ -52,7 +52,7 @@ namespace ToSic.SexyContent.DataImportExport
                 languages.Add(languageSelected);
             }
             else if (languageScope.Any())
-            {
+            {   // Export all languages
                 languages.AddRange(languageScope);
             }
             else

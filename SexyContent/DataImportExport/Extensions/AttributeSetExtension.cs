@@ -8,7 +8,7 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
 {
     public static class AttributeSetExtension
     {
-        public static IEnumerable<string> GetAttributeNames(this ToSic.Eav.AttributeSet attributeSet)
+        public static IEnumerable<string> GetEntitiesAttributeNames(this ToSic.Eav.AttributeSet attributeSet)
         {
             return attributeSet.AttributesInSets.Select(item => item.Attribute.StaticName).ToList();
         }

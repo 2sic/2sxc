@@ -20,6 +20,9 @@
         [LocalizedDescription("InvalidValueReference", typeof(DataImportErrorCode), "ToSic.SexyContent.SexyContent.DataImportExport")]
         InvalidValueReference,
 
+        [LocalizedDescription("InvalidValueReferenceProtection", typeof(DataImportErrorCode), "ToSic.SexyContent.SexyContent.DataImportExport")]
+        InvalidValueReferenceProtection,
+
         [LocalizedDescription("InvalidValueFormat", typeof(DataImportErrorCode), "ToSic.SexyContent.SexyContent.DataImportExport")]
         InvalidValueFormat
     }

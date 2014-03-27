@@ -20,14 +20,14 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
         /// <summary>
         /// Get for example ro from =ref(en-US,ro).
         /// </summary>
-        public static bool GetValueReadOnly(this string valueString)
+        public static string GetValueReferenceProtection(this string valueString, string defaultValue = "")
         {
             var match = Regex.Match(valueString, @"=ref\((?<language>.+),(?<readOnly>.+)\)");
             if (match.Success)
             {
-                return match.Groups["readOnly"].Value == "ro";
+                return match.Groups["readOnly"].Value;
             }
-            return true;
+            return defaultValue;
         }
 
         /// <summary>
