@@ -64,6 +64,11 @@
         </div>
     </asp:Panel>
 
+    <div class="dnnFormItem" >
+        <dnn:Label runat="server"></dnn:Label>
+        <asp:Label runat="server" ForeColor="DarkOrange" ID="lblInformationLimitations" ResourceKey="lblInformationLimitations"></asp:Label>
+    </div>
+
     <ul class="dnnActions dnnClear">
         <li><asp:LinkButton runat="server" ID="btnExportData" class="dnnPrimaryAction" ResourceKey="btnExportData" OnClick="OnExportDataClick"></asp:LinkButton></li>
         <li><asp:HyperLink runat="server" ID="btnCancel" class="dnnSecondaryAction" ResourceKey="btnCancel" NavigateUrl="/"></asp:HyperLink></li>

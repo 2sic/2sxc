@@ -152,7 +152,18 @@ namespace ToSic.SexyContent.Administration
             rblResourceReference.SelectedValue = ResourceReferenceImportOption.Resolve.ToString();
         }
 
+
+        protected void OnTestDataDetailedClick(object sender, EventArgs e)
+        {
+            OnTestDataClick(true);
+        }
+
         protected void OnTestDataClick(object sender, EventArgs e)
+        {
+            OnTestDataClick(false);
+        }
+
+        private void OnTestDataClick(bool detailed)
         {
             if (!fuFileUpload.HasFile)
             {
@@ -173,8 +184,8 @@ namespace ToSic.SexyContent.Administration
             {
                 var fileInfo = new FileInfo(FilePath);
                 fileInfo.WriteStream(fileContent);
-                
-                ShowDetailPanel(fileImport);
+
+                ShowDetailPanel(fileImport, detailed);
             }
         }
 
@@ -230,7 +241,7 @@ namespace ToSic.SexyContent.Administration
             pnlDone.Visible = false;
         }
 
-        private void ShowDetailPanel(DataXmlImport dataImport)
+        private void ShowDetailPanel(DataXmlImport dataImport, bool showDebugOutput)
         {
             lblDetailInfo.Text = LocalizeFormatString("lblDetailInfo", FileName);
             lblDetailElementCount.Text = LocalizeFormatString
@@ -262,9 +273,10 @@ namespace ToSic.SexyContent.Administration
                 "lblDetailAttributeIgnore", dataImport.GetAttributeIgnoreCount(), dataImport.GetAttributeIgnoredNames(", ")
             );
 
-            //#if DEBUG
-            lblDetailDebugOutput.Text = dataImport.GetEntitiesDebugString();
-            //#endif
+            if (showDebugOutput)
+            {
+                lblDetailDebugOutput.Text = dataImport.GetEntitiesDebugString();
+            }
 
             pnlSetup.Visible = false;
             pnlDetail.Visible = true;

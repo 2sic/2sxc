@@ -57,9 +57,15 @@
             <asp:Label runat="server" ForeColor="Red" ID="lblWarningBackup" ResourceKey="lblWarningBackup"></asp:Label>
         </div>
 
+        <div class="dnnFormItem" >
+            <dnn:Label runat="server"></dnn:Label>
+            <asp:Label runat="server" ForeColor="DarkOrange" ID="lblInformationLimitations" ResourceKey="lblInformationLimitations"></asp:Label>
+        </div>
+
         <ul class="dnnActions dnnClear">
             <li><asp:LinkButton runat="server" ID="btnContinue" class="dnnPrimaryAction" ResourceKey="btnTestData" OnClick="OnTestDataClick"></asp:LinkButton></li>
             <li><asp:HyperLink runat="server" ID="btnCancel" class="dnnSecondaryAction" ResourceKey="btnCancel" NavigateUrl="/"></asp:HyperLink></li>
+            <li><asp:LinkButton runat="server" ID="btnContinueDetailed" class="dnnSecondaryAction" ForeColor="White" ResourceKey="btnTestDataDetailed" OnClick="OnTestDataDetailedClick"></asp:LinkButton></li>
         </ul>
     </div>
 </asp:Panel>
@@ -91,6 +97,7 @@
         
         <ul class="dnnActions dnnClear">
             <li><asp:LinkButton runat="server" class="dnnPrimaryAction" ResourceKey="btnImportData" OnClick="OnImportDataClick"></asp:LinkButton></li>
+            <li><asp:LinkButton runat="server" class="dnnSecondaryAction" ResourceKey="btnBack" OnClick="OnBackClick"></asp:LinkButton></li>
             <li><asp:HyperLink runat="server" class="dnnSecondaryAction" ResourceKey="btnClose" NavigateUrl="/"></asp:HyperLink></li>
         </ul>
     </div>
@@ -108,6 +115,7 @@
 
         <ul class="dnnActions dnnClear">
             <li><asp:LinkButton runat="server" class="dnnPrimaryAction" ResourceKey="btnBack" OnClick="OnBackClick"></asp:LinkButton></li>
+            <li><asp:HyperLink runat="server" class="dnnSecondaryAction" ResourceKey="btnClose" NavigateUrl="/"></asp:HyperLink></li>
         </ul>
     </div>
 </asp:Panel>

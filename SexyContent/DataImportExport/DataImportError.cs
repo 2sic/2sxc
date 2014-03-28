@@ -17,6 +17,9 @@
         [LocalizedDescription("InvalidLanguage", typeof(DataImportErrorCode), "ToSic.SexyContent.SexyContent.DataImportExport")]
         InvalidLanguage,
 
+        [LocalizedDescription("MissingElementLanguage", typeof(DataImportErrorCode), "ToSic.SexyContent.SexyContent.DataImportExport")]
+        MissingElementLanguage,
+
         [LocalizedDescription("InvalidValueReference", typeof(DataImportErrorCode), "ToSic.SexyContent.SexyContent.DataImportExport")]
         InvalidValueReference,
 
@@ -24,7 +27,7 @@
         InvalidValueReferenceProtection,
 
         [LocalizedDescription("InvalidValueFormat", typeof(DataImportErrorCode), "ToSic.SexyContent.SexyContent.DataImportExport")]
-        InvalidValueFormat
+        InvalidValueFormat,
     }
 
     public class DataImportError

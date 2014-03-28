@@ -166,6 +166,15 @@ namespace ToSic.SexyContent.Administration {
         protected global::System.Web.UI.WebControls.Label lblWarningBackup;
         
         /// <summary>
+        /// lblInformationLimitations control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblInformationLimitations;
+        
+        /// <summary>
         /// btnContinue control.
         /// </summary>
         /// <remarks>
@@ -182,6 +191,15 @@ namespace ToSic.SexyContent.Administration {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HyperLink btnCancel;
+        
+        /// <summary>
+        /// btnContinueDetailed control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton btnContinueDetailed;
         
         /// <summary>
         /// pnlDetail control.

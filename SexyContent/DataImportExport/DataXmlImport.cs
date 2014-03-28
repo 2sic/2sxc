@@ -110,11 +110,28 @@ namespace ToSic.SexyContent.DataImportExport
                 errorProtocol.AppendError(DataImportErrorCode.InvalidRoot);
                 return;
             }
+
+            
+            documentElements = documentRoot.Elements(XElementName.Entity);
+            var documentElementNumber = 0;
+
+            var documentElementLanguagesAll = documentElements.GroupBy(element => element.Element(XElementName.EntityGuid).Value)
+                                                              .Select(group => group.Select(element => element.Element(XElementName.EntityLanguage).Value)).ToList();
+            var documentElementLanguagesCount = documentElementLanguagesAll.Select(item => item.Count());
+            if (documentElementLanguagesCount.Any(count => count != 1))
+            {
+                // It is an all language import, so check if all languages are specified for all entities
+                foreach (var documentElementLanguages in documentElementLanguagesAll)
+                {   
+                    if (languages.Except(documentElementLanguages).Any())
+                    {
+                        errorProtocol.AppendError(DataImportErrorCode.MissingElementLanguage, "Langs=" + string.Join(", ", languages));
+                        return;
+                    }
+                }
+            }
  
             var entityGuidManager = new EntityGuidManager();
-
-            var documentElementNumber = 0;
-            documentElements = documentRoot.Elements(XElementName.Entity);
             foreach (var documentElement in documentElements)
             {
                 documentElementNumber++;
@@ -335,32 +352,46 @@ namespace ToSic.SexyContent.DataImportExport
 
         public string GetEntitiesDebugString()
         {
-            var result = string.Empty;
+            var result = "<p>Details:</p>";
+            result += "<ul>";
             foreach (var entity in entities)
             {
-                result += "<br><br><b>Entity: " + entity.EntityGuid + "</b>";
+                result += "<li><div>Entity: " + entity.EntityGuid + "</div><ul>";
                 foreach (var value in entity.Values)
                 {
-                    result += "<br><b>Attribute: " + value.Key + "</b>";
+                    result += "<li><div>Attribute: " + value.Key + "</div>";
                     foreach (var content in value.Value)
                     {
-                        var contentKnown = content as ValueImportModel<string>;
-                        if (contentKnown != null)
+                        if (content is ValueImportModel<string>)
                         {
-                            result += "<br>Value: " + contentKnown.Value;
+                            result += string.Format("<div>Value: {0}</div>", ((ValueImportModel<string>)content).Value);
+                        }
+                        else if (content is ValueImportModel<bool?>)
+                        {
+                            result += string.Format("<div>Value: {0}</div>", ((ValueImportModel<bool?>)content).Value);
+                        }
+                        else if (content is ValueImportModel<decimal?>)
+                        {
+                            result += string.Format("<div>Value: {0}</div>", ((ValueImportModel<decimal?>)content).Value);
+                        }
+                        else if (content is ValueImportModel<DateTime?>)
+                        {
+                            result += string.Format("<div>Value: {0}</div>", ((ValueImportModel<DateTime?>)content).Value);
                         }
                         else
                         {
-                            result += "<br>Value: --";
+                            result += "<div>Value: --</div>";
                         }
                         foreach (var dimension in content.ValueDimensions)
                         {
-                            result += "<br>Lang: " + dimension.DimensionExternalKey + ",ro=" + dimension.ReadOnly;
+                            result += string.Format("<div>Language: {0},{1}</div>", dimension.DimensionExternalKey, dimension.ReadOnly);
                         }
                     }
+                    result += "</li>";
                 }
-                result += "<br>";
+                result += "</ul></li>";
             }
+            result += "</ul>";
             return result;
         }
     }

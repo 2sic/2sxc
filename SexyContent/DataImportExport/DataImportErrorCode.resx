@@ -138,6 +138,9 @@
   <data name="InvalidValueReferenceProtection" xml:space="preserve">
     <value>Language reference cannot be parsed, the read-write protection is not supported.</value>
   </data>
+  <data name="MissingElementLanguage" xml:space="preserve">
+    <value>The document does not specify all languages for all entities.</value>
+  </data>
   <data name="Unknown" xml:space="preserve">
     <value>Unknown error.</value>
   </data>

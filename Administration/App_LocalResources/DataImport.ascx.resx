@@ -249,4 +249,10 @@
   <data name="btnDetailShowDebug.Text" xml:space="preserve">
     <value>Show details</value>
   </data>
+  <data name="lblInformationLimitations.Text" xml:space="preserve">
+    <value>Note: Relations between content-types are not supported at the moment.</value>
+  </data>
+  <data name="btnTestDataDetailed.Text" xml:space="preserve">
+    <value>Test XML detailed</value>
+  </data>
 </root>
