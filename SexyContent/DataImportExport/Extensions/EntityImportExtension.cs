@@ -53,7 +53,7 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
             return valueModel;
         }
 
-        private static IValueImportModel GetValueModel(string valueString, string valueType, string valueLanguages, bool valueRedOnly, bool resolveHyperlink, Entity entity)
+        private static IValueImportModel GetValueModel(string valueString, string valueType, string valueLanguage, bool valueRedOnly, bool resolveHyperlink, Entity entity)
         {
             IValueImportModel valueModel;
             switch (valueType)
@@ -115,7 +115,7 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
                     break;
             }
 
-            valueModel.AppendLanguageReference(valueLanguages, valueRedOnly);
+            valueModel.AppendLanguageReference(valueLanguage, valueRedOnly);
             return valueModel;
         }
 

@@ -12,7 +12,15 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
         /// </summary>
         public static EavValue GetAttributeValue(this Entity entity, Attribute attribute, string language)
         {
-            return entity.Values.Where(value => value.Attribute.StaticName == attribute.StaticName).FirstOrDefault(value => value.ValuesDimensions.Any(reference => reference.Dimension.ExternalKey == language));
+            var values = entity.Values.Where(value => value.Attribute.StaticName == attribute.StaticName);
+            if (string.IsNullOrEmpty(language))
+            {
+                return values.FirstOrDefault(value => !value.ValuesDimensions.Any());
+            }
+            else
+            {
+                return values.FirstOrDefault(value => value.ValuesDimensions.Any(reference => reference.Dimension.ExternalKey == language));
+            }
         }
 
         /// <summary>

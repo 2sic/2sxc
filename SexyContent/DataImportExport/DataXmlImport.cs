@@ -19,6 +19,10 @@ namespace ToSic.SexyContent.DataImportExport
 
         private IEnumerable<XElement> documentElements;
 
+        private string documentLanguageFallback;
+
+        private IEnumerable<string> languages;
+
         private ResourceReferenceImportOption resourceReferenceOption;
 
         private EntityClearImportOption entityClearOption;
@@ -64,11 +68,13 @@ namespace ToSic.SexyContent.DataImportExport
 
 
 
-        public DataXmlImport(int? applicationId, int contentTypeId, EntityClearImportOption entityClearOption, ResourceReferenceImportOption resourceReferenceOption)
+        public DataXmlImport(int? applicationId, int contentTypeId, IEnumerable<string> languages, string documentLanguageFallback, EntityClearImportOption entityClearOption, ResourceReferenceImportOption resourceReferenceOption)
         {
             this.applicationId = applicationId;
             this.contentManager = new SexyContent(true, new int?(), applicationId);
             this.contentType = contentManager.ContentContext.GetAttributeSet(contentTypeId);
+            this.languages = languages;
+            this.documentLanguageFallback = documentLanguageFallback;
             this.entityClearOption = entityClearOption;
             this.resourceReferenceOption = resourceReferenceOption;
         }
@@ -77,11 +83,11 @@ namespace ToSic.SexyContent.DataImportExport
         /// Deserialize a 2SexyContent data XML stream to the memory. By the way the data will be checked for 
         /// errors.
         /// </summary>
-        public void Deserialize(IEnumerable<string> languages, string documentLanguageFallback, Stream dataStream)
+        public void Deserialize(Stream dataStream)
         {
             if (languages == null || languages.Count() == 0)
             {
-                languages = new string[] { documentLanguageFallback };
+                languages = new string[] { string.Empty };
             }
 
             if (contentType == null)
@@ -114,10 +120,6 @@ namespace ToSic.SexyContent.DataImportExport
                 documentElementNumber++;
 
                 var documentElementLanguage = documentElement.GetChildElementValue(XElementName.EntityLanguage);
-                if (string.IsNullOrEmpty(documentElementLanguage))
-                {   // Assume the fallback language
-                    documentElementLanguage = documentLanguageFallback;
-                }
                 if (!languages.Any(language => language == documentElementLanguage))
                 {   // DNN does not support the language
                     errorProtocol.AppendError(DataImportErrorCode.InvalidLanguage, "Lang=" + documentElementLanguage, documentElementNumber);
@@ -235,6 +237,8 @@ namespace ToSic.SexyContent.DataImportExport
             return newGuids;
         }
 
+
+        // TODO2tk: Make properties
         public int GetDocumentElementCount()
         {
             return documentElements.Count();

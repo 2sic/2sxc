@@ -27,10 +27,13 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
                 valueModel.ValueDimensions = valueDimesnions;
             }
 
-            valueDimesnions.Add
-            (
-                new ValueDimension() { DimensionExternalKey = language, ReadOnly = readOnly }
-            );
+            if (!string.IsNullOrEmpty(language))
+            {
+                valueDimesnions.Add
+                (
+                    new ValueDimension() { DimensionExternalKey = language, ReadOnly = readOnly }
+                );
+            }
         }
     }
 }

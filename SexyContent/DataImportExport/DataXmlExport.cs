@@ -57,7 +57,7 @@ namespace ToSic.SexyContent.DataImportExport
             }
             else
             {
-                languages.Add(languageFallback);
+                languages.Add(string.Empty);
             }
 
             var documentRoot = GetDocumentRoot(contentType.Name, null);

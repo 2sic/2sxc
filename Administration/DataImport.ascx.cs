@@ -163,8 +163,8 @@ namespace ToSic.SexyContent.Administration
             FileName = fuFileUpload.FileName;
 
             var fileContent = fuFileUpload.FileContent;
-            var fileImport = new DataXmlImport(ApplicationId, ContentTypeIdSelected, EntityClearOptionSelected, ResourceReferenceOptionSelected);
-            fileImport.Deserialize(Languages, LanguageFallback, fileContent);
+            var fileImport = new DataXmlImport(ApplicationId, ContentTypeIdSelected, Languages, LanguageFallback, EntityClearOptionSelected, ResourceReferenceOptionSelected);
+            fileImport.Deserialize(fileContent);
             if (fileImport.HasErrors)
             {
                 ShowErrorPanel(fileImport);
@@ -184,8 +184,8 @@ namespace ToSic.SexyContent.Administration
             var fileContent = fileInfo.ReadStream();
             fileInfo.Delete();  
           
-            var fileImport = new DataXmlImport(ApplicationId, ContentTypeIdSelected, EntityClearOptionSelected, ResourceReferenceOptionSelected);
-            fileImport.Deserialize(Languages, LanguageFallback, fileContent);
+            var fileImport = new DataXmlImport(ApplicationId, ContentTypeIdSelected, Languages, LanguageFallback, EntityClearOptionSelected, ResourceReferenceOptionSelected);
+            fileImport.Deserialize(fileContent);
             var fileImported = fileImport.Pesrist(ZoneId, UserName);
            
             ShowDonePanel(!fileImported);
@@ -262,9 +262,9 @@ namespace ToSic.SexyContent.Administration
                 "lblDetailAttributeIgnore", dataImport.GetAttributeIgnoreCount(), dataImport.GetAttributeIgnoredNames(", ")
             );
 
-            #if DEBUG
+            //#if DEBUG
             lblDetailDebugOutput.Text = dataImport.GetEntitiesDebugString();
-            #endif
+            //#endif
 
             pnlSetup.Visible = false;
             pnlDetail.Visible = true;
