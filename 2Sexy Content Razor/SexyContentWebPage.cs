@@ -78,6 +78,16 @@ namespace ToSic.SexyContent.Razor
             var initialSource = SexyContent.GetInitialDataSource(SexyContent.GetZoneID(PortalSettings.Current.PortalId).Value, App.AppId);
             return typeName != "" ? DataSource.GetDataSource(typeName, initialSource.ZoneId, initialSource.AppId, initialSource, configurationProvider) : initialSource;
         }
+
+        // ToDo: Discuss w/ 2dm
+        protected T CreateSource<T>(IDataSource inSource = null, IConfigurationProvider configurationProvider = null)
+        {
+            if (inSource != null)
+                return DataSource.GetDataSource<T>(inSource.ZoneId, inSource.AppId, inSource, configurationProvider);
+
+            var initialSource = SexyContent.GetInitialDataSource(SexyContent.GetZoneID(PortalSettings.Current.PortalId).Value, App.AppId);
+            return DataSource.GetDataSource<T>(initialSource.ZoneId, initialSource.AppId, initialSource, configurationProvider);
+        }
     }
 
     // <2sic> Removed DotNetNukeWebPage<T>:DotNetNukeWebPage
