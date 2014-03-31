@@ -26,6 +26,10 @@
             <asp:Label runat="server" ID="lblTemplate"></asp:Label>
         </div>
         <div class="dnnFormItem">
+            <dnn:Label runat="server" ID="plTemplateLocation" ResourceKey="plTemplateLocation" HelpKey="plTemplateLocation.HelpText" ControlName="lblTemplate" Suffix=":" />
+            <asp:Label runat="server" ID="lblTemplateLocation"></asp:Label>
+        </div>
+        <div class="dnnFormItem">
             <asp:Label runat="server" ID="lblTableDescription" ResourceKey="lblTableDescription"></asp:Label>
         </div>
 

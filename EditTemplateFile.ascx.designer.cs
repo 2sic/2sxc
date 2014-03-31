@@ -94,6 +94,24 @@ namespace ToSic.SexyContent {
         protected global::System.Web.UI.WebControls.Label lblTemplate;
         
         /// <summary>
+        /// plTemplateLocation control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UserControl plTemplateLocation;
+        
+        /// <summary>
+        /// lblTemplateLocation control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTemplateLocation;
+        
+        /// <summary>
         /// lblTableDescription control.
         /// </summary>
         /// <remarks>

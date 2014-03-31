@@ -18,6 +18,14 @@ namespace ToSic.SexyContent
         private const string AdditionalSystemRazor = "@Content.Toolbar,ContentToolbar";
         private const string ListAdditionalSystemRazor = "@ListContent.Toolbar,ListToolbar";
 
+        private bool UserMayEdit
+        {
+            get
+            {
+                return !UserInfo.IsSuperUser && (Template.Location == SexyContent.TemplateLocations.HostFileSystem || Template.IsRazor);
+            }
+        }
+
         private Template Template
         {
             get {
@@ -35,7 +43,7 @@ namespace ToSic.SexyContent
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!UserInfo.IsSuperUser && Template.Location == SexyContent.TemplateLocations.HostFileSystem)
+            if (UserMayEdit)
             {
                 btnUpdate.Visible = false;
                 txtTemplateContent.Enabled = false;
@@ -54,6 +62,7 @@ namespace ToSic.SexyContent
 
             // Get name of the current template and write it to lblTemplate
             lblTemplate.Text = Template.Name;
+            lblTemplateLocation.Text = @"/" + TemplatePath.Replace(HttpContext.Current.Request.PhysicalApplicationPath, String.Empty).Replace('\\','/');
             lblEditTemplateFileHeading.Text = String.Format(LocalizeString("lblEditTemplateFileHeading.Text"), Template.Name);
 
 
@@ -99,7 +108,7 @@ namespace ToSic.SexyContent
 
         protected void btnUpdate_Click(object sender, EventArgs e)
         {
-            if(!UserInfo.IsSuperUser && Template.Location == SexyContent.TemplateLocations.HostFileSystem)
+            if(!UserMayEdit)
                 return;
 
             if (File.Exists(TemplatePath))

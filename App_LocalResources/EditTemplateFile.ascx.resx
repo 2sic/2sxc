@@ -198,4 +198,10 @@
   <data name="ListIndex1.Text" xml:space="preserve">
     <value>Index of the current item + 1 (for numbering lists)</value>
   </data>
+  <data name="plTemplateLocation.HelpText" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="plTemplateLocation.Text" xml:space="preserve">
+    <value>Template Location</value>
+  </data>
 </root>
