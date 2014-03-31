@@ -92,7 +92,7 @@ namespace ToSic.SexyContent.DataImportExport
 
         private static AttributeSet GetContentType(int? applicationId, int contentTypeId)
         {
-            var contentContext = new SexyContent(true, new int?(), applicationId).ContentContext;
+            var contentContext = new SexyContent(1, applicationId.Value).ContentContext; // TODO2tk: Get the zone ID
             return contentContext.GetAttributeSet(contentTypeId);
         }
 

@@ -10,9 +10,8 @@ using ToSic.SexyContent.ImportExport;
 
 namespace ToSic.SexyContent
 {
-    public partial class Export : DotNetNuke.Entities.Modules.PortalModuleBase
+    public partial class Export : SexyControlAdminBase
     {
-        SexyContent Sexy = new SexyContent();
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -20,7 +19,7 @@ namespace ToSic.SexyContent
 
             if (!IsPostBack)
             {
-                var ContentTypes = Sexy.ContentContext.GetAllAttributeSets().Where(a => !a.StaticName.StartsWith("@") && a.AttributesInSets.Count > 0 && a.ChangeLogIDDeleted == null && a.Scope == "2SexyContent" && a.App.ZoneID == Sexy.GetZoneID(PortalId));
+                var ContentTypes = Sexy.ContentContext.GetAllAttributeSets().Where(a => !a.StaticName.StartsWith("@") && a.AttributesInSets.Count > 0 && a.ChangeLogIDDeleted == null && a.Scope == "2SexyContent" && a.App.ZoneID == SexyContent.GetZoneID(PortalId));
                 grdContentTypes.DataSource = ContentTypes;
                 grdContentTypes.DataBind();
 
@@ -44,7 +43,7 @@ namespace ToSic.SexyContent
                 grdData.DataSource = Data;
                 grdData.DataBind();
 
-                grdTemplates.DataSource = from c in Sexy.TemplateContext.GetTemplates(this.PortalId)
+                grdTemplates.DataSource = from c in Sexy.GetTemplates(this.PortalId)
                                           select new {
                                             c.Name,
                                             c.TemplateID,
@@ -64,7 +63,7 @@ namespace ToSic.SexyContent
             string[] TemplateIDs = GetTelerikGridSelections(grdTemplates);
 
             List<ExportImportMessage> Messages = new List<ExportImportMessage>();
-            string Xml = new XmlExport().ExportXml(ContentTypeIDs, EntityIDs, TemplateIDs, out Messages);
+            string Xml = new XmlExport(ZoneId.Value, AppId.Value, false).ExportXml(ContentTypeIDs, EntityIDs, TemplateIDs, out Messages);
             Response.Clear();
             Response.Write(Xml);
             Response.AddHeader("Content-Disposition", string.Format("attachment; filename={0}", "SexyContent-Export.xml"));

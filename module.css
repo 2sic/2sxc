@@ -5,5 +5,5 @@
 .sc-menu a { display:inline-block; margin-right:4px; }
 .Mod2SexyContentC .dnnFormMessage select { margin-bottom:0; }
 
-.sc-contenttype-selector, .sc-template-selector { width: 100%;position: relative; max-width: 300px!important; }
-.sc-contenttype-selector { margin-bottom: 3px!important; }
+.sc-contenttype-selector, .sc-template-selector, .sc-app-selector { width: 100%;position: relative; max-width: 300px!important; }
+.sc-contenttype-selector, .sc-app-selector { margin-bottom: 3px!important; }

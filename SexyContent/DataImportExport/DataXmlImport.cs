@@ -57,7 +57,7 @@ namespace ToSic.SexyContent.DataImportExport
             var entity = new Entity()
             {
                 AttributeSetStaticName = contentType.StaticName,
-                AssignmentObjectTypeId = contentManager.DefaultAssignmentObjectTypeID,
+                AssignmentObjectTypeId = SexyContent.AssignmentObjectTypeIDDefault,
                 EntityGuid = entityGuid,
                 KeyNumber = null,
                 Values = new Dictionary<string, List<IValueImportModel>>()
@@ -71,7 +71,7 @@ namespace ToSic.SexyContent.DataImportExport
         public DataXmlImport(int? applicationId, int contentTypeId, IEnumerable<string> languages, string documentLanguageFallback, EntityClearImportOption entityClearOption, ResourceReferenceImportOption resourceReferenceOption)
         {
             this.applicationId = applicationId;
-            this.contentManager = new SexyContent(true, new int?(), applicationId);
+            this.contentManager = new SexyContent(1, applicationId.Value); // TODO2tk: Get the zone ID
             this.contentType = contentManager.ContentContext.GetAttributeSet(contentTypeId);
             this.languages = languages;
             this.documentLanguageFallback = documentLanguageFallback;

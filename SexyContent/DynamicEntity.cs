@@ -139,18 +139,4 @@ namespace ToSic.SexyContent
 
     }
 
-    //// todo: unsolved...
-    //public static class DynamicEntityHelpers
-    //{
-    //    public static DynamicEntity AsDynamic(this IEntity t)
-    //    {
-    //        string language = new SexyContent().GetCurrentLanguageName();
-    //        return new DynamicEntity(t, new string[] { language });
-    //    }
-    //    public static DynamicEntity AsDynamic(this EntityModel t)
-    //    {
-    //        int? language = new SexyContent().GetCurrentLanguageID(true);
-    //        return new DynamicEntity(t, new int[] { language.Value });
-    //    }
-    //}
 }

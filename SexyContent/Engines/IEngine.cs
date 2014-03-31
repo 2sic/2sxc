@@ -15,6 +15,6 @@ namespace ToSic.SexyContent.Engines
         /// <param name="TemplatePath"></param>
         /// <param name="TemplateText"></param>
         /// <returns></returns>
-        string Render(Template template, App app, List<Element> Elements, Element ListElement, ModuleInstanceContext HostingModule, string LocalResourcesPath, IDataSource DataSource);
+        string Render(Template template, string templatePath, App app, List<Element> Elements, Element ListElement, ModuleInstanceContext HostingModule, string LocalResourcesPath, IDataSource DataSource);
     }
 }

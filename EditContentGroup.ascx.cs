@@ -16,7 +16,7 @@ using ToSic.SexyContent;
 
 namespace ToSic.SexyContent
 {
-    public partial class EditContentGroup : DotNetNuke.Entities.Modules.PortalModuleBase
+    public partial class EditContentGroup : SexyControlEditBase
     {
         #region Properties
         /// <summary>
@@ -120,8 +120,6 @@ namespace ToSic.SexyContent
 
         #endregion
 
-        private SexyContent Sexy = new SexyContent();
-
         protected void Page_Init(object sender, EventArgs e)
         {
             // Register JavaScripts
@@ -138,7 +136,7 @@ namespace ToSic.SexyContent
         {
 
             // Add DNN Version to body Class
-            Sexy.AddDNNVersionToBodyClass(this);
+            SexyContent.AddDNNVersionToBodyClass(this);
 
             // Bind Languages Repeater
             var Languages = Sexy.ContentContext.GetLanguages().Where(l => l.Active).OrderByDescending(l => l.DimensionID == DefaultLanguageID).ThenBy(l => l.ExternalKey);
@@ -203,9 +201,11 @@ namespace ToSic.SexyContent
                         EditContentGroupItem EditControl = (EditContentGroupItem)LoadControl(System.IO.Path.Combine(TemplateSourceDirectory, "EditContentGroupItem.ascx"));
                         EditControl.ContentGroupItemID = ContentGroupItem != null && ContentGroupItem.ContentGroupID != 0 ? ContentGroupItem.ContentGroupItemID : new int?();
                         EditControl.ContentGroupID = ContentGroupID;
+                        EditControl.AppId = AppId.Value;
+                        EditControl.ZoneId = ZoneId.Value;
                         EditControl.ItemType = TemplateDefault.ItemType;
                         EditControl.TemplateID = Items.First().TemplateID.Value;
-                        EditControl.SortOrder = CurrentlyEditedItems.Any() ? SortOrder : new int?();
+                        EditControl.SortOrder = CurrentlyEditedItems.Any() || SortOrder == -1 ? SortOrder : new int?();
                         EditControl.ModuleID = ModuleId;
                         EditControl.TabID = TabId;
                         EditControl.AttributeSetID = TemplateDefault.ContentTypeID.Value;
@@ -234,7 +234,7 @@ namespace ToSic.SexyContent
 
         protected void btnDelete_Click(object sender, EventArgs e)
         {
-            new SexyContent(false).TemplateContext.DeleteContentGroupItems(ContentGroupID, SortOrder.Value, UserId);
+            SexyUncached.TemplateContext.DeleteContentGroupItems(ContentGroupID, SortOrder.Value, UserId);
             RedirectBack();
         }
 

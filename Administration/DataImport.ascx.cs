@@ -129,9 +129,9 @@ namespace ToSic.SexyContent.Administration
 
             ApplicationId = Request["AppID"] != null ? int.Parse(Request["AppID"]) : new int?();
 
-            var sexyContent = new SexyContent(true, new int?(), ApplicationId);
+            var sexyContent = new SexyContent(1, ApplicationId.Value); // TODO2tk: Get the zone ID
 
-            ZoneId = sexyContent.GetZoneID(PortalId);
+            ZoneId = SexyContent.GetZoneID(PortalId);
             Languages = sexyContent.ContentContext.GetLanguages()
                                                   .Where(language => language.Active)
                                                   .Select(language => language.ExternalKey)

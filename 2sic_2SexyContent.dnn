@@ -1,6 +1,6 @@
 ﻿<dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="2SexyContent" type="Module" version="05.05.01">
+    <package name="2SexyContent" type="Module" version="06.00.01">
       <friendlyName> Content</friendlyName>
       <description>2Sexy Content is a DotNetNuke Extension to create attractive and designed content. It solves the common problem, allowing the web designer to create designed templates for different content elements, so that the user must only fill in fields and receive a perfectly designed and animated output.</description>
       <iconFile>icon.png</iconFile>
@@ -100,14 +100,23 @@
               <name>05.05.00.SqlDataProvider</name>
               <version>05.05.00</version>
             </script>
+            <script type="Install">
+              <path>SqlDataProvider</path>
+              <name>05.05.03.SqlDataProvider</name>
+              <version>05.05.03</version>
+            </script>
+            <script type="Install">
+              <path>SqlDataProvider</path>
+              <name>05.06.00.SqlDataProvider</name>
+              <version>05.06.00</version>
+            </script>
             <script type="UnInstall">
               <path>SqlDataProvider</path>
               <name>Uninstall.SqlDataProvider</name>
-              <version>5.5.1</version>
+              <version>06.00.01</version>
             </script>
           </scripts>
         </component>
-
         <component type="Module">
           <desktopModule>
             <moduleName>2sxc</moduleName>
@@ -509,10 +518,6 @@
               <path>DesktopModules\ToSIC_SexyContent</path>
               <name>Uninstall.SqlDataProvider</name>
             </file>
-            <file>
-              <path>DesktopModules\ToSIC_SexyContent</path>
-              <name>2sic_2SexyContent.dnn</name>
-            </file>
           </files>
         </component>
 
@@ -556,5 +561,226 @@
         </component>
       </components>
     </package>
+    
+    <package name="2SexyContent-App" type="Module" version="06.00.01">
+      <friendlyName> App</friendlyName>
+      <description>2Sexy Content App is an extension that allows to insert a 2SexyContent app.</description>
+      <iconFile>icon-app.png</iconFile>
+      <owner>
+        <name>2sic</name>
+        <organization>2sic Internet Solutions</organization>
+        <url>http://www.2sic.com</url>
+        <email>info@2sic.com</email>
+      </owner>
+      <license src="License.txt"></license>
+      <releaseNotes src="ReleaseNotes.txt"></releaseNotes>
+      <components>
+        <component type="Module">
+          <desktopModule>
+            <moduleName>2sxc-app</moduleName>
+            <foldername>ToSIC_SexyContent</foldername>
+            <businessControllerClass>ToSic.SexyContent.SexyContent</businessControllerClass>
+            <supportedFeatures>
+              <supportedFeature type="Searchable" />
+              <supportedFeature type="Upgradeable" />
+            </supportedFeatures>
+            <moduleDefinitions>
+              <moduleDefinition>
+                <friendlyName>2Sexy Content App</friendlyName>
+                <defaultCacheTime>0</defaultCacheTime>
+                <moduleControls>
+                  <moduleControl>
+                    <controlKey />
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/ViewApp.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle />
+                    <controlType>View</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>False</supportsPopUps>
+                    <viewOrder>0</viewOrder>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>eavmanagement</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/EAVManagement.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Manage Content Types</controlTitle>
+                    <controlType>Admin</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                    <viewOrder>0</viewOrder>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>editcontentgroup</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/EditContentGroup.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Edit Item</controlTitle>
+                    <controlType>Edit</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>editdatasource</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/EditDataSource.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Edit Datasource</controlTitle>
+                    <controlType>Admin</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>editlist</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/EditList.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Edit List</controlTitle>
+                    <controlType>Edit</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>edittemplate</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/EditTemplate.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Edit Template</controlTitle>
+                    <controlType>Edit</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                    <viewOrder>0</viewOrder>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>edittemplatefile</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/EditTemplateFile.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Edit Template File</controlTitle>
+                    <controlType>Edit</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>export</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/Export.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Export</controlTitle>
+                    <controlType>Admin</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>gettingstarted</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/GettingStarted.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Getting Started</controlTitle>
+                    <controlType>Edit</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>import</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/Import.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Import</controlTitle>
+                    <controlType>Admin</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>managetemplates</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/ManageTemplates.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Manage Templates</controlTitle>
+                    <controlType>Admin</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                    <viewOrder>0</viewOrder>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>portalconfiguration</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/PortalConfiguration.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Portal Configuration</controlTitle>
+                    <controlType>Admin</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>settings</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/Settings.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>2Sexy Content Settings</controlTitle>
+                    <controlType>Edit</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                    <viewOrder>0</viewOrder>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>settingswrapper</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/SettingsWrapper.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>2Sexy Content Settings</controlTitle>
+                    <controlType>Edit</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                    <viewOrder>0</viewOrder>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>appmanagement</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/Apps/AppManagement.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>App Management</controlTitle>
+                    <controlType>Admin</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>appexport</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/Apps/AppExport.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>App Export</controlTitle>
+                    <controlType>Admin</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>appimport</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/Apps/AppImport.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>App Import</controlTitle>
+                    <controlType>Admin</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                  </moduleControl>
+                </moduleControls>
+              </moduleDefinition>
+            </moduleDefinitions>
+          </desktopModule>
+        </component>
+
+        <component type="File">
+          <files>
+            <basePath>DesktopModules/ToSIC_SexyContent</basePath>
+            <file>
+              <name>icon-app.png</name>
+            </file>
+          </files>
+        </component>
+      </components>
+    </package>
+    
   </packages>
 </dotnetnuke>

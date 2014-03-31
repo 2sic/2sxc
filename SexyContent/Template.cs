@@ -16,15 +16,15 @@ namespace ToSic.SexyContent
 {
     public partial class Template
     {
-        /// <summary>
-        /// Returns the path to the current template file
-        /// </summary>
-        /// <param name="PortalSettings"></param>
-        /// <returns></returns>
-        public string GetTemplatePath()
-        {
-            return System.IO.Path.Combine(SexyContent.GetTemplatePathRoot(Location), Path);
-        }
+        ///// <summary>
+        ///// Returns the path to the current template file
+        ///// </summary>
+        ///// <param name="PortalSettings"></param>
+        ///// <returns></returns>
+        //public string GetTemplatePath(App app)
+        //{
+        //    return System.IO.Path.Combine(SexyContent.GetTemplatePathRoot(Location), Path);
+        //}
 
         /// <summary>
         /// Returns true if the current template uses Razor
@@ -47,13 +47,13 @@ namespace ToSic.SexyContent
         /// <param name="Entity"></param>
         /// <param name="Elements"></param>
         /// <returns></returns>
-        public string RenderTemplate(Page Page, HttpServerUtility Server, PortalSettings PortalSettings, ModuleInstanceContext ModuleContext, string LocalResourceFile, List<Element> Elements, Element ListElement, System.Web.UI.Control Control, ToSic.Eav.DataSources.IDataSource DataSource)
+        public string RenderTemplate(Page Page, HttpServerUtility Server, PortalSettings PortalSettings, ModuleInstanceContext ModuleContext, string LocalResourceFile, List<Element> Elements, Element ListElement, System.Web.UI.Control Control, ToSic.Eav.DataSources.IDataSource DataSource, SexyContent sexy, int appId)
         {
-            string TemplatePath = GetTemplatePath();
+            string templatePath = System.IO.Path.Combine(sexy.GetTemplatePathRoot(this.Location), this.Path);
 
             // Throw Exception if Template does not exist
-            if (!System.IO.File.Exists(Server.MapPath(TemplatePath)))
-                throw new SexyContentException("The template file '" + TemplatePath + "' does not exist.");
+            if (!System.IO.File.Exists(Server.MapPath(templatePath)))
+                throw new SexyContentException("The template file '" + templatePath + "' does not exist.");
 
             Type EngineType;
 
@@ -74,14 +74,10 @@ namespace ToSic.SexyContent
 
             IEngine Engine = (IEngine)Activator.CreateInstance(EngineType, null);
 
-            var app = new App()
-                {
-                    Path =  VirtualPathUtility.ToAbsolute(SexyContent.GetTemplatePathRoot(this.Location)),
-                    PhysicalPath = Server.MapPath(SexyContent.GetTemplatePathRoot(this.Location))
-                };
+            var app = SexyContent.GetApp(SexyContent.GetZoneID(PortalSettings.Current.PortalId).Value, appId);
 
             // Render elements that have a content (by DemoEntityID or real Entity ID)
-            string RenderedTemplate = Engine.Render(this, app, Elements.Where(p => p.Content != null).ToList(), ListElement, ModuleContext, LocalResourceFile, DataSource);
+            string RenderedTemplate = Engine.Render(this, templatePath, app, Elements.Where(p => p.Content != null).ToList(), ListElement, ModuleContext, LocalResourceFile, DataSource);
 
             #region  Handle Client Dependency injection
 
@@ -117,7 +113,7 @@ namespace ToSic.SexyContent
             {
                 if (!Regex.IsMatch(Match.Value, EnableClientDependencyRegex, RegexOptions.IgnoreCase))
                     continue;
-
+                
                 // Break If the Rel attribute is not stylesheet
                 if (!Regex.IsMatch(Match.Value, "('|\"|\\s)rel=('|\")stylesheet('|\")", RegexOptions.IgnoreCase))
                     continue;

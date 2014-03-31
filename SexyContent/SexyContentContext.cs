@@ -5,6 +5,7 @@ using System.Data.Objects.DataClasses;
 using System.Linq;
 using System.Reflection;
 using System.Web;
+using System.Web.UI.WebControls;
 using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.UI.Modules;
@@ -88,12 +89,13 @@ namespace ToSic.SexyContent
         /// Returns a new template
         /// </summary>
         /// <returns></returns>
-        public Template GetNewTemplate()
+        public Template GetNewTemplate(int appId)
         {
             Template NewTemplate = new Template();
             NewTemplate.SysModified = DateTime.Now;
             NewTemplate.SysCreated = DateTime.Now;
             NewTemplate.IsFile = true;
+            NewTemplate.AppID = appId;
             return NewTemplate;
         }
 
@@ -115,57 +117,9 @@ namespace ToSic.SexyContent
             return GetTemplate(Template.TemplateID);
         }
 
-        /// <summary>
-        /// Returns all templates from the specified DotNetNuke portal
-        /// </summary>
-        /// <param name="PortalID"></param>
-        /// <returns></returns>
-        public IEnumerable<Template> GetTemplates(int PortalID)
+        public IEnumerable<Template> GetAllTemplates()
         {
-            return (from t in Templates where t.PortalID == PortalID select t);
-        }
-
-        /// <summary>
-        /// Returns all visible templates with the specified PortalID
-        /// </summary>
-        /// <param name="PortalID"></param>
-        /// <returns></returns>
-        public IEnumerable<Template> GetVisibleTemplates(int PortalID)
-        {
-            return GetTemplates(PortalID).Where(t => !t.IsHidden);
-        }
-
-        /// <summary>
-        /// Returns all visible templates that belongs to the specified portal and use the given AttributeSet.
-        /// </summary>
-        /// <param name="PortalID">The id of the portal to get the templates from</param>
-        /// <param name="AttributeSetID">The id of the AttributeSet</param>
-        /// <returns></returns>
-        public IEnumerable<Template> GetVisibleTemplates(int PortalID, int AttributeSetID)
-        {
-            return GetVisibleTemplates(PortalID).Where(t => t.AttributeSetID == AttributeSetID);
-        }
-
-        /// <summary>
-        /// Returns all visible templates that belongs to the specified portal and use the given AttributeSet, and can be used for lists.
-        /// </summary>
-        /// <param name="PortalID"></param>
-        /// <param name="AttributeSetID"></param>
-        /// <returns></returns>
-        public IEnumerable<Template> GetVisibleListTemplates(int PortalID, int AttributeSetID)
-        {
-            return GetVisibleTemplates(PortalID, AttributeSetID).Where(t => t.UseForList);
-        }
-
-        /// <summary>
-        /// Returns all visible templates that belongs to the specified portal and use the given AttributeSet, and can be used for lists.
-        /// </summary>
-        /// <param name="PortalID"></param>
-        /// <param name="AttributeSetID"></param>
-        /// <returns></returns>
-        public IEnumerable<Template> GetVisibleListTemplates(int PortalID)
-        {
-            return GetVisibleTemplates(PortalID).Where(t => t.UseForList);
+            return Templates;
         }
 
         /// <summary>
@@ -178,6 +132,22 @@ namespace ToSic.SexyContent
             Template Template = GetTemplate(TemplateID);
             Template.SysDeleted = DateTime.Now;
             Template.SysDeletedBy = UserId;
+            SaveChanges();
+        }
+
+        /// <summary>
+        /// Deletes a template and every exiting contengroupitem that uses it completely from the database
+        /// </summary>
+        /// <param name="templateId"></param>
+        /// <param name="userId"></param>
+        public void HardDeleteTemplate(int templateId, int userId)
+        {
+            var template = GetTemplate(templateId);
+            var contentGroupItems = base.ContentGroupItems.Where(c => c.TemplateID == templateId).ToList();
+
+            contentGroupItems.ForEach(DeleteObject);
+            DeleteObject(template);
+
             SaveChanges();
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Data;
 using System.Data.Common;
 using System.Data.EntityClient;
@@ -28,7 +29,9 @@ namespace ToSic.SexyContent.ImportExport
         private string _sourceDefaultLanguage;
         private string _sourceDefaultDimensionId;
         private List<Dimension> _targetDimensions;
-        private readonly SexyContent _sexy = new SexyContent(false);
+        private SexyContent _sexy;
+        private int _appId;
+        private int _zoneId;
         private Dictionary<int, int> _fileIdCorrectionList;
 
         #region Prerequisites
@@ -92,12 +95,60 @@ namespace ToSic.SexyContent.ImportExport
         #endregion
 
         /// <summary>
+        /// Creates an app and then imports the xml
+        /// </summary>
+        /// <param name="xml"></param>
+        /// <returns>AppId of the new imported app</returns>
+        public bool ImportApp(int zoneId, string xml, out int? appId)
+        {
+            appId = new int?();
+
+            // Parse XDocument from string
+            XDocument doc = XDocument.Parse(xml);
+
+            if (!IsCompatible(doc))
+            {
+                ImportLog.Add(new ExportImportMessage("The import file is not compatible with the installed version of 2SexyContent.", ExportImportMessage.MessageTypes.Error));
+                return false;
+            }
+
+            // Get root node "SexyContent"
+            XElement xmlSource = doc.Element("SexyContent");
+            var xApp = xmlSource.Element("Header").Element("App");
+
+            // Build Guid (take existing, or create a new)
+            var appGuid = xApp.Attribute("Guid").Value;
+            if (String.IsNullOrEmpty(appGuid) || appGuid == new Guid().ToString())
+            {
+                appGuid = Guid.NewGuid().ToString();
+            }
+
+            // Adding app to EAV
+            var sexy = new SexyContent(zoneId, SexyContent.GetDefaultAppId(zoneId));
+            var app = sexy.ContentContext.AddApp(appGuid);
+            sexy.ContentContext.SaveChanges();
+
+            appId = app.AppID;
+
+            if (!appId.HasValue || appId <= 0)
+            {
+                ImportLog.Add(new ExportImportMessage("App was not created. Please try again or make sure the package you are importing is correct.", ExportImportMessage.MessageTypes.Error));
+                return false;
+            }
+
+            return ImportXml(zoneId, app.AppID, xml);
+        }
+
+        /// <summary>
         /// Do the import
         /// </summary>
         /// <param name="xml">The previously exported XML</param>
         /// <returns></returns>
-        public bool ImportXml(string xml)
+        public bool ImportXml(int zoneId, int appId, string xml)
         {
+            _sexy = new SexyContent(zoneId, appId, false);
+            _appId = appId;
+            _zoneId = zoneId;
 
             // Parse XDocument from string
             XDocument doc = XDocument.Parse(xml);
@@ -139,9 +190,9 @@ namespace ToSic.SexyContent.ImportExport
             #endregion
 
             var importAttributeSets = GetImportAttributeSets(xmlSource.Element("AttributeSets").Elements("AttributeSet"));
-            var importEntities = GetImportEntities(xmlSource.Elements("Entities").Elements("Entity"), _sexy.DefaultAssignmentObjectTypeID);
+            var importEntities = GetImportEntities(xmlSource.Elements("Entities").Elements("Entity"), SexyContent.AssignmentObjectTypeIDDefault);
             
-            var import = new ToSic.Eav.Import.Import(_sexy.GetZoneID(PortalSettings.Current.PortalId), null, PortalSettings.Current.UserInfo.DisplayName);
+            var import = new ToSic.Eav.Import.Import(_zoneId, _appId, PortalSettings.Current.UserInfo.DisplayName);
             import.RunImport(importAttributeSets, importEntities, true, true);
             ImportLog.AddRange(GetExportImportMessagesFromImportLog(import.ImportLog));
             
@@ -153,7 +204,7 @@ namespace ToSic.SexyContent.ImportExport
                 List<Entity> templateDescribingEntities;
                 ImportXmlTemplates(xmlSource, out templateDescribingEntities);
 
-                var import2 = new ToSic.Eav.Import.Import(_sexy.GetZoneID(PortalSettings.Current.PortalId), null, PortalSettings.Current.UserInfo.DisplayName);
+                var import2 = new ToSic.Eav.Import.Import(_zoneId, _appId, PortalSettings.Current.UserInfo.DisplayName);
                 import2.RunImport(new List<AttributeSet>(), templateDescribingEntities, true, true);
                 ImportLog.AddRange(GetExportImportMessagesFromImportLog(import2.ImportLog));
 
@@ -213,7 +264,7 @@ namespace ToSic.SexyContent.ImportExport
                         Name = attributeSet.Attribute("Name").Value,
                         Description = attributeSet.Attribute("Description").Value,
                         Attributes = attributes,
-                        Scope = SexyContent.AttributeSetScope,
+                        Scope = attributeSet.Attributes("Scope").Any() ? attributeSet.Attribute("Scope").Value : SexyContent.AttributeSetScope,
                         TitleAttribute = titleAttribute
                     });
             }
@@ -235,7 +286,7 @@ namespace ToSic.SexyContent.ImportExport
                 string attributeSetStaticName = template.Attribute("AttributeSetStaticName").Value;
                 ToSic.Eav.AttributeSet Set = _sexy.ContentContext.GetAttributeSet(attributeSetStaticName);
 
-                Template t = _sexy.TemplateContext.GetNewTemplate();
+                Template t = _sexy.TemplateContext.GetNewTemplate(_sexy.AppId.Value);
                 t.Name = template.Attribute("Name").Value;
                 t.Path = template.Attribute("Path").Value;
 
@@ -273,7 +324,7 @@ namespace ToSic.SexyContent.ImportExport
                     t.UseForList = Boolean.Parse(template.Attribute("UseForList").Value);
 
                 // Stop if the same template already exists
-                if (_sexy.TemplateContext.GetTemplates(PortalSettings.Current.PortalId)
+                if (_sexy.GetTemplates(PortalSettings.Current.PortalId)
                          .Any(p => p.AttributeSetID == t.AttributeSetID
                                    && p.Path == t.Path
                                    && p.UseForList == t.UseForList && p.SysDeleted == null))
@@ -283,7 +334,7 @@ namespace ToSic.SexyContent.ImportExport
                 _sexy.TemplateContext.AddTemplate(t);
 
                 foreach (XElement xEntity in template.Elements("Entity"))
-                    entities.Add(GetImportEntity(xEntity, _sexy.SexyContentTemplateAssignmentObjectTypeID, t.TemplateID));
+                    entities.Add(GetImportEntity(xEntity, SexyContent.AssignmentObjectTypeIDSexyContentTemplate, t.TemplateID));
 
                 ImportLog.Add(new ExportImportMessage("Template '" + t.Name + "' successfully imported.",
                                                      ExportImportMessage.MessageTypes.Information));
@@ -315,7 +366,15 @@ namespace ToSic.SexyContent.ImportExport
         /// <returns></returns>
         private Entity GetImportEntity(XElement xEntity, int assignmentObjectTypeId, int? keyNumber = null)
         {
-            
+            var attributeSetStaticName = xEntity.Attribute("AttributeSetStaticName").Value;
+
+            // Special case: App AttributeSets must be assigned to the current app
+            if (xEntity.Attribute("AssignmentObjectType").Value == "App")
+            {
+                keyNumber = _appId;
+                assignmentObjectTypeId = SexyContent.AssignmentObjectTypeIDSexyContentApp;
+            }
+
             var targetEntity = new Entity()
                 {
                     AssignmentObjectTypeId = assignmentObjectTypeId,
@@ -388,9 +447,8 @@ namespace ToSic.SexyContent.ImportExport
                     // Process found value
                     if (sourceValue != null)
                     {
-
                         // Special cases for template-describing values
-                        if (xEntity.Attribute("AttributeSetStaticName").Value == "2SexyContent-Template-ContentTypes")
+                        if (attributeSetStaticName == SexyContent.AttributeSetStaticNameTemplateContentTypes)
                         {
                             var sourceValueString = sourceValue.Attribute("Value").Value;
                             if (!String.IsNullOrEmpty(sourceValueString))
@@ -399,12 +457,12 @@ namespace ToSic.SexyContent.ImportExport
                                 {
                                     case "ContentTypeID":
                                         var attributeSet = _sexy.ContentContext.AttributeSetExists(sourceValueString, _sexy.ContentContext.AppId) ? _sexy.ContentContext.GetAttributeSet(sourceValueString) : null;
-                                        sourceValue.Attribute("Value").SetValue(attributeSet != null ? attributeSet.AttributeSetID.ToString() : String.Empty);
+                                        sourceValue.Attribute("Value").SetValue(attributeSet != null ? attributeSet.AttributeSetID.ToString() : "0");
                                         break;
                                     case "DemoEntityID":
                                         var entityGuid = new Guid(sourceValue.Attribute("Value").Value);
                                         var demoEntity = _sexy.ContentContext.EntityExists(entityGuid) ? _sexy.ContentContext.GetEntity(entityGuid) : null;
-                                        sourceValue.Attribute("Value").SetValue(demoEntity != null ? demoEntity.EntityID.ToString() : String.Empty);
+                                        sourceValue.Attribute("Value").SetValue(demoEntity != null ? demoEntity.EntityID.ToString() : "0");
                                         break;
                                 }
                             }

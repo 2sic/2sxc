@@ -6,13 +6,13 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using DotNetNuke.UI.Modules;
 using ToSic.SexyContent;
+using DotNetNuke.Entities.Modules;
 
 namespace ToSic.SexyContent
 {
-    public partial class ContentTypeAndDemoSelector : DotNetNuke.Entities.Modules.PortalModuleBase
+    public partial class ContentTypeAndDemoSelector : PortalModuleBase
     {
-        SexyContent Sexy;
-
+        
         public bool ContentTypeRequired { get; set; }
 
         public int? _ContentTypeID;
@@ -49,13 +49,36 @@ namespace ToSic.SexyContent
             }
         }
 
+        public int ZoneId { get; set; }
+        public int AppId { get; set; }
+
+        private SexyContent _sexy;
+        public SexyContent Sexy
+        {
+            get
+            {
+                if (_sexy == null)
+                {
+                    if (ZoneId == 0 || AppId == 0)
+                        throw new ArgumentNullException("ZoneId and AppId must be set.");
+                    _sexy = new SexyContent(ZoneId, AppId);
+                }
+                return _sexy;
+            }
+        }
+        private SexyContent _sexyUncached;
+        public SexyContent SexyUncached
+        {
+            get
+            {
+                if (_sexyUncached == null)
+                    _sexyUncached = new SexyContent(ZoneId, AppId, false);
+                return _sexyUncached;
+            }
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
-            Sexy = new SexyContent(true, new int?(),
-                            Request.QueryString.AllKeys.Contains("AppID")
-                                ? int.Parse(Request.QueryString["AppID"])
-                                : new int?());
-
             // Make sure the correct Resource file is loaded
             LocalResourceFile = LocalResourceFile.Replace(ID, "ContentTypeAndDemoSelector");
 
@@ -68,7 +91,7 @@ namespace ToSic.SexyContent
             if (!IsPostBack)
             {
                 // DataBind Content Types
-                var AttributeSets = Sexy.GetAvailableAttributeSets();
+                var AttributeSets = Sexy.GetAvailableAttributeSets(SexyContent.AttributeSetScope);
                 ddlContentTypes.DataSource = AttributeSets;
 
                 if (AttributeSets.Any(a => a.AttributeSetID == _ContentTypeID))

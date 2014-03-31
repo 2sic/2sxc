@@ -11,7 +11,7 @@ using ToSic.SexyContent;
 
 namespace ToSic.SexyContent
 {
-    public partial class EditContentGroupItem : DotNetNuke.Entities.Modules.PortalModuleBase
+    public partial class EditContentGroupItem : PortalModuleBase
     {
         #region Properties
 
@@ -52,6 +52,30 @@ namespace ToSic.SexyContent
 
         public int AttributeSetID { get; set; }
 
+        public int ZoneId { get; set;}
+        public int AppId { get; set; }
+
+        private SexyContent _sexy;
+        public SexyContent Sexy {
+            get {
+                if (_sexy == null)
+                {
+                    if (ZoneId == 0 || AppId == 0)
+                        throw new ArgumentNullException("ZoneId and AppId must be set.");
+                    _sexy = new SexyContent(ZoneId, AppId);
+                }
+                return _sexy;
+            }
+        }
+        private SexyContent _sexyUncached;
+        public SexyContent SexyUncached {
+            get {
+                if (_sexyUncached == null)
+                    _sexyUncached = new SexyContent(ZoneId, AppId, false);
+                return _sexyUncached;
+            }
+        }
+
         private ContentGroupItem _Item;
         /// <summary>
         /// Returns the current ContentGroupItem
@@ -86,7 +110,8 @@ namespace ToSic.SexyContent
 
         #endregion
 
-        private SexyContent Sexy = new SexyContent(false);
+
+        //private SexyContent Sexy = new SexyContent(false);
         private ItemForm EditItemControl;
 
         public EventHandler OnSaved;
@@ -127,8 +152,9 @@ namespace ToSic.SexyContent
             EditItemControl.HideNavigationButtons = true;
             EditItemControl.PreventRedirect = true;
             EditItemControl.AttributeSetId = AttributeSetID;
-            EditItemControl.AssignmentObjectTypeId = Sexy.DefaultAssignmentObjectTypeID;
-            EditItemControl.ZoneId = Sexy.GetZoneID(PortalId);
+            EditItemControl.AssignmentObjectTypeId = SexyContent.AssignmentObjectTypeIDDefault;
+            EditItemControl.ZoneId = ZoneId;
+            EditItemControl.AppId = AppId;
 	        EditItemControl.AddClientScriptAndCss = false;
 
             // If ContentGroupItem has Entity, edit that; else create new Entity
@@ -162,19 +188,17 @@ namespace ToSic.SexyContent
 
         protected void NewItem_OnInserted(ToSic.Eav.Entity Entity)
         {
-            // New Context (wihtout caching)
-            var SexyContext = new SexyContent(false);
             ContentGroupItem NewItem;
 
             if (Item != null)
-                NewItem = SexyContext.TemplateContext.GetContentGroupItem(Item.ContentGroupItemID);
+                NewItem = SexyUncached.TemplateContext.GetContentGroupItem(Item.ContentGroupItemID);
             else
-                NewItem = SexyContext.AddContentGroupItem(ContentGroupID, UserId, TemplateID, Entity.EntityID, SortOrder, true, ItemType, ItemType != ContentGroupItemType.Content);
+                NewItem = SexyUncached.AddContentGroupItem(ContentGroupID, UserId, TemplateID, Entity.EntityID, SortOrder, true, ItemType, ItemType != ContentGroupItemType.Content);
 
             NewItem.EntityID = Entity.EntityID;
             NewItem.SysModified = DateTime.Now;
             NewItem.SysModifiedBy = UserId;
-            SexyContext.TemplateContext.SaveChanges();
+            SexyUncached.TemplateContext.SaveChanges();
 
             UpdateModuleTitleIfNecessary(Entity, NewItem);
         }
@@ -185,7 +209,7 @@ namespace ToSic.SexyContent
                 EditItemControl.Save();
 
             if (Item != null && pnlReferenced.Visible && !EditItemControl.Visible)
-                new SexyContent(false).TemplateContext.DeleteContentGroupItem(Item.ContentGroupItemID, UserId);
+                SexyUncached.TemplateContext.DeleteContentGroupItem(Item.ContentGroupItemID, UserId);
 
             if (OnSaved != null)
                 OnSaved(this, new EventArgs());
@@ -200,7 +224,7 @@ namespace ToSic.SexyContent
         protected void UpdateModuleTitleIfNecessary(ToSic.Eav.Entity Entity, ContentGroupItem GroupItem)
         {
             // Creating new Context, because EntityTitle gets not refreshed otherwise
-            SexyContent SexyContext = new SexyContent();
+            var SexyContext = new SexyContent(ZoneId, AppId, true);
 
             // Get ContentGroup
             var ListContentGroupItem = SexyContext.TemplateContext.GetListContentGroupItem(GroupItem.ContentGroupID, UserId);
