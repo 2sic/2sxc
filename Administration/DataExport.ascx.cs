@@ -5,20 +5,19 @@ using ToSic.SexyContent.DataImportExport;
 
 namespace ToSic.SexyContent.Administration
 {
-    public partial class DataExport : DotNetNuke.Entities.Modules.PortalModuleBase
+    public partial class DataExport : SexyControlAdminBase
     {
         // NOTE2tk: Find the dialog on http://2sexycontent.2tk.2sic/Home/tabid/55/ctl/dataexport/mid/388/Default.aspx?popUp=true
-        // TODO2tk: Make sure the new EAV libraries are checked in
-        // TODO2tk: The language must be enabled in 2SexyContent at the moment
-        public int? ApplicationId
+
+        public int ApplicationId
         {
             get
             {
                 if (ViewState["ApplicationId"] == null)
                 {
-                    return new int?();
+                    return 0;
                 }
-                return (int?)ViewState["ApplicationId"];
+                return (int)ViewState["ApplicationId"];
             }
             set
             {
@@ -101,9 +100,9 @@ namespace ToSic.SexyContent.Administration
                 return;
             }
 
-            ApplicationId = Request["AppID"] != null ? int.Parse(Request["AppID"]) : new int?();
+            ApplicationId = Request["AppID"] != null ? int.Parse(Request["AppID"]) : 0;
 
-            var sexyContent = new SexyContent(1, ApplicationId.Value); // TODO2tk: Get the zone ID
+            var sexyContent = new SexyContent(ZoneId.Value, ApplicationId);
 
             LanguageFallback = PortalSettings.DefaultLanguage;
             Languages = sexyContent.ContentContext.GetLanguages()
@@ -150,11 +149,11 @@ namespace ToSic.SexyContent.Administration
             
             if (RecordExportOptionSelected.IsBlank())
             {
-                dataXml = dataSerializer.SerializeBlank(ApplicationId, ContentTypeIdSelected);
+                dataXml = dataSerializer.SerializeBlank(ZoneId.Value, ApplicationId, ContentTypeIdSelected);
             }
             else
             {
-                dataXml = dataSerializer.Serialize(ApplicationId, ContentTypeIdSelected, LanguageSelected, LanguageFallback, Languages, LanguageReferenceOptionSelected, ResourceReferenceOptionSelected);
+                dataXml = dataSerializer.Serialize(ZoneId.Value, ApplicationId, ContentTypeIdSelected, LanguageSelected, LanguageFallback, Languages, LanguageReferenceOptionSelected, ResourceReferenceOptionSelected);
             }
 
 

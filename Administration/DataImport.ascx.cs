@@ -7,37 +7,21 @@ using ToSic.SexyContent.DataImportExport.Extensions;
 
 namespace ToSic.SexyContent.Administration
 {
-    public partial class DataImport : DotNetNuke.Entities.Modules.PortalModuleBase
+    public partial class DataImport : SexyControlAdminBase
     {
-        public int? ApplicationId
+        public int ApplicationId
         {
             get
             {
                 if (ViewState["ApplicationId"] == null)
                 {
-                    return new int?();
+                    return 0;
                 }
-                return (int?)ViewState["ApplicationId"];
+                return (int)ViewState["ApplicationId"];
             }
             set
             {
                 ViewState["ApplicationId"] = value;
-            }
-        }
-
-        public int? ZoneId
-        {
-            get
-            {
-                if (ViewState["ZoneId"] == null)
-                {
-                    return new int?();
-                }
-                return (int?)ViewState["ZoneId"];
-            }
-            set
-            {
-                ViewState["ZoneId"] = value;
             }
         }
 
@@ -127,11 +111,9 @@ namespace ToSic.SexyContent.Administration
                 return;
             }
 
-            ApplicationId = Request["AppID"] != null ? int.Parse(Request["AppID"]) : new int?();
+            ApplicationId = Request["AppID"] != null ? int.Parse(Request["AppID"]) : 0;
+            var sexyContent = new SexyContent(ZoneId.Value, ApplicationId);
 
-            var sexyContent = new SexyContent(1, ApplicationId.Value); // TODO2tk: Get the zone ID
-
-            ZoneId = SexyContent.GetZoneID(PortalId);
             Languages = sexyContent.ContentContext.GetLanguages()
                                                   .Where(language => language.Active)
                                                   .Select(language => language.ExternalKey)
@@ -174,7 +156,7 @@ namespace ToSic.SexyContent.Administration
             FileName = fuFileUpload.FileName;
 
             var fileContent = fuFileUpload.FileContent;
-            var fileImport = new DataXmlImport(ApplicationId, ContentTypeIdSelected, Languages, LanguageFallback, EntityClearOptionSelected, ResourceReferenceOptionSelected);
+            var fileImport = new DataXmlImport(ZoneId.Value, ApplicationId, ContentTypeIdSelected, Languages, LanguageFallback, EntityClearOptionSelected, ResourceReferenceOptionSelected);
             fileImport.Deserialize(fileContent);
             if (fileImport.HasErrors)
             {
@@ -195,9 +177,9 @@ namespace ToSic.SexyContent.Administration
             var fileContent = fileInfo.ReadStream();
             fileInfo.Delete();  
           
-            var fileImport = new DataXmlImport(ApplicationId, ContentTypeIdSelected, Languages, LanguageFallback, EntityClearOptionSelected, ResourceReferenceOptionSelected);
+            var fileImport = new DataXmlImport(ZoneId.Value, ApplicationId, ContentTypeIdSelected, Languages, LanguageFallback, EntityClearOptionSelected, ResourceReferenceOptionSelected);
             fileImport.Deserialize(fileContent);
-            var fileImported = fileImport.Pesrist(ZoneId, UserName);
+            var fileImported = fileImport.Pesrist(UserName);
            
             ShowDonePanel(!fileImported);
         }

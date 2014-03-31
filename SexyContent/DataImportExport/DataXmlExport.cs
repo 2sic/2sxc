@@ -11,9 +11,9 @@ namespace ToSic.SexyContent.DataImportExport
         /// <summary>
         /// Create a blank xml scheme for 2SexyContent data.
         /// </summary>
-        public string SerializeBlank(int? applicationId, int contentTypeId)
+        public string SerializeBlank(int zoneId, int applicationId, int contentTypeId)
         {
-            var contentType = GetContentType(applicationId, contentTypeId);
+            var contentType = GetContentType(zoneId, applicationId, contentTypeId);
             if (contentType == null) 
                 return null;
 
@@ -33,6 +33,7 @@ namespace ToSic.SexyContent.DataImportExport
         /// <summary>
         /// Serialize 2SexyContent data to an xml string.
         /// </summary>
+        /// <param name="zoneId">ID of 2SexyContent zone</param>
         /// <param name="applicationId">ID of 2SexyContent application</param>
         /// <param name="contentTypeId">ID of 2SexyContent type</param>
         /// <param name="languageSelected">Language of the data to be serialized (null for all languages)</param>
@@ -40,9 +41,9 @@ namespace ToSic.SexyContent.DataImportExport
         /// <param name="languageScope">Languages supported of the system</param>
         /// <param name="languageReferenceOption">How value references to other languages are handled</param>
         /// <param name="resourceReferenceOption">How value references to files and pages are handled</param>
-        public string Serialize(int? applicationId, int contentTypeId, string languageSelected, string languageFallback, IEnumerable<string> languageScope, LanguageReferenceExportOption languageReferenceOption, ResourceReferenceExportOption resourceReferenceOption)
+        public string Serialize(int zoneId, int applicationId, int contentTypeId, string languageSelected, string languageFallback, IEnumerable<string> languageScope, LanguageReferenceExportOption languageReferenceOption, ResourceReferenceExportOption resourceReferenceOption)
         {
-            var contentType = GetContentType(applicationId, contentTypeId);
+            var contentType = GetContentType(zoneId, applicationId, contentTypeId);
             if (contentType == null)
                 return null;
 
@@ -90,9 +91,9 @@ namespace ToSic.SexyContent.DataImportExport
         }
 
 
-        private static AttributeSet GetContentType(int? applicationId, int contentTypeId)
+        private static AttributeSet GetContentType(int zoneId, int applicationId, int contentTypeId)
         {
-            var contentContext = new SexyContent(1, applicationId.Value).ContentContext; // TODO2tk: Get the zone ID
+            var contentContext = new SexyContent(zoneId, applicationId).ContentContext;
             return contentContext.GetAttributeSet(contentTypeId);
         }
 

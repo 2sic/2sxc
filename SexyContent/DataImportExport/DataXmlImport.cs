@@ -11,7 +11,9 @@ namespace ToSic.SexyContent.DataImportExport
 {
     public class DataXmlImport
     {
-        private int? applicationId;
+        private int applicationId;
+
+        private int zoneId;
 
         private SexyContent contentManager;
 
@@ -68,10 +70,11 @@ namespace ToSic.SexyContent.DataImportExport
 
 
 
-        public DataXmlImport(int? applicationId, int contentTypeId, IEnumerable<string> languages, string documentLanguageFallback, EntityClearImportOption entityClearOption, ResourceReferenceImportOption resourceReferenceOption)
+        public DataXmlImport(int zoneId, int applicationId, int contentTypeId, IEnumerable<string> languages, string documentLanguageFallback, EntityClearImportOption entityClearOption, ResourceReferenceImportOption resourceReferenceOption)
         {
             this.applicationId = applicationId;
-            this.contentManager = new SexyContent(1, applicationId.Value); // TODO2tk: Get the zone ID
+            this.zoneId = zoneId;
+            this.contentManager = new SexyContent(zoneId, applicationId);
             this.contentType = contentManager.ContentContext.GetAttributeSet(contentTypeId);
             this.languages = languages;
             this.documentLanguageFallback = documentLanguageFallback;
@@ -215,7 +218,7 @@ namespace ToSic.SexyContent.DataImportExport
         /// <summary>
         /// Save the data in memory to the EAV data base.
         /// </summary>
-        public bool Pesrist(int? zoneId, string userId)
+        public bool Pesrist(string userId)
         {
             if (HasErrors)
             {
