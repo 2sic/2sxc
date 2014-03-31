@@ -39,7 +39,7 @@
 				</asp:TemplateField>
 				<asp:TemplateField HeaderText="Records">
 					<ItemTemplate>
-						<asp:Label ID="lblRecordsCount" runat="server" Text='<%# Eval("Entities.Count") %>' />
+						<asp:Label ID="lblRecordsCount" runat="server" Text='<%# ((System.Data.Objects.DataClasses.EntityCollection<ToSic.Eav.Entity>)Eval("Entities")).Count(en => !en.ChangeLogIDDeleted.HasValue) %>' />
 						<asp:HyperLink ID="hlnkShowItems" NavigateUrl='<%# GetShowItemsUrl(Eval("AttributeSetId")) %>'
 							runat="server" CssClass='<%# UseDialogs ? "Dialog" : "" %>' Text="Show Items" />
 					</ItemTemplate>

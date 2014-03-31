@@ -426,7 +426,9 @@
     <Content Include="SexyContent\EAV\Controls\ItemForm.css" />
     <Content Include="SexyContent\EAV\Controls\ItemForm.js" />
     <Content Include="SexyContent\EAV\Controls\ItemFormEntityModelCreator.js" />
+    <Content Include="SexyContent\EAV\Controls\ItemHistory.ascx" />
     <Content Include="SexyContent\EAV\Controls\Items.ascx" />
+    <Content Include="SexyContent\EAV\Controls\ItemVersionDetails.ascx" />
     <Content Include="SexyContent\EAV\FieldTemplates\Entity_Edit.ascx" />
     <Content Include="SexyContent\EAV\FieldTemplates\Number_Edit.ascx" />
     <Content Include="SexyContent\EAV\FieldTemplates\Hyperlink_Edit.ascx" />
