@@ -130,6 +130,20 @@
     <Compile Include="Administration\Apps\AppImport.ascx.designer.cs">
       <DependentUpon>AppImport.ascx</DependentUpon>
     </Compile>
+    <Compile Include="Administration\DataExport.ascx.cs">
+      <DependentUpon>DataExport.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\DataExport.ascx.designer.cs">
+      <DependentUpon>DataExport.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Administration\DataImport.ascx.cs">
+      <DependentUpon>DataImport.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\DataImport.ascx.designer.cs">
+      <DependentUpon>DataImport.ascx</DependentUpon>
+    </Compile>
     <Compile Include="Administration\GettingStarted.ascx.cs">
       <DependentUpon>GettingStarted.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -214,6 +228,30 @@
     </Compile>
     <Compile Include="SexyContent\App.cs" />
     <Compile Include="SexyContent\ContentGroupItem.cs" />
+    <Compile Include="SexyContent\DataImportExport\Extensions\AttributeExtension.cs" />
+    <Compile Include="SexyContent\DataImportExport\DataImportErrorProtocol.cs" />
+    <Compile Include="SexyContent\DataImportExport\DataXmlExport.cs" />
+    <Compile Include="SexyContent\DataImportExport\DataXmlImport.cs" />
+    <Compile Include="SexyContent\DataImportExport\EntityGuidManager.cs" />
+    <Compile Include="SexyContent\DataImportExport\Extensions\EntityImportExtension.cs" />
+    <Compile Include="SexyContent\DataImportExport\Extensions\EnumExtension.cs" />
+    <Compile Include="SexyContent\DataImportExport\Extensions\FileInfoExtension.cs" />
+    <Compile Include="SexyContent\DataImportExport\Extensions\IValueImportModelExtension.cs" />
+    <Compile Include="SexyContent\DataImportExport\DataImportError.cs" />
+    <Compile Include="SexyContent\DataImportExport\Extensions\EavValueExtension.cs" />
+    <Compile Include="SexyContent\DataImportExport\LanguageReferenceImportOption.cs" />
+    <Compile Include="SexyContent\DataImportExport\EntityClearImportOption.cs" />
+    <Compile Include="SexyContent\DataImportExport\Extensions\EntityExtension.cs" />
+    <Compile Include="SexyContent\DataImportExport\Extensions\IEnumerableExtension.cs" />
+    <Compile Include="SexyContent\DataImportExport\LocalizedDescriptionAttribute.cs" />
+    <Compile Include="SexyContent\DataImportExport\RecordCreateExportOption.cs" />
+    <Compile Include="SexyContent\DataImportExport\ResourceReferenceImportOption.cs" />
+    <Compile Include="SexyContent\DataImportExport\Extensions\StringExtension.cs" />
+    <Compile Include="SexyContent\DataImportExport\XElementName.cs" />
+    <Compile Include="SexyContent\DataImportExport\LanguageMissingExportOption.cs" />
+    <Compile Include="SexyContent\DataImportExport\LanguageReferenceExportOption.cs" />
+    <Compile Include="SexyContent\DataImportExport\ResourceReferenceExportOption.cs" />
+    <Compile Include="SexyContent\DataImportExport\Extensions\XElementExtension.cs" />
     <Compile Include="SexyContent\DataSources\EntitiesFromList.cs" />
     <Compile Include="SexyContent\DataSources\ModuleDataSource.cs" />
     <Compile Include="SexyContent\DataSources\Tokens\ModulePropertyAccess.cs" />
@@ -269,6 +307,7 @@
     <Compile Include="SexyContent\Engines\TokenEngine\AppPropertyAccess.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\DynamicEntityPropertyAccess.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\TokenEngine.cs" />
+    <Compile Include="SexyContent\DataImportExport\Extensions\AttributeSetExtension.cs" />
     <Compile Include="SexyContent\ImportExport\ExportImportMessage.cs" />
     <Compile Include="SexyContent\ImportExport\ImportExport.cs" />
     <Compile Include="SexyContent\ImportExport\ImportExportHelpers.cs" />
@@ -357,6 +396,8 @@
     <Content Include="Administration\Apps\AppExport.ascx" />
     <Content Include="Administration\Apps\AppManagement.ascx" />
     <Content Include="Administration\Apps\AppImport.ascx" />
+    <Content Include="Administration\DataExport.ascx" />
+    <Content Include="Administration\DataImport.ascx" />
     <Content Include="Administration\GettingStarted.ascx" />
     <Content Include="Administration\PortalConfiguration.ascx" />
     <Content Include="Administration\ContentTypeAndDemoSelector.ascx" />
@@ -427,7 +468,9 @@
     <Content Include="SexyContent\EAV\Controls\ItemForm.css" />
     <Content Include="SexyContent\EAV\Controls\ItemForm.js" />
     <Content Include="SexyContent\EAV\Controls\ItemFormEntityModelCreator.js" />
+    <Content Include="SexyContent\EAV\Controls\ItemHistory.ascx" />
     <Content Include="SexyContent\EAV\Controls\Items.ascx" />
+    <Content Include="SexyContent\EAV\Controls\ItemVersionDetails.ascx" />
     <Content Include="SexyContent\EAV\FieldTemplates\Entity_Edit.ascx" />
     <Content Include="SexyContent\EAV\FieldTemplates\Number_Edit.ascx" />
     <Content Include="SexyContent\EAV\FieldTemplates\Hyperlink_Edit.ascx" />
@@ -566,6 +609,23 @@
   <ItemGroup>
     <Content Include="Administration\App_LocalResources\PortalConfiguration.ascx.de-DE.resx" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Administration\App_LocalResources\DataImport.ascx.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Administration\App_LocalResources\DataImport.ascx.de-DE.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Administration\App_LocalResources\DataExport.ascx.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Administration\App_LocalResources\DataExport.ascx.de-DE.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SexyContent\DataImportExport\DataImportErrorCode.de-DE.resx" />
+    <EmbeddedResource Include="SexyContent\DataImportExport\DataImportErrorCode.resx" />
+  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Administration\Apps\App_LocalResources\AppManagement.ascx.resx" />
   </ItemGroup>

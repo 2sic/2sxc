@@ -156,6 +156,7 @@ namespace ToSic.SexyContent
             EditItemControl.ZoneId = ZoneId;
             EditItemControl.AppId = AppId;
 	        EditItemControl.AddClientScriptAndCss = false;
+            EditItemControl.ItemHistoryUrl = "";
 
             // If ContentGroupItem has Entity, edit that; else create new Entity
             if (Item != null && Item.EntityID.HasValue)

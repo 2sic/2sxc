@@ -117,28 +117,31 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ActionExport.Text" xml:space="preserve">
-    <value>Export</value>
+  <data name="InvalidContentType" xml:space="preserve">
+    <value>Selected content-type does not exist.</value>
   </data>
-  <data name="dataexport.Text" xml:space="preserve">
-    <value>Data Export</value>
+  <data name="InvalidDocument" xml:space="preserve">
+    <value>Document is not a valid XML file.</value>
   </data>
-  <data name="dataimport.Text" xml:space="preserve">
-    <value>Data Import</value>
+  <data name="InvalidLanguage" xml:space="preserve">
+    <value>The language is not supported.</value>
   </data>
-  <data name="eavmanagement.Text" xml:space="preserve">
-    <value>Manage Content Types</value>
+  <data name="InvalidRoot" xml:space="preserve">
+    <value>Selected content-type does not match the content-type in the XML file.</value>
   </data>
-  <data name="gettingstarted.Text" xml:space="preserve">
-    <value>Getting Started</value>
+  <data name="InvalidValueFormat" xml:space="preserve">
+    <value>Value cannot be read, because of it has an invalid format.</value>
   </data>
-  <data name="import.Text" xml:space="preserve">
-    <value>Import / Export</value>
+  <data name="InvalidValueReference" xml:space="preserve">
+    <value>Language reference cannot be parsed, the language is not supported.</value>
   </data>
-  <data name="managetemplates.Text" xml:space="preserve">
-    <value>Manage Templates</value>
+  <data name="InvalidValueReferenceProtection" xml:space="preserve">
+    <value>Language reference cannot be parsed, the read-write protection is not supported.</value>
   </data>
-  <data name="portalconfiguration.Text" xml:space="preserve">
-    <value>Portal Configuration</value>
+  <data name="MissingElementLanguage" xml:space="preserve">
+    <value>The document does not specify all languages for all entities.</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>Unknown error.</value>
   </data>
 </root>
