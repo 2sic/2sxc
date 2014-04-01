@@ -47,7 +47,7 @@ namespace ToSic.SexyContent
                 ClientScript.RegisterClientScriptInclude("ViewEdit", ResolveClientUrl("~/DesktopModules/ToSIC_SexyContent/Js/ViewEdit.js"));
 
                 hfContentGroupItemAction.Visible = true;
-                hfContentGroupItemID.Visible = true;
+                hfContentGroupItemSortOrder.Visible = true;
 
                 // ToDo: The following part must also be implemented into ViewApp.ascx!
                 ((DotNetNuke.UI.Modules.ModuleHost)this.Parent).Attributes.Add("data-2sxc", (new
@@ -65,13 +65,14 @@ namespace ToSic.SexyContent
                             dialogUrl = DotNetNuke.Common.Globals.NavigateURL(this.TabId),
                             returnUrl = Request.RawUrl,
                             appPath = AppId.HasValue ? Sexy.App.Path : null,
-                            cultureDimension = Sexy.GetCurrentLanguageID()
+                            cultureDimension = Sexy.GetCurrentLanguageID(),
+                            attributeSetGuid = Template != null ? Sexy.ContentContext.GetAttributeSet(Template.AttributeSetID).StaticName : null
                         }
                     }
                 }).ToJson());
 
-                ClientResourceManager.RegisterScript(this.Page, "~/DesktopModules/ToSIC_SexyContent/Js/2sxc.api.js", 100);
-                ClientResourceManager.RegisterScript(this.Page, "~/DesktopModules/ToSIC_SexyContent/Js/2sxc.api.manage.js", 110);
+                ClientResourceManager.RegisterScript(this.Page, "~/DesktopModules/ToSIC_SexyContent/Js/2sxc.api.js", 90);
+                ClientResourceManager.RegisterScript(this.Page, "~/DesktopModules/ToSIC_SexyContent/Js/2sxc.api.manage.js", 91);
             }
 
         }
@@ -346,13 +347,13 @@ namespace ToSic.SexyContent
                 switch (hfContentGroupItemAction.Value)
                 {
                     case "add":
-                        new SexyContent(ZoneId.Value, AppId.Value, false).AddContentGroupItem(Elements.First().GroupId, UserId, Elements.First().TemplateId, null, Elements.Where(el => el.Id == int.Parse(hfContentGroupItemID.Value)).Single().SortOrder + 1, true, ContentGroupItemType.Content, false);
+                        new SexyContent(ZoneId.Value, AppId.Value, false).AddContentGroupItem(Elements.First().GroupId, UserId, Elements.First().TemplateId, null, int.Parse(hfContentGroupItemSortOrder.Value) + 1, true, ContentGroupItemType.Content, false);
                         Response.Redirect(DotNetNuke.Common.Globals.NavigateURL(this.TabId, "", null));
                         break;
                 }  
 
                 hfContentGroupItemAction.Value = "";
-                hfContentGroupItemID.Value = "";
+                hfContentGroupItemSortOrder.Value = "";
             }
         }
 

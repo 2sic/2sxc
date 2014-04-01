@@ -27,6 +27,9 @@ $2sxc.getManageController = function(id) {
                 returnUrl: ''
             };
 
+            if (settings.action == 'new')
+                dialogParams.editMode = "New";
+
             return settings.dialogUrl
                 + (settings.dialogUrl.indexOf('?') == -1 ? '?' : '&')
                 + $.param(dialogParams);
@@ -45,36 +48,55 @@ $2sxc.getManageController = function(id) {
             
         },
 
+        action: function(settings) {
+
+            if (settings.action == 'edit' || settings.action == 'new')
+                manageController.openDialog(settings);
+            else if (settings.action == 'add') {
+                moduleElement.find("input[id$=hfContentGroupItemSortOrder]:first").val(settings.sortOrder);
+                moduleElement.find("input[id$=hfContentGroupItemAction]:first").val("add");
+
+                $("form").submit();
+            } else {
+                throw "Action " + settings.action + " not known.";
+            }
+        },
+
         getButton: function (settings) {
 
             settings = $.extend(config, settings);
             var button = $('<a />', {
-                'class': 'sc-' + settings.action
+                'class': 'sc-' + settings.action,
+                'href': 'javascript:$2sxc(' + settings.moduleId + ').manage.action(' + JSON.stringify(settings) + ')'
             });
 
             // Bind click action
-            button.click(function () { manageController.openDialog(settings); });
+            //button.click(function () { manageController.openDialog(settings); });
 
-            return button;
+            return button[0].outerHTML; 
         },
 
-        // Builds the toolbar and returns it as jQuery object
-        getToolbar: function(entityId, editSettings, addSettings, newSettings) {
+        // Builds the toolbar and returns it as HTML
+        getToolbar: function (settings) {
 
-            var toolbar = $('<ul />', {
-                'class': 'sc-menu'
-            });
+            var buttons = [];
 
-            editSettings = $.extend(editSettings, { action: 'edit', sortOrder: 0 });
-            addSettings = $.extend(addSettings, { action: 'add' });
-            newSettings = $.extend(newSettings, { action: 'new' });
+            if ($.isArray(settings)) {
+                buttons = settings;
+            } else {
+                buttons = [
+                    $.extend({ action: 'edit' }, settings),
+                    $.extend({ action: 'add' }, settings),
+                    $.extend({ action: 'new' }, settings)
+                ];
+            }
 
-            toolbar.append($('<li />').append(manageController.getButton(editSettings)));
-            toolbar.append($('<li />').append(manageController.getButton(addSettings)));
-            toolbar.append($('<li />').append(manageController.getButton(newSettings)));
+            var toolbar = $('<ul />', { 'class': 'sc-menu' });
 
-            return toolbar;
+            for (var i = 0; i < buttons.length; i++)
+                toolbar.append($('<li />').append($(manageController.getButton(buttons[i]))));
 
+            return toolbar[0].outerHTML;
         }
 
     };
