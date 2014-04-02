@@ -2,7 +2,7 @@
 $2sxc.getManageController = function(id) {
 
     var moduleElement = $('.DnnModule-' + id);
-    var config = $.parseJSON(moduleElement.find('.Mod2sxcC').attr('data-2sxc')).manage.config;
+    var config = $.parseJSON(moduleElement.find('.Mod2sxcC, .Mod2sxcappC').attr('data-2sxc')).manage.config;
 
     var manageController = {
 

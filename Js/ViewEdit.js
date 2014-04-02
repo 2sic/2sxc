@@ -4,7 +4,7 @@
         e.stopPropagation();
     });
 
-    $('.DnnModule-2sxc .Mod2sxcC').each(function() {
+    $('.DnnModule-2sxc .Mod2sxcC, .DnnModule-2sxc-app .Mod2sxcappC').each(function () {
         var moduleId = $.parseJSON($(this).attr('data-2sxc')).moduleId;
 
         $('.sc-menu', this).each(function () {

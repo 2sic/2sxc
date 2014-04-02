@@ -1,24 +1,15 @@
 ﻿using System;
-using System.IO;
 using System.Web;
 using System.Web.UI;
-using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using DotNetNuke.Common.Utilities;
-using DotNetNuke.Security.Permissions;
 using DotNetNuke.Services.Exceptions;
-using System.Dynamic;
 using System.Collections.Generic;
-using DotNetNuke.Services.Tokens;
-using System.Collections.Specialized;
-using DotNetNuke.Entities.Users;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Client.ClientResourceManagement;
-using Microsoft.CSharp;
 using System.Linq;
 using DotNetNuke.Entities.Modules;
 using ToSic.Eav;
-using ToSic.SexyContent;
 using DotNetNuke.Entities.Modules.Actions;
 
 namespace ToSic.SexyContent
@@ -49,7 +40,6 @@ namespace ToSic.SexyContent
                 hfContentGroupItemAction.Visible = true;
                 hfContentGroupItemSortOrder.Visible = true;
 
-                // ToDo: The following part must also be implemented into ViewApp.ascx!
                 ((DotNetNuke.UI.Modules.ModuleHost)this.Parent).Attributes.Add("data-2sxc", (new
                 {
                     moduleId = ModuleId,

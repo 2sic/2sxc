@@ -716,7 +716,7 @@ namespace ToSic.SexyContent
 
             //Toolbar += "</ul>";
 
-            return "<ul class='sc-menu' data-toolbar='" + new { moduleId = ModuleId, sortOrder = SortOrder }.ToJson() + "'></ul>";
+            return "<ul class='sc-menu' data-toolbar='" + new { sortOrder = SortOrder }.ToJson() + "'></ul>";
         }
 
         /// <summary>
