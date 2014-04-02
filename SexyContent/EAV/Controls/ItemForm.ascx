@@ -20,5 +20,6 @@
 <asp:Panel runat="server" ID="pnlActions" Visible='<%# !HideNavigationButtons %>'>
     <asp:LinkButton CssClass="eav-save" ID="btnInsert" runat="server" CommandName="Insert" Text="Insert" OnClick="btnInsert_Click" />
 	<asp:LinkButton CssClass="eav-save" ID="btnUpdate" runat="server" CommandName="Update" Text="Update" OnClick="btnUpdate_Click" />
-	<asp:LinkButton CssClass="eav-cancel" ID="btnCancel" runat="server" CommandName="Cancel" Text="Cancel" CausesValidation="false" onclick="btnCancel_Click" />
+	<asp:LinkButton CssClass="eav-cancel" ID="btnCancel" runat="server" CommandName="Cancel" Text="Cancel" CausesValidation="false" OnClick="btnCancel_Click" />
+	<asp:Hyperlink CssClass="eav-history" ID="hlkShowHistory" runat="server" Text="Show History" NavigateUrl='<%# GetHistoryUrl() %>' />
 </asp:Panel>

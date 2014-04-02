@@ -1,4 +1,5 @@
-﻿using System.Data.Objects.DataClasses;
+﻿using System.Data;
+using System.Data.Objects.DataClasses;
 using System.Text.RegularExpressions;
 using System.Web.UI;
 using DotNetNuke.Web.Client.ClientResourceManagement;
@@ -81,7 +82,7 @@ namespace ToSic.SexyContent
 
             #region  Handle Client Dependency injection
 
-            var EnableClientDependencyRegex = "\\sdata-enableoptimizations=('|\")true('|\")(>|\\s)";
+            var EnableClientDependencyRegex = "\\sdata-enableoptimizations=('|\")(?<Priority>true|[0-9]+)('|\")(>|\\s)";
 
             #region Scripts
             var ScriptMatches = Regex.Matches(RenderedTemplate, "<script\\s([^>]*)src=('|\")(?<Src>.*?)('|\")(([^>]*/>)|[^>]*(>.*?</script>))", RegexOptions.IgnoreCase | RegexOptions.Singleline);
@@ -89,12 +90,17 @@ namespace ToSic.SexyContent
 
             foreach (Match Match in ScriptMatches)
             {
-                if (!Regex.IsMatch(Match.Value, EnableClientDependencyRegex, RegexOptions.IgnoreCase))
+                var clientDependencyMatch = Regex.Match(Match.Value, EnableClientDependencyRegex, RegexOptions.IgnoreCase);
+                if (!clientDependencyMatch.Success)
                     continue;
 
                 var Path = Match.Groups["Src"].Value;
+                var Priority = clientDependencyMatch.Groups["Priority"].Value;
 
-                ClientResourceManager.RegisterScript(Page, Path);
+                if (Priority == "true")
+                    ClientResourceManager.RegisterScript(Page, Path);
+                else
+                    ClientResourceManager.RegisterScript(Page, Path, int.Parse(Priority));
 
                 // Remove the script tag from the Rendered Template
                 ScriptMatchesToRemove.Add(Match);
@@ -111,7 +117,8 @@ namespace ToSic.SexyContent
 
             foreach (Match Match in StyleMatches)
             {
-                if (!Regex.IsMatch(Match.Value, EnableClientDependencyRegex, RegexOptions.IgnoreCase))
+                var clientDependencyMatch = Regex.Match(Match.Value, EnableClientDependencyRegex, RegexOptions.IgnoreCase);
+                if (!clientDependencyMatch.Success)
                     continue;
                 
                 // Break If the Rel attribute is not stylesheet
@@ -119,8 +126,12 @@ namespace ToSic.SexyContent
                     continue;
 
                 var Path = Match.Groups["Src"].Value;
+                var Priority = clientDependencyMatch.Groups["Priority"].Value;
 
-                ClientResourceManager.RegisterStyleSheet(Page, Path);
+                if(Priority == "true")
+                    ClientResourceManager.RegisterStyleSheet(Page, Path);
+                else
+                    ClientResourceManager.RegisterStyleSheet(Page, Path, int.Parse(Priority));
 
                 // Remove the script tag from the Rendered Template
                 StyleMatchesToRemove.Add(Match);
