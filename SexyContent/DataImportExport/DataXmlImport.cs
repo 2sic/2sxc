@@ -218,7 +218,7 @@ namespace ToSic.SexyContent.DataImportExport
             }
             catch (Exception exception)
             {
-                errorProtocol.AppendError(DataImportErrorCode.Unknown, exception.Message);
+                errorProtocol.AppendError(DataImportErrorCode.Unknown, exception.ToString());
             }
         }
 
