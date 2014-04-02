@@ -255,4 +255,7 @@
   <data name="btnTestDataDetailed.Text" xml:space="preserve">
     <value>Test XML detailed</value>
   </data>
+  <data name="lblInformationImportTime.Text" xml:space="preserve">
+    <value>Note: The import may take several minutes.</value>
+  </data>
 </root>
