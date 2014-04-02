@@ -85,10 +85,13 @@ $2sxc.getManageController = function(id) {
                 buttons = settings;
             } else {
                 buttons = [
-                    $.extend({ action: 'edit' }, settings),
-                    $.extend({ action: 'add' }, settings),
-                    $.extend({ action: 'new' }, settings)
+                    $.extend({ action: 'edit' }, settings)
                 ];
+
+                if (config.isList) {
+                    buttons.push($.extend({ action: 'add' }, settings));
+                    buttons.push($.extend({ action: 'new' }, settings));
+                }
             }
 
             var toolbar = $('<ul />', { 'class': 'sc-menu' });

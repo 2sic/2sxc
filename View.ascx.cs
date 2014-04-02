@@ -66,7 +66,8 @@ namespace ToSic.SexyContent
                             returnUrl = Request.RawUrl,
                             appPath = AppId.HasValue ? Sexy.App.Path : null,
                             cultureDimension = Sexy.GetCurrentLanguageID(),
-                            attributeSetGuid = Template != null ? Sexy.ContentContext.GetAttributeSet(Template.AttributeSetID).StaticName : null
+                            attributeSetGuid = Template != null ? Sexy.ContentContext.GetAttributeSet(Template.AttributeSetID).StaticName : null,
+                            isList = Template != null && Template.UseForList
                         }
                     }
                 }).ToJson());

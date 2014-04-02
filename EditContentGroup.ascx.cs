@@ -266,7 +266,7 @@ namespace ToSic.SexyContent
         {
             // Create URL for other language
             var Url = Request.RawUrl;
-            Url = Regex.Replace(Url, "&CultureDimension=[0-9]+?", "");
+            Url = Regex.Replace(Url, "&CultureDimension=[0-9]+?", "", RegexOptions.IgnoreCase);
             Url = Url + "&CultureDimension=" + cultureDimensionId;
 
             return Url;
