@@ -22,7 +22,8 @@ namespace ToSic.SexyContent
         {
             get
             {
-                return !UserInfo.IsSuperUser && (Template.Location == SexyContent.TemplateLocations.HostFileSystem || Template.IsRazor);
+                return UserInfo.IsSuperUser ||
+                    (Template.Location == SexyContent.TemplateLocations.PortalFileSystem && !Template.IsRazor && UserInfo.IsInRole(PortalSettings.AdministratorRoleName));
             }
         }
 
@@ -43,7 +44,7 @@ namespace ToSic.SexyContent
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (UserMayEdit)
+            if (!UserMayEdit)
             {
                 btnUpdate.Visible = false;
                 txtTemplateContent.Enabled = false;
