@@ -366,8 +366,6 @@ namespace ToSic.SexyContent.ImportExport
         /// <returns></returns>
         private Entity GetImportEntity(XElement xEntity, int assignmentObjectTypeId, int? keyNumber = null)
         {
-            var attributeSetStaticName = xEntity.Attribute("AttributeSetStaticName").Value;
-
             // Special case: App AttributeSets must be assigned to the current app
             if (xEntity.Attribute("AssignmentObjectType").Value == "App")
             {
@@ -375,146 +373,182 @@ namespace ToSic.SexyContent.ImportExport
                 assignmentObjectTypeId = SexyContent.AssignmentObjectTypeIDSexyContentApp;
             }
 
-            var targetEntity = new Entity()
-                {
-                    AssignmentObjectTypeId = assignmentObjectTypeId,
-                    AttributeSetStaticName = xEntity.Attribute("AttributeSetStaticName").Value,
-                    EntityGuid = Guid.Parse(xEntity.Attribute("EntityGUID").Value),
-                    KeyNumber = keyNumber
-                };
-
-            var targetValues = new Dictionary<string, List<IValueImportModel>>();
-
-            // Group values by StaticName
-            var valuesGroupedByStaticName = xEntity.Elements("Value")
-                .GroupBy(v => v.Attribute("Key").Value, e => e, (key, e) => new {StaticName = key, Values = e.ToList()});
-            
-            // Process each attribute (values grouped by StaticName)
-            foreach (var sourceAttribute in valuesGroupedByStaticName)
+            // Special case #2: Corrent values of Template-Describing entities
+            if (xEntity.Attribute("AttributeSetStaticName").Value == SexyContent.AttributeSetStaticNameTemplateContentTypes)
             {
-                var sourceValues = sourceAttribute.Values;
-                var tempTargetValues = new List<ImportValue>();
-
-                // Process each target's language
-                foreach (var targetDimension in _targetDimensions.OrderByDescending(p => p.ExternalKey == PortalSettings.Current.DefaultLanguage).ThenBy(p => p.ExternalKey))
+                foreach (var sourceValue in xEntity.Elements("Value"))
                 {
-                    // This list will contain all source dimensions
-                    List<Dimension> sourceLanguages = new List<Dimension>();
-
-                    // Add exact match source language, if exists
-                    var exactMatchSourceDimension = _sourceDimensions.FirstOrDefault(p => p.ExternalKey == targetDimension.ExternalKey);
-                    if (exactMatchSourceDimension != null)
-                        sourceLanguages.Add(exactMatchSourceDimension);
-
-                    // Add un-exact match language
-                    var unExactMatchSourceDimensions = _sourceDimensions.Where(p => p.ExternalKey != targetDimension.ExternalKey && p.ExternalKey.StartsWith(targetDimension.ExternalKey.Substring(0, 3)))
-                        .OrderByDescending(p => p.ExternalKey == PortalSettings.Current.DefaultLanguage)
-                        .ThenByDescending(p => p.ExternalKey.Substring(0, 2) == p.ExternalKey.Substring(3, 2))
-                        .ThenBy(p => p.ExternalKey);
-                    sourceLanguages.AddRange(unExactMatchSourceDimensions);
-
-                    // Add primary language, if current target is primary
-                    if (targetDimension.ExternalKey == PortalSettings.Current.DefaultLanguage)
+                    var sourceValueString = sourceValue.Attribute("Value").Value;
+                    var sourceKey = sourceValue.Attribute("Key").Value;
+                    if (!String.IsNullOrEmpty(sourceValueString))
                     {
-                        var sourcePrimaryLanguage = _sourceDimensions.FirstOrDefault(p => p.DimensionID == int.Parse(_sourceDefaultDimensionId));
-                        if (sourcePrimaryLanguage != null && !sourceLanguages.Contains(sourcePrimaryLanguage))
-                            sourceLanguages.Add(sourcePrimaryLanguage);
-                    }
-
-                    XElement sourceValue = null;
-                    bool readOnly = false;
-
-                    foreach (var sourceLanguage in sourceLanguages)
-                    {
-                        sourceValue = sourceValues.FirstOrDefault(p => p.Elements("Dimension").Any(d => d.Attribute("DimensionID").Value == sourceLanguage.DimensionID.ToString()));
-
-                        if (sourceValue == null)
-                            continue;
-
-                        readOnly = Boolean.Parse(sourceValue.Elements("Dimension").FirstOrDefault(p => p.Attribute("DimensionID").Value == sourceLanguage.DimensionID.ToString()).Attribute("ReadOnly").Value);
-
-                        // Override ReadOnly for primary target language
-                        if (targetDimension.ExternalKey == PortalSettings.Current.DefaultLanguage)
-                            readOnly = false;
-
-                        break;
-                    }
-
-                    // Take first value if there is only one value wihtout a dimension (default / fallback value), but only in primary language
-                    if (sourceValue == null && sourceValues.Count == 1 && !sourceValues.Elements("Dimension").Any() && targetDimension.ExternalKey == PortalSettings.Current.DefaultLanguage)
-                        sourceValue = sourceValues.First();
-
-                    // Process found value
-                    if (sourceValue != null)
-                    {
-                        // Special cases for template-describing values
-                        if (attributeSetStaticName == SexyContent.AttributeSetStaticNameTemplateContentTypes)
+                        switch (sourceKey)
                         {
-                            var sourceValueString = sourceValue.Attribute("Value").Value;
-                            if (!String.IsNullOrEmpty(sourceValueString))
-                            {
-                                switch (sourceAttribute.StaticName)
-                                {
-                                    case "ContentTypeID":
-                                        var attributeSet = _sexy.ContentContext.AttributeSetExists(sourceValueString, _sexy.ContentContext.AppId) ? _sexy.ContentContext.GetAttributeSet(sourceValueString) : null;
-                                        sourceValue.Attribute("Value").SetValue(attributeSet != null ? attributeSet.AttributeSetID.ToString() : "0");
-                                        break;
-                                    case "DemoEntityID":
-                                        var entityGuid = new Guid(sourceValue.Attribute("Value").Value);
-                                        var demoEntity = _sexy.ContentContext.EntityExists(entityGuid) ? _sexy.ContentContext.GetEntity(entityGuid) : null;
-                                        sourceValue.Attribute("Value").SetValue(demoEntity != null ? demoEntity.EntityID.ToString() : "0");
-                                        break;
-                                }
-                            }
+                            case "ContentTypeID":
+                                var attributeSet = _sexy.ContentContext.AttributeSetExists(sourceValueString, _sexy.ContentContext.AppId) ? _sexy.ContentContext.GetAttributeSet(sourceValueString) : null;
+                                sourceValue.Attribute("Value").SetValue(attributeSet != null ? attributeSet.AttributeSetID.ToString() : "0");
+                                break;
+                            case "DemoEntityID":
+                                var entityGuid = new Guid(sourceValue.Attribute("Value").Value);
+                                var demoEntity = _sexy.ContentContext.EntityExists(entityGuid) ? _sexy.ContentContext.GetEntity(entityGuid) : null;
+                                sourceValue.Attribute("Value").SetValue(demoEntity != null ? demoEntity.EntityID.ToString() : "0");
+                                break;
                         }
-
-                        // Correct FileId in Hyperlink fields (takes XML data that lists files)
-                        if (sourceValue.Attribute("Type").Value == "Hyperlink")
-                        {
-                            var sourceValueString = sourceValue.Attribute("Value").Value;
-                            var fileRegex = new Regex("^File:(?<FileId>[0-9]+)", RegexOptions.IgnoreCase);
-                            var a = fileRegex.Match(sourceValueString);
-                            if (a.Success && a.Groups["FileId"].Length > 0)
-                            {
-                                var originalId = int.Parse(a.Groups["FileId"].Value);
-                                
-                                if (_fileIdCorrectionList.ContainsKey(originalId))
-                                {
-                                    var newValue = fileRegex.Replace(sourceValueString, "File:" + _fileIdCorrectionList[originalId].ToString());
-                                    sourceValue.Attribute("Value").SetValue(newValue);
-                                }
-
-                            }
-                        }
-
-                        var dimensionsToAdd = new List<ToSic.Eav.Import.ValueDimension>();
-                        if (_targetDimensions.Single(p => p.ExternalKey == targetDimension.ExternalKey).DimensionID >= 1)
-                            dimensionsToAdd.Add(new ToSic.Eav.Import.ValueDimension() { DimensionExternalKey = targetDimension.ExternalKey, ReadOnly = readOnly });
-
-                        // If value has already been added to the list, add just dimension with original ReadOnly state
-                        var existingImportValue = tempTargetValues.FirstOrDefault(p => p.XmlValue == sourceValue);
-                        if (existingImportValue != null)
-                            existingImportValue.Dimensions.AddRange(dimensionsToAdd);
-                        else
-                        {
-                            tempTargetValues.Add(new ImportValue()
-                            {
-                                Dimensions = dimensionsToAdd,
-                                XmlValue = sourceValue
-                            });
-                        }
-
                     }
-                    
                 }
-
-                var currentAttributesImportValues = tempTargetValues.Select(tempImportValue => GetImportValue(tempImportValue.XmlValue, tempImportValue.Dimensions, targetEntity)).ToList();
-                targetValues.Add(sourceAttribute.StaticName, currentAttributesImportValues);
             }
 
-            targetEntity.Values = targetValues;
+            var importEntity = ToSic.Eav.ImportExport.XmlImport.GetImportEntity(xEntity, assignmentObjectTypeId,
+                _targetDimensions, _sourceDimensions, int.Parse(_sourceDefaultDimensionId), _sourceDefaultLanguage, keyNumber);
 
-            return targetEntity;
+            return importEntity;
+
+            //var attributeSetStaticName = xEntity.Attribute("AttributeSetStaticName").Value;
+
+
+
+            //var targetEntity = new Entity()
+            //    {
+            //        AssignmentObjectTypeId = assignmentObjectTypeId,
+            //        AttributeSetStaticName = xEntity.Attribute("AttributeSetStaticName").Value,
+            //        EntityGuid = Guid.Parse(xEntity.Attribute("EntityGUID").Value),
+            //        KeyNumber = keyNumber
+            //    };
+
+            //var targetValues = new Dictionary<string, List<IValueImportModel>>();
+
+            //// Group values by StaticName
+            //var valuesGroupedByStaticName = xEntity.Elements("Value")
+            //    .GroupBy(v => v.Attribute("Key").Value, e => e, (key, e) => new {StaticName = key, Values = e.ToList()});
+
+            //// Process each attribute (values grouped by StaticName)
+            //foreach (var sourceAttribute in valuesGroupedByStaticName)
+            //{
+            //    var sourceValues = sourceAttribute.Values;
+            //    var tempTargetValues = new List<ImportValue>();
+
+            //    // Process each target's language
+            //    foreach (var targetDimension in _targetDimensions.OrderByDescending(p => p.ExternalKey == PortalSettings.Current.DefaultLanguage).ThenBy(p => p.ExternalKey))
+            //    {
+            //        // This list will contain all source dimensions
+            //        List<Dimension> sourceLanguages = new List<Dimension>();
+
+            //        // Add exact match source language, if exists
+            //        var exactMatchSourceDimension = _sourceDimensions.FirstOrDefault(p => p.ExternalKey == targetDimension.ExternalKey);
+            //        if (exactMatchSourceDimension != null)
+            //            sourceLanguages.Add(exactMatchSourceDimension);
+
+            //        // Add un-exact match language
+            //        var unExactMatchSourceDimensions = _sourceDimensions.Where(p => p.ExternalKey != targetDimension.ExternalKey && p.ExternalKey.StartsWith(targetDimension.ExternalKey.Substring(0, 3)))
+            //            .OrderByDescending(p => p.ExternalKey == PortalSettings.Current.DefaultLanguage)
+            //            .ThenByDescending(p => p.ExternalKey.Substring(0, 2) == p.ExternalKey.Substring(3, 2))
+            //            .ThenBy(p => p.ExternalKey);
+            //        sourceLanguages.AddRange(unExactMatchSourceDimensions);
+
+            //        // Add primary language, if current target is primary
+            //        if (targetDimension.ExternalKey == PortalSettings.Current.DefaultLanguage)
+            //        {
+            //            var sourcePrimaryLanguage = _sourceDimensions.FirstOrDefault(p => p.DimensionID == int.Parse(_sourceDefaultDimensionId));
+            //            if (sourcePrimaryLanguage != null && !sourceLanguages.Contains(sourcePrimaryLanguage))
+            //                sourceLanguages.Add(sourcePrimaryLanguage);
+            //        }
+
+            //        XElement sourceValue = null;
+            //        bool readOnly = false;
+
+            //        foreach (var sourceLanguage in sourceLanguages)
+            //        {
+            //            sourceValue = sourceValues.FirstOrDefault(p => p.Elements("Dimension").Any(d => d.Attribute("DimensionID").Value == sourceLanguage.DimensionID.ToString()));
+
+            //            if (sourceValue == null)
+            //                continue;
+
+            //            readOnly = Boolean.Parse(sourceValue.Elements("Dimension").FirstOrDefault(p => p.Attribute("DimensionID").Value == sourceLanguage.DimensionID.ToString()).Attribute("ReadOnly").Value);
+
+            //            // Override ReadOnly for primary target language
+            //            if (targetDimension.ExternalKey == PortalSettings.Current.DefaultLanguage)
+            //                readOnly = false;
+
+            //            break;
+            //        }
+
+            //        // Take first value if there is only one value wihtout a dimension (default / fallback value), but only in primary language
+            //        if (sourceValue == null && sourceValues.Count == 1 && !sourceValues.Elements("Dimension").Any() && targetDimension.ExternalKey == PortalSettings.Current.DefaultLanguage)
+            //            sourceValue = sourceValues.First();
+
+            //        // Process found value
+            //        if (sourceValue != null)
+            //        {
+            // Special cases for template-describing values
+            //if (attributeSetStaticName == SexyContent.AttributeSetStaticNameTemplateContentTypes)
+            //{
+            //    var sourceValueString = sourceValue.Attribute("Value").Value;
+            //    if (!String.IsNullOrEmpty(sourceValueString))
+            //    {
+            //        switch (sourceAttribute.StaticName)
+            //        {
+            //            case "ContentTypeID":
+            //                var attributeSet = _sexy.ContentContext.AttributeSetExists(sourceValueString, _sexy.ContentContext.AppId) ? _sexy.ContentContext.GetAttributeSet(sourceValueString) : null;
+            //                sourceValue.Attribute("Value").SetValue(attributeSet != null ? attributeSet.AttributeSetID.ToString() : "0");
+            //                break;
+            //            case "DemoEntityID":
+            //                var entityGuid = new Guid(sourceValue.Attribute("Value").Value);
+            //                var demoEntity = _sexy.ContentContext.EntityExists(entityGuid) ? _sexy.ContentContext.GetEntity(entityGuid) : null;
+            //                sourceValue.Attribute("Value").SetValue(demoEntity != null ? demoEntity.EntityID.ToString() : "0");
+            //                break;
+            //        }
+            //    }
+            //}
+
+            //// Correct FileId in Hyperlink fields (takes XML data that lists files)
+            //if (sourceValue.Attribute("Type").Value == "Hyperlink")
+            //{
+            //    var sourceValueString = sourceValue.Attribute("Value").Value;
+            //    var fileRegex = new Regex("^File:(?<FileId>[0-9]+)", RegexOptions.IgnoreCase);
+            //    var a = fileRegex.Match(sourceValueString);
+            //    if (a.Success && a.Groups["FileId"].Length > 0)
+            //    {
+            //        var originalId = int.Parse(a.Groups["FileId"].Value);
+
+            //        if (_fileIdCorrectionList.ContainsKey(originalId))
+            //        {
+            //            var newValue = fileRegex.Replace(sourceValueString, "File:" + _fileIdCorrectionList[originalId].ToString());
+            //            sourceValue.Attribute("Value").SetValue(newValue);
+            //        }
+
+            //    }
+            //}
+
+            //var dimensionsToAdd = new List<ToSic.Eav.Import.ValueDimension>();
+            //if (_targetDimensions.Single(p => p.ExternalKey == targetDimension.ExternalKey).DimensionID >= 1)
+            //    dimensionsToAdd.Add(new ToSic.Eav.Import.ValueDimension() { DimensionExternalKey = targetDimension.ExternalKey, ReadOnly = readOnly });
+
+            //// If value has already been added to the list, add just dimension with original ReadOnly state
+            //var existingImportValue = tempTargetValues.FirstOrDefault(p => p.XmlValue == sourceValue);
+            //if (existingImportValue != null)
+            //    existingImportValue.Dimensions.AddRange(dimensionsToAdd);
+            //else
+            //{
+            //    tempTargetValues.Add(new ImportValue()
+            //    {
+            //        Dimensions = dimensionsToAdd,
+            //        XmlValue = sourceValue
+            //    });
+            //}
+
+            //        }
+
+            //    }
+
+            //    var currentAttributesImportValues = tempTargetValues.Select(tempImportValue => GetImportValue(tempImportValue.XmlValue, tempImportValue.Dimensions, targetEntity)).ToList();
+            //    targetValues.Add(sourceAttribute.StaticName, currentAttributesImportValues);
+            //}
+
+            //targetEntity.Values = targetValues;
+
+            //return targetEntity;
+
+
         }
 
         private ToSic.Eav.Import.IValueImportModel GetImportValue(XElement xValue, List<ToSic.Eav.Import.ValueDimension> valueDimensions, ToSic.Eav.Import.Entity referencingEntity)

@@ -7,9 +7,6 @@ namespace ToSic.SexyContent
 {
     public class Element
     {
-        [Obsolete("Deprecated: Use Id instead of ID")]
-        public int ID { get { return this.Id; } set { this.Id = value; } }
-
         /// <summary>
         /// The ContentGroupID of this Element
         /// </summary>
@@ -45,6 +42,12 @@ namespace ToSic.SexyContent
         /// </summary>
         public int SortOrder { get; set; }
 
+        /// <summary>
+        /// The ContentGroupID of the ContentGroupItem
+        /// </summary>
+        public int GroupId { get; set; }
+
+
         [Obsolete("Deprecated: Use GroupId instead of GroupID")]
         public int GroupID
         {
@@ -52,9 +55,9 @@ namespace ToSic.SexyContent
             set { this.GroupId = value; }
         }
 
-        /// <summary>
-        /// The ContentGroupID of the ContentGroupItem
-        /// </summary>
-        public int GroupId { get; set; }
+        [Obsolete("Deprecated: Use Id instead of ID")]
+        public int ID { get { return this.Id; } set { this.Id = value; } }
+
+        
     }
 }

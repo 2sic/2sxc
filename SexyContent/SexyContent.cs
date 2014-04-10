@@ -782,7 +782,7 @@ namespace ToSic.SexyContent
             if(!IsEditable)
                 Elements.Where(p => p.Content != null).ToList().ForEach(p => ((DynamicEntity)p.Content).Toolbar = "");
             else
-                Elements.Where(p => p.Content != null).ToList().ForEach(p => ((DynamicEntity)p.Content).Toolbar = GetElementToolbar(p.GroupID, p.SortOrder, p.ID, ModuleID, LocalResourcesPath, ListEnabled, ParentControl, ReturnUrl));
+                Elements.Where(p => p.Content != null).ToList().ForEach(p => ((DynamicEntity)p.Content).Toolbar = GetElementToolbar(p.GroupId, p.SortOrder, p.Id, ModuleID, LocalResourcesPath, ListEnabled, ParentControl, ReturnUrl));
         }
 
         #endregion
@@ -809,32 +809,38 @@ namespace ToSic.SexyContent
         {
             // Get appName from cache
             var eavAppName = ((BaseCache) DataSource.GetCache(zoneId, null)).ZoneApps[zoneId].Apps[appId];
+            App sexyApp = null;
 
-            // Get app-describing entity
-            var appMetaData = DataSource.GetMetaDataSource(zoneId, appId).GetAssignedEntities(AssignmentObjectTypeIDSexyContentApp, appId, AttributeSetStaticNameApps).FirstOrDefault();
-            var appResources = DataSource.GetMetaDataSource(zoneId, appId).GetAssignedEntities(AssignmentObjectTypeIDSexyContentApp, appId, AttributeSetStaticNameAppResources).FirstOrDefault();
-            var appSettings = DataSource.GetMetaDataSource(zoneId, appId).GetAssignedEntities(AssignmentObjectTypeIDSexyContentApp, appId, AttributeSetStaticNameAppSettings).FirstOrDefault();
-            App sexyApp;
-            if (appMetaData != null)
+            if(eavAppName != EavContext.DefaultAppName)
             {
-                dynamic appMetaDataDynamic = new DynamicEntity(appMetaData, new[] { System.Threading.Thread.CurrentThread.CurrentCulture.Name });
-                dynamic appResourcesDynamic = appResources != null ? new DynamicEntity(appResources, new[] {System.Threading.Thread.CurrentThread.CurrentCulture.Name}) : null;
-                dynamic appSettingsDynamic = appResources != null ? new DynamicEntity(appSettings, new[] {System.Threading.Thread.CurrentThread.CurrentCulture.Name}) : null;
+                EnsureAppIsConfigured(zoneId, appId);
 
-                sexyApp = new App()
+                // Get app-describing entity
+                var appMetaData = DataSource.GetMetaDataSource(zoneId, appId).GetAssignedEntities(AssignmentObjectTypeIDSexyContentApp, appId, AttributeSetStaticNameApps).FirstOrDefault();
+                var appResources = DataSource.GetMetaDataSource(zoneId, appId).GetAssignedEntities(AssignmentObjectTypeIDSexyContentApp, appId, AttributeSetStaticNameAppResources).FirstOrDefault();
+                var appSettings = DataSource.GetMetaDataSource(zoneId, appId).GetAssignedEntities(AssignmentObjectTypeIDSexyContentApp, appId, AttributeSetStaticNameAppSettings).FirstOrDefault();
+                
+                if (appMetaData != null)
                 {
-                    AppId = appId,
-                    Name = appMetaDataDynamic.DisplayName,
-                    Folder = appMetaDataDynamic.Folder,
-                    Configuration = appMetaDataDynamic,
-                    Resources = appResourcesDynamic,
-                    Settings = appSettingsDynamic,
-                    Hidden = appMetaDataDynamic.Hidden is bool ? appMetaDataDynamic.Hidden : false,
-                    AppGuid = eavAppName
-                };
+                    dynamic appMetaDataDynamic = new DynamicEntity(appMetaData, new[] { System.Threading.Thread.CurrentThread.CurrentCulture.Name });
+                    dynamic appResourcesDynamic = appResources != null ? new DynamicEntity(appResources, new[] {System.Threading.Thread.CurrentThread.CurrentCulture.Name}) : null;
+                    dynamic appSettingsDynamic = appResources != null ? new DynamicEntity(appSettings, new[] {System.Threading.Thread.CurrentThread.CurrentCulture.Name}) : null;
+
+                    sexyApp = new App()
+                    {
+                        AppId = appId,
+                        Name = appMetaDataDynamic.DisplayName,
+                        Folder = appMetaDataDynamic.Folder,
+                        Configuration = appMetaDataDynamic,
+                        Resources = appResourcesDynamic,
+                        Settings = appSettingsDynamic,
+                        Hidden = appMetaDataDynamic.Hidden is bool ? appMetaDataDynamic.Hidden : false,
+                        AppGuid = eavAppName
+                    };
+                }
             }
             // Handle default app
-            else if (eavAppName == EavContext.DefaultAppName)
+            else
             {
                 sexyApp = new App()
                 {
@@ -848,12 +854,62 @@ namespace ToSic.SexyContent
                     AppGuid = eavAppName
                 };
             }
-            else
-            {
-                sexyApp = null;
-            }
 
             return sexyApp;
+        }
+
+        /// <summary>
+        /// Create app-describing entity for configuration and add Settings and Resources Content Type
+        /// </summary>
+        /// <param name="zoneId"></param>
+        /// <param name="appId"></param>
+        public static void EnsureAppIsConfigured(int zoneId, int appId, string appName = null)
+        {
+            var appMetaData = DataSource.GetMetaDataSource(zoneId, appId).GetAssignedEntities(AssignmentObjectTypeIDSexyContentApp, appId, AttributeSetStaticNameApps).FirstOrDefault();
+            var appResources = DataSource.GetMetaDataSource(zoneId, appId).GetAssignedEntities(AssignmentObjectTypeIDSexyContentApp, appId, AttributeSetStaticNameAppResources).FirstOrDefault();
+            var appSettings = DataSource.GetMetaDataSource(zoneId, appId).GetAssignedEntities(AssignmentObjectTypeIDSexyContentApp, appId, AttributeSetStaticNameAppSettings).FirstOrDefault();
+
+            // Get appName from cache
+            var eavAppName = ((BaseCache)DataSource.GetCache(zoneId, null)).ZoneApps[zoneId].Apps[appId];
+
+            if (eavAppName == EavContext.DefaultAppName)
+                return;
+
+            var appContext = new SexyContent(zoneId, appId);
+
+            if (appMetaData == null)
+            {
+                // Add app-describing entity
+                var appAttributeSet =
+                    appContext.ContentContext.GetAttributeSet(AttributeSetStaticNameApps).AttributeSetID;
+                var values = new OrderedDictionary()
+                {
+                    {"DisplayName", String.IsNullOrEmpty(appName) ? eavAppName : appName },
+                    {"Folder", String.IsNullOrEmpty(appName) ? eavAppName : appName },
+                    {"AllowTokenTemplates", "False"},
+                    {"AllowRazorTemplates", "False"},
+                    {"Version", "00.00.01"},
+                    {"OriginalId", ""}
+                };
+                appContext.ContentContext.AddEntity(appAttributeSet, values, null, appId, AssignmentObjectTypeIDSexyContentApp);
+            }
+
+            if(appSettings == null)
+            { 
+                // Add new (empty) ContentType for Settings
+                var settingsAttributeSet = appContext.ContentContext.AddAttributeSet(AttributeSetStaticNameAppSettings, "Stores settings for an app", AttributeSetStaticNameAppSettings, AttributeSetScopeApps);
+                appContext.ContentContext.AddEntity(settingsAttributeSet, new OrderedDictionary() { }, null, appId, AssignmentObjectTypeIDSexyContentApp);
+            }
+
+            if(appResources == null)
+            {
+                // Add new (empty) ContentType for Resources
+                var resourcesAttributeSet = appContext.ContentContext.AddAttributeSet(AttributeSetStaticNameAppResources, "Stores resources like translations for an app", AttributeSetStaticNameAppResources, AttributeSetScopeApps);
+                appContext.ContentContext.AddEntity(resourcesAttributeSet, new OrderedDictionary() { }, null, appId, AssignmentObjectTypeIDSexyContentApp);
+            }
+
+            if (appMetaData == null || appSettings == null || appResources == null)
+                appContext.ContentContext.SaveChanges();
         }
 
         public static App AddApp(int zoneId, string appName)
@@ -865,30 +921,10 @@ namespace ToSic.SexyContent
             var sexy = new SexyContent(zoneId, GetDefaultAppId(zoneId));
             var app = sexy.ContentContext.AddApp(Guid.NewGuid().ToString());
             sexy.ContentContext.SaveChanges();
-            
-            // Add app-describing entity
-            var appContext = new SexyContent(zoneId, app.AppID);
-            var appAttributeSet = appContext.ContentContext.GetAttributeSet(AttributeSetStaticNameApps).AttributeSetID;
-            var values = new OrderedDictionary() {
-                { "DisplayName", appName },
-                { "Folder", appName },
-                { "AllowTokenTemplates", "False" },
-                { "AllowRazorTemplates", "False" },
-                { "Version", "00.00.01" },
-                { "OriginalId", "" }
-            };
-            appContext.ContentContext.AddEntity(appAttributeSet, values, null, app.AppID, AssignmentObjectTypeIDSexyContentApp);
 
-            // Add new (empty) ContentType for Settings
-            var settingsAttributeSet = appContext.ContentContext.AddAttributeSet(AttributeSetStaticNameAppSettings, "Stores settings for an app", AttributeSetStaticNameAppSettings, AttributeSetScopeApps);
-            appContext.ContentContext.AddEntity(settingsAttributeSet, new OrderedDictionary() { }, null, app.AppID, AssignmentObjectTypeIDSexyContentApp);
-
-            // Add new (empty) ContentType for Resources
-            var resourcesAttributeSet = appContext.ContentContext.AddAttributeSet(AttributeSetStaticNameAppResources, "Stores resources like translations for an app", AttributeSetStaticNameAppResources, AttributeSetScopeApps);
-            appContext.ContentContext.AddEntity(resourcesAttributeSet, new OrderedDictionary() { }, null, app.AppID, AssignmentObjectTypeIDSexyContentApp);
+            EnsureAppIsConfigured(zoneId, app.AppID, appName);
 
             return GetApp(zoneId, app.AppID);
-
         }
 
         public static int? GetAppSettingsAttributeSetId(int zoneId, int appId)

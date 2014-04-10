@@ -11,6 +11,7 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Tabs;
 using DotNetNuke.Services.FileSystem;
 using ToSic.Eav;
+using ToSic.SexyContent.DataImportExport.Extensions;
 
 namespace ToSic.SexyContent.ImportExport
 {
@@ -195,67 +196,103 @@ namespace ToSic.SexyContent.ImportExport
         /// <returns></returns>
         private XElement GetEntityXElement(Entity e)
         {
-            var attributeSet = Sexy.ContentContext.GetAttributeSet(e.AttributeSetID);
+            //var attributeSet = Sexy.ContentContext.GetAttributeSet(e.AttributeSetID);
+            var entityXElement = new ToSic.Eav.ImportExport.XmlExport(Sexy.ContentContext).GetEntityXElement(e.EntityID);
 
-            return new XElement("Entity",
-                new XAttribute("AssignmentObjectType", e.AssignmentObjectType.Name),
-                new XAttribute("AttributeSetStaticName", attributeSet.StaticName),
-                new XAttribute("AttributeSetName", attributeSet.Name),
-                new XAttribute("EntityGUID", e.EntityGUID),
-                from c in Sexy.ContentContext.GetValues(e.EntityID)
-                where c.ChangeLogDeleted == null
-                select GetAttributeValueXElement(c.Attribute.StaticName, c, c.Attribute.Type, attributeSet));
-        }
-
-        /// <summary>
-        /// Gets an Entity Value-Key XElement
-        /// </summary>
-        /// <param name="Key"></param>
-        /// <param name="Type"></param>
-        /// <param name="Value"></param>
-        /// <returns></returns>
-        private XElement GetAttributeValueXElement(string Key, EavValue Value, string Type, AttributeSet set)
-        {
-            var value = Value.Value == null ? String.Empty : Value.Value.ToString(CultureInfo.InvariantCulture);
-
-            var x = new XElement("Value",
-                new XAttribute("Key", Key),
-                new XAttribute("Value", value),
-                !String.IsNullOrEmpty(Type) ? new XAttribute("Type", Type) : null,
-                Value.ValuesDimensions.Select(p => new XElement("Dimension",
-                        new XAttribute("DimensionID", p.DimensionID),
-                        new XAttribute("ReadOnly", p.ReadOnly)
-                    ))
-                );
-
-            // Special cases for Template ContentTypes
-            if (set.StaticName == "2SexyContent-Template-ContentTypes" && !String.IsNullOrEmpty(value))
+            foreach (var value in entityXElement.Elements("Value"))
             {
-                switch (Key)
+                var valueString = value.Attribute("Value").Value;
+                var valueType = value.Attribute("Type").Value;
+                var valueKey = value.Attribute("Key").Value;
+
+                // Special cases for Template ContentTypes
+                if (e.Set.StaticName == "2SexyContent-Template-ContentTypes" && !String.IsNullOrEmpty(valueString))
                 {
-                    case "ContentTypeID":
-                        var attributeSet = Sexy.ContentContext.GetAllAttributeSets().FirstOrDefault(a => a.AttributeSetID == int.Parse(x.Attribute("Value").Value));
-                        x.Attribute("Value").SetValue(attributeSet != null ? attributeSet.StaticName : String.Empty);
-                        break;
-                    case "DemoEntityID":
-                        var entityID = int.Parse(x.Attribute("Value").Value);
-                        var demoEntity = Sexy.ContentContext.Entities.FirstOrDefault(e => e.EntityID == entityID);
-                        x.Attribute("Value").SetValue(demoEntity != null ? demoEntity.EntityGUID.ToString() : String.Empty);
-                        break;
+                    switch (valueKey)
+                    {
+                        case "ContentTypeID":
+                            var attributeSet = Sexy.ContentContext.GetAllAttributeSets().FirstOrDefault(a => a.AttributeSetID == int.Parse(valueString));
+                            value.Attribute("Value").SetValue(attributeSet != null ? attributeSet.StaticName : String.Empty);
+                            break;
+                        case "DemoEntityID":
+                            var entityID = int.Parse(valueString);
+                            var demoEntity = Sexy.ContentContext.Entities.FirstOrDefault(en => en.EntityID == entityID);
+                            value.Attribute("Value").SetValue(demoEntity != null ? demoEntity.EntityGUID.ToString() : String.Empty);
+                            break;
+                    }
+                }
+
+                // Collect all referenced files for adding a file list to the xml later
+                if (valueType == "Hyperlink")
+                {
+                    var fileRegex = new Regex("^File:(?<FileId>[0-9]+)", RegexOptions.IgnoreCase);
+                    var a = fileRegex.Match(valueString);
+                    if (a.Success && a.Groups["FileId"].Length > 0)
+                        _referencedFileIds.Add(int.Parse(a.Groups["FileId"].Value));
                 }
             }
 
-            // Collect all referenced files for adding a file list to the xml later
-            if (Type == "Hyperlink")
-            {
-                var fileRegex = new Regex("^File:(?<FileId>[0-9]+)", RegexOptions.IgnoreCase);
-                var a = fileRegex.Match(value);
-                if(a.Success && a.Groups["FileId"].Length > 0)
-                    _referencedFileIds.Add(int.Parse(a.Groups["FileId"].Value));
-            }
+            //return new XElement("Entity",
+            //    new XAttribute("AssignmentObjectType", e.AssignmentObjectType.Name),
+            //    new XAttribute("AttributeSetStaticName", attributeSet.StaticName),
+            //    new XAttribute("AttributeSetName", attributeSet.Name),
+            //    new XAttribute("EntityGUID", e.EntityGUID),
+            //    from c in Sexy.ContentContext.GetValues(e.EntityID)
+            //    where c.ChangeLogDeleted == null
+            //    select GetAttributeValueXElement(c.Attribute.StaticName, c, c.Attribute.Type, attributeSet));
 
-            return x;
+            return entityXElement;
         }
+
+        ///// <summary>
+        ///// Gets an Entity Value-Key XElement
+        ///// </summary>
+        ///// <param name="Key"></param>
+        ///// <param name="Type"></param>
+        ///// <param name="Value"></param>
+        ///// <returns></returns>
+        //private XElement GetAttributeValueXElement(string Key, EavValue Value, string Type, AttributeSet set)
+        //{
+        //    var value = Value.Value == null ? String.Empty : Value.Value.ToString(CultureInfo.InvariantCulture);
+
+        //    var x = new XElement("Value",
+        //        new XAttribute("Key", Key),
+        //        new XAttribute("Value", value),
+        //        !String.IsNullOrEmpty(Type) ? new XAttribute("Type", Type) : null,
+        //        Value.ValuesDimensions.Select(p => new XElement("Dimension",
+        //                new XAttribute("DimensionID", p.DimensionID),
+        //                new XAttribute("ReadOnly", p.ReadOnly)
+        //            ))
+        //        );
+
+        //    // Special cases for Template ContentTypes
+        //    if (set.StaticName == "2SexyContent-Template-ContentTypes" && !String.IsNullOrEmpty(value))
+        //    {
+        //        switch (Key)
+        //        {
+        //            case "ContentTypeID":
+        //                var attributeSet = Sexy.ContentContext.GetAllAttributeSets().FirstOrDefault(a => a.AttributeSetID == int.Parse(x.Attribute("Value").Value));
+        //                x.Attribute("Value").SetValue(attributeSet != null ? attributeSet.StaticName : String.Empty);
+        //                break;
+        //            case "DemoEntityID":
+        //                var entityID = int.Parse(x.Attribute("Value").Value);
+        //                var demoEntity = Sexy.ContentContext.Entities.FirstOrDefault(e => e.EntityID == entityID);
+        //                x.Attribute("Value").SetValue(demoEntity != null ? demoEntity.EntityGUID.ToString() : String.Empty);
+        //                break;
+        //        }
+        //    }
+
+        //    // Collect all referenced files for adding a file list to the xml later
+        //    if (Type == "Hyperlink")
+        //    {
+        //        var fileRegex = new Regex("^File:(?<FileId>[0-9]+)", RegexOptions.IgnoreCase);
+        //        var a = fileRegex.Match(value);
+        //        if(a.Success && a.Groups["FileId"].Length > 0)
+        //            _referencedFileIds.Add(int.Parse(a.Groups["FileId"].Value));
+        //    }
+
+        //    return x;
+        //}
 
         #endregion
 
