@@ -287,6 +287,11 @@ namespace ToSic.Eav.ManagementUI
 			var dnnPageDropDownListType = _dnnPageDropDownList.GetType();
 			dnnPageDropDownListType.GetProperty("UndefinedItem").SetValue(_dnnPageDropDownList, undefinedItem, null);
 			dnnPageDropDownListType.GetProperty("PortalId").SetValue(_dnnPageDropDownList, portalId, null);
+
+            // "IncludeDisabledTabs" is only available on newer DNN 7 (~7.2)
+            if (dnnPageDropDownListType.GetProperty("IncludeDisabledTabs") != null)
+                dnnPageDropDownListType.GetProperty("IncludeDisabledTabs").SetValue(_dnnPageDropDownList, true, null);
+
 			var onClientSelectionChanged = (List<string>)dnnPageDropDownListType.GetProperty("OnClientSelectionChanged").GetValue(_dnnPageDropDownList, null);
 			onClientSelectionChanged.Add("ToSexyContent.ItemForm.Hyperlink._pagePicker.dnn71PickerSelectionChanged");
 
