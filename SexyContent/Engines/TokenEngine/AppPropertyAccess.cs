@@ -9,9 +9,10 @@ using ToSic.Eav;
 
 namespace ToSic.SexyContent.Engines.TokenEngine
 {
-    public class AppPropertyAccess : IPropertyAccess
+    public class AppPropertyAccess : IPropertyAccess, ToSic.Eav.DataSources.Tokens.IPropertyAccess
     {
         private App _app;
+        public string Name { get; private set; }
 
         public AppPropertyAccess(App app)
         {
@@ -34,6 +35,11 @@ namespace ToSic.SexyContent.Engines.TokenEngine
         /// <param name="PropertyNotFound"></param>
         /// <returns></returns>
         public string GetProperty(string strPropertyName, string strFormat, System.Globalization.CultureInfo formatProvider, UserInfo AccessingUser, Scope AccessLevel, ref bool PropertyNotFound)
+        {
+            return GetProperty(strPropertyName, ref PropertyNotFound);
+        }
+
+        public string GetProperty(string strPropertyName, ref bool PropertyNotFound)
         {
             if (strPropertyName == "Path")
                 return _app.Path;

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Globalization;
 using DotNetNuke.Entities.Users;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Tokens;
@@ -9,9 +10,10 @@ using ToSic.Eav;
 
 namespace ToSic.SexyContent.Engines.TokenEngine
 {
-    public class DynamicEntityPropertyAccess : IPropertyAccess
+    public class DynamicEntityPropertyAccess : IPropertyAccess, ToSic.Eav.DataSources.Tokens.IPropertyAccess
     {
         private DynamicEntity _entity;
+        public string Name { get; private set; }
 
         public DynamicEntityPropertyAccess(DynamicEntity entity)
         {
@@ -75,6 +77,11 @@ namespace ToSic.SexyContent.Engines.TokenEngine
                 PropertyNotFound = true;
                 return string.Empty;
             }
+        }
+
+        public string GetProperty(string strPropertyName, ref bool PropertyNotFound)
+        {
+            return GetProperty(strPropertyName, "", System.Threading.Thread.CurrentThread.CurrentCulture, null, Scope.DefaultSettings, ref PropertyNotFound);
         }
     }
 }

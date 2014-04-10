@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using DotNetNuke.Services.FileSystem;
 using ToSic.Eav;
+using ToSic.Eav.DataSources;
 
 namespace ToSic.SexyContent
 {
@@ -55,23 +56,15 @@ namespace ToSic.SexyContent
 
                 if (attribute.Type == "Hyperlink" && result is string)
                 {
-                    result = SexyContent.ResolveHyperlinkValues((string)result);
+                    result = SexyContent.ResolveHyperlinkValues((string) result);
                 }
-
-                if (attribute.Type == "Entity")
+                else if (attribute.Type == "Entity" && result is EntityRelationshipModel)
                 {
                     // Convert related entities to Dynamics
-                    if (result != null && result is ToSic.Eav.EntityRelationshipModel)
-                    {
-                        string language = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
-                        result = ((ToSic.Eav.EntityRelationshipModel)result).Select(
-                            p => new DynamicEntity(p, new string[] { language })
-                            ).ToList();
-                    }
-                    else
-                    {
-                        result = new List<DynamicEntity>();
-                    }
+                    string language = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
+                    result = ((ToSic.Eav.EntityRelationshipModel) result).Select(
+                        p => new DynamicEntity(p, new string[] {language})
+                        ).ToList();
                 }
             }
             else
@@ -88,6 +81,8 @@ namespace ToSic.SexyContent
                         result = Toolbar;
                         break;
                     default:
+                        // ToDo: Get Attributes, find out what to return as default...
+                        //var attributeSet = DataSource.GetCache().
                         result = null;
                         propertyNotFound = true;
                         break;

@@ -71,7 +71,9 @@ namespace ToSic.SexyContent.Razor
 
         protected IDataSource CreateSource(string typeName = "", IDataSource inSource = null, IConfigurationProvider configurationProvider = null)
         {
-            //var Sexy = new SexyContent();
+            if (configurationProvider == null)
+                configurationProvider = SexyContent.GetConfigurationProvider(App);
+
             if (inSource != null)
                 return DataSource.GetDataSource(typeName, inSource.ZoneId, inSource.AppId, inSource, configurationProvider);
             
@@ -81,6 +83,9 @@ namespace ToSic.SexyContent.Razor
 
         protected T CreateSource<T>(IDataSource inSource = null, IConfigurationProvider configurationProvider = null)
         {
+            if (configurationProvider == null)
+                configurationProvider = SexyContent.GetConfigurationProvider(App);
+
             if (inSource != null)
                 return DataSource.GetDataSource<T>(inSource.ZoneId, inSource.AppId, inSource, configurationProvider);
 

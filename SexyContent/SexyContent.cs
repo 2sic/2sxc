@@ -23,6 +23,8 @@ using System.Web.UI.HtmlControls;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Caches;
 using ToSic.SexyContent;
+using ToSic.SexyContent.DataSources.Tokens;
+using ToSic.SexyContent.Engines.TokenEngine;
 using FileInfo = System.IO.FileInfo;
 using DotNetNuke.Common;
 
@@ -565,13 +567,23 @@ namespace ToSic.SexyContent
 
         /// <summary>
         /// Gets the initial DataSource
-        /// Will use the current portal's Zone if no zoneId is set
         /// </summary>
         /// <param name="zoneId"></param>
+        /// <param name="appId"></param>
         /// <returns></returns>
         public static ToSic.Eav.DataSources.IDataSource GetInitialDataSource(int zoneId, int appId)
         {
             return DataSource.GetInitialDataSource(zoneId, appId);
+        }
+
+        public static ConfigurationProvider GetConfigurationProvider(App app)
+        {
+            var configurationProvider = new ConfigurationProvider();
+            configurationProvider.Sources.Add("querystring", new QueryStringPropertyAccess());
+            configurationProvider.Sources.Add("app", new AppPropertyAccess(app));
+            configurationProvider.Sources.Add("appsettings", new DynamicEntityPropertyAccess(app.Settings));
+            configurationProvider.Sources.Add("appresources", new DynamicEntityPropertyAccess(app.Resources));
+            return configurationProvider;
         }
 
         /// <summary>
@@ -611,7 +623,7 @@ namespace ToSic.SexyContent
                 var DimensionIds = new[] { LanguageName };
                 // Load all Entities to list
                 var InitialSource = GetInitialDataSource(ZoneId.Value, AppId.Value);
-                var EntityDataSource = DataSource.GetDataSource("ToSic.Eav.DataSources.EntityIdFilter", ZoneId, AppId, InitialSource);
+                var EntityDataSource = DataSource.GetDataSource("ToSic.Eav.DataSources.EntityIdFilter", ZoneId, AppId, InitialSource, InitialSource.ConfigurationProvider);
                 ((EntityIdFilter)EntityDataSource).Configuration["EntityIds"] = String.Join(",", Identities.ToArray());
                 SexyDataSource = DataSource.GetDataSource("ToSic.Eav.DataSources.PassThrough", ZoneId, AppId, EntityDataSource);
                 var Entities = SexyDataSource.Out["Default"].List;// ContentContext.GetEntityModel(Identities);
@@ -880,8 +892,7 @@ namespace ToSic.SexyContent
             if (appMetaData == null)
             {
                 // Add app-describing entity
-                var appAttributeSet =
-                    appContext.ContentContext.GetAttributeSet(AttributeSetStaticNameApps).AttributeSetID;
+                var appAttributeSet = appContext.ContentContext.GetAttributeSet(AttributeSetStaticNameApps).AttributeSetID;
                 var values = new OrderedDictionary()
                 {
                     {"DisplayName", String.IsNullOrEmpty(appName) ? eavAppName : appName },
@@ -898,6 +909,7 @@ namespace ToSic.SexyContent
             { 
                 // Add new (empty) ContentType for Settings
                 var settingsAttributeSet = appContext.ContentContext.AddAttributeSet(AttributeSetStaticNameAppSettings, "Stores settings for an app", AttributeSetStaticNameAppSettings, AttributeSetScopeApps);
+                DataSource.GetCache(zoneId, appId).PurgeCache(zoneId, appId);
                 appContext.ContentContext.AddEntity(settingsAttributeSet, new OrderedDictionary() { }, null, appId, AssignmentObjectTypeIDSexyContentApp);
             }
 
@@ -905,11 +917,12 @@ namespace ToSic.SexyContent
             {
                 // Add new (empty) ContentType for Resources
                 var resourcesAttributeSet = appContext.ContentContext.AddAttributeSet(AttributeSetStaticNameAppResources, "Stores resources like translations for an app", AttributeSetStaticNameAppResources, AttributeSetScopeApps);
+                DataSource.GetCache(zoneId, appId).PurgeCache(zoneId, appId);
                 appContext.ContentContext.AddEntity(resourcesAttributeSet, new OrderedDictionary() { }, null, appId, AssignmentObjectTypeIDSexyContentApp);
             }
 
             if (appMetaData == null || appSettings == null || appResources == null)
-                appContext.ContentContext.SaveChanges();
+                DataSource.GetCache(zoneId, appId).PurgeCache(zoneId, appId);
         }
 
         public static App AddApp(int zoneId, string appName)
