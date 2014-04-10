@@ -51,7 +51,11 @@ namespace ToSic.SexyContent
             get
             {
                 if (!String.IsNullOrEmpty(Request.QueryString["CultureDimension"]))
-                    return int.Parse(Request.QueryString["CultureDimension"]);
+                {
+                    int languageId;
+                    if (int.TryParse(Request.QueryString["CultureDimension"], out languageId))
+                        return languageId;
+                }
                 return new int?();
             }
         }
