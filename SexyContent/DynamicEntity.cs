@@ -71,6 +71,22 @@ namespace ToSic.SexyContent
                 {
                     result = SexyContent.ResolveHyperlinkValues((string)result);
                 }
+
+                if (attribute.Type == "Entity")
+                {
+                    // Convert related entities to Dynamics
+                    if (result != null && result is ToSic.Eav.EntityRelationshipModel)
+                    {
+                        string language = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
+                        result = ((ToSic.Eav.EntityRelationshipModel)result).Select(
+                            p => new DynamicEntity(p, new string[] { language })
+                            ).ToList();
+                    }
+                    else
+                    {
+                        result = new List<DynamicEntity>();
+                    }
+                }
             }
             else
             {
@@ -90,15 +106,6 @@ namespace ToSic.SexyContent
                         propertyNotFound = true;
                         break;
                 }
-            }
-
-            // Convert related entities to Dynamics
-            if (result != null && result.GetType() == typeof (ToSic.Eav.EntityRelationshipModel))
-            {
-                string language = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
-                result = ((ToSic.Eav.EntityRelationshipModel) result).Select(
-                    p => new DynamicEntity(p, new string[] {language})
-                    ).ToList();
             }
 
             return result;

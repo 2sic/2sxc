@@ -110,7 +110,7 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
 
                 default:
                     {   // String
-                        valueModel = new ValueImportModel<string>(entity) { Value = valueString };
+                        valueModel = new ValueImportModel<string>(entity) { Value = HttpUtility.HtmlDecode(valueString) };
                     }
                     break;
             }

@@ -64,8 +64,8 @@
 
         <ul class="dnnActions dnnClear">
             <li><asp:LinkButton runat="server" ID="btnContinue" class="dnnPrimaryAction" ResourceKey="btnTestData" OnClick="OnTestDataClick"></asp:LinkButton></li>
-            <li><asp:HyperLink runat="server" ID="btnCancel" class="dnnSecondaryAction" ResourceKey="btnCancel" NavigateUrl="/"></asp:HyperLink></li>
-            <li><asp:LinkButton runat="server" ID="btnContinueDetailed" class="dnnSecondaryAction" ForeColor="White" ResourceKey="btnTestDataDetailed" OnClick="OnTestDataDetailedClick"></asp:LinkButton></li>
+            <li><asp:HyperLink runat="server" class="dnnSecondaryAction" ResourceKey="btnClose" NavigateUrl="/"></asp:HyperLink></li>
+            <li><asp:LinkButton runat="server" ID="btnContinueDetailed" ForeColor="White" ResourceKey="btnTestDataDetailed" OnClick="OnTestDataDetailedClick"></asp:LinkButton></li>
         </ul>
     </div>
 </asp:Panel>
@@ -95,6 +95,10 @@
             <asp:Label runat="server" ID="lblDetailDebugOutput"></asp:Label>
         </p>
         
+        <p>
+            <asp:Label runat="server" ForeColor="DarkOrange" ResourceKey="lblInformationImportTime"></asp:Label>
+        </p>
+
         <ul class="dnnActions dnnClear">
             <li><asp:LinkButton runat="server" class="dnnPrimaryAction" ResourceKey="btnImportData" OnClick="OnImportDataClick"></asp:LinkButton></li>
             <li><asp:LinkButton runat="server" class="dnnSecondaryAction" ResourceKey="btnBack" OnClick="OnBackClick"></asp:LinkButton></li>

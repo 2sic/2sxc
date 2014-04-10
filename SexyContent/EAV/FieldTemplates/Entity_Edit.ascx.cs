@@ -47,7 +47,7 @@ namespace ToSic.Eav.ManagementUI
 
 		    var entities = from l in dsrc["Default"].List
 						   where l.Value.Type == foundType || foundType == null
-						   select new { Value = l.Key, Text = l.Value.Title == null || l.Value.Title[DimensionIds] == null || string.IsNullOrWhiteSpace(l.Value.Title[DimensionIds].ToString()) ? "(no Title, " + l.Key + ")" : l.Value.Title[DimensionIds] };
+						   select new { Value = l.Key, Text = l.Value.Title == null || l.Value.Title[DimensionIds] == null || string.IsNullOrWhiteSpace(l.Value.Title[DimensionIds].ToString()) ? "(no Title, " + l.Key + ")" : l.Value.Title[DimensionIds].ToString() };
 
 			DropDownList1.DataSource = entities.OrderBy(p => p.Text);
 		}

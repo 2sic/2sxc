@@ -88,130 +88,137 @@ namespace ToSic.SexyContent.DataImportExport
         /// </summary>
         public void Deserialize(Stream dataStream)
         {
-            if (languages == null || languages.Count() == 0)
+            try
             {
-                languages = new string[] { string.Empty };
-            }
+                if (languages == null || languages.Count() == 0)
+                {
+                    languages = new string[] { string.Empty };
+                }
 
-            if (contentType == null)
-            {
-                errorProtocol.AppendError(DataImportErrorCode.InvalidContentType);
-                return;
-            }
+                if (contentType == null)
+                {
+                    errorProtocol.AppendError(DataImportErrorCode.InvalidContentType);
+                    return;
+                }
 
-            var document = XDocument.Load(dataStream);
-            dataStream.Position = 0;
-            if (document == null)
-            {
-                errorProtocol.AppendError(DataImportErrorCode.InvalidDocument);
-                return;
-            }
+                var document = XDocument.Load(dataStream);
+                dataStream.Position = 0;
+                if (document == null)
+                {
+                    errorProtocol.AppendError(DataImportErrorCode.InvalidDocument);
+                    return;
+                }
 
-            var documentRoot = document.Element(XElementName.Root + contentType.Name.RemoveSpecialCharacters());
-            if (documentRoot == null)
-            {
-                errorProtocol.AppendError(DataImportErrorCode.InvalidRoot);
-                return;
-            }
+                var documentRoot = document.Element(XElementName.Root + contentType.Name.RemoveSpecialCharacters());
+                if (documentRoot == null)
+                {
+                    errorProtocol.AppendError(DataImportErrorCode.InvalidRoot);
+                    return;
+                }
 
             
-            documentElements = documentRoot.Elements(XElementName.Entity);
-            var documentElementNumber = 0;
+                documentElements = documentRoot.Elements(XElementName.Entity);
+                var documentElementNumber = 0;
 
-            var documentElementLanguagesAll = documentElements.GroupBy(element => element.Element(XElementName.EntityGuid).Value)
-                                                              .Select(group => group.Select(element => element.Element(XElementName.EntityLanguage).Value)).ToList();
-            var documentElementLanguagesCount = documentElementLanguagesAll.Select(item => item.Count());
-            if (documentElementLanguagesCount.Any(count => count != 1))
-            {
-                // It is an all language import, so check if all languages are specified for all entities
-                foreach (var documentElementLanguages in documentElementLanguagesAll)
-                {   
-                    if (languages.Except(documentElementLanguages).Any())
-                    {
-                        errorProtocol.AppendError(DataImportErrorCode.MissingElementLanguage, "Langs=" + string.Join(", ", languages));
-                        return;
-                    }
-                }
-            }
- 
-            var entityGuidManager = new EntityGuidManager();
-            foreach (var documentElement in documentElements)
-            {
-                documentElementNumber++;
-
-                var documentElementLanguage = documentElement.GetChildElementValue(XElementName.EntityLanguage);
-                if (!languages.Any(language => language == documentElementLanguage))
-                {   // DNN does not support the language
-                    errorProtocol.AppendError(DataImportErrorCode.InvalidLanguage, "Lang=" + documentElementLanguage, documentElementNumber);
-                    continue;
-                }
-
-                var entityGuid = entityGuidManager.GetGuid(documentElement, documentLanguageFallback);
-                var entity = GetEntity(entityGuid);
-                if (entity == null)
+                var documentElementLanguagesAll = documentElements.GroupBy(element => element.Element(XElementName.EntityGuid).Value)
+                                                                  .Select(group => group.Select(element => element.Element(XElementName.EntityLanguage).Value)).ToList();
+                var documentElementLanguagesCount = documentElementLanguagesAll.Select(item => item.Count());
+                if (documentElementLanguagesCount.Any(count => count != 1))
                 {
-                    entity = AppendEntity(entityGuid);
-                }
-
-                var attributes = contentType.GetAttributes();
-                foreach (var attribute in attributes)
-                {   
-                    var valueName = attribute.StaticName;
-                    var value = documentElement.GetChildElementValue(valueName);
-                    if (value == null || value.IsValueDefault())
-                    {
-                        continue;
-                    }
-
-                    var valueType = attribute.Type;
-                    var valueReferenceLanguage = value.GetValueReferenceLanguage();
-                    if (valueReferenceLanguage == null)
-                    {   // It is not a value reference.. it is a normal text
-                        try
+                    // It is an all language import, so check if all languages are specified for all entities
+                    foreach (var documentElementLanguages in documentElementLanguagesAll)
+                    {   
+                        if (languages.Except(documentElementLanguages).Any())
                         {
-                            entity.AppendAttributeValue(valueName, value, valueType, documentElementLanguage, false, resourceReferenceOption.IsResolve());
+                            errorProtocol.AppendError(DataImportErrorCode.MissingElementLanguage, "Langs=" + string.Join(", ", languages));
+                            return;
                         }
-                        catch (FormatException)
-                        {
-                            errorProtocol.AppendError(DataImportErrorCode.InvalidValueFormat, valueName + ":" + valueType + "=" + value, documentElementNumber);
-                        }
-                        continue;
                     }
-
-                    var valueReferenceProtection = value.GetValueReferenceProtection();
-                    if (valueReferenceProtection != "rw" && valueReferenceProtection != "ro")
-                    {
-                        errorProtocol.AppendError(DataImportErrorCode.InvalidValueReferenceProtection, value, documentElementNumber);
-                        continue;
-                    }
-                    var valueReadOnly = valueReferenceProtection == "ro";
-
-                    var entityValue = entity.GetAttributeValue(valueName, valueReferenceLanguage);
-                    if (entityValue != null)
-                    {
-                        entityValue.AppendLanguageReference(documentElementLanguage, valueReadOnly);
-                        continue;
-                    }
-
-                    // We do not have the value referenced in memory, so search for the 
-                    // value in the database 
-                    var dbEntity = contentType.GetEntity(entityGuid);
-                    if (dbEntity == null)
-                    {
-                        errorProtocol.AppendError(DataImportErrorCode.InvalidValueReference, value, documentElementNumber);
-                        continue;
-                    }
-
-                    var dbEntityValue = dbEntity.GetAttributeValue(attribute, valueReferenceLanguage);
-                    if(dbEntityValue == null)
-                    {
-                        errorProtocol.AppendError(DataImportErrorCode.InvalidValueReference, value, documentElementNumber);
-                        continue;
-                    }
-
-                    entity.AppendAttributeValue(valueName, dbEntityValue.Value, valueType, valueReferenceLanguage, dbEntityValue.IsLanguageReadOnly(valueReferenceLanguage), resourceReferenceOption.IsResolve())
-                          .AppendLanguageReference(documentElementLanguage, valueReadOnly);       
                 }
+ 
+                var entityGuidManager = new EntityGuidManager();
+                foreach (var documentElement in documentElements)
+                {
+                    documentElementNumber++;
+
+                    var documentElementLanguage = documentElement.GetChildElementValue(XElementName.EntityLanguage);
+                    if (!languages.Any(language => language == documentElementLanguage))
+                    {   // DNN does not support the language
+                        errorProtocol.AppendError(DataImportErrorCode.InvalidLanguage, "Lang=" + documentElementLanguage, documentElementNumber);
+                        continue;
+                    }
+
+                    var entityGuid = entityGuidManager.GetGuid(documentElement, documentLanguageFallback);
+                    var entity = GetEntity(entityGuid);
+                    if (entity == null)
+                    {
+                        entity = AppendEntity(entityGuid);
+                    }
+
+                    var attributes = contentType.GetAttributes();
+                    foreach (var attribute in attributes)
+                    {   
+                        var valueName = attribute.StaticName;
+                        var value = documentElement.GetChildElementValue(valueName);
+                        if (value == null || value.IsValueDefault())
+                        {
+                            continue;
+                        }
+
+                        var valueType = attribute.Type;
+                        var valueReferenceLanguage = value.GetValueReferenceLanguage();
+                        if (valueReferenceLanguage == null)
+                        {   // It is not a value reference.. it is a normal text
+                            try
+                            {
+                                entity.AppendAttributeValue(valueName, value, valueType, documentElementLanguage, false, resourceReferenceOption.IsResolve());
+                            }
+                            catch (FormatException)
+                            {
+                                errorProtocol.AppendError(DataImportErrorCode.InvalidValueFormat, valueName + ":" + valueType + "=" + value, documentElementNumber);
+                            }
+                            continue;
+                        }
+
+                        var valueReferenceProtection = value.GetValueReferenceProtection();
+                        if (valueReferenceProtection != "rw" && valueReferenceProtection != "ro")
+                        {
+                            errorProtocol.AppendError(DataImportErrorCode.InvalidValueReferenceProtection, value, documentElementNumber);
+                            continue;
+                        }
+                        var valueReadOnly = valueReferenceProtection == "ro";
+
+                        var entityValue = entity.GetAttributeValue(valueName, valueReferenceLanguage);
+                        if (entityValue != null)
+                        {
+                            entityValue.AppendLanguageReference(documentElementLanguage, valueReadOnly);
+                            continue;
+                        }
+
+                        // We do not have the value referenced in memory, so search for the 
+                        // value in the database 
+                        var dbEntity = contentType.GetEntity(entityGuid);
+                        if (dbEntity == null)
+                        {
+                            errorProtocol.AppendError(DataImportErrorCode.InvalidValueReference, value, documentElementNumber);
+                            continue;
+                        }
+
+                        var dbEntityValue = dbEntity.GetAttributeValue(attribute, valueReferenceLanguage);
+                        if(dbEntityValue == null)
+                        {
+                            errorProtocol.AppendError(DataImportErrorCode.InvalidValueReference, value, documentElementNumber);
+                            continue;
+                        }
+
+                        entity.AppendAttributeValue(valueName, dbEntityValue.Value, valueType, valueReferenceLanguage, dbEntityValue.IsLanguageReadOnly(valueReferenceLanguage), resourceReferenceOption.IsResolve())
+                              .AppendLanguageReference(documentElementLanguage, valueReadOnly);       
+                    }
+                }                
+            }
+            catch (Exception exception)
+            {
+                errorProtocol.AppendError(DataImportErrorCode.Unknown, exception.ToString());
             }
         }
 
