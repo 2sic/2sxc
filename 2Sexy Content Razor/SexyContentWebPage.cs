@@ -79,7 +79,6 @@ namespace ToSic.SexyContent.Razor
             return typeName != "" ? DataSource.GetDataSource(typeName, initialSource.ZoneId, initialSource.AppId, initialSource, configurationProvider) : initialSource;
         }
 
-        // ToDo: Discuss w/ 2dm
         protected T CreateSource<T>(IDataSource inSource = null, IConfigurationProvider configurationProvider = null)
         {
             if (inSource != null)
