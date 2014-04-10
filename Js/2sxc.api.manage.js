@@ -88,7 +88,7 @@ $2sxc.getManageController = function(id) {
                     $.extend({ action: 'edit' }, settings)
                 ];
 
-                if (config.isList) {
+                if (config.isList && settings.sortOrder != -1) {
                     buttons.push($.extend({ action: 'add' }, settings));
                     buttons.push($.extend({ action: 'new' }, settings));
                 }
