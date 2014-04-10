@@ -32,7 +32,7 @@ namespace ToSic.SexyContent
             AddActionHandler(ModuleActions_Click);
 
             // If logged in, inject Edit JavaScript, and delete / add items
-            if(UserMayEditThisModule)
+            if(UserMayEditThisModule && Sexy != null)
             {
                 ClientScriptManager ClientScript = Page.ClientScript;
                 ClientScript.RegisterClientScriptInclude("ViewEdit", ResolveClientUrl("~/DesktopModules/ToSIC_SexyContent/Js/ViewEdit.js"));
