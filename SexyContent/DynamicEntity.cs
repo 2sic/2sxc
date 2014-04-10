@@ -11,39 +11,25 @@ namespace ToSic.SexyContent
     public class DynamicEntity : DynamicObject
     {
         public ContentConfiguration Configuration = new ContentConfiguration();
-
         public IEntity Entity { get; set; }
-        //public IEntity AsEntity()
-        //{
-        //    return Entity;
-        //}
-
-
         public string Toolbar { get; set; }
-
-        private string[] DimensionIds;
+        private readonly string[] _dimensions;
 
         /// <summary>
         /// Contructor with EntityModel and DimensionIds
         /// </summary>
-        /// <param name="Dict"></param>
-        public DynamicEntity(IEntity entityModel, string[] DimensionIds)
+        /// <param name="entityModel"></param>
+        /// <param name="dimensions"></param>
+        public DynamicEntity(IEntity entityModel, string[] dimensions)
         {
             this.Entity = entityModel;
-            this.DimensionIds = DimensionIds;
+            this._dimensions = dimensions;
             this.Toolbar = "";
         }
 
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
             return TryGetMember(binder.Name, out result);
-            //var propertyNotFound = false;
-            //result = GetEntityValue(binder.Name, out propertyNotFound);
-
-            //if(propertyNotFound)
-            //    result = String.Format(Configuration.ErrorKeyMissing, binder.Name);
-
-            //return true;
         }
 
         public bool TryGetMember(string memberName, out object result)
@@ -65,7 +51,7 @@ namespace ToSic.SexyContent
             if (Entity.Attributes.ContainsKey(attributeName))
             {
                 var attribute = Entity.Attributes[attributeName];
-                result = attribute[DimensionIds];
+                result = attribute[_dimensions];
 
                 if (attribute.Type == "Hyperlink" && result is string)
                 {
@@ -111,13 +97,6 @@ namespace ToSic.SexyContent
             return result;
         }
 
-        // Uses the compiler's type inference mechanisms for generics to find out the type
-        // 'self' was declared with in the current scope.
-        private Type GetDeclaredType<TSelf>(TSelf self)
-        {
-            return typeof(TSelf);
-        }
-
         /// <summary>
         /// Configuration class for this expando
         /// </summary>
@@ -142,14 +121,10 @@ namespace ToSic.SexyContent
             get { return Entity.EntityGuid; }
         }
 
-
-
         public object EntityTitle
         {
-            get { return Entity.Title[DimensionIds]; }
+            get { return Entity.Title[_dimensions]; }
         }
 
-
     }
-
 }
