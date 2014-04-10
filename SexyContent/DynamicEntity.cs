@@ -52,7 +52,7 @@ namespace ToSic.SexyContent
             result = GetEntityValue(memberName, out propertyNotFound);
 
             if (propertyNotFound)
-                result = String.Format(Configuration.ErrorKeyMissing, memberName);
+                result = null; // String.Format(Configuration.ErrorKeyMissing, memberName);
 
             return true;
         }
@@ -61,7 +61,7 @@ namespace ToSic.SexyContent
         {
             propertyNotFound = false;
             object result;
-
+            
             if (Entity.Attributes.ContainsKey(attributeName))
             {
                 var attribute = Entity.Attributes[attributeName];
@@ -123,7 +123,13 @@ namespace ToSic.SexyContent
         /// </summary>
         public class ContentConfiguration
         {
-            public string ErrorKeyMissing = "[@Content.{0} not found]";
+            public string ErrorKeyMissing {
+                get { return null; }
+                set
+                {
+                    throw new Exception("Obsolete: Do not use ErrorKeyMissing anymore. Check if the value is null instead.");
+                }
+            }
         }
 
         public int EntityId
