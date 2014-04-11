@@ -39,7 +39,7 @@
         <ul class="dnnActions dnnClear">
             <li><asp:LinkButton ID="btnUpdate" resourcekey="btnUpdate" runat="server" CommandName="Update" OnClick="btnUpdate_Click" CssClass="dnnPrimaryAction eav-save" /></li>
             <li><asp:LinkButton ID="btnCancel" resourcekey="btnCancel" runat="server" CommandName="Cancel" CausesValidation="false" onclick="btnCancel_Click" CssClass="dnnSecondaryAction" /></li>
-            <li><asp:LinkButton ID="btnDelete" runat="server" CommandName="Delete" CausesValidation="false" OnClick="btnDelete_Click" CssClass="dnnSecondaryAction" /></li>
+            <li><asp:LinkButton ID="btnDelete" visible="false" runat="server" CommandName="Delete" CausesValidation="false" OnClick="btnDelete_Click" CssClass="dnnSecondaryAction" /></li>
             <li><asp:Hyperlink CssClass="dnnSecondaryAction hlkChangeContent" runat="server" ID="hlkChangeContent" ResourceKey="hlkChangeContent" Visible="False"></asp:Hyperlink></li>
         </ul>
     </asp:Panel>

@@ -11,7 +11,7 @@ using ToSic.SexyContent;
 
 namespace ToSic.SexyContent
 {
-    public partial class EditContentGroupItem : PortalModuleBase
+    public partial class EditContentGroupItem : PortalModuleBase, IEditContentControl
     {
         #region Properties
 

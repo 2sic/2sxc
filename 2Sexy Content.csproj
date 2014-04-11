@@ -177,6 +177,13 @@
       <DependentUpon>Services.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="EditEntity.ascx.cs">
+      <DependentUpon>EditEntity.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="EditEntity.ascx.designer.cs">
+      <DependentUpon>EditEntity.ascx</DependentUpon>
+    </Compile>
     <Compile Include="EditContentGroupItem.ascx.cs">
       <DependentUpon>EditContentGroupItem.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -308,6 +315,7 @@
     <Compile Include="SexyContent\Engines\TokenEngine\DynamicEntityPropertyAccess.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\TokenEngine.cs" />
     <Compile Include="SexyContent\DataImportExport\Extensions\AttributeSetExtension.cs" />
+    <Compile Include="SexyContent\IEditContentControl.cs" />
     <Compile Include="SexyContent\ImportExport\ExportImportMessage.cs" />
     <Compile Include="SexyContent\ImportExport\ImportExport.cs" />
     <Compile Include="SexyContent\ImportExport\ImportExportHelpers.cs" />
@@ -404,6 +412,7 @@
     <Content Include="Administration\Registers.ascx" />
     <Content Include="API\Services.asmx" />
     <Content Include="BuildScripts\MSBuild.Community.Tasks.dll" />
+    <Content Include="EditEntity.ascx" />
     <Content Include="EditContentGroupItem.ascx" />
     <Content Include="EditDataSource.ascx" />
     <Content Include="EditList.ascx" />
@@ -622,6 +631,8 @@
     <Content Include="Administration\App_LocalResources\DataExport.ascx.de-DE.resx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_LocalResources\EditEntity.ascx.de-DE.resx" />
+    <Content Include="App_LocalResources\EditEntity.resx" />
     <EmbeddedResource Include="SexyContent\DataImportExport\DataImportErrorCode.de-DE.resx" />
     <EmbeddedResource Include="SexyContent\DataImportExport\DataImportErrorCode.resx" />
   </ItemGroup>

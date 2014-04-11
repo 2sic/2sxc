@@ -8,6 +8,7 @@ using System.Web.UI.WebControls;
 using DotNetNuke.Common.Utilities;
 using DotNetNuke.UI.Utilities;
 using ToSic.Eav;
+using ToSic.Eav.DataSources;
 using ToSic.Eav.ManagementUI;
 using DotNetNuke.Entities.Modules;
 using System.Web.UI.HtmlControls;
@@ -16,6 +17,11 @@ using ToSic.SexyContent;
 
 namespace ToSic.SexyContent
 {
+    /// <summary>
+    /// Edit Entities - either by specifying SortOrder of the current ContentGroup, or by specifying the Entity ID directly.
+    /// If AttributeSetId is specified in the url, this control will allow editing the entity (or create new)
+    /// If ContentGroupId is specified in the url, this control will allow editing the ContentGroupItem (or create new)
+    /// </summary>
     public partial class EditContentGroup : SexyControlEditBase
     {
         #region Properties
@@ -26,9 +32,25 @@ namespace ToSic.SexyContent
         {
             get {
                 if (!String.IsNullOrEmpty(Request.QueryString["SortOrder"]))
-                    return int.Parse(Request.QueryString["SortOrder"]);
-                else
-                    return null;
+                {
+                    int sortOrder;
+                    if (int.TryParse(Request.QueryString["SortOrder"], out sortOrder))
+                        return sortOrder;
+                }
+                return new int?();
+            }
+        }
+
+        /// <summary>
+        /// Return the EntityID from QueryString
+        /// </summary>
+        public int? EntityId
+        {
+            get
+            {
+                if (!String.IsNullOrEmpty(Request.QueryString["EntityId"]))
+                    return int.Parse(Request.QueryString["EntityId"]);
+                return new int?();
             }
         }
 
@@ -71,7 +93,7 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Returns the ContentGroupID from QueryString
         /// </summary>
-        public int ContentGroupID
+        public int? ContentGroupID
         {
             get
             {
@@ -79,8 +101,24 @@ namespace ToSic.SexyContent
 
                 if (!String.IsNullOrEmpty(ContentGroupIDString))
                     return int.Parse(ContentGroupIDString);
-                else
-                    return int.Parse(Settings[SexyContent.ContentGroupIDString].ToString());
+
+                return new int?();
+            }
+        }
+
+        /// <summary>
+        /// Returns the ContentGroupID from QueryString
+        /// </summary>
+        public int? AttributeSetId
+        {
+            get
+            {
+                string attributeSetIdString = Request.QueryString[SexyContent.AttributeSetIDString];
+
+                if (!String.IsNullOrEmpty(attributeSetIdString))
+                    return int.Parse(attributeSetIdString);
+
+                return new int?();
             }
         }
 
@@ -92,8 +130,10 @@ namespace ToSic.SexyContent
         {
             get
             {
-                if (_Items == null)
-                    _Items = Sexy.TemplateContext.GetContentGroupItems(ContentGroupID).ToList();
+                if (_Items == null && ContentGroupID.HasValue)
+                    _Items = Sexy.TemplateContext.GetContentGroupItems(ContentGroupID.Value).ToList();
+                if(_Items == null && AttributeSetId.HasValue)
+                    _Items = new List<ContentGroupItem>();
                 return _Items;
             }
         }
@@ -101,16 +141,15 @@ namespace ToSic.SexyContent
         private List<ContentGroupItem> CurrentlyEditedItems
         {
             get {
-                if (NewMode)
+                if (NewMode && ContentGroupID.HasValue)
                     return new List<ContentGroupItem>() { new ContentGroupItem()
                     {
                         SortOrder = SortOrder.HasValue ? SortOrder.Value : 0,
-                        ContentGroupID = ContentGroupID,
+                        ContentGroupID = ContentGroupID.Value,
                         Type = ContentGroupItemType.Content.ToString("F"),
                         
                     }};
-                else
-                return Items.Where(p => p.SortOrder == SortOrder.Value).ToList();
+                return !SortOrder.HasValue ? new List<ContentGroupItem>() : Items.Where(p => p.SortOrder == SortOrder.Value).ToList();
             }
         }
 
@@ -151,6 +190,7 @@ namespace ToSic.SexyContent
 
             btnDelete.OnClientClick = "return confirm('" + LocalizeString("btnDelete.Confirm") + "')";
             btnDelete.Text = Items.Count(p => p.ItemType == ContentGroupItemType.Content) > 1 ? LocalizeString("btnDelete.ListText") : LocalizeString("btnDelete.Text");
+            btnDelete.Visible = !NewMode;
 
             // If there is something to edit
             if (CurrentlyEditedItems.Any())
@@ -163,6 +203,7 @@ namespace ToSic.SexyContent
                 hlkChangeContent.Visible = !NewMode && IsDefaultLanguage && (CurrentlyEditedItems.First().ItemType == ContentGroupItemType.Content || CurrentlyEditedItems.First().ItemType == ContentGroupItemType.ListContent);
             }
 
+            // Show message if language is not active
             if (!Sexy.ContentContext.HasLanguages() || (LanguageID.HasValue && Sexy.ContentContext.GetDimension(LanguageID.Value).Active))
                 ProcessView();
             else
@@ -174,7 +215,6 @@ namespace ToSic.SexyContent
                     btnActivateLanguage.Visible = true;
             }
 
-            btnDelete.Visible = !NewMode;
         }
 
         protected void ProcessView()
@@ -202,27 +242,39 @@ namespace ToSic.SexyContent
                         if (CurrentlyEditedItems.Any() && CurrentlyEditedItems.First().ContentGroupItemID != 0)
                             ContentGroupItem = CurrentlyEditedItems.FirstOrDefault(p => p.ItemType == TemplateDefault.ItemType);
 
-                        EditContentGroupItem EditControl = (EditContentGroupItem)LoadControl(System.IO.Path.Combine(TemplateSourceDirectory, "EditContentGroupItem.ascx"));
-                        EditControl.ContentGroupItemID = ContentGroupItem != null && ContentGroupItem.ContentGroupID != 0 ? ContentGroupItem.ContentGroupItemID : new int?();
-                        EditControl.ContentGroupID = ContentGroupID;
-                        EditControl.AppId = AppId.Value;
-                        EditControl.ZoneId = ZoneId.Value;
-                        EditControl.ItemType = TemplateDefault.ItemType;
-                        EditControl.TemplateID = Items.First().TemplateID.Value;
-                        EditControl.SortOrder = CurrentlyEditedItems.Any() || SortOrder == -1 ? SortOrder : new int?();
-                        EditControl.ModuleID = ModuleId;
-                        EditControl.TabID = TabId;
-                        EditControl.AttributeSetID = TemplateDefault.ContentTypeID.Value;
-                        phNewOrEditControls.Controls.Add(EditControl);
+                        var editControl = (EditContentGroupItem)LoadControl(System.IO.Path.Combine(TemplateSourceDirectory, "EditContentGroupItem.ascx"));
+                        editControl.ContentGroupItemID = ContentGroupItem != null && ContentGroupItem.ContentGroupID != 0 ? ContentGroupItem.ContentGroupItemID : new int?();
+                        editControl.ContentGroupID = ContentGroupID.Value;
+                        editControl.AppId = AppId.Value;
+                        editControl.ZoneId = ZoneId.Value;
+                        editControl.ItemType = TemplateDefault.ItemType;
+                        editControl.TemplateID = Items.First().TemplateID.Value;
+                        editControl.SortOrder = CurrentlyEditedItems.Any() || SortOrder == -1 ? SortOrder : new int?();
+                        editControl.ModuleID = ModuleId;
+                        editControl.TabID = TabId;
+                        editControl.AttributeSetID = TemplateDefault.ContentTypeID.Value;
+                        phNewOrEditControls.Controls.Add(editControl);
                     }
                 }
             }
 
+            // Directly edit entity Id
+            if ((!SortOrder.HasValue && EntityId.HasValue) || (!SortOrder.HasValue && AttributeSetId.HasValue && NewMode))
+            {
+                var editControl = (EditEntity)LoadControl(System.IO.Path.Combine(TemplateSourceDirectory, "EditEntity.ascx"));
+                editControl.AppId = AppId.Value;
+                editControl.ZoneId = ZoneId.Value;
+                editControl.ModuleID = ModuleId;
+                editControl.TabID = TabId;
+                editControl.AttributeSetID = AttributeSetId.Value;
+                editControl.EntityId = EntityId;
+                phNewOrEditControls.Controls.Add(editControl);
+            }
         }
 
         protected void btnUpdate_Click(object sender, EventArgs e)
         {
-            foreach(EditContentGroupItem EditControl in phNewOrEditControls.Controls)
+            foreach (IEditContentControl EditControl in phNewOrEditControls.Controls)
                 EditControl.Save();
 
             RedirectBack();
@@ -230,7 +282,7 @@ namespace ToSic.SexyContent
 
         protected void btnCancel_Click(object sender, EventArgs e)
         {
-            foreach (EditContentGroupItem EditControl in phNewOrEditControls.Controls)
+            foreach (IEditContentControl EditControl in phNewOrEditControls.Controls)
                 EditControl.Cancel();
 
             RedirectBack();
@@ -238,7 +290,7 @@ namespace ToSic.SexyContent
 
         protected void btnDelete_Click(object sender, EventArgs e)
         {
-            SexyUncached.TemplateContext.DeleteContentGroupItems(ContentGroupID, SortOrder.Value, UserId);
+            SexyUncached.TemplateContext.DeleteContentGroupItems(ContentGroupID.Value, SortOrder.Value, UserId);
             RedirectBack();
         }
 
@@ -257,7 +309,7 @@ namespace ToSic.SexyContent
                 if (Boolean.Parse(hfMustSave.Value))
                 {
                     // Save when changing language
-                    foreach (EditContentGroupItem EditControl in phNewOrEditControls.Controls)
+                    foreach (IEditContentControl EditControl in phNewOrEditControls.Controls)
                         EditControl.Save();
                 }
 
@@ -279,7 +331,7 @@ namespace ToSic.SexyContent
         protected void btnActivateLanguage_Click(object sender, EventArgs e)
         {
             Sexy.SetCultureState(System.Threading.Thread.CurrentThread.CurrentCulture.Name, true, PortalId);
-            Response.Redirect(Sexy.GetElementEditLink(ContentGroupID, SortOrder.Value, ModuleId, TabId, ""));
+            Response.Redirect(Sexy.GetElementEditLink(ContentGroupID.Value, SortOrder.Value, ModuleId, TabId, ""));
         }
     }
 }

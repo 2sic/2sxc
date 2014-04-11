@@ -30,6 +30,12 @@ $2sxc.getManageController = function(id) {
             if (settings.action == 'new')
                 dialogParams.editMode = "New";
 
+            if (settings.AttributeSetId) {
+                dialogParams.entityId = settings.entityId;
+                dialogParams.attributeSetId = settings.AttributeSetId;
+                dialogParams.contentGroupId = "";
+            }
+
             return settings.dialogUrl
                 + (settings.dialogUrl.indexOf('?') == -1 ? '?' : '&')
                 + $.param(dialogParams);
