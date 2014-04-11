@@ -15,7 +15,7 @@ $2sxc.getManageController = function(id) {
         config: config,
 
         getLink: function (settings) {
-            settings = $.extend(config, settings);
+            settings = $.extend({}, config, settings);
 
             var dialogParams = {
                 //tabid: settings.tabId,
@@ -30,9 +30,10 @@ $2sxc.getManageController = function(id) {
             if (settings.action == 'new')
                 dialogParams.editMode = "New";
 
-            if (settings.AttributeSetId) {
-                dialogParams.entityId = settings.entityId;
-                dialogParams.attributeSetId = settings.AttributeSetId;
+            if (settings.attributeSetName) {
+                if(settings.action != 'new')
+                    dialogParams.entityId = settings.entityId;
+                dialogParams.attributeSetName = settings.attributeSetName;
                 dialogParams.contentGroupId = "";
             }
 
@@ -70,7 +71,7 @@ $2sxc.getManageController = function(id) {
 
         getButton: function (settings) {
 
-            settings = $.extend(config, settings);
+            settings = $.extend({}, config, settings);
             var button = $('<a />', {
                 'class': 'sc-' + settings.action,
                 'href': 'javascript:$2sxc(' + settings.moduleId + ').manage.action(' + JSON.stringify(settings) + ')'

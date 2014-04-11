@@ -106,6 +106,8 @@ namespace ToSic.SexyContent
             }
         }
 
+
+        private int? _attributeSetId;
         /// <summary>
         /// Returns the ContentGroupID from QueryString
         /// </summary>
@@ -113,12 +115,14 @@ namespace ToSic.SexyContent
         {
             get
             {
-                string attributeSetIdString = Request.QueryString[SexyContent.AttributeSetIDString];
+                if (_attributeSetId == null)
+                {
+                    string attributeSetName = Request.QueryString["AttributeSetName"];
 
-                if (!String.IsNullOrEmpty(attributeSetIdString))
-                    return int.Parse(attributeSetIdString);
-
-                return new int?();
+                    if (!String.IsNullOrEmpty(attributeSetName))
+                        _attributeSetId = Sexy.ContentContext.GetAllAttributeSets().FirstOrDefault(p => p.Name == attributeSetName || p.StaticName == attributeSetName).AttributeSetID;
+                }
+                return _attributeSetId;
             }
         }
 
@@ -190,7 +194,7 @@ namespace ToSic.SexyContent
 
             btnDelete.OnClientClick = "return confirm('" + LocalizeString("btnDelete.Confirm") + "')";
             btnDelete.Text = Items.Count(p => p.ItemType == ContentGroupItemType.Content) > 1 ? LocalizeString("btnDelete.ListText") : LocalizeString("btnDelete.Text");
-            btnDelete.Visible = !NewMode;
+            btnDelete.Visible = !NewMode && ContentGroupID.HasValue;
 
             // If there is something to edit
             if (CurrentlyEditedItems.Any())
