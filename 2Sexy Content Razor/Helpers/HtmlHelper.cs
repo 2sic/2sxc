@@ -32,5 +32,15 @@ namespace ToSic.SexyContent.Razor.Helpers
         {
             return new HtmlString(text);
         }
+
+        /// <summary>
+        /// Temporary overload needed for backward compatibility Html.Raw(Content.Toolbar)
+        /// </summary>
+        /// <param name="htmlString"></param>
+        /// <returns></returns>
+        public HtmlString Raw(HtmlString htmlString)
+        {
+            return htmlString;
+        }
     }
 }
