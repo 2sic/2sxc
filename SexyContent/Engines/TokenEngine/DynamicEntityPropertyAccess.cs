@@ -53,7 +53,7 @@ namespace ToSic.SexyContent.Engines.TokenEngine
                     case "String":
                         return PropertyAccess.FormatString((string)valueObject, strFormat);
                     case "Boolean":
-                        return (PropertyAccess.Boolean2LocalizedYesNo((bool)valueObject, formatProvider));
+                        return ((bool) valueObject).ToString(formatProvider).ToLower();
                     case "DateTime":
                     case "Double":
                     case "Single":
