@@ -23,9 +23,11 @@ $2sxc.getManageController = function(id) {
                 mid: settings.moduleId,
                 sortOrder: settings.sortOrder,
                 contentGroupId: settings.contentGroupId,
-                cultureDimension: settings.cultureDimension,
-                returnUrl: ''
+                //returnUrl: ''
             };
+
+            if (settings.cultureDimension && settings.cultureDimension != null)
+                dialogParams.cultureDimension = settings.cultureDimension;
 
             if (settings.action == 'new')
                 dialogParams.editMode = "New";
