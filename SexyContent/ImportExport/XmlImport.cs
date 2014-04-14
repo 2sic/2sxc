@@ -27,7 +27,7 @@ namespace ToSic.SexyContent.ImportExport
         
         private List<Dimension> _sourceDimensions;
         private string _sourceDefaultLanguage;
-        private string _sourceDefaultDimensionId;
+        private int? _sourceDefaultDimensionId;
         private List<Dimension> _targetDimensions;
         private SexyContent _sexy;
         private int _appId;
@@ -175,8 +175,8 @@ namespace ToSic.SexyContent.ImportExport
 
             _sourceDefaultLanguage = xmlSource.Element("Header").Element("Language").Attribute("Default").Value;
             _sourceDefaultDimensionId = _sourceDimensions.Any() ? 
-                _sourceDimensions.FirstOrDefault(p => p.ExternalKey == _sourceDefaultLanguage).DimensionID.ToString()
-                : null;
+                _sourceDimensions.FirstOrDefault(p => p.ExternalKey == _sourceDefaultLanguage).DimensionID
+                : new int?();
 
             _targetDimensions = _sexy.ContentContext.GetDimensionChildren("Culture");
             if(_targetDimensions.Count == 0)
@@ -399,7 +399,7 @@ namespace ToSic.SexyContent.ImportExport
             }
 
             var importEntity = ToSic.Eav.ImportExport.XmlImport.GetImportEntity(xEntity, assignmentObjectTypeId,
-                _targetDimensions, _sourceDimensions, int.Parse(_sourceDefaultDimensionId), _sourceDefaultLanguage, keyNumber);
+                _targetDimensions, _sourceDimensions, _sourceDefaultDimensionId, _sourceDefaultLanguage, keyNumber);
 
             return importEntity;
 
