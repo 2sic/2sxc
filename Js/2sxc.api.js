@@ -76,7 +76,7 @@ var $2sxc = function (id) {
         source: null,
         isLoaded: false,
         lastRefresh: null,
-        manage: $2sxc.getManageController(id)
+        manage: $2sxc.getManageController ? $2sxc.getManageController(id) : null
     };
 
     // Make sure back-reference to controller is set
