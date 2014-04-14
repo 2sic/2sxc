@@ -10,6 +10,9 @@ var $2sxc = function (id) {
             // in-streams
             "in": {},
 
+            // Will hold the default stream (["in"]["Default"].List
+            List: [],
+
             controller: null,
 
             // Load data via ajax
@@ -32,6 +35,9 @@ var $2sxc = function (id) {
                                 controller.data["in"][dataSetName].name = dataSetName;
                             }
                         }
+
+                        if (controller.data["in"]["Default"])
+                            controller.List = controller.data["in"]["Default"].List;
                         
                         if (source.origSuccess)
                             source.origSuccess(controller.data);
