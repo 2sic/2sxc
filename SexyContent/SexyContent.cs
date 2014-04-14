@@ -792,9 +792,9 @@ namespace ToSic.SexyContent
         {
             // Add Toolbar if neccessary, else add empty string to dictionary
             if(!IsEditable)
-                Elements.Where(p => p.Content != null).ToList().ForEach(p => ((DynamicEntity)p.Content).Toolbar = "");
+                Elements.Where(p => p.Content != null).ToList().ForEach(p => ((DynamicEntity)p.Content).ToolbarString = "");
             else
-                Elements.Where(p => p.Content != null).ToList().ForEach(p => ((DynamicEntity)p.Content).Toolbar = GetElementToolbar(p.GroupId, p.SortOrder, p.Id, ModuleID, LocalResourcesPath, ListEnabled, ParentControl, ReturnUrl));
+                Elements.Where(p => p.Content != null).ToList().ForEach(p => ((DynamicEntity)p.Content).ToolbarString = GetElementToolbar(p.GroupId, p.SortOrder, p.Id, ModuleID, LocalResourcesPath, ListEnabled, ParentControl, ReturnUrl));
         }
 
         #endregion

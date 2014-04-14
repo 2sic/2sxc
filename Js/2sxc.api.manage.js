@@ -30,9 +30,10 @@ $2sxc.getManageController = function(id) {
             if (settings.action == 'new')
                 dialogParams.editMode = "New";
 
-            if (settings.attributeSetName) {
+            if (settings.entityId) {
                 if(settings.action != 'new')
                     dialogParams.entityId = settings.entityId;
+
                 dialogParams.attributeSetName = settings.attributeSetName;
                 dialogParams.contentGroupId = "";
             }

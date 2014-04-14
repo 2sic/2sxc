@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Web;
 using DotNetNuke.Services.FileSystem;
 using ToSic.Eav;
 using ToSic.Eav.DataSources;
@@ -13,7 +14,10 @@ namespace ToSic.SexyContent
     {
         public ContentConfiguration Configuration = new ContentConfiguration();
         public IEntity Entity { get; set; }
-        public string Toolbar { get; set; }
+        public string ToolbarString { get; set; }
+        public HtmlString Toolbar {
+            get { return new HtmlString(ToolbarString); }
+        }
         private readonly string[] _dimensions;
 
         /// <summary>
@@ -25,7 +29,7 @@ namespace ToSic.SexyContent
         {
             this.Entity = entityModel;
             this._dimensions = dimensions;
-            this.Toolbar = "";
+            this.ToolbarString = "";
         }
 
         public override bool TryGetMember(GetMemberBinder binder, out object result)
@@ -78,7 +82,7 @@ namespace ToSic.SexyContent
                         result = EntityId;
                         break;
                     case "Toolbar":
-                        result = Toolbar;
+                        result = ToolbarString;
                         break;
                     default:
                         // ToDo: Get Attributes, find out what to return as default...
