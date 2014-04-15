@@ -17,32 +17,29 @@ $2sxc.getManageController = function(id) {
         getLink: function (settings) {
             settings = $.extend({}, config, settings);
 
-            var dialogParams = {
-                //tabid: settings.tabId,
+            var params = {
                 ctl: 'editcontentgroup',
-                mid: settings.moduleId,
-                sortOrder: settings.sortOrder,
-                contentGroupId: settings.contentGroupId,
-                //returnUrl: ''
+                mid: settings.moduleId
             };
 
             if (settings.cultureDimension && settings.cultureDimension != null)
-                dialogParams.cultureDimension = settings.cultureDimension;
+                params.cultureDimension = settings.cultureDimension;
 
             if (settings.action == 'new')
-                dialogParams.editMode = "New";
+                params.editMode = "New";
 
-            if (settings.entityId) {
-                if(settings.action != 'new')
-                    dialogParams.entityId = settings.entityId;
-
-                dialogParams.attributeSetName = settings.attributeSetName;
-                dialogParams.contentGroupId = "";
+            if (settings.attributeSetName) {
+                if (settings.action != 'new')
+                    params.entityId = settings.entityId;
+                params.attributeSetName = settings.attributeSetName;
+            } else {
+                params.sortOrder = settings.sortOrder;
+                params.contentGroupId = settings.contentGroupId;
             }
 
             return settings.dialogUrl
                 + (settings.dialogUrl.indexOf('?') == -1 ? '?' : '&')
-                + $.param(dialogParams);
+                + $.param(params);
         },
 
         openDialog: function(settings) {
