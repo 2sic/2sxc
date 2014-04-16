@@ -52,7 +52,7 @@ namespace ToSic.SexyContent.Razor
 
             // Return if parent page is not a SexyContentWebPage
             if (parentPage.GetType().BaseType != typeof(SexyContentWebPage)) return;
-
+            
             Dnn = ((SexyContentWebPage) parentPage).Dnn;
             Html = ((SexyContentWebPage) parentPage).Html;
             Url = ((SexyContentWebPage) parentPage).Url;
