@@ -34,7 +34,9 @@
         </ItemTemplate>
     </asp:ListView>
     <ul class="dnnActions dnnClear">
-        <li><asp:HyperLink ID="hlkClose" runat="server" CssClass="dnnPrimaryAction" ResourceKey="hlkClose"></asp:HyperLink></li>
+        <li>
+            <a href="<%= EditUrl("", "", "appmanagement") %>" class="dnnPrimaryAction"><%= LocalizeString("hlkClose.Text") %></a>
+        </li>
     </ul>
 </asp:Panel>
 

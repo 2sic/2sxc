@@ -9,6 +9,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Client.ClientResourceManagement;
 using System.Linq;
 using DotNetNuke.Entities.Modules;
+using DotNetNuke.Web.UI.WebControls.Extensions;
 using ToSic.Eav;
 using DotNetNuke.Entities.Modules.Actions;
 
@@ -87,8 +88,8 @@ namespace ToSic.SexyContent
                 if (!AppId.HasValue || !Elements.Any() || !Elements.First().TemplateId.HasValue || Elements.All(p => !p.EntityId.HasValue))
                     ShowTemplateChooser();
 
-                if (!SexyContent.PortalIsConfigured(Server, ControlPath))
-                    pnlMissingConfiguration.Visible = true;
+                if (AppId.HasValue && !SexyContent.PortalIsConfigured(Server, ControlPath))
+                    Sexy.ConfigurePortal(Server);
 
                 if (AppId.HasValue && Elements.Any() && Elements.First().TemplateId.HasValue)
                     ProcessView();
@@ -260,8 +261,14 @@ namespace ToSic.SexyContent
             ddlApp.DataSource = SexyContent.GetApps(ZoneId.Value, false).Where(a => !a.Hidden);
             ddlApp.DataBind();
 
-            if(ddlApp.Items.Cast<ListItem>().Any(p => p.Value == AppId.ToString()))
+            if (ddlApp.Items.Cast<ListItem>().Any(p => p.Value == AppId.ToString()))
                 ddlApp.SelectedValue = AppId.ToString();
+
+            var separatorItem = new ListItem("──────────", "", true);
+            separatorItem.Attributes["disabled"] = "disabled";
+
+            ddlApp.Items.Add(separatorItem);
+            ddlApp.Items.Add(new ListItem("Get more apps", "OpenAppDialog", true));
         }
 
         protected void ChangeTemplate()
@@ -293,6 +300,12 @@ namespace ToSic.SexyContent
 
         protected void ddlApp_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (ddlApp.SelectedValue == "OpenAppDialog")
+            {
+                pnlOpenCatalog.Visible = true;
+                return;
+            }
+
             AppId = int.Parse(ddlApp.SelectedValue);
             ddlTemplate.SelectedValue = "0";
             ChangeTemplate();
@@ -416,18 +429,5 @@ namespace ToSic.SexyContent
         }
         #endregion
 
-        /// <summary>
-        /// Configure Portal (creates /Portals/[Directory]/2sexy folder with web.config for Razor templates)
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        protected void hlkConfigurePortal_Click(object sender, EventArgs e)
-        {
-            if (!SexyContent.PortalIsConfigured(Server, ControlPath))
-            {
-                Sexy.ConfigurePortal(Server);
-                Response.Redirect(Request.RawUrl);
-            }
-        }
     }
 }

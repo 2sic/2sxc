@@ -88,8 +88,8 @@ namespace ToSic.SexyContent
                 if (!AppId.HasValue || !Elements.Any() || !Elements.First().TemplateId.HasValue || Elements.All(p => !p.EntityId.HasValue))
                     ShowTemplateChooser();
 
-                if (!SexyContent.PortalIsConfigured(Server, ControlPath))
-                    pnlMissingConfiguration.Visible = true;
+                if (AppId.HasValue && !SexyContent.PortalIsConfigured(Server, ControlPath))
+                    Sexy.ConfigurePortal(Server);
 
                 if (AppId.HasValue && Elements.Any() && Elements.First().TemplateId.HasValue)
                     ProcessView();
@@ -444,18 +444,5 @@ namespace ToSic.SexyContent
         }
         #endregion
 
-        /// <summary>
-        /// Configure Portal (creates /Portals/[Directory]/2sexy folder with web.config for Razor templates)
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        protected void hlkConfigurePortal_Click(object sender, EventArgs e)
-        {
-            if (!SexyContent.PortalIsConfigured(Server, ControlPath))
-            {
-                Sexy.ConfigurePortal(Server);
-                Response.Redirect(Request.RawUrl);
-            }
-        }
     }
 }

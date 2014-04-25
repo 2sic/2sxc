@@ -337,11 +337,15 @@ namespace ToSic.SexyContent
             if (!sexyFolder.GetFiles("web.config").Any())
                 File.Copy(server.MapPath(WebConfigTemplatePath), Path.Combine(sexyFolder.FullName, WebConfigFileName));
 
-            // Create a Content folder (default app)
-            var contentFolder = new DirectoryInfo(Path.Combine(sexyFolder.FullName, App.Folder));
+            // Create a Content folder (or App Folder)
+            if (!String.IsNullOrEmpty(App.Folder))
+            {
+                var contentFolder = new DirectoryInfo(Path.Combine(sexyFolder.FullName, App.Folder));
+                if (!contentFolder.Exists)
+                    contentFolder.Create();
+            }
 
-            if (!contentFolder.Exists)
-                contentFolder.Create();
+            
         }
 
         /// <summary>
@@ -352,8 +356,6 @@ namespace ToSic.SexyContent
         /// <param name="ControlPath"></param>
         public void ConfigurePortal(HttpServerUtility server)
         {
-            //var templatePathRootMapPath = server.MapPath(Path.Combine(PortalSettings.Current.HomeDirectory, SexyContent.TemplateFolder));
-            //var directory = new DirectoryInfo(templatePathRootMapPath);
             EnsureTemplateFolderExists(server, TemplateLocations.PortalFileSystem);
         }
 

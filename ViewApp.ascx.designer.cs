@@ -49,33 +49,6 @@ namespace ToSic.SexyContent {
         protected global::System.Web.UI.WebControls.Panel pnlGetStarted;
         
         /// <summary>
-        /// pnlMissingConfiguration control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlMissingConfiguration;
-        
-        /// <summary>
-        /// lblMissingConfiguration control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblMissingConfiguration;
-        
-        /// <summary>
-        /// hlkConfigurePortal control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton hlkConfigurePortal;
-        
-        /// <summary>
         /// pnlZoneConfigurationMissing control.
         /// </summary>
         /// <remarks>
@@ -128,6 +101,15 @@ namespace ToSic.SexyContent {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.PlaceHolder phOutput;
+        
+        /// <summary>
+        /// pnlOpenCatalog control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlOpenCatalog;
         
         /// <summary>
         /// hfContentGroupItemSortOrder control.
