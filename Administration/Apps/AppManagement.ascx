@@ -65,7 +65,7 @@
 
                     <dnnweb:DnnGridTemplateColumn HeaderText="ManageApp">
                         <ItemTemplate>
-                            <a href="<%# EditUrl("", "", SexyContent.ControlKeys.EavManagement, SexyContent.AppIDString + "=" + Eval("AppID")) %>">Manage</a>
+                            <a href="<%# EditUrl("", "", SexyContent.ControlKeys.GettingStarted, SexyContent.AppIDString + "=" + Eval("AppID")) %>">Manage</a>
                         </ItemTemplate>
                     </dnnweb:DnnGridTemplateColumn>
                     
@@ -92,7 +92,7 @@
             </clientsettings>
         </dnnweb:DnnGrid>
         <ul class="dnnActions dnnClear">
-            <li><asp:Hyperlink ID="hlkBrowseApps" runat="server" CssClass="dnnPrimaryAction" ResourceKey="hlkBrowseApps"></asp:Hyperlink></li>
+            <li><asp:Hyperlink ID="hlkBrowseApps" runat="server" CssClass="dnnPrimaryAction" ResourceKey="hlkBrowseApps" Target="_blank" NavigateUrl="http://2sexycontent.org/apps"></asp:Hyperlink></li>
             <li><a class="dnnSecondaryAction" href="<%= EditUrl("", "", SexyContent.ControlKeys.AppImport) %>">Import App</a></li>
             <li><asp:LinkButton ID="btnCreateApp" runat="server" CssClass="dnnSecondaryAction sc-create-app" ResourceKey="btnCreateApp" OnClientClick="return CreateApp()" OnClick="btnCreateApp_Click"></asp:LinkButton></li>
         </ul>
