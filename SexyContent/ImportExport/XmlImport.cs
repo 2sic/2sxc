@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Xml.Linq;
@@ -101,6 +102,9 @@ namespace ToSic.SexyContent.ImportExport
         /// <returns>AppId of the new imported app</returns>
         public bool ImportApp(int zoneId, string xml, out int? appId)
         {
+            // Increase script timeout to prevent timeouts
+            HttpContext.Current.Server.ScriptTimeout = 300;
+
             appId = new int?();
 
             // Parse XDocument from string
