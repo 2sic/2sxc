@@ -27,11 +27,31 @@ namespace ToSic.SexyContent.Razor
         protected internal List<Element> List { get; internal set; }
         protected internal IDataTarget Data { get; internal set; }
 
+        /// <summary>
+        /// Transform a IEntity to a DynamicEntity as dynamic object
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         public dynamic AsDynamic(IEntity entity)
         {
             return new DynamicEntity(entity, new[] { System.Threading.Thread.CurrentThread.CurrentCulture.Name });
         }
 
+        /// <summary>
+        /// Makes sure a dynamicEntity could be wrapped in AsDynamic()
+        /// </summary>
+        /// <param name="dynamicEntity"></param>
+        /// <returns></returns>
+        public dynamic AsDynamic(dynamic dynamicEntity)
+        {
+            return dynamicEntity;
+        }
+
+        /// <summary>
+        /// Transform a DynamicEntity dynamic object back to a IEntity instance
+        /// </summary>
+        /// <param name="dynamicEntity"></param>
+        /// <returns></returns>
         public IEntity AsEntity(dynamic dynamicEntity)
         {
             return ((DynamicEntity)dynamicEntity).Entity;
