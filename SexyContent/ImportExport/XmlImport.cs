@@ -403,7 +403,7 @@ namespace ToSic.SexyContent.ImportExport
             }
 
             var importEntity = ToSic.Eav.ImportExport.XmlImport.GetImportEntity(xEntity, assignmentObjectTypeId,
-                _targetDimensions, _sourceDimensions, _sourceDefaultDimensionId, _sourceDefaultLanguage, keyNumber);
+                _targetDimensions, _sourceDimensions, _sourceDefaultDimensionId, PortalSettings.Current.DefaultLanguage, keyNumber);
 
             return importEntity;
 
