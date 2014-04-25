@@ -55,8 +55,14 @@ namespace ToSic.SexyContent
                         return new int?();
                 }
 
-                // Get AppId from ModuleSettings
-                var appIdString = Settings[SexyContent.AppIDString];
+                object appIdString;
+
+                if (!String.IsNullOrEmpty(Request.QueryString["AppId"]))
+                    appIdString = Request.QueryString["AppId"];
+                else
+                    // Get AppId from ModuleSettings
+                    appIdString = Settings[SexyContent.AppIDString];
+
                 int appId;
                 if (appIdString != null && int.TryParse(appIdString.ToString(), out appId))
                     return appId;

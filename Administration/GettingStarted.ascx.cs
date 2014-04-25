@@ -28,9 +28,10 @@ namespace ToSic.SexyContent.Administration
             var ZoneID = SexyContent.GetZoneID(PortalId);
             GettingStartedSrc += ZoneID.HasValue ? "&ZoneID=" + ZoneID.Value.ToString() : "";
             // Add AppStaticName and Version
-            if (AppId.HasValue)
+            if (AppId.HasValue && !IsContentApp)
             {
                 var app = SexyContent.GetApp(ZoneId.Value, AppId.Value);
+
                 GettingStartedSrc += "&AppGuid=" + app.AppGuid;
                 if (app.Configuration != null)
                 {

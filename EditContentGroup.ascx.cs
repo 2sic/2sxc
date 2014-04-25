@@ -109,7 +109,7 @@ namespace ToSic.SexyContent
 
         private int? _attributeSetId;
         /// <summary>
-        /// Returns the ContentGroupID from QueryString
+        /// Returns the AttributeSetId from QueryString
         /// </summary>
         public int? AttributeSetId
         {

@@ -745,15 +745,40 @@ namespace ToSic.SexyContent
         /// <param name="assignmentObjectTypeID"></param>
         /// <param name="keyNumber"></param>
         /// <returns></returns>
-        public static string GetMetaDataEditUrl(int tabId, int moduleId, string returnUrl, Control control, string attributeSetStaticName, int assignmentObjectTypeID, int keyNumber, int zoneId, int appId)
+        public string GetMetaDataEditUrl(int tabId, int moduleId, string returnUrl, Control control, string attributeSetStaticName, int assignmentObjectTypeID, int keyNumber)
         {
-            var portalSettings = PortalSettings.Current;
+            //var portalSettings = PortalSettings.Current;
 
-            //var DefaultAppContext = new SexyContent(true, DataSource.DefaultZoneId);
-            var set = new SexyContent(zoneId, appId).ContentContext.GetAttributeSet(attributeSetStaticName);
-            string newItemUrl = Globals.NavigateURL(tabId, ControlKeys.EavManagement, "mid=" + moduleId.ToString() + "&ManagementMode=NewItem&AttributeSetId=[AttributeSetId]&KeyNumber=[KeyNumber]&AssignmentObjectTypeId=[AssignmentObjectTypeId]&ReturnUrl=[ReturnUrl]&" + SexyContent.AppIDString + "=" + appId);
-            string editItemUrl = Globals.NavigateURL(tabId, ControlKeys.EavManagement, "mid=" + moduleId.ToString() + "&ManagementMode=EditItem&EntityId=[EntityId]&ReturnUrl=[ReturnUrl]&" + SexyContent.AppIDString + "=" + appId);
-            return UrlUtils.PopUpUrl(Eav.ManagementUI.Forms.GetItemFormUrl(keyNumber, set.AttributeSetID, assignmentObjectTypeID, newItemUrl, editItemUrl, returnUrl), control, portalSettings, false, true);
+            //var set = new SexyContent(zoneId, appId).ContentContext.GetAttributeSet(attributeSetStaticName);
+            //string newItemUrl = Globals.NavigateURL(tabId, ControlKeys.EavManagement, "mid=" + moduleId.ToString() + "&ManagementMode=NewItem&AttributeSetId=[AttributeSetId]&KeyNumber=[KeyNumber]&AssignmentObjectTypeId=[AssignmentObjectTypeId]&ReturnUrl=[ReturnUrl]&" + SexyContent.AppIDString + "=" + appId);
+            //string editItemUrl = Globals.NavigateURL(tabId, ControlKeys.EavManagement, "mid=" + moduleId.ToString() + "&ManagementMode=EditItem&EntityId=[EntityId]&ReturnUrl=[ReturnUrl]&" + SexyContent.AppIDString + "=" + appId);
+            //return UrlUtils.PopUpUrl(Eav.ManagementUI.Forms.GetItemFormUrl(keyNumber, set.AttributeSetID, assignmentObjectTypeID, newItemUrl, editItemUrl, returnUrl), control, portalSettings, false, true);
+
+            var assignedEntity = DataSource.GetMetaDataSource(ZoneId.Value, AppId.Value).GetAssignedEntities(assignmentObjectTypeID, keyNumber, attributeSetStaticName).FirstOrDefault();
+            var entityId = assignedEntity == null ? new int?() : assignedEntity.EntityId;
+
+            return GetEntityEditLink(entityId , moduleId, tabId, attributeSetStaticName, returnUrl,
+                    assignmentObjectTypeID, keyNumber);
+        
+        }
+
+        private string GetEntityEditLink(int? entityId, int moduleId, int tabId, string attributeSetStaticName, string returnUrl, int? assignmentObjectTypeId, int? keyNumber)
+        {
+            string editUrl = Globals.NavigateURL(tabId, ControlKeys.EditContentGroup, new string[] { "mid", moduleId.ToString(), "AppId", AppId.ToString(),
+                "AttributeSetName", attributeSetStaticName, "AssignmentObjectTypeId", assignmentObjectTypeId.ToString(), "KeyNumber", keyNumber.ToString() });
+            editUrl += (editUrl.IndexOf("?") == -1 ? "?" : "&") + "popUp=true&ReturnUrl=" + HttpUtility.UrlEncode(returnUrl);
+
+            if (!entityId.HasValue)
+                editUrl += "&EditMode=New";
+            else
+                editUrl += "&EntityId=" + entityId.Value;
+
+            // If Culture exists, add CultureDimension
+            var languageId = GetCurrentLanguageID();
+            if (languageId.HasValue)
+                editUrl += "&CultureDimension=" + languageId;
+
+            return editUrl;
         }
 
         /// <summary>

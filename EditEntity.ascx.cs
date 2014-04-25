@@ -78,6 +78,26 @@ namespace ToSic.SexyContent
             }
         }
 
+        public int? KeyNumber
+        {
+            get
+            {
+                return !String.IsNullOrEmpty(Request.QueryString["KeyNumber"])
+                    ? int.Parse(Request.QueryString["KeyNumber"])
+                    : new int?();
+            }
+        }
+
+        public int AssignmentObjectTypeId
+        {
+            get
+            {
+                return !String.IsNullOrEmpty(Request.QueryString["AssignmentObjectTypeId"])
+                    ? int.Parse(Request.QueryString["AssignmentObjectTypeId"])
+                    : SexyContent.AssignmentObjectTypeIDDefault;
+            }
+        }
+
         #endregion
 
         private ItemForm EditItemControl;
@@ -112,7 +132,8 @@ namespace ToSic.SexyContent
             EditItemControl.HideNavigationButtons = true;
             EditItemControl.PreventRedirect = true;
             EditItemControl.AttributeSetId = AttributeSetID;
-            EditItemControl.AssignmentObjectTypeId = SexyContent.AssignmentObjectTypeIDDefault;
+            EditItemControl.AssignmentObjectTypeId = AssignmentObjectTypeId;
+            EditItemControl.KeyNumber = KeyNumber;
             EditItemControl.ZoneId = ZoneId;
             EditItemControl.AppId = AppId;
 	        EditItemControl.AddClientScriptAndCss = false;
