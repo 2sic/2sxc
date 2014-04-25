@@ -1,6 +1,6 @@
 Check requirements before installing:
 <ul>
-<li>DotNetNuke 6.1 or later</li>
+<li>DotNetNuke 7.0 or later</li>
 <li>.NET Framework 4</li>
 <li>IIS 7.0</li>
 <li>SQL Server 2008 or later</li>
