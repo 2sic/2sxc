@@ -78,7 +78,7 @@ namespace ToSic.SexyContent.ImportExport
                 var fileId = int.Parse(portalFile.Attribute("Id").Value);
                 var relativePath = portalFile.Attribute("RelativePath").Value;
                 var fileName = Path.GetFileName(relativePath);
-                var directory = Path.GetDirectoryName(relativePath);
+                var directory = Path.GetDirectoryName(relativePath).Replace('\\', '/');
 
                 if (!folderManager.FolderExists(portalId, directory))
                     continue;
@@ -377,14 +377,18 @@ namespace ToSic.SexyContent.ImportExport
                 assignmentObjectTypeId = SexyContent.AssignmentObjectTypeIDSexyContentApp;
             }
 
-            // Special case #2: Corrent values of Template-Describing entities
-            if (xEntity.Attribute("AttributeSetStaticName").Value == SexyContent.AttributeSetStaticNameTemplateContentTypes)
+            // Special case #2: Corrent values of Template-Describing entities, and resolve files
+            
+            foreach (var sourceValue in xEntity.Elements("Value"))
             {
-                foreach (var sourceValue in xEntity.Elements("Value"))
+                var sourceValueString = sourceValue.Attribute("Value").Value;
+                var sourceKey = sourceValue.Attribute("Key").Value;
+
+                
+                if (!String.IsNullOrEmpty(sourceValueString))
                 {
-                    var sourceValueString = sourceValue.Attribute("Value").Value;
-                    var sourceKey = sourceValue.Attribute("Key").Value;
-                    if (!String.IsNullOrEmpty(sourceValueString))
+                    // Correct ContentTypeID and DemoEntityID
+                    if (xEntity.Attribute("AttributeSetStaticName").Value == SexyContent.AttributeSetStaticNameTemplateContentTypes)
                     {
                         switch (sourceKey)
                         {
@@ -399,8 +403,32 @@ namespace ToSic.SexyContent.ImportExport
                                 break;
                         }
                     }
+
+                    // Correct FileId in Hyperlink fields (takes XML data that lists files)
+                    if (sourceValue.Attribute("Type").Value == "Hyperlink")
+                    {
+                        var fileRegex = new Regex("^File:(?<FileId>[0-9]+)", RegexOptions.IgnoreCase);
+                        var a = fileRegex.Match(sourceValueString);
+                        if (a.Success && a.Groups["FileId"].Length > 0)
+                        {
+                            var originalId = int.Parse(a.Groups["FileId"].Value);
+
+                            if (_fileIdCorrectionList.ContainsKey(originalId))
+                            {
+                                var newValue = fileRegex.Replace(sourceValueString, "File:" + _fileIdCorrectionList[originalId]);
+                                sourceValue.Attribute("Value").SetValue(newValue);
+                            }
+
+                        }
+                    }
                 }
+
             }
+            
+
+
+
+            
 
             var importEntity = ToSic.Eav.ImportExport.XmlImport.GetImportEntity(xEntity, assignmentObjectTypeId,
                 _targetDimensions, _sourceDimensions, _sourceDefaultDimensionId, PortalSettings.Current.DefaultLanguage, keyNumber);
