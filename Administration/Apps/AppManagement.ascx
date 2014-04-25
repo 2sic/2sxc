@@ -21,7 +21,7 @@
                         <ItemTemplate>
                             <div style='<%# (Eval("Name") != "Content") ? "display:block;" : "display:none;" %>'>
                                 <a data-app-name='<%# HttpUtility.HtmlEncode(Eval("Name")) %>' href="<%# new SexyContent(ZoneId.Value, (int)Eval("AppID")).GetMetaDataEditUrl(TabId, ModuleId, Request.RawUrl, this, SexyContent.AttributeSetStaticNameApps, SexyContent.AssignmentObjectTypeIDSexyContentApp, (int)Eval("AppID")) %>">
-                                    <%# HttpUtility.HtmlEncode(Eval("Name")) %>
+                                    <%# Eval("Name") == null ? "(error)" : HttpUtility.HtmlEncode(Eval("Name")) %>
                                 </a>
                             </div>
                             <div style='<%# (Eval("Name") == "Content") ? "display:block;" : "display:none;" %>'>
@@ -32,12 +32,12 @@
                     <dnnweb:DnnGridBoundColumn HeaderText="Folder" DataField="Folder"></dnnweb:DnnGridBoundColumn>
                     <dnnweb:DnnGridTemplateColumn HeaderText="TokenTemplates">
                         <ItemTemplate>
-                            <%# ((dynamic)Eval("Configuration")) == null ? "-" : ((dynamic)Eval("Configuration")).AllowTokenTemplates.ToString() %>
+                            <%# ((dynamic)Eval("Configuration")) == null || ((dynamic)Eval("Configuration")).AllowTokenTemplates == null ? "-" : ((dynamic)Eval("Configuration")).AllowTokenTemplates.ToString() %>
                         </ItemTemplate>
                     </dnnweb:DnnGridTemplateColumn>
                     <dnnweb:DnnGridTemplateColumn HeaderText="RazorTemplates">
                         <ItemTemplate>
-                            <%# ((dynamic)Eval("Configuration")) == null ? "-" : ((dynamic)Eval("Configuration")).AllowRazorTemplates.ToString() %>
+                            <%# ((dynamic)Eval("Configuration")) == null || ((dynamic)Eval("Configuration")).AllowRazorTemplates == null ? "-" : ((dynamic)Eval("Configuration")).AllowRazorTemplates.ToString() %>
                         </ItemTemplate>
                     </dnnweb:DnnGridTemplateColumn>
                     
