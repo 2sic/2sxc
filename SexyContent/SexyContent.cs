@@ -973,7 +973,7 @@ namespace ToSic.SexyContent
             TemplateContext.SaveChanges();
 
             // Delete folder
-            if (!String.IsNullOrEmpty(sexyApp.Folder) &&  Directory.Exists(sexyApp.PhysicalPath)))
+            if (!String.IsNullOrEmpty(sexyApp.Folder) &&  Directory.Exists(sexyApp.PhysicalPath))
                 Directory.Delete(sexyApp.PhysicalPath, true);
 
             // Delete the app
