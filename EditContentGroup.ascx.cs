@@ -121,6 +121,7 @@ namespace ToSic.SexyContent
 
                     if (!String.IsNullOrEmpty(attributeSetName))
                         _attributeSetId = Sexy.ContentContext.GetAllAttributeSets().FirstOrDefault(p => p.Name == attributeSetName || p.StaticName == attributeSetName).AttributeSetID;
+                    
                 }
                 return _attributeSetId;
             }
@@ -136,7 +137,7 @@ namespace ToSic.SexyContent
             {
                 if (_Items == null && ContentGroupID.HasValue)
                     _Items = Sexy.TemplateContext.GetContentGroupItems(ContentGroupID.Value).ToList();
-                if(_Items == null && AttributeSetId.HasValue)
+                if(_Items == null && (AttributeSetId.HasValue || EntityId.HasValue))
                     _Items = new List<ContentGroupItem>();
                 return _Items;
             }
@@ -270,7 +271,7 @@ namespace ToSic.SexyContent
                 editControl.ZoneId = ZoneId.Value;
                 editControl.ModuleID = ModuleId;
                 editControl.TabID = TabId;
-                editControl.AttributeSetID = AttributeSetId.Value;
+                editControl.AttributeSetID = AttributeSetId.HasValue ? AttributeSetId.Value : Sexy.ContentContext.GetEntity(EntityId.Value).AttributeSetID;
                 editControl.EntityId = EntityId;
                 phNewOrEditControls.Controls.Add(editControl);
             }
