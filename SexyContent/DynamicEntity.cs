@@ -67,7 +67,7 @@ namespace ToSic.SexyContent
                     // Convert related entities to Dynamics
                     string language = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
                     result = ((ToSic.Eav.EntityRelationshipModel) result).Select(
-                        p => new DynamicEntity(p, new string[] {language})
+                        p => new DynamicEntity(p, _dimensions)
                         ).ToList();
                 }
             }
