@@ -709,28 +709,7 @@ namespace ToSic.SexyContent
         /// <returns></returns>
         public string GetElementToolbar(int ContentGroupID, int SortOrder, int ContentGroupItemID, int ModuleId, string LocalResourcesPath, bool ListEnabled, Control ParentControl, string ReturnUrl)
         {
-            //string editLink = GetElementEditLink(ContentGroupID, SortOrder, ModuleId, PortalSettings.Current.ActiveTab.TabID, ReturnUrl);
-            //if (PortalSettings.Current.EnablePopUps)
-            //    editLink = HttpUtility.UrlDecode(UrlUtils.PopUpUrl(editLink, ParentControl, PortalSettings.Current, false, false));
-
-            //string addLink = GetElementAddWithEditLink(ContentGroupID, SortOrder + 1, ModuleId, PortalSettings.Current.ActiveTab.TabID, ReturnUrl);
-            //if (PortalSettings.Current.EnablePopUps)
-            //    addLink = HttpUtility.UrlDecode(UrlUtils.PopUpUrl(addLink, ParentControl, PortalSettings.Current, false, false));
-
-            //string Toolbar = "<ul class=\"sc-menu\">";
-            
-
-            //Toolbar += "<li><a class=\"sc-menu-edit\" href=\"" + editLink + "\"><img src=\"" + ParentControl.ResolveClientUrl("~/DesktopModules/ToSIC_SexyContent/Images/Edit.png") + "\" /></a></li>";
-
-            //if (ListEnabled && SortOrder != -1)
-            //{
-            //    Toolbar += "<li><a class=\"sc-menu-add\" href=\"javascript:void(0);\" onclick='AddContentGroupItem(this, \"" + ContentGroupItemID.ToString() + "\");'><img src=\"" + ParentControl.ResolveClientUrl("~/DesktopModules/ToSIC_SexyContent/Images/Add.png") + "\" /></a></li>";
-            //    Toolbar += "<li><a class=\"sc-menu-addwithedit\" href=\"" + addLink + "\"><img src=\"" + ParentControl.ResolveClientUrl("~/DesktopModules/ToSIC_SexyContent/Images/AddWithEdit.png") + "\" /></a></li>";
-            //}
-
-            //Toolbar += "</ul>";
-
-            return "<ul class='sc-menu' data-toolbar='" + new { sortOrder = SortOrder }.ToJson() + "'></ul>";
+            return "<ul class='sc-menu' data-toolbar='" + new { sortOrder = SortOrder, useModuleList = true }.ToJson() + "'></ul>";
         }
 
         /// <summary>
@@ -747,19 +726,11 @@ namespace ToSic.SexyContent
         /// <returns></returns>
         public string GetMetaDataEditUrl(int tabId, int moduleId, string returnUrl, Control control, string attributeSetStaticName, int assignmentObjectTypeID, int keyNumber)
         {
-            //var portalSettings = PortalSettings.Current;
-
-            //var set = new SexyContent(zoneId, appId).ContentContext.GetAttributeSet(attributeSetStaticName);
-            //string newItemUrl = Globals.NavigateURL(tabId, ControlKeys.EavManagement, "mid=" + moduleId.ToString() + "&ManagementMode=NewItem&AttributeSetId=[AttributeSetId]&KeyNumber=[KeyNumber]&AssignmentObjectTypeId=[AssignmentObjectTypeId]&ReturnUrl=[ReturnUrl]&" + SexyContent.AppIDString + "=" + appId);
-            //string editItemUrl = Globals.NavigateURL(tabId, ControlKeys.EavManagement, "mid=" + moduleId.ToString() + "&ManagementMode=EditItem&EntityId=[EntityId]&ReturnUrl=[ReturnUrl]&" + SexyContent.AppIDString + "=" + appId);
-            //return UrlUtils.PopUpUrl(Eav.ManagementUI.Forms.GetItemFormUrl(keyNumber, set.AttributeSetID, assignmentObjectTypeID, newItemUrl, editItemUrl, returnUrl), control, portalSettings, false, true);
-
             var assignedEntity = DataSource.GetMetaDataSource(ZoneId.Value, AppId.Value).GetAssignedEntities(assignmentObjectTypeID, keyNumber, attributeSetStaticName).FirstOrDefault();
             var entityId = assignedEntity == null ? new int?() : assignedEntity.EntityId;
 
             return GetEntityEditLink(entityId , moduleId, tabId, attributeSetStaticName, returnUrl,
                     assignmentObjectTypeID, keyNumber);
-        
         }
 
         private string GetEntityEditLink(int? entityId, int moduleId, int tabId, string attributeSetStaticName, string returnUrl, int? assignmentObjectTypeId, int? keyNumber)

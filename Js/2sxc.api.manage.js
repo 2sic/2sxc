@@ -28,7 +28,7 @@ $2sxc.getManageController = function(id) {
             if (settings.action == 'new')
                 params.editMode = "New";
 
-            if (settings.attributeSetName) {
+            if (!settings.useModuleList) {
                 if (settings.action != 'new')
                     params.entityId = settings.entityId;
                 params.attributeSetName = settings.attributeSetName;

@@ -555,55 +555,55 @@ namespace ToSic.SexyContent.ImportExport
 
         }
 
-        private ToSic.Eav.Import.IValueImportModel GetImportValue(XElement xValue, List<ToSic.Eav.Import.ValueDimension> valueDimensions, ToSic.Eav.Import.Entity referencingEntity)
-        {
-            var stringValue = xValue.Attribute("Value").Value;
-            var type = xValue.Attribute("Type").Value;
+        //private ToSic.Eav.Import.IValueImportModel GetImportValue(XElement xValue, List<ToSic.Eav.Import.ValueDimension> valueDimensions, ToSic.Eav.Import.Entity referencingEntity)
+        //{
+        //    var stringValue = xValue.Attribute("Value").Value;
+        //    var type = xValue.Attribute("Type").Value;
 
-            IValueImportModel value;
+        //    IValueImportModel value;
 
-            switch (type)
-            {
-                case "String":
-                case "Hyperlink":
-                    value = new ValueImportModel<string>(referencingEntity) { Value = stringValue };
-                    break;
-                case "Number":
-                    decimal typedDecimal;
-                    var isDecimal = Decimal.TryParse(stringValue, NumberStyles.Any, CultureInfo.InvariantCulture, out typedDecimal);
-                    decimal? typedDecimalNullable = null;
-                    if(isDecimal)
-                        typedDecimalNullable = typedDecimal;
-                    value = new ValueImportModel<decimal?>(referencingEntity)
-                        {
-                            Value = typedDecimalNullable
-                        };
-                    break;
-                // ToDo: Fix Entity Value
-                case "Entity":
-                    throw new NotImplementedException();
-                case "DateTime":
-                    DateTime typedDateTime;
-                    value = new ValueImportModel<DateTime?>(referencingEntity)
-                        {
-                            Value = DateTime.TryParse(stringValue, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out typedDateTime) ? typedDateTime : new DateTime?()
-                        };
-                    break;
-                case "Boolean":
-                    bool typedBoolean;
-                    value = new ValueImportModel<bool?>(referencingEntity)
-                        {
-                            Value = Boolean.TryParse(stringValue, out typedBoolean) ? typedBoolean : new bool?()
-                        };
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(type, stringValue, "Unknown type argument found in import XML.");
-            }
+        //    switch (type)
+        //    {
+        //        case "String":
+        //        case "Hyperlink":
+        //            value = new ValueImportModel<string>(referencingEntity) { Value = stringValue };
+        //            break;
+        //        case "Number":
+        //            decimal typedDecimal;
+        //            var isDecimal = Decimal.TryParse(stringValue, NumberStyles.Any, CultureInfo.InvariantCulture, out typedDecimal);
+        //            decimal? typedDecimalNullable = null;
+        //            if(isDecimal)
+        //                typedDecimalNullable = typedDecimal;
+        //            value = new ValueImportModel<decimal?>(referencingEntity)
+        //                {
+        //                    Value = typedDecimalNullable
+        //                };
+        //            break;
+        //        // ToDo: Fix Entity Value
+        //        case "Entity":
+        //            throw new NotImplementedException();
+        //        case "DateTime":
+        //            DateTime typedDateTime;
+        //            value = new ValueImportModel<DateTime?>(referencingEntity)
+        //                {
+        //                    Value = DateTime.TryParse(stringValue, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out typedDateTime) ? typedDateTime : new DateTime?()
+        //                };
+        //            break;
+        //        case "Boolean":
+        //            bool typedBoolean;
+        //            value = new ValueImportModel<bool?>(referencingEntity)
+        //                {
+        //                    Value = Boolean.TryParse(stringValue, out typedBoolean) ? typedBoolean : new bool?()
+        //                };
+        //            break;
+        //        default:
+        //            throw new ArgumentOutOfRangeException(type, stringValue, "Unknown type argument found in import XML.");
+        //    }
 
-            value.ValueDimensions = valueDimensions;
+        //    value.ValueDimensions = valueDimensions;
 
-            return value;
-        }
+        //    return value;
+        //}
 
         #endregion
     }
