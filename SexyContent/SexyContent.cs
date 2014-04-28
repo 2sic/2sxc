@@ -578,15 +578,7 @@ namespace ToSic.SexyContent
             return DataSource.GetInitialDataSource(zoneId, appId);
         }
 
-        public static ConfigurationProvider GetConfigurationProvider(App app)
-        {
-            var configurationProvider = new ConfigurationProvider();
-            configurationProvider.Sources.Add("querystring", new QueryStringPropertyAccess());
-            configurationProvider.Sources.Add("app", new AppPropertyAccess(app));
-            configurationProvider.Sources.Add("appsettings", new DynamicEntityPropertyAccess(app.Settings));
-            configurationProvider.Sources.Add("appresources", new DynamicEntityPropertyAccess(app.Resources));
-            return configurationProvider;
-        }
+        
 
         /// <summary>
         /// Get a list of ContentElements by ModuleId or ContentGroupID
