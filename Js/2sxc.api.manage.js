@@ -38,6 +38,9 @@ $2sxc.getManageController = function(id) {
                 params.contentGroupId = settings.contentGroupId;
             }
 
+            if (settings.prefill)
+                params.prefill = JSON.stringify(settings.prefill);
+
             return settings.dialogUrl
                 + (settings.dialogUrl.indexOf('?') == -1 ? '?' : '&')
                 + $.param(params);
