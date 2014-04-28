@@ -58,7 +58,6 @@ namespace ToSic.SexyContent
             // Set localized Error Messages for Validators
             valTemplateName.ErrorMessage = LocalizeString("valTemplateName.ErrorMessage");
             valTemplateFile.ErrorMessage = LocalizeString("valTemplateFile.ErrorMessage");
-            //valContentType.ErrorMessage = LocalizeString("valContentType.ErrorMessage");
             valTemplateFileName.ErrorMessage = LocalizeString("valTemplateFileName.ErrorMessage");
 
             pnlSeparateContentPresentation.Visible = chkSeparateContentPresentation.Checked;
@@ -174,7 +173,7 @@ namespace ToSic.SexyContent
             SexyUncached.CreateOrUpdateTemplateDefault(Template.TemplateID, ContentGroupItemType.ListPresentation.ToString("F"), ctrListPresentationType.ContentTypeID, ctrListPresentationType.DemoEntityID);
 
             // Redirect to the manage templates control
-            string RedirectUrl = DotNetNuke.Common.Utilities.UrlUtils.PopUpUrl(DotNetNuke.Common.Globals.NavigateURL(SexyContent.ControlKeys.ManageTemplates, "mid", ModuleId.ToString(), SexyContent.AppIDString, AppId.ToString()), this, PortalSettings, false, true);
+            string RedirectUrl = UrlUtils.PopUpUrl(DotNetNuke.Common.Globals.NavigateURL(SexyContent.ControlKeys.ManageTemplates, "mid", ModuleId.ToString(), SexyContent.AppIDString, AppId.ToString()), this, PortalSettings, false, true);
             Response.Redirect(RedirectUrl);
         }
 
