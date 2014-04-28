@@ -2,12 +2,14 @@
 $2sxc.getManageController = function(id) {
 
     var moduleElement = $('.DnnModule-' + id);
-    var config = $.parseJSON(moduleElement.find('.Mod2sxcC, .Mod2sxcappC').attr('data-2sxc')).manage.config;
+    var manageInfo = $.parseJSON(moduleElement.find('.Mod2sxcC, .Mod2sxcappC').attr('data-2sxc')).manage;
+    var config = manageInfo.config;
+    var isEditMode = manageInfo.isEditMode;
 
     var manageController = {
 
         isEditMode: function() {
-            return config.isEditMode;
+            return isEditMode;
         },
 
         // The config object has the following properties:
