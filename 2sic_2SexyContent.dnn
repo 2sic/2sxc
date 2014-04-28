@@ -14,7 +14,7 @@
       <releaseNotes src="ReleaseNotes.txt"></releaseNotes>
       <dependencies>
         <dependency type="type">System.Dynamic.ExpandoObject</dependency>
-        <dependency type="CoreVersion">07.00.00</dependency>
+        <dependency type="CoreVersion">07.02.00</dependency>
       </dependencies>
       <components>
         <component type="Script">
