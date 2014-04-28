@@ -259,7 +259,7 @@
                     <controlKey>settings</controlKey>
                     <controlSrc>DesktopModules/ToSIC_SexyContent/Settings.ascx</controlSrc>
                     <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle>2Sexy Content Settings</controlTitle>
+                    <controlTitle>2sxc Content Settings</controlTitle>
                     <controlType>Edit</controlType>
                     <iconFile />
                     <helpUrl />
@@ -270,7 +270,7 @@
                     <controlKey>settingswrapper</controlKey>
                     <controlSrc>DesktopModules/ToSIC_SexyContent/SettingsWrapper.ascx</controlSrc>
                     <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle>2Sexy Content Settings</controlTitle>
+                    <controlTitle>2sxc Content Settings</controlTitle>
                     <controlType>Edit</controlType>
                     <iconFile />
                     <helpUrl />
@@ -717,7 +717,7 @@
                     <controlKey>settings</controlKey>
                     <controlSrc>DesktopModules/ToSIC_SexyContent/Settings.ascx</controlSrc>
                     <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle>2Sexy Content Settings</controlTitle>
+                    <controlTitle>2sxc App Settings</controlTitle>
                     <controlType>Edit</controlType>
                     <iconFile />
                     <helpUrl />
@@ -728,7 +728,7 @@
                     <controlKey>settingswrapper</controlKey>
                     <controlSrc>DesktopModules/ToSIC_SexyContent/SettingsWrapper.ascx</controlSrc>
                     <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle>2Sexy Content Settings</controlTitle>
+                    <controlTitle>2sxc App Settings</controlTitle>
                     <controlType>Edit</controlType>
                     <iconFile />
                     <helpUrl />

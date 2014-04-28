@@ -142,13 +142,13 @@
     <value>Datenquelle</value>
   </data>
   <data name="lblDataSourceConfiguration.Text" xml:space="preserve">
-    <value>2Sexy Content - Datenquellen-Konfiguration</value>
+    <value>Datenquellen-Konfiguration</value>
   </data>
   <data name="lblDataSourcePublishing.LongText" xml:space="preserve">
     <value>Mit diesen Einstellungen ist es möglich, Daten zu veröffentlichen (z.B. als JSON, um sie im JavaScript weiter zu verwenden).</value>
   </data>
   <data name="lblDataSourcePublishing.Text" xml:space="preserve">
-    <value>2Sexy Content - Datenquelle veröffentlichen</value>
+    <value>Datenquelle veröffentlichen</value>
   </data>
   <data name="lblEntityID.Help" xml:space="preserve">
     <value>Die ID des gewählten Objektes</value>
