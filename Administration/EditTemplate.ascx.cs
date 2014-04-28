@@ -88,11 +88,9 @@ namespace ToSic.SexyContent
                 ddlTemplateTypes.SelectedValue = Template.Type;
                 chkHidden.Checked = Template.IsHidden;
                 chkEnableList.Checked = Template.UseForList;
-                hlkTemplateMetaData.Visible = true;
                 pnlListConfiguration.Visible = chkEnableList.Checked;
 
                 string ReturnUrl = Request.Url.AbsoluteUri;
-                hlkTemplateMetaData.NavigateUrl = Sexy.GetMetaDataEditUrl(TabId, ModuleId, ReturnUrl, this, SexyContent.AttributeSetStaticNameTemplateMetaData, SexyContent.AssignmentObjectTypeIDSexyContentTemplate, TemplateID);
 
                 // Set ContentType / Demo Entity Selectors
                 SetTemplateDefaultSelector(Template.TemplateID, ctrContentType);

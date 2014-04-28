@@ -57,6 +57,5 @@
     <ul class="dnnActions dnnClear">
         <li><asp:LinkButton runat="server" ID="btnUpdate" ResourceKey="btnUpdate" OnClick="btnUpdate_Click" CssClass="dnnPrimaryAction"></asp:LinkButton></li>
         <li><asp:HyperLink runat="server" ID="hlkCancel" ResourceKey="hlkCancel" CssClass="dnnSecondaryAction"></asp:HyperLink></li>
-        <li><asp:HyperLink Visible="false" runat="server" ID="hlkTemplateMetaData" ResourceKey="hlkTemplateMetaData" CssClass="dnnSecondaryAction"></asp:HyperLink></li>
     </ul>
 </div>
