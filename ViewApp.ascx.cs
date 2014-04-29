@@ -3,6 +3,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using DotNetNuke.Common.Utilities;
+using DotNetNuke.Security.Permissions;
 using DotNetNuke.Services.Exceptions;
 using System.Collections.Generic;
 using DotNetNuke.Security;
@@ -126,7 +127,7 @@ namespace ToSic.SexyContent
 
             try
             {
-                var ListElement = Sexy.GetListElement(ModuleId, Sexy.GetCurrentLanguageName(), null, PortalId);
+                var ListElement = Sexy.GetListElement(ModuleId, Sexy.GetCurrentLanguageName(), null, PortalId, ModulePermissionController.CanEditModuleContent(this.ModuleConfiguration));
 
                 // Attach Toolbar to Elements
                 Sexy.AttachToolbarToElements(new List<Element> { ListElement }, ModuleId, LocalResourceFile, Template.UseForList, ModuleContext.IsEditable, this, Request.RawUrl);

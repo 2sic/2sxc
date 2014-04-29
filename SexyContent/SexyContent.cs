@@ -573,9 +573,9 @@ namespace ToSic.SexyContent
         /// <param name="zoneId"></param>
         /// <param name="appId"></param>
         /// <returns></returns>
-        public static ToSic.Eav.DataSources.IDataSource GetInitialDataSource(int zoneId, int appId)
+        public static ToSic.Eav.DataSources.IDataSource GetInitialDataSource(int zoneId, int appId, bool showDrafts = false)
         {
-            return DataSource.GetInitialDataSource(zoneId, appId);
+            return DataSource.GetInitialDataSource(zoneId, appId, showDrafts);
         }
 
         
@@ -584,22 +584,21 @@ namespace ToSic.SexyContent
         /// Get a list of ContentElements by ModuleId or ContentGroupID
         /// </summary>
         /// <returns></returns>
-        public List<Element> GetContentElements(int ModuleID, string LanguageName, int? ContentGroupID, int PortalId)
+        public List<Element> GetContentElements(int ModuleID, string LanguageName, int? ContentGroupID, int PortalId, bool showDrafts)
         {
-            return GetElements(ModuleID, ContentGroupID, ContentGroupItemType.Content, ContentGroupItemType.Presentation, LanguageName, PortalId);
+            return GetElements(ModuleID, ContentGroupID, ContentGroupItemType.Content, ContentGroupItemType.Presentation, LanguageName, PortalId, showDrafts);
         }
 
-        public Element GetListElement(int ModuleID, string LanguageName, int? ContentGroupID, int PortalId)
+        public Element GetListElement(int ModuleID, string LanguageName, int? ContentGroupID, int PortalId, bool showDrafts)
         {
-            var ListElement = GetElements(ModuleID, ContentGroupID, ContentGroupItemType.ListContent, ContentGroupItemType.ListPresentation, LanguageName, PortalId).FirstOrDefault();
+            var ListElement = GetElements(ModuleID, ContentGroupID, ContentGroupItemType.ListContent, ContentGroupItemType.ListPresentation, LanguageName, PortalId, showDrafts).FirstOrDefault();
             return ListElement;
         }
 
-        private List<Element> GetElements(int ModuleID, int? ContentGroupID, ContentGroupItemType ContentItemType, ContentGroupItemType PresentationItemType, string LanguageName, int PortalId)
+        private List<Element> GetElements(int ModuleID, int? ContentGroupID, ContentGroupItemType ContentItemType, ContentGroupItemType PresentationItemType, string LanguageName, int PortalId, bool showDrafts)
         {
             if (!ContentGroupID.HasValue)
                 ContentGroupID = GetContentGroupIDFromModule(ModuleID);
-
 
             IEnumerable<ContentGroupItem> ItemsQuery = TemplateContext.GetContentGroupItems(ContentGroupID.Value);
             List<ContentGroupItem> Items = ItemsQuery.Where(c => c.Type == ContentItemType.ToString("F") || c.Type == PresentationItemType.ToString("F")).ToList();
@@ -616,7 +615,7 @@ namespace ToSic.SexyContent
                 // Prepare Dimension List (Languages)
                 var DimensionIds = new[] { LanguageName };
                 // Load all Entities to list
-                var InitialSource = GetInitialDataSource(ZoneId.Value, AppId.Value);
+                var InitialSource = GetInitialDataSource(ZoneId.Value, AppId.Value, showDrafts);
                 var EntityDataSource = DataSource.GetDataSource("ToSic.Eav.DataSources.EntityIdFilter", ZoneId, AppId, InitialSource, InitialSource.ConfigurationProvider);
                 ((EntityIdFilter)EntityDataSource).Configuration["EntityIds"] = String.Join(",", Identities.ToArray());
                 SexyDataSource = DataSource.GetDataSource("ToSic.Eav.DataSources.PassThrough", ZoneId, AppId, EntityDataSource);
@@ -1083,8 +1082,8 @@ namespace ToSic.SexyContent
 
             var SearchItems = new SearchItemInfoCollection();
 
-            var Elements = Sexy.GetContentElements(ModInfo.ModuleID, Sexy.GetCurrentLanguageName(), null, ModInfo.PortalID);
-            Elements.Add(Sexy.GetListElement(ModInfo.ModuleID, Sexy.GetCurrentLanguageName(), null, ModInfo.PortalID));
+            var Elements = Sexy.GetContentElements(ModInfo.ModuleID, Sexy.GetCurrentLanguageName(), null, ModInfo.PortalID, false);
+            Elements.Add(Sexy.GetListElement(ModInfo.ModuleID, Sexy.GetCurrentLanguageName(), null, ModInfo.PortalID, false));
 
             foreach (var Element in Elements)
             {

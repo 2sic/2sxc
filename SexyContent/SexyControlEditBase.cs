@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using DotNetNuke.Security.Permissions;
 
 namespace ToSic.SexyContent
 {
@@ -96,7 +97,7 @@ namespace ToSic.SexyContent
             {
                 if (_Elements == null)
                 {
-                    _Elements = Sexy.GetContentElements(ModuleId, Sexy.GetCurrentLanguageName(), null, PortalId).ToList();
+                    _Elements = Sexy.GetContentElements(ModuleId, Sexy.GetCurrentLanguageName(), null, PortalId, ModulePermissionController.CanEditModuleContent(this.ModuleConfiguration)).ToList();
                 }
                 return _Elements;
             }

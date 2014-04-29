@@ -28,7 +28,7 @@
 </asp:EntityDataSource>
 <asp:Label runat="server" ID="lblNotifications" />
 <asp:GridView ID="grdItems" runat="server" DataSourceID="dsrcItems" AllowSorting="True" 
-	OnRowDataBound="grdItems_RowDataBound" DataKeyNames="EntityId" OnDataBound="grdItems_DataBound">
+	OnRowDataBound="grdItems_RowDataBound" DataKeyNames="RepositoryId" OnDataBound="grdItems_DataBound">
 	<Columns>
 		<asp:HyperLinkField Text="Edit" />
 		<asp:ButtonField CommandName="Delete" Text="Delete" />
@@ -46,6 +46,6 @@
 		<asp:Parameter Name="source" Type="Object" ConvertEmptyStringToNull="True" DefaultValue="" />
 	</SelectParameters>
 	<DeleteParameters>
-		<asp:Parameter Name="EntityId" Type="Int32" />
+		<asp:Parameter Name="RepositoryId" Type="Int32" />
 	</DeleteParameters>
 </asp:ObjectDataSource>
