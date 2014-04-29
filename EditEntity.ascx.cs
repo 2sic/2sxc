@@ -152,6 +152,7 @@ namespace ToSic.SexyContent
                 EditItemControl.EntityId = EntityId.Value;
                 EditItemControl.InitForm(FormViewMode.Edit);
 
+                hlkHistory.Visible = true;
                 hlkHistory.NavigateUrl = EditUrl("", "", SexyContent.ControlKeys.EavManagement, new string[] { "AppID", AppId.ToString(), "ManagementMode", "ItemHistory", "EntityId", EntityId.Value.ToString(), "mid", ModuleID.ToString() });
             }
             // Create a new Entity
