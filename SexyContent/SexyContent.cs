@@ -643,6 +643,8 @@ namespace ToSic.SexyContent
                 // Transform to list of Elements
                 ElementList = (from c in Items
                                where c.ItemType == ContentItemType
+                               // don't show items whose Content entity is not in source
+                               && (!c.EntityID.HasValue || Entities.ContainsKey(c.EntityID.Value))
                                select new Element
                                {
                                    ID = c.ContentGroupItemID,
@@ -653,10 +655,10 @@ namespace ToSic.SexyContent
                                        .Select(d => new DynamicEntity(Entities[d.DemoEntityID.Value], DimensionIds)).FirstOrDefault(),
                                    // Get Presentation object - Take Default if it does not exist
                                    Presentation = (from p in Items
-                                                   where p.SortOrder == c.SortOrder && p.ItemType == PresentationItemType && p.EntityID.HasValue
+                                                   where p.SortOrder == c.SortOrder && p.ItemType == PresentationItemType && p.EntityID.HasValue && Entities.ContainsKey(p.EntityID.Value)
                                                    select new DynamicEntity(Entities[p.EntityID.Value], DimensionIds)).FirstOrDefault() ??
                                                    (from d in Defaults
-                                                    where d.ItemType == PresentationItemType && d.DemoEntityID.HasValue
+                                                    where d.ItemType == PresentationItemType && d.DemoEntityID.HasValue && Entities.ContainsKey(d.DemoEntityID.Value)
                                                     select new DynamicEntity(Entities[d.DemoEntityID.Value], DimensionIds)).FirstOrDefault()
                                                    ,
                                    GroupID = c.ContentGroupID,

@@ -84,6 +84,9 @@ namespace ToSic.SexyContent
                     case "Toolbar":
                         result = ToolbarString;
                         break;
+                    case "IsPublished":
+                        result = Entity.IsPublished;
+                        break;
                     default:
                         // ToDo: Get Attributes, find out what to return as default...
                         //var attributeSet = DataSource.GetCache().
