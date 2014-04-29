@@ -25,6 +25,12 @@ namespace ToSic.SexyContent
         /// </summary>
         public int ContentGroupID { get; set; }
 
+        public bool IsPublished
+        {
+            get { return EditItemControl.IsPublished; }
+            set { EditItemControl.IsPublished = value; }
+        }
+
         /// <summary>
         /// Gets or sets the ItemType
         /// </summary>
@@ -168,6 +174,9 @@ namespace ToSic.SexyContent
                 EditItemControl.Updated += EditItem_OnEdited;
                 EditItemControl.EntityId = Item.EntityID.Value;
                 EditItemControl.InitForm(FormViewMode.Edit);
+
+                hlkHistory.Visible = true;
+                hlkHistory.NavigateUrl = EditUrl("", "", SexyContent.ControlKeys.EavManagement, new string[] { "AppID", AppId.ToString(), "ManagementMode", "ItemHistory", "EntityId", Item.EntityID.Value.ToString(), "mid", ModuleID.ToString() });
             }
             // Create a new Entity
             else
@@ -184,6 +193,7 @@ namespace ToSic.SexyContent
             }
 
             phNewOrEditItem.Controls.Add(EditItemControl);
+            
         }
 
         protected void EditItem_OnEdited(ToSic.Eav.Entity Entity)

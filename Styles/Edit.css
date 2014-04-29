@@ -17,11 +17,13 @@ table.EAVAttributeSets a { color:#036; font-weight:bold; }
 .eav-message-defaultfirst { margin-top: 30px; }
 .eav-field { width:100%; }
 .eav-form .eav-field { padding: 4px 0px; }
+.scNewOrEditItem .eav-field-published { display: none; }
 
 .dnn-7 .eav-form .eav-field {  padding:0;margin-bottom: 15px; /*overflow: hidden;*/ }
 
 .dnnSexyContentEditList .GridItemDropIndicator_Default { z-index:1000; }
 .dnnSexyContentEditList .sc-list-itemedit { display:block; line-height:20px; }
+.sc-action-other { display: none; }
 
 /* DateTime */
 .dnn-7 .dnnFormItem .RadPicker_Default {

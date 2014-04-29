@@ -145,4 +145,7 @@
   <data name="FieldValidationFailed.Text" xml:space="preserve">
     <value>Mindestens ein Feld enthält einen ungültigen Wert.</value>
   </data>
+  <data name="Published.Text" xml:space="preserve">
+    <value>Publiziert</value>
+  </data>
 </root>

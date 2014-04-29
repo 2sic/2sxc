@@ -222,6 +222,11 @@ namespace ToSic.SexyContent
 
         }
 
+        protected void Page_PreRender(object sender, EventArgs e)
+        {
+            chkPublished.Checked = ((IEditContentControl)phNewOrEditControls.Controls[0]).IsPublished;
+        }
+
         protected void ProcessView()
         {
             List<ContentGroupItemType> EditableItemsTypes = new List<ContentGroupItemType>();
@@ -280,7 +285,10 @@ namespace ToSic.SexyContent
         protected void btnUpdate_Click(object sender, EventArgs e)
         {
             foreach (IEditContentControl EditControl in phNewOrEditControls.Controls)
+            {
+                EditControl.IsPublished = chkPublished.Checked;
                 EditControl.Save();
+            }
 
             RedirectBack();
         }
@@ -288,7 +296,9 @@ namespace ToSic.SexyContent
         protected void btnCancel_Click(object sender, EventArgs e)
         {
             foreach (IEditContentControl EditControl in phNewOrEditControls.Controls)
+            {
                 EditControl.Cancel();
+            }
 
             RedirectBack();
         }

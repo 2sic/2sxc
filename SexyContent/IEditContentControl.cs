@@ -14,5 +14,6 @@ namespace ToSic.SexyContent
     {
         void Cancel();
         void Save();
+        bool IsPublished { get; set; }
     }
 }

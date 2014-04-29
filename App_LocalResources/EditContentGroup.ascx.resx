@@ -144,4 +144,7 @@
   <data name="FieldValidationFailed.Text" xml:space="preserve">
     <value>At least one field contains an invalid value.</value>
   </data>
+  <data name="Published.Text" xml:space="preserve">
+    <value>Published</value>
+  </data>
 </root>
