@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Web;
 using System.Web.WebPages;
 using DotNetNuke.Common.Utilities;
@@ -134,20 +135,33 @@ namespace ToSic.SexyContent.Razor
             return DataSource.GetDataSource<T>(initialSource.ZoneId, initialSource.AppId, initialSource, configurationProvider);
         }
 
+        /// <summary>
+        /// Will contain the already instanciated shared pages
+        /// </summary>
         private Dictionary<string, dynamic> _sharedPages = new Dictionary<string, dynamic>();  
 
-        // Try to get shared code inside an app
+        /// <summary>
+        /// Creates instances of the shared pages with the given relative path
+        /// </summary>
+        /// <param name="relativePath"></param>
+        /// <returns></returns>
         public dynamic Shared(string relativePath)
         {
             if (_sharedPages.ContainsKey(relativePath))
                 return _sharedPages[relativePath];
 
-            var path = VirtualPathUtility.Combine(this.VirtualPath, relativePath);
+            var path = NormalizePath(relativePath);
+
             if(!File.Exists(Server.MapPath(path)))
                 throw new FileNotFoundException("The shared file does not exist.", path);
 
             return CreateInstanceFromVirtualPath(path);
+
+
         }
+
+        
+
     }
 
     // <2sic> Removed DotNetNukeWebPage<T>:DotNetNukeWebPage
