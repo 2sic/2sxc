@@ -50,7 +50,7 @@ namespace ToSic.SexyContent
         /// <returns></returns>
         public string RenderTemplate(Page Page, HttpServerUtility Server, PortalSettings PortalSettings, ModuleInstanceContext ModuleContext, string LocalResourceFile, List<Element> Elements, Element ListElement, System.Web.UI.Control Control, ToSic.Eav.DataSources.IDataSource DataSource, SexyContent sexy, int appId)
         {
-            string templatePath = System.IO.Path.Combine(sexy.GetTemplatePathRoot(this.Location), this.Path);
+            string templatePath = VirtualPathUtility.Combine(sexy.GetTemplatePathRoot(this.Location) + "/", this.Path);
 
             // Throw Exception if Template does not exist
             if (!System.IO.File.Exists(Server.MapPath(templatePath)))

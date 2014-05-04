@@ -1,4 +1,6 @@
-﻿using System.Web.WebPages;
+﻿using System.IO;
+using System.Web;
+using System.Web.WebPages;
 using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Portals;
 using ToSic.SexyContent.DataSources.Tokens;
@@ -132,14 +134,19 @@ namespace ToSic.SexyContent.Razor
             return DataSource.GetDataSource<T>(initialSource.ZoneId, initialSource.AppId, initialSource, configurationProvider);
         }
 
+        private Dictionary<string, dynamic> _sharedPages = new Dictionary<string, dynamic>();  
+
         // Try to get shared code inside an app
-        public dynamic Shared
+        public dynamic Shared(string relativePath)
         {
-            get
-            {
-                var i = WebPageBase.CreateInstanceFromVirtualPath("/Portals/0/2sxc/Content/Shared/_Test.cshtml");
-                return i;
-            }
+            if (_sharedPages.ContainsKey(relativePath))
+                return _sharedPages[relativePath];
+
+            var path = VirtualPathUtility.Combine(this.VirtualPath, relativePath);
+            if(!File.Exists(Server.MapPath(path)))
+                throw new FileNotFoundException("The shared file does not exist.", path);
+
+            return CreateInstanceFromVirtualPath(path);
         }
     }
 
