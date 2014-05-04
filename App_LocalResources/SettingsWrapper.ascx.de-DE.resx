@@ -124,7 +124,7 @@
     <value>Speichern</value>
   </data>
   <data name="ControlTitle_settings.Text" xml:space="preserve">
-    <value>Content Einstellungen</value>
+    <value>2sxc Einstellungen</value>
   </data>
   <data name="ddlEntitiesDefaultItem.Text" xml:space="preserve">
     <value>&lt;Objekt wählen&gt;</value>
@@ -148,7 +148,7 @@
     <value>Objekt</value>
   </data>
   <data name="lblSettingsHeading.Text" xml:space="preserve">
-    <value>2Sexy Content Einstellungen</value>
+    <value>2sxc Einstellungen</value>
   </data>
   <data name="lblTemplate.Help" xml:space="preserve">
     <value>Vorlage auswählen</value>

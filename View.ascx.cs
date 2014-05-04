@@ -3,9 +3,11 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using DotNetNuke.Common.Utilities;
+using DotNetNuke.Security.Permissions;
 using DotNetNuke.Services.Exceptions;
 using System.Collections.Generic;
 using DotNetNuke.Security;
+using DotNetNuke.UI.UserControls;
 using DotNetNuke.Web.Client.ClientResourceManagement;
 using System.Linq;
 using DotNetNuke.Entities.Modules;
@@ -88,8 +90,8 @@ namespace ToSic.SexyContent
                 if (!AppId.HasValue || !Elements.Any() || !Elements.First().TemplateId.HasValue || Elements.All(p => !p.EntityId.HasValue))
                     ShowTemplateChooser();
 
-                if (!SexyContent.PortalIsConfigured(Server, ControlPath))
-                    pnlMissingConfiguration.Visible = true;
+                if (AppId.HasValue && !SexyContent.PortalIsConfigured(Server, ControlPath))
+                    Sexy.ConfigurePortal(Server);
 
                 if (AppId.HasValue && Elements.Any() && Elements.First().TemplateId.HasValue)
                     ProcessView();
@@ -126,7 +128,7 @@ namespace ToSic.SexyContent
 
             try
             {
-                var ListElement = Sexy.GetListElement(ModuleId, Sexy.GetCurrentLanguageName(), null, PortalId);
+                var ListElement = Sexy.GetListElement(ModuleId, Sexy.GetCurrentLanguageName(), null, PortalId, ModulePermissionController.CanEditModuleContent(this.ModuleConfiguration));
 
                 // Attach Toolbar to Elements
                 Sexy.AttachToolbarToElements(new List<Element> { ListElement }, ModuleId, LocalResourceFile, Template.UseForList, ModuleContext.IsEditable, this, Request.RawUrl);
@@ -444,18 +446,5 @@ namespace ToSic.SexyContent
         }
         #endregion
 
-        /// <summary>
-        /// Configure Portal (creates /Portals/[Directory]/2sexy folder with web.config for Razor templates)
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        protected void hlkConfigurePortal_Click(object sender, EventArgs e)
-        {
-            if (!SexyContent.PortalIsConfigured(Server, ControlPath))
-            {
-                Sexy.ConfigurePortal(Server);
-                Response.Redirect(Request.RawUrl);
-            }
-        }
     }
 }

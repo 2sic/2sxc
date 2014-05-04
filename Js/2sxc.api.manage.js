@@ -2,12 +2,14 @@
 $2sxc.getManageController = function(id) {
 
     var moduleElement = $('.DnnModule-' + id);
-    var config = $.parseJSON(moduleElement.find('.Mod2sxcC, .Mod2sxcappC').attr('data-2sxc')).manage.config;
+    var manageInfo = $.parseJSON(moduleElement.find('.Mod2sxcC, .Mod2sxcappC').attr('data-2sxc')).manage;
+    var config = manageInfo.config;
+    var isEditMode = manageInfo.isEditMode;
 
     var manageController = {
 
         isEditMode: function() {
-            return config.isEditMode;
+            return isEditMode;
         },
 
         // The config object has the following properties:
@@ -28,14 +30,18 @@ $2sxc.getManageController = function(id) {
             if (settings.action == 'new')
                 params.editMode = "New";
 
-            if (settings.attributeSetName) {
+            if (!settings.useModuleList) {
                 if (settings.action != 'new')
                     params.entityId = settings.entityId;
-                params.attributeSetName = settings.attributeSetName;
+                if(settings.attributeSetName)
+                    params.attributeSetName = settings.attributeSetName;
             } else {
                 params.sortOrder = settings.sortOrder;
                 params.contentGroupId = settings.contentGroupId;
             }
+
+            if (settings.prefill)
+                params.prefill = JSON.stringify(settings.prefill);
 
             return settings.dialogUrl
                 + (settings.dialogUrl.indexOf('?') == -1 ? '?' : '&')

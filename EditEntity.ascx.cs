@@ -20,6 +20,12 @@ namespace ToSic.SexyContent
         /// </summary>
         public int? EntityId { get; set; }
 
+        public bool IsPublished
+        {
+            get { return EditItemControl.IsPublished; }
+            set { EditItemControl.IsPublished = value; }
+        }
+
         /// <summary>
         /// Gets or sets ModuleID
         /// </summary>
@@ -78,6 +84,26 @@ namespace ToSic.SexyContent
             }
         }
 
+        public int? KeyNumber
+        {
+            get
+            {
+                return !String.IsNullOrEmpty(Request.QueryString["KeyNumber"])
+                    ? int.Parse(Request.QueryString["KeyNumber"])
+                    : new int?();
+            }
+        }
+
+        public int AssignmentObjectTypeId
+        {
+            get
+            {
+                return !String.IsNullOrEmpty(Request.QueryString["AssignmentObjectTypeId"])
+                    ? int.Parse(Request.QueryString["AssignmentObjectTypeId"])
+                    : SexyContent.AssignmentObjectTypeIDDefault;
+            }
+        }
+
         #endregion
 
         private ItemForm EditItemControl;
@@ -112,7 +138,8 @@ namespace ToSic.SexyContent
             EditItemControl.HideNavigationButtons = true;
             EditItemControl.PreventRedirect = true;
             EditItemControl.AttributeSetId = AttributeSetID;
-            EditItemControl.AssignmentObjectTypeId = SexyContent.AssignmentObjectTypeIDDefault;
+            EditItemControl.AssignmentObjectTypeId = AssignmentObjectTypeId;
+            EditItemControl.KeyNumber = KeyNumber;
             EditItemControl.ZoneId = ZoneId;
             EditItemControl.AppId = AppId;
 	        EditItemControl.AddClientScriptAndCss = false;
@@ -124,6 +151,9 @@ namespace ToSic.SexyContent
                 EditItemControl.Updated += EditItem_OnEdited;
                 EditItemControl.EntityId = EntityId.Value;
                 EditItemControl.InitForm(FormViewMode.Edit);
+
+                hlkHistory.Visible = true;
+                hlkHistory.NavigateUrl = EditUrl("", "", SexyContent.ControlKeys.EavManagement, new string[] { "AppID", AppId.ToString(), "ManagementMode", "ItemHistory", "EntityId", EntityId.Value.ToString(), "mid", ModuleID.ToString() });
             }
             // Create a new Entity
             else

@@ -126,4 +126,7 @@
   <data name="lblReferenced.Text" xml:space="preserve">
     <value>This is currently inheriting the default values.</value>
   </data>
+  <data name="HistoryLink.Text" xml:space="preserve">
+    <value>History</value>
+  </data>
 </root>

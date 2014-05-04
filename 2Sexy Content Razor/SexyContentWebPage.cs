@@ -1,6 +1,8 @@
 ﻿using System.Web.WebPages;
 using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Portals;
+using ToSic.SexyContent.DataSources.Tokens;
+using ToSic.SexyContent.Engines.TokenEngine;
 using ToSic.SexyContent.Razor.Helpers;
 using System.Collections.Generic;
 using ToSic.Eav;
@@ -27,11 +29,31 @@ namespace ToSic.SexyContent.Razor
         protected internal List<Element> List { get; internal set; }
         protected internal IDataTarget Data { get; internal set; }
 
+        /// <summary>
+        /// Transform a IEntity to a DynamicEntity as dynamic object
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         public dynamic AsDynamic(IEntity entity)
         {
             return new DynamicEntity(entity, new[] { System.Threading.Thread.CurrentThread.CurrentCulture.Name });
         }
 
+        /// <summary>
+        /// Makes sure a dynamicEntity could be wrapped in AsDynamic()
+        /// </summary>
+        /// <param name="dynamicEntity"></param>
+        /// <returns></returns>
+        public dynamic AsDynamic(dynamic dynamicEntity)
+        {
+            return dynamicEntity;
+        }
+
+        /// <summary>
+        /// Transform a DynamicEntity dynamic object back to a IEntity instance
+        /// </summary>
+        /// <param name="dynamicEntity"></param>
+        /// <returns></returns>
         public IEntity AsEntity(dynamic dynamicEntity)
         {
             return ((DynamicEntity)dynamicEntity).Entity;
@@ -69,10 +91,27 @@ namespace ToSic.SexyContent.Razor
         #endregion
 
 
+        private ConfigurationProvider _configurationProvider;
+        private ConfigurationProvider ConfigurationProvider
+        {
+            get
+            {
+                if (_configurationProvider == null)
+                {
+                    _configurationProvider = new ConfigurationProvider();
+                    _configurationProvider.Sources.Add("querystring", new QueryStringPropertyAccess());
+                    _configurationProvider.Sources.Add("app", new AppPropertyAccess(App));
+                    _configurationProvider.Sources.Add("appsettings", new DynamicEntityPropertyAccess(App.Settings));
+                    _configurationProvider.Sources.Add("appresources", new DynamicEntityPropertyAccess(App.Resources));
+                }
+                return _configurationProvider;
+            }
+        }
+
         protected IDataSource CreateSource(string typeName = "", IDataSource inSource = null, IConfigurationProvider configurationProvider = null)
         {
             if (configurationProvider == null)
-                configurationProvider = SexyContent.GetConfigurationProvider(App);
+                configurationProvider = ConfigurationProvider;
 
             if (inSource != null)
                 return DataSource.GetDataSource(typeName, inSource.ZoneId, inSource.AppId, inSource, configurationProvider);
@@ -84,7 +123,7 @@ namespace ToSic.SexyContent.Razor
         protected T CreateSource<T>(IDataSource inSource = null, IConfigurationProvider configurationProvider = null)
         {
             if (configurationProvider == null)
-                configurationProvider = SexyContent.GetConfigurationProvider(App);
+                configurationProvider = ConfigurationProvider;
 
             if (inSource != null)
                 return DataSource.GetDataSource<T>(inSource.ZoneId, inSource.AppId, inSource, configurationProvider);

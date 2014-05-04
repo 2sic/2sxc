@@ -25,6 +25,12 @@ namespace ToSic.SexyContent
         /// </summary>
         public int ContentGroupID { get; set; }
 
+        public bool IsPublished
+        {
+            get { return EditItemControl.IsPublished; }
+            set { EditItemControl.IsPublished = value; }
+        }
+
         /// <summary>
         /// Gets or sets the ItemType
         /// </summary>
@@ -168,6 +174,9 @@ namespace ToSic.SexyContent
                 EditItemControl.Updated += EditItem_OnEdited;
                 EditItemControl.EntityId = Item.EntityID.Value;
                 EditItemControl.InitForm(FormViewMode.Edit);
+
+                hlkHistory.Visible = true;
+                hlkHistory.NavigateUrl = EditUrl("", "", SexyContent.ControlKeys.EavManagement, new string[] { "AppID", AppId.ToString(), "ManagementMode", "ItemHistory", "EntityId", Item.EntityID.Value.ToString(), "mid", ModuleID.ToString() });
             }
             // Create a new Entity
             else
@@ -184,6 +193,7 @@ namespace ToSic.SexyContent
             }
 
             phNewOrEditItem.Controls.Add(EditItemControl);
+            
         }
 
         protected void EditItem_OnEdited(ToSic.Eav.Entity Entity)
@@ -226,57 +236,54 @@ namespace ToSic.SexyContent
                 EditItemControl.Cancel();
         }
 
-        protected void UpdateModuleTitleIfNecessary(ToSic.Eav.Entity Entity, ContentGroupItem GroupItem)
+        protected void UpdateModuleTitleIfNecessary(ToSic.Eav.Entity entity, ContentGroupItem groupItem)
         {
             // Creating new Context, because EntityTitle gets not refreshed otherwise
-            var SexyContext = new SexyContent(ZoneId, AppId, true);
+            var sexyContext = new SexyContent(ZoneId, AppId, true);
 
             // Get ContentGroup
-            var ListContentGroupItem = SexyContext.TemplateContext.GetListContentGroupItem(GroupItem.ContentGroupID, UserId);
+            var listContentGroupItem = sexyContext.TemplateContext.GetListContentGroupItem(groupItem.ContentGroupID, UserId);
+            var entityModel = sexyContext.ContentContext.GetEntityModel(entity.EntityID);
 
             // If this is the list title, or no list-title exists, set module title
-            if (GroupItem.ItemType == ContentGroupItemType.ListContent || (ListContentGroupItem == null && GroupItem.ItemType == ContentGroupItemType.Content && GroupItem.SortOrder == 0))
+            if (groupItem.ItemType == ContentGroupItemType.ListContent || (listContentGroupItem == null && groupItem.ItemType == ContentGroupItemType.Content && groupItem.SortOrder == 0) && entityModel.IsPublished)
             {
-                var Languages = Sexy.ContentContext.GetLanguages();
+                var languages = Sexy.ContentContext.GetLanguages();
+                // Find Module for default language
+                var moduleController = new ModuleController();
+                var originalModule = moduleController.GetModule(ModuleID);
 
                 // Update Original Module if no languages active
-                if (Languages.Count == 0)
+                if (languages.Count == 0)
                 {
                     // Get Title value of Entitiy in current language
-                    string TitleValue = SexyContext.ContentContext.GetEntityModel(Entity.EntityID).Title[0].ToString();
+                    string titleValue = entityModel.Title[0].ToString();
 
-                    // Find Module for default language
-                    var ModuleController = new ModuleController();
-                    var OriginalModule = ModuleController.GetModule(ModuleID);
-
-                    OriginalModule.ModuleTitle = TitleValue;
-                    ModuleController.UpdateModule(OriginalModule);
+                    originalModule.ModuleTitle = titleValue;
+                    moduleController.UpdateModule(originalModule);
                 }
 
-                foreach (var Language in Languages)
+                foreach (var dimension in languages)
                 {
                     // Get Title value of Entitiy in current language
-                    string TitleValue = SexyContext.ContentContext.GetEntityModel(Entity.EntityID).Title[Language.DimensionID].ToString();
+                    string titleValue = entityModel.Title[dimension.DimensionID].ToString();
 
-                    // Find Module for default language
-                    var ModuleController = new ModuleController();
-                    var OriginalModule = ModuleController.GetModule(ModuleID);
-                    if(!OriginalModule.IsDefaultLanguage)
-                        OriginalModule = OriginalModule.DefaultLanguageModule;
+                    if(!originalModule.IsDefaultLanguage)
+                        originalModule = originalModule.DefaultLanguageModule;
 
                     // Break if default language module is null
-                    if (OriginalModule == null)
+                    if (originalModule == null)
                         return;
 
                     // Find module for given Culture
-                    var Module = ModuleController.GetModuleByCulture(OriginalModule.ModuleID, OriginalModule.TabID, PortalId, LocaleController.Instance.GetLocale(Language.ExternalKey));
+                    var moduleByCulture = moduleController.GetModuleByCulture(originalModule.ModuleID, originalModule.TabID, PortalId, LocaleController.Instance.GetLocale(dimension.ExternalKey));
 
                     // Break if no module found
-                    if (Module == null)
+                    if (moduleByCulture == null)
                         return;
 
-                    Module.ModuleTitle = TitleValue;
-                    ModuleController.UpdateModule(Module);
+                    moduleByCulture.ModuleTitle = titleValue;
+                    moduleController.UpdateModule(moduleByCulture);
                 }
             }
         }

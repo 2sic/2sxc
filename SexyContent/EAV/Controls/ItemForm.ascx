@@ -11,6 +11,16 @@
 </asp:Panel>
 <asp:Panel runat="server" ID="pnlEditForm" CssClass="eav-form">
 	<asp:PlaceHolder runat="server" ID="phFields" />
+	<div class='eav-field-system eav-field-published dnnFormItem'>
+		<asp:Label ID="FieldLabel" runat="server" Text="Published" />
+		<div class="eav-field-control">
+			<asp:RadioButtonList runat="server" ID="rblPublished" CssClass="" EnableViewState="True" RepeatDirection="Horizontal">
+				<asp:ListItem Value="Published" Text="Yes" />
+				<asp:ListItem Value="Draft" Text="No" />
+			</asp:RadioButtonList>
+		</div>
+	</div>
+	<br />
 </asp:Panel>
 <asp:Panel runat="server" ID="pnlEditDefaultFirstEN" CssClass="eav-message-defaultfirst dnnFormMessage dnnFormInfo" Visible="False">
 </asp:Panel>
@@ -18,8 +28,7 @@
     Bitte zuerst in der Standardsprache erfassen.
 </asp:Panel>--%>
 <asp:Panel runat="server" ID="pnlActions" Visible='<%# !HideNavigationButtons %>'>
-    <asp:LinkButton CssClass="eav-save" ID="btnInsert" runat="server" CommandName="Insert" Text="Insert" OnClick="btnInsert_Click" />
-	<asp:LinkButton CssClass="eav-save" ID="btnUpdate" runat="server" CommandName="Update" Text="Update" OnClick="btnUpdate_Click" />
-	<asp:LinkButton CssClass="eav-cancel" ID="btnCancel" runat="server" CommandName="Cancel" Text="Cancel" CausesValidation="false" OnClick="btnCancel_Click" />
+    <asp:LinkButton CssClass="eav-save" ID="btnSave" runat="server" Text="Save" OnClick="btnSave_Click" />
+	<asp:LinkButton CssClass="eav-cancel" ID="btnCancel" runat="server" Text="Cancel" CausesValidation="false" OnClick="btnCancel_Click" />
 	<asp:Hyperlink CssClass="eav-history" ID="hlkShowHistory" runat="server" Text="Show History" NavigateUrl='<%# GetHistoryUrl() %>' />
 </asp:Panel>

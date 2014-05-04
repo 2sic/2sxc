@@ -37,10 +37,12 @@
     <asp:Panel runat="server" ID="pnlActions" Visible="true">
         <div class="sc-field-error dnnFormWarning dnnFormMessage" style="display:none;"><%= LocalizeString("FieldValidationFailed.Text") %></div>
         <ul class="dnnActions dnnClear">
+            <li style="line-height: 32px; margin-right: 20px;"><asp:CheckBox runat="server" ID="chkPublished"/><%= LocalizeString("Published.Text") %> </li>
             <li><asp:LinkButton ID="btnUpdate" resourcekey="btnUpdate" runat="server" CommandName="Update" OnClick="btnUpdate_Click" CssClass="dnnPrimaryAction eav-save" /></li>
             <li><asp:LinkButton ID="btnCancel" resourcekey="btnCancel" runat="server" CommandName="Cancel" CausesValidation="false" onclick="btnCancel_Click" CssClass="dnnSecondaryAction" /></li>
-            <li><asp:LinkButton ID="btnDelete" visible="false" runat="server" CommandName="Delete" CausesValidation="false" OnClick="btnDelete_Click" CssClass="dnnSecondaryAction" /></li>
-            <li><asp:Hyperlink CssClass="dnnSecondaryAction hlkChangeContent" runat="server" ID="hlkChangeContent" ResourceKey="hlkChangeContent" Visible="False"></asp:Hyperlink></li>
+            <li><a style="min-width:25px;" class="dnnSecondaryAction sc-action-trigger-others">...</a></li>
+            <li><asp:LinkButton ID="btnDelete" visible="false" runat="server" CommandName="Delete" CausesValidation="false" OnClick="btnDelete_Click" CssClass="dnnSecondaryAction sc-action-other" /></li>
+            <li><asp:Hyperlink CssClass="dnnSecondaryAction hlkChangeContent sc-action-other" runat="server" ID="hlkChangeContent" ResourceKey="hlkChangeContent" Visible="False"></asp:Hyperlink></li>
         </ul>
     </asp:Panel>
 </div>
@@ -59,6 +61,12 @@
         // Show message if there are field validation errors
         $(".eav-save").click(function () {
             $(".sc-field-error").toggle($(".dnnFormMessage.dnnFormError:visible").size() > 0);
+        });
+
+        // Show "Other" actions when ... is clicked
+        $(".sc-action-trigger-others").click(function () {
+            $(".sc-action-other").css("display", "inline-block");
+            $(this).hide();
         });
     });
 

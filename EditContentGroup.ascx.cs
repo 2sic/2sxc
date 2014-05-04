@@ -109,7 +109,7 @@ namespace ToSic.SexyContent
 
         private int? _attributeSetId;
         /// <summary>
-        /// Returns the ContentGroupID from QueryString
+        /// Returns the AttributeSetId from QueryString
         /// </summary>
         public int? AttributeSetId
         {
@@ -121,6 +121,7 @@ namespace ToSic.SexyContent
 
                     if (!String.IsNullOrEmpty(attributeSetName))
                         _attributeSetId = Sexy.ContentContext.GetAllAttributeSets().FirstOrDefault(p => p.Name == attributeSetName || p.StaticName == attributeSetName).AttributeSetID;
+                    
                 }
                 return _attributeSetId;
             }
@@ -136,7 +137,7 @@ namespace ToSic.SexyContent
             {
                 if (_Items == null && ContentGroupID.HasValue)
                     _Items = Sexy.TemplateContext.GetContentGroupItems(ContentGroupID.Value).ToList();
-                if(_Items == null && AttributeSetId.HasValue)
+                if(_Items == null && (AttributeSetId.HasValue || EntityId.HasValue))
                     _Items = new List<ContentGroupItem>();
                 return _Items;
             }
@@ -221,6 +222,11 @@ namespace ToSic.SexyContent
 
         }
 
+        protected void Page_PreRender(object sender, EventArgs e)
+        {
+            chkPublished.Checked = ((IEditContentControl)phNewOrEditControls.Controls[0]).IsPublished;
+        }
+
         protected void ProcessView()
         {
             List<ContentGroupItemType> EditableItemsTypes = new List<ContentGroupItemType>();
@@ -270,7 +276,7 @@ namespace ToSic.SexyContent
                 editControl.ZoneId = ZoneId.Value;
                 editControl.ModuleID = ModuleId;
                 editControl.TabID = TabId;
-                editControl.AttributeSetID = AttributeSetId.Value;
+                editControl.AttributeSetID = AttributeSetId.HasValue ? AttributeSetId.Value : Sexy.ContentContext.GetEntity(EntityId.Value).AttributeSetID;
                 editControl.EntityId = EntityId;
                 phNewOrEditControls.Controls.Add(editControl);
             }
@@ -279,7 +285,10 @@ namespace ToSic.SexyContent
         protected void btnUpdate_Click(object sender, EventArgs e)
         {
             foreach (IEditContentControl EditControl in phNewOrEditControls.Controls)
+            {
+                EditControl.IsPublished = chkPublished.Checked;
                 EditControl.Save();
+            }
 
             RedirectBack();
         }
@@ -287,7 +296,9 @@ namespace ToSic.SexyContent
         protected void btnCancel_Click(object sender, EventArgs e)
         {
             foreach (IEditContentControl EditControl in phNewOrEditControls.Controls)
+            {
                 EditControl.Cancel();
+            }
 
             RedirectBack();
         }
@@ -326,7 +337,7 @@ namespace ToSic.SexyContent
         {
             // Create URL for other language
             var Url = Request.RawUrl;
-            Url = Regex.Replace(Url, "&CultureDimension=[0-9]+?", "", RegexOptions.IgnoreCase);
+            Url = Regex.Replace(Url, "&CultureDimension=[0-9]+", "", RegexOptions.IgnoreCase);
             Url = Url + "&CultureDimension=" + cultureDimensionId;
 
             return Url;

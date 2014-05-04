@@ -38,7 +38,7 @@ namespace ToSic.SexyContent
     {
         #region Constants
 
-        public const string ModuleVersion = "06.00.03";
+        public const string ModuleVersion = "06.00.05";
         public const string TemplateID = "TemplateID";
         public const string ContentGroupIDString = "ContentGroupID";
         public const string AppIDString = "AppId";
@@ -337,11 +337,15 @@ namespace ToSic.SexyContent
             if (!sexyFolder.GetFiles("web.config").Any())
                 File.Copy(server.MapPath(WebConfigTemplatePath), Path.Combine(sexyFolder.FullName, WebConfigFileName));
 
-            // Create a Content folder (default app)
-            var contentFolder = new DirectoryInfo(Path.Combine(sexyFolder.FullName, App.Folder));
+            // Create a Content folder (or App Folder)
+            if (!String.IsNullOrEmpty(App.Folder))
+            {
+                var contentFolder = new DirectoryInfo(Path.Combine(sexyFolder.FullName, App.Folder));
+                if (!contentFolder.Exists)
+                    contentFolder.Create();
+            }
 
-            if (!contentFolder.Exists)
-                contentFolder.Create();
+            
         }
 
         /// <summary>
@@ -352,8 +356,6 @@ namespace ToSic.SexyContent
         /// <param name="ControlPath"></param>
         public void ConfigurePortal(HttpServerUtility server)
         {
-            //var templatePathRootMapPath = server.MapPath(Path.Combine(PortalSettings.Current.HomeDirectory, SexyContent.TemplateFolder));
-            //var directory = new DirectoryInfo(templatePathRootMapPath);
             EnsureTemplateFolderExists(server, TemplateLocations.PortalFileSystem);
         }
 
@@ -571,41 +573,32 @@ namespace ToSic.SexyContent
         /// <param name="zoneId"></param>
         /// <param name="appId"></param>
         /// <returns></returns>
-        public static ToSic.Eav.DataSources.IDataSource GetInitialDataSource(int zoneId, int appId)
+        public static ToSic.Eav.DataSources.IDataSource GetInitialDataSource(int zoneId, int appId, bool showDrafts = false)
         {
-            return DataSource.GetInitialDataSource(zoneId, appId);
+            return DataSource.GetInitialDataSource(zoneId, appId, showDrafts);
         }
 
-        public static ConfigurationProvider GetConfigurationProvider(App app)
-        {
-            var configurationProvider = new ConfigurationProvider();
-            configurationProvider.Sources.Add("querystring", new QueryStringPropertyAccess());
-            configurationProvider.Sources.Add("app", new AppPropertyAccess(app));
-            configurationProvider.Sources.Add("appsettings", new DynamicEntityPropertyAccess(app.Settings));
-            configurationProvider.Sources.Add("appresources", new DynamicEntityPropertyAccess(app.Resources));
-            return configurationProvider;
-        }
+        
 
         /// <summary>
         /// Get a list of ContentElements by ModuleId or ContentGroupID
         /// </summary>
         /// <returns></returns>
-        public List<Element> GetContentElements(int ModuleID, string LanguageName, int? ContentGroupID, int PortalId)
+        public List<Element> GetContentElements(int ModuleID, string LanguageName, int? ContentGroupID, int PortalId, bool showDrafts)
         {
-            return GetElements(ModuleID, ContentGroupID, ContentGroupItemType.Content, ContentGroupItemType.Presentation, LanguageName, PortalId);
+            return GetElements(ModuleID, ContentGroupID, ContentGroupItemType.Content, ContentGroupItemType.Presentation, LanguageName, PortalId, showDrafts);
         }
 
-        public Element GetListElement(int ModuleID, string LanguageName, int? ContentGroupID, int PortalId)
+        public Element GetListElement(int ModuleID, string LanguageName, int? ContentGroupID, int PortalId, bool showDrafts)
         {
-            var ListElement = GetElements(ModuleID, ContentGroupID, ContentGroupItemType.ListContent, ContentGroupItemType.ListPresentation, LanguageName, PortalId).FirstOrDefault();
+            var ListElement = GetElements(ModuleID, ContentGroupID, ContentGroupItemType.ListContent, ContentGroupItemType.ListPresentation, LanguageName, PortalId, showDrafts).FirstOrDefault();
             return ListElement;
         }
 
-        private List<Element> GetElements(int ModuleID, int? ContentGroupID, ContentGroupItemType ContentItemType, ContentGroupItemType PresentationItemType, string LanguageName, int PortalId)
+        private List<Element> GetElements(int ModuleID, int? ContentGroupID, ContentGroupItemType ContentItemType, ContentGroupItemType PresentationItemType, string LanguageName, int PortalId, bool showDrafts)
         {
             if (!ContentGroupID.HasValue)
                 ContentGroupID = GetContentGroupIDFromModule(ModuleID);
-
 
             IEnumerable<ContentGroupItem> ItemsQuery = TemplateContext.GetContentGroupItems(ContentGroupID.Value);
             List<ContentGroupItem> Items = ItemsQuery.Where(c => c.Type == ContentItemType.ToString("F") || c.Type == PresentationItemType.ToString("F")).ToList();
@@ -622,7 +615,7 @@ namespace ToSic.SexyContent
                 // Prepare Dimension List (Languages)
                 var DimensionIds = new[] { LanguageName };
                 // Load all Entities to list
-                var InitialSource = GetInitialDataSource(ZoneId.Value, AppId.Value);
+                var InitialSource = GetInitialDataSource(ZoneId.Value, AppId.Value, showDrafts);
                 var EntityDataSource = DataSource.GetDataSource("ToSic.Eav.DataSources.EntityIdFilter", ZoneId, AppId, InitialSource, InitialSource.ConfigurationProvider);
                 ((EntityIdFilter)EntityDataSource).Configuration["EntityIds"] = String.Join(",", Identities.ToArray());
                 SexyDataSource = DataSource.GetDataSource("ToSic.Eav.DataSources.PassThrough", ZoneId, AppId, EntityDataSource);
@@ -650,6 +643,8 @@ namespace ToSic.SexyContent
                 // Transform to list of Elements
                 ElementList = (from c in Items
                                where c.ItemType == ContentItemType
+                               // don't show items whose Content entity is not in source
+                               && (!c.EntityID.HasValue || Entities.ContainsKey(c.EntityID.Value))
                                select new Element
                                {
                                    ID = c.ContentGroupItemID,
@@ -660,10 +655,10 @@ namespace ToSic.SexyContent
                                        .Select(d => new DynamicEntity(Entities[d.DemoEntityID.Value], DimensionIds)).FirstOrDefault(),
                                    // Get Presentation object - Take Default if it does not exist
                                    Presentation = (from p in Items
-                                                   where p.SortOrder == c.SortOrder && p.ItemType == PresentationItemType && p.EntityID.HasValue
+                                                   where p.SortOrder == c.SortOrder && p.ItemType == PresentationItemType && p.EntityID.HasValue && Entities.ContainsKey(p.EntityID.Value)
                                                    select new DynamicEntity(Entities[p.EntityID.Value], DimensionIds)).FirstOrDefault() ??
                                                    (from d in Defaults
-                                                    where d.ItemType == PresentationItemType && d.DemoEntityID.HasValue
+                                                    where d.ItemType == PresentationItemType && d.DemoEntityID.HasValue && Entities.ContainsKey(d.DemoEntityID.Value)
                                                     select new DynamicEntity(Entities[d.DemoEntityID.Value], DimensionIds)).FirstOrDefault()
                                                    ,
                                    GroupID = c.ContentGroupID,
@@ -707,28 +702,7 @@ namespace ToSic.SexyContent
         /// <returns></returns>
         public string GetElementToolbar(int ContentGroupID, int SortOrder, int ContentGroupItemID, int ModuleId, string LocalResourcesPath, bool ListEnabled, Control ParentControl, string ReturnUrl)
         {
-            //string editLink = GetElementEditLink(ContentGroupID, SortOrder, ModuleId, PortalSettings.Current.ActiveTab.TabID, ReturnUrl);
-            //if (PortalSettings.Current.EnablePopUps)
-            //    editLink = HttpUtility.UrlDecode(UrlUtils.PopUpUrl(editLink, ParentControl, PortalSettings.Current, false, false));
-
-            //string addLink = GetElementAddWithEditLink(ContentGroupID, SortOrder + 1, ModuleId, PortalSettings.Current.ActiveTab.TabID, ReturnUrl);
-            //if (PortalSettings.Current.EnablePopUps)
-            //    addLink = HttpUtility.UrlDecode(UrlUtils.PopUpUrl(addLink, ParentControl, PortalSettings.Current, false, false));
-
-            //string Toolbar = "<ul class=\"sc-menu\">";
-            
-
-            //Toolbar += "<li><a class=\"sc-menu-edit\" href=\"" + editLink + "\"><img src=\"" + ParentControl.ResolveClientUrl("~/DesktopModules/ToSIC_SexyContent/Images/Edit.png") + "\" /></a></li>";
-
-            //if (ListEnabled && SortOrder != -1)
-            //{
-            //    Toolbar += "<li><a class=\"sc-menu-add\" href=\"javascript:void(0);\" onclick='AddContentGroupItem(this, \"" + ContentGroupItemID.ToString() + "\");'><img src=\"" + ParentControl.ResolveClientUrl("~/DesktopModules/ToSIC_SexyContent/Images/Add.png") + "\" /></a></li>";
-            //    Toolbar += "<li><a class=\"sc-menu-addwithedit\" href=\"" + addLink + "\"><img src=\"" + ParentControl.ResolveClientUrl("~/DesktopModules/ToSIC_SexyContent/Images/AddWithEdit.png") + "\" /></a></li>";
-            //}
-
-            //Toolbar += "</ul>";
-
-            return "<ul class='sc-menu' data-toolbar='" + new { sortOrder = SortOrder }.ToJson() + "'></ul>";
+            return "<ul class='sc-menu' data-toolbar='" + new { sortOrder = SortOrder, useModuleList = true }.ToJson() + "'></ul>";
         }
 
         /// <summary>
@@ -743,15 +717,32 @@ namespace ToSic.SexyContent
         /// <param name="assignmentObjectTypeID"></param>
         /// <param name="keyNumber"></param>
         /// <returns></returns>
-        public static string GetMetaDataEditUrl(int tabId, int moduleId, string returnUrl, Control control, string attributeSetStaticName, int assignmentObjectTypeID, int keyNumber, int zoneId, int appId)
+        public string GetMetaDataEditUrl(int tabId, int moduleId, string returnUrl, Control control, string attributeSetStaticName, int assignmentObjectTypeID, int keyNumber)
         {
-            var portalSettings = PortalSettings.Current;
+            var assignedEntity = DataSource.GetMetaDataSource(ZoneId.Value, AppId.Value).GetAssignedEntities(assignmentObjectTypeID, keyNumber, attributeSetStaticName).FirstOrDefault();
+            var entityId = assignedEntity == null ? new int?() : assignedEntity.EntityId;
 
-            //var DefaultAppContext = new SexyContent(true, DataSource.DefaultZoneId);
-            var set = new SexyContent(zoneId, appId).ContentContext.GetAttributeSet(attributeSetStaticName);
-            string newItemUrl = Globals.NavigateURL(tabId, ControlKeys.EavManagement, "mid=" + moduleId.ToString() + "&ManagementMode=NewItem&AttributeSetId=[AttributeSetId]&KeyNumber=[KeyNumber]&AssignmentObjectTypeId=[AssignmentObjectTypeId]&ReturnUrl=[ReturnUrl]&" + SexyContent.AppIDString + "=" + appId);
-            string editItemUrl = Globals.NavigateURL(tabId, ControlKeys.EavManagement, "mid=" + moduleId.ToString() + "&ManagementMode=EditItem&EntityId=[EntityId]&ReturnUrl=[ReturnUrl]&" + SexyContent.AppIDString + "=" + appId);
-            return UrlUtils.PopUpUrl(Eav.ManagementUI.Forms.GetItemFormUrl(keyNumber, set.AttributeSetID, assignmentObjectTypeID, newItemUrl, editItemUrl, returnUrl), control, portalSettings, false, true);
+            return GetEntityEditLink(entityId , moduleId, tabId, attributeSetStaticName, returnUrl,
+                    assignmentObjectTypeID, keyNumber);
+        }
+
+        private string GetEntityEditLink(int? entityId, int moduleId, int tabId, string attributeSetStaticName, string returnUrl, int? assignmentObjectTypeId, int? keyNumber)
+        {
+            string editUrl = Globals.NavigateURL(tabId, ControlKeys.EditContentGroup, new string[] { "mid", moduleId.ToString(), "AppId", AppId.ToString(),
+                "AttributeSetName", attributeSetStaticName, "AssignmentObjectTypeId", assignmentObjectTypeId.ToString(), "KeyNumber", keyNumber.ToString() });
+            editUrl += (editUrl.IndexOf("?") == -1 ? "?" : "&") + "popUp=true&ReturnUrl=" + HttpUtility.UrlEncode(returnUrl);
+
+            if (!entityId.HasValue)
+                editUrl += "&EditMode=New";
+            else
+                editUrl += "&EntityId=" + entityId.Value;
+
+            // If Culture exists, add CultureDimension
+            var languageId = GetCurrentLanguageID();
+            if (languageId.HasValue)
+                editUrl += "&CultureDimension=" + languageId;
+
+            return editUrl;
         }
 
         /// <summary>
@@ -975,7 +966,7 @@ namespace ToSic.SexyContent
             TemplateContext.SaveChanges();
 
             // Delete folder
-            if (Directory.Exists(sexyApp.PhysicalPath))
+            if (!String.IsNullOrEmpty(sexyApp.Folder) &&  Directory.Exists(sexyApp.PhysicalPath))
                 Directory.Delete(sexyApp.PhysicalPath, true);
 
             // Delete the app
@@ -1093,8 +1084,8 @@ namespace ToSic.SexyContent
 
             var SearchItems = new SearchItemInfoCollection();
 
-            var Elements = Sexy.GetContentElements(ModInfo.ModuleID, Sexy.GetCurrentLanguageName(), null, ModInfo.PortalID);
-            Elements.Add(Sexy.GetListElement(ModInfo.ModuleID, Sexy.GetCurrentLanguageName(), null, ModInfo.PortalID));
+            var Elements = Sexy.GetContentElements(ModInfo.ModuleID, Sexy.GetCurrentLanguageName(), null, ModInfo.PortalID, false);
+            Elements.Add(Sexy.GetListElement(ModInfo.ModuleID, Sexy.GetCurrentLanguageName(), null, ModInfo.PortalID, false));
 
             foreach (var Element in Elements)
             {

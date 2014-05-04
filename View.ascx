@@ -19,13 +19,6 @@
     <%= LocalizeString("GetStarted.Text") %>
 </asp:Panel>
 
-<asp:Panel runat="server" ID="pnlMissingConfiguration" Visible="false" CssClass="dnnFormMessage dnnFormInfo">
-    <asp:Label runat="server" ID="lblMissingConfiguration" ResourceKey="lblMissingConfiguration"></asp:Label>
-    <asp:LinkButton runat="server" ID="hlkConfigurePortal" 
-        CssClass="dnnSecondaryAction" ResourceKey="hlkConfigurePortal" 
-        onclick="hlkConfigurePortal_Click"></asp:LinkButton>
-</asp:Panel>
-
 <asp:Panel runat="server" ID="pnlZoneConfigurationMissing" Visible="false" CssClass="dnnFormMessage dnnFormInfo">
     <asp:Label runat="server" ID="lblMissingZoneConfiguration" ResourceKey="ZoneConfigurationMissing"></asp:Label>
     <asp:HyperLink runat="server" ID="hlkConfigureZone" 

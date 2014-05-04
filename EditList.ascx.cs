@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using DotNetNuke.Security.Permissions;
 using Telerik.Web.UI;
 using DotNetNuke.Web.UI.WebControls;
 using ToSic.Eav;
@@ -33,7 +34,7 @@ namespace ToSic.SexyContent
             {
                 if (_Elements == null)
                 {
-                    _Elements = Sexy.GetContentElements(ModuleId, Sexy.GetCurrentLanguageName(), ContentGroupID, PortalId).ToList();
+                    _Elements = Sexy.GetContentElements(ModuleId, Sexy.GetCurrentLanguageName(), ContentGroupID, PortalId, ModulePermissionController.CanEditModuleContent(this.ModuleConfiguration)).ToList();
                 }
                 return _Elements;
             }
