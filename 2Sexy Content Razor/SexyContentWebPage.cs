@@ -92,8 +92,20 @@ namespace ToSic.SexyContent.Razor
             var initialSource = SexyContent.GetInitialDataSource(SexyContent.GetZoneID(PortalSettings.Current.PortalId).Value, App.AppId);
             return DataSource.GetDataSource<T>(initialSource.ZoneId, initialSource.AppId, initialSource, configurationProvider);
         }
+
+        // Try to get shared code inside an app
+        public dynamic Shared
+        {
+            get
+            {
+                var i = WebPageBase.CreateInstanceFromVirtualPath("/Portals/0/2sxc/Content/Shared/_Test.cshtml");
+                return i;
+            }
+        }
     }
 
     // <2sic> Removed DotNetNukeWebPage<T>:DotNetNukeWebPage
     // </2sic>
+
+    
 }
