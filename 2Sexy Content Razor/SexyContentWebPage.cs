@@ -135,10 +135,6 @@ namespace ToSic.SexyContent.Razor
             return DataSource.GetDataSource<T>(initialSource.ZoneId, initialSource.AppId, initialSource, configurationProvider);
         }
 
-        /// <summary>
-        /// Will contain the already instanciated shared pages
-        /// </summary>
-        private Dictionary<string, dynamic> _sharedPages = new Dictionary<string, dynamic>();  
 
         /// <summary>
         /// Creates instances of the shared pages with the given relative path
@@ -147,9 +143,6 @@ namespace ToSic.SexyContent.Razor
         /// <returns></returns>
         public dynamic Shared(string relativePath)
         {
-            if (_sharedPages.ContainsKey(relativePath))
-                return _sharedPages[relativePath];
-
             var path = NormalizePath(relativePath);
 
             if(!File.Exists(Server.MapPath(path)))
