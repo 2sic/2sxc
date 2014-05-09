@@ -21,7 +21,7 @@ namespace ToSic.SexyContent
         private readonly string[] _dimensions;
 
         /// <summary>
-        /// Contructor with EntityModel and DimensionIds
+        /// Constructor with EntityModel and DimensionIds
         /// </summary>
         /// <param name="entityModel"></param>
         /// <param name="dimensions"></param>
