@@ -141,7 +141,7 @@ namespace ToSic.SexyContent.Razor
         /// </summary>
         /// <param name="relativePath"></param>
         /// <returns></returns>
-        public dynamic Shared(string relativePath)
+        public dynamic CreateInstance(string relativePath)
         {
             var path = NormalizePath(relativePath);
 
