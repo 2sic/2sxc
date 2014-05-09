@@ -53,6 +53,16 @@ namespace ToSic.SexyContent.Razor
         }
 
         /// <summary>
+        /// Returns the value of a KeyValuePair as DynamicEntity
+        /// </summary>
+        /// <param name="entityKeyValuePair"></param>
+        /// <returns></returns>
+        public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair)
+        {
+            return AsDynamic(entityKeyValuePair.Value);
+        }
+
+        /// <summary>
         /// Transform a DynamicEntity dynamic object back to a IEntity instance
         /// </summary>
         /// <param name="dynamicEntity"></param>
