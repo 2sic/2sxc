@@ -162,7 +162,7 @@ namespace ToSic.SexyContent.Engines
                     // </2sic>
                 }
                 Webpage.Context = HttpContext;
-                Webpage.VirtualPath = VirtualPathUtility.GetDirectory(RazorScriptFile);
+                Webpage.VirtualPath = RazorScriptFile;
                 InitHelpers(Webpage);
             }
         }

@@ -1,4 +1,7 @@
-﻿using System.Web.WebPages;
+﻿using System;
+using System.IO;
+using System.Web;
+using System.Web.WebPages;
 using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Portals;
 using ToSic.SexyContent.DataSources.Tokens;
@@ -74,7 +77,7 @@ namespace ToSic.SexyContent.Razor
 
             // Return if parent page is not a SexyContentWebPage
             if (parentPage.GetType().BaseType != typeof(SexyContentWebPage)) return;
-
+            
             Dnn = ((SexyContentWebPage) parentPage).Dnn;
             Html = ((SexyContentWebPage) parentPage).Html;
             Url = ((SexyContentWebPage) parentPage).Url;
@@ -131,8 +134,31 @@ namespace ToSic.SexyContent.Razor
             var initialSource = SexyContent.GetInitialDataSource(SexyContent.GetZoneID(PortalSettings.Current.PortalId).Value, App.AppId);
             return DataSource.GetDataSource<T>(initialSource.ZoneId, initialSource.AppId, initialSource, configurationProvider);
         }
+
+
+        /// <summary>
+        /// Creates instances of the shared pages with the given relative path
+        /// </summary>
+        /// <param name="relativePath"></param>
+        /// <returns></returns>
+        public dynamic CreateInstance(string relativePath)
+        {
+            var path = NormalizePath(relativePath);
+
+            if(!File.Exists(Server.MapPath(path)))
+                throw new FileNotFoundException("The shared file does not exist.", path);
+
+            var webPage = (SexyContentWebPage)CreateInstanceFromVirtualPath(path);
+            webPage.ConfigurePage(this);
+            return webPage;
+        }
+
+        
+
     }
 
     // <2sic> Removed DotNetNukeWebPage<T>:DotNetNukeWebPage
     // </2sic>
+
+    
 }

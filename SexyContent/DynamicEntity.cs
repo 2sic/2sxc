@@ -128,5 +128,15 @@ namespace ToSic.SexyContent
             get { return Entity.Title[_dimensions]; }
         }
 
+        public dynamic GetDraft()
+        {
+            return new DynamicEntity(Entity.GetDraft(), _dimensions);
+        }
+
+        public dynamic GetPublished()
+        {
+            return new DynamicEntity(Entity.GetPublished(), _dimensions);
+        }
+
     }
 }
