@@ -94,9 +94,13 @@ $2sxc.getManageController = function(id) {
 
             var buttons = [];
 
+            if (settings.action)
+                settings = [settings];
+            
             if ($.isArray(settings)) {
                 buttons = settings;
             } else {
+
                 buttons = [
                     $.extend({ action: 'edit' }, settings)
                 ];
