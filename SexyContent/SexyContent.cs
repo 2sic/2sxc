@@ -1045,7 +1045,7 @@ namespace ToSic.SexyContent
             }
             
             var sexy = new SexyContent(zoneId.Value, appId, true);
-            var portalSettings = PortalSettings.Current;
+            
 
             // This list will hold all EAV entities to be indexed
             var entityIds = new List<int>();

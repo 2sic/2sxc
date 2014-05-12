@@ -168,10 +168,10 @@ namespace ToSic.SexyContent.Engines
         {
             dynamic webPageInstance = CreateWebPageInstance();
 
-            if (webPageInstance.PrepareData == null)
+            if (webPageInstance.PrepareViewData == null)
                 return;
 
-            webPageInstance.PrepareData();
+            webPageInstance.PrepareViewData();
         }
     }
 }
