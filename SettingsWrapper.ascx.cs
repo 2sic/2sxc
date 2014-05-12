@@ -26,7 +26,7 @@ namespace ToSic.SexyContent
                     if (DirectEditContentGroupItem)
                         _ContentGroupItems = SexyUncached.TemplateContext.GetContentGroupItems(ContentGroupItem.ContentGroupID);
                     else
-                        _ContentGroupItems = SexyUncached.TemplateContext.GetContentGroupItems(SexyUncached.GetContentGroupIDFromModule(ModuleId));
+                        _ContentGroupItems = SexyUncached.TemplateContext.GetContentGroupItems(SexyUncached.GetContentGroupIdFromModule(ModuleId));
                 }
                 return _ContentGroupItems;
             }
@@ -117,13 +117,6 @@ namespace ToSic.SexyContent
                                                  EntityID = c["EntityID"]
                                              };
                     ddlEntities.DataBind();
-
-                    // ToDo: Filter items by "in use" (and add a button "show all")
-                    //DotNetNuke.Entities.Modules.ModuleController t = new ModuleController();
-                    //var dm = DotNetNuke.Entities.Modules.DesktopModuleController.GetDesktopModuleByModuleName("2SexyContent", PortalSettings.PortalId);
-                    //List<ModuleInfo> list = t.GetModules(PortalSettings.PortalId).Cast<ModuleInfo>().ToList();
-                    //var contentGroupIdList = list.Where(p => !p.IsDeleted && p.ModuleDefinition.FriendlyName == dm.FriendlyName).Select(p => p.ModuleSettings[SexyContent.ContentGroupIDString]).Distinct();
-                    
                 }
 
                 // If EntityID is set, select the chosen Entity in the dropdown

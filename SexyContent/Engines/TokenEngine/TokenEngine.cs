@@ -5,6 +5,7 @@ using System.Collections;
 using System.Linq;
 using System.Text.RegularExpressions;
 using ToSic.Eav.DataSources;
+using ToSic.SexyContent.DataSources;
 
 namespace ToSic.SexyContent.Engines.TokenEngine
 {
@@ -19,11 +20,16 @@ namespace ToSic.SexyContent.Engines.TokenEngine
         /// <param name="LocalResourcesPath">Resource path</param>
         /// <param name="Elements">The SexyContent Element list</param>
         /// <returns></returns>
-        public string Render(Template template, string templatePath, App app, List<Element> Elements, Element ListElement, ModuleInstanceContext HostingModule, string LocalResourcesPath, IDataSource DataSource)
+        public string Render(Template template, string templatePath, App app, ModuleInstanceContext HostingModule, string LocalResourcesPath, IDataSource DataSource)
         {
-            //SexyContent Sexy = new SexyContent();
-            DynamicEntity ListContent = ListElement != null ? ListElement.Content : null;
-            DynamicEntity ListPresentation = ListElement != null ? ListElement.Presentation : null;
+            List<Element> Elements;
+            DynamicEntity ListContent = null;
+            DynamicEntity ListPresentation = null;
+
+            var moduleDataSource = (ModuleDataSource) DataSource;
+            ListContent = moduleDataSource.ListElement != null ? moduleDataSource.ListElement.Content : null;
+            ListPresentation = moduleDataSource.ListElement != null ? moduleDataSource.ListElement.Presentation : null;
+            Elements = moduleDataSource.ContentElements;
 
             // Prepare Source Text
             string SourceText = System.IO.File.ReadAllText(HttpContext.Current.Server.MapPath(templatePath));
@@ -84,5 +90,7 @@ namespace ToSic.SexyContent.Engines.TokenEngine
 
             return RenderedTemplate;
         }
+
+        public void PrepareViewData() {}
     }
 }

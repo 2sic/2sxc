@@ -118,7 +118,7 @@ namespace ToSic.SexyContent
 
             if (Elements.First().Content == null)
             {
-                var toolbar = IsEditable ? Sexy.GetElementToolbar(Elements.First().GroupID, Elements.First().SortOrder, Elements.First().ID, ModuleId, LocalResourceFile, false, this, Request.RawUrl) : "";
+                var toolbar = IsEditable ? "<ul class='sc-menu' data-toolbar='" + new { sortOrder = Elements.First().SortOrder, useModuleList = true, action = "edit" }.ToJson() + "'></ul>" : "";
                 ShowMessage(LocalizeString("NoDemoItem.Text") + " " + toolbar);
                 return;
             }
@@ -127,37 +127,37 @@ namespace ToSic.SexyContent
 
             try
             {
-                var ListElement = Sexy.GetListElement(ModuleId, Sexy.GetCurrentLanguageName(), null, PortalId, ModulePermissionController.CanEditModuleContent(this.ModuleConfiguration));
+                var listElement = Sexy.GetListElement(ModuleId, Sexy.GetCurrentLanguageName(), null, PortalId, ModulePermissionController.CanEditModuleContent(this.ModuleConfiguration));
 
-                // Attach Toolbar to Elements
-                Sexy.AttachToolbarToElements(new List<Element> { ListElement }, ModuleId, LocalResourceFile, Template.UseForList, ModuleContext.IsEditable, this, Request.RawUrl);
-                Sexy.AttachToolbarToElements(Elements, ModuleId, LocalResourceFile, Template.UseForList, ModuleContext.IsEditable, this, Request.RawUrl);
+                //// Attach Toolbar to Elements
+                //Sexy.AttachToolbarToElements(new List<Element> { ListElement }, ModuleId, LocalResourceFile, Template.UseForList, ModuleContext.IsEditable, this, Request.RawUrl);
+                //Sexy.AttachToolbarToElements(Elements, ModuleId, LocalResourceFile, Template.UseForList, ModuleContext.IsEditable, this, Request.RawUrl);
 
-                string RenderedTemplate = "";
+                string renderedTemplate = "";
 
                 // Output JSON data if type=data in URL
                 if (Request.QueryString["type"] == "data" && Settings.ContainsKey(SexyContent.SettingsPublishDataSource) &&
                     Boolean.Parse(Settings[SexyContent.SettingsPublishDataSource].ToString()))
                 {
-                    RenderedTemplate = Sexy.GetJsonFromElements(Elements, Sexy.GetCurrentLanguageName());
+                    renderedTemplate = Sexy.GetJsonFromElements(Elements, Sexy.GetCurrentLanguageName());
                     Response.ContentType = "application/json";
                 }
                 else
-                    RenderedTemplate = Template.RenderTemplate(Page, Server, PortalSettings, ModuleContext,
-                                                               LocalResourceFile, Elements, ListElement, this,
-                                                               Sexy.SexyDataSource, Sexy, AppId.Value);
+                    renderedTemplate = Template.RenderTemplate(Page, PortalSettings, ModuleContext,
+                                                               LocalResourceFile,
+                                                               Sexy.GetModuleDataSource(ModuleId, ModulePermissionController.CanEditModuleContent(this.ModuleConfiguration)), Sexy);
 
                 // If standalone is specified, output just the template without anything else
                 if (StandAlone)
                 {
                     Response.Clear();
-                    Response.Write(RenderedTemplate);
+                    Response.Write(renderedTemplate);
                     Response.Flush();
                     Response.SuppressContent = true;
                     HttpContext.Current.ApplicationInstance.CompleteRequest();
                 }
                 else
-                    phOutput.Controls.Add(new LiteralControl(RenderedTemplate));
+                    phOutput.Controls.Add(new LiteralControl(renderedTemplate));
             }
             // Catch errors
             //catch (SexyContentException Ex)
@@ -282,7 +282,7 @@ namespace ToSic.SexyContent
                 if (Template != null && TemplateID == Template.TemplateID)
                     return;
 
-                new SexyContent(ZoneId.Value, AppId.Value, false).UpdateTemplateForGroup(Sexy.GetContentGroupIDFromModule(ModuleId), TemplateID,
+                new SexyContent(ZoneId.Value, AppId.Value, false).UpdateTemplateForGroup(Sexy.GetContentGroupIdFromModule(ModuleId), TemplateID,
                                                               UserId);
 
                 Response.Redirect(Request.RawUrl);

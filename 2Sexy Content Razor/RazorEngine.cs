@@ -7,6 +7,7 @@ using System.Web.Compilation;
 using System.Web.WebPages;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.UI.Modules;
+using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Razor.Helpers;
 using ToSic.SexyContent.Razor;
 using System.Collections.Generic;
@@ -71,20 +72,23 @@ namespace ToSic.SexyContent.Engines
         /// <param name="HostingModule"></param>
         /// <param name="LocalResourcesPath"></param>
         /// <returns></returns>
-        public string Render(Template template, string templatePath, App app, List<Element> Elements, Element ListElement, ModuleInstanceContext HostingModule, string LocalResourcesPath, IDataSource DataSource) 
+        public string Render(Template template, string templatePath, App app, ModuleInstanceContext HostingModule, string LocalResourcesPath, IDataSource DataSource) 
         {
             ModuleContext = HostingModule;
             LocalResourceFile = LocalResourcesPath;
             RazorScriptFile = templatePath;
 
-            Content = Elements.First().Content;
-            Presentation = Elements.First().Presentation;
-            if (ListElement != null)
+            var elements = ((ModuleDataSource) DataSource).ContentElements;
+            var listElement = ((ModuleDataSource) DataSource).ListElement;
+
+            Content = elements.First().Content;
+            Presentation = elements.First().Presentation;
+            if (listElement != null)
             {
-                ListContent = ListElement.Content;
-                ListPresentation = ListElement.Presentation;
+                ListContent = listElement.Content;
+                ListPresentation = listElement.Presentation;
             }
-            List = Elements;
+            List = elements;
             App = app;
             this.DataSource = DataSource;
             // </2sic>
@@ -132,7 +136,7 @@ namespace ToSic.SexyContent.Engines
             webPage.Dnn = new DnnHelper(ModuleContext);
             webPage.Html = new HtmlHelper(ModuleContext, LocalResourceFile);
             webPage.Url = new UrlHelper(ModuleContext);
-            // <2sic>
+            
             webPage.Content = Content;
             webPage.Presentation = Presentation;
             webPage.ListContent = ListContent;
@@ -140,31 +144,34 @@ namespace ToSic.SexyContent.Engines
             webPage.List = List;
             webPage.App = App;
             webPage.Data = (IDataTarget)DataSource;
-            // </2sic>
         }
 
         private void InitWebpage()
         {
-            if (!string.IsNullOrEmpty(RazorScriptFile))
-            {
-                var objectValue = RuntimeHelpers.GetObjectValue(CreateWebPageInstance());
-                if ((objectValue == null))
-                {
-                    throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "The webpage found at '{0}' was not created.", new object[] { RazorScriptFile }));
-                }
-                // <2sic>
-                Webpage = objectValue as SexyContentWebPage;
-                // </2sic>
-                if ((Webpage == null))
-                {
-                    // <2sic> changed Exception Message (DotNetNukeWebPage to SexyContentWebPage)
-                    throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "The webpage at '{0}' must derive from SexyContentWebPage.", new object[] { RazorScriptFile }));
-                    // </2sic>
-                }
-                Webpage.Context = HttpContext;
-                Webpage.VirtualPath = RazorScriptFile;
-                InitHelpers(Webpage);
-            }
+            if (string.IsNullOrEmpty(RazorScriptFile)) return;
+
+            var objectValue = RuntimeHelpers.GetObjectValue(CreateWebPageInstance());
+            if ((objectValue == null))
+                throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "The webpage found at '{0}' was not created.", new object[] { RazorScriptFile }));
+
+            Webpage = objectValue as SexyContentWebPage;
+
+            if ((Webpage == null))
+                throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "The webpage at '{0}' must derive from SexyContentWebPage.", new object[] { RazorScriptFile }));
+
+            Webpage.Context = HttpContext;
+            Webpage.VirtualPath = RazorScriptFile;
+            InitHelpers(Webpage);
+        }
+
+        public void PrepareViewData()
+        {
+            dynamic webPageInstance = CreateWebPageInstance();
+
+            if (webPageInstance.PrepareData == null)
+                return;
+
+            webPageInstance.PrepareData();
         }
     }
 }

@@ -88,8 +88,6 @@ namespace ToSic.SexyContent
                         result = Entity.IsPublished;
                         break;
                     default:
-                        // ToDo: Get Attributes, find out what to return as default...
-                        //var attributeSet = DataSource.GetCache().
                         result = null;
                         propertyNotFound = true;
                         break;

@@ -607,7 +607,6 @@ namespace ToSic.SexyContent.ImportExport
         //                    Value = typedDecimalNullable
         //                };
         //            break;
-        //        // ToDo: Fix Entity Value
         //        case "Entity":
         //            throw new NotImplementedException();
         //        case "DateTime":

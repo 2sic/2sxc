@@ -17,16 +17,6 @@ namespace ToSic.SexyContent
 {
     public partial class Template
     {
-        ///// <summary>
-        ///// Returns the path to the current template file
-        ///// </summary>
-        ///// <param name="PortalSettings"></param>
-        ///// <returns></returns>
-        //public string GetTemplatePath(App app)
-        //{
-        //    return System.IO.Path.Combine(SexyContent.GetTemplatePathRoot(Location), Path);
-        //}
-
         /// <summary>
         /// Returns true if the current template uses Razor
         /// </summary>
@@ -38,112 +28,118 @@ namespace ToSic.SexyContent
             }
         }
 
+        public IEngine RenderEngine
+        {
+            get
+            {
+                Type engineType;
+
+                if (IsRazor)
+                {
+                    // Load the Razor Engine via Reflection
+                    var engineAssembly = Assembly.Load("ToSic.SexyContent.Razor");
+                    engineType = engineAssembly.GetType("ToSic.SexyContent.Engines.RazorEngine");
+                }
+                else
+                {
+                    // Load Token Engine
+                    engineType = typeof (Engines.TokenEngine.TokenEngine);
+                }
+
+                if (engineType == null)
+                    throw new Exception("Error: Could not find the template engine to parse this template.");
+
+                return (IEngine) Activator.CreateInstance(engineType, null);
+            }
+        }
+
         /// <summary>
         /// Renders the given elements with Razor or TokenReplace and returns the string representation.
         /// </summary>
         /// <param name="Server"></param>
-        /// <param name="PortalSettings"></param>
+        /// <param name="portalSettings"></param>
         /// <param name="ModuleContext"></param>
         /// <param name="LocalResourceFile"></param>
         /// <param name="Entity"></param>
         /// <param name="Elements"></param>
         /// <returns></returns>
-        public string RenderTemplate(Page Page, HttpServerUtility Server, PortalSettings PortalSettings, ModuleInstanceContext ModuleContext, string LocalResourceFile, List<Element> Elements, Element ListElement, System.Web.UI.Control Control, ToSic.Eav.DataSources.IDataSource DataSource, SexyContent sexy, int appId)
+        public string RenderTemplate(Page Page, PortalSettings portalSettings, ModuleInstanceContext ModuleContext, string LocalResourceFile, ToSic.Eav.DataSources.IDataSource DataSource, SexyContent sexy)
         {
-            string templatePath = VirtualPathUtility.Combine(sexy.GetTemplatePathRoot(this.Location) + "/", this.Path);
+            var templatePath = VirtualPathUtility.Combine(sexy.GetTemplatePathRoot(this.Location) + "/", this.Path);
 
             // Throw Exception if Template does not exist
-            if (!System.IO.File.Exists(Server.MapPath(templatePath)))
+            if (!System.IO.File.Exists(HttpContext.Current.Server.MapPath(templatePath)))
                 throw new SexyContentException("The template file '" + templatePath + "' does not exist.");
 
-            Type EngineType;
+            var app = SexyContent.GetApp(SexyContent.GetZoneID(PortalSettings.Current.PortalId).Value, sexy.AppId.Value);
 
-            if (IsRazor)
-            {
-                // Load the Razor Engine via Reflection
-                Assembly EngineAssembly = Assembly.Load("ToSic.SexyContent.Razor");
-                EngineType = EngineAssembly.GetType("ToSic.SexyContent.Engines.RazorEngine");
-            }
-            else
-            {
-                // Load Token Engine
-                EngineType = typeof(ToSic.SexyContent.Engines.TokenEngine.TokenEngine);
-            }
-
-            if (EngineType == null)
-                throw new Exception("Error: Could not find the template engine to parse this template.");
-
-            IEngine Engine = (IEngine)Activator.CreateInstance(EngineType, null);
-
-            var app = SexyContent.GetApp(SexyContent.GetZoneID(PortalSettings.Current.PortalId).Value, appId);
-
-            // Render elements that have a content (by DemoEntityID or real Entity ID)
-            string RenderedTemplate = Engine.Render(this, templatePath, app, Elements.Where(p => p.Content != null).ToList(), ListElement, ModuleContext, LocalResourceFile, DataSource);
+            // Render elements that have a content (by DemoEntityId or real Entity Id)
+            var renderedTemplate = RenderEngine.Render(this, templatePath, app, ModuleContext, LocalResourceFile, DataSource);
 
             #region  Handle Client Dependency injection
 
-            var EnableClientDependencyRegex = "\\sdata-enableoptimizations=('|\")(?<Priority>true|[0-9]+)('|\")(>|\\s)";
+            var clientDependencyRegex = "\\sdata-enableoptimizations=('|\")(?<Priority>true|[0-9]+)('|\")(>|\\s)";
 
             #region Scripts
-            var ScriptMatches = Regex.Matches(RenderedTemplate, "<script\\s([^>]*)src=('|\")(?<Src>.*?)('|\")(([^>]*/>)|[^>]*(>.*?</script>))", RegexOptions.IgnoreCase | RegexOptions.Singleline);
-            var ScriptMatchesToRemove = new List<Match>();
+            var scriptMatches = Regex.Matches(renderedTemplate, "<script\\s([^>]*)src=('|\")(?<Src>.*?)('|\")(([^>]*/>)|[^>]*(>.*?</script>))", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+            var scriptMatchesToRemove = new List<Match>();
 
-            foreach (Match Match in ScriptMatches)
+            foreach (Match match in scriptMatches)
             {
-                var clientDependencyMatch = Regex.Match(Match.Value, EnableClientDependencyRegex, RegexOptions.IgnoreCase);
+                var clientDependencyMatch = Regex.Match(match.Value, clientDependencyRegex, RegexOptions.IgnoreCase);
                 if (!clientDependencyMatch.Success)
                     continue;
 
-                var Path = Match.Groups["Src"].Value;
-                var Priority = clientDependencyMatch.Groups["Priority"].Value;
+                var path = match.Groups["Src"].Value;
+                var priority = clientDependencyMatch.Groups["Priority"].Value;
 
-                if (Priority == "true")
-                    ClientResourceManager.RegisterScript(Page, Path);
+                if (priority == "true")
+                    ClientResourceManager.RegisterScript(Page, path);
                 else
-                    ClientResourceManager.RegisterScript(Page, Path, int.Parse(Priority));
+                    ClientResourceManager.RegisterScript(Page, path, int.Parse(priority));
 
                 // Remove the script tag from the Rendered Template
-                ScriptMatchesToRemove.Add(Match);
+                scriptMatchesToRemove.Add(match);
             }
 
-            ScriptMatchesToRemove.Reverse();
-            ScriptMatchesToRemove.ForEach(p => RenderedTemplate = RenderedTemplate.Remove(p.Index, p.Length));
+            scriptMatchesToRemove.Reverse();
+            scriptMatchesToRemove.ForEach(p => renderedTemplate = renderedTemplate.Remove(p.Index, p.Length));
             #endregion
 
             #region Styles
 
-            var StyleMatches = Regex.Matches(RenderedTemplate, "<link\\s([^>]*)href=('|\")(?<Src>.*?)('|\")([^>]*)(>.*?</link>|/>)", RegexOptions.IgnoreCase | RegexOptions.Singleline);
-            var StyleMatchesToRemove = new List<Match>();
+            var styleMatches = Regex.Matches(renderedTemplate, "<link\\s([^>]*)href=('|\")(?<Src>.*?)('|\")([^>]*)(>.*?</link>|/>)", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+            var styleMatchesToRemove = new List<Match>();
 
-            foreach (Match Match in StyleMatches)
+            foreach (Match match in styleMatches)
             {
-                var clientDependencyMatch = Regex.Match(Match.Value, EnableClientDependencyRegex, RegexOptions.IgnoreCase);
+                var clientDependencyMatch = Regex.Match(match.Value, clientDependencyRegex, RegexOptions.IgnoreCase);
                 if (!clientDependencyMatch.Success)
                     continue;
                 
                 // Break If the Rel attribute is not stylesheet
-                if (!Regex.IsMatch(Match.Value, "('|\"|\\s)rel=('|\")stylesheet('|\")", RegexOptions.IgnoreCase))
+                if (!Regex.IsMatch(match.Value, "('|\"|\\s)rel=('|\")stylesheet('|\")", RegexOptions.IgnoreCase))
                     continue;
 
-                var Path = Match.Groups["Src"].Value;
-                var Priority = clientDependencyMatch.Groups["Priority"].Value;
+                var path = match.Groups["Src"].Value;
+                var priority = clientDependencyMatch.Groups["Priority"].Value;
 
-                if(Priority == "true")
-                    ClientResourceManager.RegisterStyleSheet(Page, Path);
+                if(priority == "true")
+                    ClientResourceManager.RegisterStyleSheet(Page, path);
                 else
-                    ClientResourceManager.RegisterStyleSheet(Page, Path, int.Parse(Priority));
+                    ClientResourceManager.RegisterStyleSheet(Page, path, int.Parse(priority));
 
                 // Remove the script tag from the Rendered Template
-                StyleMatchesToRemove.Add(Match);
+                styleMatchesToRemove.Add(match);
             }
 
-            StyleMatchesToRemove.Reverse();
-            StyleMatchesToRemove.ForEach(p => RenderedTemplate = RenderedTemplate.Remove(p.Index, p.Length));
+            styleMatchesToRemove.Reverse();
+            styleMatchesToRemove.ForEach(p => renderedTemplate = renderedTemplate.Remove(p.Index, p.Length));
 
             #endregion
             #endregion
 
-            return RenderedTemplate;
+            return renderedTemplate;
         }
     }
 }
