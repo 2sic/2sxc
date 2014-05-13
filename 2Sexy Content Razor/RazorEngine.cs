@@ -78,7 +78,7 @@ namespace ToSic.SexyContent.Engines
             LocalResourceFile = LocalResourcesPath;
             RazorScriptFile = templatePath;
 
-            var elements = ((ModuleDataSource) DataSource).ContentElements;
+            var elements = ((ModuleDataSource) DataSource).ContentElements.Where(p => p.Content != null).ToList();
             var listElement = ((ModuleDataSource) DataSource).ListElement;
 
             Content = elements.First().Content;

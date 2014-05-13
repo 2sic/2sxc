@@ -115,12 +115,12 @@ namespace ToSic.SexyContent.DataSources
             var elements = new List<Element>();
             if (!ContentGroupItems.Any(c => c.TemplateID.HasValue)) return elements;
 
-            // Create a clone of the list (because it will get modified
+            // Create a clone of the list (because it will get modified)
             var items = ContentGroupItems.ToList();
             var templateId = items.First().TemplateID.Value;
             var defaults = Sexy.GetTemplateDefaults(templateId);
             var dimensionIds = new[] { System.Threading.Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName };
-            var entities = In["Default"].List;// ContentContext.GetEntityModel(Identities);
+            var entities = In["Default"].List;
 
             // If no Content Elements exist and type is List, add a ContentGroupItem to List (not to DB)
             if (contentItemType == ContentGroupItemType.ListContent && items.All(p => p.ItemType != ContentGroupItemType.ListContent))

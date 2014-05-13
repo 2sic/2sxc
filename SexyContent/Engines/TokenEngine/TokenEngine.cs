@@ -22,75 +22,79 @@ namespace ToSic.SexyContent.Engines.TokenEngine
         /// <returns></returns>
         public string Render(Template template, string templatePath, App app, ModuleInstanceContext HostingModule, string LocalResourcesPath, IDataSource DataSource)
         {
-            List<Element> Elements;
-            DynamicEntity ListContent = null;
-            DynamicEntity ListPresentation = null;
+            DynamicEntity listContent = null;
+            DynamicEntity listPresentation = null;
 
             var moduleDataSource = (ModuleDataSource) DataSource;
-            ListContent = moduleDataSource.ListElement != null ? moduleDataSource.ListElement.Content : null;
-            ListPresentation = moduleDataSource.ListElement != null ? moduleDataSource.ListElement.Presentation : null;
-            Elements = moduleDataSource.ContentElements;
+            listContent = moduleDataSource.ListElement != null ? moduleDataSource.ListElement.Content : null;
+            listPresentation = moduleDataSource.ListElement != null ? moduleDataSource.ListElement.Presentation : null;
+            var elements = moduleDataSource.ContentElements.Where(p => p.Content != null).ToList();
 
             // Prepare Source Text
-            string SourceText = System.IO.File.ReadAllText(HttpContext.Current.Server.MapPath(templatePath));
-            string RepeatingPart;
-            bool ContainsRepeat = SourceText.Contains("<repeat>") && SourceText.Contains("</repeat>");
+            string sourceText = System.IO.File.ReadAllText(HttpContext.Current.Server.MapPath(templatePath));
+            string repeatingPart;
+            bool containsRepeat = sourceText.Contains("<repeat>") && sourceText.Contains("</repeat>");
             
 
             // Prepare List Object
-            Dictionary<string, string> List = new Dictionary<string, string>();
-            List.Add("Index", "0");
-            List.Add("Index1", "1");
-            List.Add("Count", "1");
-            List.Add("IsFirst", "First");
-            List.Add("IsLast", "Last");
-            List.Add("Alternator2", "0");
-            List.Add("Alternator3", "0");
-            List.Add("Alternator4", "0");
-            List.Add("Alternator5", "0");
+            var list = new Dictionary<string, string>
+            {
+                {"Index", "0"},
+                {"Index1", "1"},
+                {"Count", "1"},
+                {"IsFirst", "First"},
+                {"IsLast", "Last"},
+                {"Alternator2", "0"},
+                {"Alternator3", "0"},
+                {"Alternator4", "0"},
+                {"Alternator5", "0"}
+            };
 
-            List["Count"] = Elements.Count.ToString();
+            list["Count"] = elements.Count.ToString();
 
             // If the SourceText contains a <repeat>, define Repeating Part. Else take SourceText as repeating part.
-            if (ContainsRepeat)
+            if (containsRepeat)
             {
-                RepeatingPart = Regex.Match(SourceText, @"<repeat>(.*?)</repeat>", RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[1].Captures[0].Value;
-                var tr = new TokenReplace(null, null, ListContent, ListPresentation, List, app);
+                repeatingPart = Regex.Match(sourceText, @"<repeat>(.*?)</repeat>", RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[1].Captures[0].Value;
+                var tr = new TokenReplace(null, null, listContent, listPresentation, list, app);
                 tr.ModuleId = HostingModule.ModuleId;
                 tr.PortalSettings = HostingModule.PortalSettings;
-                SourceText = tr.ReplaceEnvironmentTokens(SourceText);
+                sourceText = tr.ReplaceEnvironmentTokens(sourceText);
             }
             else
-                RepeatingPart = SourceText;
+                repeatingPart = sourceText;
 
-            TokenReplace TokenReplace;
-            string RenderedTemplate = "";
+            TokenReplace tokenReplace;
+            string renderedTemplate = "";
 
-            foreach (Element Element in Elements)
+            foreach (Element element in elements)
             {
                 // Modify List Object
-                List["Index"] = Elements.IndexOf(Element).ToString();
-                List["Index1"] = (Elements.IndexOf(Element) + 1).ToString();
-                List["IsFirst"] = Elements.First() == Element ? "First" : "";
-                List["IsLast"] = Elements.Last() == Element ? "Last" : "";
-                List["Alternator2"] = (Elements.IndexOf(Element) % 2).ToString();
-                List["Alternator3"] = (Elements.IndexOf(Element) % 3).ToString();
-                List["Alternator4"] = (Elements.IndexOf(Element) % 4).ToString();
-                List["Alternator5"] = (Elements.IndexOf(Element) % 5).ToString();
+                list["Index"] = elements.IndexOf(element).ToString();
+                list["Index1"] = (elements.IndexOf(element) + 1).ToString();
+                list["IsFirst"] = elements.First() == element ? "First" : "";
+                list["IsLast"] = elements.Last() == element ? "Last" : "";
+                list["Alternator2"] = (elements.IndexOf(element) % 2).ToString();
+                list["Alternator3"] = (elements.IndexOf(element) % 3).ToString();
+                list["Alternator4"] = (elements.IndexOf(element) % 4).ToString();
+                list["Alternator5"] = (elements.IndexOf(element) % 5).ToString();
 
                 // Replace Tokens
-                TokenReplace = new TokenReplace(Element.Content, Element.Presentation, ListContent, ListPresentation, List, app);
-                TokenReplace.ModuleId = HostingModule.ModuleId;
-                TokenReplace.PortalSettings = HostingModule.PortalSettings;
-                RenderedTemplate += TokenReplace.ReplaceEnvironmentTokens(RepeatingPart);
+                tokenReplace = new TokenReplace(element.Content, element.Presentation, listContent, listPresentation, list, app);
+                tokenReplace.ModuleId = HostingModule.ModuleId;
+                tokenReplace.PortalSettings = HostingModule.PortalSettings;
+                renderedTemplate += tokenReplace.ReplaceEnvironmentTokens(repeatingPart);
             }
 
             // Return Rendered Template
-            RenderedTemplate = ContainsRepeat ? Regex.Replace(SourceText, "<repeat>.*?</repeat>", RenderedTemplate, RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.Singleline) : RenderedTemplate;
+            renderedTemplate = containsRepeat ? Regex.Replace(sourceText, "<repeat>.*?</repeat>", renderedTemplate, RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.Singleline) : renderedTemplate;
 
-            return RenderedTemplate;
+            return renderedTemplate;
         }
 
+        /// <summary>
+        /// The template engine does not support PrepareViewData yet, so do nothing
+        /// </summary>
         public void PrepareViewData() {}
     }
 }
