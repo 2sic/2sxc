@@ -53,7 +53,8 @@ namespace ToSic.SexyContent
             propertyNotFound = false;
             object result;
             
-            if (Entity.Attributes.ContainsKey(attributeName) && Entity.Attributes[attributeName] != null)
+            
+            if (Entity.Attributes.ContainsKey(attributeName))
             {
                 var attribute = Entity.Attributes[attributeName];
                 result = attribute[_dimensions];
@@ -65,7 +66,6 @@ namespace ToSic.SexyContent
                 else if (attribute.Type == "Entity" && result is EntityRelationshipModel)
                 {
                     // Convert related entities to Dynamics
-                    string language = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
                     result = ((ToSic.Eav.EntityRelationshipModel) result).Select(
                         p => new DynamicEntity(p, _dimensions)
                         ).ToList();
