@@ -27,8 +27,8 @@ namespace ToSic.Eav.ManagementUI
             if (GetMetaDataValue<bool>(MetaDataIsRequiredKey))
                 TextBox1.CssClass += " dnnFormRequired";
 
-            if (MetaData.ContainsKey(MetaDataLengthKey))
-                TextBox1.MaxLength = int.Parse(MetaData[MetaDataLengthKey][DimensionIds].ToString());
+            if (!String.IsNullOrEmpty(GetMetaDataValue<string>(MetaDataLengthKey)))
+                TextBox1.MaxLength = GetMetaDataValue<int>(MetaDataLengthKey);
 
             TextBox1.ToolTip = GetMetaDataValue<string>(MetaDataNotesKey, "");
 

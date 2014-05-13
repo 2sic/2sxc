@@ -10,8 +10,8 @@ namespace ToSic.Eav.ManagementUI
 
 		protected void Page_Load(object sender, EventArgs e)
 		{
-            CheckBox1.ToolTip = MetaData.ContainsKey("Notes") ? MetaData["Notes"][DimensionIds].ToString() : null;
-            FieldLabel.Text = MetaData.ContainsKey("Name") ? MetaData["Name"][DimensionIds].ToString() : Attribute.StaticName;
+            CheckBox1.ToolTip = GetMetaDataValue<string>("Notes");
+            FieldLabel.Text = GetMetaDataValue("Name", Attribute.StaticName);
 
 			if (ShowDataControlOnly)
 				FieldLabel.Visible = false;
@@ -23,8 +23,8 @@ namespace ToSic.Eav.ManagementUI
 			{
 				DataBind();
 			}
-            FieldLabel.Text = MetaData.ContainsKey("Name") ? MetaData["Name"][DimensionIds].ToString() : Attribute.StaticName;
-            FieldLabel.HelpText = MetaData.ContainsKey("Notes") ? MetaData["Notes"][DimensionIds].ToString() : "";
+            FieldLabel.Text = GetMetaDataValue("Name", Attribute.StaticName);
+            FieldLabel.HelpText = GetMetaDataValue<string>("Notes");
 
             bool Value = false;
             if (Boolean.TryParse(FieldValueEditString, out Value))

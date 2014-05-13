@@ -11,17 +11,15 @@ namespace ToSic.Eav.ManagementUI
         Boolean UseTimePicker = false;
 		protected void Page_Load(object sender, EventArgs e)
 		{
-            if (MetaData.ContainsKey("UseTimePicker") && ((IAttribute<bool?>)MetaData["UseTimePicker"]).Typed[DimensionIds].Value)
-                UseTimePicker = true;
-
+            UseTimePicker = GetMetaDataValue<bool>("UseTimePicker");
             TimePicker1.Visible = UseTimePicker;
 
-            Calendar1.ToolTip = MetaData.ContainsKey("Notes") ? MetaData["Notes"][DimensionIds].ToString() : null;
+            Calendar1.ToolTip = GetMetaDataValue<string>("Notes");
 
 			if (ShowDataControlOnly)
 				FieldLabel.Visible = false;
 
-            if (MetaData.ContainsKey("IsRequired") && ((IAttribute<bool?>)MetaData["IsRequired"]).Typed[DimensionIds].Value)
+            if (GetMetaDataValue<bool>("IsRequired"))
             {
                 Calendar1.CssClass += " dnnFormRequired";
                 TimePicker1.CssClass += " dnnFormRequired";
@@ -43,9 +41,9 @@ namespace ToSic.Eav.ManagementUI
                 if(UseTimePicker)
                     TimePicker1.DataBind();
 			}
-            FieldLabel.Text = MetaData.ContainsKey("Name") ? MetaData["Name"][DimensionIds].ToString() : Attribute.StaticName;
-            FieldLabel.HelpText = MetaData.ContainsKey("Notes") ? MetaData["Notes"][DimensionIds].ToString() : "";
-            valCalendar1.Enabled = MetaData.ContainsKey("IsRequired") && ((IAttribute<bool?>)MetaData["IsRequired"]).Typed[DimensionIds].Value;
+            FieldLabel.Text = GetMetaDataValue("Name", Attribute.StaticName);
+            FieldLabel.HelpText = GetMetaDataValue<string>("Notes");
+            valCalendar1.Enabled = GetMetaDataValue<bool>("IsRequired");
 
 			base.OnPreRender(e);
 		}

@@ -1024,7 +1024,11 @@ namespace ToSic.SexyContent
         /// <returns></returns>
         public override IList<SearchDocument> GetModifiedSearchDocuments(ModuleInfo moduleInfo, DateTime beginDate)
         {
+
+
             var searchItems = new List<SearchDocument>();
+            return searchItems;
+            // ToDo: Fix this!
 
             var isContentModule = moduleInfo.DesktopModule.ModuleName == "2sxc";
             

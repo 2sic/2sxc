@@ -11,7 +11,6 @@ namespace ToSic.SexyContent.DataSources
 {
     public class ModuleDataSource : BaseDataSource
     {
-        public override string Name { get { return "ModuleDataSource"; } }
         private SexyContent Sexy;
         private List<ContentGroupItem> _contentGroupItems;
         private IEnumerable<ContentGroupItem> ContentGroupItems {
