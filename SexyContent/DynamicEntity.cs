@@ -53,7 +53,7 @@ namespace ToSic.SexyContent
             propertyNotFound = false;
             object result;
             
-            if (Entity.Attributes.ContainsKey(attributeName))
+            if (Entity.Attributes.ContainsKey(attributeName) && Entity.Attributes[attributeName] != null)
             {
                 var attribute = Entity.Attributes[attributeName];
                 result = attribute[_dimensions];
