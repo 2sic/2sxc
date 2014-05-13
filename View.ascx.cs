@@ -132,14 +132,24 @@ namespace ToSic.SexyContent
                 
                 string renderedTemplate = "";
                 var engine = EngineFactory.CreateEngine(Template);
-                engine.Init(Template, Sexy.App, this.ModuleConfiguration, Sexy.GetModuleDataSource(this.ModuleId, ModulePermissionController.CanEditModuleContent(this.ModuleConfiguration)));
+                var dataSource = Sexy.GetModuleDataSource(this.ModuleId, ModulePermissionController.CanEditModuleContent(this.ModuleConfiguration));
+                engine.Init(Template, Sexy.App, this.ModuleConfiguration, dataSource);
                 engine.PrepareViewData();
 
                 // Output JSON data if type=data in URL
-                if (Request.QueryString["type"] == "data" && Settings.ContainsKey(SexyContent.SettingsPublishDataSource) &&
-                    Boolean.Parse(Settings[SexyContent.SettingsPublishDataSource].ToString()))
+                if (Request.QueryString["type"] == "data")
                 {
-                    renderedTemplate = Sexy.GetJsonFromElements(Elements, Sexy.GetCurrentLanguageName());
+                    if (Settings.ContainsKey(SexyContent.SettingsPublishDataSource) &&
+                        Boolean.Parse(Settings[SexyContent.SettingsPublishDataSource].ToString()))
+                    {
+                        var publishedStreams = Settings[SexyContent.SettingsPublishDataSourceStreams].ToString();
+                        renderedTemplate = Sexy.GetJsonFromStreams(dataSource, publishedStreams.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries));
+                    }
+                    else
+                    {
+                        Response.StatusCode = 403;
+                        renderedTemplate = (new { error = "2sxc Content, Module " + ModuleId + ": Setup JSON publishing in the module settings to allow data publishing." }).ToJson();
+                    }
                     Response.ContentType = "application/json";
                 }
                 else

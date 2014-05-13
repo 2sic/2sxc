@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Dynamic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -1230,22 +1231,30 @@ namespace ToSic.SexyContent
         /// <param name="elements"></param>
         /// <param name="dimensionID"></param>
         /// <returns></returns>
-        public string GetJsonFromElements(List<Element> elements, string language)
+        public string GetJsonFromStreams(ToSic.Eav.DataSources.IDataSource source, string[] streamsToPublish)
         {
-            var x = new
-            {
-                Default = new
-                {
-                    List = (from c in elements
-                            where c.EntityId.HasValue
-                            select new
-                            {
-                                Content = GetDictionaryFromEntity(((DynamicEntity)c.Content).Entity, language)
-                            }).ToList()
-                }
-            };
+            var language = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
 
-            return x.ToJson();
+            var y = source.Out.Where(s => streamsToPublish.Contains(s.Key)).ToDictionary(k => k.Key, s => new
+            {
+                List = (from c in s.Value.List select GetDictionaryFromEntity(c.Value, language)).ToList()
+            });
+
+            
+            //var x = new
+            //{
+            //    Default = new
+            //    {
+            //        List = (from c in elements
+            //                where c.EntityId.HasValue
+            //                select new
+            //                {
+            //                    Content = GetDictionaryFromEntity(((DynamicEntity)c.Content).Entity, language)
+            //                }).ToList()
+            //    }
+            //};
+
+            return y.ToJson();
         }
 
         private Dictionary<string, object> GetDictionaryFromEntity(IEntity entity, string language)

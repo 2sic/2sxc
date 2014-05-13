@@ -46,6 +46,9 @@ var $2sxc = function (id) {
                         controller.lastRefresh = new Date();
                         controller.data._triggerLoaded();
                     };
+                    source.error = function(request) {
+                        alert(JSON.parse(request.responseText).error);
+                    };
                     controller.data.source = source;
                     return controller.data.reload();
                 }

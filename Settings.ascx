@@ -25,7 +25,7 @@
         </div>
         <div class="dnnFormItem">
             <dnn:Label ID="lblPublishStreams" runat="server" ControlName="txtPublishStreams" Suffix=":"></dnn:Label>
-            <asp:TextBox runat="server" ID="txtPublishStreams" Text="Content,Presentation,ListContent,ListPresentation" ReadOnly="True" Enabled="False"></asp:TextBox>
+            <asp:TextBox runat="server" ID="txtPublishStreams" Text="Default,ListContent"></asp:TextBox>
         </div>
         <div class="dnnFormItem">
             <dnn:Label ID="lblTest" runat="server" Suffix=":"></dnn:Label>
