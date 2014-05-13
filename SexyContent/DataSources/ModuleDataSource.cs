@@ -119,7 +119,7 @@ namespace ToSic.SexyContent.DataSources
             var items = ContentGroupItems.ToList();
             var templateId = items.First().TemplateID.Value;
             var defaults = Sexy.GetTemplateDefaults(templateId);
-            var dimensionIds = new[] { System.Threading.Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName };
+            var dimensionIds = new[] { System.Threading.Thread.CurrentThread.CurrentCulture.Name };
             var entities = In["Default"].List;
 
             // If no Content Elements exist and type is List, add a ContentGroupItem to List (not to DB)
@@ -149,7 +149,7 @@ namespace ToSic.SexyContent.DataSources
                                EntityId = c.EntityID,
                                TemplateId = c.TemplateID,
                                Content = c.EntityID.HasValue ? new DynamicEntity(entities[c.EntityID.Value], dimensionIds) :
-                                   defaults.Where(d => d.ItemType == contentItemType && d.DemoEntityID.HasValue)
+                                   defaults.Where(d => d.ItemType == contentItemType && d.DemoEntityID.HasValue && entities.ContainsKey(d.DemoEntityID.Value))
                                        .Select(d => new DynamicEntity(entities[d.DemoEntityID.Value], dimensionIds)).FirstOrDefault(),
                                // Get Presentation object - Take Default if it does not exist
                                Presentation = (from p in items

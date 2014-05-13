@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Web;
 using System.Web.WebPages;
 using DotNetNuke.Common.Utilities;
@@ -62,6 +63,11 @@ namespace ToSic.SexyContent.Razor
             return AsDynamic(entityKeyValuePair.Value);
         }
 
+        public IEnumerable<dynamic> AsDynamic(IDataStream stream)
+        {
+            return stream.List.Select(e => AsDynamic(e.Value));
+        }
+
         /// <summary>
         /// Transform a DynamicEntity dynamic object back to a IEntity instance
         /// </summary>
@@ -71,6 +77,8 @@ namespace ToSic.SexyContent.Razor
         {
             return ((DynamicEntity)dynamicEntity).Entity;
         }
+
+        
 
         // </2sic>
 
@@ -163,7 +171,14 @@ namespace ToSic.SexyContent.Razor
             return webPage;
         }
 
-        
+        /// <summary>
+        /// Prepares the data for the view
+        /// </summary>
+        /// <param name="Data"></param>
+        public virtual bool PrepareViewData(IDataSource Data)
+        {
+            return false;
+        }
 
     }
 

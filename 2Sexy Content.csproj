@@ -310,6 +310,8 @@
     <Compile Include="SexyContent\EAV\FieldTemplates\String_Edit.ascx.designer.cs">
       <DependentUpon>String_Edit.ascx</DependentUpon>
     </Compile>
+    <Compile Include="SexyContent\Engines\EngineBase.cs" />
+    <Compile Include="SexyContent\Engines\EngineFactory.cs" />
     <Compile Include="SexyContent\Engines\IEngine.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\AppPropertyAccess.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\DynamicEntityPropertyAccess.cs" />

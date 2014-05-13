@@ -1,4 +1,7 @@
 ﻿using System.Web;
+using System.Web.Hosting;
+using DotNetNuke.Entities.Modules;
+using DotNetNuke.Entities.Portals;
 using DotNetNuke.UI.Modules;
 using System.Collections.Generic;
 using System.Collections;
@@ -9,33 +12,28 @@ using ToSic.SexyContent.DataSources;
 
 namespace ToSic.SexyContent.Engines.TokenEngine
 {
-    public class TokenEngine : IEngine
+    public class TokenEngine : EngineBase
     {
+
         /// <summary>
         /// Renders a Token Template
         /// </summary>
-        /// <param name="TemplatePath">Path to the template</param>
-        /// <param name="TemplateText">Text of the template</param>
-        /// <param name="HostingModule">Module that hosts this instance</param>
-        /// <param name="LocalResourcesPath">Resource path</param>
-        /// <param name="Elements">The SexyContent Element list</param>
-        /// <returns></returns>
-        public string Render(Template template, string templatePath, App app, ModuleInstanceContext HostingModule, string LocalResourcesPath, IDataSource DataSource)
+        /// <returns>Rendered template as string</returns>
+        public override string Render()
         {
             DynamicEntity listContent = null;
             DynamicEntity listPresentation = null;
 
-            var moduleDataSource = (ModuleDataSource) DataSource;
+            var moduleDataSource = (ModuleDataSource)DataSource;
             listContent = moduleDataSource.ListElement != null ? moduleDataSource.ListElement.Content : null;
             listPresentation = moduleDataSource.ListElement != null ? moduleDataSource.ListElement.Presentation : null;
             var elements = moduleDataSource.ContentElements.Where(p => p.Content != null).ToList();
 
             // Prepare Source Text
-            string sourceText = System.IO.File.ReadAllText(HttpContext.Current.Server.MapPath(templatePath));
+            string sourceText = System.IO.File.ReadAllText(HostingEnvironment.MapPath(TemplatePath));
             string repeatingPart;
             bool containsRepeat = sourceText.Contains("<repeat>") && sourceText.Contains("</repeat>");
             
-
             // Prepare List Object
             var list = new Dictionary<string, string>
             {
@@ -56,9 +54,9 @@ namespace ToSic.SexyContent.Engines.TokenEngine
             if (containsRepeat)
             {
                 repeatingPart = Regex.Match(sourceText, @"<repeat>(.*?)</repeat>", RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[1].Captures[0].Value;
-                var tr = new TokenReplace(null, null, listContent, listPresentation, list, app);
-                tr.ModuleId = HostingModule.ModuleId;
-                tr.PortalSettings = HostingModule.PortalSettings;
+                var tr = new TokenReplace(null, null, listContent, listPresentation, list, App);
+                tr.ModuleId = ModuleInfo.ModuleID;
+                tr.PortalSettings = PortalSettings.Current;
                 sourceText = tr.ReplaceEnvironmentTokens(sourceText);
             }
             else
@@ -80,9 +78,9 @@ namespace ToSic.SexyContent.Engines.TokenEngine
                 list["Alternator5"] = (elements.IndexOf(element) % 5).ToString();
 
                 // Replace Tokens
-                tokenReplace = new TokenReplace(element.Content, element.Presentation, listContent, listPresentation, list, app);
-                tokenReplace.ModuleId = HostingModule.ModuleId;
-                tokenReplace.PortalSettings = HostingModule.PortalSettings;
+                tokenReplace = new TokenReplace(element.Content, element.Presentation, listContent, listPresentation, list, App);
+                tokenReplace.ModuleId = ModuleInfo.ModuleID;
+                tokenReplace.PortalSettings = PortalSettings.Current;
                 renderedTemplate += tokenReplace.ReplaceEnvironmentTokens(repeatingPart);
             }
 
@@ -95,6 +93,9 @@ namespace ToSic.SexyContent.Engines.TokenEngine
         /// <summary>
         /// The template engine does not support PrepareViewData yet, so do nothing
         /// </summary>
-        public void PrepareViewData() {}
+        public bool PrepareViewData()
+        {
+            return false;
+        }
     }
 }

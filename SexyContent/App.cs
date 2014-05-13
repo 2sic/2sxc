@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Hosting;
 using DotNetNuke.Entities.Portals;
 
 namespace ToSic.SexyContent
@@ -34,7 +35,7 @@ namespace ToSic.SexyContent
             get
             {
                 var appPath = System.IO.Path.Combine(SexyContent.AppBasePath(), Folder);
-                return HttpContext.Current.Server.MapPath(appPath);
+                return HostingEnvironment.MapPath(appPath);
             }
         }
     }

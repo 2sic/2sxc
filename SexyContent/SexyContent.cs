@@ -26,6 +26,7 @@ using ToSic.Eav.DataSources.Caches;
 using ToSic.SexyContent;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.DataSources.Tokens;
+using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Engines.TokenEngine;
 using FileInfo = System.IO.FileInfo;
 using DotNetNuke.Common;
@@ -246,7 +247,7 @@ namespace ToSic.SexyContent
         /// <returns></returns>
         public IEnumerable<string> GetTemplateFiles(HttpServerUtility Server, PortalSettings PortalSettings, string TemplateType, string TemplateLocation)
         {
-            string TemplatePathRootMapPath = Server.MapPath(GetTemplatePathRoot(TemplateLocation));
+            string TemplatePathRootMapPath = Server.MapPath(GetTemplatePathRoot(TemplateLocation, App));
             DirectoryInfo Directory = new DirectoryInfo(TemplatePathRootMapPath);
 
             EnsureTemplateFolderExists(Server, TemplateLocation);
@@ -301,7 +302,7 @@ namespace ToSic.SexyContent
             }
 
             Template.Path = System.Text.RegularExpressions.Regex.Replace(Name, @"[?:\/*""<>|]", "");
-            var TemplatePath = Server.MapPath(System.IO.Path.Combine(GetTemplatePathRoot(Template.Location), Template.Path));
+            var TemplatePath = Server.MapPath(System.IO.Path.Combine(GetTemplatePathRoot(Template.Location, App), Template.Path));
 
             if (!File.Exists(TemplatePath))
             {
@@ -382,12 +383,14 @@ namespace ToSic.SexyContent
         /// <param name="locationID"></param>
         /// <param name="PortalSettings"></param>
         /// <returns></returns>
-        public string GetTemplatePathRoot(string locationID)
+        public static string GetTemplatePathRoot(string locationID, App app, PortalSettings portalSettings = null)
         {
-            string RootFolder = (locationID == LocationIDCurrentPortal ? PortalSettings.Current.HomeDirectory : PortalHostDirectory);
-            // Hard-coded /Content/ app (default app)
-            RootFolder += TemplateFolder + "/" + App.Folder;
-            return RootFolder;
+            if (portalSettings == null)
+                portalSettings = PortalSettings.Current;
+
+            string rootFolder = (locationID == LocationIDCurrentPortal ? portalSettings.HomeDirectory : PortalHostDirectory);
+            rootFolder += TemplateFolder + "/" + app.Folder;
+            return rootFolder;
         }
 
         #endregion
@@ -1024,11 +1027,14 @@ namespace ToSic.SexyContent
         /// <returns></returns>
         public override IList<SearchDocument> GetModifiedSearchDocuments(ModuleInfo moduleInfo, DateTime beginDate)
         {
-
-
             var searchItems = new List<SearchDocument>();
             return searchItems;
+
             // ToDo: Fix this!
+            var item = new SearchDocument()
+            {
+                
+            };
 
             var isContentModule = moduleInfo.DesktopModule.ModuleName == "2sxc";
             
@@ -1052,23 +1058,19 @@ namespace ToSic.SexyContent
             
 
             // This list will hold all EAV entities to be indexed
-            var entityIds = new List<int>();
-            var elements = sexy.GetContentElements(moduleInfo.ModuleID, sexy.GetCurrentLanguageName(), null, moduleInfo.PortalID, false);
-            elements.Add(sexy.GetListElement(moduleInfo.ModuleID, sexy.GetCurrentLanguageName(), null, moduleInfo.PortalID, false));
+            var dataSource = GetModuleDataSource(moduleInfo.ModuleID, false);
+
+            var elements = dataSource.ContentElements.ToList();
+            elements.Add(dataSource.ListElement);
 
             if (!elements.Any())
                 return searchItems;
 
-            // We need different search items when working with apps, so let's decide
-            if (isContentModule)
-            {
-                entityIds = elements.Where(p => p.EntityId.HasValue).Select(p => p.EntityId.Value).ToList();
-            }
-            else
-            {
-                var template = sexy.TemplateContext.GetTemplate(elements.First().TemplateId.Value);
-                //var renderedString = template.RenderTemplate()
-            }
+            var template = sexy.TemplateContext.GetTemplate(elements.First().TemplateId.Value);
+            var engine = EngineFactory.CreateEngine(template);
+            engine.Init(template, sexy.App, moduleInfo, dataSource);
+            engine.PrepareViewData();
+
 
             //foreach (var Element in elements)
             //{

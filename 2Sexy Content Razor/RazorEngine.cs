@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Web;
 using System.Web.Compilation;
 using System.Web.WebPages;
+using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.UI.Modules;
 using ToSic.SexyContent.DataSources;
@@ -16,29 +17,55 @@ using ToSic.Eav.DataSources;
 
 namespace ToSic.SexyContent.Engines
 {
-    public class RazorEngine : IEngine
+    public class RazorEngine : EngineBase
     {
-        public RazorEngine()
-        {
-        }
-
-        protected string RazorScriptFile { get; set; }
-        protected ModuleInstanceContext ModuleContext { get; set; }
-        protected string LocalResourceFile { get; set; }
-        // <2sic>
+        //protected string RazorScriptFile { get; set; }
         protected SexyContentWebPage Webpage { get; set; }
         protected dynamic Content { get; set; }
         protected dynamic Presentation { get; set; }
         protected dynamic ListContent { get; set; }
         protected dynamic ListPresentation { get; set; }
-        protected App App { get; set; }
         protected List<Element> List { get; set; }
-        protected IDataSource DataSource { get; set; }
-        // </2sic>
+
+        protected override void Init()
+        {
+            var elements = ((ModuleDataSource)DataSource).ContentElements.Where(p => p.Content != null).ToList();
+            var listElement = ((ModuleDataSource)DataSource).ListElement;
+            List = elements;
+
+            if (elements.Any())
+            {
+                Content = elements.First().Content;
+                Presentation = elements.First().Presentation;
+            }
+            if (listElement != null)
+            {
+                ListContent = listElement.Content;
+                ListPresentation = listElement.Presentation;
+            }
+            
+            try
+            {
+                InitWebpage();
+            }
+            // Catch web.config Error on DNNs upgraded to 7
+            catch (System.Configuration.ConfigurationErrorsException Exc)
+            {
+                var e = new Exception("Configuration Error: Please follow this checklist to solve the problem: http://swisschecklist.com/en/i4k4hhqo/2Sexy-Content-Solve-configuration-error-after-upgrading-to-DotNetNuke-7", Exc);
+                throw e;
+            }
+        }
+
+
 
         protected HttpContextBase HttpContext
         {
-            get { return new HttpContextWrapper(System.Web.HttpContext.Current); }
+            get
+            {
+                if (System.Web.HttpContext.Current == null)
+                    return null;
+                return new HttpContextWrapper(System.Web.HttpContext.Current);
+            }
         }
 
         public Type RequestedModelType()
@@ -65,64 +92,17 @@ namespace ToSic.SexyContent.Engines
         /// <summary>
         /// Renders the template
         /// </summary>
-        /// <param name="TemplatePath"></param>
-        /// <param name="TemplateText"></param>
-        /// <param name="Elements"></param>
-        /// <param name="ListElement"></param>
-        /// <param name="HostingModule"></param>
-        /// <param name="LocalResourcesPath"></param>
         /// <returns></returns>
-        public string Render(Template template, string templatePath, App app, ModuleInstanceContext HostingModule, string LocalResourcesPath, IDataSource DataSource) 
+        public override string Render() 
         {
-            ModuleContext = HostingModule;
-            LocalResourceFile = LocalResourcesPath;
-            RazorScriptFile = templatePath;
-
-            var elements = ((ModuleDataSource) DataSource).ContentElements.Where(p => p.Content != null).ToList();
-            var listElement = ((ModuleDataSource) DataSource).ListElement;
-
-            Content = elements.First().Content;
-            Presentation = elements.First().Presentation;
-            if (listElement != null)
-            {
-                ListContent = listElement.Content;
-                ListPresentation = listElement.Presentation;
-            }
-            List = elements;
-            App = app;
-            this.DataSource = DataSource;
-            // </2sic>
-
-            // Error if it's DNN 7 and WebPages v1 is used
-            if (typeof(DotNetNuke.Common.Globals).Assembly.GetName().Version.Major >= 7)
-            {
-                if(typeof(System.Web.WebPages.WebPageBase).Assembly.GetName().Version.Major == 1)
-                {
-                    Exception e = new Exception("Error - wrong version of WebPages used, please follow this checklist to solve the problem: http://swisschecklist.com/en/titu2ili/2Sexy-Content-Create-WebPages-redirect-in-web.config-for-DNN-7");
-                    throw e;
-                }
-            }
-
-            try
-            {
-                InitWebpage();
-            }
-            // Catch web.config Error on DNNs upgraded to 7
-            catch (System.Configuration.ConfigurationErrorsException Exc)
-            {
-                Exception e = new Exception("Configuration Error: Please follow this checklist to solve the problem: http://swisschecklist.com/en/i4k4hhqo/2Sexy-Content-Solve-configuration-error-after-upgrading-to-DotNetNuke-7", Exc);
-                //Exceptions.LogException(e);
-                throw e;
-            }
-
-            var writer = new System.IO.StringWriter();
+            var writer = new StringWriter();
             Render(writer);
             return writer.ToString();
         }
 
         private object CreateWebPageInstance()
         {
-            var compiledType = BuildManager.GetCompiledType(RazorScriptFile);
+            var compiledType = BuildManager.GetCompiledType(TemplatePath);
             object objectValue = null;
             if (compiledType != null)
             {
@@ -133,9 +113,9 @@ namespace ToSic.SexyContent.Engines
 
         private void InitHelpers(SexyContentWebPage webPage)
         {
-            webPage.Dnn = new DnnHelper(ModuleContext);
-            webPage.Html = new HtmlHelper(ModuleContext, LocalResourceFile);
-            webPage.Url = new UrlHelper(ModuleContext);
+            webPage.Dnn = new DnnHelper(ModuleInfo);
+            webPage.Html = new HtmlHelper();
+            webPage.Url = new UrlHelper(ModuleInfo);
             
             webPage.Content = Content;
             webPage.Presentation = Presentation;
@@ -148,30 +128,27 @@ namespace ToSic.SexyContent.Engines
 
         private void InitWebpage()
         {
-            if (string.IsNullOrEmpty(RazorScriptFile)) return;
+            if (string.IsNullOrEmpty(TemplatePath)) return;
 
             var objectValue = RuntimeHelpers.GetObjectValue(CreateWebPageInstance());
             if ((objectValue == null))
-                throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "The webpage found at '{0}' was not created.", new object[] { RazorScriptFile }));
+                throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "The webpage found at '{0}' was not created.", new object[] { TemplatePath }));
 
             Webpage = objectValue as SexyContentWebPage;
 
             if ((Webpage == null))
-                throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "The webpage at '{0}' must derive from SexyContentWebPage.", new object[] { RazorScriptFile }));
+                throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "The webpage at '{0}' must derive from SexyContentWebPage.", new object[] { TemplatePath }));
 
             Webpage.Context = HttpContext;
-            Webpage.VirtualPath = RazorScriptFile;
+            Webpage.VirtualPath = TemplatePath;
             InitHelpers(Webpage);
         }
 
-        public void PrepareViewData()
+        public override bool PrepareViewData()
         {
-            dynamic webPageInstance = CreateWebPageInstance();
-
-            if (webPageInstance.PrepareViewData == null)
-                return;
-
-            webPageInstance.PrepareViewData();
+            if (Webpage != null)
+                return Webpage.PrepareViewData(this.DataSource);
+            return false;
         }
     }
 }

@@ -110,7 +110,7 @@ namespace ToSic.SexyContent.ImportExport
                                 var sexy = new SexyContent(_zoneId, appId.Value);
 
                                 // Copy all files in 2sexy folder to (portal file system) 2sexy folder
-                                string templateRoot = server.MapPath(sexy.GetTemplatePathRoot(SexyContent.TemplateLocations.PortalFileSystem));
+                                string templateRoot = server.MapPath(SexyContent.GetTemplatePathRoot(SexyContent.TemplateLocations.PortalFileSystem, sexy.App));
                                 string appTemplateRoot = Path.Combine(appDirectory, "2sexy");
                                 if (Directory.Exists(appTemplateRoot))
                                     ImportExportHelpers.CopyAllFiles(appTemplateRoot, templateRoot, false, messages);

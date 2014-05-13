@@ -13,6 +13,7 @@ using DotNetNuke.Entities.Modules;
 using DotNetNuke.Web.UI.WebControls.Extensions;
 using ToSic.Eav;
 using DotNetNuke.Entities.Modules.Actions;
+using ToSic.SexyContent.Engines;
 
 namespace ToSic.SexyContent
 {
@@ -127,13 +128,11 @@ namespace ToSic.SexyContent
 
             try
             {
-                var listElement = Sexy.GetListElement(ModuleId, Sexy.GetCurrentLanguageName(), null, PortalId, ModulePermissionController.CanEditModuleContent(this.ModuleConfiguration));
-
-                //// Attach Toolbar to Elements
-                //Sexy.AttachToolbarToElements(new List<Element> { ListElement }, ModuleId, LocalResourceFile, Template.UseForList, ModuleContext.IsEditable, this, Request.RawUrl);
-                //Sexy.AttachToolbarToElements(Elements, ModuleId, LocalResourceFile, Template.UseForList, ModuleContext.IsEditable, this, Request.RawUrl);
-
+                
                 string renderedTemplate = "";
+                var engine = EngineFactory.CreateEngine(Template);
+                engine.Init(Template, Sexy.App, this.ModuleConfiguration, Sexy.GetModuleDataSource(this.ModuleId, ModulePermissionController.CanEditModuleContent(this.ModuleConfiguration)));
+                engine.PrepareViewData();
 
                 // Output JSON data if type=data in URL
                 if (Request.QueryString["type"] == "data" && Settings.ContainsKey(SexyContent.SettingsPublishDataSource) &&
@@ -143,9 +142,7 @@ namespace ToSic.SexyContent
                     Response.ContentType = "application/json";
                 }
                 else
-                    renderedTemplate = Template.RenderTemplate(Page, PortalSettings, ModuleContext,
-                                                               LocalResourceFile,
-                                                               Sexy.GetModuleDataSource(ModuleId, ModulePermissionController.CanEditModuleContent(this.ModuleConfiguration)), Sexy);
+                    renderedTemplate = engine.Render();
 
                 // If standalone is specified, output just the template without anything else
                 if (StandAlone)
