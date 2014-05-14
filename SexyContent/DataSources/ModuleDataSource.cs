@@ -11,15 +11,26 @@ namespace ToSic.SexyContent.DataSources
 {
     public class ModuleDataSource : BaseDataSource
     {
-        private SexyContent Sexy;
+        private SexyContent _sexy;
+
+        private SexyContent Sexy
+        {
+            get
+            {
+                if(_sexy == null)
+                    _sexy = new SexyContent(In["Default"].Source.ZoneId, In["Default"].Source.AppId);
+                return _sexy;
+            }
+        }
+
         private List<ContentGroupItem> _contentGroupItems;
         private IEnumerable<ContentGroupItem> ContentGroupItems {
             get
             {
                 if (!ListId.HasValue)
                     return new List<ContentGroupItem>();
-                
-                if(_contentGroupItems == null)
+
+                if (_contentGroupItems == null)
                     _contentGroupItems = Sexy.TemplateContext.GetContentGroupItems(ListId.Value).ToList();
                 return _contentGroupItems;
             }
@@ -33,7 +44,6 @@ namespace ToSic.SexyContent.DataSources
             Out.Add("ListPresentation", new DataStream(this, "Default", GetListPresentation));
 
             Configuration.Add("ModuleId", "[Module:ModuleID]");
-            Sexy = new SexyContent(Out["Default"].Source.ZoneId, Out["Default"].Source.AppId);
         }
 
         private IDictionary<int, IEntity> _content;
