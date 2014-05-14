@@ -28,7 +28,7 @@ namespace ToSic.SexyContent.Engines
         /// <returns></returns>
         string Render();
 
-        bool PrepareViewData();
+        bool PrepareData();
 
     }
 }

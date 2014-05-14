@@ -146,7 +146,7 @@ namespace ToSic.SexyContent.Engines
             InitHelpers(Webpage);
         }
 
-        public override bool PrepareViewData()
+        public override bool PrepareData()
         {
             if (Webpage != null)
                 return Webpage.PrepareData();

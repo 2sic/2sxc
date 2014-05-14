@@ -41,7 +41,7 @@ namespace ToSic.SexyContent.Engines
 
         protected virtual void Init() {}
 
-        public virtual bool PrepareViewData()
+        public virtual bool PrepareData()
         {
             return true;
         }
