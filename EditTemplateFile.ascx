@@ -54,9 +54,28 @@
             setupModule();
         });
     });
+
+    $(document).delegate('.sc-txt-templatecontent', 'keydown', function (e) {
+        var keyCode = e.keyCode || e.which;
+
+        if (keyCode == 9) {
+            e.preventDefault();
+            var start = $(this).get(0).selectionStart;
+            var end = $(this).get(0).selectionEnd;
+
+            // set textarea value to: text before caret + tab + text after caret
+            $(this).val($(this).val().substring(0, start)
+                        + "\t"
+                        + $(this).val().substring(end));
+
+            // put caret at right position again
+            $(this).get(0).selectionStart =
+            $(this).get(0).selectionEnd = start + 1;
+        }
+    });
 </script>
 
 <style type="text/css">
     .grdFields { margin-bottom: 10px; }
-    .sc-txt-templatecontent { max-width:none!important; }
+    .sc-txt-templatecontent { max-width:none!important;font-family: "Monaco", "Menlo", "Ubuntu Mono", "Consolas", "source-code-pro", monospace; -moz-tab-size:4;-ms-tab-size: 4; -o-tab-size:4; tab-size:4; }
 </style>
