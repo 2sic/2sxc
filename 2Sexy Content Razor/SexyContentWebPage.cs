@@ -175,10 +175,15 @@ namespace ToSic.SexyContent.Razor
         /// Prepares the data for the view
         /// </summary>
         /// <param name="Data"></param>
-        public virtual bool PrepareViewData(IDataSource Data)
+        public virtual bool PrepareData()
         {
             return false;
         }
+
+        //public virtual bool PrepareSearch()
+        //{
+
+        //}
 
     }
 

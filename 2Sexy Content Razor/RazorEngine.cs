@@ -29,8 +29,10 @@ namespace ToSic.SexyContent.Engines
 
         protected override void Init()
         {
-            var elements = ((ModuleDataSource)DataSource).ContentElements.Where(p => p.Content != null).ToList();
-            var listElement = ((ModuleDataSource)DataSource).ListElement;
+            var moduleDataSource = (ModuleDataSource)((IDataTarget) DataSource).In["Default"].Source;
+
+            var elements = (moduleDataSource).ContentElements.Where(p => p.Content != null).ToList();
+            var listElement = (moduleDataSource).ListElement;
             List = elements;
 
             if (elements.Any())
@@ -147,7 +149,7 @@ namespace ToSic.SexyContent.Engines
         public override bool PrepareViewData()
         {
             if (Webpage != null)
-                return Webpage.PrepareViewData(this.DataSource);
+                return Webpage.PrepareData();
             return false;
         }
     }

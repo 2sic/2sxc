@@ -584,15 +584,18 @@ namespace ToSic.SexyContent
         /// <summary>
         /// The EAV DataSource
         /// </summary>
-        private ModuleDataSource ModuleDataSource { get; set; }
-        public ModuleDataSource GetModuleDataSource(int moduleId, bool showDrafts)
+        private ToSic.Eav.DataSources.IDataSource ModuleDataSource { get; set; }
+        public ToSic.Eav.DataSources.IDataSource GetModuleDataSource(int moduleId, bool showDrafts)
         {
             if (ModuleDataSource == null)
             {
                 var initialSource = GetInitialDataSource(ZoneId.Value, AppId.Value, showDrafts);
                 var moduleDataSource = DataSource.GetDataSource<ModuleDataSource>(ZoneId, AppId, initialSource);
                 moduleDataSource.ModuleId = moduleId;
-                ModuleDataSource = moduleDataSource;
+
+                var passthrough = DataSource.GetDataSource<PassThrough>(ZoneId, AppId, moduleDataSource);
+
+                ModuleDataSource = (ToSic.Eav.DataSources.IDataSource)passthrough;
             }
 
             return ModuleDataSource;
@@ -607,7 +610,9 @@ namespace ToSic.SexyContent
         {
             // ToDo: Refactor
             //return GetElements(ModuleID, ContentGroupID, ContentGroupItemType.Content, ContentGroupItemType.Presentation, LanguageName, PortalId, showDrafts);
-            return GetModuleDataSource(ModuleID, showDrafts).ContentElements.ToList();
+
+            var dataSource = (ModuleDataSource)((IDataTarget)GetModuleDataSource(ModuleID, showDrafts)).In["Default"].Source;
+            return dataSource.ContentElements;
         }
 
         public Element GetListElement(int ModuleID, string LanguageName, int? ContentGroupID, int PortalId, bool showDrafts)
@@ -616,7 +621,8 @@ namespace ToSic.SexyContent
             //var ListElement = GetElements(ModuleID, ContentGroupID, ContentGroupItemType.ListContent, ContentGroupItemType.ListPresentation, LanguageName, PortalId, showDrafts).FirstOrDefault();
             //return ListElement;
 
-            return GetModuleDataSource(ModuleID, showDrafts).ListElement;
+            var dataSource = (ModuleDataSource)((IDataTarget) GetModuleDataSource(ModuleID, showDrafts)).In["Default"].Source;
+            return dataSource.ListElement;
         }
 
         /// <summary>
@@ -1058,19 +1064,19 @@ namespace ToSic.SexyContent
             var sexy = new SexyContent(zoneId.Value, appId, true);
             
 
-            // This list will hold all EAV entities to be indexed
-            var dataSource = GetModuleDataSource(moduleInfo.ModuleID, false);
+            //// This list will hold all EAV entities to be indexed
+            //var dataSource = GetModuleDataSource(moduleInfo.ModuleID, false);
 
-            var elements = dataSource.ContentElements.ToList();
-            elements.Add(dataSource.ListElement);
+            //var elements = dataSource.ContentElements.ToList();
+            //elements.Add(dataSource.ListElement);
 
-            if (!elements.Any())
-                return searchItems;
+            //if (!elements.Any())
+            //    return searchItems;
 
-            var template = sexy.TemplateContext.GetTemplate(elements.First().TemplateId.Value);
-            var engine = EngineFactory.CreateEngine(template);
-            engine.Init(template, sexy.App, moduleInfo, dataSource);
-            engine.PrepareViewData();
+            //var template = sexy.TemplateContext.GetTemplate(elements.First().TemplateId.Value);
+            //var engine = EngineFactory.CreateEngine(template);
+            //engine.Init(template, sexy.App, moduleInfo, dataSource);
+            //engine.PrepareViewData();
 
 
             //foreach (var Element in elements)
