@@ -19,7 +19,7 @@ namespace ToSic.SexyContent.Engines.TokenEngine
         /// Renders a Token Template
         /// </summary>
         /// <returns>Rendered template as string</returns>
-        public override string Render()
+        protected override string RenderTemplate()
         {
             DynamicEntity listContent = null;
             DynamicEntity listPresentation = null;

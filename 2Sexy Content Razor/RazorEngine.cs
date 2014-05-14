@@ -93,7 +93,7 @@ namespace ToSic.SexyContent.Engines
         /// Renders the template
         /// </summary>
         /// <returns></returns>
-        public override string Render() 
+        protected override string RenderTemplate() 
         {
             var writer = new StringWriter();
             Render(writer);

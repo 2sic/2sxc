@@ -37,7 +37,7 @@ namespace ToSic.SexyContent.Engines
             this.Init();
         }
 
-        public abstract string Render();
+        protected abstract string RenderTemplate();
 
         protected virtual void Init() {}
 
@@ -50,9 +50,9 @@ namespace ToSic.SexyContent.Engines
         /// Renders the given elements with Razor or TokenReplace and returns the string representation.
         /// </summary>
         /// <returns></returns>
-        public string RenderTemplate(SexyContent sexy)
+        public string Render()
         {
-            var renderedTemplate = Render();
+            var renderedTemplate = RenderTemplate();
             return HandleClientDependencyInjection(renderedTemplate);
         }
 
