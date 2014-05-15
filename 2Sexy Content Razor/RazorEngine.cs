@@ -125,7 +125,7 @@ namespace ToSic.SexyContent.Engines
             webPage.ListPresentation = ListPresentation;
             webPage.List = List;
             webPage.App = App;
-            webPage.Data = (IDataTarget)DataSource;
+            webPage.Data = (ViewDataSource)DataSource;
         }
 
         private void InitWebpage()

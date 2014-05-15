@@ -259,10 +259,12 @@
     <Compile Include="SexyContent\DataImportExport\LanguageReferenceExportOption.cs" />
     <Compile Include="SexyContent\DataImportExport\ResourceReferenceExportOption.cs" />
     <Compile Include="SexyContent\DataImportExport\Extensions\XElementExtension.cs" />
+    <Compile Include="SexyContent\DataPublishing.cs" />
     <Compile Include="SexyContent\DataSources\EntitiesFromList.cs" />
     <Compile Include="SexyContent\DataSources\ModuleDataSource.cs" />
     <Compile Include="SexyContent\DataSources\Tokens\ModulePropertyAccess.cs" />
     <Compile Include="SexyContent\DataSources\Tokens\QueryStringPropertyAccess.cs" />
+    <Compile Include="SexyContent\DataSources\ViewDataSource.cs" />
     <Compile Include="SexyContent\EAV\FieldTemplates\EditorProvider.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>

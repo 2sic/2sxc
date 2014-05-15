@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.WebPages;
 using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Portals;
+using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.DataSources.Tokens;
 using ToSic.SexyContent.Engines.TokenEngine;
 using ToSic.SexyContent.Razor.Helpers;
@@ -31,7 +32,7 @@ namespace ToSic.SexyContent.Razor
         protected internal dynamic ListPresentation { get; internal set; }
         protected internal new App App { get; internal set; }
         protected internal List<Element> List { get; internal set; }
-        protected internal IDataTarget Data { get; internal set; }
+        protected internal ViewDataSource Data { get; internal set; }
 
         /// <summary>
         /// Transform a IEntity to a DynamicEntity as dynamic object

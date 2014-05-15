@@ -13,6 +13,7 @@ using System.Linq;
 using DotNetNuke.Entities.Modules;
 using ToSic.Eav;
 using DotNetNuke.Entities.Modules.Actions;
+using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Engines;
 
 namespace ToSic.SexyContent
@@ -132,17 +133,16 @@ namespace ToSic.SexyContent
                 
                 string renderedTemplate = "";
                 var engine = EngineFactory.CreateEngine(Template);
-                var dataSource = Sexy.GetModuleDataSource(this.ModuleId, ModulePermissionController.CanEditModuleContent(this.ModuleConfiguration));
+                var dataSource = (ViewDataSource)Sexy.GetViewDataSource(this.ModuleId, ModulePermissionController.CanEditModuleContent(this.ModuleConfiguration));
                 engine.Init(Template, Sexy.App, this.ModuleConfiguration, dataSource);
                 engine.CustomizeData();
 
                 // Output JSON data if type=data in URL
                 if (Request.QueryString["type"] == "data")
                 {
-                    if (Settings.ContainsKey(SexyContent.SettingsPublishDataSource) &&
-                        Boolean.Parse(Settings[SexyContent.SettingsPublishDataSource].ToString()))
+                    if (dataSource.Publish.Enabled)
                     {
-                        var publishedStreams = Settings[SexyContent.SettingsPublishDataSourceStreams].ToString();
+                        var publishedStreams = dataSource.Publish.Streams;
                         renderedTemplate = Sexy.GetJsonFromStreams(dataSource, publishedStreams.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries));
                     }
                     else
