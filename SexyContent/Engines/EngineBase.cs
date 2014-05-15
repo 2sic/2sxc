@@ -41,10 +41,7 @@ namespace ToSic.SexyContent.Engines
 
         protected virtual void Init() {}
 
-        public virtual bool PrepareData()
-        {
-            return true;
-        }
+        public virtual void CustomizeData() {}
 
         /// <summary>
         /// Renders the given elements with Razor or TokenReplace and returns the string representation.

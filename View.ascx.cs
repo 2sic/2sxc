@@ -134,7 +134,7 @@ namespace ToSic.SexyContent
                 var engine = EngineFactory.CreateEngine(Template);
                 var dataSource = Sexy.GetModuleDataSource(this.ModuleId, ModulePermissionController.CanEditModuleContent(this.ModuleConfiguration));
                 engine.Init(Template, Sexy.App, this.ModuleConfiguration, dataSource);
-                engine.PrepareData();
+                engine.CustomizeData();
 
                 // Output JSON data if type=data in URL
                 if (Request.QueryString["type"] == "data")

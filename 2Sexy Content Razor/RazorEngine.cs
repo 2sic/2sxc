@@ -146,11 +146,10 @@ namespace ToSic.SexyContent.Engines
             InitHelpers(Webpage);
         }
 
-        public override bool PrepareData()
+        public override void CustomizeData()
         {
             if (Webpage != null)
-                return Webpage.PrepareData();
-            return false;
+                Webpage.CustomizeData();
         }
     }
 }

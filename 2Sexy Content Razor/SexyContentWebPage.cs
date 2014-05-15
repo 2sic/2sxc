@@ -171,19 +171,23 @@ namespace ToSic.SexyContent.Razor
             return webPage;
         }
 
+
         /// <summary>
-        /// Prepares the data for the view
+        /// Override this to have your code change the (already initialized) Data object. 
+        /// If you don't override this, nothing will be changed/customized. 
         /// </summary>
-        /// <param name="Data"></param>
-        public virtual bool PrepareData()
+        public virtual void CustomizeData()
+        {
+        }
+
+        /// <summary>
+        /// ToDo
+        /// </summary>
+        /// <returns></returns>
+        public virtual bool PrepareSearch()
         {
             return false;
         }
-
-        //public virtual bool PrepareSearch()
-        //{
-
-        //}
 
     }
 
