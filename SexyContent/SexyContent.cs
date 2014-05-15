@@ -1,34 +1,23 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Dynamic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Runtime.Remoting.Channels;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security.Roles;
 using DotNetNuke.Services.FileSystem;
-using DotNetNuke.Services.Search;
 using DotNetNuke.Services.Search.Entities;
 using ToSic.Eav;
 using DotNetNuke.Common.Utilities;
 using DotNetNuke.Services.Localization;
 using DotNetNuke.Entities.Modules;
-using System.Reflection;
 using System.Web.UI.HtmlControls;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Caches;
-using ToSic.SexyContent;
 using ToSic.SexyContent.DataSources;
-using ToSic.SexyContent.DataSources.Tokens;
-using ToSic.SexyContent.Engines;
-using ToSic.SexyContent.Engines.TokenEngine;
 using FileInfo = System.IO.FileInfo;
 using DotNetNuke.Common;
 
@@ -1267,7 +1256,9 @@ namespace ToSic.SexyContent
 
         private Dictionary<string, object> GetDictionaryFromEntity(IEntity entity, string language)
         {
-            var dictionary = ((from d in entity.Attributes select d).ToDictionary(k => k.Value.Name, v => v.Value[language]));
+            var dynamicEntity = new DynamicEntity(entity, new[] { language });
+            bool propertyNotFound;
+            var dictionary = ((from d in entity.Attributes select d.Value).ToDictionary(k => k.Name, v => dynamicEntity.GetEntityValue(v.Name, out propertyNotFound)));
             dictionary.Add("EntityId", entity.EntityId);
             return dictionary;
         }
