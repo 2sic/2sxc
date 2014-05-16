@@ -10,7 +10,7 @@
 
         var moduleId = $.parseJSON($(this).attr('data-2sxc')).moduleId;
 
-        $('.sc-menu', this).each(function () {
+        $('.sc-menu[data-toolbar]', this).each(function () {
             var toolbarSettings = $.parseJSON($(this).attr('data-toolbar'));
             $(this).replaceWith($2sxc(moduleId).manage.getToolbar(toolbarSettings));
         });
