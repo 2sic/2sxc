@@ -80,13 +80,13 @@ $2sxc.getManageController = function(id) {
             settings = $.extend({}, config, settings);
             var button = $('<a />', {
                 'class': 'sc-' + settings.action,
-                'href': 'javascript:$2sxc(' + settings.moduleId + ').manage.action(' + JSON.stringify(settings) + ')'
+                'onclick': 'javascript:$2sxc(' + settings.moduleId + ').manage.action(' + JSON.stringify(settings) + ')'
             });
 
             // Bind click action
             //button.click(function () { manageController.openDialog(settings); });
 
-            return button[0].outerHTML; 
+            return button[0].outerHTML;
         },
 
         // Builds the toolbar and returns it as HTML
