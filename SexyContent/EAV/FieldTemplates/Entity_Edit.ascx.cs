@@ -26,7 +26,8 @@ namespace ToSic.Eav.ManagementUI
 				hfEntityIds.Visible = true;
 				pnlMultiValues.Visible = true;
 				phAddMultiValue.Visible = true;
-			    hfEntityIds.Value = string.Join(",", RelatedEntities.EntityIds);
+                if(RelatedEntities != null)
+			        hfEntityIds.Value = string.Join(",", RelatedEntities.EntityIds);
 			}
 
             DropDownList1.ToolTip = GetMetaDataValue<string>("Notes");
