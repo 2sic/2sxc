@@ -7,7 +7,7 @@ namespace ToSic.SexyContent.ImportExport
 {
     public class ImportExport
     {
-        public static string FileVersion = "05.04.01";
-        public static string MinimumRequiredVersion = "05.04.01";
+        public static string FileVersion = "06.00.08";
+        public static string MinimumRequiredVersion = "06.00.08";
     }
 }

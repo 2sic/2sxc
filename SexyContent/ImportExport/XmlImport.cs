@@ -52,9 +52,9 @@ namespace ToSic.SexyContent.ImportExport
             }
 
             // Return if Version does not match
-            if (!doc.Element("SexyContent").Attributes().Any(a => a.Name == "MinimumRequiredVersion") || new Version(doc.Element("SexyContent").Attribute("MinimumRequiredVersion").Value) > new Version(ImportExport.FileVersion))
+            if (!doc.Element("SexyContent").Attributes().Any(a => a.Name == "MinimumRequiredVersion") || new Version(doc.Element("SexyContent").Attribute("MinimumRequiredVersion").Value) > new Version(SexyContent.ModuleVersion))
             {
-                ImportLog.Add(new ExportImportMessage("The XML file you specified has an incompatible File Version.", ExportImportMessage.MessageTypes.Error));
+                ImportLog.Add(new ExportImportMessage("This template or app requires 2SexyContent " + doc.Element("SexyContent").Attribute("MinimumRequiredVersion").Value + " in order to work, you have version " + SexyContent.ModuleVersion + " installed.", ExportImportMessage.MessageTypes.Error));
                 return false;
             }
 
