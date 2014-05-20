@@ -240,7 +240,7 @@ namespace ToSic.SexyContent
         {
             IEnumerable<Template> TemplatesToChoose;
 
-            if (!IsList)
+            if (Elements.Count <= 1)
                 TemplatesToChoose = Sexy.GetVisibleTemplates(PortalId);
             else
                 TemplatesToChoose = Sexy.GetVisibleListTemplates(PortalId);
@@ -248,7 +248,7 @@ namespace ToSic.SexyContent
             ddlTemplate.DataSource = TemplatesToChoose;
             ddlTemplate.DataBind();
             // If the current data is a list of entities, don't allow changing back to no template
-            if(!IsList)
+            if(Elements.Count <= 1)
                 ddlTemplate.Items.Insert(0, new ListItem(LocalizeString("ddlTemplateDefaultItem.Text"), "0"));
 
             // If there are elements and the selected template exists in the list, select that
