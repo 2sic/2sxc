@@ -77,14 +77,11 @@ $2sxc.getManageController = function(id) {
 
         getButton: function (settings) {
 
-            settings = $.extend({}, config, settings);
+            //settings = $.extend({}, config, settings);
             var button = $('<a />', {
                 'class': 'sc-' + settings.action,
-                'onclick': 'javascript:$2sxc(' + settings.moduleId + ').manage.action(' + JSON.stringify(settings) + ')'
+                'onclick': 'javascript:$2sxc(' + id + ').manage.action(' + JSON.stringify(settings) + ')'
             });
-
-            // Bind click action
-            //button.click(function () { manageController.openDialog(settings); });
 
             return button[0].outerHTML;
         },
