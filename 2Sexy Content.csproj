@@ -331,6 +331,7 @@
     <Compile Include="SexyContent\ImportExport\XmlImport.cs" />
     <Compile Include="SexyContent\ImportExport\ZipExport.cs" />
     <Compile Include="SexyContent\ImportExport\ZipImport.cs" />
+    <Compile Include="SexyContent\Search\SearchInfo.cs" />
     <Compile Include="SexyContent\SexyContentContext.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

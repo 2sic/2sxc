@@ -8,6 +8,7 @@ using System.Web.UI;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Web.Client.ClientResourceManagement;
+using ToSic.SexyContent.Search;
 using IDataSource = ToSic.Eav.DataSources.IDataSource;
 
 namespace ToSic.SexyContent.Engines
@@ -42,6 +43,8 @@ namespace ToSic.SexyContent.Engines
         protected virtual void Init() {}
 
         public virtual void CustomizeData() {}
+
+        public virtual void PrepareSearchData(List<SearchInfo> searchInfos) { }
 
         /// <summary>
         /// Renders the given elements with Razor or TokenReplace and returns the string representation.

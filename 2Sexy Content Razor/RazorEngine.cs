@@ -151,5 +151,11 @@ namespace ToSic.SexyContent.Engines
             if (Webpage != null)
                 Webpage.CustomizeData();
         }
+
+        public override void PrepareSearchData(List<Search.SearchInfo> searchInfos)
+        {
+            if (Webpage != null)
+                Webpage.PrepareSearch(searchInfos);
+        }
     }
 }

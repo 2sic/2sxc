@@ -6,6 +6,7 @@ using System.Web;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.UI.Modules;
 using ToSic.Eav.DataSources;
+using ToSic.SexyContent.Search;
 
 namespace ToSic.SexyContent.Engines
 {
@@ -29,6 +30,8 @@ namespace ToSic.SexyContent.Engines
         string Render();
 
         void CustomizeData();
+
+        void PrepareSearchData(List<SearchInfo> searchInfos);
 
     }
 }

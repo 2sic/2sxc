@@ -90,12 +90,6 @@ namespace ToSic.SexyContent.Engines.TokenEngine
             return renderedTemplate;
         }
 
-        /// <summary>
-        /// The template engine does not support PrepareViewData yet, so do nothing
-        /// </summary>
-        public bool PrepareViewData()
-        {
-            return false;
-        }
+
     }
 }
