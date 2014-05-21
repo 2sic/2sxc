@@ -85,7 +85,10 @@ var $2sxc = function (id) {
         source: null,
         isLoaded: false,
         lastRefresh: null,
-        manage: $2sxc.getManageController ? $2sxc.getManageController(id) : null
+        manage: $2sxc.getManageController ? $2sxc.getManageController(id) : null,
+        isEditMode: function() {
+            return controller.manage && controller.manage.isEditMode();
+        }
     };
 
     // Make sure back-reference to controller is set

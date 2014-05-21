@@ -77,6 +77,18 @@ $2sxc.getManageController = function(id) {
 
         getButton: function (settings) {
 
+
+            if (settings.entity && settings.entity._2sxcEditInformation) {
+                if (settings.entity._2sxcEditInformation.entityId) {
+                    settings.entityId = settings.entity._2sxcEditInformation.entityId;
+                }
+                if (settings.entity._2sxcEditInformation.sortOrder != null) {
+                    settings.sortOrder = settings.entity._2sxcEditInformation.sortOrder;
+                    settings.useModuleList = true;
+                }
+                delete settings.entity;
+            }
+
             //settings = $.extend({}, config, settings);
             var button = $('<a />', {
                 'class': 'sc-' + settings.action,
@@ -88,6 +100,7 @@ $2sxc.getManageController = function(id) {
 
         // Builds the toolbar and returns it as HTML
         getToolbar: function (settings) {
+
 
             var buttons = [];
 

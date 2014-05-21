@@ -18,6 +18,7 @@ using System.Web.UI.HtmlControls;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Caches;
 using ToSic.SexyContent.DataSources;
+using ToSic.SexyContent.EAVExtensions;
 using FileInfo = System.IO.FileInfo;
 using DotNetNuke.Common;
 
@@ -1237,20 +1238,6 @@ namespace ToSic.SexyContent
                 List = (from c in s.Value.List select GetDictionaryFromEntity(c.Value, language)).ToList()
             });
 
-            
-            //var x = new
-            //{
-            //    Default = new
-            //    {
-            //        List = (from c in elements
-            //                where c.EntityId.HasValue
-            //                select new
-            //                {
-            //                    Content = GetDictionaryFromEntity(((DynamicEntity)c.Content).Entity, language)
-            //                }).ToList()
-            //    }
-            //};
-
             return y.ToJson();
         }
 
@@ -1260,6 +1247,12 @@ namespace ToSic.SexyContent
             bool propertyNotFound;
             var dictionary = ((from d in entity.Attributes select d.Value).ToDictionary(k => k.Name, v => dynamicEntity.GetEntityValue(v.Name, out propertyNotFound)));
             dictionary.Add("EntityId", entity.EntityId);
+
+            if(entity is IHasEditingData)
+                dictionary.Add("_2sxcEditInformation", new { sortOrder = ((IHasEditingData)entity).SortOrder });
+            else
+                dictionary.Add("_2sxcEditInformation", new { entityId = entity.EntityId });
+
             return dictionary;
         }
 

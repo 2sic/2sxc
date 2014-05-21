@@ -36,6 +36,20 @@ namespace ToSic.SexyContent.DataSources
             }
         }
 
+        private List<TemplateDefault> _templateDefaults;
+        private IEnumerable<TemplateDefault> TemplateDefaults
+        {
+            get
+            {
+                if (!ListId.HasValue || !ContentGroupItems.Any() || !ContentGroupItems.First().TemplateID.HasValue)
+                    return new List<TemplateDefault>();
+
+                if (_templateDefaults == null)
+                    _templateDefaults = Sexy.GetTemplateDefaults(ContentGroupItems.First().TemplateID.Value);
+                return _templateDefaults;
+            }
+        }
+
         public ModuleDataSource()
         {
             Out.Add("Default", new DataStream(this, "Default", GetContent));
@@ -51,11 +65,7 @@ namespace ToSic.SexyContent.DataSources
         {
             if (_content == null)
             {
-                var originals = In["Default"].List;
-                var entityIds =
-                    ContentGroupItems.Where(p => p.ItemType == ContentGroupItemType.Content && p.EntityID.HasValue)
-                        .Select(p => p.EntityID.Value);
-                _content = entityIds.Distinct().ToDictionary(id => id, id => originals[id]);
+                _content = GetStream(ContentGroupItemType.Content);
             }
             return _content;
         }
@@ -65,11 +75,7 @@ namespace ToSic.SexyContent.DataSources
         {
             if (_presentation == null)
             {
-                var originals = In["Default"].List;
-                var entityIds =
-                    ContentGroupItems.Where(p => p.ItemType == ContentGroupItemType.Presentation && p.EntityID.HasValue)
-                        .Select(p => p.EntityID.Value);
-                _presentation = entityIds.Distinct().ToDictionary(id => id, id => originals[id]);
+                _presentation = GetStream(ContentGroupItemType.Presentation);
             }
             return _presentation;
         }
@@ -79,11 +85,7 @@ namespace ToSic.SexyContent.DataSources
         {
             if (_listContent == null)
             {
-                var originals = In["Default"].List;
-                var entityIds =
-                    ContentGroupItems.Where(p => p.ItemType == ContentGroupItemType.ListContent && p.EntityID.HasValue)
-                        .Select(p => p.EntityID.Value);
-                _listContent = entityIds.Distinct().ToDictionary(id => id, id => originals[id]);
+                _listContent = GetStream(ContentGroupItemType.ListContent);
             }
             return _listContent;
         }
@@ -93,14 +95,57 @@ namespace ToSic.SexyContent.DataSources
         {
             if (_listPresentation == null)
             {
-                var originals = In["Default"].List;
-                var entityIds =
-                    ContentGroupItems.Where(
-                        p => p.ItemType == ContentGroupItemType.ListPresentation && p.EntityID.HasValue)
-                        .Select(p => p.EntityID.Value);
-                _listPresentation = entityIds.Distinct().ToDictionary(id => id, id => originals[id]);
+                _listPresentation = GetStream(ContentGroupItemType.ListPresentation);
             }
             return _listPresentation;
+        }
+
+        private IDictionary<int, IEntity> GetStream(ContentGroupItemType itemType)
+        {
+            var templateDefault = TemplateDefaults.FirstOrDefault(t => t.ItemType == itemType);
+            var items = ContentGroupItems.Where(p => p.ItemType == itemType).ToList(); // Create copy of list (not in cache)
+
+            // If no Content Elements exist and type is List, add a ContentGroupItem to List (not to DB)
+            if (itemType == ContentGroupItemType.ListContent && items.All(p => p.ItemType != ContentGroupItemType.ListContent))
+            {
+                items.Add(new ContentGroupItem()
+                {
+                    ContentGroupID = ListId.Value,
+                    ContentGroupItemID = -1,
+                    EntityID = new int?(),
+                    SortOrder = -1,
+                    SysCreated = DateTime.Now,
+                    SysCreatedBy = -1,
+                    TemplateID = ContentGroupItems.First().TemplateID.Value,
+                    Type = ContentGroupItemType.ListContent.ToString("F")
+                });
+            }
+
+            var originals = In["Default"].List;
+            var entitiesToDeliver = new Dictionary<int, IEntity>();
+
+            foreach (var i in items)
+            {
+                // use demo-entites where available
+                var entityId = i.EntityID.HasValue
+                    ? i.EntityID.Value
+                    : (templateDefault != null && templateDefault.DemoEntityID.HasValue
+                        ? templateDefault.DemoEntityID.Value
+                        : new int?());
+
+                if (!entityId.HasValue)
+                    continue;
+
+                var key = entityId.Value;
+
+                // This ensures that if an entity is added again, the dictionary doesn't complain because of duplicate keys
+                while (entitiesToDeliver.ContainsKey(key))
+                    key += 1000000000;
+
+                entitiesToDeliver.Add(key, new EAVExtensions.EntityInContentGroup(originals[entityId.Value]) { SortOrder = i.SortOrder });
+            }
+
+            return entitiesToDeliver;
         }
 
         public int? ModuleId
@@ -122,6 +167,8 @@ namespace ToSic.SexyContent.DataSources
 
         private IEnumerable<Element> GetElements(ContentGroupItemType contentItemType, ContentGroupItemType presentationItemType)
         {
+            // ToDo: Refactor to use streams above!
+
             var elements = new List<Element>();
             if (!ContentGroupItems.Any(c => c.TemplateID.HasValue)) return elements;
 
