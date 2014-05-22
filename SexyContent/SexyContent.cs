@@ -1279,7 +1279,7 @@ namespace ToSic.SexyContent
         public static string ResolveHyperlinkValues(string value)
         {
             var resultString = (string)value;
-            var regularExpression = Regex.Match(resultString, "(?<type>(file|page)):(?<id>[0-9]+)", RegexOptions.IgnoreCase);
+            var regularExpression = Regex.Match(resultString, @"^(?<type>(file|page)):(?<id>[0-9]+)(?<params>(\?|\#).*)?$", RegexOptions.IgnoreCase);
 
             if (!regularExpression.Success)
                 return value;
@@ -1288,13 +1288,14 @@ namespace ToSic.SexyContent
             var tabController = new DotNetNuke.Entities.Tabs.TabController();
             var type = regularExpression.Groups["type"].Value.ToLower();
             var id = int.Parse(regularExpression.Groups["id"].Value);
+			var urlParams = regularExpression.Groups["params"].Value ?? "";
 
             switch (type)
             {
                 case "file":
                     var fileInfo = fileManager.GetFile(id);
                     if(fileInfo != null)
-                        resultString = fileManager.GetUrl(fileInfo);
+                        resultString = fileManager.GetUrl(fileInfo) + urlParams;
                     break;
                 case "page":
                     var portalId = PortalSettings.Current.PortalId;
@@ -1312,7 +1313,7 @@ namespace ToSic.SexyContent
                                 tabInfo = cultureTabInfo;
                         }
 
-                        resultString = tabInfo.FullUrl;
+						resultString = tabInfo.FullUrl + urlParams;
                     }
                     break;
             }
