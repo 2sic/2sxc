@@ -188,7 +188,7 @@ namespace ToSic.SexyContent.Razor
         {
         }
 
-        public LoadMode LoadMode { get; set; }
+        public InstancePurposes InstancePurpose { get; set; }
 
     }
 

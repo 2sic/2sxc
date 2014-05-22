@@ -5,7 +5,7 @@ using System.Web;
 
 namespace ToSic.SexyContent.Engines
 {
-    public enum LoadMode
+    public enum InstancePurposes
     {
         WebView,
         IndexingForSearch,

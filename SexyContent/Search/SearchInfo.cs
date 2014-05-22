@@ -9,25 +9,6 @@ namespace ToSic.SexyContent.Search
 {
     public class SearchInfo : SearchDocument, ISearchInfo
     {
-        public SearchInfo()
-        {
-            //AutoExtractEntities = true;
-        }
-
-        //public Dictionary<string, List<IEntity>> EntityLists { get; set; }
-        //public List<IEntity> Entities { get; set; }
-
-
-
-
         public IEntity Entity { get; set; }
-
-        //public bool AutoExtractEntities { get; set; }
-        //public string Body { get; set; }
-        //public string Url { get; set; }
-
-        //// ToDo: Review with 2dm
-        //public string Title { get; set; }
-        //public DateTime Modified { get; set; }
     }
 }

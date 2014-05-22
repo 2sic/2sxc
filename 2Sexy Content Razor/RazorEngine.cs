@@ -144,7 +144,7 @@ namespace ToSic.SexyContent.Engines
 
             Webpage.Context = HttpContext;
             Webpage.VirtualPath = TemplatePath;
-            Webpage.LoadMode = LoadMode;
+            Webpage.InstancePurpose = InstancePurposes;
             InitHelpers(Webpage);
         }
 

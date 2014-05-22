@@ -133,7 +133,7 @@ namespace ToSic.SexyContent
                 string renderedTemplate = "";
                 var engine = EngineFactory.CreateEngine(Template);
                 var dataSource = (ViewDataSource)Sexy.GetViewDataSource(this.ModuleId, ModulePermissionController.CanEditModuleContent(this.ModuleConfiguration));
-                engine.Init(Template, Sexy.App, this.ModuleConfiguration, dataSource, Request.QueryString["type"] == "data" ? LoadMode.PublishData : LoadMode.WebView);
+                engine.Init(Template, Sexy.App, this.ModuleConfiguration, dataSource, Request.QueryString["type"] == "data" ? InstancePurposes.PublishData : InstancePurposes.WebView);
                 engine.CustomizeData();
 
                 // Output JSON data if type=data in URL

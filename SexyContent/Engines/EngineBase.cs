@@ -20,9 +20,9 @@ namespace ToSic.SexyContent.Engines
         protected App App;
         protected ModuleInfo ModuleInfo;
         protected IDataSource DataSource;
-        protected LoadMode LoadMode;
+        protected InstancePurposes InstancePurposes;
 
-        public void Init(Template template, App app, ModuleInfo hostingModule, IDataSource dataSource, LoadMode loadMode)
+        public void Init(Template template, App app, ModuleInfo hostingModule, IDataSource dataSource, InstancePurposes instancePurposes)
         {
             var templatePath = VirtualPathUtility.Combine(SexyContent.GetTemplatePathRoot(template.Location, app, new PortalSettings(hostingModule.PortalID)) + "/", template.Path);
 
@@ -35,7 +35,7 @@ namespace ToSic.SexyContent.Engines
             App = app;
             ModuleInfo = hostingModule;
             DataSource = dataSource;
-            LoadMode = loadMode;
+            InstancePurposes = instancePurposes;
 
             this.Init();
         }

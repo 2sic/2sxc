@@ -21,7 +21,7 @@ namespace ToSic.SexyContent.Engines
         /// <param name="hostingModule"></param>
         /// <param name="localResourcesPath"></param>
         /// <param name="dataSource"></param>
-        void Init(Template template, App app, ModuleInfo hostingModule, IDataSource dataSource, LoadMode loadMode);
+        void Init(Template template, App app, ModuleInfo hostingModule, IDataSource dataSource, InstancePurposes instancePurposes);
 
         /// <summary>
         /// Renders a template, returning a string with the rendered template.

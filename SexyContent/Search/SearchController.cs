@@ -6,6 +6,7 @@ using System.Web;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.Search.Entities;
+using DotNetNuke.Web.UI;
 using ToSic.Eav;
 using ToSic.Eav.DataSources;
 using ToSic.SexyContent.DataSources;
@@ -18,9 +19,6 @@ namespace ToSic.SexyContent.Search
 
         public IList<SearchDocument> GetModifiedSearchDocuments(ModuleInfo moduleInfo, DateTime beginDate)
         {
-            // 2SexyContent does not support delta search, so clear all entries first
-            DotNetNuke.Services.Search.Internals.InternalSearchController.Instance.DeleteSearchDocumentsByModule(moduleInfo.PortalID, moduleInfo.ModuleID, moduleInfo.ModuleDefID);
-
             var searchDocuments = new List<SearchDocument>();
 
             var isContentModule = moduleInfo.DesktopModule.ModuleName == "2sxc";
@@ -56,7 +54,7 @@ namespace ToSic.SexyContent.Search
 
             var template = sexy.TemplateContext.GetTemplate(elements.First().TemplateId.Value);
             var engine = EngineFactory.CreateEngine(template);
-            engine.Init(template, sexy.App, moduleInfo, dataSource, LoadMode.IndexingForSearch);
+            engine.Init(template, sexy.App, moduleInfo, dataSource, InstancePurposes.IndexingForSearch);
 
             try
             {
@@ -68,16 +66,14 @@ namespace ToSic.SexyContent.Search
             }
 
             
-
-            // ToDo: Name...
-            var searchInfos2 = new Dictionary<string, List<ISearchInfo>>();
+            var searchInfoDictionary = new Dictionary<string, List<ISearchInfo>>();
 
             // Get DNN SearchDocuments from 2Sexy SearchInfos
             foreach (var stream in dataSource.Out.Where(p => p.Key != "Presentation" && p.Key != "ListPresentation" ))
             {
                 
                 var entities = stream.Value.List.Select(p => p.Value);
-                var searchInfoList = searchInfos2[stream.Key] = new List<ISearchInfo>();
+                var searchInfoList = searchInfoDictionary[stream.Key] = new List<ISearchInfo>();
 
                 searchInfoList.AddRange(entities.Select(entity => new SearchInfo()
                 {
@@ -87,7 +83,7 @@ namespace ToSic.SexyContent.Search
                     Body = GetJoinedAttributes(entity, language),
                     Title = entity.Title[language].ToString(),
                     // ToDo: Get modified time from entity
-                    ModifiedTimeUtc = DateTime.Now,//((EntityModel)entity).,
+                    ModifiedTimeUtc = DateTime.Now.ToUniversalTime(),//((EntityModel)entity).,
                     UniqueKey = entity.EntityGuid.ToString(),
                     IsActive = true,
                     TabId = moduleInfo.TabID,
@@ -95,12 +91,52 @@ namespace ToSic.SexyContent.Search
                 }));
             }
 
-            engine.CustomizeSearch(searchInfos2, moduleInfo, beginDate);
+            try
+            {
+                engine.CustomizeSearch(searchInfoDictionary, moduleInfo, beginDate);
+            }
+            catch (Exception e)
+            {
+                Exceptions.LogException(e);
+            }
 
-            foreach (var searchInfoList in searchInfos2)
+            foreach (var searchInfoList in searchInfoDictionary)
             {
                 searchDocuments.AddRange(searchInfoList.Value.Select(p => (SearchDocument)p));
             }
+
+
+            // 2SexyContent does not support delta search, so add SearchDocuments for all deleted entries
+            //var moduleSearchController = DotNetNuke.Services.Search.Controllers.SearchController.Instance;
+
+
+            //DotNetNuke.Services.Search.Internals.InternalSearchController.Instance.
+
+            //DotNetNuke.Services.Search.Controllers.SearchController.SetTestableInstance(moduleSearchController);
+            //var moduleSearch = moduleSearchController.ModuleSearch(new SearchQuery() { ModuleId = moduleInfo.ModuleID, PortalIds = new[] { moduleInfo.PortalID } });
+            //var searchDocumentsToDelete =
+            //    moduleSearch.Results.Where(r => searchDocuments.All(s => s.UniqueKey != r.UniqueKey))
+            //        .Select(r => new SearchDocument()
+            //        {
+            //            UniqueKey = r.UniqueKey,
+            //            PortalId = r.PortalId,
+            //            CultureCode = r.CultureCode,
+            //            IsActive = r.IsActive
+            //        });
+
+            //searchDocuments.AddRange(searchDocumentsToDelete);
+
+
+            //var sourceLists = DotNetNuke.Services.Search.Internals.InternalSearchController.Instance.GetSearchContentSourceList(
+            //    moduleInfo.PortalID);
+
+            //foreach (var source in sourceLists)
+            //{
+            //    source.
+            //}
+
+            //DotNetNuke.Services.Search.Controllers.SearchController.Instance.
+
 
             return searchDocuments;
         }
