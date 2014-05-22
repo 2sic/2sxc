@@ -20,8 +20,9 @@ namespace ToSic.SexyContent.Engines
         protected App App;
         protected ModuleInfo ModuleInfo;
         protected IDataSource DataSource;
+        protected LoadMode LoadMode;
 
-        public void Init(Template template, App app, ModuleInfo hostingModule, IDataSource dataSource)
+        public void Init(Template template, App app, ModuleInfo hostingModule, IDataSource dataSource, LoadMode loadMode)
         {
             var templatePath = VirtualPathUtility.Combine(SexyContent.GetTemplatePathRoot(template.Location, app, new PortalSettings(hostingModule.PortalID)) + "/", template.Path);
 
@@ -34,6 +35,7 @@ namespace ToSic.SexyContent.Engines
             App = app;
             ModuleInfo = hostingModule;
             DataSource = dataSource;
+            LoadMode = loadMode;
 
             this.Init();
         }
@@ -44,7 +46,10 @@ namespace ToSic.SexyContent.Engines
 
         public virtual void CustomizeData() {}
 
-        public virtual void PrepareSearchData(List<SearchInfo> searchInfos) { }
+        public virtual void CustomizeSearch(Dictionary<string, List<ISearchInfo>> searchInfos, ModuleInfo moduleInfo,
+            DateTime beginDate)
+        {
+        }
 
         /// <summary>
         /// Renders the given elements with Razor or TokenReplace and returns the string representation.

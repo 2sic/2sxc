@@ -14,6 +14,7 @@ using ToSic.SexyContent.Razor;
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.DataSources;
+using ToSic.SexyContent.Search;
 
 namespace ToSic.SexyContent.Engines
 {
@@ -143,6 +144,7 @@ namespace ToSic.SexyContent.Engines
 
             Webpage.Context = HttpContext;
             Webpage.VirtualPath = TemplatePath;
+            Webpage.LoadMode = LoadMode;
             InitHelpers(Webpage);
         }
 
@@ -152,10 +154,10 @@ namespace ToSic.SexyContent.Engines
                 Webpage.CustomizeData();
         }
 
-        public override void PrepareSearchData(List<Search.SearchInfo> searchInfos)
+        public override void CustomizeSearch(Dictionary<string, List<ISearchInfo>> searchInfos, ModuleInfo moduleInfo, DateTime beginDate)
         {
             if (Webpage != null)
-                Webpage.PrepareSearch(searchInfos);
+                Webpage.CustomizeSearch(searchInfos, moduleInfo, beginDate);
         }
     }
 }

@@ -315,6 +315,7 @@
     <Compile Include="SexyContent\Engines\EngineBase.cs" />
     <Compile Include="SexyContent\Engines\EngineFactory.cs" />
     <Compile Include="SexyContent\Engines\IEngine.cs" />
+    <Compile Include="SexyContent\Engines\LoadMode.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\AppPropertyAccess.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\DynamicEntityPropertyAccess.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\TokenEngine.cs" />
@@ -331,6 +332,7 @@
     <Compile Include="SexyContent\ImportExport\XmlImport.cs" />
     <Compile Include="SexyContent\ImportExport\ZipExport.cs" />
     <Compile Include="SexyContent\ImportExport\ZipImport.cs" />
+    <Compile Include="SexyContent\Search\ISearchInfo.cs" />
     <Compile Include="SexyContent\Search\SearchController.cs" />
     <Compile Include="SexyContent\Search\SearchInfo.cs" />
     <Compile Include="SexyContent\SexyContentContext.Designer.cs">

@@ -18,6 +18,9 @@ namespace ToSic.SexyContent.Search
 
         public IList<SearchDocument> GetModifiedSearchDocuments(ModuleInfo moduleInfo, DateTime beginDate)
         {
+            // 2SexyContent does not support delta search, so clear all entries first
+            DotNetNuke.Services.Search.Internals.InternalSearchController.Instance.DeleteSearchDocumentsByModule(moduleInfo.PortalID, moduleInfo.ModuleID, moduleInfo.ModuleDefID);
+
             var searchDocuments = new List<SearchDocument>();
 
             var isContentModule = moduleInfo.DesktopModule.ModuleName == "2sxc";
@@ -53,7 +56,7 @@ namespace ToSic.SexyContent.Search
 
             var template = sexy.TemplateContext.GetTemplate(elements.First().TemplateId.Value);
             var engine = EngineFactory.CreateEngine(template);
-            engine.Init(template, sexy.App, moduleInfo, dataSource);
+            engine.Init(template, sexy.App, moduleInfo, dataSource, LoadMode.IndexingForSearch);
 
             try
             {
@@ -64,32 +67,39 @@ namespace ToSic.SexyContent.Search
                 Exceptions.LogException(e);
             }
 
-            var searchInfos = new List<SearchInfo>();
+            
 
             // ToDo: Name...
-            var searchInfos2 = new Dictionary<string, List<SearchInfo>>();
+            var searchInfos2 = new Dictionary<string, List<ISearchInfo>>();
 
             // Get DNN SearchDocuments from 2Sexy SearchInfos
-            foreach (var stream in dataSource.Out)
+            foreach (var stream in dataSource.Out.Where(p => p.Key != "Presentation" && p.Key != "ListPresentation" ))
             {
+                
                 var entities = stream.Value.List.Select(p => p.Value);
-                var searchInfoList = searchInfos2[stream.Key] = new List<SearchInfo>();
+                var searchInfoList = searchInfos2[stream.Key] = new List<ISearchInfo>();
 
-                searchInfoList.AddRange(entities.Select(entity => new SearchInfo(entity)
+                searchInfoList.AddRange(entities.Select(entity => new SearchInfo()
                 {
+                    Entity = entity,
                     Url = "",
+                    Description = "",
                     Body = GetJoinedAttributes(entity, language),
                     Title = entity.Title[language].ToString(),
-                    // ToDo: Modified Date
-                    ModifiedTimeUtc = DateTime.Now
+                    // ToDo: Get modified time from entity
+                    ModifiedTimeUtc = DateTime.Now,//((EntityModel)entity).,
+                    UniqueKey = entity.EntityGuid.ToString(),
+                    IsActive = true,
+                    TabId = moduleInfo.TabID,
+                    PortalId = moduleInfo.PortalID
                 }));
             }
 
-            engine.PrepareSearchData(searchInfos);
+            engine.CustomizeSearch(searchInfos2, moduleInfo, beginDate);
 
             foreach (var searchInfoList in searchInfos2)
             {
-                searchDocuments.AddRange(searchInfoList.Value);
+                searchDocuments.AddRange(searchInfoList.Value.Select(p => (SearchDocument)p));
             }
 
             return searchDocuments;

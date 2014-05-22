@@ -4,9 +4,11 @@ using System.Linq;
 using System.Web;
 using System.Web.WebPages;
 using DotNetNuke.Common.Utilities;
+using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.DataSources.Tokens;
+using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Engines.TokenEngine;
 using ToSic.SexyContent.Razor.Helpers;
 using System.Collections.Generic;
@@ -182,9 +184,11 @@ namespace ToSic.SexyContent.Razor
         {
         }
 
-        public virtual void PrepareSearch(List<SearchInfo> searchInfos)
+        public virtual void CustomizeSearch(Dictionary<string, List<ISearchInfo>> searchInfos, ModuleInfo moduleInfo, DateTime beginDate)
         {
         }
+
+        public LoadMode LoadMode { get; set; }
 
     }
 

@@ -7,9 +7,9 @@ using ToSic.Eav;
 
 namespace ToSic.SexyContent.Search
 {
-    public class SearchInfo : SearchDocument
+    public class SearchInfo : SearchDocument, ISearchInfo
     {
-        public SearchInfo(IEntity entity)
+        public SearchInfo()
         {
             //AutoExtractEntities = true;
         }

@@ -21,7 +21,7 @@ namespace ToSic.SexyContent.Engines
         /// <param name="hostingModule"></param>
         /// <param name="localResourcesPath"></param>
         /// <param name="dataSource"></param>
-        void Init(Template template, App app, ModuleInfo hostingModule, IDataSource dataSource);
+        void Init(Template template, App app, ModuleInfo hostingModule, IDataSource dataSource, LoadMode loadMode);
 
         /// <summary>
         /// Renders a template, returning a string with the rendered template.
@@ -31,7 +31,7 @@ namespace ToSic.SexyContent.Engines
 
         void CustomizeData();
 
-        void PrepareSearchData(List<SearchInfo> searchInfos);
+        void CustomizeSearch(Dictionary<string, List<ISearchInfo>> searchInfos, ModuleInfo moduleInfo, DateTime beginDate);
 
     }
 }
