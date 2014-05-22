@@ -80,13 +80,19 @@ namespace ToSic.Eav.ManagementUI
 
 		protected override void OnPreRender(EventArgs e)
 		{
-			if (!IsPostBack)
-				txtFilePath.Text = FieldValueEditString;
+		    if (!IsPostBack)
+		    {
+                if(FieldValueEditString == null)
+                    txtFilePath.Text = GetMetaDataValue("DefaultValue", "");
+                else
+		            txtFilePath.Text = FieldValueEditString;
+		    }
 
-			InitDialogOpener();
+		    InitDialogOpener();
 
 			FieldLabel.Text = GetMetaDataValue("Name", Attribute.StaticName);
 			FieldLabel.HelpText = GetMetaDataValue<string>("Notes");
+            valFieldValue.Enabled = GetMetaDataValue<bool>("Required");
 
 			base.OnPreRender(e);
 		}

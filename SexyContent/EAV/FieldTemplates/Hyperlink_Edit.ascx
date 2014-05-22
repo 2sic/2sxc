@@ -9,6 +9,7 @@
 <SexyContent:DimensionMenu runat="server" />
 <div class="eav-field-control" data-homedirectory="<%# PortalSettings.Current.HomeDirectory %>">
 	<asp:TextBox runat="server" ID="txtFilePath" />
+    <asp:RequiredFieldValidator ID="valFieldValue" runat="server" CssClass="dnnFormMessage dnnFormError" ControlToValidate="txtFilePath" Display="Dynamic" EnableClientScript="true" ErrorMessage="Please enter a value."></asp:RequiredFieldValidator>
 	<div class="sc-hyperlink-picker-wrapper">
 		<div class="eav-contextmenu">
 			<asp:HyperLink ID="hlkFileBrowse" runat="server" NavigateUrl='<%# "javascript:" + GetClientOpenDialogCommand() %>' Text="..." CssClass="sc-hyperlink-browse" />

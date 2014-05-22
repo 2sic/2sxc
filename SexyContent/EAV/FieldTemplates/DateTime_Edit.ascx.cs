@@ -8,18 +8,18 @@ namespace ToSic.Eav.ManagementUI
 	{
         protected global::DotNetNuke.UI.UserControls.LabelControl FieldLabel;
 
-        Boolean UseTimePicker = false;
+        Boolean _useTimePicker = false;
 		protected void Page_Load(object sender, EventArgs e)
 		{
-            UseTimePicker = GetMetaDataValue<bool>("UseTimePicker");
-            TimePicker1.Visible = UseTimePicker;
+            _useTimePicker = GetMetaDataValue<bool>("UseTimePicker");
+            TimePicker1.Visible = _useTimePicker;
 
             Calendar1.ToolTip = GetMetaDataValue<string>("Notes");
 
 			if (ShowDataControlOnly)
 				FieldLabel.Visible = false;
 
-            if (GetMetaDataValue<bool>("IsRequired"))
+            if (GetMetaDataValue<bool>("Required"))
             {
                 Calendar1.CssClass += " dnnFormRequired";
                 TimePicker1.CssClass += " dnnFormRequired";
@@ -38,12 +38,12 @@ namespace ToSic.Eav.ManagementUI
                 }
 
 				Calendar1.DataBind();
-                if(UseTimePicker)
+                if(_useTimePicker)
                     TimePicker1.DataBind();
 			}
             FieldLabel.Text = GetMetaDataValue("Name", Attribute.StaticName);
             FieldLabel.HelpText = GetMetaDataValue<string>("Notes");
-            valCalendar1.Enabled = GetMetaDataValue<bool>("IsRequired");
+            valCalendar1.Enabled = GetMetaDataValue<bool>("Required");
 
 			base.OnPreRender(e);
 		}
@@ -55,7 +55,7 @@ namespace ToSic.Eav.ManagementUI
                 DateTime? SelectedDate = null;
                 if (Calendar1.SelectedDate.HasValue)
                     SelectedDate = Calendar1.SelectedDate.Value;
-                if (UseTimePicker)
+                if (_useTimePicker)
                 {
                     if (TimePicker1.SelectedDate.HasValue)
                         SelectedDate += TimePicker1.SelectedDate.Value.TimeOfDay;

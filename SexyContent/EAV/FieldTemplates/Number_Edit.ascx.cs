@@ -12,7 +12,7 @@ namespace ToSic.Eav.ManagementUI
 
         // Meta Data Keys
         private string MetaDataDefaultValueKey = "DefaultValue";
-        private string MetaDataIsRequiredKey = "IsRequired";
+        private string MetaDataIsRequiredKey = "Required";
         private string MetaDataLengthKey = "Length";
         private string MetaDataNotesKey = "Notes";
         private string MetaDataNameKey = "Name";
