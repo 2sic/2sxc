@@ -39,6 +39,7 @@ namespace ToSic.SexyContent.Search
             }
 
             var sexy = new SexyContent(zoneId.Value, appId, true);
+            var language = sexy.GetCurrentLanguageName();
 
             // This list will hold all EAV entities to be indexed
             var dataSource = sexy.GetViewDataSource(moduleInfo.ModuleID, false);
@@ -64,38 +65,31 @@ namespace ToSic.SexyContent.Search
             }
 
             var searchInfos = new List<SearchInfo>();
-            searchInfos.Add(new SearchInfo()
+
+            // ToDo: Name...
+            var searchInfos2 = new Dictionary<string, List<SearchInfo>>();
+
+            // Get DNN SearchDocuments from 2Sexy SearchInfos
+            foreach (var stream in dataSource.Out)
             {
-                AdditionalBody = "",
-                EntityLists = dataSource.Out.ToDictionary(p => p.Key, p => p.Value.List.Select(e => e.Value).ToList()),
-            });
+                var entities = stream.Value.List.Select(p => p.Value);
+                var searchInfoList = searchInfos2[stream.Key] = new List<SearchInfo>();
+
+                searchInfoList.AddRange(entities.Select(entity => new SearchInfo(entity)
+                {
+                    Url = "",
+                    Body = GetJoinedAttributes(entity, language),
+                    Title = entity.Title[language].ToString(),
+                    // ToDo: Modified Date
+                    ModifiedTimeUtc = DateTime.Now
+                }));
+            }
 
             engine.PrepareSearchData(searchInfos);
 
-            // Get DNN SearchDocuments from 2Sexy SearchInfos
-            foreach (var s in searchInfos)
+            foreach (var searchInfoList in searchInfos2)
             {
-                var entities = new List<IEntity>();
-
-                foreach (var entityList in s.EntityLists)
-                    entities.AddRange(entityList.Value);
-
-                string body = entities.Aggregate("", (current, entity) => current + GetJoinedAttributes(entity, sexy.GetCurrentLanguageName()));
-
-                searchDocuments.Add(new SearchDocument()
-                {
-                    Url = s.Url,
-                    // ToDo: UniqueKey!
-                    UniqueKey = moduleInfo.ModuleID.ToString(),
-                    PortalId = moduleInfo.PortalID,
-                    // ToDo: Title!
-                    Title = moduleInfo.ModuleTitle,
-                    // ToDo: Description!
-                    Description = "",
-                    Body = body,
-                    // ToDo: ModifiedTime!
-                    ModifiedTimeUtc = DateTime.Now.ToUniversalTime()
-                });
+                searchDocuments.AddRange(searchInfoList.Value);
             }
 
             return searchDocuments;
