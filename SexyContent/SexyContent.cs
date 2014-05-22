@@ -1,4 +1,12 @@
-﻿using System;
+﻿using DotNetNuke.Common;
+using DotNetNuke.Common.Utilities;
+using DotNetNuke.Entities.Modules;
+using DotNetNuke.Entities.Portals;
+using DotNetNuke.Security.Roles;
+using DotNetNuke.Services.FileSystem;
+using DotNetNuke.Services.Localization;
+using DotNetNuke.Services.Search.Entities;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
@@ -6,26 +14,14 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.UI;
-using DotNetNuke.Entities.Portals;
-using DotNetNuke.Security.Roles;
-using DotNetNuke.Services.Exceptions;
-using DotNetNuke.Services.FileSystem;
-using DotNetNuke.Services.Log.EventLog;
-using DotNetNuke.Services.Search;
-using DotNetNuke.Services.Search.Entities;
-using ToSic.Eav;
-using DotNetNuke.Common.Utilities;
-using DotNetNuke.Services.Localization;
-using DotNetNuke.Entities.Modules;
 using System.Web.UI.HtmlControls;
+using ToSic.Eav;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Caches;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.EAVExtensions;
-using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Search;
 using FileInfo = System.IO.FileInfo;
-using DotNetNuke.Common;
 
 namespace ToSic.SexyContent
 {
@@ -1023,115 +1019,9 @@ namespace ToSic.SexyContent
 
         #region DNN Interface Members
 
-        /// <summary>
-        /// Returns search item collections for DNN
-        /// </summary>
-        /// <param name="moduleInfo"></param>
-        /// <param name="beginDate"></param>
-        /// <returns></returns>
         public override IList<SearchDocument> GetModifiedSearchDocuments(ModuleInfo moduleInfo, DateTime beginDate)
         {
-            var searchDocuments = new List<SearchDocument>();
-
-            var isContentModule = moduleInfo.DesktopModule.ModuleName == "2sxc";
-            
-            // New Context because PortalSettings.Current is null
-            var zoneId = GetZoneID(moduleInfo.PortalID);
-
-            if (!zoneId.HasValue)
-                return searchDocuments;
-
-            var appId = GetDefaultAppId(zoneId.Value);
-
-            if (!isContentModule)
-            {
-                // Get AppId from ModuleSettings
-                var appIdString = moduleInfo.ModuleSettings[SexyContent.AppIDString];
-                if (appIdString == null || !int.TryParse(appIdString.ToString(), out appId))
-                    return searchDocuments;
-            }
-            
-            var sexy = new SexyContent(zoneId.Value, appId, true);
-            
-
-            //// This list will hold all EAV entities to be indexed
-            var dataSource = sexy.GetViewDataSource(moduleInfo.ModuleID, false);
-            var moduleDataSource = (ModuleDataSource)((IDataTarget)dataSource).In["Default"].Source;
-
-            var elements = moduleDataSource.ContentElements.ToList();
-            elements.Add(moduleDataSource.ListElement);
-
-            if (!elements.Any() || !elements.Any(e => e.TemplateId.HasValue))
-                return searchDocuments;
-
-            var template = sexy.TemplateContext.GetTemplate(elements.First().TemplateId.Value);
-            var engine = EngineFactory.CreateEngine(template);
-            engine.Init(template, sexy.App, moduleInfo, dataSource);
-
-            try
-            {
-                engine.CustomizeData();
-            }
-            catch (Exception e) // Catch errors here, because of references to Request etc.
-            {
-                Exceptions.LogException(e);
-            }
-
-            var searchInfos = new List<SearchInfo>();
-            searchInfos.Add(new SearchInfo()
-            {
-                AdditionalSearchText = "",
-                EntityLists = dataSource.Out.ToDictionary(p => p.Key, p => p.Value.List.Select(e => e.Value).ToList()),
-            });
-
-            engine.PrepareSearchData(searchInfos);
-
-            // Get DNN SearchDocuments from 2Sexy SearchInfos
-            foreach (var s in searchInfos)
-            {
-                var entities = new List<IEntity>();
-
-                foreach (var entityList in s.EntityLists)
-                    entities.AddRange(entityList.Value);
-
-                string body = "";
-                foreach (var entity in entities)
-                {
-                    body += String.Join(", ", entity.Attributes.Select(x => x.Value[new string[] { sexy.GetCurrentLanguageName() }]).Where(a => a != null).Select(a => StripHtmlAndHtmlDecode(a.ToString())).Where(x => !String.IsNullOrEmpty(x))) + " ";
-                }
-                
-                searchDocuments.Add(new SearchDocument()
-                {
-                    Url = s.Url,
-                    // ToDo: UniqueKey!
-                    UniqueKey = moduleInfo.ModuleID.ToString(),
-                    PortalId = moduleInfo.PortalID,
-                    // ToDo: Title!
-                    Title = moduleInfo.ModuleTitle,
-                    // ToDo: Description!
-                    Description = "",
-                    Body = body,
-                    // ToDo: ModifiedTime!
-                    ModifiedTimeUtc = DateTime.Now.ToUniversalTime()
-                });
-            }
-
-            //foreach (var Element in elements)
-            //{
-            //    if (Element != null && Element.EntityId.HasValue)
-            //    {
-            //        var Attributes = ((DynamicEntity)Element.Content).Entity.Attributes;
-            //        string Content = String.Join(", ", Attributes.Select(x => x.Value[new string[] { sexy.GetCurrentLanguageName() }]).Where(a => a != null).Select(a => StripHtmlAndHtmlDecode(a.ToString())).Where(x => !String.IsNullOrEmpty(x)));
-
-            //        var ContentGroupItem = sexy.TemplateContext.GetContentGroupItem(Element.ID);
-            //        var PubDate = sexy.ContentContext.GetValues(Element.EntityId.Value).Max(p => (DateTime?)p.ChangeLogCreated.Timestamp);
-
-            //        if (PubDate.HasValue)
-            //            searchItems.Add(new SearchItemInfo(Element.Content.EntityTitle.ToString(), Content, ContentGroupItem == null ? -1 : ContentGroupItem.SysCreatedBy, PubDate.Value, ModInfo.ModuleID, Element.EntityId.ToString(), Content));
-            //    }
-            //}
-
-            return searchDocuments;
+            return new SearchController().GetModifiedSearchDocuments(moduleInfo, beginDate);
         }
 
         #endregion
@@ -1251,11 +1141,6 @@ namespace ToSic.SexyContent
         #endregion
 
         #region Helper Methods
-
-        private string StripHtmlAndHtmlDecode(string Text)
-        {
-            return HttpUtility.HtmlDecode(Regex.Replace(Text, "<.*?>", string.Empty));
-        }
 
         public static void AddDNNVersionToBodyClass(Control Parent)
         {
