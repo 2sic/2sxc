@@ -133,6 +133,7 @@
             </supportedFeatures>
             <moduleDefinitions>
               <moduleDefinition>
+                <definitionName>2Sexy Content</definitionName>
                 <friendlyName>2sxc Content</friendlyName>
                 <defaultCacheTime>0</defaultCacheTime>
                 <moduleControls>
@@ -591,6 +592,7 @@
             </supportedFeatures>
             <moduleDefinitions>
               <moduleDefinition>
+                <definitionName>2Sexy Content App</definitionName>
                 <friendlyName>2sxc Content App</friendlyName>
                 <defaultCacheTime>0</defaultCacheTime>
                 <moduleControls>
