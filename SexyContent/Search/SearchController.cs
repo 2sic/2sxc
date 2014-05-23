@@ -47,7 +47,9 @@ namespace ToSic.SexyContent.Search
             var moduleDataSource = (ModuleDataSource)((IDataTarget)dataSource).In["Default"].Source;
 
             var elements = moduleDataSource.ContentElements.ToList();
-            elements.Add(moduleDataSource.ListElement);
+            var listElement = moduleDataSource.ListElement;
+            if(listElement != null)
+                elements.Add(listElement);
 
             if (!elements.Any() || !elements.Any(e => e.TemplateId.HasValue))
                 return searchDocuments;

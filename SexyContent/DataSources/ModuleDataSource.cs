@@ -133,7 +133,8 @@ namespace ToSic.SexyContent.DataSources
                         ? templateDefault.DemoEntityID.Value
                         : new int?());
 
-                if (!entityId.HasValue)
+                // We can't deliver entities that are not delivered by base (original stream), so continue
+                if (!entityId.HasValue || !originals.ContainsKey(entityId.Value))
                     continue;
 
                 var key = entityId.Value;
