@@ -82,6 +82,15 @@ namespace ToSic.SexyContent.Razor
             return ((DynamicEntity)dynamicEntity).Entity;
         }
 
+        /// <summary>
+        /// Returns a list of DynamicEntities
+        /// </summary>
+        /// <param name="entityList">List of entities</param>
+        /// <returns></returns>
+        public dynamic AsDynamic(IEnumerable<IEntity> entityList)
+        {
+            return entityList.Select(e => AsDynamic(e));
+        }
         
 
         // </2sic>
