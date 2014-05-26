@@ -58,6 +58,7 @@ namespace ToSic.SexyContent.DataSources
             Out.Add("ListPresentation", new DataStream(this, "Default", GetListPresentation));
 
             Configuration.Add("ModuleId", "[Module:ModuleID]");
+            Configuration.Add("IncludeEditingData", "False");
         }
 
         private IDictionary<int, IEntity> _content;
@@ -104,6 +105,7 @@ namespace ToSic.SexyContent.DataSources
         {
             var templateDefault = TemplateDefaults.FirstOrDefault(t => t.ItemType == itemType);
             var items = ContentGroupItems.Where(p => p.ItemType == itemType).ToList(); // Create copy of list (not in cache)
+            var includeEditingData = IncludeEditingData;
 
             // If no Content Elements exist and type is List, add a ContentGroupItem to List (not to DB)
             if (itemType == ContentGroupItemType.ListContent && items.All(p => p.ItemType != ContentGroupItemType.ListContent))
@@ -143,7 +145,10 @@ namespace ToSic.SexyContent.DataSources
                 while (entitiesToDeliver.ContainsKey(key))
                     key += 1000000000;
 
-                entitiesToDeliver.Add(key, new EAVExtensions.EntityInContentGroup(originals[entityId.Value]) { SortOrder = i.SortOrder });
+                if(includeEditingData)
+                    entitiesToDeliver.Add(key, new EAVExtensions.EntityInContentGroup(originals[entityId.Value]) { SortOrder = i.SortOrder, ContentGroupItemModified = i.SysModified });
+                else
+                    entitiesToDeliver.Add(key, originals[entityId.Value]);
             }
 
             return entitiesToDeliver;
@@ -164,6 +169,12 @@ namespace ToSic.SexyContent.DataSources
         private int? ListId
         {
             get { return ModuleId.HasValue ? Sexy.GetContentGroupIdFromModule(ModuleId.Value) : new int?(); }
+        }
+
+        public bool IncludeEditingData
+        {
+            get { return Boolean.Parse(Configuration["IncludeEditingData"]); }
+            set { Configuration["IncludeEditingData"] = value.ToString(); }
         }
 
         private IEnumerable<Element> GetElements(ContentGroupItemType contentItemType, ContentGroupItemType presentationItemType)

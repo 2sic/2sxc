@@ -43,7 +43,7 @@ namespace ToSic.SexyContent.Search
             var language = sexy.GetCurrentLanguageName();
 
             // This list will hold all EAV entities to be indexed
-            var dataSource = sexy.GetViewDataSource(moduleInfo.ModuleID, false);
+            var dataSource = sexy.GetViewDataSource(moduleInfo.ModuleID, false, true);
             var moduleDataSource = (ModuleDataSource)((IDataTarget)dataSource).In["Default"].Source;
 
             var elements = moduleDataSource.ContentElements.ToList();
@@ -84,8 +84,8 @@ namespace ToSic.SexyContent.Search
                     Description = "",
                     Body = GetJoinedAttributes(entity, language),
                     Title = entity.Title[language].ToString(),
-                    // ToDo: Get modified time from entity
-                    ModifiedTimeUtc = DateTime.Now.ToUniversalTime(),//((EntityModel)entity).,
+                    // ToDo: Date of ContentGroupItem should also be respected...
+                    ModifiedTimeUtc = entity.Modified >  entity.Modified.ToUniversalTime(),
                     UniqueKey = entity.EntityGuid.ToString(),
                     IsActive = true,
                     TabId = moduleInfo.TabID,
@@ -104,41 +104,11 @@ namespace ToSic.SexyContent.Search
 
             foreach (var searchInfoList in searchInfoDictionary)
             {
-                searchDocuments.AddRange(searchInfoList.Value.Select(p => (SearchDocument)p));
+                // Filter by Date - take only SearchDocuments that changed since beginDate
+                var searchDocumentsToAdd = searchInfoList.Value.Where(p => p.ModifiedTimeUtc >= beginDate.ToUniversalTime()).Select(p => (SearchDocument) p);
+
+                searchDocuments.AddRange(searchDocumentsToAdd);
             }
-
-
-            // 2SexyContent does not support delta search, so add SearchDocuments for all deleted entries
-            //var moduleSearchController = DotNetNuke.Services.Search.Controllers.SearchController.Instance;
-
-
-            //DotNetNuke.Services.Search.Internals.InternalSearchController.Instance.
-
-            //DotNetNuke.Services.Search.Controllers.SearchController.SetTestableInstance(moduleSearchController);
-            //var moduleSearch = moduleSearchController.ModuleSearch(new SearchQuery() { ModuleId = moduleInfo.ModuleID, PortalIds = new[] { moduleInfo.PortalID } });
-            //var searchDocumentsToDelete =
-            //    moduleSearch.Results.Where(r => searchDocuments.All(s => s.UniqueKey != r.UniqueKey))
-            //        .Select(r => new SearchDocument()
-            //        {
-            //            UniqueKey = r.UniqueKey,
-            //            PortalId = r.PortalId,
-            //            CultureCode = r.CultureCode,
-            //            IsActive = r.IsActive
-            //        });
-
-            //searchDocuments.AddRange(searchDocumentsToDelete);
-
-
-            //var sourceLists = DotNetNuke.Services.Search.Internals.InternalSearchController.Instance.GetSearchContentSourceList(
-            //    moduleInfo.PortalID);
-
-            //foreach (var source in sourceLists)
-            //{
-            //    source.
-            //}
-
-            //DotNetNuke.Services.Search.Controllers.SearchController.Instance.
-
 
             return searchDocuments;
         }
@@ -148,10 +118,17 @@ namespace ToSic.SexyContent.Search
             return HttpUtility.HtmlDecode(Regex.Replace(Text, "<.*?>", string.Empty));
         }
 
+        /// <summary>
+        /// Gets a string that represents all entities joined with a comma , separator
+        /// Does just include String and Number fields
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="language"></param>
+        /// <returns></returns>
         private string GetJoinedAttributes(IEntity entity, string language)
         {
             return String.Join(", ",
-                entity.Attributes.Select(x => x.Value[new[] {language}])
+                entity.Attributes.Where(x => x.Value.Type == "String" || x.Value.Type == "Number").Select(x => x.Value[new[] {language}])
                     .Where(a => a != null)
                     .Select(a => StripHtmlAndHtmlDecode(a.ToString()))
                     .Where(x => !String.IsNullOrEmpty(x))) + " ";

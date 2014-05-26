@@ -1,4 +1,5 @@
-﻿using ToSic.Eav;
+﻿using System;
+using ToSic.Eav;
 
 namespace ToSic.SexyContent.EAVExtensions
 {
@@ -9,5 +10,6 @@ namespace ToSic.SexyContent.EAVExtensions
         }
 
         public int SortOrder { get; set; }
+        public DateTime ContentGroupItemModified { get; set; }
     }
 }

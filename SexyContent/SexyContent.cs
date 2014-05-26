@@ -576,13 +576,14 @@ namespace ToSic.SexyContent
         /// The EAV DataSource
         /// </summary>
         private ToSic.Eav.DataSources.IDataSource ViewDataSource { get; set; }
-        public ToSic.Eav.DataSources.IDataSource GetViewDataSource(int moduleId, bool showDrafts)
+        public ToSic.Eav.DataSources.IDataSource GetViewDataSource(int moduleId, bool showDrafts, bool includeEditingData)
         {
             if (ViewDataSource == null)
             {
                 var initialSource = GetInitialDataSource(ZoneId.Value, AppId.Value, showDrafts);
                 var moduleDataSource = DataSource.GetDataSource<ModuleDataSource>(ZoneId, AppId, initialSource);
                 moduleDataSource.ModuleId = moduleId;
+                moduleDataSource.IncludeEditingData = true;
 
                 var viewDataSource = DataSource.GetDataSource<ViewDataSource>(ZoneId, AppId, moduleDataSource);
                 var moduleSettings = new ModuleController().GetModuleSettings(moduleId);
@@ -604,7 +605,7 @@ namespace ToSic.SexyContent
             // ToDo: Refactor
             //return GetElements(ModuleID, ContentGroupID, ContentGroupItemType.Content, ContentGroupItemType.Presentation, LanguageName, PortalId, showDrafts);
 
-            var dataSource = (ModuleDataSource)((IDataTarget)GetViewDataSource(ModuleID, showDrafts)).In["Default"].Source;
+            var dataSource = (ModuleDataSource)((IDataTarget)GetViewDataSource(ModuleID, showDrafts, false)).In["Default"].Source;
             return dataSource.ContentElements;
         }
 
@@ -614,7 +615,7 @@ namespace ToSic.SexyContent
             //var ListElement = GetElements(ModuleID, ContentGroupID, ContentGroupItemType.ListContent, ContentGroupItemType.ListPresentation, LanguageName, PortalId, showDrafts).FirstOrDefault();
             //return ListElement;
 
-            var dataSource = (ModuleDataSource)((IDataTarget) GetViewDataSource(ModuleID, showDrafts)).In["Default"].Source;
+            var dataSource = (ModuleDataSource)((IDataTarget) GetViewDataSource(ModuleID, showDrafts, false)).In["Default"].Source;
             return dataSource.ListElement;
         }
 
