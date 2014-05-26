@@ -234,7 +234,7 @@ namespace ToSic.SexyContent
                 {
                     ddlContentType.DataSource = Sexy.GetAvailableAttributeSetsForVisibleTemplates(PortalId);
                     ddlContentType.DataBind();
-                    ddlContentType.Enabled = Elements.Count > 1;
+                    ddlContentType.Enabled = Elements.Count <= 1;
 
                     if (Template != null)
                         ddlContentType.SelectedValue = Template.AttributeSetID.ToString();
