@@ -47,6 +47,10 @@ namespace ToSic.SexyContent.EAVExtensions
             get { return _baseEntity.Title; }
         }
 
+        public DateTime Modified {
+            get { return _baseEntity.Modified; }
+        }
+
         public IAttribute this[string attributeName]
         {
             get { return _baseEntity[attributeName]; }
