@@ -166,6 +166,6 @@
     <value>To get started, choose „Admin“ in the module menu (make sure you’re in edit-page mode).</value>
   </data>
   <data name="EnableDataPublishing.Text" xml:space="preserve">
-    <value>Setup JSON publishing in the module settings to allow data publishing.</value>
+    <value>This module is trying to retrieve data from the server. If you see this message, it is because Data Publishing is not enabled on this module. Please enable it in the module settings of the module {0} (the module with the title "{1}").</value>
   </data>
 </root>

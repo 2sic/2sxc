@@ -166,6 +166,6 @@
     <value>Beginne im “Admin” Bereich im Modul-Menü (nur sichtbar im Seite-Bearbeiten-Modus).</value>
   </data>
   <data name="EnableDataPublishing.Text" xml:space="preserve">
-    <value>Aktiviere JSON-Publishing in den Moduleinstellungen, damit die Daten geladen werden können.</value>
+    <value>Dieses Modul benötigt Daten vom Server. Wenn Du diese Meldung siehst, ist das Veröffentlichen für dieses Modul nicht aktiviert. Bitte aktiviere das in den Moduleinstellungen des Moduls {0} (das Modul mit dem Titel "{1}").</value>
   </data>
 </root>

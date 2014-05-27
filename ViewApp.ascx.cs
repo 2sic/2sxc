@@ -147,7 +147,8 @@ namespace ToSic.SexyContent
                     else
                     {
                         Response.StatusCode = 403;
-                        renderedTemplate = (new { error = "2sxc Content (" + ModuleId + "): " + LocalizeString("EnableDataPublishing.Text") }).ToJson();
+                        var moduleTitle = new ModuleController().GetModule(ModuleId).ModuleTitle;
+                        renderedTemplate = (new { error = "2sxc Content (" + ModuleId + "): " + String.Format(LocalizeString("EnableDataPublishing.Text"), ModuleId, moduleTitle) }).ToJson();
                         Response.TrySkipIisCustomErrors = true;
                     }
                     Response.ContentType = "application/json";
