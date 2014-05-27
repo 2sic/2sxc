@@ -88,7 +88,7 @@ namespace ToSic.SexyContent.Search
                         Body = GetJoinedAttributes(entity, language),
                         Title = entity.Title[language].ToString(),
                         ModifiedTimeUtc = entity.Modified.ToUniversalTime(),
-                        UniqueKey = entity.EntityGuid.ToString(),
+                        UniqueKey = "2sxc-" + moduleInfo.ModuleID + "-" + (entity.EntityGuid != new Guid() ? entity.EntityGuid.ToString() : (stream.Key + "-" + entity.EntityId)),
                         IsActive = true,
                         TabId = moduleInfo.TabID,
                         PortalId = moduleInfo.PortalID
