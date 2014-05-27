@@ -95,6 +95,14 @@ $2sxc.getManageController = function(id) {
                 'onclick': 'javascript:$2sxc(' + id + ').manage.action(' + JSON.stringify(settings) + ')'
             });
 
+            if (settings.isPublished == null || settings.isPublished == true) {
+                button.addClass("sc-published");
+                button.attr("title", "Published");
+            } else {
+                button.addClass("sc-draft");
+                button.attr("title", "Draft");
+            }
+
             return button[0].outerHTML;
         },
 

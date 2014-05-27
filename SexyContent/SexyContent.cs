@@ -641,18 +641,18 @@ namespace ToSic.SexyContent
 
         #region URL Handling / Toolbar
 
-        /// <summary>
-        /// Get Toolbar HTML for given Element
-        /// </summary>
-        /// <param name="Element"></param>
-        /// <param name="HostingModule"></param>
-        /// <param name="LocalResourcesPath"></param>
-        /// <param name="ListEnabled"></param>
-        /// <returns></returns>
-        public string GetElementToolbar(int sortOrder)
-        {
-            return "<ul class='sc-menu' data-toolbar='" + new { sortOrder = sortOrder, useModuleList = true }.ToJson() + "'></ul>";
-        }
+        ///// <summary>
+        ///// Get Toolbar HTML for given Element
+        ///// </summary>
+        ///// <param name="Element"></param>
+        ///// <param name="HostingModule"></param>
+        ///// <param name="LocalResourcesPath"></param>
+        ///// <param name="ListEnabled"></param>
+        ///// <returns></returns>
+        //public string GetElementToolbar(int sortOrder)
+        //{
+        //    return "<ul class='sc-menu' data-toolbar='" + new { sortOrder = sortOrder, useModuleList = true }.ToJson() + "'></ul>";
+        //}
 
         /// <summary>
         /// Get the URL for editing MetaData

@@ -233,8 +233,9 @@ namespace ToSic.SexyContent.DataSources
                            }).ToList();
 
             // Add Toolbar if neccessary, else add empty string to dictionary
+            // ToDo: This should be done inside of the DynamicEntity object (Toolbar property), but DynamicEntities above have to be wrapped inside of IHasEditingData
             if (PortalSettings.Current != null && DotNetNuke.Common.Globals.IsEditMode())
-                elements.Where(p => p.Content != null).ToList().ForEach(p => ((DynamicEntity)p.Content).ToolbarString = "<ul class='sc-menu' data-toolbar='" + new { sortOrder = p.SortOrder, useModuleList = true }.ToJson() + "'></ul>");
+                elements.Where(p => p.Content != null).ToList().ForEach(p => ((DynamicEntity)p.Content).ToolbarString = "<ul class='sc-menu' data-toolbar='" + new { sortOrder = p.SortOrder, useModuleList = true, isPublished = (((DynamicEntity)p.Content)).Entity.IsPublished }.ToJson() + "'></ul>");
             
             return elements;
         }

@@ -4,9 +4,11 @@ using System.Dynamic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
+using DotNetNuke.Common.Utilities;
 using DotNetNuke.Services.FileSystem;
 using ToSic.Eav;
 using ToSic.Eav.DataSources;
+using ToSic.SexyContent.EAVExtensions;
 
 namespace ToSic.SexyContent
 {
@@ -16,7 +18,15 @@ namespace ToSic.SexyContent
         public IEntity Entity { get; set; }
         public string ToolbarString { get; set; }
         public HtmlString Toolbar {
-            get { return new HtmlString(ToolbarString); }
+            get
+            {
+                if(!DotNetNuke.Common.Globals.IsEditMode()) return new HtmlString("");
+
+                if (ToolbarString != "")
+                    return new HtmlString(ToolbarString);
+
+                return new HtmlString("<ul class='sc-menu' data-toolbar='" + new { entityId = Entity.EntityId, isPublished = Entity.IsPublished }.ToJson() + "'></ul>");
+            }
         }
         private readonly string[] _dimensions;
 
@@ -82,7 +92,7 @@ namespace ToSic.SexyContent
                         result = EntityId;
                         break;
                     case "Toolbar":
-                        result = ToolbarString;
+                        result = Toolbar.ToString();
                         break;
                     case "IsPublished":
                         result = Entity.IsPublished;
