@@ -145,6 +145,6 @@
     <value>At least one field contains an invalid value.</value>
   </data>
   <data name="Published.Text" xml:space="preserve">
-    <value>Published</value>
+    <value>Publish changes</value>
   </data>
 </root>
