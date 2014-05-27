@@ -46,6 +46,9 @@ var $2sxc = function (id) {
                         controller.lastRefresh = new Date();
                         controller.data._triggerLoaded();
                     };
+                    source.error = function(request) {
+                        alert(JSON.parse(request.responseText).error);
+                    };
                     controller.data.source = source;
                     return controller.data.reload();
                 }
@@ -82,7 +85,10 @@ var $2sxc = function (id) {
         source: null,
         isLoaded: false,
         lastRefresh: null,
-        manage: $2sxc.getManageController ? $2sxc.getManageController(id) : null
+        manage: $2sxc.getManageController ? $2sxc.getManageController(id) : null,
+        isEditMode: function() {
+            return controller.manage && controller.manage.isEditMode();
+        }
     };
 
     // Make sure back-reference to controller is set
@@ -93,6 +99,6 @@ var $2sxc = function (id) {
 
 $2sxc._controllers = {};
 $2sxc.metaName = "The 2SexyContent Controller object";
-$2sxc.metaVersion = "06.00.05";
+$2sxc.metaVersion = "06.00.09";
 $2sxc.beta = {};
 $2sxc._data = {};

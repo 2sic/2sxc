@@ -13,6 +13,8 @@ using System.Linq;
 using DotNetNuke.Entities.Modules;
 using ToSic.Eav;
 using DotNetNuke.Entities.Modules.Actions;
+using ToSic.SexyContent.DataSources;
+using ToSic.SexyContent.Engines;
 
 namespace ToSic.SexyContent
 {
@@ -119,7 +121,7 @@ namespace ToSic.SexyContent
 
             if (Elements.First().Content == null)
             {
-                var toolbar = IsEditable ? Sexy.GetElementToolbar(Elements.First().GroupID, Elements.First().SortOrder, Elements.First().ID, ModuleId, LocalResourceFile, false, this, Request.RawUrl) : "";
+                var toolbar = IsEditable ? "<ul class='sc-menu' data-toolbar='" + new { sortOrder = Elements.First().SortOrder, useModuleList = true, action = "edit" }.ToJson() + "'></ul>" : "";
                 ShowMessage(LocalizeString("NoDemoItem.Text") + " " + toolbar);
                 return;
             }
@@ -128,37 +130,45 @@ namespace ToSic.SexyContent
 
             try
             {
-                var ListElement = Sexy.GetListElement(ModuleId, Sexy.GetCurrentLanguageName(), null, PortalId, ModulePermissionController.CanEditModuleContent(this.ModuleConfiguration));
-
-                // Attach Toolbar to Elements
-                Sexy.AttachToolbarToElements(new List<Element> { ListElement }, ModuleId, LocalResourceFile, Template.UseForList, ModuleContext.IsEditable, this, Request.RawUrl);
-                Sexy.AttachToolbarToElements(Elements, ModuleId, LocalResourceFile, Template.UseForList, ModuleContext.IsEditable, this, Request.RawUrl);
-
-                string RenderedTemplate = "";
+                
+                string renderedTemplate = "";
+                var engine = EngineFactory.CreateEngine(Template);
+                var dataSource = (ViewDataSource)Sexy.GetViewDataSource(this.ModuleId, ModulePermissionController.CanEditModuleContent(this.ModuleConfiguration), DotNetNuke.Common.Globals.IsEditMode());
+                engine.Init(Template, Sexy.App, this.ModuleConfiguration, dataSource, Request.QueryString["type"] == "data" ? InstancePurposes.PublishData : InstancePurposes.WebView);
+                engine.CustomizeData();
 
                 // Output JSON data if type=data in URL
-                if (Request.QueryString["type"] == "data" && Settings.ContainsKey(SexyContent.SettingsPublishDataSource) &&
-                    Boolean.Parse(Settings[SexyContent.SettingsPublishDataSource].ToString()))
+                if (Request.QueryString["type"] == "data")
                 {
-                    RenderedTemplate = Sexy.GetJsonFromElements(Elements, Sexy.GetCurrentLanguageName());
+                    if (dataSource.Publish.Enabled)
+                    {
+                        var publishedStreams = dataSource.Publish.Streams;
+                        renderedTemplate = Sexy.GetJsonFromStreams(dataSource, publishedStreams.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries));
+                    }
+                    else
+                    {
+                        Response.StatusCode = 403;
+                        renderedTemplate = (new { error = "2sxc Content (" + ModuleId + "): " + LocalizeString("EnableDataPublishing.Text") }).ToJson();
+                        Response.TrySkipIisCustomErrors = true;
+                    }
                     Response.ContentType = "application/json";
                 }
                 else
-                    RenderedTemplate = Template.RenderTemplate(Page, Server, PortalSettings, ModuleContext,
-                                                               LocalResourceFile, Elements, ListElement, this,
-                                                               Sexy.SexyDataSource, Sexy, AppId.Value);
+                {
+                    renderedTemplate = engine.Render();
+                }
 
                 // If standalone is specified, output just the template without anything else
                 if (StandAlone)
                 {
                     Response.Clear();
-                    Response.Write(RenderedTemplate);
+                    Response.Write(renderedTemplate);
                     Response.Flush();
                     Response.SuppressContent = true;
                     HttpContext.Current.ApplicationInstance.CompleteRequest();
                 }
                 else
-                    phOutput.Controls.Add(new LiteralControl(RenderedTemplate));
+                    phOutput.Controls.Add(new LiteralControl(renderedTemplate));
             }
             // Catch errors
             //catch (SexyContentException Ex)
@@ -224,7 +234,7 @@ namespace ToSic.SexyContent
                 {
                     ddlContentType.DataSource = Sexy.GetAvailableAttributeSetsForVisibleTemplates(PortalId);
                     ddlContentType.DataBind();
-                    ddlContentType.Enabled = !IsList;
+                    ddlContentType.Enabled = Elements.Count <= 1;
 
                     if (Template != null)
                         ddlContentType.SelectedValue = Template.AttributeSetID.ToString();
@@ -248,7 +258,7 @@ namespace ToSic.SexyContent
         {
             IEnumerable<Template> TemplatesToChoose;
 
-            if (!IsList)
+            if (Elements.Count <= 1)
                 TemplatesToChoose = Sexy.GetVisibleTemplates(PortalId);
             else
                 TemplatesToChoose = Sexy.GetVisibleListTemplates(PortalId);
@@ -260,7 +270,7 @@ namespace ToSic.SexyContent
             ddlTemplate.DataSource = TemplatesToChoose;
             ddlTemplate.DataBind();
             // If the current data is a list of entities, don't allow changing back to no template
-            if(!IsList)
+            if(Elements.Count <= 1)
                 ddlTemplate.Items.Insert(0, new ListItem(LocalizeString("ddlTemplateDefaultItem.Text"), "0"));
 
             // If there are elements and the selected template exists in the list, select that
@@ -300,7 +310,7 @@ namespace ToSic.SexyContent
                 if (Template != null && TemplateID == Template.TemplateID)
                     return;
 
-                SexyUncached.UpdateTemplateForGroup(Sexy.GetContentGroupIDFromModule(ModuleId), TemplateID,
+                SexyUncached.UpdateTemplateForGroup(Sexy.GetContentGroupIdFromModule(ModuleId), TemplateID,
                                                               UserId);
 
                 Response.Redirect(Request.RawUrl);

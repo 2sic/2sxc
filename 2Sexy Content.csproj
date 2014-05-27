@@ -259,10 +259,12 @@
     <Compile Include="SexyContent\DataImportExport\LanguageReferenceExportOption.cs" />
     <Compile Include="SexyContent\DataImportExport\ResourceReferenceExportOption.cs" />
     <Compile Include="SexyContent\DataImportExport\Extensions\XElementExtension.cs" />
+    <Compile Include="SexyContent\DataPublishing.cs" />
     <Compile Include="SexyContent\DataSources\EntitiesFromList.cs" />
     <Compile Include="SexyContent\DataSources\ModuleDataSource.cs" />
     <Compile Include="SexyContent\DataSources\Tokens\ModulePropertyAccess.cs" />
     <Compile Include="SexyContent\DataSources\Tokens\QueryStringPropertyAccess.cs" />
+    <Compile Include="SexyContent\DataSources\ViewDataSource.cs" />
     <Compile Include="SexyContent\EAV\FieldTemplates\EditorProvider.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
@@ -310,11 +312,17 @@
     <Compile Include="SexyContent\EAV\FieldTemplates\String_Edit.ascx.designer.cs">
       <DependentUpon>String_Edit.ascx</DependentUpon>
     </Compile>
+    <Compile Include="SexyContent\Engines\EngineBase.cs" />
+    <Compile Include="SexyContent\Engines\EngineFactory.cs" />
     <Compile Include="SexyContent\Engines\IEngine.cs" />
+    <Compile Include="SexyContent\Engines\InstancePurposes.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\AppPropertyAccess.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\DynamicEntityPropertyAccess.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\TokenEngine.cs" />
     <Compile Include="SexyContent\DataImportExport\Extensions\AttributeSetExtension.cs" />
+    <Compile Include="SexyContent\EAVExtensions\EntityDecorator.cs" />
+    <Compile Include="SexyContent\EAVExtensions\EntityInContentGroup.cs" />
+    <Compile Include="SexyContent\EAVExtensions\IHasEditingData.cs" />
     <Compile Include="SexyContent\IEditContentControl.cs" />
     <Compile Include="SexyContent\ImportExport\ExportImportMessage.cs" />
     <Compile Include="SexyContent\ImportExport\ImportExport.cs" />
@@ -324,6 +332,9 @@
     <Compile Include="SexyContent\ImportExport\XmlImport.cs" />
     <Compile Include="SexyContent\ImportExport\ZipExport.cs" />
     <Compile Include="SexyContent\ImportExport\ZipImport.cs" />
+    <Compile Include="SexyContent\Search\ISearchInfo.cs" />
+    <Compile Include="SexyContent\Search\SearchController.cs" />
+    <Compile Include="SexyContent\Search\SearchInfo.cs" />
     <Compile Include="SexyContent\SexyContentContext.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -524,6 +535,7 @@
     <Content Include="SqlDataProvider\05.05.03.SqlDataProvider" />
     <Content Include="SqlDataProvider\05.06.00.SqlDataProvider" />
     <Content Include="SqlDataProvider\06.00.05.SqlDataProvider" />
+    <Content Include="SqlDataProvider\06.00.09.SqlDataProvider" />
     <None Include="SqlDataProvider\Uninstall.SqlDataProvider" />
     <Content Include="web.config" />
   </ItemGroup>

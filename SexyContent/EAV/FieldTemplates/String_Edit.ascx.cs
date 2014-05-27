@@ -113,8 +113,8 @@ namespace ToSic.Eav.ManagementUI
             {
                 TextBox1.Visible = false;
                 DropDown1.Visible = true;
-                if (MetaData != null && MetaData.ContainsKey(MetaDataDrowdownValuesKey) && !String.IsNullOrEmpty(MetaData[MetaDataDrowdownValuesKey][DimensionIds].ToString()))
-                    DropDown1.DataSource = (from c in MetaData[MetaDataDrowdownValuesKey][DimensionIds].ToString().Replace("\r", "").Split('\n')
+                if (!String.IsNullOrEmpty(GetMetaDataValue<string>(MetaDataDrowdownValuesKey)))
+                    DropDown1.DataSource = (from c in GetMetaDataValue<string>(MetaDataDrowdownValuesKey).Replace("\r", "").Split('\n')
                                             select new
                                             {
                                                 Text = c.Contains(':') ? (c.Split(':'))[0] : c,
@@ -144,20 +144,22 @@ namespace ToSic.Eav.ManagementUI
             else
             {
                 // Row Count of multiline field
-                if (MetaData != null && MetaData.ContainsKey(MetaDataRowCountKey) && MetaData[MetaDataRowCountKey][DimensionIds] != null)
+                var metaDataRowCount = GetMetaDataValue<decimal?>(MetaDataRowCountKey);
+                if (metaDataRowCount.HasValue && metaDataRowCount > 0)
                 {
-                    TextBox1.Rows = int.Parse(MetaData[MetaDataRowCountKey][DimensionIds].ToString());
+                    TextBox1.Rows = Convert.ToInt32(metaDataRowCount.Value.ToString());
                     if(TextBox1.Rows > 1)
                         TextBox1.TextMode = System.Web.UI.WebControls.TextBoxMode.MultiLine;
                 }
 
-                if (MetaData.ContainsKey(MetaDataIsRequiredKey) && Boolean.Parse(MetaData[MetaDataIsRequiredKey][DimensionIds].ToString()))
+                if (GetMetaDataValue<bool>(MetaDataIsRequiredKey))
                     TextBox1.CssClass += " dnnFormRequired";
 
-                if (MetaData.ContainsKey(MetaDataLengthKey))
-                    TextBox1.MaxLength = int.Parse(MetaData[MetaDataLengthKey][DimensionIds].ToString());
+                var metaDataLength = GetMetaDataValue<int?>(MetaDataLengthKey);
+                if (metaDataLength.HasValue && metaDataLength > 0)
+                    TextBox1.MaxLength = metaDataLength.Value;
 
-                TextBox1.ToolTip = MetaData.ContainsKey(MetaDataNotesKey) ? MetaData[MetaDataNotesKey][DimensionIds].ToString() : "";
+                TextBox1.ToolTip = GetMetaDataValue<string>(MetaDataNotesKey);
 
                 if (FieldValueEditString != null)
                     TextBox1.Text = FieldValueEditString;
@@ -170,8 +172,9 @@ namespace ToSic.Eav.ManagementUI
 
             valFieldValue.DataBind();
 
-            if (MetaData.ContainsKey(MetaDataRegularExpression))
-                valRegularExpression.ValidationExpression = MetaData[MetaDataRegularExpression][DimensionIds].ToString();
+            var metaRegularExpressions = GetMetaDataValue<string>(MetaDataRegularExpression);
+            if (!String.IsNullOrEmpty(metaRegularExpressions))
+                valRegularExpression.ValidationExpression = metaRegularExpressions;
             valRegularExpression.DataBind();
         }
 
@@ -186,10 +189,10 @@ namespace ToSic.Eav.ManagementUI
                 IsInitialized = true;
             }
 
-            FieldLabel.Text = MetaData.ContainsKey(MetaDataNameKey) ? MetaData[MetaDataNameKey][DimensionIds].ToString() : Attribute.StaticName;
-            FieldLabel.HelpText = MetaData.ContainsKey(MetaDataNotesKey) ? MetaData[MetaDataNotesKey][DimensionIds].ToString() : "";
-            valFieldValue.Enabled = MetaData.ContainsKey(MetaDataIsRequiredKey) && Boolean.Parse(MetaData[MetaDataIsRequiredKey][DimensionIds].ToString());
-            valRegularExpression.Enabled = MetaData.ContainsKey(MetaDataRegularExpression) && !String.IsNullOrEmpty(MetaData[MetaDataRegularExpression][DimensionIds].ToString());
+            FieldLabel.Text = GetMetaDataValue<string>(MetaDataNameKey, Attribute.StaticName);
+            FieldLabel.HelpText = GetMetaDataValue<string>(MetaDataNotesKey);
+            valFieldValue.Enabled = GetMetaDataValue<bool>(MetaDataIsRequiredKey);
+            valRegularExpression.Enabled = !String.IsNullOrEmpty(GetMetaDataValue<string>(MetaDataRegularExpression));
             
             // base.OnLoad(e);
         }

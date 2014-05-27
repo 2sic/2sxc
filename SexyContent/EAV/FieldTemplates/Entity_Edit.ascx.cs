@@ -14,7 +14,7 @@ namespace ToSic.Eav.ManagementUI
 		}
 		private bool AllowMultiValue
 		{
-			get { return MetaData.ContainsKey("AllowMultiValue") && (bool)MetaData["AllowMultiValue"][DimensionIds]; }
+            get { return GetMetaDataValue<bool>("AllowMultiValue"); }
 		}
 
 		protected void Page_Load(object sender, EventArgs e)
@@ -26,13 +26,13 @@ namespace ToSic.Eav.ManagementUI
 				hfEntityIds.Visible = true;
 				pnlMultiValues.Visible = true;
 				phAddMultiValue.Visible = true;
-				if (RelatedEntities != null)
-					hfEntityIds.Value = string.Join(",", RelatedEntities.EntityIds);
+                if(RelatedEntities != null)
+			        hfEntityIds.Value = string.Join(",", RelatedEntities.EntityIds);
 			}
 
-			DropDownList1.ToolTip = MetaData.ContainsKey("Notes") ? MetaData["Notes"][DimensionIds].ToString() : null;
-			FieldLabel.Text = MetaData.ContainsKey("Name") ? MetaData["Name"][DimensionIds].ToString() : Attribute.StaticName;
-            FieldLabel.HelpText = MetaData.ContainsKey("Notes") ? MetaData["Notes"][DimensionIds].ToString() : "";
+            DropDownList1.ToolTip = GetMetaDataValue<string>("Notes");
+            FieldLabel.Text = GetMetaDataValue("Name", Attribute.StaticName);
+            FieldLabel.HelpText = GetMetaDataValue<string>("Notes");
 
 			if (ShowDataControlOnly)
 				FieldLabel.Visible = false;
@@ -42,8 +42,9 @@ namespace ToSic.Eav.ManagementUI
 		{
 			var dsrc = DataSource.GetInitialDataSource(ZoneId, AppId);
 			IContentType foundType = null;
-			if (MetaData.ContainsKey("EntityType") && !string.IsNullOrWhiteSpace(MetaData["EntityType"][DimensionIds].ToString()))
-				foundType = DataSource.GetCache(dsrc.ZoneId, dsrc.AppId).GetContentType(MetaData["EntityType"][DimensionIds].ToString());
+            var strEntityType = GetMetaDataValue<string>("EntityType");
+            if (!string.IsNullOrWhiteSpace(strEntityType))
+                foundType = DataSource.GetCache(dsrc.ZoneId, dsrc.AppId).GetContentType(strEntityType);
 
 		    var entities = from l in dsrc["Default"].List
 						   where l.Value.Type == foundType || foundType == null

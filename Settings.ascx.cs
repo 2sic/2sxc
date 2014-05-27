@@ -25,8 +25,7 @@ namespace ToSic.SexyContent
 
             // Load DataSource Settings
             chkPublishSource.Checked = Settings.ContainsKey(SexyContent.SettingsPublishDataSource) && Boolean.Parse(Settings[SexyContent.SettingsPublishDataSource].ToString());
-            txtPublishStreams.Text = Settings.ContainsKey(SexyContent.SettingsPublishDataSourceStreams) ? Settings[SexyContent.SettingsPublishDataSourceStreams].ToString() : "Content,Presentation,ListContent,ListPresentation";
-
+            txtPublishStreams.Text = Settings.ContainsKey(SexyContent.SettingsPublishDataSourceStreams) ? Settings[SexyContent.SettingsPublishDataSourceStreams].ToString() : "Default,ListContent";
         }
 
         /// <summary>

@@ -8,20 +8,18 @@ namespace ToSic.Eav.ManagementUI
 	{
         protected global::DotNetNuke.UI.UserControls.LabelControl FieldLabel;
 
-        Boolean UseTimePicker = false;
+        Boolean _useTimePicker = false;
 		protected void Page_Load(object sender, EventArgs e)
 		{
-            if (MetaData.ContainsKey("UseTimePicker") && ((IAttribute<bool?>)MetaData["UseTimePicker"]).Typed[DimensionIds].Value)
-                UseTimePicker = true;
+            _useTimePicker = GetMetaDataValue<bool>("UseTimePicker");
+            TimePicker1.Visible = _useTimePicker;
 
-            TimePicker1.Visible = UseTimePicker;
-
-            Calendar1.ToolTip = MetaData.ContainsKey("Notes") ? MetaData["Notes"][DimensionIds].ToString() : null;
+            Calendar1.ToolTip = GetMetaDataValue<string>("Notes");
 
 			if (ShowDataControlOnly)
 				FieldLabel.Visible = false;
 
-            if (MetaData.ContainsKey("IsRequired") && ((IAttribute<bool?>)MetaData["IsRequired"]).Typed[DimensionIds].Value)
+            if (GetMetaDataValue<bool>("Required"))
             {
                 Calendar1.CssClass += " dnnFormRequired";
                 TimePicker1.CssClass += " dnnFormRequired";
@@ -40,12 +38,12 @@ namespace ToSic.Eav.ManagementUI
                 }
 
 				Calendar1.DataBind();
-                if(UseTimePicker)
+                if(_useTimePicker)
                     TimePicker1.DataBind();
 			}
-            FieldLabel.Text = MetaData.ContainsKey("Name") ? MetaData["Name"][DimensionIds].ToString() : Attribute.StaticName;
-            FieldLabel.HelpText = MetaData.ContainsKey("Notes") ? MetaData["Notes"][DimensionIds].ToString() : "";
-            valCalendar1.Enabled = MetaData.ContainsKey("IsRequired") && ((IAttribute<bool?>)MetaData["IsRequired"]).Typed[DimensionIds].Value;
+            FieldLabel.Text = GetMetaDataValue("Name", Attribute.StaticName);
+            FieldLabel.HelpText = GetMetaDataValue<string>("Notes");
+            valCalendar1.Enabled = GetMetaDataValue<bool>("Required");
 
 			base.OnPreRender(e);
 		}
@@ -57,7 +55,7 @@ namespace ToSic.Eav.ManagementUI
                 DateTime? SelectedDate = null;
                 if (Calendar1.SelectedDate.HasValue)
                     SelectedDate = Calendar1.SelectedDate.Value;
-                if (UseTimePicker)
+                if (_useTimePicker)
                 {
                     if (TimePicker1.SelectedDate.HasValue)
                         SelectedDate += TimePicker1.SelectedDate.Value.TimeOfDay;

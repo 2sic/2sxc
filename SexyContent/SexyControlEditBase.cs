@@ -118,10 +118,7 @@ namespace ToSic.SexyContent
 
         protected bool IsList
         {
-            get
-            {
-                return Elements.Count > 1;
-            }
+            get { return Template != null && Template.UseForList; }
         }
 
         protected bool UserMayEditThisModule

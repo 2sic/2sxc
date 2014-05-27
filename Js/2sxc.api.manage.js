@@ -77,20 +77,30 @@ $2sxc.getManageController = function(id) {
 
         getButton: function (settings) {
 
-            settings = $.extend({}, config, settings);
+
+            if (settings.entity && settings.entity._2sxcEditInformation) {
+                if (settings.entity._2sxcEditInformation.entityId) {
+                    settings.entityId = settings.entity._2sxcEditInformation.entityId;
+                }
+                if (settings.entity._2sxcEditInformation.sortOrder != null) {
+                    settings.sortOrder = settings.entity._2sxcEditInformation.sortOrder;
+                    settings.useModuleList = true;
+                }
+                delete settings.entity;
+            }
+
+            //settings = $.extend({}, config, settings);
             var button = $('<a />', {
                 'class': 'sc-' + settings.action,
-                'href': 'javascript:$2sxc(' + settings.moduleId + ').manage.action(' + JSON.stringify(settings) + ')'
+                'onclick': 'javascript:$2sxc(' + id + ').manage.action(' + JSON.stringify(settings) + ')'
             });
 
-            // Bind click action
-            //button.click(function () { manageController.openDialog(settings); });
-
-            return button[0].outerHTML; 
+            return button[0].outerHTML;
         },
 
         // Builds the toolbar and returns it as HTML
         getToolbar: function (settings) {
+
 
             var buttons = [];
 

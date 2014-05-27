@@ -1,6 +1,6 @@
 ﻿<dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="2SexyContent" type="Module" version="06.00.05">
+    <package name="2SexyContent" type="Module" version="06.00.09">
       <friendlyName> Content</friendlyName>
       <description>2Sexy Content is a DotNetNuke Extension to create attractive and designed content. It solves the common problem, allowing the web designer to create designed templates for different content elements, so that the user must only fill in fields and receive a perfectly designed and animated output.</description>
       <iconFile>icon.png</iconFile>
@@ -118,7 +118,7 @@
             <script type="UnInstall">
               <path>SqlDataProvider</path>
               <name>Uninstall.SqlDataProvider</name>
-              <version>06.00.05</version>
+              <version>06.00.09</version>
             </script>
           </scripts>
         </component>
@@ -133,7 +133,8 @@
             </supportedFeatures>
             <moduleDefinitions>
               <moduleDefinition>
-                <friendlyName>2Sexy Content</friendlyName>
+                <definitionName>2Sexy Content</definitionName>
+                <friendlyName>Content</friendlyName>
                 <defaultCacheTime>0</defaultCacheTime>
                 <moduleControls>
                   <moduleControl>
@@ -567,7 +568,7 @@
       </components>
     </package>
     
-    <package name="2SexyContent-App" type="Module" version="06.00.05">
+    <package name="2SexyContent-App" type="Module" version="06.00.09">
       <friendlyName> App</friendlyName>
       <description>2Sexy Content App is an extension that allows to insert a 2SexyContent app.</description>
       <iconFile>icon-app.png</iconFile>
@@ -591,7 +592,8 @@
             </supportedFeatures>
             <moduleDefinitions>
               <moduleDefinition>
-                <friendlyName>2Sexy Content App</friendlyName>
+                <definitionName>2Sexy Content App</definitionName>
+                <friendlyName>Content App</friendlyName>
                 <defaultCacheTime>0</defaultCacheTime>
                 <moduleControls>
                   <moduleControl>

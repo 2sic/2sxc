@@ -1,0 +1,41 @@
+-- make sure sql rolls back automatically in case of error.
+SET XACT_ABORT ON
+
+BEGIN TRANSACTION SexyContentUpdate;
+
+EXEC ToSIC_EAV_ChangeLogAdd 'System'
+DECLARE @ChangeLogID int
+Set @ChangeLogID = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
+
+-- Extend Entities with ChangeLogModified
+EXEC('ALTER TABLE dbo.ToSIC_EAV_Entities ADD
+	ChangeLogModified int NULL')
+
+-- Update all Entites with ChangeLogModified
+EXEC('UPDATE       ToSIC_EAV_Entities
+SET                ChangeLogModified = CASE WHEN ToSIC_EAV_Entities.ChangeLogDeleted IS NOT NULL 
+                         THEN ToSIC_EAV_Entities.ChangeLogDeleted WHEN ToSIC_EAV_Values.ChangeLogDeleted IS NOT NULL 
+                         THEN ToSIC_EAV_Values.ChangeLogDeleted WHEN ToSIC_EAV_Values.ChangeLogModified IS NOT NULL 
+                         THEN ToSIC_EAV_Values.ChangeLogModified WHEN ToSIC_EAV_Values.ChangeLogCreated IS NOT NULL 
+                         THEN ToSIC_EAV_Values.ChangeLogCreated WHEN ToSIC_EAV_Entities.ChangeLogCreated IS NOT NULL THEN ToSIC_EAV_Entities.ChangeLogCreated END
+FROM            ToSIC_EAV_Entities LEFT OUTER JOIN
+                         ToSIC_EAV_Values ON ToSIC_EAV_Entities.EntityID = ToSIC_EAV_Values.EntityID')
+
+-- Make ChangeLogModified Not Nullable
+EXEC('ALTER TABLE dbo.ToSIC_EAV_Entities ALTER COLUMN ChangeLogModified int NOT NULL')
+
+-- Add FOREIGN KEY CONSTRAINT
+EXEC('ALTER TABLE dbo.ToSIC_EAV_Entities ADD CONSTRAINT
+	FK_ToSIC_EAV_Entities_ToSIC_EAV_ChangeLog_Modified FOREIGN KEY
+	(
+	ChangeLogModified
+	) REFERENCES dbo.ToSIC_EAV_ChangeLog
+	(
+	ChangeID
+	) ON UPDATE  NO ACTION 
+	 ON DELETE  NO ACTION')
+
+
+-- Commit the transaction
+COMMIT TRANSACTION SexyContentUpdate;
+--ROLLBACK TRANSACTION SexyContentUpdate;

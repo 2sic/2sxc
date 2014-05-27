@@ -1,32 +1,27 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Runtime.Remoting.Channels;
-using System.Text.RegularExpressions;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
+﻿using DotNetNuke.Common;
+using DotNetNuke.Common.Utilities;
+using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security.Roles;
 using DotNetNuke.Services.FileSystem;
-using DotNetNuke.Services.Search;
-using ToSic.Eav;
-using DotNetNuke.Common.Utilities;
 using DotNetNuke.Services.Localization;
-using DotNetNuke.Entities.Modules;
-using System.Reflection;
+using DotNetNuke.Services.Search.Entities;
+using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Web;
+using System.Web.UI;
 using System.Web.UI.HtmlControls;
+using ToSic.Eav;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Caches;
-using ToSic.SexyContent;
-using ToSic.SexyContent.DataSources.Tokens;
-using ToSic.SexyContent.Engines.TokenEngine;
+using ToSic.SexyContent.DataSources;
+using ToSic.SexyContent.EAVExtensions;
+using ToSic.SexyContent.Search;
 using FileInfo = System.IO.FileInfo;
-using DotNetNuke.Common;
 
 namespace ToSic.SexyContent
 {
@@ -34,11 +29,11 @@ namespace ToSic.SexyContent
     /// Business Layer
     /// Centralizes all global constants and business logic
     /// </summary>
-    public class SexyContent : ISearchable, IUpgradeable
+    public class SexyContent : ModuleSearchBase, IUpgradeable
     {
         #region Constants
 
-        public const string ModuleVersion = "06.00.05";
+        public const string ModuleVersion = "06.00.09";
         public const string TemplateID = "TemplateID";
         public const string ContentGroupIDString = "ContentGroupID";
         public const string AppIDString = "AppId";
@@ -124,11 +119,6 @@ namespace ToSic.SexyContent
         public App App {
             get { return GetApp(ZoneId.Value, AppId.Value); }
         }
-
-        /// <summary>
-        /// The EAV DataSource
-        /// </summary>
-        public ToSic.Eav.DataSources.IDataSource SexyDataSource { get; internal set; }
 
         #endregion
 
@@ -249,7 +239,7 @@ namespace ToSic.SexyContent
         /// <returns></returns>
         public IEnumerable<string> GetTemplateFiles(HttpServerUtility Server, PortalSettings PortalSettings, string TemplateType, string TemplateLocation)
         {
-            string TemplatePathRootMapPath = Server.MapPath(GetTemplatePathRoot(TemplateLocation));
+            string TemplatePathRootMapPath = Server.MapPath(GetTemplatePathRoot(TemplateLocation, App));
             DirectoryInfo Directory = new DirectoryInfo(TemplatePathRootMapPath);
 
             EnsureTemplateFolderExists(Server, TemplateLocation);
@@ -304,7 +294,7 @@ namespace ToSic.SexyContent
             }
 
             Template.Path = System.Text.RegularExpressions.Regex.Replace(Name, @"[?:\/*""<>|]", "");
-            var TemplatePath = Server.MapPath(System.IO.Path.Combine(GetTemplatePathRoot(Template.Location), Template.Path));
+            var TemplatePath = Server.MapPath(System.IO.Path.Combine(GetTemplatePathRoot(Template.Location, App), Template.Path));
 
             if (!File.Exists(TemplatePath))
             {
@@ -385,12 +375,14 @@ namespace ToSic.SexyContent
         /// <param name="locationID"></param>
         /// <param name="PortalSettings"></param>
         /// <returns></returns>
-        public string GetTemplatePathRoot(string locationID)
+        public static string GetTemplatePathRoot(string locationID, App app, PortalSettings portalSettings = null)
         {
-            string RootFolder = (locationID == LocationIDCurrentPortal ? PortalSettings.Current.HomeDirectory : PortalHostDirectory);
-            // Hard-coded /Content/ app (default app)
-            RootFolder += TemplateFolder + "/" + App.Folder;
-            return RootFolder;
+            if (portalSettings == null)
+                portalSettings = PortalSettings.Current;
+
+            string rootFolder = (locationID == LocationIDCurrentPortal ? portalSettings.HomeDirectory : PortalHostDirectory);
+            rootFolder += TemplateFolder + "/" + app.Folder;
+            return rootFolder;
         }
 
         #endregion
@@ -578,7 +570,31 @@ namespace ToSic.SexyContent
             return DataSource.GetInitialDataSource(zoneId, appId, showDrafts);
         }
 
-        
+
+
+        /// <summary>
+        /// The EAV DataSource
+        /// </summary>
+        private ToSic.Eav.DataSources.IDataSource ViewDataSource { get; set; }
+        public ToSic.Eav.DataSources.IDataSource GetViewDataSource(int moduleId, bool showDrafts, bool includeEditingData)
+        {
+            if (ViewDataSource == null)
+            {
+                var initialSource = GetInitialDataSource(ZoneId.Value, AppId.Value, showDrafts);
+                var moduleDataSource = DataSource.GetDataSource<ModuleDataSource>(ZoneId, AppId, initialSource);
+                moduleDataSource.ModuleId = moduleId;
+                moduleDataSource.IncludeEditingData = true;
+
+                var viewDataSource = DataSource.GetDataSource<ViewDataSource>(ZoneId, AppId, moduleDataSource);
+                var moduleSettings = new ModuleController().GetModuleSettings(moduleId);
+                viewDataSource.Publish.Enabled = moduleSettings.ContainsKey(SettingsPublishDataSource) && Boolean.Parse(moduleSettings[SettingsPublishDataSource].ToString());
+                viewDataSource.Publish.Streams = moduleSettings.ContainsKey(SettingsPublishDataSourceStreams) ? moduleSettings[SettingsPublishDataSourceStreams].ToString() : "Content,ListContent";
+                ViewDataSource = viewDataSource;
+            }
+
+            return ViewDataSource;
+        }
+
 
         /// <summary>
         /// Get a list of ContentElements by ModuleId or ContentGroupID
@@ -586,87 +602,21 @@ namespace ToSic.SexyContent
         /// <returns></returns>
         public List<Element> GetContentElements(int ModuleID, string LanguageName, int? ContentGroupID, int PortalId, bool showDrafts)
         {
-            return GetElements(ModuleID, ContentGroupID, ContentGroupItemType.Content, ContentGroupItemType.Presentation, LanguageName, PortalId, showDrafts);
+            // ToDo: Refactor
+            //return GetElements(ModuleID, ContentGroupID, ContentGroupItemType.Content, ContentGroupItemType.Presentation, LanguageName, PortalId, showDrafts);
+
+            var dataSource = (ModuleDataSource)((IDataTarget)GetViewDataSource(ModuleID, showDrafts, false)).In["Default"].Source;
+            return dataSource.ContentElements;
         }
 
         public Element GetListElement(int ModuleID, string LanguageName, int? ContentGroupID, int PortalId, bool showDrafts)
         {
-            var ListElement = GetElements(ModuleID, ContentGroupID, ContentGroupItemType.ListContent, ContentGroupItemType.ListPresentation, LanguageName, PortalId, showDrafts).FirstOrDefault();
-            return ListElement;
-        }
+            // ToDo: Refactor (does not need all parameters)
+            //var ListElement = GetElements(ModuleID, ContentGroupID, ContentGroupItemType.ListContent, ContentGroupItemType.ListPresentation, LanguageName, PortalId, showDrafts).FirstOrDefault();
+            //return ListElement;
 
-        private List<Element> GetElements(int ModuleID, int? ContentGroupID, ContentGroupItemType ContentItemType, ContentGroupItemType PresentationItemType, string LanguageName, int PortalId, bool showDrafts)
-        {
-            if (!ContentGroupID.HasValue)
-                ContentGroupID = GetContentGroupIDFromModule(ModuleID);
-
-            IEnumerable<ContentGroupItem> ItemsQuery = TemplateContext.GetContentGroupItems(ContentGroupID.Value);
-            List<ContentGroupItem> Items = ItemsQuery.Where(c => c.Type == ContentItemType.ToString("F") || c.Type == PresentationItemType.ToString("F")).ToList();
-            List<Element> ElementList = new List<Element>();
-
-            if (ItemsQuery.Any(c => c.TemplateID.HasValue))
-            {
-                var Defaults = GetTemplateDefaults(ItemsQuery.First().TemplateID.Value);
-
-                // Get List of Entities
-                List<int> Identities = (from c in Items where c.EntityID.HasValue && c.EntityID.Value > 0 select c.EntityID.Value).ToList();
-                // Add Demo Entities
-                Identities.AddRange(Defaults.Where(d => d.DemoEntityID.HasValue).Select(d => d.DemoEntityID.Value));
-                // Prepare Dimension List (Languages)
-                var DimensionIds = new[] { LanguageName };
-                // Load all Entities to list
-                var InitialSource = GetInitialDataSource(ZoneId.Value, AppId.Value, showDrafts);
-                var EntityDataSource = DataSource.GetDataSource("ToSic.Eav.DataSources.EntityIdFilter", ZoneId, AppId, InitialSource, InitialSource.ConfigurationProvider);
-                ((EntityIdFilter)EntityDataSource).Configuration["EntityIds"] = String.Join(",", Identities.ToArray());
-                SexyDataSource = DataSource.GetDataSource("ToSic.Eav.DataSources.PassThrough", ZoneId, AppId, EntityDataSource);
-                var Entities = SexyDataSource.Out["Default"].List;// ContentContext.GetEntityModel(Identities);
-
-                // If no Content Elements exist and type is List, add a ContentGroupItem to List (not to DB)
-                if (ContentItemType == ContentGroupItemType.ListContent && Items.All(p => p.ItemType != ContentGroupItemType.ListContent))
-                {
-                    var ListContentDefault = Defaults.FirstOrDefault(d => d.ItemType == ContentGroupItemType.ListContent);
-                    var TemplateID = ItemsQuery.First().TemplateID.Value;
-
-                    Items.Add(new ContentGroupItem()
-                    {
-                        ContentGroupID = ContentGroupID.Value,
-                        ContentGroupItemID = -1,
-                        EntityID = ListContentDefault != null ? ListContentDefault.DemoEntityID : new int?(),
-                        SortOrder = -1,
-                        SysCreated = DateTime.Now,
-                        SysCreatedBy = -1,
-                        TemplateID = TemplateID,
-                        Type = ContentGroupItemType.ListContent.ToString("F")
-                    });
-                }
-
-                // Transform to list of Elements
-                ElementList = (from c in Items
-                               where c.ItemType == ContentItemType
-                               // don't show items whose Content entity is not in source
-                               && (!c.EntityID.HasValue || Entities.ContainsKey(c.EntityID.Value))
-                               select new Element
-                               {
-                                   ID = c.ContentGroupItemID,
-                                   EntityId = c.EntityID,
-                                   TemplateId = c.TemplateID,
-                                   Content = c.EntityID.HasValue ? new DynamicEntity(Entities[c.EntityID.Value], DimensionIds) :
-                                       Defaults.Where(d => d.ItemType == ContentItemType && d.DemoEntityID.HasValue)
-                                       .Select(d => new DynamicEntity(Entities[d.DemoEntityID.Value], DimensionIds)).FirstOrDefault(),
-                                   // Get Presentation object - Take Default if it does not exist
-                                   Presentation = (from p in Items
-                                                   where p.SortOrder == c.SortOrder && p.ItemType == PresentationItemType && p.EntityID.HasValue && Entities.ContainsKey(p.EntityID.Value)
-                                                   select new DynamicEntity(Entities[p.EntityID.Value], DimensionIds)).FirstOrDefault() ??
-                                                   (from d in Defaults
-                                                    where d.ItemType == PresentationItemType && d.DemoEntityID.HasValue && Entities.ContainsKey(d.DemoEntityID.Value)
-                                                    select new DynamicEntity(Entities[d.DemoEntityID.Value], DimensionIds)).FirstOrDefault()
-                                                   ,
-                                   GroupID = c.ContentGroupID,
-                                   SortOrder = c.SortOrder
-                               }).ToList();
-            }
-
-            return ElementList;
+            var dataSource = (ModuleDataSource)((IDataTarget) GetViewDataSource(ModuleID, showDrafts, false)).In["Default"].Source;
+            return dataSource.ListElement;
         }
 
         /// <summary>
@@ -675,18 +625,17 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <param name="ModuleID"></param>
         /// <returns></returns>
-        public int GetContentGroupIDFromModule(int ModuleID)
+        public int GetContentGroupIdFromModule(int ModuleID)
         {
-            ModuleController ModuleControl = new ModuleController();
-            Hashtable Settings = ModuleControl.GetModuleSettings(ModuleID);
+            var moduleControl = new ModuleController();
+            var settings = moduleControl.GetModuleSettings(ModuleID);
 
             // Set ContentGroupID if not defined in ModuleSettings yet
-            if (Settings[ContentGroupIDString] == null)
-                ModuleControl.UpdateModuleSetting(ModuleID, ContentGroupIDString, ModuleID.ToString());
+            if (settings[ContentGroupIDString] == null)
+                moduleControl.UpdateModuleSetting(ModuleID, ContentGroupIDString, ModuleID.ToString());
 
-            Settings = ModuleControl.GetModuleSettings(ModuleID);
-
-            return int.Parse(Settings[SexyContent.ContentGroupIDString].ToString());
+            settings = moduleControl.GetModuleSettings(ModuleID);
+            return int.Parse(settings[SexyContent.ContentGroupIDString].ToString());
         }
         #endregion
 
@@ -700,9 +649,9 @@ namespace ToSic.SexyContent
         /// <param name="LocalResourcesPath"></param>
         /// <param name="ListEnabled"></param>
         /// <returns></returns>
-        public string GetElementToolbar(int ContentGroupID, int SortOrder, int ContentGroupItemID, int ModuleId, string LocalResourcesPath, bool ListEnabled, Control ParentControl, string ReturnUrl)
+        public string GetElementToolbar(int sortOrder)
         {
-            return "<ul class='sc-menu' data-toolbar='" + new { sortOrder = SortOrder, useModuleList = true }.ToJson() + "'></ul>";
+            return "<ul class='sc-menu' data-toolbar='" + new { sortOrder = sortOrder, useModuleList = true }.ToJson() + "'></ul>";
         }
 
         /// <summary>
@@ -779,14 +728,10 @@ namespace ToSic.SexyContent
             return SettingsUrl;
         }
 
-        public void AttachToolbarToElements(List<Element> Elements, int ModuleID, string LocalResourcesPath, bool ListEnabled, bool IsEditable, Control ParentControl, string ReturnUrl)
-        {
-            // Add Toolbar if neccessary, else add empty string to dictionary
-            if(!IsEditable)
-                Elements.Where(p => p.Content != null).ToList().ForEach(p => ((DynamicEntity)p.Content).ToolbarString = "");
-            else
-                Elements.Where(p => p.Content != null).ToList().ForEach(p => ((DynamicEntity)p.Content).ToolbarString = GetElementToolbar(p.GroupId, p.SortOrder, p.Id, ModuleID, LocalResourcesPath, ListEnabled, ParentControl, ReturnUrl));
-        }
+        //public void AttachToolbarToElements(List<Element> Elements)
+        //{
+            
+        //}
 
         #endregion
 
@@ -1075,34 +1020,9 @@ namespace ToSic.SexyContent
 
         #region DNN Interface Members
 
-        public SearchItemInfoCollection GetSearchItems(ModuleInfo ModInfo)
+        public override IList<SearchDocument> GetModifiedSearchDocuments(ModuleInfo moduleInfo, DateTime beginDate)
         {
-            var ZoneID = GetZoneID(ModInfo.PortalID);
-
-            // Need a new Context because PortalSettings.Current is null
-            var Sexy = new SexyContent(ZoneID.Value, 0, true);
-
-            var SearchItems = new SearchItemInfoCollection();
-
-            var Elements = Sexy.GetContentElements(ModInfo.ModuleID, Sexy.GetCurrentLanguageName(), null, ModInfo.PortalID, false);
-            Elements.Add(Sexy.GetListElement(ModInfo.ModuleID, Sexy.GetCurrentLanguageName(), null, ModInfo.PortalID, false));
-
-            foreach (var Element in Elements)
-            {
-                if (Element != null && Element.EntityId.HasValue)
-                {
-                    var Attributes = ((DynamicEntity)Element.Content).Entity.Attributes;
-                    string Content = String.Join(", ", Attributes.Select(x => x.Value[new string[] { Sexy.GetCurrentLanguageName() }]).Where(a => a != null).Select(a => StripHtmlAndHtmlDecode(a.ToString())).Where(x => !String.IsNullOrEmpty(x)));
-
-                    var ContentGroupItem = Sexy.TemplateContext.GetContentGroupItem(Element.ID);
-                    var PubDate = Sexy.ContentContext.GetValues(Element.EntityId.Value).Max(p => (DateTime?)p.ChangeLogCreated.Timestamp);
-
-                    if (PubDate.HasValue)
-                        SearchItems.Add(new SearchItemInfo(Element.Content.EntityTitle.ToString(), Content, ContentGroupItem == null ? -1 : ContentGroupItem.SysCreatedBy, PubDate.Value, ModInfo.ModuleID, Element.EntityId.ToString(), Content));
-                }
-            }
-
-            return SearchItems;
+            return new SearchController().GetModifiedSearchDocuments(moduleInfo, beginDate);
         }
 
         #endregion
@@ -1223,11 +1143,6 @@ namespace ToSic.SexyContent
 
         #region Helper Methods
 
-        private string StripHtmlAndHtmlDecode(string Text)
-        {
-            return HttpUtility.HtmlDecode(Regex.Replace(Text, "<.*?>", string.Empty));
-        }
-
         public static void AddDNNVersionToBodyClass(Control Parent)
         {
             // Add DNN Version to body as CSS Class
@@ -1245,28 +1160,30 @@ namespace ToSic.SexyContent
         /// <param name="elements"></param>
         /// <param name="dimensionID"></param>
         /// <returns></returns>
-        public string GetJsonFromElements(List<Element> elements, string language)
+        public string GetJsonFromStreams(ToSic.Eav.DataSources.IDataSource source, string[] streamsToPublish)
         {
-            var x = new
-            {
-                Default = new
-                {
-                    List = (from c in elements
-                            where c.EntityId.HasValue
-                            select new
-                            {
-                                Content = GetDictionaryFromEntity(((DynamicEntity)c.Content).Entity, language)
-                            }).ToList()
-                }
-            };
+            var language = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
 
-            return x.ToJson();
+            var y = source.Out.Where(s => streamsToPublish.Contains(s.Key)).ToDictionary(k => k.Key, s => new
+            {
+                List = (from c in s.Value.List select GetDictionaryFromEntity(c.Value, language)).ToList()
+            });
+
+            return y.ToJson();
         }
 
         private Dictionary<string, object> GetDictionaryFromEntity(IEntity entity, string language)
         {
-            var dictionary = ((from d in entity.Attributes select d).ToDictionary(k => k.Value.Name, v => v.Value[language]));
+            var dynamicEntity = new DynamicEntity(entity, new[] { language });
+            bool propertyNotFound;
+            var dictionary = ((from d in entity.Attributes select d.Value).ToDictionary(k => k.Name, v => dynamicEntity.GetEntityValue(v.Name, out propertyNotFound)));
             dictionary.Add("EntityId", entity.EntityId);
+
+            if(entity is IHasEditingData)
+                dictionary.Add("_2sxcEditInformation", new { sortOrder = ((IHasEditingData)entity).SortOrder });
+            else
+                dictionary.Add("_2sxcEditInformation", new { entityId = entity.EntityId });
+
             return dictionary;
         }
 
@@ -1426,8 +1343,8 @@ namespace ToSic.SexyContent
                 }
             }
         }
-
-
+        
         #endregion
+
     }
 }

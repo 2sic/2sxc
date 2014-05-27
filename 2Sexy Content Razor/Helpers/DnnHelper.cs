@@ -12,18 +12,20 @@ namespace ToSic.SexyContent.Razor.Helpers
 {
     public class DnnHelper
     {
-        private readonly ModuleInstanceContext _context;
+        private readonly ModuleInfo _context;
+        private readonly PortalSettings _portalSettings;
 
-        public DnnHelper(ModuleInstanceContext context)
+        public DnnHelper(ModuleInfo context)
         {
             _context = context;
+            _portalSettings = PortalSettings.Current ?? new PortalSettings(context.PortalID);
         }
 
         public ModuleInfo Module
         {
             get
             {
-                return _context.Configuration;
+                return _context;
             }
         }
 
@@ -31,7 +33,9 @@ namespace ToSic.SexyContent.Razor.Helpers
         {
             get
             {
-                return _context.PortalSettings.ActiveTab;
+                if (_portalSettings == null)
+                    return null;
+                return _portalSettings.ActiveTab;
             }
         }
 
@@ -39,7 +43,7 @@ namespace ToSic.SexyContent.Razor.Helpers
         {
             get
             {
-                return _context.PortalSettings;
+                return _portalSettings;
             }
         }
 
@@ -47,7 +51,7 @@ namespace ToSic.SexyContent.Razor.Helpers
         {
             get
             {
-                return _context.PortalSettings.UserInfo;
+                return _portalSettings.UserInfo;
             }
         }
     }

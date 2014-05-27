@@ -60,11 +60,13 @@ Eav.Entities = {
     CreateValueListModel: function (attributeModelJson) {
         var values = {};
 
-        $.each(attributeModelJson.Values, function (i, valueModelJson) {
-            values[valueModelJson.ValueId] = Eav.Entities.CreateValueModel(valueModelJson);
-        });
+	    if (attributeModelJson.Values != null) {
+		    $.each(attributeModelJson.Values, function(i, valueModelJson) {
+			    values[valueModelJson.ValueId] = Eav.Entities.CreateValueModel(valueModelJson);
+		    });
+	    }
 
-        return values;
+	    return values;
     },
 
     CreateValueModel: function (valuesModelJson) {

@@ -165,4 +165,7 @@
   <data name="GetStarted.Text" xml:space="preserve">
     <value>To get started, choose „Admin“ in the module menu (make sure you’re in edit-page mode).</value>
   </data>
+  <data name="EnableDataPublishing.Text" xml:space="preserve">
+    <value>Setup JSON publishing in the module settings to allow data publishing.</value>
+  </data>
 </root>

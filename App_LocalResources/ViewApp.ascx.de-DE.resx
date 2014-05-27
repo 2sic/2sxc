@@ -165,4 +165,7 @@
   <data name="GetStarted.Text" xml:space="preserve">
     <value>Beginne im “Admin” Bereich im Modul-Menü (nur sichtbar im Seite-Bearbeiten-Modus).</value>
   </data>
+  <data name="EnableDataPublishing.Text" xml:space="preserve">
+    <value>Aktiviere JSON-Publishing in den Moduleinstellungen, damit die Daten geladen werden können.</value>
+  </data>
 </root>

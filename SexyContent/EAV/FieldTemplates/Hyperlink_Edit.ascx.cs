@@ -80,13 +80,19 @@ namespace ToSic.Eav.ManagementUI
 
 		protected override void OnPreRender(EventArgs e)
 		{
-			if (!IsPostBack)
-				txtFilePath.Text = FieldValueEditString;
+		    if (!IsPostBack)
+		    {
+                if(FieldValueEditString == null)
+                    txtFilePath.Text = GetMetaDataValue("DefaultValue", "");
+                else
+		            txtFilePath.Text = FieldValueEditString;
+		    }
 
-			InitDialogOpener();
+		    InitDialogOpener();
 
 			FieldLabel.Text = GetMetaDataValue("Name", Attribute.StaticName);
 			FieldLabel.HelpText = GetMetaDataValue<string>("Notes");
+            valFieldValue.Enabled = GetMetaDataValue<bool>("Required");
 
 			base.OnPreRender(e);
 		}
@@ -109,8 +115,9 @@ namespace ToSic.Eav.ManagementUI
 			#region Get View, Update, DeletePaths
 			var homeDirectory = PortalSettings.Current.HomeDirectory;
 			string[] paths;
-			if (MetaData.ContainsKey("Paths") && !String.IsNullOrEmpty(MetaData["Paths"][DimensionIds].ToString()))
-				paths = MetaData["Paths"][DimensionIds].ToString().Split(',').Select(p => homeDirectory + p).ToArray();
+		    var metaDataPaths = GetMetaDataValue<string>("Paths");
+			if (!String.IsNullOrEmpty(metaDataPaths))
+                paths = metaDataPaths.Split(',').Select(p => homeDirectory + p).ToArray();
 			else
 				paths = _imageManagerConfiguration.ViewPaths;
 
@@ -186,8 +193,8 @@ namespace ToSic.Eav.ManagementUI
 				SearchPatterns = _imageManagerConfiguration.SearchPatterns,
 			};
 			imageManagerParameters["IsSkinTouch"] = false;
-			if (MetaData.ContainsKey("FileFilter") && !String.IsNullOrEmpty(MetaData["FileFilter"][DimensionIds].ToString()))
-				imageManagerParameters.SearchPatterns = MetaData["FileFilter"][DimensionIds].ToString().Split(',');
+            if (!String.IsNullOrEmpty(GetMetaDataValue<string>("FileFilter")))
+                imageManagerParameters.SearchPatterns = GetMetaDataValue<string>("FileFilter").Split(',');
 
 			var imageManagerDefinition = new DialogDefinition(typeof(ImageManagerDialog), imageManagerParameters)
 			{
@@ -215,8 +222,8 @@ namespace ToSic.Eav.ManagementUI
 			};
 
 			documentManagerParameters["IsSkinTouch"] = false;
-			if (MetaData.ContainsKey("FileFilter") && !String.IsNullOrEmpty(MetaData["FileFilter"][DimensionIds].ToString()))
-				documentManagerParameters.SearchPatterns = MetaData["FileFilter"][DimensionIds].ToString().Split(',');
+            if (!String.IsNullOrEmpty(GetMetaDataValue<string>("FileFilter")))
+                documentManagerParameters.SearchPatterns = GetMetaDataValue<string>("FileFilter").Split(',');
 
 			var documentManagerDefinition = new DialogDefinition(typeof(DocumentManagerDialog), documentManagerParameters)
 			{
@@ -243,8 +250,8 @@ namespace ToSic.Eav.ManagementUI
 				SearchPatterns = _imageManagerConfiguration.SearchPatterns
 			};
 			imageEditorParameters["IsSkinTouch"] = false;
-			if (MetaData.ContainsKey("FileFilter") && !String.IsNullOrEmpty(MetaData["FileFilter"][DimensionIds].ToString()))
-				imageEditorParameters.SearchPatterns = MetaData["FileFilter"][DimensionIds].ToString().Split(',');
+            if (!String.IsNullOrEmpty(GetMetaDataValue<string>("FileFilter")))
+                imageEditorParameters.SearchPatterns = GetMetaDataValue<string>("FileFilter").Split(',');
 
 			var imageEditorDefinition = new DialogDefinition(typeof(ImageEditorDialog), imageEditorParameters)
 			{

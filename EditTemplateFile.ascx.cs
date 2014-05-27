@@ -38,7 +38,7 @@ namespace ToSic.SexyContent
         private string TemplatePath
         {
             get {
-                return Server.MapPath(System.IO.Path.Combine(Sexy.GetTemplatePathRoot(Template.Location), Template.Path));
+                return Server.MapPath(System.IO.Path.Combine(SexyContent.GetTemplatePathRoot(Template.Location, Sexy.App), Template.Path));
             }
         }
 

@@ -83,7 +83,7 @@
 		<asp:BoundField HeaderText="Static Name" DataField="StaticName" />
 		<asp:BoundField DataField="Type" HeaderText="Type" />
 		<asp:BoundField DataField="Name" HeaderText="Name" />
-		<asp:BoundField DataField="Notes" HeaderText="Notes" />
+		<asp:BoundField DataField="Notes" HeaderText="Notes" HtmlEncode="False" />
 		<asp:TemplateField HeaderText="is Title">
 			<ItemTemplate>
 				<asp:LinkButton ID="lbtnMakeTitle" Text="No" CommandName="MakeTitle" CommandArgument='<%# Eval("AttributeID") %>' Visible='<%# !(bool)Eval("IsTitle") %>' runat="server" />

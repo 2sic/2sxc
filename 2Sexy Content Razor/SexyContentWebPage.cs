@@ -1,15 +1,20 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Web;
 using System.Web.WebPages;
 using DotNetNuke.Common.Utilities;
+using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
+using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.DataSources.Tokens;
+using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Engines.TokenEngine;
 using ToSic.SexyContent.Razor.Helpers;
 using System.Collections.Generic;
 using ToSic.Eav;
 using ToSic.Eav.DataSources;
+using ToSic.SexyContent.Search;
 
 namespace ToSic.SexyContent.Razor
 {
@@ -30,7 +35,7 @@ namespace ToSic.SexyContent.Razor
         protected internal dynamic ListPresentation { get; internal set; }
         protected internal new App App { get; internal set; }
         protected internal List<Element> List { get; internal set; }
-        protected internal IDataTarget Data { get; internal set; }
+        protected internal ViewDataSource Data { get; internal set; }
 
         /// <summary>
         /// Transform a IEntity to a DynamicEntity as dynamic object
@@ -62,6 +67,11 @@ namespace ToSic.SexyContent.Razor
             return AsDynamic(entityKeyValuePair.Value);
         }
 
+        public IEnumerable<dynamic> AsDynamic(IDataStream stream)
+        {
+            return stream.List.Select(e => AsDynamic(e.Value));
+        }
+
         /// <summary>
         /// Transform a DynamicEntity dynamic object back to a IEntity instance
         /// </summary>
@@ -71,6 +81,17 @@ namespace ToSic.SexyContent.Razor
         {
             return ((DynamicEntity)dynamicEntity).Entity;
         }
+
+        /// <summary>
+        /// Returns a list of DynamicEntities
+        /// </summary>
+        /// <param name="entities">List of entities</param>
+        /// <returns></returns>
+        public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities)
+        {
+            return entities.Select(e => AsDynamic(e));
+        }
+        
 
         // </2sic>
 
@@ -129,7 +150,7 @@ namespace ToSic.SexyContent.Razor
             if (inSource != null)
                 return DataSource.GetDataSource(typeName, inSource.ZoneId, inSource.AppId, inSource, configurationProvider);
             
-            var initialSource = SexyContent.GetInitialDataSource(SexyContent.GetZoneID(PortalSettings.Current.PortalId).Value, App.AppId);
+            var initialSource = SexyContent.GetInitialDataSource(SexyContent.GetZoneID(Dnn.Portal.PortalId).Value, App.AppId);
             return typeName != "" ? DataSource.GetDataSource(typeName, initialSource.ZoneId, initialSource.AppId, initialSource, configurationProvider) : initialSource;
         }
 
@@ -141,7 +162,7 @@ namespace ToSic.SexyContent.Razor
             if (inSource != null)
                 return DataSource.GetDataSource<T>(inSource.ZoneId, inSource.AppId, inSource, configurationProvider);
 
-            var initialSource = SexyContent.GetInitialDataSource(SexyContent.GetZoneID(PortalSettings.Current.PortalId).Value, App.AppId);
+            var initialSource = SexyContent.GetInitialDataSource(SexyContent.GetZoneID(Dnn.Portal.PortalId).Value, App.AppId);
             return DataSource.GetDataSource<T>(initialSource.ZoneId, initialSource.AppId, initialSource, configurationProvider);
         }
 
@@ -163,7 +184,20 @@ namespace ToSic.SexyContent.Razor
             return webPage;
         }
 
-        
+
+        /// <summary>
+        /// Override this to have your code change the (already initialized) Data object. 
+        /// If you don't override this, nothing will be changed/customized. 
+        /// </summary>
+        public virtual void CustomizeData()
+        {
+        }
+
+        public virtual void CustomizeSearch(Dictionary<string, List<ISearchInfo>> searchInfos, ModuleInfo moduleInfo, DateTime beginDate)
+        {
+        }
+
+        public InstancePurposes InstancePurpose { get; set; }
 
     }
 

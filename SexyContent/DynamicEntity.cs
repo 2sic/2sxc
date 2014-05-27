@@ -53,6 +53,7 @@ namespace ToSic.SexyContent
             propertyNotFound = false;
             object result;
             
+            
             if (Entity.Attributes.ContainsKey(attributeName))
             {
                 var attribute = Entity.Attributes[attributeName];
@@ -65,7 +66,6 @@ namespace ToSic.SexyContent
                 else if (attribute.Type == "Entity" && result is EntityRelationshipModel)
                 {
                     // Convert related entities to Dynamics
-                    string language = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
                     result = ((ToSic.Eav.EntityRelationshipModel) result).Select(
                         p => new DynamicEntity(p, _dimensions)
                         ).ToList();
@@ -88,8 +88,6 @@ namespace ToSic.SexyContent
                         result = Entity.IsPublished;
                         break;
                     default:
-                        // ToDo: Get Attributes, find out what to return as default...
-                        //var attributeSet = DataSource.GetCache().
                         result = null;
                         propertyNotFound = true;
                         break;
