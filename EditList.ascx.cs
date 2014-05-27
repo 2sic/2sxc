@@ -68,8 +68,10 @@ namespace ToSic.SexyContent
             {
                 case "add":
                     SexyUncached.AddContentGroupItem(ContentGroupID, UserId, Element.TemplateId.Value, null, Element.SortOrder + 1, true, ContentGroupItemType.Content, false);
-                    grdEntities.Rebind();
-                    grdEntities.Items[Element.SortOrder].Selected = true;
+                    // Refresh page
+                    Response.Redirect(Request.RawUrl);
+                    //grdEntities.Rebind();
+                    //grdEntities.Items[Element.SortOrder].Selected = true;
                     break;
                 case "addwithedit":
                     Response.Redirect(Sexy.GetElementAddWithEditLink(ContentGroupID, Element.SortOrder + 1, ModuleId, TabId, Request.RawUrl));

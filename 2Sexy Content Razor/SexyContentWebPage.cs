@@ -6,6 +6,7 @@ using System.Web.WebPages;
 using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
+using DotNetNuke.Security.Permissions;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.DataSources.Tokens;
 using ToSic.SexyContent.Engines;
@@ -149,8 +150,8 @@ namespace ToSic.SexyContent.Razor
 
             if (inSource != null)
                 return DataSource.GetDataSource(typeName, inSource.ZoneId, inSource.AppId, inSource, configurationProvider);
-            
-            var initialSource = SexyContent.GetInitialDataSource(SexyContent.GetZoneID(Dnn.Portal.PortalId).Value, App.AppId);
+
+            var initialSource = SexyContent.GetInitialDataSource(SexyContent.GetZoneID(Dnn.Portal.PortalId).Value, App.AppId, ModulePermissionController.CanEditModuleContent(Dnn.Module));
             return typeName != "" ? DataSource.GetDataSource(typeName, initialSource.ZoneId, initialSource.AppId, initialSource, configurationProvider) : initialSource;
         }
 
@@ -162,7 +163,7 @@ namespace ToSic.SexyContent.Razor
             if (inSource != null)
                 return DataSource.GetDataSource<T>(inSource.ZoneId, inSource.AppId, inSource, configurationProvider);
 
-            var initialSource = SexyContent.GetInitialDataSource(SexyContent.GetZoneID(Dnn.Portal.PortalId).Value, App.AppId);
+            var initialSource = SexyContent.GetInitialDataSource(SexyContent.GetZoneID(Dnn.Portal.PortalId).Value, App.AppId, ModulePermissionController.CanEditModuleContent(Dnn.Module));
             return DataSource.GetDataSource<T>(initialSource.ZoneId, initialSource.AppId, initialSource, configurationProvider);
         }
 
