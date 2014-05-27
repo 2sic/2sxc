@@ -19,7 +19,9 @@ using ToSic.Eav;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Caches;
 using ToSic.SexyContent.DataSources;
+using ToSic.SexyContent.DataSources.Tokens;
 using ToSic.SexyContent.EAVExtensions;
+using ToSic.SexyContent.Engines.TokenEngine;
 using ToSic.SexyContent.Search;
 using FileInfo = System.IO.FileInfo;
 
@@ -570,7 +572,22 @@ namespace ToSic.SexyContent
             return DataSource.GetInitialDataSource(zoneId, appId, showDrafts);
         }
 
-
+        private ConfigurationProvider _configurationProvider;
+        private ConfigurationProvider ConfigurationProvider
+        {
+            get
+            {
+                if (_configurationProvider == null)
+                {
+                    _configurationProvider = new ConfigurationProvider();
+                    _configurationProvider.Sources.Add("querystring", new QueryStringPropertyAccess());
+                    _configurationProvider.Sources.Add("app", new AppPropertyAccess(App));
+                    _configurationProvider.Sources.Add("appsettings", new DynamicEntityPropertyAccess(App.Settings));
+                    _configurationProvider.Sources.Add("appresources", new DynamicEntityPropertyAccess(App.Resources));
+                }
+                return _configurationProvider;
+            }
+        }
 
         /// <summary>
         /// The EAV DataSource
@@ -581,11 +598,11 @@ namespace ToSic.SexyContent
             if (ViewDataSource == null)
             {
                 var initialSource = GetInitialDataSource(ZoneId.Value, AppId.Value, showDrafts);
-                var moduleDataSource = DataSource.GetDataSource<ModuleDataSource>(ZoneId, AppId, initialSource);
+                var moduleDataSource = DataSource.GetDataSource<ModuleDataSource>(ZoneId, AppId, initialSource, ConfigurationProvider);
                 moduleDataSource.ModuleId = moduleId;
                 moduleDataSource.IncludeEditingData = true;
 
-                var viewDataSource = DataSource.GetDataSource<ViewDataSource>(ZoneId, AppId, moduleDataSource);
+                var viewDataSource = DataSource.GetDataSource<ViewDataSource>(ZoneId, AppId, moduleDataSource, ConfigurationProvider);
                 var moduleSettings = new ModuleController().GetModuleSettings(moduleId);
                 viewDataSource.Publish.Enabled = moduleSettings.ContainsKey(SettingsPublishDataSource) && Boolean.Parse(moduleSettings[SettingsPublishDataSource].ToString());
                 viewDataSource.Publish.Streams = moduleSettings.ContainsKey(SettingsPublishDataSourceStreams) ? moduleSettings[SettingsPublishDataSourceStreams].ToString() : "Content,ListContent";

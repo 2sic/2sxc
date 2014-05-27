@@ -97,10 +97,10 @@ $2sxc.getManageController = function(id) {
 
             if (settings.isPublished == null || settings.isPublished == true) {
                 button.addClass("sc-published");
-                button.attr("title", "Published");
+                button.attr("title", "Is published");
             } else {
                 button.addClass("sc-draft");
-                button.attr("title", "Draft");
+                button.attr("title", "Has unpublished changes");
             }
 
             return button[0].outerHTML;

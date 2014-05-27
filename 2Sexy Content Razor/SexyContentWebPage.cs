@@ -126,18 +126,14 @@ namespace ToSic.SexyContent.Razor
         #endregion
 
 
-        private ConfigurationProvider _configurationProvider;
-        private ConfigurationProvider ConfigurationProvider
+        private IConfigurationProvider _configurationProvider;
+        private IConfigurationProvider ConfigurationProvider
         {
             get
             {
                 if (_configurationProvider == null)
                 {
-                    _configurationProvider = new ConfigurationProvider();
-                    _configurationProvider.Sources.Add("querystring", new QueryStringPropertyAccess());
-                    _configurationProvider.Sources.Add("app", new AppPropertyAccess(App));
-                    _configurationProvider.Sources.Add("appsettings", new DynamicEntityPropertyAccess(App.Settings));
-                    _configurationProvider.Sources.Add("appresources", new DynamicEntityPropertyAccess(App.Resources));
+                    _configurationProvider = Data.In["Default"].Source.ConfigurationProvider;
                 }
                 return _configurationProvider;
             }
