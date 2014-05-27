@@ -10,6 +10,7 @@ using DotNetNuke.Web.UI;
 using ToSic.Eav;
 using ToSic.Eav.DataSources;
 using ToSic.SexyContent.DataSources;
+using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Engines;
 
 namespace ToSic.SexyContent.Search
@@ -77,19 +78,32 @@ namespace ToSic.SexyContent.Search
                 var entities = stream.Value.List.Select(p => p.Value);
                 var searchInfoList = searchInfoDictionary[stream.Key] = new List<ISearchInfo>();
 
-                searchInfoList.AddRange(entities.Select(entity => new SearchInfo()
+                searchInfoList.AddRange(entities.Select(entity =>
                 {
-                    Entity = entity,
-                    Url = "",
-                    Description = "",
-                    Body = GetJoinedAttributes(entity, language),
-                    Title = entity.Title[language].ToString(),
-                    // ToDo: Date of ContentGroupItem should also be respected...
-                    ModifiedTimeUtc = entity.Modified >  entity.Modified.ToUniversalTime(),
-                    UniqueKey = entity.EntityGuid.ToString(),
-                    IsActive = true,
-                    TabId = moduleInfo.TabID,
-                    PortalId = moduleInfo.PortalID
+                    var searchInfo = new SearchInfo()
+                    {
+                        Entity = entity,
+                        Url = "",
+                        Description = "",
+                        Body = GetJoinedAttributes(entity, language),
+                        Title = entity.Title[language].ToString(),
+                        ModifiedTimeUtc = entity.Modified.ToUniversalTime(),
+                        UniqueKey = entity.EntityGuid.ToString(),
+                        IsActive = true,
+                        TabId = moduleInfo.TabID,
+                        PortalId = moduleInfo.PortalID
+                    };
+
+                    // Take the newest value (from ContentGroupItem and Entity)
+                    if (entity is IHasEditingData)
+                    {
+                        var contentGroupItemModifiedUtc = ((IHasEditingData) entity).ContentGroupItemModified.ToUniversalTime();
+                        searchInfo.ModifiedTimeUtc = searchInfo.ModifiedTimeUtc > contentGroupItemModifiedUtc
+                            ? searchInfo.ModifiedTimeUtc
+                            : contentGroupItemModifiedUtc;
+                    }
+
+                    return searchInfo;
                 }));
             }
 
