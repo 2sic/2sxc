@@ -750,7 +750,7 @@ namespace ToSic.SexyContent
             if (!includeDefaultApp)
                 sexyApps = sexyApps.Where(a => a.Name != "Content");
 
-            return sexyApps.ToList();
+            return sexyApps.OrderBy(a => a.Name).ToList();
         }
 
         public static App GetApp(int zoneId, int appId)
