@@ -373,7 +373,7 @@
             </file>
           </files>
         </component>
-        
+
         <component type="ResourceFile">
           <resourceFiles>
             <basePath>DesktopModules/ToSIC_SexyContent</basePath>
@@ -572,7 +572,7 @@
         </component>
       </components>
     </package>
-    
+
     <package name="2SexyContent-App" type="Module" version="06.00.09">
       <friendlyName> App</friendlyName>
       <description>2Sexy Content App is an extension that allows to insert a 2SexyContent app.</description>
@@ -777,6 +777,26 @@
                     <helpUrl />
                     <supportsPopUps>True</supportsPopUps>
                   </moduleControl>
+                  <moduleControl>
+                    <controlKey>dataExport</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/DataExport.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Data Export</controlTitle>
+                    <controlType>Admin</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>dataImport</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/DataImport.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Data Import</controlTitle>
+                    <controlType>Admin</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                  </moduleControl>
                 </moduleControls>
               </moduleDefinition>
             </moduleDefinitions>
@@ -793,6 +813,6 @@
         </component>
       </components>
     </package>
-    
+
   </packages>
 </dotnetnuke>
