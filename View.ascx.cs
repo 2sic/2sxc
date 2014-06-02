@@ -15,6 +15,7 @@ using ToSic.Eav;
 using DotNetNuke.Entities.Modules.Actions;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Engines;
+using ToSic.SexyContent.ImportExport;
 
 namespace ToSic.SexyContent
 {
@@ -457,5 +458,11 @@ namespace ToSic.SexyContent
         }
         #endregion
 
+        protected void btnInstallGettingStarted_OnClick(object sender, EventArgs e)
+        {
+            var messages = new List<ExportImportMessage>();
+            new GettingStartedImport(ZoneId.Value, AppId.Value).ImportGettingStartedTemplates(UserInfo, messages);
+            Response.Redirect(Request.RawUrl);
+        }
     }
 }

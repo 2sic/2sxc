@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Xml.Linq;
 using DotNetNuke.Entities.Portals;
+using DotNetNuke.Entities.Users;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.FileSystem;
 using ICSharpCode.SharpZipLib.Zip;

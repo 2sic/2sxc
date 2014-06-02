@@ -16,7 +16,8 @@
     </div>
 </asp:Panel>
 <asp:Panel runat="server" Visible="False" class="dnnFormMessage dnnFormInfo" ID="pnlGetStarted">
-    <%= LocalizeString("GetStarted.Text") %>
+    <%= LocalizeString("GetStarted.Text") %><br/><br/>
+    <asp:LinkButton runat="server" ID="btnInstallGettingStarted" ResourceKey="btnInstallGettingStarted" CssClass="dnnPrimaryAction" OnClick="btnInstallGettingStarted_OnClick"></asp:LinkButton>
 </asp:Panel>
 
 <asp:Panel runat="server" ID="pnlZoneConfigurationMissing" Visible="false" CssClass="dnnFormMessage dnnFormInfo">

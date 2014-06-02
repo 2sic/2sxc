@@ -325,6 +325,7 @@
     <Compile Include="SexyContent\EAVExtensions\IHasEditingData.cs" />
     <Compile Include="SexyContent\IEditContentControl.cs" />
     <Compile Include="SexyContent\ImportExport\ExportImportMessage.cs" />
+    <Compile Include="SexyContent\ImportExport\GettingStartedImport.cs" />
     <Compile Include="SexyContent\ImportExport\ImportExport.cs" />
     <Compile Include="SexyContent\ImportExport\ImportExportHelpers.cs" />
     <Compile Include="SexyContent\ImportExport\ImportValue.cs" />
