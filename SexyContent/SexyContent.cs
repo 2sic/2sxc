@@ -1049,16 +1049,29 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Returns the ZoneID from PortalSettings
         /// </summary>
-        /// <param name="PortalID"></param>
+        /// <param name="portalId"></param>
         /// <returns></returns>
-        public static int? GetZoneID(int PortalID)
+        public static int? GetZoneID(int portalId)
         {
-            var ZoneSettingKey = SexyContent.PortalSettingsPrefix + "ZoneID";
-            var c = PortalController.GetPortalSettingsDictionary(PortalID);
+            var zoneSettingKey = SexyContent.PortalSettingsPrefix + "ZoneID";
+            var c = PortalController.GetPortalSettingsDictionary(portalId);
+            var portalSettings = new PortalSettings(portalId);
 
-            if (c.ContainsKey(ZoneSettingKey))
-                return int.Parse(c[ZoneSettingKey]);
-            return null;
+            int zoneId;
+
+            // Create new zone automatically
+            if (!c.ContainsKey(zoneSettingKey))
+            {
+                var newZone = AddZone(portalSettings.PortalName + " (Portal " + portalId + ")");
+                SetZoneID(newZone.ZoneID, portalId);
+                zoneId = newZone.ZoneID;
+            }
+            else
+            {
+                zoneId = int.Parse(c[zoneSettingKey]);
+            }
+
+            return zoneId;
         }
 
         /// <summary>
