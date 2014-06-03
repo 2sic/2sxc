@@ -162,10 +162,10 @@
   <data name="TemplateError.Text" xml:space="preserve">
     <value>&lt;b&gt;There was an error while rendering the template&lt;/b&gt;</value>
   </data>
-  <data name="GetStarted.Text" xml:space="preserve">
-    <value>To get started, choose „Admin“ in the module menu (make sure you’re in edit-page mode).</value>
-  </data>
   <data name="EnableDataPublishing.Text" xml:space="preserve">
     <value>This module is trying to retrieve data from the server. If you see this message, it is because Data Publishing is not enabled on this module. Please enable it in the module settings of the module {0} (the module with the title "{1}").</value>
+  </data>
+  <data name="btnInstallGettingStarted.Text" xml:space="preserve">
+    <value>Install "Getting Started" templates</value>
   </data>
 </root>

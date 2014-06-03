@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Xml.Linq;
 using DotNetNuke.Entities.Portals;
+using DotNetNuke.Entities.Users;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.FileSystem;
 using ICSharpCode.SharpZipLib.Zip;
@@ -140,6 +142,26 @@ namespace ToSic.SexyContent.ImportExport
                 // Finally delete the temporary directory
                 Directory.Delete(temporaryDirectory, true);
             }
+
+            return success;
+        }
+
+        public bool ImportZipFromUrl(string packageUrl, List<ExportImportMessage> messages, bool isAppImport)
+        {
+            var tempDirectory = new DirectoryInfo(HttpContext.Current.Server.MapPath(SexyContent.TemporaryDirectory));
+            if (tempDirectory.Exists)
+                Directory.CreateDirectory(tempDirectory.FullName);
+
+            var destinationPath = Path.Combine(tempDirectory.FullName, Path.GetRandomFileName() + ".zip");
+            var client = new WebClient();
+            var success = false;
+
+            client.DownloadFile(packageUrl, destinationPath);
+
+            using (var file = File.OpenRead(destinationPath))
+                success = ImportZip(file, HttpContext.Current.Server, PortalSettings.Current, messages, isAppImport);
+
+            File.Delete(destinationPath);
 
             return success;
         }

@@ -5,12 +5,12 @@
 
 
 <asp:Panel runat="server" class="dnnForm dnnSexyContentImport dnnClear" id="pnlUpload">
-    <asp:Panel runat="server" ID="pnlGettingStartedTemplates">
+    <%--<asp:Panel runat="server" ID="pnlGettingStartedTemplates">
         <h2 class="dnnFormSectionHead" runat="server"><asp:Label runat="server" ResourceKey="lblImportDefaultPackageHeading"></asp:Label></h2>
         <%= LocalizeString("GettingStartedPackage.Text") %><br/><br/>
         <asp:LinkButton ID="btnInstallGettingStarted" runat="server" CssClass="dnnPrimaryAction" ResourceKey="btnInstallGettingStarted" OnClick="btnInstallGettingStarted_Click"></asp:LinkButton>
         <br/><br/><br/>
-    </asp:Panel>
+    </asp:Panel>--%>
     <h2 class="dnnFormSectionHead" runat="server"><asp:Label runat="server" ID="lblImportHeading" ResourceKey="lblImportHeading"></asp:Label></h2>
     <div class="dnnFormMessage dnnFormInfo">
         <asp:Label runat="server" ID="lblImportInfo" ResourceKey="lblImportInfo"></asp:Label>
