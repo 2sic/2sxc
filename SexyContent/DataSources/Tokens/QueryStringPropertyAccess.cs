@@ -14,13 +14,11 @@ namespace ToSic.SexyContent.DataSources.Tokens
 
             if (context == null)
             {
-                propertyNotFound = true;
+                propertyNotFound = false;
                 return null;
             }
-	        var result = context.Request.QueryString[propertyName.ToLower()];
-	        if (result == null)
-		        propertyNotFound = true;
-            return result ?? "";
+
+            return context.Request.QueryString[propertyName.ToLower()];
         }
 
         public string Name { get; private set; }
