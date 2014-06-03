@@ -40,6 +40,8 @@
         function InstallPackages<%= ModuleID %>(packages) {
 
             $("#<%=pnlLoading.ClientID%>").show();
+            var sf = $.ServicesFramework(<%= ModuleID %>);
+            var success = true;
 
             // Loop all packages and install them
             for (var i = 0; i < packages.length; i++) {
@@ -47,28 +49,30 @@
                 var currentPackage = packages[i];
 
                 $.ajax({
-                    type: "POST",
+                    type: "GET",
                     dataType: "json",
                     async: false,
-                    url: window.location.href + (window.location.href.indexOf("?") == -1 ? "?" : "&") + "mid=<%= ModuleID %>",
-                    data: "installpackage=true&package=" + encodeURIComponent(currentPackage.url),
+                    url: sf.getServiceRoot('ToSIC_SexyContent') + "GettingStarted/" + "InstallPackage",
+                    data: "packageUrl=" + currentPackage.url,
+                    beforeSend: sf.setModuleHeaders
                 }).done(function (e) {
-                    if (e.error != "")
+                    if (e.error != "") {
                         alert("Something went wrong while installing '" + currentPackage.displayName + "': \n" + e.error);
-                    else {
-                        alert("Installed package '" + currentPackage.displayName + "' successfully.");
-                        if(i + 1 == packages.length)
-                            window.location.reload();
+                        success = false;
                     }
                     if (window.console)
                         console.log(e);
                 }).fail(function (xhr, result, status) {
                     alert("Something went wrong while installing '" + currentPackage.displayName + "': " + status);
+                    success = false;
                 });
 
             }
 
-            
+            if (success) {
+                alert("Installed  all packages successfully.");
+                window.location.reload();
+            }
 
         }
 
