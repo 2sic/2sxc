@@ -15,6 +15,7 @@ using ToSic.Eav;
 using DotNetNuke.Entities.Modules.Actions;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Engines;
+using ToSic.SexyContent.GettingStarted;
 using ToSic.SexyContent.ImportExport;
 
 namespace ToSic.SexyContent
@@ -223,9 +224,12 @@ namespace ToSic.SexyContent
             var noTemplatesYet = !AppId.HasValue || !Sexy.GetVisibleTemplates(PortalId).Any();
 
             // If there are no templates configured
-            if (noTemplatesYet)
+            if (noTemplatesYet && UserInfo.IsInRole(PortalSettings.AdministratorRoleName))
             {
                 pnlGetStarted.Visible = true;
+                var gettingStartedControl = (GettingStartedContent)LoadControl("~/DesktopModules/ToSIC_SexyContent/SexyContent/GettingStarted/GettingStartedContent.ascx");
+                gettingStartedControl.ModuleID = this.ModuleId;
+                pnlGetStarted.Controls.Add(gettingStartedControl);
             }
 
             if (!Page.IsPostBack && UserMayEditThisModule)
@@ -458,11 +462,5 @@ namespace ToSic.SexyContent
         }
         #endregion
 
-        protected void btnInstallGettingStarted_OnClick(object sender, EventArgs e)
-        {
-            var messages = new List<ExportImportMessage>();
-            new GettingStartedImport(ZoneId.Value, AppId.Value).ImportGettingStartedTemplates(UserInfo, messages);
-            Response.Redirect(Request.RawUrl);
-        }
     }
 }

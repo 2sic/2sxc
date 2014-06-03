@@ -911,6 +911,38 @@ namespace ToSic.SexyContent
                 .Single(p => p.StaticName == AttributeSetStaticNameAppResources).AttributeSetID;
         }
 
+        public static int? GetAppIdFromModule(ModuleInfo module)
+        {
+            var zoneId = GetZoneID(module.PortalID);
+            
+            if (module.DesktopModule.ModuleName == "2sxc")
+            {
+                if (zoneId.HasValue)
+                    return SexyContent.GetDefaultAppId(zoneId.Value);
+                else
+                    return new int?();
+            }
+
+            object appIdString = null;
+
+            if (HttpContext.Current != null)
+            {
+                if (!String.IsNullOrEmpty(HttpContext.Current.Request.QueryString["AppId"]))
+                    appIdString = HttpContext.Current.Request.QueryString["AppId"];
+                else
+                {
+                    // Get AppId from ModuleSettings
+                    appIdString = new ModuleController().GetModuleSettings(module.ModuleID)[SexyContent.AppIDString];
+                }
+            }
+
+            int appId;
+            if (appIdString != null && int.TryParse(appIdString.ToString(), out appId))
+                return appId;
+
+            return null;
+        }
+
         public void RemoveApp(int appId, int userId)
         {
             if(appId != this.ContentContext.AppId)
