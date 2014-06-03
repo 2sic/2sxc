@@ -15,24 +15,22 @@ namespace ToSic.SexyContent.GettingStarted
     {
         //[AllowAnonymous]
         //[HttpGet]
-        //public HttpResponseMessage HelloWorld()
+        //public HttpResponseMessage SimpleString()
         //{
-        //    return Request.CreateResponse(HttpStatusCode.OK, "Hello World!");
+        //    return Request.CreateResponse(HttpStatusCode.OK, "String returned!");
         //}
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         [ValidateAntiForgeryToken]
-        public HttpResponseMessage InstallPackage([FromUri]string packageUrl)
+        public HttpResponseMessage InstallPackage(string packageUrl)
         {
             var zoneId = SexyContent.GetZoneID(ActiveModule.PortalID);
             var appId = SexyContent.GetAppIdFromModule(ActiveModule);
+            bool success;
 
-            // Install packages
+            // Install package
             var messages = new List<ExportImportMessage>();
-            var error = "";
-
-            var success = true;
             try
             {
                 success = new ZipImport(zoneId.Value, appId, PortalSettings.UserInfo.IsSuperUser).ImportZipFromUrl(
@@ -40,10 +38,11 @@ namespace ToSic.SexyContent.GettingStarted
             }
             catch (Exception ex)
             {
-                error = "Error while installing: " + ex.Message;
+                DotNetNuke.Services.Exceptions.Exceptions.LogException(ex);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Error while installing: " + ex.Message, ex);
             }
-
-            return Request.CreateResponse(HttpStatusCode.OK, new { success, messages, error });
+            
+            return Request.CreateResponse(success ? HttpStatusCode.OK : HttpStatusCode.InternalServerError, new { success, messages });
         }
 
     }

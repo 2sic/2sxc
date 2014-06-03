@@ -52,17 +52,11 @@
                     type: "GET",
                     dataType: "json",
                     async: false,
-                    url: sf.getServiceRoot('ToSIC_SexyContent') + "GettingStarted/" + "InstallPackage",
+                    url: sf.getServiceRoot('2sxc') + "GettingStarted/" + "InstallPackage",
                     data: "packageUrl=" + currentPackage.url,
                     beforeSend: sf.setModuleHeaders
-                }).done(function (e) {
-                    if (e.error != "") {
-                        alert("Something went wrong while installing '" + currentPackage.displayName + "': \n" + e.error);
-                        success = false;
-                    }
-                    if (window.console)
-                        console.log(e);
-                }).fail(function (xhr, result, status) {
+                }).done(function (e) {})
+                .fail(function (xhr, result, status) {
                     alert("Something went wrong while installing '" + currentPackage.displayName + "': " + status);
                     success = false;
                 });

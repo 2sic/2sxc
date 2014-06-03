@@ -11,7 +11,7 @@ namespace ToSic.SexyContent
 
         public void RegisterRoutes(IMapRoute mapRouteManager)
         {
-            mapRouteManager.MapHttpRoute("ToSIC_SexyContent", "default", "{controller}/{action}", new[] { "ToSic.SexyContent.GettingStarted" });
+            mapRouteManager.MapHttpRoute("2sxc", "default", "{controller}/{action}", new[] { "ToSic.SexyContent.GettingStarted" });
         }
 
     }
