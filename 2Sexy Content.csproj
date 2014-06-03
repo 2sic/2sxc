@@ -84,12 +84,15 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
@@ -323,9 +326,17 @@
     <Compile Include="SexyContent\EAVExtensions\EntityDecorator.cs" />
     <Compile Include="SexyContent\EAVExtensions\EntityInContentGroup.cs" />
     <Compile Include="SexyContent\EAVExtensions\IHasEditingData.cs" />
+    <Compile Include="SexyContent\GettingStarted\GettingStartedController.cs" />
+    <Compile Include="SexyContent\GettingStarted\GettingStartedFrame.ascx.cs">
+      <DependentUpon>GettingStartedFrame.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SexyContent\GettingStarted\GettingStartedFrame.ascx.designer.cs">
+      <DependentUpon>GettingStartedFrame.ascx</DependentUpon>
+    </Compile>
     <Compile Include="SexyContent\IEditContentControl.cs" />
     <Compile Include="SexyContent\ImportExport\ExportImportMessage.cs" />
-    <Compile Include="SexyContent\ImportExport\GettingStartedImport.cs" />
+    <Compile Include="SexyContent\GettingStarted\GettingStartedImport.cs" />
     <Compile Include="SexyContent\ImportExport\ImportExport.cs" />
     <Compile Include="SexyContent\ImportExport\ImportExportHelpers.cs" />
     <Compile Include="SexyContent\ImportExport\ImportValue.cs" />
@@ -333,6 +344,7 @@
     <Compile Include="SexyContent\ImportExport\XmlImport.cs" />
     <Compile Include="SexyContent\ImportExport\ZipExport.cs" />
     <Compile Include="SexyContent\ImportExport\ZipImport.cs" />
+    <Compile Include="SexyContent\RouteMapper.cs" />
     <Compile Include="SexyContent\Search\ISearchInfo.cs" />
     <Compile Include="SexyContent\Search\SearchController.cs" />
     <Compile Include="SexyContent\Search\SearchInfo.cs" />
@@ -504,6 +516,7 @@
     <Content Include="BuildScripts\ModulePackage.Targets" />
     <Content Include="BuildScripts\MSBuild.Community.Tasks.targets" />
     <None Include="SqlDataProvider\01.00.00.SqlDataProvider" />
+    <Content Include="SexyContent\GettingStarted\GettingStartedFrame.ascx" />
     <Content Include="SqlDataProvider\05.02.01.SqlDataProvider" />
     <Content Include="Styles\Edit.css" />
     <Content Include="Styles\EditDataSource\demo-new.css" />

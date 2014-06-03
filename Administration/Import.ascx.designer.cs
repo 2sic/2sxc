@@ -22,24 +22,6 @@ namespace ToSic.SexyContent {
         protected global::System.Web.UI.WebControls.Panel pnlUpload;
         
         /// <summary>
-        /// pnlGettingStartedTemplates control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlGettingStartedTemplates;
-        
-        /// <summary>
-        /// btnInstallGettingStarted control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton btnInstallGettingStarted;
-        
-        /// <summary>
         /// lblImportHeading control.
         /// </summary>
         /// <remarks>
@@ -64,7 +46,7 @@ namespace ToSic.SexyContent {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UserControl lblSelectImportFile;
+        protected global::DotNetNuke.UI.UserControls.LabelControl lblSelectImportFile;
         
         /// <summary>
         /// fileUpload control.

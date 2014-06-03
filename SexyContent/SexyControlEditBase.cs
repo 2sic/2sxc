@@ -48,27 +48,29 @@ namespace ToSic.SexyContent
         {
             get
             {
-                if (IsContentApp)
-                {
-                    if (ZoneId.HasValue)
-                        return SexyContent.GetDefaultAppId(ZoneId.Value);
-                    else
-                        return new int?();
-                }
+                //if (IsContentApp)
+                //{
+                //    if (ZoneId.HasValue)
+                //        return SexyContent.GetDefaultAppId(ZoneId.Value);
+                //    else
+                //        return new int?();
+                //}
 
-                object appIdString;
+                //object appIdString;
 
-                if (!String.IsNullOrEmpty(Request.QueryString["AppId"]))
-                    appIdString = Request.QueryString["AppId"];
-                else
-                    // Get AppId from ModuleSettings
-                    appIdString = Settings[SexyContent.AppIDString];
+                //if (!String.IsNullOrEmpty(Request.QueryString["AppId"]))
+                //    appIdString = Request.QueryString["AppId"];
+                //else
+                //    // Get AppId from ModuleSettings
+                //    appIdString = Settings[SexyContent.AppIDString];
 
-                int appId;
-                if (appIdString != null && int.TryParse(appIdString.ToString(), out appId))
-                    return appId;
+                //int appId;
+                //if (appIdString != null && int.TryParse(appIdString.ToString(), out appId))
+                //    return appId;
 
-                return null;
+                //return null;
+
+                return SexyContent.GetAppIdFromModule(ModuleConfiguration);
             }
             set
             {

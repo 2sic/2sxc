@@ -15,6 +15,7 @@ using ToSic.Eav;
 using DotNetNuke.Entities.Modules.Actions;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Engines;
+using ToSic.SexyContent.GettingStarted;
 
 namespace ToSic.SexyContent
 {
@@ -218,6 +219,16 @@ namespace ToSic.SexyContent
         /// </summary>
         protected void ShowTemplateChooser()
         {
+            if (IsEditable && UserInfo.IsInRole(PortalSettings.AdministratorRoleName) && !SexyContent.GetApps(ZoneId.Value, false).Any())
+            {
+                // If there are no apps yet
+                pnlGetStarted.Visible = true;
+                var gettingStartedControl = (GettingStartedFrame)LoadControl("~/DesktopModules/ToSIC_SexyContent/SexyContent/GettingStarted/GettingStartedFrame.ascx");
+                gettingStartedControl.ModuleID = this.ModuleId;
+                gettingStartedControl.ModuleConfiguration = this.ModuleConfiguration;
+                pnlGetStarted.Controls.Add(gettingStartedControl);
+            }
+
             if (!Page.IsPostBack && UserMayEditThisModule)
             {
                 pnlTemplateChooser.Visible = true;
@@ -233,7 +244,6 @@ namespace ToSic.SexyContent
                     ddlApp.Visible = true;
                     BindAppDropDown();
                 }
-
             }
         }
 

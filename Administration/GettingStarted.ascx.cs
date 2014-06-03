@@ -16,37 +16,43 @@ namespace ToSic.SexyContent.Administration
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            var GettingStartedSrc = "http://gettingstarted.2sexycontent.org/router.aspx?";
+            var gettingStartedSrc = "http://gettingstarted.2sexycontent.org/router.aspx?";
             
             // Add DNN Version
-            GettingStartedSrc += "DnnVersion=" + Assembly.GetAssembly(typeof(DotNetNuke.Common.Globals)).GetName().Version.ToString(4);
+            gettingStartedSrc += "DnnVersion=" + Assembly.GetAssembly(typeof(DotNetNuke.Common.Globals)).GetName().Version.ToString(4);
             // Add 2SexyContent Version
-            GettingStartedSrc += "&2SexyContentVersion=" + SexyContent.ModuleVersion;
+            gettingStartedSrc += "&2SexyContentVersion=" + SexyContent.ModuleVersion;
+            // Add module type
+            gettingStartedSrc += "&ModuleName=" + ModuleConfiguration.DesktopModule.ModuleName;
+            // Add module id
+            gettingStartedSrc += "&ModuleId=" + ModuleId;
             // Add Portal ID
-            GettingStartedSrc += "&PortalID=" + PortalId.ToString();
+            gettingStartedSrc += "&PortalID=" + PortalId.ToString();
             // Add VDB / Zone ID (if set)
             var ZoneID = SexyContent.GetZoneID(PortalId);
-            GettingStartedSrc += ZoneID.HasValue ? "&ZoneID=" + ZoneID.Value.ToString() : "";
+            gettingStartedSrc += ZoneID.HasValue ? "&ZoneID=" + ZoneID.Value.ToString() : "";
             // Add AppStaticName and Version
             if (AppId.HasValue && !IsContentApp)
             {
                 var app = SexyContent.GetApp(ZoneId.Value, AppId.Value);
 
-                GettingStartedSrc += "&AppGuid=" + app.AppGuid;
+                gettingStartedSrc += "&AppGuid=" + app.AppGuid;
                 if (app.Configuration != null)
                 {
-                    GettingStartedSrc += "&AppVersion=" + app.Configuration.Version;
-                    GettingStartedSrc += "&AppOriginalId=" + app.Configuration.OriginalId;
+                    gettingStartedSrc += "&AppVersion=" + app.Configuration.Version;
+                    gettingStartedSrc += "&AppOriginalId=" + app.Configuration.OriginalId;
                 }
             }
             // Add DNN Guid
             var HostSettings = HostController.Instance.GetSettingsDictionary();
-            GettingStartedSrc += HostSettings.ContainsKey("GUID") ? "&DnnGUID=" + HostSettings["GUID"].ToString() : "";
+            gettingStartedSrc += HostSettings.ContainsKey("GUID") ? "&DnnGUID=" + HostSettings["GUID"].ToString() : "";
             // Add Portal Default Language
-            GettingStartedSrc += "&DefaultLanguage=" + PortalSettings.DefaultLanguage;
+            gettingStartedSrc += "&DefaultLanguage=" + PortalSettings.DefaultLanguage;
+            // Add current language
+            gettingStartedSrc += "&CurrentLanguage=" + PortalSettings.CultureCode;
 
             // Set src to iframe
-            ifrGettingStarted.Attributes["src"] = GettingStartedSrc;
+            ifrGettingStarted.Attributes["src"] = gettingStartedSrc;
         }
     }
 }
