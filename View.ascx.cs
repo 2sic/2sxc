@@ -224,11 +224,12 @@ namespace ToSic.SexyContent
             var noTemplatesYet = !AppId.HasValue || !Sexy.GetVisibleTemplates(PortalId).Any();
 
             // If there are no templates configured
-            if (noTemplatesYet && UserInfo.IsInRole(PortalSettings.AdministratorRoleName))
+            if (noTemplatesYet && IsEditable && UserInfo.IsInRole(PortalSettings.AdministratorRoleName))
             {
                 pnlGetStarted.Visible = true;
-                var gettingStartedControl = (GettingStartedContent)LoadControl("~/DesktopModules/ToSIC_SexyContent/SexyContent/GettingStarted/GettingStartedContent.ascx");
+                var gettingStartedControl = (GettingStartedFrame)LoadControl("~/DesktopModules/ToSIC_SexyContent/SexyContent/GettingStarted/GettingStartedFrame.ascx");
                 gettingStartedControl.ModuleID = this.ModuleId;
+                gettingStartedControl.ModuleConfiguration = this.ModuleConfiguration;
                 pnlGetStarted.Controls.Add(gettingStartedControl);
             }
 

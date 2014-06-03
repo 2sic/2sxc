@@ -10,15 +10,24 @@
 namespace ToSic.SexyContent.GettingStarted {
     
     
-    public partial class GettingStartedContent {
+    public partial class GettingStartedFrame {
         
         /// <summary>
-        /// btnInstallGettingStarted control.
+        /// frGettingStarted control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton btnInstallGettingStarted;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl frGettingStarted;
+        
+        /// <summary>
+        /// pnlLoading control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlLoading;
     }
 }

@@ -146,7 +146,7 @@ namespace ToSic.SexyContent.ImportExport
             return success;
         }
 
-        public bool ImportZipFromUrl(string packageUrl, List<ExportImportMessage> messages)
+        public bool ImportZipFromUrl(string packageUrl, List<ExportImportMessage> messages, bool isAppImport)
         {
             var tempDirectory = new DirectoryInfo(HttpContext.Current.Server.MapPath(SexyContent.TemporaryDirectory));
             if (tempDirectory.Exists)
@@ -159,7 +159,7 @@ namespace ToSic.SexyContent.ImportExport
             client.DownloadFile(packageUrl, destinationPath);
 
             using (var file = File.OpenRead(destinationPath))
-                success = ImportZip(file, HttpContext.Current.Server, PortalSettings.Current, messages, false);
+                success = ImportZip(file, HttpContext.Current.Server, PortalSettings.Current, messages, isAppImport);
 
             File.Delete(destinationPath);
 

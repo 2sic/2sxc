@@ -43,24 +43,7 @@ namespace ToSic.SexyContent.ImportExport
             var release = Releases.Element("SexyContentReleases").Elements("Release").Last(p => new Version(p.Attribute("Version").Value) <= new Version(SexyContent.ModuleVersion));
             var starterPackageUrl = release.Elements("RecommendedPackages").Elements("Package").First().Attribute("PackageUrl").Value;
 
-            //var tempDirectory = new DirectoryInfo(HttpContext.Current.Server.MapPath(SexyContent.TemporaryDirectory));
-            //if (tempDirectory.Exists)
-            //    Directory.CreateDirectory(tempDirectory.FullName);
-
-            //var destinationPath = Path.Combine(tempDirectory.FullName, Path.GetRandomFileName() + ".zip");
-            //var client = new WebClient();
-            //var success = false;
-
-            //client.DownloadFile(starterPackageUrl, destinationPath);
-
-            //using (var file = File.OpenRead(destinationPath))
-            //    success = new ZipImport(_zoneId, _appId, user.IsSuperUser).ImportZip(file, HttpContext.Current.Server, PortalSettings.Current, messages, false);
-
-            //File.Delete(destinationPath);
-
-            return new ZipImport(_zoneId, _appId, user.IsSuperUser).ImportZipFromUrl(starterPackageUrl, messages);
-
-            //return success;
+            return new ZipImport(_zoneId, _appId, user.IsSuperUser).ImportZipFromUrl(starterPackageUrl, messages, false);
         }
 
     }

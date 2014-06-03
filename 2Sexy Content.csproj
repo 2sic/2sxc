@@ -326,14 +326,13 @@
     <Compile Include="SexyContent\EAVExtensions\EntityDecorator.cs" />
     <Compile Include="SexyContent\EAVExtensions\EntityInContentGroup.cs" />
     <Compile Include="SexyContent\EAVExtensions\IHasEditingData.cs" />
-    <Compile Include="SexyContent\GettingStarted\GettingStartedContent.ascx.cs">
-      <DependentUpon>GettingStartedContent.ascx</DependentUpon>
+    <Compile Include="SexyContent\GettingStarted\GettingStartedFrame.ascx.cs">
+      <DependentUpon>GettingStartedFrame.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="SexyContent\GettingStarted\GettingStartedContent.ascx.designer.cs">
-      <DependentUpon>GettingStartedContent.ascx</DependentUpon>
+    <Compile Include="SexyContent\GettingStarted\GettingStartedFrame.ascx.designer.cs">
+      <DependentUpon>GettingStartedFrame.ascx</DependentUpon>
     </Compile>
-    <Compile Include="SexyContent\GettingStarted\GettingStartedController.cs" />
     <Compile Include="SexyContent\IEditContentControl.cs" />
     <Compile Include="SexyContent\ImportExport\ExportImportMessage.cs" />
     <Compile Include="SexyContent\GettingStarted\GettingStartedImport.cs" />
@@ -344,7 +343,6 @@
     <Compile Include="SexyContent\ImportExport\XmlImport.cs" />
     <Compile Include="SexyContent\ImportExport\ZipExport.cs" />
     <Compile Include="SexyContent\ImportExport\ZipImport.cs" />
-    <Compile Include="SexyContent\RouteMapper.cs" />
     <Compile Include="SexyContent\Search\ISearchInfo.cs" />
     <Compile Include="SexyContent\Search\SearchController.cs" />
     <Compile Include="SexyContent\Search\SearchInfo.cs" />
@@ -516,7 +514,7 @@
     <Content Include="BuildScripts\ModulePackage.Targets" />
     <Content Include="BuildScripts\MSBuild.Community.Tasks.targets" />
     <None Include="SqlDataProvider\01.00.00.SqlDataProvider" />
-    <Content Include="SexyContent\GettingStarted\GettingStartedContent.ascx" />
+    <Content Include="SexyContent\GettingStarted\GettingStartedFrame.ascx" />
     <Content Include="SqlDataProvider\05.02.01.SqlDataProvider" />
     <Content Include="Styles\Edit.css" />
     <Content Include="Styles\EditDataSource\demo-new.css" />

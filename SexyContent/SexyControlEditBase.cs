@@ -70,7 +70,7 @@ namespace ToSic.SexyContent
 
                 //return null;
 
-                return SexyContent.GetAppIdFromModule(this.ModuleConfiguration);
+                return SexyContent.GetAppIdFromModule(ModuleConfiguration);
             }
             set
             {
