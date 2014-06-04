@@ -217,6 +217,7 @@ namespace ToSic.SexyContent
 
             this.ZoneId = zoneId;
             this.AppId = appId;
+
         }
 
         /// <summary>
@@ -791,9 +792,8 @@ namespace ToSic.SexyContent
                     dynamic appResourcesDynamic = appResources != null ? new DynamicEntity(appResources, new[] {System.Threading.Thread.CurrentThread.CurrentCulture.Name}) : null;
                     dynamic appSettingsDynamic = appResources != null ? new DynamicEntity(appSettings, new[] {System.Threading.Thread.CurrentThread.CurrentCulture.Name}) : null;
 
-                    sexyApp = new App()
+                    sexyApp = new App(appId, zoneId)
                     {
-                        AppId = appId,
                         Name = appMetaDataDynamic.DisplayName,
                         Folder = appMetaDataDynamic.Folder,
                         Configuration = appMetaDataDynamic,
@@ -807,7 +807,7 @@ namespace ToSic.SexyContent
             // Handle default app
             else
             {
-                sexyApp = new App()
+                sexyApp = new App(appId, zoneId)
                 {
                     AppId = appId,
                     Name = "Content",
