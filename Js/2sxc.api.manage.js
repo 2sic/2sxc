@@ -92,7 +92,7 @@ $2sxc.getManageController = function(id) {
             //settings = $.extend({}, config, settings);
             var button = $('<a />', {
                 'class': 'sc-' + settings.action,
-                'onclick': 'javascript:$2sxc(' + id + ').manage.action(' + JSON.stringify(settings) + ')'
+                'onclick': 'javascript:$2sxc(' + id + ').manage.action(' + JSON.stringify(settings) + '); return false;'
             });
 
             if (settings.isPublished == null || settings.isPublished == true) {
@@ -129,7 +129,7 @@ $2sxc.getManageController = function(id) {
                 }
             }
 
-            var toolbar = $('<ul />', { 'class': 'sc-menu' });
+            var toolbar = $('<ul />', { 'class': 'sc-menu', 'onclick': 'javascript: var e = arguments[0] || window.event; e.stopPropagation();' });
 
             for (var i = 0; i < buttons.length; i++)
                 toolbar.append($('<li />').append($(manageController.getButton(buttons[i]))));
