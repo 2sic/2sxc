@@ -92,7 +92,7 @@ $2sxc.getManageController = function(id) {
             //settings = $.extend({}, config, settings);
             var button = $('<a />', {
                 'class': 'sc-' + settings.action,
-                'onclick': 'javascript:$2sxc(' + id + ').manage.action(' + JSON.stringify(settings) + '); return false;'
+                'onclick': 'javascript:$2sxc(' + id + ').manage.action(' + JSON.stringify(settings) + ');'
             });
 
             if (settings.isPublished == null || settings.isPublished == true) {
