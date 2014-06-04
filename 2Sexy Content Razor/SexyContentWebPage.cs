@@ -68,10 +68,25 @@ namespace ToSic.SexyContent.Razor
             return AsDynamic(entityKeyValuePair.Value);
         }
 
-        public IEnumerable<dynamic> AsDynamic(IDataStream stream)
+		/// <summary>
+		/// In case AsDynamic is used with Data["name"]
+		/// </summary>
+		/// <param name="list"></param>
+		/// <returns></returns>
+		public IEnumerable<dynamic> AsDynamic(IDataStream stream)
         {
-            return stream.List.Select(e => AsDynamic(e.Value));
+            return AsDynamic(stream.List);//.Select(e => AsDynamic(e.Value));
         }
+
+		/// <summary>
+		/// In case AsDynamic is used with Data["name"].List
+		/// </summary>
+		/// <param name="list"></param>
+		/// <returns></returns>
+		public IEnumerable<dynamic> AsDynamic(IDictionary<int, IEntity> list)
+		{
+			return list.Select(e => AsDynamic(e.Value));
+		}
 
         /// <summary>
         /// Transform a DynamicEntity dynamic object back to a IEntity instance
@@ -162,6 +177,23 @@ namespace ToSic.SexyContent.Razor
             var initialSource = SexyContent.GetInitialDataSource(SexyContent.GetZoneID(Dnn.Portal.PortalId).Value, App.AppId, ModulePermissionController.CanEditModuleContent(Dnn.Module));
             return DataSource.GetDataSource<T>(initialSource.ZoneId, initialSource.AppId, initialSource, configurationProvider);
         }
+
+		/// <summary>
+		/// Create a source with initial stream to attach...
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="inStream"></param>
+		/// <returns></returns>
+		protected T CreateSource<T>(IDataStream inStream)
+		{
+			// if it has a source, then use this, otherwise it's null and that works too. Reason: some sources like DataTable or SQL won't have an upstream source
+			T src = CreateSource<T>(inStream.Source);
+			
+			IDataTarget srcDs = (IDataTarget) src;
+			srcDs.In.Clear();
+			srcDs.In.Add(DataSource.DefaultStreamName, inStream);
+			return src;
+		}
 
 
         /// <summary>
