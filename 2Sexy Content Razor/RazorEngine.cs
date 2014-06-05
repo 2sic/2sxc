@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Compilation;
 using System.Web.WebPages;
 using DotNetNuke.Entities.Modules;
+using DotNetNuke.Security.Permissions;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.UI.Modules;
 using ToSic.SexyContent.DataSources;
@@ -127,6 +128,14 @@ namespace ToSic.SexyContent.Engines
             webPage.List = List;
             webPage.App = App;
             webPage.Data = (ViewDataSource)DataSource;
+
+            // ToDo: Remove this as soon as App.Data getter on App class is fixed #1 and #2
+            if (webPage.App.Data == null)
+            {
+                var initialSource = SexyContent.GetInitialDataSource(App.ZoneId, App.AppId,
+                    ModulePermissionController.CanEditModuleContent(webPage.Dnn.Module));
+                App.Data = ToSic.Eav.DataSource.GetDataSource<ToSic.Eav.DataSources.App>(initialSource.ZoneId, initialSource.AppId, initialSource, initialSource.ConfigurationProvider);
+            }
         }
 
         private void InitWebpage()

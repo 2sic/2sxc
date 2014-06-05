@@ -57,14 +57,16 @@ namespace ToSic.SexyContent
         {
             get
             {
-                if (_data == null)
-                {
-                    // ToDo: Care about "showDrafts" (instead of setting it to false)
-                    var initialSource = SexyContent.GetInitialDataSource(ZoneId, AppId, false);
-                    _data = DataSource.GetDataSource<ToSic.Eav.DataSources.App>(ZoneId, AppId, initialSource, initialSource.ConfigurationProvider);
-                }
+                //if (_data == null)
+                //{
+                //    // ToDo: #1 Care about "showDrafts" (instead of setting it to false)
+                //    // ToDo: #2 this property gets temporarily overwritten in WebPageBase, remove this if #1 is fixed
+                //    var initialSource = SexyContent.GetInitialDataSource(ZoneId, AppId, false);
+                //    _data = DataSource.GetDataSource<ToSic.Eav.DataSources.App>(ZoneId, AppId, initialSource, initialSource.ConfigurationProvider);
+                //}
                 return _data;
             }
+            set { _data = value; }
         }
 
     }
