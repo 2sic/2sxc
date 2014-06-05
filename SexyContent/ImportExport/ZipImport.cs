@@ -149,7 +149,7 @@ namespace ToSic.SexyContent.ImportExport
         public bool ImportZipFromUrl(string packageUrl, List<ExportImportMessage> messages, bool isAppImport)
         {
             var tempDirectory = new DirectoryInfo(HttpContext.Current.Server.MapPath(SexyContent.TemporaryDirectory));
-            if (tempDirectory.Exists)
+            if (!tempDirectory.Exists)
                 Directory.CreateDirectory(tempDirectory.FullName);
 
             var destinationPath = Path.Combine(tempDirectory.FullName, Path.GetRandomFileName() + ".zip");
