@@ -41,7 +41,7 @@ namespace ToSic.SexyContent.Search
             }
 
             var sexy = new SexyContent(zoneId.Value, appId, true);
-            var language = sexy.GetCurrentLanguageName();
+            var language = moduleInfo.CultureCode;
 
             // This list will hold all EAV entities to be indexed
             var dataSource = sexy.GetViewDataSource(moduleInfo.ModuleID, false, true);
