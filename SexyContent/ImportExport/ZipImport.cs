@@ -75,10 +75,19 @@ namespace ToSic.SexyContent.ImportExport
                             {
 
                                 var appId = new int?();
+                                // ToDo: App-Import should only look for App.xml
                                 var xmlSearchPattern = isAppImport ? "App.xml" : "*.xml";
 
+                                // Stores the number of the current xml file to process
+                                var xmlIndex = 0;
+
+                                // Handle PortalFiles folder
+                                //string portalTempRoot = Path.Combine(appDirectory, "PortalFiles");
+                                //if (Directory.Exists(portalTempRoot))
+                                //    CopyAllFilesDnnPortal(portalTempRoot, "", false, messages);
+
                                 // Import XML file(s)
-                                foreach (string xmlFileName in Directory.GetFiles(appDirectory, "*.xml"))
+                                foreach (var xmlFileName in Directory.GetFiles(appDirectory, "*.xml"))
                                 {
                                     var fileContents = File.ReadAllText(Path.Combine(appDirectory, xmlFileName));
                                     var import = new XmlImport();
@@ -97,16 +106,34 @@ namespace ToSic.SexyContent.ImportExport
                                             throw new Exception("Import not allowed because the specified folder does already exist.");
                                         }
 
+                                        if (xmlIndex == 0 && import.IsCompatible(_zoneId, fileContents))
+                                        {
+                                            // Handle PortalFiles folder
+                                            string portalTempRoot = Path.Combine(appDirectory, "PortalFiles");
+                                            if (Directory.Exists(portalTempRoot))
+                                                CopyAllFilesDnnPortal(portalTempRoot, "", false, messages);
+                                        }
+
                                         import.ImportApp(_zoneId, fileContents, out appId);
                                     }
                                     else
                                     {
                                         appId = _appId.Value;
+                                        if (xmlIndex == 0 && import.IsCompatible(_zoneId, fileContents))
+                                        {
+                                            // Handle PortalFiles folder
+                                            string portalTempRoot = Path.Combine(appDirectory, "PortalFiles");
+                                            if (Directory.Exists(portalTempRoot))
+                                                CopyAllFilesDnnPortal(portalTempRoot, "", false, messages);
+                                        }
+
                                         import.ImportXml(_zoneId, appId.Value, fileContents);
                                     }
 
                                     
                                     messages.AddRange(import.ImportLog);
+
+                                    xmlIndex++;
                                 }
 
                                 var sexy = new SexyContent(_zoneId, appId.Value);
@@ -116,11 +143,6 @@ namespace ToSic.SexyContent.ImportExport
                                 string appTemplateRoot = Path.Combine(appDirectory, "2sexy");
                                 if (Directory.Exists(appTemplateRoot))
                                     ImportExportHelpers.CopyAllFiles(appTemplateRoot, templateRoot, false, messages);
-
-                                // Handle PortalFiles folder
-                                string portalTempRoot = Path.Combine(appDirectory, "PortalFiles");
-                                if (Directory.Exists(portalTempRoot))
-                                    CopyAllFilesDnnPortal(portalTempRoot, "", false, messages);
 
                             }
 

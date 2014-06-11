@@ -95,6 +95,13 @@ namespace ToSic.SexyContent.ImportExport
         }
         #endregion
 
+        public bool IsCompatible(int zoneId, string xml)
+        {
+            // Parse XDocument from string
+            XDocument doc = XDocument.Parse(xml);
+            return IsCompatible(doc);
+        }
+
         /// <summary>
         /// Creates an app and then imports the xml
         /// </summary>
