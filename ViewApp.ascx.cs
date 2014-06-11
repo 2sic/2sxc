@@ -295,7 +295,7 @@ namespace ToSic.SexyContent
 
         protected void ChangeTemplate()
         {
-            if (UserMayEditThisModule && !String.IsNullOrEmpty(ddlTemplate.SelectedValue))
+            if (UserMayEditThisModule && !String.IsNullOrEmpty(ddlTemplate.SelectedValue) && AppId.HasValue)
             {
                 var TemplateID = int.Parse(ddlTemplate.SelectedValue);
 
