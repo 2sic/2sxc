@@ -282,6 +282,7 @@ namespace ToSic.SexyContent
         {
             ddlApp.DataSource = SexyContent.GetApps(ZoneId.Value, false).Where(a => !a.Hidden);
             ddlApp.DataBind();
+            ddlApp.Enabled = (!AppId.HasValue || Elements.Count <= 1);
 
             if (ddlApp.Items.Cast<ListItem>().Any(p => p.Value == AppId.ToString()))
                 ddlApp.SelectedValue = AppId.ToString();
