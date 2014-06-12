@@ -121,7 +121,7 @@ namespace ToSic.SexyContent
                 return;
             }
 
-            if (Elements.First().Content == null)
+            if (Elements.All(e => e.Content == null))
             {
                 var toolbar = IsEditable ? "<ul class='sc-menu' data-toolbar='" + new { sortOrder = Elements.First().SortOrder, useModuleList = true, action = "edit" }.ToJson() + "'></ul>" : "";
                 ShowMessage(LocalizeString("NoDemoItem.Text") + " " + toolbar);
