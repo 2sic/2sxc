@@ -165,4 +165,10 @@
   <data name="EnableDataPublishing.Text" xml:space="preserve">
     <value>Dieses Modul benötigt Daten vom Server. Wenn Du diese Meldung siehst, ist das Veröffentlichen für dieses Modul nicht aktiviert. Bitte aktiviere das in den Moduleinstellungen des Moduls {0} (das Modul mit dem Titel "{1}").</value>
   </data>
+  <data name="ddlAppDefaultItem.Text" xml:space="preserve">
+    <value>&lt;App auswählen&gt;</value>
+  </data>
+  <data name="GetMoreApps.Text" xml:space="preserve">
+    <value>Weitere Apps installieren...</value>
+  </data>
 </root>

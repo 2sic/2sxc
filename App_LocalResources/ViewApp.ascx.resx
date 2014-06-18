@@ -165,4 +165,10 @@
   <data name="EnableDataPublishing.Text" xml:space="preserve">
     <value>This module is trying to retrieve data from the server. If you see this message, it is because Data Publishing is not enabled on this module. Please enable it in the module settings of the module {0} (the module with the title "{1}").</value>
   </data>
+  <data name="ddlAppDefaultItem.Text" xml:space="preserve">
+    <value>&lt;Choose App&gt;</value>
+  </data>
+  <data name="GetMoreApps.Text" xml:space="preserve">
+    <value>Get more apps...</value>
+  </data>
 </root>

@@ -291,7 +291,7 @@ namespace ToSic.SexyContent
             separatorItem.Attributes["disabled"] = "disabled";
 
             ddlApp.Items.Add(separatorItem);
-            ddlApp.Items.Add(new ListItem("Get more apps", "OpenAppDialog", true));
+            ddlApp.Items.Add(new ListItem(LocalizeString("GetMoreApps.Text"), "OpenAppDialog", true));
         }
 
         protected void ChangeTemplate()
