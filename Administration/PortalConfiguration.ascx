@@ -5,28 +5,6 @@
 <SexyContent:AdministrationRegisters runat="server"></SexyContent:AdministrationRegisters>
 
 <div class="dnnForm scPortalConfiguration dnnClear">
-    <h2 class="dnnFormSectionHead" runat="server" id="dnnSitePanelSexyContentZones">
-        <a href="#"><asp:Label runat="server" ID="lblZones" ResourceKey="lblZonesHeading"></asp:Label></a>
-    </h2>
-    <fieldset>
-        <div class="dnnFormItem">
-            <dnn:Label runat="server" id="lblZone" Suffix=":"></dnn:Label>
-            <asp:DropDownList Width="200px" runat="server" ID="ddlZones" DataTextField="Name" DataValueField="ZoneID" AppendDataBoundItems="true" AutoPostBack="true" OnSelectedIndexChanged="ddlZones_SelectedIndexChanged"></asp:DropDownList>
-        </div>
-        <div class="dnnFormItem">
-            <dnn:Label runat="server"></dnn:Label>
-            <asp:LinkButton runat="server" ID="btnRenameZone" CssClass="dnnSecondaryAction" resourcekey="btnRenameZone" OnClientClick=" return RenameZone()" OnClick="btnRenameZone_Click"></asp:LinkButton>
-            <asp:LinkButton runat="server" ID="btnCreateZone" CssClass="dnnSecondaryAction" resourcekey="btnCreateZone" OnClientClick="return CreateZone()" OnClick="btnCreateZone_Click"></asp:LinkButton>
-            <asp:HiddenField runat="server" ID="hfZoneName" Value="" />
-        </div>
-        <div class="dnnFormItem">
-            <dnn:Label runat="server"></dnn:Label>
-            <div class="dnnLeft" style="width:450px; margin-top:20px;">
-                <asp:Literal runat="server" ID="litZoneInfo"></asp:Literal>
-            </div>
-        </div>
-    </fieldset>
-
     <h2 class="dnnFormSectionHead" runat="server" id="dnnSitePanelSexyContentCultures">
         <a href="#"><asp:Label runat="server" ID="lblCulturesHeading" ResourceKey="lblCulturesHeading" Text="Cultures"></asp:Label></a>
     </h2>
@@ -52,6 +30,29 @@
             </div>
         </div>
     </fieldset>
+    
+    <h2 class="dnnFormSectionHead" runat="server" id="dnnSitePanelSexyContentZones">
+        <a href="#"><asp:Label runat="server" ID="lblZones" ResourceKey="lblZonesHeading"></asp:Label></a>
+    </h2>
+    <fieldset>
+        <div class="dnnFormItem">
+            <dnn:Label runat="server" id="lblZone" Suffix=":"></dnn:Label>
+            <asp:DropDownList Width="200px" runat="server" ID="ddlZones" DataTextField="Name" DataValueField="ZoneID" AppendDataBoundItems="true" AutoPostBack="true" OnSelectedIndexChanged="ddlZones_SelectedIndexChanged"></asp:DropDownList>
+        </div>
+        <div class="dnnFormItem">
+            <dnn:Label runat="server"></dnn:Label>
+            <asp:LinkButton runat="server" ID="btnRenameZone" CssClass="dnnSecondaryAction" resourcekey="btnRenameZone" OnClientClick=" return RenameZone()" OnClick="btnRenameZone_Click"></asp:LinkButton>
+            <asp:LinkButton runat="server" ID="btnCreateZone" CssClass="dnnSecondaryAction" resourcekey="btnCreateZone" OnClientClick="return CreateZone()" OnClick="btnCreateZone_Click"></asp:LinkButton>
+            <asp:HiddenField runat="server" ID="hfZoneName" Value="" />
+        </div>
+        <div class="dnnFormItem">
+            <dnn:Label runat="server"></dnn:Label>
+            <div class="dnnLeft" style="width:450px; margin-top:20px;">
+                <asp:Literal runat="server" ID="litZoneInfo"></asp:Literal>
+            </div>
+        </div>
+    </fieldset>
+    
     <ul class="dnnActions dnnClear">
         <li><asp:LinkButton ID="hlkSave" runat="server" CssClass="dnnPrimaryAction" Text="Save" resourcekey="hlkSave" OnClick="hlkSave_Click"></asp:LinkButton></li>
         <li><asp:HyperLink ID="hlkCancel" runat="server" CssClass="dnnSecondaryAction" Text="Cancel" resourcekey="hlkCancel"></asp:HyperLink></li>

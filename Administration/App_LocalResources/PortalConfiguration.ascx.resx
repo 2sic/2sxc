@@ -154,10 +154,10 @@
     <value>Manage the cultures for the selected Virtual Database</value>
   </data>
   <data name="lblCultures.Text" xml:space="preserve">
-    <value>Cultures</value>
+    <value>Cultures / Languages</value>
   </data>
   <data name="lblCulturesHeading.Text" xml:space="preserve">
-    <value>Cultures</value>
+    <value>Languages / Cultures</value>
   </data>
   <data name="lblSpecifyZoneFirst.Text" xml:space="preserve">
     <value>Please select or create a Virtual Database before managing the cultures.</value>

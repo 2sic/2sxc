@@ -13,6 +13,60 @@ namespace ToSic.SexyContent.Configuration {
     public partial class PortalConfiguration {
         
         /// <summary>
+        /// dnnSitePanelSexyContentCultures control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl dnnSitePanelSexyContentCultures;
+        
+        /// <summary>
+        /// lblCulturesHeading control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblCulturesHeading;
+        
+        /// <summary>
+        /// lblCultures control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::DotNetNuke.UI.UserControls.LabelControl lblCultures;
+        
+        /// <summary>
+        /// pnlSpecifyZoneFirst control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlSpecifyZoneFirst;
+        
+        /// <summary>
+        /// lblSpecifyZoneFirst control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblSpecifyZoneFirst;
+        
+        /// <summary>
+        /// grdCultures control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::DotNetNuke.Web.UI.WebControls.DnnGrid grdCultures;
+        
+        /// <summary>
         /// dnnSitePanelSexyContentZones control.
         /// </summary>
         /// <remarks>
@@ -37,7 +91,7 @@ namespace ToSic.SexyContent.Configuration {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UserControl lblZone;
+        protected global::DotNetNuke.UI.UserControls.LabelControl lblZone;
         
         /// <summary>
         /// ddlZones control.
@@ -83,60 +137,6 @@ namespace ToSic.SexyContent.Configuration {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Literal litZoneInfo;
-        
-        /// <summary>
-        /// dnnSitePanelSexyContentCultures control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl dnnSitePanelSexyContentCultures;
-        
-        /// <summary>
-        /// lblCulturesHeading control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblCulturesHeading;
-        
-        /// <summary>
-        /// lblCultures control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.UserControl lblCultures;
-        
-        /// <summary>
-        /// pnlSpecifyZoneFirst control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlSpecifyZoneFirst;
-        
-        /// <summary>
-        /// lblSpecifyZoneFirst control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblSpecifyZoneFirst;
-        
-        /// <summary>
-        /// grdCultures control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::DotNetNuke.Web.UI.WebControls.DnnGrid grdCultures;
         
         /// <summary>
         /// hlkSave control.
