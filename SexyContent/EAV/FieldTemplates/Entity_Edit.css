@@ -1,0 +1,6 @@
+﻿.eav-entityselect-item { border: 1px solid #DDD;width: 295px;background: url('../../../Images/Drag.gif') 2px 7px no-repeat #FAFAFA; }
+.eav-entityselect-item div { padding: 3px 10px 3px 20px;position: relative;line-height: 25px; }
+.eav-entityselect-item span { display: block; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;padding-right: 25px; }
+.eav-entityselect-item-remove { width: 31px;height: 31px;background:url('../../../Images/Delete.png') center center no-repeat;display: block;text-indent: -9999px;position: absolute;right: 0px;top: 0px;cursor: pointer; }
+.eav-entityselect-selector { width: 200px; }
+.angular-ui-tree-placeholder { margin: 0; }

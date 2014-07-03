@@ -454,6 +454,9 @@
     <Content Include="Images\Edit.png" />
     <Content Include="Administration\Import.ascx" />
     <Content Include="Js\2sxc.api.manage.js" />
+    <Content Include="Js\AngularJS\angular-ui-tree.min.css" />
+    <Content Include="Js\AngularJS\angular-ui-tree.min.js" />
+    <Content Include="Js\AngularJS\angular.min.js" />
     <Content Include="Js\EditDataSource\demo-helper-jquery.js" />
     <Content Include="Js\EditDataSource\demo-list.js" />
     <Content Include="Js\EditDataSource\flowchartConnectorsDemo %28original%29.js" />
@@ -505,6 +508,8 @@
     <Content Include="SexyContent\EAV\Controls\Items.ascx" />
     <Content Include="SexyContent\EAV\Controls\ItemVersionDetails.ascx" />
     <Content Include="SexyContent\EAV\FieldTemplates\Entity_Edit.ascx" />
+    <Content Include="SexyContent\EAV\FieldTemplates\Entity_Edit.css" />
+    <Content Include="SexyContent\EAV\FieldTemplates\Entity_Edit.js" />
     <Content Include="SexyContent\EAV\FieldTemplates\Number_Edit.ascx" />
     <Content Include="SexyContent\EAV\FieldTemplates\Hyperlink_Edit.ascx" />
     <Content Include="SexyContent\EAV\FieldTemplates\Boolean_Edit.ascx" />

@@ -36,10 +36,10 @@ namespace ToSic.SexyContent.Engines.TokenEngine
         /// <returns></returns>
         public string GetProperty(string strPropertyName, string strFormat, System.Globalization.CultureInfo formatProvider, UserInfo AccessingUser, Scope AccessLevel, ref bool PropertyNotFound)
         {
-            return GetProperty(strPropertyName, ref PropertyNotFound);
+            return GetProperty(strPropertyName, strFormat, ref PropertyNotFound);
         }
 
-        public string GetProperty(string strPropertyName, ref bool PropertyNotFound)
+        public string GetProperty(string strPropertyName, string strFormat, ref bool PropertyNotFound)
         {
             if (strPropertyName == "Path")
                 return _app.Path;

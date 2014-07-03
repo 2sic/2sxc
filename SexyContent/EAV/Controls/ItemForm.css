@@ -44,3 +44,4 @@ ul.eav-dimension-actions, .eav-dimension-actions ul, ul.eav-contextmenu-actions,
 .eav-field-control, .eav-gps-map-actions { display:inline-block; }
 .eav-gps-map-latitude, .eav-gps-map-longitude { width: 87px !important;}
 .eav-gps-map-actions input[type='button'] { background: none repeat scroll 0 0 #DDDDDD; border: 1px solid #BBBBBB; margin: 1px 2px 1px 6px; padding: 3px; }
+
