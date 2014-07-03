@@ -34,7 +34,7 @@ namespace ToSic.SexyContent
             {
                 if (_Elements == null)
                 {
-                    _Elements = Sexy.GetContentElements(ModuleId, Sexy.GetCurrentLanguageName(), ContentGroupID, PortalId, ModulePermissionController.CanEditModuleContent(this.ModuleConfiguration)).ToList();
+                    _Elements = Sexy.GetContentElements(ModuleId, Sexy.GetCurrentLanguageName(), ContentGroupID, PortalId, SexyContent.HasEditPermission(this.ModuleConfiguration)).ToList();
                 }
                 return _Elements;
             }

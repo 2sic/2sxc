@@ -132,8 +132,8 @@ namespace ToSic.SexyContent.Engines
             // ToDo: Remove this as soon as App.Data getter on App class is fixed #1 and #2
             if (webPage.App.Data == null)
             {
-                var initialSource = SexyContent.GetInitialDataSource(App.ZoneId, App.AppId,
-                    ModulePermissionController.CanEditModuleContent(webPage.Dnn.Module));
+                // ModulePermissionController does not work when indexing, return false for search
+                var initialSource = SexyContent.GetInitialDataSource(App.ZoneId, App.AppId, this.Webpage.InstancePurpose != InstancePurposes.IndexingForSearch && SexyContent.HasEditPermission(webPage.Dnn.Module));
                 App.Data = ToSic.Eav.DataSource.GetDataSource<ToSic.Eav.DataSources.App>(initialSource.ZoneId, initialSource.AppId, initialSource, initialSource.ConfigurationProvider);
             }
         }
