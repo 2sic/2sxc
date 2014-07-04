@@ -866,3 +866,8 @@ $.ajaxTransport(function (options, originalOptions, jqXHR) {
         }
     };
 });
+
+// Contstruct angular module for EAV
+(function () {
+    angular.module('2sic-EAV', ['ui.tree']);
+})();

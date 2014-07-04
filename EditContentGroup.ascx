@@ -9,7 +9,6 @@
 <dnn:DnnJsInclude runat="server" FilePath="~/DesktopModules/ToSIC_SexyContent/Js/AngularJS/angular.min.js" Priority="50" />
 <dnn:DnnJsInclude runat="server" FilePath="~/DesktopModules/ToSIC_SexyContent/Js/AngularJS/angular-ui-tree.min.js" Priority="60" />
 
-
 <!-- Dimension-Navigation -->
 <asp:Panel runat="server" CssClass="dnnForm dimensionTabs" ID="pnlDimensionNav">
     <ul class="dnnAdminTabNav dnnClear ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">

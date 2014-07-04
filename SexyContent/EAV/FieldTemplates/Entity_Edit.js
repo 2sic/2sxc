@@ -1,5 +1,5 @@
 ﻿(function() {
-    angular.module('2sic-EAV', ['ui.tree'])
+    angular.module('2sic-EAV')
         .controller('EntityEditCtrl', function($scope) {
             $scope.configuration = {};
             $scope.selectedEntity = "";
