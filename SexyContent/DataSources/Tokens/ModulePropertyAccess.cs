@@ -20,7 +20,7 @@ namespace ToSic.SexyContent.DataSources.Tokens
             _moduleInfo = ctr.GetModule(moduleId);
         }
 
-        public string GetProperty(string propertyName, ref bool propertyNotFound)
+        public string GetProperty(string propertyName, string format, ref bool propertyNotFound)
         {
             return GetProperty(propertyName, "", null, null, Scope.DefaultSettings, ref propertyNotFound);
         }

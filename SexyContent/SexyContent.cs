@@ -2,6 +2,8 @@
 using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
+using DotNetNuke.Security;
+using DotNetNuke.Security.Permissions;
 using DotNetNuke.Security.Roles;
 using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Services.Localization;
@@ -35,7 +37,7 @@ namespace ToSic.SexyContent
     {
         #region Constants
 
-        public const string ModuleVersion = "06.01.02";
+        public const string ModuleVersion = "06.01.05";
         public const string TemplateID = "TemplateID";
         public const string ContentGroupIDString = "ContentGroupID";
         public const string AppIDString = "AppId";
@@ -530,7 +532,7 @@ namespace ToSic.SexyContent
 
         #endregion
 
-        #region User Management
+        #region Security / User Management
         /// <summary>
         /// Returns true if a DotNetNuke User Group "SexyContent Designers" exists and contains at minumum one user
         /// </summary>
@@ -558,6 +560,18 @@ namespace ToSic.SexyContent
         {
             return user.IsInRole(SexyContentGroupName);
         }
+
+        /// <summary>
+        /// Returns true if the user is able to edit this module
+        /// </summary>
+        /// <param name="module"></param>
+        /// <returns></returns>
+        public static bool HasEditPermission(ModuleInfo module)
+        {
+            return ModulePermissionController.HasModuleAccess(SecurityAccessLevel.Edit, "CONTENT", module);
+        }
+
+
         #endregion
 
         #region Preparation of 2Sexy Elements

@@ -8,7 +8,7 @@ namespace ToSic.SexyContent.DataSources.Tokens
 {
     public class QueryStringPropertyAccess : ToSic.Eav.DataSources.Tokens.IPropertyAccess, DotNetNuke.Services.Tokens.IPropertyAccess
     {
-        public string GetProperty(string propertyName, ref bool propertyNotFound)
+        public string GetProperty(string propertyName, string format, ref bool propertyNotFound)
         {
             var context = HttpContext.Current;
 
@@ -30,7 +30,7 @@ namespace ToSic.SexyContent.DataSources.Tokens
 
         public string GetProperty(string propertyName, string format, System.Globalization.CultureInfo formatProvider, DotNetNuke.Entities.Users.UserInfo accessingUser, DotNetNuke.Services.Tokens.Scope accessLevel, ref bool propertyNotFound)
         {
-            return GetProperty(propertyName, ref propertyNotFound);
+            return GetProperty(propertyName, format, ref propertyNotFound);
         }
     }
 }

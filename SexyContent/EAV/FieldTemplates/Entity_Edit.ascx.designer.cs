@@ -22,13 +22,13 @@ namespace ToSic.Eav.ManagementUI {
         protected global::ToSic.Eav.ManagementUI.DimensionMenu DimensionMenu1;
         
         /// <summary>
-        /// DropDownList1 control.
+        /// hfConfiguration control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList DropDownList1;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText hfConfiguration;
         
         /// <summary>
         /// hfEntityIds control.
@@ -37,24 +37,6 @@ namespace ToSic.Eav.ManagementUI {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField hfEntityIds;
-        
-        /// <summary>
-        /// pnlMultiValues control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlMultiValues;
-        
-        /// <summary>
-        /// phAddMultiValue control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.PlaceHolder phAddMultiValue;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText hfEntityIds;
     }
 }

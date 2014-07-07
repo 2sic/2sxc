@@ -79,9 +79,9 @@ namespace ToSic.SexyContent.Engines.TokenEngine
             }
         }
 
-        public string GetProperty(string strPropertyName, ref bool PropertyNotFound)
+        public string GetProperty(string strPropertyName, string strFormat, ref bool PropertyNotFound)
         {
-            return GetProperty(strPropertyName, "", System.Threading.Thread.CurrentThread.CurrentCulture, null, Scope.DefaultSettings, ref PropertyNotFound);
+            return GetProperty(strPropertyName, strFormat, System.Threading.Thread.CurrentThread.CurrentCulture, null, Scope.DefaultSettings, ref PropertyNotFound);
         }
     }
 }
