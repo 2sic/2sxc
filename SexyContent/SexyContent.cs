@@ -17,6 +17,7 @@ using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
+using DotNetNuke.Web.Client.ClientResourceManagement;
 using ToSic.Eav;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Caches;
@@ -1374,6 +1375,11 @@ namespace ToSic.SexyContent
                     }
                     break;
             }
+
+            // Increase ClientDependency version upon each upgrade (System and all Portals)
+            // prevents browsers caching old JS and CSS files for editing, which could cause several errors
+            ClientResourceManager.UpdateVersion();
+
             return Version;
         }
 
