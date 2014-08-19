@@ -121,7 +121,8 @@ namespace ToSic.SexyContent
 
                     if (!String.IsNullOrEmpty(attributeSetName))
                         _attributeSetId = Sexy.ContentContext.GetAllAttributeSets().FirstOrDefault(p => p.Name == attributeSetName || p.StaticName == attributeSetName).AttributeSetID;
-                    
+                    else if (!String.IsNullOrWhiteSpace(Request.QueryString["AttributeSetId"]))
+                        _attributeSetId = int.Parse(Request.QueryString["AttributeSetId"]);
                 }
                 return _attributeSetId;
             }
@@ -311,6 +312,9 @@ namespace ToSic.SexyContent
 
         protected void RedirectBack()
         {
+            if (Request.QueryString["PreventRedirect"] == "true")
+                return;
+
             if (!String.IsNullOrEmpty(ReturnUrl))
                 Response.Redirect(ReturnUrl, true);
             else

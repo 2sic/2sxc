@@ -168,6 +168,9 @@ namespace ToSic.SexyContent
 	        EditItemControl.AddClientScriptAndCss = false;
             EditItemControl.ItemHistoryUrl = "";
 
+            var newItemUrl = EditUrl(this.TabID, SexyContent.ControlKeys.EditContentGroup, true, new string[] {});
+            EditItemControl.NewItemUrl = newItemUrl + (newItemUrl.Contains("?") ? "&" : "?") + "AppID=" + AppId.ToString() + "&mid=" + ModuleID.ToString() + "&AttributeSetId=[AttributeSetId]&EditMode=New&CultureDimension=" + this.LanguageID;
+
             // If ContentGroupItem has Entity, edit that; else create new Entity
             if (Item != null && Item.EntityID.HasValue)
             {

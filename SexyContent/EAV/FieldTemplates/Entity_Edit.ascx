@@ -30,4 +30,6 @@
         <option ng-repeat="item in configuration.Entities" ng-disabled="configuration.SelectedEntities.indexOf(item.Value) != -1" value="{{item.Value}}">{{item.Text}}</option>
     </select>
 
+    <a ng-if="CreateEntityAllowed()" ng-click="OpenNewEntityDialog()">Create Entity</a>
+
 </div>

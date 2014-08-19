@@ -34,32 +34,45 @@ namespace ToSic.Eav.ManagementUI
 			if (ShowDataControlOnly)
 				FieldLabel.Visible = false;
 
-            // Set configuration on hiddenfield
-            var configurationObject = new
-            {
+            // Set configuration on attribute
+		    var configuration = new
+		    {
                 AllowMultiValue = GetMetaDataValue<bool?>("AllowMultiValue"),
                 Entities = SelectableEntities(),
-                SelectedEntities = RelatedEntities != null ? RelatedEntities.EntityIds : new List<int>()
-            };
-            hfConfiguration.Attributes.Add("ng-init", "configuration=" + new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(configurationObject) + "");
+                SelectedEntities = RelatedEntities != null ? RelatedEntities.EntityIds : new List<int>(),
+                AttributeSetId = ContentType == null ? new int?() : ContentType.AttributeSetId
+		    };
+            hfConfiguration.Attributes.Add("ng-init", "configuration=" + new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(configuration));
 		}
 
-        protected IEnumerable SelectableEntities()
-        {
-            var dsrc = DataSource.GetInitialDataSource(ZoneId, AppId);
-            IContentType foundType = null;
-            var strEntityType = GetMetaDataValue<string>("EntityType");
-            if (!string.IsNullOrWhiteSpace(strEntityType))
-                foundType = DataSource.GetCache(dsrc.ZoneId, dsrc.AppId).GetContentType(strEntityType);
+	    private IContentType ContentType
+	    {
+	        get
+	        {
+	            var strEntityType = GetMetaDataValue<string>("EntityType");
+                if (!string.IsNullOrWhiteSpace(strEntityType))
+                    return DataSource.GetCache(ZoneId.Value, AppId).GetContentType(strEntityType);
+	            return null;
+	        }
+	    }
 
-            var entities = from l in dsrc["Default"].List
-                           where l.Value.Type == foundType || foundType == null
-                           select new { Value = l.Key, Text = l.Value.Title == null || l.Value.Title[DimensionIds] == null || string.IsNullOrWhiteSpace(l.Value.Title[DimensionIds].ToString()) ? "(no Title, " + l.Key + ")" : l.Value.Title[DimensionIds] };
+	    protected IEnumerable SelectableEntities()
+	    {
+	        var dsrc = DataSource.GetInitialDataSource(ZoneId, AppId);
+            //IContentType foundType = null;
+            //var strEntityType = GetMetaDataValue<string>("EntityType");
+            //if (!string.IsNullOrWhiteSpace(strEntityType))
+            //    foundType = DataSource.GetCache(dsrc.ZoneId, dsrc.AppId).GetContentType(strEntityType);
+	        //var foundType = ContentType;
 
-            return entities;
-        }
+			var entities = from l in dsrc["Default"].List
+                           where l.Value.Type == ContentType || ContentType == null
+						   select new { Value = l.Key, Text = l.Value.Title == null || l.Value.Title[DimensionIds] == null || string.IsNullOrWhiteSpace(l.Value.Title[DimensionIds].ToString()) ? "(no Title, " + l.Key + ")" : l.Value.Title[DimensionIds] };
 
-		protected override void OnPreRender(EventArgs e)
+	        return entities;
+	    }
+
+	    protected override void OnPreRender(EventArgs e)
 		{
 			if (!IsPostBack)
 			{
