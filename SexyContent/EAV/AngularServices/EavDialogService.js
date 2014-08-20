@@ -11,8 +11,9 @@
                         onClose: function() {}
                     }, params);
 
-                    if (window.top.EavEditDialogs == null)
-                        window.top.EavEditDialogs = [];
+                    // ToDo: Should be here, not in ViewEdit.js
+                    //if (window.top.EavEditDialogs == null)
+                    //    window.top.EavEditDialogs = [];
 
                     var dialogElement = "<div id='EavNewEditDialog" + window.top.EavEditDialogs.length + "'><iframe style='position:absolute; top:0; right:0; left:0; bottom:0; height:100%; width:100%; border:0;' src='" + params.url + "'></iframe></div>";
 
