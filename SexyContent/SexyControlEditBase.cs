@@ -1,11 +1,9 @@
-﻿using System.Dynamic;
-using DotNetNuke.Common.Utilities;
+﻿using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Modules;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using DotNetNuke.Security.Permissions;
+using DotNetNuke.UI.Modules;
 
 namespace ToSic.SexyContent
 {
@@ -17,17 +15,20 @@ namespace ToSic.SexyContent
     {
         protected void Page_Init(object sender, EventArgs e)
         {
-            // Add some required variables to module host div
-            ((DotNetNuke.UI.Modules.ModuleHost)this.Parent).Attributes.Add("data-2sxc-globals", (new
+            if (UserMayEditThisModule && this.Parent is ModuleHost)
             {
-                ModuleContext = new
+                // Add some required variables to module host div
+                ((ModuleHost) this.Parent).Attributes.Add("data-2sxc-globals", (new
                 {
-                    this.ModuleContext.PortalId,
-                    this.ModuleContext.TabId,
-                    this.ModuleContext.ModuleId
-                },
-                ApplicationPath = Request.ApplicationPath
-            }).ToJson());
+                    ModuleContext = new
+                    {
+                        this.ModuleContext.PortalId,
+                        this.ModuleContext.TabId,
+                        this.ModuleContext.ModuleId
+                    },
+                    ApplicationPath = Request.ApplicationPath
+                }).ToJson());
+            }
         }
 
         private SexyContent _sexy;

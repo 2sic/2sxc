@@ -99,6 +99,6 @@ var $2sxc = function (id) {
 
 $2sxc._controllers = {};
 $2sxc.metaName = "The 2SexyContent Controller object";
-$2sxc.metaVersion = "06.01.05";
+$2sxc.metaVersion = "06.01.06";
 $2sxc.beta = {};
 $2sxc._data = {};
