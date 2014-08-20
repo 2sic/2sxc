@@ -13,12 +13,6 @@ namespace ToSic.SexyContent.GettingStarted
     [SupportedModules("2sxc,2sxc-app")]
     public class GettingStartedController : DnnApiController
     {
-        //[AllowAnonymous]
-        //[HttpGet]
-        //public HttpResponseMessage SimpleString()
-        //{
-        //    return Request.CreateResponse(HttpStatusCode.OK, "String returned!");
-        //}
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
