@@ -141,6 +141,7 @@ namespace ToSic.SexyContent
             EditItemControl.AssignmentObjectTypeId = AssignmentObjectTypeId;
             EditItemControl.KeyNumber = KeyNumber;
             EditItemControl.ZoneId = ZoneId;
+            EditItemControl.ReturnUrl = "";
             EditItemControl.AppId = AppId;
 	        EditItemControl.AddClientScriptAndCss = false;
             EditItemControl.ItemHistoryUrl = "";

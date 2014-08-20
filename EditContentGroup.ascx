@@ -3,6 +3,10 @@
 <dnn:DnnCssInclude runat="server" FilePath="~/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/Controls/ItemForm.css" />
 <dnn:DnnCssInclude runat="server" FilePath="~/DesktopModules/ToSIC_SexyContent/Styles/Edit.css"></dnn:DnnCssInclude>
 <dnn:DnnJsInclude runat="server" FilePath="~/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/Controls/ItemForm.js" Priority="100" />
+<dnn:DnnJsInclude runat="server" FilePath="~/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/AngularServices/EavGlobalConfigurationProvider.js" Priority="101" />
+<dnn:DnnJsInclude runat="server" FilePath="~/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/AngularServices/EavApiService.js" Priority="102" />
+<dnn:DnnJsInclude runat="server" FilePath="~/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/AngularServices/EavDialogService.js" Priority="103" />
+
 <dnn:DnnJsInclude runat="server" FilePath="~/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/Controls/ItemFormEntityModelCreator.js" Priority="200" />
 <dnn:DnnJsInclude runat="server" FilePath="~/DesktopModules/ToSIC_SexyContent/Js/ItemForm.js" Priority="300" />
 

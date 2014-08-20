@@ -1,4 +1,5 @@
 ﻿using System.Dynamic;
+using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Modules;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,21 @@ namespace ToSic.SexyContent
     /// </summary>
     public abstract class SexyControlEditBase : PortalModuleBase
     {
+        protected void Page_Init(object sender, EventArgs e)
+        {
+            // Add some required variables to module host div
+            ((DotNetNuke.UI.Modules.ModuleHost)this.Parent).Attributes.Add("data-2sxc-globals", (new
+            {
+                ModuleContext = new
+                {
+                    this.ModuleContext.PortalId,
+                    this.ModuleContext.TabId,
+                    this.ModuleContext.ModuleId
+                },
+                ApplicationPath = Request.ApplicationPath
+            }).ToJson());
+        }
+
         private SexyContent _sexy;
         protected SexyContent Sexy
         {
@@ -48,28 +64,6 @@ namespace ToSic.SexyContent
         {
             get
             {
-                //if (IsContentApp)
-                //{
-                //    if (ZoneId.HasValue)
-                //        return SexyContent.GetDefaultAppId(ZoneId.Value);
-                //    else
-                //        return new int?();
-                //}
-
-                //object appIdString;
-
-                //if (!String.IsNullOrEmpty(Request.QueryString["AppId"]))
-                //    appIdString = Request.QueryString["AppId"];
-                //else
-                //    // Get AppId from ModuleSettings
-                //    appIdString = Settings[SexyContent.AppIDString];
-
-                //int appId;
-                //if (appIdString != null && int.TryParse(appIdString.ToString(), out appId))
-                //    return appId;
-
-                //return null;
-
                 return SexyContent.GetAppIdFromModule(ModuleConfiguration);
             }
             set

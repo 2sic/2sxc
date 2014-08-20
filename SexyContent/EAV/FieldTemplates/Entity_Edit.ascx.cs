@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Web.Script.Serialization;
 using System.Web.UI;
 using System.Linq;
 
@@ -16,16 +17,16 @@ namespace ToSic.Eav.ManagementUI
 		}
 		private bool AllowMultiValue
 		{
-            get { return GetMetaDataValue<bool>("AllowMultiValue"); }
+			get { return GetMetaDataValue<bool>("AllowMultiValue"); }
 		}
 
 		protected void Page_Load(object sender, EventArgs e)
 		{
 			if (!IsPostBack && AllowMultiValue)
 			{
-                hfEntityIds.Visible = true;
-                if(RelatedEntities != null)
-                    hfEntityIds.Value = string.Join(",", RelatedEntities.EntityIds);
+				hfEntityIds.Visible = true;
+				if(RelatedEntities != null)
+					hfEntityIds.Value = string.Join(",", RelatedEntities.EntityIds);
 			}
 
             FieldLabel.Text = GetMetaDataValue("Name", Attribute.StaticName);
@@ -38,11 +39,13 @@ namespace ToSic.Eav.ManagementUI
 		    var configuration = new
 		    {
                 AllowMultiValue = GetMetaDataValue<bool?>("AllowMultiValue"),
-                Entities = SelectableEntities(),
+                DimensionId = (DimensionIds != null && DimensionIds.Any()) ? DimensionIds.First() : new int?(),
+                AppId = AppId,
+                ZoneId = ZoneId,
                 SelectedEntities = RelatedEntities != null ? RelatedEntities.EntityIds : new List<int>(),
                 AttributeSetId = ContentType == null ? new int?() : ContentType.AttributeSetId
 		    };
-            hfConfiguration.Attributes.Add("ng-init", "configuration=" + new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(configuration));
+            hfConfiguration.Value = new JavaScriptSerializer().Serialize(configuration);
 		}
 
 	    private IContentType ContentType
@@ -54,22 +57,6 @@ namespace ToSic.Eav.ManagementUI
                     return DataSource.GetCache(ZoneId.Value, AppId).GetContentType(strEntityType);
 	            return null;
 	        }
-	    }
-
-	    protected IEnumerable SelectableEntities()
-	    {
-	        var dsrc = DataSource.GetInitialDataSource(ZoneId, AppId);
-            //IContentType foundType = null;
-            //var strEntityType = GetMetaDataValue<string>("EntityType");
-            //if (!string.IsNullOrWhiteSpace(strEntityType))
-            //    foundType = DataSource.GetCache(dsrc.ZoneId, dsrc.AppId).GetContentType(strEntityType);
-	        //var foundType = ContentType;
-
-			var entities = from l in dsrc["Default"].List
-                           where l.Value.Type == ContentType || ContentType == null
-						   select new { Value = l.Key, Text = l.Value.Title == null || l.Value.Title[DimensionIds] == null || string.IsNullOrWhiteSpace(l.Value.Title[DimensionIds].ToString()) ? "(no Title, " + l.Key + ")" : l.Value.Title[DimensionIds] };
-
-	        return entities;
 	    }
 
 	    protected override void OnPreRender(EventArgs e)

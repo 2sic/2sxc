@@ -174,6 +174,8 @@ namespace ToSic.SexyContent
             // Register JavaScripts
             ClientAPI.RegisterClientReference(this.Page, ClientAPI.ClientNamespaceReferences.dnn);
             DotNetNuke.Framework.jQuery.RequestDnnPluginsRegistration();
+
+            base.Page_Init(sender, e);
         }
 
         /// <summary>

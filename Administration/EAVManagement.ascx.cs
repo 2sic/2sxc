@@ -19,6 +19,8 @@ namespace ToSic.SexyContent
             ClientAPI.RegisterClientReference(this.Page, ClientAPI.ClientNamespaceReferences.dnn);
             DotNetNuke.Framework.jQuery.RegisterJQuery(this.Page);
             DotNetNuke.Framework.jQuery.RequestDnnPluginsRegistration();
+
+            base.Page_Init(sender, e);
         }
 
         /// <summary>
@@ -32,6 +34,10 @@ namespace ToSic.SexyContent
                 Request.QueryString["ManagementMode"] == "EditItem")
             {
                 ClientResourceManager.RegisterScript(this.Page, "~/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/Controls/ItemForm.js", 100);
+                ClientResourceManager.RegisterScript(this.Page, "~/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/AngularServices/EavGlobalConfigurationProvider.js", 101);
+                ClientResourceManager.RegisterScript(this.Page, "~/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/AngularServices/EavApiService.js", 102);
+                ClientResourceManager.RegisterScript(this.Page, "~/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/AngularServices/EavDialogService.js", 103);
+
                 ClientResourceManager.RegisterScript(this.Page, "~/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/Controls/ItemFormEntityModelCreator.js", 200);
                 ClientResourceManager.RegisterScript(this.Page, "~/DesktopModules/ToSIC_SexyContent/Js/ItemForm.js", 300);
                 ClientResourceManager.RegisterStyleSheet(this.Page, "~/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/Controls/ItemForm.css", 150);

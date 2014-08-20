@@ -1,13 +1,21 @@
 ﻿(function() {
     angular.module('2sic-EAV')
-        .controller('EntityEditCtrl', function($scope, eavDialogService, $rootElement) {
-            $scope.configuration = {};
+        .controller('EntityEditCtrl', function($scope, eavDialogService, eavApiService, $rootElement, $http, $element, $filter) {
+
+            // Prepare configuration
+            $scope.configuration = $.parseJSON($($element).find("input[id$='hfConfiguration']").val());
+            $scope.configuration.Entities = [];
             $scope.selectedEntity = "";
             $scope.entityIds = function() {
                 return $scope.configuration.SelectedEntities.join(',');
             };
+
+            // Controller functions
             $scope.AddEntity = function() {
-                $scope.configuration.SelectedEntities.push(parseInt($scope.selectedEntity));
+                if ($scope.selectedEntity == "new")
+                    $scope.OpenNewEntityDialog();
+                else
+                    $scope.configuration.SelectedEntities.push(parseInt($scope.selectedEntity));
                 $scope.selectedEntity = "";
             };
 
@@ -16,39 +24,35 @@
             $scope.OpenNewEntityDialog = function() {
                 var url = $($rootElement).attr("data-newdialogurl") + "&PreventRedirect=true";
                 url = url.replace("[AttributeSetId]", $scope.configuration.AttributeSetId);
-                eavDialogService.open(url, 950, 600, function() {
-                    __doPostBack();
+                eavDialogService.open({
+                    url: url,
+                    onClose: function() { $scope.getAvailableEntities(); }
                 });
             };
-        }).factory('eavDialogService', [
-            function() {
-                return {
-                    open: function (url, width, height, callback) {
-                        if (window.top.EavEditDialogs == null)
-                            window.top.EavEditDialogs = [];
 
-                        var dialogElement = "<div id='EavNewEditDialog" + window.top.EavEditDialogs.length + "'><iframe style='position:absolute; top:0; right:0; left:0; bottom:0; height:100%; width:100%; border:0;' src='" + url + "'></iframe></div>";
-
-                        window.top.jQuery(dialogElement).dialog({
-                            autoOpen: true,
-                            modal: true,
-                            width: width,
-                            height: height,
-                            dialogClass: "dnnFormPopup",
-                            buttons: {},
-                            close: function (event, ui) {
-                                $(this).remove();
-                                if(callback != null)
-                                    callback();
-
-                                window.top.EavEditDialogs.pop();
-                            }
-                        });
-
-                        window.top.EavEditDialogs.push(dialogElement);
+            $scope.getAvailableEntities = function () {
+                eavApiService({
+                    method: 'GET',
+                    url: '/EAV/EntityPicker/getavailableentities',
+                    params: {
+                        zoneId: $scope.configuration.ZoneId,
+                        appId: $scope.configuration.AppId,
+                        attributeSetId: $scope.configuration.AttributeSetId,
+                        dimensionId: $scope.configuration.DimensionId
                     }
-                };
+                }).then(function(data) {
+                    $scope.configuration.Entities = data.data;
+                });
+            };
+
+            $scope.getEntityText = function(entityId) {
+                var entities = $filter('filter')($scope.configuration.Entities, { Value: entityId });
+                return entities.length > 0 ? entities[0].Text : "(Entity not found)";
             }
-        ]);
+
+            // Initialize entities
+            $scope.getAvailableEntities();
+
+        });
 
 })();

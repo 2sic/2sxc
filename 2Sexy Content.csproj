@@ -268,6 +268,7 @@
     <Compile Include="SexyContent\DataSources\Tokens\ModulePropertyAccess.cs" />
     <Compile Include="SexyContent\DataSources\Tokens\QueryStringPropertyAccess.cs" />
     <Compile Include="SexyContent\DataSources\ViewDataSource.cs" />
+    <Compile Include="SexyContent\EAVExtensions\EavApiProxies\EntityPickerController.cs" />
     <Compile Include="SexyContent\EAV\FieldTemplates\EditorProvider.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
@@ -492,6 +493,9 @@
     <Content Include="ReleaseNotes.txt" />
     <Content Include="Settings.ascx" />
     <Content Include="SettingsWrapper.ascx" />
+    <Content Include="SexyContent\EAV\AngularServices\EavApiService.js" />
+    <Content Include="SexyContent\EAV\AngularServices\EavDialogService.js" />
+    <Content Include="SexyContent\EAV\AngularServices\EavGlobalConfigurationProvider.js" />
     <Content Include="SexyContent\EAV\Controls\ContentTypeEdit.ascx" />
     <Content Include="SexyContent\EAV\Controls\ContentTypeFields.ascx" />
     <Content Include="SexyContent\EAV\Controls\ContentTypesList.ascx" />
@@ -520,6 +524,7 @@
     <Content Include="Extensions\ToSic_vCard\vCard.ashx" />
     <Content Include="BuildScripts\ModulePackage.Targets" />
     <Content Include="BuildScripts\MSBuild.Community.Tasks.targets" />
+    <Content Include="packages.config" />
     <None Include="SqlDataProvider\01.00.00.SqlDataProvider" />
     <Content Include="SexyContent\GettingStarted\GettingStartedFrame.ascx" />
     <Content Include="SqlDataProvider\05.02.01.SqlDataProvider" />
