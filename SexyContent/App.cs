@@ -25,21 +25,23 @@ namespace ToSic.SexyContent
         public dynamic Resources { get; internal set; }
 
         //private IDataSource InitialSource { get; set; }
+        internal PortalSettings OwnerPS { get; set; }
         
         public string AppGuid { get; set; }
 
-        public App(int appId, int zoneId, IDataSource parentSource = null)
+        public App(int appId, int zoneId, PortalSettings ownerPS, IDataSource parentSource = null)
         {
             AppId = appId;
             ZoneId = zoneId;
             //InitialSource = parentSource;
+            OwnerPS = ownerPS;
         }
 
         public string Path
         {
             get
             {
-                var appPath = System.IO.Path.Combine(SexyContent.AppBasePath(), Folder);
+                var appPath = System.IO.Path.Combine(SexyContent.AppBasePath(OwnerPS), Folder);
                 return VirtualPathUtility.ToAbsolute(appPath);
             }
         }
@@ -47,7 +49,7 @@ namespace ToSic.SexyContent
         {
             get
             {
-                var appPath = System.IO.Path.Combine(SexyContent.AppBasePath(), Folder);
+                var appPath = System.IO.Path.Combine(SexyContent.AppBasePath(OwnerPS), Folder);
                 return HostingEnvironment.MapPath(appPath);
             }
         }

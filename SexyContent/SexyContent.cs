@@ -122,8 +122,11 @@ namespace ToSic.SexyContent
         public SexyContentContext TemplateContext { get; internal set; }
 
         public App App {
-            get { return GetApp(ZoneId.Value, AppId.Value); }
+            get { return GetApp(ZoneId.Value, AppId.Value, OwnerPS); }
         }
+
+        public PortalSettings OwnerPS { get; set; }
+        public PortalSettings PS { get; set; }
 
         #endregion
 
@@ -183,13 +186,16 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Instanciates Content and Template-Contexts
         /// </summary>
-        public SexyContent(int zoneId, int appId, bool enableCaching = true)
+        public SexyContent(int zoneId, int appId, bool enableCaching = true, int? ownerPortalId = null)
         {
+            OwnerPS = ownerPortalId.HasValue ? new PortalSettings(ownerPortalId.Value) : PortalSettings.Current;
+            this.PS = PortalSettings.Current;
+
             if (zoneId == 0)
-                if (PortalSettings.Current == null || !GetZoneID(PortalSettings.Current.PortalId).HasValue)
+                if (OwnerPS == null || !GetZoneID(OwnerPS.PortalId).HasValue)
                     zoneId = DataSource.DefaultZoneId;
                 else
-                    zoneId = GetZoneID(PortalSettings.Current.PortalId).Value;
+                    zoneId = GetZoneID(OwnerPS.PortalId).Value;
 
             if (appId == 0)
                 appId = GetDefaultAppId(zoneId);
@@ -237,16 +243,10 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Returns all template files in the template folder.
         /// </summary>
-        /// <param name="Server">The HttpServerUtility for MapPath</param>
-        /// <param name="PortalSettings"></param>
-        /// <param name="TemplateType"></param>
-        /// <param name="TemplateLocation"></param>
-        /// <param name="ControlPath">The PortalModuleBase.ControlPath property</param>
-        /// <returns></returns>
-        public IEnumerable<string> GetTemplateFiles(HttpServerUtility Server, PortalSettings PortalSettings, string TemplateType, string TemplateLocation)
+        public IEnumerable<string> GetTemplateFiles(HttpServerUtility Server, string TemplateType, string TemplateLocation)
         {
-            string TemplatePathRootMapPath = Server.MapPath(GetTemplatePathRoot(TemplateLocation, App));
-            DirectoryInfo Directory = new DirectoryInfo(TemplatePathRootMapPath);
+            var TemplatePathRootMapPath = Server.MapPath(GetTemplatePathRoot(TemplateLocation, App));
+            var Directory = new DirectoryInfo(TemplatePathRootMapPath);
 
             EnsureTemplateFolderExists(Server, TemplateLocation);
 
@@ -272,11 +272,6 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Creates a template file if it does not already exists, and uses a default text to insert.
         /// </summary>
-        /// <param name="Name"></param>
-        /// <param name="Template"></param>
-        /// <param name="PortalSettings"></param>
-        /// <param name="Server"></param>
-        /// <param name="Contents"></param>
         public void CreateTemplateFileIfNotExists(string Name, Template Template, HttpServerUtility Server, string Contents = "")
         {
             if (Template.Type == RazorC)
@@ -320,7 +315,7 @@ namespace ToSic.SexyContent
         /// <param name="ControlPath"></param>
         private void EnsureTemplateFolderExists(HttpServerUtility server, string templateLocation)
         {
-            var portalPath = templateLocation == TemplateLocations.HostFileSystem ? server.MapPath(PortalHostDirectory) : PortalSettings.Current.HomeDirectoryMapPath;
+            var portalPath = templateLocation == TemplateLocations.HostFileSystem ? server.MapPath(PortalHostDirectory) : OwnerPS.HomeDirectoryMapPath;
             var sexyFolderPath = Path.Combine(portalPath, SexyContent.TemplateFolder);
 
             var sexyFolder = new DirectoryInfo(sexyFolderPath);
@@ -347,29 +342,22 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Configures a Portal (Creates a 2sxc Folder containing a web.config File)
         /// </summary>
-        /// <param name="server"></param>
-        /// <param name="PortalSettings"></param>
-        /// <param name="ControlPath"></param>
         public void ConfigurePortal(HttpServerUtility server)
         {
             EnsureTemplateFolderExists(server, TemplateLocations.PortalFileSystem);
         }
 
-        public static string AppBasePath()
+        public static string AppBasePath(PortalSettings ownerPS)
         {
-            return Path.Combine(PortalSettings.Current.HomeDirectory, SexyContent.TemplateFolder);
+            return Path.Combine(ownerPS.HomeDirectory, SexyContent.TemplateFolder);
         }
 
         /// <summary>
         /// Returns true if the Portal HomeDirectory Contains the 2sxc Folder and this folder contains the web.config and a Content folder
         /// </summary>
-        /// <param name="server"></param>
-        /// <param name="controlPath"></param>
-        /// <param name="PortalSettings"></param>
-        /// <returns></returns>
-        public static bool PortalIsConfigured(HttpServerUtility server, string controlPath)
+        public bool PortalIsConfigured(HttpServerUtility server, string controlPath)
         {
-            var sexyFolder = new DirectoryInfo(server.MapPath(Path.Combine(PortalSettings.Current.HomeDirectory, SexyContent.TemplateFolder)));
+            var sexyFolder = new DirectoryInfo(server.MapPath(Path.Combine(OwnerPS.HomeDirectory, SexyContent.TemplateFolder)));
             var contentFolder = new DirectoryInfo(Path.Combine(sexyFolder.FullName, "Content"));
             var webConfigTemplate = new FileInfo(Path.Combine(sexyFolder.FullName, SexyContent.WebConfigFileName));
             return sexyFolder.Exists && webConfigTemplate.Exists && contentFolder.Exists;
@@ -378,15 +366,9 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Returns the location where Templates are stored for the current app
         /// </summary>
-        /// <param name="locationID"></param>
-        /// <param name="PortalSettings"></param>
-        /// <returns></returns>
-        public static string GetTemplatePathRoot(string locationID, App app, PortalSettings portalSettings = null)
+        public static string GetTemplatePathRoot(string locationID, App app)
         {
-            if (portalSettings == null)
-                portalSettings = PortalSettings.Current;
-
-            string rootFolder = (locationID == LocationIDCurrentPortal ? portalSettings.HomeDirectory : PortalHostDirectory);
+            string rootFolder = (locationID == LocationIDCurrentPortal ? app.OwnerPS.HomeDirectory : PortalHostDirectory);
             rootFolder += TemplateFolder + "/" + app.Folder;
             return rootFolder;
         }
@@ -673,20 +655,7 @@ namespace ToSic.SexyContent
         #endregion
 
         #region URL Handling / Toolbar
-
-        ///// <summary>
-        ///// Get Toolbar HTML for given Element
-        ///// </summary>
-        ///// <param name="Element"></param>
-        ///// <param name="HostingModule"></param>
-        ///// <param name="LocalResourcesPath"></param>
-        ///// <param name="ListEnabled"></param>
-        ///// <returns></returns>
-        //public string GetElementToolbar(int sortOrder)
-        //{
-        //    return "<ul class='sc-menu' data-toolbar='" + new { sortOrder = sortOrder, useModuleList = true }.ToJson() + "'></ul>";
-        //}
-
+        
         /// <summary>
         /// Get the URL for editing MetaData
         /// </summary>
@@ -775,10 +744,10 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <param name="includeDefaultApp"></param>
         /// <returns></returns>
-        public static List<App> GetApps(int zoneId, bool includeDefaultApp)
+        public static List<App> GetApps(int zoneId, bool includeDefaultApp, PortalSettings ownerPS)
         {
             var eavApps = ((BaseCache)DataSource.GetCache(zoneId, null)).ZoneApps[zoneId].Apps;
-            var sexyApps = eavApps.Select(eavApp => GetApp(zoneId, eavApp.Key));
+            var sexyApps = eavApps.Select(eavApp => GetApp(zoneId, eavApp.Key, ownerPS));
 
             if (!includeDefaultApp)
                 sexyApps = sexyApps.Where(a => a.Name != "Content");
@@ -786,7 +755,7 @@ namespace ToSic.SexyContent
             return sexyApps.OrderBy(a => a.Name).ToList();
         }
 
-        public static App GetApp(int zoneId, int appId)
+        public static App GetApp(int zoneId, int appId, PortalSettings ownerPS)
         {
             // Get appName from cache
             var eavAppName = ((BaseCache) DataSource.GetCache(zoneId, null)).ZoneApps[zoneId].Apps[appId];
@@ -807,7 +776,7 @@ namespace ToSic.SexyContent
                     dynamic appResourcesDynamic = appResources != null ? new DynamicEntity(appResources, new[] {System.Threading.Thread.CurrentThread.CurrentCulture.Name}) : null;
                     dynamic appSettingsDynamic = appResources != null ? new DynamicEntity(appSettings, new[] {System.Threading.Thread.CurrentThread.CurrentCulture.Name}) : null;
 
-                    sexyApp = new App(appId, zoneId)
+                    sexyApp = new App(appId, zoneId, ownerPS)
                     {
                         Name = appMetaDataDynamic.DisplayName,
                         Folder = appMetaDataDynamic.Folder,
@@ -822,7 +791,7 @@ namespace ToSic.SexyContent
             // Handle default app
             else
             {
-                sexyApp = new App(appId, zoneId)
+                sexyApp = new App(appId, zoneId, ownerPS)
                 {
                     AppId = appId,
                     Name = "Content",
@@ -893,7 +862,7 @@ namespace ToSic.SexyContent
                 DataSource.GetCache(zoneId, appId).PurgeCache(zoneId, appId);
         }
 
-        public static App AddApp(int zoneId, string appName)
+        public static App AddApp(int zoneId, string appName, PortalSettings ownerPS)
         {
             if(appName == "Content" || appName == "Default" || String.IsNullOrEmpty(appName) || !Regex.IsMatch(appName, "^[0-9A-Za-z -_]+$"))
                 throw new ArgumentOutOfRangeException("appName '" + appName + "' not allowed");
@@ -905,7 +874,7 @@ namespace ToSic.SexyContent
 
             EnsureAppIsConfigured(zoneId, app.AppID, appName);
 
-            return GetApp(zoneId, app.AppID);
+            return GetApp(zoneId, app.AppID, ownerPS);
         }
 
         public static int? GetAppSettingsAttributeSetId(int zoneId, int appId)
@@ -928,7 +897,7 @@ namespace ToSic.SexyContent
 
         public static int? GetAppIdFromModule(ModuleInfo module)
         {
-            var zoneId = GetZoneID(module.PortalID);
+            var zoneId = GetZoneID(module.OwnerPortalID);
             
             if (module.DesktopModule.ModuleName == "2sxc")
             {
@@ -966,7 +935,7 @@ namespace ToSic.SexyContent
             if(appId == GetDefaultAppId(ZoneId.Value))
                 throw new Exception("The default app of a zone cannot be removed.");
 
-            var sexyApp = GetApp(ZoneId.Value, appId);
+            var sexyApp = GetApp(ZoneId.Value, appId, OwnerPS);
             var eavApp = ContentContext.GetApps().Single(a => a.AppID == appId);
 
             // Delete templates
@@ -1293,13 +1262,13 @@ namespace ToSic.SexyContent
                     break;
                 case "page":
                     var portalId = PortalSettings.Current.PortalId;
-                    var tabInfo = tabController.GetTab(id, portalId , false);
+                    var tabInfo = tabController.GetTab(id, portalId, false);
                     if (tabInfo != null)
                     {
                         //tabInfo.IsDefaultLanguage && 
                         if (tabInfo.CultureCode != "" && tabInfo.CultureCode != PortalSettings.Current.CultureCode)
                         {
-                            var cultureTabInfo = tabController.GetTabByCulture(tabInfo.TabID, portalId,
+                            var cultureTabInfo = tabController.GetTabByCulture(tabInfo.TabID, tabInfo.PortalID,
                                                                     LocaleController.Instance.GetLocale(
                                                                         PortalSettings.Current.CultureCode));
 
@@ -1317,7 +1286,7 @@ namespace ToSic.SexyContent
 
         public bool CanDeleteEntity(int entityId)
         {
-            var templates = GetTemplates(PortalSettings.Current.PortalId);
+            var templates = GetTemplates(OwnerPS.PortalId);
             var templateDefaults = templates.ToList().Select(t => new {Template = t, Defaults = GetTemplateDefaults(t.TemplateID)});
             var contentGroupItems = TemplateContext.GetContentGroupItems();
 

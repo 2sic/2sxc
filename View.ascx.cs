@@ -93,7 +93,7 @@ namespace ToSic.SexyContent
                 if (!AppId.HasValue || !Elements.Any() || !Elements.First().TemplateId.HasValue || Elements.All(p => !p.EntityId.HasValue))
                     ShowTemplateChooser();
 
-                if (AppId.HasValue && !SexyContent.PortalIsConfigured(Server, ControlPath))
+                if (AppId.HasValue && !Sexy.PortalIsConfigured(Server, ControlPath))
                     Sexy.ConfigurePortal(Server);
 
                 if (AppId.HasValue && Elements.Any() && Elements.First().TemplateId.HasValue)
@@ -296,7 +296,7 @@ namespace ToSic.SexyContent
 
         private void BindAppDropDown()
         {
-            ddlApp.DataSource = SexyContent.GetApps(ZoneId.Value, false).Where(a => !a.Hidden);
+            ddlApp.DataSource = SexyContent.GetApps(ZoneId.Value, false, Sexy.OwnerPS).Where(a => !a.Hidden);
             ddlApp.DataBind();
 
             if (ddlApp.Items.Cast<ListItem>().Any(p => p.Value == AppId.ToString()))
@@ -376,6 +376,9 @@ namespace ToSic.SexyContent
         {
             get
             {
+                if (ModuleConfiguration.PortalID != ModuleConfiguration.OwnerPortalID)
+                    return new ModuleActionCollection();
+
                 if (_ModuleActions == null)
                 {
                     _ModuleActions = new DotNetNuke.Entities.Modules.Actions.ModuleActionCollection();

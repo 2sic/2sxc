@@ -99,7 +99,7 @@ namespace ToSic.SexyContent.ImportExport
                                             XDocument.Parse(fileContents).Element("SexyContent")
                                                 .Element("Entities").Elements("Entity").Single(e =>e.Attribute("AttributeSetStaticName").Value =="2SexyContent-App")
                                                 .Elements("Value").First(v => v.Attribute("Key").Value == "Folder").Attribute("Value").Value;
-                                        var appPath = System.IO.Path.Combine(SexyContent.AppBasePath(), folder);
+                                        var appPath = System.IO.Path.Combine(SexyContent.AppBasePath(PortalSettings.Current), folder);
 
                                         if(Directory.Exists(HttpContext.Current.Server.MapPath(appPath)))
                                         {

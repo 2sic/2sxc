@@ -24,7 +24,7 @@ namespace ToSic.SexyContent.Engines
 
         public void Init(Template template, App app, ModuleInfo hostingModule, IDataSource dataSource, InstancePurposes instancePurposes)
         {
-            var templatePath = VirtualPathUtility.Combine(SexyContent.GetTemplatePathRoot(template.Location, app, new PortalSettings(hostingModule.PortalID)) + "/", template.Path);
+            var templatePath = VirtualPathUtility.Combine(SexyContent.GetTemplatePathRoot(template.Location, app) + "/", template.Path);
 
             // Throw Exception if Template does not exist
             if (!System.IO.File.Exists(HostingEnvironment.MapPath(templatePath)))

@@ -37,7 +37,7 @@ namespace ToSic.SexyContent
             get
             {
                 if (_sexy == null && ZoneId.HasValue && AppId.HasValue)
-                    _sexy = new SexyContent(ZoneId.Value, AppId.Value);
+                    _sexy = new SexyContent(ZoneId.Value, AppId.Value, true, ModuleConfiguration.OwnerPortalID);
                 return _sexy;
             }
         }
@@ -48,7 +48,7 @@ namespace ToSic.SexyContent
             get
             {
                 if (_sexyUncached == null && ZoneId.HasValue && AppId.HasValue)
-                    _sexyUncached = new SexyContent(ZoneId.Value, AppId.Value, false);
+                    _sexyUncached = new SexyContent(ZoneId.Value, AppId.Value, false, ModuleConfiguration.OwnerPortalID);
                 return _sexyUncached;
             }
         }
@@ -57,7 +57,7 @@ namespace ToSic.SexyContent
         {
             get
             {
-                return SexyContent.GetZoneID(PortalId);
+                return SexyContent.GetZoneID(ModuleConfiguration.OwnerPortalID);
             }
         }
 

@@ -19,14 +19,14 @@ namespace ToSic.SexyContent.Administration
 
         protected void grdApps_NeedDataSource(object sender, EventArgs e)
         {
-            grdApps.DataSource = SexyContent.GetApps(ZoneId.Value, true);
+            grdApps.DataSource = SexyContent.GetApps(ZoneId.Value, true, Sexy.OwnerPS);
         }
 
         protected void btnCreateApp_Click(object sender, EventArgs e)
         {
             if(!String.IsNullOrEmpty(hfNewAppName.Value))
             {
-                SexyContent.AddApp(ZoneId.Value, hfNewAppName.Value);
+                SexyContent.AddApp(ZoneId.Value, hfNewAppName.Value, Sexy.OwnerPS);
                 Response.Redirect(Request.RawUrl);
             }
         }

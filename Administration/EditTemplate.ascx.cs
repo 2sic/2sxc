@@ -252,7 +252,7 @@ namespace ToSic.SexyContent
         /// <param name="TemplateDropDown">The template dropdown to databind</param>
         protected void BindTemplateFiles(string TemplateType, string TemplateLocation, DropDownList TemplateDropDown)
         {
-            TemplateDropDown.DataSource = Sexy.GetTemplateFiles(Server, PortalSettings, TemplateType, TemplateLocation);
+            TemplateDropDown.DataSource = Sexy.GetTemplateFiles(Server, TemplateType, TemplateLocation);
             TemplateDropDown.DataBind();
         }
     }

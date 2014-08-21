@@ -34,7 +34,7 @@ namespace ToSic.SexyContent.Administration
             // Add AppStaticName and Version
             if (AppId.HasValue && !IsContentApp)
             {
-                var app = SexyContent.GetApp(ZoneId.Value, AppId.Value);
+                var app = SexyContent.GetApp(ZoneId.Value, AppId.Value, Sexy.OwnerPS);
 
                 gettingStartedSrc += "&AppGuid=" + app.AppGuid;
                 if (app.Configuration != null)
