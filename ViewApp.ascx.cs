@@ -3,6 +3,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using DotNetNuke.Common.Utilities;
+using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security.Permissions;
 using DotNetNuke.Services.Exceptions;
 using System.Collections.Generic;
@@ -219,7 +220,7 @@ namespace ToSic.SexyContent
         /// </summary>
         protected void ShowTemplateChooser()
         {
-            if (IsEditable && UserInfo.IsInRole(PortalSettings.AdministratorRoleName) && !SexyContent.GetApps(ZoneId.Value, false, Sexy.OwnerPS).Any())
+            if (IsEditable && UserInfo.IsInRole(PortalSettings.AdministratorRoleName) && !SexyContent.GetApps(ZoneId.Value, false, new PortalSettings(ModuleConfiguration.OwnerPortalID)).Any())
             {
                 // If there are no apps yet
                 pnlGetStarted.Visible = true;
@@ -280,7 +281,7 @@ namespace ToSic.SexyContent
 
         private void BindAppDropDown()
         {
-            ddlApp.DataSource = SexyContent.GetApps(ZoneId.Value, false, Sexy.OwnerPS).Where(a => !a.Hidden);
+            ddlApp.DataSource = SexyContent.GetApps(ZoneId.Value, false, new PortalSettings(ModuleConfiguration.OwnerPortalID)).Where(a => !a.Hidden);
             ddlApp.DataBind();
             ddlApp.Enabled = (!AppId.HasValue || Elements.Count <= 1);
 
