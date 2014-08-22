@@ -1,8 +1,11 @@
 ﻿using System.Data.Objects;
 using DotNetNuke.Common;
+using DotNetNuke.Common.Internal;
 using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
+using DotNetNuke.Entities.Portals.Internal;
+using DotNetNuke.Entities.Tabs.Internal;
 using DotNetNuke.Security;
 using DotNetNuke.Security.Permissions;
 using DotNetNuke.Security.Roles;
@@ -39,7 +42,7 @@ namespace ToSic.SexyContent
     {
         #region Constants
 
-        public const string ModuleVersion = "06.01.06";
+        public const string ModuleVersion = "06.01.07";
         public const string TemplateID = "TemplateID";
         public const string ContentGroupIDString = "ContentGroupID";
         public const string AppIDString = "AppId";
@@ -1266,22 +1269,27 @@ namespace ToSic.SexyContent
                         resultString = fileManager.GetUrl(fileInfo) + urlParams;
                     break;
                 case "page":
-                    var portalId = ownerPortalSettings.PortalId;
-                    var tabInfo = tabController.GetTab(id, portalId, false);
+                    var portalSettings = PortalSettings.Current;
+
+                    // Get full PortalSettings (with portal alias) if module sharing is active
+                    if (PortalSettings.Current != null && PortalSettings.Current.PortalId != ownerPortalSettings.PortalId)
+                    {
+                        var portalAlias = ownerPortalSettings.PrimaryAlias ?? TestablePortalAliasController.Instance.GetPortalAliasesByPortalId(ownerPortalSettings.PortalId).First();
+                        portalSettings = new PortalSettings(id, portalAlias);
+                    }
+                    var tabInfo = tabController.GetTab(id, ownerPortalSettings.PortalId, false);
                     if (tabInfo != null)
                     {
-                        //tabInfo.IsDefaultLanguage && 
                         if (tabInfo.CultureCode != "" && tabInfo.CultureCode != PortalSettings.Current.CultureCode)
                         {
-                            var cultureTabInfo = tabController.GetTabByCulture(tabInfo.TabID, tabInfo.PortalID,
-                                                                    LocaleController.Instance.GetLocale(
-                                                                        PortalSettings.Current.CultureCode));
+                            var cultureTabInfo = tabController.GetTabByCulture(tabInfo.TabID, tabInfo.PortalID, LocaleController.Instance.GetLocale(PortalSettings.Current.CultureCode));
 
                             if (cultureTabInfo != null)
                                 tabInfo = cultureTabInfo;
                         }
 
-                        resultString = Globals.NavigateURL(tabInfo.TabID, ownerPortalSettings, "", new string[] {}) + urlParams;
+                        // Exception in AdvancedURLProvider because ownerPortalSettings.PortalAlias is null
+                        resultString = Globals.NavigateURL(tabInfo.TabID, portalSettings, "", new string[] { }) + urlParams;
                     }
                     break;
             }
