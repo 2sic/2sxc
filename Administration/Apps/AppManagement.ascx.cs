@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using DotNetNuke.Entities.Portals;
 using DotNetNuke.Web.UI.WebControls;
 using Telerik.Web.UI;
 using ToSic.Eav;
@@ -19,14 +20,14 @@ namespace ToSic.SexyContent.Administration
 
         protected void grdApps_NeedDataSource(object sender, EventArgs e)
         {
-            grdApps.DataSource = SexyContent.GetApps(ZoneId.Value, true, Sexy.OwnerPS);
+            grdApps.DataSource = SexyContent.GetApps(ZoneId.Value, true, new PortalSettings(ModuleConfiguration.OwnerPortalID));
         }
 
         protected void btnCreateApp_Click(object sender, EventArgs e)
         {
             if(!String.IsNullOrEmpty(hfNewAppName.Value))
             {
-                SexyContent.AddApp(ZoneId.Value, hfNewAppName.Value, Sexy.OwnerPS);
+                SexyContent.AddApp(ZoneId.Value, hfNewAppName.Value, new PortalSettings(ModuleConfiguration.OwnerPortalID));
                 Response.Redirect(Request.RawUrl);
             }
         }
