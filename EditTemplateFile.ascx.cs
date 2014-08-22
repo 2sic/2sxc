@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.IO;
+using DotNetNuke.Services.Tokens;
 using DotNetNuke.Web.UI.WebControls;
 
 namespace ToSic.SexyContent
@@ -12,11 +13,11 @@ namespace ToSic.SexyContent
     public partial class EditTemplateFile : SexyControlEditBase
     {
 
-        private const string AdditionalSystemTokens = "[Content:Toolbar],ContentToolbar";
-        private const string ListAdditionalSystemTokens = "[List:Index],ListIndex;[List:Index1],ListIndex1;[List:Count],ListCount;[List:IsFirst],ListIsFirst;[List:IsLast],ListIsLast;[List:Alternator2],ListAlternator2;[List:Alternator3],ListAlternator3;[List:Alternator4],ListAlternator4;[List:Alternator5],ListAlternator5;[ListContent:Toolbar],ListToolbar;<repeat>...</repeat>,ListRepeat";
+		//private const string AdditionalSystemTokens = "[Content:Toolbar],ContentToolbar";
+		//private const string ListAdditionalSystemTokens = "[List:Index],ListIndex;[List:Index1],ListIndex1;[List:Count],ListCount;[List:IsFirst],ListIsFirst;[List:IsLast],ListIsLast;[List:Alternator2],ListAlternator2;[List:Alternator3],ListAlternator3;[List:Alternator4],ListAlternator4;[List:Alternator5],ListAlternator5;[ListContent:Toolbar],ListToolbar;<repeat>...</repeat>,ListRepeat";
 
-        private const string AdditionalSystemRazor = "@Content.Toolbar,ContentToolbar";
-        private const string ListAdditionalSystemRazor = "@ListContent.Toolbar,ListToolbar";
+		//private const string AdditionalSystemRazor = "@Content.Toolbar,ContentToolbar";
+		//private const string ListAdditionalSystemRazor = "@ListContent.Toolbar,ListToolbar";
 
         private bool UserMayEdit
         {
@@ -67,45 +68,121 @@ namespace ToSic.SexyContent
             lblEditTemplateFileHeading.Text = String.Format(LocalizeString("lblEditTemplateFileHeading.Text"), Template.Name);
 
 
-            var DefaultLanguageID = Sexy.ContentContext.GetLanguageId(PortalSettings.DefaultLanguage);
-            var LanguageList = DefaultLanguageID.HasValue ? new[] {DefaultLanguageID.Value} : new[] { 0 };
+            var defaultLanguageID = Sexy.ContentContext.GetLanguageId(PortalSettings.DefaultLanguage);
+            var languageList = defaultLanguageID.HasValue ? new[] {defaultLanguageID.Value} : new[] { 0 };
             
-            var TemplateDefaults = Sexy.GetTemplateDefaults(Template.TemplateID).Where(t => t.ContentTypeID.HasValue);
-            string FormatString;
+            var templateDefaults = Sexy.GetTemplateDefaults(Template.TemplateID).Where(t => t.ContentTypeID.HasValue);
+            string formatString;
 
             if (Template.Type == "Token")
-                FormatString = "[{0}:{1}]";
+                formatString = "[{0}:{1}]";
             else
-                FormatString = "@{0}.{1}";
+                formatString = "@{0}.{1}";
 
-            foreach(var TemplateDefault in TemplateDefaults)
+            foreach(var templateDefault in templateDefaults)
             {
-                ToSic.Eav.AttributeSet Set = Sexy.ContentContext.GetAttributeSet(TemplateDefault.ContentTypeID.Value);
-                
-                var DataSource = Sexy.ContentContext.GetAttributes(Set, true).Select(a => new {
-                    StaticName = String.Format(FormatString, TemplateDefault.ItemType.ToString("F"), a.StaticName),
-                    DisplayName = (Sexy.ContentContext.GetAttributeMetaData(a.AttributesInSets.FirstOrDefault().AttributeID)).ContainsKey("Name") ? (Sexy.ContentContext.GetAttributeMetaData(a.AttributesInSets.FirstOrDefault().AttributeID))["Name"][LanguageList] : a.StaticName + " (static)"
-                }).ToList();
-
-                AddFieldGrid(DataSource, TemplateDefault.ItemType.ToString("F"));
+	            var contentTypeId = templateDefault.ContentTypeID.Value;
+	            AddHelpForAContentType(contentTypeId, formatString, templateDefault, languageList);
             }
 
-            
-            if (!Template.IsRazor)
-            {
-                AddFieldGrid(AdditionalSystemTokens.Split(';').Select(d => new { StaticName = d.Split(',')[0], DisplayName = LocalizeString(d.Split(',')[1] + ".Text")}), "System");
+			// todo: add AppResources and AppSettings help
 
-                if (Template.UseForList)
-                    AddFieldGrid(ListAdditionalSystemTokens.Split(';').Select(d => new { StaticName = HttpUtility.HtmlEncode(d.Split(',')[0]), DisplayName = LocalizeString(d.Split(',')[1] + ".Text") }), "ListSystem");
-            }
-            else
-            {
-                AddFieldGrid(AdditionalSystemRazor.Split(';').Select(d => new { StaticName = d.Split(',')[0], DisplayName = LocalizeString(d.Split(',')[1] + ".Text") }), "System");
-
-                if(Template.UseForList)
-                    AddFieldGrid(ListAdditionalSystemRazor.Split(';').Select(d => new { StaticName = d.Split(',')[0], DisplayName = LocalizeString(d.Split(',')[1] + ".Text") }), "ListSystem");
-            }
+			// add standard help
+	        AddHelpFragments();
         }
+
+		/// <summary>
+		/// Create a help-table showing all the tokens/placeholders for a specific content type
+		/// </summary>
+		/// <param name="contentTypeId"></param>
+		/// <param name="FormatString"></param>
+		/// <param name="TemplateDefault"></param>
+		/// <param name="LanguageList"></param>
+	    private void AddHelpForAContentType(int contentTypeId, string FormatString, TemplateDefault TemplateDefault,
+		    int[] LanguageList)
+	    {
+		    Eav.AttributeSet Set = Sexy.ContentContext.GetAttributeSet(contentTypeId);
+
+		    var DataSource = Sexy.ContentContext.GetAttributes(Set, true).Select(a => new
+		    {
+			    StaticName = String.Format(FormatString, TemplateDefault.ItemType.ToString("F"), a.StaticName),
+			    DisplayName =
+				    (Sexy.ContentContext.GetAttributeMetaData(a.AttributesInSets.FirstOrDefault().AttributeID)).ContainsKey("Name")
+					    ? (Sexy.ContentContext.GetAttributeMetaData(a.AttributesInSets.FirstOrDefault().AttributeID))["Name"][LanguageList]
+					    : a.StaticName + " (static)"
+		    }).ToList();
+
+		    AddFieldGrid(DataSource, TemplateDefault.ItemType.ToString("F"));
+	    }
+
+	    /// <summary>
+		/// Add helper infos to the editor, common tokens, razor snippets etc.
+		/// </summary>
+	    private void AddHelpFragments()
+	    {
+			// 2014-07-18 2dm - new
+		    var lookupKey = Template.IsRazor ? "Razor" : "Token";
+		    var additionalHelpers = LocalizeString("Additional" + lookupKey + "Sets.Text");
+		    if (!Template.UseForList)
+			    additionalHelpers = additionalHelpers.Replace("List" + lookupKey + ",", "");
+		    foreach (var helperSet in additionalHelpers.Split(','))
+		    {
+			    var setText = LocalizeString(helperSet + ".List");
+			    var hasEncodedStuff = (setText.IndexOf("»") > 0);
+			    var splitFilter1 = hasEncodedStuff ? new string[] {"»\r\n", "»\n"} : new string[] {"\r\n", "\n"};
+			    var splitFilter2 = hasEncodedStuff ? new string[] {"«"} : new string[] {"="};
+			    var data =
+				    setText.Split(splitFilter1, StringSplitOptions.None)
+					    .Select(
+						    d =>
+							    new
+							    {
+								    StaticName = d.Split(splitFilter2, StringSplitOptions.None)[0],
+								    DisplayName = d.Split(splitFilter2, StringSplitOptions.None)[1]
+							    })
+					    .ToList();
+			    if (hasEncodedStuff)
+				    data =
+					    data.Select(x => new {StaticName = EncodeCode(x.StaticName), DisplayName = EncodeComment(x.DisplayName)}).ToList();
+			    // todo: bug - cannot pass in translated title, the grid always tries to re-look it up in another resx
+			    //var title = LocalizeString(tokenSet + ".Title");
+			    AddFieldGrid(data, helperSet);
+		    }
+
+
+		    //// Add Token Help Tables
+		    //if (!Template.IsRazor)
+		    //{
+		    //	// 2014-07-18 2dm - removed
+		    //	// AddFieldGrid(AdditionalSystemTokens.Split(';').Select(d => new { StaticName = d.Split(',')[0], DisplayName = LocalizeString(d.Split(',')[1] + ".Text")}), "System");
+		    //	//if (Template.UseForList)
+		    //	//	AddFieldGrid(ListAdditionalSystemTokens.Split(';').Select(d => new { StaticName = HttpUtility.HtmlEncode(d.Split(',')[0]), DisplayName = LocalizeString(d.Split(',')[1] + ".Text") }), "ListSystem");
+
+		    //}
+		    //// Add Razor Help Tables
+		    //else
+		    //{
+		    //	AddFieldGrid(AdditionalSystemRazor.Split(';').Select(d => new { StaticName = d.Split(',')[0], DisplayName = LocalizeString(d.Split(',')[1] + ".Text") }), "System");
+
+		    //	if(Template.UseForList)
+		    //		AddFieldGrid(ListAdditionalSystemRazor.Split(';').Select(d => new { StaticName = d.Split(',')[0], DisplayName = LocalizeString(d.Split(',')[1] + ".Text") }), "ListSystem");
+		    //}
+	    }
+
+	    protected string EncodeCode(string original)
+	    {
+		    //return "<pre>" + original + "</pre>";
+		    return Server.HtmlEncode(original)
+			    .Replace("\r\n", "<br/>")
+			    .Replace("\t", "&nbsp;");
+	    }
+
+	    protected string EncodeComment(string original)
+	    {
+			return Server.HtmlEncode(original)
+				.Replace("\r\n", "<br/>")
+				.Replace("\t", "&nbsp;");
+		}
 
         protected void btnUpdate_Click(object sender, EventArgs e)
         {
@@ -119,20 +196,20 @@ namespace ToSic.SexyContent
             }
         }
 
-        protected void AddFieldGrid(object DataSource, string HeaderText)
+        protected void AddFieldGrid(object dataSource, string headerText)
         {
-            var GridControl = (TemplateHelpGrid)LoadControl(Path.Combine(TemplateSourceDirectory, "TemplateHelpGrid.ascx"));
-            var Grid = GridControl.Grid;
+            var gridControl = (TemplateHelpGrid)LoadControl(Path.Combine(TemplateSourceDirectory, "TemplateHelpGrid.ascx"));
+            var grid = gridControl.Grid;
 
 
             // DataBind the GridView with the Tokens
-            DnnGridBoundColumn TokenColumn = ((DnnGridBoundColumn)Grid.Columns.FindByUniqueName("StaticName"));
-            TokenColumn.HeaderText = HeaderText;
+            DnnGridBoundColumn tokenColumn = ((DnnGridBoundColumn)grid.Columns.FindByUniqueName("StaticName"));
+            tokenColumn.HeaderText = headerText;
             
-            Grid.DataSource = DataSource;
-            Grid.DataBind();
+            grid.DataSource = dataSource;
+            grid.DataBind();
             
-            phGrids.Controls.Add(GridControl);
+            phGrids.Controls.Add(gridControl);
         }
     }
 }
