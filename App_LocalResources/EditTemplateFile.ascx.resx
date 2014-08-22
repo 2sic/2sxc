@@ -155,53 +155,211 @@
   </data>
   <data name="ListContent.Header" xml:space="preserve">
     <value>ListContent</value>
+    <comment>old</comment>
   </data>
   <data name="ListPresentation.Header" xml:space="preserve">
     <value>ListPresentation</value>
+    <comment>old</comment>
   </data>
   <data name="Presentation.Header" xml:space="preserve">
     <value>Presentation</value>
   </data>
   <data name="ContentToolbar.Text" xml:space="preserve">
     <value>SexyContent Toolbar</value>
+    <comment>old</comment>
   </data>
   <data name="ListAlternator2.Text" xml:space="preserve">
     <value>Outputs &lt;b&gt;0&lt;/b&gt; or &lt;b&gt;1&lt;/b&gt; depending on items index</value>
+    <comment>old</comment>
   </data>
   <data name="ListAlternator3.Text" xml:space="preserve">
     <value>Outputs &lt;b&gt;0&lt;/b&gt;, &lt;b&gt;1&lt;/b&gt; or &lt;b&gt;2&lt;/b&gt; depending on items index</value>
+    <comment>old</comment>
   </data>
   <data name="ListAlternator4.Text" xml:space="preserve">
     <value>Outputs &lt;b&gt;0&lt;/b&gt;, &lt;b&gt;1&lt;/b&gt;, &lt;b&gt;2&lt;/b&gt; or &lt;b&gt;3&lt;/b&gt; depending on items index</value>
+    <comment>old</comment>
   </data>
   <data name="ListAlternator5.Text" xml:space="preserve">
     <value>Outputs &lt;b&gt;0&lt;/b&gt;, &lt;b&gt;1&lt;/b&gt;, &lt;b&gt;2&lt;/b&gt;, &lt;b&gt;3&lt;/b&gt; or &lt;b&gt;4&lt;/b&gt; depending on items index</value>
+    <comment>old</comment>
   </data>
   <data name="ListCount.Text" xml:space="preserve">
     <value>Count of items in the list</value>
+    <comment>old</comment>
   </data>
   <data name="ListIndex.Text" xml:space="preserve">
     <value>Index of the current item</value>
+    <comment>old</comment>
   </data>
   <data name="ListIsFirst.Text" xml:space="preserve">
     <value>Outputs &lt;b&gt;First&lt;/b&gt; if current item is the first one</value>
+    <comment>old</comment>
   </data>
   <data name="ListIsLast.Text" xml:space="preserve">
     <value>Outputs &lt;b&gt;Last&lt;/b&gt; if current item is the last one</value>
+    <comment>old</comment>
   </data>
   <data name="ListRepeat.Text" xml:space="preserve">
     <value>Allows defining the repeating part of the template</value>
+    <comment>old</comment>
   </data>
   <data name="ListToolbar.Text" xml:space="preserve">
     <value>Outputs the toolbar to edit list information</value>
   </data>
   <data name="ListIndex1.Text" xml:space="preserve">
     <value>Index of the current item + 1 (for numbering lists)</value>
+    <comment>old</comment>
   </data>
   <data name="plTemplateLocation.HelpText" xml:space="preserve">
     <value>Help</value>
   </data>
   <data name="plTemplateLocation.Text" xml:space="preserve">
     <value>Template Location</value>
+  </data>
+  <data name="AdditionalRazorSets.Text" xml:space="preserve">
+    <value>SystemRazor,ListRazor,AppRazor</value>
+  </data>
+  <data name="AdditionalTokenSets.Text" xml:space="preserve">
+    <value>SystemTokens,ListTokens,AppTokens,PortalTokens,TabTokens,ModuleTokens,QueryStringTokens,UserTokens,ProfileTokens</value>
+  </data>
+  <data name="AppRazor.List" xml:space="preserve">
+    <value>@App.Path=returns the url to the current app, for integrating scripts, images etc. For example, use as @App.Path/scripts/knockout.js
+@App.PhysicalPath=physical path, in c:\
+@App.AppGuid=internal GUID - should stay the same across all systems for this specific App
+@App.AppId=ID in the current DB. Is a different number in every App-Installation
+@App.Name=internal name
+@App.Folder=folder
+@App.Resources.ANYKEY=any resource defined in the App - usually used for multilanguage labels like @App.Resources.FirstName
+@App.Settings.ANYKEY=any type of setting defined in the App - usually used for configuration like details-pages @App.Settings.DetailsLink</value>
+  </data>
+  <data name="AppTokens.List" xml:space="preserve">
+    <value>[App:Path]=returns the url to the current app, for integrating scripts, images etc. For example, use as [App:Path]/scripts/knockout.js
+[App:PhysicalPath]=the physical path, in case you want access to the C:\path for some reason
+[AppResources:...]=any resource defined in the App - usually used for multilanguage labels like [AppResources:FirstName]
+[AppSettings:...]=any type of setting defined in the App - usually used for configuration like details-pages [AppSettings:DetailsLink]</value>
+  </data>
+  <data name="ListRazor.List" xml:space="preserve">
+    <value>@List.Content.Toolbar«Toolbar for inline editing with 2sxc. If used inside a &lt;div class="sc-element"&gt; then the toolbar will float»
+	&lt;ul&gt;
+	@foreach(var e in List) {
+		var Content = e.Content;
+		&lt;li class="sc-element"&gt;
+			@Html.Raw(Content.Toolbar)
+			@Content.EntityTitle
+		&lt;/li&gt;
+	}
+	&lt;/ul&gt;«Demo-Loop how to cycle through items»</value>
+  </data>
+  <data name="ListTokens.List" xml:space="preserve">
+    <value>[List:Index]=Index of the current item
+[List:Index1]=Index of the current item + 1 (for numbering lists)
+[List:Count]=Count of items in the list
+[List:IsFirst]=Outputs &lt;b&gt;First&lt;/b&gt; if current item is the first one
+[List:IsLast]=Outputs &lt;b&gt;Last&lt;/b&gt; if current item is the last one
+[List:Alternator2]=Outputs &lt;b&gt;0&lt;/b&gt; or &lt;b&gt;1&lt;/b&gt; depending on items index
+[List:Alternator3]=Outputs &lt;b&gt;0&lt;/b&gt;, &lt;b&gt;1&lt;/b&gt; or &lt;b&gt;2&lt;/b&gt; depending on items index
+[List:Alternator4]=Outputs &lt;b&gt;0&lt;/b&gt;, &lt;b&gt;1&lt;/b&gt;, &lt;b&gt;2&lt;/b&gt; or &lt;b&gt;3&lt;/b&gt; depending on items index
+[List:Alternator5]=Outputs &lt;b&gt;0&lt;/b&gt;, &lt;b&gt;1&lt;/b&gt;, &lt;b&gt;2&lt;/b&gt;, &lt;b&gt;3&lt;/b&gt; or &lt;b&gt;4&lt;/b&gt; depending on items index
+[ListContent:Toolbar]=Outputs the toolbar to edit list information
+&amp;lt;repeat&amp;gt;...&amp;lt;/repeat&amp;gt;=Allows defining the repeating part of the template</value>
+  </data>
+  <data name="ListTokens.Title" xml:space="preserve">
+    <value>List System</value>
+    <comment>temp</comment>
+  </data>
+  <data name="ModuleTokens.List" xml:space="preserve">
+    <value>[Module:Description]=Module Definition Description 
+[Module:EndDate]=Module Display Until Date 
+[Module:Footer]=Module Footer Text 
+[Module:FriendlyName]=Module Definition Name 
+[Module:Header]=Module Header Text 
+[Module:HelpURL]=Module Help URL 
+[Module:IconFile]=Module Path to Icon File 
+[Module:ModuleTitle]=Module Title 
+[Module:PaneName]=Module Name of Pane (where the module resides) 
+[Module:StartDate]=Module Display from Date</value>
+  </data>
+  <data name="ModuleTokens.Title" xml:space="preserve">
+    <value>Module Tokens</value>
+    <comment>n</comment>
+  </data>
+  <data name="PortalTokens.List" xml:space="preserve">
+    <value>[Portal:Currency]=Currency String 
+[Portal:Description]=Portal Description 
+[Portal:Email]=Portal Admin Email 
+[Portal:FooterText]=Portal Copyright Text 
+[Portal:HomeDirectory]=Portal Path (relative) of Home Directory 
+[Portal:LogoFile]=Portal Path to Logo File 
+[Portal:PortalName]=Portal Name 
+[Portal:PortalAlias]=Portal URL 
+[Portal:TimeZoneOffset]=Difference in Minutes between Portal Default Time and UTC</value>
+  </data>
+  <data name="PortalTokens.Title" xml:space="preserve">
+    <value>Portal Tokens</value>
+    <comment>n</comment>
+  </data>
+  <data name="ProfileTokens.List" xml:space="preserve">
+    <value>[Profile:]=Use any default or custom Profile Property as listed in Profile Property Definition section of Manage User Accounts. Use non-localized Property Name only.</value>
+  </data>
+  <data name="ProfileTokens.Title" xml:space="preserve">
+    <value>User Profile Tokens</value>
+    <comment>n</comment>
+  </data>
+  <data name="QueryStringTokens.List" xml:space="preserve">
+    <value>[Querystring:Name]=Value of Querystring Name</value>
+  </data>
+  <data name="QueryStringTokens.Title" xml:space="preserve">
+    <value>QueryString (URL-Parameters) Tokens</value>
+    <comment>n</comment>
+  </data>
+  <data name="SystemRazor.List" xml:space="preserve">
+    <value>@Content.Toolbar=SexyContent Toolbar</value>
+  </data>
+  <data name="SystemTokens.List" xml:space="preserve">
+    <value>[Content:Toolbar]=Toolbar for inline editing with 2sxc. If used inside a &amp;lt;div class&amp;equals;&amp;quot;sc-element&amp;quot;&amp;gt; then the toolbar will float</value>
+  </data>
+  <data name="SystemTokens.Title" xml:space="preserve">
+    <value>ContentFeatures</value>
+    <comment>temp</comment>
+  </data>
+  <data name="TabTokens.List" xml:space="preserve">
+    <value>[Tab:Description]=Page Description Text for Search Engine 
+[Tab:EndDate]=Page Display Until Date 
+[Tab:FullUrl]=Page Full URL 
+[Tab:IconFile]=Page Relative Path to Icon File 
+[Tab:KeyWords]=Page Keywords for Search Engine 
+[Tab:PageHeadText]=Page Header Text 
+[Tab:StartDate]=Page Display from Date 
+[Tab:TabName]=Page Name 
+[Tab:TabPath]=Page Relative Path 
+[Tab:Title]=Page Title (Window Title) 
+[Tab:URL]=Page URL</value>
+  </data>
+  <data name="TabTokens.Title" xml:space="preserve">
+    <value>Tab (Page) Tokens</value>
+    <comment>n</comment>
+  </data>
+  <data name="TimeTokens.List" xml:space="preserve">
+    <value>[DateTime:Now]=Current Date and Time 
+[Ticks:Now]=CPU Tick Count for Current Second 
+[Ticks:Today]=CPU Tick Count since Midnight 
+[Ticks:TicksPerDay]=CPU Ticks per Day (for calculations)</value>
+  </data>
+  <data name="TimeTokens.Title" xml:space="preserve">
+    <value>Time Tokens</value>
+    <comment>n</comment>
+  </data>
+  <data name="UserTokens.List" xml:space="preserve">
+    <value>[User:DisplayName]=User’s Display Name 
+[User:Email]=User’s Email Address 
+[User:FirstName]=User’s First Name 
+[User:FullName]=(deprecated)
+[User:LastName]=User’s Last Name 
+[User:Username]=User’s Login User Name</value>
+  </data>
+  <data name="UserTokens.Title" xml:space="preserve">
+    <value>User Tokens</value>
+    <comment>n</comment>
   </data>
 </root>

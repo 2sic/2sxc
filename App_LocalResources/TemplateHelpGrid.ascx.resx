@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AppRazor.Header" xml:space="preserve">
+    <value>App Razor Codes</value>
+  </data>
+  <data name="AppTokens.Header" xml:space="preserve">
+    <value>App Tokens</value>
+  </data>
   <data name="Content.Header" xml:space="preserve">
     <value>Content</value>
   </data>
@@ -126,13 +132,46 @@
   <data name="ListPresentation.Header" xml:space="preserve">
     <value>ListPresentation</value>
   </data>
+  <data name="ListRazor.Header" xml:space="preserve">
+    <value>List Properties / Helpers</value>
+  </data>
   <data name="ListSystem.Header" xml:space="preserve">
     <value>System (List)</value>
+  </data>
+  <data name="ListTokens.Header" xml:space="preserve">
+    <value>List Tokens</value>
+  </data>
+  <data name="ModuleTokens.Header" xml:space="preserve">
+    <value>Module Tokens</value>
+  </data>
+  <data name="PortalTokens.Header" xml:space="preserve">
+    <value>Portal Tokens</value>
   </data>
   <data name="Presentation.Header" xml:space="preserve">
     <value>Presentation</value>
   </data>
+  <data name="ProfileTokens.Header" xml:space="preserve">
+    <value>User Profile Tokens</value>
+  </data>
+  <data name="QueryStringTokens.Header" xml:space="preserve">
+    <value>QueryString (URL-Parameters) Tokens</value>
+  </data>
   <data name="System.Header" xml:space="preserve">
     <value>System</value>
+  </data>
+  <data name="SystemRazor.Header" xml:space="preserve">
+    <value>Razor Content Properties / Helpers</value>
+  </data>
+  <data name="SystemTokens.Header" xml:space="preserve">
+    <value>Additional Content Tokens</value>
+  </data>
+  <data name="TabTokens.Header" xml:space="preserve">
+    <value>Tab (Page) Tokens</value>
+  </data>
+  <data name="TimeTokens.Header" xml:space="preserve">
+    <value>Time Tokens</value>
+  </data>
+  <data name="UserTokens.Header" xml:space="preserve">
+    <value>User Tokens</value>
   </data>
 </root>
