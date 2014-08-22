@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
 using DotNetNuke.Common.Utilities;
+using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.FileSystem;
 using ToSic.Eav;
 using ToSic.Eav.DataSources;
@@ -20,7 +21,8 @@ namespace ToSic.SexyContent
         public HtmlString Toolbar {
             get
             {
-                if(!DotNetNuke.Common.Globals.IsEditMode()) return new HtmlString("");
+                if (SexyContext == null || !SexyContext.IsEditMode())
+                    return new HtmlString("");
 
                 if (ToolbarString != "")
                     return new HtmlString(ToolbarString);
@@ -29,17 +31,17 @@ namespace ToSic.SexyContent
             }
         }
         private readonly string[] _dimensions;
+        private SexyContent SexyContext { get; set; }
 
         /// <summary>
         /// Constructor with EntityModel and DimensionIds
         /// </summary>
-        /// <param name="entityModel"></param>
-        /// <param name="dimensions"></param>
-        public DynamicEntity(IEntity entityModel, string[] dimensions)
+        public DynamicEntity(IEntity entityModel, string[] dimensions, SexyContent sexy)
         {
             this.Entity = entityModel;
             this._dimensions = dimensions;
             this.ToolbarString = "";
+            SexyContext = sexy;
         }
 
         public override bool TryGetMember(GetMemberBinder binder, out object result)
@@ -71,13 +73,13 @@ namespace ToSic.SexyContent
 
                 if (attribute.Type == "Hyperlink" && result is string)
                 {
-                    result = SexyContent.ResolveHyperlinkValues((string) result);
+                    result = SexyContent.ResolveHyperlinkValues((string) result, SexyContext == null ? PortalSettings.Current : SexyContext.OwnerPS);
                 }
                 else if (attribute.Type == "Entity" && result is EntityRelationshipModel)
                 {
                     // Convert related entities to Dynamics
                     result = ((ToSic.Eav.EntityRelationshipModel) result).Select(
-                        p => new DynamicEntity(p, _dimensions)
+                        p => new DynamicEntity(p, _dimensions, this.SexyContext)
                         ).ToList();
                 }
             }
@@ -138,12 +140,12 @@ namespace ToSic.SexyContent
 
         public dynamic GetDraft()
         {
-            return new DynamicEntity(Entity.GetDraft(), _dimensions);
+            return new DynamicEntity(Entity.GetDraft(), _dimensions, this.SexyContext);
         }
 
         public dynamic GetPublished()
         {
-            return new DynamicEntity(Entity.GetPublished(), _dimensions);
+            return new DynamicEntity(Entity.GetPublished(), _dimensions, this.SexyContext);
         }
 
     }

@@ -13,7 +13,7 @@ namespace ToSic.SexyContent.DataSources
     {
         private SexyContent _sexy;
 
-        private SexyContent Sexy
+        internal SexyContent Sexy
         {
             get
             {
@@ -21,6 +21,7 @@ namespace ToSic.SexyContent.DataSources
                     _sexy = new SexyContent(In["Default"].Source.ZoneId, In["Default"].Source.AppId);
                 return _sexy;
             }
+            set { _sexy = value; }
         }
 
         private List<ContentGroupItem> _contentGroupItems;
@@ -217,16 +218,16 @@ namespace ToSic.SexyContent.DataSources
                                ID = c.ContentGroupItemID,
                                EntityId = c.EntityID,
                                TemplateId = c.TemplateID,
-                               Content = c.EntityID.HasValue ? new DynamicEntity(entities[c.EntityID.Value], dimensionIds) :
+                               Content = c.EntityID.HasValue ? new DynamicEntity(entities[c.EntityID.Value], dimensionIds, Sexy) :
                                    defaults.Where(d => d.ItemType == contentItemType && d.DemoEntityID.HasValue && entities.ContainsKey(d.DemoEntityID.Value))
-                                       .Select(d => new DynamicEntity(entities[d.DemoEntityID.Value], dimensionIds)).FirstOrDefault(),
+                                       .Select(d => new DynamicEntity(entities[d.DemoEntityID.Value], dimensionIds, Sexy)).FirstOrDefault(),
                                // Get Presentation object - Take Default if it does not exist
                                Presentation = (from p in items
                                                where p.SortOrder == c.SortOrder && p.ItemType == presentationItemType && p.EntityID.HasValue && entities.ContainsKey(p.EntityID.Value)
-                                               select new DynamicEntity(entities[p.EntityID.Value], dimensionIds)).FirstOrDefault() ??
+                                               select new DynamicEntity(entities[p.EntityID.Value], dimensionIds, Sexy)).FirstOrDefault() ??
                                               (from d in defaults
                                                where d.ItemType == presentationItemType && d.DemoEntityID.HasValue && entities.ContainsKey(d.DemoEntityID.Value)
-                                               select new DynamicEntity(entities[d.DemoEntityID.Value], dimensionIds)).FirstOrDefault()
+                                               select new DynamicEntity(entities[d.DemoEntityID.Value], dimensionIds, Sexy)).FirstOrDefault()
                                ,
                                GroupId = c.ContentGroupID,
                                SortOrder = c.SortOrder
@@ -234,7 +235,7 @@ namespace ToSic.SexyContent.DataSources
 
             // Add Toolbar if neccessary, else add empty string to dictionary
             // ToDo: This should be done inside of the DynamicEntity object (Toolbar property), but DynamicEntities above have to be wrapped inside of IHasEditingData
-            if (PortalSettings.Current != null && DotNetNuke.Common.Globals.IsEditMode())
+            if (PortalSettings.Current != null && Sexy != null && Sexy.IsEditMode())
                 elements.Where(p => p.Content != null).ToList().ForEach(p => ((DynamicEntity)p.Content).ToolbarString = "<ul class='sc-menu' data-toolbar='" + new { sortOrder = p.SortOrder, useModuleList = true, isPublished = (((DynamicEntity)p.Content)).Entity.IsPublished }.ToJson() + "'></ul>");
             
             return elements;

@@ -127,6 +127,7 @@ namespace ToSic.SexyContent.Engines
             webPage.ListPresentation = ListPresentation;
             webPage.List = List;
             webPage.App = App;
+            webPage.Sexy = Sexy;
             webPage.Data = (ViewDataSource)DataSource;
 
             // ToDo: Remove this as soon as App.Data getter on App class is fixed #1 and #2

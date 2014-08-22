@@ -25,7 +25,7 @@ namespace ToSic.SexyContent.Search
             var isContentModule = moduleInfo.DesktopModule.ModuleName == "2sxc";
 
             // New Context because PortalSettings.Current is null
-            var zoneId = SexyContent.GetZoneID(moduleInfo.PortalID);
+            var zoneId = SexyContent.GetZoneID(moduleInfo.OwnerPortalID);
 
             if (!zoneId.HasValue)
                 return searchDocuments;
@@ -40,7 +40,7 @@ namespace ToSic.SexyContent.Search
                     return searchDocuments;
             }
 
-            var sexy = new SexyContent(zoneId.Value, appId, true);
+            var sexy = new SexyContent(zoneId.Value, appId, true, moduleInfo.OwnerPortalID);
             var language = moduleInfo.CultureCode;
 
             // This list will hold all EAV entities to be indexed
@@ -57,7 +57,7 @@ namespace ToSic.SexyContent.Search
 
             var template = sexy.TemplateContext.GetTemplate(elements.First().TemplateId.Value);
             var engine = EngineFactory.CreateEngine(template);
-            engine.Init(template, sexy.App, moduleInfo, dataSource, InstancePurposes.IndexingForSearch);
+            engine.Init(template, sexy.App, moduleInfo, dataSource, InstancePurposes.IndexingForSearch, sexy);
 
             try
             {

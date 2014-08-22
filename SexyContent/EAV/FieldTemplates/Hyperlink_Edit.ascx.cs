@@ -134,7 +134,7 @@ namespace ToSic.Eav.ManagementUI
 
 			DialogOpener1.HandlerUrl = "~/DesktopModules/Admin/RadEditorProvider/DialogHandler.aspx?portalid=" + PortalSettings.Current.PortalId + "&tabid=" + PortalSettings.Current.ActiveTab.TabID;
 			if (!String.IsNullOrWhiteSpace(FieldValueEditString) && FieldValueEditString.StartsWith("File:"))
-				DialogOpener1.AdditionalQueryString = "&PreselectedItemUrl=" + HttpUtility.UrlEncode(SexyContent.SexyContent.ResolveHyperlinkValues(FieldValueEditString));
+				DialogOpener1.AdditionalQueryString = "&PreselectedItemUrl=" + HttpUtility.UrlEncode(SexyContent.SexyContent.ResolveHyperlinkValues(FieldValueEditString, PortalSettings.Current));
 			DialogOpener1.EnableEmbeddedSkins = _editorProvider._editor.EnableEmbeddedSkins;
 			DialogOpener1.Skin = _editorProvider._editor.Skin;
 

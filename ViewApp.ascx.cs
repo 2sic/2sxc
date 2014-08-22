@@ -135,7 +135,7 @@ namespace ToSic.SexyContent
                 string renderedTemplate = "";
                 var engine = EngineFactory.CreateEngine(Template);
                 var dataSource = (ViewDataSource)Sexy.GetViewDataSource(this.ModuleId, SexyContent.HasEditPermission(this.ModuleConfiguration), DotNetNuke.Common.Globals.IsEditMode());
-                engine.Init(Template, Sexy.App, this.ModuleConfiguration, dataSource, Request.QueryString["type"] == "data" ? InstancePurposes.PublishData : InstancePurposes.WebView);
+                engine.Init(Template, Sexy.App, this.ModuleConfiguration, dataSource, Request.QueryString["type"] == "data" ? InstancePurposes.PublishData : InstancePurposes.WebView, Sexy);
                 engine.CustomizeData();
 
                 // Output JSON data if type=data in URL

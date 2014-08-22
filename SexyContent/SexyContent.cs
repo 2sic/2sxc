@@ -1,4 +1,5 @@
-﻿using DotNetNuke.Common;
+﻿using System.Data.Objects;
+using DotNetNuke.Common;
 using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
@@ -599,6 +600,7 @@ namespace ToSic.SexyContent
                 var moduleDataSource = DataSource.GetDataSource<ModuleDataSource>(ZoneId, AppId, initialSource, ConfigurationProvider);
                 moduleDataSource.ModuleId = moduleId;
                 moduleDataSource.IncludeEditingData = true;
+                moduleDataSource.Sexy = this;
 
                 var viewDataSource = DataSource.GetDataSource<ViewDataSource>(ZoneId, AppId, moduleDataSource, ConfigurationProvider);
                 var moduleSettings = new ModuleController().GetModuleSettings(moduleId);
@@ -772,9 +774,9 @@ namespace ToSic.SexyContent
                 
                 if (appMetaData != null)
                 {
-                    dynamic appMetaDataDynamic = new DynamicEntity(appMetaData, new[] { System.Threading.Thread.CurrentThread.CurrentCulture.Name });
-                    dynamic appResourcesDynamic = appResources != null ? new DynamicEntity(appResources, new[] {System.Threading.Thread.CurrentThread.CurrentCulture.Name}) : null;
-                    dynamic appSettingsDynamic = appResources != null ? new DynamicEntity(appSettings, new[] {System.Threading.Thread.CurrentThread.CurrentCulture.Name}) : null;
+                    dynamic appMetaDataDynamic = new DynamicEntity(appMetaData, new[] { System.Threading.Thread.CurrentThread.CurrentCulture.Name }, null);
+                    dynamic appResourcesDynamic = appResources != null ? new DynamicEntity(appResources, new[] {System.Threading.Thread.CurrentThread.CurrentCulture.Name}, null) : null;
+                    dynamic appSettingsDynamic = appResources != null ? new DynamicEntity(appSettings, new[] {System.Threading.Thread.CurrentThread.CurrentCulture.Name}, null) : null;
 
                     sexyApp = new App(appId, zoneId, ownerPS)
                     {
@@ -1200,6 +1202,11 @@ namespace ToSic.SexyContent
                 body.Attributes["class"] = CssClass;
         }
 
+        public bool IsEditMode()
+        {
+            return DotNetNuke.Common.Globals.IsEditMode() && (OwnerPS.PortalId == PS.PortalId);
+        }
+
         /// <summary>
         /// Returns a JSON string for the elements
         /// </summary>
@@ -1220,7 +1227,7 @@ namespace ToSic.SexyContent
 
         private Dictionary<string, object> GetDictionaryFromEntity(IEntity entity, string language)
         {
-            var dynamicEntity = new DynamicEntity(entity, new[] { language });
+            var dynamicEntity = new DynamicEntity(entity, new[] { language }, this);
             bool propertyNotFound;
             var dictionary = ((from d in entity.Attributes select d.Value).ToDictionary(k => k.Name, v => dynamicEntity.GetEntityValue(v.Name, out propertyNotFound)));
             dictionary.Add("EntityId", entity.EntityId);
@@ -1237,9 +1244,7 @@ namespace ToSic.SexyContent
         /// Resolves File and Page values
         /// For example, File:123 or Page:123
         /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public static string ResolveHyperlinkValues(string value)
+        public static string ResolveHyperlinkValues(string value, PortalSettings ownerPortalSettings)
         {
             var resultString = (string)value;
             var regularExpression = Regex.Match(resultString, @"^(?<type>(file|page)):(?<id>[0-9]+)(?<params>(\?|\#).*)?$", RegexOptions.IgnoreCase);
@@ -1261,7 +1266,7 @@ namespace ToSic.SexyContent
                         resultString = fileManager.GetUrl(fileInfo) + urlParams;
                     break;
                 case "page":
-                    var portalId = PortalSettings.Current.PortalId;
+                    var portalId = ownerPortalSettings.PortalId;
                     var tabInfo = tabController.GetTab(id, portalId, false);
                     if (tabInfo != null)
                     {
@@ -1276,7 +1281,7 @@ namespace ToSic.SexyContent
                                 tabInfo = cultureTabInfo;
                         }
 
-						resultString = tabInfo.FullUrl + urlParams;
+                        resultString = Globals.NavigateURL(tabInfo.TabID, ownerPortalSettings, "", new string[] {}) + urlParams;
                     }
                     break;
             }

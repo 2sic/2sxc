@@ -37,6 +37,7 @@ namespace ToSic.SexyContent.Razor
         protected internal new App App { get; internal set; }
         protected internal List<Element> List { get; internal set; }
         protected internal ViewDataSource Data { get; internal set; }
+        protected internal SexyContent Sexy { get; set; }
 
         /// <summary>
         /// Transform a IEntity to a DynamicEntity as dynamic object
@@ -45,7 +46,7 @@ namespace ToSic.SexyContent.Razor
         /// <returns></returns>
         public dynamic AsDynamic(IEntity entity)
         {
-            return new DynamicEntity(entity, new[] { System.Threading.Thread.CurrentThread.CurrentCulture.Name });
+            return new DynamicEntity(entity, new[] { System.Threading.Thread.CurrentThread.CurrentCulture.Name }, Sexy);
         }
 
         /// <summary>
