@@ -136,6 +136,7 @@
               <supportedFeature type="Searchable" />
               <supportedFeature type="Upgradeable" />
             </supportedFeatures>
+            <shareable>Supported</shareable>
             <moduleDefinitions>
               <moduleDefinition>
                 <definitionName>2Sexy Content</definitionName>
@@ -595,6 +596,7 @@
               <supportedFeature type="Searchable" />
               <supportedFeature type="Upgradeable" />
             </supportedFeatures>
+            <shareable>Supported</shareable>
             <moduleDefinitions>
               <moduleDefinition>
                 <definitionName>2Sexy Content App</definitionName>

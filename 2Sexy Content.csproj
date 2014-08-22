@@ -524,7 +524,6 @@
     <Content Include="Extensions\ToSic_vCard\vCard.ashx" />
     <Content Include="BuildScripts\ModulePackage.Targets" />
     <Content Include="BuildScripts\MSBuild.Community.Tasks.targets" />
-    <Content Include="packages.config" />
     <None Include="SqlDataProvider\01.00.00.SqlDataProvider" />
     <Content Include="SexyContent\GettingStarted\GettingStartedFrame.ascx" />
     <Content Include="SqlDataProvider\05.02.01.SqlDataProvider" />
