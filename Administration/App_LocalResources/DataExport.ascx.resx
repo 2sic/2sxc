@@ -172,7 +172,7 @@
     <value>No, just export blank data schema (for new data import)</value>
   </data>
   <data name="lblTitle.Text" xml:space="preserve">
-    <value>2SexyContent - Export Data</value>
+    <value>2sxc - Export Data</value>
   </data>
   <data name="lblInformationLimitations.Text" xml:space="preserve">
     <value>Note: Relations between content-types are not supported at the moment.</value>

@@ -157,7 +157,7 @@
     <value>Try to resolve pathes to references (for example File:4711)</value>
   </data>
   <data name="lblSetupTitle.Text" xml:space="preserve">
-    <value>2SexyContent - Import Data Step 1 of 2</value>
+    <value>2sxc - Import Data Step 1 of 2</value>
   </data>
   <data name="btnBack.Text" xml:space="preserve">
     <value>Back</value>
@@ -199,13 +199,13 @@
     <value>{0} languages</value>
   </data>
   <data name="lblDetailTitle.Text" xml:space="preserve">
-    <value>2SexyContent - Import Data Step 2 of 3</value>
+    <value>2sxc - Import Data Step 2 of 3</value>
   </data>
   <data name="lblDoneInfo.Text" xml:space="preserve">
     <value>Import: {0}</value>
   </data>
   <data name="lblDoneTitle.Text" xml:space="preserve">
-    <value>2SexyContent - Import Data Step 3 of 3</value>
+    <value>2sxc - Import Data Step 3 of 3</value>
   </data>
   <data name="lblErrorInfo.Text" xml:space="preserve">
     <value>Try to import: {0}</value>
@@ -214,7 +214,7 @@
     <value>File contains the following errors:</value>
   </data>
   <data name="lblErrorTitle.Text" xml:space="preserve">
-    <value>2SexyContent - Import Data</value>
+    <value>2sxc - Import Data</value>
   </data>
   <data name="lblDoneResultFailed.Text" xml:space="preserve">
     <value>Failed!&lt;br /&gt;{0}</value>

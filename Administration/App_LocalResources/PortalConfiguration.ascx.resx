@@ -172,7 +172,7 @@
     <value>Virtual Database (VDB)</value>
   </data>
   <data name="litZoneInfo.Text" xml:space="preserve">
-    <value>&lt;p&gt;A Virtual Database (VDB) separates content that belongs together from other content that is technically in the same database. Usually every DotNetNuke portal will have an own VDB for 2sexy content, but there are scenarios where multiple portals share the same content.&lt;/p&gt;
+    <value>&lt;p&gt;A Virtual Database (VDB) separates content that belongs together from other content that is technically in the same database. Usually every DotNetNuke portal will have an own VDB for 2sxc, but there are scenarios where multiple portals share the same content.&lt;/p&gt;
                 &lt;p&gt;Examples for sharing VDBs: a) cases where each language is another portal; b) franchise-systems showing almost identical content on multiple portals; c) sub-portals showing an excerpt of the main portal - say a mobile site.&lt;/p&gt;
                 If you are unsure what to do, then create one VDB per portal.</value>
   </data>

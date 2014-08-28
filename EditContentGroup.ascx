@@ -34,7 +34,7 @@
     <asp:Panel runat="server" id="pnlLanguageNotActive" Visible="false">
         <br />
         <div class="dnnFormMessage dnnFormInfo">
-            The language you are trying to edit (<i><asp:Literal runat="server" ID="litLanguageName"></asp:Literal></i>) is not active in 2SexyContent Portal Configuration.
+            The language you are trying to edit (<i><asp:Literal runat="server" ID="litLanguageName"></asp:Literal></i>) is not active in 2sxc Portal Configuration.
             <asp:LinkButton runat="server" Visible="False" ID="btnActivateLanguage" Text="Activate Language" OnClick="btnActivateLanguage_Click"></asp:LinkButton>
         </div>
         <br />

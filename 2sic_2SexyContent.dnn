@@ -2,7 +2,7 @@
   <packages>
     <package name="2SexyContent" type="Module" version="06.01.08">
       <friendlyName> Content</friendlyName>
-      <description>2Sexy Content is a DotNetNuke Extension to create attractive and designed content. It solves the common problem, allowing the web designer to create designed templates for different content elements, so that the user must only fill in fields and receive a perfectly designed and animated output.</description>
+      <description>2sxc Content is a DotNetNuke Extension to create attractive and designed content. It solves the common problem, allowing the web designer to create designed templates for different content elements, so that the user must only fill in fields and receive a perfectly designed and animated output.</description>
       <iconFile>icon.png</iconFile>
       <owner>
         <name>2sic</name>
@@ -576,7 +576,7 @@
 
     <package name="2SexyContent-App" type="Module" version="06.01.08">
       <friendlyName> App</friendlyName>
-      <description>2Sexy Content App is an extension that allows to insert a 2SexyContent app.</description>
+      <description>2sxc Content App is an extension that allows to insert a Content app.</description>
       <iconFile>icon-app.png</iconFile>
       <owner>
         <name>2sic</name>

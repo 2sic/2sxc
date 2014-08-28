@@ -159,7 +159,7 @@ namespace ToSic.SexyContent.Administration
 
             var fileName = string.Format
                 (
-                    "2SexyContent {0} {1} {2} {3}.xml",
+                    "2sxc {0} {1} {2} {3}.xml",
                     ContentTypeNameSelected.Replace(" ", "-"),
                     LanguageSelected.Replace(" ", "-"),
                     RecordExportOptionSelected.IsBlank() ? "Template" : "Data",
