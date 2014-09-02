@@ -56,6 +56,10 @@ namespace ToSic.SexyContent.Search
                 return searchDocuments;
 
             var template = sexy.TemplateContext.GetTemplate(elements.First().TemplateId.Value);
+
+            if (template == null)
+                return searchDocuments;
+
             var engine = EngineFactory.CreateEngine(template);
             engine.Init(template, sexy.App, moduleInfo, dataSource, InstancePurposes.IndexingForSearch, sexy);
 
