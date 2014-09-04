@@ -75,7 +75,6 @@ namespace ToSic.SexyContent.ImportExport
                             {
 
                                 var appId = new int?();
-                                // ToDo: App-Import should only look for App.xml
                                 var xmlSearchPattern = isAppImport ? "App.xml" : "*.xml";
 
                                 // Stores the number of the current xml file to process
