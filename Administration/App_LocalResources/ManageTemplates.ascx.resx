@@ -151,7 +151,7 @@
     <value>New Template</value>
   </data>
   <data name="lblSexyContentDesignersInfo.Text" xml:space="preserve">
-    <value>Improve the user experience for the content-editor by hiding advanced features from him. If your portal contains a security role called “2sxc&amp;nbsp;Designers”, then non-members will not see buttons like &lt;i&gt;Edit Template&lt;/i&gt; or &lt;i&gt;Manage Templates&lt;/i&gt;. How-To documented &lt;a target="_blank" href="http://swisschecklist.com/en/fwttmwjx/2Sexy-Content-Hide-advanced-features-from-Content-Editors-with-Designer-Security-Role"&gt;here&lt;/a&gt;.</value>
+    <value>Improve the user experience for the content-editor by hiding advanced features from him. If your portal contains a security role called “2SexyContent&amp;nbsp;Designers”, then non-members will not see buttons like &lt;i&gt;Edit Template&lt;/i&gt; or &lt;i&gt;Manage Templates&lt;/i&gt;. How-To documented &lt;a target="_blank" href="http://swisschecklist.com/en/fwttmwjx/2Sexy-Content-Hide-advanced-features-from-Content-Editors-with-Designer-Security-Role"&gt;here&lt;/a&gt;.</value>
   </data>
   <data name="ContentTypeGroupByField.HeaderText" xml:space="preserve">
     <value>Content Type</value>
