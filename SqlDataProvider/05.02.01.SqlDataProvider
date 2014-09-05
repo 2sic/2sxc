@@ -42,8 +42,8 @@ EXEC('CREATE TABLE [dbo].[ToSIC_EAV_EntityRelationships](
 	[AttributeID] ASC,
 	[ParentEntityID] ASC,
 	[ChildEntityID] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)
+)
 
 
 ALTER TABLE [dbo].[ToSIC_EAV_EntityRelationships]  WITH CHECK ADD  CONSTRAINT [FK_ToSIC_EAV_EntityRelationships_ToSIC_EAV_Attributes] FOREIGN KEY([AttributeID])
@@ -92,13 +92,18 @@ BEGIN
 		,@sysLogID int
 		,@newData xml
 	
-	IF CONTEXT_INFO() IS NULL
-		BEGIN
-			RAISERROR (''CONTEXT_INFO must contain ChangeLogID'', 0, 1)
-			RETURN
-		END
+	IF SERVERPROPERTY(''edition'') <> ''SQL Azure''
+	BEGIN
+		IF CONTEXT_INFO() IS NULL
+			BEGIN
+				RAISERROR (''CONTEXT_INFO must contain ChangeLogID'', 0, 1)
+				RETURN
+			END
+		ELSE
+			SET @sysLogId = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
+	END
 	ELSE
-		SET @sysLogId = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
+		SET @sysLogId = 1
 
 	-- Automatically get the table name where this trigger is attached
 	Select @table = OBJECT_NAME(parent_id) FROM sys.triggers WHERE object_id=@@PROCID
@@ -138,7 +143,10 @@ END');
 
 EXEC ToSIC_EAV_ChangeLogAdd 'System'
 DECLARE @ChangeLogID int
-Set @ChangeLogID = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
+IF SERVERPROPERTY('edition') <> 'SQL Azure'
+	Set @ChangeLogID = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
+ELSE
+	SET @ChangeLogID = 1
 SELECT @ChangeLogID
 
 -- Insert AttributeSet @Entity

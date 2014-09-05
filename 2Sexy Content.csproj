@@ -559,6 +559,7 @@
     <Content Include="SqlDataProvider\05.06.00.SqlDataProvider" />
     <Content Include="SqlDataProvider\06.00.05.SqlDataProvider" />
     <Content Include="SqlDataProvider\06.00.09.SqlDataProvider" />
+    <Content Include="SqlDataProvider\06.02.01.SqlDataProvider" />
     <None Include="SqlDataProvider\Uninstall.SqlDataProvider" />
     <Content Include="web.config" />
   </ItemGroup>

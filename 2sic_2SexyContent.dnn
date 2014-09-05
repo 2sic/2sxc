@@ -12,6 +12,7 @@
       </owner>
       <license src="License.txt"></license>
       <releaseNotes src="ReleaseNotes.txt"></releaseNotes>
+      <azureCompatible>true</azureCompatible>
       <dependencies>
         <dependency type="type">System.Dynamic.ExpandoObject</dependency>
         <dependency type="CoreVersion">07.02.00</dependency>
@@ -119,6 +120,11 @@
               <path>SqlDataProvider</path>
               <name>06.00.09.SqlDataProvider</name>
               <version>06.00.09</version>
+            </script>
+            <script type="Install">
+              <path>SqlDataProvider</path>
+              <name>06.02.01.SqlDataProvider</name>
+              <version>06.02.01</version>
             </script>
             <script type="UnInstall">
               <path>SqlDataProvider</path>
@@ -586,6 +592,7 @@
       </owner>
       <license src="License.txt"></license>
       <releaseNotes src="ReleaseNotes.txt"></releaseNotes>
+      <azureCompatible>true</azureCompatible>
       <components>
         <component type="Module">
           <desktopModule>

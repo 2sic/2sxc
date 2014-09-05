@@ -58,7 +58,7 @@ CREATE TABLE dbo.Tmp_ToSIC_SexyContent_ContentGroupItems
 	SysModifiedBy int NOT NULL,
 	SysDeleted datetime NULL,
 	SysDeletedBy int NULL
-	)  ON [PRIMARY]
+	) 
 ALTER TABLE dbo.Tmp_ToSIC_SexyContent_ContentGroupItems SET (LOCK_ESCALATION = TABLE)
 ALTER TABLE dbo.Tmp_ToSIC_SexyContent_ContentGroupItems ADD CONSTRAINT
 	DF_ToSIC_SexyContent_ContentGroupItems_Type DEFAULT N'Content' FOR Type
@@ -73,11 +73,11 @@ ALTER TABLE dbo.ToSIC_SexyContent_ContentGroupItems ADD CONSTRAINT
 	PK_ToSIC_SexyContent_ContentGroupItems PRIMARY KEY CLUSTERED 
 	(
 	ContentGroupItemID
-	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)
 CREATE NONCLUSTERED INDEX IX_ToSIC_SexyContent_ContentGroupItems ON dbo.ToSIC_SexyContent_ContentGroupItems
 	(
 	ContentGroupID
-	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)
 ALTER TABLE dbo.ToSIC_SexyContent_ContentGroupItems ADD CONSTRAINT
 	FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_EAV_Entities FOREIGN KEY
 	(

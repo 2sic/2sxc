@@ -32,7 +32,10 @@ BEGIN TRANSACTION SexyContentUpdate;
 -- Correct Attribute descriptions for FileFilter and Paths (@File AttributeSet)
 EXEC ToSIC_EAV_ChangeLogAdd 'System'
 DECLARE @ChangeLogID int
-Set @ChangeLogID = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
+IF SERVERPROPERTY('edition') <> 'SQL Azure'
+	Set @ChangeLogID = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
+ELSE
+	Set @ChangeLogID = 1
 SELECT @ChangeLogID
 
 DECLARE @FileAttributeSetID int
@@ -88,7 +91,6 @@ CREATE NONCLUSTERED INDEX [IX_EAV_Values1] ON [dbo].[ToSIC_EAV_Values]
 [EntityID] ASC,
 [ChangeLogDeleted] ASC
 )
-ON [PRIMARY]
 
 IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'ToSIC_EAV_Values') AND name = N'IX_EAV_Values2')
 CREATE NONCLUSTERED INDEX [IX_EAV_Values2] ON [dbo].[ToSIC_EAV_Values]
@@ -100,7 +102,6 @@ CREATE NONCLUSTERED INDEX [IX_EAV_Values2] ON [dbo].[ToSIC_EAV_Values]
 )
 INCLUDE ( 	[Value],
 	[ChangeLogCreated])
-ON [PRIMARY]
 
 
 -- Add Google Maps Picker Configuration

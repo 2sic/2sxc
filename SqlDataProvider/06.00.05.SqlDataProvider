@@ -6,7 +6,10 @@ BEGIN TRANSACTION SexyContentUpdate;
 EXEC ToSIC_EAV_ChangeLogAdd 'System'
 
 DECLARE @ChangeLogID int
-SET @ChangeLogID = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
+IF SERVERPROPERTY('edition') <> 'SQL Azure'
+	SET @ChangeLogID = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
+ELSE
+	SET @ChangeLogID = 1
 SELECT @ChangeLogID
 
 

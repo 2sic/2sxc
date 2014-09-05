@@ -61,7 +61,10 @@ WHERE	(Scope = N''System'' OR Scope = N''2SexyContent-System'') AND AlwaysShareC
 -- Create AttributeSets @String/@All etc for all Apps
 EXEC('
 DECLARE @ChangeLogID int
-SET @ChangeLogID = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
+IF SERVERPROPERTY(''edition'') <> ''SQL Azure''
+	SET @ChangeLogID = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
+ELSE
+	SET @ChangeLogID = 1
 
 INSERT INTO ToSIC_EAV_AttributeSets
                          (ChangeLogCreated, StaticName, Name, Scope, Description, AppID, UsesConfigurationOfAttributeSet)

@@ -5,7 +5,10 @@ BEGIN TRANSACTION SexyContentUpdate;
 
 EXEC ToSIC_EAV_ChangeLogAdd 'System'
 DECLARE @ChangeLogID int
-Set @ChangeLogID = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
+IF SERVERPROPERTY('edition') <> 'SQL Azure'
+	Set @ChangeLogID = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
+ELSE
+	SET @ChangeLogID = 1
 
 -- Extend Entities with ChangeLogModified
 EXEC('ALTER TABLE dbo.ToSIC_EAV_Entities ADD

@@ -46,8 +46,8 @@ EXEC('CREATE TABLE [dbo].[ToSIC_EAV_DataTimeline](
  CONSTRAINT [PK_ToSIC_EAV_DataTimeline] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
-) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]');
+)
+) TEXTIMAGE_ON [PRIMARY]');
 
 
 
@@ -137,13 +137,18 @@ BEGIN
 		,@sysLogID int
 		,@newData xml
 	
-	IF CONTEXT_INFO() IS NULL
-		BEGIN
-			RAISERROR (''CONTEXT_INFO must contain ChangeLogID'', 0, 1)
-			RETURN
-		END
+	IF SERVERPROPERTY(''edition'') <> ''SQL Azure''
+	BEGIN
+		IF CONTEXT_INFO() IS NULL
+			BEGIN
+				RAISERROR (''CONTEXT_INFO must contain ChangeLogID'', 0, 1)
+				RETURN
+			END
+		ELSE
+			SET @sysLogId = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
+	END
 	ELSE
-		SET @sysLogId = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
+		SET @sysLogId = 1
 
 	-- Automatically get the table name where this trigger is attached
 	Select @table = OBJECT_NAME(parent_id) FROM sys.triggers WHERE object_id=@@PROCID
@@ -206,13 +211,18 @@ BEGIN
 		,@sysLogID int
 		,@newData xml
 	
-	IF CONTEXT_INFO() IS NULL
-		BEGIN
-			RAISERROR (''CONTEXT_INFO must contain ChangeLogID'', 0, 1)
-			RETURN
-		END
+	IF SERVERPROPERTY(''edition'') <> ''SQL Azure''
+	BEGIN
+		IF CONTEXT_INFO() IS NULL
+			BEGIN
+				RAISERROR (''CONTEXT_INFO must contain ChangeLogID'', 0, 1)
+				RETURN
+			END
+		ELSE
+			SET @sysLogId = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
+	END
 	ELSE
-		SET @sysLogId = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
+		SET @sysLogId = 1
 
 	-- Automatically get the table name where this trigger is attached
 	Select @table = OBJECT_NAME(parent_id) FROM sys.triggers WHERE object_id=@@PROCID
@@ -276,13 +286,18 @@ BEGIN
 		,@sysLogID int
 		,@newData xml
 	
-	IF CONTEXT_INFO() IS NULL
-		BEGIN
-			RAISERROR (''CONTEXT_INFO must contain ChangeLogID'', 0, 1)
-			RETURN
-		END
+	IF SERVERPROPERTY(''edition'') <> ''SQL Azure''
+	BEGIN
+		IF CONTEXT_INFO() IS NULL
+			BEGIN
+				RAISERROR (''CONTEXT_INFO must contain ChangeLogID'', 0, 1)
+				RETURN
+			END
+		ELSE
+			SET @sysLogId = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
+	END
 	ELSE
-		SET @sysLogId = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
+		SET @sysLogId = 1
 
 	-- Automatically get the table name where this trigger is attached
 	Select @table = OBJECT_NAME(parent_id) FROM sys.triggers WHERE object_id=@@PROCID
@@ -347,13 +362,18 @@ BEGIN
 		,@sysLogID int
 		,@newData xml
 	
-	IF CONTEXT_INFO() IS NULL
-		BEGIN
-			RAISERROR (''CONTEXT_INFO must contain ChangeLogID'', 0, 1)
-			RETURN
-		END
+	IF SERVERPROPERTY(''edition'') <> ''SQL Azure''
+	BEGIN
+		IF CONTEXT_INFO() IS NULL
+			BEGIN
+				RAISERROR (''CONTEXT_INFO must contain ChangeLogID'', 0, 1)
+				RETURN
+			END
+		ELSE
+			SET @sysLogId = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
+	END
 	ELSE
-		SET @sysLogId = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
+		SET @sysLogId = 1
 
 	-- Automatically get the table name where this trigger is attached
 	Select @table = OBJECT_NAME(parent_id) FROM sys.triggers WHERE object_id=@@PROCID
@@ -417,13 +437,18 @@ BEGIN
 		,@sysLogID int
 		,@newData xml
 	
-	IF CONTEXT_INFO() IS NULL
-		BEGIN
-			RAISERROR (''CONTEXT_INFO must contain ChangeLogID'', 0, 1)
-			RETURN
-		END
+	IF SERVERPROPERTY(''edition'') <> ''SQL Azure''
+	BEGIN
+		IF CONTEXT_INFO() IS NULL
+			BEGIN
+				RAISERROR (''CONTEXT_INFO must contain ChangeLogID'', 0, 1)
+				RETURN
+			END
+		ELSE
+			SET @sysLogId = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
+	END
 	ELSE
-		SET @sysLogId = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
+		SET @sysLogId = 1
 
 	-- Automatically get the table name where this trigger is attached
 	Select @table = OBJECT_NAME(parent_id) FROM sys.triggers WHERE object_id=@@PROCID
@@ -487,13 +512,18 @@ BEGIN
 		,@sysLogID int
 		,@newData xml
 	
-	IF CONTEXT_INFO() IS NULL
-		BEGIN
-			RAISERROR (''CONTEXT_INFO must contain ChangeLogID'', 0, 1)
-			RETURN
-		END
+	IF SERVERPROPERTY(''edition'') <> ''SQL Azure''
+	BEGIN
+		IF CONTEXT_INFO() IS NULL
+			BEGIN
+				RAISERROR (''CONTEXT_INFO must contain ChangeLogID'', 0, 1)
+				RETURN
+			END
+		ELSE
+			SET @sysLogId = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
+	END
 	ELSE
-		SET @sysLogId = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
+		SET @sysLogId = 1
 
 	-- Automatically get the table name where this trigger is attached
 	Select @table = OBJECT_NAME(parent_id) FROM sys.triggers WHERE object_id=@@PROCID
@@ -556,14 +586,19 @@ BEGIN
 		,@sysCreated datetime
 		,@sysLogID int
 		,@newData xml
-	
-	IF CONTEXT_INFO() IS NULL
-		BEGIN
-			RAISERROR (''CONTEXT_INFO must contain ChangeLogID'', 0, 1)
-			RETURN
-		END
+
+	IF SERVERPROPERTY(''edition'') <> ''SQL Azure''
+	BEGIN
+		IF CONTEXT_INFO() IS NULL
+			BEGIN
+				RAISERROR (''CONTEXT_INFO must contain ChangeLogID'', 0, 1)
+				RETURN
+			END
+		ELSE
+			SET @sysLogId = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
+	END
 	ELSE
-		SET @sysLogId = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
+		SET @sysLogId = 1
 
 	-- Automatically get the table name where this trigger is attached
 	Select @table = OBJECT_NAME(parent_id) FROM sys.triggers WHERE object_id=@@PROCID
@@ -626,14 +661,19 @@ BEGIN
 		,@sysCreated datetime
 		,@sysLogID int
 		,@newData xml
-	
-	IF CONTEXT_INFO() IS NULL
-		BEGIN
-			RAISERROR (''CONTEXT_INFO must contain ChangeLogID'', 0, 1)
-			RETURN
-		END
+
+	IF SERVERPROPERTY(''edition'') <> ''SQL Azure''
+	BEGIN
+		IF CONTEXT_INFO() IS NULL
+			BEGIN
+				RAISERROR (''CONTEXT_INFO must contain ChangeLogID'', 0, 1)
+				RETURN
+			END
+		ELSE
+			SET @sysLogId = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
+	END
 	ELSE
-		SET @sysLogId = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
+		SET @sysLogId = 1
 
 	-- Automatically get the table name where this trigger is attached
 	Select @table = OBJECT_NAME(parent_id) FROM sys.triggers WHERE object_id=@@PROCID
@@ -697,13 +737,18 @@ BEGIN
 		,@sysLogID int
 		,@newData xml
 	
-	IF CONTEXT_INFO() IS NULL
-		BEGIN
-			RAISERROR (''CONTEXT_INFO must contain ChangeLogID'', 0, 1)
-			RETURN
-		END
+	IF SERVERPROPERTY(''edition'') <> ''SQL Azure''
+	BEGIN
+		IF CONTEXT_INFO() IS NULL
+			BEGIN
+				RAISERROR (''CONTEXT_INFO must contain ChangeLogID'', 0, 1)
+				RETURN
+			END
+		ELSE
+			SET @sysLogId = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
+	END
 	ELSE
-		SET @sysLogId = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
+		SET @sysLogId = 1
 
 	-- Automatically get the table name where this trigger is attached
 	Select @table = OBJECT_NAME(parent_id) FROM sys.triggers WHERE object_id=@@PROCID
@@ -766,14 +811,19 @@ BEGIN
 		,@sysCreated datetime
 		,@sysLogID int
 		,@newData xml
-	
-	IF CONTEXT_INFO() IS NULL
-		BEGIN
-			RAISERROR (''CONTEXT_INFO must contain ChangeLogID'', 0, 1)
-			RETURN
-		END
+
+	IF SERVERPROPERTY(''edition'') <> ''SQL Azure''
+	BEGIN
+		IF CONTEXT_INFO() IS NULL
+			BEGIN
+				RAISERROR (''CONTEXT_INFO must contain ChangeLogID'', 0, 1)
+				RETURN
+			END
+		ELSE
+			SET @sysLogId = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
+	END
 	ELSE
-		SET @sysLogId = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
+		SET @sysLogId = 1
 
 	-- Automatically get the table name where this trigger is attached
 	Select @table = OBJECT_NAME(parent_id) FROM sys.triggers WHERE object_id=@@PROCID
@@ -837,13 +887,18 @@ BEGIN
 		,@sysLogID int
 		,@newData xml
 	
-	IF CONTEXT_INFO() IS NULL
-		BEGIN
-			RAISERROR (''CONTEXT_INFO must contain ChangeLogID'', 0, 1)
-			RETURN
-		END
+	IF SERVERPROPERTY(''edition'') <> ''SQL Azure''
+	BEGIN
+		IF CONTEXT_INFO() IS NULL
+			BEGIN
+				RAISERROR (''CONTEXT_INFO must contain ChangeLogID'', 0, 1)
+				RETURN
+			END
+		ELSE
+			SET @sysLogId = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
+	END
 	ELSE
-		SET @sysLogId = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
+		SET @sysLogId = 1
 
 	-- Automatically get the table name where this trigger is attached
 	Select @table = OBJECT_NAME(parent_id) FROM sys.triggers WHERE object_id=@@PROCID
@@ -927,13 +982,16 @@ EXEC('CREATE PROCEDURE [dbo].[ToSIC_EAV_ChangeLogSet]
 	@ChangeID int
 AS
 BEGIN
-	IF CONTEXT_INFO() IS NOT NULL
+	IF SERVERPROPERTY(''edition'') <> ''SQL Azure''
 	BEGIN
-		RAISERROR (''CONTEXT_INFO must contain ChangeLogID'', 0, 1)
-		RETURN
-	END
+		EXEC(''IF CONTEXT_INFO() IS NOT NULL
+		BEGIN
+			RAISERROR (''''CONTEXT_INFO must contain ChangeLogID'''', 0, 1)
+			RETURN
+		END
 
-	SET CONTEXT_INFO @ChangeID
+		SET CONTEXT_INFO '' + @ChangeID)
+	END
 END');
 
 

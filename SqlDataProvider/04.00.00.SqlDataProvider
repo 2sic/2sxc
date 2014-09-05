@@ -43,8 +43,8 @@ CREATE TABLE [dbo].[ToSIC_EAV_Dimensions](
  CONSTRAINT [PK_ToSIC_EAV_Dimensions] PRIMARY KEY CLUSTERED 
 (
 	[DimensionID] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
+)
+)
 
 
 
@@ -56,8 +56,8 @@ CREATE TABLE [dbo].[ToSIC_EAV_ValuesDimensions](
 (
 	[ValueID] ASC,
 	[DimensionID] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
+)
+)
 
 
 
@@ -147,8 +147,8 @@ CREATE TABLE [dbo].[ToSIC_EAV_Apps](
  CONSTRAINT [PK_ToSIC_EAV_Apps] PRIMARY KEY CLUSTERED 
 (
 	[AppID] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
+)
+)
 
 
 -- Create Table [ToSIC_EAV_Zones]
@@ -158,8 +158,8 @@ CREATE TABLE [dbo].[ToSIC_EAV_Zones](
  CONSTRAINT [PK_ToSIC_EAV_Zones] PRIMARY KEY CLUSTERED 
 (
 	[ZoneID] ASC
-) ON [PRIMARY]
-) ON [PRIMARY]
+)
+)
 
 
 -- Add AppID to AttributeSets
