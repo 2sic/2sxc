@@ -130,7 +130,7 @@
     <value>Configure</value>
   </data>
   <data name="lblMissingConfiguration.Text" xml:space="preserve">
-    <value>Your Portal is not configured for using 2Sexy Content.</value>
+    <value>Your Portal is not configured for using 2sxc.</value>
   </data>
   <data name="NoDemoItem.Text" xml:space="preserve">
     <value>No demo item exists for the selected template.</value>
@@ -151,7 +151,7 @@
     <value>Do you want to delete item \"{0} ({1})\"?</value>
   </data>
   <data name="ZoneConfigurationMissing.Text" xml:space="preserve">
-    <value>2SexyContent says: Thank you for using me. Before you can use all my neat features, I need to know if this portal shares the content with other portals or has its own content. Please configure this in my configuration.&lt;br /&gt;</value>
+    <value>2sxc says: Thank you for using me. Before you can use all my neat features, I need to know if this portal shares the content with other portals or has its own content. Please configure this in my configuration.&lt;br /&gt;</value>
   </data>
   <data name="hlkConfigureZone.Text" xml:space="preserve">
     <value>Click here to configure this</value>

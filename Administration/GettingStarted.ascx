@@ -2,7 +2,7 @@
 <%@ Register TagName="AdministrationRegisters" TagPrefix="SexyContent" Src="Registers.ascx" %>
 <SexyContent:AdministrationRegisters runat="server"></SexyContent:AdministrationRegisters>
 
-<iframe class="sc-iframe-gettingstarted" runat="server" id="ifrGettingStarted" src="http://gettingstarted.2sexycontent.org" style="border:none; width:100%; height:500px"></iframe>
+<iframe class="sc-iframe-gettingstarted" runat="server" id="ifrGettingStarted" src="http://gettingstarted.2sxc.org" style="border:none; width:100%; height:500px"></iframe>
 
 <script type="text/javascript">
     $(document).ready(function () {

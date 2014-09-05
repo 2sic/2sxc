@@ -47,14 +47,14 @@ namespace ToSic.SexyContent.ImportExport
             // Return if no Root Node "SexyContent"
             if (!doc.Elements("SexyContent").Any())
             {
-                ImportLog.Add(new ExportImportMessage("The XML file you specified does not seem to be a 2SexyContent Export.", ExportImportMessage.MessageTypes.Error));
+                ImportLog.Add(new ExportImportMessage("The XML file you specified does not seem to be a 2sxc Export.", ExportImportMessage.MessageTypes.Error));
                 return false;
             }
 
             // Return if Version does not match
             if (!doc.Element("SexyContent").Attributes().Any(a => a.Name == "MinimumRequiredVersion") || new Version(doc.Element("SexyContent").Attribute("MinimumRequiredVersion").Value) > new Version(SexyContent.ModuleVersion))
             {
-                ImportLog.Add(new ExportImportMessage("This template or app requires 2SexyContent " + doc.Element("SexyContent").Attribute("MinimumRequiredVersion").Value + " in order to work, you have version " + SexyContent.ModuleVersion + " installed.", ExportImportMessage.MessageTypes.Error));
+                ImportLog.Add(new ExportImportMessage("This template or app requires 2sxc " + doc.Element("SexyContent").Attribute("MinimumRequiredVersion").Value + " in order to work, you have version " + SexyContent.ModuleVersion + " installed.", ExportImportMessage.MessageTypes.Error));
                 return false;
             }
 
@@ -119,7 +119,7 @@ namespace ToSic.SexyContent.ImportExport
 
             if (!IsCompatible(doc))
             {
-                ImportLog.Add(new ExportImportMessage("The import file is not compatible with the installed version of 2SexyContent.", ExportImportMessage.MessageTypes.Error));
+                ImportLog.Add(new ExportImportMessage("The import file is not compatible with the installed version of 2sxc.", ExportImportMessage.MessageTypes.Error));
                 return false;
             }
 
@@ -166,7 +166,7 @@ namespace ToSic.SexyContent.ImportExport
 
             if (!IsCompatible(doc))
             {
-                ImportLog.Add(new ExportImportMessage("The import file is not compatible with the installed version of 2SexyContent.", ExportImportMessage.MessageTypes.Error));
+                ImportLog.Add(new ExportImportMessage("The import file is not compatible with the installed version of 2sxc.", ExportImportMessage.MessageTypes.Error));
                 return false;
             }
 
@@ -226,7 +226,7 @@ namespace ToSic.SexyContent.ImportExport
         }
 
         /// <summary>
-        /// Maps EAV import messages to 2SexyContent import messages
+        /// Maps EAV import messages to 2sxc import messages
         /// </summary>
         /// <param name="importLog"></param>
         /// <returns></returns>

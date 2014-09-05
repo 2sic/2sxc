@@ -127,7 +127,7 @@
     <value>Upload</value>
   </data>
   <data name="GettingStartedPackage.Text" xml:space="preserve">
-    <value>It seems like you have not installed any templates yet. Please press the following button to import some templates to get started with 2SexyContent.</value>
+    <value>It seems like you have not installed any templates yet. Please press the following button to import some templates to get started with 2sxc.</value>
   </data>
   <data name="hlkClose.Text" xml:space="preserve">
     <value>Close</value>
@@ -142,7 +142,7 @@
     <value>Import</value>
   </data>
   <data name="lblImportInfo.Text" xml:space="preserve">
-    <value>Please select a file from your computer to import.&lt;br /&gt;To download new templates, please visit the &lt;a href="http://2sexycontent.org/Catalog.aspx" target="_blank"&gt;2SexyContent Catalog&lt;/a&gt;.</value>
+    <value>Please select a file from your computer to import.&lt;br /&gt;To download new templates, please visit the &lt;a href="http://2sxc.org/Catalog.aspx" target="_blank"&gt;2sxc Catalog&lt;/a&gt;.</value>
   </data>
   <data name="lblSelectImportFile.Help" xml:space="preserve">
     <value>The contents of the entire file you select here will be imported.</value>

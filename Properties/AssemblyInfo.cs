@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("ToSic.SexyContent")]
-[assembly: AssemblyDescription("2SexyContent - a module for DotNetNuke")]
+[assembly: AssemblyDescription("2sxc - a module for DotNetNuke")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("ToSic")]
 [assembly: AssemblyProduct("2SexyContent")]

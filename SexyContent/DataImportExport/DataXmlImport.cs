@@ -83,7 +83,7 @@ namespace ToSic.SexyContent.DataImportExport
         }
 
         /// <summary>
-        /// Deserialize a 2SexyContent data XML stream to the memory. By the way the data will be checked for 
+        /// Deserialize a 2sxc data XML stream to the memory. By the way the data will be checked for 
         /// errors.
         /// </summary>
         public void Deserialize(Stream dataStream)

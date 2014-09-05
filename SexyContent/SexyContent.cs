@@ -147,7 +147,7 @@ namespace ToSic.SexyContent
         }
 
         /// <summary>
-        /// Returns the AssignmentObjectTypeID for 2SexyContent Templates
+        /// Returns the AssignmentObjectTypeID for 2sxc Templates
         /// </summary>        
         public static int AssignmentObjectTypeIDSexyContentTemplate
         {
@@ -158,7 +158,7 @@ namespace ToSic.SexyContent
         }
 
         /// <summary>
-        /// Returns the AssignmentObjectTypeID for 2SexyContent Apps
+        /// Returns the AssignmentObjectTypeID for 2sxc Apps
         /// </summary>        
         public static int AssignmentObjectTypeIDSexyContentApp
         {
@@ -1346,7 +1346,7 @@ namespace ToSic.SexyContent
                                 DirectoryCopy(oldSexyFolder.FullName, newSexyContentFolder.FullName, true);
 
                                 // Leave info message in the content folder
-                                File.WriteAllText(Path.Combine(oldSexyFolder.FullName, "__WARNING - old copy of files - READ ME.txt"), "This is a short information\r\n\r\n2SexyContent renamed the main folder from \"[Portal]/2Sexy\" to \"[Portal]/2sxc\" in version 5.5.\r\n\r\nTo make sure that links to images/css/js still work, the old folder was copied and this was left. Please clean up and delete the entire \"[Portal]/2Sexy/\" folder once you're done. \r\n\r\nMany thanks!\r\n2SexyContent\r\n\r\nPS: Remember that you might have ClientDependency activated, so maybe you still have bundled & minified  JS/CSS-Files in your cache pointing to the old location. When done cleaning up, we recommend increasing the version just to be sure you're not seeing an old files that don't exist any more. ");
+                                File.WriteAllText(Path.Combine(oldSexyFolder.FullName, "__WARNING - old copy of files - READ ME.txt"), "This is a short information\r\n\r\n2sxc renamed the main folder from \"[Portal]/2Sexy\" to \"[Portal]/2sxc\" in version 5.5.\r\n\r\nTo make sure that links to images/css/js still work, the old folder was copied and this was left. Please clean up and delete the entire \"[Portal]/2Sexy/\" folder once you're done. \r\n\r\nMany thanks!\r\n2sxc\r\n\r\nPS: Remember that you might have ClientDependency activated, so maybe you still have bundled & minified  JS/CSS-Files in your cache pointing to the old location. When done cleaning up, we recommend increasing the version just to be sure you're not seeing an old files that don't exist any more. ");
 
                                 // Move web.config (should be directly in 2sxc)
                                 if (File.Exists(Path.Combine(newSexyContentFolder.FullName, "web.config")))
