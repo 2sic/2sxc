@@ -17,7 +17,8 @@ namespace ToSic.SexyContent.ImportExport
         /// <param name="messages"></param>
         public static void CopyAllFiles(string sourceFolder, string destinationFolder, Boolean overwriteFiles, List<ExportImportMessage> messages)
         {
-            var FileList = from f in Directory.GetFiles(sourceFolder, "*.*", SearchOption.AllDirectories)
+            var FileList = from f in Directory.EnumerateFiles(sourceFolder, "*.*", SearchOption.AllDirectories)
+                           where !f.Contains("\\.git\\")
                            select f;
 
             foreach (string file in FileList)
