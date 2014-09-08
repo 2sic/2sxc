@@ -26,7 +26,7 @@ namespace ToSic.SexyContent
                         this.ModuleContext.TabId,
                         this.ModuleContext.ModuleId
                     },
-                    ApplicationPath = Request.ApplicationPath
+                    ApplicationPath = Request.IsSecureConnection ? "https://" : "http://" + this.PortalAlias.HTTPAlias + "/"
                 }).ToJson());
             }
         }
