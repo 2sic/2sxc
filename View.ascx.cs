@@ -390,11 +390,10 @@ namespace ToSic.SexyContent
                         {
                             if (Elements.Any() && Elements.First().TemplateId.HasValue)
                             {
+                                var editLink = Sexy.GetElementEditLink(Elements.First().GroupID, Elements.First().SortOrder, ModuleId, TabId, "");
                                 Actions.Add(GetNextActionID(), LocalizeString("ActionEdit.Text"),
-                                    ModuleActionType.EditContent, "edititem", "edit.gif",
-                                    UrlUtils.PopUpUrl(
-                                        Sexy.GetElementEditLink(Elements.First().GroupID, Elements.First().SortOrder,
-                                            ModuleId, TabId, ""), this, PortalSettings, false, false), false,
+                                    ModuleActionType.EditContent, "edititem", "edit.gif", PortalSettings.EnablePopUps ?
+                                    UrlUtils.PopUpUrl(editLink, this, PortalSettings, false, false) : editLink, false,
                                     DotNetNuke.Security.SecurityAccessLevel.Edit, true, false);
                             }
                         }
