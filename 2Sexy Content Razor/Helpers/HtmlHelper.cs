@@ -9,19 +9,20 @@ namespace ToSic.SexyContent.Razor.Helpers
 {
     public class HtmlHelper
     {
-        public HtmlString Raw(string text)
+        /// <summary>
+        /// Returns a HmltString which Razor will output as Raw Html.
+        /// </summary>
+        public HtmlString Raw(object stringHtml)
         {
-            return new HtmlString(text);
+            if(stringHtml is string)
+                return new HtmlString((string)stringHtml);
+            if (stringHtml is HtmlString)
+                return (HtmlString)stringHtml;
+            if (stringHtml == null)
+                return new HtmlString(String.Empty);
+
+            throw new ArgumentException("Html.Raw does not support type '" + stringHtml.GetType().Name + "'.", "stringHtml");
         }
 
-        /// <summary>
-        /// Temporary overload needed for backward compatibility Html.Raw(Content.Toolbar)
-        /// </summary>
-        /// <param name="htmlString"></param>
-        /// <returns></returns>
-        public HtmlString Raw(HtmlString htmlString)
-        {
-            return htmlString;
-        }
     }
 }
