@@ -27,8 +27,9 @@ $2sxc.getManageController = function(id) {
             if (settings.cultureDimension && settings.cultureDimension != null)
                 params.cultureDimension = settings.cultureDimension;
 
-            if (settings.action == 'new')
+            if (settings.action == 'new') {
                 params.editMode = "New";
+            }
 
             if (!settings.useModuleList) {
                 if (settings.action != 'new')

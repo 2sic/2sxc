@@ -35,7 +35,9 @@ namespace ToSic.SexyContent
                 {
                     int sortOrder;
                     if (int.TryParse(Request.QueryString["SortOrder"], out sortOrder))
-                        return sortOrder;
+                    {
+                        return NewMode ? sortOrder + 1 : sortOrder;
+                    }
                 }
                 return new int?();
             }
