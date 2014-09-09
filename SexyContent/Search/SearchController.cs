@@ -146,7 +146,7 @@ namespace ToSic.SexyContent.Search
         private string GetJoinedAttributes(IEntity entity, string language)
         {
             return String.Join(", ",
-                entity.Attributes.Where(x => x.Value.Type == "String" || x.Value.Type == "Number").Select(x => x.Value[new[] {language}])
+                entity.Attributes.Where(x => x.Value.Type == "String" || x.Value.Type == "Number").Select(x => x.Value[language])
                     .Where(a => a != null)
                     .Select(a => StripHtmlAndHtmlDecode(a.ToString()))
                     .Where(x => !String.IsNullOrEmpty(x))) + " ";

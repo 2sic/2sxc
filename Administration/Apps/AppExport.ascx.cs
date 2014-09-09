@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 
 namespace ToSic.SexyContent.Administration.Apps
 {
@@ -17,14 +12,18 @@ namespace ToSic.SexyContent.Administration.Apps
 
         protected void btnExportApp_OnClick(object sender, EventArgs e)
         {
-            var stream = new ToSic.SexyContent.ImportExport.ZipExport(ZoneId.Value, AppId.Value).ExportApp();
-            Response.AddHeader("content-disposition", "attachment;filename=2sxcApp_" + Regex.Replace(Sexy.App.Name, "[^a-zA-Z0-9-_]", "") + "_" + Sexy.App.Configuration.Version + ".zip");
-            Response.ContentType = "application/zip";
+            using (var stream = new ToSic.SexyContent.ImportExport.ZipExport(ZoneId.Value, AppId.Value).ExportApp())
+            {
+                Response.Clear();
+                Response.ContentType = "application/zip";
+                Response.AddHeader("content-disposition", "attachment;filename=2sxcApp_" + Regex.Replace(Sexy.App.Name, "[^a-zA-Z0-9-_]", "") + "_" + Sexy.App.Configuration.Version + ".zip");
+                Response.Flush();
 
-            stream.WriteTo(Response.OutputStream);
-            stream.Close();
-            Response.Flush();
-            Response.Close();
+                stream.WriteTo(Response.OutputStream);
+
+                Response.Flush();
+                Response.End();
+            }
         }
     }
 }
