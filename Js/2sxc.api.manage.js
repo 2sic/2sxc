@@ -96,13 +96,27 @@ $2sxc.getManageController = function(id) {
                 'onclick': 'javascript:$2sxc(' + id + ').manage.action(' + JSON.stringify(settings) + ');'
             });
 
-            if (settings.isPublished == null || settings.isPublished == true) {
-                button.addClass("sc-published");
-                button.attr("title", "Is published");
-            } else {
-                button.addClass("sc-draft");
-                button.attr("title", "Has unpublished changes");
+            var title = "Edit";
+            switch(settings.action) {
+                case "add":
+                    title = "Add";
+                    break;
+                case "new":
+                    title = "New";
+                    break;
             }
+
+            if (settings.action == "edit") {
+                if (settings.isPublished == null || settings.isPublished == true) {
+                    button.addClass("sc-published");
+                    title = title + " (published)";
+                } else {
+                    button.addClass("sc-draft");
+                    title = title + " (unpublished)";
+                }
+            }
+
+            button.attr("title", title);
 
             return button[0].outerHTML;
         },
