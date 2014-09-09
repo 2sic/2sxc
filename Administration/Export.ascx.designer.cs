@@ -40,22 +40,49 @@ namespace ToSic.SexyContent {
         protected global::System.Web.UI.WebControls.Label lblExportHeading;
         
         /// <summary>
+        /// pnlExportView control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlExportView;
+        
+        /// <summary>
+        /// txtSelectedContentTypes control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtSelectedContentTypes;
+        
+        /// <summary>
+        /// txtSelectedTemplates control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtSelectedTemplates;
+        
+        /// <summary>
+        /// txtSelectedEntities control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtSelectedEntities;
+        
+        /// <summary>
         /// lblSelectContentTypes control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UserControl lblSelectContentTypes;
-        
-        /// <summary>
-        /// grdContentTypes control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::DotNetNuke.Web.UI.WebControls.DnnGrid grdContentTypes;
+        protected global::DotNetNuke.UI.UserControls.LabelControl lblSelectContentTypes;
         
         /// <summary>
         /// lblSelectData control.
@@ -64,16 +91,7 @@ namespace ToSic.SexyContent {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UserControl lblSelectData;
-        
-        /// <summary>
-        /// grdData control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::DotNetNuke.Web.UI.WebControls.DnnGrid grdData;
+        protected global::DotNetNuke.UI.UserControls.LabelControl lblSelectData;
         
         /// <summary>
         /// lblSelectTemplates control.
@@ -82,16 +100,7 @@ namespace ToSic.SexyContent {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UserControl lblSelectTemplates;
-        
-        /// <summary>
-        /// grdTemplates control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::DotNetNuke.Web.UI.WebControls.DnnGrid grdTemplates;
+        protected global::DotNetNuke.UI.UserControls.LabelControl lblSelectTemplates;
         
         /// <summary>
         /// btnExport control.
@@ -110,32 +119,5 @@ namespace ToSic.SexyContent {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HyperLink hlkCancel;
-        
-        /// <summary>
-        /// pnlExportReport control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlExportReport;
-        
-        /// <summary>
-        /// lblExportReportHeading control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblExportReportHeading;
-        
-        /// <summary>
-        /// lblContentTypeCount control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblContentTypeCount;
     }
 }

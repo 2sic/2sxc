@@ -1228,7 +1228,7 @@ namespace ToSic.SexyContent
             return y.ToJson();
         }
 
-        private Dictionary<string, object> GetDictionaryFromEntity(IEntity entity, string language)
+        internal Dictionary<string, object> GetDictionaryFromEntity(IEntity entity, string language)
         {
             var dynamicEntity = new DynamicEntity(entity, new[] { language }, this);
             bool propertyNotFound;
@@ -1238,7 +1238,7 @@ namespace ToSic.SexyContent
             if(entity is IHasEditingData)
                 dictionary.Add("_2sxcEditInformation", new { sortOrder = ((IHasEditingData)entity).SortOrder });
             else
-                dictionary.Add("_2sxcEditInformation", new { entityId = entity.EntityId });
+                dictionary.Add("_2sxcEditInformation", new { entityId = entity.EntityId, title = entity.Title[language] });
 
             return dictionary;
         }

@@ -168,9 +168,6 @@
   <data name="Title.Header" xml:space="preserve">
     <value>Title</value>
   </data>
-  <data name="lblExportReportHeading.Text" xml:space="preserve">
-    <value>Export Done</value>
-  </data>
   <data name="DemoEntity.Header" xml:space="preserve">
     <value>Demo Entity</value>
   </data>

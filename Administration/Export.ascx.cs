@@ -6,6 +6,8 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Dynamic;
 using System.Data;
+using DotNetNuke.Common.Utilities;
+using ToSic.Eav;
 using ToSic.SexyContent.ImportExport;
 
 namespace ToSic.SexyContent
@@ -17,67 +19,42 @@ namespace ToSic.SexyContent
         {
             hlkCancel.NavigateUrl = DotNetNuke.Common.Globals.NavigateURL(this.TabId, "", null);
 
-            if (!IsPostBack)
+            var contentTypes = Sexy.GetAvailableAttributeSets("2SexyContent");
+            var templates = Sexy.GetTemplates(PortalSettings.PortalId);
+            var entities = DataSource.GetInitialDataSource(ZoneId.Value, AppId.Value, false);
+            var language = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
+
+            var data = contentTypes.Select(c => new
             {
-                var ContentTypes = Sexy.ContentContext.GetAllAttributeSets().Where(a => !a.StaticName.StartsWith("@") && a.AttributesInSets.Count > 0 && a.ChangeLogIDDeleted == null && a.Scope == "2SexyContent" && a.App.ZoneID == SexyContent.GetZoneID(PortalId));
-                grdContentTypes.DataSource = ContentTypes;
-                grdContentTypes.DataBind();
+                Id = c.AttributeSetID,
+                Name = c.Name,
+                StaticName = c.StaticName,
+                Templates = templates.Where(t => t.AttributeSetID == c.AttributeSetID),
+                Entities = entities.List.Where(en => en.Value.Type.AttributeSetId == c.AttributeSetID).Select(en => Sexy.GetDictionaryFromEntity(en.Value, language))
+            });
 
-                List<object> Data = new List<object>();
-                foreach (var ContentType in ContentTypes)
-                {
-                    DataTable EntitiesList = Sexy.ContentContext.GetItemsTable(ContentType.AttributeSetID);
-                    if (EntitiesList != null)
-                    {
-                        var Entities = from DataRow i in EntitiesList.Rows
-                                       select new
-                                       {
-                                           ID = i["EntityID"],
-                                           Title = i["EntityTitle"],
-                                           ContentTypeID = ContentType.AttributeSetID,
-                                           ContentTypeName = ContentType.Name
-                                       };
-                        Data.AddRange(Entities);
-                    }
-                }
-                grdData.DataSource = Data;
-                grdData.DataBind();
+            pnlExportView.Attributes.Add("ng-init", "init(" + data.ToJson() + ");");
 
-                grdTemplates.DataSource = from c in Sexy.GetTemplates(this.PortalId)
-                                          select new {
-                                            c.Name,
-                                            c.TemplateID,
-                                            c.DemoEntityID
-                                          };
-                grdTemplates.DataBind();
-            }
         }
 
         protected void btnExport_Click(object sender, EventArgs e)
         {
             pnlChoose.Visible = false;
-            pnlExportReport.Visible = true;
 
-            string[] ContentTypeIDs = GetTelerikGridSelections(grdContentTypes);
-            string[] EntityIDs = GetTelerikGridSelections(grdData);
-            string[] TemplateIDs = GetTelerikGridSelections(grdTemplates);
+            string[] contentTypeIds = txtSelectedContentTypes.Text.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
+            string[] entityIds = txtSelectedEntities.Text.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] templateIds = txtSelectedTemplates.Text.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
-            List<ExportImportMessage> Messages = new List<ExportImportMessage>();
-            string Xml = new XmlExport(ZoneId.Value, AppId.Value, false).ExportXml(ContentTypeIDs, EntityIDs, TemplateIDs, out Messages);
+            var messages = new List<ExportImportMessage>();
+            var xml = new XmlExport(ZoneId.Value, AppId.Value, false).ExportXml(contentTypeIds, entityIds, templateIds, out messages);
+
             Response.Clear();
-            Response.Write(Xml);
+            Response.Write(xml);
             Response.AddHeader("Content-Disposition", string.Format("attachment; filename={0}", "SexyContent-Export.xml"));
-            Response.AddHeader("Content-Length", Xml.Length.ToString());
+            Response.AddHeader("Content-Length", xml.Length.ToString());
             Response.ContentType = "text/xml";
             Response.End();
         }
 
-        private string[] GetTelerikGridSelections(Telerik.Web.UI.RadGrid Grid)
-        {
-            string Key = Grid.MasterTableView.DataKeyNames[0];
-            string[] SelectedIDs = (from Telerik.Web.UI.GridItem c in Grid.SelectedItems
-                                      select Grid.MasterTableView.DataKeyValues[c.ItemIndex][Key].ToString()).ToArray();
-            return SelectedIDs;
-        }
     }
 }
