@@ -160,8 +160,17 @@ namespace ToSic.SexyContent.ImportExport
             }
             finally
             {
-                // Finally delete the temporary directory
-                Directory.Delete(temporaryDirectory, true);
+                try
+                {
+                    // Finally delete the temporary directory
+                    Directory.Delete(temporaryDirectory, true);
+                }
+                catch(IOException e)
+                {
+                    // The folder itself or files inside may be used by other processes.
+                    // Deleting the folder recursively will fail in such cases
+                    // If deleting is not possible, just leave the temporary folder as it is
+                }
             }
 
             return success;
