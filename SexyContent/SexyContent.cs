@@ -1238,7 +1238,7 @@ namespace ToSic.SexyContent
             if(entity is IHasEditingData)
                 dictionary.Add("_2sxcEditInformation", new { sortOrder = ((IHasEditingData)entity).SortOrder });
             else
-                dictionary.Add("_2sxcEditInformation", new { entityId = entity.EntityId, title = entity.Title[language] });
+                dictionary.Add("_2sxcEditInformation", new { entityId = entity.EntityId, title = entity.Title != null ? entity.Title[language] : "(no title)" });
 
             return dictionary;
         }

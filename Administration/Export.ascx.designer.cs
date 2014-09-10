@@ -76,33 +76,6 @@ namespace ToSic.SexyContent {
         protected global::System.Web.UI.WebControls.TextBox txtSelectedEntities;
         
         /// <summary>
-        /// lblSelectContentTypes control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::DotNetNuke.UI.UserControls.LabelControl lblSelectContentTypes;
-        
-        /// <summary>
-        /// lblSelectData control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::DotNetNuke.UI.UserControls.LabelControl lblSelectData;
-        
-        /// <summary>
-        /// lblSelectTemplates control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::DotNetNuke.UI.UserControls.LabelControl lblSelectTemplates;
-        
-        /// <summary>
         /// btnExport control.
         /// </summary>
         /// <remarks>

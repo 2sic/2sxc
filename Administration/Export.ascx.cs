@@ -29,7 +29,18 @@ namespace ToSic.SexyContent
                 Id = c.AttributeSetID,
                 Name = c.Name,
                 StaticName = c.StaticName,
-                Templates = templates.Where(t => t.AttributeSetID == c.AttributeSetID),
+                Templates = templates.Where(t => t.AttributeSetID == c.AttributeSetID).Select(p => new
+                {
+                    p.TemplateID,
+                    p.AttributeSetID,
+                    p.Name,
+                    TemplateDefaults = Sexy.GetTemplateDefaults(p.TemplateID).Select(td => new
+                    {
+                        td.ContentTypeID,
+                        td.DemoEntityID,
+                        ItemType = td.ItemType.ToString("F")
+                    })
+                }),
                 Entities = entities.List.Where(en => en.Value.Type.AttributeSetId == c.AttributeSetID).Select(en => Sexy.GetDictionaryFromEntity(en.Value, language))
             });
 

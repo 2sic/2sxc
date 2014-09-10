@@ -26,5 +26,12 @@
                 });
                 return $.map(selectedEntities, function (e, i) { return e.EntityId; }).join(",");
             };
+
+            // Returns only templateDefaults with a DemoEntityId
+            $scope.templateDefaultFilter = function (templateDefaults) {
+                return $filter('filter')(templateDefaults, function(templateDefault) {
+                    return templateDefault.DemoEntityID != 0 && templateDefault.DemoEntityID != null;
+                });
+            };
     });
 })();

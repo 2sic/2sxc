@@ -21,7 +21,7 @@
                 <li ng-repeat="contentType in data">
                     <a ng-click="contentType._2sxcExport = !contentType._2sxcExport;" ng-class="{active: contentType._2sxcExport}">
                         <input type="checkbox" ng-model="contentType._2sxcExport" ng-click="$event.stopPropagation()" />
-                        {{contentType.Name}} ({{contentType.Id}})
+                        ContentType: {{contentType.Name}} ({{contentType.Id}})
                     </a>
                     
                     <div class="sc-export-list-inner" ng-if="contentType.Templates.length">
@@ -30,7 +30,14 @@
                             <li ng-repeat="template in contentType.Templates">
                                 <a ng-click="template._2sxcExport = !template._2sxcExport;" ng-class="{active: template._2sxcExport}">
                                      <input type="checkbox" ng-model="template._2sxcExport" ng-click="$event.stopPropagation()" />
-                                    {{template.Name}} ({{template.TemplateID}}, Demo-Entity: {{template.DemoEntityID == null ? "none" : template.DemoEntityID}})
+                                    {{template.Name}} ({{template.TemplateID}})
+
+                                    <i ng-init="currentTemplateDefaults = templateDefaultFilter(template.TemplateDefaults);">
+                                        <span ng-if="currentTemplateDefaults.length > 0" style="margin-left:15px;">Demo-Entities: </span>
+                                        <span ng-repeat="templateDefault in currentTemplateDefaults">
+                                            {{templateDefault.ItemType}} {{templateDefault.DemoEntityID}}, 
+                                        </span>
+                                    </i>
                                 </a>
                             </li>
                         </ul>
@@ -50,16 +57,6 @@
             </ul>
         </div>
         
-
-        <div class="dnnFormItem">
-            <dnn:Label ID="lblSelectContentTypes" runat="server" ControlName="grdTemplates" Suffix=":"></dnn:Label>
-        </div>
-        <div class="dnnFormItem">
-            <dnn:Label ID="lblSelectData" runat="server" ControlName="grdData" Suffix=":"></dnn:Label>
-        </div>
-        <div class="dnnFormItem">
-            <dnn:Label ID="lblSelectTemplates" runat="server" ControlName="grdTemplates" Suffix=":"></dnn:Label>
-        </div>
         <ul class="dnnActions dnnClear">
             <li><asp:LinkButton ID="btnExport" runat="server" CssClass="dnnPrimaryAction" ResourceKey="hlkExport" OnClick="btnExport_Click"></asp:LinkButton></li>
             <li><asp:HyperLink ID="hlkCancel" runat="server" CssClass="dnnSecondaryAction" ResourceKey="hlkCancel"></asp:HyperLink></li>
