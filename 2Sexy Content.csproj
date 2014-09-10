@@ -431,6 +431,7 @@
     <Content Include="Administration\Apps\AppImport.ascx" />
     <Content Include="Administration\DataExport.ascx" />
     <Content Include="Administration\DataImport.ascx" />
+    <Content Include="Administration\Export.js" />
     <Content Include="Administration\GettingStarted.ascx" />
     <Content Include="Administration\PortalConfiguration.ascx" />
     <Content Include="Administration\ContentTypeAndDemoSelector.ascx" />

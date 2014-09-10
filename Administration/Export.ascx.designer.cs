@@ -40,58 +40,40 @@ namespace ToSic.SexyContent {
         protected global::System.Web.UI.WebControls.Label lblExportHeading;
         
         /// <summary>
-        /// lblSelectContentTypes control.
+        /// pnlExportView control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UserControl lblSelectContentTypes;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlExportView;
         
         /// <summary>
-        /// grdContentTypes control.
+        /// txtSelectedContentTypes control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::DotNetNuke.Web.UI.WebControls.DnnGrid grdContentTypes;
+        protected global::System.Web.UI.WebControls.TextBox txtSelectedContentTypes;
         
         /// <summary>
-        /// lblSelectData control.
+        /// txtSelectedTemplates control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UserControl lblSelectData;
+        protected global::System.Web.UI.WebControls.TextBox txtSelectedTemplates;
         
         /// <summary>
-        /// grdData control.
+        /// txtSelectedEntities control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::DotNetNuke.Web.UI.WebControls.DnnGrid grdData;
-        
-        /// <summary>
-        /// lblSelectTemplates control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.UserControl lblSelectTemplates;
-        
-        /// <summary>
-        /// grdTemplates control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::DotNetNuke.Web.UI.WebControls.DnnGrid grdTemplates;
+        protected global::System.Web.UI.WebControls.TextBox txtSelectedEntities;
         
         /// <summary>
         /// btnExport control.
@@ -110,32 +92,5 @@ namespace ToSic.SexyContent {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HyperLink hlkCancel;
-        
-        /// <summary>
-        /// pnlExportReport control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlExportReport;
-        
-        /// <summary>
-        /// lblExportReportHeading control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblExportReportHeading;
-        
-        /// <summary>
-        /// lblContentTypeCount control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblContentTypeCount;
     }
 }
