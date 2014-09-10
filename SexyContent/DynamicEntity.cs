@@ -17,15 +17,14 @@ namespace ToSic.SexyContent
     {
         public ContentConfiguration Configuration = new ContentConfiguration();
         public IEntity Entity { get; set; }
-        public string ToolbarString { get; set; }
         public HtmlString Toolbar {
             get
             {
-                if (SexyContext == null || !SexyContext.IsEditMode())
+                if (SexyContext == null || !SexyContext.IsEditMode() || PortalSettings.Current == null)
                     return new HtmlString("");
 
-                if (ToolbarString != "")
-                    return new HtmlString(ToolbarString);
+                if (Entity is IHasEditingData)
+                    return new HtmlString("<ul class='sc-menu' data-toolbar='" + new { sortOrder = ((IHasEditingData) Entity).SortOrder, useModuleList = true, isPublished = Entity.IsPublished }.ToJson() + "'></ul>");
 
                 return new HtmlString("<ul class='sc-menu' data-toolbar='" + new { entityId = Entity.EntityId, isPublished = Entity.IsPublished }.ToJson() + "'></ul>");
             }
@@ -40,7 +39,6 @@ namespace ToSic.SexyContent
         {
             this.Entity = entityModel;
             this._dimensions = dimensions;
-            this.ToolbarString = "";
             SexyContext = sexy;
         }
 

@@ -106,7 +106,6 @@ namespace ToSic.SexyContent.DataSources
         {
             var templateDefault = TemplateDefaults.FirstOrDefault(t => t.ItemType == itemType);
             var items = ContentGroupItems.Where(p => p.ItemType == itemType).ToList(); // Create copy of list (not in cache)
-            var includeEditingData = IncludeEditingData;
 
             // If no Content Elements exist and type is List, add a ContentGroupItem to List (not to DB)
             if (itemType == ContentGroupItemType.ListContent && items.All(p => p.ItemType != ContentGroupItemType.ListContent))
@@ -146,7 +145,7 @@ namespace ToSic.SexyContent.DataSources
                 while (entitiesToDeliver.ContainsKey(key))
                     key += 1000000000;
 
-                if(includeEditingData)
+                if(IncludeEditingData)
                     entitiesToDeliver.Add(key, new EAVExtensions.EntityInContentGroup(originals[entityId.Value]) { SortOrder = i.SortOrder, ContentGroupItemModified = i.SysModified });
                 else
                     entitiesToDeliver.Add(key, originals[entityId.Value]);
@@ -180,8 +179,7 @@ namespace ToSic.SexyContent.DataSources
 
         private IEnumerable<Element> GetElements(ContentGroupItemType contentItemType, ContentGroupItemType presentationItemType)
         {
-            // ToDo: Refactor to use streams above!
-
+            
             var elements = new List<Element>();
             if (!ContentGroupItems.Any(c => c.TemplateID.HasValue)) return elements;
 
@@ -190,7 +188,11 @@ namespace ToSic.SexyContent.DataSources
             var templateId = items.First().TemplateID.Value;
             var defaults = Sexy.GetTemplateDefaults(templateId);
             var dimensionIds = new[] { System.Threading.Thread.CurrentThread.CurrentCulture.Name };
-            var entities = In["Default"].List;
+
+            var contentEntities = GetStream(contentItemType);
+            var presentationEntities = GetStream(presentationItemType);
+            
+            //var entities = In["Default"].List;
 
             // If no Content Elements exist and type is List, add a ContentGroupItem to List (not to DB)
             if (contentItemType == ContentGroupItemType.ListContent && items.All(p => p.ItemType != ContentGroupItemType.ListContent))
@@ -212,32 +214,27 @@ namespace ToSic.SexyContent.DataSources
             elements = (from c in items
                            where c.ItemType == contentItemType
                                // don't show items whose Content entity is not in source
-                                 && (!c.EntityID.HasValue || entities.ContainsKey(c.EntityID.Value))
+                                 && (!c.EntityID.HasValue || contentEntities.ContainsKey(c.EntityID.Value))
                            select new Element
                            {
                                ID = c.ContentGroupItemID,
                                EntityId = c.EntityID,
                                TemplateId = c.TemplateID,
-                               Content = c.EntityID.HasValue ? new DynamicEntity(entities[c.EntityID.Value], dimensionIds, Sexy) :
-                                   defaults.Where(d => d.ItemType == contentItemType && d.DemoEntityID.HasValue && entities.ContainsKey(d.DemoEntityID.Value))
-                                       .Select(d => new DynamicEntity(entities[d.DemoEntityID.Value], dimensionIds, Sexy)).FirstOrDefault(),
+                               Content = c.EntityID.HasValue ? new DynamicEntity(contentEntities[c.EntityID.Value], dimensionIds, Sexy) :
+                                   defaults.Where(d => d.ItemType == contentItemType && d.DemoEntityID.HasValue && contentEntities.ContainsKey(d.DemoEntityID.Value))
+                                       .Select(d => new DynamicEntity(contentEntities[d.DemoEntityID.Value], dimensionIds, Sexy)).FirstOrDefault(),
                                // Get Presentation object - Take Default if it does not exist
                                Presentation = (from p in items
-                                               where p.SortOrder == c.SortOrder && p.ItemType == presentationItemType && p.EntityID.HasValue && entities.ContainsKey(p.EntityID.Value)
-                                               select new DynamicEntity(entities[p.EntityID.Value], dimensionIds, Sexy)).FirstOrDefault() ??
+                                               where p.SortOrder == c.SortOrder && p.ItemType == presentationItemType && p.EntityID.HasValue && presentationEntities.ContainsKey(p.EntityID.Value)
+                                               select new DynamicEntity(presentationEntities[p.EntityID.Value], dimensionIds, Sexy)).FirstOrDefault() ??
                                               (from d in defaults
-                                               where d.ItemType == presentationItemType && d.DemoEntityID.HasValue && entities.ContainsKey(d.DemoEntityID.Value)
-                                               select new DynamicEntity(entities[d.DemoEntityID.Value], dimensionIds, Sexy)).FirstOrDefault()
+                                               where d.ItemType == presentationItemType && d.DemoEntityID.HasValue && presentationEntities.ContainsKey(d.DemoEntityID.Value)
+                                               select new DynamicEntity(presentationEntities[d.DemoEntityID.Value], dimensionIds, Sexy)).FirstOrDefault()
                                ,
-                               GroupId = c.ContentGroupID,
+                               GroupId = ListId.Value,
                                SortOrder = c.SortOrder
                            }).ToList();
 
-            // Add Toolbar if neccessary, else add empty string to dictionary
-            // ToDo: This should be done inside of the DynamicEntity object (Toolbar property), but DynamicEntities above have to be wrapped inside of IHasEditingData
-            //if (PortalSettings.Current != null && Sexy != null && Sexy.IsEditMode())
-            //    elements.Where(p => p.Content != null).ToList().ForEach(p => ((DynamicEntity)p.Content).ToolbarString = "<ul class='sc-menu' data-toolbar='" + new { sortOrder = p.SortOrder, useModuleList = true, isPublished = (((DynamicEntity)p.Content)).Entity.IsPublished }.ToJson() + "'></ul>");
-            
             return elements;
         }
 
