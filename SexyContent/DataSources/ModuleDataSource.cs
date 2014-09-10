@@ -190,9 +190,7 @@ namespace ToSic.SexyContent.DataSources
             var dimensionIds = new[] { System.Threading.Thread.CurrentThread.CurrentCulture.Name };
 
             var contentEntities = GetStream(contentItemType);
-            var presentationEntities = GetStream(presentationItemType);
-            
-            //var entities = In["Default"].List;
+            var allEntities = In["Default"].List;
 
             // If no Content Elements exist and type is List, add a ContentGroupItem to List (not to DB)
             if (contentItemType == ContentGroupItemType.ListContent && items.All(p => p.ItemType != ContentGroupItemType.ListContent))
@@ -225,11 +223,11 @@ namespace ToSic.SexyContent.DataSources
                                        .Select(d => new DynamicEntity(contentEntities[d.DemoEntityID.Value], dimensionIds, Sexy)).FirstOrDefault(),
                                // Get Presentation object - Take Default if it does not exist
                                Presentation = (from p in items
-                                               where p.SortOrder == c.SortOrder && p.ItemType == presentationItemType && p.EntityID.HasValue && presentationEntities.ContainsKey(p.EntityID.Value)
-                                               select new DynamicEntity(presentationEntities[p.EntityID.Value], dimensionIds, Sexy)).FirstOrDefault() ??
+                                               where p.SortOrder == c.SortOrder && p.ItemType == presentationItemType && p.EntityID.HasValue && allEntities.ContainsKey(p.EntityID.Value)
+                                               select new DynamicEntity(allEntities[p.EntityID.Value], dimensionIds, Sexy)).FirstOrDefault() ??
                                               (from d in defaults
-                                               where d.ItemType == presentationItemType && d.DemoEntityID.HasValue && presentationEntities.ContainsKey(d.DemoEntityID.Value)
-                                               select new DynamicEntity(presentationEntities[d.DemoEntityID.Value], dimensionIds, Sexy)).FirstOrDefault()
+                                               where d.ItemType == presentationItemType && d.DemoEntityID.HasValue && allEntities.ContainsKey(d.DemoEntityID.Value)
+                                               select new DynamicEntity(allEntities[d.DemoEntityID.Value], dimensionIds, Sexy)).FirstOrDefault()
                                ,
                                GroupId = ListId.Value,
                                SortOrder = c.SortOrder
