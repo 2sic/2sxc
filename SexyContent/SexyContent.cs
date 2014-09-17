@@ -1063,7 +1063,14 @@ namespace ToSic.SexyContent
 
         public override IList<SearchDocument> GetModifiedSearchDocuments(ModuleInfo moduleInfo, DateTime beginDate)
         {
-            return new SearchController().GetModifiedSearchDocuments(moduleInfo, beginDate);
+            try
+            {
+                return new SearchController().GetModifiedSearchDocuments(moduleInfo, beginDate);
+            }
+            catch (Exception e)
+            {
+                throw new SearchIndexException(moduleInfo, e);
+            }
         }
 
         #endregion

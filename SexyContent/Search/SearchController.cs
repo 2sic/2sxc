@@ -69,7 +69,7 @@ namespace ToSic.SexyContent.Search
             }
             catch (Exception e) // Catch errors here, because of references to Request etc.
             {
-                Exceptions.LogException(e);
+                Exceptions.LogException(new SearchIndexException(moduleInfo, e));
             }
 
             
@@ -117,7 +117,7 @@ namespace ToSic.SexyContent.Search
             }
             catch (Exception e)
             {
-                Exceptions.LogException(e);
+                Exceptions.LogException(new SearchIndexException(moduleInfo, e));
             }
 
             foreach (var searchInfoList in searchInfoDictionary)
