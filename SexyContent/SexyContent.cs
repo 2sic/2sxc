@@ -555,6 +555,9 @@ namespace ToSic.SexyContent
         /// <returns></returns>
         public static bool HasEditPermission(ModuleInfo module)
         {
+            // Make sure that HasEditPermission still works while search indexing
+            if (PortalSettings.Current == null)
+                return false;
             return ModulePermissionController.HasModuleAccess(SecurityAccessLevel.Edit, "CONTENT", module);
         }
 
