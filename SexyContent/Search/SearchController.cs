@@ -91,7 +91,7 @@ namespace ToSic.SexyContent.Search
                         Description = "",
                         Body = GetJoinedAttributes(entity, language),
                         Title = entity.Title[language].ToString(),
-                        ModifiedTimeUtc = entity.Modified.ToUniversalTime(),
+                        ModifiedTimeUtc = (entity.Modified == DateTime.MinValue ? DateTime.Now.Date.AddHours(DateTime.Now.Hour) : entity.Modified).ToUniversalTime(),
                         UniqueKey = "2sxc-" + moduleInfo.ModuleID + "-" + (entity.EntityGuid != new Guid() ? entity.EntityGuid.ToString() : (stream.Key + "-" + entity.EntityId)),
                         IsActive = true,
                         TabId = moduleInfo.TabID,
