@@ -3,15 +3,20 @@ using System.Linq;
 using System.Xml.Linq;
 using ToSic.Eav;
 using ToSic.SexyContent.DataImportExport.Extensions;
+using ToSic.SexyContent.DataImportExport.Options;
 
 namespace ToSic.SexyContent.DataImportExport
 {
-    public class DataXmlExport
+    public class XmlExport
     {
         /// <summary>
         /// Create a blank xml scheme for 2SexyContent data.
         /// </summary>
-        public string SerializeBlank(int zoneId, int applicationId, int contentTypeId)
+        /// <param name="zoneId">ID of 2SexyContent zone</param>
+        /// <param name="applicationId">ID of 2SexyContent application</param>
+        /// <param name="contentTypeId">ID of 2SexyContent type</param>
+        /// <returns>A string containing the blank xml scheme</returns>
+        public string CreateBlankXml(int zoneId, int applicationId, int contentTypeId)
         {
             var contentType = GetContentType(zoneId, applicationId, contentTypeId);
             if (contentType == null) 
@@ -39,9 +44,10 @@ namespace ToSic.SexyContent.DataImportExport
         /// <param name="languageSelected">Language of the data to be serialized (null for all languages)</param>
         /// <param name="languageFallback">Language fallback of the system</param>
         /// <param name="languageScope">Languages supported of the system</param>
-        /// <param name="languageReferenceOption">How value references to other languages are handled</param>
-        /// <param name="resourceReferenceOption">How value references to files and pages are handled</param>
-        public string Serialize(int zoneId, int applicationId, int contentTypeId, string languageSelected, string languageFallback, IEnumerable<string> languageScope, LanguageReferenceExportOption languageReferenceOption, ResourceReferenceExportOption resourceReferenceOption)
+        /// <param name="languageReference">How value references to other languages are handled</param>
+        /// <param name="resourceReference">How value references to files and pages are handled</param>
+        /// <returns>A string containing the xml data</returns>
+        public string CreateXml(int zoneId, int applicationId, int contentTypeId, string languageSelected, string languageFallback, IEnumerable<string> languageScope, LanguageReferenceExport languageReference, ResourceReferenceExport resourceReference)
         {
             var contentType = GetContentType(zoneId, applicationId, contentTypeId);
             if (contentType == null)
@@ -75,13 +81,13 @@ namespace ToSic.SexyContent.DataImportExport
                     var attributes = contentType.GetAttributes();
                     foreach (var attribute in attributes)
                     {
-                        if (languageReferenceOption.IsResolve())
+                        if (languageReference.IsResolve())
                         {
-                            documentElement.AppendValueResolved(entity, attribute, language, languageFallback, resourceReferenceOption);
+                            documentElement.AppendValueResolved(entity, attribute, language, languageFallback, resourceReference);
                         }
                         else
                         {
-                            documentElement.AppendValueReferenced(entity, attribute, language, languageFallback, languageScope, languages.Count() > 1, resourceReferenceOption);
+                            documentElement.AppendValueReferenced(entity, attribute, language, languageFallback, languageScope, languages.Count() > 1, resourceReference);
                         }
                     }
                 }
@@ -104,16 +110,16 @@ namespace ToSic.SexyContent.DataImportExport
 
         private static XElement GetDocumentRoot(string contentTypeName, params object[] content)
         {
-            return new XElement(XElementName.Root + contentTypeName.RemoveSpecialCharacters(), content);
+            return new XElement(DocumentNodeNames.Root + contentTypeName.RemoveSpecialCharacters(), content);
         }
 
         private static XElement GetDocumentEntityElement(object elementGuid, object elementLanguage)
         {
             return new XElement
                 (
-                    XElementName.Entity, 
-                    new XElement(XElementName.EntityGuid, elementGuid), 
-                    new XElement(XElementName.EntityLanguage, elementLanguage)
+                    DocumentNodeNames.Entity, 
+                    new XElement(DocumentNodeNames.EntityGuid, elementGuid), 
+                    new XElement(DocumentNodeNames.EntityLanguage, elementLanguage)
                 );
         }
     }

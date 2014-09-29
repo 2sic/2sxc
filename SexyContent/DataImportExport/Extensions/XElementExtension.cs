@@ -2,10 +2,11 @@
 using System.Linq;
 using System.Xml.Linq;
 using ToSic.Eav;
+using ToSic.SexyContent.DataImportExport.Options;
 
 namespace ToSic.SexyContent.DataImportExport.Extensions
 {
-    public static class XElementExtension
+    internal static class XElementExtension
     {
         public static bool HasChildren(this XElement element)
         {
@@ -24,7 +25,7 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
         /// Append an element to this. The element will have the value of the EavValue. File and page references 
         /// can optionally be resolved.
         /// </summary>
-        public static void AppendValue(this XElement element, XName name, EavValue value, ResourceReferenceExportOption resourceReferenceOption)
+        public static void AppendValue(this XElement element, XName name, EavValue value, ResourceReferenceExport resourceReferenceOption)
         {
             if (value == null)
             {
@@ -44,7 +45,7 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
         /// Append an element to this. If the attribute is named xxx and the value is 4711 in the language specified, 
         /// the element appended will be <xxx>4711</xxx>. File and page references can be resolved optionally.
         /// </summary>
-        public static void AppendValueResolved(this XElement element, Entity entity, Attribute attribute, string language, string languageFallback, ResourceReferenceExportOption resourceReferenceOption)
+        public static void AppendValueResolved(this XElement element, Entity entity, Attribute attribute, string language, string languageFallback, ResourceReferenceExport resourceReferenceOption)
         {
             var valueName = attribute.StaticName;
             var value = entity.GetAttributeValue(attribute, language, languageFallback);
@@ -55,7 +56,7 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
         /// Append an element to this. The element will get the name of the attribute, and if possible the value will 
         /// be referenced to another language (for example =ref(en-US,ro).
         /// </summary>
-        public static void AppendValueReferenced(this XElement element, Entity entity, Attribute attribute, string language, string languageFallback, IEnumerable<string> languageScope, bool referenceParentLanguagesOnly, ResourceReferenceExportOption resourceReferenceOption)
+        public static void AppendValueReferenced(this XElement element, Entity entity, Attribute attribute, string language, string languageFallback, IEnumerable<string> languageScope, bool referenceParentLanguagesOnly, ResourceReferenceExport resourceReferenceOption)
         {
             var valueName = attribute.StaticName;
             var value = entity.GetAttributeValue(attribute, language);

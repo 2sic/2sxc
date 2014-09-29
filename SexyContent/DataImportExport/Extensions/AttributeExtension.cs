@@ -7,7 +7,7 @@ using ToSic.Eav;
 
 namespace ToSic.SexyContent.DataImportExport.Extensions
 {
-    public static class AttributeExtension
+    internal static class AttributeExtension
     {
         /// <summary>
         /// Get the type of an attribute as Type.

@@ -239,28 +239,36 @@
     <Compile Include="SexyContent\App.cs" />
     <Compile Include="SexyContent\ContentGroupItem.cs" />
     <Compile Include="SexyContent\DataImportExport\Extensions\AttributeExtension.cs" />
-    <Compile Include="SexyContent\DataImportExport\DataImportErrorProtocol.cs" />
-    <Compile Include="SexyContent\DataImportExport\DataXmlExport.cs" />
-    <Compile Include="SexyContent\DataImportExport\DataXmlImport.cs" />
+    <Compile Include="SexyContent\DataImportExport\Options\EntityClearImportExtension.cs" />
+    <Compile Include="SexyContent\DataImportExport\Options\LanguageMissingExportExtension.cs" />
+    <Compile Include="SexyContent\DataImportExport\Options\LanguageReferenceExportExtension.cs" />
+    <Compile Include="SexyContent\DataImportExport\Options\LanguageReferenceImportExtension.cs" />
+    <Compile Include="SexyContent\DataImportExport\ImportErrorCode.cs" />
+    <Compile Include="SexyContent\DataImportExport\ImportErrorProtocol.cs" />
+    <Compile Include="SexyContent\DataImportExport\Options\RecordExportExtension.cs" />
+    <Compile Include="SexyContent\DataImportExport\Options\ResourceReferenceExportExtension.cs" />
+    <Compile Include="SexyContent\DataImportExport\Options\ResourceReferenceImportExtension.cs" />
+    <Compile Include="SexyContent\DataImportExport\XmlExport.cs" />
+    <Compile Include="SexyContent\DataImportExport\XmlImport.cs" />
     <Compile Include="SexyContent\DataImportExport\EntityGuidManager.cs" />
     <Compile Include="SexyContent\DataImportExport\Extensions\EntityImportExtension.cs" />
     <Compile Include="SexyContent\DataImportExport\Extensions\EnumExtension.cs" />
     <Compile Include="SexyContent\DataImportExport\Extensions\FileInfoExtension.cs" />
     <Compile Include="SexyContent\DataImportExport\Extensions\IValueImportModelExtension.cs" />
-    <Compile Include="SexyContent\DataImportExport\DataImportError.cs" />
+    <Compile Include="SexyContent\DataImportExport\ImportError.cs" />
     <Compile Include="SexyContent\DataImportExport\Extensions\EavValueExtension.cs" />
-    <Compile Include="SexyContent\DataImportExport\LanguageReferenceImportOption.cs" />
-    <Compile Include="SexyContent\DataImportExport\EntityClearImportOption.cs" />
+    <Compile Include="SexyContent\DataImportExport\Options\LanguageReferenceImport.cs" />
+    <Compile Include="SexyContent\DataImportExport\Options\EntityClearImport.cs" />
     <Compile Include="SexyContent\DataImportExport\Extensions\EntityExtension.cs" />
     <Compile Include="SexyContent\DataImportExport\Extensions\IEnumerableExtension.cs" />
     <Compile Include="SexyContent\DataImportExport\LocalizedDescriptionAttribute.cs" />
-    <Compile Include="SexyContent\DataImportExport\RecordCreateExportOption.cs" />
-    <Compile Include="SexyContent\DataImportExport\ResourceReferenceImportOption.cs" />
+    <Compile Include="SexyContent\DataImportExport\Options\RecordExport.cs" />
+    <Compile Include="SexyContent\DataImportExport\Options\ResourceReferenceImport.cs" />
     <Compile Include="SexyContent\DataImportExport\Extensions\StringExtension.cs" />
-    <Compile Include="SexyContent\DataImportExport\XElementName.cs" />
-    <Compile Include="SexyContent\DataImportExport\LanguageMissingExportOption.cs" />
-    <Compile Include="SexyContent\DataImportExport\LanguageReferenceExportOption.cs" />
-    <Compile Include="SexyContent\DataImportExport\ResourceReferenceExportOption.cs" />
+    <Compile Include="SexyContent\DataImportExport\DocumentNodeNames.cs" />
+    <Compile Include="SexyContent\DataImportExport\Options\LanguageMissingExport.cs" />
+    <Compile Include="SexyContent\DataImportExport\Options\LanguageReferenceExport.cs" />
+    <Compile Include="SexyContent\DataImportExport\Options\ResourceReferenceExport.cs" />
     <Compile Include="SexyContent\DataImportExport\Extensions\XElementExtension.cs" />
     <Compile Include="SexyContent\DataPublishing.cs" />
     <Compile Include="SexyContent\DataSources\EntitiesFromList.cs" />
@@ -672,8 +680,8 @@
   <ItemGroup>
     <Content Include="App_LocalResources\EditEntity.ascx.de-DE.resx" />
     <Content Include="App_LocalResources\EditEntity.ascx.resx" />
-    <EmbeddedResource Include="SexyContent\DataImportExport\DataImportErrorCode.de-DE.resx" />
-    <EmbeddedResource Include="SexyContent\DataImportExport\DataImportErrorCode.resx" />
+    <EmbeddedResource Include="SexyContent\DataImportExport\ImportErrorCode.de-DE.resx" />
+    <EmbeddedResource Include="SexyContent\DataImportExport\ImportErrorCode.resx" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

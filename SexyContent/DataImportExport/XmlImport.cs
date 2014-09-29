@@ -5,11 +5,12 @@ using System.Linq;
 using System.Xml.Linq;
 using ToSic.Eav.Import;
 using ToSic.SexyContent.DataImportExport.Extensions;
+using ToSic.SexyContent.DataImportExport.Options;
 using AttributeSet = ToSic.Eav.AttributeSet;
 
 namespace ToSic.SexyContent.DataImportExport
 {
-    public class DataXmlImport
+    public class XmlImport
     {
         private int applicationId;
 
@@ -19,39 +20,61 @@ namespace ToSic.SexyContent.DataImportExport
 
         private AttributeSet contentType;
 
-        private IEnumerable<XElement> documentElements;
+        /// <summary>
+        /// The xml document to imported.
+        /// </summary>
+        public XDocument Document 
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// The elements of the xml document.
+        /// </summary>
+        public IEnumerable<XElement> DocumentElements
+        {
+            get;
+            private set;
+        }
 
         private string documentLanguageFallback;
 
         private IEnumerable<string> languages;
 
-        private ResourceReferenceImportOption resourceReferenceOption;
+        private ResourceReferenceImport resourceReference;
 
-        private EntityClearImportOption entityClearOption;
-
-        public List<Entity> Entities
-        {
-            get { return entities; }
-        }
-        private List<Entity> entities = new List<Entity>();
+        private EntityClearImport entityClear;
 
         /// <summary>
-        /// Errors occured while deserializing the xml file.
+        /// The entities created from the document. They will be saved to the repository.
         /// </summary>
-        public DataImportErrorProtocol ErrorProtocol
+        public List<Entity> Entities
         {
-            get { return errorProtocol; }
+            get;
+            private set;
         }
-        private DataImportErrorProtocol errorProtocol = new DataImportErrorProtocol();
 
+        /// <summary>
+        /// Errors found while importing the document to memory.
+        /// </summary>
+        public ImportErrorProtocol ErrorProtocol
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// True if errors has been found while importing the document to memory.
+        /// </summary>
         public bool HasErrors
         {
-            get { return errorProtocol.Count() > 0; }
+            get { return ErrorProtocol.Count() > 0; }
         }
 
         private Entity GetEntity(Guid entityGuid)
         {
-            return entities.FirstOrDefault(entity => entity.EntityGuid == entityGuid);
+            return Entities.FirstOrDefault(entity => entity.EntityGuid == entityGuid);
         }
 
         private Entity AppendEntity(Guid entityGuid)
@@ -64,29 +87,45 @@ namespace ToSic.SexyContent.DataImportExport
                 KeyNumber = null,
                 Values = new Dictionary<string, List<IValueImportModel>>()
             };
-            entities.Add(entity);
+            Entities.Add(entity);
             return entity;
         }
 
-
-
-        public DataXmlImport(int zoneId, int applicationId, int contentTypeId, IEnumerable<string> languages, string documentLanguageFallback, EntityClearImportOption entityClearOption, ResourceReferenceImportOption resourceReferenceOption)
+        /// <summary>
+        /// Create a xml import. The data stream passed will be imported to memory, and checked 
+        /// for errors. If no error could be found, the data can be persisted to the repository.
+        /// </summary>
+        /// <param name="zoneId">ID of 2SexyContent zone</param>
+        /// <param name="applicationId">ID of 2SexyContent application</param>
+        /// <param name="contentTypeId">ID of 2SexyContent type</param>
+        /// <param name="dataStream">Xml data stream to import</param>
+        /// <param name="languages">Languages that can be imported (2SexyContent languages enabled)</param>
+        /// <param name="documentLanguageFallback">Fallback document language</param>
+        /// <param name="entityClear">How to handle entities already in the repository</param>
+        /// <param name="resourceReference">How value references to files and pages are handled</param>
+        public XmlImport(int zoneId, int applicationId, int contentTypeId, Stream dataStream, IEnumerable<string> languages, string documentLanguageFallback, EntityClearImport entityClear, ResourceReferenceImport resourceReference)
         {
+            this.Entities = new List<Entity>();
+            this.ErrorProtocol = new ImportErrorProtocol();
+
             this.applicationId = applicationId;
             this.zoneId = zoneId;
             this.contentManager = new SexyContent(zoneId, applicationId);
             this.contentType = contentManager.ContentContext.GetAttributeSet(contentTypeId);
             this.languages = languages;
             this.documentLanguageFallback = documentLanguageFallback;
-            this.entityClearOption = entityClearOption;
-            this.resourceReferenceOption = resourceReferenceOption;
+            this.entityClear = entityClear;
+            this.resourceReference = resourceReference;
+
+            ValidateAndImportToMemory(dataStream);
         }
 
         /// <summary>
-        /// Deserialize a 2sxc data XML stream to the memory. By the way the data will be checked for 
+        /// Deserialize a 2sxc data xml stream to the memory. The data will also be checked for 
         /// errors.
         /// </summary>
-        public void Deserialize(Stream dataStream)
+        /// <param name="dataStream">Data stream</param>
+        private void ValidateAndImportToMemory(Stream dataStream)
         {
             try
             {
@@ -97,31 +136,31 @@ namespace ToSic.SexyContent.DataImportExport
 
                 if (contentType == null)
                 {
-                    errorProtocol.AppendError(DataImportErrorCode.InvalidContentType);
+                    ErrorProtocol.AppendError(ImportErrorCode.InvalidContentType);
                     return;
                 }
 
-                var document = XDocument.Load(dataStream);
+                Document = XDocument.Load(dataStream);
                 dataStream.Position = 0;
-                if (document == null)
+                if (Document == null)
                 {
-                    errorProtocol.AppendError(DataImportErrorCode.InvalidDocument);
+                    ErrorProtocol.AppendError(ImportErrorCode.InvalidDocument);
                     return;
                 }
 
-                var documentRoot = document.Element(XElementName.Root + contentType.Name.RemoveSpecialCharacters());
+                var documentRoot = Document.Element(DocumentNodeNames.Root + contentType.Name.RemoveSpecialCharacters());
                 if (documentRoot == null)
                 {
-                    errorProtocol.AppendError(DataImportErrorCode.InvalidRoot);
+                    ErrorProtocol.AppendError(ImportErrorCode.InvalidRoot);
                     return;
                 }
 
             
-                documentElements = documentRoot.Elements(XElementName.Entity);
+                DocumentElements = documentRoot.Elements(DocumentNodeNames.Entity);
                 var documentElementNumber = 0;
 
-                var documentElementLanguagesAll = documentElements.GroupBy(element => element.Element(XElementName.EntityGuid).Value)
-                                                                  .Select(group => group.Select(element => element.Element(XElementName.EntityLanguage).Value)).ToList();
+                var documentElementLanguagesAll = DocumentElements.GroupBy(element => element.Element(DocumentNodeNames.EntityGuid).Value)
+                                                                  .Select(group => group.Select(element => element.Element(DocumentNodeNames.EntityLanguage).Value)).ToList();
                 var documentElementLanguagesCount = documentElementLanguagesAll.Select(item => item.Count());
                 if (documentElementLanguagesCount.Any(count => count != 1))
                 {
@@ -130,21 +169,21 @@ namespace ToSic.SexyContent.DataImportExport
                     {   
                         if (languages.Except(documentElementLanguages).Any())
                         {
-                            errorProtocol.AppendError(DataImportErrorCode.MissingElementLanguage, "Langs=" + string.Join(", ", languages));
+                            ErrorProtocol.AppendError(ImportErrorCode.MissingElementLanguage, "Langs=" + string.Join(", ", languages));
                             return;
                         }
                     }
                 }
  
                 var entityGuidManager = new EntityGuidManager();
-                foreach (var documentElement in documentElements)
+                foreach (var documentElement in DocumentElements)
                 {
                     documentElementNumber++;
 
-                    var documentElementLanguage = documentElement.GetChildElementValue(XElementName.EntityLanguage);
+                    var documentElementLanguage = documentElement.GetChildElementValue(DocumentNodeNames.EntityLanguage);
                     if (!languages.Any(language => language == documentElementLanguage))
                     {   // DNN does not support the language
-                        errorProtocol.AppendError(DataImportErrorCode.InvalidLanguage, "Lang=" + documentElementLanguage, documentElementNumber);
+                        ErrorProtocol.AppendError(ImportErrorCode.InvalidLanguage, "Lang=" + documentElementLanguage, documentElementNumber);
                         continue;
                     }
 
@@ -171,11 +210,11 @@ namespace ToSic.SexyContent.DataImportExport
                         {   // It is not a value reference.. it is a normal text
                             try
                             {
-                                entity.AppendAttributeValue(valueName, value, valueType, documentElementLanguage, false, resourceReferenceOption.IsResolve());
+                                entity.AppendAttributeValue(valueName, value, valueType, documentElementLanguage, false, resourceReference.IsResolve());
                             }
                             catch (FormatException)
                             {
-                                errorProtocol.AppendError(DataImportErrorCode.InvalidValueFormat, valueName + ":" + valueType + "=" + value, documentElementNumber);
+                                ErrorProtocol.AppendError(ImportErrorCode.InvalidValueFormat, valueName + ":" + valueType + "=" + value, documentElementNumber);
                             }
                             continue;
                         }
@@ -183,7 +222,7 @@ namespace ToSic.SexyContent.DataImportExport
                         var valueReferenceProtection = value.GetValueReferenceProtection();
                         if (valueReferenceProtection != "rw" && valueReferenceProtection != "ro")
                         {
-                            errorProtocol.AppendError(DataImportErrorCode.InvalidValueReferenceProtection, value, documentElementNumber);
+                            ErrorProtocol.AppendError(ImportErrorCode.InvalidValueReferenceProtection, value, documentElementNumber);
                             continue;
                         }
                         var valueReadOnly = valueReferenceProtection == "ro";
@@ -200,39 +239,41 @@ namespace ToSic.SexyContent.DataImportExport
                         var dbEntity = contentType.GetEntity(entityGuid);
                         if (dbEntity == null)
                         {
-                            errorProtocol.AppendError(DataImportErrorCode.InvalidValueReference, value, documentElementNumber);
+                            ErrorProtocol.AppendError(ImportErrorCode.InvalidValueReference, value, documentElementNumber);
                             continue;
                         }
 
                         var dbEntityValue = dbEntity.GetAttributeValue(attribute, valueReferenceLanguage);
                         if(dbEntityValue == null)
                         {
-                            errorProtocol.AppendError(DataImportErrorCode.InvalidValueReference, value, documentElementNumber);
+                            ErrorProtocol.AppendError(ImportErrorCode.InvalidValueReference, value, documentElementNumber);
                             continue;
                         }
 
-                        entity.AppendAttributeValue(valueName, dbEntityValue.Value, valueType, valueReferenceLanguage, dbEntityValue.IsLanguageReadOnly(valueReferenceLanguage), resourceReferenceOption.IsResolve())
+                        entity.AppendAttributeValue(valueName, dbEntityValue.Value, valueType, valueReferenceLanguage, dbEntityValue.IsLanguageReadOnly(valueReferenceLanguage), resourceReference.IsResolve())
                               .AppendLanguageReference(documentElementLanguage, valueReadOnly);       
                     }
                 }                
             }
             catch (Exception exception)
             {
-                errorProtocol.AppendError(DataImportErrorCode.Unknown, exception.ToString());
+                ErrorProtocol.AppendError(ImportErrorCode.Unknown, exception.ToString());
             }
         }
 
         /// <summary>
-        /// Save the data in memory to the EAV data base.
+        /// Save the data in memory to the repository.
         /// </summary>
-        public bool Pesrist(string userId)
+        /// <param name="userId">ID of the user doing the import</param>
+        /// <returns>True if succeeded</returns>
+        public bool PersistImportToRepository(string userId)
         {
             if (HasErrors)
             {
                 return false;
             }
 
-            if (entityClearOption.IsAll())
+            if (entityClear.IsAll())
             {
                 var entityDeleteGuids = GetEntityDeleteGuids();
                 foreach(var entityGuid in entityDeleteGuids)
@@ -246,7 +287,7 @@ namespace ToSic.SexyContent.DataImportExport
             }
 
             var import = new ToSic.Eav.Import.Import(zoneId, applicationId, userId, true);
-            import.RunImport(null, entities, true, true);
+            import.RunImport(null, Entities, true, true);
             return true;
         }
 
@@ -260,53 +301,60 @@ namespace ToSic.SexyContent.DataImportExport
 
         private List<Guid> GetCreatedEntityGuids()
         {
-            var newGuids = entities.Select(entity => entity.EntityGuid.Value).ToList();
+            var newGuids = Entities.Select(entity => entity.EntityGuid.Value).ToList();
             return newGuids;
         }
 
-
-        // TODO2tk: Make properties
-        public int GetDocumentElementCount()
+        /// <summary>
+        /// Get the languages found in the xml document.
+        /// </summary>
+        public IEnumerable<string> LanguagesInDocument
         {
-            return documentElements.Count();
+            get
+            {
+                return DocumentElements.Select(element => element.Element(DocumentNodeNames.EntityLanguage).Value).Distinct();
+            }
         }
 
-        public int GetDocumentElementLanguageCount()
+        /// <summary>
+        /// Get the attribute names in the xml document.
+        /// </summary>
+        public IEnumerable<string> AttributeNamesInDocument
         {
-            return documentElements.Select(element => element.Element(XElementName.EntityLanguage).Value).Distinct().Count();
+            get 
+            {
+                return DocumentElements.SelectMany(element => element.Elements())
+                                       .GroupBy(attribute => attribute.Name.LocalName)
+                                       .Select(group => group.Key)
+                                       .Where(name => name != DocumentNodeNames.EntityGuid && name != DocumentNodeNames.EntityLanguage)
+                                       .ToList();
+            }
         }
 
-        public int GetDocumentElementAttributeCount()
+        /// <summary>
+        /// The amount of enities created in the repository on data import.
+        /// </summary>
+        public int AmountOfEntitiesCreated
         {
-            return GetDocumentElementAttributeNames().Count();
+            get
+            {
+                var existingGuids = GetExistingEntityGuids();
+                var createdGuids = GetCreatedEntityGuids();
+                return createdGuids.Except(existingGuids).Count();
+            }          
         }
 
-        public IEnumerable<string> GetDocumentElementAttributeNames()
+        /// <summary>
+        /// The amount of enities updated in the repository on data import.
+        /// </summary>
+        public int AmountOfEntitiesUpdated
         {
-            return documentElements.SelectMany(element => element.Elements())
-                                   .GroupBy(attribute => attribute.Name.LocalName)
-                                   .Select(group => group.Key)
-                                   .Where(name => name != XElementName.EntityGuid && name != XElementName.EntityLanguage)
-                                   .ToList();
-        }
-
-        public string GetDocumentElementAttributeNames(string nameSeparator)
-        {
-            return string.Join(nameSeparator, GetDocumentElementAttributeNames());
-        }
-
-        public int GetEntitiesCreateCount()
-        {
-            var existingGuids = GetExistingEntityGuids();
-            var createdGuids = GetCreatedEntityGuids();
-            return createdGuids.Except(existingGuids).Count();
-        }
-
-        public int GetEntitiesUpdateCount()
-        {
-            var existingGuids = GetExistingEntityGuids();
-            var createdGuids = GetCreatedEntityGuids();
-            return createdGuids.Where(guid => existingGuids.Contains(guid)).Count();
+           get 
+           {
+               var existingGuids = GetExistingEntityGuids();
+               var createdGuids = GetCreatedEntityGuids();
+               return createdGuids.Where(guid => existingGuids.Contains(guid)).Count();
+           }
         }
 
         private List<Guid> GetEntityDeleteGuids()
@@ -315,56 +363,54 @@ namespace ToSic.SexyContent.DataImportExport
             var createdGuids = GetCreatedEntityGuids();
             return existingGuids.Except(createdGuids).ToList();
         }
-
-        public int GetEntitiesDeleteCount()
+        
+        /// <summary>
+        /// The amount of enities deleted in the repository on data import.
+        /// </summary>
+        public int AmountOfEntitiesDeleted
         {
-            if (entityClearOption.IsNone())
+            get 
             {
-                return 0;
+                if (entityClear.IsNone())
+                {
+                    return 0;
+                }
+                return GetEntityDeleteGuids().Count();
             }
-            return GetEntityDeleteGuids().Count();
         }
 
-        public int GetEntitiesAttributeCount()
+        /// <summary>
+        /// Get the attribute names in the content type.
+        /// </summary>
+        public IEnumerable<string> AttributeNamesInContentType
         {
-            return contentType.GetEntitiesAttributeNames().Count();
+            get { return contentType.GetEntitiesAttributeNames(); }
         }
 
-        public IEnumerable<string> GetEntitiesAttributeNames()
+        /// <summary>
+        /// Get the attributes not imported (ignored) from the document to the repository.
+        /// </summary>
+        public IEnumerable<string> AttributeNamesNotImported
         {
-            return contentType.GetEntitiesAttributeNames();
-        }
-
-        public string GetAttributeNames(string nameSeparator)
-        {
-            return string.Join(nameSeparator, GetEntitiesAttributeNames());
-        }
-
-        public int GetAttributeIgnoreCount()
-        {
-            return GetAttributeIgnoredNames().Count();
-        }
-
-        public IEnumerable<string> GetAttributeIgnoredNames()
-        {
-            var existingAttributes = contentType.GetEntitiesAttributeNames();
-            var creatdAttributes = GetDocumentElementAttributeNames();
-            return existingAttributes.Except(creatdAttributes);
-        }
-
-        public string GetAttributeIgnoredNames(string nameSeparator)
-        {
-            return string.Join(nameSeparator, GetAttributeIgnoredNames());
+            get 
+            {
+                var existingAttributes = contentType.GetEntitiesAttributeNames();
+                var creatdAttributes = AttributeNamesInDocument;
+                return existingAttributes.Except(creatdAttributes);
+            }            
         }
 
         #endregion Deserialize statistics methods
 
-
-        public string GetEntitiesDebugString()
+        /// <summary>
+        /// Get a debug report about the import as html string.
+        /// </summary>
+        /// <returns>Report as HTML string</returns>
+        public string GetDebugReport()
         {
             var result = "<p>Details:</p>";
             result += "<ul>";
-            foreach (var entity in entities)
+            foreach (var entity in Entities)
             {
                 result += "<li><div>Entity: " + entity.EntityGuid + "</div><ul>";
                 foreach (var value in entity.Values)

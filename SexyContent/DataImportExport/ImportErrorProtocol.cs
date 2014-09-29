@@ -3,30 +3,30 @@ using System.Collections.Generic;
 
 namespace ToSic.SexyContent.DataImportExport
 {
-    public class DataImportErrorProtocol : IEnumerable<DataImportError>
+    public class ImportErrorProtocol : IEnumerable<ImportError>
     {
-        public DataImportError this[int index]
+        public ImportError this[int index]
         {
             get { return errors[index]; }
         }
 
-        public List<DataImportError> Errors
+        public List<ImportError> Errors
         {
             get { return errors; }
         }
-        private List<DataImportError> errors = new List<DataImportError>();
+        private List<ImportError> errors = new List<ImportError>();
 
         public int ErrorCount
         {
             get { return errors.Count; }
         }
 
-        public void AppendError(DataImportErrorCode errorCode, string errorDetail = null, int? lineNumber = null, string lineDetail = null)
+        public void AppendError(ImportErrorCode errorCode, string errorDetail = null, int? lineNumber = null, string lineDetail = null)
         {
-            errors.Add(new DataImportError(errorCode, errorDetail, lineNumber, lineDetail));
+            errors.Add(new ImportError(errorCode, errorDetail, lineNumber, lineDetail));
         }
 
-        public IEnumerator<DataImportError> GetEnumerator()
+        public IEnumerator<ImportError> GetEnumerator()
         {
             return errors.GetEnumerator();
         }

@@ -3,7 +3,7 @@ using System.ComponentModel;
 
 namespace ToSic.SexyContent.DataImportExport.Extensions
 {
-    public static class EnumExtensions
+    internal static class EnumExtensions
     {
         /// <summary>
         /// Get the description of an enumeration value. For that, the enumeration value must have a 

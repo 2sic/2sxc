@@ -2,7 +2,7 @@
 
 namespace ToSic.SexyContent.DataImportExport.Extensions
 {
-    public static class StringExtension
+    internal static class StringExtension
     {
         /// <summary>
         /// Get for example en-US from =ref(en-US,ro).

@@ -6,7 +6,7 @@ using ToSic.Eav.Import;
 
 namespace ToSic.SexyContent.DataImportExport.Extensions
 {
-    public static class IValueImportModelExtension
+    internal static class IValueImportModelExtension
     {
         public static List<IValueImportModel> ToList(this IValueImportModel valueModel)
         {

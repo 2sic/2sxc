@@ -14,7 +14,7 @@ namespace ToSic.SexyContent.DataImportExport
     ///     MyValue1
     /// }
     /// </summary>
-    public class LocalizedDescriptionAttribute : DescriptionAttribute
+    internal class LocalizedDescriptionAttribute : DescriptionAttribute
     {
         private readonly string resourceKey;
         
