@@ -93,6 +93,10 @@
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.Http.WebHost, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
@@ -364,6 +368,9 @@
     </Compile>
     <Compile Include="SexyContent\Template.cs" />
     <Compile Include="SexyContent\TemplateDefault.cs" />
+    <Compile Include="SexyContent\WebApiExtensions\HttpRequestMessageExtensions.cs" />
+    <Compile Include="SexyContent\WebApiExtensions\SexyContentApiController.cs" />
+    <Compile Include="SexyContent\WebApiExtensions\TemplateControllerSelector.cs" />
     <Compile Include="TemplateHelpGrid.ascx.cs">
       <DependentUpon>TemplateHelpGrid.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
