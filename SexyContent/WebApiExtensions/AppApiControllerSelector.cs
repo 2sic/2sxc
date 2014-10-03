@@ -10,12 +10,12 @@ using System.Web.Http.Routing;
 
 namespace ToSic.SexyContent.WebApiExtensions
 {
-    public class TemplateControllerSelector : IHttpControllerSelector
+    public class AppApiControllerSelector : IHttpControllerSelector
     {
         private readonly HttpConfiguration _config;
         public IHttpControllerSelector PreviousSelector { get; set; }
 
-        public TemplateControllerSelector(HttpConfiguration configuration)
+        public AppApiControllerSelector(HttpConfiguration configuration)
         {
             _config = configuration;
         }
@@ -27,7 +27,7 @@ namespace ToSic.SexyContent.WebApiExtensions
 
         public HttpControllerDescriptor SelectController(HttpRequestMessage request)
         {
-            
+            // ToDo: Cache controller (may affect performance or cause memory leaks in rare cases?)
             IHttpRouteData routeData = request.GetRouteData();
             if (routeData.Route.RouteTemplate.Contains("/DesktopModules/2sxc/API/App/"))
             {

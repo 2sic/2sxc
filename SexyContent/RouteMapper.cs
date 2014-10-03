@@ -21,7 +21,7 @@ namespace ToSic.SexyContent
 
             var config = GlobalConfiguration.Configuration;
             var previousSelector = config.Services.GetService(typeof(IHttpControllerSelector)) as IHttpControllerSelector;
-            config.Services.Replace(typeof(IHttpControllerSelector), new TemplateControllerSelector(config) { PreviousSelector = previousSelector });
+            config.Services.Replace(typeof(IHttpControllerSelector), new AppApiControllerSelector(config) { PreviousSelector = previousSelector });
         }
 
     }

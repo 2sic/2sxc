@@ -370,7 +370,7 @@
     <Compile Include="SexyContent\TemplateDefault.cs" />
     <Compile Include="SexyContent\WebApiExtensions\HttpRequestMessageExtensions.cs" />
     <Compile Include="SexyContent\WebApiExtensions\SexyContentApiController.cs" />
-    <Compile Include="SexyContent\WebApiExtensions\TemplateControllerSelector.cs" />
+    <Compile Include="SexyContent\WebApiExtensions\AppApiControllerSelector.cs" />
     <Compile Include="TemplateHelpGrid.ascx.cs">
       <DependentUpon>TemplateHelpGrid.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
