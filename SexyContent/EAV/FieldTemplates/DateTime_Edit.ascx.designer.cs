@@ -22,13 +22,13 @@ namespace ToSic.Eav.ManagementUI {
         protected global::DotNetNuke.Web.UI.WebControls.DnnDatePicker Calendar1;
         
         /// <summary>
-        /// TimePicker1 control.
+        /// DateTimePicker control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::DotNetNuke.Web.UI.WebControls.DnnTimePicker TimePicker1;
+        protected global::DotNetNuke.Web.UI.WebControls.DnnDateTimePicker DateTimePicker;
         
         /// <summary>
         /// valCalendar1 control.
@@ -38,5 +38,14 @@ namespace ToSic.Eav.ManagementUI {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator valCalendar1;
+        
+        /// <summary>
+        /// valDateTimePicker control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator valDateTimePicker;
     }
 }

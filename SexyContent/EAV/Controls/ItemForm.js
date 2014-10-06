@@ -723,13 +723,21 @@ Eav.FieldControllerManager = {
 
 		var field = objWrapper.find("input[type=text]");
 		var calPopup = objWrapper.find(".rcCalPopup");
+		var datePicker = window.datePickerTest = $find(field.attr("id"));
 
 		Controller.SetReadOnly = function (readOnlyState) {
-			field.prop("disabled", readOnlyState);
-			calPopup.toggle(!readOnlyState);
+		    datePicker.set_enabled(!readOnlyState);
 		};
-		Controller.SetValue = function (value) { field.val(value); };
-		Controller.GetValue = function () { return field.val(); };
+		Controller.SetValue = function (value) {
+		    if (value != null && value != '') {
+		        var date = value.indexOf("/Date") == 0 ? new Date(parseInt(value.replace(/\/Date\((\d+)\)\//gi, "$1"))) : new Date(value);
+		        datePicker.set_selectedDate(date);
+		    }
+		};
+		Controller.GetValue = function () {
+		    var selectedDate = datePicker.get_selectedDate();
+		    return selectedDate == null ? null : selectedDate.toISOString();
+		};
 
 		return Controller;
 	},

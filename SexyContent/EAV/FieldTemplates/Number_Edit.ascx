@@ -9,5 +9,5 @@
 <div class="eav-field-control">
     <asp:TextBox ID="TextBox1" runat="server" CssClass="DDTextBox" EnableViewState="true" />
 </div>
-<asp:RequiredFieldValidator ID="valFieldValue" runat="server" CssClass="dnnFormError" ControlToValidate="TextBox1" Display="Dynamic" EnableClientScript="true" ErrorMessage="Please enter a value."></asp:RequiredFieldValidator>
-<asp:RegularExpressionValidator ID="valFieldValue2" runat="server" CssClass="dnnFormError" ControlToValidate="TextBox1" Display="Dynamic" EnableClientScript="true" ErrorMessage="Please enter numeric value." Enabled="true" ValidationExpression="^[\d\.,]*$"></asp:RegularExpressionValidator>
+<asp:RequiredFieldValidator ID="valFieldValue" runat="server" CssClass="dnnFormMessage dnnFormError" ControlToValidate="TextBox1" Display="Dynamic" EnableClientScript="true" ErrorMessage="Please enter a value."></asp:RequiredFieldValidator>
+<asp:RegularExpressionValidator ID="valFieldValue2" runat="server" CssClass="dnnFormMessage dnnFormError" ControlToValidate="TextBox1" Display="Dynamic" EnableClientScript="true" ErrorMessage="Please enter numeric value." Enabled="true" ValidationExpression="^[\d\.,]*$"></asp:RegularExpressionValidator>
