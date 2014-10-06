@@ -548,52 +548,6 @@
 
 		$(target).html(message).attr("title", toolTip);
 	},
-	/*InitEntityMultiSelector: function (wrapper, reinit) {
-		var multiValuesWrapper = wrapper.find(".MultiValuesWrapper");
-		var baseDropDown = wrapper.find("select");
-		if (reinit) {
-			alert("Reinit Entity-Multi-Selector is untested!");
-			multiValuesWrapper.find(".MultiValueItem .MultiValueItem").remove();
-			baseDropDown.val("");
-		} else {
-			wrapper.find("a.AddValue").click(function () {
-				Eav.AddEntityMultiSelector(wrapper, multiValuesWrapper, baseDropDown);
-			});
-			baseDropDown.change(function () { Eav.SyncSelectedEntities(wrapper); });
-		}
-
-		var entityIds = wrapper.find("input[type=hidden][id$='_hfEntityIds']").val().split(",");
-		$.each(entityIds, function (i, entityId) {
-			if (i == 0)
-				baseDropDown.val(entityId);
-			else
-				Eav.AddEntityMultiSelector(wrapper, multiValuesWrapper, baseDropDown, i, entityId);
-		});
-	},
-	AddEntityMultiSelector: function (wrapper, multiValuesWrapper, baseDropDown, i, selectedValue) {
-		if (i == undefined)
-			i = multiValuesWrapper.find(".MultiValueItem").length + 1;
-		var elementId = multiValuesWrapper.attr("id").replace("_pnlMultiValues", "_item" + i);
-		multiValuesWrapper.append($('<div class="MultiValueItem" id="' + elementId + '"><a class="eav-entityrelationship-remove" href="javascript:void(0)" onclick="javascript:Eav.RemoveEntityMultiSelect(this)">remove</a></div>').prepend(baseDropDown.clone().attr("id", elementId + "_DropDown").removeAttr("name")));
-		var dropDown = multiValuesWrapper.find("#" + elementId + "_DropDown");
-		dropDown.val(selectedValue);
-		dropDown.change(function () { Eav.SyncSelectedEntities(wrapper); });
-	},
-	SyncSelectedEntities: function (wrapper) {
-		var entityIds = [];
-		$.each(wrapper.find("select"), function (i, ddl) {
-			var value = $(ddl).val();
-			if (value != "")
-				entityIds.push(value);
-		});
-		wrapper.find("input[type=hidden][id$='_hfEntityIds']").val(entityIds.join(","));
-	},
-	RemoveEntityMultiSelect: function (hyperlink) {
-		var fieldWrapper = $(hyperlink).closest(".eav-field");
-		$(hyperlink).closest(".MultiValueItem").remove();
-		Eav.SyncSelectedEntities(fieldWrapper);
-	},*/
-
 	Gps: {
 		_mapsApiInitDone: false,
 		FindOnMap: function (latitudeStaticName, skipMap) {	// skipMap = true will only return LatLng of Address but doesn't act with the map

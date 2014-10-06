@@ -261,7 +261,8 @@ Eav.FieldControllerManager.hyperlink = function (objWrapper) {
 		// Update test link on value change
 		field.bind("change keyup", function () {
 			ToSexyContent.ItemForm.Hyperlink.UpdateTestLink($(field.context));
-		}).change();
+		});
+		ToSexyContent.ItemForm.Hyperlink.UpdateTestLink($(field.context));
 	});
 
 	var menuBase = objWrapper.find(".eav-contextmenu");
