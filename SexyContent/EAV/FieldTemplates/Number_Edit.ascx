@@ -10,4 +10,4 @@
     <asp:TextBox ID="TextBox1" runat="server" CssClass="DDTextBox" EnableViewState="true" />
 </div>
 <asp:RequiredFieldValidator ID="valFieldValue" runat="server" CssClass="dnnFormMessage dnnFormError" ControlToValidate="TextBox1" Display="Dynamic" EnableClientScript="true" ErrorMessage="Please enter a value."></asp:RequiredFieldValidator>
-<asp:RegularExpressionValidator ID="valFieldValue2" runat="server" CssClass="dnnFormMessage dnnFormError" ControlToValidate="TextBox1" Display="Dynamic" EnableClientScript="true" ErrorMessage="Please enter numeric value." Enabled="true" ValidationExpression="^[\d\.,]*$"></asp:RegularExpressionValidator>
+<asp:CompareValidator ID="valFieldValue2" runat="server" CssClass="dnnFormMessage dnnFormError" ControlToValidate="TextBox1" Display="Dynamic" EnableClientScript="true" ErrorMessage="Please enter numeric value." Enabled="true" Type="Double" Operator="DataTypeCheck"></asp:CompareValidator>
