@@ -33,7 +33,7 @@ namespace ToSic.SexyContent.GettingStarted
             catch (Exception ex)
             {
                 DotNetNuke.Services.Exceptions.Exceptions.LogException(ex);
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Error while installing: " + ex.Message, ex);
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "Error while installing the app: " + ex.Message + " - you might discover more about the error if you visit the DNN event log.", ex);
             }
             
             return Request.CreateResponse(success ? HttpStatusCode.OK : HttpStatusCode.InternalServerError, new { success, messages });
