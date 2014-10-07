@@ -80,11 +80,6 @@ namespace ToSic.SexyContent.ImportExport
                                 // Stores the number of the current xml file to process
                                 var xmlIndex = 0;
 
-                                // Handle PortalFiles folder
-                                //string portalTempRoot = Path.Combine(appDirectory, "PortalFiles");
-                                //if (Directory.Exists(portalTempRoot))
-                                //    CopyAllFilesDnnPortal(portalTempRoot, "", false, messages);
-
                                 // Import XML file(s)
                                 foreach (var xmlFileName in Directory.GetFiles(appDirectory, "*.xml"))
                                 {
@@ -93,19 +88,22 @@ namespace ToSic.SexyContent.ImportExport
 
                                     if (isAppImport)
                                     {
-                                        // Do not import (throw error) if the app directory already exists
+                                        if (!import.IsCompatible(_zoneId, fileContents))
+                                            throw new Exception("The " + (isAppImport ? "app" : "package") + " is not compatible with this version of 2sxc.");
+
                                         var folder =
                                             XDocument.Parse(fileContents).Element("SexyContent")
                                                 .Element("Entities").Elements("Entity").Single(e =>e.Attribute("AttributeSetStaticName").Value =="2SexyContent-App")
                                                 .Elements("Value").First(v => v.Attribute("Key").Value == "Folder").Attribute("Value").Value;
                                         var appPath = System.IO.Path.Combine(SexyContent.AppBasePath(PortalSettings.Current), folder);
 
+                                        // Do not import (throw error) if the app directory already exists
                                         if(Directory.Exists(HttpContext.Current.Server.MapPath(appPath)))
                                         {
-                                            throw new Exception("Import not allowed because the specified folder does already exist.");
+                                            throw new Exception("The app could not be installed because the app-folder '" + appPath + "' already exists. Please remove or rename the folder and install the app again.");
                                         }
 
-                                        if (xmlIndex == 0 && import.IsCompatible(_zoneId, fileContents))
+                                        if (xmlIndex == 0)
                                         {
                                             // Handle PortalFiles folder
                                             string portalTempRoot = Path.Combine(appDirectory, "PortalFiles");
@@ -154,7 +152,7 @@ namespace ToSic.SexyContent.ImportExport
             catch (Exception e)
             {
                 // Add error message and return false
-                messages.Add(new ExportImportMessage("Could not import the package. " + e.Message, ExportImportMessage.MessageTypes.Error));
+                messages.Add(new ExportImportMessage("Could not import the " + (isAppImport ? "app" : "package") + ": " + e.Message, ExportImportMessage.MessageTypes.Error));
                 Exceptions.LogException(e);
                 success = false;
             }
@@ -186,7 +184,14 @@ namespace ToSic.SexyContent.ImportExport
             var client = new WebClient();
             var success = false;
 
-            client.DownloadFile(packageUrl, destinationPath);
+            try
+            {
+                client.DownloadFile(packageUrl, destinationPath);
+            }
+            catch(WebException e)
+            {
+                throw new Exception("Could not download app package from '" + packageUrl + "'.", e);
+            }
 
             using (var file = File.OpenRead(destinationPath))
                 success = ImportZip(file, HttpContext.Current.Server, PortalSettings.Current, messages, isAppImport);

@@ -55,9 +55,19 @@
                     url: sf.getServiceRoot('2sxc') + "GettingStarted/" + "InstallPackage",
                     data: "packageUrl=" + currentPackage.url,
                     beforeSend: sf.setModuleHeaders
-                }).done(function (e) {})
-                .fail(function (xhr, result, status) {
-                    alert("Something went wrong while installing '" + currentPackage.displayName + "': " + status);
+                }).done(function (e) { })
+                .error(function (xhr, result, status) {
+                    var errorMessage = "Something went wrong while installing '" + currentPackage.displayName + "': " + status;
+                    if(xhr.responseText && xhr.responseText != "")
+                    {
+                        var response = $.parseJSON(xhr.responseText);
+                        if(response.messages)
+                            errorMessage = errorMessage + " - " + response.messages[0].Message;
+                        else if(response.Message)
+                            errorMessage = errorMessage + " - " + response.Message;
+                    }
+                    errorMessage += " (you might find more informations about the error in the DNN event log).";
+                    alert(errorMessage);
                     success = false;
                 });
 

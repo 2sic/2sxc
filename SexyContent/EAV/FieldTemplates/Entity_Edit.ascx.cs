@@ -32,6 +32,8 @@ namespace ToSic.Eav.ManagementUI
             FieldLabel.Text = GetMetaDataValue("Name", Attribute.StaticName);
             FieldLabel.HelpText = GetMetaDataValue<string>("Notes");
 
+            valFieldValue.Enabled = GetMetaDataValue<bool>("Required");
+
 			if (ShowDataControlOnly)
 				FieldLabel.Visible = false;
 

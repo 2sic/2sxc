@@ -22,7 +22,7 @@ namespace ToSic.Eav.ManagementUI
             if (FieldValueEditString == null)
                 TextBox1.Text = GetMetaDataValue<string>(MetaDataDefaultValueKey, "");
             else
-                TextBox1.Text = FieldValueEditString;
+                TextBox1.Text = (FieldValue as decimal?).ToString();
 
             if (GetMetaDataValue<bool>(MetaDataIsRequiredKey))
                 TextBox1.CssClass += " dnnFormRequired";
@@ -51,7 +51,14 @@ namespace ToSic.Eav.ManagementUI
 
         public override object Value
         {
-            get { return TextBox1.Text; }
+            get {
+                if(!String.IsNullOrEmpty(TextBox1.Text))
+                {
+                    return decimal.Parse(TextBox1.Text);
+                }
+                return new decimal?();
+
+            }
         }
 
 

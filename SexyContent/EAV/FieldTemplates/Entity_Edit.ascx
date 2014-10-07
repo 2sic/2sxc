@@ -14,6 +14,8 @@
     <input style="display:none;" type="text" runat="server" id="hfConfiguration" />
     <input style="display:none;" type="text" runat="server" id="hfEntityIds" ng-value="entityIds()" />
 
+    <asp:RequiredFieldValidator ID="valFieldValue" runat="server" CssClass="dnnFormMessage dnnFormError" ControlToValidate="hfEntityIds" Display="Dynamic" EnableClientScript="true" ErrorMessage="Please select an item."></asp:RequiredFieldValidator>
+
     <div ui-tree="options" data-empty-place-holder-enabled="false">
         <ol ui-tree-nodes ng-model="configuration.SelectedEntities">
             <li ng-repeat="item in configuration.SelectedEntities" ui-tree-node class="eav-entityselect-item">
