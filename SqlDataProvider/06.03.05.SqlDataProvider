@@ -1,0 +1,14 @@
+﻿-- make sure sql rolls back automatically in case of error.
+SET XACT_ABORT ON
+
+BEGIN TRANSACTION SexyContentUpdate;
+
+-- Rename role '2SexyContent Designers' to '2sxc designers'
+UPDATE       Roles
+SET                RoleName = N'2sxc designers'
+WHERE        (RoleName = N'2SexyContent Designers')
+
+
+-- Commit the transaction
+COMMIT TRANSACTION SexyContentUpdate;
+--ROLLBACK TRANSACTION SexyContentUpdate;

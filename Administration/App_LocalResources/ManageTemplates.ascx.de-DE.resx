@@ -151,7 +151,7 @@
     <value>Neue Vorlage</value>
   </data>
   <data name="lblSexyContentDesignersInfo.Text" xml:space="preserve">
-    <value>Verbessere das Anwendungserlebnis für Anwender, die nur Inhalte bearbeiten. Wenn dein Portal eine Benutzergruppe namens „2SexyContent&amp;nbsp;Designers“ enthält, werden nur Anwender in dieser Gruppe erweiterte Funktionen wie &lt;i&gt;Vorlage bearbeiten&lt;/i&gt; oder &lt;i&gt;Vorlagen verwalten&lt;/i&gt; sehen. Checkliste dazu &lt;a target="_blank" href="http://swisschecklist.com/en/fwttmwjx/2Sexy-Content-Hide-advanced-features-from-Content-Editors-with-Designer-Security-Role"&gt;hier&lt;/a&gt;.</value>
+    <value>Verbessere das Anwendungserlebnis für Anwender, die nur Inhalte bearbeiten. Wenn dein Portal eine Benutzergruppe namens „2sxc&amp;nbsp;designers“ enthält, werden nur Anwender in dieser Gruppe erweiterte Funktionen wie &lt;i&gt;Vorlage bearbeiten&lt;/i&gt; oder &lt;i&gt;Vorlagen verwalten&lt;/i&gt; sehen. Checkliste dazu &lt;a target="_blank" href="http://swisschecklist.com/en/fwttmwjx/2Sexy-Content-Hide-advanced-features-from-Content-Editors-with-Designer-Security-Role"&gt;hier&lt;/a&gt;.</value>
   </data>
   <data name="ContentTypeGroupByField.HeaderText" xml:space="preserve">
     <value>Inhaltstyp</value>

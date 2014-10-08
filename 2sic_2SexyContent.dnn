@@ -126,10 +126,15 @@
               <name>06.02.01.SqlDataProvider</name>
               <version>06.02.01</version>
             </script>
+            <script type="Install">
+              <path>SqlDataProvider</path>
+              <name>06.03.05.SqlDataProvider</name>
+              <version>06.03.05</version>
+            </script>
             <script type="UnInstall">
               <path>SqlDataProvider</path>
               <name>Uninstall.SqlDataProvider</name>
-              <version>06.03.04</version>
+              <version>06.03.05</version>
             </script>
           </scripts>
         </component>

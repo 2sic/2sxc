@@ -97,7 +97,7 @@ namespace ToSic.SexyContent
 
         public const string WebConfigTemplatePath = "~/DesktopModules/ToSIC_SexyContent/WebConfigTemplate.config";
         public const string WebConfigFileName = "web.config";
-        public const string SexyContentGroupName = "2SexyContent Designers";
+        public const string SexyContentGroupName = "2sxc designers";
         public const string AttributeSetScope = "2SexyContent";
         public const string AttributeSetScopeApps = "2SexyContent-App";
         public const string AttributeSetStaticNameTemplateMetaData = "2SexyContent-Template-Metadata";
