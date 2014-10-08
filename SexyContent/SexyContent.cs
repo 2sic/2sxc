@@ -79,6 +79,7 @@ namespace ToSic.SexyContent
             public const string EditDataSource = "editdatasource";
             public const string AppExport = "appexport";
             public const string AppImport = "appimport";
+            public const string AppConfig = "appconfig";
         }
 
         public const string PortalHostDirectory = "~/Portals/_default/";

@@ -792,6 +792,16 @@
                     <supportsPopUps>True</supportsPopUps>
                   </moduleControl>
                   <moduleControl>
+                    <controlKey>appconfig</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/Apps/AppConfig.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>App Config</controlTitle>
+                    <controlType>Admin</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                  </moduleControl>
+                  <moduleControl>
                     <controlKey>dataExport</controlKey>
                     <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/DataExport.ascx</controlSrc>
                     <supportsPartialRendering>False</supportsPartialRendering>
