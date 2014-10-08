@@ -15,7 +15,6 @@ namespace ToSic.SexyContent.Administration
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            
         }        
     }
 }
