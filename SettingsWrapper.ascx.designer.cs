@@ -46,7 +46,7 @@ namespace ToSic.SexyContent {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UserControl lblTemplate;
+        protected global::DotNetNuke.UI.UserControls.LabelControl lblTemplate;
         
         /// <summary>
         /// ddlTemplate control.
@@ -64,7 +64,7 @@ namespace ToSic.SexyContent {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UserControl lblContentType;
+        protected global::DotNetNuke.UI.UserControls.LabelControl lblContentType;
         
         /// <summary>
         /// lblContentTypeDefaultText control.
@@ -100,7 +100,7 @@ namespace ToSic.SexyContent {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UserControl lblEntityID;
+        protected global::DotNetNuke.UI.UserControls.LabelControl lblEntityID;
         
         /// <summary>
         /// ddlEntities control.

@@ -186,21 +186,9 @@ namespace ToSic.SexyContent
                 else
                     phOutput.Controls.Add(new LiteralControl(renderedTemplate));
             }
-            // Catch errors
-            //catch (SexyContentException Ex)
-            //{
-            //    ShowError(Ex.Message);
-            //    Exceptions.LogException(Ex);
-            //}
-            //catch (System.Web.HttpCompileException Ex)
-            //{
-            //    ShowError(Ex.Message);
-            //    Exceptions.LogException(Ex);
-            //}
-            // catch all other errors
+            // Catch errors; log them
             catch (Exception Ex)
             {
-                //Exceptions.ProcessModuleLoadException(this, Ex);
                 ShowError(LocalizeString("TemplateError.Text") + ": " + HttpUtility.HtmlEncode(Ex.ToString()), LocalizeString("TemplateError.Text"), false);
                 Exceptions.LogException(Ex);
             }

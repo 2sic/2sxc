@@ -2,7 +2,6 @@
 <%@ Register TagPrefix="SexyContent" TagName="SettingsControl" Src="Settings.ascx" %>
 <%@ Register TagPrefix="dnn" TagName="Label" Src="~/controls/LabelControl.ascx" %>
 
-<%-- SexyContent:SettingsControl runat="server" id="SettingsControl" ShowModuleSettings="False" />--%>
 <div class="dnnForm">
     <h2 class="dnnFormSectionHead" runat="server" id="dnnSitePanelSexyContentSettings">
         <a href="#"><asp:Label runat="server" ID="lblSettingsHeading" ResourceKey="lblSettingsHeading"></asp:Label></a></h2>

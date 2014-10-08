@@ -28,7 +28,7 @@ namespace ToSic.SexyContent {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UserControl lblPublishSource;
+        protected global::DotNetNuke.UI.UserControls.LabelControl lblPublishSource;
         
         /// <summary>
         /// chkPublishSource control.
@@ -46,7 +46,7 @@ namespace ToSic.SexyContent {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UserControl lblPublishStreams;
+        protected global::DotNetNuke.UI.UserControls.LabelControl lblPublishStreams;
         
         /// <summary>
         /// txtPublishStreams control.
@@ -64,6 +64,6 @@ namespace ToSic.SexyContent {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UserControl lblTest;
+        protected global::DotNetNuke.UI.UserControls.LabelControl lblTest;
     }
 }

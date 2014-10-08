@@ -58,7 +58,7 @@ namespace ToSic.SexyContent
         #endregion
 
         /// <summary>
-        /// Set ModuleConfiguration of the settings control and call "LoadSettings" on it
+        /// Page init for the settingswrapper control
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
