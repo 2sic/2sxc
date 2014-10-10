@@ -335,28 +335,6 @@ namespace ToSic.SexyContent
             Response.Redirect(Request.RawUrl);
         }
 
-        /// <summary>
-        /// Value changed handler for hfContentGroupItemAction. Allows deleting / adding ContentGroupItems from inside the template.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        protected void hfContentGroupItemAction_ValueChanged(object sender, EventArgs e)
-        {
-            if (UserMayEditThisModule)
-            {
-                switch (hfContentGroupItemAction.Value)
-                {
-                    case "add":
-                        new SexyContent(ZoneId.Value, AppId.Value, false).AddContentGroupItem(Elements.First().GroupId, UserId, Elements.First().TemplateId, null, int.Parse(hfContentGroupItemSortOrder.Value) + 1, true, ContentGroupItemType.Content, false);
-                        Response.Redirect(DotNetNuke.Common.Globals.NavigateURL(this.TabId, "", null));
-                        break;
-                }
-
-                hfContentGroupItemAction.Value = "";
-                hfContentGroupItemSortOrder.Value = "";
-            }
-        }
-
         #region ModuleActions
         /// <summary>
         /// Causes DNN to create the menu with all actions like edit entity, new, etc.
