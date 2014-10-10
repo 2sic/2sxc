@@ -27,6 +27,3 @@
 <asp:Panel runat="server" ID="pnlError" CssClass="dnnFormMessage dnnFormWarning" Visible="false"></asp:Panel>
 <asp:Panel runat="server" ID="pnlMessage" CssClass="dnnFormMessage dnnFormInfo" Visible="false"></asp:Panel>
 <asp:PlaceHolder runat="server" ID="phOutput"></asp:PlaceHolder>
-
-<asp:HiddenField runat="server" ID="hfContentGroupItemSortOrder" Value="" Visible="false" />
-<asp:HiddenField runat="server" ID="hfContentGroupItemAction" Value="" Visible="false" OnValueChanged="hfContentGroupItemAction_ValueChanged" />

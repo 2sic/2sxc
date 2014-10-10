@@ -35,9 +35,6 @@ namespace ToSic.SexyContent
                 pnlMessage.Visible = false;
                 pnlError.Visible = false;
 
-                // Add ModuleActionHandler
-                AddActionHandler(ModuleActions_Click);
-
                 // If logged in, inject Edit JavaScript, and delete / add items
                 if (UserMayEditThisModule && Sexy != null)
                 {
@@ -353,7 +350,7 @@ namespace ToSic.SexyContent
                         new SexyContent(ZoneId.Value, AppId.Value, false).AddContentGroupItem(Elements.First().GroupId, UserId, Elements.First().TemplateId, null, int.Parse(hfContentGroupItemSortOrder.Value) + 1, true, ContentGroupItemType.Content, false);
                         Response.Redirect(DotNetNuke.Common.Globals.NavigateURL(this.TabId, "", null));
                         break;
-                }  
+                }
 
                 hfContentGroupItemAction.Value = "";
                 hfContentGroupItemSortOrder.Value = "";
@@ -405,9 +402,8 @@ namespace ToSic.SexyContent
                             if (Elements.Any() && Elements.First().TemplateId.HasValue && Template != null &&
                                 Template.UseForList)
                             {
-                                // Add Item (this action will do a postback)
-                                Actions.Add(GetNextActionID(), LocalizeString("ActionAdd.Text"),
-                                    SexyContent.ControlKeys.AddItem, SexyContent.ControlKeys.AddItem, "add.gif", "", true,
+                                // Add Item
+                                Actions.Add(GetNextActionID(), LocalizeString("ActionAdd.Text"), "", "", "add.gif", "javascript:$2sxc(" + this.ModuleId + ").manage.action({ 'action':'add', 'useModuleList': true });", "test", true,
                                     DotNetNuke.Security.SecurityAccessLevel.Edit, true, false);
                             }
 
@@ -451,16 +447,6 @@ namespace ToSic.SexyContent
             }
         }
 
-        protected void ModuleActions_Click(object sender, DotNetNuke.Entities.Modules.Actions.ActionEventArgs e)
-        {
-            switch (e.Action.CommandName)
-            {
-                case SexyContent.ControlKeys.AddItem:
-                    SexyUncached.AddContentGroupItem(Elements.First().GroupID, UserId, Template.TemplateID, null, null, true, ContentGroupItemType.Content, false);
-                    Response.Redirect(Request.RawUrl);
-                    break;
-            }
-        }
         #endregion
 
     }

@@ -72,7 +72,7 @@ namespace ToSic.SexyContent
             public const string DataExport = "dataexport";
             public const string DataImport = "dataimport";
             public const string EditTemplateFile = "edittemplatefile";
-            public const string AddItem = "additem";
+            //public const string AddItem = "additem";
             public const string EditTemplateDefaults = "edittemplatedefaults";
             public const string GettingStarted = "gettingstarted";
             public const string PortalConfiguration = "portalconfiguration";

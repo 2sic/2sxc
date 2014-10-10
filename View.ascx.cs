@@ -17,6 +17,7 @@ using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.GettingStarted;
 using ToSic.SexyContent.ImportExport;
+using DotNetNuke.Framework;
 
 namespace ToSic.SexyContent
 {
@@ -30,23 +31,19 @@ namespace ToSic.SexyContent
         /// <param name="e"></param>
         protected void Page_Load(object sender, EventArgs e)
         {
+            ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
+
             try
             {
                 // Reset messages visible states
                 pnlMessage.Visible = false;
                 pnlError.Visible = false;
 
-                // Add ModuleActionHandler
-                AddActionHandler(ModuleActions_Click);
-
                 // If logged in, inject Edit JavaScript, and delete / add items
                 if (UserMayEditThisModule && Sexy != null)
                 {
                     ClientScriptManager ClientScript = Page.ClientScript;
                     ClientScript.RegisterClientScriptInclude("ViewEdit", ResolveClientUrl("~/DesktopModules/ToSIC_SexyContent/Js/ViewEdit.js"));
-
-                    hfContentGroupItemAction.Visible = true;
-                    hfContentGroupItemSortOrder.Visible = true;
 
                     ((DotNetNuke.UI.Modules.ModuleHost)this.Parent).Attributes.Add("data-2sxc", (new
                     {
@@ -346,28 +343,6 @@ namespace ToSic.SexyContent
             Response.Redirect(Request.RawUrl);
         }
 
-        /// <summary>
-        /// Value changed handler for hfContentGroupItemAction. Allows deleting / adding ContentGroupItems from inside the template.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        protected void hfContentGroupItemAction_ValueChanged(object sender, EventArgs e)
-        {
-            if (UserMayEditThisModule)
-            {
-                switch (hfContentGroupItemAction.Value)
-                {
-                    case "add":
-                        new SexyContent(ZoneId.Value, AppId.Value, false).AddContentGroupItem(Elements.First().GroupId, UserId, Elements.First().TemplateId, null, int.Parse(hfContentGroupItemSortOrder.Value) + 1, true, ContentGroupItemType.Content, false);
-                        Response.Redirect(DotNetNuke.Common.Globals.NavigateURL(this.TabId, "", null));
-                        break;
-                }  
-
-                hfContentGroupItemAction.Value = "";
-                hfContentGroupItemSortOrder.Value = "";
-            }
-        }
-
         #region ModuleActions
 
         /// <summary>
@@ -415,9 +390,8 @@ namespace ToSic.SexyContent
                             if (Elements.Any() && Elements.First().TemplateId.HasValue && Template != null &&
                                 Template.UseForList)
                             {
-                                // Add Item (this action will do a postback)
-                                Actions.Add(GetNextActionID(), LocalizeString("ActionAdd.Text"),
-                                    SexyContent.ControlKeys.AddItem, SexyContent.ControlKeys.AddItem, "add.gif", "", true,
+                                // Add Item
+                                Actions.Add(GetNextActionID(), LocalizeString("ActionAdd.Text"), "", "", "add.gif", "javascript:$2sxc(" + this.ModuleId + ").manage.action({ 'action':'add', 'useModuleList': true });", "test", true,
                                     DotNetNuke.Security.SecurityAccessLevel.Edit, true, false);
                             }
 
@@ -461,16 +435,6 @@ namespace ToSic.SexyContent
             }
         }
 
-        protected void ModuleActions_Click(object sender, ActionEventArgs e)
-        {
-            switch (e.Action.CommandName)
-            {
-                case SexyContent.ControlKeys.AddItem:
-                    SexyUncached.AddContentGroupItem(Elements.First().GroupID, UserId, Template.TemplateID, null, null, true, ContentGroupItemType.Content, false);
-                    Response.Redirect(Request.RawUrl);
-                    break;
-            }
-        }
         #endregion
 
     }

@@ -187,6 +187,7 @@
       <DependentUpon>Services.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="SexyContent\View\ViewController.cs" />
     <Compile Include="EditEntity.ascx.cs">
       <DependentUpon>EditEntity.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

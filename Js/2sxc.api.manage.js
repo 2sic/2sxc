@@ -63,14 +63,22 @@ $2sxc.getManageController = function(id) {
         },
 
         action: function(settings) {
+            var sf = $.ServicesFramework(id);
 
             if (settings.action == 'edit' || settings.action == 'new')
                 manageController.openDialog(settings);
             else if (settings.action == 'add') {
-                moduleElement.find("input[id$=hfContentGroupItemSortOrder]:first").val(settings.sortOrder);
-                moduleElement.find("input[id$=hfContentGroupItemAction]:first").val("add");
+                $.ajax({
+                    type: "GET",
+                    dataType: "json",
+                    async: false,
+                    url: sf.getServiceRoot('2sxc') + "View/View/" + "AddItemToList",
+                    data: { sortOrder: settings.sortOrder },
+                    beforeSend: sf.setModuleHeaders
+                }).done(function (e) {
+                    window.location.reload();
+                });
 
-                $("form").submit();
             } else {
                 throw "Action " + settings.action + " not known.";
             }
