@@ -14,6 +14,10 @@
             var toolbarSettings = $.parseJSON($(this).attr('data-toolbar'));
             $(this).replaceWith($2sxc(moduleId).manage.getToolbar(toolbarSettings));
         });
+
+        $('.sc-template-selector', this).change(function() {
+            $2sxc(moduleId).manage._changeTemplate($(this).val());
+        });
     });
 
 

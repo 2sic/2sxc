@@ -161,16 +161,6 @@ namespace ToSic.SexyContent
             }
         }
 
-        /// <summary>
-        /// Set the chosen template and redirect to the current page (in order to show the chosen template on the page)
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        protected void ddlTemplate_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            ChangeTemplate();
-        }
-
         protected void ddlContentType_SelectedIndexChanged(object sender, EventArgs e)
         {
             BindTemplateDropDown();

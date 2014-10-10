@@ -7,7 +7,7 @@
         </asp:DropDownList>
     </div>
     <div>
-        <asp:DropDownList runat="server" ID="ddlTemplate" DataTextField="Name" DataValueField="TemplateID" OnSelectedIndexChanged="ddlTemplate_SelectedIndexChanged" AutoPostBack="true" CssClass="sc-template-selector">
+        <asp:DropDownList runat="server" ID="ddlTemplate" DataTextField="Name" DataValueField="TemplateID" CssClass="sc-template-selector">
         </asp:DropDownList>
     </div>
     <% if (Template != null) { %>

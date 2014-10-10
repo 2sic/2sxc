@@ -122,9 +122,9 @@ namespace ToSic.SexyContent
             // If there are elements and the selected template exists in the list, select that
             if (Elements.Any() && ddlTemplate.Items.FindByValue(Elements.First().TemplateId.ToString()) != null)
                 ddlTemplate.SelectedValue = Elements.First().TemplateId.ToString();
-            else if(ddlTemplate.Items.Count > 1)
+            else if(TemplatesToChoose.Any() && ddlTemplate.SelectedValue == "0")
             {
-                ddlTemplate.SelectedIndex = 1;
+                ddlTemplate.SelectedValue = TemplatesToChoose.First().TemplateID.ToString();
                 ChangeTemplate();
             }
 
@@ -168,16 +168,6 @@ namespace ToSic.SexyContent
             }
         }
 
-        /// <summary>
-        /// Set the chosen template and redirect to the current page (in order to show the chosen template on the page)
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        protected void ddlTemplate_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            ChangeTemplate();
-        }
-
         protected void ddlApp_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ddlApp.SelectedValue == "OpenAppDialog")
@@ -187,8 +177,12 @@ namespace ToSic.SexyContent
             }
 
             AppId = int.Parse(ddlApp.SelectedValue);
-            ddlTemplate.SelectedValue = "0";
-            ChangeTemplate();
+
+            // Reset template
+            new SexyContent(ZoneId.Value, AppId.Value, false).UpdateTemplateForGroup(Sexy.GetContentGroupIdFromModule(ModuleId), null, UserId);
+
+            //ddlTemplate.SelectedValue = "0";
+            //ChangeTemplate();
             Response.Redirect(Request.RawUrl);
         }
 

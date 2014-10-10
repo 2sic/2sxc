@@ -180,6 +180,25 @@ $2sxc.getManageController = function(id) {
                     console.log("Error: Could not set template chooser state. Status: " + e.status + " - " + e.statusText);
                 }
             });
+        },
+
+        _changeTemplate: function(templateId) {
+            
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                async: false,
+                url: sf.getServiceRoot('2sxc') + "View/ContentGroup/" + "ChangeTemplate",
+                data: { templateId: templateId },
+                beforeSend: sf.setModuleHeaders
+            }).done(function (e) {
+                window.location.reload();
+            }).error(function (e) {
+                if (window.console) {
+                    console.log("Error: Could not change template. Status: " + e.status + " - " + e.statusText);
+                }
+            });
+
         }
 
     };
