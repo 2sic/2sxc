@@ -68,6 +68,7 @@ $2sxc.getManageController = function(id) {
             if (settings.action == 'edit' || settings.action == 'new')
                 manageController.openDialog(settings);
             else if (settings.action == 'add') {
+
                 $.ajax({
                     type: "GET",
                     dataType: "json",
@@ -77,6 +78,10 @@ $2sxc.getManageController = function(id) {
                     beforeSend: sf.setModuleHeaders
                 }).done(function (e) {
                     window.location.reload();
+                }).error(function (e) {
+                    if (window.console) {
+                        console.log("Error: Could not add item. Status: " + e.status + " - " + e.statusText);
+                    }
                 });
 
             } else {
