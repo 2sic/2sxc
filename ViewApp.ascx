@@ -1,6 +1,6 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" Inherits="ToSic.SexyContent.ViewApp" Codebehind="ViewApp.ascx.cs" %>
 <%@ Import Namespace="ToSic.SexyContent" %>
-<asp:Panel runat="server" ID="pnlTemplateChooser" Visible="false" CssClass="dnnFormMessage dnnFormInfo">
+<asp:Panel runat="server" ID="pnlTemplateChooser" Visible="false" CssClass="dnnFormMessage dnnFormInfo sc-choosetemplate">
     <div>
         <asp:DropDownList runat="server" ID="ddlApp" Visible="False" AppendDataBoundItems="true" CssClass="sc-app-selector" DataTextField="Name" DataValueField="AppId" OnSelectedIndexChanged="ddlApp_SelectedIndexChanged" AutoPostBack="true">
             <asp:ListItem Value="0" Text="<Choose App>" resourcekey="ddlAppDefaultItem"></asp:ListItem>
@@ -10,6 +10,9 @@
         <asp:DropDownList runat="server" ID="ddlTemplate" DataTextField="Name" DataValueField="TemplateID" OnSelectedIndexChanged="ddlTemplate_SelectedIndexChanged" AutoPostBack="true" CssClass="sc-template-selector">
         </asp:DropDownList>
     </div>
+    <% if (Template != null) { %>
+        <a class="sc-choosetemplate-close" href="javascript:$2sxc(<%= ModuleId %>).manage._setTemplateChooserState(false);">Close</a>
+    <% } %>
 </asp:Panel>
 <asp:Panel runat="server" Visible="False" class="dnnFormMessage dnnFormInfo" ID="pnlGetStarted"></asp:Panel>
 
@@ -28,6 +31,3 @@
         window.location = "<%= EditUrl("", "", SexyContent.ControlKeys.AppImport) %>";
     </script>
 </asp:Panel>
-
-<asp:HiddenField runat="server" ID="hfContentGroupItemSortOrder" Value="" Visible="false" />
-<asp:HiddenField runat="server" ID="hfContentGroupItemAction" Value="" Visible="false" OnValueChanged="hfContentGroupItemAction_ValueChanged" />

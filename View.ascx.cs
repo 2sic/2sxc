@@ -1,80 +1,31 @@
-﻿using System;
-using System.Web;
+﻿using DotNetNuke.Common.Utilities;
+using DotNetNuke.Entities.Modules;
+using DotNetNuke.Entities.Modules.Actions;
+using DotNetNuke.Security;
+using DotNetNuke.Services.Exceptions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using DotNetNuke.Common.Utilities;
-using DotNetNuke.Security.Permissions;
-using DotNetNuke.Services.Exceptions;
-using System.Collections.Generic;
-using DotNetNuke.Security;
-using DotNetNuke.UI.UserControls;
-using DotNetNuke.Web.Client.ClientResourceManagement;
-using System.Linq;
-using DotNetNuke.Entities.Modules;
-using ToSic.Eav;
-using DotNetNuke.Entities.Modules.Actions;
-using ToSic.SexyContent.DataSources;
-using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.GettingStarted;
-using ToSic.SexyContent.ImportExport;
-using DotNetNuke.Framework;
 
 namespace ToSic.SexyContent
 {
-    public partial class View : SexyControlEditBase, IActionable
+    public partial class View : SexyViewContentOrApp, IActionable
     {
-
         /// <summary>
-        /// Page Load event - preload template chooser if necessary
+        /// Page Load event
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         protected void Page_Load(object sender, EventArgs e)
         {
-            ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
+            // Reset messages visible states
+            pnlMessage.Visible = false;
+            pnlError.Visible = false;
 
-            try
-            {
-                // Reset messages visible states
-                pnlMessage.Visible = false;
-                pnlError.Visible = false;
-
-                // If logged in, inject Edit JavaScript, and delete / add items
-                if (UserMayEditThisModule && Sexy != null)
-                {
-                    ClientScriptManager ClientScript = Page.ClientScript;
-                    ClientScript.RegisterClientScriptInclude("ViewEdit", ResolveClientUrl("~/DesktopModules/ToSIC_SexyContent/Js/ViewEdit.js"));
-
-                    ((DotNetNuke.UI.Modules.ModuleHost)this.Parent).Attributes.Add("data-2sxc", (new
-                    {
-                        moduleId = ModuleId,
-                        manage = new
-                        {
-                            isEditMode = UserMayEditThisModule,
-                            config = new
-                            {
-                                portalId = PortalId,
-                                tabId = TabId,
-                                moduleId = ModuleId,
-                                contentGroupId = Elements.Any() ? Elements.First().GroupId : -1,
-                                dialogUrl = DotNetNuke.Common.Globals.NavigateURL(this.TabId),
-                                returnUrl = Request.RawUrl,
-                                appPath = AppId.HasValue ? Sexy.App.Path : null,
-                                cultureDimension = Sexy.GetCurrentLanguageID(),
-                                isList = Template != null && Template.UseForList
-                            }
-                        }
-                    }).ToJson());
-
-                    ClientResourceManager.RegisterScript(this.Page, "~/DesktopModules/ToSIC_SexyContent/Js/2sxc.api.js", 90);
-                    ClientResourceManager.RegisterScript(this.Page, "~/DesktopModules/ToSIC_SexyContent/Js/2sxc.api.manage.js", 91);
-                }
-            }
-            catch (Exception ex)
-            {
-                Exceptions.ProcessModuleLoadException(this, ex);
-            }
-
+            base.Page_Load(sender, e);
         }
 
         /// <summary>
@@ -95,15 +46,20 @@ namespace ToSic.SexyContent
                 }
                 else
                 {
+                    var templateChooserVisible = !AppId.HasValue || !Elements.Any() || !Elements.First().TemplateId.HasValue || Elements.All(p => !p.EntityId.HasValue);
+
+                    if (Settings.ContainsKey(SexyContent.SettingsShowTemplateChooser))
+                        templateChooserVisible = Boolean.Parse(Settings[SexyContent.SettingsShowTemplateChooser].ToString());
+
                     // If not fully configured, show stuff
-                    if (!AppId.HasValue || !Elements.Any() || !Elements.First().TemplateId.HasValue || Elements.All(p => !p.EntityId.HasValue))
+                    if (templateChooserVisible)
                         ShowTemplateChooser();
 
                     if (AppId.HasValue && !Sexy.PortalIsConfigured(Server, ControlPath))
                         Sexy.ConfigurePortal(Server);
 
                     if (AppId.HasValue && Elements.Any() && Elements.First().TemplateId.HasValue)
-                        ProcessView();
+                        ProcessView(phOutput, pnlError, pnlMessage);
                 }
             }
             catch (Exception ex)
@@ -112,107 +68,6 @@ namespace ToSic.SexyContent
             }
         }
 
-        /// <summary>
-        /// Get the content data and render it with the given template to the page.
-        /// </summary>
-        protected void ProcessView()
-        {
-            #region Check if everything has values and return if not
-
-            if (Template == null)
-            {
-                ShowError(LocalizeString("TemplateConfigurationMissing.Text"));
-                return;
-            }
-
-            if (DataSource.GetCache(ZoneId.Value, AppId.Value).GetContentType(Template.AttributeSetID) == null)
-            {
-                ShowError("The contents of this module cannot be displayed because it's located in another VDB.");
-                return;
-            }
-
-            if (Elements.All(e => e.Content == null))
-            {
-                var toolbar = IsEditable ? "<ul class='sc-menu' data-toolbar='" + new { sortOrder = Elements.First().SortOrder, useModuleList = true, action = "edit" }.ToJson() + "'></ul>" : "";
-                ShowMessage(LocalizeString("NoDemoItem.Text") + " " + toolbar);
-                return;
-            }
-
-            #endregion
-
-            try
-            {
-                
-                string renderedTemplate = "";
-                var engine = EngineFactory.CreateEngine(Template);
-                var dataSource = (ViewDataSource)Sexy.GetViewDataSource(this.ModuleId, SexyContent.HasEditPermission(this.ModuleConfiguration), DotNetNuke.Common.Globals.IsEditMode());
-                engine.Init(Template, Sexy.App, this.ModuleConfiguration, dataSource, Request.QueryString["type"] == "data" ? InstancePurposes.PublishData : InstancePurposes.WebView, Sexy);
-                engine.CustomizeData();
-
-                // Output JSON data if type=data in URL
-                if (Request.QueryString["type"] == "data")
-                {
-                    if (dataSource.Publish.Enabled)
-                    {
-                        var publishedStreams = dataSource.Publish.Streams;
-                        renderedTemplate = Sexy.GetJsonFromStreams(dataSource, publishedStreams.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries));
-                    }
-                    else
-                    {
-                        Response.StatusCode = 403;
-                        var moduleTitle = new ModuleController().GetModule(ModuleId).ModuleTitle;
-                        renderedTemplate = (new { error = "2sxc Content (" + ModuleId + "): " + String.Format(LocalizeString("EnableDataPublishing.Text"), ModuleId, moduleTitle) }).ToJson();
-                        Response.TrySkipIisCustomErrors = true;
-                    }
-                    Response.ContentType = "application/json";
-                }
-                else
-                {
-                    renderedTemplate = engine.Render();
-                }
-
-                // If standalone is specified, output just the template without anything else
-                if (StandAlone)
-                {
-                    Response.Clear();
-                    Response.Write(renderedTemplate);
-                    Response.Flush();
-                    Response.SuppressContent = true;
-                    HttpContext.Current.ApplicationInstance.CompleteRequest();
-                }
-                else
-                    phOutput.Controls.Add(new LiteralControl(renderedTemplate));
-            }
-            // Catch errors; log them
-            catch (Exception Ex)
-            {
-                ShowError(LocalizeString("TemplateError.Text") + ": " + HttpUtility.HtmlEncode(Ex.ToString()), LocalizeString("TemplateError.Text"), false);
-                Exceptions.LogException(Ex);
-            }
-        }
-
-        #region Show Message or Errors
-        protected void ShowMessage(string Message, bool ShowOnlyEdit = true)
-        {
-            if (!ShowOnlyEdit || UserMayEditThisModule)
-            {
-                pnlMessage.Controls.Add(new LiteralControl(Message));
-                pnlMessage.Visible = true;
-            }
-        }
-
-        protected void ShowError(string Error, string NonHostError = "", bool ShowOnlyEdit = true)
-        {
-            if (String.IsNullOrEmpty(NonHostError))
-                NonHostError = Error;
-
-            if (!ShowOnlyEdit || UserMayEditThisModule)
-            {
-                pnlError.Controls.Add(new LiteralControl(UserInfo.IsSuperUser ? Error : NonHostError));
-                pnlError.Visible = true;
-            }
-        }
-        #endregion
 
         /// <summary>
         /// Show the Template Chooser directly on the page, but only if the user has edit rights
@@ -239,7 +94,7 @@ namespace ToSic.SexyContent
                 {
                     ddlContentType.DataSource = Sexy.GetAvailableAttributeSetsForVisibleTemplates(PortalId);
                     ddlContentType.DataBind();
-                    ddlContentType.Enabled = Elements.Count <= 1;
+                    ddlContentType.Enabled = Elements.Count <= 1 && (!Elements.Any(e => e.EntityId.HasValue));
 
                     if (Template != null)
                         ddlContentType.SelectedValue = Template.AttributeSetID.ToString();
@@ -247,12 +102,6 @@ namespace ToSic.SexyContent
                     BindTemplateDropDown();
                 }
 
-                if (!IsContentApp)
-                {
-                    ddlApp.Visible = true;
-                    BindAppDropDown();
-                }
-                    
             }
 
             ddlContentType.Visible = IsContentApp;
@@ -263,7 +112,9 @@ namespace ToSic.SexyContent
         {
             IEnumerable<Template> TemplatesToChoose;
 
-            if (Elements.Count <= 1)
+            if (Elements.Any(e => e.EntityId.HasValue))
+                TemplatesToChoose = Sexy.GetCompatibleTemplates(PortalId, Elements.First().GroupId).Where(p => !p.IsHidden);
+            else if (Elements.Count <= 1)
                 TemplatesToChoose = Sexy.GetVisibleTemplates(PortalId);
             else
                 TemplatesToChoose = Sexy.GetVisibleListTemplates(PortalId);
@@ -275,7 +126,7 @@ namespace ToSic.SexyContent
             ddlTemplate.DataSource = TemplatesToChoose;
             ddlTemplate.DataBind();
             // If the current data is a list of entities, don't allow changing back to no template
-            if(Elements.Count <= 1)
+            if(Elements.Count <= 1 && (!Elements.Any(e => e.EntityId.HasValue)))
                 ddlTemplate.Items.Insert(0, new ListItem(LocalizeString("ddlTemplateDefaultItem.Text"), "0"));
 
             // If there are elements and the selected template exists in the list, select that
@@ -293,21 +144,9 @@ namespace ToSic.SexyContent
             }
         }
 
-        private void BindAppDropDown()
-        {
-            ddlApp.DataSource = SexyContent.GetApps(ZoneId.Value, false, Sexy.OwnerPS).Where(a => !a.Hidden);
-            ddlApp.DataBind();
-
-            if (ddlApp.Items.Cast<ListItem>().Any(p => p.Value == AppId.ToString()))
-            {
-                ddlApp.SelectedValue = AppId.ToString();
-                ddlApp.Items.Cast<ListItem>().First().Enabled = false;
-            }
-        }
-
         protected void ChangeTemplate()
         {
-            if (UserMayEditThisModule)
+            if (UserMayEditThisModule && !String.IsNullOrEmpty(ddlTemplate.SelectedValue) && AppId.HasValue)
             {
                 var TemplateID = int.Parse(ddlTemplate.SelectedValue);
 
@@ -315,7 +154,7 @@ namespace ToSic.SexyContent
                 if (Template != null && TemplateID == Template.TemplateID)
                     return;
 
-                SexyUncached.UpdateTemplateForGroup(Sexy.GetContentGroupIdFromModule(ModuleId), TemplateID,
+                new SexyContent(ZoneId.Value, AppId.Value, false).UpdateTemplateForGroup(Sexy.GetContentGroupIdFromModule(ModuleId), TemplateID,
                                                               UserId);
 
                 Response.Redirect(Request.RawUrl);
@@ -337,19 +176,14 @@ namespace ToSic.SexyContent
             BindTemplateDropDown();
         }
 
-        protected void ddlApp_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            AppId = int.Parse(ddlApp.SelectedValue);
-            Response.Redirect(Request.RawUrl);
-        }
 
         #region ModuleActions
 
         /// <summary>
         /// Causes DNN to create the menu with all actions like edit entity, new, etc.
         /// </summary>
-        private DotNetNuke.Entities.Modules.Actions.ModuleActionCollection _ModuleActions;
-        public DotNetNuke.Entities.Modules.Actions.ModuleActionCollection ModuleActions
+        private ModuleActionCollection _ModuleActions;
+        public ModuleActionCollection ModuleActions
         {
             get
             {
@@ -358,8 +192,8 @@ namespace ToSic.SexyContent
 
                 if (_ModuleActions == null)
                 {
-                    _ModuleActions = new DotNetNuke.Entities.Modules.Actions.ModuleActionCollection();
-                    DotNetNuke.Entities.Modules.Actions.ModuleActionCollection Actions = _ModuleActions;
+                    _ModuleActions = new ModuleActionCollection();
+                    ModuleActionCollection Actions = _ModuleActions;
 
                     try
                     {
@@ -373,7 +207,7 @@ namespace ToSic.SexyContent
                                     Actions.Add(GetNextActionID(), LocalizeString("ActionEdit.Text"),
                                         ModuleActionType.EditContent, "edititem", "edit.gif", PortalSettings.EnablePopUps ?
                                         UrlUtils.PopUpUrl(editLink, this, PortalSettings, false, false) : editLink, false,
-                                        DotNetNuke.Security.SecurityAccessLevel.Edit, true, false);
+                                        SecurityAccessLevel.Edit, true, false);
                                 }
                             }
                             else
@@ -384,7 +218,7 @@ namespace ToSic.SexyContent
                                     EditUrl(this.TabId, SexyContent.ControlKeys.EditList, false, "mid",
                                         this.ModuleId.ToString(), SexyContent.ContentGroupIDString,
                                         Elements.First().GroupID.ToString()), false,
-                                    DotNetNuke.Security.SecurityAccessLevel.Edit, true, false);
+                                    SecurityAccessLevel.Edit, true, false);
                             }
 
                             if (Elements.Any() && Elements.First().TemplateId.HasValue && Template != null &&
@@ -392,16 +226,15 @@ namespace ToSic.SexyContent
                             {
                                 // Add Item
                                 Actions.Add(GetNextActionID(), LocalizeString("ActionAdd.Text"), "", "", "add.gif", "javascript:$2sxc(" + this.ModuleId + ").manage.action({ 'action':'add', 'useModuleList': true });", "test", true,
-                                    DotNetNuke.Security.SecurityAccessLevel.Edit, true, false);
+                                    SecurityAccessLevel.Edit, true, false);
                             }
 
-                            // Settings Button
+                            // Change layout button
                             if (Sexy.GetVisibleTemplates(PortalSettings.PortalId).Any() && Template != null)
                             {
                                 Actions.Add(GetNextActionID(), LocalizeString("ActionChangeLayoutOrContent.Text"),
-                                    ModuleActionType.AddContent, "settings", "action_settings.gif",
-                                    EditUrl(SexyContent.ControlKeys.SettingsWrapper), false, SecurityAccessLevel.Edit, true,
-                                    false);
+                                    "", "", "action_settings.gif", "javascript:$2sxc(" + this.ModuleId + ").manage._setTemplateChooserState(true);", "test", true,
+                                    SecurityAccessLevel.Edit, true, false);
                             }
                         }
 
@@ -410,7 +243,7 @@ namespace ToSic.SexyContent
                             if (ZoneId.HasValue && AppId.HasValue && Template != null)
                             {
                                 // Edit Template Button
-                                Actions.Add(GetNextActionID(), LocalizeString("ActionEditTemplateFile.Text"), ModuleActionType.EditContent, "templatehelp", "edit.gif", EditUrl(this.TabId, SexyContent.ControlKeys.EditTemplateFile, false, "mid", this.ModuleId.ToString(), "TemplateID", Template.TemplateID.ToString()), false, DotNetNuke.Security.SecurityAccessLevel.Admin, true, true);
+                                Actions.Add(GetNextActionID(), LocalizeString("ActionEditTemplateFile.Text"), ModuleActionType.EditContent, "templatehelp", "edit.gif", EditUrl(this.TabId, SexyContent.ControlKeys.EditTemplateFile, false, "mid", this.ModuleId.ToString(), "TemplateID", Template.TemplateID.ToString()), false, SecurityAccessLevel.Admin, true, true);
                             }
 
                             // Administrator functions
@@ -421,7 +254,7 @@ namespace ToSic.SexyContent
 
                             // App Management
                             if (!IsContentApp)
-                                Actions.Add(GetNextActionID(), "App Management", "AppManagement.Action",
+                                Actions.Add(GetNextActionID(), "Apps Management", "AppManagement.Action",
                                         "appmanagement", "action_settings.gif", EditUrl("", "", "appmanagement"),
                                         false, SecurityAccessLevel.Admin, true, false);
                         }

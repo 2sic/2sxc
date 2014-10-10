@@ -5,6 +5,7 @@ $2sxc.getManageController = function(id) {
     var manageInfo = $.parseJSON(moduleElement.find('.Mod2sxcC, .Mod2sxcappC').attr('data-2sxc')).manage;
     var config = manageInfo.config;
     var isEditMode = manageInfo.isEditMode;
+    var sf = $.ServicesFramework(id);
 
     var manageController = {
 
@@ -49,7 +50,7 @@ $2sxc.getManageController = function(id) {
                 + $.param(params);
         },
 
-        openDialog: function(settings) {
+        _openDialog: function(settings) {
 
             var link = manageController.getLink(settings);
 
@@ -63,17 +64,15 @@ $2sxc.getManageController = function(id) {
         },
 
         action: function(settings) {
-            var sf = $.ServicesFramework(id);
-
             if (settings.action == 'edit' || settings.action == 'new')
-                manageController.openDialog(settings);
+                manageController._openDialog(settings);
             else if (settings.action == 'add') {
 
                 $.ajax({
                     type: "GET",
                     dataType: "json",
                     async: false,
-                    url: sf.getServiceRoot('2sxc') + "View/View/" + "AddItemToList",
+                    url: sf.getServiceRoot('2sxc') + "View/ContentGroup/" + "AddItem",
                     data: { sortOrder: settings.sortOrder },
                     beforeSend: sf.setModuleHeaders
                 }).done(function (e) {
@@ -163,6 +162,24 @@ $2sxc.getManageController = function(id) {
                 toolbar.append($('<li />').append($(manageController.getButton(buttons[i]))));
 
             return toolbar[0].outerHTML;
+        },
+
+        _setTemplateChooserState: function (state)
+        {
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                async: false,
+                url: sf.getServiceRoot('2sxc') + "View/Module/" + "SetTemplateChooserState",
+                data: { state: state },
+                beforeSend: sf.setModuleHeaders
+            }).done(function (e) {
+                window.location.reload();
+            }).error(function (e) {
+                if (window.console) {
+                    console.log("Error: Could not set template chooser state. Status: " + e.status + " - " + e.statusText);
+                }
+            });
         }
 
     };

@@ -8,10 +8,12 @@
 .sc-edit { background: url(images/Edit.png); }
 .sc-new { background: url(images/AddWithEdit.png); }
 .sc-draft.sc-edit { background: url(images/Edit-Draft.png); }
-.Mod2sxcC .dnnFormMessage select { margin-bottom:0; }
+.Mod2sxcC .dnnFormMessage select, .Mod2sxcappC .dnnFormMessage select { margin-bottom:0; }
 
+.sc-choosetemplate { position: relative; }
 .sc-contenttype-selector, .sc-template-selector, .sc-app-selector { width: 100%;position: relative; max-width: 300px!important; }
 .sc-contenttype-selector, .sc-app-selector { margin-bottom: 3px!important; }
+.sc-choosetemplate-close { background: url(images/Delete.png) center center no-repeat;position: absolute;right: 0;top: 0;height: 30px;width: 30px;display: block;text-indent: -9999px; }
 
 /* Loading sign */
 .sc-loading { position: absolute;top: 0;left: 0;width: 100%;height: 100%;background: url(images/ajax-loader.gif) center center no-repeat rgba(255,255,255,0.7); }

@@ -48,6 +48,7 @@ namespace ToSic.SexyContent
         public const string AppIDString = "AppId";
         public const string SettingsPublishDataSource = "ToSic_SexyContent_PublishDataSource";
         public const string SettingsPublishDataSourceStreams = "ToSic_SexyContent_PublishDataSource_Streams";
+        public const string SettingsShowTemplateChooser = "ToSIC_SexyContent_ShowTemplateChooser";
         public const string ContentGroupItemIDString = "ContentGroupItemID";
         public const string SortOrderString = "SortOrder";
         public const string EntityID = "EntityID";
@@ -981,6 +982,8 @@ namespace ToSic.SexyContent
         /// <returns></returns>
         public ContentGroupItem AddContentGroupItem(int ContentGroupID, int UserID, int? TemplateID, int? EntityID, int? DestinationSortOrder, bool AutoSave, ContentGroupItemType ItemType, bool PreventSorting)
         {
+            var userId = PortalSettings.Current.UserId;
+
             var Item = new ContentGroupItem()
             {
                 ContentGroupID = ContentGroupID,

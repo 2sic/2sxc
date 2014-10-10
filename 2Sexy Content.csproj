@@ -187,7 +187,10 @@
       <DependentUpon>Services.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="SexyContent\View\ViewController.cs" />
+    <Compile Include="SexyContent\SexyViewContentOrApp.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SexyContent\ViewAPI\ContentGroupController.cs" />
     <Compile Include="EditEntity.ascx.cs">
       <DependentUpon>EditEntity.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -380,6 +383,7 @@
     </Compile>
     <Compile Include="SexyContent\Template.cs" />
     <Compile Include="SexyContent\TemplateDefault.cs" />
+    <Compile Include="SexyContent\ViewAPI\ModuleController.cs" />
     <Compile Include="TemplateHelpGrid.ascx.cs">
       <DependentUpon>TemplateHelpGrid.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

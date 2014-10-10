@@ -105,7 +105,7 @@ namespace ToSic.SexyContent
         {
             get
             {
-                if (!Elements.Any() || !Elements.First().TemplateId.HasValue)
+                if (!AppId.HasValue || !Elements.Any() || !Elements.First().TemplateId.HasValue)
                     return null;
                 if (_Template == null)
                     _Template = Sexy.TemplateContext.GetTemplate(Elements.First().TemplateId.Value);
