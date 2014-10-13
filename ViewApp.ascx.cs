@@ -122,7 +122,7 @@ namespace ToSic.SexyContent
             // If there are elements and the selected template exists in the list, select that
             if (Elements.Any() && ddlTemplate.Items.FindByValue(Elements.First().TemplateId.ToString()) != null)
                 ddlTemplate.SelectedValue = Elements.First().TemplateId.ToString();
-            else if(TemplatesToChoose.Any() && ddlTemplate.SelectedValue == "0")
+            else if(TemplatesToChoose.Any())
             {
                 ddlTemplate.SelectedValue = TemplatesToChoose.First().TemplateID.ToString();
                 ChangeTemplate();
@@ -181,8 +181,6 @@ namespace ToSic.SexyContent
             // Reset template
             new SexyContent(ZoneId.Value, AppId.Value, false).UpdateTemplateForGroup(Sexy.GetContentGroupIdFromModule(ModuleId), null, UserId);
 
-            //ddlTemplate.SelectedValue = "0";
-            //ChangeTemplate();
             Response.Redirect(Request.RawUrl);
         }
 
