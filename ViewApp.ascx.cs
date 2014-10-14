@@ -38,30 +38,20 @@ namespace ToSic.SexyContent
         {
             try
             {
-                // If the Zone (VDB) has not been specified in Portal Settings, show message
-                if (!ZoneId.HasValue)
-                {
-                    pnlZoneConfigurationMissing.Visible = true;
-                    hlkConfigureZone.NavigateUrl = EditUrl(this.TabId, SexyContent.ControlKeys.PortalConfiguration, false,
-                        "mid", this.ModuleId.ToString());
-                }
-                else
-                {
-                    var templateChooserVisible = !AppId.HasValue || !Elements.Any() || !Elements.First().TemplateId.HasValue || Elements.All(p => !p.EntityId.HasValue);
+                var templateChooserVisible = !AppId.HasValue || !Elements.Any() || !Elements.First().TemplateId.HasValue || Elements.All(p => !p.EntityId.HasValue);
 
-                    if (Settings.ContainsKey(SexyContent.SettingsShowTemplateChooser))
-                        templateChooserVisible = Boolean.Parse(Settings[SexyContent.SettingsShowTemplateChooser].ToString());
+                if (Settings.ContainsKey(SexyContent.SettingsShowTemplateChooser))
+                    templateChooserVisible = Boolean.Parse(Settings[SexyContent.SettingsShowTemplateChooser].ToString());
 
-                    // If not fully configured, show stuff
-                    if (templateChooserVisible)
-                        ShowTemplateChooser();
+                // If not fully configured, show stuff
+                if (templateChooserVisible)
+                    ShowTemplateChooser();
 
-                    if (AppId.HasValue && !Sexy.PortalIsConfigured(Server, ControlPath))
-                        Sexy.ConfigurePortal(Server);
+                if (AppId.HasValue && !Sexy.PortalIsConfigured(Server, ControlPath))
+                    Sexy.ConfigurePortal(Server);
 
-                    if (AppId.HasValue && Elements.Any() && Elements.First().TemplateId.HasValue)
-                        ProcessView(phOutput, pnlError, pnlMessage);
-                }
+                if (AppId.HasValue && Elements.Any() && Elements.First().TemplateId.HasValue)
+                    ProcessView(phOutput, pnlError, pnlMessage);
             }
             catch (Exception ex)
             {

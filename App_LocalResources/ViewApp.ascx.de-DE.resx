@@ -129,9 +129,6 @@
   <data name="hlkConfigurePortal.Text" xml:space="preserve">
     <value>Portal Konfigurieren</value>
   </data>
-  <data name="lblMissingConfiguration.Text" xml:space="preserve">
-    <value>Ihr Portal ist nicht für die Verwendung von 2sxc konfiguriert.</value>
-  </data>
   <data name="NoDemoItem.Text" xml:space="preserve">
     <value>Für die ausgewählte Vorlage wurde noch kein Inhalt eingegeben.</value>
   </data>
@@ -149,9 +146,6 @@
   </data>
   <data name="DeleteContentGroupItem.Text" xml:space="preserve">
     <value>Möchten Sie \"{0} ({1})\" wirklich löschen?</value>
-  </data>
-  <data name="ZoneConfigurationMissing.Text" xml:space="preserve">
-    <value>2sxc meldet: Danke, dass du mich verwendest. Bevor du alles ausprobieren kannst, muss ich wissen, ob dieses Portal die Inhalte mit anderen Portalen teilt oder autonom arbeitet. Bitte richte dies ein in der Konfiguration.&lt;br /&gt;</value>
   </data>
   <data name="hlkConfigureZone.Text" xml:space="preserve">
     <value>Klick hier um dies einzurichten</value>

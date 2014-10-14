@@ -118,54 +118,63 @@
   <ItemGroup>
     <Compile Include="Administration\Apps\AppExport.ascx.cs">
       <DependentUpon>AppExport.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Administration\Apps\AppExport.ascx.designer.cs">
       <DependentUpon>AppExport.ascx</DependentUpon>
     </Compile>
     <Compile Include="Administration\Apps\AppConfig.ascx.cs">
       <DependentUpon>AppConfig.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Administration\Apps\AppConfig.ascx.designer.cs">
       <DependentUpon>AppConfig.ascx</DependentUpon>
     </Compile>
     <Compile Include="Administration\Apps\AppManagement.ascx.cs">
       <DependentUpon>AppManagement.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Administration\Apps\AppManagement.ascx.designer.cs">
       <DependentUpon>AppManagement.ascx</DependentUpon>
     </Compile>
     <Compile Include="Administration\Apps\AppImport.ascx.cs">
       <DependentUpon>AppImport.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Administration\Apps\AppImport.ascx.designer.cs">
       <DependentUpon>AppImport.ascx</DependentUpon>
     </Compile>
     <Compile Include="Administration\DataExport.ascx.cs">
       <DependentUpon>DataExport.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Administration\DataExport.ascx.designer.cs">
       <DependentUpon>DataExport.ascx</DependentUpon>
     </Compile>
     <Compile Include="Administration\DataImport.ascx.cs">
       <DependentUpon>DataImport.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Administration\DataImport.ascx.designer.cs">
       <DependentUpon>DataImport.ascx</DependentUpon>
     </Compile>
     <Compile Include="Administration\GettingStarted.ascx.cs">
       <DependentUpon>GettingStarted.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Administration\GettingStarted.ascx.designer.cs">
       <DependentUpon>GettingStarted.ascx</DependentUpon>
     </Compile>
     <Compile Include="Administration\PortalConfiguration.ascx.cs">
       <DependentUpon>PortalConfiguration.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Administration\PortalConfiguration.ascx.designer.cs">
       <DependentUpon>PortalConfiguration.ascx</DependentUpon>
     </Compile>
     <Compile Include="Administration\ContentTypeAndDemoSelector.ascx.cs">
       <DependentUpon>ContentTypeAndDemoSelector.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Administration\ContentTypeAndDemoSelector.ascx.designer.cs">
       <DependentUpon>ContentTypeAndDemoSelector.ascx</DependentUpon>
@@ -188,53 +197,63 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SexyContentContext.edmx</DependentUpon>
     </Compile>
-    <Compile Include="SexyContent\SexyViewContentOrApp.cs" />
+    <Compile Include="SexyContent\SexyViewContentOrApp.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="SexyContent\Template.cs" />
     <Compile Include="SexyContent\ViewAPI\ContentGroupController.cs" />
     <Compile Include="EditEntity.ascx.cs">
       <DependentUpon>EditEntity.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="EditEntity.ascx.designer.cs">
       <DependentUpon>EditEntity.ascx</DependentUpon>
     </Compile>
     <Compile Include="EditContentGroupItem.ascx.cs">
       <DependentUpon>EditContentGroupItem.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="EditContentGroupItem.ascx.designer.cs">
       <DependentUpon>EditContentGroupItem.ascx</DependentUpon>
     </Compile>
     <Compile Include="EditDataSource.ascx.cs">
       <DependentUpon>EditDataSource.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="EditDataSource.ascx.designer.cs">
       <DependentUpon>EditDataSource.ascx</DependentUpon>
     </Compile>
     <Compile Include="EditList.ascx.cs">
       <DependentUpon>EditList.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="EditList.ascx.designer.cs">
       <DependentUpon>EditList.ascx</DependentUpon>
     </Compile>
     <Compile Include="EditTemplateFile.ascx.cs">
       <DependentUpon>EditTemplateFile.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="EditTemplateFile.ascx.designer.cs">
       <DependentUpon>EditTemplateFile.ascx</DependentUpon>
     </Compile>
     <Compile Include="Administration\Export.ascx.cs">
       <DependentUpon>Export.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Administration\Export.ascx.designer.cs">
       <DependentUpon>Export.ascx</DependentUpon>
     </Compile>
     <Compile Include="Administration\Import.ascx.cs">
       <DependentUpon>Import.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Administration\Import.ascx.designer.cs">
       <DependentUpon>Import.ascx</DependentUpon>
     </Compile>
     <Compile Include="EditContentGroup.ascx.cs">
       <DependentUpon>EditContentGroup.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="EditContentGroup.ascx.designer.cs">
       <DependentUpon>EditContentGroup.ascx</DependentUpon>
@@ -279,9 +298,12 @@
     <Compile Include="SexyContent\DataSources\Tokens\QueryStringPropertyAccess.cs" />
     <Compile Include="SexyContent\DataSources\ViewDataSource.cs" />
     <Compile Include="SexyContent\EAVExtensions\EavApiProxies\EntityPickerController.cs" />
-    <Compile Include="SexyContent\EAV\FieldTemplates\EditorProvider.cs" />
+    <Compile Include="SexyContent\EAV\FieldTemplates\EditorProvider.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="SexyContent\EAV\FieldTemplates\Entity_Edit.ascx.cs">
       <DependentUpon>Entity_Edit.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="SexyContent\EAV\FieldTemplates\Entity_Edit.ascx.designer.cs">
       <DependentUpon>Entity_Edit.ascx</DependentUpon>
@@ -290,30 +312,35 @@
     <Compile Include="SexyContent\DynamicEntity.cs" />
     <Compile Include="SexyContent\EAV\FieldTemplates\Number_Edit.ascx.cs">
       <DependentUpon>Number_Edit.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="SexyContent\EAV\FieldTemplates\Number_Edit.ascx.designer.cs">
       <DependentUpon>Number_Edit.ascx</DependentUpon>
     </Compile>
     <Compile Include="SexyContent\EAV\FieldTemplates\Hyperlink_Edit.ascx.cs">
       <DependentUpon>Hyperlink_Edit.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="SexyContent\EAV\FieldTemplates\Hyperlink_Edit.ascx.designer.cs">
       <DependentUpon>Hyperlink_Edit.ascx</DependentUpon>
     </Compile>
     <Compile Include="SexyContent\EAV\FieldTemplates\Boolean_Edit.ascx.cs">
       <DependentUpon>Boolean_Edit.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="SexyContent\EAV\FieldTemplates\Boolean_Edit.ascx.designer.cs">
       <DependentUpon>Boolean_Edit.ascx</DependentUpon>
     </Compile>
     <Compile Include="SexyContent\EAV\FieldTemplates\DateTime_Edit.ascx.cs">
       <DependentUpon>DateTime_Edit.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="SexyContent\EAV\FieldTemplates\DateTime_Edit.ascx.designer.cs">
       <DependentUpon>DateTime_Edit.ascx</DependentUpon>
     </Compile>
     <Compile Include="SexyContent\EAV\FieldTemplates\String_Edit.ascx.cs">
       <DependentUpon>String_Edit.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="SexyContent\EAV\FieldTemplates\String_Edit.ascx.designer.cs">
       <DependentUpon>String_Edit.ascx</DependentUpon>
@@ -332,6 +359,7 @@
     <Compile Include="SexyContent\GettingStarted\GettingStartedController.cs" />
     <Compile Include="SexyContent\GettingStarted\GettingStartedFrame.ascx.cs">
       <DependentUpon>GettingStartedFrame.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="SexyContent\GettingStarted\GettingStartedFrame.ascx.designer.cs">
       <DependentUpon>GettingStartedFrame.ascx</DependentUpon>
@@ -352,8 +380,12 @@
     <Compile Include="SexyContent\Search\SearchIndexException.cs" />
     <Compile Include="SexyContent\Search\SearchInfo.cs" />
     <Compile Include="SexyContent\SexyContentException.cs" />
-    <Compile Include="SexyContent\SexyControlAdminBase.cs" />
-    <Compile Include="SexyContent\SexyControlEditBase.cs" />
+    <Compile Include="SexyContent\SexyControlAdminBase.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SexyContent\SexyControlEditBase.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="SexyContent\TemplateDefault.cs" />
     <Compile Include="SexyContent\ViewAPI\ModuleController.cs" />
     <Compile Include="TemplateHelpGrid.ascx.cs">
@@ -365,12 +397,14 @@
     </Compile>
     <Compile Include="ViewApp.ascx.cs">
       <DependentUpon>ViewApp.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="ViewApp.ascx.designer.cs">
       <DependentUpon>ViewApp.ascx</DependentUpon>
     </Compile>
     <Compile Include="View.ascx.cs">
       <DependentUpon>View.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="View.ascx.designer.cs">
       <DependentUpon>View.ascx</DependentUpon>
@@ -394,19 +428,24 @@
     <Compile Include="SexyContent\SexyContentContext.cs" />
     <Compile Include="Administration\EAVManagement.ascx.cs">
       <DependentUpon>EAVManagement.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Administration\ManageTemplates.ascx.cs">
       <DependentUpon>ManageTemplates.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Administration\EditTemplate.ascx.cs">
       <DependentUpon>EditTemplate.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.ascx.cs">
       <DependentUpon>Settings.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="SettingsWrapper.ascx.cs">
       <DependentUpon>SettingsWrapper.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="SexyContent\Engines\TokenEngine\FilteredNameValueCollectionPropertyAccess.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\TokenReplace.cs" />
@@ -512,7 +551,6 @@
     <Content Include="Extensions\ToSic_vCard\vCard.ashx" />
     <Content Include="BuildScripts\ModulePackage.Targets" />
     <Content Include="BuildScripts\MSBuild.Community.Tasks.targets" />
-    <Content Include="packages.config" />
     <None Include="SqlDataProvider\01.00.00.SqlDataProvider" />
     <Content Include="SexyContent\GettingStarted\GettingStartedFrame.ascx" />
     <Content Include="SqlDataProvider\05.02.01.SqlDataProvider" />
