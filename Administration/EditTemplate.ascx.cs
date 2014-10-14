@@ -122,9 +122,11 @@ namespace ToSic.SexyContent
         protected void btnUpdate_Click(object sender, EventArgs e)
         {
 
+            var attributeSetId = ctrContentType.ContentTypeID.HasValue && ctrListContentType.ContentTypeID != 0 ? ctrContentType.ContentTypeID.Value : new int?();
+
             if (ModeIsEdit)
             {
-                Template.AttributeSetID = ctrContentType.ContentTypeID.Value;
+                Template.AttributeSetID = attributeSetId;
                 Template.DemoEntityID = ctrContentType.DemoEntityID;
                 Template.Location = ddlTemplateLocations.SelectedValue;
                 Template.Type = ddlTemplateTypes.SelectedValue;
@@ -146,7 +148,7 @@ namespace ToSic.SexyContent
             {
                 Template = Sexy.TemplateContext.GetNewTemplate(AppId.Value);
                 Template.PortalID = this.PortalId;
-                Template.AttributeSetID = ctrContentType.ContentTypeID.Value;
+                Template.AttributeSetID = attributeSetId;
                 Template.DemoEntityID = ctrContentType.DemoEntityID;
                 Template.Location = ddlTemplateLocations.SelectedValue;
                 Template.Type = ddlTemplateTypes.SelectedValue;

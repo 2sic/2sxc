@@ -8,6 +8,8 @@ UPDATE       Roles
 SET                RoleName = N'2sxc designers'
 WHERE        (RoleName = N'2SexyContent Designers')
 
+-- Make sure AttributeSetID can be null
+ALTER TABLE ToSIC_SexyContent_Templates ALTER COLUMN AttributeSetID int NULL
 
 -- Commit the transaction
 COMMIT TRANSACTION SexyContentUpdate;

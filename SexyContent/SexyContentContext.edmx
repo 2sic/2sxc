@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="ToSic.SexyContent.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+    <Schema Namespace="ToSic.SexyContent.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
         <EntityType Name="ToSIC_SexyContent_ContentGroupItems">
           <Key>
             <PropertyRef Name="ContentGroupItemID" />
@@ -30,7 +30,7 @@
           <Property Name="PortalID" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="Path" Type="nvarchar" MaxLength="250" Nullable="false" />
-          <Property Name="AttributeSetID" Type="int" Nullable="false" />
+          <Property Name="AttributeSetID" Type="int" />
           <Property Name="DemoEntityID" Type="int" />
           <Property Name="Script" Type="nvarchar(max)" Nullable="false" />
           <Property Name="IsFile" Type="bit" Nullable="false" />
@@ -88,14 +88,14 @@
           <Property Name="EntityID" Type="Int32" />
           <Property Name="TemplateID" Type="Int32" />
           <Property Name="SortOrder" Type="Int32" Nullable="false" />
+          <Property Name="Type" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="SysCreated" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="SysCreatedBy" Type="Int32" Nullable="false" />
           <Property Name="SysModified" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="SysModifiedBy" Type="Int32" Nullable="false" />
           <Property Name="SysDeleted" Type="DateTime" Precision="3" />
           <Property Name="SysDeletedBy" Type="Int32" />
-          <NavigationProperty Name="Template" Relationship="ToSic.SexyContent.FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_SexyContent_Templates" FromRole="ToSIC_SexyContent_ContentGroupItems" ToRole="ToSIC_SexyContent_Templates" />
-          <Property Type="String" Name="Type" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ToSIC_SexyContent_Templates" Relationship="ToSic.SexyContent.FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_SexyContent_Templates" FromRole="ToSIC_SexyContent_ContentGroupItems" ToRole="ToSIC_SexyContent_Templates" />
         </EntityType>
         <EntityType Name="Template">
           <Key>
@@ -103,15 +103,15 @@
           </Key>
           <Property Name="TemplateID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="PortalID" Type="Int32" Nullable="false" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
-          <Property Name="Path" Type="String" Nullable="false" MaxLength="250" Unicode="true" FixedLength="false" />
-          <Property Name="AttributeSetID" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Path" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="AttributeSetID" Type="Int32" />
           <Property Name="DemoEntityID" Type="Int32" />
-          <Property Name="Script" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="Script" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="IsFile" Type="Boolean" Nullable="false" />
-          <Property Name="Type" Type="String" Nullable="false" MaxLength="25" Unicode="true" FixedLength="false" />
+          <Property Name="Type" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="true" />
           <Property Name="IsHidden" Type="Boolean" Nullable="false" />
-          <Property Name="Location" Type="String" Nullable="false" MaxLength="25" Unicode="true" FixedLength="false" />
+          <Property Name="Location" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="true" />
           <Property Name="UseForList" Type="Boolean" Nullable="false" />
           <Property Name="UseForItem" Type="Boolean" Nullable="false" />
           <Property Name="SysCreated" Type="DateTime" Nullable="false" Precision="3" />
@@ -120,12 +120,12 @@
           <Property Name="SysModifiedBy" Type="Int32" Nullable="false" />
           <Property Name="SysDeleted" Type="DateTime" Precision="3" />
           <Property Name="SysDeletedBy" Type="Int32" />
-          <NavigationProperty Name="ContentGroupItems" Relationship="ToSic.SexyContent.FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_SexyContent_Templates" FromRole="ToSIC_SexyContent_Templates" ToRole="ToSIC_SexyContent_ContentGroupItems" />
           <Property Name="AppID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ToSIC_SexyContent_ContentGroupItems" Relationship="ToSic.SexyContent.FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_SexyContent_Templates" FromRole="ToSIC_SexyContent_Templates" ToRole="ToSIC_SexyContent_ContentGroupItems" />
         </EntityType>
         <Association Name="FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_SexyContent_Templates">
-          <End Role="ToSIC_SexyContent_Templates" Type="ToSic.SexyContent.Template" Multiplicity="0..1" />
-          <End Role="ToSIC_SexyContent_ContentGroupItems" Type="ToSic.SexyContent.ContentGroupItem" Multiplicity="*" />
+          <End Type="ToSic.SexyContent.Template" Role="ToSIC_SexyContent_Templates" Multiplicity="0..1" />
+          <End Type="ToSic.SexyContent.ContentGroupItem" Role="ToSIC_SexyContent_ContentGroupItems" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="ToSIC_SexyContent_Templates">
               <PropertyRef Name="TemplateID" />
@@ -141,42 +141,50 @@
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="ToSicSexyContentStoreContainer" CdmEntityContainer="SexyContentContextBase">
-          <EntitySetMapping Name="ContentGroupItems"><EntityTypeMapping TypeName="ToSic.SexyContent.ContentGroupItem"><MappingFragment StoreEntitySet="ToSIC_SexyContent_ContentGroupItems">
+          <EntitySetMapping Name="ContentGroupItems">
+            <EntityTypeMapping TypeName="ToSic.SexyContent.ContentGroupItem">
+              <MappingFragment StoreEntitySet="ToSIC_SexyContent_ContentGroupItems">
+                <ScalarProperty Name="SysDeletedBy" ColumnName="SysDeletedBy" />
+                <ScalarProperty Name="SysDeleted" ColumnName="SysDeleted" />
+                <ScalarProperty Name="SysModifiedBy" ColumnName="SysModifiedBy" />
+                <ScalarProperty Name="SysModified" ColumnName="SysModified" />
+                <ScalarProperty Name="SysCreatedBy" ColumnName="SysCreatedBy" />
+                <ScalarProperty Name="SysCreated" ColumnName="SysCreated" />
                 <ScalarProperty Name="Type" ColumnName="Type" />
-                <ScalarProperty Name="ContentGroupItemID" ColumnName="ContentGroupItemID" />
-            <ScalarProperty Name="ContentGroupID" ColumnName="ContentGroupID" />
-            <ScalarProperty Name="EntityID" ColumnName="EntityID" />
-            <ScalarProperty Name="TemplateID" ColumnName="TemplateID" />
-            <ScalarProperty Name="SortOrder" ColumnName="SortOrder" />
-            <ScalarProperty Name="SysCreated" ColumnName="SysCreated" />
-            <ScalarProperty Name="SysCreatedBy" ColumnName="SysCreatedBy" />
-            <ScalarProperty Name="SysModified" ColumnName="SysModified" />
-            <ScalarProperty Name="SysModifiedBy" ColumnName="SysModifiedBy" />
-            <ScalarProperty Name="SysDeleted" ColumnName="SysDeleted" />
-            <ScalarProperty Name="SysDeletedBy" ColumnName="SysDeletedBy" />
-          </MappingFragment></EntityTypeMapping></EntitySetMapping>
-          <EntitySetMapping Name="Templates"><EntityTypeMapping TypeName="ToSic.SexyContent.Template"><MappingFragment StoreEntitySet="ToSIC_SexyContent_Templates">
-            <ScalarProperty Name="AppID" ColumnName="AppID" />
+                <ScalarProperty Name="SortOrder" ColumnName="SortOrder" />
                 <ScalarProperty Name="TemplateID" ColumnName="TemplateID" />
-            <ScalarProperty Name="PortalID" ColumnName="PortalID" />
-            <ScalarProperty Name="Name" ColumnName="Name" />
-            <ScalarProperty Name="Path" ColumnName="Path" />
-            <ScalarProperty Name="AttributeSetID" ColumnName="AttributeSetID" />
-            <ScalarProperty Name="DemoEntityID" ColumnName="DemoEntityID" />
-            <ScalarProperty Name="Script" ColumnName="Script" />
-            <ScalarProperty Name="IsFile" ColumnName="IsFile" />
-            <ScalarProperty Name="Type" ColumnName="Type" />
-            <ScalarProperty Name="IsHidden" ColumnName="IsHidden" />
-            <ScalarProperty Name="Location" ColumnName="Location" />
-            <ScalarProperty Name="UseForList" ColumnName="UseForList" />
-            <ScalarProperty Name="UseForItem" ColumnName="UseForItem" />
-            <ScalarProperty Name="SysCreated" ColumnName="SysCreated" />
-            <ScalarProperty Name="SysCreatedBy" ColumnName="SysCreatedBy" />
-            <ScalarProperty Name="SysModified" ColumnName="SysModified" />
-            <ScalarProperty Name="SysModifiedBy" ColumnName="SysModifiedBy" />
-            <ScalarProperty Name="SysDeleted" ColumnName="SysDeleted" />
-            <ScalarProperty Name="SysDeletedBy" ColumnName="SysDeletedBy" />
-          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+                <ScalarProperty Name="EntityID" ColumnName="EntityID" />
+                <ScalarProperty Name="ContentGroupID" ColumnName="ContentGroupID" />
+                <ScalarProperty Name="ContentGroupItemID" ColumnName="ContentGroupItemID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Templates">
+            <EntityTypeMapping TypeName="ToSic.SexyContent.Template">
+              <MappingFragment StoreEntitySet="ToSIC_SexyContent_Templates">
+                <ScalarProperty Name="AppID" ColumnName="AppID" />
+                <ScalarProperty Name="SysDeletedBy" ColumnName="SysDeletedBy" />
+                <ScalarProperty Name="SysDeleted" ColumnName="SysDeleted" />
+                <ScalarProperty Name="SysModifiedBy" ColumnName="SysModifiedBy" />
+                <ScalarProperty Name="SysModified" ColumnName="SysModified" />
+                <ScalarProperty Name="SysCreatedBy" ColumnName="SysCreatedBy" />
+                <ScalarProperty Name="SysCreated" ColumnName="SysCreated" />
+                <ScalarProperty Name="UseForItem" ColumnName="UseForItem" />
+                <ScalarProperty Name="UseForList" ColumnName="UseForList" />
+                <ScalarProperty Name="Location" ColumnName="Location" />
+                <ScalarProperty Name="IsHidden" ColumnName="IsHidden" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="IsFile" ColumnName="IsFile" />
+                <ScalarProperty Name="Script" ColumnName="Script" />
+                <ScalarProperty Name="DemoEntityID" ColumnName="DemoEntityID" />
+                <ScalarProperty Name="AttributeSetID" ColumnName="AttributeSetID" />
+                <ScalarProperty Name="Path" ColumnName="Path" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="PortalID" ColumnName="PortalID" />
+                <ScalarProperty Name="TemplateID" ColumnName="TemplateID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -200,12 +208,9 @@
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
       <Diagram Name="SexyContentContext">
-        <EntityTypeShape EntityType="ToSic.SexyContent.ContentGroupItem" Width="1.5" PointX="3" PointY="1.875" Height="3.5186979166666656" IsExpanded="true" />
-        <EntityTypeShape EntityType="ToSic.SexyContent.Template" Width="1.5" PointX="0.75" PointY="1.125" Height="4.8648079427083317" IsExpanded="true" />
-        <AssociationConnector Association="ToSic.SexyContent.FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_SexyContent_Templates" ManuallyRouted="false">
-          <ConnectorPoint PointX="2.25" PointY="3.6343489583333328" />
-          <ConnectorPoint PointX="3" PointY="3.6343489583333328" />
-        </AssociationConnector>
+        <EntityTypeShape EntityType="ToSic.SexyContent.ContentGroupItem" Width="1.5" PointX="3" PointY="1.875" />
+        <EntityTypeShape EntityType="ToSic.SexyContent.Template" Width="1.5" PointX="0.75" PointY="1.125" />
+        <AssociationConnector Association="ToSic.SexyContent.FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_SexyContent_Templates" />
       </Diagram>
     </Diagrams>
   </Designer>

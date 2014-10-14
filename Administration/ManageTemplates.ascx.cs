@@ -88,7 +88,7 @@ namespace ToSic.SexyContent
                                 TemplateID = c.TemplateID,
                                 TemplateName = c.Name,
                                 AttributeSetID = c.AttributeSetID,
-                                AttributeSetName = a != null ? a.Name : "Content Type not found",
+                                AttributeSetName = a != null ? a.Name : "No Content Type",
                                 TemplatePath = c.Path,
                                 DemoEntityID = c.DemoEntityID,
                                 IsHidden = c.IsHidden

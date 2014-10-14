@@ -78,13 +78,13 @@ namespace ToSic.SexyContent
                 return;
             }
 
-            if (DataSource.GetCache(ZoneId.Value, AppId.Value).GetContentType(Template.AttributeSetID) == null)
+            if (Template.AttributeSetID.HasValue && DataSource.GetCache(ZoneId.Value, AppId.Value).GetContentType(Template.AttributeSetID.Value) == null)
             {
                 ShowError("The contents of this module cannot be displayed because it's located in another VDB.", pnlError);
                 return;
             }
 
-            if (Elements.All(e => e.Content == null))
+            if (Template.AttributeSetID.HasValue && Elements.All(e => e.Content == null))
             {
                 var toolbar = IsEditable ? "<ul class='sc-menu' data-toolbar='" + new { sortOrder = Elements.First().SortOrder, useModuleList = true, action = "edit" }.ToJson() + "'></ul>" : "";
                 ShowMessage(LocalizeString("NoDemoItem.Text") + " " + toolbar, pnlMessage);

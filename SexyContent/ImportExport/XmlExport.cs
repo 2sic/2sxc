@@ -145,7 +145,7 @@ namespace ToSic.SexyContent.ImportExport
                     new XAttribute("IsFile", t.IsFile.ToString()),
                     new XAttribute("Script", t.Script),
                     new XAttribute("Type", t.Type),
-                    new XAttribute("AttributeSetStaticName", Sexy.ContentContext.GetAttributeSet(t.AttributeSetID).StaticName),
+                    new XAttribute("AttributeSetStaticName", t.AttributeSetID.HasValue ? Sexy.ContentContext.GetAttributeSet(t.AttributeSetID.Value).StaticName : ""),
                     new XAttribute("IsHidden", t.IsHidden.ToString()),
                     new XAttribute("UseForList", t.UseForList.ToString()),
                     new XAttribute("DemoEntityGUID", DemoEntity != null ? DemoEntity.EntityGUID.ToString() : ""),
