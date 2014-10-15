@@ -31,6 +31,9 @@ namespace ToSic.SexyContent
                 if (UserMayEditThisModule && Sexy != null)
                 {
                     ClientScriptManager ClientScript = Page.ClientScript;
+                    // ToDo: Move these RegisterScripts to JS to prevent including AngularJS twice (from other modules)
+                    ClientResourceManager.RegisterScript(this.Page, "~/DesktopModules/ToSIC_SexyContent/Js/AngularJS/angular.min.js");
+                    ClientResourceManager.RegisterScript(this.Page, "~/DesktopModules/ToSIC_SexyContent/Js/2sxc.TemplateSelector.js");
                     ClientScript.RegisterClientScriptInclude("ViewEdit", ResolveClientUrl("~/DesktopModules/ToSIC_SexyContent/Js/ViewEdit.js"));
 
                     ((DotNetNuke.UI.Modules.ModuleHost)this.Parent).Attributes.Add("data-2sxc", (new

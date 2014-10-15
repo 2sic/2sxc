@@ -388,6 +388,8 @@
     </Compile>
     <Compile Include="SexyContent\TemplateDefault.cs" />
     <Compile Include="SexyContent\ViewAPI\ModuleController.cs" />
+    <Compile Include="SexyContent\WebApiExtensions\HttpRequestMessageExtensions.cs" />
+    <Compile Include="SexyContent\WebApiExtensions\SexyContentApiController.cs" />
     <Compile Include="TemplateHelpGrid.ascx.cs">
       <DependentUpon>TemplateHelpGrid.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -482,6 +484,7 @@
     <Content Include="Images\Edit.png" />
     <Content Include="Administration\Import.ascx" />
     <Content Include="Js\2sxc.api.manage.js" />
+    <Content Include="Js\2sxc.TemplateSelector.js" />
     <Content Include="Js\AngularJS\angular-ui-tree.min.css" />
     <Content Include="Js\AngularJS\angular-ui-tree.min.js" />
     <Content Include="Js\AngularJS\angular.min.js" />

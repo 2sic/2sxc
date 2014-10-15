@@ -4,10 +4,9 @@
         e.stopPropagation();
     });
 
-    $('.DnnModule-2sxc .Mod2sxcC, .DnnModule-2sxc-app .Mod2sxcappC').each(function () {
-        if (!$(this).is("[data-2sxc]"))
-            return;
+    var modules = $('.DnnModule-2sxc .Mod2sxcC[data-2sxc], .DnnModule-2sxc-app .Mod2sxcappC[data-2sxc]');
 
+    modules.each(function () {
         var moduleId = $.parseJSON($(this).attr('data-2sxc')).moduleId;
 
         $('.sc-menu[data-toolbar]', this).each(function () {
@@ -22,4 +21,15 @@
 
 
     window.EavEditDialogs = [];
+    
+    // ToDo: Make sure AngularJS is loaded when needed (prevents loading AngularJS twice if it is already loaded by another module)
+    //if (modules.length > 0 && angular == null) {
+    //    $.getScript(modules[0].);
+    //}
+
+    if (window.angular != null) {
+        angular.element(document).ready(function () {
+            angular.bootstrap(document, ['2sxc.view']);
+        });
+    }
 });
