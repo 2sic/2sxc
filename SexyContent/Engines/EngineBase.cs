@@ -65,7 +65,7 @@ namespace ToSic.SexyContent.Engines
 
         private string HandleClientDependencyInjection(string renderedTemplate)
         {
-            if (HttpContext.Current == null || HttpContext.Current.CurrentHandler == null)
+            if (HttpContext.Current == null || HttpContext.Current.CurrentHandler == null || !(HttpContext.Current.CurrentHandler is Page))
                 return renderedTemplate;
 
             var page = (HttpContext.Current.CurrentHandler as Page);

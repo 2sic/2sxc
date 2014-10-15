@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Portals;
+using DotNetNuke.UI.WebControls;
 using ToSic.Eav;
 using ToSic.Eav.DataSources;
 
@@ -46,7 +47,7 @@ namespace ToSic.SexyContent.DataSources
                     return new List<TemplateDefault>();
 
                 if (_templateDefaults == null)
-                    _templateDefaults = Sexy.GetTemplateDefaults(ContentGroupItems.First().TemplateID.Value);
+                    _templateDefaults = Sexy.GetTemplateDefaults(OverrideTemplateId.HasValue ? OverrideTemplateId.Value : ContentGroupItems.First().TemplateID.Value);
                 return _templateDefaults;
             }
         }
@@ -59,6 +60,7 @@ namespace ToSic.SexyContent.DataSources
             Out.Add("ListPresentation", new DataStream(this, "Default", GetListPresentation));
 
             Configuration.Add("ModuleId", "[Module:ModuleID]");
+            Configuration.Add("OverrideTemplateId", "");
             Configuration.Add("IncludeEditingData", "False");
         }
 
@@ -118,7 +120,7 @@ namespace ToSic.SexyContent.DataSources
                     SortOrder = -1,
                     SysCreated = DateTime.Now,
                     SysCreatedBy = -1,
-                    TemplateID = ContentGroupItems.First().TemplateID.Value,
+                    TemplateID = OverrideTemplateId.HasValue ? OverrideTemplateId.Value : ContentGroupItems.First().TemplateID.Value,
                     Type = ContentGroupItemType.ListContent.ToString("F")
                 });
             }
@@ -166,6 +168,16 @@ namespace ToSic.SexyContent.DataSources
             set { Configuration["ModuleId"] = value.ToString(); }
         }
 
+        public int? OverrideTemplateId
+        {
+            get
+            {
+                int overrideTemplateId;
+                return int.TryParse(Configuration["OverrideTemplateId"], out overrideTemplateId) ? overrideTemplateId : new int?();
+            }
+            set { Configuration["OverrideTemplateId"] = value.ToString(); }
+        }
+
         private int? ListId
         {
             get { return ModuleId.HasValue ? Sexy.GetContentGroupIdFromModule(ModuleId.Value) : new int?(); }
@@ -181,11 +193,11 @@ namespace ToSic.SexyContent.DataSources
         {
             
             var elements = new List<Element>();
-            if (!ContentGroupItems.Any(c => c.TemplateID.HasValue)) return elements;
+            if (!ContentGroupItems.Any(c => c.TemplateID.HasValue) && !OverrideTemplateId.HasValue) return elements;
 
             // Create a clone of the list (because it will get modified)
             var items = ContentGroupItems.ToList();
-            var templateId = items.First().TemplateID.Value;
+            var templateId = OverrideTemplateId.HasValue ? OverrideTemplateId.Value : items.First().TemplateID.Value;
             var defaults = Sexy.GetTemplateDefaults(templateId);
             var dimensionIds = new[] { System.Threading.Thread.CurrentThread.CurrentCulture.Name };
 

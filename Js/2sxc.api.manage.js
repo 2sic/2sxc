@@ -3,7 +3,7 @@ $2sxc.getManageController = function(id) {
 
     var moduleElement = $('.DnnModule-' + id);
     var manageInfo = $.parseJSON(moduleElement.find('.Mod2sxcC, .Mod2sxcappC').attr('data-2sxc')).manage;
-    var config = manageInfo.config;
+    var toolbarConfig = manageInfo.config;
     var isEditMode = manageInfo.isEditMode;
     var sf = $.ServicesFramework(id);
 
@@ -15,10 +15,12 @@ $2sxc.getManageController = function(id) {
 
         // The config object has the following properties:
         // portalId, tabId, moduleId, contentGroupId, dialogUrl, returnUrl, appPath
-        config: config,
+        _toolbarConfig: toolbarConfig,
+
+        _manageInfo: manageInfo,
 
         getLink: function (settings) {
-            settings = $.extend({}, config, settings);
+            settings = $.extend({}, toolbarConfig, settings);
 
             var params = {
                 ctl: 'editcontentgroup',
@@ -150,7 +152,7 @@ $2sxc.getManageController = function(id) {
                     $.extend({ action: 'edit' }, settings)
                 ];
 
-                if (config.isList && settings.sortOrder != -1) {
+                if (toolbarConfig.isList && settings.sortOrder != -1) {
                     buttons.push($.extend({ action: 'add' }, settings));
                     buttons.push($.extend({ action: 'new' }, settings));
                 }
@@ -164,41 +166,11 @@ $2sxc.getManageController = function(id) {
             return toolbar[0].outerHTML;
         },
 
-        _setTemplateChooserState: function (state)
-        {
-            $.ajax({
-                type: "GET",
-                dataType: "json",
-                async: false,
-                url: sf.getServiceRoot('2sxc') + "View/Module/" + "SetTemplateChooserState",
-                data: { state: state },
-                beforeSend: sf.setModuleHeaders
-            }).done(function (e) {
-                window.location.reload();
-            }).error(function (e) {
-                if (window.console) {
-                    console.log("Error: Could not set template chooser state. Status: " + e.status + " - " + e.statusText);
-                }
+        _processToolbars: function() {
+            $('.sc-menu[data-toolbar]', $(".DnnModule-" + id)).each(function () {
+                var toolbarSettings = $.parseJSON($(this).attr('data-toolbar'));
+                $(this).replaceWith($2sxc(id).manage.getToolbar(toolbarSettings));
             });
-        },
-
-        _changeTemplate: function(templateId) {
-            
-            $.ajax({
-                type: "GET",
-                dataType: "json",
-                async: false,
-                url: sf.getServiceRoot('2sxc') + "View/ContentGroup/" + "ChangeTemplate",
-                data: { templateId: templateId },
-                beforeSend: sf.setModuleHeaders
-            }).done(function (e) {
-                window.location.reload();
-            }).error(function (e) {
-                if (window.console) {
-                    console.log("Error: Could not change template. Status: " + e.status + " - " + e.statusText);
-                }
-            });
-
         }
 
     };

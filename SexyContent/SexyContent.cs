@@ -600,7 +600,7 @@ namespace ToSic.SexyContent
         /// The EAV DataSource
         /// </summary>
         private ToSic.Eav.DataSources.IDataSource ViewDataSource { get; set; }
-        public ToSic.Eav.DataSources.IDataSource GetViewDataSource(int moduleId, bool showDrafts, bool includeEditingData)
+        public ToSic.Eav.DataSources.IDataSource GetViewDataSource(int moduleId, bool showDrafts, bool includeEditingData, int? overrideTemplateId = new int?())
         {
             if (ViewDataSource == null)
             {
@@ -608,6 +608,7 @@ namespace ToSic.SexyContent
                 var moduleDataSource = DataSource.GetDataSource<ModuleDataSource>(ZoneId, AppId, initialSource, ConfigurationProvider);
                 moduleDataSource.ModuleId = moduleId;
                 moduleDataSource.IncludeEditingData = true;
+                moduleDataSource.OverrideTemplateId = overrideTemplateId;
                 moduleDataSource.Sexy = this;
 
                 var viewDataSource = DataSource.GetDataSource<ViewDataSource>(ZoneId, AppId, moduleDataSource, ConfigurationProvider);

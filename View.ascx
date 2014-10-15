@@ -12,21 +12,22 @@
     
     
     <%-- New AngularJS template chooser --%>
-    <div ng-controller="TemplateSelectorCtrl" data-moduleid="<%= ModuleId %>">
+    <div ng-controller="TemplateSelectorCtrl" data-moduleid="<%= ModuleId %>" ng-visible="manageInfo.templateChooserVisible">
         
         <div>
-            <select ng-model="selectedContentType" ng-options="c.AttributeSetID as c.Name for c in contentTypes" class="sc-contenttype-selector">
+            <select ng-model="contentTypeId" ng-options="c.AttributeSetID as c.Name for c in contentTypes" class="sc-contenttype-selector" ng-enabled="!manageInfo.hasContent">
                 <option value=""><%= HttpUtility.HtmlEncode(LocalizeString("ddlContentTypeDefaultItem.Text")) %></option>
             </select>
         </div>
         
         <div>
-            <select ng-model="selectedTemplate" class="sc-template-selector" ng-options="t.TemplateID as t.Name for t in templates">
-                <option value=""><%= HttpUtility.HtmlEncode(LocalizeString("ddlTemplateDefaultItem.Text")) %></option>
+            <select ng-model="templateId" class="sc-template-selector" ng-options="t.TemplateID as t.Name for t in filteredTemplates()">
+                <option value="" ng-enabled="!manageInfo.hasContent"><%= HttpUtility.HtmlEncode(LocalizeString("ddlTemplateDefaultItem.Text")) %></option>
             </select>
         </div>
         
-        <a ng-visible="selectedTemplate != null" class="sc-choosetemplate-close" href="javascript:$2sxc(<%= ModuleId %>).manage._setTemplateChooserState(false);">Close</a>
+        <a ng-visible="selectedTemplate != null" class="sc-choosetemplate-close" ng-click="setTemplateChooserState(false);">Close</a>
+        <a ng-click="saveTemplateId(templateId)">Save Template</a>
     </div>
 
 </asp:Panel>
@@ -41,4 +42,7 @@
 
 <asp:Panel runat="server" ID="pnlError" CssClass="dnnFormMessage dnnFormWarning" Visible="false"></asp:Panel>
 <asp:Panel runat="server" ID="pnlMessage" CssClass="dnnFormMessage dnnFormInfo" Visible="false"></asp:Panel>
-<asp:PlaceHolder runat="server" ID="phOutput"></asp:PlaceHolder>
+
+<div class="sc-viewport">
+    <asp:PlaceHolder runat="server" ID="phOutput"></asp:PlaceHolder>
+</div>

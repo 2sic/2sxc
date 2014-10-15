@@ -22,7 +22,7 @@ namespace ToSic.SexyContent.ViewAPI
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         [ValidateAntiForgeryToken]
-        public void ChangeTemplate([FromUri] int? templateId)
+        public void SaveTemplateId([FromUri] int? templateId)
         {
             SexyUncached.UpdateTemplateForGroup(Sexy.GetContentGroupIdFromModule(ActiveModule.ModuleID), templateId, UserInfo.UserID);
         }

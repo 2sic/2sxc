@@ -1,9 +1,16 @@
 ﻿using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
+using System.Text;
+using System.Web;
+using System.Web.Caching;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using System.Linq;
 using System.Web.Http;
 using ToSic.Eav;
+using ToSic.SexyContent.DataSources;
+using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.WebApiExtensions;
 
 namespace ToSic.SexyContent.ViewAPI
@@ -31,7 +38,7 @@ namespace ToSic.SexyContent.ViewAPI
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         [ValidateAntiForgeryToken]
-        public IEnumerable<object> GetSelectableTemplates([FromUri]int? attributeSetId = new int?())
+        public IEnumerable<object> GetSelectableTemplates() //[FromUri]int? attributeSetId = new int?()
         {
             IEnumerable<Template> availableTemplates;
             var elements = Sexy.GetContentElements(ActiveModule.ModuleID, Sexy.GetCurrentLanguageName(), null, PortalSettings.PortalId, SexyContent.HasEditPermission(ActiveModule));
@@ -44,8 +51,8 @@ namespace ToSic.SexyContent.ViewAPI
                 availableTemplates = Sexy.GetVisibleListTemplates(PortalSettings.PortalId);
 
             // Make only templates from chosen content type shown if content type is set
-            if (attributeSetId.HasValue)
-                availableTemplates = availableTemplates.Where(p => p.AttributeSetID == attributeSetId.Value);
+            //if (attributeSetId.HasValue)
+            //    availableTemplates = availableTemplates.Where(p => p.AttributeSetID == attributeSetId.Value);
 
 
             //// If the current data is a list of entities, don't allow changing back to no template
@@ -66,7 +73,22 @@ namespace ToSic.SexyContent.ViewAPI
             //    }
             //}
 
-            return availableTemplates.Select(t => new { t.TemplateID, t.Name });
+            return availableTemplates.Select(t => new { t.TemplateID, t.Name, t.AttributeSetID });
+        }
+
+        [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        [ValidateAntiForgeryToken]
+        public HttpResponseMessage RenderTemplate([FromUri]int templateId)
+        {
+            var template = Sexy.TemplateContext.GetTemplate(templateId);
+            var engine = EngineFactory.CreateEngine(template);
+            var dataSource = (ViewDataSource)Sexy.GetViewDataSource(ActiveModule.ModuleID, SexyContent.HasEditPermission(ActiveModule), DotNetNuke.Common.Globals.IsEditMode(), templateId);
+            engine.Init(template, Sexy.App, ActiveModule, dataSource, InstancePurposes.WebView, Sexy);
+            engine.CustomizeData();
+            var response = new HttpResponseMessage(HttpStatusCode.OK);
+            response.Content = new StringContent(engine.Render(), Encoding.UTF8, "text/plain");
+            return response;
         }
 
     }

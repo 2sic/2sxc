@@ -122,7 +122,7 @@ namespace ToSic.SexyContent
         protected void btnUpdate_Click(object sender, EventArgs e)
         {
 
-            var attributeSetId = ctrContentType.ContentTypeID.HasValue && ctrListContentType.ContentTypeID != 0 ? ctrContentType.ContentTypeID.Value : new int?();
+            var attributeSetId = ctrContentType.ContentTypeID.HasValue && ctrContentType.ContentTypeID != 0 ? ctrContentType.ContentTypeID.Value : new int?();
 
             if (ModeIsEdit)
             {
