@@ -15,14 +15,14 @@
     <div ng-controller="TemplateSelectorCtrl" data-moduleid="<%= ModuleId %>" ng-visible="manageInfo.templateChooserVisible">
         
         <div>
-            <select ng-model="contentTypeId" ng-options="c.AttributeSetID as c.Name for c in contentTypes" class="sc-contenttype-selector" ng-enabled="!manageInfo.hasContent">
+            <select ng-model="contentTypeId" ng-options="c.AttributeSetID as c.Name for c in contentTypes" class="sc-contenttype-selector" ng-disabled="manageInfo.hasContent">
                 <option value=""><%= HttpUtility.HtmlEncode(LocalizeString("ddlContentTypeDefaultItem.Text")) %></option>
             </select>
         </div>
         
         <div>
             <select ng-model="templateId" class="sc-template-selector" ng-options="t.TemplateID as t.Name for t in filteredTemplates()">
-                <option value="" ng-enabled="!manageInfo.hasContent"><%= HttpUtility.HtmlEncode(LocalizeString("ddlTemplateDefaultItem.Text")) %></option>
+                <option value="" ng-disabled="manageInfo.hasContent"><%= HttpUtility.HtmlEncode(LocalizeString("ddlTemplateDefaultItem.Text")) %></option>
             </select>
         </div>
         
