@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Text;
 using System.Web;
 using System.Web.Caching;
+using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using System.Linq;
@@ -25,6 +26,23 @@ namespace ToSic.SexyContent.ViewAPI
         public void SetTemplateChooserState([FromUri]bool state)
         {
             ActiveModule.ModuleSettings[SexyContent.SettingsShowTemplateChooser] = state;
+        }
+
+        [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        [ValidateAntiForgeryToken]
+        public IEnumerable<object> GetSelectableApps()
+        {
+            var zoneId = SexyContent.GetZoneID(ActiveModule.PortalID);
+            return SexyContent.GetApps(zoneId.Value, false, new PortalSettings(ActiveModule.OwnerPortalID));
+        }
+
+        [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        [ValidateAntiForgeryToken]
+        public void SetAppId(int? appId)
+        {
+            SexyContent.SetAppIdForModule(ActiveModule, appId);
         }
 
         [HttpGet]

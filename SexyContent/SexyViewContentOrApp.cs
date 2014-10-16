@@ -28,7 +28,7 @@ namespace ToSic.SexyContent
             {
 
                 // If logged in, inject Edit JavaScript, and delete / add items
-                if (UserMayEditThisModule && Sexy != null)
+                if (UserMayEditThisModule)
                 {
                     ClientScriptManager ClientScript = Page.ClientScript;
                     // ToDo: Move these RegisterScripts to JS to prevent including AngularJS twice (from other modules)
@@ -51,6 +51,7 @@ namespace ToSic.SexyContent
                             templateChooserVisible = templateChooserVisible,
                             hasContent = hasContent,
                             isContentApp = IsContentApp,
+                            appId = AppId,
                             isList = AppId.HasValue && Elements.Count > 1,
                             templateId = Template != null ? Template.TemplateID : new int?(),
                             config = new
@@ -58,11 +59,11 @@ namespace ToSic.SexyContent
                                 portalId = PortalId,
                                 tabId = TabId,
                                 moduleId = ModuleId,
-                                contentGroupId = Elements.Any() ? Elements.First().GroupId : -1,
+                                contentGroupId = (AppId.HasValue && Elements.Any()) ? Elements.First().GroupId : -1,
                                 dialogUrl = DotNetNuke.Common.Globals.NavigateURL(this.TabId),
                                 returnUrl = Request.RawUrl,
                                 appPath = AppId.HasValue ? Sexy.App.Path : null,
-                                cultureDimension = Sexy.GetCurrentLanguageID(),
+                                cultureDimension = AppId.HasValue ? Sexy.GetCurrentLanguageID() : new int?(),
                                 isList = Template != null && Template.UseForList
                             }
                         }

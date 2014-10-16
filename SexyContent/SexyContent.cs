@@ -938,6 +938,15 @@ namespace ToSic.SexyContent
             return null;
         }
 
+        public static void SetAppIdForModule(ModuleInfo module, int? appId)
+        {
+            var moduleController = new ModuleController();
+            if (appId == 0 || !appId.HasValue)
+                moduleController.DeleteModuleSetting(module.ModuleID, SexyContent.AppIDString);
+            else
+                moduleController.UpdateModuleSetting(module.ModuleID, SexyContent.AppIDString, appId.ToString());
+        }
+
         public void RemoveApp(int appId, int userId)
         {
             if(appId != this.ContentContext.AppId)
