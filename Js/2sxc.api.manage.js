@@ -173,6 +173,11 @@ $2sxc.getManageController = function(id) {
                 var toolbarSettings = $.parseJSON($(this).attr('data-toolbar'));
                 $(this).replaceWith($2sxc(id).manage.getToolbar(toolbarSettings));
             });
+        },
+
+        _getSelectorScope: function() {
+            var selectorElement = document.querySelector('.DnnModule-' + id + ' .sc-selector-wrapper');
+            return angular.element(selectorElement).scope();
         }
 
     };

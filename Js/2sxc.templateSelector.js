@@ -13,25 +13,7 @@
         };
         $scope.contentTypeId = null;
         $scope.templateId = $scope.manageInfo.templateId;
-        $scope.loading = true;
-
-        $scope.$watch('templateId', function (newTemplateId, oldTemplateId) {
-            if (newTemplateId == null) {
-                var firstTemplateId = $filter('filter')($scope.templates, { AttributeSetID: $scope.contentTypeId })[0].TemplateID;
-                if ($scope.templateId != firstTemplateId)
-                    $scope.templateId = firstTemplateId;
-            }
-            else if (newTemplateId != oldTemplateId) {
-                $scope.renderTemplate(newTemplateId);
-            }
-        });
-
-        $scope.$watch('contentTypeId', function (newContentTypeId, oldContentTypeId) {
-            if (newContentTypeId != null) {
-                $scope.templateId = null;
-            }
-        });
-
+        $scope.savedTemplateId = $scope.manageInfo.templateId;
 
         var getContentTypes = apiService(moduleId, {
             url: 'View/Module/GetSelectableContentTypes'
@@ -47,12 +29,34 @@
             var template = $filter('filter')($scope.templates, { TemplateID: $scope.templateId });
             if (template[0] != null && $scope.contentTypeId == null)
                 $scope.contentTypeId = template[0].AttributeSetID;
+
+            $scope.$watch('templateId', function (newTemplateId, oldTemplateId) {
+                if (newTemplateId != oldTemplateId) {
+                    $scope.renderTemplate(newTemplateId);
+                }
+            });
+
+            $scope.$watch('contentTypeId', function (newContentTypeId, oldContentTypeId) {
+                if (newContentTypeId == oldContentTypeId)
+                    return;
+                // Select first template if contentType changed
+                var firstTemplateId = $filter('filter')($scope.templates, { AttributeSetID: $scope.contentTypeId })[0].TemplateID;
+                if ($scope.templateId != firstTemplateId && firstTemplateId != null)
+                    $scope.templateId = firstTemplateId;
+            });
+
         });
 
         $scope.setTemplateChooserState = function (state) {
+            // Reset templateid / cancel template change
+            if (!state)
+                $scope.templateId = $scope.savedTemplateId;
+
             apiService(moduleId, {
                 url: 'View/Module/SetTemplateChooserState',
                 params: { state: state }
+            }).then(function() {
+                $scope.manageInfo.templateChooserVisible = state;
             });
         };
 
@@ -60,10 +64,12 @@
             apiService(moduleId, {
                 url: 'View/ContentGroup/SaveTemplateId',
                 params: { templateId: templateId }
+            }).then(function () {
+                window.location.reload();
             });
         };
 
-        $scope.renderTemplate = function(templateId) {
+        $scope.renderTemplate = function (templateId) {
             apiService(moduleId, {
                 url: 'View/Module/RenderTemplate',
                 params: { templateId: templateId }

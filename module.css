@@ -12,6 +12,7 @@
 
 /* Template / ContentType / App-Selector */
 .sc-selector-wrapper { position: relative;overflow: hidden; }
+.sc-selector-wrapper .dnnFormInfo { overflow: hidden; }
 .sc-selector-wrapper a { cursor: pointer; }
 .sc-selectors { max-width: 300px !important;float: left;width: 100%; }
 .sc-selectors select { display: block;width: 100%; }

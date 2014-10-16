@@ -38,140 +38,32 @@ namespace ToSic.SexyContent
         {
             try
             {
-                var templateChooserVisible = !AppId.HasValue || !Elements.Any() || !Elements.First().TemplateId.HasValue || Elements.All(p => !p.EntityId.HasValue);
 
-                if (Settings.ContainsKey(SexyContent.SettingsShowTemplateChooser))
-                    templateChooserVisible = Boolean.Parse(Settings[SexyContent.SettingsShowTemplateChooser].ToString());
+                // If there are no apps yet - show "getting started" frame
+                if (IsEditable && UserInfo.IsInRole(PortalSettings.AdministratorRoleName) && !SexyContent.GetApps(ZoneId.Value, false, new PortalSettings(ModuleConfiguration.OwnerPortalID)).Any())
+                {
+                    pnlGetStarted.Visible = true;
+                    var gettingStartedControl = (GettingStartedFrame)LoadControl("~/DesktopModules/ToSIC_SexyContent/SexyContent/GettingStarted/GettingStartedFrame.ascx");
+                    gettingStartedControl.ModuleID = this.ModuleId;
+                    gettingStartedControl.ModuleConfiguration = this.ModuleConfiguration;
+                    pnlGetStarted.Controls.Add(gettingStartedControl);
+                }
 
                 // If not fully configured, show stuff
-                if (templateChooserVisible)
-                    ShowTemplateChooser();
+                if (UserMayEditThisModule)
+                    pnlTemplateChooser.Visible = true;
 
                 if (AppId.HasValue && !Sexy.PortalIsConfigured(Server, ControlPath))
                     Sexy.ConfigurePortal(Server);
 
                 if (AppId.HasValue && Elements.Any() && Elements.First().TemplateId.HasValue)
                     ProcessView(phOutput, pnlError, pnlMessage);
+
             }
             catch (Exception ex)
             {
                 Exceptions.ProcessModuleLoadException(this, ex);
             }
-        }
-
-        /// <summary>
-        /// Show the Template Chooser directly on the page, but only if the user has edit rights
-        /// </summary>
-        protected void ShowTemplateChooser()
-        {
-            if (IsEditable && UserInfo.IsInRole(PortalSettings.AdministratorRoleName) && !SexyContent.GetApps(ZoneId.Value, false, new PortalSettings(ModuleConfiguration.OwnerPortalID)).Any())
-            {
-                // If there are no apps yet
-                pnlGetStarted.Visible = true;
-                var gettingStartedControl = (GettingStartedFrame)LoadControl("~/DesktopModules/ToSIC_SexyContent/SexyContent/GettingStarted/GettingStartedFrame.ascx");
-                gettingStartedControl.ModuleID = this.ModuleId;
-                gettingStartedControl.ModuleConfiguration = this.ModuleConfiguration;
-                pnlGetStarted.Controls.Add(gettingStartedControl);
-            }
-
-            if (!Page.IsPostBack && UserMayEditThisModule)
-            {
-                pnlTemplateChooser.Visible = true;
-                ddlTemplate.Visible = AppId.HasValue;
-
-                if (AppId.HasValue)
-                {
-                    BindTemplateDropDown();
-                }
-
-                if (!IsContentApp)
-                {
-                    ddlApp.Visible = true;
-                    BindAppDropDown();
-                }
-            }
-        }
-
-        protected void BindTemplateDropDown()
-        {
-            IEnumerable<Template> TemplatesToChoose;
-
-            if (Elements.Any(e => e.EntityId.HasValue))
-                TemplatesToChoose = Sexy.GetCompatibleTemplates(PortalId, Elements.First().GroupId).Where(p => !p.IsHidden);
-            else if (Elements.Count <= 1)
-                TemplatesToChoose = Sexy.GetVisibleTemplates(PortalId);
-            else
-                TemplatesToChoose = Sexy.GetVisibleListTemplates(PortalId);
-
-            ddlTemplate.DataSource = TemplatesToChoose;
-            ddlTemplate.DataBind();
-            // If the current data is a list of entities, don't allow changing back to no template
-            if (Elements.Count <= 1 && AppId.HasValue && (!Elements.Any(e => e.EntityId.HasValue)))
-                ddlTemplate.Items.Insert(0, new ListItem(LocalizeString("ddlTemplateDefaultItem.Text"), "0"));
-
-            // If there are elements and the selected template exists in the list, select that
-            if (Elements.Any() && ddlTemplate.Items.FindByValue(Elements.First().TemplateId.ToString()) != null)
-                ddlTemplate.SelectedValue = Elements.First().TemplateId.ToString();
-            else if(TemplatesToChoose.Any())
-            {
-                ddlTemplate.SelectedValue = TemplatesToChoose.First().TemplateID.ToString();
-                ChangeTemplate();
-            }
-
-            if (ddlTemplate.Items.Count == 2)
-            {
-                ddlTemplate.Visible = false;
-            }
-
-        }
-
-        private void BindAppDropDown()
-        {
-            ddlApp.DataSource = SexyContent.GetApps(ZoneId.Value, false, new PortalSettings(ModuleConfiguration.OwnerPortalID)).Where(a => !a.Hidden);
-            ddlApp.DataBind();
-            ddlApp.Enabled = (!AppId.HasValue || Elements.Count <= 1);
-
-            if (ddlApp.Items.Cast<ListItem>().Any(p => p.Value == AppId.ToString()))
-                ddlApp.SelectedValue = AppId.ToString();
-
-            var separatorItem = new ListItem("──────────", "", true);
-            separatorItem.Attributes["disabled"] = "disabled";
-
-            ddlApp.Items.Add(separatorItem);
-            ddlApp.Items.Add(new ListItem(LocalizeString("GetMoreApps.Text"), "OpenAppDialog", true));
-        }
-
-        protected void ChangeTemplate()
-        {
-            if (UserMayEditThisModule && !String.IsNullOrEmpty(ddlTemplate.SelectedValue) && AppId.HasValue)
-            {
-                var TemplateID = int.Parse(ddlTemplate.SelectedValue);
-
-                // Return if current TemplateID is already set
-                if (Template != null && TemplateID == Template.TemplateID)
-                    return;
-
-                new SexyContent(ZoneId.Value, AppId.Value, false).UpdateTemplateForGroup(Sexy.GetContentGroupIdFromModule(ModuleId), TemplateID,
-                                                              UserId);
-
-                Response.Redirect(Request.RawUrl);
-            }
-        }
-
-        protected void ddlApp_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (ddlApp.SelectedValue == "OpenAppDialog")
-            {
-                pnlOpenCatalog.Visible = true;
-                return;
-            }
-
-            AppId = int.Parse(ddlApp.SelectedValue);
-
-            // Reset template
-            new SexyContent(ZoneId.Value, AppId.Value, false).UpdateTemplateForGroup(Sexy.GetContentGroupIdFromModule(ModuleId), null, UserId);
-
-            Response.Redirect(Request.RawUrl);
         }
 
         #region ModuleActions

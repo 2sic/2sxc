@@ -38,13 +38,9 @@ namespace ToSic.SexyContent
             try
             {
                 
-                // If not fully configured, show stuff
-                //if (templateChooserVisible)
-                    //ShowTemplateChooser();
-
                 var noTemplatesYet = !Sexy.GetVisibleTemplates(PortalId).Any();
 
-                // If there are no templates configured
+                // If there are no templates configured - show "getting started" frame
                 if (noTemplatesYet && IsEditable && UserInfo.IsInRole(PortalSettings.AdministratorRoleName))
                 {
                     pnlGetStarted.Visible = true;
@@ -68,95 +64,6 @@ namespace ToSic.SexyContent
                 Exceptions.ProcessModuleLoadException(this, ex);
             }
         }
-
-
-        ///// <summary>
-        ///// Show the Template Chooser directly on the page, but only if the user has edit rights
-        ///// </summary>
-        //protected void ShowTemplateChooser()
-        //{
-
-
-        //    if (!Page.IsPostBack && UserMayEditThisModule)
-        //    {
-        //        pnlTemplateChooser.Visible = true;
-
-        //        if (AppId.HasValue)
-        //        {
-        //            ddlContentType.DataSource = Sexy.GetAvailableAttributeSetsForVisibleTemplates(PortalId);
-        //            ddlContentType.DataBind();
-        //            ddlContentType.Enabled = Elements.Count <= 1 && (!Elements.Any(e => e.EntityId.HasValue));
-
-        //            if (Template != null)
-        //                ddlContentType.SelectedValue = Template.AttributeSetID.ToString();
-
-        //            BindTemplateDropDown();
-        //        }
-
-        //    }
-
-        //    ddlContentType.Visible = IsContentApp;
-        //    ddlTemplate.Enabled = IsContentApp || AppId.HasValue;
-        //}
-
-        //protected void BindTemplateDropDown()
-        //{
-        //    IEnumerable<Template> TemplatesToChoose;
-
-        //    if (Elements.Any(e => e.EntityId.HasValue))
-        //        TemplatesToChoose = Sexy.GetCompatibleTemplates(PortalId, Elements.First().GroupId).Where(p => !p.IsHidden);
-        //    else if (Elements.Count <= 1)
-        //        TemplatesToChoose = Sexy.GetVisibleTemplates(PortalId);
-        //    else
-        //        TemplatesToChoose = Sexy.GetVisibleListTemplates(PortalId);
-
-        //    // Make only templates from chosen content type shown if content type is set
-        //    if (ddlContentType.SelectedValue != "0")
-        //        TemplatesToChoose = TemplatesToChoose.Where(p => p.AttributeSetID == int.Parse(ddlContentType.SelectedValue));
-
-        //    ddlTemplate.DataSource = TemplatesToChoose;
-        //    ddlTemplate.DataBind();
-        //    // If the current data is a list of entities, don't allow changing back to no template
-        //    if(Elements.Count <= 1 && (!Elements.Any(e => e.EntityId.HasValue)))
-        //        ddlTemplate.Items.Insert(0, new ListItem(LocalizeString("ddlTemplateDefaultItem.Text"), "0"));
-
-        //    // If there are elements and the selected template exists in the list, select that
-        //    if (Elements.Any() && ddlTemplate.Items.FindByValue(Elements.First().TemplateId.ToString()) != null)
-        //        ddlTemplate.SelectedValue = Elements.First().TemplateId.ToString();
-        //    else
-        //    {
-        //        if (ddlContentType.SelectedValue != "0")
-        //        {
-        //            if (ddlTemplate.Items.Count > 1)
-        //                ddlTemplate.SelectedIndex = 1;
-
-        //            ChangeTemplate();
-        //        }
-        //    }
-        //}
-
-        //protected void ChangeTemplate()
-        //{
-        //    if (UserMayEditThisModule && !String.IsNullOrEmpty(ddlTemplate.SelectedValue) && AppId.HasValue)
-        //    {
-        //        var TemplateID = int.Parse(ddlTemplate.SelectedValue);
-
-        //        // Return if current TemplateID is already set
-        //        if (Template != null && TemplateID == Template.TemplateID)
-        //            return;
-
-        //        new SexyContent(ZoneId.Value, AppId.Value, false).UpdateTemplateForGroup(Sexy.GetContentGroupIdFromModule(ModuleId), TemplateID,
-        //                                                      UserId);
-
-        //        Response.Redirect(Request.RawUrl);
-        //    }
-        //}
-
-        //protected void ddlContentType_SelectedIndexChanged(object sender, EventArgs e)
-        //{
-        //    BindTemplateDropDown();
-        //}
-
 
         #region ModuleActions
 
@@ -211,12 +118,9 @@ namespace ToSic.SexyContent
                             }
 
                             // Change layout button
-                            if (Sexy.GetVisibleTemplates(PortalSettings.PortalId).Any() && Template != null)
-                            {
-                                Actions.Add(GetNextActionID(), LocalizeString("ActionChangeLayoutOrContent.Text"),
-                                    "", "", "action_settings.gif", "javascript:$2sxc(" + this.ModuleId + ").manage._setTemplateChooserState(true);", "test", true,
-                                    SecurityAccessLevel.Edit, true, false);
-                            }
+                            Actions.Add(GetNextActionID(), LocalizeString("ActionChangeLayoutOrContent.Text"),
+                                "", "", "action_settings.gif", "javascript:$2sxc(" + this.ModuleId + ").manage._getSelectorScope().setTemplateChooserState(true);", "test", true,
+                                SecurityAccessLevel.Edit, true, false);
                         }
 
                         if (!SexyContent.SexyContentDesignersGroupConfigured(PortalId) || SexyContent.IsInSexyContentDesignersGroup(UserInfo))

@@ -123,9 +123,6 @@
   <data name="ActionEdit.Text" xml:space="preserve">
     <value>Bearbeiten</value>
   </data>
-  <data name="ddlTemplateDefaultItem.Text" xml:space="preserve">
-    <value>&lt;Darstellung auswählen&gt;</value>
-  </data>
   <data name="hlkConfigurePortal.Text" xml:space="preserve">
     <value>Portal Konfigurieren</value>
   </data>

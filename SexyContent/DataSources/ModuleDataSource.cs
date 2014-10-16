@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using DotNetNuke.Common.Utilities;
+using DotNetNuke.Entities.Content;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.UI.WebControls;
 using ToSic.Eav;
@@ -43,7 +44,7 @@ namespace ToSic.SexyContent.DataSources
         {
             get
             {
-                if (!ListId.HasValue || !ContentGroupItems.Any() || !ContentGroupItems.First().TemplateID.HasValue)
+                if (!ListId.HasValue || (!OverrideTemplateId.HasValue && (!ContentGroupItems.Any() || !ContentGroupItems.First().TemplateID.HasValue)))
                     return new List<TemplateDefault>();
 
                 if (_templateDefaults == null)
@@ -110,18 +111,18 @@ namespace ToSic.SexyContent.DataSources
             var items = ContentGroupItems.Where(p => p.ItemType == itemType).ToList(); // Create copy of list (not in cache)
 
             // If no Content Elements exist and type is List, add a ContentGroupItem to List (not to DB)
-            if (itemType == ContentGroupItemType.ListContent && items.All(p => p.ItemType != ContentGroupItemType.ListContent))
+            if ((itemType == ContentGroupItemType.Content || itemType == ContentGroupItemType.ListContent) && !items.Any(p => p.ItemType == itemType))
             {
                 items.Add(new ContentGroupItem()
                 {
                     ContentGroupID = ListId.Value,
                     ContentGroupItemID = -1,
                     EntityID = new int?(),
-                    SortOrder = -1,
+                    SortOrder = itemType == ContentGroupItemType.ListContent ? -1 : 0,
                     SysCreated = DateTime.Now,
                     SysCreatedBy = -1,
                     TemplateID = OverrideTemplateId.HasValue ? OverrideTemplateId.Value : ContentGroupItems.First().TemplateID.Value,
-                    Type = ContentGroupItemType.ListContent.ToString("F")
+                    Type = itemType.ToString("F")
                 });
             }
 
@@ -204,19 +205,19 @@ namespace ToSic.SexyContent.DataSources
             var contentEntities = GetStream(contentItemType);
             var allEntities = In["Default"].List;
 
-            // If no Content Elements exist and type is List, add a ContentGroupItem to List (not to DB)
-            if (contentItemType == ContentGroupItemType.ListContent && items.All(p => p.ItemType != ContentGroupItemType.ListContent))
+            // If no Content Elements exist, add a ContentGroupItem to List (not to DB)
+            if (!items.Any(p => p.ItemType == contentItemType))
             {
                 items.Add(new ContentGroupItem()
                 {
                     ContentGroupID = ListId.Value,
                     ContentGroupItemID = -1,
                     EntityID = new int?(),
-                    SortOrder = -1,
+                    SortOrder = contentItemType == ContentGroupItemType.ListContent ? -1 : 0,
                     SysCreated = DateTime.Now,
                     SysCreatedBy = -1,
                     TemplateID = templateId,
-                    Type = ContentGroupItemType.ListContent.ToString("F")
+                    Type = contentItemType.ToString("F")
                 });
             }
 
