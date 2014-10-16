@@ -4,6 +4,7 @@ $2sxc.getManageController = function(id) {
     var moduleElement = $('.DnnModule-' + id);
     var manageInfo = $.parseJSON(moduleElement.find('.Mod2sxcC, .Mod2sxcappC').attr('data-2sxc')).manage;
     var toolbarConfig = manageInfo.config;
+    toolbarConfig.returnUrl = window.location.href;
     var isEditMode = manageInfo.isEditMode;
     var sf = $.ServicesFramework(id);
 
@@ -24,7 +25,8 @@ $2sxc.getManageController = function(id) {
 
             var params = {
                 ctl: 'editcontentgroup',
-                mid: settings.moduleId
+                mid: settings.moduleId,
+                returnUrl: settings.returnUrl
             };
 
             if (settings.cultureDimension && settings.cultureDimension != null)
