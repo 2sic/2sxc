@@ -1,7 +1,7 @@
 ﻿(function () {
     var module = angular.module('2sxc.view', []);
 
-    module.controller('TemplateSelectorCtrl', function ($scope, $attrs, apiService, $filter) {
+    module.controller('TemplateSelectorCtrl', function ($scope, $attrs, apiService, $filter, $q) {
 
         var moduleId = $attrs.moduleid;
         $scope.manageInfo = $2sxc(moduleId).manage._manageInfo;
@@ -13,6 +13,7 @@
         };
         $scope.contentTypeId = null;
         $scope.templateId = $scope.manageInfo.templateId;
+        $scope.loading = true;
 
         $scope.$watch('templateId', function (newTemplateId, oldTemplateId) {
             if (newTemplateId == null) {
@@ -31,21 +32,22 @@
             }
         });
 
-        apiService(moduleId, {
+
+        var getContentTypes = apiService(moduleId, {
             url: 'View/Module/GetSelectableContentTypes'
-        }).then(function(data) {
-            $scope.contentTypes = data.data;
         });
 
-        apiService(moduleId, {
+        var getTemplates = apiService(moduleId, {
             url: 'View/Module/GetSelectableTemplates'
-        }).then(function(data) {
-            $scope.templates = data.data;
+        });
+
+        $q.all([getContentTypes, getTemplates]).then(function(res) {
+            $scope.contentTypes = res[0].data;
+            $scope.templates = res[1].data;
             var template = $filter('filter')($scope.templates, { TemplateID: $scope.templateId });
             if (template[0] != null && $scope.contentTypeId == null)
                 $scope.contentTypeId = template[0].AttributeSetID;
         });
-
 
         $scope.setTemplateChooserState = function (state) {
             apiService(moduleId, {

@@ -483,6 +483,7 @@
     <Content Include="Images\Drag.gif" />
     <Content Include="Images\Edit.png" />
     <Content Include="Administration\Import.ascx" />
+    <Content Include="Images\Save.png" />
     <Content Include="Js\2sxc.api.manage.js" />
     <Content Include="Js\2sxc.TemplateSelector.js" />
     <Content Include="Js\AngularJS\angular-ui-tree.min.css" />

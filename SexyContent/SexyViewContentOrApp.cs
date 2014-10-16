@@ -49,6 +49,8 @@ namespace ToSic.SexyContent
                         {
                             isEditMode = UserMayEditThisModule,
                             templateChooserVisible = templateChooserVisible,
+                            hasContent = hasContent,
+                            isList = AppId.HasValue && Elements.Count > 1,
                             templateId = Template != null ? Template.TemplateID : new int?(),
                             config = new
                             {

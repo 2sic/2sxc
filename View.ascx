@@ -1,5 +1,5 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" Inherits="ToSic.SexyContent.View" Codebehind="View.ascx.cs" %>
-<asp:Panel runat="server" ID="pnlTemplateChooser" Visible="false" CssClass="dnnFormMessage dnnFormInfo sc-choosetemplate">
+<asp:Placeholder runat="server" ID="pnlTemplateChooser" Visible="false">
     <%--<div>
         <asp:DropDownList runat="server" ID="ddlContentType" AppendDataBoundItems="true" DataTextField="Name" DataValueField="AttributeSetId" OnSelectedIndexChanged="ddlContentType_SelectedIndexChanged" AutoPostBack="true" CssClass="sc-contenttype-selector">
             <asp:ListItem Value="0" ResourceKey="ddlContentTypeDefaultItem"></asp:ListItem>
@@ -10,27 +10,26 @@
         </asp:DropDownList>
     </div>--%>
     
+    <%--CssClass="dnnFormMessage dnnFormInfo sc-choosetemplate"--%>
     
     <%-- New AngularJS template chooser --%>
-    <div ng-controller="TemplateSelectorCtrl" data-moduleid="<%= ModuleId %>" ng-visible="manageInfo.templateChooserVisible">
+    <div ng-controller="TemplateSelectorCtrl" data-moduleid="<%= ModuleId %>" ng-visible="manageInfo.templateChooserVisible" class="dnnFormMessage dnnFormInfo sc-selector-wrapper">
         
-        <div>
-            <select ng-model="contentTypeId" ng-options="c.AttributeSetID as c.Name for c in contentTypes" class="sc-contenttype-selector" ng-disabled="manageInfo.hasContent">
+        <div class="sc-selectors">
+            <select ng-model="contentTypeId" ng-options="c.AttributeSetID as c.Name for c in contentTypes" class="sc-selector-contenttype" ng-disabled="manageInfo.hasContent">
                 <option value=""><%= HttpUtility.HtmlEncode(LocalizeString("ddlContentTypeDefaultItem.Text")) %></option>
             </select>
-        </div>
         
-        <div>
-            <select ng-model="templateId" class="sc-template-selector" ng-options="t.TemplateID as t.Name for t in filteredTemplates()">
+            <select ng-model="templateId" class="sc-selector-template" ng-options="t.TemplateID as t.Name for t in filteredTemplates()">
                 <option value="" ng-disabled="manageInfo.hasContent"><%= HttpUtility.HtmlEncode(LocalizeString("ddlTemplateDefaultItem.Text")) %></option>
             </select>
         </div>
         
-        <a ng-visible="selectedTemplate != null" class="sc-choosetemplate-close" ng-click="setTemplateChooserState(false);">Close</a>
-        <a ng-click="saveTemplateId(templateId)">Save Template</a>
+        <a ng-visible="selectedTemplate != null" class="sc-selector-close" ng-click="setTemplateChooserState(false);">Close</a>
+        <a ng-click="saveTemplateId(templateId)" class="sc-selector-save">Save Template</a>
     </div>
 
-</asp:Panel>
+</asp:Placeholder>
 
 <asp:Panel runat="server" Visible="False" class="dnnFormMessage dnnFormInfo" ID="pnlGetStarted"></asp:Panel>
 
