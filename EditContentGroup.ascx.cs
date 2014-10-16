@@ -320,14 +320,7 @@ namespace ToSic.SexyContent
                 return;
 
             if (!String.IsNullOrEmpty(ReturnUrl))
-            {
-                if (PortalSettings.EnablePopUps)
-                {
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "Close popup and return", "$('body').css('display', 'none'); window.top.location.reload();", true);
-                }
-                else
-                    Response.Redirect(ReturnUrl, true);
-            }
+                Response.Redirect(ReturnUrl, true);
             else
                 Response.Redirect(DotNetNuke.Common.Globals.NavigateURL(this.TabId), true);
         }
