@@ -55,8 +55,13 @@
 
         };
 
-        if ($scope.appId != null)
+        if ($scope.appId != null && $scope.manageInfo.templateChooserVisible)
             $scope.reloadTemplates();
+
+        $scope.$watch('manageInfo.templateChooserVisible', function(visible) {
+            if (visible)
+                $scope.reloadTemplates();
+        });
 
         $scope.$watch('appId', function (newAppId, oldAppId) {
             if (newAppId == oldAppId)
@@ -77,15 +82,22 @@
             if (!state)
                 $scope.templateId = $scope.savedTemplateId;
 
-            moduleApi.setTemplateChooserState(state).then(function () {
+            return moduleApi.setTemplateChooserState(state).then(function () {
                 $scope.manageInfo.templateChooserVisible = state;
             });
         };
 
-        $scope.saveTemplateId = function(templateId) {
-            groupApi.saveTemplateId(templateId).then(function () {
-                window.location.reload();
-            });
+        $scope.saveTemplateId = function () {
+            var promises = [];
+
+            if ($scope.savedTemplateId != $scope.templateId) {
+                promises.push(groupApi.saveTemplateId($scope.templateId));
+            }
+
+            $scope.savedTemplateId = $scope.templateId;
+            promises.push($scope.setTemplateChooserState(false));
+
+            return $q.all(promises);
         };
 
         $scope.renderTemplate = function (templateId) {
@@ -97,6 +109,12 @@
 
         $scope.insertRenderedTemplate = function(renderedTemplate) {
             $(".DnnModule-" + moduleId + " .sc-viewport").html(renderedTemplate);
+        };
+
+        $scope.addItem = function(sortOrder) {
+            groupApi.addItem(sortOrder).then(function () {
+                $scope.renderTemplate($scope.templateId);
+            });
         };
 
     });
@@ -148,6 +166,12 @@
                     return apiService(moduleId, {
                         url: 'View/ContentGroup/SaveTemplateId',
                         params: { templateId: templateId }
+                    });
+                },
+                addItem: function(sortOrder) {
+                    return apiService(moduleId, {
+                        url: 'View/ContentGroup/AddItem',
+                        params: { sortOrder: sortOrder }
                     });
                 }
             };

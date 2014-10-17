@@ -67,33 +67,19 @@ $2sxc.getManageController = function(id) {
             
         },
 
-        action: function(settings) {
-            if (settings.action == 'edit' || settings.action == 'new')
-                manageController._openDialog(settings);
-            else if (settings.action == 'add') {
-
-                $.ajax({
-                    type: "GET",
-                    dataType: "json",
-                    async: false,
-                    url: sf.getServiceRoot('2sxc') + "View/ContentGroup/" + "AddItem",
-                    data: { sortOrder: settings.sortOrder },
-                    beforeSend: sf.setModuleHeaders
-                }).done(function (e) {
-                    window.location.reload();
-                }).error(function (e) {
-                    if (window.console) {
-                        console.log("Error: Could not add item. Status: " + e.status + " - " + e.statusText);
-                    }
-                });
-
-            } else {
-                throw "Action " + settings.action + " not known.";
-            }
+        action: function (settings) {
+            manageController._getSelectorScope().saveTemplateId().then(function() {
+                if (settings.action == 'edit' || settings.action == 'new')
+                    manageController._openDialog(settings);
+                else if (settings.action == 'add') {
+                    manageController._getSelectorScope().addItem();
+                } else {
+                    throw "Action " + settings.action + " not known.";
+                }
+            });
         },
 
         getButton: function (settings) {
-
 
             if (settings.entity && settings.entity._2sxcEditInformation) {
                 if (settings.entity._2sxcEditInformation.entityId) {

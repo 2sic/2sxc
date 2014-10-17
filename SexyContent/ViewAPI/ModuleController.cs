@@ -56,7 +56,7 @@ namespace ToSic.SexyContent.ViewAPI
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         [ValidateAntiForgeryToken]
-        public IEnumerable<object> GetSelectableTemplates() //[FromUri]int? attributeSetId = new int?()
+        public IEnumerable<object> GetSelectableTemplates()
         {
             IEnumerable<Template> availableTemplates;
             var elements = Sexy.GetContentElements(ActiveModule.ModuleID, Sexy.GetCurrentLanguageName(), null, PortalSettings.PortalId, SexyContent.HasEditPermission(ActiveModule));
@@ -67,29 +67,6 @@ namespace ToSic.SexyContent.ViewAPI
                 availableTemplates = Sexy.GetVisibleTemplates(PortalSettings.PortalId);
             else
                 availableTemplates = Sexy.GetVisibleListTemplates(PortalSettings.PortalId);
-
-            // Make only templates from chosen content type shown if content type is set
-            //if (attributeSetId.HasValue)
-            //    availableTemplates = availableTemplates.Where(p => p.AttributeSetID == attributeSetId.Value);
-
-
-            //// If the current data is a list of entities, don't allow changing back to no template
-            //if (Elements.Count <= 1 && (!Elements.Any(e => e.EntityId.HasValue)))
-            //    ddlTemplate.Items.Insert(0, new ListItem(LocalizeString("ddlTemplateDefaultItem.Text"), "0"));
-
-            //// If there are elements and the selected template exists in the list, select that
-            //if (Elements.Any() && ddlTemplate.Items.FindByValue(Elements.First().TemplateId.ToString()) != null)
-            //    ddlTemplate.SelectedValue = Elements.First().TemplateId.ToString();
-            //else
-            //{
-            //    if (ddlContentType.SelectedValue != "0")
-            //    {
-            //        if (ddlTemplate.Items.Count > 1)
-            //            ddlTemplate.SelectedIndex = 1;
-
-            //        ChangeTemplate();
-            //    }
-            //}
 
             return availableTemplates.Select(t => new { t.TemplateID, t.Name, t.AttributeSetID });
         }

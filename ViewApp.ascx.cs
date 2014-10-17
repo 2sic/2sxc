@@ -91,10 +91,14 @@ namespace ToSic.SexyContent
                             {
                                 if (Elements.Any() && Elements.First().TemplateId.HasValue)
                                 {
-                                    var editLink = Sexy.GetElementEditLink(Elements.First().GroupID, Elements.First().SortOrder, ModuleId, TabId, "");
-                                    Actions.Add(GetNextActionID(), LocalizeString("ActionEdit.Text"),
-                                        ModuleActionType.EditContent, "edititem", "edit.gif", PortalSettings.EnablePopUps ?
-                                        UrlUtils.PopUpUrl(editLink, this, PortalSettings, false, false) : editLink, false,
+                                    //var editLink = Sexy.GetElementEditLink(Elements.First().GroupID, Elements.First().SortOrder, ModuleId, TabId, "");
+                                    //Actions.Add(GetNextActionID(), LocalizeString("ActionEdit.Text"),
+                                    //    ModuleActionType.EditContent, "edititem", "edit.gif", PortalSettings.EnablePopUps ?
+                                    //    UrlUtils.PopUpUrl(editLink, this, PortalSettings, false, false) : editLink, false,
+                                    //    SecurityAccessLevel.Edit, true, false);
+
+                                    // Add Item
+                                    Actions.Add(GetNextActionID(), LocalizeString("ActionEdit.Text"), "", "", "edit.gif", "javascript:$2sxc(" + this.ModuleId + ").manage.action({ 'action':'edit', 'useModuleList': true, 'sortOrder':0 }); return false;", "test", true,
                                         SecurityAccessLevel.Edit, true, false);
                                 }
                             }
@@ -113,7 +117,7 @@ namespace ToSic.SexyContent
                                 Template.UseForList)
                             {
                                 // Add Item
-                                Actions.Add(GetNextActionID(), LocalizeString("ActionAdd.Text"), "", "", "add.gif", "javascript:$2sxc(" + this.ModuleId + ").manage.action({ 'action':'add', 'useModuleList': true });", "test", true,
+                                Actions.Add(GetNextActionID(), LocalizeString("ActionAdd.Text"), "", "", "add.gif", "javascript:$2sxc(" + this.ModuleId + ").manage.action({ 'action':'add', 'useModuleList': true }); return false;", "test", true,
                                     SecurityAccessLevel.Edit, true, false);
                             }
 
@@ -121,7 +125,7 @@ namespace ToSic.SexyContent
                             if (Sexy.GetVisibleTemplates(PortalSettings.PortalId).Any() && Template != null)
                             {
                                 Actions.Add(GetNextActionID(), LocalizeString("ActionChangeLayoutOrContent.Text"),
-                                    "", "", "action_settings.gif", "javascript:$2sxc(" + this.ModuleId + ").manage._setTemplateChooserState(true);", "test", true,
+                                    "", "", "action_settings.gif", "javascript:$2sxc(" + this.ModuleId + ").manage._setTemplateChooserState(true); return false;", "test", true,
                                     SecurityAccessLevel.Edit, true, false);
                             }
                         }

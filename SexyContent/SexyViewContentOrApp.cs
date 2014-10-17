@@ -35,6 +35,7 @@ namespace ToSic.SexyContent
                     ClientResourceManager.RegisterScript(this.Page, "~/DesktopModules/ToSIC_SexyContent/Js/AngularJS/angular.min.js", 80);
                     ClientResourceManager.RegisterScript(this.Page, "~/DesktopModules/ToSIC_SexyContent/Js/2sxc.TemplateSelector.js", 81);
                     ClientResourceManager.RegisterScript(this.Page, "~/DesktopModules/ToSIC_SexyContent/Js/ViewEdit.js", 82);
+                    ClientResourceManager.RegisterScript(this.Page, "~/DesktopModules/ToSIC_SexyContent/Js/2sxc.DnnActionMenuMapper.js", 83);
                     //ClientScript.RegisterClientScriptInclude("ViewEdit", ResolveClientUrl(""));
 
                     var hasContent = AppId.HasValue && Elements.Any() && Elements.First().TemplateId.HasValue && Elements.Any(p => p.EntityId.HasValue);
@@ -59,7 +60,7 @@ namespace ToSic.SexyContent
                                 portalId = PortalId,
                                 tabId = TabId,
                                 moduleId = ModuleId,
-                                contentGroupId = (AppId.HasValue && Elements.Any()) ? Elements.First().GroupId : -1,
+                                contentGroupId = AppId.HasValue ? Sexy.GetContentGroupIdFromModule(ModuleId) : 0,
                                 dialogUrl = DotNetNuke.Common.Globals.NavigateURL(this.TabId),
                                 returnUrl = Request.RawUrl,
                                 appPath = AppId.HasValue ? Sexy.App.Path : null,

@@ -12,13 +12,14 @@
 
 /* Template / ContentType / App-Selector */
 .sc-selector-wrapper { position: relative;overflow: hidden; }
-.sc-selector-wrapper .dnnFormInfo { overflow: hidden; }
+.sc-selector-wrapper .dnnFormInfo { overflow: hidden;padding: 9px;max-width:none; }
 .sc-selector-wrapper a { cursor: pointer; }
-.sc-selectors { max-width: 300px !important;float: left;width: 100%; }
+.sc-selectors { max-width: 100% !important;float: left;width: 300px; }
 .sc-selectors select { display: block;width: 100%; }
 .sc-selector-contenttype, .sc-selector-app { margin-bottom: 3px!important; }
-.sc-selector-close { background: url(images/Delete.png) center center no-repeat; float: right; height: 30px; width: 30px; display: block; text-indent: -9999px; }
-.sc-selector-save { background: url(images/Save.png) center center no-repeat;height: 30px;width: 30px; float: right; clear: right; display: block; text-indent: -9999px; }
+.sc-selector-actions { margin-top: 46px; }
+.sc-selector-close { background: url(images/Delete.png) center center no-repeat; height: 30px; width: 30px; display: inline-block; text-indent: -9999px; }
+.sc-selector-save { background: url(images/Save.png) center center no-repeat;height: 30px;width: 30px; display: inline-block; text-indent: -9999px; }
 
 /* Loading sign */
 .sc-loading { position: absolute;top: 0;left: 0;width: 100%;height: 100%;background: url(images/ajax-loader.gif) center center no-repeat rgba(255,255,255,0.7); }

@@ -5,18 +5,20 @@
     <div ng-controller="TemplateSelectorCtrl" data-moduleid="<%= ModuleId %>" class="sc-selector-wrapper">
         <div ng-show="manageInfo.templateChooserVisible" class="dnnFormMessage dnnFormInfo">
             <div class="sc-selectors">
-                <select ng-show="!manageInfo.isContentApp" ng-model="appId"></select>
+                <select ng-show="!manageInfo.isContentApp" ng-model="appId" class="sc-selector-app" ng-options="a.AppId as a.Name for a in apps">
+                    <option value=""><%= HttpUtility.HtmlEncode(LocalizeString("ddlAppDefaultItem.Text")) %></option>
+                </select>
 
-                <select ng-model="contentTypeId" ng-options="c.AttributeSetID as c.Name for c in contentTypes" class="sc-selector-contenttype" ng-disabled="manageInfo.hasContent">
+                <select ng-show="manageInfo.isContentApp" ng-model="contentTypeId" ng-options="c.AttributeSetID as c.Name for c in contentTypes" class="sc-selector-contenttype" ng-disabled="manageInfo.hasContent">
                     <option value=""><%= HttpUtility.HtmlEncode(LocalizeString("ddlContentTypeDefaultItem.Text")) %></option>
                 </select>
-        
-                <select ng-show="contentTypeId != null" ng-model="templateId" class="sc-selector-template" ng-options="t.TemplateID as t.Name for t in filteredTemplates()">
+                <select ng-show="manageInfo.isContentApp ? contentTypeId != null : savedAppId != null" ng-model="templateId" class="sc-selector-template" ng-options="t.TemplateID as t.Name for t in filteredTemplates()">
                 </select>
             </div>
-        
-            <a ng-show="templateId != null && savedTemplateId != templateId" ng-click="saveTemplateId(templateId);" class="sc-selector-save" title="Save Template">Save Template</a>
-            <a ng-show="savedTemplateId != null" class="sc-selector-close" ng-click="setTemplateChooserState(false);" title="Cancel">Cancel</a>
+            <div class="sc-selector-actions">
+                <a ng-show="templateId != null && savedTemplateId != templateId" ng-click="saveTemplateId();" class="sc-selector-save" title="Save Template">Save Template</a>
+                <a ng-show="savedTemplateId != null" class="sc-selector-close" ng-click="setTemplateChooserState(false);" title="Cancel">Cancel</a>
+            </div>
         </div>
     </div>
 
