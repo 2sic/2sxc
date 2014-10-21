@@ -192,6 +192,14 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="SexyContent\ContentGroupItem.cs" />
+    <Compile Include="SexyContent\EAVExtensions\EavApiProxies\PipelineDesignerController.cs" />
+    <Compile Include="SexyContent\EAV\PipelineDesigner\PipelineDesigner.ascx.cs">
+      <DependentUpon>PipelineDesigner.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SexyContent\EAV\PipelineDesigner\PipelineDesigner.ascx.designer.cs">
+      <DependentUpon>PipelineDesigner.ascx</DependentUpon>
+    </Compile>
     <Compile Include="SexyContent\SexyContentContext.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -487,6 +495,8 @@
     <Content Include="Js\2sxc.api.manage.js" />
     <Content Include="Js\2sxc.DnnActionMenuMapper.js" />
     <Content Include="Js\2sxc.TemplateSelector.js" />
+    <Content Include="Js\AngularJS\angular-animate.min.js" />
+    <Content Include="Js\AngularJS\angular-resource.min.js" />
     <Content Include="Js\AngularJS\angular-ui-tree.min.css" />
     <Content Include="Js\AngularJS\angular-ui-tree.min.js" />
     <Content Include="Js\AngularJS\angular.min.js" />
@@ -528,6 +538,7 @@
     <Content Include="SexyContent\EAV\AngularServices\EavApiService.js" />
     <Content Include="SexyContent\EAV\AngularServices\EavDialogService.js" />
     <Content Include="SexyContent\EAV\AngularServices\EavGlobalConfigurationProvider.js" />
+    <Content Include="SexyContent\EAV\AngularServices\NotificationService.js" />
     <Content Include="SexyContent\EAV\Controls\ContentTypeEdit.ascx" />
     <Content Include="SexyContent\EAV\Controls\ContentTypeFields.ascx" />
     <Content Include="SexyContent\EAV\Controls\ContentTypesList.ascx" />
@@ -557,6 +568,13 @@
     <Content Include="BuildScripts\ModulePackage.Targets" />
     <Content Include="BuildScripts\MSBuild.Community.Tasks.targets" />
     <None Include="SqlDataProvider\01.00.00.SqlDataProvider" />
+    <Content Include="SexyContent\EAV\PipelineDesigner\assets\Delete.png" />
+    <Content Include="SexyContent\EAV\PipelineDesigner\assets\jquery.jsPlumb-1.6.4-min.js" />
+    <Content Include="SexyContent\EAV\PipelineDesigner\PipelineDesigner.ascx" />
+    <Content Include="SexyContent\EAV\PipelineDesigner\PipelineDesigner.css" />
+    <Content Include="SexyContent\EAV\PipelineDesigner\PipelineDesigner.js" />
+    <Content Include="SexyContent\EAV\PipelineDesigner\PipelineDesignerController.js" />
+    <Content Include="SexyContent\EAV\PipelineDesigner\PipelineFactory.js" />
     <Content Include="SexyContent\GettingStarted\GettingStartedFrame.ascx" />
     <Content Include="SqlDataProvider\05.02.01.SqlDataProvider" />
     <Content Include="Styles\Edit.css" />
@@ -600,9 +618,6 @@
     <Content Include="Administration\App_LocalResources\ManageTemplates.ascx.resx" />
     <Content Include="Administration\App_LocalResources\EditTemplate.ascx.resx" />
     <Content Include="App_LocalResources\Settings.ascx.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_LocalResources\View.ascx.resx" />

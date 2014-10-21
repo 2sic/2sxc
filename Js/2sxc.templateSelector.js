@@ -192,6 +192,7 @@
             };
 
             settings.headers = $.extend({}, settings.headers, headers);
+        	// ToDo: use eavGlobalConfigurationProvider!
             settings.url = sf.getServiceRoot('2sxc') + settings.url;
             settings.params = $.extend({}, settings.params);
             return $http(settings);
