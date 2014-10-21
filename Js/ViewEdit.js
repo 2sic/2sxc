@@ -7,7 +7,7 @@
     var modules = $('.DnnModule-2sxc .Mod2sxcC[data-2sxc], .DnnModule-2sxc-app .Mod2sxcappC[data-2sxc]');
 
     modules.each(function () {
-        var moduleId = $.parseJSON($(this).attr('data-2sxc')).moduleId;
+        var moduleId = $(this).data("2sxc").moduleId;
         $2sxc(moduleId).manage._processToolbars();
     });
 
