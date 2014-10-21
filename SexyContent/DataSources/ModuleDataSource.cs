@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using DotNetNuke.Common.Utilities;
-using DotNetNuke.Entities.Content;
-using DotNetNuke.Entities.Portals;
-using DotNetNuke.UI.WebControls;
 using ToSic.Eav;
 using ToSic.Eav.DataSources;
 
 namespace ToSic.SexyContent.DataSources
 {
+	[PipelineDesigner]
     public class ModuleDataSource : BaseDataSource
     {
         private SexyContent _sexy;

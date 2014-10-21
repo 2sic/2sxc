@@ -1,9 +1,12 @@
 ﻿// PipelineFactory provides an interface to the Server Backend storing Pipelines and their Pipeline Parts
-pipelineDesigner.factory('pipelineFactory', ['$resource', '$q', '$filter', 'eavGlobalConfigurationProvider', function ($resource, $q, $filter, eavGlobalConfigurationProvider) {
+pipelineDesigner.factory('pipelineFactory', ['$resource', '$q', '$filter', 'eavGlobalConfigurationProvider', '$http', function ($resource, $q, $filter, eavGlobalConfigurationProvider, $http) {
 	'use strict';
 
 	// Web API Service
-	var pipelineResource = $resource(eavGlobalConfigurationProvider.apiBaseUrl + '/EAV/PipelineDesigner/:action');
+	var pipelineResource = $resource(eavGlobalConfigurationProvider.api.baseUrl + '/EAV/PipelineDesigner/:action');
+	// Add additional Headers to each http-Request
+	angular.extend($http.defaults.headers.common, eavGlobalConfigurationProvider.api.additionalHeaders);
+
 
 	// Get the Definition of a DataSource
 	var getDataSourceDefinitionProperty = function (model, dataSource) {

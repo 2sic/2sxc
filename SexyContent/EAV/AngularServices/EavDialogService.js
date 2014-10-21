@@ -11,9 +11,8 @@
     				title: null
     			}, params);
 
-    			// ToDo: Should be here, not in ViewEdit.js
-    			//if (window.top.EavEditDialogs == null)
-    			//    window.top.EavEditDialogs = [];
+    			if (window.top.EavEditDialogs == null)
+    			    window.top.EavEditDialogs = [];
 
     			var dialogElement;
     			if (params.url)
