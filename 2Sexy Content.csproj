@@ -485,6 +485,7 @@
     <Content Include="Images\Save.png" />
     <Content Include="Js\2sxc.api.manage.js" />
     <Content Include="Js\2sxc.DnnActionMenuMapper.js" />
+    <Content Include="Js\2sxc.ApiService.js" />
     <Content Include="Js\2sxc.TemplateSelector.js" />
     <Content Include="Js\AngularJS\angular-ui-tree.min.css" />
     <Content Include="Js\AngularJS\angular-ui-tree.min.js" />

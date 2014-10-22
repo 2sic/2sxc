@@ -36,9 +36,9 @@ namespace ToSic.SexyContent
                     // ToDo: Move these RegisterScripts to JS to prevent including AngularJS twice (from other modules)
                     ClientResourceManager.RegisterScript(this.Page, "~/DesktopModules/ToSIC_SexyContent/Js/AngularJS/angular.min.js", 80);
                     ClientResourceManager.RegisterScript(this.Page, "~/DesktopModules/ToSIC_SexyContent/Js/2sxc.TemplateSelector.js", 81);
+                    ClientResourceManager.RegisterScript(this.Page, "~/DesktopModules/ToSIC_SexyContent/Js/2sxc.ApiService.js", 82);
                     ClientResourceManager.RegisterScript(this.Page, "~/DesktopModules/ToSIC_SexyContent/Js/ViewEdit.js", 82);
                     ClientResourceManager.RegisterScript(this.Page, "~/DesktopModules/ToSIC_SexyContent/Js/2sxc.DnnActionMenuMapper.js", 83);
-                    //ClientScript.RegisterClientScriptInclude("ViewEdit", ResolveClientUrl(""));
 
                     var hasContent = AppId.HasValue && Elements.Any() && Elements.First().TemplateId.HasValue && Elements.Any(p => p.EntityId.HasValue);
                     var templateChooserVisible = Settings.ContainsKey(SexyContent.SettingsShowTemplateChooser) ?
