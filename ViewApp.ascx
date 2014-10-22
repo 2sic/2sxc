@@ -1,7 +1,7 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" Inherits="ToSic.SexyContent.ViewApp" Codebehind="ViewApp.ascx.cs" %>
 <asp:Placeholder runat="server" ID="pnlTemplateChooser" Visible="false">
     
-        <%-- New AngularJS template chooser --%>
+    <%-- New AngularJS template chooser --%>
     <div ng-controller="TemplateSelectorCtrl" data-moduleid="<%= ModuleId %>" class="sc-selector-wrapper">
         <div ng-show="manageInfo.templateChooserVisible" class="dnnFormMessage dnnFormInfo">
             <div class="sc-selectors">
@@ -9,11 +9,10 @@
                     <option value=""><%= HttpUtility.HtmlEncode(LocalizeString("ddlAppDefaultItem.Text")) %></option>
                 </select>
 
-                <select ng-if="manageInfo.isContentApp" ng-model="contentTypeId" ng-options="c.AttributeSetID as c.Name for c in contentTypes" class="sc-selector-contenttype" ng-disabled="manageInfo.hasContent">
-                    <option value=""><%= HttpUtility.HtmlEncode(LocalizeString("ddlContentTypeDefaultItem.Text")) %></option>
+                <select ng-show="manageInfo.isContentApp" ng-model="contentTypeId" ng-options="c.AttributeSetID as c.Name for c in contentTypes" class="sc-selector-contenttype" ng-disabled="manageInfo.hasContent || manageInfo.isList">
+                    <option ng-disabled="contentTypeId != null" value=""><%= HttpUtility.HtmlEncode(LocalizeString("ddlContentTypeDefaultItem.Text")) %></option>
                 </select>
-
-                <select ng-show="contentTypeId != null || (!manageInfo.isContentApp && savedAppId != null)" ng-model="templateId" class="sc-selector-template" ng-options="t.TemplateID as t.Name for t in filteredTemplates()">
+                <select ng-show="manageInfo.isContentApp ? contentTypeId != null : savedAppId != null" ng-model="templateId" class="sc-selector-template" ng-options="t.TemplateID as t.Name for t in filteredTemplates()">
                 </select>
             </div>
             <div class="sc-selector-actions">

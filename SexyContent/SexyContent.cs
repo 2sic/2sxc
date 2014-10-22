@@ -1,4 +1,5 @@
-﻿using System.Data.Objects;
+﻿using System.Configuration;
+using System.Data.Objects;
 using DotNetNuke.Common;
 using DotNetNuke.Common.Internal;
 using DotNetNuke.Common.Utilities;
@@ -993,6 +994,17 @@ namespace ToSic.SexyContent
         public ContentGroupItem AddContentGroupItem(int ContentGroupID, int UserID, int? TemplateID, int? EntityID, int? DestinationSortOrder, bool AutoSave, ContentGroupItemType ItemType, bool PreventSorting)
         {
             var userId = PortalSettings.Current.UserId;
+
+            if (TemplateID.HasValue)
+            {
+                var template = TemplateContext.GetTemplate(TemplateID.Value);
+
+                // Throw exception if
+                // 1. a content element is added
+                // 2. the template is not configured for a list
+                if (ItemType == ContentGroupItemType.Content && !template.UseForList)
+                    throw new Exception("Cannot add item: The template is not configured for lists.");
+            }
 
             var Item = new ContentGroupItem()
             {

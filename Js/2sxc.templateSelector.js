@@ -1,7 +1,7 @@
 ﻿(function () {
     var module = angular.module('2sxc.view', []);
 
-    module.controller('TemplateSelectorCtrl', function($scope, $attrs, moduleApiService, groupApiService, $filter, $q) {
+    module.controller('TemplateSelectorCtrl', function($scope, $attrs, moduleApiService, groupApiService, $filter, $q, $window) {
 
         var moduleId = $attrs.moduleid;
 
@@ -38,7 +38,12 @@
 
                 $scope.$watch('templateId', function(newTemplateId, oldTemplateId) {
                     if (newTemplateId != oldTemplateId) {
-                        $scope.renderTemplate(newTemplateId);
+                        if ($scope.manageInfo.isContentApp)
+                            $scope.renderTemplate(newTemplateId);
+                        else {
+                            $scope.saveTemplateId(newTemplateId);
+                            $window.location.reload();
+                        }
                     }
                 });
 
@@ -59,7 +64,7 @@
             $scope.reloadTemplates();
 
         $scope.$watch('manageInfo.templateChooserVisible', function(visible) {
-            if (visible)
+            if ($scope.appId != null && visible)
                 $scope.reloadTemplates();
         });
 
@@ -178,7 +183,7 @@
         }
     });
 
-    module.factory('apiService', function ($http) {
+    module.factory('apiService', function ($http, $window) {
 
         return function (moduleId, settings) {
 
@@ -194,7 +199,18 @@
             settings.headers = $.extend({}, settings.headers, headers);
             settings.url = sf.getServiceRoot('2sxc') + settings.url;
             settings.params = $.extend({}, settings.params);
-            return $http(settings);
+
+            var apiPromise = $http(settings);
+
+            // Catch, log and show errors
+            return apiPromise.catch(function(reason) {
+                if ($window.console)
+                    $window.console.log(reason);
+                var error = "Error: ";
+                error += (reason.data && reason.data.ExceptionMessage) ? reason.data.ExceptionMessage : "Unkown";
+                error += "\r\nThe error has also been logged to the console.";
+                $window.alert(error);
+            });
         }
     });
 
