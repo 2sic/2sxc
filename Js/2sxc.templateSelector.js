@@ -1,12 +1,11 @@
 ﻿(function () {
     var module = angular.module('2sxc.view', []);
 
-    module.controller('TemplateSelectorCtrl', function($scope, $attrs, moduleApiService, groupApiService, $filter, $q, $window) {
+    module.controller('TemplateSelectorCtrl', function($scope, $attrs, moduleApiService, $filter, $q, $window) {
 
         var moduleId = $attrs.moduleid;
 
         var moduleApi = moduleApiService(moduleId);
-        var groupApi = groupApiService(moduleId);
 
         $scope.manageInfo = $2sxc(moduleId).manage._manageInfo;
         $scope.apps = [];
@@ -96,7 +95,7 @@
             var promises = [];
 
             if ($scope.savedTemplateId != $scope.templateId) {
-                promises.push(groupApi.saveTemplateId($scope.templateId));
+                promises.push(moduleApi.saveTemplateId($scope.templateId));
             }
 
             $scope.savedTemplateId = $scope.templateId;
@@ -117,7 +116,7 @@
         };
 
         $scope.addItem = function(sortOrder) {
-            groupApi.addItem(sortOrder).then(function () {
+            moduleApi.addItem(sortOrder).then(function () {
                 $scope.renderTemplate($scope.templateId);
             });
         };
@@ -127,6 +126,18 @@
     module.factory('moduleApiService', function(apiService) {
         return function(moduleId) {
             return {
+                saveTemplateId: function(templateId) {
+                    return apiService(moduleId, {
+                        url: 'View/ContentGroup/SaveTemplateId',
+                        params: { templateId: templateId }
+                    });
+                },
+                addItem: function(sortOrder) {
+                    return apiService(moduleId, {
+                        url: 'View/ContentGroup/AddItem',
+                        params: { sortOrder: sortOrder }
+                    });
+                },
                 getSelectableApps: function() {
                     return apiService(moduleId, {
                         url: 'View/Module/GetSelectableApps'
@@ -162,25 +173,6 @@
                 }
             };
         };
-    });
-
-    module.factory('groupApiService', function(apiService) {
-        return function(moduleId) {
-            return {
-                saveTemplateId: function(templateId) {
-                    return apiService(moduleId, {
-                        url: 'View/ContentGroup/SaveTemplateId',
-                        params: { templateId: templateId }
-                    });
-                },
-                addItem: function(sortOrder) {
-                    return apiService(moduleId, {
-                        url: 'View/ContentGroup/AddItem',
-                        params: { sortOrder: sortOrder }
-                    });
-                }
-            };
-        }
     });
 
     module.factory('apiService', function ($http, $window) {

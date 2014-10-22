@@ -23,6 +23,23 @@ namespace ToSic.SexyContent.ViewAPI
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         [ValidateAntiForgeryToken]
+        public void AddItem([FromUri] int? sortOrder = null)
+        {
+            var elements = Sexy.GetContentElements(ActiveModule.ModuleID, Sexy.GetCurrentLanguageName(), null, PortalSettings.PortalId, SexyContent.HasEditPermission(ActiveModule)).ToList();
+            SexyUncached.AddContentGroupItem(elements.First().GroupId, UserInfo.UserID, elements.First().TemplateId, null, sortOrder.HasValue ? sortOrder.Value + 1 : sortOrder, true, ContentGroupItemType.Content, false);
+        }
+
+        [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        [ValidateAntiForgeryToken]
+        public void SaveTemplateId([FromUri] int? templateId)
+        {
+            SexyUncached.UpdateTemplateForGroup(Sexy.GetContentGroupIdFromModule(ActiveModule.ModuleID), templateId, UserInfo.UserID);
+        }
+
+        [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        [ValidateAntiForgeryToken]
         public void SetTemplateChooserState([FromUri]bool state)
         {
             ActiveModule.ModuleSettings[SexyContent.SettingsShowTemplateChooser] = state;

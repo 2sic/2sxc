@@ -201,7 +201,6 @@
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="SexyContent\Template.cs" />
-    <Compile Include="SexyContent\ViewAPI\ContentGroupController.cs" />
     <Compile Include="EditEntity.ascx.cs">
       <DependentUpon>EditEntity.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
