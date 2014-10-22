@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -93,14 +94,25 @@ namespace ToSic.SexyContent.ViewAPI
         [ValidateAntiForgeryToken]
         public HttpResponseMessage RenderTemplate([FromUri]int templateId)
         {
-            var template = Sexy.TemplateContext.GetTemplate(templateId);
-            var engine = EngineFactory.CreateEngine(template);
-            var dataSource = (ViewDataSource)Sexy.GetViewDataSource(ActiveModule.ModuleID, SexyContent.HasEditPermission(ActiveModule), DotNetNuke.Common.Globals.IsEditMode(), templateId);
-            engine.Init(template, Sexy.App, ActiveModule, dataSource, InstancePurposes.WebView, Sexy);
-            engine.CustomizeData();
-            var response = new HttpResponseMessage(HttpStatusCode.OK);
-            response.Content = new StringContent(engine.Render(), Encoding.UTF8, "text/plain");
-            return response;
+            try
+            {
+                var template = Sexy.TemplateContext.GetTemplate(templateId);
+                var engine = EngineFactory.CreateEngine(template);
+                var dataSource =
+                    (ViewDataSource)
+                        Sexy.GetViewDataSource(ActiveModule.ModuleID, SexyContent.HasEditPermission(ActiveModule),
+                            DotNetNuke.Common.Globals.IsEditMode(), templateId);
+                engine.Init(template, Sexy.App, ActiveModule, dataSource, InstancePurposes.WebView, Sexy);
+                engine.CustomizeData();
+                var response = new HttpResponseMessage(HttpStatusCode.OK);
+                response.Content = new StringContent(engine.Render(), Encoding.UTF8, "text/plain");
+                return response;
+            }
+            catch (Exception e)
+            {
+                DotNetNuke.Services.Exceptions.Exceptions.LogException(e);
+                throw e;
+            }
         }
 
     }
