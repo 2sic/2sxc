@@ -550,15 +550,9 @@ namespace ToSic.SexyContent
         /// <returns></returns>
         public static bool SexyContentDesignersGroupConfigured(int portalId)
         {
-            var roleControl = new DotNetNuke.Security.Roles.RoleController();
-            RoleInfo Role = roleControl.GetRoleByName(portalId, SexyContentGroupName);
-            if (Role != null)
-            {
-                System.Collections.ArrayList t = roleControl.GetUsersByRoleName(portalId, SexyContentGroupName);
-                if (t.Count > 0)
-                    return true;
-            }
-            return false;
+            var roleControl = new RoleController();
+            RoleInfo role = roleControl.GetRoleByName(portalId, SexyContentGroupName);
+            return role != null;
         }
 
         /// <summary>
