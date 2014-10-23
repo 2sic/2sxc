@@ -434,7 +434,27 @@ namespace ToSic.SexyContent
             return Result;
         }
 
-        public List<Template> GetCompatibleTemplates(int PortalID, int ContentGroupID)
+        /// <summary>
+        /// Returns all templates that should be available in the template selector
+        /// </summary>
+        /// <param name="module"></param>
+        /// <returns></returns>
+        public IEnumerable<Template> GetAvailableTemplatesForSelector(ModuleInfo module)
+        {
+            IEnumerable<Template> availableTemplates;
+            var elements = GetContentElements(module.ModuleID, GetCurrentLanguageName(), null, module.OwnerPortalID, SexyContent.HasEditPermission(module));
+
+            if (elements.Any(e => e.EntityId.HasValue))
+                availableTemplates = GetCompatibleTemplates(module.PortalID, elements.First().GroupId).Where(p => !p.IsHidden);
+            else if (elements.Count <= 1)
+                availableTemplates = GetVisibleTemplates(module.PortalID);
+            else
+                availableTemplates = GetVisibleListTemplates(module.PortalID);
+            
+            return availableTemplates;
+        } 
+
+        private List<Template> GetCompatibleTemplates(int PortalID, int ContentGroupID)
         {
             var ContentGroupItems = TemplateContext.GetContentGroupItems(ContentGroupID).ToList();
             List<Template> CompatibleTemplates;

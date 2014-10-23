@@ -86,11 +86,12 @@ namespace ToSic.SexyContent
                 lblContentTypeText.Visible = true;
                 lblContentTypeDefaultText.Visible = false;
 
-                IEnumerable<Template> CompatibleTemplates = SexyUncached.GetCompatibleTemplates(PortalId, ContentGroupItem.ContentGroupID).Where(p => !p.IsHidden);
-                ddlTemplate.DataSource = CompatibleTemplates;
+                // ToDo: This dialog should not be used to change the template anymore, clean it up!
+                //IEnumerable<Template> CompatibleTemplates = SexyUncached.GetCompatibleTemplates(PortalId, ContentGroupItem.ContentGroupID).Where(p => !p.IsHidden);
+                //ddlTemplate.DataSource = CompatibleTemplates;
 
-                if (CompatibleTemplates.Any(p => p.TemplateID == TemplateID))
-                    ddlTemplate.SelectedValue = TemplateID.ToString();
+                //if (CompatibleTemplates.Any(p => p.TemplateID == TemplateID))
+                //    ddlTemplate.SelectedValue = TemplateID.ToString();
             }
             else
                 ddlTemplate.DataSource = SexyUncached.GetVisibleTemplates(PortalId);

@@ -58,6 +58,15 @@ namespace ToSic.SexyContent.ViewAPI
         public void SetAppId(int? appId)
         {
             SexyContent.SetAppIdForModule(ActiveModule, appId);
+
+            // Change to 1. template if app has been set
+            if (appId.HasValue)
+            {
+                var sexyForNewApp = new SexyContent(Sexy.App.ZoneId, appId.Value, false);
+                var templates = sexyForNewApp.GetAvailableTemplatesForSelector(ActiveModule).ToList();
+                if(templates.Any())
+                    SexyUncached.UpdateTemplateForGroup(Sexy.GetContentGroupIdFromModule(ActiveModule.ModuleID), templates.First().TemplateID, UserInfo.UserID);
+            }
         }
 
         [HttpGet]
@@ -73,16 +82,7 @@ namespace ToSic.SexyContent.ViewAPI
         [ValidateAntiForgeryToken]
         public IEnumerable<object> GetSelectableTemplates()
         {
-            IEnumerable<Template> availableTemplates;
-            var elements = Sexy.GetContentElements(ActiveModule.ModuleID, Sexy.GetCurrentLanguageName(), null, PortalSettings.PortalId, SexyContent.HasEditPermission(ActiveModule));
-
-            if (elements.Any(e => e.EntityId.HasValue))
-                availableTemplates = Sexy.GetCompatibleTemplates(PortalSettings.PortalId, elements.First().GroupId).Where(p => !p.IsHidden);
-            else if (elements.Count <= 1)
-                availableTemplates = Sexy.GetVisibleTemplates(PortalSettings.PortalId);
-            else
-                availableTemplates = Sexy.GetVisibleListTemplates(PortalSettings.PortalId);
-
+            var availableTemplates = Sexy.GetAvailableTemplatesForSelector(ActiveModule);
             return availableTemplates.Select(t => new { t.TemplateID, t.Name, t.AttributeSetID });
         }
 
