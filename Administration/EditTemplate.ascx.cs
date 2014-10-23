@@ -72,6 +72,16 @@ namespace ToSic.SexyContent
             if (Page.IsPostBack)
             {
                 pnlListConfiguration.Visible = chkEnableList.Checked;
+                var isNoContentType = (ctrContentType.ContentTypeID == -1);
+                if (isNoContentType)
+                {
+                    chkEnableList.Checked = false;
+                    ctrPresentationType.ContentTypeID = 0;
+                    chkSeparateContentPresentation.Checked = false;
+                }
+                chkEnableList.Enabled = !isNoContentType;
+                chkSeparateContentPresentation.Enabled = !isNoContentType;
+                ctrPresentationType.Enabled = !isNoContentType;
                 return;
             }
 
