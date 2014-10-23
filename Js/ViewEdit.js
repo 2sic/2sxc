@@ -13,15 +13,16 @@
 
 
     window.EavEditDialogs = [];
-    
-    // ToDo: Make sure AngularJS is loaded when needed (prevents loading AngularJS twice if it is already loaded by another module)
-    //if (modules.length > 0 && angular == null) {
-    //    $.getScript(modules[0].);
-    //}
 
-    if (window.angular != null) {
-        angular.element(document).ready(function () {
-            angular.bootstrap(document, ['2sxc.view']);
-        });
-    }
 });
+
+// ToDo: Make sure AngularJS is loaded when needed (prevents loading AngularJS twice if it is already loaded by another module)
+//if (modules.length > 0 && angular == null) {
+//    $.getScript(modules[0].);
+//}
+
+if (window.angular != null) {
+    angular.element(document).ready(function () {
+        angular.bootstrap(document, ['2sxc.view']);
+    });
+}

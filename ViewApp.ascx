@@ -3,7 +3,7 @@
     
     <%-- New AngularJS template chooser --%>
     <div ng-controller="TemplateSelectorCtrl" data-moduleid="<%= ModuleId %>" class="sc-selector-wrapper">
-        <div ng-show="manageInfo.templateChooserVisible" class="dnnFormMessage dnnFormInfo">
+        <div ng-show="manageInfo.templateChooserVisible" class="dnnFormMessage dnnFormInfo" style="display:none;">
             <div class="sc-selectors">
                 <select ng-show="!manageInfo.isContentApp" ng-model="appId" class="sc-selector-app" ng-options="a.AppId as a.Name for a in apps">
                     <option value=""><%= HttpUtility.HtmlEncode(LocalizeString("ddlAppDefaultItem.Text")) %></option>

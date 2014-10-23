@@ -163,7 +163,12 @@ $2sxc.getManageController = function(id) {
 
         _getSelectorScope: function() {
             var selectorElement = document.querySelector('.DnnModule-' + id + ' .sc-selector-wrapper');
-            return angular.element(selectorElement).scope();
+            var scope = angular.element(selectorElement).scope();
+
+            if (scope == null)
+                alert("Something went wrong. Make sure your template does not cause JavaScript errors.");
+
+            return scope;
         }
 
     };
