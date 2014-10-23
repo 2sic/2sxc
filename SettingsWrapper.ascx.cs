@@ -23,10 +23,7 @@ namespace ToSic.SexyContent
             {
                 if (_ContentGroupItems == null)
                 {
-                    if (DirectEditContentGroupItem)
-                        _ContentGroupItems = SexyUncached.TemplateContext.GetContentGroupItems(ContentGroupItem.ContentGroupID);
-                    else
-                        _ContentGroupItems = SexyUncached.TemplateContext.GetContentGroupItems(SexyUncached.GetContentGroupIdFromModule(ModuleId));
+                    _ContentGroupItems = SexyUncached.TemplateContext.GetContentGroupItems(ContentGroupItem.ContentGroupID);
                 }
                 return _ContentGroupItems;
             }
@@ -39,22 +36,12 @@ namespace ToSic.SexyContent
             {
                 if (_ContentGroupItem == null)
                 {
-                    if (DirectEditContentGroupItem)
-                        _ContentGroupItem = SexyUncached.TemplateContext.GetContentGroupItem(int.Parse(Request.QueryString[SexyContent.ContentGroupItemIDString]));
-                    else if (ContentGroupItems.Count() != 0)
-                        _ContentGroupItem = ContentGroupItems.First();
+                    _ContentGroupItem = SexyUncached.TemplateContext.GetContentGroupItem(int.Parse(Request.QueryString[SexyContent.ContentGroupItemIDString]));
                 }
                 return _ContentGroupItem;
             }
         }
 
-        private bool DirectEditContentGroupItem
-        {
-            get
-            {
-                return !String.IsNullOrEmpty(Request.QueryString[SexyContent.ContentGroupItemIDString]);
-            }
-        }
         #endregion
 
         /// <summary>
@@ -69,61 +56,26 @@ namespace ToSic.SexyContent
                 return;
 
             // Break if there is no ContentGroupItem
-            if (ContentGroupItem == null)
+            if (ContentGroupItem == null || !ContentGroupItem.TemplateID.HasValue)
                 return;
 
-            int? TemplateID = ContentGroupItem.TemplateID;
-            int? EntityID = ContentGroupItem.EntityID;
-            int? AttributeSetID = null;
+            int? entityID = ContentGroupItem.EntityID;
+            int? attributeSetID = SexyUncached.GetTemplateDefault(ContentGroupItem.TemplateID.Value, ContentGroupItem.ItemType).ContentTypeID;
 
-            // If TemplateID is set, fill template-dropdown with templates of the same 
-            // AttributeSetId / Content Type. Else show all visible templates.
-            if (TemplateID.HasValue)
+            if (attributeSetID.HasValue)
             {
-                AttributeSetID = SexyUncached.GetTemplateDefault(TemplateID.Value, ContentGroupItem.ItemType).ContentTypeID;
-
-                lblContentTypeText.Text = Sexy.ContentContext.GetAttributeSet(AttributeSetID.Value).Name;
-                lblContentTypeText.Visible = true;
-                lblContentTypeDefaultText.Visible = false;
-
-                // ToDo: This dialog should not be used to change the template anymore, clean it up!
-                //IEnumerable<Template> CompatibleTemplates = SexyUncached.GetCompatibleTemplates(PortalId, ContentGroupItem.ContentGroupID).Where(p => !p.IsHidden);
-                //ddlTemplate.DataSource = CompatibleTemplates;
-
-                //if (CompatibleTemplates.Any(p => p.TemplateID == TemplateID))
-                //    ddlTemplate.SelectedValue = TemplateID.ToString();
-            }
-            else
-                ddlTemplate.DataSource = SexyUncached.GetVisibleTemplates(PortalId);
-
-            ddlTemplate.DataBind();
-
-            if (DirectEditContentGroupItem)
-            {
-                pnlTemplate.Visible = false;
-                ddlEntities.Items.RemoveAt(0);
+                ddlEntities.DataSource =
+                    Sexy.ContentContext.GetItemsTable(attributeSetID.Value).AsEnumerable().Select(i => new
+                    {
+                        EntityTitle = i["EntityTitle"] + " (" + i["EntityID"] + ")",
+                        EntityID = i["EntityID"]
+                    });
+                ddlEntities.DataBind();
             }
 
-            if (ContentGroupItems.Count(c => c.ItemType == ContentGroupItemType.Content) > 1 && !DirectEditContentGroupItem)
-                pnlEntities.Visible = false;
-            else
-            {
-                // If Content Type is set, show available Entities
-                if (AttributeSetID.HasValue)
-                {
-                    ddlEntities.DataSource = from System.Data.DataRow c in Sexy.ContentContext.GetItemsTable(AttributeSetID.Value).AsEnumerable()
-                                             select new
-                                             {
-                                                 EntityTitle = c["EntityTitle"] + " (" + c["EntityID"] + ")",
-                                                 EntityID = c["EntityID"]
-                                             };
-                    ddlEntities.DataBind();
-                }
+            if (entityID.HasValue)
+                ddlEntities.SelectedValue = entityID.Value.ToString();
 
-                // If EntityID is set, select the chosen Entity in the dropdown
-                if (EntityID.HasValue)
-                    ddlEntities.SelectedValue = EntityID.Value.ToString();
-            }
         }
 
         /// <summary>
@@ -133,20 +85,13 @@ namespace ToSic.SexyContent
         /// <param name="e"></param>
         protected void btnSave_Click(object sender, EventArgs e)
         {
-            // Save Template
-            if (ddlTemplate.SelectedValue != "-1")
-                SexyUncached.UpdateTemplateForGroup(ContentGroupItem.ContentGroupID, int.Parse(ddlTemplate.SelectedValue), UserId);
-
-            // Save Entity (if not list)
-            if (ContentGroupItems.Count(c => c.ItemType == ContentGroupItemType.Content) < 2 || DirectEditContentGroupItem)
-            {
-                if (ddlEntities.SelectedValue != "-1")
-                    ContentGroupItem.EntityID = int.Parse(ddlEntities.SelectedValue);
-                else
-                    ContentGroupItem.EntityID = null;
-                ContentGroupItem.SysModified = DateTime.Now;
-                ContentGroupItem.SysModifiedBy = UserId;
-            }
+            
+            if (ddlEntities.SelectedValue != "-1")
+                ContentGroupItem.EntityID = int.Parse(ddlEntities.SelectedValue);
+            else
+                ContentGroupItem.EntityID = null;
+            ContentGroupItem.SysModified = DateTime.Now;
+            ContentGroupItem.SysModifiedBy = UserId;
 
             SexyUncached.TemplateContext.SaveChanges();
 
