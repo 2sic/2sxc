@@ -19,6 +19,7 @@
                 <a ng-show="templateId != null && savedTemplateId != templateId" ng-click="saveTemplateId();" class="sc-selector-save" title="Save Template">Save Template</a>
                 <a ng-show="savedTemplateId != null" class="sc-selector-close" ng-click="setTemplateChooserState(false);" title="Cancel">Cancel</a>
             </div>
+            <div class="sc-loading sc-loading-nobg" ng-show="loading"></div>
         </div>
     </div>
 

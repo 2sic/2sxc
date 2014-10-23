@@ -22,9 +22,11 @@
         $scope.savedTemplateId = $scope.manageInfo.templateId;
         $scope.appId = $scope.manageInfo.appId;
         $scope.savedAppId = $scope.manageInfo.appId;
+        $scope.loading = 0;
 
         $scope.reloadTemplates = function() {
 
+            $scope.loading++;
             var getContentTypes = moduleApi.getSelectableContentTypes();
             var getTemplates = moduleApi.getSelectableTemplates();
 
@@ -55,6 +57,7 @@
                         $scope.templateId = firstTemplateId;
                 });
 
+                $scope.loading--;
             });
 
         };
@@ -107,9 +110,16 @@
         };
 
         $scope.renderTemplate = function (templateId) {
+            $scope.loading++;
             moduleApi.renderTemplate(templateId).then(function (response) {
-                $scope.insertRenderedTemplate(response.data);
-                $2sxc(moduleId).manage._processToolbars();
+                try {
+                    $scope.insertRenderedTemplate(response.data);
+                    $2sxc(moduleId).manage._processToolbars();
+                } catch (e) {
+                    console.log("Error while rendering template:");
+                    console.log(e);
+                }
+                $scope.loading--;
             });
         };
 

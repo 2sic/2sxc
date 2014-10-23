@@ -476,6 +476,8 @@
     <Content Include="Extensions\Imazen_ImageResizer\license.txt" />
     <Content Include="icon-app.png" />
     <Content Include="icon.png" />
+    <Content Include="Images\ajax-loader.gif" />
+    <Content Include="Images\Edit-Draft.png" />
     <Content Include="Images\Add.png" />
     <Content Include="Images\AddWithEdit.png" />
     <Content Include="Images\Delete.png" />
