@@ -762,11 +762,6 @@ namespace ToSic.SexyContent
             return SettingsUrl;
         }
 
-        //public void AttachToolbarToElements(List<Element> Elements)
-        //{
-            
-        //}
-
         #endregion
 
         #region Apps
