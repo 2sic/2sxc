@@ -34,7 +34,7 @@ angular.module('eavGlobalConfigurationProvider', [])
 			pipelineDesigner: {
 				outDataSource: {
 					className: 'SexyContentTemplate',
-					in: ['Content', 'Presentation', 'ListContent', 'ListPresentation'],
+					in: ['Content', 'ListContent', 'Presentation', 'ListPresentation'],
 					name: '2SexyContent Module',
 					description: 'The module/template which will show this data',
 					visualDesignerData: { Top: 50, Left: 410 }

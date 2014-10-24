@@ -191,6 +191,7 @@
       <DependentUpon>Services.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="SexyContent\SexyContentModuleUpgrade.cs" />
     <Compile Include="SexyContent\ContentGroupItem.cs" />
     <Compile Include="SexyContent\EAVExtensions\EavApiProxies\PipelineDesignerController.cs" />
     <Compile Include="SexyContent\EAV\PipelineDesigner\PipelineDesignerDnnWrapper.ascx.cs">

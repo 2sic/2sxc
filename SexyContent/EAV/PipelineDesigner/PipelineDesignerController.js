@@ -29,7 +29,7 @@ pipelineDesigner.controller('pipelineDesignerController',
 
 			// If a new Pipeline is made, init new Pipeline
 			if (!$scope.PipelineEntityId)
-				$timeout(initNewPipeline);
+				initNewPipeline();
 		}, function (reason) {
 			uiNotification.error('Loading Pipeline failed', reason);
 		});
@@ -203,9 +203,11 @@ pipelineDesigner.controller('pipelineDesignerController',
 				$scope.addDataSource(dataSource.partAssemblyAndType, dataSource.visualDesignerData, false);
 			});
 
-			// create wirings when DOM was created
-			$timeout(function () {
+			// Wait until all DataSources were created
+			var initWiringsListener = $scope.$on('ngRepeatFinished', function () {
 				initWirings(eavGlobalConfigurationProvider.pipelineDesigner.defaultPipeline.streamWiring);
+				
+				initWiringsListener(); // unbind the Listener
 			});
 		}
 
