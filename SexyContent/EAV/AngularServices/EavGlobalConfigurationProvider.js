@@ -1,12 +1,12 @@
 ﻿// EavGlobalConfigurationProvider providers default global values for the EAV angular system
 // The ConfigurationProvider in 2sxc is not the same as in the EAV project.
 angular.module('eavGlobalConfigurationProvider', [])
-	.factory('eavGlobalConfigurationProvider', function() {
+	.factory('eavGlobalConfigurationProvider', function () {
 
 		// Get needed moduleContext variables from parent node
 		var globals = $.parseJSON($("[data-2sxc-globals]").attr("data-2sxc-globals"));
 
-		var getApiAdditionalHeaders = function() {
+		var getApiAdditionalHeaders = function () {
 			var sf = $.ServicesFramework(globals.ModuleContext.ModuleId);
 
 			return {
@@ -15,6 +15,8 @@ angular.module('eavGlobalConfigurationProvider', [])
 				RequestVerificationToken: sf.getAntiForgeryValue()
 			};
 		}
+
+		var itemFormBaseUrl = globals.FullUrl + "/ctl/eavmanagement/mid/" + globals.ModuleContext.ModuleId + "/popUp/true?AppID=" + globals.ModuleContext.AppId + "&";
 
 		return {
 			api: {
@@ -28,8 +30,8 @@ angular.module('eavGlobalConfigurationProvider', [])
 			//},
 			dialogClass: "dnnFormPopup",
 			itemForm: {
-				newItemUrl: "/EAVManagement.aspx?ManagementMode=NewItem&AttributeSetId=[AttributeSetId]&CultureDimension=[CultureDimension]&KeyNumber=[KeyNumber]&KeyGuid=[KeyGuid]&AssignmentObjectTypeId=[AssignmentObjectTypeId]",
-				editItemUrl: "/EAVManagement.aspx?ManagementMode=EditItem&EntityId=[EntityId]&CultureDimension=2"
+				newItemUrl: itemFormBaseUrl + 'ManagementMode=NewItem&AttributeSetId=[AttributeSetId]&CultureDimension=[CultureDimension]&KeyNumber=[KeyNumber]&KeyGuid=[KeyGuid]&AssignmentObjectTypeId=[AssignmentObjectTypeId]',
+				editItemUrl: itemFormBaseUrl + "ManagementMode=EditItem&EntityId=[EntityId]&CultureDimension=[CultureDimension]"
 			},
 			pipelineDesigner: {
 				outDataSource: {
