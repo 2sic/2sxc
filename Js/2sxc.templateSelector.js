@@ -11,13 +11,13 @@
         $scope.apps = [];
         $scope.contentTypes = [];
         $scope.templates = [];
-        $scope.filteredTemplates = function () {
+        $scope.filteredTemplates = function (contentTypeId) {
             // Return all templates for App
             if (!$scope.manageInfo.isContentApp)
                 return $scope.templates;
-            return $filter('filter')($scope.templates, { AttributeSetID: $scope.contentTypeId });
+            return $filter('filter')($scope.templates, contentTypeId == 0 ? { AttributeSetID: '!' } : { AttributeSetID: contentTypeId });
         };
-        $scope.contentTypeId = null;
+        $scope.contentTypeId = 0;
         $scope.templateId = $scope.manageInfo.templateId;
         $scope.savedTemplateId = $scope.manageInfo.templateId;
         $scope.appId = $scope.manageInfo.appId;
@@ -30,11 +30,12 @@
             var getContentTypes = moduleApi.getSelectableContentTypes();
             var getTemplates = moduleApi.getSelectableTemplates();
 
-            $q.all([getContentTypes, getTemplates]).then(function(res) {
+            $q.all([getContentTypes, getTemplates]).then(function (res) {
                 $scope.contentTypes = res[0].data;
+                $scope.contentTypes.unshift({ AttributeSetID: null, Name: "< No Content Type >" });
                 $scope.templates = res[1].data;
                 var template = $filter('filter')($scope.templates, { TemplateID: $scope.templateId });
-                if (template[0] != null && $scope.contentTypeId == null)
+                if (template[0] != null && $scope.contentTypeId == 0)
                     $scope.contentTypeId = template[0].AttributeSetID;
 
                 $scope.$watch('templateId', function(newTemplateId, oldTemplateId) {
@@ -52,7 +53,7 @@
                     if (newContentTypeId == oldContentTypeId)
                         return;
                     // Select first template if contentType changed
-                    var firstTemplateId = $filter('filter')($scope.templates, { AttributeSetID: $scope.contentTypeId })[0].TemplateID;
+                    var firstTemplateId = $scope.filteredTemplates(newContentTypeId)[0].TemplateID; // $filter('filter')($scope.templates, { AttributeSetID: $scope.contentTypeId == null ? "!!" : $scope.contentTypeId })[0].TemplateID;
                     if ($scope.templateId != firstTemplateId && firstTemplateId != null)
                         $scope.templateId = firstTemplateId;
                 });

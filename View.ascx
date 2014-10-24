@@ -10,9 +10,10 @@
                 </select>
 
                 <select ng-show="manageInfo.isContentApp" ng-model="contentTypeId" ng-options="c.AttributeSetID as c.Name for c in contentTypes" class="sc-selector-contenttype" ng-disabled="manageInfo.hasContent || manageInfo.isList">
-                    <option ng-disabled="contentTypeId != null" value=""><%= HttpUtility.HtmlEncode(LocalizeString("ddlContentTypeDefaultItem.Text")) %></option>
+                    <option ng-disabled="contentTypeId != 0" value=""><%= HttpUtility.HtmlEncode(LocalizeString("ddlContentTypeDefaultItem.Text")) %></option>
+                    <%--<option ng-repeat="c in contentTypes"  value="{{c.AttributeSetID}}">{{c.Name}}</option>--%>
                 </select>
-                <select ng-show="manageInfo.isContentApp ? contentTypeId != null : savedAppId != null" ng-model="templateId" class="sc-selector-template" ng-options="t.TemplateID as t.Name for t in filteredTemplates()">
+                <select ng-show="manageInfo.isContentApp ? contentTypeId != 0 : savedAppId != null" ng-model="templateId" class="sc-selector-template" ng-options="t.TemplateID as t.Name for t in filteredTemplates(contentTypeId)">
                 </select>
             </div>
             <div class="sc-selector-actions">
