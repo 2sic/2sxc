@@ -21,7 +21,6 @@
                         <ItemTemplate>
                             <div style='<%# (Eval("Name") != "Content") ? "display:block;" : "display:none;" %>'>
                                 <a data-app-name='<%# HttpUtility.HtmlEncode(Eval("Name")) %>' href="<%# new SexyContent(ZoneId.Value, (int)Eval("AppID")).GetMetaDataEditUrl(TabId, ModuleId, Request.RawUrl, this, SexyContent.AttributeSetStaticNameApps, SexyContent.AssignmentObjectTypeIDSexyContentApp, (int)Eval("AppID")) %>">
-                                    <img src="<%= ResolveClientUrl(this.TemplateSourceDirectory + "../../../Images/Edit.png") %>" />
                                     <%# Eval("Name") == null ? "(error)" : HttpUtility.HtmlEncode(Eval("Name")) %>
                                 </a>
                             </div>

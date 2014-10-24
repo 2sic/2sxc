@@ -57,6 +57,7 @@ namespace ToSic.SexyContent
         public const string RazorC = "C# Razor";
         public const string RazorVB = "VB Razor";
         public const string TokenReplace = "Token";
+	    public const string InternalUserName = "Internal";
 
         public static class ControlKeys
         {
@@ -229,7 +230,7 @@ namespace ToSic.SexyContent
 
             // Set Properties on ContentContext
             ContentContext = EavContext.Instance(zoneId, appId);
-            ContentContext.UserName = (HttpContext.Current == null || HttpContext.Current.User == null) ? "Internal" : HttpContext.Current.User.Identity.Name;
+            ContentContext.UserName = (HttpContext.Current == null || HttpContext.Current.User == null) ? InternalUserName : HttpContext.Current.User.Identity.Name;
 
             this.ZoneId = zoneId;
             this.AppId = appId;

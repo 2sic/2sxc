@@ -2,7 +2,7 @@
 $2sxc.getManageController = function(id) {
 
     var moduleElement = $('.DnnModule-' + id);
-    var manageInfo = moduleElement.find('.Mod2sxcC, .Mod2sxcappC').data('2sxc').manage;
+    var manageInfo = $.parseJSON(moduleElement.find('.Mod2sxcC, .Mod2sxcappC').attr('data-2sxc')).manage;
     var toolbarConfig = manageInfo.config;
     toolbarConfig.returnUrl = window.location.href;
     var isEditMode = manageInfo.isEditMode;
@@ -156,19 +156,14 @@ $2sxc.getManageController = function(id) {
 
         _processToolbars: function() {
             $('.sc-menu[data-toolbar]', $(".DnnModule-" + id)).each(function () {
-                var toolbarSettings = $(this).data('toolbar');
+                var toolbarSettings = $.parseJSON($(this).attr('data-toolbar'));
                 $(this).replaceWith($2sxc(id).manage.getToolbar(toolbarSettings));
             });
         },
 
         _getSelectorScope: function() {
             var selectorElement = document.querySelector('.DnnModule-' + id + ' .sc-selector-wrapper');
-            var scope = angular.element(selectorElement).scope();
-
-            if (scope == null)
-                alert("Something went wrong. Make sure your template does not cause JavaScript errors.");
-
-            return scope;
+            return angular.element(selectorElement).scope();
         }
 
     };

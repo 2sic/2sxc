@@ -67,7 +67,8 @@ namespace ToSic.SexyContent
 		/// </summary>
 		private static void Version060307()
 		{
-			VersionUpgrade.EnsurePipelineDesignerEntities();
+			var eavVersionUpgrade = new VersionUpgrade(SexyContent.InternalUserName);
+			eavVersionUpgrade.EnsurePipelineDesignerAttributeSets();
 		}
 
 		/// <summary>

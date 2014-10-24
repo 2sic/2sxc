@@ -34,7 +34,7 @@
         <asp:TextBox runat="server" ID="txtTemplateFileName"></asp:TextBox>
         <asp:RequiredFieldValidator ID="valTemplateFileName" Enabled="false" runat="server" ControlToValidate="txtTemplateFileName" CssClass="dnnFormError" Display="Dynamic" EnableClientScript="true"></asp:RequiredFieldValidator>
     </asp:Panel>
-    <Sexy:ContentTypeAndDemoSelector runat="server" ID="ctrContentType" ItemType="Content" EnableNoContentTypeOption="True" ContentTypeRequired="True"></Sexy:ContentTypeAndDemoSelector>
+    <Sexy:ContentTypeAndDemoSelector runat="server" ID="ctrContentType" ItemType="Content"></Sexy:ContentTypeAndDemoSelector>
     <div class="dnnFormItem">
         <dnn:Label ID="lblSeparateContentPresentation" runat="server" ControlName="chkSeparateContentPresentation" Suffix=":"></dnn:Label>
         <asp:CheckBox runat="server" ID="chkSeparateContentPresentation" Checked="False" AutoPostBack="True" />
