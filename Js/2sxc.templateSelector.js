@@ -15,7 +15,7 @@
             // Return all templates for App
             if (!$scope.manageInfo.isContentApp)
                 return $scope.templates;
-            return $filter('filter')($scope.templates, contentTypeId == 0 ? { AttributeSetID: '!' } : { AttributeSetID: contentTypeId });
+            return $filter('filter')($scope.templates, contentTypeId == 0 ? { AttributeSetID: null } : { AttributeSetID: contentTypeId }, true);
         };
         $scope.contentTypeId = 0;
         $scope.templateId = $scope.manageInfo.templateId;
@@ -32,9 +32,12 @@
 
             $q.all([getContentTypes, getTemplates]).then(function (res) {
                 $scope.contentTypes = res[0].data;
-                $scope.contentTypes.unshift({ AttributeSetID: null, Name: "< No Content Type >" });
                 $scope.templates = res[1].data;
-                var template = $filter('filter')($scope.templates, { TemplateID: $scope.templateId });
+                // Add option for no content type if there are templates without
+                if ($filter('filter')($scope.templates, { AttributeSetID: null }, true).length > 0)
+                    $scope.contentTypes.unshift({ AttributeSetID: null, Name: "< No Content Type >" });
+
+                var template = $filter('filter')($scope.templates, { TemplateID: $scope.templateId }, true);
                 if (template[0] != null && $scope.contentTypeId == 0)
                     $scope.contentTypeId = template[0].AttributeSetID;
 
