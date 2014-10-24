@@ -14,6 +14,7 @@ namespace ToSic.SexyContent
     {
         
         public bool ContentTypeRequired { get; set; }
+        public bool EnableNoContentTypeOption { get; set; }
 
         public int? _ContentTypeID;
         public int? ContentTypeID
@@ -90,6 +91,9 @@ namespace ToSic.SexyContent
 
             if (!IsPostBack)
             {
+                if(EnableNoContentTypeOption)
+                    ddlContentTypes.Items.Add(new ListItem("< no ContentType >", "-1"));
+
                 // DataBind Content Types
                 var AttributeSets = Sexy.GetAvailableAttributeSets(SexyContent.AttributeSetScope);
                 ddlContentTypes.DataSource = AttributeSets;

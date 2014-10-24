@@ -1,6 +1,8 @@
 ﻿using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Modules;
+using DotNetNuke.Entities.Modules.Actions;
 using DotNetNuke.Framework;
+using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Client.ClientResourceManagement;
 using System;
@@ -34,9 +36,9 @@ namespace ToSic.SexyContent
                     // ToDo: Move these RegisterScripts to JS to prevent including AngularJS twice (from other modules)
                     ClientResourceManager.RegisterScript(this.Page, "~/DesktopModules/ToSIC_SexyContent/Js/AngularJS/angular.min.js", 80);
                     ClientResourceManager.RegisterScript(this.Page, "~/DesktopModules/ToSIC_SexyContent/Js/2sxc.TemplateSelector.js", 81);
+                    ClientResourceManager.RegisterScript(this.Page, "~/DesktopModules/ToSIC_SexyContent/Js/2sxc.ApiService.js", 82);
                     ClientResourceManager.RegisterScript(this.Page, "~/DesktopModules/ToSIC_SexyContent/Js/ViewEdit.js", 82);
                     ClientResourceManager.RegisterScript(this.Page, "~/DesktopModules/ToSIC_SexyContent/Js/2sxc.DnnActionMenuMapper.js", 83);
-                    //ClientScript.RegisterClientScriptInclude("ViewEdit", ResolveClientUrl(""));
 
                     var hasContent = AppId.HasValue && Elements.Any() && Elements.First().TemplateId.HasValue && Elements.Any(p => p.EntityId.HasValue);
                     var templateChooserVisible = Settings.ContainsKey(SexyContent.SettingsShowTemplateChooser) ?
@@ -183,5 +185,89 @@ namespace ToSic.SexyContent
         }
         #endregion
 
+        #region ModuleActions
+
+        /// <summary>
+        /// Causes DNN to create the menu with all actions like edit entity, new, etc.
+        /// </summary>
+        private ModuleActionCollection _ModuleActions;
+        public ModuleActionCollection ModuleActions
+        {
+            get
+            {
+                if (ModuleConfiguration.PortalID != ModuleConfiguration.OwnerPortalID)
+                    return new ModuleActionCollection();
+
+                if (_ModuleActions == null)
+                {
+                    _ModuleActions = new ModuleActionCollection();
+                    ModuleActionCollection Actions = _ModuleActions;
+
+                    try
+                    {
+                        if (ZoneId.HasValue && AppId.HasValue)
+                        {
+                            if (!IsList)
+                            {
+                                if (Elements.Any() && Elements.First().TemplateId.HasValue)
+                                {
+                                    // Edit item
+                                    Actions.Add(GetNextActionID(), LocalizeString("ActionEdit.Text"), "", "", "edit.gif", "javascript:$2sxcActionMenuMapper(" + this.ModuleId + ").edit();", "test", true,
+                                        SecurityAccessLevel.Edit, true, false);
+                                }
+                            }
+                            else
+                            {
+                                // Edit List
+                                Actions.Add(GetNextActionID(), LocalizeString("ActionList.Text"),
+                                    ModuleActionType.ContentOptions, "editlist", "edit.gif",
+                                    EditUrl(this.TabId, SexyContent.ControlKeys.EditList, false, "mid",
+                                        this.ModuleId.ToString(), SexyContent.ContentGroupIDString,
+                                        Elements.First().GroupID.ToString()), false,
+                                    SecurityAccessLevel.Edit, true, false);
+                            }
+
+                            if (Elements.Any() && Elements.First().TemplateId.HasValue && Template != null &&
+                                Template.UseForList)
+                            {
+                                // Add Item
+                                Actions.Add(GetNextActionID(), LocalizeString("ActionAdd.Text"), "", "", "add.gif", "javascript:$2sxcActionMenuMapper(" + this.ModuleId + ").addItem();", true, SecurityAccessLevel.Edit, true, false);
+                            }
+
+                            // Change layout button
+                            Actions.Add(GetNextActionID(), LocalizeString("ActionChangeLayoutOrContent.Text"), "", "", "action_settings.gif", "javascript:$2sxcActionMenuMapper(" + this.ModuleId + ").changeLayoutOrContent();", false, SecurityAccessLevel.Edit, true, false);
+                        }
+
+                        if (!SexyContent.SexyContentDesignersGroupConfigured(PortalId) || SexyContent.IsInSexyContentDesignersGroup(UserInfo))
+                        {
+                            if (ZoneId.HasValue && AppId.HasValue && Template != null)
+                            {
+                                // Edit Template Button
+                                Actions.Add(GetNextActionID(), LocalizeString("ActionEditTemplateFile.Text"), ModuleActionType.EditContent, "templatehelp", "edit.gif", EditUrl(this.TabId, SexyContent.ControlKeys.EditTemplateFile, false, "mid", this.ModuleId.ToString(), "TemplateID", Template.TemplateID.ToString()), false, SecurityAccessLevel.Admin, true, true);
+                            }
+
+                            // Administrator functions
+                            if (ZoneId.HasValue && AppId.HasValue)
+                                Actions.Add(GetNextActionID(), "Admin" + (IsContentApp ? "" : " " + Sexy.App.Name), "Admin.Action",
+                                            "gettingstarted", "action_settings.gif", EditUrl("", "", "gettingstarted", SexyContent.AppIDString + "=" + AppId),
+                                            false, SecurityAccessLevel.Admin, true, false);
+
+                            // App Management
+                            if (!IsContentApp)
+                                Actions.Add(GetNextActionID(), "Apps Management", "AppManagement.Action",
+                                        "appmanagement", "action_settings.gif", EditUrl("", "", "appmanagement"),
+                                        false, SecurityAccessLevel.Admin, true, false);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Exceptions.ProcessModuleLoadException(this, e);
+                    }
+                }
+                return _ModuleActions;
+            }
+        }
+
+        #endregion
     }
 }

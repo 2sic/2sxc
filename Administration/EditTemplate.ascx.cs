@@ -72,6 +72,16 @@ namespace ToSic.SexyContent
             if (Page.IsPostBack)
             {
                 pnlListConfiguration.Visible = chkEnableList.Checked;
+                var isNoContentType = (ctrContentType.ContentTypeID == -1);
+                if (isNoContentType)
+                {
+                    chkEnableList.Checked = false;
+                    ctrPresentationType.ContentTypeID = 0;
+                    chkSeparateContentPresentation.Checked = false;
+                }
+                chkEnableList.Enabled = !isNoContentType;
+                chkSeparateContentPresentation.Enabled = !isNoContentType;
+                ctrPresentationType.Enabled = !isNoContentType;
                 return;
             }
 
@@ -122,7 +132,7 @@ namespace ToSic.SexyContent
         protected void btnUpdate_Click(object sender, EventArgs e)
         {
 
-            var attributeSetId = ctrContentType.ContentTypeID.HasValue && ctrContentType.ContentTypeID != 0 ? ctrContentType.ContentTypeID.Value : new int?();
+            var attributeSetId = ctrContentType.ContentTypeID.HasValue && ctrContentType.ContentTypeID > 0 ? ctrContentType.ContentTypeID.Value : new int?();
 
             if (ModeIsEdit)
             {

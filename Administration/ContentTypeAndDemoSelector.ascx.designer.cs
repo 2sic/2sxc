@@ -19,7 +19,7 @@ namespace ToSic.SexyContent {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UserControl lblContentType;
+        protected global::DotNetNuke.UI.UserControls.LabelControl lblContentType;
         
         /// <summary>
         /// pnlLocked control.
@@ -64,7 +64,7 @@ namespace ToSic.SexyContent {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UserControl lblDemoRow;
+        protected global::DotNetNuke.UI.UserControls.LabelControl lblDemoRow;
         
         /// <summary>
         /// ddlDemoRows control.

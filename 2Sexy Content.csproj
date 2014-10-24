@@ -210,7 +210,6 @@
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="SexyContent\Template.cs" />
-    <Compile Include="SexyContent\ViewAPI\ContentGroupController.cs" />
     <Compile Include="EditEntity.ascx.cs">
       <DependentUpon>EditEntity.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -486,6 +485,8 @@
     <Content Include="Extensions\Imazen_ImageResizer\license.txt" />
     <Content Include="icon-app.png" />
     <Content Include="icon.png" />
+    <Content Include="Images\ajax-loader.gif" />
+    <Content Include="Images\Edit-Draft.png" />
     <Content Include="Images\Add.png" />
     <Content Include="Images\AddWithEdit.png" />
     <Content Include="Images\Delete.png" />
@@ -495,6 +496,7 @@
     <Content Include="Images\Save.png" />
     <Content Include="Js\2sxc.api.manage.js" />
     <Content Include="Js\2sxc.DnnActionMenuMapper.js" />
+    <Content Include="Js\2sxc.ApiService.js" />
     <Content Include="Js\2sxc.TemplateSelector.js" />
     <Content Include="Js\AngularJS\angular-animate.min.js" />
     <Content Include="Js\AngularJS\angular-resource.min.js" />

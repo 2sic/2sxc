@@ -1,8 +1,12 @@
-﻿using DotNetNuke.Common;
+﻿using System.Configuration;
+using System.Data.Objects;
+using DotNetNuke.Common;
+using DotNetNuke.Common.Internal;
 using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Portals.Internal;
+using DotNetNuke.Entities.Tabs.Internal;
 using DotNetNuke.Security;
 using DotNetNuke.Security.Permissions;
 using DotNetNuke.Security.Roles;
@@ -18,6 +22,7 @@ using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
+using DotNetNuke.Web.Client.ClientResourceManagement;
 using ToSic.Eav;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Caches;
@@ -429,7 +434,27 @@ namespace ToSic.SexyContent
             return Result;
         }
 
-        public List<Template> GetCompatibleTemplates(int PortalID, int ContentGroupID)
+        /// <summary>
+        /// Returns all templates that should be available in the template selector
+        /// </summary>
+        /// <param name="module"></param>
+        /// <returns></returns>
+        public IEnumerable<Template> GetAvailableTemplatesForSelector(ModuleInfo module)
+        {
+            IEnumerable<Template> availableTemplates;
+            var elements = GetContentElements(module.ModuleID, GetCurrentLanguageName(), null, module.OwnerPortalID, SexyContent.HasEditPermission(module));
+
+            if (elements.Any(e => e.EntityId.HasValue))
+                availableTemplates = GetCompatibleTemplates(module.PortalID, elements.First().GroupId).Where(p => !p.IsHidden);
+            else if (elements.Count <= 1)
+                availableTemplates = GetVisibleTemplates(module.PortalID);
+            else
+                availableTemplates = GetVisibleListTemplates(module.PortalID);
+            
+            return availableTemplates;
+        } 
+
+        private List<Template> GetCompatibleTemplates(int PortalID, int ContentGroupID)
         {
             var ContentGroupItems = TemplateContext.GetContentGroupItems(ContentGroupID).ToList();
             List<Template> CompatibleTemplates;
@@ -525,15 +550,9 @@ namespace ToSic.SexyContent
         /// <returns></returns>
         public static bool SexyContentDesignersGroupConfigured(int portalId)
         {
-            var roleControl = new DotNetNuke.Security.Roles.RoleController();
-            RoleInfo Role = roleControl.GetRoleByName(portalId, SexyContentGroupName);
-            if (Role != null)
-            {
-                System.Collections.ArrayList t = roleControl.GetUsersByRoleName(portalId, SexyContentGroupName);
-                if (t.Count > 0)
-                    return true;
-            }
-            return false;
+            var roleControl = new RoleController();
+            RoleInfo role = roleControl.GetRoleByName(portalId, SexyContentGroupName);
+            return role != null;
         }
 
         /// <summary>
@@ -736,11 +755,6 @@ namespace ToSic.SexyContent
             SettingsUrl += (SettingsUrl.IndexOf("?") == -1 ? "?" : "&") + "popUp=true&ReturnUrl=" + HttpUtility.UrlEncode(ReturnUrl);
             return SettingsUrl;
         }
-
-        //public void AttachToolbarToElements(List<Element> Elements)
-        //{
-            
-        //}
 
         #endregion
 
@@ -989,6 +1003,17 @@ namespace ToSic.SexyContent
         public ContentGroupItem AddContentGroupItem(int ContentGroupID, int UserID, int? TemplateID, int? EntityID, int? DestinationSortOrder, bool AutoSave, ContentGroupItemType ItemType, bool PreventSorting)
         {
             var userId = PortalSettings.Current.UserId;
+
+            if (TemplateID.HasValue)
+            {
+                var template = TemplateContext.GetTemplate(TemplateID.Value);
+
+                // Throw exception if
+                // 1. a content element is added
+                // 2. the template is not configured for a list
+                if (ItemType == ContentGroupItemType.Content && !template.UseForList)
+                    throw new Exception("Cannot add item: The template is not configured for lists.");
+            }
 
             var Item = new ContentGroupItem()
             {
@@ -1346,7 +1371,7 @@ namespace ToSic.SexyContent
         {
 			return SexyContentModuleUpgrade.UpgradeModule(Version);
         }
-        
+
         #endregion
     }
 }

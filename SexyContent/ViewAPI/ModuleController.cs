@@ -1,15 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using DotNetNuke.Entities.Portals;
+using DotNetNuke.Security;
+using DotNetNuke.Web.Api;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
-using System.Web;
-using System.Web.Caching;
-using DotNetNuke.Entities.Portals;
-using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
-using System.Linq;
 using System.Web.Http;
-using ToSic.Eav;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.WebApiExtensions;
@@ -19,6 +17,23 @@ namespace ToSic.SexyContent.ViewAPI
     [SupportedModules("2sxc,2sxc-app")]
     public class ModuleController : SexyContentApiController
     {
+
+        [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        [ValidateAntiForgeryToken]
+        public void AddItem([FromUri] int? sortOrder = null)
+        {
+            var elements = Sexy.GetContentElements(ActiveModule.ModuleID, Sexy.GetCurrentLanguageName(), null, PortalSettings.PortalId, SexyContent.HasEditPermission(ActiveModule)).ToList();
+            SexyUncached.AddContentGroupItem(elements.First().GroupId, UserInfo.UserID, elements.First().TemplateId, null, sortOrder.HasValue ? sortOrder.Value + 1 : sortOrder, true, ContentGroupItemType.Content, false);
+        }
+
+        [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        [ValidateAntiForgeryToken]
+        public void SaveTemplateId([FromUri] int? templateId)
+        {
+            SexyUncached.UpdateTemplateForGroup(Sexy.GetContentGroupIdFromModule(ActiveModule.ModuleID), templateId, UserInfo.UserID);
+        }
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
@@ -43,6 +58,15 @@ namespace ToSic.SexyContent.ViewAPI
         public void SetAppId(int? appId)
         {
             SexyContent.SetAppIdForModule(ActiveModule, appId);
+
+            // Change to 1. template if app has been set
+            if (appId.HasValue)
+            {
+                var sexyForNewApp = new SexyContent(Sexy.App.ZoneId, appId.Value, false);
+                var templates = sexyForNewApp.GetAvailableTemplatesForSelector(ActiveModule).ToList();
+                if(templates.Any())
+                    SexyUncached.UpdateTemplateForGroup(Sexy.GetContentGroupIdFromModule(ActiveModule.ModuleID), templates.First().TemplateID, UserInfo.UserID);
+            }
         }
 
         [HttpGet]
@@ -58,16 +82,7 @@ namespace ToSic.SexyContent.ViewAPI
         [ValidateAntiForgeryToken]
         public IEnumerable<object> GetSelectableTemplates()
         {
-            IEnumerable<Template> availableTemplates;
-            var elements = Sexy.GetContentElements(ActiveModule.ModuleID, Sexy.GetCurrentLanguageName(), null, PortalSettings.PortalId, SexyContent.HasEditPermission(ActiveModule));
-
-            if (elements.Any(e => e.EntityId.HasValue))
-                availableTemplates = Sexy.GetCompatibleTemplates(PortalSettings.PortalId, elements.First().GroupId).Where(p => !p.IsHidden);
-            else if (elements.Count <= 1)
-                availableTemplates = Sexy.GetVisibleTemplates(PortalSettings.PortalId);
-            else
-                availableTemplates = Sexy.GetVisibleListTemplates(PortalSettings.PortalId);
-
+            var availableTemplates = Sexy.GetAvailableTemplatesForSelector(ActiveModule);
             return availableTemplates.Select(t => new { t.TemplateID, t.Name, t.AttributeSetID });
         }
 
@@ -76,14 +91,25 @@ namespace ToSic.SexyContent.ViewAPI
         [ValidateAntiForgeryToken]
         public HttpResponseMessage RenderTemplate([FromUri]int templateId)
         {
-            var template = Sexy.TemplateContext.GetTemplate(templateId);
-            var engine = EngineFactory.CreateEngine(template);
-            var dataSource = (ViewDataSource)Sexy.GetViewDataSource(ActiveModule.ModuleID, SexyContent.HasEditPermission(ActiveModule), DotNetNuke.Common.Globals.IsEditMode(), templateId);
-            engine.Init(template, Sexy.App, ActiveModule, dataSource, InstancePurposes.WebView, Sexy);
-            engine.CustomizeData();
-            var response = new HttpResponseMessage(HttpStatusCode.OK);
-            response.Content = new StringContent(engine.Render(), Encoding.UTF8, "text/plain");
-            return response;
+            try
+            {
+                var template = Sexy.TemplateContext.GetTemplate(templateId);
+                var engine = EngineFactory.CreateEngine(template);
+                var dataSource =
+                    (ViewDataSource)
+                        Sexy.GetViewDataSource(ActiveModule.ModuleID, SexyContent.HasEditPermission(ActiveModule),
+                            DotNetNuke.Common.Globals.IsEditMode(), templateId);
+                engine.Init(template, Sexy.App, ActiveModule, dataSource, InstancePurposes.WebView, Sexy);
+                engine.CustomizeData();
+                var response = new HttpResponseMessage(HttpStatusCode.OK);
+                response.Content = new StringContent(engine.Render(), Encoding.UTF8, "text/plain");
+                return response;
+            }
+            catch (Exception e)
+            {
+                DotNetNuke.Services.Exceptions.Exceptions.LogException(e);
+                throw e;
+            }
         }
 
     }
