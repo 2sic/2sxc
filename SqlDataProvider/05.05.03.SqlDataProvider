@@ -106,7 +106,7 @@ EXEC(N'
 -- Create date: 2014-02-26
 -- Description:	Delete an App in the 2sic EAV System
 -- =============================================
-CREATE PROCEDURE ToSIC_EAV_DeleteApp
+CREATE PROCEDURE [dbo].ToSIC_EAV_DeleteApp
 	@AppId int
 AS
 BEGIN
