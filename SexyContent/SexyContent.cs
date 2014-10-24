@@ -1344,7 +1344,7 @@ namespace ToSic.SexyContent
 
         public string UpgradeModule(string Version)
         {
-	        return SexyContentModuleUpgrade.UpgradeModule(Version, ContentContext);
+			return SexyContentModuleUpgrade.UpgradeModule(Version);
         }
         
         #endregion

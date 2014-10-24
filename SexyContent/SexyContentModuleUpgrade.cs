@@ -9,7 +9,7 @@ namespace ToSic.SexyContent
 {
 	public class SexyContentModuleUpgrade
 	{
-		public static string UpgradeModule(string version, EavContext eavContext)
+		public static string UpgradeModule(string version)
 		{
 			switch (version)
 			{
@@ -67,7 +67,7 @@ namespace ToSic.SexyContent
 		/// </summary>
 		private static void Version060307()
 		{
-			
+			VersionUpgrade.EnsurePipelineDesignerEntities();
 		}
 
 		/// <summary>
