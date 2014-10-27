@@ -821,7 +821,27 @@
                     <helpUrl />
                     <supportsPopUps>True</supportsPopUps>
                   </moduleControl>
-                </moduleControls>
+                  <moduleControl>
+                    <controlKey>pipelineDesigner</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/SexyContent/EAV/PipelineDesigner/PipelineDesignerDnnWrapper.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Pipeline Designer</controlTitle>
+                    <controlType>Admin</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                  </moduleControl>
+					<moduleControl>
+						<controlKey>pipelineManagement</controlKey>
+						<controlSrc>DesktopModules/ToSIC_SexyContent/SexyContent/EAV/PipelineDesigner/PipelineManagementDnnWrapper.ascx</controlSrc>
+						<supportsPartialRendering>False</supportsPartialRendering>
+						<controlTitle>Pipeline Management</controlTitle>
+						<controlType>Admin</controlType>
+						<iconFile />
+						<helpUrl />
+						<supportsPopUps>True</supportsPopUps>
+					</moduleControl>
+				</moduleControls>
               </moduleDefinition>
             </moduleDefinitions>
           </desktopModule>

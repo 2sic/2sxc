@@ -1,7 +1,7 @@
 ﻿// EavGlobalConfigurationProvider providers default global values for the EAV angular system
 // The ConfigurationProvider in 2sxc is not the same as in the EAV project.
 angular.module('eavGlobalConfigurationProvider', [])
-	.factory('eavGlobalConfigurationProvider', function () {
+	.factory('eavGlobalConfigurationProvider', function ($location) {
 
 		// Get needed moduleContext variables from parent node
 		var globals = $.parseJSON($("[data-2sxc-globals]").attr("data-2sxc-globals"));
@@ -16,7 +16,8 @@ angular.module('eavGlobalConfigurationProvider', [])
 			};
 		}
 
-		var itemFormBaseUrl = globals.FullUrl + "/ctl/eavmanagement/mid/" + globals.ModuleContext.ModuleId + "/popUp/true?AppID=" + globals.ModuleContext.AppId + "&";
+		var baseUrl = globals.FullUrl + "/mid/" + globals.ModuleContext.ModuleId + "/popUp/true?AppID=" + globals.ModuleContext.AppId + "&";
+		var itemFormBaseUrl = baseUrl + "ctl=EavManagement&";
 
 		return {
 			api: {
@@ -30,10 +31,19 @@ angular.module('eavGlobalConfigurationProvider', [])
 			//},
 			dialogClass: "dnnFormPopup",
 			itemForm: {
-				newItemUrl: itemFormBaseUrl + 'ManagementMode=NewItem&AttributeSetId=[AttributeSetId]&CultureDimension=[CultureDimension]&KeyNumber=[KeyNumber]&KeyGuid=[KeyGuid]&AssignmentObjectTypeId=[AssignmentObjectTypeId]',
-				editItemUrl: itemFormBaseUrl + "ManagementMode=EditItem&EntityId=[EntityId]&CultureDimension=[CultureDimension]"
+				newItemUrl: baseUrl + 'ManagementMode=NewItem&AttributeSetId=[AttributeSetId]&CultureDimension=[CultureDimension]&KeyNumber=[KeyNumber]&KeyGuid=[KeyGuid]&AssignmentObjectTypeId=[AssignmentObjectTypeId]',
+				editItemUrl: baseUrl + "ManagementMode=EditItem&EntityId=[EntityId]&CultureDimension=[CultureDimension]",
+				getUrl: function (mode, params) {
+					angular.extend(params, { ManagementMode: mode + 'Item' });
+					if (!params.ReturnUrl)
+						params.ReturnUrl = $location.url();
+					return itemFormBaseUrl + $.param(params);
+				}
 			},
 			pipelineDesigner: {
+				getUrl: function (appId, pipelineId) {
+					return '/Pages/PipelineDesigner.aspx?AppId=' + appId + '&PipelineId=' + pipelineId;
+				},
 				outDataSource: {
 					className: 'SexyContentTemplate',
 					in: ['Content', 'ListContent', 'Presentation', 'ListPresentation'],

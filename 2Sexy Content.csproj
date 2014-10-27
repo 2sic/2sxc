@@ -191,6 +191,14 @@
       <DependentUpon>Services.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="SexyContent\EAVExtensions\EavApiProxies\EntitiesController.cs" />
+    <Compile Include="SexyContent\EAV\PipelineDesigner\PipelineManagementDnnWrapper.ascx.cs">
+      <DependentUpon>PipelineManagementDnnWrapper.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SexyContent\EAV\PipelineDesigner\PipelineManagementDnnWrapper.ascx.designer.cs">
+      <DependentUpon>PipelineManagementDnnWrapper.ascx</DependentUpon>
+    </Compile>
     <Compile Include="SexyContent\SexyContentModuleUpgrade.cs" />
     <Compile Include="SexyContent\ContentGroupItem.cs" />
     <Compile Include="SexyContent\EAVExtensions\EavApiProxies\PipelineDesignerController.cs" />
@@ -581,6 +589,9 @@
     <Content Include="SexyContent\EAV\PipelineDesigner\PipelineDesignerController.js" />
     <Content Include="SexyContent\EAV\PipelineDesigner\PipelineDesignerDnnWrapper.ascx" />
     <Content Include="SexyContent\EAV\PipelineDesigner\PipelineFactory.js" />
+    <Content Include="SexyContent\EAV\PipelineDesigner\PipelineManagement.ascx" />
+    <Content Include="SexyContent\EAV\PipelineDesigner\PipelineManagement.js" />
+    <Content Include="SexyContent\EAV\PipelineDesigner\PipelineManagementDnnWrapper.ascx" />
     <Content Include="SexyContent\GettingStarted\GettingStartedFrame.ascx" />
     <Content Include="SqlDataProvider\05.02.01.SqlDataProvider" />
     <Content Include="Styles\Edit.css" />

@@ -11,12 +11,13 @@ namespace ToSic.SexyContent.EAV.PipelineDesigner
 	{
 		protected void Page_Load(object sender, EventArgs e)
 		{
-			Register2sxcGlobals(this, Request, int.Parse(Request.QueryString["AppId"]));
+			Register2SxcGlobals(this, Request, int.Parse(Request.QueryString["AppId"]));
 			ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
 		}
 
 
-		private static void Register2sxcGlobals(PortalModuleBase module, HttpRequest request, int appId)
+		// ToDo: Refactor, move to correct Class
+		public static void Register2SxcGlobals(PortalModuleBase module, HttpRequest request, int appId)
 		{
 			// Add some required variables to module host div
 			((ModuleHost)module.Parent).Attributes.Add("data-2sxc-globals", (new

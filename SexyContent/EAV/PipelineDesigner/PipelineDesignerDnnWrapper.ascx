@@ -1,10 +1,9 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="PipelineDesignerDnnWrapper.ascx.cs" Inherits="ToSic.SexyContent.EAV.PipelineDesigner.PipelineDesignerDnnWrapper" %>
-<%@ Register src="PipelineDesigner.ascx" tagname="PipelineDesigner" tagprefix="sxc" %>
+<%@ Register Src="PipelineDesigner.ascx" TagName="PipelineDesigner" TagPrefix="sxc" %>
 <%@ Register TagPrefix="dnn" Namespace="DotNetNuke.Web.Client.ClientResourceManagement" Assembly="DotNetNuke.Web.Client" %>
 
 <dnn:DnnCssInclude runat="server" Priority="60" FilePath="~/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/PipelineDesigner/PipelineDesigner.css" />
 <dnn:DnnCssInclude runat="server" Priority="61" FilePath="~/DesktopModules/ToSIC_SexyContent/Js/AngularJS/toaster.css" />
-
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
 

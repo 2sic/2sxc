@@ -20,15 +20,15 @@
 		<div class="actions panel panel-default">
 			<div class="panel-heading">Actions</div>
 			<div class="panel-body">
-				<button type="button" class="btn btn-primary btn-block" ng-disabled="readOnly" ng-click="savePipeline()">Save</button>
+				<button type="button" class="btn btn-primary btn-block" ng-disabled="readOnly" ng-click="savePipeline()"><span class="glyphicon glyphicon-floppy-save"></span> Save</button>
 				<select class="form-control" ng-model="addDataSourceType" ng-disabled="readOnly" ng-change="addDataSource()" ng-options="d.ClassName for d in pipelineData.InstalledDataSources | filter: {allowNew: '!false'} | orderBy: 'ClassName'">
 					<option value="">-- Add DataSource --</option>
 				</select>
-				<button type="button" class="btn btn-default btn-sm" title="Query the Data of this Pipeline" ng-click="queryPipeline()">Query</button>
-				<button type="button" class="btn btn-default btn-sm" title="Clone this Pipeline with all DataSources and Configurations" ng-click="clonePipeline()" ng-disabled="!PipelineEntityId">Clone</button>
-				<button type="button" class="btn btn-info btn-xs" ng-click="toggleEndpointOverlays()">{{showEndpointOverlays ? 'Hide' : 'Show' }} Overlays</button>
-				<button type="button" class="btn btn-info btn-xs" ng-click="repaint()">Repaint</button>
-				<button type="button" class="btn btn-info btn-xs" ng-click="toogleDebug()">{{debug ? 'Hide' : 'Show'}} Debug Info</button>
+				<button type="button" class="btn btn-default btn-sm" title="Query the Data of this Pipeline" ng-click="queryPipeline()"><span class="glyphicon glyphicon-play"></span> Query</button>
+				<button type="button" class="btn btn-default btn-sm" title="Clone this Pipeline with all DataSources and Configurations" ng-click="clonePipeline()" ng-disabled="!PipelineEntityId"><span class="glyphicon glyphicon-share-alt"></span> Clone</button>
+				<button type="button" class="btn btn-info btn-xs" ng-click="toggleEndpointOverlays()"><span class="glyphicon glyphicon-info-sign"></span> {{showEndpointOverlays ? 'Hide' : 'Show' }} Overlays</button>
+				<button type="button" class="btn btn-info btn-xs" ng-click="repaint()"><span class="glyphicon glyphicon-repeat"></span> Repaint</button>
+				<button type="button" class="btn btn-info btn-xs" ng-click="toogleDebug()"><span class="glyphicon glyphicon-info-sign"></span> {{debug ? 'Hide' : 'Show'}} Debug Info</button>
 			</div>
 		</div>
 		<toaster-container></toaster-container>
