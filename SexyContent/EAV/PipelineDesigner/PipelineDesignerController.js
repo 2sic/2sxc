@@ -28,7 +28,7 @@ pipelineDesigner.controller('pipelineDesignerController',
 			uiNotification.note('Ready', $scope.readOnly ? 'This pipeline is read only' : 'You can now desing the Pipeline', true);
 
 			// If a new Pipeline is made, init new Pipeline
-			if (!$scope.PipelineEntityId)
+			if (!$scope.PipelineEntityId || $scope.pipelineData.DataSources.length == 1)
 				initNewPipeline();
 		}, function (reason) {
 			uiNotification.error('Loading Pipeline failed', reason);

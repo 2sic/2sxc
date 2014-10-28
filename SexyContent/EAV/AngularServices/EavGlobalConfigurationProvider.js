@@ -16,19 +16,19 @@ angular.module('eavGlobalConfigurationProvider', [])
 			};
 		}
 
-		var baseUrl = globals.FullUrl + "/mid/" + globals.ModuleContext.ModuleId + "/popUp/true?AppID=" + globals.ModuleContext.AppId + "&";
+		var baseUrl = globals.FullUrl + "/mid/" + globals.ModuleContext.ModuleId + "/popUp/true?AppId=" + globals.ModuleContext.AppId + "&";
 		var itemFormBaseUrl = baseUrl + "ctl=EavManagement&";
 
 		return {
 			api: {
 				baseUrl: globals.ApplicationPath + "DesktopModules/2sxc/API",
-				additionalHeaders: getApiAdditionalHeaders()
+				additionalHeaders: getApiAdditionalHeaders(),
+				defaultParams: {
+					portalId: globals.ModuleContext.PortalId,
+					moduleId: globals.ModuleContext.ModuleId,
+					tabId: globals.ModuleContext.TabId
+				}
 			},
-			//defaultApiParams: {
-			//	portalId: globals.ModuleContext.PortalId,
-			//	moduleId: globals.ModuleContext.ModuleId,
-			//	tabId: globals.ModuleContext.TabId
-			//},
 			dialogClass: "dnnFormPopup",
 			itemForm: {
 				newItemUrl: baseUrl + 'ManagementMode=NewItem&AttributeSetId=[AttributeSetId]&CultureDimension=[CultureDimension]&KeyNumber=[KeyNumber]&KeyGuid=[KeyGuid]&AssignmentObjectTypeId=[AssignmentObjectTypeId]',
@@ -42,7 +42,7 @@ angular.module('eavGlobalConfigurationProvider', [])
 			},
 			pipelineDesigner: {
 				getUrl: function (appId, pipelineId) {
-					return '/Pages/PipelineDesigner.aspx?AppId=' + appId + '&PipelineId=' + pipelineId;
+					return baseUrl + 'ctl=pipelinedesigner&PipelineId=' + pipelineId;
 				},
 				outDataSource: {
 					className: 'SexyContentTemplate',

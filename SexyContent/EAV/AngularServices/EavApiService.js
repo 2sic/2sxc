@@ -6,7 +6,7 @@
         .factory('eavApiService', function (eavGlobalConfigurationProvider, $http) {
             return function(settings) {
                 settings.url = eavGlobalConfigurationProvider.api.baseUrl + settings.url;
-                settings.params = $.extend({}, eavGlobalConfigurationProvider.defaultApiParams, settings.params);
+                settings.params = $.extend({}, eavGlobalConfigurationProvider.api.defaultParams, settings.params);
                 return $http(settings);
             }
         });

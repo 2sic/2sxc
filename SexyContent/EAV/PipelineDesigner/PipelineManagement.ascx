@@ -23,7 +23,7 @@
 						<a class="btn btn-xs btn-default" target="_blank" ng-href="{{getPipelineUrl('design', pipeline)}}">
 							<span class="glyphicon glyphicon-random"></span> Open Designer
 						</a>
-						<a class="btn btn-xs btn-default" ng-if="pipeline.AllowEdit" target="_self" ng-href="{{getPipelineUrl('edit', pipeline)}}">
+						<a class="btn btn-xs btn-default" target="_self" ng-href="{{getPipelineUrl('edit', pipeline)}}">
 							<span class="glyphicon glyphicon-pencil"></span> Edit
 						</a>
 					</td>
