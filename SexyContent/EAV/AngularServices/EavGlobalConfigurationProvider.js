@@ -31,8 +31,8 @@ angular.module('eavGlobalConfigurationProvider', [])
 			},
 			dialogClass: "dnnFormPopup",
 			itemForm: {
-				newItemUrl: baseUrl + 'ManagementMode=NewItem&AttributeSetId=[AttributeSetId]&CultureDimension=[CultureDimension]&KeyNumber=[KeyNumber]&KeyGuid=[KeyGuid]&AssignmentObjectTypeId=[AssignmentObjectTypeId]',
-				editItemUrl: baseUrl + "ManagementMode=EditItem&EntityId=[EntityId]&CultureDimension=[CultureDimension]",
+				newItemUrl: itemFormBaseUrl + 'ManagementMode=NewItem&AttributeSetId=[AttributeSetId]&CultureDimension=[CultureDimension]&KeyNumber=[KeyNumber]&KeyGuid=[KeyGuid]&AssignmentObjectTypeId=[AssignmentObjectTypeId]',
+				editItemUrl: itemFormBaseUrl + "ManagementMode=EditItem&EntityId=[EntityId]&CultureDimension=[CultureDimension]",
 				getUrl: function (mode, params) {
 					angular.extend(params, { ManagementMode: mode + 'Item' });
 					if (!params.ReturnUrl)
