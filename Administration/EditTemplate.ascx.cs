@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
-using System.Web;
-using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.IO;
-using System.Data;
-using DotNetNuke;
 using DotNetNuke.Common.Utilities;
-using ToSic.SexyContent;
+using ToSic.Eav;
+using ToSic.Eav.DataSources;
 
 namespace ToSic.SexyContent
 {
@@ -98,8 +92,8 @@ namespace ToSic.SexyContent
                 chkHidden.Checked = Template.IsHidden;
                 chkEnableList.Checked = Template.UseForList;
                 pnlListConfiguration.Visible = chkEnableList.Checked;
-
-                string ReturnUrl = Request.Url.AbsoluteUri;
+	            ddlDataPipeline.SelectedValue = (Template.PipelineEntityID.HasValue ? Template.PipelineEntityID : 0).ToString();
+	            txtViewNameInUrl.Text = Template.ViewNameInUrl;
 
                 // Set ContentType / Demo Entity Selectors
                 SetTemplateDefaultSelector(Template.TemplateID, ctrContentType);
@@ -113,6 +107,9 @@ namespace ToSic.SexyContent
             // Bind template files dropdown
             BindTemplateFiles(ddlTemplateTypes.SelectedValue, ddlTemplateLocations.SelectedValue, ddlTemplateFiles);
 
+			// Bind DataPipeline DropDown
+	        BindDataPipelineDropDown();
+
             // Set value of demo-content and template file dropdown if in edit mode
             if (ModeIsEdit)
             {
@@ -123,7 +120,7 @@ namespace ToSic.SexyContent
             }
         }
 
-        /// <summary>
+	    /// <summary>
         /// After the Update button is clicked, updates the template or creates a new one,
         /// depending if in edit mode or not.
         /// </summary>
@@ -134,6 +131,10 @@ namespace ToSic.SexyContent
 
             var attributeSetId = ctrContentType.ContentTypeID.HasValue && ctrContentType.ContentTypeID > 0 ? ctrContentType.ContentTypeID.Value : new int?();
 
+			Template.PipelineEntityID = ddlDataPipeline.SelectedValue == "0" ? (int?)null : int.Parse(ddlDataPipeline.SelectedValue);
+		    Template.ViewNameInUrl = txtViewNameInUrl.Text;
+
+			// ToDo: Remove duplicate Code
             if (ModeIsEdit)
             {
                 Template.AttributeSetID = attributeSetId;
@@ -262,10 +263,27 @@ namespace ToSic.SexyContent
         /// <param name="TemplateType">The template type</param>
         /// <param name="TemplateLocation">The template location</param>
         /// <param name="TemplateDropDown">The template dropdown to databind</param>
-        protected void BindTemplateFiles(string TemplateType, string TemplateLocation, DropDownList TemplateDropDown)
+        private void BindTemplateFiles(string TemplateType, string TemplateLocation, DropDownList TemplateDropDown)
         {
             TemplateDropDown.DataSource = Sexy.GetTemplateFiles(Server, TemplateType, TemplateLocation);
             TemplateDropDown.DataBind();
         }
+
+		/// <summary>
+		/// Bind the DataPipeline DropDown with Pipelines for this App
+		/// </summary>
+	    private void BindDataPipelineDropDown()
+	    {
+		    var source = DataSource.GetInitialDataSource(ZoneId, AppId);
+		    var typeFilter = DataSource.GetDataSource<EntityTypeFilter>(ZoneId, AppId, source);
+		    typeFilter.TypeName = DataSource.DataPipelineStaticName;
+
+		    ddlDataPipeline.DataSource = typeFilter.List.Select(e => new
+			{
+				PipelineEntityID = e.Key,
+				Name = string.Format("{0} ({1})", ((AttributeModel<string>)e.Value["Name"]).TypedContents, e.Key)
+			}).OrderBy(e => e.Name);
+		    ddlDataPipeline.DataBind();
+	    }
     }
 }

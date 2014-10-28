@@ -207,4 +207,16 @@
   <data name="lblSeparateContentPresentation.Help" xml:space="preserve">
     <value>Specify if you want to select a separate ContentType for presentation configuration.</value>
   </data>
+  <data name="lblPipelineEntity.Text" xml:space="preserve">
+    <value>Data Pipeline</value>
+  </data>
+  <data name="ddlDataPipelineDefaultItem.Text" xml:space="preserve">
+    <value>&lt; Default Data Pipeline &gt;</value>
+  </data>
+  <data name="lblViewNameInUrl.Help" xml:space="preserve">
+    <value>This Template will be shown if this ViewName is present in the URL, right after the Page-URL.</value>
+  </data>
+  <data name="lblViewNameInUrl.Text" xml:space="preserve">
+    <value>View Name in URL</value>
+  </data>
 </root>

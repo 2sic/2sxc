@@ -1045,6 +1045,54 @@ namespace ToSic.SexyContent
         private global::System.Int32 _AppID;
         partial void OnAppIDChanging(global::System.Int32 value);
         partial void OnAppIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> PipelineEntityID
+        {
+            get
+            {
+                return _PipelineEntityID;
+            }
+            set
+            {
+                OnPipelineEntityIDChanging(value);
+                ReportPropertyChanging("PipelineEntityID");
+                _PipelineEntityID = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("PipelineEntityID");
+                OnPipelineEntityIDChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _PipelineEntityID;
+        partial void OnPipelineEntityIDChanging(Nullable<global::System.Int32> value);
+        partial void OnPipelineEntityIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String ViewNameInUrl
+        {
+            get
+            {
+                return _ViewNameInUrl;
+            }
+            set
+            {
+                OnViewNameInUrlChanging(value);
+                ReportPropertyChanging("ViewNameInUrl");
+                _ViewNameInUrl = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("ViewNameInUrl");
+                OnViewNameInUrlChanged();
+            }
+        }
+        private global::System.String _ViewNameInUrl;
+        partial void OnViewNameInUrlChanging(global::System.String value);
+        partial void OnViewNameInUrlChanged();
 
         #endregion
 
