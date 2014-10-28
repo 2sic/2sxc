@@ -9,6 +9,10 @@
     modules.each(function () {
         var moduleId = $(this).data("2sxc").moduleId;
         $2sxc(moduleId).manage._processToolbars();
+
+        if (window.angular != null) {
+            angular.bootstrap($(this).find('.sc-selector-wrapper').get(0), ['2sxc.view']);
+        }
     });
 
 
@@ -21,8 +25,3 @@
 //    $.getScript(modules[0].);
 //}
 
-if (window.angular != null) {
-    angular.element(document).ready(function () {
-        angular.bootstrap(document, ['2sxc.view']);
-    });
-}
