@@ -263,12 +263,5 @@ namespace ToSic.SexyContent
             TemplateDropDown.DataBind();
         }
 
-        protected string GetJsonUrl()
-        {
-            var url = DotNetNuke.Common.Globals.NavigateURL(this.TabId);
-            url += (url.Contains("?") ? "&" : "?") + "mid=" + ModuleId.ToString() +
-                   "&standalone=true&type=data&popUp=true";
-            return url;
-        }
     }
 }

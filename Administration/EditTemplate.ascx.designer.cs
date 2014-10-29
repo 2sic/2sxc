@@ -328,15 +328,6 @@ namespace ToSic.SexyContent {
         protected global::System.Web.UI.WebControls.TextBox txtPublishStreams;
         
         /// <summary>
-        /// lblTest control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::DotNetNuke.UI.UserControls.LabelControl lblTest;
-        
-        /// <summary>
         /// btnUpdate control.
         /// </summary>
         /// <remarks>
