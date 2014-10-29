@@ -34,8 +34,10 @@
                 $scope.contentTypes = res[0].data;
                 $scope.templates = res[1].data;
                 // Add option for no content type if there are templates without
-                if ($filter('filter')($scope.templates, { AttributeSetID: null }, true).length > 0)
-                    $scope.contentTypes.unshift({ AttributeSetID: null, Name: "< No Content Type >" });
+                if ($filter('filter')($scope.templates, { AttributeSetID: null }, true).length > 0) {
+                    $scope.contentTypes.push({ AttributeSetID: null, Name: "Layout element" });
+                    $scope.contentTypes = $filter('orderBy')($scope.contentTypes, 'Name');
+                }
 
                 var template = $filter('filter')($scope.templates, { TemplateID: $scope.templateId }, true);
                 if (template[0] != null && $scope.contentTypeId == 0)
