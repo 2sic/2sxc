@@ -46,6 +46,8 @@
           <Property Name="SysDeleted" Type="datetime" />
           <Property Name="SysDeletedBy" Type="int" />
           <Property Name="AppID" Type="int" Nullable="false" />
+          <Property Name="PublishData" Type="bit" Nullable="false" />
+          <Property Name="StreamsToPublish" Type="nvarchar" MaxLength="200" Nullable="false" />
         </EntityType>
         <Association Name="FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_SexyContent_Templates">
           <End Role="ToSIC_SexyContent_Templates" Type="Self.ToSIC_SexyContent_Templates" Multiplicity="0..1" />
@@ -122,6 +124,8 @@
           <Property Name="SysDeletedBy" Type="Int32" />
           <Property Name="AppID" Type="Int32" Nullable="false" />
           <NavigationProperty Name="ToSIC_SexyContent_ContentGroupItems" Relationship="ToSic.SexyContent.FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_SexyContent_Templates" FromRole="ToSIC_SexyContent_Templates" ToRole="ToSIC_SexyContent_ContentGroupItems" />
+          <Property Name="PublishData" Type="Boolean" Nullable="false" />
+          <Property Name="StreamsToPublish" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_SexyContent_Templates">
           <End Type="ToSic.SexyContent.Template" Role="ToSIC_SexyContent_Templates" Multiplicity="0..1" />
@@ -162,6 +166,8 @@
           <EntitySetMapping Name="Templates">
             <EntityTypeMapping TypeName="ToSic.SexyContent.Template">
               <MappingFragment StoreEntitySet="ToSIC_SexyContent_Templates">
+                <ScalarProperty Name="StreamsToPublish" ColumnName="StreamsToPublish" />
+                <ScalarProperty Name="PublishData" ColumnName="PublishData" />
                 <ScalarProperty Name="AppID" ColumnName="AppID" />
                 <ScalarProperty Name="SysDeletedBy" ColumnName="SysDeletedBy" />
                 <ScalarProperty Name="SysDeleted" ColumnName="SysDeleted" />

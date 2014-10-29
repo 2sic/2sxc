@@ -283,6 +283,60 @@ namespace ToSic.SexyContent {
         protected global::System.Web.UI.WebControls.CheckBox chkHidden;
         
         /// <summary>
+        /// lblDataSourcePublishing control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblDataSourcePublishing;
+        
+        /// <summary>
+        /// lblPublishSource control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::DotNetNuke.UI.UserControls.LabelControl lblPublishSource;
+        
+        /// <summary>
+        /// chkPublishSource control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkPublishSource;
+        
+        /// <summary>
+        /// lblPublishStreams control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::DotNetNuke.UI.UserControls.LabelControl lblPublishStreams;
+        
+        /// <summary>
+        /// txtPublishStreams control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtPublishStreams;
+        
+        /// <summary>
+        /// lblTest control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::DotNetNuke.UI.UserControls.LabelControl lblTest;
+        
+        /// <summary>
         /// btnUpdate control.
         /// </summary>
         /// <remarks>

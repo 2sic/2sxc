@@ -537,7 +537,9 @@ namespace ToSic.SexyContent
         /// <param name="sysModified">Initial value of the SysModified property.</param>
         /// <param name="sysModifiedBy">Initial value of the SysModifiedBy property.</param>
         /// <param name="appID">Initial value of the AppID property.</param>
-        public static Template CreateTemplate(global::System.Int32 templateID, global::System.Int32 portalID, global::System.String name, global::System.String path, global::System.String script, global::System.Boolean isFile, global::System.String type, global::System.Boolean isHidden, global::System.String location, global::System.Boolean useForList, global::System.Boolean useForItem, global::System.DateTime sysCreated, global::System.Int32 sysCreatedBy, global::System.DateTime sysModified, global::System.Int32 sysModifiedBy, global::System.Int32 appID)
+        /// <param name="publishData">Initial value of the PublishData property.</param>
+        /// <param name="streamsToPublish">Initial value of the StreamsToPublish property.</param>
+        public static Template CreateTemplate(global::System.Int32 templateID, global::System.Int32 portalID, global::System.String name, global::System.String path, global::System.String script, global::System.Boolean isFile, global::System.String type, global::System.Boolean isHidden, global::System.String location, global::System.Boolean useForList, global::System.Boolean useForItem, global::System.DateTime sysCreated, global::System.Int32 sysCreatedBy, global::System.DateTime sysModified, global::System.Int32 sysModifiedBy, global::System.Int32 appID, global::System.Boolean publishData, global::System.String streamsToPublish)
         {
             Template template = new Template();
             template.TemplateID = templateID;
@@ -556,6 +558,8 @@ namespace ToSic.SexyContent
             template.SysModified = sysModified;
             template.SysModifiedBy = sysModifiedBy;
             template.AppID = appID;
+            template.PublishData = publishData;
+            template.StreamsToPublish = streamsToPublish;
             return template;
         }
 
@@ -1045,6 +1049,54 @@ namespace ToSic.SexyContent
         private global::System.Int32 _AppID;
         partial void OnAppIDChanging(global::System.Int32 value);
         partial void OnAppIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Boolean PublishData
+        {
+            get
+            {
+                return _PublishData;
+            }
+            set
+            {
+                OnPublishDataChanging(value);
+                ReportPropertyChanging("PublishData");
+                _PublishData = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("PublishData");
+                OnPublishDataChanged();
+            }
+        }
+        private global::System.Boolean _PublishData;
+        partial void OnPublishDataChanging(global::System.Boolean value);
+        partial void OnPublishDataChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String StreamsToPublish
+        {
+            get
+            {
+                return _StreamsToPublish;
+            }
+            set
+            {
+                OnStreamsToPublishChanging(value);
+                ReportPropertyChanging("StreamsToPublish");
+                _StreamsToPublish = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("StreamsToPublish");
+                OnStreamsToPublishChanged();
+            }
+        }
+        private global::System.String _StreamsToPublish;
+        partial void OnStreamsToPublishChanging(global::System.String value);
+        partial void OnStreamsToPublishChanged();
 
         #endregion
 

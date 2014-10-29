@@ -47,8 +47,8 @@ namespace ToSic.SexyContent
         public const string TemplateID = "TemplateID";
         public const string ContentGroupIDString = "ContentGroupID";
         public const string AppIDString = "AppId";
-        public const string SettingsPublishDataSource = "ToSic_SexyContent_PublishDataSource";
-        public const string SettingsPublishDataSourceStreams = "ToSic_SexyContent_PublishDataSource_Streams";
+        //public const string SettingsPublishDataSource = "ToSic_SexyContent_PublishDataSource";
+        //public const string SettingsPublishDataSourceStreams = "ToSic_SexyContent_PublishDataSource_Streams";
         public const string SettingsShowTemplateChooser = "ToSIC_SexyContent_ShowTemplateChooser";
         public const string ContentGroupItemIDString = "ContentGroupItemID";
         public const string SortOrderString = "SortOrder";
@@ -627,9 +627,15 @@ namespace ToSic.SexyContent
                 moduleDataSource.Sexy = this;
 
                 var viewDataSource = DataSource.GetDataSource<ViewDataSource>(ZoneId, AppId, moduleDataSource, ConfigurationProvider);
-                var moduleSettings = new ModuleController().GetModuleSettings(moduleId);
-                viewDataSource.Publish.Enabled = moduleSettings.ContainsKey(SettingsPublishDataSource) && Boolean.Parse(moduleSettings[SettingsPublishDataSource].ToString());
-                viewDataSource.Publish.Streams = moduleSettings.ContainsKey(SettingsPublishDataSourceStreams) ? moduleSettings[SettingsPublishDataSourceStreams].ToString() : "Content,ListContent";
+                
+                // ToDo: Do not take overrideTemplateId, but use correct template id - maybe get from modulesetting
+                if (overrideTemplateId.HasValue)
+                {
+                    var template = TemplateContext.GetTemplate(overrideTemplateId.Value);
+                    viewDataSource.Publish.Enabled = template.PublishData;
+                    viewDataSource.Publish.Streams = template.StreamsToPublish;
+                }
+
                 ViewDataSource = viewDataSource;
             }
 
