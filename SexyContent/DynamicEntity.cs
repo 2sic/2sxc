@@ -97,6 +97,9 @@ namespace ToSic.SexyContent
                     case "IsPublished":
                         result = Entity.IsPublished;
                         break;
+                    case "Modified":
+                        result = Entity.Modified;
+                        break;
                     default:
                         result = null;
                         propertyNotFound = true;

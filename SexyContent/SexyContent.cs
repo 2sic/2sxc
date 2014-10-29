@@ -1264,9 +1264,6 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Returns a JSON string for the elements
         /// </summary>
-        /// <param name="elements"></param>
-        /// <param name="dimensionID"></param>
-        /// <returns></returns>
         public string GetJsonFromStreams(ToSic.Eav.DataSources.IDataSource source, string[] streamsToPublish)
         {
             var language = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
@@ -1283,8 +1280,18 @@ namespace ToSic.SexyContent
         {
             var dynamicEntity = new DynamicEntity(entity, new[] { language }, this);
             bool propertyNotFound;
-            var dictionary = ((from d in entity.Attributes select d.Value).ToDictionary(k => k.Name, v => dynamicEntity.GetEntityValue(v.Name, out propertyNotFound)));
+
+            // Convert DynamicEntity to dictionary
+            var dictionary = ((from d in entity.Attributes select d.Value).ToDictionary(k => k.Name, v =>
+            {
+                var value = dynamicEntity.GetEntityValue(v.Name, out propertyNotFound);
+                if (v.Type == "Entity" && value is List<DynamicEntity>)
+                    return ((List<DynamicEntity>) value).Select(p => new { p.EntityId, p.EntityTitle });
+                return value;
+            }));
+
             dictionary.Add("EntityId", entity.EntityId);
+            dictionary.Add("Modified", entity.Modified);
 
             if(entity is IHasEditingData)
                 dictionary.Add("_2sxcEditInformation", new { sortOrder = ((IHasEditingData)entity).SortOrder });
