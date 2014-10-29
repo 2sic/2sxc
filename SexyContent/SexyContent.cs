@@ -628,13 +628,13 @@ namespace ToSic.SexyContent
 
                 var viewDataSource = DataSource.GetDataSource<ViewDataSource>(ZoneId, AppId, moduleDataSource, ConfigurationProvider);
                 
-                // ToDo: Do not take overrideTemplateId, but use correct template id - maybe get from modulesetting
-                if (overrideTemplateId.HasValue)
-                {
-                    var template = TemplateContext.GetTemplate(overrideTemplateId.Value);
-                    viewDataSource.Publish.Enabled = template.PublishData;
-                    viewDataSource.Publish.Streams = template.StreamsToPublish;
-                }
+                var templateId = overrideTemplateId.HasValue
+                    ? overrideTemplateId.Value
+                    : TemplateContext.GetContentGroupItems(GetContentGroupIdFromModule(moduleId)).First().TemplateID.Value;
+
+                var template = TemplateContext.GetTemplate(templateId);
+                viewDataSource.Publish.Enabled = template.PublishData;
+                viewDataSource.Publish.Streams = template.StreamsToPublish;
 
                 ViewDataSource = viewDataSource;
             }
