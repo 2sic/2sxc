@@ -51,7 +51,7 @@ namespace ToSic.SexyContent.ViewAPI
             try
             {
                 var zoneId = SexyContent.GetZoneID(ActiveModule.PortalID);
-                return SexyContent.GetApps(zoneId.Value, false, new PortalSettings(ActiveModule.OwnerPortalID));
+                return SexyContent.GetApps(zoneId.Value, false, new PortalSettings(ActiveModule.OwnerPortalID)).Select(a => new { a.Name, a.AppId });
             }
             catch (Exception e)
             {
