@@ -294,22 +294,33 @@ namespace ToSic.SexyContent.ImportExport
 
             foreach (var template in templates.Elements("Template"))
             {
-                string attributeSetStaticName = template.Attribute("AttributeSetStaticName").Value;
-                ToSic.Eav.AttributeSet Set = _sexy.ContentContext.GetAttributeSet(attributeSetStaticName);
-
                 Template t = _sexy.TemplateContext.GetNewTemplate(_sexy.AppId.Value);
                 t.Name = template.Attribute("Name").Value;
                 t.Path = template.Attribute("Path").Value;
 
-                if (Set == null)
+                string attributeSetStaticName = template.Attribute("AttributeSetStaticName").Value;
+
+
+                if (!String.IsNullOrEmpty(attributeSetStaticName))
                 {
-                    ImportLog.Add(
-                        new ExportImportMessage("Content Type for Template '" + t.Name + "' could not be found. The template has not been imported.",
-                                                ExportImportMessage.MessageTypes.Warning));
-                    continue;
+                    ToSic.Eav.AttributeSet Set = _sexy.ContentContext.GetAttributeSet(attributeSetStaticName);
+
+                    if (Set == null)
+                    {
+                        ImportLog.Add(
+                            new ExportImportMessage(
+                                "Content Type for Template '" + t.Name +
+                                "' could not be found. The template has not been imported.",
+                                ExportImportMessage.MessageTypes.Warning));
+                        continue;
+                    }
+                    else
+                        t.AttributeSetID = _sexy.ContentContext.GetAttributeSet(attributeSetStaticName).AttributeSetID;
                 }
                 else
-                    t.AttributeSetID = _sexy.ContentContext.GetAttributeSet(attributeSetStaticName).AttributeSetID;
+                {
+                    t.AttributeSetID = new int?();
+                }
 
                 string DemoEntityGuid = template.Attribute("DemoEntityGUID").Value;
                 if (!String.IsNullOrEmpty(DemoEntityGuid))
@@ -330,6 +341,8 @@ namespace ToSic.SexyContent.ImportExport
                 t.Type = template.Attribute("Type").Value;
                 t.IsHidden = Boolean.Parse(template.Attribute("IsHidden").Value);
                 t.Location = template.Attribute("Location").Value;
+                t.PublishData = Boolean.Parse(template.Attribute("PublishData") == null ? "False" : template.Attribute("PublishData").Value);
+                t.StreamsToPublish = template.Attribute("StreamsToPublish") == null ? "" : template.Attribute("StreamsToPublish").Value;
 
                 if (template.Attribute("UseForList") != null)
                     t.UseForList = Boolean.Parse(template.Attribute("UseForList").Value);

@@ -627,14 +627,17 @@ namespace ToSic.SexyContent
                 moduleDataSource.Sexy = this;
 
                 var viewDataSource = DataSource.GetDataSource<ViewDataSource>(ZoneId, AppId, moduleDataSource, ConfigurationProvider);
-                
-                var templateId = overrideTemplateId.HasValue
-                    ? overrideTemplateId.Value
-                    : TemplateContext.GetContentGroupItems(GetContentGroupIdFromModule(moduleId)).First().TemplateID.Value;
+                var items = TemplateContext.GetContentGroupItems(GetContentGroupIdFromModule(moduleId));
+                if (items.Any())
+                {
+                    var templateId = overrideTemplateId.HasValue
+                        ? overrideTemplateId.Value
+                        : items.First().TemplateID.Value;
 
-                var template = TemplateContext.GetTemplate(templateId);
-                viewDataSource.Publish.Enabled = template.PublishData;
-                viewDataSource.Publish.Streams = template.StreamsToPublish;
+                    var template = TemplateContext.GetTemplate(templateId);
+                    viewDataSource.Publish.Enabled = template.PublishData;
+                    viewDataSource.Publish.Streams = template.StreamsToPublish;
+                }
 
                 ViewDataSource = viewDataSource;
             }
