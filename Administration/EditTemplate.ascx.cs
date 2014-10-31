@@ -135,7 +135,7 @@ namespace ToSic.SexyContent
 		    Template.ViewNameInUrl = txtViewNameInUrl.Text;
 
 			// ToDo: Remove duplicate Code
-            if (ModeIsEdit)
+            if (ModeIsEdit) // Update existing Template
             {
                 Template.AttributeSetID = attributeSetId;
                 Template.DemoEntityID = ctrContentType.DemoEntityID;
@@ -155,7 +155,7 @@ namespace ToSic.SexyContent
 
                 SexyUncached.TemplateContext.UpdateTemplate(Template);
             }
-            else
+            else // Add new Template
             {
                 Template = Sexy.TemplateContext.GetNewTemplate(AppId.Value);
                 Template.PortalID = this.PortalId;

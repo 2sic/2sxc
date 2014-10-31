@@ -46,23 +46,38 @@ angular.module('eavGlobalConfigurationProvider', [])
 				},
 				outDataSource: {
 					className: 'SexyContentTemplate',
-					in: ['Content', 'ListContent', 'Presentation', 'ListPresentation'],
+					in: ['ListPresentation', 'Presentation', 'ListContent', 'Default'],
 					name: '2SexyContent Module',
 					description: 'The module/template which will show this data',
-					visualDesignerData: { Top: 50, Left: 410 }
+					visualDesignerData: { Top: 20, Left: 420 }
 				},
 				defaultPipeline: {
 					dataSources: [
 						{
+							entityGuid: 'unsaved1',
+							partAssemblyAndType: 'ToSic.Eav.DataSources.Caches.ICache, ToSic.Eav',
+							visualDesignerData: { Top: 800, Left: 440 }
+						},
+						{
+							entityGuid: 'unsaved2',
+							partAssemblyAndType: 'ToSic.Eav.DataSources.PublishingFilter, ToSic.Eav',
+							visualDesignerData: { Top: 620, Left: 440 }
+						},
+						{
+							entityGuid: 'unsaved3',
 							partAssemblyAndType: 'ToSic.SexyContent.DataSources.ModuleDataSource, ToSic.SexyContent',
-							visualDesignerData: { Top: 400, Left: 450 }
+							visualDesignerData: { Top: 440, Left: 440 }
 						}
 					],
 					streamWiring: [
-						{ From: 'unsaved1', Out: 'Content', To: 'Out', In: 'Content' },
-						{ From: 'unsaved1', Out: 'ListContent', To: 'Out', In: 'ListContent' },
-						{ From: 'unsaved1', Out: 'Presentation', To: 'Out', In: 'Presentation' },
-						{ From: 'unsaved1', Out: 'ListPresentation', To: 'Out', In: 'ListPresentation' }
+						{ From: 'unsaved1', Out: 'Default', To: 'unsaved2', In: 'Default' },
+						{ From: 'unsaved1', Out: 'Drafts', To: 'unsaved2', In: 'Drafts' },
+						{ From: 'unsaved1', Out: 'Published', To: 'unsaved2', In: 'Published' },
+						{ From: 'unsaved2', Out: 'Default', To: 'unsaved3', In: 'Default' },
+						{ From: 'unsaved3', Out: 'ListPresentation', To: 'Out', In: 'ListPresentation' },
+						{ From: 'unsaved3', Out: 'ListContent', To: 'Out', In: 'ListContent' },
+						{ From: 'unsaved3', Out: 'Presentation', To: 'Out', In: 'Presentation' },
+						{ From: 'unsaved3', Out: 'Default', To: 'Out', In: 'Default' }
 					]
 				}
 			}

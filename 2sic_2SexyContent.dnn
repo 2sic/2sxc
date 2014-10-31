@@ -827,7 +827,7 @@
                     <supportsPopUps>True</supportsPopUps>
                   </moduleControl>
                   <moduleControl>
-                    <controlKey>pipelineDesigner</controlKey>
+                    <controlKey>pipelinedesigner</controlKey>
                     <controlSrc>DesktopModules/ToSIC_SexyContent/SexyContent/EAV/PipelineDesigner/PipelineDesignerDnnWrapper.ascx</controlSrc>
                     <supportsPartialRendering>False</supportsPartialRendering>
                     <controlTitle>Pipeline Designer</controlTitle>
@@ -837,7 +837,7 @@
                     <supportsPopUps>True</supportsPopUps>
                   </moduleControl>
 					<moduleControl>
-						<controlKey>pipelineManagement</controlKey>
+						<controlKey>pipelinemanagement</controlKey>
 						<controlSrc>DesktopModules/ToSIC_SexyContent/SexyContent/EAV/PipelineDesigner/PipelineManagementDnnWrapper.ascx</controlSrc>
 						<supportsPartialRendering>False</supportsPartialRendering>
 						<controlTitle>Pipeline Management</controlTitle>

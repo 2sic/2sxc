@@ -200,19 +200,19 @@ pipelineDesigner.controller('pipelineDesignerController',
 		// Init a new Pipeline with DataSources and Wirings from Configuration
 		var initNewPipeline = function () {
 			angular.forEach(eavGlobalConfigurationProvider.pipelineDesigner.defaultPipeline.dataSources, function (dataSource) {
-				$scope.addDataSource(dataSource.partAssemblyAndType, dataSource.visualDesignerData, false);
+				$scope.addDataSource(dataSource.partAssemblyAndType, dataSource.visualDesignerData, false, dataSource.entityGuid);
 			});
 
 			// Wait until all DataSources were created
 			var initWiringsListener = $scope.$on('ngRepeatFinished', function () {
 				initWirings(eavGlobalConfigurationProvider.pipelineDesigner.defaultPipeline.streamWiring);
-				
+
 				initWiringsListener(); // unbind the Listener
 			});
 		}
 
 		// Add new DataSource
-		$scope.addDataSource = function (partAssemblyAndType, visualDesignerData, autoSave) {
+		$scope.addDataSource = function (partAssemblyAndType, visualDesignerData, autoSave, entityGuid) {
 			if (!partAssemblyAndType) {
 				partAssemblyAndType = $scope.addDataSourceType.PartAssemblyAndType;
 				$scope.addDataSourceType = null;
@@ -225,7 +225,7 @@ pipelineDesigner.controller('pipelineDesignerController',
 				Name: $filter('typename')(partAssemblyAndType, 'className'),
 				Description: '',
 				PartAssemblyAndType: partAssemblyAndType,
-				EntityGuid: 'unsaved' + ($scope.dataSourcesCount + 1)
+				EntityGuid: entityGuid || 'unsaved' + ($scope.dataSourcesCount + 1)
 			};
 			// Extend it with a Property to it's Definition
 			newDataSource = angular.extend(newDataSource, pipelineFactory.getNewDataSource($scope.pipelineData, newDataSource));

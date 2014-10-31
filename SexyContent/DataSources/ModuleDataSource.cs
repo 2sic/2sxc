@@ -57,7 +57,6 @@ namespace ToSic.SexyContent.DataSources
             Out.Add("ListPresentation", new DataStream(this, "Default", GetListPresentation));
 
             Configuration.Add("ModuleId", "[Module:ModuleID]");
-            Configuration.Add("OverrideTemplateId", "");
             Configuration.Add("IncludeEditingData", "False");
         }
 
@@ -165,15 +164,7 @@ namespace ToSic.SexyContent.DataSources
             set { Configuration["ModuleId"] = value.ToString(); }
         }
 
-        public int? OverrideTemplateId
-        {
-            get
-            {
-                int overrideTemplateId;
-                return int.TryParse(Configuration["OverrideTemplateId"], out overrideTemplateId) ? overrideTemplateId : new int?();
-            }
-            set { Configuration["OverrideTemplateId"] = value.ToString(); }
-        }
+        public int? OverrideTemplateId { get; set; }
 
         private int? ListId
         {
