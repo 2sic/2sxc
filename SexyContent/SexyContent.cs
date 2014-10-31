@@ -632,6 +632,11 @@ namespace ToSic.SexyContent
                 viewDataSource.Publish.Enabled = moduleSettings.ContainsKey(SettingsPublishDataSource) && Boolean.Parse(moduleSettings[SettingsPublishDataSource].ToString());
                 viewDataSource.Publish.Streams = moduleSettings.ContainsKey(SettingsPublishDataSourceStreams) ? moduleSettings[SettingsPublishDataSourceStreams].ToString() : "Content,ListContent";
                 ViewDataSource = viewDataSource;
+
+				// ToDo: Review Implementation
+				//var pipelineEntityId = -1;	// Get from Template
+				//var configurationPropertyAccesses = ConfigurationProvider.Sources.Select(s => s.Value);
+				//DataPipelineFactory.GetDataSource(AppId.Value, pipelineEntityId, configurationPropertyAccesses, viewDataSource);
             }
 
             return ViewDataSource;
