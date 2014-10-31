@@ -43,12 +43,12 @@ namespace ToSic.SexyContent
     {
         #region Constants
 
-        public const string ModuleVersion = "06.03.08";
+        public const string ModuleVersion = "06.04.00";
         public const string TemplateID = "TemplateID";
         public const string ContentGroupIDString = "ContentGroupID";
         public const string AppIDString = "AppId";
-        public const string SettingsPublishDataSource = "ToSic_SexyContent_PublishDataSource";
-        public const string SettingsPublishDataSourceStreams = "ToSic_SexyContent_PublishDataSource_Streams";
+        //public const string SettingsPublishDataSource = "ToSic_SexyContent_PublishDataSource";
+        //public const string SettingsPublishDataSourceStreams = "ToSic_SexyContent_PublishDataSource_Streams";
         public const string SettingsShowTemplateChooser = "ToSIC_SexyContent_ShowTemplateChooser";
         public const string ContentGroupItemIDString = "ContentGroupItemID";
         public const string SortOrderString = "SortOrder";
@@ -628,9 +628,18 @@ namespace ToSic.SexyContent
                 moduleDataSource.Sexy = this;
 
                 var viewDataSource = DataSource.GetDataSource<ViewDataSource>(ZoneId, AppId, moduleDataSource, ConfigurationProvider);
-                var moduleSettings = new ModuleController().GetModuleSettings(moduleId);
-                viewDataSource.Publish.Enabled = moduleSettings.ContainsKey(SettingsPublishDataSource) && Boolean.Parse(moduleSettings[SettingsPublishDataSource].ToString());
-                viewDataSource.Publish.Streams = moduleSettings.ContainsKey(SettingsPublishDataSourceStreams) ? moduleSettings[SettingsPublishDataSourceStreams].ToString() : "Content,ListContent";
+                var items = TemplateContext.GetContentGroupItems(GetContentGroupIdFromModule(moduleId));
+                if (items.Any())
+                {
+                    var templateId = overrideTemplateId.HasValue
+                        ? overrideTemplateId.Value
+                        : items.First().TemplateID.Value;
+
+                    var template = TemplateContext.GetTemplate(templateId);
+                    viewDataSource.Publish.Enabled = template.PublishData;
+                    viewDataSource.Publish.Streams = template.StreamsToPublish;
+                }
+
                 ViewDataSource = viewDataSource;
 
 				// ToDo: Review Implementation
@@ -1264,9 +1273,6 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Returns a JSON string for the elements
         /// </summary>
-        /// <param name="elements"></param>
-        /// <param name="dimensionID"></param>
-        /// <returns></returns>
         public string GetJsonFromStreams(ToSic.Eav.DataSources.IDataSource source, string[] streamsToPublish)
         {
             var language = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
@@ -1283,8 +1289,18 @@ namespace ToSic.SexyContent
         {
             var dynamicEntity = new DynamicEntity(entity, new[] { language }, this);
             bool propertyNotFound;
-            var dictionary = ((from d in entity.Attributes select d.Value).ToDictionary(k => k.Name, v => dynamicEntity.GetEntityValue(v.Name, out propertyNotFound)));
+
+            // Convert DynamicEntity to dictionary
+            var dictionary = ((from d in entity.Attributes select d.Value).ToDictionary(k => k.Name, v =>
+            {
+                var value = dynamicEntity.GetEntityValue(v.Name, out propertyNotFound);
+                if (v.Type == "Entity" && value is List<DynamicEntity>)
+                    return ((List<DynamicEntity>) value).Select(p => new { p.EntityId, p.EntityTitle });
+                return value;
+            }));
+
             dictionary.Add("EntityId", entity.EntityId);
+            dictionary.Add("Modified", entity.Modified);
 
             if(entity is IHasEditingData)
                 dictionary.Add("_2sxcEditInformation", new { sortOrder = ((IHasEditingData)entity).SortOrder });

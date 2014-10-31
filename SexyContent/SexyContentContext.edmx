@@ -56,6 +56,8 @@
           <Property Name="AppID" Type="int" Nullable="false" />
           <Property Name="PipelineEntityID" Type="int" />
           <Property Name="ViewNameInUrl" Type="nvarchar" MaxLength="50" />
+          <Property Name="PublishData" Type="bit" Nullable="false" />
+          <Property Name="StreamsToPublish" Type="nvarchar" MaxLength="200" Nullable="false" />
         </EntityType>
         <Association Name="FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_SexyContent_Templates">
           <End Role="ToSIC_SexyContent_Templates" Type="ToSic.SexyContent.Store.ToSIC_SexyContent_Templates" Multiplicity="0..1" />
@@ -126,6 +128,8 @@
           <NavigationProperty Name="ToSIC_SexyContent_ContentGroupItems" Relationship="ToSic.SexyContent.FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_SexyContent_Templates" FromRole="ToSIC_SexyContent_Templates" ToRole="ToSIC_SexyContent_ContentGroupItems" />
           <Property Type="Int32" Name="PipelineEntityID" />
           <Property Type="String" Name="ViewNameInUrl" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PublishData" Type="Boolean" Nullable="false" />
+          <Property Name="StreamsToPublish" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_SexyContent_Templates">
           <End Type="ToSic.SexyContent.Template" Role="ToSIC_SexyContent_Templates" Multiplicity="0..1" />
@@ -168,6 +172,8 @@
               <MappingFragment StoreEntitySet="ToSIC_SexyContent_Templates">
                 <ScalarProperty Name="ViewNameInUrl" ColumnName="ViewNameInUrl" />
                 <ScalarProperty Name="PipelineEntityID" ColumnName="PipelineEntityID" />
+                <ScalarProperty Name="StreamsToPublish" ColumnName="StreamsToPublish" />
+                <ScalarProperty Name="PublishData" ColumnName="PublishData" />
                 <ScalarProperty Name="AppID" ColumnName="AppID" />
                 <ScalarProperty Name="SysDeletedBy" ColumnName="SysDeletedBy" />
                 <ScalarProperty Name="SysDeleted" ColumnName="SysDeleted" />

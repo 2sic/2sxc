@@ -1,6 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
+using System.Web;
+using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.IO;
+using System.Data;
+using DotNetNuke;
 using DotNetNuke.Common.Utilities;
 using ToSic.Eav;
 using ToSic.Eav.DataSources;
@@ -83,6 +90,8 @@ namespace ToSic.SexyContent
             ddlTemplateLocations.Items.Add(new ListItem(LocalizeString("TemplateLocationPortalFileSystem.Text"), SexyContent.TemplateLocations.PortalFileSystem));
             ddlTemplateLocations.Items.Add(new ListItem(LocalizeString("TemplateLocationHostFileSystem.Text"), SexyContent.TemplateLocations.HostFileSystem));
 
+            txtPublishStreams.Text = "Default,ListContent";
+
             // Fill form with values if in edit mode
             if (ModeIsEdit)
             {
@@ -92,6 +101,8 @@ namespace ToSic.SexyContent
                 chkHidden.Checked = Template.IsHidden;
                 chkEnableList.Checked = Template.UseForList;
                 pnlListConfiguration.Visible = chkEnableList.Checked;
+                txtPublishStreams.Text = Template.StreamsToPublish;
+                chkPublishSource.Checked = Template.PublishData;
 	            ddlDataPipeline.SelectedValue = (Template.PipelineEntityID.HasValue ? Template.PipelineEntityID : 0).ToString();
 	            txtViewNameInUrl.Text = Template.ViewNameInUrl;
 
@@ -120,7 +131,7 @@ namespace ToSic.SexyContent
             }
         }
 
-	    /// <summary>
+        /// <summary>
         /// After the Update button is clicked, updates the template or creates a new one,
         /// depending if in edit mode or not.
         /// </summary>
@@ -131,49 +142,38 @@ namespace ToSic.SexyContent
 
             var attributeSetId = ctrContentType.ContentTypeID.HasValue && ctrContentType.ContentTypeID > 0 ? ctrContentType.ContentTypeID.Value : new int?();
 
-			Template.PipelineEntityID = ddlDataPipeline.SelectedValue == "0" ? (int?)null : int.Parse(ddlDataPipeline.SelectedValue);
-		    Template.ViewNameInUrl = txtViewNameInUrl.Text;
+            // Get a new template if the temlpate does not exist yet, else take existing
+            Template = ModeIsEdit ? Template : Sexy.TemplateContext.GetNewTemplate(AppId.Value);
 
-			// ToDo: Remove duplicate Code
-            if (ModeIsEdit) // Update existing Template
-            {
+            Template.PortalID = this.PortalId;
                 Template.AttributeSetID = attributeSetId;
                 Template.DemoEntityID = ctrContentType.DemoEntityID;
                 Template.Location = ddlTemplateLocations.SelectedValue;
                 Template.Type = ddlTemplateTypes.SelectedValue;
-                if (pnlSelectTemplateFile.Visible)
-                    Template.Path = ddlTemplateFiles.SelectedValue;
-                else
-                    SexyUncached.CreateTemplateFileIfNotExists(txtTemplateFileName.Text, Template, Server, LocalizeString("NewTemplateFile.DefaultText"));
+				Template.PipelineEntityID = ddlDataPipeline.SelectedValue == "0" ? (int?)null : int.Parse(ddlDataPipeline.SelectedValue);
+				Template.ViewNameInUrl = txtViewNameInUrl.Text;
                 Template.SysModifiedBy = UserId;
                 Template.SysModified = DateTime.Now;
+            Template.Name = txtTemplateName.Text;
                 Template.Script = "";
-                Template.Name = txtTemplateName.Text;
                 Template.IsHidden = chkHidden.Checked;
                 Template.UseForList = chkEnableList.Checked;
                 Template.AppID = AppId.Value;
+            Template.PublishData = chkPublishSource.Checked;
+            Template.StreamsToPublish = txtPublishStreams.Text;
 
+            if (pnlSelectTemplateFile.Visible)
+                Template.Path = ddlTemplateFiles.SelectedValue;
+            else
+                SexyUncached.CreateTemplateFileIfNotExists(txtTemplateFileName.Text, Template, Server, LocalizeString("NewTemplateFile.DefaultText"));
+
+            if (ModeIsEdit)
+            {
                 SexyUncached.TemplateContext.UpdateTemplate(Template);
             }
-            else // Add new Template
+            else
             {
-                Template = Sexy.TemplateContext.GetNewTemplate(AppId.Value);
-                Template.PortalID = this.PortalId;
-                Template.AttributeSetID = attributeSetId;
-                Template.DemoEntityID = ctrContentType.DemoEntityID;
-                Template.Location = ddlTemplateLocations.SelectedValue;
-                Template.Type = ddlTemplateTypes.SelectedValue;
-                if (pnlSelectTemplateFile.Visible)
-                    Template.Path = ddlTemplateFiles.SelectedValue;
-                else
-                    SexyUncached.CreateTemplateFileIfNotExists(txtTemplateFileName.Text, Template, Server, LocalizeString("NewTemplateFile.DefaultText"));
                 Template.SysCreatedBy = UserId;
-                Template.SysModifiedBy = UserId;
-                Template.Script = "";
-                Template.Name = txtTemplateName.Text;
-                Template.IsHidden = chkHidden.Checked;
-                Template.UseForList = chkEnableList.Checked;
-
                 SexyUncached.TemplateContext.AddTemplate(Template);
             }
 

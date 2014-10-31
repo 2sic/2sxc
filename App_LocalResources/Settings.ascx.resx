@@ -117,67 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ControlTitle_settings.Text" xml:space="preserve">
-    <value>Content Settings</value>
+  <data name="ControlTitle_settings.Text1" xml:space="preserve">
+    <value>Content Einstellungen</value>
   </data>
-  <data name="ddlEntitiesDefaultItem.Text" xml:space="preserve">
-    <value>&lt;Choose Item&gt;</value>
-  </data>
-  <data name="ddlTemplateDefaultItem.Text" xml:space="preserve">
-    <value>&lt;Choose Template&gt;</value>
-  </data>
-  <data name="lblContentType.Help" xml:space="preserve">
-    <value>Content-Type of the chosen Template</value>
-  </data>
-  <data name="lblContentType.Text" xml:space="preserve">
-    <value>Content-Type</value>
-  </data>
-  <data name="lblContentTypeDefaultText.Text" xml:space="preserve">
-    <value>No template chosen</value>
-  </data>
-  <data name="lblDataSource.Help" xml:space="preserve">
-    <value>The data source defines what data arrives at this module; what data can be used inside the template. This cannot be configured yet.</value>
-  </data>
-  <data name="lblDataSource.Text" xml:space="preserve">
-    <value>Data Source</value>
-  </data>
-  <data name="lblDataSourceConfiguration.Text" xml:space="preserve">
-    <value>Data Configuration</value>
-  </data>
-  <data name="lblDataSourcePublishing.LongText" xml:space="preserve">
-    <value>With these settings you can enable data to be published, meaning it can be sent to a JavaScript client using JSON.</value>
+  <data name="DataPublishingMoved.Text" xml:space="preserve">
+    <value>Data Publishing settings have been moved. It is now configured at the view (aka template) level, not at the module level. The feature is only available inside Apps - this is an important change in 2sxc 6.4.</value>
   </data>
   <data name="lblDataSourcePublishing.Text" xml:space="preserve">
-    <value>Data Publishing Configuration</value>
-  </data>
-  <data name="lblEntityID.Help" xml:space="preserve">
-    <value>The ID of the created Entity</value>
-  </data>
-  <data name="lblEntityID.Text" xml:space="preserve">
-    <value>Entity ID</value>
-  </data>
-  <data name="lblPublishDataSource.Help" xml:space="preserve">
-    <value>Publishing the data sources means that special http-requests to this module will return a JSON with the published data instead of the HTML.</value>
-  </data>
-  <data name="lblPublishSource.Text" xml:space="preserve">
-    <value>Publish Data</value>
-  </data>
-  <data name="lblPublishStreams.Help" xml:space="preserve">
-    <value>Please specify exactly which streams you want to publish, to protect against accidental publishing of data that should not be public. Comma separated, like this: "Categories, Questions"</value>
-  </data>
-  <data name="lblPublishStreams.Text" xml:space="preserve">
-    <value>Streams to publish</value>
-  </data>
-  <data name="lblSettingsHeading.Text" xml:space="preserve">
-    <value>Content Settings</value>
-  </data>
-  <data name="lblTemplate.Help" xml:space="preserve">
-    <value>Choose a template</value>
-  </data>
-  <data name="lblTemplate.Text" xml:space="preserve">
-    <value>Template</value>
-  </data>
-  <data name="lblTest.Text" xml:space="preserve">
-    <value>Test the stream</value>
+    <value>Data Publishing</value>
   </data>
 </root>

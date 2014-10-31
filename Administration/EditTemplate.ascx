@@ -2,9 +2,10 @@
 <%@ Register TagPrefix="dnn" TagName="Label" Src="~/controls/LabelControl.ascx" %>
 <%@ Register tagPrefix="Sexy" tagName="ContentTypeAndDemoSelector" src="ContentTypeAndDemoSelector.ascx" %>
 
-<div class="dnnForm dnnEAVEditItem dnnClear">
+<div class="dnnForm scEditTemplate dnnClear">
     <h2 class="dnnFormSectionHead" runat="server" id="dnnSitePanelSexyContentNewEditTemplate">
-        <asp:Label runat="server" ID="lblEditTemplateHeading" ResourceKey="lblEditTemplateHeading"></asp:Label></h2>
+        <a href="#"><asp:Label runat="server" ID="lblEditTemplateHeading" ResourceKey="lblEditTemplateHeading"></asp:Label></a></h2>
+    <fieldset>
     <div class="dnnFormItem">
         <dnn:Label ID="lblTemplateName" runat="server" ControlName="txtTemplateName" Suffix=":"></dnn:Label>
         <asp:TextBox ID="txtTemplateName" runat="server" CssClass="dnnFormRequired"></asp:TextBox>
@@ -63,8 +64,37 @@
         <dnn:Label ID="lblHidden" runat="server" ControlName="chkVisible" Suffix=":" />
         <asp:CheckBox ID="chkHidden" runat="server" />
     </div>
+    </fieldset>
+    <h2 class="dnnFormSectionHead" id="dnnSitePanelSexyContentTemplateDataPublish">
+        <a href="#"><asp:Label runat="server" ID="lblDataSourcePublishing" ResourceKey="lblDataSourcePublishing"></asp:Label></a>
+    </h2>
+    <fieldset>
+        <div style="margin-left:280px; margin-bottom:30px;"><%= LocalizeString("lblDataSourcePublishing.LongText") %></div>
+        <div class="dnnFormItem">
+            <dnn:Label ID="lblPublishSource" runat="server" ControlName="chkPublishSource" Suffix=":"></dnn:Label>
+            <asp:CheckBox runat="server" ID="chkPublishSource" />
+        </div>
+        <div class="dnnFormItem">
+            <dnn:Label ID="lblPublishStreams" runat="server" ControlName="txtPublishStreams" Suffix=":"></dnn:Label>
+            <asp:TextBox runat="server" ID="txtPublishStreams" Text="Default,ListContent"></asp:TextBox>
+        </div>
+    </fieldset>
+    
     <ul class="dnnActions dnnClear">
         <li><asp:LinkButton runat="server" ID="btnUpdate" ResourceKey="btnUpdate" OnClick="btnUpdate_Click" CssClass="dnnPrimaryAction"></asp:LinkButton></li>
         <li><asp:HyperLink runat="server" ID="hlkCancel" ResourceKey="hlkCancel" CssClass="dnnSecondaryAction"></asp:HyperLink></li>
     </ul>
 </div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        var setupModule = function() {
+            jQuery('.scEditTemplate').dnnPanels();
+        };
+        setupModule();
+        Sys.WebForms.PageRequestManager.getInstance().add_endRequest(function() {
+            // note that this will fire when _any_ UpdatePanel is triggered
+            setupModule();
+        });
+    });
+</script>

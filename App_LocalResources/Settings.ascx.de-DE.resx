@@ -120,58 +120,10 @@
   <data name="ControlTitle_settings.Text" xml:space="preserve">
     <value>Content Einstellungen</value>
   </data>
-  <data name="ddlEntitiesDefaultItem.Text" xml:space="preserve">
-    <value>&lt;Objekt wählen&gt;</value>
-  </data>
-  <data name="ddlTemplateDefaultItem.Text" xml:space="preserve">
-    <value>&lt;Vorlage wählen&gt;</value>
-  </data>
-  <data name="lblContentType.Help" xml:space="preserve">
-    <value>Inhaltstyp der gewählten Vorlage</value>
-  </data>
-  <data name="lblContentType.Text" xml:space="preserve">
-    <value>Inhaltstyp</value>
-  </data>
-  <data name="lblContentTypeDefaultText.Text" xml:space="preserve">
-    <value>Keine Vorlage ausgewählt</value>
-  </data>
-  <data name="lblDataSource.Help" xml:space="preserve">
-    <value>Die Datenquelle definiert, welche Daten das Modul verwendet bzw. im Template verwendet werden können. Diese Einstellung kann noch nicht verändert werden.</value>
-  </data>
-  <data name="lblDataSource.Text" xml:space="preserve">
-    <value>Datenquelle</value>
-  </data>
-  <data name="lblDataSourceConfiguration.Text" xml:space="preserve">
-    <value>Datenquellen-Konfiguration</value>
-  </data>
-  <data name="lblDataSourcePublishing.LongText" xml:space="preserve">
-    <value>Mit diesen Einstellungen ist es möglich, Daten zu veröffentlichen (z.B. als JSON, um sie im JavaScript weiter zu verwenden).</value>
+  <data name="DataPublishingMoved.Text" xml:space="preserve">
+    <value>Data Publishing settings have been moved. It is now configured at the view (aka template) level, not at the module level. The feature is only available inside Apps - this is an important change in 2sxc 6.4.</value>
   </data>
   <data name="lblDataSourcePublishing.Text" xml:space="preserve">
-    <value>Datenquelle veröffentlichen</value>
-  </data>
-  <data name="lblEntityID.Help" xml:space="preserve">
-    <value>Die ID des gewählten Objektes</value>
-  </data>
-  <data name="lblEntityID.Text" xml:space="preserve">
-    <value>Objekt-ID</value>
-  </data>
-  <data name="lblPublishSource.Text" xml:space="preserve">
-    <value>Datenquelle veröffentlichen</value>
-  </data>
-  <data name="lblPublishStreams.Text" xml:space="preserve">
-    <value>Öffentliche Streams</value>
-  </data>
-  <data name="lblSettingsHeading.Text" xml:space="preserve">
-    <value>Content Einstellungen</value>
-  </data>
-  <data name="lblTemplate.Help" xml:space="preserve">
-    <value>Vorlage auswählen</value>
-  </data>
-  <data name="lblTemplate.Text" xml:space="preserve">
-    <value>Vorlage</value>
-  </data>
-  <data name="lblTest.Text" xml:space="preserve">
-    <value>Streams testen</value>
+    <value>Data Publishing</value>
   </data>
 </root>

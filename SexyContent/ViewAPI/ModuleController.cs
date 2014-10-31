@@ -48,8 +48,16 @@ namespace ToSic.SexyContent.ViewAPI
         [ValidateAntiForgeryToken]
         public IEnumerable<object> GetSelectableApps()
         {
-            var zoneId = SexyContent.GetZoneID(ActiveModule.PortalID);
-            return SexyContent.GetApps(zoneId.Value, false, new PortalSettings(ActiveModule.OwnerPortalID));
+            try
+            {
+                var zoneId = SexyContent.GetZoneID(ActiveModule.PortalID);
+                return SexyContent.GetApps(zoneId.Value, false, new PortalSettings(ActiveModule.OwnerPortalID)).Select(a => new { a.Name, a.AppId });
+            }
+            catch (Exception e)
+            {
+                DotNetNuke.Services.Exceptions.Exceptions.LogException(e);
+                throw e;
+            }
         }
 
         [HttpGet]
