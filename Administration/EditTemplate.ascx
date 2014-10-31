@@ -26,7 +26,7 @@
     <asp:Panel runat="server" ID="pnlSelectTemplateFile" CssClass="dnnFormItem">
         <dnn:Label ID="lblTemplateFile" runat="server" ControlName="ddlTemplateFiles" Suffix=":" />
 	    <asp:DropDownList runat="server" ID="ddlTemplateFiles" />
-        <asp:LinkButton runat="server" ID="btnCreateTemplateFile" ResourceKey="btnCreateTemplateFile" OnClick="btnCreateTemplateFile_Click" CausesValidation="false"></asp:LinkButton>
+	    <asp:LinkButton runat="server" ID="btnCreateTemplateFile" ResourceKey="btnCreateTemplateFile" OnClick="btnCreateTemplateFile_Click" CausesValidation="false" />
         <asp:RequiredFieldValidator ID="valTemplateFile" runat="server" ControlToValidate="ddlTemplateFiles" CssClass="dnnFormError" Display="Dynamic" EnableClientScript="true"></asp:RequiredFieldValidator>
     </asp:Panel> 
     <asp:Panel runat="server" ID="pnlCreateTemplateFile" CssClass="dnnFormItem" Visible="false">
@@ -34,16 +34,6 @@
 	    <asp:TextBox runat="server" ID="txtTemplateFileName" />
         <asp:RequiredFieldValidator ID="valTemplateFileName" Enabled="false" runat="server" ControlToValidate="txtTemplateFileName" CssClass="dnnFormError" Display="Dynamic" EnableClientScript="true"></asp:RequiredFieldValidator>
     </asp:Panel>
-	<asp:Panel runat="server" ID="pnlDataPipeline" CssClass="dnnFormItem">
-		<dnn:Label ID="lblPipelineEntity" runat="server" ControlName="ddlDataPipeline" Suffix=":" />
-		<asp:DropDownList runat="server" ID="ddlDataPipeline" DataValueField="PipelineEntityID" DataTextField="Name" AppendDataBoundItems="True">
-			<asp:ListItem Value="0" ResourceKey="ddlDataPipelineDefaultItem" />
-		</asp:DropDownList>
-	</asp:Panel>
-	<asp:Panel runat="server" ID="pnlViewNameInUrl" CssClass="dnnFormItem">
-		<dnn:Label ID="lblViewNameInUrl" runat="server" ControlName="txtViewNameInUrl" Suffix=":" />
-		<asp:TextBox runat="server" ID="txtViewNameInUrl" />
-	</asp:Panel>
     <Sexy:ContentTypeAndDemoSelector runat="server" ID="ctrContentType" ItemType="Content"></Sexy:ContentTypeAndDemoSelector>
     <div class="dnnFormItem">
         <dnn:Label ID="lblSeparateContentPresentation" runat="server" ControlName="chkSeparateContentPresentation" Suffix=":"></dnn:Label>
@@ -69,6 +59,17 @@
         <a href="#"><asp:Label runat="server" ID="lblDataSourcePublishing" ResourceKey="lblDataSourcePublishing"></asp:Label></a>
     </h2>
     <fieldset>
+		<asp:Panel runat="server" ID="pnlDataPipeline" CssClass="dnnFormItem">
+			<dnn:Label ID="lblPipelineEntity" runat="server" ControlName="ddlDataPipeline" Suffix=":" />
+			<asp:DropDownList runat="server" ID="ddlDataPipeline" DataValueField="PipelineEntityID" DataTextField="Name" AppendDataBoundItems="True">
+				<asp:ListItem Value="0" ResourceKey="ddlDataPipelineDefaultItem" />
+			</asp:DropDownList>
+			<asp:HyperLink runat="server" ID="hlkManagePipelines" ResourceKey="hlkManagePipelines" />
+		</asp:Panel>
+		<asp:Panel runat="server" ID="pnlViewNameInUrl" CssClass="dnnFormItem">
+			<dnn:Label ID="lblViewNameInUrl" runat="server" ControlName="txtViewNameInUrl" Suffix=":" />
+			<asp:TextBox runat="server" ID="txtViewNameInUrl" />
+		</asp:Panel>
         <div style="margin-left:280px; margin-bottom:30px;"><%= LocalizeString("lblDataSourcePublishing.LongText") %></div>
         <div class="dnnFormItem">
             <dnn:Label ID="lblPublishSource" runat="server" ControlName="chkPublishSource" Suffix=":"></dnn:Label>

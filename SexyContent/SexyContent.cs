@@ -83,6 +83,8 @@ namespace ToSic.SexyContent
             public const string AppExport = "appexport";
             public const string AppImport = "appimport";
             public const string AppConfig = "appconfig";
+			public const string PipelineManagement = "pipelinemanagement";
+			public const string PipelineDesigner = "pipelinedesigner";
         }
 
         public const string PortalHostDirectory = "~/Portals/_default/";

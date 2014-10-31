@@ -7,19 +7,22 @@
 		<button type="button" class="btn btn-default" ng-click="refresh()">
 			<span class="glyphicon glyphicon-repeat"></span> Refresh
 		</button>
+		<a target="_self" class="btn btn-default" ng-if="returnUrl" ng-href="{{returnUrl}}">
+			<span class="glyphicon glyphicon-arrow-left"></span> Back
+		</a>
 		<table class="table table-striped table-hover">
 			<thead>
 				<tr>
-					<th>ID</th>
 					<th>Name</th>
+					<th>ID</th>
 					<th>Description</th>
 					<th>Actions</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr ng-repeat="pipeline in pipelines | orderBy:'Name'">
-					<td>{{pipeline.EntityId}}</td>
 					<td>{{pipeline.Name}}</td>
+					<td>{{pipeline.EntityId}}</td>
 					<td>{{pipeline.Description}}</td>
 					<td>
 						<a class="btn btn-xs btn-default" target="_blank" ng-href="{{getPipelineUrl('design', pipeline)}}">

@@ -2,6 +2,7 @@
 <%@ Register TagName="AdministrationRegisters" TagPrefix="SexyContent" Src="../Registers.ascx" %>
 <SexyContent:AdministrationRegisters runat="server"></SexyContent:AdministrationRegisters>
 <%@ Import Namespace="ToSic.SexyContent" %>
+<%@ Import Namespace="ToSic.SexyContent.EAV.PipelineDesigner" %>
 
 <div class="dnnForm dnnSexyContentAppConfig dnnClear">
     <h2 class="dnnFormSectionHead">
@@ -20,9 +21,7 @@
                 Configure App Settings
             </a>
         </p>
-
     </div>
-
     <div>
         <h5>App Resources</h5>
         <p>Resources are used for labels and things like that in the App. They are usually needed to create multi-lingual views and such, and should not be used for App-Settings.</p>
@@ -34,9 +33,16 @@
                 Configure App Resources
             </a>
         </p>
-
     </div>
-
+    <div>
+        <h5>Data Pipelines</h5>
+        <p>Data Pipelines are used to get and prepare Custom Data. They are used in Templates and the JavaScript API.</p>
+        <p>
+            <a class="dnnPrimaryAction" href="<%= PipelineManagementDnnWrapper.GetEditUrl(this, AppId.Value) %>">
+                Manage Pipelines
+            </a>
+        </p>
+    </div>
     <div>
         <h5>Other actions</h5>
         <p>
@@ -44,9 +50,7 @@
             <a class="dnnSecondaryAction" href="<%= EditUrl("", "", SexyContent.ControlKeys.AppExport, SexyContent.AppIDString + "=" + AppId.Value) %>">Export this App</a>
         </p>
     </div>
-
 </div>
-
 
 <style>
     .dnnSexyContentAppConfig h5 { margin-bottom:5px; }

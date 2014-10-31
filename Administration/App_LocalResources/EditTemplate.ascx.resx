@@ -240,4 +240,7 @@
   <data name="lblViewNameInUrl.Text" xml:space="preserve">
     <value>View Name in URL</value>
   </data>
+  <data name="hlkManagePipelines.Text" xml:space="preserve">
+    <value>Manage</value>
+  </data>
 </root>
