@@ -141,7 +141,9 @@ $2sxc.getManageController = function(id) {
                 ];
 
                 if (toolbarConfig.isList && settings.sortOrder != -1) {
-                    buttons.push($.extend({ action: 'add' }, settings));
+                    if (settings.useModuleList) {
+                        buttons.push($.extend({ action: 'add' }, settings));
+                    }
                     buttons.push($.extend({ action: 'new' }, settings));
                 }
             }
