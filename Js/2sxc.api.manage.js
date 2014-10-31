@@ -72,7 +72,7 @@ $2sxc.getManageController = function(id) {
                 if (settings.action == 'edit' || settings.action == 'new')
                     manageController._openDialog(settings);
                 else if (settings.action == 'add') {
-                    manageController._getSelectorScope().addItem();
+                    manageController._getSelectorScope().addItem(settings.sortOrder);
                 } else {
                     throw "Action " + settings.action + " not known.";
                 }
