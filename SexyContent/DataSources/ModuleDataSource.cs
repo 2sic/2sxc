@@ -56,7 +56,7 @@ namespace ToSic.SexyContent.DataSources
             Out.Add("ListContent", new DataStream(this, "Default", GetListContent));
             Out.Add("ListPresentation", new DataStream(this, "Default", GetListPresentation));
 
-            Configuration.Add("ModuleId", "[Module:ModuleID]");
+			Configuration.Add("ModuleId", "[Module:ModuleID||[Module:ModuleId]]");	// Look for ModuleID and ModuleId
             Configuration.Add("IncludeEditingData", "False");
         }
 
@@ -108,7 +108,10 @@ namespace ToSic.SexyContent.DataSources
             // If no Content Elements exist and type is List, add a ContentGroupItem to List (not to DB)
             if ((itemType == ContentGroupItemType.Content || itemType == ContentGroupItemType.ListContent) && !items.Any(p => p.ItemType == itemType))
             {
-                items.Add(new ContentGroupItem()
+				if (!ListId.HasValue)
+					throw new Exception("GetStream() failed because ListId is null. ModuleId is " + (ModuleId.HasValue ? ModuleId.ToString() : "null"));
+
+                items.Add(new ContentGroupItem
                 {
                     ContentGroupID = ListId.Value,
                     ContentGroupItemID = -1,
@@ -192,11 +195,11 @@ namespace ToSic.SexyContent.DataSources
             var contentEntities = GetStream(contentItemType);
             var allEntities = In["Default"].List;
 
-            // If no Content Elements exist, add a ContentGroupItem to List (not to DB)
-            if (!items.Any(p => p.ItemType == contentItemType))
-            {
-                items.Add(new ContentGroupItem()
-                {
+			// If no Content Elements exist, add a ContentGroupItem to List (not to DB)
+			if (!items.Any(p => p.ItemType == contentItemType))
+			{
+				items.Add(new ContentGroupItem()
+				{
                     ContentGroupID = ListId.Value,
                     ContentGroupItemID = -1,
                     EntityID = new int?(),

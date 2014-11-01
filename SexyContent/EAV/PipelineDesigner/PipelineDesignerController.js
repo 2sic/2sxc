@@ -347,6 +347,7 @@ pipelineDesigner.controller('pipelineDesignerController',
 
 			pipelineFactory.savePipeline($scope.AppId, $scope.pipelineData.Pipeline, $scope.pipelineData.DataSources).then(successHandler, function (reason) {
 				uiNotification.error('Save Pipeline failed', reason);
+				$scope.readOnly = false;
 				deferred.reject();
 			}).then(function () {
 				deferred.resolve();
