@@ -4,6 +4,7 @@ pipelineDesigner.factory('pipelineFactory', ['$resource', '$q', '$filter', 'eavG
 
 	// Web API Service
 	var pipelineResource = $resource(eavGlobalConfigurationProvider.api.baseUrl + '/EAV/PipelineDesigner/:action');
+	var entitiesResource = $resource(eavGlobalConfigurationProvider.api.baseUrl + '/EAV/Entities/:action');
 	// Add additional Headers to each http-Request
 	angular.extend($http.defaults.headers.common, eavGlobalConfigurationProvider.api.additionalHeaders);
 
@@ -101,16 +102,36 @@ pipelineDesigner.factory('pipelineFactory', ['$resource', '$q', '$filter', 'eavG
 		clonePipeline: function (appId, pipelineEntityId) {
 			return pipelineResource.get({ action: 'ClonePipeline', appId: appId, Id: pipelineEntityId }).$promise;
 		},
-		// Get the URL
+		// Get the URL to configure a DataSource
 		getDataSourceConfigurationUrl: function (appId, dataSource) {
-			return pipelineResource.get({
-				action: 'GetDataSourceConfigurationUrl',
-				appId: appId,
-				dataSourceEntityGuid: dataSource.EntityGuid,
-				dataSourceFullName: $filter('typename')(dataSource.PartAssemblyAndType, 'classFullName'),
-				newItemUrl: eavGlobalConfigurationProvider.itemForm.newItemUrl + '&PreventRedirect=true',
-				editItemUrl: eavGlobalConfigurationProvider.itemForm.editItemUrl + '&PreventRedirect=true'
-			}).$promise;
+			var dataSourceFullName = $filter('typename')(dataSource.PartAssemblyAndType, 'classFullName');
+			var contentTypeName = '|Config ' + dataSourceFullName;
+			var assignmentObjectTypeId = 4;
+			var keyGuid = dataSource.EntityGuid;
+			var preventRedirect = true;
+
+			var deferred = $q.defer();
+
+			// Query for existing Entity
+			entitiesResource.query({ action: 'GetAssignedEntities', appId: appId, assignmentObjectTypeId: assignmentObjectTypeId, keyGuid: keyGuid, contentTypeName: contentTypeName }, function (success) {
+				if (success.length) // Edit existing Entity
+					deferred.resolve(eavGlobalConfigurationProvider.itemForm.getEditItemUrl(success[0].EntityId, null, preventRedirect));
+				else { // Create new Entity
+					entitiesResource.get({ action: 'GetContentType', appId: appId, name: contentTypeName }, function (contentType) {
+						// test for null-response
+						if (contentType[0] == 'n' && contentType[1] == 'u' && contentType[2] == 'l' && contentType[3] == 'l')
+							deferred.reject('Content Type ' + contentTypeName + ' not found.');
+						else
+							deferred.resolve(eavGlobalConfigurationProvider.itemForm.getNewItemUrl(contentType.AttributeSetId, assignmentObjectTypeId, { KeyGuid: keyGuid, ReturnUrl: null }, preventRedirect));
+					}, function (reason) {
+						deferred.reject(reason);
+					});
+				}
+			}, function (reason) {
+				deferred.reject(reason);
+			});
+
+			return deferred.promise;
 		},
 		// Query the Data of a Pipeline
 		queryPipeline: function (appId, id) {

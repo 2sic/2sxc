@@ -17,7 +17,16 @@ angular.module('eavGlobalConfigurationProvider', [])
 		}
 
 		var baseUrl = globals.FullUrl + "/mid/" + globals.ModuleContext.ModuleId + "/popUp/true?AppId=" + globals.ModuleContext.AppId + "&";
-		var itemFormBaseUrl = baseUrl + "ctl=editcontentgroup&";
+
+		var getItemFormUrl = function (mode, params, preventRedirect) {
+			if (mode == 'New')
+				params.editMode = 'New';
+			if (!params.ReturnUrl)
+				params.ReturnUrl = $location.url();
+			if (preventRedirect)
+				params.PreventRedirect = true;
+			return baseUrl + "ctl=editcontentgroup&" + $.param(params);
+		};
 
 		return {
 			api: {
@@ -31,14 +40,11 @@ angular.module('eavGlobalConfigurationProvider', [])
 			},
 			dialogClass: "dnnFormPopup",
 			itemForm: {
-				newItemUrl: itemFormBaseUrl + 'ManagementMode=NewItem&AttributeSetId=[AttributeSetId]&CultureDimension=[CultureDimension]&KeyNumber=[KeyNumber]&KeyGuid=[KeyGuid]&AssignmentObjectTypeId=[AssignmentObjectTypeId]',
-				editItemUrl: itemFormBaseUrl + "ManagementMode=EditItem&EntityId=[EntityId]&CultureDimension=[CultureDimension]",
-				getUrl: function (mode, params) {
-					if (mode == 'New')
-						angular.extend(params, { editMode: 'New' });
-					if (!params.ReturnUrl)
-						params.ReturnUrl = $location.url();
-					return itemFormBaseUrl + $.param(params);
+				getNewItemUrl: function (attributeSetId, assignmentObjectTypeId, params, preventRedirect) {
+					return getItemFormUrl('New', angular.extend({ AttributeSetId: attributeSetId, AssignmentObjectTypeId: assignmentObjectTypeId }, params), preventRedirect);
+				},
+				getEditItemUrl: function (entityId, params, preventRedirect) {
+					return getItemFormUrl('Edit', angular.extend({ EntityId: entityId }, params), preventRedirect);
 				}
 			},
 			pipelineDesigner: {

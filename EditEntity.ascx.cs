@@ -94,6 +94,15 @@ namespace ToSic.SexyContent
             }
         }
 
+		public Guid? KeyGuid
+		{
+			get
+			{
+				try { return Guid.Parse(Request.QueryString["KeyGuid"]); }
+				catch { return null; }
+			}
+		}
+
         public int AssignmentObjectTypeId
         {
             get
@@ -140,6 +149,7 @@ namespace ToSic.SexyContent
             EditItemControl.AttributeSetId = AttributeSetID;
             EditItemControl.AssignmentObjectTypeId = AssignmentObjectTypeId;
             EditItemControl.KeyNumber = KeyNumber;
+	        EditItemControl.KeyGuid = KeyGuid;
             EditItemControl.ZoneId = ZoneId;
             EditItemControl.ReturnUrl = "";
             EditItemControl.AppId = AppId;

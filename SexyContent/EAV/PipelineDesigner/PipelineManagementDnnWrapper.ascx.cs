@@ -15,7 +15,7 @@ namespace ToSic.SexyContent.EAV.PipelineDesigner
 		public static string GetEditUrl(PortalModuleBase caller, int appId)
 		{
 			return caller.EditUrl(caller.PortalSettings.ActiveTab.TabID, SexyContent.ControlKeys.PipelineManagement, true,
-					"mid=" + caller.ModuleId + "&ReturnUrl=" + HttpUtility.UrlEncode(caller.Request.RawUrl)) + "&AppId=" + appId;
+					"mid=" + caller.ModuleId + "&ReturnUrl=" + HttpUtility.UrlEncode(caller.Request.RawUrl)) + "&AppId=" + appId;	// AppId must be at the end so it's after the ? Character for use in AngularJS
 		}
 	}
 }

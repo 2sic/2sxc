@@ -24,20 +24,6 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 		}
 
 		/// <summary>
-		/// Get URL to configure a DataSource
-		/// </summary>
-		/// <param name="appId">AppId of the Pipeline/DataSource</param>
-		/// <param name="dataSourceEntityGuid">EntityGuid of the DataSource</param>
-		/// <param name="dataSourceFullName">FullName of the DataSource Type</param>
-		/// <param name="newItemUrl">URL Schema to NewItem-Form</param>
-		/// <param name="editItemUrl">URL Schema to EditItem-Form</param>
-		[HttpGet]
-		public object GetDataSourceConfigurationUrl(int appId, Guid dataSourceEntityGuid, string dataSourceFullName, string newItemUrl, string editItemUrl)
-		{
-			return _controller.GetDataSourceConfigurationUrl(appId, dataSourceEntityGuid, dataSourceFullName, newItemUrl, editItemUrl);
-		}
-
-		/// <summary>
 		/// Get a Pipeline with DataSources
 		/// </summary>
 		[HttpGet]

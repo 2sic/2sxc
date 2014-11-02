@@ -286,9 +286,9 @@ pipelineDesigner.controller('pipelineDesignerController',
 
 			uiNotification.wait();
 
-			pipelineFactory.getDataSourceConfigurationUrl($scope.AppId, dataSource).then(function (success) {
+			pipelineFactory.getDataSourceConfigurationUrl($scope.AppId, dataSource).then(function (url) {
 				uiNotification.clear();
-				eavDialogService.open({ url: success.Url, title: 'Configure DataSource ' + dataSource.Name });
+				eavDialogService.open({ url: url, title: 'Configure DataSource ' + dataSource.Name });
 			}, function (error) {
 				uiNotification.error('Open Configuration UI failed', error);
 			});

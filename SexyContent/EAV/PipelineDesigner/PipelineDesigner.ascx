@@ -14,7 +14,7 @@
 				<div class="description" title="Click to edit the Description" ng-click="editDescription(dataSource)">{{dataSource.Description || '(no description)'}}</div><br/>
 				<div class="typename" ng-attr-title="{{dataSource.PartAssemblyAndType}}">Type: {{dataSource.PartAssemblyAndType | typename: 'className'}}</div>
 				<div class="ep" title="Drag a new Out-Connection from here" ng-if="!dataSource.ReadOnly"></div>
-				<div class="delete" title="Delete this DataSource" ng-click="remove($index)" ng-if="!dataSource.ReadOnly"></div>
+				<div class="delete glyphicon glyphicon-remove" title="Delete this DataSource" ng-click="remove($index)" ng-if="!dataSource.ReadOnly"></div>
 			</div>
 		</div>
 		<div class="actions panel panel-default">

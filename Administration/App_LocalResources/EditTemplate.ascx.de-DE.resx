@@ -235,10 +235,10 @@
     <value>&lt; Standard Data Pipeline &gt;</value>
   </data>
   <data name="lblViewNameInUrl.Help" xml:space="preserve">
-    <value>Diese Vorlage wird angezeigt, wenn der angegebene Name in der URL vorkommt, unmittelbar nach dem Seiten-URL.</value>
+    <value>Diese Vorlage wird angezeigt, wenn der angegebene Text in der URL vorkommt, unmittelbar nach der normalen Seiten-URL.</value>
   </data>
   <data name="lblViewNameInUrl.Text" xml:space="preserve">
-    <value>View Name in URL</value>
+    <value>View Name in der URL</value>
   </data>
   <data name="hlkManagePipelines.Text" xml:space="preserve">
     <value>Verwalten</value>

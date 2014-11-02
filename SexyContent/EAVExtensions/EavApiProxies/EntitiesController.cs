@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
@@ -27,6 +28,22 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 		public IEnumerable<Dictionary<string, object>> GetEntities(int appId, string typeName, string cultureCode = null)
 		{
 			return _controller.GetEntities(appId, typeName, cultureCode);
+		}
+
+		/// <summary>
+		/// Get Entities with specified AssignmentObjectTypeId and Key
+		/// </summary>
+		public IEnumerable<IEntity> GetAssignedEntities(int appId, int assignmentObjectTypeId, Guid keyGuid, string contentTypeName)
+		{
+			return _controller.GetAssignedEntities(appId, assignmentObjectTypeId, keyGuid, contentTypeName);
+		}
+
+		/// <summary>
+		/// Get Entities with specified AssignmentObjectTypeId and Key
+		/// </summary>
+		public IEnumerable<IEntity> GetAssignedEntities(int appId, int assignmentObjectTypeId, string keyString, string contentTypeName)
+		{
+			return _controller.GetAssignedEntities(appId, assignmentObjectTypeId, keyString, contentTypeName);
 		}
 
 		/// <summary>

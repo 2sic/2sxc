@@ -578,7 +578,6 @@
     <Content Include="BuildScripts\ModulePackage.Targets" />
     <Content Include="BuildScripts\MSBuild.Community.Tasks.targets" />
     <None Include="SqlDataProvider\01.00.00.SqlDataProvider" />
-    <Content Include="SexyContent\EAV\PipelineDesigner\assets\Delete.png" />
     <Content Include="SexyContent\EAV\PipelineDesigner\assets\jquery.jsPlumb-1.6.4-min.js" />
     <Content Include="SexyContent\EAV\PipelineDesigner\PipelineDesigner.ascx" />
     <Content Include="SexyContent\EAV\PipelineDesigner\PipelineDesigner.css" />
