@@ -243,4 +243,7 @@
   <data name="hlkManagePipelines.Text" xml:space="preserve">
     <value>Manage</value>
   </data>
+  <data name="valViewNameInUrl.Text" xml:space="preserve">
+    <value>The name must must contain one slash (/)</value>
+  </data>
 </root>

@@ -37,7 +37,7 @@ namespace ToSic.SexyContent {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UserControl lblTemplateName;
+        protected global::DotNetNuke.UI.UserControls.LabelControl lblTemplateName;
         
         /// <summary>
         /// txtTemplateName control.
@@ -64,7 +64,7 @@ namespace ToSic.SexyContent {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UserControl lblTemplateType;
+        protected global::DotNetNuke.UI.UserControls.LabelControl lblTemplateType;
         
         /// <summary>
         /// ddlTemplateTypes control.
@@ -82,7 +82,7 @@ namespace ToSic.SexyContent {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UserControl lblTemplateLocation;
+        protected global::DotNetNuke.UI.UserControls.LabelControl lblTemplateLocation;
         
         /// <summary>
         /// ddlTemplateLocations control.
@@ -109,7 +109,7 @@ namespace ToSic.SexyContent {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UserControl lblTemplateFile;
+        protected global::DotNetNuke.UI.UserControls.LabelControl lblTemplateFile;
         
         /// <summary>
         /// ddlTemplateFiles control.
@@ -154,7 +154,7 @@ namespace ToSic.SexyContent {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UserControl lblTemplateFileName;
+        protected global::DotNetNuke.UI.UserControls.LabelControl lblTemplateFileName;
         
         /// <summary>
         /// txtTemplateFileName control.
@@ -190,7 +190,7 @@ namespace ToSic.SexyContent {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UserControl lblSeparateContentPresentation;
+        protected global::DotNetNuke.UI.UserControls.LabelControl lblSeparateContentPresentation;
         
         /// <summary>
         /// chkSeparateContentPresentation control.
@@ -226,7 +226,7 @@ namespace ToSic.SexyContent {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UserControl lblEnableList;
+        protected global::DotNetNuke.UI.UserControls.LabelControl lblEnableList;
         
         /// <summary>
         /// chkEnableList control.
@@ -271,7 +271,7 @@ namespace ToSic.SexyContent {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UserControl lblHidden;
+        protected global::DotNetNuke.UI.UserControls.LabelControl lblHidden;
         
         /// <summary>
         /// chkHidden control.
@@ -307,7 +307,7 @@ namespace ToSic.SexyContent {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UserControl lblPipelineEntity;
+        protected global::DotNetNuke.UI.UserControls.LabelControl lblPipelineEntity;
         
         /// <summary>
         /// ddlDataPipeline control.
@@ -343,7 +343,7 @@ namespace ToSic.SexyContent {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UserControl lblViewNameInUrl;
+        protected global::DotNetNuke.UI.UserControls.LabelControl lblViewNameInUrl;
         
         /// <summary>
         /// txtViewNameInUrl control.
@@ -355,13 +355,22 @@ namespace ToSic.SexyContent {
         protected global::System.Web.UI.WebControls.TextBox txtViewNameInUrl;
         
         /// <summary>
+        /// valViewNameInUrl control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator valViewNameInUrl;
+        
+        /// <summary>
         /// lblPublishSource control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UserControl lblPublishSource;
+        protected global::DotNetNuke.UI.UserControls.LabelControl lblPublishSource;
         
         /// <summary>
         /// chkPublishSource control.
@@ -379,7 +388,7 @@ namespace ToSic.SexyContent {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UserControl lblPublishStreams;
+        protected global::DotNetNuke.UI.UserControls.LabelControl lblPublishStreams;
         
         /// <summary>
         /// txtPublishStreams control.

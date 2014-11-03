@@ -69,6 +69,7 @@
 		<asp:Panel runat="server" ID="pnlViewNameInUrl" CssClass="dnnFormItem">
 			<dnn:Label ID="lblViewNameInUrl" runat="server" ControlName="txtViewNameInUrl" Suffix=":" />
 			<asp:TextBox runat="server" ID="txtViewNameInUrl" />
+			<asp:RegularExpressionValidator ID="valViewNameInUrl" ResourceKey="valViewNameInUrl" runat="server" ValidationExpression="[^/]+/[^/]+" ControlToValidate="txtViewNameInUrl" CssClass="dnnFormError" Display="Dynamic" EnableClientScript="true" />
 		</asp:Panel>
         <div style="margin-left:280px; margin-bottom:30px;"><%= LocalizeString("lblDataSourcePublishing.LongText") %></div>
         <div class="dnnFormItem">
