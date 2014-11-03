@@ -113,15 +113,23 @@ namespace ToSic.SexyContent
 
             try
             {
-
-                string renderedTemplate = "";
+				var renderTemplate = Template;
+				string renderedTemplate;
                 
-				// ToDo: Load List of all Templates
-				//Sexy.TemplateContext.GetAllTemplates().Where(t => t.AppID == AppId && t.ViewNameInUrl == );
+				// Change Template if URL contais "ViewNameInUrl"
+				if (!IsContentApp)
+				{
+					// combine all QueryString Params to a list of key/value lowercase and search for a template having this ViewNameInUrl
+					// QueryString is never blank in DNN so no there's no test for it
+					var queryStringPairs = Request.QueryString.AllKeys.Select(key => string.Format("{0}/{1}", key, Request.QueryString[key]).ToLower());
+					var matchedTemplate = Sexy.TemplateContext.GetAllTemplates().FirstOrDefault(t => t.AppID == AppId && !string.IsNullOrEmpty(t.ViewNameInUrl) && queryStringPairs.Contains(t.ViewNameInUrl.ToLower()));
+					if (matchedTemplate != null)
+						renderTemplate = matchedTemplate;
+				}
 
-				var engine = EngineFactory.CreateEngine(Template);
+				var engine = EngineFactory.CreateEngine(renderTemplate);
 				var dataSource = (ViewDataSource)Sexy.GetViewDataSource(this.ModuleId, SexyContent.HasEditPermission(this.ModuleConfiguration), DotNetNuke.Common.Globals.IsEditMode());
-                engine.Init(Template, Sexy.App, this.ModuleConfiguration, dataSource, Request.QueryString["type"] == "data" ? InstancePurposes.PublishData : InstancePurposes.WebView, Sexy);
+				engine.Init(renderTemplate, Sexy.App, this.ModuleConfiguration, dataSource, Request.QueryString["type"] == "data" ? InstancePurposes.PublishData : InstancePurposes.WebView, Sexy);
                 engine.CustomizeData();
 
                 // Output JSON data if type=data in URL

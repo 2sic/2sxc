@@ -64,6 +64,13 @@ namespace ToSic.SexyContent
             valTemplateFileName.ErrorMessage = LocalizeString("valTemplateFileName.ErrorMessage");
 
             pnlSeparateContentPresentation.Visible = chkSeparateContentPresentation.Checked;
+
+			// show some fields only for App-Module
+	        if (IsContentApp)
+	        {
+		        pnlDataPipeline.Visible = false;
+		        pnlViewNameInUrl.Visible = false;
+	        }
         }
 
         /// <summary>
