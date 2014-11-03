@@ -605,10 +605,10 @@ namespace ToSic.SexyContent
                 if (_configurationProvider == null)
                 {
                     _configurationProvider = new ConfigurationProvider();
-                    _configurationProvider.Sources.Add("querystring", new QueryStringPropertyAccess());
-                    _configurationProvider.Sources.Add("app", new AppPropertyAccess(App));
-                    _configurationProvider.Sources.Add("appsettings", new DynamicEntityPropertyAccess(App.Settings));
-                    _configurationProvider.Sources.Add("appresources", new DynamicEntityPropertyAccess(App.Resources));
+					_configurationProvider.Sources.Add("querystring", new QueryStringPropertyAccess("querystring"));
+                    _configurationProvider.Sources.Add("app", new AppPropertyAccess("app", App));
+                    _configurationProvider.Sources.Add("appsettings", new DynamicEntityPropertyAccess("appsettings", App.Settings));
+                    _configurationProvider.Sources.Add("appresources", new DynamicEntityPropertyAccess("appresources", App.Resources));
                 }
                 return _configurationProvider;
             }
@@ -629,25 +629,38 @@ namespace ToSic.SexyContent
                 moduleDataSource.OverrideTemplateId = overrideTemplateId;
                 moduleDataSource.Sexy = this;
 
-                var viewDataSource = DataSource.GetDataSource<ViewDataSource>(ZoneId, AppId, moduleDataSource, ConfigurationProvider);
+	            var viewDataSourceUpstream = moduleDataSource;
+
+				// Get the View-Template
                 var items = TemplateContext.GetContentGroupItems(GetContentGroupIdFromModule(moduleId));
+	            Template template = null;
                 if (items.Any())
                 {
                     var templateId = overrideTemplateId.HasValue
                         ? overrideTemplateId.Value
                         : items.First().TemplateID.Value;
 
-                    var template = TemplateContext.GetTemplate(templateId);
-                    viewDataSource.Publish.Enabled = template.PublishData;
-                    viewDataSource.Publish.Streams = template.StreamsToPublish;
+                    template = TemplateContext.GetTemplate(templateId);
                 }
 
-                ViewDataSource = viewDataSource;
+	            // If the Template has a Data-Pipeline, use it instead of the ModuleDataSource created above
+				if (template != null && template.PipelineEntityID.HasValue)
+					viewDataSourceUpstream = null;
 
-				// ToDo: Review Implementation
-				//var pipelineEntityId = -1;	// Get from Template
-				//var configurationPropertyAccesses = ConfigurationProvider.Sources.Select(s => s.Value);
-				//DataPipelineFactory.GetDataSource(AppId.Value, pipelineEntityId, configurationPropertyAccesses, viewDataSource);
+				var viewDataSource = DataSource.GetDataSource<ViewDataSource>(ZoneId, AppId, viewDataSourceUpstream, ConfigurationProvider);
+
+				// Take Publish-Properties from the View-Template
+	            if (template != null)
+	            {
+					viewDataSource.Publish.Enabled = template.PublishData;
+					viewDataSource.Publish.Streams = template.StreamsToPublish;
+
+					// Append Streams of the Data-Pipeline
+		            if (template.PipelineEntityID.HasValue)
+						DataPipelineFactory.GetDataSource(AppId.Value, template.PipelineEntityID.Value, ConfigurationProvider, viewDataSource);
+	            }
+
+                ViewDataSource = viewDataSource;
             }
 
             return ViewDataSource;

@@ -1,22 +1,20 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using DotNetNuke.Entities.Users;
-using DotNetNuke.Security;
+﻿using DotNetNuke.Entities.Users;
 using DotNetNuke.Services.Tokens;
-using ToSic.Eav;
 
 namespace ToSic.SexyContent.Engines.TokenEngine
 {
     public class AppPropertyAccess : IPropertyAccess, ToSic.Eav.DataSources.Tokens.IPropertyAccess
     {
-        private App _app;
-        public string Name { get; private set; }
+        private readonly App _app;
+		public string Name { get; private set; }
 
-        public AppPropertyAccess(App app)
+		/// <summary>
+		/// Constructor
+		/// </summary>
+        public AppPropertyAccess(string name, App app)
         {
-            _app = app;
+			Name = name;
+			_app = app;
         }
 
         public CacheLevel Cacheability

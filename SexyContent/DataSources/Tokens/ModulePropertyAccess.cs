@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Web;
-using DotNetNuke.Entities.Modules;
+﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Tokens;
 
 namespace ToSic.SexyContent.DataSources.Tokens
@@ -11,7 +6,14 @@ namespace ToSic.SexyContent.DataSources.Tokens
     public class ModulePropertyAccess : ToSic.Eav.DataSources.Tokens.IPropertyAccess, DotNetNuke.Services.Tokens.IPropertyAccess
     {
         private int _moduleId;
-        private ModuleInfo _moduleInfo;
+        private readonly ModuleInfo _moduleInfo;
+
+	    public ModulePropertyAccess(string name)
+	    {
+		    Name = name;
+	    }
+
+	    public string Name { get; private set; }
 
         public ModulePropertyAccess(int moduleId)
         {
@@ -24,9 +26,6 @@ namespace ToSic.SexyContent.DataSources.Tokens
         {
             return GetProperty(propertyName, "", null, null, Scope.DefaultSettings, ref propertyNotFound);
         }
-
-        public string Name { get; private set; }
-
 
         #region DotNetNuke IPropertyAccess Members
 

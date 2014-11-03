@@ -1,22 +1,17 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Globalization;
 using DotNetNuke.Entities.Users;
-using DotNetNuke.Security;
 using DotNetNuke.Services.Tokens;
-using ToSic.Eav;
 
 namespace ToSic.SexyContent.Engines.TokenEngine
 {
     public class DynamicEntityPropertyAccess : IPropertyAccess, ToSic.Eav.DataSources.Tokens.IPropertyAccess
     {
-        private DynamicEntity _entity;
+        private readonly DynamicEntity _entity;
         public string Name { get; private set; }
 
-        public DynamicEntityPropertyAccess(DynamicEntity entity)
+        public DynamicEntityPropertyAccess(string name, DynamicEntity entity)
         {
+	        Name = name;
             _entity = entity;
         }
 

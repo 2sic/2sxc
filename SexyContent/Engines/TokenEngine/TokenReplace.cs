@@ -20,29 +20,29 @@ namespace ToSic.SexyContent.Engines.TokenEngine
                 if (Content != null)
                 {
                     /*Dictionary<string, object> ContentDictionary = new Dictionary<string, object>(Content.Dictionary);*/
-                    PropertySource.Add("content", new DynamicEntityPropertyAccess(Content));
+                    PropertySource.Add("content", new DynamicEntityPropertyAccess("content", Content));
                 }
                 if(Presentation != null)
                 {
                     /*Dictionary<string, object> PresentationDictionary = new Dictionary<string, object>(Presentation.Dictionary);*/
-                    PropertySource.Add("presentation", new DynamicEntityPropertyAccess(Presentation));
+                    PropertySource.Add("presentation", new DynamicEntityPropertyAccess("presentation", Presentation));
                 }
                 if (ListContent != null)
                 {
                     /*Dictionary<string, object> ContentDictionary = new Dictionary<string, object>(ListContent.Dictionary);*/
-                    PropertySource.Add("listcontent", new DynamicEntityPropertyAccess(ListContent));
+                    PropertySource.Add("listcontent", new DynamicEntityPropertyAccess("listcontent", ListContent));
                 }
                 if (ListPresentation != null)
                 {
                     /*Dictionary<string, object> PresentationDictionary = new Dictionary<string, object>(ListPresentation.Dictionary);*/
-                    PropertySource.Add("listpresentation", new DynamicEntityPropertyAccess(ListPresentation));
+                    PropertySource.Add("listpresentation", new DynamicEntityPropertyAccess("listpresentation", ListPresentation));
                 }
                 
-                PropertySource.Add("app", new AppPropertyAccess(app));
+                PropertySource.Add("app", new AppPropertyAccess("app", app));
                 if(app.Settings != null)
-                    PropertySource.Add("appsettings", new DynamicEntityPropertyAccess(app.Settings));
+                    PropertySource.Add("appsettings", new DynamicEntityPropertyAccess("appsettings", app.Settings));
                 if (app.Resources != null)
-                    PropertySource.Add("appresources", new DynamicEntityPropertyAccess(app.Resources));
+                    PropertySource.Add("appresources", new DynamicEntityPropertyAccess("appresources", app.Resources));
                 PropertySource.Add("list", new DictionaryPropertyAccess(List));
             }
         }

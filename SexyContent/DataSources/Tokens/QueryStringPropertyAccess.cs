@@ -1,36 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Web;
 using DotNetNuke.Services.Tokens;
 
 namespace ToSic.SexyContent.DataSources.Tokens
 {
-    public class QueryStringPropertyAccess : ToSic.Eav.DataSources.Tokens.IPropertyAccess, DotNetNuke.Services.Tokens.IPropertyAccess
-    {
-        public string GetProperty(string propertyName, string format, ref bool propertyNotFound)
-        {
-            var context = HttpContext.Current;
+	public class QueryStringPropertyAccess : ToSic.Eav.DataSources.Tokens.IPropertyAccess, DotNetNuke.Services.Tokens.IPropertyAccess
+	{
+		#region Properties
 
-            if (context == null)
-            {
-                propertyNotFound = false;
-                return null;
-            }
+		public string Name { get; private set; }
 
-            return context.Request.QueryString[propertyName.ToLower()];
-        }
+		public CacheLevel Cacheability
+		{
+			get { return CacheLevel.notCacheable; }
+		}
+		#endregion
 
-        public string Name { get; private set; }
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		public QueryStringPropertyAccess(string name)
+		{
+			Name = name;
+		}
 
-        public CacheLevel Cacheability
-        {
-            get { return CacheLevel.notCacheable; }
-        }
+		public string GetProperty(string propertyName, string format, ref bool propertyNotFound)
+		{
+			var context = HttpContext.Current;
 
-        public string GetProperty(string propertyName, string format, System.Globalization.CultureInfo formatProvider, DotNetNuke.Entities.Users.UserInfo accessingUser, DotNetNuke.Services.Tokens.Scope accessLevel, ref bool propertyNotFound)
-        {
-            return GetProperty(propertyName, format, ref propertyNotFound);
-        }
-    }
+			if (context == null)
+			{
+				propertyNotFound = false;
+				return null;
+			}
+
+			return context.Request.QueryString[propertyName.ToLower()];
+		}
+
+
+		public string GetProperty(string propertyName, string format, System.Globalization.CultureInfo formatProvider, DotNetNuke.Entities.Users.UserInfo accessingUser, DotNetNuke.Services.Tokens.Scope accessLevel, ref bool propertyNotFound)
+		{
+			return GetProperty(propertyName, format, ref propertyNotFound);
+		}
+	}
 }
