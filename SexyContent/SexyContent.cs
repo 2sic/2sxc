@@ -622,6 +622,7 @@ namespace ToSic.SexyContent
         {
             if (ViewDataSource == null)
             {
+				// Get ModuleDataSource
                 var initialSource = GetInitialDataSource(ZoneId.Value, AppId.Value, showDrafts);
                 var moduleDataSource = DataSource.GetDataSource<ModuleDataSource>(ZoneId, AppId, initialSource, ConfigurationProvider);
                 moduleDataSource.ModuleId = moduleId;
@@ -667,28 +668,41 @@ namespace ToSic.SexyContent
         }
 
 
-        /// <summary>
-        /// Get a list of ContentElements by ModuleId or ContentGroupID
-        /// </summary>
-        /// <returns></returns>
-        public List<Element> GetContentElements(int ModuleID, string LanguageName, int? ContentGroupID, int PortalId, bool showDrafts)
-        {
-            // ToDo: Refactor
-            //return GetElements(ModuleID, ContentGroupID, ContentGroupItemType.Content, ContentGroupItemType.Presentation, LanguageName, PortalId, showDrafts);
+		#region Get ModuleDataSource and Streams of it
+		/// <summary>
+		/// Get a list of ContentElements by ModuleId or ContentGroupID
+		/// </summary>
+		[Obsolete("Use Overload with less Parameters")]
+		public List<Element> GetContentElements(int ModuleID, string LanguageName, int? ContentGroupID, int PortalId, bool showDrafts)
+		{
+			return GetContentElements(ModuleID, showDrafts);
+		}
 
-            var dataSource = (ModuleDataSource)((IDataTarget)GetViewDataSource(ModuleID, showDrafts, false)).In["Default"].Source;
-            return dataSource.ContentElements;
-        }
+		/// <summary>
+		/// Get a list of ContentElements by ModuleId or ContentGroupID
+		/// </summary>
+		public List<Element> GetContentElements(int moduleId, bool showDrafts)
+		{
+			return GetModuleDataSource(moduleId, showDrafts).ContentElements;
+		}
 
-        public Element GetListElement(int ModuleID, string LanguageName, int? ContentGroupID, int PortalId, bool showDrafts)
-        {
-            // ToDo: Refactor (does not need all parameters)
-            //var ListElement = GetElements(ModuleID, ContentGroupID, ContentGroupItemType.ListContent, ContentGroupItemType.ListPresentation, LanguageName, PortalId, showDrafts).FirstOrDefault();
-            //return ListElement;
+		[Obsolete("Use Overload with less Parameters")]
+		public Element GetListElement(int ModuleID, string LanguageName, int? ContentGroupID, int PortalId, bool showDrafts)
+		{
+			return GetListElement(ModuleID, showDrafts);
+		}
 
-            var dataSource = (ModuleDataSource)((IDataTarget) GetViewDataSource(ModuleID, showDrafts, false)).In["Default"].Source;
-            return dataSource.ListElement;
-        }
+		public Element GetListElement(int moduleId, bool showDrafts)
+		{
+			return GetModuleDataSource(moduleId, showDrafts).ListElement;
+		}
+
+		private ModuleDataSource GetModuleDataSource(int moduleId, bool showDrafts)
+		{
+			var viewDataSource = (IDataTarget)GetViewDataSource(moduleId, showDrafts, false);
+			return DataPipelineFactory.FindDataSource<ModuleDataSource>(viewDataSource);
+		} 
+		#endregion
 
         /// <summary>
         /// Returns the ContentGroupID for a module.
