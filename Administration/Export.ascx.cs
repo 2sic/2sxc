@@ -24,25 +24,32 @@ namespace ToSic.SexyContent
             var entities = DataSource.GetInitialDataSource(ZoneId.Value, AppId.Value, false);
             var language = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
 
-            var data = contentTypes.Select(c => new
-            {
-                Id = c.AttributeSetID,
-                Name = c.Name,
-                StaticName = c.StaticName,
-                Templates = templates.Where(t => t.AttributeSetID == c.AttributeSetID).Select(p => new
+            var data = new {
+                contentTypes = contentTypes.Select(c => new
                 {
-                    p.TemplateID,
-                    p.AttributeSetID,
-                    p.Name,
-                    TemplateDefaults = Sexy.GetTemplateDefaults(p.TemplateID).Select(td => new
+                    Id = c.AttributeSetID,
+                    Name = c.Name,
+                    StaticName = c.StaticName,
+                    Templates = templates.Where(t => t.AttributeSetID == c.AttributeSetID).Select(p => new
                     {
-                        td.ContentTypeID,
-                        td.DemoEntityID,
-                        ItemType = td.ItemType.ToString("F")
-                    })
+                        p.TemplateID,
+                        p.AttributeSetID,
+                        p.Name,
+                        TemplateDefaults = Sexy.GetTemplateDefaults(p.TemplateID).Select(td => new
+                        {
+                            td.ContentTypeID,
+                            td.DemoEntityID,
+                            ItemType = td.ItemType.ToString("F")
+                        })
+                    }),
+                    Entities = entities.List.Where(en => en.Value.Type.AttributeSetId == c.AttributeSetID).Select(en => Sexy.GetDictionaryFromEntity(en.Value, language))
                 }),
-                Entities = entities.List.Where(en => en.Value.Type.AttributeSetId == c.AttributeSetID).Select(en => Sexy.GetDictionaryFromEntity(en.Value, language))
-            });
+                templatesWithoutContentType = templates.Where(p => !p.AttributeSetID.HasValue).Select(t => new
+                {
+                    t.TemplateID,
+                    t.Name
+                })
+            };
 
             pnlExportView.Attributes.Add("ng-init", "init(" + data.ToJson() + ");");
 
