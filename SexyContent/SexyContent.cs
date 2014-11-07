@@ -1,5 +1,6 @@
 ﻿using System.Configuration;
 using System.Data.Objects;
+using System.Globalization;
 using DotNetNuke.Common;
 using DotNetNuke.Common.Internal;
 using DotNetNuke.Common.Utilities;
@@ -597,24 +598,21 @@ namespace ToSic.SexyContent
             return DataSource.GetInitialDataSource(zoneId, appId, showDrafts);
         }
 
-        private ConfigurationProvider _configurationProvider;
-        private ConfigurationProvider ConfigurationProvider
-        {
-            get
-            {
-                if (_configurationProvider == null)
-                {
-                    _configurationProvider = new ConfigurationProvider();
-					_configurationProvider.Sources.Add("querystring", new QueryStringPropertyAccess("querystring"));
-                    _configurationProvider.Sources.Add("app", new AppPropertyAccess("app", App));
-                    _configurationProvider.Sources.Add("appsettings", new DynamicEntityPropertyAccess("appsettings", App.Settings));
-                    _configurationProvider.Sources.Add("appresources", new DynamicEntityPropertyAccess("appresources", App.Resources));
-                }
-                return _configurationProvider;
-            }
-        }
+	    private ConfigurationProvider GetConfigurationProvider(int moduleId)
+	    {
+		    var provider = new ConfigurationProvider();
+		    provider.Sources.Add("querystring", new QueryStringPropertyAccess("querystring"));
+		    provider.Sources.Add("app", new AppPropertyAccess("app", App));
+		    provider.Sources.Add("appsettings", new DynamicEntityPropertyAccess("appsettings", App.Settings));
+		    provider.Sources.Add("appresources", new DynamicEntityPropertyAccess("appresources", App.Resources));
 
-        /// <summary>
+		    var modulePropertyAccess = new StaticPropertyAccess("module");
+		    modulePropertyAccess.Properties.Add("ModuleID", moduleId.ToString(CultureInfo.InvariantCulture));
+		    provider.Sources.Add(modulePropertyAccess.Name, modulePropertyAccess);
+		    return provider;
+	    }
+
+	    /// <summary>
         /// The EAV DataSource
         /// </summary>
         private ToSic.Eav.DataSources.IDataSource ViewDataSource { get; set; }
@@ -622,9 +620,11 @@ namespace ToSic.SexyContent
         {
             if (ViewDataSource == null)
             {
+	            var configurationProvider = GetConfigurationProvider(moduleId);
+
 				// Get ModuleDataSource
                 var initialSource = GetInitialDataSource(ZoneId.Value, AppId.Value, showDrafts);
-                var moduleDataSource = DataSource.GetDataSource<ModuleDataSource>(ZoneId, AppId, initialSource, ConfigurationProvider);
+				var moduleDataSource = DataSource.GetDataSource<ModuleDataSource>(ZoneId, AppId, initialSource, configurationProvider);
                 moduleDataSource.ModuleId = moduleId;
                 moduleDataSource.IncludeEditingData = true;
                 moduleDataSource.OverrideTemplateId = overrideTemplateId;
@@ -648,7 +648,7 @@ namespace ToSic.SexyContent
 				if (template != null && template.PipelineEntityID.HasValue)
 					viewDataSourceUpstream = null;
 
-				var viewDataSource = DataSource.GetDataSource<ViewDataSource>(ZoneId, AppId, viewDataSourceUpstream, ConfigurationProvider);
+				var viewDataSource = DataSource.GetDataSource<ViewDataSource>(ZoneId, AppId, viewDataSourceUpstream, configurationProvider);
 
 				// Take Publish-Properties from the View-Template
 	            if (template != null)
@@ -658,7 +658,7 @@ namespace ToSic.SexyContent
 
 					// Append Streams of the Data-Pipeline
 		            if (template.PipelineEntityID.HasValue)
-						DataPipelineFactory.GetDataSource(AppId.Value, template.PipelineEntityID.Value, ConfigurationProvider, viewDataSource);
+						DataPipelineFactory.GetDataSource(AppId.Value, template.PipelineEntityID.Value, configurationProvider, viewDataSource);
 	            }
 
                 ViewDataSource = viewDataSource;
