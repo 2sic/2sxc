@@ -10,33 +10,77 @@ namespace ToSic.SexyContent.Razor.Data.Api01
 {
     /// <summary>
     /// Place the data extension methods here for the razor-views.
-    /// It's important to keep this in an own namespace, to allow us to switch to a different API in the future without breaking the old one.
+    /// It is important to keep this in an own namespace, to allow us to switch to a 
+    /// different API in the future without breaking the old one.
     /// </summary>
     public static class ExtensionMethodsForTheRazorViews
     {
         /// <summary>
-        /// this will simply return a correctly instantiated instance of the simple data controller.
+        /// Get a correctly instantiated instance of the simple data controller.
         /// </summary>
-        /// <param name="page"></param>
-        /// <returns>A instantiaced DataController which can Create/Update/Delete entities</returns>
+        /// <param name="page">Page</param>
+        /// <returns>An data controller to create, update and delete entities</returns>
         public static SimpleDataController DataController(this SexyContentWebPage page)
         {
-            // todo: ensure I have the language & appid
-            return new SimpleDataController(page.App.AppId, "");
+            return new SimpleDataController(page.App.ZoneId, page.App.AppId, page.User.Identity.Name, page.Dnn.Portal.DefaultLanguage);
         }
 
-
-        public static bool Create(this SexyContentWebPage page, string contentTypeName, Dictionary<string, object> values)
+        /// <summary>
+        /// Create a new entity of the content-type specified.
+        /// </summary>
+        /// <param name="page">Page</param>
+        /// <param name="contentTypeName">Content-type</param>
+        /// <param name="values">Values to be set (dictionary of attribute name and value pairs)</param>
+        /// <returns>True if create succeeded, else false</returns>
+        public static bool CreateEntity(this SexyContentWebPage page, string contentTypeName, Dictionary<string, object> values)
         {
             return page.DataController().Create(contentTypeName, values);
         }
-        public static bool Update(this SexyContentWebPage page, int entityId, Dictionary<string, object> values)
+
+        /// <summary>
+        /// Update the entity specified by ID.
+        /// </summary>
+        /// <param name="page">Page</param>
+        /// <param name="entityId">Entity ID</param>
+        /// <param name="values">Values to be updated (dictionary of attribute name and value pairs)</param>
+        /// <returns>True if update succeeded, else false</returns>
+        public static bool UpdateEntity(this SexyContentWebPage page, int entityId, Dictionary<string, object> values)
         {
             return page.DataController().Update(entityId, values);
         }
-        public static bool Create(this SexyContentWebPage page, int entityId)
+
+        /// <summary>
+        /// Update the entity specified by Guid.
+        /// </summary>
+        /// <param name="page">Page</param>
+        /// <param name="entityGuid">Entity Guid</param>
+        /// <param name="values">Values to be updated (dictionary of attribute name and value pairs)</param>
+        /// <returns>True if update succeeded, else false</returns>
+        public static bool UpdateEntity(this SexyContentWebPage page, Guid entityGuid, Dictionary<string, object> values)
+        {
+            return page.DataController().Update(entityGuid, values);
+        }
+
+        /// <summary>
+        /// Delete the entity specified by ID.
+        /// </summary>
+        /// <param name="page">Page</param>
+        /// <param name="entityId">Entity ID</param>
+        /// <returns>True if delete succeeded, else false</returns>
+        public static bool DeleteEntity(this SexyContentWebPage page, int entityId)
         {
             return page.DataController().Delete(entityId);
+        }
+
+        /// <summary>
+        /// Delete the entity specified by Guid.
+        /// </summary>
+        /// <param name="page">Page</param>
+        /// <param name="entityGuid">Entity Guid</param>
+        /// <returns>True if delete succeeded, else false</returns>
+        public static bool DeleteEntity(this SexyContentWebPage page, Guid entityGuid)
+        {
+            return page.DataController().Delete(entityGuid);
         }
     }
 

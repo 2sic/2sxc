@@ -53,6 +53,17 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
             return valueModel;
         }
 
+
+        public static void AppendAttributeValues(this Entity entity, Eav.AttributeSet attributeSet, Dictionary<string, object> values, string valuesLanguage, bool valuesReadOnly, bool resolveHyperlink)
+        {
+            foreach (var value in values)
+            {
+                var attribute = attributeSet.GetAttribute(value.Key);
+                entity.AppendAttributeValue(value.Key, value.Value.ToString(), attribute.Type, valuesLanguage, valuesReadOnly, resolveHyperlink);
+            }
+        }
+
+
         private static IValueImportModel GetValueModel(string valueString, string valueType, string valueLanguage, bool valueRedOnly, bool resolveHyperlink, Entity entity)
         {
             IValueImportModel valueModel;
@@ -143,6 +154,13 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
                 return "Page:" + tabInfo.TabID;
             }
             return fallbackValue;
+        }
+
+
+        public static void Import(this Entity entity, int zoneId, int appId, string userName)
+        {
+            var import = new ToSic.Eav.Import.Import(zoneId, appId, userName, true);
+            import.RunImport(null, new Entity[] { entity }, true, true);
         }
     }
 }
