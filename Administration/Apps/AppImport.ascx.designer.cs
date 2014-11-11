@@ -37,7 +37,7 @@ namespace ToSic.SexyContent {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UserControl lblSelectImportFile;
+        protected global::DotNetNuke.UI.UserControls.LabelControl lblSelectImportFile;
         
         /// <summary>
         /// fileUpload control.
