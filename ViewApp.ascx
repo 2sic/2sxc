@@ -2,16 +2,15 @@
 <asp:Placeholder runat="server" ID="pnlTemplateChooser" Visible="false">
     
     <%-- New AngularJS template chooser --%>
-    <div ng-controller="TemplateSelectorCtrl" data-moduleid="<%= ModuleId %>" class="sc-selector-wrapper">
+    <div ng-controller="TemplateSelectorCtrl" data-moduleid="<%= ModuleId %>" class="sc-selector-wrapper" data-importAppDialog="<%= EditUrl("", "", ToSic.SexyContent.SexyContent.ControlKeys.AppImport) %>" data-importAppText="<%= LocalizeString("GetMoreApps.Text") %>">
         <div ng-cloak ng-show="manageInfo.templateChooserVisible" class="dnnFormMessage dnnFormInfo">
             <div class="sc-selectors">
                 <select ng-show="!manageInfo.isContentApp" ng-model="appId" class="sc-selector-app" ng-options="a.AppId as a.Name for a in apps">
-                    <option value=""><%= HttpUtility.HtmlEncode(LocalizeString("ddlAppDefaultItem.Text")) %></option>
+                    <option value="" ng-disabled="appId != null"><%= HttpUtility.HtmlEncode(LocalizeString("ddlAppDefaultItem.Text")) %></option>
                 </select>
 
                 <select ng-show="manageInfo.isContentApp" ng-model="contentTypeId" ng-options="c.AttributeSetID as c.Name for c in contentTypes" class="sc-selector-contenttype" ng-disabled="manageInfo.hasContent || manageInfo.isList">
                     <option ng-disabled="contentTypeId != 0" value=""><%= HttpUtility.HtmlEncode(LocalizeString("ddlContentTypeDefaultItem.Text")) %></option>
-                    <%--<option ng-repeat="c in contentTypes"  value="{{c.AttributeSetID}}">{{c.Name}}</option>--%>
                 </select>
                 <select ng-show="manageInfo.isContentApp ? contentTypeId != 0 : (savedAppId != null &&  filteredTemplates().length > 1)" ng-model="templateId" class="sc-selector-template" ng-options="t.TemplateID as t.Name for t in filteredTemplates(contentTypeId)">
                 </select>
@@ -40,9 +39,3 @@
 <div class="sc-viewport">
     <asp:PlaceHolder runat="server" ID="phOutput"></asp:PlaceHolder>
 </div>
-
-<asp:Panel runat="server" ID="pnlOpenCatalog" Visible="False">
-    <script type="text/javascript">
-        window.location = "<%= EditUrl("", "", ToSic.SexyContent.SexyContent.ControlKeys.AppImport) %>";
-    </script>
-</asp:Panel>

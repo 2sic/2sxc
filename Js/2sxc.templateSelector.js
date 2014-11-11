@@ -77,8 +77,14 @@
         });
 
         $scope.$watch('appId', function (newAppId, oldAppId) {
-            if (newAppId == oldAppId)
+            if (newAppId == oldAppId || newAppId == null)
                 return;
+
+            if (newAppId == -1) {
+                window.location = $attrs.importappdialog;
+                return;
+            }
+
             moduleApi.setAppId(newAppId).then(function() {
                 $window.location.reload();
             });
@@ -87,6 +93,7 @@
         if (!$scope.manageInfo.isContentApp) {
             moduleApi.getSelectableApps().then(function(data) {
                 $scope.apps = data.data;
+                $scope.apps.push({ Name: $attrs.importapptext, AppId: -1 });
             });
         }
 
