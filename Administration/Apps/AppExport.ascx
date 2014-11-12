@@ -46,9 +46,9 @@ Contains:<br/>
         <% } %>
 
     </li>
-    <li>
+    <%--<li>
         ToDo: files in the portal folder (images/pdf etc.)
-    </li>
+    </li>--%>
 </ul>
 
 

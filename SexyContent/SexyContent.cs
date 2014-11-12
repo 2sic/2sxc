@@ -1,4 +1,5 @@
-﻿using System.Data.Objects;
+﻿using System.Configuration;
+using System.Data.Objects;
 using DotNetNuke.Common;
 using DotNetNuke.Common.Internal;
 using DotNetNuke.Common.Utilities;
@@ -42,12 +43,13 @@ namespace ToSic.SexyContent
     {
         #region Constants
 
-        public const string ModuleVersion = "06.03.04";
+        public const string ModuleVersion = "06.04.00";
         public const string TemplateID = "TemplateID";
         public const string ContentGroupIDString = "ContentGroupID";
         public const string AppIDString = "AppId";
-        public const string SettingsPublishDataSource = "ToSic_SexyContent_PublishDataSource";
-        public const string SettingsPublishDataSourceStreams = "ToSic_SexyContent_PublishDataSource_Streams";
+        //public const string SettingsPublishDataSource = "ToSic_SexyContent_PublishDataSource";
+        //public const string SettingsPublishDataSourceStreams = "ToSic_SexyContent_PublishDataSource_Streams";
+        public const string SettingsShowTemplateChooser = "ToSIC_SexyContent_ShowTemplateChooser";
         public const string ContentGroupItemIDString = "ContentGroupItemID";
         public const string SortOrderString = "SortOrder";
         public const string EntityID = "EntityID";
@@ -72,13 +74,14 @@ namespace ToSic.SexyContent
             public const string DataExport = "dataexport";
             public const string DataImport = "dataimport";
             public const string EditTemplateFile = "edittemplatefile";
-            public const string AddItem = "additem";
+            //public const string AddItem = "additem";
             public const string EditTemplateDefaults = "edittemplatedefaults";
             public const string GettingStarted = "gettingstarted";
             public const string PortalConfiguration = "portalconfiguration";
             public const string EditDataSource = "editdatasource";
             public const string AppExport = "appexport";
             public const string AppImport = "appimport";
+            public const string AppConfig = "appconfig";
         }
 
         public const string PortalHostDirectory = "~/Portals/_default/";
@@ -97,7 +100,7 @@ namespace ToSic.SexyContent
 
         public const string WebConfigTemplatePath = "~/DesktopModules/ToSIC_SexyContent/WebConfigTemplate.config";
         public const string WebConfigFileName = "web.config";
-        public const string SexyContentGroupName = "2SexyContent Designers";
+        public const string SexyContentGroupName = "2sxc designers";
         public const string AttributeSetScope = "2SexyContent";
         public const string AttributeSetScopeApps = "2SexyContent-App";
         public const string AttributeSetStaticNameTemplateMetaData = "2SexyContent-Template-Metadata";
@@ -431,7 +434,27 @@ namespace ToSic.SexyContent
             return Result;
         }
 
-        public List<Template> GetCompatibleTemplates(int PortalID, int ContentGroupID)
+        /// <summary>
+        /// Returns all templates that should be available in the template selector
+        /// </summary>
+        /// <param name="module"></param>
+        /// <returns></returns>
+        public IEnumerable<Template> GetAvailableTemplatesForSelector(ModuleInfo module)
+        {
+            IEnumerable<Template> availableTemplates;
+            var elements = GetContentElements(module.ModuleID, GetCurrentLanguageName(), null, module.OwnerPortalID, SexyContent.HasEditPermission(module));
+
+            if (elements.Any(e => e.EntityId.HasValue))
+                availableTemplates = GetCompatibleTemplates(module.PortalID, elements.First().GroupId).Where(p => !p.IsHidden);
+            else if (elements.Count <= 1)
+                availableTemplates = GetVisibleTemplates(module.PortalID);
+            else
+                availableTemplates = GetVisibleListTemplates(module.PortalID);
+            
+            return availableTemplates;
+        } 
+
+        private List<Template> GetCompatibleTemplates(int PortalID, int ContentGroupID)
         {
             var ContentGroupItems = TemplateContext.GetContentGroupItems(ContentGroupID).ToList();
             List<Template> CompatibleTemplates;
@@ -527,15 +550,9 @@ namespace ToSic.SexyContent
         /// <returns></returns>
         public static bool SexyContentDesignersGroupConfigured(int portalId)
         {
-            var roleControl = new DotNetNuke.Security.Roles.RoleController();
-            RoleInfo Role = roleControl.GetRoleByName(portalId, SexyContentGroupName);
-            if (Role != null)
-            {
-                System.Collections.ArrayList t = roleControl.GetUsersByRoleName(portalId, SexyContentGroupName);
-                if (t.Count > 0)
-                    return true;
-            }
-            return false;
+            var roleControl = new RoleController();
+            RoleInfo role = roleControl.GetRoleByName(portalId, SexyContentGroupName);
+            return role != null;
         }
 
         /// <summary>
@@ -598,7 +615,7 @@ namespace ToSic.SexyContent
         /// The EAV DataSource
         /// </summary>
         private ToSic.Eav.DataSources.IDataSource ViewDataSource { get; set; }
-        public ToSic.Eav.DataSources.IDataSource GetViewDataSource(int moduleId, bool showDrafts, bool includeEditingData)
+        public ToSic.Eav.DataSources.IDataSource GetViewDataSource(int moduleId, bool showDrafts, bool includeEditingData, int? overrideTemplateId = new int?())
         {
             if (ViewDataSource == null)
             {
@@ -606,12 +623,22 @@ namespace ToSic.SexyContent
                 var moduleDataSource = DataSource.GetDataSource<ModuleDataSource>(ZoneId, AppId, initialSource, ConfigurationProvider);
                 moduleDataSource.ModuleId = moduleId;
                 moduleDataSource.IncludeEditingData = true;
+                moduleDataSource.OverrideTemplateId = overrideTemplateId;
                 moduleDataSource.Sexy = this;
 
                 var viewDataSource = DataSource.GetDataSource<ViewDataSource>(ZoneId, AppId, moduleDataSource, ConfigurationProvider);
-                var moduleSettings = new ModuleController().GetModuleSettings(moduleId);
-                viewDataSource.Publish.Enabled = moduleSettings.ContainsKey(SettingsPublishDataSource) && Boolean.Parse(moduleSettings[SettingsPublishDataSource].ToString());
-                viewDataSource.Publish.Streams = moduleSettings.ContainsKey(SettingsPublishDataSourceStreams) ? moduleSettings[SettingsPublishDataSourceStreams].ToString() : "Content,ListContent";
+                var items = TemplateContext.GetContentGroupItems(GetContentGroupIdFromModule(moduleId));
+                if (items.Any())
+                {
+                    var templateId = overrideTemplateId.HasValue
+                        ? overrideTemplateId.Value
+                        : items.First().TemplateID.Value;
+
+                    var template = TemplateContext.GetTemplate(templateId);
+                    viewDataSource.Publish.Enabled = template.PublishData;
+                    viewDataSource.Publish.Streams = template.StreamsToPublish;
+                }
+
                 ViewDataSource = viewDataSource;
             }
 
@@ -737,11 +764,6 @@ namespace ToSic.SexyContent
             SettingsUrl += (SettingsUrl.IndexOf("?") == -1 ? "?" : "&") + "popUp=true&ReturnUrl=" + HttpUtility.UrlEncode(ReturnUrl);
             return SettingsUrl;
         }
-
-        //public void AttachToolbarToElements(List<Element> Elements)
-        //{
-            
-        //}
 
         #endregion
 
@@ -935,6 +957,15 @@ namespace ToSic.SexyContent
             return null;
         }
 
+        public static void SetAppIdForModule(ModuleInfo module, int? appId)
+        {
+            var moduleController = new ModuleController();
+            if (appId == 0 || !appId.HasValue)
+                moduleController.DeleteModuleSetting(module.ModuleID, SexyContent.AppIDString);
+            else
+                moduleController.UpdateModuleSetting(module.ModuleID, SexyContent.AppIDString, appId.ToString());
+        }
+
         public void RemoveApp(int appId, int userId)
         {
             if(appId != this.ContentContext.AppId)
@@ -980,6 +1011,19 @@ namespace ToSic.SexyContent
         /// <returns></returns>
         public ContentGroupItem AddContentGroupItem(int ContentGroupID, int UserID, int? TemplateID, int? EntityID, int? DestinationSortOrder, bool AutoSave, ContentGroupItemType ItemType, bool PreventSorting)
         {
+            var userId = PortalSettings.Current.UserId;
+
+            if (TemplateID.HasValue)
+            {
+                var template = TemplateContext.GetTemplate(TemplateID.Value);
+
+                // Throw exception if
+                // 1. a content element is added
+                // 2. the template is not configured for a list
+                if (ItemType == ContentGroupItemType.Content && !template.UseForList)
+                    throw new Exception("Cannot add item: The template is not configured for lists.");
+            }
+
             var Item = new ContentGroupItem()
             {
                 ContentGroupID = ContentGroupID,
@@ -1223,9 +1267,6 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Returns a JSON string for the elements
         /// </summary>
-        /// <param name="elements"></param>
-        /// <param name="dimensionID"></param>
-        /// <returns></returns>
         public string GetJsonFromStreams(ToSic.Eav.DataSources.IDataSource source, string[] streamsToPublish)
         {
             var language = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
@@ -1242,8 +1283,18 @@ namespace ToSic.SexyContent
         {
             var dynamicEntity = new DynamicEntity(entity, new[] { language }, this);
             bool propertyNotFound;
-            var dictionary = ((from d in entity.Attributes select d.Value).ToDictionary(k => k.Name, v => dynamicEntity.GetEntityValue(v.Name, out propertyNotFound)));
+
+            // Convert DynamicEntity to dictionary
+            var dictionary = ((from d in entity.Attributes select d.Value).ToDictionary(k => k.Name, v =>
+            {
+                var value = dynamicEntity.GetEntityValue(v.Name, out propertyNotFound);
+                if (v.Type == "Entity" && value is List<DynamicEntity>)
+                    return ((List<DynamicEntity>) value).Select(p => new { p.EntityId, p.EntityTitle });
+                return value;
+            }));
+
             dictionary.Add("EntityId", entity.EntityId);
+            dictionary.Add("Modified", entity.Modified);
 
             if(entity is IHasEditingData)
                 dictionary.Add("_2sxcEditInformation", new { sortOrder = ((IHasEditingData)entity).SortOrder });

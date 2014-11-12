@@ -9,7 +9,7 @@ using ToSic.Eav;
 
 namespace ToSic.SexyContent.DataImportExport.Extensions
 {
-    public static class EavValueExtension
+    internal static class EavValueExtension
     {
         /// <summary>
         /// If the value is a file or page reference, resolve it for example from 

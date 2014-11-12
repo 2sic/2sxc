@@ -142,7 +142,7 @@
     <value>Import</value>
   </data>
   <data name="lblImportInfo.Text" xml:space="preserve">
-    <value>Bitte wählen Sie die zu importierende Datei.&lt;br /&gt;Um neue Vorlagen herunterzuladen, besuchen Sie &lt;a href="http://2sxc.org/Catalog.aspx" target="_blank"&gt;2sxc Catalog&lt;/a&gt;.</value>
+    <value>Bitte wählen Sie die zu importierende Datei.&lt;br /&gt;Um neue Vorlagen herunterzuladen, besuchen Sie &lt;a href="http://2sxc.org/en/templates" target="_blank"&gt;2sxc Catalog&lt;/a&gt;.</value>
   </data>
   <data name="lblSelectImportFile.Help" xml:space="preserve">
     <value>Der gesamte Inhalt der hier gewählten Datei wird importiert.</value>

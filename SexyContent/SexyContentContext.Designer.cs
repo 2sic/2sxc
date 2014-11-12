@@ -147,22 +147,22 @@ namespace ToSic.SexyContent
         /// <param name="contentGroupItemID">Initial value of the ContentGroupItemID property.</param>
         /// <param name="contentGroupID">Initial value of the ContentGroupID property.</param>
         /// <param name="sortOrder">Initial value of the SortOrder property.</param>
+        /// <param name="type">Initial value of the Type property.</param>
         /// <param name="sysCreated">Initial value of the SysCreated property.</param>
         /// <param name="sysCreatedBy">Initial value of the SysCreatedBy property.</param>
         /// <param name="sysModified">Initial value of the SysModified property.</param>
         /// <param name="sysModifiedBy">Initial value of the SysModifiedBy property.</param>
-        /// <param name="type">Initial value of the Type property.</param>
-        public static ContentGroupItem CreateContentGroupItem(global::System.Int32 contentGroupItemID, global::System.Int32 contentGroupID, global::System.Int32 sortOrder, global::System.DateTime sysCreated, global::System.Int32 sysCreatedBy, global::System.DateTime sysModified, global::System.Int32 sysModifiedBy, global::System.String type)
+        public static ContentGroupItem CreateContentGroupItem(global::System.Int32 contentGroupItemID, global::System.Int32 contentGroupID, global::System.Int32 sortOrder, global::System.String type, global::System.DateTime sysCreated, global::System.Int32 sysCreatedBy, global::System.DateTime sysModified, global::System.Int32 sysModifiedBy)
         {
             ContentGroupItem contentGroupItem = new ContentGroupItem();
             contentGroupItem.ContentGroupItemID = contentGroupItemID;
             contentGroupItem.ContentGroupID = contentGroupID;
             contentGroupItem.SortOrder = sortOrder;
+            contentGroupItem.Type = type;
             contentGroupItem.SysCreated = sysCreated;
             contentGroupItem.SysCreatedBy = sysCreatedBy;
             contentGroupItem.SysModified = sysModified;
             contentGroupItem.SysModifiedBy = sysModifiedBy;
-            contentGroupItem.Type = type;
             return contentGroupItem;
         }
 
@@ -292,6 +292,30 @@ namespace ToSic.SexyContent
         private global::System.Int32 _SortOrder;
         partial void OnSortOrderChanging(global::System.Int32 value);
         partial void OnSortOrderChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String Type
+        {
+            get
+            {
+                return _Type;
+            }
+            set
+            {
+                OnTypeChanging(value);
+                ReportPropertyChanging("Type");
+                _Type = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("Type");
+                OnTypeChanged();
+            }
+        }
+        private global::System.String _Type;
+        partial void OnTypeChanging(global::System.String value);
+        partial void OnTypeChanged();
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -436,30 +460,6 @@ namespace ToSic.SexyContent
         private Nullable<global::System.Int32> _SysDeletedBy;
         partial void OnSysDeletedByChanging(Nullable<global::System.Int32> value);
         partial void OnSysDeletedByChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.String Type
-        {
-            get
-            {
-                return _Type;
-            }
-            set
-            {
-                OnTypeChanging(value);
-                ReportPropertyChanging("Type");
-                _Type = StructuralObject.SetValidValue(value, false);
-                ReportPropertyChanged("Type");
-                OnTypeChanged();
-            }
-        }
-        private global::System.String _Type;
-        partial void OnTypeChanging(global::System.String value);
-        partial void OnTypeChanged();
 
         #endregion
 
@@ -473,7 +473,7 @@ namespace ToSic.SexyContent
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
         [EdmRelationshipNavigationPropertyAttribute("ToSic.SexyContent", "FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_SexyContent_Templates", "ToSIC_SexyContent_Templates")]
-        public Template Template
+        public Template ToSIC_SexyContent_Templates
         {
             get
             {
@@ -489,7 +489,7 @@ namespace ToSic.SexyContent
         /// </summary>
         [BrowsableAttribute(false)]
         [DataMemberAttribute()]
-        public EntityReference<Template> TemplateReference
+        public EntityReference<Template> ToSIC_SexyContent_TemplatesReference
         {
             get
             {
@@ -525,7 +525,6 @@ namespace ToSic.SexyContent
         /// <param name="portalID">Initial value of the PortalID property.</param>
         /// <param name="name">Initial value of the Name property.</param>
         /// <param name="path">Initial value of the Path property.</param>
-        /// <param name="attributeSetID">Initial value of the AttributeSetID property.</param>
         /// <param name="script">Initial value of the Script property.</param>
         /// <param name="isFile">Initial value of the IsFile property.</param>
         /// <param name="type">Initial value of the Type property.</param>
@@ -538,14 +537,15 @@ namespace ToSic.SexyContent
         /// <param name="sysModified">Initial value of the SysModified property.</param>
         /// <param name="sysModifiedBy">Initial value of the SysModifiedBy property.</param>
         /// <param name="appID">Initial value of the AppID property.</param>
-        public static Template CreateTemplate(global::System.Int32 templateID, global::System.Int32 portalID, global::System.String name, global::System.String path, global::System.Int32 attributeSetID, global::System.String script, global::System.Boolean isFile, global::System.String type, global::System.Boolean isHidden, global::System.String location, global::System.Boolean useForList, global::System.Boolean useForItem, global::System.DateTime sysCreated, global::System.Int32 sysCreatedBy, global::System.DateTime sysModified, global::System.Int32 sysModifiedBy, global::System.Int32 appID)
+        /// <param name="publishData">Initial value of the PublishData property.</param>
+        /// <param name="streamsToPublish">Initial value of the StreamsToPublish property.</param>
+        public static Template CreateTemplate(global::System.Int32 templateID, global::System.Int32 portalID, global::System.String name, global::System.String path, global::System.String script, global::System.Boolean isFile, global::System.String type, global::System.Boolean isHidden, global::System.String location, global::System.Boolean useForList, global::System.Boolean useForItem, global::System.DateTime sysCreated, global::System.Int32 sysCreatedBy, global::System.DateTime sysModified, global::System.Int32 sysModifiedBy, global::System.Int32 appID, global::System.Boolean publishData, global::System.String streamsToPublish)
         {
             Template template = new Template();
             template.TemplateID = templateID;
             template.PortalID = portalID;
             template.Name = name;
             template.Path = path;
-            template.AttributeSetID = attributeSetID;
             template.Script = script;
             template.IsFile = isFile;
             template.Type = type;
@@ -558,6 +558,8 @@ namespace ToSic.SexyContent
             template.SysModified = sysModified;
             template.SysModifiedBy = sysModifiedBy;
             template.AppID = appID;
+            template.PublishData = publishData;
+            template.StreamsToPublish = streamsToPublish;
             return template;
         }
 
@@ -667,9 +669,9 @@ namespace ToSic.SexyContent
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public global::System.Int32 AttributeSetID
+        public Nullable<global::System.Int32> AttributeSetID
         {
             get
             {
@@ -684,8 +686,8 @@ namespace ToSic.SexyContent
                 OnAttributeSetIDChanged();
             }
         }
-        private global::System.Int32 _AttributeSetID;
-        partial void OnAttributeSetIDChanging(global::System.Int32 value);
+        private Nullable<global::System.Int32> _AttributeSetID;
+        partial void OnAttributeSetIDChanging(Nullable<global::System.Int32> value);
         partial void OnAttributeSetIDChanged();
     
         /// <summary>
@@ -1047,6 +1049,54 @@ namespace ToSic.SexyContent
         private global::System.Int32 _AppID;
         partial void OnAppIDChanging(global::System.Int32 value);
         partial void OnAppIDChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Boolean PublishData
+        {
+            get
+            {
+                return _PublishData;
+            }
+            set
+            {
+                OnPublishDataChanging(value);
+                ReportPropertyChanging("PublishData");
+                _PublishData = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("PublishData");
+                OnPublishDataChanged();
+            }
+        }
+        private global::System.Boolean _PublishData;
+        partial void OnPublishDataChanging(global::System.Boolean value);
+        partial void OnPublishDataChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String StreamsToPublish
+        {
+            get
+            {
+                return _StreamsToPublish;
+            }
+            set
+            {
+                OnStreamsToPublishChanging(value);
+                ReportPropertyChanging("StreamsToPublish");
+                _StreamsToPublish = StructuralObject.SetValidValue(value, false);
+                ReportPropertyChanged("StreamsToPublish");
+                OnStreamsToPublishChanged();
+            }
+        }
+        private global::System.String _StreamsToPublish;
+        partial void OnStreamsToPublishChanging(global::System.String value);
+        partial void OnStreamsToPublishChanged();
 
         #endregion
 
@@ -1060,7 +1110,7 @@ namespace ToSic.SexyContent
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
         [EdmRelationshipNavigationPropertyAttribute("ToSic.SexyContent", "FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_SexyContent_Templates", "ToSIC_SexyContent_ContentGroupItems")]
-        public EntityCollection<ContentGroupItem> ContentGroupItems
+        public EntityCollection<ContentGroupItem> ToSIC_SexyContent_ContentGroupItems
         {
             get
             {

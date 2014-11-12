@@ -4,7 +4,7 @@ using ToSic.SexyContent.DataImportExport.Extensions;
 
 namespace ToSic.SexyContent.DataImportExport
 {
-    public class EntityGuidManager
+    internal class EntityGuidManager
     {
         private Guid entityGuidLast = Guid.Empty;
 
@@ -16,10 +16,10 @@ namespace ToSic.SexyContent.DataImportExport
         {
             Guid entityGuid;
 
-            var elementGuid = element.GetChildElementValue(XElementName.EntityGuid);
+            var elementGuid = element.GetChildElementValue(DocumentNodeNames.EntityGuid);
             if (string.IsNullOrEmpty(elementGuid))
             {
-                var elementLanguage = element.GetChildElementValue(XElementName.EntityLanguage);
+                var elementLanguage = element.GetChildElementValue(DocumentNodeNames.EntityLanguage);
                 if (elementLanguage == languageFallback)
                 {   // If the element does not have a GUID and the element has data for the default 
                     // language, create a new GUID

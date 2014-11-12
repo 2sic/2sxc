@@ -6,7 +6,7 @@ using ToSic.Eav;
 
 namespace ToSic.SexyContent.DataImportExport.Extensions
 {
-    public static class AttributeSetExtension
+    internal static class AttributeSetExtension
     {
         public static IEnumerable<string> GetEntitiesAttributeNames(this ToSic.Eav.AttributeSet attributeSet)
         {

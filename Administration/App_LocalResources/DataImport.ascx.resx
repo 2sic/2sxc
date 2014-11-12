@@ -144,16 +144,16 @@
   <data name="lblWarningBackup.Text" xml:space="preserve">
     <value>Remember to backup your DNN first!</value>
   </data>
-  <data name="EntityClearImportOptionNone.Text" xml:space="preserve">
+  <data name="EntityClearImportNone.Text" xml:space="preserve">
     <value>Keep all entities not found in import</value>
   </data>
-  <data name="EntityClearImportOptionAll.Text" xml:space="preserve">
+  <data name="EntityClearImportAll.Text" xml:space="preserve">
     <value>Remove all entities not found in import</value>
   </data>
-  <data name="ResourceReferenceImportOptionKeep.Text" xml:space="preserve">
+  <data name="ResourceReferenceImportKeep.Text" xml:space="preserve">
     <value>Import links as written in the file (for example /Portals/...)</value>
   </data>
-  <data name="ResourceReferenceImportOptionResolve.Text" xml:space="preserve">
+  <data name="ResourceReferenceImportResolve.Text" xml:space="preserve">
     <value>Try to resolve pathes to references (for example File:4711)</value>
   </data>
   <data name="lblSetupTitle.Text" xml:space="preserve">

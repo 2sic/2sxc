@@ -62,8 +62,16 @@ namespace ToSic.SexyContent.Engines.TokenEngine
             else
                 repeatingPart = sourceText;
 
-            TokenReplace tokenReplace;
             string renderedTemplate = "";
+
+            // Replace available tokens even if there are no elements in the list
+            if (elements.Count == 0)
+            {
+                var tr = new TokenReplace(null, null, listContent, listPresentation, list, App);
+                tr.ModuleId = ModuleInfo.ModuleID;
+                tr.PortalSettings = PortalSettings.Current;
+                renderedTemplate = tr.ReplaceEnvironmentTokens(repeatingPart);
+            }
 
             foreach (Element element in elements)
             {
@@ -78,7 +86,7 @@ namespace ToSic.SexyContent.Engines.TokenEngine
                 list["Alternator5"] = (elements.IndexOf(element) % 5).ToString();
 
                 // Replace Tokens
-                tokenReplace = new TokenReplace(element.Content, element.Presentation, listContent, listPresentation, list, App);
+                var tokenReplace = new TokenReplace(element.Content, element.Presentation, listContent, listPresentation, list, App);
                 tokenReplace.ModuleId = ModuleInfo.ModuleID;
                 tokenReplace.PortalSettings = PortalSettings.Current;
                 renderedTemplate += tokenReplace.ReplaceEnvironmentTokens(repeatingPart);

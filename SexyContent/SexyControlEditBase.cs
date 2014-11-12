@@ -67,14 +67,7 @@ namespace ToSic.SexyContent
             {
                 return SexyContent.GetAppIdFromModule(ModuleConfiguration);
             }
-            set
-            {
-                var moduleController = new ModuleController();
-                if(value == 0 || !value.HasValue)
-                    moduleController.DeleteModuleSetting(ModuleId, SexyContent.AppIDString);
-                else
-                    moduleController.UpdateModuleSetting(ModuleId, SexyContent.AppIDString, value.ToString());
-            }
+            set { SexyContent.SetAppIdForModule(ModuleConfiguration, value); }
         }
 
 
@@ -105,7 +98,7 @@ namespace ToSic.SexyContent
         {
             get
             {
-                if (!Elements.Any() || !Elements.First().TemplateId.HasValue)
+                if (!AppId.HasValue || !Elements.Any() || !Elements.First().TemplateId.HasValue)
                     return null;
                 if (_Template == null)
                     _Template = Sexy.TemplateContext.GetTemplate(Elements.First().TemplateId.Value);

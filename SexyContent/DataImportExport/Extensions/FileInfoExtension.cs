@@ -2,7 +2,7 @@
 
 namespace ToSic.SexyContent.DataImportExport.Extensions
 {
-    public static class FileInfoExtension
+    internal static class FileInfoExtension
     {
         public static void WriteStream(this FileInfo fileInfo, Stream fileContent)
         {

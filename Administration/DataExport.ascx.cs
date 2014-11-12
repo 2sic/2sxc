@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.SexyContent.DataImportExport;
+using ToSic.SexyContent.DataImportExport.Options;
 
 namespace ToSic.SexyContent.Administration
 {
     public partial class DataExport : SexyControlAdminBase
     {
-        // NOTE2tk: Find the dialog on http://2sexycontent.2tk.2sic/Home/tabid/55/ctl/dataexport/mid/388/Default.aspx?popUp=true
-
         public int ApplicationId
         {
             get
@@ -62,24 +61,24 @@ namespace ToSic.SexyContent.Administration
             get { return ddlLanguage.SelectedValue; }
         }
 
-        public LanguageMissingExportOption LanguageMissingOptionSelected
+        public LanguageMissingExport LanguageMissingOptionSelected
         {
-            get { return ParseEnum<LanguageMissingExportOption>(rblLanguageMissing.SelectedValue); }
+            get { return ParseEnum<LanguageMissingExport>(rblLanguageMissing.SelectedValue); }
         }
 
-        public LanguageReferenceExportOption LanguageReferenceOptionSelected
+        public LanguageReferenceExport LanguageReferenceOptionSelected
         {
-            get { return ParseEnum<LanguageReferenceExportOption>(rblLanguageReference.SelectedValue); }
+            get { return ParseEnum<LanguageReferenceExport>(rblLanguageReference.SelectedValue); }
         }
 
-        public ResourceReferenceExportOption ResourceReferenceOptionSelected
+        public ResourceReferenceExport ResourceReferenceOptionSelected
         {
-            get { return ParseEnum<ResourceReferenceExportOption>(rblResourceReference.SelectedValue); }
+            get { return ParseEnum<ResourceReferenceExport>(rblResourceReference.SelectedValue); }
         }
 
-        public RecordExportOption RecordExportOptionSelected
+        public RecordExport RecordExportOptionSelected
         {
-            get { return ParseEnum<RecordExportOption>(rblRecordExport.SelectedValue); }
+            get { return ParseEnum<RecordExport>(rblRecordExport.SelectedValue); }
         }
 
         public int ContentTypeIdSelected
@@ -118,42 +117,42 @@ namespace ToSic.SexyContent.Administration
             ddlContentType.DataSource = sexyContent.GetAvailableAttributeSets(); ;
             ddlContentType.DataBind();
 
-            rblRecordExport.DataSource = EnumToDataSource<RecordExportOption>();
+            rblRecordExport.DataSource = EnumToDataSource<RecordExport>();
             rblRecordExport.DataBind();
-            rblRecordExport.SelectedValue = RecordExportOption.All.ToString();
+            rblRecordExport.SelectedValue = RecordExport.All.ToString();
 
-            rblLanguageMissing.DataSource = EnumToDataSource<LanguageMissingExportOption>();
+            rblLanguageMissing.DataSource = EnumToDataSource<LanguageMissingExport>();
             rblLanguageMissing.DataBind();
-            rblLanguageMissing.SelectedValue = LanguageMissingExportOption.Create.ToString();
+            rblLanguageMissing.SelectedValue = LanguageMissingExport.Create.ToString();
 
-            rblLanguageReference.DataSource = EnumToDataSource<LanguageReferenceExportOption>();
+            rblLanguageReference.DataSource = EnumToDataSource<LanguageReferenceExport>();
             rblLanguageReference.DataBind();
-            rblLanguageReference.SelectedValue = LanguageReferenceExportOption.Link.ToString();
+            rblLanguageReference.SelectedValue = LanguageReferenceExport.Link.ToString();
 
-            rblResourceReference.DataSource = EnumToDataSource<ResourceReferenceExportOption>();
+            rblResourceReference.DataSource = EnumToDataSource<ResourceReferenceExport>();
             rblResourceReference.DataBind();
-            rblResourceReference.SelectedValue = ResourceReferenceExportOption.Link.ToString();
+            rblResourceReference.SelectedValue = ResourceReferenceExport.Link.ToString();
         }
 
 
         protected void OnRecordExportSelectedIndexChanged(object sender, EventArgs e)
         {
-            var recordExportOption = ParseEnum<RecordExportOption>(rblRecordExport.SelectedValue);
+            var recordExportOption = ParseEnum<RecordExport>(rblRecordExport.SelectedValue);
             pnlExportReferenceOptions.Enabled = !recordExportOption.IsBlank();
         }
 
         protected void OnExportDataClick(object sender, EventArgs e)
         {
             var dataXml = default(string);
-            var dataSerializer = new DataXmlExport();
+            var dataSerializer = new XmlExport();
             
             if (RecordExportOptionSelected.IsBlank())
             {
-                dataXml = dataSerializer.SerializeBlank(ZoneId.Value, ApplicationId, ContentTypeIdSelected);
+                dataXml = dataSerializer.CreateBlankXml(ZoneId.Value, ApplicationId, ContentTypeIdSelected);
             }
             else
             {
-                dataXml = dataSerializer.Serialize(ZoneId.Value, ApplicationId, ContentTypeIdSelected, LanguageSelected, LanguageFallback, Languages, LanguageReferenceOptionSelected, ResourceReferenceOptionSelected);
+                dataXml = dataSerializer.CreateXml(ZoneId.Value, ApplicationId, ContentTypeIdSelected, LanguageSelected, LanguageFallback, Languages, LanguageReferenceOptionSelected, ResourceReferenceOptionSelected);
             }
 
 

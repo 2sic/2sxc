@@ -1,0 +1,13 @@
+﻿-- make sure sql rolls back automatically in case of error.
+SET XACT_ABORT ON
+
+BEGIN TRANSACTION SexyContentUpdate;
+
+-- Add stream publishing informations to the templates table
+ALTER TABLE dbo.ToSIC_SexyContent_Templates ADD
+	PublishData bit NOT NULL CONSTRAINT DF_ToSIC_SexyContent_Templates_PublishData DEFAULT 0,
+	StreamsToPublish nvarchar(200) NOT NULL CONSTRAINT DF_ToSIC_SexyContent_Templates_StreamsToPublish DEFAULT N''
+
+-- Commit the transaction
+COMMIT TRANSACTION SexyContentUpdate;
+--ROLLBACK TRANSACTION SexyContentUpdate;

@@ -12,9 +12,11 @@ namespace ToSic.Eav.ManagementUI
 		protected void Page_Load(object sender, EventArgs e)
 		{
             _useTimePicker = GetMetaDataValue<bool>("UseTimePicker");
-            TimePicker1.Visible = _useTimePicker;
+            DateTimePicker.Visible = _useTimePicker;
+            Calendar1.Visible = !_useTimePicker;
 
             Calendar1.ToolTip = GetMetaDataValue<string>("Notes");
+            DateTimePicker.ToolTip = GetMetaDataValue<string>("Notes");
 
 			if (ShowDataControlOnly)
 				FieldLabel.Visible = false;
@@ -22,7 +24,7 @@ namespace ToSic.Eav.ManagementUI
             if (GetMetaDataValue<bool>("Required"))
             {
                 Calendar1.CssClass += " dnnFormRequired";
-                TimePicker1.CssClass += " dnnFormRequired";
+                DateTimePicker.CssClass += " dnnFormRequired";
             }
 		}
 
@@ -34,16 +36,18 @@ namespace ToSic.Eav.ManagementUI
                 if (((DateTime?)FieldValue).HasValue)
                 {
                     Calendar1.SelectedDate = ((DateTime?)FieldValue).Value;
-                    TimePicker1.SelectedDate = ((DateTime?)FieldValue).Value;
+                    DateTimePicker.SelectedDate = ((DateTime?)FieldValue).Value;
                 }
 
-				Calendar1.DataBind();
-                if(_useTimePicker)
-                    TimePicker1.DataBind();
+                if(!_useTimePicker)
+				    Calendar1.DataBind();
+                else
+                    DateTimePicker.DataBind();
 			}
             FieldLabel.Text = GetMetaDataValue("Name", Attribute.StaticName);
             FieldLabel.HelpText = GetMetaDataValue<string>("Notes");
             valCalendar1.Enabled = GetMetaDataValue<bool>("Required");
+            valDateTimePicker.Enabled = GetMetaDataValue<bool>("Required");
 
 			base.OnPreRender(e);
 		}
@@ -52,19 +56,10 @@ namespace ToSic.Eav.ManagementUI
 	    {
 	        get
 	        {
-                DateTime? SelectedDate = null;
-                if (Calendar1.SelectedDate.HasValue)
-                    SelectedDate = Calendar1.SelectedDate.Value;
-                if (_useTimePicker)
-                {
-                    if (TimePicker1.SelectedDate.HasValue)
-                        SelectedDate += TimePicker1.SelectedDate.Value.TimeOfDay;
-                }
-
-                if (SelectedDate.HasValue)
-                    return SelectedDate.Value;
+                if (!_useTimePicker)
+                    return Calendar1.SelectedDate;
                 else
-                    return "";
+                    return DateTimePicker.SelectedDate;
 	        }
 	    }
 

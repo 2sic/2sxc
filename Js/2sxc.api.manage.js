@@ -2,9 +2,11 @@
 $2sxc.getManageController = function(id) {
 
     var moduleElement = $('.DnnModule-' + id);
-    var manageInfo = $.parseJSON(moduleElement.find('.Mod2sxcC, .Mod2sxcappC').attr('data-2sxc')).manage;
-    var config = manageInfo.config;
+    var manageInfo = moduleElement.find('.Mod2sxcC, .Mod2sxcappC').data('2sxc').manage;
+    var toolbarConfig = manageInfo.config;
+    toolbarConfig.returnUrl = window.location.href;
     var isEditMode = manageInfo.isEditMode;
+    var sf = $.ServicesFramework(id);
 
     var manageController = {
 
@@ -14,14 +16,17 @@ $2sxc.getManageController = function(id) {
 
         // The config object has the following properties:
         // portalId, tabId, moduleId, contentGroupId, dialogUrl, returnUrl, appPath
-        config: config,
+        _toolbarConfig: toolbarConfig,
+
+        _manageInfo: manageInfo,
 
         getLink: function (settings) {
-            settings = $.extend({}, config, settings);
+            settings = $.extend({}, toolbarConfig, settings);
 
             var params = {
                 ctl: 'editcontentgroup',
-                mid: settings.moduleId
+                mid: settings.moduleId,
+                returnUrl: settings.returnUrl
             };
 
             if (settings.cultureDimension && settings.cultureDimension != null)
@@ -49,7 +54,7 @@ $2sxc.getManageController = function(id) {
                 + $.param(params);
         },
 
-        openDialog: function(settings) {
+        _openDialog: function(settings) {
 
             var link = manageController.getLink(settings);
 
@@ -62,22 +67,19 @@ $2sxc.getManageController = function(id) {
             
         },
 
-        action: function(settings) {
-
-            if (settings.action == 'edit' || settings.action == 'new')
-                manageController.openDialog(settings);
-            else if (settings.action == 'add') {
-                moduleElement.find("input[id$=hfContentGroupItemSortOrder]:first").val(settings.sortOrder);
-                moduleElement.find("input[id$=hfContentGroupItemAction]:first").val("add");
-
-                $("form").submit();
-            } else {
-                throw "Action " + settings.action + " not known.";
-            }
+        action: function (settings) {
+            manageController._getSelectorScope().saveTemplateId().then(function() {
+                if (settings.action == 'edit' || settings.action == 'new')
+                    manageController._openDialog(settings);
+                else if (settings.action == 'add') {
+                    manageController._getSelectorScope().addItem(settings.sortOrder);
+                } else {
+                    throw "Action " + settings.action + " not known.";
+                }
+            });
         },
 
         getButton: function (settings) {
-
 
             if (settings.entity && settings.entity._2sxcEditInformation) {
                 if (settings.entity._2sxcEditInformation.entityId) {
@@ -138,8 +140,10 @@ $2sxc.getManageController = function(id) {
                     $.extend({ action: 'edit' }, settings)
                 ];
 
-                if (config.isList && settings.sortOrder != -1) {
-                    buttons.push($.extend({ action: 'add' }, settings));
+                if (toolbarConfig.isList && settings.sortOrder != -1) {
+                    if (settings.useModuleList) {
+                        buttons.push($.extend({ action: 'add' }, settings));
+                    }
                     buttons.push($.extend({ action: 'new' }, settings));
                 }
             }
@@ -150,6 +154,23 @@ $2sxc.getManageController = function(id) {
                 toolbar.append($('<li />').append($(manageController.getButton(buttons[i]))));
 
             return toolbar[0].outerHTML;
+        },
+
+        _processToolbars: function() {
+            $('.sc-menu[data-toolbar]', $(".DnnModule-" + id)).each(function () {
+                var toolbarSettings = $(this).data('toolbar');
+                $(this).replaceWith($2sxc(id).manage.getToolbar(toolbarSettings));
+            });
+        },
+
+        _getSelectorScope: function() {
+            var selectorElement = document.querySelector('.DnnModule-' + id + ' .sc-selector-wrapper');
+            var scope = angular.element(selectorElement).scope();
+
+            if (scope == null)
+                alert("Something went wrong. Make sure your template does not cause JavaScript errors.");
+
+            return scope;
         }
 
     };

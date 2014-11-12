@@ -24,14 +24,14 @@ namespace ToSic.SexyContent.Administration
             if (SexyContent.GetZoneID(ParentModule.PortalId).HasValue)
             {
                 Registers.Add(SexyContent.ControlKeys.Import);
-                //Registers.Add(SexyContent.ControlKeys.DataExport);
-                //Registers.Add(SexyContent.ControlKeys.DataImport);
                 Registers.Add(SexyContent.ControlKeys.ManageTemplates);
                 Registers.Add(SexyContent.ControlKeys.EavManagement);
             }
 
             if (ParentModule.IsContentApp)
                 Registers.Add(SexyContent.ControlKeys.PortalConfiguration);
+            else
+                Registers.Add(SexyContent.ControlKeys.AppConfig);
 
             rptRegisters.DataSource = from c in Registers
                                       select new {

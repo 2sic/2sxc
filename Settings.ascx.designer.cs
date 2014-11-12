@@ -22,48 +22,12 @@ namespace ToSic.SexyContent {
         protected global::System.Web.UI.WebControls.Label lblDataSourcePublishing;
         
         /// <summary>
-        /// lblPublishSource control.
+        /// lblDataPublishing control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UserControl lblPublishSource;
-        
-        /// <summary>
-        /// chkPublishSource control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkPublishSource;
-        
-        /// <summary>
-        /// lblPublishStreams control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.UserControl lblPublishStreams;
-        
-        /// <summary>
-        /// txtPublishStreams control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtPublishStreams;
-        
-        /// <summary>
-        /// lblTest control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.UserControl lblTest;
+        protected global::System.Web.UI.WebControls.Label lblDataPublishing;
     }
 }

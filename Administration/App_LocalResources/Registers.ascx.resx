@@ -120,6 +120,9 @@
   <data name="ActionExport.Text" xml:space="preserve">
     <value>Export</value>
   </data>
+  <data name="appconfig.Text" xml:space="preserve">
+    <value>App Config</value>
+  </data>
   <data name="dataexport.Text" xml:space="preserve">
     <value>Data Export</value>
   </data>

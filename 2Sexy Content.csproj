@@ -69,6 +69,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\DotNetNuke.WebUtility.dll</HintPath>
     </Reference>
+    <Reference Include="EntityFramework">
+      <HintPath>packages\EntityFramework.5.0.0\lib\net40\EntityFramework.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.ApplicationBlocks.Data, Version=2.0.0.0, Culture=neutral">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\Microsoft.ApplicationBlocks.Data.dll</HintPath>
@@ -80,6 +83,7 @@
       <HintPath>..\..\bin\SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data.Entity" />
@@ -122,6 +126,13 @@
     </Compile>
     <Compile Include="Administration\Apps\AppExport.ascx.designer.cs">
       <DependentUpon>AppExport.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Administration\Apps\AppConfig.ascx.cs">
+      <DependentUpon>AppConfig.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\Apps\AppConfig.ascx.designer.cs">
+      <DependentUpon>AppConfig.ascx</DependentUpon>
     </Compile>
     <Compile Include="Administration\Apps\AppManagement.ascx.cs">
       <DependentUpon>AppManagement.ascx</DependentUpon>
@@ -184,6 +195,16 @@
       <DependentUpon>Services.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="SexyContent\ContentGroupItem.cs" />
+    <Compile Include="SexyContent\SexyContentContext.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SexyContentContext.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="SexyContent\SexyViewContentOrApp.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SexyContent\Template.cs" />
     <Compile Include="EditEntity.ascx.cs">
       <DependentUpon>EditEntity.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -241,30 +262,37 @@
       <DependentUpon>EditContentGroup.ascx</DependentUpon>
     </Compile>
     <Compile Include="SexyContent\App.cs" />
-    <Compile Include="SexyContent\ContentGroupItem.cs" />
     <Compile Include="SexyContent\DataImportExport\Extensions\AttributeExtension.cs" />
-    <Compile Include="SexyContent\DataImportExport\DataImportErrorProtocol.cs" />
-    <Compile Include="SexyContent\DataImportExport\DataXmlExport.cs" />
-    <Compile Include="SexyContent\DataImportExport\DataXmlImport.cs" />
+    <Compile Include="SexyContent\DataImportExport\Options\EntityClearImportExtension.cs" />
+    <Compile Include="SexyContent\DataImportExport\Options\LanguageMissingExportExtension.cs" />
+    <Compile Include="SexyContent\DataImportExport\Options\LanguageReferenceExportExtension.cs" />
+    <Compile Include="SexyContent\DataImportExport\Options\LanguageReferenceImportExtension.cs" />
+    <Compile Include="SexyContent\DataImportExport\ImportErrorCode.cs" />
+    <Compile Include="SexyContent\DataImportExport\ImportErrorProtocol.cs" />
+    <Compile Include="SexyContent\DataImportExport\Options\RecordExportExtension.cs" />
+    <Compile Include="SexyContent\DataImportExport\Options\ResourceReferenceExportExtension.cs" />
+    <Compile Include="SexyContent\DataImportExport\Options\ResourceReferenceImportExtension.cs" />
+    <Compile Include="SexyContent\DataImportExport\XmlExport.cs" />
+    <Compile Include="SexyContent\DataImportExport\XmlImport.cs" />
     <Compile Include="SexyContent\DataImportExport\EntityGuidManager.cs" />
     <Compile Include="SexyContent\DataImportExport\Extensions\EntityImportExtension.cs" />
     <Compile Include="SexyContent\DataImportExport\Extensions\EnumExtension.cs" />
     <Compile Include="SexyContent\DataImportExport\Extensions\FileInfoExtension.cs" />
     <Compile Include="SexyContent\DataImportExport\Extensions\IValueImportModelExtension.cs" />
-    <Compile Include="SexyContent\DataImportExport\DataImportError.cs" />
+    <Compile Include="SexyContent\DataImportExport\ImportError.cs" />
     <Compile Include="SexyContent\DataImportExport\Extensions\EavValueExtension.cs" />
-    <Compile Include="SexyContent\DataImportExport\LanguageReferenceImportOption.cs" />
-    <Compile Include="SexyContent\DataImportExport\EntityClearImportOption.cs" />
+    <Compile Include="SexyContent\DataImportExport\Options\LanguageReferenceImport.cs" />
+    <Compile Include="SexyContent\DataImportExport\Options\EntityClearImport.cs" />
     <Compile Include="SexyContent\DataImportExport\Extensions\EntityExtension.cs" />
     <Compile Include="SexyContent\DataImportExport\Extensions\IEnumerableExtension.cs" />
     <Compile Include="SexyContent\DataImportExport\LocalizedDescriptionAttribute.cs" />
-    <Compile Include="SexyContent\DataImportExport\RecordCreateExportOption.cs" />
-    <Compile Include="SexyContent\DataImportExport\ResourceReferenceImportOption.cs" />
+    <Compile Include="SexyContent\DataImportExport\Options\RecordExport.cs" />
+    <Compile Include="SexyContent\DataImportExport\Options\ResourceReferenceImport.cs" />
     <Compile Include="SexyContent\DataImportExport\Extensions\StringExtension.cs" />
-    <Compile Include="SexyContent\DataImportExport\XElementName.cs" />
-    <Compile Include="SexyContent\DataImportExport\LanguageMissingExportOption.cs" />
-    <Compile Include="SexyContent\DataImportExport\LanguageReferenceExportOption.cs" />
-    <Compile Include="SexyContent\DataImportExport\ResourceReferenceExportOption.cs" />
+    <Compile Include="SexyContent\DataImportExport\DocumentNodeNames.cs" />
+    <Compile Include="SexyContent\DataImportExport\Options\LanguageMissingExport.cs" />
+    <Compile Include="SexyContent\DataImportExport\Options\LanguageReferenceExport.cs" />
+    <Compile Include="SexyContent\DataImportExport\Options\ResourceReferenceExport.cs" />
     <Compile Include="SexyContent\DataImportExport\Extensions\XElementExtension.cs" />
     <Compile Include="SexyContent\DataPublishing.cs" />
     <Compile Include="SexyContent\DataSources\EntitiesFromList.cs" />
@@ -354,11 +382,6 @@
     <Compile Include="SexyContent\Search\SearchController.cs" />
     <Compile Include="SexyContent\Search\SearchIndexException.cs" />
     <Compile Include="SexyContent\Search\SearchInfo.cs" />
-    <Compile Include="SexyContent\SexyContentContext.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>SexyContentContext.edmx</DependentUpon>
-    </Compile>
     <Compile Include="SexyContent\SexyContentException.cs" />
     <Compile Include="SexyContent\SexyControlAdminBase.cs">
       <SubType>ASPXCodeBehind</SubType>
@@ -366,10 +389,11 @@
     <Compile Include="SexyContent\SexyControlEditBase.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="SexyContent\Template.cs" />
     <Compile Include="SexyContent\TemplateDefault.cs" />
+    <Compile Include="SexyContent\ViewAPI\ModuleController.cs" />
     <Compile Include="SexyContent\WebApiExtensions\HttpRequestMessageExtensions.cs" />
     <Compile Include="SexyContent\WebApiExtensions\SexyContentApiController.cs" />
+	<Compile Include="SexyContent\WebApiExtensions\HttpRequestMessageExtensions.cs" />
     <Compile Include="SexyContent\WebApiExtensions\AppApiControllerSelector.cs" />
     <Compile Include="TemplateHelpGrid.ascx.cs">
       <DependentUpon>TemplateHelpGrid.ascx</DependentUpon>
@@ -435,6 +459,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Administration\Apps\AppExport.ascx" />
+    <Content Include="Administration\Apps\AppConfig.ascx" />
     <Content Include="Administration\Apps\AppManagement.ascx" />
     <Content Include="Administration\Apps\AppImport.ascx" />
     <Content Include="Administration\DataExport.ascx" />
@@ -457,13 +482,19 @@
     <Content Include="Extensions\Imazen_ImageResizer\license.txt" />
     <Content Include="icon-app.png" />
     <Content Include="icon.png" />
+    <Content Include="Images\ajax-loader.gif" />
+    <Content Include="Images\Edit-Draft.png" />
     <Content Include="Images\Add.png" />
     <Content Include="Images\AddWithEdit.png" />
     <Content Include="Images\Delete.png" />
     <Content Include="Images\Drag.gif" />
     <Content Include="Images\Edit.png" />
     <Content Include="Administration\Import.ascx" />
+    <Content Include="Images\Save.png" />
     <Content Include="Js\2sxc.api.manage.js" />
+    <Content Include="Js\2sxc.DnnActionMenuMapper.js" />
+    <Content Include="Js\2sxc.ApiService.js" />
+    <Content Include="Js\2sxc.TemplateSelector.js" />
     <Content Include="Js\AngularJS\angular-ui-tree.min.css" />
     <Content Include="Js\AngularJS\angular-ui-tree.min.js" />
     <Content Include="Js\AngularJS\angular.min.js" />
@@ -569,6 +600,8 @@
     <Content Include="SqlDataProvider\06.00.05.SqlDataProvider" />
     <Content Include="SqlDataProvider\06.00.09.SqlDataProvider" />
     <Content Include="SqlDataProvider\06.02.01.SqlDataProvider" />
+    <Content Include="SqlDataProvider\06.03.07.SqlDataProvider" />
+    <Content Include="SqlDataProvider\06.04.00.SqlDataProvider" />
     <None Include="SqlDataProvider\Uninstall.SqlDataProvider" />
     <Content Include="web.config" />
   </ItemGroup>
@@ -679,8 +712,9 @@
   <ItemGroup>
     <Content Include="App_LocalResources\EditEntity.ascx.de-DE.resx" />
     <Content Include="App_LocalResources\EditEntity.ascx.resx" />
-    <EmbeddedResource Include="SexyContent\DataImportExport\DataImportErrorCode.de-DE.resx" />
-    <EmbeddedResource Include="SexyContent\DataImportExport\DataImportErrorCode.resx" />
+    <Content Include="Administration\Apps\App_LocalResources\AppConfig.ascx.resx" />
+    <EmbeddedResource Include="SexyContent\DataImportExport\ImportErrorCode.de-DE.resx" />
+    <EmbeddedResource Include="SexyContent\DataImportExport\ImportErrorCode.resx" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

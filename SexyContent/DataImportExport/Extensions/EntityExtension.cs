@@ -5,7 +5,7 @@ using ToSic.Eav;
 
 namespace ToSic.SexyContent.DataImportExport.Extensions
 {
-    public static class EntityExtension
+    internal static class EntityExtension
     {
         /// <summary>
         /// Get the value of an attribute in the language specified.

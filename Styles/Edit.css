@@ -24,6 +24,7 @@ table.EAVAttributeSets a { color:#036; font-weight:bold; }
 .dnnSexyContentEditList .GridItemDropIndicator_Default { z-index:1000; }
 .dnnSexyContentEditList .sc-list-itemedit { display:block; line-height:20px; }
 .sc-action-other { display: none; }
+.dnnFormMessage.dnnFormError { color:#FFFFFF!important; }
 
 /* DateTime */
 .dnn-7 .dnnFormItem .RadPicker_Default {

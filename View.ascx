@@ -1,20 +1,30 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" Inherits="ToSic.SexyContent.View" Codebehind="View.ascx.cs" %>
-<asp:Panel runat="server" ID="pnlTemplateChooser" Visible="false" CssClass="dnnFormMessage dnnFormInfo">
-    <div>
-        <asp:DropDownList runat="server" ID="ddlContentType" AppendDataBoundItems="true" DataTextField="Name" DataValueField="AttributeSetId" OnSelectedIndexChanged="ddlContentType_SelectedIndexChanged" AutoPostBack="true" CssClass="sc-contenttype-selector">
-            <asp:ListItem Value="0" ResourceKey="ddlContentTypeDefaultItem"></asp:ListItem>
-        </asp:DropDownList>
+<asp:Placeholder runat="server" ID="pnlTemplateChooser" Visible="false">
+    
+    <%-- New AngularJS template chooser --%>
+    <div ng-controller="TemplateSelectorCtrl" data-moduleid="<%= ModuleId %>" class="sc-selector-wrapper">
+        <div ng-cloak ng-show="manageInfo.templateChooserVisible" class="dnnFormMessage dnnFormInfo">
+            <div class="sc-selectors">
+                <select ng-show="!manageInfo.isContentApp" ng-model="appId" class="sc-selector-app" ng-options="a.AppId as a.Name for a in apps">
+                    <option value=""><%= HttpUtility.HtmlEncode(LocalizeString("ddlAppDefaultItem.Text")) %></option>
+                </select>
+
+                <select ng-show="manageInfo.isContentApp" ng-model="contentTypeId" ng-options="c.AttributeSetID as c.Name for c in contentTypes" class="sc-selector-contenttype" ng-disabled="manageInfo.hasContent || manageInfo.isList">
+                    <option ng-disabled="contentTypeId != 0" value=""><%= HttpUtility.HtmlEncode(LocalizeString("ddlContentTypeDefaultItem.Text")) %></option>
+                    <%--<option ng-repeat="c in contentTypes"  value="{{c.AttributeSetID}}">{{c.Name}}</option>--%>
+                </select>
+                <select ng-show="manageInfo.isContentApp ? contentTypeId != 0 : savedAppId != null" ng-model="templateId" class="sc-selector-template" ng-options="t.TemplateID as t.Name for t in filteredTemplates(contentTypeId)">
+                </select>
+            </div>
+            <div class="sc-selector-actions">
+                <a ng-show="templateId != null && savedTemplateId != templateId" ng-click="saveTemplateId();" class="sc-selector-save" title="Save Template">Save Template</a>
+                <a ng-show="savedTemplateId != null" class="sc-selector-close" ng-click="setTemplateChooserState(false);" title="Cancel">Cancel</a>
+            </div>
+            <div class="sc-loading sc-loading-nobg" ng-show="loading"></div>
+        </div>
     </div>
-    <div>
-        <asp:DropDownList runat="server" ID="ddlApp" Visible="False" AppendDataBoundItems="true" CssClass="sc-app-selector" DataTextField="Name" DataValueField="AppId" OnSelectedIndexChanged="ddlApp_SelectedIndexChanged" AutoPostBack="true">
-            <asp:ListItem Value="0" Text="<Choose App>"></asp:ListItem>
-        </asp:DropDownList>
-    </div>
-    <div>
-        <asp:DropDownList runat="server" ID="ddlTemplate" DataTextField="Name" DataValueField="TemplateID" OnSelectedIndexChanged="ddlTemplate_SelectedIndexChanged" AutoPostBack="true" CssClass="sc-template-selector">
-        </asp:DropDownList>
-    </div>
-</asp:Panel>
+
+</asp:Placeholder>
 
 <asp:Panel runat="server" Visible="False" class="dnnFormMessage dnnFormInfo" ID="pnlGetStarted"></asp:Panel>
 
@@ -26,7 +36,7 @@
 
 <asp:Panel runat="server" ID="pnlError" CssClass="dnnFormMessage dnnFormWarning" Visible="false"></asp:Panel>
 <asp:Panel runat="server" ID="pnlMessage" CssClass="dnnFormMessage dnnFormInfo" Visible="false"></asp:Panel>
-<asp:PlaceHolder runat="server" ID="phOutput"></asp:PlaceHolder>
 
-<asp:HiddenField runat="server" ID="hfContentGroupItemSortOrder" Value="" Visible="false" />
-<asp:HiddenField runat="server" ID="hfContentGroupItemAction" Value="" Visible="false" OnValueChanged="hfContentGroupItemAction_ValueChanged" />
+<div class="sc-viewport">
+    <asp:PlaceHolder runat="server" ID="phOutput"></asp:PlaceHolder>
+</div>

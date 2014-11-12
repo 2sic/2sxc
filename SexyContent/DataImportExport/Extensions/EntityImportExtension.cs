@@ -9,7 +9,7 @@ using ToSic.Eav.Import;
 
 namespace ToSic.SexyContent.DataImportExport.Extensions
 {
-    public static class EntityImportExtension
+    internal static class EntityImportExtension
     {
         /// <summary>
         /// Get values of an attribute in all languages, for example Tobi (German) and Toby (English) of 

@@ -123,16 +123,16 @@
   <data name="btnExportData.Text" xml:space="preserve">
     <value>Export to XML</value>
   </data>
-  <data name="LanguageMissingExportOptionCreate.Text" xml:space="preserve">
+  <data name="LanguageMissingExportCreate.Text" xml:space="preserve">
     <value>Yes, also create rows for untranslated languages</value>
   </data>
-  <data name="LanguageMissingExportOptionIgnore.Text" xml:space="preserve">
+  <data name="LanguageMissingExportIgnore.Text" xml:space="preserve">
     <value>No, only create rows for languages containing values</value>
   </data>
-  <data name="LanguageReferenceExportOptionLink.Text" xml:space="preserve">
+  <data name="LanguageReferenceExportLink.Text" xml:space="preserve">
     <value>Keep references to other languages (for re-import)</value>
   </data>
-  <data name="LanguageReferenceExportOptionResolve.Text" xml:space="preserve">
+  <data name="LanguageReferenceExportResolve.Text" xml:space="preserve">
     <value>Replace references with values</value>
   </data>
   <data name="lblContentType.Text" xml:space="preserve">
@@ -156,19 +156,19 @@
   <data name="lblResourceReference.Text" xml:space="preserve">
     <value>File / page references</value>
   </data>
-  <data name="ResourceReferenceExportOptionLink.Text" xml:space="preserve">
+  <data name="ResourceReferenceExportLink.Text" xml:space="preserve">
     <value>Keep references (for re-import, for example Page:4711)</value>
   </data>
-  <data name="ResourceReferenceExportOptionResolve.Text" xml:space="preserve">
+  <data name="ResourceReferenceExportResolve.Text" xml:space="preserve">
     <value>Replace references with real urls (for example /Portals/0...)</value>
   </data>
   <data name="lblRecordExport.Text" xml:space="preserve">
     <value>Export data</value>
   </data>
-  <data name="RecordExportOptionAll.Text" xml:space="preserve">
+  <data name="RecordExportAll.Text" xml:space="preserve">
     <value>Yes, export all records</value>
   </data>
-  <data name="RecordExportOptionBlank.Text" xml:space="preserve">
+  <data name="RecordExportBlank.Text" xml:space="preserve">
     <value>No, just export blank data schema (for new data import)</value>
   </data>
   <data name="lblTitle.Text" xml:space="preserve">

@@ -37,6 +37,6 @@ namespace ToSic.Eav.ManagementUI {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RegularExpressionValidator valFieldValue2;
+        protected global::System.Web.UI.WebControls.CompareValidator valFieldValue2;
     }
 }

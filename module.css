@@ -8,10 +8,19 @@
 .sc-edit { background: url(images/Edit.png); }
 .sc-new { background: url(images/AddWithEdit.png); }
 .sc-draft.sc-edit { background: url(images/Edit-Draft.png); }
-.Mod2sxcC .dnnFormMessage select { margin-bottom:0; }
+.Mod2sxcC .dnnFormMessage select, .Mod2sxcappC .dnnFormMessage select { margin-bottom:0; }
 
-.sc-contenttype-selector, .sc-template-selector, .sc-app-selector { width: 100%;position: relative; max-width: 300px!important; }
-.sc-contenttype-selector, .sc-app-selector { margin-bottom: 3px!important; }
+/* Template / ContentType / App-Selector */
+.sc-selector-wrapper { position: relative;overflow: hidden; }
+.sc-selector-wrapper .dnnFormInfo { overflow: hidden;padding: 9px;max-width:none; }
+.sc-selector-wrapper a { cursor: pointer; }
+.sc-selectors { max-width: 100% !important;float: left;width: 300px; }
+.sc-selectors select { display: block;width: 100%; }
+.sc-selector-contenttype, .sc-selector-app { margin-bottom: 3px!important; }
+.sc-selector-actions { margin-top: 46px; }
+.sc-selector-close { background: url(images/Delete.png) center center no-repeat; height: 30px; width: 30px; display: inline-block; text-indent: -9999px; }
+.sc-selector-save { background: url(images/Save.png) center center no-repeat;height: 30px;width: 30px; display: inline-block; text-indent: -9999px; }
 
 /* Loading sign */
 .sc-loading { position: absolute;top: 0;left: 0;width: 100%;height: 100%;background: url(images/ajax-loader.gif) center center no-repeat rgba(255,255,255,0.7); }
+.sc-loading.sc-loading-nobg { background:url(images/ajax-loader.gif) center center no-repeat; }

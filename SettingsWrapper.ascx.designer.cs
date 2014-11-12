@@ -31,60 +31,6 @@ namespace ToSic.SexyContent {
         protected global::System.Web.UI.WebControls.Label lblSettingsHeading;
         
         /// <summary>
-        /// pnlTemplate control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlTemplate;
-        
-        /// <summary>
-        /// lblTemplate control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.UserControl lblTemplate;
-        
-        /// <summary>
-        /// ddlTemplate control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlTemplate;
-        
-        /// <summary>
-        /// lblContentType control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.UserControl lblContentType;
-        
-        /// <summary>
-        /// lblContentTypeDefaultText control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblContentTypeDefaultText;
-        
-        /// <summary>
-        /// lblContentTypeText control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblContentTypeText;
-        
-        /// <summary>
         /// pnlEntities control.
         /// </summary>
         /// <remarks>
@@ -100,7 +46,7 @@ namespace ToSic.SexyContent {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UserControl lblEntityID;
+        protected global::DotNetNuke.UI.UserControls.LabelControl lblEntityID;
         
         /// <summary>
         /// ddlEntities control.
