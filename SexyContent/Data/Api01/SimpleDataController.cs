@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav;
 using ToSic.Eav.Import;
 using ToSic.SexyContent.DataImportExport.Extensions;
+using ImportEntity = ToSic.Eav.Import.Entity;
 
 namespace ToSic.SexyContent.Data.Api01
 {
     /// <summary>
-    /// This is a simple controller with some Create/Update/Delete commands. 
-    /// It needs to be initialized with AppId, DefaultLanguage and maybe ZoneId.
+    /// This is a simple controller with some Create, Update and Delete commands. 
     /// </summary>
     public class SimpleDataController
     {
-        private SexyContent _contentManager;
+        private EavContext _contentContext;
 
         private string _defaultLanguageCode;
 
@@ -24,119 +25,118 @@ namespace ToSic.SexyContent.Data.Api01
 
 
 
+        /// <summary>
+        /// Create a simple data controller to create, update and delete entities.
+        /// </summary>
+        /// <param name="zoneId">Zone ID</param>
+        /// <param name="appId">App ID</param>
+        /// <param name="userName">Name of user loged in</param>
+        /// <param name="defaultLanguageCode">Default language of system</param>
         public SimpleDataController(int zoneId, int appId, string userName, string defaultLanguageCode)
         {
             this._zoneId = zoneId;
             this._appId = appId;
             this._userName = userName;
             this._defaultLanguageCode = defaultLanguageCode;
-            this._contentManager = new SexyContent(zoneId, appId);
+            this._contentContext = EavContext.Instance(zoneId, appId);
         }
 
 
 
-        public bool Create(string contentTypeName, Dictionary<string, object> values)
+        /// <summary>
+        /// Create a new entity of the content-type specified.
+        /// </summary>
+        /// <param name="contentTypeName">Content-type</param>
+        /// <param name="values">Values to be set (dictionary of attribute name and value pairs)</param>
+        /// <exception cref="ArgumentException">Content-type does not exist, or an attribute in values</exception>
+        public void Create(string contentTypeName, Dictionary<string, object> values)
         {
-            try
+            var attributeSet = _contentContext.GetAllAttributeSets().FirstOrDefault(item => item.Name == contentTypeName);
+            if (attributeSet == null)
             {
-                var attributeSet = _contentManager.GetAvailableAttributeSets().FirstOrDefault(item => item.Name == contentTypeName);
-                var importEntity = CreateImportEntity(attributeSet.StaticName);
-                importEntity.AppendAttributeValues(attributeSet, values, _defaultLanguageCode, false, true);
-                importEntity.Import(_zoneId, _appId, _userName);
-                return true;
+                throw new ArgumentException("Content type '" + contentTypeName + "' does not exist.");
             }
-            catch
-            {   // The content-type does not exist, or an attribute in the content-type
-                return false;
-            }
+            
+            var importEntity = CreateImportEntity(attributeSet.StaticName);
+            importEntity.AppendAttributeValues(attributeSet, values, _defaultLanguageCode, false, true);
+            importEntity.Import(_zoneId, _appId, _userName);
         }
 
 
 
-        public bool Update(int entityId, Dictionary<string, object> values)
+        /// <summary>
+        /// Update an entity specified by ID.
+        /// </summary>
+        /// <param name="entityId">Entity ID</param>
+        /// <param name="values">Values to be updated (dictionary of attribute and value pairs)</param>
+        /// <exception cref="ArgumentException">Attribute in values does not exit</exception>
+        /// <exception cref="ArgumentNullException">Entity does not exist</exception>
+        public void Update(int entityId, Dictionary<string, object> values)
         {
-            try
-            {
-                var entity = _contentManager.ContentContext.GetEntity(entityId);
-                return Update(entity, values);
-            }
-            catch
-            {   // Entity does not exists
-                return false;
-            }
+            var entity = _contentContext.GetEntity(entityId);
+            Update(entity, values);
         }
 
-        public bool Update(Guid entityGuid, Dictionary<string, object> values)
+        /// <summary>
+        /// Update an entity specified by GUID.
+        /// </summary>
+        /// <param name="entityGuid">Entity GUID</param>param>
+        /// <param name="values">Values to be updated (dictionary of attribute and value pairs)</param>
+        /// <exception cref="ArgumentException">Attribute in values does not exit</exception>
+        /// <exception cref="ArgumentNullException">Entity does not exist</exception>
+        public void Update(Guid entityGuid, Dictionary<string, object> values)
         {
-            try
-            {
-                var entity = _contentManager.ContentContext.GetEntity(entityGuid);
-                return Update(entity, values);
-            }
-            catch
-            {   // Entity does not exists
-                return false;
-            }
+            var entity = _contentContext.GetEntity(entityGuid);
+            Update(entity, values);
         }
 
-        private bool Update(Eav.Entity entity, Dictionary<string, object> values)
+        private void Update(Eav.Entity entity, Dictionary<string, object> values)
         {
-            try
-            {
-                var attributeSet = _contentManager.ContentContext.GetAttributeSet(entity.AttributeSetID);
-                var importEntity = CreateImportEntity(entity.EntityGUID, attributeSet.StaticName);
-                importEntity.AppendAttributeValues(attributeSet, values, _defaultLanguageCode, false, true);
-                importEntity.Import(_zoneId, _appId, _userName);
-                return true;
-            }
-            catch
-            {
-                return false;  
-            }
+            var attributeSet = _contentContext.GetAttributeSet(entity.AttributeSetID);            
+            var importEntity = CreateImportEntity(entity.EntityGUID, attributeSet.StaticName);
+            importEntity.AppendAttributeValues(attributeSet, values, _defaultLanguageCode, false, true);
+            importEntity.Import(_zoneId, _appId, _userName);
         }
 
 
 
-        public bool Delete(int entityId)
+        /// <summary>
+        /// Delete the entity specified by ID.
+        /// </summary>
+        /// <param name="entityId">Entity ID</param>
+        /// <exception cref="InvalidOperationException">Entity cannot be deleted for example when it is referenced by another object</exception>
+        public void Delete(int entityId)
         {
-            var deleted = false;            
-            try
+            if (!_contentContext.CanDeleteEntity(entityId).Item1)
             {
-                if (_contentManager.ContentContext.CanDeleteEntity(entityId).Item1)
-                {
-                    deleted = _contentManager.ContentContext.DeleteEntity(entityId);
-                }
+                throw new InvalidOperationException("The entity " + entityId  + " cannot be deleted because of it is referenced by another object.");
             }
-            catch
-            {
-                deleted = false;
-            }
-            return deleted;
+            _contentContext.DeleteEntity(entityId);
         }
 
-        public bool Delete(Guid entityGuid)
+
+        /// <summary>
+        /// Delete the entity specified by GUID.
+        /// </summary>
+        /// <param name="entityGuid">Entity GUID</param>
+        /// <exception cref="ArgumentNullException">Entity does not exist</exception>
+        /// <exception cref="InvalidOperationException">Entity cannot be deleted for example when it is referenced by another object</exception>
+        public void Delete(Guid entityGuid)
         {
-            try
-            {
-                var entity = _contentManager.ContentContext.GetEntity(entityGuid);
-                return Delete(entity.EntityID);
-            }
-            catch
-            {   // Entity specified does not exist!
-                return false;
-            }
+            var entity = _contentContext.GetEntity(entityGuid);
+            Delete(entity.EntityID);
         }
 
 
 
-        private static Entity CreateImportEntity(string attributeSetStaticName)
+        private static ImportEntity CreateImportEntity(string attributeSetStaticName)
         {
             return CreateImportEntity(Guid.NewGuid(), attributeSetStaticName);
         }
 
-        private static Entity CreateImportEntity(Guid entityGuid, string attributeSetStaticName)
+        private static ImportEntity CreateImportEntity(Guid entityGuid, string attributeSetStaticName)
         {
-            return new Entity()
+            return new ImportEntity()
             {
                 EntityGuid = entityGuid,
                 AttributeSetStaticName = attributeSetStaticName,

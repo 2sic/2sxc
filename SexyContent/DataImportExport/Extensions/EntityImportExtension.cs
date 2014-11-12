@@ -59,6 +59,10 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
             foreach (var value in values)
             {
                 var attribute = attributeSet.GetAttribute(value.Key);
+                if (attribute == null)
+                { 
+                    throw new ArgumentException("Attribute '" + attribute + "' does not exist.");
+                }
                 entity.AppendAttributeValue(value.Key, value.Value.ToString(), attribute.Type, valuesLanguage, valuesReadOnly, resolveHyperlink);
             }
         }
