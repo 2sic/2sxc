@@ -1,12 +1,1 @@
-Check requirements before installing:
-<ul>
-<li>DotNetNuke 7.2 or later</li>
-<li>.NET Framework 4</li>
-<li>IIS 7.0</li>
-<li>SQL Server 2008 or later</li>
-<li>Recommended: Razor installed (see <a href="http://swisschecklist.com/en/j3zng2ko/Bin-Deploying-ASP.NET-MVC-3" target="_blank">checklist</a>)</li>
-</ul>
-For help installing this module correctly click <a href="http://swisschecklist.com/en/rh7ew1ms/Install-2Sexy-Content-Module-for-DotNetNuke" target="_blank">here</a><br />
-<br />
-<hr />
-<p><a href="http://sexycontent.codeplex.com/wikipage?title=Release%20Notes" target="_blank">Release notes on CodePlex</a></p>
+<p>Read the <a href="http://sexycontent.codeplex.com/wikipage?title=Release%20Notes" target="_blank">release notes on CodePlex</a></p>

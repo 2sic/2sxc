@@ -38,23 +38,30 @@ namespace ToSic.SexyContent
             try
             {
                 
-                var noTemplatesYet = !Sexy.GetVisibleTemplates(PortalId).Any();
+                
+                var isSharedModule = ModuleConfiguration.PortalID != ModuleConfiguration.OwnerPortalID;
 
-                // If there are no templates configured - show "getting started" frame
-                if (noTemplatesYet && IsEditable && UserInfo.IsInRole(PortalSettings.AdministratorRoleName))
+
+                if (!isSharedModule)
                 {
-                    pnlGetStarted.Visible = true;
-                    var gettingStartedControl = (GettingStartedFrame)LoadControl("~/DesktopModules/ToSIC_SexyContent/SexyContent/GettingStarted/GettingStartedFrame.ascx");
-                    gettingStartedControl.ModuleID = this.ModuleId;
-                    gettingStartedControl.ModuleConfiguration = this.ModuleConfiguration;
-                    pnlGetStarted.Controls.Add(gettingStartedControl);
+                    var noTemplatesYet = !Sexy.GetVisibleTemplates(PortalId).Any();
+
+                    // If there are no templates configured - show "getting started" frame
+                    if (noTemplatesYet && IsEditable && UserInfo.IsInRole(PortalSettings.AdministratorRoleName))
+                    {
+                        pnlGetStarted.Visible = true;
+                        var gettingStartedControl = (GettingStartedFrame)LoadControl("~/DesktopModules/ToSIC_SexyContent/SexyContent/GettingStarted/GettingStartedFrame.ascx");
+                        gettingStartedControl.ModuleID = this.ModuleId;
+                        gettingStartedControl.ModuleConfiguration = this.ModuleConfiguration;
+                        pnlGetStarted.Controls.Add(gettingStartedControl);
+                    }
+
+                    if (UserMayEditThisModule)
+                        pnlTemplateChooser.Visible = true;
+
+                    if (AppId.HasValue && !Sexy.PortalIsConfigured(Server, ControlPath))
+                        Sexy.ConfigurePortal(Server);
                 }
-
-                if (UserMayEditThisModule)
-                    pnlTemplateChooser.Visible = true;
-
-                if (AppId.HasValue && !Sexy.PortalIsConfigured(Server, ControlPath))
-                    Sexy.ConfigurePortal(Server);
 
                 if (AppId.HasValue && Elements.Any() && Elements.First().TemplateId.HasValue)
                     ProcessView(phOutput, pnlError, pnlMessage);

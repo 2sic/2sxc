@@ -40,7 +40,7 @@ namespace ToSic.SexyContent.ViewAPI
         [ValidateAntiForgeryToken]
         public void SetTemplateChooserState([FromUri]bool state)
         {
-            ActiveModule.ModuleSettings[SexyContent.SettingsShowTemplateChooser] = state;
+            new DotNetNuke.Entities.Modules.ModuleController().UpdateModuleSetting(ActiveModule.ModuleID, SexyContent.SettingsShowTemplateChooser, state.ToString());
         }
 
         [HttpGet]
