@@ -15,7 +15,7 @@ using ToSic.SexyContent.WebApiExtensions;
 namespace ToSic.SexyContent.ViewAPI
 {
     [SupportedModules("2sxc,2sxc-app")]
-    public class ModuleController : SexyContentApiController
+    public class ModuleController : SxcApiController
     {
 
         [HttpGet]

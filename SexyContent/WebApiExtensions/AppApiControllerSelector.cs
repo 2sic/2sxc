@@ -27,21 +27,21 @@ namespace ToSic.SexyContent.WebApiExtensions
 
         public HttpControllerDescriptor SelectController(HttpRequestMessage request)
         {
-            // ToDo: Cache controller (may affect performance or cause memory leaks in rare cases?)
+            // ToDo: Cache controller (may affect performance / cause memory leaks)
             IHttpRouteData routeData = request.GetRouteData();
             if (routeData.Route.RouteTemplate.Contains("/DesktopModules/2sxc/API/App/"))
             {
-                var moduleInfo = request.FindModuleInfo();
                 var portalSettings = DotNetNuke.Entities.Portals.PortalSettings.Current;
-                var sexy = request.FindSexy();
+                var sexy = request.GetSxcOfModuleContext();
+                var controllerTypeName = routeData.Values["controller"] + "Controller";
 
-                var controllerPath = Path.Combine(SexyContent.AppBasePath(portalSettings), sexy.App.Folder, "WebApiController.cs");
+                var controllerPath = Path.Combine(SexyContent.AppBasePath(portalSettings), sexy.App.Folder, "Api/" + controllerTypeName + ".cs");
 
                 if(File.Exists(System.Web.Hosting.HostingEnvironment.MapPath(controllerPath)))
                 {
                     var assembly = BuildManager.GetCompiledAssembly(controllerPath);
-                    var type = assembly.GetType("WebApiController");
-                    return new HttpControllerDescriptor(_config, "WebApiController", type);
+                    var type = assembly.GetType(controllerTypeName);
+                    return new HttpControllerDescriptor(_config, controllerTypeName, type);
                 }
             }
             

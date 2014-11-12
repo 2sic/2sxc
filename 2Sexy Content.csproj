@@ -392,8 +392,7 @@
     <Compile Include="SexyContent\TemplateDefault.cs" />
     <Compile Include="SexyContent\ViewAPI\ModuleController.cs" />
     <Compile Include="SexyContent\WebApiExtensions\HttpRequestMessageExtensions.cs" />
-    <Compile Include="SexyContent\WebApiExtensions\SexyContentApiController.cs" />
-	<Compile Include="SexyContent\WebApiExtensions\HttpRequestMessageExtensions.cs" />
+    <Compile Include="SexyContent\WebApiExtensions\SxcApiController.cs" />
     <Compile Include="SexyContent\WebApiExtensions\AppApiControllerSelector.cs" />
     <Compile Include="TemplateHelpGrid.ascx.cs">
       <DependentUpon>TemplateHelpGrid.ascx</DependentUpon>

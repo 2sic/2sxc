@@ -9,7 +9,7 @@ namespace ToSic.SexyContent.WebApiExtensions
 {
     public static class HttpRequestMessageExtensions
     {
-        public static SexyContent FindSexy(this HttpRequestMessage request)
+        internal static SexyContent GetSxcOfModuleContext(this HttpRequestMessage request)
         {
             var moduleInfo = request.FindModuleInfo();
             var appId = SexyContent.GetAppIdFromModule(moduleInfo);
@@ -17,7 +17,7 @@ namespace ToSic.SexyContent.WebApiExtensions
             return new SexyContent(zoneId.Value, appId.Value, true, moduleInfo.OwnerPortalID);
         }
 
-        internal static SexyContent FindSexyUncached(this HttpRequestMessage request)
+        internal static SexyContent GetUncachedSxcOfModuleContext(this HttpRequestMessage request)
         {
             var moduleInfo = request.FindModuleInfo();
             var appId = SexyContent.GetAppIdFromModule(moduleInfo);
