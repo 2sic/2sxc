@@ -29,7 +29,8 @@ namespace ToSic.SexyContent.WebApiExtensions
         {
             // ToDo: Cache controller (may affect performance / cause memory leaks)
             IHttpRouteData routeData = request.GetRouteData();
-            if (routeData.Route.RouteTemplate.Contains("/DesktopModules/2sxc/API/App/"))
+            var module = request.FindModuleInfo();
+            if (module.DesktopModule.ModuleName == "2sxc-app" && routeData.Route.RouteTemplate.Contains("/DesktopModules/2sxc/API/App/"))
             {
                 var portalSettings = DotNetNuke.Entities.Portals.PortalSettings.Current;
                 var sexy = request.GetSxcOfModuleContext();

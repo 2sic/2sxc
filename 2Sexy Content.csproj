@@ -196,6 +196,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="SexyContent\ContentGroupItem.cs" />
+    <Compile Include="SexyContent\DnnHelper.cs" />
     <Compile Include="SexyContent\SexyContentContext.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -204,6 +205,8 @@
     <Compile Include="SexyContent\SexyViewContentOrApp.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="SexyContent\IFrontApi.cs" />
+    <Compile Include="SexyContent\FrontApi.cs" />
     <Compile Include="SexyContent\Template.cs" />
     <Compile Include="EditEntity.ascx.cs">
       <DependentUpon>EditEntity.ascx</DependentUpon>

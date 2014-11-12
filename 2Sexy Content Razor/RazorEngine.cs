@@ -117,7 +117,6 @@ namespace ToSic.SexyContent.Engines
 
         private void InitHelpers(SexyContentWebPage webPage)
         {
-            webPage.Dnn = new DnnHelper(ModuleInfo);
             webPage.Html = new HtmlHelper();
             webPage.Url = new UrlHelper(ModuleInfo);
             
@@ -126,9 +125,8 @@ namespace ToSic.SexyContent.Engines
             webPage.ListContent = ListContent;
             webPage.ListPresentation = ListPresentation;
             webPage.List = List;
-            webPage.App = App;
             webPage.Sexy = Sexy;
-            webPage.Data = (ViewDataSource)DataSource;
+            webPage.FrontApi = new FrontApi(Sexy, ModuleInfo, (ViewDataSource)DataSource);
 
             // ToDo: Remove this as soon as App.Data getter on App class is fixed #1 and #2
             if (webPage.App.Data == null)
