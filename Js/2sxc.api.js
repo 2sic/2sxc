@@ -91,6 +91,24 @@
             manage: $2sxc.getManageController ? $2sxc.getManageController(id) : null,
             isEditMode: function() {
                 return controller.manage && controller.manage.isEditMode();
+            },
+            api: function (settings) {
+                var defaults = {
+                    method: 'POST'
+                };
+                settings = $.extend({}, defaults, settings);
+
+                var sf = $.ServicesFramework(id);
+
+                return $.ajax({
+                    type: settings.method,
+                    dataType: "json",
+                    async: true,
+                    data: JSON.stringify(settings.data),
+                    contentType: "application/json",
+                    url: sf.getServiceRoot('2sxc') + "App/HelloWorld/Test?" + $.param(settings.params),
+                    beforeSend: sf.setModuleHeaders
+                });
             }
         };
 

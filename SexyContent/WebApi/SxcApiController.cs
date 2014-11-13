@@ -4,16 +4,15 @@ using ToSic.Eav;
 using ToSic.Eav.DataSources;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Razor.Helpers;
-using ToSic.SexyContent;
 
-namespace ToSic.Sxc.WebApi
+namespace ToSic.SexyContent.WebApi
 {
 
     [SupportedModules("2sxc-app")]
     public abstract class SxcApiController : DnnApiController
     {
-        private SexyContent.SexyContent _sexyContent;
-        private SexyContent.SexyContent _sexyContentUncached;
+        private SexyContent _sexyContent;
+        private SexyContent _sexyContentUncached;
 
         private AppAndDataHelpers _appAndDataHelpers;
         private AppAndDataHelpers AppAndDataHelpers {
@@ -22,7 +21,7 @@ namespace ToSic.Sxc.WebApi
                 if (_appAndDataHelpers == null)
                 {
                     var moduleInfo = Request.FindModuleInfo();
-                    var viewDataSource = Sexy.GetViewDataSource(Request.FindModuleId(), SexyContent.SexyContent.HasEditPermission(moduleInfo), DotNetNuke.Common.Globals.IsEditMode());
+                    var viewDataSource = Sexy.GetViewDataSource(Request.FindModuleId(), SexyContent.HasEditPermission(moduleInfo), DotNetNuke.Common.Globals.IsEditMode());
                     _appAndDataHelpers = new AppAndDataHelpers(Sexy, moduleInfo, (ViewDataSource)viewDataSource);
                 }
                 return _appAndDataHelpers;
@@ -30,7 +29,7 @@ namespace ToSic.Sxc.WebApi
         }
 
         // Sexy object should not be accessible for other assemblies - just internal use
-        internal SexyContent.SexyContent Sexy
+        internal SexyContent Sexy
         {
             get
             {
@@ -39,7 +38,7 @@ namespace ToSic.Sxc.WebApi
                 return _sexyContent;
             }
         }
-        internal SexyContent.SexyContent SexyUncached
+        internal SexyContent SexyUncached
         {
             get
             {
