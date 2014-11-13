@@ -34,7 +34,7 @@ namespace ToSic.SexyContent.Razor
         protected internal dynamic ListPresentation { get; internal set; }
         protected internal List<Element> List { get; internal set; }
         protected internal SexyContent Sexy { get; set; }
-        protected internal FrontApi FrontApi { get; set; }
+        protected internal AppAndDataHelpers AppAndDataHelpers { get; set; }
         // </2sic>
 
         #endregion
@@ -59,23 +59,22 @@ namespace ToSic.SexyContent.Razor
             ListContent = ((SexyContentWebPage) parentPage).ListContent;
             ListPresentation = ((SexyContentWebPage) parentPage).ListPresentation;
             List = ((SexyContentWebPage) parentPage).List;
-            FrontApi = ((SexyContentWebPage)parentPage).FrontApi;
+            AppAndDataHelpers = ((SexyContentWebPage)parentPage).AppAndDataHelpers;
         }
 
         #endregion
 
 
-
-        #region Front API implementation
+        #region AppAndDataHelpers implementation
 
         protected internal DnnHelper Dnn {
-            get { return FrontApi.Dnn; }
+            get { return AppAndDataHelpers.Dnn; }
         }
         protected internal new App App {
-            get { return FrontApi.App; }
+            get { return AppAndDataHelpers.App; }
         }
         protected internal ViewDataSource Data {
-            get { return FrontApi.Data; }
+            get { return AppAndDataHelpers.Data; }
         }
 
         /// <summary>
@@ -85,7 +84,7 @@ namespace ToSic.SexyContent.Razor
         /// <returns></returns>
         public dynamic AsDynamic(IEntity entity)
         {
-            return FrontApi.AsDynamic(entity);
+            return AppAndDataHelpers.AsDynamic(entity);
         }
 
         /// <summary>
@@ -95,7 +94,7 @@ namespace ToSic.SexyContent.Razor
         /// <returns></returns>
         public dynamic AsDynamic(dynamic dynamicEntity)
         {
-            return FrontApi.AsDynamic(dynamicEntity);
+            return AppAndDataHelpers.AsDynamic(dynamicEntity);
         }
 
         /// <summary>
@@ -105,7 +104,7 @@ namespace ToSic.SexyContent.Razor
         /// <returns></returns>
         public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair)
         {
-            return FrontApi.AsDynamic(entityKeyValuePair.Value);
+            return AppAndDataHelpers.AsDynamic(entityKeyValuePair.Value);
         }
 
         /// <summary>
@@ -115,7 +114,7 @@ namespace ToSic.SexyContent.Razor
         /// <returns></returns>
         public IEnumerable<dynamic> AsDynamic(IDataStream stream)
         {
-            return FrontApi.AsDynamic(stream.List);
+            return AppAndDataHelpers.AsDynamic(stream.List);
         }
 
         /// <summary>
@@ -125,7 +124,7 @@ namespace ToSic.SexyContent.Razor
         /// <returns></returns>
         public IEnumerable<dynamic> AsDynamic(IDictionary<int, IEntity> list)
         {
-            return FrontApi.AsDynamic(list);
+            return AppAndDataHelpers.AsDynamic(list);
         }
 
         /// <summary>
@@ -135,7 +134,7 @@ namespace ToSic.SexyContent.Razor
         /// <returns></returns>
         public IEntity AsEntity(dynamic dynamicEntity)
         {
-            return FrontApi.AsEntity(dynamicEntity);
+            return AppAndDataHelpers.AsEntity(dynamicEntity);
         }
 
         /// <summary>
@@ -145,17 +144,17 @@ namespace ToSic.SexyContent.Razor
         /// <returns></returns>
         public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities)
         {
-            return FrontApi.AsDynamic(entities);
+            return AppAndDataHelpers.AsDynamic(entities);
         }
 
         protected IDataSource CreateSource(string typeName = "", IDataSource inSource = null, IConfigurationProvider configurationProvider = null)
         {
-            return FrontApi.CreateSource(typeName, inSource, configurationProvider);
+            return AppAndDataHelpers.CreateSource(typeName, inSource, configurationProvider);
         }
 
         protected T CreateSource<T>(IDataSource inSource = null, IConfigurationProvider configurationProvider = null)
         {
-            return FrontApi.CreateSource<T>(inSource, configurationProvider);
+            return AppAndDataHelpers.CreateSource<T>(inSource, configurationProvider);
         }
 
 		/// <summary>
@@ -166,11 +165,10 @@ namespace ToSic.SexyContent.Razor
 		/// <returns></returns>
 		protected T CreateSource<T>(IDataStream inStream)
 		{
-		    return FrontApi.CreateSource<T>(inStream);
+		    return AppAndDataHelpers.CreateSource<T>(inStream);
 		}
 
         #endregion
-
 
 
         /// <summary>

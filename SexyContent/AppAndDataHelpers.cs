@@ -8,11 +8,11 @@ using ToSic.SexyContent.Razor.Helpers;
 
 namespace ToSic.SexyContent
 {
-    public class FrontApi : IFrontApi
+    public class AppAndDataHelpers : IAppAndDataHelpers
     {
         private SexyContent _sexy;
 
-        public FrontApi(SexyContent sexy, ModuleInfo module, ViewDataSource data)
+        public AppAndDataHelpers(SexyContent sexy, ModuleInfo module, ViewDataSource data)
         {
             _sexy = sexy;
             App = sexy.App;

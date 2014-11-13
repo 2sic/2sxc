@@ -126,7 +126,7 @@ namespace ToSic.SexyContent.Engines
             webPage.ListPresentation = ListPresentation;
             webPage.List = List;
             webPage.Sexy = Sexy;
-            webPage.FrontApi = new FrontApi(Sexy, ModuleInfo, (ViewDataSource)DataSource);
+            webPage.AppAndDataHelpers = new AppAndDataHelpers(Sexy, ModuleInfo, (ViewDataSource)DataSource);
 
             // ToDo: Remove this as soon as App.Data getter on App class is fixed #1 and #2
             if (webPage.App.Data == null)

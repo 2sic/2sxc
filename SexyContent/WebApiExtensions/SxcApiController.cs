@@ -14,17 +14,17 @@ namespace ToSic.SexyContent.WebApiExtensions
         private SexyContent _sexyContent;
         private SexyContent _sexyContentUncached;
 
-        private FrontApi _frontApi;
-        private FrontApi FrontApi {
+        private AppAndDataHelpers _appAndDataHelpers;
+        private AppAndDataHelpers AppAndDataHelpers {
             get
             {
-                if (_frontApi == null)
+                if (_appAndDataHelpers == null)
                 {
                     var moduleInfo = Request.FindModuleInfo();
                     var viewDataSource = Sexy.GetViewDataSource(Request.FindModuleId(), SexyContent.HasEditPermission(moduleInfo), DotNetNuke.Common.Globals.IsEditMode());
-                    _frontApi = new FrontApi(Sexy, moduleInfo, (ViewDataSource)viewDataSource);
+                    _appAndDataHelpers = new AppAndDataHelpers(Sexy, moduleInfo, (ViewDataSource)viewDataSource);
                 }
-                return _frontApi;
+                return _appAndDataHelpers;
             }
         }
 
@@ -49,19 +49,19 @@ namespace ToSic.SexyContent.WebApiExtensions
         }
 
 
-        #region Front API implementation
+        #region AppAndDataHelpers implementation
 
         protected internal DnnHelper Dnn
         {
-            get { return FrontApi.Dnn; }
+            get { return AppAndDataHelpers.Dnn; }
         }
         protected internal new App App
         {
-            get { return FrontApi.App; }
+            get { return AppAndDataHelpers.App; }
         }
         protected internal ViewDataSource Data
         {
-            get { return FrontApi.Data; }
+            get { return AppAndDataHelpers.Data; }
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace ToSic.SexyContent.WebApiExtensions
         /// <returns></returns>
         public dynamic AsDynamic(IEntity entity)
         {
-            return FrontApi.AsDynamic(entity);
+            return AppAndDataHelpers.AsDynamic(entity);
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace ToSic.SexyContent.WebApiExtensions
         /// <returns></returns>
         public dynamic AsDynamic(dynamic dynamicEntity)
         {
-            return FrontApi.AsDynamic(dynamicEntity);
+            return AppAndDataHelpers.AsDynamic(dynamicEntity);
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace ToSic.SexyContent.WebApiExtensions
         /// <returns></returns>
         public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair)
         {
-            return FrontApi.AsDynamic(entityKeyValuePair.Value);
+            return AppAndDataHelpers.AsDynamic(entityKeyValuePair.Value);
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace ToSic.SexyContent.WebApiExtensions
         /// <returns></returns>
         public IEnumerable<dynamic> AsDynamic(IDataStream stream)
         {
-            return FrontApi.AsDynamic(stream.List);
+            return AppAndDataHelpers.AsDynamic(stream.List);
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace ToSic.SexyContent.WebApiExtensions
         /// <returns></returns>
         public IEnumerable<dynamic> AsDynamic(IDictionary<int, IEntity> list)
         {
-            return FrontApi.AsDynamic(list);
+            return AppAndDataHelpers.AsDynamic(list);
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace ToSic.SexyContent.WebApiExtensions
         /// <returns></returns>
         public IEntity AsEntity(dynamic dynamicEntity)
         {
-            return FrontApi.AsEntity(dynamicEntity);
+            return AppAndDataHelpers.AsEntity(dynamicEntity);
         }
 
         /// <summary>
@@ -131,17 +131,17 @@ namespace ToSic.SexyContent.WebApiExtensions
         /// <returns></returns>
         public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities)
         {
-            return FrontApi.AsDynamic(entities);
+            return AppAndDataHelpers.AsDynamic(entities);
         }
 
         protected IDataSource CreateSource(string typeName = "", IDataSource inSource = null, IConfigurationProvider configurationProvider = null)
         {
-            return FrontApi.CreateSource(typeName, inSource, configurationProvider);
+            return AppAndDataHelpers.CreateSource(typeName, inSource, configurationProvider);
         }
 
         protected T CreateSource<T>(IDataSource inSource = null, IConfigurationProvider configurationProvider = null)
         {
-            return FrontApi.CreateSource<T>(inSource, configurationProvider);
+            return AppAndDataHelpers.CreateSource<T>(inSource, configurationProvider);
         }
 
         /// <summary>
@@ -152,7 +152,7 @@ namespace ToSic.SexyContent.WebApiExtensions
         /// <returns></returns>
         protected T CreateSource<T>(IDataStream inStream)
         {
-            return FrontApi.CreateSource<T>(inStream);
+            return AppAndDataHelpers.CreateSource<T>(inStream);
         }
 
         #endregion
