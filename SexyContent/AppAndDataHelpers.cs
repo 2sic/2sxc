@@ -12,10 +12,10 @@ namespace ToSic.SexyContent
     {
         private SexyContent _sexy;
 
-        public AppAndDataHelpers(SexyContent sexy, ModuleInfo module, ViewDataSource data)
+        public AppAndDataHelpers(SexyContent sexy, ModuleInfo module, ViewDataSource data, App app)
         {
             _sexy = sexy;
-            App = sexy.App;
+            App = app;
             Data = data;
             Dnn = new DnnHelper(module);
         }

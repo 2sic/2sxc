@@ -22,7 +22,7 @@ namespace ToSic.SexyContent.WebApi
                 {
                     var moduleInfo = Request.FindModuleInfo();
                     var viewDataSource = Sexy.GetViewDataSource(Request.FindModuleId(), SexyContent.HasEditPermission(moduleInfo), DotNetNuke.Common.Globals.IsEditMode());
-                    _appAndDataHelpers = new AppAndDataHelpers(Sexy, moduleInfo, (ViewDataSource)viewDataSource);
+                    _appAndDataHelpers = new AppAndDataHelpers(Sexy, moduleInfo, (ViewDataSource)viewDataSource, Sexy.App);
                 }
                 return _appAndDataHelpers;
             }
