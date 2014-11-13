@@ -2,6 +2,7 @@
 using DotNetNuke.Entities.Tabs;
 using DotNetNuke.Services.FileSystem;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -39,8 +40,7 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
         /// </summary>
         public static IValueImportModel AppendAttributeValue(this Entity entity, string valueName, string valueString, string valueType, string valueLanguage, bool valueReadOnly, bool resolveHyperlink)
         {
-            var valueModel = GetValueModel(valueString, valueType, valueLanguage, valueReadOnly, resolveHyperlink, entity);
-            
+            var valueModel = GetValueModel(valueString, valueType, valueLanguage, valueReadOnly, resolveHyperlink, entity);          
             var entityValue = entity.Values.Where(item => item.Key == valueName).Select(item => item.Value).FirstOrDefault();
             if (entityValue == null)
             {
@@ -127,6 +127,15 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
                             }
                         }
                         valueModel = new ValueImportModel<string>(entity) { Value = valueReference };
+                    }
+                    break;
+
+                case "Entity":
+                    {
+                        valueModel = new ValueImportModel<List<Guid>>(entity) 
+                        { 
+                            Value = string.IsNullOrEmpty(valueString) ? new List<Guid>() : valueString.Split(',').Select(Guid.Parse).ToList()
+                        };
                     }
                     break;
 

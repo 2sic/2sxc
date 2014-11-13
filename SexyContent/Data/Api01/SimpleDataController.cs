@@ -47,7 +47,11 @@ namespace ToSic.SexyContent.Data.Api01
         /// Create a new entity of the content-type specified.
         /// </summary>
         /// <param name="contentTypeName">Content-type</param>
-        /// <param name="values">Values to be set (dictionary of attribute name and value pairs)</param>
+        /// <param name="values">
+        ///     Values to be set collected in a dictionary. Each dictionary item is a pair of attribute 
+        ///     name and value. To set references to other entities, set the attribute value to a list of 
+        ///     entity ids. 
+        /// </param>
         /// <exception cref="ArgumentException">Content-type does not exist, or an attribute in values</exception>
         public void Create(string contentTypeName, Dictionary<string, object> values)
         {
@@ -58,7 +62,7 @@ namespace ToSic.SexyContent.Data.Api01
             }
             
             var importEntity = CreateImportEntity(attributeSet.StaticName);
-            importEntity.AppendAttributeValues(attributeSet, values, _defaultLanguageCode, false, true);
+            importEntity.AppendAttributeValues(attributeSet, ConvertEntityRelations(values), _defaultLanguageCode, false, true);
             importEntity.Import(_zoneId, _appId, _userName);
         }
 
@@ -68,7 +72,11 @@ namespace ToSic.SexyContent.Data.Api01
         /// Update an entity specified by ID.
         /// </summary>
         /// <param name="entityId">Entity ID</param>
-        /// <param name="values">Values to be updated (dictionary of attribute and value pairs)</param>
+        /// <param name="values">
+        ///     Values to be set collected in a dictionary. Each dictionary item is a pair of attribute 
+        ///     name and value. To set references to other entities, set the attribute value to a list of 
+        ///     entity ids. 
+        /// </param>
         /// <exception cref="ArgumentException">Attribute in values does not exit</exception>
         /// <exception cref="ArgumentNullException">Entity does not exist</exception>
         public void Update(int entityId, Dictionary<string, object> values)
@@ -81,7 +89,11 @@ namespace ToSic.SexyContent.Data.Api01
         /// Update an entity specified by GUID.
         /// </summary>
         /// <param name="entityGuid">Entity GUID</param>param>
-        /// <param name="values">Values to be updated (dictionary of attribute and value pairs)</param>
+        /// <param name="values">
+        ///     Values to be set collected in a dictionary. Each dictionary item is a pair of attribute 
+        ///     name and value. To set references to other entities, set the attribute value to a list of 
+        ///     entity ids. 
+        /// </param>
         /// <exception cref="ArgumentException">Attribute in values does not exit</exception>
         /// <exception cref="ArgumentNullException">Entity does not exist</exception>
         public void Update(Guid entityGuid, Dictionary<string, object> values)
@@ -94,10 +106,9 @@ namespace ToSic.SexyContent.Data.Api01
         {
             var attributeSet = _contentContext.GetAttributeSet(entity.AttributeSetID);            
             var importEntity = CreateImportEntity(entity.EntityGUID, attributeSet.StaticName);
-            importEntity.AppendAttributeValues(attributeSet, values, _defaultLanguageCode, false, true);
+            importEntity.AppendAttributeValues(attributeSet, ConvertEntityRelations(values), _defaultLanguageCode, false, true);
             importEntity.Import(_zoneId, _appId, _userName);
         }
-
 
 
         /// <summary>
@@ -144,6 +155,31 @@ namespace ToSic.SexyContent.Data.Api01
                 KeyNumber = null,
                 Values = new Dictionary<string, List<IValueImportModel>>()
             };
+        }
+
+
+        private Dictionary<string, object> ConvertEntityRelations(Dictionary<string, object> values)
+        {
+            var result = new Dictionary<string, object>();
+            foreach (var value in values)
+            {
+                var ids = value.Value as IEnumerable<int>;
+                if (ids != null)
+                {   // The value has entity ids. For import, these must be converted to a string of guids.
+                    var guids = new List<Guid>();
+                    foreach (var id in ids)
+                    {
+                        var entity = _contentContext.GetEntity(id);
+                        guids.Add(entity.EntityGUID);
+                    }
+                    result.Add(value.Key, string.Join(",", guids));
+                }
+                else
+                {
+                    result.Add(value.Key, value.Value);
+                }
+            }
+            return result;
         }
     }
 }
