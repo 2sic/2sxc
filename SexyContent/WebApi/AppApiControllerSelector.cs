@@ -8,7 +8,7 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
 using System.Web.Http.Routing;
 
-namespace ToSic.SexyContent.WebApiExtensions
+namespace ToSic.SexyContent.WebApi
 {
     public class AppApiControllerSelector : IHttpControllerSelector
     {

@@ -4,15 +4,16 @@ using ToSic.Eav;
 using ToSic.Eav.DataSources;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Razor.Helpers;
+using ToSic.SexyContent;
 
-namespace ToSic.SexyContent.WebApiExtensions
+namespace ToSic.Sxc.WebApi
 {
 
     [SupportedModules("2sxc-app")]
     public abstract class SxcApiController : DnnApiController
     {
-        private SexyContent _sexyContent;
-        private SexyContent _sexyContentUncached;
+        private SexyContent.SexyContent _sexyContent;
+        private SexyContent.SexyContent _sexyContentUncached;
 
         private AppAndDataHelpers _appAndDataHelpers;
         private AppAndDataHelpers AppAndDataHelpers {
@@ -21,7 +22,7 @@ namespace ToSic.SexyContent.WebApiExtensions
                 if (_appAndDataHelpers == null)
                 {
                     var moduleInfo = Request.FindModuleInfo();
-                    var viewDataSource = Sexy.GetViewDataSource(Request.FindModuleId(), SexyContent.HasEditPermission(moduleInfo), DotNetNuke.Common.Globals.IsEditMode());
+                    var viewDataSource = Sexy.GetViewDataSource(Request.FindModuleId(), SexyContent.SexyContent.HasEditPermission(moduleInfo), DotNetNuke.Common.Globals.IsEditMode());
                     _appAndDataHelpers = new AppAndDataHelpers(Sexy, moduleInfo, (ViewDataSource)viewDataSource);
                 }
                 return _appAndDataHelpers;
@@ -29,21 +30,21 @@ namespace ToSic.SexyContent.WebApiExtensions
         }
 
         // Sexy object should not be accessible for other assemblies - just internal use
-        internal SexyContent Sexy
+        internal SexyContent.SexyContent Sexy
         {
             get
             {
                 if (_sexyContent == null)
-                    _sexyContent = HttpRequestMessageExtensions.GetSxcOfModuleContext(Request);
+                    _sexyContent = ToSic.SexyContent.WebApi.HttpRequestMessageExtensions.GetSxcOfModuleContext(Request);
                 return _sexyContent;
             }
         }
-        internal SexyContent SexyUncached
+        internal SexyContent.SexyContent SexyUncached
         {
             get
             {
                 if (_sexyContentUncached == null)
-                    _sexyContentUncached = HttpRequestMessageExtensions.GetUncachedSxcOfModuleContext(Request);
+                    _sexyContentUncached = ToSic.SexyContent.WebApi.HttpRequestMessageExtensions.GetUncachedSxcOfModuleContext(Request);
                 return _sexyContentUncached;
             }
         }
@@ -55,7 +56,7 @@ namespace ToSic.SexyContent.WebApiExtensions
         {
             get { return AppAndDataHelpers.Dnn; }
         }
-        protected internal new App App
+        protected internal new ToSic.SexyContent.App App
         {
             get { return AppAndDataHelpers.App; }
         }

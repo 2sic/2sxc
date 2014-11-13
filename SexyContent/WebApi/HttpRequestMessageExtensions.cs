@@ -5,7 +5,7 @@ using System.Web;
 using DotNetNuke.Web.Api;
 using System.Net.Http;
 
-namespace ToSic.SexyContent.WebApiExtensions
+namespace ToSic.SexyContent.WebApi
 {
     public static class HttpRequestMessageExtensions
     {

@@ -6,7 +6,8 @@ using DotNetNuke.Web.Api;
 using System.Web.Routing;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
-using ToSic.SexyContent.WebApiExtensions;
+using ToSic.SexyContent.WebApi;
+
 
 namespace ToSic.SexyContent
 {

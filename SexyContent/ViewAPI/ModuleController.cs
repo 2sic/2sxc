@@ -10,7 +10,7 @@ using System.Text;
 using System.Web.Http;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Engines;
-using ToSic.SexyContent.WebApiExtensions;
+using ToSic.Sxc.WebApi;
 
 namespace ToSic.SexyContent.ViewAPI
 {

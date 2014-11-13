@@ -380,7 +380,7 @@
     <Compile Include="SexyContent\ImportExport\XmlImport.cs" />
     <Compile Include="SexyContent\ImportExport\ZipExport.cs" />
     <Compile Include="SexyContent\ImportExport\ZipImport.cs" />
-    <Compile Include="SexyContent\RouteMapper.cs" />
+    <Compile Include="SexyContent\WebApi\RouteMapper.cs" />
     <Compile Include="SexyContent\Search\ISearchInfo.cs" />
     <Compile Include="SexyContent\Search\SearchController.cs" />
     <Compile Include="SexyContent\Search\SearchIndexException.cs" />
@@ -394,9 +394,9 @@
     </Compile>
     <Compile Include="SexyContent\TemplateDefault.cs" />
     <Compile Include="SexyContent\ViewAPI\ModuleController.cs" />
-    <Compile Include="SexyContent\WebApiExtensions\HttpRequestMessageExtensions.cs" />
-    <Compile Include="SexyContent\WebApiExtensions\SxcApiController.cs" />
-    <Compile Include="SexyContent\WebApiExtensions\AppApiControllerSelector.cs" />
+    <Compile Include="SexyContent\WebApi\HttpRequestMessageExtensions.cs" />
+    <Compile Include="SexyContent\WebApi\SxcApiController.cs" />
+    <Compile Include="SexyContent\WebApi\AppApiControllerSelector.cs" />
     <Compile Include="TemplateHelpGrid.ascx.cs">
       <DependentUpon>TemplateHelpGrid.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
