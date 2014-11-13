@@ -101,6 +101,7 @@
                     };
                     settings = $.extend({}, defaults, settings);
                     var sf = $.ServicesFramework(id);
+
                     return $.ajax({
                         type: settings.method,
                         dataType: "json",
@@ -109,6 +110,9 @@
                         contentType: "application/json",
                         url: controller.webApi.getActionUrl(settings),
                         beforeSend: sf.setModuleHeaders
+                    }).fail(function(result) {
+                        if (window.console)
+                            console.log(result);
                     });
                 },
                 getActionUrl: function(settings) {

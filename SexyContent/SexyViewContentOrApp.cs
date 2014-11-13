@@ -25,7 +25,7 @@ namespace ToSic.SexyContent
         protected void Page_Load(object sender, EventArgs e)
         {
             ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
-
+            
             try
             {
 

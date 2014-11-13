@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web;
 using DotNetNuke.Web.Api;
 using System.Collections.Generic;
 using System.IO;
@@ -35,22 +36,27 @@ namespace ToSic.SexyContent.WebApi
                 var portalSettings = DotNetNuke.Entities.Portals.PortalSettings.Current;
                 var sexy = request.GetSxcOfModuleContext();
 
-                if ((string)routeData.Values["appFolder"] != "auto-detect-app" && (string)routeData.Values["appFolder"] != sexy.App.Folder)
-                    throw new Exception("AppFolder was not correct - was " + routeData.Values["appFolder"] + " but should be " + sexy.App.Folder);
+                if ((string) routeData.Values["appFolder"] != "auto-detect-app" && (string) routeData.Values["appFolder"] != sexy.App.Folder)
+                    throw new HttpException("AppFolder was not correct - was " + routeData.Values["appFolder"] + " but should be " + sexy.App.Folder);
 
                 var controllerTypeName = routeData.Values["controller"] + "Controller";
 
-                var controllerPath = Path.Combine(SexyContent.AppBasePath(portalSettings), sexy.App.Folder, "Api/" + controllerTypeName + ".cs");
+                var controllerPath = Path.Combine(SexyContent.AppBasePath(portalSettings), sexy.App.Folder,
+                    "Api/" + controllerTypeName + ".cs");
 
-                if(File.Exists(System.Web.Hosting.HostingEnvironment.MapPath(controllerPath)))
+                if (File.Exists(System.Web.Hosting.HostingEnvironment.MapPath(controllerPath)))
                 {
                     var assembly = BuildManager.GetCompiledAssembly(controllerPath);
                     var type = assembly.GetType(controllerTypeName);
                     return new HttpControllerDescriptor(_config, controllerTypeName, type);
                 }
+                else
+                {
+                    throw new HttpException(404, "Controller " + controllerTypeName + " not found in app.");
+                }
             }
-            
-            return PreviousSelector.SelectController(request);
+            else
+                return PreviousSelector.SelectController(request);
         }
     }
 }
