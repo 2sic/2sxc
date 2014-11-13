@@ -1,4 +1,5 @@
-﻿using DotNetNuke.Web.Api;
+﻿using System;
+using DotNetNuke.Web.Api;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
@@ -27,13 +28,16 @@ namespace ToSic.SexyContent.WebApi
 
         public HttpControllerDescriptor SelectController(HttpRequestMessage request)
         {
-            // ToDo: Cache controller (may affect performance / cause memory leaks)
             IHttpRouteData routeData = request.GetRouteData();
             var module = request.FindModuleInfo();
             if (routeData.Route.RouteTemplate.Contains("/DesktopModules/2sxc/API/App/") && module.DesktopModule.ModuleName == "2sxc-app")
             {
                 var portalSettings = DotNetNuke.Entities.Portals.PortalSettings.Current;
                 var sexy = request.GetSxcOfModuleContext();
+
+                if ((string)routeData.Values["appFolder"] != "auto-detect-app" && (string)routeData.Values["appFolder"] != sexy.App.Folder)
+                    throw new Exception("AppFolder was not correct - was " + routeData.Values["appFolder"] + " but should be " + sexy.App.Folder);
+
                 var controllerTypeName = routeData.Values["controller"] + "Controller";
 
                 var controllerPath = Path.Combine(SexyContent.AppBasePath(portalSettings), sexy.App.Folder, "Api/" + controllerTypeName + ".cs");

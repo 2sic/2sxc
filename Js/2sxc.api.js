@@ -92,23 +92,29 @@
             isEditMode: function() {
                 return controller.manage && controller.manage.isEditMode();
             },
-            api: function (settings) {
-                var defaults = {
-                    method: 'POST'
-                };
-                settings = $.extend({}, defaults, settings);
-
-                var sf = $.ServicesFramework(id);
-
-                return $.ajax({
-                    type: settings.method,
-                    dataType: "json",
-                    async: true,
-                    data: JSON.stringify(settings.data),
-                    contentType: "application/json",
-                    url: sf.getServiceRoot('2sxc') + "App/HelloWorld/Test?" + $.param(settings.params),
-                    beforeSend: sf.setModuleHeaders
-                });
+            webApi: {
+                action: function(settings) {
+                    var defaults = {
+                        method: 'POST',
+                        data: {},
+                        params: {}
+                    };
+                    settings = $.extend({}, defaults, settings);
+                    var sf = $.ServicesFramework(id);
+                    return $.ajax({
+                        type: settings.method,
+                        dataType: "json",
+                        async: true,
+                        data: JSON.stringify(settings.data),
+                        contentType: "application/json",
+                        url: controller.webApi.getActionUrl(settings),
+                        beforeSend: sf.setModuleHeaders
+                    });
+                },
+                getActionUrl: function(settings) {
+                    var sf = $.ServicesFramework(id);
+                    return sf.getServiceRoot('2sxc') + "App/auto-detect-app/" + settings.controller + "/" + settings.action + "?" + $.param(settings.params);
+                }
             }
         };
 
