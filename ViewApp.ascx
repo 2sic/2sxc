@@ -5,7 +5,7 @@
     <div ng-controller="TemplateSelectorCtrl" data-moduleid="<%= ModuleId %>" class="sc-selector-wrapper" data-importAppDialog="<%= EditUrl("", "", ToSic.SexyContent.SexyContent.ControlKeys.AppImport) %>" data-importAppText="<%= LocalizeString("GetMoreApps.Text") %>">
         <div ng-cloak ng-show="manageInfo.templateChooserVisible" class="dnnFormMessage dnnFormInfo">
             <div class="sc-selectors">
-                <select ng-show="!manageInfo.isContentApp" ng-model="appId" class="sc-selector-app" ng-options="a.AppId as a.Name for a in apps">
+                <select ng-show="!manageInfo.isContentApp" ng-model="appId" class="sc-selector-app" ng-options="a.AppId as a.Name for a in apps" ng-disabled="manageInfo.hasContent || manageInfo.isList">
                     <option value="" ng-disabled="appId != null"><%= HttpUtility.HtmlEncode(LocalizeString("ddlAppDefaultItem.Text")) %></option>
                 </select>
 
