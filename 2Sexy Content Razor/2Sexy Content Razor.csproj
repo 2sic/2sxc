@@ -61,7 +61,6 @@
   <ItemGroup>
     <Compile Include="Data\Api01\ExtensionMethodsForTheRazorViews.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Helpers\DnnHelper.cs" />
     <Compile Include="Helpers\HtmlHelper.cs" />
     <Compile Include="Helpers\UrlHelper.cs" />
     <Compile Include="RazorEngine.cs" />
