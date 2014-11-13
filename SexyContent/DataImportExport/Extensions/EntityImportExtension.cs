@@ -58,6 +58,13 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
         {
             foreach (var value in values)
             {
+                // Handle special attributes (for example of the system)
+                if (value.Key == "IsPublished")
+                {
+                    entity.IsPublished = value.Value is bool ? (bool)value.Value : true;
+                    continue;
+                }        
+                // Handle content-type attributes
                 var attribute = attributeSet.GetAttribute(value.Key);
                 if (attribute == null)
                 { 
