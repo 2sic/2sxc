@@ -19,7 +19,7 @@ using ToSic.SexyContent.Search;
 
 namespace ToSic.SexyContent.Razor
 {
-    public abstract class SexyContentWebPage : WebPageBase
+    public abstract class SexyContentWebPage : WebPageBase, IAppAndDataHelpers
     {
         #region Helpers
 
@@ -67,13 +67,13 @@ namespace ToSic.SexyContent.Razor
 
         #region AppAndDataHelpers implementation
 
-        protected internal DnnHelper Dnn {
+        public DnnHelper Dnn {
             get { return AppAndDataHelpers.Dnn; }
         }
-        protected internal new App App {
+        public new App App {
             get { return AppAndDataHelpers.App; }
         }
-        protected internal ViewDataSource Data {
+        public ViewDataSource Data {
             get { return AppAndDataHelpers.Data; }
         }
 
@@ -147,12 +147,12 @@ namespace ToSic.SexyContent.Razor
             return AppAndDataHelpers.AsDynamic(entities);
         }
 
-        protected IDataSource CreateSource(string typeName = "", IDataSource inSource = null, IConfigurationProvider configurationProvider = null)
+        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, IConfigurationProvider configurationProvider = null)
         {
             return AppAndDataHelpers.CreateSource(typeName, inSource, configurationProvider);
         }
 
-        protected T CreateSource<T>(IDataSource inSource = null, IConfigurationProvider configurationProvider = null)
+        public T CreateSource<T>(IDataSource inSource = null, IConfigurationProvider configurationProvider = null)
         {
             return AppAndDataHelpers.CreateSource<T>(inSource, configurationProvider);
         }
@@ -163,7 +163,7 @@ namespace ToSic.SexyContent.Razor
 		/// <typeparam name="T"></typeparam>
 		/// <param name="inStream"></param>
 		/// <returns></returns>
-		protected T CreateSource<T>(IDataStream inStream)
+		public T CreateSource<T>(IDataStream inStream)
 		{
 		    return AppAndDataHelpers.CreateSource<T>(inStream);
 		}
