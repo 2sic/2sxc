@@ -10,12 +10,12 @@ using System.Text;
 using System.Web.Http;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Engines;
-using ToSic.SexyContent.WebApiExtensions;
+using ToSic.SexyContent.WebApi;
 
 namespace ToSic.SexyContent.ViewAPI
 {
     [SupportedModules("2sxc,2sxc-app")]
-    public class ModuleController : SexyContentApiController
+    public class ModuleController : SxcApiController
     {
 
         [HttpGet]
