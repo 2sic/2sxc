@@ -22,7 +22,13 @@ namespace ToSic.SexyContent.Razor.Data.Api01
         /// <returns>An data controller to create, update and delete entities</returns>
         public static SimpleDataController DataController(this SexyContentWebPage page)
         {
-            return new SimpleDataController(page.App.ZoneId, page.App.AppId, page.User.Identity.Name, page.Dnn.Portal.DefaultLanguage);
+            var defaultLanguage = "";
+            var languagesActive = SexyContent.GetCulturesWithActiveState(page.Dnn.Portal.PortalId, page.App.ZoneId).Any(c => c.Active);
+            if (languagesActive)
+            {
+                defaultLanguage = page.Dnn.Portal.DefaultLanguage;
+            }
+            return new SimpleDataController(page.App.ZoneId, page.App.AppId, page.User.Identity.Name, defaultLanguage);
         }
     }
 }
