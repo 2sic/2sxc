@@ -31,7 +31,7 @@ namespace ToSic.SexyContent.WebApi
         {
             IHttpRouteData routeData = request.GetRouteData();
             var module = request.FindModuleInfo();
-            if (routeData.Route.RouteTemplate.Contains("/DesktopModules/2sxc/API/App/") && module.DesktopModule.ModuleName == "2sxc-app")
+            if (routeData.Route.RouteTemplate.Contains("DesktopModules/2sxc/API/App/") && module.DesktopModule.ModuleName == "2sxc-app")
             {
                 var portalSettings = DotNetNuke.Entities.Portals.PortalSettings.Current;
                 var sexy = request.GetSxcOfModuleContext();
