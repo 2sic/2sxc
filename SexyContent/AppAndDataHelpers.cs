@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DotNetNuke.Entities.Modules;
+using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
 using ToSic.Eav.DataSources;
 using ToSic.SexyContent.DataSources;
@@ -18,6 +19,10 @@ namespace ToSic.SexyContent
             App = app;
             Data = data;
             Dnn = new DnnHelper(module);
+
+            // If PortalSettings is null - for example, while search index runs - HasEditPermission would fail
+            // But in search mode, it shouldn't show drafts, so this is ok.
+            App.InitData(PortalSettings.Current != null && SexyContent.HasEditPermission(module));
         }
 
         public App App { get; private set; }

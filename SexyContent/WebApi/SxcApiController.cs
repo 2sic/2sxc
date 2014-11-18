@@ -55,7 +55,7 @@ namespace ToSic.SexyContent.WebApi
         {
             get { return AppAndDataHelpers.Dnn; }
         }
-        protected internal new ToSic.SexyContent.App App
+        protected internal ToSic.SexyContent.App App
         {
             get { return AppAndDataHelpers.App; }
         }

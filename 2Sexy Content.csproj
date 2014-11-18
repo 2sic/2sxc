@@ -196,6 +196,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="SexyContent\ContentGroupItem.cs" />
+    <Compile Include="SexyContent\DataSources\App.cs" />
     <Compile Include="SexyContent\DnnHelper.cs" />
     <Compile Include="SexyContent\Data\Api01\SimpleDataController.cs" />
     <Compile Include="SexyContent\SexyContentContext.Designer.cs">
