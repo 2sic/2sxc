@@ -6,7 +6,7 @@ using ToSic.SexyContent.Razor.Helpers;
 
 namespace ToSic.SexyContent
 {
-    interface IAppAndDataHelpers
+    public interface IAppAndDataHelpers
     {
         App App { get; }
         ViewDataSource Data { get; }

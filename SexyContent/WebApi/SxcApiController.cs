@@ -9,7 +9,7 @@ namespace ToSic.SexyContent.WebApi
 {
 
     [SupportedModules("2sxc-app")]
-    public abstract class SxcApiController : DnnApiController
+    public abstract class SxcApiController : DnnApiController, IAppAndDataHelpers
     {
         private SexyContent _sexyContent;
         private SexyContent _sexyContentUncached;
@@ -51,15 +51,15 @@ namespace ToSic.SexyContent.WebApi
 
         #region AppAndDataHelpers implementation
 
-        protected internal DnnHelper Dnn
+        public DnnHelper Dnn
         {
             get { return AppAndDataHelpers.Dnn; }
         }
-        protected internal ToSic.SexyContent.App App
+        public ToSic.SexyContent.App App
         {
             get { return AppAndDataHelpers.App; }
         }
-        protected internal ViewDataSource Data
+        public ViewDataSource Data
         {
             get { return AppAndDataHelpers.Data; }
         }
@@ -134,12 +134,12 @@ namespace ToSic.SexyContent.WebApi
             return AppAndDataHelpers.AsDynamic(entities);
         }
 
-        protected IDataSource CreateSource(string typeName = "", IDataSource inSource = null, IConfigurationProvider configurationProvider = null)
+        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, IConfigurationProvider configurationProvider = null)
         {
             return AppAndDataHelpers.CreateSource(typeName, inSource, configurationProvider);
         }
 
-        protected T CreateSource<T>(IDataSource inSource = null, IConfigurationProvider configurationProvider = null)
+        public T CreateSource<T>(IDataSource inSource = null, IConfigurationProvider configurationProvider = null)
         {
             return AppAndDataHelpers.CreateSource<T>(inSource, configurationProvider);
         }
@@ -150,7 +150,7 @@ namespace ToSic.SexyContent.WebApi
         /// <typeparam name="T"></typeparam>
         /// <param name="inStream"></param>
         /// <returns></returns>
-        protected T CreateSource<T>(IDataStream inStream)
+        public T CreateSource<T>(IDataStream inStream)
         {
             return AppAndDataHelpers.CreateSource<T>(inStream);
         }
