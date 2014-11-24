@@ -869,17 +869,32 @@ namespace ToSic.SexyContent
             }
 
             if(appSettings == null)
-            { 
+            {
+
+                AttributeSet settingsAttributeSet;
                 // Add new (empty) ContentType for Settings
-                var settingsAttributeSet = appContext.ContentContext.AddAttributeSet(AttributeSetStaticNameAppSettings, "Stores settings for an app", AttributeSetStaticNameAppSettings, AttributeSetScopeApps);
+                if (!appContext.ContentContext.AttributeSetExists(AttributeSetStaticNameAppSettings, appId))
+                    settingsAttributeSet = appContext.ContentContext.AddAttributeSet(AttributeSetStaticNameAppSettings,
+                        "Stores settings for an app", AttributeSetStaticNameAppSettings, AttributeSetScopeApps);
+                else
+                    settingsAttributeSet = appContext.ContentContext.GetAttributeSet(AttributeSetStaticNameAppSettings);
+
                 DataSource.GetCache(zoneId, appId).PurgeCache(zoneId, appId);
                 appContext.ContentContext.AddEntity(settingsAttributeSet, new OrderedDictionary() { }, null, appId, AssignmentObjectTypeIDSexyContentApp);
             }
 
             if(appResources == null)
             {
+                AttributeSet resourcesAttributeSet;
+
                 // Add new (empty) ContentType for Resources
-                var resourcesAttributeSet = appContext.ContentContext.AddAttributeSet(AttributeSetStaticNameAppResources, "Stores resources like translations for an app", AttributeSetStaticNameAppResources, AttributeSetScopeApps);
+                if (!appContext.ContentContext.AttributeSetExists(AttributeSetStaticNameAppResources, appId))
+                    resourcesAttributeSet = appContext.ContentContext.AddAttributeSet(
+                        AttributeSetStaticNameAppResources, "Stores resources like translations for an app",
+                        AttributeSetStaticNameAppResources, AttributeSetScopeApps);
+                else
+                    resourcesAttributeSet = appContext.ContentContext.GetAttributeSet(AttributeSetStaticNameAppResources);
+
                 DataSource.GetCache(zoneId, appId).PurgeCache(zoneId, appId);
                 appContext.ContentContext.AddEntity(resourcesAttributeSet, new OrderedDictionary() { }, null, appId, AssignmentObjectTypeIDSexyContentApp);
             }
