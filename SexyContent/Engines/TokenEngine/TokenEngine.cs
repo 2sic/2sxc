@@ -32,7 +32,6 @@ namespace ToSic.SexyContent.Engines.TokenEngine
             // Prepare Source Text
             string sourceText = System.IO.File.ReadAllText(HostingEnvironment.MapPath(TemplatePath));
             string repeatingPart;
-            bool containsRepeat = sourceText.Contains("<repeat>") && sourceText.Contains("</repeat>");
             
             // Prepare List Object
             var list = new Dictionary<string, string>
@@ -51,27 +50,13 @@ namespace ToSic.SexyContent.Engines.TokenEngine
             list["Count"] = elements.Count.ToString();
 
             // If the SourceText contains a <repeat>, define Repeating Part. Else take SourceText as repeating part.
+            bool containsRepeat = sourceText.Contains("<repeat>") && sourceText.Contains("</repeat>");
             if (containsRepeat)
-            {
                 repeatingPart = Regex.Match(sourceText, @"<repeat>(.*?)</repeat>", RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[1].Captures[0].Value;
-                var tr = new TokenReplace(null, null, listContent, listPresentation, list, App);
-                tr.ModuleId = ModuleInfo.ModuleID;
-                tr.PortalSettings = PortalSettings.Current;
-                sourceText = tr.ReplaceEnvironmentTokens(sourceText);
-            }
             else
-                repeatingPart = sourceText;
+                repeatingPart = "";
 
             string renderedTemplate = "";
-
-            // Replace available tokens even if there are no elements in the list
-            if (elements.Count == 0)
-            {
-                var tr = new TokenReplace(null, null, listContent, listPresentation, list, App);
-                tr.ModuleId = ModuleInfo.ModuleID;
-                tr.PortalSettings = PortalSettings.Current;
-                renderedTemplate = tr.ReplaceEnvironmentTokens(repeatingPart);
-            }
 
             foreach (Element element in elements)
             {
@@ -92,8 +77,14 @@ namespace ToSic.SexyContent.Engines.TokenEngine
                 renderedTemplate += tokenReplace.ReplaceEnvironmentTokens(repeatingPart);
             }
 
-            // Return Rendered Template
-            renderedTemplate = containsRepeat ? Regex.Replace(sourceText, "<repeat>.*?</repeat>", renderedTemplate, RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.Singleline) : renderedTemplate;
+            // Replace repeating part
+            renderedTemplate = Regex.Replace(sourceText, "<repeat>.*?</repeat>", renderedTemplate, RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.Singleline);
+
+            // Replace tokens outside the repeating part
+            var tr2 = new TokenReplace(elements.Any() ? elements.First().Content : null, elements.Any() ? elements.First().Presentation : null, listContent, listPresentation, list, App);
+            tr2.ModuleId = ModuleInfo.ModuleID;
+            tr2.PortalSettings = PortalSettings.Current;
+            renderedTemplate = tr2.ReplaceEnvironmentTokens(renderedTemplate);
 
             return renderedTemplate;
         }
