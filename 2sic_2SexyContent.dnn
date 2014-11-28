@@ -826,6 +826,16 @@
                     <helpUrl />
                     <supportsPopUps>True</supportsPopUps>
                   </moduleControl>
+                   <moduleControl>
+                    <controlKey>webapihelp</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/WebApiHelp.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Web API Help</controlTitle>
+                    <controlType>Admin</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                  </moduleControl>
                 </moduleControls>
               </moduleDefinition>
             </moduleDefinitions>

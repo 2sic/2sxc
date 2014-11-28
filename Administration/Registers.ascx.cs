@@ -23,9 +23,13 @@ namespace ToSic.SexyContent.Administration
             // Add Buttons if ZoneID is set
             if (SexyContent.GetZoneID(ParentModule.PortalId).HasValue)
             {
-                Registers.Add(SexyContent.ControlKeys.Import);
-                Registers.Add(SexyContent.ControlKeys.ManageTemplates);
                 Registers.Add(SexyContent.ControlKeys.EavManagement);
+                Registers.Add(SexyContent.ControlKeys.ManageTemplates);
+
+                if(!ParentModule.IsContentApp)
+                    Registers.Add(SexyContent.ControlKeys.WebApiHelp);
+
+                Registers.Add(SexyContent.ControlKeys.Import);
             }
 
             if (ParentModule.IsContentApp)
