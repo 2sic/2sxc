@@ -1,4 +1,5 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="WebApiHelp.ascx.cs" Inherits="ToSic.SexyContent.Administration.WebApiHelp" %>
+<%@ Import Namespace="System.IO" %>
 <%@ Register TagName="AdministrationRegisters" TagPrefix="SexyContent" Src="Registers.ascx" %>
 <SexyContent:AdministrationRegisters runat="server"></SexyContent:AdministrationRegisters>
 
@@ -10,8 +11,20 @@
         <%= LocalizeString("WebApiHelp.Text") %>
         <br/><br/>
         The following table shows the .cs files in the App-API folder:<br/>
-        [todo: list here]<br/><br/>
-        For a quick start, the following button will auto-generate a simple WebAPI-Controller for you and create the JavaScript code to access the API. <br/>
+        <% if (Directory.Exists(Path.Combine(this.Sexy.App.PhysicalPath, "Api"))) { %>
+        <ul>
+            <% foreach (var file in Directory.GetFiles(Path.Combine(this.Sexy.App.PhysicalPath, "Api"))) { %>
+            <li>
+                <%= Path.GetFileName(file) %>
+            </li>
+            <% } %>
+        </ul>
+        <% } else { %>
+            <p>(the directory does not exist)</p>
+        <% } %>
+
+        <br/><br/>
+        For a quick start, we recommend that you install the WebApi demo-app. It contains some WebAPI controllers with various actions and some example views to use these controllers. Download the App here in the App-Catalog.
         [todo:button]
     </fieldset>
 </asp:Panel>
