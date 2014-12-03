@@ -37,6 +37,30 @@ namespace ToSic.SexyContent
             OwnerPS = ownerPS;
         }
 
+        /// <summary>
+        /// needed to initialize data - must always happen a bit later because the show-draft info isn't available when creating the first App-object.
+        /// todo: later this should be moved to initialization of this object
+        /// </summary>
+        /// <param name="showDrafts"></param>
+        internal void InitData(bool showDrafts)
+        {
+            // ToDo: Remove this as soon as App.Data getter on App class is fixed #1 and #2
+            if (_data == null)
+            {
+                // ModulePermissionController does not work when indexing, return false for search
+                var initialSource = SexyContent.GetInitialDataSource(ZoneId, AppId, showDrafts);
+
+                _data = ToSic.Eav.DataSource.GetDataSource<ToSic.SexyContent.DataSources.App>(initialSource.ZoneId,
+                    initialSource.AppId, initialSource, initialSource.ConfigurationProvider);
+                var defaultLanguage = "";
+                var languagesActive = SexyContent.GetCulturesWithActiveState(OwnerPS.PortalId, ZoneId).Any(c => c.Active);
+                if (languagesActive)
+                    defaultLanguage = OwnerPS.DefaultLanguage;
+                Data.DefaultLanguage = defaultLanguage;
+                Data.CurrentUserName = OwnerPS.UserInfo.Username;
+            }
+        }
+
         public string Path
         {
             get
@@ -54,8 +78,10 @@ namespace ToSic.SexyContent
             }
         }
 
-        private IDataSource _data;
-        public IDataSource Data
+        //private IDataSource _data;
+        //public IDataSource Data
+        private ToSic.SexyContent.DataSources.App _data;
+        public ToSic.SexyContent.DataSources.App Data
         {
             get
             {

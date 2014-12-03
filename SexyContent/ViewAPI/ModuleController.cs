@@ -10,12 +10,12 @@ using System.Text;
 using System.Web.Http;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Engines;
-using ToSic.SexyContent.WebApiExtensions;
+using ToSic.SexyContent.WebApi;
 
 namespace ToSic.SexyContent.ViewAPI
 {
     [SupportedModules("2sxc,2sxc-app")]
-    public class ModuleController : SexyContentApiController
+    public class ModuleController : SxcApiController
     {
 
         [HttpGet]
@@ -40,7 +40,7 @@ namespace ToSic.SexyContent.ViewAPI
         [ValidateAntiForgeryToken]
         public void SetTemplateChooserState([FromUri]bool state)
         {
-            ActiveModule.ModuleSettings[SexyContent.SettingsShowTemplateChooser] = state;
+            new DotNetNuke.Entities.Modules.ModuleController().UpdateModuleSetting(ActiveModule.ModuleID, SexyContent.SettingsShowTemplateChooser, state.ToString());
         }
 
         [HttpGet]
@@ -82,7 +82,7 @@ namespace ToSic.SexyContent.ViewAPI
         [ValidateAntiForgeryToken]
         public IEnumerable<object> GetSelectableContentTypes()
         {
-            return Sexy.GetAvailableAttributeSetsForVisibleTemplates(PortalSettings.PortalId).Select(p => new { p.AttributeSetID, p.Name } );
+            return Sexy.GetAvailableAttributeSetsForVisibleTemplates(PortalSettings.PortalId).Select(p => new { p.AttributeSetId, p.Name } );
         }
 
         [HttpGet]

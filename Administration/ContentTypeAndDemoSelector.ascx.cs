@@ -98,7 +98,7 @@ namespace ToSic.SexyContent
                 var AttributeSets = Sexy.GetAvailableAttributeSets(SexyContent.AttributeSetScope);
                 ddlContentTypes.DataSource = AttributeSets;
 
-                if (AttributeSets.Any(a => a.AttributeSetID == _ContentTypeID))
+                if (AttributeSets.Any(a => a.AttributeSetId == _ContentTypeID))
                     ddlContentTypes.SelectedValue = _ContentTypeID.ToString();
 
                 ddlContentTypes.DataBind();

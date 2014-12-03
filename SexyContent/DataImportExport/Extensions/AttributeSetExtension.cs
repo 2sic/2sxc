@@ -27,5 +27,10 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
         {
             return attributeSet.GetEntity(entityGuid) != null;
         }
+
+        public static Eav.Attribute GetAttribute(this AttributeSet attributeSet, string attributeName)
+        {
+            return attributeSet.GetAttributes().FirstOrDefault(attr => attr.StaticName == attributeName);
+        }
     }
 }

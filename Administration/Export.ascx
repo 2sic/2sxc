@@ -18,7 +18,7 @@
             </div>
 
             <ul class="sc-export-list">
-                <li ng-repeat="contentType in data">
+                <li ng-repeat="contentType in contentTypes">
                     <a ng-click="contentType._2sxcExport = !contentType._2sxcExport;" ng-class="{active: contentType._2sxcExport}">
                         <input type="checkbox" ng-model="contentType._2sxcExport" ng-click="$event.stopPropagation()" />
                         ContentType: {{contentType.Name}} ({{contentType.Id}})
@@ -29,7 +29,7 @@
                         <ul>
                             <li ng-repeat="template in contentType.Templates">
                                 <a ng-click="template._2sxcExport = !template._2sxcExport;" ng-class="{active: template._2sxcExport}">
-                                     <input type="checkbox" ng-model="template._2sxcExport" ng-click="$event.stopPropagation()" />
+                                    <input type="checkbox" ng-model="template._2sxcExport" ng-click="$event.stopPropagation()" />
                                     {{template.Name}} ({{template.TemplateID}})
 
                                     <i ng-init="currentTemplateDefaults = templateDefaultFilter(template.TemplateDefaults);">
@@ -53,6 +53,16 @@
                             </li>
                         </ul>
                     </div>
+                </li>
+            </ul>
+            <br /><br />
+            <strong>Templates without content type</strong>
+            <ul class="sc-export-list">
+                <li ng-repeat="template in templatesWithoutContentType">
+                    <a ng-click="template._2sxcExport = !template._2sxcExport;" ng-class="{active: template._2sxcExport}">
+                        <input type="checkbox" ng-model="template._2sxcExport" ng-click="$event.stopPropagation()" />
+                        {{template.Name}} ({{template.TemplateID}})
+                    </a>
                 </li>
             </ul>
         </div>

@@ -1,7 +1,7 @@
 ﻿(function () {
     var module = angular.module('2sxc.view', ["2sxc.api"]);
 
-	module.controller('TemplateSelectorCtrl', function ($scope, $attrs, moduleApiService, $filter, $q, $window) {
+    module.controller('TemplateSelectorCtrl', function($scope, $attrs, moduleApiService, $filter, $q, $window) {
 
         var moduleId = $attrs.moduleid;
 
@@ -24,7 +24,7 @@
         $scope.savedAppId = $scope.manageInfo.appId;
         $scope.loading = 0;
 
-		$scope.reloadTemplates = function () {
+        $scope.reloadTemplates = function() {
 
             $scope.loading++;
             var getContentTypes = moduleApi.getSelectableContentTypes();
@@ -35,7 +35,7 @@
                 $scope.templates = res[1].data;
                 // Add option for no content type if there are templates without
                 if ($filter('filter')($scope.templates, { AttributeSetID: null }, true).length > 0) {
-                    $scope.contentTypes.push({ AttributeSetID: null, Name: "Layout element" });
+                    $scope.contentTypes.push({ AttributeSetId: null, Name: "Layout element" });
                     $scope.contentTypes = $filter('orderBy')($scope.contentTypes, 'Name');
                 }
 
@@ -43,7 +43,7 @@
                 if (template[0] != null && $scope.contentTypeId == 0)
                     $scope.contentTypeId = template[0].AttributeSetID;
 
-				$scope.$watch('templateId', function (newTemplateId, oldTemplateId) {
+                $scope.$watch('templateId', function(newTemplateId, oldTemplateId) {
                     if (newTemplateId != oldTemplateId) {
                         if ($scope.manageInfo.isContentApp)
                             $scope.renderTemplate(newTemplateId);
@@ -54,11 +54,11 @@
                     }
                 });
 
-				$scope.$watch('contentTypeId', function (newContentTypeId, oldContentTypeId) {
+                $scope.$watch('contentTypeId', function(newContentTypeId, oldContentTypeId) {
                     if (newContentTypeId == oldContentTypeId)
                         return;
                     // Select first template if contentType changed
-                    var firstTemplateId = $scope.filteredTemplates(newContentTypeId)[0].TemplateID; // $filter('filter')($scope.templates, { AttributeSetID: $scope.contentTypeId == null ? "!!" : $scope.contentTypeId })[0].TemplateID;
+                    var firstTemplateId = $scope.filteredTemplates(newContentTypeId)[0].TemplateID; // $filter('filter')($scope.templates, { AttributeSetId: $scope.contentTypeId == null ? "!!" : $scope.contentTypeId })[0].TemplateID;
                     if ($scope.templateId != firstTemplateId && firstTemplateId != null)
                         $scope.templateId = firstTemplateId;
                 });
@@ -71,22 +71,29 @@
         if ($scope.appId != null && $scope.manageInfo.templateChooserVisible)
             $scope.reloadTemplates();
 
-		$scope.$watch('manageInfo.templateChooserVisible', function (visible) {
+        $scope.$watch('manageInfo.templateChooserVisible', function(visible) {
             if ($scope.appId != null && visible)
                 $scope.reloadTemplates();
         });
 
         $scope.$watch('appId', function (newAppId, oldAppId) {
-            if (newAppId == oldAppId)
+            if (newAppId == oldAppId || newAppId == null)
                 return;
-			moduleApi.setAppId(newAppId).then(function () {
+
+            if (newAppId == -1) {
+                window.location = $attrs.importappdialog;
+                return;
+            }
+
+            moduleApi.setAppId(newAppId).then(function() {
                 $window.location.reload();
             });
         });
 
         if (!$scope.manageInfo.isContentApp) {
-			moduleApi.getSelectableApps().then(function (data) {
+            moduleApi.getSelectableApps().then(function(data) {
                 $scope.apps = data.data;
+                $scope.apps.push({ Name: $attrs.importapptext, AppId: -1 });
             });
         }
 
@@ -109,7 +116,7 @@
 
             $scope.savedTemplateId = $scope.templateId;
 
-			if ($scope.manageInfo.isContentApp)
+            if($scope.manageInfo.isContentApp)
                 promises.push($scope.setTemplateChooserState(false));
 
             return $q.all(promises);
@@ -129,11 +136,11 @@
             });
         };
 
-		$scope.insertRenderedTemplate = function (renderedTemplate) {
+        $scope.insertRenderedTemplate = function(renderedTemplate) {
             $(".DnnModule-" + moduleId + " .sc-viewport").html(renderedTemplate);
         };
 
-		$scope.addItem = function (sortOrder) {
+        $scope.addItem = function(sortOrder) {
             moduleApi.addItem(sortOrder).then(function () {
                 $scope.renderTemplate($scope.templateId);
             });
@@ -141,27 +148,27 @@
 
     });
 
-	module.factory('moduleApiService', function (apiService) {
-		return function (moduleId) {
+    module.factory('moduleApiService', function(apiService) {
+        return function(moduleId) {
             return {
-				saveTemplateId: function (templateId) {
+                saveTemplateId: function(templateId) {
                     return apiService(moduleId, {
                         url: 'View/Module/SaveTemplateId',
                         params: { templateId: templateId }
                     });
                 },
-				addItem: function (sortOrder) {
+                addItem: function(sortOrder) {
                     return apiService(moduleId, {
                         url: 'View/Module/AddItem',
                         params: { sortOrder: sortOrder }
                     });
                 },
-				getSelectableApps: function () {
+                getSelectableApps: function() {
                     return apiService(moduleId, {
                         url: 'View/Module/GetSelectableApps'
                     });
                 },
-				setAppId: function (appId) {
+                setAppId: function(appId) {
                     return apiService(moduleId, {
                         url: 'View/Module/SetAppId',
                         params: { appId: appId }
@@ -172,18 +179,18 @@
                         url: 'View/Module/GetSelectableContentTypes'
                     });
                 },
-				getSelectableTemplates: function () {
+                getSelectableTemplates: function() {
                     return apiService(moduleId, {
                         url: 'View/Module/GetSelectableTemplates'
                     });
                 },
-				setTemplateChooserState: function (state) {
+                setTemplateChooserState: function(state) {
                     return apiService(moduleId, {
                         url: 'View/Module/SetTemplateChooserState',
                         params: { state: state }
                     });
                 },
-				renderTemplate: function (templateId) {
+                renderTemplate: function(templateId) {
                     return apiService(moduleId, {
                         url: 'View/Module/RenderTemplate',
                         params: { templateId: templateId }

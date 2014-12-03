@@ -759,8 +759,8 @@ Eav.FieldControllerManager = {
 			case "gps":
 				var latitudeStaticName = objWrapper.attr("data-staticname");
 				var longitude = objWrapper.next();
-				if (longitude.attr("data-fieldtype") != "Number" || longitude.attr("data-fieldsubtype") != "")
-					alert("GPS Number Field \"" + latitudeStaticName + "\" isn't configured correctly.\nThe field below/next to Latitude must be Longitude. Both must be Number fields but only Latitude must be of Typ \"GPS\".");
+				if (longitude.attr("data-fieldtype") != "Number" || (longitude.attr("data-fieldsubtype") != "" && longitude.attr("data-fieldsubtype") != "default"))
+					alert("GPS Number Field \"" + latitudeStaticName + "\" isn't configured correctly.\nThe field below/next to Latitude must be Longitude. Both must be Number fields but only Latitude must be of type \"GPS\".");
 
 				objWrapper.find(".eav-field-control").append('<div class="eav-gps-map-actions"><input class="eav-gps-map-showhide" type="button" value="Show Map" onclick="Eav.Gps.ShowMap(\'' + latitudeStaticName + '\')" /><input type="button" value="Find on Map" onclick="Eav.Gps.FindOnMap(\'' + latitudeStaticName + '\')"/></div>');
 				objWrapper.before('<div id="eav-gps-map-' + latitudeStaticName + '" class="eav-gps-map-canvas" style="height: 400px; display: none"></div>');

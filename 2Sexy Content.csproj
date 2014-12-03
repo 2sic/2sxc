@@ -75,6 +75,10 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="SharpZipLib, Version=0.81.0.1407, Culture=neutral">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\SharpZipLib.dll</HintPath>
@@ -94,6 +98,10 @@
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.Http.WebHost, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
@@ -155,6 +163,13 @@
     <Compile Include="Administration\DataImport.ascx.designer.cs">
       <DependentUpon>DataImport.ascx</DependentUpon>
     </Compile>
+    <Compile Include="Administration\WebApiHelp.ascx.cs">
+      <DependentUpon>WebApiHelp.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Administration\WebApiHelp.ascx.designer.cs">
+      <DependentUpon>WebApiHelp.ascx</DependentUpon>
+    </Compile>
     <Compile Include="Administration\GettingStarted.ascx.cs">
       <DependentUpon>GettingStarted.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -206,6 +221,9 @@
     <Compile Include="SexyContent\EAV\PipelineDesigner\PipelineDesignerDnnWrapper.ascx.designer.cs">
       <DependentUpon>PipelineDesignerDnnWrapper.ascx</DependentUpon>
     </Compile>
+    <Compile Include="SexyContent\DataSources\App.cs" />
+    <Compile Include="SexyContent\DnnHelper.cs" />
+    <Compile Include="SexyContent\Data\Api01\SimpleDataController.cs" />
     <Compile Include="SexyContent\SexyContentContext.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -214,6 +232,8 @@
     <Compile Include="SexyContent\SexyViewContentOrApp.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="SexyContent\IAppAndDataHelpers.cs" />
+    <Compile Include="SexyContent\AppAndDataHelpers.cs" />
     <Compile Include="SexyContent\Template.cs" />
     <Compile Include="EditEntity.ascx.cs">
       <DependentUpon>EditEntity.ascx</DependentUpon>
@@ -387,7 +407,7 @@
     <Compile Include="SexyContent\ImportExport\XmlImport.cs" />
     <Compile Include="SexyContent\ImportExport\ZipExport.cs" />
     <Compile Include="SexyContent\ImportExport\ZipImport.cs" />
-    <Compile Include="SexyContent\RouteMapper.cs" />
+    <Compile Include="SexyContent\WebApi\RouteMapper.cs" />
     <Compile Include="SexyContent\Search\ISearchInfo.cs" />
     <Compile Include="SexyContent\Search\SearchController.cs" />
     <Compile Include="SexyContent\Search\SearchIndexException.cs" />
@@ -401,8 +421,9 @@
     </Compile>
     <Compile Include="SexyContent\TemplateDefault.cs" />
     <Compile Include="SexyContent\ViewAPI\ModuleController.cs" />
-    <Compile Include="SexyContent\WebApiExtensions\HttpRequestMessageExtensions.cs" />
-    <Compile Include="SexyContent\WebApiExtensions\SexyContentApiController.cs" />
+    <Compile Include="SexyContent\WebApi\HttpRequestMessageExtensions.cs" />
+    <Compile Include="SexyContent\WebApi\SxcApiController.cs" />
+    <Compile Include="SexyContent\WebApi\AppApiControllerSelector.cs" />
     <Compile Include="TemplateHelpGrid.ascx.cs">
       <DependentUpon>TemplateHelpGrid.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -472,6 +493,7 @@
     <Content Include="Administration\Apps\AppImport.ascx" />
     <Content Include="Administration\DataExport.ascx" />
     <Content Include="Administration\DataImport.ascx" />
+    <Content Include="Administration\WebApiHelp.ascx" />
     <Content Include="Administration\Export.js" />
     <Content Include="Administration\GettingStarted.ascx" />
     <Content Include="Administration\PortalConfiguration.ascx" />
@@ -734,6 +756,7 @@
     <Content Include="App_LocalResources\EditEntity.ascx.de-DE.resx" />
     <Content Include="App_LocalResources\EditEntity.ascx.resx" />
     <Content Include="Administration\Apps\App_LocalResources\AppConfig.ascx.resx" />
+    <Content Include="Administration\App_LocalResources\WebApiHelp.ascx.resx" />
     <EmbeddedResource Include="SexyContent\DataImportExport\ImportErrorCode.de-DE.resx" />
     <EmbeddedResource Include="SexyContent\DataImportExport\ImportErrorCode.resx" />
   </ItemGroup>

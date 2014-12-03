@@ -13,7 +13,7 @@
         </div>
     </fieldset>
     <ul class="dnnActions dnnClear">
-        <li><asp:LinkButton ID="btnUpload" runat="server" CssClass="dnnPrimaryAction" Text="Upload" ResourceKey="btnUpload" OnClick="btnUpload_Click"></asp:LinkButton></li>
+        <li><asp:LinkButton ID="btnUpload" runat="server" CssClass="dnnPrimaryAction" Text="Upload" ResourceKey="btnUpload" OnClick="btnUpload_Click" OnClientClick="$(this).hide();"></asp:LinkButton></li>
     </ul>
 </asp:Panel>
 

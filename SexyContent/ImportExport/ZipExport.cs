@@ -35,7 +35,7 @@ namespace ToSic.SexyContent.ImportExport
             //                    || a.StaticName == SexyContent.AttributeSetStaticNameTemplateMetaData
             //                    || a.StaticName.StartsWith("@"));
 
-            var attributeSetIds = attributeSets.Select(p => p.AttributeSetID.ToString()).ToArray();
+            var attributeSetIds = attributeSets.Select(p => p.AttributeSetId.ToString()).ToArray();
             var entities = SexyContent.GetInitialDataSource(_zoneId, _appId).Out["Default"].List;
             var entityIds = entities.Where(e => e.Value.AssignmentObjectTypeId != SexyContent.AssignmentObjectTypeIDSexyContentTemplate 
                 && e.Value.AssignmentObjectTypeId != DataSource.AssignmentObjectTypeIdFieldProperties)

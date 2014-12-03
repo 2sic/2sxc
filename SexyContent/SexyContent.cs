@@ -1,19 +1,15 @@
-﻿using System.Configuration;
-using System.Data.Objects;
-using System.Globalization;
-using DotNetNuke.Common;
-using DotNetNuke.Common.Internal;
+﻿using DotNetNuke.Common;
 using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Portals.Internal;
-using DotNetNuke.Entities.Tabs.Internal;
 using DotNetNuke.Security;
 using DotNetNuke.Security.Permissions;
 using DotNetNuke.Security.Roles;
 using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Services.Localization;
 using DotNetNuke.Services.Search.Entities;
+using DotNetNuke.Web.Client.ClientResourceManagement;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -23,7 +19,6 @@ using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
-using DotNetNuke.Web.Client.ClientResourceManagement;
 using ToSic.Eav;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Caches;
@@ -44,7 +39,7 @@ namespace ToSic.SexyContent
     {
         #region Constants
 
-        public const string ModuleVersion = "06.04.02";
+        public const string ModuleVersion = "06.04.04";
         public const string TemplateID = "TemplateID";
         public const string ContentGroupIDString = "ContentGroupID";
         public const string AppIDString = "AppId";
@@ -86,6 +81,7 @@ namespace ToSic.SexyContent
             public const string AppConfig = "appconfig";
 			public const string PipelineManagement = "pipelinemanagement";
 			public const string PipelineDesigner = "pipelinedesigner";
+            public const string WebApiHelp = "WebApiHelp";
         }
 
         public const string PortalHostDirectory = "~/Portals/_default/";
@@ -599,7 +595,7 @@ namespace ToSic.SexyContent
         }
 
 	    private ConfigurationProvider GetConfigurationProvider(int moduleId)
-	    {
+        {
 		    var provider = new ConfigurationProvider();
 		    provider.Sources.Add("querystring", new QueryStringPropertyAccess("querystring"));
 		    provider.Sources.Add("app", new AppPropertyAccess("app", App));
@@ -610,9 +606,9 @@ namespace ToSic.SexyContent
 		    modulePropertyAccess.Properties.Add("ModuleID", moduleId.ToString(CultureInfo.InvariantCulture));
 		    provider.Sources.Add(modulePropertyAccess.Name, modulePropertyAccess);
 		    return provider;
-	    }
+                }
 
-	    /// <summary>
+        /// <summary>
         /// The EAV DataSource
         /// </summary>
         private ToSic.Eav.DataSources.IDataSource ViewDataSource { get; set; }
@@ -626,7 +622,7 @@ namespace ToSic.SexyContent
                 var initialSource = GetInitialDataSource(ZoneId.Value, AppId.Value, showDrafts);
 				var moduleDataSource = DataSource.GetDataSource<ModuleDataSource>(ZoneId, AppId, initialSource, configurationProvider);
                 moduleDataSource.ModuleId = moduleId;
-                moduleDataSource.IncludeEditingData = true;
+                moduleDataSource.IncludeEditingData = includeEditingData;
                 moduleDataSource.OverrideTemplateId = overrideTemplateId;
                 moduleDataSource.Sexy = this;
 
@@ -653,13 +649,13 @@ namespace ToSic.SexyContent
 				// Take Publish-Properties from the View-Template
 	            if (template != null)
 	            {
-					viewDataSource.Publish.Enabled = template.PublishData;
-					viewDataSource.Publish.Streams = template.StreamsToPublish;
+                    viewDataSource.Publish.Enabled = template.PublishData;
+                    viewDataSource.Publish.Streams = template.StreamsToPublish;
 
 					// Append Streams of the Data-Pipeline
 		            if (template.PipelineEntityID.HasValue)
 						DataPipelineFactory.GetDataSource(AppId.Value, template.PipelineEntityID.Value, configurationProvider, viewDataSource);
-	            }
+                }
 
                 ViewDataSource = viewDataSource;
             }
@@ -669,12 +665,12 @@ namespace ToSic.SexyContent
 
 
 		#region Get ModuleDataSource and Streams of it
-		/// <summary>
-		/// Get a list of ContentElements by ModuleId or ContentGroupID
-		/// </summary>
+        /// <summary>
+        /// Get a list of ContentElements by ModuleId or ContentGroupID
+        /// </summary>
 		[Obsolete("Use Overload with less Parameters")]
-		public List<Element> GetContentElements(int ModuleID, string LanguageName, int? ContentGroupID, int PortalId, bool showDrafts)
-		{
+        public List<Element> GetContentElements(int ModuleID, string LanguageName, int? ContentGroupID, int PortalId, bool showDrafts)
+        {
 			return GetContentElements(ModuleID, showDrafts);
 		}
 
@@ -684,11 +680,11 @@ namespace ToSic.SexyContent
 		public List<Element> GetContentElements(int moduleId, bool showDrafts)
 		{
 			return GetModuleDataSource(moduleId, showDrafts).ContentElements;
-		}
+        }
 
 		[Obsolete("Use Overload with less Parameters")]
-		public Element GetListElement(int ModuleID, string LanguageName, int? ContentGroupID, int PortalId, bool showDrafts)
-		{
+        public Element GetListElement(int ModuleID, string LanguageName, int? ContentGroupID, int PortalId, bool showDrafts)
+        {
 			return GetListElement(ModuleID, showDrafts);
 		}
 
@@ -701,7 +697,7 @@ namespace ToSic.SexyContent
 		{
 			var viewDataSource = (IDataTarget)GetViewDataSource(moduleId, showDrafts, false);
 			return DataPipelineFactory.FindDataSource<ModuleDataSource>(viewDataSource);
-		} 
+        }
 		#endregion
 
         /// <summary>
@@ -909,16 +905,31 @@ namespace ToSic.SexyContent
 
             if(appSettings == null)
             { 
+
+                AttributeSet settingsAttributeSet;
                 // Add new (empty) ContentType for Settings
-                var settingsAttributeSet = appContext.ContentContext.AddAttributeSet(AttributeSetStaticNameAppSettings, "Stores settings for an app", AttributeSetStaticNameAppSettings, AttributeSetScopeApps);
+                if (!appContext.ContentContext.AttributeSetExists(AttributeSetStaticNameAppSettings, appId))
+                    settingsAttributeSet = appContext.ContentContext.AddAttributeSet(AttributeSetStaticNameAppSettings,
+                        "Stores settings for an app", AttributeSetStaticNameAppSettings, AttributeSetScopeApps);
+                else
+                    settingsAttributeSet = appContext.ContentContext.GetAttributeSet(AttributeSetStaticNameAppSettings);
+
                 DataSource.GetCache(zoneId, appId).PurgeCache(zoneId, appId);
                 appContext.ContentContext.AddEntity(settingsAttributeSet, new OrderedDictionary() { }, null, appId, AssignmentObjectTypeIDSexyContentApp);
             }
 
             if(appResources == null)
             {
+                AttributeSet resourcesAttributeSet;
+
                 // Add new (empty) ContentType for Resources
-                var resourcesAttributeSet = appContext.ContentContext.AddAttributeSet(AttributeSetStaticNameAppResources, "Stores resources like translations for an app", AttributeSetStaticNameAppResources, AttributeSetScopeApps);
+                if (!appContext.ContentContext.AttributeSetExists(AttributeSetStaticNameAppResources, appId))
+                    resourcesAttributeSet = appContext.ContentContext.AddAttributeSet(
+                        AttributeSetStaticNameAppResources, "Stores resources like translations for an app",
+                        AttributeSetStaticNameAppResources, AttributeSetScopeApps);
+                else
+                    resourcesAttributeSet = appContext.ContentContext.GetAttributeSet(AttributeSetStaticNameAppResources);
+
                 DataSource.GetCache(zoneId, appId).PurgeCache(zoneId, appId);
                 appContext.ContentContext.AddEntity(resourcesAttributeSet, new OrderedDictionary() { }, null, appId, AssignmentObjectTypeIDSexyContentApp);
             }
@@ -948,7 +959,7 @@ namespace ToSic.SexyContent
                 return null;
 
             return new SexyContent(zoneId, appId).GetAvailableAttributeSets(AttributeSetScopeApps)
-                .Single(p => p.StaticName == AttributeSetStaticNameAppSettings).AttributeSetID;
+                .Single(p => p.StaticName == AttributeSetStaticNameAppSettings).AttributeSetId;
         }
 
         public static int? GetAppResourcesAttributeSetId(int zoneId, int appId)
@@ -957,7 +968,7 @@ namespace ToSic.SexyContent
                 return null;
 
             return new SexyContent(zoneId, appId).GetAvailableAttributeSets(AttributeSetScopeApps)
-                .Single(p => p.StaticName == AttributeSetStaticNameAppResources).AttributeSetID;
+                .Single(p => p.StaticName == AttributeSetStaticNameAppResources).AttributeSetId;
         }
 
         public static int? GetAppIdFromModule(ModuleInfo module)
@@ -1109,20 +1120,21 @@ namespace ToSic.SexyContent
             TemplateContext.SaveChanges();
         }
 
-        public IEnumerable<AttributeSet> GetAvailableAttributeSets(string scope)
+        public IEnumerable<IContentType> GetAvailableAttributeSets(string scope)
         {
             return GetAvailableAttributeSets().Where(p => p.Scope == scope);
         }
 
-        public IEnumerable<AttributeSet> GetAvailableAttributeSets()
+        public IEnumerable<IContentType> GetAvailableAttributeSets()
         {
-            return ContentContext.GetAllAttributeSets().Where(c => !c.Name.StartsWith("@") && !c.ChangeLogIDDeleted.HasValue).OrderBy(c => c.Name);
+            var contentTypes = ((BaseCache) DataSource.GetCache(this.ZoneId.Value, this.AppId.Value)).GetContentTypes();
+            return contentTypes.Select(c => c.Value).Where(c => !c.Name.StartsWith("@")).OrderBy(c => c.Name);
         }
 
-        public IEnumerable<AttributeSet> GetAvailableAttributeSetsForVisibleTemplates(int PortalId)
+        public IEnumerable<IContentType> GetAvailableAttributeSetsForVisibleTemplates(int PortalId)
         {
             var AvailableTemplates = GetVisibleTemplates(PortalId);
-            return GetAvailableAttributeSets(SexyContent.AttributeSetScope).Where(p => AvailableTemplates.Any(t => t.AttributeSetID == p.AttributeSetID)).OrderBy(p => p.Name);
+            return GetAvailableAttributeSets(SexyContent.AttributeSetScope).Where(p => AvailableTemplates.Any(t => t.AttributeSetID == p.AttributeSetId)).OrderBy(p => p.Name);
         }
 
         /// <summary>
@@ -1311,7 +1323,7 @@ namespace ToSic.SexyContent
                 List = (from c in s.Value.List select GetDictionaryFromEntity(c.Value, language)).ToList()
             });
 
-            return y.ToJson();
+            return Newtonsoft.Json.JsonConvert.SerializeObject(y);
         }
 
         internal Dictionary<string, object> GetDictionaryFromEntity(IEntity entity, string language)
@@ -1422,7 +1434,7 @@ namespace ToSic.SexyContent
         {
 			return SexyContentModuleUpgrade.UpgradeModule(Version);
         }
-
+        
         #endregion
     }
 }
