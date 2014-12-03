@@ -45,7 +45,7 @@ namespace ToSic.SexyContent
                         Boolean.Parse(Settings[SexyContent.SettingsShowTemplateChooser].ToString())
                         : !hasContent;
 
-                    ((DotNetNuke.UI.Modules.ModuleHost)this.Parent).Attributes.Add("data-2sxc", (new
+                    ((DotNetNuke.UI.Modules.ModuleHost)this.Parent).Attributes.Add("data-2sxc", Newtonsoft.Json.JsonConvert.SerializeObject(new
                     {
                         moduleId = ModuleId,
                         manage = new
@@ -70,7 +70,7 @@ namespace ToSic.SexyContent
                                 isList = Template != null && Template.UseForList
                             }
                         }
-                    }).ToJson());
+                    }));
 
                     ClientResourceManager.RegisterScript(this.Page, "~/DesktopModules/ToSIC_SexyContent/Js/2sxc.api.js", 90);
                     ClientResourceManager.RegisterScript(this.Page, "~/DesktopModules/ToSIC_SexyContent/Js/2sxc.api.manage.js", 91);
@@ -104,7 +104,7 @@ namespace ToSic.SexyContent
 
             if (Template.AttributeSetID.HasValue && Elements.All(e => e.Content == null))
             {
-                var toolbar = IsEditable ? "<ul class='sc-menu' data-toolbar='" + new { sortOrder = Elements.First().SortOrder, useModuleList = true, action = "edit" }.ToJson() + "'></ul>" : "";
+                var toolbar = IsEditable ? "<ul class='sc-menu' data-toolbar='" + Newtonsoft.Json.JsonConvert.SerializeObject(new { sortOrder = Elements.First().SortOrder, useModuleList = true, action = "edit" }) + "'></ul>" : "";
                 ShowMessage(LocalizeString("NoDemoItem.Text") + " " + toolbar, pnlMessage);
                 return;
             }
@@ -132,7 +132,7 @@ namespace ToSic.SexyContent
                     {
                         Response.StatusCode = 403;
                         var moduleTitle = new ModuleController().GetModule(ModuleId).ModuleTitle;
-                        renderedTemplate = (new { error = "2sxc Content (" + ModuleId + "): " + String.Format(LocalizeString("EnableDataPublishing.Text"), ModuleId, moduleTitle) }).ToJson();
+                        renderedTemplate = Newtonsoft.Json.JsonConvert.SerializeObject(new { error = "2sxc Content (" + ModuleId + "): " + String.Format(LocalizeString("EnableDataPublishing.Text"), ModuleId, moduleTitle) });
                         Response.TrySkipIisCustomErrors = true;
                     }
                     Response.ContentType = "application/json";

@@ -51,7 +51,7 @@ namespace ToSic.SexyContent
                 })
             };
 
-            pnlExportView.Attributes.Add("ng-init", "init(" + data.ToJson() + ");");
+            pnlExportView.Attributes.Add("ng-init", "init(" + Newtonsoft.Json.JsonConvert.SerializeObject(data) + ");");
 
         }
 

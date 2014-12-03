@@ -24,9 +24,9 @@ namespace ToSic.SexyContent
                     return new HtmlString("");
 
                 if (Entity is IHasEditingData)
-                    return new HtmlString("<ul class='sc-menu' data-toolbar='" + new { sortOrder = ((IHasEditingData) Entity).SortOrder, useModuleList = true, isPublished = Entity.IsPublished }.ToJson() + "'></ul>");
+                    return new HtmlString("<ul class='sc-menu' data-toolbar='" + Newtonsoft.Json.JsonConvert.SerializeObject(new { sortOrder = ((IHasEditingData) Entity).SortOrder, useModuleList = true, isPublished = Entity.IsPublished }) + "'></ul>");
 
-                return new HtmlString("<ul class='sc-menu' data-toolbar='" + new { entityId = Entity.EntityId, isPublished = Entity.IsPublished, attributeSetName = Entity.Type.Name }.ToJson() + "'></ul>");
+                return new HtmlString("<ul class='sc-menu' data-toolbar='" + Newtonsoft.Json.JsonConvert.SerializeObject(new { entityId = Entity.EntityId, isPublished = Entity.IsPublished, attributeSetName = Entity.Type.Name }) + "'></ul>");
             }
         }
         private readonly string[] _dimensions;

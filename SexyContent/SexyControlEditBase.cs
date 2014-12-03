@@ -18,7 +18,7 @@ namespace ToSic.SexyContent
             if (UserMayEditThisModule && this.Parent is ModuleHost)
             {
                 // Add some required variables to module host div
-                ((ModuleHost) this.Parent).Attributes.Add("data-2sxc-globals", (new
+                ((ModuleHost) this.Parent).Attributes.Add("data-2sxc-globals", Newtonsoft.Json.JsonConvert.SerializeObject(new
                 {
                     ModuleContext = new
                     {
@@ -27,7 +27,7 @@ namespace ToSic.SexyContent
                         this.ModuleContext.ModuleId
                     },
                     ApplicationPath = (Request.IsSecureConnection ? "https://" : "http://") + this.PortalAlias.HTTPAlias + "/"
-                }).ToJson());
+                }));
             }
         }
 

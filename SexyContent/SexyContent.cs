@@ -619,7 +619,7 @@ namespace ToSic.SexyContent
                 var initialSource = GetInitialDataSource(ZoneId.Value, AppId.Value, showDrafts);
                 var moduleDataSource = DataSource.GetDataSource<ModuleDataSource>(ZoneId, AppId, initialSource, ConfigurationProvider);
                 moduleDataSource.ModuleId = moduleId;
-                moduleDataSource.IncludeEditingData = true;
+                moduleDataSource.IncludeEditingData = includeEditingData;
                 moduleDataSource.OverrideTemplateId = overrideTemplateId;
                 moduleDataSource.Sexy = this;
 
@@ -1289,7 +1289,7 @@ namespace ToSic.SexyContent
                 List = (from c in s.Value.List select GetDictionaryFromEntity(c.Value, language)).ToList()
             });
 
-            return y.ToJson();
+            return Newtonsoft.Json.JsonConvert.SerializeObject(y);
         }
 
         internal Dictionary<string, object> GetDictionaryFromEntity(IEntity entity, string language)
