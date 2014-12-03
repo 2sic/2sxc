@@ -12,7 +12,7 @@
         The following list shows the .cs files in the App-API folder:<br/>
         <% if (Directory.Exists(Path.Combine(this.Sexy.App.PhysicalPath, "Api"))) { %>
         <ul>
-            <% foreach (var file in Directory.GetFiles(Path.Combine(this.Sexy.App.PhysicalPath, "Api"))) { %>
+            <% foreach (var file in Directory.GetFiles(Path.Combine(this.Sexy.App.PhysicalPath, "Api"), "*.cs")) { %>
             <li>
                 <%= Path.GetFileName(file) %>
             </li>
