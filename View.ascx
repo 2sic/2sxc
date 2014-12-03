@@ -1,5 +1,5 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" Inherits="ToSic.SexyContent.View" Codebehind="View.ascx.cs" %>
-<asp:Placeholder runat="server" ID="pnlTemplateChooser" Visible="false">
+<asp:Placeholder runat="server" ID="pnlTemplateChooser" Visible="false" EnableViewState="False">
     
     <%-- New AngularJS template chooser --%>
     <div ng-controller="TemplateSelectorCtrl" data-moduleid="<%= ModuleId %>" class="sc-selector-wrapper">

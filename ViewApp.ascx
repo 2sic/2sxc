@@ -1,5 +1,5 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" Inherits="ToSic.SexyContent.ViewApp" Codebehind="ViewApp.ascx.cs" %>
-<asp:Placeholder runat="server" ID="pnlTemplateChooser" Visible="false">
+<asp:Placeholder runat="server" ID="pnlTemplateChooser" Visible="false" EnableViewState="False">
     
     <%-- New AngularJS template chooser --%>
     <div ng-controller="TemplateSelectorCtrl" data-moduleid="<%= ModuleId %>" class="sc-selector-wrapper" data-importAppDialog="<%= EditUrl("", "", ToSic.SexyContent.SexyContent.ControlKeys.AppImport) %>" data-importAppText="<%= LocalizeString("GetMoreApps.Text") %>">
