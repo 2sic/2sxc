@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Web;
 using DotNetNuke.Web.Api;
 using System.Collections.Generic;
@@ -52,7 +53,7 @@ namespace ToSic.SexyContent.WebApi
                 }
                 else
                 {
-                    throw new HttpException(404, "Controller " + controllerTypeName + " not found in app.");
+                    throw new HttpResponseException(request.CreateErrorResponse(HttpStatusCode.NotFound, "Controller " + controllerTypeName + " not found in app."));
                 }
             }
             else
