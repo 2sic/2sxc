@@ -1093,7 +1093,7 @@ namespace ToSic.SexyContent
 
         public IEnumerable<IContentType> GetAvailableAttributeSets()
         {
-            var contentTypes = ((BaseCache) DataSource.GetCache(this.ZoneId.Value, null)).GetContentTypes();
+            var contentTypes = ((BaseCache) DataSource.GetCache(this.ZoneId.Value, this.AppId.Value)).GetContentTypes();
             return contentTypes.Select(c => c.Value).Where(c => !c.Name.StartsWith("@")).OrderBy(c => c.Name);
         }
 
