@@ -925,7 +925,7 @@ namespace ToSic.SexyContent
                 return null;
 
             return new SexyContent(zoneId, appId).GetAvailableAttributeSets(AttributeSetScopeApps)
-                .Single(p => p.StaticName == AttributeSetStaticNameAppSettings).AttributeSetID;
+                .Single(p => p.StaticName == AttributeSetStaticNameAppSettings).AttributeSetId;
         }
 
         public static int? GetAppResourcesAttributeSetId(int zoneId, int appId)
@@ -934,7 +934,7 @@ namespace ToSic.SexyContent
                 return null;
 
             return new SexyContent(zoneId, appId).GetAvailableAttributeSets(AttributeSetScopeApps)
-                .Single(p => p.StaticName == AttributeSetStaticNameAppResources).AttributeSetID;
+                .Single(p => p.StaticName == AttributeSetStaticNameAppResources).AttributeSetId;
         }
 
         public static int? GetAppIdFromModule(ModuleInfo module)
@@ -1086,20 +1086,21 @@ namespace ToSic.SexyContent
             TemplateContext.SaveChanges();
         }
 
-        public IEnumerable<AttributeSet> GetAvailableAttributeSets(string scope)
+        public IEnumerable<IContentType> GetAvailableAttributeSets(string scope)
         {
             return GetAvailableAttributeSets().Where(p => p.Scope == scope);
         }
 
-        public IEnumerable<AttributeSet> GetAvailableAttributeSets()
+        public IEnumerable<IContentType> GetAvailableAttributeSets()
         {
-            return ContentContext.GetAllAttributeSets().Where(c => !c.Name.StartsWith("@") && !c.ChangeLogIDDeleted.HasValue).OrderBy(c => c.Name);
+            var contentTypes = ((BaseCache) DataSource.GetCache(this.ZoneId.Value, null)).GetContentTypes();
+            return contentTypes.Select(c => c.Value).Where(c => !c.Name.StartsWith("@")).OrderBy(c => c.Name);
         }
 
-        public IEnumerable<AttributeSet> GetAvailableAttributeSetsForVisibleTemplates(int PortalId)
+        public IEnumerable<IContentType> GetAvailableAttributeSetsForVisibleTemplates(int PortalId)
         {
             var AvailableTemplates = GetVisibleTemplates(PortalId);
-            return GetAvailableAttributeSets(SexyContent.AttributeSetScope).Where(p => AvailableTemplates.Any(t => t.AttributeSetID == p.AttributeSetID)).OrderBy(p => p.Name);
+            return GetAvailableAttributeSets(SexyContent.AttributeSetScope).Where(p => AvailableTemplates.Any(t => t.AttributeSetID == p.AttributeSetId)).OrderBy(p => p.Name);
         }
 
         /// <summary>

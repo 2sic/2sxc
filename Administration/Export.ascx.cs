@@ -27,10 +27,10 @@ namespace ToSic.SexyContent
             var data = new {
                 contentTypes = contentTypes.Select(c => new
                 {
-                    Id = c.AttributeSetID,
+                    Id = c.AttributeSetId,
                     Name = c.Name,
                     StaticName = c.StaticName,
-                    Templates = templates.Where(t => t.AttributeSetID == c.AttributeSetID).Select(p => new
+                    Templates = templates.Where(t => t.AttributeSetID == c.AttributeSetId).Select(p => new
                     {
                         p.TemplateID,
                         p.AttributeSetID,
@@ -42,7 +42,7 @@ namespace ToSic.SexyContent
                             ItemType = td.ItemType.ToString("F")
                         })
                     }),
-                    Entities = entities.List.Where(en => en.Value.Type.AttributeSetId == c.AttributeSetID).Select(en => Sexy.GetDictionaryFromEntity(en.Value, language))
+                    Entities = entities.List.Where(en => en.Value.Type.AttributeSetId == c.AttributeSetId).Select(en => Sexy.GetDictionaryFromEntity(en.Value, language))
                 }),
                 templatesWithoutContentType = templates.Where(p => !p.AttributeSetID.HasValue).Select(t => new
                 {

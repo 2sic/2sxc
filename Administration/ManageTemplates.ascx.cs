@@ -81,7 +81,7 @@ namespace ToSic.SexyContent
             var AttributeSetList = Sexy.GetAvailableAttributeSets(SexyContent.AttributeSetScope).ToList();
             var TemplateList = Sexy.GetTemplates(PortalId).ToList();
             var Templates = from c in  TemplateList
-                            join a in AttributeSetList on c.AttributeSetID equals a.AttributeSetID into JoinedList
+                            join a in AttributeSetList on c.AttributeSetID equals a.AttributeSetId into JoinedList
                             from a in JoinedList.DefaultIfEmpty()
                             select new
                             {

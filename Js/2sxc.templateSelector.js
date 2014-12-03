@@ -35,7 +35,7 @@
                 $scope.templates = res[1].data;
                 // Add option for no content type if there are templates without
                 if ($filter('filter')($scope.templates, { AttributeSetID: null }, true).length > 0) {
-                    $scope.contentTypes.push({ AttributeSetID: null, Name: "Layout element" });
+                    $scope.contentTypes.push({ AttributeSetId: null, Name: "Layout element" });
                     $scope.contentTypes = $filter('orderBy')($scope.contentTypes, 'Name');
                 }
 
@@ -58,7 +58,7 @@
                     if (newContentTypeId == oldContentTypeId)
                         return;
                     // Select first template if contentType changed
-                    var firstTemplateId = $scope.filteredTemplates(newContentTypeId)[0].TemplateID; // $filter('filter')($scope.templates, { AttributeSetID: $scope.contentTypeId == null ? "!!" : $scope.contentTypeId })[0].TemplateID;
+                    var firstTemplateId = $scope.filteredTemplates(newContentTypeId)[0].TemplateID; // $filter('filter')($scope.templates, { AttributeSetId: $scope.contentTypeId == null ? "!!" : $scope.contentTypeId })[0].TemplateID;
                     if ($scope.templateId != firstTemplateId && firstTemplateId != null)
                         $scope.templateId = firstTemplateId;
                 });
