@@ -16,8 +16,8 @@ namespace ToSic.SexyContent
 				case "05.05.00":
 					Version050500();
 					break;
-				case "06.04.02":
-					Version060402();
+				case "06.04.05":
+					Version060405();
 					break;
 			}
 
@@ -65,7 +65,7 @@ namespace ToSic.SexyContent
 		/// <summary>
 		/// Add new Content Types for Pipeline Designer
 		/// </summary>
-		private static void Version060402()
+		private static void Version060405()
 		{
 			var eavVersionUpgrade = new VersionUpgrade(SexyContent.InternalUserName);
 			eavVersionUpgrade.EnsurePipelineDesignerAttributeSets();
