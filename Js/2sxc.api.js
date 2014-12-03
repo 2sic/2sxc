@@ -194,7 +194,7 @@
 
     $2sxc._controllers = {};
     $2sxc.metaName = "The 2SexyContent Controller object";
-    $2sxc.metaVersion = "06.04.03";
+    $2sxc.metaVersion = "06.04.04";
     $2sxc.beta = {};
     $2sxc._data = {};
 
