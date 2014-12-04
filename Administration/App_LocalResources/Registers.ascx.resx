@@ -130,7 +130,7 @@
     <value>Data Import</value>
   </data>
   <data name="eavmanagement.Text" xml:space="preserve">
-    <value>Manage Content Types</value>
+    <value>Content</value>
   </data>
   <data name="gettingstarted.Text" xml:space="preserve">
     <value>Getting Started</value>
@@ -139,12 +139,12 @@
     <value>Import / Export</value>
   </data>
   <data name="managetemplates.Text" xml:space="preserve">
-    <value>Manage Templates</value>
+    <value>Views / Templates</value>
   </data>
   <data name="portalconfiguration.Text" xml:space="preserve">
     <value>Portal &amp; Languages</value>
   </data>
   <data name="WebApiHelp.Text" xml:space="preserve">
-    <value>Web API</value>
+    <value>WebAPI</value>
   </data>
 </root>
