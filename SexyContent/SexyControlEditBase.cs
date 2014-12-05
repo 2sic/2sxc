@@ -75,7 +75,7 @@ namespace ToSic.SexyContent
             {
 				if (_elements == null)
                 {
-					_elements = Sexy.GetContentElements(ModuleId, Sexy.GetCurrentLanguageName(), null, PortalId, SexyContent.HasEditPermission(this.ModuleConfiguration)).ToList();
+					_elements = Sexy.GetContentElements(ModuleId, SexyContent.HasEditPermission(this.ModuleConfiguration)).ToList();
                 }
 				return _elements;
             }

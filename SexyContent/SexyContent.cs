@@ -443,7 +443,7 @@ namespace ToSic.SexyContent
         public IEnumerable<Template> GetAvailableTemplatesForSelector(ModuleInfo module)
         {
             IEnumerable<Template> availableTemplates;
-            var elements = GetContentElements(module.ModuleID, GetCurrentLanguageName(), null, module.OwnerPortalID, SexyContent.HasEditPermission(module));
+            var elements = GetContentElements(module.ModuleID, HasEditPermission(module));
 
             if (elements.Any(e => e.EntityId.HasValue))
                 availableTemplates = GetCompatibleTemplates(module.PortalID, elements.First().GroupId).Where(p => !p.IsHidden);
@@ -653,7 +653,7 @@ namespace ToSic.SexyContent
                     viewDataSource.Publish.Enabled = template.PublishData;
                     viewDataSource.Publish.Streams = template.StreamsToPublish;
 
-					// Append Streams of the Data-Pipeline
+					// Append Streams of the Data-Pipeline (this doesn't require a change of the viewDataSource itself)
 		            if (template.PipelineEntityID.HasValue)
 						DataPipelineFactory.GetDataSource(AppId.Value, template.PipelineEntityID.Value, configurationProvider, viewDataSource);
                 }
@@ -666,15 +666,6 @@ namespace ToSic.SexyContent
 
 
 		#region Get ModuleDataSource and Streams of it
-        /// <summary>
-        /// Get a list of ContentElements by ModuleId or ContentGroupID
-        /// </summary>
-		[Obsolete("Use Overload with less Parameters")]
-        public List<Element> GetContentElements(int ModuleID, string LanguageName, int? ContentGroupID, int PortalId, bool showDrafts)
-        {
-			return GetContentElements(ModuleID, showDrafts);
-		}
-
 		/// <summary>
 		/// Get a list of ContentElements by ModuleId or ContentGroupID
 		/// </summary>
@@ -682,12 +673,6 @@ namespace ToSic.SexyContent
 		{
 			return GetModuleDataSource(moduleId, showDrafts).ContentElements;
         }
-
-		[Obsolete("Use Overload with less Parameters")]
-        public Element GetListElement(int ModuleID, string LanguageName, int? ContentGroupID, int PortalId, bool showDrafts)
-        {
-			return GetListElement(ModuleID, showDrafts);
-		}
 
 		public Element GetListElement(int moduleId, bool showDrafts)
 		{
