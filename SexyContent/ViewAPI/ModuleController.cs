@@ -65,6 +65,9 @@ namespace ToSic.SexyContent.ViewAPI
         [ValidateAntiForgeryToken]
         public void SetAppId(int? appId)
         {
+			// Reset template to nothing (prevents errors after changing app)
+			SexyUncached.UpdateTemplateForGroup(Sexy.GetContentGroupIdFromModule(ActiveModule.ModuleID), null, UserInfo.UserID);
+
             SexyContent.SetAppIdForModule(ActiveModule, appId);
 
             // Change to 1. template if app has been set

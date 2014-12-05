@@ -632,7 +632,7 @@ namespace ToSic.SexyContent
 				// Get the View-Template
                 var items = TemplateContext.GetContentGroupItems(GetContentGroupIdFromModule(moduleId));
 	            Template template = null;
-                if (items.Any())
+                if (items.Any(i => i.TemplateID.HasValue))
                 {
                     var templateId = overrideTemplateId.HasValue
                         ? overrideTemplateId.Value
