@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Http;
 using DotNetNuke.Entities.Users;
 using DotNetNuke.Security;
@@ -69,6 +70,21 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 		public object ClonePipeline(int appId, int id)
 		{
 			return _controller.ClonePipeline(appId, id);
+		}
+
+		/// <summary>
+		/// Delete a Pipeline with the Pipeline Entity, Pipeline Parts and their Configurations. Stops if the if the Pipeline Entity has relationships to other Entities or is in use in a 2sxc-Template.
+		/// </summary>
+		[HttpGet]
+		public object DeletePipeline(int appId, int id)
+		{
+			// Stop if a Template uses this Pipeline
+			var sexy = new SexyContent(0, appId);
+			var templatesUsingPipeline = sexy.TemplateContext.GetAllTemplates().Where(t => t.PipelineEntityID == id).Select(t => t.TemplateID).ToArray();
+			if (templatesUsingPipeline.Any())
+				throw new Exception(string.Format("Pipeline is used by Templates and cant be deleted. Pipeline EntityId: {0}. TemplateIds: {1}", id, string.Join(", ", templatesUsingPipeline)));
+
+			return _controller.DeletePipeline(appId, id);
 		}
 	}
 }

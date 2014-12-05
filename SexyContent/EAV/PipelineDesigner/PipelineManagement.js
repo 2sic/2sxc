@@ -21,6 +21,18 @@ angular.module('pipelineManagement', ['pipelineManagementFactory']).
 		// Set Return URL
 		if ($location.search().ReturnUrl)
 			$scope.returnUrl = decodeURIComponent($location.search().ReturnUrl);
+
+		// Delete a Pipeline
+		$scope.delete = function (pipeline) {
+			if (!confirm('Delete Pipeline "' + pipeline.Name + ' (' + pipeline.EntityId + ')"?'))
+				return;
+
+			pipelineManagementFactory.deletePipeline(pipeline.EntityId).then(function () {
+				$scope.refresh();
+			}, function (reason) {
+				alert(reason);
+			});
+		}
 	});
 
 
@@ -30,9 +42,11 @@ angular.module('pipelineManagementFactory', ['ngResource', 'eavGlobalConfigurati
 		'use strict';
 
 		// Web API Service
+		var pipelineResource = $resource(eavGlobalConfigurationProvider.api.baseUrl + '/EAV/PipelineDesigner/:action');
 		var entitiesResource = $resource(eavGlobalConfigurationProvider.api.baseUrl + '/EAV/Entities/:action');
 		// Add additional Headers to each http-Request
 		angular.extend($http.defaults.headers.common, eavGlobalConfigurationProvider.api.additionalHeaders);
+
 
 		var dataPipelineAttributeSetId;
 		var appId;
@@ -56,7 +70,12 @@ angular.module('pipelineManagementFactory', ['ngResource', 'eavGlobalConfigurati
 						return eavGlobalConfigurationProvider.itemForm.getEditItemUrl(pipeline.EntityId);
 					case 'design':
 						return eavGlobalConfigurationProvider.pipelineDesigner.getUrl(appId, pipeline.EntityId);
+					default:
+						return null;
 				}
+			},
+			deletePipeline: function (id) {
+				return pipelineResource.get({ action: 'DeletePipeline', appId: appId, id: id }).$promise;
 			}
 		}
 	});
