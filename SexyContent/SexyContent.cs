@@ -652,7 +652,7 @@ namespace ToSic.SexyContent
             // ToDo: Refactor
             //return GetElements(ModuleID, ContentGroupID, ContentGroupItemType.Content, ContentGroupItemType.Presentation, LanguageName, PortalId, showDrafts);
 
-            var dataSource = (ModuleDataSource)((IDataTarget)GetViewDataSource(ModuleID, showDrafts, false)).In["Default"].Source;
+            var dataSource = (ModuleDataSource)((IDataTarget)GetViewDataSource(ModuleID, showDrafts, true)).In["Default"].Source;
             return dataSource.ContentElements;
         }
 
@@ -662,7 +662,7 @@ namespace ToSic.SexyContent
             //var ListElement = GetElements(ModuleID, ContentGroupID, ContentGroupItemType.ListContent, ContentGroupItemType.ListPresentation, LanguageName, PortalId, showDrafts).FirstOrDefault();
             //return ListElement;
 
-            var dataSource = (ModuleDataSource)((IDataTarget) GetViewDataSource(ModuleID, showDrafts, false)).In["Default"].Source;
+            var dataSource = (ModuleDataSource)((IDataTarget) GetViewDataSource(ModuleID, showDrafts, true)).In["Default"].Source;
             return dataSource.ListElement;
         }
 
