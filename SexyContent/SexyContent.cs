@@ -40,7 +40,7 @@ namespace ToSic.SexyContent
     {
         #region Constants
 
-        public const string ModuleVersion = "06.04.05";
+        public const string ModuleVersion = "06.05.02";
         public const string TemplateID = "TemplateID";
         public const string ContentGroupIDString = "ContentGroupID";
         public const string AppIDString = "AppId";
@@ -666,22 +666,22 @@ namespace ToSic.SexyContent
 
 
 		#region Get ModuleDataSource and Streams of it
-		/// <summary>
-		/// Get a list of ContentElements by ModuleId or ContentGroupID
-		/// </summary>
+        /// <summary>
+        /// Get a list of ContentElements by ModuleId or ContentGroupID
+        /// </summary>
 		public List<Element> GetContentElements(int moduleId, bool showDrafts)
-		{
+        {
 			return GetModuleDataSource(moduleId, showDrafts).ContentElements;
         }
 
 		public Element GetListElement(int moduleId, bool showDrafts)
-		{
+        {
 			return GetModuleDataSource(moduleId, showDrafts).ListElement;
 		}
 
 		private ModuleDataSource GetModuleDataSource(int moduleId, bool showDrafts)
 		{
-			var viewDataSource = (IDataTarget)GetViewDataSource(moduleId, showDrafts, false);
+			var viewDataSource = (IDataTarget)GetViewDataSource(moduleId, showDrafts, Globals.IsEditMode());
 			return DataPipelineFactory.FindDataSource<ModuleDataSource>(viewDataSource);
         }
 		#endregion
@@ -890,7 +890,7 @@ namespace ToSic.SexyContent
             }
 
             if(appSettings == null)
-            { 
+            {
 
                 AttributeSet settingsAttributeSet;
                 // Add new (empty) ContentType for Settings

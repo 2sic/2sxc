@@ -1,6 +1,6 @@
 ﻿<dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="2SexyContent" type="Module" version="06.04.05">
+    <package name="2SexyContent" type="Module" version="06.05.02">
       <friendlyName> Content</friendlyName>
       <description>2sxc (2SexyContent) is a DotNetNuke Extension to create attractive and designed content. It solves the common problem, allowing the web designer to create designed templates for different content elements, so that the user must only fill in fields and receive a perfectly designed and animated output.</description>
       <iconFile>icon.png</iconFile>
@@ -138,13 +138,13 @@
             </script>
 			<script type="Install">
               <path>SqlDataProvider</path>
-              <name>06.04.05.SqlDataProvider</name>
-              <version>06.04.05</version>
+              <name>06.05.02.SqlDataProvider</name>
+              <version>06.05.02</version>
             </script>
             <script type="UnInstall">
               <path>SqlDataProvider</path>
               <name>Uninstall.SqlDataProvider</name>
-              <version>06.04.05</version>
+              <version>06.05.02</version>
             </script>
           </scripts>
         </component>
@@ -595,7 +595,7 @@
       </components>
     </package>
 
-    <package name="2SexyContent-App" type="Module" version="06.04.05">
+    <package name="2SexyContent-App" type="Module" version="06.05.02">
       <friendlyName> App</friendlyName>
       <description>2sxc (2SexyContent) App is an extension that allows to install and use a 2sxc app.</description>
       <iconFile>icon-app.png</iconFile>
@@ -831,7 +831,7 @@
                     <helpUrl />
                     <supportsPopUps>True</supportsPopUps>
                   </moduleControl>
-                  <moduleControl>
+                   <moduleControl>
                     <controlKey>pipelinedesigner</controlKey>
                     <controlSrc>DesktopModules/ToSIC_SexyContent/SexyContent/EAV/PipelineDesigner/PipelineDesignerDnnWrapper.ascx</controlSrc>
                     <supportsPartialRendering>False</supportsPartialRendering>

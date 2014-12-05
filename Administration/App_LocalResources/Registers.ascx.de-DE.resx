@@ -121,7 +121,7 @@
     <value>Export</value>
   </data>
   <data name="eavmanagement.Text" xml:space="preserve">
-    <value>Inhaltstypen verwalten</value>
+    <value>Inhalt</value>
   </data>
   <data name="gettingstarted.Text" xml:space="preserve">
     <value>Erste Schritte</value>
@@ -130,7 +130,7 @@
     <value>Import / Export</value>
   </data>
   <data name="managetemplates.Text" xml:space="preserve">
-    <value>Vorlagen verwalten</value>
+    <value>Vorlagen</value>
   </data>
   <data name="portalconfiguration.Text" xml:space="preserve">
     <value>Portal &amp; Sprachen</value>
