@@ -65,7 +65,7 @@ angular.module('pipelineManagementFactory', ['ngResource', 'eavGlobalConfigurati
 			getPipelineUrl: function (mode, pipeline) {
 				switch (mode) {
 					case 'new':
-						return eavGlobalConfigurationProvider.itemForm.getNewItemUrl(dataPipelineAttributeSetId, 4);
+						return eavGlobalConfigurationProvider.itemForm.getNewItemUrl(dataPipelineAttributeSetId, eavGlobalConfigurationProvider.assignmentObjectTypeIdDataPipeline, {}, false, { TestParameters: eavGlobalConfigurationProvider.pipelineDesigner.testParameters });
 					case 'edit':
 						return eavGlobalConfigurationProvider.itemForm.getEditItemUrl(pipeline.EntityId);
 					case 'design':
