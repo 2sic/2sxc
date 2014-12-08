@@ -14,7 +14,7 @@
 				Eav.Dimensions[dimension.DimensionId] = dimension;
 			});
 
-			// Loop through each Eav form wrapper
+			// Loop through each Eav Form Wrapper
 			$(".eav-form").each(function (i, form) {
 				Eav.AttachFormController(form);
 			});
@@ -24,6 +24,8 @@
 			while ((fn = Eav.InitializeFormsReadyList[i++])) {
 				fn.call(document, $);
 			}
+
+			Eav.PrefillForm();
 
 			// Initialization done, set Initialized to true and show save button again
 			Eav.FormsInitialized = true;
@@ -36,6 +38,26 @@
 		ButtonDisabledClass: "disabled",
 		MenuWrapper: "eav-dimensionmenu-wrapper",
 		SaveButtonClass: "eav-save"
+	},
+
+	PrefillForm: function() {
+		// Prefill values based on QueryString parameter (but only if entity id is not set / new item is created)
+		if (!($(".eav-form:first").attr("data-entityid"))) {
+			var match = RegExp('[?&]' + "prefill" + '=([^&]*)', 'i').exec(window.location.search);
+			var prefillString = match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+
+			if (prefillString) {
+				var prefill = $.parseJSON(prefillString);
+				for (prefillKey in prefill) {
+					var fields = $(".eav-field[data-staticname='" + prefillKey + "']");
+					if (fields.length == 1) {
+						var fieldController = fields[0].Controller;
+						if (fieldController && fieldController.SetFieldValue && prefill[prefillKey])
+							fieldController.SetFieldValue(prefill[prefillKey]);
+					}
+				}
+			}
+		}
 	},
 
 	AttachFormController: function (form) {
@@ -657,7 +679,7 @@
 			} else
 				Eav.Gps._initMap(latitudeStaticName);
 		}
-	},
+	}
 };
 
 function pageLoad(sender, e) {
