@@ -24,7 +24,7 @@ angular.module('pipelineManagement', ['pipelineManagementFactory']).
 
 		// Delete a Pipeline
 		$scope.delete = function (pipeline) {
-			if (!confirm('Delete Pipeline "' + pipeline.Name + ' (' + pipeline.EntityId + ')"?'))
+			if (!confirm('Delete Pipeline "' + pipeline.Name + '" (' + pipeline.EntityId + ')?'))
 				return;
 
 			pipelineManagementFactory.deletePipeline(pipeline.EntityId).then(function () {

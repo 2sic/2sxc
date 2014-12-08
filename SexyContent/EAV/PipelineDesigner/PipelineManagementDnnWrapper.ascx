@@ -4,6 +4,9 @@
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+<style type="text/css">
+	a.btn-default { color: #333 }	/* overwrite DNN Button-Color */
+</style>
 
 <sxc:PipelineManagement runat="server" id="PipelineManagement" />
 
