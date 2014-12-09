@@ -343,7 +343,7 @@
             <attributes>
               <businessControllerClass>ToSic.SexyContent.SexyContent, ToSic.SexyContent</businessControllerClass>
               <desktopModuleID>[DESKTOPMODULEID]</desktopModuleID>
-              <upgradeVersionsList>05.05.00,06.04.02</upgradeVersionsList>
+              <upgradeVersionsList>05.05.00,06.05.02</upgradeVersionsList>
             </attributes>
           </eventMessage>
         </component>

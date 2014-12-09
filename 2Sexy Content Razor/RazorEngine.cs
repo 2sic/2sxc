@@ -31,10 +31,10 @@ namespace ToSic.SexyContent.Engines
 
         protected override void Init()
         {
-            var moduleDataSource = (ModuleDataSource)((IDataTarget) DataSource).In["Default"].Source;
+			var moduleDataSource = DataPipelineFactory.FindDataSource<ModuleDataSource>((IDataTarget)DataSource);
 
-            var elements = (moduleDataSource).ContentElements.Where(p => p.Content != null).ToList();
-            var listElement = (moduleDataSource).ListElement;
+            var elements = moduleDataSource.ContentElements.Where(p => p.Content != null).ToList();
+            var listElement = moduleDataSource.ListElement;
             List = elements;
 
             if (elements.Any())
