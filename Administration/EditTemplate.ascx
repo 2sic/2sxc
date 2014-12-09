@@ -59,6 +59,11 @@
         <a href="#"><asp:Label runat="server" ID="lblDataSourcePublishing" ResourceKey="lblDataSourcePublishing"></asp:Label></a>
     </h2>
     <fieldset>
+		<asp:Panel runat="server" ID="pnlViewNameInUrl" CssClass="dnnFormItem">
+			<dnn:Label ID="lblViewNameInUrl" runat="server" ControlName="txtViewNameInUrl" Suffix=":" />
+			<asp:TextBox runat="server" ID="txtViewNameInUrl" />
+			<asp:RegularExpressionValidator ID="valViewNameInUrl" ResourceKey="valViewNameInUrl" runat="server" ValidationExpression="[^/]+/[^/]+" ControlToValidate="txtViewNameInUrl" CssClass="dnnFormError" Display="Dynamic" EnableClientScript="true" />
+		</asp:Panel>
 		<asp:Panel runat="server" ID="pnlDataPipeline" CssClass="dnnFormItem">
 			<dnn:Label ID="lblPipelineEntity" runat="server" ControlName="ddlDataPipeline" Suffix=":" />
 			<asp:DropDownList runat="server" ID="ddlDataPipeline" DataValueField="PipelineEntityID" DataTextField="Name" AppendDataBoundItems="True">
@@ -66,12 +71,6 @@
 			</asp:DropDownList>
 			<asp:HyperLink runat="server" ID="hlkManagePipelines" ResourceKey="hlkManagePipelines" />
 		</asp:Panel>
-		<asp:Panel runat="server" ID="pnlViewNameInUrl" CssClass="dnnFormItem">
-			<dnn:Label ID="lblViewNameInUrl" runat="server" ControlName="txtViewNameInUrl" Suffix=":" />
-			<asp:TextBox runat="server" ID="txtViewNameInUrl" />
-			<asp:RegularExpressionValidator ID="valViewNameInUrl" ResourceKey="valViewNameInUrl" runat="server" ValidationExpression="[^/]+/[^/]+" ControlToValidate="txtViewNameInUrl" CssClass="dnnFormError" Display="Dynamic" EnableClientScript="true" />
-		</asp:Panel>
-        <div style="margin-left:280px; margin-bottom:30px;"><%= LocalizeString("lblDataSourcePublishing.LongText") %></div>
         <div class="dnnFormItem">
             <dnn:Label ID="lblPublishSource" runat="server" ControlName="chkPublishSource" Suffix=":"></dnn:Label>
             <asp:CheckBox runat="server" ID="chkPublishSource" />
