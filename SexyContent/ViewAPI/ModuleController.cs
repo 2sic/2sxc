@@ -72,8 +72,10 @@ namespace ToSic.SexyContent.ViewAPI
             {
                 var sexyForNewApp = new SexyContent(Sexy.App.ZoneId, appId.Value, false);
                 var templates = sexyForNewApp.GetAvailableTemplatesForSelector(ActiveModule).ToList();
-                if(templates.Any())
+                if (templates.Any())
                     SexyUncached.UpdateTemplateForGroup(Sexy.GetContentGroupIdFromModule(ActiveModule.ModuleID), templates.First().TemplateID, UserInfo.UserID);
+                else
+                    SexyUncached.UpdateTemplateForGroup(Sexy.GetContentGroupIdFromModule(ActiveModule.ModuleID), null, UserInfo.UserID);
             }
         }
 

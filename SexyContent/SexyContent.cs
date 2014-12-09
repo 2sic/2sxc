@@ -625,7 +625,7 @@ namespace ToSic.SexyContent
 
                 var viewDataSource = DataSource.GetDataSource<ViewDataSource>(ZoneId, AppId, moduleDataSource, ConfigurationProvider);
                 var items = TemplateContext.GetContentGroupItems(GetContentGroupIdFromModule(moduleId));
-                if (items.Any())
+                if (items.Any(i => i.TemplateID.HasValue))
                 {
                     var templateId = overrideTemplateId.HasValue
                         ? overrideTemplateId.Value
