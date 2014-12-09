@@ -131,8 +131,7 @@
 
                     var defaults = {
                         method: method == null ? 'POST' : method,
-                        data: {},
-                        params: {},
+                        params: null,
                         preventAutoFail: false
                     };
                     settings = $.extend({}, defaults, settings);
@@ -181,7 +180,7 @@
                 },
                 getActionUrl: function(settings) {
                     var sf = $.ServicesFramework(id);
-                    return sf.getServiceRoot('2sxc') + "App/auto-detect-app/" + settings.controller + "/" + settings.action + "?" + $.param(settings.params);
+                    return sf.getServiceRoot('2sxc') + "App/auto-detect-app/" + settings.controller + "/" + settings.action + (settings.params == null ? "" : ("?" + $.param(settings.params)));
                 }
             }
         };
