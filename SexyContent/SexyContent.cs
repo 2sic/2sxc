@@ -682,7 +682,10 @@ namespace ToSic.SexyContent
 		private ModuleDataSource GetModuleDataSource(int moduleId, bool showDrafts)
 		{
 			var viewDataSource = (IDataTarget)GetViewDataSource(moduleId, showDrafts, Globals.IsEditMode());
-			return DataPipelineFactory.FindDataSource<ModuleDataSource>(viewDataSource);
+			var moduleDataSource = DataPipelineFactory.FindDataSource<ModuleDataSource>(viewDataSource);
+			if (moduleDataSource == null)
+				throw new Exception("ModuleDataSource not found in the DataPipeline.");
+			return moduleDataSource;
         }
 		#endregion
 
