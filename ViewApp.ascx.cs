@@ -65,7 +65,7 @@ namespace ToSic.SexyContent
                 {
                     if (Elements.Any() && Elements.First().TemplateId.HasValue)
                         ProcessView(phOutput, pnlError, pnlMessage);
-                    else if(UserMayEditThisModule) // Select first available template automatically if it's not set yet - then refresh page
+                    else if (!IsContentApp && UserMayEditThisModule) // Select first available template automatically if it's not set yet - then refresh page
                     {
                         var templates = Sexy.GetAvailableTemplatesForSelector(ModuleConfiguration).ToList();
                         if (templates.Any())
