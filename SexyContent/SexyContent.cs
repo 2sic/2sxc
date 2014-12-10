@@ -439,7 +439,7 @@ namespace ToSic.SexyContent
         public IEnumerable<Template> GetAvailableTemplatesForSelector(ModuleInfo module)
         {
             IEnumerable<Template> availableTemplates;
-            var elements = GetContentElements(module.ModuleID, GetCurrentLanguageName(), null, module.OwnerPortalID, SexyContent.HasEditPermission(module));
+            var elements = GetContentElements(module.ModuleID, GetCurrentLanguageName(), null, module.OwnerPortalID, SexyContent.HasEditPermission(module), false);
 
             if (elements.Any(e => e.EntityId.HasValue))
                 availableTemplates = GetCompatibleTemplates(module.PortalID, elements.First().GroupId).Where(p => !p.IsHidden);
@@ -647,22 +647,22 @@ namespace ToSic.SexyContent
         /// Get a list of ContentElements by ModuleId or ContentGroupID
         /// </summary>
         /// <returns></returns>
-        public List<Element> GetContentElements(int ModuleID, string LanguageName, int? ContentGroupID, int PortalId, bool showDrafts)
+        public List<Element> GetContentElements(int ModuleID, string LanguageName, int? ContentGroupID, int PortalId, bool showDrafts, bool isEditMode)
         {
             // ToDo: Refactor
             //return GetElements(ModuleID, ContentGroupID, ContentGroupItemType.Content, ContentGroupItemType.Presentation, LanguageName, PortalId, showDrafts);
 
-            var dataSource = (ModuleDataSource)((IDataTarget)GetViewDataSource(ModuleID, showDrafts, Globals.IsEditMode())).In["Default"].Source;
+            var dataSource = (ModuleDataSource)((IDataTarget)GetViewDataSource(ModuleID, showDrafts, isEditMode)).In["Default"].Source;
             return dataSource.ContentElements;
         }
 
-        public Element GetListElement(int ModuleID, string LanguageName, int? ContentGroupID, int PortalId, bool showDrafts)
+        public Element GetListElement(int ModuleID, string LanguageName, int? ContentGroupID, int PortalId, bool showDrafts, bool isEditMode)
         {
             // ToDo: Refactor (does not need all parameters)
             //var ListElement = GetElements(ModuleID, ContentGroupID, ContentGroupItemType.ListContent, ContentGroupItemType.ListPresentation, LanguageName, PortalId, showDrafts).FirstOrDefault();
             //return ListElement;
 
-            var dataSource = (ModuleDataSource)((IDataTarget)GetViewDataSource(ModuleID, showDrafts, Globals.IsEditMode())).In["Default"].Source;
+            var dataSource = (ModuleDataSource)((IDataTarget)GetViewDataSource(ModuleID, showDrafts, isEditMode)).In["Default"].Source;
             return dataSource.ListElement;
         }
 
