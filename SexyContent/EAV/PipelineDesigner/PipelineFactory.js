@@ -1,5 +1,5 @@
 ﻿// PipelineFactory provides an interface to the Server Backend storing Pipelines and their Pipeline Parts
-pipelineDesigner.factory('pipelineFactory', ['$resource', '$q', '$filter', 'eavGlobalConfigurationProvider', '$http', function ($resource, $q, $filter, eavGlobalConfigurationProvider, $http) {
+angular.module('pipelineFactory', []).factory('pipelineFactory', ['$resource', '$q', '$filter', 'eavGlobalConfigurationProvider', '$http', function ($resource, $q, $filter, eavGlobalConfigurationProvider, $http) {
 	'use strict';
 
 	// Web API Service
@@ -8,6 +8,9 @@ pipelineDesigner.factory('pipelineFactory', ['$resource', '$q', '$filter', 'eavG
 	// Add additional Headers to each http-Request
 	angular.extend($http.defaults.headers.common, eavGlobalConfigurationProvider.api.additionalHeaders);
 
+
+	var dataPipelineAttributeSetId;
+	var appId;
 
 	// Get the Definition of a DataSource
 	var getDataSourceDefinitionProperty = function (model, dataSource) {
@@ -35,7 +38,7 @@ pipelineDesigner.factory('pipelineFactory', ['$resource', '$q', '$filter', 'eavG
 
 	return {
 		// get a Pipeline with Pipeline Info with Pipeline Parts and Installed DataSources
-		getPipeline: function (pipelineEntityId, appId) {
+		getPipeline: function (pipelineEntityId) {
 			var deferred = $q.defer();
 
 			var getPipeline = pipelineResource.get({ action: 'GetPipeline', id: pipelineEntityId, appId: appId });
@@ -84,9 +87,9 @@ pipelineDesigner.factory('pipelineFactory', ['$resource', '$q', '$filter', 'eavG
 			return { Definition: function () { return getDataSourceDefinitionProperty(model, dataSourceBase); } }
 		},
 		// Save whole Pipline
-		savePipeline: function (appId, pipeline, dataSources) {
+		savePipeline: function (pipeline, dataSources) {
 			if (!appId)
-				return $q.reject('AppId must be set to save a Pipeline');
+				return $q.reject('appId must be set to save a Pipeline');
 
 			// Remove some Properties from the DataSource before Saving
 			var dataSourcesPrepared = [];
@@ -99,11 +102,11 @@ pipelineDesigner.factory('pipelineFactory', ['$resource', '$q', '$filter', 'eavG
 			return pipelineResource.save({ action: 'SavePipeline', appId: appId, Id: pipeline.EntityId }, { pipeline: pipeline, dataSources: dataSourcesPrepared }).$promise;
 		},
 		// clone a whole Pipeline
-		clonePipeline: function (appId, pipelineEntityId) {
+		clonePipeline: function (pipelineEntityId) {
 			return pipelineResource.get({ action: 'ClonePipeline', appId: appId, Id: pipelineEntityId }).$promise;
 		},
 		// Get the URL to configure a DataSource
-		getDataSourceConfigurationUrl: function (appId, dataSource) {
+		getDataSourceConfigurationUrl: function (dataSource) {
 			var dataSourceFullName = $filter('typename')(dataSource.PartAssemblyAndType, 'classFullName');
 			var contentTypeName = '|Config ' + dataSourceFullName;
 			var assignmentObjectTypeId = 4;
@@ -134,8 +137,39 @@ pipelineDesigner.factory('pipelineFactory', ['$resource', '$q', '$filter', 'eavG
 			return deferred.promise;
 		},
 		// Query the Data of a Pipeline
-		queryPipeline: function (appId, id) {
+		queryPipeline: function (id) {
 			return pipelineResource.get({ action: 'QueryPipeline', appId: appId, id: id }).$promise;
+		},
+		// set appId and init some dynamic configurations
+		setAppId: function (newAppId) {
+			appId = newAppId;
+		},
+		// Init some Content Types, currently only used for getPipelineUrl('new', ...)
+		initContentTypes: function() {
+			entitiesResource.get({ action: 'GetContentType', appId: appId, name: 'DataPipeline' }, function (success) {
+				dataPipelineAttributeSetId = success.AttributeSetId;
+			});
+		},
+		// Get all Pipelines of current App
+		getPipelines: function () {
+			return entitiesResource.query({ action: 'GetEntities', appId: appId, typeName: 'DataPipeline' });
+		},
+		// Get New/Edit/Design URL for a Pipeline
+		getPipelineUrl: function (mode, id) {
+			switch (mode) {
+				case 'new':
+					return eavGlobalConfigurationProvider.itemForm.getNewItemUrl(dataPipelineAttributeSetId, eavGlobalConfigurationProvider.assignmentObjectTypeIdDataPipeline, {}, false, { TestParameters: eavGlobalConfigurationProvider.pipelineDesigner.testParameters });
+				case 'edit':
+					return eavGlobalConfigurationProvider.itemForm.getEditItemUrl(id);
+				case 'design':
+					return eavGlobalConfigurationProvider.pipelineDesigner.getUrl(appId, id);
+				default:
+					return null;
+			}
+		},
+		// Delete a Pipeline on current App
+		deletePipeline: function (id) {
+			return pipelineResource.get({ action: 'DeletePipeline', appId: appId, id: id }).$promise;
 		}
 	}
 }]);

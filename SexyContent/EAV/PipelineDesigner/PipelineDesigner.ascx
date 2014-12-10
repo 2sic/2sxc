@@ -1,6 +1,6 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="PipelineDesigner.ascx.cs" Inherits="ToSic.Eav.ManagementUI.EAV.PipelineDesigner.PipelineDesigner" %>
 <div ng-app="pipelineDesinger" class="ng-cloak">
-	<div ng-controller="pipelineDesignerController">
+	<div ng-controller="PipelineDesignerController">
 		<div id="pipelineContainer">
 			<div
 				ng-repeat="dataSource in pipelineData.DataSources"

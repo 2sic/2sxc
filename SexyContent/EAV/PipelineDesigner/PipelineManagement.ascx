@@ -1,6 +1,6 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="PipelineManagement.ascx.cs" Inherits="ToSic.Eav.ManagementUI.EAV.PipelineManagement" %>
 <div ng-app="pipelineManagement" class="ng-cloak">
-	<div ng-controller="pipelineManagementController">
+	<div ng-controller="PipelineManagementController">
 		<a ng-href="{{getPipelineUrl('new')}}" target="_self" class="btn btn-default">
 			<span class="glyphicon glyphicon-plus"></span> New
 		</a>
@@ -25,12 +25,15 @@
 					<td>{{pipeline.EntityId}}</td>
 					<td>{{pipeline.Description}}</td>
 					<td>
-						<a class="btn btn-xs btn-default" target="_blank" ng-href="{{getPipelineUrl('design', pipeline)}}">
+						<a class="btn btn-xs btn-default" target="_blank" ng-href="{{getPipelineUrl('design', pipeline.EntityId)}}">
 							<span class="glyphicon glyphicon-random"></span> Open Designer
 						</a>
-						<a class="btn btn-xs btn-default" target="_self" ng-href="{{getPipelineUrl('edit', pipeline)}}">
+						<a class="btn btn-xs btn-default" target="_self" ng-href="{{getPipelineUrl('edit', pipeline.EntityId)}}">
 							<span class="glyphicon glyphicon-pencil"></span> Edit
 						</a>
+						<button type="button" class="btn btn-xs btn-default" ng-click="clone(pipeline)">
+							<span class="glyphicon glyphicon-share-alt"></span> Clone
+						</button>
 						<button type="button" class="btn btn-xs btn-danger" ng-click="delete(pipeline)">
 							<span class="glyphicon glyphicon-remove"></span> Delete
 						</button>
