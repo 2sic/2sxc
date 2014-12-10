@@ -1339,8 +1339,10 @@ namespace ToSic.SexyContent
             {
                 case "file":
                     var fileInfo = fileManager.GetFile(id);
-                    if(fileInfo != null)
-                        resultString = fileManager.GetUrl(fileInfo) + urlParams;
+                    if (fileInfo != null)
+                        resultString = (fileInfo.StorageLocation == (int)FolderController.StorageLocationTypes.InsecureFileSystem
+                            ? Path.Combine(ownerPortalSettings.HomeDirectory, fileInfo.RelativePath) + urlParams
+                            : fileManager.GetUrl(fileInfo));
                     break;
                 case "page":
                     var portalSettings = PortalSettings.Current;
