@@ -676,10 +676,10 @@ namespace ToSic.SexyContent
 		public Element GetListElement(int moduleId, bool showDrafts)
         {
 			return GetModuleDataSource(moduleId, showDrafts).ListElement;
-		}
+        }
 
 		private ModuleDataSource GetModuleDataSource(int moduleId, bool showDrafts)
-		{
+        {
 			var viewDataSource = (IDataTarget)GetViewDataSource(moduleId, showDrafts);
 			var moduleDataSource = DataPipelineFactory.FindDataSource<ModuleDataSource>(viewDataSource);
 			if (moduleDataSource == null)
@@ -1361,8 +1361,10 @@ namespace ToSic.SexyContent
             {
                 case "file":
                     var fileInfo = fileManager.GetFile(id);
-                    if(fileInfo != null)
-                        resultString = fileManager.GetUrl(fileInfo) + urlParams;
+                    if (fileInfo != null)
+                        resultString = (fileInfo.StorageLocation == (int)FolderController.StorageLocationTypes.InsecureFileSystem
+                            ? Path.Combine(ownerPortalSettings.HomeDirectory, fileInfo.RelativePath) + urlParams
+                            : fileManager.GetUrl(fileInfo));
                     break;
                 case "page":
                     var portalSettings = PortalSettings.Current;
