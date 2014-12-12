@@ -613,7 +613,7 @@ namespace ToSic.SexyContent
         /// The EAV DataSource
         /// </summary>
         private ToSic.Eav.DataSources.IDataSource ViewDataSource { get; set; }
-        public ToSic.Eav.DataSources.IDataSource GetViewDataSource(int moduleId, bool showDrafts, bool includeEditingData, int? overrideTemplateId = new int?())
+		public ToSic.Eav.DataSources.IDataSource GetViewDataSource(int moduleId, bool showDrafts, int? overrideTemplateId = new int?())
         {
             if (ViewDataSource == null)
             {
@@ -623,7 +623,6 @@ namespace ToSic.SexyContent
                 var initialSource = GetInitialDataSource(ZoneId.Value, AppId.Value, showDrafts);
 				var moduleDataSource = DataSource.GetDataSource<ModuleDataSource>(ZoneId, AppId, initialSource, configurationProvider);
                 moduleDataSource.ModuleId = moduleId;
-                moduleDataSource.IncludeEditingData = includeEditingData;
                 moduleDataSource.OverrideTemplateId = overrideTemplateId;
                 moduleDataSource.Sexy = this;
 
@@ -681,7 +680,7 @@ namespace ToSic.SexyContent
 
 		private ModuleDataSource GetModuleDataSource(int moduleId, bool showDrafts)
 		{
-			var viewDataSource = (IDataTarget)GetViewDataSource(moduleId, showDrafts, Globals.IsEditMode());
+			var viewDataSource = (IDataTarget)GetViewDataSource(moduleId, showDrafts);
 			var moduleDataSource = DataPipelineFactory.FindDataSource<ModuleDataSource>(viewDataSource);
 			if (moduleDataSource == null)
 				throw new Exception("ModuleDataSource not found in the DataPipeline.");

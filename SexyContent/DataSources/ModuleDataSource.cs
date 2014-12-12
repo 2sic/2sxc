@@ -57,7 +57,6 @@ namespace ToSic.SexyContent.DataSources
             Out.Add("ListPresentation", new DataStream(this, "Default", GetListPresentation));
 
 			Configuration.Add("ModuleId", "[Module:ModuleID||[Module:ModuleId]]");	// Look for ModuleID and ModuleId
-            Configuration.Add("IncludeEditingData", "False");
         }
 
         private IDictionary<int, IEntity> _content;
@@ -146,10 +145,7 @@ namespace ToSic.SexyContent.DataSources
                 while (entitiesToDeliver.ContainsKey(key))
                     key += 1000000000;
 
-                if(IncludeEditingData)
-                    entitiesToDeliver.Add(key, new EAVExtensions.EntityInContentGroup(originals[entityId.Value]) { SortOrder = i.SortOrder, ContentGroupItemModified = i.SysModified });
-                else
-                    entitiesToDeliver.Add(key, originals[entityId.Value]);
+                entitiesToDeliver.Add(key, new EAVExtensions.EntityInContentGroup(originals[entityId.Value]) { SortOrder = i.SortOrder, ContentGroupItemModified = i.SysModified });
             }
 
             return entitiesToDeliver;
@@ -172,12 +168,6 @@ namespace ToSic.SexyContent.DataSources
         private int? ListId
         {
             get { return ModuleId.HasValue ? Sexy.GetContentGroupIdFromModule(ModuleId.Value) : new int?(); }
-        }
-
-        public bool IncludeEditingData
-        {
-            get { return Boolean.Parse(Configuration["IncludeEditingData"]); }
-            set { Configuration["IncludeEditingData"] = value.ToString(); }
         }
 
         private IEnumerable<Element> GetElements(ContentGroupItemType contentItemType, ContentGroupItemType presentationItemType)

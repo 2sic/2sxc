@@ -21,7 +21,7 @@ namespace ToSic.SexyContent.WebApi
                 if (_appAndDataHelpers == null)
                 {
                     var moduleInfo = Request.FindModuleInfo();
-                    var viewDataSource = Sexy.GetViewDataSource(Request.FindModuleId(), SexyContent.HasEditPermission(moduleInfo), DotNetNuke.Common.Globals.IsEditMode());
+                    var viewDataSource = Sexy.GetViewDataSource(Request.FindModuleId(), SexyContent.HasEditPermission(moduleInfo));
                     _appAndDataHelpers = new AppAndDataHelpers(Sexy, moduleInfo, (ViewDataSource)viewDataSource, Sexy.App);
                 }
                 return _appAndDataHelpers;

@@ -108,8 +108,7 @@ namespace ToSic.SexyContent.ViewAPI
                 var engine = EngineFactory.CreateEngine(template);
                 var dataSource =
                     (ViewDataSource)
-                        Sexy.GetViewDataSource(ActiveModule.ModuleID, SexyContent.HasEditPermission(ActiveModule),
-                            DotNetNuke.Common.Globals.IsEditMode(), templateId);
+                        Sexy.GetViewDataSource(ActiveModule.ModuleID, SexyContent.HasEditPermission(ActiveModule), templateId);
                 engine.Init(template, Sexy.App, ActiveModule, dataSource, InstancePurposes.WebView, Sexy);
                 engine.CustomizeData();
                 var response = new HttpResponseMessage(HttpStatusCode.OK);
