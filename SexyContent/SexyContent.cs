@@ -1306,9 +1306,9 @@ namespace ToSic.SexyContent
         {
             var language = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
 
-            var y = source.Out.Where(s => streamsToPublish.Contains(s.Key)).ToDictionary(k => k.Key, s => new
+            var y = streamsToPublish.Where(k => source.Out.ContainsKey(k)).ToDictionary(k => k, s => new
             {
-                List = (from c in s.Value.List select GetDictionaryFromEntity(c.Value, language)).ToList()
+                List = (from c in source.Out[s].List select GetDictionaryFromEntity(c.Value, language)).ToList()
             });
 
             return Newtonsoft.Json.JsonConvert.SerializeObject(y);
