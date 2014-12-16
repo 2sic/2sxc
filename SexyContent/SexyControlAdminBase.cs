@@ -16,15 +16,12 @@ namespace ToSic.SexyContent
         {
             get
             {
-                //if (IsContentApp)
-                //    return SexyContent.GetDefaultAppId(SexyContent.GetZoneID(PortalId).Value);
-
                 var appIdString = Request.QueryString[SexyContent.AppIDString];
                 int appId;
                 if (appIdString != null && int.TryParse(appIdString, out appId))
                     return appId;
-                
-                throw new ArgumentNullException("AppId is null");
+
+                return null;
             }
         }
 
