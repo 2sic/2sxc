@@ -65,6 +65,8 @@ namespace ToSic.SexyContent
 
             pnlSeparateContentPresentation.Visible = chkSeparateContentPresentation.Checked;
 
+            lblPublishSource.HelpText = LocalizeString("lblPublishSource.HelpText").Replace("[JSONTestLink]", "http://www.test.com");
+
 			// show some fields only for App-Module
 	        if (IsContentApp)
 	        {

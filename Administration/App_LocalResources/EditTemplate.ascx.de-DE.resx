@@ -208,7 +208,7 @@
     <value>Geben Sie an, ob Sie einen separaten ContentType für Presentation-Konfiguration auswählen wollen.</value>
   </data>
   <data name="lblPublishSource.Help" xml:space="preserve">
-    <value>Mit diesen Einstellungen ist es möglich, Daten zu veröffentlichen (z.B. als JSON, um sie im JavaScript weiter zu verwenden).</value>
+    <value>Mit diesen Einstellungen ist es möglich, Daten zu veröffentlichen (z.B. als JSON, um sie im JavaScript weiter zu verwenden). &lt;a href="[JSONTestLink]"&gt;Test-Link&lt;/a&gt; (Der Link funktioniert nur dann, wenn das Modul dieses Template zugewiesen hat und das Veröffentlichen aktiv ist)</value>
   </data>
   <data name="lblDataSourcePublishing.Text" xml:space="preserve">
     <value>Erweitert</value>
