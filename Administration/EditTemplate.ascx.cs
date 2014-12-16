@@ -44,6 +44,22 @@ namespace ToSic.SexyContent
                 ddlTemplateLocations.Enabled = false;
         }
 
+        protected void Page_PreRender(object sender, EventArgs e)
+        {
+            lblPublishSource.HelpText = LocalizeString("lblPublishSource.Help").Replace("[JSONTestLink]", GetJsonUrl());
+            lblPublishSource.Text = LocalizeString("lblPublishSource.Text");
+            lblPublishSource.ResourceKey = "-";
+
+        }
+
+        protected string GetJsonUrl()
+        {
+            var url = DotNetNuke.Common.Globals.NavigateURL(this.TabId);
+            url += (url.Contains("?") ? "&" : "?") + "mid=" + ModuleId.ToString() +
+                   "&standalone=true&type=data&popUp=true";
+            return url;
+        }
+
         /// <summary>
         /// Set values in the form if edit mode is active
         /// Set DotNetNuke modal window NavigateUrl for cancel link
@@ -64,8 +80,6 @@ namespace ToSic.SexyContent
             valTemplateFileName.ErrorMessage = LocalizeString("valTemplateFileName.ErrorMessage");
 
             pnlSeparateContentPresentation.Visible = chkSeparateContentPresentation.Checked;
-
-            lblPublishSource.HelpText = LocalizeString("lblPublishSource.HelpText").Replace("[JSONTestLink]", "http://www.test.com");
 
 			// show some fields only for App-Module
 	        if (IsContentApp)

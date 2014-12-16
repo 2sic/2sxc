@@ -208,7 +208,7 @@
     <value>Specify if you want to select a separate ContentType for presentation configuration.</value>
   </data>
   <data name="lblPublishSource.Help" xml:space="preserve">
-    <value>With these settings you can enable data to be published, meaning it can be sent to a JavaScript client using JSON. &lt;a href="[JSONTestLink]"&gt;Test-Link&lt;/a&gt; (will only work if the current module has this template assigned and data publishing is active)</value>
+    <value>With these settings you can enable data to be published, meaning it can be sent to a JavaScript client using JSON. &lt;a href="[JSONTestLink]" target="_blank"&gt;Test-Link&lt;/a&gt; (will only work if the current module has this template assigned and data publishing is active)</value>
   </data>
   <data name="lblDataSourcePublishing.Text" xml:space="preserve">
     <value>Advanced</value>
