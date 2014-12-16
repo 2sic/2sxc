@@ -20,7 +20,7 @@ namespace ToSic.SexyContent
         public HtmlString Toolbar {
             get
             {
-                if (SexyContext == null || !SexyContext.IsEditMode() || PortalSettings.Current == null)
+                if (SexyContext == null || PortalSettings.Current == null)
                     return new HtmlString("");
 
                 if (Entity is IHasEditingData)

@@ -25,6 +25,6 @@
         <br/><br/>
         <hr/>
         <p>For a quick start, we recommend that you install the WebApi demo-app. It contains some WebAPI controllers with various actions and some example views to use these controllers. Download the App here in the App-Catalog.</p>
-        <a href="http://2sxc.org/en/Apps/Details?AppGuid=40a89dd5-30af-43fe-bc92-00b3bf3d09ab" target="_blank" class="dnnPrimaryAction">Download WebApi Demo</a>
+        <a href="http://2sxc.org/en/Apps/tag/WebApi" target="_blank" class="dnnPrimaryAction">Download WebApi Demo</a>
     </fieldset>
 </asp:Panel>

@@ -63,8 +63,18 @@ namespace ToSic.SexyContent
                         Sexy.ConfigurePortal(Server);
                 }
 
-                if (AppId.HasValue && Elements.Any() && Elements.First().TemplateId.HasValue)
-                    ProcessView(phOutput, pnlError, pnlMessage);
+                if (AppId.HasValue)
+                {
+                    if (Elements.Any() && Elements.First().TemplateId.HasValue)
+                        ProcessView(phOutput, pnlError, pnlMessage);
+                    else if(!IsContentApp && UserMayEditThisModule) // Select first available template automatically if it's not set yet - then refresh page
+                    {
+                        var templates = Sexy.GetAvailableTemplatesForSelector(ModuleConfiguration).ToList();
+                        if (templates.Any())
+                            SexyUncached.UpdateTemplateForGroup(Sexy.GetContentGroupIdFromModule(ModuleConfiguration.ModuleID), templates.First().TemplateID, UserInfo.UserID);
+                        Response.Redirect(Request.RawUrl);
+                    }
+                }
             }
             catch (Exception ex)
             {

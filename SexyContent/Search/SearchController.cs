@@ -44,7 +44,7 @@ namespace ToSic.SexyContent.Search
             var language = moduleInfo.CultureCode;
 
             // This list will hold all EAV entities to be indexed
-            var dataSource = sexy.GetViewDataSource(moduleInfo.ModuleID, false, true);
+            var dataSource = sexy.GetViewDataSource(moduleInfo.ModuleID, false);
 			var moduleDataSource = DataPipelineFactory.FindDataSource<ModuleDataSource>((IDataTarget)dataSource);
 
             var elements = moduleDataSource.ContentElements.ToList();

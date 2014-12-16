@@ -40,7 +40,7 @@ namespace ToSic.SexyContent
     {
         #region Constants
 
-        public const string ModuleVersion = "06.05.02";
+        public const string ModuleVersion = "06.06.00";
         public const string TemplateID = "TemplateID";
         public const string ContentGroupIDString = "ContentGroupID";
         public const string AppIDString = "AppId";
@@ -613,7 +613,7 @@ namespace ToSic.SexyContent
         /// The EAV DataSource
         /// </summary>
         private ToSic.Eav.DataSources.IDataSource ViewDataSource { get; set; }
-        public ToSic.Eav.DataSources.IDataSource GetViewDataSource(int moduleId, bool showDrafts, bool includeEditingData, int? overrideTemplateId = new int?())
+		public ToSic.Eav.DataSources.IDataSource GetViewDataSource(int moduleId, bool showDrafts, int? overrideTemplateId = new int?())
         {
             if (ViewDataSource == null)
             {
@@ -623,7 +623,6 @@ namespace ToSic.SexyContent
                 var initialSource = GetInitialDataSource(ZoneId.Value, AppId.Value, showDrafts);
 				var moduleDataSource = DataSource.GetDataSource<ModuleDataSource>(ZoneId, AppId, initialSource, configurationProvider);
                 moduleDataSource.ModuleId = moduleId;
-                moduleDataSource.IncludeEditingData = includeEditingData;
                 moduleDataSource.OverrideTemplateId = overrideTemplateId;
                 moduleDataSource.Sexy = this;
 
@@ -677,11 +676,11 @@ namespace ToSic.SexyContent
 		public Element GetListElement(int moduleId, bool showDrafts)
         {
 			return GetModuleDataSource(moduleId, showDrafts).ListElement;
-		}
+        }
 
 		private ModuleDataSource GetModuleDataSource(int moduleId, bool showDrafts)
-		{
-			var viewDataSource = (IDataTarget)GetViewDataSource(moduleId, showDrafts, Globals.IsEditMode());
+        {
+			var viewDataSource = (IDataTarget)GetViewDataSource(moduleId, showDrafts);
 			var moduleDataSource = DataPipelineFactory.FindDataSource<ModuleDataSource>(viewDataSource);
 			if (moduleDataSource == null)
 				throw new Exception("ModuleDataSource not found in the DataPipeline.");
@@ -1362,8 +1361,10 @@ namespace ToSic.SexyContent
             {
                 case "file":
                     var fileInfo = fileManager.GetFile(id);
-                    if(fileInfo != null)
-                        resultString = fileManager.GetUrl(fileInfo) + urlParams;
+                    if (fileInfo != null)
+                        resultString = (fileInfo.StorageLocation == (int)FolderController.StorageLocationTypes.InsecureFileSystem
+                            ? Path.Combine(ownerPortalSettings.HomeDirectory, fileInfo.RelativePath) + urlParams
+                            : fileManager.GetUrl(fileInfo));
                     break;
                 case "page":
                     var portalSettings = PortalSettings.Current;
