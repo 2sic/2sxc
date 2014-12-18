@@ -37,10 +37,7 @@ namespace ToSic.SexyContent
         {
             try
             {
-                
-                
                 var isSharedModule = ModuleConfiguration.PortalID != ModuleConfiguration.OwnerPortalID;
-
 
                 if (!isSharedModule)
                 {

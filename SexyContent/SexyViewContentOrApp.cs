@@ -40,7 +40,7 @@ namespace ToSic.SexyContent
 					ClientResourceManager.RegisterScript(this.Page, "~/DesktopModules/ToSIC_SexyContent/Js/ViewEdit.js", 82);
 					ClientResourceManager.RegisterScript(this.Page, "~/DesktopModules/ToSIC_SexyContent/Js/2sxc.DnnActionMenuMapper.js", 83);
 
-					var hasContent = AppId.HasValue && Elements.Any() && Elements.First().TemplateId.HasValue && Elements.Any(p => p.EntityId.HasValue);
+					var hasContent = AppId.HasValue && Template != null && Elements.Any(p => p.EntityId.HasValue);
 					var templateChooserVisible = Settings.ContainsKey(SexyContent.SettingsShowTemplateChooser) ?
 						Boolean.Parse(Settings[SexyContent.SettingsShowTemplateChooser].ToString())
 						: !hasContent;
@@ -113,20 +113,12 @@ namespace ToSic.SexyContent
 
 			try
 			{
-				var renderTemplate = Template;
+				//var renderTemplate = Template;
 				string renderedTemplate;
 
-				// Change Template if URL contais "ViewNameInUrl"
-				if (!IsContentApp)
-				{
-					var templateFromUlr = GetTemplateFromUrl();
-					if (templateFromUlr != null)
-						renderTemplate = templateFromUlr;
-				}
-
-				var engine = EngineFactory.CreateEngine(renderTemplate);
-				var dataSource = (ViewDataSource)Sexy.GetViewDataSource(this.ModuleId, SexyContent.HasEditPermission(this.ModuleConfiguration), renderTemplate.TemplateID);
-				engine.Init(renderTemplate, Sexy.App, this.ModuleConfiguration, dataSource, Request.QueryString["type"] == "data" ? InstancePurposes.PublishData : InstancePurposes.WebView, Sexy);
+				var engine = EngineFactory.CreateEngine(Template);
+				var dataSource = (ViewDataSource)Sexy.GetViewDataSource(this.ModuleId, SexyContent.HasEditPermission(this.ModuleConfiguration), Template);
+				engine.Init(Template, Sexy.App, this.ModuleConfiguration, dataSource, Request.QueryString["type"] == "data" ? InstancePurposes.PublishData : InstancePurposes.WebView, Sexy);
 				engine.CustomizeData();
 
 				// Output JSON data if type=data in URL
@@ -169,17 +161,6 @@ namespace ToSic.SexyContent
 				ShowError(LocalizeString("TemplateError.Text") + ": " + HttpUtility.HtmlEncode(Ex.ToString()), pnlError, LocalizeString("TemplateError.Text"), false);
 				Exceptions.LogException(Ex);
 			}
-		}
-
-		/// <summary>
-		/// combine all QueryString Params to a list of key/value lowercase and search for a template having this ViewNameInUrl
-		/// QueryString is never blank in DNN so no there's no test for it
-		/// </summary>
-		private Template GetTemplateFromUrl()
-		{
-			var queryStringPairs = Request.QueryString.AllKeys.Select(key => string.Format("{0}/{1}", key, Request.QueryString[key]).ToLower());
-			var matchedTemplate = Sexy.TemplateContext.GetAllTemplates().FirstOrDefault(t => t.AppID == AppId && !string.IsNullOrEmpty(t.ViewNameInUrl) && queryStringPairs.Contains(t.ViewNameInUrl.ToLower()));
-			return matchedTemplate;
 		}
 
 		#region Show Message or Errors
@@ -229,7 +210,7 @@ namespace ToSic.SexyContent
 						{
 							if (!IsList)
 							{
-								if (Elements.Any() && Elements.First().TemplateId.HasValue)
+								if (Template != null)
 								{
 									// Edit item
 									Actions.Add(GetNextActionID(), LocalizeString("ActionEdit.Text"), "", "", "edit.gif", "javascript:$2sxcActionMenuMapper(" + this.ModuleId + ").edit();", "test", true,
@@ -247,8 +228,7 @@ namespace ToSic.SexyContent
 									SecurityAccessLevel.Edit, true, false);
 							}
 
-							if (Elements.Any() && Elements.First().TemplateId.HasValue && Template != null &&
-								Template.UseForList)
+							if (Template != null && Template.UseForList)
 							{
 								// Add Item
 								Actions.Add(GetNextActionID(), LocalizeString("ActionAdd.Text"), "", "", "add.gif", "javascript:$2sxcActionMenuMapper(" + this.ModuleId + ").addItem();", true, SecurityAccessLevel.Edit, true, false);

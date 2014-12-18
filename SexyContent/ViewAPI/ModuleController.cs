@@ -23,8 +23,9 @@ namespace ToSic.SexyContent.ViewAPI
         [ValidateAntiForgeryToken]
         public void AddItem([FromUri] int? sortOrder = null)
         {
-            var elements = Sexy.GetContentElements(ActiveModule.ModuleID, SexyContent.HasEditPermission(ActiveModule)).ToList();
-            SexyUncached.AddContentGroupItem(elements.First().GroupId, UserInfo.UserID, elements.First().TemplateId, null, sortOrder.HasValue ? sortOrder.Value + 1 : sortOrder, true, ContentGroupItemType.Content, false);
+            var contentGroupId = Sexy.GetContentGroupIdFromModule(ActiveModule.ModuleID);
+            var templateId = Sexy.GetTemplateForModule(ActiveModule.ModuleID).TemplateID;
+            SexyUncached.AddContentGroupItem(contentGroupId, UserInfo.UserID, templateId, null, sortOrder.HasValue ? sortOrder.Value + 1 : sortOrder, true, ContentGroupItemType.Content, false);
         }
 
         [HttpGet]
@@ -110,7 +111,7 @@ namespace ToSic.SexyContent.ViewAPI
                 var engine = EngineFactory.CreateEngine(template);
                 var dataSource =
                     (ViewDataSource)
-                        Sexy.GetViewDataSource(ActiveModule.ModuleID, SexyContent.HasEditPermission(ActiveModule), templateId);
+                        Sexy.GetViewDataSource(ActiveModule.ModuleID, SexyContent.HasEditPermission(ActiveModule), template);
                 engine.Init(template, Sexy.App, ActiveModule, dataSource, InstancePurposes.WebView, Sexy);
                 engine.CustomizeData();
                 var response = new HttpResponseMessage(HttpStatusCode.OK);

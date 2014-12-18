@@ -75,7 +75,7 @@ namespace ToSic.SexyContent
             {
 				if (_elements == null)
                 {
-					_elements = Sexy.GetContentElements(ModuleId, SexyContent.HasEditPermission(this.ModuleConfiguration)).ToList();
+					_elements = Sexy.GetContentElements(ModuleId, SexyContent.HasEditPermission(this.ModuleConfiguration), Template).ToList();
                 }
 				return _elements;
             }
@@ -86,12 +86,36 @@ namespace ToSic.SexyContent
         {
             get
             {
-                if (!AppId.HasValue || !Elements.Any() || !Elements.First().TemplateId.HasValue)
+                if (!AppId.HasValue)
                     return null;
-				if (_template == null)
-					_template = Sexy.TemplateContext.GetTemplate(Elements.First().TemplateId.Value);
-				return _template;
+
+                if (_template == null)
+                {
+                    // Change Template if URL contais "ViewNameInUrl"
+                    if (!IsContentApp)
+                    {
+                        var templateFromUrl = GetTemplateFromUrl();
+                        if (templateFromUrl != null)
+                            _template = templateFromUrl;
+                    }
+
+                    if (_template == null)
+                        _template = Sexy.GetTemplateForModule(this.ModuleConfiguration.ModuleID);
+                }
+
+                return _template;
             }
+        }
+
+        /// <summary>
+        /// combine all QueryString Params to a list of key/value lowercase and search for a template having this ViewNameInUrl
+        /// QueryString is never blank in DNN so no there's no test for it
+        /// </summary>
+        private Template GetTemplateFromUrl()
+        {
+            var queryStringPairs = Request.QueryString.AllKeys.Select(key => string.Format("{0}/{1}", key, Request.QueryString[key]).ToLower());
+            var matchedTemplate = Sexy.TemplateContext.GetAllTemplates().FirstOrDefault(t => t.AppID == AppId && !string.IsNullOrEmpty(t.ViewNameInUrl) && queryStringPairs.Contains(t.ViewNameInUrl.ToLower()));
+            return matchedTemplate;
         }
 
         protected bool IsList

@@ -42,9 +42,10 @@ namespace ToSic.SexyContent.Search
 
             var sexy = new SexyContent(zoneId.Value, appId, true, moduleInfo.OwnerPortalID);
             var language = moduleInfo.CultureCode;
+            var template = sexy.GetTemplateForModule(moduleInfo.ModuleID);
 
             // This list will hold all EAV entities to be indexed
-            var dataSource = sexy.GetViewDataSource(moduleInfo.ModuleID, false);
+            var dataSource = sexy.GetViewDataSource(moduleInfo.ModuleID, false, template);
 			var moduleDataSource = DataPipelineFactory.FindDataSource<ModuleDataSource>((IDataTarget)dataSource);
 
             var elements = moduleDataSource.ContentElements.ToList();
@@ -55,7 +56,7 @@ namespace ToSic.SexyContent.Search
             if (!elements.Any() || !elements.Any(e => e.TemplateId.HasValue))
                 return searchDocuments;
 
-            var template = sexy.TemplateContext.GetTemplate(elements.First().TemplateId.Value);
+            //var template = sexy.TemplateContext.GetTemplate(elements.First().TemplateId.Value);
 
             if (template == null)
                 return searchDocuments;

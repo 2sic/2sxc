@@ -443,7 +443,7 @@ namespace ToSic.SexyContent
         public IEnumerable<Template> GetAvailableTemplatesForSelector(ModuleInfo module)
         {
             IEnumerable<Template> availableTemplates;
-            var elements = GetContentElements(module.ModuleID, HasEditPermission(module));
+            var elements = GetContentElements(module.ModuleID, HasEditPermission(module), GetTemplateForModule(module.ModuleID));
 
             if (elements.Any(e => e.EntityId.HasValue))
                 availableTemplates = GetCompatibleTemplates(module.PortalID, elements.First().GroupId).Where(p => !p.IsHidden);
@@ -609,11 +609,24 @@ namespace ToSic.SexyContent
 		    return provider;
                 }
 
+        // ToDo: Move to correct location
+        public Template GetTemplateForModule(int moduleId)
+        {
+            var items = TemplateContext.GetContentGroupItems(GetContentGroupIdFromModule(moduleId));
+            Template template = null;
+            if (items.Any(i => i.TemplateID.HasValue))
+            {
+                var templateId = items.First().TemplateID.Value;
+                template = TemplateContext.GetTemplate(templateId);
+            }
+            return template;
+        }
+
         /// <summary>
         /// The EAV DataSource
         /// </summary>
         private ToSic.Eav.DataSources.IDataSource ViewDataSource { get; set; }
-		public ToSic.Eav.DataSources.IDataSource GetViewDataSource(int moduleId, bool showDrafts, int? overrideTemplateId = new int?())
+		public ToSic.Eav.DataSources.IDataSource GetViewDataSource(int moduleId, bool showDrafts, Template template)
         {
             if (ViewDataSource == null)
             {
@@ -623,22 +636,21 @@ namespace ToSic.SexyContent
                 var initialSource = GetInitialDataSource(ZoneId.Value, AppId.Value, showDrafts);
 				var moduleDataSource = DataSource.GetDataSource<ModuleDataSource>(ZoneId, AppId, initialSource, configurationProvider);
                 moduleDataSource.ModuleId = moduleId;
-                moduleDataSource.OverrideTemplateId = overrideTemplateId;
+                if(template != null)
+                    moduleDataSource.OverrideTemplateId = template.TemplateID;
                 moduleDataSource.Sexy = this;
 
 	            var viewDataSourceUpstream = moduleDataSource;
 
 				// Get the View-Template
-                var items = TemplateContext.GetContentGroupItems(GetContentGroupIdFromModule(moduleId));
-	            Template template = null;
-                if (items.Any(i => i.TemplateID.HasValue))
-                {
-                    var templateId = overrideTemplateId.HasValue
-                        ? overrideTemplateId.Value
-                        : items.First().TemplateID.Value;
-
-                    template = TemplateContext.GetTemplate(templateId);
-                }
+                //var items = TemplateContext.GetContentGroupItems(GetContentGroupIdFromModule(moduleId));
+                //Template template = null;
+                //if (items.Any(i => i.TemplateID.HasValue))
+                //{
+                //    var templateId = overrideTemplateId.HasValue
+                //        ? overrideTemplateId.Value
+                //        : items.First().TemplateID.Value;
+                //var template = templateId.HasValue ? TemplateContext.GetTemplate(templateId.Value) : null;
 
 	            // If the Template has a Data-Pipeline, use it instead of the ModuleDataSource created above
 				if (template != null && template.PipelineEntityID.HasValue)
@@ -668,19 +680,19 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Get a list of ContentElements by ModuleId or ContentGroupID
         /// </summary>
-		public List<Element> GetContentElements(int moduleId, bool showDrafts)
+		public List<Element> GetContentElements(int moduleId, bool showDrafts, Template template)
         {
-			return GetModuleDataSource(moduleId, showDrafts).ContentElements;
+            return GetModuleDataSource(moduleId, showDrafts, template).ContentElements;
         }
 
-		public Element GetListElement(int moduleId, bool showDrafts)
+		public Element GetListElement(int moduleId, bool showDrafts, Template template)
         {
-			return GetModuleDataSource(moduleId, showDrafts).ListElement;
+            return GetModuleDataSource(moduleId, showDrafts, template).ListElement;
         }
 
-		private ModuleDataSource GetModuleDataSource(int moduleId, bool showDrafts)
+		private ModuleDataSource GetModuleDataSource(int moduleId, bool showDrafts, Template template)
         {
-			var viewDataSource = (IDataTarget)GetViewDataSource(moduleId, showDrafts);
+			var viewDataSource = (IDataTarget)GetViewDataSource(moduleId, showDrafts, template);
 			var moduleDataSource = DataPipelineFactory.FindDataSource<ModuleDataSource>(viewDataSource);
 			if (moduleDataSource == null)
 				throw new Exception("ModuleDataSource not found in the DataPipeline.");
