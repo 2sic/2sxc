@@ -24,7 +24,7 @@ namespace ToSic.SexyContent.Engines.TokenEngine
             DynamicEntity listContent = null;
             DynamicEntity listPresentation = null;
 
-            var moduleDataSource = (ModuleDataSource)((IDataTarget)DataSource).In["Default"].Source;
+            var moduleDataSource = DataPipelineFactory.FindDataSource<ModuleDataSource>((IDataTarget)DataSource);
             listContent = moduleDataSource.ListElement != null ? moduleDataSource.ListElement.Content : null;
             listPresentation = moduleDataSource.ListElement != null ? moduleDataSource.ListElement.Presentation : null;
             var elements = moduleDataSource.ContentElements.Where(p => p.Content != null).ToList();
