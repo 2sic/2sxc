@@ -27,8 +27,10 @@
                     } else {
                         if (!source)
                             source = {};
-                        if (!source.url)
-                            source.url = window.location.href + (window.location.href.indexOf("?") != -1 ? "&" : "?") + "mid=" + id + "&standalone=true&popUp=true&type=data";
+                        if (!source.url) {
+                            var currentUrl = window.location.href.split("#")[0];
+                            source.url = currentUrl + (currentUrl.indexOf("?") != -1 ? "&" : "?") + "mid=" + id + "&standalone=true&popUp=true&type=data";
+                        }
                         source.origSuccess = source.success;
                         source.success = function(data) {
 
