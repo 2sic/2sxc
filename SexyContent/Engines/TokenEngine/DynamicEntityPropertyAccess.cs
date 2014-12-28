@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using DotNetNuke.Entities.Users;
 using DotNetNuke.Services.Tokens;
 
@@ -56,6 +58,21 @@ namespace ToSic.SexyContent.Engines.TokenEngine
                     case "Int64":
                     case "Decimal":
                         return (((IFormattable)valueObject).ToString(outputFormat, formatProvider));
+					case "List`1":
+		                var entityList = valueObject as List<DynamicEntity>;
+						if (entityList != null)
+						{
+							if (!entityList.Any())
+								return string.Empty;
+
+							if (outputFormat.StartsWith("First."))
+							{
+								var propertyName = outputFormat.Substring(6);
+								return new DynamicEntityPropertyAccess(null, entityList.First()).GetProperty(propertyName, string.Empty,
+									formatProvider, AccessingUser, AccessLevel, ref propertyNotFound);
+							}
+						}
+						return PropertyAccess.FormatString(valueObject.ToString(), strFormat);
                     default:
                         return PropertyAccess.FormatString(valueObject.ToString(), strFormat);
                 }
