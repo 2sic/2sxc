@@ -58,7 +58,7 @@ namespace ToSic.SexyContent.Engines.TokenEngine
                     case "Int64":
                     case "Decimal":
                         return (((IFormattable)valueObject).ToString(outputFormat, formatProvider));
-					case "List`1":
+                    case "List`1":
 		                var entityList = valueObject as List<DynamicEntity>;
 						if (entityList != null)
 						{
