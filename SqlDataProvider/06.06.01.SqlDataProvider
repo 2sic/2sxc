@@ -1,0 +1,16 @@
+﻿-- make sure sql rolls back automatically in case of error.
+SET XACT_ABORT ON
+
+BEGIN TRANSACTION SexyContentUpdate;
+
+-- Rename AssignmentObjectType
+UPDATE ToSIC_EAV_AssignmentObjectTypes
+SET
+	Name = 'Data Pipeline',
+	Description = 'Data Pipelines with Pipeline Parts and Configurations'
+WHERE
+	AssignmentObjectTypeID = 4
+
+-- Commit the transaction
+COMMIT TRANSACTION SexyContentUpdate;
+--ROLLBACK TRANSACTION SexyContentUpdate;
