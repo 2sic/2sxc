@@ -3,7 +3,9 @@
 angular.module('eavGlobalConfigurationProvider', []).factory('eavGlobalConfigurationProvider', function ($location) {
 
 	// Get DNN ModuleContext
-	var globals = $("div[data-2sxc-globals]").data("2sxc-globals");
+	var globals = $('div[data-2sxc-globals]').data('2sxc-globals');
+	if (!globals)
+		alert('Please ensure the DNN-Page is in Edit-Mode');
 
 	var getApiAdditionalHeaders = function () {
 		var sf = $.ServicesFramework(globals.ModuleContext.ModuleId);
@@ -15,7 +17,7 @@ angular.module('eavGlobalConfigurationProvider', []).factory('eavGlobalConfigura
 		};
 	}
 
-	var baseUrl = globals.FullUrl + "/mid/" + globals.ModuleContext.ModuleId + "/popUp/true?AppId=" + globals.ModuleContext.AppId + "&";
+	var baseUrl = globals.FullUrl + '?mid=' + globals.ModuleContext.ModuleId + '&popUp=true&AppId=' + globals.ModuleContext.AppId + '&';
 
 	var getItemFormUrl = function (mode, params, preventRedirect) {
 		if (mode == 'New')
@@ -24,12 +26,14 @@ angular.module('eavGlobalConfigurationProvider', []).factory('eavGlobalConfigura
 			params.ReturnUrl = $location.url();
 		if (preventRedirect)
 			params.PreventRedirect = true;
-		return baseUrl + "ctl=editcontentgroup&" + $.param(params);
+		if (typeof globals.DefaultLanguageID == 'number')
+			params.cultureDimension = globals.DefaultLanguageID;
+		return baseUrl + 'ctl=editcontentgroup&' + $.param(params);
 	};
 
 	return {
 		api: {
-			baseUrl: globals.ApplicationPath + "DesktopModules/2sxc/API",
+			baseUrl: globals.ApplicationPath + 'DesktopModules/2sxc/API',
 			additionalHeaders: getApiAdditionalHeaders(),
 			defaultParams: {
 				portalId: globals.ModuleContext.PortalId,
@@ -37,7 +41,7 @@ angular.module('eavGlobalConfigurationProvider', []).factory('eavGlobalConfigura
 				tabId: globals.ModuleContext.TabId
 			}
 		},
-		dialogClass: "dnnFormPopup",
+		dialogClass: 'dnnFormPopup',
 		itemForm: {
 			getNewItemUrl: function (attributeSetId, assignmentObjectTypeId, params, preventRedirect, prefill) {
 				if (prefill)
