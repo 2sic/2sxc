@@ -343,6 +343,20 @@ namespace ToSic.SexyContent.ImportExport
                 t.Location = template.Attribute("Location").Value;
                 t.PublishData = Boolean.Parse(template.Attribute("PublishData") == null ? "False" : template.Attribute("PublishData").Value);
                 t.StreamsToPublish = template.Attribute("StreamsToPublish") == null ? "" : template.Attribute("StreamsToPublish").Value;
+				t.ViewNameInUrl = template.Attribute("ViewNameInUrl") == null ? null : template.Attribute("ViewNameInUrl").Value;
+
+	            var pipelineEntityGuid = template.Attribute("PipelineEntityGUID");
+	            if (pipelineEntityGuid != null && !string.IsNullOrEmpty(pipelineEntityGuid.Value))
+	            {
+		            var entityGuid = Guid.Parse(pipelineEntityGuid.Value);
+					if (_sexy.ContentContext.EntityExists(entityGuid))
+						t.PipelineEntityID = _sexy.ContentContext.GetEntity(entityGuid).EntityID;
+					else
+						ImportLog.Add(
+							new ExportImportMessage(
+								"Pipeline Entity for Template '" + t.Name + "' could not be found. (Guid: " + pipelineEntityGuid.Value +
+								")", ExportImportMessage.MessageTypes.Information));
+				}
 
                 if (template.Attribute("UseForList") != null)
                     t.UseForList = Boolean.Parse(template.Attribute("UseForList").Value);
@@ -390,12 +404,21 @@ namespace ToSic.SexyContent.ImportExport
         /// <returns></returns>
         private Entity GetImportEntity(XElement xEntity, int assignmentObjectTypeId, int? keyNumber = null)
         {
-            // Special case: App AttributeSets must be assigned to the current app
-            if (xEntity.Attribute("AssignmentObjectType").Value == "App")
-            {
-                keyNumber = _appId;
-                assignmentObjectTypeId = SexyContent.AssignmentObjectTypeIDSexyContentApp;
-            }
+			switch (xEntity.Attribute("AssignmentObjectType").Value)
+	        {
+				// Special case: App AttributeSets must be assigned to the current app
+				case "App":
+					keyNumber = _appId;
+					assignmentObjectTypeId = SexyContent.AssignmentObjectTypeIDSexyContentApp;
+					break;
+				case "Data Pipeline":
+			        assignmentObjectTypeId = DataSource.AssignmentObjectTypeIdDataPipeline;
+					break;
+	        }
+
+			Guid? keyGuid = null;
+			if (xEntity.Attribute("KeyGuid") != null)
+		        keyGuid = Guid.Parse(xEntity.Attribute("KeyGuid").Value);
 
             // Special case #2: Corrent values of Template-Describing entities, and resolve files
             
@@ -451,7 +474,7 @@ namespace ToSic.SexyContent.ImportExport
             
 
             var importEntity = ToSic.Eav.ImportExport.XmlImport.GetImportEntity(xEntity, assignmentObjectTypeId,
-                _targetDimensions, _sourceDimensions, _sourceDefaultDimensionId, PortalSettings.Current.DefaultLanguage, keyNumber);
+				_targetDimensions, _sourceDimensions, _sourceDefaultDimensionId, PortalSettings.Current.DefaultLanguage, keyNumber, keyGuid);
 
             return importEntity;
 

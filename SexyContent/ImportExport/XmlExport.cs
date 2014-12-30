@@ -137,6 +137,7 @@ namespace ToSic.SexyContent.ImportExport
                 int ID = int.Parse(TemplateID);
                 Template t = Sexy.TemplateContext.GetTemplate(ID);
                 Entity DemoEntity = t.DemoEntityID.HasValue ? Sexy.ContentContext.GetEntity(t.DemoEntityID.Value) : null;
+				var pipelineEntity = t.PipelineEntityID.HasValue ? Sexy.ContentContext.GetEntity(t.PipelineEntityID.Value) : null;
 
                 XElement Template = new XElement("Template",
                     new XAttribute("Name", t.Name),
@@ -151,6 +152,8 @@ namespace ToSic.SexyContent.ImportExport
                     new XAttribute("DemoEntityGUID", DemoEntity != null ? DemoEntity.EntityGUID.ToString() : ""),
                     new XAttribute("PublishData", t.PublishData),
                     new XAttribute("StreamsToPublish", t.StreamsToPublish),
+					new XAttribute("ViewNameInUrl", t.ViewNameInUrl),
+					new XAttribute("PipelineEntityGUID", pipelineEntity != null ? pipelineEntity.EntityGUID.ToString() : ""),
                     (from c in Sexy.ContentContext.GetEntities(SexyContent.AssignmentObjectTypeIDSexyContentTemplate, t.TemplateID, null, null)
                      select GetEntityXElement(c))
                 );
@@ -233,6 +236,9 @@ namespace ToSic.SexyContent.ImportExport
                         _referencedFileIds.Add(int.Parse(a.Groups["FileId"].Value));
                 }
             }
+
+	        if (e.KeyGuid.HasValue)
+		        entityXElement.Add(new XAttribute("KeyGuid", e.KeyGuid));
 
             //return new XElement("Entity",
             //    new XAttribute("AssignmentObjectType", e.AssignmentObjectType.Name),
