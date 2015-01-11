@@ -13,7 +13,7 @@
 <dnn:DnnJsInclude runat="server" Priority="61" FilePath="~/DesktopModules/ToSIC_SexyContent/Js/AngularJS/angular-resource.min.js" />
 <dnn:DnnJsInclude runat="server" Priority="62" FilePath="~/DesktopModules/ToSIC_SexyContent/Js/AngularJS/angular-animate.min.js" />
 <dnn:DnnJsInclude runat="server" Priority="63" FilePath="~/DesktopModules/ToSIC_SexyContent/Js/AngularJS/toaster.js" />
-<dnn:DnnJsInclude runat="server" Priority="64" FilePath="~/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/PipelineDesigner/assets/jquery.jsPlumb-1.6.4-min.js" />
+<dnn:DnnJsInclude runat="server" Priority="64" FilePath="~/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/PipelineDesigner/assets/jquery.jsPlumb-1.7.2-min.js" />
 <dnn:DnnJsInclude runat="server" Priority="65" FilePath="~/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/PipelineDesigner/PipelineDesigner.js" />
 <dnn:DnnJsInclude runat="server" Priority="66" FilePath="~/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/PipelineDesigner/PipelineDesignerController.js" />
 <dnn:DnnJsInclude runat="server" Priority="67" FilePath="~/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/PipelineDesigner/PipelineFactory.js" />
