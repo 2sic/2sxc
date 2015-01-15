@@ -18,7 +18,7 @@
 </div>
 <div class="dnnFormItem">
     <dnn:Label ID="lblDemoRow" runat="server" Suffix=":" />
-    <asp:DropDownList ID="ddlDemoRows" runat="server" DataTextField="EntityTitle" DataValueField="EntityID" AppendDataBoundItems="true">
+    <asp:DropDownList ID="ddlDemoRows" runat="server" DataTextField="EntityTitle" DataValueField="EntityId" AppendDataBoundItems="true">
         <asp:ListItem ResourceKey="ddlDemoRowsDefaultItem" Value="0"></asp:ListItem>
     </asp:DropDownList>
 </div>
