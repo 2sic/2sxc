@@ -20,7 +20,30 @@ namespace ToSic.SexyContent
             Data = data;
             Dnn = new DnnHelper(module);
 
-            // If PortalSettings is null - for example, while search index runs - HasEditPermission would fail
+	        if (data != null)
+	        {
+		        var moduleDataSource = DataPipelineFactory.FindDataSource<ModuleDataSource>((IDataTarget) data);
+
+		        if (moduleDataSource != null)
+		        {
+			        var elements = moduleDataSource.ContentElements.Where(p => p.Content != null).ToList();
+			        var listElement = moduleDataSource.ListElement;
+			        List = elements;
+
+			        if (elements.Any())
+			        {
+				        Content = elements.First().Content;
+				        Presentation = elements.First().Presentation;
+			        }
+			        if (listElement != null)
+			        {
+				        ListContent = listElement.Content;
+				        ListPresentation = listElement.Presentation;
+			        }
+		        }
+	        }
+
+	        // If PortalSettings is null - for example, while search index runs - HasEditPermission would fail
             // But in search mode, it shouldn't show drafts, so this is ok.
             App.InitData(PortalSettings.Current != null && SexyContent.HasEditPermission(module));
         }
@@ -153,6 +176,12 @@ namespace ToSic.SexyContent
             srcDs.In.Add(DataSource.DefaultStreamName, inStream);
             return src;
         }
+
+		public dynamic Content { get; set; }
+		public dynamic Presentation { get; set; }
+		public dynamic ListContent { get; set; }
+		public dynamic ListPresentation { get; set; }
+		public List<Element> List { get; set; }
 
     }
 }

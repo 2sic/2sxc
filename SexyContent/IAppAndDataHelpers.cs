@@ -68,5 +68,10 @@ namespace ToSic.SexyContent
         ToSic.Eav.DataSources.IDataSource CreateSource(string typeName = "", ToSic.Eav.DataSources.IDataSource inSource = null, IConfigurationProvider configurationProvider = null);
         T CreateSource<T>(ToSic.Eav.DataSources.IDataSource inSource = null, IConfigurationProvider configurationProvider = null);
 
+		dynamic Content { get; }
+		dynamic Presentation { get; }
+		dynamic ListContent { get; }
+		dynamic ListPresentation { get; }
+		List<Element> List { get; }
     }
 }
