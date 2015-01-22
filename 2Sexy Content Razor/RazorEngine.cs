@@ -23,31 +23,9 @@ namespace ToSic.SexyContent.Engines
     {
 
         protected SexyContentWebPage Webpage { get; set; }
-		//protected dynamic Content { get; set; }
-		//protected dynamic Presentation { get; set; }
-		//protected dynamic ListContent { get; set; }
-		//protected dynamic ListPresentation { get; set; }
-		//protected List<Element> List { get; set; }
 
         protected override void Init()
         {
-			//var moduleDataSource = DataPipelineFactory.FindDataSource<ModuleDataSource>((IDataTarget)DataSource);
-
-			//var elements = moduleDataSource.ContentElements.Where(p => p.Content != null).ToList();
-			//var listElement = moduleDataSource.ListElement;
-			//List = elements;
-
-			//if (elements.Any())
-			//{
-			//	Content = elements.First().Content;
-			//	Presentation = elements.First().Presentation;
-			//}
-			//if (listElement != null)
-			//{
-			//	ListContent = listElement.Content;
-			//	ListPresentation = listElement.Presentation;
-			//}
-            
             try
             {
                 InitWebpage();
@@ -59,8 +37,6 @@ namespace ToSic.SexyContent.Engines
                 throw e;
             }
         }
-
-
 
         protected HttpContextBase HttpContext
         {
@@ -119,12 +95,6 @@ namespace ToSic.SexyContent.Engines
         {
             webPage.Html = new HtmlHelper();
             webPage.Url = new UrlHelper(ModuleInfo);
-            
-			//webPage.Content = Content;
-			//webPage.Presentation = Presentation;
-			//webPage.ListContent = ListContent;
-			//webPage.ListPresentation = ListPresentation;
-			//webPage.List = List;
             webPage.Sexy = Sexy;
             webPage.AppAndDataHelpers = new AppAndDataHelpers(Sexy, ModuleInfo, (ViewDataSource)DataSource, App);
 
