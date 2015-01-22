@@ -1,5 +1,6 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="WebApiHelp.ascx.cs" Inherits="ToSic.SexyContent.Administration.WebApiHelp" %>
 <%@ Import Namespace="System.IO" %>
+<%@ Import Namespace="ToSic.SexyContent.EAV.PipelineDesigner" %>
 <%@ Register TagName="AdministrationRegisters" TagPrefix="SexyContent" Src="Registers.ascx" %>
 <SexyContent:AdministrationRegisters runat="server"></SexyContent:AdministrationRegisters>
 
@@ -8,7 +9,11 @@
         <span><%= LocalizeString("Heading.Text") %></span>
     </h2>
     <fieldset>
-        <%= LocalizeString("WebApiHelp.Text") %>
+        <%= LocalizeString("SxcDataHelp.Text") %><br /><br/>
+		<%= LocalizeString("VisualDataPipelines.Text") %><br/><br/>
+		<a href="<%= PipelineManagementDnnWrapper.GetEditUrl(this, AppId.Value) %>" class="dnnPrimaryAction">Visual Pipeline Designer</a>
+		<br/><br/>
+	    <%= LocalizeString("WebApi.Text") %><br/><br/>
         The following list shows the .cs files in the App-API folder:<br/>
         <% if (Directory.Exists(Path.Combine(this.Sexy.App.PhysicalPath, "Api"))) { %>
         <ul>

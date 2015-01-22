@@ -120,12 +120,22 @@
   <data name="Heading.Text" xml:space="preserve">
     <value>Web API Help</value>
   </data>
-  <data name="WebApiHelp.Text" xml:space="preserve">
+  <data name="SxcDataHelp.Text" xml:space="preserve">
     <value>&lt;strong&gt;Using 2sxc Data in JavaScript&lt;/strong&gt;&lt;br /&gt;
-To do this, use the data publishing feature. This is configured at the View-Level. Read more about &lt;a href="http://2sxc.org/en/Docs/tag/Data%20and%20Data%20Sources" target="_blank"&gt;coding data pipelines&lt;/a&gt; and about &lt;a href="http://2sxc.org/en/Docs/tag/Data%20and%20Data%20Sources" target="_blank"&gt;using the data in JavaScript with jQuery, AngularJS and more&lt;/a&gt;.&lt;br /&gt;
+To do this, use the data publishing feature. This is configured at the View-Level. Read more about &lt;a href="http://2sxc.org/en/Docs/tag/Data%20and%20Data%20Sources" target="_blank"&gt;coding data pipelines&lt;/a&gt; and about &lt;a href="http://2sxc.org/en/Docs/tag/Data%20and%20Data%20Sources" target="_blank"&gt;using the data in JavaScript with jQuery, AngularJS and more&lt;/a&gt;.</value>
+  </data>
+  <data name="VisualDataPipelines.Text" xml:space="preserve">
+    <value>&lt;strong&gt;Visual Data Pipelines&lt;/strong&gt;&lt;br /&gt;
+Use the Pipeline-Designer to create queries to data from 2sxc, SQL, RSS and more.</value>
+  </data>
+  <data name="WebApi.Text" xml:space="preserve">
+    <value>&lt;strong&gt;WebApi&lt;/strong&gt;&lt;br /&gt;
+Create a WebApi within minutes by placing the source code in the folder called API and inheriting the correct interface. Try it out by creating one automatically and pressing here. Read more about the &lt;a href="http://2sxc.org/en/Docs-Manuals/Feature/feature/3361" target="_blank"&gt;WebApi&lt;/a&gt; or the &lt;a href="http://2sxc.org/en/Docs-Manuals/Feature/feature/3360" target="_blank"&gt;C# data editing API&lt;/a&gt;.</value>
+  </data>
+  <data name="WebApiHelp.Text" xml:space="preserve">
+    <value>&lt;br /&gt;
 &lt;br /&gt;
-&lt;strong&gt;Visual Data Pipelines&lt;/strong&gt;&lt;br /&gt;
-The visual pipeline designer feature will be released in January 2015.&lt;br /&gt;
+&lt;br /&gt;
 &lt;br /&gt;
 &lt;strong&gt;WebApi&lt;/strong&gt;&lt;br /&gt;
 Create a WebApi within minutes by placing the source code in the folder called API and inheriting the correct interface. Try it out by creating one automatically and pressing here. Read more about the &lt;a href="http://2sxc.org/en/Docs-Manuals/Feature/feature/3361" target="_blank"&gt;WebApi&lt;/a&gt; or the &lt;a href="http://2sxc.org/en/Docs-Manuals/Feature/feature/3360" target="_blank"&gt;C# data editing API&lt;/a&gt;.&lt;br /&gt;&lt;br /&gt;</value>
