@@ -17,7 +17,7 @@
                 return $scope.templates;
             return $filter('filter')($scope.templates, contentTypeId == 0 ? { AttributeSetID: null } : { AttributeSetID: contentTypeId }, true);
         };
-        $scope.contentTypeId = 0;
+        $scope.contentTypeId = $scope.manageInfo.contentTypeId;
         $scope.templateId = $scope.manageInfo.templateId;
         $scope.savedTemplateId = $scope.manageInfo.templateId;
         $scope.appId = $scope.manageInfo.appId;
@@ -33,46 +33,43 @@
             $q.all([getContentTypes, getTemplates]).then(function (res) {
                 $scope.contentTypes = res[0].data;
                 $scope.templates = res[1].data;
+
                 // Add option for no content type if there are templates without
                 if ($filter('filter')($scope.templates, { AttributeSetID: null }, true).length > 0) {
                     $scope.contentTypes.push({ AttributeSetId: null, Name: "Layout element" });
                     $scope.contentTypes = $filter('orderBy')($scope.contentTypes, 'Name');
                 }
 
-                var template = $filter('filter')($scope.templates, { TemplateID: $scope.templateId }, true);
-                if (template[0] != null && $scope.contentTypeId == 0)
-                    $scope.contentTypeId = template[0].AttributeSetID;
-
-                $scope.$watch('templateId', function(newTemplateId, oldTemplateId) {
-                    if (newTemplateId != oldTemplateId) {
-                        if ($scope.manageInfo.isContentApp)
-                            $scope.renderTemplate(newTemplateId);
-                        else {
-                            $scope.saveTemplateId(newTemplateId);
-                            $window.location.reload();
-                        }
-                    }
-                });
-
-                $scope.$watch('contentTypeId', function(newContentTypeId, oldContentTypeId) {
-                    if (newContentTypeId == oldContentTypeId)
-                        return;
-                    // Select first template if contentType changed
-                    var firstTemplateId = $scope.filteredTemplates(newContentTypeId)[0].TemplateID; // $filter('filter')($scope.templates, { AttributeSetId: $scope.contentTypeId == null ? "!!" : $scope.contentTypeId })[0].TemplateID;
-                    if ($scope.templateId != firstTemplateId && firstTemplateId != null)
-                        $scope.templateId = firstTemplateId;
-                });
-
                 $scope.loading--;
             });
 
         };
 
+        $scope.$watch('templateId', function (newTemplateId, oldTemplateId) {
+        	if (newTemplateId != oldTemplateId) {
+        		if ($scope.manageInfo.isContentApp)
+        			$scope.renderTemplate(newTemplateId);
+        		else {
+        			$scope.saveTemplateId(newTemplateId);
+        			$window.location.reload();
+        		}
+        	}
+        });
+
+        $scope.$watch('contentTypeId', function (newContentTypeId, oldContentTypeId) {
+        	if (newContentTypeId == oldContentTypeId)
+        		return;
+        	// Select first template if contentType changed
+        	var firstTemplateId = $scope.filteredTemplates(newContentTypeId)[0].TemplateID; // $filter('filter')($scope.templates, { AttributeSetId: $scope.contentTypeId == null ? "!!" : $scope.contentTypeId })[0].TemplateID;
+        	if ($scope.templateId != firstTemplateId && firstTemplateId != null)
+        		$scope.templateId = firstTemplateId;
+        });
+
         if ($scope.appId != null && $scope.manageInfo.templateChooserVisible)
             $scope.reloadTemplates();
 
-        $scope.$watch('manageInfo.templateChooserVisible', function(visible) {
-            if ($scope.appId != null && visible)
+        $scope.$watch('manageInfo.templateChooserVisible', function(visible, oldVisible) {
+            if (visible != oldVisible && $scope.appId != null && visible)
                 $scope.reloadTemplates();
         });
 
