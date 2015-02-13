@@ -57,6 +57,7 @@ namespace ToSic.SexyContent
 							appId = AppId,
 							isList = AppId.HasValue && Elements.Count > 1,
 							templateId = Template != null ? Template.TemplateID : new int?(),
+							contentTypeId = Template != null ? Template.AttributeSetID : 0,
 							config = new
 							{
 								portalId = PortalId,

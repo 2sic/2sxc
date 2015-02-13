@@ -28,11 +28,6 @@ namespace ToSic.SexyContent.Razor
         protected internal UrlHelper Url { get; internal set; }
 
         // <2sic>
-        protected internal dynamic Content { get; internal set; }
-        protected internal dynamic Presentation { get; internal set; }
-        protected internal dynamic ListContent { get; internal set; }
-        protected internal dynamic ListPresentation { get; internal set; }
-        protected internal List<Element> List { get; internal set; }
         protected internal SexyContent Sexy { get; set; }
         protected internal AppAndDataHelpers AppAndDataHelpers { get; set; }
         // </2sic>
@@ -53,12 +48,6 @@ namespace ToSic.SexyContent.Razor
             
             Html = ((SexyContentWebPage) parentPage).Html;
             Url = ((SexyContentWebPage) parentPage).Url;
-
-            Content = ((SexyContentWebPage) parentPage).Content;
-            Presentation = ((SexyContentWebPage) parentPage).Presentation;
-            ListContent = ((SexyContentWebPage) parentPage).ListContent;
-            ListPresentation = ((SexyContentWebPage) parentPage).ListPresentation;
-            List = ((SexyContentWebPage) parentPage).List;
             AppAndDataHelpers = ((SexyContentWebPage)parentPage).AppAndDataHelpers;
         }
 
@@ -168,6 +157,26 @@ namespace ToSic.SexyContent.Razor
 		    return AppAndDataHelpers.CreateSource<T>(inStream);
 		}
 
+		public dynamic Content {
+			get { return AppAndDataHelpers.Content; }
+		}
+
+	    public dynamic Presentation {
+		    get { return AppAndDataHelpers.Presentation; }
+	    }
+
+	    public dynamic ListContent {
+		    get { return AppAndDataHelpers.ListContent; }
+	    }
+
+		public dynamic ListPresentation {
+			get { return AppAndDataHelpers.ListPresentation; }
+		}
+
+		public List<Element> List {
+			get { return AppAndDataHelpers.List; }
+		}
+
         #endregion
 
 
@@ -202,6 +211,7 @@ namespace ToSic.SexyContent.Razor
         }
 
         public InstancePurposes InstancePurpose { get; set; }
+
 
     }
 

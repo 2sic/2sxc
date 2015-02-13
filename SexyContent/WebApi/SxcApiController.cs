@@ -155,6 +155,31 @@ namespace ToSic.SexyContent.WebApi
             return AppAndDataHelpers.CreateSource<T>(inStream);
         }
 
+		public dynamic Content
+		{
+			get { return AppAndDataHelpers.Content; }
+		}
+
+		public dynamic Presentation
+		{
+			get { return AppAndDataHelpers.Presentation; }
+		}
+
+		public dynamic ListContent
+		{
+			get { return AppAndDataHelpers.ListContent; }
+		}
+
+		public dynamic ListPresentation
+		{
+			get { return AppAndDataHelpers.ListPresentation; }
+		}
+
+		public List<Element> List
+		{
+			get { return AppAndDataHelpers.List; }
+		}
+
         #endregion
 
     }

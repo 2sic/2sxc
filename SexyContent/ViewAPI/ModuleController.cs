@@ -108,12 +108,17 @@ namespace ToSic.SexyContent.ViewAPI
             try
             {
                 var template = Sexy.TemplateContext.GetTemplate(templateId);
+
                 var engine = EngineFactory.CreateEngine(template);
-                var dataSource =
-                    (ViewDataSource)
-                        Sexy.GetViewDataSource(ActiveModule.ModuleID, SexyContent.HasEditPermission(ActiveModule), template);
+                var dataSource = (ViewDataSource) Sexy.GetViewDataSource(ActiveModule.ModuleID, SexyContent.HasEditPermission(ActiveModule), template);
                 engine.Init(template, Sexy.App, ActiveModule, dataSource, InstancePurposes.WebView, Sexy);
                 engine.CustomizeData();
+
+				if (template.AttributeSetID.HasValue && !template.DemoEntityID.HasValue && dataSource["Default"].List.Count == 0) { 
+					var toolbar = "<ul class='sc-menu' data-toolbar='" + Newtonsoft.Json.JsonConvert.SerializeObject(new { sortOrder = 0, useModuleList = true, action = "edit" }) + "'></ul>";
+					return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent("<div class='dnnFormMessage dnnFormInfo'>No demo item exists for the selected template. " + toolbar + "</div>") };
+				}
+
                 var response = new HttpResponseMessage(HttpStatusCode.OK);
                 response.Content = new StringContent(engine.Render(), Encoding.UTF8, "text/plain");
                 return response;

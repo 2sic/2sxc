@@ -894,7 +894,7 @@ namespace ToSic.SexyContent
                 var values = new OrderedDictionary()
                 {
                     {"DisplayName", String.IsNullOrEmpty(appName) ? eavAppName : appName },
-                    {"Folder", String.IsNullOrEmpty(appName) ? eavAppName : appName },
+                    {"Folder", String.IsNullOrEmpty(appName) ? eavAppName : RemoveIllegalCharsFromPath(appName) },
                     {"AllowTokenTemplates", "False"},
                     {"AllowRazorTemplates", "False"},
                     {"Version", "00.00.01"},
@@ -1350,6 +1350,13 @@ namespace ToSic.SexyContent
 
             return dictionary;
         }
+
+	    private static string RemoveIllegalCharsFromPath(string path)
+	    {
+			string regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
+			Regex r = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
+			return r.Replace(path, "");
+	    }
 
         /// <summary>
         /// Resolves File and Page values
