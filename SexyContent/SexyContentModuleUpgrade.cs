@@ -17,7 +17,6 @@ namespace ToSic.SexyContent
 					Version050500();
 					break;
 				case "06.06.00":
-				case "06.06.01":
 					EnsurePipelineDesignerAttributeSets();
 					break;
 			}
