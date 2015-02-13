@@ -114,7 +114,7 @@ namespace ToSic.SexyContent.Administration
             ddlLanguage.DataSource = Languages;
             ddlLanguage.DataBind();
             
-            ddlContentType.DataSource = sexyContent.GetAvailableAttributeSets(); ;
+            ddlContentType.DataSource = sexyContent.GetAvailableAttributeSets(SexyContent.AttributeSetScope);
             ddlContentType.DataBind();
 
             rblRecordExport.DataSource = EnumToDataSource<RecordExport>();
