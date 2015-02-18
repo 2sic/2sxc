@@ -113,9 +113,23 @@ namespace ToSic.SexyContent
         /// </summary>
         private Template GetTemplateFromUrl()
         {
-            var queryStringPairs = Request.QueryString.AllKeys.Select(key => string.Format("{0}/{1}", key, Request.QueryString[key]).ToLower());
-            var matchedTemplate = Sexy.TemplateContext.GetAllTemplates().FirstOrDefault(t => t.AppID == AppId && !string.IsNullOrEmpty(t.ViewNameInUrl) && queryStringPairs.Contains(t.ViewNameInUrl.ToLower()));
-            return matchedTemplate;
+            var queryStringPairs = Request.QueryString.AllKeys.Select(key => string.Format("{0}/{1}", key, Request.QueryString[key]).ToLower()).ToArray();
+			var queryStringKeys = Request.QueryString.AllKeys.Select(k => k.ToLower()).ToArray();
+
+			foreach (var template in Sexy.TemplateContext.GetAllTemplates().Where(t => t.AppID == AppId && !string.IsNullOrEmpty(t.ViewNameInUrl)))
+	        {
+			    var viewNameInUrlLowered = template.ViewNameInUrl.ToLower();
+				if (queryStringPairs.Contains(viewNameInUrlLowered))	// match view/details
+				    return template;
+		        if (viewNameInUrlLowered.EndsWith("/.*"))	// match details/.* --> e.g. details/12
+		        {
+			        var keyName = viewNameInUrlLowered.Substring(0, viewNameInUrlLowered.Length - 3);
+					if (queryStringKeys.Contains(keyName))
+						return template;
+		        }
+	        }
+
+			return null;
         }
 
         protected bool IsList
