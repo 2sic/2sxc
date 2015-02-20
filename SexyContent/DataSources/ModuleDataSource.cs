@@ -145,7 +145,7 @@ namespace ToSic.SexyContent.DataSources
                 while (entitiesToDeliver.ContainsKey(key))
                     key += 1000000000;
 
-                entitiesToDeliver.Add(key, new EAVExtensions.EntityInContentGroup(originals[entityId.Value]) { SortOrder = i.SortOrder, ContentGroupItemModified = i.SysModified });
+                entitiesToDeliver.Add(key, new EAVExtensions.EntityInContentGroup(originals[entityId.Value]) { SortOrder = i.SortOrder, ContentGroupItemModified = i.SysModified, Presentation = null });
             }
 
             return entitiesToDeliver;
@@ -229,27 +229,27 @@ namespace ToSic.SexyContent.DataSources
             return elements;
         }
 
-        private List<Element> _contentElements;
-        public List<Element> ContentElements
-        {
-            get
-            {
-                if (_contentElements == null)
-                    _contentElements = GetElements(ContentGroupItemType.Content, ContentGroupItemType.Presentation).ToList();
-                return _contentElements;
-            }
-        }
+		//private List<Element> _contentElements;
+		//public List<Element> ContentElements
+		//{
+		//	get
+		//	{
+		//		if (_contentElements == null)
+		//			_contentElements = GetElements(ContentGroupItemType.Content, ContentGroupItemType.Presentation).ToList();
+		//		return _contentElements;
+		//	}
+		//}
 
-        private Element _listElement;
-        public Element ListElement
-        {
-            get
-            {
-                if(_listElement == null)
-                    _listElement = GetElements(ContentGroupItemType.ListContent, ContentGroupItemType.ListPresentation).FirstOrDefault();
-                return _listElement;
-            }
-        }
+		//private Element _listElement;
+		//public Element ListElement
+		//{
+		//	get
+		//	{
+		//		if(_listElement == null)
+		//			_listElement = GetElements(ContentGroupItemType.ListContent, ContentGroupItemType.ListPresentation).FirstOrDefault();
+		//		return _listElement;
+		//	}
+		//}
 
     }
 }
