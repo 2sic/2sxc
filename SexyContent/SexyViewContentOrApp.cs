@@ -103,7 +103,7 @@ namespace ToSic.SexyContent
 				return;
 			}
 
-			if (Template.AttributeSetID.HasValue && Items.All(e => !e.EntityID.HasValue))
+			if (Template.AttributeSetID.HasValue && !Template.DemoEntityID.HasValue && Items.All(e => !e.EntityID.HasValue))
 			{
 				var toolbar = IsEditable ? "<ul class='sc-menu' data-toolbar='" + Newtonsoft.Json.JsonConvert.SerializeObject(new { sortOrder = Items.First().SortOrder, useModuleList = true, action = "edit" }) + "'></ul>" : "";
 				ShowMessage(LocalizeString("NoDemoItem.Text") + " " + toolbar, pnlMessage);
