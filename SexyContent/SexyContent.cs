@@ -1311,7 +1311,14 @@ namespace ToSic.SexyContent
             dictionary.Add("EntityId", entity.EntityId);
             dictionary.Add("Modified", entity.Modified);
 
-            if(entity is IHasEditingData)
+	        if (entity is EntityInContentGroup && !dictionary.ContainsKey("Presentation"))
+	        {
+		        var entityInGroup = (EntityInContentGroup) entity;
+				if(entityInGroup.Presentation != null)
+					dictionary.Add("Presentation", GetDictionaryFromEntity(entityInGroup.Presentation, language));
+	        }
+
+	        if(entity is IHasEditingData)
                 dictionary.Add("_2sxcEditInformation", new { sortOrder = ((IHasEditingData)entity).SortOrder });
             else
                 dictionary.Add("_2sxcEditInformation", new { entityId = entity.EntityId, title = entity.Title != null ? entity.Title[language] : "(no title)" });

@@ -61,7 +61,7 @@ namespace ToSic.SexyContent
         public object GetEntityValue(string attributeName, out bool propertyNotFound)
         {
             propertyNotFound = false;
-            object result;
+            object result = null;
             
             
             if (Entity.Attributes.ContainsKey(attributeName))
@@ -100,6 +100,11 @@ namespace ToSic.SexyContent
                     case "Modified":
                         result = Entity.Modified;
                         break;
+					case "Presentation":
+		                var inContentGroup = Entity as EntityInContentGroup;
+		                if(inContentGroup != null)
+							result = inContentGroup.Presentation;
+		                break;
                     default:
                         result = null;
                         propertyNotFound = true;
