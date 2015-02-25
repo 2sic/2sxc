@@ -24,31 +24,13 @@ namespace ToSic.SexyContent
 	        if (data != null)
 	        {
 		        
-			    var entities = data.List.Where(e => e.Value is EntityInContentGroup).Select(e => e.Value);
-			    var listEntity = data["ListContent"].List.Select(e => e.Value).FirstOrDefault(e => e is EntityInContentGroup);
+			    var entities = data.List.Select(e => e.Value);
+			    var listEntity = data["ListContent"].List.Select(e => e.Value).FirstOrDefault();
 
-		        var elements = entities.Select(e =>
-		        {
-			        var c = ((EntityInContentGroup) e);
-			        return new Element
-			        {
-				        EntityId = e.EntityId,
-				        Content = AsDynamic(e),
-				        GroupId = c.GroupId,
-				        Presentation = AsDynamic(c.Presentation),
-				        SortOrder = c.SortOrder
-			        };
-		        }).ToList();
+		        var elements = entities.Select(GetElementFromEntity).ToList();
 
 		        var listElement = listEntity != null
-			        ? new Element()
-			        {
-				        EntityId = listEntity.EntityId,
-						Content = AsDynamic(listEntity),
-						GroupId = ((EntityInContentGroup)listEntity).GroupId,
-						Presentation = AsDynamic(((EntityInContentGroup)listEntity).Presentation),
-						SortOrder = ((EntityInContentGroup)listEntity).SortOrder
-			        }
+			        ? GetElementFromEntity(listEntity)
 			        : null;
 
 			    List = elements;
@@ -70,6 +52,25 @@ namespace ToSic.SexyContent
             // But in search mode, it shouldn't show drafts, so this is ok.
             App.InitData(PortalSettings.Current != null && SexyContent.HasEditPermission(module));
         }
+
+	    private Element GetElementFromEntity(IEntity e)
+	    {
+			var el = new Element
+			{
+				EntityId = e.EntityId,
+				Content = AsDynamic(e)
+			};
+
+			if (e is EntityInContentGroup)
+			{
+				var c = ((EntityInContentGroup)e);
+				el.GroupId = c.GroupId;
+				el.Presentation = AsDynamic(c.Presentation);
+				el.SortOrder = c.SortOrder;
+			}
+
+		    return el;
+	    }
 
         public App App { get; private set; }
         public ViewDataSource Data { get; private set; }

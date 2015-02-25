@@ -14,11 +14,14 @@
     <asp:Panel runat="server" id="pnlEAV"></asp:Panel>
 </div>
 
+<% if (Request.QueryString["ManagementMode"] == "ContentTypesList")
+   { %>
 <ul class="dnnActions">
 	<li>
-		<a href="<%= EditUrl(TabId, SexyContent.ControlKeys.DataExport, true, "mid=" + ModuleId + "&" +SexyContent.AppIDString + "=" + Request.QueryString[SexyContent.AppIDString]) %>" class="dnnSecondaryAction">Export Data (beta)</a>
+		<a href="<%= EditUrl(TabId, SexyContent.ControlKeys.DataExport, true, "mid=" + ModuleId + "&" + SexyContent.AppIDString + "=" + Request.QueryString[SexyContent.AppIDString]) %>" class="dnnSecondaryAction">Export Data (beta)</a>
 	</li>
 	<li>
 		<a href="<%= EditUrl(TabId, SexyContent.ControlKeys.DataImport, true, "mid=" + ModuleId + "&" + SexyContent.AppIDString + "=" + Request.QueryString[SexyContent.AppIDString]) %>" class="dnnSecondaryAction">Import Data (beta)</a>
 	</li>
 </ul>
+<% } %>
