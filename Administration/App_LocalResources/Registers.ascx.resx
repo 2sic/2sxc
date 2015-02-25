@@ -130,7 +130,8 @@
     <value>Data Import</value>
   </data>
   <data name="eavmanagement.Text" xml:space="preserve">
-    <value>Content</value>
+    <value>Content / Data</value>
+    <comment> </comment>
   </data>
   <data name="gettingstarted.Text" xml:space="preserve">
     <value>Getting Started</value>

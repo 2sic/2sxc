@@ -153,4 +153,7 @@
   <data name="lblSummaryHeading.Text" xml:space="preserve">
     <value>Import Summary</value>
   </data>
+  <data name="lblImportExportData.Text" xml:space="preserve">
+    <value>To export / import data (like tables of employees, etc.) use the import/export in the "Content / Data" tab.</value>
+  </data>
 </root>

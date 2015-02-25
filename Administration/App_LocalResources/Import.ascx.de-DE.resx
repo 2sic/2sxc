@@ -153,4 +153,7 @@
   <data name="lblSummaryHeading.Text" xml:space="preserve">
     <value>Zusammenfassung Import</value>
   </data>
+  <data name="lblImportExportData.Text1" xml:space="preserve">
+    <value>Zum Exportieren von Daten (z.B. alle Mitarbeiter etc.): Verwende den Import/Export im "Inhalt / Daten"-Register.</value>
+  </data>
 </root>
