@@ -20,31 +20,34 @@ namespace ToSic.SexyContent
             App = app;
             Data = data;
             Dnn = new DnnHelper(module);
+	        List = new List<Element>();
 
 	        if (data != null)
 	        {
-		        
-			    var entities = data.List.Select(e => e.Value);
-			    var listEntity = data["ListContent"].List.Select(e => e.Value).FirstOrDefault();
+		        if (data.Out.ContainsKey("Default"))
+		        {
+			        var entities = data.List.Select(e => e.Value);
+					var elements = entities.Select(GetElementFromEntity).ToList();
+					List = elements;
 
-		        var elements = entities.Select(GetElementFromEntity).ToList();
+					if (elements.Any())
+					{
+						Content = elements.First().Content;
+						Presentation = elements.First().Presentation;
+					}
+		        }
 
-		        var listElement = listEntity != null
-			        ? GetElementFromEntity(listEntity)
-			        : null;
+		        if (data.Out.ContainsKey("ListContent"))
+		        {
+			        var listEntity = data["ListContent"].List.Select(e => e.Value).FirstOrDefault();
+					var listElement = listEntity != null ? GetElementFromEntity(listEntity) : null;
 
-			    List = elements;
-
-			    if (elements.Any())
-			    {
-				    Content = elements.First().Content;
-				    Presentation = elements.First().Presentation;
-			    }
-			    if (listElement != null)
-			    {
-				    ListContent = listElement.Content;
-				    ListPresentation = listElement.Presentation;
-			    }
+					if (listElement != null)
+					{
+						ListContent = listElement.Content;
+						ListPresentation = listElement.Presentation;
+					}
+		        }
 
 	        }
 
