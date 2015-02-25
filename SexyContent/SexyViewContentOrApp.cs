@@ -40,7 +40,7 @@ namespace ToSic.SexyContent
 					ClientResourceManager.RegisterScript(this.Page, "~/DesktopModules/ToSIC_SexyContent/Js/ViewEdit.js", 82);
 					ClientResourceManager.RegisterScript(this.Page, "~/DesktopModules/ToSIC_SexyContent/Js/2sxc.DnnActionMenuMapper.js", 83);
 
-					var hasContent = AppId.HasValue && Template != null && Elements.Any(p => p.EntityId.HasValue);
+					var hasContent = AppId.HasValue && Template != null && Items.Any(p => p.EntityID.HasValue);
 					var templateChooserVisible = Settings.ContainsKey(SexyContent.SettingsShowTemplateChooser) ?
 						Boolean.Parse(Settings[SexyContent.SettingsShowTemplateChooser].ToString())
 						: !hasContent;
@@ -55,7 +55,7 @@ namespace ToSic.SexyContent
 							hasContent = hasContent,
 							isContentApp = IsContentApp,
 							appId = AppId,
-							isList = AppId.HasValue && Elements.Count > 1,
+							isList = AppId.HasValue && Items.Count > 1,
 							templateId = Template != null ? Template.TemplateID : new int?(),
 							contentTypeId = Template != null ? Template.AttributeSetID : 0,
 							config = new
@@ -103,9 +103,9 @@ namespace ToSic.SexyContent
 				return;
 			}
 
-			if (Template.AttributeSetID.HasValue && Elements.All(e => e.Content == null))
+			if (Template.AttributeSetID.HasValue && Items.All(e => !e.EntityID.HasValue))
 			{
-				var toolbar = IsEditable ? "<ul class='sc-menu' data-toolbar='" + Newtonsoft.Json.JsonConvert.SerializeObject(new { sortOrder = Elements.First().SortOrder, useModuleList = true, action = "edit" }) + "'></ul>" : "";
+				var toolbar = IsEditable ? "<ul class='sc-menu' data-toolbar='" + Newtonsoft.Json.JsonConvert.SerializeObject(new { sortOrder = Items.First().SortOrder, useModuleList = true, action = "edit" }) + "'></ul>" : "";
 				ShowMessage(LocalizeString("NoDemoItem.Text") + " " + toolbar, pnlMessage);
 				return;
 			}
@@ -225,7 +225,7 @@ namespace ToSic.SexyContent
 									ModuleActionType.ContentOptions, "editlist", "edit.gif",
 									EditUrl(this.TabId, SexyContent.ControlKeys.EditList, false, "mid",
 										this.ModuleId.ToString(), SexyContent.ContentGroupIDString,
-										Elements.First().GroupID.ToString()), false,
+										Items.First().ContentGroupID.ToString()), false,
 									SecurityAccessLevel.Edit, true, false);
 							}
 

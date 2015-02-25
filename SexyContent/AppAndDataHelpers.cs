@@ -5,6 +5,7 @@ using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
 using ToSic.Eav.DataSources;
 using ToSic.SexyContent.DataSources;
+using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Razor.Helpers;
 
 namespace ToSic.SexyContent
@@ -22,25 +23,47 @@ namespace ToSic.SexyContent
 
 	        if (data != null)
 	        {
-		        var moduleDataSource = DataPipelineFactory.FindDataSource<ModuleDataSource>((IDataTarget) data);
+		        
+			    var entities = data.List.Where(e => e.Value is EntityInContentGroup).Select(e => e.Value);
+			    var listEntity = data["ListContent"].List.Select(e => e.Value).FirstOrDefault(e => e is EntityInContentGroup);
 
-		        if (moduleDataSource != null)
+		        var elements = entities.Select(e =>
 		        {
-			        var elements = moduleDataSource.ContentElements.Where(p => p.Content != null).ToList();
-			        var listElement = moduleDataSource.ListElement;
-			        List = elements;
+			        var c = ((EntityInContentGroup) e);
+			        return new Element
+			        {
+				        EntityId = e.EntityId,
+				        Content = AsDynamic(e),
+				        GroupId = c.GroupId,
+				        Presentation = AsDynamic(c.Presentation),
+				        SortOrder = c.SortOrder
+			        };
+		        }).ToList();
 
-			        if (elements.Any())
+		        var listElement = listEntity != null
+			        ? new Element()
 			        {
-				        Content = elements.First().Content;
-				        Presentation = elements.First().Presentation;
+				        EntityId = listEntity.EntityId,
+						Content = AsDynamic(listEntity),
+						GroupId = ((EntityInContentGroup)listEntity).GroupId,
+						Presentation = AsDynamic(((EntityInContentGroup)listEntity).Presentation),
+						SortOrder = ((EntityInContentGroup)listEntity).SortOrder
 			        }
-			        if (listElement != null)
-			        {
-				        ListContent = listElement.Content;
-				        ListPresentation = listElement.Presentation;
-			        }
-		        }
+			        : null;
+
+			    List = elements;
+
+			    if (elements.Any())
+			    {
+				    Content = elements.First().Content;
+				    Presentation = elements.First().Presentation;
+			    }
+			    if (listElement != null)
+			    {
+				    ListContent = listElement.Content;
+				    ListPresentation = listElement.Presentation;
+			    }
+
 	        }
 
 	        // If PortalSettings is null - for example, while search index runs - HasEditPermission would fail
