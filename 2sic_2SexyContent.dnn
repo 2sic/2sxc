@@ -146,6 +146,11 @@
               <name>06.06.01.SqlDataProvider</name>
               <version>06.06.01</version>
             </script>
+            <script type="Install">
+              <path>SqlDataProvider</path>
+              <name>06.06.03.SqlDataProvider</name>
+              <version>06.06.03</version>
+            </script>
             <script type="UnInstall">
               <path>SqlDataProvider</path>
               <name>Uninstall.SqlDataProvider</name>
@@ -348,7 +353,7 @@
             <attributes>
               <businessControllerClass>ToSic.SexyContent.SexyContent, ToSic.SexyContent</businessControllerClass>
               <desktopModuleID>[DESKTOPMODULEID]</desktopModuleID>
-              <upgradeVersionsList>05.05.00,06.06.00</upgradeVersionsList>
+              <upgradeVersionsList>05.05.00,06.06.00,06.06.03</upgradeVersionsList>
             </attributes>
           </eventMessage>
         </component>

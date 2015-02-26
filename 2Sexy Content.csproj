@@ -203,6 +203,7 @@
       <DependentUpon>Services.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="SexyContent\DataSources\DnnSqlDataSource.cs" />
     <Compile Include="SexyContent\EAVExtensions\EavApiProxies\EntitiesController.cs" />
     <Compile Include="SexyContent\EAV\PipelineDesigner\PipelineManagementDnnWrapper.ascx.cs">
       <DependentUpon>PipelineManagementDnnWrapper.ascx</DependentUpon>
@@ -649,6 +650,7 @@
     <Content Include="SqlDataProvider\06.04.00.SqlDataProvider" />
     <Content Include="SqlDataProvider\06.06.00.SqlDataProvider" />
     <Content Include="SqlDataProvider\06.06.01.SqlDataProvider" />
+    <Content Include="SqlDataProvider\06.06.03.SqlDataProvider" />
     <None Include="SqlDataProvider\Uninstall.SqlDataProvider" />
     <Content Include="web.config" />
   </ItemGroup>

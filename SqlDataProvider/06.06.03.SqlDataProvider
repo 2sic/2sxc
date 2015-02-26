@@ -1,0 +1,17 @@
+﻿-- make sure sql rolls back automatically in case of error.
+SET XACT_ABORT ON
+
+BEGIN TRANSACTION SexyContentUpdate;
+
+-- Change length of AttributeSet-StaticName from 50 to 150
+ALTER TABLE ToSIC_EAV_AttributeSets
+ALTER COLUMN StaticName nvarchar(150)
+
+-- Change length of AttributeSet-Name from 50 to 150
+ALTER TABLE ToSIC_EAV_AttributeSets
+ALTER COLUMN Name nvarchar(150)
+
+
+-- Commit the transaction
+COMMIT TRANSACTION SexyContentUpdate;
+--ROLLBACK TRANSACTION SexyContentUpdate;
