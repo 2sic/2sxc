@@ -75,7 +75,7 @@ namespace ToSic.SexyContent
 				new List<Eav.Import.Attribute>
 				{
 					Eav.Import.Attribute.StringAttribute("ContentType", "ContentType", null, true),
-					Eav.Import.Attribute.StringAttribute("SelectCommand", "SelectCommand", null, true)
+					Eav.Import.Attribute.StringAttribute("SelectCommand", "SelectCommand", null, true, rowCount: 10)
 				});
 
 			// Collect AttributeSets for use in Import
