@@ -11,5 +11,7 @@ namespace ToSic.SexyContent.EAVExtensions
 
         public int SortOrder { get; set; }
         public DateTime ContentGroupItemModified { get; set; }
+		public IEntity Presentation { get; set; }
+		public int GroupId { get; set; }
     }
 }

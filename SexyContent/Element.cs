@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using ToSic.Eav;
 
 namespace ToSic.SexyContent
 {
     public class Element
     {
+
         /// <summary>
         /// The ContentGroupID of this Element
         /// </summary>
-        public int Id { get; set; }
+        // public int Id { get; set; }
 
         /// <summary>
         /// The DynamicContent object, as dynamic
@@ -25,7 +27,7 @@ namespace ToSic.SexyContent
         /// <summary>
         /// The ViewConfig object, as dynamic / DynamicContent
         /// </summary>
-        public dynamic ViewConfig { get; set; }
+        // public dynamic ViewConfig { get; set; }
 
         /// <summary>
         /// The EntityID of the ContentGroupItem
@@ -35,6 +37,7 @@ namespace ToSic.SexyContent
         /// <summary>
         /// The TemplateID of the ContentGroupItem
         /// </summary>
+        [Obsolete("Will be removed in version 7")]
         public int? TemplateId { get; set; }
 
         /// <summary>
@@ -48,15 +51,15 @@ namespace ToSic.SexyContent
         public int GroupId { get; set; }
 
 
-        [Obsolete("Deprecated: Use GroupId instead of GroupID")]
-        public int GroupID
-        {
-            get { return this.GroupId; }
-            set { this.GroupId = value; }
-        }
+		//[Obsolete("Deprecated: Use GroupId instead of GroupID")]
+		//public int GroupID
+		//{
+		//	get { return this.GroupId; }
+		//	set { this.GroupId = value; }
+		//}
 
-        [Obsolete("Deprecated: Use Id instead of ID")]
-        public int ID { get { return this.Id; } set { this.Id = value; } }
+		//[Obsolete("Deprecated: Use Id instead of ID")]
+		//public int ID { get { return this.Id; } set { this.Id = value; } }
 
         
     }

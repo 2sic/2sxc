@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using DotNetNuke.Entities.Portals;
@@ -17,6 +18,7 @@ namespace ToSic.SexyContent
 					Version050500();
 					break;
 				case "06.06.00":
+				case "06.06.04":
 					EnsurePipelineDesignerAttributeSets();
 					break;
 			}
@@ -65,12 +67,33 @@ namespace ToSic.SexyContent
 		/// <summary>
 		/// Add new Content Types for Pipeline Designer
 		/// </summary>
+		/// <remarks>Some Content Types are defined in EAV but some only in 2sxc. EAV.VersionUpgrade ensures Content Types are shared across all Apps.</remarks>
 		private static void EnsurePipelineDesignerAttributeSets()
 		{
+			// Ensure DnnSqlDataSource Configuration
+			var dsrcSqlDataSource = Eav.Import.AttributeSet.SystemAttributeSet("|Config ToSic.SexyContent.DataSources.DnnSqlDataSource", "used to configure a DNN SqlDataSource",
+				new List<Eav.Import.Attribute>
+				{
+					Eav.Import.Attribute.StringAttribute("ContentType", "ContentType", null, true),
+					Eav.Import.Attribute.StringAttribute("SelectCommand", "SelectCommand", null, true, rowCount: 10)
+				});
+
+			// Collect AttributeSets for use in Import
+			var attributeSets = new List<Eav.Import.AttributeSet>
+			{
+				dsrcSqlDataSource
+			};
+			var import = new Eav.Import.Import(DataSource.DefaultZoneId, DataSource.MetaDataAppId, SexyContent.InternalUserName);
+			import.RunImport(attributeSets, null);
+
+			var metaDataCtx = EavContext.Instance(DataSource.DefaultZoneId, DataSource.MetaDataAppId);
+			metaDataCtx.GetAttributeSet(dsrcSqlDataSource.StaticName).AlwaysShareConfiguration = true;
+			metaDataCtx.SaveChanges();
+
+			// Run EAV Version Upgrade (also ensures Content Type sharing)
 			var eavVersionUpgrade = new VersionUpgrade(SexyContent.InternalUserName);
 			eavVersionUpgrade.EnsurePipelineDesignerAttributeSets();
 		}
-
 		/// <summary>
 		/// Copy a Directory recursive
 		/// </summary>

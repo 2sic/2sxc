@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -27,18 +28,18 @@ namespace ToSic.SexyContent
             }
         }
 
-        private List<Element> _Elements;
-        private List<Element> Elements
-        {
-            get
-            {
-                if (_Elements == null)
-                {
-                    _Elements = Sexy.GetContentElements(ModuleId, SexyContent.HasEditPermission(ModuleConfiguration), Sexy.GetTemplateForModule(ModuleConfiguration.ModuleID)).ToList();
-                }
-                return _Elements;
-            }
-        }
+		private List<ContentGroupItem> _Items;
+		private List<ContentGroupItem> Items
+		{
+			get
+			{
+				if (_Items == null)
+				{
+					_Items = Sexy.TemplateContext.GetContentGroupItems(ContentGroupID).ToList();
+				}
+				return _Items;
+			}
+		}
 
         private Template Template
         {
@@ -62,19 +63,17 @@ namespace ToSic.SexyContent
         protected void grdEntities_ItemCommand(object sender, Telerik.Web.UI.GridCommandEventArgs e)
         {
             int ContentGroupItemID = Convert.ToInt32(e.Item.OwnerTableView.DataKeyValues[e.Item.ItemIndex]["ID"]);
-            Element Element = Elements.First(p => p.ID == ContentGroupItemID);
+            var item = Items.First(p => p.ContentGroupItemID == ContentGroupItemID);
 
             switch (e.CommandName)
             {
                 case "add":
-                    SexyUncached.AddContentGroupItem(ContentGroupID, UserId, Element.TemplateId.Value, null, Element.SortOrder + 1, true, ContentGroupItemType.Content, false);
+                    SexyUncached.AddContentGroupItem(ContentGroupID, UserId, item.TemplateID.Value, null, item.SortOrder + 1, true, ContentGroupItemType.Content, false);
                     // Refresh page
                     Response.Redirect(Request.RawUrl);
-                    //grdEntities.Rebind();
-                    //grdEntities.Items[Element.SortOrder].Selected = true;
                     break;
                 case "addwithedit":
-                    Response.Redirect(Sexy.GetElementAddWithEditLink(ContentGroupID, Element.SortOrder + 1, ModuleId, TabId, Request.RawUrl));
+                    Response.Redirect(Sexy.GetElementAddWithEditLink(ContentGroupID, item.SortOrder + 1, ModuleId, TabId, Request.RawUrl));
                     break;
             }
         }
@@ -104,20 +103,25 @@ namespace ToSic.SexyContent
 
         protected void grdEntities_NeedDatasource(object sender, EventArgs e)
         {
-            _Elements = null;
-            grdEntities.DataSource = from c in Elements
-                                     select new
-                                     {
-                                         EntityID = c.EntityId,
-                                         EntityTitle = c.Content != null ? String.IsNullOrEmpty(c.Content.EntityTitle.ToString()) ? "(empty)" : c.Content.EntityTitle : "(no demo row)",
-                                         ID = c.ID
-                                     };
+            _Items = null;
+	        var entities = DataSource.GetInitialDataSource(this.ZoneId.Value, this.AppId.Value);
+	        grdEntities.DataSource = Items.Select(i =>
+	        {
+		        var entity = i.EntityID.HasValue ? new DynamicEntity(entities.List.FirstOrDefault(en => en.Key == i.EntityID.Value).Value, new [] { CultureInfo.CurrentCulture.Name }, Sexy) : null;
+		        return new
+		        {
+			        EntityID = i.EntityID,
+			        EntityTitle = entity != null ? String.IsNullOrEmpty(entity.EntityTitle.ToString()) ? "(empty)" : entity.EntityTitle : "(no demo row)",
+			        ID = i.ContentGroupItemID
+		        };
+	        });
+
         }
 
         protected string GetEditUrl(int ContentGroupItemID)
         {
-            Element Item = Elements.Where(p => p.ID == ContentGroupItemID).Single();
-            return Sexy.GetElementEditLink(Item.GroupID, Item.SortOrder, ModuleId, TabId, Request.RawUrl);
+            var item = Items.Single(p => p.ContentGroupItemID == ContentGroupItemID);
+            return Sexy.GetElementEditLink(item.ContentGroupID, item.SortOrder, ModuleId, TabId, Request.RawUrl);
         }
 
         /// <summary>
@@ -127,8 +131,8 @@ namespace ToSic.SexyContent
         /// <returns></returns>
         protected string GetSettingsUrl(int ContentGroupItemID)
         {
-            Element Item = Elements.Where(p => p.ID == ContentGroupItemID).Single();
-            return Sexy.GetElementSettingsLink(Item.ID, ModuleId, TabId, Request.RawUrl);
+            var item = Items.Single(p => p.ContentGroupItemID == ContentGroupItemID);
+            return Sexy.GetElementSettingsLink(item.ContentGroupItemID, ModuleId, TabId, Request.RawUrl);
         }
 
         protected void btnEditListHeader_Click(object sender, EventArgs e)

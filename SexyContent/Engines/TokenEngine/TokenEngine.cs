@@ -21,13 +21,11 @@ namespace ToSic.SexyContent.Engines.TokenEngine
         /// <returns>Rendered template as string</returns>
         protected override string RenderTemplate()
         {
-            DynamicEntity listContent = null;
-            DynamicEntity listPresentation = null;
+            var h = new AppAndDataHelpers(Sexy, ModuleInfo, (ViewDataSource)DataSource, App);
 
-            var moduleDataSource = DataPipelineFactory.FindDataSource<ModuleDataSource>((IDataTarget)DataSource);
-            listContent = moduleDataSource.ListElement != null ? moduleDataSource.ListElement.Content : null;
-            listPresentation = moduleDataSource.ListElement != null ? moduleDataSource.ListElement.Presentation : null;
-            var elements = moduleDataSource.ContentElements.Where(p => p.Content != null).ToList();
+            var listContent = h.ListContent;
+            var listPresentation = h.ListPresentation;
+            var elements = h.List;
 
             // Prepare Source Text
             string sourceText = System.IO.File.ReadAllText(HostingEnvironment.MapPath(TemplatePath));
@@ -58,7 +56,7 @@ namespace ToSic.SexyContent.Engines.TokenEngine
 
             string renderedTemplate = "";
 
-            foreach (Element element in elements)
+            foreach (var element in elements)
             {
                 // Modify List Object
                 list["Index"] = elements.IndexOf(element).ToString();
@@ -71,7 +69,7 @@ namespace ToSic.SexyContent.Engines.TokenEngine
                 list["Alternator5"] = (elements.IndexOf(element) % 5).ToString();
 
                 // Replace Tokens
-                var tokenReplace = new TokenReplace(element.Content, element.Presentation, listContent, listPresentation, list, App);
+                var tokenReplace = new TokenReplace((DynamicEntity)element.Content, (DynamicEntity)element.Presentation, (DynamicEntity)listContent, (DynamicEntity)listPresentation, list, App);
                 tokenReplace.ModuleId = ModuleInfo.ModuleID;
                 tokenReplace.PortalSettings = PortalSettings.Current;
                 renderedTemplate += tokenReplace.ReplaceEnvironmentTokens(repeatingPart);

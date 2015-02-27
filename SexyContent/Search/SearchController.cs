@@ -46,18 +46,7 @@ namespace ToSic.SexyContent.Search
 
             // This list will hold all EAV entities to be indexed
             var dataSource = sexy.GetViewDataSource(moduleInfo.ModuleID, false, template);
-			var moduleDataSource = DataPipelineFactory.FindDataSource<ModuleDataSource>((IDataTarget)dataSource);
-
-            var elements = moduleDataSource.ContentElements.ToList();
-            var listElement = moduleDataSource.ListElement;
-            if(listElement != null)
-                elements.Add(listElement);
-
-            if (!elements.Any() || !elements.Any(e => e.TemplateId.HasValue))
-                return searchDocuments;
-
-            //var template = sexy.TemplateContext.GetTemplate(elements.First().TemplateId.Value);
-
+			
             if (template == null)
                 return searchDocuments;
 

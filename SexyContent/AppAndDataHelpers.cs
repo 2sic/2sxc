@@ -5,6 +5,7 @@ using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
 using ToSic.Eav.DataSources;
 using ToSic.SexyContent.DataSources;
+using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Razor.Helpers;
 
 namespace ToSic.SexyContent
@@ -19,34 +20,60 @@ namespace ToSic.SexyContent
             App = app;
             Data = data;
             Dnn = new DnnHelper(module);
+	        List = new List<Element>();
 
 	        if (data != null)
 	        {
-		        var moduleDataSource = DataPipelineFactory.FindDataSource<ModuleDataSource>((IDataTarget) data);
-
-		        if (moduleDataSource != null)
+		        if (data.Out.ContainsKey("Default"))
 		        {
-			        var elements = moduleDataSource.ContentElements.Where(p => p.Content != null).ToList();
-			        var listElement = moduleDataSource.ListElement;
-			        List = elements;
+			        var entities = data.List.Select(e => e.Value);
+					var elements = entities.Select(GetElementFromEntity).ToList();
+					List = elements;
 
-			        if (elements.Any())
-			        {
-				        Content = elements.First().Content;
-				        Presentation = elements.First().Presentation;
-			        }
-			        if (listElement != null)
-			        {
-				        ListContent = listElement.Content;
-				        ListPresentation = listElement.Presentation;
-			        }
+					if (elements.Any())
+					{
+						Content = elements.First().Content;
+						Presentation = elements.First().Presentation;
+					}
 		        }
+
+		        if (data.Out.ContainsKey("ListContent"))
+		        {
+			        var listEntity = data["ListContent"].List.Select(e => e.Value).FirstOrDefault();
+					var listElement = listEntity != null ? GetElementFromEntity(listEntity) : null;
+
+					if (listElement != null)
+					{
+						ListContent = listElement.Content;
+						ListPresentation = listElement.Presentation;
+					}
+		        }
+
 	        }
 
 	        // If PortalSettings is null - for example, while search index runs - HasEditPermission would fail
             // But in search mode, it shouldn't show drafts, so this is ok.
             App.InitData(PortalSettings.Current != null && SexyContent.HasEditPermission(module));
         }
+
+	    private Element GetElementFromEntity(IEntity e)
+	    {
+			var el = new Element
+			{
+				EntityId = e.EntityId,
+				Content = AsDynamic(e)
+			};
+
+			if (e is EntityInContentGroup)
+			{
+				var c = ((EntityInContentGroup)e);
+				el.GroupId = c.GroupId;
+				el.Presentation = AsDynamic(c.Presentation);
+				el.SortOrder = c.SortOrder;
+			}
+
+		    return el;
+	    }
 
         public App App { get; private set; }
         public ViewDataSource Data { get; private set; }

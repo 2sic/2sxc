@@ -35,20 +35,6 @@ namespace ToSic.SexyContent.DataSources
             }
         }
 
-        private List<TemplateDefault> _templateDefaults;
-        private IEnumerable<TemplateDefault> TemplateDefaults
-        {
-            get
-            {
-                if (!ListId.HasValue || (!OverrideTemplateId.HasValue && (!ContentGroupItems.Any() || !ContentGroupItems.First().TemplateID.HasValue)))
-                    return new List<TemplateDefault>();
-
-                if (_templateDefaults == null)
-                    _templateDefaults = Sexy.GetTemplateDefaults(OverrideTemplateId.HasValue ? OverrideTemplateId.Value : ContentGroupItems.First().TemplateID.Value);
-                return _templateDefaults;
-            }
-        }
-
         public ModuleDataSource()
         {
             Out.Add("Default", new DataStream(this, "Default", GetContent));
@@ -64,7 +50,7 @@ namespace ToSic.SexyContent.DataSources
         {
             if (_content == null)
             {
-                _content = GetStream(ContentGroupItemType.Content);
+                _content = GetStream(ContentGroupItemType.Content, ContentGroupItemType.Presentation);
             }
             return _content;
         }
@@ -74,7 +60,7 @@ namespace ToSic.SexyContent.DataSources
         {
             if (_presentation == null)
             {
-                _presentation = GetStream(ContentGroupItemType.Presentation);
+                _presentation = GetStream(ContentGroupItemType.Presentation, null);
             }
             return _presentation;
         }
@@ -84,7 +70,7 @@ namespace ToSic.SexyContent.DataSources
         {
             if (_listContent == null)
             {
-                _listContent = GetStream(ContentGroupItemType.ListContent);
+                _listContent = GetStream(ContentGroupItemType.ListContent, ContentGroupItemType.ListPresentation);
             }
             return _listContent;
         }
@@ -94,15 +80,20 @@ namespace ToSic.SexyContent.DataSources
         {
             if (_listPresentation == null)
             {
-                _listPresentation = GetStream(ContentGroupItemType.ListPresentation);
+                _listPresentation = GetStream(ContentGroupItemType.ListPresentation, null);
             }
             return _listPresentation;
         }
 
-        private IDictionary<int, IEntity> GetStream(ContentGroupItemType itemType)
+		private IDictionary<int, IEntity> GetStream(ContentGroupItemType itemType, ContentGroupItemType? presentationItemType)
         {
-            var templateDefault = TemplateDefaults.FirstOrDefault(t => t.ItemType == itemType);
-            var items = ContentGroupItems.Where(p => p.ItemType == itemType).ToList(); // Create copy of list (not in cache)
+			var entitiesToDeliver = new Dictionary<int, IEntity>();
+			if (!ContentGroupItems.Any(c => c.TemplateID.HasValue) && !OverrideTemplateId.HasValue) return entitiesToDeliver;
+
+            var items = ContentGroupItems.ToList(); // Create copy of list (not in cache) because it will get modified
+			var templateId = OverrideTemplateId.HasValue ? OverrideTemplateId.Value : items.First().TemplateID.Value;
+			var templateDefaults = Sexy.GetTemplateDefaults(templateId);
+			var templateDefault = templateDefaults.FirstOrDefault(t => t.ItemType == itemType);
 
             // If no Content Elements exist and type is List, add a ContentGroupItem to List (not to DB)
             if ((itemType == ContentGroupItemType.Content || itemType == ContentGroupItemType.ListContent) && !items.Any(p => p.ItemType == itemType))
@@ -115,18 +106,17 @@ namespace ToSic.SexyContent.DataSources
                     ContentGroupID = ListId.Value,
                     ContentGroupItemID = -1,
                     EntityID = new int?(),
-                    SortOrder = itemType == ContentGroupItemType.ListContent ? -1 : 0,
+                    SortOrder = (itemType == ContentGroupItemType.ListContent ? -1 : 0),
                     SysCreated = DateTime.Now,
                     SysCreatedBy = -1,
-                    TemplateID = OverrideTemplateId.HasValue ? OverrideTemplateId.Value : ContentGroupItems.First().TemplateID.Value,
+                    TemplateID = templateId,
                     Type = itemType.ToString("F")
                 });
             }
 
             var originals = In["Default"].List;
-            var entitiesToDeliver = new Dictionary<int, IEntity>();
 
-            foreach (var i in items)
+            foreach (var i in items.Where(p => p.ItemType == itemType))
             {
                 // use demo-entites where available
                 var entityId = i.EntityID.HasValue
@@ -139,13 +129,36 @@ namespace ToSic.SexyContent.DataSources
                 if (!entityId.HasValue || !originals.ContainsKey(entityId.Value))
                     continue;
 
-                var key = entityId.Value;
+	            IEntity presentation = null;
 
-                // This ensures that if an entity is added again, the dictionary doesn't complain because of duplicate keys
+
+	            if (presentationItemType.HasValue)
+	            {
+		            // Try to find presentation entity
+		            var presentationEntityId = items.Where(p =>
+			            p.SortOrder == i.SortOrder && p.ItemType == presentationItemType && p.EntityID.HasValue &&
+			            originals.ContainsKey(p.EntityID.Value)).Select(p => p.EntityID).FirstOrDefault();
+
+		            // If there is no presentation entity, take default entity
+		            if (!presentationEntityId.HasValue)
+			            presentationEntityId =
+				            templateDefaults.Where(
+					            d =>
+						            d.ItemType == presentationItemType && d.DemoEntityID.HasValue &&
+						            originals.ContainsKey(d.DemoEntityID.Value))
+					            .Select(p => p.DemoEntityID).FirstOrDefault();
+
+		            presentation = presentationEntityId.HasValue ? originals[presentationEntityId.Value] : null;
+	            }
+
+
+	            var key = entityId.Value;
+
+                // This ensures that if an entity is added more than once, the dictionary doesn't complain because of duplicate keys
                 while (entitiesToDeliver.ContainsKey(key))
                     key += 1000000000;
 
-                entitiesToDeliver.Add(key, new EAVExtensions.EntityInContentGroup(originals[entityId.Value]) { SortOrder = i.SortOrder, ContentGroupItemModified = i.SysModified });
+				entitiesToDeliver.Add(key, new EAVExtensions.EntityInContentGroup(originals[entityId.Value]) { SortOrder = i.SortOrder, ContentGroupItemModified = i.SysModified, Presentation = presentation, GroupId = ListId.Value });
             }
 
             return entitiesToDeliver;
@@ -168,87 +181,6 @@ namespace ToSic.SexyContent.DataSources
         private int? ListId
         {
             get { return ModuleId.HasValue ? Sexy.GetContentGroupIdFromModule(ModuleId.Value) : new int?(); }
-        }
-
-        private IEnumerable<Element> GetElements(ContentGroupItemType contentItemType, ContentGroupItemType presentationItemType)
-        {
-            
-            var elements = new List<Element>();
-            if (!ContentGroupItems.Any(c => c.TemplateID.HasValue) && !OverrideTemplateId.HasValue) return elements;
-
-            // Create a clone of the list (because it will get modified)
-            var items = ContentGroupItems.ToList();
-            var templateId = OverrideTemplateId.HasValue ? OverrideTemplateId.Value : items.First().TemplateID.Value;
-            var defaults = Sexy.GetTemplateDefaults(templateId);
-            var dimensionIds = new[] { System.Threading.Thread.CurrentThread.CurrentCulture.Name };
-
-            var contentEntities = GetStream(contentItemType);
-            var allEntities = In["Default"].List;
-
-			// If no Content Elements exist, add a ContentGroupItem to List (not to DB)
-			if (!items.Any(p => p.ItemType == contentItemType))
-			{
-				items.Add(new ContentGroupItem()
-				{
-                    ContentGroupID = ListId.Value,
-                    ContentGroupItemID = -1,
-                    EntityID = new int?(),
-                    SortOrder = contentItemType == ContentGroupItemType.ListContent ? -1 : 0,
-                    SysCreated = DateTime.Now,
-                    SysCreatedBy = -1,
-                    TemplateID = templateId,
-                    Type = contentItemType.ToString("F")
-                });
-            }
-
-            // Transform to list of Elements
-            elements = (from c in items
-                           where c.ItemType == contentItemType
-                               // don't show items whose Content entity is not in source
-                                 && (!c.EntityID.HasValue || contentEntities.ContainsKey(c.EntityID.Value))
-                           select new Element
-                           {
-                               ID = c.ContentGroupItemID,
-                               EntityId = c.EntityID,
-                               TemplateId = c.TemplateID,
-                               Content = c.EntityID.HasValue ? new DynamicEntity(contentEntities[c.EntityID.Value], dimensionIds, Sexy) :
-                                   defaults.Where(d => d.ItemType == contentItemType && d.DemoEntityID.HasValue && contentEntities.ContainsKey(d.DemoEntityID.Value))
-                                       .Select(d => new DynamicEntity(contentEntities[d.DemoEntityID.Value], dimensionIds, Sexy)).FirstOrDefault(),
-                               // Get Presentation object - Take Default if it does not exist
-                               Presentation = (from p in items
-                                               where p.SortOrder == c.SortOrder && p.ItemType == presentationItemType && p.EntityID.HasValue && allEntities.ContainsKey(p.EntityID.Value)
-                                               select new DynamicEntity(allEntities[p.EntityID.Value], dimensionIds, Sexy)).FirstOrDefault() ??
-                                              (from d in defaults
-                                               where d.ItemType == presentationItemType && d.DemoEntityID.HasValue && allEntities.ContainsKey(d.DemoEntityID.Value)
-                                               select new DynamicEntity(allEntities[d.DemoEntityID.Value], dimensionIds, Sexy)).FirstOrDefault()
-                               ,
-                               GroupId = ListId.Value,
-                               SortOrder = c.SortOrder
-                           }).ToList();
-
-            return elements;
-        }
-
-        private List<Element> _contentElements;
-        public List<Element> ContentElements
-        {
-            get
-            {
-                if (_contentElements == null)
-                    _contentElements = GetElements(ContentGroupItemType.Content, ContentGroupItemType.Presentation).ToList();
-                return _contentElements;
-            }
-        }
-
-        private Element _listElement;
-        public Element ListElement
-        {
-            get
-            {
-                if(_listElement == null)
-                    _listElement = GetElements(ContentGroupItemType.ListContent, ContentGroupItemType.ListPresentation).FirstOrDefault();
-                return _listElement;
-            }
         }
 
     }

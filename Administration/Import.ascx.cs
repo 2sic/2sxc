@@ -18,7 +18,6 @@ namespace ToSic.SexyContent
         protected void Page_Load(object sender, EventArgs e)
         {
             hlkExport.NavigateUrl =  EditUrl(TabId, SexyContent.ControlKeys.Export, true, "mid=" + ModuleId + "&" + SexyContent.AppIDString + "=" + AppId);
-            //pnlGettingStartedTemplates.Visible = IsContentApp && !Sexy.GetVisibleTemplates(PortalSettings.PortalId).Any();
         }
 
         protected void btnUpload_Click(object sender, EventArgs e)
@@ -72,24 +71,6 @@ namespace ToSic.SexyContent
         {
             var messages = new List<ExportImportMessage>();
             new GettingStartedImport(ZoneId.Value, AppId.Value).ImportGettingStartedTemplates(UserInfo, messages);
-
-            //var release = Releases.Element("SexyContentReleases").Elements("Release").FirstOrDefault(p => p.Attribute("Version").Value == SexyContent.ModuleVersion);
-            //var starterPackageUrl = release.Elements("RecommendedPackages").Elements("Package").First().Attribute("PackageUrl").Value;
-
-            //var tempDirectory = new DirectoryInfo(Server.MapPath(SexyContent.TemporaryDirectory));
-            //if (tempDirectory.Exists)
-            //    Directory.CreateDirectory(tempDirectory.FullName);
-
-            //var destinationPath = Path.Combine(tempDirectory.FullName, Path.GetRandomFileName() + ".zip");
-
-            //var client = new WebClient();
-
-            //client.DownloadFile(starterPackageUrl, destinationPath);
-
-            //using(var file = File.OpenRead(destinationPath))
-            //    ImportFromStream(file, true);
-
-            //File.Delete(destinationPath);
         }
     }
 }

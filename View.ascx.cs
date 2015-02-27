@@ -62,7 +62,7 @@ namespace ToSic.SexyContent
 
                 if (AppId.HasValue)
                 {
-                    if (Elements.Any() && Elements.First().TemplateId.HasValue)
+                    if (Items.Any() && Template != null)
                         ProcessView(phOutput, pnlError, pnlMessage);
                     else if(!IsContentApp && UserMayEditThisModule) // Select first available template automatically if it's not set yet - then refresh page
                     {

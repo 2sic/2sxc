@@ -40,7 +40,7 @@ namespace ToSic.SexyContent
     {
         #region Constants
 
-        public const string ModuleVersion = "06.06.02";
+        public const string ModuleVersion = "06.06.04";
         public const string TemplateID = "TemplateID";
         public const string ContentGroupIDString = "ContentGroupID";
         public const string AppIDString = "AppId";
@@ -443,11 +443,13 @@ namespace ToSic.SexyContent
         public IEnumerable<Template> GetAvailableTemplatesForSelector(ModuleInfo module)
         {
             IEnumerable<Template> availableTemplates;
-            var elements = GetContentElements(module.ModuleID, HasEditPermission(module), GetTemplateForModule(module.ModuleID));
+	        var items = TemplateContext.GetContentGroupItems(GetContentGroupIdFromModule(module.ModuleID)).ToList();
+            
+			//var elements = GetContentElements(module.ModuleID, HasEditPermission(module), GetTemplateForModule(module.ModuleID));
 
-            if (elements.Any(e => e.EntityId.HasValue))
-                availableTemplates = GetCompatibleTemplates(module.PortalID, elements.First().GroupId).Where(p => !p.IsHidden);
-            else if (elements.Count <= 1)
+            if (items.Any(e => e.EntityID.HasValue))
+                availableTemplates = GetCompatibleTemplates(module.PortalID, items.First().ContentGroupID).Where(p => !p.IsHidden);
+            else if (items.Count <= 1)
                 availableTemplates = GetVisibleTemplates(module.PortalID);
             else
                 availableTemplates = GetVisibleListTemplates(module.PortalID);
@@ -642,16 +644,6 @@ namespace ToSic.SexyContent
 
 	            var viewDataSourceUpstream = moduleDataSource;
 
-				// Get the View-Template
-                //var items = TemplateContext.GetContentGroupItems(GetContentGroupIdFromModule(moduleId));
-                //Template template = null;
-                //if (items.Any(i => i.TemplateID.HasValue))
-                //{
-                //    var templateId = overrideTemplateId.HasValue
-                //        ? overrideTemplateId.Value
-                //        : items.First().TemplateID.Value;
-                //var template = templateId.HasValue ? TemplateContext.GetTemplate(templateId.Value) : null;
-
 	            // If the Template has a Data-Pipeline, use it instead of the ModuleDataSource created above
 				if (template != null && template.PipelineEntityID.HasValue)
 					viewDataSourceUpstream = null;
@@ -675,30 +667,6 @@ namespace ToSic.SexyContent
             return ViewDataSource;
         }
 
-
-		#region Get ModuleDataSource and Streams of it
-        /// <summary>
-        /// Get a list of ContentElements by ModuleId or ContentGroupID
-        /// </summary>
-		public List<Element> GetContentElements(int moduleId, bool showDrafts, Template template)
-        {
-            return GetModuleDataSource(moduleId, showDrafts, template).ContentElements;
-        }
-
-		public Element GetListElement(int moduleId, bool showDrafts, Template template)
-        {
-            return GetModuleDataSource(moduleId, showDrafts, template).ListElement;
-        }
-
-		private ModuleDataSource GetModuleDataSource(int moduleId, bool showDrafts, Template template)
-        {
-			var viewDataSource = (IDataTarget)GetViewDataSource(moduleId, showDrafts, template);
-			var moduleDataSource = DataPipelineFactory.FindDataSource<ModuleDataSource>(viewDataSource);
-			if (moduleDataSource == null)
-				throw new Exception("ModuleDataSource not found in the DataPipeline.");
-			return moduleDataSource;
-        }
-		#endregion
 
         /// <summary>
         /// Returns the ContentGroupID for a module.
@@ -1343,7 +1311,14 @@ namespace ToSic.SexyContent
             dictionary.Add("EntityId", entity.EntityId);
             dictionary.Add("Modified", entity.Modified);
 
-            if(entity is IHasEditingData)
+	        if (entity is EntityInContentGroup && !dictionary.ContainsKey("Presentation"))
+	        {
+		        var entityInGroup = (EntityInContentGroup) entity;
+				if(entityInGroup.Presentation != null)
+					dictionary.Add("Presentation", GetDictionaryFromEntity(entityInGroup.Presentation, language));
+	        }
+
+	        if(entity is IHasEditingData)
                 dictionary.Add("_2sxcEditInformation", new { sortOrder = ((IHasEditingData)entity).SortOrder });
             else
                 dictionary.Add("_2sxcEditInformation", new { entityId = entity.EntityId, title = entity.Title != null ? entity.Title[language] : "(no title)" });

@@ -65,21 +65,21 @@ namespace ToSic.SexyContent
         }
 
 
-        /// <summary>
-        /// Holds the List of Elements for the current module.
-        /// </summary>
-		private List<Element> _elements;
-        protected List<Element> Elements
-        {
-            get
-            {
-				if (_elements == null)
-                {
-					_elements = Sexy.GetContentElements(ModuleId, SexyContent.HasEditPermission(this.ModuleConfiguration), Template).ToList();
-                }
-				return _elements;
-            }
-        }
+	    private List<ContentGroupItem> _items;
+
+	    protected List<ContentGroupItem> Items
+	    {
+		    get
+		    {
+			    if (_items == null)
+			    {
+				    _items =
+					    Sexy.TemplateContext.GetContentGroupItems(Sexy.GetContentGroupIdFromModule(this.ModuleConfiguration.ModuleID))
+						    .ToList();
+			    }
+			    return _items;
+		    }
+	    }
 
 		private Template _template;
         protected Template Template
