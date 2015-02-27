@@ -77,9 +77,6 @@ namespace ToSic.SexyContent
 					Eav.Import.Attribute.StringAttribute("ContentType", "ContentType", null, true),
 					Eav.Import.Attribute.StringAttribute("SelectCommand", "SelectCommand", null, true)
 				});
-			var metaDataCtx = EavContext.Instance(DataSource.DefaultZoneId, DataSource.MetaDataAppId);
-			metaDataCtx.GetAttributeSet(dsrcSqlDataSource.StaticName).AlwaysShareConfiguration = true;
-			metaDataCtx.SaveChanges();
 
 			// Collect AttributeSets for use in Import
 			var attributeSets = new List<Eav.Import.AttributeSet>
@@ -88,6 +85,10 @@ namespace ToSic.SexyContent
 			};
 			var import = new Eav.Import.Import(DataSource.DefaultZoneId, DataSource.MetaDataAppId, SexyContent.InternalUserName);
 			import.RunImport(attributeSets, null);
+
+			var metaDataCtx = EavContext.Instance(DataSource.DefaultZoneId, DataSource.MetaDataAppId);
+			metaDataCtx.GetAttributeSet(dsrcSqlDataSource.StaticName).AlwaysShareConfiguration = true;
+			metaDataCtx.SaveChanges();
 
 			// Run EAV Version Upgrade (also ensures Content Type sharing)
 			var eavVersionUpgrade = new VersionUpgrade(SexyContent.InternalUserName);
