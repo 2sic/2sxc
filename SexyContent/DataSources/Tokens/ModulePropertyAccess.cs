@@ -3,7 +3,7 @@ using DotNetNuke.Services.Tokens;
 
 namespace ToSic.SexyContent.DataSources.Tokens
 {
-    public class ModulePropertyAccess : ToSic.Eav.DataSources.Tokens.IPropertyAccess, DotNetNuke.Services.Tokens.IPropertyAccess
+    public class ModulePropertyAccess : ToSic.Eav.PropertyAccess.IPropertyAccess, DotNetNuke.Services.Tokens.IPropertyAccess
     {
         private int _moduleId;
         private readonly ModuleInfo _moduleInfo;

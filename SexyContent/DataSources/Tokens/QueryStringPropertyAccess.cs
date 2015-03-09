@@ -3,7 +3,7 @@ using DotNetNuke.Services.Tokens;
 
 namespace ToSic.SexyContent.DataSources.Tokens
 {
-	public class QueryStringPropertyAccess : ToSic.Eav.DataSources.Tokens.IPropertyAccess, DotNetNuke.Services.Tokens.IPropertyAccess
+	public class QueryStringPropertyAccess : ToSic.Eav.PropertyAccess.IPropertyAccess, DotNetNuke.Services.Tokens.IPropertyAccess
 	{
 		#region Properties
 

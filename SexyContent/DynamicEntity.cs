@@ -58,61 +58,101 @@ namespace ToSic.SexyContent
             return true;
         }
 
+
+        // todo urgent: try to inherit the GetBestValue from the new entity-object and skip most of the code, as it's almost identical...
+
         public object GetEntityValue(string attributeName, out bool propertyNotFound)
         {
-            propertyNotFound = false;
-            object result = null;
-            
-            
-            if (Entity.Attributes.ContainsKey(attributeName))
+            propertyNotFound = false;   // assume found, as that's usually the case
+
+            #region check the two special cases which the EAV doesn't know
+            switch (attributeName)
+            {
+                case "Toolbar":
+                    return Toolbar.ToString();
+                case "Presentation":
+                    var inContentGroup = Entity as EntityInContentGroup;
+                    return (inContentGroup != null)
+                        ? inContentGroup.Presentation
+                        : null;
+            }
+            #endregion
+
+            // new implementation based on revised EAV API
+            var result = Entity.GetBestValue(attributeName, _dimensions, out propertyNotFound);
+
+            #region handle 2sxc special conversions for file names and entity-lists
+
+            if (!propertyNotFound)
             {
                 var attribute = Entity.Attributes[attributeName];
-                result = attribute[_dimensions];
-
                 if (attribute.Type == "Hyperlink" && result is string)
-                {
-                    result = SexyContent.ResolveHyperlinkValues((string) result, SexyContext == null ? PortalSettings.Current : SexyContext.OwnerPS);
-                }
-                else if (attribute.Type == "Entity" && result is EntityRelationshipModel)
-                {
+                    result = SexyContent.ResolveHyperlinkValues((string) result,
+                        SexyContext == null ? PortalSettings.Current : SexyContext.OwnerPS);
+
+                if (attribute.Type == "Entity" && result is EntityRelationshipModel)
                     // Convert related entities to Dynamics
                     result = ((ToSic.Eav.EntityRelationshipModel) result).Select(
                         p => new DynamicEntity(p, _dimensions, this.SexyContext)
                         ).ToList();
-                }
+                return result;
             }
-            else
-            {
-                switch (attributeName)
-                {
-                    case "EntityTitle":
-                        result = EntityTitle;
-                        break;
-                    case "EntityId":
-                        result = EntityId;
-                        break;
-                    case "Toolbar":
-                        result = Toolbar.ToString();
-                        break;
-                    case "IsPublished":
-                        result = Entity.IsPublished;
-                        break;
-                    case "Modified":
-                        result = Entity.Modified;
-                        break;
-					case "Presentation":
-		                var inContentGroup = Entity as EntityInContentGroup;
-		                if(inContentGroup != null)
-							result = inContentGroup.Presentation;
-		                break;
-                    default:
-                        result = null;
-                        propertyNotFound = true;
-                        break;
-                }
-            }
+            #endregion
 
-            return result;
+            #region all failed, return null
+            propertyNotFound = true;
+            return null;
+            #endregion
+
+            //if (Entity.Attributes.ContainsKey(attributeName))
+            //{
+            //    var attribute = Entity.Attributes[attributeName];
+            //    result = attribute[_dimensions];
+
+            //    if (attribute.Type == "Hyperlink" && result is string)
+            //    {
+            //        result = SexyContent.ResolveHyperlinkValues((string) result, SexyContext == null ? PortalSettings.Current : SexyContext.OwnerPS);
+            //    }
+            //    else if (attribute.Type == "Entity" && result is EntityRelationshipModel)
+            //    {
+            //        // Convert related entities to Dynamics
+            //        result = ((ToSic.Eav.EntityRelationshipModel) result).Select(
+            //            p => new DynamicEntity(p, _dimensions, this.SexyContext)
+            //            ).ToList();
+            //    }
+            //}
+            //else
+            //{
+            //    switch (attributeName)
+            //    {
+            //        case "EntityTitle":
+            //            result = EntityTitle;
+            //            break;
+            //        case "EntityId":
+            //            result = EntityId;
+            //            break;
+            //        case "Toolbar":
+            //            result = Toolbar.ToString();
+            //            break;
+            //        case "IsPublished":
+            //            result = Entity.IsPublished;
+            //            break;
+            //        case "Modified":
+            //            result = Entity.Modified;
+            //            break;
+            //        case "Presentation":
+            //            var inContentGroup = Entity as EntityInContentGroup;
+            //            if(inContentGroup != null)
+            //                result = inContentGroup.Presentation;
+            //            break;
+            //        default:
+            //            result = null;
+            //            propertyNotFound = true;
+            //            break;
+            //    }
+            //}
+
+            //return result;
         }
 
         /// <summary>

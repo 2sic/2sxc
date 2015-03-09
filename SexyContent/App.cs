@@ -11,7 +11,7 @@ using ToSic.Eav.DataSources;
 namespace ToSic.SexyContent
 {
     /// <summary>
-    /// The app class is currently only used to provide the App:Path placeholder in a template
+    /// The app class gives access to the App-object - for the data and things like the App:Path placeholder in a template
     /// </summary>
     public class App
     {

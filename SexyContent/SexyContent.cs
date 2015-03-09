@@ -21,6 +21,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using ToSic.Eav;
+using ToSic.Eav.PropertyAccess;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Caches;
 using ToSic.SexyContent.DataSources;

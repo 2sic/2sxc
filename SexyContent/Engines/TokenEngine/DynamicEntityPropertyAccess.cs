@@ -7,7 +7,7 @@ using DotNetNuke.Services.Tokens;
 
 namespace ToSic.SexyContent.Engines.TokenEngine
 {
-	public class DynamicEntityPropertyAccess : IPropertyAccess, ToSic.Eav.DataSources.Tokens.IPropertyAccess
+	public class DynamicEntityPropertyAccess : IPropertyAccess, ToSic.Eav.PropertyAccess.IPropertyAccess
 	{
 		private readonly DynamicEntity _entity;
 		public string Name { get; private set; }

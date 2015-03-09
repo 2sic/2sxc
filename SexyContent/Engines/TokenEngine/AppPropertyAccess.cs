@@ -3,7 +3,7 @@ using DotNetNuke.Services.Tokens;
 
 namespace ToSic.SexyContent.Engines.TokenEngine
 {
-    public class AppPropertyAccess : IPropertyAccess, ToSic.Eav.DataSources.Tokens.IPropertyAccess
+    public class AppPropertyAccess : IPropertyAccess, ToSic.Eav.PropertyAccess.IPropertyAccess
     {
         private readonly App _app;
 		public string Name { get; private set; }

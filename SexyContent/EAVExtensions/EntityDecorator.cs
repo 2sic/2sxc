@@ -63,6 +63,16 @@ namespace ToSic.SexyContent.EAVExtensions
             get { return _baseEntity.IsPublished; }
         }
 
+        public object GetBestValue(string attributeName, out bool propertyNotFound)
+        {
+            return _baseEntity.GetBestValue(attributeName, out propertyNotFound);
+        }
+
+        public object GetBestValue(string attributeName, string[] dimensions, out bool propertyNotFound)
+        {
+            return _baseEntity.GetBestValue(attributeName, dimensions, out propertyNotFound);
+        }
+
         #endregion
     }
 }
