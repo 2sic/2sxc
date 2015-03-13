@@ -56,11 +56,16 @@ namespace ToSic.SexyContent.EAVExtensions
             get { return _baseEntity[attributeName]; }
         }
 
-        public RelationshipManager Relationships {
+        public ToSic.Eav.Data.RelationshipManager Relationships {
             get { return _baseEntity.Relationships; }
         }
         public bool IsPublished {
             get { return _baseEntity.IsPublished; }
+        }
+
+        public object GetBestValue(string attributeName) 
+        {
+            return _baseEntity.GetBestValue(attributeName);
         }
 
         public object GetBestValue(string attributeName, out bool propertyNotFound)

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Web.Script.Serialization;
 using System.Web.UI;
 using System.Linq;
+using ToSic.Eav.Data;
 
 namespace ToSic.Eav.ManagementUI
 {
@@ -11,9 +12,9 @@ namespace ToSic.Eav.ManagementUI
 	{
         protected global::DotNetNuke.UI.UserControls.LabelControl FieldLabel;
 
-		private EntityRelationshipModel RelatedEntities
+		private ToSic.Eav.Data.EntityRelationship RelatedEntities
 		{
-			get { return (EntityRelationshipModel)FieldValue; }
+			get { return (ToSic.Eav.Data.EntityRelationship )FieldValue; }
 		}
 		private bool AllowMultiValue
 		{

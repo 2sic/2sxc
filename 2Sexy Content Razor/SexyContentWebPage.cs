@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using ToSic.Eav;
 using ToSic.Eav.DataSources;
 using ToSic.SexyContent.Search;
+using ToSic.Eav.ValueProvider;
 
 namespace ToSic.SexyContent.Razor
 {
@@ -136,12 +137,12 @@ namespace ToSic.SexyContent.Razor
             return AppAndDataHelpers.AsDynamic(entities);
         }
 
-        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, IConfigurationProvider configurationProvider = null)
+        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, IValueCollectionProvider configurationProvider = null)
         {
             return AppAndDataHelpers.CreateSource(typeName, inSource, configurationProvider);
         }
 
-        public T CreateSource<T>(IDataSource inSource = null, IConfigurationProvider configurationProvider = null)
+        public T CreateSource<T>(IDataSource inSource = null, IValueCollectionProvider configurationProvider = null)
         {
             return AppAndDataHelpers.CreateSource<T>(inSource, configurationProvider);
         }

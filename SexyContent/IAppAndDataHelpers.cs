@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Razor.Helpers;
 
@@ -65,8 +66,8 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <returns></returns>
         T CreateSource<T>(IDataStream inStream);
-        ToSic.Eav.DataSources.IDataSource CreateSource(string typeName = "", ToSic.Eav.DataSources.IDataSource inSource = null, IConfigurationProvider configurationProvider = null);
-        T CreateSource<T>(ToSic.Eav.DataSources.IDataSource inSource = null, IConfigurationProvider configurationProvider = null);
+        ToSic.Eav.DataSources.IDataSource CreateSource(string typeName = "", ToSic.Eav.DataSources.IDataSource inSource = null, IValueCollectionProvider configurationProvider = null);
+        T CreateSource<T>(ToSic.Eav.DataSources.IDataSource inSource = null, IValueCollectionProvider configurationProvider = null);
 
 		dynamic Content { get; }
 		dynamic Presentation { get; }

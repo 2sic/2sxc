@@ -7,6 +7,7 @@ using ToSic.Eav.DataSources;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Razor.Helpers;
+using ToSic.Eav.ValueProvider;
 
 namespace ToSic.SexyContent
 {
@@ -150,8 +151,8 @@ namespace ToSic.SexyContent
         }
 
 
-        private IConfigurationProvider _configurationProvider;
-        private IConfigurationProvider ConfigurationProvider
+        private IValueCollectionProvider _configurationProvider;
+        private IValueCollectionProvider ConfigurationProvider
         {
             get
             {
@@ -163,7 +164,7 @@ namespace ToSic.SexyContent
             }
         }
 
-        public Eav.DataSources.IDataSource CreateSource(string typeName = "", Eav.DataSources.IDataSource inSource = null, IConfigurationProvider configurationProvider = null)
+        public Eav.DataSources.IDataSource CreateSource(string typeName = "", Eav.DataSources.IDataSource inSource = null, IValueCollectionProvider configurationProvider = null)
         {
             if (configurationProvider == null)
                 configurationProvider = ConfigurationProvider;
@@ -175,7 +176,7 @@ namespace ToSic.SexyContent
             return typeName != "" ? DataSource.GetDataSource(typeName, initialSource.ZoneId, initialSource.AppId, initialSource, configurationProvider) : initialSource;
         }
 
-        public T CreateSource<T>(Eav.DataSources.IDataSource inSource = null, IConfigurationProvider configurationProvider = null)
+        public T CreateSource<T>(Eav.DataSources.IDataSource inSource = null, IValueCollectionProvider configurationProvider = null)
         {
             if (configurationProvider == null)
                 configurationProvider = ConfigurationProvider;

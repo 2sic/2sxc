@@ -3,7 +3,7 @@ using DotNetNuke.Services.Tokens;
 
 namespace ToSic.SexyContent.DataSources.Tokens
 {
-    public class ModulePropertyAccess : ToSic.Eav.PropertyAccess.IPropertyAccess, DotNetNuke.Services.Tokens.IPropertyAccess
+    public class ModulePropertyAccess : ToSic.Eav.ValueProvider.IValueProvider, DotNetNuke.Services.Tokens.IPropertyAccess
     {
         private int _moduleId;
         private readonly ModuleInfo _moduleInfo;
@@ -22,10 +22,21 @@ namespace ToSic.SexyContent.DataSources.Tokens
             _moduleInfo = ctr.GetModule(moduleId);
         }
 
-        public string GetProperty(string propertyName, string format, ref bool propertyNotFound)
+        public string Get(string propertyName, string format, ref bool propertyNotFound)
         {
             return GetProperty(propertyName, "", null, null, Scope.DefaultSettings, ref propertyNotFound);
         }
+        /// <summary>
+        /// Shorthand version, will return the string value or a null if not found. 
+        /// </summary>
+        /// <param name="property"></param>
+        /// <returns></returns>
+        public virtual string Get(string property)
+        {
+            bool temp = false;
+            return Get(property, "", ref temp);
+        }
+
 
         #region DotNetNuke IPropertyAccess Members
 
@@ -40,5 +51,11 @@ namespace ToSic.SexyContent.DataSources.Tokens
         }
 
         #endregion
+
+        public bool Has(string property)
+        {
+            throw new System.NotImplementedException();
+        }
+
     }
 }

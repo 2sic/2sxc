@@ -21,7 +21,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using ToSic.Eav;
-using ToSic.Eav.PropertyAccess;
+using ToSic.Eav.ValueProvider;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Caches;
 using ToSic.SexyContent.DataSources;
@@ -598,15 +598,15 @@ namespace ToSic.SexyContent
             return DataSource.GetInitialDataSource(zoneId, appId, showDrafts);
         }
 
-	    private ConfigurationProvider GetConfigurationProvider(int moduleId)
+	    private ValueCollectionProvider GetConfigurationProvider(int moduleId)
         {
-		    var provider = new ConfigurationProvider();
+		    var provider = new ValueCollectionProvider();
 		    provider.Sources.Add("querystring", new QueryStringPropertyAccess("querystring"));
 		    provider.Sources.Add("app", new AppPropertyAccess("app", App));
 		    provider.Sources.Add("appsettings", new DynamicEntityPropertyAccess("appsettings", App.Settings));
 		    provider.Sources.Add("appresources", new DynamicEntityPropertyAccess("appresources", App.Resources));
 
-		    var modulePropertyAccess = new StaticPropertyAccess("module");
+		    var modulePropertyAccess = new StaticValueProvider("module");
 		    modulePropertyAccess.Properties.Add("ModuleID", moduleId.ToString(CultureInfo.InvariantCulture));
 		    provider.Sources.Add(modulePropertyAccess.Name, modulePropertyAccess);
 		    return provider;

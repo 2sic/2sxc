@@ -8,6 +8,7 @@ using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.FileSystem;
 using ToSic.Eav;
+using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.SexyContent.EAVExtensions;
 
@@ -90,9 +91,9 @@ namespace ToSic.SexyContent
                     result = SexyContent.ResolveHyperlinkValues((string) result,
                         SexyContext == null ? PortalSettings.Current : SexyContext.OwnerPS);
 
-                if (attribute.Type == "Entity" && result is EntityRelationshipModel)
+                if (attribute.Type == "Entity" && result is ToSic.Eav.Data.EntityRelationship)
                     // Convert related entities to Dynamics
-                    result = ((ToSic.Eav.EntityRelationshipModel) result).Select(
+                    result = ((ToSic.Eav.Data.EntityRelationship) result).Select(
                         p => new DynamicEntity(p, _dimensions, this.SexyContext)
                         ).ToList();
                 return result;

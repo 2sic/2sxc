@@ -7,7 +7,7 @@ using DotNetNuke.Services.Tokens;
 
 namespace ToSic.SexyContent.Engines.TokenEngine
 {
-	public class DynamicEntityPropertyAccess : IPropertyAccess, ToSic.Eav.PropertyAccess.IPropertyAccess
+	public class DynamicEntityPropertyAccess : IPropertyAccess, ToSic.Eav.ValueProvider.IValueProvider
 	{
 		private readonly DynamicEntity _entity;
 		public string Name { get; private set; }
@@ -94,9 +94,26 @@ namespace ToSic.SexyContent.Engines.TokenEngine
 			}
 		}
 
-		public string GetProperty(string strPropertyName, string strFormat, ref bool PropertyNotFound)
+		public string Get(string strPropertyName, string strFormat, ref bool PropertyNotFound)
 		{
 			return GetProperty(strPropertyName, strFormat, System.Threading.Thread.CurrentThread.CurrentCulture, null, Scope.DefaultSettings, ref PropertyNotFound);
 		}
+        /// <summary>
+        /// Shorthand version, will return the string value or a null if not found. 
+        /// </summary>
+        /// <param name="property"></param>
+        /// <returns></returns>
+        public virtual string Get(string property)
+        {
+            bool temp = false;
+            return Get(property, "", ref temp);
+        }
+
+
+        public bool Has(string property)
+        {
+            throw new System.NotImplementedException();
+        }
+
 	}
 }

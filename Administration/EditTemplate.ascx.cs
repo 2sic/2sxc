@@ -306,7 +306,7 @@ namespace ToSic.SexyContent
 		    ddlDataPipeline.DataSource = typeFilter.List.Select(e => new
 			{
 				PipelineEntityID = e.Key,
-				Name = string.Format("{0} ({1})", ((AttributeModel<string>)e.Value["Name"]).TypedContents, e.Key)
+				Name = string.Format("{0} ({1})", ((ToSic.Eav.Data.Attribute<string>)e.Value["Name"]).TypedContents, e.Key)
 			}).OrderBy(e => e.Name);
 		    ddlDataPipeline.DataBind();
 	    }

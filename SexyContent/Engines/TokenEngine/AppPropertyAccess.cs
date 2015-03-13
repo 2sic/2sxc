@@ -3,7 +3,7 @@ using DotNetNuke.Services.Tokens;
 
 namespace ToSic.SexyContent.Engines.TokenEngine
 {
-    public class AppPropertyAccess : IPropertyAccess, ToSic.Eav.PropertyAccess.IPropertyAccess
+    public class AppPropertyAccess : IPropertyAccess, ToSic.Eav.ValueProvider.IValueProvider
     {
         private readonly App _app;
 		public string Name { get; private set; }
@@ -34,10 +34,10 @@ namespace ToSic.SexyContent.Engines.TokenEngine
         /// <returns></returns>
         public string GetProperty(string strPropertyName, string strFormat, System.Globalization.CultureInfo formatProvider, UserInfo AccessingUser, Scope AccessLevel, ref bool PropertyNotFound)
         {
-            return GetProperty(strPropertyName, strFormat, ref PropertyNotFound);
+            return Get(strPropertyName, strFormat, ref PropertyNotFound);
         }
 
-        public string GetProperty(string strPropertyName, string strFormat, ref bool PropertyNotFound)
+        public string Get(string strPropertyName, string strFormat, ref bool PropertyNotFound)
         {
             if (strPropertyName == "Path")
                 return _app.Path;
@@ -47,5 +47,22 @@ namespace ToSic.SexyContent.Engines.TokenEngine
             PropertyNotFound = true;
             return string.Empty;
         }
+        /// <summary>
+        /// Shorthand version, will return the string value or a null if not found. 
+        /// </summary>
+        /// <param name="property"></param>
+        /// <returns></returns>
+        public virtual string Get(string property)
+        {
+            bool temp = false;
+            return Get(property, "", ref temp);
+        }
+
+
+        public bool Has(string property)
+        {
+            throw new System.NotImplementedException();
+        }
+
     }
 }
