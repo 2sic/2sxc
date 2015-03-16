@@ -69,11 +69,13 @@
             $(".sc-field-error").toggle($(".dnnFormMessage.dnnFormError:visible").size() > 0);
         });
 
-        // Show "Other" actions when ... is clicked
+    	// Show "Other" actions when ... is clicked
         $(".sc-action-trigger-others").click(function () {
             $(".sc-action-other").css("display", "inline-block");
             $(this).hide();
         });
+        if ($(".sc-action-other").size() == 0)
+        	$(".sc-action-trigger-others").hide();
     });
 
     function ChangeLanguage(CurrentLanguage, NewLanguage, NewLanguageUrl) {
