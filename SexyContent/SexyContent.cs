@@ -672,29 +672,29 @@ namespace ToSic.SexyContent
         /// Returns the ContentGroupID for a module.
         /// If it is not set, the ModuleID will set as ContentGroupID.
         /// </summary>
-        /// <param name="ModuleID"></param>
+        /// <param name="moduleId"></param>
         /// <returns></returns>
-        public int GetContentGroupIdFromModule(int ModuleID)
+        public int GetContentGroupIdFromModule(int moduleId)
         {
-			string cacheId = string.Format("2sxc-ModuleSetting-ContentGroupId-{0}", ModuleID);
+			string cacheId = string.Format("2sxc-ModuleSetting-ContentGroupId-{0}", moduleId);
 			int contentGroupId;
 
 	        if (HttpContext.Current == null || HttpContext.Current.Cache == null || HttpContext.Current.Cache[cacheId] == null)
 	        {
 		        var moduleControl = new ModuleController();
-		        var settings = moduleControl.GetModule(ModuleID).ModuleSettings;
+		        var settings = moduleControl.GetModule(moduleId).ModuleSettings;
 
 		        // Set ContentGroupID if not defined in ModuleSettings yet
 		        if (settings[ContentGroupIDString] == null)
 		        {
-			        moduleControl.UpdateModuleSetting(ModuleID, ContentGroupIDString, ModuleID.ToString());
-			        settings = moduleControl.GetModule(ModuleID).ModuleSettings;
+			        moduleControl.UpdateModuleSetting(moduleId, ContentGroupIDString, moduleId.ToString());
+			        settings = moduleControl.GetModule(moduleId).ModuleSettings;
 		        }
 
 		        contentGroupId = Convert.ToInt32(settings[ContentGroupIDString].ToString());
 
 		        if (HttpContext.Current != null && HttpContext.Current.Cache != null)
-			        HttpContext.Current.Cache.Insert(cacheId, contentGroupId.ToString(), null, DateTime.MaxValue, System.Web.Caching.Cache.NoSlidingExpiration);
+			        HttpContext.Current.Cache.Insert(cacheId, contentGroupId.ToString(), null, DateTime.Now.AddDays(1), System.Web.Caching.Cache.NoSlidingExpiration);
 	        }
 	        else
 	        {
