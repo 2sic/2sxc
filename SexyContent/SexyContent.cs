@@ -676,15 +676,32 @@ namespace ToSic.SexyContent
         /// <returns></returns>
         public int GetContentGroupIdFromModule(int ModuleID)
         {
-            var moduleControl = new ModuleController();
-            var settings = moduleControl.GetModuleSettings(ModuleID);
+			string cacheId = string.Format("2sxc-ModuleSetting-ContentGroupId-{0}", ModuleID);
+			int contentGroupId;
 
-            // Set ContentGroupID if not defined in ModuleSettings yet
-            if (settings[ContentGroupIDString] == null)
-                moduleControl.UpdateModuleSetting(ModuleID, ContentGroupIDString, ModuleID.ToString());
+	        if (HttpContext.Current == null || HttpContext.Current.Cache == null || HttpContext.Current.Cache[cacheId] == null)
+	        {
+		        var moduleControl = new ModuleController();
+		        var settings = moduleControl.GetModule(ModuleID).ModuleSettings;
 
-            settings = moduleControl.GetModuleSettings(ModuleID);
-            return int.Parse(settings[SexyContent.ContentGroupIDString].ToString());
+		        // Set ContentGroupID if not defined in ModuleSettings yet
+		        if (settings[ContentGroupIDString] == null)
+		        {
+			        moduleControl.UpdateModuleSetting(ModuleID, ContentGroupIDString, ModuleID.ToString());
+			        settings = moduleControl.GetModule(ModuleID).ModuleSettings;
+		        }
+
+		        contentGroupId = Convert.ToInt32(settings[ContentGroupIDString].ToString());
+
+		        if (HttpContext.Current != null && HttpContext.Current.Cache != null)
+			        HttpContext.Current.Cache.Insert(cacheId, contentGroupId.ToString(), null, DateTime.MaxValue, System.Web.Caching.Cache.NoSlidingExpiration);
+	        }
+	        else
+	        {
+		        contentGroupId = Convert.ToInt32(HttpContext.Current.Cache[cacheId].ToString());
+	        }
+
+            return contentGroupId;
         }
         #endregion
 
@@ -960,7 +977,7 @@ namespace ToSic.SexyContent
                 else
                 {
                     // Get AppId from ModuleSettings
-                    appIdString = new ModuleController().GetModuleSettings(module.ModuleID)[SexyContent.AppIDString];
+                    appIdString = module.ModuleSettings[SexyContent.AppIDString];
                 }
             }
 

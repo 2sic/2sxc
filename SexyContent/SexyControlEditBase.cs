@@ -74,7 +74,7 @@ namespace ToSic.SexyContent
 			    if (_items == null)
 			    {
 				    _items =
-					    Sexy.TemplateContext.GetContentGroupItems(Sexy.GetContentGroupIdFromModule(this.ModuleConfiguration.ModuleID))
+						Sexy.TemplateContext.GetContentGroupItems(Sexy.GetContentGroupIdFromModule(this.ModuleConfiguration.ModuleID))
 						    .ToList();
 			    }
 			    return _items;

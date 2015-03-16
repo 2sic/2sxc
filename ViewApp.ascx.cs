@@ -70,7 +70,7 @@ namespace ToSic.SexyContent
                         var templates = Sexy.GetAvailableTemplatesForSelector(ModuleConfiguration).ToList();
                         if (templates.Any())
                         {
-                            SexyUncached.UpdateTemplateForGroup(Sexy.GetContentGroupIdFromModule(ModuleConfiguration.ModuleID), templates.First().TemplateID, UserInfo.UserID);
+							SexyUncached.UpdateTemplateForGroup(Sexy.GetContentGroupIdFromModule(ModuleConfiguration.ModuleID), templates.First().TemplateID, UserInfo.UserID);
                             Response.Redirect(Request.RawUrl);
                         }
                     }
