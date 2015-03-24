@@ -80,7 +80,8 @@ namespace ToSic.SexyContent
             #endregion
 
             // new implementation based on revised EAV API
-            var result = Entity.GetBestValue(attributeName, _dimensions, out propertyNotFound);
+            var result = Entity.GetBestValue(attributeName, _dimensions);//, out propertyNotFound);
+            propertyNotFound = result == null;
 
             #region handle 2sxc special conversions for file names and entity-lists
 
