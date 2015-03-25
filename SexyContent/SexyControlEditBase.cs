@@ -74,7 +74,7 @@ namespace ToSic.SexyContent
 			    if (_items == null)
 			    {
 				    _items =
-					    Sexy.TemplateContext.GetContentGroupItems(Sexy.GetContentGroupIdFromModule(this.ModuleConfiguration.ModuleID))
+					    Sexy.Templates.GetContentGroupItems(Sexy.GetContentGroupIdFromModule(this.ModuleConfiguration.ModuleID))
 						    .ToList();
 			    }
 			    return _items;
@@ -116,7 +116,7 @@ namespace ToSic.SexyContent
             var queryStringPairs = Request.QueryString.AllKeys.Select(key => string.Format("{0}/{1}", key, Request.QueryString[key]).ToLower()).ToArray();
 			var queryStringKeys = Request.QueryString.AllKeys.Select(k => k.ToLower()).ToArray();
 
-			foreach (var template in Sexy.TemplateContext.GetAllTemplates().Where(t => t.AppID == AppId && !string.IsNullOrEmpty(t.ViewNameInUrl)))
+			foreach (var template in Sexy.Templates.GetAllTemplates().Where(t => t.AppID == AppId && !string.IsNullOrEmpty(t.ViewNameInUrl)))
 	        {
 			    var viewNameInUrlLowered = template.ViewNameInUrl.ToLower();
 				if (queryStringPairs.Contains(viewNameInUrlLowered))	// match view/details

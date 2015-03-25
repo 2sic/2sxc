@@ -20,7 +20,7 @@ namespace ToSic.SexyContent
             hlkCancel.NavigateUrl = DotNetNuke.Common.Globals.NavigateURL(this.TabId, "", null);
 
             var contentTypes = Sexy.GetAvailableAttributeSets("2SexyContent");
-            var templates = Sexy.GetTemplates(PortalSettings.PortalId);
+            var templates = Sexy.Templates.GetAllTemplates();
             var entities = DataSource.GetInitialDataSource(ZoneId.Value, AppId.Value, false);
             var language = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
 
@@ -30,12 +30,12 @@ namespace ToSic.SexyContent
                     Id = c.AttributeSetId,
                     Name = c.Name,
                     StaticName = c.StaticName,
-                    Templates = templates.Where(t => t.AttributeSetID == c.AttributeSetId).Select(p => new
+                    Templates = templates.Where(t => t.ContentTypeStaticName == c.StaticName).Select(p => new
                     {
-                        p.TemplateID,
-                        p.AttributeSetID,
+                        p.TemplateId,
+                        p.ContentTypeStaticName,
                         p.Name,
-                        TemplateDefaults = Sexy.GetTemplateDefaults(p.TemplateID).Select(td => new
+                        TemplateDefaults = Sexy.GetTemplateDefaults(p.TemplateId).Select(td => new
                         {
                             td.ContentTypeID,
                             td.DemoEntityID,
@@ -44,9 +44,9 @@ namespace ToSic.SexyContent
                     }),
                     Entities = entities.List.Where(en => en.Value.Type.AttributeSetId == c.AttributeSetId).Select(en => Sexy.GetDictionaryFromEntity(en.Value, language))
                 }),
-                templatesWithoutContentType = templates.Where(p => !p.AttributeSetID.HasValue).Select(t => new
+                templatesWithoutContentType = templates.Where(p => !String.IsNullOrEmpty(p.ContentTypeStaticName)).Select(t => new
                 {
-                    t.TemplateID,
+                    t.TemplateId,
                     t.Name
                 })
             };

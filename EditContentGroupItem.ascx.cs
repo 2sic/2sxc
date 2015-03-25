@@ -31,10 +31,10 @@ namespace ToSic.SexyContent
             set { EditItemControl.IsPublished = value; }
         }
 
-        /// <summary>
-        /// Gets or sets the ItemType
-        /// </summary>
-        public ContentGroupItemType ItemType { get; set; }
+		///// <summary>
+		///// Gets or sets the ItemType
+		///// </summary>
+		//public ContentGroupItemType ItemType { get; set; }
 
         /// <summary>
         /// Gets or sets the TemplateID
@@ -82,19 +82,19 @@ namespace ToSic.SexyContent
             }
         }
 
-        private ContentGroupItem _Item;
-        /// <summary>
-        /// Returns the current ContentGroupItem
-        /// </summary>
-        private ContentGroupItem Item
-        {
-            get
-            {
-                if (_Item == null && ContentGroupItemID.HasValue)
-                    _Item = Sexy.TemplateContext.GetContentGroupItem(ContentGroupItemID.Value);
-                return _Item;
-            }
-        }
+		//private ContentGroupItem _Item;
+		///// <summary>
+		///// Returns the current ContentGroupItem
+		///// </summary>
+		//private ContentGroupItem Item
+		//{
+		//	get
+		//	{
+		//		if (_Item == null && ContentGroupItemID.HasValue)
+		//			_Item = Sexy.Templates.GetContentGroupItem(ContentGroupItemID.Value);
+		//		return _Item;
+		//	}
+		//}
 
         public int? LanguageID
         {
@@ -209,14 +209,14 @@ namespace ToSic.SexyContent
             ContentGroupItem NewItem;
 
             if (Item != null)
-                NewItem = SexyUncached.TemplateContext.GetContentGroupItem(Item.ContentGroupItemID);
+                NewItem = SexyUncached.Templates.GetContentGroupItem(Item.ContentGroupItemID);
             else
                 NewItem = SexyUncached.AddContentGroupItem(ContentGroupID, UserId, TemplateID, Entity.EntityID, SortOrder, true, ItemType, ItemType != ContentGroupItemType.Content);
 
             NewItem.EntityID = Entity.EntityID;
             NewItem.SysModified = DateTime.Now;
             NewItem.SysModifiedBy = UserId;
-            SexyUncached.TemplateContext.SaveChanges();
+            SexyUncached.Templates.SaveChanges();
 
             UpdateModuleTitleIfNecessary(Entity, NewItem);
         }
@@ -227,7 +227,7 @@ namespace ToSic.SexyContent
                 EditItemControl.Save();
 
             if (Item != null && pnlReferenced.Visible && !EditItemControl.Visible)
-                SexyUncached.TemplateContext.DeleteContentGroupItem(Item.ContentGroupItemID, UserId);
+                SexyUncached.Templates.DeleteContentGroupItem(Item.ContentGroupItemID, UserId);
 
             if (OnSaved != null)
                 OnSaved(this, new EventArgs());
@@ -245,7 +245,7 @@ namespace ToSic.SexyContent
             var sexyContext = new SexyContent(ZoneId, AppId, true);
 
             // Get ContentGroup
-            var listContentGroupItem = sexyContext.TemplateContext.GetListContentGroupItem(groupItem.ContentGroupID, UserId);
+            var listContentGroupItem = sexyContext.Templates.GetListContentGroupItem(groupItem.ContentGroupID, UserId);
             var entityModel = sexyContext.ContentContext.GetEntityModel(entity.EntityID);
 
             // If this is the list title, or no list-title exists, set module title

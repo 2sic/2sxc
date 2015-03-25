@@ -94,6 +94,34 @@ namespace ToSic.SexyContent
 			var eavVersionUpgrade = new VersionUpgrade(SexyContent.InternalUserName);
 			eavVersionUpgrade.EnsurePipelineDesignerAttributeSets();
 		}
+
+		///// <summary>
+		///// Add ContentTypes for ContentGroup
+		///// </summary>
+		//private static void AddContentGroupAndTemplateContentType()
+		//{
+		//	// Ensure ContentGroup Configuration
+		//	var attributeSetContentGroup = Eav.Import.AttributeSet.SystemAttributeSet("2SexyContent-ContentGroup", "Contains all content groups (lists) from 2sxc",
+		//		new List<Eav.Import.Attribute>
+		//		{
+		//			Eav.Import.Attribute.("Template", "Template", null, true),
+		//		});
+
+		//	// Collect AttributeSets for use in Import
+		//	var attributeSets = new List<Eav.Import.AttributeSet>
+		//	{
+		//		attributeSetContentGroup
+		//	};
+		//	var import = new Eav.Import.Import(DataSource.DefaultZoneId, DataSource.MetaDataAppId, SexyContent.InternalUserName);
+		//	import.RunImport(attributeSets, null);
+
+		//	var metaDataCtx = EavContext.Instance(DataSource.DefaultZoneId, DataSource.MetaDataAppId);
+		//	metaDataCtx.GetAttributeSet(attributeSetContentGroup.StaticName).AlwaysShareConfiguration = true;
+		//	metaDataCtx.SaveChanges();
+
+		//	// ToDo: Ensure Content Type sharing
+		//}
+
 		/// <summary>
 		/// Copy a Directory recursive
 		/// </summary>

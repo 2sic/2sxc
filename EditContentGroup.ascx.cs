@@ -139,7 +139,7 @@ namespace ToSic.SexyContent
             get
             {
                 if (_Items == null && ContentGroupID.HasValue)
-                    _Items = Sexy.TemplateContext.GetContentGroupItems(ContentGroupID.Value).ToList();
+                    _Items = Sexy.Templates.GetContentGroupItems(ContentGroupID.Value).ToList();
                 if(_Items == null && (AttributeSetId.HasValue || EntityId.HasValue))
                     _Items = new List<ContentGroupItem>();
                 return _Items;
@@ -310,7 +310,7 @@ namespace ToSic.SexyContent
 
         protected void btnDelete_Click(object sender, EventArgs e)
         {
-            SexyUncached.TemplateContext.DeleteContentGroupItems(ContentGroupID.Value, SortOrder.Value, UserId);
+            SexyUncached.Templates.DeleteContentGroupItems(ContentGroupID.Value, SortOrder.Value, UserId);
             RedirectBack();
         }
 

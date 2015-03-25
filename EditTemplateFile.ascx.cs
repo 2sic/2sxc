@@ -32,14 +32,14 @@ namespace ToSic.SexyContent
         {
             get {
                 int TemplateID = int.Parse(Request.QueryString["TemplateID"]);
-                return Sexy.TemplateContext.GetTemplate(TemplateID);
+                return Sexy.Templates.GetTemplate(TemplateID);
             }
         }
 
         private string TemplatePath
         {
             get {
-                return Server.MapPath(System.IO.Path.Combine(SexyContent.GetTemplatePathRoot(Template.Location, Sexy.App), Template.Path));
+                return Server.MapPath(Path.Combine(SexyContent.GetTemplatePathRoot(Template.Location, Sexy.App), Template.Path));
             }
         }
 
@@ -71,7 +71,7 @@ namespace ToSic.SexyContent
             var defaultLanguageID = Sexy.ContentContext.GetLanguageId(PortalSettings.DefaultLanguage);
             var languageList = defaultLanguageID.HasValue ? new[] {defaultLanguageID.Value} : new[] { 0 };
             
-            var templateDefaults = Sexy.GetTemplateDefaults(Template.TemplateID).Where(t => t.ContentTypeID.HasValue);
+            //var templateDefaults = Sexy.GetTemplateDefaults(Template.TemplateID).Where(t => t.ContentTypeID.HasValue);
             string formatString;
 
             if (Template.Type == "Token")
@@ -79,11 +79,12 @@ namespace ToSic.SexyContent
             else
                 formatString = "@{0}.{1}";
 
-            foreach(var templateDefault in templateDefaults)
-            {
-	            var contentTypeId = templateDefault.ContentTypeID.Value;
-	            AddHelpForAContentType(contentTypeId, formatString, templateDefault, languageList);
-            }
+			// ToDo: Add templatedefaults again
+			//foreach(var templateDefault in templateDefaults)
+			//{
+			//	var contentTypeId = templateDefault.ContentTypeID.Value;
+			//	AddHelpForAContentType(contentTypeId, formatString, templateDefault, languageList);
+			//}
 
 			// todo: add AppResources and AppSettings help
 
@@ -91,29 +92,29 @@ namespace ToSic.SexyContent
 	        AddHelpFragments();
         }
 
-		/// <summary>
-		/// Create a help-table showing all the tokens/placeholders for a specific content type
-		/// </summary>
-		/// <param name="contentTypeId"></param>
-		/// <param name="FormatString"></param>
-		/// <param name="TemplateDefault"></param>
-		/// <param name="LanguageList"></param>
-	    private void AddHelpForAContentType(int contentTypeId, string FormatString, TemplateDefault TemplateDefault,
-		    int[] LanguageList)
-	    {
-		    Eav.AttributeSet Set = Sexy.ContentContext.GetAttributeSet(contentTypeId);
+		///// <summary>
+		///// Create a help-table showing all the tokens/placeholders for a specific content type
+		///// </summary>
+		///// <param name="contentTypeId"></param>
+		///// <param name="FormatString"></param>
+		///// <param name="TemplateDefault"></param>
+		///// <param name="LanguageList"></param>
+		//private void AddHelpForAContentType(int contentTypeId, string FormatString, TemplateDefault TemplateDefault,
+		//	int[] LanguageList)
+		//{
+		//	Eav.AttributeSet Set = Sexy.ContentContext.GetAttributeSet(contentTypeId);
 
-		    var DataSource = Sexy.ContentContext.GetAttributes(Set, true).Select(a => new
-		    {
-			    StaticName = String.Format(FormatString, TemplateDefault.ItemType.ToString("F"), a.StaticName),
-			    DisplayName =
-				    (Sexy.ContentContext.GetAttributeMetaData(a.AttributesInSets.FirstOrDefault().AttributeID)).ContainsKey("Name")
-					    ? (Sexy.ContentContext.GetAttributeMetaData(a.AttributesInSets.FirstOrDefault().AttributeID))["Name"][LanguageList]
-					    : a.StaticName + " (static)"
-		    }).ToList();
+		//	var DataSource = Sexy.ContentContext.GetAttributes(Set, true).Select(a => new
+		//	{
+		//		StaticName = String.Format(FormatString, TemplateDefault.ItemType.ToString("F"), a.StaticName),
+		//		DisplayName =
+		//			(Sexy.ContentContext.GetAttributeMetaData(a.AttributesInSets.FirstOrDefault().AttributeID)).ContainsKey("Name")
+		//				? (Sexy.ContentContext.GetAttributeMetaData(a.AttributesInSets.FirstOrDefault().AttributeID))["Name"][LanguageList]
+		//				: a.StaticName + " (static)"
+		//	}).ToList();
 
-		    AddFieldGrid(DataSource, TemplateDefault.ItemType.ToString("F"));
-	    }
+		//	AddFieldGrid(DataSource, TemplateDefault.ItemType.ToString("F"));
+		//}
 
 	    /// <summary>
 		/// Add helper infos to the editor, common tokens, razor snippets etc.

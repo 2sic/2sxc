@@ -107,7 +107,7 @@ namespace ToSic.SexyContent.ViewAPI
         {
             try
             {
-                var template = Sexy.TemplateContext.GetTemplate(templateId);
+                var template = Sexy.Templates.GetTemplate(templateId);
 
                 var engine = EngineFactory.CreateEngine(template);
                 var dataSource = (ViewDataSource) Sexy.GetViewDataSource(ActiveModule.ModuleID, SexyContent.HasEditPermission(ActiveModule), template);

@@ -47,7 +47,7 @@ namespace ToSic.SexyContent
         protected void grdTemplates_DeleteCommand(object sender, Telerik.Web.UI.GridCommandEventArgs e)
         {
             int TemplateID = Convert.ToInt32(e.Item.OwnerTableView.DataKeyValues[e.Item.ItemIndex][SexyContent.TemplateID]);
-            SexyUncached.TemplateContext.DeleteTemplate(TemplateID, UserId);
+            SexyUncached.Templates.DeleteTemplate(TemplateID, UserId);
             BindGrdTemplates();
         }
 

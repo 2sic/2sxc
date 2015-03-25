@@ -22,18 +22,18 @@ namespace ToSic.SexyContent.DataSources
             set { _sexy = value; }
         }
 
-        private List<ContentGroupItem> _contentGroupItems;
-        private IEnumerable<ContentGroupItem> ContentGroupItems {
-            get
-            {
-                if (!ListId.HasValue)
-                    return new List<ContentGroupItem>();
+		private ContentGroup _contentGroup;
 
-                if (_contentGroupItems == null)
-                    _contentGroupItems = Sexy.TemplateContext.GetContentGroupItems(ListId.Value).ToList();
-                return _contentGroupItems;
-            }
-        }
+		private ContentGroup ContentGroup
+		{
+			get
+			{
+				if (!ListId.HasValue)
+					throw new Exception("Looking up ContentGroup failed because ListId is null. ModuleId is " + (ModuleId.HasValue ? ModuleId.ToString() : "null"));
+				if (_contentGroup == null)
+					_contentGroup = Sexy.ContentGroups.GetContentGroup(ListId.Value);
+			}
+		}
 
         public ModuleDataSource()
         {
@@ -50,7 +50,7 @@ namespace ToSic.SexyContent.DataSources
         {
             if (_content == null)
             {
-                _content = GetStream(ContentGroupItemType.Content, ContentGroupItemType.Presentation);
+                _content = GetStream(ContentGroup.Content, Template.ContentDemoEntity, ContentGroup.Presentation, Template.PresentationDemoEntity);
             }
             return _content;
         }
@@ -60,7 +60,7 @@ namespace ToSic.SexyContent.DataSources
         {
             if (_presentation == null)
             {
-                _presentation = GetStream(ContentGroupItemType.Presentation, null);
+                _presentation = GetStream(ContentGroup.Presentation, Template.PresentationDemoEntity, null, null);
             }
             return _presentation;
         }
@@ -70,7 +70,7 @@ namespace ToSic.SexyContent.DataSources
         {
             if (_listContent == null)
             {
-                _listContent = GetStream(ContentGroupItemType.ListContent, ContentGroupItemType.ListPresentation);
+                _listContent = GetStream(ContentGroup.ListContent, Template.ListContentDemoEntity, ContentGroup.ListPresentation, Template.ListPresentationDemoEntity);
             }
             return _listContent;
         }
@@ -80,75 +80,62 @@ namespace ToSic.SexyContent.DataSources
         {
             if (_listPresentation == null)
             {
-                _listPresentation = GetStream(ContentGroupItemType.ListPresentation, null);
+                _listPresentation = GetStream(ContentGroup.ListPresentation, Template.ListPresentationDemoEntity, null, null);
             }
             return _listPresentation;
         }
 
-		private IDictionary<int, IEntity> GetStream(ContentGroupItemType itemType, ContentGroupItemType? presentationItemType)
+		private Template _template;
+		private Template Template
+		{
+			get
+			{
+				if (_template == null)
+					_template = OverrideTemplateId.HasValue
+						? Sexy.Templates.GetTemplate(OverrideTemplateId.Value)
+						: ContentGroup.Template;
+				return _template;
+			}
+		}
+
+		private IDictionary<int, IEntity> GetStream(List<IEntity> content, IEntity contentDemoEntity, List<IEntity> presentation, IEntity presentationDemoEntity)
         {
 			var entitiesToDeliver = new Dictionary<int, IEntity>();
-			if (!ContentGroupItems.Any(c => c.TemplateID.HasValue) && !OverrideTemplateId.HasValue) return entitiesToDeliver;
+			if (ContentGroup.Template == null && !OverrideTemplateId.HasValue) return entitiesToDeliver;
 
-            var items = ContentGroupItems.ToList(); // Create copy of list (not in cache) because it will get modified
-			var templateId = OverrideTemplateId.HasValue ? OverrideTemplateId.Value : items.First().TemplateID.Value;
-			var templateDefaults = Sexy.GetTemplateDefaults(templateId);
-			var templateDefault = templateDefaults.FirstOrDefault(t => t.ItemType == itemType);
-
-            // If no Content Elements exist and type is List, add a ContentGroupItem to List (not to DB)
-            if ((itemType == ContentGroupItemType.Content || itemType == ContentGroupItemType.ListContent) && !items.Any(p => p.ItemType == itemType))
-            {
-				if (!ListId.HasValue)
-					throw new Exception("GetStream() failed because ListId is null. ModuleId is " + (ModuleId.HasValue ? ModuleId.ToString() : "null"));
-
-                items.Add(new ContentGroupItem
-                {
-                    ContentGroupID = ListId.Value,
-                    ContentGroupItemID = -1,
-                    EntityID = new int?(),
-                    SortOrder = (itemType == ContentGroupItemType.ListContent ? -1 : 0),
-                    SysCreated = DateTime.Now,
-                    SysCreatedBy = -1,
-                    TemplateID = templateId,
-                    Type = itemType.ToString("F")
-                });
-            }
+			var contentEntities = content.ToList(); // Create copy of list (not in cache) because it will get modified
+			
+            // If no Content Elements exist and type is content (means, presentation is not null), add an empty entity (demo entry will be taken for this)
+            if (content.Count == 0 && presentation != null)
+                contentEntities.Add(null);
 
             var originals = In["Default"].List;
 
-            foreach (var i in items.Where(p => p.ItemType == itemType))
+            for (var i = 0; i < contentEntities.Count; i++)
             {
+	            var contentEntity = contentEntities[i];
+
                 // use demo-entites where available
-                var entityId = i.EntityID.HasValue
-                    ? i.EntityID.Value
-                    : (templateDefault != null && templateDefault.DemoEntityID.HasValue
-                        ? templateDefault.DemoEntityID.Value
-                        : new int?());
+				var entityId = contentEntity != null
+					? contentEntity.EntityId :
+					(contentDemoEntity != null ? contentDemoEntity.EntityId : new int?());
 
                 // We can't deliver entities that are not delivered by base (original stream), so continue
                 if (!entityId.HasValue || !originals.ContainsKey(entityId.Value))
                     continue;
 
-	            IEntity presentation = null;
+	            IEntity presentationEntity = null;
 
-
-	            if (presentationItemType.HasValue)
+	            if (presentation != null)
 	            {
 		            // Try to find presentation entity
-		            var presentationEntityId = items.Where(p =>
-			            p.SortOrder == i.SortOrder && p.ItemType == presentationItemType && p.EntityID.HasValue &&
-			            originals.ContainsKey(p.EntityID.Value)).Select(p => p.EntityID).FirstOrDefault();
+		            var presentationEntityId = presentation[i] != null && originals.ContainsKey(presentation[i].EntityId) ? presentation[i].EntityId : new int?();
 
 		            // If there is no presentation entity, take default entity
 		            if (!presentationEntityId.HasValue)
-			            presentationEntityId =
-				            templateDefaults.Where(
-					            d =>
-						            d.ItemType == presentationItemType && d.DemoEntityID.HasValue &&
-						            originals.ContainsKey(d.DemoEntityID.Value))
-					            .Select(p => p.DemoEntityID).FirstOrDefault();
+			            presentationEntityId = presentationDemoEntity != null && originals.ContainsKey(presentationDemoEntity.EntityId) ? presentationDemoEntity.EntityId : new int?();
 
-		            presentation = presentationEntityId.HasValue ? originals[presentationEntityId.Value] : null;
+		            presentationEntity = presentationEntityId.HasValue ? originals[presentationEntityId.Value] : null;
 	            }
 
 
@@ -158,7 +145,7 @@ namespace ToSic.SexyContent.DataSources
                 while (entitiesToDeliver.ContainsKey(key))
                     key += 1000000000;
 
-				entitiesToDeliver.Add(key, new EAVExtensions.EntityInContentGroup(originals[entityId.Value]) { SortOrder = i.SortOrder, ContentGroupItemModified = i.SysModified, Presentation = presentation, GroupId = ListId.Value });
+				entitiesToDeliver.Add(key, new EAVExtensions.EntityInContentGroup(originals[entityId.Value]) { SortOrder = i, ContentGroupItemModified = originals[entityId.Value].Modified, Presentation = presentationEntity, GroupId = ListId.Value });
             }
 
             return entitiesToDeliver;

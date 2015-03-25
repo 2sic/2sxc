@@ -38,7 +38,7 @@ namespace ToSic.SexyContent
 			}
 		}
 
-		public ContentGroupItemType ItemType { get; set; }
+		public string ItemType { get; set; }
 
 		private bool _Enabled { get; set; }
 		public bool Enabled
@@ -88,8 +88,8 @@ namespace ToSic.SexyContent
 			// Set localized Error Messages for validator
 			valContentType.ErrorMessage = LocalizeString("valContentType.ErrorMessage");
 			valContentType.Enabled = ContentTypeRequired;
-			((DotNetNuke.UI.UserControls.LabelControl)lblContentType).Text = LocalizeString("lblContentType" + ItemType.ToString("F") + ".Text");
-			((DotNetNuke.UI.UserControls.LabelControl)lblDemoRow).Text = LocalizeString("lblDemoRow" + ItemType.ToString("F") + ".Text");
+			((DotNetNuke.UI.UserControls.LabelControl)lblContentType).Text = LocalizeString("lblContentType" + ItemType + ".Text");
+			((DotNetNuke.UI.UserControls.LabelControl)lblDemoRow).Text = LocalizeString("lblDemoRow" + ItemType + ".Text");
 
 			if (!IsPostBack)
 			{

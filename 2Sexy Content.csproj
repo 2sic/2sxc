@@ -203,6 +203,8 @@
       <DependentUpon>Services.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="SexyContent\ContentGroup.cs" />
+    <Compile Include="SexyContent\ContentGroups.cs" />
     <Compile Include="SexyContent\DataSources\DnnSqlDataSource.cs" />
     <Compile Include="SexyContent\EAVExtensions\EavApiProxies\EntitiesController.cs" />
     <Compile Include="SexyContent\EAV\PipelineDesigner\PipelineManagementDnnWrapper.ascx.cs">
@@ -213,7 +215,6 @@
       <DependentUpon>PipelineManagementDnnWrapper.ascx</DependentUpon>
     </Compile>
     <Compile Include="SexyContent\SexyContentModuleUpgrade.cs" />
-    <Compile Include="SexyContent\ContentGroupItem.cs" />
     <Compile Include="SexyContent\EAVExtensions\EavApiProxies\PipelineDesignerController.cs" />
     <Compile Include="SexyContent\EAV\PipelineDesigner\PipelineDesignerDnnWrapper.ascx.cs">
       <DependentUpon>PipelineDesignerDnnWrapper.ascx</DependentUpon>
@@ -408,6 +409,7 @@
     <Compile Include="SexyContent\ImportExport\XmlImport.cs" />
     <Compile Include="SexyContent\ImportExport\ZipExport.cs" />
     <Compile Include="SexyContent\ImportExport\ZipImport.cs" />
+    <Compile Include="SexyContent\Templates.cs" />
     <Compile Include="SexyContent\WebApi\RouteMapper.cs" />
     <Compile Include="SexyContent\Search\ISearchInfo.cs" />
     <Compile Include="SexyContent\Search\SearchController.cs" />
@@ -462,7 +464,6 @@
       <DependentUpon>SettingsWrapper.ascx</DependentUpon>
     </Compile>
     <Compile Include="SexyContent\SexyContent.cs" />
-    <Compile Include="SexyContent\SexyContentContext.cs" />
     <Compile Include="Administration\EAVManagement.ascx.cs">
       <DependentUpon>EAVManagement.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

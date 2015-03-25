@@ -209,9 +209,9 @@ namespace ToSic.SexyContent.ImportExport
             
             if (xmlSource.Elements("Templates").Any())
             {
-                if(_sexy.TemplateContext.Connection.State != ConnectionState.Open)
-                    _sexy.TemplateContext.Connection.Open();
-                var transaction = _sexy.TemplateContext.Connection.BeginTransaction();
+                if(_sexy.Templates.Connection.State != ConnectionState.Open)
+                    _sexy.Templates.Connection.Open();
+                var transaction = _sexy.Templates.Connection.BeginTransaction();
                 List<Entity> templateDescribingEntities;
                 ImportXmlTemplates(xmlSource, out templateDescribingEntities);
 
@@ -294,7 +294,7 @@ namespace ToSic.SexyContent.ImportExport
 
             foreach (var template in templates.Elements("Template"))
             {
-                Template t = _sexy.TemplateContext.GetNewTemplate(_sexy.AppId.Value);
+                Template t = _sexy.Templates.GetNewTemplate(_sexy.AppId.Value);
                 t.Name = template.Attribute("Name").Value;
                 t.Path = template.Attribute("Path").Value;
 
@@ -369,7 +369,7 @@ namespace ToSic.SexyContent.ImportExport
                     continue;
 
                 t.PortalID = PortalSettings.Current.PortalId;
-                _sexy.TemplateContext.AddTemplate(t);
+                _sexy.Templates.AddTemplate(t);
 
                 foreach (XElement xEntity in template.Elements("Entity"))
                     entities.Add(GetImportEntity(xEntity, SexyContent.AssignmentObjectTypeIDSexyContentTemplate, t.TemplateID));
@@ -378,7 +378,7 @@ namespace ToSic.SexyContent.ImportExport
                                                      ExportImportMessage.MessageTypes.Information));
             }
 
-            _sexy.TemplateContext.SaveChanges();
+            _sexy.Templates.SaveChanges();
         }
 
         #endregion

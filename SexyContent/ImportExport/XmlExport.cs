@@ -135,7 +135,7 @@ namespace ToSic.SexyContent.ImportExport
             foreach (string TemplateID in TemplateIDs)
             {
                 int ID = int.Parse(TemplateID);
-                Template t = Sexy.TemplateContext.GetTemplate(ID);
+                Template t = Sexy.Templates.GetTemplate(ID);
                 Entity DemoEntity = t.DemoEntityID.HasValue ? Sexy.ContentContext.GetEntity(t.DemoEntityID.Value) : null;
 				var pipelineEntity = t.PipelineEntityID.HasValue ? Sexy.ContentContext.GetEntity(t.PipelineEntityID.Value) : null;
 

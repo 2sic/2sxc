@@ -30,18 +30,13 @@ namespace ToSic.SexyContent.ImportExport
             attributeSets.AddRange(_sexy.GetAvailableAttributeSets(SexyContent.AttributeSetScopeApps));
             attributeSets = attributeSets.Where(a => !a.UsesConfigurationOfAttributeSet.HasValue).ToList();
 
-            // Special case: Entities of the template attributesets and field properties should not be exported here
-            //var templateAttributeSets = _sexy.GetAvailableAttributeSets().Where(a => a.StaticName == SexyContent.AttributeSetStaticNameTemplateContentTypes
-            //                    || a.StaticName == SexyContent.AttributeSetStaticNameTemplateMetaData
-            //                    || a.StaticName.StartsWith("@"));
-
             var attributeSetIds = attributeSets.Select(p => p.AttributeSetId.ToString()).ToArray();
             var entities = SexyContent.GetInitialDataSource(_zoneId, _appId).Out["Default"].List;
             var entityIds = entities.Where(e => e.Value.AssignmentObjectTypeId != SexyContent.AssignmentObjectTypeIDSexyContentTemplate 
                 && e.Value.AssignmentObjectTypeId != DataSource.AssignmentObjectTypeIdFieldProperties)
                 .Select(e => e.Value.EntityId.ToString()).ToArray();
 
-            var templateIds = _sexy.GetTemplates(PortalSettings.Current.PortalId).Select(p => p.TemplateID.ToString()).ToArray();
+            var templateIds = _sexy.Templates.GetAllTemplates().Select(p => p.TemplateId.ToString()).ToArray();
             var messages = new List<ExportImportMessage>();
             var xmlExport = new XmlExport(_zoneId, _appId, true);
             var xml = xmlExport.ExportXml(attributeSetIds, entityIds, templateIds, out messages);

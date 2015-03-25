@@ -35,7 +35,7 @@ namespace ToSic.SexyContent
 			{
 				if (_Items == null)
 				{
-					_Items = Sexy.TemplateContext.GetContentGroupItems(ContentGroupID).ToList();
+					_Items = Sexy.Templates.GetContentGroupItems(ContentGroupID).ToList();
 				}
 				return _Items;
 			}
@@ -45,7 +45,7 @@ namespace ToSic.SexyContent
         {
             get
             {
-                return Sexy.TemplateContext.GetTemplate(Sexy.TemplateContext.GetContentGroupItems(ContentGroupID).First().TemplateID.Value);
+                return Sexy.Templates.GetTemplate(Sexy.Templates.GetContentGroupItems(ContentGroupID).First().TemplateID.Value);
             }
         }
         #endregion
@@ -84,8 +84,8 @@ namespace ToSic.SexyContent
             {
                 var UncachedSexyContent = SexyUncached;
 
-                ContentGroupItem DestItem = UncachedSexyContent.TemplateContext.GetContentGroupItem(((int)e.DestDataItem.GetDataKeyValue("ID")));
-                ContentGroupItem Item = UncachedSexyContent.TemplateContext.GetContentGroupItem(((int)e.DraggedItems[0].GetDataKeyValue("ID")));
+                ContentGroupItem DestItem = UncachedSexyContent.Templates.GetContentGroupItem(((int)e.DestDataItem.GetDataKeyValue("ID")));
+                ContentGroupItem Item = UncachedSexyContent.Templates.GetContentGroupItem(((int)e.DraggedItems[0].GetDataKeyValue("ID")));
                 int DestinationSortOrder = DestItem.SortOrder;
 
                 if (e.DropPosition == GridItemDropPosition.Below)
@@ -94,7 +94,7 @@ namespace ToSic.SexyContent
                 if (Item.SortOrder < DestinationSortOrder)
                     DestinationSortOrder--;
 
-                UncachedSexyContent.TemplateContext.ReorderContentGroupItem(Item, DestinationSortOrder, true);
+                UncachedSexyContent.Templates.ReorderContentGroupItem(Item, DestinationSortOrder, true);
 
                 grdEntities.Rebind();
                 grdEntities.Items[DestinationSortOrder].Selected = true;

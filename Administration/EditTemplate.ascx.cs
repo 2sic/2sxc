@@ -30,7 +30,7 @@ namespace ToSic.SexyContent
         protected void Page_Init(object sender, EventArgs e)
         {
             if (ModeIsEdit)
-                Template = SexyUncached.TemplateContext.GetTemplate(TemplateID);
+                Template = SexyUncached.Templates.GetTemplate(TemplateID);
 
             var contentTypeSelectors = new[] { ctrContentType, ctrPresentationType, ctrListContentType, ctrListPresentationType };
 
@@ -168,7 +168,7 @@ namespace ToSic.SexyContent
             var attributeSetId = ctrContentType.ContentTypeID.HasValue && ctrContentType.ContentTypeID > 0 ? ctrContentType.ContentTypeID.Value : new int?();
 
             // Get a new template if the temlpate does not exist yet, else take existing
-            Template = ModeIsEdit ? Template : Sexy.TemplateContext.GetNewTemplate(AppId.Value);
+            Template = ModeIsEdit ? Template : Sexy.Templates.GetNewTemplate(AppId.Value);
 
             Template.PortalID = this.PortalId;
                 Template.AttributeSetID = attributeSetId;
@@ -194,12 +194,12 @@ namespace ToSic.SexyContent
 
             if (ModeIsEdit)
             {
-                SexyUncached.TemplateContext.UpdateTemplate(Template);
+                SexyUncached.Templates.UpdateTemplate(Template);
             }
             else
             {
                 Template.SysCreatedBy = UserId;
-                SexyUncached.TemplateContext.AddTemplate(Template);
+                SexyUncached.Templates.AddTemplate(Template);
             }
 
             if (!chkSeparateContentPresentation.Checked)
@@ -226,7 +226,6 @@ namespace ToSic.SexyContent
                 Selector.DemoEntityID = TemplateDefault.DemoEntityID;
             }
 
-            Selector.ItemType = ItemType;
             Selector.Enabled = !Sexy.IsTemplateDefaultInUse(TemplateID, ItemType);
         }
 
