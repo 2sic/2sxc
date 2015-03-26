@@ -95,32 +95,24 @@ namespace ToSic.SexyContent
 			eavVersionUpgrade.EnsurePipelineDesignerAttributeSets();
 		}
 
-		///// <summary>
-		///// Add ContentTypes for ContentGroup
-		///// </summary>
-		//private static void AddContentGroupAndTemplateContentType()
-		//{
-		//	// Ensure ContentGroup Configuration
-		//	var attributeSetContentGroup = Eav.Import.AttributeSet.SystemAttributeSet("2SexyContent-ContentGroup", "Contains all content groups (lists) from 2sxc",
-		//		new List<Eav.Import.Attribute>
-		//		{
-		//			Eav.Import.Attribute.("Template", "Template", null, true),
-		//		});
+		/// <summary>
+		/// Add ContentTypes for ContentGroup
+		/// </summary>
+		private static void AddContentGroupAndTemplateContentType()
+		{
+			// 1. Import new ContentTypes for ContentGroups and Templates
 
-		//	// Collect AttributeSets for use in Import
-		//	var attributeSets = new List<Eav.Import.AttributeSet>
-		//	{
-		//		attributeSetContentGroup
-		//	};
-		//	var import = new Eav.Import.Import(DataSource.DefaultZoneId, DataSource.MetaDataAppId, SexyContent.InternalUserName);
-		//	import.RunImport(attributeSets, null);
+			// Set AlwaysShareConfiguration to true
+			var metaDataCtx = EavContext.Instance(DataSource.DefaultZoneId, DataSource.MetaDataAppId);
+			metaDataCtx.GetAttributeSet("2SexyContent-ContentGroup").AlwaysShareConfiguration = true;
+			metaDataCtx.SaveChanges();
 
-		//	var metaDataCtx = EavContext.Instance(DataSource.DefaultZoneId, DataSource.MetaDataAppId);
-		//	metaDataCtx.GetAttributeSet(attributeSetContentGroup.StaticName).AlwaysShareConfiguration = true;
-		//	metaDataCtx.SaveChanges();
+			// ToDo: Ensure Content Type sharing
 
-		//	// ToDo: Ensure Content Type sharing
-		//}
+
+			// 2. Move all data to the new ContentTypes
+			// 3. Append new IDs to old data (ensures that we can fix things that went wrong after upgrading the module)
+		}
 
 		/// <summary>
 		/// Copy a Directory recursive
