@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using ToSic.Eav;
 using ToSic.Eav.ManagementUI;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Localization;
@@ -15,15 +16,27 @@ namespace ToSic.SexyContent
     {
         #region Properties
 
-        /// <summary>
-        /// Gets or sets the ContentGroupItemID
-        /// </summary>
-        public int? ContentGroupItemID { get; set; }
+		///// <summary>
+		///// Gets or sets the ContentGroupItemID
+		///// </summary>
+		//public int? ContentGroupItemID { get; set; }
 
         /// <summary>
         /// Gets or sets the ContentGroupID
         /// </summary>
         public int ContentGroupID { get; set; }
+
+	    private ContentGroup _contentGroup;
+
+	    private ContentGroup ContentGroup
+	    {
+		    get
+		    {
+			    if (_contentGroup == null)
+				    _contentGroup = Sexy.ContentGroups.GetContentGroup(ContentGroupID);
+			    return _contentGroup;
+		    }
+	    }
 
         public bool IsPublished
         {
@@ -31,10 +44,10 @@ namespace ToSic.SexyContent
             set { EditItemControl.IsPublished = value; }
         }
 
-		///// <summary>
-		///// Gets or sets the ItemType
-		///// </summary>
-		//public ContentGroupItemType ItemType { get; set; }
+		/// <summary>
+		/// Gets or sets the ItemType
+		/// </summary>
+		public string ItemType { get; set; }
 
         /// <summary>
         /// Gets or sets the TemplateID
@@ -82,19 +95,19 @@ namespace ToSic.SexyContent
             }
         }
 
-		//private ContentGroupItem _Item;
-		///// <summary>
-		///// Returns the current ContentGroupItem
-		///// </summary>
-		//private ContentGroupItem Item
-		//{
-		//	get
-		//	{
-		//		if (_Item == null && ContentGroupItemID.HasValue)
-		//			_Item = Sexy.Templates.GetContentGroupItem(ContentGroupItemID.Value);
-		//		return _Item;
-		//	}
-		//}
+		private IEntity _entity;
+		/// <summary>
+		/// Returns the current ContentGroupItem
+		/// </summary>
+		private IEntity Entity
+		{
+			get
+			{
+				if (_entity == null && SortOrder.HasValue)
+					_entity = ContentGroup.Content.Count > SortOrder ? ContentGroup.Content[SortOrder.Value] : null;
+				return _entity;
+			}
+		}
 
         public int? LanguageID
         {
@@ -120,8 +133,6 @@ namespace ToSic.SexyContent
 
         #endregion
 
-
-        //private SexyContent Sexy = new SexyContent(false);
         private ItemForm EditItemControl;
 
         public EventHandler OnSaved;
@@ -138,20 +149,20 @@ namespace ToSic.SexyContent
 
             ProcessView();
 
-            hSectionHead.ID = "SexyContent-EditSection-" + ItemType.ToString("F");
+            hSectionHead.ID = "SexyContent-EditSection-" + ItemType;
 
             if (IsPostBack)
                 return;
 
-            if (Item != null)
+            if (ContentGroup != null)
             {
                 // Show Change Content or Reference Link only if this is the default language
                 var IsDefaultLanguage = LanguageID == DefaultLanguageID;
-                btnReference.Visible = IsDefaultLanguage && (Item.ItemType != ContentGroupItemType.Content && ItemType != ContentGroupItemType.ListContent);
-                lblNewOrEditItemHeading.Attributes.Add("title", Item.EntityID.HasValue ? Item.EntityID.Value.ToString() : "");
+                btnReference.Visible = IsDefaultLanguage && (ItemType != "Content" && ItemType != "ListContent");
+                lblNewOrEditItemHeading.Attributes.Add("title", Entity != null ? Entity.EntityId.ToString() : "");
             }
 
-            lblNewOrEditItemHeading.Text = ItemType.ToString("F");
+            lblNewOrEditItemHeading.Text = ItemType;
         }
 
         protected void ProcessView()
@@ -172,14 +183,14 @@ namespace ToSic.SexyContent
             EditItemControl.NewItemUrl = newItemUrl + (newItemUrl.Contains("?") ? "&" : "?") + "AppID=" + AppId.ToString() + "&mid=" + ModuleID.ToString() + "&AttributeSetId=[AttributeSetId]&EditMode=New&CultureDimension=" + this.LanguageID;
 
             // If ContentGroupItem has Entity, edit that; else create new Entity
-            if (Item != null && Item.EntityID.HasValue)
+            if (Entity != null)
             {
                 EditItemControl.Updated += EditItem_OnEdited;
-                EditItemControl.EntityId = Item.EntityID.Value;
+                EditItemControl.EntityId = Entity.EntityId;
                 EditItemControl.InitForm(FormViewMode.Edit);
 
                 hlkHistory.Visible = true;
-                hlkHistory.NavigateUrl = EditUrl("", "", SexyContent.ControlKeys.EavManagement, new string[] { "AppID", AppId.ToString(), "ManagementMode", "ItemHistory", "EntityId", Item.EntityID.Value.ToString(), "mid", ModuleID.ToString() });
+                hlkHistory.NavigateUrl = EditUrl("", "", SexyContent.ControlKeys.EavManagement, new string[] { "AppID", AppId.ToString(), "ManagementMode", "ItemHistory", "EntityId", Entity.EntityId.ToString(), "mid", ModuleID.ToString() });
             }
             // Create a new Entity
             else
@@ -187,7 +198,7 @@ namespace ToSic.SexyContent
                 EditItemControl.Inserted += NewItem_OnInserted;
                 EditItemControl.Visible = false;
 
-                if (ItemType == ContentGroupItemType.Content || ItemType == ContentGroupItemType.ListContent)
+                if (ItemType == "Content" || ItemType == "ListContent")
                     EditItemControl.Visible = true;
                 else
                     pnlReferenced.Visible = true;
@@ -201,24 +212,27 @@ namespace ToSic.SexyContent
 
         protected void EditItem_OnEdited(ToSic.Eav.Entity Entity)
         {
-            UpdateModuleTitleIfNecessary(Entity, Item);
+            UpdateModuleTitleIfNecessary(Entity, this.Entity);
         }
 
         protected void NewItem_OnInserted(ToSic.Eav.Entity Entity)
         {
-            ContentGroupItem NewItem;
+			// ToDo: Implement adding item
+	        throw new Exception("ToDo: implement adding items");
 
-            if (Item != null)
-                NewItem = SexyUncached.Templates.GetContentGroupItem(Item.ContentGroupItemID);
-            else
-                NewItem = SexyUncached.AddContentGroupItem(ContentGroupID, UserId, TemplateID, Entity.EntityID, SortOrder, true, ItemType, ItemType != ContentGroupItemType.Content);
+	        //ContentGroupItem NewItem;
 
-            NewItem.EntityID = Entity.EntityID;
-            NewItem.SysModified = DateTime.Now;
-            NewItem.SysModifiedBy = UserId;
-            SexyUncached.Templates.SaveChanges();
+	        //if (this.Entity != null)
+	        //	NewItem = SexyUncached.Templates.GetContentGroupItem(this.Entity.ContentGroupItemID);
+	        //else
+	        //	NewItem = SexyUncached.AddContentGroupItem(ContentGroupID, UserId, TemplateID, Entity.EntityID, SortOrder, true, ItemType, ItemType != ContentGroupItemType.Content);
 
-            UpdateModuleTitleIfNecessary(Entity, NewItem);
+	        //NewItem.EntityID = Entity.EntityID;
+	        //NewItem.SysModified = DateTime.Now;
+	        //NewItem.SysModifiedBy = UserId;
+	        //SexyUncached.Templates.SaveChanges();
+
+	        //UpdateModuleTitleIfNecessary(Entity, NewItem);
         }
 
         public void Save()
@@ -226,8 +240,10 @@ namespace ToSic.SexyContent
             if(EditItemControl.Visible)
                 EditItemControl.Save();
 
-            if (Item != null && pnlReferenced.Visible && !EditItemControl.Visible)
-                SexyUncached.Templates.DeleteContentGroupItem(Item.ContentGroupItemID, UserId);
+			throw new NotImplementedException("ToDo: implement referencing demo / deleting content group item");
+			// ToDo: implement referencing demo / deleting content group item
+			//if (Entity != null && pnlReferenced.Visible && !EditItemControl.Visible)
+			//	SexyUncached.Templates.DeleteContentGroupItem(Entity.ContentGroupItemID, UserId);
 
             if (OnSaved != null)
                 OnSaved(this, new EventArgs());
@@ -239,17 +255,17 @@ namespace ToSic.SexyContent
                 EditItemControl.Cancel();
         }
 
-        protected void UpdateModuleTitleIfNecessary(ToSic.Eav.Entity entity, ContentGroupItem groupItem)
+        protected void UpdateModuleTitleIfNecessary(ToSic.Eav.Entity entity, object groupItem)
         {
             // Creating new Context, because EntityTitle gets not refreshed otherwise
             var sexyContext = new SexyContent(ZoneId, AppId, true);
 
             // Get ContentGroup
-            var listContentGroupItem = sexyContext.Templates.GetListContentGroupItem(groupItem.ContentGroupID, UserId);
+            var listContentGroupItem = ContentGroup.ListContent;
             var entityModel = sexyContext.ContentContext.GetEntityModel(entity.EntityID);
 
             // If this is the list title, or no list-title exists, set module title
-            if (groupItem.ItemType == ContentGroupItemType.ListContent || (listContentGroupItem == null && groupItem.ItemType == ContentGroupItemType.Content && groupItem.SortOrder == 0) && entityModel.IsPublished)
+            if (ItemType == "ListContent" || (listContentGroupItem == null && ItemType == "Content" && SortOrder == 0) && entityModel.IsPublished)
             {
                 var languages = Sexy.ContentContext.GetLanguages();
                 // Find Module for default language
@@ -309,7 +325,7 @@ namespace ToSic.SexyContent
 
         private void UpdateReferenceChangedHiddenField(bool Referenced)
         {
-            if ((Item == null && Referenced) || (Item != null && !Referenced))
+            if ((Entity == null && Referenced) || (Entity != null && !Referenced))
                 hfReferenceChanged.Value = "false";
             else
                 hfReferenceChanged.Value = "true";

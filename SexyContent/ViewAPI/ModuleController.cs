@@ -23,9 +23,11 @@ namespace ToSic.SexyContent.ViewAPI
         [ValidateAntiForgeryToken]
         public void AddItem([FromUri] int? sortOrder = null)
         {
-            var contentGroupId = Sexy.GetContentGroupIdFromModule(ActiveModule.ModuleID);
-            var templateId = Sexy.GetTemplateForModule(ActiveModule.ModuleID).TemplateID;
-            SexyUncached.AddContentGroupItem(contentGroupId, UserInfo.UserID, templateId, null, sortOrder.HasValue ? sortOrder.Value + 1 : sortOrder, true, ContentGroupItemType.Content, false);
+			// ToDo: Fix this
+			throw new NotImplementedException("ToDo: Fix this");
+			//var contentGroupId = Sexy.GetContentGroupIdFromModule(ActiveModule.ModuleID);
+			//var templateId = Sexy.GetTemplateForModule(ActiveModule.ModuleID).TemplateID;
+			//SexyUncached.AddContentGroupItem(contentGroupId, UserInfo.UserID, templateId, null, sortOrder.HasValue ? sortOrder.Value + 1 : sortOrder, true, ContentGroupItemType.Content, false);
         }
 
         [HttpGet]
@@ -33,7 +35,7 @@ namespace ToSic.SexyContent.ViewAPI
         [ValidateAntiForgeryToken]
         public void SaveTemplateId([FromUri] int? templateId)
         {
-            SexyUncached.UpdateTemplateForGroup(Sexy.GetContentGroupIdFromModule(ActiveModule.ModuleID), templateId, UserInfo.UserID);
+			Sexy.ContentGroups.UpdateContentGroup(Sexy.GetContentGroupIdFromModule(ActiveModule.ModuleID), templateId);
         }
 
         [HttpGet]
@@ -67,7 +69,7 @@ namespace ToSic.SexyContent.ViewAPI
         public void SetAppId(int? appId)
         {
 			// Reset template to nothing (prevents errors after changing app)
-			SexyUncached.UpdateTemplateForGroup(Sexy.GetContentGroupIdFromModule(ActiveModule.ModuleID), null, UserInfo.UserID);
+			Sexy.ContentGroups.UpdateContentGroup(Sexy.GetContentGroupIdFromModule(ActiveModule.ModuleID), null);
 
             SexyContent.SetAppIdForModule(ActiveModule, appId);
 
@@ -77,9 +79,9 @@ namespace ToSic.SexyContent.ViewAPI
                 var sexyForNewApp = new SexyContent(Sexy.App.ZoneId, appId.Value, false);
                 var templates = sexyForNewApp.GetAvailableTemplatesForSelector(ActiveModule).ToList();
                 if (templates.Any())
-                    SexyUncached.UpdateTemplateForGroup(Sexy.GetContentGroupIdFromModule(ActiveModule.ModuleID), templates.First().TemplateID, UserInfo.UserID);
+					Sexy.ContentGroups.UpdateContentGroup(Sexy.GetContentGroupIdFromModule(ActiveModule.ModuleID), templates.First().TemplateId);
                 else
-                    SexyUncached.UpdateTemplateForGroup(Sexy.GetContentGroupIdFromModule(ActiveModule.ModuleID), null, UserInfo.UserID);
+					Sexy.ContentGroups.UpdateContentGroup(Sexy.GetContentGroupIdFromModule(ActiveModule.ModuleID), null);
             }
         }
 
@@ -88,7 +90,7 @@ namespace ToSic.SexyContent.ViewAPI
         [ValidateAntiForgeryToken]
         public IEnumerable<object> GetSelectableContentTypes()
         {
-            return Sexy.GetAvailableAttributeSetsForVisibleTemplates(PortalSettings.PortalId).Select(p => new { p.AttributeSetId, p.Name } );
+            return Sexy.GetAvailableAttributeSetsForVisibleTemplates().Select(p => new { p.AttributeSetId, p.Name } );
         }
 
         [HttpGet]
@@ -97,7 +99,7 @@ namespace ToSic.SexyContent.ViewAPI
         public IEnumerable<object> GetSelectableTemplates()
         {
             var availableTemplates = Sexy.GetAvailableTemplatesForSelector(ActiveModule);
-            return availableTemplates.Select(t => new { t.TemplateID, t.Name, t.AttributeSetID });
+            return availableTemplates.Select(t => new { t.TemplateId, t.Name, t.ContentTypeStaticName });
         }
 
         [HttpGet]
@@ -114,7 +116,7 @@ namespace ToSic.SexyContent.ViewAPI
                 engine.Init(template, Sexy.App, ActiveModule, dataSource, InstancePurposes.WebView, Sexy);
                 engine.CustomizeData();
 
-				if (template.AttributeSetID.HasValue && !template.DemoEntityID.HasValue && dataSource["Default"].List.Count == 0) { 
+				if (template.ContentTypeStaticName != "" && template.ContentDemoEntity == null && dataSource["Default"].List.Count == 0) { 
 					var toolbar = "<ul class='sc-menu' data-toolbar='" + Newtonsoft.Json.JsonConvert.SerializeObject(new { sortOrder = 0, useModuleList = true, action = "edit" }) + "'></ul>";
 					return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent("<div class='dnnFormMessage dnnFormInfo'>No demo item exists for the selected template. " + toolbar + "</div>") };
 				}

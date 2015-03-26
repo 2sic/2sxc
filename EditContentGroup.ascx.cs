@@ -108,6 +108,17 @@ namespace ToSic.SexyContent
             }
         }
 
+		private ContentGroup _contentGroup;
+		private ContentGroup ContentGroup
+		{
+			get
+			{
+				if (_contentGroup == null)
+					_contentGroup = Sexy.ContentGroups.GetContentGroup(ContentGroupID.Value);
+				return _contentGroup;
+			}
+		}
+
 
         private int? _attributeSetId;
         /// <summary>
@@ -130,36 +141,36 @@ namespace ToSic.SexyContent
             }
         }
 
-        private List<ContentGroupItem> _Items;
-        /// <summary>
-        /// Returns the current ContentGroupItem
-        /// </summary>
-        private List<ContentGroupItem> Items
-        {
-            get
-            {
-                if (_Items == null && ContentGroupID.HasValue)
-                    _Items = Sexy.Templates.GetContentGroupItems(ContentGroupID.Value).ToList();
-                if(_Items == null && (AttributeSetId.HasValue || EntityId.HasValue))
-                    _Items = new List<ContentGroupItem>();
-                return _Items;
-            }
-        }
+		//private List<ContentGroupItem> _Items;
+		///// <summary>
+		///// Returns the current ContentGroupItem
+		///// </summary>
+		//private List<ContentGroupItem> Items
+		//{
+		//	get
+		//	{
+		//		if (_Items == null && ContentGroupID.HasValue)
+		//			_Items = Sexy.Templates.GetContentGroupItems(ContentGroupID.Value).ToList();
+		//		if(_Items == null && (AttributeSetId.HasValue || EntityId.HasValue))
+		//			_Items = new List<ContentGroupItem>();
+		//		return _Items;
+		//	}
+		//}
 
-        private List<ContentGroupItem> CurrentlyEditedItems
-        {
-            get {
-                if (NewMode && ContentGroupID.HasValue)
-                    return new List<ContentGroupItem>() { new ContentGroupItem()
-                    {
-                        SortOrder = SortOrder.HasValue ? SortOrder.Value : 0,
-                        ContentGroupID = ContentGroupID.Value,
-                        Type = ContentGroupItemType.Content.ToString("F"),
+		//private List<ContentGroupItem> CurrentlyEditedItems
+		//{
+		//	get {
+		//		if (NewMode && ContentGroupID.HasValue)
+		//			return new List<ContentGroupItem>() { new ContentGroupItem()
+		//			{
+		//				SortOrder = SortOrder.HasValue ? SortOrder.Value : 0,
+		//				ContentGroupID = ContentGroupID.Value,
+		//				Type = ContentGroupItemType.Content.ToString("F"),
                         
-                    }};
-                return !SortOrder.HasValue ? new List<ContentGroupItem>() : Items.Where(p => p.SortOrder == SortOrder.Value).ToList();
-            }
-        }
+		//			}};
+		//		return !SortOrder.HasValue ? new List<ContentGroupItem>() : Items.Where(p => p.SortOrder == SortOrder.Value).ToList();
+		//	}
+		//}
 
         /// <summary>
         /// Returns true if a new ContentGroupItem should be created at the specified location
@@ -199,19 +210,21 @@ namespace ToSic.SexyContent
             rptDimensions.DataBind();
 
             btnDelete.OnClientClick = "return confirm('" + LocalizeString("btnDelete.Confirm") + "')";
-            btnDelete.Text = Items.Count(p => p.ItemType == ContentGroupItemType.Content) > 1 ? LocalizeString("btnDelete.ListText") : LocalizeString("btnDelete.Text");
+            btnDelete.Text = ContentGroup.Content.Count > 1 ? LocalizeString("btnDelete.ListText") : LocalizeString("btnDelete.Text");
             btnDelete.Visible = !NewMode && ContentGroupID.HasValue;
 
-            // If there is something to edit
-            if (CurrentlyEditedItems.Any())
-            {
-                // Settings link (to change content)
-                hlkChangeContent.NavigateUrl = Sexy.GetElementSettingsLink(CurrentlyEditedItems.First().ContentGroupItemID, ModuleId, TabId, Request.RawUrl);
+			// ToDo: Fix this!
+			throw new NotImplementedException("ToDo: Fix this");
+			//// If there is something to edit
+			//if (CurrentlyEditedItems.Any())
+			//{
+			//	// Settings link (to change content)
+			//	hlkChangeContent.NavigateUrl = Sexy.GetElementSettingsLink(CurrentlyEditedItems.First().ContentGroupItemID, ModuleId, TabId, Request.RawUrl);
 
-                // Show Change Content or Reference Link only if this is the default language
-                var IsDefaultLanguage = LanguageID == DefaultLanguageID;
-                hlkChangeContent.Visible = !NewMode && IsDefaultLanguage && (CurrentlyEditedItems.First().ItemType == ContentGroupItemType.Content || CurrentlyEditedItems.First().ItemType == ContentGroupItemType.ListContent);
-            }
+			//	// Show Change Content or Reference Link only if this is the default language
+			//	var IsDefaultLanguage = LanguageID == DefaultLanguageID;
+			//	hlkChangeContent.Visible = !NewMode && IsDefaultLanguage && (CurrentlyEditedItems.First().ItemType == ContentGroupItemType.Content || CurrentlyEditedItems.First().ItemType == ContentGroupItemType.ListContent);
+			//}
 
             // Show message if language is not active
             if (!Sexy.ContentContext.HasLanguages() || (LanguageID.HasValue && Sexy.ContentContext.GetDimension(LanguageID.Value).Active))
@@ -234,57 +247,60 @@ namespace ToSic.SexyContent
 
         protected void ProcessView()
         {
-            List<ContentGroupItemType> EditableItemsTypes = new List<ContentGroupItemType>();
+			// ToDo: Fix this
+			throw new NotImplementedException("ToDo: Fix this");
 
-            if (CurrentlyEditedItems.Any() && CurrentlyEditedItems.Any(c => c.ItemType == ContentGroupItemType.Content))
-            {
-                EditableItemsTypes.Add(ContentGroupItemType.Content);
-                EditableItemsTypes.Add(ContentGroupItemType.Presentation);
-            }
-            if (SortOrder == -1 || CurrentlyEditedItems.Any(c => c.ItemType == ContentGroupItemType.ListContent))
-            {
-                EditableItemsTypes.Add(ContentGroupItemType.ListContent);
-                EditableItemsTypes.Add(ContentGroupItemType.ListPresentation);
-            }
+			//List<ContentGroupItemType> EditableItemsTypes = new List<ContentGroupItemType>();
 
-            if (Items.Any() && Items.First().TemplateID.HasValue)
-            {
-                foreach (var TemplateDefault in Sexy.GetTemplateDefaults(Items.First().TemplateID.Value).Where(c => EditableItemsTypes.Contains(c.ItemType)))
-                {
-                    if (TemplateDefault.ContentTypeID.HasValue && TemplateDefault.ContentTypeID.Value > 0)
-                    {
-                        ContentGroupItem ContentGroupItem = null;
-                        if (CurrentlyEditedItems.Any() && CurrentlyEditedItems.First().ContentGroupItemID != 0)
-                            ContentGroupItem = CurrentlyEditedItems.FirstOrDefault(p => p.ItemType == TemplateDefault.ItemType);
+			//if (CurrentlyEditedItems.Any() && CurrentlyEditedItems.Any(c => c.ItemType == ContentGroupItemType.Content))
+			//{
+			//	EditableItemsTypes.Add(ContentGroupItemType.Content);
+			//	EditableItemsTypes.Add(ContentGroupItemType.Presentation);
+			//}
+			//if (SortOrder == -1 || CurrentlyEditedItems.Any(c => c.ItemType == ContentGroupItemType.ListContent))
+			//{
+			//	EditableItemsTypes.Add(ContentGroupItemType.ListContent);
+			//	EditableItemsTypes.Add(ContentGroupItemType.ListPresentation);
+			//}
 
-                        var editControl = (EditContentGroupItem)LoadControl(System.IO.Path.Combine(TemplateSourceDirectory, "EditContentGroupItem.ascx"));
-                        editControl.ContentGroupItemID = ContentGroupItem != null && ContentGroupItem.ContentGroupID != 0 ? ContentGroupItem.ContentGroupItemID : new int?();
-                        editControl.ContentGroupID = ContentGroupID.Value;
-                        editControl.AppId = AppId.Value;
-                        editControl.ZoneId = ZoneId.Value;
-                        editControl.ItemType = TemplateDefault.ItemType;
-                        editControl.TemplateID = Items.First().TemplateID.Value;
-                        editControl.SortOrder = CurrentlyEditedItems.Any() || SortOrder == -1 ? SortOrder : new int?();
-                        editControl.ModuleID = ModuleId;
-                        editControl.TabID = TabId;
-                        editControl.AttributeSetID = TemplateDefault.ContentTypeID.Value;
-                        phNewOrEditControls.Controls.Add(editControl);
-                    }
-                }
-            }
+			//if (Items.Any() && Items.First().TemplateID.HasValue)
+			//{
+			//	foreach (var TemplateDefault in Sexy.GetTemplateDefaults(Items.First().TemplateID.Value).Where(c => EditableItemsTypes.Contains(c.ItemType)))
+			//	{
+			//		if (TemplateDefault.ContentTypeID.HasValue && TemplateDefault.ContentTypeID.Value > 0)
+			//		{
+			//			ContentGroupItem ContentGroupItem = null;
+			//			if (CurrentlyEditedItems.Any() && CurrentlyEditedItems.First().ContentGroupItemID != 0)
+			//				ContentGroupItem = CurrentlyEditedItems.FirstOrDefault(p => p.ItemType == TemplateDefault.ItemType);
 
-            // Directly edit entity Id
-            if ((!SortOrder.HasValue && EntityId.HasValue) || (!SortOrder.HasValue && AttributeSetId.HasValue && NewMode))
-            {
-                var editControl = (EditEntity)LoadControl(System.IO.Path.Combine(TemplateSourceDirectory, "EditEntity.ascx"));
-                editControl.AppId = AppId.Value;
-                editControl.ZoneId = ZoneId.Value;
-                editControl.ModuleID = ModuleId;
-                editControl.TabID = TabId;
-                editControl.AttributeSetID = AttributeSetId.HasValue ? AttributeSetId.Value : Sexy.ContentContext.GetEntity(EntityId.Value).AttributeSetID;
-                editControl.EntityId = EntityId;
-                phNewOrEditControls.Controls.Add(editControl);
-            }
+			//			var editControl = (EditContentGroupItem)LoadControl(System.IO.Path.Combine(TemplateSourceDirectory, "EditContentGroupItem.ascx"));
+			//			editControl.ContentGroupItemID = ContentGroupItem != null && ContentGroupItem.ContentGroupID != 0 ? ContentGroupItem.ContentGroupItemID : new int?();
+			//			editControl.ContentGroupID = ContentGroupID.Value;
+			//			editControl.AppId = AppId.Value;
+			//			editControl.ZoneId = ZoneId.Value;
+			//			editControl.ItemType = TemplateDefault.ItemType;
+			//			editControl.TemplateID = Items.First().TemplateID.Value;
+			//			editControl.SortOrder = CurrentlyEditedItems.Any() || SortOrder == -1 ? SortOrder : new int?();
+			//			editControl.ModuleID = ModuleId;
+			//			editControl.TabID = TabId;
+			//			editControl.AttributeSetID = TemplateDefault.ContentTypeID.Value;
+			//			phNewOrEditControls.Controls.Add(editControl);
+			//		}
+			//	}
+			//}
+
+			//// Directly edit entity Id
+			//if ((!SortOrder.HasValue && EntityId.HasValue) || (!SortOrder.HasValue && AttributeSetId.HasValue && NewMode))
+			//{
+			//	var editControl = (EditEntity)LoadControl(System.IO.Path.Combine(TemplateSourceDirectory, "EditEntity.ascx"));
+			//	editControl.AppId = AppId.Value;
+			//	editControl.ZoneId = ZoneId.Value;
+			//	editControl.ModuleID = ModuleId;
+			//	editControl.TabID = TabId;
+			//	editControl.AttributeSetID = AttributeSetId.HasValue ? AttributeSetId.Value : Sexy.ContentContext.GetEntity(EntityId.Value).AttributeSetID;
+			//	editControl.EntityId = EntityId;
+			//	phNewOrEditControls.Controls.Add(editControl);
+			//}
         }
 
         protected void btnUpdate_Click(object sender, EventArgs e)
@@ -310,8 +326,9 @@ namespace ToSic.SexyContent
 
         protected void btnDelete_Click(object sender, EventArgs e)
         {
-            SexyUncached.Templates.DeleteContentGroupItems(ContentGroupID.Value, SortOrder.Value, UserId);
-            RedirectBack();
+			throw new Exception("Fix this");
+			//SexyUncached.Templates.DeleteContentGroupItems(ContentGroupID.Value, SortOrder.Value, UserId);
+			//RedirectBack();
         }
 
         protected void RedirectBack()

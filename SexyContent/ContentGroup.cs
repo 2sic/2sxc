@@ -17,6 +17,8 @@ namespace ToSic.SexyContent
 
 		public Template Template { get { return new Template(((IEntity)_contentGroupEntity.GetBestValue("Template"))); } }
 
+		public int ContentGroupId { get { return _contentGroupEntity.EntityId; } }
+
 		public List<IEntity> Content { get { return (List<IEntity>) _contentGroupEntity.GetBestValue("Content"); } }
 		public List<IEntity> Presentation { get { return (List<IEntity>) _contentGroupEntity.GetBestValue("Presentation"); } }
 		public List<IEntity> ListContent { get { return (List<IEntity>) _contentGroupEntity.GetBestValue("ListContent"); } }

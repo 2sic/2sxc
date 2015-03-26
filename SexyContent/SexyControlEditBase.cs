@@ -65,19 +65,32 @@ namespace ToSic.SexyContent
         }
 
 
-	    private List<ContentGroupItem> _items;
+		//private List<ContentGroupItem> _items;
 
-	    protected List<ContentGroupItem> Items
+		//protected List<ContentGroupItem> Items
+		//{
+		//	get
+		//	{
+		//		if (_items == null)
+		//		{
+		//			_items =
+		//				Sexy.Templates.GetContentGroupItems(Sexy.GetContentGroupIdFromModule(this.ModuleConfiguration.ModuleID))
+		//					.ToList();
+		//		}
+		//		return _items;
+		//	}
+		//}
+
+	    private ContentGroup _contentGroup;
+
+	    protected ContentGroup ContentGroup
 	    {
 		    get
 		    {
-			    if (_items == null)
-			    {
-				    _items =
-					    Sexy.Templates.GetContentGroupItems(Sexy.GetContentGroupIdFromModule(this.ModuleConfiguration.ModuleID))
-						    .ToList();
-			    }
-			    return _items;
+			    if (_contentGroup == null)
+				    _contentGroup =
+					    Sexy.ContentGroups.GetContentGroup(Sexy.GetContentGroupIdFromModule(this.ModuleConfiguration.ModuleID));
+			    return _contentGroup;
 		    }
 	    }
 
@@ -100,7 +113,7 @@ namespace ToSic.SexyContent
                     }
 
                     if (_template == null)
-                        _template = Sexy.GetTemplateForModule(this.ModuleConfiguration.ModuleID);
+                        _template = ContentGroup.Template;
                 }
 
                 return _template;
@@ -116,7 +129,7 @@ namespace ToSic.SexyContent
             var queryStringPairs = Request.QueryString.AllKeys.Select(key => string.Format("{0}/{1}", key, Request.QueryString[key]).ToLower()).ToArray();
 			var queryStringKeys = Request.QueryString.AllKeys.Select(k => k.ToLower()).ToArray();
 
-			foreach (var template in Sexy.Templates.GetAllTemplates().Where(t => t.AppID == AppId && !string.IsNullOrEmpty(t.ViewNameInUrl)))
+			foreach (var template in Sexy.Templates.GetAllTemplates().Where(t => !string.IsNullOrEmpty(t.ViewNameInUrl)))
 	        {
 			    var viewNameInUrlLowered = template.ViewNameInUrl.ToLower();
 				if (queryStringPairs.Contains(viewNameInUrlLowered))	// match view/details

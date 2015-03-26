@@ -32,6 +32,7 @@ namespace ToSic.SexyContent.DataSources
 					throw new Exception("Looking up ContentGroup failed because ListId is null. ModuleId is " + (ModuleId.HasValue ? ModuleId.ToString() : "null"));
 				if (_contentGroup == null)
 					_contentGroup = Sexy.ContentGroups.GetContentGroup(ListId.Value);
+				return _contentGroup;
 			}
 		}
 

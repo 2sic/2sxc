@@ -41,5 +41,11 @@ namespace ToSic.SexyContent
 			return new ContentGroup(dataSource.List.FirstOrDefault().Value);
 		}
 
+		public void UpdateContentGroup(int contentGroupId, int? templateId)
+		{
+			// ToDo: Should add ContentGroup if it does not exist?!
+			throw new Exception("Not implemented yet (code for changing the contentgroup)");
+		}
+
 	}
 }

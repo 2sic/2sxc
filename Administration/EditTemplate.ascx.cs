@@ -128,14 +128,14 @@ namespace ToSic.SexyContent
                 pnlListConfiguration.Visible = chkEnableList.Checked;
                 txtPublishStreams.Text = Template.StreamsToPublish;
                 chkPublishSource.Checked = Template.PublishData;
-	            ddlDataPipeline.SelectedValue = (Template.PipelineEntityID.HasValue ? Template.PipelineEntityID : 0).ToString();
+	            ddlDataPipeline.SelectedValue = (Template.Pipeline != null ? Template.Pipeline.EntityId : 0).ToString();
 	            txtViewNameInUrl.Text = Template.ViewNameInUrl;
 
                 // Set ContentType / Demo Entity Selectors
-                SetTemplateDefaultSelector(Template.TemplateID, ctrContentType);
-                SetTemplateDefaultSelector(Template.TemplateID, ctrPresentationType);
-                SetTemplateDefaultSelector(Template.TemplateID, ctrListContentType);
-                SetTemplateDefaultSelector(Template.TemplateID, ctrListPresentationType);
+                SetTemplateDefaultSelector(Template.TemplateId, ctrContentType);
+                SetTemplateDefaultSelector(Template.TemplateId, ctrPresentationType);
+                SetTemplateDefaultSelector(Template.TemplateId, ctrListContentType);
+                SetTemplateDefaultSelector(Template.TemplateId, ctrListPresentationType);
 
                 chkSeparateContentPresentation.Checked = pnlSeparateContentPresentation.Visible = ctrPresentationType._ContentTypeID > 0;
             }
@@ -165,68 +165,74 @@ namespace ToSic.SexyContent
         protected void btnUpdate_Click(object sender, EventArgs e)
         {
 
-            var attributeSetId = ctrContentType.ContentTypeID.HasValue && ctrContentType.ContentTypeID > 0 ? ctrContentType.ContentTypeID.Value : new int?();
+			// ToDo: Fix template update
+			throw new NotImplementedException("ToDo: Fix Template Update");
 
-            // Get a new template if the temlpate does not exist yet, else take existing
-            Template = ModeIsEdit ? Template : Sexy.Templates.GetNewTemplate(AppId.Value);
+			//var attributeSetId = ctrContentType.ContentTypeID.HasValue && ctrContentType.ContentTypeID > 0 ? ctrContentType.ContentTypeID.Value : new int?();
 
-            Template.PortalID = this.PortalId;
-                Template.AttributeSetID = attributeSetId;
-                Template.DemoEntityID = ctrContentType.DemoEntityID;
-                Template.Location = ddlTemplateLocations.SelectedValue;
-                Template.Type = ddlTemplateTypes.SelectedValue;
-				Template.PipelineEntityID = ddlDataPipeline.SelectedValue == "0" ? (int?)null : int.Parse(ddlDataPipeline.SelectedValue);
-				Template.ViewNameInUrl = txtViewNameInUrl.Text;
-                Template.SysModifiedBy = UserId;
-                Template.SysModified = DateTime.Now;
-            Template.Name = txtTemplateName.Text;
-                Template.Script = "";
-                Template.IsHidden = chkHidden.Checked;
-                Template.UseForList = chkEnableList.Checked;
-                Template.AppID = AppId.Value;
-            Template.PublishData = chkPublishSource.Checked;
-            Template.StreamsToPublish = txtPublishStreams.Text;
+			//// Get a new template if the temlpate does not exist yet, else take existing
+			//Template = ModeIsEdit ? Template : Sexy.Templates.GetNewTemplate(AppId.Value);
 
-            if (pnlSelectTemplateFile.Visible)
-                Template.Path = ddlTemplateFiles.SelectedValue;
-            else
-                SexyUncached.CreateTemplateFileIfNotExists(txtTemplateFileName.Text, Template, Server, LocalizeString("NewTemplateFile.DefaultText"));
+			//Template.PortalID = this.PortalId;
+			//	Template.AttributeSetID = attributeSetId;
+			//	Template.DemoEntityID = ctrContentType.DemoEntityID;
+			//	Template.Location = ddlTemplateLocations.SelectedValue;
+			//	Template.Type = ddlTemplateTypes.SelectedValue;
+			//	Template.PipelineEntityID = ddlDataPipeline.SelectedValue == "0" ? (int?)null : int.Parse(ddlDataPipeline.SelectedValue);
+			//	Template.ViewNameInUrl = txtViewNameInUrl.Text;
+			//	Template.SysModifiedBy = UserId;
+			//	Template.SysModified = DateTime.Now;
+			//Template.Name = txtTemplateName.Text;
+			//	Template.Script = "";
+			//	Template.IsHidden = chkHidden.Checked;
+			//	Template.UseForList = chkEnableList.Checked;
+			//	Template.AppID = AppId.Value;
+			//Template.PublishData = chkPublishSource.Checked;
+			//Template.StreamsToPublish = txtPublishStreams.Text;
 
-            if (ModeIsEdit)
-            {
-                SexyUncached.Templates.UpdateTemplate(Template);
-            }
-            else
-            {
-                Template.SysCreatedBy = UserId;
-                SexyUncached.Templates.AddTemplate(Template);
-            }
+			//if (pnlSelectTemplateFile.Visible)
+			//	Template.Path = ddlTemplateFiles.SelectedValue;
+			//else
+			//	SexyUncached.CreateTemplateFileIfNotExists(txtTemplateFileName.Text, Template, Server, LocalizeString("NewTemplateFile.DefaultText"));
 
-            if (!chkSeparateContentPresentation.Checked)
-                ctrPresentationType.ContentTypeID = new int?();
+			//if (ModeIsEdit)
+			//{
+			//	SexyUncached.Templates.UpdateTemplate(Template);
+			//}
+			//else
+			//{
+			//	Template.SysCreatedBy = UserId;
+			//	SexyUncached.Templates.AddTemplate(Template);
+			//}
 
-            // Add template configuration entities for presentation, list header content type, list content, etc.    
-            SexyUncached.CreateOrUpdateTemplateDefault(Template.TemplateID, ContentGroupItemType.Presentation.ToString("F"), ctrPresentationType.ContentTypeID, ctrPresentationType.DemoEntityID);
-            SexyUncached.CreateOrUpdateTemplateDefault(Template.TemplateID, ContentGroupItemType.ListContent.ToString("F"), ctrListContentType.ContentTypeID, ctrListContentType.DemoEntityID);
-            SexyUncached.CreateOrUpdateTemplateDefault(Template.TemplateID, ContentGroupItemType.ListPresentation.ToString("F"), ctrListPresentationType.ContentTypeID, ctrListPresentationType.DemoEntityID);
+			//if (!chkSeparateContentPresentation.Checked)
+			//	ctrPresentationType.ContentTypeID = new int?();
 
-            // Redirect to the manage templates control
-            string RedirectUrl = UrlUtils.PopUpUrl(DotNetNuke.Common.Globals.NavigateURL(SexyContent.ControlKeys.ManageTemplates, "mid", ModuleId.ToString(), SexyContent.AppIDString, AppId.ToString()), this, PortalSettings, false, true);
-            Response.Redirect(RedirectUrl);
+			//// Add template configuration entities for presentation, list header content type, list content, etc.    
+			//SexyUncached.CreateOrUpdateTemplateDefault(Template.TemplateID, ContentGroupItemType.Presentation.ToString("F"), ctrPresentationType.ContentTypeID, ctrPresentationType.DemoEntityID);
+			//SexyUncached.CreateOrUpdateTemplateDefault(Template.TemplateID, ContentGroupItemType.ListContent.ToString("F"), ctrListContentType.ContentTypeID, ctrListContentType.DemoEntityID);
+			//SexyUncached.CreateOrUpdateTemplateDefault(Template.TemplateID, ContentGroupItemType.ListPresentation.ToString("F"), ctrListPresentationType.ContentTypeID, ctrListPresentationType.DemoEntityID);
+
+			//// Redirect to the manage templates control
+			//string RedirectUrl = UrlUtils.PopUpUrl(DotNetNuke.Common.Globals.NavigateURL(SexyContent.ControlKeys.ManageTemplates, "mid", ModuleId.ToString(), SexyContent.AppIDString, AppId.ToString()), this, PortalSettings, false, true);
+			//Response.Redirect(RedirectUrl);
         }
 
         protected void SetTemplateDefaultSelector(int TemplateID, ContentTypeAndDemoSelector Selector)
         {
-            var ItemType = Selector.ItemType;
-            var TemplateDefault = Sexy.GetTemplateDefault(TemplateID, ItemType);
+			// ToDo: Fix template default selector...
+			throw new NotImplementedException("Fix Template default selector!");
 
-            if (TemplateDefault != null)
-            {
-                Selector.ContentTypeID = TemplateDefault.ContentTypeID;
-                Selector.DemoEntityID = TemplateDefault.DemoEntityID;
-            }
+			//var ItemType = Selector.ItemType;
+			//var TemplateDefault = Sexy.GetTemplateDefault(TemplateID, ItemType);
 
-            Selector.Enabled = !Sexy.IsTemplateDefaultInUse(TemplateID, ItemType);
+			//if (TemplateDefault != null)
+			//{
+			//	Selector.ContentTypeID = TemplateDefault.ContentTypeID;
+			//	Selector.DemoEntityID = TemplateDefault.DemoEntityID;
+			//}
+
+			//Selector.Enabled = !Sexy.IsTemplateDefaultInUse(TemplateID, ItemType);
         }
 
         protected void btnCreateTemplateFile_Click(object sender, EventArgs e)

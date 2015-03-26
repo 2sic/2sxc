@@ -46,9 +46,12 @@ namespace ToSic.SexyContent
         /// <param name="e"></param>
         protected void grdTemplates_DeleteCommand(object sender, Telerik.Web.UI.GridCommandEventArgs e)
         {
-            int TemplateID = Convert.ToInt32(e.Item.OwnerTableView.DataKeyValues[e.Item.ItemIndex][SexyContent.TemplateID]);
-            SexyUncached.Templates.DeleteTemplate(TemplateID, UserId);
-            BindGrdTemplates();
+			// ToDo: Implement deleting templates
+			throw new NotImplementedException("ToDo: Delete template");
+
+			//int TemplateID = Convert.ToInt32(e.Item.OwnerTableView.DataKeyValues[e.Item.ItemIndex][SexyContent.TemplateID]);
+			//SexyUncached.Templates.DeleteTemplate(TemplateID, UserId);
+			//BindGrdTemplates();
         }
 
         /// <summary>
@@ -79,18 +82,18 @@ namespace ToSic.SexyContent
         private void BindGrdTemplates()
         {
             var AttributeSetList = Sexy.GetAvailableAttributeSets(SexyContent.AttributeSetScope).ToList();
-            var TemplateList = Sexy.GetTemplates(PortalId).ToList();
+            var TemplateList = Sexy.Templates.GetAllTemplates();
             var Templates = from c in  TemplateList
-                            join a in AttributeSetList on c.AttributeSetID equals a.AttributeSetId into JoinedList
+                            join a in AttributeSetList on c.ContentTypeStaticName equals a.StaticName into JoinedList
                             from a in JoinedList.DefaultIfEmpty()
                             select new
                             {
-                                TemplateID = c.TemplateID,
+                                TemplateID = c.TemplateId,
                                 TemplateName = c.Name,
-                                AttributeSetID = c.AttributeSetID,
+                                ContentTypeStaticName = c.ContentTypeStaticName,
                                 AttributeSetName = a != null ? a.Name : "No Content Type",
                                 TemplatePath = c.Path,
-                                DemoEntityID = c.DemoEntityID,
+                                DemoEntityID = c.ContentDemoEntity.EntityId,
                                 IsHidden = c.IsHidden
                             };
 

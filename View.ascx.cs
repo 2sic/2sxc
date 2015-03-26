@@ -41,7 +41,7 @@ namespace ToSic.SexyContent
 
                 if (!isSharedModule)
                 {
-                    var noTemplatesYet = !Sexy.GetVisibleTemplates(PortalId).Any();
+                    var noTemplatesYet = !Sexy.Templates.GetVisibleTemplates().Any();
 
                     // If there are no templates configured - show "getting started" frame
                     if (noTemplatesYet && IsEditable && UserInfo.IsInRole(PortalSettings.AdministratorRoleName))
@@ -62,13 +62,13 @@ namespace ToSic.SexyContent
 
                 if (AppId.HasValue)
                 {
-                    if (Items.Any() && Template != null)
+                    if (ContentGroup.Content.Any() && Template != null)
                         ProcessView(phOutput, pnlError, pnlMessage);
                     else if(!IsContentApp && UserMayEditThisModule) // Select first available template automatically if it's not set yet - then refresh page
                     {
                         var templates = Sexy.GetAvailableTemplatesForSelector(ModuleConfiguration).ToList();
                         if (templates.Any())
-                            SexyUncached.UpdateTemplateForGroup(Sexy.GetContentGroupIdFromModule(ModuleConfiguration.ModuleID), templates.First().TemplateID, UserInfo.UserID);
+                            Sexy.ContentGroups.UpdateContentGroup(Sexy.GetContentGroupIdFromModule(ModuleConfiguration.ModuleID), templates.First().TemplateId);
                         Response.Redirect(Request.RawUrl);
                     }
                 }

@@ -34,13 +34,7 @@ namespace ToSic.SexyContent
                     {
                         p.TemplateId,
                         p.ContentTypeStaticName,
-                        p.Name,
-                        TemplateDefaults = Sexy.GetTemplateDefaults(p.TemplateId).Select(td => new
-                        {
-                            td.ContentTypeID,
-                            td.DemoEntityID,
-                            ItemType = td.ItemType.ToString("F")
-                        })
+                        p.Name
                     }),
                     Entities = entities.List.Where(en => en.Value.Type.AttributeSetId == c.AttributeSetId).Select(en => Sexy.GetDictionaryFromEntity(en.Value, language))
                 }),

@@ -40,7 +40,7 @@ namespace ToSic.SexyContent
 					ClientResourceManager.RegisterScript(this.Page, "~/DesktopModules/ToSIC_SexyContent/Js/ViewEdit.js", 82);
 					ClientResourceManager.RegisterScript(this.Page, "~/DesktopModules/ToSIC_SexyContent/Js/2sxc.DnnActionMenuMapper.js", 83);
 
-					var hasContent = AppId.HasValue && Template != null && Items.Any(p => p.EntityID.HasValue);
+					var hasContent = AppId.HasValue && Template != null && ContentGroup.Content.Any(p => p != null);
 					var templateChooserVisible = Settings.ContainsKey(SexyContent.SettingsShowTemplateChooser) ?
 						Boolean.Parse(Settings[SexyContent.SettingsShowTemplateChooser].ToString())
 						: !hasContent;
@@ -55,9 +55,9 @@ namespace ToSic.SexyContent
 							hasContent = hasContent,
 							isContentApp = IsContentApp,
 							appId = AppId,
-							isList = AppId.HasValue && Items.Count > 1,
-							templateId = Template != null ? Template.TemplateID : new int?(),
-							contentTypeId = Template != null ? Template.AttributeSetID : 0,
+							isList = AppId.HasValue && ContentGroup.Content.Count > 1,
+							templateId = Template != null ? Template.TemplateId : new int?(),
+							contentTypeId = Template != null ? Template.ContentTypeStaticName : "",
 							config = new
 							{
 								portalId = PortalId,
@@ -97,15 +97,15 @@ namespace ToSic.SexyContent
 				return;
 			}
 
-			if (Template.AttributeSetID.HasValue && DataSource.GetCache(ZoneId.Value, AppId.Value).GetContentType(Template.AttributeSetID.Value) == null)
+			if (Template.ContentTypeStaticName != "" && DataSource.GetCache(ZoneId.Value, AppId.Value).GetContentType(Template.ContentTypeStaticName) == null)
 			{
 				ShowError("The contents of this module cannot be displayed because it's located in another VDB.", pnlError);
 				return;
 			}
 
-			if (Template.AttributeSetID.HasValue && !Template.DemoEntityID.HasValue && Items.All(e => !e.EntityID.HasValue))
+			if (Template.ContentTypeStaticName != "" && Template.ContentDemoEntity == null && ContentGroup.Content.All(e => e == null))
 			{
-				var toolbar = IsEditable ? "<ul class='sc-menu' data-toolbar='" + Newtonsoft.Json.JsonConvert.SerializeObject(new { sortOrder = Items.First().SortOrder, useModuleList = true, action = "edit" }) + "'></ul>" : "";
+				var toolbar = IsEditable ? "<ul class='sc-menu' data-toolbar='" + Newtonsoft.Json.JsonConvert.SerializeObject(new { sortOrder = 0, useModuleList = true, action = "edit" }) + "'></ul>" : "";
 				ShowMessage(LocalizeString("NoDemoItem.Text") + " " + toolbar, pnlMessage);
 				return;
 			}
@@ -225,7 +225,7 @@ namespace ToSic.SexyContent
 									ModuleActionType.ContentOptions, "editlist", "edit.gif",
 									EditUrl(this.TabId, SexyContent.ControlKeys.EditList, false, "mid",
 										this.ModuleId.ToString(), SexyContent.ContentGroupIDString,
-										Items.First().ContentGroupID.ToString()), false,
+										ContentGroup.ContentGroupId.ToString()), false,
 									SecurityAccessLevel.Edit, true, false);
 							}
 
@@ -244,7 +244,7 @@ namespace ToSic.SexyContent
 							if (ZoneId.HasValue && AppId.HasValue && Template != null)
 							{
 								// Edit Template Button
-								Actions.Add(GetNextActionID(), LocalizeString("ActionEditTemplateFile.Text"), ModuleActionType.EditContent, "templatehelp", "edit.gif", EditUrl(this.TabId, SexyContent.ControlKeys.EditTemplateFile, false, "mid", this.ModuleId.ToString(), "TemplateID", Template.TemplateID.ToString()), false, SecurityAccessLevel.Admin, true, true);
+								Actions.Add(GetNextActionID(), LocalizeString("ActionEditTemplateFile.Text"), ModuleActionType.EditContent, "templatehelp", "edit.gif", EditUrl(this.TabId, SexyContent.ControlKeys.EditTemplateFile, false, "mid", this.ModuleId.ToString(), "TemplateID", Template.TemplateId.ToString()), false, SecurityAccessLevel.Admin, true, true);
 							}
 
 							// Administrator functions

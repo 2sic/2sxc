@@ -134,31 +134,29 @@ namespace ToSic.SexyContent.ImportExport
             // Go through each Template
             foreach (string TemplateID in TemplateIDs)
             {
-                int ID = int.Parse(TemplateID);
-                Template t = Sexy.Templates.GetTemplate(ID);
-                Entity DemoEntity = t.DemoEntityID.HasValue ? Sexy.ContentContext.GetEntity(t.DemoEntityID.Value) : null;
-				var pipelineEntity = t.PipelineEntityID.HasValue ? Sexy.ContentContext.GetEntity(t.PipelineEntityID.Value) : null;
+                var id = int.Parse(TemplateID);
+                var t = Sexy.Templates.GetTemplate(id);
+                var demoEntity = t.ContentDemoEntity;
+				var pipelineEntity = t.Pipeline;
 
-                XElement Template = new XElement("Template",
+                var template = new XElement("Template",
                     new XAttribute("Name", t.Name),
                     new XAttribute("Path", t.Path),
                     new XAttribute("Location", t.Location),
-                    new XAttribute("IsFile", t.IsFile.ToString()),
-                    new XAttribute("Script", t.Script),
                     new XAttribute("Type", t.Type),
-                    new XAttribute("AttributeSetStaticName", t.AttributeSetID.HasValue ? Sexy.ContentContext.GetAttributeSet(t.AttributeSetID.Value).StaticName : ""),
+                    new XAttribute("AttributeSetStaticName", t.ContentTypeStaticName),
                     new XAttribute("IsHidden", t.IsHidden.ToString()),
                     new XAttribute("UseForList", t.UseForList.ToString()),
-                    new XAttribute("DemoEntityGUID", DemoEntity != null ? DemoEntity.EntityGUID.ToString() : ""),
+                    new XAttribute("DemoEntityGUID", demoEntity != null ? demoEntity.EntityGuid.ToString() : ""),
                     new XAttribute("PublishData", t.PublishData),
                     new XAttribute("StreamsToPublish", t.StreamsToPublish),
 					new XAttribute("ViewNameInUrl", t.ViewNameInUrl),
-					new XAttribute("PipelineEntityGUID", pipelineEntity != null ? pipelineEntity.EntityGUID.ToString() : ""),
-                    (from c in Sexy.ContentContext.GetEntities(SexyContent.AssignmentObjectTypeIDSexyContentTemplate, t.TemplateID, null, null)
+					new XAttribute("PipelineEntityGUID", pipelineEntity != null ? pipelineEntity.EntityGuid.ToString() : ""),
+                    (from c in Sexy.ContentContext.GetEntities(SexyContent.AssignmentObjectTypeIDSexyContentTemplate, t.TemplateId, null, null)
                      select GetEntityXElement(c))
                 );
 
-                Templates.Add(Template);
+                Templates.Add(template);
             }
 
             #endregion
