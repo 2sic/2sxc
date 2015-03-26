@@ -45,7 +45,7 @@ namespace ToSic.Eav.ManagementUI
                 DimensionId = (DimensionIds != null && DimensionIds.Any()) ? DimensionIds.First() : new int?(),
                 AppId = AppId,
                 ZoneId = ZoneId,
-                SelectedEntities = RelatedEntities != null ? RelatedEntities.EntityIds : new List<int>(),
+                SelectedEntities = RelatedEntities != null ? RelatedEntities.EntityIds : new List<int?>(),
                 AttributeSetId = ContentType == null ? new int?() : ContentType.AttributeSetId
 		    };
             hfConfiguration.Value = new JavaScriptSerializer().Serialize(configuration);
