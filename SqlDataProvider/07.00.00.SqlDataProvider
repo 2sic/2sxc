@@ -1,0 +1,66 @@
+-- make sure sql rolls back automatically in case of error.
+SET XACT_ABORT ON
+
+BEGIN TRANSACTION SexyContentUpdate;
+
+EXEC ToSIC_EAV_ChangeLogAdd 'System'
+
+-- Fix SortOrder for rows in ToSIC_EAV_EntityRelationships
+DECLARE @AttributeId INT
+DECLARE @ParentEntityId INT
+DECLARE cur CURSOR LOCAL FOR
+    SELECT [AttributeID], [ParentEntityID] FROM ToSIC_EAV_EntityRelationships GROUP BY [AttributeID], [ParentEntityID]
+
+OPEN cur
+
+FETCH NEXT FROM cur INTO @AttributeId, @ParentEntityId
+
+WHILE @@FETCH_STATUS = 0 BEGIN
+
+    -- Go through each AttributeId | ParentEntityId combination and correct the sortorder values
+	WITH TableWithFixedSortOrder AS (
+		SELECT
+			[AttributeId],
+			[ParentEntityID],
+			[ChildEntityID],
+			[SortOrder],
+			(ROW_NUMBER() over (ORDER BY SortOrder)) - 1 AS NewSortOrder
+			FROM ToSIC_EAV_EntityRelationships
+			WHERE [AttributeID] = @AttributeId AND [ParentEntityID] = @ParentEntityId
+	)
+	-- Update Relationships table
+	UPDATE	ToSIC_EAV_EntityRelationships
+	SET		SortOrder = TableWithFixedSortOrder.NewSortOrder
+	FROM	ToSIC_EAV_EntityRelationships INNER JOIN TableWithFixedSortOrder
+		AS TableWithFixedSortOrder
+		ON ToSIC_EAV_EntityRelationships.AttributeID = TableWithFixedSortOrder.AttributeID AND
+		ToSIC_EAV_EntityRelationships.ParentEntityID = TableWithFixedSortOrder.ParentEntityID AND 
+		ToSIC_EAV_EntityRelationships.ChildEntityID = TableWithFixedSortOrder.ChildEntityID
+	WHERE ToSIC_EAV_EntityRelationships.SortOrder <> TableWithFixedSortOrder.NewSortOrder
+
+    FETCH NEXT FROM cur INTO @AttributeId, @ParentEntityId
+END
+
+CLOSE cur
+DEALLOCATE cur
+
+
+-- Remove primary key temporarily
+ALTER TABLE ToSIC_EAV_EntityRelationships
+	DROP CONSTRAINT PK_ToSIC_EAV_EntityRelationships
+
+-- Change ChildEntityID to not null
+ALTER TABLE ToSIC_EAV_EntityRelationships ALTER COLUMN [ChildEntityID] INTEGER NULL
+
+-- Set primary key to AttributeID, ParentEntityID, SortOrder
+ALTER TABLE ToSIC_EAV_EntityRelationships ADD CONSTRAINT
+	PK_ToSIC_EAV_EntityRelationships PRIMARY KEY CLUSTERED 
+	(
+	AttributeID,
+	ParentEntityID,
+	SortOrder
+	)
+
+-- Commit the transaction
+COMMIT TRANSACTION SexyContentUpdate;
+--ROLLBACK TRANSACTION SexyContentUpdate;
