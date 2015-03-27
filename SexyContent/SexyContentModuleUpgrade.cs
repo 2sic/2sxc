@@ -113,7 +113,7 @@ namespace ToSic.SexyContent
 			if (!success)
 			{
 				var messages = String.Join(", ", xmlImport.ImportLog.Select(p => p.Message).ToArray());
-				throw new Exception("The 2sxc module upgrade failed: " + messages);
+				throw new Exception("The 2sxc module upgrade to 07.00.00 failed: " + messages);
 			}
 
 			// 2. Move all data to the new ContentTypes
