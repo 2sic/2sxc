@@ -5,7 +5,7 @@
 		<Dimensions />
 	</Header>
 	<AttributeSets>
-		<AttributeSet StaticName="d3ca84e3-eeb4-470f-9097-cda40c04dce1" Name="2SexyContent-ContentGroup" Description="Contains all content groups (lists) from 2sxc" Scope="2SexyContent-System" AlwaysShareConfiguration="true">
+		<AttributeSet StaticName="2SexyContent-ContentGroup" Name="2SexyContent-ContentGroup" Description="Contains all content groups (lists) from 2sxc" Scope="2SexyContent-System" AlwaysShareConfiguration="true">
 			<Attributes>
 				<Attribute StaticName="Template" Type="Entity" IsTitle="true">
 					<Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@All" AttributeSetName="@All" EntityGUID="ae4b5b42-924f-48c9-92a6-af60cfe1fba4">
@@ -34,7 +34,7 @@
 				</Attribute>
 			</Attributes>
 		</AttributeSet>
-		<AttributeSet StaticName="7b76750d-afdc-4937-ad34-a415a19c6409" Name="2SexyContent-Template" Description="Contains all registered 2sxc templates" Scope="2SexyContent-System" AlwaysShareConfiguration="true">
+		<AttributeSet StaticName="2SexyContent-Template" Name="2SexyContent-Template" Description="Contains all registered 2sxc templates" Scope="2SexyContent-System" AlwaysShareConfiguration="true">
 			<Attributes>
 				<Attribute StaticName="Name" Type="String" IsTitle="true">
 					<Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@All" AttributeSetName="@All" EntityGUID="06c96a88-1fe5-4bcf-a88c-26e26f005ca0">
@@ -151,5 +151,4 @@
 	</AttributeSets>
 	<Entities />
 	<Templates />
-	<PortalFiles />
 </SexyContent>

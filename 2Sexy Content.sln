@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "2Sexy Content Razor", "2Sexy Content Razor\2Sexy Content Razor.csproj", "{78A558AF-F274-4E3C-95FE-8DE9226E0EBC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "2Sexy Content", "2Sexy Content.csproj", "{D4250011-B9BE-4326-9736-4F0122C79802}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "2Sexy Content Test", "2Sexy Content Testing\2Sexy Content Test\2Sexy Content Test.csproj", "{1368A390-6FB3-4C24-9C67-FC78D75A907F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{D4250011-B9BE-4326-9736-4F0122C79802}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4250011-B9BE-4326-9736-4F0122C79802}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4250011-B9BE-4326-9736-4F0122C79802}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1368A390-6FB3-4C24-9C67-FC78D75A907F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1368A390-6FB3-4C24-9C67-FC78D75A907F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1368A390-6FB3-4C24-9C67-FC78D75A907F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1368A390-6FB3-4C24-9C67-FC78D75A907F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

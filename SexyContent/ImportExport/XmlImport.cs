@@ -309,7 +309,7 @@ namespace ToSic.SexyContent.ImportExport
                         Description = attributeSet.Attribute("Description").Value,
                         Attributes = attributes,
                         Scope = attributeSet.Attributes("Scope").Any() ? attributeSet.Attribute("Scope").Value : SexyContent.AttributeSetScope,
-						AlwaysShareConfiguration = AllowSystemChanges && attributeSet.Attributes("AlwaysShareConfiguration").Any() && Boolean.Parse(attributeSet.Attribute("Scope").Value),
+						AlwaysShareConfiguration = AllowSystemChanges && attributeSet.Attributes("AlwaysShareConfiguration").Any() && Boolean.Parse(attributeSet.Attribute("AlwaysShareConfiguration").Value),
                         TitleAttribute = titleAttribute
                     });
             }
