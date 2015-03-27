@@ -84,7 +84,7 @@ namespace ToSic.SexyContent.ImportExport
                                 foreach (var xmlFileName in Directory.GetFiles(appDirectory, "*.xml"))
                                 {
                                     var fileContents = File.ReadAllText(Path.Combine(appDirectory, xmlFileName));
-                                    var import = new XmlImport();
+									var import = new XmlImport(PortalSettings.Current.DefaultLanguage, PortalSettings.Current.UserInfo.Username);
 
                                     if (isAppImport)
                                     {

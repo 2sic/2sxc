@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Web.Client.ClientResourceManagement;
 using ToSic.Eav;
+using ToSic.SexyContent.ImportExport;
 
 namespace ToSic.SexyContent
 {
@@ -20,6 +22,9 @@ namespace ToSic.SexyContent
 				case "06.06.00":
 				case "06.06.04":
 					EnsurePipelineDesignerAttributeSets();
+					break;
+				case "07.00.00":
+					Version070000();
 					break;
 			}
 
@@ -96,21 +101,24 @@ namespace ToSic.SexyContent
 		}
 
 		/// <summary>
-		/// Add ContentTypes for ContentGroup
+		/// Add ContentTypes for ContentGroup and move all 2sxc data to EAV
 		/// </summary>
-		private static void AddContentGroupAndTemplateContentType()
+		private static void Version070000()
 		{
 			// 1. Import new ContentTypes for ContentGroups and Templates
+			var xmlToImport= File.ReadAllText("~/DesktopModules/ToSIC_SexyContent/Upgrade/07.00.00.xml");
+			var xmlImport = new XmlImport("en-US", "System-ModuleUpgrade-070000", true);
+			var success = xmlImport.ImportXml(DataSource.DefaultZoneId, DataSource.MetaDataAppId, xmlToImport);
 
-			// Set AlwaysShareConfiguration to true
-			var metaDataCtx = EavContext.Instance(DataSource.DefaultZoneId, DataSource.MetaDataAppId);
-			metaDataCtx.GetAttributeSet("2SexyContent-ContentGroup").AlwaysShareConfiguration = true;
-			metaDataCtx.SaveChanges();
-
-			// ToDo: Ensure Content Type sharing
-
+			if (!success)
+			{
+				var messages = String.Join(", ", xmlImport.ImportLog.Select(p => p.Message).ToArray());
+				throw new Exception("The 2sxc module upgrade failed: " + messages);
+			}
 
 			// 2. Move all data to the new ContentTypes
+
+
 			// 3. Append new IDs to old data (ensures that we can fix things that went wrong after upgrading the module)
 		}
 

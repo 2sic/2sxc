@@ -40,7 +40,7 @@ namespace ToSic.SexyContent
             else
             {
                 string Xml = new StreamReader(importStream).ReadToEnd();
-                var import = new XmlImport();
+                var import = new XmlImport(PortalSettings.Current.DefaultLanguage, PortalSettings.Current.UserInfo.Username);
                 success = import.ImportXml(ZoneId.Value, AppId.Value, Xml);
                 messages = import.ImportLog;
             }
