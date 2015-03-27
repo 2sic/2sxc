@@ -106,6 +106,7 @@ namespace ToSic.SexyContent
         public const string AttributeSetScope = "2SexyContent";
         public const string AttributeSetScopeApps = "2SexyContent-App";
         public const string AttributeSetStaticNameTemplateMetaData = "2SexyContent-Template-Metadata";
+		[Obsolete("Do not use this anymore - nothing should be assigned to this anymore")]
         public const string AttributeSetStaticNameTemplateContentTypes = "2SexyContent-Template-ContentTypes";
         public const string AttributeSetStaticNameApps = "2SexyContent-App";
         public const string AttributeSetStaticNameAppResources = "App-Resources";
@@ -151,7 +152,8 @@ namespace ToSic.SexyContent
 
         /// <summary>
         /// Returns the AssignmentObjectTypeID for 2sxc Templates
-        /// </summary>        
+        /// </summary>    
+        [Obsolete("Do not use this anymore")]    
         public static int AssignmentObjectTypeIDSexyContentTemplate
         {
             get

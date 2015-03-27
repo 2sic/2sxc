@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Web;
+using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Web.Client.ClientResourceManagement;
 using ToSic.Eav;
 using ToSic.SexyContent.ImportExport;
+using System.Data;
 
 namespace ToSic.SexyContent
 {
@@ -112,14 +115,69 @@ namespace ToSic.SexyContent
 
 			if (!success)
 			{
-				var messages = String.Join(", ", xmlImport.ImportLog.Select(p => p.Message).ToArray());
+				var messages = String.Join("\r\n- ", xmlImport.ImportLog.Select(p => p.Message).ToArray());
 				throw new Exception("The 2sxc module upgrade to 07.00.00 failed: " + messages);
 			}
 
-			// 2. Move all data to the new ContentTypes
+			// 2. Move all existing data to the new ContentTypes - Append new IDs to old data (ensures that we can fix things that went wrong after upgrading the module)
+			var templates = new DataTable();
+			const string sqlCommand = @"SELECT        ToSIC_SexyContent_Templates.TemplateID, ToSIC_SexyContent_Templates.PortalID, ToSIC_SexyContent_Templates.Name, ToSIC_SexyContent_Templates.Path, 
+                         ToSIC_SexyContent_Templates.AttributeSetID, ToSIC_SexyContent_Templates.DemoEntityID, ToSIC_SexyContent_Templates.Type, 
+                         ToSIC_SexyContent_Templates.IsHidden, ToSIC_SexyContent_Templates.Location, ToSIC_SexyContent_Templates.UseForList, 
+                         ToSIC_SexyContent_Templates.AppID, ToSIC_SexyContent_Templates.PublishData, ToSIC_SexyContent_Templates.StreamsToPublish, 
+                         ToSIC_SexyContent_Templates.PipelineEntityID, ToSIC_SexyContent_Templates.ViewNameInUrl, ToSIC_EAV_Apps.ZoneID
+FROM            ToSIC_SexyContent_Templates INNER JOIN
+                         ToSIC_EAV_Apps ON ToSIC_SexyContent_Templates.AppID = ToSIC_EAV_Apps.AppID
+WHERE        (ToSIC_SexyContent_Templates.SysDeleted IS NULL)";
+
+			var adapter = new SqlDataAdapter(sqlCommand, Config.GetConnectionString());
+			adapter.Fill(templates);
+
+			foreach (DataRow template in templates.Rows)
+			{
+				var templateId = (int) template["TemplateID"];
+				var zoneId = (int) template["ZoneID"];
+				var appId = (int) template["AppID"];
+
+				var templateDefaults = DataSource.GetMetaDataSource(zoneId, appId).GetAssignedEntities(SexyContent.AssignmentObjectTypeIDSexyContentTemplate, templateId, SexyContent.AttributeSetStaticNameTemplateContentTypes).ToList();
+				var presentationDefault = templateDefaults.FirstOrDefault(t => (string) t.Attributes["ItemType"][0] == "Presentation");
+				var listContentDefault = templateDefaults.FirstOrDefault(t => (string) t.Attributes["ItemType"][0] == "ListContent");
+				var listPresentationDefault = templateDefaults.FirstOrDefault(t => (string) t.Attributes["ItemType"][0] == "ListPresentation");
 
 
-			// 3. Append new IDs to old data (ensures that we can fix things that went wrong after upgrading the module)
+				var tempTemplate = new
+				{
+					TemplateID = templateId,
+					Name = (string)template["Name"],
+					Path = (string)template["Path"],
+					
+					ContentTypeId = (int?)template["AttributeSetID"],
+					ContentDemoEntityId = (int?)template["DemoEntityID"],
+					PresentationTypeId = presentationDefault != null ? presentationDefault.GetBestValue("ContentTypeID") : new int?(),
+					PresentationDemoEntityId = presentationDefault != null ? presentationDefault.GetBestValue("DemoEntityID") : new int?(),
+
+					//ListContentTypeId = listContentDefault != null && listContentDefault.Attributes.ContainsKey("ContentTypeID") && listContentDefault.Attributes["ContentTypeID"][0] != null && (decimal)listContentDefault.Attributes["ContentTypeID"][0] != 0 ? Convert.ToInt32((decimal)listContentDefault.Attributes["ContentTypeID"][0]) : new int?(),
+					//ListContentDemoEntityId = listContentDefault != null && listContentDefault.Attributes.ContainsKey("DemoEntityID") && listContentDefault.Attributes["DemoEntityID"][0] != null && (decimal)listContentDefault.Attributes["DemoEntityID"][0] != 0 ? Convert.ToInt32((decimal)listContentDefault.Attributes["DemoEntityID"][0]) : new int?(),
+
+					//ListPresentationTypeId = listPresentationDefault != null && listPresentationDefault.Attributes.ContainsKey("ContentTypeID") && listPresentationDefault.Attributes["ContentTypeID"][0] != null && (decimal)listPresentationDefault.Attributes["ContentTypeID"][0] != 0 ? Convert.ToInt32((decimal)listPresentationDefault.Attributes["ContentTypeID"][0]) : new int?(),
+					//ListPresentationDemoEntityId = listPresentationDefault != null && listPresentationDefault.Attributes.ContainsKey("DemoEntityID") && listPresentationDefault.Attributes["DemoEntityID"][0] != null && (decimal)listPresentationDefault.Attributes["DemoEntityID"][0] != 0 ? Convert.ToInt32((decimal)listPresentationDefault.Attributes["DemoEntityID"][0]) : new int?(),
+					
+					Type = (string)template["Type"],
+					IsHidden = (bool)template["IsHidden"],
+					Location = (string)template["Location"],
+					UseForList = (bool)template["UseForList"],
+					AppId = appId,
+					PublishData = (bool)template["PublishData"],
+					StreamsToPublish = (string)template["StreamsToPublish"],
+					PipelineEntityID = (int?)template["PipelineEntityID"],
+					ViewNameInUrl = (string)template["ViewNameInUrl"],
+					ZoneId = zoneId
+				};
+
+			}
+
+			// 4. Use new GUID ContentGroup-IDs on module settings
+
 		}
 
 		/// <summary>

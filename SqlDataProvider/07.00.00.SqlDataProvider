@@ -61,6 +61,69 @@ ALTER TABLE ToSIC_EAV_EntityRelationships ADD CONSTRAINT
 	SortOrder
 	)
 
+
+
+
+
+
+
+
+-- The next block transfers DemoEntityID and ContentTypeID information from assigned entities to templates directly
+EXEC('
+CREATE FUNCTION Temp_ToSIC_SexyContent_TemplateMove
+(	
+	@itemTypeFilter nvarchar(max)
+)
+RETURNS TABLE 
+AS
+RETURN 
+(
+	SELECT        ToSIC_EAV_Values_1.Value AS ItemType, CAST(ContentTypeIDValues.Value AS INT) AS ContentTypeID, CAST(DemoEntityIDValue.Value AS INT) AS DemoEntityID, 
+                                ContentTypeIDValues.EntityID, ToSIC_EAV_Entities_1.KeyNumber AS TemplateID
+    FROM            ToSIC_EAV_Attributes AS ContentTypeIDAttribute INNER JOIN
+                                ToSIC_EAV_Values AS ContentTypeIDValues ON ContentTypeIDAttribute.AttributeID = ContentTypeIDValues.AttributeID RIGHT OUTER JOIN
+                                ToSIC_EAV_Values AS DemoEntityIDValue INNER JOIN
+                                ToSIC_EAV_Attributes AS DemoEntityIDAttribute ON DemoEntityIDValue.AttributeID = DemoEntityIDAttribute.AttributeID RIGHT OUTER JOIN
+                                ToSIC_EAV_AssignmentObjectTypes AS ToSIC_EAV_AssignmentObjectTypes_1 INNER JOIN
+                                ToSIC_EAV_Entities AS ToSIC_EAV_Entities_1 ON 
+                                ToSIC_EAV_AssignmentObjectTypes_1.AssignmentObjectTypeID = ToSIC_EAV_Entities_1.AssignmentObjectTypeID INNER JOIN
+                                ToSIC_EAV_AttributeSets AS ToSIC_EAV_AttributeSets_1 ON 
+                                ToSIC_EAV_Entities_1.AttributeSetID = ToSIC_EAV_AttributeSets_1.AttributeSetID INNER JOIN
+                                ToSIC_EAV_Values AS ToSIC_EAV_Values_1 ON ToSIC_EAV_Entities_1.EntityID = ToSIC_EAV_Values_1.EntityID INNER JOIN
+                                ToSIC_EAV_Attributes AS ToSIC_EAV_Attributes_1 ON ToSIC_EAV_Values_1.AttributeID = ToSIC_EAV_Attributes_1.AttributeID ON 
+                                DemoEntityIDValue.EntityID = ToSIC_EAV_Values_1.EntityID ON ContentTypeIDValues.EntityID = ToSIC_EAV_Values_1.EntityID
+    WHERE        (ToSIC_EAV_AssignmentObjectTypes_1.Name = N''2SexyContent-Template'') AND 
+                                (ToSIC_EAV_AttributeSets_1.StaticName = N''2SexyContent-Template-ContentTypes'') AND (ToSIC_EAV_Attributes_1.StaticName = N''ItemType'') AND 
+                                (ContentTypeIDAttribute.StaticName = N''ContentTypeID'') AND (DemoEntityIDAttribute.StaticName = N''DemoEntityID'')
+																						AND (ToSIC_EAV_Values_1.Value = @itemTypeFilter)
+																												 
+)')
+
+EXEC('
+ALTER TABLE ToSIC_SexyContent_Templates ADD Temp_PresentationTypeID INT NOT NULL DEFAULT 0
+ALTER TABLE ToSIC_SexyContent_Templates ADD Temp_PresentationDemoEntityID INT NOT NULL DEFAULT 0
+ALTER TABLE ToSIC_SexyContent_Templates ADD Temp_ListContentTypeID INT NOT NULL DEFAULT 0
+ALTER TABLE ToSIC_SexyContent_Templates ADD Temp_ListContentDemoEntityID INT NOT NULL DEFAULT 0
+ALTER TABLE ToSIC_SexyContent_Templates ADD Temp_ListPresentationTypeID INT NOT NULL DEFAULT 0
+ALTER TABLE ToSIC_SexyContent_Templates ADD Temp_ListPresentationDemoEntityID INT NOT NULL DEFAULT 0')
+
+UPDATE       ToSIC_SexyContent_Templates
+SET					Temp_PresentationTypeID = ISNULL(Presentation.ContentTypeID, 0),
+					Temp_PresentationDemoEntityID = ISNULL(Presentation.DemoEntityID, 0),
+					Temp_ListContentTypeID = ISNULL(ListContent.ContentTypeID, 0),
+					Temp_ListContentDemoEntityID = ISNULL(ListContent.DemoEntityID, 0),
+					Temp_ListPresentationTypeID = ISNULL(ListPresentation.ContentTypeID, 0),
+					Temp_ListPresentationDemoEntityID = ISNULL(ListPresentation.DemoEntityID, 0)
+FROM            ToSIC_SexyContent_Templates LEFT OUTER JOIN
+                             (SELECT * FROM Temp_ToSIC_SexyContent_TemplateMove('ListPresentation')) AS ListPresentation ON 
+                         ToSIC_SexyContent_Templates.TemplateID = ListPresentation.TemplateID LEFT OUTER JOIN
+                             (SELECT * FROM Temp_ToSIC_SexyContent_TemplateMove('Presentation')) AS Presentation ON 
+                         ToSIC_SexyContent_Templates.TemplateID = Presentation.TemplateID LEFT OUTER JOIN
+                             (SELECT * FROM Temp_ToSIC_SexyContent_TemplateMove('ListContent')) AS ListContent ON ToSIC_SexyContent_Templates.TemplateID = ListContent.TemplateID
+							 													 
+DROP FUNCTION Temp_ToSIC_SexyContent_TemplateMove
+
+
 -- Commit the transaction
 COMMIT TRANSACTION SexyContentUpdate;
 --ROLLBACK TRANSACTION SexyContentUpdate;
