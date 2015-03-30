@@ -235,10 +235,14 @@ namespace ToSic.SexyContent
 			#region ContentGroups
 
 			var contentGroups = new DataTable();
-			const string sqlCommandContentGroups = @"SELECT *
-				FROM ToSIC_SexyContent_Templates INNER JOIN
-				ToSIC_EAV_Apps ON ToSIC_SexyContent_Templates.AppID = ToSIC_EAV_Apps.AppID
-				WHERE (ToSIC_SexyContent_Templates.SysDeleted IS NULL AND Temp_NewEntityGuid IS NULL)";
+			const string sqlCommandContentGroups = @"SELECT        ToSIC_SexyContent_ContentGroupItems.ContentGroupItemID, ToSIC_SexyContent_ContentGroupItems.ContentGroupID, 
+                         ToSIC_SexyContent_ContentGroupItems.EntityID, ToSIC_SexyContent_ContentGroupItems.TemplateID, ToSIC_SexyContent_ContentGroupItems.SortOrder, 
+                         ToSIC_SexyContent_ContentGroupItems.Type, ToSIC_SexyContent_ContentGroupItems.SysCreated, ToSIC_SexyContent_ContentGroupItems.SysCreatedBy, 
+                         ToSIC_SexyContent_ContentGroupItems.SysModified, ToSIC_SexyContent_ContentGroupItems.SysModifiedBy, ToSIC_SexyContent_ContentGroupItems.SysDeleted, 
+                         ToSIC_SexyContent_ContentGroupItems.SysDeletedBy, ModuleSettings.ModuleID
+FROM            ModuleSettings INNER JOIN
+                         ToSIC_SexyContent_ContentGroupItems ON ModuleSettings.SettingValue = ToSIC_SexyContent_ContentGroupItems.ContentGroupID
+WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (ModuleSettings.SettingName = N'ContentGroupID')";
 
 			var adapterContentGroups = new SqlDataAdapter(sqlCommandContentGroups, sqlConnection);
 			adapterContentGroups.Fill(contentGroups);
