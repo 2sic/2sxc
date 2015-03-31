@@ -43,7 +43,7 @@ namespace ToSic.SexyContent
 
         public const string ModuleVersion = "06.06.04";
         public const string TemplateID = "TemplateID";
-        public const string ContentGroupIDString = "ContentGroupID";
+        public const string ContentGroupIDString = "ToSIC_SexyContent_ContentGroupGuid";
         public const string AppIDString = "AppId";
         //public const string SettingsPublishDataSource = "ToSic_SexyContent_PublishDataSource";
         //public const string SettingsPublishDataSourceStreams = "ToSic_SexyContent_PublishDataSource_Streams";
@@ -673,7 +673,7 @@ namespace ToSic.SexyContent
         /// <returns></returns>
         public string GetElementEditLink(int ContentGroupID, int SortOrder, int ModuleID, int TabID, string ReturnUrl)
         {
-            string EditUrl = Globals.NavigateURL(TabID, ControlKeys.EditContentGroup, "mid", ModuleID.ToString(), SortOrderString, SortOrder.ToString(), ContentGroupIDString, ContentGroupID.ToString());
+            string EditUrl = Globals.NavigateURL(TabID, ControlKeys.EditContentGroup, "mid", ModuleID.ToString(), SortOrderString, SortOrder.ToString(), "ContentGroupID", ContentGroupID.ToString());
             EditUrl += (EditUrl.IndexOf("?") == -1 ? "?" : "&") + "popUp=true&ReturnUrl=" + HttpUtility.UrlEncode(ReturnUrl);
 
             // If Culture exists, add CultureDimension

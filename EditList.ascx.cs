@@ -24,7 +24,7 @@ namespace ToSic.SexyContent
         {
             get
             {
-                return int.Parse(Request.QueryString[SexyContent.ContentGroupIDString]);
+                return int.Parse(Request.QueryString["ContentGroupID"]);
             }
         }
 

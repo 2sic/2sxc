@@ -10,6 +10,7 @@ using System.Web.UI.WebControls;
 using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Web.Client.ClientResourceManagement;
+using Telerik.Web.UI;
 using ToSic.Eav;
 using ToSic.Eav.DataSources.Caches;
 using ToSic.Eav.Import;
@@ -115,7 +116,8 @@ namespace ToSic.SexyContent
 		{
 			var userName = "System-ModuleUpgrade-070000";
 
-			// 1. Import new ContentTypes for ContentGroups and Templates
+			#region 1. Import new ContentTypes for ContentGroups and Templates
+
 			// ToDo: Correct File Path
 			//var xmlToImport= File.ReadAllText("~/DesktopModules/ToSIC_SexyContent/Upgrade/07.00.00.xml");
 			var xmlToImport = File.ReadAllText("../../../../Upgrade/07.00.00.xml");
@@ -128,134 +130,327 @@ namespace ToSic.SexyContent
 				throw new Exception("The 2sxc module upgrade to 07.00.00 failed: " + messages);
 			}
 
+			#endregion
+
+			
+
 			// 2. Move all existing data to the new ContentTypes - Append new IDs to old data (ensures that we can fix things that went wrong after upgrading the module)
 
-			#region Copy templates
+			#region Prepare Templates
 
 			var sqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString);
 			var templates = new DataTable();
-			const string sqlCommand = @"SELECT *
-				FROM ToSIC_SexyContent_Templates INNER JOIN
-				ToSIC_EAV_Apps ON ToSIC_SexyContent_Templates.AppID = ToSIC_EAV_Apps.AppID
-				WHERE (ToSIC_SexyContent_Templates.SysDeleted IS NULL AND Temp_NewEntityGuid IS NULL)";
+			const string sqlCommand = @"SELECT        ToSIC_SexyContent_Templates.TemplateID, ToSIC_SexyContent_Templates.PortalID, ToSIC_SexyContent_Templates.Name, ToSIC_SexyContent_Templates.Path, 
+                         ToSIC_SexyContent_Templates.AttributeSetID, ToSIC_SexyContent_Templates.DemoEntityID, ToSIC_SexyContent_Templates.Script, 
+                         ToSIC_SexyContent_Templates.IsFile, ToSIC_SexyContent_Templates.Type, ToSIC_SexyContent_Templates.IsHidden, ToSIC_SexyContent_Templates.Location, 
+                         ToSIC_SexyContent_Templates.UseForList, ToSIC_SexyContent_Templates.UseForItem, ToSIC_SexyContent_Templates.SysCreated, 
+                         ToSIC_SexyContent_Templates.SysCreatedBy, ToSIC_SexyContent_Templates.SysModified, ToSIC_SexyContent_Templates.SysModifiedBy, 
+                         ToSIC_SexyContent_Templates.SysDeleted, ToSIC_SexyContent_Templates.SysDeletedBy, ToSIC_SexyContent_Templates.AppID, 
+                         ToSIC_SexyContent_Templates.PublishData, ToSIC_SexyContent_Templates.StreamsToPublish, ToSIC_SexyContent_Templates.PipelineEntityID, 
+                         ToSIC_SexyContent_Templates.ViewNameInUrl, ToSIC_SexyContent_Templates.Temp_PresentationTypeID, 
+                         ToSIC_SexyContent_Templates.Temp_PresentationDemoEntityID, ToSIC_SexyContent_Templates.Temp_ListContentTypeID, 
+                         ToSIC_SexyContent_Templates.Temp_ListContentDemoEntityID, ToSIC_SexyContent_Templates.Temp_ListPresentationTypeID, 
+                         ToSIC_SexyContent_Templates.Temp_ListPresentationDemoEntityID, ToSIC_SexyContent_Templates.Temp_NewTemplateGuid, ToSIC_EAV_Apps.ZoneID, 
+                         ToSIC_EAV_Entities_1.EntityGUID AS ContentDemoEntityGuid, ToSIC_EAV_Entities_2.EntityGUID AS PresentationDemoEntityGuid, 
+                         ToSIC_EAV_Entities_3.EntityGUID AS ListContentDemoEntityGuid, ToSIC_EAV_Entities_4.EntityGUID AS ListPresentationDemoEntityGuid, 
+                         ToSIC_EAV_Entities.EntityGUID AS PipelineEntityGuid
+FROM            ToSIC_SexyContent_Templates INNER JOIN
+                         ToSIC_EAV_Apps ON ToSIC_SexyContent_Templates.AppID = ToSIC_EAV_Apps.AppID LEFT OUTER JOIN
+                         ToSIC_EAV_Entities ON ToSIC_SexyContent_Templates.PipelineEntityID = ToSIC_EAV_Entities.EntityID LEFT OUTER JOIN
+                         ToSIC_EAV_Entities AS ToSIC_EAV_Entities_3 ON ToSIC_SexyContent_Templates.Temp_ListContentDemoEntityID = ToSIC_EAV_Entities_3.EntityID LEFT OUTER JOIN
+                         ToSIC_EAV_Entities AS ToSIC_EAV_Entities_1 ON ToSIC_SexyContent_Templates.DemoEntityID = ToSIC_EAV_Entities_1.EntityID LEFT OUTER JOIN
+                         ToSIC_EAV_Entities AS ToSIC_EAV_Entities_2 ON 
+                         ToSIC_SexyContent_Templates.Temp_PresentationDemoEntityID = ToSIC_EAV_Entities_2.EntityID LEFT OUTER JOIN
+                         ToSIC_EAV_Entities AS ToSIC_EAV_Entities_4 ON ToSIC_SexyContent_Templates.Temp_ListPresentationDemoEntityID = ToSIC_EAV_Entities_4.EntityID
+WHERE        (ToSIC_SexyContent_Templates.SysDeleted IS NULL) AND (ToSIC_SexyContent_Templates.Temp_NewTemplateGuid IS NULL)";
 
 			var adapter = new SqlDataAdapter(sqlCommand, sqlConnection);
 			adapter.Fill(templates);
 
-			foreach (DataRow template in templates.Rows)
+			var existingTemplates = templates.AsEnumerable().Select(t =>
 			{
-				var templateId = (int) template["TemplateID"];
-				var zoneId = (int) template["ZoneID"];
-				var appId = (int) template["AppID"];
-				var cache = ((BaseCache) DataSource.GetCache(zoneId, appId)).GetContentTypes();
+				var templateId = (int)t["TemplateID"];
+				var zoneId = (int)t["ZoneID"];
+				var appId = (int)t["AppID"];
+				var cache = ((BaseCache)DataSource.GetCache(zoneId, appId)).GetContentTypes();
 
 				#region Helper Functions
 				Func<int?, string> getContentTypeStaticName = (contentTypeId) =>
 				{
 					if (!contentTypeId.HasValue || contentTypeId == 0)
 						return "";
-					if(cache.Any(c => c.Value.AttributeSetId == contentTypeId))
+					if (cache.Any(c => c.Value.AttributeSetId == contentTypeId))
 						return cache[contentTypeId.Value].StaticName;
 					return "";
 				};
 
-				Func<int?, int[]> getRelationshipArray = (demoEntityId) =>
-				{
-					if(demoEntityId == 0 || !demoEntityId.HasValue)
-						return new int[]{};
-					return new[] { demoEntityId.Value };
-				};
+				//Func<int?, int[]> getRelationshipArray = (demoEntityId) =>
+				//{
+				//	if (demoEntityId == 0 || !demoEntityId.HasValue)
+				//		return new int[] { };
+				//	return new[] { demoEntityId.Value };
+				//};
 				#endregion
 
 				// Create anonymous object to validate the types
 				var tempTemplate = new
 				{
 					TemplateID = templateId,
-					Name = (string)template["Name"],
-					Path = (string)template["Path"],
-					
-					ContentTypeId = getContentTypeStaticName(template["AttributeSetID"] == DBNull.Value ? new int?() : (int)template["AttributeSetID"]),
-					ContentDemoEntityId = template["DemoEntityID"] == DBNull.Value ? new int[]{} : getRelationshipArray((int)template["DemoEntityID"]),
-					PresentationTypeId = getContentTypeStaticName((int)template["Temp_PresentationTypeID"]),
-					PresentationDemoEntityId = getRelationshipArray((int)template["Temp_PresentationDemoEntityID"]),
-					ListContentTypeId = getContentTypeStaticName((int)template["Temp_ListContentTypeID"]),
-					ListContentDemoEntityId = getRelationshipArray((int)template["Temp_ListContentDemoEntityID"]),
-					ListPresentationTypeId = getContentTypeStaticName((int)template["Temp_ListPresentationTypeID"]),
-					ListPresentationDemoEntityId = getRelationshipArray((int)template["Temp_ListPresentationDemoEntityID"]),
-					
-					Type = (string)template["Type"],
-					IsHidden = (bool)template["IsHidden"],
-					Location = (string)template["Location"],
-					UseForList = (bool)template["UseForList"],
+					Name = (string)t["Name"],
+					Path = (string)t["Path"],
+					NewEntityGuid = Guid.NewGuid(),
+
+					ContentTypeId = getContentTypeStaticName(t["AttributeSetID"] == DBNull.Value ? new int?() : (int)t["AttributeSetID"]),
+					ContentDemoEntityGuids = t["ContentDemoEntityGuid"] == DBNull.Value ? new List<Guid>() : new List<Guid>() { (Guid)t["ContentDemoEntityGuid"] },
+					PresentationTypeId = getContentTypeStaticName((int)t["Temp_PresentationTypeID"]),
+					PresentationDemoEntityGuids = t["PresentationDemoEntityGuid"] == DBNull.Value ? new List<Guid>() : new List<Guid>() { (Guid)t["PresentationDemoEntityGuid"] },
+					ListContentTypeId = getContentTypeStaticName((int)t["Temp_ListContentTypeID"]),
+					ListContentDemoEntityGuids = t["ListContentDemoEntityGuid"] == DBNull.Value ? new List<Guid>() : new List<Guid>() { (Guid)t["ListContentDemoEntityGuid"] },
+					ListPresentationTypeId = getContentTypeStaticName((int)t["Temp_ListPresentationTypeID"]),
+					ListPresentationDemoEntityGuids = t["ListPresentationDemoEntityGuid"] == DBNull.Value ? new List<Guid>() : new List<Guid>() { (Guid)t["ListPresentationDemoEntityGuid"] },
+
+					Type = (string)t["Type"],
+					IsHidden = (bool)t["IsHidden"],
+					Location = (string)t["Location"],
+					UseForList = (bool)t["UseForList"],
 					AppId = appId,
-					PublishData = (bool)template["PublishData"],
-					StreamsToPublish = (string)template["StreamsToPublish"],
-					PipelineEntityID = getRelationshipArray(template["PipelineEntityID"] == DBNull.Value ? new int?() : (int)template["PipelineEntityID"]),
-					ViewNameInUrl = template["ViewNameInUrl"].ToString(),
+					PublishData = (bool)t["PublishData"],
+					StreamsToPublish = (string)t["StreamsToPublish"],
+					PipelineEntityGuids = t["PipelineEntityGuid"] == DBNull.Value ? new List<Guid>() : new List<Guid>() { (Guid)t["PipelineEntityGuid"] },
+					ViewNameInUrl = t["ViewNameInUrl"].ToString(),
 					ZoneId = zoneId
 				};
 
-				var entityGuid = Guid.NewGuid();
-				var context = EavContext.Instance(zoneId, appId);
-				var templateAttributeSet = cache.FirstOrDefault(c => c.Value.StaticName == "2SexyContent-Template").Value;
+				return tempTemplate;
+			});
 
-				var values = new Dictionary<string, object>()
-				{
-					{"Name", tempTemplate.Name},
-					{"Path", tempTemplate.Path},
-					{"ContentTypeStaticName", tempTemplate.ContentTypeId},
-					{"ContentDemoEntity", tempTemplate.ContentDemoEntityId},
-					{"PresentationTypeStaticName", tempTemplate.PresentationTypeId},
-					{"PresentationDemoEntity", tempTemplate.PresentationDemoEntityId},
-					{"ListContentTypeStaticName", tempTemplate.ListContentTypeId},
-					{"ListContentDemoEntity", tempTemplate.ListContentDemoEntityId},
-					{"ListPresentationTypeStaticName", tempTemplate.ListPresentationTypeId},
-					{"ListPresentationDemoEntity", tempTemplate.ListPresentationDemoEntityId},
-					{"Type", tempTemplate.Type},
-					{"IsHidden", tempTemplate.IsHidden},
-					{"Location", tempTemplate.Location},
-					{"UseForList", tempTemplate.UseForList},
-					{"PublishData", tempTemplate.PublishData},
-					{"StreamsToPublish", tempTemplate.StreamsToPublish},
-					{"Pipeline", tempTemplate.PipelineEntityID},
-					{"ViewNameInUrl", tempTemplate.ViewNameInUrl}
-				};
 
-				context.AddEntity(templateAttributeSet.AttributeSetId, values, null, null, entityGuid: entityGuid);
 
-				if(sqlConnection.State != ConnectionState.Open)
-					sqlConnection.Open();
-				var sqlCmd = new SqlCommand("UPDATE ToSIC_SexyContent_Templates SET Temp_NewEntityGuid = N'" + entityGuid + "' WHERE TemplateID = " + templateId, sqlConnection);
-				sqlCmd.ExecuteNonQuery();
-			}
+
+			//foreach (DataRow template in templates.Rows)
+			//{
+			//	var entityGuid = Guid.NewGuid();
+			//	var context = EavContext.Instance(zoneId, appId);
+			//	var templateAttributeSet = cache.FirstOrDefault(c => c.Value.StaticName == "2SexyContent-Template").Value;
+
+			//	var values = new Dictionary<string, object>()
+			//	{
+			//		{"Name", tempTemplate.Name},
+			//		{"Path", tempTemplate.Path},
+			//		{"ContentTypeStaticName", tempTemplate.ContentTypeId},
+			//		{"ContentDemoEntity", tempTemplate.ContentDemoEntityId},
+			//		{"PresentationTypeStaticName", tempTemplate.PresentationTypeId},
+			//		{"PresentationDemoEntity", tempTemplate.PresentationDemoEntityId},
+			//		{"ListContentTypeStaticName", tempTemplate.ListContentTypeId},
+			//		{"ListContentDemoEntity", tempTemplate.ListContentDemoEntityId},
+			//		{"ListPresentationTypeStaticName", tempTemplate.ListPresentationTypeId},
+			//		{"ListPresentationDemoEntity", tempTemplate.ListPresentationDemoEntityId},
+			//		{"Type", tempTemplate.Type},
+			//		{"IsHidden", tempTemplate.IsHidden},
+			//		{"Location", tempTemplate.Location},
+			//		{"UseForList", tempTemplate.UseForList},
+			//		{"PublishData", tempTemplate.PublishData},
+			//		{"StreamsToPublish", tempTemplate.StreamsToPublish},
+			//		{"Pipeline", tempTemplate.PipelineEntityID},
+			//		{"ViewNameInUrl", tempTemplate.ViewNameInUrl}
+			//	};
+
+			//	context.AddEntity(templateAttributeSet.AttributeSetId, values, null, null, entityGuid: entityGuid);
+
+			//	if(sqlConnection.State != ConnectionState.Open)
+			//		sqlConnection.Open();
+			//	var sqlCmd = new SqlCommand("UPDATE ToSIC_SexyContent_Templates SET Temp_NewTemplateGuid = N'" + entityGuid + "' WHERE TemplateID = " + templateId, sqlConnection);
+			//	sqlCmd.ExecuteNonQuery();
+			//}
 
 			#endregion
 
 
-			#region ContentGroups
+			#region Prepare ContentGroups
 
-			var contentGroups = new DataTable();
+			var contentGroupItemsTable = new DataTable();
 			const string sqlCommandContentGroups = @"SELECT        ToSIC_SexyContent_ContentGroupItems.ContentGroupItemID, ToSIC_SexyContent_ContentGroupItems.ContentGroupID, 
-                         ToSIC_SexyContent_ContentGroupItems.EntityID, ToSIC_SexyContent_ContentGroupItems.TemplateID, ToSIC_SexyContent_ContentGroupItems.SortOrder, 
-                         ToSIC_SexyContent_ContentGroupItems.Type, ToSIC_SexyContent_ContentGroupItems.SysCreated, ToSIC_SexyContent_ContentGroupItems.SysCreatedBy, 
-                         ToSIC_SexyContent_ContentGroupItems.SysModified, ToSIC_SexyContent_ContentGroupItems.SysModifiedBy, ToSIC_SexyContent_ContentGroupItems.SysDeleted, 
-                         ToSIC_SexyContent_ContentGroupItems.SysDeletedBy, ModuleSettings.ModuleID
-FROM            ModuleSettings INNER JOIN
-                         ToSIC_SexyContent_ContentGroupItems ON ModuleSettings.SettingValue = ToSIC_SexyContent_ContentGroupItems.ContentGroupID
+                         ToSIC_SexyContent_ContentGroupItems.TemplateID, ToSIC_SexyContent_ContentGroupItems.SortOrder, ToSIC_SexyContent_ContentGroupItems.Type, 
+                         ToSIC_SexyContent_ContentGroupItems.SysCreated, ToSIC_SexyContent_ContentGroupItems.SysCreatedBy, ToSIC_SexyContent_ContentGroupItems.SysModified, 
+                         ToSIC_SexyContent_ContentGroupItems.SysModifiedBy, ToSIC_SexyContent_ContentGroupItems.SysDeleted, 
+                         ToSIC_SexyContent_ContentGroupItems.SysDeletedBy, ModuleSettings.ModuleID, ToSIC_SexyContent_Templates.AppID, ToSIC_EAV_Apps.ZoneID, 
+                         Temp_NewTemplateGuid, ToSIC_EAV_Entities.EntityGUID, ToSIC_SexyContent_ContentGroupItems.EntityID
+FROM            ToSIC_SexyContent_Templates INNER JOIN
+                         ModuleSettings INNER JOIN
+                         ToSIC_SexyContent_ContentGroupItems ON ModuleSettings.SettingValue = ToSIC_SexyContent_ContentGroupItems.ContentGroupID ON 
+                         ToSIC_SexyContent_Templates.TemplateID = ToSIC_SexyContent_ContentGroupItems.TemplateID INNER JOIN
+                         ToSIC_EAV_Apps ON ToSIC_SexyContent_Templates.AppID = ToSIC_EAV_Apps.AppID LEFT OUTER JOIN
+                         ToSIC_EAV_Entities ON ToSIC_SexyContent_Templates.DemoEntityID = ToSIC_EAV_Entities.EntityID AND 
+                         ToSIC_SexyContent_ContentGroupItems.EntityID = ToSIC_EAV_Entities.EntityID
 WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (ModuleSettings.SettingName = N'ContentGroupID')";
 
 			var adapterContentGroups = new SqlDataAdapter(sqlCommandContentGroups, sqlConnection);
-			adapterContentGroups.Fill(contentGroups);
+			adapterContentGroups.Fill(contentGroupItemsTable);
 
-			foreach (DataRow contentGroup in contentGroups.Rows)
+			var contentGroupItems = contentGroupItemsTable.AsEnumerable().Select(c => new
 			{
-				// ToDo: Implement contentgroup copy to entities
-			}
+				ContentGroupId = (int)c["ContentGroupID"],
+				EntityId = c["EntityID"] == DBNull.Value ? new int?() : (int)c["EntityID"],
+				EntityGuid = c["EntityGUID"] == DBNull.Value ? new Guid?() : Guid.Parse((string)c["EntityGUID"]),
+				TemplateId = c["TemplateID"] == DBNull.Value ? new int?() : (int)c["TemplateID"],
+				SortOrder = c["SortOrder"],
+				Type = (string)c["Type"],
+				ModuleId = (int)c["ModuleID"],
+				AppId = (int)c["AppID"],
+				ZoneId = (int)c["ZoneID"],
+				TemplateEntityGuids = c["Temp_NewTemplateGuid"] == DBNull.Value ? new List<Guid>() : new List<Guid>() { Guid.Parse((string)c["Temp_NewTemplateGuid"]) }
+			});
+
+			var existingContentGroups = contentGroupItems.GroupBy(c => c.ContentGroupId, c => c, (id, items) =>
+			{
+				var itemsList = items.ToList();
+				var contentGroup = new
+				{
+					NewEntityGuid = Guid.NewGuid(),
+					AppId = itemsList.First().AppId,
+					ZoneId = itemsList.First().ZoneId,
+					ContentGroupId = id,
+					TemplateGuids = itemsList.First().TemplateEntityGuids,
+					ModuleId = itemsList.First().ModuleId,
+					ContentGuids = itemsList.Where(p => p.Type == "Content").Select(p => p.EntityGuid).ToList(),
+					PresentationGuids = itemsList.Where(p => p.Type == "Presentation").Select(p => p.EntityGuid).ToList(),
+					ListContentGuids = itemsList.Where(p => p.Type == "ListContent").Select(p => p.EntityGuid).ToList(),
+					ListPresentationGuids = itemsList.Where(p => p.Type == "ListPresentation").Select(p => p.EntityGuid).ToList()
+				};
+				return contentGroup;
+			}).ToList();
+
+			//foreach (var contentGroup in contentGroups)
+			//{
+				//var entityGuid = Guid.NewGuid();
+				//var context = EavContext.Instance(contentGroup.ZoneId, contentGroup.AppId);
+
+				//var values = new Dictionary<string, object>()
+				//{
+				//	{"Name", tempTemplate.Name},
+				//	{"Path", tempTemplate.Path},
+				//	{"ContentTypeStaticName", tempTemplate.ContentTypeId},
+				//	{"ContentDemoEntity", tempTemplate.ContentDemoEntityId},
+				//	{"PresentationTypeStaticName", tempTemplate.PresentationTypeId},
+				//	{"PresentationDemoEntity", tempTemplate.PresentationDemoEntityId},
+				//	{"ListContentTypeStaticName", tempTemplate.ListContentTypeId},
+				//	{"ListContentDemoEntity", tempTemplate.ListContentDemoEntityId},
+				//	{"ListPresentationTypeStaticName", tempTemplate.ListPresentationTypeId},
+				//	{"ListPresentationDemoEntity", tempTemplate.ListPresentationDemoEntityId},
+				//	{"Type", tempTemplate.Type},
+				//	{"IsHidden", tempTemplate.IsHidden},
+				//	{"Location", tempTemplate.Location},
+				//	{"UseForList", tempTemplate.UseForList},
+				//	{"PublishData", tempTemplate.PublishData},
+				//	{"StreamsToPublish", tempTemplate.StreamsToPublish},
+				//	{"Pipeline", tempTemplate.PipelineEntityID},
+				//	{"ViewNameInUrl", tempTemplate.ViewNameInUrl}
+				//};
+
+				//var cache = ((BaseCache)DataSource.GetCache(contentGroup.ZoneId, contentGroup.AppId)).GetContentTypes();
+				//var contentGroupAttributeSet = cache.FirstOrDefault(c => c.Value.StaticName == "2SexyContent-ContentGroup").Value;
+				//context.AddEntity(contentGroupAttributeSet.AttributeSetId, values, null, null, entityGuid: entityGuid);
+
+				//if (sqlConnection.State != ConnectionState.Open)
+				//	sqlConnection.Open();
+				//var sqlCmd = new SqlCommand("UPDATE ToSIC_SexyContent_Templates SET Temp_NewEntityGuid = N'" + entityGuid + "' WHERE TemplateID = " + templateId, sqlConnection);
+				//sqlCmd.ExecuteNonQuery();
+			//}
 
 			#endregion
 
-			// 4. Use new GUID ContentGroup-IDs on module settings
 
+			// Import all entities
+			var apps = existingTemplates.Select(p => p.AppId).ToList();
+			apps.AddRange(existingContentGroups.Select(p => p.AppId));
+			apps = apps.Distinct().ToList();
+
+			foreach (var app in apps)
+			{
+				var entitiesToImport = new List<ToSic.Eav.Import.Entity>();
+
+				foreach (var t in existingTemplates.Where(t => t.AppId == app))
+				{
+					var entity = new ToSic.Eav.Import.Entity()
+					{
+						AttributeSetStaticName = "2SexyContent-Template",
+						EntityGuid = t.NewEntityGuid,
+						IsPublished = true,
+						AssignmentObjectTypeId = SexyContent.AssignmentObjectTypeIDDefault
+					};
+					entity.Values = new Dictionary<string, List<IValueImportModel>>()
+					{
+						{"Name", new List<IValueImportModel>() {new ValueImportModel<string>(entity) { Value = t.Name }}},
+						{"Path", new List<IValueImportModel>() {new ValueImportModel<string>(entity) { Value = t.Path }}},
+						{"ContentTypeStaticName", new List<IValueImportModel>() {new ValueImportModel<string>(entity) { Value = t.ContentTypeId }}},
+						{"ContentDemoEntity", new List<IValueImportModel>() {new ValueImportModel<List<Guid>>(entity) { Value = t.ContentDemoEntityGuids }}},
+						{"PresentationTypeStaticName", new List<IValueImportModel>() {new ValueImportModel<string>(entity) { Value = t.PresentationTypeId }}},
+						{"PresentationDemoEntity", new List<IValueImportModel>() {new ValueImportModel<List<Guid>>(entity) { Value = t.PresentationDemoEntityGuids }}},
+						{"ListContentTypeStaticName", new List<IValueImportModel>() {new ValueImportModel<string>(entity) { Value = t.ListContentTypeId }}},
+						{"ListContentDemoEntity", new List<IValueImportModel>() {new ValueImportModel<List<Guid>>(entity) { Value = t.ListContentDemoEntityGuids }}},
+						{"ListPresentationTypeStaticName", new List<IValueImportModel>() {new ValueImportModel<string>(entity) { Value = t.ListPresentationTypeId }}},
+						{"ListPresentationDemoEntity", new List<IValueImportModel>() {new ValueImportModel<List<Guid>>(entity) { Value = t.ListPresentationDemoEntityGuids }}},
+						{"Type", new List<IValueImportModel>() {new ValueImportModel<string>(entity) { Value = t.Type }}},
+						{"IsHidden", new List<IValueImportModel>() {new ValueImportModel<bool>(entity) { Value = t.IsHidden }}},
+						{"Location", new List<IValueImportModel>() {new ValueImportModel<string>(entity) { Value = t.Location }}},
+						{"UseForList", new List<IValueImportModel>() {new ValueImportModel<bool>(entity) { Value = t.UseForList }}},
+						{"PublishData", new List<IValueImportModel>() {new ValueImportModel<bool>(entity) { Value = t.PublishData }}},
+						{"StreamsToPublish", new List<IValueImportModel>() {new ValueImportModel<string>(entity) { Value = t.StreamsToPublish }}},
+						{"Pipeline", new List<IValueImportModel>() {new ValueImportModel<List<Guid>>(entity) { Value = t.PipelineEntityGuids }}},
+						{"ViewNameInUrl", new List<IValueImportModel>() {new ValueImportModel<string>(entity) { Value = t.ViewNameInUrl }}}
+					};
+					entitiesToImport.Add(entity);
+
+					if (sqlConnection.State != ConnectionState.Open)
+						sqlConnection.Open();
+					var sqlCmd = new SqlCommand("UPDATE ToSIC_SexyContent_Templates SET Temp_NewTemplateGuid = N'" + entity.EntityGuid + "' WHERE TemplateID = " + t.TemplateID, sqlConnection);
+					sqlCmd.ExecuteNonQuery();
+				}
+
+				foreach (var t in existingContentGroups.Where(t => t.AppId == app))
+				{
+					var entity = new ToSic.Eav.Import.Entity()
+					{
+						AttributeSetStaticName = "2SexyContent-ContentGroup",
+						EntityGuid = t.NewEntityGuid,
+						IsPublished = true,
+						AssignmentObjectTypeId = SexyContent.AssignmentObjectTypeIDDefault
+					};
+					entity.Values = new Dictionary<string, List<IValueImportModel>>()
+					{
+						{"Template", new List<IValueImportModel>() {new ValueImportModel<List<Guid>>(entity) { Value = t.TemplateGuids }}},
+						{"Content", new List<IValueImportModel>() {new ValueImportModel<List<Guid?>>(entity) { Value = t.ContentGuids }}},
+						{"Presentation", new List<IValueImportModel>() {new ValueImportModel<List<Guid?>>(entity) { Value = t.PresentationGuids }}},
+						{"ListContent", new List<IValueImportModel>() {new ValueImportModel<List<Guid?>>(entity) { Value = t.ListContentGuids }}},
+						{"ListPresentation", new List<IValueImportModel>() {new ValueImportModel<List<Guid?>>(entity) { Value = t.ListPresentationGuids }}}
+					};
+					entitiesToImport.Add(entity);
+
+					if (sqlConnection.State != ConnectionState.Open)
+						sqlConnection.Open();
+					var sqlCmd = new SqlCommand("UPDATE ToSIC_SexyContent_ContentGroupItems SET Temp_NewContentGroupGuid = N'" + entity.EntityGuid + "' WHERE ContentGroupID = " + t.ContentGroupId, sqlConnection);
+					sqlCmd.ExecuteNonQuery();
+				}
+
+				var import = new ToSic.Eav.Import.Import(null, app, userName);
+				import.RunImport(null, entitiesToImport);
+			}
+
+			// 4. Use new GUID ContentGroup-IDs on module settings
+			if (sqlConnection.State != ConnectionState.Open)
+				sqlConnection.Open();
+			var sqlCmdUpdateModuleSettings = new SqlCommand(@"INSERT INTO ModuleSettings
+                         (ModuleID, CreatedByUserID, CreatedOnDate, LastModifiedByUserID, LastModifiedOnDate, SettingName, SettingValue)
+SELECT        ModuleSettings_1.ModuleID, ModuleSettings_1.CreatedByUserID, ModuleSettings_1.CreatedOnDate, ModuleSettings_1.LastModifiedByUserID, 
+                         ModuleSettings_1.LastModifiedOnDate, 'ToSIC_SexyContent_ContentGroupGuid' AS SettingName, 
+                         ToSIC_SexyContent_ContentGroupItems.Temp_NewContentGroupGuid AS SettingValue
+FROM            ModuleSettings AS ModuleSettings_1 LEFT OUTER JOIN
+                         ToSIC_SexyContent_ContentGroupItems ON ModuleSettings_1.SettingValue = ToSIC_SexyContent_ContentGroupItems.ContentGroupID
+WHERE        (ModuleSettings_1.SettingName = N'ContentGroupID') AND (NOT (ToSIC_SexyContent_ContentGroupItems.Temp_NewContentGroupGuid IS NULL)) AND
+                             ((SELECT        COUNT(*) AS Expr1
+                                 FROM            ModuleSettings AS ModuleSettings_2
+                                 WHERE        (ModuleID = ModuleSettings_1.ModuleID) AND (SettingName = N'ToSIC_SexyContent_ContentGroupGuid')) = 0)", sqlConnection);
+			sqlCmdUpdateModuleSettings.ExecuteNonQuery();
 		}
 
 		/// <summary>

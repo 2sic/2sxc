@@ -99,7 +99,7 @@ namespace ToSic.SexyContent
         {
             get
             {
-                string ContentGroupIDString = Request.QueryString[SexyContent.ContentGroupIDString];
+                string ContentGroupIDString = Request.QueryString["ContentGroupID"];
 
                 if (!String.IsNullOrEmpty(ContentGroupIDString))
                     return int.Parse(ContentGroupIDString);

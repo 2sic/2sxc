@@ -106,7 +106,8 @@ ALTER TABLE ToSIC_SexyContent_Templates ADD Temp_ListContentTypeID INT NOT NULL 
 ALTER TABLE ToSIC_SexyContent_Templates ADD Temp_ListContentDemoEntityID INT NOT NULL DEFAULT 0
 ALTER TABLE ToSIC_SexyContent_Templates ADD Temp_ListPresentationTypeID INT NOT NULL DEFAULT 0
 ALTER TABLE ToSIC_SexyContent_Templates ADD Temp_ListPresentationDemoEntityID INT NOT NULL DEFAULT 0
-ALTER TABLE ToSIC_SexyContent_Templates ADD Temp_NewEntityGuid NVARCHAR(MAX) NULL')
+ALTER TABLE ToSIC_SexyContent_Templates ADD Temp_NewTemplateGuid NVARCHAR(MAX) NULL
+ALTER TABLE ToSIC_SexyContent_ContentGroupItems ADD Temp_NewContentGroupGuid NVARCHAR(MAX) NULL')
 
 UPDATE       ToSIC_SexyContent_Templates
 SET					Temp_PresentationTypeID = ISNULL(Presentation.ContentTypeID, 0),
