@@ -130,7 +130,7 @@ namespace ToSic.SexyContent.DataSources
 	            if (presentation != null)
 	            {
 		            // Try to find presentation entity
-		            var presentationEntityId = presentation[i] != null && originals.ContainsKey(presentation[i].EntityId) ? presentation[i].EntityId : new int?();
+		            var presentationEntityId = (presentation.Count - 1 >= i) && presentation[i] != null && originals.ContainsKey(presentation[i].EntityId) ? presentation[i].EntityId : new int?();
 
 		            // If there is no presentation entity, take default entity
 		            if (!presentationEntityId.HasValue)

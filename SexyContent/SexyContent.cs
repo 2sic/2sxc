@@ -460,8 +460,8 @@ namespace ToSic.SexyContent
 			compatibleTemplates = compatibleTemplates
 				.Where(t => contentGroup.Content.All(c => c == null) || contentGroup.Content.First().Type.StaticName == t.ContentTypeStaticName)
 				.Where(t => contentGroup.Presentation.All(c => c == null) || contentGroup.Presentation.First().Type.StaticName == t.PresentationTypeStaticName)
-				.Where(t => contentGroup.Content.All(c => c == null) || contentGroup.ListContent.First().Type.StaticName == t.ListContentTypeStaticName)
-				.Where(t => contentGroup.Content.Any(c => c == null) || contentGroup.ListPresentation.First().Type.StaticName == t.ListPresentationTypeStaticName);
+				.Where(t => contentGroup.ListContent.All(c => c == null) || contentGroup.ListContent.First().Type.StaticName == t.ListContentTypeStaticName)
+				.Where(t => contentGroup.ListPresentation.All(c => c == null) || contentGroup.ListPresentation.First().Type.StaticName == t.ListPresentationTypeStaticName);
 
 			return compatibleTemplates;
 		}
@@ -689,11 +689,11 @@ namespace ToSic.SexyContent
             return GetElementEditLink(ContentGroupID, DestinationSortOrder, ModuleID, TabID, ReturnUrl) + "&EditMode=New";
         }
 
-        public string GetElementSettingsLink(int ContentGroupItemID, int ModuleID, int TabID, string ReturnUrl)
+        public string GetElementSettingsLink(Guid ContentGroupID, int sortOrder, int ModuleID, int TabID, string ReturnUrl)
         {
-            string SettingsUrl = DotNetNuke.Common.Globals.NavigateURL(TabID, ControlKeys.SettingsWrapper, "mid", ModuleID.ToString(), ContentGroupItemIDString, ContentGroupItemID.ToString());
-            SettingsUrl += (SettingsUrl.IndexOf("?") == -1 ? "?" : "&") + "popUp=true&ReturnUrl=" + HttpUtility.UrlEncode(ReturnUrl);
-            return SettingsUrl;
+            string settingsUrl = Globals.NavigateURL(TabID, ControlKeys.SettingsWrapper, "mid", ModuleID.ToString(), ContentGroupIDString, ContentGroupID.ToString(), "SortOrder", sortOrder.ToString());
+            settingsUrl += (settingsUrl.IndexOf("?") == -1 ? "?" : "&") + "popUp=true&ReturnUrl=" + HttpUtility.UrlEncode(ReturnUrl);
+            return settingsUrl;
         }
 
         #endregion

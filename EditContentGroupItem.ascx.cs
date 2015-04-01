@@ -69,8 +69,6 @@ namespace ToSic.SexyContent
         /// </summary>
         public int TabID { get; set; }
 
-        public int AttributeSetID { get; set; }
-
         public int ZoneId { get; set;}
         public int AppId { get; set; }
 
@@ -104,12 +102,37 @@ namespace ToSic.SexyContent
 			get
 			{
 				if (_entity == null && SortOrder.HasValue)
-					_entity = ContentGroup.Content.Count > SortOrder ? ContentGroup.Content[SortOrder.Value] : null;
+				{
+					var entities = ContentGroup.Content;
+
+					if (ItemType == "Presentation")
+						entities = ContentGroup.Presentation;
+					else if (ItemType == "ListContent")
+						entities = ContentGroup.ListContent;
+					else if (ItemType == "ListPresentation")
+						entities = ContentGroup.ListPresentation;
+						
+					_entity = entities.Count > SortOrder ? entities[SortOrder.Value] : null;
+				}
 				return _entity;
 			}
 		}
 
-        public int? LanguageID
+	    public string AttributeSetStaticName
+	    {
+		    get
+		    {
+			    if (ItemType == "Presentation")
+				    return ContentGroup.Template.PresentationTypeStaticName;
+				if (ItemType == "ListContent")
+					return ContentGroup.Template.ListContentTypeStaticName;
+				if (ItemType == "ListPresentation")
+					return ContentGroup.Template.ListContentTypeStaticName;
+				return ContentGroup.Template.ContentTypeStaticName;
+		    }
+	    }
+
+	    public int? LanguageID
         {
             get
             {
@@ -167,12 +190,14 @@ namespace ToSic.SexyContent
 
         protected void ProcessView()
         {
+	        var attributeSet = ToSic.Eav.DataSource.GetCache(ZoneId, AppId).GetContentType(this.AttributeSetStaticName);
+
             EditItemControl = (ItemForm)LoadControl(System.IO.Path.Combine(TemplateSourceDirectory, "SexyContent/EAV/Controls/ItemForm.ascx"));
             EditItemControl.DefaultCultureDimension = DefaultLanguageID != 0 ? DefaultLanguageID : new int?();
             EditItemControl.IsDialog = false;
             EditItemControl.HideNavigationButtons = true;
             EditItemControl.PreventRedirect = true;
-            EditItemControl.AttributeSetId = AttributeSetID;
+			EditItemControl.AttributeSetId = attributeSet.AttributeSetId;
             EditItemControl.AssignmentObjectTypeId = SexyContent.AssignmentObjectTypeIDDefault;
             EditItemControl.ZoneId = ZoneId;
             EditItemControl.AppId = AppId;

@@ -147,7 +147,7 @@ namespace ToSic.SexyContent
         /// <returns></returns>
         protected string GetSettingsUrl(int sortOrder)
         {
-            return Sexy.GetElementSettingsLink(sortOrder, ModuleId, TabId, Request.RawUrl);
+			return Sexy.GetElementSettingsLink(ContentGroupID, sortOrder, ModuleId, TabId, Request.RawUrl);
         }
 
         protected void btnEditListHeader_Click(object sender, EventArgs e)

@@ -162,7 +162,7 @@ FROM            ToSIC_SexyContent_Templates INNER JOIN
                          ToSIC_EAV_Entities AS ToSIC_EAV_Entities_2 ON 
                          ToSIC_SexyContent_Templates.Temp_PresentationDemoEntityID = ToSIC_EAV_Entities_2.EntityID LEFT OUTER JOIN
                          ToSIC_EAV_Entities AS ToSIC_EAV_Entities_4 ON ToSIC_SexyContent_Templates.Temp_ListPresentationDemoEntityID = ToSIC_EAV_Entities_4.EntityID
-WHERE        (ToSIC_SexyContent_Templates.SysDeleted IS NULL) AND (ToSIC_SexyContent_Templates.Temp_NewTemplateGuid IS NULL)";
+WHERE        (ToSIC_SexyContent_Templates.SysDeleted IS NULL)";
 
 			var adapter = new SqlDataAdapter(sqlCommand, sqlConnection);
 			adapter.Fill(templates);
@@ -199,6 +199,7 @@ WHERE        (ToSIC_SexyContent_Templates.SysDeleted IS NULL) AND (ToSIC_SexyCon
 					Name = (string)t["Name"],
 					Path = (string)t["Path"],
 					NewEntityGuid = Guid.NewGuid(),
+					AlreadyImported = t["Temp_NewTemplateGuid"] != DBNull.Value,
 
 					ContentTypeId = getContentTypeStaticName(t["AttributeSetID"] == DBNull.Value ? new int?() : (int)t["AttributeSetID"]),
 					ContentDemoEntityGuids = t["ContentDemoEntityGuid"] == DBNull.Value ? new List<Guid>() : new List<Guid>() { (Guid)t["ContentDemoEntityGuid"] },
@@ -222,7 +223,7 @@ WHERE        (ToSIC_SexyContent_Templates.SysDeleted IS NULL) AND (ToSIC_SexyCon
 				};
 
 				return tempTemplate;
-			});
+			}).ToList();
 
 
 
@@ -274,15 +275,15 @@ WHERE        (ToSIC_SexyContent_Templates.SysDeleted IS NULL) AND (ToSIC_SexyCon
                          ToSIC_SexyContent_ContentGroupItems.SysCreated, ToSIC_SexyContent_ContentGroupItems.SysCreatedBy, ToSIC_SexyContent_ContentGroupItems.SysModified, 
                          ToSIC_SexyContent_ContentGroupItems.SysModifiedBy, ToSIC_SexyContent_ContentGroupItems.SysDeleted, 
                          ToSIC_SexyContent_ContentGroupItems.SysDeletedBy, ModuleSettings.ModuleID, ToSIC_SexyContent_Templates.AppID, ToSIC_EAV_Apps.ZoneID, 
-                         Temp_NewTemplateGuid, ToSIC_EAV_Entities.EntityGUID, ToSIC_SexyContent_ContentGroupItems.EntityID
+                         ToSIC_EAV_Entities.EntityGUID, ToSIC_SexyContent_ContentGroupItems.EntityID, ToSIC_SexyContent_ContentGroupItems.Temp_NewContentGroupGuid
 FROM            ToSIC_SexyContent_Templates INNER JOIN
                          ModuleSettings INNER JOIN
                          ToSIC_SexyContent_ContentGroupItems ON ModuleSettings.SettingValue = ToSIC_SexyContent_ContentGroupItems.ContentGroupID ON 
                          ToSIC_SexyContent_Templates.TemplateID = ToSIC_SexyContent_ContentGroupItems.TemplateID INNER JOIN
                          ToSIC_EAV_Apps ON ToSIC_SexyContent_Templates.AppID = ToSIC_EAV_Apps.AppID LEFT OUTER JOIN
-                         ToSIC_EAV_Entities ON ToSIC_SexyContent_Templates.DemoEntityID = ToSIC_EAV_Entities.EntityID AND 
-                         ToSIC_SexyContent_ContentGroupItems.EntityID = ToSIC_EAV_Entities.EntityID
-WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (ModuleSettings.SettingName = N'ContentGroupID')";
+                         ToSIC_EAV_Entities ON ToSIC_SexyContent_ContentGroupItems.EntityID = ToSIC_EAV_Entities.EntityID
+WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (ModuleSettings.SettingName = N'ContentGroupID') AND 
+                         (ToSIC_SexyContent_ContentGroupItems.Temp_NewContentGroupGuid IS NULL)";
 
 			var adapterContentGroups = new SqlDataAdapter(sqlCommandContentGroups, sqlConnection);
 			adapterContentGroups.Fill(contentGroupItemsTable);
@@ -291,14 +292,14 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
 			{
 				ContentGroupId = (int)c["ContentGroupID"],
 				EntityId = c["EntityID"] == DBNull.Value ? new int?() : (int)c["EntityID"],
-				EntityGuid = c["EntityGUID"] == DBNull.Value ? new Guid?() : Guid.Parse((string)c["EntityGUID"]),
+				EntityGuid = c["EntityGUID"] == DBNull.Value ? (Guid?)null : ((Guid)c["EntityGUID"]),
 				TemplateId = c["TemplateID"] == DBNull.Value ? new int?() : (int)c["TemplateID"],
-				SortOrder = c["SortOrder"],
+				SortOrder = (int)c["SortOrder"],
 				Type = (string)c["Type"],
 				ModuleId = (int)c["ModuleID"],
 				AppId = (int)c["AppID"],
 				ZoneId = (int)c["ZoneID"],
-				TemplateEntityGuids = c["Temp_NewTemplateGuid"] == DBNull.Value ? new List<Guid>() : new List<Guid>() { Guid.Parse((string)c["Temp_NewTemplateGuid"]) }
+				TemplateEntityGuids = existingTemplates.Where(e => c["TemplateID"] != DBNull.Value && e.TemplateID == (int)c["TemplateID"]).Select(e => e.NewEntityGuid).ToList()
 			});
 
 			var existingContentGroups = contentGroupItems.GroupBy(c => c.ContentGroupId, c => c, (id, items) =>
@@ -369,7 +370,7 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
 			{
 				var entitiesToImport = new List<ToSic.Eav.Import.Entity>();
 
-				foreach (var t in existingTemplates.Where(t => t.AppId == app))
+				foreach (var t in existingTemplates.Where(t => t.AppId == app && !t.AlreadyImported))
 				{
 					var entity = new ToSic.Eav.Import.Entity()
 					{
