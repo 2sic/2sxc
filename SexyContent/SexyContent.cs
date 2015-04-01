@@ -532,19 +532,23 @@ namespace ToSic.SexyContent
         /// Returns the ContentGroupID for a module.
         /// If it is not set, the ModuleID will set as ContentGroupID.
         /// </summary>
-        /// <param name="ModuleID"></param>
+        /// <param name="moduleID"></param>
         /// <returns></returns>
-        public Guid GetContentGroupIdFromModule(int ModuleID)
+        public Guid GetContentGroupIdFromModule(int moduleID)
         {
             var moduleControl = new ModuleController();
-            var settings = moduleControl.GetModuleSettings(ModuleID);
+            var settings = moduleControl.GetModuleSettings(moduleID);
 
-            // Set ContentGroupID if not defined in ModuleSettings yet
-			//if (settings[ContentGroupIDString] == null)
-			//	moduleControl.UpdateModuleSetting(ModuleID, ContentGroupIDString, new );
+            // Create new content group if the module has nothing defined yet
+	        if (settings[ContentGroupIDString] == null)
+	        {
+		        var guid = ContentGroups.CreateContentGroup();
+		        moduleControl.UpdateModuleSetting(moduleID, ContentGroupIDString, guid.ToString());
+	        }
 
-            settings = moduleControl.GetModuleSettings(ModuleID);
-            return Guid.Parse(settings[SexyContent.ContentGroupIDString].ToString());
+	        settings = moduleControl.GetModuleSettings(moduleID);
+
+            return Guid.Parse(settings[ContentGroupIDString].ToString());
         }
         #endregion
 

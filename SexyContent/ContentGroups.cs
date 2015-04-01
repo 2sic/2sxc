@@ -71,5 +71,23 @@ namespace ToSic.SexyContent
 			}
 		}
 
+		public Guid CreateContentGroup()
+		{
+			var context = EavContext.Instance(_zoneId, _appId);
+			var contentType = DataSource.GetCache(_zoneId, _appId).GetContentType(ContentGroupTypeName);
+
+			var values = new Dictionary<string, object>()
+			{
+				{"Template", new int[] {}},
+				{"Content", new int[] {}},
+				{"Presentation", new int[] {}},
+				{"ListContent", new int[] {}},
+				{"ListPresentation", new int[] {}}
+			};
+
+			var entity = context.AddEntity(contentType.AttributeSetId, values, null, null);
+			return entity.EntityGUID;
+		}
+
 	}
 }

@@ -22,7 +22,10 @@ namespace ToSic.SexyContent
 		{
 			get
 			{
-				return new Template(((Eav.Data.EntityRelationship)_contentGroupEntity.Attributes["Template"][0]).FirstOrDefault());
+				var templateEntity = ((Eav.Data.EntityRelationship) _contentGroupEntity.Attributes["Template"][0]).FirstOrDefault();
+				if (templateEntity == null)
+					return null;
+				return new Template(templateEntity);
 			}
 		}
 
