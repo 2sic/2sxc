@@ -90,7 +90,7 @@ namespace ToSic.SexyContent.ViewAPI
         [ValidateAntiForgeryToken]
         public IEnumerable<object> GetSelectableContentTypes()
         {
-            return Sexy.GetAvailableAttributeSetsForVisibleTemplates().Select(p => new { p.AttributeSetId, p.Name } );
+            return Sexy.GetAvailableAttributeSetsForVisibleTemplates().Select(p => new { p.StaticName, p.Name } );
         }
 
         [HttpGet]

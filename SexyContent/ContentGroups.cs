@@ -41,14 +41,19 @@ namespace ToSic.SexyContent
 
 		public void UpdateContentGroup(Guid contentGroupGuid, int? templateId)
 		{
-			// ToDo: Should add ContentGroup if it does not exist?!
-			throw new Exception("Not implemented yet (code for changing the contentgroup)");
+			var values = new Dictionary<string, object>
+			{
+				{ "Template", templateId.HasValue ? new[] { templateId.Value } : new int[]{} }
+			};
+
+			var context = EavContext.Instance(_zoneId, _appId);
+			context.UpdateEntity(contentGroupGuid, values);
 		}
 
 		public void RemoveContentGroupItem(Guid contentGroupGuid, string type, int sortOrder)
 		{
 			// ToDo: Fix removing content group item
-			throw new Exception("Not implemented yet (code for changing the contentgroup)");
+			throw new Exception("Not implemented yet (code for removing an item in the content group)");
 		}
 
 		public bool IsConfigurationInUse(int templateId, string type)
