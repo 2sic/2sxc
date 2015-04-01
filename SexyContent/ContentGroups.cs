@@ -33,15 +33,14 @@ namespace ToSic.SexyContent
 			return ContentGroupSource().List.Select(p => new ContentGroup(p.Value));
 		}
 
-		public ContentGroup GetContentGroup(int contentGroupId)
+		public ContentGroup GetContentGroup(Guid contentGroupId)
 		{
 			var dataSource = ContentGroupSource();
-			dataSource = DataSource.GetDataSource<EntityIdFilter>(_zoneId, _appId, dataSource);
-			((EntityIdFilter) dataSource).EntityIds = contentGroupId.ToString();
-			return new ContentGroup(dataSource.List.FirstOrDefault().Value);
+			// ToDo: Need a EntityGuidFilter to filter this
+			return new ContentGroup(dataSource.List.FirstOrDefault(e => e.Value.EntityGuid == contentGroupId).Value);
 		}
 
-		public void UpdateContentGroup(int contentGroupId, int? templateId)
+		public void UpdateContentGroup(Guid contentGroupId, int? templateId)
 		{
 			// ToDo: Should add ContentGroup if it does not exist?!
 			throw new Exception("Not implemented yet (code for changing the contentgroup)");

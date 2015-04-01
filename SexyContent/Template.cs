@@ -1,4 +1,5 @@
-﻿using ToSic.Eav;
+﻿using System;
+using ToSic.Eav;
 
 namespace ToSic.SexyContent
 {
@@ -7,6 +8,9 @@ namespace ToSic.SexyContent
 	    private readonly IEntity _templateEntity;
 	    public Template(IEntity templateEntity)
 	    {
+			if(templateEntity == null)
+				throw new Exception("Template entity is null");
+
 		    _templateEntity = templateEntity;
 	    }
 
@@ -24,9 +28,22 @@ namespace ToSic.SexyContent
 		public string ListPresentationTypeStaticName { get { return (string)_templateEntity.GetBestValue("ListPresentationTypeStaticName"); } }
 		public IEntity ListPresentationDemoEntity { get { return (IEntity)_templateEntity.GetBestValue("ListPresentationDemoEntity"); } }
 		public string Type { get { return (string)_templateEntity.GetBestValue("Type"); } }
-		public bool IsHidden { get { return (bool)_templateEntity.GetBestValue("IsHidden"); } }
-		public string Location { get { return (string)_templateEntity.GetBestValue("Location"); } }
-		public bool UseForList { get { return (bool)_templateEntity.GetBestValue("UseForList"); } }
+
+	    public bool IsHidden
+	    {
+		    get
+		    {
+				return (bool)(_templateEntity.GetBestValue("IsHidden") ?? false);
+		    }
+	    }
+
+	    public string Location { get { return (string)_templateEntity.GetBestValue("Location"); } }
+		public bool UseForList {
+			get
+			{
+				return (bool) _templateEntity.GetBestValue("UseForList");
+			}
+		}
 		public bool PublishData { get { return (bool)_templateEntity.GetBestValue("PublishData"); } }
 		public string StreamsToPublish { get { return (string)_templateEntity.GetBestValue("StreamsToPublish"); } }
 		public IEntity Pipeline { get { return (IEntity)_templateEntity.GetBestValue("Pipeline"); } }

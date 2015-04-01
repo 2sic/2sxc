@@ -95,16 +95,16 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Returns the ContentGroupID from QueryString
         /// </summary>
-        public int? ContentGroupID
+        public Guid? ContentGroupID
         {
             get
             {
                 string ContentGroupIDString = Request.QueryString["ContentGroupID"];
 
                 if (!String.IsNullOrEmpty(ContentGroupIDString))
-                    return int.Parse(ContentGroupIDString);
+                    return Guid.Parse(ContentGroupIDString);
 
-                return new int?();
+                return null;
             }
         }
 

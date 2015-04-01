@@ -20,11 +20,11 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Returns the ContentGroupID from QueryString
         /// </summary>
-        private int ContentGroupID
+        private Guid ContentGroupID
         {
             get
             {
-                return int.Parse(Request.QueryString["ContentGroupID"]);
+                return Guid.Parse(Request.QueryString["ContentGroupID"]);
             }
         }
 

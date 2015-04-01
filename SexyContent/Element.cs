@@ -48,7 +48,7 @@ namespace ToSic.SexyContent
         /// <summary>
         /// The ContentGroupID of the ContentGroupItem
         /// </summary>
-        public int GroupId { get; set; }
+        public Guid GroupId { get; set; }
 
 
 		//[Obsolete("Deprecated: Use GroupId instead of GroupID")]

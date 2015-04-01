@@ -391,10 +391,10 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
 						{"ListPresentationTypeStaticName", new List<IValueImportModel>() {new ValueImportModel<string>(entity) { Value = t.ListPresentationTypeId }}},
 						{"ListPresentationDemoEntity", new List<IValueImportModel>() {new ValueImportModel<List<Guid>>(entity) { Value = t.ListPresentationDemoEntityGuids }}},
 						{"Type", new List<IValueImportModel>() {new ValueImportModel<string>(entity) { Value = t.Type }}},
-						{"IsHidden", new List<IValueImportModel>() {new ValueImportModel<bool>(entity) { Value = t.IsHidden }}},
+						{"IsHidden", new List<IValueImportModel>() {new ValueImportModel<bool?>(entity) { Value = t.IsHidden }}},
 						{"Location", new List<IValueImportModel>() {new ValueImportModel<string>(entity) { Value = t.Location }}},
-						{"UseForList", new List<IValueImportModel>() {new ValueImportModel<bool>(entity) { Value = t.UseForList }}},
-						{"PublishData", new List<IValueImportModel>() {new ValueImportModel<bool>(entity) { Value = t.PublishData }}},
+						{"UseForList", new List<IValueImportModel>() {new ValueImportModel<bool?>(entity) { Value = t.UseForList }}},
+						{"PublishData", new List<IValueImportModel>() {new ValueImportModel<bool?>(entity) { Value = t.PublishData }}},
 						{"StreamsToPublish", new List<IValueImportModel>() {new ValueImportModel<string>(entity) { Value = t.StreamsToPublish }}},
 						{"Pipeline", new List<IValueImportModel>() {new ValueImportModel<List<Guid>>(entity) { Value = t.PipelineEntityGuids }}},
 						{"ViewNameInUrl", new List<IValueImportModel>() {new ValueImportModel<string>(entity) { Value = t.ViewNameInUrl }}}

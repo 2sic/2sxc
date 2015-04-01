@@ -166,9 +166,13 @@ namespace ToSic.SexyContent.DataSources
 
         public int? OverrideTemplateId { get; set; }
 
-        private int? ListId
+        private Guid? ListId
         {
-            get { return ModuleId.HasValue ? Sexy.GetContentGroupIdFromModule(ModuleId.Value) : new int?(); }
+            get
+            {
+	            if (ModuleId.HasValue) return Sexy.GetContentGroupIdFromModule(ModuleId.Value);
+	            return null;
+            }
         }
 
     }

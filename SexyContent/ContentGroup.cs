@@ -12,17 +12,26 @@ namespace ToSic.SexyContent
 		private readonly IEntity _contentGroupEntity;
 	    public ContentGroup(IEntity contentGroupEntity)
 	    {
+			if (contentGroupEntity == null)
+				throw new Exception("ContentGroup entity is null");
+
 		    _contentGroupEntity = contentGroupEntity;
 	    }
 
-		public Template Template { get { return new Template(((IEntity)_contentGroupEntity.GetBestValue("Template"))); } }
+		public Template Template
+		{
+			get
+			{
+				return new Template(((Eav.Data.EntityRelationship)_contentGroupEntity.Attributes["Template"][0]).FirstOrDefault());
+			}
+		}
 
 		public int ContentGroupId { get { return _contentGroupEntity.EntityId; } }
 
-		public List<IEntity> Content { get { return (List<IEntity>) _contentGroupEntity.GetBestValue("Content"); } }
-		public List<IEntity> Presentation { get { return (List<IEntity>) _contentGroupEntity.GetBestValue("Presentation"); } }
-		public List<IEntity> ListContent { get { return (List<IEntity>) _contentGroupEntity.GetBestValue("ListContent"); } }
-		public List<IEntity> ListPresentation { get { return (List<IEntity>) _contentGroupEntity.GetBestValue("ListPresentation"); } }
+		public List<IEntity> Content { get { return ((Eav.Data.EntityRelationship)_contentGroupEntity.GetBestValue("Content")).ToList(); } }
+		public List<IEntity> Presentation { get { return ((Eav.Data.EntityRelationship)_contentGroupEntity.GetBestValue("Presentation")).ToList(); } }
+		public List<IEntity> ListContent { get { return ((Eav.Data.EntityRelationship)_contentGroupEntity.GetBestValue("ListContent")).ToList(); } }
+		public List<IEntity> ListPresentation { get { return ((Eav.Data.EntityRelationship)_contentGroupEntity.GetBestValue("ListPresentation")).ToList(); } }
 
 	}
 }

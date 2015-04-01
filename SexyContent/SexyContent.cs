@@ -43,7 +43,7 @@ namespace ToSic.SexyContent
 
         public const string ModuleVersion = "06.06.04";
         public const string TemplateID = "TemplateID";
-        public const string ContentGroupIDString = "ToSIC_SexyContent_ContentGroupGuid";
+		public const string ContentGroupIDString = "ToSIC_SexyContent_ContentGroupGuid";
         public const string AppIDString = "AppId";
         //public const string SettingsPublishDataSource = "ToSic_SexyContent_PublishDataSource";
         //public const string SettingsPublishDataSourceStreams = "ToSic_SexyContent_PublishDataSource_Streams";
@@ -451,7 +451,7 @@ namespace ToSic.SexyContent
             return availableTemplates;
         }
 
-		private IEnumerable<Template> GetCompatibleTemplates(int contentGroupID)
+		private IEnumerable<Template> GetCompatibleTemplates(Guid contentGroupID)
 		{
 			var contentGroup = ContentGroups.GetContentGroup(contentGroupID);
 			var isList = contentGroup.Content.Count > 1;
@@ -606,17 +606,17 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <param name="ModuleID"></param>
         /// <returns></returns>
-        public int GetContentGroupIdFromModule(int ModuleID)
+        public Guid GetContentGroupIdFromModule(int ModuleID)
         {
             var moduleControl = new ModuleController();
             var settings = moduleControl.GetModuleSettings(ModuleID);
 
             // Set ContentGroupID if not defined in ModuleSettings yet
-            if (settings[ContentGroupIDString] == null)
-                moduleControl.UpdateModuleSetting(ModuleID, ContentGroupIDString, ModuleID.ToString());
+			//if (settings[ContentGroupIDString] == null)
+			//	moduleControl.UpdateModuleSetting(ModuleID, ContentGroupIDString, new );
 
             settings = moduleControl.GetModuleSettings(ModuleID);
-            return int.Parse(settings[SexyContent.ContentGroupIDString].ToString());
+            return Guid.Parse(settings[SexyContent.ContentGroupIDString].ToString());
         }
         #endregion
 
@@ -671,7 +671,7 @@ namespace ToSic.SexyContent
         /// <param name="UserID"></param>
         /// <param name="ReturnUrl"></param>
         /// <returns></returns>
-        public string GetElementEditLink(int ContentGroupID, int SortOrder, int ModuleID, int TabID, string ReturnUrl)
+        public string GetElementEditLink(Guid ContentGroupID, int SortOrder, int ModuleID, int TabID, string ReturnUrl)
         {
             string EditUrl = Globals.NavigateURL(TabID, ControlKeys.EditContentGroup, "mid", ModuleID.ToString(), SortOrderString, SortOrder.ToString(), "ContentGroupID", ContentGroupID.ToString());
             EditUrl += (EditUrl.IndexOf("?") == -1 ? "?" : "&") + "popUp=true&ReturnUrl=" + HttpUtility.UrlEncode(ReturnUrl);
@@ -684,7 +684,7 @@ namespace ToSic.SexyContent
             return EditUrl;
         }
 
-        public string GetElementAddWithEditLink(int ContentGroupID, int DestinationSortOrder, int ModuleID, int TabID, string ReturnUrl)
+        public string GetElementAddWithEditLink(Guid ContentGroupID, int DestinationSortOrder, int ModuleID, int TabID, string ReturnUrl)
         {
             return GetElementEditLink(ContentGroupID, DestinationSortOrder, ModuleID, TabID, ReturnUrl) + "&EditMode=New";
         }

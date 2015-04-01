@@ -24,7 +24,7 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Gets or sets the ContentGroupID
         /// </summary>
-        public int ContentGroupID { get; set; }
+        public Guid ContentGroupID { get; set; }
 
 	    private ContentGroup _contentGroup;
 
