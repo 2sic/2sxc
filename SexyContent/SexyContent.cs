@@ -380,56 +380,6 @@ namespace ToSic.SexyContent
 
         #region Template Configuration
 
-        public void CreateOrUpdateTemplateDefault(int TemplateID, string ItemType, int? ContentTypeID, int? DemoEntityID)
-        {
-            //var DefaultAppContext = new SexyContent(true, DataSource.DefaultZoneId);
-            var AttributeSetID = ContentContext.GetAttributeSet(AttributeSetStaticNameTemplateContentTypes).AttributeSetID;
-            var Entities = ContentContext.GetEntities(AssignmentObjectTypeIDSexyContentTemplate, TemplateID, null, null);
-
-            var Values = new OrderedDictionary()
-                                {
-                                    {"ItemType", ItemType},
-                                    {"ContentTypeID", ContentTypeID.HasValue ? ContentTypeID.Value.ToString() : "0" },
-                                    {"DemoEntityID", DemoEntityID.HasValue ? DemoEntityID.Value.ToString() : "0" }
-                                };
-
-            var ExistingEntity =
-                Entities.FirstOrDefault(
-                    p => p.Values.Any(v => v.Attribute.StaticName == "ItemType" && v.Value == ItemType));
-
-            if (ExistingEntity != null)
-                ContentContext.UpdateEntity(ExistingEntity.EntityID, Values);
-            else
-                ContentContext.AddEntity(AttributeSetID, Values, null, TemplateID, AssignmentObjectTypeIDSexyContentTemplate, 0);
-        }
-
-		//public TemplateDefault GetTemplateDefault(int templateId, ContentGroupItemType ItemType)
-		//{
-		//	return GetTemplateDefaults(templateId).FirstOrDefault(t => t.ItemType == ItemType);
-		//}
-
-		//public List<TemplateDefault> GetTemplateDefaults(int TemplateID)
-		//{
-		//	var Result = new List<TemplateDefault>();
-		//	var Entities = DataSource.GetMetaDataSource(ZoneId.Value, AppId.Value).GetAssignedEntities(AssignmentObjectTypeIDSexyContentTemplate, TemplateID, AttributeSetStaticNameTemplateContentTypes);
-
-		//	// Add TemplateDefault configured directly in Template
-		//	var Template = TemplateContext.GetTemplate(TemplateID);
-		//	if(Template == null)
-		//		return new List<TemplateDefault>();
-
-		//	Result.Add(new TemplateDefault() { ContentTypeID = Template.AttributeSetID, DemoEntityID = Template.DemoEntityID, ItemType = ContentGroupItemType.Content });
-
-		//	Result.AddRange(Entities.Select(e => new TemplateDefault()
-		//		{
-		//			ItemType = (ContentGroupItemType) Enum.Parse(typeof (ContentGroupItemType), (string) e.Attributes["ItemType"][0]),
-		//			ContentTypeID = e.Attributes.ContainsKey("ContentTypeID") && e.Attributes["ContentTypeID"][0] != null && (decimal)e.Attributes["ContentTypeID"][0] != 0 ? Convert.ToInt32((decimal)e.Attributes["ContentTypeID"][0]) : new int?(),
-		//			DemoEntityID = e.Attributes.ContainsKey("DemoEntityID") && e.Attributes["DemoEntityID"][0] != null && (decimal) e.Attributes["DemoEntityID"][0] != 0 ? Convert.ToInt32((decimal) e.Attributes["DemoEntityID"][0]) : new int?()
-		//		}));
-
-		//	return Result;
-		//}
-
         /// <summary>
         /// Returns all templates that should be available in the template selector
         /// </summary>
@@ -465,28 +415,6 @@ namespace ToSic.SexyContent
 
 			return compatibleTemplates;
 		}
-
-		///// <summary>
-		///// Returns all visible templates that belongs to the specified portal and use the given AttributeSet, and can be used for lists.
-		///// </summary>
-		///// <param name="PortalID"></param>
-		///// <param name="AttributeSetID"></param>
-		///// <returns></returns>
-		//public IEnumerable<Template> GetVisibleListTemplates(int PortalID, int AttributeSetID)
-		//{
-		//	return GetVisibleTemplates(PortalID, AttributeSetID).Where(t => t.UseForList);
-		//}
-
-		///// <summary>
-		///// Returns all visible templates that belongs to the specified portal and use the given AttributeSet, and can be used for lists.
-		///// </summary>
-		///// <param name="PortalID"></param>
-		///// <param name="AttributeSetID"></param>
-		///// <returns></returns>
-		//public IEnumerable<Template> GetVisibleListTemplates(int PortalID)
-		//{
-		//	return GetVisibleTemplates(PortalID).Where(t => t.UseForList);
-		//}
 
         #endregion
 
@@ -939,81 +867,6 @@ namespace ToSic.SexyContent
 
         #region ContentGroupItem Management
 
-		///// <summary>
-		///// Adds a ContentGroupItem to a specified ContentGroup and returns the created ContentGroupItem.
-		///// </summary>
-		///// <param name="ContentGroupID"></param>
-		///// <param name="UserID"></param>
-		///// <param name="TemplateID"></param>
-		///// <param name="EntityID"></param>
-		///// <param name="DestinationSortOrder"></param>
-		///// <param name="AutoSave">Prevents from saving the item if false</param>
-		///// <returns></returns>
-		//public ContentGroupItem AddContentGroupItem(int ContentGroupID, int UserID, int? TemplateID, int? EntityID, int? DestinationSortOrder, bool AutoSave, ContentGroupItemType ItemType, bool PreventSorting)
-		//{
-		//	var userId = PortalSettings.Current.UserId;
-
-		//	if (TemplateID.HasValue)
-		//	{
-		//		var template = Templates.GetTemplate(TemplateID.Value);
-
-		//		// Throw exception if
-		//		// 1. a content element is added
-		//		// 2. the template is not configured for a list
-		//		if (ItemType == ContentGroupItemType.Content && !template.UseForList)
-		//			throw new Exception("Cannot add item: The template is not configured for lists.");
-		//	}
-
-		//	var Item = new ContentGroupItem()
-		//	{
-		//		ContentGroupID = ContentGroupID,
-		//		SysCreatedBy = UserID,
-		//		SysModifiedBy = UserID,
-		//		SysCreated = DateTime.Now,
-		//		SysModified = DateTime.Now,
-		//		SortOrder = DestinationSortOrder.HasValue ? DestinationSortOrder.Value : 0,
-		//		TemplateID = TemplateID,
-		//		EntityID = EntityID,
-		//		Type = ItemType.ToString()
-		//	};
-
-		//	Item = Templates.AddContentGroupItem(Item);
-
-		//	if (AutoSave)
-		//		Templates.SaveChanges();
-
-		//	if (!PreventSorting)
-		//	{
-		//		var GroupItems = Templates.GetContentGroupItems(ContentGroupID);
-
-		//		if (GroupItems.Any(p => p != Item))
-		//		{
-		//			Item.SortOrder = GroupItems.Where(p => p != Item).Max(p => p.SortOrder) + 1;
-		//		}
-
-		//		if (DestinationSortOrder.HasValue)
-		//			Templates.ReorderContentGroupItem(Item, DestinationSortOrder.Value, AutoSave);
-		//	}
-
-		//	if (AutoSave)
-		//		Templates.SaveChanges();
-
-		//	return Item;
-		//}
-
-		//public void UpdateTemplateForGroup(int ContentGroupID, int? TemplateID, int UserID)
-		//{
-		//	List<ContentGroupItem> Items = Templates.GetContentGroupItems(ContentGroupID, ContentGroupItemType.Content).ToList();
-
-		//	if (!Items.Any())
-		//		Items.Add(AddContentGroupItem(ContentGroupID, UserID, null, null, null, true, ContentGroupItemType.Content, false));
-
-		//	TemplateID = TemplateID == 0 ? null : TemplateID;
-		//	Items.ForEach(p => p.TemplateID = TemplateID);
-
-		//	Templates.SaveChanges();
-		//}
-
         public IEnumerable<IContentType> GetAvailableAttributeSets(string scope)
         {
             return GetAvailableAttributeSets().Where(p => p.Scope == scope);
@@ -1031,16 +884,6 @@ namespace ToSic.SexyContent
             return GetAvailableAttributeSets(SexyContent.AttributeSetScope).Where(p => AvailableTemplates.Any(t => t.ContentTypeStaticName == p.StaticName)).OrderBy(p => p.Name);
         }
 
-		///// <summary>
-		///// Returns if any ContentItem with the TemplateID and ItemType specified is in use.
-		///// </summary>
-		///// <param name="TemplateID"></param>
-		///// <param name="ItemType"></param>
-		///// <returns></returns>
-		//public bool IsTemplateDefaultInUse(int TemplateID, ContentGroupItemType ItemType)
-		//{
-		//	return Templates.GetContentGroupItems().Any(c => c.TemplateID == TemplateID && c.ItemType == ItemType && c.EntityID.HasValue);
-		//}
 
         #endregion
 
@@ -1313,31 +1156,6 @@ namespace ToSic.SexyContent
             }
 
             return resultString;
-        }
-
-        public bool CanDeleteEntity(int entityId)
-        {
-			// This check is not needed anymore, because the data is now stored in EAV
-			// EAV checks the relationship before deleting
-			// ToDo: Remove this code if really not needed
-
-			//var templates = Templates.GetAllTemplates().ToList();
-			//var templateDefaults = templates.ToList().Select(t => new {Template = t, Defaults = GetTemplateDefaults(t.TemplateId)});
-			//var contentGroupItems = Templates.GetContentGroupItems();
-
-			//// Check all templates
-			//if (templates.Any(t => t.ContentDemoEntity.EntityId == entityId))
-			//	return false;
-
-			//// Check template defaults (Presentation, ListContent, ListPresentation)
-			//if(templateDefaults.Any(d => d.Defaults.Any(de => de.DemoEntityID == entityId)))
-			//	return false;
-
-			//// Check ContentGroupItems
-			//if (contentGroupItems.Any(c => c.EntityID == entityId))
-			//	return false;
-
-            return true;
         }
 
         #endregion

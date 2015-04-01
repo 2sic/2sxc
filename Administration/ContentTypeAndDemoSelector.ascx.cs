@@ -18,11 +18,11 @@ namespace ToSic.SexyContent
 		public bool ContentTypeRequired { get; set; }
 		public bool EnableNoContentTypeOption { get; set; }
 
-		public int? _ContentTypeID;
-		public int? ContentTypeID
+		public string _ContentTypeStaticName;
+		public string ContentTypeStaticName
 		{
-			get { return int.Parse(ddlContentTypes.SelectedValue); }
-			set { _ContentTypeID = value; }
+			get { return ddlContentTypes.SelectedValue; }
+			set { _ContentTypeStaticName = value; }
 		}
 
 		public int? _DemoEntityID;
@@ -88,8 +88,8 @@ namespace ToSic.SexyContent
 			// Set localized Error Messages for validator
 			valContentType.ErrorMessage = LocalizeString("valContentType.ErrorMessage");
 			valContentType.Enabled = ContentTypeRequired;
-			((DotNetNuke.UI.UserControls.LabelControl)lblContentType).Text = LocalizeString("lblContentType" + ItemType + ".Text");
-			((DotNetNuke.UI.UserControls.LabelControl)lblDemoRow).Text = LocalizeString("lblDemoRow" + ItemType + ".Text");
+			lblContentType.Text = LocalizeString("lblContentType" + ItemType + ".Text");
+			lblDemoRow.Text = LocalizeString("lblDemoRow" + ItemType + ".Text");
 
 			if (!IsPostBack)
 			{
@@ -100,12 +100,12 @@ namespace ToSic.SexyContent
 				var AttributeSets = Sexy.GetAvailableAttributeSets(SexyContent.AttributeSetScope);
 				ddlContentTypes.DataSource = AttributeSets;
 
-				if (AttributeSets.Any(a => a.AttributeSetId == _ContentTypeID))
-					ddlContentTypes.SelectedValue = _ContentTypeID.ToString();
+				if (AttributeSets.Any(a => a.StaticName == _ContentTypeStaticName))
+					ddlContentTypes.SelectedValue = _ContentTypeStaticName.ToString();
 
 				ddlContentTypes.DataBind();
 
-				BindDemoContentDropdown(Convert.ToInt32(ddlContentTypes.SelectedValue), ddlDemoRows);
+				BindDemoContentDropdown(ddlContentTypes.SelectedValue, ddlDemoRows);
 				if (_DemoEntityID.HasValue && _DemoEntityID != 0 && ddlDemoRows.Items.FindByValue(_DemoEntityID.Value.ToString()) != null)
 					ddlDemoRows.SelectedValue = _DemoEntityID.Value.ToString();
 			}
@@ -118,31 +118,31 @@ namespace ToSic.SexyContent
 		/// <param name="e"></param>
 		protected void ddlContentTypes_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			BindDemoContentDropdown(Convert.ToInt32(ddlContentTypes.SelectedValue), ddlDemoRows);
+			BindDemoContentDropdown(ddlContentTypes.SelectedValue, ddlDemoRows);
 		}
 
 		/// <summary>
 		/// Bind the demo dropdown
 		/// </summary>
-		/// <param name="ContentType"></param>
-		/// <param name="DemoContentChooser"></param>
-		protected void BindDemoContentDropdown(int ContentType, DropDownList DemoContentChooser)
+		/// <param name="contentType"></param>
+		/// <param name="demoContentChooser"></param>
+		protected void BindDemoContentDropdown(string contentType, DropDownList demoContentChooser)
         {
-            if (ContentType > 0)
+            if (!String.IsNullOrEmpty(contentType))
             {
-                DemoContentChooser.Items.Clear();
-                DemoContentChooser.Items.Add(new ListItem(LocalizeString("ddlDemoRowsDefaultItem.Text"), "0"));
+                demoContentChooser.Items.Clear();
+                demoContentChooser.Items.Add(new ListItem(LocalizeString("ddlDemoRowsDefaultItem.Text"), ""));
 
 	            var dataSource = DataSource.GetInitialDataSource(ZoneId, AppId);
-	            var data = dataSource.List.Where(p => p.Value.Type.AttributeSetId == ContentType).Select(p => new { p.Value.EntityId, EntityTitle = p.Value.Title != null ? p.Value.Title[CultureInfo.CurrentCulture.Name].ToString() : "(no title)" });
+	            var data = dataSource.List.Where(p => p.Value.Type.StaticName == contentType).Select(p => new { p.Value.EntityId, EntityTitle = p.Value.Title != null ? p.Value.Title[CultureInfo.CurrentCulture.Name].ToString() : "(no title)" });
 					
-				DemoContentChooser.DataSource = data;
-                DemoContentChooser.Enabled = true;
-                DemoContentChooser.DataBind();
+				demoContentChooser.DataSource = data;
+                demoContentChooser.Enabled = true;
+                demoContentChooser.DataBind();
             }
             else
             {
-                DemoContentChooser.Enabled = false;
+                demoContentChooser.Enabled = false;
             }
         }
 	}

@@ -182,7 +182,6 @@ namespace ToSic.SexyContent
             btnDelete.Text = ContentGroup.Content.Count > 1 ? LocalizeString("btnDelete.ListText") : LocalizeString("btnDelete.Text");
             btnDelete.Visible = !NewMode && ContentGroupID.HasValue;
 
-			// ToDo: Fix this!
 			// If there is something to edit
 			if (SortOrder.HasValue && (SortOrder == -1 || SortOrder < ContentGroup.Content.Count))
 			{
@@ -215,8 +214,6 @@ namespace ToSic.SexyContent
 
         protected void ProcessView()
         {
-			// ToDo: Fix this
-
 			if (ContentGroupID.HasValue && SortOrder.HasValue)
 			{
 				var types = new List<string>();

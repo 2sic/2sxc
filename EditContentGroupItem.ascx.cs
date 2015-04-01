@@ -265,10 +265,8 @@ namespace ToSic.SexyContent
             if(EditItemControl.Visible)
                 EditItemControl.Save();
 
-			throw new NotImplementedException("ToDo: implement referencing demo / deleting content group item");
-			// ToDo: implement referencing demo / deleting content group item
-			//if (Entity != null && pnlReferenced.Visible && !EditItemControl.Visible)
-			//	SexyUncached.Templates.DeleteContentGroupItem(Entity.ContentGroupItemID, UserId);
+			if (Entity != null && pnlReferenced.Visible && !EditItemControl.Visible)
+				SexyUncached.ContentGroups.RemoveContentGroupItem(ContentGroupID, ItemType, SortOrder.Value);
 
             if (OnSaved != null)
                 OnSaved(this, new EventArgs());

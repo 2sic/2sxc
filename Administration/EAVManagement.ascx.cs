@@ -64,11 +64,12 @@ namespace ToSic.SexyContent
 
         protected void EavManagementEntityDeleting(EntityDeletingEventArgs e)
         {
-            if (!Sexy.CanDeleteEntity(e.EntityId))
-            {
-                e.Cancel = true;
-                e.CancelMessage += " This entity cannot be deleted because it is in use (2sxc).";
-            }
+			// This code is not needed anymore because EAV has the list management now.
+			//if (!Sexy.CanDeleteEntity(e.EntityId))
+			//{
+			//	e.Cancel = true;
+			//	e.CancelMessage += " This entity cannot be deleted because it is in use (2sxc).";
+			//}
         }
     }
 }

@@ -47,5 +47,48 @@ namespace ToSic.SexyContent
 			return new Template(dataSource.List.FirstOrDefault().Value);
 		}
 
+		/// <summary>
+		/// Adds or updates a template - will create a new template if templateId is not specified
+		/// </summary>
+		public void UpdateTemplate(Guid? templateId, string name, string path, string contentTypeStaticName,
+			int contentDemoEntity, string presentationTypeStaticName, int presentationDemoEntity,
+			string listContentTypeStaticName, int listContentDemoEntity, string listPresentationTypeStaticName,
+			int listPresentationDemoEntity, string templateType, bool isHidden, string location, bool useForList,
+			bool publishData, string streamsToPublish, int pipelineEntity, string viewNameInUrl)
+		{
+			var values = new Dictionary<string,object>
+			{
+				{ "Name", name },
+				{ "Path", path },
+				{ "ContentTypeStaticName", contentTypeStaticName },
+				{ "ContentDemoEntity", new[] { contentDemoEntity } },
+				{ "PresentationTypeStaticName", presentationTypeStaticName },
+				{ "PresentationDemoEntity", new[] { presentationDemoEntity } },
+				{ "ListContentTypeStaticName", listContentTypeStaticName },
+				{ "ListContentDemoEntity", new[] { listContentDemoEntity } },
+				{ "ListPresentationTypeStaticName", listPresentationTypeStaticName },
+				{ "ListPresentationDemoEntity", new[] { listPresentationDemoEntity } },
+				{ "Type", templateType },
+				{ "IsHidden", isHidden },
+				{ "Location", location },
+				{ "UseForList", useForList },
+				{ "PublishData", publishData },
+				{ "StreamsToPublish", streamsToPublish },
+				{ "Pipeline", new[] { pipelineEntity } },
+				{ "ViewNameInUrl", viewNameInUrl }
+			};
+
+			var context = EavContext.Instance(_zoneId, _appId);
+
+			if(templateId.HasValue)
+				context.UpdateEntity(templateId.Value, values);
+			else
+			{
+				var contentType = DataSource.GetCache(_zoneId, _appId).GetContentType(TemplateTypeName);
+				context.AddEntity(contentType.AttributeSetId, values, null, null);
+			}
+			
+		}
+
 	}
 }
