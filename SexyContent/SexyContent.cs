@@ -271,42 +271,42 @@ namespace ToSic.SexyContent
         }
 
         /// <summary>
-        /// Creates a template file if it does not already exists, and uses a default text to insert.
+        /// Creates a template file if it does not already exists, and uses a default text to insert. Returns the new path
         /// </summary>
-        public void CreateTemplateFileIfNotExists(string Name, Template Template, HttpServerUtility Server, string Contents = "")
+        public string CreateTemplateFileIfNotExists(string name, Template template, HttpServerUtility server, string contents = "")
         {
-            if (Template.Type == RazorC)
+            if (template.Type == RazorC)
             {
-                if (!Name.StartsWith("_"))
-                    Name = "_" + Name;
-                if (Path.GetExtension(Name) != ".cshtml")
-                    Name += ".cshtml";
+                if (!name.StartsWith("_"))
+                    name = "_" + name;
+                if (Path.GetExtension(name) != ".cshtml")
+                    name += ".cshtml";
             }
-            else if (Template.Type == RazorVB)
+            else if (template.Type == RazorVB)
             {
-                if (!Name.StartsWith("_"))
-                    Name = "_" + Name;
-                if (Path.GetExtension(Name) != ".vbhtml")
-                    Name += ".vbhtml";
+                if (!name.StartsWith("_"))
+                    name = "_" + name;
+                if (Path.GetExtension(name) != ".vbhtml")
+                    name += ".vbhtml";
             }
-            else if (Template.Type == TokenReplace)
+            else if (template.Type == TokenReplace)
             {
-                if (Path.GetExtension(Name) != ".html")
-                    Name += ".html";
+                if (Path.GetExtension(name) != ".html")
+                    name += ".html";
             }
 
-			throw new NotImplementedException("ToDo: Fix this");
-			// ToDo: Fix this
-			//Template.Path = System.Text.RegularExpressions.Regex.Replace(Name, @"[?:\/*""<>|]", "");
-            var TemplatePath = Server.MapPath(System.IO.Path.Combine(GetTemplatePathRoot(Template.Location, App), Template.Path));
+			var templatePath = Regex.Replace(name, @"[?:\/*""<>|]", "");
+            var absolutePath = server.MapPath(Path.Combine(GetTemplatePathRoot(template.Location, App), templatePath));
 
-            if (!File.Exists(TemplatePath))
+            if (!File.Exists(absolutePath))
             {
-                StreamWriter Stream = new StreamWriter(File.Create(TemplatePath));
-                Stream.Write(Contents);
-                Stream.Flush();
-                Stream.Close();
+                var stream = new StreamWriter(File.Create(absolutePath));
+                stream.Write(contents);
+                stream.Flush();
+                stream.Close();
             }
+
+	        return templatePath;
         }
 
         /// <summary>

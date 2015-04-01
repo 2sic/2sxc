@@ -30,7 +30,7 @@ namespace ToSic.SexyContent
 		{
 			get
 			{
-				return Convert.ToInt32(ddlDemoRows.SelectedValue) > 0 ? Convert.ToInt32(ddlDemoRows.SelectedValue) : new int?();
+				return ddlDemoRows.SelectedValue != "" && Convert.ToInt32(ddlDemoRows.SelectedValue) > 0 ? Convert.ToInt32(ddlDemoRows.SelectedValue) : new int?();
 			}
 			set
 			{

@@ -50,31 +50,31 @@ namespace ToSic.SexyContent
 		/// <summary>
 		/// Adds or updates a template - will create a new template if templateId is not specified
 		/// </summary>
-		public void UpdateTemplate(Guid? templateId, string name, string path, string contentTypeStaticName,
-			int contentDemoEntity, string presentationTypeStaticName, int presentationDemoEntity,
-			string listContentTypeStaticName, int listContentDemoEntity, string listPresentationTypeStaticName,
-			int listPresentationDemoEntity, string templateType, bool isHidden, string location, bool useForList,
-			bool publishData, string streamsToPublish, int pipelineEntity, string viewNameInUrl)
+		public void UpdateTemplate(int? templateId, string name, string path, string contentTypeStaticName,
+			int? contentDemoEntity, string presentationTypeStaticName, int? presentationDemoEntity,
+			string listContentTypeStaticName, int? listContentDemoEntity, string listPresentationTypeStaticName,
+			int? listPresentationDemoEntity, string templateType, bool isHidden, string location, bool useForList,
+			bool publishData, string streamsToPublish, int? pipelineEntity, string viewNameInUrl)
 		{
 			var values = new Dictionary<string,object>
 			{
 				{ "Name", name },
 				{ "Path", path },
 				{ "ContentTypeStaticName", contentTypeStaticName },
-				{ "ContentDemoEntity", new[] { contentDemoEntity } },
+				{ "ContentDemoEntity", contentDemoEntity.HasValue ? new[] { contentDemoEntity.Value } : new int[]{} },
 				{ "PresentationTypeStaticName", presentationTypeStaticName },
-				{ "PresentationDemoEntity", new[] { presentationDemoEntity } },
+				{ "PresentationDemoEntity", presentationDemoEntity.HasValue ? new[] { presentationDemoEntity.Value } : new int[]{} },
 				{ "ListContentTypeStaticName", listContentTypeStaticName },
-				{ "ListContentDemoEntity", new[] { listContentDemoEntity } },
+				{ "ListContentDemoEntity", listContentDemoEntity.HasValue ? new[] { listContentDemoEntity.Value } : new int[]{} },
 				{ "ListPresentationTypeStaticName", listPresentationTypeStaticName },
-				{ "ListPresentationDemoEntity", new[] { listPresentationDemoEntity } },
+				{ "ListPresentationDemoEntity", listPresentationDemoEntity.HasValue ? new[] { listPresentationDemoEntity.Value } : new int[]{} },
 				{ "Type", templateType },
 				{ "IsHidden", isHidden },
 				{ "Location", location },
 				{ "UseForList", useForList },
 				{ "PublishData", publishData },
 				{ "StreamsToPublish", streamsToPublish },
-				{ "Pipeline", new[] { pipelineEntity } },
+				{ "Pipeline", pipelineEntity.HasValue ? new[] { pipelineEntity } : new int?[]{} },
 				{ "ViewNameInUrl", viewNameInUrl }
 			};
 
