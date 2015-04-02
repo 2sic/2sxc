@@ -62,14 +62,14 @@ namespace ToSic.SexyContent
 			var el = new Element
 			{
 				EntityId = e.EntityId,
-				Content = AsDynamic(e)
+				Content =AsDynamic(e)
 			};
 
 			if (e is EntityInContentGroup)
 			{
 				var c = ((EntityInContentGroup)e);
 				el.GroupId = c.GroupId;
-				el.Presentation = AsDynamic(c.Presentation);
+				el.Presentation = c.Presentation == null ? null : AsDynamic(c.Presentation);
 				el.SortOrder = c.SortOrder;
 			}
 

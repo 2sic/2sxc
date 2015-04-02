@@ -104,7 +104,10 @@ namespace ToSic.SexyContent
 				if (_entity == null && SortOrder.HasValue)
 				{
 					var entities = ContentGroup[ItemType];
-					_entity = entities.Count > SortOrder ? entities[SortOrder.Value] : null;
+					var sortOrder = SortOrder.Value == -1 ? 0 : SortOrder.Value;
+					if (entities.Count() - 1 < sortOrder)
+						return null;
+					_entity = entities.Count > sortOrder ? entities[sortOrder] : null;
 				}
 				return _entity;
 			}
@@ -226,7 +229,7 @@ namespace ToSic.SexyContent
         {
 	        if (NewMode)
 	        {
-		        ContentGroup.AddContentAndPresentationEntity(SortOrder);
+		        ContentGroup.AddEntity(ItemType, SortOrder.Value);
 				ContentGroup.UpdateEntity(ItemType, SortOrder.Value, Entity.EntityID);
 	        }
 	        else

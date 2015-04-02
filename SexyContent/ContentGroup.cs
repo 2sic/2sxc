@@ -10,7 +10,7 @@ namespace ToSic.SexyContent
 	public class ContentGroup
 	{
 
-		private readonly IEntity _contentGroupEntity;
+		private IEntity _contentGroupEntity;
 		private readonly int _zoneId;
 		private readonly int _appId;
 
@@ -87,6 +87,9 @@ namespace ToSic.SexyContent
 
 		public void UpdateEntity(string type, int sortOrder, int? entityId)
 		{
+			if (sortOrder == -1)
+				sortOrder = 0;
+
 			var entityIds = this[type].Select(p => p == null ? new int?() : p.EntityId).ToList();
 
 			if (entityIds.Count < sortOrder + 1)
@@ -98,6 +101,9 @@ namespace ToSic.SexyContent
 
 		private void UpdateEntities(string type, IEnumerable<int?> entityIds)
 		{
+			if (type == "Presentation" && entityIds.Count() > Content.Count)
+				throw new Exception("Presentation may not contain more items than Content.");
+
 			var values = new Dictionary<string, object>
 			{
 				{ type, entityIds.ToArray() }
@@ -105,6 +111,9 @@ namespace ToSic.SexyContent
 
 			var context = EavContext.Instance(_zoneId, _appId);
 			context.UpdateEntity(_contentGroupEntity.EntityGuid, values);
+
+			// Refresh content group entity (ensures contentgroup is up to date)
+			this._contentGroupEntity = new ContentGroups(_zoneId, _appId).GetContentGroup(_contentGroupEntity.EntityGuid)._contentGroupEntity;
 		}
 
 		/// <summary>
@@ -160,7 +169,7 @@ namespace ToSic.SexyContent
 			AddEntity(type.Replace("Content", "Presentation"), sortOrder.Value);
 		}
 
-		private void AddEntity(string type, int sortOrder)
+		public void AddEntity(string type, int sortOrder)
 		{
 			var entityIds = this[type].Select(p => p == null ? new int?() : p.EntityId).ToList();
 			entityIds.Insert(sortOrder, new int?());
@@ -177,6 +186,24 @@ namespace ToSic.SexyContent
 			var entityIds = Presentation.Select(p => p == null ? new int?() : p.EntityId).ToList();
 			entityIds.AddRange(Enumerable.Repeat(new int?(), difference));
 			UpdateEntities("Presentation", entityIds);
+		}
+
+		public void ReorderEntities(int sortOrder, int destinationSortOrder)
+		{
+			var contentIds = Content.Select(p => p == null ? new int?() : p.EntityId).ToList();
+			var presentationIds = Presentation.Select(p => p == null ? new int?() : p.EntityId).ToList();
+
+			var contentId = contentIds[sortOrder];
+			var presentationId = presentationIds[sortOrder];
+
+			contentIds.RemoveAt(sortOrder);
+			presentationIds.RemoveAt(sortOrder);
+
+			contentIds.Insert(destinationSortOrder, contentId);
+			presentationIds.Insert(destinationSortOrder, presentationId);
+
+			UpdateEntities("Content", contentIds);
+			UpdateEntities("Presentation", presentationIds);
 		}
 	}
 }

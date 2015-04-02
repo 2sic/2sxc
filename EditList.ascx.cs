@@ -59,32 +59,23 @@ namespace ToSic.SexyContent
 
         protected void grdEntities_RowDrop(object sender, GridDragDropEventArgs e)
         {
-			// ToDo: implement rowdrop
-	        throw new Exception("ToDo: implement rowdrop");
-	        //if (e.DestDataItem != null)
-	        //{
-	        //	var UncachedSexyContent = SexyUncached;
+	        if (e.DestDataItem == null)
+				return;
 
-	        //	ContentGroupItem DestItem = UncachedSexyContent.Templates.GetContentGroupItem(((int)e.DestDataItem.GetDataKeyValue("ID")));
-	        //	ContentGroupItem Item = UncachedSexyContent.Templates.GetContentGroupItem(((int)e.DraggedItems[0].GetDataKeyValue("ID")));
-	        //	int DestinationSortOrder = DestItem.SortOrder;
+	        var sortOrder = (int)e.DraggedItems[0].GetDataKeyValue("SortOrder");
+	        var destinationSortOrder = (int) e.DestDataItem.GetDataKeyValue("SortOrder");
 
-	        //	if (e.DropPosition == GridItemDropPosition.Below)
-	        //		DestinationSortOrder++;
+	        ContentGroup.ReorderEntities(sortOrder, destinationSortOrder);
 
-	        //	if (Item.SortOrder < DestinationSortOrder)
-	        //		DestinationSortOrder--;
+			// Refresh cached contentgroup
+	        _contentGroup = null;
 
-	        //	UncachedSexyContent.Templates.ReorderContentGroupItem(Item, DestinationSortOrder, true);
-
-	        //	grdEntities.Rebind();
-	        //	grdEntities.Items[DestinationSortOrder].Selected = true;
-	        //}
+	        grdEntities.Rebind();
+	        grdEntities.Items[destinationSortOrder].Selected = true;
         }
 
         protected void grdEntities_NeedDatasource(object sender, EventArgs e)
         {
-			
 			var entities = ContentGroup.Content;
 			grdEntities.DataSource = entities.Select((en, i) =>
 			{
@@ -92,11 +83,10 @@ namespace ToSic.SexyContent
 				return new
 				{
 					EntityId = en == null ? new int?() : en.EntityId,
-					EntityTitle = entity != null ? String.IsNullOrEmpty(entity.EntityTitle.ToString()) ? "(empty)" : entity.EntityTitle : "(no demo row)",
+					EntityTitle = entity != null ? String.IsNullOrEmpty(entity.EntityTitle.ToString()) ? "(empty)" : entity.EntityTitle : "(demo row)",
 					SortOrder = i
 				};
 			});
-
         }
 
         protected string GetEditUrl(int sortOrder)

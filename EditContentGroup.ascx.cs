@@ -235,7 +235,7 @@ namespace ToSic.SexyContent
 					editControl.TemplateID = ContentGroup.Template.TemplateId;
 					editControl.AttributeSetStaticName = contentTypeStaticName;
 					editControl.ItemType = type;
-					editControl.SortOrder = SortOrder.HasValue || SortOrder == -1 ? SortOrder : new int?();
+					editControl.SortOrder = SortOrder;
 					editControl.ModuleID = ModuleId;
 					editControl.TabID = TabId;
 					editControl.NewMode = NewMode;
