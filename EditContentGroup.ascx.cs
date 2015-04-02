@@ -1,19 +1,11 @@
-﻿using System;
+﻿using DotNetNuke.Entities.Content;
+using DotNetNuke.Services.Localization;
+using DotNetNuke.UI.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Web;
-using System.Web.UI;
 using System.Web.UI.WebControls;
-using DotNetNuke.Common.Utilities;
-using DotNetNuke.UI.Utilities;
-using ToSic.Eav;
-using ToSic.Eav.DataSources;
-using ToSic.Eav.ManagementUI;
-using DotNetNuke.Entities.Modules;
-using System.Web.UI.HtmlControls;
-using DotNetNuke.Services.Localization;
-using ToSic.SexyContent;
 
 namespace ToSic.SexyContent
 {
@@ -224,18 +216,28 @@ namespace ToSic.SexyContent
 
 				foreach (var type in types)
 				{
-					
-					var editControl = (EditContentGroupItem)LoadControl(System.IO.Path.Combine(TemplateSourceDirectory, "EditContentGroupItem.ascx"));
-					//editControl.ContentGroupItemID = ContentGroupItem != null && ContentGroupItem.ContentGroupID != 0 ? ContentGroupItem.ContentGroupItemID : new int?();
+					var contentTypeStaticName = ContentGroup.Template.ContentTypeStaticName;
+					if (type == "Presentation")
+						contentTypeStaticName = ContentGroup.Template.PresentationTypeStaticName;
+					if (type == "ListContent")
+						contentTypeStaticName = ContentGroup.Template.ListContentTypeStaticName;
+					if (type == "ListPresentation")
+						contentTypeStaticName = ContentGroup.Template.ListPresentationTypeStaticName;
+
+					if (String.IsNullOrEmpty(contentTypeStaticName))
+						continue;
+
+					var editControl =
+						(EditContentGroupItem) LoadControl(System.IO.Path.Combine(TemplateSourceDirectory, "EditContentGroupItem.ascx"));
 					editControl.ContentGroupID = ContentGroupID.Value;
 					editControl.AppId = AppId.Value;
 					editControl.ZoneId = ZoneId.Value;
 					editControl.TemplateID = ContentGroup.Template.TemplateId;
+					editControl.AttributeSetStaticName = contentTypeStaticName;
 					editControl.ItemType = type;
 					editControl.SortOrder = SortOrder.HasValue || SortOrder == -1 ? SortOrder : new int?();
 					editControl.ModuleID = ModuleId;
 					editControl.TabID = TabId;
-					//editControl.AttributeSetStaticName = ContentGroup.Template.ContentTypeStaticName;
 					phNewOrEditControls.Controls.Add(editControl);
 				}
 			}
@@ -277,9 +279,8 @@ namespace ToSic.SexyContent
 
         protected void btnDelete_Click(object sender, EventArgs e)
         {
-			throw new NotImplementedException("Fix this");
-			//SexyUncached.Templates.DeleteContentGroupItems(ContentGroupID.Value, SortOrder.Value, UserId);
-			//RedirectBack();
+			ContentGroup.RemoveContentAndPresentationEntities(SortOrder.Value);
+			RedirectBack();
         }
 
         protected void RedirectBack()

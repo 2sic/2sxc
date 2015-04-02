@@ -23,19 +23,17 @@ namespace ToSic.SexyContent.ViewAPI
         [ValidateAntiForgeryToken]
         public void AddItem([FromUri] int? sortOrder = null)
         {
-			// ToDo: Fix this
-			throw new NotImplementedException("ToDo: Fix this");
-			//var contentGroupId = Sexy.GetContentGroupIdFromModule(ActiveModule.ModuleID);
-			//var templateId = Sexy.GetTemplateForModule(ActiveModule.ModuleID).TemplateID;
-			//SexyUncached.AddContentGroupItem(contentGroupId, UserInfo.UserID, templateId, null, sortOrder.HasValue ? sortOrder.Value + 1 : sortOrder, true, ContentGroupItemType.Content, false);
+			var contentGroup = Sexy.ContentGroups.GetContentGroup(Sexy.GetContentGroupIdFromModule(ActiveModule.ModuleID));
+			contentGroup.AddContentAndPresentationEntity(sortOrder);
         }
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         [ValidateAntiForgeryToken]
         public void SaveTemplateId([FromUri] int? templateId)
-        {
-			Sexy.ContentGroups.UpdateContentGroup(Sexy.GetContentGroupIdFromModule(ActiveModule.ModuleID), templateId);
+		{
+			var contentGroup = Sexy.ContentGroups.GetContentGroup(Sexy.GetContentGroupIdFromModule(ActiveModule.ModuleID));
+			contentGroup.Update(templateId);
         }
 
         [HttpGet]
@@ -68,8 +66,10 @@ namespace ToSic.SexyContent.ViewAPI
         [ValidateAntiForgeryToken]
         public void SetAppId(int? appId)
         {
+			var contentGroup = Sexy.ContentGroups.GetContentGroup(Sexy.GetContentGroupIdFromModule(ActiveModule.ModuleID));
+
 			// Reset template to nothing (prevents errors after changing app)
-			Sexy.ContentGroups.UpdateContentGroup(Sexy.GetContentGroupIdFromModule(ActiveModule.ModuleID), null);
+			contentGroup.Update(null);
 
             SexyContent.SetAppIdForModule(ActiveModule, appId);
 
@@ -79,9 +79,9 @@ namespace ToSic.SexyContent.ViewAPI
                 var sexyForNewApp = new SexyContent(Sexy.App.ZoneId, appId.Value, false);
                 var templates = sexyForNewApp.GetAvailableTemplatesForSelector(ActiveModule).ToList();
                 if (templates.Any())
-					Sexy.ContentGroups.UpdateContentGroup(Sexy.GetContentGroupIdFromModule(ActiveModule.ModuleID), templates.First().TemplateId);
+					contentGroup.Update(templates.First().TemplateId);
                 else
-					Sexy.ContentGroups.UpdateContentGroup(Sexy.GetContentGroupIdFromModule(ActiveModule.ModuleID), null);
+					contentGroup.Update(null);
             }
         }
 

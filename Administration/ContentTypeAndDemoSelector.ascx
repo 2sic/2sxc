@@ -10,7 +10,7 @@
         DataValueField="StaticName" runat="server" AppendDataBoundItems="true" 
         AutoPostBack="true" 
         onselectedindexchanged="ddlContentTypes_SelectedIndexChanged">
-        <asp:ListItem ResourceKey="ddlContentTypesDefaultItem" Value="0"></asp:ListItem>
+        <asp:ListItem ResourceKey="ddlContentTypesDefaultItem" Value=""></asp:ListItem>
     </asp:DropDownList>
     <asp:RequiredFieldValidator ID="valContentType" runat="server" InitialValue="" ControlToValidate="ddlContentTypes" CssClass="dnnFormError" Display="Dynamic"></asp:RequiredFieldValidator>
 </div>

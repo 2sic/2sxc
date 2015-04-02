@@ -273,30 +273,30 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Creates a template file if it does not already exists, and uses a default text to insert. Returns the new path
         /// </summary>
-        public string CreateTemplateFileIfNotExists(string name, Template template, HttpServerUtility server, string contents = "")
+        public string CreateTemplateFileIfNotExists(string name, string type, string location, HttpServerUtility server, string contents = "")
         {
-            if (template.Type == RazorC)
+            if (type == RazorC)
             {
                 if (!name.StartsWith("_"))
                     name = "_" + name;
                 if (Path.GetExtension(name) != ".cshtml")
                     name += ".cshtml";
             }
-            else if (template.Type == RazorVB)
+            else if (type == RazorVB)
             {
                 if (!name.StartsWith("_"))
                     name = "_" + name;
                 if (Path.GetExtension(name) != ".vbhtml")
                     name += ".vbhtml";
             }
-            else if (template.Type == TokenReplace)
+            else if (type == TokenReplace)
             {
                 if (Path.GetExtension(name) != ".html")
                     name += ".html";
             }
 
 			var templatePath = Regex.Replace(name, @"[?:\/*""<>|]", "");
-            var absolutePath = server.MapPath(Path.Combine(GetTemplatePathRoot(template.Location, App), templatePath));
+            var absolutePath = server.MapPath(Path.Combine(GetTemplatePathRoot(location, App), templatePath));
 
             if (!File.Exists(absolutePath))
             {
@@ -408,10 +408,10 @@ namespace ToSic.SexyContent
 
 			var compatibleTemplates = Templates.GetAllTemplates().Where(t => t.UseForList || !isList);
 			compatibleTemplates = compatibleTemplates
-				.Where(t => contentGroup.Content.All(c => c == null) || contentGroup.Content.First().Type.StaticName == t.ContentTypeStaticName)
-				.Where(t => contentGroup.Presentation.All(c => c == null) || contentGroup.Presentation.First().Type.StaticName == t.PresentationTypeStaticName)
-				.Where(t => contentGroup.ListContent.All(c => c == null) || contentGroup.ListContent.First().Type.StaticName == t.ListContentTypeStaticName)
-				.Where(t => contentGroup.ListPresentation.All(c => c == null) || contentGroup.ListPresentation.First().Type.StaticName == t.ListPresentationTypeStaticName);
+				.Where(t => contentGroup.Content.All(c => c == null) || contentGroup.Content.First(e => e != null).Type.StaticName == t.ContentTypeStaticName)
+				.Where(t => contentGroup.Presentation.All(c => c == null) || contentGroup.Presentation.First(e => e != null).Type.StaticName == t.PresentationTypeStaticName)
+				.Where(t => contentGroup.ListContent.All(c => c == null) || contentGroup.ListContent.First(e => e != null).Type.StaticName == t.ListContentTypeStaticName)
+				.Where(t => contentGroup.ListPresentation.All(c => c == null) || contentGroup.ListPresentation.First(e => e != null).Type.StaticName == t.ListPresentationTypeStaticName);
 
 			return compatibleTemplates;
 		}

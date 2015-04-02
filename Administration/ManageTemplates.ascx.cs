@@ -81,10 +81,10 @@ namespace ToSic.SexyContent
         /// </summary>
         private void BindGrdTemplates()
         {
-            var AttributeSetList = Sexy.GetAvailableAttributeSets(SexyContent.AttributeSetScope).ToList();
-            var TemplateList = Sexy.Templates.GetAllTemplates();
-            var Templates = from c in  TemplateList
-                            join a in AttributeSetList on c.ContentTypeStaticName equals a.StaticName into JoinedList
+            var attributeSetList = Sexy.GetAvailableAttributeSets(SexyContent.AttributeSetScope).ToList();
+            var templateList = Sexy.Templates.GetAllTemplates();
+            var templates = from c in  templateList
+                            join a in attributeSetList on c.ContentTypeStaticName equals a.StaticName into JoinedList
                             from a in JoinedList.DefaultIfEmpty()
                             select new
                             {
@@ -93,11 +93,11 @@ namespace ToSic.SexyContent
                                 ContentTypeStaticName = c.ContentTypeStaticName,
                                 AttributeSetName = a != null ? a.Name : "No Content Type",
                                 TemplatePath = c.Path,
-                                DemoEntityID = c.ContentDemoEntity.EntityId,
+                                DemoEntityID = c.ContentDemoEntity != null ? c.ContentDemoEntity.EntityId : new int?(),
                                 IsHidden = c.IsHidden
                             };
 
-            grdTemplates.DataSource = Templates;
+            grdTemplates.DataSource = templates;
             grdTemplates.DataBind();
         }
     }

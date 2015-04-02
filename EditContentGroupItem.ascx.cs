@@ -103,34 +103,14 @@ namespace ToSic.SexyContent
 			{
 				if (_entity == null && SortOrder.HasValue)
 				{
-					var entities = ContentGroup.Content;
-
-					if (ItemType == "Presentation")
-						entities = ContentGroup.Presentation;
-					else if (ItemType == "ListContent")
-						entities = ContentGroup.ListContent;
-					else if (ItemType == "ListPresentation")
-						entities = ContentGroup.ListPresentation;
-						
+					var entities = ContentGroup[ItemType];
 					_entity = entities.Count > SortOrder ? entities[SortOrder.Value] : null;
 				}
 				return _entity;
 			}
 		}
 
-	    public string AttributeSetStaticName
-	    {
-		    get
-		    {
-			    if (ItemType == "Presentation")
-				    return ContentGroup.Template.PresentationTypeStaticName;
-				if (ItemType == "ListContent")
-					return ContentGroup.Template.ListContentTypeStaticName;
-				if (ItemType == "ListPresentation")
-					return ContentGroup.Template.ListContentTypeStaticName;
-				return ContentGroup.Template.ContentTypeStaticName;
-		    }
-	    }
+	    public string AttributeSetStaticName { get; set; }
 
 	    public int? LanguageID
         {
@@ -237,27 +217,13 @@ namespace ToSic.SexyContent
 
         protected void EditItem_OnEdited(ToSic.Eav.Entity Entity)
         {
-            UpdateModuleTitleIfNecessary(Entity, this.Entity);
+            UpdateModuleTitleIfNecessary(Entity);
         }
 
         protected void NewItem_OnInserted(ToSic.Eav.Entity Entity)
         {
-			// ToDo: Implement adding item
-	        throw new Exception("ToDo: implement adding items");
-
-	        //ContentGroupItem NewItem;
-
-	        //if (this.Entity != null)
-	        //	NewItem = SexyUncached.Templates.GetContentGroupItem(this.Entity.ContentGroupItemID);
-	        //else
-	        //	NewItem = SexyUncached.AddContentGroupItem(ContentGroupID, UserId, TemplateID, Entity.EntityID, SortOrder, true, ItemType, ItemType != ContentGroupItemType.Content);
-
-	        //NewItem.EntityID = Entity.EntityID;
-	        //NewItem.SysModified = DateTime.Now;
-	        //NewItem.SysModifiedBy = UserId;
-	        //SexyUncached.Templates.SaveChanges();
-
-	        //UpdateModuleTitleIfNecessary(Entity, NewItem);
+			ContentGroup.UpdateEntity(ItemType, SortOrder.Value, Entity.EntityID);
+			UpdateModuleTitleIfNecessary(Entity);
         }
 
         public void Save()
@@ -266,7 +232,7 @@ namespace ToSic.SexyContent
                 EditItemControl.Save();
 
 			if (Entity != null && pnlReferenced.Visible && !EditItemControl.Visible)
-				SexyUncached.ContentGroups.RemoveContentGroupItem(ContentGroupID, ItemType, SortOrder.Value);
+				ContentGroup.RemovePresentationEntity(SortOrder.Value);
 
             if (OnSaved != null)
                 OnSaved(this, new EventArgs());
@@ -278,7 +244,7 @@ namespace ToSic.SexyContent
                 EditItemControl.Cancel();
         }
 
-        protected void UpdateModuleTitleIfNecessary(ToSic.Eav.Entity entity, object groupItem)
+        protected void UpdateModuleTitleIfNecessary(ToSic.Eav.Entity entity)
         {
             // Creating new Context, because EntityTitle gets not refreshed otherwise
             var sexyContext = new SexyContent(ZoneId, AppId, true);
