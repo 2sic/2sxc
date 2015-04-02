@@ -240,21 +240,9 @@ namespace ToSic.SexyContent.ImportExport
             var import = new ToSic.Eav.Import.Import(_zoneId, _appId, UserName);
             import.RunImport(importAttributeSets, importEntities, true, true);
             ImportLog.AddRange(GetExportImportMessagesFromImportLog(import.ImportLog));
-            
-			//if (xmlSource.Elements("Templates").Any())
-			//{
-			//	if(_sexy.Templates.Connection.State != ConnectionState.Open)
-			//		_sexy.Templates.Connection.Open();
-			//	var transaction = _sexy.Templates.Connection.BeginTransaction();
-			//	List<Entity> templateDescribingEntities;
-			//	ImportXmlTemplates(xmlSource, out templateDescribingEntities);
 
-			//	var import2 = new ToSic.Eav.Import.Import(_zoneId, _appId, userName);
-			//	import2.RunImport(new List<AttributeSet>(), templateDescribingEntities, true, true);
-			//	ImportLog.AddRange(GetExportImportMessagesFromImportLog(import2.ImportLog));
-
-			//	transaction.Commit();
-			//}
+			if (xmlSource.Elements("Templates").Any())
+				ImportXmlTemplates(xmlSource);
 
             return true;
         }
@@ -321,100 +309,125 @@ namespace ToSic.SexyContent.ImportExport
 
         #region Templates
 
-		// ToDo: Remove this if not needed anymore
-		//private void ImportXmlTemplates(XElement Root, out List<Entity> entities)
-		//{
-		//	var templates = Root.Element("Templates");
-		//	entities = new List<Entity>();
+		private void ImportXmlTemplates(XElement root)
+		{
+			var templates = root.Element("Templates");
 
-		//	foreach (var template in templates.Elements("Template"))
-		//	{
-		//		Template t = _sexy.Templates.GetNewTemplate(_sexy.AppId.Value);
-		//		t.Name = template.Attribute("Name").Value;
-		//		t.Path = template.Attribute("Path").Value;
+			var cache = DataSource.GetCache(_zoneId, _appId);
 
-		//		string attributeSetStaticName = template.Attribute("AttributeSetStaticName").Value;
+			foreach (var template in templates.Elements("Template"))
+			{
+				var name = template.Attribute("Name").Value;
+				var path = template.Attribute("Path").Value;
 
+				var contentTypeStaticName = template.Attribute("AttributeSetStaticName").Value;
 
-		//		if (!String.IsNullOrEmpty(attributeSetStaticName))
-		//		{
-		//			ToSic.Eav.AttributeSet Set = _sexy.ContentContext.GetAttributeSet(attributeSetStaticName);
+				if (cache.GetContentType(contentTypeStaticName) == null)
+				{
+					ImportLog.Add(
+							new ExportImportMessage(
+								"Content Type for Template '" + name +
+								"' could not be found. The template has not been imported.",
+								ExportImportMessage.MessageTypes.Warning));
+					continue;
+				}
 
-		//			if (Set == null)
-		//			{
-		//				ImportLog.Add(
-		//					new ExportImportMessage(
-		//						"Content Type for Template '" + t.Name +
-		//						"' could not be found. The template has not been imported.",
-		//						ExportImportMessage.MessageTypes.Warning));
-		//				continue;
-		//			}
-		//			else
-		//				t.AttributeSetID = _sexy.ContentContext.GetAttributeSet(attributeSetStaticName).AttributeSetID;
-		//		}
-		//		else
-		//		{
-		//			t.AttributeSetID = new int?();
-		//		}
+				var demoEntityGuid = template.Attribute("DemoEntityGUID").Value;
+				var demoEntityId = new int?();
 
-		//		string DemoEntityGuid = template.Attribute("DemoEntityGUID").Value;
-		//		if (!String.IsNullOrEmpty(DemoEntityGuid))
-		//		{
-		//			var EntityGuid = Guid.Parse(DemoEntityGuid);
-		//			if (_sexy.ContentContext.EntityExists(EntityGuid))
-		//				t.DemoEntityID = _sexy.ContentContext.GetEntity(EntityGuid).EntityID;
-		//			else
-		//				ImportLog.Add(
-		//					new ExportImportMessage(
-		//						"Demo Entity for Template '" + t.Name + "' could not be found. (Guid: " + DemoEntityGuid +
-		//						")", ExportImportMessage.MessageTypes.Information));
+				if (!String.IsNullOrEmpty(demoEntityGuid))
+				{
+					var entityGuid = Guid.Parse(demoEntityGuid);
+					if (_sexy.ContentContext.EntityExists(entityGuid))
+						demoEntityId = _sexy.ContentContext.GetEntity(entityGuid).EntityID;
+					else
+						ImportLog.Add(
+							new ExportImportMessage(
+								"Demo Entity for Template '" + name + "' could not be found. (Guid: " + demoEntityGuid +
+								")", ExportImportMessage.MessageTypes.Information));
 
-		//		}
+				}
 
-		//		t.Script = template.Attribute("Script").Value;
-		//		t.IsFile = Boolean.Parse(template.Attribute("IsFile").Value);
-		//		t.Type = template.Attribute("Type").Value;
-		//		t.IsHidden = Boolean.Parse(template.Attribute("IsHidden").Value);
-		//		t.Location = template.Attribute("Location").Value;
-		//		t.PublishData = Boolean.Parse(template.Attribute("PublishData") == null ? "False" : template.Attribute("PublishData").Value);
-		//		t.StreamsToPublish = template.Attribute("StreamsToPublish") == null ? "" : template.Attribute("StreamsToPublish").Value;
-		//		t.ViewNameInUrl = template.Attribute("ViewNameInUrl") == null ? null : template.Attribute("ViewNameInUrl").Value;
+				var type = template.Attribute("Type").Value;
+				var isHidden = Boolean.Parse(template.Attribute("IsHidden").Value);
+				var location = template.Attribute("Location").Value;
+				var publishData = Boolean.Parse(template.Attribute("PublishData") == null ? "False" : template.Attribute("PublishData").Value);
+				var streamsToPublish = template.Attribute("StreamsToPublish") == null ? "" : template.Attribute("StreamsToPublish").Value;
+				var viewNameInUrl = template.Attribute("ViewNameInUrl") == null ? null : template.Attribute("ViewNameInUrl").Value;
 
-		//		var pipelineEntityGuid = template.Attribute("PipelineEntityGUID");
-		//		if (pipelineEntityGuid != null && !string.IsNullOrEmpty(pipelineEntityGuid.Value))
-		//		{
-		//			var entityGuid = Guid.Parse(pipelineEntityGuid.Value);
-		//			if (_sexy.ContentContext.EntityExists(entityGuid))
-		//				t.PipelineEntityID = _sexy.ContentContext.GetEntity(entityGuid).EntityID;
-		//			else
-		//				ImportLog.Add(
-		//					new ExportImportMessage(
-		//						"Pipeline Entity for Template '" + t.Name + "' could not be found. (Guid: " + pipelineEntityGuid.Value +
-		//						")", ExportImportMessage.MessageTypes.Information));
-		//		}
+				var pipelineEntityGuid = template.Attribute("PipelineEntityGUID");
+				var pipelineEntityId = new int?();
 
-		//		if (template.Attribute("UseForList") != null)
-		//			t.UseForList = Boolean.Parse(template.Attribute("UseForList").Value);
+				if (pipelineEntityGuid != null && !string.IsNullOrEmpty(pipelineEntityGuid.Value))
+				{
+					var entityGuid = Guid.Parse(pipelineEntityGuid.Value);
+					if (_sexy.ContentContext.EntityExists(entityGuid))
+						pipelineEntityId = _sexy.ContentContext.GetEntity(entityGuid).EntityID;
+					else
+						ImportLog.Add(
+							new ExportImportMessage(
+								"Pipeline Entity for Template '" + name + "' could not be found. (Guid: " + pipelineEntityGuid.Value +
+								")", ExportImportMessage.MessageTypes.Information));
+				}
 
-		//		// Stop if the same template already exists
-		//		if (_sexy.GetTemplates(PortalId.Value)
-		//				 .Any(p => p.AttributeSetID == t.AttributeSetID
-		//						   && p.Path == t.Path
-		//						   && p.UseForList == t.UseForList && p.SysDeleted == null))
-		//			continue;
+				var useForList = false;
+				if (template.Attribute("UseForList") != null)
+					useForList = Boolean.Parse(template.Attribute("UseForList").Value);
 
-		//		t.PortalID = PortalId.Value;
-		//		_sexy.Templates.AddTemplate(t);
+				var templateDefaults = template.Elements("Entity").Select(e =>
+				{
+					var xmlItemType = e.Elements("Value").FirstOrDefault(v => v.Attribute("Key").Value == "ItemType").Attribute("Value").Value;
+					var xmlContentTypeStaticName = e.Elements("Value").FirstOrDefault(v => v.Attribute("Key").Value == "ContentTypeID").Attribute("Value").Value;
+					var xmlDemoEntityGuidString = e.Elements("Value").FirstOrDefault(v => v.Attribute("Key").Value == "DemoEntityID").Attribute("Value").Value;
+					var xmlDemoEntityId = new int?();
+					if (xmlDemoEntityGuidString != "0" && xmlDemoEntityGuidString != "")
+					{
+						var xmlDemoEntityGuid = Guid.Parse(xmlDemoEntityGuidString);
+						if(_sexy.ContentContext.EntityExists(xmlDemoEntityGuid))
+							xmlDemoEntityId = _sexy.ContentContext.GetEntity(xmlDemoEntityGuid).EntityID;
+					}
 
-		//		foreach (XElement xEntity in template.Elements("Entity"))
-		//			entities.Add(GetImportEntity(xEntity, SexyContent.AssignmentObjectTypeIDSexyContentTemplate, t.TemplateID));
+					return new
+					{
+						ItemType = xmlItemType,
+						ContentTypeStaticName = xmlContentTypeStaticName == "0" || xmlContentTypeStaticName == "" ? "" : xmlContentTypeStaticName,
+						DemoEntityId = xmlDemoEntityId
+					};
+				}).ToList();
 
-		//		ImportLog.Add(new ExportImportMessage("Template '" + t.Name + "' successfully imported.",
-		//											 ExportImportMessage.MessageTypes.Information));
-		//	}
+				var presentationTypeStaticName = "";
+				var presentationDemoEntityId = new int?();
+				var presentationDefault = templateDefaults.FirstOrDefault(t => t.ItemType == "Presentation");
+				if (presentationDefault != null)
+				{
+					presentationTypeStaticName = presentationDefault.ContentTypeStaticName;
+					presentationDemoEntityId = presentationDefault.DemoEntityId;
+				}
 
-		//	_sexy.Templates.SaveChanges();
-		//}
+				var listContentTypeStaticName = "";
+				var listContentDemoEntityId = new int?();
+				var listContentDefault = templateDefaults.FirstOrDefault(t => t.ItemType == "ListContent");
+				if (listContentDefault != null)
+				{
+					listContentTypeStaticName = listContentDefault.ContentTypeStaticName;
+					listContentDemoEntityId = listContentDefault.DemoEntityId;
+				}
+
+				var listPresentationTypeStaticName = "";
+				var listPresentationDemoEntityId = new int?();
+				var listPresentationDefault = templateDefaults.FirstOrDefault(t => t.ItemType == "ListPresentation");
+				if (listPresentationDefault != null)
+				{
+					listPresentationTypeStaticName = listPresentationDefault.ContentTypeStaticName;
+					listPresentationDemoEntityId = listPresentationDefault.DemoEntityId;
+				}
+
+				_sexy.Templates.UpdateTemplate(null, name, path, contentTypeStaticName, demoEntityId, presentationTypeStaticName, presentationDemoEntityId, listContentTypeStaticName, listContentDemoEntityId, listPresentationTypeStaticName, listPresentationDemoEntityId, type, isHidden, location, useForList, publishData, streamsToPublish, pipelineEntityId, viewNameInUrl);
+				
+				ImportLog.Add(new ExportImportMessage("Template '" + name + "' successfully imported.",
+													 ExportImportMessage.MessageTypes.Information));
+			}
+		}
 
         #endregion
 
@@ -471,21 +484,21 @@ namespace ToSic.SexyContent.ImportExport
                 if (!String.IsNullOrEmpty(sourceValueString))
                 {
                     // Correct ContentTypeID and DemoEntityID
-                    if (xEntity.Attribute("AttributeSetStaticName").Value == SexyContent.AttributeSetStaticNameTemplateContentTypes)
-                    {
-                        switch (sourceKey)
-                        {
-                            case "ContentTypeID":
-                                var attributeSet = _sexy.ContentContext.AttributeSetExists(sourceValueString, _sexy.ContentContext.AppId) ? _sexy.ContentContext.GetAttributeSet(sourceValueString) : null;
-                                sourceValue.Attribute("Value").SetValue(attributeSet != null ? attributeSet.AttributeSetID.ToString() : "0");
-                                break;
-                            case "DemoEntityID":
-                                var entityGuid = new Guid(sourceValue.Attribute("Value").Value);
-                                var demoEntity = _sexy.ContentContext.EntityExists(entityGuid) ? _sexy.ContentContext.GetEntity(entityGuid) : null;
-                                sourceValue.Attribute("Value").SetValue(demoEntity != null ? demoEntity.EntityID.ToString() : "0");
-                                break;
-                        }
-                    }
+					//if (xEntity.Attribute("AttributeSetStaticName").Value == SexyContent.AttributeSetStaticNameTemplateContentTypes)
+					//{
+					//	switch (sourceKey)
+					//	{
+					//		case "ContentTypeID":
+					//			var attributeSet = _sexy.ContentContext.AttributeSetExists(sourceValueString, _sexy.ContentContext.AppId) ? _sexy.ContentContext.GetAttributeSet(sourceValueString) : null;
+					//			sourceValue.Attribute("Value").SetValue(attributeSet != null ? attributeSet.AttributeSetID.ToString() : "0");
+					//			break;
+					//		case "DemoEntityID":
+					//			var entityGuid = new Guid(sourceValue.Attribute("Value").Value);
+					//			var demoEntity = _sexy.ContentContext.EntityExists(entityGuid) ? _sexy.ContentContext.GetEntity(entityGuid) : null;
+					//			sourceValue.Attribute("Value").SetValue(demoEntity != null ? demoEntity.EntityID.ToString() : "0");
+					//			break;
+					//	}
+					//}
 
                     // Correct FileId in Hyperlink fields (takes XML data that lists files)
                     if (sourceValue.Attribute("Type").Value == "Hyperlink")

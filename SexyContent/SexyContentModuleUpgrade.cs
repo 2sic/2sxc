@@ -118,7 +118,6 @@ namespace ToSic.SexyContent
 
 			#region 1. Import new ContentTypes for ContentGroups and Templates
 
-			// ToDo: Correct File Path
 			if (DataSource.GetCache(DataSource.DefaultZoneId, DataSource.MetaDataAppId).GetContentType("2SexyContent-Template") == null)
 			{
 
