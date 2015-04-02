@@ -37,6 +37,7 @@ namespace ToSic.SexyContent
 		}
 
 		public int ContentGroupId { get { return _contentGroupEntity.EntityId; } }
+		public Guid ContentGroupGuid { get { return _contentGroupEntity.EntityGuid; } }
 
 		public List<IEntity> Content
 		{

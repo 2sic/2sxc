@@ -17,16 +17,6 @@ namespace ToSic.SexyContent
     {
         
         #region Private Properties
-        /// <summary>
-        /// Returns the ContentGroupID from QueryString
-        /// </summary>
-        private Guid ContentGroupID
-        {
-            get
-            {
-                return Guid.Parse(Request.QueryString["ContentGroupID"]);
-            }
-        }
 
 	    private ContentGroup _contentGroup;
 	    private ContentGroup ContentGroup
@@ -34,31 +24,11 @@ namespace ToSic.SexyContent
 		    get
 		    {
 			    if (_contentGroup == null)
-				    _contentGroup = Sexy.ContentGroups.GetContentGroup(ContentGroupID);
+				    _contentGroup = Sexy.ContentGroups.GetContentGroup(Sexy.GetContentGroupIdFromModule(this.ModuleId));
 			    return _contentGroup;
 		    }
 	    }
 
-		//private List<ContentGroupItem> _Items;
-		//private List<ContentGroupItem> Items
-		//{
-		//	get
-		//	{
-		//		if (_Items == null)
-		//		{
-		//			_Items = Sexy.Templates.GetContentGroupItems(ContentGroupID).ToList();
-		//		}
-		//		return _Items;
-		//	}
-		//}
-
-		//private Template Template
-		//{
-		//	get
-		//	{
-		//		return Sexy.Templates.GetTemplate(Sexy.Templates.GetContentGroupItems(ContentGroupID).First().TemplateID.Value);
-		//	}
-		//}
         #endregion
 
         protected void Page_Load(object sender, EventArgs e)
@@ -73,22 +43,18 @@ namespace ToSic.SexyContent
 
         protected void grdEntities_ItemCommand(object sender, Telerik.Web.UI.GridCommandEventArgs e)
         {
-			// ToDo: implement grid actions
-			throw new Exception("ToDo: implement grid actions");
-			//int ContentGroupItemID = Convert.ToInt32(e.Item.OwnerTableView.DataKeyValues[e.Item.ItemIndex]["ID"]);
-			//var item = Items.First(p => p.ContentGroupItemID == ContentGroupItemID);
+			int sortOrder = Convert.ToInt32(e.Item.OwnerTableView.DataKeyValues[e.Item.ItemIndex]["SortOrder"]);
 
-			//switch (e.CommandName)
-			//{
-			//	case "add":
-			//		SexyUncached.AddContentGroupItem(ContentGroupID, UserId, item.TemplateID.Value, null, item.SortOrder + 1, true, ContentGroupItemType.Content, false);
-			//		// Refresh page
-			//		Response.Redirect(Request.RawUrl);
-			//		break;
-			//	case "addwithedit":
-			//		Response.Redirect(Sexy.GetElementAddWithEditLink(ContentGroupID, item.SortOrder + 1, ModuleId, TabId, Request.RawUrl));
-			//		break;
-			//}
+			switch (e.CommandName)
+			{
+				case "add":
+					ContentGroup.AddContentAndPresentationEntity(sortOrder + 1);
+					Response.Redirect(Request.RawUrl);
+					break;
+				case "addwithedit":
+					Response.Redirect(Sexy.GetElementAddWithEditLink(ContentGroup.ContentGroupGuid, sortOrder + 1, ModuleId, TabId, Request.RawUrl));
+					break;
+			}
         }
 
         protected void grdEntities_RowDrop(object sender, GridDragDropEventArgs e)
@@ -118,26 +84,24 @@ namespace ToSic.SexyContent
 
         protected void grdEntities_NeedDatasource(object sender, EventArgs e)
         {
-			// ToDo: Fix needdatasource
-			throw new Exception("Fix Needdatasource");
-			//_Items = null;
-			//var entities = DataSource.GetInitialDataSource(this.ZoneId.Value, this.AppId.Value);
-			//grdEntities.DataSource = Items.Select(i =>
-			//{
-			//	var entity = i.EntityID.HasValue ? new DynamicEntity(entities.List.FirstOrDefault(en => en.Key == i.EntityID.Value).Value, new [] { CultureInfo.CurrentCulture.Name }, Sexy) : null;
-			//	return new
-			//	{
-			//		EntityID = i.EntityID,
-			//		EntityTitle = entity != null ? String.IsNullOrEmpty(entity.EntityTitle.ToString()) ? "(empty)" : entity.EntityTitle : "(no demo row)",
-			//		ID = i.ContentGroupItemID
-			//	};
-			//});
+			
+			var entities = ContentGroup.Content;
+			grdEntities.DataSource = entities.Select((en, i) =>
+			{
+				var entity = en != null ? new DynamicEntity(en, new[] { CultureInfo.CurrentCulture.Name }, Sexy) : null;
+				return new
+				{
+					EntityId = en == null ? new int?() : en.EntityId,
+					EntityTitle = entity != null ? String.IsNullOrEmpty(entity.EntityTitle.ToString()) ? "(empty)" : entity.EntityTitle : "(no demo row)",
+					SortOrder = i
+				};
+			});
 
         }
 
         protected string GetEditUrl(int sortOrder)
         {
-            return Sexy.GetElementEditLink(ContentGroupID, sortOrder, ModuleId, TabId, Request.RawUrl);
+            return Sexy.GetElementEditLink(ContentGroup.ContentGroupGuid, sortOrder, ModuleId, TabId, Request.RawUrl);
         }
 
         /// <summary>
@@ -147,12 +111,12 @@ namespace ToSic.SexyContent
         /// <returns></returns>
         protected string GetSettingsUrl(int sortOrder)
         {
-			return Sexy.GetElementSettingsLink(ContentGroupID, sortOrder, ModuleId, TabId, Request.RawUrl);
+			return Sexy.GetElementSettingsLink(ContentGroup.ContentGroupGuid, sortOrder, ModuleId, TabId, Request.RawUrl);
         }
 
         protected void btnEditListHeader_Click(object sender, EventArgs e)
         {
-            Response.Redirect(Sexy.GetElementEditLink(ContentGroupID, -1, ModuleId, TabId, Request.RawUrl));
+			Response.Redirect(Sexy.GetElementEditLink(ContentGroup.ContentGroupGuid, -1, ModuleId, TabId, Request.RawUrl));
         }
     }
 }

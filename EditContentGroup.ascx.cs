@@ -28,7 +28,7 @@ namespace ToSic.SexyContent
                     int sortOrder;
                     if (int.TryParse(Request.QueryString["SortOrder"], out sortOrder))
                     {
-                        return NewMode ? sortOrder + 1 : sortOrder;
+                        return sortOrder;
                     }
                 }
                 return new int?();
@@ -238,6 +238,7 @@ namespace ToSic.SexyContent
 					editControl.SortOrder = SortOrder.HasValue || SortOrder == -1 ? SortOrder : new int?();
 					editControl.ModuleID = ModuleId;
 					editControl.TabID = TabId;
+					editControl.NewMode = NewMode;
 					phNewOrEditControls.Controls.Add(editControl);
 				}
 			}

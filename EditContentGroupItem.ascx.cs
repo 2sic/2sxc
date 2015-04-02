@@ -134,6 +134,8 @@ namespace ToSic.SexyContent
             }
         }
 
+		public bool NewMode { get; set; }
+
         #endregion
 
         private ItemForm EditItemControl;
@@ -188,7 +190,7 @@ namespace ToSic.SexyContent
             EditItemControl.NewItemUrl = newItemUrl + (newItemUrl.Contains("?") ? "&" : "?") + "AppID=" + AppId.ToString() + "&mid=" + ModuleID.ToString() + "&AttributeSetId=[AttributeSetId]&EditMode=New&CultureDimension=" + this.LanguageID;
 
             // If ContentGroupItem has Entity, edit that; else create new Entity
-            if (Entity != null)
+            if (!NewMode && Entity != null)
             {
                 EditItemControl.Updated += EditItem_OnEdited;
                 EditItemControl.EntityId = Entity.EntityId;
@@ -222,8 +224,16 @@ namespace ToSic.SexyContent
 
         protected void NewItem_OnInserted(ToSic.Eav.Entity Entity)
         {
-			ContentGroup.UpdateEntity(ItemType, SortOrder.Value, Entity.EntityID);
-			UpdateModuleTitleIfNecessary(Entity);
+	        if (NewMode)
+	        {
+		        ContentGroup.AddContentAndPresentationEntity(SortOrder);
+				ContentGroup.UpdateEntity(ItemType, SortOrder.Value, Entity.EntityID);
+	        }
+	        else
+	        {
+		        ContentGroup.UpdateEntity(ItemType, SortOrder.Value, Entity.EntityID);
+	        }
+	        UpdateModuleTitleIfNecessary(Entity);
         }
 
         public void Save()

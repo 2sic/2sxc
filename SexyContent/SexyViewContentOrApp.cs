@@ -224,8 +224,7 @@ namespace ToSic.SexyContent
 								Actions.Add(GetNextActionID(), LocalizeString("ActionList.Text"),
 									ModuleActionType.ContentOptions, "editlist", "edit.gif",
 									EditUrl(this.TabId, SexyContent.ControlKeys.EditList, false, "mid",
-										this.ModuleId.ToString(), "ContentGroupID",
-										ContentGroup.ContentGroupId.ToString()), false,
+										this.ModuleId.ToString()), false,
 									SecurityAccessLevel.Edit, true, false);
 							}
 
