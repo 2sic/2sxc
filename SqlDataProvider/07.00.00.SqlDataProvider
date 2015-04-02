@@ -100,14 +100,38 @@ RETURN
 )')
 
 EXEC('
-ALTER TABLE ToSIC_SexyContent_Templates ADD Temp_PresentationTypeID INT NOT NULL DEFAULT 0
-ALTER TABLE ToSIC_SexyContent_Templates ADD Temp_PresentationDemoEntityID INT NOT NULL DEFAULT 0
-ALTER TABLE ToSIC_SexyContent_Templates ADD Temp_ListContentTypeID INT NOT NULL DEFAULT 0
-ALTER TABLE ToSIC_SexyContent_Templates ADD Temp_ListContentDemoEntityID INT NOT NULL DEFAULT 0
-ALTER TABLE ToSIC_SexyContent_Templates ADD Temp_ListPresentationTypeID INT NOT NULL DEFAULT 0
-ALTER TABLE ToSIC_SexyContent_Templates ADD Temp_ListPresentationDemoEntityID INT NOT NULL DEFAULT 0
-ALTER TABLE ToSIC_SexyContent_Templates ADD Temp_NewTemplateGuid NVARCHAR(MAX) NULL
-ALTER TABLE ToSIC_SexyContent_ContentGroupItems ADD Temp_NewContentGroupGuid NVARCHAR(MAX) NULL')
+IF COL_LENGTH(''ToSIC_SexyContent_Templates'',''Temp_PresentationTypeID'') IS NULL
+BEGIN
+	ALTER TABLE ToSIC_SexyContent_Templates ADD Temp_PresentationTypeID INT NOT NULL DEFAULT 0
+END
+IF COL_LENGTH(''ToSIC_SexyContent_Templates'',''Temp_PresentationDemoEntityID'') IS NULL
+BEGIN
+	ALTER TABLE ToSIC_SexyContent_Templates ADD Temp_PresentationDemoEntityID INT NOT NULL DEFAULT 0
+END
+IF COL_LENGTH(''ToSIC_SexyContent_Templates'',''Temp_ListContentTypeID'') IS NULL
+BEGIN
+	ALTER TABLE ToSIC_SexyContent_Templates ADD Temp_ListContentTypeID INT NOT NULL DEFAULT 0
+END
+IF COL_LENGTH(''ToSIC_SexyContent_Templates'',''Temp_ListContentDemoEntityID'') IS NULL
+BEGIN
+	ALTER TABLE ToSIC_SexyContent_Templates ADD Temp_ListContentDemoEntityID INT NOT NULL DEFAULT 0
+END
+IF COL_LENGTH(''ToSIC_SexyContent_Templates'',''Temp_ListPresentationTypeID'') IS NULL
+BEGIN
+	ALTER TABLE ToSIC_SexyContent_Templates ADD Temp_ListPresentationTypeID INT NOT NULL DEFAULT 0
+END
+IF COL_LENGTH(''ToSIC_SexyContent_Templates'',''Temp_ListPresentationDemoEntityID'') IS NULL
+BEGIN
+	ALTER TABLE ToSIC_SexyContent_Templates ADD Temp_ListPresentationDemoEntityID INT NOT NULL DEFAULT 0
+END
+IF COL_LENGTH(''ToSIC_SexyContent_Templates'',''Temp_NewTemplateGuid'') IS NULL
+BEGIN
+	ALTER TABLE ToSIC_SexyContent_Templates ADD Temp_NewTemplateGuid NVARCHAR(MAX) NULL
+END
+IF COL_LENGTH(''ToSIC_SexyContent_ContentGroupItems'',''Temp_NewContentGroupGuid'') IS NULL
+BEGIN
+	ALTER TABLE ToSIC_SexyContent_ContentGroupItems ADD Temp_NewContentGroupGuid NVARCHAR(MAX) NULL
+END')
 
 UPDATE       ToSIC_SexyContent_Templates
 SET					Temp_PresentationTypeID = ISNULL(Presentation.ContentTypeID, 0),

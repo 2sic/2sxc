@@ -119,15 +119,20 @@ namespace ToSic.SexyContent
 			#region 1. Import new ContentTypes for ContentGroups and Templates
 
 			// ToDo: Correct File Path
-			//var xmlToImport= File.ReadAllText("~/DesktopModules/ToSIC_SexyContent/Upgrade/07.00.00.xml");
-			var xmlToImport = File.ReadAllText("../../../../Upgrade/07.00.00.xml");
-			var xmlImport = new XmlImport("en-US", userName, true);
-			var success = xmlImport.ImportXml(DataSource.DefaultZoneId, DataSource.MetaDataAppId, xmlToImport);
-
-			if (!success)
+			if (DataSource.GetCache(DataSource.DefaultZoneId, DataSource.MetaDataAppId).GetContentType("2SexyContent-Template") == null)
 			{
-				var messages = String.Join("\r\n- ", xmlImport.ImportLog.Select(p => p.Message).ToArray());
-				throw new Exception("The 2sxc module upgrade to 07.00.00 failed: " + messages);
+
+				var xmlToImport =
+					File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/07.00.00.xml"));
+				//var xmlToImport = File.ReadAllText("../../../../Upgrade/07.00.00.xml");
+				var xmlImport = new XmlImport("en-US", userName, true);
+				var success = xmlImport.ImportXml(DataSource.DefaultZoneId, DataSource.MetaDataAppId, xmlToImport);
+
+				if (!success)
+				{
+					var messages = String.Join("\r\n- ", xmlImport.ImportLog.Select(p => p.Message).ToArray());
+					throw new Exception("The 2sxc module upgrade to 07.00.00 failed: " + messages);
+				}
 			}
 
 			#endregion
@@ -184,12 +189,6 @@ WHERE        (ToSIC_SexyContent_Templates.SysDeleted IS NULL)";
 					return "";
 				};
 
-				//Func<int?, int[]> getRelationshipArray = (demoEntityId) =>
-				//{
-				//	if (demoEntityId == 0 || !demoEntityId.HasValue)
-				//		return new int[] { };
-				//	return new[] { demoEntityId.Value };
-				//};
 				#endregion
 
 				// Create anonymous object to validate the types
@@ -224,45 +223,6 @@ WHERE        (ToSIC_SexyContent_Templates.SysDeleted IS NULL)";
 
 				return tempTemplate;
 			}).ToList();
-
-
-
-
-			//foreach (DataRow template in templates.Rows)
-			//{
-			//	var entityGuid = Guid.NewGuid();
-			//	var context = EavContext.Instance(zoneId, appId);
-			//	var templateAttributeSet = cache.FirstOrDefault(c => c.Value.StaticName == "2SexyContent-Template").Value;
-
-			//	var values = new Dictionary<string, object>()
-			//	{
-			//		{"Name", tempTemplate.Name},
-			//		{"Path", tempTemplate.Path},
-			//		{"ContentTypeStaticName", tempTemplate.ContentTypeId},
-			//		{"ContentDemoEntity", tempTemplate.ContentDemoEntityId},
-			//		{"PresentationTypeStaticName", tempTemplate.PresentationTypeId},
-			//		{"PresentationDemoEntity", tempTemplate.PresentationDemoEntityId},
-			//		{"ListContentTypeStaticName", tempTemplate.ListContentTypeId},
-			//		{"ListContentDemoEntity", tempTemplate.ListContentDemoEntityId},
-			//		{"ListPresentationTypeStaticName", tempTemplate.ListPresentationTypeId},
-			//		{"ListPresentationDemoEntity", tempTemplate.ListPresentationDemoEntityId},
-			//		{"Type", tempTemplate.Type},
-			//		{"IsHidden", tempTemplate.IsHidden},
-			//		{"Location", tempTemplate.Location},
-			//		{"UseForList", tempTemplate.UseForList},
-			//		{"PublishData", tempTemplate.PublishData},
-			//		{"StreamsToPublish", tempTemplate.StreamsToPublish},
-			//		{"Pipeline", tempTemplate.PipelineEntityID},
-			//		{"ViewNameInUrl", tempTemplate.ViewNameInUrl}
-			//	};
-
-			//	context.AddEntity(templateAttributeSet.AttributeSetId, values, null, null, entityGuid: entityGuid);
-
-			//	if(sqlConnection.State != ConnectionState.Open)
-			//		sqlConnection.Open();
-			//	var sqlCmd = new SqlCommand("UPDATE ToSIC_SexyContent_Templates SET Temp_NewTemplateGuid = N'" + entityGuid + "' WHERE TemplateID = " + templateId, sqlConnection);
-			//	sqlCmd.ExecuteNonQuery();
-			//}
 
 			#endregion
 
@@ -320,43 +280,6 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
 				};
 				return contentGroup;
 			}).ToList();
-
-			//foreach (var contentGroup in contentGroups)
-			//{
-				//var entityGuid = Guid.NewGuid();
-				//var context = EavContext.Instance(contentGroup.ZoneId, contentGroup.AppId);
-
-				//var values = new Dictionary<string, object>()
-				//{
-				//	{"Name", tempTemplate.Name},
-				//	{"Path", tempTemplate.Path},
-				//	{"ContentTypeStaticName", tempTemplate.ContentTypeId},
-				//	{"ContentDemoEntity", tempTemplate.ContentDemoEntityId},
-				//	{"PresentationTypeStaticName", tempTemplate.PresentationTypeId},
-				//	{"PresentationDemoEntity", tempTemplate.PresentationDemoEntityId},
-				//	{"ListContentTypeStaticName", tempTemplate.ListContentTypeId},
-				//	{"ListContentDemoEntity", tempTemplate.ListContentDemoEntityId},
-				//	{"ListPresentationTypeStaticName", tempTemplate.ListPresentationTypeId},
-				//	{"ListPresentationDemoEntity", tempTemplate.ListPresentationDemoEntityId},
-				//	{"Type", tempTemplate.Type},
-				//	{"IsHidden", tempTemplate.IsHidden},
-				//	{"Location", tempTemplate.Location},
-				//	{"UseForList", tempTemplate.UseForList},
-				//	{"PublishData", tempTemplate.PublishData},
-				//	{"StreamsToPublish", tempTemplate.StreamsToPublish},
-				//	{"Pipeline", tempTemplate.PipelineEntityID},
-				//	{"ViewNameInUrl", tempTemplate.ViewNameInUrl}
-				//};
-
-				//var cache = ((BaseCache)DataSource.GetCache(contentGroup.ZoneId, contentGroup.AppId)).GetContentTypes();
-				//var contentGroupAttributeSet = cache.FirstOrDefault(c => c.Value.StaticName == "2SexyContent-ContentGroup").Value;
-				//context.AddEntity(contentGroupAttributeSet.AttributeSetId, values, null, null, entityGuid: entityGuid);
-
-				//if (sqlConnection.State != ConnectionState.Open)
-				//	sqlConnection.Open();
-				//var sqlCmd = new SqlCommand("UPDATE ToSIC_SexyContent_Templates SET Temp_NewEntityGuid = N'" + entityGuid + "' WHERE TemplateID = " + templateId, sqlConnection);
-				//sqlCmd.ExecuteNonQuery();
-			//}
 
 			#endregion
 

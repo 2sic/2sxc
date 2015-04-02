@@ -186,29 +186,30 @@ namespace ToSic.SexyContent
 		protected void SetTemplateDefaultSelector(int TemplateID, ContentTypeAndDemoSelector Selector)
 		{
 			var itemType = Selector.ItemType;
+			var template = Sexy.Templates.GetTemplate(TemplateID);
 
 			if (itemType == "Content")
 			{
-				Selector.ContentTypeStaticName = ContentGroup.Template.ContentTypeStaticName;
-				Selector.DemoEntityID = ContentGroup.Template.ContentDemoEntity != null ? ContentGroup.Template.ContentDemoEntity.EntityId : new int?();
+				Selector.ContentTypeStaticName = template.ContentTypeStaticName;
+				Selector.DemoEntityID = template.ContentDemoEntity != null ? template.ContentDemoEntity.EntityId : new int?();
 			}
 
 			if (itemType == "Presentation")
 			{
-				Selector.ContentTypeStaticName = ContentGroup.Template.PresentationTypeStaticName;
-				Selector.DemoEntityID = ContentGroup.Template.PresentationDemoEntity != null ? ContentGroup.Template.PresentationDemoEntity.EntityId : new int?();
+				Selector.ContentTypeStaticName = template.PresentationTypeStaticName;
+				Selector.DemoEntityID = template.PresentationDemoEntity != null ? template.PresentationDemoEntity.EntityId : new int?();
 			}
 
 			if (itemType == "ListContent")
 			{
-				Selector.ContentTypeStaticName = ContentGroup.Template.ListContentTypeStaticName;
-				Selector.DemoEntityID = ContentGroup.Template.ListContentDemoEntity != null ? ContentGroup.Template.ListContentDemoEntity.EntityId : new int?();
+				Selector.ContentTypeStaticName = template.ListContentTypeStaticName;
+				Selector.DemoEntityID = template.ListContentDemoEntity != null ? template.ListContentDemoEntity.EntityId : new int?();
 			}
 
 			if (itemType == "ListPresentation")
 			{
-				Selector.ContentTypeStaticName = ContentGroup.Template.ListPresentationTypeStaticName;
-				Selector.DemoEntityID = ContentGroup.Template.ListPresentationDemoEntity != null ? ContentGroup.Template.ListPresentationDemoEntity.EntityId : new int?();
+				Selector.ContentTypeStaticName = template.ListPresentationTypeStaticName;
+				Selector.DemoEntityID = template.ListPresentationDemoEntity != null ? template.ListPresentationDemoEntity.EntityId : new int?();
 			}
 
 			Selector.Enabled = !Sexy.ContentGroups.IsConfigurationInUse(TemplateID, itemType);
