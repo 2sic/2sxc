@@ -24,7 +24,7 @@ namespace ToSic.SexyContent
 		    get
 		    {
 			    if (_contentGroup == null)
-				    _contentGroup = Sexy.ContentGroups.GetContentGroup(Sexy.GetContentGroupIdFromModule(this.ModuleId));
+				    _contentGroup = Sexy.ContentGroups.GetContentGroup(Sexy.ContentGroups.GetContentGroupIdFromModule(this.ModuleId, Sexy));
 			    return _contentGroup;
 		    }
 	    }

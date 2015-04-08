@@ -19,7 +19,7 @@ namespace ToSic.SexyContent
         {
             hlkCancel.NavigateUrl = DotNetNuke.Common.Globals.NavigateURL(this.TabId, "", null);
 
-            var contentTypes = Sexy.GetAvailableAttributeSets("2SexyContent");
+            var contentTypes = Sexy.GetAvailableContentTypes("2SexyContent");
             var templates = Sexy.Templates.GetAllTemplates();
             var entities = DataSource.GetInitialDataSource(ZoneId.Value, AppId.Value, false);
             var language = System.Threading.Thread.CurrentThread.CurrentCulture.Name;

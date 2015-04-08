@@ -170,7 +170,7 @@ namespace ToSic.SexyContent.DataSources
         {
             get
             {
-	            if (ModuleId.HasValue) return Sexy.GetContentGroupIdFromModule(ModuleId.Value);
+	            if (ModuleId.HasValue) return Sexy.ContentGroups.GetContentGroupIdFromModule(ModuleId.Value, Sexy);
 	            return null;
             }
         }

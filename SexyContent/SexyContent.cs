@@ -43,10 +43,9 @@ namespace ToSic.SexyContent
 
         public const string ModuleVersion = "07.00.00";
         public const string TemplateID = "TemplateID";
-		public const string ContentGroupIDString = "ToSIC_SexyContent_ContentGroupGuid";
+		public const string ContentGroupGuidString = "ToSIC_SexyContent_ContentGroupGuid";
         public const string AppIDString = "AppId";
-        //public const string SettingsPublishDataSource = "ToSic_SexyContent_PublishDataSource";
-        //public const string SettingsPublishDataSourceStreams = "ToSic_SexyContent_PublishDataSource_Streams";
+	    public const string AppNameString = "ToSIC_SexyContent_AppName";
         public const string SettingsShowTemplateChooser = "ToSIC_SexyContent_ShowTemplateChooser";
         public const string ContentGroupItemIDString = "ContentGroupItemID";
         public const string SortOrderString = "SortOrder";
@@ -73,7 +72,6 @@ namespace ToSic.SexyContent
             public const string DataExport = "dataexport";
             public const string DataImport = "dataimport";
             public const string EditTemplateFile = "edittemplatefile";
-            //public const string AddItem = "additem";
             public const string EditTemplateDefaults = "edittemplatedefaults";
             public const string GettingStarted = "gettingstarted";
             public const string PortalConfiguration = "portalconfiguration";
@@ -106,8 +104,6 @@ namespace ToSic.SexyContent
         public const string AttributeSetScope = "2SexyContent";
         public const string AttributeSetScopeApps = "2SexyContent-App";
         public const string AttributeSetStaticNameTemplateMetaData = "2SexyContent-Template-Metadata";
-		[Obsolete("Do not use this anymore - nothing should be assigned to this anymore")]
-        public const string AttributeSetStaticNameTemplateContentTypes = "2SexyContent-Template-ContentTypes";
         public const string AttributeSetStaticNameApps = "2SexyContent-App";
         public const string AttributeSetStaticNameAppResources = "App-Resources";
         public const string AttributeSetStaticNameAppSettings = "App-Settings";
@@ -378,7 +374,7 @@ namespace ToSic.SexyContent
 
         #endregion
 
-        #region Template Configuration
+        #region Template Selector
 
         /// <summary>
         /// Returns all templates that should be available in the template selector
@@ -457,7 +453,7 @@ namespace ToSic.SexyContent
 
         #endregion
 
-        #region Preparation of 2Sexy Elements
+        #region Get DataSources
 
         /// <summary>
         /// Gets the initial DataSource
@@ -536,19 +532,22 @@ namespace ToSic.SexyContent
         /// <returns></returns>
         public Guid GetContentGroupIdFromModule(int moduleID)
         {
+
+			// This method should return null 
+
             var moduleControl = new ModuleController();
             var settings = moduleControl.GetModuleSettings(moduleID);
 
             // Create new content group if the module has nothing defined yet
-	        if (settings[ContentGroupIDString] == null)
+	        if (settings[ContentGroupGuidString] == null)
 	        {
 		        var guid = ContentGroups.CreateContentGroup();
-		        moduleControl.UpdateModuleSetting(moduleID, ContentGroupIDString, guid.ToString());
+		        moduleControl.UpdateModuleSetting(moduleID, ContentGroupGuidString, guid.ToString());
 	        }
 
 	        settings = moduleControl.GetModuleSettings(moduleID);
 
-            return Guid.Parse(settings[ContentGroupIDString].ToString());
+            return Guid.Parse(settings[ContentGroupGuidString].ToString());
         }
         #endregion
 
@@ -623,7 +622,7 @@ namespace ToSic.SexyContent
 
         public string GetElementSettingsLink(Guid ContentGroupID, int sortOrder, int ModuleID, int TabID, string ReturnUrl)
         {
-            string settingsUrl = Globals.NavigateURL(TabID, ControlKeys.SettingsWrapper, "mid", ModuleID.ToString(), ContentGroupIDString, ContentGroupID.ToString(), "SortOrder", sortOrder.ToString());
+            string settingsUrl = Globals.NavigateURL(TabID, ControlKeys.SettingsWrapper, "mid", ModuleID.ToString(), ContentGroupGuidString, ContentGroupID.ToString(), "SortOrder", sortOrder.ToString());
             settingsUrl += (settingsUrl.IndexOf("?") == -1 ? "?" : "&") + "popUp=true&ReturnUrl=" + HttpUtility.UrlEncode(ReturnUrl);
             return settingsUrl;
         }
@@ -790,7 +789,7 @@ namespace ToSic.SexyContent
             if (appId == GetDefaultAppId(zoneId))
                 return null;
 
-            return new SexyContent(zoneId, appId).GetAvailableAttributeSets(AttributeSetScopeApps)
+            return new SexyContent(zoneId, appId).GetAvailableContentTypes(AttributeSetScopeApps)
                 .Single(p => p.StaticName == AttributeSetStaticNameAppSettings).AttributeSetId;
         }
 
@@ -799,20 +798,17 @@ namespace ToSic.SexyContent
             if (appId == GetDefaultAppId(zoneId))
                 return null;
 
-            return new SexyContent(zoneId, appId).GetAvailableAttributeSets(AttributeSetScopeApps)
+            return new SexyContent(zoneId, appId).GetAvailableContentTypes(AttributeSetScopeApps)
                 .Single(p => p.StaticName == AttributeSetStaticNameAppResources).AttributeSetId;
         }
 
         public static int? GetAppIdFromModule(ModuleInfo module)
         {
             var zoneId = GetZoneID(module.OwnerPortalID);
-            
+
             if (module.DesktopModule.ModuleName == "2sxc")
             {
-                if (zoneId.HasValue)
-                    return SexyContent.GetDefaultAppId(zoneId.Value);
-                else
-                    return new int?();
+                return zoneId.HasValue ? SexyContent.GetDefaultAppId(zoneId.Value) : new int?();
             }
 
             object appIdString = null;
@@ -823,8 +819,15 @@ namespace ToSic.SexyContent
                     appIdString = HttpContext.Current.Request.QueryString["AppId"];
                 else
                 {
-                    // Get AppId from ModuleSettings
-                    appIdString = new ModuleController().GetModuleSettings(module.ModuleID)[SexyContent.AppIDString];
+					var appName = module.ModuleSettings[SexyContent.AppNameString];
+
+	                if (appName != null)
+	                {
+						appIdString = ((ToSic.Eav.DataSources.Caches.BaseCache) DataSource.GetCache(DataSource.DefaultZoneId, DataSource.MetaDataAppId)).ZoneApps[zoneId.Value].Apps.Where(p => p.Value == appName).Select(p => p.Key).FirstOrDefault();
+	                }
+
+	                // Get AppId from ModuleSettings
+                    //appIdString = module.ModuleSettings[SexyContent.AppIDString];
                 }
             }
 
@@ -838,10 +841,14 @@ namespace ToSic.SexyContent
         public static void SetAppIdForModule(ModuleInfo module, int? appId)
         {
             var moduleController = new ModuleController();
-            if (appId == 0 || !appId.HasValue)
-                moduleController.DeleteModuleSetting(module.ModuleID, SexyContent.AppIDString);
-            else
-                moduleController.UpdateModuleSetting(module.ModuleID, SexyContent.AppIDString, appId.ToString());
+	        if (appId == 0 || !appId.HasValue)
+		        moduleController.DeleteModuleSetting(module.ModuleID, SexyContent.AppNameString);
+	        else
+	        {
+				var zoneId = GetZoneID(module.OwnerPortalID);
+		        var appName = ((ToSic.Eav.DataSources.Caches.BaseCache) DataSource.GetCache(0, 0)).ZoneApps[zoneId.Value].Apps[appId.Value];
+				moduleController.UpdateModuleSetting(module.ModuleID, SexyContent.AppNameString, appName.ToString());
+	        }
         }
 
         public void RemoveApp(int appId, int userId)
@@ -869,23 +876,23 @@ namespace ToSic.SexyContent
 
         #endregion Apps
 
-        #region ContentGroupItem Management
+        #region Get ContentTypes
 
-        public IEnumerable<IContentType> GetAvailableAttributeSets(string scope)
+        public IEnumerable<IContentType> GetAvailableContentTypes(string scope)
         {
-            return GetAvailableAttributeSets().Where(p => p.Scope == scope);
+            return GetAvailableContentTypes().Where(p => p.Scope == scope);
         }
 
-        public IEnumerable<IContentType> GetAvailableAttributeSets()
+        public IEnumerable<IContentType> GetAvailableContentTypes()
         {
             var contentTypes = ((BaseCache) DataSource.GetCache(this.ZoneId.Value, this.AppId.Value)).GetContentTypes();
             return contentTypes.Select(c => c.Value).Where(c => !c.Name.StartsWith("@")).OrderBy(c => c.Name);
         }
 
-        public IEnumerable<IContentType> GetAvailableAttributeSetsForVisibleTemplates()
+        public IEnumerable<IContentType> GetAvailableContentTypesForVisibleTemplates()
         {
             var AvailableTemplates = Templates.GetVisibleTemplates();
-            return GetAvailableAttributeSets(SexyContent.AttributeSetScope).Where(p => AvailableTemplates.Any(t => t.ContentTypeStaticName == p.StaticName)).OrderBy(p => p.Name);
+            return GetAvailableContentTypes(SexyContent.AttributeSetScope).Where(p => AvailableTemplates.Any(t => t.ContentTypeStaticName == p.StaticName)).OrderBy(p => p.Name);
         }
 
 

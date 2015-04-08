@@ -30,17 +30,16 @@ namespace ToSic.SexyContent.Search
             if (!zoneId.HasValue)
                 return searchDocuments;
 
-            var appId = SexyContent.GetDefaultAppId(zoneId.Value);
+            int? appId = SexyContent.GetDefaultAppId(zoneId.Value);
 
             if (!isContentModule)
             {
-                // Get AppId from ModuleSettings
-                var appIdString = moduleInfo.ModuleSettings[SexyContent.AppIDString];
-                if (appIdString == null || !int.TryParse(appIdString.ToString(), out appId))
-                    return searchDocuments;
+	            appId = SexyContent.GetAppIdFromModule(moduleInfo);
+				if (!appId.HasValue)
+		            return searchDocuments;
             }
 
-            var sexy = new SexyContent(zoneId.Value, appId, true, moduleInfo.OwnerPortalID);
+            var sexy = new SexyContent(zoneId.Value, appId.Value, true, moduleInfo.OwnerPortalID);
             var language = moduleInfo.CultureCode;
 	        var contentGroup = sexy.ContentGroups.GetContentGroup(sexy.GetContentGroupIdFromModule(moduleInfo.ModuleID));
             var template = contentGroup.Template;

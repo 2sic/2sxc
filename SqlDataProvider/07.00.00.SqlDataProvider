@@ -150,6 +150,24 @@ FROM            ToSIC_SexyContent_Templates LEFT OUTER JOIN
 DROP FUNCTION Temp_ToSIC_SexyContent_TemplateMove
 
 
+
+
+-- Add AppName setting for all 2sxc-app modules
+INSERT INTO ModuleSettings
+                         (ModuleID, SettingName, SettingValue, CreatedByUserID, CreatedOnDate, LastModifiedByUserID, LastModifiedOnDate)
+SELECT        ModuleSettings_1.ModuleID, 'ToSIC_SexyContent_AppName' AS SettingName, ToSIC_EAV_Apps.Name AS SettingValue, ModuleSettings_1.CreatedByUserID, 
+                         ModuleSettings_1.CreatedOnDate, ModuleSettings_1.LastModifiedByUserID, ModuleSettings_1.LastModifiedOnDate
+FROM            ModuleSettings AS ModuleSettings_1 INNER JOIN
+                         ToSIC_EAV_Apps ON ModuleSettings_1.SettingValue = ToSIC_EAV_Apps.AppID INNER JOIN
+                         Modules ON ModuleSettings_1.ModuleID = Modules.ModuleID INNER JOIN
+                         ModuleDefinitions ON Modules.ModuleDefID = ModuleDefinitions.ModuleDefID INNER JOIN
+                         DesktopModules ON ModuleDefinitions.DesktopModuleID = DesktopModules.DesktopModuleID
+WHERE        (ModuleSettings_1.SettingName = N'AppId') AND (DesktopModules.ModuleName = N'2sxc-app') AND
+                             ((SELECT        COUNT(*) AS Expr1
+                                 FROM            ModuleSettings AS ModuleSettings_2
+                                 WHERE        (ModuleID = ModuleSettings_1.ModuleID) AND (SettingName = N'ToSIC_SexyContent_AppName')) = 0)
+
+
 -- Commit the transaction
 COMMIT TRANSACTION SexyContentUpdate;
 --ROLLBACK TRANSACTION SexyContentUpdate;

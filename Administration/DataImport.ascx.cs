@@ -123,7 +123,7 @@ namespace ToSic.SexyContent.Administration
                                                   .ToList();
             FileTemporaryDirectory = CreatePhysicalDirectory(SexyContent.TemporaryDirectory);
 
-            ddlContentType.DataSource = sexyContent.GetAvailableAttributeSets(SexyContent.AttributeSetScope);
+            ddlContentType.DataSource = sexyContent.GetAvailableContentTypes(SexyContent.AttributeSetScope);
             ddlContentType.DataBind();
 
             rblEntityClear.DataSource = EnumToDataSource<EntityClearImport>();

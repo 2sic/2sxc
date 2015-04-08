@@ -89,7 +89,7 @@ namespace ToSic.SexyContent
 		    {
 			    if (_contentGroup == null)
 				    _contentGroup =
-					    Sexy.ContentGroups.GetContentGroup(Sexy.GetContentGroupIdFromModule(this.ModuleConfiguration.ModuleID));
+					    Sexy.ContentGroups.GetContentGroup(Sexy.ContentGroups.GetContentGroupIdFromModule(this.ModuleConfiguration.ModuleID, Sexy));
 			    return _contentGroup;
 		    }
 	    }

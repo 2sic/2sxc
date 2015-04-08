@@ -26,8 +26,8 @@ namespace ToSic.SexyContent.ImportExport
         public MemoryStream ExportApp()
         {
             // Get Export XML
-            var attributeSets = _sexy.GetAvailableAttributeSets(SexyContent.AttributeSetScope).ToList();
-            attributeSets.AddRange(_sexy.GetAvailableAttributeSets(SexyContent.AttributeSetScopeApps));
+            var attributeSets = _sexy.GetAvailableContentTypes(SexyContent.AttributeSetScope).ToList();
+            attributeSets.AddRange(_sexy.GetAvailableContentTypes(SexyContent.AttributeSetScopeApps));
             attributeSets = attributeSets.Where(a => !a.UsesConfigurationOfAttributeSet.HasValue).ToList();
 
             var attributeSetIds = attributeSets.Select(p => p.AttributeSetId.ToString()).ToArray();
