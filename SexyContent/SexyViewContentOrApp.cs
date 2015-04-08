@@ -63,7 +63,7 @@ namespace ToSic.SexyContent
 								portalId = PortalId,
 								tabId = TabId,
 								moduleId = ModuleId,
-								contentGroupId = AppId.HasValue ? Sexy.GetContentGroupIdFromModule(ModuleId) : (Guid?)null,
+								contentGroupId = AppId.HasValue ? ContentGroup.ContentGroupGuid : (Guid?)null,
 								dialogUrl = DotNetNuke.Common.Globals.NavigateURL(this.TabId),
 								returnUrl = Request.RawUrl,
 								appPath = AppId.HasValue ? Sexy.App.Path : null,

@@ -23,18 +23,26 @@ namespace ToSic.SexyContent.ViewAPI
         [ValidateAntiForgeryToken]
         public void AddItem([FromUri] int? sortOrder = null)
         {
-			var contentGroup = Sexy.ContentGroups.GetContentGroup(Sexy.GetContentGroupIdFromModule(ActiveModule.ModuleID));
+			var contentGroup = Sexy.ContentGroups.GetContentGroupForModule(ActiveModule.ModuleID);
 			contentGroup.AddContentAndPresentationEntity(sortOrder);
         }
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         [ValidateAntiForgeryToken]
-        public void SaveTemplateId([FromUri] int? templateId)
+        public void SaveTemplateId([FromUri] int templateId)
 		{
-			var contentGroup = Sexy.ContentGroups.GetContentGroup(Sexy.GetContentGroupIdFromModule(ActiveModule.ModuleID));
-			contentGroup.Update(templateId);
+			Sexy.ContentGroups.SaveTemplateId(ActiveModule.ModuleID, templateId);
         }
+		
+		// ToDo: implement Client-Side, Test
+		//[HttpGet]
+		//[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+		//[ValidateAntiForgeryToken]
+		//public void SetPreviewTemplateId([FromUri] Guid templateGuid)
+		//{
+		//	ContentGroups.SetPreviewTemplateId(ActiveModule.ModuleID, templateGuid);
+		//}
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
@@ -66,23 +74,7 @@ namespace ToSic.SexyContent.ViewAPI
         [ValidateAntiForgeryToken]
         public void SetAppId(int? appId)
         {
-			var contentGroup = Sexy.ContentGroups.GetContentGroup(Sexy.GetContentGroupIdFromModule(ActiveModule.ModuleID));
-
-			// Reset template to nothing (prevents errors after changing app)
-			contentGroup.Update(null);
-
-            SexyContent.SetAppIdForModule(ActiveModule, appId);
-
-            // Change to 1. template if app has been set
-            if (appId.HasValue)
-            {
-                var sexyForNewApp = new SexyContent(Sexy.App.ZoneId, appId.Value, false);
-                var templates = sexyForNewApp.GetAvailableTemplatesForSelector(ActiveModule).ToList();
-                if (templates.Any())
-					contentGroup.Update(templates.First().TemplateId);
-                else
-					contentGroup.Update(null);
-            }
+			SexyContent.SetAppIdForModule(ActiveModule, appId);
         }
 
         [HttpGet]

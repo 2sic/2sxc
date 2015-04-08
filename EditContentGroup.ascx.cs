@@ -84,21 +84,21 @@ namespace ToSic.SexyContent
             }
         }
 
-        /// <summary>
-        /// Returns the ContentGroupID from QueryString
-        /// </summary>
-        public Guid? ContentGroupID
-        {
-            get
-            {
-                string ContentGroupIDString = Request.QueryString["ContentGroupID"];
+		///// <summary>
+		///// Returns the ContentGroupID from QueryString
+		///// </summary>
+		//public Guid? ContentGroupID
+		//{
+		//	get
+		//	{
+		//		string ContentGroupIDString = Request.QueryString["ContentGroupID"];
 
-                if (!String.IsNullOrEmpty(ContentGroupIDString))
-                    return Guid.Parse(ContentGroupIDString);
+		//		if (!String.IsNullOrEmpty(ContentGroupIDString))
+		//			return Guid.Parse(ContentGroupIDString);
 
-                return null;
-            }
-        }
+		//		return null;
+		//	}
+		//}
 
 		private ContentGroup _contentGroup;
 		private ContentGroup ContentGroup
@@ -106,7 +106,7 @@ namespace ToSic.SexyContent
 			get
 			{
 				if (_contentGroup == null)
-					_contentGroup = Sexy.ContentGroups.GetContentGroup(ContentGroupID.Value);
+					_contentGroup = Sexy.ContentGroups.GetContentGroupForModule(ModuleId);
 				return _contentGroup;
 			}
 		}
@@ -172,13 +172,13 @@ namespace ToSic.SexyContent
 
             btnDelete.OnClientClick = "return confirm('" + LocalizeString("btnDelete.Confirm") + "')";
             btnDelete.Text = ContentGroup.Content.Count > 1 ? LocalizeString("btnDelete.ListText") : LocalizeString("btnDelete.Text");
-            btnDelete.Visible = !NewMode && ContentGroupID.HasValue;
+			btnDelete.Visible = !NewMode && !EntityId.HasValue;
 
 			// If there is something to edit
 			if (SortOrder.HasValue && (SortOrder == -1 || SortOrder < ContentGroup.Content.Count))
 			{
 				// Settings link (to change content)
-				hlkChangeContent.NavigateUrl = Sexy.GetElementSettingsLink(ContentGroupID.Value, SortOrder.Value, ModuleId, TabId, Request.RawUrl);
+				hlkChangeContent.NavigateUrl = Sexy.GetElementSettingsLink(ContentGroup.ContentGroupGuid, SortOrder.Value, ModuleId, TabId, Request.RawUrl);
 
 				// Show Change Content or Reference Link only if this is the default language
 				var isDefaultLanguage = LanguageID == DefaultLanguageID;
@@ -206,7 +206,7 @@ namespace ToSic.SexyContent
 
         protected void ProcessView()
         {
-			if (ContentGroupID.HasValue && SortOrder.HasValue)
+			if (!EntityId.HasValue && SortOrder.HasValue)
 			{
 				var types = new List<string>();
 				if (SortOrder == -1)
@@ -229,7 +229,7 @@ namespace ToSic.SexyContent
 
 					var editControl =
 						(EditContentGroupItem) LoadControl(System.IO.Path.Combine(TemplateSourceDirectory, "EditContentGroupItem.ascx"));
-					editControl.ContentGroupID = ContentGroupID.Value;
+					editControl.ContentGroupID = ContentGroup.ContentGroupGuid;
 					editControl.AppId = AppId.Value;
 					editControl.ZoneId = ZoneId.Value;
 					editControl.TemplateID = ContentGroup.Template.TemplateId;
@@ -324,7 +324,7 @@ namespace ToSic.SexyContent
         protected void btnActivateLanguage_Click(object sender, EventArgs e)
         {
             Sexy.SetCultureState(System.Threading.Thread.CurrentThread.CurrentCulture.Name, true, PortalId);
-            Response.Redirect(Sexy.GetElementEditLink(ContentGroupID.Value, SortOrder.Value, ModuleId, TabId, ""));
+            Response.Redirect(Sexy.GetElementEditLink(ContentGroup.ContentGroupGuid, SortOrder.Value, ModuleId, TabId, ""));
         }
     }
 }

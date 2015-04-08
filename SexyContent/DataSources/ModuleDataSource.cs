@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using ToSic.Eav;
 using ToSic.Eav.DataSources;
 
@@ -23,15 +24,14 @@ namespace ToSic.SexyContent.DataSources
         }
 
 		private ContentGroup _contentGroup;
-
 		private ContentGroup ContentGroup
 		{
 			get
 			{
-				if (!ListId.HasValue)
-					throw new Exception("Looking up ContentGroup failed because ListId is null. ModuleId is " + (ModuleId.HasValue ? ModuleId.ToString() : "null"));
+				if (!ModuleId.HasValue)
+					throw new Exception("Looking up ContentGroup failed because ModuleId is null.");
 				if (_contentGroup == null)
-					_contentGroup = Sexy.ContentGroups.GetContentGroup(ListId.Value);
+					_contentGroup = Sexy.ContentGroups.GetContentGroupForModule(ModuleId.Value);
 				return _contentGroup;
 			}
 		}
@@ -146,7 +146,7 @@ namespace ToSic.SexyContent.DataSources
                 while (entitiesToDeliver.ContainsKey(key))
                     key += 1000000000;
 
-				entitiesToDeliver.Add(key, new EAVExtensions.EntityInContentGroup(originals[entityId.Value]) { SortOrder = i, ContentGroupItemModified = originals[entityId.Value].Modified, Presentation = presentationEntity, GroupId = ListId.Value });
+				entitiesToDeliver.Add(key, new EAVExtensions.EntityInContentGroup(originals[entityId.Value]) { SortOrder = i, ContentGroupItemModified = originals[entityId.Value].Modified, Presentation = presentationEntity, GroupId = ContentGroup.ContentGroupGuid });
             }
 
             return entitiesToDeliver;
@@ -165,15 +165,6 @@ namespace ToSic.SexyContent.DataSources
         }
 
         public int? OverrideTemplateId { get; set; }
-
-        private Guid? ListId
-        {
-            get
-            {
-	            if (ModuleId.HasValue) return Sexy.ContentGroups.GetContentGroupIdFromModule(ModuleId.Value, Sexy);
-	            return null;
-            }
-        }
 
     }
 }

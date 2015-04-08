@@ -55,7 +55,6 @@ namespace ToSic.SexyContent
             {
                 return SexyContent.GetAppIdFromModule(ModuleConfiguration);
             }
-            set { SexyContent.SetAppIdForModule(ModuleConfiguration, value); }
         }
 
 
@@ -63,23 +62,6 @@ namespace ToSic.SexyContent
         {
             get { return ModuleConfiguration.DesktopModule.ModuleName == "2sxc"; }
         }
-
-
-		//private List<ContentGroupItem> _items;
-
-		//protected List<ContentGroupItem> Items
-		//{
-		//	get
-		//	{
-		//		if (_items == null)
-		//		{
-		//			_items =
-		//				Sexy.Templates.GetContentGroupItems(Sexy.GetContentGroupIdFromModule(this.ModuleConfiguration.ModuleID))
-		//					.ToList();
-		//		}
-		//		return _items;
-		//	}
-		//}
 
 	    private ContentGroup _contentGroup;
 
@@ -89,7 +71,7 @@ namespace ToSic.SexyContent
 		    {
 			    if (_contentGroup == null)
 				    _contentGroup =
-					    Sexy.ContentGroups.GetContentGroup(Sexy.ContentGroups.GetContentGroupIdFromModule(this.ModuleConfiguration.ModuleID, Sexy));
+					    Sexy.ContentGroups.GetContentGroupForModule(ModuleConfiguration.ModuleID);
 			    return _contentGroup;
 		    }
 	    }

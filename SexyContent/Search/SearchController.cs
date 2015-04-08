@@ -41,7 +41,7 @@ namespace ToSic.SexyContent.Search
 
             var sexy = new SexyContent(zoneId.Value, appId.Value, true, moduleInfo.OwnerPortalID);
             var language = moduleInfo.CultureCode;
-	        var contentGroup = sexy.ContentGroups.GetContentGroup(sexy.GetContentGroupIdFromModule(moduleInfo.ModuleID));
+	        var contentGroup = sexy.ContentGroups.GetContentGroupForModule(moduleInfo.ModuleID);
             var template = contentGroup.Template;
 
             // This list will hold all EAV entities to be indexed

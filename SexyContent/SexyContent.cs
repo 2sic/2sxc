@@ -384,11 +384,11 @@ namespace ToSic.SexyContent
         public IEnumerable<Template> GetAvailableTemplatesForSelector(ModuleInfo module)
         {
             IEnumerable<Template> availableTemplates;
-	        var contentGroupId = GetContentGroupIdFromModule(module.ModuleID);
-			var items = ContentGroups.GetContentGroup(contentGroupId).Content;
+	        var contentGroup = ContentGroups.GetContentGroupForModule(module.ModuleID);
+			var items = contentGroup.Content;
 
             if (items.Any(e => e != null))
-				availableTemplates = GetCompatibleTemplates(contentGroupId).Where(p => !p.IsHidden);
+				availableTemplates = GetCompatibleTemplates(contentGroup).Where(p => !p.IsHidden);
             else if (items.Count <= 1)
                 availableTemplates = Templates.GetVisibleTemplates();
             else
@@ -397,9 +397,8 @@ namespace ToSic.SexyContent
             return availableTemplates;
         }
 
-		private IEnumerable<Template> GetCompatibleTemplates(Guid contentGroupID)
+		private IEnumerable<Template> GetCompatibleTemplates(ContentGroup contentGroup)
 		{
-			var contentGroup = ContentGroups.GetContentGroup(contentGroupID);
 			var isList = contentGroup.Content.Count > 1;
 
 			var compatibleTemplates = Templates.GetAllTemplates().Where(t => t.UseForList || !isList);
@@ -523,33 +522,7 @@ namespace ToSic.SexyContent
             return ViewDataSource;
         }
 
-
-        /// <summary>
-        /// Returns the ContentGroupID for a module.
-        /// If it is not set, the ModuleID will set as ContentGroupID.
-        /// </summary>
-        /// <param name="moduleID"></param>
-        /// <returns></returns>
-        public Guid GetContentGroupIdFromModule(int moduleID)
-        {
-
-			// This method should return null 
-
-            var moduleControl = new ModuleController();
-            var settings = moduleControl.GetModuleSettings(moduleID);
-
-            // Create new content group if the module has nothing defined yet
-	        if (settings[ContentGroupGuidString] == null)
-	        {
-		        var guid = ContentGroups.CreateContentGroup();
-		        moduleControl.UpdateModuleSetting(moduleID, ContentGroupGuidString, guid.ToString());
-	        }
-
-	        settings = moduleControl.GetModuleSettings(moduleID);
-
-            return Guid.Parse(settings[ContentGroupGuidString].ToString());
-        }
-        #endregion
+	    #endregion
 
         #region URL Handling / Toolbar
         
@@ -823,7 +796,7 @@ namespace ToSic.SexyContent
 
 	                if (appName != null)
 	                {
-						appIdString = ((ToSic.Eav.DataSources.Caches.BaseCache) DataSource.GetCache(DataSource.DefaultZoneId, DataSource.MetaDataAppId)).ZoneApps[zoneId.Value].Apps.Where(p => p.Value == appName).Select(p => p.Key).FirstOrDefault();
+						appIdString = ((ToSic.Eav.DataSources.Caches.BaseCache) DataSource.GetCache(DataSource.DefaultZoneId, DataSource.MetaDataAppId)).ZoneApps[zoneId.Value].Apps.Where(p => p.Value == (string)appName).Select(p => p.Key).FirstOrDefault();
 	                }
 
 	                // Get AppId from ModuleSettings
@@ -840,15 +813,31 @@ namespace ToSic.SexyContent
 
         public static void SetAppIdForModule(ModuleInfo module, int? appId)
         {
-            var moduleController = new ModuleController();
+			var moduleController = new ModuleController();
+
+			// Reset temporary template
+			ContentGroups.SetPreviewTemplateId(module.ModuleID, null);
+
+			// ToDo: Should throw exception if a real ContentGroup exists
+
+			var zoneId = GetZoneID(module.OwnerPortalID);
+            
 	        if (appId == 0 || !appId.HasValue)
-		        moduleController.DeleteModuleSetting(module.ModuleID, SexyContent.AppNameString);
+		        moduleController.DeleteModuleSetting(module.ModuleID, AppNameString);
 	        else
 	        {
-				var zoneId = GetZoneID(module.OwnerPortalID);
-		        var appName = ((ToSic.Eav.DataSources.Caches.BaseCache) DataSource.GetCache(0, 0)).ZoneApps[zoneId.Value].Apps[appId.Value];
-				moduleController.UpdateModuleSetting(module.ModuleID, SexyContent.AppNameString, appName.ToString());
+		        var appName = ((BaseCache) DataSource.GetCache(0, 0)).ZoneApps[zoneId.Value].Apps[appId.Value];
+				moduleController.UpdateModuleSetting(module.ModuleID, AppNameString, appName);
 	        }
+
+			// Change to 1. available template if app has been set
+			if (appId.HasValue)
+			{
+				var sexyForNewApp = new SexyContent(zoneId.Value, appId.Value, false);
+				var templates = sexyForNewApp.GetAvailableTemplatesForSelector(module).ToList();
+				if (templates.Any())
+					ContentGroups.SetPreviewTemplateId(module.ModuleID, templates.First().TemplateId);
+			}
         }
 
         public void RemoveApp(int appId, int userId)

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Permissions;
 using System.Web;
 using ToSic.Eav;
+using ToSic.Eav.DataSources;
 
 namespace ToSic.SexyContent
 {
@@ -13,6 +14,8 @@ namespace ToSic.SexyContent
 		private IEntity _contentGroupEntity;
 		private readonly int _zoneId;
 		private readonly int _appId;
+
+		private readonly Guid? _previewTemplateId;
 
 
 	    public ContentGroup(IEntity contentGroupEntity, int zoneId, int appId)
@@ -25,14 +28,39 @@ namespace ToSic.SexyContent
 		    _appId = appId;
 	    }
 
+		/// <summary>
+		/// Instanciate a "temporary" ContentGroup with the specified templateId and no Content items
+		/// </summary>
+		public ContentGroup(Guid previewTemplateId, int zoneId, int appId)
+		{
+			_previewTemplateId = previewTemplateId;
+			_zoneId = zoneId;
+			_appId = appId;
+		}
+
+		public bool Exists
+		{
+			get { return _contentGroupEntity != null; }
+		}
+
 		public Template Template
 		{
 			get
 			{
-				var templateEntity = ((Eav.Data.EntityRelationship) _contentGroupEntity.Attributes["Template"][0]).FirstOrDefault();
-				if (templateEntity == null)
-					return null;
-				return new Template(templateEntity);
+				IEntity templateEntity;
+
+				if (_previewTemplateId.HasValue)
+				{
+					var dataSource = DataSource.GetInitialDataSource(_zoneId, _appId, false);
+					dataSource = DataSource.GetDataSource<EntityTypeFilter>(_zoneId, _appId, dataSource);
+					
+					// ToDo: Should use an indexed Guid filter
+					templateEntity = dataSource.List.FirstOrDefault(e => e.Value.EntityGuid == _previewTemplateId).Value;
+				}
+				else
+					templateEntity = ((Eav.Data.EntityRelationship) _contentGroupEntity.Attributes["Template"][0]).FirstOrDefault();
+
+				return templateEntity == null ? null : new Template(templateEntity);
 			}
 		}
 

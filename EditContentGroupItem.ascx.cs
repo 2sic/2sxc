@@ -16,11 +16,6 @@ namespace ToSic.SexyContent
     {
         #region Properties
 
-		///// <summary>
-		///// Gets or sets the ContentGroupItemID
-		///// </summary>
-		//public int? ContentGroupItemID { get; set; }
-
         /// <summary>
         /// Gets or sets the ContentGroupID
         /// </summary>
