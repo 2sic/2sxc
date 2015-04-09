@@ -1,10 +1,4 @@
-﻿using DotNetNuke.Entities.Modules;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace ToSic.SexyContent
+﻿namespace ToSic.SexyContent
 {
     /// <summary>
     /// Contains properties that all controls use that edit the current module's data (not global data like admin controls)

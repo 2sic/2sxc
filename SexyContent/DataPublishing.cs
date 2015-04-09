@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using ToSic.Eav.DataSources;
-
-namespace ToSic.SexyContent
+﻿namespace ToSic.SexyContent
 {
     public class DataPublishing
     {

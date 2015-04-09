@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Globalization;
 using System.Web;
+using DotNetNuke.Entities.Users;
 using DotNetNuke.Services.Tokens;
+using ToSic.Eav.ValueProvider;
 
 namespace ToSic.SexyContent.DataSources.Tokens
 {
-	public class QueryStringPropertyAccess : ToSic.Eav.ValueProvider.IValueProvider, DotNetNuke.Services.Tokens.IPropertyAccess
+	public class QueryStringPropertyAccess : IValueProvider, IPropertyAccess
 	{
 		#region Properties
 
@@ -45,12 +48,12 @@ namespace ToSic.SexyContent.DataSources.Tokens
         /// <returns></returns>
         public virtual string Get(string property)
         {
-            bool temp = false;
+            var temp = false;
             return Get(property, "", ref temp);
         }
 
 
-		public string GetProperty(string propertyName, string format, System.Globalization.CultureInfo formatProvider, DotNetNuke.Entities.Users.UserInfo accessingUser, DotNetNuke.Services.Tokens.Scope accessLevel, ref bool propertyNotFound)
+		public string GetProperty(string propertyName, string format, CultureInfo formatProvider, UserInfo accessingUser, Scope accessLevel, ref bool propertyNotFound)
 		{
 			return Get(propertyName, format, ref propertyNotFound);
 		}

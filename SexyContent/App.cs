@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Web;
 using System.Web.Hosting;
 using DotNetNuke.Entities.Portals;
-using DotNetNuke.Security.Permissions;
 using ToSic.Eav;
 using ToSic.Eav.DataSources;
 
@@ -50,7 +47,7 @@ namespace ToSic.SexyContent
                 // ModulePermissionController does not work when indexing, return false for search
                 var initialSource = SexyContent.GetInitialDataSource(ZoneId, AppId, showDrafts);
 
-                _data = ToSic.Eav.DataSource.GetDataSource<ToSic.SexyContent.DataSources.App>(initialSource.ZoneId,
+                _data = DataSource.GetDataSource<DataSources.App>(initialSource.ZoneId,
                     initialSource.AppId, initialSource, initialSource.ConfigurationProvider);
                 var defaultLanguage = "";
                 var languagesActive = SexyContent.GetCulturesWithActiveState(OwnerPS.PortalId, ZoneId).Any(c => c.Active);
@@ -80,8 +77,8 @@ namespace ToSic.SexyContent
 
         //private IDataSource _data;
         //public IDataSource Data
-        private ToSic.SexyContent.DataSources.App _data;
-        public ToSic.SexyContent.DataSources.App Data
+        private DataSources.App _data;
+        public DataSources.App Data
         {
             get
             {

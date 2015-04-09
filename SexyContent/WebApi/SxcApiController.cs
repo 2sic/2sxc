@@ -1,5 +1,5 @@
-﻿using DotNetNuke.Web.Api;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using DotNetNuke.Web.Api;
 using ToSic.Eav;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.ValueProvider;
@@ -13,7 +13,6 @@ namespace ToSic.SexyContent.WebApi
     public abstract class SxcApiController : DnnApiController, IAppAndDataHelpers
     {
         private SexyContent _sexyContent;
-        private SexyContent _sexyContentUncached;
 
         private AppAndDataHelpers _appAndDataHelpers;
         private AppAndDataHelpers AppAndDataHelpers {
@@ -22,7 +21,7 @@ namespace ToSic.SexyContent.WebApi
                 if (_appAndDataHelpers == null)
                 {
                     var moduleInfo = Request.FindModuleInfo();
-                    var viewDataSource = Sexy.GetViewDataSource(Request.FindModuleId(), SexyContent.HasEditPermission(moduleInfo), Sexy.GetTemplateForModule(moduleInfo.ModuleID));
+                    var viewDataSource = Sexy.GetViewDataSource(Request.FindModuleId(), SexyContent.HasEditPermission(moduleInfo), Sexy.ContentGroups.GetContentGroupForModule(moduleInfo.ModuleID).Template);
                     _appAndDataHelpers = new AppAndDataHelpers(Sexy, moduleInfo, (ViewDataSource)viewDataSource, Sexy.App);
                 }
                 return _appAndDataHelpers;
@@ -35,17 +34,8 @@ namespace ToSic.SexyContent.WebApi
             get
             {
                 if (_sexyContent == null)
-                    _sexyContent = ToSic.SexyContent.WebApi.HttpRequestMessageExtensions.GetSxcOfModuleContext(Request);
+                    _sexyContent = Request.GetSxcOfModuleContext();
                 return _sexyContent;
-            }
-        }
-        internal SexyContent SexyUncached
-        {
-            get
-            {
-                if (_sexyContentUncached == null)
-                    _sexyContentUncached = ToSic.SexyContent.WebApi.HttpRequestMessageExtensions.GetUncachedSxcOfModuleContext(Request);
-                return _sexyContentUncached;
             }
         }
 
@@ -56,7 +46,7 @@ namespace ToSic.SexyContent.WebApi
         {
             get { return AppAndDataHelpers.Dnn; }
         }
-        public ToSic.SexyContent.App App
+        public App App
         {
             get { return AppAndDataHelpers.App; }
         }

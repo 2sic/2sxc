@@ -1,6 +1,5 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="EditTemplateFile.ascx.cs" Inherits="ToSic.SexyContent.EditTemplateFile" %>
 <%@ Register TagPrefix="dnn" TagName="Label" Src="~/controls/LabelControl.ascx" %>
-<%@ Register TagPrefix="dnnweb" Assembly="DotNetNuke.Web" Namespace="DotNetNuke.Web.UI.WebControls" %>
 
 <div class="dnnForm dnnEditTemplateFile dnnClear">
     <h2 class="dnnFormSectionHead" runat="server" id="dnnSitePanelSexyContentEditTemplateFile">

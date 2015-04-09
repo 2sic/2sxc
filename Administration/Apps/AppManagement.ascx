@@ -1,7 +1,6 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="AppManagement.ascx.cs" Inherits="ToSic.SexyContent.Administration.AppManagement" %>
 <%@ Import Namespace="ToSic.SexyContent" %>
 <%@ Register TagPrefix="dnnweb" Assembly="DotNetNuke.Web" Namespace="DotNetNuke.Web.UI.WebControls" %>
-<%@ Register TagPrefix="Telerik" Assembly="Telerik.Web.UI" Namespace="Telerik.Web.UI" %>
 
 
 <div class="dnnForm dnnSexyContentManageApps dnnClear">

@@ -1,6 +1,6 @@
 ﻿<%@ Control Language="C#" Inherits="ToSic.Eav.ManagementUI.Hyperlink_EditCustom" AutoEventWireup="True" CodeBehind="Hyperlink_Edit.ascx.cs" %>
-<%@ Import Namespace="DotNetNuke.Entities.Portals" %>
 <%@ Register TagPrefix="dnn" TagName="Label" Src="~/controls/LabelControl.ascx" %>
+<%@ Import Namespace="DotNetNuke.Entities.Portals" %>
 <%@ Register TagPrefix="telerik" Namespace="Telerik.Web.UI" Assembly="Telerik.Web.UI" %>
 <%@ Register TagPrefix="SexyContent" TagName="DimensionMenu" Src="../Controls/DimensionMenu.ascx" %>
 

@@ -15,7 +15,7 @@
             // Return all templates for App
             if (!$scope.manageInfo.isContentApp)
                 return $scope.templates;
-            return $filter('filter')($scope.templates, contentTypeId == 0 ? { AttributeSetID: null } : { AttributeSetID: contentTypeId }, true);
+            return $filter('filter')($scope.templates, contentTypeId == 0 ? { ContentTypeStaticName: null } : { ContentTypeStaticName: contentTypeId }, true);
         };
         $scope.contentTypeId = $scope.manageInfo.contentTypeId;
         $scope.templateId = $scope.manageInfo.templateId;
@@ -35,8 +35,8 @@
                 $scope.templates = res[1].data;
 
                 // Add option for no content type if there are templates without
-                if ($filter('filter')($scope.templates, { AttributeSetID: null }, true).length > 0) {
-                    $scope.contentTypes.push({ AttributeSetId: null, Name: "Layout element" });
+                if ($filter('filter')($scope.templates, { ContentTypeStaticName: null }, true).length > 0) {
+                	$scope.contentTypes.push({ StaticName: null, Name: "Layout element" });
                     $scope.contentTypes = $filter('orderBy')($scope.contentTypes, 'Name');
                 }
 
@@ -50,8 +50,15 @@
         		if ($scope.manageInfo.isContentApp)
         			$scope.renderTemplate(newTemplateId);
         		else {
-        			$scope.saveTemplateId(newTemplateId);
-        			$window.location.reload();
+        			$scope.loading++;
+			        var promise;
+			        if ($scope.manageInfo.hasContent)
+				        promise = $scope.saveTemplateId(newTemplateId);
+			        else
+				        promise = $scope.setPreviewTemplateId(newTemplateId);
+			        promise.then(function() {
+        				$window.location.reload();
+			        });
         		}
         	}
         });
@@ -60,7 +67,7 @@
         	if (newContentTypeId == oldContentTypeId)
         		return;
         	// Select first template if contentType changed
-        	var firstTemplateId = $scope.filteredTemplates(newContentTypeId)[0].TemplateID; // $filter('filter')($scope.templates, { AttributeSetId: $scope.contentTypeId == null ? "!!" : $scope.contentTypeId })[0].TemplateID;
+        	var firstTemplateId = $scope.filteredTemplates(newContentTypeId)[0].TemplateId; // $filter('filter')($scope.templates, { AttributeSetId: $scope.contentTypeId == null ? "!!" : $scope.contentTypeId })[0].TemplateID;
         	if ($scope.templateId != firstTemplateId && firstTemplateId != null)
         		$scope.templateId = firstTemplateId;
         });
@@ -105,19 +112,19 @@
         };
 
         $scope.saveTemplateId = function () {
-            var promises = [];
+        	var promises = [];
 
-            if ($scope.savedTemplateId != $scope.templateId) {
-                promises.push(moduleApi.saveTemplateId($scope.templateId));
-            }
+            promises.push(moduleApi.saveTemplateId($scope.templateId));
 
             $scope.savedTemplateId = $scope.templateId;
-
-            if($scope.manageInfo.isContentApp)
-                promises.push($scope.setTemplateChooserState(false));
+            promises.push($scope.setTemplateChooserState(false));
 
             return $q.all(promises);
         };
+
+	    $scope.setPreviewTemplateId = function() {
+		    return moduleApi.setPreviewTemplateId($scope.templateId);
+	    };
 
         $scope.renderTemplate = function (templateId) {
             $scope.loading++;
@@ -154,6 +161,12 @@
                         params: { templateId: templateId }
                     });
                 },
+            	setPreviewTemplateId: function(templateId) {
+            		return apiService(moduleId, {
+            			url: 'View/Module/SetPreviewTemplateId',
+            			params: { templateId: templateId }
+            		});
+	            },
                 addItem: function(sortOrder) {
                     return apiService(moduleId, {
                         url: 'View/Module/AddItem',

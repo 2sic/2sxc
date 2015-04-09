@@ -13,7 +13,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public IEnumerable<dynamic> GetAvailableEntities(int zoneId, int appId, int? attributeSetId = null, int? dimensionId = null)
         {
-            return new ToSic.Eav.ManagementUI.API.EntityPickerController().GetAvailableEntities(zoneId, appId, attributeSetId, dimensionId);
+            return new Eav.ManagementUI.API.EntityPickerController().GetAvailableEntities(zoneId, appId, attributeSetId, dimensionId);
         }
 
     }

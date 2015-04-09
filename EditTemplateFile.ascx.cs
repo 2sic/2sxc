@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.IO;
-using DotNetNuke.Services.Tokens;
+using DotNetNuke.Common;
 using DotNetNuke.Web.UI.WebControls;
 
 namespace ToSic.SexyContent
@@ -31,15 +28,15 @@ namespace ToSic.SexyContent
         private Template Template
         {
             get {
-                int TemplateID = int.Parse(Request.QueryString["TemplateID"]);
-                return Sexy.TemplateContext.GetTemplate(TemplateID);
+                var TemplateID = int.Parse(Request.QueryString["TemplateID"]);
+                return Sexy.Templates.GetTemplate(TemplateID);
             }
         }
 
         private string TemplatePath
         {
             get {
-                return Server.MapPath(System.IO.Path.Combine(SexyContent.GetTemplatePathRoot(Template.Location, Sexy.App), Template.Path));
+                return Server.MapPath(Path.Combine(SexyContent.GetTemplatePathRoot(Template.Location, Sexy.App), Template.Path));
             }
         }
 
@@ -51,7 +48,7 @@ namespace ToSic.SexyContent
                 txtTemplateContent.Enabled = false;
             }
 
-            hlkCancel.NavigateUrl = DotNetNuke.Common.Globals.NavigateURL(this.TabId);
+            hlkCancel.NavigateUrl = Globals.NavigateURL(TabId);
 
             if (IsPostBack)
                 return;
@@ -71,7 +68,7 @@ namespace ToSic.SexyContent
             var defaultLanguageID = Sexy.ContentContext.GetLanguageId(PortalSettings.DefaultLanguage);
             var languageList = defaultLanguageID.HasValue ? new[] {defaultLanguageID.Value} : new[] { 0 };
             
-            var templateDefaults = Sexy.GetTemplateDefaults(Template.TemplateID).Where(t => t.ContentTypeID.HasValue);
+            //var templateDefaults = Sexy.GetTemplateDefaults(Template.TemplateID).Where(t => t.ContentTypeID.HasValue);
             string formatString;
 
             if (Template.Type == "Token")
@@ -79,11 +76,10 @@ namespace ToSic.SexyContent
             else
                 formatString = "@{0}.{1}";
 
-            foreach(var templateDefault in templateDefaults)
-            {
-	            var contentTypeId = templateDefault.ContentTypeID.Value;
-	            AddHelpForAContentType(contentTypeId, formatString, templateDefault, languageList);
-            }
+	        AddHelpForAContentType(ContentGroup.Template.ContentTypeStaticName, formatString, "Content", languageList);
+			AddHelpForAContentType(ContentGroup.Template.PresentationTypeStaticName, formatString, "Presentation", languageList);
+			AddHelpForAContentType(ContentGroup.Template.ListContentTypeStaticName, formatString, "ListContent", languageList);
+			AddHelpForAContentType(ContentGroup.Template.ListPresentationTypeStaticName, formatString, "ListPresentation", languageList);
 
 			// todo: add AppResources and AppSettings help
 
@@ -95,25 +91,28 @@ namespace ToSic.SexyContent
 		/// Create a help-table showing all the tokens/placeholders for a specific content type
 		/// </summary>
 		/// <param name="contentTypeId"></param>
-		/// <param name="FormatString"></param>
+		/// <param name="formatString"></param>
 		/// <param name="TemplateDefault"></param>
 		/// <param name="LanguageList"></param>
-	    private void AddHelpForAContentType(int contentTypeId, string FormatString, TemplateDefault TemplateDefault,
-		    int[] LanguageList)
-	    {
-		    Eav.AttributeSet Set = Sexy.ContentContext.GetAttributeSet(contentTypeId);
+		private void AddHelpForAContentType(string contentTypeStaticName, string formatString, string itemType,
+			int[] LanguageList)
+		{
+			if (String.IsNullOrEmpty(contentTypeStaticName))
+				return;
 
-		    var DataSource = Sexy.ContentContext.GetAttributes(Set, true).Select(a => new
-		    {
-			    StaticName = String.Format(FormatString, TemplateDefault.ItemType.ToString("F"), a.StaticName),
-			    DisplayName =
-				    (Sexy.ContentContext.GetAttributeMetaData(a.AttributesInSets.FirstOrDefault().AttributeID)).ContainsKey("Name")
-					    ? (Sexy.ContentContext.GetAttributeMetaData(a.AttributesInSets.FirstOrDefault().AttributeID))["Name"][LanguageList]
-					    : a.StaticName + " (static)"
-		    }).ToList();
+			var set = Sexy.ContentContext.GetAttributeSet(contentTypeStaticName);
 
-		    AddFieldGrid(DataSource, TemplateDefault.ItemType.ToString("F"));
-	    }
+			var dataSource = Sexy.ContentContext.GetAttributes(set, true).Select(a => new
+			{
+				StaticName = String.Format(formatString, itemType, a.StaticName),
+				DisplayName =
+					(Sexy.ContentContext.GetAttributeMetaData(a.AttributesInSets.FirstOrDefault().AttributeID)).ContainsKey("Name")
+						? (Sexy.ContentContext.GetAttributeMetaData(a.AttributesInSets.FirstOrDefault().AttributeID))["Name"][LanguageList]
+						: a.StaticName + " (static)"
+			}).ToList();
+
+			AddFieldGrid(dataSource, itemType);
+		}
 
 	    /// <summary>
 		/// Add helper infos to the editor, common tokens, razor snippets etc.
@@ -129,8 +128,8 @@ namespace ToSic.SexyContent
 		    {
 			    var setText = LocalizeString(helperSet + ".List");
 			    var hasEncodedStuff = (setText.IndexOf("»") > 0);
-			    var splitFilter1 = hasEncodedStuff ? new string[] {"»\r\n", "»\n"} : new string[] {"\r\n", "\n"};
-			    var splitFilter2 = hasEncodedStuff ? new string[] {"«"} : new string[] {"="};
+			    var splitFilter1 = hasEncodedStuff ? new[] {"»\r\n", "»\n"} : new[] {"\r\n", "\n"};
+			    var splitFilter2 = hasEncodedStuff ? new[] {"«"} : new[] {"="};
 			    var data =
 				    setText.Split(splitFilter1, StringSplitOptions.None)
 					    .Select(
@@ -192,7 +191,7 @@ namespace ToSic.SexyContent
             if (File.Exists(TemplatePath))
             {
                 File.WriteAllText(TemplatePath, txtTemplateContent.Text);
-                Response.Redirect(DotNetNuke.Common.Globals.NavigateURL(this.TabId));
+                Response.Redirect(Globals.NavigateURL(TabId));
             }
         }
 
@@ -203,7 +202,7 @@ namespace ToSic.SexyContent
 
 
             // DataBind the GridView with the Tokens
-            DnnGridBoundColumn tokenColumn = ((DnnGridBoundColumn)grid.Columns.FindByUniqueName("StaticName"));
+            var tokenColumn = ((DnnGridBoundColumn)grid.Columns.FindByUniqueName("StaticName"));
             tokenColumn.HeaderText = headerText;
             
             grid.DataSource = dataSource;

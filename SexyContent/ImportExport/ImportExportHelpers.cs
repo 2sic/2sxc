@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Web;
 
 namespace ToSic.SexyContent.ImportExport
 {
@@ -21,10 +20,10 @@ namespace ToSic.SexyContent.ImportExport
                            where !f.Contains("\\.git\\")
                            select f;
 
-            foreach (string file in FileList)
+            foreach (var file in FileList)
             {
-                string relativeFilePath = file.Replace(sourceFolder, "");
-                string destinationFilePath = String.Format("{0}{1}{2}",
+                var relativeFilePath = file.Replace(sourceFolder, "");
+                var destinationFilePath = String.Format("{0}{1}{2}",
                 destinationFolder, Path.DirectorySeparatorChar, relativeFilePath);
 
                 if (!Directory.Exists(Path.GetDirectoryName(destinationFilePath)))

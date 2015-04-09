@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Collections.Specialized;
 using System.Web.UI;
+using DotNetNuke.UI.UserControls;
 
 namespace ToSic.Eav.ManagementUI
 {
-	public partial class Boolean_EditCustom : ManagementUI.FieldTemplateUserControl
+	public partial class Boolean_EditCustom : FieldTemplateUserControl
 	{
-        protected global::DotNetNuke.UI.UserControls.LabelControl FieldLabel;
+        protected LabelControl FieldLabel;
 
 		protected void Page_Load(object sender, EventArgs e)
 		{
@@ -26,7 +26,7 @@ namespace ToSic.Eav.ManagementUI
             FieldLabel.Text = GetMetaDataValue("Name", Attribute.StaticName);
             FieldLabel.HelpText = GetMetaDataValue<string>("Notes");
 
-            bool Value = false;
+            var Value = false;
             if (Boolean.TryParse(FieldValueEditString, out Value))
                 CheckBox1.Checked = Value;
             else if (MetaData.ContainsKey("DefaultValue") && !String.IsNullOrEmpty(((IAttribute<string>)MetaData["DefaultValue"]).Typed[DimensionIds]) && Boolean.TryParse(((IAttribute<string>)MetaData["DefaultValue"]).Typed[DimensionIds], out Value))

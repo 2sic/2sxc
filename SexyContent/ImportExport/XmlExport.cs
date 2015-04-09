@@ -1,29 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
-using System.Web;
 using System.Xml;
 using System.Xml.Linq;
 using DotNetNuke.Entities.Portals;
-using DotNetNuke.Entities.Tabs;
 using DotNetNuke.Services.FileSystem;
 using ToSic.Eav;
-using ToSic.SexyContent.DataImportExport.Extensions;
 
 namespace ToSic.SexyContent.ImportExport
 {
     public class XmlExport
     {
         // initialize data context
-        private SexyContent Sexy;
+        private readonly SexyContent Sexy;
         private List<int> _referencedFileIds;
         public List<IFileInfo> ReferencedFiles;
         private int _zoneId;
         private int _appId;
-        private bool _isAppExport;
+        private readonly bool _isAppExport;
 
         #region Export
 
@@ -49,12 +46,12 @@ namespace ToSic.SexyContent.ImportExport
             ReferencedFiles = new List<IFileInfo>();
 
             // Create XML document and declaration
-            XDocument Doc = new XDocument(new XDeclaration("1.0", "UTF-8", "yes"), null);
+            var Doc = new XDocument(new XDeclaration("1.0", "UTF-8", "yes"), null);
 
             #region Header
 
             var Dimensions = Sexy.ContentContext.GetDimensionChildren("Culture");
-            XElement Header = new XElement("Header",
+            var Header = new XElement("Header",
                 _isAppExport ? new XElement("App",
                     new XAttribute("Guid", Sexy.App.AppGuid)
                     //new XAttribute("Name", Sexy.App.Name),
@@ -74,19 +71,19 @@ namespace ToSic.SexyContent.ImportExport
 
             #region Attribute Sets
 
-            XElement AttributeSets = new XElement("AttributeSets");
+            var AttributeSets = new XElement("AttributeSets");
 
             // Go through each AttributeSetID
-            foreach (string AttributeSetID in AttributeSetIDs)
+            foreach (var AttributeSetID in AttributeSetIDs)
             {
-                int ID = int.Parse(AttributeSetID);
-                AttributeSet Set = Sexy.ContentContext.GetAttributeSet(ID);
-                XElement Attributes = new XElement("Attributes");
+                var ID = int.Parse(AttributeSetID);
+                var Set = Sexy.ContentContext.GetAttributeSet(ID);
+                var Attributes = new XElement("Attributes");
 
                 // Add all Attributes to AttributeSet including meta informations
-                foreach (ToSic.Eav.AttributeInSet x in Sexy.ContentContext.GetAttributesInSet(ID))
+                foreach (var x in Sexy.ContentContext.GetAttributesInSet(ID))
                 {
-                    XElement Attribute = new XElement("Attribute",
+                    var Attribute = new XElement("Attribute",
                         new XAttribute("StaticName", x.Attribute.StaticName),
                         new XAttribute("Type", x.Attribute.Type),
                         new XAttribute("IsTitle", x.IsTitle),
@@ -99,7 +96,7 @@ namespace ToSic.SexyContent.ImportExport
                 }
 
                 // Add AttributeSet / Content Type
-                XElement AttributeSet = new XElement("AttributeSet",
+                var AttributeSet = new XElement("AttributeSet",
                     new XAttribute("StaticName", Set.StaticName),
                     new XAttribute("Name", Set.Name),
                     new XAttribute("Description", Set.Description),
@@ -113,12 +110,12 @@ namespace ToSic.SexyContent.ImportExport
 
             #region Entities
 
-            XElement Entities = new XElement("Entities");
+            var Entities = new XElement("Entities");
 
             // Go through each Entity
-            foreach (string EntityID in EntityIDs)
+            foreach (var EntityID in EntityIDs)
             {
-                int ID = int.Parse(EntityID);
+                var ID = int.Parse(EntityID);
 
                 // Get the entity and ContentType from ContentContext add Add it to ContentItems
                 var Entity = Sexy.ContentContext.GetEntity(ID);
@@ -129,36 +126,34 @@ namespace ToSic.SexyContent.ImportExport
 
             #region Templates
 
-            XElement Templates = new XElement("Templates");
+            var Templates = new XElement("Templates");
 
             // Go through each Template
-            foreach (string TemplateID in TemplateIDs)
+            foreach (var TemplateID in TemplateIDs)
             {
-                int ID = int.Parse(TemplateID);
-                Template t = Sexy.TemplateContext.GetTemplate(ID);
-                Entity DemoEntity = t.DemoEntityID.HasValue ? Sexy.ContentContext.GetEntity(t.DemoEntityID.Value) : null;
-				var pipelineEntity = t.PipelineEntityID.HasValue ? Sexy.ContentContext.GetEntity(t.PipelineEntityID.Value) : null;
+                var id = int.Parse(TemplateID);
+                var t = Sexy.Templates.GetTemplate(id);
+                var demoEntity = t.ContentDemoEntity;
+				var pipelineEntity = t.Pipeline;
 
-                XElement Template = new XElement("Template",
+                var template = new XElement("Template",
                     new XAttribute("Name", t.Name),
                     new XAttribute("Path", t.Path),
                     new XAttribute("Location", t.Location),
-                    new XAttribute("IsFile", t.IsFile.ToString()),
-                    new XAttribute("Script", t.Script),
                     new XAttribute("Type", t.Type),
-                    new XAttribute("AttributeSetStaticName", t.AttributeSetID.HasValue ? Sexy.ContentContext.GetAttributeSet(t.AttributeSetID.Value).StaticName : ""),
+                    new XAttribute("AttributeSetStaticName", t.ContentTypeStaticName),
                     new XAttribute("IsHidden", t.IsHidden.ToString()),
                     new XAttribute("UseForList", t.UseForList.ToString()),
-                    new XAttribute("DemoEntityGUID", DemoEntity != null ? DemoEntity.EntityGUID.ToString() : ""),
+                    new XAttribute("DemoEntityGUID", demoEntity != null ? demoEntity.EntityGuid.ToString() : ""),
                     new XAttribute("PublishData", t.PublishData),
                     new XAttribute("StreamsToPublish", t.StreamsToPublish),
 					new XAttribute("ViewNameInUrl", t.ViewNameInUrl),
-					new XAttribute("PipelineEntityGUID", pipelineEntity != null ? pipelineEntity.EntityGUID.ToString() : ""),
-                    (from c in Sexy.ContentContext.GetEntities(SexyContent.AssignmentObjectTypeIDSexyContentTemplate, t.TemplateID, null, null)
+					new XAttribute("PipelineEntityGUID", pipelineEntity != null ? pipelineEntity.EntityGuid.ToString() : ""),
+                    (from c in Sexy.ContentContext.GetEntities(SexyContent.AssignmentObjectTypeIDSexyContentTemplate, t.TemplateId, null, null)
                      select GetEntityXElement(c))
                 );
 
-                Templates.Add(Template);
+                Templates.Add(template);
             }
 
             #endregion
@@ -179,14 +174,14 @@ namespace ToSic.SexyContent.ImportExport
             Messages = null;
 
             // Write XDocument to string and return it
-            XmlWriterSettings xmlSettings = new XmlWriterSettings();
-            xmlSettings.Encoding = System.Text.Encoding.UTF8;
+            var xmlSettings = new XmlWriterSettings();
+            xmlSettings.Encoding = Encoding.UTF8;
             xmlSettings.ConformanceLevel = ConformanceLevel.Document;
             xmlSettings.Indent = true;
 
             using (var stringWriter = new Utf8StringWriter())
             {
-                using (XmlWriter writer = XmlWriter.Create(stringWriter, xmlSettings))
+                using (var writer = XmlWriter.Create(stringWriter, xmlSettings))
                 {
                     Doc.Save(writer);
                 }
@@ -202,7 +197,7 @@ namespace ToSic.SexyContent.ImportExport
         private XElement GetEntityXElement(Entity e)
         {
             //var attributeSet = Sexy.ContentContext.GetAttributeSet(e.AttributeSetID);
-            var entityXElement = new ToSic.Eav.ImportExport.XmlExport(Sexy.ContentContext).GetEntityXElement(e.EntityID);
+            var entityXElement = new Eav.ImportExport.XmlExport(Sexy.ContentContext).GetEntityXElement(e.EntityID);
 
             foreach (var value in entityXElement.Elements("Value"))
             {
@@ -338,7 +333,7 @@ namespace ToSic.SexyContent.ImportExport
         /// </summary>
         public class Utf8StringWriter : StringWriter
         {
-            public override System.Text.Encoding Encoding { get { return System.Text.Encoding.UTF8; } }
+            public override Encoding Encoding { get { return Encoding.UTF8; } }
         }
     }
 }

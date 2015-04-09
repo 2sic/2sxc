@@ -12,10 +12,10 @@
 
         public ImportError(ImportErrorCode errorCode, string errorDetail = null, int? lineNumber = null, string lineDetail = null)
         {
-            this.ErrorCode = errorCode;
-            this.ErrorDetail = errorDetail;
-            this.LineNumber = lineNumber;
-            this.LineDetail = lineDetail;
+            ErrorCode = errorCode;
+            ErrorDetail = errorDetail;
+            LineNumber = lineNumber;
+            LineDetail = lineDetail;
         }
     }
 }

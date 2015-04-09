@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Web;
-using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Portals;
-using DotNetNuke.Services.FileSystem;
+using Newtonsoft.Json;
 using ToSic.Eav;
-using ToSic.Eav.Data;
-using ToSic.Eav.DataSources;
 using ToSic.SexyContent.EAVExtensions;
+using EntityRelationship = ToSic.Eav.Data.EntityRelationship;
 
 namespace ToSic.SexyContent
 {
@@ -25,9 +21,9 @@ namespace ToSic.SexyContent
                     return new HtmlString("");
 
                 if (Entity is IHasEditingData)
-                    return new HtmlString("<ul class='sc-menu' data-toolbar='" + Newtonsoft.Json.JsonConvert.SerializeObject(new { sortOrder = ((IHasEditingData) Entity).SortOrder, useModuleList = true, isPublished = Entity.IsPublished }) + "'></ul>");
+                    return new HtmlString("<ul class='sc-menu' data-toolbar='" + JsonConvert.SerializeObject(new { sortOrder = ((IHasEditingData) Entity).SortOrder, useModuleList = true, isPublished = Entity.IsPublished }) + "'></ul>");
 
-                return new HtmlString("<ul class='sc-menu' data-toolbar='" + Newtonsoft.Json.JsonConvert.SerializeObject(new { entityId = Entity.EntityId, isPublished = Entity.IsPublished, attributeSetName = Entity.Type.Name }) + "'></ul>");
+                return new HtmlString("<ul class='sc-menu' data-toolbar='" + JsonConvert.SerializeObject(new { entityId = Entity.EntityId, isPublished = Entity.IsPublished, attributeSetName = Entity.Type.Name }) + "'></ul>");
             }
         }
         private readonly string[] _dimensions;
@@ -38,8 +34,8 @@ namespace ToSic.SexyContent
         /// </summary>
         public DynamicEntity(IEntity entityModel, string[] dimensions, SexyContent sexy)
         {
-            this.Entity = entityModel;
-            this._dimensions = dimensions;
+            Entity = entityModel;
+            _dimensions = dimensions;
             SexyContext = sexy;
         }
 
@@ -92,10 +88,10 @@ namespace ToSic.SexyContent
                     result = SexyContent.ResolveHyperlinkValues((string) result,
                         SexyContext == null ? PortalSettings.Current : SexyContext.OwnerPS);
 
-                if (attribute.Type == "Entity" && result is ToSic.Eav.Data.EntityRelationship)
+                if (attribute.Type == "Entity" && result is EntityRelationship)
                     // Convert related entities to Dynamics
-                    result = ((ToSic.Eav.Data.EntityRelationship) result).Select(
-                        p => new DynamicEntity(p, _dimensions, this.SexyContext)
+                    result = ((EntityRelationship) result).Select(
+                        p => new DynamicEntity(p, _dimensions, SexyContext)
                         ).ToList();
                 return result;
             }
@@ -188,12 +184,12 @@ namespace ToSic.SexyContent
 
         public dynamic GetDraft()
         {
-            return new DynamicEntity(Entity.GetDraft(), _dimensions, this.SexyContext);
+            return new DynamicEntity(Entity.GetDraft(), _dimensions, SexyContext);
         }
 
         public dynamic GetPublished()
         {
-            return new DynamicEntity(Entity.GetPublished(), _dimensions, this.SexyContext);
+            return new DynamicEntity(Entity.GetPublished(), _dimensions, SexyContext);
         }
 
     }

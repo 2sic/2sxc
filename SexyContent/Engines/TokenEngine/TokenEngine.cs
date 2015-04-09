@@ -1,13 +1,9 @@
-﻿using System.Web;
-using System.Web.Hosting;
-using DotNetNuke.Entities.Modules;
-using DotNetNuke.Entities.Portals;
-using DotNetNuke.UI.Modules;
-using System.Collections.Generic;
-using System.Collections;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using ToSic.Eav.DataSources;
+using System.Web.Hosting;
+using DotNetNuke.Entities.Portals;
 using ToSic.SexyContent.DataSources;
 
 namespace ToSic.SexyContent.Engines.TokenEngine
@@ -28,7 +24,7 @@ namespace ToSic.SexyContent.Engines.TokenEngine
             var elements = h.List;
 
             // Prepare Source Text
-            string sourceText = System.IO.File.ReadAllText(HostingEnvironment.MapPath(TemplatePath));
+            var sourceText = File.ReadAllText(HostingEnvironment.MapPath(TemplatePath));
             string repeatingPart;
             
             // Prepare List Object
@@ -48,13 +44,13 @@ namespace ToSic.SexyContent.Engines.TokenEngine
             list["Count"] = elements.Count.ToString();
 
             // If the SourceText contains a <repeat>, define Repeating Part. Else take SourceText as repeating part.
-            bool containsRepeat = sourceText.Contains("<repeat>") && sourceText.Contains("</repeat>");
+            var containsRepeat = sourceText.Contains("<repeat>") && sourceText.Contains("</repeat>");
             if (containsRepeat)
                 repeatingPart = Regex.Match(sourceText, @"<repeat>(.*?)</repeat>", RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[1].Captures[0].Value;
             else
                 repeatingPart = "";
 
-            string renderedTemplate = "";
+            var renderedTemplate = "";
 
             foreach (var element in elements)
             {

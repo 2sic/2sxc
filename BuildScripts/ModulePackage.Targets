@@ -27,6 +27,8 @@
       <DefaultExclude Include="Js\EditDataSource\**" />
       <DefaultExclude Include="Styles\EditDataSource\**" />
       <DefaultExclude Include="ModulePackages\**" />
+			<DefaultExclude Include="2Sexy Content Testing\**" />
+			<DefaultExclude Include=".git\**" />
     </ItemGroup>
 
     <ItemGroup>
@@ -44,6 +46,7 @@
       <InstallInclude Include="**\*.jpg" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="**\*.gif" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="**\*.config" Exclude="@(DefaultExclude);**\web-Deploy.config" />
+			<InstallInclude Include="**\*.xml" Exclude="@(DefaultExclude);" />
     </ItemGroup>
 
     <ItemGroup>

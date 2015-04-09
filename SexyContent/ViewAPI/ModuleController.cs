@@ -1,13 +1,15 @@
-﻿using DotNetNuke.Entities.Portals;
-using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Web.Http;
+using DotNetNuke.Entities.Portals;
+using DotNetNuke.Security;
+using DotNetNuke.Services.Exceptions;
+using DotNetNuke.Web.Api;
+using Newtonsoft.Json;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.WebApi;
@@ -23,18 +25,25 @@ namespace ToSic.SexyContent.ViewAPI
         [ValidateAntiForgeryToken]
         public void AddItem([FromUri] int? sortOrder = null)
         {
-            var contentGroupId = Sexy.GetContentGroupIdFromModule(ActiveModule.ModuleID);
-            var templateId = Sexy.GetTemplateForModule(ActiveModule.ModuleID).TemplateID;
-            SexyUncached.AddContentGroupItem(contentGroupId, UserInfo.UserID, templateId, null, sortOrder.HasValue ? sortOrder.Value + 1 : sortOrder, true, ContentGroupItemType.Content, false);
+			var contentGroup = Sexy.ContentGroups.GetContentGroupForModule(ActiveModule.ModuleID);
+			contentGroup.AddContentAndPresentationEntity(sortOrder);
         }
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         [ValidateAntiForgeryToken]
-        public void SaveTemplateId([FromUri] int? templateId)
-        {
-            SexyUncached.UpdateTemplateForGroup(Sexy.GetContentGroupIdFromModule(ActiveModule.ModuleID), templateId, UserInfo.UserID);
+        public void SaveTemplateId([FromUri] int templateId)
+		{
+			Sexy.ContentGroups.SaveTemplateId(ActiveModule.ModuleID, templateId);
         }
+		
+		[HttpGet]
+		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+		[ValidateAntiForgeryToken]
+		public void SetPreviewTemplateId([FromUri] int templateId)
+		{
+			Sexy.ContentGroups.SetPreviewTemplateId(ActiveModule.ModuleID, templateId);
+		}
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
@@ -56,7 +65,7 @@ namespace ToSic.SexyContent.ViewAPI
             }
             catch (Exception e)
             {
-                DotNetNuke.Services.Exceptions.Exceptions.LogException(e);
+                Exceptions.LogException(e);
                 throw e;
             }
         }
@@ -66,21 +75,7 @@ namespace ToSic.SexyContent.ViewAPI
         [ValidateAntiForgeryToken]
         public void SetAppId(int? appId)
         {
-			// Reset template to nothing (prevents errors after changing app)
-			SexyUncached.UpdateTemplateForGroup(Sexy.GetContentGroupIdFromModule(ActiveModule.ModuleID), null, UserInfo.UserID);
-
-            SexyContent.SetAppIdForModule(ActiveModule, appId);
-
-            // Change to 1. template if app has been set
-            if (appId.HasValue)
-            {
-                var sexyForNewApp = new SexyContent(Sexy.App.ZoneId, appId.Value, false);
-                var templates = sexyForNewApp.GetAvailableTemplatesForSelector(ActiveModule).ToList();
-                if (templates.Any())
-                    SexyUncached.UpdateTemplateForGroup(Sexy.GetContentGroupIdFromModule(ActiveModule.ModuleID), templates.First().TemplateID, UserInfo.UserID);
-                else
-                    SexyUncached.UpdateTemplateForGroup(Sexy.GetContentGroupIdFromModule(ActiveModule.ModuleID), null, UserInfo.UserID);
-            }
+			SexyContent.SetAppIdForModule(ActiveModule, appId);
         }
 
         [HttpGet]
@@ -88,7 +83,7 @@ namespace ToSic.SexyContent.ViewAPI
         [ValidateAntiForgeryToken]
         public IEnumerable<object> GetSelectableContentTypes()
         {
-            return Sexy.GetAvailableAttributeSetsForVisibleTemplates(PortalSettings.PortalId).Select(p => new { p.AttributeSetId, p.Name } );
+            return Sexy.GetAvailableContentTypesForVisibleTemplates().Select(p => new { p.StaticName, p.Name } );
         }
 
         [HttpGet]
@@ -97,7 +92,7 @@ namespace ToSic.SexyContent.ViewAPI
         public IEnumerable<object> GetSelectableTemplates()
         {
             var availableTemplates = Sexy.GetAvailableTemplatesForSelector(ActiveModule);
-            return availableTemplates.Select(t => new { t.TemplateID, t.Name, t.AttributeSetID });
+            return availableTemplates.Select(t => new { t.TemplateId, t.Name, t.ContentTypeStaticName });
         }
 
         [HttpGet]
@@ -107,15 +102,15 @@ namespace ToSic.SexyContent.ViewAPI
         {
             try
             {
-                var template = Sexy.TemplateContext.GetTemplate(templateId);
+                var template = Sexy.Templates.GetTemplate(templateId);
 
                 var engine = EngineFactory.CreateEngine(template);
                 var dataSource = (ViewDataSource) Sexy.GetViewDataSource(ActiveModule.ModuleID, SexyContent.HasEditPermission(ActiveModule), template);
                 engine.Init(template, Sexy.App, ActiveModule, dataSource, InstancePurposes.WebView, Sexy);
                 engine.CustomizeData();
 
-				if (template.AttributeSetID.HasValue && !template.DemoEntityID.HasValue && dataSource["Default"].List.Count == 0) { 
-					var toolbar = "<ul class='sc-menu' data-toolbar='" + Newtonsoft.Json.JsonConvert.SerializeObject(new { sortOrder = 0, useModuleList = true, action = "edit" }) + "'></ul>";
+				if (template.ContentTypeStaticName != "" && template.ContentDemoEntity == null && dataSource["Default"].List.Count == 0) { 
+					var toolbar = "<ul class='sc-menu' data-toolbar='" + JsonConvert.SerializeObject(new { sortOrder = 0, useModuleList = true, action = "edit" }) + "'></ul>";
 					return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent("<div class='dnnFormMessage dnnFormInfo'>No demo item exists for the selected template. " + toolbar + "</div>") };
 				}
 
@@ -125,7 +120,7 @@ namespace ToSic.SexyContent.ViewAPI
             }
             catch (Exception e)
             {
-                DotNetNuke.Services.Exceptions.Exceptions.LogException(e);
+                Exceptions.LogException(e);
                 throw e;
             }
         }

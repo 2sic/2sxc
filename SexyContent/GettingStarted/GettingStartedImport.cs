@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Xml.Linq;
-using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
 
 namespace ToSic.SexyContent.ImportExport
@@ -13,8 +11,8 @@ namespace ToSic.SexyContent.ImportExport
     public class GettingStartedImport
     {
 
-        private int _zoneId;
-        private int _appId;
+        private readonly int _zoneId;
+        private readonly int _appId;
 
         public GettingStartedImport(int zoneId, int appId)
         {

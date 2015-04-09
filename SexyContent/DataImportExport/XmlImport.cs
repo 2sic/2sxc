@@ -7,18 +7,19 @@ using ToSic.Eav.Import;
 using ToSic.SexyContent.DataImportExport.Extensions;
 using ToSic.SexyContent.DataImportExport.Options;
 using AttributeSet = ToSic.Eav.AttributeSet;
+using Entity = ToSic.Eav.Import.Entity;
 
 namespace ToSic.SexyContent.DataImportExport
 {
     public class XmlImport
     {
-        private int applicationId;
+        private readonly int applicationId;
 
-        private int zoneId;
+        private readonly int zoneId;
 
-        private SexyContent contentManager;
+        private readonly SexyContent contentManager;
 
-        private AttributeSet contentType;
+        private readonly AttributeSet contentType;
 
         /// <summary>
         /// The xml document to imported.
@@ -38,13 +39,13 @@ namespace ToSic.SexyContent.DataImportExport
             private set;
         }
 
-        private string documentLanguageFallback;
+        private readonly string documentLanguageFallback;
 
         private IEnumerable<string> languages;
 
-        private ResourceReferenceImport resourceReference;
+        private readonly ResourceReferenceImport resourceReference;
 
-        private EntityClearImport entityClear;
+        private readonly EntityClearImport entityClear;
 
         /// <summary>
         /// The entities created from the document. They will be saved to the repository.
@@ -79,7 +80,7 @@ namespace ToSic.SexyContent.DataImportExport
 
         private Entity AppendEntity(Guid entityGuid)
         {
-            var entity = new Entity()
+            var entity = new Entity
             {
                 AttributeSetStaticName = contentType.StaticName,
                 AssignmentObjectTypeId = SexyContent.AssignmentObjectTypeIDDefault,
@@ -105,13 +106,13 @@ namespace ToSic.SexyContent.DataImportExport
         /// <param name="resourceReference">How value references to files and pages are handled</param>
         public XmlImport(int zoneId, int applicationId, int contentTypeId, Stream dataStream, IEnumerable<string> languages, string documentLanguageFallback, EntityClearImport entityClear, ResourceReferenceImport resourceReference)
         {
-            this.Entities = new List<Entity>();
-            this.ErrorProtocol = new ImportErrorProtocol();
+            Entities = new List<Entity>();
+            ErrorProtocol = new ImportErrorProtocol();
 
             this.applicationId = applicationId;
             this.zoneId = zoneId;
-            this.contentManager = new SexyContent(zoneId, applicationId);
-            this.contentType = contentManager.ContentContext.GetAttributeSet(contentTypeId);
+            contentManager = new SexyContent(zoneId, applicationId);
+            contentType = contentManager.ContentContext.GetAttributeSet(contentTypeId);
             this.languages = languages;
             this.documentLanguageFallback = documentLanguageFallback;
             this.entityClear = entityClear;
@@ -131,7 +132,7 @@ namespace ToSic.SexyContent.DataImportExport
             {
                 if (languages == null || languages.Count() == 0)
                 {
-                    languages = new string[] { string.Empty };
+                    languages = new[] { string.Empty };
                 }
 
                 if (contentType == null)
@@ -286,7 +287,7 @@ namespace ToSic.SexyContent.DataImportExport
                 }
             }
 
-            var import = new ToSic.Eav.Import.Import(zoneId, applicationId, userId, true);
+            var import = new Eav.Import.Import(zoneId, applicationId, userId, true);
             import.RunImport(null, Entities, true, true);
             return true;
         }

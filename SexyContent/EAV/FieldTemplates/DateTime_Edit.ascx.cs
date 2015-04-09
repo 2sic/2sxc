@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Collections.Specialized;
 using System.Web.UI;
+using DotNetNuke.UI.UserControls;
 
 namespace ToSic.Eav.ManagementUI
 {
-	public partial class DateTime_EditCustom : ManagementUI.FieldTemplateUserControl
+	public partial class DateTime_EditCustom : FieldTemplateUserControl
 	{
-        protected global::DotNetNuke.UI.UserControls.LabelControl FieldLabel;
+        protected LabelControl FieldLabel;
 
-        Boolean _useTimePicker = false;
+        Boolean _useTimePicker;
 		protected void Page_Load(object sender, EventArgs e)
 		{
             _useTimePicker = GetMetaDataValue<bool>("UseTimePicker");
@@ -56,10 +56,9 @@ namespace ToSic.Eav.ManagementUI
 	    {
 	        get
 	        {
-                if (!_useTimePicker)
+		        if (!_useTimePicker)
                     return Calendar1.SelectedDate;
-                else
-                    return DateTimePicker.SelectedDate;
+		        return DateTimePicker.SelectedDate;
 	        }
 	    }
 

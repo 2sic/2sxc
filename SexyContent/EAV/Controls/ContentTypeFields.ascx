@@ -1,5 +1,6 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="True"
 	Inherits="ToSic.Eav.ManagementUI.ContentTypeFields" Codebehind="ContentTypeFields.ascx.cs" %>
+<%@ Import Namespace="ToSic.Eav" %>
 
 <asp:Panel ID="pnlNavigateBack" runat="server" Visible='<%# !IsDialog %>'>
 	<asp:HyperLink ID="hlnkNavigateBack" NavigateUrl='<%# ReturnUrl %>' runat="server" Text="Back" />
@@ -24,8 +25,8 @@
 									CssClass="StandardInput" ValidationGroup="AddEditField" />
 								<asp:RegularExpressionValidator ID="revStaticName" runat="server" 
 									ControlToValidate="StaticNameTextBox" ValidationGroup="AddEditField" 
-									Text='<%# ToSic.Eav.EavContext.AttributeStaticNameRegExNotes %>' 
-									ValidationExpression='<%# ToSic.Eav.EavContext.AttributeStaticNameRegEx %>' SetFocusOnError="True" Display="Dynamic" />
+									Text='<%# EavContext.AttributeStaticNameRegExNotes %>' 
+									ValidationExpression='<%# EavContext.AttributeStaticNameRegEx %>' SetFocusOnError="True" Display="Dynamic" />
 							</td>
 						</tr>
 						<tr>

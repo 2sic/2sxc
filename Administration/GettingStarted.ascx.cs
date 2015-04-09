@@ -1,12 +1,7 @@
-﻿using DotNetNuke.Entities.Controllers;
-using DotNetNuke.Entities.Modules;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
+﻿using System;
+using DotNetNuke.Common;
+using DotNetNuke.Entities.Controllers;
+using Assembly = System.Reflection.Assembly;
 
 namespace ToSic.SexyContent.Administration
 {
@@ -19,7 +14,7 @@ namespace ToSic.SexyContent.Administration
             var gettingStartedSrc = "http://gettingstarted.2sexycontent.org/router.aspx?";
             
             // Add DNN Version
-            gettingStartedSrc += "DnnVersion=" + Assembly.GetAssembly(typeof(DotNetNuke.Common.Globals)).GetName().Version.ToString(4);
+            gettingStartedSrc += "DnnVersion=" + Assembly.GetAssembly(typeof(Globals)).GetName().Version.ToString(4);
             // Add 2SexyContent Version
             gettingStartedSrc += "&2SexyContentVersion=" + SexyContent.ModuleVersion;
             // Add module type
@@ -27,10 +22,10 @@ namespace ToSic.SexyContent.Administration
             // Add module id
             gettingStartedSrc += "&ModuleId=" + ModuleId;
             // Add Portal ID
-            gettingStartedSrc += "&PortalID=" + PortalId.ToString();
+            gettingStartedSrc += "&PortalID=" + PortalId;
             // Add VDB / Zone ID (if set)
             var ZoneID = SexyContent.GetZoneID(PortalId);
-            gettingStartedSrc += ZoneID.HasValue ? "&ZoneID=" + ZoneID.Value.ToString() : "";
+            gettingStartedSrc += ZoneID.HasValue ? "&ZoneID=" + ZoneID.Value : "";
             // Add AppStaticName and Version
             if (AppId.HasValue && !IsContentApp)
             {
@@ -45,7 +40,7 @@ namespace ToSic.SexyContent.Administration
             }
             // Add DNN Guid
             var HostSettings = HostController.Instance.GetSettingsDictionary();
-            gettingStartedSrc += HostSettings.ContainsKey("GUID") ? "&DnnGUID=" + HostSettings["GUID"].ToString() : "";
+            gettingStartedSrc += HostSettings.ContainsKey("GUID") ? "&DnnGUID=" + HostSettings["GUID"] : "";
             // Add Portal Default Language
             gettingStartedSrc += "&DefaultLanguage=" + PortalSettings.DefaultLanguage;
             // Add current language

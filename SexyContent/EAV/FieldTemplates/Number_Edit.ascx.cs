@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Specialized;
 using System.Web.UI;
-using System.Linq;
-using System.Web.UI.WebControls;
+using DotNetNuke.UI.UserControls;
 
 namespace ToSic.Eav.ManagementUI
 {
-    public partial class Number_EditCustom : ManagementUI.FieldTemplateUserControl
+    public partial class Number_EditCustom : FieldTemplateUserControl
     {
-        protected global::DotNetNuke.UI.UserControls.LabelControl FieldLabel;
+        protected LabelControl FieldLabel;
 
         // Meta Data Keys
         private string MetaDataDefaultValueKey = "DefaultValue";
@@ -20,7 +18,7 @@ namespace ToSic.Eav.ManagementUI
         protected void Page_Load(object sender, EventArgs e)
         {
             if (FieldValueEditString == null)
-                TextBox1.Text = GetMetaDataValue<string>(MetaDataDefaultValueKey, "");
+                TextBox1.Text = GetMetaDataValue(MetaDataDefaultValueKey, "");
             else
                 TextBox1.Text = (FieldValue as decimal?).ToString();
 
@@ -30,7 +28,7 @@ namespace ToSic.Eav.ManagementUI
             if (!String.IsNullOrEmpty(GetMetaDataValue<string>(MetaDataLengthKey)))
                 TextBox1.MaxLength = GetMetaDataValue<int>(MetaDataLengthKey);
 
-            TextBox1.ToolTip = GetMetaDataValue<string>(MetaDataNotesKey, "");
+            TextBox1.ToolTip = GetMetaDataValue(MetaDataNotesKey, "");
 
             if (ShowDataControlOnly)
                 FieldLabel.Visible = false;

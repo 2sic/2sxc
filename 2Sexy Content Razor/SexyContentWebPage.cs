@@ -1,22 +1,16 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
-using System.Web;
-using System.Web.WebPages;
-using DotNetNuke.Common.Utilities;
-using DotNetNuke.Entities.Modules;
-using DotNetNuke.Entities.Portals;
-using DotNetNuke.Security.Permissions;
-using ToSic.SexyContent.DataSources;
-using ToSic.SexyContent.DataSources.Tokens;
-using ToSic.SexyContent.Engines;
-using ToSic.SexyContent.Engines.TokenEngine;
-using ToSic.SexyContent.Razor.Helpers;
 using System.Collections.Generic;
+using System.IO;
+using System.Web.Hosting;
+using System.Web.WebPages;
+using DotNetNuke.Entities.Modules;
 using ToSic.Eav;
 using ToSic.Eav.DataSources;
-using ToSic.SexyContent.Search;
 using ToSic.Eav.ValueProvider;
+using ToSic.SexyContent.DataSources;
+using ToSic.SexyContent.Engines;
+using ToSic.SexyContent.Razor.Helpers;
+using ToSic.SexyContent.Search;
 
 namespace ToSic.SexyContent.Razor
 {
@@ -190,7 +184,7 @@ namespace ToSic.SexyContent.Razor
         {
             var path = NormalizePath(relativePath);
 
-            if(!File.Exists(System.Web.Hosting.HostingEnvironment.MapPath(path)))
+            if(!File.Exists(HostingEnvironment.MapPath(path)))
                 throw new FileNotFoundException("The shared file does not exist.", path);
 
             var webPage = (SexyContentWebPage)CreateInstanceFromVirtualPath(path);
