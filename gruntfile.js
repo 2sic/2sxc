@@ -1,0 +1,40 @@
+module.exports = function(grunt) {
+
+  // Project configuration.
+  grunt.initConfig({
+    pkg: grunt.file.readJSON('package.json'),
+	
+	ngAnnotate: {
+        options: {
+            // Task-specific options go here. 
+			sourceMap: true
+        },
+        Sxc4ng: {
+			files: {
+				'Js/AngularJS/2sxc4ng.annotated.js': ['Js/AngularJS/2sxc4ng.js']
+			}
+        },
+    },
+	
+    uglify: {
+      options: {
+        banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
+		sourceMap: true
+      },
+	  Sxc4ng: {
+		files: {
+			'Js/AngularJS/2sxc4ng.min.js': ['Js/AngularJS/2sxc4ng.annotated.js']
+		}
+	  }
+    }
+  });
+
+  grunt.loadNpmTasks('grunt-ng-annotate');
+  
+  // Load the plugin that provides the "uglify" task.
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+
+  // Default task(s).
+  grunt.registerTask('default', ['ngAnnotate', 'uglify']);
+
+};
