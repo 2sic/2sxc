@@ -511,6 +511,7 @@
     <Content Include="Extensions\404.png" />
     <Content Include="Extensions\Imazen_ImageResizer\ImageResizer.txt" />
     <Content Include="Extensions\Imazen_ImageResizer\license.txt" />
+    <Content Include="gruntfile.js" />
     <Content Include="icon-app.png" />
     <Content Include="icon.png" />
     <Content Include="Images\ajax-loader.gif" />
@@ -523,9 +524,13 @@
     <Content Include="Administration\Import.ascx" />
     <Content Include="Images\Save.png" />
     <Content Include="Js\2sxc.api.manage.js" />
+    <Content Include="Js\2sxc.api.manage.min.js" />
+    <Content Include="Js\2sxc.api.min.js" />
     <Content Include="Js\2sxc.DnnActionMenuMapper.js" />
     <Content Include="Js\2sxc.ApiService.js" />
+    <Content Include="Js\2sxc.TemplateSelector.annotated.js" />
     <Content Include="Js\2sxc.TemplateSelector.js" />
+    <Content Include="Js\2sxc.TemplateSelector.min.js" />
     <Content Include="Js\AngularJS\angular-animate.min.js" />
     <Content Include="Js\AngularJS\angular-resource.min.js" />
     <Content Include="Js\AngularJS\angular-ui-tree.min.css" />
@@ -600,6 +605,10 @@
     <Content Include="Extensions\ToSic_vCard\vCard.ashx" />
     <Content Include="BuildScripts\ModulePackage.Targets" />
     <Content Include="BuildScripts\MSBuild.Community.Tasks.targets" />
+    <Content Include="package.json" />
+    <Content Include="Js\2sxc.api.manage.min.js.map" />
+    <Content Include="Js\2sxc.api.min.js.map" />
+    <Content Include="Js\2sxc.TemplateSelector.min.js.map" />
     <None Include="SqlDataProvider\01.00.00.SqlDataProvider" />
     <Content Include="SexyContent\EAV\PipelineDesigner\assets\jquery.jsPlumb-1.7.2-min.js" />
     <Content Include="SexyContent\EAV\PipelineDesigner\PipelineDesigner.ascx" />
