@@ -360,7 +360,7 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
 				sqlConnection.Open();
 			var sqlCmdUpdateModuleSettings = new SqlCommand(@"INSERT INTO ModuleSettings
                          (ModuleID, CreatedByUserID, CreatedOnDate, LastModifiedByUserID, LastModifiedOnDate, SettingName, SettingValue)
-SELECT        ModuleSettings_1.ModuleID, ModuleSettings_1.CreatedByUserID, ModuleSettings_1.CreatedOnDate, ModuleSettings_1.LastModifiedByUserID, 
+SELECT DISTINCT       ModuleSettings_1.ModuleID, ModuleSettings_1.CreatedByUserID, ModuleSettings_1.CreatedOnDate, ModuleSettings_1.LastModifiedByUserID, 
                          ModuleSettings_1.LastModifiedOnDate, 'ToSIC_SexyContent_ContentGroupGuid' AS SettingName, 
                          ToSIC_SexyContent_ContentGroupItems.Temp_NewContentGroupGuid AS SettingValue
 FROM            ModuleSettings AS ModuleSettings_1 LEFT OUTER JOIN
