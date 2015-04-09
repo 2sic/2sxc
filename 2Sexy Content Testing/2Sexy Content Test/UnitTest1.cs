@@ -1,7 +1,5 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.SexyContent;
-
 
 namespace _2Sexy_Content_Test
 {

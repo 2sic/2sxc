@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using DotNetNuke.Entities.Modules;
-using DotNetNuke.Services.Journal;
 using ToSic.Eav;
 using ToSic.Eav.DataSources;
 
@@ -54,7 +52,7 @@ namespace ToSic.SexyContent
 			var context = EavContext.Instance(_zoneId, _appId);
 			var contentType = DataSource.GetCache(_zoneId, _appId).GetContentType(ContentGroupTypeName);
 
-			var values = new Dictionary<string, object>()
+			var values = new Dictionary<string, object>
 			{
 				{"Template", templateId.HasValue ? new [] { templateId.Value } : new int[] {}},
 				{"Content", new int[] {}},

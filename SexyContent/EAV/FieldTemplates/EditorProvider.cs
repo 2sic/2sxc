@@ -1,20 +1,13 @@
-﻿// Copied from DotNetNuke Source Code. (EditorProvider.cs) - 2013-01-04
-// Changed by 2sic: made _editor public to access configuration.
-// Usage in Hyperlink_Edit.ascx.cs
-
-#region Usings
+﻿#region Usings
 
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Web;
 using System.Web.UI;
-using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Xml;
-
 using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Host;
 using DotNetNuke.Entities.Modules;
@@ -25,9 +18,8 @@ using DotNetNuke.Modules.HTMLEditorProvider;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Localization;
 using DotNetNuke.UI;
-
-using Telerik.Web.UI;
 using DotNetNuke.UI.Utilities;
+using Telerik.Web.UI;
 
 #endregion
 
@@ -113,15 +105,15 @@ namespace ToSic.SexyContent.EAV.FieldTemplates
             get
             {
                 //get current user
-                UserInfo objUserInfo = UserController.GetCurrentUserInfo();
+                var objUserInfo = UserController.GetCurrentUserInfo();
                 //load default tools file
-                string tempConfigFile = ConfigFileName;
+                var tempConfigFile = ConfigFileName;
                 //get absolute path of default tools file
-                string path = HttpContext.Current.Server.MapPath(tempConfigFile).ToLower();
+                var path = HttpContext.Current.Server.MapPath(tempConfigFile).ToLower();
 
-                string rolepath = "";
-                string tabpath = "";
-                string portalpath = "";
+                var rolepath = "";
+                var tabpath = "";
+                var portalpath = "";
 
                 //lookup host specific config file
                 if (objUserInfo != null)
@@ -224,9 +216,9 @@ namespace ToSic.SexyContent.EAV.FieldTemplates
         {
             if (!File.Exists(path))
             {
-                string filePath = Path.GetDirectoryName(path);
-                string name = "default." + Path.GetFileName(path);
-                string defaultConfigFile = Path.Combine(filePath, name);
+                var filePath = Path.GetDirectoryName(path);
+                var name = "default." + Path.GetFileName(path);
+                var defaultConfigFile = Path.Combine(filePath, name);
 
                 //if defaultConfigFile is missing there is a big problem
                 //let the error propogate to the module level
@@ -239,15 +231,15 @@ namespace ToSic.SexyContent.EAV.FieldTemplates
             get
             {
                 //get current user
-                UserInfo objUserInfo = UserController.GetCurrentUserInfo();
+                var objUserInfo = UserController.GetCurrentUserInfo();
                 //load default tools file
-                string tempToolsFile = ToolsFileName;
+                var tempToolsFile = ToolsFileName;
                 //get absolute path of default tools file
-                string path = HttpContext.Current.Server.MapPath(tempToolsFile).ToLower();
+                var path = HttpContext.Current.Server.MapPath(tempToolsFile).ToLower();
 
-                string rolepath = "";
-                string tabpath = "";
-                string portalpath = "";
+                var rolepath = "";
+                var tabpath = "";
+                var portalpath = "";
 
                 //lookup host specific tools file
                 if (objUserInfo != null)
@@ -342,29 +334,23 @@ namespace ToSic.SexyContent.EAV.FieldTemplates
 
         private string AddSlash(string Folderpath)
         {
-            if (Folderpath.StartsWith("/"))
+	        if (Folderpath.StartsWith("/"))
             {
                 return Folderpath.Replace("//", "/");
             }
-            else
-            {
-                return "/" + Folderpath;
-            }
+	        return "/" + Folderpath;
         }
 
-        private string RemoveEndSlash(string Folderpath)
-        {
-            if (Folderpath.EndsWith("/"))
+	    private string RemoveEndSlash(string Folderpath)
+	    {
+		    if (Folderpath.EndsWith("/"))
             {
                 return Folderpath.Substring(0, Folderpath.LastIndexOf("/"));
             }
-            else
-            {
-                return Folderpath;
-            }
-        }
+		    return Folderpath;
+	    }
 
-        private void PopulateFolder(string folderPath, string toolname)
+	    private void PopulateFolder(string folderPath, string toolname)
         {
             var ReadPaths = new ArrayList();
             var WritePaths = new ArrayList();
@@ -376,7 +362,7 @@ namespace ToSic.SexyContent.EAV.FieldTemplates
             }
             else if (folderPath.Length > 0)
             {
-                string path = RemoveEndSlash(RootImageDirectory) + AddSlash(folderPath);
+                var path = RemoveEndSlash(RootImageDirectory) + AddSlash(folderPath);
                 WritePaths.Add(path);
                 ReadPaths.Add(path);
             }
@@ -435,12 +421,12 @@ namespace ToSic.SexyContent.EAV.FieldTemplates
 
         private EditorLink AddLink(TabInfo objTab, ref EditorLink parent)
         {
-            string linkUrl = string.Empty;
+            var linkUrl = string.Empty;
             if (! objTab.DisableLink)
             {
                 if (_linksUseTabNames)
                 {
-                    string linkFormat = "http://{0}/Default.aspx?TabName={1}";
+                    var linkFormat = "http://{0}/Default.aspx?TabName={1}";
                     linkUrl = string.Format(linkFormat, PortalSettings.PortalAlias.HTTPAlias, HttpUtility.UrlEncode(objTab.TabName));
                 }
                 else
@@ -449,7 +435,7 @@ namespace ToSic.SexyContent.EAV.FieldTemplates
                 }
                 if (_linksUseRelativeUrls && (linkUrl.StartsWith("http://") || linkUrl.StartsWith("https://")))
                 {
-                    int linkIndex = linkUrl.IndexOf("/", 8);
+                    var linkIndex = linkUrl.IndexOf("/", 8);
                     if (linkIndex > 0)
                     {
                         linkUrl = linkUrl.Substring(linkIndex);
@@ -464,8 +450,8 @@ namespace ToSic.SexyContent.EAV.FieldTemplates
         private void AddChildLinks(int TabId, ref EditorLink links)
         {
             var tc = new TabController();
-            List<TabInfo> tabs = TabController.GetPortalTabs(PortalSettings.PortalId, Null.NullInteger, false, "", true, false, true, true, false);
-            foreach (TabInfo objTab in tabs)
+            var tabs = TabController.GetPortalTabs(PortalSettings.PortalId, Null.NullInteger, false, "", true, false, true, true, false);
+            foreach (var objTab in tabs)
             {
                 if (objTab.ParentId == TabId)
                 {
@@ -473,7 +459,7 @@ namespace ToSic.SexyContent.EAV.FieldTemplates
                     if (objTab.HasChildren)
                     {
                         //has more children
-                        EditorLink tempVar = AddLink(objTab, ref links);
+                        var tempVar = AddLink(objTab, ref links);
                         AddChildLinks(objTab.TabID, ref tempVar);
                     }
                     else
@@ -491,8 +477,8 @@ namespace ToSic.SexyContent.EAV.FieldTemplates
 
             //Add links to custom link menu
             var tc = new TabController();
-            List<TabInfo> tabs = TabController.GetPortalTabs(PortalSettings.PortalId, Null.NullInteger, false, "", true, false, true, true, false);
-            foreach (TabInfo objTab in tabs)
+            var tabs = TabController.GetPortalTabs(PortalSettings.PortalId, Null.NullInteger, false, "", true, false, true, true, false);
+            foreach (var objTab in tabs)
             {
                 //check permissions and visibility of current tab
                 if (objTab.Level == 0)
@@ -500,7 +486,7 @@ namespace ToSic.SexyContent.EAV.FieldTemplates
                     if (objTab.HasChildren)
                     {
                         //is a root tab, and has children
-                        EditorLink tempVar = AddLink(objTab, ref portalLinks);
+                        var tempVar = AddLink(objTab, ref portalLinks);
                         AddChildLinks(objTab.TabID, ref tempVar);
                     }
                     else
@@ -534,7 +520,7 @@ namespace ToSic.SexyContent.EAV.FieldTemplates
 
             if (! string.IsNullOrEmpty(ConfigFile))
             {
-                XmlDocument xmlDoc = GetValidConfigFile();
+                var xmlDoc = GetValidConfigFile();
                 var colorConverter = new WebColorConverter();
                 var items = new ArrayList();
 
@@ -547,8 +533,8 @@ namespace ToSic.SexyContent.EAV.FieldTemplates
                             continue;
                         }
 
-                        string propertyName = node.Attributes["name"].Value;
-                        string propValue = node.InnerText;
+                        var propertyName = node.Attributes["name"].Value;
+                        var propValue = node.InnerText;
                         //use reflection to set all string and bool properties
                         SetEditorProperty(propertyName, propValue);
                         //the following collections are handled by the tools file now:
@@ -574,7 +560,7 @@ namespace ToSic.SexyContent.EAV.FieldTemplates
                             case "NewLineBr":
                                 {
                                     //use NewLineMode as NewLineBR has been obsoleted
-                                    if (bool.Parse(node.InnerText)==true)
+                                    if (bool.Parse(node.InnerText))
                                     {
                                         _editor.NewLineMode = EditorNewLineModes.Br;
                                         }
@@ -596,7 +582,7 @@ namespace ToSic.SexyContent.EAV.FieldTemplates
                                 }
                             case "ScriptToLoad":
                                 {
-                                    string path = Context.Request.MapPath(PortalSettings.ActiveTab.SkinPath) + node.InnerText;
+                                    var path = Context.Request.MapPath(PortalSettings.ActiveTab.SkinPath) + node.InnerText;
                                     if (File.Exists(path))
                                     {
                                         _scripttoload = PortalSettings.ActiveTab.SkinPath + node.InnerText;
@@ -779,7 +765,7 @@ namespace ToSic.SexyContent.EAV.FieldTemplates
                                 }
                             case "CssFile":
                                 {
-                                    string path = Context.Request.MapPath(PortalSettings.ActiveTab.SkinPath) + node.InnerText;
+                                    var path = Context.Request.MapPath(PortalSettings.ActiveTab.SkinPath) + node.InnerText;
                                     if (File.Exists(path))
                                     {
                                         _editor.CssFiles.Clear();
@@ -860,46 +846,35 @@ namespace ToSic.SexyContent.EAV.FieldTemplates
                         }
                     }
                 }
-                else
-                {
-                    //could not load config
-                }
-            }
-            else
-            {
-                //could not load config (config file property empty?)
             }
         }
 
         private string[] ApplySearchPatternFilter(string[] patterns)
         {
-            FileExtensionWhitelist hostWhiteList = Host.AllowedExtensionWhitelist;
+            var hostWhiteList = Host.AllowedExtensionWhitelist;
 
             if (patterns.Length == 1 && patterns[0] == "*.*")
             {
                 //todisplaystring converts to a "*.xxx, *.yyy" format which is then split for return
                 return hostWhiteList.ToDisplayString().Split(',');
             }
-            else
-            {
-                var returnPatterns = new List<string>();
+	        var returnPatterns = new List<string>();
 
-                foreach (string pattern in patterns)
-                {
-                    if (hostWhiteList.IsAllowedExtension(pattern.Substring(1)))
-                    {
-                        returnPatterns.Add(pattern);
-                    }
-                }
+	        foreach (var pattern in patterns)
+	        {
+		        if (hostWhiteList.IsAllowedExtension(pattern.Substring(1)))
+		        {
+			        returnPatterns.Add(pattern);
+		        }
+	        }
 
-                return returnPatterns.ToArray();
-            }
+	        return returnPatterns.ToArray();
         }
 
         protected void Panel_Init(object sender, EventArgs e)
         {
             //fix for allowing childportal (tabid must be in querystring!)
-            string PortalPath = "";
+            var PortalPath = "";
             try
             {
                 PortalPath = _editor.TemplateManager.ViewPaths[0];
@@ -908,15 +883,15 @@ namespace ToSic.SexyContent.EAV.FieldTemplates
             {
             }
             PortalPath = PortalPath.Replace(PortalSettings.HomeDirectory, "").Replace("//", "/");
-            string strSaveTemplateDialogPath = _panel.Page.ResolveUrl(moduleFolderPath + "Dialogs/SaveTemplate.aspx?Path=" + PortalPath + "&TabId=" + PortalSettings.ActiveTab.TabID);
+            var strSaveTemplateDialogPath = _panel.Page.ResolveUrl(moduleFolderPath + "Dialogs/SaveTemplate.aspx?Path=" + PortalPath + "&TabId=" + PortalSettings.ActiveTab.TabID);
 
 			AJAX.AddScriptManager(_panel.Page);
         	var scriptManager = AJAX.GetScriptManager(_panel.Page);
 
-            string strRegisterClientScriptPath = _panel.Page.ResolveUrl(moduleFolderPath + "js/ClientScripts.js");
+            var strRegisterClientScriptPath = _panel.Page.ResolveUrl(moduleFolderPath + "js/ClientScripts.js");
             ScriptManager.RegisterClientScriptInclude(_panel.Page, _panel.Page.GetType(), "ClientScripts", strRegisterClientScriptPath);
 
-            string strRegisterDialogScriptPath = _panel.Page.ResolveUrl(moduleFolderPath + "js/RegisterDialogs.js");
+            var strRegisterDialogScriptPath = _panel.Page.ResolveUrl(moduleFolderPath + "js/RegisterDialogs.js");
             ScriptManager.RegisterClientScriptInclude(_panel.Page, _panel.Page.GetType(), "RegisterDialogs", strRegisterDialogScriptPath);
 
 
@@ -924,7 +899,7 @@ namespace ToSic.SexyContent.EAV.FieldTemplates
             var setEditorOverrideCSSPath = "<script type=\"text/javascript\">var __editorOverrideCSSPath = \"" + editorOverrideCSSPath + "\";</script>";
             _panel.Page.ClientScript.RegisterClientScriptBlock(GetType(), "EditorOverrideCSSPath", setEditorOverrideCSSPath);
 
-            string styleOverrideScriptPath = _panel.Page.ResolveUrl(moduleFolderPath + "js/overrideCSS.js");
+            var styleOverrideScriptPath = _panel.Page.ResolveUrl(moduleFolderPath + "js/overrideCSS.js");
             ScriptManager.RegisterClientScriptInclude(_panel.Page, _panel.Page.GetType(), "OverrideCSS", styleOverrideScriptPath);
 
             if (! string.IsNullOrEmpty(_scripttoload))
@@ -984,9 +959,9 @@ namespace ToSic.SexyContent.EAV.FieldTemplates
             try
             {
                 var parentModule = ControlUtilities.FindParentControl<PortalModuleBase>(HtmlEditorControl);
-                int moduleid = Convert.ToInt32(((parentModule == null) ? -1 : parentModule.ModuleId));
-                int portalId = Convert.ToInt32(((parentModule == null) ? -1 : parentModule.PortalId));
-                int tabId = Convert.ToInt32(((parentModule == null) ? -1 : parentModule.TabId));
+                var moduleid = Convert.ToInt32(((parentModule == null) ? -1 : parentModule.ModuleId));
+                var portalId = Convert.ToInt32(((parentModule == null) ? -1 : parentModule.PortalId));
+                var tabId = Convert.ToInt32(((parentModule == null) ? -1 : parentModule.TabId));
                 ClientAPI.RegisterClientVariable(HtmlEditorControl.Page, "editorModuleId", moduleid.ToString(), true);
                 ClientAPI.RegisterClientVariable(HtmlEditorControl.Page, "editorTabId", tabId.ToString(), true);
                 ClientAPI.RegisterClientVariable(HtmlEditorControl.Page, "editorPortalId", portalId.ToString(), true);
@@ -1002,7 +977,7 @@ namespace ToSic.SexyContent.EAV.FieldTemplates
 
         protected void RadEditor_Load(object sender, EventArgs e)
         {
-            Page editorPage = _panel.Page;
+            var editorPage = _panel.Page;
 
             //if not use relative links, we need a parameter in query string to let html module not parse
             //absolute urls to relative;
@@ -1015,7 +990,7 @@ namespace ToSic.SexyContent.EAV.FieldTemplates
             //set language
             if (! _languageSet) //language might have been set by config file
             {
-                string localizationLang = "en-US"; //use teleriks internal fallback language
+                var localizationLang = "en-US"; //use teleriks internal fallback language
 
                 //first check portal settings
                 if (IsLocaleAvailable(PortalSettings.DefaultLanguage))
@@ -1027,7 +1002,7 @@ namespace ToSic.SexyContent.EAV.FieldTemplates
                 //then check if language cookie is present
                 if (editorPage.Request.Cookies["language"] != null)
                 {
-                    string cookieValue = editorPage.Request.Cookies.Get("language").Value;
+                    var cookieValue = editorPage.Request.Cookies.Get("language").Value;
                     if (IsLocaleAvailable(cookieValue))
                     {
                         //only use locale if resource file is present
@@ -1091,15 +1066,12 @@ namespace ToSic.SexyContent.EAV.FieldTemplates
             {
                 return path;
             }
-            string convertedPath = Context.Request.MapPath(path);
+            var convertedPath = Context.Request.MapPath(path);
             if (File.Exists(convertedPath))
             {
                 return convertedPath;
             }
-            else
-            {
-                return path;
-            }
+	        return path;
         }
 
         protected XmlDocument GetValidConfigFile()
@@ -1118,7 +1090,7 @@ namespace ToSic.SexyContent.EAV.FieldTemplates
 
         private void SetEditorProperty(string propertyName, string propValue)
         {
-            PropertyInfo pi = _editor.GetType().GetProperty(propertyName);
+            var pi = _editor.GetType().GetProperty(propertyName);
             if (pi != null)
             {
                 if (pi.PropertyType.Equals(typeof (string)))

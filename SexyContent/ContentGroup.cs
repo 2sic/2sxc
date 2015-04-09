@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav;
+using EntityRelationship = ToSic.Eav.Data.EntityRelationship;
 
 namespace ToSic.SexyContent
 {
@@ -61,7 +62,7 @@ namespace ToSic.SexyContent
 						templateEntity = dataSource.List.FirstOrDefault(e => e.Value.EntityGuid == _previewTemplateId).Value;
 					}
 					else if (_contentGroupEntity != null)
-						templateEntity = ((Eav.Data.EntityRelationship) _contentGroupEntity.Attributes["Template"][0]).FirstOrDefault();
+						templateEntity = ((EntityRelationship) _contentGroupEntity.Attributes["Template"][0]).FirstOrDefault();
 
 					_template = templateEntity == null ? null : new Template(templateEntity);
 				}
@@ -79,12 +80,12 @@ namespace ToSic.SexyContent
 			{
 				if (_contentGroupEntity != null)
 				{
-					var list = ((Eav.Data.EntityRelationship) _contentGroupEntity.GetBestValue("Content")).ToList();
+					var list = ((EntityRelationship) _contentGroupEntity.GetBestValue("Content")).ToList();
 					if (list.Count > 0)
 						return list;
 				}
 
-				return new List<IEntity>() { null };
+				return new List<IEntity> { null };
 			}
 		}
 
@@ -94,7 +95,7 @@ namespace ToSic.SexyContent
 			{
 				if(_contentGroupEntity == null)
 					return new List<IEntity>();
-				return ((Eav.Data.EntityRelationship) _contentGroupEntity.GetBestValue("Presentation")).ToList();
+				return ((EntityRelationship) _contentGroupEntity.GetBestValue("Presentation")).ToList();
 			}
 		}
 
@@ -104,7 +105,7 @@ namespace ToSic.SexyContent
 			{
 				if (_contentGroupEntity == null)
 					return new List<IEntity>();
-				return ((Eav.Data.EntityRelationship)_contentGroupEntity.GetBestValue("ListContent")).ToList();
+				return ((EntityRelationship)_contentGroupEntity.GetBestValue("ListContent")).ToList();
 			}
 		}
 		public List<IEntity> ListPresentation
@@ -113,7 +114,7 @@ namespace ToSic.SexyContent
 			{
 				if (_contentGroupEntity == null)
 					return new List<IEntity>(); 
-				return((Eav.Data.EntityRelationship)_contentGroupEntity.GetBestValue("ListPresentation")).ToList();
+				return((EntityRelationship)_contentGroupEntity.GetBestValue("ListPresentation")).ToList();
 			}
 		}
 
@@ -176,7 +177,7 @@ namespace ToSic.SexyContent
 			context.UpdateEntity(_contentGroupEntity.EntityGuid, values);
 
 			// Refresh content group entity (ensures contentgroup is up to date)
-			this._contentGroupEntity = new ContentGroups(_zoneId, _appId).GetContentGroup(_contentGroupEntity.EntityGuid)._contentGroupEntity;
+			_contentGroupEntity = new ContentGroups(_zoneId, _appId).GetContentGroup(_contentGroupEntity.EntityGuid)._contentGroupEntity;
 		}
 
 		/// <summary>

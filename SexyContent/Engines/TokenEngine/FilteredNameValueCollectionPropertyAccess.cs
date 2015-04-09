@@ -1,4 +1,5 @@
 ﻿using System.Collections.Specialized;
+using System.Globalization;
 using DotNetNuke.Entities.Users;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Tokens;
@@ -10,7 +11,7 @@ namespace ToSic.SexyContent.Engines.TokenEngine
     /// </summary>
     public class FilteredNameValueCollectionPropertyAccess : IPropertyAccess
     {
-        NameValueCollection NameValueCollection;
+	    readonly NameValueCollection NameValueCollection;
         public FilteredNameValueCollectionPropertyAccess(NameValueCollection list)
         {
             NameValueCollection = list;
@@ -31,11 +32,11 @@ namespace ToSic.SexyContent.Engines.TokenEngine
         /// <param name="AccessLevel"></param>
         /// <param name="PropertyNotFound"></param>
         /// <returns></returns>
-        public string GetProperty(string strPropertyName, string strFormat, System.Globalization.CultureInfo formatProvider, UserInfo AccessingUser, Scope AccessLevel, ref bool PropertyNotFound)
+        public string GetProperty(string strPropertyName, string strFormat, CultureInfo formatProvider, UserInfo AccessingUser, Scope AccessLevel, ref bool PropertyNotFound)
         {
             if (NameValueCollection == null)
                 return string.Empty;
-            string value = NameValueCollection[strPropertyName];
+            var value = NameValueCollection[strPropertyName];
             string OutputFormat = null;
             if (strFormat == string.Empty)
             {
@@ -47,15 +48,12 @@ namespace ToSic.SexyContent.Engines.TokenEngine
             }
             if (value != null)
             {
-                PortalSecurity Security = new PortalSecurity();
+                var Security = new PortalSecurity();
                 value = Security.InputFilter(value, PortalSecurity.FilterFlag.NoScripting);
                 return Security.InputFilter(PropertyAccess.FormatString(value, strFormat), PortalSecurity.FilterFlag.NoScripting);
             }
-            else
-            {
-                PropertyNotFound = true;
-                return string.Empty;
-            }
+	        PropertyNotFound = true;
+	        return string.Empty;
         }
     }
 }

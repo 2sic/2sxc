@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
+using DotNetNuke.Common;
 using DotNetNuke.Web.UI.WebControls;
+using Telerik.Web.UI;
 
 namespace ToSic.SexyContent
 {
@@ -32,8 +30,8 @@ namespace ToSic.SexyContent
             if (!Page.IsPostBack)
                 BindGrdTemplates();
 
-            hlkNewTemplate.NavigateUrl = EditUrl(PortalSettings.ActiveTab.TabID, SexyContent.ControlKeys.EditTemplate, true, "mid=" + this.ModuleId + "&" + SexyContent.AppIDString + "=" + AppId);
-            hlkCancel.NavigateUrl = DotNetNuke.Common.Globals.NavigateURL(this.TabId, "", null);
+            hlkNewTemplate.NavigateUrl = EditUrl(PortalSettings.ActiveTab.TabID, SexyContent.ControlKeys.EditTemplate, true, "mid=" + ModuleId + "&" + SexyContent.AppIDString + "=" + AppId);
+            hlkCancel.NavigateUrl = Globals.NavigateURL(TabId, "", null);
 
             if (!SexyContent.SexyContentDesignersGroupConfigured(PortalId))
                 pnlSexyContentDesignersInfo.Visible = true;
@@ -44,7 +42,7 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected void grdTemplates_DeleteCommand(object sender, Telerik.Web.UI.GridCommandEventArgs e)
+        protected void grdTemplates_DeleteCommand(object sender, GridCommandEventArgs e)
         {
 			var templateId = Convert.ToInt32(e.Item.OwnerTableView.DataKeyValues[e.Item.ItemIndex][SexyContent.TemplateID]);
 			Sexy.Templates.DeleteTemplate(templateId);
@@ -66,10 +64,10 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected void grdTemplates_EditCommand(object sender, Telerik.Web.UI.GridCommandEventArgs e)
+        protected void grdTemplates_EditCommand(object sender, GridCommandEventArgs e)
         {
             var templateId = Convert.ToInt32(e.Item.OwnerTableView.DataKeyValues[e.Item.ItemIndex][SexyContent.TemplateID]);
-            var editUrl = ModuleContext.NavigateUrl(TabId, SexyContent.ControlKeys.EditTemplate.ToString(), true, "mid" + "=" + ModuleId.ToString() + "&" + SexyContent.TemplateID + "=" + templateId.ToString() + "&" + SexyContent.AppIDString + "=" + AppId.ToString());
+            var editUrl = ModuleContext.NavigateUrl(TabId, SexyContent.ControlKeys.EditTemplate, true, "mid" + "=" + ModuleId + "&" + SexyContent.TemplateID + "=" + templateId + "&" + SexyContent.AppIDString + "=" + AppId);
             Response.Redirect(editUrl);
         }
 
@@ -86,12 +84,10 @@ namespace ToSic.SexyContent
                             select new
                             {
                                 TemplateID = c.TemplateId,
-                                TemplateName = c.Name,
-                                ContentTypeStaticName = c.ContentTypeStaticName,
+                                TemplateName = c.Name, c.ContentTypeStaticName,
                                 AttributeSetName = a != null ? a.Name : "No Content Type",
                                 TemplatePath = c.Path,
-                                DemoEntityID = c.ContentDemoEntity != null ? c.ContentDemoEntity.EntityId : new int?(),
-                                IsHidden = c.IsHidden
+                                DemoEntityID = c.ContentDemoEntity != null ? c.ContentDemoEntity.EntityId : new int?(), c.IsHidden
                             };
 
             grdTemplates.DataSource = templates;

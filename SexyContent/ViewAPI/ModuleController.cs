@@ -1,13 +1,15 @@
-﻿using DotNetNuke.Entities.Portals;
-using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Web.Http;
+using DotNetNuke.Entities.Portals;
+using DotNetNuke.Security;
+using DotNetNuke.Services.Exceptions;
+using DotNetNuke.Web.Api;
+using Newtonsoft.Json;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.WebApi;
@@ -63,7 +65,7 @@ namespace ToSic.SexyContent.ViewAPI
             }
             catch (Exception e)
             {
-                DotNetNuke.Services.Exceptions.Exceptions.LogException(e);
+                Exceptions.LogException(e);
                 throw e;
             }
         }
@@ -108,7 +110,7 @@ namespace ToSic.SexyContent.ViewAPI
                 engine.CustomizeData();
 
 				if (template.ContentTypeStaticName != "" && template.ContentDemoEntity == null && dataSource["Default"].List.Count == 0) { 
-					var toolbar = "<ul class='sc-menu' data-toolbar='" + Newtonsoft.Json.JsonConvert.SerializeObject(new { sortOrder = 0, useModuleList = true, action = "edit" }) + "'></ul>";
+					var toolbar = "<ul class='sc-menu' data-toolbar='" + JsonConvert.SerializeObject(new { sortOrder = 0, useModuleList = true, action = "edit" }) + "'></ul>";
 					return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent("<div class='dnnFormMessage dnnFormInfo'>No demo item exists for the selected template. " + toolbar + "</div>") };
 				}
 
@@ -118,7 +120,7 @@ namespace ToSic.SexyContent.ViewAPI
             }
             catch (Exception e)
             {
-                DotNetNuke.Services.Exceptions.Exceptions.LogException(e);
+                Exceptions.LogException(e);
                 throw e;
             }
         }

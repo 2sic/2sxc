@@ -1,13 +1,7 @@
-﻿using DotNetNuke.Common.Utilities;
-using DotNetNuke.Entities.Modules;
-using DotNetNuke.Entities.Modules.Actions;
-using DotNetNuke.Security;
-using DotNetNuke.Services.Exceptions;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Web.UI;
-using System.Web.UI.WebControls;
+using DotNetNuke.Entities.Modules;
+using DotNetNuke.Services.Exceptions;
 using ToSic.SexyContent.GettingStarted;
 
 namespace ToSic.SexyContent
@@ -48,8 +42,8 @@ namespace ToSic.SexyContent
                     {
                         pnlGetStarted.Visible = true;
                         var gettingStartedControl = (GettingStartedFrame)LoadControl("~/DesktopModules/ToSIC_SexyContent/SexyContent/GettingStarted/GettingStartedFrame.ascx");
-                        gettingStartedControl.ModuleID = this.ModuleId;
-                        gettingStartedControl.ModuleConfiguration = this.ModuleConfiguration;
+                        gettingStartedControl.ModuleID = ModuleId;
+                        gettingStartedControl.ModuleConfiguration = ModuleConfiguration;
                         pnlGetStarted.Controls.Add(gettingStartedControl);
                     }
 

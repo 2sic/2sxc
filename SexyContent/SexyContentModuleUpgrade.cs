@@ -1,21 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
 using System.Web;
-using System.Web.UI.WebControls;
-using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Web.Client.ClientResourceManagement;
-using Telerik.Web.UI;
 using ToSic.Eav;
 using ToSic.Eav.DataSources.Caches;
 using ToSic.Eav.Import;
 using ToSic.SexyContent.ImportExport;
-using System.Data;
+using Attribute = ToSic.Eav.Import.Attribute;
+using AttributeSet = ToSic.Eav.Import.AttributeSet;
+using Entity = ToSic.Eav.Import.Entity;
 
 namespace ToSic.SexyContent
 {
@@ -85,15 +84,15 @@ namespace ToSic.SexyContent
 		private static void EnsurePipelineDesignerAttributeSets()
 		{
 			// Ensure DnnSqlDataSource Configuration
-			var dsrcSqlDataSource = Eav.Import.AttributeSet.SystemAttributeSet("|Config ToSic.SexyContent.DataSources.DnnSqlDataSource", "used to configure a DNN SqlDataSource",
-				new List<Eav.Import.Attribute>
+			var dsrcSqlDataSource = AttributeSet.SystemAttributeSet("|Config ToSic.SexyContent.DataSources.DnnSqlDataSource", "used to configure a DNN SqlDataSource",
+				new List<Attribute>
 				{
-					Eav.Import.Attribute.StringAttribute("ContentType", "ContentType", null, true),
-					Eav.Import.Attribute.StringAttribute("SelectCommand", "SelectCommand", null, true, rowCount: 10)
+					Attribute.StringAttribute("ContentType", "ContentType", null, true),
+					Attribute.StringAttribute("SelectCommand", "SelectCommand", null, true, rowCount: 10)
 				});
 
 			// Collect AttributeSets for use in Import
-			var attributeSets = new List<Eav.Import.AttributeSet>
+			var attributeSets = new List<AttributeSet>
 			{
 				dsrcSqlDataSource
 			};
@@ -179,7 +178,7 @@ WHERE        (ToSIC_SexyContent_Templates.SysDeleted IS NULL)";
 				var cache = ((BaseCache)DataSource.GetCache(zoneId, appId)).GetContentTypes();
 
 				#region Helper Functions
-				Func<int?, string> getContentTypeStaticName = (contentTypeId) =>
+				Func<int?, string> getContentTypeStaticName = contentTypeId =>
 				{
 					if (!contentTypeId.HasValue || contentTypeId == 0)
 						return "";
@@ -200,13 +199,13 @@ WHERE        (ToSIC_SexyContent_Templates.SysDeleted IS NULL)";
 					AlreadyImported = t["Temp_NewTemplateGuid"] != DBNull.Value,
 
 					ContentTypeId = getContentTypeStaticName(t["AttributeSetID"] == DBNull.Value ? new int?() : (int)t["AttributeSetID"]),
-					ContentDemoEntityGuids = t["ContentDemoEntityGuid"] == DBNull.Value ? new List<Guid>() : new List<Guid>() { (Guid)t["ContentDemoEntityGuid"] },
+					ContentDemoEntityGuids = t["ContentDemoEntityGuid"] == DBNull.Value ? new List<Guid>() : new List<Guid> { (Guid)t["ContentDemoEntityGuid"] },
 					PresentationTypeId = getContentTypeStaticName((int)t["Temp_PresentationTypeID"]),
-					PresentationDemoEntityGuids = t["PresentationDemoEntityGuid"] == DBNull.Value ? new List<Guid>() : new List<Guid>() { (Guid)t["PresentationDemoEntityGuid"] },
+					PresentationDemoEntityGuids = t["PresentationDemoEntityGuid"] == DBNull.Value ? new List<Guid>() : new List<Guid> { (Guid)t["PresentationDemoEntityGuid"] },
 					ListContentTypeId = getContentTypeStaticName((int)t["Temp_ListContentTypeID"]),
-					ListContentDemoEntityGuids = t["ListContentDemoEntityGuid"] == DBNull.Value ? new List<Guid>() : new List<Guid>() { (Guid)t["ListContentDemoEntityGuid"] },
+					ListContentDemoEntityGuids = t["ListContentDemoEntityGuid"] == DBNull.Value ? new List<Guid>() : new List<Guid> { (Guid)t["ListContentDemoEntityGuid"] },
 					ListPresentationTypeId = getContentTypeStaticName((int)t["Temp_ListPresentationTypeID"]),
-					ListPresentationDemoEntityGuids = t["ListPresentationDemoEntityGuid"] == DBNull.Value ? new List<Guid>() : new List<Guid>() { (Guid)t["ListPresentationDemoEntityGuid"] },
+					ListPresentationDemoEntityGuids = t["ListPresentationDemoEntityGuid"] == DBNull.Value ? new List<Guid>() : new List<Guid> { (Guid)t["ListPresentationDemoEntityGuid"] },
 
 					Type = (string)t["Type"],
 					IsHidden = (bool)t["IsHidden"],
@@ -215,7 +214,7 @@ WHERE        (ToSIC_SexyContent_Templates.SysDeleted IS NULL)";
 					AppId = appId,
 					PublishData = (bool)t["PublishData"],
 					StreamsToPublish = (string)t["StreamsToPublish"],
-					PipelineEntityGuids = t["PipelineEntityGuid"] == DBNull.Value ? new List<Guid>() : new List<Guid>() { (Guid)t["PipelineEntityGuid"] },
+					PipelineEntityGuids = t["PipelineEntityGuid"] == DBNull.Value ? new List<Guid>() : new List<Guid> { (Guid)t["PipelineEntityGuid"] },
 					ViewNameInUrl = t["ViewNameInUrl"].ToString(),
 					ZoneId = zoneId
 				};
@@ -266,12 +265,9 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
 				var itemsList = items.ToList();
 				var contentGroup = new
 				{
-					NewEntityGuid = Guid.NewGuid(),
-					AppId = itemsList.First().AppId,
-					ZoneId = itemsList.First().ZoneId,
+					NewEntityGuid = Guid.NewGuid(), itemsList.First().AppId, itemsList.First().ZoneId,
 					ContentGroupId = id,
-					TemplateGuids = itemsList.First().TemplateEntityGuids,
-					ModuleId = itemsList.First().ModuleId,
+					TemplateGuids = itemsList.First().TemplateEntityGuids, itemsList.First().ModuleId,
 					ContentGuids = itemsList.Where(p => p.Type == "Content").Select(p => p.EntityGuid).ToList(),
 					PresentationGuids = itemsList.Where(p => p.Type == "Presentation").Select(p => p.EntityGuid).ToList(),
 					ListContentGuids = itemsList.Where(p => p.Type == "ListContent").Select(p => p.EntityGuid).ToList(),
@@ -290,37 +286,37 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
 
 			foreach (var app in apps)
 			{
-				var entitiesToImport = new List<ToSic.Eav.Import.Entity>();
+				var entitiesToImport = new List<Entity>();
 
 				foreach (var t in existingTemplates.Where(t => t.AppId == app && !t.AlreadyImported))
 				{
-					var entity = new ToSic.Eav.Import.Entity()
+					var entity = new Entity
 					{
 						AttributeSetStaticName = "2SexyContent-Template",
 						EntityGuid = t.NewEntityGuid,
 						IsPublished = true,
 						AssignmentObjectTypeId = SexyContent.AssignmentObjectTypeIDDefault
 					};
-					entity.Values = new Dictionary<string, List<IValueImportModel>>()
+					entity.Values = new Dictionary<string, List<IValueImportModel>>
 					{
-						{"Name", new List<IValueImportModel>() {new ValueImportModel<string>(entity) { Value = t.Name }}},
-						{"Path", new List<IValueImportModel>() {new ValueImportModel<string>(entity) { Value = t.Path }}},
-						{"ContentTypeStaticName", new List<IValueImportModel>() {new ValueImportModel<string>(entity) { Value = t.ContentTypeId }}},
-						{"ContentDemoEntity", new List<IValueImportModel>() {new ValueImportModel<List<Guid>>(entity) { Value = t.ContentDemoEntityGuids }}},
-						{"PresentationTypeStaticName", new List<IValueImportModel>() {new ValueImportModel<string>(entity) { Value = t.PresentationTypeId }}},
-						{"PresentationDemoEntity", new List<IValueImportModel>() {new ValueImportModel<List<Guid>>(entity) { Value = t.PresentationDemoEntityGuids }}},
-						{"ListContentTypeStaticName", new List<IValueImportModel>() {new ValueImportModel<string>(entity) { Value = t.ListContentTypeId }}},
-						{"ListContentDemoEntity", new List<IValueImportModel>() {new ValueImportModel<List<Guid>>(entity) { Value = t.ListContentDemoEntityGuids }}},
-						{"ListPresentationTypeStaticName", new List<IValueImportModel>() {new ValueImportModel<string>(entity) { Value = t.ListPresentationTypeId }}},
-						{"ListPresentationDemoEntity", new List<IValueImportModel>() {new ValueImportModel<List<Guid>>(entity) { Value = t.ListPresentationDemoEntityGuids }}},
-						{"Type", new List<IValueImportModel>() {new ValueImportModel<string>(entity) { Value = t.Type }}},
-						{"IsHidden", new List<IValueImportModel>() {new ValueImportModel<bool?>(entity) { Value = t.IsHidden }}},
-						{"Location", new List<IValueImportModel>() {new ValueImportModel<string>(entity) { Value = t.Location }}},
-						{"UseForList", new List<IValueImportModel>() {new ValueImportModel<bool?>(entity) { Value = t.UseForList }}},
-						{"PublishData", new List<IValueImportModel>() {new ValueImportModel<bool?>(entity) { Value = t.PublishData }}},
-						{"StreamsToPublish", new List<IValueImportModel>() {new ValueImportModel<string>(entity) { Value = t.StreamsToPublish }}},
-						{"Pipeline", new List<IValueImportModel>() {new ValueImportModel<List<Guid>>(entity) { Value = t.PipelineEntityGuids }}},
-						{"ViewNameInUrl", new List<IValueImportModel>() {new ValueImportModel<string>(entity) { Value = t.ViewNameInUrl }}}
+						{"Name", new List<IValueImportModel> {new ValueImportModel<string>(entity) { Value = t.Name }}},
+						{"Path", new List<IValueImportModel> {new ValueImportModel<string>(entity) { Value = t.Path }}},
+						{"ContentTypeStaticName", new List<IValueImportModel> {new ValueImportModel<string>(entity) { Value = t.ContentTypeId }}},
+						{"ContentDemoEntity", new List<IValueImportModel> {new ValueImportModel<List<Guid>>(entity) { Value = t.ContentDemoEntityGuids }}},
+						{"PresentationTypeStaticName", new List<IValueImportModel> {new ValueImportModel<string>(entity) { Value = t.PresentationTypeId }}},
+						{"PresentationDemoEntity", new List<IValueImportModel> {new ValueImportModel<List<Guid>>(entity) { Value = t.PresentationDemoEntityGuids }}},
+						{"ListContentTypeStaticName", new List<IValueImportModel> {new ValueImportModel<string>(entity) { Value = t.ListContentTypeId }}},
+						{"ListContentDemoEntity", new List<IValueImportModel> {new ValueImportModel<List<Guid>>(entity) { Value = t.ListContentDemoEntityGuids }}},
+						{"ListPresentationTypeStaticName", new List<IValueImportModel> {new ValueImportModel<string>(entity) { Value = t.ListPresentationTypeId }}},
+						{"ListPresentationDemoEntity", new List<IValueImportModel> {new ValueImportModel<List<Guid>>(entity) { Value = t.ListPresentationDemoEntityGuids }}},
+						{"Type", new List<IValueImportModel> {new ValueImportModel<string>(entity) { Value = t.Type }}},
+						{"IsHidden", new List<IValueImportModel> {new ValueImportModel<bool?>(entity) { Value = t.IsHidden }}},
+						{"Location", new List<IValueImportModel> {new ValueImportModel<string>(entity) { Value = t.Location }}},
+						{"UseForList", new List<IValueImportModel> {new ValueImportModel<bool?>(entity) { Value = t.UseForList }}},
+						{"PublishData", new List<IValueImportModel> {new ValueImportModel<bool?>(entity) { Value = t.PublishData }}},
+						{"StreamsToPublish", new List<IValueImportModel> {new ValueImportModel<string>(entity) { Value = t.StreamsToPublish }}},
+						{"Pipeline", new List<IValueImportModel> {new ValueImportModel<List<Guid>>(entity) { Value = t.PipelineEntityGuids }}},
+						{"ViewNameInUrl", new List<IValueImportModel> {new ValueImportModel<string>(entity) { Value = t.ViewNameInUrl }}}
 					};
 					entitiesToImport.Add(entity);
 
@@ -332,20 +328,20 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
 
 				foreach (var t in existingContentGroups.Where(t => t.AppId == app))
 				{
-					var entity = new ToSic.Eav.Import.Entity()
+					var entity = new Entity
 					{
 						AttributeSetStaticName = "2SexyContent-ContentGroup",
 						EntityGuid = t.NewEntityGuid,
 						IsPublished = true,
 						AssignmentObjectTypeId = SexyContent.AssignmentObjectTypeIDDefault
 					};
-					entity.Values = new Dictionary<string, List<IValueImportModel>>()
+					entity.Values = new Dictionary<string, List<IValueImportModel>>
 					{
-						{"Template", new List<IValueImportModel>() {new ValueImportModel<List<Guid>>(entity) { Value = t.TemplateGuids }}},
-						{"Content", new List<IValueImportModel>() {new ValueImportModel<List<Guid?>>(entity) { Value = t.ContentGuids }}},
-						{"Presentation", new List<IValueImportModel>() {new ValueImportModel<List<Guid?>>(entity) { Value = t.PresentationGuids }}},
-						{"ListContent", new List<IValueImportModel>() {new ValueImportModel<List<Guid?>>(entity) { Value = t.ListContentGuids }}},
-						{"ListPresentation", new List<IValueImportModel>() {new ValueImportModel<List<Guid?>>(entity) { Value = t.ListPresentationGuids }}}
+						{"Template", new List<IValueImportModel> {new ValueImportModel<List<Guid>>(entity) { Value = t.TemplateGuids }}},
+						{"Content", new List<IValueImportModel> {new ValueImportModel<List<Guid?>>(entity) { Value = t.ContentGuids }}},
+						{"Presentation", new List<IValueImportModel> {new ValueImportModel<List<Guid?>>(entity) { Value = t.PresentationGuids }}},
+						{"ListContent", new List<IValueImportModel> {new ValueImportModel<List<Guid?>>(entity) { Value = t.ListContentGuids }}},
+						{"ListPresentation", new List<IValueImportModel> {new ValueImportModel<List<Guid?>>(entity) { Value = t.ListPresentationGuids }}}
 					};
 					entitiesToImport.Add(entity);
 
@@ -355,7 +351,7 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
 					sqlCmd.ExecuteNonQuery();
 				}
 
-				var import = new ToSic.Eav.Import.Import(null, app, userName);
+				var import = new Eav.Import.Import(null, app, userName);
 				import.RunImport(null, entitiesToImport);
 			}
 
@@ -383,8 +379,8 @@ WHERE        (ModuleSettings_1.SettingName = N'ContentGroupID') AND (NOT (ToSIC_
 		private static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs)
 		{
 			// Get the subdirectories for the specified directory.
-			DirectoryInfo dir = new DirectoryInfo(sourceDirName);
-			DirectoryInfo[] dirs = dir.GetDirectories();
+			var dir = new DirectoryInfo(sourceDirName);
+			var dirs = dir.GetDirectories();
 
 			if (!dir.Exists)
 			{
@@ -398,19 +394,19 @@ WHERE        (ModuleSettings_1.SettingName = N'ContentGroupID') AND (NOT (ToSIC_
 			}
 
 			// Get the files in the directory and copy them to the new location.
-			FileInfo[] files = dir.GetFiles();
-			foreach (FileInfo file in files)
+			var files = dir.GetFiles();
+			foreach (var file in files)
 			{
-				string temppath = Path.Combine(destDirName, file.Name);
+				var temppath = Path.Combine(destDirName, file.Name);
 				file.CopyTo(temppath, false);
 			}
 
 			// If copying subdirectories, copy them and their contents to new location. 
 			if (copySubDirs)
 			{
-				foreach (DirectoryInfo subdir in dirs)
+				foreach (var subdir in dirs)
 				{
-					string temppath = Path.Combine(destDirName, subdir.Name);
+					var temppath = Path.Combine(destDirName, subdir.Name);
 					DirectoryCopy(subdir.FullName, temppath, copySubDirs);
 				}
 			}

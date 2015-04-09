@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace ToSic.SexyContent.DataImportExport
@@ -14,7 +15,7 @@ namespace ToSic.SexyContent.DataImportExport
         {
             get { return errors; }
         }
-        private List<ImportError> errors = new List<ImportError>();
+        private readonly List<ImportError> errors = new List<ImportError>();
 
         public int ErrorCount
         {
@@ -31,7 +32,7 @@ namespace ToSic.SexyContent.DataImportExport
             return errors.GetEnumerator();
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
             throw new NotImplementedException();
         }

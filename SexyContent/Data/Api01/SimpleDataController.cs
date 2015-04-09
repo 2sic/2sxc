@@ -4,6 +4,7 @@ using System.Linq;
 using ToSic.Eav;
 using ToSic.Eav.Import;
 using ToSic.SexyContent.DataImportExport.Extensions;
+using Entity = ToSic.Eav.Entity;
 using ImportEntity = ToSic.Eav.Import.Entity;
 
 namespace ToSic.SexyContent.Data.Api01
@@ -13,15 +14,15 @@ namespace ToSic.SexyContent.Data.Api01
     /// </summary>
     public class SimpleDataController
     {
-        private EavContext _contentContext;
+        private readonly EavContext _contentContext;
 
-        private string _defaultLanguageCode;
+        private readonly string _defaultLanguageCode;
 
-        private int _zoneId;
+        private readonly int _zoneId;
 
-        private int _appId;
+        private readonly int _appId;
 
-        private string _userName;
+        private readonly string _userName;
 
 
 
@@ -34,11 +35,11 @@ namespace ToSic.SexyContent.Data.Api01
         /// <param name="defaultLanguageCode">Default language of system</param>
         public SimpleDataController(int zoneId, int appId, string userName, string defaultLanguageCode)
         {
-            this._zoneId = zoneId;
-            this._appId = appId;
-            this._userName = userName;
-            this._defaultLanguageCode = defaultLanguageCode;
-            this._contentContext = EavContext.Instance(zoneId, appId);
+            _zoneId = zoneId;
+            _appId = appId;
+            _userName = userName;
+            _defaultLanguageCode = defaultLanguageCode;
+            _contentContext = EavContext.Instance(zoneId, appId);
         }
 
 
@@ -102,7 +103,7 @@ namespace ToSic.SexyContent.Data.Api01
             Update(entity, values);
         }
 
-        private void Update(Eav.Entity entity, Dictionary<string, object> values)
+        private void Update(Entity entity, Dictionary<string, object> values)
         {
             var attributeSet = _contentContext.GetAttributeSet(entity.AttributeSetID);            
             var importEntity = CreateImportEntity(entity.EntityGUID, attributeSet.StaticName);
@@ -147,7 +148,7 @@ namespace ToSic.SexyContent.Data.Api01
 
         private static ImportEntity CreateImportEntity(Guid entityGuid, string attributeSetStaticName)
         {
-            return new ImportEntity()
+            return new ImportEntity
             {
                 EntityGuid = entityGuid,
                 AttributeSetStaticName = attributeSetStaticName,

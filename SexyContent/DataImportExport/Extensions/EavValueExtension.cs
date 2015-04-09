@@ -1,10 +1,8 @@
-﻿using DotNetNuke.Entities.Tabs;
-using DotNetNuke.Services.FileSystem;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Web;
+using DotNetNuke.Entities.Tabs;
+using DotNetNuke.Services.FileSystem;
 using ToSic.Eav;
 
 namespace ToSic.SexyContent.DataImportExport.Extensions
@@ -40,10 +38,7 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
             {
                 return ResolvePageLink(linkId, value.Value);
             }
-            else
-            {
-                return ResolveFileLink(linkId, value.Value);
-            }
+	        return ResolveFileLink(linkId, value.Value);
         }
 
         private static string ResolveFileLink(int linkId, string defaultValue = null)

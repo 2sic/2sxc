@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using DotNetNuke.Entities.Users;
 using DotNetNuke.Services.Tokens;
+using ToSic.Eav.ValueProvider;
 
 namespace ToSic.SexyContent.Engines.TokenEngine
 {
-	public class DynamicEntityPropertyAccess : IPropertyAccess, ToSic.Eav.ValueProvider.IValueProvider
+	public class DynamicEntityPropertyAccess : IPropertyAccess, IValueProvider
 	{
 		private readonly DynamicEntity _entity;
 		public string Name { get; private set; }
@@ -33,16 +36,16 @@ namespace ToSic.SexyContent.Engines.TokenEngine
 		/// <param name="AccessLevel"></param>
 		/// <param name="PropertyNotFound"></param>
 		/// <returns></returns>
-		public string GetProperty(string strPropertyName, string strFormat, System.Globalization.CultureInfo formatProvider, UserInfo AccessingUser, Scope AccessLevel, ref bool PropertyNotFound)
+		public string GetProperty(string strPropertyName, string strFormat, CultureInfo formatProvider, UserInfo AccessingUser, Scope AccessLevel, ref bool PropertyNotFound)
 		{
 			// Return empty string if Entity is null
 			if (_entity == null)
 				return string.Empty;
 
-			string outputFormat = strFormat == string.Empty ? "g" : strFormat;
+			var outputFormat = strFormat == string.Empty ? "g" : strFormat;
 
 			bool propertyNotFound;
-			object valueObject = _entity.GetEntityValue(strPropertyName, out propertyNotFound);
+			var valueObject = _entity.GetEntityValue(strPropertyName, out propertyNotFound);
 
 			if (!propertyNotFound && valueObject != null)
 			{
@@ -63,40 +66,38 @@ namespace ToSic.SexyContent.Engines.TokenEngine
 						return PropertyAccess.FormatString(valueObject.ToString(), strFormat);
 				}
 			}
-			else
-			{
-				#region Check for Navigation-Property (e.g. Manager:Name)
-				if (strPropertyName.Contains(':'))
-				{
-					var propertyMatch = Regex.Match(strPropertyName, "([a-z]+):([a-z]+)", RegexOptions.IgnoreCase);
-					if (propertyMatch.Success)
-					{
-						valueObject = _entity.GetEntityValue(propertyMatch.Groups[1].Value, out propertyNotFound);
-						if (!propertyNotFound && valueObject != null)
-						{
-							#region Handle Entity-Field (List of DynamicEntity)
-							var list = valueObject as List<DynamicEntity>;
-							if (list != null)
-							{
-								if (!list.Any())
-									return string.Empty;
 
-								return new DynamicEntityPropertyAccess(null, list.First()).GetProperty(propertyMatch.Groups[2].Value, string.Empty, formatProvider, AccessingUser, AccessLevel, ref propertyNotFound);
-							}
-							#endregion
+			#region Check for Navigation-Property (e.g. Manager:Name)
+			if (strPropertyName.Contains(':'))
+			{
+				var propertyMatch = Regex.Match(strPropertyName, "([a-z]+):([a-z]+)", RegexOptions.IgnoreCase);
+				if (propertyMatch.Success)
+				{
+					valueObject = _entity.GetEntityValue(propertyMatch.Groups[1].Value, out propertyNotFound);
+					if (!propertyNotFound && valueObject != null)
+					{
+						#region Handle Entity-Field (List of DynamicEntity)
+						var list = valueObject as List<DynamicEntity>;
+						if (list != null)
+						{
+							if (!list.Any())
+								return string.Empty;
+
+							return new DynamicEntityPropertyAccess(null, list.First()).GetProperty(propertyMatch.Groups[2].Value, string.Empty, formatProvider, AccessingUser, AccessLevel, ref propertyNotFound);
 						}
+						#endregion
 					}
 				}
-				#endregion
-
-				PropertyNotFound = true;
-				return string.Empty;
 			}
+			#endregion
+
+			PropertyNotFound = true;
+			return string.Empty;
 		}
 
 		public string Get(string strPropertyName, string strFormat, ref bool PropertyNotFound)
 		{
-			return GetProperty(strPropertyName, strFormat, System.Threading.Thread.CurrentThread.CurrentCulture, null, Scope.DefaultSettings, ref PropertyNotFound);
+			return GetProperty(strPropertyName, strFormat, Thread.CurrentThread.CurrentCulture, null, Scope.DefaultSettings, ref PropertyNotFound);
 		}
         /// <summary>
         /// Shorthand version, will return the string value or a null if not found. 
@@ -105,14 +106,14 @@ namespace ToSic.SexyContent.Engines.TokenEngine
         /// <returns></returns>
         public virtual string Get(string property)
         {
-            bool temp = false;
+            var temp = false;
             return Get(property, "", ref temp);
         }
 
 
         public bool Has(string property)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
 	}

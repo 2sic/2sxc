@@ -1,10 +1,9 @@
-﻿using DotNetNuke.Entities.Modules;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
+using DotNetNuke.Common;
+using DotNetNuke.Services.Localization;
 
 namespace ToSic.SexyContent.Administration
 {
@@ -13,7 +12,7 @@ namespace ToSic.SexyContent.Administration
         protected void Page_Load(object sender, EventArgs e)
         {
             // Correct Local Resource File
-            var ResourceFile = DotNetNuke.Common.Globals.ResolveUrl("~/DesktopModules/ToSIC_SexyContent/Administration/App_LocalResources/Registers.ascx.resx");
+            var ResourceFile = Globals.ResolveUrl("~/DesktopModules/ToSIC_SexyContent/Administration/App_LocalResources/Registers.ascx.resx");
 
             var ParentModule = (SexyControlAdminBase)Parent;
 
@@ -39,7 +38,7 @@ namespace ToSic.SexyContent.Administration
 
             rptRegisters.DataSource = from c in Registers
                                       select new {
-                                        Name = DotNetNuke.Services.Localization.Localization.GetString(c + ".Text",  ResourceFile),
+                                        Name = Localization.GetString(c + ".Text",  ResourceFile),
                                         Key = c,
                                         Url = ParentModule.EditUrl(ParentModule.TabId, c, true, "mid=" + ParentModule.ModuleId +
                                             (String.IsNullOrEmpty(Request.QueryString[SexyContent.AppIDString]) ? "" : "&" + SexyContent.AppIDString + "=" + Request.QueryString[SexyContent.AppIDString])),

@@ -1,6 +1,5 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="Export.ascx.cs" Inherits="ToSic.SexyContent.Export" %>
 <%@ Register TagPrefix="dnn" Namespace="DotNetNuke.Web.Client.ClientResourceManagement" Assembly="DotNetNuke.Web.Client" %>
-<%@ Register TagPrefix="dnn" TagName="Label" Src="~/controls/LabelControl.ascx" %>
 
 <dnn:DnnJsInclude runat="server" FilePath="~/DesktopModules/ToSIC_SexyContent/Js/AngularJS/angular.min.js" Priority="60" />
 <dnn:DnnJsInclude runat="server" FilePath="~/DesktopModules/ToSIC_SexyContent/Administration/Export.js" Priority="65" />

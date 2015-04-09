@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using ToSic.Eav;
 using ToSic.Eav.DataSources;
+using ToSic.SexyContent.EAVExtensions;
 
 namespace ToSic.SexyContent.DataSources
 {
@@ -146,7 +146,7 @@ namespace ToSic.SexyContent.DataSources
                 while (entitiesToDeliver.ContainsKey(key))
                     key += 1000000000;
 
-				entitiesToDeliver.Add(key, new EAVExtensions.EntityInContentGroup(originals[entityId.Value]) { SortOrder = i, ContentGroupItemModified = originals[entityId.Value].Modified, Presentation = presentationEntity, GroupId = ContentGroup.ContentGroupGuid });
+				entitiesToDeliver.Add(key, new EntityInContentGroup(originals[entityId.Value]) { SortOrder = i, ContentGroupItemModified = originals[entityId.Value].Modified, Presentation = presentationEntity, GroupId = ContentGroup.ContentGroupGuid });
             }
 
             return entitiesToDeliver;

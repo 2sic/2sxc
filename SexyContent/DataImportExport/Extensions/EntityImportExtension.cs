@@ -1,12 +1,12 @@
-﻿using DotNetNuke.Entities.Portals;
-using DotNetNuke.Entities.Tabs;
-using DotNetNuke.Services.FileSystem;
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using DotNetNuke.Entities.Portals;
+using DotNetNuke.Entities.Tabs;
+using DotNetNuke.Services.FileSystem;
 using ToSic.Eav.Import;
+using AttributeSet = ToSic.Eav.AttributeSet;
 
 namespace ToSic.SexyContent.DataImportExport.Extensions
 {
@@ -54,7 +54,7 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
         }
 
 
-        public static void AppendAttributeValues(this Entity entity, Eav.AttributeSet attributeSet, Dictionary<string, object> values, string valuesLanguage, bool valuesReadOnly, bool resolveHyperlink)
+        public static void AppendAttributeValues(this Entity entity, AttributeSet attributeSet, Dictionary<string, object> values, string valuesLanguage, bool valuesReadOnly, bool resolveHyperlink)
         {
             foreach (var value in values)
             {
@@ -179,8 +179,8 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
 
         public static void Import(this Entity entity, int zoneId, int appId, string userName)
         {
-            var import = new ToSic.Eav.Import.Import(zoneId, appId, userName, true);
-            import.RunImport(null, new Entity[] { entity }, true, true);
+            var import = new Eav.Import.Import(zoneId, appId, userName, true);
+            import.RunImport(null, new[] { entity }, true, true);
         }
     }
 }

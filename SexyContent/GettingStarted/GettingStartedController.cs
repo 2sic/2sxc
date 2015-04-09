@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using DotNetNuke.Common.Utilities;
 using DotNetNuke.Security;
+using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Api;
 using ToSic.SexyContent.ImportExport;
 
@@ -32,7 +32,7 @@ namespace ToSic.SexyContent.GettingStarted
             }
             catch (Exception ex)
             {
-                DotNetNuke.Services.Exceptions.Exceptions.LogException(ex);
+                Exceptions.LogException(ex);
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "An error occurred while installing the app: " + ex.Message, ex);
             }
             

@@ -1,17 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Web;
 using DotNetNuke.Services.Tokens;
-using ToSic.SexyContent.DataSources.Tokens;
 
 namespace ToSic.SexyContent.Engines.TokenEngine
 {
     public class TokenReplace : DotNetNuke.Services.Tokens.TokenReplace
     {
-        public TokenReplace(DynamicEntity Content, DynamicEntity Presentation, DynamicEntity ListContent, DynamicEntity ListPresentation, Dictionary<string,string> List, App app) : base()
+        public TokenReplace(DynamicEntity Content, DynamicEntity Presentation, DynamicEntity ListContent, DynamicEntity ListPresentation, Dictionary<string,string> List, App app)
         {
             if (HttpContext.Current != null)
             {
-                HttpRequest request = HttpContext.Current.Request;
+                var request = HttpContext.Current.Request;
                 PropertySource.Add("querystring", new FilteredNameValueCollectionPropertyAccess(request.QueryString));
                 PropertySource.Add("form", new FilteredNameValueCollectionPropertyAccess(request.Form));
                 PropertySource.Add("server", new FilteredNameValueCollectionPropertyAccess(request.ServerVariables));

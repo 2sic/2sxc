@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.UI;
 using System.Web.UI.WebControls;
-using DotNetNuke.Services.Localization;
+using DotNetNuke.Common;
 using Telerik.Web.UI;
 using ToSic.Eav;
 
@@ -89,7 +87,7 @@ namespace ToSic.SexyContent.Configuration
         /// <param name="e"></param>
         protected void grdCultures_ItemCommand(object sender, GridCommandEventArgs e)
         {
-            GridEditableItem Item = e.Item as GridEditableItem;
+            var Item = e.Item as GridEditableItem;
             var CultureCode = Item.GetDataKeyValue("Code").ToString();
 
             // Activate or Deactivate the Culture
@@ -147,7 +145,7 @@ namespace ToSic.SexyContent.Configuration
             if (!String.IsNullOrEmpty(Request.QueryString["ReturnUrl"]))
                 Response.Redirect(Request.QueryString["ReturnUrl"], true);
             else
-                Response.Redirect(DotNetNuke.Common.Globals.NavigateURL(this.TabId), true);
+                Response.Redirect(Globals.NavigateURL(TabId), true);
         }
 
         protected void ddlZones_SelectedIndexChanged(object sender, EventArgs e)

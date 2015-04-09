@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
-using System.Web;
-using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.IO;
-using System.Data;
-using DotNetNuke;
+using DotNetNuke.Common;
 using DotNetNuke.Common.Utilities;
 using ToSic.Eav;
+using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.SexyContent.EAV.PipelineDesigner;
 
@@ -54,8 +49,8 @@ namespace ToSic.SexyContent
 
         protected string GetJsonUrl()
         {
-            var url = DotNetNuke.Common.Globals.NavigateURL(this.TabId);
-            url += (url.Contains("?") ? "&" : "?") + "mid=" + ModuleId.ToString() +
+            var url = Globals.NavigateURL(TabId);
+            url += (url.Contains("?") ? "&" : "?") + "mid=" + ModuleId +
                    "&standalone=true&type=data&popUp=true";
             return url;
         }
@@ -178,7 +173,7 @@ namespace ToSic.SexyContent
 			Sexy.Templates.UpdateTemplate(templateId, txtTemplateName.Text, templatePath, ctrContentType.ContentTypeStaticName, ctrContentType.DemoEntityID, ctrPresentationType.ContentTypeStaticName, ctrPresentationType.DemoEntityID, ctrListContentType.ContentTypeStaticName, ctrListContentType.DemoEntityID, ctrListPresentationType.ContentTypeStaticName, ctrListPresentationType.DemoEntityID, ddlTemplateTypes.SelectedValue, chkHidden.Checked, ddlTemplateLocations.SelectedValue, chkEnableList.Checked, chkPublishSource.Checked, txtPublishStreams.Text, pipelineEntityId, txtViewNameInUrl.Text);
 
 			// Redirect to the manage templates control
-			string RedirectUrl = UrlUtils.PopUpUrl(DotNetNuke.Common.Globals.NavigateURL(SexyContent.ControlKeys.ManageTemplates, "mid", ModuleId.ToString(), SexyContent.AppIDString, AppId.ToString()), this, PortalSettings, false, true);
+			var RedirectUrl = UrlUtils.PopUpUrl(Globals.NavigateURL(SexyContent.ControlKeys.ManageTemplates, "mid", ModuleId.ToString(), SexyContent.AppIDString, AppId.ToString()), this, PortalSettings, false, true);
 			Response.Redirect(RedirectUrl);
 
         }
@@ -225,7 +220,7 @@ namespace ToSic.SexyContent
             if(!UserInfo.IsSuperUser)
                 ddlTemplateLocations.Items.Remove(ddlTemplateLocations.Items.FindByValue(SexyContent.TemplateLocations.HostFileSystem));
             
-            string ProposedTemplateFile = "";
+            var ProposedTemplateFile = "";
             if(ddlTemplateTypes.SelectedValue == "C# Razor" || ddlTemplateTypes.SelectedValue == "VB Razor")
                 ProposedTemplateFile += "_";
             
@@ -291,7 +286,7 @@ namespace ToSic.SexyContent
 		    ddlDataPipeline.DataSource = typeFilter.List.Select(e => new
 			{
 				PipelineEntityID = e.Key,
-				Name = string.Format("{0} ({1})", ((ToSic.Eav.Data.Attribute<string>)e.Value["Name"]).TypedContents, e.Key)
+				Name = string.Format("{0} ({1})", ((Attribute<string>)e.Value["Name"]).TypedContents, e.Key)
 			}).OrderBy(e => e.Name);
 		    ddlDataPipeline.DataBind();
 	    }

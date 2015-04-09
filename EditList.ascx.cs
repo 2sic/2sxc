@@ -1,15 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using DotNetNuke.Security.Permissions;
+using DotNetNuke.Common;
 using Telerik.Web.UI;
-using DotNetNuke.Web.UI.WebControls;
-using ToSic.Eav;
-using ToSic.SexyContent;
 
 namespace ToSic.SexyContent
 {
@@ -24,7 +17,7 @@ namespace ToSic.SexyContent
 		    get
 		    {
 			    if (_contentGroup == null)
-				    _contentGroup = Sexy.ContentGroups.GetContentGroupForModule(this.ModuleId);
+				    _contentGroup = Sexy.ContentGroups.GetContentGroupForModule(ModuleId);
 			    return _contentGroup;
 		    }
 	    }
@@ -33,7 +26,7 @@ namespace ToSic.SexyContent
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            hlkCancel.NavigateUrl = DotNetNuke.Common.Globals.NavigateURL(this.TabId, "", null);
+            hlkCancel.NavigateUrl = Globals.NavigateURL(TabId, "", null);
 
 	        pnlEditListHeader.Visible = !String.IsNullOrEmpty(ContentGroup.Template.ListContentTypeStaticName);
 
@@ -41,9 +34,9 @@ namespace ToSic.SexyContent
                 grdEntities.DataBind();
         }
 
-        protected void grdEntities_ItemCommand(object sender, Telerik.Web.UI.GridCommandEventArgs e)
+        protected void grdEntities_ItemCommand(object sender, GridCommandEventArgs e)
         {
-			int sortOrder = Convert.ToInt32(e.Item.OwnerTableView.DataKeyValues[e.Item.ItemIndex]["SortOrder"]);
+			var sortOrder = Convert.ToInt32(e.Item.OwnerTableView.DataKeyValues[e.Item.ItemIndex]["SortOrder"]);
 
 			switch (e.CommandName)
 			{

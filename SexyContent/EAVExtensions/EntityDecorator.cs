@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav;
+using ToSic.Eav.Data;
 
 namespace ToSic.SexyContent.EAVExtensions
 {
@@ -56,7 +57,7 @@ namespace ToSic.SexyContent.EAVExtensions
             get { return _baseEntity[attributeName]; }
         }
 
-        public ToSic.Eav.Data.RelationshipManager Relationships {
+        public RelationshipManager Relationships {
             get { return _baseEntity.Relationships; }
         }
         public bool IsPublished {

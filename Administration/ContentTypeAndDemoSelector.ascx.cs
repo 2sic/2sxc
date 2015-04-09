@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Web;
-using System.Web.UI;
 using System.Web.UI.WebControls;
-using DotNetNuke.UI.Modules;
-using ToSic.Eav;
-using ToSic.SexyContent;
 using DotNetNuke.Entities.Modules;
+using ToSic.Eav;
 
 namespace ToSic.SexyContent
 {
@@ -91,7 +86,7 @@ namespace ToSic.SexyContent
 				ddlContentTypes.DataSource = AttributeSets;
 
 				if (AttributeSets.Any(a => a.StaticName == _ContentTypeStaticName))
-					ddlContentTypes.SelectedValue = _ContentTypeStaticName.ToString();
+					ddlContentTypes.SelectedValue = _ContentTypeStaticName;
 
 				ddlContentTypes.DataBind();
 

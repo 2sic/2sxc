@@ -1,11 +1,14 @@
-﻿using DotNetNuke.Entities.Content;
-using DotNetNuke.Services.Localization;
-using DotNetNuke.UI.Utilities;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Web.UI.WebControls;
+using DotNetNuke.Framework;
+using DotNetNuke.Services.Localization;
+using DotNetNuke.UI.Utilities;
+using Globals = DotNetNuke.Common.Globals;
 
 namespace ToSic.SexyContent
 {
@@ -55,10 +58,9 @@ namespace ToSic.SexyContent
         {
             get
             {
-                if (String.IsNullOrEmpty(Request.QueryString["ReturnUrl"]))
-                    return DotNetNuke.Common.Globals.NavigateURL(this.TabId);
-                else
-                    return Request.QueryString["ReturnUrl"];
+	            if (String.IsNullOrEmpty(Request.QueryString["ReturnUrl"]))
+                    return Globals.NavigateURL(TabId);
+	            return Request.QueryString["ReturnUrl"];
             }
         }
 
@@ -106,7 +108,7 @@ namespace ToSic.SexyContent
             {
                 if (_attributeSetId == null)
                 {
-                    string attributeSetName = Request.QueryString["AttributeSetName"];
+                    var attributeSetName = Request.QueryString["AttributeSetName"];
 
                     if (!String.IsNullOrEmpty(attributeSetName))
                         _attributeSetId = Sexy.ContentContext.GetAllAttributeSets().FirstOrDefault(p => p.Name == attributeSetName || p.StaticName == attributeSetName).AttributeSetID;
@@ -130,8 +132,8 @@ namespace ToSic.SexyContent
         protected void Page_Init(object sender, EventArgs e)
         {
             // Register JavaScripts
-            ClientAPI.RegisterClientReference(this.Page, ClientAPI.ClientNamespaceReferences.dnn);
-            DotNetNuke.Framework.jQuery.RequestDnnPluginsRegistration();
+            ClientAPI.RegisterClientReference(Page, ClientAPI.ClientNamespaceReferences.dnn);
+            jQuery.RequestDnnPluginsRegistration();
 
             base.Page_Init(sender, e);
         }
@@ -176,7 +178,7 @@ namespace ToSic.SexyContent
             {
                 pnlActions.Visible = false;
                 pnlLanguageNotActive.Visible = true;
-                litLanguageName.Text = LocaleController.Instance.GetLocale(System.Threading.Thread.CurrentThread.CurrentCulture.Name).Text;
+                litLanguageName.Text = LocaleController.Instance.GetLocale(Thread.CurrentThread.CurrentCulture.Name).Text;
                 if (UserInfo.IsInRole(PortalSettings.AdministratorRoleName))
                     btnActivateLanguage.Visible = true;
             }
@@ -194,9 +196,9 @@ namespace ToSic.SexyContent
 			{
 				var types = new List<string>();
 				if (SortOrder == -1)
-					types = new List<string>() {"ListContent", "ListPresentation"};
+					types = new List<string> {"ListContent", "ListPresentation"};
 				else
-					types = new List<string>() { "Content", "Presentation" };
+					types = new List<string> { "Content", "Presentation" };
 
 				foreach (var type in types)
 				{
@@ -212,7 +214,7 @@ namespace ToSic.SexyContent
 						continue;
 
 					var editControl =
-						(EditContentGroupItem) LoadControl(System.IO.Path.Combine(TemplateSourceDirectory, "EditContentGroupItem.ascx"));
+						(EditContentGroupItem) LoadControl(Path.Combine(TemplateSourceDirectory, "EditContentGroupItem.ascx"));
 					editControl.ContentGroupID = ContentGroup.ContentGroupGuid;
 					editControl.AppId = AppId.Value;
 					editControl.ZoneId = ZoneId.Value;
@@ -230,7 +232,7 @@ namespace ToSic.SexyContent
 			// Directly edit entity Id
 			if ((!SortOrder.HasValue && EntityId.HasValue) || (!SortOrder.HasValue && AttributeSetId.HasValue && NewMode))
 			{
-				var editControl = (EditEntity)LoadControl(System.IO.Path.Combine(TemplateSourceDirectory, "EditEntity.ascx"));
+				var editControl = (EditEntity)LoadControl(Path.Combine(TemplateSourceDirectory, "EditEntity.ascx"));
 				editControl.AppId = AppId.Value;
 				editControl.ZoneId = ZoneId.Value;
 				editControl.ModuleID = ModuleId;
@@ -276,7 +278,7 @@ namespace ToSic.SexyContent
             if (!String.IsNullOrEmpty(ReturnUrl))
                 Response.Redirect(ReturnUrl, true);
             else
-                Response.Redirect(DotNetNuke.Common.Globals.NavigateURL(this.TabId), true);
+                Response.Redirect(Globals.NavigateURL(TabId), true);
         }
 
         protected void rptDimensions_ItemCommand(object source, RepeaterCommandEventArgs e)
@@ -307,7 +309,7 @@ namespace ToSic.SexyContent
 
         protected void btnActivateLanguage_Click(object sender, EventArgs e)
         {
-            Sexy.SetCultureState(System.Threading.Thread.CurrentThread.CurrentCulture.Name, true, PortalId);
+            Sexy.SetCultureState(Thread.CurrentThread.CurrentCulture.Name, true, PortalId);
             Response.Redirect(Sexy.GetElementEditLink(ContentGroup.ContentGroupGuid, SortOrder.Value, ModuleId, TabId, ""));
         }
     }

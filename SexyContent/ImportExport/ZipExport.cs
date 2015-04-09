@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Web;
-using DotNetNuke.Entities.Portals;
 using ICSharpCode.SharpZipLib.Zip;
 using ToSic.Eav;
 
@@ -12,9 +10,9 @@ namespace ToSic.SexyContent.ImportExport
 {
     public class ZipExport
     {
-        private int _appId;
-        private int _zoneId;
-        private SexyContent _sexy;
+        private readonly int _appId;
+        private readonly int _zoneId;
+        private readonly SexyContent _sexy;
 
         public ZipExport(int zoneId, int appId)
         {
@@ -43,7 +41,7 @@ namespace ToSic.SexyContent.ImportExport
 
             #region Copy needed files to temporary directory
 
-            var temporaryDirectoryPath = HttpContext.Current.Server.MapPath(Path.Combine(SexyContent.TemporaryDirectory, System.Guid.NewGuid().ToString()));
+            var temporaryDirectoryPath = HttpContext.Current.Server.MapPath(Path.Combine(SexyContent.TemporaryDirectory, Guid.NewGuid().ToString()));
 
             if (!Directory.Exists(temporaryDirectoryPath))
                 Directory.CreateDirectory(temporaryDirectoryPath);
@@ -71,7 +69,7 @@ namespace ToSic.SexyContent.ImportExport
             }
             
             // Save export xml
-            File.AppendAllText(System.IO.Path.Combine(appDirectory.FullName, "App.xml"), xml);
+            File.AppendAllText(Path.Combine(appDirectory.FullName, "App.xml"), xml);
 
             #endregion
 
@@ -90,18 +88,18 @@ namespace ToSic.SexyContent.ImportExport
         public static void ZipFolder(string RootFolder, string CurrentFolder, ZipOutputStream zStream)
         {
 
-            string[] SubFolders = Directory.GetDirectories(CurrentFolder);
-            foreach (string Folder in SubFolders)
+            var SubFolders = Directory.GetDirectories(CurrentFolder);
+            foreach (var Folder in SubFolders)
                 ZipFolder(RootFolder, Folder, zStream);
 
-            string relativePath = CurrentFolder.Substring(RootFolder.Length) + "\\";
+            var relativePath = CurrentFolder.Substring(RootFolder.Length) + "\\";
 
             if (relativePath.Length > 1)
             {
                 var dirEntry = new ZipEntry(relativePath);
                 dirEntry.DateTime = DateTime.Now;
             }
-            foreach (string file in Directory.GetFiles(CurrentFolder))
+            foreach (var file in Directory.GetFiles(CurrentFolder))
             {
                 AddFileToZip(zStream, relativePath, file);
             }
@@ -111,12 +109,12 @@ namespace ToSic.SexyContent.ImportExport
 
         private static void AddFileToZip(ZipOutputStream zStream, string relativePath, string file)
         {
-            byte[] buffer = new byte[4096];
-            string fileRelativePath = (relativePath.Length > 1 ? relativePath : string.Empty) + Path.GetFileName(file);
-            ZipEntry entry = new ZipEntry(fileRelativePath);
+            var buffer = new byte[4096];
+            var fileRelativePath = (relativePath.Length > 1 ? relativePath : string.Empty) + Path.GetFileName(file);
+            var entry = new ZipEntry(fileRelativePath);
             entry.DateTime = DateTime.Now;
             zStream.PutNextEntry(entry);
-            using (FileStream fs = File.OpenRead(file))
+            using (var fs = File.OpenRead(file))
             {
                 int sourceBytes;
                 do

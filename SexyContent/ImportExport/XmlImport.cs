@@ -1,15 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Data;
-using System.Data.Common;
-using System.Data.EntityClient;
-using System.Data.Metadata.Edm;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Xml.Linq;
@@ -17,6 +10,7 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.FileSystem;
 using ToSic.Eav;
 using ToSic.Eav.Import;
+using Attribute = ToSic.Eav.Import.Attribute;
 using AttributeSet = ToSic.Eav.Import.AttributeSet;
 using Entity = ToSic.Eav.Import.Entity;
 
@@ -131,7 +125,7 @@ namespace ToSic.SexyContent.ImportExport
         public bool IsCompatible(int zoneId, string xml)
         {
             // Parse XDocument from string
-            XDocument doc = XDocument.Parse(xml);
+            var doc = XDocument.Parse(xml);
             return IsCompatible(doc);
         }
 
@@ -148,7 +142,7 @@ namespace ToSic.SexyContent.ImportExport
             appId = new int?();
 
             // Parse XDocument from string
-            XDocument doc = XDocument.Parse(xml);
+            var doc = XDocument.Parse(xml);
 
             if (!IsCompatible(doc))
             {
@@ -157,7 +151,7 @@ namespace ToSic.SexyContent.ImportExport
             }
 
             // Get root node "SexyContent"
-            XElement xmlSource = doc.Element("SexyContent");
+            var xmlSource = doc.Element("SexyContent");
             var xApp = xmlSource.Element("Header").Element("App");
 
             // Build Guid (take existing, or create a new)
@@ -196,7 +190,7 @@ namespace ToSic.SexyContent.ImportExport
             _zoneId = zoneId;
 
             // Parse XDocument from string
-            XDocument doc = XDocument.Parse(xml);
+            var doc = XDocument.Parse(xml);
 
             if (!IsCompatible(doc))
             {
@@ -205,12 +199,12 @@ namespace ToSic.SexyContent.ImportExport
             }
 
             // Get root node "SexyContent"
-            XElement xmlSource = doc.Element("SexyContent");
+            var xmlSource = doc.Element("SexyContent");
             PrepareFileIdCorrectionList(xmlSource);
 
             #region Prepare dimensions
-            _sourceDimensions = xmlSource.Element("Header").Element("Dimensions").Elements("Dimension").Select(p => new Dimension()
-                {
+            _sourceDimensions = xmlSource.Element("Header").Element("Dimensions").Elements("Dimension").Select(p => new Dimension
+            {
                     DimensionID = int.Parse(p.Attribute("DimensionID").Value),
                     Name = p.Attribute("Name").Value,
                     SystemKey = p.Attribute("SystemKey").Value,
@@ -225,8 +219,8 @@ namespace ToSic.SexyContent.ImportExport
 
             _targetDimensions = _sexy.ContentContext.GetDimensionChildren("Culture");
             if(_targetDimensions.Count == 0)
-                _targetDimensions.Add(new Dimension()
-                    {
+                _targetDimensions.Add(new Dimension
+                {
                         Active = true,
                         ExternalKey = DefaultLanguage,
                         Name = "(added by import System, default language " + DefaultLanguage + ")",
@@ -237,7 +231,7 @@ namespace ToSic.SexyContent.ImportExport
             var importAttributeSets = GetImportAttributeSets(xmlSource.Element("AttributeSets").Elements("AttributeSet"));
             var importEntities = GetImportEntities(xmlSource.Elements("Entities").Elements("Entity"), SexyContent.AssignmentObjectTypeIDDefault);
             
-            var import = new ToSic.Eav.Import.Import(_zoneId, _appId, UserName);
+            var import = new Eav.Import.Import(_zoneId, _appId, UserName);
             import.RunImport(importAttributeSets, importEntities, true, true);
             ImportLog.AddRange(GetExportImportMessagesFromImportLog(import.ImportLog));
 
@@ -263,20 +257,20 @@ namespace ToSic.SexyContent.ImportExport
 
         #region AttributeSets
 
-        private List<ToSic.Eav.Import.AttributeSet> GetImportAttributeSets(IEnumerable<XElement> xAttributeSets)
+        private List<AttributeSet> GetImportAttributeSets(IEnumerable<XElement> xAttributeSets)
         {
-            var importAttributeSets = new List<ToSic.Eav.Import.AttributeSet>();
+            var importAttributeSets = new List<AttributeSet>();
 
             // Loop through AttributeSets
             foreach (var attributeSet in xAttributeSets)
             {
-                var attributes = new List<ToSic.Eav.Import.Attribute>();
-                var titleAttribute = new ToSic.Eav.Import.Attribute();
+                var attributes = new List<Attribute>();
+                var titleAttribute = new Attribute();
                 
-                foreach (XElement xElementAttribute in attributeSet.Element("Attributes").Elements("Attribute"))
+                foreach (var xElementAttribute in attributeSet.Element("Attributes").Elements("Attribute"))
                 {
-                    var attribute = new ToSic.Eav.Import.Attribute()
-                        {
+                    var attribute = new Attribute
+                    {
                             StaticName = xElementAttribute.Attribute("StaticName").Value,
                             Type = xElementAttribute.Attribute("Type").Value,
                             AttributeMetaData = GetImportEntities(xElementAttribute.Elements("Entity"), DataSource.AssignmentObjectTypeIdFieldProperties)
@@ -290,8 +284,8 @@ namespace ToSic.SexyContent.ImportExport
                 }
 
                 // Add AttributeSet
-                importAttributeSets.Add(new AttributeSet()
-                    {
+                importAttributeSets.Add(new AttributeSet
+                {
                         StaticName = attributeSet.Attribute("StaticName").Value,
                         Name = attributeSet.Attribute("Name").Value,
                         Description = attributeSet.Attribute("Description").Value,
@@ -441,7 +435,7 @@ namespace ToSic.SexyContent.ImportExport
 	    /// <param name="assignmentObjectTypeId"></param>
 	    /// <param name="keyNumber"></param>
 	    /// <returns></returns>
-	    private List<ToSic.Eav.Import.Entity> GetImportEntities(IEnumerable<XElement> entities, int assignmentObjectTypeId, int? keyNumber = null)
+	    private List<Entity> GetImportEntities(IEnumerable<XElement> entities, int assignmentObjectTypeId, int? keyNumber = null)
         {
             return entities.Select(e => GetImportEntity(e, assignmentObjectTypeId, keyNumber)).ToList();
         }
@@ -521,7 +515,7 @@ namespace ToSic.SexyContent.ImportExport
 
             }
 
-            var importEntity = ToSic.Eav.ImportExport.XmlImport.GetImportEntity(xEntity, assignmentObjectTypeId,
+            var importEntity = Eav.ImportExport.XmlImport.GetImportEntity(xEntity, assignmentObjectTypeId,
 				_targetDimensions, _sourceDimensions, _sourceDefaultDimensionId, DefaultLanguage, keyNumber);
 
             return importEntity;

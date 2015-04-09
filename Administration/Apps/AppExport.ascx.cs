@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.RegularExpressions;
+using ToSic.SexyContent.ImportExport;
 
 namespace ToSic.SexyContent.Administration.Apps
 {
@@ -12,7 +13,7 @@ namespace ToSic.SexyContent.Administration.Apps
 
         protected void btnExportApp_OnClick(object sender, EventArgs e)
         {
-            using (var stream = new ToSic.SexyContent.ImportExport.ZipExport(ZoneId.Value, AppId.Value).ExportApp())
+            using (var stream = new ZipExport(ZoneId.Value, AppId.Value).ExportApp())
             {
                 Response.Clear();
                 Response.ContentType = "application/zip";

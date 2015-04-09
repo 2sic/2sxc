@@ -1,5 +1,5 @@
-﻿using DotNetNuke.Web.Api;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using DotNetNuke.Web.Api;
 using ToSic.Eav;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.ValueProvider;
@@ -34,7 +34,7 @@ namespace ToSic.SexyContent.WebApi
             get
             {
                 if (_sexyContent == null)
-                    _sexyContent = ToSic.SexyContent.WebApi.HttpRequestMessageExtensions.GetSxcOfModuleContext(Request);
+                    _sexyContent = Request.GetSxcOfModuleContext();
                 return _sexyContent;
             }
         }
@@ -46,7 +46,7 @@ namespace ToSic.SexyContent.WebApi
         {
             get { return AppAndDataHelpers.Dnn; }
         }
-        public ToSic.SexyContent.App App
+        public App App
         {
             get { return AppAndDataHelpers.App; }
         }

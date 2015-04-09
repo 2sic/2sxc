@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
 using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -6,15 +8,9 @@ using System.Web;
 using System.Web.Compilation;
 using System.Web.WebPages;
 using DotNetNuke.Entities.Modules;
-using DotNetNuke.Security.Permissions;
-using DotNetNuke.Services.Exceptions;
-using DotNetNuke.UI.Modules;
 using ToSic.SexyContent.DataSources;
-using ToSic.SexyContent.Razor.Helpers;
 using ToSic.SexyContent.Razor;
-using System.Collections.Generic;
-using System.Linq;
-using ToSic.Eav.DataSources;
+using ToSic.SexyContent.Razor.Helpers;
 using ToSic.SexyContent.Search;
 
 namespace ToSic.SexyContent.Engines
@@ -31,7 +27,7 @@ namespace ToSic.SexyContent.Engines
                 InitWebpage();
             }
             // Catch web.config Error on DNNs upgraded to 7
-            catch (System.Configuration.ConfigurationErrorsException Exc)
+            catch (ConfigurationErrorsException Exc)
             {
                 var e = new Exception("Configuration Error: Please follow this checklist to solve the problem: http://swisschecklist.com/en/i4k4hhqo/2Sexy-Content-Solve-configuration-error-after-upgrading-to-DotNetNuke-7", Exc);
                 throw e;

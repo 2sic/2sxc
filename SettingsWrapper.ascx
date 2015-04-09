@@ -1,5 +1,4 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" Inherits="ToSic.SexyContent.SettingsWrapper" Codebehind="SettingsWrapper.ascx.cs" %>
-<%@ Register TagPrefix="SexyContent" TagName="SettingsControl" Src="Settings.ascx" %>
 <%@ Register TagPrefix="dnn" TagName="Label" Src="~/controls/LabelControl.ascx" %>
 
 <div class="dnnForm">

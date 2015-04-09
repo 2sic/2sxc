@@ -1,15 +1,15 @@
-﻿using System;
-using System.Net;
-using System.Web;
-using DotNetNuke.Web.Api;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Net.Http;
+using System.Web;
 using System.Web.Compilation;
+using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
-using System.Web.Http.Routing;
+using DotNetNuke.Entities.Portals;
+using DotNetNuke.Web.Api;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -30,11 +30,11 @@ namespace ToSic.SexyContent.WebApi
 
         public HttpControllerDescriptor SelectController(HttpRequestMessage request)
         {
-            IHttpRouteData routeData = request.GetRouteData();
+            var routeData = request.GetRouteData();
             var module = request.FindModuleInfo();
             if (routeData.Route.RouteTemplate.Contains("DesktopModules/2sxc/API/App/") && module.DesktopModule.ModuleName == "2sxc-app")
             {
-                var portalSettings = DotNetNuke.Entities.Portals.PortalSettings.Current;
+                var portalSettings = PortalSettings.Current;
                 var sexy = request.GetSxcOfModuleContext();
 
                 if ((string) routeData.Values["appFolder"] != "auto-detect-app" && (string) routeData.Values["appFolder"] != sexy.App.Folder)
@@ -45,19 +45,15 @@ namespace ToSic.SexyContent.WebApi
                 var controllerPath = Path.Combine(SexyContent.AppBasePath(portalSettings), sexy.App.Folder,
                     "Api/" + controllerTypeName + ".cs");
 
-                if (File.Exists(System.Web.Hosting.HostingEnvironment.MapPath(controllerPath)))
+                if (File.Exists(HostingEnvironment.MapPath(controllerPath)))
                 {
                     var assembly = BuildManager.GetCompiledAssembly(controllerPath);
                     var type = assembly.GetType(controllerTypeName);
                     return new HttpControllerDescriptor(_config, controllerTypeName, type);
                 }
-                else
-                {
-                    throw new HttpResponseException(request.CreateErrorResponse(HttpStatusCode.NotFound, "Controller " + controllerTypeName + " not found in app."));
-                }
+	            throw new HttpResponseException(request.CreateErrorResponse(HttpStatusCode.NotFound, "Controller " + controllerTypeName + " not found in app."));
             }
-            else
-                return PreviousSelector.SelectController(request);
+	        return PreviousSelector.SelectController(request);
         }
     }
 }

@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using ToSic.SexyContent.Data.Api01;
 
 namespace ToSic.SexyContent.DataSources
 {
-    public class App: ToSic.Eav.DataSources.App
+    public class App: Eav.DataSources.App
     {
         internal string DefaultLanguage { get; set; }
         internal string CurrentUserName { get; set; }

@@ -1,9 +1,8 @@
-﻿using DotNetNuke.Common.Utilities;
-using DotNetNuke.Entities.Modules;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
+using DotNetNuke.Entities.Modules;
 using DotNetNuke.UI.Modules;
+using Newtonsoft.Json;
 
 namespace ToSic.SexyContent
 {
@@ -140,7 +139,7 @@ namespace ToSic.SexyContent
 		private void RegisterGlobalsAttribute()
 		{
 			// Add some required variables to module host div
-			((ModuleHost)Parent).Attributes.Add("data-2sxc-globals", Newtonsoft.Json.JsonConvert.SerializeObject(new
+			((ModuleHost)Parent).Attributes.Add("data-2sxc-globals", JsonConvert.SerializeObject(new
 			{
 				ModuleContext = new
 				{

@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Web;
-using System.Web.UI;
 using System.Web.UI.WebControls;
-using ToSic.Eav;
-using ToSic.Eav.ManagementUI;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Localization;
-using ToSic.SexyContent;
+using ToSic.Eav;
+using ToSic.Eav.ManagementUI;
 
 namespace ToSic.SexyContent
 {
@@ -162,9 +159,9 @@ namespace ToSic.SexyContent
 
         protected void ProcessView()
         {
-	        var attributeSet = ToSic.Eav.DataSource.GetCache(ZoneId, AppId).GetContentType(this.AttributeSetStaticName);
+	        var attributeSet = DataSource.GetCache(ZoneId, AppId).GetContentType(AttributeSetStaticName);
 
-            EditItemControl = (ItemForm)LoadControl(System.IO.Path.Combine(TemplateSourceDirectory, "SexyContent/EAV/Controls/ItemForm.ascx"));
+            EditItemControl = (ItemForm)LoadControl(Path.Combine(TemplateSourceDirectory, "SexyContent/EAV/Controls/ItemForm.ascx"));
             EditItemControl.DefaultCultureDimension = DefaultLanguageID != 0 ? DefaultLanguageID : new int?();
             EditItemControl.IsDialog = false;
             EditItemControl.HideNavigationButtons = true;
@@ -176,8 +173,8 @@ namespace ToSic.SexyContent
 	        EditItemControl.AddClientScriptAndCss = false;
             EditItemControl.ItemHistoryUrl = "";
 
-            var newItemUrl = EditUrl(this.TabID, SexyContent.ControlKeys.EditContentGroup, true, new string[] {});
-            EditItemControl.NewItemUrl = newItemUrl + (newItemUrl.Contains("?") ? "&" : "?") + "AppID=" + AppId.ToString() + "&mid=" + ModuleID.ToString() + "&AttributeSetId=[AttributeSetId]&EditMode=New&CultureDimension=" + this.LanguageID;
+            var newItemUrl = EditUrl(TabID, SexyContent.ControlKeys.EditContentGroup, true, new string[] {});
+            EditItemControl.NewItemUrl = newItemUrl + (newItemUrl.Contains("?") ? "&" : "?") + "AppID=" + AppId + "&mid=" + ModuleID + "&AttributeSetId=[AttributeSetId]&EditMode=New&CultureDimension=" + LanguageID;
 
             // If ContentGroupItem has Entity, edit that; else create new Entity
             if (!NewMode && Entity != null)
@@ -187,7 +184,7 @@ namespace ToSic.SexyContent
                 EditItemControl.InitForm(FormViewMode.Edit);
 
                 hlkHistory.Visible = true;
-                hlkHistory.NavigateUrl = EditUrl("", "", SexyContent.ControlKeys.EavManagement, new string[] { "AppID", AppId.ToString(), "ManagementMode", "ItemHistory", "EntityId", Entity.EntityId.ToString(), "mid", ModuleID.ToString() });
+                hlkHistory.NavigateUrl = EditUrl("", "", SexyContent.ControlKeys.EavManagement, new[] { "AppID", AppId.ToString(), "ManagementMode", "ItemHistory", "EntityId", Entity.EntityId.ToString(), "mid", ModuleID.ToString() });
             }
             // Create a new Entity
             else
@@ -207,12 +204,12 @@ namespace ToSic.SexyContent
             
         }
 
-        protected void EditItem_OnEdited(ToSic.Eav.Entity Entity)
+        protected void EditItem_OnEdited(Entity Entity)
         {
             UpdateModuleTitleIfNecessary(Entity);
         }
 
-        protected void NewItem_OnInserted(ToSic.Eav.Entity Entity)
+        protected void NewItem_OnInserted(Entity Entity)
         {
 	        if (NewMode)
 	        {
@@ -244,7 +241,7 @@ namespace ToSic.SexyContent
                 EditItemControl.Cancel();
         }
 
-        protected void UpdateModuleTitleIfNecessary(ToSic.Eav.Entity entity)
+        protected void UpdateModuleTitleIfNecessary(Entity entity)
         {
             // Creating new Context, because EntityTitle gets not refreshed otherwise
             var sexyContext = new SexyContent(ZoneId, AppId, true);
@@ -265,7 +262,7 @@ namespace ToSic.SexyContent
                 if (languages.Count == 0)
                 {
                     // Get Title value of Entitiy in current language
-                    string titleValue = entityModel.Title[0].ToString();
+                    var titleValue = entityModel.Title[0].ToString();
 
                     originalModule.ModuleTitle = titleValue;
                     moduleController.UpdateModule(originalModule);
@@ -274,7 +271,7 @@ namespace ToSic.SexyContent
                 foreach (var dimension in languages)
                 {
                     // Get Title value of Entitiy in current language
-                    string titleValue = entityModel.Title[dimension.DimensionID].ToString();
+                    var titleValue = entityModel.Title[dimension.DimensionID].ToString();
 
                     if(!originalModule.IsDefaultLanguage)
                         originalModule = originalModule.DefaultLanguageModule;

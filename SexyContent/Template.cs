@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using ToSic.Eav;
+using EntityRelationship = ToSic.Eav.Data.EntityRelationship;
 
 namespace ToSic.SexyContent
 {
@@ -21,13 +22,13 @@ namespace ToSic.SexyContent
 	    public string Path { get { return (string) _templateEntity.GetBestValue("Path"); } }
 
 		public string ContentTypeStaticName { get { return (string)_templateEntity.GetBestValue("ContentTypeStaticName"); } }
-		public IEntity ContentDemoEntity { get { return (((Eav.Data.EntityRelationship)_templateEntity.Attributes["ContentDemoEntity"][0]).FirstOrDefault()); } }
+		public IEntity ContentDemoEntity { get { return (((EntityRelationship)_templateEntity.Attributes["ContentDemoEntity"][0]).FirstOrDefault()); } }
 		public string PresentationTypeStaticName { get { return (string)_templateEntity.GetBestValue("PresentationTypeStaticName"); } }
-		public IEntity PresentationDemoEntity { get { return (((Eav.Data.EntityRelationship)_templateEntity.Attributes["PresentationDemoEntity"][0]).FirstOrDefault()); } }
+		public IEntity PresentationDemoEntity { get { return (((EntityRelationship)_templateEntity.Attributes["PresentationDemoEntity"][0]).FirstOrDefault()); } }
 		public string ListContentTypeStaticName { get { return (string)_templateEntity.GetBestValue("ListContentTypeStaticName"); } }
-		public IEntity ListContentDemoEntity { get { return (((Eav.Data.EntityRelationship)_templateEntity.Attributes["ListContentDemoEntity"][0]).FirstOrDefault()); } }
+		public IEntity ListContentDemoEntity { get { return (((EntityRelationship)_templateEntity.Attributes["ListContentDemoEntity"][0]).FirstOrDefault()); } }
 		public string ListPresentationTypeStaticName { get { return (string)_templateEntity.GetBestValue("ListPresentationTypeStaticName"); } }
-		public IEntity ListPresentationDemoEntity { get { return (((Eav.Data.EntityRelationship)_templateEntity.Attributes["ListPresentationDemoEntity"][0]).FirstOrDefault()); } }
+		public IEntity ListPresentationDemoEntity { get { return (((EntityRelationship)_templateEntity.Attributes["ListPresentationDemoEntity"][0]).FirstOrDefault()); } }
 		public string Type { get { return (string)_templateEntity.GetBestValue("Type"); } }
 
 	    public bool IsHidden
@@ -48,7 +49,7 @@ namespace ToSic.SexyContent
 		public bool PublishData { get { return (bool)_templateEntity.GetBestValue("PublishData"); } }
 		public string StreamsToPublish { get { return (string)_templateEntity.GetBestValue("StreamsToPublish"); } }
 
-		public IEntity Pipeline { get { return (((Eav.Data.EntityRelationship)_templateEntity.Attributes["Pipeline"][0]).FirstOrDefault()); } }
+		public IEntity Pipeline { get { return (((EntityRelationship)_templateEntity.Attributes["Pipeline"][0]).FirstOrDefault()); } }
 		public string ViewNameInUrl { get { return (string)_templateEntity.GetBestValue("ViewNameInUrl"); } }
 
         /// <summary>

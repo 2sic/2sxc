@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Linq;
 using ToSic.Eav;
 
 namespace ToSic.SexyContent.DataImportExport.Extensions
@@ -17,15 +15,12 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
             {
                 return values.FirstOrDefault(value => !value.ValuesDimensions.Any());
             }
-            else
-            {
-                var rootValue = values.FirstOrDefault();
-                if (rootValue != null && rootValue.ValuesDimensions.Count == 0)
-                {   // When we enable languages in 2sxc, but have not saved the content yet!
-                    return rootValue;
-                }
-                return values.FirstOrDefault(value => value.ValuesDimensions.Any(reference => reference.Dimension.ExternalKey == language));
-            }
+	        var rootValue = values.FirstOrDefault();
+	        if (rootValue != null && rootValue.ValuesDimensions.Count == 0)
+	        {   // When we enable languages in 2sxc, but have not saved the content yet!
+		        return rootValue;
+	        }
+	        return values.FirstOrDefault(value => value.ValuesDimensions.Any(reference => reference.Dimension.ExternalKey == language));
         }
 
         /// <summary>

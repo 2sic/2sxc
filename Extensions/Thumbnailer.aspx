@@ -3,40 +3,39 @@
 <%@ Import Namespace="System.Drawing" %>
 <%@ Import Namespace="System.Drawing.Drawing2D" %>
 <%@ Import Namespace="System.Drawing.Imaging" %>
-<%@ Import Namespace="System.IO" %>
 <script runat="server">
-    private void Page_Load(object sender, System.EventArgs e)
+    private void Page_Load(object sender, EventArgs e)
     {
-        string Image = Request.QueryString["Image"];
+        var Image = Request.QueryString["Image"];
         if (String.IsNullOrEmpty(Image))
         {
-            this.ErrorResult();
+            ErrorResult();
             return;
         }
 
-        string sWidth = Request["Width"];
-        int Width = 120;
+        var sWidth = Request["Width"];
+        var Width = 120;
         if (sWidth != null)
             Width = Int32.Parse(sWidth);
 
-        string sHeight = Request["Height"];
-        int Height = 120;
+        var sHeight = Request["Height"];
+        var Height = 120;
         if (sHeight != null)
             Height = Int32.Parse(sHeight);
 
-        string Path = Server.MapPath(Request.ApplicationPath + Image);
+        var Path = Server.MapPath(Request.ApplicationPath + Image);
 
         if(!Path.Contains(Server.MapPath(Request.ApplicationPath)))
         {
-            this.ErrorResult();
+            ErrorResult();
             return;
         }
         
-        Bitmap bmp = CreateThumbnail(Path, Width, Height);
+        var bmp = CreateThumbnail(Path, Width, Height);
 
         if (bmp == null)
         {
-            this.ErrorResult();
+            ErrorResult();
             return;
         }
 
@@ -44,9 +43,9 @@
         OutputFilename = Request.QueryString["OutputFilename"];
 
         //Set Image codec of JPEG type, the index of JPEG codec is "1"
-        ImageCodecInfo codec = ImageCodecInfo.GetImageEncoders()[1];
+        var codec = ImageCodecInfo.GetImageEncoders()[1];
         //Set the parameters for defining the quality of the thumbnail
-        EncoderParameters eParams = new EncoderParameters(1);
+        var eParams = new EncoderParameters(1);
         eParams.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, 95L);
         
         // Put user code to initialize the page here
@@ -59,7 +58,7 @@
     {
         Response.Clear();
         Response.ContentType = "image/png";
-        var NotFoundImage = Bitmap.FromFile(Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Extensions/404.png"));
+        var NotFoundImage = System.Drawing.Image.FromFile(Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Extensions/404.png"));
         NotFoundImage.Save(Response.OutputStream, ImageFormat.Png);
         NotFoundImage.Dispose();
         
@@ -78,21 +77,21 @@
     /// <returns></returns>
     public static Bitmap CreateThumbnail(string lcFilename, int lnWidth, int lnHeight)
     {
-        System.Drawing.Bitmap bmpOut = null;
+        Bitmap bmpOut = null;
         try
         {
-            Bitmap loBMP = new Bitmap(lcFilename);
-            ImageFormat loFormat = loBMP.RawFormat;
+            var loBMP = new Bitmap(lcFilename);
+            var loFormat = loBMP.RawFormat;
             decimal lnRatio;
-            int lnNewWidth = 0;
-            int lnNewHeight = 0;
+            var lnNewWidth = 0;
+            var lnNewHeight = 0;
             //*** If the image is smaller than a thumbnail just return it
             if (loBMP.Width < lnWidth && loBMP.Height < lnHeight)
                 return loBMP;
 
             lnRatio = (decimal)lnWidth / loBMP.Width;
             lnNewWidth = lnWidth;
-            decimal lnTemp = loBMP.Height * lnRatio;
+            var lnTemp = loBMP.Height * lnRatio;
             lnNewHeight = (int)lnTemp;
             
             if (lnNewHeight > lnHeight)
@@ -110,11 +109,11 @@
             // *** and handles GIF files better by generating a white background for
             // *** transparent images (as opposed to black)
             bmpOut = new Bitmap(lnNewWidth, lnNewHeight);
-            Graphics g = Graphics.FromImage(bmpOut);
-            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
-            g.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
+            var g = Graphics.FromImage(bmpOut);
+            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            g.SmoothingMode = SmoothingMode.HighQuality;
+            g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            g.CompositingQuality = CompositingQuality.HighQuality;
 
             g.FillRectangle(Brushes.White, 0, 0, lnNewWidth, lnNewHeight);
             g.DrawImage(loBMP, 0, 0, lnNewWidth, lnNewHeight);

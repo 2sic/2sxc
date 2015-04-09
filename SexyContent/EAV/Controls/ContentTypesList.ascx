@@ -1,5 +1,7 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="True"
 	Inherits="ToSic.Eav.ManagementUI.ContentTypesList" Codebehind="ContentTypesList.ascx.cs" %>
+<%@ Import Namespace="ToSic.Eav" %>
+<%@ Import Namespace="System.Data.Objects.DataClasses" %>
 <asp:UpdatePanel ID="UpdatePanel1" runat="server">
 	<ContentTemplate>
 		<asp:EntityDataSource ID="dsrcAttributeSets" runat="server" ConnectionString="name=EavContext"
@@ -39,7 +41,7 @@
 				</asp:TemplateField>
 				<asp:TemplateField HeaderText="Records">
 					<ItemTemplate>
-						<asp:Label ID="lblRecordsCount" runat="server" Text='<%# ((System.Data.Objects.DataClasses.EntityCollection<ToSic.Eav.Entity>)Eval("Entities")).Count(en => !en.ChangeLogIDDeleted.HasValue) %>' />
+						<asp:Label ID="lblRecordsCount" runat="server" Text='<%# ((EntityCollection<Entity>)Eval("Entities")).Count(en => !en.ChangeLogIDDeleted.HasValue) %>' />
 						<asp:HyperLink ID="hlnkShowItems" NavigateUrl='<%# GetShowItemsUrl(Eval("AttributeSetId")) %>'
 							runat="server" CssClass='<%# UseDialogs ? "Dialog" : "" %>' Text="Show Items" />
 					</ItemTemplate>

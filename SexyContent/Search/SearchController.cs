@@ -6,10 +6,7 @@ using System.Web;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.Search.Entities;
-using DotNetNuke.Web.UI;
 using ToSic.Eav;
-using ToSic.Eav.DataSources;
-using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Engines;
 
@@ -74,7 +71,7 @@ namespace ToSic.SexyContent.Search
 
                 searchInfoList.AddRange(entities.Select(entity =>
                 {
-                    var searchInfo = new SearchInfo()
+                    var searchInfo = new SearchInfo
                     {
                         Entity = entity,
                         Url = "",

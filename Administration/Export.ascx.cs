@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.Dynamic;
-using System.Data;
-using DotNetNuke.Common.Utilities;
+using System.Threading;
+using DotNetNuke.Common;
+using Newtonsoft.Json;
 using ToSic.Eav;
 using ToSic.SexyContent.ImportExport;
 
@@ -17,19 +14,17 @@ namespace ToSic.SexyContent
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            hlkCancel.NavigateUrl = DotNetNuke.Common.Globals.NavigateURL(this.TabId, "", null);
+            hlkCancel.NavigateUrl = Globals.NavigateURL(TabId, "", null);
 
             var contentTypes = Sexy.GetAvailableContentTypes("2SexyContent");
             var templates = Sexy.Templates.GetAllTemplates();
             var entities = DataSource.GetInitialDataSource(ZoneId.Value, AppId.Value, false);
-            var language = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
+            var language = Thread.CurrentThread.CurrentCulture.Name;
 
             var data = new {
                 contentTypes = contentTypes.Select(c => new
                 {
-                    Id = c.AttributeSetId,
-                    Name = c.Name,
-                    StaticName = c.StaticName,
+                    Id = c.AttributeSetId, c.Name, c.StaticName,
                     Templates = templates.Where(t => t.ContentTypeStaticName == c.StaticName).Select(p => new
                     {
                         p.TemplateId,
@@ -45,7 +40,7 @@ namespace ToSic.SexyContent
                 })
             };
 
-            pnlExportView.Attributes.Add("ng-init", "init(" + Newtonsoft.Json.JsonConvert.SerializeObject(data) + ");");
+            pnlExportView.Attributes.Add("ng-init", "init(" + JsonConvert.SerializeObject(data) + ");");
 
         }
 
@@ -53,9 +48,9 @@ namespace ToSic.SexyContent
         {
             pnlChoose.Visible = false;
 
-            string[] contentTypeIds = txtSelectedContentTypes.Text.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
-            string[] entityIds = txtSelectedEntities.Text.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            string[] templateIds = txtSelectedTemplates.Text.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            var contentTypeIds = txtSelectedContentTypes.Text.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
+            var entityIds = txtSelectedEntities.Text.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            var templateIds = txtSelectedTemplates.Text.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
             var messages = new List<ExportImportMessage>();
             var xml = new XmlExport(ZoneId.Value, AppId.Value, false).ExportXml(contentTypeIds, entityIds, templateIds, out messages);

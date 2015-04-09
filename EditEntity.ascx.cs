@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
+using System.IO;
 using System.Web.UI.WebControls;
-using ToSic.Eav.ManagementUI;
 using DotNetNuke.Entities.Modules;
-using DotNetNuke.Services.Localization;
-using ToSic.SexyContent;
+using ToSic.Eav;
+using ToSic.Eav.ManagementUI;
 
 namespace ToSic.SexyContent
 {
@@ -133,7 +129,7 @@ namespace ToSic.SexyContent
 
         protected void ProcessView()
         {
-            EditItemControl = (ItemForm)LoadControl(System.IO.Path.Combine(TemplateSourceDirectory, "SexyContent/EAV/Controls/ItemForm.ascx"));
+            EditItemControl = (ItemForm)LoadControl(Path.Combine(TemplateSourceDirectory, "SexyContent/EAV/Controls/ItemForm.ascx"));
             EditItemControl.DefaultCultureDimension = DefaultLanguageID != 0 ? DefaultLanguageID : new int?();
             EditItemControl.IsDialog = false;
             EditItemControl.HideNavigationButtons = true;
@@ -149,8 +145,8 @@ namespace ToSic.SexyContent
             EditItemControl.ItemHistoryUrl = "";
             EditItemControl.PreventRedirect = Request.QueryString["PreventRedirect"] == "true";
 
-            var newItemUrl = EditUrl(this.TabID, SexyContent.ControlKeys.EditContentGroup, true, new string[] { });
-            EditItemControl.NewItemUrl = newItemUrl + (newItemUrl.Contains("?") ? "&" : "?") + "AppID=" + AppId.ToString() + "&mid=" + ModuleID.ToString() + "&AttributeSetId=[AttributeSetId]&EditMode=New&CultureDimension=" + this.LanguageID;
+            var newItemUrl = EditUrl(TabID, SexyContent.ControlKeys.EditContentGroup, true, new string[] { });
+            EditItemControl.NewItemUrl = newItemUrl + (newItemUrl.Contains("?") ? "&" : "?") + "AppID=" + AppId + "&mid=" + ModuleID + "&AttributeSetId=[AttributeSetId]&EditMode=New&CultureDimension=" + LanguageID;
 
             // If ContentGroupItem has Entity, edit that; else create new Entity
             if (EntityId.HasValue)
@@ -160,7 +156,7 @@ namespace ToSic.SexyContent
                 EditItemControl.InitForm(FormViewMode.Edit);
 
                 hlkHistory.Visible = true;
-                hlkHistory.NavigateUrl = EditUrl("", "", SexyContent.ControlKeys.EavManagement, new string[] { "AppID", AppId.ToString(), "ManagementMode", "ItemHistory", "EntityId", EntityId.Value.ToString(), "mid", ModuleID.ToString() });
+                hlkHistory.NavigateUrl = EditUrl("", "", SexyContent.ControlKeys.EavManagement, new[] { "AppID", AppId.ToString(), "ManagementMode", "ItemHistory", "EntityId", EntityId.Value.ToString(), "mid", ModuleID.ToString() });
             }
             // Create a new Entity
             else
@@ -173,11 +169,11 @@ namespace ToSic.SexyContent
             phNewOrEditItem.Controls.Add(EditItemControl);
         }
 
-        protected void EditItem_OnEdited(ToSic.Eav.Entity Entity)
+        protected void EditItem_OnEdited(Entity Entity)
         {
         }
 
-        protected void NewItem_OnInserted(ToSic.Eav.Entity Entity)
+        protected void NewItem_OnInserted(Entity Entity)
         {
         }
 

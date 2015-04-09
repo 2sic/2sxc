@@ -1,8 +1,8 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="AppConfig.ascx.cs" Inherits="ToSic.SexyContent.Administration.AppConfig" %>
-<%@ Register TagName="AdministrationRegisters" TagPrefix="SexyContent" Src="../Registers.ascx" %>
-<SexyContent:AdministrationRegisters runat="server"></SexyContent:AdministrationRegisters>
 <%@ Import Namespace="ToSic.SexyContent" %>
 <%@ Import Namespace="ToSic.SexyContent.EAV.PipelineDesigner" %>
+<%@ Register TagName="AdministrationRegisters" TagPrefix="SexyContent" Src="../Registers.ascx" %>
+<SexyContent:AdministrationRegisters runat="server"></SexyContent:AdministrationRegisters>
 
 <div class="dnnForm dnnSexyContentAppConfig dnnClear">
     <h2 class="dnnFormSectionHead">

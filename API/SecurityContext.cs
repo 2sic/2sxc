@@ -1,42 +1,11 @@
-/*
-The MIT License
-
-Copyright (c) 2008 Daniel Rosenstark (http://www.confusionists.com)
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
- */
 using System;
-using System.Data;
-using System.Configuration;
-using System.Web;
-using System.Web.Security;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.Web.UI.WebControls.WebParts;
-using System.Web.UI.HtmlControls;
 using System.Threading;
-using DotNetNuke.Entities.Users;
-using DNNSec = DotNetNuke.Security.Membership;
+using System.Web;
 using DotNetNuke.Entities.Modules;
-using DotNetNuke.Security.Permissions;
 using DotNetNuke.Entities.Portals;
-using System.Collections;
+using DotNetNuke.Entities.Users;
+using DotNetNuke.Security.Permissions;
+using DNNSec = DotNetNuke.Security.Membership;
 
 //<2sic modified>
 //namespace Confusionists.IWebLite
@@ -63,15 +32,15 @@ namespace ToSic.SexyContent.API
         {
             if (!Thread.CurrentPrincipal.Identity.IsAuthenticated)
                 return null;
-            DNNSec.MembershipProvider memProvider = DNNSec.MembershipProvider.Instance();
-            UserInfo retVal = memProvider.GetUserByUserName(portalId, Thread.CurrentPrincipal.Identity.Name, false);
+            var memProvider = DNNSec.MembershipProvider.Instance();
+            var retVal = memProvider.GetUserByUserName(portalId, Thread.CurrentPrincipal.Identity.Name, false);
             return retVal;
         }
 
         public static ModuleInfo getModuleInfo(int moduleId, int tabId)
         {
-            ModuleController modController = new ModuleController();
-            ModuleInfo modInfo = modController.GetModule(moduleId, tabId);
+            var modController = new ModuleController();
+            var modInfo = modController.GetModule(moduleId, tabId);
             return modInfo;
 
         }
@@ -83,26 +52,26 @@ namespace ToSic.SexyContent.API
         /// <returns></returns>
         public static bool canUserAccessModule(UserInfo user, int portalId, int tabId, ModuleInfo moduleInfo, string permissionKey)
         {
-            bool retVal = false;
+            var retVal = false;
             string permissionsString = null;
             if (moduleInfo.InheritViewPermissions)
             {
-                TabPermissionController tabPermissionController = new TabPermissionController();
-                TabPermissionCollection tabPermissionCollection =
+                var tabPermissionController = new TabPermissionController();
+                var tabPermissionCollection =
                     tabPermissionController.GetTabPermissionsCollectionByTabID(tabId, portalId);
                 permissionsString = tabPermissionController.GetTabPermissions(tabPermissionCollection, permissionKey);
             }
             else
             {
-                ModulePermissionController modulePermissionController = new ModulePermissionController();
-                ModulePermissionCollection permissionCollection =
+                var modulePermissionController = new ModulePermissionController();
+                var permissionCollection =
                     modulePermissionController.GetModulePermissionsCollectionByModuleID(moduleInfo.ModuleID, tabId);
                 permissionsString = modulePermissionController.GetModulePermissions(permissionCollection, permissionKey);
             }
 
             char[] splitter = { ';' };
-            string[] roles = permissionsString.Split(splitter);
-            foreach (string role in roles)
+            var roles = permissionsString.Split(splitter);
+            foreach (var role in roles)
             {
                 if (role.Length > 0)
                 {
@@ -124,13 +93,13 @@ namespace ToSic.SexyContent.API
         /// <returns></returns>
         public static int getPortalId(HttpContext context)
         {
-            int retVal = -1;
-            string url = getUriWithoutProtocol(context.Request.Url);
-            PortalAliasController controller = new PortalAliasController();
-            PortalAliasCollection aliasCollection = controller.GetPortalAliases();
+            var retVal = -1;
+            var url = getUriWithoutProtocol(context.Request.Url);
+            var controller = new PortalAliasController();
+            var aliasCollection = controller.GetPortalAliases();
             foreach (string key in aliasCollection.Keys)
             {
-                PortalAliasInfo info = aliasCollection[key] as PortalAliasInfo;
+                var info = aliasCollection[key];
                 if (url.StartsWith(info.HTTPAlias))
                     retVal = info.PortalID;
             }
@@ -144,8 +113,8 @@ namespace ToSic.SexyContent.API
         /// <returns></returns>
         static string getUriWithoutProtocol(Uri uri)
         {
-            string protocol = uri.Scheme;
-            string retVal = uri.AbsoluteUri;
+            var protocol = uri.Scheme;
+            var retVal = uri.AbsoluteUri;
             retVal = retVal.Substring(protocol.Length + 3); // strip off the //:
             return retVal;
         }
@@ -206,7 +175,7 @@ namespace ToSic.SexyContent.API
         {
             this.tabId = tabId;
             setPortalIdAndPageName(context);
-            if (this.portalId == -1)
+            if (portalId == -1)
                 throw new Exception("Cannot find portal for this URL " + context.Request.Url.AbsoluteUri);
             userInfo = getCurrentUser(portalId);
             moduleInfo = getModuleInfo(moduleId, tabId);
@@ -223,12 +192,12 @@ namespace ToSic.SexyContent.API
         {
             if (moduleInfo == null)
                 return false;
-            bool retVal = false;
-            ModuleController moduleController = new ModuleController();
-            Hashtable settings = moduleController.GetTabModuleSettings(moduleInfo.TabModuleID);
+            var retVal = false;
+            var moduleController = new ModuleController();
+            var settings = moduleController.GetTabModuleSettings(moduleInfo.TabModuleID);
             if (settings.ContainsKey(MODULE_SETTING_KEY_ASMX))
             {
-                string setting = settings[MODULE_SETTING_KEY_ASMX] as string;
+                var setting = settings[MODULE_SETTING_KEY_ASMX] as string;
                 if (setting.Length > 0) // else false, of course
                     retVal = asmxName.ToLower().Contains(setting.ToLower());
             }
@@ -252,12 +221,12 @@ namespace ToSic.SexyContent.API
             portalId = -1;
             asmxName = null;
 
-            string url = getUriWithoutProtocol(context.Request.Url);
-            PortalAliasController controller = new PortalAliasController();
-            PortalAliasCollection aliasCollection = controller.GetPortalAliases();
+            var url = getUriWithoutProtocol(context.Request.Url);
+            var controller = new PortalAliasController();
+            var aliasCollection = controller.GetPortalAliases();
             foreach (string key in aliasCollection.Keys)
             {
-                PortalAliasInfo info = aliasCollection[key] as PortalAliasInfo;
+                var info = aliasCollection[key];
                 if (url.StartsWith(info.HTTPAlias))
                 {
                     portalId = info.PortalID;

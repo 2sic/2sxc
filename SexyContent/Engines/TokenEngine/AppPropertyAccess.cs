@@ -1,9 +1,12 @@
-﻿using DotNetNuke.Entities.Users;
+﻿using System;
+using System.Globalization;
+using DotNetNuke.Entities.Users;
 using DotNetNuke.Services.Tokens;
+using ToSic.Eav.ValueProvider;
 
 namespace ToSic.SexyContent.Engines.TokenEngine
 {
-    public class AppPropertyAccess : IPropertyAccess, ToSic.Eav.ValueProvider.IValueProvider
+    public class AppPropertyAccess : IPropertyAccess, IValueProvider
     {
         private readonly App _app;
 		public string Name { get; private set; }
@@ -32,7 +35,7 @@ namespace ToSic.SexyContent.Engines.TokenEngine
         /// <param name="AccessLevel"></param>
         /// <param name="PropertyNotFound"></param>
         /// <returns></returns>
-        public string GetProperty(string strPropertyName, string strFormat, System.Globalization.CultureInfo formatProvider, UserInfo AccessingUser, Scope AccessLevel, ref bool PropertyNotFound)
+        public string GetProperty(string strPropertyName, string strFormat, CultureInfo formatProvider, UserInfo AccessingUser, Scope AccessLevel, ref bool PropertyNotFound)
         {
             return Get(strPropertyName, strFormat, ref PropertyNotFound);
         }
@@ -54,14 +57,14 @@ namespace ToSic.SexyContent.Engines.TokenEngine
         /// <returns></returns>
         public virtual string Get(string property)
         {
-            bool temp = false;
+            var temp = false;
             return Get(property, "", ref temp);
         }
 
 
         public bool Has(string property)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
     }

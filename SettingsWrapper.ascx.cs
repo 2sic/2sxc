@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.IO;
-using System.Data;
-using DotNetNuke.Entities.Modules;
 using ToSic.Eav;
 using ToSic.Eav.DataSources;
 
@@ -44,9 +37,9 @@ namespace ToSic.SexyContent
 				throw new Exception("Cannot find content group");
 
 			var entity = ContentGroup[ItemType][SortOrder];
-			int? entityID = entity == null ? new int?() : entity.EntityId;
+			var entityID = entity == null ? new int?() : entity.EntityId;
 
-			string attributeSetName = ItemType == "Content" ? ContentGroup.Template.ContentTypeStaticName : ContentGroup.Template.ListContentTypeStaticName;
+			var attributeSetName = ItemType == "Content" ? ContentGroup.Template.ContentTypeStaticName : ContentGroup.Template.ListContentTypeStaticName;
 
 			if (!String.IsNullOrEmpty(attributeSetName))
 			{
@@ -93,7 +86,7 @@ namespace ToSic.SexyContent
 		private void RedirectReturn()
 		{
 			if (String.IsNullOrEmpty(Request.QueryString["ReturnUrl"]))
-				Response.Redirect(ModuleContext.NavigateUrl(this.TabId, "", true));
+				Response.Redirect(ModuleContext.NavigateUrl(TabId, "", true));
 			else
 				Response.Redirect(Request.QueryString["ReturnUrl"]);
 		}

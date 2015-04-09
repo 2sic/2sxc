@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.IO;
-using DotNetNuke.Services.Tokens;
+using DotNetNuke.Common;
 using DotNetNuke.Web.UI.WebControls;
 
 namespace ToSic.SexyContent
@@ -31,7 +28,7 @@ namespace ToSic.SexyContent
         private Template Template
         {
             get {
-                int TemplateID = int.Parse(Request.QueryString["TemplateID"]);
+                var TemplateID = int.Parse(Request.QueryString["TemplateID"]);
                 return Sexy.Templates.GetTemplate(TemplateID);
             }
         }
@@ -51,7 +48,7 @@ namespace ToSic.SexyContent
                 txtTemplateContent.Enabled = false;
             }
 
-            hlkCancel.NavigateUrl = DotNetNuke.Common.Globals.NavigateURL(this.TabId);
+            hlkCancel.NavigateUrl = Globals.NavigateURL(TabId);
 
             if (IsPostBack)
                 return;
@@ -131,8 +128,8 @@ namespace ToSic.SexyContent
 		    {
 			    var setText = LocalizeString(helperSet + ".List");
 			    var hasEncodedStuff = (setText.IndexOf("»") > 0);
-			    var splitFilter1 = hasEncodedStuff ? new string[] {"»\r\n", "»\n"} : new string[] {"\r\n", "\n"};
-			    var splitFilter2 = hasEncodedStuff ? new string[] {"«"} : new string[] {"="};
+			    var splitFilter1 = hasEncodedStuff ? new[] {"»\r\n", "»\n"} : new[] {"\r\n", "\n"};
+			    var splitFilter2 = hasEncodedStuff ? new[] {"«"} : new[] {"="};
 			    var data =
 				    setText.Split(splitFilter1, StringSplitOptions.None)
 					    .Select(
@@ -194,7 +191,7 @@ namespace ToSic.SexyContent
             if (File.Exists(TemplatePath))
             {
                 File.WriteAllText(TemplatePath, txtTemplateContent.Text);
-                Response.Redirect(DotNetNuke.Common.Globals.NavigateURL(this.TabId));
+                Response.Redirect(Globals.NavigateURL(TabId));
             }
         }
 
@@ -205,7 +202,7 @@ namespace ToSic.SexyContent
 
 
             // DataBind the GridView with the Tokens
-            DnnGridBoundColumn tokenColumn = ((DnnGridBoundColumn)grid.Columns.FindByUniqueName("StaticName"));
+            var tokenColumn = ((DnnGridBoundColumn)grid.Columns.FindByUniqueName("StaticName"));
             tokenColumn.HeaderText = headerText;
             
             grid.DataSource = dataSource;

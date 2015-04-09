@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Web.Script.Services;
 using System.Web.Services;
@@ -8,28 +9,15 @@ using DotNetNuke.Entities.Users;
 using DotNetNuke.Security.Permissions;
 using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Services.Localization;
-using FileInfo = DotNetNuke.Services.FileSystem.FileInfo;
 
 namespace ToSic.SexyContent.API
 {
 	[WebService(Namespace = "http://schemas.2sic.com/2013/ToSexyContent/Services/01.00")]
 	[WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
-	[System.ComponentModel.ToolboxItem(false)]
+	[ToolboxItem(false)]
 	[ScriptService]
 	public class Services : WebService
 	{
-		public Services()
-		{
-			//var request = HttpContext.Current.Request;
-			//var domainName = Globals.GetDomainName(request);
-			//var alias = PortalAliasController.GetPortalAliasInfo(domainName);
-
-			//_settings = new PortalSettings(-1, alias);
-
-			//var user = SecurityContext.getCurrentUser(SecurityContext.getPortalId(Context));
-
-		}
-
 		[WebMethod]
 		[ScriptMethod(ResponseFormat = ResponseFormat.Json)]
 		public FileInfo GetFileByPath(int portalId, string relativePath)
