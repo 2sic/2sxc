@@ -64,7 +64,7 @@ namespace ToSic.SexyContent.Configuration {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::DotNetNuke.Web.UI.WebControls.dnngrid grdCultures;
+        protected global::DotNetNuke.Web.UI.WebControls.DnnGrid grdCultures;
         
         /// <summary>
         /// dnnSitePanelSexyContentZones control.
