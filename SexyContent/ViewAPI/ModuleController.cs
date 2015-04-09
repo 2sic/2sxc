@@ -35,14 +35,13 @@ namespace ToSic.SexyContent.ViewAPI
 			Sexy.ContentGroups.SaveTemplateId(ActiveModule.ModuleID, templateId);
         }
 		
-		// ToDo: implement Client-Side, Test
-		//[HttpGet]
-		//[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-		//[ValidateAntiForgeryToken]
-		//public void SetPreviewTemplateId([FromUri] Guid templateGuid)
-		//{
-		//	ContentGroups.SetPreviewTemplateId(ActiveModule.ModuleID, templateGuid);
-		//}
+		[HttpGet]
+		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+		[ValidateAntiForgeryToken]
+		public void SetPreviewTemplateId([FromUri] int templateId)
+		{
+			Sexy.ContentGroups.SetPreviewTemplateId(ActiveModule.ModuleID, templateId);
+		}
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]

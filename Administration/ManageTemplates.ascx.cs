@@ -46,12 +46,9 @@ namespace ToSic.SexyContent
         /// <param name="e"></param>
         protected void grdTemplates_DeleteCommand(object sender, Telerik.Web.UI.GridCommandEventArgs e)
         {
-			// ToDo: Implement deleting templates
-			throw new NotImplementedException("ToDo: Delete template");
-
-			//int TemplateID = Convert.ToInt32(e.Item.OwnerTableView.DataKeyValues[e.Item.ItemIndex][SexyContent.TemplateID]);
-			//SexyUncached.Templates.DeleteTemplate(TemplateID, UserId);
-			//BindGrdTemplates();
+			var templateId = Convert.ToInt32(e.Item.OwnerTableView.DataKeyValues[e.Item.ItemIndex][SexyContent.TemplateID]);
+			Sexy.Templates.DeleteTemplate(templateId);
+			BindGrdTemplates();
         }
 
         /// <summary>
@@ -71,9 +68,9 @@ namespace ToSic.SexyContent
         /// <param name="e"></param>
         protected void grdTemplates_EditCommand(object sender, Telerik.Web.UI.GridCommandEventArgs e)
         {
-            int TemplateID = Convert.ToInt32(e.Item.OwnerTableView.DataKeyValues[e.Item.ItemIndex][SexyContent.TemplateID]);
-            string EditUrl = ModuleContext.NavigateUrl(TabId, SexyContent.ControlKeys.EditTemplate.ToString(), true, "mid" + "=" + ModuleId.ToString() + "&" + SexyContent.TemplateID + "=" + TemplateID.ToString() + "&" + SexyContent.AppIDString + "=" + AppId.ToString());
-            Response.Redirect(EditUrl);
+            var templateId = Convert.ToInt32(e.Item.OwnerTableView.DataKeyValues[e.Item.ItemIndex][SexyContent.TemplateID]);
+            var editUrl = ModuleContext.NavigateUrl(TabId, SexyContent.ControlKeys.EditTemplate.ToString(), true, "mid" + "=" + ModuleId.ToString() + "&" + SexyContent.TemplateID + "=" + templateId.ToString() + "&" + SexyContent.AppIDString + "=" + AppId.ToString());
+            Response.Redirect(editUrl);
         }
 
         /// <summary>

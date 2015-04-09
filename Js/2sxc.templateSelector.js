@@ -50,8 +50,15 @@
         		if ($scope.manageInfo.isContentApp)
         			$scope.renderTemplate(newTemplateId);
         		else {
-        			$scope.saveTemplateId(newTemplateId);
-        			$window.location.reload();
+        			$scope.loading++;
+			        var promise;
+			        if ($scope.manageInfo.hasContent)
+				        promise = $scope.saveTemplateId(newTemplateId);
+			        else
+				        promise = $scope.setPreviewTemplateId(newTemplateId);
+			        promise.then(function() {
+        				$window.location.reload();
+			        });
         		}
         	}
         });
@@ -105,19 +112,19 @@
         };
 
         $scope.saveTemplateId = function () {
-            var promises = [];
+        	var promises = [];
 
-            if ($scope.savedTemplateId != $scope.templateId) {
-                promises.push(moduleApi.saveTemplateId($scope.templateId));
-            }
+            promises.push(moduleApi.saveTemplateId($scope.templateId));
 
             $scope.savedTemplateId = $scope.templateId;
-
-            if($scope.manageInfo.isContentApp)
-                promises.push($scope.setTemplateChooserState(false));
+            promises.push($scope.setTemplateChooserState(false));
 
             return $q.all(promises);
         };
+
+	    $scope.setPreviewTemplateId = function() {
+		    return moduleApi.setPreviewTemplateId($scope.templateId);
+	    };
 
         $scope.renderTemplate = function (templateId) {
             $scope.loading++;
@@ -154,6 +161,12 @@
                         params: { templateId: templateId }
                     });
                 },
+            	setPreviewTemplateId: function(templateId) {
+            		return apiService(moduleId, {
+            			url: 'View/Module/SetPreviewTemplateId',
+            			params: { templateId: templateId }
+            		});
+	            },
                 addItem: function(sortOrder) {
                     return apiService(moduleId, {
                         url: 'View/Module/AddItem',

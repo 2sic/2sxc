@@ -595,7 +595,7 @@ namespace ToSic.SexyContent
 
         public string GetElementSettingsLink(Guid ContentGroupID, int sortOrder, int ModuleID, int TabID, string ReturnUrl)
         {
-            string settingsUrl = Globals.NavigateURL(TabID, ControlKeys.SettingsWrapper, "mid", ModuleID.ToString(), ContentGroupGuidString, ContentGroupID.ToString(), "SortOrder", sortOrder.ToString());
+            string settingsUrl = Globals.NavigateURL(TabID, ControlKeys.SettingsWrapper, "mid", ModuleID.ToString(), ContentGroupGuidString, ContentGroupID.ToString(), "SortOrder", sortOrder.ToString(), "ItemType", sortOrder == -1 ? "ListContent" : "Content");
             settingsUrl += (settingsUrl.IndexOf("?") == -1 ? "?" : "&") + "popUp=true&ReturnUrl=" + HttpUtility.UrlEncode(ReturnUrl);
             return settingsUrl;
         }
@@ -796,7 +796,9 @@ namespace ToSic.SexyContent
 
 	                if (appName != null)
 	                {
-						appIdString = ((ToSic.Eav.DataSources.Caches.BaseCache) DataSource.GetCache(DataSource.DefaultZoneId, DataSource.MetaDataAppId)).ZoneApps[zoneId.Value].Apps.Where(p => p.Value == (string)appName).Select(p => p.Key).FirstOrDefault();
+						// ToDo: Fix issue in EAV (cache is only ensured when a CacheItem-Property is accessed like LastRefresh)
+		                var x = ((BaseCache) DataSource.GetCache(DataSource.DefaultZoneId, DataSource.MetaDataAppId)).LastRefresh;
+						appIdString = ((BaseCache) DataSource.GetCache(DataSource.DefaultZoneId, DataSource.MetaDataAppId)).ZoneApps[zoneId.Value].Apps.Where(p => p.Value == (string)appName).Select(p => p.Key).FirstOrDefault();
 	                }
 
 	                // Get AppId from ModuleSettings
@@ -816,7 +818,7 @@ namespace ToSic.SexyContent
 			var moduleController = new ModuleController();
 
 			// Reset temporary template
-			ContentGroups.SetPreviewTemplateId(module.ModuleID, null);
+			ContentGroups.DeletePreviewTemplateId(module.ModuleID);
 
 			// ToDo: Should throw exception if a real ContentGroup exists
 
@@ -836,7 +838,7 @@ namespace ToSic.SexyContent
 				var sexyForNewApp = new SexyContent(zoneId.Value, appId.Value, false);
 				var templates = sexyForNewApp.GetAvailableTemplatesForSelector(module).ToList();
 				if (templates.Any())
-					ContentGroups.SetPreviewTemplateId(module.ModuleID, templates.First().TemplateId);
+					sexyForNewApp.ContentGroups.SetPreviewTemplateId(module.ModuleID, templates.First().TemplateId);
 			}
         }
 

@@ -40,7 +40,7 @@ namespace ToSic.SexyContent
 					ClientResourceManager.RegisterScript(this.Page, "~/DesktopModules/ToSIC_SexyContent/Js/ViewEdit.js", 82);
 					ClientResourceManager.RegisterScript(this.Page, "~/DesktopModules/ToSIC_SexyContent/Js/2sxc.DnnActionMenuMapper.js", 83);
 
-					var hasContent = AppId.HasValue && Template != null && ContentGroup.Content.Any(p => p != null);
+					var hasContent = AppId.HasValue && Template != null && ContentGroup.Exists;
 					var templateChooserVisible = Settings.ContainsKey(SexyContent.SettingsShowTemplateChooser) ?
 						Boolean.Parse(Settings[SexyContent.SettingsShowTemplateChooser].ToString())
 						: !hasContent;

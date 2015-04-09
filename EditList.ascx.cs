@@ -94,15 +94,15 @@ namespace ToSic.SexyContent
             return Sexy.GetElementEditLink(ContentGroup.ContentGroupGuid, sortOrder, ModuleId, TabId, Request.RawUrl);
         }
 
-        /// <summary>
-        /// Returns the Settings URL
-        /// </summary>
-        /// <param name="ContentGroupItemID"></param>
-        /// <returns></returns>
-        protected string GetSettingsUrl(int sortOrder)
-        {
-			return Sexy.GetElementSettingsLink(ContentGroup.ContentGroupGuid, sortOrder, ModuleId, TabId, Request.RawUrl);
-        }
+		///// <summary>
+		///// Returns the Settings URL
+		///// </summary>
+		///// <param name="ContentGroupItemID"></param>
+		///// <returns></returns>
+		//protected string GetSettingsUrl(string itemType, int sortOrder)
+		//{
+		//	return Sexy.GetElementSettingsLink(ContentGroup.ContentGroupGuid, sortOrder, ModuleId, TabId, Request.RawUrl);
+		//}
 
         protected void btnEditListHeader_Click(object sender, EventArgs e)
         {

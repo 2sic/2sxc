@@ -44,7 +44,22 @@ namespace ToSic.SexyContent
 			var dataSource = TemplateDataSource();
 			dataSource = DataSource.GetDataSource<EntityIdFilter>(_zoneId, _appId, dataSource);
 			((EntityIdFilter)dataSource).EntityIds = templateId.ToString();
-			return new Template(dataSource.List.FirstOrDefault().Value);
+			var templateEntity = dataSource.List.FirstOrDefault().Value;
+
+			if(templateEntity == null)
+				throw new Exception("The template with id " + templateId + " does not exist.");
+
+			return new Template(templateEntity);
+		}
+
+		public bool DeleteTemplate(int templateId)
+		{
+			var template = GetTemplate(templateId);
+			var eavContext = EavContext.Instance(_zoneId, _appId);
+			var canDelete = eavContext.CanDeleteEntity(template.TemplateId);
+			if(!canDelete.Item1)
+				throw new Exception(canDelete.Item2);
+			return eavContext.DeleteEntity(template.TemplateId);
 		}
 
 		/// <summary>

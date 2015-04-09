@@ -42,7 +42,7 @@ $2sxc.getManageController = function(id) {
                 if(settings.attributeSetName)
                     params.attributeSetName = settings.attributeSetName;
             } else {
-                params.sortOrder = settings.sortOrder;
+            	params.sortOrder = settings.action == 'new' ? settings.sortOrder + 1 : settings.sortOrder;
                 params.contentGroupId = settings.contentGroupId;
             }
 
@@ -68,14 +68,14 @@ $2sxc.getManageController = function(id) {
         },
 
         action: function (settings) {
-            manageController._getSelectorScope().saveTemplateId().then(function() {
-                if (settings.action == 'edit' || settings.action == 'new')
-                    manageController._openDialog(settings);
-                else if (settings.action == 'add') {
-                    manageController._getSelectorScope().addItem(settings.sortOrder);
-                } else {
-                    throw "Action " + settings.action + " not known.";
-                }
+        	manageController._getSelectorScope().saveTemplateId().then(function () {
+	            if (settings.action == 'edit' || settings.action == 'new') {
+		            manageController._openDialog(settings);
+	            } else if (settings.action == 'add') {
+		            manageController._getSelectorScope().addItem(settings.sortOrder);
+	            } else {
+		            throw "Action " + settings.action + " not known.";
+	            }
             });
         },
 

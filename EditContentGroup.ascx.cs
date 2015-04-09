@@ -84,22 +84,6 @@ namespace ToSic.SexyContent
             }
         }
 
-		///// <summary>
-		///// Returns the ContentGroupID from QueryString
-		///// </summary>
-		//public Guid? ContentGroupID
-		//{
-		//	get
-		//	{
-		//		string ContentGroupIDString = Request.QueryString["ContentGroupID"];
-
-		//		if (!String.IsNullOrEmpty(ContentGroupIDString))
-		//			return Guid.Parse(ContentGroupIDString);
-
-		//		return null;
-		//	}
-		//}
-
 		private ContentGroup _contentGroup;
 		private ContentGroup ContentGroup
 		{

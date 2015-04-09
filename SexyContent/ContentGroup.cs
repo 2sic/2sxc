@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Permissions;
-using System.Web;
 using ToSic.Eav;
-using ToSic.Eav.DataSources;
 
 namespace ToSic.SexyContent
 {
@@ -31,56 +28,94 @@ namespace ToSic.SexyContent
 		/// <summary>
 		/// Instanciate a "temporary" ContentGroup with the specified templateId and no Content items
 		/// </summary>
-		public ContentGroup(Guid previewTemplateId, int zoneId, int appId)
+		public ContentGroup(Guid? previewTemplateId, int zoneId, int appId)
 		{
 			_previewTemplateId = previewTemplateId;
 			_zoneId = zoneId;
 			_appId = appId;
 		}
 
+		/// <summary>
+		/// Returns true if a content group entity for this group really exists
+		/// Means for example, that the app can't be changed anymore
+		/// </summary>
 		public bool Exists
 		{
 			get { return _contentGroupEntity != null; }
 		}
 
+		private Template _template;
 		public Template Template
 		{
 			get
 			{
-				IEntity templateEntity;
-
-				if (_previewTemplateId.HasValue)
+				if (_template == null)
 				{
-					var dataSource = DataSource.GetInitialDataSource(_zoneId, _appId, false);
-					dataSource = DataSource.GetDataSource<EntityTypeFilter>(_zoneId, _appId, dataSource);
-					
-					// ToDo: Should use an indexed Guid filter
-					templateEntity = dataSource.List.FirstOrDefault(e => e.Value.EntityGuid == _previewTemplateId).Value;
-				}
-				else
-					templateEntity = ((Eav.Data.EntityRelationship) _contentGroupEntity.Attributes["Template"][0]).FirstOrDefault();
 
-				return templateEntity == null ? null : new Template(templateEntity);
+					IEntity templateEntity = null;
+
+					if (_previewTemplateId.HasValue)
+					{
+						var dataSource = DataSource.GetInitialDataSource(_zoneId, _appId);
+						// ToDo: Should use an indexed Guid filter
+						templateEntity = dataSource.List.FirstOrDefault(e => e.Value.EntityGuid == _previewTemplateId).Value;
+					}
+					else if (_contentGroupEntity != null)
+						templateEntity = ((Eav.Data.EntityRelationship) _contentGroupEntity.Attributes["Template"][0]).FirstOrDefault();
+
+					_template = templateEntity == null ? null : new Template(templateEntity);
+				}
+
+				return _template;
 			}
 		}
 
 		public int ContentGroupId { get { return _contentGroupEntity.EntityId; } }
-		public Guid ContentGroupGuid { get { return _contentGroupEntity.EntityGuid; } }
+		public Guid ContentGroupGuid { get { return _contentGroupEntity == null ? Guid.Empty : _contentGroupEntity.EntityGuid; } }
 
 		public List<IEntity> Content
 		{
 			get
 			{
-				var list = ((Eav.Data.EntityRelationship) _contentGroupEntity.GetBestValue("Content")).ToList();
-				if(list.Count == 0)
-					return new List<IEntity>() { null };
-				return list;
+				if (_contentGroupEntity != null)
+				{
+					var list = ((Eav.Data.EntityRelationship) _contentGroupEntity.GetBestValue("Content")).ToList();
+					if (list.Count > 0)
+						return list;
+				}
+
+				return new List<IEntity>() { null };
 			}
 		}
 
-		public List<IEntity> Presentation { get { return ((Eav.Data.EntityRelationship)_contentGroupEntity.GetBestValue("Presentation")).ToList(); } }
-		public List<IEntity> ListContent { get { return ((Eav.Data.EntityRelationship)_contentGroupEntity.GetBestValue("ListContent")).ToList(); } }
-		public List<IEntity> ListPresentation { get { return ((Eav.Data.EntityRelationship)_contentGroupEntity.GetBestValue("ListPresentation")).ToList(); } }
+		public List<IEntity> Presentation
+		{
+			get
+			{
+				if(_contentGroupEntity == null)
+					return new List<IEntity>();
+				return ((Eav.Data.EntityRelationship) _contentGroupEntity.GetBestValue("Presentation")).ToList();
+			}
+		}
+
+		public List<IEntity> ListContent
+		{
+			get
+			{
+				if (_contentGroupEntity == null)
+					return new List<IEntity>();
+				return ((Eav.Data.EntityRelationship)_contentGroupEntity.GetBestValue("ListContent")).ToList();
+			}
+		}
+		public List<IEntity> ListPresentation
+		{
+			get
+			{
+				if (_contentGroupEntity == null)
+					return new List<IEntity>(); 
+				return((Eav.Data.EntityRelationship)_contentGroupEntity.GetBestValue("ListPresentation")).ToList();
+			}
+		}
 
 		public List<IEntity> this[string type]
 		{
@@ -89,13 +124,13 @@ namespace ToSic.SexyContent
 				switch (type)
 				{
 					case "Content":
-						return this.Content;
+						return Content;
 					case "Presentation":
-						return this.Presentation;
+						return Presentation;
 					case "ListContent":
-						return this.ListContent;
+						return ListContent;
 					case "ListPresentation":
-						return this.ListPresentation;
+						return ListPresentation;
 					default:
 						throw new Exception("Type " + type + " not allowed");
 				}

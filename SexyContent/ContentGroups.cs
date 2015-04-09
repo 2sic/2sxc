@@ -49,14 +49,14 @@ namespace ToSic.SexyContent
 			return contentGroups.Any(p => p[type].Any(c => c != null));
 		}
 
-		public Guid CreateContentGroup(int moduleId)
+		public Guid CreateContentGroup(int moduleId, int? templateId)
 		{
 			var context = EavContext.Instance(_zoneId, _appId);
 			var contentType = DataSource.GetCache(_zoneId, _appId).GetContentType(ContentGroupTypeName);
 
 			var values = new Dictionary<string, object>()
 			{
-				{"Template", new int[] {}},
+				{"Template", templateId.HasValue ? new [] { templateId.Value } : new int[] {}},
 				{"Content", new int[] {}},
 				{"Presentation", new int[] {}},
 				{"ListContent", new int[] {}},
@@ -77,28 +77,40 @@ namespace ToSic.SexyContent
 		/// </summary>
 		/// <param name="moduleId"></param>
 		/// <param name="previewTemplateId"></param>
-		public static void SetPreviewTemplateId(int moduleId, Guid? previewTemplateId)
+		public void SetPreviewTemplateId(int moduleId, int previewTemplateId)
 		{
 			var moduleController = new ModuleController();
 			var settings = moduleController.GetModuleSettings(moduleId);
 
 			// Do not allow saving the temporary template id if a contentgroup exists for this module
-			if(settings[SexyContent.ContentGroupGuidString] == null)
+			if(settings[SexyContent.ContentGroupGuidString] != null)
 				throw new Exception("Preview template id cannot be set for a module that already has content.");
 
-			if(previewTemplateId.HasValue)
-				moduleController.UpdateModuleSetting(moduleId, PreviewTemplateIdString, previewTemplateId.Value.ToString());
-			else
-				moduleController.DeleteModuleSetting(moduleId, PreviewTemplateIdString);
+			var dataSource = DataSource.GetInitialDataSource(_zoneId, _appId);
+			var previewTemplateGuid = dataSource.List[previewTemplateId].EntityGuid;
+
+			moduleController.UpdateModuleSetting(moduleId, PreviewTemplateIdString, previewTemplateGuid.ToString());
+		}
+
+		public static void DeletePreviewTemplateId(int moduleId)
+		{
+			var moduleController = new ModuleController();
+			moduleController.DeleteModuleSetting(moduleId, PreviewTemplateIdString);
 		}
 
 		public void SaveTemplateId(int moduleId, int templateId)
 		{
 			// Remove the previewTemplateId (because it's not needed as soon Content is inserted)
-			SetPreviewTemplateId(moduleId, null);
+			DeletePreviewTemplateId(moduleId);
 
+
+			// Create a new contentgroup if it does not exist
 			var contentGroup = GetContentGroupForModule(moduleId);
-			contentGroup.Update(templateId);
+
+			if(!contentGroup.Exists)
+				CreateContentGroup(moduleId, templateId);
+			else
+				contentGroup.Update(templateId);
 		}
 
 		public ContentGroup GetContentGroupForModule(int moduleId)
@@ -110,8 +122,7 @@ namespace ToSic.SexyContent
 			if (settings[SexyContent.ContentGroupGuidString] == null)
 			{
 				var previewTemplateString = settings[PreviewTemplateIdString];
-				if (previewTemplateString != null)
-					return new ContentGroup(Guid.Parse(previewTemplateString.ToString()), _zoneId, _appId);
+				return new ContentGroup(previewTemplateString != null ? Guid.Parse(previewTemplateString.ToString()) : new Guid?(), _zoneId, _appId);
 			}
 
 			settings = moduleControl.GetModuleSettings(moduleId);

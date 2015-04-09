@@ -30,7 +30,7 @@ namespace ToSic.SexyContent
         protected void Page_Init(object sender, EventArgs e)
         {
             if (ModeIsEdit)
-                Template = SexyUncached.Templates.GetTemplate(TemplateID);
+                Template = Sexy.Templates.GetTemplate(TemplateID);
 
             var contentTypeSelectors = new[] { ctrContentType, ctrPresentationType, ctrListContentType, ctrListPresentationType };
 
@@ -167,7 +167,7 @@ namespace ToSic.SexyContent
 	        var templatePath = ddlTemplateFiles.SelectedValue;
 
 			if (!pnlSelectTemplateFile.Visible)
-				templatePath = SexyUncached.CreateTemplateFileIfNotExists(txtTemplateFileName.Text, ddlTemplateTypes.SelectedValue, ddlTemplateLocations.SelectedValue, Server, LocalizeString("NewTemplateFile.DefaultText"));
+				templatePath = Sexy.CreateTemplateFileIfNotExists(txtTemplateFileName.Text, ddlTemplateTypes.SelectedValue, ddlTemplateLocations.SelectedValue, Server, LocalizeString("NewTemplateFile.DefaultText"));
 
 	        var templateId = ModeIsEdit ? Template.TemplateId : new int?();
 	        var pipelineEntityId = ddlDataPipeline.SelectedValue == "0" ? (int?) null : int.Parse(ddlDataPipeline.SelectedValue);

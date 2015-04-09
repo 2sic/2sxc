@@ -53,14 +53,6 @@ namespace ToSic.SexyContent
                 return _sexy;
             }
         }
-        private SexyContent _sexyUncached;
-        public SexyContent SexyUncached {
-            get {
-                if (_sexyUncached == null)
-                    _sexyUncached = new SexyContent(ZoneId, AppId, false);
-                return _sexyUncached;
-            }
-        }
 
         public int? LanguageID
         {

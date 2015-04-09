@@ -13,7 +13,6 @@ namespace ToSic.SexyContent.WebApi
     public abstract class SxcApiController : DnnApiController, IAppAndDataHelpers
     {
         private SexyContent _sexyContent;
-        private SexyContent _sexyContentUncached;
 
         private AppAndDataHelpers _appAndDataHelpers;
         private AppAndDataHelpers AppAndDataHelpers {
@@ -37,15 +36,6 @@ namespace ToSic.SexyContent.WebApi
                 if (_sexyContent == null)
                     _sexyContent = ToSic.SexyContent.WebApi.HttpRequestMessageExtensions.GetSxcOfModuleContext(Request);
                 return _sexyContent;
-            }
-        }
-        internal SexyContent SexyUncached
-        {
-            get
-            {
-                if (_sexyContentUncached == null)
-                    _sexyContentUncached = ToSic.SexyContent.WebApi.HttpRequestMessageExtensions.GetUncachedSxcOfModuleContext(Request);
-                return _sexyContentUncached;
             }
         }
 

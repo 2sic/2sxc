@@ -30,17 +30,6 @@ namespace ToSic.SexyContent
             }
         }
 
-        private SexyContent _sexyUncached;
-        protected SexyContent SexyUncached
-        {
-            get
-            {
-                if (_sexyUncached == null && ZoneId.HasValue && AppId.HasValue)
-                    _sexyUncached = new SexyContent(ZoneId.Value, AppId.Value, false, ModuleConfiguration.OwnerPortalID);
-                return _sexyUncached;
-            }
-        }
-
         protected int? ZoneId
         {
             get

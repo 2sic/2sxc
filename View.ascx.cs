@@ -68,7 +68,7 @@ namespace ToSic.SexyContent
                     {
                         var templates = Sexy.GetAvailableTemplatesForSelector(ModuleConfiguration).ToList();
                         if (templates.Any())
-                            ContentGroup.Update(templates.First().TemplateId);
+							Sexy.ContentGroups.SetPreviewTemplateId(ModuleConfiguration.ModuleID, templates.First().TemplateId);
                         Response.Redirect(Request.RawUrl);
                     }
                 }
