@@ -14,7 +14,7 @@
     <asp:Panel runat="server" id="pnlEAV"></asp:Panel>
 </div>
 
-<% if (Request.QueryString["ManagementMode"] == "ContentTypesList")
+<% if (Request.QueryString["ManagementMode"] == "ContentTypesList" || String.IsNullOrEmpty(Request.QueryString["ManagementMode"]))
    { %>
 <ul class="dnnActions">
 	<li>

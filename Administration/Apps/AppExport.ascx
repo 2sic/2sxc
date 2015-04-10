@@ -26,13 +26,13 @@ Contains:<br/>
         <%= SexyContent.GetCulturesWithActiveState(PortalId, ZoneId.Value).Where(p => p.Active).Count() %> Languages
     </li>
     <li>
-        <%= Sexy.GetTemplates(PortalId).Count() %> templates
+        <%= Sexy.Templates.GetAllTemplates().Count() %> templates
     </li>
     <li>
-        Tokens: <%= Sexy.GetTemplates(PortalId).Any(p => !p.IsRazor) %>
+        Tokens: <%= Sexy.Templates.GetAllTemplates().Any(p => !p.IsRazor) %>
     </li>
     <li>
-        Razor: <%= Sexy.GetTemplates(PortalId).Any(p => p.IsRazor) %>
+        Razor: <%= Sexy.Templates.GetAllTemplates().Any(p => p.IsRazor) %>
     </li>
     <li>
         <% if (Directory.Exists(Sexy.App.PhysicalPath))

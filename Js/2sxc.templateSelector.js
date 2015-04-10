@@ -15,7 +15,7 @@
             // Return all templates for App
             if (!$scope.manageInfo.isContentApp)
                 return $scope.templates;
-            return $filter('filter')($scope.templates, contentTypeId == 0 ? { ContentTypeStaticName: null } : { ContentTypeStaticName: contentTypeId }, true);
+            return $filter('filter')($scope.templates, contentTypeId == "_LayoutElement" ? { ContentTypeStaticName: "" } : { ContentTypeStaticName: contentTypeId }, true);
         };
         $scope.contentTypeId = $scope.manageInfo.contentTypeId;
         $scope.templateId = $scope.manageInfo.templateId;
@@ -35,8 +35,8 @@
                 $scope.templates = res[1].data;
 
                 // Add option for no content type if there are templates without
-                if ($filter('filter')($scope.templates, { ContentTypeStaticName: null }, true).length > 0) {
-                	$scope.contentTypes.push({ StaticName: null, Name: "Layout element" });
+                if ($filter('filter')($scope.templates, { ContentTypeStaticName: "" }, true).length > 0) {
+                	$scope.contentTypes.push({ StaticName: "_LayoutElement", Name: "Layout element" });
                     $scope.contentTypes = $filter('orderBy')($scope.contentTypes, 'Name');
                 }
 

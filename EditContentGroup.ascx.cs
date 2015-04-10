@@ -91,6 +91,8 @@ namespace ToSic.SexyContent
 		{
 			get
 			{
+				if (EntityId.HasValue)
+					return null;
 				if (_contentGroup == null)
 					_contentGroup = Sexy.ContentGroups.GetContentGroupForModule(ModuleId);
 				return _contentGroup;
@@ -157,7 +159,7 @@ namespace ToSic.SexyContent
             rptDimensions.DataBind();
 
             btnDelete.OnClientClick = "return confirm('" + LocalizeString("btnDelete.Confirm") + "')";
-            btnDelete.Text = ContentGroup.Content.Count > 1 ? LocalizeString("btnDelete.ListText") : LocalizeString("btnDelete.Text");
+            btnDelete.Text = ContentGroup != null && ContentGroup.Content.Count > 1 ? LocalizeString("btnDelete.ListText") : LocalizeString("btnDelete.Text");
 			btnDelete.Visible = !NewMode && !EntityId.HasValue;
 
 			// If there is something to edit
