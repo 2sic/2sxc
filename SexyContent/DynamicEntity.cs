@@ -83,17 +83,20 @@ namespace ToSic.SexyContent
 
             if (!propertyNotFound)
             {
-                var attribute = Entity.Attributes[attributeName];
-                if (attribute.Type == "Hyperlink" && result is string)
-                    result = SexyContent.ResolveHyperlinkValues((string) result,
-                        SexyContext == null ? PortalSettings.Current : SexyContext.OwnerPS);
+	            if (Entity.Attributes.ContainsKey(attributeName))
+	            {
+		            var attribute = Entity.Attributes[attributeName];
+		            if (attribute.Type == "Hyperlink" && result is string)
+			            result = SexyContent.ResolveHyperlinkValues((string) result,
+				            SexyContext == null ? PortalSettings.Current : SexyContext.OwnerPS);
 
-                if (attribute.Type == "Entity" && result is EntityRelationship)
-                    // Convert related entities to Dynamics
-                    result = ((EntityRelationship) result).Select(
-                        p => new DynamicEntity(p, _dimensions, SexyContext)
-                        ).ToList();
-                return result;
+		            if (attribute.Type == "Entity" && result is EntityRelationship)
+			            // Convert related entities to Dynamics
+			            result = ((EntityRelationship) result).Select(
+				            p => new DynamicEntity(p, _dimensions, SexyContext)
+				            ).ToList();
+	            }
+	            return result;
             }
             #endregion
 
