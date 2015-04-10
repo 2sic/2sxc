@@ -241,7 +241,7 @@ FROM            ToSIC_SexyContent_Templates INNER JOIN
                          ToSIC_EAV_Apps ON ToSIC_SexyContent_Templates.AppID = ToSIC_EAV_Apps.AppID LEFT OUTER JOIN
                          ToSIC_EAV_Entities ON ToSIC_SexyContent_ContentGroupItems.EntityID = ToSIC_EAV_Entities.EntityID
 WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (ModuleSettings.SettingName = N'ContentGroupID') AND 
-                         (ToSIC_SexyContent_ContentGroupItems.Temp_NewContentGroupGuid IS NULL)";
+                         (ToSIC_SexyContent_ContentGroupItems.Temp_NewContentGroupGuid IS NULL) ORDER BY SortOrder";
 
 			var adapterContentGroups = new SqlDataAdapter(sqlCommandContentGroups, sqlConnection);
 			adapterContentGroups.Fill(contentGroupItemsTable);
