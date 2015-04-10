@@ -531,6 +531,9 @@
     <Content Include="Js\2sxc.TemplateSelector.annotated.js" />
     <Content Include="Js\2sxc.TemplateSelector.js" />
     <Content Include="Js\2sxc.TemplateSelector.min.js" />
+    <Content Include="Js\AngularJS\2sxc4ng.annotated.js" />
+    <Content Include="Js\AngularJS\2sxc4ng.js" />
+    <Content Include="Js\AngularJS\2sxc4ng.min.js" />
     <Content Include="Js\AngularJS\angular-animate.min.js" />
     <Content Include="Js\AngularJS\angular-resource.min.js" />
     <Content Include="Js\AngularJS\angular-ui-tree.min.css" />
@@ -609,6 +612,7 @@
     <Content Include="Js\2sxc.api.manage.min.js.map" />
     <Content Include="Js\2sxc.api.min.js.map" />
     <Content Include="Js\2sxc.TemplateSelector.min.js.map" />
+    <Content Include="Js\AngularJS\2sxc4ng.min.js.map" />
     <None Include="SqlDataProvider\01.00.00.SqlDataProvider" />
     <Content Include="SexyContent\EAV\PipelineDesigner\assets\jquery.jsPlumb-1.7.2-min.js" />
     <Content Include="SexyContent\EAV\PipelineDesigner\PipelineDesigner.ascx" />
