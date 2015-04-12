@@ -1,5 +1,5 @@
-﻿
-$2sxc.getManageController = function(id) {
+﻿// A helper-controller in charge of opening edit-dialogs + creating the toolbars for it
+$2sxc.getManageController = function (id) {
 
     var moduleElement = $('.DnnModule-' + id);
     var manageInfo = $.parseJSON(moduleElement.find('.Mod2sxcC, .Mod2sxcappC').attr('data-2sxc')).manage;
@@ -8,9 +8,41 @@ $2sxc.getManageController = function(id) {
     var isEditMode = manageInfo.isEditMode;
     var sf = $.ServicesFramework(id);
 
+    // all the standard buttons with the display configuration and click-action
+    var actionButtonsConf = {
+        'default': { icon: 'glyphicon-fire', hideFirst: true,
+            action: function(settings) { alert('not implemented yet') } },
+        'edit': { title: 'Edit', icon: 'glyphicon-pencil', lightbox: true, hideFirst: false,
+            action: function(settings) { 
+                manageController._openDialog(settings); 
+            } },
+        'editinline': { title: 'Edit inline', icon: 'glyphicon-pencil', lightbox: false,
+            action: function(settings) { alert('not implemented yet') } },
+        'new': { title: 'New', icon: 'glyphicon-plus', lightbox: true, hideFirst: false, 
+            action: function(settings) { 
+                manageController._openDialog(settings); 
+            } },
+        'add': { title: 'Add', icon: 'glyphicon-plus', lightbox: false, hideFirst: true,
+            action: function(settings) { 
+                manageController._getSelectorScope().addItem(settings.sortOrder); 
+            } },
+        'publish': { title: 'Published', icon: 'glyphicon-eye-open disabled', icon2: 'glyphicon-eye-close disabled', lightbox: false, hideFirst: true, disabled: true,
+            action: function(settings) { 
+                alert('Status: ' + (settings.isPublished ? 'published' : 'not published')); 
+            } },
+        'remove': { title: 'remove', icon: 'glyphicon-remove-circle disabled', lightbox: false, hideFirst: true, disabled: true, 
+            action: function(settings) { 
+                alert('Remove not implemented yet');
+            } },
+        'more': { title: 'More', icon: 'glyphicon-option-horizontal', icon2: 'glyphicon-option-vertical', borlightboxder: false, hideFirst: false,
+            action: function(settings, clickEvt) { 
+                $(clickEvt.target).toggleClass(this.icon).toggleClass(this.icon2).closest('ul.sc-menu').toggleClass('showAll'); 
+            } }
+    };
+
     var manageController = {
 
-        isEditMode: function() {
+        isEditMode: function () {
             return isEditMode;
         },
 
@@ -32,17 +64,16 @@ $2sxc.getManageController = function(id) {
             if (settings.cultureDimension && settings.cultureDimension != null)
                 params.cultureDimension = settings.cultureDimension;
 
-            if (settings.action == 'new') {
-            	params.editMode = "New";
-            }
+            if (settings.action == 'new') 
+                params.editMode = "New";
 
             if (!settings.useModuleList) {
                 if (settings.action != 'new')
                     params.entityId = settings.entityId;
-                if(settings.attributeSetName)
+                if (settings.attributeSetName)
                     params.attributeSetName = settings.attributeSetName;
             } else {
-            	params.sortOrder = settings.action == 'new' ? settings.sortOrder + 1 : settings.sortOrder;
+                params.sortOrder = settings.sortOrder;
                 params.contentGroupId = settings.contentGroupId;
             }
 
@@ -54,7 +85,8 @@ $2sxc.getManageController = function(id) {
                 + $.param(params);
         },
 
-        _openDialog: function(settings) {
+        // Open a dialog within DNN as a lightbox or as a link, depending on DNN-config
+        _openDialog: function (settings) {
 
             var link = manageController.getLink(settings);
 
@@ -64,23 +96,22 @@ $2sxc.getManageController = function(id) {
             } else {
                 window.location = link;
             }
-            
+
         },
 
+        // Perform a toolbar button-action - basically get the configuration and execute it's action
         action: function (settings) {
-        	manageController._getSelectorScope().saveTemplateId().then(function () {
-	            if (settings.action == 'edit' || settings.action == 'new') {
-		            manageController._openDialog(settings);
-	            } else if (settings.action == 'add') {
-		            manageController._getSelectorScope().addItem(settings.sortOrder);
-	            } else {
-		            throw "Action " + settings.action + " not known.";
-	            }
+            var origEvent = event; // important to save the because afterwards we have a promise, so the event-object changes
+            var conf = actionButtonsConf[settings.action] || actionButtonsConf.default;
+            manageController._getSelectorScope().saveTemplateId().then(function () {
+                conf.action(settings, origEvent);
             });
         },
 
+        // Generate a button (an <a>-tag) for one specific toolbar-action. 
+        // Expects: settings, an object containing the specs for the expected buton
         getButton: function (settings) {
-
+            // if the button belongs to a content-item, move the specs to the item into the settings-object
             if (settings.entity && settings.entity._2sxcEditInformation) {
                 if (settings.entity._2sxcEditInformation.entityId) {
                     settings.entityId = settings.entity._2sxcEditInformation.entityId;
@@ -92,60 +123,57 @@ $2sxc.getManageController = function(id) {
                 delete settings.entity;
             }
 
-            //settings = $.extend({}, config, settings);
+            // retrieve configuration for this button
+            var conf = actionButtonsConf[settings.action] || actionButtonsConf.default;
+
             var button = $('<a />', {
-                'class': 'sc-' + settings.action,
-                'onclick': 'javascript:$2sxc(' + id + ').manage.action(' + JSON.stringify(settings) + ');'
+                'class': 'sc-' + settings.action + ' ' 
+                    + (settings.hideFirst || conf.hideFirst ? 'hideFirst' : '') 
+                    + ' ' + (conf.lightbox ? 'box' : ''),
+                'onclick': 'javascript:$2sxc(' + id + ').manage.action(' + JSON.stringify(settings) + ');',
+                'title': conf.title
             });
+            var symbol = $('<span class="glyphicon ' + conf.icon + '" aria-hidden="true"></span>');
 
-            var title = "Edit";
-            switch(settings.action) {
-                case "add":
-                    title = "Add";
-                    break;
-                case "new":
-                    title = "New";
-                    break;
+            // if publish-button and not published yet, show button (otherwise hidden) & change icon
+            if (settings.action == "publish" && settings.isPublished == false) {
+                button.toggleClass('hideFirst', false)
+                    .attr('title', "Unpublished");
+                symbol.toggleClass(conf.icon, false)
+                    .toggleClass(conf.icon2, true);
             }
 
-            if (settings.action == "edit") {
-                if (settings.isPublished == null || settings.isPublished == true) {
-                    button.addClass("sc-published");
-                    title = title + " (published)";
-                } else {
-                    button.addClass("sc-draft");
-                    title = title + " (unpublished)";
-                }
-            }
-
-            button.attr("title", title);
+            button.html(symbol);
 
             return button[0].outerHTML;
         },
 
         // Builds the toolbar and returns it as HTML
+        // expects settings - either for 1 button or for an array of buttons
         getToolbar: function (settings) {
-
-
             var buttons = [];
 
-            if (settings.action)
-                settings = [settings];
-            
-            if ($.isArray(settings)) {
+            if (settings.action) {
+                // if single item with specified action, use this as our button-list
+                //settings = [settings];
+                buttons = [settings];
+            } else if ($.isArray(settings)) {
+                // if it is an array, use that. Otherwise assume that we auto-generate all buttons with supplied settings
                 buttons = settings;
             } else {
+                // Create a standard menu with all standard buttons
+                // first button: edit
+                buttons.push($.extend({}, settings, { action: 'edit' }));
 
-                buttons = [
-                    $.extend({ action: 'edit' }, settings)
-                ];
-
+                // add applicable list buttons - add=add item below; new=lightbox-dialog
                 if (toolbarConfig.isList && settings.sortOrder != -1) {
-                    if (settings.useModuleList) {
-                        buttons.push($.extend({ action: 'add' }, settings));
-                    }
-                    buttons.push($.extend({ action: 'new' }, settings));
+                    buttons.push($.extend({}, settings, { action: 'new' }));
+                    if (settings.useModuleList)
+                        buttons.push($.extend({}, settings, { action: 'add' }));
                 }
+                buttons.push($.extend({}, settings, { action: 'publish' }));
+                buttons.push($.extend({}, settings, { action: 'remove' }));
+                buttons.push($.extend({}, settings, { action: 'more' }));
             }
 
             var toolbar = $('<ul />', { 'class': 'sc-menu', 'onclick': 'javascript: var e = arguments[0] || window.event; e.stopPropagation();' });
@@ -156,14 +184,15 @@ $2sxc.getManageController = function(id) {
             return toolbar[0].outerHTML;
         },
 
-        _processToolbars: function() {
+        // find all toolbar-info-attributes in the HTML, convert to <ul><li> toolbar
+        _processToolbars: function () {
             $('.sc-menu[data-toolbar]', $(".DnnModule-" + id)).each(function () {
                 var toolbarSettings = $.parseJSON($(this).attr('data-toolbar'));
                 $(this).replaceWith($2sxc(id).manage.getToolbar(toolbarSettings));
             });
         },
 
-        _getSelectorScope: function() {
+        _getSelectorScope: function () {
             var selectorElement = document.querySelector('.DnnModule-' + id + ' .sc-selector-wrapper');
             return angular.element(selectorElement).scope();
         }

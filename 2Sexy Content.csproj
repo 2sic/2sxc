@@ -501,6 +501,7 @@
     <Content Include="Administration\ContentTypeAndDemoSelector.ascx" />
     <Content Include="Administration\Registers.ascx" />
     <Content Include="API\Services.asmx" />
+    <Content Include="bootstrap\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="BuildScripts\MSBuild.Community.Tasks.dll" />
     <Content Include="EditEntity.ascx" />
     <Content Include="EditContentGroupItem.ascx" />
@@ -613,6 +614,10 @@
     <Content Include="Js\2sxc.api.min.js.map" />
     <Content Include="Js\2sxc.TemplateSelector.min.js.map" />
     <Content Include="Js\AngularJS\2sxc4ng.min.js.map" />
+    <Content Include="bootstrap\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="bootstrap\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="bootstrap\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="bootstrap\fonts\glyphicons-halflings-regular.woff2" />
     <None Include="SqlDataProvider\01.00.00.SqlDataProvider" />
     <Content Include="SexyContent\EAV\PipelineDesigner\assets\jquery.jsPlumb-1.7.2-min.js" />
     <Content Include="SexyContent\EAV\PipelineDesigner\PipelineDesigner.ascx" />
