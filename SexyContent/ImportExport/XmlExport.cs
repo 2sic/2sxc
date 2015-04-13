@@ -52,7 +52,7 @@ namespace ToSic.SexyContent.ImportExport
 
             var Dimensions = Sexy.ContentContext.GetDimensionChildren("Culture");
             var Header = new XElement("Header",
-                _isAppExport ? new XElement("App",
+                _isAppExport && Sexy.App.AppGuid != "Default" ? new XElement("App",
                     new XAttribute("Guid", Sexy.App.AppGuid)
                     //new XAttribute("Name", Sexy.App.Name),
                     //new XAttribute("Version", Sexy.App.Configuration.Version),

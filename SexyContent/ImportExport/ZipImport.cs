@@ -74,7 +74,6 @@ namespace ToSic.SexyContent.ImportExport
                             {
 
                                 var appId = new int?();
-                                var xmlSearchPattern = isAppImport ? "App.xml" : "*.xml";
 
                                 // Stores the number of the current xml file to process
                                 var xmlIndex = 0;
@@ -85,11 +84,11 @@ namespace ToSic.SexyContent.ImportExport
                                     var fileContents = File.ReadAllText(Path.Combine(appDirectory, xmlFileName));
 									var import = new XmlImport(PortalSettings.Current.DefaultLanguage, PortalSettings.Current.UserInfo.Username);
 
+									if (!import.IsCompatible(_zoneId, fileContents))
+										throw new Exception("The " + (isAppImport ? "app" : "package") + " is not compatible with this version of 2sxc.");
+
                                     if (isAppImport)
                                     {
-                                        if (!import.IsCompatible(_zoneId, fileContents))
-                                            throw new Exception("The " + (isAppImport ? "app" : "package") + " is not compatible with this version of 2sxc.");
-
                                         var folder =
                                             XDocument.Parse(fileContents).Element("SexyContent")
                                                 .Element("Entities").Elements("Entity").Single(e =>e.Attribute("AttributeSetStaticName").Value =="2SexyContent-App")
