@@ -56,8 +56,6 @@ namespace ToSic.SexyContent
         }
 
 
-        // todo urgent: try to inherit the GetBestValue from the new entity-object and skip most of the code, as it's almost identical...
-
         public object GetEntityValue(string attributeName, out bool propertyNotFound)
         {
             propertyNotFound = false;   // assume found, as that's usually the case
