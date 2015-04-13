@@ -47,6 +47,11 @@
       <InstallInclude Include="**\*.gif" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="**\*.config" Exclude="@(DefaultExclude);**\web-Deploy.config" />
 			<InstallInclude Include="**\*.xml" Exclude="@(DefaultExclude);" />
+			<InstallInclude Include="**\*.eot" Exclude="@(DefaultExclude);" />
+			<InstallInclude Include="**\*.svg" Exclude="@(DefaultExclude)" />
+			<InstallInclude Include="**\*.ttf" Exclude="@(DefaultExclude)" />
+			<InstallInclude Include="**\*.woff" Exclude="@(DefaultExclude)" />
+			<InstallInclude Include="**\*.woff2" Exclude="@(DefaultExclude)" />
     </ItemGroup>
 
     <ItemGroup>
