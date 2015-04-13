@@ -13,11 +13,11 @@ namespace ToSic.SexyContent.Administration.Apps
 
         protected void btnExportApp_OnClick(object sender, EventArgs e)
         {
-            using (var stream = new ZipExport(ZoneId.Value, AppId.Value).ExportApp())
+            using (var stream = new ZipExport(ZoneId.Value, AppId.Value).ExportApp(chkIncludeContentGroups.Checked))
             {
                 Response.Clear();
                 Response.ContentType = "application/zip";
-                Response.AddHeader("content-disposition", "attachment;filename=2sxcApp_" + Regex.Replace(Sexy.App.Name, "[^a-zA-Z0-9-_]", "") + "_" + Sexy.App.Configuration.Version + ".zip");
+                Response.AddHeader("content-disposition", "attachment;filename=2sxcApp_" + Regex.Replace(Sexy.App.Name, "[^a-zA-Z0-9-_]", "") + "_" + (Sexy.App.Configuration == null ? "" : Sexy.App.Configuration.Version) + ".zip");
                 Response.Flush();
 
                 stream.WriteTo(Response.OutputStream);

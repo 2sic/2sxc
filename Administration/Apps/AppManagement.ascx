@@ -74,9 +74,7 @@
                     
                     <dnnweb:DnnGridTemplateColumn HeaderText="ExportApp">
                         <ItemTemplate>
-                            <div style='<%# (Eval("Name") != "Content") ? "display:block;" : "display:none;" %>'>
-                                <a href="<%# EditUrl("", "", SexyContent.ControlKeys.AppExport, SexyContent.AppIDString + "=" + Eval("AppID")) %>">Export</a>
-                            </div>
+                            <a href="<%# EditUrl("", "", SexyContent.ControlKeys.AppExport, SexyContent.AppIDString + "=" + Eval("AppID")) %>">Export</a>
                         </ItemTemplate>
                     </dnnweb:DnnGridTemplateColumn>
 

@@ -21,7 +21,7 @@ namespace ToSic.SexyContent.ImportExport
             _sexy = new SexyContent(_zoneId, _appId);
         }
 
-        public MemoryStream ExportApp()
+        public MemoryStream ExportApp(bool includeContentGroups = false)
         {
             // Get Export XML
             var attributeSets = _sexy.GetAvailableContentTypes(SexyContent.AttributeSetScope).ToList();
@@ -29,15 +29,18 @@ namespace ToSic.SexyContent.ImportExport
             attributeSets = attributeSets.Where(a => !a.UsesConfigurationOfAttributeSet.HasValue).ToList();
 
             var attributeSetIds = attributeSets.Select(p => p.AttributeSetId.ToString()).ToArray();
-            var entities = SexyContent.GetInitialDataSource(_zoneId, _appId).Out["Default"].List;
-            var entityIds = entities.Where(e => e.Value.AssignmentObjectTypeId != SexyContent.AssignmentObjectTypeIDSexyContentTemplate 
-                && e.Value.AssignmentObjectTypeId != DataSource.AssignmentObjectTypeIdFieldProperties)
+			var entities = SexyContent.GetInitialDataSource(_zoneId, _appId).Out["Default"].List.Where(e => e.Value.AssignmentObjectTypeId != SexyContent.AssignmentObjectTypeIDSexyContentTemplate
+				&& e.Value.AssignmentObjectTypeId != DataSource.AssignmentObjectTypeIdFieldProperties).ToList();
+
+	        if (!includeContentGroups)
+		        entities = entities.Where(p => p.Value.Type.StaticName != "2SexyContent-ContentGroup").ToList();
+
+            var entityIds = entities
                 .Select(e => e.Value.EntityId.ToString()).ToArray();
 
-            var templateIds = _sexy.Templates.GetAllTemplates().Select(p => p.TemplateId.ToString()).ToArray();
             var messages = new List<ExportImportMessage>();
             var xmlExport = new XmlExport(_zoneId, _appId, true);
-            var xml = xmlExport.ExportXml(attributeSetIds, entityIds, templateIds, out messages);
+            var xml = xmlExport.ExportXml(attributeSetIds, entityIds, out messages);
 
             #region Copy needed files to temporary directory
 

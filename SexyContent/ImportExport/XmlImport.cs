@@ -16,19 +16,19 @@ using Entity = ToSic.Eav.Import.Entity;
 
 namespace ToSic.SexyContent.ImportExport
 {
-    public class XmlImport
-    {
-        public List<ExportImportMessage> ImportLog;
-        
-        private List<Dimension> _sourceDimensions;
-        private string _sourceDefaultLanguage;
-        private int? _sourceDefaultDimensionId;
-        private List<Dimension> _targetDimensions;
-        private SexyContent _sexy;
-        private int _appId;
-        private int _zoneId;
-        private Dictionary<int, int> _fileIdCorrectionList;
-		
+	public class XmlImport
+	{
+		public List<ExportImportMessage> ImportLog;
+
+		private List<Dimension> _sourceDimensions;
+		private string _sourceDefaultLanguage;
+		private int? _sourceDefaultDimensionId;
+		private List<Dimension> _targetDimensions;
+		private SexyContent _sexy;
+		private int _appId;
+		private int _zoneId;
+		private Dictionary<int, int> _fileIdCorrectionList;
+
 		/// <summary>
 		/// The default language / culture - example: de-DE
 		/// </summary>
@@ -42,7 +42,8 @@ namespace ToSic.SexyContent.ImportExport
 		/// <summary>
 		/// The id of the current portal
 		/// </summary>
-		private int? PortalId {
+		private int? PortalId
+		{
 			get
 			{
 				if (PortalSettings.Current != null)
@@ -53,255 +54,263 @@ namespace ToSic.SexyContent.ImportExport
 
 		private bool AllowSystemChanges { get; set; }
 
-        #region Prerequisites
+		#region Prerequisites
 
-	    /// <summary>
-	    /// Create a new xmlImport instance
-	    /// </summary>
-	    /// <param name="defaultLanguage">The portals default language / culture - example: de-DE</param>
-	    /// <param name="userName"></param>
-	    /// <param name="allowSystemChanges">Specify if the import should be able to change system-wide things like shared attributesets</param>
-	    public XmlImport(string defaultLanguage, string userName, bool allowSystemChanges = false)
-        {
-            // Prepare
-            ImportLog = new List<ExportImportMessage>();
-	        DefaultLanguage = defaultLanguage;
+		/// <summary>
+		/// Create a new xmlImport instance
+		/// </summary>
+		/// <param name="defaultLanguage">The portals default language / culture - example: de-DE</param>
+		/// <param name="userName"></param>
+		/// <param name="allowSystemChanges">Specify if the import should be able to change system-wide things like shared attributesets</param>
+		public XmlImport(string defaultLanguage, string userName, bool allowSystemChanges = false)
+		{
+			// Prepare
+			ImportLog = new List<ExportImportMessage>();
+			DefaultLanguage = defaultLanguage;
 			AllowSystemChanges = allowSystemChanges;
-        }
+		}
 
-        private bool IsCompatible(XDocument doc)
-        {
-            // Return if no Root Node "SexyContent"
-            if (!doc.Elements("SexyContent").Any())
-            {
-                ImportLog.Add(new ExportImportMessage("The XML file you specified does not seem to be a 2sxc Export.", ExportImportMessage.MessageTypes.Error));
-                return false;
-            }
+		private bool IsCompatible(XDocument doc)
+		{
+			// Return if no Root Node "SexyContent"
+			if (!doc.Elements("SexyContent").Any())
+			{
+				ImportLog.Add(new ExportImportMessage("The XML file you specified does not seem to be a 2sxc Export.", ExportImportMessage.MessageTypes.Error));
+				return false;
+			}
 
-            // Return if Version does not match
-            if (!doc.Element("SexyContent").Attributes().Any(a => a.Name == "MinimumRequiredVersion") || new Version(doc.Element("SexyContent").Attribute("MinimumRequiredVersion").Value) > new Version(SexyContent.ModuleVersion))
-            {
-                ImportLog.Add(new ExportImportMessage("This template or app requires 2sxc " + doc.Element("SexyContent").Attribute("MinimumRequiredVersion").Value + " in order to work, you have version " + SexyContent.ModuleVersion + " installed.", ExportImportMessage.MessageTypes.Error));
-                return false;
-            }
+			// Return if Version does not match
+			if (!doc.Element("SexyContent").Attributes().Any(a => a.Name == "MinimumRequiredVersion") || new Version(doc.Element("SexyContent").Attribute("MinimumRequiredVersion").Value) > new Version(SexyContent.ModuleVersion))
+			{
+				ImportLog.Add(new ExportImportMessage("This template or app requires 2sxc " + doc.Element("SexyContent").Attribute("MinimumRequiredVersion").Value + " in order to work, you have version " + SexyContent.ModuleVersion + " installed.", ExportImportMessage.MessageTypes.Error));
+				return false;
+			}
 
-            return true;
-        }
+			return true;
+		}
 
-        private void PrepareFileIdCorrectionList(XElement sexyContentNode)
-        {
-            _fileIdCorrectionList = new Dictionary<int, int>();
+		private void PrepareFileIdCorrectionList(XElement sexyContentNode)
+		{
+			_fileIdCorrectionList = new Dictionary<int, int>();
 
-            if (!sexyContentNode.Elements("PortalFiles").Any())
-                return;
+			if (!sexyContentNode.Elements("PortalFiles").Any())
+				return;
 
-            var portalId = PortalId.Value;
-            var fileManager = FileManager.Instance;
-            var folderManager = FolderManager.Instance;
+			var portalId = PortalId.Value;
+			var fileManager = FileManager.Instance;
+			var folderManager = FolderManager.Instance;
 
-            var portalFiles = sexyContentNode.Element("PortalFiles").Elements("File");
-            foreach (var portalFile in portalFiles)
-            {
-                var fileId = int.Parse(portalFile.Attribute("Id").Value);
-                var relativePath = portalFile.Attribute("RelativePath").Value;
-                var fileName = Path.GetFileName(relativePath);
-                var directory = Path.GetDirectoryName(relativePath).Replace('\\', '/');
+			var portalFiles = sexyContentNode.Element("PortalFiles").Elements("File");
+			foreach (var portalFile in portalFiles)
+			{
+				var fileId = int.Parse(portalFile.Attribute("Id").Value);
+				var relativePath = portalFile.Attribute("RelativePath").Value;
+				var fileName = Path.GetFileName(relativePath);
+				var directory = Path.GetDirectoryName(relativePath).Replace('\\', '/');
 
-                if (!folderManager.FolderExists(portalId, directory))
-                    continue;
+				if (!folderManager.FolderExists(portalId, directory))
+					continue;
 
-                var folderInfo = folderManager.GetFolder(portalId, directory);
+				var folderInfo = folderManager.GetFolder(portalId, directory);
 
-                if (!fileManager.FileExists(folderInfo, fileName))
-                    continue;
+				if (!fileManager.FileExists(folderInfo, fileName))
+					continue;
 
-                var fileInfo = fileManager.GetFile(folderInfo, fileName);
-                _fileIdCorrectionList.Add(fileId, fileInfo.FileId);
-            }
+				var fileInfo = fileManager.GetFile(folderInfo, fileName);
+				_fileIdCorrectionList.Add(fileId, fileInfo.FileId);
+			}
 
-        }
-        #endregion
+		}
+		#endregion
 
-        public bool IsCompatible(int zoneId, string xml)
-        {
-            // Parse XDocument from string
-            var doc = XDocument.Parse(xml);
-            return IsCompatible(doc);
-        }
+		public bool IsCompatible(int zoneId, string xml)
+		{
+			// Parse XDocument from string
+			var doc = XDocument.Parse(xml);
+			return IsCompatible(doc);
+		}
 
-        /// <summary>
-        /// Creates an app and then imports the xml
-        /// </summary>
-        /// <param name="xml"></param>
-        /// <returns>AppId of the new imported app</returns>
-        public bool ImportApp(int zoneId, string xml, out int? appId)
-        {
-            // Increase script timeout to prevent timeouts
-            HttpContext.Current.Server.ScriptTimeout = 300;
+		/// <summary>
+		/// Creates an app and then imports the xml
+		/// </summary>
+		/// <param name="xml"></param>
+		/// <returns>AppId of the new imported app</returns>
+		public bool ImportApp(int zoneId, string xml, out int? appId)
+		{
+			// Increase script timeout to prevent timeouts
+			HttpContext.Current.Server.ScriptTimeout = 300;
 
-            appId = new int?();
+			appId = new int?();
 
-            // Parse XDocument from string
-            var doc = XDocument.Parse(xml);
+			// Parse XDocument from string
+			var doc = XDocument.Parse(xml);
 
-            if (!IsCompatible(doc))
-            {
-                ImportLog.Add(new ExportImportMessage("The import file is not compatible with the installed version of 2sxc.", ExportImportMessage.MessageTypes.Error));
-                return false;
-            }
+			if (!IsCompatible(doc))
+			{
+				ImportLog.Add(new ExportImportMessage("The import file is not compatible with the installed version of 2sxc.", ExportImportMessage.MessageTypes.Error));
+				return false;
+			}
 
-            // Get root node "SexyContent"
-            var xmlSource = doc.Element("SexyContent");
-            var xApp = xmlSource.Element("Header").Element("App");
+			// Get root node "SexyContent"
+			var xmlSource = doc.Element("SexyContent");
+			var xApp = xmlSource.Element("Header").Element("App");
 
-            // Build Guid (take existing, or create a new)
-            var appGuid = xApp.Attribute("Guid").Value;
-            if (String.IsNullOrEmpty(appGuid) || appGuid == new Guid().ToString())
-            {
-                appGuid = Guid.NewGuid().ToString();
-            }
+			var appGuid = xApp.Attribute("Guid").Value;
 
-            // Adding app to EAV
-            var sexy = new SexyContent(zoneId, SexyContent.GetDefaultAppId(zoneId));
-            var app = sexy.ContentContext.AddApp(appGuid);
-            sexy.ContentContext.SaveChanges();
+			if (appGuid != "Default")
+			{
+				// Build Guid (take existing, or create a new)
+				if (String.IsNullOrEmpty(appGuid) || appGuid == new Guid().ToString())
+				{
+					appGuid = Guid.NewGuid().ToString();
+				}
 
-            appId = app.AppID;
+				// Adding app to EAV
+				var sexy = new SexyContent(zoneId, SexyContent.GetDefaultAppId(zoneId));
+				var app = sexy.ContentContext.AddApp(appGuid);
+				sexy.ContentContext.SaveChanges();
 
-            if (!appId.HasValue || appId <= 0)
-            {
-                ImportLog.Add(new ExportImportMessage("App was not created. Please try again or make sure the package you are importing is correct.", ExportImportMessage.MessageTypes.Error));
-                return false;
-            }
+				appId = app.AppID;
+			}
+			else
+			{
+				appId = this._appId;
+			}
 
-            return ImportXml(zoneId, app.AppID, xml);
-        }
+			if (!appId.HasValue || appId <= 0)
+			{
+				ImportLog.Add(new ExportImportMessage("App was not created. Please try again or make sure the package you are importing is correct.", ExportImportMessage.MessageTypes.Error));
+				return false;
+			}
 
-	    /// <summary>
-	    /// Do the import
-	    /// </summary>
-	    /// <param name="xml">The previously exported XML</param>
-	    /// <param name="userName">The username of the current user (will be logged in history)</param>
-	    /// <returns></returns>
-	    public bool ImportXml(int zoneId, int appId, string xml)
-        {
-            _sexy = new SexyContent(zoneId, appId, false);
-            _appId = appId;
-            _zoneId = zoneId;
+			return ImportXml(zoneId, appId.Value, xml);
+		}
 
-            // Parse XDocument from string
-            var doc = XDocument.Parse(xml);
+		/// <summary>
+		/// Do the import
+		/// </summary>
+		/// <param name="xml">The previously exported XML</param>
+		/// <param name="userName">The username of the current user (will be logged in history)</param>
+		/// <returns></returns>
+		public bool ImportXml(int zoneId, int appId, string xml)
+		{
+			_sexy = new SexyContent(zoneId, appId, false);
+			_appId = appId;
+			_zoneId = zoneId;
 
-            if (!IsCompatible(doc))
-            {
-                ImportLog.Add(new ExportImportMessage("The import file is not compatible with the installed version of 2sxc.", ExportImportMessage.MessageTypes.Error));
-                return false;
-            }
+			// Parse XDocument from string
+			var doc = XDocument.Parse(xml);
 
-            // Get root node "SexyContent"
-            var xmlSource = doc.Element("SexyContent");
-            PrepareFileIdCorrectionList(xmlSource);
+			if (!IsCompatible(doc))
+			{
+				ImportLog.Add(new ExportImportMessage("The import file is not compatible with the installed version of 2sxc.", ExportImportMessage.MessageTypes.Error));
+				return false;
+			}
 
-            #region Prepare dimensions
-            _sourceDimensions = xmlSource.Element("Header").Element("Dimensions").Elements("Dimension").Select(p => new Dimension
-            {
-                    DimensionID = int.Parse(p.Attribute("DimensionID").Value),
-                    Name = p.Attribute("Name").Value,
-                    SystemKey = p.Attribute("SystemKey").Value,
-                    ExternalKey = p.Attribute("ExternalKey").Value,
-                    Active = Boolean.Parse(p.Attribute("Active").Value)
-                }).ToList();
+			// Get root node "SexyContent"
+			var xmlSource = doc.Element("SexyContent");
+			PrepareFileIdCorrectionList(xmlSource);
 
-            _sourceDefaultLanguage = xmlSource.Element("Header").Element("Language").Attribute("Default").Value;
-            _sourceDefaultDimensionId = _sourceDimensions.Any() ? 
-                _sourceDimensions.FirstOrDefault(p => p.ExternalKey == _sourceDefaultLanguage).DimensionID
-                : new int?();
+			#region Prepare dimensions
+			_sourceDimensions = xmlSource.Element("Header").Element("Dimensions").Elements("Dimension").Select(p => new Dimension
+			{
+				DimensionID = int.Parse(p.Attribute("DimensionID").Value),
+				Name = p.Attribute("Name").Value,
+				SystemKey = p.Attribute("SystemKey").Value,
+				ExternalKey = p.Attribute("ExternalKey").Value,
+				Active = Boolean.Parse(p.Attribute("Active").Value)
+			}).ToList();
 
-            _targetDimensions = _sexy.ContentContext.GetDimensionChildren("Culture");
-            if(_targetDimensions.Count == 0)
-                _targetDimensions.Add(new Dimension
-                {
-                        Active = true,
-                        ExternalKey = DefaultLanguage,
-                        Name = "(added by import System, default language " + DefaultLanguage + ")",
-                        SystemKey = "Culture"
-                    });
-            #endregion
+			_sourceDefaultLanguage = xmlSource.Element("Header").Element("Language").Attribute("Default").Value;
+			_sourceDefaultDimensionId = _sourceDimensions.Any() ?
+				_sourceDimensions.FirstOrDefault(p => p.ExternalKey == _sourceDefaultLanguage).DimensionID
+				: new int?();
 
-            var importAttributeSets = GetImportAttributeSets(xmlSource.Element("AttributeSets").Elements("AttributeSet"));
-            var importEntities = GetImportEntities(xmlSource.Elements("Entities").Elements("Entity"), SexyContent.AssignmentObjectTypeIDDefault);
-            
-            var import = new Eav.Import.Import(_zoneId, _appId, UserName);
-            import.RunImport(importAttributeSets, importEntities, true, true);
-            ImportLog.AddRange(GetExportImportMessagesFromImportLog(import.ImportLog));
+			_targetDimensions = _sexy.ContentContext.GetDimensionChildren("Culture");
+			if (_targetDimensions.Count == 0)
+				_targetDimensions.Add(new Dimension
+				{
+					Active = true,
+					ExternalKey = DefaultLanguage,
+					Name = "(added by import System, default language " + DefaultLanguage + ")",
+					SystemKey = "Culture"
+				});
+			#endregion
+
+			var importAttributeSets = GetImportAttributeSets(xmlSource.Element("AttributeSets").Elements("AttributeSet"));
+			var importEntities = GetImportEntities(xmlSource.Elements("Entities").Elements("Entity"), SexyContent.AssignmentObjectTypeIDDefault);
+
+			var import = new Eav.Import.Import(_zoneId, _appId, UserName);
+			import.RunImport(importAttributeSets, importEntities, true, true);
+			ImportLog.AddRange(GetExportImportMessagesFromImportLog(import.ImportLog));
 
 			if (xmlSource.Elements("Templates").Any())
 				ImportXmlTemplates(xmlSource);
 
-            return true;
-        }
+			return true;
+		}
 
-        /// <summary>
-        /// Maps EAV import messages to 2sxc import messages
-        /// </summary>
-        /// <param name="importLog"></param>
-        /// <returns></returns>
-        public IEnumerable<ExportImportMessage> GetExportImportMessagesFromImportLog(List<LogItem> importLog)
-        {
-            return importLog.Select(l => new ExportImportMessage(l.Message, 
-                l.EntryType == EventLogEntryType.Error ? ExportImportMessage.MessageTypes.Error :
-                l.EntryType == EventLogEntryType.Information ? ExportImportMessage.MessageTypes.Information :
-                ExportImportMessage.MessageTypes.Warning
-                ));
-        }
+		/// <summary>
+		/// Maps EAV import messages to 2sxc import messages
+		/// </summary>
+		/// <param name="importLog"></param>
+		/// <returns></returns>
+		public IEnumerable<ExportImportMessage> GetExportImportMessagesFromImportLog(List<LogItem> importLog)
+		{
+			return importLog.Select(l => new ExportImportMessage(l.Message,
+				l.EntryType == EventLogEntryType.Error ? ExportImportMessage.MessageTypes.Error :
+				l.EntryType == EventLogEntryType.Information ? ExportImportMessage.MessageTypes.Information :
+				ExportImportMessage.MessageTypes.Warning
+				));
+		}
 
-        #region AttributeSets
+		#region AttributeSets
 
-        private List<AttributeSet> GetImportAttributeSets(IEnumerable<XElement> xAttributeSets)
-        {
-            var importAttributeSets = new List<AttributeSet>();
+		private List<AttributeSet> GetImportAttributeSets(IEnumerable<XElement> xAttributeSets)
+		{
+			var importAttributeSets = new List<AttributeSet>();
 
-            // Loop through AttributeSets
-            foreach (var attributeSet in xAttributeSets)
-            {
-                var attributes = new List<Attribute>();
-                var titleAttribute = new Attribute();
-                
-                foreach (var xElementAttribute in attributeSet.Element("Attributes").Elements("Attribute"))
-                {
-                    var attribute = new Attribute
-                    {
-                            StaticName = xElementAttribute.Attribute("StaticName").Value,
-                            Type = xElementAttribute.Attribute("Type").Value,
-                            AttributeMetaData = GetImportEntities(xElementAttribute.Elements("Entity"), DataSource.AssignmentObjectTypeIdFieldProperties)
-                        };
+			// Loop through AttributeSets
+			foreach (var attributeSet in xAttributeSets)
+			{
+				var attributes = new List<Attribute>();
+				var titleAttribute = new Attribute();
 
-                    attributes.Add(attribute);
+				foreach (var xElementAttribute in attributeSet.Element("Attributes").Elements("Attribute"))
+				{
+					var attribute = new Attribute
+					{
+						StaticName = xElementAttribute.Attribute("StaticName").Value,
+						Type = xElementAttribute.Attribute("Type").Value,
+						AttributeMetaData = GetImportEntities(xElementAttribute.Elements("Entity"), DataSource.AssignmentObjectTypeIdFieldProperties)
+					};
 
-                    // Set Title Attribute
-                    if (Boolean.Parse(xElementAttribute.Attribute("IsTitle").Value))
-                        titleAttribute = attribute;
-                }
+					attributes.Add(attribute);
 
-                // Add AttributeSet
-                importAttributeSets.Add(new AttributeSet
-                {
-                        StaticName = attributeSet.Attribute("StaticName").Value,
-                        Name = attributeSet.Attribute("Name").Value,
-                        Description = attributeSet.Attribute("Description").Value,
-                        Attributes = attributes,
-                        Scope = attributeSet.Attributes("Scope").Any() ? attributeSet.Attribute("Scope").Value : SexyContent.AttributeSetScope,
-						AlwaysShareConfiguration = AllowSystemChanges && attributeSet.Attributes("AlwaysShareConfiguration").Any() && Boolean.Parse(attributeSet.Attribute("AlwaysShareConfiguration").Value),
-                        TitleAttribute = titleAttribute
-                    });
-            }
+					// Set Title Attribute
+					if (Boolean.Parse(xElementAttribute.Attribute("IsTitle").Value))
+						titleAttribute = attribute;
+				}
 
-            return importAttributeSets;
-        }
+				// Add AttributeSet
+				importAttributeSets.Add(new AttributeSet
+				{
+					StaticName = attributeSet.Attribute("StaticName").Value,
+					Name = attributeSet.Attribute("Name").Value,
+					Description = attributeSet.Attribute("Description").Value,
+					Attributes = attributes,
+					Scope = attributeSet.Attributes("Scope").Any() ? attributeSet.Attribute("Scope").Value : SexyContent.AttributeSetScope,
+					AlwaysShareConfiguration = AllowSystemChanges && attributeSet.Attributes("AlwaysShareConfiguration").Any() && Boolean.Parse(attributeSet.Attribute("AlwaysShareConfiguration").Value),
+					TitleAttribute = titleAttribute
+				});
+			}
 
-        #endregion
+			return importAttributeSets;
+		}
 
-        #region Templates
+		#endregion
+
+		#region Templates
 
 		private void ImportXmlTemplates(XElement root)
 		{
@@ -377,7 +386,7 @@ namespace ToSic.SexyContent.ImportExport
 					if (xmlDemoEntityGuidString != "0" && xmlDemoEntityGuidString != "")
 					{
 						var xmlDemoEntityGuid = Guid.Parse(xmlDemoEntityGuidString);
-						if(_sexy.ContentContext.EntityExists(xmlDemoEntityGuid))
+						if (_sexy.ContentContext.EntityExists(xmlDemoEntityGuid))
 							xmlDemoEntityId = _sexy.ContentContext.GetEntity(xmlDemoEntityGuid).EntityID;
 					}
 
@@ -417,110 +426,93 @@ namespace ToSic.SexyContent.ImportExport
 				}
 
 				_sexy.Templates.UpdateTemplate(null, name, path, contentTypeStaticName, demoEntityId, presentationTypeStaticName, presentationDemoEntityId, listContentTypeStaticName, listContentDemoEntityId, listPresentationTypeStaticName, listPresentationDemoEntityId, type, isHidden, location, useForList, publishData, streamsToPublish, pipelineEntityId, viewNameInUrl);
-				
+
 				ImportLog.Add(new ExportImportMessage("Template '" + name + "' successfully imported.",
 													 ExportImportMessage.MessageTypes.Information));
 			}
 		}
 
-        #endregion
+		#endregion
 
-        #region Entities
+		#region Entities
 
-	    /// <summary>
-	    /// Returns a collection of EAV import entities
-	    /// </summary>
-	    /// <param name="entities"></param>
-	    /// <param name="defaultLanguage">example: de-DE</param>
-	    /// <param name="assignmentObjectTypeId"></param>
-	    /// <param name="keyNumber"></param>
-	    /// <returns></returns>
-	    private List<Entity> GetImportEntities(IEnumerable<XElement> entities, int assignmentObjectTypeId, int? keyNumber = null)
-        {
-            return entities.Select(e => GetImportEntity(e, assignmentObjectTypeId, keyNumber)).ToList();
-        }
+		/// <summary>
+		/// Returns a collection of EAV import entities
+		/// </summary>
+		/// <param name="entities"></param>
+		/// <param name="defaultLanguage">example: de-DE</param>
+		/// <param name="assignmentObjectTypeId"></param>
+		/// <param name="keyNumber"></param>
+		/// <returns></returns>
+		private List<Entity> GetImportEntities(IEnumerable<XElement> entities, int assignmentObjectTypeId, int? keyNumber = null)
+		{
+			return entities.Select(e => GetImportEntity(e, assignmentObjectTypeId, keyNumber)).ToList();
+		}
 
 
-        /// <summary>
+		/// <summary>
 		/// Returns an EAV import entity
-        /// </summary>
-        /// <param name="xEntity">The xml-Element of the entity to import</param>
-        /// <param name="assignmentObjectTypeId">assignmentObjectTypeId</param>
-        /// <param name="defaultLanguage">The default language / culture - exmple: de-DE</param>
-        /// <param name="keyNumber">The entity will be assigned to this keyNumber (optional)</param>
-        /// <returns></returns>
+		/// </summary>
+		/// <param name="xEntity">The xml-Element of the entity to import</param>
+		/// <param name="assignmentObjectTypeId">assignmentObjectTypeId</param>
+		/// <param name="defaultLanguage">The default language / culture - exmple: de-DE</param>
+		/// <param name="keyNumber">The entity will be assigned to this keyNumber (optional)</param>
+		/// <returns></returns>
 		private Entity GetImportEntity(XElement xEntity, int assignmentObjectTypeId, int? keyNumber = null)
-        {
+		{
 			switch (xEntity.Attribute("AssignmentObjectType").Value)
-	        {
+			{
 				// Special case: App AttributeSets must be assigned to the current app
 				case "App":
 					keyNumber = _appId;
 					assignmentObjectTypeId = SexyContent.AssignmentObjectTypeIDSexyContentApp;
 					break;
 				case "Data Pipeline":
-			        assignmentObjectTypeId = DataSource.AssignmentObjectTypeIdDataPipeline;
+					assignmentObjectTypeId = DataSource.AssignmentObjectTypeIdDataPipeline;
 					break;
-	        }
+			}
 
 			Guid? keyGuid = null;
 			if (xEntity.Attribute("KeyGuid") != null)
-		        keyGuid = Guid.Parse(xEntity.Attribute("KeyGuid").Value);
+				keyGuid = Guid.Parse(xEntity.Attribute("KeyGuid").Value);
 
-            // Special case #2: Corrent values of Template-Describing entities, and resolve files
-            
-            foreach (var sourceValue in xEntity.Elements("Value"))
-            {
-                var sourceValueString = sourceValue.Attribute("Value").Value;
-                var sourceKey = sourceValue.Attribute("Key").Value;
+			// Special case #2: Corrent values of Template-Describing entities, and resolve files
 
-                
-                if (!String.IsNullOrEmpty(sourceValueString))
-                {
-                    // Correct ContentTypeID and DemoEntityID
-					//if (xEntity.Attribute("AttributeSetStaticName").Value == SexyContent.AttributeSetStaticNameTemplateContentTypes)
-					//{
-					//	switch (sourceKey)
-					//	{
-					//		case "ContentTypeID":
-					//			var attributeSet = _sexy.ContentContext.AttributeSetExists(sourceValueString, _sexy.ContentContext.AppId) ? _sexy.ContentContext.GetAttributeSet(sourceValueString) : null;
-					//			sourceValue.Attribute("Value").SetValue(attributeSet != null ? attributeSet.AttributeSetID.ToString() : "0");
-					//			break;
-					//		case "DemoEntityID":
-					//			var entityGuid = new Guid(sourceValue.Attribute("Value").Value);
-					//			var demoEntity = _sexy.ContentContext.EntityExists(entityGuid) ? _sexy.ContentContext.GetEntity(entityGuid) : null;
-					//			sourceValue.Attribute("Value").SetValue(demoEntity != null ? demoEntity.EntityID.ToString() : "0");
-					//			break;
-					//	}
-					//}
+			foreach (var sourceValue in xEntity.Elements("Value"))
+			{
+				var sourceValueString = sourceValue.Attribute("Value").Value;
+				var sourceKey = sourceValue.Attribute("Key").Value;
 
-                    // Correct FileId in Hyperlink fields (takes XML data that lists files)
-                    if (sourceValue.Attribute("Type").Value == "Hyperlink")
-                    {
-                        var fileRegex = new Regex("^File:(?<FileId>[0-9]+)", RegexOptions.IgnoreCase);
-                        var a = fileRegex.Match(sourceValueString);
-                        if (a.Success && a.Groups["FileId"].Length > 0)
-                        {
-                            var originalId = int.Parse(a.Groups["FileId"].Value);
 
-                            if (_fileIdCorrectionList.ContainsKey(originalId))
-                            {
-                                var newValue = fileRegex.Replace(sourceValueString, "File:" + _fileIdCorrectionList[originalId]);
-                                sourceValue.Attribute("Value").SetValue(newValue);
-                            }
+				if (!String.IsNullOrEmpty(sourceValueString))
+				{
+					// Correct FileId in Hyperlink fields (takes XML data that lists files)
+					if (sourceValue.Attribute("Type").Value == "Hyperlink")
+					{
+						var fileRegex = new Regex("^File:(?<FileId>[0-9]+)", RegexOptions.IgnoreCase);
+						var a = fileRegex.Match(sourceValueString);
+						if (a.Success && a.Groups["FileId"].Length > 0)
+						{
+							var originalId = int.Parse(a.Groups["FileId"].Value);
 
-                        }
-                    }
-                }
+							if (_fileIdCorrectionList.ContainsKey(originalId))
+							{
+								var newValue = fileRegex.Replace(sourceValueString, "File:" + _fileIdCorrectionList[originalId]);
+								sourceValue.Attribute("Value").SetValue(newValue);
+							}
 
-            }
+						}
+					}
+				}
 
-            var importEntity = Eav.ImportExport.XmlImport.GetImportEntity(xEntity, assignmentObjectTypeId,
+			}
+
+			var importEntity = Eav.ImportExport.XmlImport.GetImportEntity(xEntity, assignmentObjectTypeId,
 				_targetDimensions, _sourceDimensions, _sourceDefaultDimensionId, DefaultLanguage, keyNumber);
 
-            return importEntity;
-        }
+			return importEntity;
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

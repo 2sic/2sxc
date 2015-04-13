@@ -3,7 +3,13 @@
 <%@ Import Namespace="ToSic.SexyContent" %>
 <%@ Import Namespace="System.IO" %>
 
-<h2>Will Export: App-<%= Sexy.App.Name %>-<%= Sexy.App.Configuration.Version %>.zip</h2>
+<%
+	var version = "";
+	if (Sexy.App.Configuration != null)
+		version = Sexy.App.Configuration.Version;
+%>
+
+<h2>Will Export: App-<%= Sexy.App.Name %>-<%= version %>.zip</h2>
 Specs:
 <ul>
     <li>
@@ -13,7 +19,7 @@ Specs:
         Guid:<%= Sexy.App.AppGuid %>
     </li>
     <li>
-        Version: <%= Sexy.App.Configuration.Version %>
+        Version: <%= version %>
     </li>
 </ul>
 <br /><br />
@@ -23,7 +29,7 @@ Contains:<br/>
         <%= DataSource.GetInitialDataSource(ZoneId.Value, AppId.Value).Out["Default"].List.Count %> Entities
     </li>
     <li>
-        <%= SexyContent.GetCulturesWithActiveState(PortalId, ZoneId.Value).Where(p => p.Active).Count() %> Languages
+        <%= SexyContent.GetCulturesWithActiveState(PortalId, ZoneId.Value).Count(p => p.Active) %> Languages
     </li>
     <li>
         <%= Sexy.Templates.GetAllTemplates().Count() %> templates
@@ -37,7 +43,7 @@ Contains:<br/>
     <li>
         <% if (Directory.Exists(Sexy.App.PhysicalPath))
            { %>
-            <%= new DirectoryInfo(Sexy.App.PhysicalPath).GetFiles("*.*", SearchOption.AllDirectories).Count() %> files int the App folder
+            <%= new DirectoryInfo(Sexy.App.PhysicalPath).GetFiles("*.*", SearchOption.AllDirectories).Count() %> files in the App folder
         <% }
            else
            { %>
@@ -49,7 +55,9 @@ Contains:<br/>
         ToDo: files in the portal folder (images/pdf etc.)
     </li>--%>
 </ul>
-
+<br/>
+<br/>
+<asp:CheckBox runat="server" Checked="False" ID="chkIncludeContentGroups" /> Include Content
 
 <ul class="dnnActions">
     <li>

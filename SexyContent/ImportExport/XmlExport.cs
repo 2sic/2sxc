@@ -40,7 +40,7 @@ namespace ToSic.SexyContent.ImportExport
         /// <param name="TemplateIDs"></param>
         /// <param name="Messages"></param>
         /// <returns></returns>
-        public string ExportXml(string[] AttributeSetIDs, string[] EntityIDs, string[] TemplateIDs, out List<ExportImportMessage> Messages)
+        public string ExportXml(string[] AttributeSetIDs, string[] EntityIDs, out List<ExportImportMessage> Messages)
         {
             _referencedFileIds = new List<int>();
             ReferencedFiles = new List<IFileInfo>();
@@ -124,40 +124,6 @@ namespace ToSic.SexyContent.ImportExport
 
             #endregion
 
-            #region Templates
-
-            var Templates = new XElement("Templates");
-
-            // Go through each Template
-            foreach (var TemplateID in TemplateIDs)
-            {
-                var id = int.Parse(TemplateID);
-                var t = Sexy.Templates.GetTemplate(id);
-                var demoEntity = t.ContentDemoEntity;
-				var pipelineEntity = t.Pipeline;
-
-                var template = new XElement("Template",
-                    new XAttribute("Name", t.Name),
-                    new XAttribute("Path", t.Path),
-                    new XAttribute("Location", t.Location),
-                    new XAttribute("Type", t.Type),
-                    new XAttribute("AttributeSetStaticName", t.ContentTypeStaticName),
-                    new XAttribute("IsHidden", t.IsHidden.ToString()),
-                    new XAttribute("UseForList", t.UseForList.ToString()),
-                    new XAttribute("DemoEntityGUID", demoEntity != null ? demoEntity.EntityGuid.ToString() : ""),
-                    new XAttribute("PublishData", t.PublishData),
-                    new XAttribute("StreamsToPublish", t.StreamsToPublish),
-					new XAttribute("ViewNameInUrl", t.ViewNameInUrl),
-					new XAttribute("PipelineEntityGUID", pipelineEntity != null ? pipelineEntity.EntityGuid.ToString() : ""),
-                    (from c in Sexy.ContentContext.GetEntities(SexyContent.AssignmentObjectTypeIDSexyContentTemplate, t.TemplateId, null, null)
-                     select GetEntityXElement(c))
-                );
-
-                Templates.Add(template);
-            }
-
-            #endregion
-
             // Create root node "SexyContent" and add ContentTypes, ContentItems and Templates
             Doc.Add(new XElement("SexyContent",
                 new XAttribute("FileVersion", ImportExport.FileVersion),
@@ -167,7 +133,6 @@ namespace ToSic.SexyContent.ImportExport
                 Header,
                 AttributeSets,
                 Entities,
-                Templates,
                 GetFilesXElements()));
 
             // Will be used to show an export protocoll in future
