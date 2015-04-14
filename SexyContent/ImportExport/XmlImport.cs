@@ -70,7 +70,7 @@ namespace ToSic.SexyContent.ImportExport
 			AllowSystemChanges = allowSystemChanges;
 		}
 
-		private bool IsCompatible(XDocument doc)
+		public bool IsCompatible(XDocument doc)
 		{
 			// Return if no Root Node "SexyContent"
 			if (!doc.Elements("SexyContent").Any())
@@ -123,19 +123,19 @@ namespace ToSic.SexyContent.ImportExport
 		}
 		#endregion
 
-		public bool IsCompatible(int zoneId, string xml)
-		{
-			// Parse XDocument from string
-			var doc = XDocument.Parse(xml);
-			return IsCompatible(doc);
-		}
+		//public bool IsCompatible(string xml)
+		//{
+		//	// Parse XDocument from string
+		//	var doc = XDocument.Parse(xml);
+		//	return IsCompatible(doc);
+		//}
 
 		/// <summary>
 		/// Creates an app and then imports the xml
 		/// </summary>
 		/// <param name="xml"></param>
 		/// <returns>AppId of the new imported app</returns>
-		public bool ImportApp(int zoneId, string xml, out int? appId)
+		public bool ImportApp(int zoneId, XDocument doc, out int? appId)
 		{
 			// Increase script timeout to prevent timeouts
 			HttpContext.Current.Server.ScriptTimeout = 300;
@@ -143,7 +143,7 @@ namespace ToSic.SexyContent.ImportExport
 			appId = new int?();
 
 			// Parse XDocument from string
-			var doc = XDocument.Parse(xml);
+			//var doc = XDocument.Parse(xml);
 
 			if (!IsCompatible(doc))
 			{
@@ -183,23 +183,17 @@ namespace ToSic.SexyContent.ImportExport
 				return false;
 			}
 
-			return ImportXml(zoneId, appId.Value, xml);
+			return ImportXml(zoneId, appId.Value, doc);
 		}
 
 		/// <summary>
 		/// Do the import
 		/// </summary>
-		/// <param name="xml">The previously exported XML</param>
-		/// <param name="userName">The username of the current user (will be logged in history)</param>
-		/// <returns></returns>
-		public bool ImportXml(int zoneId, int appId, string xml)
+		public bool ImportXml(int zoneId, int appId, XDocument doc)
 		{
 			_sexy = new SexyContent(zoneId, appId, false);
 			_appId = appId;
 			_zoneId = zoneId;
-
-			// Parse XDocument from string
-			var doc = XDocument.Parse(xml);
 
 			if (!IsCompatible(doc))
 			{

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Web.UI.WebControls;
+using System.Xml.Linq;
 using DotNetNuke.Entities.Portals;
 using ToSic.SexyContent.ImportExport;
 
@@ -30,13 +31,14 @@ namespace ToSic.SexyContent
 
             if (isZip)
             {
-                success = new ZipImport(ZoneId.Value, AppId.Value, UserInfo.IsSuperUser).ImportZip(importStream, Server, PortalSettings, messages, false);
+                success = new ZipImport(ZoneId.Value, AppId.Value, UserInfo.IsSuperUser).ImportZip(importStream, Server, PortalSettings, messages);
             }
             else
             {
-                var Xml = new StreamReader(importStream).ReadToEnd();
+                var xml = new StreamReader(importStream).ReadToEnd();
+	            var doc = XDocument.Parse(xml);
                 var import = new XmlImport(PortalSettings.Current.DefaultLanguage, PortalSettings.Current.UserInfo.Username);
-                success = import.ImportXml(ZoneId.Value, AppId.Value, Xml);
+				success = import.ImportXml(ZoneId.Value, AppId.Value, doc);
                 messages = import.ImportLog;
             }
 

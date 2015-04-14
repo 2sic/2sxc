@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Web;
+using System.Xml.Linq;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Web.Client.ClientResourceManagement;
 using ToSic.Eav;
@@ -124,7 +125,7 @@ namespace ToSic.SexyContent
 					File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/07.00.00.xml"));
 				//var xmlToImport = File.ReadAllText("../../../../Upgrade/07.00.00.xml");
 				var xmlImport = new XmlImport("en-US", userName, true);
-				var success = xmlImport.ImportXml(DataSource.DefaultZoneId, DataSource.MetaDataAppId, xmlToImport);
+				var success = xmlImport.ImportXml(DataSource.DefaultZoneId, DataSource.MetaDataAppId, XDocument.Parse(xmlToImport));
 
 				if (!success)
 				{
@@ -165,7 +166,7 @@ FROM            ToSIC_SexyContent_Templates INNER JOIN
                          ToSIC_EAV_Entities AS ToSIC_EAV_Entities_2 ON 
                          ToSIC_SexyContent_Templates.Temp_PresentationDemoEntityID = ToSIC_EAV_Entities_2.EntityID LEFT OUTER JOIN
                          ToSIC_EAV_Entities AS ToSIC_EAV_Entities_4 ON ToSIC_SexyContent_Templates.Temp_ListPresentationDemoEntityID = ToSIC_EAV_Entities_4.EntityID
-WHERE        (ToSIC_SexyContent_Templates.SysDeleted IS NULL)";
+WHERE        (ToSIC_SexyContent_Templates.SysDeleted IS NULL) AND ((SELECT COUNT(*) FROM ToSIC_EAV_Entities WHERE EntityGUID = ToSIC_SexyContent_Templates.Temp_NewTemplateGuid) = 0)";
 
 			var adapter = new SqlDataAdapter(sqlCommand, sqlConnection);
 			adapter.Fill(templates);
@@ -195,8 +196,8 @@ WHERE        (ToSIC_SexyContent_Templates.SysDeleted IS NULL)";
 					TemplateID = templateId,
 					Name = (string)t["Name"],
 					Path = (string)t["Path"],
-					NewEntityGuid = Guid.NewGuid(),
-					AlreadyImported = t["Temp_NewTemplateGuid"] != DBNull.Value,
+					NewEntityGuid = Guid.Parse((string)t["Temp_NewTemplateGuid"]),
+					//AlreadyImported = t["Temp_NewTemplateGuid"] != DBNull.Value,
 
 					ContentTypeId = getContentTypeStaticName(t["AttributeSetID"] == DBNull.Value ? new int?() : (int)t["AttributeSetID"]),
 					ContentDemoEntityGuids = t["ContentDemoEntityGuid"] == DBNull.Value ? new List<Guid>() : new List<Guid> { (Guid)t["ContentDemoEntityGuid"] },
@@ -233,7 +234,7 @@ WHERE        (ToSIC_SexyContent_Templates.SysDeleted IS NULL)";
                          ToSIC_SexyContent_ContentGroupItems.SysCreated, ToSIC_SexyContent_ContentGroupItems.SysCreatedBy, ToSIC_SexyContent_ContentGroupItems.SysModified, 
                          ToSIC_SexyContent_ContentGroupItems.SysModifiedBy, ToSIC_SexyContent_ContentGroupItems.SysDeleted, 
                          ToSIC_SexyContent_ContentGroupItems.SysDeletedBy, ModuleSettings.ModuleID, ToSIC_SexyContent_Templates.AppID, ToSIC_EAV_Apps.ZoneID, 
-                         ToSIC_EAV_Entities.EntityGUID, ToSIC_SexyContent_ContentGroupItems.EntityID, ToSIC_SexyContent_ContentGroupItems.Temp_NewContentGroupGuid
+                         ToSIC_EAV_Entities.EntityGUID, ToSIC_SexyContent_ContentGroupItems.EntityID, ToSIC_SexyContent_ContentGroupItems.Temp_NewContentGroupGuid, ToSIC_SexyContent_Templates.Temp_NewTemplateGuid
 FROM            ToSIC_SexyContent_Templates INNER JOIN
                          ModuleSettings INNER JOIN
                          ToSIC_SexyContent_ContentGroupItems ON ModuleSettings.SettingValue = ToSIC_SexyContent_ContentGroupItems.ContentGroupID ON 
@@ -241,7 +242,7 @@ FROM            ToSIC_SexyContent_Templates INNER JOIN
                          ToSIC_EAV_Apps ON ToSIC_SexyContent_Templates.AppID = ToSIC_EAV_Apps.AppID LEFT OUTER JOIN
                          ToSIC_EAV_Entities ON ToSIC_SexyContent_ContentGroupItems.EntityID = ToSIC_EAV_Entities.EntityID
 WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (ModuleSettings.SettingName = N'ContentGroupID') AND 
-                         (ToSIC_SexyContent_ContentGroupItems.Temp_NewContentGroupGuid IS NULL) ORDER BY SortOrder";
+                         ((SELECT COUNT(*) FROM ToSIC_EAV_Entities WHERE EntityGUID = ToSIC_SexyContent_ContentGroupItems.Temp_NewContentGroupGuid) = 0) ORDER BY SortOrder";
 
 			var adapterContentGroups = new SqlDataAdapter(sqlCommandContentGroups, sqlConnection);
 			adapterContentGroups.Fill(contentGroupItemsTable);
@@ -249,6 +250,7 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
 			var contentGroupItems = contentGroupItemsTable.AsEnumerable().Select(c => new
 			{
 				ContentGroupId = (int)c["ContentGroupID"],
+				NewContentGroupGuid = Guid.Parse((string)c["Temp_NewContentGroupGuid"]),
 				EntityId = c["EntityID"] == DBNull.Value ? new int?() : (int)c["EntityID"],
 				EntityGuid = c["EntityGUID"] == DBNull.Value ? (Guid?)null : ((Guid)c["EntityGUID"]),
 				TemplateId = c["TemplateID"] == DBNull.Value ? new int?() : (int)c["TemplateID"],
@@ -257,7 +259,7 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
 				ModuleId = (int)c["ModuleID"],
 				AppId = (int)c["AppID"],
 				ZoneId = (int)c["ZoneID"],
-				TemplateEntityGuids = existingTemplates.Where(e => c["TemplateID"] != DBNull.Value && e.TemplateID == (int)c["TemplateID"]).Select(e => e.NewEntityGuid).ToList()
+				TemplateEntityGuids = new List<Guid>() { Guid.Parse((string)c["Temp_NewTemplateGuid"]) }
 			});
 
 			var existingContentGroups = contentGroupItems.GroupBy(c => c.ContentGroupId, c => c, (id, items) =>
@@ -265,7 +267,9 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
 				var itemsList = items.ToList();
 				var contentGroup = new
 				{
-					NewEntityGuid = Guid.NewGuid(), itemsList.First().AppId, itemsList.First().ZoneId,
+					NewEntityGuid = itemsList.First().NewContentGroupGuid,
+					itemsList.First().AppId,
+					itemsList.First().ZoneId,
 					ContentGroupId = id,
 					TemplateGuids = itemsList.First().TemplateEntityGuids, itemsList.First().ModuleId,
 					ContentGuids = itemsList.Where(p => p.Type == "Content").Select(p => p.EntityGuid).ToList(),
@@ -286,9 +290,10 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
 
 			foreach (var app in apps)
 			{
+				var currentApp = app;
 				var entitiesToImport = new List<Entity>();
 
-				foreach (var t in existingTemplates.Where(t => t.AppId == app && !t.AlreadyImported))
+				foreach (var t in existingTemplates.Where(t => t.AppId == currentApp))
 				{
 					var entity = new Entity
 					{
@@ -320,10 +325,10 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
 					};
 					entitiesToImport.Add(entity);
 
-					if (sqlConnection.State != ConnectionState.Open)
-						sqlConnection.Open();
-					var sqlCmd = new SqlCommand("UPDATE ToSIC_SexyContent_Templates SET Temp_NewTemplateGuid = N'" + entity.EntityGuid + "' WHERE TemplateID = " + t.TemplateID, sqlConnection);
-					sqlCmd.ExecuteNonQuery();
+					//if (sqlConnection.State != ConnectionState.Open)
+					//	sqlConnection.Open();
+					//var sqlCmd = new SqlCommand("UPDATE ToSIC_SexyContent_Templates SET Temp_NewTemplateGuid = N'" + entity.EntityGuid + "' WHERE TemplateID = " + t.TemplateID, sqlConnection);
+					//sqlCmd.ExecuteNonQuery();
 				}
 
 				foreach (var t in existingContentGroups.Where(t => t.AppId == app))
@@ -345,10 +350,10 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
 					};
 					entitiesToImport.Add(entity);
 
-					if (sqlConnection.State != ConnectionState.Open)
-						sqlConnection.Open();
-					var sqlCmd = new SqlCommand("UPDATE ToSIC_SexyContent_ContentGroupItems SET Temp_NewContentGroupGuid = N'" + entity.EntityGuid + "' WHERE ContentGroupID = " + t.ContentGroupId, sqlConnection);
-					sqlCmd.ExecuteNonQuery();
+					//if (sqlConnection.State != ConnectionState.Open)
+					//	sqlConnection.Open();
+					//var sqlCmd = new SqlCommand("UPDATE ToSIC_SexyContent_ContentGroupItems SET Temp_NewContentGroupGuid = N'" + entity.EntityGuid + "' WHERE ContentGroupID = " + t.ContentGroupId, sqlConnection);
+					//sqlCmd.ExecuteNonQuery();
 				}
 
 				var import = new Eav.Import.Import(null, app, userName);
@@ -356,20 +361,20 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
 			}
 
 			// 4. Use new GUID ContentGroup-IDs on module settings
-			if (sqlConnection.State != ConnectionState.Open)
-				sqlConnection.Open();
-			var sqlCmdUpdateModuleSettings = new SqlCommand(@"INSERT INTO ModuleSettings
-                         (ModuleID, CreatedByUserID, CreatedOnDate, LastModifiedByUserID, LastModifiedOnDate, SettingName, SettingValue)
-SELECT DISTINCT       ModuleSettings_1.ModuleID, ModuleSettings_1.CreatedByUserID, ModuleSettings_1.CreatedOnDate, ModuleSettings_1.LastModifiedByUserID, 
-                         ModuleSettings_1.LastModifiedOnDate, 'ToSIC_SexyContent_ContentGroupGuid' AS SettingName, 
-                         ToSIC_SexyContent_ContentGroupItems.Temp_NewContentGroupGuid AS SettingValue
-FROM            ModuleSettings AS ModuleSettings_1 LEFT OUTER JOIN
-                         ToSIC_SexyContent_ContentGroupItems ON ModuleSettings_1.SettingValue = ToSIC_SexyContent_ContentGroupItems.ContentGroupID
-WHERE        (ModuleSettings_1.SettingName = N'ContentGroupID') AND (NOT (ToSIC_SexyContent_ContentGroupItems.Temp_NewContentGroupGuid IS NULL)) AND
-                             ((SELECT        COUNT(*) AS Expr1
-                                 FROM            ModuleSettings AS ModuleSettings_2
-                                 WHERE        (ModuleID = ModuleSettings_1.ModuleID) AND (SettingName = N'ToSIC_SexyContent_ContentGroupGuid')) = 0)", sqlConnection);
-			sqlCmdUpdateModuleSettings.ExecuteNonQuery();
+//			if (sqlConnection.State != ConnectionState.Open)
+//				sqlConnection.Open();
+//			var sqlCmdUpdateModuleSettings = new SqlCommand(@"INSERT INTO ModuleSettings
+//                         (ModuleID, CreatedByUserID, CreatedOnDate, LastModifiedByUserID, LastModifiedOnDate, SettingName, SettingValue)
+//SELECT DISTINCT       ModuleSettings_1.ModuleID, ModuleSettings_1.CreatedByUserID, ModuleSettings_1.CreatedOnDate, ModuleSettings_1.LastModifiedByUserID, 
+//                         ModuleSettings_1.LastModifiedOnDate, 'ToSIC_SexyContent_ContentGroupGuid' AS SettingName, 
+//                         ToSIC_SexyContent_ContentGroupItems.Temp_NewContentGroupGuid AS SettingValue
+//FROM            ModuleSettings AS ModuleSettings_1 LEFT OUTER JOIN
+//                         ToSIC_SexyContent_ContentGroupItems ON ModuleSettings_1.SettingValue = ToSIC_SexyContent_ContentGroupItems.ContentGroupID
+//WHERE        (ModuleSettings_1.SettingName = N'ContentGroupID') AND (NOT (ToSIC_SexyContent_ContentGroupItems.Temp_NewContentGroupGuid IS NULL)) AND
+//                             ((SELECT        COUNT(*) AS Expr1
+//                                 FROM            ModuleSettings AS ModuleSettings_2
+//                                 WHERE        (ModuleID = ModuleSettings_1.ModuleID) AND (SettingName = N'ToSIC_SexyContent_ContentGroupGuid')) = 0)", sqlConnection);
+//			sqlCmdUpdateModuleSettings.ExecuteNonQuery();
 		}
 
 		/// <summary>

@@ -168,6 +168,27 @@ WHERE        (ModuleSettings_1.SettingName = N'AppId') AND (DesktopModules.Modul
                                  WHERE        (ModuleID = ModuleSettings_1.ModuleID) AND (SettingName = N'ToSIC_SexyContent_AppName')) = 0)
 
 
+-- Insert new GUID for ContentGroups and Templates (will be used as EntityGuid while upgrading)
+EXEC('UPDATE ToSIC_SexyContent_Templates SET Temp_NewTemplateGuid = NEWID() WHERE Temp_NewTemplateGuid IS NULL')
+
+EXEC('UPDATE c SET Temp_NewContentGroupGuid = c1.newGuid FROM ToSIC_SexyContent_ContentGroupItems AS c
+LEFT OUTER JOIN (SELECT ContentGroupID, NEWID() AS newGuid  FROM ToSIC_SexyContent_ContentGroupItems GROUP BY ContentGroupID) c1
+ON c.ContentGroupID = c1.ContentGroupID WHERE Temp_NewContentGroupGuid IS NULL')
+
+
+-- Update ModuleSettings to use the new ContentGroupGuid instead of the old id
+EXEC('INSERT INTO ModuleSettings
+                         (ModuleID, CreatedByUserID, CreatedOnDate, LastModifiedByUserID, LastModifiedOnDate, SettingName, SettingValue)
+SELECT DISTINCT       ModuleSettings_1.ModuleID, ModuleSettings_1.CreatedByUserID, ModuleSettings_1.CreatedOnDate, ModuleSettings_1.LastModifiedByUserID, 
+                         ModuleSettings_1.LastModifiedOnDate, ''ToSIC_SexyContent_ContentGroupGuid'' AS SettingName, 
+                         ToSIC_SexyContent_ContentGroupItems.Temp_NewContentGroupGuid AS SettingValue
+FROM            ModuleSettings AS ModuleSettings_1 LEFT OUTER JOIN
+                         ToSIC_SexyContent_ContentGroupItems ON ModuleSettings_1.SettingValue = ToSIC_SexyContent_ContentGroupItems.ContentGroupID
+WHERE        (ModuleSettings_1.SettingName = N''ContentGroupID'') AND (NOT (ToSIC_SexyContent_ContentGroupItems.Temp_NewContentGroupGuid IS NULL)) AND
+                             ((SELECT        COUNT(*) AS Expr1
+                                 FROM            ModuleSettings AS ModuleSettings_2
+                                 WHERE        (ModuleID = ModuleSettings_1.ModuleID) AND (SettingName = N''ToSIC_SexyContent_ContentGroupGuid'')) = 0) AND ToSIC_SexyContent_ContentGroupItems.TemplateID IS NOT NULL')
+
 -- Commit the transaction
 COMMIT TRANSACTION SexyContentUpdate;
 --ROLLBACK TRANSACTION SexyContentUpdate;

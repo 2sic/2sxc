@@ -9,6 +9,8 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.FileSystem;
 using ICSharpCode.SharpZipLib.Zip;
+using ToSic.Eav;
+using ToSic.Eav.DataSources.Caches;
 
 namespace ToSic.SexyContent.ImportExport
 {
@@ -27,7 +29,7 @@ namespace ToSic.SexyContent.ImportExport
 
         public bool ImportApp(Stream zipStream, HttpServerUtility server, PortalSettings portalSettings, List<ExportImportMessage> messages)
         {
-			return ImportZip(zipStream, server, portalSettings, messages, true);
+			return ImportZip(zipStream, server, portalSettings, messages);
         }
 
         /// <summary>
@@ -38,11 +40,8 @@ namespace ToSic.SexyContent.ImportExport
         /// <param name="portalSettings"></param>
         /// <param name="messages"></param>
         /// <returns></returns>
-        public bool ImportZip(Stream zipStream, HttpServerUtility server, PortalSettings portalSettings, List<ExportImportMessage> messages, bool isAppImport)
+        public bool ImportZip(Stream zipStream, HttpServerUtility server, PortalSettings portalSettings, List<ExportImportMessage> messages)
         {
-            if(!isAppImport && !_appId.HasValue)
-                throw new Exception("Could not import zip: No valid app id");
-
             if (messages == null)
                 messages = new List<ExportImportMessage>();
 
@@ -82,10 +81,16 @@ namespace ToSic.SexyContent.ImportExport
                                 foreach (var xmlFileName in Directory.GetFiles(appDirectory, "*.xml"))
                                 {
                                     var fileContents = File.ReadAllText(Path.Combine(appDirectory, xmlFileName));
+	                                var doc = XDocument.Parse(fileContents);
 									var import = new XmlImport(PortalSettings.Current.DefaultLanguage, PortalSettings.Current.UserInfo.Username);
 
-									if (!import.IsCompatible(_zoneId, fileContents))
-										throw new Exception("The " + (isAppImport ? "app" : "package") + " is not compatible with this version of 2sxc.");
+									if (!import.IsCompatible(doc))
+										throw new Exception("The app / package is not compatible with this version of 2sxc.");
+
+									var isAppImport = doc.Element("SexyContent").Element("Header").Elements("App").Any() && doc.Element("SexyContent").Element("Header").Element("App").Attribute("Guid").Value != "Default";
+
+	                                if (!isAppImport && !_appId.HasValue)
+		                                _appId = ((BaseCache) DataSource.GetCache(_zoneId)).ZoneApps[_zoneId].DefaultAppId;
 
                                     if (isAppImport)
                                     {
@@ -109,12 +114,12 @@ namespace ToSic.SexyContent.ImportExport
                                                 CopyAllFilesDnnPortal(portalTempRoot, "", false, messages);
                                         }
 
-                                        import.ImportApp(_zoneId, fileContents, out appId);
+                                        import.ImportApp(_zoneId, doc, out appId);
                                     }
                                     else
                                     {
                                         appId = _appId.Value;
-                                        if (xmlIndex == 0 && import.IsCompatible(_zoneId, fileContents))
+                                        if (xmlIndex == 0 && import.IsCompatible(doc))
                                         {
                                             // Handle PortalFiles folder
                                             var portalTempRoot = Path.Combine(appDirectory, "PortalFiles");
@@ -122,7 +127,7 @@ namespace ToSic.SexyContent.ImportExport
                                                 CopyAllFilesDnnPortal(portalTempRoot, "", false, messages);
                                         }
 
-                                        import.ImportXml(_zoneId, appId.Value, fileContents);
+                                        import.ImportXml(_zoneId, appId.Value, doc);
                                     }
 
                                     
@@ -150,7 +155,7 @@ namespace ToSic.SexyContent.ImportExport
             catch (Exception e)
             {
                 // Add error message and return false
-                messages.Add(new ExportImportMessage("Could not import the " + (isAppImport ? "app" : "package") + ": " + e.Message, ExportImportMessage.MessageTypes.Error));
+                messages.Add(new ExportImportMessage("Could not import the app / package: " + e.Message, ExportImportMessage.MessageTypes.Error));
                 Exceptions.LogException(e);
                 success = false;
             }
@@ -192,7 +197,7 @@ namespace ToSic.SexyContent.ImportExport
             }
 
             using (var file = File.OpenRead(destinationPath))
-                success = ImportZip(file, HttpContext.Current.Server, PortalSettings.Current, messages, isAppImport);
+                success = ImportZip(file, HttpContext.Current.Server, PortalSettings.Current, messages);
 
             File.Delete(destinationPath);
 

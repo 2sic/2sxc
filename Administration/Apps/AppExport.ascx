@@ -57,7 +57,7 @@ Contains:<br/>
 </ul>
 <br/>
 <br/>
-<asp:CheckBox runat="server" Checked="False" ID="chkIncludeContentGroups" /> Include Content
+<asp:CheckBox runat="server" Checked="False" ID="chkIncludeContentGroups" /> Include all Content-Groups for re-import in copies of this exact site (only select this for creating site-copies with site-templates)
 
 <ul class="dnnActions">
     <li>
