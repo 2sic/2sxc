@@ -115,16 +115,5 @@ namespace ToSic.SexyContent
             return query;
         }
 
-        private SexyContent _sxc;
-        protected SexyContent Sxc
-        {
-            get
-            {
-                if (_sxc == null)
-                    _sxc = new SexyContent(ZoneId, AppId, true, OwnerPS.PortalId);
-                return _sxc;
-            }
-        }
-
     }
 }
