@@ -1,9 +1,12 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Web;
 using System.Web.Hosting;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.ValueProvider;
+using ToSic.SexyContent.DataSources;
 
 namespace ToSic.SexyContent
 {
@@ -92,6 +95,35 @@ namespace ToSic.SexyContent
                 return _data;
             }
             set { _data = value; }
+        }
+
+        public IDataSource Query(string queryName)
+        {
+            // 1. Find the entity describing this data source
+            var vFilter = DataSource.GetDataSource<ValueFilter>();
+            vFilter.Attach(DataSource.DefaultStreamName, _data[DataSource.DataPipelineStaticName]); 
+            vFilter.Attribute = "EntityTitle";
+            vFilter.Value = queryName;
+            var list = vFilter.Out[DataSource.DefaultStreamName].List;
+            if(list.Count == 0)
+                throw new Exception("Cannot find a query/datapipeline by the name of '" + queryName + "'");
+            var queryEntity = list.FirstOrDefault().Value;
+
+            var query = DataPipelineFactory.GetDataSource(AppId, queryEntity.EntityId,
+                (ValueCollectionProvider) _data.ConfigurationProvider);
+
+            return query;
+        }
+
+        private SexyContent _sxc;
+        protected SexyContent Sxc
+        {
+            get
+            {
+                if (_sxc == null)
+                    _sxc = new SexyContent(ZoneId, AppId, true, OwnerPS.PortalId);
+                return _sxc;
+            }
         }
 
     }

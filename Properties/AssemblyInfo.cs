@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("ToSic")]
 [assembly: AssemblyProduct("2SexyContent")]
-[assembly: AssemblyCopyright("© 2sic 2014")]
+[assembly: AssemblyCopyright("© 2sic 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: Guid("bd90b92e-79ec-4846-8998-b56277d5b2b4")]
 
