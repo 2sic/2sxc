@@ -612,7 +612,7 @@
 
     <package name="2SexyContent-App" type="Module" version="07.00.00">
       <friendlyName> App</friendlyName>
-      <description>2sxc (2SexyContent) App is an extension that allows to install and use a 2sxc app.</description>
+      <description>2sxc App is an extension that allows to install and use a 2sxc app.</description>
       <iconFile>icon-app.png</iconFile>
       <owner>
         <name>2sic</name>
@@ -637,7 +637,7 @@
             <moduleDefinitions>
               <moduleDefinition>
                 <definitionName>2Sexy Content App</definitionName>
-                <friendlyName>Content App</friendlyName>
+                <friendlyName>App</friendlyName>
                 <defaultCacheTime>0</defaultCacheTime>
                 <moduleControls>
                   <moduleControl>
