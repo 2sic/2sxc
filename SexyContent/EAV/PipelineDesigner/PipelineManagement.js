@@ -1,7 +1,10 @@
 ﻿// Config and Controller for the Pipeline Management UI
 angular.module('pipelineManagement', ['pipelineFactory', 'eavGlobalConfigurationProvider', 'ngResource']).
 	config(function ($locationProvider) {
-		$locationProvider.html5Mode(true);
+		$locationProvider.html5Mode({
+			enabled: true,
+			requireBase: false
+		});
 	}).
 	controller('PipelineManagementController', function ($rootScope, $scope, $location, $window, pipelineFactory) {
 		// Init
