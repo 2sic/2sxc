@@ -319,7 +319,7 @@ namespace ToSic.SexyContent.ImportExport
 
 				var contentTypeStaticName = template.Attribute("AttributeSetStaticName").Value;
 
-				if (cache.GetContentType(contentTypeStaticName) == null)
+				if (!String.IsNullOrEmpty(contentTypeStaticName) && cache.GetContentType(contentTypeStaticName) == null)
 				{
 					ImportLog.Add(
 							new ExportImportMessage(
