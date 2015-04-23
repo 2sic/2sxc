@@ -502,7 +502,7 @@ namespace ToSic.SexyContent.ImportExport
 			}
 
 			var importEntity = Eav.ImportExport.XmlImport.GetImportEntity(xEntity, assignmentObjectTypeId,
-				_targetDimensions, _sourceDimensions, _sourceDefaultDimensionId, DefaultLanguage, keyNumber);
+				_targetDimensions, _sourceDimensions, _sourceDefaultDimensionId, DefaultLanguage, keyNumber, keyGuid);
 
 			return importEntity;
 		}
