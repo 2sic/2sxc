@@ -205,6 +205,18 @@
                         url: 'View/Module/RenderTemplate',
                         params: { templateId: templateId }
                     });
+                },
+                changeOrder: function (sortOrder, destinationSortOrder) {
+                	return apiService(moduleId, {
+                		url: 'View/Module/ChangeOrder',
+                		params: { sortOrder: sortOrder, destinationSortOrder: destinationSortOrder }
+                	});
+                },
+                removeFromList: function (sortOrder) {
+                	return apiService(moduleId, {
+                		url: 'View/Module/RemoveFromList',
+                		params: { sortOrder: sortOrder }
+                	});
                 }
             };
         };
