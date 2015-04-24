@@ -125,8 +125,8 @@
 To do this, use the data publishing feature. This is configured at the View-Level. Read more about &lt;a href="http://2sxc.org/en/Docs/tag/Data%20and%20Data%20Sources" target="_blank"&gt;coding data pipelines&lt;/a&gt; and about &lt;a href="http://2sxc.org/en/Docs/tag/Data%20and%20Data%20Sources" target="_blank"&gt;using the data in JavaScript with jQuery, AngularJS and more&lt;/a&gt;.</value>
   </data>
   <data name="VisualDataPipelines.Text" xml:space="preserve">
-    <value>&lt;strong&gt;Visual Data Pipelines&lt;/strong&gt;&lt;br /&gt;
-Use the Pipeline-Designer to create queries to data from 2sxc, SQL, RSS and more.</value>
+    <value>&lt;strong&gt;Visual Data Query&lt;/strong&gt;&lt;br /&gt;
+Use the Visual Query Designer (Pipeline-Designer) to create queries to data from 2sxc, SQL, RSS and more.</value>
   </data>
   <data name="WebApi.Text" xml:space="preserve">
     <value>&lt;strong&gt;WebApi&lt;/strong&gt;&lt;br /&gt;
