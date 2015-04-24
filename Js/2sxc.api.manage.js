@@ -23,17 +23,33 @@ $2sxc.getManageController = function (id) {
                 manageController._openDialog(settings); 
             } },
         'add': { title: 'Add', icon: 'glyphicon-plus', lightbox: false, hideFirst: true,
-            action: function(settings) { 
+        	action: function (settings) {
+				// ToDo: Remove dependency to AngularJS, should use 2sxc.api.js
                 manageController._getSelectorScope().addItem(settings.sortOrder); 
             } },
         'publish': { title: 'Published', icon: 'glyphicon-eye-open disabled', icon2: 'glyphicon-eye-close disabled', lightbox: false, hideFirst: true, disabled: true,
             action: function(settings) { 
                 alert('Status: ' + (settings.isPublished ? 'published' : 'not published')); 
             } },
-        'remove': { title: 'remove', icon: 'glyphicon-remove-circle disabled', lightbox: false, hideFirst: true, disabled: true, 
-            action: function(settings) { 
-                alert('Remove not implemented yet');
-            } },
+        'moveup': {
+        	title: 'Move up', icon: 'glyphicon-arrow-up', icon2: 'glyphicon-arrow-up', lightbox: false, hideFirst: true, disabled: false,
+        	action: function (settings) {
+        		manageController._getSelectorScope().changeOrder(settings.sortOrder, Math.max(settings.sortOrder - 1, 0));
+        	}
+        },
+        'movedown': {
+        	title: 'Move down', icon: 'glyphicon-arrow-down', icon2: 'glyphicon-arrow-down', lightbox: false, hideFirst: true, disabled: false,
+        	action: function (settings) {
+        		manageController._getSelectorScope().changeOrder(settings.sortOrder, settings.sortOrder + 1);
+        	}
+        },
+        'remove': {
+        	title: 'remove', icon: 'glyphicon-remove-circle', lightbox: false, hideFirst: true, disabled: true,
+        	action: function (settings) {
+		        if (confirm("Do you really want to delete this item?")) {
+			        manageController._getSelectorScope().removeFromList(settings.sortOrder);
+		        }
+	        } },
         'more': { title: 'More', icon: 'glyphicon-option-horizontal', icon2: 'glyphicon-option-vertical', borlightboxder: false, hideFirst: false,
             action: function(settings, clickEvt) { 
                 $(clickEvt.target).toggleClass(this.icon).toggleClass(this.icon2).closest('ul.sc-menu').toggleClass('showAll'); 
@@ -168,8 +184,11 @@ $2sxc.getManageController = function (id) {
                 // add applicable list buttons - add=add item below; new=lightbox-dialog
                 if (toolbarConfig.isList && settings.sortOrder != -1) {
                     buttons.push($.extend({}, settings, { action: 'new' }));
-                    if (settings.useModuleList)
-                        buttons.push($.extend({}, settings, { action: 'add' }));
+	                if (settings.useModuleList) {
+	                	buttons.push($.extend({}, settings, { action: 'add' }));
+	                	buttons.push($.extend({}, settings, { action: 'moveup' }));
+	                	buttons.push($.extend({}, settings, { action: 'movedown' }));
+	                }
                 }
                 buttons.push($.extend({}, settings, { action: 'publish' }));
                 buttons.push($.extend({}, settings, { action: 'remove' }));
