@@ -57,7 +57,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 		/// Query the Result of a Pipline using Test-Parameters
 		/// </summary>
 		[HttpGet]
-		public Dictionary<string, IEnumerable<IEntity>> QueryPipeline(int appId, int id)
+		public dynamic QueryPipeline(int appId, int id)
 		{
 			return _controller.QueryPipeline(appId, id);
 		}

@@ -396,7 +396,7 @@ pipelineDesigner.controller('PipelineDesignerController',
 					uiNotification.clear();
 					eavDialogService.open({
 						title: 'Query result',
-						content: '<div>The following Result was also logged to the Browser Console.<pre id="pipelineQueryResult">' + $filter('json')(success) + '</pre></div>'
+						content: '<div>The Result was logged to the Browser Console; best view it there. Here the first 500 characters: <pre id="pipelineQueryResult">' + $filter('json')(success).substring(0, 500) + '...</pre></div>'
 					});
 					$log.debug(success);
 				}, function (reason) {
