@@ -144,10 +144,21 @@
             $(".DnnModule-" + moduleId + " .sc-viewport").html(renderedTemplate);
         };
 
+		// ToDo: Remove this here, as it's not used in TemplateSelector - should move to 2sxc.api.manage.js
         $scope.addItem = function(sortOrder) {
             moduleApi.addItem(sortOrder).then(function () {
                 $scope.renderTemplate($scope.templateId);
             });
+        };
+        $scope.removeFromList = function (sortOrder) {
+        	moduleApi.removeFromList(sortOrder).then(function () {
+        		$scope.renderTemplate($scope.templateId);
+        	});
+        };
+        $scope.changeOrder = function (sortOrder, desintationSortOrder) {
+        	moduleApi.changeOrder(sortOrder, desintationSortOrder).then(function () {
+        		$scope.renderTemplate($scope.templateId);
+        	});
         };
 
     });
