@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Hosting;
@@ -97,22 +98,26 @@ namespace ToSic.SexyContent
             set { _data = value; }
         }
 
-        public IDataSource Query(string queryName)
+        /// <summary>
+        /// Cached list of queries
+        /// </summary>
+        private IDictionary<string, IDataSource> _queries;
+
+        /// <summary>
+        /// Accessor to queries. Use like:
+        /// - App.Query.Count
+        /// - App.Query.ContainsKey(...)
+        /// - App.Query["One Event"].List
+        /// </summary>
+        public IDictionary<string, IDataSource> Query// (string queryName)
         {
-            // 1. Find the entity describing this data source
-            var vFilter = DataSource.GetDataSource<ValueFilter>();
-            vFilter.Attach(DataSource.DefaultStreamName, _data[DataSource.DataPipelineStaticName]); 
-            vFilter.Attribute = "EntityTitle";
-            vFilter.Value = queryName;
-            var list = vFilter.Out[DataSource.DefaultStreamName].List;
-            if(list.Count == 0)
-                throw new Exception("Cannot find a query/datapipeline by the name of '" + queryName + "'");
-            var queryEntity = list.FirstOrDefault().Value;
+            get
+            {
+                if (_queries == null)
+                    _queries = DataPipeline.AllPipelines(ZoneId, AppId, Data.ConfigurationProvider);
 
-            var query = DataPipelineFactory.GetDataSource(AppId, queryEntity.EntityId,
-                (ValueCollectionProvider) _data.ConfigurationProvider);
-
-            return query;
+                return _queries;
+            }
         }
 
     }
