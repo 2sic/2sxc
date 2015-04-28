@@ -198,14 +198,20 @@ namespace ToSic.SexyContent.DataImportExport
                     var attributes = contentType.GetAttributes();
                     foreach (var attribute in attributes)
                     {   
+                        var valueType = attribute.Type;
                         var valueName = attribute.StaticName;
                         var value = documentElement.GetChildElementValue(valueName);
-                        if (value == null || value.IsValueDefault())
+                        if (value == null || value.IsValueNull())
                         {
                             continue;
                         }
 
-                        var valueType = attribute.Type;
+                        if (value.IsValueEmpty())
+                        {   // It is an empty string
+                            entity.AppendAttributeValue(valueName, "", attribute.Type, documentElementLanguage, false, resourceReference.IsResolve());
+                            continue;
+                        }
+
                         var valueReferenceLanguage = value.GetValueReferenceLanguage();
                         if (valueReferenceLanguage == null)
                         {   // It is not a value reference.. it is a normal text

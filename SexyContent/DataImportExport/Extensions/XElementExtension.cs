@@ -29,11 +29,19 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
         {
             if (value == null)
             {
-                element.Append(name, "=default()");
+                element.Append(name, "=()");
             }
+            else if (value.Value == null)
+            {
+                element.Append(name, "=()");
+            }            
             else if (resourceReferenceOption.IsResolve())
             {
                 element.Append(name, value.ResolveValueReference());
+            }
+            else if (value.Value == string.Empty)
+            {
+                element.Append(name, "=(\"\")");
             }
             else
             {
@@ -62,7 +70,7 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
             var value = entity.GetAttributeValue(attribute, language);
             if (value == null)
             {
-                element.Append(valueName, "=default()");
+                element.Append(valueName, "=()");
                 return;
             }
 
