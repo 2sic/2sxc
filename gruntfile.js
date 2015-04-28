@@ -7,7 +7,7 @@ module.exports = function(grunt) {
         ngAnnotate: {
             options: {
                 // Task-specific options go here. 
-                sourceMap: true
+                // disable sourceMap for now as we can't pass it through to uglify yet (don't know how) sourceMap: true
             },
             Sxc4ng: {
                 files: {
@@ -30,7 +30,7 @@ module.exports = function(grunt) {
                 files: {
                     'Js/AngularJS/2sxc4ng.min.js': ['Js/AngularJS/2sxc4ng.annotated.js']
                 }
-            },
+            }, 
             SxcCore: {
                 files: {
                     'Js/2sxc.api.min.js': ['Js/2sxc.api.js'],
