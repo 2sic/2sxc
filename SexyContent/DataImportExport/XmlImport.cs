@@ -149,8 +149,10 @@ namespace ToSic.SexyContent.DataImportExport
                     return;
                 }
 
-                var documentRoot = Document.Element(DocumentNodeNames.Root + contentType.Name.RemoveSpecialCharacters());
-                if (documentRoot == null)
+                var documentRoot = Document.Element(DocumentNodeNames.Root);
+                
+                var documentTypeAttribute = documentRoot.Attribute(DocumentNodeNames.RootTypeAttribute);
+                if (documentTypeAttribute == null || documentTypeAttribute.Value == null || documentTypeAttribute.Value != contentType.Name.RemoveSpecialCharacters())
                 {
                     ErrorProtocol.AppendError(ImportErrorCode.InvalidRoot);
                     return;

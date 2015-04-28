@@ -125,7 +125,7 @@ namespace ToSic.SexyContent.DataImportExport
 
         private static XElement GetDocumentRoot(string contentTypeName, params object[] content)
         {
-            return new XElement(DocumentNodeNames.Root + contentTypeName.RemoveSpecialCharacters(), content);
+            return new XElement(DocumentNodeNames.Root, new XAttribute(DocumentNodeNames.RootTypeAttribute, contentTypeName.RemoveSpecialCharacters()), content);
         }
 
         private static XElement GetDocumentEntityElement(object elementGuid, object elementLanguage)
