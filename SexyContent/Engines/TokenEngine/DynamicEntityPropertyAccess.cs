@@ -42,6 +42,10 @@ namespace ToSic.SexyContent.Engines.TokenEngine
 			if (_entity == null)
 				return string.Empty;
 
+            // 2015-04-25 - 2dm - must discuss w/2rm
+            // Looks like very duplicate code! Try this instead
+		    // return _entity.GetEntityValue(strPropertyName);
+
 			var outputFormat = strFormat == string.Empty ? "g" : strFormat;
 
 			bool propertyNotFound;

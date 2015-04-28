@@ -15,7 +15,7 @@ namespace ToSic.SexyContent.Administration
             
             // Add DNN Version
             gettingStartedSrc += "DnnVersion=" + Assembly.GetAssembly(typeof(Globals)).GetName().Version.ToString(4);
-            // Add 2SexyContent Version
+            // Add 2sxc Version
             gettingStartedSrc += "&2SexyContentVersion=" + SexyContent.ModuleVersion;
             // Add module type
             gettingStartedSrc += "&ModuleName=" + ModuleConfiguration.DesktopModule.ModuleName;

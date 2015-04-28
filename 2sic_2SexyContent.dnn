@@ -2,7 +2,7 @@
   <packages>
     <package name="2SexyContent" type="Module" version="07.00.00">
       <friendlyName> Content</friendlyName>
-      <description>2sxc (2SexyContent) is a DotNetNuke Extension to create attractive and designed content. It solves the common problem, allowing the web designer to create designed templates for different content elements, so that the user must only fill in fields and receive a perfectly designed and animated output.</description>
+      <description>2sxc is a DotNetNuke Extension to create attractive and designed content. It solves the common problem, allowing the web designer to create designed templates for different content elements, so that the user must only fill in fields and receive a perfectly designed and animated output.</description>
       <iconFile>icon.png</iconFile>
       <owner>
         <name>2sic</name>
