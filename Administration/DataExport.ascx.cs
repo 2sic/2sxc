@@ -148,7 +148,7 @@ namespace ToSic.SexyContent.Administration
             
             if (RecordExportOptionSelected.IsBlank())
             {
-                dataXml = dataSerializer.CreateBlankXml(ZoneId.Value, ApplicationId, ContentTypeIdSelected);
+                dataXml = dataSerializer.CreateBlankXml(ZoneId.Value, ApplicationId, ContentTypeIdSelected, LocalizeString("BlankExportHelp"));
             }
             else
             {

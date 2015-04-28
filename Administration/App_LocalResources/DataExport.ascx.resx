@@ -177,4 +177,7 @@
   <data name="lblInformationLimitations.Text" xml:space="preserve">
     <value />
   </data>
+  <data name="BlankExportHelp.Text" xml:space="preserve">
+    <value>Visit http://2sxc.org/help for instructions.</value>
+  </data>
 </root>
