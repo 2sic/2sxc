@@ -81,7 +81,11 @@ namespace ToSic.SexyContent.DataImportExport
                     var attributes = contentType.GetAttributes();
                     foreach (var attribute in attributes)
                     {
-                        if (languageReference.IsResolve())
+                        if (attribute.Type == "Entity")
+                        {   // Handle separately
+                            documentElement.AppendEntityReferences(entity, attribute);
+                        }
+                        else if (languageReference.IsResolve())
                         {
                             documentElement.AppendValueResolved(entity, attribute, language, languageFallback, resourceReference);
                         }

@@ -21,6 +21,14 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
             element.Add(new XElement(name, value));
         }
 
+        public static void AppendEntityReferences(this XElement element, Entity entity, Attribute attribute)
+        {
+            var entityGuids = attribute.ToSIC_EAV_EntityRelationships.Where(rel => rel.ParentEntityID == entity.EntityID)
+                                                                     .Select(rel => rel.ChildEntity.EntityGUID);
+            var entityGuidsString = string.Join(",", entityGuids);
+            element.Append(attribute.StaticName, entityGuidsString);
+        }
+
         /// <summary>
         /// Append an element to this. The element will have the value of the EavValue. File and page references 
         /// can optionally be resolved.
