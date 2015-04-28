@@ -121,7 +121,7 @@
     <value>Cancel</value>
   </data>
   <data name="btnTestData.Text" xml:space="preserve">
-    <value>Test XML</value>
+    <value>Preview Import</value>
   </data>
   <data name="lblContentType.Text" xml:space="preserve">
     <value>Content-type</value>
@@ -133,7 +133,7 @@
     <value>Choose file</value>
   </data>
   <data name="lblIntro.Text" xml:space="preserve">
-    <value>Help: Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</value>
+    <value>This will import content-items / data into 2sxc. It requires that you already defined the Content-Type before you try importing, and that you created the import-file using the template provided by the Export. Please visit &lt;a href="http://2sxc.org/help" target="_blank"&gt;http://2sxc.org/help&lt;/a&gt; for more instructions.</value>
   </data>
   <data name="lblEntityClear.Text" xml:space="preserve">
     <value>Clear all other entities</value>
@@ -157,7 +157,7 @@
     <value>Try to resolve pathes to references (for example File:4711)</value>
   </data>
   <data name="lblSetupTitle.Text" xml:space="preserve">
-    <value>2sxc - Import Data Step 1 of 2</value>
+    <value>Import Content / Data Step 1 of 3</value>
   </data>
   <data name="btnBack.Text" xml:space="preserve">
     <value>Back</value>
@@ -175,19 +175,19 @@
     <value>{0} columns: {1}</value>
   </data>
   <data name="lblDetailDetailsDelete.Text" xml:space="preserve">
-    <value>Delete {0} entities</value>
+    <value>Delete {0} content-items</value>
   </data>
   <data name="lblDetailElementCount.Text" xml:space="preserve">
-    <value>{0} records</value>
+    <value>{0} content-items (records/entities)</value>
   </data>
   <data name="lblDetailEntitiesCreate.Text" xml:space="preserve">
-    <value>Create {0} entities</value>
+    <value>Create {0} content-items</value>
   </data>
   <data name="lblDetailEntitiesTitle.Text" xml:space="preserve">
-    <value>Import would:</value>
+    <value>If you press Import, it will:</value>
   </data>
   <data name="lblDetailEntitiesUpdate.Text" xml:space="preserve">
-    <value>Update {0} entities</value>
+    <value>Update {0} content-items</value>
   </data>
   <data name="lblDetailFileTitle.Text" xml:space="preserve">
     <value>File contains:</value>
@@ -199,13 +199,13 @@
     <value>{0} languages</value>
   </data>
   <data name="lblDetailTitle.Text" xml:space="preserve">
-    <value>2sxc - Import Data Step 2 of 3</value>
+    <value>Import Content / Data Step 2 of 3</value>
   </data>
   <data name="lblDoneInfo.Text" xml:space="preserve">
     <value>Import: {0}</value>
   </data>
   <data name="lblDoneTitle.Text" xml:space="preserve">
-    <value>2sxc - Import Data Step 3 of 3</value>
+    <value>Import Content / Data Step 3 of 3</value>
   </data>
   <data name="lblErrorInfo.Text" xml:space="preserve">
     <value>Try to import: {0}</value>
@@ -214,13 +214,13 @@
     <value>File contains the following errors:</value>
   </data>
   <data name="lblErrorTitle.Text" xml:space="preserve">
-    <value>2sxc - Import Data</value>
+    <value>Import Content / Data Step 2 of 3 - Error</value>
   </data>
   <data name="lblDoneResultFailed.Text" xml:space="preserve">
     <value>Failed!&lt;br /&gt;{0}</value>
   </data>
   <data name="lblDoneResultSucceeded.Text" xml:space="preserve">
-    <value>Succeeded!</value>
+    <value>Import Successful!</value>
   </data>
   <data name="lblErrorProtocolErrorDetail.Text" xml:space="preserve">
     <value>&lt;br/&gt;&lt;i&gt;Details: {0}&lt;/i&gt;</value>
@@ -238,13 +238,13 @@
     <value>Languages</value>
   </data>
   <data name="lblLanguageInfo.Text" xml:space="preserve">
-    <value>Auto: Use languages specified in the file</value>
+    <value>Auto: Use language(s) specified in the file</value>
   </data>
   <data name="lblLanguageReference.Text" xml:space="preserve">
     <value>Value references to other languages</value>
   </data>
   <data name="lblLanguageReferenceInfo.Text" xml:space="preserve">
-    <value>Auto: Import as references (for example [ref(en-US,ro)]</value>
+    <value>Auto: Import as reference (a DE title [ref(en-US,ro)] references the EN-title in read-only)</value>
   </data>
   <data name="btnDetailShowDebug.Text" xml:space="preserve">
     <value>Show details</value>
@@ -256,6 +256,6 @@
     <value>Test XML detailed</value>
   </data>
   <data name="lblInformationImportTime.Text" xml:space="preserve">
-    <value>Note: The import may take several minutes.</value>
+    <value>Note: The import validates much data and may take several minutes.</value>
   </data>
 </root>

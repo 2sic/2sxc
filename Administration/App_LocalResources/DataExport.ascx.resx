@@ -121,7 +121,7 @@
     <value>Cancel</value>
   </data>
   <data name="btnExportData.Text" xml:space="preserve">
-    <value>Export to XML</value>
+    <value>Export</value>
   </data>
   <data name="LanguageMissingExportCreate.Text" xml:space="preserve">
     <value>Yes, also create rows for untranslated languages</value>
@@ -142,7 +142,7 @@
     <value>All</value>
   </data>
   <data name="lblIntro.Text" xml:space="preserve">
-    <value>This will generate an XML file which you can edit in Excel (or your favorit XML editor). If you just want to import new data, use this to export the data schema that you can fill in using Excel. Please visit &lt;a href="http://2sxc.org/help" target="_blank"&gt;http://2sxc.org/help&lt;/a&gt; for more instructions.</value>
+    <value>This will generate an XML file which you can edit in Excel. If you just want to import new data, use this to export the structure (schema) that you can then fill in using Excel. Please visit &lt;a href="http://2sxc.org/help" target="_blank"&gt;http://2sxc.org/help&lt;/a&gt; for more instructions.</value>
   </data>
   <data name="lblLanguage.Text" xml:space="preserve">
     <value>Language</value>
@@ -160,19 +160,19 @@
     <value>Keep references (for re-import, for example Page:4711)</value>
   </data>
   <data name="ResourceReferenceExportResolve.Text" xml:space="preserve">
-    <value>Replace references with real urls (for example /Portals/0...)</value>
+    <value>Replace references with real URLs (for example /Portals/0...)</value>
   </data>
   <data name="lblRecordExport.Text" xml:space="preserve">
     <value>Export data</value>
   </data>
   <data name="RecordExportAll.Text" xml:space="preserve">
-    <value>Yes, export all records</value>
+    <value>Yes, export all content-items</value>
   </data>
   <data name="RecordExportBlank.Text" xml:space="preserve">
     <value>No, just export blank data schema (for new data import)</value>
   </data>
   <data name="lblTitle.Text" xml:space="preserve">
-    <value>2sxc - Export Data</value>
+    <value>Export Content / Data</value>
   </data>
   <data name="lblInformationLimitations.Text" xml:space="preserve">
     <value />

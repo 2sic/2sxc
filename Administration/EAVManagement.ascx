@@ -18,10 +18,10 @@
    { %>
 <ul class="dnnActions">
 	<li>
-		<a href="<%= EditUrl(TabId, SexyContent.ControlKeys.DataExport, true, "mid=" + ModuleId + "&" + SexyContent.AppIDString + "=" + Request.QueryString[SexyContent.AppIDString]) %>" class="dnnSecondaryAction">Export Data (beta)</a>
+		<a href="<%= EditUrl(TabId, SexyContent.ControlKeys.DataExport, true, "mid=" + ModuleId + "&" + SexyContent.AppIDString + "=" + Request.QueryString[SexyContent.AppIDString]) %>" class="dnnSecondaryAction">Export Content / Data</a>
 	</li>
 	<li>
-		<a href="<%= EditUrl(TabId, SexyContent.ControlKeys.DataImport, true, "mid=" + ModuleId + "&" + SexyContent.AppIDString + "=" + Request.QueryString[SexyContent.AppIDString]) %>" class="dnnSecondaryAction">Import Data (beta)</a>
+		<a href="<%= EditUrl(TabId, SexyContent.ControlKeys.DataImport, true, "mid=" + ModuleId + "&" + SexyContent.AppIDString + "=" + Request.QueryString[SexyContent.AppIDString]) %>" class="dnnSecondaryAction">Import Content / Data</a>
 	</li>
 </ul>
 <% } %>
