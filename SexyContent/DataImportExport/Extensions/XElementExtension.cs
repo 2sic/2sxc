@@ -37,11 +37,11 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
         {
             if (value == null)
             {
-                element.Append(name, "=()");
+                element.Append(name, "[]");
             }
             else if (value.Value == null)
             {
-                element.Append(name, "=()");
+                element.Append(name, "[]");
             }            
             else if (resourceReferenceOption.IsResolve())
             {
@@ -49,7 +49,7 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
             }
             else if (value.Value == string.Empty)
             {
-                element.Append(name, "=(\"\")");
+                element.Append(name, "[\"\"]");
             }
             else
             {
@@ -70,7 +70,7 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
 
         /// <summary>
         /// Append an element to this. The element will get the name of the attribute, and if possible the value will 
-        /// be referenced to another language (for example =ref(en-US,ro).
+        /// be referenced to another language (for example [ref(en-US,ro)].
         /// </summary>
         public static void AppendValueReferenced(this XElement element, Entity entity, Attribute attribute, string language, string languageFallback, IEnumerable<string> languageScope, bool referenceParentLanguagesOnly, ResourceReferenceExport resourceReferenceOption)
         {
@@ -78,7 +78,7 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
             var value = entity.GetAttributeValue(attribute, language);
             if (value == null)
             {
-                element.Append(valueName, "=()");
+                element.Append(valueName, "[]");
                 return;
             }
 
@@ -119,7 +119,7 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
                 return;
             }
 
-            element.Append(valueName, string.Format("=ref({0},{1})", valueLanguageReferenced, valueLanguageReadOnly ? "ro" : "rw"));
+            element.Append(valueName, string.Format("[ref({0},{1})]", valueLanguageReferenced, valueLanguageReadOnly ? "ro" : "rw"));
         }
     
         public static string GetChildElementValue(this XElement element, string childElementName)

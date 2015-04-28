@@ -244,7 +244,7 @@
     <value>Value references to other languages</value>
   </data>
   <data name="lblLanguageReferenceInfo.Text" xml:space="preserve">
-    <value>Auto: Import as references (for example =ref(en-US,ro))</value>
+    <value>Auto: Import as references (for example [ref(en-US,ro)]</value>
   </data>
   <data name="btnDetailShowDebug.Text" xml:space="preserve">
     <value>Show details</value>
