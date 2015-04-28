@@ -9,7 +9,8 @@ namespace _2Sexy_Content_Test
 		[TestMethod]
 		public void TestMethod1()
 		{
-			SexyContentModuleUpgrade.UpgradeModule("07.00.00");
+			// ToDo: This is not a unit test, but a "system" test... move it somewhere else?
+			//SexyContentModuleUpgrade.UpgradeModule("07.00.00");
 		}
 	}
 }
