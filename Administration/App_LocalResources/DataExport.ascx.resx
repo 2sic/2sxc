@@ -142,7 +142,7 @@
     <value>All</value>
   </data>
   <data name="lblIntro.Text" xml:space="preserve">
-    <value>This will generate an XML file which you can edit in Excel (or your favorit XML editor). If you just want to import new data, use this to export the data schema that you can fill in using Excel.</value>
+    <value>This will generate an XML file which you can edit in Excel (or your favorit XML editor). If you just want to import new data, use this to export the data schema that you can fill in using Excel. Please visit &lt;a href="http://2sxc.org/help" target="_blank"&gt;http://2sxc.org/help&lt;/a&gt; for more instructions.</value>
   </data>
   <data name="lblLanguage.Text" xml:space="preserve">
     <value>Language</value>
