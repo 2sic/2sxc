@@ -11,7 +11,7 @@
     <fieldset>
         <%= LocalizeString("SxcDataHelp.Text") %><br /><br/>
 		<%= LocalizeString("VisualDataPipelines.Text") %><br/><br/>
-		<a href="<%= PipelineManagementDnnWrapper.GetEditUrl(this, AppId.Value) %>" class="dnnPrimaryAction">Visual Pipeline Designer</a>
+		<a href="<%= PipelineManagementDnnWrapper.GetEditUrl(this, AppId.Value) %>" class="dnnPrimaryAction">Visual Query Designer</a>
 		<br/><br/>
 	    <%= LocalizeString("WebApi.Text") %><br/><br/>
         The following list shows the .cs files in the App-API folder:<br/>

@@ -35,15 +35,6 @@
         </p>
     </div>
     <div>
-        <h5>Data Pipelines</h5>
-        <p>Data Pipelines are used to get and prepare Custom Data. They are used in Templates and the JavaScript API.</p>
-        <p>
-            <a class="dnnPrimaryAction" href="<%= PipelineManagementDnnWrapper.GetEditUrl(this, AppId.Value) %>">
-                Manage Pipelines
-            </a>
-        </p>
-    </div>
-    <div>
         <h5>Other actions</h5>
         <p>
             <a class="dnnSecondaryAction" href="<%= Sexy.GetMetaDataEditUrl(TabId, ModuleId, Request.RawUrl, this, SexyContent.AttributeSetStaticNameApps, SexyContent.AssignmentObjectTypeIDSexyContentApp, AppId.Value) %>">Edit App Definition</a>

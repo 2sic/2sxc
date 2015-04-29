@@ -6,7 +6,10 @@
 
 <asp:Panel runat="server" class="dnnForm dnnSexyContentExport dnnClear" id="pnlChoose" ng-app="2sxc-Export">
     <h2 class="dnnFormSectionHead" runat="server" id="dnnSitePanelExport"><asp:Label runat="server" ID="lblExportHeading" ResourceKey="lblExportHeading"></asp:Label></h2>
-    <div class="dnnFormMessage dnnFormInfo">Many features are not automated yet – for example you can add the images used by your entities to your zip, and they will be imported automatically. To discover these features, please unpack the Getting-Started package. </div>
+    <div class="dnnFormInfo">
+        <asp:Label runat="server" ID="Label2" ResourceKey="lblPartialExportIntro"></asp:Label>
+    </div>
+
     <fieldset>
         <div id="pnlExportView" ng-controller="ExportController" runat="server">
             
