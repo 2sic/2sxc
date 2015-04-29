@@ -188,6 +188,11 @@ namespace ToSic.SexyContent.Administration
             ShowSetupPanel();
         }
 
+        protected void OnCloseClick(object sender, EventArgs e)
+        {
+            Response.Redirect(EditUrl(PortalSettings.ActiveTab.TabID, SexyContent.ControlKeys.EavManagement, true, "mid=" + ModuleId + "&" + SexyContent.AppIDString + "=" + ApplicationId));
+        }
+
         private IEnumerable<dynamic> EnumToDataSource<T>() where T : struct
         {
             return from Enum enumValue in Enum.GetValues(typeof(T))

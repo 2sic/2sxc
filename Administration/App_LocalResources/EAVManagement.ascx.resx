@@ -117,67 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="btnCancel.Text" xml:space="preserve">
-    <value>Close</value>
-  </data>
   <data name="btnExportData.Text" xml:space="preserve">
-    <value>Export</value>
+    <value>Export Data / Content</value>
   </data>
-  <data name="LanguageMissingExportCreate.Text" xml:space="preserve">
-    <value>Yes, also create rows for untranslated languages</value>
-  </data>
-  <data name="LanguageMissingExportIgnore.Text" xml:space="preserve">
-    <value>No, only create rows for languages containing values</value>
-  </data>
-  <data name="LanguageReferenceExportLink.Text" xml:space="preserve">
-    <value>Keep references to other languages (for re-import)</value>
-  </data>
-  <data name="LanguageReferenceExportResolve.Text" xml:space="preserve">
-    <value>Replace references with values</value>
-  </data>
-  <data name="lblContentType.Text" xml:space="preserve">
-    <value>Content-type</value>
-  </data>
-  <data name="lblDropDownListAll.Text" xml:space="preserve">
-    <value>All</value>
-  </data>
-  <data name="lblIntro.Text" xml:space="preserve">
-    <value>This will generate an XML file which you can edit in Excel. If you just want to import new data, use this to export the structure (schema) that you can then fill in using Excel. Please visit &lt;a href="http://2sxc.org/help" target="_blank"&gt;http://2sxc.org/help&lt;/a&gt; for more instructions.</value>
-  </data>
-  <data name="lblLanguage.Text" xml:space="preserve">
-    <value>Language</value>
-  </data>
-  <data name="lblLanguageMissing.Text" xml:space="preserve">
-    <value>Create rows for empty languages</value>
-  </data>
-  <data name="lblLanguageReference.Text" xml:space="preserve">
-    <value>Value references to other languages</value>
-  </data>
-  <data name="lblResourceReference.Text" xml:space="preserve">
-    <value>File / page references</value>
-  </data>
-  <data name="ResourceReferenceExportLink.Text" xml:space="preserve">
-    <value>Keep references (for re-import, for example Page:4711)</value>
-  </data>
-  <data name="ResourceReferenceExportResolve.Text" xml:space="preserve">
-    <value>Replace references with real URLs (for example /Portals/0...)</value>
-  </data>
-  <data name="lblRecordExport.Text" xml:space="preserve">
-    <value>Export data</value>
-  </data>
-  <data name="RecordExportAll.Text" xml:space="preserve">
-    <value>Yes, export all content-items</value>
-  </data>
-  <data name="RecordExportBlank.Text" xml:space="preserve">
-    <value>No, just export blank data schema (for new data import)</value>
-  </data>
-  <data name="lblTitle.Text" xml:space="preserve">
-    <value>Export Content / Data</value>
-  </data>
-  <data name="lblInformationLimitations.Text" xml:space="preserve">
-    <value />
-  </data>
-  <data name="BlankExportHelp.Text" xml:space="preserve">
-    <value>Visit http://2sxc.org/help for instructions.</value>
+  <data name="btnImportData.Text" xml:space="preserve">
+    <value>Import Data / Content</value>
   </data>
 </root>
