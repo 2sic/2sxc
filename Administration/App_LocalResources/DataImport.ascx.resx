@@ -163,7 +163,7 @@
     <value>Back</value>
   </data>
   <data name="btnClose.Text" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Close</value>
   </data>
   <data name="btnImportData.Text" xml:space="preserve">
     <value>Import file</value>
