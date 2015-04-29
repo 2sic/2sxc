@@ -141,6 +141,11 @@ namespace ToSic.SexyContent.Administration
             pnlExportReferenceOptions.Enabled = !recordExportOption.IsBlank();
         }
 
+        protected void OnCloseClick(object sender, EventArgs e)
+        {
+            Response.Redirect(EditUrl(PortalSettings.ActiveTab.TabID, SexyContent.ControlKeys.EavManagement, true, "mid=" + ModuleId + "&" + SexyContent.AppIDString + "=" + ApplicationId));
+        }
+
         protected void OnExportDataClick(object sender, EventArgs e)
         {
             var dataXml = default(string);
