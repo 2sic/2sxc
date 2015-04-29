@@ -42,6 +42,13 @@ namespace ToSic.SexyContent.Engines.TokenEngine
             };
 
             list["Count"] = elements.Count.ToString();
+            var defaultCount = DataSource["Default"].List.Count;
+            // todo
+            // replace <repeat> with <repeat repeat="Content in Data:Default">
+            // replace [Presentation:*] with [Content:Presentation:*]
+
+            // <repeat repeat="House in Data:Houses">
+            // [House:City]
 
             // If the SourceText contains a <repeat>, define Repeating Part. Else take SourceText as repeating part.
             var containsRepeat = sourceText.Contains("<repeat>") && sourceText.Contains("</repeat>");
