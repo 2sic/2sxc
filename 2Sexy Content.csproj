@@ -53,6 +53,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\DotNetNuke.dll</HintPath>
     </Reference>
+    <Reference Include="dotnetnuke.modules.userdefinedtable, Version=6.0.0.15391, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\dotnetnuke.modules.userdefinedtable.dll</HintPath>
+    </Reference>
     <Reference Include="DotNetNuke.RadEditorProvider, Version=6.1.0.1171, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\DotNetNuke.RadEditorProvider.dll</HintPath>
@@ -206,6 +210,7 @@
     <Compile Include="SexyContent\ContentGroup.cs" />
     <Compile Include="SexyContent\ContentGroups.cs" />
     <Compile Include="SexyContent\DataSources\DnnSqlDataSource.cs" />
+    <Compile Include="SexyContent\DataSources\DnnFormAndList.cs" />
     <Compile Include="SexyContent\EAVExtensions\EavApiProxies\EntitiesController.cs" />
     <Compile Include="SexyContent\EAV\PipelineDesigner\PipelineManagementDnnWrapper.ascx.cs">
       <DependentUpon>PipelineManagementDnnWrapper.ascx</DependentUpon>
@@ -781,6 +786,8 @@
     <Content Include="App_LocalResources\EditEntity.ascx.resx" />
     <Content Include="Administration\Apps\App_LocalResources\AppConfig.ascx.resx" />
     <Content Include="Administration\App_LocalResources\WebApiHelp.ascx.resx" />
+    <Content Include="Administration\App_LocalResources\EAVManagement.ascx.resx" />
+    <Content Include="Administration\App_LocalResources\EAVManagement.ascx.de-DE.resx" />
     <EmbeddedResource Include="SexyContent\DataImportExport\ImportErrorCode.de-DE.resx" />
     <EmbeddedResource Include="SexyContent\DataImportExport\ImportErrorCode.resx" />
   </ItemGroup>

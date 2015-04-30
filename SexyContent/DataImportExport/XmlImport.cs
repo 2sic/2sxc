@@ -149,8 +149,10 @@ namespace ToSic.SexyContent.DataImportExport
                     return;
                 }
 
-                var documentRoot = Document.Element(DocumentNodeNames.Root + contentType.Name.RemoveSpecialCharacters());
-                if (documentRoot == null)
+                var documentRoot = Document.Element(DocumentNodeNames.Root);
+                
+                var documentTypeAttribute = documentRoot.Attribute(DocumentNodeNames.RootTypeAttribute);
+                if (documentTypeAttribute == null || documentTypeAttribute.Value == null || documentTypeAttribute.Value != contentType.Name.RemoveSpecialCharacters())
                 {
                     ErrorProtocol.AppendError(ImportErrorCode.InvalidRoot);
                     return;
@@ -160,8 +162,19 @@ namespace ToSic.SexyContent.DataImportExport
                 DocumentElements = documentRoot.Elements(DocumentNodeNames.Entity);
                 var documentElementNumber = 0;
 
-                var documentElementLanguagesAll = DocumentElements.GroupBy(element => element.Element(DocumentNodeNames.EntityGuid).Value)
-                                                                  .Select(group => group.Select(element => element.Element(DocumentNodeNames.EntityLanguage).Value)).ToList();
+                // Assure that each element has a GUID and language child element
+                foreach (var element in DocumentElements)
+                {
+                    if (element.Element(DocumentNodeNames.EntityGuid) == null)
+                    {
+                        element.Append(DocumentNodeNames.EntityGuid, "");
+                    }
+                    if (element.Element(DocumentNodeNames.EntityLanguage) == null)
+                    {
+                        element.Append(DocumentNodeNames.EntityLanguage, "");
+                    }
+                }
+                var documentElementLanguagesAll = DocumentElements.GroupBy(element => element.Element(DocumentNodeNames.EntityGuid).Value).Select(group => group.Select(element => element.Element(DocumentNodeNames.EntityLanguage).Value).ToList());
                 var documentElementLanguagesCount = documentElementLanguagesAll.Select(item => item.Count());
                 if (documentElementLanguagesCount.Any(count => count != 1))
                 {
@@ -198,14 +211,20 @@ namespace ToSic.SexyContent.DataImportExport
                     var attributes = contentType.GetAttributes();
                     foreach (var attribute in attributes)
                     {   
+                        var valueType = attribute.Type;
                         var valueName = attribute.StaticName;
                         var value = documentElement.GetChildElementValue(valueName);
-                        if (value == null || value.IsValueDefault())
+                        if (value == null || value.IsValueNull())
                         {
                             continue;
                         }
 
-                        var valueType = attribute.Type;
+                        if (value.IsValueEmpty())
+                        {   // It is an empty string
+                            entity.AppendAttributeValue(valueName, "", attribute.Type, documentElementLanguage, false, resourceReference.IsResolve());
+                            continue;
+                        }
+
                         var valueReferenceLanguage = value.GetValueReferenceLanguage();
                         if (valueReferenceLanguage == null)
                         {   // It is not a value reference.. it is a normal text

@@ -12,5 +12,7 @@
         public const string EntityGuid = "Guid";
 
         public const string EntityLanguage = "Language";
+
+        public const string RootTypeAttribute = "Type";
     }
 }

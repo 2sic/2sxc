@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="btnExport.Text" xml:space="preserve">
-    <value>Export (Beta)</value>
+    <value>Partial Export (beta)</value>
   </data>
   <data name="btnInstallGettingStarted.Text" xml:space="preserve">
     <value>Install "Getting Started" templates</value>
@@ -139,10 +139,18 @@
     <value>The import has been done. View messages below for more information.</value>
   </data>
   <data name="lblImportHeading.Text" xml:space="preserve">
-    <value>Import</value>
+    <value>Import Templates and Content &lt;em&gt;into&lt;/em&gt; this App/Content</value>
   </data>
   <data name="lblImportInfo.Text" xml:space="preserve">
-    <value>Please select a file from your computer to import.&lt;br /&gt;To download new templates, please visit the &lt;a href="http://2sxc.org/en/templates" target="_blank"&gt;2sxc Catalog&lt;/a&gt;.</value>
+    <value>This import will add Content-Types, Templates and Content-Items to the &lt;strong&gt;current&lt;/strong&gt; Content or App. &lt;ul&gt;&lt;li&gt;If you want to import a new App, go to &lt;em&gt;App-Management&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;If you want to import Tables/Lists of content-items, go to the tab &lt;em&gt;Content / Data&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;For further help visit &lt;a href="http://2sxc.org/learn" target="_blank"&gt;2sxc Help&lt;/a&gt;.</value>
+  </data>
+  <data name="lblPartialImportHeading.Text" xml:space="preserve">
+    <value>Import a content export (.zip) or a partial export (.xml)</value>
+  </data>
+  <data name="lblPartialImportInfo.Text" xml:space="preserve">
+    <value>This import will add Content-Types, Templates and Content-Items to the current Content or App. </value>
   </data>
   <data name="lblSelectImportFile.Help" xml:space="preserve">
     <value>The contents of the entire file you select here will be imported.</value>
@@ -152,8 +160,5 @@
   </data>
   <data name="lblSummaryHeading.Text" xml:space="preserve">
     <value>Import Summary</value>
-  </data>
-  <data name="lblImportExportData.Text" xml:space="preserve">
-    <value>To export / import data (like tables of employees, etc.) use the import/export in the "Content / Data" tab.</value>
   </data>
 </root>

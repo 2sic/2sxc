@@ -146,7 +146,13 @@ namespace ToSic.SexyContent.DataSources
                 while (entitiesToDeliver.ContainsKey(key))
                     key += 1000000000;
 
-				entitiesToDeliver.Add(key, new EntityInContentGroup(originals[entityId.Value]) { SortOrder = i, ContentGroupItemModified = originals[entityId.Value].Modified, Presentation = presentationEntity, GroupId = ContentGroup.ContentGroupGuid });
+				entitiesToDeliver.Add(key, new EntityInContentGroup(originals[entityId.Value])
+				{
+				    SortOrder = i, 
+                    ContentGroupItemModified = originals[entityId.Value].Modified, 
+                    Presentation = presentationEntity, 
+                    GroupId = ContentGroup.ContentGroupGuid
+				});
             }
 
             return entitiesToDeliver;
