@@ -1,5 +1,6 @@
 ﻿using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Tokens;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,34 +16,44 @@ namespace ToSic.SexyContent.Engines.TokenEngine
 {
     public class TokenEngine : EngineBase
     {
-        #region RegExs and internal variables
+        #region Regular Expressions / String Constants
+        
+        private static readonly dynamic SourcePropertyName =  new {
+            Content     = "content",
+            ListContent = "listcontent"
+        };
+
+        private static readonly dynamic RegexToken = new {
+            SourceName = "sourceName",
+            StreamName = "streamName",
+            Template   = "template"
+        };
+
         private static string RepeatPlaceholder = "<repeat_placeholder>";
 
         private static string RepeatPattern = @"
-# begins with <repeat
-<repeat\s
-#must contain attribute repeat='...' according to a specific schema with in Data:...
-repeat=['|""](?<sourceName>[a-zA-Z0-9$_]+)\sin\sData\:(?<streamName>[a-zA-Z0-9$_]+)['|""]
->
-(?<template>.*?)
-</repeat>
-        "; //<repeat repeat=['|""](?<sourceName>[a-zA-Z0-9$_]+) in Data\:(?<streamName>[a-zA-Z0-9$_]+)['|""]>(?<template>.*?)</repeat>";
+                # Begins with <repeat
+                <repeat\s
+                    # Must contain the attribute repeat='...' according to the schema with 'in Data:...'
+                    repeat=['|""](?<sourceName>[a-zA-Z0-9$_]+)\sin\sData\:(?<streamName>[a-zA-Z0-9$_]+)['|""]
+                    >
+                    (?<template>.*?)
+                </repeat>";
 
         private static Regex RepeatRegex = new Regex(RepeatPattern, 
-            RegexOptions.IgnoreCase 
-            | RegexOptions.Multiline 
-            | RegexOptions.Singleline 
-            | RegexOptions.Compiled 
-            | RegexOptions.IgnorePatternWhitespace);
-
+                RegexOptions.IgnoreCase 
+                | RegexOptions.Multiline 
+                | RegexOptions.Singleline 
+                | RegexOptions.Compiled 
+                | RegexOptions.IgnorePatternWhitespace);
+        #endregion
 
 
         private AppAndDataHelpers dataHelper;
 
         private TokenReplace tokenReplace;
-        // private ToSic.Eav.Tokens.BaseTokenReplace eavToken;//  = new Eav.Tokens.TokenReplace();
 
-        #endregion
+
 
         protected override void Init()
         {
@@ -58,12 +69,14 @@ repeat=['|""](?<sourceName>[a-zA-Z0-9$_]+)\sin\sData\:(?<streamName>[a-zA-Z0-9$_
 
         private void InitTokenReplace()
         {
-            tokenReplace = new TokenReplace(App, ModuleInfo.ModuleID, PortalSettings.Current);           
-            tokenReplace.AddPropertySource("listcontent", new DynamicEntityPropertyAccess("listcontent", dataHelper.ListContent));
+            tokenReplace = new TokenReplace(App, ModuleInfo.ModuleID, PortalSettings.Current);
+            
+            // Add the Content and ListContent property sources used always
+            tokenReplace.AddPropertySource(SourcePropertyName.ListContent, new DynamicEntityPropertyAccess(SourcePropertyName.ListContent, dataHelper.ListContent));
             var contentProperty = dataHelper.List.FirstOrDefault();
             if (contentProperty != null)
-            {// todo: const for strings
-                tokenReplace.AddPropertySource("content", new DynamicEntityPropertyAccess("content", contentProperty.Content));
+            {
+                tokenReplace.AddPropertySource(SourcePropertyName.Content, new DynamicEntityPropertyAccess(SourcePropertyName.Content, contentProperty.Content));
             }
         }
 
@@ -82,25 +95,25 @@ repeat=['|""](?<sourceName>[a-zA-Z0-9$_]+)\sin\sData\:(?<streamName>[a-zA-Z0-9$_
             var repeatsRendered = new List<string>();
             foreach (Match match in repeatsMatches)
             {
-                repeatsRendered.Add(RenderRepeat(match.Groups["sourceName"].Value.ToLower(), match.Groups["streamName"].Value, match.Groups["template"].Value));
+                repeatsRendered.Add(RenderRepeat(match.Groups[RegexToken.SourceName].Value.ToLower(), match.Groups[RegexToken.StreamName].Value, match.Groups[RegexToken.Template].Value));
             }
 
-            // Render sections between the <repeat>s
-            // First remove the <repeat> sections and the sub-templates
-            // ...replace with a placeholder which will be filled later on
-            var rendered = RepeatRegex.Replace(templateSource, RepeatPlaceholder);
-            rendered = RenderSection(rendered, new Dictionary<string, IPropertyAccess>());
+            // Render sections between the <repeat>s (but before replace the <repeat>s and 
+            // the tempates contained with placeholders, so the templates in the <reapeat>s 
+            // are not rendered twice)
+            var template = RepeatRegex.Replace(templateSource, RepeatPlaceholder);
+            var rendered = RenderSection(template, new Dictionary<string, IPropertyAccess>());
 
-            // Re-Insert <repeat>s rendered to the template target
+            // Insert <repeat>s rendered to the template target
             var repeatsIndexes = FindAllIndexesOfString(rendered, RepeatPlaceholder);
-            var templateTargetBuilder = new StringBuilder(rendered);
-            for (var i = repeatsIndexes.Count - 1; i >= 0; i--)
+            var renderedBuilder = new StringBuilder(rendered);
+            for (var i = repeatsIndexes.Count - 1; i >= 0; i--) // Reversed
             {
-                templateTargetBuilder.Remove(repeatsIndexes[i], RepeatPlaceholder.Length)
-                                     .Insert(repeatsIndexes[i], repeatsRendered[i]);
+                renderedBuilder.Remove(repeatsIndexes[i], RepeatPlaceholder.Length)
+                               .Insert(repeatsIndexes[i], repeatsRendered[i]);
             }
 
-            return templateTargetBuilder.ToString();
+            return renderedBuilder.ToString();
         }
 
 
@@ -110,7 +123,10 @@ repeat=['|""](?<sourceName>[a-zA-Z0-9$_]+)\sin\sData\:(?<streamName>[a-zA-Z0-9$_
                 return "";
 
             var builder = new StringBuilder();
-            
+
+            if (!DataSource.Out.ContainsKey(streamName))
+                throw new ArgumentException("Was not able to implement REPEAT because I could not find Data:" + streamName + ". Please check spelling the pipeline delivering data to this template.");
+
             var dataItems = DataSource[streamName].List;
             for (var i = 0; i < dataItems.Count; i++)
             {
@@ -127,6 +143,7 @@ repeat=['|""](?<sourceName>[a-zA-Z0-9$_]+)\sin\sData\:(?<streamName>[a-zA-Z0-9$_
                     { "Count",       dataItems.Count.ToString() }
                 };                
               
+                // Create property sources for the current data item (for the current data item and its list information)
                 var propertySources = new Dictionary<string, IPropertyAccess>();
                 propertySources.Add("list", new DictionaryPropertyAccess(dataItemInfo));
                 propertySources.Add(sourceName, new DynamicEntityPropertyAccess(sourceName, dataHelper.AsDynamic(dataItems.ElementAt(i).Value)));
@@ -142,16 +159,20 @@ repeat=['|""](?<sourceName>[a-zA-Z0-9$_]+)\sin\sData\:(?<streamName>[a-zA-Z0-9$_
             if (string.IsNullOrEmpty(template))
                 return "";
 
-            var propertySourcesBackup = new Dictionary<string, IPropertyAccess>();  // Backup sources to restore initial state after rendering
+            var propertySourcesBackup = new Dictionary<string, IPropertyAccess>();
             
+            // Replace old property sources with the new ones, and backup the old ones so that 
+            // they can be restored after rendering the section
             foreach(var src in propertySource)
             {
                 propertySourcesBackup.Add(src.Key, tokenReplace.RemovePropertySource(src.Key));
                 tokenReplace.AddPropertySource(src.Key, src.Value);
             }
 
+            // Render
             var sectionRendered = tokenReplace.ReplaceEnvironmentTokens(template);
 
+            // Restore
             foreach (var src in propertySourcesBackup)
             {
                 tokenReplace.RemovePropertySource(src.Key);
@@ -162,7 +183,7 @@ repeat=['|""](?<sourceName>[a-zA-Z0-9$_]+)\sin\sData\:(?<streamName>[a-zA-Z0-9$_
             return sectionRendered;
         }
 
-
+        // Find all indexes of a string in a source string
         public static List<int> FindAllIndexesOfString(string source, string value)
         {
             var indexes = new List<int>();

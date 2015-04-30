@@ -53,12 +53,5 @@ namespace ToSic.SexyContent.Engines.TokenEngine
             }
             return null;
         }
-
-        /* 
-        protected override string replacedTokenValue(string strObjectName, string strPropertyName, string strFormat)
-        {
-            return base.replacedTokenValue(strObjectName, strPropertyName, strFormat);
-        }
-         */
     }
 }
