@@ -54,6 +54,10 @@ namespace ToSic.SexyContent.Razor
         public DnnHelper Dnn {
             get { return AppAndDataHelpers.Dnn; }
         }
+		public SxcHelper Sxc
+		{
+			get { return AppAndDataHelpers.Sxc; }
+		}
         public new App App {
             get { return AppAndDataHelpers.App; }
         }

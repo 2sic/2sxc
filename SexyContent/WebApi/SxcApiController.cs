@@ -46,6 +46,10 @@ namespace ToSic.SexyContent.WebApi
         {
             get { return AppAndDataHelpers.Dnn; }
         }
+		public SxcHelper Sxc
+		{
+			get { return AppAndDataHelpers.Sxc; }
+		}
         public App App
         {
             get { return AppAndDataHelpers.App; }

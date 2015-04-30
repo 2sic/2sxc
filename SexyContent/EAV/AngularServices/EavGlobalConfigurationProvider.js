@@ -58,7 +58,8 @@ angular.module('eavGlobalConfigurationProvider', []).factory('eavGlobalConfigura
 			},
 			outDataSource: {
 				className: 'SexyContentTemplate',
-				in: ['ListPresentation', 'Presentation', 'ListContent', 'Default'],
+				in: ['ListContent', 'Default'],
+				//in: ['ListPresentation', 'Presentation', 'ListContent', 'Default'],
 				name: '2SexyContent Module',
 				description: 'The module/template which will show this data',
 				visualDesignerData: { Top: 20, Left: 420 }
@@ -86,9 +87,9 @@ angular.module('eavGlobalConfigurationProvider', []).factory('eavGlobalConfigura
 					{ From: 'unsaved1', Out: 'Drafts', To: 'unsaved2', In: 'Drafts' },
 					{ From: 'unsaved1', Out: 'Published', To: 'unsaved2', In: 'Published' },
 					{ From: 'unsaved2', Out: 'Default', To: 'unsaved3', In: 'Default' },
-					{ From: 'unsaved3', Out: 'ListPresentation', To: 'Out', In: 'ListPresentation' },
+					//{ From: 'unsaved3', Out: 'ListPresentation', To: 'Out', In: 'ListPresentation' },
 					{ From: 'unsaved3', Out: 'ListContent', To: 'Out', In: 'ListContent' },
-					{ From: 'unsaved3', Out: 'Presentation', To: 'Out', In: 'Presentation' },
+					//{ From: 'unsaved3', Out: 'Presentation', To: 'Out', In: 'Presentation' },
 					{ From: 'unsaved3', Out: 'Default', To: 'Out', In: 'Default' }
 				]
 			},

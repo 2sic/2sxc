@@ -22,6 +22,7 @@ namespace ToSic.SexyContent
             App = app;
             Data = data;
             Dnn = new DnnHelper(module);
+			Sxc = new SxcHelper(sexy);
 	        List = new List<Element>();
 
 	        if (data != null)
@@ -80,6 +81,7 @@ namespace ToSic.SexyContent
         public App App { get; private set; }
         public ViewDataSource Data { get; private set; }
         public DnnHelper Dnn { get; private set; }
+		public SxcHelper Sxc { get; private set; }
 
         /// <summary>
         /// Transform a IEntity to a DynamicEntity as dynamic object

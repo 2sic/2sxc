@@ -12,6 +12,7 @@ namespace ToSic.SexyContent
         App App { get; }
         ViewDataSource Data { get; }
         DnnHelper Dnn { get; }
+		SxcHelper Sxc { get; }
 
         /// <summary>
         /// Transform a IEntity to a DynamicEntity as dynamic object
