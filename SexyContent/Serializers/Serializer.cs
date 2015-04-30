@@ -68,8 +68,7 @@ namespace ToSic.SexyContent.Serializers
         /// </summary>
         public object Prepare(DynamicEntity dynamicEntity)
         {
-            var language = Thread.CurrentThread.CurrentCulture.Name;
-            return GetDictionaryFromEntity(dynamicEntity.Entity, language);
+            return Prepare(dynamicEntity.Entity);
         }
 
 
@@ -100,7 +99,7 @@ namespace ToSic.SexyContent.Serializers
             // Note that for editing purposes or similar, there is always the extended info-object, so this is purely for "normal" working with the data
             dictionary.Add((dictionary.ContainsKey("Id") ? "EntityId": "Id"), entity.EntityId);
             if(!dictionary.ContainsKey("Title"))
-                dictionary.Add("Title", entity.Title);
+                dictionary.Add("Title", entity.GetBestValue("EntityTitle"));
 
             // Check w/2rm - this should only happen in edit mode...
 		    if (true) // todo: edit-mode-only...?

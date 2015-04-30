@@ -103,55 +103,7 @@ namespace ToSic.SexyContent
             return null;
             #endregion
 
-            //if (Entity.Attributes.ContainsKey(attributeName))
-            //{
-            //    var attribute = Entity.Attributes[attributeName];
-            //    result = attribute[_dimensions];
 
-            //    if (attribute.Type == "Hyperlink" && result is string)
-            //    {
-            //        result = SexyContent.ResolveHyperlinkValues((string) result, SexyContext == null ? PortalSettings.Current : SexyContext.OwnerPS);
-            //    }
-            //    else if (attribute.Type == "Entity" && result is EntityRelationshipModel)
-            //    {
-            //        // Convert related entities to Dynamics
-            //        result = ((ToSic.Eav.EntityRelationshipModel) result).Select(
-            //            p => new DynamicEntity(p, _dimensions, this.SexyContext)
-            //            ).ToList();
-            //    }
-            //}
-            //else
-            //{
-            //    switch (attributeName)
-            //    {
-            //        case "EntityTitle":
-            //            result = EntityTitle;
-            //            break;
-            //        case "EntityId":
-            //            result = EntityId;
-            //            break;
-            //        case "Toolbar":
-            //            result = Toolbar.ToString();
-            //            break;
-            //        case "IsPublished":
-            //            result = Entity.IsPublished;
-            //            break;
-            //        case "Modified":
-            //            result = Entity.Modified;
-            //            break;
-            //        case "Presentation":
-            //            var inContentGroup = Entity as EntityInContentGroup;
-            //            if(inContentGroup != null)
-            //                result = inContentGroup.Presentation;
-            //            break;
-            //        default:
-            //            result = null;
-            //            propertyNotFound = true;
-            //            break;
-            //    }
-            //}
-
-            //return result;
         }
 
         /// <summary>

@@ -10,50 +10,65 @@ $2sxc.getManageController = function (id) {
 
     // all the standard buttons with the display configuration and click-action
     var actionButtonsConf = {
-        'default': { icon: 'glyphicon-fire', hideFirst: true,
-            action: function(settings) { alert('not implemented yet') } },
-        'edit': { title: 'Edit', icon: 'glyphicon-pencil', lightbox: true, hideFirst: false,
-            action: function(settings) { 
-                manageController._openDialog(settings); 
-            } },
-        'editinline': { title: 'Edit inline', icon: 'glyphicon-pencil', lightbox: false,
-            action: function(settings) { alert('not implemented yet') } },
-        'new': { title: 'New', icon: 'glyphicon-plus', lightbox: true, hideFirst: false, 
-            action: function(settings) { 
-                manageController._openDialog(settings); 
-            } },
-        'add': { title: 'Add', icon: 'glyphicon-plus', lightbox: false, hideFirst: true,
-        	action: function (settings) {
-				// ToDo: Remove dependency to AngularJS, should use 2sxc.api.js
+        'default': {
+            icon: 'glyphicon-fire', hideFirst: true,
+            action: function (event, settings) { alert('not implemented yet') }
+        },
+        'edit': {
+            title: 'Edit', icon: 'glyphicon-pencil', lightbox: true, hideFirst: false,
+            action: function (event, settings) {
+                manageController._openDialog(settings);
+            }
+        },
+        'editinline': {
+            title: 'Edit inline', icon: 'glyphicon-pencil', lightbox: false,
+            action: function (event, settings) { alert('not implemented yet') }
+        },
+        'new': {
+            title: 'New', icon: 'glyphicon-plus', lightbox: true, hideFirst: false,
+            action: function (event, settings) {
+                manageController._openDialog(settings);
+            }
+        },
+        'add': {
+            title: 'Add', icon: 'glyphicon-plus', lightbox: false, hideFirst: true,
+            action: function (event, settings) {
+                // ToDo: Remove dependency to AngularJS, should use 2sxc.api.js
                 manageController._getSelectorScope().addItem(settings.sortOrder + 1);
-            } },
-        'publish': { title: 'Published', icon: 'glyphicon-eye-open disabled', icon2: 'glyphicon-eye-close disabled', lightbox: false, hideFirst: true, disabled: true,
-            action: function(settings) { 
-                alert('Status: ' + (settings.isPublished ? 'published' : 'not published')); 
-            } },
+            }
+        },
+        'publish': {
+            title: 'Published', icon: 'glyphicon-eye-open disabled', icon2: 'glyphicon-eye-close disabled', lightbox: false, hideFirst: true, disabled: true,
+            action: function (event, settings) {
+                alert('Status: ' + (settings.isPublished ? 'published' : 'not published'));
+            }
+        },
         'moveup': {
-        	title: 'Move up', icon: 'glyphicon-arrow-up', icon2: 'glyphicon-arrow-up', lightbox: false, hideFirst: true, disabled: false,
-        	action: function (settings) {
-        		manageController._getSelectorScope().changeOrder(settings.sortOrder, Math.max(settings.sortOrder - 1, 0));
-        	}
+            title: 'Move up', icon: 'glyphicon-arrow-up', icon2: 'glyphicon-arrow-up', lightbox: false, hideFirst: true, disabled: false,
+            action: function (event, settings) {
+                manageController._getSelectorScope().changeOrder(settings.sortOrder, Math.max(settings.sortOrder - 1, 0));
+            }
         },
         'movedown': {
-        	title: 'Move down', icon: 'glyphicon-arrow-down', icon2: 'glyphicon-arrow-down', lightbox: false, hideFirst: true, disabled: false,
-        	action: function (settings) {
-        		manageController._getSelectorScope().changeOrder(settings.sortOrder, settings.sortOrder + 1);
-        	}
+            title: 'Move down', icon: 'glyphicon-arrow-down', icon2: 'glyphicon-arrow-down', lightbox: false, hideFirst: true, disabled: false,
+            action: function (event, settings) {
+                manageController._getSelectorScope().changeOrder(settings.sortOrder, settings.sortOrder + 1);
+            }
         },
         'remove': {
-        	title: 'remove', icon: 'glyphicon-remove-circle', lightbox: false, hideFirst: true, disabled: true,
-        	action: function (settings) {
-		        if (confirm("Do you really want to delete this item?")) {
-			        manageController._getSelectorScope().removeFromList(settings.sortOrder);
-		        }
-	        } },
-        'more': { title: 'More', icon: 'glyphicon-option-horizontal', icon2: 'glyphicon-option-vertical', borlightboxder: false, hideFirst: false,
-            action: function(settings, clickEvt) { 
-                $(clickEvt.target).toggleClass(this.icon).toggleClass(this.icon2).closest('ul.sc-menu').toggleClass('showAll'); 
-            } }
+            title: 'remove', icon: 'glyphicon-remove-circle', lightbox: false, hideFirst: true, disabled: true,
+            action: function (event, settings) {
+                if (confirm("Do you really want to delete this item?")) {
+                    manageController._getSelectorScope().removeFromList(settings.sortOrder);
+                }
+            }
+        },
+        'more': {
+            title: 'More', icon: 'glyphicon-option-horizontal', icon2: 'glyphicon-option-vertical', borlightboxder: false, hideFirst: false,
+            action: function (event, settings) {
+                $(event.target).toggleClass(this.icon).toggleClass(this.icon2).closest('ul.sc-menu').toggleClass('showAll');
+            }
+        }
     };
 
     var manageController = {
@@ -80,7 +95,7 @@ $2sxc.getManageController = function (id) {
             if (settings.cultureDimension && settings.cultureDimension != null)
                 params.cultureDimension = settings.cultureDimension;
 
-            if (settings.action == 'new') 
+            if (settings.action == 'new')
                 params.editMode = "New";
 
             if (!settings.useModuleList) {
@@ -116,11 +131,11 @@ $2sxc.getManageController = function (id) {
         },
 
         // Perform a toolbar button-action - basically get the configuration and execute it's action
-        action: function (settings) {
-            var origEvent = event; // important to save the because afterwards we have a promise, so the event-object changes
+        action: function (event, settings) {
+            var origEvent = event || window.event; // pre-save event because afterwards we have a promise, so the event-object changes; funky syntax is because of browser differences
             var conf = actionButtonsConf[settings.action] || actionButtonsConf.default;
             manageController._getSelectorScope().saveTemplateId().then(function () {
-                conf.action(settings, origEvent);
+                conf.action(origEvent, settings);
             });
         },
 
@@ -143,10 +158,10 @@ $2sxc.getManageController = function (id) {
             var conf = actionButtonsConf[settings.action] || actionButtonsConf.default;
 
             var button = $('<a />', {
-                'class': 'sc-' + settings.action + ' ' 
-                    + (settings.hideFirst || conf.hideFirst ? 'hideFirst' : '') 
+                'class': 'sc-' + settings.action + ' '
+                    + (settings.hideFirst || conf.hideFirst ? 'hideFirst' : '')
                     + ' ' + (conf.lightbox ? 'box' : ''),
-                'onclick': 'javascript:$2sxc(' + id + ').manage.action(' + JSON.stringify(settings) + ');',
+                'onclick': 'javascript:$2sxc(' + id + ').manage.action(event, ' + JSON.stringify(settings) + ');',
                 'title': conf.title
             });
             var symbol = $('<span class="glyphicon ' + conf.icon + '" aria-hidden="true"></span>');
@@ -182,16 +197,17 @@ $2sxc.getManageController = function (id) {
                 buttons.push($.extend({}, settings, { action: 'edit' }));
 
                 // add applicable list buttons - add=add item below; new=lightbox-dialog
-                if (toolbarConfig.isList && settings.sortOrder != -1) {
+                if (toolbarConfig.isList && settings.sortOrder != -1) {     // if list and not the list-header
                     buttons.push($.extend({}, settings, { action: 'new' }));
-	                if (settings.useModuleList) {
-	                	buttons.push($.extend({}, settings, { action: 'add' }));
-	                	buttons.push($.extend({}, settings, { action: 'moveup' }));
-	                	buttons.push($.extend({}, settings, { action: 'movedown' }));
-	                }
+                    if (settings.useModuleList) {
+                        buttons.push($.extend({}, settings, { action: 'add' }));
+                        buttons.push($.extend({}, settings, { action: 'moveup' }));
+                        buttons.push($.extend({}, settings, { action: 'movedown' }));
+                    }
                 }
                 buttons.push($.extend({}, settings, { action: 'publish' }));
-                buttons.push($.extend({}, settings, { action: 'remove' }));
+                if (toolbarConfig.isList)
+                    buttons.push($.extend({}, settings, { action: 'remove' })); // only provide remove on lists
                 buttons.push($.extend({}, settings, { action: 'more' }));
             }
 

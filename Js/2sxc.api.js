@@ -186,6 +186,11 @@
             showDetailedHttpError: function showDetailedHttpError(result) {
                 if (window.console)
                     console.log(result);
+
+                // if it's an unspecified 0-error, it's probably not an error but a cancelled request, (happens when closing popups containing angularJS)
+                if (result.status == 0)
+                    return;
+
                 // let's try to show good messages in most cases
                 var infoText = "Had an error talking to the server (status " + result.status + ").";
                 var srvResp = result.responseText ?
