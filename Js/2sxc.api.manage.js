@@ -25,7 +25,7 @@ $2sxc.getManageController = function (id) {
         'add': { title: 'Add', icon: 'glyphicon-plus', lightbox: false, hideFirst: true,
         	action: function (settings) {
 				// ToDo: Remove dependency to AngularJS, should use 2sxc.api.js
-                manageController._getSelectorScope().addItem(settings.sortOrder); 
+                manageController._getSelectorScope().addItem(settings.sortOrder + 1);
             } },
         'publish': { title: 'Published', icon: 'glyphicon-eye-open disabled', icon2: 'glyphicon-eye-close disabled', lightbox: false, hideFirst: true, disabled: true,
             action: function(settings) { 

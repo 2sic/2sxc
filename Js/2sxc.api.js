@@ -16,9 +16,8 @@
                 var scope = virtualPath.split('/')[0].toLowerCase();
                 // stop if it's not one of our special paths
                 if (controller.serviceScopes.indexOf(scope) == -1)
-                    return virtualPath;
+                	return virtualPath;
 
-                if (scope == 'app-api') scope = 'app'; // deprecated but in 6.6 still working mode
                 if (scope.indexOf('app') > -1) scope += "/auto-detect-app";
                 return controller.serviceRoot + scope + '/' + virtualPath.substring(virtualPath.indexOf('/') + 1);
             },
@@ -179,7 +178,7 @@
                 },
                 getActionUrl: function (settings) {
                     var sf = $.ServicesFramework(id);
-                    return sf.getServiceRoot('2sxc') + "App/auto-detect-app/" + settings.controller + "/" + settings.action + (settings.params == null ? "" : ("?" + $.param(settings.params)));
+                    return sf.getServiceRoot('2sxc') + "app-api/auto-detect-app/" + settings.controller + "/" + settings.action + (settings.params == null ? "" : ("?" + $.param(settings.params)));
                 }
             },
 

@@ -51,7 +51,7 @@ namespace ToSic.SexyContent.Serializers
 		public object Prepare(IDataStream stream)
 		{
 			var language = Thread.CurrentThread.CurrentCulture.Name;
-			return new Dictionary<string, object>() { { stream.Name, stream.List.Select(c => GetDictionaryFromEntity(c.Value, language)) } };
+			return stream.List.Select(c => GetDictionaryFromEntity(c.Value, language));
 		}
 
 		private Dictionary<string, object> GetDictionaryFromEntity(IEntity entity, string language)
