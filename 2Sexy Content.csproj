@@ -214,6 +214,7 @@
     <Compile Include="SexyContent\EAV\PipelineDesigner\PipelineManagementDnnWrapper.ascx.designer.cs">
       <DependentUpon>PipelineManagementDnnWrapper.ascx</DependentUpon>
     </Compile>
+    <Compile Include="SexyContent\Serializers\Serializer.cs" />
     <Compile Include="SexyContent\SexyContentModuleUpgrade.cs" />
     <Compile Include="SexyContent\EAVExtensions\EavApiProxies\PipelineDesignerController.cs" />
     <Compile Include="SexyContent\EAV\PipelineDesigner\PipelineDesignerDnnWrapper.ascx.cs">
