@@ -27,7 +27,7 @@ $2sxc.getManageController = function (id) {
         'new': {
             title: 'New', icon: 'glyphicon-plus', lightbox: true, hideFirst: false,
             action: function (event, settings) {
-                manageController._openDialog(settings);
+                manageController._openDialog($.extend({}, settings, { sortOrder: settings.sortOrder + 1 }));
             }
         },
         'add': {
@@ -35,6 +35,13 @@ $2sxc.getManageController = function (id) {
             action: function (event, settings) {
                 // ToDo: Remove dependency to AngularJS, should use 2sxc.api.js
                 manageController._getSelectorScope().addItem(settings.sortOrder + 1);
+            }
+        },
+        'replace': {
+            title: 'Replace', icon: 'glyphicon-random', lightbox: false, hideFirst: true,
+            action: function (event, settings) {
+                // ToDo: Remove dependency to AngularJS, should use 2sxc.api.js
+                manageController._openDialog(settings);
             }
         },
         'publish': {
@@ -58,7 +65,7 @@ $2sxc.getManageController = function (id) {
         'remove': {
             title: 'remove', icon: 'glyphicon-remove-circle', lightbox: false, hideFirst: true, disabled: true,
             action: function (event, settings) {
-                if (confirm("Do you really want to delete this item?")) {
+                if (confirm("This will remove this content-item from this list, but not delete it (so you can add it again later). \nSee 2sxc.org/help for more. \n\nOk to remove?")) {
                     manageController._getSelectorScope().removeFromList(settings.sortOrder);
                 }
             }
@@ -106,6 +113,11 @@ $2sxc.getManageController = function (id) {
             } else {
                 params.sortOrder = settings.sortOrder;
                 params.contentGroupId = settings.contentGroupId;
+            }
+
+            if (settings.action == 'replace') {
+                params.ctl = 'settingswrapper';
+                params.ItemType = 'Content';
             }
 
             if (settings.prefill)
@@ -201,7 +213,9 @@ $2sxc.getManageController = function (id) {
                     buttons.push($.extend({}, settings, { action: 'new' }));
                     if (settings.useModuleList) {
                         buttons.push($.extend({}, settings, { action: 'add' }));
-                        buttons.push($.extend({}, settings, { action: 'moveup' }));
+                        buttons.push($.extend({}, settings, { action: 'replace' }));
+                        if (settings.sortOrder != 0)
+                            buttons.push($.extend({}, settings, { action: 'moveup' }));
                         buttons.push($.extend({}, settings, { action: 'movedown' }));
                     }
                 }

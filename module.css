@@ -84,3 +84,7 @@
 .glyphicon-arrow-down:before {
   content: "\e094";
 }
+
+.glyphicon-random:before {
+  content: "\e110";
+}
