@@ -247,13 +247,18 @@ namespace ToSic.SexyContent
 			if (difference < 0)
 				throw new Exception("There are more Presentation elements than Content elements.");
 
-			var entityIds = Presentation.Select(p => p == null ? new int?() : p.EntityId).ToList();
-			entityIds.AddRange(Enumerable.Repeat(new int?(), difference));
-			UpdateEntities("Presentation", entityIds);
+			if (difference != 0)
+			{
+				var entityIds = Presentation.Select(p => p == null ? new int?() : p.EntityId).ToList();
+				entityIds.AddRange(Enumerable.Repeat(new int?(), difference));
+				UpdateEntities("Presentation", entityIds);
+			}
 		}
 
 		public void ReorderEntities(int sortOrder, int destinationSortOrder)
 		{
+			SyncContentAndPresentationEntitiesCount();
+
 			var contentIds = Content.Select(p => p == null ? new int?() : p.EntityId).ToList();
 			var presentationIds = Presentation.Select(p => p == null ? new int?() : p.EntityId).ToList();
 
