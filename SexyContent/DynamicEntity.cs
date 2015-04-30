@@ -68,7 +68,7 @@ namespace ToSic.SexyContent
                 case "Presentation":
                     var inContentGroup = Entity as EntityInContentGroup;
                     return (inContentGroup != null)
-                        ? inContentGroup.Presentation
+                        ? new DynamicEntity(inContentGroup.Presentation, _dimensions, SexyContext)
                         : null;
             }
             #endregion

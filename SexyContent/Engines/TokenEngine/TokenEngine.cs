@@ -1,95 +1,180 @@
-﻿using System.Collections.Generic;
+﻿using DotNetNuke.Entities.Portals;
+using DotNetNuke.Services.Tokens;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Web.Hosting;
-using DotNetNuke.Entities.Portals;
+using ToSic.Eav;
 using ToSic.SexyContent.DataSources;
+using ToSic.SexyContent.EAVExtensions;
 
 namespace ToSic.SexyContent.Engines.TokenEngine
 {
     public class TokenEngine : EngineBase
     {
+        #region RegExs and internal variables
+        private static string RepeatPlaceholder = "<repeat_placeholder>";
 
-        /// <summary>
-        /// Renders a Token Template
-        /// </summary>
-        /// <returns>Rendered template as string</returns>
-        protected override string RenderTemplate()
+        private static string RepeatPattern = @"
+# begins with <repeat
+<repeat\s
+#must contain attribute repeat='...' according to a specific schema with in Data:...
+repeat=['|""](?<sourceName>[a-zA-Z0-9$_]+)\sin\sData\:(?<streamName>[a-zA-Z0-9$_]+)['|""]
+>
+(?<template>.*?)
+</repeat>
+        "; //<repeat repeat=['|""](?<sourceName>[a-zA-Z0-9$_]+) in Data\:(?<streamName>[a-zA-Z0-9$_]+)['|""]>(?<template>.*?)</repeat>";
+
+        private static Regex RepeatRegex = new Regex(RepeatPattern, 
+            RegexOptions.IgnoreCase 
+            | RegexOptions.Multiline 
+            | RegexOptions.Singleline 
+            | RegexOptions.Compiled 
+            | RegexOptions.IgnorePatternWhitespace);
+
+
+
+        private AppAndDataHelpers dataHelper;
+
+        private TokenReplace tokenReplace;
+        // private ToSic.Eav.Tokens.BaseTokenReplace eavToken;//  = new Eav.Tokens.TokenReplace();
+
+        #endregion
+
+        protected override void Init()
         {
-            var h = new AppAndDataHelpers(Sexy, ModuleInfo, (ViewDataSource)DataSource, App);
+            base.Init();
+            InitDataHelper();
+            InitTokenReplace();
+        }
 
-            var listContent = h.ListContent;
-            var listPresentation = h.ListPresentation;
-            var elements = h.List;
+        private void InitDataHelper()
+        {
+            dataHelper = new AppAndDataHelpers(Sexy, ModuleInfo, (ViewDataSource)DataSource, App);
+        }
 
-            // Prepare Source Text
-            var sourceText = File.ReadAllText(HostingEnvironment.MapPath(TemplatePath));
-            string repeatingPart;
-            
-            // Prepare List Object
-            var list = new Dictionary<string, string>
-            {
-                {"Index", "0"},
-                {"Index1", "1"},
-                {"Count", "1"},
-                {"IsFirst", "First"},
-                {"IsLast", "Last"},
-                {"Alternator2", "0"},
-                {"Alternator3", "0"},
-                {"Alternator4", "0"},
-                {"Alternator5", "0"}
-            };
-
-            list["Count"] = elements.Count.ToString();
-            var defaultCount = DataSource["Default"].List.Count;
-            // todo
-            // replace <repeat> with <repeat repeat="Content in Data:Default">
-            // replace [Presentation:*] with [Content:Presentation:*]
-
-            // <repeat repeat="House in Data:Houses">
-            // [House:City]
-
-            // If the SourceText contains a <repeat>, define Repeating Part. Else take SourceText as repeating part.
-            var containsRepeat = sourceText.Contains("<repeat>") && sourceText.Contains("</repeat>");
-            if (containsRepeat)
-                repeatingPart = Regex.Match(sourceText, @"<repeat>(.*?)</repeat>", RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[1].Captures[0].Value;
-            else
-                repeatingPart = "";
-
-            var renderedTemplate = "";
-
-            foreach (var element in elements)
-            {
-                // Modify List Object
-                list["Index"] = elements.IndexOf(element).ToString();
-                list["Index1"] = (elements.IndexOf(element) + 1).ToString();
-                list["IsFirst"] = elements.First() == element ? "First" : "";
-                list["IsLast"] = elements.Last() == element ? "Last" : "";
-                list["Alternator2"] = (elements.IndexOf(element) % 2).ToString();
-                list["Alternator3"] = (elements.IndexOf(element) % 3).ToString();
-                list["Alternator4"] = (elements.IndexOf(element) % 4).ToString();
-                list["Alternator5"] = (elements.IndexOf(element) % 5).ToString();
-
-                // Replace Tokens
-                var tokenReplace = new TokenReplace((DynamicEntity)element.Content, (DynamicEntity)element.Presentation, (DynamicEntity)listContent, (DynamicEntity)listPresentation, list, App);
-                tokenReplace.ModuleId = ModuleInfo.ModuleID;
-                tokenReplace.PortalSettings = PortalSettings.Current;
-                renderedTemplate += tokenReplace.ReplaceEnvironmentTokens(repeatingPart);
+        private void InitTokenReplace()
+        {
+            tokenReplace = new TokenReplace(App, ModuleInfo.ModuleID, PortalSettings.Current);           
+            tokenReplace.AddPropertySource("listcontent", new DynamicEntityPropertyAccess("listcontent", dataHelper.ListContent));
+            var contentProperty = dataHelper.List.FirstOrDefault();
+            if (contentProperty != null)
+            {// todo: const for strings
+                tokenReplace.AddPropertySource("content", new DynamicEntityPropertyAccess("content", contentProperty.Content));
             }
-
-            // Replace repeating part
-            renderedTemplate = Regex.Replace(sourceText, "<repeat>.*?</repeat>", renderedTemplate, RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.Singleline);
-
-            // Replace tokens outside the repeating part
-            var tr2 = new TokenReplace(elements.Any() ? elements.First().Content : null, elements.Any() ? elements.First().Presentation : null, listContent, listPresentation, list, App);
-            tr2.ModuleId = ModuleInfo.ModuleID;
-            tr2.PortalSettings = PortalSettings.Current;
-            renderedTemplate = tr2.ReplaceEnvironmentTokens(renderedTemplate);
-
-            return renderedTemplate;
         }
 
 
+
+        protected override string RenderTemplate()
+        {
+            var templateSource = File.ReadAllText(HostingEnvironment.MapPath(TemplatePath));
+            // Convert old <repeat> elements to the new ones
+            templateSource = templateSource.Replace("[Presentation:", "[Content:Presentation:")
+                                           .Replace("[ListPresentation:", "[ListContent:Presentation:")
+                                           .Replace("<repeat>", "<repeat repeat=\"Content in Data:Default\">");
+
+            // Render all <repeat>s
+            var repeatsMatches = RepeatRegex.Matches(templateSource);       
+            var repeatsRendered = new List<string>();
+            foreach (Match match in repeatsMatches)
+            {
+                repeatsRendered.Add(RenderRepeat(match.Groups["sourceName"].Value.ToLower(), match.Groups["streamName"].Value, match.Groups["template"].Value));
+            }
+
+            // Render sections between the <repeat>s
+            // First remove the <repeat> sections and the sub-templates
+            // ...replace with a placeholder which will be filled later on
+            var rendered = RepeatRegex.Replace(templateSource, RepeatPlaceholder);
+            rendered = RenderSection(rendered, new Dictionary<string, IPropertyAccess>());
+
+            // Re-Insert <repeat>s rendered to the template target
+            var repeatsIndexes = FindAllIndexesOfString(rendered, RepeatPlaceholder);
+            var templateTargetBuilder = new StringBuilder(rendered);
+            for (var i = repeatsIndexes.Count - 1; i >= 0; i--)
+            {
+                templateTargetBuilder.Remove(repeatsIndexes[i], RepeatPlaceholder.Length)
+                                     .Insert(repeatsIndexes[i], repeatsRendered[i]);
+            }
+
+            return templateTargetBuilder.ToString();
+        }
+
+
+        private string RenderRepeat(string sourceName, string streamName, string template)
+        {
+            if (string.IsNullOrEmpty(template))
+                return "";
+
+            var builder = new StringBuilder();
+            
+            var dataItems = DataSource[streamName].List;
+            for (var i = 0; i < dataItems.Count; i++)
+            {
+                var dataItemInfo = new Dictionary<string, string>()  // Information about position of data item in list
+                {
+                    { "Index",       (i).ToString()     },
+                    { "Index1",      (i + 1).ToString() },
+                    { "Alternator2", (i % 2).ToString() },
+                    { "Alternator3", (i % 3).ToString() },
+                    { "Alternator4", (i % 4).ToString() },
+                    { "Alternator5", (i % 5).ToString() },  
+                    { "IsFirst",     (i == 0) ? "First" : "" },
+                    { "IsLast",      (i == dataItems.Count - 1) ? "Last" : "" },
+                    { "Count",       dataItems.Count.ToString() }
+                };                
+              
+                var propertySources = new Dictionary<string, IPropertyAccess>();
+                propertySources.Add("list", new DictionaryPropertyAccess(dataItemInfo));
+                propertySources.Add(sourceName, new DynamicEntityPropertyAccess(sourceName, dataHelper.AsDynamic(dataItems.ElementAt(i).Value)));
+
+                builder.Append(RenderSection(template, propertySources));
+            }
+
+            return builder.ToString();
+        }
+
+        private string RenderSection(string template, IDictionary<string, IPropertyAccess> propertySource)
+        {
+            if (string.IsNullOrEmpty(template))
+                return "";
+
+            var propertySourcesBackup = new Dictionary<string, IPropertyAccess>();  // Backup sources to restore initial state after rendering
+            
+            foreach(var src in propertySource)
+            {
+                propertySourcesBackup.Add(src.Key, tokenReplace.RemovePropertySource(src.Key));
+                tokenReplace.AddPropertySource(src.Key, src.Value);
+            }
+
+            var sectionRendered = tokenReplace.ReplaceEnvironmentTokens(template);
+
+            foreach (var src in propertySourcesBackup)
+            {
+                tokenReplace.RemovePropertySource(src.Key);
+                if (src.Value != null)
+                    tokenReplace.AddPropertySource(src.Key, src.Value);
+            }
+            
+            return sectionRendered;
+        }
+
+
+        public static List<int> FindAllIndexesOfString(string source, string value)
+        {
+            var indexes = new List<int>();
+            for (var index = 0; ; index += value.Length)
+            {
+                index = source.IndexOf(value, index);
+                if (index == -1)
+                {   // No more found
+                    return indexes;
+                }
+                indexes.Add(index);
+            }
+        }
     }
 }
