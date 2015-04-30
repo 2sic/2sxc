@@ -82,15 +82,19 @@ namespace ToSic.SexyContent.Engines.TokenEngine
 					{
 						#region Handle Entity-Field (List of DynamicEntity)
 						var list = valueObject as List<DynamicEntity>;
-						if (list != null)
-						{
-							if (!list.Any())
-								return string.Empty;
 
-							return new DynamicEntityPropertyAccess(null, list.First()).GetProperty(propertyMatch.Groups[2].Value, string.Empty, formatProvider, AccessingUser, AccessLevel, ref propertyNotFound);
-						}
+                        var entity = list != null ? list.FirstOrDefault() : null;
+
+                        if (entity == null)
+                            entity = valueObject as DynamicEntity;
+
+						if (entity != null)
+                            return new DynamicEntityPropertyAccess(null, entity).GetProperty(propertyMatch.Groups[2].Value, string.Empty, formatProvider, AccessingUser, AccessLevel, ref propertyNotFound);
+
 						#endregion
-					}
+
+                        return string.Empty;
+                    }
 				}
 			}
 			#endregion
