@@ -130,8 +130,15 @@ namespace ToSic.SexyContent
         public Templates Templates { get; internal set; }
 		public ContentGroups ContentGroups { get; internal set; }
 
+        // must cache App, it gets re-created on each single call - about 10x per request!
+        private App _app;
         public App App {
-            get { return GetApp(ZoneId.Value, AppId.Value, OwnerPS); }
+            get
+            {
+                if(_app == null)
+                    _app = GetApp(ZoneId.Value, AppId.Value, OwnerPS);
+                return _app; // GetApp(ZoneId.Value, AppId.Value, OwnerPS);
+            }
         }
 
         public PortalSettings OwnerPS { get; set; }
@@ -470,27 +477,34 @@ namespace ToSic.SexyContent
             return DataSource.GetInitialDataSource(zoneId, appId, showDrafts);
         }
 
+        // 2015-04-30 2dm must cache this, shouldn't get re-created on a single call, it's always the same
+        // todo: must ask 2rm if it's ok to cache - can this SexyContent be re-used for other modules?
+        private ValueCollectionProvider _valueCollectionProvider;
 	    private ValueCollectionProvider GetConfigurationProvider(int moduleId)
         {
-		    var provider = new ValueCollectionProvider();
-		    provider.Sources.Add("querystring", new QueryStringPropertyAccess("querystring"));
-		    provider.Sources.Add("app", new AppPropertyAccess("app", App));
-		    provider.Sources.Add("appsettings", new DynamicEntityPropertyAccess("appsettings", App.Settings));
-		    provider.Sources.Add("appresources", new DynamicEntityPropertyAccess("appresources", App.Resources));
+	        if (_valueCollectionProvider == null)
+	        {
+	            var provider = new ValueCollectionProvider();
+	            provider.Sources.Add("querystring", new QueryStringPropertyAccess("querystring"));
+	            provider.Sources.Add("app", new AppPropertyAccess("app", App));
+	            provider.Sources.Add("appsettings", new DynamicEntityPropertyAccess("appsettings", App.Settings));
+	            provider.Sources.Add("appresources", new DynamicEntityPropertyAccess("appresources", App.Resources));
 
-		    var modulePropertyAccess = new StaticValueProvider("module");
-		    modulePropertyAccess.Properties.Add("ModuleID", moduleId.ToString(CultureInfo.InvariantCulture));
-		    provider.Sources.Add(modulePropertyAccess.Name, modulePropertyAccess);
-		    return provider;
+	            var modulePropertyAccess = new StaticValueProvider("module");
+	            modulePropertyAccess.Properties.Add("ModuleID", moduleId.ToString(CultureInfo.InvariantCulture));
+	            provider.Sources.Add(modulePropertyAccess.Name, modulePropertyAccess);
+	            _valueCollectionProvider = provider;
+	        }
+	        return _valueCollectionProvider;
         }
 
         /// <summary>
         /// The EAV DataSource
         /// </summary>
-        private IDataSource ViewDataSource { get; set; }
+        private IDataSource _viewDataSource;// { get; set; }
 		public IDataSource GetViewDataSource(int moduleId, bool showDrafts, Template template)
         {
-            if (ViewDataSource == null)
+            if (_viewDataSource == null)
             {
 	            var configurationProvider = GetConfigurationProvider(moduleId);
 
@@ -521,10 +535,10 @@ namespace ToSic.SexyContent
 						DataPipelineFactory.GetDataSource(AppId.Value, template.Pipeline.EntityId, configurationProvider, viewDataSource);
                 }
 
-                ViewDataSource = viewDataSource;
+                _viewDataSource = viewDataSource;
             }
 
-            return ViewDataSource;
+            return _viewDataSource;
         }
 
 	    #endregion

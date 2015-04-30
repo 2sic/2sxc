@@ -56,7 +56,7 @@ namespace ToSic.SexyContent
 
 	        // If PortalSettings is null - for example, while search index runs - HasEditPermission would fail
             // But in search mode, it shouldn't show drafts, so this is ok.
-            App.InitData(PortalSettings.Current != null && SexyContent.HasEditPermission(module));
+            App.InitData(PortalSettings.Current != null && SexyContent.HasEditPermission(module), data.ConfigurationProvider);
         }
 
 	    private Element GetElementFromEntity(IEntity e)

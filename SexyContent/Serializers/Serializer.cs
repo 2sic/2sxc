@@ -13,11 +13,11 @@ namespace ToSic.SexyContent.Serializers
 {
 	public class Serializer
 	{
-		private SexyContent Sexy { get; set; }
+		private SexyContent Sxc { get; set; }
 
 		public Serializer(SexyContent sexy)
 		{
-			Sexy = sexy;
+			Sxc = sexy;
 		}
 
 		/// <summary>
@@ -54,23 +54,41 @@ namespace ToSic.SexyContent.Serializers
 			return stream.List.Select(c => GetDictionaryFromEntity(c.Value, language));
 		}
 
+        /// <summary>
+        /// Return an object that represents an IDataStream, but is serializable
+        /// </summary>
+        public object Prepare(IEntity entity)
+        {
+            var language = Thread.CurrentThread.CurrentCulture.Name;
+            return GetDictionaryFromEntity(entity, language);
+        }
+
+        /// <summary>
+        /// Return an object that represents an IDataStream, but is serializable
+        /// </summary>
+        public object Prepare(DynamicEntity dynamicEntity)
+        {
+            var language = Thread.CurrentThread.CurrentCulture.Name;
+            return GetDictionaryFromEntity(dynamicEntity.Entity, language);
+        }
+
+
+
 		private Dictionary<string, object> GetDictionaryFromEntity(IEntity entity, string language)
 		{
-			var dynamicEntity = new DynamicEntity(entity, new[] { language }, Sexy);
+			var dynamicEntity = new DynamicEntity(entity, new[] { language }, Sxc);
 
 			// Convert DynamicEntity to dictionary
-			var dictionary = ((from d in entity.Attributes select d.Value).ToDictionary(k => k.Name, v =>
+			var dictionary = (from d in entity.Attributes select d.Value).ToDictionary(k => k.Name, v =>
 			{
 				bool propertyNotFound;
 				var value = dynamicEntity.GetEntityValue(v.Name, out propertyNotFound);
 				if (v.Type == "Entity" && value is List<DynamicEntity>)
-					return ((List<DynamicEntity>)value).Select(p => new { p.EntityId, p.EntityTitle });
+					return ((List<DynamicEntity>)value).Select(p => new { Id = p.EntityId, Title = p.EntityTitle });
 				return value;
-			}));
+			}, StringComparer.OrdinalIgnoreCase);
 
-			dictionary.Add("EntityId", entity.EntityId);
-			dictionary.Add("Modified", entity.Modified);
-
+            // Add full presentation object if it has one...because there we need more than just id/title
 			if (entity is EntityInContentGroup && !dictionary.ContainsKey("Presentation"))
 			{
 				var entityInGroup = (EntityInContentGroup)entity;
@@ -78,12 +96,24 @@ namespace ToSic.SexyContent.Serializers
 					dictionary.Add("Presentation", GetDictionaryFromEntity(entityInGroup.Presentation, language));
 			}
 
-			if (entity is IHasEditingData)
-				dictionary.Add("_2sxcEditInformation", new { sortOrder = ((IHasEditingData)entity).SortOrder });
-			else
-				dictionary.Add("_2sxcEditInformation", new { entityId = entity.EntityId, title = entity.Title != null ? entity.Title[language] : "(no title)" });
+            // If ID is not used by the entity itself as an internal value, give the object a Id property as well since it's nicer to use in JS
+            // Note that for editing purposes or similar, there is always the extended info-object, so this is purely for "normal" working with the data
+            dictionary.Add((dictionary.ContainsKey("Id") ? "EntityId": "Id"), entity.EntityId);
+            if(!dictionary.ContainsKey("Title"))
+                dictionary.Add("Title", entity.Title);
 
-			return dictionary;
+            // Check w/2rm - this should only happen in edit mode...
+		    if (true) // todo: edit-mode-only...?
+		    {
+                dictionary.Add("Modified", entity.Modified);
+                
+                if (entity is IHasEditingData)
+		            dictionary.Add("_2sxcEditInformation", new {sortOrder = ((IHasEditingData) entity).SortOrder});
+		        else
+		            dictionary.Add("_2sxcEditInformation",
+		                new {entityId = entity.EntityId, title = entity.Title != null ? entity.Title[language] : "(no title)"});
+		    }
+		    return dictionary;
 		}
 	}
 }

@@ -60,8 +60,8 @@ angular.module('eavGlobalConfigurationProvider', []).factory('eavGlobalConfigura
 				className: 'SexyContentTemplate',
 				in: ['ListContent', 'Default'],
 				//in: ['ListPresentation', 'Presentation', 'ListContent', 'Default'],
-				name: '2SexyContent Module',
-				description: 'The module/template which will show this data',
+				name: '2sxc Target (View or API)',
+				description: 'The template/script which will show this data',
 				visualDesignerData: { Top: 20, Left: 420 }
 			},
 			defaultPipeline: {

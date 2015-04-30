@@ -24,6 +24,7 @@ namespace ToSic.SexyContent
         public dynamic Configuration { get; internal set; }
         public dynamic Settings { get; internal set; }
         public dynamic Resources { get; internal set; }
+        private IValueCollectionProvider ConfigurationProvider { get; set; }
 
         //private IDataSource InitialSource { get; set; }
         internal PortalSettings OwnerPS { get; set; }
@@ -43,14 +44,17 @@ namespace ToSic.SexyContent
         /// todo: later this should be moved to initialization of this object
         /// </summary>
         /// <param name="showDrafts"></param>
-        internal void InitData(bool showDrafts)
+        internal void InitData(bool showDrafts, IValueCollectionProvider configurationValues)
         {
+            ConfigurationProvider = configurationValues;
+
             // ToDo: Remove this as soon as App.Data getter on App class is fixed #1 and #2
             if (_data == null)
             {
                 // ModulePermissionController does not work when indexing, return false for search
                 var initialSource = SexyContent.GetInitialDataSource(ZoneId, AppId, showDrafts);
 
+                // todo: probably use th efull configuration provider from function params, not from initial source?
                 _data = DataSource.GetDataSource<DataSources.App>(initialSource.ZoneId,
                     initialSource.AppId, initialSource, initialSource.ConfigurationProvider);
                 var defaultLanguage = "";
@@ -114,7 +118,7 @@ namespace ToSic.SexyContent
             get
             {
                 if (_queries == null)
-                    _queries = DataPipeline.AllPipelines(ZoneId, AppId, Data.ConfigurationProvider);
+                    _queries = DataPipeline.AllPipelines(ZoneId, AppId, ConfigurationProvider);
 
                 return _queries;
             }
