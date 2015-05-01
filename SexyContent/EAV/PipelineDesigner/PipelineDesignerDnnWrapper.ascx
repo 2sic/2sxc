@@ -6,6 +6,9 @@
 <dnn:DnnCssInclude runat="server" Priority="61" FilePath="~/DesktopModules/ToSIC_SexyContent/Js/AngularJS/toaster.css" />
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+<style type="text/css">
+	a.btn-info { color: #fff }	/* overwrite DNN Button-Color */
+</style>
 
 <sxc:PipelineDesigner ID="PipelineDesigner1" runat="server" />
 
