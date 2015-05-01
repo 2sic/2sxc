@@ -8,6 +8,11 @@
 		margin: 4px 0 4px 0;
 	}
 
+	.actions .panel-heading {
+		height: 45px;
+		margin: 0;
+	}
+
 .dataSource {
 	height: 100px;
 	transition: box-shadow 0.15s ease-in 0s;

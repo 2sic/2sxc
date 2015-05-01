@@ -13,5 +13,5 @@
 <dnn:DnnJsInclude runat="server" Priority="60" FilePath="~/DesktopModules/ToSIC_SexyContent/Js/AngularJS/angular.min.js" />
 <dnn:DnnJsInclude runat="server" Priority="61" FilePath="~/DesktopModules/ToSIC_SexyContent/Js/AngularJS/angular-resource.min.js" />
 <dnn:DnnJsInclude runat="server" Priority="62" FilePath="~/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/PipelineDesigner/PipelineManagement.js" />
-<dnn:DnnJsInclude runat="server" Priority="63" FilePath="~/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/PipelineDesigner/PipelineFactory.js" />
+<dnn:DnnJsInclude runat="server" Priority="63" FilePath="~/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/PipelineDesigner/PipelineService.js" />
 <dnn:DnnJsInclude runat="server" Priority="70" FilePath="~/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/AngularServices/EavGlobalConfigurationProvider.js" />
