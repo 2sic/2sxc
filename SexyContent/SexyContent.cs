@@ -480,19 +480,36 @@ namespace ToSic.SexyContent
         // 2015-04-30 2dm must cache this, shouldn't get re-created on a single call, it's always the same
         // todo: must ask 2rm if it's ok to cache - can this SexyContent be re-used for other modules?
         private ValueCollectionProvider _valueCollectionProvider;
-	    private ValueCollectionProvider GetConfigurationProvider(int moduleId)
+	    public ValueCollectionProvider GetConfigurationProvider(int moduleId)
         {
 	        if (_valueCollectionProvider == null)
 	        {
-	            var provider = new ValueCollectionProvider();
-	            provider.Sources.Add("querystring", new QueryStringPropertyAccess("querystring"));
-	            provider.Sources.Add("app", new AppPropertyAccess("app", App));
-	            provider.Sources.Add("appsettings", new DynamicEntityPropertyAccess("appsettings", App.Settings));
-	            provider.Sources.Add("appresources", new DynamicEntityPropertyAccess("appresources", App.Resources));
+                var provider = new ValueCollectionProvider();
 
-	            var modulePropertyAccess = new StaticValueProvider("module");
-	            modulePropertyAccess.Properties.Add("ModuleID", moduleId.ToString(CultureInfo.InvariantCulture));
-	            provider.Sources.Add(modulePropertyAccess.Name, modulePropertyAccess);
+                // only add these in running inside an http-context. Otherwise leave them away!
+                if (HttpContext.Current != null)
+                {
+                    var request = HttpContext.Current.Request;
+                    provider.Sources.Add("querystring", new FilteredNameValueCollectionPropertyAccess("querystring", request.QueryString));
+                    provider.Sources.Add("server", new FilteredNameValueCollectionPropertyAccess("server", request.ServerVariables));
+                    provider.Sources.Add("form", new FilteredNameValueCollectionPropertyAccess("form", request.Form));
+                }
+
+                // Try to add the standard DNN property sources
+	            var dnn = new TokenReplaceDnn(App, moduleId);
+	            var stdSources = dnn.PropertySources;
+	            foreach (var propertyAccess in stdSources)
+	                provider.Sources.Add(propertyAccess.Key, new ValueProviderWrapperForPropertyAccess(propertyAccess.Key, propertyAccess.Value));
+
+	            provider.Sources.Add("app", new AppPropertyAccess("app", App));
+
+                // add module if it was not already added previously
+	            if (!provider.Sources.ContainsKey("module"))
+	            {
+	                var modulePropertyAccess = new StaticValueProvider("module");
+	                modulePropertyAccess.Properties.Add("ModuleID", moduleId.ToString(CultureInfo.InvariantCulture));
+	                provider.Sources.Add(modulePropertyAccess.Name, modulePropertyAccess);
+	            }
 	            _valueCollectionProvider = provider;
 	        }
 	        return _valueCollectionProvider;

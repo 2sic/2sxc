@@ -3,17 +3,19 @@ using System.Globalization;
 using DotNetNuke.Entities.Users;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Tokens;
+using ToSic.Eav.ValueProvider;
 
 namespace ToSic.SexyContent.Engines.TokenEngine
 {
     /// <summary>
     /// Copied from Form and List Module
     /// </summary>
-    public class FilteredNameValueCollectionPropertyAccess : IPropertyAccess
+    public class FilteredNameValueCollectionPropertyAccess : BaseValueProvider, IPropertyAccess
     {
 	    readonly NameValueCollection NameValueCollection;
-        public FilteredNameValueCollectionPropertyAccess(NameValueCollection list)
+        public FilteredNameValueCollectionPropertyAccess(string name, NameValueCollection list)
         {
+            Name = name;
             NameValueCollection = list;
         }
 
@@ -37,15 +39,15 @@ namespace ToSic.SexyContent.Engines.TokenEngine
             if (NameValueCollection == null)
                 return string.Empty;
             var value = NameValueCollection[strPropertyName];
-            string OutputFormat = null;
-            if (strFormat == string.Empty)
-            {
-                OutputFormat = "g";
-            }
-            else
-            {
-                OutputFormat = string.Empty;
-            }
+            //string OutputFormat = null;
+            //if (strFormat == string.Empty)
+            //{
+            //    OutputFormat = "g";
+            //}
+            //else
+            //{
+            //    OutputFormat = string.Empty;
+            //}
             if (value != null)
             {
                 var Security = new PortalSecurity();
@@ -54,6 +56,18 @@ namespace ToSic.SexyContent.Engines.TokenEngine
             }
 	        PropertyNotFound = true;
 	        return string.Empty;
+        }
+
+        public override string Get(string property, string format, ref bool propertyNotFound)
+        {
+            if (NameValueCollection == null)
+                return string.Empty;
+            return FormatString(NameValueCollection[property], format);
+        }
+
+        public override bool Has(string property)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

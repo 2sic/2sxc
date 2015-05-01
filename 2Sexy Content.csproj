@@ -219,6 +219,8 @@
     <Compile Include="SexyContent\EAV\PipelineDesigner\PipelineManagementDnnWrapper.ascx.designer.cs">
       <DependentUpon>PipelineManagementDnnWrapper.ascx</DependentUpon>
     </Compile>
+    <Compile Include="SexyContent\Engines\TokenEngine\TokenReplaceEav.cs" />
+    <Compile Include="SexyContent\Engines\TokenEngine\ValueProviderWrapperForPropertyAccess.cs" />
     <Compile Include="SexyContent\Serializers\Serializer.cs" />
     <Compile Include="SexyContent\SexyContentModuleUpgrade.cs" />
     <Compile Include="SexyContent\EAVExtensions\EavApiProxies\PipelineDesignerController.cs" />
@@ -492,7 +494,7 @@
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="SexyContent\Engines\TokenEngine\FilteredNameValueCollectionPropertyAccess.cs" />
-    <Compile Include="SexyContent\Engines\TokenEngine\TokenReplace.cs" />
+    <Compile Include="SexyContent\Engines\TokenEngine\TokenReplaceDnn.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Administration\Apps\AppExport.ascx" />
