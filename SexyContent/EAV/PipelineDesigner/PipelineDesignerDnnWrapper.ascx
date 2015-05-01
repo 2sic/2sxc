@@ -6,6 +6,9 @@
 <dnn:DnnCssInclude runat="server" Priority="61" FilePath="~/DesktopModules/ToSIC_SexyContent/Js/AngularJS/toaster.css" />
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+<style type="text/css">
+	a.btn-info { color: #fff }	/* overwrite DNN Button-Color */
+</style>
 
 <sxc:PipelineDesigner ID="PipelineDesigner1" runat="server" />
 
@@ -16,7 +19,7 @@
 <dnn:DnnJsInclude runat="server" Priority="64" FilePath="~/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/PipelineDesigner/assets/jquery.jsPlumb-1.7.2-min.js" />
 <dnn:DnnJsInclude runat="server" Priority="65" FilePath="~/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/PipelineDesigner/PipelineDesigner.js" />
 <dnn:DnnJsInclude runat="server" Priority="66" FilePath="~/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/PipelineDesigner/PipelineDesignerController.js" />
-<dnn:DnnJsInclude runat="server" Priority="67" FilePath="~/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/PipelineDesigner/PipelineFactory.js" />
+<dnn:DnnJsInclude runat="server" Priority="67" FilePath="~/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/PipelineDesigner/PipelineService.js" />
 <dnn:DnnJsInclude runat="server" Priority="69" FilePath="~/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/AngularServices/NotificationService.js" />
 <dnn:DnnJsInclude runat="server" Priority="70" FilePath="~/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/AngularServices/EavGlobalConfigurationProvider.js" />
 <dnn:DnnJsInclude runat="server" Priority="71" FilePath="~/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/AngularServices/EavDialogService.js" />

@@ -634,7 +634,7 @@
     <Content Include="SexyContent\EAV\PipelineDesigner\PipelineDesigner.js" />
     <Content Include="SexyContent\EAV\PipelineDesigner\PipelineDesignerController.js" />
     <Content Include="SexyContent\EAV\PipelineDesigner\PipelineDesignerDnnWrapper.ascx" />
-    <Content Include="SexyContent\EAV\PipelineDesigner\PipelineFactory.js" />
+    <Content Include="SexyContent\EAV\PipelineDesigner\PipelineService.js" />
     <Content Include="SexyContent\EAV\PipelineDesigner\PipelineManagement.ascx" />
     <Content Include="SexyContent\EAV\PipelineDesigner\PipelineManagement.js" />
     <Content Include="SexyContent\EAV\PipelineDesigner\PipelineManagementDnnWrapper.ascx" />

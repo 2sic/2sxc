@@ -1,24 +1,24 @@
 ﻿// Config and Controller for the Pipeline Management UI
-angular.module('pipelineManagement', ['pipelineFactory', 'eavGlobalConfigurationProvider', 'ngResource']).
+angular.module('pipelineManagement', ['pipelineService', 'eavGlobalConfigurationProvider', 'ngResource']).
 	config(function ($locationProvider) {
 		$locationProvider.html5Mode({
 			enabled: true,
 			requireBase: false
 		});
 	}).
-	controller('PipelineManagementController', function ($rootScope, $scope, $location, $window, pipelineFactory) {
+	controller('PipelineManagementController', function ($rootScope, $scope, $location, $window, pipelineService) {
 		// Init
 		$scope.AppId = $location.search().AppId;
 		if (!$scope.AppId)
 			throw 'Please specify an AppId';
-		pipelineFactory.setAppId($scope.AppId);
-		pipelineFactory.initContentTypes();
+		pipelineService.setAppId($scope.AppId);
+		pipelineService.initContentTypes();
 		// Make URL-Provider available to the scope
-		$scope.getPipelineUrl = pipelineFactory.getPipelineUrl;
+		$scope.getPipelineUrl = pipelineService.getPipelineUrl;
 
 		// Refresh List of Pipelines
 		$scope.refresh = function () {
-			$scope.pipelines = pipelineFactory.getPipelines($scope.AppId);
+			$scope.pipelines = pipelineService.getPipelines($scope.AppId);
 		};
 		$scope.refresh();
 
@@ -31,7 +31,7 @@ angular.module('pipelineManagement', ['pipelineFactory', 'eavGlobalConfiguration
 			if (!confirm('Delete Pipeline "' + pipeline.Name + '" (' + pipeline.EntityId + ')?'))
 				return;
 
-			pipelineFactory.deletePipeline(pipeline.EntityId).then(function () {
+			pipelineService.deletePipeline(pipeline.EntityId).then(function () {
 				$scope.refresh();
 			}, function (reason) {
 				alert(reason);
@@ -40,7 +40,7 @@ angular.module('pipelineManagement', ['pipelineFactory', 'eavGlobalConfiguration
 
 		// Clone a Pipeline
 		$scope.clone = function (pipeline) {
-			pipelineFactory.clonePipeline(pipeline.EntityId).then(function () {
+			pipelineService.clonePipeline(pipeline.EntityId).then(function () {
 				$scope.refresh();
 			}, function (reason) {
 				alert(reason);

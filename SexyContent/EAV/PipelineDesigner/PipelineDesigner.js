@@ -1,4 +1,4 @@
-var pipelineDesigner = angular.module('pipelineDesinger', ['pipelineDesinger.filters', 'ngResource', 'toaster', 'eavGlobalConfigurationProvider', 'eavDialogService', 'pipelineFactory']);
+var pipelineDesigner = angular.module('pipelineDesinger', ['pipelineDesinger.filters', 'ngResource', 'toaster', 'eavGlobalConfigurationProvider', 'eavDialogService', 'pipelineService']);
 
 pipelineDesigner.config(['$locationProvider', function ($locationProvider) {
 	$locationProvider.html5Mode({
