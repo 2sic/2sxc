@@ -78,11 +78,30 @@
 		height: 16px;
 	}
 
+	.dataSource .configure {
+		position: absolute;
+		top: 0;
+		left: 0;
+		padding: 3px;
+		font-size: large;
+	}
+
 	.dataSource:hover .delete, .dataSource:hover .typename {
 		display: block;
 	}
 
 
+.sourceEndpoint:after, .targetEndpoint:after {
+	font-family: 'Glyphicons Halflings';
+	content: "\e133";
+	color: #000;
+	font-size: 18px;
+	background-color: #fff;
+	border-radius: 10px;
+	width: 20px;
+	display: inline-block;
+	text-align: center;
+}
 
 ._jsPlumb_endpoint, .endpointTargetLabel, .endpointSourceLabel {
 	z-index: 21;
@@ -130,18 +149,15 @@
 
 .ep {
 	position: absolute;
-	bottom: 37%;
+	bottom: 42%;
 	right: 5px;
 	width: 1em;
 	height: 1em;
-	background-color: orange;
 	cursor: pointer;
-	box-shadow: 0 0 2px black;
-	-webkit-transition: -webkit-box-shadow 0.25s ease-in;
-	-moz-transition: -moz-box-shadow 0.25s ease-in;
-	transition: box-shadow 0.25s ease-in;
+	font-size: large;
+	color: orange;
 }
 
 	.ep:hover {
-		box-shadow: 0 0 6px black;
+		color: #D98D00;
 	}

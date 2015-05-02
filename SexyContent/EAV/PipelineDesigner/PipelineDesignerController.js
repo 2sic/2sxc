@@ -45,8 +45,6 @@ pipelineDesigner.controller('PipelineDesignerController',
 					outlineWidth: 2,
 					outlineColor: "white"
 				},
-				EndpointHoverStyle: { fillStyle: "#216477", strokeStyle: "#216477" },
-				ConnectionOverlays: [['Arrow', { location: 0.7 }]],
 				PaintStyle: {
 					lineWidth: 4,
 					strokeStyle: '#61B7CF',
@@ -91,7 +89,8 @@ pipelineDesigner.controller('PipelineDesignerController',
 
 		// the definition of source endpoints (the small blue ones)
 		var sourceEndpoint = {
-			paintStyle: { strokeStyle: '#7AB02C', fillStyle: 'transparent', radius: 7, lineWidth: 3 },
+			paintStyle: { fillStyle: 'transparent', radius: 10, lineWidth: 0 },
+			cssClass: "sourceEndpoint",
 			maxConnections: -1,
 			isSource: true,
 			anchor: ['Continuous', { faces: ['top'] }],
@@ -100,7 +99,8 @@ pipelineDesigner.controller('PipelineDesignerController',
 
 		// the definition of target endpoints (will appear when the user drags a connection) 
 		var targetEndpoint = {
-			paintStyle: { fillStyle: '#7AB02C', radius: 11 },
+			paintStyle: { fillStyle: 'transparent', radius: 10, lineWidth: 0 },
+			cssClass: "targetEndpoint",
 			maxConnections: 1,
 			isTarget: true,
 			anchor: ['Continuous', { faces: ['bottom'] }],
@@ -131,7 +131,7 @@ pipelineDesigner.controller('PipelineDesignerController',
 						$scope.jsPlumbInstance.makeTarget(element, targetEndpointUnlimited);
 					}
 
-					$scope.jsPlumbInstance.makeSource(element, sourceEndpoint, { filter: '.ep', });
+					$scope.jsPlumbInstance.makeSource(element, sourceEndpoint, { filter: '.ep .glyphicon', });
 				}
 
 				// make DataSources draggable

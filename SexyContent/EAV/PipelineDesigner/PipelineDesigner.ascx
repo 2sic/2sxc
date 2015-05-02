@@ -7,13 +7,16 @@
 				datasource
 				id="dataSource_{{dataSource.EntityGuid}}"
 				class="dataSource"
-				ng-attr-style="top: {{dataSource.VisualDesignerData.Top}}px; left: {{dataSource.VisualDesignerData.Left}}px"
-				title="Double click to edit the Configuration"
-				ng-dblclick="configureDataSource(dataSource)">
+				ng-attr-style="top: {{dataSource.VisualDesignerData.Top}}px; left: {{dataSource.VisualDesignerData.Left}}px">
+				<div class="configure" ng-click="configureDataSource(dataSource)" title="Configure this DataSource" ng-if="!dataSource.ReadOnly">
+					<span class="glyphicon glyphicon-list-alt"></span>
+				</div>
 				<div class="name" title="Click to edit the Name" ng-click="editName(dataSource)">{{dataSource.Name || '(unnamed)'}}</div><br/>
 				<div class="description" title="Click to edit the Description" ng-click="editDescription(dataSource)">{{dataSource.Description || '(no description)'}}</div><br/>
 				<div class="typename" ng-attr-title="{{dataSource.PartAssemblyAndType}}">Type: {{dataSource.PartAssemblyAndType | typename: 'className'}}</div>
-				<div class="ep" title="Drag a new Out-Connection from here" ng-if="!dataSource.ReadOnly"></div>
+				<div class="ep" title="Drag a new Out-Connection from here" ng-if="!dataSource.ReadOnly">
+					<span class="glyphicon glyphicon-plus-sign"></span>
+				</div>
 				<div class="delete glyphicon glyphicon-remove" title="Delete this DataSource" ng-click="remove($index)" ng-if="!dataSource.ReadOnly"></div>
 			</div>
 		</div>
