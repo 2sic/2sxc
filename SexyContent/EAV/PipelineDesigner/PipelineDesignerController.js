@@ -312,22 +312,19 @@ pipelineDesigner.controller('PipelineDesignerController',
 				endpoints.hideOverlays();
 		}
 
-	    // Make URL-Provider available to the scope
-		$scope.getPipelineUrl = pipelineService.getPipelineUrl;
-		
-		$scope.editTestParameters = function editTestParameters() {
-            // todo: save first?
-		    // todo: open dialog
-		    var editUrl = pipelineService.getPipelineUrl('edit', $scope.PipelineEntityId);
-//		    pipelineService.getDataSourceConfigurationUrl(dataSource).then(function (url) {
-		        uiNotification.clear();
-		        eavDialogService.open({ url: editUrl, title: 'Edit Test Values' });
-		    //}, function (error) {
-		    //    uiNotification.error('Open Configuration UI failed', error);
-//		    });
-
-            // todo: relod something?
-        }
+		// Edit Pipeline Entity
+		$scope.editPipelineEntity = function () {
+			// save Pipeline, then open Edit Dialog
+			$scope.savePipeline().then(function () {
+				eavDialogService.open({
+					url: pipelineService.getPipelineUrl('edit', $scope.PipelineEntityId),
+					title: 'Edit Test Values',
+					onClose: function() {
+						pipelineService.getPipeline($scope.PipelineEntityId).then(pipelineSaved);
+					}
+				});
+			});
+		}
 
 		// Sync jsPlumb Connections and StreamsOut to the pipelineData-Object
 		var syncPipelineData = function () {
@@ -413,7 +410,7 @@ pipelineDesigner.controller('PipelineDesignerController',
 					uiNotification.clear();
 					eavDialogService.open({
 						title: 'Query result',
-						content: '<div><div>The Full result was logged to the Browser Console. Further down you\'ll find more debug-infos. </div>' 
+						content: '<div><div>The Full result was logged to the Browser Console. Further down you\'ll find more debug-infos. </div>'
                             + '<h3>Parameters used</h3><div>' + ($scope.pipelineData.Pipeline.TestParameters.length > 5 ? $scope.pipelineData.Pipeline.TestParameters.replace('\n', '<br>') : 'no test params specified') + '</div> '
                             + '<h3>Query result</h3><div> <pre id="pipelineQueryResult">' + $filter('json')(success.Query) + '</pre>' + showConnectionTable(success) + '</div>'
                             + '</div'
@@ -424,40 +421,40 @@ pipelineDesigner.controller('PipelineDesignerController',
 				});
 			};
 
-            // Create html-table with connection debug-info
+			// Create html-table with connection debug-info
 			var showConnectionTable = function (result) {
-			    var srcTbl = '<h3>Sources</h3>' +
+				var srcTbl = '<h3>Sources</h3>' +
 			        '<table><tr><th>Guid</th><th>Type</th><th>Config</th></tr>';
-			    var src = result.Sources;
-			    for (var s in src) {
-			        if (s[0] != '$') {
-			            srcTbl += "<tr><td><pre>" + s.substring(0, 13) + "...</pre></td><td>" + src[s].Type + "</td><td>";
-			            var cnf = src[s].Configuration;
-			            for (var c in cnf) 
-			                if (c[0] != '$') 
-			                    srcTbl += '<b>' + c + '</b>' + "=" + cnf[c] + '</br>';
-			            srcTbl += "</td></tr>";
-			        }
-			    }
-			    srcTbl += "</table>";
+				var src = result.Sources;
+				for (var s in src) {
+					if (s[0] != '$') {
+						srcTbl += "<tr><td><pre>" + s.substring(0, 13) + "...</pre></td><td>" + src[s].Type + "</td><td>";
+						var cnf = src[s].Configuration;
+						for (var c in cnf)
+							if (c[0] != '$')
+								srcTbl += '<b>' + c + '</b>' + "=" + cnf[c] + '</br>';
+						srcTbl += "</td></tr>";
+					}
+				}
+				srcTbl += "</table>";
 
 
-		        srcTbl += "<h3>Streams</h3>" +
+				srcTbl += "<h3>Streams</h3>" +
 		            "<table><tr><th>Source</th><th>Target</th><th>Items</th><th>Err</th></tr>";
-		        src = result.Streams;
-		        for (var s in src) {
-		            if (s[0] != '$') {
-		                srcTbl += "<tr><td><pre>"
+				src = result.Streams;
+				for (var s in src) {
+					if (s[0] != '$') {
+						srcTbl += "<tr><td><pre>"
                             + src[s].Source.substring(0, 13) + ":" + src[s].SourceOut + "</pre></td><td><pre>"
                             + src[s].Target.substring(0, 13) + ":" + src[s].TargetIn + "</pre></td><td>"
                             + src[s].Count + "</td><td>" +
-                            + src[s].Error + "</td></tr>";
-		            }
-		        }
-		        srcTbl += "</table>";
+                            +src[s].Error + "</td></tr>";
+					}
+				}
+				srcTbl += "</table>";
 
-		        return srcTbl;
-		    };
+				return srcTbl;
+			};
 
 			// Ensure the Pipeline is saved
 			$scope.savePipeline().then(query);

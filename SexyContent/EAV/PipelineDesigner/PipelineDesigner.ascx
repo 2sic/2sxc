@@ -29,13 +29,7 @@
 				</select>
 				<button type="button" class="btn btn-default btn-sm" title="Query the Data of this Pipeline" ng-click="queryPipeline()"><span class="glyphicon glyphicon-play"></span> Query</button>
 				<button type="button" class="btn btn-default btn-sm" title="Clone this Pipeline with all DataSources and Configurations" ng-click="clonePipeline()" ng-disabled="!PipelineEntityId"><span class="glyphicon glyphicon-share-alt"></span> Clone</button>
-
-						<a class="btn btn-xs btn-default" target="_self" ng-href="{{getPipelineUrl('edit', PipelineEntityId)}}">
-							<span class="glyphicon glyphicon-pencil"></span> Test Parameters
-						</a>
-
-
-				<button type="button" class="btn btn-info btn-xs" ng-click="editTestParameters()"><span class="glyphicon glyphicon-info-sign"></span> Test Parameters</button>
+				<button type="button" class="btn btn-default btn-sm" ng-click="editPipelineEntity()"><span class="glyphicon glyphicon-pencil"></span> Test Parameters</button>
 				<button type="button" class="btn btn-info btn-xs" ng-click="toggleEndpointOverlays()"><span class="glyphicon glyphicon-info-sign"></span> {{showEndpointOverlays ? 'Hide' : 'Show' }} Overlays</button>
 				<button type="button" class="btn btn-info btn-xs" ng-click="repaint()"><span class="glyphicon glyphicon-repeat"></span> Repaint</button>
 				<button type="button" class="btn btn-info btn-xs" ng-click="toogleDebug()"><span class="glyphicon glyphicon-info-sign"></span> {{debug ? 'Hide' : 'Show'}} Debug Info</button>
