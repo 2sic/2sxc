@@ -50,10 +50,28 @@ namespace ToSic.SexyContent.Serializers
 		/// </summary>
 		public object Prepare(IDataStream stream)
 		{
-			var language = Thread.CurrentThread.CurrentCulture.Name;
-			return stream.List.Select(c => GetDictionaryFromEntity(c.Value, language));
+			// var language = Thread.CurrentThread.CurrentCulture.Name;
+		    return Prepare(stream.List);  // stream.List.Select(c => GetDictionaryFromEntity(c.Value, language));
 		}
 
+        /// <summary>
+        /// Return an object that represents an IDataStream, but is serializable
+        /// </summary>
+        public object Prepare(IDictionary<int, IEntity> list)
+        {
+            var language = Thread.CurrentThread.CurrentCulture.Name;
+            return list.Select(c => GetDictionaryFromEntity(c.Value, language));
+        }
+
+        /// <summary>
+        /// Return an object that represents an IDataStream, but is serializable
+        /// </summary>
+        public object Prepare(IEnumerable<dynamic> dynamicList)
+        {
+            var language = Thread.CurrentThread.CurrentCulture.Name;
+            return dynamicList.Select(c => GetDictionaryFromEntity(c.Entity, language));
+        }
+        
         /// <summary>
         /// Return an object that represents an IDataStream, but is serializable
         /// </summary>
