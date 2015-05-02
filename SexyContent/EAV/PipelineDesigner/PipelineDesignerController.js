@@ -319,7 +319,7 @@ pipelineDesigner.controller('PipelineDesignerController',
 				eavDialogService.open({
 					url: pipelineService.getPipelineUrl('edit', $scope.PipelineEntityId),
 					title: 'Edit Test Values',
-					onClose: function() {
+					onClose: function () {
 						pipelineService.getPipeline($scope.PipelineEntityId).then(pipelineSaved);
 					}
 				});
@@ -415,6 +415,9 @@ pipelineDesigner.controller('PipelineDesignerController',
                             + '<h3>Query result</h3><div> <pre id="pipelineQueryResult">' + $filter('json')(success.Query) + '</pre>' + showConnectionTable(success) + '</div>'
                             + '</div'
 					});
+					$timeout(function () {
+						showEntityCountOnStreams(success);
+					});
 					$log.debug(success);
 				}, function (reason) {
 					uiNotification.error('Query failed', reason);
@@ -455,6 +458,30 @@ pipelineDesigner.controller('PipelineDesignerController',
 
 				return srcTbl;
 			};
+
+			var showEntityCountOnStreams = function (result) {
+				angular.forEach(result.Streams, function (stream) {
+					// Find jsPlumb Connection for the current Stream
+					var sourceElementId = $scope.dataSourceIdPrefix + stream.Source;
+					var targetElementId = $scope.dataSourceIdPrefix + stream.Target;
+					if (stream.Target === "00000000-0000-0000-0000-000000000000")
+						targetElementId = $scope.dataSourceIdPrefix + "Out";
+
+					var fromUuid = sourceElementId + '_out_' + stream.SourceOut;
+					var toUuid = targetElementId + '_in_' + stream.TargetIn;
+
+					var sourceEndpoint = $scope.jsPlumbInstance.getEndpoint(fromUuid);
+					angular.forEach(sourceEndpoint.connections, function (connection) {
+						if (connection.endpoints[1].getUuid() === toUuid) {
+							// when connection found, update it's label with the Entities-Count
+							connection.setLabel({
+								label: stream.Count.toString(),
+								cssClass: "streamEntitiesCount"
+							});
+						}
+					});
+				});
+			}
 
 			// Ensure the Pipeline is saved
 			$scope.savePipeline().then(query);
