@@ -114,10 +114,12 @@
         $scope.saveTemplateId = function () {
         	var promises = [];
 
-            promises.push(moduleApi.saveTemplateId($scope.templateId));
-
-            $scope.savedTemplateId = $scope.templateId;
-            promises.push($scope.setTemplateChooserState(false));
+			// Save only if the currently saved is not the same as the new
+        	if ($scope.savedTemplateId != $scope.templateId) {
+        		promises.push(moduleApi.saveTemplateId($scope.templateId));
+        		$scope.savedTemplateId = $scope.templateId;
+        		promises.push($scope.setTemplateChooserState(false));
+	        }
 
             return $q.all(promises);
         };
