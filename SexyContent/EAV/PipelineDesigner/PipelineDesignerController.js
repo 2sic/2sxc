@@ -26,7 +26,7 @@ pipelineDesigner.controller('PipelineDesignerController',
 		pipelineService.getPipeline($scope.PipelineEntityId).then(function (success) {
 			$scope.pipelineData = success;
 			$scope.readOnly = !success.Pipeline.AllowEdit;
-			uiNotification.note('Ready', $scope.readOnly ? 'This pipeline is read only' : 'You can now desing the Pipeline', true);
+			uiNotification.note('Ready', $scope.readOnly ? 'This pipeline is read only' : 'You can now design the Pipeline. \nNote that there are still a few UI bugs.\nVisit 2sxc.org/help for more.', true);
 
 			// If a new Pipeline is made, init new Pipeline
 			if (!$scope.PipelineEntityId || $scope.pipelineData.DataSources.length == 1)
