@@ -171,10 +171,11 @@ WHERE        (ModuleSettings_1.SettingName = N'AppId') AND (DesktopModules.Modul
 -- Insert new GUID for ContentGroups and Templates (will be used as EntityGuid while upgrading)
 EXEC('UPDATE ToSIC_SexyContent_Templates SET Temp_NewTemplateGuid = NEWID() WHERE Temp_NewTemplateGuid IS NULL')
 
-EXEC('UPDATE c SET Temp_NewContentGroupGuid = c1.newGuid FROM ToSIC_SexyContent_ContentGroupItems AS c
-LEFT OUTER JOIN (SELECT ContentGroupID, NEWID() AS newGuid  FROM ToSIC_SexyContent_ContentGroupItems GROUP BY ContentGroupID) c1
+EXEC('SELECT * INTO #ContentGroupItems FROM (SELECT ContentGroupID, NEWID() AS newGuid  FROM ToSIC_SexyContent_ContentGroupItems GROUP BY ContentGroupID)
+GO
+UPDATE c SET Temp_NewContentGroupGuid = c1.newGuid FROM ToSIC_SexyContent_ContentGroupItems AS c
+LEFT OUTER JOIN #ContentGroupItems c1
 ON c.ContentGroupID = c1.ContentGroupID WHERE Temp_NewContentGroupGuid IS NULL')
-
 
 -- Update ModuleSettings to use the new ContentGroupGuid instead of the old id
 EXEC('INSERT INTO ModuleSettings
