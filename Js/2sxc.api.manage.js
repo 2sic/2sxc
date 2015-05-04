@@ -40,7 +40,6 @@ $2sxc.getManageController = function (id) {
         'replace': {
             title: 'Replace', icon: 'glyphicon-random', lightbox: false, hideFirst: true,
             action: function (event, settings) {
-                // ToDo: Remove dependency to AngularJS, should use 2sxc.api.js
                 manageController._openDialog(settings);
             }
         },
