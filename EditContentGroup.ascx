@@ -74,6 +74,9 @@
             $(".sc-action-other").css("display", "inline-block");
             $(this).hide();
         });
+
+	    $(".sc-action-trigger-others").toggle($(".sc-action-other").size() > 0);
+
     });
 
     function ChangeLanguage(CurrentLanguage, NewLanguage, NewLanguageUrl) {
