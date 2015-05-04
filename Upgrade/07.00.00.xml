@@ -148,6 +148,46 @@
 				</Attribute>
 			</Attributes>
 		</AttributeSet>
+		<AttributeSet StaticName="|Config ToSic.SexyContent.DataSources.DnnFormAndList" Name="|Config ToSic.SexyContent.DataSources.DnnFormAndList" Description="Configuration for the Form and List Data Source" Scope="System" AlwaysShareConfiguration="true">
+			<Attributes>
+				<Attribute StaticName="Title" Type="String" IsTitle="true">
+					<Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@All" AttributeSetName="@All" EntityGUID="5f5f222f-a504-4c70-9ecf-366aa0a0356e">
+						<Value Key="Name" Value="Title" Type="String" />
+						<Value Key="Notes" Value="&lt;p&gt;Just a title for you to give this configuration a name.&lt;/p&gt;" Type="String" />
+						<Value Key="VisibleInEditUI" Value="True" Type="Boolean" />
+						<Value Key="Required" Value="True" Type="Boolean" />
+						<Value Key="DefaultValue" Value="FnL DataSource Configuration" Type="String" />
+					</Entity>
+				</Attribute>
+				<Attribute StaticName="ModuleId" Type="Number" IsTitle="false">
+					<Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@All" AttributeSetName="@All" EntityGUID="c7683ee8-ba4a-4981-8990-a19f524c39a8">
+						<Value Key="Name" Value="FnL Module Id" Type="String" />
+						<Value Key="Notes" Value="&lt;p&gt;The ID of the Form and List Module in DNN. The Data will be retrieved from that specific module.&amp;nbsp;&lt;/p&gt;" Type="String" />
+						<Value Key="VisibleInEditUI" Value="True" Type="Boolean" />
+						<Value Key="Required" Value="True" Type="Boolean" />
+						<Value Key="DefaultValue" Value="" Type="String" />
+					</Entity>
+				</Attribute>
+				<Attribute StaticName="TitleFieldName" Type="String" IsTitle="false">
+					<Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@All" AttributeSetName="@All" EntityGUID="da8ba7fe-cbba-489b-917f-a2a5eb793646">
+						<Value Key="Name" Value="Title Field Name" Type="String" />
+						<Value Key="Notes" Value="&lt;span&gt;The column in Form and List which should become the title of the resulting content-items. If you leave this blank, the system will just pick the first column as title.&amp;nbsp;&lt;/span&gt;" Type="String" />
+						<Value Key="VisibleInEditUI" Value="True" Type="Boolean" />
+						<Value Key="Required" Value="False" Type="Boolean" />
+						<Value Key="DefaultValue" Value="" Type="String" />
+					</Entity>
+				</Attribute>
+				<Attribute StaticName="ContentTypeName" Type="String" IsTitle="false">
+					<Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@All" AttributeSetName="@All" EntityGUID="1b16a073-7e20-4a7f-8d2a-e0b4517f92c9">
+						<Value Key="Name" Value="Content Type Name" Type="String" />
+						<Value Key="Notes" Value="&lt;p&gt;This is the internal name for the resulting Content-Type. Usually not important, if you leave it blank a default value (usually FnL) is used.&amp;nbsp;&lt;/p&gt;" Type="String" />
+						<Value Key="VisibleInEditUI" Value="True" Type="Boolean" />
+						<Value Key="Required" Value="False" Type="Boolean" />
+						<Value Key="DefaultValue" Value="" Type="String" />
+					</Entity>
+				</Attribute>
+			</Attributes>
+		</AttributeSet>
 	</AttributeSets>
 	<Entities />
 	<Templates />
