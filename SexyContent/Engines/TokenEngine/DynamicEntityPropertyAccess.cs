@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Web.UI.WebControls;
 using DotNetNuke.Entities.Users;
 using DotNetNuke.Services.Tokens;
 using ToSic.Eav.ValueProvider;
@@ -12,13 +13,21 @@ namespace ToSic.SexyContent.Engines.TokenEngine
 {
 	public class DynamicEntityPropertyAccess : IPropertyAccess, IValueProvider
 	{
+        public const string RepeaterSubToken = "Repeater";
+
 		private readonly DynamicEntity _entity;
 		public string Name { get; private set; }
 
-		public DynamicEntityPropertyAccess(string name, DynamicEntity entity)
+	    private int RepeaterIndex = -1;
+	    private int RepeaterTotal = -1;
+        
+
+		public DynamicEntityPropertyAccess(string name, DynamicEntity entity, int repeaterIndex = -1, int repeaterTotal = -1)
 		{
 			Name = name;
 			_entity = entity;
+		    RepeaterIndex = repeaterIndex;
+		    RepeaterTotal = repeaterTotal;
 		}
 
 		public CacheLevel Cacheability
@@ -42,14 +51,52 @@ namespace ToSic.SexyContent.Engines.TokenEngine
 			if (_entity == null)
 				return string.Empty;
 
+
             // 2015-04-25 - 2dm - must discuss w/2rm
             // Looks like very duplicate code! Try this instead
 		    // return _entity.GetEntityValue(strPropertyName);
 
 			var outputFormat = strFormat == string.Empty ? "g" : strFormat;
 
-			bool propertyNotFound;
-			var valueObject = _entity.GetEntityValue(strPropertyName, out propertyNotFound);
+			bool propertyNotFound = false;
+
+            // 2015-05-04 2dm added functionality for repeater-infos
+            string repeaterHelper = null;
+            if (RepeaterIndex > -1 && strPropertyName.StartsWith(RepeaterSubToken + ":", StringComparison.OrdinalIgnoreCase))
+            {
+                switch (strPropertyName.Substring(RepeaterSubToken.Length + 1).ToLower())
+                {
+                    case "index":
+                        repeaterHelper = (RepeaterIndex).ToString();
+                        break;
+                    case "index1":
+                        repeaterHelper = (RepeaterIndex + 1).ToString();
+                        break;
+                    case "alternator2":
+                        repeaterHelper = (RepeaterIndex%2).ToString();
+                        break;
+                    case "alternator3":
+                        repeaterHelper = (RepeaterIndex%3).ToString();
+                        break;
+                    case "alternator4":
+                        repeaterHelper = (RepeaterIndex%4).ToString();
+                        break;
+                    case "alternator5":
+                        repeaterHelper = (RepeaterIndex%5).ToString();
+                        break;
+                    case "isfirst":
+                        repeaterHelper = (RepeaterIndex == 0) ? "First" : "";
+                        break;
+                    case "islast":
+                        repeaterHelper = (RepeaterIndex == RepeaterTotal - 1) ? "Last" : "";
+                        break;
+                    case "count":
+                        repeaterHelper = RepeaterTotal.ToString();
+                        break;
+                }
+            }
+
+			var valueObject = repeaterHelper ?? _entity.GetEntityValue(strPropertyName, out propertyNotFound);
 
 			if (!propertyNotFound && valueObject != null)
 			{
