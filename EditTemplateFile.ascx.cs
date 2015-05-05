@@ -77,9 +77,9 @@ namespace ToSic.SexyContent
                 formatString = "@{0}.{1}";
 
 	        AddHelpForAContentType(ContentGroup.Template.ContentTypeStaticName, formatString, "Content", languageList);
-			AddHelpForAContentType(ContentGroup.Template.PresentationTypeStaticName, formatString, "Presentation", languageList);
+			AddHelpForAContentType(ContentGroup.Template.PresentationTypeStaticName, formatString.Replace("[{0}", "[Content:Presentation"), "Presentation", languageList);
 			AddHelpForAContentType(ContentGroup.Template.ListContentTypeStaticName, formatString, "ListContent", languageList);
-			AddHelpForAContentType(ContentGroup.Template.ListPresentationTypeStaticName, formatString, "ListPresentation", languageList);
+			AddHelpForAContentType(ContentGroup.Template.ListPresentationTypeStaticName, formatString.Replace("[{0}", "[ListContent:Presentation"), "ListPresentation", languageList);
 
 			// todo: add AppResources and AppSettings help
 
