@@ -496,10 +496,13 @@ namespace ToSic.SexyContent
                 }
 
                 // Try to add the standard DNN property sources
-	            var dnn = new TokenReplaceDnn(App, moduleId);
+	            var dnnUsr = UserController.Instance.GetCurrentUserInfo();
+                var dnnCult = Thread.CurrentThread.CurrentUICulture;  // todo: discuss w/2rm
+	            var dnn = new TokenReplaceDnn(App, moduleId, PS, dnnUsr);
 	            var stdSources = dnn.PropertySources;
 	            foreach (var propertyAccess in stdSources)
-	                provider.Sources.Add(propertyAccess.Key, new ValueProviderWrapperForPropertyAccess(propertyAccess.Key, propertyAccess.Value));
+	                provider.Sources.Add(propertyAccess.Key,
+	                    new ValueProviderWrapperForPropertyAccess(propertyAccess.Key, propertyAccess.Value, dnnUsr, dnnCult));
 
 	            provider.Sources.Add("app", new AppPropertyAccess("app", App));
 

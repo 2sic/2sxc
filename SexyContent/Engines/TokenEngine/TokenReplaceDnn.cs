@@ -1,5 +1,6 @@
 ﻿using System;
 using DotNetNuke.Entities.Portals;
+using DotNetNuke.Entities.Users;
 using DotNetNuke.Services.Tokens;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,8 +10,10 @@ namespace ToSic.SexyContent.Engines.TokenEngine
 {
     public class TokenReplaceDnn : DotNetNuke.Services.Tokens.TokenReplace
     {
-        public TokenReplaceDnn(App app, int moduleId)//, PortalSettings portalSettings)
+        public TokenReplaceDnn(App app, int moduleId, PortalSettings ps, UserInfo uinfo)
+            : base(Scope.DefaultSettings, "".ToString(), ps, uinfo, moduleId) //, PortalSettings portalSettings)
         {
+
             var xApp = app;
             //ModuleId = moduleId;
             // throw new NotImplementedException();
@@ -35,33 +38,42 @@ namespace ToSic.SexyContent.Engines.TokenEngine
 
         }
 
+        private bool _initialized = false;
         public Dictionary<string, IPropertyAccess> PropertySources
         {
-            get { return PropertySource; }
-        }
-
-        public void AddPropertySource(string name, IPropertyAccess value)
-        {
-            PropertySource.Add(name, value);
-        }
-
-        public IPropertyAccess RemovePropertySource(string name)
-        {
-            var source = GetPropertySource(name);
-            if (source != null)
-            { 
-                PropertySource.Remove(name);
+            get
+            {
+                if (!_initialized)
+                {
+                    ReplaceTokens("InitializePropertySources");
+                    _initialized = true;
+                }
+                return PropertySource;
             }
-            return source;
         }
 
-        public IPropertyAccess GetPropertySource(string name)
-        {
-            if (PropertySource.ContainsKey(name))
-            { 
-                return PropertySource[name];
-            }
-            return null;
-        }
+        //public void AddPropertySource(string name, IPropertyAccess value)
+        //{
+        //    PropertySource.Add(name, value);
+        //}
+
+        //public IPropertyAccess RemovePropertySource(string name)
+        //{
+        //    var source = GetPropertySource(name);
+        //    if (source != null)
+        //    { 
+        //        PropertySource.Remove(name);
+        //    }
+        //    return source;
+        //}
+
+        //public IPropertyAccess GetPropertySource(string name)
+        //{
+        //    if (PropertySource.ContainsKey(name))
+        //    { 
+        //        return PropertySource[name];
+        //    }
+        //    return null;
+        //}
     }
 }
