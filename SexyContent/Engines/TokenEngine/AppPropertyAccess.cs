@@ -90,6 +90,10 @@ namespace ToSic.SexyContent.Engines.TokenEngine
                 if (subProvider != null)
                     return subProvider.Get(subToken.Rest, strFormat, ref PropertyNotFound);
             }
+
+            // Maybe someday: also retrieve metadata like Folder, Name, Version
+            // var found = base.Get(strPropertyName, strFormat, ref PropertyNotFound);
+
             PropertyNotFound = true;
             return string.Empty;
         }

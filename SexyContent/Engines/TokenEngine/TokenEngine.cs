@@ -1,4 +1,6 @@
-﻿using DotNetNuke.Entities.Portals;
+﻿using System.Runtime.InteropServices;
+using System.Security.Policy;
+using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Tokens;
 using System;
 using System.Collections.Generic;
@@ -17,8 +19,21 @@ namespace ToSic.SexyContent.Engines.TokenEngine
 {
     public class TokenEngine : EngineBase
     {
+        #region Replacement List to still support old Tokens
+        // Version 6 to 7
+        private string[,] upgrade6to7 = new string[,]
+        {
+            {"[Presentation:", "[Content:Presentation:"},           // replaces all old direct references to presentation
+            {"[ListPresentation:", "[ListContent:Presentation:"},   // Replaces all old references to ListPresentation
+            {"[AppSettings:", "[App:Settings:"},                    // Replaces all old Settings
+            {"[AppResources:", "[App:Resources:"},                  // Replaces all old Resources
+            {"<repeat>", "<repeat repeat=\"Content in Data:Default\">"},    // Replace all old repeat-tags
+            {"[List:", "[Content:Repeater:"},                       // Replaces all old List:Index, List:Index1, List:Alternator, IsFirst/Last etc.
+        };
+        #endregion
+
         #region Regular Expressions / String Constants
-        
+
         private static readonly dynamic SourcePropertyName =  new {
             Content     = "content",
             ListContent = "listcontent"
@@ -87,11 +102,8 @@ namespace ToSic.SexyContent.Engines.TokenEngine
         {
             var templateSource = File.ReadAllText(HostingEnvironment.MapPath(TemplatePath));
             // Convert old <repeat> elements to the new ones
-            templateSource = templateSource.Replace("[Presentation:", "[Content:Presentation:")
-                                           .Replace("[ListPresentation:", "[ListContent:Presentation:")
-                                           .Replace("[AppSettings:", "[App:Settings:")
-                                           .Replace("[AppResources:", "[App:Resources:")
-                                           .Replace("<repeat>", "<repeat repeat=\"Content in Data:Default\">");
+            for (var upgrade = 0; upgrade < upgrade6to7.Length/2; upgrade++)
+                templateSource = templateSource.Replace(upgrade6to7[upgrade, 0], upgrade6to7[upgrade, 1]);
 
             // Render all <repeat>s
             var repeatsMatches = RepeatRegex.Matches(templateSource);       
@@ -131,27 +143,12 @@ namespace ToSic.SexyContent.Engines.TokenEngine
                 throw new ArgumentException("Was not able to implement REPEAT because I could not find Data:" + streamName + ". Please check spelling the pipeline delivering data to this template.");
 
             var dataItems = DataSource[streamName].List;
-            for (var i = 0; i < dataItems.Count; i++)
+            var itemsCount = dataItems.Count;
+            for (var i = 0; i < itemsCount; i++)
             {
-
-                var dataItemInfo = new Dictionary<string, string>()  // Information about position of data item in list
-                {
-                    { "Index",       (i).ToString()     },
-                    { "Index1",      (i + 1).ToString() },
-                    { "Alternator2", (i % 2).ToString() },
-                    { "Alternator3", (i % 3).ToString() },
-                    { "Alternator4", (i % 4).ToString() },
-                    { "Alternator5", (i % 5).ToString() },  
-                    { "IsFirst",     (i == 0) ? "First" : "" },
-                    { "IsLast",      (i == dataItems.Count - 1) ? "Last" : "" },
-                    { "Count",       dataItems.Count.ToString() }
-                };
-              
                 // Create property sources for the current data item (for the current data item and its list information)
                 var propertySources = new Dictionary<string, IValueProvider>();
-                propertySources.Add("list", new StaticValueProvider("list", dataItemInfo));// new DictionaryPropertyAccess(dataItemInfo));
-                propertySources.Add(sourceName, new DynamicEntityPropertyAccess(sourceName, dataHelper.AsDynamic(dataItems.ElementAt(i).Value)));
-
+                propertySources.Add(sourceName, new DynamicEntityPropertyAccess(sourceName, dataHelper.AsDynamic(dataItems.ElementAt(i).Value), i, itemsCount));
                 builder.Append(RenderSection(template, propertySources));
             }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using DotNetNuke.Entities.Portals;
+using DotNetNuke.Entities.Users;
 using DotNetNuke.Services.Tokens;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,59 +10,28 @@ namespace ToSic.SexyContent.Engines.TokenEngine
 {
     public class TokenReplaceDnn : DotNetNuke.Services.Tokens.TokenReplace
     {
-        public TokenReplaceDnn(App app, int moduleId)//, PortalSettings portalSettings)
+        /// <summary>
+        /// This class is mainly here to deliver all standard DNN-token lists to 2sxc. 
+        /// So it mainly initializes the normal DNN-Tokenprovider and offers a property called Property-Access which then contains all value-resolvers
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="moduleId"></param>
+        /// <param name="ps"></param>
+        /// <param name="uinfo"></param>
+        public TokenReplaceDnn(App app, int moduleId, PortalSettings ps, UserInfo uinfo)
+            : base(Scope.DefaultSettings, "", ps, uinfo, moduleId)
         {
-            var xApp = app;
-            //ModuleId = moduleId;
-            // throw new NotImplementedException();
-
-            //if (HttpContext.Current != null)
-            //{
-            //    var request = HttpContext.Current.Request;
-            //    PropertySource.Add("querystring", new FilteredNameValueCollectionPropertyAccess(request.QueryString));
-            //    PropertySource.Add("server", new FilteredNameValueCollectionPropertyAccess(request.ServerVariables));
-            //    PropertySource.Add("form", new FilteredNameValueCollectionPropertyAccess(request.Form));
-            //}
-
-            //PropertySource.Add("app", new AppPropertyAccess("app", app));
-            //if (app.Settings != null)
-            //    PropertySource.Add("appsettings", new DynamicEntityPropertyAccess("appsettings", app.Settings));
-            //if (app.Resources != null)
-            //    PropertySource.Add("appresources", new DynamicEntityPropertyAccess("appresources", app.Resources));
-
             ModuleId = moduleId;
-            //PortalSettings = portalSettings;  
-            ReplaceTokens("InitializePropertySources");
-
+            PortalSettings = ps;  
+            ReplaceTokens("InitializePropertySources"); // must be executed, otherwise the list doesn't get built
         }
 
         public Dictionary<string, IPropertyAccess> PropertySources
         {
-            get { return PropertySource; }
-        }
-
-        public void AddPropertySource(string name, IPropertyAccess value)
-        {
-            PropertySource.Add(name, value);
-        }
-
-        public IPropertyAccess RemovePropertySource(string name)
-        {
-            var source = GetPropertySource(name);
-            if (source != null)
-            { 
-                PropertySource.Remove(name);
+            get
+            {
+                return PropertySource; 
             }
-            return source;
-        }
-
-        public IPropertyAccess GetPropertySource(string name)
-        {
-            if (PropertySource.ContainsKey(name))
-            { 
-                return PropertySource[name];
-            }
-            return null;
         }
     }
 }
