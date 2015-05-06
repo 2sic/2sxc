@@ -115,7 +115,7 @@
         	var promises = [];
 
 			// Save only if the currently saved is not the same as the new
-        	if ($scope.savedTemplateId != $scope.templateId) {
+        	if (!$scope.manageInfo.hasContent || $scope.savedTemplateId != $scope.templateId) {
         		promises.push(moduleApi.saveTemplateId($scope.templateId));
         		$scope.savedTemplateId = $scope.templateId;
         		promises.push($scope.setTemplateChooserState(false));
