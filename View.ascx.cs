@@ -62,11 +62,7 @@ namespace ToSic.SexyContent
                     {
                         var templates = Sexy.GetAvailableTemplatesForSelector(ModuleConfiguration).ToList();
                         if (templates.Any())
-<<<<<<< HEAD
-							SexyUncached.UpdateTemplateForGroup(Sexy.GetContentGroupIdFromModule(ModuleConfiguration.ModuleID), templates.First().TemplateID, UserInfo.UserID);
-=======
 							Sexy.ContentGroups.SetPreviewTemplateId(ModuleConfiguration.ModuleID, templates.First().TemplateId);
->>>>>>> PreV7
                         Response.Redirect(Request.RawUrl);
                     }
                 }
