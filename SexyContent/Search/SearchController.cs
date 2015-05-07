@@ -6,10 +6,7 @@ using System.Web;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.Search.Entities;
-using DotNetNuke.Web.UI;
 using ToSic.Eav;
-using ToSic.Eav.DataSources;
-using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Engines;
 
@@ -30,19 +27,19 @@ namespace ToSic.SexyContent.Search
             if (!zoneId.HasValue)
                 return searchDocuments;
 
-            var appId = SexyContent.GetDefaultAppId(zoneId.Value);
+            int? appId = SexyContent.GetDefaultAppId(zoneId.Value);
 
             if (!isContentModule)
             {
-                // Get AppId from ModuleSettings
-                var appIdString = moduleInfo.ModuleSettings[SexyContent.AppIDString];
-                if (appIdString == null || !int.TryParse(appIdString.ToString(), out appId))
-                    return searchDocuments;
+	            appId = SexyContent.GetAppIdFromModule(moduleInfo);
+				if (!appId.HasValue)
+		            return searchDocuments;
             }
 
-            var sexy = new SexyContent(zoneId.Value, appId, true, moduleInfo.OwnerPortalID);
+            var sexy = new SexyContent(zoneId.Value, appId.Value, true, moduleInfo.OwnerPortalID);
             var language = moduleInfo.CultureCode;
-            var template = sexy.GetTemplateForModule(moduleInfo.ModuleID);
+	        var contentGroup = sexy.ContentGroups.GetContentGroupForModule(moduleInfo.ModuleID);
+            var template = contentGroup.Template;
 
             // This list will hold all EAV entities to be indexed
             var dataSource = sexy.GetViewDataSource(moduleInfo.ModuleID, false, template);
@@ -74,7 +71,7 @@ namespace ToSic.SexyContent.Search
 
                 searchInfoList.AddRange(entities.Select(entity =>
                 {
-                    var searchInfo = new SearchInfo()
+                    var searchInfo = new SearchInfo
                     {
                         Entity = entity,
                         Url = "",

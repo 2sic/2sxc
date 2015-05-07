@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Web;
 using DotNetNuke.Entities.Modules;
-using DotNetNuke.UI.Modules;
 using ToSic.Eav.DataSources;
 using ToSic.SexyContent.Search;
 

@@ -5,9 +5,14 @@
 
 
 <asp:Panel runat="server" class="dnnForm dnnSexyContentImport dnnClear" id="pnlUpload">
-    <h2 class="dnnFormSectionHead" runat="server"><asp:Label runat="server" ID="lblImportHeading" ResourceKey="lblImportHeading"></asp:Label></h2>
-    <div class="dnnFormMessage dnnFormInfo">
-        <asp:Label runat="server" ID="lblImportInfo" ResourceKey="lblImportInfo"></asp:Label>
+    <h2 class="dnnFormSectionHead" runat="server"><asp:Label runat="server" ID="Label1" ResourceKey="lblImportHeading"></asp:Label></h2>
+    <div class="dnnFormInfo">
+        <asp:Label runat="server" ID="Label2" ResourceKey="lblImportInfo"></asp:Label>
+    </div>
+
+    <h2 class="dnnFormSectionHead" runat="server"><asp:Label runat="server" ID="lblImportHeading" ResourceKey="lblPartialImportHeading"></asp:Label></h2>
+    <div class="dnnFormInfo">
+        <asp:Label runat="server" ID="lblImportInfo" ResourceKey="lblPartialImportInfo"></asp:Label>
     </div>
     <fieldset>
         <div class="dnnFormItem">
@@ -47,7 +52,3 @@
         $('.dnnFormSuccess').slideToggle();
     }
 </script>
-<br /><br />
-<div class="dnnFormMessage dnnFormInfo">
-    <asp:Label runat="server" ResourceKey="lblImportExportData"></asp:Label>
-</div>

@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
@@ -10,9 +9,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("ToSic")]
 [assembly: AssemblyProduct("2SexyContent")]
-[assembly: AssemblyCopyright("© 2sic 2014")]
+[assembly: AssemblyCopyright("© 2sic 2015")]
 [assembly: AssemblyTrademark("")]
-[assembly: GuidAttribute("bd90b92e-79ec-4846-8998-b56277d5b2b4")]
+[assembly: Guid("bd90b92e-79ec-4846-8998-b56277d5b2b4")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
@@ -29,5 +28,5 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
-[assembly: AssemblyVersion("6.6.6.0")]
-[assembly: AssemblyFileVersion("6.6.6.0")]
+[assembly: AssemblyVersion("7.0.1.0")]
+[assembly: AssemblyFileVersion("7.0.1.0")]

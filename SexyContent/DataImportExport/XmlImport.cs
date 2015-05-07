@@ -7,18 +7,19 @@ using ToSic.Eav.Import;
 using ToSic.SexyContent.DataImportExport.Extensions;
 using ToSic.SexyContent.DataImportExport.Options;
 using AttributeSet = ToSic.Eav.AttributeSet;
+using Entity = ToSic.Eav.Import.Entity;
 
 namespace ToSic.SexyContent.DataImportExport
 {
     public class XmlImport
     {
-        private int applicationId;
+        private readonly int applicationId;
 
-        private int zoneId;
+        private readonly int zoneId;
 
-        private SexyContent contentManager;
+        private readonly SexyContent contentManager;
 
-        private AttributeSet contentType;
+        private readonly AttributeSet contentType;
 
         /// <summary>
         /// The xml document to imported.
@@ -38,13 +39,13 @@ namespace ToSic.SexyContent.DataImportExport
             private set;
         }
 
-        private string documentLanguageFallback;
+        private readonly string documentLanguageFallback;
 
         private IEnumerable<string> languages;
 
-        private ResourceReferenceImport resourceReference;
+        private readonly ResourceReferenceImport resourceReference;
 
-        private EntityClearImport entityClear;
+        private readonly EntityClearImport entityClear;
 
         /// <summary>
         /// The entities created from the document. They will be saved to the repository.
@@ -79,7 +80,7 @@ namespace ToSic.SexyContent.DataImportExport
 
         private Entity AppendEntity(Guid entityGuid)
         {
-            var entity = new Entity()
+            var entity = new Entity
             {
                 AttributeSetStaticName = contentType.StaticName,
                 AssignmentObjectTypeId = SexyContent.AssignmentObjectTypeIDDefault,
@@ -105,13 +106,13 @@ namespace ToSic.SexyContent.DataImportExport
         /// <param name="resourceReference">How value references to files and pages are handled</param>
         public XmlImport(int zoneId, int applicationId, int contentTypeId, Stream dataStream, IEnumerable<string> languages, string documentLanguageFallback, EntityClearImport entityClear, ResourceReferenceImport resourceReference)
         {
-            this.Entities = new List<Entity>();
-            this.ErrorProtocol = new ImportErrorProtocol();
+            Entities = new List<Entity>();
+            ErrorProtocol = new ImportErrorProtocol();
 
             this.applicationId = applicationId;
             this.zoneId = zoneId;
-            this.contentManager = new SexyContent(zoneId, applicationId);
-            this.contentType = contentManager.ContentContext.GetAttributeSet(contentTypeId);
+            contentManager = new SexyContent(zoneId, applicationId);
+            contentType = contentManager.ContentContext.GetAttributeSet(contentTypeId);
             this.languages = languages;
             this.documentLanguageFallback = documentLanguageFallback;
             this.entityClear = entityClear;
@@ -131,7 +132,7 @@ namespace ToSic.SexyContent.DataImportExport
             {
                 if (languages == null || languages.Count() == 0)
                 {
-                    languages = new string[] { string.Empty };
+                    languages = new[] { string.Empty };
                 }
 
                 if (contentType == null)
@@ -148,8 +149,10 @@ namespace ToSic.SexyContent.DataImportExport
                     return;
                 }
 
-                var documentRoot = Document.Element(DocumentNodeNames.Root + contentType.Name.RemoveSpecialCharacters());
-                if (documentRoot == null)
+                var documentRoot = Document.Element(DocumentNodeNames.Root);
+                
+                var documentTypeAttribute = documentRoot.Attribute(DocumentNodeNames.RootTypeAttribute);
+                if (documentTypeAttribute == null || documentTypeAttribute.Value == null || documentTypeAttribute.Value != contentType.Name.RemoveSpecialCharacters())
                 {
                     ErrorProtocol.AppendError(ImportErrorCode.InvalidRoot);
                     return;
@@ -159,8 +162,19 @@ namespace ToSic.SexyContent.DataImportExport
                 DocumentElements = documentRoot.Elements(DocumentNodeNames.Entity);
                 var documentElementNumber = 0;
 
-                var documentElementLanguagesAll = DocumentElements.GroupBy(element => element.Element(DocumentNodeNames.EntityGuid).Value)
-                                                                  .Select(group => group.Select(element => element.Element(DocumentNodeNames.EntityLanguage).Value)).ToList();
+                // Assure that each element has a GUID and language child element
+                foreach (var element in DocumentElements)
+                {
+                    if (element.Element(DocumentNodeNames.EntityGuid) == null)
+                    {
+                        element.Append(DocumentNodeNames.EntityGuid, "");
+                    }
+                    if (element.Element(DocumentNodeNames.EntityLanguage) == null)
+                    {
+                        element.Append(DocumentNodeNames.EntityLanguage, "");
+                    }
+                }
+                var documentElementLanguagesAll = DocumentElements.GroupBy(element => element.Element(DocumentNodeNames.EntityGuid).Value).Select(group => group.Select(element => element.Element(DocumentNodeNames.EntityLanguage).Value).ToList());
                 var documentElementLanguagesCount = documentElementLanguagesAll.Select(item => item.Count());
                 if (documentElementLanguagesCount.Any(count => count != 1))
                 {
@@ -197,14 +211,20 @@ namespace ToSic.SexyContent.DataImportExport
                     var attributes = contentType.GetAttributes();
                     foreach (var attribute in attributes)
                     {   
+                        var valueType = attribute.Type;
                         var valueName = attribute.StaticName;
                         var value = documentElement.GetChildElementValue(valueName);
-                        if (value == null || value.IsValueDefault())
+                        if (value == null || value.IsValueNull())
                         {
                             continue;
                         }
 
-                        var valueType = attribute.Type;
+                        if (value.IsValueEmpty())
+                        {   // It is an empty string
+                            entity.AppendAttributeValue(valueName, "", attribute.Type, documentElementLanguage, false, resourceReference.IsResolve());
+                            continue;
+                        }
+
                         var valueReferenceLanguage = value.GetValueReferenceLanguage();
                         if (valueReferenceLanguage == null)
                         {   // It is not a value reference.. it is a normal text
@@ -286,7 +306,7 @@ namespace ToSic.SexyContent.DataImportExport
                 }
             }
 
-            var import = new ToSic.Eav.Import.Import(zoneId, applicationId, userId, true);
+            var import = new Eav.Import.Import(zoneId, applicationId, userId, true);
             import.RunImport(null, Entities, true, true);
             return true;
         }

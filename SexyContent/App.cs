@@ -4,14 +4,15 @@ using System.Linq;
 using System.Web;
 using System.Web.Hosting;
 using DotNetNuke.Entities.Portals;
-using DotNetNuke.Security.Permissions;
 using ToSic.Eav;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.ValueProvider;
+using ToSic.SexyContent.DataSources;
 
 namespace ToSic.SexyContent
 {
     /// <summary>
-    /// The app class is currently only used to provide the App:Path placeholder in a template
+    /// The app class gives access to the App-object - for the data and things like the App:Path placeholder in a template
     /// </summary>
     public class App
     {
@@ -23,6 +24,7 @@ namespace ToSic.SexyContent
         public dynamic Configuration { get; internal set; }
         public dynamic Settings { get; internal set; }
         public dynamic Resources { get; internal set; }
+        private IValueCollectionProvider ConfigurationProvider { get; set; }
 
         //private IDataSource InitialSource { get; set; }
         internal PortalSettings OwnerPS { get; set; }
@@ -42,15 +44,18 @@ namespace ToSic.SexyContent
         /// todo: later this should be moved to initialization of this object
         /// </summary>
         /// <param name="showDrafts"></param>
-        internal void InitData(bool showDrafts)
+        internal void InitData(bool showDrafts, IValueCollectionProvider configurationValues)
         {
+            ConfigurationProvider = configurationValues;
+
             // ToDo: Remove this as soon as App.Data getter on App class is fixed #1 and #2
             if (_data == null)
             {
                 // ModulePermissionController does not work when indexing, return false for search
                 var initialSource = SexyContent.GetInitialDataSource(ZoneId, AppId, showDrafts);
 
-                _data = ToSic.Eav.DataSource.GetDataSource<ToSic.SexyContent.DataSources.App>(initialSource.ZoneId,
+                // todo: probably use th efull configuration provider from function params, not from initial source?
+                _data = DataSource.GetDataSource<DataSources.App>(initialSource.ZoneId,
                     initialSource.AppId, initialSource, initialSource.ConfigurationProvider);
                 var defaultLanguage = "";
                 var languagesActive = SexyContent.GetCulturesWithActiveState(OwnerPS.PortalId, ZoneId).Any(c => c.Active);
@@ -80,8 +85,8 @@ namespace ToSic.SexyContent
 
         //private IDataSource _data;
         //public IDataSource Data
-        private ToSic.SexyContent.DataSources.App _data;
-        public ToSic.SexyContent.DataSources.App Data
+        private DataSources.App _data;
+        public DataSources.App Data
         {
             get
             {
@@ -95,6 +100,28 @@ namespace ToSic.SexyContent
                 return _data;
             }
             set { _data = value; }
+        }
+
+        /// <summary>
+        /// Cached list of queries
+        /// </summary>
+        private IDictionary<string, IDataSource> _queries;
+
+        /// <summary>
+        /// Accessor to queries. Use like:
+        /// - App.Query.Count
+        /// - App.Query.ContainsKey(...)
+        /// - App.Query["One Event"].List
+        /// </summary>
+        public IDictionary<string, IDataSource> Query// (string queryName)
+        {
+            get
+            {
+                if (_queries == null)
+                    _queries = DataPipeline.AllPipelines(ZoneId, AppId, ConfigurationProvider);
+
+                return _queries;
+            }
         }
 
     }

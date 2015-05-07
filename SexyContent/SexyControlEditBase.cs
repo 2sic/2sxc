@@ -1,9 +1,8 @@
-﻿using DotNetNuke.Common.Utilities;
-using DotNetNuke.Entities.Modules;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
+using DotNetNuke.Entities.Modules;
 using DotNetNuke.UI.Modules;
+using Newtonsoft.Json;
 
 namespace ToSic.SexyContent
 {
@@ -30,17 +29,6 @@ namespace ToSic.SexyContent
             }
         }
 
-        private SexyContent _sexyUncached;
-        protected SexyContent SexyUncached
-        {
-            get
-            {
-                if (_sexyUncached == null && ZoneId.HasValue && AppId.HasValue)
-                    _sexyUncached = new SexyContent(ZoneId.Value, AppId.Value, false, ModuleConfiguration.OwnerPortalID);
-                return _sexyUncached;
-            }
-        }
-
         protected int? ZoneId
         {
             get
@@ -55,7 +43,6 @@ namespace ToSic.SexyContent
             {
                 return SexyContent.GetAppIdFromModule(ModuleConfiguration);
             }
-            set { SexyContent.SetAppIdForModule(ModuleConfiguration, value); }
         }
 
 
@@ -64,20 +51,16 @@ namespace ToSic.SexyContent
             get { return ModuleConfiguration.DesktopModule.ModuleName == "2sxc"; }
         }
 
+	    private ContentGroup _contentGroup;
 
-	    private List<ContentGroupItem> _items;
-
-	    protected List<ContentGroupItem> Items
+	    protected ContentGroup ContentGroup
 	    {
 		    get
 		    {
-			    if (_items == null)
-			    {
-				    _items =
-						Sexy.TemplateContext.GetContentGroupItems(Sexy.GetContentGroupIdFromModule(this.ModuleConfiguration.ModuleID))
-						    .ToList();
-			    }
-			    return _items;
+			    if (_contentGroup == null)
+				    _contentGroup =
+					    Sexy.ContentGroups.GetContentGroupForModule(ModuleConfiguration.ModuleID);
+			    return _contentGroup;
 		    }
 	    }
 
@@ -100,7 +83,7 @@ namespace ToSic.SexyContent
                     }
 
                     if (_template == null)
-                        _template = Sexy.GetTemplateForModule(this.ModuleConfiguration.ModuleID);
+                        _template = ContentGroup.Template;
                 }
 
                 return _template;
@@ -114,9 +97,9 @@ namespace ToSic.SexyContent
         private Template GetTemplateFromUrl()
         {
             var queryStringPairs = Request.QueryString.AllKeys.Select(key => string.Format("{0}/{1}", key, Request.QueryString[key]).ToLower()).ToArray();
-			var queryStringKeys = Request.QueryString.AllKeys.Select(k => k.ToLower()).ToArray();
+			var queryStringKeys = Request.QueryString.AllKeys.Select(k => k == null ? "" :  k.ToLower()).ToArray();
 
-			foreach (var template in Sexy.TemplateContext.GetAllTemplates().Where(t => t.AppID == AppId && !string.IsNullOrEmpty(t.ViewNameInUrl)))
+			foreach (var template in Sexy.Templates.GetAllTemplates().Where(t => !string.IsNullOrEmpty(t.ViewNameInUrl)))
 	        {
 			    var viewNameInUrlLowered = template.ViewNameInUrl.ToLower();
 				if (queryStringPairs.Contains(viewNameInUrlLowered))	// match view/details
@@ -156,7 +139,7 @@ namespace ToSic.SexyContent
 		private void RegisterGlobalsAttribute()
 		{
 			// Add some required variables to module host div
-			((ModuleHost)Parent).Attributes.Add("data-2sxc-globals", Newtonsoft.Json.JsonConvert.SerializeObject(new
+			((ModuleHost)Parent).Attributes.Add("data-2sxc-globals", JsonConvert.SerializeObject(new
 			{
 				ModuleContext = new
 				{

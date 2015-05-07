@@ -1,13 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net;
-using System.Web;
-using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Xml.Linq;
-using DotNetNuke.Entities.Portals;
 using ToSic.SexyContent.ImportExport;
 
 namespace ToSic.SexyContent
@@ -43,8 +37,8 @@ namespace ToSic.SexyContent
         {
             if (e.Item.ItemType == ListViewItemType.DataItem)
             {
-                ExportImportMessage.MessageTypes MessageType = ((ExportImportMessage)e.Item.DataItem).MessageType;
-                Panel Pnl = (Panel)e.Item.FindControl("pnlMessage");
+                var MessageType = ((ExportImportMessage)e.Item.DataItem).MessageType;
+                var Pnl = (Panel)e.Item.FindControl("pnlMessage");
 
                 if (MessageType == ExportImportMessage.MessageTypes.Error)
                     Pnl.CssClass += " dnnFormValidationSummary";

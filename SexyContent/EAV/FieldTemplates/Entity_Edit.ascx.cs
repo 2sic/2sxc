@@ -1,19 +1,19 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Script.Serialization;
 using System.Web.UI;
-using System.Linq;
+using DotNetNuke.UI.UserControls;
 
 namespace ToSic.Eav.ManagementUI
 {
 	public partial class Entity_EditCustom : FieldTemplateUserControl
 	{
-        protected global::DotNetNuke.UI.UserControls.LabelControl FieldLabel;
+        protected LabelControl FieldLabel;
 
-		private EntityRelationshipModel RelatedEntities
+		private Data.EntityRelationship RelatedEntities
 		{
-			get { return (EntityRelationshipModel)FieldValue; }
+			get { return (Data.EntityRelationship )FieldValue; }
 		}
 		private bool AllowMultiValue
 		{
@@ -41,10 +41,8 @@ namespace ToSic.Eav.ManagementUI
 		    var configuration = new
 		    {
                 AllowMultiValue = GetMetaDataValue<bool?>("AllowMultiValue"),
-                DimensionId = (DimensionIds != null && DimensionIds.Any()) ? DimensionIds.First() : new int?(),
-                AppId = AppId,
-                ZoneId = ZoneId,
-                SelectedEntities = RelatedEntities != null ? RelatedEntities.EntityIds : new List<int>(),
+                DimensionId = (DimensionIds != null && DimensionIds.Any()) ? DimensionIds.First() : new int?(), AppId, ZoneId,
+                SelectedEntities = RelatedEntities != null ? RelatedEntities.EntityIds : new List<int?>(),
                 AttributeSetId = ContentType == null ? new int?() : ContentType.AttributeSetId
 		    };
             hfConfiguration.Value = new JavaScriptSerializer().Serialize(configuration);

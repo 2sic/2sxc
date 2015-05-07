@@ -1,20 +1,15 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
-using System.Web;
-using System.Web.WebPages;
-using DotNetNuke.Common.Utilities;
-using DotNetNuke.Entities.Modules;
-using DotNetNuke.Entities.Portals;
-using DotNetNuke.Security.Permissions;
-using ToSic.SexyContent.DataSources;
-using ToSic.SexyContent.DataSources.Tokens;
-using ToSic.SexyContent.Engines;
-using ToSic.SexyContent.Engines.TokenEngine;
-using ToSic.SexyContent.Razor.Helpers;
 using System.Collections.Generic;
+using System.IO;
+using System.Web.Hosting;
+using System.Web.WebPages;
+using DotNetNuke.Entities.Modules;
 using ToSic.Eav;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.ValueProvider;
+using ToSic.SexyContent.DataSources;
+using ToSic.SexyContent.Engines;
+using ToSic.SexyContent.Razor.Helpers;
 using ToSic.SexyContent.Search;
 
 namespace ToSic.SexyContent.Razor
@@ -59,6 +54,10 @@ namespace ToSic.SexyContent.Razor
         public DnnHelper Dnn {
             get { return AppAndDataHelpers.Dnn; }
         }
+		public SxcHelper Sxc
+		{
+			get { return AppAndDataHelpers.Sxc; }
+		}
         public new App App {
             get { return AppAndDataHelpers.App; }
         }
@@ -136,12 +135,12 @@ namespace ToSic.SexyContent.Razor
             return AppAndDataHelpers.AsDynamic(entities);
         }
 
-        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, IConfigurationProvider configurationProvider = null)
+        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, IValueCollectionProvider configurationProvider = null)
         {
             return AppAndDataHelpers.CreateSource(typeName, inSource, configurationProvider);
         }
 
-        public T CreateSource<T>(IDataSource inSource = null, IConfigurationProvider configurationProvider = null)
+        public T CreateSource<T>(IDataSource inSource = null, IValueCollectionProvider configurationProvider = null)
         {
             return AppAndDataHelpers.CreateSource<T>(inSource, configurationProvider);
         }
@@ -189,7 +188,7 @@ namespace ToSic.SexyContent.Razor
         {
             var path = NormalizePath(relativePath);
 
-            if(!File.Exists(System.Web.Hosting.HostingEnvironment.MapPath(path)))
+            if(!File.Exists(HostingEnvironment.MapPath(path)))
                 throw new FileNotFoundException("The shared file does not exist.", path);
 
             var webPage = (SexyContentWebPage)CreateInstanceFromVirtualPath(path);

@@ -1,7 +1,8 @@
-﻿using DotNetNuke.Web.Api;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using DotNetNuke.Web.Api;
 using ToSic.Eav;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Razor.Helpers;
 
@@ -12,7 +13,6 @@ namespace ToSic.SexyContent.WebApi
     public abstract class SxcApiController : DnnApiController, IAppAndDataHelpers
     {
         private SexyContent _sexyContent;
-        private SexyContent _sexyContentUncached;
 
         private AppAndDataHelpers _appAndDataHelpers;
         private AppAndDataHelpers AppAndDataHelpers {
@@ -21,7 +21,7 @@ namespace ToSic.SexyContent.WebApi
                 if (_appAndDataHelpers == null)
                 {
                     var moduleInfo = Request.FindModuleInfo();
-                    var viewDataSource = Sexy.GetViewDataSource(Request.FindModuleId(), SexyContent.HasEditPermission(moduleInfo), Sexy.GetTemplateForModule(moduleInfo.ModuleID));
+                    var viewDataSource = Sexy.GetViewDataSource(Request.FindModuleId(), SexyContent.HasEditPermission(moduleInfo), Sexy.ContentGroups.GetContentGroupForModule(moduleInfo.ModuleID).Template);
                     _appAndDataHelpers = new AppAndDataHelpers(Sexy, moduleInfo, (ViewDataSource)viewDataSource, Sexy.App);
                 }
                 return _appAndDataHelpers;
@@ -34,17 +34,8 @@ namespace ToSic.SexyContent.WebApi
             get
             {
                 if (_sexyContent == null)
-                    _sexyContent = ToSic.SexyContent.WebApi.HttpRequestMessageExtensions.GetSxcOfModuleContext(Request);
+                    _sexyContent = Request.GetSxcOfModuleContext();
                 return _sexyContent;
-            }
-        }
-        internal SexyContent SexyUncached
-        {
-            get
-            {
-                if (_sexyContentUncached == null)
-                    _sexyContentUncached = ToSic.SexyContent.WebApi.HttpRequestMessageExtensions.GetUncachedSxcOfModuleContext(Request);
-                return _sexyContentUncached;
             }
         }
 
@@ -55,7 +46,11 @@ namespace ToSic.SexyContent.WebApi
         {
             get { return AppAndDataHelpers.Dnn; }
         }
-        public ToSic.SexyContent.App App
+		public SxcHelper Sxc
+		{
+			get { return AppAndDataHelpers.Sxc; }
+		}
+        public App App
         {
             get { return AppAndDataHelpers.App; }
         }
@@ -134,12 +129,12 @@ namespace ToSic.SexyContent.WebApi
             return AppAndDataHelpers.AsDynamic(entities);
         }
 
-        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, IConfigurationProvider configurationProvider = null)
+        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, IValueCollectionProvider configurationProvider = null)
         {
             return AppAndDataHelpers.CreateSource(typeName, inSource, configurationProvider);
         }
 
-        public T CreateSource<T>(IDataSource inSource = null, IConfigurationProvider configurationProvider = null)
+        public T CreateSource<T>(IDataSource inSource = null, IValueCollectionProvider configurationProvider = null)
         {
             return AppAndDataHelpers.CreateSource<T>(inSource, configurationProvider);
         }

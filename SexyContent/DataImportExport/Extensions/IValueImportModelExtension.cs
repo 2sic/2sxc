@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using ToSic.Eav.Import;
 
 namespace ToSic.SexyContent.DataImportExport.Extensions
@@ -31,7 +28,7 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
             {
                 valueDimesnions.Add
                 (
-                    new ValueDimension() { DimensionExternalKey = language, ReadOnly = readOnly }
+                    new ValueDimension { DimensionExternalKey = language, ReadOnly = readOnly }
                 );
             }
         }

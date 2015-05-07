@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav;
+using ToSic.Eav.Data;
 
 namespace ToSic.SexyContent.EAVExtensions
 {
@@ -61,6 +62,21 @@ namespace ToSic.SexyContent.EAVExtensions
         }
         public bool IsPublished {
             get { return _baseEntity.IsPublished; }
+        }
+
+        public object GetBestValue(string attributeName) 
+        {
+            return _baseEntity.GetBestValue(attributeName);
+        }
+
+        //public object GetBestValue(string attributeName, out bool propertyNotFound)
+        //{
+        //    return _baseEntity.GetBestValue(attributeName);//, out propertyNotFound);
+        //}
+
+        public object GetBestValue(string attributeName, string[] dimensions)//, out bool propertyNotFound)
+        {
+            return _baseEntity.GetBestValue(attributeName, dimensions); //, out propertyNotFound);
         }
 
         #endregion

@@ -53,6 +53,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\DotNetNuke.dll</HintPath>
     </Reference>
+    <Reference Include="dotnetnuke.modules.userdefinedtable, Version=6.0.0.15391, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\dotnetnuke.modules.userdefinedtable.dll</HintPath>
+    </Reference>
     <Reference Include="DotNetNuke.RadEditorProvider, Version=6.1.0.1171, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\DotNetNuke.RadEditorProvider.dll</HintPath>
@@ -203,7 +207,10 @@
       <DependentUpon>Services.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="SexyContent\ContentGroup.cs" />
+    <Compile Include="SexyContent\ContentGroups.cs" />
     <Compile Include="SexyContent\DataSources\DnnSqlDataSource.cs" />
+    <Compile Include="SexyContent\DataSources\DnnFormAndList.cs" />
     <Compile Include="SexyContent\EAVExtensions\EavApiProxies\EntitiesController.cs" />
     <Compile Include="SexyContent\EAV\PipelineDesigner\PipelineManagementDnnWrapper.ascx.cs">
       <DependentUpon>PipelineManagementDnnWrapper.ascx</DependentUpon>
@@ -212,8 +219,10 @@
     <Compile Include="SexyContent\EAV\PipelineDesigner\PipelineManagementDnnWrapper.ascx.designer.cs">
       <DependentUpon>PipelineManagementDnnWrapper.ascx</DependentUpon>
     </Compile>
+    <Compile Include="SexyContent\Engines\TokenEngine\TokenReplaceEav.cs" />
+    <Compile Include="SexyContent\Engines\TokenEngine\ValueProviderWrapperForPropertyAccess.cs" />
+    <Compile Include="SexyContent\Serializers\Serializer.cs" />
     <Compile Include="SexyContent\SexyContentModuleUpgrade.cs" />
-    <Compile Include="SexyContent\ContentGroupItem.cs" />
     <Compile Include="SexyContent\EAVExtensions\EavApiProxies\PipelineDesignerController.cs" />
     <Compile Include="SexyContent\EAV\PipelineDesigner\PipelineDesignerDnnWrapper.ascx.cs">
       <DependentUpon>PipelineDesignerDnnWrapper.ascx</DependentUpon>
@@ -235,6 +244,7 @@
     </Compile>
     <Compile Include="SexyContent\IAppAndDataHelpers.cs" />
     <Compile Include="SexyContent\AppAndDataHelpers.cs" />
+    <Compile Include="SexyContent\SxcHelper.cs" />
     <Compile Include="SexyContent\Template.cs" />
     <Compile Include="EditEntity.ascx.cs">
       <DependentUpon>EditEntity.ascx</DependentUpon>
@@ -326,7 +336,6 @@
     <Compile Include="SexyContent\DataImportExport\Options\ResourceReferenceExport.cs" />
     <Compile Include="SexyContent\DataImportExport\Extensions\XElementExtension.cs" />
     <Compile Include="SexyContent\DataPublishing.cs" />
-    <Compile Include="SexyContent\DataSources\EntitiesFromList.cs" />
     <Compile Include="SexyContent\DataSources\ModuleDataSource.cs" />
     <Compile Include="SexyContent\DataSources\Tokens\ModulePropertyAccess.cs" />
     <Compile Include="SexyContent\DataSources\Tokens\QueryStringPropertyAccess.cs" />
@@ -408,6 +417,7 @@
     <Compile Include="SexyContent\ImportExport\XmlImport.cs" />
     <Compile Include="SexyContent\ImportExport\ZipExport.cs" />
     <Compile Include="SexyContent\ImportExport\ZipImport.cs" />
+    <Compile Include="SexyContent\Templates.cs" />
     <Compile Include="SexyContent\WebApi\RouteMapper.cs" />
     <Compile Include="SexyContent\Search\ISearchInfo.cs" />
     <Compile Include="SexyContent\Search\SearchController.cs" />
@@ -462,7 +472,6 @@
       <DependentUpon>SettingsWrapper.ascx</DependentUpon>
     </Compile>
     <Compile Include="SexyContent\SexyContent.cs" />
-    <Compile Include="SexyContent\SexyContentContext.cs" />
     <Compile Include="Administration\EAVManagement.ascx.cs">
       <DependentUpon>EAVManagement.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -485,7 +494,7 @@
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="SexyContent\Engines\TokenEngine\FilteredNameValueCollectionPropertyAccess.cs" />
-    <Compile Include="SexyContent\Engines\TokenEngine\TokenReplace.cs" />
+    <Compile Include="SexyContent\Engines\TokenEngine\TokenReplaceDnn.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Administration\Apps\AppExport.ascx" />
@@ -501,6 +510,7 @@
     <Content Include="Administration\ContentTypeAndDemoSelector.ascx" />
     <Content Include="Administration\Registers.ascx" />
     <Content Include="API\Services.asmx" />
+    <Content Include="bootstrap\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="BuildScripts\MSBuild.Community.Tasks.dll" />
     <Content Include="EditEntity.ascx" />
     <Content Include="EditContentGroupItem.ascx" />
@@ -511,6 +521,7 @@
     <Content Include="Extensions\404.png" />
     <Content Include="Extensions\Imazen_ImageResizer\ImageResizer.txt" />
     <Content Include="Extensions\Imazen_ImageResizer\license.txt" />
+    <Content Include="gruntfile.js" />
     <Content Include="icon-app.png" />
     <Content Include="icon.png" />
     <Content Include="Images\ajax-loader.gif" />
@@ -523,9 +534,16 @@
     <Content Include="Administration\Import.ascx" />
     <Content Include="Images\Save.png" />
     <Content Include="Js\2sxc.api.manage.js" />
+    <Content Include="Js\2sxc.api.manage.min.js" />
+    <Content Include="Js\2sxc.api.min.js" />
     <Content Include="Js\2sxc.DnnActionMenuMapper.js" />
     <Content Include="Js\2sxc.ApiService.js" />
+    <Content Include="Js\2sxc.TemplateSelector.annotated.js" />
     <Content Include="Js\2sxc.TemplateSelector.js" />
+    <Content Include="Js\2sxc.TemplateSelector.min.js" />
+    <Content Include="Js\AngularJS\2sxc4ng.annotated.js" />
+    <Content Include="Js\AngularJS\2sxc4ng.js" />
+    <Content Include="Js\AngularJS\2sxc4ng.min.js" />
     <Content Include="Js\AngularJS\angular-animate.min.js" />
     <Content Include="Js\AngularJS\angular-resource.min.js" />
     <Content Include="Js\AngularJS\angular-ui-tree.min.css" />
@@ -600,6 +618,15 @@
     <Content Include="Extensions\ToSic_vCard\vCard.ashx" />
     <Content Include="BuildScripts\ModulePackage.Targets" />
     <Content Include="BuildScripts\MSBuild.Community.Tasks.targets" />
+    <Content Include="package.json" />
+    <Content Include="Js\2sxc.api.manage.min.js.map" />
+    <Content Include="Js\2sxc.api.min.js.map" />
+    <Content Include="Js\2sxc.TemplateSelector.min.js.map" />
+    <Content Include="Js\AngularJS\2sxc4ng.min.js.map" />
+    <Content Include="bootstrap\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="bootstrap\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="bootstrap\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="bootstrap\fonts\glyphicons-halflings-regular.woff2" />
     <None Include="SqlDataProvider\01.00.00.SqlDataProvider" />
     <Content Include="SexyContent\EAV\PipelineDesigner\assets\jquery.jsPlumb-1.7.2-min.js" />
     <Content Include="SexyContent\EAV\PipelineDesigner\PipelineDesigner.ascx" />
@@ -607,7 +634,7 @@
     <Content Include="SexyContent\EAV\PipelineDesigner\PipelineDesigner.js" />
     <Content Include="SexyContent\EAV\PipelineDesigner\PipelineDesignerController.js" />
     <Content Include="SexyContent\EAV\PipelineDesigner\PipelineDesignerDnnWrapper.ascx" />
-    <Content Include="SexyContent\EAV\PipelineDesigner\PipelineFactory.js" />
+    <Content Include="SexyContent\EAV\PipelineDesigner\PipelineService.js" />
     <Content Include="SexyContent\EAV\PipelineDesigner\PipelineManagement.ascx" />
     <Content Include="SexyContent\EAV\PipelineDesigner\PipelineManagement.js" />
     <Content Include="SexyContent\EAV\PipelineDesigner\PipelineManagementDnnWrapper.ascx" />
@@ -617,6 +644,7 @@
     <Content Include="Styles\EditDataSource\demo-new.css" />
     <Content Include="Styles\EditDataSource\flowchartDemo.css" />
     <Content Include="TemplateHelpGrid.ascx" />
+    <Content Include="Upgrade\07.00.00.xml" />
     <Content Include="ViewApp.ascx" />
     <Content Include="View.ascx" />
     <Content Include="Administration\EAVManagement.ascx" />
@@ -651,6 +679,7 @@
     <Content Include="SqlDataProvider\06.06.00.SqlDataProvider" />
     <Content Include="SqlDataProvider\06.06.01.SqlDataProvider" />
     <Content Include="SqlDataProvider\06.06.04.SqlDataProvider" />
+    <Content Include="SqlDataProvider\07.00.00.SqlDataProvider" />
     <None Include="SqlDataProvider\Uninstall.SqlDataProvider" />
     <Content Include="web.config" />
   </ItemGroup>
@@ -760,6 +789,8 @@
     <Content Include="App_LocalResources\EditEntity.ascx.resx" />
     <Content Include="Administration\Apps\App_LocalResources\AppConfig.ascx.resx" />
     <Content Include="Administration\App_LocalResources\WebApiHelp.ascx.resx" />
+    <Content Include="Administration\App_LocalResources\EAVManagement.ascx.resx" />
+    <Content Include="Administration\App_LocalResources\EAVManagement.ascx.de-DE.resx" />
     <EmbeddedResource Include="SexyContent\DataImportExport\ImportErrorCode.de-DE.resx" />
     <EmbeddedResource Include="SexyContent\DataImportExport\ImportErrorCode.resx" />
   </ItemGroup>

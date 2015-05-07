@@ -1,6 +1,6 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="WebApiHelp.ascx.cs" Inherits="ToSic.SexyContent.Administration.WebApiHelp" %>
-<%@ Import Namespace="System.IO" %>
 <%@ Import Namespace="ToSic.SexyContent.EAV.PipelineDesigner" %>
+<%@ Import Namespace="System.IO" %>
 <%@ Register TagName="AdministrationRegisters" TagPrefix="SexyContent" Src="Registers.ascx" %>
 <SexyContent:AdministrationRegisters runat="server"></SexyContent:AdministrationRegisters>
 
@@ -11,13 +11,13 @@
     <fieldset>
         <%= LocalizeString("SxcDataHelp.Text") %><br /><br/>
 		<%= LocalizeString("VisualDataPipelines.Text") %><br/><br/>
-		<a href="<%= PipelineManagementDnnWrapper.GetEditUrl(this, AppId.Value) %>" class="dnnPrimaryAction">Visual Pipeline Designer</a>
+		<a href="<%= PipelineManagementDnnWrapper.GetEditUrl(this, AppId.Value) %>" class="dnnPrimaryAction">Visual Query Designer</a>
 		<br/><br/>
 	    <%= LocalizeString("WebApi.Text") %><br/><br/>
         The following list shows the .cs files in the App-API folder:<br/>
-        <% if (Directory.Exists(Path.Combine(this.Sexy.App.PhysicalPath, "Api"))) { %>
+        <% if (Directory.Exists(Path.Combine(Sexy.App.PhysicalPath, "Api"))) { %>
         <ul>
-            <% foreach (var file in Directory.GetFiles(Path.Combine(this.Sexy.App.PhysicalPath, "Api"), "*.cs")) { %>
+            <% foreach (var file in Directory.GetFiles(Path.Combine(Sexy.App.PhysicalPath, "Api"), "*.cs")) { %>
             <li>
                 <%= Path.GetFileName(file) %>
             </li>

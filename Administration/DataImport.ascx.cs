@@ -123,7 +123,7 @@ namespace ToSic.SexyContent.Administration
                                                   .ToList();
             FileTemporaryDirectory = CreatePhysicalDirectory(SexyContent.TemporaryDirectory);
 
-            ddlContentType.DataSource = sexyContent.GetAvailableAttributeSets(SexyContent.AttributeSetScope);
+            ddlContentType.DataSource = sexyContent.GetAvailableContentTypes(SexyContent.AttributeSetScope);
             ddlContentType.DataBind();
 
             rblEntityClear.DataSource = EnumToDataSource<EntityClearImport>();
@@ -186,6 +186,11 @@ namespace ToSic.SexyContent.Administration
         protected void OnBackClick(object sender, EventArgs e)
         {
             ShowSetupPanel();
+        }
+
+        protected void OnCloseClick(object sender, EventArgs e)
+        {
+            Response.Redirect(EditUrl(PortalSettings.ActiveTab.TabID, SexyContent.ControlKeys.EavManagement, true, "mid=" + ModuleId + "&" + SexyContent.AppIDString + "=" + ApplicationId));
         }
 
         private IEnumerable<dynamic> EnumToDataSource<T>() where T : struct

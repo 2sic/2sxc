@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net;
-using System.Web;
-using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Xml.Linq;
 using DotNetNuke.Entities.Portals;
@@ -35,13 +31,14 @@ namespace ToSic.SexyContent
 
             if (isZip)
             {
-                success = new ZipImport(ZoneId.Value, AppId.Value, UserInfo.IsSuperUser).ImportZip(importStream, Server, PortalSettings, messages, false);
+                success = new ZipImport(ZoneId.Value, AppId.Value, UserInfo.IsSuperUser).ImportZip(importStream, Server, PortalSettings, messages);
             }
             else
             {
-                string Xml = new StreamReader(importStream).ReadToEnd();
-                var import = new XmlImport();
-                success = import.ImportXml(ZoneId.Value, AppId.Value, Xml);
+                var xml = new StreamReader(importStream).ReadToEnd();
+	            var doc = XDocument.Parse(xml);
+                var import = new XmlImport(PortalSettings.Current.DefaultLanguage, PortalSettings.Current.UserInfo.Username);
+				success = import.ImportXml(ZoneId.Value, AppId.Value, doc);
                 messages = import.ImportLog;
             }
 
@@ -55,8 +52,8 @@ namespace ToSic.SexyContent
         {
             if (e.Item.ItemType == ListViewItemType.DataItem)
             {
-                ExportImportMessage.MessageTypes MessageType = ((ExportImportMessage)e.Item.DataItem).MessageType;
-                Panel Pnl = (Panel)e.Item.FindControl("pnlMessage");
+                var MessageType = ((ExportImportMessage)e.Item.DataItem).MessageType;
+                var Pnl = (Panel)e.Item.FindControl("pnlMessage");
 
                 if (MessageType == ExportImportMessage.MessageTypes.Error)
                     Pnl.CssClass += " dnnFormValidationSummary";

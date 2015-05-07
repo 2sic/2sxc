@@ -1,15 +1,39 @@
 ﻿
-(function() {
+(function () {
     if (window.$2sxc)
         return;
 
-    window.$2sxc = function(id) {
+    window.$2sxc = function (id) {
 
         if (!$2sxc._data[id])
             $2sxc._data[id] = {};
 
         var controller = $2sxc._controllers[id] ? $2sxc._controllers[id] : $2sxc._controllers[id] = {
+            // <NewIn7>
+            serviceScopes: ['app-api', 'app-query', 'app-data', 'eav'], // todo7: should probably deprecate "app"
+            serviceRoot: $.ServicesFramework(id).getServiceRoot('2sxc'),
+            resolveServiceUrl: function resolveServiceUrl(virtualPath) {
+                var scope = virtualPath.split('/')[0].toLowerCase();
+                // stop if it's not one of our special paths
+                if (controller.serviceScopes.indexOf(scope) == -1)
+                	return virtualPath;
+
+                if (scope.indexOf('app') > -1) scope += "/auto-detect-app";
+                return controller.serviceRoot + scope + '/' + virtualPath.substring(virtualPath.indexOf('/') + 1);
+            },
+            // </NewIn7>
             data: {
+                // source path defaulting to current page + optional params
+                sourceUrl: function (params) {
+                    var url = window.location.href;
+                    if (url.indexOf("#"))
+                        url = url.substr(0, url.indexOf("#"));
+                    url += (window.location.href.indexOf("?") != -1 ? "&" : "?") + "mid=" + id + "&standalone=true&popUp=true&type=data";
+                    if (typeof params == 'string') // text like 'id=7'
+                        url += "&" + params;
+                    return url;
+                },
+
                 // in-streams
                 "in": {},
 
@@ -19,7 +43,7 @@
                 controller: null,
 
                 // Load data via ajax
-                load: function(source) {
+                load: function (source) {
                     // If source is already the data, set it
                     if (source && source.List) {
                         controller.data.setData(source);
@@ -27,12 +51,10 @@
                     } else {
                         if (!source)
                             source = {};
-                        if (!source.url) {
-                            var currentUrl = window.location.href.split("#")[0];
-                            source.url = currentUrl + (currentUrl.indexOf("?") != -1 ? "&" : "?") + "mid=" + id + "&standalone=true&popUp=true&type=data";
-                        }
+                        if (!source.url)
+                            source.url = controller.data.sourceUrl();
                         source.origSuccess = source.success;
-                        source.success = function(data) {
+                        source.success = function (data) {
 
                             for (var dataSetName in data) {
                                 if (data[dataSetName].List != null) {
@@ -51,7 +73,7 @@
                             controller.lastRefresh = new Date();
                             controller.data._triggerLoaded();
                         };
-                        source.error = function(request) {
+                        source.error = function (request) {
                             alert(JSON.parse(request.responseText).error);
                         };
                         controller.data.source = source;
@@ -59,7 +81,7 @@
                     }
                 },
 
-                reload: function(optionalCallback) {
+                reload: function (optionalCallback) {
 
                     // todo: convert dates...
 
@@ -70,15 +92,15 @@
                     return controller.data;
                 },
 
-                on: function(events, callback) {
+                on: function (events, callback) {
                     return $(controller.data).bind("2scLoad", callback)[0]._triggerLoaded();
                 },
 
-                _triggerLoaded: function() {
+                _triggerLoaded: function () {
                     return controller.isLoaded ? $(controller.data).trigger("2scLoad", [controller.data])[0] : controller.data;
                 },
 
-                one: function(events, callback) {
+                one: function (events, callback) {
                     if (!controller.isLoaded)
                         return $(controller.data).one("2scLoad", callback)[0];
                     callback({}, controller.data);
@@ -91,7 +113,7 @@
             isLoaded: false,
             lastRefresh: null,
             manage: $2sxc.getManageController ? $2sxc.getManageController(id) : null,
-            isEditMode: function() {
+            isEditMode: function () {
                 return controller.manage && controller.manage.isEditMode();
             },
             webApi: {
@@ -150,14 +172,31 @@
                     });
 
                     if (!settings.preventAutoFail)
-                        promise.fail(function (result) {
+                        promise.fail(controller.showDetailedHttpError);
+
+                    return promise;
+                },
+                getActionUrl: function (settings) {
+                    var sf = $.ServicesFramework(id);
+                    return sf.getServiceRoot('2sxc') + "app-api/auto-detect-app/" + settings.controller + "/" + settings.action + (settings.params == null ? "" : ("?" + $.param(settings.params)));
+                }
+            },
+
+            // Show a nice error with more infos around 2sxc
+            showDetailedHttpError: function showDetailedHttpError(result) {
                             if (window.console)
                                 console.log(result);
+
+                // if it's an unspecified 0-error, it's probably not an error but a cancelled request, (happens when closing popups containing angularJS)
+                if (result.status == 0)
+                    return;
+
                             // let's try to show good messages in most cases
                             var infoText = "Had an error talking to the server (status " + result.status + ").";
-                            var srvResp = result.responseText;
+                var srvResp = result.responseText ?
+                    JSON.parse(result.responseText) // for jquery ajax errors
+                    : result.data;                  // for angular $http
                             if (srvResp) {
-                                srvResp = JSON.parse(srvResp);
                                 var msg = srvResp.Message;
                                 if (msg) infoText += "\n\nMessage: " + msg;
                                 var msgDet = srvResp.MessageDetail;
@@ -176,14 +215,6 @@
                             }
                             infoText += "\n\nFor further debugging view the JS-console or use fiddler. ";
                             alert(infoText);
-                        });
-
-                    return promise;
-                },
-                getActionUrl: function(settings) {
-                    var sf = $.ServicesFramework(id);
-                    return sf.getServiceRoot('2sxc') + "App/auto-detect-app/" + settings.controller + "/" + settings.action + (settings.params == null ? "" : ("?" + $.param(settings.params)));
-                }
             }
         };
 
@@ -194,8 +225,8 @@
     };
 
     $2sxc._controllers = {};
-    $2sxc.metaName = "The 2SexyContent Controller object";
-    $2sxc.metaVersion = "06.06.06";
+    $2sxc.metaName = "The 2sxc Controller object";
+    $2sxc.metaVersion = "07.00.01";
     $2sxc.beta = {};
     $2sxc._data = {};
 

@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Hosting;
 using System.Web.UI;
 using DotNetNuke.Entities.Modules;
-using DotNetNuke.Entities.Portals;
 using DotNetNuke.Web.Client.ClientResourceManagement;
 using ToSic.SexyContent.Search;
 using IDataSource = ToSic.Eav.DataSources.IDataSource;
@@ -28,7 +27,7 @@ namespace ToSic.SexyContent.Engines
             var templatePath = VirtualPathUtility.Combine(SexyContent.GetTemplatePathRoot(template.Location, app) + "/", template.Path);
 
             // Throw Exception if Template does not exist
-            if (!System.IO.File.Exists(HostingEnvironment.MapPath(templatePath)))
+            if (!File.Exists(HostingEnvironment.MapPath(templatePath)))
                 throw new SexyContentException("The template file '" + templatePath + "' does not exist.");
 
             Template = template;
@@ -39,7 +38,7 @@ namespace ToSic.SexyContent.Engines
             InstancePurposes = instancePurposes;
             Sexy = sexy;
 
-            this.Init();
+            Init();
         }
 
         protected abstract string RenderTemplate();

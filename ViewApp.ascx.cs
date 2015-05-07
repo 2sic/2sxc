@@ -1,14 +1,8 @@
-﻿using DotNetNuke.Common.Utilities;
-using DotNetNuke.Entities.Modules;
-using DotNetNuke.Entities.Modules.Actions;
-using DotNetNuke.Entities.Portals;
-using DotNetNuke.Security;
-using DotNetNuke.Services.Exceptions;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Web.UI;
-using System.Web.UI.WebControls;
+using DotNetNuke.Entities.Modules;
+using DotNetNuke.Entities.Portals;
+using DotNetNuke.Services.Exceptions;
 using ToSic.SexyContent.GettingStarted;
 
 namespace ToSic.SexyContent
@@ -47,8 +41,8 @@ namespace ToSic.SexyContent
                     {
                         pnlGetStarted.Visible = true;
                         var gettingStartedControl = (GettingStartedFrame)LoadControl("~/DesktopModules/ToSIC_SexyContent/SexyContent/GettingStarted/GettingStartedFrame.ascx");
-                        gettingStartedControl.ModuleID = this.ModuleId;
-                        gettingStartedControl.ModuleConfiguration = this.ModuleConfiguration;
+                        gettingStartedControl.ModuleID = ModuleId;
+                        gettingStartedControl.ModuleConfiguration = ModuleConfiguration;
                         pnlGetStarted.Controls.Add(gettingStartedControl);
                     }
 
@@ -63,14 +57,14 @@ namespace ToSic.SexyContent
 
                 if (AppId.HasValue)
                 {
-                    if (Items.Any() && Template != null)
+                    if (ContentGroup.Content.Any() && Template != null)
                         ProcessView(phOutput, pnlError, pnlMessage);
                     else if (!IsContentApp && UserMayEditThisModule) // Select first available template automatically if it's not set yet - then refresh page
                     {
                         var templates = Sexy.GetAvailableTemplatesForSelector(ModuleConfiguration).ToList();
                         if (templates.Any())
                         {
-							SexyUncached.UpdateTemplateForGroup(Sexy.GetContentGroupIdFromModule(ModuleConfiguration.ModuleID), templates.First().TemplateID, UserInfo.UserID);
+                            Sexy.ContentGroups.SetPreviewTemplateId(ModuleConfiguration.ModuleID, templates.First().TemplateId);
                             Response.Redirect(Request.RawUrl);
                         }
                     }

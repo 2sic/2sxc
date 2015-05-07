@@ -136,7 +136,7 @@
     <value>ID</value>
   </data>
   <data name="lblExportHeading.Text" xml:space="preserve">
-    <value>Export Content Types, Templates and Data</value>
+    <value>Partial Export of Content Types, Template Configuration and Content</value>
   </data>
   <data name="lblNoRecords.Text" xml:space="preserve">
     <value>Nothing found that could be exported.</value>
@@ -170,5 +170,11 @@
   </data>
   <data name="DemoEntity.Header" xml:space="preserve">
     <value>Demo Entity</value>
+  </data>
+  <data name="lblPartialExportIntro.Text" xml:space="preserve">
+    <value>This is an advanced export feature to export &lt;strong&gt;parts&lt;/strong&gt; of this Content / App. It will create an XML-file for you which you can import &lt;em&gt;into&lt;/em&gt; another site or App. &lt;ul&gt;&lt;li&gt;To export an the entire Content (to migrate / duplicate this site) or to export an App, go to &lt;em&gt;App-Management&lt;/em&gt;&lt;/li&gt; 
+&lt;li&gt;To exports lists (tables) of Content-Items please go to the tab &lt;em&gt;Content / Data&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+ For further help visit &lt;a href="http://2sxc.org/learn" target="_blank"&gt;2sxc Help&lt;/a&gt;.</value>
   </data>
 </root>

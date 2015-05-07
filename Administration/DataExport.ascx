@@ -71,6 +71,6 @@
 
     <ul class="dnnActions dnnClear">
         <li><asp:LinkButton runat="server" ID="btnExportData" class="dnnPrimaryAction" ResourceKey="btnExportData" OnClick="OnExportDataClick"></asp:LinkButton></li>
-        <li><asp:HyperLink runat="server" ID="btnCancel" class="dnnSecondaryAction" ResourceKey="btnCancel" NavigateUrl="/"></asp:HyperLink></li>
+        <li><asp:LinkButton runat="server" ID="btnCancel" class="dnnSecondaryAction" ResourceKey="btnCancel" OnClick="OnCloseClick"></asp:LinkButton></li>
     </ul>
 </div>

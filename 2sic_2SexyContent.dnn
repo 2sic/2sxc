@@ -1,8 +1,8 @@
 ﻿<dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="2SexyContent" type="Module" version="06.06.06">
+    <package name="2SexyContent" type="Module" version="07.00.01">
       <friendlyName> Content</friendlyName>
-      <description>2sxc (2SexyContent) is a DotNetNuke Extension to create attractive and designed content. It solves the common problem, allowing the web designer to create designed templates for different content elements, so that the user must only fill in fields and receive a perfectly designed and animated output.</description>
+      <description>2sxc is a DNN Extension to create attractive and designed content. It solves the common problem, allowing the web designer to create designed templates for different content elements, so that the user must only fill in fields and receive a perfectly designed and animated output.</description>
       <iconFile>icon.png</iconFile>
       <owner>
         <name>2sic</name>
@@ -151,10 +151,15 @@
               <name>06.06.04.SqlDataProvider</name>
               <version>06.06.04</version>
             </script>
+						<script type="Install">
+							<path>SqlDataProvider</path>
+							<name>07.00.00.SqlDataProvider</name>
+							<version>07.00.00</version>
+						</script>
             <script type="UnInstall">
               <path>SqlDataProvider</path>
               <name>Uninstall.SqlDataProvider</name>
-              <version>06.06.06</version>
+              <version>07.00.01</version>
             </script>
           </scripts>
         </component>
@@ -353,7 +358,7 @@
             <attributes>
               <businessControllerClass>ToSic.SexyContent.SexyContent, ToSic.SexyContent</businessControllerClass>
               <desktopModuleID>[DESKTOPMODULEID]</desktopModuleID>
-              <upgradeVersionsList>05.05.00,06.06.00,06.06.04</upgradeVersionsList>
+              <upgradeVersionsList>05.05.00,06.06.00,06.06.04,07.00.00</upgradeVersionsList>
             </attributes>
           </eventMessage>
         </component>
@@ -605,9 +610,9 @@
       </components>
     </package>
 
-    <package name="2SexyContent-App" type="Module" version="06.06.06">
+    <package name="2SexyContent-App" type="Module" version="07.00.01">
       <friendlyName> App</friendlyName>
-      <description>2sxc (2SexyContent) App is an extension that allows to install and use a 2sxc app.</description>
+      <description>2sxc App is an extension that allows to install and use a 2sxc app.</description>
       <iconFile>icon-app.png</iconFile>
       <owner>
         <name>2sic</name>
@@ -632,7 +637,7 @@
             <moduleDefinitions>
               <moduleDefinition>
                 <definitionName>2Sexy Content App</definitionName>
-                <friendlyName>Content App</friendlyName>
+                <friendlyName>App</friendlyName>
                 <defaultCacheTime>0</defaultCacheTime>
                 <moduleControls>
                   <moduleControl>

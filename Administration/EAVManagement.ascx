@@ -14,14 +14,14 @@
     <asp:Panel runat="server" id="pnlEAV"></asp:Panel>
 </div>
 
-<% if (Request.QueryString["ManagementMode"] == "ContentTypesList")
+<% if (Request.QueryString["ManagementMode"] == "ContentTypesList" || String.IsNullOrEmpty(Request.QueryString["ManagementMode"]))
    { %>
 <ul class="dnnActions">
 	<li>
-		<a href="<%= EditUrl(TabId, SexyContent.ControlKeys.DataExport, true, "mid=" + ModuleId + "&" + SexyContent.AppIDString + "=" + Request.QueryString[SexyContent.AppIDString]) %>" class="dnnSecondaryAction">Export Data (beta)</a>
+		<a href="<%= EditUrl(TabId, SexyContent.ControlKeys.DataExport, true, "mid=" + ModuleId + "&" + SexyContent.AppIDString + "=" + Request.QueryString[SexyContent.AppIDString]) %>" class="dnnSecondaryAction"><asp:Label runat="server" ID="btnExportData" ResourceKey="btnExportData"></asp:Label></a>
 	</li>
 	<li>
-		<a href="<%= EditUrl(TabId, SexyContent.ControlKeys.DataImport, true, "mid=" + ModuleId + "&" + SexyContent.AppIDString + "=" + Request.QueryString[SexyContent.AppIDString]) %>" class="dnnSecondaryAction">Import Data (beta)</a>
+		<a href="<%= EditUrl(TabId, SexyContent.ControlKeys.DataImport, true, "mid=" + ModuleId + "&" + SexyContent.AppIDString + "=" + Request.QueryString[SexyContent.AppIDString]) %>" class="dnnSecondaryAction"><asp:Label runat="server" ID="btnImportData" ResourceKey="btnImportData"></asp:Label></a>
 	</li>
 </ul>
 <% } %>

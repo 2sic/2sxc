@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Web;
-using DotNetNuke.Entities.Portals;
 using ICSharpCode.SharpZipLib.Zip;
 using ToSic.Eav;
 
@@ -12,9 +10,9 @@ namespace ToSic.SexyContent.ImportExport
 {
     public class ZipExport
     {
-        private int _appId;
-        private int _zoneId;
-        private SexyContent _sexy;
+        private readonly int _appId;
+        private readonly int _zoneId;
+        private readonly SexyContent _sexy;
 
         public ZipExport(int zoneId, int appId)
         {
@@ -23,32 +21,30 @@ namespace ToSic.SexyContent.ImportExport
             _sexy = new SexyContent(_zoneId, _appId);
         }
 
-        public MemoryStream ExportApp()
+        public MemoryStream ExportApp(bool includeContentGroups = false)
         {
             // Get Export XML
-            var attributeSets = _sexy.GetAvailableAttributeSets(SexyContent.AttributeSetScope).ToList();
-            attributeSets.AddRange(_sexy.GetAvailableAttributeSets(SexyContent.AttributeSetScopeApps));
+            var attributeSets = _sexy.GetAvailableContentTypes(SexyContent.AttributeSetScope).ToList();
+            attributeSets.AddRange(_sexy.GetAvailableContentTypes(SexyContent.AttributeSetScopeApps));
             attributeSets = attributeSets.Where(a => !a.UsesConfigurationOfAttributeSet.HasValue).ToList();
 
-            // Special case: Entities of the template attributesets and field properties should not be exported here
-            //var templateAttributeSets = _sexy.GetAvailableAttributeSets().Where(a => a.StaticName == SexyContent.AttributeSetStaticNameTemplateContentTypes
-            //                    || a.StaticName == SexyContent.AttributeSetStaticNameTemplateMetaData
-            //                    || a.StaticName.StartsWith("@"));
-
             var attributeSetIds = attributeSets.Select(p => p.AttributeSetId.ToString()).ToArray();
-            var entities = SexyContent.GetInitialDataSource(_zoneId, _appId).Out["Default"].List;
-            var entityIds = entities.Where(e => e.Value.AssignmentObjectTypeId != SexyContent.AssignmentObjectTypeIDSexyContentTemplate 
-                && e.Value.AssignmentObjectTypeId != DataSource.AssignmentObjectTypeIdFieldProperties)
+			var entities = SexyContent.GetInitialDataSource(_zoneId, _appId).Out["Default"].List.Where(e => e.Value.AssignmentObjectTypeId != SexyContent.AssignmentObjectTypeIDSexyContentTemplate
+				&& e.Value.AssignmentObjectTypeId != DataSource.AssignmentObjectTypeIdFieldProperties).ToList();
+
+	        if (!includeContentGroups)
+		        entities = entities.Where(p => p.Value.Type.StaticName != "2SexyContent-ContentGroup").ToList();
+
+            var entityIds = entities
                 .Select(e => e.Value.EntityId.ToString()).ToArray();
 
-            var templateIds = _sexy.GetTemplates(PortalSettings.Current.PortalId).Select(p => p.TemplateID.ToString()).ToArray();
             var messages = new List<ExportImportMessage>();
             var xmlExport = new XmlExport(_zoneId, _appId, true);
-            var xml = xmlExport.ExportXml(attributeSetIds, entityIds, templateIds, out messages);
+            var xml = xmlExport.ExportXml(attributeSetIds, entityIds, out messages);
 
             #region Copy needed files to temporary directory
 
-            var temporaryDirectoryPath = HttpContext.Current.Server.MapPath(Path.Combine(SexyContent.TemporaryDirectory, System.Guid.NewGuid().ToString()));
+            var temporaryDirectoryPath = HttpContext.Current.Server.MapPath(Path.Combine(SexyContent.TemporaryDirectory, Guid.NewGuid().ToString()));
 
             if (!Directory.Exists(temporaryDirectoryPath))
                 Directory.CreateDirectory(temporaryDirectoryPath);
@@ -76,7 +72,7 @@ namespace ToSic.SexyContent.ImportExport
             }
             
             // Save export xml
-            File.AppendAllText(System.IO.Path.Combine(appDirectory.FullName, "App.xml"), xml);
+            File.AppendAllText(Path.Combine(appDirectory.FullName, "App.xml"), xml);
 
             #endregion
 
@@ -95,18 +91,18 @@ namespace ToSic.SexyContent.ImportExport
         public static void ZipFolder(string RootFolder, string CurrentFolder, ZipOutputStream zStream)
         {
 
-            string[] SubFolders = Directory.GetDirectories(CurrentFolder);
-            foreach (string Folder in SubFolders)
+            var SubFolders = Directory.GetDirectories(CurrentFolder);
+            foreach (var Folder in SubFolders)
                 ZipFolder(RootFolder, Folder, zStream);
 
-            string relativePath = CurrentFolder.Substring(RootFolder.Length) + "\\";
+            var relativePath = CurrentFolder.Substring(RootFolder.Length) + "\\";
 
             if (relativePath.Length > 1)
             {
                 var dirEntry = new ZipEntry(relativePath);
                 dirEntry.DateTime = DateTime.Now;
             }
-            foreach (string file in Directory.GetFiles(CurrentFolder))
+            foreach (var file in Directory.GetFiles(CurrentFolder))
             {
                 AddFileToZip(zStream, relativePath, file);
             }
@@ -116,12 +112,12 @@ namespace ToSic.SexyContent.ImportExport
 
         private static void AddFileToZip(ZipOutputStream zStream, string relativePath, string file)
         {
-            byte[] buffer = new byte[4096];
-            string fileRelativePath = (relativePath.Length > 1 ? relativePath : string.Empty) + Path.GetFileName(file);
-            ZipEntry entry = new ZipEntry(fileRelativePath);
+            var buffer = new byte[4096];
+            var fileRelativePath = (relativePath.Length > 1 ? relativePath : string.Empty) + Path.GetFileName(file);
+            var entry = new ZipEntry(fileRelativePath);
             entry.DateTime = DateTime.Now;
             zStream.PutNextEntry(entry);
-            using (FileStream fs = File.OpenRead(file))
+            using (var fs = File.OpenRead(file))
             {
                 int sourceBytes;
                 do

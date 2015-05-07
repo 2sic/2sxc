@@ -28,9 +28,6 @@
 						<a class="btn btn-xs btn-default" target="_blank" ng-href="{{getPipelineUrl('design', pipeline.EntityId)}}">
 							<span class="glyphicon glyphicon-random"></span> Open Designer
 						</a>
-						<a class="btn btn-xs btn-default" target="_self" ng-href="{{getPipelineUrl('edit', pipeline.EntityId)}}">
-							<span class="glyphicon glyphicon-pencil"></span> Edit
-						</a>
 						<button type="button" class="btn btn-xs btn-default" ng-click="clone(pipeline)">
 							<span class="glyphicon glyphicon-share-alt"></span> Clone
 						</button>

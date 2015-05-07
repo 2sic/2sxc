@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Remoting;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Portals;
-using System.Web;
 using DotNetNuke.Entities.Tabs;
 using DotNetNuke.Services.Localization;
+using DotNetNuke.UI.UserControls;
 using Telerik.Web.UI;
 using Telerik.Web.UI.Editor.DialogControls;
-using System.Linq;
 using ToSic.SexyContent.EAV.FieldTemplates;
 
 namespace ToSic.Eav.ManagementUI
@@ -19,7 +20,7 @@ namespace ToSic.Eav.ManagementUI
 	public partial class Hyperlink_EditCustom : FieldTemplateUserControl
 	{
 		#region Protected Fields/Controls
-		protected DotNetNuke.UI.UserControls.LabelControl FieldLabel;
+		protected LabelControl FieldLabel;
 		#endregion
 
 		#region Private Fields
@@ -203,7 +204,7 @@ namespace ToSic.Eav.ManagementUI
 				Height = Unit.Pixel(440),
 				Title = "Image Manager"
 			};
-			imageManagerDefinition.Parameters["Language"] = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
+			imageManagerDefinition.Parameters["Language"] = Thread.CurrentThread.CurrentCulture.Name;
 			imageManagerDefinition.Parameters["LocalizationPath"] = "~/DesktopModules/Admin/RadEditorProvider/App_LocalResources/";
 
 			return imageManagerDefinition;
@@ -232,7 +233,7 @@ namespace ToSic.Eav.ManagementUI
 				Height = Unit.Pixel(440),
 				Title = "Document Manager"
 			};
-			documentManagerDefinition.Parameters["Language"] = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
+			documentManagerDefinition.Parameters["Language"] = Thread.CurrentThread.CurrentCulture.Name;
 			documentManagerDefinition.Parameters["LocalizationPath"] = "~/DesktopModules/Admin/RadEditorProvider/App_LocalResources/";
 
 			return documentManagerDefinition;
@@ -259,7 +260,7 @@ namespace ToSic.Eav.ManagementUI
 				Height = Unit.Pixel(500),
 				Title = "Image Editor"
 			};
-			imageEditorDefinition.Parameters["Language"] = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
+			imageEditorDefinition.Parameters["Language"] = Thread.CurrentThread.CurrentCulture.Name;
 			imageEditorDefinition.Parameters["LocalizationPath"] = "~/DesktopModules/Admin/RadEditorProvider/App_LocalResources/";
 
 			return imageEditorDefinition;

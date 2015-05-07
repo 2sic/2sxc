@@ -1,17 +1,18 @@
 ﻿using System;
-using System.Collections.Specialized;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.UI;
-using System.Linq;
 using System.Web.UI.WebControls;
+using DotNetNuke.Common;
+using DotNetNuke.UI.UserControls;
 
 namespace ToSic.Eav.ManagementUI
 {
-    public partial class Text_EditCustom : ManagementUI.FieldTemplateUserControl
+    public partial class Text_EditCustom : FieldTemplateUserControl
     {
-        protected DotNetNuke.UI.UserControls.LabelControl FieldLabel;
-        protected DotNetNuke.UI.UserControls.TextEditor Texteditor1;
-        protected DotNetNuke.UI.UserControls.UrlControl DnnUrl1;
+        protected LabelControl FieldLabel;
+        protected TextEditor Texteditor1;
+        protected UrlControl DnnUrl1;
 
         private const string MetaDataDefaultValueKey = "DefaultValue";
         private const string MetaDataInputTypeKey = "InputType";
@@ -81,7 +82,7 @@ namespace ToSic.Eav.ManagementUI
         /// </summary>
         public virtual void InitializeFieldTemplate()
         {
-            string DefaultValue = GetMetaDataValue(MetaDataDefaultValueKey, "");
+            var DefaultValue = GetMetaDataValue(MetaDataDefaultValueKey, "");
 
             // Do things depending which InputType this control has set
             if (InputType == InputTypes.Wysiwyg)
@@ -149,7 +150,7 @@ namespace ToSic.Eav.ManagementUI
                 {
                     TextBox1.Rows = Convert.ToInt32(metaDataRowCount.Value.ToString());
                     if(TextBox1.Rows > 1)
-                        TextBox1.TextMode = System.Web.UI.WebControls.TextBoxMode.MultiLine;
+                        TextBox1.TextMode = TextBoxMode.MultiLine;
                 }
 
                 if (GetMetaDataValue<bool>(MetaDataIsRequiredKey))
@@ -189,7 +190,7 @@ namespace ToSic.Eav.ManagementUI
                 IsInitialized = true;
             }
 
-            FieldLabel.Text = GetMetaDataValue<string>(MetaDataNameKey, Attribute.StaticName);
+            FieldLabel.Text = GetMetaDataValue(MetaDataNameKey, Attribute.StaticName);
             FieldLabel.HelpText = GetMetaDataValue<string>(MetaDataNotesKey);
             valFieldValue.Enabled = GetMetaDataValue<bool>(MetaDataIsRequiredKey);
             valRegularExpression.Enabled = !String.IsNullOrEmpty(GetMetaDataValue<string>(MetaDataRegularExpression));
@@ -218,7 +219,7 @@ namespace ToSic.Eav.ManagementUI
                         break;
                     case InputTypes.Link:
                         if (DnnUrl1.UrlType == "T")
-                            Value = Regex.Replace(DotNetNuke.Common.Globals.NavigateURL(int.Parse(DnnUrl1.Url)), "^https?://(.*?)/", "/");
+                            Value = Regex.Replace(Globals.NavigateURL(int.Parse(DnnUrl1.Url)), "^https?://(.*?)/", "/");
                         else
                             Value = DnnUrl1.Url;
                         break;

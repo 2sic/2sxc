@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Web;
-using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Portals;
-using DotNetNuke.Services.FileSystem;
+using Newtonsoft.Json;
 using ToSic.Eav;
-using ToSic.Eav.DataSources;
 using ToSic.SexyContent.EAVExtensions;
+using EntityRelationship = ToSic.Eav.Data.EntityRelationship;
 
 namespace ToSic.SexyContent
 {
@@ -24,9 +21,9 @@ namespace ToSic.SexyContent
                     return new HtmlString("");
 
                 if (Entity is IHasEditingData)
-                    return new HtmlString("<ul class='sc-menu' data-toolbar='" + Newtonsoft.Json.JsonConvert.SerializeObject(new { sortOrder = ((IHasEditingData) Entity).SortOrder, useModuleList = true, isPublished = Entity.IsPublished }) + "'></ul>");
+                    return new HtmlString("<ul class='sc-menu' data-toolbar='" + JsonConvert.SerializeObject(new { sortOrder = ((IHasEditingData) Entity).SortOrder, useModuleList = true, isPublished = Entity.IsPublished }) + "'></ul>");
 
-                return new HtmlString("<ul class='sc-menu' data-toolbar='" + Newtonsoft.Json.JsonConvert.SerializeObject(new { entityId = Entity.EntityId, isPublished = Entity.IsPublished, attributeSetName = Entity.Type.Name }) + "'></ul>");
+                return new HtmlString("<ul class='sc-menu' data-toolbar='" + JsonConvert.SerializeObject(new { entityId = Entity.EntityId, isPublished = Entity.IsPublished, attributeSetName = Entity.Type.Name }) + "'></ul>");
             }
         }
         private readonly string[] _dimensions;
@@ -37,8 +34,8 @@ namespace ToSic.SexyContent
         /// </summary>
         public DynamicEntity(IEntity entityModel, string[] dimensions, SexyContent sexy)
         {
-            this.Entity = entityModel;
-            this._dimensions = dimensions;
+            Entity = entityModel;
+            _dimensions = dimensions;
             SexyContext = sexy;
         }
 
@@ -58,61 +55,55 @@ namespace ToSic.SexyContent
             return true;
         }
 
+
         public object GetEntityValue(string attributeName, out bool propertyNotFound)
         {
-            propertyNotFound = false;
-            object result = null;
-            
-            
-            if (Entity.Attributes.ContainsKey(attributeName))
-            {
-                var attribute = Entity.Attributes[attributeName];
-                result = attribute[_dimensions];
+            propertyNotFound = false;   // assume found, as that's usually the case
 
-                if (attribute.Type == "Hyperlink" && result is string)
-                {
-                    result = SexyContent.ResolveHyperlinkValues((string) result, SexyContext == null ? PortalSettings.Current : SexyContext.OwnerPS);
-                }
-                else if (attribute.Type == "Entity" && result is EntityRelationshipModel)
-                {
-                    // Convert related entities to Dynamics
-                    result = ((ToSic.Eav.EntityRelationshipModel) result).Select(
-                        p => new DynamicEntity(p, _dimensions, this.SexyContext)
-                        ).ToList();
-                }
-            }
-            else
+            #region check the two special cases which the EAV doesn't know
+            switch (attributeName)
             {
-                switch (attributeName)
-                {
-                    case "EntityTitle":
-                        result = EntityTitle;
-                        break;
-                    case "EntityId":
-                        result = EntityId;
-                        break;
-                    case "Toolbar":
-                        result = Toolbar.ToString();
-                        break;
-                    case "IsPublished":
-                        result = Entity.IsPublished;
-                        break;
-                    case "Modified":
-                        result = Entity.Modified;
-                        break;
-					case "Presentation":
-		                var inContentGroup = Entity as EntityInContentGroup;
-		                if(inContentGroup != null)
-							result = inContentGroup.Presentation;
-		                break;
-                    default:
-                        result = null;
-                        propertyNotFound = true;
-                        break;
-                }
+                case "Toolbar":
+                    return Toolbar.ToString();
+                case "Presentation":
+                    var inContentGroup = Entity as EntityInContentGroup;
+                    return (inContentGroup != null)
+                        ? new DynamicEntity(inContentGroup.Presentation, _dimensions, SexyContext)
+                        : null;
             }
+            #endregion
 
-            return result;
+            // new implementation based on revised EAV API
+            var result = Entity.GetBestValue(attributeName, _dimensions);//, out propertyNotFound);
+            propertyNotFound = result == null;
+
+            #region handle 2sxc special conversions for file names and entity-lists
+
+            if (!propertyNotFound)
+            {
+	            if (Entity.Attributes.ContainsKey(attributeName))
+	            {
+		            var attribute = Entity.Attributes[attributeName];
+		            if (attribute.Type == "Hyperlink" && result is string)
+			            result = SexyContent.ResolveHyperlinkValues((string) result,
+				            SexyContext == null ? PortalSettings.Current : SexyContext.OwnerPS);
+
+		            if (attribute.Type == "Entity" && result is EntityRelationship)
+			            // Convert related entities to Dynamics
+			            result = ((EntityRelationship) result).Select(
+				            p => new DynamicEntity(p, _dimensions, SexyContext)
+				            ).ToList();
+	            }
+	            return result;
+            }
+            #endregion
+
+            #region all failed, return null
+            propertyNotFound = true;
+            return null;
+            #endregion
+
+
         }
 
         /// <summary>
@@ -146,12 +137,12 @@ namespace ToSic.SexyContent
 
         public dynamic GetDraft()
         {
-            return new DynamicEntity(Entity.GetDraft(), _dimensions, this.SexyContext);
+            return new DynamicEntity(Entity.GetDraft(), _dimensions, SexyContext);
         }
 
         public dynamic GetPublished()
         {
-            return new DynamicEntity(Entity.GetPublished(), _dimensions, this.SexyContext);
+            return new DynamicEntity(Entity.GetPublished(), _dimensions, SexyContext);
         }
 
     }

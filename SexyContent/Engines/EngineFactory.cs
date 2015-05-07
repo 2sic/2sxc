@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Web;
-using ToSic.SexyContent.Engines;
 
 namespace ToSic.SexyContent.Engines
 {
@@ -29,7 +25,7 @@ namespace ToSic.SexyContent.Engines
                     break;
                 case false:
                     // Load Token Engine
-                    engineType = typeof(Engines.TokenEngine.TokenEngine);
+                    engineType = typeof(TokenEngine.TokenEngine);
                     break;
             }
 

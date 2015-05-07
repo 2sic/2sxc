@@ -1,13 +1,7 @@
-﻿using DotNetNuke.Common.Utilities;
-using DotNetNuke.Entities.Modules;
-using DotNetNuke.Entities.Modules.Actions;
-using DotNetNuke.Security;
-using DotNetNuke.Services.Exceptions;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Web.UI;
-using System.Web.UI.WebControls;
+using DotNetNuke.Entities.Modules;
+using DotNetNuke.Services.Exceptions;
 using ToSic.SexyContent.GettingStarted;
 
 namespace ToSic.SexyContent
@@ -41,15 +35,15 @@ namespace ToSic.SexyContent
 
                 if (!isSharedModule)
                 {
-                    var noTemplatesYet = !Sexy.GetVisibleTemplates(PortalId).Any();
+                    var noTemplatesYet = !Sexy.Templates.GetVisibleTemplates().Any();
 
                     // If there are no templates configured - show "getting started" frame
                     if (noTemplatesYet && IsEditable && UserInfo.IsInRole(PortalSettings.AdministratorRoleName))
                     {
                         pnlGetStarted.Visible = true;
                         var gettingStartedControl = (GettingStartedFrame)LoadControl("~/DesktopModules/ToSIC_SexyContent/SexyContent/GettingStarted/GettingStartedFrame.ascx");
-                        gettingStartedControl.ModuleID = this.ModuleId;
-                        gettingStartedControl.ModuleConfiguration = this.ModuleConfiguration;
+                        gettingStartedControl.ModuleID = ModuleId;
+                        gettingStartedControl.ModuleConfiguration = ModuleConfiguration;
                         pnlGetStarted.Controls.Add(gettingStartedControl);
                     }
 
@@ -62,13 +56,17 @@ namespace ToSic.SexyContent
 
                 if (AppId.HasValue)
                 {
-                    if (Items.Any() && Template != null)
+                    if (ContentGroup.Content.Any() && Template != null)
                         ProcessView(phOutput, pnlError, pnlMessage);
                     else if(!IsContentApp && UserMayEditThisModule) // Select first available template automatically if it's not set yet - then refresh page
                     {
                         var templates = Sexy.GetAvailableTemplatesForSelector(ModuleConfiguration).ToList();
                         if (templates.Any())
+<<<<<<< HEAD
 							SexyUncached.UpdateTemplateForGroup(Sexy.GetContentGroupIdFromModule(ModuleConfiguration.ModuleID), templates.First().TemplateID, UserInfo.UserID);
+=======
+							Sexy.ContentGroups.SetPreviewTemplateId(ModuleConfiguration.ModuleID, templates.First().TemplateId);
+>>>>>>> PreV7
                         Response.Redirect(Request.RawUrl);
                     }
                 }

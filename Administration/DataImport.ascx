@@ -64,7 +64,7 @@
 
         <ul class="dnnActions dnnClear">
             <li><asp:LinkButton runat="server" ID="btnContinue" class="dnnPrimaryAction" ResourceKey="btnTestData" OnClick="OnTestDataClick"></asp:LinkButton></li>
-            <li><asp:HyperLink runat="server" class="dnnSecondaryAction" ResourceKey="btnClose" NavigateUrl="/"></asp:HyperLink></li>
+            <li><asp:LinkButton runat="server" class="dnnSecondaryAction" ResourceKey="btnClose" OnClick="OnCloseClick"></asp:LinkButton></li>
             <li><asp:LinkButton runat="server" ID="btnContinueDetailed" ForeColor="White" ResourceKey="btnTestDataDetailed" OnClick="OnTestDataDetailedClick"></asp:LinkButton></li>
         </ul>
     </div>
@@ -102,7 +102,7 @@
         <ul class="dnnActions dnnClear">
             <li><asp:LinkButton runat="server" class="dnnPrimaryAction" ResourceKey="btnImportData" OnClick="OnImportDataClick"></asp:LinkButton></li>
             <li><asp:LinkButton runat="server" class="dnnSecondaryAction" ResourceKey="btnBack" OnClick="OnBackClick"></asp:LinkButton></li>
-            <li><asp:HyperLink runat="server" class="dnnSecondaryAction" ResourceKey="btnClose" NavigateUrl="/"></asp:HyperLink></li>
+            <li><asp:LinkButton runat="server" class="dnnSecondaryAction" ResourceKey="btnClose" OnClick="OnCloseClick"></asp:LinkButton></li>
         </ul>
     </div>
 
@@ -119,7 +119,7 @@
 
         <ul class="dnnActions dnnClear">
             <li><asp:LinkButton runat="server" class="dnnPrimaryAction" ResourceKey="btnBack" OnClick="OnBackClick"></asp:LinkButton></li>
-            <li><asp:HyperLink runat="server" class="dnnSecondaryAction" ResourceKey="btnClose" NavigateUrl="/"></asp:HyperLink></li>
+            <li><asp:LinkButton runat="server" class="dnnSecondaryAction" ResourceKey="btnClose" OnClick="OnCloseClick"></asp:LinkButton></li>
         </ul>
     </div>
 </asp:Panel>
@@ -133,7 +133,7 @@
 
         <ul class="dnnActions dnnClear">
             <li><asp:LinkButton runat="server" class="dnnPrimaryAction" ResourceKey="btnBack" OnClick="OnBackClick"></asp:LinkButton></li>
-            <li><asp:HyperLink runat="server" class="dnnSecondaryAction" ResourceKey="btnClose" NavigateUrl="/"></asp:HyperLink></li>
+            <li><asp:LinkButton runat="server" class="dnnSecondaryAction" ResourceKey="btnClose" OnClick="OnCloseClick"></asp:LinkButton></li>
         </ul>
     </div>
 </asp:Panel>

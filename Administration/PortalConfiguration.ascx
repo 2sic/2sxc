@@ -86,7 +86,7 @@
     function CreateZone() {
         var newName = "";
         while (newName == "") {
-            newName = prompt("Enter the name for the new Virtual Database (VDB)", 'New VDB Portal <%= this.PortalSettings.PortalId %>');
+            newName = prompt("Enter the name for the new Virtual Database (VDB)", 'New VDB Portal <%= PortalSettings.PortalId %>');
             if (newName == null || newName == false)
                 return false;
         }

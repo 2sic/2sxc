@@ -1,6 +1,5 @@
 ﻿<%@ Control Language="C#" Inherits="ToSic.Eav.ManagementUI.Number_EditCustom" Codebehind="Number_Edit.ascx.cs" AutoEventWireup="True" %>
 <%@ Register TagPrefix="dnn" TagName="Label" Src="~/controls/LabelControl.ascx" %>
-<%@ Register TagPrefix="dnn" TagName="texteditor" Src="~/controls/texteditor.ascx" %>
 <%@ Register tagPrefix="SexyContent" tagName="DimensionMenu" src="../Controls/DimensionMenu.ascx" %>
 
 <dnn:Label ID="FieldLabel" runat="server" Suffix=":" />

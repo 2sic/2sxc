@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Razor.Helpers;
@@ -12,7 +14,7 @@ namespace ToSic.SexyContent
 {
     public class AppAndDataHelpers : IAppAndDataHelpers
     {
-        private SexyContent _sexy;
+        private readonly SexyContent _sexy;
 
         public AppAndDataHelpers(SexyContent sexy, ModuleInfo module, ViewDataSource data, App app)
         {
@@ -20,6 +22,7 @@ namespace ToSic.SexyContent
             App = app;
             Data = data;
             Dnn = new DnnHelper(module);
+			Sxc = new SxcHelper(sexy);
 	        List = new List<Element>();
 
 	        if (data != null)
@@ -53,7 +56,7 @@ namespace ToSic.SexyContent
 
 	        // If PortalSettings is null - for example, while search index runs - HasEditPermission would fail
             // But in search mode, it shouldn't show drafts, so this is ok.
-            App.InitData(PortalSettings.Current != null && SexyContent.HasEditPermission(module));
+            App.InitData(PortalSettings.Current != null && SexyContent.HasEditPermission(module), data.ConfigurationProvider);
         }
 
 	    private Element GetElementFromEntity(IEntity e)
@@ -61,14 +64,14 @@ namespace ToSic.SexyContent
 			var el = new Element
 			{
 				EntityId = e.EntityId,
-				Content = AsDynamic(e)
+				Content =AsDynamic(e)
 			};
 
 			if (e is EntityInContentGroup)
 			{
 				var c = ((EntityInContentGroup)e);
 				el.GroupId = c.GroupId;
-				el.Presentation = AsDynamic(c.Presentation);
+				el.Presentation = c.Presentation == null ? null : AsDynamic(c.Presentation);
 				el.SortOrder = c.SortOrder;
 			}
 
@@ -78,6 +81,7 @@ namespace ToSic.SexyContent
         public App App { get; private set; }
         public ViewDataSource Data { get; private set; }
         public DnnHelper Dnn { get; private set; }
+		public SxcHelper Sxc { get; private set; }
 
         /// <summary>
         /// Transform a IEntity to a DynamicEntity as dynamic object
@@ -86,7 +90,7 @@ namespace ToSic.SexyContent
         /// <returns></returns>
         public dynamic AsDynamic(IEntity entity)
         {
-            return new DynamicEntity(entity, new[] { System.Threading.Thread.CurrentThread.CurrentCulture.Name }, _sexy);
+            return new DynamicEntity(entity, new[] { Thread.CurrentThread.CurrentCulture.Name }, _sexy);
         }
 
         /// <summary>
@@ -150,8 +154,8 @@ namespace ToSic.SexyContent
         }
 
 
-        private IConfigurationProvider _configurationProvider;
-        private IConfigurationProvider ConfigurationProvider
+        private IValueCollectionProvider _configurationProvider;
+        private IValueCollectionProvider ConfigurationProvider
         {
             get
             {
@@ -163,7 +167,7 @@ namespace ToSic.SexyContent
             }
         }
 
-        public Eav.DataSources.IDataSource CreateSource(string typeName = "", Eav.DataSources.IDataSource inSource = null, IConfigurationProvider configurationProvider = null)
+        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, IValueCollectionProvider configurationProvider = null)
         {
             if (configurationProvider == null)
                 configurationProvider = ConfigurationProvider;
@@ -175,7 +179,7 @@ namespace ToSic.SexyContent
             return typeName != "" ? DataSource.GetDataSource(typeName, initialSource.ZoneId, initialSource.AppId, initialSource, configurationProvider) : initialSource;
         }
 
-        public T CreateSource<T>(Eav.DataSources.IDataSource inSource = null, IConfigurationProvider configurationProvider = null)
+        public T CreateSource<T>(IDataSource inSource = null, IValueCollectionProvider configurationProvider = null)
         {
             if (configurationProvider == null)
                 configurationProvider = ConfigurationProvider;
@@ -196,9 +200,9 @@ namespace ToSic.SexyContent
         public T CreateSource<T>(IDataStream inStream)
         {
             // if it has a source, then use this, otherwise it's null and that works too. Reason: some sources like DataTable or SQL won't have an upstream source
-            T src = CreateSource<T>(inStream.Source);
+            var src = CreateSource<T>(inStream.Source);
 
-            IDataTarget srcDs = (IDataTarget)src;
+            var srcDs = (IDataTarget)src;
             srcDs.In.Clear();
             srcDs.In.Add(DataSource.DefaultStreamName, inStream);
             return src;

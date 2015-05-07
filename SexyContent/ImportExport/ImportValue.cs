@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using System.Xml.Linq;
-using ToSic.Eav;
+using ToSic.Eav.Import;
 
 namespace ToSic.SexyContent.ImportExport
 {
     public class ImportValue
     {
         public XElement XmlValue;
-        public List<ToSic.Eav.Import.ValueDimension> Dimensions;
+        public List<ValueDimension> Dimensions;
 
         public string GetValue()
         {

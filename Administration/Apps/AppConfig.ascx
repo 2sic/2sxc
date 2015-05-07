@@ -1,8 +1,8 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="AppConfig.ascx.cs" Inherits="ToSic.SexyContent.Administration.AppConfig" %>
-<%@ Register TagName="AdministrationRegisters" TagPrefix="SexyContent" Src="../Registers.ascx" %>
-<SexyContent:AdministrationRegisters runat="server"></SexyContent:AdministrationRegisters>
 <%@ Import Namespace="ToSic.SexyContent" %>
 <%@ Import Namespace="ToSic.SexyContent.EAV.PipelineDesigner" %>
+<%@ Register TagName="AdministrationRegisters" TagPrefix="SexyContent" Src="../Registers.ascx" %>
+<SexyContent:AdministrationRegisters runat="server"></SexyContent:AdministrationRegisters>
 
 <div class="dnnForm dnnSexyContentAppConfig dnnClear">
     <h2 class="dnnFormSectionHead">
@@ -31,15 +31,6 @@
             </a>
             <a title="configure which resources exist for this App" class="dnnSecondaryAction" href="<%= EditUrl("", "", SexyContent.ControlKeys.EavManagement, SexyContent.AppIDString + "=" + AppId.Value + "&ManagementMode=ContentTypeFields&AttributeSetId=" + SexyContent.GetAppResourcesAttributeSetId(ZoneId.Value, AppId.Value)) %>">
                 Configure App Resources
-            </a>
-        </p>
-    </div>
-    <div>
-        <h5>Data Pipelines</h5>
-        <p>Data Pipelines are used to get and prepare Custom Data. They are used in Templates and the JavaScript API.</p>
-        <p>
-            <a class="dnnPrimaryAction" href="<%= PipelineManagementDnnWrapper.GetEditUrl(this, AppId.Value) %>">
-                Manage Pipelines
             </a>
         </p>
     </div>

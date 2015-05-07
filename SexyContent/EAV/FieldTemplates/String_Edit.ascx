@@ -1,5 +1,4 @@
 ﻿<%@ Control Language="C#" Inherits="ToSic.Eav.ManagementUI.Text_EditCustom" Codebehind="String_Edit.ascx.cs" AutoEventWireup="True" %>
-<%@ Register TagPrefix="dnn" Namespace="DotNetNuke.Web.UI.WebControls" Assembly="DotNetNuke.Web" %>
 <%@ Register TagPrefix="dnn" TagName="Label" Src="~/controls/LabelControl.ascx" %>
 <%@ Register TagPrefix="dnn" TagName="texteditor" Src="~/controls/texteditor.ascx" %>
 <%@ Register TagPrefix="dnn" TagName="URL" Src="~/controls/URLControl.ascx" %>

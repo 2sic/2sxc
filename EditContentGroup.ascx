@@ -20,7 +20,7 @@
         <asp:Repeater runat="server" ID="rptDimensions" OnItemCommand="rptDimensions_ItemCommand">
             <ItemTemplate>
                 <li class='<%# "ui-state-default ui-corner-top" + (LanguageID.ToString() == Eval("DimensionID").ToString() ? " ui-tabs-selected ui-state-active ui-tabs-active" : "") + (DefaultLanguageID == (int)Eval("DimensionID") ? " sc-default-language" : "") %>'>
-                    <asp:LinkButton ID="LinkButton1" runat="server" Text='<%# Eval("Name") %>' OnClientClick='<%# "if(!ChangeLanguage(" + LanguageID.ToString() + ", " + Eval("DimensionID").ToString() + ", \"" + GetCultureUrl((int)Eval("DimensionID")) + "\" )) return false;"  %>'
+                    <asp:LinkButton ID="LinkButton1" runat="server" Text='<%# Eval("Name") %>' OnClientClick='<%# "if(!ChangeLanguage(" + LanguageID + ", " + Eval("DimensionID") + ", \"" + GetCultureUrl((int)Eval("DimensionID")) + "\" )) return false;"  %>'
                         CommandName="ChangeLanguage" CommandArgument='<%# Eval("DimensionID") %>'></asp:LinkButton>
                 </li>
             </ItemTemplate>
@@ -69,13 +69,14 @@
             $(".sc-field-error").toggle($(".dnnFormMessage.dnnFormError:visible").size() > 0);
         });
 
-    	// Show "Other" actions when ... is clicked
+        // Show "Other" actions when ... is clicked
         $(".sc-action-trigger-others").click(function () {
             $(".sc-action-other").css("display", "inline-block");
             $(this).hide();
         });
-        if ($(".sc-action-other").size() == 0)
-        	$(".sc-action-trigger-others").hide();
+
+	    $(".sc-action-trigger-others").toggle($(".sc-action-other").size() > 0);
+
     });
 
     function ChangeLanguage(CurrentLanguage, NewLanguage, NewLanguageUrl) {

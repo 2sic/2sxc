@@ -22,13 +22,13 @@ namespace ToSic.SexyContent.DataImportExport
         
         public LocalizedDescriptionAttribute(string resourceKey, Type resourceType)
         {
-            this.resourceManager = new ResourceManager(resourceType.FullName, resourceType.Assembly);
+            resourceManager = new ResourceManager(resourceType.FullName, resourceType.Assembly);
             this.resourceKey = resourceKey;
         }
 
         public LocalizedDescriptionAttribute(string resourceKey, Type resourceType, string resourceFolder)
         {
-            this.resourceManager = new ResourceManager(resourceFolder + "." + resourceType.Name, resourceType.Assembly);
+            resourceManager = new ResourceManager(resourceFolder + "." + resourceType.Name, resourceType.Assembly);
             this.resourceKey = resourceKey;
         }
 
@@ -36,7 +36,7 @@ namespace ToSic.SexyContent.DataImportExport
         {
             get
             {
-                string displayName = resourceManager.GetString(resourceKey);
+                var displayName = resourceManager.GetString(resourceKey);
                 if (string.IsNullOrEmpty(displayName))
                 {
                     return string.Format("[{0}]", resourceKey);

@@ -27,6 +27,9 @@
       <DefaultExclude Include="Js\EditDataSource\**" />
       <DefaultExclude Include="Styles\EditDataSource\**" />
       <DefaultExclude Include="ModulePackages\**" />
+			<DefaultExclude Include="2Sexy Content Testing\**" />
+			<DefaultExclude Include=".git\**" />
+      <DefaultExclude Include="**\node_modules\**" /> 
     </ItemGroup>
 
     <ItemGroup>
@@ -37,13 +40,20 @@
       <InstallInclude Include="**\*.htm" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="**\*.resx" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="**\*.aspx" Exclude="@(DefaultExclude)" />
-      <InstallInclude Include="**\*.js" Exclude="@(DefaultExclude)" />
+      <InstallInclude Include="**\*.js" Exclude="@(DefaultExclude);gruntfile.js" />
+      <InstallInclude Include="**\*.map" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="**\*.txt"  Exclude="@(DefaultExclude);**\obj\**;**\_ReSharper*\**;License.txt;ReleaseNotes.txt" />
       <InstallInclude Include="**\*.ashx" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="**\*.png" Exclude="@(DefaultExclude);icon.png;icon-app.png" />
       <InstallInclude Include="**\*.jpg" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="**\*.gif" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="**\*.config" Exclude="@(DefaultExclude);**\web-Deploy.config" />
+			<InstallInclude Include="**\*.xml" Exclude="@(DefaultExclude);" />
+			<InstallInclude Include="**\*.eot" Exclude="@(DefaultExclude);" />
+			<InstallInclude Include="**\*.svg" Exclude="@(DefaultExclude)" />
+			<InstallInclude Include="**\*.ttf" Exclude="@(DefaultExclude)" />
+			<InstallInclude Include="**\*.woff" Exclude="@(DefaultExclude)" />
+			<InstallInclude Include="**\*.woff2" Exclude="@(DefaultExclude)" />
     </ItemGroup>
 
     <ItemGroup>

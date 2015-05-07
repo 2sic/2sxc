@@ -1,0 +1,198 @@
+-- make sure sql rolls back automatically in case of error.
+SET XACT_ABORT ON
+
+BEGIN TRANSACTION SexyContentUpdate;
+
+EXEC ToSIC_EAV_ChangeLogAdd 'System'
+
+-- Fix SortOrder for rows in ToSIC_EAV_EntityRelationships
+DECLARE @AttributeId INT
+DECLARE @ParentEntityId INT
+DECLARE cur CURSOR LOCAL FOR
+    SELECT [AttributeID], [ParentEntityID] FROM ToSIC_EAV_EntityRelationships GROUP BY [AttributeID], [ParentEntityID]
+
+OPEN cur
+
+FETCH NEXT FROM cur INTO @AttributeId, @ParentEntityId
+
+WHILE @@FETCH_STATUS = 0 BEGIN
+
+    -- Go through each AttributeId | ParentEntityId combination and correct the sortorder values
+	WITH TableWithFixedSortOrder AS (
+		SELECT
+			[AttributeId],
+			[ParentEntityID],
+			[ChildEntityID],
+			[SortOrder],
+			(ROW_NUMBER() over (ORDER BY SortOrder)) - 1 AS NewSortOrder
+			FROM ToSIC_EAV_EntityRelationships
+			WHERE [AttributeID] = @AttributeId AND [ParentEntityID] = @ParentEntityId
+	)
+	-- Update Relationships table
+	UPDATE	ToSIC_EAV_EntityRelationships
+	SET		SortOrder = TableWithFixedSortOrder.NewSortOrder
+	FROM	ToSIC_EAV_EntityRelationships INNER JOIN TableWithFixedSortOrder
+		AS TableWithFixedSortOrder
+		ON ToSIC_EAV_EntityRelationships.AttributeID = TableWithFixedSortOrder.AttributeID AND
+		ToSIC_EAV_EntityRelationships.ParentEntityID = TableWithFixedSortOrder.ParentEntityID AND 
+		ToSIC_EAV_EntityRelationships.ChildEntityID = TableWithFixedSortOrder.ChildEntityID
+	WHERE ToSIC_EAV_EntityRelationships.SortOrder <> TableWithFixedSortOrder.NewSortOrder
+
+    FETCH NEXT FROM cur INTO @AttributeId, @ParentEntityId
+END
+
+CLOSE cur
+DEALLOCATE cur
+
+
+-- Remove primary key temporarily
+ALTER TABLE ToSIC_EAV_EntityRelationships
+	DROP CONSTRAINT PK_ToSIC_EAV_EntityRelationships
+
+-- Change ChildEntityID to not null
+ALTER TABLE ToSIC_EAV_EntityRelationships ALTER COLUMN [ChildEntityID] INTEGER NULL
+
+-- Set primary key to AttributeID, ParentEntityID, SortOrder
+ALTER TABLE ToSIC_EAV_EntityRelationships ADD CONSTRAINT
+	PK_ToSIC_EAV_EntityRelationships PRIMARY KEY CLUSTERED 
+	(
+	AttributeID,
+	ParentEntityID,
+	SortOrder
+	)
+
+
+
+
+
+
+
+
+-- The next block transfers DemoEntityID and ContentTypeID information from assigned entities to templates directly
+EXEC('
+CREATE FUNCTION Temp_ToSIC_SexyContent_TemplateMove
+(	
+	@itemTypeFilter nvarchar(max)
+)
+RETURNS TABLE 
+AS
+RETURN 
+(
+	SELECT        ToSIC_EAV_Values_1.Value AS ItemType, CAST(ContentTypeIDValues.Value AS INT) AS ContentTypeID, CAST(DemoEntityIDValue.Value AS INT) AS DemoEntityID, 
+                                ContentTypeIDValues.EntityID, ToSIC_EAV_Entities_1.KeyNumber AS TemplateID
+    FROM            ToSIC_EAV_Attributes AS ContentTypeIDAttribute INNER JOIN
+                                ToSIC_EAV_Values AS ContentTypeIDValues ON ContentTypeIDAttribute.AttributeID = ContentTypeIDValues.AttributeID RIGHT OUTER JOIN
+                                ToSIC_EAV_Values AS DemoEntityIDValue INNER JOIN
+                                ToSIC_EAV_Attributes AS DemoEntityIDAttribute ON DemoEntityIDValue.AttributeID = DemoEntityIDAttribute.AttributeID RIGHT OUTER JOIN
+                                ToSIC_EAV_AssignmentObjectTypes AS ToSIC_EAV_AssignmentObjectTypes_1 INNER JOIN
+                                ToSIC_EAV_Entities AS ToSIC_EAV_Entities_1 ON 
+                                ToSIC_EAV_AssignmentObjectTypes_1.AssignmentObjectTypeID = ToSIC_EAV_Entities_1.AssignmentObjectTypeID INNER JOIN
+                                ToSIC_EAV_AttributeSets AS ToSIC_EAV_AttributeSets_1 ON 
+                                ToSIC_EAV_Entities_1.AttributeSetID = ToSIC_EAV_AttributeSets_1.AttributeSetID INNER JOIN
+                                ToSIC_EAV_Values AS ToSIC_EAV_Values_1 ON ToSIC_EAV_Entities_1.EntityID = ToSIC_EAV_Values_1.EntityID INNER JOIN
+                                ToSIC_EAV_Attributes AS ToSIC_EAV_Attributes_1 ON ToSIC_EAV_Values_1.AttributeID = ToSIC_EAV_Attributes_1.AttributeID ON 
+                                DemoEntityIDValue.EntityID = ToSIC_EAV_Values_1.EntityID ON ContentTypeIDValues.EntityID = ToSIC_EAV_Values_1.EntityID
+    WHERE        (ToSIC_EAV_AssignmentObjectTypes_1.Name = N''2SexyContent-Template'') AND 
+                                (ToSIC_EAV_AttributeSets_1.StaticName = N''2SexyContent-Template-ContentTypes'') AND (ToSIC_EAV_Attributes_1.StaticName = N''ItemType'') AND 
+                                (ContentTypeIDAttribute.StaticName = N''ContentTypeID'') AND (DemoEntityIDAttribute.StaticName = N''DemoEntityID'')
+																						AND (ToSIC_EAV_Values_1.Value = @itemTypeFilter)
+																												 
+)')
+
+EXEC('
+IF COL_LENGTH(''ToSIC_SexyContent_Templates'',''Temp_PresentationTypeID'') IS NULL
+BEGIN
+	ALTER TABLE ToSIC_SexyContent_Templates ADD Temp_PresentationTypeID INT NOT NULL DEFAULT 0
+END
+IF COL_LENGTH(''ToSIC_SexyContent_Templates'',''Temp_PresentationDemoEntityID'') IS NULL
+BEGIN
+	ALTER TABLE ToSIC_SexyContent_Templates ADD Temp_PresentationDemoEntityID INT NOT NULL DEFAULT 0
+END
+IF COL_LENGTH(''ToSIC_SexyContent_Templates'',''Temp_ListContentTypeID'') IS NULL
+BEGIN
+	ALTER TABLE ToSIC_SexyContent_Templates ADD Temp_ListContentTypeID INT NOT NULL DEFAULT 0
+END
+IF COL_LENGTH(''ToSIC_SexyContent_Templates'',''Temp_ListContentDemoEntityID'') IS NULL
+BEGIN
+	ALTER TABLE ToSIC_SexyContent_Templates ADD Temp_ListContentDemoEntityID INT NOT NULL DEFAULT 0
+END
+IF COL_LENGTH(''ToSIC_SexyContent_Templates'',''Temp_ListPresentationTypeID'') IS NULL
+BEGIN
+	ALTER TABLE ToSIC_SexyContent_Templates ADD Temp_ListPresentationTypeID INT NOT NULL DEFAULT 0
+END
+IF COL_LENGTH(''ToSIC_SexyContent_Templates'',''Temp_ListPresentationDemoEntityID'') IS NULL
+BEGIN
+	ALTER TABLE ToSIC_SexyContent_Templates ADD Temp_ListPresentationDemoEntityID INT NOT NULL DEFAULT 0
+END
+IF COL_LENGTH(''ToSIC_SexyContent_Templates'',''Temp_NewTemplateGuid'') IS NULL
+BEGIN
+	ALTER TABLE ToSIC_SexyContent_Templates ADD Temp_NewTemplateGuid NVARCHAR(MAX) NULL
+END
+IF COL_LENGTH(''ToSIC_SexyContent_ContentGroupItems'',''Temp_NewContentGroupGuid'') IS NULL
+BEGIN
+	ALTER TABLE ToSIC_SexyContent_ContentGroupItems ADD Temp_NewContentGroupGuid NVARCHAR(MAX) NULL
+END')
+
+UPDATE       ToSIC_SexyContent_Templates
+SET					Temp_PresentationTypeID = ISNULL(Presentation.ContentTypeID, 0),
+					Temp_PresentationDemoEntityID = ISNULL(Presentation.DemoEntityID, 0),
+					Temp_ListContentTypeID = ISNULL(ListContent.ContentTypeID, 0),
+					Temp_ListContentDemoEntityID = ISNULL(ListContent.DemoEntityID, 0),
+					Temp_ListPresentationTypeID = ISNULL(ListPresentation.ContentTypeID, 0),
+					Temp_ListPresentationDemoEntityID = ISNULL(ListPresentation.DemoEntityID, 0)
+FROM            ToSIC_SexyContent_Templates LEFT OUTER JOIN
+                             (SELECT * FROM Temp_ToSIC_SexyContent_TemplateMove('ListPresentation')) AS ListPresentation ON 
+                         ToSIC_SexyContent_Templates.TemplateID = ListPresentation.TemplateID LEFT OUTER JOIN
+                             (SELECT * FROM Temp_ToSIC_SexyContent_TemplateMove('Presentation')) AS Presentation ON 
+                         ToSIC_SexyContent_Templates.TemplateID = Presentation.TemplateID LEFT OUTER JOIN
+                             (SELECT * FROM Temp_ToSIC_SexyContent_TemplateMove('ListContent')) AS ListContent ON ToSIC_SexyContent_Templates.TemplateID = ListContent.TemplateID
+							 													 
+DROP FUNCTION Temp_ToSIC_SexyContent_TemplateMove
+
+
+
+
+-- Add AppName setting for all 2sxc-app modules
+INSERT INTO ModuleSettings
+                         (ModuleID, SettingName, SettingValue, CreatedByUserID, CreatedOnDate, LastModifiedByUserID, LastModifiedOnDate)
+SELECT        ModuleSettings_1.ModuleID, 'ToSIC_SexyContent_AppName' AS SettingName, ToSIC_EAV_Apps.Name AS SettingValue, ModuleSettings_1.CreatedByUserID, 
+                         ModuleSettings_1.CreatedOnDate, ModuleSettings_1.LastModifiedByUserID, ModuleSettings_1.LastModifiedOnDate
+FROM            ModuleSettings AS ModuleSettings_1 INNER JOIN
+                         ToSIC_EAV_Apps ON ModuleSettings_1.SettingValue = ToSIC_EAV_Apps.AppID INNER JOIN
+                         Modules ON ModuleSettings_1.ModuleID = Modules.ModuleID INNER JOIN
+                         ModuleDefinitions ON Modules.ModuleDefID = ModuleDefinitions.ModuleDefID INNER JOIN
+                         DesktopModules ON ModuleDefinitions.DesktopModuleID = DesktopModules.DesktopModuleID
+WHERE        (ModuleSettings_1.SettingName = N'AppId') AND (DesktopModules.ModuleName = N'2sxc-app') AND
+                             ((SELECT        COUNT(*) AS Expr1
+                                 FROM            ModuleSettings AS ModuleSettings_2
+                                 WHERE        (ModuleID = ModuleSettings_1.ModuleID) AND (SettingName = N'ToSIC_SexyContent_AppName')) = 0)
+
+
+-- Insert new GUID for ContentGroups and Templates (will be used as EntityGuid while upgrading)
+EXEC('UPDATE ToSIC_SexyContent_Templates SET Temp_NewTemplateGuid = NEWID() WHERE Temp_NewTemplateGuid IS NULL')
+
+EXEC('CREATE TABLE ToSIC_SexyContent_TempContentGroupGuids (ContentGroupID int PRIMARY KEY, newGuid uniqueidentifier)
+INSERT INTO ToSIC_SexyContent_TempContentGroupGuids (ContentGroupID, newGuid) SELECT ContentGroupID, NEWID() AS newGuid  FROM ToSIC_SexyContent_ContentGroupItems GROUP BY ContentGroupID')
+
+EXEC('UPDATE c SET Temp_NewContentGroupGuid = c1.newGuid FROM ToSIC_SexyContent_ContentGroupItems AS c
+LEFT OUTER JOIN ToSIC_SexyContent_TempContentGroupGuids c1
+ON c.ContentGroupID = c1.ContentGroupID WHERE Temp_NewContentGroupGuid IS NULL')
+
+EXEC('DROP TABLE ToSIC_SexyContent_TempContentGroupGuids')
+
+-- Update ModuleSettings to use the new ContentGroupGuid instead of the old id
+EXEC('INSERT INTO ModuleSettings
+                         (ModuleID, CreatedByUserID, CreatedOnDate, LastModifiedByUserID, LastModifiedOnDate, SettingName, SettingValue)
+SELECT DISTINCT       ModuleSettings_1.ModuleID, ModuleSettings_1.CreatedByUserID, ModuleSettings_1.CreatedOnDate, ModuleSettings_1.LastModifiedByUserID, 
+                         ModuleSettings_1.LastModifiedOnDate, ''ToSIC_SexyContent_ContentGroupGuid'' AS SettingName, 
+                         ToSIC_SexyContent_ContentGroupItems.Temp_NewContentGroupGuid AS SettingValue
+FROM            ModuleSettings AS ModuleSettings_1 LEFT OUTER JOIN
+                         ToSIC_SexyContent_ContentGroupItems ON ModuleSettings_1.SettingValue = ToSIC_SexyContent_ContentGroupItems.ContentGroupID
+WHERE        (ModuleSettings_1.SettingName = N''ContentGroupID'') AND (NOT (ToSIC_SexyContent_ContentGroupItems.Temp_NewContentGroupGuid IS NULL)) AND
+                             ((SELECT        COUNT(*) AS Expr1
+                                 FROM            ModuleSettings AS ModuleSettings_2
+                                 WHERE        (ModuleID = ModuleSettings_1.ModuleID) AND (SettingName = N''ToSIC_SexyContent_ContentGroupGuid'')) = 0) AND ToSIC_SexyContent_ContentGroupItems.TemplateID IS NOT NULL')
+
+-- Commit the transaction
+COMMIT TRANSACTION SexyContentUpdate;
+--ROLLBACK TRANSACTION SexyContentUpdate;

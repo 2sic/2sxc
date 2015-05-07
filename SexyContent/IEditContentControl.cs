@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-
-namespace ToSic.SexyContent
+﻿namespace ToSic.SexyContent
 {
     /// <summary>
     /// Interface used in EditContentGroupItem

@@ -16,20 +16,31 @@ namespace ToSic.SexyContent.DataImportExport
         /// <param name="applicationId">ID of 2SexyContent application</param>
         /// <param name="contentTypeId">ID of 2SexyContent type</param>
         /// <returns>A string containing the blank xml scheme</returns>
-        public string CreateBlankXml(int zoneId, int applicationId, int contentTypeId)
+        public string CreateBlankXml(int zoneId, int applicationId, int contentTypeId, string helpText = "")
         {
             var contentType = GetContentType(zoneId, applicationId, contentTypeId);
             if (contentType == null) 
                 return null;
 
-            var documentElement = GetDocumentEntityElement("", "");
-            var documentRoot = GetDocumentRoot(contentType.Name, documentElement);
+            var documentElement1 = GetDocumentEntityElement("", "");
+            var documentElement2 = GetDocumentEntityElement("", "");
+            var documentRoot = GetDocumentRoot(contentType.Name, documentElement1, documentElement2);
             var document = GetDocument(documentRoot);
 
             var attributes = contentType.GetAttributes();
+            var isFirstAttribute = true;
             foreach (var attribute in attributes)
             {
-                  documentElement.Append(attribute.StaticName, "");      
+                  if (isFirstAttribute)
+                  {
+                      documentElement1.Append(attribute.StaticName, helpText);
+                      isFirstAttribute = false;
+                  }
+                  else
+                  {
+                    documentElement1.Append(attribute.StaticName, "");
+                  }
+                  documentElement2.Append(attribute.StaticName, "");  
             }
        
             return document.ToString();
@@ -81,7 +92,11 @@ namespace ToSic.SexyContent.DataImportExport
                     var attributes = contentType.GetAttributes();
                     foreach (var attribute in attributes)
                     {
-                        if (languageReference.IsResolve())
+                        if (attribute.Type == "Entity")
+                        {   // Handle separately
+                            documentElement.AppendEntityReferences(entity, attribute);
+                        }
+                        else if (languageReference.IsResolve())
                         {
                             documentElement.AppendValueResolved(entity, attribute, language, languageFallback, resourceReference);
                         }
@@ -110,7 +125,7 @@ namespace ToSic.SexyContent.DataImportExport
 
         private static XElement GetDocumentRoot(string contentTypeName, params object[] content)
         {
-            return new XElement(DocumentNodeNames.Root + contentTypeName.RemoveSpecialCharacters(), content);
+            return new XElement(DocumentNodeNames.Root, new XAttribute(DocumentNodeNames.RootTypeAttribute, contentTypeName.RemoveSpecialCharacters()), content);
         }
 
         private static XElement GetDocumentEntityElement(object elementGuid, object elementLanguage)

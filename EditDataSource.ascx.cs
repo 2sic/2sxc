@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
+using DotNetNuke.Entities.Modules;
 
 namespace ToSic.SexyContent
 {
-    public partial class EditDataSource : DotNetNuke.Entities.Modules.PortalModuleBase
+    public partial class EditDataSource : PortalModuleBase
     {
         protected void Page_Load(object sender, EventArgs e)
         {

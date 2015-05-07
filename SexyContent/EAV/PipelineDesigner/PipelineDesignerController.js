@@ -1,7 +1,7 @@
 // AngularJS Controller for the Pipeline Designer
 pipelineDesigner.controller('PipelineDesignerController',
-			['$scope', 'pipelineFactory', '$location', '$timeout', '$filter', 'uiNotification', 'eavDialogService', '$log', 'eavGlobalConfigurationProvider', '$q',
-	function ($scope, pipelineFactory, $location, $timeout, $filter, uiNotification, eavDialogService, $log, eavGlobalConfigurationProvider, $q) {
+			['$scope', 'pipelineService', '$location', '$timeout', '$filter', 'uiNotification', 'eavDialogService', '$log', 'eavGlobalConfigurationProvider', '$q',
+	function ($scope, pipelineService, $location, $timeout, $filter, uiNotification, eavDialogService, $log, eavGlobalConfigurationProvider, $q) {
 		'use strict';
 
 		// Init
@@ -20,13 +20,13 @@ pipelineDesigner.controller('PipelineDesignerController',
 			});
 			return;
 		}
-		pipelineFactory.setAppId($location.search().AppId);
+		pipelineService.setAppId($location.search().AppId);
 
-		// Get Data from PipelineFactory (Web API)
-		pipelineFactory.getPipeline($scope.PipelineEntityId).then(function (success) {
+		// Get Data from PipelineService (Web API)
+		pipelineService.getPipeline($scope.PipelineEntityId).then(function (success) {
 			$scope.pipelineData = success;
 			$scope.readOnly = !success.Pipeline.AllowEdit;
-			uiNotification.note('Ready', $scope.readOnly ? 'This pipeline is read only' : 'You can now desing the Pipeline', true);
+			uiNotification.note('Ready', $scope.readOnly ? 'This pipeline is read only' : 'You can now design the Pipeline. \nNote that there are still a few UI bugs.\nVisit 2sxc.org/help for more.', true);
 
 			// If a new Pipeline is made, init new Pipeline
 			if (!$scope.PipelineEntityId || $scope.pipelineData.DataSources.length == 1)
@@ -45,8 +45,6 @@ pipelineDesigner.controller('PipelineDesignerController',
 					outlineWidth: 2,
 					outlineColor: "white"
 				},
-				EndpointHoverStyle: { fillStyle: "#216477", strokeStyle: "#216477" },
-				ConnectionOverlays: [['Arrow', { location: 0.7 }]],
 				PaintStyle: {
 					lineWidth: 4,
 					strokeStyle: '#61B7CF',
@@ -66,6 +64,40 @@ pipelineDesigner.controller('PipelineDesignerController',
 							$scope.jsPlumbInstance.deleteEndpoint(info.targetEndpoint);
 						});
 					}
+				}
+			});
+			// If a new connection is created, ask for a name of the In-Stream
+			$scope.jsPlumbInstance.bind('connection', function (info) {
+				if (!$scope.connectionsInitialized) return;
+
+				// Repeat until a valid Stream-Name is provided by the user
+				var repeatCount = 0;
+				while (true) {
+					repeatCount++;
+
+					var promptMessage = "Please name the Stream";
+					if (repeatCount > 1)
+						promptMessage += ". Ensure the name is not used by any other Stream on this DataSource.";
+
+					var endpointLabel = info.targetEndpoint.getOverlay('endpointLabel');
+					var labelPrompt = prompt(promptMessage, endpointLabel.getLabel());
+					if (labelPrompt)
+						endpointLabel.setLabel(labelPrompt);
+					else
+						continue;
+
+					// Check if any other Endpoint has the same Stream-Name (Label)
+					var newNameCount = 0;
+					var endpoints = $scope.jsPlumbInstance.getEndpoints(info.target.id);
+					angular.forEach(endpoints, function (endpoint) {
+						var label = endpoint.getOverlay('endpointLabel').getLabel();
+						if (label === labelPrompt)
+							newNameCount++;
+					});
+
+					if (newNameCount > 1)
+						continue;
+					break;
 				}
 			});
 		});
@@ -91,7 +123,8 @@ pipelineDesigner.controller('PipelineDesignerController',
 
 		// the definition of source endpoints (the small blue ones)
 		var sourceEndpoint = {
-			paintStyle: { strokeStyle: '#7AB02C', fillStyle: 'transparent', radius: 7, lineWidth: 3 },
+			paintStyle: { fillStyle: 'transparent', radius: 10, lineWidth: 0 },
+			cssClass: "sourceEndpoint",
 			maxConnections: -1,
 			isSource: true,
 			anchor: ['Continuous', { faces: ['top'] }],
@@ -100,7 +133,8 @@ pipelineDesigner.controller('PipelineDesignerController',
 
 		// the definition of target endpoints (will appear when the user drags a connection) 
 		var targetEndpoint = {
-			paintStyle: { fillStyle: '#7AB02C', radius: 11 },
+			paintStyle: { fillStyle: 'transparent', radius: 10, lineWidth: 0 },
+			cssClass: "targetEndpoint",
 			maxConnections: 1,
 			isTarget: true,
 			anchor: ['Continuous', { faces: ['bottom'] }],
@@ -131,7 +165,7 @@ pipelineDesigner.controller('PipelineDesignerController',
 						$scope.jsPlumbInstance.makeTarget(element, targetEndpointUnlimited);
 					}
 
-					$scope.jsPlumbInstance.makeSource(element, sourceEndpoint, { filter: '.ep', });
+					$scope.jsPlumbInstance.makeSource(element, sourceEndpoint, { filter: '.ep .glyphicon', });
 				}
 
 				// make DataSources draggable
@@ -229,7 +263,7 @@ pipelineDesigner.controller('PipelineDesignerController',
 				EntityGuid: entityGuid || 'unsaved' + ($scope.dataSourcesCount + 1)
 			};
 			// Extend it with a Property to it's Definition
-			newDataSource = angular.extend(newDataSource, pipelineFactory.getNewDataSource($scope.pipelineData, newDataSource));
+			newDataSource = angular.extend(newDataSource, pipelineService.getNewDataSource($scope.pipelineData, newDataSource));
 
 			$scope.pipelineData.DataSources.push(newDataSource);
 
@@ -287,7 +321,7 @@ pipelineDesigner.controller('PipelineDesignerController',
 
 			uiNotification.wait();
 
-			pipelineFactory.getDataSourceConfigurationUrl(dataSource).then(function (url) {
+			pipelineService.getDataSourceConfigurationUrl(dataSource).then(function (url) {
 				uiNotification.clear();
 				eavDialogService.open({ url: url, title: 'Configure DataSource ' + dataSource.Name });
 			}, function (error) {
@@ -310,6 +344,20 @@ pipelineDesigner.controller('PipelineDesignerController',
 				endpoints.showOverlays();
 			else
 				endpoints.hideOverlays();
+		}
+
+		// Edit Pipeline Entity
+		$scope.editPipelineEntity = function () {
+			// save Pipeline, then open Edit Dialog
+			$scope.savePipeline().then(function () {
+				eavDialogService.open({
+					url: pipelineService.getPipelineUrl('edit', $scope.PipelineEntityId),
+					title: 'Edit Test Values',
+					onClose: function () {
+						pipelineService.getPipeline($scope.PipelineEntityId).then(pipelineSaved);
+					}
+				});
+			});
 		}
 
 		// Sync jsPlumb Connections and StreamsOut to the pipelineData-Object
@@ -346,7 +394,7 @@ pipelineDesigner.controller('PipelineDesignerController',
 			if (typeof successHandler == 'undefined')	// set default success Handler
 				successHandler = pipelineSaved;
 
-			pipelineFactory.savePipeline($scope.pipelineData.Pipeline, $scope.pipelineData.DataSources).then(successHandler, function (reason) {
+			pipelineService.savePipeline($scope.pipelineData.Pipeline, $scope.pipelineData.DataSources).then(successHandler, function (reason) {
 				uiNotification.error('Save Pipeline failed', reason);
 				$scope.readOnly = false;
 				deferred.reject();
@@ -365,7 +413,7 @@ pipelineDesigner.controller('PipelineDesignerController',
 			$location.search('PipelineId', success.Pipeline.EntityId);
 			$scope.readOnly = !success.Pipeline.AllowEdit;
 			$scope.pipelineData.DataSources = success.DataSources;
-			pipelineFactory.postProcessDataSources($scope.pipelineData);
+			pipelineService.postProcessDataSources($scope.pipelineData);
 
 			uiNotification.success('Saved', 'Pipeline ' + success.Pipeline.EntityId + ' saved and loaded', true);
 
@@ -388,21 +436,86 @@ pipelineDesigner.controller('PipelineDesignerController',
 		// Query the Pipeline
 		$scope.queryPipeline = function () {
 			var query = function () {
-				// Query pipelineFactory for the result...
+				// Query pipelineService for the result...
 				uiNotification.wait('Running Query ...');
 
-				pipelineFactory.queryPipeline($scope.PipelineEntityId).then(function (success) {
+				pipelineService.queryPipeline($scope.PipelineEntityId).then(function (success) {
 					// Show Result in a UI-Dialog
 					uiNotification.clear();
 					eavDialogService.open({
 						title: 'Query result',
-						content: '<div>The following Result was also logged to the Browser Console.<pre id="pipelineQueryResult">' + $filter('json')(success) + '</pre></div>'
+						content: '<div><div>The Full result was logged to the Browser Console. Further down you\'ll find more debug-infos. </div>'
+                            + '<h3>Parameters used</h3><div>' + ($scope.pipelineData.Pipeline.TestParameters.length > 5 ? $scope.pipelineData.Pipeline.TestParameters.replace('\n', '<br>') : 'no test params specified') + '</div> '
+                            + '<h3>Query result</h3><div> <pre id="pipelineQueryResult">' + $filter('json')(success.Query) + '</pre>' + showConnectionTable(success) + '</div>'
+                            + '</div'
+					});
+					$timeout(function () {
+						showEntityCountOnStreams(success);
 					});
 					$log.debug(success);
 				}, function (reason) {
 					uiNotification.error('Query failed', reason);
 				});
 			};
+
+			// Create html-table with connection debug-info
+			var showConnectionTable = function (result) {
+				var srcTbl = '<h3>Sources</h3>' +
+			        '<table><tr><th>Guid</th><th>Type</th><th>Config</th></tr>';
+				var src = result.Sources;
+				for (var s in src) {
+					if (s[0] != '$') {
+						srcTbl += "<tr><td><pre>" + s.substring(0, 13) + "...</pre></td><td>" + src[s].Type + "</td><td>";
+						var cnf = src[s].Configuration;
+						for (var c in cnf)
+							if (c[0] != '$')
+								srcTbl += '<b>' + c + '</b>' + "=" + cnf[c] + '</br>';
+						srcTbl += "</td></tr>";
+					}
+				}
+				srcTbl += "</table>";
+
+
+				srcTbl += "<h3>Streams</h3>" +
+		            "<table><tr><th>Source</th><th>Target</th><th>Items</th><th>Err</th></tr>";
+				src = result.Streams;
+				for (var s in src) {
+					if (s[0] != '$') {
+						srcTbl += "<tr><td><pre>"
+                            + src[s].Source.substring(0, 13) + ":" + src[s].SourceOut + "</pre></td><td><pre>"
+                            + src[s].Target.substring(0, 13) + ":" + src[s].TargetIn + "</pre></td><td>"
+                            + src[s].Count + "</td><td>" +
+                            +src[s].Error + "</td></tr>";
+					}
+				}
+				srcTbl += "</table>";
+
+				return srcTbl;
+			};
+
+			var showEntityCountOnStreams = function (result) {
+				angular.forEach(result.Streams, function (stream) {
+					// Find jsPlumb Connection for the current Stream
+					var sourceElementId = $scope.dataSourceIdPrefix + stream.Source;
+					var targetElementId = $scope.dataSourceIdPrefix + stream.Target;
+					if (stream.Target === "00000000-0000-0000-0000-000000000000")
+						targetElementId = $scope.dataSourceIdPrefix + "Out";
+
+					var fromUuid = sourceElementId + '_out_' + stream.SourceOut;
+					var toUuid = targetElementId + '_in_' + stream.TargetIn;
+
+					var sourceEndpoint = $scope.jsPlumbInstance.getEndpoint(fromUuid);
+					angular.forEach(sourceEndpoint.connections, function (connection) {
+						if (connection.endpoints[1].getUuid() === toUuid) {
+							// when connection found, update it's label with the Entities-Count
+							connection.setLabel({
+								label: stream.Count.toString(),
+								cssClass: "streamEntitiesCount"
+							});
+						}
+					});
+				});
+			}
 
 			// Ensure the Pipeline is saved
 			$scope.savePipeline().then(query);
@@ -414,11 +527,11 @@ pipelineDesigner.controller('PipelineDesignerController',
 
 			// Clone and get new PipelineEntityId
 			var clone = function () {
-				return pipelineFactory.clonePipeline($scope.PipelineEntityId);
+				return pipelineService.clonePipeline($scope.PipelineEntityId);
 			};
 			// Get the new Pipeline (Pipeline and DataSources)
 			var getClonePipeline = function (success) {
-				return pipelineFactory.getPipeline(success.EntityId);
+				return pipelineService.getPipeline(success.EntityId);
 			};
 
 			// Save, clone, get clone, load clone

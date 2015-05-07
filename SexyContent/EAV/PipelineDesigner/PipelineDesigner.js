@@ -1,7 +1,10 @@
-var pipelineDesigner = angular.module('pipelineDesinger', ['pipelineDesinger.filters', 'ngResource', 'toaster', 'eavGlobalConfigurationProvider', 'eavDialogService', 'pipelineFactory']);
+var pipelineDesigner = angular.module('pipelineDesinger', ['pipelineDesinger.filters', 'ngResource', 'toaster', 'eavGlobalConfigurationProvider', 'eavDialogService', 'pipelineService']);
 
 pipelineDesigner.config(['$locationProvider', function ($locationProvider) {
-	$locationProvider.html5Mode(true);
+	$locationProvider.html5Mode({
+		enabled: true,
+		requireBase: false
+	});
 }]);
 
 // datasource directive makes an element a DataSource with jsPlumb

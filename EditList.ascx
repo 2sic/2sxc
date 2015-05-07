@@ -1,5 +1,4 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" Inherits="ToSic.SexyContent.EditList" Codebehind="EditList.ascx.cs" %>
-<%@ Register TagPrefix="dnn" TagName="Label" Src="~/controls/LabelControl.ascx" %>
 <%@ Register TagPrefix="dnnweb" Assembly="DotNetNuke.Web" Namespace="DotNetNuke.Web.UI.WebControls" %>
 <%@ Register TagPrefix="telerik" Assembly="Telerik.Web.UI" Namespace="Telerik.Web.UI" %>
 
@@ -16,15 +15,15 @@
             <ClientSettings AllowRowsDragDrop="true" AllowColumnsReorder="true" ReorderColumnsOnClient="true">
                 <Selecting AllowRowSelect="True" EnableDragToSelectRows="false"></Selecting>
             </ClientSettings>
-            <MasterTableView DataKeyNames="ID" HeaderStyle-Font-Bold="true">
+            <MasterTableView DataKeyNames="SortOrder" HeaderStyle-Font-Bold="true">
                 <Columns>
                     <telerik:GridDragDropColumn HeaderStyle-Width="18px" ItemStyle-Width="18px" DragImageUrl="~/DesktopModules/ToSIC_SexyContent/Images/Drag.gif" />
                     <dnnweb:DnnGridTemplateColumn HeaderText="Title">
                         <ItemTemplate>
-                            <asp:HyperLink CssClass="sc-list-itemedit" ID="hlkEdit" runat="server" NavigateUrl='<%# GetEditUrl((int)Eval("ID")) %>' Text='<%# String.IsNullOrEmpty(Eval("EntityTitle").ToString()) ? "..." : Eval("EntityTitle") %>'></asp:HyperLink>
+                            <asp:HyperLink CssClass="sc-list-itemedit" ID="hlkEdit" runat="server" NavigateUrl='<%# GetEditUrl((int)Eval("SortOrder")) %>' Text='<%# String.IsNullOrEmpty(Eval("EntityTitle").ToString()) ? "..." : Eval("EntityTitle") %>'></asp:HyperLink>
                         </ItemTemplate>
                     </dnnweb:DnnGridTemplateColumn>
-                    <dnnweb:DnnGridBoundColumn HeaderText="ID" DataField="EntityID" HeaderStyle-Width="100px" ItemStyle-Width="100px"></dnnweb:DnnGridBoundColumn>
+                    <dnnweb:DnnGridBoundColumn HeaderText="EntityId" DataField="EntityId" HeaderStyle-Width="100px" ItemStyle-Width="100px"></dnnweb:DnnGridBoundColumn>
                     <dnnweb:DnnGridButtonColumn UniqueName="AddColumn" ButtonType="ImageButton" ImageUrl="~/DesktopModules/ToSIC_SexyContent/Images/Add.png" CommandName="add" HeaderStyle-Width="25px" ItemStyle-Width="25px"></dnnweb:DnnGridButtonColumn>
                     <dnnweb:DnnGridButtonColumn UniqueName="AddWithEditColumn" ButtonType="ImageButton" ImageUrl="~/DesktopModules/ToSIC_SexyContent/Images/AddWithEdit.png" CommandName="addwithedit" HeaderStyle-Width="25px" ItemStyle-Width="25px"></dnnweb:DnnGridButtonColumn>
                 </Columns>

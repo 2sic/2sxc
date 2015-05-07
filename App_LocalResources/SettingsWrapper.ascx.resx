@@ -124,7 +124,7 @@
     <value>Update</value>
   </data>
   <data name="ControlTitle_settings.Text" xml:space="preserve">
-    <value>2sxc Settings</value>
+    <value>Replace Content-Item with another Content-Item</value>
   </data>
   <data name="ddlEntitiesDefaultItem.Text" xml:space="preserve">
     <value>&lt;Choose Item&gt;</value>

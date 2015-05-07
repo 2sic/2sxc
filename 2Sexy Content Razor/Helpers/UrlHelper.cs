@@ -1,5 +1,5 @@
-﻿using DotNetNuke.Entities.Modules;
-using DotNetNuke.Common;
+﻿using DotNetNuke.Common;
+using DotNetNuke.Entities.Modules;
 
 namespace ToSic.SexyContent.Razor.Helpers
 {

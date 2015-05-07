@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Razor.Helpers;
 
@@ -11,6 +12,7 @@ namespace ToSic.SexyContent
         App App { get; }
         ViewDataSource Data { get; }
         DnnHelper Dnn { get; }
+		SxcHelper Sxc { get; }
 
         /// <summary>
         /// Transform a IEntity to a DynamicEntity as dynamic object
@@ -65,8 +67,8 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <returns></returns>
         T CreateSource<T>(IDataStream inStream);
-        ToSic.Eav.DataSources.IDataSource CreateSource(string typeName = "", ToSic.Eav.DataSources.IDataSource inSource = null, IConfigurationProvider configurationProvider = null);
-        T CreateSource<T>(ToSic.Eav.DataSources.IDataSource inSource = null, IConfigurationProvider configurationProvider = null);
+        IDataSource CreateSource(string typeName = "", IDataSource inSource = null, IValueCollectionProvider configurationProvider = null);
+        T CreateSource<T>(IDataSource inSource = null, IValueCollectionProvider configurationProvider = null);
 
 		dynamic Content { get; }
 		dynamic Presentation { get; }
