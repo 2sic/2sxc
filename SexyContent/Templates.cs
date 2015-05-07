@@ -30,7 +30,7 @@ namespace ToSic.SexyContent
 		public IEnumerable<Template> GetAllTemplates()
 		{
 			
-            return TemplateDataSource().List.Select(p => new Template(p.Value));
+            return TemplateDataSource().List.Select(p => new Template(p.Value)).OrderBy(p => p.Name);
         }
 
 		public IEnumerable<Template> GetVisibleTemplates()
