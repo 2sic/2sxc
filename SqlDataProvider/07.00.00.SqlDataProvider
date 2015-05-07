@@ -171,7 +171,7 @@ WHERE        (ModuleSettings_1.SettingName = N'AppId') AND (DesktopModules.Modul
 -- Insert new GUID for ContentGroups and Templates (will be used as EntityGuid while upgrading)
 EXEC('UPDATE ToSIC_SexyContent_Templates SET Temp_NewTemplateGuid = NEWID() WHERE Temp_NewTemplateGuid IS NULL')
 
-EXEC('CREATE TABLE ToSIC_SexyContent_TempContentGroupGuids (ContentGroupID int, newGuid uniqueidentifier)
+EXEC('CREATE TABLE ToSIC_SexyContent_TempContentGroupGuids (ContentGroupID int PRIMARY KEY, newGuid uniqueidentifier)
 INSERT INTO ToSIC_SexyContent_TempContentGroupGuids (ContentGroupID, newGuid) SELECT ContentGroupID, NEWID() AS newGuid  FROM ToSIC_SexyContent_ContentGroupItems GROUP BY ContentGroupID')
 
 EXEC('UPDATE c SET Temp_NewContentGroupGuid = c1.newGuid FROM ToSIC_SexyContent_ContentGroupItems AS c
