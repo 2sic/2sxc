@@ -4,6 +4,14 @@ module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
 
+        jshint: {
+            grunt: ['Gruntfile.js'],
+            Sxc4ng: ['Js/AngularJS/2sxc4ng.js'],
+            // Sxc: ['Js/2sxc.api.js'], // commented out for now, has about 10 suggestions but won't fix them yet
+            // SxcManage: ['Js/2sxc.api.manage.js'], // 2015-05-07 has about 13 suggestions, won't fix yet
+            // SxcTemplate: ['Js/2sxc.TemplateSelector.js'], // 2015-05-07 has about 4 suggestions for null-comparison, won't fix yet
+        },
+
         ngAnnotate: {
             options: {
                 // Task-specific options go here. 
@@ -52,7 +60,9 @@ module.exports = function(grunt) {
   // Load the plugin that provides the "uglify" task.
   grunt.loadNpmTasks('grunt-contrib-uglify');
 
-  // Default task(s).
-  grunt.registerTask('default', ['ngAnnotate', 'uglify']);
+  grunt.loadNpmTasks('grunt-contrib-jshint');
+
+// Default task(s).
+  grunt.registerTask('default', ['jshint', 'ngAnnotate', 'uglify']);
 
 };

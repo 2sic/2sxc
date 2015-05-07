@@ -7,12 +7,12 @@
 $2sxc.ng = {
     appAttribute: 'sxc-app',
     ngAttrPrefixes: ['ng-', 'data-ng-', 'ng:', 'x-ng-'],
-    iidAttrNames: ['app-instanceid','data-instanceid', 'id'],
+    iidAttrNames: ['app-instanceid', 'data-instanceid', 'id'],
 
     // bootstrap: an App-Start-Help; normally you won't call this manually as it will be auto-bootstrapped. 
     // All params optional except for 'element'
-    bootstrap: function (element, ngModName, iid, dependencies, config) {
-        iid = iid || $2sxc.ng.findInstanceId(element); 
+    bootstrap: function(element, ngModName, iid, dependencies, config) {
+        iid = iid || $2sxc.ng.findInstanceId(element);
         var sf = $.ServicesFramework(iid);
 
         // create a micro-module to configure sxc-init parameters, add to dependencies. Note that the order is important!
@@ -23,17 +23,18 @@ $2sxc.ng = {
             .constant('HttpHeaders', { "ModuleId": iid, "TabId": sf.getTabId(), "RequestVerificationToken": sf.getAntiForgeryValue() });
         var allDependencies = ['confSxcApp' + iid, '2sxc4ng'].concat(dependencies || [ngModName]);
 
-        angular.element(document).ready(function () {
-            angular.bootstrap(element, allDependencies, config);      // start the app
+        angular.element(document).ready(function() {
+            angular.bootstrap(element, allDependencies, config); // start the app
         });
     },
 
     // find instance Id in an attribute of the tag - typically with id="app-700" or something and use the number as IID
     findInstanceId: function findInstanceId(element) {
         var attrib, ngElement = angular.element(element);
-        for (var i = 0; i < $2sxc.ng.iidAttrNames.length; i++) 
-            if(attrib = ngElement.attr($2sxc.ng.iidAttrNames[i])) {
-                var iid = parseInt(attrib.toString().replace(/\D/g, ''));  // filter all characters if necessary
+        for (var i = 0; i < $2sxc.ng.iidAttrNames.length; i++)
+            attrib = ngElement.attr($2sxc.ng.iidAttrNames[i]);
+            if (attrib) {
+                var iid = parseInt(attrib.toString().replace(/\D/g, '')); // filter all characters if necessary
                 if (!iid) throw "iid or instanceId (the DNN moduleid) not supplied and automatic lookup failed. Please set app-tag attribute iid or give id in bootstrap call";
                 return iid;
             }
@@ -43,17 +44,17 @@ $2sxc.ng = {
     bootstrapAll: function bootstrapAll(element) {
         element = element || document;
         var allAppTags = element.querySelectorAll('[' + $2sxc.ng.appAttribute + ']');
-        angular.forEach(allAppTags, function (appTag) {
+        angular.forEach(allAppTags, function(appTag) {
             var ngModName = appTag.getAttribute($2sxc.ng.appAttribute);
             var configDependencyInjection = { strictDi: $2sxc.ng.getNgAttribute(appTag, "strict-di") !== null };
             $2sxc.ng.bootstrap(appTag, ngModName, null, null, configDependencyInjection);
-        })
+        });
     },
 
     // if the page contains angular, do auto-bootstrap of all 2sxc apps
     autoRunBootstrap: function autoRunBootstrap() {
         if (angular)
-            angular.element(document).ready(function () {
+            angular.element(document).ready(function() {
                 $2sxc.ng.bootstrapAll();
             });
     },
@@ -69,7 +70,7 @@ $2sxc.ng = {
         }
         return null;
     }
-}
+};
 $2sxc.ng.autoRunBootstrap();
 
 angular.module('2sxc4ng', ['ng'])
