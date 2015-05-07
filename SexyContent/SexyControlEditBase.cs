@@ -97,7 +97,7 @@ namespace ToSic.SexyContent
         private Template GetTemplateFromUrl()
         {
             var queryStringPairs = Request.QueryString.AllKeys.Select(key => string.Format("{0}/{1}", key, Request.QueryString[key]).ToLower()).ToArray();
-			var queryStringKeys = Request.QueryString.AllKeys.Select(k => k.ToLower()).ToArray();
+			var queryStringKeys = Request.QueryString.AllKeys.Select(k => k == null ? "" :  k.ToLower()).ToArray();
 
 			foreach (var template in Sexy.Templates.GetAllTemplates().Where(t => !string.IsNullOrEmpty(t.ViewNameInUrl)))
 	        {
