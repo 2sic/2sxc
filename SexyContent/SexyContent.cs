@@ -495,16 +495,19 @@ namespace ToSic.SexyContent
                     provider.Sources.Add("form", new FilteredNameValueCollectionPropertyAccess("form", request.Form));
                 }
 
-                // Try to add the standard DNN property sources
-	            var dnnUsr = UserController.Instance.GetCurrentUserInfo();
-                var dnnCult = Thread.CurrentThread.CurrentUICulture;  // todo: discuss w/2rm
-	            var dnn = new TokenReplaceDnn(App, moduleId, PS, dnnUsr);
-	            var stdSources = dnn.PropertySources;
-	            foreach (var propertyAccess in stdSources)
-	                provider.Sources.Add(propertyAccess.Key,
-	                    new ValueProviderWrapperForPropertyAccess(propertyAccess.Key, propertyAccess.Value, dnnUsr, dnnCult));
+				// Add the standard DNN property sources if PortalSettings object is available
+		        if (PS != null)
+		        {
+			        var dnnUsr = PS.UserInfo;
+			        var dnnCult = Thread.CurrentThread.CurrentCulture;
+			        var dnn = new TokenReplaceDnn(App, moduleId, PS, dnnUsr);
+			        var stdSources = dnn.PropertySources;
+			        foreach (var propertyAccess in stdSources)
+				        provider.Sources.Add(propertyAccess.Key,
+					        new ValueProviderWrapperForPropertyAccess(propertyAccess.Key, propertyAccess.Value, dnnUsr, dnnCult));
+		        }
 
-	            provider.Sources.Add("app", new AppPropertyAccess("app", App));
+		        provider.Sources.Add("app", new AppPropertyAccess("app", App));
 
                 // add module if it was not already added previously
 	            if (!provider.Sources.ContainsKey("module"))
