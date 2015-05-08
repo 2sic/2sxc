@@ -241,7 +241,9 @@ pipelineDesigner.controller('PipelineDesignerController',
 
 			// Wait until all DataSources were created
 			var initWiringsListener = $scope.$on('ngRepeatFinished', function () {
+				$scope.connectionsInitialized = false;
 				initWirings(eavGlobalConfigurationProvider.pipelineDesigner.defaultPipeline.streamWiring);
+				$scope.connectionsInitialized = true;
 
 				initWiringsListener(); // unbind the Listener
 			});
