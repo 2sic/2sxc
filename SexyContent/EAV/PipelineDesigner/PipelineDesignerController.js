@@ -86,17 +86,18 @@ pipelineDesigner.controller('PipelineDesignerController',
 					else
 						continue;
 
-					// Check if any other Endpoint has the same Stream-Name (Label)
-					var newNameCount = 0;
+					// Check if any other Target-Endpoint has the same Stream-Name (Label)
 					var endpoints = $scope.jsPlumbInstance.getEndpoints(info.target.id);
+					var targetEndpointHavingSameLabel = null;
 					angular.forEach(endpoints, function (endpoint) {
 						var label = endpoint.getOverlay('endpointLabel').getLabel();
-						if (label === labelPrompt)
-							newNameCount++;
+						if (label === labelPrompt && info.targetEndpoint.id !== endpoint.id && angular.element(endpoint.canvas).hasClass("targetEndpoint")) {
+							targetEndpointHavingSameLabel = endpoint;
+						}
 					});
-
-					if (newNameCount > 1)
+					if (targetEndpointHavingSameLabel)
 						continue;
+
 					break;
 				}
 			});
