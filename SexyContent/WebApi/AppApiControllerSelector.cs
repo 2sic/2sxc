@@ -32,6 +32,8 @@ namespace ToSic.SexyContent.WebApi
         {
             var routeData = request.GetRouteData();
             var module = request.FindModuleInfo();
+
+            // Handle the app-api queries
             if (routeData.Route.RouteTemplate.Contains("DesktopModules/2sxc/API/app-api/") && module.DesktopModule.ModuleName == "2sxc-app")
             {
                 var portalSettings = PortalSettings.Current;

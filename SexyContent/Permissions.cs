@@ -15,7 +15,7 @@ namespace ToSic.SexyContent
     {
         public const int AssignemntObjectTypeId = 5;
         public const string ContentTypeName = "PermissionConfiguration";
-        public const string Reason = "Reason";
+        public const string Condition = "Condition";
         public const string Grant = "Grant";
         public string CustomPermissionKey = ""; // "CONTENT";
         readonly string _salPrefix = "SecurityAccessLevel.".ToLower();
@@ -119,7 +119,7 @@ namespace ToSic.SexyContent
             // Check if the current user fits the reason for this grant
             try
             {
-                var rsn = permissionEntity.GetBestValue(Reason).ToString();
+                var rsn = permissionEntity.GetBestValue(Condition).ToString();
                 if (rsn.ToLower().StartsWith(_salPrefix))
                 {
                     var salWord = rsn.Substring(_salPrefix.Length);
