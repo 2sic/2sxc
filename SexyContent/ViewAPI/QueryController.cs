@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 using ToSic.Eav.DataSources;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Engines;
+using ToSic.SexyContent.Security;
 using ToSic.SexyContent.WebApi;
 
 namespace ToSic.SexyContent.ViewAPI
@@ -36,9 +37,9 @@ namespace ToSic.SexyContent.ViewAPI
 
             var queryConf = query.QueryDefinition;
 
-            var permissionChecker = new Permissions(App.ZoneId, App.AppId, queryConf.EntityGuid, Dnn.Module);
+            var permissionChecker = new PermissionController(App.ZoneId, App.AppId, queryConf.EntityGuid, Dnn.Module);
 
-            var readAllowed = permissionChecker.UserMay('r');
+            var readAllowed = permissionChecker.UserMay(PermissionGrant.Read);
 
             if (readAllowed)
                 return Sxc.Serializer.Prepare(query);

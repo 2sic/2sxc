@@ -462,7 +462,7 @@ namespace ToSic.SexyContent.ImportExport
 					assignmentObjectTypeId = SexyContent.AssignmentObjectTypeIDSexyContentApp;
 					break;
 				case "Data Pipeline":
-					assignmentObjectTypeId = DataSource.AssignmentObjectTypeIdDataPipeline;
+					assignmentObjectTypeId = DataSource.AssignmentObjectTypeEntity;
 					break;
 			}
 

@@ -5,15 +5,16 @@ using System.Web;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Security;
 using ToSic.Eav;
+using ToSic.SexyContent.Security;
 
-namespace ToSic.SexyContent
+namespace ToSic.SexyContent.Security
 {
     /// <summary>
     /// Permissions object which checks if the user is allowed to do soemthing based on specific permission
     /// </summary>
-    public class Permissions
+    public class PermissionController
     {
-        public const int AssignemntObjectTypeId = 5;
+        public const int AssignmentObjectId = 4;
         public const string ContentTypeName = "PermissionConfiguration";
         public const string Condition = "Condition";
         public const string Grant = "Grant";
@@ -23,18 +24,23 @@ namespace ToSic.SexyContent
         public int AppId { get; private set; }
         public int ZoneId { get; private set; }
         public Guid TargetGuid { get; private set; }
-        public IEnumerable<IEntity> PermissionList { get; private set; }
-        public ModuleInfo Module { get; private set; }
+        private IEnumerable<IEntity> _permissionList;
 
-        private bool _permissionsLoaded = false;
-        private void LoadPermissions()
+        public IEnumerable<IEntity> PermissionList
         {
-            if (_permissionsLoaded)
-                return;
-            var mds = DataSource.GetMetaDataSource(ZoneId, AppId);
-            PermissionList = mds.GetAssignedEntities(AssignemntObjectTypeId, TargetGuid, ContentTypeName);
-            _permissionsLoaded = true;
+            get
+            {
+                if (_permissionList == null)
+                {
+                    var ds = DataSource.GetMetaDataSource(ZoneId, AppId);
+                    _permissionList = ds.GetAssignedEntities(AssignmentObjectId, TargetGuid, ContentTypeName);
+                }
+                return _permissionList;
+            }
+            private set { _permissionList = value; }
         }
+
+        public ModuleInfo Module { get; private set; }
 
         /// <summary>
         /// Initialize this object so it can then give information regarding the permissions of an entity.
@@ -44,7 +50,7 @@ namespace ToSic.SexyContent
         /// <param name="appId">EAV APP</param>
         /// <param name="targetGuid">Entity GUID to check permissions against</param>
         /// <param name="module">DNN Module - necessary for SecurityAccessLevel checks</param>
-        public Permissions(int zoneId, int appId, Guid targetGuid, ModuleInfo module = null)
+        public PermissionController(int zoneId, int appId, Guid targetGuid, ModuleInfo module = null)
         {
             ZoneId = zoneId;
             AppId = appId;
@@ -59,30 +65,12 @@ namespace ToSic.SexyContent
         /// <returns></returns>
         public bool UserMay(char actionCode)
         {
-            LoadPermissions();
             return DoesPermissionsListAllow(actionCode);
         }
 
-        /// <summary>
-        /// Review if the user is allowed to do something specific
-        /// </summary>
-        /// <param name="actionName">An action like read, create, update, delete, ...</param>
-        /// <returns></returns>
-        public bool UserMay(string actionName)
+        public bool UserMay(PermissionGrant action)
         {
-            switch (actionName.ToLower())
-            {
-                case "read":
-                case "create":
-                case "update":
-                case "delete":
-                case "all":
-                case "approve":
-                    return UserMay(actionName.ToLower()[0]);
-                case "edit":
-                    return UserMay('u');
-            }
-            throw new Exception("Wanted to check if user may do something, couldn't find '" + actionName + "'");
+            return DoesPermissionsListAllow((Char)action);
         }
 
         /// <summary>
