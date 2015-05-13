@@ -27,7 +27,7 @@ namespace ToSic.SexyContent.DataSources
         private const string ContentTypeKey = "ContentType";
         private const string EntityTitleDefaultKeyToken = "[Settings:TitleFieldName]";
         private const string FnLModuleIdDefaultToken = "[Settings:ModuleId||0]";
-        private const string ContentTypeDefaultToken = "[Settings:ContentTypeName||FnL";
+        private const string ContentTypeDefaultToken = "[Settings:ContentTypeName||FnL]";
 
         /// <summary>
         /// Gets or sets the FnL ModuleID containing the data
