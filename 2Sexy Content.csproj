@@ -211,6 +211,7 @@
     <Compile Include="SexyContent\ContentGroups.cs" />
     <Compile Include="SexyContent\DataSources\DnnSqlDataSource.cs" />
     <Compile Include="SexyContent\DataSources\DnnFormAndList.cs" />
+    <Compile Include="SexyContent\EAVExtensions\EavApiProxies\NewEntitiesController.cs" />
     <Compile Include="SexyContent\EAVExtensions\EavApiProxies\EntitiesController.cs" />
     <Compile Include="SexyContent\EAV\PipelineDesigner\PipelineManagementDnnWrapper.ascx.cs">
       <DependentUpon>PipelineManagementDnnWrapper.ascx</DependentUpon>
