@@ -18,9 +18,12 @@ namespace ToSic.SexyContent
 		public Serializer Serializer
 		{
 			get {
-				if(_serializer == null)
-					_serializer = new Serializer(Sexy);
-				return _serializer;
+			    if (_serializer == null)
+			    {
+			        _serializer = new Serializer();
+			        _serializer.Sxc = Sexy;
+			    }
+			    return _serializer;
 			}
 		}
 	}

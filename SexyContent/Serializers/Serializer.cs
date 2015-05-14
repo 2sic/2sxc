@@ -8,12 +8,12 @@ namespace ToSic.SexyContent.Serializers
 {
 	public class Serializer: Eav.Serializers.Serializer
 	{
-		private SexyContent Sxc { get; set; }
+		public SexyContent Sxc { get; set; }
 
-		public Serializer(SexyContent sexy)
-		{
-			Sxc = sexy;
-		}
+        //public Serializer(SexyContent sexy)
+        //{
+        //    Sxc = sexy;
+        //}
 
 
         #region Prepare statements expecting dynamic objects - extending the EAV Prepare variations

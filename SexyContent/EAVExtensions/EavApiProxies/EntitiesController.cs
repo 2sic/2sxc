@@ -14,7 +14,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 	[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 	public class EntitiesController : DnnApiController
 	{
-		private readonly Eav.ManagementUI.API.EntitiesController _controller = new Eav.ManagementUI.API.EntitiesController();
+	    private readonly Eav.WebApi.WebApi eavWebApi = new Eav.WebApi.WebApi();//  new Eav.ManagementUI.API.EntitiesController();
 
 		public EntitiesController()
 		{
@@ -27,23 +27,23 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 		[HttpGet]
 		public IEnumerable<Dictionary<string, object>> GetEntities(int appId, string typeName, string cultureCode = null)
 		{
-			return _controller.GetEntities(appId, typeName, cultureCode);
+			return eavWebApi.GetEntities(appId, typeName, cultureCode);
 		}
 
 		/// <summary>
 		/// Get Entities with specified AssignmentObjectTypeId and Key
 		/// </summary>
-		public IEnumerable<IEntity> GetAssignedEntities(int appId, int assignmentObjectTypeId, Guid keyGuid, string contentTypeName)
+		public IEnumerable<Dictionary<string, object>> GetAssignedEntities(int appId, int assignmentObjectTypeId, Guid keyGuid, string contentTypeName)
 		{
-			return _controller.GetAssignedEntities(appId, assignmentObjectTypeId, keyGuid, contentTypeName);
+			return eavWebApi.GetAssignedEntities(appId, assignmentObjectTypeId, keyGuid, contentTypeName);
 		}
 
 		/// <summary>
 		/// Get Entities with specified AssignmentObjectTypeId and Key
 		/// </summary>
-		public IEnumerable<IEntity> GetAssignedEntities(int appId, int assignmentObjectTypeId, string keyString, string contentTypeName)
+		public IEnumerable<Dictionary<string, object>> GetAssignedEntities(int appId, int assignmentObjectTypeId, string keyString, string contentTypeName)
 		{
-			return _controller.GetAssignedEntities(appId, assignmentObjectTypeId, keyString, contentTypeName);
+			return eavWebApi.GetAssignedEntities(appId, assignmentObjectTypeId, keyString, contentTypeName);
 		}
 
 		/// <summary>
@@ -52,7 +52,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 		[HttpGet]
 		public IContentType GetContentType(int appId, string name)
 		{
-			return _controller.GetContentType(appId, name);
+			return eavWebApi.GetContentType(appId, name);
 		}
 	}
 }

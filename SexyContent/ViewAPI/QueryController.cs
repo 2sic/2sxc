@@ -26,9 +26,6 @@ namespace ToSic.SexyContent.ViewAPI
         [ValidateAntiForgeryToken]                                          // currently only available for modules, so always require the security token
         public dynamic Query([FromUri] string name)
         {
-            // return "success - your query is '" + queryName + "'";
-
-
             // Try to find the query, abort if not found
             if (!App.Query.ContainsKey(name))
                 throw new Exception("Can't find Query with name '" + name + "'");
