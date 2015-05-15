@@ -52,6 +52,11 @@ angular.module('eavGlobalConfigurationProvider', []).factory('eavGlobalConfigura
 				return getItemFormUrl('Edit', angular.extend({ EntityId: entityId }, params), preventRedirect);
 			}
 		},
+		adminUrls: {
+		    managePermissions: function (appId, targetId) {
+		        return baseUrl + "ctl=permissions&Target=" + targetId;// "/Pages/Permissions.aspx?AppId=" + appId + "&Target=" + targetId;
+		    }
+		},
 		pipelineDesigner: {
 			getUrl: function (appId, pipelineId) {
 				return baseUrl + 'ctl=pipelinedesigner&PipelineId=' + pipelineId;

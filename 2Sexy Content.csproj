@@ -219,7 +219,6 @@
     <Compile Include="SexyContent\ContentGroups.cs" />
     <Compile Include="SexyContent\DataSources\DnnSqlDataSource.cs" />
     <Compile Include="SexyContent\DataSources\DnnFormAndList.cs" />
-    <Compile Include="SexyContent\EAVExtensions\EavApiProxies\NewEntitiesController.cs" />
     <Compile Include="SexyContent\EAVExtensions\EavApiProxies\EntitiesController.cs" />
     <Compile Include="SexyContent\EAV\PipelineDesigner\PipelineManagementDnnWrapper.ascx.cs">
       <DependentUpon>PipelineManagementDnnWrapper.ascx</DependentUpon>
@@ -227,6 +226,10 @@
     </Compile>
     <Compile Include="SexyContent\EAV\PipelineDesigner\PipelineManagementDnnWrapper.ascx.designer.cs">
       <DependentUpon>PipelineManagementDnnWrapper.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="SexyContent\EAV\Security\PermissionsDnnWrapper.ascx.cs">
+      <DependentUpon>PermissionsDnnWrapper.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="SexyContent\Engines\TokenEngine\TokenReplaceEav.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\ValueProviderWrapperForPropertyAccess.cs" />
@@ -430,6 +433,7 @@
     <Compile Include="SexyContent\ImportExport\ZipImport.cs" />
     <Compile Include="SexyContent\Templates.cs" />
     <Compile Include="SexyContent\ViewAPI\QueryController.cs" />
+    <Compile Include="SexyContent\WebApi\AppContentController.cs" />
     <Compile Include="SexyContent\WebApi\RouteMapper.cs" />
     <Compile Include="SexyContent\Search\ISearchInfo.cs" />
     <Compile Include="SexyContent\Search\SearchController.cs" />
@@ -598,9 +602,11 @@
     <Content Include="ReleaseNotes.txt" />
     <Content Include="Settings.ascx" />
     <Content Include="SettingsWrapper.ascx" />
+    <Content Include="SexyContent\EAV\AngularServices\eav4ng.js" />
     <Content Include="SexyContent\EAV\AngularServices\EavApiService.js" />
     <Content Include="SexyContent\EAV\AngularServices\EavDialogService.js" />
     <Content Include="SexyContent\EAV\AngularServices\EavGlobalConfigurationProvider.js" />
+    <Content Include="SexyContent\EAV\AngularServices\eavNgSvcs.js" />
     <Content Include="SexyContent\EAV\AngularServices\NotificationService.js" />
     <Content Include="SexyContent\EAV\Controls\ContentTypeEdit.ascx" />
     <Content Include="SexyContent\EAV\Controls\ContentTypeFields.ascx" />
@@ -650,6 +656,10 @@
     <Content Include="SexyContent\EAV\PipelineDesigner\PipelineManagement.ascx" />
     <Content Include="SexyContent\EAV\PipelineDesigner\PipelineManagement.js" />
     <Content Include="SexyContent\EAV\PipelineDesigner\PipelineManagementDnnWrapper.ascx" />
+    <Content Include="SexyContent\EAV\Security\PermissionsDnnWrapper.ascx" />
+    <Content Include="SexyContent\EAV\Security\Permissions.ascx" />
+    <Content Include="SexyContent\EAV\Security\PermissionsController.js" />
+    <Content Include="SexyContent\EAV\Security\PermissionsServices.js" />
     <Content Include="SexyContent\GettingStarted\GettingStartedFrame.ascx" />
     <Content Include="SqlDataProvider\05.02.01.SqlDataProvider" />
     <Content Include="Styles\Edit.css" />

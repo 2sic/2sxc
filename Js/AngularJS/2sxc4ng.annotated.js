@@ -103,6 +103,31 @@ angular.module('2sxc4ng', ['ng'])
         return ngSxc;
     }])
     
+    /// Standard entity commands like get one, many etc.
+    .factory('content', ["$http", function ($http) {
+        var svc = {};
+
+        svc.get = function get(contentType, id) {
+            return id ? $http.get("app-content/" + contentType + '/' + id)
+                : $http.get("app-content/" + contentType);
+        };
+
+        // todo
+        svc.update = function update(contentType, id, values) {
+
+        };
+
+        svc.delete = function del(contentType, id) {
+            return $http.delete('app-content/' + contentType + '/' + id);
+        };
+
+        svc.getQuery = function getQuery(name) {
+            return $http.get("app-query/" + name);
+        };
+
+        return svc;
+    }])
+
     /* Todo: future feature
     .factory('sxcResource', function(iid, $injector) {
         return function (url, paramDefaults, actions, options) {

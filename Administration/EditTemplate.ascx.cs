@@ -65,7 +65,7 @@ namespace ToSic.SexyContent
         {
             // set DotNetNuke modal window Url for cancel link
             hlkCancel.NavigateUrl = EditUrl(PortalSettings.ActiveTab.TabID, SexyContent.ControlKeys.ManageTemplates, true, "mid=" + ModuleId + "&" + SexyContent.AppIDString + "=" + AppId);
-	        hlkManagePipelines.NavigateUrl = PipelineManagementDnnWrapper.GetEditUrl(this, AppId.Value);
+	        hlkManagePipelines.NavigateUrl =  ToSic.SexyContent.EAV.PipelineDesigner.PipelineManagementDnnWrapper.GetEditUrl(this, AppId.Value);
 
             InitializeForm();
 

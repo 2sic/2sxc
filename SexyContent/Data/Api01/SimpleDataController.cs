@@ -119,6 +119,7 @@ namespace ToSic.SexyContent.Data.Api01
         /// <exception cref="InvalidOperationException">Entity cannot be deleted for example when it is referenced by another object</exception>
         public void Delete(int entityId)
         {
+            // todo: refactor to use the eav-api delete
             if (!_contentContext.CanDeleteEntity(entityId).Item1)
             {
                 throw new InvalidOperationException("The entity " + entityId  + " cannot be deleted because of it is referenced by another object.");
@@ -135,6 +136,7 @@ namespace ToSic.SexyContent.Data.Api01
         /// <exception cref="InvalidOperationException">Entity cannot be deleted for example when it is referenced by another object</exception>
         public void Delete(Guid entityGuid)
         {
+            // todo: refactor to use the eav-api delete
             var entity = _contentContext.GetEntity(entityGuid);
             Delete(entity.EntityID);
         }

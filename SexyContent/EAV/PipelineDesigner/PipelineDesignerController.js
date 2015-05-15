@@ -412,13 +412,13 @@ pipelineDesigner.controller('PipelineDesignerController',
 		var pipelineSaved = function (success) {
 			// Update PipelineData with data retrieved from the Server
 			$scope.pipelineData.Pipeline = success.Pipeline;
-			$scope.PipelineEntityId = success.Pipeline.EntityId;
-			$location.search('PipelineId', success.Pipeline.EntityId);
+			$scope.PipelineEntityId = success.Pipeline.EntityId /*EntityId*/;
+			$location.search('PipelineId', success.Pipeline.EntityId /*EntityId*/);
 			$scope.readOnly = !success.Pipeline.AllowEdit;
 			$scope.pipelineData.DataSources = success.DataSources;
 			pipelineService.postProcessDataSources($scope.pipelineData);
 
-			uiNotification.success('Saved', 'Pipeline ' + success.Pipeline.EntityId + ' saved and loaded', true);
+			uiNotification.success('Saved', 'Pipeline ' + success.Pipeline.EntityId /*EntityId*/ + ' saved and loaded', true);
 
 			// Reset jsPlumb, re-Init Connections
 			$scope.jsPlumbInstance.reset();
@@ -534,7 +534,7 @@ pipelineDesigner.controller('PipelineDesignerController',
 			};
 			// Get the new Pipeline (Pipeline and DataSources)
 			var getClonePipeline = function (success) {
-				return pipelineService.getPipeline(success.EntityId);
+				return pipelineService.getPipeline(success.EntityId /*EntityId*/);
 			};
 
 			// Save, clone, get clone, load clone

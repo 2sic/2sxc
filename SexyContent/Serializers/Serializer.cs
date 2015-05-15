@@ -10,10 +10,22 @@ namespace ToSic.SexyContent.Serializers
 	{
 		public SexyContent Sxc { get; set; }
 
-        //public Serializer(SexyContent sexy)
-        //{
-        //    Sxc = sexy;
-        //}
+        /// <summary>
+        /// Standard constructor, important for Unity when opening this class in dependency-injection mode
+        /// </summary>
+	    public Serializer() : base()
+	    {
+	        
+	    }
+
+        /// <summary>
+        /// Common constructor, directly preparing it with 2sxc
+        /// </summary>
+        /// <param name="sexy"></param>
+        public Serializer(SexyContent sexy)
+        {
+            Sxc = sexy;
+        }
 
 
         #region Prepare statements expecting dynamic objects - extending the EAV Prepare variations

@@ -100,7 +100,7 @@ angular.module('pipelineService', [])
 				dataSourcesPrepared.push(dataSourceClone);
 			});
 
-			return pipelineResource.save({ action: 'SavePipeline', appId: appId, Id: pipeline.EntityId }, { pipeline: pipeline, dataSources: dataSourcesPrepared }).$promise;
+			return pipelineResource.save({ action: 'SavePipeline', appId: appId, Id: pipeline.EntityId /*id later EntityId */ }, { pipeline: pipeline, dataSources: dataSourcesPrepared }).$promise;
 		},
 		// clone a whole Pipeline
 		clonePipeline: function (pipelineEntityId) {
@@ -119,7 +119,7 @@ angular.module('pipelineService', [])
 			// Query for existing Entity
 			entitiesResource.query({ action: 'GetAssignedEntities', appId: appId, assignmentObjectTypeId: assignmentObjectTypeId, keyGuid: keyGuid, contentTypeName: contentTypeName }, function (success) {
 				if (success.length) // Edit existing Entity
-					deferred.resolve(eavGlobalConfigurationProvider.itemForm.getEditItemUrl(success[0].EntityId, null, preventRedirect));
+					deferred.resolve(eavGlobalConfigurationProvider.itemForm.getEditItemUrl(success[0].Id /*EntityId*/, null, preventRedirect));
 				else { // Create new Entity
 					entitiesResource.get({ action: 'GetContentType', appId: appId, name: contentTypeName }, function (contentType) {
 						// test for null-response
@@ -147,13 +147,13 @@ angular.module('pipelineService', [])
 		},
 		// Init some Content Types, currently only used for getPipelineUrl('new', ...)
 		initContentTypes: function() {
-			entitiesResource.get({ action: 'GetContentType', appId: appId, name: 'DataPipeline' }, function (success) {
+			entitiesResource.get({ action: 'GetContentType', appId: appId, contentType: 'DataPipeline' }, function (success) {
 				dataPipelineAttributeSetId = success.AttributeSetId;
 			});
 		},
 		// Get all Pipelines of current App
 		getPipelines: function () {
-			return entitiesResource.query({ action: 'GetEntities', appId: appId, typeName: 'DataPipeline' });
+			return entitiesResource.query({ action: 'GetEntities', appId: appId, contentType: 'DataPipeline' });
 		},
 		// Get New/Edit/Design URL for a Pipeline
 		getPipelineUrl: function (mode, id) {
@@ -163,7 +163,9 @@ angular.module('pipelineService', [])
 				case 'edit':
 					return eavGlobalConfigurationProvider.itemForm.getEditItemUrl(id, undefined, true);
 				case 'design':
-					return eavGlobalConfigurationProvider.pipelineDesigner.getUrl(appId, id);
+				    return eavGlobalConfigurationProvider.pipelineDesigner.getUrl(appId, id);
+			    case 'permissions':
+			        return eavGlobalConfigurationProvider.adminUrls.managePermissions(appId, id);
 				default:
 					return null;
 			}
