@@ -1,7 +1,5 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="True"
 	Inherits="ToSic.Eav.ManagementUI.ContentTypesList" Codebehind="ContentTypesList.ascx.cs" %>
-<%@ Import Namespace="ToSic.Eav" %>
-<%@ Import Namespace="System.Data.Objects.DataClasses" %>
 <asp:UpdatePanel ID="UpdatePanel1" runat="server">
 	<ContentTemplate>
 		<asp:EntityDataSource ID="dsrcAttributeSets" runat="server" ConnectionString="name=EavContext"
@@ -41,7 +39,7 @@
 				</asp:TemplateField>
 				<asp:TemplateField HeaderText="Records">
 					<ItemTemplate>
-						<asp:Label ID="lblRecordsCount" runat="server" Text='<%# ((EntityCollection<Entity>)Eval("Entities")).Count(en => !en.ChangeLogIDDeleted.HasValue) %>' />
+						<asp:Label ID="lblRecordsCount" runat="server" Text='<%# ((System.Data.Objects.DataClasses.EntityCollection<ToSic.Eav.Entity>)Eval("Entities")).Count(en => !en.ChangeLogIDDeleted.HasValue) %>' />
 						<asp:HyperLink ID="hlnkShowItems" NavigateUrl='<%# GetShowItemsUrl(Eval("AttributeSetId")) %>'
 							runat="server" CssClass='<%# UseDialogs ? "Dialog" : "" %>' Text="Show Items" />
 					</ItemTemplate>
@@ -51,6 +49,7 @@
 						<asp:HyperLink ID="hlnkConfigureContentType" NavigateUrl='<%# GetConfigureContentTypeUrl(Eval("AttributeSetId")) %>'
 							Text="Edit" CssClass='<%# UseDialogs ? "Dialog" : "" %>' runat="server" />&nbsp;<asp:LinkButton ID="lbtnDeleteField"
 								Text="Delete" runat="server" CommandName="Delete" OnClientClick='return confirm("Are you sure you want to delete this entry?");' />
+                        &nbsp;<asp:HyperLink Visible='<%# Eval("StaticName").ToString().Length == "00000000-0000-0000-0000-000000000000".Length %>' ID="hlnkPermissions"  NavigateUrl='<%# "javascript:location.href=$eavUIConfig.urls.managePermissions(" + Eval("AppId") + ", " + "\"" + Eval("StaticName") + "\")" %>' Text="Permissions" CssClass='<%# UseDialogs ? "Dialog" : "" %>' runat="server" />
 					</ItemTemplate>
 				</asp:TemplateField>
 			</Columns>

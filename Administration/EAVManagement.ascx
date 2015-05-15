@@ -7,6 +7,9 @@
 <dnn:DnnJsInclude runat="server" FilePath="~/DesktopModules/ToSIC_SexyContent/Js/AngularJS/angular.min.js" Priority="60" />
 <dnn:DnnJsInclude runat="server" FilePath="~/DesktopModules/ToSIC_SexyContent/Js/AngularJS/angular-ui-tree.min.js" Priority="61" />
 
+<dnn:DnnJsInclude runat="server" FilePath="~/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/AngularServices/EavGlobalConfigurationProvider.js" Priority="65" />
+
+
 <SexyContent:AdministrationRegisters runat="server"></SexyContent:AdministrationRegisters>
 
 <div class="dnnForm">
