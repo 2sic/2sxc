@@ -39,8 +39,9 @@ namespace ToSic.SexyContent.WebApi
                 var portalSettings = PortalSettings.Current;
                 var sexy = request.GetSxcOfModuleContext();
 
-                if ((string) routeData.Values["appFolder"] != "auto-detect-app" && (string) routeData.Values["appFolder"] != sexy.App.Folder)
-                    throw new HttpException("AppFolder was not correct - was " + routeData.Values["appFolder"] + " but should be " + sexy.App.Folder);
+                // previously we assumed that there is a sub-folder with a future-app-id, but 2015-05-15 decided it's probably not worth trying, because each request currently needs tokens anyhow
+                // if ((string) routeData.Values["appFolder"] != "auto-detect-app" && (string) routeData.Values["appFolder"] != sexy.App.Folder)
+                //    throw new HttpException("AppFolder was not correct - was " + routeData.Values["appFolder"] + " but should be " + sexy.App.Folder);
 
                 var controllerTypeName = routeData.Values["controller"] + "Controller";
 

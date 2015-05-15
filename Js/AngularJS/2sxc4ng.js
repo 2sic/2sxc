@@ -12,7 +12,7 @@ $2sxc.ng = {
     // bootstrap: an App-Start-Help; normally you won't call this manually as it will be auto-bootstrapped. 
     // All params optional except for 'element'
     bootstrap: function(element, ngModName, iid, dependencies, config) {
-        iid = iid || $2sxc.ng.findInstanceId(element);
+        iid = iid || $2sxc.ng.findInstanceId(element) || $2sxc.ng.getParameterByName('mid'); // use fn-param, or get from DOM, or get url-param
         var sf = $.ServicesFramework(iid);
 
         // create a micro-module to configure sxc-init parameters, add to dependencies. Note that the order is important!
@@ -69,7 +69,16 @@ $2sxc.ng = {
                 return attr;
         }
         return null;
+    },
+
+    // get url param - mainly needed for mid=### in admin-dialogs
+    getParameterByName: function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
     }
+
 };
 $2sxc.ng.autoRunBootstrap();
 

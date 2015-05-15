@@ -2,9 +2,8 @@
 using System.Web.Http.Dispatcher;
 using DotNetNuke.Web.Api;
 using Microsoft.Practices.Unity;
-using ToSic.SexyContent.WebApi;
 
-namespace ToSic.SexyContent
+namespace ToSic.SexyContent.WebApi
 {
     public class RouteMapper : IServiceRouteMapper
     {
@@ -28,7 +27,7 @@ namespace ToSic.SexyContent
 
             mapRouteManager.MapHttpRoute("2sxc", "View", "View/{controller}/{action}", new[] { "ToSic.SexyContent.ViewAPI" });
             mapRouteManager.MapHttpRoute("2sxc", "app-api", "app-api/{controller}/{action}", new[] { "ToSic.SexyContent.Apps" });
-            mapRouteManager.MapHttpRoute("2sxc", "app-query", "app-query/{name}", new { controller = "Query"}, new[] { "ToSic.SexyContent.ViewAPI" });
+            mapRouteManager.MapHttpRoute("2sxc", "app-query", "app-query/{name}", new { controller = "AppQuery"}, new[] { "ToSic.SexyContent.WebApi" });
             mapRouteManager.MapHttpRoute("2sxc", "default", "{controller}/{action}", new[] { "ToSic.SexyContent.GettingStarted" });
 
             var config = GlobalConfiguration.Configuration;
