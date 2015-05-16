@@ -11,7 +11,7 @@ $2sxc.ng = {
 
     // bootstrap: an App-Start-Help; normally you won't call this manually as it will be auto-bootstrapped. 
     // All params optional except for 'element'
-    bootstrap: function(element, ngModName, iid, dependencies, config) {
+    bootstrap: function (element, ngModName, iid, dependencies, config) {
         iid = iid || $2sxc.ng.findInstanceId(element) || $2sxc.ng.getParameterByName('mid'); // use fn-param, or get from DOM, or get url-param
         var sf = $.ServicesFramework(iid);
 
@@ -23,7 +23,7 @@ $2sxc.ng = {
             .constant('HttpHeaders', { "ModuleId": iid, "TabId": sf.getTabId(), "RequestVerificationToken": sf.getAntiForgeryValue() });
         var allDependencies = ['confSxcApp' + iid, '2sxc4ng'].concat(dependencies || [ngModName]);
 
-        angular.element(document).ready(function() {
+        angular.element(document).ready(function () {
             angular.bootstrap(element, allDependencies, config); // start the app
         });
     },
@@ -33,18 +33,18 @@ $2sxc.ng = {
         var attrib, ngElement = angular.element(element);
         for (var i = 0; i < $2sxc.ng.iidAttrNames.length; i++)
             attrib = ngElement.attr($2sxc.ng.iidAttrNames[i]);
-            if (attrib) {
-                var iid = parseInt(attrib.toString().replace(/\D/g, '')); // filter all characters if necessary
-                if (!iid) throw "iid or instanceId (the DNN moduleid) not supplied and automatic lookup failed. Please set app-tag attribute iid or give id in bootstrap call";
-                return iid;
-            }
+        if (attrib) {
+            var iid = parseInt(attrib.toString().replace(/\D/g, '')); // filter all characters if necessary
+            if (!iid) throw "iid or instanceId (the DNN moduleid) not supplied and automatic lookup failed. Please set app-tag attribute iid or give id in bootstrap call";
+            return iid;
+        }
     },
 
     // Auto-bootstrap all sub-tags having an 'sxc-app' attribute - for Multiple-Apps-per-Page
     bootstrapAll: function bootstrapAll(element) {
         element = element || document;
         var allAppTags = element.querySelectorAll('[' + $2sxc.ng.appAttribute + ']');
-        angular.forEach(allAppTags, function(appTag) {
+        angular.forEach(allAppTags, function (appTag) {
             var ngModName = appTag.getAttribute($2sxc.ng.appAttribute);
             var configDependencyInjection = { strictDi: $2sxc.ng.getNgAttribute(appTag, "strict-di") !== null };
             $2sxc.ng.bootstrap(appTag, ngModName, null, null, configDependencyInjection);
@@ -54,7 +54,7 @@ $2sxc.ng = {
     // if the page contains angular, do auto-bootstrap of all 2sxc apps
     autoRunBootstrap: function autoRunBootstrap() {
         if (angular)
-            angular.element(document).ready(function() {
+            angular.element(document).ready(function () {
                 $2sxc.ng.bootstrapAll();
             });
     },
@@ -73,10 +73,10 @@ $2sxc.ng = {
 
     // get url param - mainly needed for mid=### in admin-dialogs
     getParameterByName: function getParameterByName(name) {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-        results = regex.exec(location.search);
-    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+            results = regex.exec(location.search);
+        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
     }
 
 };
@@ -86,22 +86,22 @@ angular.module('2sxc4ng', ['ng'])
     // Configure $http for DNN web services (security tokens etc.)
     .config(function ($httpProvider, HttpHeaders) {
         angular.extend($httpProvider.defaults.headers.common, HttpHeaders);
-        $httpProvider.interceptors.push(function($q, sxc) { 
+        $httpProvider.interceptors.push(function ($q, sxc) {
             return {
                 // Rewrite 2sxc-urls if necessary
-                'request': function(config) {
+                'request': function (config) {
                     config.url = sxc.resolveServiceUrl(config.url);
                     return config;
                 },
 
                 // Show very nice error if necessary
-               'responseError': function(rejection) {
-                  sxc.showDetailedHttpError(rejection);
-                  return $q.reject(rejection);
+                'responseError': function (rejection) {
+                    sxc.showDetailedHttpError(rejection);
+                    return $q.reject(rejection);
                 }
             };
         });
-        
+
     })
 
     // Provide the sxc helper for this module
@@ -111,46 +111,57 @@ angular.module('2sxc4ng', ['ng'])
         var ngSxc = $2sxc(AppInstanceId);    // make this service be the 2sxc-controller for this module
         return ngSxc;
     })
-    
+
     /// Standard entity commands like get one, many etc.
     .factory('content', function ($http) {
-        var svc = {};
+        // construct a service just for this content-type
+            return function(contentType) {
+                var oneType = {};
+                oneType.contentType = contentType;
+                oneType.root = 'app-content/' + contentType;
 
-        svc.get = function get(contentType, id) {
-            return id ? $http.get("app-content/" + contentType + '/' + id)
-                : $http.get("app-content/" + contentType);
+                // will get one or all of a content-type, depending on if an id was supplied
+                oneType.get = oneType.read = function get(id) {
+                    return $http.get(oneType.root + (id ? '/' + id : ''));
+                };
+                oneType.create = function create(values) {
+                    return $http.post(oneType.root, values);
+                };
+                oneType.update = function update(values, id) {
+                    var realId = id || values.Id || values.id;  // automatically use the correct Id
+                    return $http.post(oneType.root + '/' + realId, values);
+                };
+                oneType.delete = function del(id) {
+                    return $http.delete(oneType.root + '/' + id);
+                };
+                return oneType;
+            };
+        })
+
+    .factory('query', function ($http) {
+        return function(name) {
+            var qry = this;
+            qry.root = 'app-query/' + name;
+            qry.get = function() {
+                return $http.get(qry.root);
+            };
         };
-
-        // todo
-        svc.update = function update(contentType, id, values) {
-
-        };
-
-        svc.delete = function del(contentType, id) {
-            return $http.delete('app-content/' + contentType + '/' + id);
-        };
-
-        svc.getQuery = function getQuery(name) {
-            return $http.get("app-query/" + name);
-        };
-
-        return svc;
     })
 
-    /* Todo: future feature
-    .factory('sxcResource', function(iid, $injector) {
-        return function (url, paramDefaults, actions, options) {
+/* Todo: future feature
+.factory('sxcResource', function(iid, $injector) {
+    return function (url, paramDefaults, actions, options) {
 
-    //        // todo: check if resource is loaded
-            // manually get injector, to prevent required dependency and give nice error
-            var inj = angular.injector(['ngResource']);
-            if (!inj)
-                throw 'Error: sxcResource only works if the page also includes angular-resource. So you must either include that, or you should use jQuery AJAX instead.';
-            var res = inj.get('$resource')
-            
-            
-            return res(url, paramDefaults, actions, option);
-        }
-    })
-    */
+//        // todo: check if resource is loaded
+        // manually get injector, to prevent required dependency and give nice error
+        var inj = angular.injector(['ngResource']);
+        if (!inj)
+            throw 'Error: sxcResource only works if the page also includes angular-resource. So you must either include that, or you should use jQuery AJAX instead.';
+        var res = inj.get('$resource')
+        
+        
+        return res(url, paramDefaults, actions, option);
+    }
+})
+*/
 ;

@@ -79,7 +79,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 	    [HttpPost]
 	    public Dictionary<string, object> CreateOrUpdate(string contentType, int id = 0)
 	    {
-	        return null;
+	        throw new NotImplementedException();
 	    }
 
         #region Content Types

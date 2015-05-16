@@ -147,133 +147,170 @@ namespace ToSic.SexyContent.WebApi
             // Convert to case-insensitive dictionary just to be safe!
             newContentItem = new Dictionary<string, object>(newContentItem, StringComparer.OrdinalIgnoreCase);
 
-            var cache = (BaseCache)DataSource.GetCache(App.ZoneId, App.AppId);
-            var listOfTypes = cache.GetContentType(contentType) as ContentType;
-	        var attribs = listOfTypes.AttributeDefinitions;
+            // Now create the cleaned up import-dictionary so we can create a new entity
+            var cleanedNewItem = CreateEntityDictionary(contentType, newContentItem);
 
-
-            var cleanedNewItem = new Dictionary<string, object>();
-	        foreach (var attrDef in attribs.Select(a => a.Value))
-	        {
-                // var attrDef = attr.Value;// ats.GetAttribute(attr);
-                var attrName = attrDef.Name;
-                if (newContentItem.ContainsKey(attrName))
-	            {
-	                var foundValue = newContentItem[attrName];
-	                switch (attrDef.Type.ToLower())
-	                {
-                        case "string":
-                        case "hyperlink":
-	                        if (foundValue is string)
-	                            cleanedNewItem.Add(attrName, foundValue.ToString());
-                            else
-	                            ThrowValueMappingError(attrDef, foundValue);
-	                        break;
-                        case "boolean":
-	                        bool bolValue;
-	                        if (bool.TryParse(foundValue.ToString(), out bolValue))
-	                            cleanedNewItem.Add(attrName, bolValue);
-	                        else
-	                            ThrowValueMappingError(attrDef, foundValue);
-	                        break;
-                        case "datetime":
-	                        DateTime dtm;
-                            if(DateTime.TryParse(foundValue.ToString(), out dtm))
-                                cleanedNewItem.Add(attrName, dtm);
-                            else
-	                            ThrowValueMappingError(attrDef, foundValue);
-	                        break;
-                        case "number":
-	                        decimal dec;
-                            if(Decimal.TryParse(foundValue.ToString(), out dec))
-                                cleanedNewItem.Add(attrName, dec);
-                            else
-	                            ThrowValueMappingError(attrDef, foundValue);
-	                        break;
-                        case "entity":
-	                        var relationships = new List<int>();
-	                        
-	                        var foundEnum = foundValue as System.Collections.IEnumerable;
-	                        if (foundEnum != null) // it's a list!
-	                            foreach (var item in foundEnum)
-	                                CreateSingleRelationshipItem(item, relationships);
-	                        else // not a list
-	                            CreateSingleRelationshipItem(foundValue, relationships);
-
-                            cleanedNewItem.Add(attrName, relationships);
-
-                            break;
-                            default:
-                                throw new Exception("Tried to create attribute '" + attrName + "' but the type is not known: '" + attrDef.Type + "'");
-	                }
-	            }
-
-                // todo: maybe one day get default-values and insert them if not supplied by JS
-
-            }
-
-            // Get user name/id when creating, would be important if one day checking for author
+	        // Get user name/id when creating, would be important if one day checking for author
 	        var x = Dnn.User.UserID;
 	        var userName = (x == -1) ? "Anonymous" : "dnn:id=" + x;
 
             // try to create
             App.Data.Create(contentType, cleanedNewItem, userName); // full version, with "who did it" for the log entry
 
+            // Todo: try to return the newly created object 
             return null;
 	    }
 
+
+        /// <summary>
+        /// Construct an import-friedly, type-controlled value-dictionary to create or update an entity
+        /// </summary>
+        /// <param name="contentType"></param>
+        /// <param name="newContentItem"></param>
+        /// <returns></returns>
+	    private Dictionary<string, object> CreateEntityDictionary(string contentType, Dictionary<string, object> newContentItem)
+	    {
+            // Retrieve content-type definition and check all the fields that this content-type has
+	        var cache = (BaseCache) DataSource.GetCache(App.ZoneId, App.AppId);
+	        var listOfTypes = cache.GetContentType(contentType) as ContentType;
+	        var attribs = listOfTypes.AttributeDefinitions;
+
+
+	        var cleanedNewItem = new Dictionary<string, object>();
+	        foreach (var attrDef in attribs.Select(a => a.Value))
+	        {
+	            // var attrDef = attr.Value;// ats.GetAttribute(attr);
+	            var attrName = attrDef.Name;
+	            if (newContentItem.ContainsKey(attrName))
+	            {
+	                var foundValue = newContentItem[attrName];
+	                switch (attrDef.Type.ToLower())
+	                {
+	                    case "string":
+	                    case "hyperlink":
+	                        if (foundValue is string)
+	                            cleanedNewItem.Add(attrName, foundValue.ToString());
+	                        else
+	                            ThrowValueMappingError(attrDef, foundValue);
+	                        break;
+	                    case "boolean":
+	                        bool bolValue;
+	                        if (bool.TryParse(foundValue.ToString(), out bolValue))
+	                            cleanedNewItem.Add(attrName, bolValue);
+	                        else
+	                            ThrowValueMappingError(attrDef, foundValue);
+	                        break;
+	                    case "datetime":
+	                        DateTime dtm;
+	                        if (DateTime.TryParse(foundValue.ToString(), out dtm))
+	                            cleanedNewItem.Add(attrName, dtm);
+	                        else
+	                            ThrowValueMappingError(attrDef, foundValue);
+	                        break;
+	                    case "number":
+	                        decimal dec;
+	                        if (Decimal.TryParse(foundValue.ToString(), out dec))
+	                            cleanedNewItem.Add(attrName, dec);
+	                        else
+	                            ThrowValueMappingError(attrDef, foundValue);
+	                        break;
+	                    case "entity":
+	                        var relationships = new List<int>();
+
+	                        var foundEnum = foundValue as System.Collections.IEnumerable;
+	                        if (foundEnum != null) // it's a list!
+	                            foreach (var item in foundEnum)
+                                    relationships.Add(CreateSingleRelationshipItem(item));
+	                        else // not a list
+                                relationships.Add(CreateSingleRelationshipItem(foundValue));
+
+	                        cleanedNewItem.Add(attrName, relationships);
+
+	                        break;
+	                    default:
+	                        throw new Exception("Tried to create attribute '" + attrName + "' but the type is not known: '" +
+	                                            attrDef.Type + "'");
+	                }
+	            }
+
+	            // todo: maybe one day get default-values and insert them if not supplied by JS
+	        }
+	        return cleanedNewItem;
+	    }
+
+        /// <summary>
+        /// In case of an error, show a nicer, consistent message
+        /// </summary>
+        /// <param name="attributeDefinition"></param>
+        /// <param name="foundValue"></param>
 	    private static void ThrowValueMappingError(AttributeBase attributeDefinition, object foundValue)
 	    {
 	        throw new Exception("Tried to create " + attributeDefinition.Name + " and couldn't convert to correct " + attributeDefinition.Type + ": '" +
 	                            foundValue + "'");
 	    }
 
-	    private static void CreateSingleRelationshipItem(object foundValue, List<int> relationships)
+	    /// <summary>
+	    /// Takes input from JSON which could be in many formats like Category=ID or Category={id=#} 
+	    /// and then converts it to an item in the relationships-list
+	    /// </summary>
+	    /// <param name="foundValue"></param>
+	    private int CreateSingleRelationshipItem(object foundValue)
 	    {
-// it's either just an Id, or an Id/Title combination
-	        int foundNumber;
-	        if (int.TryParse(foundValue.ToString(), out foundNumber))
-	            CreateValidRelationshipItem(foundNumber, relationships);
-	                            
-	            // So it's not a number, it must be a single dictionary with 1 item
-	        else
+	        try
 	        {
-	            try
+	            // the object foundNumber is either just an Id, or an Id/Title combination
+                // Try to see if it's already a number, else check if it's a JSON property
+                int foundNumber;
+	            if (!int.TryParse(foundValue.ToString(), out foundNumber))
 	            {
-	                var jsonProperty = foundValue as JProperty;
-	                var relationshipNumber = (int) jsonProperty.Value;
-                    CreateValidRelationshipItem(relationshipNumber, relationships);
-	                // else
-	                // var dict = foundValue as Dictionary<string, object>;
-	                // if(dict == null)
+	                JProperty jp = foundValue as JProperty;
+                    if(jp != null)
+	                    foundNumber = (int) (foundValue as JProperty).Value;
+                    else
+                    {
+                        JObject jo = foundValue as JObject;
+                        JToken foundId;
+                        if (jo.TryGetValue("Id", out foundId))
+                            foundNumber = (int) foundId;
+                        else if (jo.TryGetValue("id", out foundId))
+                            foundNumber = (int) foundId;
+                    }
 	            }
-	            catch
-	            {
-	                throw new Exception("Couldn't covert list of values to dictionary");
-	            }
-	            // dict = new Dictionary<string, object>(dict, StringComparer.OrdinalIgnoreCase);
-                // if(dict.ContainsKey("id"))
-                //    CreateValidRelationshipItem(dict["id"], relationships);
+	            return foundNumber;
+	        }
+	        catch
+	        {
+                throw new Exception("Tried to find Id of a relationship - but only found " + foundValue);
 	        }
 	    }
 
-	    private static void CreateValidRelationshipItem(object potValue, List<int> relationships)
-	    {
-	        var relationshipKey = potValue.ToString();
-	        int relationshipId;
 
-	        var isOk = int.TryParse(relationshipKey, out relationshipId);
-	        if (isOk)
-	            relationships.Add(Convert.ToInt32(relationshipId));
-	        else
-	            throw new Exception("Tried to find Id of a relationship - but only found " + potValue);
-	    }
-
-	    [HttpPost]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public Dictionary<string, object> CreateOrUpdate(string contentType, int id)
+        [HttpPost]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
+        public Dictionary<string, object> Create(string contentType, int id, Dictionary<string, object> newContentItem)
         {
-            return null;
+            InitEavAndSerializer();
+            // Now check standard create-permissions
+            PerformSecurityCheck(contentType, PermissionGrant.Update, true);
+
+            // Check that this ID is actually of this content-type, this throws an error if it's not the correct type
+            _eavWebApi.GetOne(contentType, id);
+
+            // Convert to case-insensitive dictionary just to be safe!
+            newContentItem = new Dictionary<string, object>(newContentItem, StringComparer.OrdinalIgnoreCase);
+
+            // Now create the cleaned up import-dictionary so we can create a new entity
+            var cleanedNewItem = CreateEntityDictionary(contentType, newContentItem);
+
+            // Get user name/id when creating, would be important if one day checking for author
+            var x = Dnn.User.UserID;
+            var userName = (x == -1) ? "Anonymous" : "dnn:id=" + x;
+
+            // try to create
+            App.Data.Update(id, cleanedNewItem, userName); // full version, with "who did it" for the log entry
+
+            // Todo: try to return the newly created object 
+            return _eavWebApi.Serializer.Prepare(App.Data.List[id]);
         }
     }
 }

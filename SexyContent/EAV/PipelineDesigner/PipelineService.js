@@ -117,11 +117,11 @@ angular.module('pipelineService', [])
 			var deferred = $q.defer();
 
 			// Query for existing Entity
-			entitiesResource.query({ action: 'GetAssignedEntities', appId: appId, assignmentObjectTypeId: assignmentObjectTypeId, keyGuid: keyGuid, contentTypeName: contentTypeName }, function (success) {
+			entitiesResource.query({ action: 'GetAssignedEntities', appId: appId, assignmentObjectTypeId: assignmentObjectTypeId, keyGuid: keyGuid, contentType: contentTypeName }, function (success) {
 				if (success.length) // Edit existing Entity
 					deferred.resolve(eavGlobalConfigurationProvider.itemForm.getEditItemUrl(success[0].Id /*EntityId*/, null, preventRedirect));
 				else { // Create new Entity
-					entitiesResource.get({ action: 'GetContentType', appId: appId, name: contentTypeName }, function (contentType) {
+					entitiesResource.get({ action: 'GetContentType', appId: appId, contentType: contentTypeName }, function (contentType) {
 						// test for null-response
 						if (contentType[0] == 'n' && contentType[1] == 'u' && contentType[2] == 'l' && contentType[3] == 'l')
 							deferred.reject('Content Type ' + contentTypeName + ' not found.');
