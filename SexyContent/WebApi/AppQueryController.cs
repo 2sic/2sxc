@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Net;
+using System.Net.Http;
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
@@ -11,6 +13,8 @@ namespace ToSic.SexyContent.WebApi
     /// In charge of delivering Pipeline-Queries on the fly
     /// They will only be delivered if the security is confirmed - it must be publicly available
     /// </summary>
+    /// 
+    // todo: ensure that high-permitted users get the query even if not specified
     [SupportedModules("2sxc,2sxc-app")]
     public class AppQueryController : SxcApiController
     {
@@ -29,11 +33,17 @@ namespace ToSic.SexyContent.WebApi
             var permissionChecker = new PermissionController(App.ZoneId, App.AppId, queryConf.EntityGuid, Dnn.Module);
             var readAllowed = permissionChecker.UserMay(PermissionGrant.Read);
 
+            var isAdmin = DotNetNuke.Security.Permissions.ModulePermissionController.CanAdminModule(Dnn.Module);
+
             // Only return query if permissions ok
-            if (readAllowed)
+            if (readAllowed || isAdmin)
                 return Sxc.Serializer.Prepare(query);
             else
-                throw new Exception("Not allowed for query '" + name + "'");
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Unauthorized)
+                {
+                    Content = new StringContent("Request not allowed. User does not have read permissions for query '" + name + "'"),
+                    ReasonPhrase = "Request not allowed"
+                }); 
         }
 
 
