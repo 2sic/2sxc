@@ -1,14 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
+using Newtonsoft.Json.Linq;
+using Telerik.Charting.Styles;
 using Telerik.Web.UI.PivotGrid.Core.Fields;
 using ToSic.Eav;
+using ToSic.Eav.Data;
+using ToSic.Eav.DataSources.Caches;
 using ToSic.SexyContent.Security;
 using ToSic.SexyContent.Serializers;
+using ToSic.SexyContent.DataImportExport.Extensions;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -137,23 +143,133 @@ namespace ToSic.SexyContent.WebApi
             InitEavAndSerializer();
             // Now check standard create-permissions
             PerformSecurityCheck(contentType, PermissionGrant.Create, true);
-            
-            // todo: maybe perform extra "does this stuff look right" checks to deliver nicer errors
 
-            // todo: maybe one day get default-values and insert them if not supplied by JS
+            // Convert to case-insensitive dictionary just to be safe!
+            newContentItem = new Dictionary<string, object>(newContentItem, StringComparer.OrdinalIgnoreCase);
 
-            // todo: get user name/id when creating, would be important if one day checking for author
-            // ...
-	        var x = Dnn.User.Username;
-	        var userName = "Anonymous";
+            var cache = (BaseCache)DataSource.GetCache(App.ZoneId, App.AppId);
+            var listOfTypes = cache.GetContentType(contentType) as ContentType;
+	        var attribs = listOfTypes.AttributeDefinitions;
+
+
+            var cleanedNewItem = new Dictionary<string, object>();
+	        foreach (var attrDef in attribs.Select(a => a.Value))
+	        {
+                // var attrDef = attr.Value;// ats.GetAttribute(attr);
+                var attrName = attrDef.Name;
+                if (newContentItem.ContainsKey(attrName))
+	            {
+	                var foundValue = newContentItem[attrName];
+	                switch (attrDef.Type.ToLower())
+	                {
+                        case "string":
+                        case "hyperlink":
+	                        if (foundValue is string)
+	                            cleanedNewItem.Add(attrName, foundValue.ToString());
+                            else
+	                            ThrowValueMappingError(attrDef, foundValue);
+	                        break;
+                        case "boolean":
+	                        bool bolValue;
+	                        if (bool.TryParse(foundValue.ToString(), out bolValue))
+	                            cleanedNewItem.Add(attrName, bolValue);
+	                        else
+	                            ThrowValueMappingError(attrDef, foundValue);
+	                        break;
+                        case "datetime":
+	                        DateTime dtm;
+                            if(DateTime.TryParse(foundValue.ToString(), out dtm))
+                                cleanedNewItem.Add(attrName, dtm);
+                            else
+	                            ThrowValueMappingError(attrDef, foundValue);
+	                        break;
+                        case "number":
+	                        decimal dec;
+                            if(Decimal.TryParse(foundValue.ToString(), out dec))
+                                cleanedNewItem.Add(attrName, dec);
+                            else
+	                            ThrowValueMappingError(attrDef, foundValue);
+	                        break;
+                        case "entity":
+	                        var relationships = new List<int>();
+	                        
+	                        var foundEnum = foundValue as System.Collections.IEnumerable;
+	                        if (foundEnum != null) // it's a list!
+	                            foreach (var item in foundEnum)
+	                                CreateSingleRelationshipItem(item, relationships);
+	                        else // not a list
+	                            CreateSingleRelationshipItem(foundValue, relationships);
+
+                            cleanedNewItem.Add(attrName, relationships);
+
+                            break;
+                            default:
+                                throw new Exception("Tried to create attribute '" + attrName + "' but the type is not known: '" + attrDef.Type + "'");
+	                }
+	            }
+
+                // todo: maybe one day get default-values and insert them if not supplied by JS
+
+            }
+
+            // Get user name/id when creating, would be important if one day checking for author
+	        var x = Dnn.User.UserID;
+	        var userName = (x == -1) ? "Anonymous" : "dnn:id=" + x;
 
             // try to create
-            App.Data.Create(contentType, newContentItem, userName); // full version, with "who did it" for the log entry
+            App.Data.Create(contentType, cleanedNewItem, userName); // full version, with "who did it" for the log entry
 
             return null;
 	    }
 
-        [HttpPost]
+	    private static void ThrowValueMappingError(AttributeBase attributeDefinition, object foundValue)
+	    {
+	        throw new Exception("Tried to create " + attributeDefinition.Name + " and couldn't convert to correct " + attributeDefinition.Type + ": '" +
+	                            foundValue + "'");
+	    }
+
+	    private static void CreateSingleRelationshipItem(object foundValue, List<int> relationships)
+	    {
+// it's either just an Id, or an Id/Title combination
+	        int foundNumber;
+	        if (int.TryParse(foundValue.ToString(), out foundNumber))
+	            CreateValidRelationshipItem(foundNumber, relationships);
+	                            
+	            // So it's not a number, it must be a single dictionary with 1 item
+	        else
+	        {
+	            try
+	            {
+	                var jsonProperty = foundValue as JProperty;
+	                var relationshipNumber = (int) jsonProperty.Value;
+                    CreateValidRelationshipItem(relationshipNumber, relationships);
+	                // else
+	                // var dict = foundValue as Dictionary<string, object>;
+	                // if(dict == null)
+	            }
+	            catch
+	            {
+	                throw new Exception("Couldn't covert list of values to dictionary");
+	            }
+	            // dict = new Dictionary<string, object>(dict, StringComparer.OrdinalIgnoreCase);
+                // if(dict.ContainsKey("id"))
+                //    CreateValidRelationshipItem(dict["id"], relationships);
+	        }
+	    }
+
+	    private static void CreateValidRelationshipItem(object potValue, List<int> relationships)
+	    {
+	        var relationshipKey = potValue.ToString();
+	        int relationshipId;
+
+	        var isOk = int.TryParse(relationshipKey, out relationshipId);
+	        if (isOk)
+	            relationships.Add(Convert.ToInt32(relationshipId));
+	        else
+	            throw new Exception("Tried to find Id of a relationship - but only found " + potValue);
+	    }
+
+	    [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public Dictionary<string, object> CreateOrUpdate(string contentType, int id)
         {
