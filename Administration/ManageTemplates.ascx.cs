@@ -15,9 +15,9 @@ namespace ToSic.SexyContent
         /// <param name="e"></param>
         protected void Page_Init(object sender, EventArgs e)
         {
-            //Sexy = new SexyContent(this.GetZoneId(), Request.QueryString.AllKeys.Contains("AppID") ? int.Parse(Request.QueryString["AppID"]) : new int?(), true);
-
             ((DnnGridButtonColumn)grdTemplates.Columns.FindByUniqueName("DeleteColumn")).ConfirmText = LocalizeString("DeleteColumn.ConfirmText");
+			grdTemplates.Columns.FindByUniqueName("PermissionsColumn").Visible = !IsContentApp;
+	        base.Page_Init(sender, e);
         }
 
         /// <summary>
@@ -71,12 +71,12 @@ namespace ToSic.SexyContent
             Response.Redirect(editUrl);
         }
 
-        public string PermissionsLink(string templateGuid)
-        {
-            var editUrl = ModuleContext.EditUrl(SexyContent.ControlKeys.Permissions, 
-                "mid" + "=" + ModuleId + "&Target=" + templateGuid + "&" + SexyContent.AppIDString + "=" + AppId);
-            return editUrl;
-        }
+		//public string PermissionsLink(string templateGuid)
+		//{
+		//	var editUrl = ModuleContext.EditUrl(SexyContent.ControlKeys.Permissions, 
+		//		"mid" + "=" + ModuleId + "&Target=" + templateGuid + "&" + SexyContent.AppIDString + "=" + AppId);
+		//	return editUrl;
+		//}
 
         
         /// <summary>

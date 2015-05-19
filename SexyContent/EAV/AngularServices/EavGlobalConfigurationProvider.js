@@ -21,7 +21,7 @@ $(function () {
     };
 });
 
-if (angular) // needs if(angular) because the file is also included in older non-angulare dialogs
+if (window.angular) // needed because the file is also included in older non-angular dialogs
     angular.module('eavGlobalConfigurationProvider', []).factory('eavGlobalConfigurationProvider', function ($location) {
 
         // Get DNN ModuleContext

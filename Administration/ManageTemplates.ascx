@@ -2,7 +2,9 @@
 <%@ Register TagPrefix="dnnweb" Assembly="DotNetNuke.Web" Namespace="DotNetNuke.Web.UI.WebControls" %>
 <%@ Register TagPrefix="Telerik" Assembly="Telerik.Web.UI" Namespace="Telerik.Web.UI" %>
 <%@ Register TagName="AdministrationRegisters" TagPrefix="SexyContent" Src="Registers.ascx" %>
+<%@ Register TagPrefix="dnn" Namespace="DotNetNuke.Web.Client.ClientResourceManagement" Assembly="DotNetNuke.Web.Client" %>
 <SexyContent:AdministrationRegisters runat="server"></SexyContent:AdministrationRegisters>
+<dnn:DnnJsInclude runat="server" FilePath="~/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/AngularServices/EavGlobalConfigurationProvider.js" Priority="101" />
 
 <asp:Panel runat="server" class="dnnForm dnnSexyContentManageTemplates dnnClear" id="pnlManageTemplates">
     <h2 class="dnnFormSectionHead" runat="server" id="dnnSitePanelManageTemplates"><asp:Label runat="server" ID="lblManageTemplatesHeading" ResourceKey="lblManageTemplatesHeading"></asp:Label></h2>
@@ -50,13 +52,12 @@
                     <dnnweb:DnnGridBoundColumn HeaderText="Url" DataField="ViewNameInUrl">
                         <HeaderStyle Width="100px" />
                     </dnnweb:DnnGridBoundColumn>
-                    <dnnweb:DnnGridTemplateColumn HeaderText="Permissions" >
+                    <dnnweb:DnnGridTemplateColumn UniqueName="PermissionsColumn" HeaderText="Permissions" >
                         <HeaderStyle Width="35px" />
                         <ItemTemplate>
-                            <a href="<%# PermissionsLink(Eval("Guid").ToString()) %>">Permissions</a>
+                            <a href="javascript: window.location = window.$eavUIConfig.urls.managePermissions(<%# AppId.Value %>, '<%# Eval("Guid") %>');">Permissions</a>
                         </ItemTemplate>
                     </dnnweb:DnnGridTemplateColumn>
-
                 </Columns>
                 <NoRecordsTemplate>
                     <asp:Label ID="lblNoRecords" runat="server" resourcekey="lblNoRecords"></asp:Label>

@@ -17,7 +17,7 @@ namespace ToSic.SexyContent
     {
         protected void Page_Init(object sender, EventArgs e)
         {
-			if (UserMayEditThisModule && Parent is ModuleHost)
+			if ((UserMayEditThisModule || this is SexyControlAdminBase) && Parent is ModuleHost)
 				RegisterGlobalsAttribute();
             }
 

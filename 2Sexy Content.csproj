@@ -705,6 +705,7 @@
     <Content Include="Styles\EditDataSource\flowchartDemo.css" />
     <Content Include="TemplateHelpGrid.ascx" />
     <Content Include="Upgrade\07.00.00.xml" />
+    <Content Include="Upgrade\07.00.03.xml" />
     <Content Include="ViewApp.ascx" />
     <Content Include="View.ascx" />
     <Content Include="Administration\EAVManagement.ascx" />

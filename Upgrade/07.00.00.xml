@@ -159,7 +159,7 @@
 						<Value Key="DefaultValue" Value="FnL DataSource Configuration" Type="String" />
 					</Entity>
 				</Attribute>
-				<Attribute StaticName="ModuleId" Type="Number" IsTitle="false">
+				<Attribute StaticName="ModuleId" Type="String" IsTitle="false">
 					<Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@All" AttributeSetName="@All" EntityGUID="c7683ee8-ba4a-4981-8990-a19f524c39a8">
 						<Value Key="Name" Value="FnL Module Id" Type="String" />
 						<Value Key="Notes" Value="&lt;p&gt;The ID of the Form and List Module in DNN. The Data will be retrieved from that specific module.&amp;nbsp;&lt;/p&gt;" Type="String" />

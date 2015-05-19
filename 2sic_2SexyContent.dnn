@@ -876,6 +876,16 @@
                     <helpUrl />
                     <supportsPopUps>True</supportsPopUps>
                   </moduleControl>
+									<moduleControl>
+										<controlKey>permissions</controlKey>
+										<controlSrc>DesktopModules/ToSIC_SexyContent/SexyContent/EAV/Permissions/PermissionsDnnWrapper.ascx</controlSrc>
+										<supportsPartialRendering>False</supportsPartialRendering>
+										<controlTitle>Permissions</controlTitle>
+										<controlType>Admin</controlType>
+										<iconFile />
+										<helpUrl />
+										<supportsPopUps>True</supportsPopUps>
+									</moduleControl>
                 </moduleControls>
               </moduleDefinition>
             </moduleDefinitions>

@@ -1,4 +1,7 @@
-﻿namespace ToSic.SexyContent
+﻿using System;
+using DotNetNuke.UI.Modules;
+
+namespace ToSic.SexyContent
 {
     /// <summary>
     /// Contains properties that all controls use that edit the current module's data (not global data like admin controls)
@@ -6,6 +9,7 @@
     /// </summary>
     public abstract class SexyControlAdminBase : SexyControlEditBase
     {
+
         protected override int? AppId
         {
             get
