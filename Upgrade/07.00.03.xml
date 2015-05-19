@@ -5,7 +5,7 @@
     <Dimensions />
   </Header>
   <AttributeSets>
-    <AttributeSet StaticName="PermissionConfiguration" Name="PermissionConfiguration" Description="For configuring permissions." Scope="2SexyContent-System">
+    <AttributeSet StaticName="PermissionConfiguration" Name="PermissionConfiguration" Description="For configuring permissions." Scope="System" AlwaysShareConfiguration="true">
       <Attributes>
         <Attribute StaticName="Title" Type="String" IsTitle="true">
           <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@All" AttributeSetName="@All" EntityGUID="9058ec65-2c69-47f0-a641-37d697abe0c1">

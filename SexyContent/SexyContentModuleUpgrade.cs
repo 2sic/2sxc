@@ -35,6 +35,9 @@ namespace ToSic.SexyContent
 				case "07.00.00":
 					Version070000();
 					break;
+				case "07.00.03":
+					Version070003();
+					break;
 			}
 
 			// Increase ClientDependency version upon each upgrade (System and all Portals)
@@ -375,6 +378,29 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
 //                                 FROM            ModuleSettings AS ModuleSettings_2
 //                                 WHERE        (ModuleID = ModuleSettings_1.ModuleID) AND (SettingName = N'ToSIC_SexyContent_ContentGroupGuid')) = 0)", sqlConnection);
 //			sqlCmdUpdateModuleSettings.ExecuteNonQuery();
+		}
+
+		private static void Version070003()
+		{
+			var userName = "System-ModuleUpgrade-070003";
+
+			// Import new ContentType for permissions
+			if (DataSource.GetCache(DataSource.DefaultZoneId, DataSource.MetaDataAppId).GetContentType("PermissionConfiguration") == null)
+			{
+
+				var xmlToImport =
+					File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/07.00.03.xml"));
+				//var xmlToImport = File.ReadAllText("../../../../Upgrade/07.00.00.xml");
+				var xmlImport = new XmlImport("en-US", userName, true);
+				var success = xmlImport.ImportXml(DataSource.DefaultZoneId, DataSource.MetaDataAppId, XDocument.Parse(xmlToImport));
+
+				if (!success)
+				{
+					var messages = String.Join("\r\n- ", xmlImport.ImportLog.Select(p => p.Message).ToArray());
+					throw new Exception("The 2sxc module upgrade to 07.00.03 failed: " + messages);
+				}
+			}
+
 		}
 
 		/// <summary>

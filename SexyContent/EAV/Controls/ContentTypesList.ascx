@@ -49,7 +49,7 @@
 						<asp:HyperLink ID="hlnkConfigureContentType" NavigateUrl='<%# GetConfigureContentTypeUrl(Eval("AttributeSetId")) %>'
 							Text="Edit" CssClass='<%# UseDialogs ? "Dialog" : "" %>' runat="server" />&nbsp;<asp:LinkButton ID="lbtnDeleteField"
 								Text="Delete" runat="server" CommandName="Delete" OnClientClick='return confirm("Are you sure you want to delete this entry?");' />
-                        &nbsp;<asp:HyperLink Visible='<%# Eval("StaticName").ToString().Length == "00000000-0000-0000-0000-000000000000".Length %>' ID="hlnkPermissions"  NavigateUrl='<%# "javascript:location.href=$eavUIConfig.urls.managePermissions(" + Eval("AppId") + ", " + "\"" + Eval("StaticName") + "\")" %>' Text="Permissions" CssClass='<%# UseDialogs ? "Dialog" : "" %>' runat="server" />
+                        &nbsp;<asp:HyperLink Visible='<%# ShowPermissionsLink && Eval("StaticName").ToString().Length == "00000000-0000-0000-0000-000000000000".Length %>' ID="hlnkPermissions"  NavigateUrl='<%# "javascript:location.href=$eavUIConfig.urls.managePermissions(" + Eval("AppId") + ", " + "\"" + Eval("StaticName") + "\")" %>' Text="Permissions" CssClass='<%# UseDialogs ? "Dialog" : "" %>' runat="server" />
 					</ItemTemplate>
 				</asp:TemplateField>
 			</Columns>

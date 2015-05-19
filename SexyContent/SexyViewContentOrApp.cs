@@ -120,7 +120,7 @@ namespace ToSic.SexyContent
             var permissions = new Security.PermissionController(ZoneId.Value, AppId.Value, Template.Guid, this.ModuleContext.Configuration);
 
             // Views only need permissions to limit access, so only check if there are any configured permissions
-            if (permissions.PermissionList.Any())
+            if (!UserInfo.IsInRole(PortalSettings.AdministratorRoleName) && permissions.PermissionList.Any())
                 if (!permissions.UserMay(PermissionGrant.Read))
                     throw new UnauthorizedAccessException("This view is not accessible for the current user. To give access, change permissions in the view settings. See http://2sxc.org/help?tag=view-permissions");
 
