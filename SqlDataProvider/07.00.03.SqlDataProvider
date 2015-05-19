@@ -11,5 +11,5 @@ SET                Name = N'Entity', Description = N'For Permissions, Data Pipel
 WHERE        (AssignmentObjectTypeID = 4)
 
 -- Commit the transaction
---COMMIT TRANSACTION SexyContentUpdate;
-ROLLBACK TRANSACTION SexyContentUpdate;
+COMMIT TRANSACTION SexyContentUpdate;
+--ROLLBACK TRANSACTION SexyContentUpdate;
