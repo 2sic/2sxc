@@ -71,6 +71,14 @@ namespace ToSic.SexyContent
             Response.Redirect(editUrl);
         }
 
+        public string PermissionsLink(string templateGuid)
+        {
+            var editUrl = ModuleContext.EditUrl(SexyContent.ControlKeys.Permissions, 
+                "mid" + "=" + ModuleId + "&Target=" + templateGuid + "&" + SexyContent.AppIDString + "=" + AppId);
+            return editUrl;
+        }
+
+        
         /// <summary>
         /// DataBind the template grid view
         /// </summary>
@@ -87,7 +95,10 @@ namespace ToSic.SexyContent
                                 TemplateName = c.Name, c.ContentTypeStaticName,
                                 AttributeSetName = a != null ? a.Name : "No Content Type",
                                 TemplatePath = c.Path,
-                                DemoEntityID = c.ContentDemoEntity != null ? c.ContentDemoEntity.EntityId : new int?(), c.IsHidden
+                                DemoEntityID = c.ContentDemoEntity != null ? c.ContentDemoEntity.EntityId : new int?(), 
+                                c.IsHidden,
+                                c.ViewNameInUrl,
+                                c.Guid
                             };
 
             grdTemplates.DataSource = templates;

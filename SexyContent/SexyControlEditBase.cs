@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Linq;
 using DotNetNuke.Entities.Modules;
+using DotNetNuke.Entities.Tabs;
+using DotNetNuke.Services.Installer.Dependencies;
 using DotNetNuke.UI.Modules;
 using Newtonsoft.Json;
+using ToSic.SexyContent.Security;
 
 namespace ToSic.SexyContent
 {

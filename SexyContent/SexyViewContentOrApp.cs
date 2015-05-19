@@ -15,6 +15,7 @@ using Newtonsoft.Json;
 using ToSic.Eav;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Engines;
+using ToSic.SexyContent.Security;
 
 namespace ToSic.SexyContent
 {
@@ -112,7 +113,20 @@ namespace ToSic.SexyContent
 
 			#endregion
 
-			try
+            #region PermissionsCheck
+            // 2015-05-19 2dm: new: do security check if security exists
+            // should probably happen somewhere else - so it doesn't throw errors when not even rendering...
+            // maybe should show 
+            var permissions = new Security.PermissionController(ZoneId.Value, AppId.Value, Template.Guid, this.ModuleContext.Configuration);
+
+            // Views only need permissions to limit access, so only check if there are any configured permissions
+            if (permissions.PermissionList.Any())
+                if (!permissions.UserMay(PermissionGrant.Read))
+                    throw new UnauthorizedAccessException("This view is not accessible for the current user. To give access, change permissions in the view settings. See http://2sxc.org/help?tag=view-permissions");
+
+            #endregion
+
+            try
 			{
 				//var renderTemplate = Template;
 				string renderedTemplate;

@@ -11,7 +11,7 @@
     </asp:Panel>
     <fieldset>
         <dnnweb:DnnGrid CssClass="GridTemplates" ID="grdTemplates" runat="server" AutoGenerateColumns="false" EnableEmbeddedSkins="True" EnableEmbeddedBaseStylesheet="True" Skin="Default" OnDeleteCommand="grdTemplates_DeleteCommand" OnSortCommand="grdTemplates_SortCommand" OnEditCommand="grdTemplates_EditCommand" EnableViewState="true">
-            <MasterTableView DataKeyNames="TemplateID" AllowSorting="True" HeaderStyle-Font-Bold="true">
+            <MasterTableView DataKeyNames="TemplateID, Guid" AllowSorting="True" HeaderStyle-Font-Bold="true">
                 <GroupByExpressions>
                     <Telerik:GridGroupByExpression>
                         <SelectFields>
@@ -45,8 +45,18 @@
                         <HeaderStyle Width="110px" />
                     </dnnweb:DnnGridBoundColumn>
                     <dnnweb:DnnGridCheckBoxColumn ReadOnly="true" DataField="IsHidden" HeaderText="IsHidden">
-                        <HeaderStyle Width="80px" />
+                        <HeaderStyle Width="60px" />
                     </dnnweb:DnnGridCheckBoxColumn>
+                    <dnnweb:DnnGridBoundColumn HeaderText="Url" DataField="ViewNameInUrl">
+                        <HeaderStyle Width="100px" />
+                    </dnnweb:DnnGridBoundColumn>
+                    <dnnweb:DnnGridTemplateColumn HeaderText="Permissions" >
+                        <HeaderStyle Width="35px" />
+                        <ItemTemplate>
+                            <a href="<%# PermissionsLink(Eval("Guid").ToString()) %>">Permissions</a>
+                        </ItemTemplate>
+                    </dnnweb:DnnGridTemplateColumn>
+
                 </Columns>
                 <NoRecordsTemplate>
                     <asp:Label ID="lblNoRecords" runat="server" resourcekey="lblNoRecords"></asp:Label>

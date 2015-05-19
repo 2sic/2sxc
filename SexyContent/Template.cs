@@ -30,6 +30,7 @@ namespace ToSic.SexyContent
 		public string ListPresentationTypeStaticName { get { return (string)_templateEntity.GetBestValue("ListPresentationTypeStaticName"); } }
 		public IEntity ListPresentationDemoEntity { get { return (((EntityRelationship)_templateEntity.Attributes["ListPresentationDemoEntity"][0]).FirstOrDefault()); } }
 		public string Type { get { return (string)_templateEntity.GetBestValue("Type"); } }
+        public Guid Guid { get { return (Guid)_templateEntity.GetBestValue("EntityGuid"); } }
 
 	    public bool IsHidden
 	    {

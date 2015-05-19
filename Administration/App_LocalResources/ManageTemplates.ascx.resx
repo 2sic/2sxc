@@ -156,4 +156,10 @@
   <data name="ContentTypeGroupByField.HeaderText" xml:space="preserve">
     <value>Content Type</value>
   </data>
+  <data name="Permissions.Header" xml:space="preserve">
+    <value>Permissions</value>
+  </data>
+  <data name="Permissions.Text" xml:space="preserve">
+    <value>Perm</value>
+  </data>
 </root>

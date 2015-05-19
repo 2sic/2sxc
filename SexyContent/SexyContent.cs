@@ -87,6 +87,7 @@ namespace ToSic.SexyContent
 			public const string PipelineManagement = "pipelinemanagement";
 			public const string PipelineDesigner = "pipelinedesigner";
             public const string WebApiHelp = "WebApiHelp";
+            public const string Permissions = "Permissions";
         }
 
         public const string PortalHostDirectory = "~/Portals/_default/";
