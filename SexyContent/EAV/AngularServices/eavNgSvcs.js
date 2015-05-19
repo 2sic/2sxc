@@ -10,8 +10,13 @@ angular.module('eavNgSvcs', ['ng'])
 
     /// Provide state-information related to the current open dialog
     .factory('eavManagementDialog', function($location){
-        var result = {};
-        result.appId = $location.search().AppId;
+    	var result = {};
+		// ToDo: Nicer solution for getting the appId
+		var appId = $location.url().match(/\/AppId\/([0-9]+)/i);
+		if (appId.length > 1)
+			result.appId = appId[1];
+		else
+			result.appId = $location.search().AppId;
         return result;
     })
 
