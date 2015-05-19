@@ -13,7 +13,8 @@ angular.module('eavNgSvcs', ['ng'])
     	var result = {};
 		// ToDo: Nicer solution for getting the appId
 		var appId = $location.url().match(/\/AppId\/([0-9]+)/i);
-		if (appId.length > 1)
+		if (appId != null && appId.length > 1)
+        //if (appId.length > 1)
 			result.appId = appId[1];
 		else
 			result.appId = $location.search().AppId;
