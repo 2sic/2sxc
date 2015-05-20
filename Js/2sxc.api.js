@@ -229,5 +229,32 @@
     $2sxc.metaVersion = "07.00.03";
     $2sxc.beta = {};
     $2sxc._data = {};
+    
+    // New helper method 
+    $2sxc.getParamFromUrl = function getParamFromUrl(paramName) {
+        var result = null;
+        // First, try to get it from URL-Query
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i = 0; i < vars.length; i++) {
+            var pair = vars[i].split("=");
+            if (pair[0] == paramName) { result = pair[1]; }
+        }
 
+        if (result)
+            return result;
+
+        // Otherwise try parts of the URL
+        var matches = window.location.pathname.match("/" + paramName + "/([^/]+)", 'i');
+
+        // Check if we found anything
+        if (matches != null && matches.length > 1) {
+            matches = matches.reverse(); // must reverse, because it may have found more than one and then we want the one at the end of the URL
+            result = matches[0];
+        }
+
+        if (result)
+            return result;
+
+    }
 })();
