@@ -112,18 +112,20 @@ namespace ToSic.SexyContent.WebApi
 		}
 
         [HttpDelete]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
 	    public void Delete(string contentType, int id)
         {
             InitEavAndSerializer();
-             _eavWebApi.Delete(contentType, id);
+            PerformSecurityCheck(contentType, PermissionGrant.Delete, true);
+            _eavWebApi.Delete(contentType, id);
         }
         [HttpDelete]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
         public void Delete(string contentType, Guid guid)
         {
             InitEavAndSerializer();
-             _eavWebApi.Delete(contentType, guid);
+            PerformSecurityCheck(contentType, PermissionGrant.Delete, true);
+            _eavWebApi.Delete(contentType, guid);
         }
 
 
