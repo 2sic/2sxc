@@ -12,6 +12,8 @@ $2sxc.ng = {
     // bootstrap: an App-Start-Help; normally you won't call this manually as it will be auto-bootstrapped. 
     // All params optional except for 'element'
     bootstrap: function (element, ngModName, iid, dependencies, config) {
+        // first, try to get moduleId from URL
+        
         iid = iid || $2sxc.ng.findInstanceId(element) || $2sxc.ng.getParameterByName('mid'); // use fn-param, or get from DOM, or get url-param
         var sf = $.ServicesFramework(iid);
 
@@ -76,7 +78,19 @@ $2sxc.ng = {
         name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
         var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
             results = regex.exec(location.search);
-        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+
+        // if nothing found, try normal URL because DNN places parameters in /key/value notation
+        if (results === null) {
+            // Otherwise try parts of the URL
+            var matches = window.location.pathname.match("/" + name + "/([^/]+)", 'i');
+
+            // Check if we found anything, if we do find it, we must reverse the results so we get the "last" one in case there are multiple hits
+            if (matches !== null && matches.length > 1) 
+                results = matches.reverse()[0]; 
+        } else 
+            results = results[1];
+        
+        return results === null ? "" : decodeURIComponent(results.replace(/\+/g, " "));
     }
 
 };
