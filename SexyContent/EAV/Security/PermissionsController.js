@@ -8,10 +8,10 @@
 
 
 
-    function AdminController(permissionsSvc, $location) {
+    function AdminController(permissionsSvc) {
         var vm = this;
 
-        permissionsSvc.PermissionTargetGuid = $location.search().Target;
+        permissionsSvc.PermissionTargetGuid = $2sxc.ng.getParameterByName('Target');
 
         vm.getUrl = permissionsSvc.getUrl;
 
