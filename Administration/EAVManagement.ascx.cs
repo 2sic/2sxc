@@ -57,7 +57,7 @@ namespace ToSic.SexyContent
             eavManagement.AppId = AppId;
             eavManagement.AddFormClientScriptAndCss = false;
             eavManagement.EntityDeleting += EavManagementEntityDeleting;
-	        //eavManagement.ShowPermissionsLink = !IsContentApp;
+	        eavManagement.ShowPermissionsLink = !IsContentApp;
             pnlEAV.Controls.Add(eavManagement);
         }
 
