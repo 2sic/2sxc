@@ -508,15 +508,23 @@ pipelineDesigner.controller('PipelineDesignerController',
 					var toUuid = targetElementId + '_in_' + stream.TargetIn;
 
 					var sourceEndpoint = $scope.jsPlumbInstance.getEndpoint(fromUuid);
-					angular.forEach(sourceEndpoint.connections, function (connection) {
-						if (connection.endpoints[1].getUuid() === toUuid) {
-							// when connection found, update it's label with the Entities-Count
-							connection.setLabel({
-								label: stream.Count.toString(),
-								cssClass: "streamEntitiesCount"
-							});
-						}
-					});
+					var streamFound = false;
+					if (sourceEndpoint) {
+						angular.forEach(sourceEndpoint.connections, function (connection) {
+							if (connection.endpoints[1].getUuid() === toUuid) {
+								// when connection found, update it's label with the Entities-Count
+								connection.setLabel({
+									label: stream.Count.toString(),
+									cssClass: "streamEntitiesCount"
+								});
+								streamFound = true;
+								return;
+							}
+						});
+					}
+
+					if (!streamFound)
+						$log.error("Stream not found", stream, sourceEndpoint);
 				});
 			}
 
