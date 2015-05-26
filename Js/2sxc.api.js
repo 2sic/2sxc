@@ -178,7 +178,7 @@
                 },
                 getActionUrl: function (settings) {
                     var sf = $.ServicesFramework(id);
-                    return sf.getServiceRoot('2sxc') + "app-api/auto-detect-app/" + settings.controller + "/" + settings.action + (settings.params == null ? "" : ("?" + $.param(settings.params)));
+                    return sf.getServiceRoot('2sxc') + "app-api/" + settings.controller + "/" + settings.action + (settings.params == null ? "" : ("?" + $.param(settings.params)));
                 }
             },
 
