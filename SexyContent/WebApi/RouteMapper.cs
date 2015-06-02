@@ -3,7 +3,7 @@ using System.Web.Http.Dispatcher;
 using DotNetNuke.Web.Api;
 using Microsoft.Practices.Unity;
 using ToSic.Eav.Implementations.ValueConverter;
-using ToSic.Eav.ImportExport.Refactoring.ValueConverter;
+using ToSic.SexyContent.EAV.Implementation.ValueConverter;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -45,7 +45,7 @@ namespace ToSic.SexyContent.WebApi
             // Also register Unity Dependency-Injection here, since this will certainly run once early during bootup
             var cont = Eav.Factory.Container; 
             cont.RegisterType(typeof(Eav.Serializers.Serializer), typeof(Serializers.Serializer), new InjectionConstructor());//, null, null, null);
-            cont.RegisterType(typeof (IEavValueConverter), typeof (SexyContentVC), new InjectionConstructor());
+            cont.RegisterType(typeof (IEavValueConverter), typeof (SexyContentValueConverter), new InjectionConstructor());
         }
 
     }

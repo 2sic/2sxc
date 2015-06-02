@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using DotNetNuke.Entities.Portals;
-using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Entities.Tabs;
+using DotNetNuke.Services.FileSystem;
+using ToSic.Eav;
 using ToSic.Eav.Implementations.ValueConverter;
 
-namespace ToSic.Eav.ImportExport.Refactoring.ValueConverter
+namespace ToSic.SexyContent.EAV.Implementation.ValueConverter
 {
-    public class SexyContentVC : IEavValueConverter
+    public class SexyContentValueConverter : IEavValueConverter
     {
         private string hlnkType = "Hyperlink";
 
@@ -24,6 +26,7 @@ namespace ToSic.Eav.ImportExport.Refactoring.ValueConverter
             {
                 case ConversionScenario.GetFriendlyValue:
                     if (type == hlnkType)
+                        return ResolveHyperlink(originalValue);
                         throw new NotImplementedException();
                     break;
                 case ConversionScenario.ConvertFriendlyToData:
@@ -62,7 +65,42 @@ namespace ToSic.Eav.ImportExport.Refactoring.ValueConverter
             return potentialFilePath;
         }
 
+        private static string ResolveHyperlink(string value)
+        {
+            var match = Regex.Match(value, @"(?<type>.+)\:(?<id>\d+)");
+            if (!match.Success)
+            {
+                return value;
+            }
 
+            var linkId = int.Parse(match.Groups["id"].Value);
+            var linkType = match.Groups["type"].Value;
+
+            if (linkType == "Page")
+            {
+                return ResolvePageLink(linkId, value);
+            }
+            return ResolveFileLink(linkId, value);
+        }
+
+        private static string ResolveFileLink(int linkId, string defaultValue)
+        {
+            var fileInfo = FileManager.Instance.GetFile(linkId);
+            if (fileInfo == null)
+                return defaultValue;
+
+            return fileInfo.RelativePath;
+        }
+
+        private static string ResolvePageLink(int linkId, string defaultValue)
+        {
+            var tabController = new TabController();
+            var tabInfo = tabController.GetTab(linkId);
+            if (tabInfo == null)
+                return defaultValue;
+
+            return tabInfo.TabPath;
+        }
     }
 
 
