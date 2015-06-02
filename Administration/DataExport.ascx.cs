@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ToSic.SexyContent.DataImportExport;
-using ToSic.SexyContent.DataImportExport.Options;
+using ToSic.Eav.ImportExport.Refactoring;
+using ToSic.Eav.ImportExport.Refactoring.Options;
 
 namespace ToSic.SexyContent.Administration
 {

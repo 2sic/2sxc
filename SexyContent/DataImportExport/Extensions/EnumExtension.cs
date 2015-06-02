@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace ToSic.SexyContent.DataImportExport.Extensions
+namespace ToSic.Eav.ImportExport.Refactoring.Extensions
 {
     internal static class EnumExtensions
     {

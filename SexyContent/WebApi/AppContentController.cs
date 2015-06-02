@@ -7,14 +7,11 @@ using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using Newtonsoft.Json.Linq;
-using Telerik.Charting.Styles;
-using Telerik.Web.UI.PivotGrid.Core.Fields;
 using ToSic.Eav;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources.Caches;
 using ToSic.SexyContent.Security;
 using ToSic.SexyContent.Serializers;
-using ToSic.SexyContent.DataImportExport.Extensions;
 
 namespace ToSic.SexyContent.WebApi
 {

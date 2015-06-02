@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Xml.Linq;
-using ToSic.SexyContent.DataImportExport.Extensions;
+using ToSic.Eav.ImportExport.Refactoring.Extensions;
 
-namespace ToSic.SexyContent.DataImportExport
+namespace ToSic.Eav.ImportExport.Refactoring
 {
     internal class EntityGuidManager
     {

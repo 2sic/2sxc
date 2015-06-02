@@ -4,7 +4,7 @@ using System.Linq;
 using ToSic.Eav;
 using Attribute = ToSic.Eav.Attribute;
 
-namespace ToSic.SexyContent.DataImportExport.Extensions
+namespace ToSic.Eav.ImportExport.Refactoring.Extensions
 {
     internal static class AttributeSetExtension
     {
@@ -18,7 +18,7 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
             return attributeSet.AttributesInSets.Select(item => item.Attribute).ToList();
         }
 
-        public static Entity GetEntity(this AttributeSet attributeSet, Guid entityGuid)
+        public static Eav.Entity GetEntity(this AttributeSet attributeSet, Guid entityGuid)
         {
             return attributeSet.Entities.FirstOrDefault(entity => entity.EntityGUID == entityGuid && entity.ChangeLogIDDeleted == null);
         }  

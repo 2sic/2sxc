@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Import;
 
-namespace ToSic.SexyContent.DataImportExport.Extensions
+namespace ToSic.Eav.ImportExport.Refactoring.Extensions
 {
     internal static class IValueImportModelExtension
     {
@@ -17,10 +17,10 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
         /// </summary>
         public static void AppendLanguageReference(this IValueImportModel valueModel, string language, bool readOnly)
         {
-            var valueDimesnions = valueModel.ValueDimensions as List<ValueDimension>;
+            var valueDimesnions = valueModel.ValueDimensions as List<Import.ValueDimension>;
             if (valueDimesnions == null)
             {
-                valueDimesnions = new List<ValueDimension>();
+                valueDimesnions = new List<Import.ValueDimension>();
                 valueModel.ValueDimensions = valueDimesnions;
             }
 
@@ -28,7 +28,7 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
             {
                 valueDimesnions.Add
                 (
-                    new ValueDimension { DimensionExternalKey = language, ReadOnly = readOnly }
+                    new Import.ValueDimension { DimensionExternalKey = language, ReadOnly = readOnly }
                 );
             }
         }

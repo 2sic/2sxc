@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Resources;
 
-namespace ToSic.SexyContent.DataImportExport
+namespace ToSic.Eav.ImportExport.Refactoring
 {
     /// <summary>
     /// Attribute to describe and localize enumeration values.

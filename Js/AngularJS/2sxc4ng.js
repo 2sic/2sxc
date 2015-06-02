@@ -153,12 +153,18 @@ angular.module('2sxc4ng', ['ng'])
         })
 
     .factory('query', function ($http) {
-        return function(name) {
-            var qry = this;
+        return function (name) {
+            var fn = this;
+            var qry = {};
             qry.root = 'app-query/' + name;
+            // todo: not ready yet! no parameters!!!
             qry.get = function() {
                 return $http.get(qry.root);
             };
+            //fn.get = function get(name) {
+            //    return fn(name).get();
+            //};
+            //return qry;
         };
     })
 

@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using DotNetNuke.Entities.Portals;
-using DotNetNuke.Entities.Tabs;
-using DotNetNuke.Services.FileSystem;
+using Microsoft.Practices.Unity;
+using ToSic.Eav.Implementations.ValueConverter;
 using ToSic.Eav.Import;
 using AttributeSet = ToSic.Eav.AttributeSet;
 
-namespace ToSic.SexyContent.DataImportExport.Extensions
+namespace ToSic.Eav.ImportExport.Refactoring.Extensions
 {
     internal static class EntityImportExtension
     {
@@ -16,7 +15,7 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
         /// Get values of an attribute in all languages, for example Tobi (German) and Toby (English) of 
         /// the attribute Name.
         /// </summary>
-        public static IEnumerable<IValueImportModel> GetAttributeValues(this Entity entity, string valueName)
+        public static IEnumerable<IValueImportModel> GetAttributeValues(this Import.Entity entity, string valueName)
         {
             return entity.Values.Where(item => item.Key == valueName).Select(item => item.Value).FirstOrDefault();
         }
@@ -24,7 +23,7 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
         /// <summary>
         /// Get the value of an attribute in the language specified.
         /// </summary>
-        public static IValueImportModel GetAttributeValue(this Entity entity, string valueName, string valueLanguage)
+        public static IValueImportModel GetAttributeValue(this Import.Entity entity, string valueName, string valueLanguage)
         {
             var values = entity.GetAttributeValues(valueName);
             if (values == null)
@@ -38,7 +37,7 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
         /// Add a value to the attribute specified. To do so, set the name, type and string of the value, as 
         /// well as some language properties.
         /// </summary>
-        public static IValueImportModel AppendAttributeValue(this Entity entity, string valueName, string valueString, string valueType, string valueLanguage, bool valueReadOnly, bool resolveHyperlink)
+        public static IValueImportModel AppendAttributeValue(this Import.Entity entity, string valueName, string valueString, string valueType, string valueLanguage, bool valueReadOnly, bool resolveHyperlink)
         {
             var valueModel = GetValueModel(valueString, valueType, valueLanguage, valueReadOnly, resolveHyperlink, entity);          
             var entityValue = entity.Values.Where(item => item.Key == valueName).Select(item => item.Value).FirstOrDefault();
@@ -54,7 +53,7 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
         }
 
 
-        public static void AppendAttributeValues(this Entity entity, AttributeSet attributeSet, Dictionary<string, object> values, string valuesLanguage, bool valuesReadOnly, bool resolveHyperlink)
+        public static void AppendAttributeValues(this Import.Entity entity, AttributeSet attributeSet, Dictionary<string, object> values, string valuesLanguage, bool valuesReadOnly, bool resolveHyperlink)
         {
             foreach (var value in values)
             {
@@ -75,9 +74,10 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
         }
 
 
-        private static IValueImportModel GetValueModel(string valueString, string valueType, string valueLanguage, bool valueRedOnly, bool resolveHyperlink, Entity entity)
+        private static IValueImportModel GetValueModel(string valueString, string valueType, string valueLanguage, bool valueRedOnly, bool resolveHyperlink, Import.Entity entity)
         {
             IValueImportModel valueModel;
+            IEavValueConverter vc = Eav.Factory.Container.Resolve<IEavValueConverter>();
             switch (valueType)
             {
                 case "Boolean":
@@ -110,21 +110,11 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
                 case "Hyperlink":
                     {
                         string valueReference;
-                        if (string.IsNullOrEmpty(valueString))
-                        {
+                        if (string.IsNullOrEmpty(valueString) || !resolveHyperlink)
                             valueReference = valueString;
-                        }
-                        else if (!resolveHyperlink)
-                        {
-                            valueReference = valueString;
-                        }
                         else
                         {
-                            valueReference = GetFileReference(valueString, valueString);
-                            if (valueReference == valueString)
-                            {   // Maybe it is a page and not a file
-                                valueReference = GetTabReference(valueString, valueString);
-                            }
+                            valueReference = vc.Convert(ConversionScenario.ConvertFriendlyToData, valueType, valueString);//vc.TryToResolveOneLinkToInternalDnnCode(valueString);
                         }
                         valueModel = new ValueImportModel<string>(entity) { Value = valueReference };
                     }
@@ -150,34 +140,34 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
             return valueModel;
         }
 
-        private static string GetFileReference(string filePath, string fallbackValue = null)
-        {
-            var portalInfo = PortalController.GetCurrentPortalSettings();
-            var fileInfo = FileManager.Instance.GetFile(portalInfo.PortalId, filePath);
-            if (fileInfo != null)
-            {
-                return "File:" + fileInfo.FileId;
-            }
-            return fallbackValue;
-        }
+        //private static string GetFileReference(string filePath, string fallbackValue = null)
+        //{
+        //    var portalInfo = PortalController.GetCurrentPortalSettings();
+        //    var fileInfo = FileManager.Instance.GetFile(portalInfo.PortalId, filePath);
+        //    if (fileInfo != null)
+        //    {
+        //        return "File:" + fileInfo.FileId;
+        //    }
+        //    return fallbackValue;
+        //}
 
-        private static string GetTabReference(string tabPath, string fallbackValue = null)
-        {
-            var portalInfo = PortalController.GetCurrentPortalSettings();
-            var tabController = new TabController();
-            var tabCollection = tabController.GetTabsByPortal(portalInfo.PortalId);
-            var tabInfo = tabCollection.Select(tab => tab.Value)
-                                       .Where(tab => tab.TabPath == tabPath)
-                                       .FirstOrDefault();
-            if (tabInfo != null)
-            {
-                return "Page:" + tabInfo.TabID;
-            }
-            return fallbackValue;
-        }
+        //private static string GetTabReference(string tabPath, string fallbackValue = null)
+        //{
+        //    var portalInfo = PortalController.GetCurrentPortalSettings();
+        //    var tabController = new TabController();
+        //    var tabCollection = tabController.GetTabsByPortal(portalInfo.PortalId);
+        //    var tabInfo = tabCollection.Select(tab => tab.Value)
+        //                               .Where(tab => tab.TabPath == tabPath)
+        //                               .FirstOrDefault();
+        //    if (tabInfo != null)
+        //    {
+        //        return "Page:" + tabInfo.TabID;
+        //    }
+        //    return fallbackValue;
+        //}
 
 
-        public static void Import(this Entity entity, int zoneId, int appId, string userName)
+        public static void Import(this Import.Entity entity, int zoneId, int appId, string userName)
         {
             var import = new Eav.Import.Import(zoneId, appId, userName, true);
             import.RunImport(null, new[] { entity }, true, true);

@@ -1,4 +1,4 @@
-﻿namespace ToSic.SexyContent.DataImportExport
+﻿namespace ToSic.Eav.ImportExport.Refactoring
 {
     /// <summary>
     /// Element names of the 2SexyContent data xml.

@@ -1,14 +1,14 @@
 ﻿using System.Linq;
 using ToSic.Eav;
 
-namespace ToSic.SexyContent.DataImportExport.Extensions
+namespace ToSic.Eav.ImportExport.Refactoring.Extensions
 {
     internal static class EntityExtension
     {
         /// <summary>
         /// Get the value of an attribute in the language specified.
         /// </summary>
-        public static EavValue GetAttributeValue(this Entity entity, Attribute attribute, string language)
+        public static EavValue GetAttributeValue(this Eav.Entity entity, Attribute attribute, string language)
         {
             var values = entity.Values.Where(value => value.Attribute.StaticName == attribute.StaticName);
             if (string.IsNullOrEmpty(language))
@@ -26,7 +26,7 @@ namespace ToSic.SexyContent.DataImportExport.Extensions
         /// <summary>
         /// Get the value of an attribute in the language specified.
         /// </summary>
-        public static EavValue GetAttributeValue(this Entity entity, Attribute attribute, string language, string languageFallback)
+        public static EavValue GetAttributeValue(this Eav.Entity entity, Attribute attribute, string language, string languageFallback)
         {
             var attributeValue = entity.GetAttributeValue(attribute, language);
             if (attributeValue == null)

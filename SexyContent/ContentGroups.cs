@@ -77,6 +77,8 @@ namespace ToSic.SexyContent
 		/// <param name="previewTemplateId"></param>
 		public void SetPreviewTemplateId(int moduleId, int previewTemplateId)
 		{
+            // todo: 2rm - I believe you are accidentally using uncached module settings access - pls check and probably change
+            // todo: note: this is done ca. 3x in this class
 			var moduleController = new ModuleController();
 			var settings = moduleController.GetModuleSettings(moduleId);
 

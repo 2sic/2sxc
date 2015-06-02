@@ -5,7 +5,7 @@ using DotNetNuke.Entities.Tabs;
 using DotNetNuke.Services.FileSystem;
 using ToSic.Eav;
 
-namespace ToSic.SexyContent.DataImportExport.Extensions
+namespace ToSic.Eav.ImportExport.Refactoring.Extensions
 {
     internal static class EavValueExtension
     {

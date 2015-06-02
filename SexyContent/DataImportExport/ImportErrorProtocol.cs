@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace ToSic.SexyContent.DataImportExport
+namespace ToSic.Eav.ImportExport.Refactoring
 {
     public class ImportErrorProtocol : IEnumerable<ImportError>
     {

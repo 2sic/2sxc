@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace ToSic.SexyContent.DataImportExport.Extensions
+namespace ToSic.Eav.ImportExport.Refactoring.Extensions
 {
     internal static class FileInfoExtension
     {

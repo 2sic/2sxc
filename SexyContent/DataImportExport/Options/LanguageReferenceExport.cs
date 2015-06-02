@@ -1,4 +1,4 @@
-﻿namespace ToSic.SexyContent.DataImportExport.Options
+﻿namespace ToSic.Eav.ImportExport.Refactoring.Options
 {
     public enum LanguageReferenceExport
     {

@@ -2,10 +2,10 @@
 using System.Linq;
 using System.Xml.Linq;
 using ToSic.Eav;
-using ToSic.SexyContent.DataImportExport.Extensions;
-using ToSic.SexyContent.DataImportExport.Options;
+using ToSic.Eav.ImportExport.Refactoring.Extensions;
+using ToSic.Eav.ImportExport.Refactoring.Options;
 
-namespace ToSic.SexyContent.DataImportExport
+namespace ToSic.Eav.ImportExport.Refactoring
 {
     public class XmlExport
     {
@@ -114,7 +114,7 @@ namespace ToSic.SexyContent.DataImportExport
 
         private static AttributeSet GetContentType(int zoneId, int applicationId, int contentTypeId)
         {
-            var contentContext = new SexyContent(zoneId, applicationId).ContentContext;
+            var contentContext = new SexyContent.SexyContent(zoneId, applicationId).ContentContext;
             return contentContext.GetAttributeSet(contentTypeId);
         }
 

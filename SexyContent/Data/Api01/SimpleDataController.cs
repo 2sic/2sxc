@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav;
 using ToSic.Eav.Import;
-using ToSic.SexyContent.DataImportExport.Extensions;
+using ToSic.Eav.ImportExport.Refactoring.Extensions;
 using Entity = ToSic.Eav.Entity;
 using ImportEntity = ToSic.Eav.Import.Entity;
 

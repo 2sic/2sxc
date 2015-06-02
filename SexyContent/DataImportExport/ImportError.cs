@@ -1,4 +1,4 @@
-﻿namespace ToSic.SexyContent.DataImportExport
+﻿namespace ToSic.Eav.ImportExport.Refactoring
 {
     public class ImportError
     {

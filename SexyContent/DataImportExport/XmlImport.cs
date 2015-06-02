@@ -4,12 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using ToSic.Eav.Import;
-using ToSic.SexyContent.DataImportExport.Extensions;
-using ToSic.SexyContent.DataImportExport.Options;
+using ToSic.Eav.ImportExport.Refactoring.Extensions;
+using ToSic.Eav.ImportExport.Refactoring.Options;
 using AttributeSet = ToSic.Eav.AttributeSet;
 using Entity = ToSic.Eav.Import.Entity;
 
-namespace ToSic.SexyContent.DataImportExport
+namespace ToSic.Eav.ImportExport.Refactoring
 {
     public class XmlImport
     {
@@ -17,7 +17,7 @@ namespace ToSic.SexyContent.DataImportExport
 
         private readonly int zoneId;
 
-        private readonly SexyContent contentManager;
+        private readonly SexyContent.SexyContent contentManager;
 
         private readonly AttributeSet contentType;
 
@@ -50,7 +50,7 @@ namespace ToSic.SexyContent.DataImportExport
         /// <summary>
         /// The entities created from the document. They will be saved to the repository.
         /// </summary>
-        public List<Entity> Entities
+        public List<Import.Entity> Entities
         {
             get;
             private set;
@@ -73,17 +73,17 @@ namespace ToSic.SexyContent.DataImportExport
             get { return ErrorProtocol.Count() > 0; }
         }
 
-        private Entity GetEntity(Guid entityGuid)
+        private Import.Entity GetEntity(Guid entityGuid)
         {
             return Entities.FirstOrDefault(entity => entity.EntityGuid == entityGuid);
         }
 
-        private Entity AppendEntity(Guid entityGuid)
+        private Import.Entity AppendEntity(Guid entityGuid)
         {
-            var entity = new Entity
+            var entity = new Import.Entity
             {
                 AttributeSetStaticName = contentType.StaticName,
-                AssignmentObjectTypeId = SexyContent.AssignmentObjectTypeIDDefault,
+                AssignmentObjectTypeId = SexyContent.SexyContent.AssignmentObjectTypeIDDefault,
                 EntityGuid = entityGuid,
                 KeyNumber = null,
                 Values = new Dictionary<string, List<IValueImportModel>>()
@@ -106,12 +106,12 @@ namespace ToSic.SexyContent.DataImportExport
         /// <param name="resourceReference">How value references to files and pages are handled</param>
         public XmlImport(int zoneId, int applicationId, int contentTypeId, Stream dataStream, IEnumerable<string> languages, string documentLanguageFallback, EntityClearImport entityClear, ResourceReferenceImport resourceReference)
         {
-            Entities = new List<Entity>();
+            Entities = new List<Import.Entity>();
             ErrorProtocol = new ImportErrorProtocol();
 
             this.applicationId = applicationId;
             this.zoneId = zoneId;
-            contentManager = new SexyContent(zoneId, applicationId);
+            contentManager = new SexyContent.SexyContent(zoneId, applicationId);
             contentType = contentManager.ContentContext.GetAttributeSet(contentTypeId);
             this.languages = languages;
             this.documentLanguageFallback = documentLanguageFallback;

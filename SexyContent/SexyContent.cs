@@ -155,7 +155,8 @@ namespace ToSic.SexyContent
         {
             get
             {
-                return  DataSource.GetCache(DataSource.DefaultZoneId, DataSource.MetaDataAppId).GetAssignmentObjectTypeId("Default");
+                return Eav.Configuration.AssignmentObjectTypeIdDefault;
+                // return  DataSource.GetCache(DataSource.DefaultZoneId, DataSource.MetaDataAppId).GetAssignmentObjectTypeId("Default");
             }
         }
 

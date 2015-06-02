@@ -2,6 +2,8 @@
 using System.Web.Http.Dispatcher;
 using DotNetNuke.Web.Api;
 using Microsoft.Practices.Unity;
+using ToSic.Eav.Implementations.ValueConverter;
+using ToSic.Eav.ImportExport.Refactoring.ValueConverter;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -30,6 +32,12 @@ namespace ToSic.SexyContent.WebApi
             mapRouteManager.MapHttpRoute("2sxc", "app-query", "app-query/{name}", new { controller = "AppQuery"}, new[] { "ToSic.SexyContent.WebApi" });
             mapRouteManager.MapHttpRoute("2sxc", "default", "{controller}/{action}", new[] { "ToSic.SexyContent.GettingStarted" });
 
+            /*
+            mapRouteManager.MapHttpRoute("2sxc", "named-app-query", "app/{apppath}/query/{name}", new { controller = "AppQuery" }, new[] { "ToSic.SexyContent.WebApi" });
+            mapRouteManager.MapHttpRoute("2sxc", "named-app-api", "app/{apppath}/api/{controller}/{action}", new[] { "ToSic.SexyContent.Apps" });
+            mapRouteManager.MapHttpRoute("2sxc", "named-app-content", "app/{apppath}/{contenttype}/{id}", new { controller = "AppContent", id = RouteParameter.Optional }, new[] { "ToSic.SexyContent.WebApi" });
+            */
+
             var config = GlobalConfiguration.Configuration;
             var previousSelector = config.Services.GetService(typeof(IHttpControllerSelector)) as IHttpControllerSelector;
             config.Services.Replace(typeof(IHttpControllerSelector), new AppApiControllerSelector(config) { PreviousSelector = previousSelector });
@@ -37,6 +45,7 @@ namespace ToSic.SexyContent.WebApi
             // Also register Unity Dependency-Injection here, since this will certainly run once early during bootup
             var cont = Eav.Factory.Container; 
             cont.RegisterType(typeof(Eav.Serializers.Serializer), typeof(Serializers.Serializer), new InjectionConstructor());//, null, null, null);
+            cont.RegisterType(typeof (IEavValueConverter), typeof (SexyContentVC), new InjectionConstructor());
         }
 
     }
