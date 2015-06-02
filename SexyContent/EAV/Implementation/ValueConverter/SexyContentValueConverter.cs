@@ -26,8 +26,7 @@ namespace ToSic.SexyContent.EAV.Implementation.ValueConverter
             {
                 case ConversionScenario.GetFriendlyValue:
                     if (type == hlnkType)
-                        return ResolveHyperlink(originalValue);
-                        throw new NotImplementedException();
+                        return TryToResolveDnnCodeToLink(originalValue);
                     break;
                 case ConversionScenario.ConvertFriendlyToData:
                     if (type == hlnkType)
@@ -65,13 +64,17 @@ namespace ToSic.SexyContent.EAV.Implementation.ValueConverter
             return potentialFilePath;
         }
 
-        private static string ResolveHyperlink(string value)
+        /// <summary>
+        /// Will take a link like "File:17" and convert to "Faq/screenshot1.jpg"
+        /// It will always deliver a relative path to the portal root
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private string TryToResolveDnnCodeToLink(string value)
         {
             var match = Regex.Match(value, @"(?<type>.+)\:(?<id>\d+)");
             if (!match.Success)
-            {
                 return value;
-            }
 
             var linkId = int.Parse(match.Groups["id"].Value);
             var linkType = match.Groups["type"].Value;
@@ -83,7 +86,7 @@ namespace ToSic.SexyContent.EAV.Implementation.ValueConverter
             return ResolveFileLink(linkId, value);
         }
 
-        private static string ResolveFileLink(int linkId, string defaultValue)
+        private string ResolveFileLink(int linkId, string defaultValue)
         {
             var fileInfo = FileManager.Instance.GetFile(linkId);
             if (fileInfo == null)
@@ -92,7 +95,7 @@ namespace ToSic.SexyContent.EAV.Implementation.ValueConverter
             return fileInfo.RelativePath;
         }
 
-        private static string ResolvePageLink(int linkId, string defaultValue)
+        private string ResolvePageLink(int linkId, string defaultValue)
         {
             var tabController = new TabController();
             var tabInfo = tabController.GetTab(linkId);
