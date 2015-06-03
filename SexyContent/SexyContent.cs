@@ -28,7 +28,6 @@ using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Caches;
 using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.DataSources;
-using ToSic.SexyContent.DataSources.Tokens;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Engines.TokenEngine;
 using ToSic.SexyContent.Search;
@@ -156,7 +155,6 @@ namespace ToSic.SexyContent
             get
             {
                 return Eav.Configuration.AssignmentObjectTypeIdDefault;
-                // return  DataSource.GetCache(DataSource.DefaultZoneId, DataSource.MetaDataAppId).GetAssignmentObjectTypeId("Default");
             }
         }
 
