@@ -461,7 +461,8 @@ namespace ToSic.SexyContent.ImportExport
 					keyNumber = _appId;
 					assignmentObjectTypeId = SexyContent.AssignmentObjectTypeIDSexyContentApp;
 					break;
-				case "Data Pipeline":
+                case "Entity":
+                case "Data Pipeline": // this one is an old key, remove some time in the future; was probably almost never used...
 					assignmentObjectTypeId = DataSource.AssignmentObjectTypeEntity;
 					break;
 			}
