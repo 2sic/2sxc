@@ -283,13 +283,40 @@ namespace ToSic.SexyContent {
         protected global::System.Web.UI.WebControls.CheckBox chkHidden;
         
         /// <summary>
-        /// lblDataSourcePublishing control.
+        /// pnlViewNameInUrl control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblDataSourcePublishing;
+        protected global::System.Web.UI.WebControls.Panel pnlViewNameInUrl;
+        
+        /// <summary>
+        /// lblViewNameInUrl control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::DotNetNuke.UI.UserControls.LabelControl lblViewNameInUrl;
+        
+        /// <summary>
+        /// txtViewNameInUrl control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtViewNameInUrl;
+        
+        /// <summary>
+        /// valViewNameInUrl control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator valViewNameInUrl;
         
         /// <summary>
         /// pnlDataPipeline control.
@@ -328,40 +355,13 @@ namespace ToSic.SexyContent {
         protected global::System.Web.UI.WebControls.HyperLink hlkManagePipelines;
         
         /// <summary>
-        /// pnlViewNameInUrl control.
+        /// lblDataSourcePublishing control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlViewNameInUrl;
-        
-        /// <summary>
-        /// lblViewNameInUrl control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::DotNetNuke.UI.UserControls.LabelControl lblViewNameInUrl;
-        
-        /// <summary>
-        /// txtViewNameInUrl control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtViewNameInUrl;
-        
-        /// <summary>
-        /// valViewNameInUrl control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RegularExpressionValidator valViewNameInUrl;
+        protected global::System.Web.UI.WebControls.Label lblDataSourcePublishing;
         
         /// <summary>
         /// lblPublishSource control.

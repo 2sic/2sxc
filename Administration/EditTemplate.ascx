@@ -54,11 +54,6 @@
         <dnn:Label ID="lblHidden" runat="server" ControlName="chkVisible" Suffix=":" />
         <asp:CheckBox ID="chkHidden" runat="server" />
     </div>
-    </fieldset>
-    <h2 class="dnnFormSectionHead" id="dnnSitePanelSexyContentTemplateDataPublish">
-        <a href="#"><asp:Label runat="server" ID="lblDataSourcePublishing" ResourceKey="lblDataSourcePublishing"></asp:Label></a>
-    </h2>
-    <fieldset>
 		<asp:Panel runat="server" ID="pnlViewNameInUrl" CssClass="dnnFormItem">
 			<dnn:Label ID="lblViewNameInUrl" runat="server" ControlName="txtViewNameInUrl" Suffix=":" />
 			<asp:TextBox runat="server" ID="txtViewNameInUrl" />
@@ -71,6 +66,12 @@
 			</asp:DropDownList>
 			<asp:HyperLink runat="server" ID="hlkManagePipelines" ResourceKey="hlkManagePipelines" />
 		</asp:Panel>
+    </fieldset>
+    <h2 class="dnnFormSectionHead" id="dnnSitePanelSexyContentTemplateDataPublish">
+        <a href="#"><asp:Label runat="server" ID="lblDataSourcePublishing" ResourceKey="lblDataSourcePublishing"></asp:Label></a>
+    </h2>
+    <fieldset>
+		
         <div class="dnnFormItem">
             <dnn:Label ID="lblPublishSource" runat="server" ControlName="chkPublishSource" Suffix=":"></dnn:Label>
             <asp:CheckBox runat="server" ID="chkPublishSource" />
