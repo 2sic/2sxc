@@ -129,42 +129,39 @@ angular.module('2sxc4ng', ['ng'])
     /// Standard entity commands like get one, many etc.
     .factory('content', ["$http", function ($http) {
         // construct a service just for this content-type
-            return function(contentType) {
-                var oneType = {};
-                oneType.contentType = contentType;
-                oneType.root = 'app-content/' + contentType;
+        return function (contentType) {
+            var oneType = {};
+            oneType.contentType = contentType;
+            oneType.root = 'app-content/' + contentType;
 
-                // will get one or all of a content-type, depending on if an id was supplied
-                oneType.get = oneType.read = function get(id) {
-                    return $http.get(oneType.root + (id ? '/' + id : ''));
-                };
-                oneType.create = function create(values) {
-                    return $http.post(oneType.root, values);
-                };
-                oneType.update = function update(values, id) {
-                    var realId = id || values.Id || values.id;  // automatically use the correct Id
-                    return $http.post(oneType.root + '/' + realId, values);
-                };
-                oneType.delete = function del(id) {
-                    return $http.delete(oneType.root + '/' + id);
-                };
-                return oneType;
+            // will get one or all of a content-type, depending on if an id was supplied
+            oneType.get = oneType.read = function get(id) {
+                return $http.get(oneType.root + (id ? '/' + id : ''));
             };
-        }])
+            oneType.create = function create(values) {
+                return $http.post(oneType.root, values);
+            };
+            oneType.update = oneType.patch = function update(values, id) {
+                var realId = id || values.Id || values.id;  // automatically use the correct Id
+                return $http.post(oneType.root + '/' + realId, values);
+            };
+            oneType.delete = function del(id) {
+                return $http.delete(oneType.root + '/' + id);
+            };
+            return oneType;
+        };
+    }])
 
+    /// simple helper service which will call a query
     .factory('query', ["$http", function ($http) {
         return function (name) {
-            var fn = this;
             var qry = {};
             qry.root = 'app-query/' + name;
-            // todo: not ready yet! no parameters!!!
-            qry.get = function() {
-                return $http.get(qry.root);
+
+            qry.get = function (config) {
+                return $http.get(qry.root, config);
             };
-            //fn.get = function get(name) {
-            //    return fn(name).get();
-            //};
-            //return qry;
+            return qry;
         };
     }])
 

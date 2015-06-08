@@ -136,6 +136,7 @@ namespace ToSic.SexyContent.WebApi
 	    }
 
 	    [HttpPost]
+        [HttpPatch]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
 	    public Dictionary<string, object> Create(string contentType, Dictionary<string, object> newContentItem)
 	    {
