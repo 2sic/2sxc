@@ -235,7 +235,7 @@
     <value>&lt; Default Data Pipeline &gt;</value>
   </data>
   <data name="lblViewNameInUrl.Help" xml:space="preserve">
-    <value>This Template will be shown if this ViewName is present in the URL, right after the Page-URL.</value>
+    <value>This Template will be shown if this ViewName is present in the URL, right after the Page-URL. &lt;a href='http://2sxc.org/en/help?tag=view-name' target='_blank'&gt;more help&lt;/a&gt;</value>
   </data>
   <data name="lblViewNameInUrl.Text" xml:space="preserve">
     <value>View Name in URL</value>
