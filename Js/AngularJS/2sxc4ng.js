@@ -165,7 +165,7 @@ angular.module('2sxc4ng', ['ng'])
             //    return fn(name).get();
             //};
             //return qry;
-        };
+        };   
     })
 
 /* Todo: future feature
