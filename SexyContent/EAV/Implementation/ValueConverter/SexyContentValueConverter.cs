@@ -45,7 +45,7 @@ namespace ToSic.SexyContent.EAV.Implementation.ValueConverter
         /// <returns></returns>
         public string TryToResolveOneLinkToInternalDnnCode(string potentialFilePath)
         {
-            var portalInfo = PortalController.Instance.GetCurrentPortalSettings();
+	        var portalInfo = PortalSettings.Current; //PortalController.Instance.GetCurrentPortalSettings();
 
             // Try file reference
             var fileInfo = FileManager.Instance.GetFile(portalInfo.PortalId, potentialFilePath);
