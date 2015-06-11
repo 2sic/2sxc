@@ -1,5 +1,5 @@
 ﻿(function () {
-    
+
     var module = angular.module('2sxc.api', []);
 
     module.factory('apiService', function ($http, $window) {
@@ -23,6 +23,9 @@
 
             // Catch, log and show errors
             return apiPromise.catch(function (reason) {
+                // 2015-06-10 2dm
+                if (reason.status == 0)  // in this case the request was stopped by the browser; iframe closed or something
+                    return;
                 if ($window.console)
                     $window.console.log(reason);
                 var error = "Error: ";
