@@ -304,6 +304,10 @@ namespace ToSic.Eav.ManagementUI
             if (dnnPageDropDownListType.GetProperty("IncludeActiveTab") != null)
                 dnnPageDropDownListType.GetProperty("IncludeActiveTab").SetValue(_dnnPageDropDownList, true, null);
 
+			if(dnnPageDropDownListType.GetProperty("IncludeAllTabTypes") != null)
+				dnnPageDropDownListType.GetProperty("IncludeAllTabTypes").SetValue(_dnnPageDropDownList, true, null);
+
+
 			var onClientSelectionChanged = (List<string>)dnnPageDropDownListType.GetProperty("OnClientSelectionChanged").GetValue(_dnnPageDropDownList, null);
 			onClientSelectionChanged.Add("ToSexyContent.ItemForm.Hyperlink._pagePicker.dnn71PickerSelectionChanged");
 
