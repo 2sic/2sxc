@@ -392,7 +392,7 @@
     <Compile Include="SexyContent\ImportExport\ExportImportMessage.cs" />
     <Compile Include="SexyContent\GettingStarted\GettingStartedImport.cs" />
     <Compile Include="SexyContent\ImportExport\ImportExport.cs" />
-    <Compile Include="SexyContent\ImportExport\ImportExportHelpers.cs" />
+    <Compile Include="SexyContent\ImportExport\FileManager.cs" />
     <Compile Include="SexyContent\ImportExport\ImportValue.cs" />
     <Compile Include="SexyContent\ImportExport\XmlExporter.cs" />
     <Compile Include="SexyContent\ImportExport\XmlImport.cs" />

@@ -300,7 +300,7 @@ namespace ToSic.SexyContent.ImportExport
 
         private XElement GetFileXElement(int fileId)
         {
-            var fileController = FileManager.Instance;
+            var fileController = DotNetNuke.Services.FileSystem.FileManager.Instance;
             var file = fileController.GetFile(fileId);
             if (file != null)
             {

@@ -43,7 +43,8 @@ Contains:<br/>
     <li>
         <% if (Directory.Exists(Sexy.App.PhysicalPath))
            { %>
-            <%= new DirectoryInfo(Sexy.App.PhysicalPath).GetFiles("*.*", SearchOption.AllDirectories).Count() %> files in the App folder
+            <%= Exporter.FileManager.AllTransferableFiles.Count() %> files in the App folder to export of a total of 
+            <%= Exporter.FileManager.AllFiles.Count() %> files in the App folder
         <% }
            else
            { %>

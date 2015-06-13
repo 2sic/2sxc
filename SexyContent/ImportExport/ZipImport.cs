@@ -142,7 +142,7 @@ namespace ToSic.SexyContent.ImportExport
                                 var templateRoot = server.MapPath(SexyContent.GetTemplatePathRoot(SexyContent.TemplateLocations.PortalFileSystem, sexy.App));
                                 var appTemplateRoot = Path.Combine(appDirectory, "2sexy");
                                 if (Directory.Exists(appTemplateRoot))
-                                    ImportExportHelpers.CopyAllFiles(appTemplateRoot, templateRoot, false, messages);
+                                    (new FileManager(appTemplateRoot)).CopyAllFiles(templateRoot, false, messages);
 
                             }
 
@@ -218,7 +218,7 @@ namespace ToSic.SexyContent.ImportExport
         {
             var files = Directory.GetFiles(sourceFolder, "*.*");
 
-            var fileManager = FileManager.Instance;
+            var fileManager = DotNetNuke.Services.FileSystem.FileManager.Instance;
             var folderManager = FolderManager.Instance;
             var portalId = PortalSettings.Current.PortalId;
 

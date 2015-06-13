@@ -97,7 +97,7 @@ namespace ToSic.SexyContent.ImportExport
 				return;
 
 			var portalId = PortalId.Value;
-			var fileManager = FileManager.Instance;
+			var fileManager = DotNetNuke.Services.FileSystem.FileManager.Instance;
 			var folderManager = FolderManager.Instance;
 
 			var portalFiles = sexyContentNode.Element("PortalFiles").Elements("File");

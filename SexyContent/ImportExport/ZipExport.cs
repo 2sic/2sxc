@@ -21,11 +21,14 @@ namespace ToSic.SexyContent.ImportExport
         private string _zipFolderForAppStuff = "2sexy";
         private string _AppXmlFileName = "App.xml";
 
+        public FileManager FileManager;
+
         public ZipExport(int zoneId, int appId)
         {
             _appId = appId;
             _zoneId = zoneId;
             _sexy = new SexyContent(_zoneId, _appId);
+            FileManager = new FileManager(_sexy.App.PhysicalPath);
         }
 
         public MemoryStream ExportApp(bool includeContentGroups = false, bool resetAppGuid = false)
@@ -77,7 +80,7 @@ namespace ToSic.SexyContent.ImportExport
             // Copy app folder
             if (Directory.Exists(_sexy.App.PhysicalPath))
             {
-                ImportExportHelpers.CopyAllFiles(_sexy.App.PhysicalPath, sexyDirectory.FullName, false, messages);
+                FileManager.CopyAllFiles(sexyDirectory.FullName, false, messages);
             }
 
             // Copy PortalFiles
