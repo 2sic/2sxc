@@ -16,20 +16,23 @@ namespace ToSic.SexyContent.ImportExport
         /// <param name="messages"></param>
         public static void CopyAllFiles(string sourceFolder, string destinationFolder, Boolean overwriteFiles, List<ExportImportMessage> messages)
         {
-            var FileList = from f in Directory.EnumerateFiles(sourceFolder, "*.*", SearchOption.AllDirectories)
-                           where !f.Contains("\\.git\\")
+            string[] excludeFolders = {".git", "node_modules"};
+            excludeFolders = excludeFolders.Select(f => "\\" + f + "\\").ToArray();
+
+            var allFiles = Directory.EnumerateFiles(sourceFolder, "*.*", SearchOption.AllDirectories);
+
+            var filteredFiles = from f in allFiles
+                           where !excludeFolders.Any(ex => f.ToLowerInvariant().Contains(ex) )// !f.Contains("\\.git\\")
                            select f;
 
-            foreach (var file in FileList)
+            foreach (var file in filteredFiles)
             {
                 var relativeFilePath = file.Replace(sourceFolder, "");
                 var destinationFilePath = String.Format("{0}{1}{2}",
                 destinationFolder, Path.DirectorySeparatorChar, relativeFilePath);
 
-                if (!Directory.Exists(Path.GetDirectoryName(destinationFilePath)))
-                {
+                //if (!Directory.Exists(Path.GetDirectoryName(destinationFilePath)))
                     Directory.CreateDirectory(Path.GetDirectoryName(destinationFilePath));
-                }
 
                 if (!File.Exists(destinationFilePath))
                     File.Copy(file, destinationFilePath, overwriteFiles);
