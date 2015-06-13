@@ -53,7 +53,7 @@ namespace ToSic.SexyContent
             var templateIds = txtSelectedTemplates.Text.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
             var messages = new List<ExportImportMessage>();
-            var xml = new XmlExport(ZoneId.Value, AppId.Value, false).ExportXml(contentTypeIds, entityIds, out messages);
+            var xml = new XmlExporter(ZoneId.Value, AppId.Value, false, contentTypeIds, entityIds).GenerateNiceXml();//contentTypeIds, entityIds, out messages);
 
             Response.Clear();
             Response.Write(xml);

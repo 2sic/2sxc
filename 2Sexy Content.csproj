@@ -394,7 +394,7 @@
     <Compile Include="SexyContent\ImportExport\ImportExport.cs" />
     <Compile Include="SexyContent\ImportExport\ImportExportHelpers.cs" />
     <Compile Include="SexyContent\ImportExport\ImportValue.cs" />
-    <Compile Include="SexyContent\ImportExport\XmlExport.cs" />
+    <Compile Include="SexyContent\ImportExport\XmlExporter.cs" />
     <Compile Include="SexyContent\ImportExport\XmlImport.cs" />
     <Compile Include="SexyContent\ImportExport\ZipExport.cs" />
     <Compile Include="SexyContent\ImportExport\ZipImport.cs" />

@@ -13,7 +13,7 @@ namespace ToSic.SexyContent.Administration.Apps
 
         protected void btnExportApp_OnClick(object sender, EventArgs e)
         {
-            using (var stream = new ZipExport(ZoneId.Value, AppId.Value).ExportApp(chkIncludeContentGroups.Checked))
+            using (var stream = new ZipExport(ZoneId.Value, AppId.Value).ExportApp(chkIncludeContentGroups.Checked, chkResetApGuid.Checked))
             {
                 Response.Clear();
                 Response.ContentType = "application/zip";

@@ -58,6 +58,10 @@ Contains:<br/>
 <br/>
 <br/>
 <asp:CheckBox runat="server" Checked="False" ID="chkIncludeContentGroups" /> Include all Content-Groups for re-import in copies of this exact site (only select this for creating site-copies with site-templates)
+<br/>
+<asp:CheckBox runat="server" Checked="False" ID="chkResetApGuid" /> Reset the App-Guid to 0000. You only need this in special tutorial-Apps, usually you should leave this blank. Read <a href="http://2sxc.org/en/help?tag=export-app" target="_blank">more</a>.
+<br/>
+
 
 <ul class="dnnActions">
     <li>
