@@ -1,5 +1,5 @@
 ﻿.eav-field { position: relative;min-height: 19px;padding-bottom: 10px; width:50% }
-.eav-dimensionmenu-wrapper { width: 281px;float: right; }
+.eav-dimensionmenu-wrapper { width: 250px;float: right; }
 .eav-dimension, .eav-contextmenu {position: relative; padding-left: 0px;margin-top: 2px; height: 27px;display: block; color: #BBB;line-height: 25px; }
 .eav-dimension-lockicon { background: url(images/unlocked.png) no-repeat top left;display: inline; padding-left: 24px;    padding-top: 4px;position: relative; }
 .eav-dimension-locked .eav-dimension-lockicon { background: url(images/Locked.png) no-repeat top left;}
