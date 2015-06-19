@@ -65,7 +65,7 @@ namespace ToSic.SexyContent.DataSources
         /// </summary>
         public DnnFormAndList()
         {
-            Out.Add(DataSource.DefaultStreamName, new DataStream(this, DataSource.DefaultStreamName, GetEntities));
+            Out.Add(DataSource.DefaultStreamName, new DataStream(this, DataSource.DefaultStreamName, GetEntities, GetList));
             Configuration.Add(ModuleIdKey, FnLModuleIdDefaultToken);
             Configuration.Add(TitleFieldKey, EntityTitleDefaultKeyToken);
             Configuration.Add(ContentTypeKey, ContentTypeDefaultToken);
@@ -106,6 +106,19 @@ namespace ToSic.SexyContent.DataSources
                 LoadFnL();
 
             return DtDs["Default"].List;
+        }
+
+        /// <summary>
+        /// Internal helper that returns the entities - actually just retrieving them from the attached Data-Source
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerable<IEntity> GetList()
+        {
+            // if not initialized, do that first
+            if (DtDs == null)
+                LoadFnL();
+
+            return DtDs["Default"].LightList;
         }
     }
 }
