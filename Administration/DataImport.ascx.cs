@@ -158,7 +158,7 @@ namespace ToSic.SexyContent.Administration
 
             var fileContent = fuFileUpload.FileContent;
             var fileImport = new XmlImport(ZoneId.Value, ApplicationId, ContentTypeIdSelected, fileContent, Languages, LanguageFallback, EntityClearOptionSelected, ResourceReferenceOptionSelected);
-            if (fileImport.HasErrors)
+            if (fileImport.ErrorProtocol.HasErrors)
             {
                 ShowErrorPanel(fileImport);
             }

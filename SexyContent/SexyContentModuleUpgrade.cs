@@ -13,9 +13,6 @@ using ToSic.Eav;
 using ToSic.Eav.DataSources.Caches;
 using ToSic.Eav.Import;
 using ToSic.SexyContent.ImportExport;
-using Attribute = ToSic.Eav.Import.Attribute;
-using AttributeSet = ToSic.Eav.Import.AttributeSet;
-using Entity = ToSic.Eav.Import.Entity;
 
 namespace ToSic.SexyContent
 {
@@ -88,15 +85,15 @@ namespace ToSic.SexyContent
 		private static void EnsurePipelineDesignerAttributeSets()
 		{
 			// Ensure DnnSqlDataSource Configuration
-			var dsrcSqlDataSource = AttributeSet.SystemAttributeSet("|Config ToSic.SexyContent.DataSources.DnnSqlDataSource", "used to configure a DNN SqlDataSource",
-				new List<Attribute>
+			var dsrcSqlDataSource = ImportAttributeSet.SystemAttributeSet("|Config ToSic.SexyContent.DataSources.DnnSqlDataSource", "used to configure a DNN SqlDataSource",
+				new List<ImportAttribute>
 				{
-					Attribute.StringAttribute("ContentType", "ContentType", null, true),
-					Attribute.StringAttribute("SelectCommand", "SelectCommand", null, true, rowCount: 10)
+					ImportAttribute.StringAttribute("ContentType", "ContentType", null, true),
+					ImportAttribute.StringAttribute("SelectCommand", "SelectCommand", null, true, rowCount: 10)
 				});
 
 			// Collect AttributeSets for use in Import
-			var attributeSets = new List<AttributeSet>
+            var attributeSets = new List<ImportAttributeSet>
 			{
 				dsrcSqlDataSource
 			};
@@ -294,11 +291,11 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
 			foreach (var app in apps)
 			{
 				var currentApp = app;
-				var entitiesToImport = new List<Entity>();
+				var entitiesToImport = new List<ImportEntity>();
 
 				foreach (var t in existingTemplates.Where(t => t.AppId == currentApp))
 				{
-					var entity = new Entity
+                    var entity = new ImportEntity
 					{
 						AttributeSetStaticName = "2SexyContent-Template",
 						EntityGuid = t.NewEntityGuid,
@@ -336,7 +333,7 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
 
 				foreach (var t in existingContentGroups.Where(t => t.AppId == app))
 				{
-					var entity = new Entity
+                    var entity = new ImportEntity
 					{
 						AttributeSetStaticName = "2SexyContent-ContentGroup",
 						EntityGuid = t.NewEntityGuid,
