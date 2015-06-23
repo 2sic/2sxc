@@ -5,6 +5,8 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Exceptions;
 using ToSic.SexyContent.GettingStarted;
 
+// Warning: This code is 99% identical View.ascx.cs and ViewApp.ascx.cs. These should be merged! Dangerous to keep them apart
+
 namespace ToSic.SexyContent
 {
     public partial class ViewApp : SexyViewContentOrApp, IActionable
@@ -59,7 +61,7 @@ namespace ToSic.SexyContent
                 {
                     if (ContentGroup.Content.Any() && Template != null)
                         ProcessView(phOutput, pnlError, pnlMessage);
-                    else if (!IsContentApp && UserMayEditThisModule) // Select first available template automatically if it's not set yet - then refresh page
+                    else if(!IsContentApp && UserMayEditThisModule) // Select first available template automatically if it's not set yet - then refresh page
                     {
                         var templates = Sexy.GetAvailableTemplatesForSelector(ModuleConfiguration).ToList();
                         if (templates.Any())

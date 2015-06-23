@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using DotNetNuke.Entities.Portals;
+using DotNetNuke.Entities.Users;
 using ToSic.Eav;
 using ToSic.SexyContent.EAVExtensions;
 
@@ -65,6 +67,7 @@ namespace ToSic.SexyContent.Serializers
 			}
 
             // Check w/2rm - this should only happen in edit mode...
+            // this is the code from the View-module: if (IsEditable && UserInfo.IsInRole(PortalSettings.AdministratorRoleName) && !SexyContent.GetApps(ZoneId.Value, false, new PortalSettings(ModuleConfiguration.OwnerPortalID)).Any())
 		    if (true) // todo: edit-mode-only...?
 		    {
                 dictionary.Add("Modified", entity.Modified);

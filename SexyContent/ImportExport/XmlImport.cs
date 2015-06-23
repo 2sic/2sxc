@@ -10,9 +10,9 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.FileSystem;
 using ToSic.Eav;
 using ToSic.Eav.Import;
-using Attribute = ToSic.Eav.Import.Attribute;
-using AttributeSet = ToSic.Eav.Import.AttributeSet;
-using Entity = ToSic.Eav.Import.Entity;
+// using Attribute = ToSic.Eav.Import.Attribute;
+// using AttributeSet = ToSic.Eav.Import.AttributeSet;
+// using Entity = ToSic.Eav.Import.Entity;
 
 namespace ToSic.SexyContent.ImportExport
 {
@@ -260,19 +260,19 @@ namespace ToSic.SexyContent.ImportExport
 
 		#region AttributeSets
 
-		private List<AttributeSet> GetImportAttributeSets(IEnumerable<XElement> xAttributeSets)
+		private List<ImportAttributeSet> GetImportAttributeSets(IEnumerable<XElement> xAttributeSets)
 		{
-			var importAttributeSets = new List<AttributeSet>();
+			var importAttributeSets = new List<ImportAttributeSet>();
 
 			// Loop through AttributeSets
 			foreach (var attributeSet in xAttributeSets)
 			{
-				var attributes = new List<Attribute>();
-				var titleAttribute = new Attribute();
+				var attributes = new List<ImportAttribute>();
+				var titleAttribute = new ImportAttribute();
 
 				foreach (var xElementAttribute in attributeSet.Element("Attributes").Elements("Attribute"))
 				{
-					var attribute = new Attribute
+					var attribute = new ImportAttribute
 					{
 						StaticName = xElementAttribute.Attribute("StaticName").Value,
 						Type = xElementAttribute.Attribute("Type").Value,
@@ -287,7 +287,7 @@ namespace ToSic.SexyContent.ImportExport
 				}
 
 				// Add AttributeSet
-				importAttributeSets.Add(new AttributeSet
+				importAttributeSets.Add(new ImportAttributeSet
 				{
 					StaticName = attributeSet.Attribute("StaticName").Value,
 					Name = attributeSet.Attribute("Name").Value,
@@ -438,7 +438,7 @@ namespace ToSic.SexyContent.ImportExport
 		/// <param name="assignmentObjectTypeId"></param>
 		/// <param name="keyNumber"></param>
 		/// <returns></returns>
-		private List<Entity> GetImportEntities(IEnumerable<XElement> entities, int assignmentObjectTypeId, int? keyNumber = null)
+		private List<ImportEntity> GetImportEntities(IEnumerable<XElement> entities, int assignmentObjectTypeId, int? keyNumber = null)
 		{
 			return entities.Select(e => GetImportEntity(e, assignmentObjectTypeId, keyNumber)).ToList();
 		}
@@ -452,7 +452,7 @@ namespace ToSic.SexyContent.ImportExport
 		/// <param name="defaultLanguage">The default language / culture - exmple: de-DE</param>
 		/// <param name="keyNumber">The entity will be assigned to this keyNumber (optional)</param>
 		/// <returns></returns>
-		private Entity GetImportEntity(XElement xEntity, int assignmentObjectTypeId, int? keyNumber = null)
+		private ImportEntity GetImportEntity(XElement xEntity, int assignmentObjectTypeId, int? keyNumber = null)
 		{
 			switch (xEntity.Attribute("AssignmentObjectType").Value)
 			{
