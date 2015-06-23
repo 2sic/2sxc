@@ -13,9 +13,6 @@ using ToSic.Eav;
 using ToSic.Eav.DataSources.Caches;
 using ToSic.Eav.Import;
 using ToSic.SexyContent.ImportExport;
-// using Attribute = ToSic.Eav.Import.Attribute;
-// using AttributeSet = ToSic.Eav.Import.AttributeSet;
-// using Entity = ToSic.Eav.Import.Entity;
 
 namespace ToSic.SexyContent
 {
@@ -96,7 +93,7 @@ namespace ToSic.SexyContent
 				});
 
 			// Collect AttributeSets for use in Import
-			var attributeSets = new List<ImportAttributeSet>
+            var attributeSets = new List<ImportAttributeSet>
 			{
 				dsrcSqlDataSource
 			};
@@ -298,7 +295,7 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
 
 				foreach (var t in existingTemplates.Where(t => t.AppId == currentApp))
 				{
-					var entity = new ImportEntity
+                    var entity = new ImportEntity
 					{
 						AttributeSetStaticName = "2SexyContent-Template",
 						EntityGuid = t.NewEntityGuid,
@@ -336,7 +333,7 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
 
 				foreach (var t in existingContentGroups.Where(t => t.AppId == app))
 				{
-					var entity = new ImportEntity
+                    var entity = new ImportEntity
 					{
 						AttributeSetStaticName = "2SexyContent-ContentGroup",
 						EntityGuid = t.NewEntityGuid,
