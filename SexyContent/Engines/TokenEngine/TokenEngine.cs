@@ -177,7 +177,7 @@ namespace ToSic.SexyContent.Engines.TokenEngine
             }
 
             // Render
-            var sectionRendered = tokenReplace.ReplaceTokens(template, 1);
+            var sectionRendered = tokenReplace.ReplaceTokens(template, 0);
 
             // Restore values list to original state
             foreach (var src in valuesForThisInstanceOnly)
