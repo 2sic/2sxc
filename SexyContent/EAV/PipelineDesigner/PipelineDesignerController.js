@@ -449,7 +449,7 @@ pipelineDesigner.controller('PipelineDesignerController',
 						title: 'Query result',
 						content: '<div><div>The Full result was logged to the Browser Console. Further down you\'ll find more debug-infos. </div>'
                             + '<h3>Parameters used</h3><div>' + ($scope.pipelineData.Pipeline.TestParameters.length > 5 ? $scope.pipelineData.Pipeline.TestParameters.replace('\n', '<br>') : 'no test params specified') + '</div> '
-                            + '<h3>Query result</h3><div> <pre id="pipelineQueryResult">' + $filter('json')(success.Query) + '</pre>' + showConnectionTable(success) + '</div>'
+                            + '<h3>Query result - executed in ' + success.QueryTimer.Milliseconds + 'ms (' + success.QueryTimer.Ticks + 'tx)</h3><div> <pre id="pipelineQueryResult">' + $filter('json')(success.Query) + '</pre>' + showConnectionTable(success) + '</div>'
                             + '</div'
 					});
 					$timeout(function () {
