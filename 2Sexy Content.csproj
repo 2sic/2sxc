@@ -783,7 +783,9 @@
     <Content Include="Administration\App_LocalResources\EAVManagement.ascx.resx" />
     <Content Include="Administration\App_LocalResources\EAVManagement.ascx.de-DE.resx" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="i18n\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Administration\Apps\App_LocalResources\AppManagement.ascx.resx" />
   </ItemGroup>

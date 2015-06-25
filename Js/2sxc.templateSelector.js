@@ -1,5 +1,20 @@
 ﻿(function () {
-    var module = angular.module('2sxc.view', ["2sxc.api"]);
+    var module = angular.module('2sxc.view', ["2sxc.api", "pascalprecht.translate"]);
+
+    module.config(['$translateProvider', function($translateProvider) {
+ 
+        // add translation table
+        $translateProvider
+          // .translations('en', translationsE)
+          //.translations('de', translationsD)
+          .preferredLanguage('en')
+          .useSanitizeValueStrategy('escape')
+          .fallbackLanguage('en')
+          .useStaticFilesLoader({
+              prefix: '/desktopmodules/tosic_sexycontent/i18n/inpage-',
+              suffix: '.js'
+          });
+    }]);
 
     module.controller('TemplateSelectorCtrl', function($scope, $attrs, moduleApiService, $filter, $q, $window) {
 

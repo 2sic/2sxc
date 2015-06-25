@@ -38,8 +38,13 @@ namespace ToSic.SexyContent
 					var ClientScript = Page.ClientScript;
 					// ToDo: Move these RegisterScripts to JS to prevent including AngularJS twice (from other modules)
 					ClientResourceManager.RegisterScript(Page, "~/DesktopModules/ToSIC_SexyContent/Js/AngularJS/angular.min.js", 80);
-					ClientResourceManager.RegisterScript(Page, "~/DesktopModules/ToSIC_SexyContent/Js/2sxc.TemplateSelector.js", 81);
-					ClientResourceManager.RegisterScript(Page, "~/DesktopModules/ToSIC_SexyContent/Js/2sxc.ApiService.js", 82);
+                    ClientResourceManager.RegisterScript(Page, "~/desktopmodules/tosic_sexycontent/js/2sxc.templateselector.min.js", 81);
+
+                    // New: multi-language stuff
+                    ClientResourceManager.RegisterScript(Page, "~/desktopmodules/tosic_sexycontent/bower_components/angular-translate/angular-translate.min.js", 82);
+                    ClientResourceManager.RegisterScript(Page, "~/desktopmodules/tosic_sexycontent/bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.min.js", 83);
+                    
+                    ClientResourceManager.RegisterScript(Page, "~/DesktopModules/ToSIC_SexyContent/Js/2sxc.ApiService.js", 82);
 					ClientResourceManager.RegisterScript(Page, "~/DesktopModules/ToSIC_SexyContent/Js/ViewEdit.js", 82);
 					ClientResourceManager.RegisterScript(Page, "~/DesktopModules/ToSIC_SexyContent/Js/2sxc.DnnActionMenuMapper.js", 83);
 

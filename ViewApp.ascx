@@ -7,18 +7,18 @@
         <div ng-cloak ng-show="manageInfo.templateChooserVisible" class="dnnFormMessage dnnFormInfo">
             <div class="sc-selectors">
                 <select ng-show="!manageInfo.isContentApp" ng-model="appId" class="sc-selector-app" ng-options="a.AppId as a.Name for a in apps" ng-disabled="manageInfo.hasContent || manageInfo.isList">
-                    <option value="" ng-disabled="appId != null"><%= HttpUtility.HtmlEncode(LocalizeString("ddlAppDefaultItem.Text")) %></option>
+                    <option value="" ng-disabled="appId != null" translate="TemplatePicker.AppPickerDefault"></option>
                 </select>
 
                 <select ng-show="manageInfo.isContentApp" ng-model="contentTypeId" ng-options="c.StaticName as c.Name for c in contentTypes" class="sc-selector-contenttype" ng-disabled="manageInfo.hasContent || manageInfo.isList">
-                    <option ng-disabled="contentTypeId != ''" value=""><%= HttpUtility.HtmlEncode(LocalizeString("ddlContentTypeDefaultItem.Text")) %></option>
+                    <option ng-disabled="contentTypeId != ''" value="" translate="TemplatePicker.ContentTypePickerDefault"></option>
                 </select>
                 <select ng-show="manageInfo.isContentApp ? contentTypeId != 0 : (savedAppId != null &&  filteredTemplates().length > 1)" ng-model="templateId" class="sc-selector-template" ng-options="t.TemplateId as t.Name for t in filteredTemplates(contentTypeId)">
                 </select>
             </div>
             <div class="sc-selector-actions">
-                <a ng-show="templateId != null && savedTemplateId != templateId" ng-click="saveTemplateId();" class="sc-selector-save" title="Save Template">Save Template</a>
-                <a ng-show="savedTemplateId != null" class="sc-selector-close" ng-click="setTemplateChooserState(false);" title="Cancel">Cancel</a>
+                <a ng-show="templateId != null && savedTemplateId != templateId" ng-click="saveTemplateId();" class="sc-selector-save" title="{{ 'TemplatePicker.Save' | translate }}">{{ 'TemplatePicker.Save' | translate }}</a>
+                <a ng-show="savedTemplateId != null" class="sc-selector-close" ng-click="setTemplateChooserState(false);" title="{{ 'TemplatePicker.Close' | translate }}">{{ 'TemplatePicker.Close' | translate }}</a>
             </div>
             <div class="sc-loading sc-loading-nobg" ng-show="loading"></div>
         </div>
