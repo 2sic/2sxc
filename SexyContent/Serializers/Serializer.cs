@@ -66,9 +66,8 @@ namespace ToSic.SexyContent.Serializers
 					dictionary.Add("Presentation", GetDictionaryFromEntity(entityInGroup.Presentation, language));
 			}
 
-            // Check w/2rm - this should only happen in edit mode...
-            // this is the code from the View-module: if (IsEditable && UserInfo.IsInRole(PortalSettings.AdministratorRoleName) && !SexyContent.GetApps(ZoneId.Value, false, new PortalSettings(ModuleConfiguration.OwnerPortalID)).Any())
-		    if (true) // todo: edit-mode-only...?
+            // Add additional information in case we're in edit mode
+            if(DotNetNuke.Common.Globals.IsEditMode())
 		    {
                 dictionary.Add("Modified", entity.Modified);
                 
