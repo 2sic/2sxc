@@ -1,5 +1,5 @@
 ﻿(function () {
-    var module = angular.module('2sxc.view', ["2sxc.api", "2sxc4ng", "pascalprecht.translate"]);
+    var module = angular.module('2sxc.view', ["2sxc4ng", "pascalprecht.translate"]);
 
     module.config(function ($translateProvider, HttpHeaders, AppInstanceId) {
         //alert(sxc);
@@ -184,8 +184,11 @@
 
     });
 
-    module.factory('moduleApiService', function(apiService) {
-        return function(moduleId) {
+    module.factory('moduleApiService', function(sxc, $http) {
+        return function (moduleId) {
+            function apiService(modId, settings) {
+                return $http(settings);
+            }
             return {
                 saveTemplateId: function(templateId) {
                     return apiService(moduleId, {

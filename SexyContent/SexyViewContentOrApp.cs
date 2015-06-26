@@ -45,7 +45,7 @@ namespace ToSic.SexyContent
                     ClientResourceManager.RegisterScript(Page, "~/desktopmodules/tosic_sexycontent/bower_components/angular-translate/angular-translate.min.js", 82);
                     ClientResourceManager.RegisterScript(Page, "~/desktopmodules/tosic_sexycontent/bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.min.js", 83);
                     
-                    ClientResourceManager.RegisterScript(Page, "~/DesktopModules/ToSIC_SexyContent/Js/2sxc.ApiService.js", 82);
+                    // ClientResourceManager.RegisterScript(Page, "~/DesktopModules/ToSIC_SexyContent/Js/2sxc.ApiService.js", 82);
 					ClientResourceManager.RegisterScript(Page, "~/DesktopModules/ToSIC_SexyContent/Js/ViewEdit.js", 82);
 					ClientResourceManager.RegisterScript(Page, "~/DesktopModules/ToSIC_SexyContent/Js/2sxc.DnnActionMenuMapper.js", 83);
 

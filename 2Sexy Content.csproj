@@ -530,7 +530,6 @@
     <Content Include="js\2sxc.api.manage.min.js" />
     <Content Include="js\2sxc.api.min.js" />
     <Content Include="js\2sxc.DnnActionMenuMapper.js" />
-    <Content Include="js\2sxc.ApiService.js" />
     <Content Include="js\template-selector\template-selector-view.html" />
     <Content Include="js\template-selector\template-selector-app.html" />
     <Content Include="js\template-selector\template-selector.annotated.js" />

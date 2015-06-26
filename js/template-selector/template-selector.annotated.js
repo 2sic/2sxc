@@ -1,8 +1,11 @@
 (function () {
-    var module = angular.module('2sxc.view', ["2sxc.api", "pascalprecht.translate"]);
+    var module = angular.module('2sxc.view', ["2sxc.api", "2sxc4ng", "pascalprecht.translate"]);
 
-    module.config(['$translateProvider', function($translateProvider) {
- 
+    module.config(["$translateProvider", "HttpHeaders", "AppInstanceId", function ($translateProvider, HttpHeaders, AppInstanceId) {
+        //alert(sxc);
+        alert(AppInstanceId);
+        var ngSxc = $2sxc(AppInstanceId);
+        alert(ngSxc);
         // add translation table
         $translateProvider
           .preferredLanguage('en')
@@ -181,8 +184,11 @@
 
     }]);
 
-    module.factory('moduleApiService', ["apiService", function(apiService) {
-        return function(moduleId) {
+    module.factory('moduleApiService', ["sxc", "$http", function(sxc, $http) {
+        return function (moduleId) {
+            function apiService(modId, settings) {
+                return $http(settings);
+            }
             return {
                 saveTemplateId: function(templateId) {
                     return apiService(moduleId, {
