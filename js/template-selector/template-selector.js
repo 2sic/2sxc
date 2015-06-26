@@ -2,18 +2,17 @@
     var module = angular.module('2sxc.view', ["2sxc4ng", "pascalprecht.translate"]);
 
     module.config(function ($translateProvider, HttpHeaders, AppInstanceId) {
-        //alert(sxc);
-        alert(AppInstanceId);
-        var ngSxc = $2sxc(AppInstanceId);
-        alert(ngSxc);
+        
+        var globals = $2sxc(AppInstanceId).manage._manageInfo;
+        
         // add translation table
         $translateProvider
-          .preferredLanguage('en')
+          .preferredLanguage(globals.lang)
           .useSanitizeValueStrategy('escape')
-          .fallbackLanguage('en')
+          .fallbackLanguage(globals.fallbackLang)
           .useStaticFilesLoader({
               // todo: path...
-              prefix: '/desktopmodules/tosic_sexycontent/i18n/inpage-',
+              prefix: globals.applicationRoot + 'desktopmodules/tosic_sexycontent/i18n/inpage-',
               suffix: '.js'
           });
     });
