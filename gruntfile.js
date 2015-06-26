@@ -9,7 +9,7 @@ module.exports = function(grunt) {
             Sxc4ng: ['Js/AngularJS/2sxc4ng.js'],
             // Sxc: ['Js/2sxc.api.js'], // commented out for now, has about 10 suggestions but won't fix them yet
             // SxcManage: ['Js/2sxc.api.manage.js'], // 2015-05-07 has about 13 suggestions, won't fix yet
-            // SxcTemplate: ['Js/2sxc.TemplateSelector.js'], // 2015-05-07 has about 4 suggestions for null-comparison, won't fix yet
+            // SxcTemplate: ['Js/template-selector/template-selector.js'], // 2015-05-07 has about 4 suggestions for null-comparison, won't fix yet
         },
 
         ngAnnotate: {
@@ -24,7 +24,7 @@ module.exports = function(grunt) {
             },
             SxcModuleUi: {
                     files: {
-                        'Js/2sxc.TemplateSelector.annotated.js': ['Js/2sxc.TemplateSelector.js']
+                        'Js/template-selector/template-selector.annotated.js': ['Js/template-selector/template-selector.js']
                     }
             }
         },
@@ -43,12 +43,12 @@ module.exports = function(grunt) {
                 files: {
                     'Js/2sxc.api.min.js': ['Js/2sxc.api.js'],
                     'Js/2sxc.api.manage.min.js': ['Js/2sxc.api.manage.js'],
-                    'Js/2sxc.TemplateSelector.min.js': ['Js/2sxc.TemplateSelector.annotated.js']
+                    'Js/template-selector/template-selector.min.js': ['Js/template-selector/template-selector.annotated.js']
                 }
             },
             SxcModuleUi: {
                 files: {
-                    'Js/2sxc.TemplateSelector.min.js': ['Js/2sxc.TemplateSelector.annotated.js']
+                    'Js/template-selector/template-selector.min.js': ['Js/template-selector/template-selector.annotated.js']
                 }
 
             }

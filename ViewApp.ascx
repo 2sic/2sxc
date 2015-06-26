@@ -1,29 +1,7 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" Inherits="ToSic.SexyContent.ViewApp" Codebehind="ViewApp.ascx.cs" %>
 <%@ Import Namespace="ToSic.SexyContent" %>
 <asp:Placeholder runat="server" ID="pnlTemplateChooser" Visible="false" EnableViewState="False">
-    
-    <%-- New AngularJS template chooser --%>
-    <div ng-controller="TemplateSelectorCtrl" data-moduleid="<%= ModuleId %>" class="sc-selector-wrapper" data-importAppDialog="<%= EditUrl("", "", SexyContent.ControlKeys.AppImport) %>" data-importAppText="<%= LocalizeString("GetMoreApps.Text") %>">
-        <div ng-cloak ng-show="manageInfo.templateChooserVisible" class="dnnFormMessage dnnFormInfo">
-            <div class="sc-selectors">
-                <select ng-show="!manageInfo.isContentApp" ng-model="appId" class="sc-selector-app" ng-options="a.AppId as a.Name for a in apps" ng-disabled="manageInfo.hasContent || manageInfo.isList">
-                    <option value="" ng-disabled="appId != null" translate="TemplatePicker.AppPickerDefault"></option>
-                </select>
-
-                <select ng-show="manageInfo.isContentApp" ng-model="contentTypeId" ng-options="c.StaticName as c.Name for c in contentTypes" class="sc-selector-contenttype" ng-disabled="manageInfo.hasContent || manageInfo.isList">
-                    <option ng-disabled="contentTypeId != ''" value="" translate="TemplatePicker.ContentTypePickerDefault"></option>
-                </select>
-                <select ng-show="manageInfo.isContentApp ? contentTypeId != 0 : (savedAppId != null &&  filteredTemplates().length > 1)" ng-model="templateId" class="sc-selector-template" ng-options="t.TemplateId as t.Name for t in filteredTemplates(contentTypeId)">
-                </select>
-            </div>
-            <div class="sc-selector-actions">
-                <a ng-show="templateId != null && savedTemplateId != templateId" ng-click="saveTemplateId();" class="sc-selector-save" title="{{ 'TemplatePicker.Save' | translate }}">{{ 'TemplatePicker.Save' | translate }}</a>
-                <a ng-show="savedTemplateId != null" class="sc-selector-close" ng-click="setTemplateChooserState(false);" title="{{ 'TemplatePicker.Close' | translate }}">{{ 'TemplatePicker.Close' | translate }}</a>
-            </div>
-            <div class="sc-loading sc-loading-nobg" ng-show="loading"></div>
-        </div>
-    </div>
-
+    <div ng-controller="TemplateSelectorCtrl" data-moduleid="<%= ModuleId %>" class="sc-selector-wrapper" ng-include="'<%= ResolveUrl("~") %>desktopmodules/tosic_sexycontent/js/template-selector/template-selector-app.html'" data-importAppDialog="<%= EditUrl("", "", SexyContent.ControlKeys.AppImport) %>" data-importAppText="<%= LocalizeString("GetMoreApps.Text") %>" />
 </asp:Placeholder>
 
 <asp:Panel runat="server" Visible="False" class="dnnFormMessage dnnFormInfo" ID="pnlGetStarted"></asp:Panel>
