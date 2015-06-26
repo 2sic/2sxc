@@ -3,7 +3,7 @@
     
     <%-- todo:2rm - auto-select template doesn't quite work when not inline-template --%>
     <div ng-controller="TemplateSelectorCtrl" data-moduleid="<%= ModuleId %>" class="sc-selector-wrapper" ng-include="'<%= ResolveUrl("~") %>desktopmodules/tosic_sexycontent/js/template-selector/template-selector-view.html'">
-<!--
+<%--
 <div ng-cloak ng-show="manageInfo.templateChooserVisible" class="dnnFormMessage dnnFormInfo">
     <div class="sc-selectors">
         <select ng-show="!manageInfo.isContentApp" ng-model="appId" class="sc-selector-app" ng-options="a.AppId as a.Name for a in apps">
@@ -22,7 +22,7 @@
     </div>
     <div class="sc-loading sc-loading-nobg" ng-show="loading"></div>
 </div>
--->
+	--%>
     </div>
     
 </asp:Placeholder>

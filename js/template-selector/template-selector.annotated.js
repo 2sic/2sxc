@@ -5,12 +5,11 @@
  
         // add translation table
         $translateProvider
-          // .translations('en', translationsE)
-          //.translations('de', translationsD)
           .preferredLanguage('en')
           .useSanitizeValueStrategy('escape')
           .fallbackLanguage('en')
           .useStaticFilesLoader({
+              // todo: path...
               prefix: '/desktopmodules/tosic_sexycontent/i18n/inpage-',
               suffix: '.js'
           });
@@ -19,7 +18,6 @@
     module.controller('TemplateSelectorCtrl', ["$scope", "$attrs", "moduleApiService", "$filter", "$q", "$window", function($scope, $attrs, moduleApiService, $filter, $q, $window) {
 
         var moduleId = $attrs.moduleid;
-
         var moduleApi = moduleApiService(moduleId);
 
         $scope.manageInfo = $2sxc(moduleId).manage._manageInfo;
@@ -62,6 +60,7 @@
 
         $scope.$watch('templateId', function (newTemplateId, oldTemplateId) {
         	if (newTemplateId != oldTemplateId) {
+        		alert("templateId changed");
         		if ($scope.manageInfo.isContentApp)
         			$scope.renderTemplate(newTemplateId);
         		else {

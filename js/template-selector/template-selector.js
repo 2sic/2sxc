@@ -18,7 +18,6 @@
     module.controller('TemplateSelectorCtrl', function($scope, $attrs, moduleApiService, $filter, $q, $window) {
 
         var moduleId = $attrs.moduleid;
-
         var moduleApi = moduleApiService(moduleId);
 
         $scope.manageInfo = $2sxc(moduleId).manage._manageInfo;
@@ -61,6 +60,7 @@
 
         $scope.$watch('templateId', function (newTemplateId, oldTemplateId) {
         	if (newTemplateId != oldTemplateId) {
+        		alert("templateId changed");
         		if ($scope.manageInfo.isContentApp)
         			$scope.renderTemplate(newTemplateId);
         		else {
