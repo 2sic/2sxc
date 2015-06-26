@@ -1,0 +1,17 @@
+-- make sure sql rolls back automatically in case of error.
+SET XACT_ABORT ON
+
+BEGIN TRANSACTION SexyContentUpdate;
+
+EXEC ToSIC_EAV_ChangeLogAdd 'System'
+
+-- Remove all keys on old tables
+ALTER TABLE [dbo].[ToSIC_SexyContent_Templates] DROP CONSTRAINT [FK_ToSIC_SexyContent_Templates_ToSIC_EAV_AttributeSets]
+ALTER TABLE [dbo].[ToSIC_SexyContent_Templates] DROP CONSTRAINT [FK_ToSIC_SexyContent_Templates_ToSIC_EAV_Entities]
+ALTER TABLE [dbo].[ToSIC_SexyContent_ContentGroupItems] DROP CONSTRAINT [FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_EAV_Entities]
+ALTER TABLE [dbo].[ToSIC_SexyContent_ContentGroupItems] DROP CONSTRAINT [FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_SexyContent_Templates]
+
+
+-- Commit the transaction
+COMMIT TRANSACTION SexyContentUpdate;
+--ROLLBACK TRANSACTION SexyContentUpdate;
