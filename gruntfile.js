@@ -44,7 +44,7 @@ module.exports = function(grunt) {
                     'js/2sxc.api.min.js': ['js/2sxc.api.js'],
                     'js/2sxc.api.manage.min.js': ['js/2sxc.api.manage.js'],
                     'js/template-selector/template-selector.min.js': ['js/template-selector/template-selector.annotated.js'],
-                    'js/dnn-view-edit.min.js': ['js/dnn-view-edit.api.js']
+                    'js/dnn-inpage-edit.min.js': ['js/dnn-inpage-edit.js']
     }
             },
             SxcModuleUi: {
