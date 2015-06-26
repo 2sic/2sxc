@@ -10,9 +10,9 @@
         var moduleId = $(this).data("2sxc").moduleId;
         $2sxc(moduleId).manage._processToolbars();
 
-        if (window.angular != null) {
-            angular.bootstrap($(this).find('.sc-selector-wrapper').get(0), ['2sxc.view']);
-        }
+        //if (window.angular != null) {
+        //    angular.bootstrap($(this).find('.sc-selector-wrapper').get(0), ['2sxc.view']);
+        //}
     });
 
 
