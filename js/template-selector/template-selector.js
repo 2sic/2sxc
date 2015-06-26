@@ -1,7 +1,7 @@
 ﻿(function () {
     var module = angular.module('2sxc.view', ["2sxc4ng", "pascalprecht.translate"]);
 
-    module.config(function ($translateProvider, HttpHeaders, AppInstanceId) {
+    module.config(function ($translateProvider, AppInstanceId) {
         
         var globals = $2sxc(AppInstanceId).manage._manageInfo;
         
@@ -183,7 +183,7 @@
 
     });
 
-    module.factory('moduleApiService', function(sxc, $http) {
+    module.factory('moduleApiService', function($http) {
         return function (moduleId) {
             function apiService(modId, settings) {
                 return $http(settings);

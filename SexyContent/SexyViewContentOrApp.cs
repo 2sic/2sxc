@@ -37,20 +37,19 @@ namespace ToSic.SexyContent
 				{
 					var ClientScript = Page.ClientScript;
 					// ToDo: Move these RegisterScripts to JS to prevent including AngularJS twice (from other modules)
-					ClientResourceManager.RegisterScript(Page, "~/DesktopModules/ToSIC_SexyContent/Js/AngularJS/angular.min.js", 80);
-                    ClientResourceManager.RegisterScript(Page, "~/desktopmodules/tosic_sexycontent/js/angularjs/2sxc4ng.js", 93); 
-                    ClientResourceManager.RegisterScript(Page, "~/desktopmodules/tosic_sexycontent/js/template-selector/template-selector.js", 81);
+                    ClientResourceManager.RegisterScript(Page, "~/desktopmodules/tosic_sexycontent/js/angularjs/angular.min.js", 80);
+                    ClientResourceManager.RegisterScript(Page, "~/desktopmodules/tosic_sexycontent/js/template-selector/template-selector.min.js", 81);
 
                     // New: multi-language stuff
                     ClientResourceManager.RegisterScript(Page, "~/desktopmodules/tosic_sexycontent/bower_components/angular-translate/angular-translate.min.js", 82);
                     ClientResourceManager.RegisterScript(Page, "~/desktopmodules/tosic_sexycontent/bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.min.js", 83);
-                    
-                    // ClientResourceManager.RegisterScript(Page, "~/DesktopModules/ToSIC_SexyContent/Js/2sxc.ApiService.js", 82);
-					ClientResourceManager.RegisterScript(Page, "~/DesktopModules/ToSIC_SexyContent/Js/ViewEdit.js", 82);
-					ClientResourceManager.RegisterScript(Page, "~/DesktopModules/ToSIC_SexyContent/Js/2sxc.DnnActionMenuMapper.js", 83);
 
-                    ClientResourceManager.RegisterScript(Page, "~/DesktopModules/ToSIC_SexyContent/Js/2sxc.api.js", 90);
-                    ClientResourceManager.RegisterScript(Page, "~/DesktopModules/ToSIC_SexyContent/Js/2sxc.api.manage.js", 91);
+                    ClientResourceManager.RegisterScript(Page, "~/desktopmodules/tosic_sexycontent/js/dnn-inpage-edit.min.js", 82);
+
+                    ClientResourceManager.RegisterScript(Page, "~/desktopmodules/tosic_sexycontent/js/2sxc.api.min.js", 90);
+                    ClientResourceManager.RegisterScript(Page, "~/desktopmodules/tosic_sexycontent/js/2sxc.api.manage.min.js", 91);
+
+                    ClientResourceManager.RegisterScript(Page, "~/desktopmodules/tosic_sexycontent/js/angularjs/2sxc4ng.min.js", 93); 
 
 					var hasContent = AppId.HasValue && Template != null && ContentGroup.Exists;
 					var templateChooserVisible = Settings.ContainsKey(SexyContent.SettingsShowTemplateChooser) ?
