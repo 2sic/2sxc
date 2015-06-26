@@ -494,6 +494,14 @@
     <Content Include="Administration\Registers.ascx" />
     <Content Include="API\Services.asmx" />
     <Content Include="bootstrap\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="bower_components\angular-translate-loader-static-files\angular-translate-loader-static-files.js" />
+    <Content Include="bower_components\angular-translate-loader-static-files\angular-translate-loader-static-files.min.js" />
+    <Content Include="bower_components\angular-translate\angular-translate.js" />
+    <Content Include="bower_components\angular-translate\angular-translate.min.js" />
+    <Content Include="bower_components\angular\angular-csp.css" />
+    <Content Include="bower_components\angular\angular.js" />
+    <Content Include="bower_components\angular\angular.min.js" />
+    <Content Include="bower_components\angular\index.js" />
     <Content Include="BuildScripts\MSBuild.Community.Tasks.dll" />
     <Content Include="EditEntity.ascx" />
     <Content Include="EditContentGroupItem.ascx" />
@@ -505,6 +513,8 @@
     <Content Include="Extensions\Imazen_ImageResizer\ImageResizer.txt" />
     <Content Include="Extensions\Imazen_ImageResizer\license.txt" />
     <Content Include="gruntfile.js" />
+    <Content Include="i18n\inpage-de.js" />
+    <Content Include="i18n\inpage-en.js" />
     <Content Include="icon-app.png" />
     <Content Include="icon.png" />
     <Content Include="Images\ajax-loader.gif" />
@@ -523,6 +533,7 @@
     <Content Include="js\2sxc.ApiService.js" />
     <Content Include="js\template-selector\template-selector-view.html" />
     <Content Include="js\template-selector\template-selector-app.html" />
+    <Content Include="js\template-selector\template-selector.annotated.js" />
     <Content Include="js\template-selector\template-selector.js" />
     <Content Include="js\AngularJS\2sxc4ng.annotated.js" />
     <Content Include="js\AngularJS\2sxc4ng.js" />
@@ -560,6 +571,7 @@
     <Content Include="js\EditDataSource\jsPlumb\mootools.jsPlumb-1.4.0-RC1.js" />
     <Content Include="js\EditDataSource\jsPlumb\yui.jsPlumb-1.4.0-RC1.js" />
     <Content Include="js\ItemForm.js" />
+    <Content Include="js\template-selector\template-selector.min.js" />
     <Content Include="js\ViewEdit.js" />
     <Content Include="Administration\ManageTemplates.ascx" />
     <Content Include="license.txt" />
@@ -611,6 +623,20 @@
     <Content Include="bootstrap\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="bootstrap\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="bootstrap\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="bower_components\angular-translate-loader-static-files\.bower.json" />
+    <Content Include="bower_components\angular-translate-loader-static-files\bower.json" />
+    <Content Include="bower_components\angular-translate-loader-static-files\README.md" />
+    <Content Include="bower_components\angular-translate\.bower.json" />
+    <Content Include="bower_components\angular-translate\bower.json" />
+    <Content Include="bower_components\angular-translate\README.md" />
+    <Content Include="bower_components\angular\.bower.json" />
+    <Content Include="bower_components\angular\angular.min.js.gzip" />
+    <Content Include="bower_components\angular\angular.min.js.map" />
+    <Content Include="bower_components\angular\bower.json" />
+    <Content Include="bower_components\angular\package.json" />
+    <Content Include="bower_components\angular\README.md" />
+    <Content Include="js\template-selector\template-selector.min.js.map" />
+    <Content Include="README.md" />
     <None Include="SqlDataProvider\01.00.00.SqlDataProvider" />
     <Content Include="SexyContent\EAV\PipelineDesigner\assets\jquery.jsPlumb-1.7.2-min.js" />
     <Content Include="SexyContent\EAV\PipelineDesigner\PipelineDesigner.ascx" />
@@ -782,9 +808,7 @@
     <Content Include="Administration\App_LocalResources\EAVManagement.ascx.resx" />
     <Content Include="Administration\App_LocalResources\EAVManagement.ascx.de-DE.resx" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="i18n\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Administration\Apps\App_LocalResources\AppManagement.ascx.resx" />
   </ItemGroup>
