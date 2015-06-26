@@ -1,19 +1,18 @@
 (function () {
-    var module = angular.module('2sxc.view', ["2sxc.api", "2sxc4ng", "pascalprecht.translate"]);
+    var module = angular.module('2sxc.view', ["2sxc4ng", "pascalprecht.translate"]);
 
-    module.config(["$translateProvider", "HttpHeaders", "AppInstanceId", function ($translateProvider, HttpHeaders, AppInstanceId) {
-        //alert(sxc);
-        alert(AppInstanceId);
-        var ngSxc = $2sxc(AppInstanceId);
-        alert(ngSxc);
+    module.config(["$translateProvider", "AppInstanceId", function ($translateProvider, AppInstanceId) {
+        
+        var globals = $2sxc(AppInstanceId).manage._manageInfo;
+        
         // add translation table
         $translateProvider
-          .preferredLanguage('en')
+          .preferredLanguage(globals.lang)
           .useSanitizeValueStrategy('escape')
-          .fallbackLanguage('en')
+          .fallbackLanguage(globals.fallbackLang)
           .useStaticFilesLoader({
               // todo: path...
-              prefix: '/desktopmodules/tosic_sexycontent/i18n/inpage-',
+              prefix: globals.applicationRoot + 'desktopmodules/tosic_sexycontent/i18n/inpage-',
               suffix: '.js'
           });
     }]);
@@ -184,7 +183,7 @@
 
     }]);
 
-    module.factory('moduleApiService', ["sxc", "$http", function(sxc, $http) {
+    module.factory('moduleApiService', ["$http", function($http) {
         return function (moduleId) {
             function apiService(modId, settings) {
                 return $http(settings);
