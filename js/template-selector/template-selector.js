@@ -5,12 +5,11 @@
  
         // add translation table
         $translateProvider
-          // .translations('en', translationsE)
-          //.translations('de', translationsD)
           .preferredLanguage('en')
           .useSanitizeValueStrategy('escape')
           .fallbackLanguage('en')
           .useStaticFilesLoader({
+              // todo: path...
               prefix: '/desktopmodules/tosic_sexycontent/i18n/inpage-',
               suffix: '.js'
           });
