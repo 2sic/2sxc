@@ -498,10 +498,6 @@
     <Content Include="bower_components\angular-translate-loader-static-files\angular-translate-loader-static-files.min.js" />
     <Content Include="bower_components\angular-translate\angular-translate.js" />
     <Content Include="bower_components\angular-translate\angular-translate.min.js" />
-    <Content Include="bower_components\angular\angular-csp.css" />
-    <Content Include="bower_components\angular\angular.js" />
-    <Content Include="bower_components\angular\angular.min.js" />
-    <Content Include="bower_components\angular\index.js" />
     <Content Include="BuildScripts\MSBuild.Community.Tasks.dll" />
     <Content Include="EditEntity.ascx" />
     <Content Include="EditContentGroupItem.ascx" />
@@ -628,12 +624,6 @@
     <Content Include="bower_components\angular-translate\.bower.json" />
     <Content Include="bower_components\angular-translate\bower.json" />
     <Content Include="bower_components\angular-translate\README.md" />
-    <Content Include="bower_components\angular\.bower.json" />
-    <Content Include="bower_components\angular\angular.min.js.gzip" />
-    <Content Include="bower_components\angular\angular.min.js.map" />
-    <Content Include="bower_components\angular\bower.json" />
-    <Content Include="bower_components\angular\package.json" />
-    <Content Include="bower_components\angular\README.md" />
     <Content Include="js\template-selector\template-selector.min.js.map" />
     <Content Include="README.md" />
     <Content Include="js\dnn-inpage-edit.min.js.map" />
@@ -697,6 +687,7 @@
     <Content Include="SqlDataProvider\06.06.04.SqlDataProvider" />
     <Content Include="SqlDataProvider\07.00.00.SqlDataProvider" />
     <Content Include="SqlDataProvider\07.00.03.SqlDataProvider" />
+    <Content Include="SqlDataProvider\07.02.00.SqlDataProvider" />
     <None Include="SqlDataProvider\Uninstall.SqlDataProvider" />
     <Content Include="web.config" />
   </ItemGroup>
