@@ -16,60 +16,62 @@
     }]);
 
     module.controller('TemplateSelectorCtrl', function($scope, $attrs, moduleApiService, $filter, $q, $window) {
+        var vm = this;
+        var realScope = $scope;
 
         var moduleId = $attrs.moduleid;
         var moduleApi = moduleApiService(moduleId);
 
-        $scope.manageInfo = $2sxc(moduleId).manage._manageInfo;
-        $scope.apps = [];
-        $scope.contentTypes = [];
-        $scope.templates = [];
-        $scope.filteredTemplates = function (contentTypeId) {
+        vm.manageInfo = $2sxc(moduleId).manage._manageInfo;
+        vm.apps = [];
+        vm.contentTypes = [];
+        vm.templates = [];
+        vm.filteredTemplates = function (contentTypeId) {
             // Return all templates for App
-            if (!$scope.manageInfo.isContentApp)
-                return $scope.templates;
-            return $filter('filter')($scope.templates, contentTypeId == "_LayoutElement" ? { ContentTypeStaticName: "" } : { ContentTypeStaticName: contentTypeId }, true);
+            if (!vm.manageInfo.isContentApp)
+                return vm.templates;
+            return $filter('filter')(vm.templates, contentTypeId == "_LayoutElement" ? { ContentTypeStaticName: "" } : { ContentTypeStaticName: contentTypeId }, true);
         };
-        $scope.contentTypeId = $scope.manageInfo.contentTypeId;
-        $scope.templateId = $scope.manageInfo.templateId;
-        $scope.savedTemplateId = $scope.manageInfo.templateId;
-        $scope.appId = $scope.manageInfo.appId;
-        $scope.savedAppId = $scope.manageInfo.appId;
-        $scope.loading = 0;
+        vm.contentTypeId = vm.manageInfo.contentTypeId;
+        vm.templateId = vm.manageInfo.templateId;
+        vm.savedTemplateId = vm.manageInfo.templateId;
+        vm.appId = vm.manageInfo.appId;
+        vm.savedAppId = vm.manageInfo.appId;
+        vm.loading = 0;
 
-        $scope.reloadTemplates = function() {
+        vm.reloadTemplates = function() {
 
-            $scope.loading++;
+            vm.loading++;
             var getContentTypes = moduleApi.getSelectableContentTypes();
             var getTemplates = moduleApi.getSelectableTemplates();
 
             $q.all([getContentTypes, getTemplates]).then(function (res) {
-                $scope.contentTypes = res[0].data;
-                $scope.templates = res[1].data;
+                vm.contentTypes = res[0].data;
+                vm.templates = res[1].data;
 
                 // Add option for no content type if there are templates without
-                if ($filter('filter')($scope.templates, { ContentTypeStaticName: "" }, true).length > 0) {
-                	$scope.contentTypes.push({ StaticName: "_LayoutElement", Name: "Layout element" });
-                    $scope.contentTypes = $filter('orderBy')($scope.contentTypes, 'Name');
+                if ($filter('filter')(vm.templates, { ContentTypeStaticName: "" }, true).length > 0) {
+                	vm.contentTypes.push({ StaticName: "_LayoutElement", Name: "Layout element" });
+                    vm.contentTypes = $filter('orderBy')(vm.contentTypes, 'Name');
                 }
 
-                $scope.loading--;
+                vm.loading--;
             });
 
         };
 
-        $scope.$watch('templateId', function (newTemplateId, oldTemplateId) {
+        realScope.$watch('vm.templateId', function (newTemplateId, oldTemplateId) {
         	if (newTemplateId != oldTemplateId) {
-        		alert("templateId changed");
-        		if ($scope.manageInfo.isContentApp)
-        			$scope.renderTemplate(newTemplateId);
+        		//alert("templateId changed");
+        		if (vm.manageInfo.isContentApp)
+        			vm.renderTemplate(newTemplateId);
         		else {
-        			$scope.loading++;
+        			vm.loading++;
 			        var promise;
-			        if ($scope.manageInfo.hasContent)
-				        promise = $scope.saveTemplateId(newTemplateId);
+			        if (vm.manageInfo.hasContent)
+				        promise = vm.saveTemplateId(newTemplateId);
 			        else
-				        promise = $scope.setPreviewTemplateId(newTemplateId);
+				        promise = vm.setPreviewTemplateId(newTemplateId);
 			        promise.then(function() {
         				$window.location.reload();
 			        });
@@ -77,24 +79,24 @@
         	}
         });
 
-        $scope.$watch('contentTypeId', function (newContentTypeId, oldContentTypeId) {
+        realScope.$watch('vm.contentTypeId', function (newContentTypeId, oldContentTypeId) {
         	if (newContentTypeId == oldContentTypeId)
         		return;
         	// Select first template if contentType changed
-        	var firstTemplateId = $scope.filteredTemplates(newContentTypeId)[0].TemplateId; // $filter('filter')($scope.templates, { AttributeSetId: $scope.contentTypeId == null ? "!!" : $scope.contentTypeId })[0].TemplateID;
-        	if ($scope.templateId != firstTemplateId && firstTemplateId != null)
-        		$scope.templateId = firstTemplateId;
+        	var firstTemplateId = vm.filteredTemplates(newContentTypeId)[0].TemplateId; // $filter('filter')(vm.templates, { AttributeSetId: vm.contentTypeId == null ? "!!" : vm.contentTypeId })[0].TemplateID;
+        	if (vm.templateId != firstTemplateId && firstTemplateId != null)
+        		vm.templateId = firstTemplateId;
         });
 
-        if ($scope.appId != null && $scope.manageInfo.templateChooserVisible)
-            $scope.reloadTemplates();
+        if (vm.appId != null && vm.manageInfo.templateChooserVisible)
+            vm.reloadTemplates();
 
-        $scope.$watch('manageInfo.templateChooserVisible', function(visible, oldVisible) {
-            if (visible != oldVisible && $scope.appId != null && visible)
-                $scope.reloadTemplates();
+        realScope.$watch('vm.manageInfo.templateChooserVisible', function(visible, oldVisible) {
+            if (visible != oldVisible && vm.appId != null && visible)
+                vm.reloadTemplates();
         });
 
-        $scope.$watch('appId', function (newAppId, oldAppId) {
+        realScope.$watch('vm.appId', function (newAppId, oldAppId) {
             if (newAppId == oldAppId || newAppId == null)
                 return;
 
@@ -108,72 +110,72 @@
             });
         });
 
-        if (!$scope.manageInfo.isContentApp) {
+        if (!vm.manageInfo.isContentApp) {
             moduleApi.getSelectableApps().then(function(data) {
-                $scope.apps = data.data;
-                $scope.apps.push({ Name: $attrs.importapptext, AppId: -1 });
+                vm.apps = data.data;
+                vm.apps.push({ Name: $attrs.importapptext, AppId: -1 });
             });
         }
 
-        $scope.setTemplateChooserState = function (state) {
+        vm.setTemplateChooserState = function (state) {
             // Reset templateid / cancel template change
             if (!state)
-                $scope.templateId = $scope.savedTemplateId;
+                vm.templateId = vm.savedTemplateId;
 
             return moduleApi.setTemplateChooserState(state).then(function () {
-                $scope.manageInfo.templateChooserVisible = state;
+                vm.manageInfo.templateChooserVisible = state;
             });
         };
 
-        $scope.saveTemplateId = function () {
+        vm.saveTemplateId = function () {
         	var promises = [];
 
 			// Save only if the currently saved is not the same as the new
-        	if (!$scope.manageInfo.hasContent || $scope.savedTemplateId != $scope.templateId) {
-        		promises.push(moduleApi.saveTemplateId($scope.templateId));
-        		$scope.savedTemplateId = $scope.templateId;
-        		promises.push($scope.setTemplateChooserState(false));
+        	if (!vm.manageInfo.hasContent || vm.savedTemplateId != vm.templateId) {
+        		promises.push(moduleApi.saveTemplateId(vm.templateId));
+        		vm.savedTemplateId = vm.templateId;
+        		promises.push(vm.setTemplateChooserState(false));
 	        }
 
             return $q.all(promises);
         };
 
-	    $scope.setPreviewTemplateId = function() {
-		    return moduleApi.setPreviewTemplateId($scope.templateId);
+	    vm.setPreviewTemplateId = function() {
+		    return moduleApi.setPreviewTemplateId(vm.templateId);
 	    };
 
-        $scope.renderTemplate = function (templateId) {
-            $scope.loading++;
+        vm.renderTemplate = function (templateId) {
+            vm.loading++;
             moduleApi.renderTemplate(templateId).then(function (response) {
                 try {
-                    $scope.insertRenderedTemplate(response.data);
+                    vm.insertRenderedTemplate(response.data);
                     $2sxc(moduleId).manage._processToolbars();
                 } catch (e) {
                     console.log("Error while rendering template:");
                     console.log(e);
                 }
-                $scope.loading--;
+                vm.loading--;
             });
         };
 
-        $scope.insertRenderedTemplate = function(renderedTemplate) {
+        vm.insertRenderedTemplate = function(renderedTemplate) {
             $(".DnnModule-" + moduleId + " .sc-viewport").html(renderedTemplate);
         };
 
 		// ToDo: Remove this here, as it's not used in TemplateSelector - should move to 2sxc.api.manage.js
-        $scope.addItem = function(sortOrder) {
+        vm.addItem = function(sortOrder) {
             moduleApi.addItem(sortOrder).then(function () {
-                $scope.renderTemplate($scope.templateId);
+                vm.renderTemplate(vm.templateId);
             });
         };
-        $scope.removeFromList = function (sortOrder) {
+        vm.removeFromList = function (sortOrder) {
         	moduleApi.removeFromList(sortOrder).then(function () {
-        		$scope.renderTemplate($scope.templateId);
+        		vm.renderTemplate(vm.templateId);
         	});
         };
-        $scope.changeOrder = function (sortOrder, desintationSortOrder) {
+        vm.changeOrder = function (sortOrder, desintationSortOrder) {
         	moduleApi.changeOrder(sortOrder, desintationSortOrder).then(function () {
-        		$scope.renderTemplate($scope.templateId);
+        		vm.renderTemplate(vm.templateId);
         	});
         };
 
