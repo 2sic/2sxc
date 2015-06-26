@@ -1,7 +1,7 @@
-{
+ï»¿{
     "TemplatePicker": {
-        "AppPickerDefault": "<App auswählen>",
-        "ContentTypePickerDefault": "<Typ des Inhalts auswählen>",
+        "AppPickerDefault": "<App auswÃ¤hlen>",
+        "ContentTypePickerDefault": "<Typ des Inhalts auswÃ¤hlen>",
         "Save": "Speichern",
         "Cancel": "Abbrechen",
         "Close": "Schliessen"

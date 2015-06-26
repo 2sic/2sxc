@@ -1,4 +1,4 @@
-{
+﻿{
     "TemplatePicker": {
         "AppPickerDefault": "<Choose App>",
         "ContentTypePickerDefault": "<Choose Content Type>",
