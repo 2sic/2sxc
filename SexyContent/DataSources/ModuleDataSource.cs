@@ -71,7 +71,7 @@ namespace ToSic.SexyContent.DataSources
         {
             if (_listContent == null)
             {
-                _listContent = GetStream(ContentGroup.ListContent, Template.ListContentDemoEntity, ContentGroup.ListPresentation, Template.ListPresentationDemoEntity);
+                _listContent = GetStream(ContentGroup.ListContent, Template.ListContentDemoEntity, ContentGroup.ListPresentation, Template.ListPresentationDemoEntity, true);
             }
             return _listContent;
         }
@@ -81,7 +81,7 @@ namespace ToSic.SexyContent.DataSources
         {
             if (_listPresentation == null)
             {
-                _listPresentation = GetStream(ContentGroup.ListPresentation, Template.ListPresentationDemoEntity, null, null);
+                _listPresentation = GetStream(ContentGroup.ListPresentation, Template.ListPresentationDemoEntity, null, null, true);
             }
             return _listPresentation;
         }
@@ -99,7 +99,7 @@ namespace ToSic.SexyContent.DataSources
 			}
 		}
 
-		private IDictionary<int, IEntity> GetStream(List<IEntity> content, IEntity contentDemoEntity, List<IEntity> presentation, IEntity presentationDemoEntity)
+		private IDictionary<int, IEntity> GetStream(List<IEntity> content, IEntity contentDemoEntity, List<IEntity> presentation, IEntity presentationDemoEntity, bool isListHeader = false)
         {
 			var entitiesToDeliver = new Dictionary<int, IEntity>();
 			if (ContentGroup.Template == null && !OverrideTemplateId.HasValue) return entitiesToDeliver;
@@ -148,7 +148,7 @@ namespace ToSic.SexyContent.DataSources
 
 				entitiesToDeliver.Add(key, new EntityInContentGroup(originals[entityId.Value])
 				{
-				    SortOrder = i, 
+				    SortOrder = isListHeader ? -1 : i, 
                     ContentGroupItemModified = originals[entityId.Value].Modified, 
                     Presentation = presentationEntity, 
                     GroupId = ContentGroup.ContentGroupGuid
