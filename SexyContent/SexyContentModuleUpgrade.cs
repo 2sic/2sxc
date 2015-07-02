@@ -232,11 +232,11 @@ WHERE        (ToSIC_SexyContent_Templates.SysDeleted IS NULL) AND ((SELECT COUNT
 			#region Prepare ContentGroups
 
 			var contentGroupItemsTable = new DataTable();
-			const string sqlCommandContentGroups = @"SELECT        ToSIC_SexyContent_ContentGroupItems.ContentGroupItemID, ToSIC_SexyContent_ContentGroupItems.ContentGroupID, 
+			const string sqlCommandContentGroups = @"SELECT DISTINCT        ToSIC_SexyContent_ContentGroupItems.ContentGroupItemID, ToSIC_SexyContent_ContentGroupItems.ContentGroupID, 
                          ToSIC_SexyContent_ContentGroupItems.TemplateID, ToSIC_SexyContent_ContentGroupItems.SortOrder, ToSIC_SexyContent_ContentGroupItems.Type, 
                          ToSIC_SexyContent_ContentGroupItems.SysCreated, ToSIC_SexyContent_ContentGroupItems.SysCreatedBy, ToSIC_SexyContent_ContentGroupItems.SysModified, 
                          ToSIC_SexyContent_ContentGroupItems.SysModifiedBy, ToSIC_SexyContent_ContentGroupItems.SysDeleted, 
-                         ToSIC_SexyContent_ContentGroupItems.SysDeletedBy, ModuleSettings.ModuleID, ToSIC_SexyContent_Templates.AppID, ToSIC_EAV_Apps.ZoneID, 
+                         ToSIC_SexyContent_ContentGroupItems.SysDeletedBy, ToSIC_SexyContent_Templates.AppID, ToSIC_EAV_Apps.ZoneID, 
                          ToSIC_EAV_Entities.EntityGUID, ToSIC_SexyContent_ContentGroupItems.EntityID, ToSIC_SexyContent_ContentGroupItems.Temp_NewContentGroupGuid, ToSIC_SexyContent_Templates.Temp_NewTemplateGuid
 FROM            ToSIC_SexyContent_Templates INNER JOIN
                          ModuleSettings INNER JOIN
@@ -259,7 +259,6 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
 				TemplateId = c["TemplateID"] == DBNull.Value ? new int?() : (int)c["TemplateID"],
 				SortOrder = (int)c["SortOrder"],
 				Type = (string)c["Type"],
-				ModuleId = (int)c["ModuleID"],
 				AppId = (int)c["AppID"],
 				ZoneId = (int)c["ZoneID"],
 				TemplateEntityGuids = new List<Guid>() { Guid.Parse((string)c["Temp_NewTemplateGuid"]) }
@@ -274,7 +273,7 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
 					itemsList.First().AppId,
 					itemsList.First().ZoneId,
 					ContentGroupId = id,
-					TemplateGuids = itemsList.First().TemplateEntityGuids, itemsList.First().ModuleId,
+					TemplateGuids = itemsList.First().TemplateEntityGuids,
 					ContentGuids = itemsList.Where(p => p.Type == "Content").Select(p => p.EntityGuid).ToList(),
 					PresentationGuids = itemsList.Where(p => p.Type == "Presentation").Select(p => p.EntityGuid).ToList(),
 					ListContentGuids = itemsList.Where(p => p.Type == "ListContent").Select(p => p.EntityGuid).ToList(),
