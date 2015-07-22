@@ -9,75 +9,85 @@ using ToSic.SexyContent.GettingStarted;
 
 namespace ToSic.SexyContent
 {
-    public partial class View : SexyViewContentOrApp, IActionable
-    {
-        /// <summary>
-        /// Page Load event - preload template chooser if necessary
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        protected void Page_Load(object sender, EventArgs e)
-        {
-            // Reset messages visible states
-            pnlMessage.Visible = false;
-            pnlError.Visible = false;
+	public partial class View : SexyViewContentOrApp, IActionable
+	{
+		/// <summary>
+		/// Page Load event - preload template chooser if necessary
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		protected void Page_Load(object sender, EventArgs e)
+		{
+			// Reset messages visible states
+			pnlMessage.Visible = false;
+			pnlError.Visible = false;
 
-            base.Page_Load(sender, e);
-        }
+			if (!EnsureUpgrade(pnlError))
+				return;
 
-        /// <summary>
-        /// Process View if a Template has been set
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        protected void Page_PreRender(object sender, EventArgs e)
-        {
-            try
-            {
-                var isSharedModule = ModuleConfiguration.PortalID != ModuleConfiguration.OwnerPortalID;
+			base.Page_Load(sender, e);
+		}
 
-                if (!isSharedModule)
-                {
-                    var noTemplatesYet = !Sexy.Templates.GetVisibleTemplates().Any();
+		/// <summary>
+		/// Process View if a Template has been set
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		protected void Page_PreRender(object sender, EventArgs e)
+		{
 
-                    // If there are no templates configured - show "getting started" frame
-                    if (noTemplatesYet && IsEditable && UserInfo.IsInRole(PortalSettings.AdministratorRoleName))
-                    {
-                        pnlGetStarted.Visible = true;
-                        var gettingStartedControl = (GettingStartedFrame)LoadControl("~/DesktopModules/ToSIC_SexyContent/SexyContent/GettingStarted/GettingStartedFrame.ascx");
-                        gettingStartedControl.ModuleID = ModuleId;
-                        gettingStartedControl.ModuleConfiguration = ModuleConfiguration;
-                        pnlGetStarted.Controls.Add(gettingStartedControl);
-                    }
+			if (!SexyContentModuleUpgrade.UpgradeComplete)
+				return;
 
-                    // If not fully configured, show stuff
-                    if (UserMayEditThisModule)
-                        pnlTemplateChooser.Visible = true;
+			try
+			{
+				var isSharedModule = ModuleConfiguration.PortalID != ModuleConfiguration.OwnerPortalID;
 
-                    if (AppId.HasValue && !Sexy.PortalIsConfigured(Server, ControlPath))
-                        Sexy.ConfigurePortal(Server);
-                }
+				if (!isSharedModule)
+				{
+					var noTemplatesYet = !Sexy.Templates.GetVisibleTemplates().Any();
 
-                if (AppId.HasValue)
-                {
-                    if (ContentGroup.Content.Any() && Template != null)
-                        ProcessView(phOutput, pnlError, pnlMessage);
-                    else if(!IsContentApp && UserMayEditThisModule) // Select first available template automatically if it's not set yet - then refresh page
-                    {
-                        var templates = Sexy.GetAvailableTemplatesForSelector(ModuleConfiguration).ToList();
-                        if (templates.Any())
-                        {
-                            Sexy.ContentGroups.SetPreviewTemplateId(ModuleConfiguration.ModuleID, templates.First().TemplateId);
-                            Response.Redirect(Request.RawUrl);
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Exceptions.ProcessModuleLoadException(this, ex);
-            }
-        }
+					// If there are no templates configured - show "getting started" frame
+					if (noTemplatesYet && IsEditable && UserInfo.IsInRole(PortalSettings.AdministratorRoleName))
+					{
+						pnlGetStarted.Visible = true;
+						var gettingStartedControl =
+							(GettingStartedFrame)
+								LoadControl("~/DesktopModules/ToSIC_SexyContent/SexyContent/GettingStarted/GettingStartedFrame.ascx");
+						gettingStartedControl.ModuleID = ModuleId;
+						gettingStartedControl.ModuleConfiguration = ModuleConfiguration;
+						pnlGetStarted.Controls.Add(gettingStartedControl);
+					}
 
-    }
+					// If not fully configured, show stuff
+					if (UserMayEditThisModule)
+						pnlTemplateChooser.Visible = true;
+
+					if (AppId.HasValue && !Sexy.PortalIsConfigured(Server, ControlPath))
+						Sexy.ConfigurePortal(Server);
+				}
+
+				if (AppId.HasValue)
+				{
+					if (ContentGroup.Content.Any() && Template != null)
+						ProcessView(phOutput, pnlError, pnlMessage);
+					else if (!IsContentApp && UserMayEditThisModule)
+					// Select first available template automatically if it's not set yet - then refresh page
+					{
+						var templates = Sexy.GetAvailableTemplatesForSelector(ModuleConfiguration).ToList();
+						if (templates.Any())
+						{
+							Sexy.ContentGroups.SetPreviewTemplateId(ModuleConfiguration.ModuleID, templates.First().TemplateId);
+							Response.Redirect(Request.RawUrl);
+						}
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				Exceptions.ProcessModuleLoadException(this, ex);
+			}
+		}
+
+	}
 }

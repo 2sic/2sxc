@@ -27,6 +27,7 @@ namespace ToSic.SexyContent
 
 		protected void Page_Load(object sender, EventArgs e)
 		{
+
 			ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
 
 			try
@@ -35,7 +36,6 @@ namespace ToSic.SexyContent
 				// If logged in, inject Edit JavaScript, and delete / add items
 				if (UserMayEditThisModule)
 				{
-					var ClientScript = Page.ClientScript;
 					// ToDo: Move these RegisterScripts to JS to prevent including AngularJS twice (from other modules)
                     ClientResourceManager.RegisterScript(Page, "~/desktopmodules/tosic_sexycontent/js/angularjs/angular.min.js", 80);
                     ClientResourceManager.RegisterScript(Page, "~/desktopmodules/tosic_sexycontent/js/template-selector/template-selector.min.js", 81);
@@ -92,6 +92,22 @@ namespace ToSic.SexyContent
 				Exceptions.ProcessModuleLoadException(this, ex);
 			}
 
+		}
+
+		protected bool EnsureUpgrade(Panel pnlError)
+		{
+			// Upgrade success check - show message if upgrade did not run successfully
+			if (UserInfo.IsSuperUser && !SexyContentModuleUpgrade.UpgradeComplete)
+			{
+				if (Request.QueryString["finishUpgrade"] == "true")
+					SexyContentModuleUpgrade.FinishAbortedUpgrade();
+
+				ShowError("Module upgrade did not complete successfully. Please click the following button to finish the upgrade:<br><a class='dnnPrimaryAction' href='?finishUpgrade=true'>Finish Upgrade</a>", pnlError);
+
+				return false;
+			}
+
+			return true;
 		}
 
 		/// <summary>
@@ -220,16 +236,16 @@ namespace ToSic.SexyContent
 		{
 			get
 			{
-				if (ModuleConfiguration.PortalID != ModuleConfiguration.OwnerPortalID)
-					return new ModuleActionCollection();
-
-				if (_ModuleActions == null)
+				try
 				{
-					_ModuleActions = new ModuleActionCollection();
-					var Actions = _ModuleActions;
+					if (ModuleConfiguration.PortalID != ModuleConfiguration.OwnerPortalID)
+						return new ModuleActionCollection();
 
-					try
+					if (_ModuleActions == null)
 					{
+						_ModuleActions = new ModuleActionCollection();
+						var Actions = _ModuleActions;
+
 						if (ZoneId.HasValue && AppId.HasValue)
 						{
 							if (!IsList)
@@ -282,12 +298,13 @@ namespace ToSic.SexyContent
 										false, SecurityAccessLevel.Admin, true, false);
 						}
 					}
-					catch (Exception e)
-					{
-						Exceptions.ProcessModuleLoadException(this, e);
-					}
+					return _ModuleActions;
 				}
-				return _ModuleActions;
+				catch(Exception e)
+				{
+					Exceptions.LogException(e);
+					return new ModuleActionCollection();
+				}
 			}
 		}
 

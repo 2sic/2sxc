@@ -13,15 +13,29 @@ using ToSic.Eav;
 using ToSic.Eav.DataSources.Caches;
 using ToSic.Eav.Import;
 using ToSic.SexyContent.ImportExport;
+using System.Text;
+using System.Web.Hosting;
 
 namespace ToSic.SexyContent
 {
 	public class SexyContentModuleUpgrade
 	{
+		public static readonly bool UpgradeComplete;
+		private static string _logDirectory = "~/DesktopModules/ToSIC_SexyContent/Upgrade/Log/";
+
+		static SexyContentModuleUpgrade()
+		{
+			UpgradeComplete = IsUpgradeComplete(SexyContent.ModuleVersion);
+		}
+
 		public static string UpgradeModule(string version)
 		{
 			switch (version)
 			{
+				case "01.00.00": // Make sure that log folder is not existent on new installations
+					if (Directory.Exists(HostingEnvironment.MapPath(_logDirectory)))
+						Directory.Delete(HostingEnvironment.MapPath(_logDirectory), true);
+					break;
 				case "05.05.00":
 					Version050500();
 					break;
@@ -38,13 +52,49 @@ namespace ToSic.SexyContent
 				case "07.02.00":
 					Version070200();
 					break;
+				case "07.02.02":
+					// Make sure upgrades between 07.00.00 and 07.02.02 do not run again when FinishAbortedUpgrade is triggered
+					LogSuccessfulUpgrade("07.00.00", false);
+					LogSuccessfulUpgrade("07.00.03", false);
+					LogSuccessfulUpgrade("07.02.00", false);
+					break;
 			}
 
 			// Increase ClientDependency version upon each upgrade (System and all Portals)
 			// prevents browsers caching old JS and CSS files for editing, which could cause several errors
 			ClientResourceManager.UpdateVersion();
 
+			LogSuccessfulUpgrade(version);
+
 			return version;
+		}
+
+		internal static void FinishAbortedUpgrade() {
+			// Maybe this list can somehow be extracted from the module manifest?
+			var upgradeVersionList = new[] { "07.00.00", "07.00.03", "07.02.00", "07.02.02" };
+
+			// Run upgrade again for all versions that do not have a corresponding logfile
+			foreach(var upgradeVersion in upgradeVersionList) {
+				if(!IsUpgradeComplete(upgradeVersion))
+					UpgradeModule(upgradeVersion);
+			}
+
+			System.Web.HttpRuntime.UnloadAppDomain();
+		}
+
+		internal static void LogSuccessfulUpgrade(string version, bool appendToFile = true)
+		{
+			if(!Directory.Exists(HostingEnvironment.MapPath(_logDirectory)))
+				Directory.CreateDirectory(HostingEnvironment.MapPath(_logDirectory));
+
+			var logFilePath = HostingEnvironment.MapPath(_logDirectory + version + ".resources");
+			if(appendToFile || !File.Exists(logFilePath))
+			File.AppendAllText(logFilePath, DateTime.UtcNow.ToString(@"yyyy-MM-ddTHH\:mm\:ss.fffffffzzz\r\n"), Encoding.UTF8);
+		}
+
+		internal static bool IsUpgradeComplete(string version) {
+			var logFilePath = HostingEnvironment.MapPath(_logDirectory + version + ".resources");
+			return File.Exists(logFilePath);
 		}
 
 		/// <summary>

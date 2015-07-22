@@ -666,7 +666,9 @@
     <None Include="SqlDataProvider\03.03.00.SqlDataProvider" />
     <None Include="SqlDataProvider\03.04.03.SqlDataProvider" />
     <None Include="SqlDataProvider\04.00.00.SqlDataProvider" />
-    <None Include="2sic_2SexyContent.dnn" />
+    <None Include="2sic_2SexyContent.dnn">
+      <SubType>Designer</SubType>
+    </None>
     <Content Include="SqlDataProvider\04.00.02.SqlDataProvider" />
     <Content Include="SqlDataProvider\05.01.00.SqlDataProvider" />
     <Content Include="SqlDataProvider\05.03.01.SqlDataProvider" />
@@ -800,7 +802,9 @@
     <Content Include="Administration\App_LocalResources\EAVManagement.ascx.resx" />
     <Content Include="Administration\App_LocalResources\EAVManagement.ascx.de-DE.resx" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Upgrade\Log\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Administration\Apps\App_LocalResources\AppManagement.ascx.resx" />
   </ItemGroup>
