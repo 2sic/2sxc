@@ -125,6 +125,8 @@
 					return true;
 
 				$.each(formController.EntityModel.Attributes, function (i, e) {
+					if (e.Controller == null)
+						return;
 					if (e.Controller.IsChanged())
 						changed = true;
 				});
