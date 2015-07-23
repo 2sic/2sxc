@@ -1,0 +1,28 @@
+-- make sure sql rolls back automatically in case of error.
+SET XACT_ABORT ON
+
+BEGIN TRANSACTION SexyContentUpdate;
+
+DECLARE @AppDuplicateCount INT
+
+SELECT @AppDuplicateCount = COUNT(*) FROM (SELECT Name, ZoneID
+FROM ToSIC_EAV_Apps
+GROUP BY Name, ZoneID
+HAVING COUNT(*) > 1) g
+
+IF @AppDuplicateCount > 0
+BEGIN
+	RAISERROR(N'Duplicate apps detected in the same zone (ToSIC_EAV_Apps). Please make sure that there are no duplicate app names in the same zone.', 16, 1)
+	RETURN
+END
+
+ALTER TABLE ToSIC_EAV_Apps
+ADD CONSTRAINT [ToSIC_EAV_Apps_PreventDuplicates] UNIQUE NONCLUSTERED
+(
+    [Name], [ZoneID]
+)
+
+
+-- Commit the transaction
+COMMIT TRANSACTION SexyContentUpdate;
+--ROLLBACK TRANSACTION SexyContentUpdate;
