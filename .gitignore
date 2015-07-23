@@ -168,3 +168,6 @@ Resources.zip.manifest
 # node and grunt
 node_*/
 grunt*/
+
+# 2sxc Upgrade Logs
+/Upgrade/Log
