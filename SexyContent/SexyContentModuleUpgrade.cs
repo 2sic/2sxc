@@ -8,6 +8,8 @@ using System.Linq;
 using System.Web;
 using System.Xml.Linq;
 using DotNetNuke.Entities.Portals;
+using DotNetNuke.Services.Exceptions;
+using DotNetNuke.Services.Upgrade;
 using DotNetNuke.Web.Client.ClientResourceManagement;
 using ToSic.Eav;
 using ToSic.Eav.DataSources.Caches;
@@ -21,6 +23,7 @@ namespace ToSic.SexyContent
 	public class SexyContentModuleUpgrade
 	{
 		public static readonly bool UpgradeComplete;
+
 		private static string _logDirectory = "~/DesktopModules/ToSIC_SexyContent/Upgrade/Log/";
 
 		static SexyContentModuleUpgrade()
@@ -30,41 +33,65 @@ namespace ToSic.SexyContent
 
 		public static string UpgradeModule(string version)
 		{
-			switch (version)
+			if (IsUpgradeComplete(version))
+				return "2sxc upgrade for version " + version + " triggered, but it looks like the upgrade for this version is already complete. Skipping upgrade for this version.";
+
+			if (IsUpgradeRunning)
+				return "2sxc upgrade for version " + version + " aborted because it looks like the upgrade is already running. Skipping upgrade.";
+
+			IsUpgradeRunning = true;
+			LogUpgradeStep("----- Upgrade to " + version + " started -----");
+
+			try
 			{
-				case "01.00.00": // Make sure that log folder is not existent on new installations
-					if (Directory.Exists(HostingEnvironment.MapPath(_logDirectory)))
-						Directory.Delete(HostingEnvironment.MapPath(_logDirectory), true);
-					break;
-				case "05.05.00":
-					Version050500();
-					break;
-				case "06.06.00":
-				case "06.06.04":
-					EnsurePipelineDesignerAttributeSets();
-					break;
-				case "07.00.00":
-					Version070000();
-					break;
-				case "07.00.03":
-					Version070003();
-					break;
-				case "07.02.00":
-					Version070200();
-					break;
-				case "07.02.02":
-					// Make sure upgrades between 07.00.00 and 07.02.02 do not run again when FinishAbortedUpgrade is triggered
-					LogSuccessfulUpgrade("07.00.00", false);
-					LogSuccessfulUpgrade("07.00.03", false);
-					LogSuccessfulUpgrade("07.02.00", false);
-					break;
+
+				switch (version)
+				{
+					case "01.00.00": // Make sure that log folder is not existent on new installations
+						if (Directory.Exists(HostingEnvironment.MapPath(_logDirectory)))
+							Directory.Delete(HostingEnvironment.MapPath(_logDirectory), true);
+						break;
+					case "05.05.00":
+						Version050500();
+						break;
+					case "06.06.00":
+					case "06.06.04":
+						EnsurePipelineDesignerAttributeSets();
+						break;
+					case "07.00.00":
+						Version070000();
+						break;
+					case "07.00.03":
+						Version070003();
+						break;
+					case "07.02.00":
+						Version070200();
+						break;
+					case "07.02.02":
+						// Make sure upgrades between 07.00.00 and 07.02.02 do not run again when FinishAbortedUpgrade is triggered
+						LogSuccessfulUpgrade("07.00.00", false);
+						LogSuccessfulUpgrade("07.00.03", false);
+						LogSuccessfulUpgrade("07.02.00", false);
+						break;
+				}
+
+				// Increase ClientDependency version upon each upgrade (System and all Portals)
+				// prevents browsers caching old JS and CSS files for editing, which could cause several errors
+				ClientResourceManager.UpdateVersion();
+
+				LogSuccessfulUpgrade(version);
+				LogUpgradeStep("----- Upgrade to " + version + " completed -----");
+
 			}
-
-			// Increase ClientDependency version upon each upgrade (System and all Portals)
-			// prevents browsers caching old JS and CSS files for editing, which could cause several errors
-			ClientResourceManager.UpdateVersion();
-
-			LogSuccessfulUpgrade(version);
+			catch (Exception e)
+			{
+				LogUpgradeStep(version, "Upgrade failed - " + e.Message);
+				throw;
+			}
+			finally
+			{
+				IsUpgradeRunning = false;
+			}
 
 			return version;
 		}
@@ -89,12 +116,50 @@ namespace ToSic.SexyContent
 
 			var logFilePath = HostingEnvironment.MapPath(_logDirectory + version + ".resources");
 			if(appendToFile || !File.Exists(logFilePath))
-			File.AppendAllText(logFilePath, DateTime.UtcNow.ToString(@"yyyy-MM-ddTHH\:mm\:ss.fffffffzzz\r\n"), Encoding.UTF8);
+			File.AppendAllText(logFilePath, DateTime.UtcNow.ToString(@"yyyy-MM-ddTHH\:mm\:ss.fffffffzzz"), Encoding.UTF8);
 		}
 
 		internal static bool IsUpgradeComplete(string version) {
 			var logFilePath = HostingEnvironment.MapPath(_logDirectory + version + ".resources");
 			return File.Exists(logFilePath);
+		}
+
+		private static FileStream upgradeFileHandle = null;
+		private static StreamWriter upgradeFileStreamWriter = null;
+		internal static bool IsUpgradeRunning
+		{
+			get
+			{
+				var lockFilePath = HostingEnvironment.MapPath(_logDirectory + "lock.resources");
+				return File.Exists(lockFilePath);
+			}
+			private set
+			{
+				var lockFilePath = HostingEnvironment.MapPath(_logDirectory + "lock.resources");
+				if (value)
+				{
+					upgradeFileHandle =  new FileStream(lockFilePath, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.Read); //File.Create(lockFilePath);
+					upgradeFileStreamWriter = new StreamWriter(upgradeFileHandle);
+				}
+				else
+				{
+					upgradeFileHandle.Close();
+					var renamedLockFilePath =
+						HostingEnvironment.MapPath(_logDirectory + DateTime.UtcNow.ToString(@"yyyy-MM-dd HH-mm-ss-fffffff") + ".log.resources");
+					File.Move(lockFilePath, renamedLockFilePath);
+				}
+			}
+		}
+
+		private static void LogUpgradeStep(string message)
+		{
+			upgradeFileStreamWriter.WriteLine(DateTime.UtcNow.ToString(@"yyyy-MM-ddTHH\:mm\:ss") + " " + message);
+			upgradeFileStreamWriter.Flush();
+		}
+
+		private static void LogUpgradeStep(string version, string message)
+		{
+			LogUpgradeStep(version + " - " + message);
 		}
 
 		/// <summary>
@@ -342,6 +407,8 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
 
 			foreach (var app in apps)
 			{
+				LogUpgradeStep("07.00.00", "Starting to migrate data for app " + app + "...");
+
 				var currentApp = app;
 				var entitiesToImport = new List<ImportEntity>();
 
@@ -410,6 +477,8 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
 
 				var import = new Eav.Import.Import(null, app, userName);
 				import.RunImport(null, entitiesToImport);
+
+				LogUpgradeStep("07.00.00", "Migrated data for app " + app);
 			}
 
 			// 4. Use new GUID ContentGroup-IDs on module settings
