@@ -22,6 +22,9 @@ namespace ToSic.SexyContent
             pnlMessage.Visible = false;
             pnlError.Visible = false;
 
+			if (!EnsureUpgrade(pnlError))
+				return;
+
             base.Page_Load(sender, e);
         }
 

@@ -54,6 +54,7 @@
 			<InstallInclude Include="**\*.ttf" Exclude="@(DefaultExclude)" />
 			<InstallInclude Include="**\*.woff" Exclude="@(DefaultExclude)" />
 			<InstallInclude Include="**\*.woff2" Exclude="@(DefaultExclude)" />
+			<InstallInclude Include="**\*.sql" Exclude="@(DefaultExclude)" />
     </ItemGroup>
 
     <ItemGroup>
