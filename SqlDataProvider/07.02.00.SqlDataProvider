@@ -6,10 +6,25 @@ BEGIN TRANSACTION SexyContentUpdate;
 EXEC ToSIC_EAV_ChangeLogAdd 'System'
 
 -- Remove all keys on old tables
-ALTER TABLE [dbo].[ToSIC_SexyContent_Templates] DROP CONSTRAINT [FK_ToSIC_SexyContent_Templates_ToSIC_EAV_AttributeSets]
-ALTER TABLE [dbo].[ToSIC_SexyContent_Templates] DROP CONSTRAINT [FK_ToSIC_SexyContent_Templates_ToSIC_EAV_Entities]
-ALTER TABLE [dbo].[ToSIC_SexyContent_ContentGroupItems] DROP CONSTRAINT [FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_EAV_Entities]
-ALTER TABLE [dbo].[ToSIC_SexyContent_ContentGroupItems] DROP CONSTRAINT [FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_SexyContent_Templates]
+IF (OBJECT_ID('FK_ToSIC_SexyContent_Templates_ToSIC_EAV_AttributeSets', 'F') IS NOT NULL)
+BEGIN
+	ALTER TABLE [dbo].[ToSIC_SexyContent_Templates] DROP CONSTRAINT [FK_ToSIC_SexyContent_Templates_ToSIC_EAV_AttributeSets]
+END
+
+IF (OBJECT_ID('FK_ToSIC_SexyContent_Templates_ToSIC_EAV_Entities', 'F') IS NOT NULL)
+BEGIN
+	ALTER TABLE [dbo].[ToSIC_SexyContent_Templates] DROP CONSTRAINT [FK_ToSIC_SexyContent_Templates_ToSIC_EAV_Entities]
+END
+
+IF (OBJECT_ID('FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_EAV_Entities', 'F') IS NOT NULL)
+BEGIN
+	ALTER TABLE [dbo].[ToSIC_SexyContent_ContentGroupItems] DROP CONSTRAINT [FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_EAV_Entities]
+END
+
+IF (OBJECT_ID('FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_SexyContent_Templates', 'F') IS NOT NULL)
+BEGIN
+	ALTER TABLE [dbo].[ToSIC_SexyContent_ContentGroupItems] DROP CONSTRAINT [FK_ToSIC_SexyContent_ContentGroupItems_ToSIC_SexyContent_Templates]
+END
 
 
 -- Commit the transaction

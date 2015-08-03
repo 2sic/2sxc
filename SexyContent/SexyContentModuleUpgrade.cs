@@ -34,10 +34,10 @@ namespace ToSic.SexyContent
 		public static string UpgradeModule(string version)
 		{
 			if (IsUpgradeComplete(version))
-				return "2sxc upgrade for version " + version + " triggered, but it looks like the upgrade for this version is already complete. Skipping upgrade for this version.";
+				throw new Exception("2sxc upgrade for version " + version + " started, but it looks like the upgrade for this version is already complete. Aborting upgrade.");
 
 			if (IsUpgradeRunning)
-				return "2sxc upgrade for version " + version + " aborted because it looks like the upgrade is already running. Skipping upgrade.";
+				throw new Exception("2sxc upgrade for version " + version + " started, but the upgrade is already running. Aborting upgrade.");
 
 			IsUpgradeRunning = true;
 			LogUpgradeStep("----- Upgrade to " + version + " started -----");
@@ -106,7 +106,8 @@ namespace ToSic.SexyContent
 					UpgradeModule(upgradeVersion);
 			}
 
-			System.Web.HttpRuntime.UnloadAppDomain();
+			// Restart application
+			HttpRuntime.UnloadAppDomain();
 		}
 
 		internal static void LogSuccessfulUpgrade(string version, bool appendToFile = true)
@@ -131,14 +132,35 @@ namespace ToSic.SexyContent
 			get
 			{
 				var lockFilePath = HostingEnvironment.MapPath(_logDirectory + "lock.resources");
-				return File.Exists(lockFilePath);
+				if (!File.Exists(lockFilePath))
+					return false;
+
+				FileStream stream = null;
+				try
+				{
+					stream = new FileStream(lockFilePath, FileMode.Open, FileAccess.ReadWrite, FileShare.Read);
+				}
+				catch (IOException)
+				{
+					// The file is unavailable because it is:
+					// - being processed by another thread
+					// - does not exist (has already been processed)
+					return true;
+				}
+				finally
+				{
+					if (stream != null)
+						stream.Close();
+				}
+
+				return false;
 			}
 			private set
 			{
 				var lockFilePath = HostingEnvironment.MapPath(_logDirectory + "lock.resources");
 				if (value)
 				{
-					upgradeFileHandle =  new FileStream(lockFilePath, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.Read); //File.Create(lockFilePath);
+					upgradeFileHandle =  new FileStream(lockFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read);
 					upgradeFileStreamWriter = new StreamWriter(upgradeFileHandle);
 				}
 				else
