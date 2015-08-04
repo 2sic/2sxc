@@ -105,7 +105,7 @@ namespace ToSic.SexyContent
 				if(SexyContentModuleUpgrade.IsUpgradeRunning)
 					ShowError("It looks like a 2sxc upgrade is currently running. Please wait for the operation to complete (the upgrade may take a few minutes).", pnlError, "", false);
 				else
-					ShowError("Module upgrade did not complete successfully. Please click the following button to finish the upgrade:<br><a class='dnnPrimaryAction' href='?finishUpgrade=true'>Finish Upgrade</a>", pnlError, "Module upgrade did not complete successfully. Please login as host user to finish the upgrade.", false);
+					ShowError("Module upgrade did not complete. Please click the following button to finish the upgrade:<br><a class='dnnPrimaryAction' href='?finishUpgrade=true'>Finish Upgrade</a>", pnlError, "Module upgrade did not complete successfully. Please login as host user to finish the upgrade.", false);
 
 				return false;
 			}
