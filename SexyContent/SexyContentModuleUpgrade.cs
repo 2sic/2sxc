@@ -131,6 +131,9 @@ namespace ToSic.SexyContent
 		{
 			get
 			{
+				if (!Directory.Exists(HostingEnvironment.MapPath(_logDirectory)))
+					Directory.CreateDirectory(HostingEnvironment.MapPath(_logDirectory));
+
 				var lockFilePath = HostingEnvironment.MapPath(_logDirectory + "lock.resources");
 				if (!File.Exists(lockFilePath))
 					return false;
