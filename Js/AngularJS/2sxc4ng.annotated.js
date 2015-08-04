@@ -26,7 +26,12 @@ $2sxc.ng = {
         var allDependencies = ['confSxcApp' + iid, '2sxc4ng'].concat(dependencies || [ngModName]);
 
         angular.element(document).ready(function () {
-            angular.bootstrap(element, allDependencies, config); // start the app
+			try {
+				angular.bootstrap(element, allDependencies, config); // start the app
+			} catch (e) { // Make sure that if one app breaks, others continue to work
+				if (console && console.error)
+				    console.error(e);
+			}
         });
     },
 
@@ -47,9 +52,9 @@ $2sxc.ng = {
         element = element || document;
         var allAppTags = element.querySelectorAll('[' + $2sxc.ng.appAttribute + ']');
         angular.forEach(allAppTags, function (appTag) {
-            var ngModName = appTag.getAttribute($2sxc.ng.appAttribute);
-            var configDependencyInjection = { strictDi: $2sxc.ng.getNgAttribute(appTag, "strict-di") !== null };
-            $2sxc.ng.bootstrap(appTag, ngModName, null, null, configDependencyInjection);
+		    var ngModName = appTag.getAttribute($2sxc.ng.appAttribute);
+		    var configDependencyInjection = { strictDi: $2sxc.ng.getNgAttribute(appTag, "strict-di") !== null };
+		    $2sxc.ng.bootstrap(appTag, ngModName, null, null, configDependencyInjection);
         });
     },
 
