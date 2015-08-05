@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using DotNetNuke.Entities.Portals;
@@ -92,7 +93,7 @@ namespace ToSic.SexyContent.EAV.Implementation.ValueConverter
             if (fileInfo == null)
                 return defaultValue;
 
-            return fileInfo.RelativePath;
+            return Path.Combine(new PortalSettings(fileInfo.PortalId).HomeDirectory, fileInfo.RelativePath);
         }
 
         private string ResolvePageLink(int linkId, string defaultValue)
