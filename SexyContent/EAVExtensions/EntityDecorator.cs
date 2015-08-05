@@ -64,9 +64,9 @@ namespace ToSic.SexyContent.EAVExtensions
             get { return _baseEntity.IsPublished; }
         }
 
-        public object GetBestValue(string attributeName) 
+        public object GetBestValue(string attributeName, bool resolveHyperlinks = false) 
         {
-            return _baseEntity.GetBestValue(attributeName);
+			return _baseEntity.GetBestValue(attributeName, resolveHyperlinks);
         }
 
         //public object GetBestValue(string attributeName, out bool propertyNotFound)
@@ -74,9 +74,9 @@ namespace ToSic.SexyContent.EAVExtensions
         //    return _baseEntity.GetBestValue(attributeName);//, out propertyNotFound);
         //}
 
-        public object GetBestValue(string attributeName, string[] dimensions)//, out bool propertyNotFound)
+		public object GetBestValue(string attributeName, string[] dimensions, bool resolveHyperlinks = false)//, out bool propertyNotFound)
         {
-            return _baseEntity.GetBestValue(attributeName, dimensions); //, out propertyNotFound);
+			return _baseEntity.GetBestValue(attributeName, dimensions, resolveHyperlinks); //, out propertyNotFound);
         }
 
         #endregion
