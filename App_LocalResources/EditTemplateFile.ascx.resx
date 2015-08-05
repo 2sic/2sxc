@@ -240,7 +240,7 @@
 [App:Settings:...]=any type of setting defined in the App - usually used for configuration like details-pages [App:Settings:DetailsLink]</value>
   </data>
   <data name="ListRazor.List" xml:space="preserve">
-    <value>@List.Content.Toolbar«Toolbar for inline editing with 2sxc. If used inside a &lt;div class="sc-element"&gt; then the toolbar will float»
+    <value>@ListContent.Toolbar«Toolbar for inline editing with 2sxc. If used inside a &lt;div class="sc-element"&gt; then the toolbar will float»
 	&lt;ul&gt;
 	@foreach(var e in List) {
 		var Content = e.Content;
