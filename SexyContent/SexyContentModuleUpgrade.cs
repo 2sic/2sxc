@@ -312,6 +312,7 @@ FROM            ToSIC_SexyContent_Templates INNER JOIN
 WHERE        (ToSIC_SexyContent_Templates.SysDeleted IS NULL) AND ((SELECT COUNT(*) FROM ToSIC_EAV_Entities WHERE EntityGUID = ToSIC_SexyContent_Templates.Temp_NewTemplateGuid) = 0)";
 
 			var adapter = new SqlDataAdapter(sqlCommand, sqlConnection);
+			adapter.SelectCommand.CommandTimeout = 3600;
 			adapter.Fill(templates);
 
 			var existingTemplates = templates.AsEnumerable().Select(t =>
@@ -388,6 +389,7 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
                          ((SELECT COUNT(*) FROM ToSIC_EAV_Entities WHERE EntityGUID = ToSIC_SexyContent_ContentGroupItems.Temp_NewContentGroupGuid) = 0) ORDER BY SortOrder";
 
 			var adapterContentGroups = new SqlDataAdapter(sqlCommandContentGroups, sqlConnection);
+			adapterContentGroups.SelectCommand.CommandTimeout = 3600;
 			adapterContentGroups.Fill(contentGroupItemsTable);
 
 			var contentGroupItems = contentGroupItemsTable.AsEnumerable().Select(c => new
@@ -468,11 +470,6 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
 						{"ViewNameInUrl", new List<IValueImportModel> {new ValueImportModel<string>(entity) { Value = t.ViewNameInUrl }}}
 					};
 					entitiesToImport.Add(entity);
-
-					//if (sqlConnection.State != ConnectionState.Open)
-					//	sqlConnection.Open();
-					//var sqlCmd = new SqlCommand("UPDATE ToSIC_SexyContent_Templates SET Temp_NewTemplateGuid = N'" + entity.EntityGuid + "' WHERE TemplateID = " + t.TemplateID, sqlConnection);
-					//sqlCmd.ExecuteNonQuery();
 				}
 
 				foreach (var t in existingContentGroups.Where(t => t.AppId == app))
@@ -493,11 +490,6 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
 						{"ListPresentation", new List<IValueImportModel> {new ValueImportModel<List<Guid?>>(entity) { Value = t.ListPresentationGuids }}}
 					};
 					entitiesToImport.Add(entity);
-
-					//if (sqlConnection.State != ConnectionState.Open)
-					//	sqlConnection.Open();
-					//var sqlCmd = new SqlCommand("UPDATE ToSIC_SexyContent_ContentGroupItems SET Temp_NewContentGroupGuid = N'" + entity.EntityGuid + "' WHERE ContentGroupID = " + t.ContentGroupId, sqlConnection);
-					//sqlCmd.ExecuteNonQuery();
 				}
 
 				var import = new Eav.Import.Import(null, app, userName);
@@ -506,21 +498,6 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
 				LogUpgradeStep("07.00.00", "Migrated data for app " + app);
 			}
 
-			// 4. Use new GUID ContentGroup-IDs on module settings
-//			if (sqlConnection.State != ConnectionState.Open)
-//				sqlConnection.Open();
-//			var sqlCmdUpdateModuleSettings = new SqlCommand(@"INSERT INTO ModuleSettings
-//                         (ModuleID, CreatedByUserID, CreatedOnDate, LastModifiedByUserID, LastModifiedOnDate, SettingName, SettingValue)
-//SELECT DISTINCT       ModuleSettings_1.ModuleID, ModuleSettings_1.CreatedByUserID, ModuleSettings_1.CreatedOnDate, ModuleSettings_1.LastModifiedByUserID, 
-//                         ModuleSettings_1.LastModifiedOnDate, 'ToSIC_SexyContent_ContentGroupGuid' AS SettingName, 
-//                         ToSIC_SexyContent_ContentGroupItems.Temp_NewContentGroupGuid AS SettingValue
-//FROM            ModuleSettings AS ModuleSettings_1 LEFT OUTER JOIN
-//                         ToSIC_SexyContent_ContentGroupItems ON ModuleSettings_1.SettingValue = ToSIC_SexyContent_ContentGroupItems.ContentGroupID
-//WHERE        (ModuleSettings_1.SettingName = N'ContentGroupID') AND (NOT (ToSIC_SexyContent_ContentGroupItems.Temp_NewContentGroupGuid IS NULL)) AND
-//                             ((SELECT        COUNT(*) AS Expr1
-//                                 FROM            ModuleSettings AS ModuleSettings_2
-//                                 WHERE        (ModuleID = ModuleSettings_1.ModuleID) AND (SettingName = N'ToSIC_SexyContent_ContentGroupGuid')) = 0)", sqlConnection);
-//			sqlCmdUpdateModuleSettings.ExecuteNonQuery();
 		}
 
 		private static void Version070003()
