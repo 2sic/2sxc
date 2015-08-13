@@ -50,7 +50,7 @@ namespace ToSic.SexyContent
 				ddlEntities.DataSource =
 					dataSource.List.Select(p => new
 					{
-						EntityTitle = p.Value.Title[0] + " (" + p.Value.EntityId + ")",
+						EntityTitle = (p.Value.Title != null ? p.Value.Title[0] : "[?]") + " (" + p.Value.EntityId + ")",
 						EntityID = p.Value.EntityId
 					});
 				ddlEntities.DataBind();
