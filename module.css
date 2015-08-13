@@ -7,6 +7,7 @@
 .sc-menu a span { width: 16px!important;height: 16px!important;background-color: #96D500; border-color: #96D500; border-width: 3px; border-style: solid; box-sizing: content-box;
                   border-radius: 6px; -webkit-border-radius: 6px; -moz-border-radius: 6px;
                   color: #fff; text-align: center; padding: 2px; font-size: 13px}
+.sc-menu.listContent a span {background-color: #007100; border-color: #007100;}
 .sc-menu a.hideFirst { display: none!important }
 .showAll a.hideFirst { display:  inline-block!important }
 .sc-menu a.box span { border-color: #666 }

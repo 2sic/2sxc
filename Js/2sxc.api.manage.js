@@ -225,7 +225,8 @@ $2sxc.getManageController = function (id) {
                 buttons.push($.extend({}, settings, { action: 'more' }));
             }
 
-            var toolbar = $('<ul />', { 'class': 'sc-menu', 'onclick': 'javascript: var e = arguments[0] || window.event; e.stopPropagation();' });
+            var tbClasses = 'sc-menu' + ((settings.sortOrder == -1) ? ' listContent' : '');
+            var toolbar = $('<ul />', { 'class': tbClasses, 'onclick': 'javascript: var e = arguments[0] || window.event; e.stopPropagation();' });
 
             for (var i = 0; i < buttons.length; i++)
                 toolbar.append($('<li />').append($(manageController.getButton(buttons[i]))));
