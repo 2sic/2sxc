@@ -116,7 +116,7 @@ $2sxc.getManageController = function (id) {
 
             if (settings.action == 'replace') {
                 params.ctl = 'settingswrapper';
-                params.ItemType = 'Content';
+                params.ItemType = (settings.sortOrder != -1) ? 'Content' : 'ListContent';// 'Content';
             }
 
             if (settings.prefill)
@@ -212,15 +212,16 @@ $2sxc.getManageController = function (id) {
                     buttons.push($.extend({}, settings, { action: 'new' }));
                     if (settings.useModuleList) {
                         buttons.push($.extend({}, settings, { action: 'add' }));
-                        buttons.push($.extend({}, settings, { action: 'replace' }));
                         if (settings.sortOrder != 0)
                             buttons.push($.extend({}, settings, { action: 'moveup' }));
                         buttons.push($.extend({}, settings, { action: 'movedown' }));
                     }
                 }
                 buttons.push($.extend({}, settings, { action: 'publish' }));
-                if (toolbarConfig.isList)
+                if (toolbarConfig.isList) {
+                    buttons.push($.extend({}, settings, { action: 'replace' }));
                     buttons.push($.extend({}, settings, { action: 'remove' })); // only provide remove on lists
+                }
                 buttons.push($.extend({}, settings, { action: 'more' }));
             }
 
