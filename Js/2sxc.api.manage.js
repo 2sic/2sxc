@@ -107,8 +107,8 @@ $2sxc.getManageController = function (id) {
             if (!settings.useModuleList) {
                 if (settings.action != 'new')
                     params.entityId = settings.entityId;
-                if (settings.attributeSetName)
-                    params.attributeSetName = settings.attributeSetName;
+                if (settings.contentType || settings.attributeSetName)
+                    params.attributeSetName = settings.contentType || settings.attributeSetName;
             } else {
                 params.sortOrder = settings.sortOrder;
                 params.contentGroupId = settings.contentGroupId;
