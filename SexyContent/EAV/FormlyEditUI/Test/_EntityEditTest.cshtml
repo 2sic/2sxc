@@ -1,0 +1,30 @@
+﻿@inherits DotNetNuke.Web.Razor.DotNetNukeWebPage
+
+<div sxc-app="testModule" id="editEntity@(Dnn.Module.ModuleID)" ng-controller="outerAppController as vm">
+	<eav-edit-entity content-type-name="Test" entity-id="3942" register-edit-control="vm.registerEditControl"></eav-edit-entity>
+	<button ng-disabled="!vm.isValid()" ng-click="vm.save()" class="btn btn-primary submit-button">Save</button>
+</div>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+
+<link rel="stylesheet" href="@Href("~/DesktopModules/ToSIC_SexyContent/js/angularjs/toaster.css")" />
+<script src="@Href("~/DesktopModules/ToSIC_SexyContent/js/angularjs/angular.min.js")"></script>
+<script src="@Href("~/DesktopModules/ToSIC_SexyContent/js/angularjs/angular-resource.min.js")"></script>
+<script src="@Href("~/DesktopModules/ToSIC_SexyContent/js/angularjs/angular-animate.min.js")"></script>
+<script src="@Href("~/DesktopModules/ToSIC_SexyContent/js/angularjs/toaster.js")"></script>
+<script src="@Href("~/DesktopModules/ToSIC_SexyContent/js/2sxc.api.js")"></script>
+<script src="@Href("~/DesktopModules/ToSIC_SexyContent/js/angularjs/2sxc4ng.min.js")"></script>
+<script src="@Href("../FieldTemplates/EavFieldTemplates.js")"></script>
+<script src="@Href("../EditEntity.js")"></script>
+<script src="@Href("EditEntityTestRazor.js")"></script>
+
+<!-- apiCheck is used by formly to validate its api -->
+<script src="@Href("../lib/api-check.js")"></script>
+<!-- This is the current state of master for formly core. -->
+<script src="@Href("../lib/formly.min.js")"></script>
+<!-- This is the current state of master for the bootstrap templates -->
+<script src="@Href("../lib/angular-formly-templates-bootstrap.min.js")"></script>
+	
+<!-- AngularUI (angular bootstrap components), needed at least for datetime picker -->
+<script src="@Href("../lib/ui-bootstrap-tpls-0.13.2.min.js")"></script>

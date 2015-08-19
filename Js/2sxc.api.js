@@ -13,8 +13,9 @@
             serviceScopes: ['app-api', 'app-query', 'app-content', 'eav', 'view'], // todo7: should probably deprecate "app"
             serviceRoot: $.ServicesFramework(id).getServiceRoot('2sxc'),
             resolveServiceUrl: function resolveServiceUrl(virtualPath) {
-                var scope = virtualPath.split('/')[0].toLowerCase();
-                // stop if it's not one of our special paths
+            	var scope = virtualPath.split('/')[0].toLowerCase();
+
+            	// stop if it's not one of our special paths
                 if (controller.serviceScopes.indexOf(scope) == -1)
                 	return virtualPath;
 

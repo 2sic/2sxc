@@ -9,7 +9,7 @@ using ToSic.SexyContent.Razor.Helpers;
 namespace ToSic.SexyContent.WebApi
 {
 
-    [SupportedModules("2sxc-app")]
+	[SupportedModules("2sxc,2sxc-app")]
     public abstract class SxcApiController : DnnApiController, IAppAndDataHelpers
     {
         private SexyContent _sexyContent;

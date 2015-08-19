@@ -69,6 +69,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\DotNetNuke.Web.Client.dll</HintPath>
     </Reference>
+    <Reference Include="DotNetNuke.Web.Razor, Version=7.2.0.607, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\DotNetNuke.Web.Razor.dll</HintPath>
+    </Reference>
     <Reference Include="DotNetNuke.WebUtility, Version=4.2.1.783, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\DotNetNuke.WebUtility.dll</HintPath>
@@ -115,6 +119,10 @@
       <HintPath>..\..\bin\System.Web.Http.WebHost.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Services" />
+    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\System.Web.WebPages.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.EnterpriseServices" />
@@ -220,6 +228,8 @@
     <Compile Include="SexyContent\DataSources\DnnSqlDataSource.cs" />
     <Compile Include="SexyContent\DataSources\DnnFormAndList.cs" />
     <Compile Include="SexyContent\EAVExtensions\EavApiProxies\EntitiesController.cs" />
+    <Compile Include="SexyContent\EAV\FormlyEditUI\ContentTypeController.cs" />
+    <Compile Include="SexyContent\EAV\FormlyEditUI\EntityController.cs" />
     <Compile Include="SexyContent\EAV\Implementation\ValueConverter\SexyContentValueConverter.cs" />
     <Compile Include="SexyContent\EAV\PipelineDesigner\PipelineManagementDnnWrapper.ascx.cs">
       <DependentUpon>PipelineManagementDnnWrapper.ascx</DependentUpon>
@@ -627,7 +637,22 @@
     <Content Include="js\template-selector\template-selector.min.js.map" />
     <Content Include="README.md" />
     <Content Include="js\dnn-inpage-edit.min.js.map" />
+    <Content Include="SexyContent\EAV\FormlyEditUI\lib\angular-formly-templates-bootstrap.js.map" />
+    <Content Include="SexyContent\EAV\FormlyEditUI\lib\angular-formly-templates-bootstrap.min.js.map" />
+    <Content Include="SexyContent\EAV\FormlyEditUI\lib\formly.min.js.map" />
+    <Content Include="SexyContent\EAV\FormlyEditUI\Test\EditEntityTestRazor.js" />
+    <Content Include="SexyContent\EAV\FormlyEditUI\Test\_EntityEditTest.cshtml" />
     <None Include="SqlDataProvider\01.00.00.SqlDataProvider" />
+    <Content Include="SexyContent\EAV\FormlyEditUI\EditEntity.js" />
+    <Content Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\EavFieldTemplates.js" />
+    <Content Include="SexyContent\EAV\FormlyEditUI\lib\angular-formly-templates-bootstrap.js" />
+    <Content Include="SexyContent\EAV\FormlyEditUI\lib\angular-formly-templates-bootstrap.min.js" />
+    <Content Include="SexyContent\EAV\FormlyEditUI\lib\api-check.js" />
+    <Content Include="SexyContent\EAV\FormlyEditUI\lib\formly.js" />
+    <Content Include="SexyContent\EAV\FormlyEditUI\lib\formly.min.js" />
+    <Content Include="SexyContent\EAV\FormlyEditUI\lib\ui-bootstrap-tpls-0.13.2.min.js" />
+    <Content Include="SexyContent\EAV\FormlyEditUI\Test\EditEntityTest.html" />
+    <Content Include="SexyContent\EAV\FormlyEditUI\Test\EditEntityTest.js" />
     <Content Include="SexyContent\EAV\PipelineDesigner\assets\jquery.jsPlumb-1.7.2-min.js" />
     <Content Include="SexyContent\EAV\PipelineDesigner\PipelineDesigner.ascx" />
     <Content Include="SexyContent\EAV\PipelineDesigner\PipelineDesigner.css" />
