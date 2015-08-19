@@ -637,9 +637,11 @@
     <Content Include="js\template-selector\template-selector.min.js.map" />
     <Content Include="README.md" />
     <Content Include="js\dnn-inpage-edit.min.js.map" />
+    <Content Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\SxcFieldTemplates.js" />
     <Content Include="SexyContent\EAV\FormlyEditUI\lib\angular-formly-templates-bootstrap.js.map" />
     <Content Include="SexyContent\EAV\FormlyEditUI\lib\angular-formly-templates-bootstrap.min.js.map" />
     <Content Include="SexyContent\EAV\FormlyEditUI\lib\formly.min.js.map" />
+    <Content Include="SexyContent\EAV\FormlyEditUI\lib\ng-ckeditor.min.js" />
     <Content Include="SexyContent\EAV\FormlyEditUI\Test\EditEntityTestRazor.js" />
     <Content Include="SexyContent\EAV\FormlyEditUI\Test\_EntityEditTest.cshtml" />
     <None Include="SqlDataProvider\01.00.00.SqlDataProvider" />

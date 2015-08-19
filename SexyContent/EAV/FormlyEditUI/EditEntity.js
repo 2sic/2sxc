@@ -2,7 +2,7 @@
 (function () {
 	'use strict';
 
-	var app = angular.module('eavEditEntity', ['formly', 'eavFieldTemplates', '2sxc4ng']);
+	var app = angular.module('eavEditEntity', ['formly', 'eavFieldTemplates', 'sxcFieldTemplates', '2sxc4ng']);
 
 	// Main directive that renders an entity edit form
 	app.directive('eavEditEntity', function() {

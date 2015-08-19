@@ -12,11 +12,11 @@
 			wrapper: ['bootstrapLabel', 'bootstrapHasError']
 		});
 
-		formlyConfigProvider.setType({
-			name: 'string-wysiwyg',
-			template: '<textarea class="form-control" ng-model="model[options.key]"></textarea>',
-			wrapper: ['bootstrapLabel', 'bootstrapHasError']
-		});
+		//formlyConfigProvider.setType({
+		//	name: 'string-wysiwyg',
+		//	template: '<textarea class="form-control" ng-model="model[options.key]"></textarea>',
+		//	wrapper: ['bootstrapLabel', 'bootstrapHasError']
+		//});
 
 		formlyConfigProvider.setType({
 			name: 'string-dropdown',
