@@ -148,6 +148,10 @@ namespace ToSic.SexyContent
         protected void Page_Load(object sender, EventArgs e)
         {
 
+			// ToDo: Remove this redirect to new edit location (as soon as it's not BETA anymore)
+			if(Request.QueryString["beta"] == "true")
+				Response.Redirect(this.EditUrl(TabId, "editentitytest", true, "mid=" + ModuleId + "&contentGroupGuid=" + ContentGroup.ContentGroupGuid + (SortOrder.HasValue ? "&sortOrder=" + this.SortOrder : "")));
+
             // Add DNN Version to body Class
             SexyContent.AddDNNVersionToBodyClass(this);
 
