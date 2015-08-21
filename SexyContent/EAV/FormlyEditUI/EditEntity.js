@@ -7,7 +7,7 @@
 	// Main directive that renders an entity edit form
 	app.directive('eavEditEntity', function() {
 		return {
-			template: '<formly-form ng-submit="vm.onSubmit()" form="vm.form" model="vm.model" fields="vm.formFields"></formly-form><h3>Debug</h3><pre>{{vm.model | json}}</pre><!--<pre>{{vm.debug | json}}</pre><pre>{{vm.formFields | json}}</pre>-->',
+			template: '<formly-form ng-submit="vm.onSubmit()" form="vm.form" model="vm.model" fields="vm.formFields"></formly-form><a ng-click="vm.showDebug = !vm.showDebug;">Debug</a><div ng-if="vm.showDebug"><h3>Debug</h3><pre>{{vm.model | json}}</pre><pre>{{vm.debug | json}}</pre><pre>{{vm.formFields | json}}</pre></div>',
 			restrict: 'E',
 			scope: {
 				contentTypeName: '@contentTypeName',
