@@ -3,7 +3,7 @@
 	'use strict';
 
 	var outerApp = angular.module('testModule', ['eavEditEntity']);
-	outerApp.controller('outerAppController', function($q) {
+	outerApp.controller('outerAppController', function($q, $http) {
 		var vm = this;
 
 		// This array holds the entities to edit
@@ -12,14 +12,31 @@
 		// Prepare URL parameters
 		var entityId = $2sxc.ng.getParameterByName('entityId');
 		var contentTypeName = $2sxc.ng.getParameterByName('contentTypeName');
-		var contentGroupId = $2sxc.ng.getParameterByName('contentGroupId');
+		var contentGroupGuid = $2sxc.ng.getParameterByName('contentGroupGuid');
 		var mode = $2sxc.ng.getParameterByName('mode');
 		var sortOrder = $2sxc.ng.getParameterByName('sortOrder');
 
+		// Edit a content group - first load the contentgroup configuration
+		// Then add entities to edit from configuration
+		if (contentGroupGuid) {
+			$http.get('view/ContentGroup/Get?contentGroupGuid=' + contentGroupGuid).then(function (result) {
+				var contentGroup = result.data;
 
-		// A content group is defined - first load the contentgroup configuration
-		if (contentGroupId) {
-			vm.entitiesToEdit.push({ contentTypeName: 'Test', entityId: '3942' });
+				// Template must be set to edit something
+				if(!contentGroup.Template)
+					alert('No template defined');
+
+				var editTypes = ['Content', 'Presentation'];
+				angular.forEach(editTypes, function (editType, i) {
+					var contentTypeName = contentGroup.Template[editType + 'TypeStaticName'];
+					console.log(contentGroup);
+					if (contentTypeName)
+						vm.entitiesToEdit.push({ contentTypeName: contentTypeName, entityId: contentGroup[editType][sortOrder], editControlTitle: editType });
+				});
+
+				//vm.entitiesToEdit.push({ contentTypeName: 'Test', entityId: '3942' });
+
+			});
 		}
 		
 		if (entityId) // User wants to edit a single entity

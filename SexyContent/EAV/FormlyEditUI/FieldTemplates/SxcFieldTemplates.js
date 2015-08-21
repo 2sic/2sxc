@@ -12,5 +12,11 @@
 			wrapper: ['bootstrapLabel', 'bootstrapHasError']
 		});
 
+		formlyConfigProvider.setType({
+			name: 'hyperlink-default',
+			template: '<span>Hyperlink template not implemented yet</span>',
+			wrapper: ['bootstrapLabel', 'bootstrapHasError']
+		});
+
 	});
 })();

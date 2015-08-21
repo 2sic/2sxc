@@ -228,6 +228,7 @@
     <Compile Include="SexyContent\DataSources\DnnSqlDataSource.cs" />
     <Compile Include="SexyContent\DataSources\DnnFormAndList.cs" />
     <Compile Include="SexyContent\EAVExtensions\EavApiProxies\EntitiesController.cs" />
+    <Compile Include="SexyContent\EAV\FormlyEditUI\ContentGroupController.cs" />
     <Compile Include="SexyContent\EAV\FormlyEditUI\ContentTypeController.cs" />
     <Compile Include="SexyContent\EAV\FormlyEditUI\EntityController.cs" />
     <Compile Include="SexyContent\EAV\Implementation\ValueConverter\SexyContentValueConverter.cs" />
