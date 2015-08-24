@@ -11,52 +11,6 @@
 	</div>
 </div>
 
-@*
-<div class="dnnDropDownList" id="test">
-	<a href="javascript:void(0);" title="Expand" class="selected-value"></a>
-	<script type="text/javascript">
-		$(document).ready(function() {
-			dnn.createDropDownList(
-				'test',
-				{
-					services: {
-						getTreeMethod: 'ItemListService/GetPages',
-						getNodeDescendantsMethod: 'ItemListService/GetPageDescendants',
-						searchTreeMethod: 'ItemListService/SearchPages',
-						getTreeWithNodeMethod: 'ItemListService/GetTreePathForPage',
-						serviceRoot: 'InternalServices',
-						sortTreeMethod: 'ItemListService/SortPages',
-						parameters: {
-							includeDisabled: true,
-							includeAllTypes: true,
-							includeAcitve: true,
-							includeHostPages: false
-							//roles: 
-						}
-					},
-					selectedItemCss: 'selected-item'
-				},
-				{ 'onSelectionChanged': function () { alert('changed!'); } }
-			);
-		});
-	</script>
-	
-	<link rel="stylesheet" href="@Href("~/Resources/Shared/components/DropDownList/dnn.DropDownList.css")" />
-	<script src="@Href("~/Resources/Shared/Components/DropDownList/dnn.DropDownList.js")"></script>
-	
-	
-	ClientResourceManager.RegisterStyleSheet(page, "~/Resources/Shared/scripts/jquery/dnn.jScrollBar.css");
-
-            ClientResourceManager.RegisterScript(page, "~/Resources/Shared/scripts/dnn.extensions.js");
-            ClientResourceManager.RegisterScript(page, "~/Resources/Shared/scripts/dnn.jquery.extensions.js");
-            ClientResourceManager.RegisterScript(page, "~/Resources/Shared/scripts/dnn.DataStructures.js");
-            ClientResourceManager.RegisterScript(page, "~/Resources/Shared/scripts/jquery/jquery.mousewheel.js");
-            ClientResourceManager.RegisterScript(page, "~/Resources/Shared/scripts/jquery/dnn.jScrollBar.js");
-            ClientResourceManager.RegisterScript(page, "~/Resources/Shared/scripts/TreeView/dnn.TreeView.js");
-            ClientResourceManager.RegisterScript(page, "~/Resources/Shared/scripts/TreeView/dnn.DynamicTreeView.js");
-		
-</div>*@
-
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
 
@@ -81,7 +35,3 @@
 	
 <!-- AngularUI (angular bootstrap components), needed at least for datetime picker -->
 <script src="@Href("../lib/ui-bootstrap-tpls-0.13.2.min.js")"></script>
-
-<!-- Wysiwyg (JS-only version of CKEditor, no DNN integration) -->
-<script src="//cdn.ckeditor.com/4.5.3/standard/ckeditor.js"></script>
-<script src="@Href("../lib/ng-ckeditor.min.js")"></script>

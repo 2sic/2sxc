@@ -231,6 +231,27 @@
     <Compile Include="SexyContent\EAV\FormlyEditUI\ContentGroupController.cs" />
     <Compile Include="SexyContent\EAV\FormlyEditUI\ContentTypeController.cs" />
     <Compile Include="SexyContent\EAV\FormlyEditUI\EntityController.cs" />
+    <Compile Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\WebForms\Wysiwyg.ascx.cs">
+      <DependentUpon>Wysiwyg.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\WebForms\Wysiwyg.ascx.designer.cs">
+      <DependentUpon>Wysiwyg.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\WebForms\PagePicker.ascx.cs">
+      <DependentUpon>PagePicker.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\WebForms\PagePicker.ascx.designer.cs">
+      <DependentUpon>PagePicker.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\WebForms\WebFormsBridge.ascx.cs">
+      <DependentUpon>WebFormsBridge.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\WebForms\WebFormsBridge.ascx.designer.cs">
+      <DependentUpon>WebFormsBridge.ascx</DependentUpon>
+    </Compile>
     <Compile Include="SexyContent\EAV\Implementation\ValueConverter\SexyContentValueConverter.cs" />
     <Compile Include="SexyContent\EAV\PipelineDesigner\PipelineManagementDnnWrapper.ascx.cs">
       <DependentUpon>PipelineManagementDnnWrapper.ascx</DependentUpon>
@@ -639,10 +660,11 @@
     <Content Include="README.md" />
     <Content Include="js\dnn-inpage-edit.min.js.map" />
     <Content Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\SxcFieldTemplates.js" />
+    <Content Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\WebForms\Wysiwyg.ascx" />
+    <Content Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\WebForms\PagePicker.ascx" />
     <Content Include="SexyContent\EAV\FormlyEditUI\lib\angular-formly-templates-bootstrap.js.map" />
     <Content Include="SexyContent\EAV\FormlyEditUI\lib\angular-formly-templates-bootstrap.min.js.map" />
     <Content Include="SexyContent\EAV\FormlyEditUI\lib\formly.min.js.map" />
-    <Content Include="SexyContent\EAV\FormlyEditUI\lib\ng-ckeditor.min.js" />
     <Content Include="SexyContent\EAV\FormlyEditUI\Test\EditEntityTestRazor.js" />
     <Content Include="SexyContent\EAV\FormlyEditUI\Test\_EntityEditTest.cshtml" />
     <None Include="SqlDataProvider\01.00.00.SqlDataProvider" />
@@ -656,6 +678,7 @@
     <Content Include="SexyContent\EAV\FormlyEditUI\lib\ui-bootstrap-tpls-0.13.2.min.js" />
     <Content Include="SexyContent\EAV\FormlyEditUI\Test\EditEntityTest.html" />
     <Content Include="SexyContent\EAV\FormlyEditUI\Test\EditEntityTest.js" />
+    <Content Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\WebForms\WebFormsBridge.ascx" />
     <Content Include="SexyContent\EAV\PipelineDesigner\assets\jquery.jsPlumb-1.7.2-min.js" />
     <Content Include="SexyContent\EAV\PipelineDesigner\PipelineDesigner.ascx" />
     <Content Include="SexyContent\EAV\PipelineDesigner\PipelineDesigner.css" />
