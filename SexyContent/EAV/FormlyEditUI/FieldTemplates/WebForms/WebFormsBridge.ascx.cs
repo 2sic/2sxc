@@ -27,6 +27,8 @@ namespace ToSic.SexyContent.EAV.FormlyEditUI.FieldTemplates.WebForms
 					controlWysiwyg.PortalId = this.PortalId;
 					pnlBridgeContent.Controls.Add(controlWysiwyg);
 					break;
+				default:
+					throw new Exception("No type was specified.");
 			}
 
 			JavaScript.RequestRegistration(CommonJs.DnnPlugins);
