@@ -4,22 +4,26 @@
 <dnn:DnnPageDropDownList ID="ctlPagePicker" CssClass="pagePicker" runat="server" Width="498px" IncludeDisabledTabs="true" IncludeActiveTab="true" IncludeAllTabTypes="true"  />
 
 <script type="text/javascript">
-	$(window).load(function() {
+	// Call this function from outside to register the actual bridge
+	window.connectBridge = function (bridge) {
+		window.bridge = bridge;
+		$(document).ready(function () {
+			initDropDown();
+		});
+	};
+
+	function initDropDown() {
 		var dnnPageDropDownList = $(".pagePicker");
 		var objDnnPageDropDownList = dnn[dnnPageDropDownList.attr("id")];
 		if (objDnnPageDropDownList._openItemList != undefined)	// works in DNN 7.2+
 			objDnnPageDropDownList._openItemList(); // expand the treeView
 		dnnPageDropDownList.find(".dt-container").width(498); // set treeView width (hight can't be set)
-	});
+	}
 
 	function SelectionChanged(selectedItem) {
-		var selectedTabId = selectedItem.key;
 		var url = "";
-		if (selectedTabId != "")
-			url = "Page:" + selectedTabId;
-
-		if (window.fieldCallback) {
-			window.fieldCallback({ url: url });
-		}
+		if (selectedItem.key != "")
+			url = "Page:" + selectedItem.key;
+		bridge.valueChanged(url);
 	}
 </script>

@@ -10,41 +10,45 @@
 
 		formlyConfigProvider.setType({
 			name: 'string-wysiwyg',
-			template: '<iframe style="width:100%;" web-forms-bridge="vm.bridge" bridge-type="wysiwyg" bridge-sync-height="true"></iframe>',
+			templateUrl: '/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/FormlyEditUI/FieldTemplates/Templates/string-wysiwyg.html', // ToDo: Use correct base path
 			wrapper: ['bootstrapLabel', 'bootstrapHasError'],
 			controller: 'FieldTemplate-WysiwygCtrl as vm'
 		});
 
 		formlyConfigProvider.setType({
 			name: 'hyperlink-default',
-			template: '<div><div class="input-group" dropdown>' +
-				'<input type="text" class="form-control" ng-model="model[options.key]">' +
-				'<span class="input-group-btn"><button type="button" id="single-button" class="btn btn-default dropdown-toggle" dropdown-toggle>' +
-				'...' +
-				'</button></span>' +
-				'<ul class="dropdown-menu pull-right" role="menu">' +
-					'<li role="menuitem"><a ng-click="vm.openDialog()" href="#">Page Picker</a></li>' +
-				'</ul>' +
-				'</div><div>Test: {{vm.test}}</div></div>',
+			templateUrl: '/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/FormlyEditUI/FieldTemplates/Templates/hyperlink-default.html',
 			wrapper: ['bootstrapLabel', 'bootstrapHasError'],
 			controller: 'FieldTemplate-HyperlinkCtrl as vm'
 		});
 
 	});
 
-	app.controller('FieldTemplate-HyperlinkCtrl', function ($modal) {
+	app.controller('FieldTemplate-HyperlinkCtrl', function ($modal, $scope) {
 
 		var vm = this;
+		vm.modalInstance = null;
 		vm.test = "...";
+		vm.bridge = {
+			valueChanged: function (value) {
+				$scope.$apply(function() {
+					$scope.model[$scope.options.key] = value;
+					vm.modalInstance.close();
+				});
+			}
+		};
 
 		vm.openDialog = function(type) {
-			$modal.open({
-				template: '<div><div class="modal-header">' +
-            '<h3 class="modal-title">Select a page</h3>' +
-			'</div>' +
-			'<div class="modal-body" style="height:400px;"><iframe style="width:100%; height:400px" web-forms-bridge="vm.bridge" bridge-type="pagepicker" bridge-sync-height="true"></iframe></div>' +
-			'<div class="modal-footer"></div>' +
-			'</div>'
+			vm.modalInstance = $modal.open({
+				templateUrl: '/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/FormlyEditUI/FieldTemplates/Templates/hyperlink-default-' + type + '.html',
+				resolve: {
+					bridge: function() {
+						return vm.bridge;
+					}
+				},
+				controller: function($scope, bridge) {
+					$scope.bridge = bridge;
+				}
 			});
 		};
 
@@ -81,15 +85,18 @@
 					w.connectBridge(scope.bridge);
 
 					// Sync height
-					if (scope.bridgeSyncHeight) {
+					if (scope.bridgeSyncHeight == "true") {
 						
 						var resize = function () {
 							elem.css('height', '');
 							elem.css('height', w.document.body.scrollHeight + "px");
 						};
 
-						//w.$(w).resize('resize'); // Performance issues when uncommenting this line...
+						//w.$(w).resize(resize); // Performance issues when uncommenting this line...
 						resize();
+						w.$(w.document).ready(function() {
+							resize();
+						});
 
 					}
 				});

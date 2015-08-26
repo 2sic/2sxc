@@ -231,6 +231,13 @@
     <Compile Include="SexyContent\EAV\FormlyEditUI\ContentGroupController.cs" />
     <Compile Include="SexyContent\EAV\FormlyEditUI\ContentTypeController.cs" />
     <Compile Include="SexyContent\EAV\FormlyEditUI\EntityController.cs" />
+    <Compile Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\WebForms\FileManager.ascx.cs">
+      <DependentUpon>FileManager.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\WebForms\FileManager.ascx.designer.cs">
+      <DependentUpon>FileManager.ascx</DependentUpon>
+    </Compile>
     <Compile Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\WebForms\Wysiwyg.ascx.cs">
       <DependentUpon>Wysiwyg.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -660,6 +667,11 @@
     <Content Include="README.md" />
     <Content Include="js\dnn-inpage-edit.min.js.map" />
     <Content Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\SxcFieldTemplates.js" />
+    <Content Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\Templates\hyperlink-default-imagemanager.html" />
+    <Content Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\Templates\hyperlink-default-pagepicker.html" />
+    <Content Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\Templates\hyperlink-default.html" />
+    <Content Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\Templates\string-wysiwyg.html" />
+    <Content Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\WebForms\FileManager.ascx" />
     <Content Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\WebForms\Wysiwyg.ascx" />
     <Content Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\WebForms\PagePicker.ascx" />
     <Content Include="SexyContent\EAV\FormlyEditUI\lib\angular-formly-templates-bootstrap.js.map" />

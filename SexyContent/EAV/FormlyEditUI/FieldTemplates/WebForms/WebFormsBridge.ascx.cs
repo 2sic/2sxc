@@ -8,7 +8,7 @@ using DotNetNuke.Framework.JavaScriptLibraries;
 namespace ToSic.SexyContent.EAV.FormlyEditUI.FieldTemplates.WebForms
 {
 	/// <summary>
-	/// This control is a bridge for DNN components that do not work in plain JavaScript yet (File Picker, Page Picker, etc.)
+	/// This control is a bridge for DNN components that do not work in plain JavaScript yet (File Picker, Page Picker, Wysiwyg, etc.)
 	/// </summary>
 	public partial class WebFormsBridge : PortalModuleBase
 	{
@@ -27,8 +27,13 @@ namespace ToSic.SexyContent.EAV.FormlyEditUI.FieldTemplates.WebForms
 					controlWysiwyg.PortalId = this.PortalId;
 					pnlBridgeContent.Controls.Add(controlWysiwyg);
 					break;
+				case "filemanager":
+					var controlFileManager = (FileManager)LoadControl("~/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/FormlyEditUI/FieldTemplates/WebForms/FileManager.ascx");
+					controlFileManager.PortalId = this.PortalId;
+					pnlBridgeContent.Controls.Add(controlFileManager);
+					break;
 				default:
-					throw new Exception("No type was specified.");
+					throw new Exception("WebForms Bridge: No valid type was specified.");
 			}
 
 			JavaScript.RequestRegistration(CommonJs.DnnPlugins);

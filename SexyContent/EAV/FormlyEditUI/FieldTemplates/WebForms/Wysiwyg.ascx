@@ -17,11 +17,7 @@
 	function initWysiwyg() {
 
 		var controller = {};
-		var bridge = window.bridge;
-		if (!bridge)
-			throw "Bridge is null - should be set from outside of the iFrame";
 
-		//bridge.onChanged("new value of wysiwyg control");
 		bridge.setValue = function(v) {
 			controller.setValue(v);
 		};
