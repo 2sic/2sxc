@@ -5,19 +5,43 @@
 
 <script type="text/javascript">
 	function OnSelectedCallback(sender, args) {
-		if (!args)
+
+		if (!args) {
+			window.bridge.valueChanged(null);
 			return;
+		}
 
 		var path = args.value[0] == null ? args.value.getAttribute("src", 2) : args.value[0].getAttribute("src", 2);
-		var url = path.indexOf("%") != -1 ? decodeURIComponent(path) : path;
 
-		//ToSexyContent.ItemForm.Hyperlink._fileManagerCallback(sender, args, url);
-		alert(url);
+		if (!path)
+			path = args.value.getAttribute("href", 2);
+
+		var url = path.indexOf("%") != -1 ? decodeURIComponent(path) : path;
+		window.bridge.valueChanged(url);
 	}
 
-	$(document).ready(function() {
-		$find('<%= DialogOpener1.ClientID %>').open('ImageManager', { CssClasses: [] });
-	});
+	// Call this function from outside to register the actual bridge
+	window.connectBridge = function (bridge) {
+		window.bridge = bridge;
+
+		$(document).ready(function() {
+			var dialogOpener = $find('<%= DialogOpener1.ClientID %>');
+
+			switch (bridge.dialogType) {
+				case 'imagemanager':
+					dialogOpener.open("ImageManager", { CssClasses: [] });
+					break;
+				case 'documentmanager':
+					var args = new Telerik.Web.UI.EditorCommandEventArgs("DocumentManager", null, document.createElement("a"));
+					args.CssClasses = [];
+					dialogOpener.open('DocumentManager', args);
+			}
+		});
+
+		<%--$(document).ready(function () {
+			$find('<%= DialogOpener1.ClientID %>').open(bridge.dialogType, { CssClasses: [] });
+		});--%>
+	};
 
 	//OpenDialog: function (sender, dialogOpenerId, type, attributeStaticName, portalId, portalHomeDirectory) {
 	//	switch (type) {

@@ -12,12 +12,6 @@
 			wrapper: ['bootstrapLabel', 'bootstrapHasError']
 		});
 
-		//formlyConfigProvider.setType({
-		//	name: 'string-wysiwyg',
-		//	template: '<textarea class="form-control" ng-model="model[options.key]"></textarea>',
-		//	wrapper: ['bootstrapLabel', 'bootstrapHasError']
-		//});
-
 		formlyConfigProvider.setType({
 			name: 'string-dropdown',
 			template: '<select class="form-control" ng-model="model[options.key]"></select>',
@@ -83,18 +77,10 @@
 		formlyConfigProvider.setType({
 			name: 'datetime-default',
 			wrapper: ['bootstrapLabel', 'bootstrapHasError'],
-			template: '<input class="form-control" ng-model="model[options.key]" is-open="to.isOpen" datepicker-options="to.datepickerOptions" />',
+			template: '<div><div class="input-group"><div class="input-group-addon" style="cursor:pointer;" ng-click="to.isOpen = true;"><i class="glyphicon glyphicon-calendar"></i></div><input class="form-control" ng-model="model[options.key]" is-open="to.isOpen" datepicker-options="to.datepickerOptions" datepicker-popup /></div>' +
+				 '<timepicker ng-show="to.settings.UseTimePicker" ng-model="model[options.key]" show-meridian="ismeridian"></timepicker></div>',
 			defaultOptions: {
-				ngModelAttrs: {
-					'datepickerPopup': { attribute: 'datepicker-popup' }
-				},
 				templateOptions: {
-					addonLeft: {
-						'class': 'glyphicon glyphicon-calendar',
-						onClick: function (options, scope) {
-							scope.to.isOpen = true;
-						}
-					},
 					datepickerOptions: {},
 					datepickerPopup: 'dd.MM.yyyy'
 				}

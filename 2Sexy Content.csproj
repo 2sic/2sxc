@@ -667,7 +667,9 @@
     <Content Include="README.md" />
     <Content Include="js\dnn-inpage-edit.min.js.map" />
     <Content Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\SxcFieldTemplates.js" />
-    <Content Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\Templates\hyperlink-default-imagemanager.html" />
+    <Content Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\Templates\entity-default.html" />
+    <Content Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\Templates\entity-default.css" />
+    <Content Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\Templates\hyperlink-default-filemanager.html" />
     <Content Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\Templates\hyperlink-default-pagepicker.html" />
     <Content Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\Templates\hyperlink-default.html" />
     <Content Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\Templates\string-wysiwyg.html" />

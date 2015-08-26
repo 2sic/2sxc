@@ -103,6 +103,8 @@
 					return e.MetaData.DefaultValue.toLowerCase() == 'true';
 				case 'datetime':
 					return new Date(e.MetaData.DefaultValue);
+				case 'entity':
+					return [];
 				default:
 					return e.MetaData.DefaultValue;
 			}

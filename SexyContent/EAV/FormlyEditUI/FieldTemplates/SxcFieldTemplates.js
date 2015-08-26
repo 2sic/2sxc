@@ -6,7 +6,7 @@
 
 	var webFormsBridgeUrl = "/en-us/Homeö/ctl/webformsbridge/mid/4023/popUp/true";
 
-	var app = angular.module('sxcFieldTemplates', ['formly', 'formlyBootstrap', 'ui.bootstrap'], function (formlyConfigProvider) {
+	var app = angular.module('sxcFieldTemplates', ['formly', 'formlyBootstrap', 'ui.bootstrap', 'ui.tree'], function (formlyConfigProvider) {
 
 		formlyConfigProvider.setType({
 			name: 'string-wysiwyg',
@@ -22,6 +22,13 @@
 			controller: 'FieldTemplate-HyperlinkCtrl as vm'
 		});
 
+		formlyConfigProvider.setType({
+			name: 'entity-default',
+			templateUrl: '/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/FormlyEditUI/FieldTemplates/Templates/entity-default.html',
+			wrapper: ['bootstrapLabel', 'bootstrapHasError'],
+			controller: 'FieldTemplate-EntityCtrl'
+		});
+
 	});
 
 	app.controller('FieldTemplate-HyperlinkCtrl', function ($modal, $scope) {
@@ -31,16 +38,21 @@
 		vm.test = "...";
 		vm.bridge = {
 			valueChanged: function (value) {
-				$scope.$apply(function() {
-					$scope.model[$scope.options.key] = value;
+				$scope.$apply(function () {
+					if(value)
+						$scope.model[$scope.options.key] = value;
 					vm.modalInstance.close();
 				});
 			}
 		};
 
-		vm.openDialog = function(type) {
+		vm.openDialog = function (type, options) {
+
+			var template = type == 'pagepicker' ? 'pagepicker' : 'filemanager';
+			vm.bridge.dialogType = type;
+
 			vm.modalInstance = $modal.open({
-				templateUrl: '/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/FormlyEditUI/FieldTemplates/Templates/hyperlink-default-' + type + '.html',
+				templateUrl: '/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/FormlyEditUI/FieldTemplates/Templates/hyperlink-default-' + template + '.html',
 				resolve: {
 					bridge: function() {
 						return vm.bridge;
@@ -67,6 +79,59 @@
 			},
 			setValue: function() { alert('Error: setValue has no override'); }
 		};
+
+	});
+
+	app.controller('FieldTemplate-EntityCtrl', function($scope, $http, $filter) {
+
+		$scope.availableEntities = [];
+
+		if ($scope.model[$scope.options.key] == null)
+			$scope.model[$scope.options.key] = [];
+
+		$scope.addEntity = function() {
+			if ($scope.selectedEntity == "new")
+				$scope.openNewEntityDialog();
+			else
+				$scope.model[$scope.options.key].push(parseInt($scope.selectedEntity));
+			$scope.selectedEntity = "";
+		};
+
+		$scope.createEntityAllowed = function () {
+			return $scope.to.settings.EntityType != null && $scope.to.settings.EntityType != "";
+		};
+
+		$scope.openNewEntityDialog = function () {
+			// ToDo
+			alert('new-dialog not implemented yet');
+			//var url = $($rootElement).attr("data-newdialogurl") + "&PreventRedirect=true";
+			//url = url.replace("[AttributeSetId]", $scope.configuration.AttributeSetId);
+			//eavDialogService.open({
+			//	url: url,
+			//	onClose: function() { $scope.getAvailableEntities(); }
+			//});
+		};
+
+		$scope.getAvailableEntities = function () {
+			$http({
+				method: 'GET',
+				url: 'eav/EntityPicker/getavailableentities',
+				params: {
+					entityType: $scope.to.settings.EntityType,
+					// ToDo: dimensionId: $scope.configuration.DimensionId
+				}
+			}).then(function(data) {
+				$scope.availableEntities = data.data;
+			});
+		};
+
+		$scope.getEntityText = function(entityId) {
+			var entities = $filter('filter')($scope.availableEntities, { Value: entityId });
+			return entities.length > 0 ? entities[0].Text : "(Entity not found)";
+		}
+
+		// Initialize entities
+		$scope.getAvailableEntities();
 
 	});
 
