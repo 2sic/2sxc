@@ -14,8 +14,8 @@
 
 		formlyConfigProvider.setType({
 			name: 'string-dropdown',
-			template: '<select class="form-control" ng-model="model[options.key]"></select>',
-			wrapper: ['bootstrapLabel', 'bootstrapHasError'],
+			template: '<select class="form-control" ng-model="value.Value"></select>',
+			wrapper: ['bootstrapLabel', 'bootstrapHasError', 'eavLocalization'],
 			defaultOptions: function defaultOptions(options) {
 
 				// DropDown field: Convert string configuration for dropdown values to object, which will be bound to the select
@@ -40,13 +40,14 @@
 						value: 'ng-options'
 					})
 				};
+
 			}
 		});
 
 		formlyConfigProvider.setType({
 			name: 'string-textarea',
-			template: '<textarea class="form-control" ng-model="model[options.key]"></textarea>',
-			wrapper: ['bootstrapLabel', 'bootstrapHasError'],
+			template: '<textarea class="form-control" ng-model="value.Value"></textarea>',
+			wrapper: ['bootstrapLabel', 'bootstrapHasError', 'eavLocalization'],
 			defaultOptions: {
 				ngModelAttrs: {
 					'{{to.settings.RowCount}}': { value: 'rows' },
@@ -57,8 +58,8 @@
 
 		formlyConfigProvider.setType({
 			name: 'number-default',
-			template: '<input type="number" class="form-control" ng-model="model[options.key]">',
-			wrapper: ['bootstrapLabel', 'bootstrapHasError'],
+			template: '<input type="number" class="form-control" ng-model="value.Value">',
+			wrapper: ['bootstrapLabel', 'bootstrapHasError', 'eavLocalization'],
 			defaultOptions: {
 				ngModelAttrs: {
 					'{{to.settings.Min}}': { value: 'min' },
@@ -70,15 +71,15 @@
 
 		formlyConfigProvider.setType({
 			name: 'boolean-default',
-			template: "<div class=\"checkbox\">\n\t<label>\n\t\t<input type=\"checkbox\"\n           class=\"formly-field-checkbox\"\n\t\t       ng-model=\"model[options.key]\">\n\t\t{{to.label}}\n\t\t{{to.required ? '*' : ''}}\n\t</label>\n</div>\n",
-			wrapper: ['bootstrapHasError']
+			template: "<div class=\"checkbox\">\n\t<label>\n\t\t<input type=\"checkbox\"\n           class=\"formly-field-checkbox\"\n\t\t       ng-model=\"value.Value\">\n\t\t{{to.label}}\n\t\t{{to.required ? '*' : ''}}\n\t</label>\n</div>\n",
+			wrapper: ['bootstrapHasError', 'eavLocalization']
 		});
 
 		formlyConfigProvider.setType({
 			name: 'datetime-default',
-			wrapper: ['bootstrapLabel', 'bootstrapHasError'],
-			template: '<div><div class="input-group"><div class="input-group-addon" style="cursor:pointer;" ng-click="to.isOpen = true;"><i class="glyphicon glyphicon-calendar"></i></div><input class="form-control" ng-model="model[options.key]" is-open="to.isOpen" datepicker-options="to.datepickerOptions" datepicker-popup /></div>' +
-				 '<timepicker ng-show="to.settings.UseTimePicker" ng-model="model[options.key]" show-meridian="ismeridian"></timepicker></div>',
+			wrapper: ['bootstrapLabel', 'bootstrapHasError', 'eavLocalization'],
+			template: '<div><div class="input-group"><div class="input-group-addon" style="cursor:pointer;" ng-click="to.isOpen = true;"><i class="glyphicon glyphicon-calendar"></i></div><input class="form-control" ng-model="value.Value" is-open="to.isOpen" datepicker-options="to.datepickerOptions" datepicker-popup /></div>' +
+				 '<timepicker ng-show="to.settings.UseTimePicker" ng-model="value.Value" show-meridian="ismeridian"></timepicker></div>',
 			defaultOptions: {
 				templateOptions: {
 					datepickerOptions: {},

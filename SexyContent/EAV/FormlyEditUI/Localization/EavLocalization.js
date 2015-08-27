@@ -4,6 +4,7 @@
 
 	/* This app handles all aspectes of the multilanguage features of the field templates */
 
+	// Field templates that use this wrapper must bind to value.Value instead of model[...]
 	var eavLocalization = angular.module('eavLocalization', ['formly'], function (formlyConfigProvider) {
 
 		formlyConfigProvider.setWrapper([
@@ -14,6 +15,8 @@
 		]);
 
 	});
+	
+	//eavLocalization.directive('eavLanguageSwitcher')
 
 	eavLocalization.directive('eavLocalizationScopeControl', function () {
 		return {

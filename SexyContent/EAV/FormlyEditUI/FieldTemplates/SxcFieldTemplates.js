@@ -9,14 +9,14 @@
 		formlyConfigProvider.setType({
 			name: 'string-wysiwyg',
 			templateUrl: '/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/FormlyEditUI/FieldTemplates/Templates/string-wysiwyg.html', // ToDo: Use correct base path
-			wrapper: ['bootstrapLabel', 'bootstrapHasError'],
+			wrapper: ['bootstrapLabel', 'bootstrapHasError', 'eavLocalization'],
 			controller: 'FieldTemplate-WysiwygCtrl as vm'
 		});
 
 		formlyConfigProvider.setType({
 			name: 'hyperlink-default',
 			templateUrl: '/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/FormlyEditUI/FieldTemplates/Templates/hyperlink-default.html',
-			wrapper: ['bootstrapLabel', 'bootstrapHasError'],
+			wrapper: ['bootstrapLabel', 'bootstrapHasError', 'eavLocalization'],
 			controller: 'FieldTemplate-HyperlinkCtrl as vm'
 		});
 
@@ -44,12 +44,12 @@
 
 					// Convert file path to file ID if type file is specified
 					if (value) {
-						$scope.model[$scope.options.key] = value;
+						$scope.value.Value = value;
 
 						if (type == "file") {
 							$http.get('eav/FieldTemplateHyperlink/GetFileByPath?relativePath=' + encodeURIComponent(value)).then(function (result) {
 								if(result.data)
-									$scope.model[$scope.options.key] = "File:" + result.data.FileId;
+									$scope.value.Value = "File:" + result.data.FileId;
 							});
 						}
 					}
@@ -63,7 +63,7 @@
 		};
 
 		// Update test-link if necessary
-		$scope.$watch('model[options.key]', function (newValue, oldValue) {
+		$scope.$watch('value.Value', function (newValue, oldValue) {
 			if (!newValue)
 				return;
 
@@ -79,7 +79,7 @@
 
 			var template = type == 'pagepicker' ? 'pagepicker' : 'filemanager';
 			vm.bridge.dialogType = type;
-			vm.bridge.params.CurrentValue = $scope.model[$scope.options.key];
+			vm.bridge.params.CurrentValue = $scope.value.Value;
 
 			vm.modalInstance = $modal.open({
 				templateUrl: '/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/FormlyEditUI/FieldTemplates/Templates/hyperlink-default-' + template + '.html',
@@ -104,7 +104,7 @@
 		vm.bridge = {
 			onChanged: function (newValue) {
 				$scope.$apply(function () {
-					$scope.model[$scope.options.key] = newValue;
+					$scope.value.Value = newValue;
 				});
 			},
 			setValue: function() { alert('Error: setValue has no override'); }
