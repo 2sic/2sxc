@@ -1164,6 +1164,7 @@ namespace ToSic.SexyContent
             var id = int.Parse(regularExpression.Groups["id"].Value);
 			var urlParams = regularExpression.Groups["params"].Value ?? "";
 
+			
             switch (type)
             {
                 case "file":

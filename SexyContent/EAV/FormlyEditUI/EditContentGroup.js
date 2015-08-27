@@ -29,7 +29,7 @@
 				var editTypes = ['Content', 'Presentation'];
 				angular.forEach(editTypes, function (editType, i) {
 					var contentTypeName = contentGroup.Template[editType + 'TypeStaticName'];
-					console.log(contentGroup);
+					
 					if (contentTypeName)
 						vm.entitiesToEdit.push({ contentTypeName: contentTypeName, entityId: contentGroup[editType][sortOrder], editControlTitle: editType });
 				});

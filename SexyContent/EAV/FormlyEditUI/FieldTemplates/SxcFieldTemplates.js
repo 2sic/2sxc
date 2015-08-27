@@ -4,9 +4,7 @@
 
 	/* This app registers all field templates for 2sxc in the angularjs sxcFieldTemplates app */
 
-	var webFormsBridgeUrl = "/en-us/Homeö/ctl/webformsbridge/mid/4023/popUp/true";
-
-	var app = angular.module('sxcFieldTemplates', ['formly', 'formlyBootstrap', 'ui.bootstrap', 'ui.tree'], function (formlyConfigProvider) {
+	var app = angular.module('sxcFieldTemplates', ['formly', 'formlyBootstrap', 'ui.bootstrap', 'ui.tree', '2sxc4ng'], function (formlyConfigProvider) {
 
 		formlyConfigProvider.setType({
 			name: 'string-wysiwyg',
@@ -31,25 +29,57 @@
 
 	});
 
-	app.controller('FieldTemplate-HyperlinkCtrl', function ($modal, $scope) {
+	app.controller('FieldTemplate-HyperlinkCtrl', function ($modal, $scope, $http, sxc) {
+
+		console.log(sxc);
+		
 
 		var vm = this;
 		vm.modalInstance = null;
-		vm.test = "...";
+		vm.testLink = "";
+		
 		vm.bridge = {
-			valueChanged: function (value) {
+			valueChanged: function(value, type) {
 				$scope.$apply(function () {
-					if(value)
+
+					// Convert file path to file ID if type file is specified
+					if (value) {
 						$scope.model[$scope.options.key] = value;
+
+						if (type == "file") {
+							$http.get('eav/FieldTemplateHyperlink/GetFileByPath?relativePath=' + encodeURIComponent(value)).then(function (result) {
+								if(result.data)
+									$scope.model[$scope.options.key] = "File:" + result.data.FileId;
+							});
+						}
+					}
 					vm.modalInstance.close();
 				});
+			},
+			params: {
+				Paths: $scope.to.settings.Paths,
+				FileFilter: $scope.to.settings.FileFilter
 			}
 		};
+
+		// Update test-link if necessary
+		$scope.$watch('model[options.key]', function (newValue, oldValue) {
+			if (!newValue)
+				return;
+
+			if (newValue.indexOf("File") != -1 || newValue.indexOf("Page") != -1) {
+				$http.get('eav/FieldTemplateHyperlink/ResolveHyperlink?hyperlink=' + encodeURIComponent(newValue)).then(function (result) {
+					if(result.data)
+						vm.testLink = result.data;
+				});
+			}
+		});
 
 		vm.openDialog = function (type, options) {
 
 			var template = type == 'pagepicker' ? 'pagepicker' : 'filemanager';
 			vm.bridge.dialogType = type;
+			vm.bridge.params.CurrentValue = $scope.model[$scope.options.key];
 
 			vm.modalInstance = $modal.open({
 				templateUrl: '/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/FormlyEditUI/FieldTemplates/Templates/hyperlink-default-' + template + '.html',
@@ -135,16 +165,18 @@
 
 	});
 
-	app.directive('webFormsBridge', function() {
+	app.directive('webFormsBridge', function (sxc) {
+		var webFormsBridgeUrl = sxc._editContentGroupConfig.tabBaseUrl + "?ctl=webformsbridge&mid=" + sxc.id + "&popUp=true";
+
 		return {
 			restrict: 'A',
 			scope: {
 				type: "@bridgeType",
 				bridge: "=webFormsBridge",
-				bridgeSyncHeight: "@bridgeSyncHeight"
+				bridgeSyncHeight: "@bridgeSyncHeight",
 			},
 			link: function (scope, elem, attrs) {
-				elem[0].src = webFormsBridgeUrl + '?type=' + scope.type;
+				elem[0].src = webFormsBridgeUrl + '&type=' + scope.type + (scope.bridge.params ? "&" + $.param(scope.bridge.params) : "");
 				elem.on('load', function () {					
 					var w = elem[0].contentWindow || elem[0];
 					w.connectBridge(scope.bridge);

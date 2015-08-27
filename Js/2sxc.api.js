@@ -82,10 +82,7 @@
                 },
 
                 reload: function (optionalCallback) {
-
-                    // todo: convert dates...
-
-                    if (optionalCallback)
+					if (optionalCallback)
                         controller.data.source.success = optionalCallback;
 
                     $.ajax(controller.data.source);

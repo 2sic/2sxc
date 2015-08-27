@@ -17,7 +17,7 @@
 			path = args.value.getAttribute("href", 2);
 
 		var url = path.indexOf("%") != -1 ? decodeURIComponent(path) : path;
-		window.bridge.valueChanged(url);
+		window.bridge.valueChanged(url, 'file');
 	}
 
 	// Call this function from outside to register the actual bridge
@@ -38,23 +38,6 @@
 			}
 		});
 
-		<%--$(document).ready(function () {
-			$find('<%= DialogOpener1.ClientID %>').open(bridge.dialogType, { CssClasses: [] });
-		});--%>
 	};
 
-	//OpenDialog: function (sender, dialogOpenerId, type, attributeStaticName, portalId, portalHomeDirectory) {
-	//	switch (type) {
-	//		case "ImageManager":
-	//			$find(dialogOpenerId).open('ImageManager', { CssClasses: [], AttributeStaticName: attributeStaticName, PortalId: portalId, PortalHomeDirectory: portalHomeDirectory });
-	//			break;
-	//		case "FileManager":
-	//			var args = new Telerik.Web.UI.EditorCommandEventArgs("DocumentManager", null, document.createElement("a"));
-	//			args.CssClasses = [];
-	//			args.AttributeStaticName = attributeStaticName;
-	//			args.PortalId = portalId;
-	//			args.PortalHomeDirectory = portalHomeDirectory;
-
-	//			$find(dialogOpenerId).open('DocumentManager', args);
-	//			break;
 </script>

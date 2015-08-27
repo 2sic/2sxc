@@ -4,12 +4,12 @@
 
 	/* This app registers all field templates for EAV in the angularjs eavFieldTemplates app */
 
-	angular.module('eavFieldTemplates', ['formly', 'formlyBootstrap', 'ui.bootstrap'], function (formlyConfigProvider) {
+	var eavFieldTemplates = angular.module('eavFieldTemplates', ['formly', 'formlyBootstrap', 'ui.bootstrap', 'eavLocalization'], function (formlyConfigProvider) {
 
 		formlyConfigProvider.setType({
 			name: 'string-default',
-			template: '<input class="form-control" ng-model="model[options.key]">',
-			wrapper: ['bootstrapLabel', 'bootstrapHasError']
+			template: '<input class="form-control" ng-model="value.Value">',
+			wrapper: ['bootstrapLabel', 'bootstrapHasError', 'eavLocalization']
 		});
 
 		formlyConfigProvider.setType({
@@ -86,6 +86,10 @@
 				}
 			}
 		});
+	});
+
+	eavFieldTemplates.controller('test', function($scope) {
+		$scope.value = "abcdefgh";
 	});
 
 })();

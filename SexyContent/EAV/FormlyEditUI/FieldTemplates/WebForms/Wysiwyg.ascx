@@ -87,15 +87,14 @@
 			controller.setValue = editor.set_html;
 			controller.getValue = editor.get_html;
 
-			editor.attachEventHandler('onselectionchange', function (e) {
+			var updateValue = function() {
 				bridge.onChanged(editor.get_html());
-			});
-			//editor.attachEventHandler('onmousedown', function (e) {
-			//	bridge.onChanged(editor.get_html());
-			//});
-			//$(document).on('keyup mouseup', function(e) {
-			//	bridge.onChanged(editor.get_html());
-			//});
+			}
+
+			editor.attachEventHandler('onselectionchange', updateValue);
+			editor.attachEventHandler('onmousedown', updateValue);
+			editor.get_textArea().addEventListener("keyup", updateValue, false);
+			$(document).on('keyup mouseup', updateValue);
 		}
 	}
 	

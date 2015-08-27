@@ -7,7 +7,7 @@
 	// Main directive that renders an entity edit form
 	app.directive('eavEditEntity', function() {
 		return {
-			template: '<formly-form ng-submit="vm.onSubmit()" form="vm.form" model="vm.model" fields="vm.formFields"></formly-form><a ng-click="vm.showDebug = !vm.showDebug;">Debug</a><div ng-if="vm.showDebug"><h3>Debug</h3><pre>{{vm.model | json}}</pre><pre>{{vm.debug | json}}</pre><pre>{{vm.formFields | json}}</pre></div>',
+			template: '<formly-form ng-submit="vm.onSubmit()" form="vm.form" model="vm.entity.Attributes" fields="vm.formFields"></formly-form><a ng-click="vm.showDebug = !vm.showDebug;">Debug</a><div ng-if="vm.showDebug"><h3>Debug</h3><pre>{{vm.entity | json}}</pre><pre>{{vm.debug | json}}</pre><pre>{{vm.formFields | json}}</pre></div>',
 			restrict: 'E',
 			scope: {
 				contentTypeName: '@contentTypeName',
@@ -26,7 +26,6 @@
 
 		vm.save = function() {
 			alert("Saving not implemented yet!");
-			console.log(vm.model);
 		};
 
 		// The control object is available outside the directive
@@ -39,38 +38,49 @@
 		// Register this control in the parent control
 		$scope.registerEditControl(vm.control);
 
-		vm.model = {};
+		vm.model = null;
+		vm.entity = null;
 
 		vm.formFields = null;
 
-		$http.get('eav/ContentType/GetContentTypeConfiguration?appId=1&zoneId=1&contentTypeName=' + encodeURIComponent($scope.contentTypeName))
-		.then(function (result) {
-			vm.debug = result;
+		$http.get('eav/ContentType/GetContentTypeConfiguration?contentTypeName=' + encodeURIComponent($scope.contentTypeName))
+			.then(function(result) {
+				vm.debug = result;
 
-			// Transform EAV content type configuration to formFields (formly configuration)
-			angular.forEach(result.data, function (e, i) {
-				vm.formFields.push({
-					key: e.StaticName,
-					type: getType(e),
-					templateOptions: {
-						required: !!e.MetaData.Required,
-						label: e.MetaData.Name,
-						description: e.MetaData.Notes,
-						settings: e.MetaData
-					},
-					hide: (e.MetaData.VisibleInEditUI ? !e.MetaData.VisibleInEditUI : false),
-					defaultValue: convertDefaultValue(e)
+				// Transform EAV content type configuration to formFields (formly configuration)
+				angular.forEach(result.data, function(e, i) {
+					vm.formFields.push({
+						key: e.StaticName,
+						type: getType(e),
+						templateOptions: {
+							required: !!e.MetaData.Required,
+							label: e.MetaData.Name,
+							description: e.MetaData.Notes,
+							settings: e.MetaData
+						},
+						hide: (e.MetaData.VisibleInEditUI ? !e.MetaData.VisibleInEditUI : false),
+						//defaultValue: parseDefaultValue(e)
+					});
 				});
+
+				if ($scope.entityId) {
+					$http.get('eav/Entity/GetEntity?entityId=' + $scope.entityId)
+						.then(function(result) {
+							vm.entity = result.data;
+						});
+				} else {
+					// ToDo: Create new / blank model should not be in this JS file
+					vm.entity = {
+						Id: null,
+						Guid: null,
+						Type: {
+							Name: $scope.contentTypeName
+						},
+						Attributes: {}
+					};
+				}
+
 			});
-
-		});
-
-		if ($scope.entityId) {
-			$http.get('eav/Entity/GetEntity?appId=1&zoneId=1&entityId=' + $scope.entityId)
-				.then(function(result) {
-					vm.model = result.data;
-				});
-		}
 
 		// Returns the field type for an attribute configuration
 		function getType(attributeConfiguration) {
@@ -92,21 +102,21 @@
 		}
 
 		// Returns a typed default value from the string representation
-		function convertDefaultValue(attributeConfiguration) {
+		function parseDefaultValue(attributeConfiguration) {
 			var e = attributeConfiguration;
-
-			if (!e.MetaData.DefaultValue)
-				return null;
+			var d = e.MetaData.DefaultValue;
 
 			switch (e.Type.toLowerCase()) {
 				case 'boolean':
-					return e.MetaData.DefaultValue.toLowerCase() == 'true';
+					return d != null ? d.toLowerCase() == 'true' : false;
 				case 'datetime':
-					return new Date(e.MetaData.DefaultValue);
+					return d != null ? new Date(d) : null;
 				case 'entity':
 					return [];
+				case 'number':
+					return null;
 				default:
-					return e.MetaData.DefaultValue;
+					return d ? d : "";
 			}
 		}
 

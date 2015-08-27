@@ -231,6 +231,7 @@
     <Compile Include="SexyContent\EAV\FormlyEditUI\ContentGroupController.cs" />
     <Compile Include="SexyContent\EAV\FormlyEditUI\ContentTypeController.cs" />
     <Compile Include="SexyContent\EAV\FormlyEditUI\EntityController.cs" />
+    <Compile Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\Templates\FieldTemplateHyperlinkController.cs" />
     <Compile Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\WebForms\FileManager.ascx.cs">
       <DependentUpon>FileManager.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -666,6 +667,7 @@
     <Content Include="js\template-selector\template-selector.min.js.map" />
     <Content Include="README.md" />
     <Content Include="js\dnn-inpage-edit.min.js.map" />
+    <Content Include="SexyContent\EAV\FormlyEditUI\Localization\EavLocalization.js" />
     <Content Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\SxcFieldTemplates.js" />
     <Content Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\Templates\entity-default.html" />
     <Content Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\Templates\entity-default.css" />
@@ -679,8 +681,10 @@
     <Content Include="SexyContent\EAV\FormlyEditUI\lib\angular-formly-templates-bootstrap.js.map" />
     <Content Include="SexyContent\EAV\FormlyEditUI\lib\angular-formly-templates-bootstrap.min.js.map" />
     <Content Include="SexyContent\EAV\FormlyEditUI\lib\formly.min.js.map" />
-    <Content Include="SexyContent\EAV\FormlyEditUI\Test\EditEntityTestRazor.js" />
-    <Content Include="SexyContent\EAV\FormlyEditUI\Test\_EntityEditTest.cshtml" />
+    <Content Include="SexyContent\EAV\FormlyEditUI\EditContentGroup.js" />
+    <Content Include="SexyContent\EAV\FormlyEditUI\Localization\FormlyLocalizationWrapper.html" />
+    <Content Include="SexyContent\EAV\FormlyEditUI\Localization\LocalizationMenu.html" />
+    <Content Include="SexyContent\EAV\FormlyEditUI\_EditContentGroup.cshtml" />
     <None Include="SqlDataProvider\01.00.00.SqlDataProvider" />
     <Content Include="SexyContent\EAV\FormlyEditUI\EditEntity.js" />
     <Content Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\EavFieldTemplates.js" />
@@ -690,8 +694,6 @@
     <Content Include="SexyContent\EAV\FormlyEditUI\lib\formly.js" />
     <Content Include="SexyContent\EAV\FormlyEditUI\lib\formly.min.js" />
     <Content Include="SexyContent\EAV\FormlyEditUI\lib\ui-bootstrap-tpls-0.13.2.min.js" />
-    <Content Include="SexyContent\EAV\FormlyEditUI\Test\EditEntityTest.html" />
-    <Content Include="SexyContent\EAV\FormlyEditUI\Test\EditEntityTest.js" />
     <Content Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\WebForms\WebFormsBridge.ascx" />
     <Content Include="SexyContent\EAV\PipelineDesigner\assets\jquery.jsPlumb-1.7.2-min.js" />
     <Content Include="SexyContent\EAV\PipelineDesigner\PipelineDesigner.ascx" />

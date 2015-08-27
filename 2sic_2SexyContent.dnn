@@ -360,6 +360,26 @@
                     <helpUrl />
                     <supportsPopUps>True</supportsPopUps>
                   </moduleControl>
+									<moduleControl>
+										<controlKey>webformsbridge</controlKey>
+										<controlSrc>DesktopModules/ToSIC_SexyContent/SexyContent/EAV/FormlyEditUI/FieldTemplates/WebForms/WebFormsBridge.ascx</controlSrc>
+										<supportsPartialRendering>False</supportsPartialRendering>
+										<controlTitle>Formly FieldTemplate WebForms Bridge</controlTitle>
+										<controlType>Edit</controlType>
+										<iconFile />
+										<helpUrl />
+										<supportsPopUps>True</supportsPopUps>
+									</moduleControl>
+									<moduleControl>
+										<controlKey>editcontentgroupjs</controlKey>
+										<controlSrc>DesktopModules/ToSIC_SexyContent/SexyContent/EAV/FormlyEditUI/_EditContentGroup.cshtml</controlSrc>
+										<supportsPartialRendering>False</supportsPartialRendering>
+										<controlTitle>Edit</controlTitle>
+										<controlType>Edit</controlType>
+										<iconFile />
+										<helpUrl />
+										<supportsPopUps>True</supportsPopUps>
+									</moduleControl>
                 </moduleControls>
               </moduleDefinition>
             </moduleDefinitions>
@@ -900,6 +920,26 @@
 										<supportsPartialRendering>False</supportsPartialRendering>
 										<controlTitle>Permissions</controlTitle>
 										<controlType>Admin</controlType>
+										<iconFile />
+										<helpUrl />
+										<supportsPopUps>True</supportsPopUps>
+									</moduleControl>
+									<moduleControl>
+										<controlKey>webformsbridge</controlKey>
+										<controlSrc>DesktopModules/ToSIC_SexyContent/SexyContent/EAV/FormlyEditUI/FieldTemplates/WebForms/WebFormsBridge.ascx</controlSrc>
+										<supportsPartialRendering>False</supportsPartialRendering>
+										<controlTitle>Formly FieldTemplate WebForms Bridge</controlTitle>
+										<controlType>Edit</controlType>
+										<iconFile />
+										<helpUrl />
+										<supportsPopUps>True</supportsPopUps>
+									</moduleControl>
+									<moduleControl>
+										<controlKey>editcontentgroupjs</controlKey>
+										<controlSrc>DesktopModules/ToSIC_SexyContent/SexyContent/EAV/FormlyEditUI/_EditContentGroup.cshtml</controlSrc>
+										<supportsPartialRendering>False</supportsPartialRendering>
+										<controlTitle>Edit</controlTitle>
+										<controlType>Edit</controlType>
 										<iconFile />
 										<helpUrl />
 										<supportsPopUps>True</supportsPopUps>
