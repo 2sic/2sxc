@@ -17,13 +17,22 @@
 
 	});
 
-	eavLocalization.directive('eavLanguageSwitcher', function() {
+	eavLocalization.directive('eavLanguageSwitcher', function () {
 		return {
 			restrict: 'E',
-			scope: {
-				langConf: '=langConf'
-			},
-			template: '<ul><li ng-repeat="l in langConf.languages" ng-click="langConf.currentLanguage = l;">{{l}}</li></ul>Current: {{langConf.currentLanguage}}'
+			template: '<ul><li ng-repeat="l in langConf.languages" ng-click="langConf.currentLanguage = l;">{{l}}</li></ul>Current: {{langConf.currentLanguage}}',
+			controller: function($scope, eavLanguageService) {
+				$scope.langConf = eavLanguageService;
+			}
+		};
+	});
+
+	eavLocalization.factory('eavLanguageService', function () {
+		// ToDo: Use correct language configuration from DNN / 2sxc
+		return {
+			languages: ['en-us', 'de-de'],
+			currentLanguage: 'de-de',
+			defaultLanguage: 'en-us'
 		};
 	});
 
@@ -34,12 +43,13 @@
 			template: '',
 			link: function (scope, element, attrs) {
 			},
-			controller: function ($scope, $filter) { // Can't use controllerAs because of transcluded scope
+			controller: function ($scope, $filter, eavDefaultValueService, eavLanguageService) { // Can't use controllerAs because of transcluded scope
 
 				var scope = $scope;
-				var langConf = scope.to.langConf;
+				var langConf = eavLanguageService;
 
 				var initCurrentValue = function() {
+
 					// Set base value object if not defined
 					if (!scope.model[scope.options.key])
 						scope.model[scope.options.key] = { Values: [] };
@@ -49,7 +59,8 @@
 					// If current language = default language and there are no values, create an empty value object
 					if (langConf.currentLanguage == langConf.defaultLanguage) {
 						if (fieldModel.Values.length == 0) {
-							fieldModel.Values.push({ Value: null, Dimensions: {} });
+							var defaultValue = eavDefaultValueService(scope.options);
+							fieldModel.Values.push({ Value: defaultValue, Dimensions: {} });
 							fieldModel.Values[0].Dimensions[langConf.currentLanguage] = true; // Assign default language dimension
 						}
 					}
@@ -85,15 +96,22 @@
 					var writable = (langConf.currentLanguage == langConf.defaultLanguage) ||
 					(scope.value && scope.value.Dimensions[langConf.currentLanguage]);
 
-					scope.disabled = !writable;
+					scope.to.disabled = !writable;
 				};
 
 				initCurrentValue();
+
 				// Handle language switch
-				scope.$watch('to.langConf.currentLanguage', function(newValue, oldValue) {
+				scope.langConf = langConf; // Watch does only work on scope variables
+				scope.$watch('langConf.currentLanguage', function (newValue, oldValue) {
+					if (oldValue == null || newValue == oldValue)
+						return;
 					initCurrentValue();
 					console.log('switched language from ' + oldValue + ' to ' + newValue);
 				});
+
+				// The language menu must be able to trigger an update of the _currentValue property
+				scope.model[scope.options.key]._initCurrentValue = initCurrentValue;
 			}
 		};
 	});
@@ -102,18 +120,24 @@
 		return {
 			restrict: 'E',
 			scope: {
-				value: '=value'
+				fieldModel: '=fieldModel'
 			},
 			templateUrl: '/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/FormlyEditUI/Localization/LocalizationMenu.html',
 			link: function (scope, element, attrs) { },
 			controllerAs: 'vm',
-			controller: function ($scope) {
+			controller: function ($scope, eavLanguageService) {
 				var vm = this;
-				vm.value = $scope.value;
+				var langConf = eavLanguageService;
+				vm.fieldModel = $scope.fieldModel;
 
-				vm.state = {
-					writable: function() {
-						return true;
+				vm.actions = {
+					translate: function () {
+						var value = { Value: 'New translated value!', Dimensions: {} };
+						value.Dimensions[langConf.currentLanguage] = true;
+						console.log(value);
+						console.log(vm.fieldModel);
+						vm.fieldModel.Values.push(value);
+						vm.fieldModel._initCurrentValue();
 					}
 				};
 

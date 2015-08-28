@@ -683,6 +683,8 @@
     <Content Include="SexyContent\EAV\FormlyEditUI\lib\formly.min.js.map" />
     <Content Include="SexyContent\EAV\FormlyEditUI\EditContentGroup.js" />
     <Content Include="SexyContent\EAV\FormlyEditUI\Localization\FormlyLocalizationWrapper.html" />
+    <Content Include="SexyContent\EAV\FormlyEditUI\Localization\images\locked.png" />
+    <Content Include="SexyContent\EAV\FormlyEditUI\Localization\images\unlocked.png" />
     <Content Include="SexyContent\EAV\FormlyEditUI\Localization\LocalizationMenu.css" />
     <Content Include="SexyContent\EAV\FormlyEditUI\Localization\LocalizationMenu.html" />
     <Content Include="SexyContent\EAV\FormlyEditUI\_EditContentGroup.cshtml" />

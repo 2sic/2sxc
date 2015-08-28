@@ -9,13 +9,6 @@
 		// This array holds the entities to edit
 		vm.entitiesToEdit = [];
 
-		// ToDo: Use correct language configuration from DNN / 2sxc
-		vm.langConf = {
-			languages: ['en-us', 'de-de'],
-			currentLanguage: 'de-de',
-			defaultLanguage: 'en-us'
-		};
-
 		// Prepare URL parameters
 		var entityId = $2sxc.ng.getParameterByName('entityId');
 		var contentTypeName = $2sxc.ng.getParameterByName('contentTypeName');
@@ -41,8 +34,7 @@
 						vm.entitiesToEdit.push({ contentTypeName: contentTypeName, entityId: contentGroup[editType][sortOrder], editControlTitle: editType });
 				});
 
-				//vm.entitiesToEdit.push({ contentTypeName: 'Test', entityId: '3942' });
-
+				console.log(vm.entitiesToEdit);
 			});
 		}
 		

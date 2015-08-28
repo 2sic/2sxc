@@ -12,8 +12,7 @@
 			scope: {
 				contentTypeName: '@contentTypeName',
 				entityId: '@entityId',
-				registerEditControl: '=registerEditControl',
-				langConf: '=langConf'
+				registerEditControl: '=registerEditControl'
 			},
 			controller: 'EditEntityCtrl',
 			controllerAs: 'vm'
@@ -49,7 +48,7 @@
 				vm.debug = result;
 
 				// Transform EAV content type configuration to formFields (formly configuration)
-				angular.forEach(result.data, function(e, i) {
+				angular.forEach(result.data, function (e, i) {
 					vm.formFields.push({
 						key: e.StaticName,
 						type: getType(e),
@@ -57,15 +56,12 @@
 							required: !!e.MetaData.Required,
 							label: e.MetaData.Name,
 							description: e.MetaData.Notes,
-							settings: e.MetaData,
-							langConf: $scope.langConf
+							settings: e.MetaData
 						},
 						hide: (e.MetaData.VisibleInEditUI ? !e.MetaData.VisibleInEditUI : false),
 						//defaultValue: parseDefaultValue(e)
 						expressionProperties: {
-							'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
-								return scope.disabled;
-							}
+							'templateOptions.disabled': 'options.templateOptions.disabled' // Needed for dynamic update of the disabled property
 						}
 					});
 				});
@@ -108,12 +104,15 @@
 			return (type + '-' + subType);
 		}
 
-		// Returns a typed default value from the string representation
-		function parseDefaultValue(attributeConfiguration) {
-			var e = attributeConfiguration;
-			var d = e.MetaData.DefaultValue;
+	});
 
-			switch (e.Type.toLowerCase()) {
+	app.service('eavDefaultValueService', function () {
+		// Returns a typed default value from the string representation
+		return function parseDefaultValue(fieldConfig) {
+			var e = fieldConfig;
+			var d = e.templateOptions.settings.DefaultValue;
+
+			switch (e.type.split('-')[0]) {
 				case 'boolean':
 					return d != null ? d.toLowerCase() == 'true' : false;
 				case 'datetime':
@@ -125,8 +124,7 @@
 				default:
 					return d ? d : "";
 			}
-		}
-
+		};
 	});
 
 })();

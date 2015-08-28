@@ -1,12 +1,17 @@
-﻿<div dropdown is-open="status.isopen">
-	Writable: {{vm.state.writable() | json}}
-	<button id="single-button" type="button" class="eav-localization-lock" ng-class="{ 'eav-localization-lock-open': test }" dropdown-toggle>
+﻿<div dropdown is-open="status.isopen" class="eav-localization">
+	<a class="eav-localization-lock" ng-class="{ 'eav-localization-lock-open': test }" dropdown-toggle href="javascript:void(0)">
 		Button dropdown <span class="caret"></span>
-	</button>
-	<ul class="dropdown-menu" role="menu" aria-labelledby="single-button">
-		<li role="menuitem"><a href="#">Action</a></li>
+	</a>
+	<ul class="dropdown-menu multi-level pull-right eav-localization-dropdown" role="menu" aria-labelledby="single-button">
+		<li role="menuitem"><a ng-click="vm.actions.translate()">Translate</a></li>
 		<li role="menuitem"><a href="#">Another action</a></li>
-		<li role="menuitem"><a href="#">Something else here</a></li>
+		<li role="menuitem" class="dropdown-submenu">
+			<a href="#">Something else here</a>
+			<ul class="dropdown-menu">
+				<li role="menuitem"><a href="#">Action</a></li>
+				<li role="menuitem"><a href="#">Another action</a></li>
+			</ul>
+		</li>
 		<li class="divider"></li>
 		<li role="menuitem"><a href="#">Separated link</a></li>
 	</ul>
