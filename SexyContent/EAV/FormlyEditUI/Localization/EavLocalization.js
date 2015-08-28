@@ -110,6 +110,11 @@
 					console.log('switched language from ' + oldValue + ' to ' + newValue);
 				});
 
+				// ToDo: Could cause performance issues (deep watch array)...
+				scope.$watch('model[options.key].Values', function(newValue, oldValue) {
+					initCurrentValue();
+				}, true);
+
 				// The language menu must be able to trigger an update of the _currentValue property
 				scope.model[scope.options.key]._initCurrentValue = initCurrentValue;
 			}
@@ -134,10 +139,7 @@
 					translate: function () {
 						var value = { Value: 'New translated value!', Dimensions: {} };
 						value.Dimensions[langConf.currentLanguage] = true;
-						console.log(value);
-						console.log(vm.fieldModel);
 						vm.fieldModel.Values.push(value);
-						vm.fieldModel._initCurrentValue();
 					}
 				};
 
