@@ -2,13 +2,6 @@
 (function () {
 	'use strict';
 
-	// ToDo: Use correct language configuration from DNN / 2sxc
-	var langConfig = {
-		languages: ['en-us', 'de-de'],
-		currentLanguage: 'de-de',
-		defaultLanguage: 'en-us'
-	};
-
 
 	/* This app handles all aspectes of the multilanguage features of the field templates */
 
@@ -23,8 +16,16 @@
 		]);
 
 	});
-	
-	//eavLocalization.directive('eavLanguageSwitcher')
+
+	eavLocalization.directive('eavLanguageSwitcher', function() {
+		return {
+			restrict: 'E',
+			scope: {
+				langConf: '=langConf'
+			},
+			template: '<ul><li ng-repeat="l in langConf.languages" ng-click="langConf.currentLanguage = l;">{{l}}</li></ul>Current: {{langConf.currentLanguage}}'
+		};
+	});
 
 	eavLocalization.directive('eavLocalizationScopeControl', function () {
 		return {
@@ -36,53 +37,63 @@
 			controller: function ($scope, $filter) { // Can't use controllerAs because of transcluded scope
 
 				var scope = $scope;
+				var langConf = scope.to.langConf;
 
-				// Set base value object if not defined
-				if (!scope.model[scope.options.key])
-					scope.model[scope.options.key] = { Values: [] };
+				var initCurrentValue = function() {
+					// Set base value object if not defined
+					if (!scope.model[scope.options.key])
+						scope.model[scope.options.key] = { Values: [] };
 
-				var fieldModel = scope.model[scope.options.key];
+					var fieldModel = scope.model[scope.options.key];
 
-				// If current language = default language and there are no values, create an empty value object
-				if (langConfig.currentLanguage == langConfig.defaultLanguage) {
-					if (fieldModel.Values.length == 0) {
-						fieldModel.Values.push({ Value: null, Dimensions: {} });
-						fieldModel.Values[0].Dimensions[langConfig.currentLanguage] = true; // Assign default language dimension
+					// If current language = default language and there are no values, create an empty value object
+					if (langConf.currentLanguage == langConf.defaultLanguage) {
+						if (fieldModel.Values.length == 0) {
+							fieldModel.Values.push({ Value: null, Dimensions: {} });
+							fieldModel.Values[0].Dimensions[langConf.currentLanguage] = true; // Assign default language dimension
+						}
 					}
-				}
 
-				var valueToEdit;
+					var valueToEdit;
 
-				// Decide which value to edit:
-				// 1. If there is a value with current dimension on it, use it
-				valueToEdit = $filter('filter')(fieldModel.Values, function (v, i) {
-					return v.Dimensions[langConfig.currentLanguage] != null;
-				})[0];
-
-				// 2. Use default language value
-				if(valueToEdit == null)
-					valueToEdit = $filter('filter')(fieldModel.Values, function (v, i) {
-						return v.Dimensions[langConfig.defaultLanguage] != null;
+					// Decide which value to edit:
+					// 1. If there is a value with current dimension on it, use it
+					valueToEdit = $filter('filter')(fieldModel.Values, function(v, i) {
+						return v.Dimensions[langConf.currentLanguage] != null;
 					})[0];
 
-				// 3. Use the first value if there is only one
-				if (valueToEdit == null) {
-					if (fieldModel.Values.length > 1)
-						throw "Default language value not found, but found multiple values - can't handle editing";
-					// Use the first value
-					valueToEdit = fieldModel.Values[0];
-				}
+					// 2. Use default language value
+					if (valueToEdit == null)
+						valueToEdit = $filter('filter')(fieldModel.Values, function(v, i) {
+							return v.Dimensions[langConf.defaultLanguage] != null;
+						})[0];
 
-				fieldModel._currentValue = valueToEdit;
+					// 3. Use the first value if there is only one
+					if (valueToEdit == null) {
+						if (fieldModel.Values.length > 1)
+							throw "Default language value not found, but found multiple values - can't handle editing";
+						// Use the first value
+						valueToEdit = fieldModel.Values[0];
+					}
 
-				// Set scope variable 'value' to simplify binding
-				scope.value = fieldModel._currentValue;
+					fieldModel._currentValue = valueToEdit;
 
-				// Decide whether the value is writable or not
-				var writable = (langConfig.currentLanguage == langConfig.defaultLanguage) ||
-					 (scope.value && scope.value.Dimensions[langConfig.currentLanguage]);
+					// Set scope variable 'value' to simplify binding
+					scope.value = fieldModel._currentValue;
 
-				scope.disabled = !writable;
+					// Decide whether the value is writable or not
+					var writable = (langConf.currentLanguage == langConf.defaultLanguage) ||
+					(scope.value && scope.value.Dimensions[langConf.currentLanguage]);
+
+					scope.disabled = !writable;
+				};
+
+				initCurrentValue();
+				// Handle language switch
+				scope.$watch('to.langConf.currentLanguage', function(newValue, oldValue) {
+					initCurrentValue();
+					console.log('switched language from ' + oldValue + ' to ' + newValue);
+				});
 			}
 		};
 	});

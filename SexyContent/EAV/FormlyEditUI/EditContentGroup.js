@@ -2,12 +2,19 @@
 (function() {
 	'use strict';
 
-	var outerApp = angular.module('testModule', ['eavEditEntity']);
+	var outerApp = angular.module('testModule', ['eavEditEntity', 'eavLocalization']);
 	outerApp.controller('outerAppController', function($q, $http) {
 		var vm = this;
 
 		// This array holds the entities to edit
 		vm.entitiesToEdit = [];
+
+		// ToDo: Use correct language configuration from DNN / 2sxc
+		vm.langConf = {
+			languages: ['en-us', 'de-de'],
+			currentLanguage: 'de-de',
+			defaultLanguage: 'en-us'
+		};
 
 		// Prepare URL parameters
 		var entityId = $2sxc.ng.getParameterByName('entityId');

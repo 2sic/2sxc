@@ -12,7 +12,8 @@
 			scope: {
 				contentTypeName: '@contentTypeName',
 				entityId: '@entityId',
-				registerEditControl: '=registerEditControl'
+				registerEditControl: '=registerEditControl',
+				langConf: '=langConf'
 			},
 			controller: 'EditEntityCtrl',
 			controllerAs: 'vm'
@@ -57,7 +58,7 @@
 							label: e.MetaData.Name,
 							description: e.MetaData.Notes,
 							settings: e.MetaData,
-							disabled: function () { return true; }
+							langConf: $scope.langConf
 						},
 						hide: (e.MetaData.VisibleInEditUI ? !e.MetaData.VisibleInEditUI : false),
 						//defaultValue: parseDefaultValue(e)
