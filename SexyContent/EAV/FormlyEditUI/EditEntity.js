@@ -56,10 +56,16 @@
 							required: !!e.MetaData.Required,
 							label: e.MetaData.Name,
 							description: e.MetaData.Notes,
-							settings: e.MetaData
+							settings: e.MetaData,
+							disabled: function () { return true; }
 						},
 						hide: (e.MetaData.VisibleInEditUI ? !e.MetaData.VisibleInEditUI : false),
 						//defaultValue: parseDefaultValue(e)
+						expressionProperties: {
+							'templateOptions.disabled': function ($viewValue, $modelValue, scope) {
+								return scope.disabled;
+							}
+						}
 					});
 				});
 
@@ -69,7 +75,7 @@
 							vm.entity = result.data;
 						});
 				} else {
-					// ToDo: Create new / blank model should not be in this JS file
+					// ToDo: Create new / blank model should probably not be here
 					vm.entity = {
 						Id: null,
 						Guid: null,
