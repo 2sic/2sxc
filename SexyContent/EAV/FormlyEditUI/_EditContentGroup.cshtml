@@ -1,4 +1,7 @@
-﻿@inherits DotNetNuke.Web.Razor.DotNetNukeWebPage
+﻿@using System.Linq
+@using DotNetNuke.Common.Utilities
+@using ToSic.SexyContent
+@inherits DotNetNuke.Web.Razor.DotNetNukeWebPage
 
 <div style="max-width:640px; padding:20px;">
 	<div sxc-app="testModule" id="editEntity@(Dnn.Module.ModuleID)" ng-controller="outerAppController as vm">
@@ -13,10 +16,25 @@
 </div>
 
 <script type="text/javascript">
+	@{
+		var appId = SexyContent.GetAppIdFromModule(Dnn.Module);
+		var zoneId = SexyContent.GetZoneID(Dnn.Module.PortalID);
+		var Sexy = new SexyContent(zoneId.Value, appId.Value, true, Dnn.Module.OwnerPortalID);
+	}
+
 	// Define some internal properties that the edit dialog must know (webforms bridge)
 	$(document).ready(function() {
 		$2sxc(@(Dnn.Module.ModuleID))._editContentGroupConfig = {
-			tabBaseUrl: "@this.Dnn.Tab.FullUrl"
+			tabBaseUrl: "@this.Dnn.Tab.FullUrl",
+			langConf: {
+				languages: @Sexy.ContentContext.GetLanguages().Where(l => l.Active).OrderBy(l => l.ExternalKey).Select(l =>
+				           {
+					           var key = l.ExternalKey.ToLower();
+					           return new {name = l.Name, key};
+				           }).ToArray().ToJson(),
+				defaultLanguage: '@Dnn.Portal.DefaultLanguage.ToLower()',
+				currentLanguage: '@Dnn.Portal.CultureCode.ToLower()'
+			}
 		};
 	});
 </script>

@@ -20,20 +20,21 @@
 	eavLocalization.directive('eavLanguageSwitcher', function () {
 		return {
 			restrict: 'E',
-			template: '<ul><li ng-repeat="l in langConf.languages" ng-click="langConf.currentLanguage = l;">{{l}}</li></ul>Current: {{langConf.currentLanguage}}',
+			template: '<ul><li ng-repeat="l in langConf.languages" ng-click="langConf.currentLanguage = l.key;">{{l.name}}</li></ul>Current: {{langConf.currentLanguage}}',
 			controller: function($scope, eavLanguageService) {
 				$scope.langConf = eavLanguageService;
 			}
 		};
 	});
 
-	eavLocalization.factory('eavLanguageService', function () {
-		// ToDo: Use correct language configuration from DNN / 2sxc
-		return {
-			languages: ['en-us', 'de-de'],
-			currentLanguage: 'de-de',
-			defaultLanguage: 'en-us'
-		};
+	eavLocalization.factory('eavLanguageService', function (sxc) {
+		return sxc._editContentGroupConfig.langConf;
+
+		//return {
+		//	languages: ['en-us', 'de-de'],
+		//	currentLanguage: 'de-de',
+		//	defaultLanguage: 'en-us'
+		//};
 	});
 
 	eavLocalization.directive('eavLocalizationScopeControl', function () {
@@ -125,7 +126,8 @@
 		return {
 			restrict: 'E',
 			scope: {
-				fieldModel: '=fieldModel'
+				fieldModel: '=fieldModel',
+				options: '=options'
 			},
 			templateUrl: '/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/FormlyEditUI/Localization/LocalizationMenu.html',
 			link: function (scope, element, attrs) { },
@@ -134,6 +136,7 @@
 				var vm = this;
 				var langConf = eavLanguageService;
 				vm.fieldModel = $scope.fieldModel;
+				vm.isDefaultLanguage = function() { return langConf.currentLanguage != langConf.defaultLanguage; };
 
 				vm.actions = {
 					translate: function () {

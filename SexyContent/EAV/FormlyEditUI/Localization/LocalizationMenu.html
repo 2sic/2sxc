@@ -1,5 +1,5 @@
 ﻿<div dropdown is-open="status.isopen" class="eav-localization">
-	<a class="eav-localization-lock" ng-class="{ 'eav-localization-lock-open': test }" dropdown-toggle href="javascript:void(0)">
+	<a class="eav-localization-lock" ng-if="vm.isDefaultLanguage()" ng-class="{ 'eav-localization-lock-open': !options.templateOptions.disabled }" dropdown-toggle href="javascript:void(0)">
 		Button dropdown <span class="caret"></span>
 	</a>
 	<ul class="dropdown-menu multi-level pull-right eav-localization-dropdown" role="menu" aria-labelledby="single-button">
