@@ -71,7 +71,7 @@ namespace ToSic.SexyContent
 						Version070200();
 						break;
 					case "07.02.02":
-						// Make sure upgrades between 07.00.00 and 07.02.02 do not run again when FinishAbortedUpgrade is triggered
+						// Make sure upgrades FROM BETWEEN 07.00.00 and 07.02.02 do not run again (create log files for each of them)
 						LogSuccessfulUpgrade("07.00.00", false);
 						LogSuccessfulUpgrade("07.00.03", false);
 						LogSuccessfulUpgrade("07.02.00", false);
