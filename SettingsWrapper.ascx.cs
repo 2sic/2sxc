@@ -18,7 +18,12 @@ namespace ToSic.SexyContent
 
 	    public int SortOrder
 	    {
-			get { return int.Parse(Request.QueryString["SortOrder"]); }
+	        get
+	        {
+	            if (ItemType == "ListContent")
+	                return 0; // not -1 any more, that was the old way of defining the list-header
+	            return int.Parse(Request.QueryString["SortOrder"]); 
+	        }
 	    }
 
 		/// <summary>
@@ -36,7 +41,9 @@ namespace ToSic.SexyContent
 			if (!ContentGroup.Exists || ContentGroup[ItemType] == null || ContentGroup.Template == null)
 				throw new Exception("Cannot find content group");
 
-			var entity = ContentGroup[ItemType][SortOrder];
+            // try to get the entityId. Sometimes it will try to get #0 which doesn't exist yet, that's why it has these checks
+		    var itemList = ContentGroup[ItemType];
+			var entity =  (itemList.Count > SortOrder) ? itemList[SortOrder] : null;
 			var entityID = entity == null ? new int?() : entity.EntityId;
 
 			var attributeSetName = ItemType == "Content" ? ContentGroup.Template.ContentTypeStaticName : ContentGroup.Template.ListContentTypeStaticName;
@@ -50,7 +57,7 @@ namespace ToSic.SexyContent
 				ddlEntities.DataSource =
 					dataSource.List.Select(p => new
 					{
-						EntityTitle = p.Value.Title[0] + " (" + p.Value.EntityId + ")",
+						EntityTitle = (p.Value.Title != null ? p.Value.Title[0] : "[?]") + " (" + p.Value.EntityId + ")",
 						EntityID = p.Value.EntityId
 					});
 				ddlEntities.DataBind();

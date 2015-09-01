@@ -47,9 +47,12 @@ namespace ToSic.SexyContent
 
 				switch (version)
 				{
-					case "01.00.00": // Make sure that log folder is not existent on new installations
+					case "01.00.00": // Make sure that log folder empty on new installations (could happen if 2sxc was already installed on a system)
 						if (Directory.Exists(HostingEnvironment.MapPath(_logDirectory)))
-							Directory.Delete(HostingEnvironment.MapPath(_logDirectory), true);
+						{
+							var files = new List<string>(Directory.GetFiles(HostingEnvironment.MapPath(_logDirectory)));
+							files.ForEach(x => { try { File.Delete(x); } catch {} });
+						}
 						break;
 					case "05.05.00":
 						Version050500();
@@ -68,7 +71,7 @@ namespace ToSic.SexyContent
 						Version070200();
 						break;
 					case "07.02.02":
-						// Make sure upgrades between 07.00.00 and 07.02.02 do not run again when FinishAbortedUpgrade is triggered
+						// Make sure upgrades FROM BETWEEN 07.00.00 and 07.02.02 do not run again (create log files for each of them)
 						LogSuccessfulUpgrade("07.00.00", false);
 						LogSuccessfulUpgrade("07.00.03", false);
 						LogSuccessfulUpgrade("07.02.00", false);
