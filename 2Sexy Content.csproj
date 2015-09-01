@@ -131,13 +131,37 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\Telerik.Web.UI.dll</HintPath>
     </Reference>
-    <Reference Include="ToSic.Eav, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="ToSic.Eav, Version=4.1.6.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\ToSic.Eav.dll</HintPath>
+      <HintPath>..\..\..\..\eav\ToSic.Eav.ManagementUI\bin\ToSic.Eav.dll</HintPath>
     </Reference>
-    <Reference Include="ToSic.Eav.ManagementUI, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="ToSic.Eav.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\ToSic.Eav.ManagementUI.dll</HintPath>
+      <HintPath>..\..\..\..\eav\ToSic.Eav.ManagementUI\bin\ToSic.Eav.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="ToSic.Eav.DataSources, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\eav\ToSic.Eav.ManagementUI\bin\ToSic.Eav.DataSources.dll</HintPath>
+    </Reference>
+    <Reference Include="ToSic.Eav.ImportExport, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\eav\ToSic.Eav.ManagementUI\bin\ToSic.Eav.ImportExport.dll</HintPath>
+    </Reference>
+    <Reference Include="ToSic.Eav.ManagementUI, Version=4.0.0.16, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\eav\ToSic.Eav.ManagementUI\bin\ToSic.Eav.ManagementUI.dll</HintPath>
+    </Reference>
+    <Reference Include="ToSic.Eav.Persistence.EF4, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\eav\ToSic.Eav.ManagementUI\bin\ToSic.Eav.Persistence.EF4.dll</HintPath>
+    </Reference>
+    <Reference Include="ToSic.Eav.Tokens, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\eav\ToSic.Eav.ManagementUI\bin\ToSic.Eav.Tokens.dll</HintPath>
+    </Reference>
+    <Reference Include="ToSic.Eav.WebApi, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\eav\ToSic.Eav.ManagementUI\bin\ToSic.Eav.WebApi.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

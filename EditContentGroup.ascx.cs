@@ -82,7 +82,7 @@ namespace ToSic.SexyContent
         {
             get
             {
-                return Sexy.ContentContext.GetLanguageId(PortalSettings.DefaultLanguage);
+                return Sexy.ContentContext.Dimensions.GetLanguageId(PortalSettings.DefaultLanguage);
             }
         }
 
@@ -113,7 +113,7 @@ namespace ToSic.SexyContent
                     var attributeSetName = Request.QueryString["AttributeSetName"];
 
                     if (!String.IsNullOrEmpty(attributeSetName))
-                        _attributeSetId = Sexy.ContentContext.GetAllAttributeSets().FirstOrDefault(p => p.Name == attributeSetName || p.StaticName == attributeSetName).AttributeSetID;
+                        _attributeSetId = Sexy.ContentContext.AttribSet.GetAllAttributeSets().FirstOrDefault(p => p.Name == attributeSetName || p.StaticName == attributeSetName).AttributeSetID;
                     else if (!String.IsNullOrWhiteSpace(Request.QueryString["AttributeSetId"]))
                         _attributeSetId = int.Parse(Request.QueryString["AttributeSetId"]);
                 }
@@ -156,7 +156,7 @@ namespace ToSic.SexyContent
             SexyContent.AddDNNVersionToBodyClass(this);
 
             // Bind Languages Repeater
-            var languages = Sexy.ContentContext.GetLanguages().Where(l => l.Active).OrderByDescending(l => l.DimensionID == DefaultLanguageID).ThenBy(l => l.ExternalKey);
+            var languages = Sexy.ContentContext.Dimensions.GetLanguages().Where(l => l.Active).OrderByDescending(l => l.DimensionID == DefaultLanguageID).ThenBy(l => l.ExternalKey);
             if (!languages.Any())
                 pnlDimensionNav.Visible = false;
             rptDimensions.DataSource = languages;
@@ -178,7 +178,7 @@ namespace ToSic.SexyContent
 			}
 
             // Show message if language is not active
-            if (!Sexy.ContentContext.HasLanguages() || (LanguageID.HasValue && Sexy.ContentContext.GetDimension(LanguageID.Value).Active))
+            if (!Sexy.ContentContext.Dimensions.HasLanguages() || (LanguageID.HasValue && Sexy.ContentContext.Dimensions.GetDimension(LanguageID.Value).Active))
                 ProcessView();
             else
             {
@@ -243,7 +243,7 @@ namespace ToSic.SexyContent
 				editControl.ZoneId = ZoneId.Value;
 				editControl.ModuleID = ModuleId;
 				editControl.TabID = TabId;
-				editControl.AttributeSetID = AttributeSetId.HasValue ? AttributeSetId.Value : Sexy.ContentContext.GetEntity(EntityId.Value).AttributeSetID;
+				editControl.AttributeSetID = AttributeSetId.HasValue ? AttributeSetId.Value : Sexy.ContentContext.Entities.GetEntity(EntityId.Value).AttributeSetID;
 				editControl.EntityId = EntityId;
 				phNewOrEditControls.Controls.Add(editControl);
 			}

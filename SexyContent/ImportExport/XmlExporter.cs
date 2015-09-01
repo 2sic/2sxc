@@ -85,7 +85,7 @@ namespace ToSic.SexyContent.ImportExport
 
                 #region Header
 
-                var Dimensions = Sexy.ContentContext.GetDimensionChildren("Culture");
+                var Dimensions = Sexy.ContentContext.Dimensions.GetDimensionChildren("Culture");
                 var Header = new XElement("Header",
                     _isAppExport && Sexy.App.AppGuid != "Default"
                         ? new XElement("App",
@@ -115,11 +115,11 @@ namespace ToSic.SexyContent.ImportExport
                 foreach (var AttributeSetID in AttributeSetIDs)
                 {
                     var ID = int.Parse(AttributeSetID);
-                    var Set = Sexy.ContentContext.GetAttributeSet(ID);
+                    var Set = Sexy.ContentContext.AttribSet.GetAttributeSet(ID);
                     var Attributes = new XElement("Attributes");
 
                     // Add all Attributes to AttributeSet including meta informations
-                    foreach (var x in Sexy.ContentContext.GetAttributesInSet(ID))
+                    foreach (var x in Sexy.ContentContext.Attributes.GetAttributesInSet(ID))
                     {
                         var Attribute = new XElement("Attribute",
                             new XAttribute("StaticName", x.Attribute.StaticName),
@@ -127,9 +127,8 @@ namespace ToSic.SexyContent.ImportExport
                             new XAttribute("IsTitle", x.IsTitle),
                             // Add Attribute MetaData
                             from c in
-                                Sexy.ContentContext.GetEntities(DataSource.AssignmentObjectTypeIdFieldProperties,
-                                    x.AttributeID,
-                                    null, null)
+                                Sexy.ContentContext.Entities.GetEntities(Constants.AssignmentObjectTypeIdFieldProperties,
+                                    x.AttributeID)
                             select GetEntityXElement(c)
                             );
 
@@ -159,7 +158,7 @@ namespace ToSic.SexyContent.ImportExport
                     var ID = int.Parse(EntityID);
 
                     // Get the entity and ContentType from ContentContext add Add it to ContentItems
-                    var Entity = Sexy.ContentContext.GetEntity(ID);
+                    var Entity = Sexy.ContentContext.Entities.GetEntity(ID);
                     Entities.Add(GetEntityXElement(Entity));
                 }
 
@@ -201,12 +200,12 @@ namespace ToSic.SexyContent.ImportExport
                     switch (valueKey)
                     {
                         case "ContentTypeID":
-                            var attributeSet = Sexy.ContentContext.GetAllAttributeSets().FirstOrDefault(a => a.AttributeSetID == int.Parse(valueString));
+                            var attributeSet = Sexy.ContentContext.AttribSet.GetAllAttributeSets().FirstOrDefault(a => a.AttributeSetID == int.Parse(valueString));
                             value.Attribute("Value").SetValue(attributeSet != null ? attributeSet.StaticName : String.Empty);
                             break;
                         case "DemoEntityID":
                             var entityID = int.Parse(valueString);
-                            var demoEntity = Sexy.ContentContext.Entities.FirstOrDefault(en => en.EntityID == entityID);
+                            var demoEntity = Sexy.ContentContext.SqlDb.Entities.FirstOrDefault(en => en.EntityID == entityID);
                             value.Attribute("Value").SetValue(demoEntity != null ? demoEntity.EntityGUID.ToString() : String.Empty);
                             break;
                     }

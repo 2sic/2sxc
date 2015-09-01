@@ -65,7 +65,7 @@ namespace ToSic.SexyContent
             lblEditTemplateFileHeading.Text = String.Format(LocalizeString("lblEditTemplateFileHeading.Text"), Template.Name);
 
 
-            var defaultLanguageID = Sexy.ContentContext.GetLanguageId(PortalSettings.DefaultLanguage);
+            var defaultLanguageID = Sexy.ContentContext.Dimensions.GetLanguageId(PortalSettings.DefaultLanguage);
             var languageList = defaultLanguageID.HasValue ? new[] {defaultLanguageID.Value} : new[] { 0 };
             
             //var templateDefaults = Sexy.GetTemplateDefaults(Template.TemplateID).Where(t => t.ContentTypeID.HasValue);
@@ -100,15 +100,20 @@ namespace ToSic.SexyContent
 			if (String.IsNullOrEmpty(contentTypeStaticName))
 				return;
 
-			var set = Sexy.ContentContext.GetAttributeSet(contentTypeStaticName);
+			var set = Sexy.ContentContext.AttribSet.GetAttributeSet(contentTypeStaticName);
 
-			var dataSource = Sexy.ContentContext.GetAttributes(set, true).Select(a => new
+            var metadata = new ToSic.Eav.Persistence.Metadata();
+			var dataSource = Sexy.ContentContext.Attributes.GetAttributes(set, true).Select(a => new
 			{
 				StaticName = String.Format(formatString, itemType, a.StaticName),
-				DisplayName =
-					(Sexy.ContentContext.GetAttributeMetaData(a.AttributesInSets.FirstOrDefault().AttributeID)).ContainsKey("Name")
-						? (Sexy.ContentContext.GetAttributeMetaData(a.AttributesInSets.FirstOrDefault().AttributeID))["Name"][LanguageList]
-						: a.StaticName + " (static)"
+                DisplayName =
+                    metadata.GetAttributeMetaData(a.AttributesInSets.FirstOrDefault().AttributeID, Sexy.ContentContext.ZoneId, Sexy.ContentContext.AppId).ContainsKey("Name")
+                        ? metadata.GetAttributeMetaData(a.AttributesInSets.FirstOrDefault().AttributeID, Sexy.ContentContext.ZoneId, Sexy.ContentContext.AppId)["Name"][LanguageList]
+                        : a.StaticName + " (static)"
+                //DisplayName =
+                //    (Sexy.ContentContext.GetAttributeMetaData(a.AttributesInSets.FirstOrDefault().AttributeID)).ContainsKey("Name")
+                //        ? (Sexy.ContentContext.GetAttributeMetaData(a.AttributesInSets.FirstOrDefault().AttributeID))["Name"][LanguageList]
+                //        : a.StaticName + " (static)"
 			}).ToList();
 
 			AddFieldGrid(dataSource, itemType);

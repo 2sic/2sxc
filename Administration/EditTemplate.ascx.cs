@@ -281,7 +281,7 @@ namespace ToSic.SexyContent
 	    {
 		    var source = DataSource.GetInitialDataSource(ZoneId, AppId);
 		    var typeFilter = DataSource.GetDataSource<EntityTypeFilter>(ZoneId, AppId, source);
-		    typeFilter.TypeName = DataSource.DataPipelineStaticName;
+		    typeFilter.TypeName = Constants.DataPipelineStaticName;
 
 		    ddlDataPipeline.DataSource = typeFilter.List.Select(e => new
 			{

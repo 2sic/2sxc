@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav;
+using ToSic.Eav.BLL;
 using EntityRelationship = ToSic.Eav.Data.EntityRelationship;
 
 namespace ToSic.SexyContent
@@ -145,7 +146,7 @@ namespace ToSic.SexyContent
 				{ "Template", templateId.HasValue ? new[] { templateId.Value } : new int[]{} }
 			};
 
-			var context = EavContext.Instance(_zoneId, _appId);
+		    var context = EavDataController.Instance(_zoneId, _appId).Entities;// EavContext.Instance(_zoneId, _appId);
 			context.UpdateEntity(_contentGroupEntity.EntityGuid, values);
 		}
 
@@ -173,7 +174,7 @@ namespace ToSic.SexyContent
 				{ type, entityIds.ToArray() }
 			};
 
-			var context = EavContext.Instance(_zoneId, _appId);
+		    var context = EavDataController.Instance(_zoneId, _appId).Entities;// EavContext.Instance(_zoneId, _appId);
 			context.UpdateEntity(_contentGroupEntity.EntityGuid, values);
 
 			// Refresh content group entity (ensures contentgroup is up to date)

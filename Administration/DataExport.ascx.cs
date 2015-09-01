@@ -104,7 +104,7 @@ namespace ToSic.SexyContent.Administration
             var sexyContent = new SexyContent(ZoneId.Value, ApplicationId);
 
             LanguageFallback = PortalSettings.DefaultLanguage;
-            Languages = sexyContent.ContentContext.GetLanguages()
+            Languages = sexyContent.ContentContext.Dimensions.GetLanguages()
                                                   .Where(language => language.Active)
                                                   .Select(language => language.ExternalKey)
                                                   .OrderBy(language => language != LanguageFallback)

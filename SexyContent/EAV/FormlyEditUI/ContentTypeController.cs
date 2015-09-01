@@ -12,22 +12,24 @@ namespace ToSic.SexyContent.EAV.FormlyEditUI
 	/// </summary>
 	public class ContentTypeController : SxcApiController
 	{
-		private readonly Eav.ManagementUI.FormlyEditUI.ContentTypeController _eavController;
-		public ContentTypeController()
-		{
-			_eavController = new Eav.ManagementUI.FormlyEditUI.ContentTypeController();
-		}
+        // todo refactor split
 
-		/// <summary>
-		/// Returns the configuration for a content type
-		/// </summary>
-		[HttpGet]
-		[SupportedModules("2sxc,2sxc-app")]
-		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-		public IEnumerable<dynamic> GetContentTypeConfiguration(string contentTypeName)
-		{
-			return _eavController.GetContentTypeConfiguration(this.App.ZoneId, this.App.AppId, contentTypeName);
-		}
+        //private readonly Eav.ManagementUI.FormlyEditUI.ContentTypeController _eavController;
+        //public ContentTypeController()
+        //{
+        //    _eavController = new Eav.ManagementUI.FormlyEditUI.ContentTypeController();
+        //}
+
+        ///// <summary>
+        ///// Returns the configuration for a content type
+        ///// </summary>
+        //[HttpGet]
+        //[SupportedModules("2sxc,2sxc-app")]
+        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        //public IEnumerable<dynamic> GetContentTypeConfiguration(string contentTypeName)
+        //{
+        //    return _eavController.GetContentTypeConfiguration(this.App.ZoneId, this.App.AppId, contentTypeName);
+        //}
 
 	}
 }

@@ -5,6 +5,7 @@ using System.Web.UI.WebControls;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Localization;
 using ToSic.Eav;
+using ToSic.Eav.BLL;
 using ToSic.Eav.ManagementUI;
 
 namespace ToSic.SexyContent
@@ -117,7 +118,7 @@ namespace ToSic.SexyContent
         {
             get
             {
-                return Sexy.ContentContext.GetLanguageId(PortalSettings.DefaultLanguage);
+                return Sexy.ContentContext.Dimensions.GetLanguageId(PortalSettings.DefaultLanguage);
             }
         }
 
@@ -248,12 +249,12 @@ namespace ToSic.SexyContent
 
             // Get ContentGroup
             var listContentGroupItem = ContentGroup.ListContent;
-            var entityModel = sexyContext.ContentContext.GetEntityModel(entity.EntityID);
+            var entityModel = new DbLoadIntoEavDataStructure(sexyContext.ContentContext).GetEavEntity(entity.EntityID); // sexyContext.ContentContext.GetEntityModel(entity.EntityID);
 
             // If this is the list title, or no list-title exists, set module title
             if (ItemType == "ListContent" || (listContentGroupItem == null && ItemType == "Content" && SortOrder == 0) && entityModel.IsPublished)
             {
-                var languages = Sexy.ContentContext.GetLanguages();
+                var languages = Sexy.ContentContext.Dimensions.GetLanguages();
                 // Find Module for default language
                 var moduleController = new ModuleController();
                 var originalModule = moduleController.GetModule(ModuleID);

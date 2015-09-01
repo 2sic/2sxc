@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav;
+using ToSic.Eav.BLL;
 using ToSic.Eav.DataSources;
 
 namespace ToSic.SexyContent
@@ -54,7 +55,7 @@ namespace ToSic.SexyContent
 		public bool DeleteTemplate(int templateId)
 		{
 			var template = GetTemplate(templateId);
-			var eavContext = EavContext.Instance(_zoneId, _appId);
+            var eavContext = EavDataController.Instance(_zoneId, _appId).Entities; ; //EavContext.Instance(_zoneId, _appId);
 			var canDelete = eavContext.CanDeleteEntity(template.TemplateId);
 			if(!canDelete.Item1)
 				throw new Exception(canDelete.Item2);
@@ -92,7 +93,7 @@ namespace ToSic.SexyContent
 				{ "ViewNameInUrl", viewNameInUrl }
 			};
 
-			var context = EavContext.Instance(_zoneId, _appId);
+            var context = EavDataController.Instance(_zoneId, _appId).Entities;// EavContext.Instance(_zoneId, _appId);
 
 			if(templateId.HasValue)
 				context.UpdateEntity(templateId.Value, values);

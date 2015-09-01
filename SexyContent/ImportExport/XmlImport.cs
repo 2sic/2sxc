@@ -165,8 +165,8 @@ namespace ToSic.SexyContent.ImportExport
 
 				// Adding app to EAV
 				var sexy = new SexyContent(zoneId, SexyContent.GetDefaultAppId(zoneId));
-				var app = sexy.ContentContext.AddApp(appGuid);
-				sexy.ContentContext.SaveChanges();
+				var app = sexy.ContentContext.App.AddApp(appGuid);
+				sexy.ContentContext.SqlDb.SaveChanges();
 
 				appId = app.AppID;
 			}
@@ -218,7 +218,7 @@ namespace ToSic.SexyContent.ImportExport
 				_sourceDimensions.FirstOrDefault(p => p.ExternalKey == _sourceDefaultLanguage).DimensionID
 				: new int?();
 
-			_targetDimensions = _sexy.ContentContext.GetDimensionChildren("Culture");
+			_targetDimensions = _sexy.ContentContext.Dimensions.GetDimensionChildren("Culture");
 			if (_targetDimensions.Count == 0)
 				_targetDimensions.Add(new Dimension
 				{
@@ -247,7 +247,7 @@ namespace ToSic.SexyContent.ImportExport
 		/// </summary>
 		/// <param name="importLog"></param>
 		/// <returns></returns>
-		public IEnumerable<ExportImportMessage> GetExportImportMessagesFromImportLog(List<LogItem> importLog)
+		public IEnumerable<ExportImportMessage> GetExportImportMessagesFromImportLog(List<ImportLogItem> importLog)
 		{
 			return importLog.Select(l => new ExportImportMessage(l.Message,
 				l.EntryType == EventLogEntryType.Error ? ExportImportMessage.MessageTypes.Error :
@@ -274,7 +274,7 @@ namespace ToSic.SexyContent.ImportExport
 					{
 						StaticName = xElementAttribute.Attribute("StaticName").Value,
 						Type = xElementAttribute.Attribute("Type").Value,
-						AttributeMetaData = GetImportEntities(xElementAttribute.Elements("Entity"), DataSource.AssignmentObjectTypeIdFieldProperties)
+						AttributeMetaData = GetImportEntities(xElementAttribute.Elements("Entity"), Constants.AssignmentObjectTypeIdFieldProperties)
 					};
 
 					attributes.Add(attribute);
@@ -333,8 +333,8 @@ namespace ToSic.SexyContent.ImportExport
 				if (!String.IsNullOrEmpty(demoEntityGuid))
 				{
 					var entityGuid = Guid.Parse(demoEntityGuid);
-					if (_sexy.ContentContext.EntityExists(entityGuid))
-						demoEntityId = _sexy.ContentContext.GetEntity(entityGuid).EntityID;
+					if (_sexy.ContentContext.Entities.EntityExists(entityGuid))
+						demoEntityId = _sexy.ContentContext.Entities.GetEntity(entityGuid).EntityID;
 					else
 						ImportLog.Add(
 							new ExportImportMessage(
@@ -356,8 +356,8 @@ namespace ToSic.SexyContent.ImportExport
 				if (pipelineEntityGuid != null && !string.IsNullOrEmpty(pipelineEntityGuid.Value))
 				{
 					var entityGuid = Guid.Parse(pipelineEntityGuid.Value);
-					if (_sexy.ContentContext.EntityExists(entityGuid))
-						pipelineEntityId = _sexy.ContentContext.GetEntity(entityGuid).EntityID;
+					if (_sexy.ContentContext.Entities.EntityExists(entityGuid))
+						pipelineEntityId = _sexy.ContentContext.Entities.GetEntity(entityGuid).EntityID;
 					else
 						ImportLog.Add(
 							new ExportImportMessage(
@@ -378,8 +378,8 @@ namespace ToSic.SexyContent.ImportExport
 					if (xmlDemoEntityGuidString != "0" && xmlDemoEntityGuidString != "")
 					{
 						var xmlDemoEntityGuid = Guid.Parse(xmlDemoEntityGuidString);
-						if (_sexy.ContentContext.EntityExists(xmlDemoEntityGuid))
-							xmlDemoEntityId = _sexy.ContentContext.GetEntity(xmlDemoEntityGuid).EntityID;
+						if (_sexy.ContentContext.Entities.EntityExists(xmlDemoEntityGuid))
+							xmlDemoEntityId = _sexy.ContentContext.Entities.GetEntity(xmlDemoEntityGuid).EntityID;
 					}
 
 					return new
@@ -461,7 +461,7 @@ namespace ToSic.SexyContent.ImportExport
 					break;
                 case "Entity":
                 case "Data Pipeline": // this one is an old key, remove some time in the future; was probably almost never used...
-					assignmentObjectTypeId = DataSource.AssignmentObjectTypeEntity;
+					assignmentObjectTypeId = Constants.AssignmentObjectTypeEntity;
 					break;
 			}
 

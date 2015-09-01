@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DotNetNuke.Entities.Modules;
 using ToSic.Eav;
+using ToSic.Eav.BLL;
 using ToSic.Eav.DataSources;
 
 namespace ToSic.SexyContent
@@ -49,7 +50,7 @@ namespace ToSic.SexyContent
 
 		public Guid CreateContentGroup(int moduleId, int? templateId)
 		{
-			var context = EavContext.Instance(_zoneId, _appId);
+		    var context = EavDataController.Instance(_zoneId, _appId).Entities;//  EavContext.Instance(_zoneId, _appId);
 			var contentType = DataSource.GetCache(_zoneId, _appId).GetContentType(ContentGroupTypeName);
 
 			var values = new Dictionary<string, object>

@@ -54,8 +54,21 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="ToSic.Eav">
-      <HintPath>..\..\..\bin\ToSic.Eav.dll</HintPath>
+    <Reference Include="ToSic.Eav, Version=4.1.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\eav\ToSic.Eav.ManagementUI\bin\ToSic.Eav.dll</HintPath>
+    </Reference>
+    <Reference Include="ToSic.Eav.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\eav\ToSic.Eav.ManagementUI\bin\ToSic.Eav.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="ToSic.Eav.DataSources, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\bin\ToSic.Eav.DataSources.dll</HintPath>
+    </Reference>
+    <Reference Include="ToSic.Eav.Tokens, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\eav\ToSic.Eav.ManagementUI\bin\ToSic.Eav.Tokens.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

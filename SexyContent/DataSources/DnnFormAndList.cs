@@ -65,7 +65,7 @@ namespace ToSic.SexyContent.DataSources
         /// </summary>
         public DnnFormAndList()
         {
-            Out.Add(DataSource.DefaultStreamName, new DataStream(this, DataSource.DefaultStreamName, GetEntities, GetList));
+            Out.Add(Constants.DefaultStreamName, new DataStream(this, Constants.DefaultStreamName, GetEntities, GetList));
             Configuration.Add(ModuleIdKey, FnLModuleIdDefaultToken);
             Configuration.Add(TitleFieldKey, EntityTitleDefaultKeyToken);
             Configuration.Add(ContentTypeKey, ContentTypeDefaultToken);

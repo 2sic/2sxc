@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using ToSic.Eav.ImportExport.Refactoring;
@@ -115,7 +116,7 @@ namespace ToSic.SexyContent.Administration
             ApplicationId = Request["AppID"] != null ? int.Parse(Request["AppID"]) : 0;
             var sexyContent = new SexyContent(ZoneId.Value, ApplicationId);
 
-            Languages = sexyContent.ContentContext.GetLanguages()
+            Languages = sexyContent.ContentContext.Dimensions.GetLanguages()
                                                   .Where(language => language.Active)
                                                   .Select(language => language.ExternalKey)
                                                   .OrderBy(language => language != LanguageFallback)
@@ -279,8 +280,8 @@ namespace ToSic.SexyContent.Administration
             {
                 errorProtocolHtml += string.Format
                     (
-                        "<li>{0}{1}{2}{3}</li>", 
-                        error.ErrorCode.GetDescription(), 
+                        "<li>{0}{1}{2}{3}</li>",
+                        GetDescription(error.ErrorCode), 
                         error.ErrorDetail != null ? LocalizeFormatString("lblErrorProtocolErrorDetail", error.ErrorDetail) : "",
                         error.LineNumber != null ? LocalizeFormatString("lblErrorProtocolLineNo", error.LineNumber) : "",
                         error.LineDetail != null ? LocalizeFormatString("lblErrorProtocolLineDetail", error.LineDetail) : ""
@@ -292,6 +293,26 @@ namespace ToSic.SexyContent.Administration
             pnlDetail.Visible = false;
             pnlError.Visible = true;
             pnlDone.Visible = false;
+        }
+
+
+        /// <summary>
+        /// Get the description of an enumeration value. For that, the enumeration value must have a 
+        /// description attribute. 
+        /// 
+        /// [Description("Human readable text of MyValue1."]
+        /// MyValue1
+        /// </summary>
+        private string GetDescription(Enum enumValue)
+        {
+            var fieldInfo = enumValue.GetType().GetField(enumValue.ToString());
+
+            var attributes = (DescriptionAttribute[])fieldInfo.GetCustomAttributes(typeof(DescriptionAttribute), false);
+            if (attributes != null && attributes.Length > 0)
+            {
+                return attributes[0].Description;
+            }
+            return enumValue.ToString();
         }
 
         private void ShowDonePanel(bool importFailed = false, string importFaileReason = null)

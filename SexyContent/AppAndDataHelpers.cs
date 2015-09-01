@@ -204,7 +204,7 @@ namespace ToSic.SexyContent
 
             var srcDs = (IDataTarget)src;
             srcDs.In.Clear();
-            srcDs.In.Add(DataSource.DefaultStreamName, inStream);
+            srcDs.In.Add(Constants.DefaultStreamName, inStream);
             return src;
         }
 

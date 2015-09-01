@@ -18,7 +18,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 	[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 	public class EntitiesController : SxcApiController // DnnApiController
 	{
-	    private Eav.WebApi.WebApi eavWebApi = new Eav.WebApi.WebApi();
+	    private Eav.WebApi.EntitiesController entitesController = new Eav.WebApi.EntitiesController();
 
 		public EntitiesController(): base()
 		{
@@ -30,14 +30,14 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 
 	    private void EnsureSerializerHasSxc()
 	    {
-            (eavWebApi.Serializer as Serializer).Sxc = Sexy;	        
+            (entitesController.Serializer as Serializer).Sxc = Sexy;	        
 	    }
 
         [HttpGet]
         public Dictionary<string, object> GetOne(string contentType, int id, int appId, string cultureCode = null)
         {
             EnsureSerializerHasSxc();
-            return eavWebApi.GetOne(contentType, id, appId, cultureCode);
+            return entitesController.GetOne(contentType, id, appId, cultureCode);
         }
 
         
@@ -48,7 +48,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
         public IEnumerable<Dictionary<string, object>> GetEntities(string contentType, int appId, string cultureCode = null)
 		{
             EnsureSerializerHasSxc();
-			return eavWebApi.GetEntities(contentType, cultureCode, appId);
+			return entitesController.GetEntities(contentType, cultureCode, appId);
 		}
 
 
@@ -58,21 +58,22 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 		[HttpGet]
 		public IEnumerable<Dictionary<string, object>> GetAssignedEntities(int assignmentObjectTypeId, Guid keyGuid, string contentType, int appId)
 		{
+		    var metadataController = new ToSic.Eav.WebApi.MetadataController();
             EnsureSerializerHasSxc();
-		    return eavWebApi.GetAssignedEntities(assignmentObjectTypeId, keyGuid, contentType, appId);
+            return metadataController.GetAssignedEntities(assignmentObjectTypeId, keyGuid, contentType, appId);
 		}
 
         [HttpDelete]
 	    public void Delete(string contentType, int id, int appId)
         {
             EnsureSerializerHasSxc();
-            eavWebApi.Delete(contentType, id, App.AppId);
+            entitesController.Delete(contentType, id, App.AppId);
         }
         [HttpDelete]
         public void Delete(string contentType, Guid guid, int appId)
         {
             EnsureSerializerHasSxc();
-            eavWebApi.Delete(contentType, guid, App.AppId);
+            entitesController.Delete(contentType, guid, App.AppId);
         }
 
 
@@ -90,8 +91,10 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 		public IContentType GetContentType(string contentType, int appId)
 		{
             EnsureSerializerHasSxc();
-			return eavWebApi.GetContentType(contentType, appId);
-        }
+            // todo refactor-verify
+            return new Eav.WebApi.ContentTypeController().Get(appId, contentType, null);
+            // return entitesController.GetContentType(contentType, appId);
+		}
 
         #endregion
     }

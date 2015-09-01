@@ -10,6 +10,7 @@ using Newtonsoft.Json.Linq;
 using ToSic.Eav;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources.Caches;
+using ToSic.Eav.WebApi;
 using ToSic.SexyContent.Security;
 using ToSic.SexyContent.Serializers;
 
@@ -25,7 +26,7 @@ namespace ToSic.SexyContent.WebApi
 	// [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
 	public class AppContentController : SxcApiController
 	{
-	    private Eav.WebApi.WebApi _eavWebApi;
+	    private Eav.WebApi.EntitiesController _entitiesController;
 
 		public AppContentController()
 		{
@@ -37,8 +38,8 @@ namespace ToSic.SexyContent.WebApi
 	    private void InitEavAndSerializer()
 	    {
             // Improve the serializer so it's aware of the 2sxc-context (module, portal etc.)
-            _eavWebApi = new Eav.WebApi.WebApi(App.AppId);
-            ((Serializer)_eavWebApi.Serializer).Sxc = Sexy;	        
+            _entitiesController = new Eav.WebApi.EntitiesController(App.AppId);
+            ((Serializer)_entitiesController.Serializer).Sxc = Sexy;	        
 	    }
 
         /// <summary>
@@ -50,7 +51,7 @@ namespace ToSic.SexyContent.WebApi
         {
             InitEavAndSerializer();
             PerformSecurityCheck(contentType, PermissionGrant.Read, true);
-            return _eavWebApi.GetEntities(contentType, cultureCode);
+            return _entitiesController.GetEntities(contentType, cultureCode);
         }
 
         /// <summary>
@@ -61,7 +62,7 @@ namespace ToSic.SexyContent.WebApi
 	    private void PerformSecurityCheck(string contentType, PermissionGrant grant, bool autoAllowAdmin = false)
 	    {
             // Check if we can find this content-type
-            var ct = _eavWebApi.GetContentType(contentType, App.AppId);
+            var ct = new Eav.WebApi.ContentTypeController().Get(App.AppId, contentType, null);
             if(ct == null)
                 ThrowHttpError(HttpStatusCode.NotFound, "Could not find Content Type '" + contentType + "'.", "content-types");
             
@@ -105,7 +106,7 @@ namespace ToSic.SexyContent.WebApi
 		public IEnumerable<Dictionary<string, object>> GetAssignedEntities(int assignmentObjectTypeId, Guid keyGuid, string contentType)
 		{
             InitEavAndSerializer();
-		    return _eavWebApi.GetAssignedEntities(assignmentObjectTypeId, keyGuid, contentType);
+	        return new MetadataController().GetAssignedEntities(assignmentObjectTypeId, keyGuid, contentType);
 		}
 
         [HttpDelete]
@@ -114,7 +115,7 @@ namespace ToSic.SexyContent.WebApi
         {
             InitEavAndSerializer();
             PerformSecurityCheck(contentType, PermissionGrant.Delete, true);
-            _eavWebApi.Delete(contentType, id);
+            _entitiesController.Delete(contentType, id);
         }
         [HttpDelete]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
@@ -122,7 +123,7 @@ namespace ToSic.SexyContent.WebApi
         {
             InitEavAndSerializer();
             PerformSecurityCheck(contentType, PermissionGrant.Delete, true);
-            _eavWebApi.Delete(contentType, guid);
+            _entitiesController.Delete(contentType, guid);
         }
 
 
@@ -132,7 +133,7 @@ namespace ToSic.SexyContent.WebApi
 	    {
             InitEavAndSerializer();
             PerformSecurityCheck(contentType, PermissionGrant.Read, true);
-	        return _eavWebApi.GetOne(contentType, id);
+	        return _entitiesController.GetOne(contentType, id);
 	    }
 
 	    [HttpPost]
@@ -243,7 +244,7 @@ namespace ToSic.SexyContent.WebApi
         /// </summary>
         /// <param name="attributeDefinition"></param>
         /// <param name="foundValue"></param>
-	    private static void ThrowValueMappingError(AttributeBase attributeDefinition, object foundValue)
+	    private static void ThrowValueMappingError(IAttributeBase attributeDefinition, object foundValue)
 	    {
 	        throw new Exception("Tried to create " + attributeDefinition.Name + " and couldn't convert to correct " + attributeDefinition.Type + ": '" +
 	                            foundValue + "'");
@@ -294,7 +295,7 @@ namespace ToSic.SexyContent.WebApi
             PerformSecurityCheck(contentType, PermissionGrant.Update, true);
 
             // Check that this ID is actually of this content-type, this throws an error if it's not the correct type
-            _eavWebApi.GetOne(contentType, id);
+            _entitiesController.GetOne(contentType, id);
 
             // Convert to case-insensitive dictionary just to be safe!
             newContentItem = new Dictionary<string, object>(newContentItem, StringComparer.OrdinalIgnoreCase);
@@ -310,7 +311,7 @@ namespace ToSic.SexyContent.WebApi
             App.Data.Update(id, cleanedNewItem, userName); // full version, with "who did it" for the log entry
 
             // Todo: try to return the newly created object 
-            return _eavWebApi.Serializer.Prepare(App.Data.List[id]);
+            return _entitiesController.Serializer.Prepare(App.Data.List[id]);
         }
     }
 }

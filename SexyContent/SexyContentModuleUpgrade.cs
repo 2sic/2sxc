@@ -17,6 +17,7 @@ using ToSic.Eav.Import;
 using ToSic.SexyContent.ImportExport;
 using System.Text;
 using System.Web.Hosting;
+using ToSic.Eav.BLL;
 
 namespace ToSic.SexyContent
 {
@@ -243,12 +244,12 @@ namespace ToSic.SexyContent
 			{
 				dsrcSqlDataSource
 			};
-			var import = new Eav.Import.Import(DataSource.DefaultZoneId, DataSource.MetaDataAppId, SexyContent.InternalUserName);
+			var import = new Eav.Import.Import(Constants.DefaultZoneId, Constants.MetaDataAppId, SexyContent.InternalUserName);
 			import.RunImport(attributeSets, null);
 
-			var metaDataCtx = EavContext.Instance(DataSource.DefaultZoneId, DataSource.MetaDataAppId);
-			metaDataCtx.GetAttributeSet(dsrcSqlDataSource.StaticName).AlwaysShareConfiguration = true;
-			metaDataCtx.SaveChanges();
+			var metaDataCtx = EavDataController.Instance(Constants.DefaultZoneId, Constants.MetaDataAppId);
+			metaDataCtx.AttribSet.GetAttributeSet(dsrcSqlDataSource.StaticName).AlwaysShareConfiguration = true;
+			metaDataCtx.SqlDb.SaveChanges();
 
 			// Run EAV Version Upgrade (also ensures Content Type sharing)
 			var eavVersionUpgrade = new VersionUpgrade(SexyContent.InternalUserName);
@@ -264,14 +265,14 @@ namespace ToSic.SexyContent
 
 			#region 1. Import new ContentTypes for ContentGroups and Templates
 
-			if (DataSource.GetCache(DataSource.DefaultZoneId, DataSource.MetaDataAppId).GetContentType("2SexyContent-Template") == null)
+			if (DataSource.GetCache(Constants.DefaultZoneId, Constants.MetaDataAppId).GetContentType("2SexyContent-Template") == null)
 			{
 
 				var xmlToImport =
 					File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/07.00.00.xml"));
 				//var xmlToImport = File.ReadAllText("../../../../Upgrade/07.00.00.xml");
 				var xmlImport = new XmlImport("en-US", userName, true);
-				var success = xmlImport.ImportXml(DataSource.DefaultZoneId, DataSource.MetaDataAppId, XDocument.Parse(xmlToImport));
+				var success = xmlImport.ImportXml(Constants.DefaultZoneId, Constants.MetaDataAppId, XDocument.Parse(xmlToImport));
 
 				if (!success)
 				{
@@ -508,14 +509,14 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
 			var userName = "System-ModuleUpgrade-070003";
 
 			// Import new ContentType for permissions
-			if (DataSource.GetCache(DataSource.DefaultZoneId, DataSource.MetaDataAppId).GetContentType("PermissionConfiguration") == null)
+			if (DataSource.GetCache(Constants.DefaultZoneId, Constants.MetaDataAppId).GetContentType("PermissionConfiguration") == null)
 			{
 
 				var xmlToImport =
 					File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/07.00.03.xml"));
 				//var xmlToImport = File.ReadAllText("../../../../Upgrade/07.00.00.xml");
 				var xmlImport = new XmlImport("en-US", userName, true);
-				var success = xmlImport.ImportXml(DataSource.DefaultZoneId, DataSource.MetaDataAppId, XDocument.Parse(xmlToImport));
+				var success = xmlImport.ImportXml(Constants.DefaultZoneId, Constants.MetaDataAppId, XDocument.Parse(xmlToImport));
 
 				if (!success)
 				{
@@ -531,14 +532,14 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
 			var userName = "System-ModuleUpgrade-070200";
 
 			// Import new ContentType for permissions
-			if (DataSource.GetCache(DataSource.DefaultZoneId, DataSource.MetaDataAppId).GetContentType("|Config ToSic.Eav.DataSources.Paging") == null)
+			if (DataSource.GetCache(Constants.DefaultZoneId, Constants.MetaDataAppId).GetContentType("|Config ToSic.Eav.DataSources.Paging") == null)
 			{
 
 				var xmlToImport =
 					File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/07.02.00.xml"));
 				//var xmlToImport = File.ReadAllText("../../../../Upgrade/07.00.00.xml");
 				var xmlImport = new XmlImport("en-US", userName, true);
-				var success = xmlImport.ImportXml(DataSource.DefaultZoneId, DataSource.MetaDataAppId, XDocument.Parse(xmlToImport));
+				var success = xmlImport.ImportXml(Constants.DefaultZoneId, Constants.MetaDataAppId, XDocument.Parse(xmlToImport));
 
 				if (!success)
 				{

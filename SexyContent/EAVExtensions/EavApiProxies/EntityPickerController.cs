@@ -9,13 +9,14 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
     [SupportedModules("2sxc,2sxc-app")]
     public class EntityPickerController : SxcApiController
     {
+        // todo refactor split
 
-        [HttpGet]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<dynamic> GetAvailableEntities(string entityType = null, int? dimensionId = null)
-        {
-            return new Eav.ManagementUI.API.EntityPickerController().GetAvailableEntities(App.ZoneId, App.AppId, entityType, dimensionId);
-        }
+        //[HttpGet]
+        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        //public IEnumerable<dynamic> GetAvailableEntities(string entityType = null, int? dimensionId = null)
+        //{
+        //    return new Eav.ManagementUI.API.EntityPickerController().GetAvailableEntities(App.ZoneId, App.AppId, entityType, dimensionId);
+        //}
 
     }
 }

@@ -115,7 +115,7 @@ namespace ToSic.SexyContent.Configuration
         protected void btnRenameZone_Click(object sender, EventArgs e)
         {
             var SelectedZoneIDBefore = SelectedZoneID;
-            Sexy.ContentContext.UpdateZone(SelectedZoneID.Value, hfZoneName.Value);
+            Sexy.ContentContext.Zone.UpdateZone(SelectedZoneID.Value, hfZoneName.Value);
             BindZones();
             ddlZones.SelectedValue = SelectedZoneIDBefore.Value.ToString();
         }

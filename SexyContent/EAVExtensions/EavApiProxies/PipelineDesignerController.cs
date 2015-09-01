@@ -15,12 +15,12 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 	[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 	public class PipelineDesignerController : DnnApiController
 	{
-		private readonly Eav.ManagementUI.API.PipelineDesignerController _controller;
+		private readonly Eav.WebApi.PipelineDesignerController _controller;
 
 		public PipelineDesignerController()
 		{
 			var userName = PortalSettings.UserInfo.Username;
-			_controller = new Eav.ManagementUI.API.PipelineDesignerController(userName, "SiteSqlServer");
+			_controller = new Eav.WebApi.PipelineDesignerController(userName, "SiteSqlServer");
 		}
 
 		/// <summary>

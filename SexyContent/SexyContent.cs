@@ -24,6 +24,7 @@ using DotNetNuke.Services.Localization;
 using DotNetNuke.Services.Search.Entities;
 using Newtonsoft.Json;
 using ToSic.Eav;
+using ToSic.Eav.BLL;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Caches;
 using ToSic.Eav.ValueProvider;
@@ -118,10 +119,11 @@ namespace ToSic.SexyContent
 
         #region Properties
 
+        // todo: 2dm - try to refactor the context out of this
         /// <summary>
         /// The Content Data Context
         /// </summary>
-        public EavContext ContentContext;
+        public EavDataController ContentContext;
 
         private int? ZoneId { get; set; }
 
@@ -166,7 +168,7 @@ namespace ToSic.SexyContent
         {
             get
             {
-                return DataSource.GetCache(DataSource.DefaultZoneId, DataSource.MetaDataAppId).GetAssignmentObjectTypeId("2SexyContent-Template");
+                return DataSource.GetCache(Constants.DefaultZoneId, Constants.MetaDataAppId).GetAssignmentObjectTypeId("2SexyContent-Template");
             }
         }
 
@@ -177,7 +179,7 @@ namespace ToSic.SexyContent
         {
             get
             {
-                return DataSource.GetCache(DataSource.DefaultZoneId, DataSource.MetaDataAppId).GetAssignmentObjectTypeId("App");
+                return DataSource.GetCache(Constants.DefaultZoneId, Constants.MetaDataAppId).GetAssignmentObjectTypeId("App");
             }
         }
 
@@ -210,7 +212,7 @@ namespace ToSic.SexyContent
 
             if (zoneId == 0)
                 if (OwnerPS == null || !GetZoneID(OwnerPS.PortalId).HasValue)
-                    zoneId = DataSource.DefaultZoneId;
+                    zoneId = Constants.DefaultZoneId;
                 else
                     zoneId = GetZoneID(OwnerPS.PortalId).Value;
 
@@ -230,7 +232,7 @@ namespace ToSic.SexyContent
 			ContentGroups = new ContentGroups(zoneId, appId);
 
             // Set Properties on ContentContext
-            ContentContext = EavContext.Instance(zoneId, appId);
+            ContentContext = EavDataController.Instance(zoneId, appId); // EavContext.Instance(zoneId, appId);
             ContentContext.UserName = (HttpContext.Current == null || HttpContext.Current.User == null) ? InternalUserName : HttpContext.Current.User.Identity.Name;
 
             ZoneId = zoneId;
@@ -668,7 +670,7 @@ namespace ToSic.SexyContent
             var eavAppName = ((BaseCache) DataSource.GetCache(zoneId, null)).ZoneApps[zoneId].Apps[appId];
             App sexyApp = null;
 
-            if(eavAppName != EavContext.DefaultAppName)
+            if(eavAppName != Constants.DefaultAppName)
             {
                 EnsureAppIsConfigured(zoneId, appId);
 
@@ -728,7 +730,7 @@ namespace ToSic.SexyContent
             // Get appName from cache
             var eavAppName = ((BaseCache)DataSource.GetCache(zoneId, null)).ZoneApps[zoneId].Apps[appId];
 
-            if (eavAppName == EavContext.DefaultAppName)
+            if (eavAppName == Constants.DefaultAppName)
                 return;
 
             var appContext = new SexyContent(zoneId, appId);
@@ -736,7 +738,7 @@ namespace ToSic.SexyContent
             if (appMetaData == null)
             {
                 // Add app-describing entity
-                var appAttributeSet = appContext.ContentContext.GetAttributeSet(AttributeSetStaticNameApps).AttributeSetID;
+                var appAttributeSet = appContext.ContentContext.AttribSet.GetAttributeSet(AttributeSetStaticNameApps).AttributeSetID;
                 var values = new OrderedDictionary
                 {
                     {"DisplayName", String.IsNullOrEmpty(appName) ? eavAppName : appName },
@@ -746,7 +748,7 @@ namespace ToSic.SexyContent
                     {"Version", "00.00.01"},
                     {"OriginalId", ""}
                 };
-                appContext.ContentContext.AddEntity(appAttributeSet, values, null, appId, AssignmentObjectTypeIDSexyContentApp);
+                appContext.ContentContext.Entities.AddEntity(appAttributeSet, values, null, appId, AssignmentObjectTypeIDSexyContentApp);
             }
 
             if(appSettings == null)
@@ -754,14 +756,14 @@ namespace ToSic.SexyContent
 
                 AttributeSet settingsAttributeSet;
                 // Add new (empty) ContentType for Settings
-                if (!appContext.ContentContext.AttributeSetExists(AttributeSetStaticNameAppSettings, appId))
-                    settingsAttributeSet = appContext.ContentContext.AddAttributeSet(AttributeSetStaticNameAppSettings,
+                if (!appContext.ContentContext.AttribSet.AttributeSetExists(AttributeSetStaticNameAppSettings, appId))
+                    settingsAttributeSet = appContext.ContentContext.AttribSet.AddAttributeSet(AttributeSetStaticNameAppSettings,
                         "Stores settings for an app", AttributeSetStaticNameAppSettings, AttributeSetScopeApps);
                 else
-                    settingsAttributeSet = appContext.ContentContext.GetAttributeSet(AttributeSetStaticNameAppSettings);
+                    settingsAttributeSet = appContext.ContentContext.AttribSet.GetAttributeSet(AttributeSetStaticNameAppSettings);
 
                 DataSource.GetCache(zoneId, appId).PurgeCache(zoneId, appId);
-                appContext.ContentContext.AddEntity(settingsAttributeSet, new OrderedDictionary(), null, appId, AssignmentObjectTypeIDSexyContentApp);
+                appContext.ContentContext.Entities.AddEntity(settingsAttributeSet, new OrderedDictionary(), null, appId, AssignmentObjectTypeIDSexyContentApp);
             }
 
             if(appResources == null)
@@ -769,15 +771,15 @@ namespace ToSic.SexyContent
                 AttributeSet resourcesAttributeSet;
 
                 // Add new (empty) ContentType for Resources
-                if (!appContext.ContentContext.AttributeSetExists(AttributeSetStaticNameAppResources, appId))
-                    resourcesAttributeSet = appContext.ContentContext.AddAttributeSet(
+                if (!appContext.ContentContext.AttribSet.AttributeSetExists(AttributeSetStaticNameAppResources, appId))
+                    resourcesAttributeSet = appContext.ContentContext.AttribSet.AddAttributeSet(
                         AttributeSetStaticNameAppResources, "Stores resources like translations for an app",
                         AttributeSetStaticNameAppResources, AttributeSetScopeApps);
                 else
-                    resourcesAttributeSet = appContext.ContentContext.GetAttributeSet(AttributeSetStaticNameAppResources);
+                    resourcesAttributeSet = appContext.ContentContext.AttribSet.GetAttributeSet(AttributeSetStaticNameAppResources);
 
                 DataSource.GetCache(zoneId, appId).PurgeCache(zoneId, appId);
-                appContext.ContentContext.AddEntity(resourcesAttributeSet, new OrderedDictionary(), null, appId, AssignmentObjectTypeIDSexyContentApp);
+                appContext.ContentContext.Entities.AddEntity(resourcesAttributeSet, new OrderedDictionary(), null, appId, AssignmentObjectTypeIDSexyContentApp);
             }
 
             if (appMetaData == null || appSettings == null || appResources == null)
@@ -791,8 +793,8 @@ namespace ToSic.SexyContent
 
             // Adding app to EAV
             var sexy = new SexyContent(zoneId, GetDefaultAppId(zoneId));
-            var app = sexy.ContentContext.AddApp(Guid.NewGuid().ToString());
-            sexy.ContentContext.SaveChanges();
+            var app = sexy.ContentContext.App.AddApp(Guid.NewGuid().ToString());
+            sexy.ContentContext.SqlDb.SaveChanges();
 
             EnsureAppIsConfigured(zoneId, app.AppID, appName);
 
@@ -839,8 +841,8 @@ namespace ToSic.SexyContent
 	                if (appName != null)
 	                {
 						// ToDo: Fix issue in EAV (cache is only ensured when a CacheItem-Property is accessed like LastRefresh)
-		                var x = ((BaseCache) DataSource.GetCache(DataSource.DefaultZoneId, DataSource.MetaDataAppId)).LastRefresh;
-						appIdString = ((BaseCache) DataSource.GetCache(DataSource.DefaultZoneId, DataSource.MetaDataAppId)).ZoneApps[zoneId.Value].Apps.Where(p => p.Value == (string)appName).Select(p => p.Key).FirstOrDefault();
+		                var x = ((BaseCache) DataSource.GetCache(Constants.DefaultZoneId, Constants.MetaDataAppId)).LastRefresh;
+						appIdString = ((BaseCache) DataSource.GetCache(Constants.DefaultZoneId, Constants.MetaDataAppId)).ZoneApps[zoneId.Value].Apps.Where(p => p.Value == (string)appName).Select(p => p.Key).FirstOrDefault();
 	                }
 
                     // Get AppId from ModuleSettings
@@ -899,7 +901,7 @@ namespace ToSic.SexyContent
                 Directory.Delete(sexyApp.PhysicalPath, true);
 
             // Delete the app
-            ContentContext.DeleteApp(appId);
+            ContentContext.App.DeleteApp(appId);
         }
 
         public static int GetDefaultAppId(int zoneId)
@@ -992,13 +994,13 @@ namespace ToSic.SexyContent
 
         public static List<Zone> GetZones()
         {
-            return new SexyContent(DataSource.DefaultZoneId, GetDefaultAppId(DataSource.DefaultZoneId)).ContentContext.GetZones();
+            return new SexyContent(Constants.DefaultZoneId, GetDefaultAppId(Constants.DefaultZoneId)).ContentContext.Zone.GetZones();
         }
 
         public static Zone AddZone(string zoneName)
         {
             return
-                new SexyContent(DataSource.DefaultZoneId, GetDefaultAppId(DataSource.DefaultZoneId)).ContentContext
+                new SexyContent(Constants.DefaultZoneId, GetDefaultAppId(Constants.DefaultZoneId)).ContentContext.Zone
                     .AddZone(zoneName).Item1;
         }
 
@@ -1009,9 +1011,9 @@ namespace ToSic.SexyContent
         [Obsolete("Don't use this anymore, use 'GetCurrentLanguageName' (work with strings)")]
         public int? GetCurrentLanguageID(bool UseDefaultLanguageIfNotFound = false)
         {
-            var LanguageID = ContentContext.GetLanguageId(Thread.CurrentThread.CurrentCulture.Name);
+            var LanguageID = ContentContext.Dimensions.GetLanguageId(Thread.CurrentThread.CurrentCulture.Name);
             if (!LanguageID.HasValue && UseDefaultLanguageIfNotFound)
-                LanguageID = ContentContext.GetLanguageId(PortalSettings.Current.DefaultLanguage);
+                LanguageID = ContentContext.Dimensions.GetLanguageId(PortalSettings.Current.DefaultLanguage);
             return LanguageID;
         }
 
@@ -1022,14 +1024,14 @@ namespace ToSic.SexyContent
 
         public void SetCultureState(string CultureCode, bool Active, int PortalID)
         {
-            var EAVLanguage = ContentContext.GetLanguages().Where(l => l.ExternalKey == CultureCode).FirstOrDefault();
+            var EAVLanguage = ContentContext.Dimensions.GetLanguages().Where(l => l.ExternalKey == CultureCode).FirstOrDefault();
             // If the language exists in EAV, set the active state, else add it
             if (EAVLanguage != null)
-                ContentContext.UpdateDimension(EAVLanguage.DimensionID, Active);
+                ContentContext.Dimensions.UpdateDimension(EAVLanguage.DimensionID, Active);
             else
             {
                 var CultureText = LocaleController.Instance.GetLocale(CultureCode).Text;
-                ContentContext.AddLanguage(CultureText, CultureCode);
+                ContentContext.Dimensions.AddLanguage(CultureText, CultureCode);
             }
         }
 
@@ -1040,7 +1042,7 @@ namespace ToSic.SexyContent
         public static List<CulturesWithActiveState> GetCulturesWithActiveState(int portalId, int zoneId)
         {
             //var DefaultLanguageID = ContentContext.GetLanguageId();
-            var AvailableEAVLanguages = new SexyContent(zoneId, GetDefaultAppId(zoneId)).ContentContext.GetLanguages();
+            var AvailableEAVLanguages = new SexyContent(zoneId, GetDefaultAppId(zoneId)).ContentContext.Dimensions.GetLanguages();
             var DefaultLanguageCode = new PortalSettings(portalId).DefaultLanguage;
             var DefaultLanguage = AvailableEAVLanguages.Where(p => p.ExternalKey == DefaultLanguageCode).FirstOrDefault();
             var DefaultLanguageIsActive = DefaultLanguage != null && DefaultLanguage.Active;
@@ -1069,7 +1071,7 @@ namespace ToSic.SexyContent
 
         public static int? GetLanguageId(int zoneId, string externalKey)
         {
-            return new SexyContent(zoneId, GetDefaultAppId(zoneId)).ContentContext.GetLanguageId(externalKey);
+            return new SexyContent(zoneId, GetDefaultAppId(zoneId)).ContentContext.Dimensions.GetLanguageId(externalKey);
         }
 
         #endregion

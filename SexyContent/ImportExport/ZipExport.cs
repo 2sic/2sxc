@@ -40,7 +40,7 @@ namespace ToSic.SexyContent.ImportExport
 
             var attributeSetIds = attributeSets.Select(p => p.AttributeSetId.ToString()).ToArray();
 			var entities = SexyContent.GetInitialDataSource(_zoneId, _appId).Out["Default"].List.Where(e => e.Value.AssignmentObjectTypeId != SexyContent.AssignmentObjectTypeIDSexyContentTemplate
-				&& e.Value.AssignmentObjectTypeId != DataSource.AssignmentObjectTypeIdFieldProperties).ToList();
+				&& e.Value.AssignmentObjectTypeId != Constants.AssignmentObjectTypeIdFieldProperties).ToList();
 
 	        if (!includeContentGroups)
 	            entities = entities.Where(p => p.Value.Type.StaticName != _sexycontentContentgroupName).ToList();

@@ -57,7 +57,7 @@ namespace ToSic.SexyContent.EAVExtensions
             get { return _baseEntity[attributeName]; }
         }
 
-        public RelationshipManager Relationships {
+        public ToSic.Eav.Interfaces.IRelationshipManager Relationships {
             get { return _baseEntity.Relationships; }
         }
         public bool IsPublished {

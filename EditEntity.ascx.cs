@@ -68,7 +68,7 @@ namespace ToSic.SexyContent
         {
             get
             {
-                return Sexy.ContentContext.GetLanguageId(PortalSettings.DefaultLanguage);
+                return Sexy.ContentContext.Dimensions.GetLanguageId(PortalSettings.DefaultLanguage);
             }
         }
 
