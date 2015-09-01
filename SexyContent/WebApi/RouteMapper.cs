@@ -43,7 +43,8 @@ namespace ToSic.SexyContent.WebApi
             config.Services.Replace(typeof(IHttpControllerSelector), new AppApiControllerSelector(config) { PreviousSelector = previousSelector });
 
             // Also register Unity Dependency-Injection here, since this will certainly run once early during bootup
-            var cont = Eav.Factory.Container; 
+            var cont = Eav.Factory.Container;
+            new Eav.Configuration().ConfigureDefaultMappings(cont);
             cont.RegisterType(typeof(Eav.Serializers.Serializer), typeof(Serializers.Serializer), new InjectionConstructor());//, null, null, null);
             cont.RegisterType(typeof (IEavValueConverter), typeof (SexyContentValueConverter), new InjectionConstructor());
         }
