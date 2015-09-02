@@ -33,11 +33,26 @@ namespace ToSic.SexyContent
 
 		public static string UpgradeModule(string version)
 		{
-			if (IsUpgradeComplete(version))
-				throw new Exception("2sxc upgrade for version " + version + " started, but it looks like the upgrade for this version is already complete. Aborting upgrade.");
-
 			if (IsUpgradeRunning)
 				throw new Exception("2sxc upgrade for version " + version + " started, but the upgrade is already running. Aborting upgrade.");
+
+			// Make sure that log folder empty on new installations (could happen if 2sxc was already installed on a system)
+			if (version == "01.00.00" && Directory.Exists(HostingEnvironment.MapPath(_logDirectory)))
+			{
+				var files = new List<string>(Directory.GetFiles(HostingEnvironment.MapPath(_logDirectory)));
+				files.ForEach(x =>
+				{
+					try
+					{
+						File.Delete(Path.Combine(HostingEnvironment.MapPath(_logDirectory), x));
+					}
+					catch
+					{ }
+				});
+			}
+
+			if (IsUpgradeComplete(version))
+				throw new Exception("2sxc upgrade for version " + version + " started, but it looks like the upgrade for this version is already complete. Aborting upgrade.");
 
 			IsUpgradeRunning = true;
 			LogUpgradeStep("----- Upgrade to " + version + " started -----");
@@ -47,12 +62,8 @@ namespace ToSic.SexyContent
 
 				switch (version)
 				{
-					case "01.00.00": // Make sure that log folder empty on new installations (could happen if 2sxc was already installed on a system)
-						if (Directory.Exists(HostingEnvironment.MapPath(_logDirectory)))
-						{
-							var files = new List<string>(Directory.GetFiles(HostingEnvironment.MapPath(_logDirectory)));
-							files.ForEach(x => { try { File.Delete(x); } catch {} });
-						}
+					case "01.00.00": 
+						
 						break;
 					case "05.05.00":
 						Version050500();
@@ -75,6 +86,11 @@ namespace ToSic.SexyContent
 						LogSuccessfulUpgrade("07.00.00", false);
 						LogSuccessfulUpgrade("07.00.03", false);
 						LogSuccessfulUpgrade("07.02.00", false);
+						break;
+					case "07.02.03":
+						// On some installations, the content types for the Pipeline designer are missing. Create them again.
+						// Cause: Upgrade did not run successfully on new installations
+						EnsurePipelineDesignerAttributeSets();
 						break;
 				}
 
@@ -101,7 +117,7 @@ namespace ToSic.SexyContent
 
 		internal static void FinishAbortedUpgrade() {
 			// Maybe this list can somehow be extracted from the module manifest?
-			var upgradeVersionList = new[] { "07.00.00", "07.00.03", "07.02.00", "07.02.02" };
+			var upgradeVersionList = new[] { "07.00.00", "07.00.03", "07.02.00", "07.02.02", "07.02.03" };
 
 			// Run upgrade again for all versions that do not have a corresponding logfile
 			foreach(var upgradeVersion in upgradeVersionList) {

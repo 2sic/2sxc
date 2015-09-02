@@ -45,7 +45,7 @@ namespace ToSic.SexyContent
     {
         #region Constants
 
-        public const string ModuleVersion = "07.02.02";
+        public const string ModuleVersion = "07.02.03";
         public const string TemplateID = "TemplateID";
 		public const string ContentGroupGuidString = "ToSIC_SexyContent_ContentGroupGuid";
         public const string AppIDString = "AppId";
@@ -849,7 +849,7 @@ namespace ToSic.SexyContent
             }
 
             int appId;
-            if (appIdString != null && int.TryParse(appIdString.ToString(), out appId))
+            if (appIdString != null && int.TryParse(appIdString.ToString().Split(',')[0], out appId))
                 return appId;
 
             return null;
