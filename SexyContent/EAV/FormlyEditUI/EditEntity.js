@@ -23,7 +23,7 @@
 	app.controller('EditEntityCtrl', function editEntityCtrl($http, $scope, formlyConfig, eavLanguageService) {
 		
 		var vm = this;
-		vm.editInDefaultLanguageFirst = function() {
+		vm.editInDefaultLanguageFirst = function () {
 			return eavLanguageService.currentLanguage != eavLanguageService.defaultLanguage && !$scope.entityId;
 		};
 

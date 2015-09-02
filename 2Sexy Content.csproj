@@ -703,9 +703,6 @@
     <Content Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\WebForms\FileManager.ascx" />
     <Content Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\WebForms\Wysiwyg.ascx" />
     <Content Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\WebForms\PagePicker.ascx" />
-    <Content Include="SexyContent\EAV\FormlyEditUI\lib\angular-formly-templates-bootstrap.js.map" />
-    <Content Include="SexyContent\EAV\FormlyEditUI\lib\angular-formly-templates-bootstrap.min.js.map" />
-    <Content Include="SexyContent\EAV\FormlyEditUI\lib\formly.min.js.map" />
     <Content Include="SexyContent\EAV\FormlyEditUI\EditContentGroup.js" />
     <Content Include="SexyContent\EAV\FormlyEditUI\Localization\FormlyLocalizationWrapper.html" />
     <Content Include="SexyContent\EAV\FormlyEditUI\Localization\images\locked.png" />
@@ -716,12 +713,6 @@
     <None Include="SqlDataProvider\01.00.00.SqlDataProvider" />
     <Content Include="SexyContent\EAV\FormlyEditUI\EditEntity.js" />
     <Content Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\EavFieldTemplates.js" />
-    <Content Include="SexyContent\EAV\FormlyEditUI\lib\angular-formly-templates-bootstrap.js" />
-    <Content Include="SexyContent\EAV\FormlyEditUI\lib\angular-formly-templates-bootstrap.min.js" />
-    <Content Include="SexyContent\EAV\FormlyEditUI\lib\api-check.js" />
-    <Content Include="SexyContent\EAV\FormlyEditUI\lib\formly.js" />
-    <Content Include="SexyContent\EAV\FormlyEditUI\lib\formly.min.js" />
-    <Content Include="SexyContent\EAV\FormlyEditUI\lib\ui-bootstrap-tpls-0.13.2.min.js" />
     <Content Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\WebForms\WebFormsBridge.ascx" />
     <Content Include="SexyContent\EAV\PipelineDesigner\assets\jquery.jsPlumb-1.7.2-min.js" />
     <Content Include="SexyContent\EAV\PipelineDesigner\PipelineDesigner.ascx" />
