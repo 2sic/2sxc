@@ -7,7 +7,7 @@
 	// Main directive that renders an entity edit form
 	app.directive('eavEditEntity', function() {
 		return {
-			template: '<formly-form ng-submit="vm.onSubmit()" form="vm.form" model="vm.entity.Attributes" fields="vm.formFields"></formly-form><a ng-click="vm.showDebug = !vm.showDebug;">Debug</a><div ng-if="vm.showDebug"><h3>Debug</h3><pre>{{vm.entity | json}}</pre><pre>{{vm.debug | json}}</pre><pre>{{vm.formFields | json}}</pre></div>',
+			templateUrl: '/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/FormlyEditUI/EditEntity.html',
 			restrict: 'E',
 			scope: {
 				contentTypeName: '@contentTypeName',
@@ -20,9 +20,12 @@
 	});
 
 	// The controller for the main form directive
-	app.controller('EditEntityCtrl', function editEntityCtrl($http, $scope, formlyConfig) {
+	app.controller('EditEntityCtrl', function editEntityCtrl($http, $scope, formlyConfig, eavLanguageService) {
 		
 		var vm = this;
+		vm.editInDefaultLanguageFirst = function() {
+			return eavLanguageService.currentLanguage != eavLanguageService.defaultLanguage && !$scope.entityId;
+		};
 
 		vm.save = function() {
 			alert("Saving not implemented yet!");
