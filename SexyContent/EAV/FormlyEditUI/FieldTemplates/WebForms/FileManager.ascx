@@ -3,6 +3,11 @@
 
 <telerik:DialogOpener runat="server" ID="DialogOpener1" />
 
+<style type="text/css">
+	body { background: transparent!important; }
+	.TelerikModalOverlay { background: transparent!important; }
+</style>
+
 <script type="text/javascript">
 	function OnSelectedCallback(sender, args) {
 

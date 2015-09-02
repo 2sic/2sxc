@@ -100,8 +100,8 @@ namespace ToSic.SexyContent.EAV.FormlyEditUI.FieldTemplates.WebForms
 			var imageManagerDefinition = new DialogDefinition(typeof(ImageManagerDialog), imageManagerParameters)
 			{
 				ClientCallbackFunction = "OnSelectedCallback",
-				Width = Unit.Pixel(694),
-				Height = Unit.Pixel(440),
+				Width = Unit.Pixel(832),
+				Height = Unit.Pixel(500),
 				Title = "Image Manager"
 			};
 

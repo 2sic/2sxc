@@ -90,7 +90,8 @@
 				},
 				controller: function($scope, bridge) {
 					$scope.bridge = bridge;
-				}
+				},
+				windowClass: 'sxc-dialog-filemanager'
 			});
 		};
 
