@@ -25,8 +25,8 @@
 									CssClass="StandardInput" ValidationGroup="AddEditField" />
 								<asp:RegularExpressionValidator ID="revStaticName" runat="server" 
 									ControlToValidate="StaticNameTextBox" ValidationGroup="AddEditField" 
-									Text='<%# Constants.AttributeStaticNameRegExNotes %>' 
-									ValidationExpression='<%# Constants.AttributeStaticNameRegEx %>' SetFocusOnError="True" Display="Dynamic" />
+									Text='<%# ToSic.Eav.Constants.AttributeStaticNameRegExNotes %>' 
+									ValidationExpression='<%# ToSic.Eav.Constants.AttributeStaticNameRegEx %>' SetFocusOnError="True" Display="Dynamic" />
 							</td>
 						</tr>
 						<tr>
