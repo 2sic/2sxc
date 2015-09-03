@@ -38,7 +38,7 @@
 	</EmptyDataTemplate>
 </asp:GridView>
 <asp:ObjectDataSource ID="dsrcItems" runat="server" SelectMethod="GetItemsTable"
-	TypeName="ToSic.Eav.EavContext" 
+	TypeName="ToSic.Eav.AscxHelpers.ListForSomeAscx" 
 	OnObjectCreating="dsrcItems_ObjectCreating" OnSelecting="dsrcItems_Selecting" OnDeleting="dsrcItems_Deleting" DeleteMethod="DeleteEntity" OnDeleted="dsrcItems_Deleted">
 	<SelectParameters>
 		<asp:Parameter Name="attributeSetId" Type="Int32" />

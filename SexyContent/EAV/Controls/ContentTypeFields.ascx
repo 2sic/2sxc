@@ -25,8 +25,8 @@
 									CssClass="StandardInput" ValidationGroup="AddEditField" />
 								<asp:RegularExpressionValidator ID="revStaticName" runat="server" 
 									ControlToValidate="StaticNameTextBox" ValidationGroup="AddEditField" 
-									Text='<%# EavContext.AttributeStaticNameRegExNotes %>' 
-									ValidationExpression='<%# EavContext.AttributeStaticNameRegEx %>' SetFocusOnError="True" Display="Dynamic" />
+									Text='<%# Constants.AttributeStaticNameRegExNotes %>' 
+									ValidationExpression='<%# Constants.AttributeStaticNameRegEx %>' SetFocusOnError="True" Display="Dynamic" />
 							</td>
 						</tr>
 						<tr>
@@ -118,7 +118,7 @@
 	</EmptyDataTemplate>
 </asp:GridView>
 <asp:ObjectDataSource ID="dsrcAttributes" runat="server" SelectMethod="GetAttributesWithMetaInfo"
-	TypeName="ToSic.Eav.EavContext" OnObjectCreating="dsrcAttributes_ObjectCreating"
+	TypeName="ToSic.Eav.AscxHelpers.ListForSomeAscx" OnObjectCreating="dsrcAttributes_ObjectCreating"
 	InsertMethod="AppendAttribute" OnInserting="dsrcAttributes_Inserting"
 	DeleteMethod="RemoveAttributeInSet" OnDeleting="dsrcAttributes_Deleting"
 	UpdateMethod="UpdateAttribute" OnInserted="dsrcAttributes_Inserted" 

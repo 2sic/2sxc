@@ -1,7 +1,7 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="CultureSelector.ascx.cs"
 	Inherits="ToSic.Eav.ManagementUI.CultureSelector" %>
 <asp:ObjectDataSource ID="dsrcCultureDimension" runat="server" SelectMethod="GetDimensionChildren"
-	TypeName="ToSic.Eav.EavContext" OnObjectCreating="dsrcCultureDimension_ObjectCreating">
+	TypeName="ToSic.Eav.AscxHelpers.ListForSomeAscx" OnObjectCreating="dsrcCultureDimension_ObjectCreating">
 	<SelectParameters>
 		<asp:Parameter Name="systemKey" Type="String" DefaultValue="Culture" />
 	</SelectParameters>

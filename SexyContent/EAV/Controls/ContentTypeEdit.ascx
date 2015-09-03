@@ -6,7 +6,7 @@
 	<EditItemTemplate>
 		Name:<asp:RequiredFieldValidator ID="RequiredFieldValidator4" runat="server" ControlToValidate="NameTextBox"
 			Display="Dynamic" Text="*" ForeColor="#B71717" /><br />
-		<asp:TextBox ID="NameTextBox" runat="server" Text='<%# Bind("Name") %>' CssClass="StandardInput" MaxLength="50" />
+		<asp:TextBox ID="NameTextBox" runat="server" Text='<%# Bind("Name") %>' CssClass="StandardInput" MaxLength="150" />
 		<br />
 		Description:<asp:RequiredFieldValidator ID="RequiredFieldValidator3" runat="server"
 			ControlToValidate="DescriptionTextBox" Display="Dynamic" Text="*" ForeColor="#B71717" /><br />
