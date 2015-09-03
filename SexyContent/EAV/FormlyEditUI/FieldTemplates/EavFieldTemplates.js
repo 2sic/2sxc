@@ -58,7 +58,7 @@
 
 		formlyConfigProvider.setType({
 			name: 'number-default',
-			template: '<input type="number" class="form-control" ng-model="value.Value">',
+			template: '<input type="number" class="form-control" ng-model="value.Value">{{vm.isGoogleMap}}',
 			wrapper: ['bootstrapLabel', 'bootstrapHasError', 'eavLocalization'],
 			defaultOptions: {
 				ngModelAttrs: {
@@ -66,7 +66,8 @@
 					'{{to.settings.Max}}': { value: 'max' },
 					'{{to.settings.Decimals ? "^[0-9]+(\.[0-9]{1," + to.settings.Decimals + "})?$" : null}}': { value: 'pattern' }
 				}
-			}
+			},
+			controller: 'FieldTemplate-NumberCtrl as vm'
 		});
 
 		formlyConfigProvider.setType({
@@ -89,8 +90,8 @@
 		});
 	});
 
-	eavFieldTemplates.controller('test', function($scope) {
-		$scope.value = "abcdefgh";
+	eavFieldTemplates.controller('FieldTemplate-NumberCtrl', function() {
+		vm.isGoogleMap = "test";
 	});
 
 })();
