@@ -121,7 +121,7 @@
 
 	});
 
-	app.controller('FieldTemplate-EntityCtrl', function($scope, $http, $filter) {
+	app.controller('FieldTemplate-EntityCtrl', function($scope, $http, $filter, $modal) {
 
 		$scope.availableEntities = [];
 
@@ -141,14 +141,25 @@
 		};
 
 		$scope.openNewEntityDialog = function () {
-			// ToDo
-			alert('new-dialog not implemented yet');
-			//var url = $($rootElement).attr("data-newdialogurl") + "&PreventRedirect=true";
-			//url = url.replace("[AttributeSetId]", $scope.configuration.AttributeSetId);
-			//eavDialogService.open({
-			//	url: url,
-			//	onClose: function() { $scope.getAvailableEntities(); }
-			//});
+
+			var modalInstance = $modal.open({
+				template: '<div style="padding:20px;"><edit-content-group edit="vm.edit"></edit-content-group></div>',
+				controller: function(entityType) {
+					var vm = this;
+					vm.edit = { contentTypeName: entityType };
+				},
+				controllerAs: 'vm',
+				resolve: {
+					entityType: function() {
+						return $scope.to.settings.EntityType;
+					}
+				}
+			});
+
+			modalInstance.result.then(function() {
+				$scope.getAvailableEntities();
+			});
+
 		};
 
 		$scope.getAvailableEntities = function () {

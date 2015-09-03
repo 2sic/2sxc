@@ -21,7 +21,6 @@
 
 	// The controller for the main form directive
 	app.controller('EditEntityCtrl', function editEntityCtrl($http, $scope, formlyConfig, eavLanguageService) {
-		
 		var vm = this;
 		vm.editInDefaultLanguageFirst = function () {
 			return false; //eavLanguageService.currentLanguage != eavLanguageService.defaultLanguage && !$scope.entityId;

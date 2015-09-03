@@ -2,19 +2,30 @@
 (function() {
 	'use strict';
 
-	var outerApp = angular.module('testModule', ['eavEditEntity', 'eavLocalization']);
-	outerApp.controller('outerAppController', function($q, $http) {
+	var app = angular.module('sxcEditContentGroup', ['eavEditEntity', 'eavLocalization']);
+	app.directive('editContentGroup', function() {
+		return {
+			templateUrl: '/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/FormlyEditUI/EditContentGroup.html',
+			restrict: 'E',
+			scope: {
+				edit: '=edit'
+			},
+			controller: 'editContentGroupCtrl',
+			controllerAs: 'vm'
+		};
+	});
+	app.controller('editContentGroupCtrl', function($q, $http, $scope) {
 		var vm = this;
 
 		// This array holds the entities to edit
 		vm.entitiesToEdit = [];
 
-		// Prepare URL parameters
-		var entityId = $2sxc.ng.getParameterByName('entityId');
-		var contentTypeName = $2sxc.ng.getParameterByName('contentTypeName');
-		var contentGroupGuid = $2sxc.ng.getParameterByName('contentGroupGuid');
-		var mode = $2sxc.ng.getParameterByName('mode');
-		var sortOrder = $2sxc.ng.getParameterByName('sortOrder');
+		// Prepare parameters
+		var entityId = $scope.edit.entityId;
+		var contentTypeName = $scope.edit.contentTypeName;
+		var contentGroupGuid = $scope.edit.contentGroupGuid;
+		//var mode = $scope.edit.mode;
+		var sortOrder = $scope.edit.sortOrder;
 
 		// Edit a content group - first load the contentgroup configuration
 		// Then add entities to edit from configuration
@@ -40,7 +51,7 @@
 		
 		if (entityId) // User wants to edit a single entity
 			vm.entitiesToEdit.push({ entityId: entityId, editControlTitle: 'Entity' });
-		else if (contentTypeName && mode == 'add') // EntityId not specified, but contentTypeName - user wants to add an item of this type
+		else if (contentTypeName && !contentGroupGuid) // EntityId not specified, but contentTypeName - user wants to add an item of this type
 			vm.entitiesToEdit.push({ contentTypeName: contentTypeName, editControlTitle: 'Entity' });
 
 		vm.registeredControls = [];

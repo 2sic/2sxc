@@ -1,0 +1,9 @@
+﻿<div>
+	<eav-language-switcher></eav-language-switcher>
+
+	<div ng-repeat="entityToEdit in vm.entitiesToEdit">
+		<h2>{{entityToEdit.editControlTitle}}</h2>
+		<eav-edit-entity content-type-name="{{entityToEdit.contentTypeName}}" entity-id="{{entityToEdit.entityId}}" register-edit-control="vm.registerEditControl"></eav-edit-entity>
+	</div>
+	<button ng-disabled="!vm.isValid()" ng-click="vm.save()" class="btn btn-primary submit-button">Save</button>
+</div>

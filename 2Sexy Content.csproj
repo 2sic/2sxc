@@ -691,6 +691,8 @@
     <Content Include="js\template-selector\template-selector.min.js.map" />
     <Content Include="README.md" />
     <Content Include="js\dnn-inpage-edit.min.js.map" />
+    <Content Include="SexyContent\EAV\FormlyEditUI\EditContentGroup.html" />
+    <Content Include="SexyContent\EAV\FormlyEditUI\EditContentGroupDnnWrapper.js" />
     <Content Include="SexyContent\EAV\FormlyEditUI\EditEntity.html" />
     <Content Include="SexyContent\EAV\FormlyEditUI\Localization\EavLocalization.js" />
     <Content Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\SxcFieldTemplates.js" />
