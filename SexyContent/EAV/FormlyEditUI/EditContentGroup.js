@@ -37,7 +37,11 @@
 				if(!contentGroup.Template)
 					alert('No template defined');
 
-				var editTypes = ['Content', 'Presentation'];
+				// Use either default or List types. Reset sortOrder to 0 for List types.
+				var editTypes = sortOrder == -1 ? ['ListContent', 'ListPresentation'] : ['Content', 'Presentation'];
+				if (sortOrder == -1)
+					sortOrder = 0;	
+
 				angular.forEach(editTypes, function (editType, i) {
 					var contentTypeName = contentGroup.Template[editType + 'TypeStaticName'];
 
