@@ -20,7 +20,7 @@
 	eavLocalization.directive('eavLanguageSwitcher', function () {
 		return {
 			restrict: 'E',
-			template: '<ul><li ng-repeat="l in langConf.languages" ng-click="langConf.currentLanguage = l.key;">{{l.name}}</li></ul>Current: {{langConf.currentLanguage}}',
+			template: '<ul class="nav nav-pills" style="margin-left:0;"><li ng-repeat="l in langConf.languages" ng-class="{ active: langConf.currentLanguage == l.key }" ><a ng-click="langConf.currentLanguage = l.key;" href="javascript:void(0);">{{l.name}}</a></li></ul>',
 			controller: function($scope, eavLanguageService) {
 				$scope.langConf = eavLanguageService;
 			}

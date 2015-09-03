@@ -27,7 +27,7 @@
 		$2sxc(@(Dnn.Module.ModuleID))._editContentGroupConfig = {
 			tabBaseUrl: "@this.Dnn.Tab.FullUrl",
 			langConf: {
-				languages: @Sexy.ContentContext.Dimensions.GetLanguages().Where(l => l.Active).OrderBy(l => l.ExternalKey).Select(l =>
+				languages: @Sexy.ContentContext.Dimensions.GetLanguages().Where(l => l.Active).OrderByDescending(l => l.ExternalKey.ToLower() == Dnn.Portal.DefaultLanguage.ToLower()).ThenBy(l => l.ExternalKey).Select(l =>
 				           {
 					           var key = l.ExternalKey.ToLower();
 					           return new {name = l.Name, key};
