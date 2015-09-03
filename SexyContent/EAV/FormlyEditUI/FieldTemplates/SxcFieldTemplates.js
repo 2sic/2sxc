@@ -31,9 +31,6 @@
 
 	app.controller('FieldTemplate-HyperlinkCtrl', function ($modal, $scope, $http, sxc) {
 
-		console.log(sxc);
-		
-
 		var vm = this;
 		vm.modalInstance = null;
 		vm.testLink = "";
@@ -108,8 +105,19 @@
 					$scope.value.Value = newValue;
 				});
 			},
-			setValue: function() { alert('Error: setValue has no override'); }
+			setValue: function () { console.log('Error: setValue has no override'); },
+			setReadOnly: function() { console.log('Error: setReadOnly has no override'); }
 		};
+
+		$scope.$watch('value.Value', function (newValue, oldValue) {
+			if (newValue != oldValue)
+				vm.bridge.setValue(newValue);
+		});
+
+		$scope.$watch('to.disabled', function (newValue, oldValue) {
+			if (newValue != oldValue)
+				vm.bridge.setReadOnly(newValue);
+		});
 
 	});
 

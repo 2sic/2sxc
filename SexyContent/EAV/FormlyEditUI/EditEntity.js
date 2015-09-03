@@ -24,7 +24,7 @@
 		
 		var vm = this;
 		vm.editInDefaultLanguageFirst = function () {
-			return eavLanguageService.currentLanguage != eavLanguageService.defaultLanguage && !$scope.entityId;
+			return false; //eavLanguageService.currentLanguage != eavLanguageService.defaultLanguage && !$scope.entityId;
 		};
 
 		vm.save = function() {
