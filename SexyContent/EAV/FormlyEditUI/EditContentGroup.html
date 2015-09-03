@@ -2,8 +2,17 @@
 	<eav-language-switcher></eav-language-switcher>
 
 	<div ng-repeat="entityToEdit in vm.entitiesToEdit">
-		<h2>{{entityToEdit.editControlTitle}}</h2>
-		<eav-edit-entity content-type-name="{{entityToEdit.contentTypeName}}" entity-id="{{entityToEdit.entityId}}" register-edit-control="vm.registerEditControl"></eav-edit-entity>
+		<h2 ng-if="entityToEdit.editControlTitle">{{entityToEdit.editControlTitle}}</h2>
+		<div class="bg-info" style="padding:12px;" ng-if="entityToEdit.isPresentation && entityToEdit.useDefaultValues">
+			The default values are used currently.
+			<a class="btn btn-default" ng-click="entityToEdit.useDefaultValues = false;">Create</a>
+		</div>
+		<div ng-if="!entityToEdit.useDefaultValues">
+			<div class="pull-right" ng-if="entityToEdit.isPresentation">
+				<a class="btn btn-default" ng-click="entityToEdit.useDefaultValues = true;">Use default values</a>
+			</div>
+			<eav-edit-entity content-type-name="{{entityToEdit.contentTypeName}}" entity-id="{{entityToEdit.entityId}}" register-edit-control="vm.registerEditControl"></eav-edit-entity>
+		</div>
 	</div>
 	<button ng-disabled="!vm.isValid()" ng-click="vm.save()" class="btn btn-primary submit-button">Save</button>
 </div>
