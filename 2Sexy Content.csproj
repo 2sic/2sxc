@@ -679,6 +679,7 @@
     <Content Include="SexyContent\EAV\FormlyEditUI\edit-contentgroup.html" />
     <Content Include="SexyContent\EAV\FormlyEditUI\edit-contentgroup-dnnwrapper.js" />
     <Content Include="SexyContent\EAV\FormlyEditUI\edit-entity.html" />
+    <Content Include="SexyContent\EAV\FormlyEditUI\localization\eav-localization-menu.js" />
     <Content Include="SexyContent\EAV\FormlyEditUI\localization\eav-localization.js" />
     <Content Include="SexyContent\EAV\FormlyEditUI\fieldtemplates\sxc-fieldtemplates.js" />
     <Content Include="SexyContent\EAV\FormlyEditUI\fieldtemplates\templates\entity-default.html" />
@@ -694,8 +695,10 @@
     <Content Include="SexyContent\EAV\FormlyEditUI\localization\formly-localization-wrapper.html" />
     <Content Include="SexyContent\EAV\FormlyEditUI\localization\images\locked.png" />
     <Content Include="SexyContent\EAV\FormlyEditUI\localization\images\unlocked.png" />
+    <Content Include="SexyContent\EAV\FormlyEditUI\localization\language-switcher.html" />
     <Content Include="SexyContent\EAV\FormlyEditUI\localization\localization-menu.css" />
     <Content Include="SexyContent\EAV\FormlyEditUI\localization\localization-menu.html" />
+    <Content Include="SexyContent\EAV\FormlyEditUI\services\defaultvalue-service.js" />
     <Content Include="SexyContent\EAV\FormlyEditUI\_EditContentGroup.cshtml" />
     <None Include="SqlDataProvider\01.00.00.SqlDataProvider" />
     <Content Include="SexyContent\EAV\FormlyEditUI\edit-entity.js" />

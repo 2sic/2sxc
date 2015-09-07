@@ -8,7 +8,7 @@
 
 		formlyConfigProvider.setType({
 			name: 'string-wysiwyg',
-			templateUrl: '/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/FormlyEditUI/FieldTemplates/Templates/string-wysiwyg.html', // ToDo: Use correct base path
+			templateUrl: '/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/FormlyEditUI/FieldTemplates/Templates/string-wysiwyg.html',
 			wrapper: ['bootstrapLabel', 'bootstrapHasError', 'eavLocalization'],
 			controller: 'FieldTemplate-WysiwygCtrl as vm'
 		});

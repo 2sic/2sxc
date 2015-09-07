@@ -20,7 +20,7 @@
 	eavLocalization.directive('eavLanguageSwitcher', function () {
 		return {
 			restrict: 'E',
-			template: '<ul class="nav nav-pills" style="margin-left:0;"><li ng-repeat="l in langConf.languages" ng-class="{ active: langConf.currentLanguage == l.key }" ><a ng-click="langConf.currentLanguage = l.key;" href="javascript:void(0);">{{l.name}}</a></li></ul>',
+			templateUrl: '/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/FormlyEditUI/localization/language-switcher.html',
 			controller: function($scope, eavLanguageService) {
 				$scope.langConf = eavLanguageService;
 			}
@@ -112,34 +112,6 @@
 
 				// The language menu must be able to trigger an update of the _currentValue property
 				scope.model[scope.options.key]._initCurrentValue = initCurrentValue;
-			}
-		};
-	});
-
-	eavLocalization.directive('eavLocalizationMenu', function() {
-		return {
-			restrict: 'E',
-			scope: {
-				fieldModel: '=fieldModel',
-				options: '=options'
-			},
-			templateUrl: '/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/FormlyEditUI/localization/localization-menu.html',
-			link: function (scope, element, attrs) { },
-			controllerAs: 'vm',
-			controller: function ($scope, eavLanguageService) {
-				var vm = this;
-				var langConf = eavLanguageService;
-				vm.fieldModel = $scope.fieldModel;
-				vm.isDefaultLanguage = function() { return langConf.currentLanguage != langConf.defaultLanguage; };
-
-				vm.actions = {
-					translate: function () {
-						var value = { Value: 'New translated value!', Dimensions: {} };
-						value.Dimensions[langConf.currentLanguage] = true;
-						vm.fieldModel.Values.push(value);
-					}
-				};
-
 			}
 		};
 	});

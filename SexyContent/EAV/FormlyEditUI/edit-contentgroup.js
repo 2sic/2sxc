@@ -14,6 +14,7 @@
 			controllerAs: 'vm'
 		};
 	});
+
 	app.controller('editContentGroupCtrl', function($q, $http, $scope) {
 		var vm = this;
 
@@ -31,12 +32,14 @@
 		// Then add entities to edit from configuration
 		if (contentGroupGuid) {
 			// ToDo: Refactor - move to service and move api
-			$http.get('sxc/ContentGroup/Get?contentGroupGuid=' + contentGroupGuid).then(function (result) {
+			$http.get('app/ContentGroup/Get?contentGroupGuid=' + contentGroupGuid).then(function (result) {
 				var contentGroup = result.data;
 
 				// Template must be set to edit something
 				if(!contentGroup.Template)
 					alert('No template defined');
+
+				console.log(result);
 
 				// Use either default or List types. Reset sortOrder to 0 for List types.
 				var editTypes = sortOrder == -1 ? ['ListContent', 'ListPresentation'] : ['Content', 'Presentation'];

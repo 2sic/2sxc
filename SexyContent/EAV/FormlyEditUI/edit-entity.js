@@ -68,66 +68,44 @@
 						}
 					});
 				});
-
-				if ($scope.entityId) {
-					$http.get('eav/Entity/GetEntity?entityId=' + $scope.entityId)
-						.then(function(result) {
-							vm.entity = result.data;
-						});
-				} else {
-					// ToDo: Create new / blank model should probably not be here (EntityService?)
-					vm.entity = {
-						Id: null,
-						Guid: null,
-						Type: {
-							Name: $scope.contentTypeName
-						},
-						Attributes: {}
-					};
-				}
-
 			});
 
-		// Returns the field type for an attribute configuration
-		function getType(attributeConfiguration) {
-			var e = attributeConfiguration;
-			var type = e.Type.toLowerCase();
-			var subType = e.Metadata.All.InputType;
-
-			subType = subType ? subType.toLowerCase() : null;
-
-			// Special case: override subtype for string-textarea
-			if (type == 'string' && e.Metadata.All.RowCount > 1)
-				subType = 'textarea';
-
-			// Use subtype 'default' if none is specified - or type does not exist
-			if (!subType || !formlyConfig.getType(type + '-' + subType))
-				subType = 'default';
-
-			return (type + '-' + subType);
+		// Load existing entity if defined
+		if ($scope.entityId) {
+			$http.get('eav/Entity/GetEntity?entityId=' + $scope.entityId)
+				.then(function (result) {
+					vm.entity = result.data;
+				});
+		} else {
+			// ToDo: Create new / blank model should probably not be here (EntityService?)
+			vm.entity = {
+				Id: null,
+				Guid: null,
+				Type: {
+					Name: $scope.contentTypeName
+				},
+				Attributes: {}
+			};
 		}
-
 	});
 
-	app.service('eavDefaultValueService', function () {
-		// Returns a typed default value from the string representation
-		return function parseDefaultValue(fieldConfig) {
-			var e = fieldConfig;
-			var d = e.templateOptions.settings.DefaultValue;
+	// Returns the field type for an attribute configuration
+	var getType = function (attributeConfiguration) {
+		var e = attributeConfiguration;
+		var type = e.Type.toLowerCase();
+		var subType = e.Metadata.All.InputType;
 
-			switch (e.type.split('-')[0]) {
-				case 'boolean':
-					return d != null ? d.toLowerCase() == 'true' : false;
-				case 'datetime':
-					return d != null ? new Date(d) : null;
-				case 'entity':
-					return [];
-				case 'number':
-					return null;
-				default:
-					return d ? d : "";
-			}
-		};
-	});
+		subType = subType ? subType.toLowerCase() : null;
+
+		// Special case: override subtype for string-textarea
+		if (type == 'string' && e.Metadata.All.RowCount > 1)
+			subType = 'textarea';
+
+		// Use subtype 'default' if none is specified - or type does not exist
+		if (!subType || !formlyConfig.getType(type + '-' + subType))
+			subType = 'default';
+
+		return (type + '-' + subType);
+	}
 
 })();
