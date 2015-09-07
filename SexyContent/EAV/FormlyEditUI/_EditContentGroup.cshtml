@@ -9,13 +9,14 @@
 	</div>
 </div>
 
-<script type="text/javascript">
-	@{
-		var appId = SexyContent.GetAppIdFromModule(Dnn.Module);
-		var zoneId = SexyContent.GetZoneID(Dnn.Module.PortalID);
-		var Sexy = new SexyContent(zoneId.Value, appId.Value, true, Dnn.Module.OwnerPortalID);
-	}
 
+@{
+	var appId = SexyContent.GetAppIdFromModule(Dnn.Module);
+	var zoneId = SexyContent.GetZoneID(Dnn.Module.PortalID);
+	var Sexy = new SexyContent(zoneId.Value, appId.Value, true, Dnn.Module.OwnerPortalID);
+}
+
+<script type="text/javascript">
 	// Define some internal properties that the edit dialog must know (webforms bridge)
 	$(document).ready(function() {
 		$2sxc(@(Dnn.Module.ModuleID))._editContentGroupConfig = {
@@ -40,11 +41,10 @@
 <link rel="stylesheet" href="@Href("FieldTemplates/Templates/entity-default.css")">
 <link rel="stylesheet" href="@Href("Localization/LocalizationMenu.css")" />
 
-<link rel="stylesheet" href="@Href("~/DesktopModules/ToSIC_SexyContent/js/angularjs/toaster.css")" />
 <script src="@Href("~/DesktopModules/ToSIC_SexyContent/js/angularjs/angular.min.js")"></script>
 <script src="@Href("~/DesktopModules/ToSIC_SexyContent/js/angularjs/angular-resource.min.js")"></script>
-<script src="@Href("~/DesktopModules/ToSIC_SexyContent/js/angularjs/angular-animate.min.js")"></script>
-<script src="@Href("~/DesktopModules/ToSIC_SexyContent/js/angularjs/toaster.js")"></script>
+@*<script src="@Href("~/DesktopModules/ToSIC_SexyContent/js/angularjs/angular-animate.min.js")"></script>*@
+@*<script src="@Href("~/DesktopModules/ToSIC_SexyContent/js/angularjs/toaster.js")"></script>*@
 <script src="@Href("~/DesktopModules/ToSIC_SexyContent/js/2sxc.api.js")"></script>
 <script src="@Href("~/DesktopModules/ToSIC_SexyContent/js/angularjs/2sxc4ng.min.js")"></script>
 <script src="@Href("~/DesktopModules/ToSIC_SexyContent/Js/AngularJS/angular-ui-tree.min.js")"></script>

@@ -30,6 +30,7 @@
 		// Edit a content group - first load the contentgroup configuration
 		// Then add entities to edit from configuration
 		if (contentGroupGuid) {
+			// ToDo: Refactor - move to service and move api
 			$http.get('view/ContentGroup/Get?contentGroupGuid=' + contentGroupGuid).then(function (result) {
 				var contentGroup = result.data;
 

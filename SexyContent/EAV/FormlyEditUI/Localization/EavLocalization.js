@@ -29,12 +29,6 @@
 
 	eavLocalization.factory('eavLanguageService', function (sxc) {
 		return sxc._editContentGroupConfig.langConf;
-
-		//return {
-		//	languages: ['en-us', 'de-de'],
-		//	currentLanguage: 'de-de',
-		//	defaultLanguage: 'en-us'
-		//};
 	});
 
 	eavLocalization.directive('eavLocalizationScopeControl', function () {
