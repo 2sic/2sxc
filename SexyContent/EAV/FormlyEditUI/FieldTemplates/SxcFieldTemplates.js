@@ -54,8 +54,8 @@
 				});
 			},
 			params: {
-				Paths: $scope.to.settings.Paths,
-				FileFilter: $scope.to.settings.FileFilter
+				Paths: $scope.to.settings.Hyperlink.Paths,
+				FileFilter: $scope.to.settings.Hyperlink.FileFilter
 			}
 		};
 
@@ -137,7 +137,7 @@
 		};
 
 		$scope.createEntityAllowed = function () {
-			return $scope.to.settings.EntityType != null && $scope.to.settings.EntityType != "";
+			return $scope.to.settings.Entity.EntityType != null && $scope.to.settings.Entity.EntityType != "";
 		};
 
 		$scope.openNewEntityDialog = function () {
@@ -151,7 +151,7 @@
 				controllerAs: 'vm',
 				resolve: {
 					entityType: function() {
-						return $scope.to.settings.EntityType;
+						return $scope.to.settings.Entity.EntityType;
 					}
 				}
 			});
@@ -167,7 +167,7 @@
 				method: 'GET',
 				url: 'eav/EntityPicker/getavailableentities',
 				params: {
-					entityType: $scope.to.settings.EntityType,
+					entityType: $scope.to.settings.Entity.EntityType,
 					// ToDo: dimensionId: $scope.configuration.DimensionId
 				}
 			}).then(function(data) {

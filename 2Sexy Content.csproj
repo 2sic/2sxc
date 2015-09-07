@@ -284,13 +284,6 @@
       <DependentUpon>WebFormsBridge.ascx</DependentUpon>
     </Compile>
     <Compile Include="SexyContent\EAV\Implementation\ValueConverter\SexyContentValueConverter.cs" />
-    <Compile Include="SexyContent\EAV\PipelineDesigner\PipelineManagementDnnWrapper.ascx.cs">
-      <DependentUpon>PipelineManagementDnnWrapper.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="SexyContent\EAV\PipelineDesigner\PipelineManagementDnnWrapper.ascx.designer.cs">
-      <DependentUpon>PipelineManagementDnnWrapper.ascx</DependentUpon>
-    </Compile>
     <Compile Include="SexyContent\EAV\Security\PermissionsDnnWrapper.ascx.cs">
       <DependentUpon>PermissionsDnnWrapper.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -302,13 +295,6 @@
     <Compile Include="SexyContent\Serializers\Serializer.cs" />
     <Compile Include="SexyContent\SexyContentModuleUpgrade.cs" />
     <Compile Include="SexyContent\EAVExtensions\EavApiProxies\PipelineDesignerController.cs" />
-    <Compile Include="SexyContent\EAV\PipelineDesigner\PipelineDesignerDnnWrapper.ascx.cs">
-      <DependentUpon>PipelineDesignerDnnWrapper.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="SexyContent\EAV\PipelineDesigner\PipelineDesignerDnnWrapper.ascx.designer.cs">
-      <DependentUpon>PipelineDesignerDnnWrapper.ascx</DependentUpon>
-    </Compile>
     <Compile Include="SexyContent\DataSources\App.cs" />
     <Compile Include="SexyContent\DnnHelper.cs" />
     <Compile Include="SexyContent\SexyContentContext.Designer.cs">
@@ -715,16 +701,6 @@
     <Content Include="SexyContent\EAV\FormlyEditUI\EditEntity.js" />
     <Content Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\EavFieldTemplates.js" />
     <Content Include="SexyContent\EAV\FormlyEditUI\FieldTemplates\WebForms\WebFormsBridge.ascx" />
-    <Content Include="SexyContent\EAV\PipelineDesigner\assets\jquery.jsPlumb-1.7.2-min.js" />
-    <Content Include="SexyContent\EAV\PipelineDesigner\PipelineDesigner.ascx" />
-    <Content Include="SexyContent\EAV\PipelineDesigner\PipelineDesigner.css" />
-    <Content Include="SexyContent\EAV\PipelineDesigner\PipelineDesigner.js" />
-    <Content Include="SexyContent\EAV\PipelineDesigner\PipelineDesignerController.js" />
-    <Content Include="SexyContent\EAV\PipelineDesigner\PipelineDesignerDnnWrapper.ascx" />
-    <Content Include="SexyContent\EAV\PipelineDesigner\PipelineService.js" />
-    <Content Include="SexyContent\EAV\PipelineDesigner\PipelineManagement.ascx" />
-    <Content Include="SexyContent\EAV\PipelineDesigner\PipelineManagement.js" />
-    <Content Include="SexyContent\EAV\PipelineDesigner\PipelineManagementDnnWrapper.ascx" />
     <Content Include="SexyContent\EAV\Security\PermissionsDnnWrapper.ascx" />
     <Content Include="SexyContent\EAV\Security\Permissions.ascx" />
     <Content Include="SexyContent\EAV\Security\PermissionsController.js" />

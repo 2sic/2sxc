@@ -19,8 +19,8 @@
 			defaultOptions: function defaultOptions(options) {
 
 				// DropDown field: Convert string configuration for dropdown values to object, which will be bound to the select
-				if (!options.templateOptions.options && options.templateOptions.settings.DropdownValues) {
-					var o = options.templateOptions.settings.DropdownValues;
+				if (!options.templateOptions.options && options.templateOptions.settings.String.DropdownValues) {
+					var o = options.templateOptions.settings.String.DropdownValues;
 					o = o.replace('\r', '').split('\n');
 					o = o.map(function (e, i) {
 						var s = e.split(':');
@@ -50,7 +50,7 @@
 			wrapper: ['bootstrapLabel', 'bootstrapHasError', 'eavLocalization'],
 			defaultOptions: {
 				ngModelAttrs: {
-					'{{to.settings.RowCount}}': { value: 'rows' },
+					'{{to.settings.String.RowCount}}': { value: 'rows' },
 					cols: { attribute: 'cols' }
 				}
 			}
@@ -62,9 +62,9 @@
 			wrapper: ['bootstrapLabel', 'bootstrapHasError', 'eavLocalization'],
 			defaultOptions: {
 				ngModelAttrs: {
-					'{{to.settings.Min}}': { value: 'min' },
-					'{{to.settings.Max}}': { value: 'max' },
-					'{{to.settings.Decimals ? "^[0-9]+(\.[0-9]{1," + to.settings.Decimals + "})?$" : null}}': { value: 'pattern' }
+					'{{to.settings.Number.Min}}': { value: 'min' },
+					'{{to.settings.Number.Max}}': { value: 'max' },
+					'{{to.settings.Number.Decimals ? "^[0-9]+(\.[0-9]{1," + to.settings.Number.Decimals + "})?$" : null}}': { value: 'pattern' }
 				}
 			},
 			controller: 'FieldTemplate-NumberCtrl as vm'
@@ -80,7 +80,7 @@
 			name: 'datetime-default',
 			wrapper: ['bootstrapLabel', 'bootstrapHasError', 'eavLocalization'],
 			template: '<div><div class="input-group"><div class="input-group-addon" style="cursor:pointer;" ng-click="to.isOpen = true;"><i class="glyphicon glyphicon-calendar"></i></div><input class="form-control" ng-model="value.Value" is-open="to.isOpen" datepicker-options="to.datepickerOptions" datepicker-popup /></div>' +
-				 '<timepicker ng-show="to.settings.UseTimePicker" ng-model="value.Value" show-meridian="ismeridian"></timepicker></div>',
+				 '<timepicker ng-show="to.settings.DateTime.UseTimePicker" ng-model="value.Value" show-meridian="ismeridian"></timepicker></div>',
 			defaultOptions: {
 				templateOptions: {
 					datepickerOptions: {},

@@ -51,16 +51,20 @@
 
 				// Transform EAV content type configuration to formFields (formly configuration)
 				angular.forEach(result.data, function (e, i) {
+
+					if (!e.Metadata.All)
+						console.error("bkljdslfkjlksdjf");
+
 					vm.formFields.push({
 						key: e.StaticName,
 						type: getType(e),
 						templateOptions: {
-							required: !!e.MetaData.Required,
-							label: e.MetaData.Name,
-							description: e.MetaData.Notes,
-							settings: e.MetaData
+							required: !!e.Metadata.All.Required,
+							label: e.Metadata.All.Name,
+							description: e.Metadata.All.Notes,
+							settings: e.Metadata
 						},
-						hide: (e.MetaData.VisibleInEditUI ? !e.MetaData.VisibleInEditUI : false),
+						hide: (e.Metadata.All.VisibleInEditUI ? !e.Metadata.All.VisibleInEditUI : false),
 						//defaultValue: parseDefaultValue(e)
 						expressionProperties: {
 							'templateOptions.disabled': 'options.templateOptions.disabled' // Needed for dynamic update of the disabled property
@@ -74,7 +78,7 @@
 							vm.entity = result.data;
 						});
 				} else {
-					// ToDo: Create new / blank model should probably not be here
+					// ToDo: Create new / blank model should probably not be here (EntityService?)
 					vm.entity = {
 						Id: null,
 						Guid: null,
@@ -91,12 +95,12 @@
 		function getType(attributeConfiguration) {
 			var e = attributeConfiguration;
 			var type = e.Type.toLowerCase();
-			var subType = e.MetaData.InputType;
+			var subType = e.Metadata.All.InputType;
 
 			subType = subType ? subType.toLowerCase() : null;
 
 			// Special case: override subtype for string-textarea
-			if (type == 'string' && e.MetaData.RowCount > 1)
+			if (type == 'string' && e.Metadata.All.RowCount > 1)
 				subType = 'textarea';
 
 			// Use subtype 'default' if none is specified - or type does not exist
