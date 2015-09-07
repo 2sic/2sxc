@@ -11,7 +11,7 @@
 		formlyConfigProvider.setWrapper([
 			{
 				name: 'eavLocalization',
-				templateUrl: '/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/FormlyEditUI/Localization/FormlyLocalizationWrapper.html'
+				templateUrl: '/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/FormlyEditUI/localization/formly-localization-wrapper.html'
 			}
 		]);
 
@@ -123,7 +123,7 @@
 				fieldModel: '=fieldModel',
 				options: '=options'
 			},
-			templateUrl: '/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/FormlyEditUI/Localization/LocalizationMenu.html',
+			templateUrl: '/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/FormlyEditUI/localization/localization-menu.html',
 			link: function (scope, element, attrs) { },
 			controllerAs: 'vm',
 			controller: function ($scope, eavLanguageService) {

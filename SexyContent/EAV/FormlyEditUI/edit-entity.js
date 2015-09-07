@@ -7,7 +7,7 @@
 	// Main directive that renders an entity edit form
 	app.directive('eavEditEntity', function() {
 		return {
-			templateUrl: '/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/FormlyEditUI/EditEntity.html',
+			templateUrl: '/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/FormlyEditUI/edit-entity.html',
 			restrict: 'E',
 			scope: {
 				contentTypeName: '@contentTypeName',

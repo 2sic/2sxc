@@ -5,7 +5,7 @@
 	var app = angular.module('sxcEditContentGroup', ['eavEditEntity', 'eavLocalization']);
 	app.directive('editContentGroup', function() {
 		return {
-			templateUrl: '/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/FormlyEditUI/EditContentGroup.html',
+			templateUrl: '/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/FormlyEditUI/edit-contentgroup.html',
 			restrict: 'E',
 			scope: {
 				edit: '=edit'
