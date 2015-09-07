@@ -44,7 +44,7 @@
 						$scope.value.Value = value;
 
 						if (type == "file") {
-							$http.get('eav/FieldTemplateHyperlink/GetFileByPath?relativePath=' + encodeURIComponent(value)).then(function (result) {
+							$http.get('dnn/Hyperlink/GetFileByPath?relativePath=' + encodeURIComponent(value)).then(function (result) {
 								if(result.data)
 									$scope.value.Value = "File:" + result.data.FileId;
 							});

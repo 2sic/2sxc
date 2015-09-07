@@ -254,7 +254,7 @@
     <Compile Include="SexyContent\EAVExtensions\EavApiProxies\EntitiesController.cs" />
     <Compile Include="SexyContent\WebApi\ContentGroupController.cs" />
     <Compile Include="SexyContent\EAVExtensions\EavApiProxies\ContentTypeController.cs" />
-    <Compile Include="SexyContent\EAV\FormlyEditUI\fieldtemplates\templates\FieldTemplateHyperlinkController.cs" />
+    <Compile Include="SexyContent\WebApi\Dnn\HyperlinkController.cs" />
     <Compile Include="SexyContent\EAV\FormlyEditUI\fieldtemplates\WebForms\FileManager.ascx.cs">
       <DependentUpon>FileManager.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

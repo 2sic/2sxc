@@ -30,7 +30,8 @@ namespace ToSic.SexyContent.WebApi
             mapRouteManager.MapHttpRoute("2sxc", "app-content", "app-content/{contenttype}/{id}", new { controller = "AppContent", id = RouteParameter.Optional }, new[] { "ToSic.SexyContent.WebApi" });
             mapRouteManager.MapHttpRoute("2sxc", "app-api", "app-api/{controller}/{action}", new[] { "ToSic.SexyContent.Apps" });
             mapRouteManager.MapHttpRoute("2sxc", "app-query", "app-query/{name}", new { controller = "AppQuery"}, new[] { "ToSic.SexyContent.WebApi" });
-			mapRouteManager.MapHttpRoute("2sxc", "sxc", "sxc/{controller}/{action}", new[] { "ToSic.SexyContent.WebApi" });
+			mapRouteManager.MapHttpRoute("2sxc", "app", "app/{controller}/{action}", new[] { "ToSic.SexyContent.WebApi" });
+			mapRouteManager.MapHttpRoute("2sxc", "dnn", "dnn/{controller}/{action}", new[] { "ToSic.SexyContent.WebApi.Dnn" });
             mapRouteManager.MapHttpRoute("2sxc", "default", "{controller}/{action}", new[] { "ToSic.SexyContent.GettingStarted" });
 
             /*
