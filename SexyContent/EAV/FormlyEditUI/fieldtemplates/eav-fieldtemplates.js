@@ -90,7 +90,8 @@
 		});
 	});
 
-	eavFieldTemplates.controller('FieldTemplate-NumberCtrl', function() {
+	eavFieldTemplates.controller('FieldTemplate-NumberCtrl', function () {
+		var vm = this;
 		vm.isGoogleMap = "test";
 	});
 

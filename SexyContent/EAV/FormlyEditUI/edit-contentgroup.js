@@ -15,7 +15,7 @@
 		};
 	});
 
-	app.controller('editContentGroupCtrl', function($q, $http, $scope) {
+	app.controller('editContentGroupCtrl', function($q, $scope, sxcContentGroupService) {
 		var vm = this;
 
 		// This array holds the entities to edit
@@ -32,7 +32,7 @@
 		// Then add entities to edit from configuration
 		if (contentGroupGuid) {
 			// ToDo: Refactor - move to service and move api
-			$http.get('app/ContentGroup/Get?contentGroupGuid=' + contentGroupGuid).then(function (result) {
+			sxcContentGroupService.get(contentGroupGuid).then(function (result) {
 				var contentGroup = result.data;
 
 				// Template must be set to edit something

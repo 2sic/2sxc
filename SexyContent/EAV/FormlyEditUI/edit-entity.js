@@ -52,6 +52,8 @@
 				// Transform EAV content type configuration to formFields (formly configuration)
 				angular.forEach(result.data, function (e, i) {
 
+					console.log(e);
+
 					vm.formFields.push({
 						key: e.StaticName,
 						type: getType(e),

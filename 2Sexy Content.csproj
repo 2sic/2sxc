@@ -698,6 +698,7 @@
     <Content Include="SexyContent\EAV\FormlyEditUI\localization\language-switcher.html" />
     <Content Include="SexyContent\EAV\FormlyEditUI\localization\localization-menu.css" />
     <Content Include="SexyContent\EAV\FormlyEditUI\localization\localization-menu.html" />
+    <Content Include="SexyContent\EAV\FormlyEditUI\services\contentgroup-service.js" />
     <Content Include="SexyContent\EAV\FormlyEditUI\services\defaultvalue-service.js" />
     <Content Include="SexyContent\EAV\FormlyEditUI\_EditContentGroup.cshtml" />
     <None Include="SqlDataProvider\01.00.00.SqlDataProvider" />
