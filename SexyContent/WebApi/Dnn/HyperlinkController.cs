@@ -1,16 +1,13 @@
-﻿using System;
-using System.Linq;
-using System.Web.Http;
+﻿using System.Web.Http;
 using DotNetNuke.Security;
-using DotNetNuke.Web.Api;
-using ToSic.SexyContent.WebApi;
-using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Security.Permissions;
+using DotNetNuke.Services.FileSystem;
+using DotNetNuke.Web.Api;
 
-namespace ToSic.SexyContent.EAV.FormlyEditUI
+namespace ToSic.SexyContent.WebApi.Dnn
 {
 	[SupportedModules("2sxc,2sxc-app")]
-	public class FieldTemplateHyperlinkController : SxcApiController
+	public class HyperlinkController : SxcApiController
 	{
 
 		[HttpGet]
@@ -34,17 +31,6 @@ namespace ToSic.SexyContent.EAV.FormlyEditUI
 		{
 			return SexyContent.ResolveHyperlinkValues(hyperlink, Dnn.Portal);
 		}
-
-		//[HttpGet]
-		//[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-		//public FileInfo GetFileById(int fileId)
-		//{
-		//	var file = FileManager.Instance.GetFile(fileId);
-		//	if (CanUserViewFile(file))
-		//		return (FileInfo)file;
-
-		//	return null;
-		//}
 
 		private bool CanUserViewFile(IFileInfo file)
 		{

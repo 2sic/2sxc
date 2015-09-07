@@ -11,7 +11,7 @@
 		formlyConfigProvider.setWrapper([
 			{
 				name: 'eavLocalization',
-				templateUrl: '/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/FormlyEditUI/Localization/FormlyLocalizationWrapper.html'
+				templateUrl: '/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/FormlyEditUI/localization/formly-localization-wrapper.html'
 			}
 		]);
 
@@ -20,7 +20,7 @@
 	eavLocalization.directive('eavLanguageSwitcher', function () {
 		return {
 			restrict: 'E',
-			template: '<ul><li ng-repeat="l in langConf.languages" ng-click="langConf.currentLanguage = l.key;">{{l.name}}</li></ul>Current: {{langConf.currentLanguage}}',
+			templateUrl: '/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/FormlyEditUI/localization/language-switcher.html',
 			controller: function($scope, eavLanguageService) {
 				$scope.langConf = eavLanguageService;
 			}
@@ -29,12 +29,6 @@
 
 	eavLocalization.factory('eavLanguageService', function (sxc) {
 		return sxc._editContentGroupConfig.langConf;
-
-		//return {
-		//	languages: ['en-us', 'de-de'],
-		//	currentLanguage: 'de-de',
-		//	defaultLanguage: 'en-us'
-		//};
 	});
 
 	eavLocalization.directive('eavLocalizationScopeControl', function () {
@@ -118,34 +112,6 @@
 
 				// The language menu must be able to trigger an update of the _currentValue property
 				scope.model[scope.options.key]._initCurrentValue = initCurrentValue;
-			}
-		};
-	});
-
-	eavLocalization.directive('eavLocalizationMenu', function() {
-		return {
-			restrict: 'E',
-			scope: {
-				fieldModel: '=fieldModel',
-				options: '=options'
-			},
-			templateUrl: '/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/FormlyEditUI/Localization/LocalizationMenu.html',
-			link: function (scope, element, attrs) { },
-			controllerAs: 'vm',
-			controller: function ($scope, eavLanguageService) {
-				var vm = this;
-				var langConf = eavLanguageService;
-				vm.fieldModel = $scope.fieldModel;
-				vm.isDefaultLanguage = function() { return langConf.currentLanguage != langConf.defaultLanguage; };
-
-				vm.actions = {
-					translate: function () {
-						var value = { Value: 'New translated value!', Dimensions: {} };
-						value.Dimensions[langConf.currentLanguage] = true;
-						vm.fieldModel.Values.push(value);
-					}
-				};
-
 			}
 		};
 	});

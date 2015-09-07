@@ -8,7 +8,7 @@
 
 		formlyConfigProvider.setType({
 			name: 'string-wysiwyg',
-			templateUrl: '/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/FormlyEditUI/FieldTemplates/Templates/string-wysiwyg.html', // ToDo: Use correct base path
+			templateUrl: '/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/FormlyEditUI/FieldTemplates/Templates/string-wysiwyg.html',
 			wrapper: ['bootstrapLabel', 'bootstrapHasError', 'eavLocalization'],
 			controller: 'FieldTemplate-WysiwygCtrl as vm'
 		});
@@ -31,9 +31,6 @@
 
 	app.controller('FieldTemplate-HyperlinkCtrl', function ($modal, $scope, $http, sxc) {
 
-		console.log(sxc);
-		
-
 		var vm = this;
 		vm.modalInstance = null;
 		vm.testLink = "";
@@ -47,7 +44,7 @@
 						$scope.value.Value = value;
 
 						if (type == "file") {
-							$http.get('eav/FieldTemplateHyperlink/GetFileByPath?relativePath=' + encodeURIComponent(value)).then(function (result) {
+							$http.get('dnn/Hyperlink/GetFileByPath?relativePath=' + encodeURIComponent(value)).then(function (result) {
 								if(result.data)
 									$scope.value.Value = "File:" + result.data.FileId;
 							});
@@ -57,8 +54,8 @@
 				});
 			},
 			params: {
-				Paths: $scope.to.settings.Paths,
-				FileFilter: $scope.to.settings.FileFilter
+				Paths: $scope.to.settings.Hyperlink.Paths,
+				FileFilter: $scope.to.settings.Hyperlink.FileFilter
 			}
 		};
 
@@ -90,7 +87,8 @@
 				},
 				controller: function($scope, bridge) {
 					$scope.bridge = bridge;
-				}
+				},
+				windowClass: 'sxc-dialog-filemanager'
 			});
 		};
 
@@ -107,12 +105,23 @@
 					$scope.value.Value = newValue;
 				});
 			},
-			setValue: function() { alert('Error: setValue has no override'); }
+			setValue: function () { console.log('Error: setValue has no override'); },
+			setReadOnly: function() { console.log('Error: setReadOnly has no override'); }
 		};
+
+		$scope.$watch('value.Value', function (newValue, oldValue) {
+			if (newValue != oldValue)
+				vm.bridge.setValue(newValue);
+		});
+
+		$scope.$watch('to.disabled', function (newValue, oldValue) {
+			if (newValue != oldValue)
+				vm.bridge.setReadOnly(newValue);
+		});
 
 	});
 
-	app.controller('FieldTemplate-EntityCtrl', function($scope, $http, $filter) {
+	app.controller('FieldTemplate-EntityCtrl', function($scope, $http, $filter, $modal) {
 
 		$scope.availableEntities = [];
 
@@ -128,18 +137,29 @@
 		};
 
 		$scope.createEntityAllowed = function () {
-			return $scope.to.settings.EntityType != null && $scope.to.settings.EntityType != "";
+			return $scope.to.settings.Entity.EntityType != null && $scope.to.settings.Entity.EntityType != "";
 		};
 
 		$scope.openNewEntityDialog = function () {
-			// ToDo
-			alert('new-dialog not implemented yet');
-			//var url = $($rootElement).attr("data-newdialogurl") + "&PreventRedirect=true";
-			//url = url.replace("[AttributeSetId]", $scope.configuration.AttributeSetId);
-			//eavDialogService.open({
-			//	url: url,
-			//	onClose: function() { $scope.getAvailableEntities(); }
-			//});
+
+			var modalInstance = $modal.open({
+				template: '<div style="padding:20px;"><edit-content-group edit="vm.edit"></edit-content-group></div>',
+				controller: function(entityType) {
+					var vm = this;
+					vm.edit = { contentTypeName: entityType };
+				},
+				controllerAs: 'vm',
+				resolve: {
+					entityType: function() {
+						return $scope.to.settings.Entity.EntityType;
+					}
+				}
+			});
+
+			modalInstance.result.then(function() {
+				$scope.getAvailableEntities();
+			});
+
 		};
 
 		$scope.getAvailableEntities = function () {
@@ -147,7 +167,7 @@
 				method: 'GET',
 				url: 'eav/EntityPicker/getavailableentities',
 				params: {
-					entityType: $scope.to.settings.EntityType,
+					entityType: $scope.to.settings.Entity.EntityType,
 					// ToDo: dimensionId: $scope.configuration.DimensionId
 				}
 			}).then(function(data) {

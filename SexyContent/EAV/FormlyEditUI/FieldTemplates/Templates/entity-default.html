@@ -10,7 +10,7 @@
 		</ol>
 	</div>
 
-	<select class="eav-entityselect-selector form-control" ng-model="selectedEntity" ng-change="addEntity()" ng-show="to.settings.AllowMultiValue || model[options.key].length < 1">
+	<select class="eav-entityselect-selector form-control" ng-model="selectedEntity" ng-change="addEntity()" ng-show="to.settings.Entity.AllowMultiValue || model[options.key].length < 1">
 		<option value="">-- choose --</option>
 		<option value="new" ng-if="createEntityAllowed()">-- new --</option>
 		<option ng-repeat="item in availableEntities" ng-disabled="model[options.key].indexOf(item.Value) != -1" value="{{item.Value}}">{{item.Text}}</option>

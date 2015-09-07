@@ -18,9 +18,17 @@
 
 		var controller = {};
 
-		bridge.setValue = function(v) {
-			controller.setValue(v);
+		bridge.setValue = function (v) {
+			if(controller.getValue() != v)
+				controller.setValue(v);
 		};
+		bridge.setReadOnly = function(v) {
+			controller.setReadOnly(v);
+		};
+		controller.onChanged = function (v) {
+			bridge.onChanged(v);
+		};
+		
 
 		// Check if CKEDITOR is used
 		if (window.CKEDITOR) {
@@ -84,11 +92,13 @@
 					}
 				}, 1);
 			};
-			controller.setValue = editor.set_html;
-			controller.getValue = editor.get_html;
+			controller.setValue = function(v) { editor.set_html(v); };
+			controller.getValue = function() { return editor.get_html(); };
 
-			var updateValue = function() {
-				bridge.onChanged(editor.get_html());
+			var updateValue = function () {
+				var value = controller.getValue();
+				if (editor.get_editable())
+					controller.onChanged(value);
 			}
 
 			editor.attachEventHandler('onselectionchange', updateValue);

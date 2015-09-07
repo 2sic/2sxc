@@ -10,7 +10,7 @@
 
         var controller = $2sxc._controllers[id] ? $2sxc._controllers[id] : $2sxc._controllers[id] = {
             // <NewIn7>
-            serviceScopes: ['app-api', 'app-query', 'app-content', 'eav', 'view'], // todo7: should probably deprecate "app"
+            serviceScopes: ['app', 'app-api', 'app-query', 'app-content', 'eav', 'view'],
             serviceRoot: $.ServicesFramework(id).getServiceRoot('2sxc'),
             resolveServiceUrl: function resolveServiceUrl(virtualPath) {
             	var scope = virtualPath.split('/')[0].toLowerCase();

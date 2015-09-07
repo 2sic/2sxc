@@ -1,20 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Text;
 using System.Web.Http;
-using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
-using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Api;
-using Newtonsoft.Json;
-using ToSic.SexyContent.DataSources;
-using ToSic.SexyContent.Engines;
-using ToSic.SexyContent.WebApi;
 
-namespace ToSic.SexyContent.ViewAPI
+namespace ToSic.SexyContent.WebApi
 {
 	[SupportedModules("2sxc,2sxc-app")]
 	public class ContentGroupController : SxcApiController
