@@ -8,6 +8,7 @@ $2sxc.ng = {
     appAttribute: 'sxc-app',
     ngAttrPrefixes: ['ng-', 'data-ng-', 'ng:', 'x-ng-'],
     iidAttrNames: ['app-instanceid', 'data-instanceid', 'id'],
+    ngAttrDependencies: 'dependencies', // new 2015-09-25
 
     // bootstrap: an App-Start-Help; normally you won't call this manually as it will be auto-bootstrapped. 
     // All params optional except for 'element'
@@ -54,7 +55,10 @@ $2sxc.ng = {
         angular.forEach(allAppTags, function (appTag) {
 		    var ngModName = appTag.getAttribute($2sxc.ng.appAttribute);
 		    var configDependencyInjection = { strictDi: $2sxc.ng.getNgAttribute(appTag, "strict-di") !== null };
-		    $2sxc.ng.bootstrap(appTag, ngModName, null, null, configDependencyInjection);
+            // new 2015-09-05
+		    var dependencies = $2sxc.ng.getNgAttribute(appTag, $2sxc.ng.ngAttrDependencies);
+		    if (dependencies) dependencies = dependencies.split(',');
+		    $2sxc.ng.bootstrap(appTag, ngModName, null, dependencies, configDependencyInjection);
         });
     },
 

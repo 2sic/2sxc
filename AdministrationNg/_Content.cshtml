@@ -1,0 +1,40 @@
+﻿@using System.Linq
+@using DotNetNuke.Common.Utilities
+@using ToSic.SexyContent
+@inherits DotNetNuke.Web.Razor.DotNetNukeWebPage
+
+
+@{
+    var appId = SexyContent.GetAppIdFromModule(Dnn.Module);
+    var zoneId = SexyContent.GetZoneID(Dnn.Module.PortalID);
+    var Sexy = new SexyContent(zoneId.Value, appId.Value, true, Dnn.Module.OwnerPortalID);
+}
+
+<div style="max-width:640px; padding:20px;">
+    <div sxc-app="ContentTypesApp" id="editEntity@(Dnn.Module.ModuleID)" ng-include="'content-types/content-types.html'" ng-dependencies="InitParametersFromUrl,ContentTypesApp"></div>
+</div>
+
+
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+
+<script src="@Href("~/DesktopModules/ToSIC_SexyContent/js/angularjs/angular.min.js")"></script>
+<script src="@Href("~/DesktopModules/ToSIC_SexyContent/js/angularjs/angular-resource.min.js")"></script>
+<script src="@Href("~/DesktopModules/ToSIC_SexyContent/js/angularjs/angular-animate.min.js")"></script>
+<script src="@Href("~/DesktopModules/ToSIC_SexyContent/js/angularjs/toaster.js")"></script>
+<script src="@Href("~/DesktopModules/ToSIC_SexyContent/js/2sxc.api.js")"></script>
+<script src="@Href("~/DesktopModules/ToSIC_SexyContent/js/angularjs/2sxc4ng.js")"></script>
+@*<script src="@Href("~/DesktopModules/ToSIC_SexyContent/js/2sxc.api.manage.js")"></script>*@
+
+
+<script src="@Href("~/DesktopModules/ToSIC_SexyContent/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js")"></script>
+<script src="@Href("~/DesktopModules/ToSIC_SexyContent/bower_components/promise-window/dist/promise-window.min.js")"></script>
+
+<script src='@Href("~/DesktopModules/ToSIC_SexyContent/sexycontent/eav/angularservices/sxceavglobalconfigurationprovider.js")'></script>
+
+@*<script src="@Href("~/DesktopModules/ToSIC_SexyContent/SexyContent/eav/AngularServices/eav4Ng.js")'></script>*@
+<script src='@Href("~/DesktopModules/ToSIC_SexyContent/sexycontent/eav/angularservices/eavngsvcs.js")'></script>
+
+
+
+<script src="@Href("~/DesktopModules/ToSIC_SexyContent/dist/admin/tosic-eav-admin.js")"></script>
