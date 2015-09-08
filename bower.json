@@ -10,7 +10,8 @@
     "angular-formly": "6.24.23",
     "angular-formly-templates-bootstrap": "6.0.0",
     "api-check": "7.5.0",
-    "promise-window": "1.0.0"
+    "promise-window": "1.0.0",
+    "angular-google-maps": "~2.2.0"
   },
   "private": true,
   "resolutions": {
