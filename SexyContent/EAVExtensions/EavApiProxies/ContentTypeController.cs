@@ -23,9 +23,9 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
         [HttpGet]
         [SupportedModules("2sxc,2sxc-app")]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<dynamic> GetContentTypeConfiguration(string contentTypeName)
+        public IEnumerable<dynamic> GetFields(string staticName)
         {
-            return _eavController.GetFields(this.App.AppId, contentTypeName);
+			return _eavController.GetFields(this.App.AppId, staticName);
         }
 
 	}
