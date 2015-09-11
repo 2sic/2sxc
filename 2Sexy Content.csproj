@@ -252,6 +252,9 @@
     <Compile Include="SexyContent\DataSources\DnnSqlDataSource.cs" />
     <Compile Include="SexyContent\DataSources\DnnFormAndList.cs" />
     <Compile Include="SexyContent\EAVExtensions\EavApiProxies\EntitiesController.cs" />
+    <Compile Include="SexyContent\EAV\FieldTemplates\EditorProvider.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="SexyContent\WebApi\ContentGroupController.cs" />
     <Compile Include="SexyContent\EAVExtensions\EavApiProxies\ContentTypeController.cs" />
     <Compile Include="SexyContent\WebApi\Dnn\HyperlinkController.cs" />
@@ -284,10 +287,6 @@
       <DependentUpon>WebFormsBridge.ascx</DependentUpon>
     </Compile>
     <Compile Include="SexyContent\EAV\Implementation\ValueConverter\SexyContentValueConverter.cs" />
-    <Compile Include="SexyContent\EAV\Security\PermissionsDnnWrapper.ascx.cs">
-      <DependentUpon>PermissionsDnnWrapper.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
     <Compile Include="SexyContent\Engines\TokenEngine\TokenReplaceEav.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\ValueProviderWrapperForPropertyAccess.cs" />
     <Compile Include="SexyContent\Security\PermissionController.cs" />
@@ -309,20 +308,6 @@
     <Compile Include="SexyContent\AppAndDataHelpers.cs" />
     <Compile Include="SexyContent\SxcHelper.cs" />
     <Compile Include="SexyContent\Template.cs" />
-    <Compile Include="EditEntity.ascx.cs">
-      <DependentUpon>EditEntity.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="EditEntity.ascx.designer.cs">
-      <DependentUpon>EditEntity.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="EditContentGroupItem.ascx.cs">
-      <DependentUpon>EditContentGroupItem.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="EditContentGroupItem.ascx.designer.cs">
-      <DependentUpon>EditContentGroupItem.ascx</DependentUpon>
-    </Compile>
     <Compile Include="EditDataSource.ascx.cs">
       <DependentUpon>EditDataSource.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -358,13 +343,6 @@
     <Compile Include="Administration\Import.ascx.designer.cs">
       <DependentUpon>Import.ascx</DependentUpon>
     </Compile>
-    <Compile Include="EditContentGroup.ascx.cs">
-      <DependentUpon>EditContentGroup.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="EditContentGroup.ascx.designer.cs">
-      <DependentUpon>EditContentGroup.ascx</DependentUpon>
-    </Compile>
     <Compile Include="SexyContent\App.cs" />
     <Compile Include="SexyContent\DataPublishing.cs" />
     <Compile Include="SexyContent\DataSources\ModuleDataSource.cs" />
@@ -372,53 +350,8 @@
     <Compile Include="SexyContent\DataSources\Tokens\QueryStringPropertyAccess.cs" />
     <Compile Include="SexyContent\DataSources\ViewDataSource.cs" />
     <Compile Include="SexyContent\EAVExtensions\EavApiProxies\EntityPickerController.cs" />
-    <Compile Include="SexyContent\EAV\FieldTemplates\EditorProvider.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="SexyContent\EAV\FieldTemplates\Entity_Edit.ascx.cs">
-      <DependentUpon>Entity_Edit.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="SexyContent\EAV\FieldTemplates\Entity_Edit.ascx.designer.cs">
-      <DependentUpon>Entity_Edit.ascx</DependentUpon>
-    </Compile>
     <Compile Include="SexyContent\Element.cs" />
     <Compile Include="SexyContent\DynamicEntity.cs" />
-    <Compile Include="SexyContent\EAV\FieldTemplates\Number_Edit.ascx.cs">
-      <DependentUpon>Number_Edit.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="SexyContent\EAV\FieldTemplates\Number_Edit.ascx.designer.cs">
-      <DependentUpon>Number_Edit.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="SexyContent\EAV\FieldTemplates\Hyperlink_Edit.ascx.cs">
-      <DependentUpon>Hyperlink_Edit.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="SexyContent\EAV\FieldTemplates\Hyperlink_Edit.ascx.designer.cs">
-      <DependentUpon>Hyperlink_Edit.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="SexyContent\EAV\FieldTemplates\Boolean_Edit.ascx.cs">
-      <DependentUpon>Boolean_Edit.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="SexyContent\EAV\FieldTemplates\Boolean_Edit.ascx.designer.cs">
-      <DependentUpon>Boolean_Edit.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="SexyContent\EAV\FieldTemplates\DateTime_Edit.ascx.cs">
-      <DependentUpon>DateTime_Edit.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="SexyContent\EAV\FieldTemplates\DateTime_Edit.ascx.designer.cs">
-      <DependentUpon>DateTime_Edit.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="SexyContent\EAV\FieldTemplates\String_Edit.ascx.cs">
-      <DependentUpon>String_Edit.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="SexyContent\EAV\FieldTemplates\String_Edit.ascx.designer.cs">
-      <DependentUpon>String_Edit.ascx</DependentUpon>
-    </Compile>
     <Compile Include="SexyContent\Engines\EngineBase.cs" />
     <Compile Include="SexyContent\Engines\EngineFactory.cs" />
     <Compile Include="SexyContent\Engines\IEngine.cs" />
@@ -488,9 +421,6 @@
     <Compile Include="View.ascx.designer.cs">
       <DependentUpon>View.ascx</DependentUpon>
     </Compile>
-    <Compile Include="Administration\EAVManagement.ascx.designer.cs">
-      <DependentUpon>EAVManagement.ascx</DependentUpon>
-    </Compile>
     <Compile Include="Administration\ManageTemplates.ascx.designer.cs">
       <DependentUpon>ManageTemplates.ascx</DependentUpon>
     </Compile>
@@ -504,10 +434,6 @@
       <DependentUpon>SettingsWrapper.ascx</DependentUpon>
     </Compile>
     <Compile Include="SexyContent\SexyContent.cs" />
-    <Compile Include="Administration\EAVManagement.ascx.cs">
-      <DependentUpon>EAVManagement.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
     <Compile Include="Administration\ManageTemplates.ascx.cs">
       <DependentUpon>ManageTemplates.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -529,6 +455,7 @@
     <Compile Include="SexyContent\Engines\TokenEngine\TokenReplaceDnn.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include=".gitignore" />
     <Content Include="Administration\Apps\AppExport.ascx" />
     <Content Include="Administration\Apps\AppConfig.ascx" />
     <Content Include="Administration\Apps\AppManagement.ascx" />
@@ -543,13 +470,7 @@
     <Content Include="Administration\Registers.ascx" />
     <Content Include="API\Services.asmx" />
     <Content Include="bootstrap\fonts\glyphicons-halflings-regular.svg" />
-    <Content Include="bower_components\angular-translate-loader-static-files\angular-translate-loader-static-files.js" />
-    <Content Include="bower_components\angular-translate-loader-static-files\angular-translate-loader-static-files.min.js" />
-    <Content Include="bower_components\angular-translate\angular-translate.js" />
-    <Content Include="bower_components\angular-translate\angular-translate.min.js" />
     <Content Include="BuildScripts\MSBuild.Community.Tasks.dll" />
-    <Content Include="EditEntity.ascx" />
-    <Content Include="EditContentGroupItem.ascx" />
     <Content Include="EditDataSource.ascx" />
     <Content Include="EditList.ascx" />
     <Content Include="EditTemplateFile.ascx" />
@@ -619,9 +540,8 @@
     <Content Include="js\dnn-inpage-edit.js" />
     <Content Include="Administration\ManageTemplates.ascx" />
     <Content Include="license.txt" />
-    <Content Include="module.css" />
+    <Content Include="edit.css" />
     <Content Include="Administration\EditTemplate.ascx" />
-    <Content Include="EditContentGroup.ascx" />
     <Content Include="ReleaseNotes.txt" />
     <Content Include="Settings.ascx" />
     <Content Include="SettingsWrapper.ascx" />
@@ -631,29 +551,6 @@
     <Content Include="SexyContent\EAV\AngularServices\EavGlobalConfigurationProvider.js" />
     <Content Include="SexyContent\EAV\AngularServices\eavNgSvcs.js" />
     <Content Include="SexyContent\EAV\AngularServices\NotificationService.js" />
-    <Content Include="SexyContent\EAV\Controls\ContentTypeEdit.ascx" />
-    <Content Include="SexyContent\EAV\Controls\ContentTypeFields.ascx" />
-    <Content Include="SexyContent\EAV\Controls\ContentTypesList.ascx" />
-    <Content Include="SexyContent\EAV\Controls\CultureSelector.ascx" />
-    <Content Include="SexyContent\EAV\Controls\DimensionMenu.ascx" />
-    <Content Include="SexyContent\EAV\Controls\EAVManagement.ascx" />
-    <Content Include="SexyContent\EAV\Controls\Images\Locked.png" />
-    <Content Include="SexyContent\EAV\Controls\Images\Unlocked.png" />
-    <Content Include="SexyContent\EAV\Controls\ItemForm.ascx" />
-    <Content Include="SexyContent\EAV\Controls\ItemForm.css" />
-    <Content Include="SexyContent\EAV\Controls\ItemForm.js" />
-    <Content Include="SexyContent\EAV\Controls\ItemFormEntityModelCreator.js" />
-    <Content Include="SexyContent\EAV\Controls\ItemHistory.ascx" />
-    <Content Include="SexyContent\EAV\Controls\Items.ascx" />
-    <Content Include="SexyContent\EAV\Controls\ItemVersionDetails.ascx" />
-    <Content Include="SexyContent\EAV\FieldTemplates\Entity_Edit.ascx" />
-    <Content Include="SexyContent\EAV\FieldTemplates\Entity_Edit.css" />
-    <Content Include="SexyContent\EAV\FieldTemplates\Entity_Edit.js" />
-    <Content Include="SexyContent\EAV\FieldTemplates\Number_Edit.ascx" />
-    <Content Include="SexyContent\EAV\FieldTemplates\Hyperlink_Edit.ascx" />
-    <Content Include="SexyContent\EAV\FieldTemplates\Boolean_Edit.ascx" />
-    <Content Include="SexyContent\EAV\FieldTemplates\DateTime_Edit.ascx" />
-    <Content Include="SexyContent\EAV\FieldTemplates\String_Edit.ascx" />
     <Content Include="Extensions\Thumbnailer.aspx" />
     <Content Include="js\2sxc.api.js" />
     <Content Include="Extensions\ToSic_vCard\vCard.ashx" />
@@ -667,12 +564,6 @@
     <Content Include="bootstrap\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="bootstrap\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="bootstrap\fonts\glyphicons-halflings-regular.woff2" />
-    <Content Include="bower_components\angular-translate-loader-static-files\.bower.json" />
-    <Content Include="bower_components\angular-translate-loader-static-files\bower.json" />
-    <Content Include="bower_components\angular-translate-loader-static-files\README.md" />
-    <Content Include="bower_components\angular-translate\.bower.json" />
-    <Content Include="bower_components\angular-translate\bower.json" />
-    <Content Include="bower_components\angular-translate\README.md" />
     <Content Include="js\template-selector\template-selector.min.js.map" />
     <Content Include="README.md" />
     <Content Include="js\dnn-inpage-edit.min.js.map" />
@@ -701,14 +592,11 @@
     <Content Include="SexyContent\EAV\FormlyEditUI\services\contentgroup-service.js" />
     <Content Include="SexyContent\EAV\FormlyEditUI\services\defaultvalue-service.js" />
     <Content Include="SexyContent\EAV\FormlyEditUI\_EditContentGroup.cshtml" />
+    <Content Include="bower.json" />
     <None Include="SqlDataProvider\01.00.00.SqlDataProvider" />
     <Content Include="SexyContent\EAV\FormlyEditUI\edit-entity.js" />
     <Content Include="SexyContent\EAV\FormlyEditUI\fieldtemplates\eav-fieldtemplates.js" />
     <Content Include="SexyContent\EAV\FormlyEditUI\fieldtemplates\WebForms\WebFormsBridge.ascx" />
-    <Content Include="SexyContent\EAV\Security\PermissionsDnnWrapper.ascx" />
-    <Content Include="SexyContent\EAV\Security\Permissions.ascx" />
-    <Content Include="SexyContent\EAV\Security\PermissionsController.js" />
-    <Content Include="SexyContent\EAV\Security\PermissionsServices.js" />
     <Content Include="SexyContent\GettingStarted\GettingStartedFrame.ascx" />
     <Content Include="SqlDataProvider\05.02.01.SqlDataProvider" />
     <Content Include="Styles\Edit.css" />
@@ -720,7 +608,6 @@
     <Content Include="Upgrade\07.00.03.xml" />
     <Content Include="ViewApp.ascx" />
     <Content Include="View.ascx" />
-    <Content Include="Administration\EAVManagement.ascx" />
     <Content Include="WebConfigTemplate.config" />
     <None Include="SqlDataProvider\01.00.01.SqlDataProvider" />
     <EntityDeploy Include="SexyContent\SexyContentContext.edmx">

@@ -36,6 +36,9 @@ namespace ToSic.SexyContent
 				// If logged in, inject Edit JavaScript, and delete / add items
 				if (UserMayEditThisModule)
 				{
+                    // add edit-mode CSS
+                    ClientResourceManager.RegisterStyleSheet(Page, "~/desktopmodules/tosic_sexycontent/edit.css");
+
 					// ToDo: Move these RegisterScripts to JS to prevent including AngularJS twice (from other modules)
                     ClientResourceManager.RegisterScript(Page, "~/desktopmodules/tosic_sexycontent/js/angularjs/angular.min.js", 80);
                     ClientResourceManager.RegisterScript(Page, "~/desktopmodules/tosic_sexycontent/js/template-selector/template-selector.min.js", 81);

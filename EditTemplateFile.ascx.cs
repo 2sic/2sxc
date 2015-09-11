@@ -102,21 +102,25 @@ namespace ToSic.SexyContent
 
 			var set = Sexy.ContentContext.AttribSet.GetAttributeSet(contentTypeStaticName);
 
-            var metadata = new ToSic.Eav.Persistence.Metadata();
-			var dataSource = Sexy.ContentContext.Attributes.GetAttributes(set, true).Select(a => new
-			{
-				StaticName = String.Format(formatString, itemType, a.StaticName),
-                DisplayName =
-                    metadata.GetAttributeMetaData(a.AttributesInSets.FirstOrDefault().AttributeID, Sexy.ContentContext.ZoneId, Sexy.ContentContext.AppId).ContainsKey("Name")
-                        ? metadata.GetAttributeMetaData(a.AttributesInSets.FirstOrDefault().AttributeID, Sexy.ContentContext.ZoneId, Sexy.ContentContext.AppId)["Name"][LanguageList]
-                        : a.StaticName + " (static)"
-                //DisplayName =
-                //    (Sexy.ContentContext.GetAttributeMetaData(a.AttributesInSets.FirstOrDefault().AttributeID)).ContainsKey("Name")
-                //        ? (Sexy.ContentContext.GetAttributeMetaData(a.AttributesInSets.FirstOrDefault().AttributeID))["Name"][LanguageList]
-                //        : a.StaticName + " (static)"
-			}).ToList();
+            // Todo: JSRefactor
+            // new?
+            // var ct = Sexy.ContentContext.ContentType.GetContentTypeConfiguration(contentTypeStaticName);
 
-			AddFieldGrid(dataSource, itemType);
+   //         var metadata = new ToSic.Eav.Persistence.Metadata();
+			//var dataSource = Sexy.ContentContext.Attributes.GetAttributes(set, true).Select(a => new
+			//{
+			//	StaticName = String.Format(formatString, itemType, a.StaticName),
+   //             DisplayName =
+   //                 metadata.GetAttributeMetaData(a.AttributesInSets.FirstOrDefault().AttributeID, Sexy.ContentContext.ZoneId, Sexy.ContentContext.AppId).ContainsKey("Name")
+   //                     ? metadata.GetAttributeMetaData(a.AttributesInSets.FirstOrDefault().AttributeID, Sexy.ContentContext.ZoneId, Sexy.ContentContext.AppId)["Name"][LanguageList]
+   //                     : a.StaticName + " (static)"
+   //             //DisplayName =
+   //             //    (Sexy.ContentContext.GetAttributeMetaData(a.AttributesInSets.FirstOrDefault().AttributeID)).ContainsKey("Name")
+   //             //        ? (Sexy.ContentContext.GetAttributeMetaData(a.AttributesInSets.FirstOrDefault().AttributeID))["Name"][LanguageList]
+   //             //        : a.StaticName + " (static)"
+			//}).ToList();
+
+			//AddFieldGrid(dataSource, itemType);
 		}
 
 	    /// <summary>
