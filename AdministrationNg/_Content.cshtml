@@ -1,40 +1,71 @@
-﻿@using System.Linq
-@using DotNetNuke.Common.Utilities
-@using ToSic.SexyContent
+﻿@using ToSic.SexyContent
 @inherits DotNetNuke.Web.Razor.DotNetNukeWebPage
 
+<h1>TEST</h1>
 
 @{
-    var appId = SexyContent.GetAppIdFromModule(Dnn.Module);
+    @*var appId = SexyContent.GetAppIdFromModule(Dnn.Module);
     var zoneId = SexyContent.GetZoneID(Dnn.Module.PortalID);
-    var Sexy = new SexyContent(zoneId.Value, appId.Value, true, Dnn.Module.OwnerPortalID);
+    var Sexy = new SexyContent(zoneId.Value, appId.Value, true, Dnn.Module.OwnerPortalID);*@
+
+
+    var ng = Request.QueryString["ng"];
+
+    const bool useMinifiedAdmin = false;
 }
 
-<div style="max-width:640px; padding:20px;">
+    @*Only load jQuery for the pipeline designer, others don't need it and it's much faster!*@
+    @if (ng == "pipeline-designer")
+    {
+        <script src="~/desktopmodules/tosic_sexycontent/bower_components/jquery/dist/jquery.min.js"></script>
+        <script src="~/desktopmodules/tosic_sexycontent/bower_components/jquery-ui/jquery-ui.min.js"></script>
+        
+        <script src='~/desktopmodules/tosic_sexycontent/js/angularjs/toaster.js'></script>
+    }
+
+
+
     <div sxc-app="ContentTypesApp" id="editEntity@(Dnn.Module.ModuleID)" ng-include="'content-types/content-types.html'" ng-dependencies="InitParametersFromUrl,ContentTypesApp"></div>
-</div>
 
 
-<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    @*CSS stuff*@
+    <link rel="stylesheet" href="~/desktopmodules/tosic_sexycontent/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/desktopmodules/tosic_sexycontent/bower_components/bootstrap/dist/css/bootstrap-theme.css">
 
-<script src="@Href("~/DesktopModules/ToSIC_SexyContent/js/angularjs/angular.min.js")"></script>
-<script src="@Href("~/DesktopModules/ToSIC_SexyContent/js/angularjs/angular-resource.min.js")"></script>
-<script src="@Href("~/DesktopModules/ToSIC_SexyContent/js/angularjs/angular-animate.min.js")"></script>
-<script src="@Href("~/DesktopModules/ToSIC_SexyContent/js/angularjs/toaster.js")"></script>
-<script src="@Href("~/DesktopModules/ToSIC_SexyContent/js/2sxc.api.js")"></script>
-<script src="@Href("~/DesktopModules/ToSIC_SexyContent/js/angularjs/2sxc4ng.js")"></script>
-@*<script src="@Href("~/DesktopModules/ToSIC_SexyContent/js/2sxc.api.manage.js")"></script>*@
+    @*Default Set / Standard Components for Admin UI*@
+    <script src='~/desktopmodules/tosic_sexycontent/js/angularjs/angular.min.js'></script>
+    <script src='~/desktopmodules/tosic_sexycontent/js/angularjs/angular-resource.min.js'></script>
+    <script src='~/desktopmodules/tosic_sexycontent/js/angularjs/angular-animate.min.js'></script>
+    <script src="~/desktopmodules/tosic_sexycontent/bower_components/angular-translate/angular-translate.min.js"></script>
+    <script src="~/desktopmodules/tosic_sexycontent/bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.min.js"></script>
 
-
-<script src="@Href("~/DesktopModules/ToSIC_SexyContent/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js")"></script>
-<script src="@Href("~/DesktopModules/ToSIC_SexyContent/bower_components/promise-window/dist/promise-window.min.js")"></script>
-
-<script src='@Href("~/DesktopModules/ToSIC_SexyContent/sexycontent/eav/angularservices/sxceavglobalconfigurationprovider.js")'></script>
-
-@*<script src="@Href("~/DesktopModules/ToSIC_SexyContent/SexyContent/eav/AngularServices/eav4Ng.js")'></script>*@
-<script src='@Href("~/DesktopModules/ToSIC_SexyContent/sexycontent/eav/angularservices/eavngsvcs.js")'></script>
+    <script src='~/desktopmodules/tosic_sexycontent/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js'></script>
+    @*<script src='~/desktopmodules/tosic_sexycontent/bower_components/promise-window/dist/promise-window.min.js'></script>*@
 
 
 
-<script src="@Href("~/DesktopModules/ToSIC_SexyContent/dist/admin/tosic-eav-admin.js")"></script>
+    @*2sic Scripts*@
+    <script src='~/desktopmodules/tosic_sexycontent/js/2sxc.api.js'></script>
+    @*<script src='~/desktopmodules/tosic_sexycontent/js/2sxc.api.manage.js'></script>*@
+
+    @*2sxc versions of the eav scripts*@
+    <script src='~/desktopmodules/tosic_sexycontent/js/angularjs/2sxc4ng.js'></script>
+    <script src='~/desktopmodules/tosic_sexycontent/sexycontent/eav/angularservices/eav-configuration-in-sxc.js'></script>
+
+
+    @*Unchanged eav scripts*@
+    <script src='~/desktopmodules/tosic_sexycontent/sexycontent/eav/angularservices/eavngsvcs.js'></script>
+    <script src='~/desktopmodules/tosic_sexycontent/dist/admin/tosic-eav-admin.js'></script>
+
+
+    @*Edit Scripts and stuff - used everywhere*@
+
+    <script src="~/desktopmodules/tosic_sexycontent/dist/edit/tosic-eav-edit.js"></script>
+    <link rel="stylesheet" href="~/desktopmodules/tosic_sexycontent/dist/edit/edit.min.css" />
+
+    <!-- apiCheck is used by formly to validate its api -->
+    <script src="~/desktopmodules/tosic_sexycontent/bower_components/api-check/dist/api-check.js"></script>
+    <!-- This is the current state of master for formly core. -->
+    <script src="~/desktopmodules/tosic_sexycontent/bower_components/angular-formly/dist/formly.min.js"></script>
+    <!-- This is the current state of master for the bootstrap templates -->
+    <script src="~/desktopmodules/tosic_sexycontent/bower_components/angular-formly-templates-bootstrap/dist/angular-formly-templates-bootstrap.min.js"></script>

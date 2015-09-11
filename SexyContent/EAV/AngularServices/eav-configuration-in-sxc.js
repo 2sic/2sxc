@@ -4,65 +4,88 @@
 // the following config-stuff is not in angular, because some settings are needed in dialogs which are not built with angularJS yet.
 // they are included in the same file for conveniance and to motivate the remaining dialogs to get migrated to AngularJS
 
-$(function () {
+//$(function () {
+    var todofilesRoot = "/desktopmodules/tosic_sexycontent/";
     window.$eavUIConfig = {
         // Get DNN ModuleContext
-        globals: $('div[data-2sxc-globals]').data('2sxc-globals'),
+        // globals: $('div[data-2sxc-globals]').data('2sxc-globals'),
 
         baseUrl: function baseUrl() {
-            return $eavUIConfig.globals.FullUrl + '?mid=' + $eavUIConfig.globals.ModuleContext.ModuleId + '&popUp=true&AppId=' + $eavUIConfig.globals.ModuleContext.AppId + '&';
+            alert("trying to use baseurl - deprecated");
+            //return $eavUIConfig.globals.FullUrl + '?mid=' + $eavUIConfig.globals.ModuleContext.ModuleId + '&popUp=true&AppId=' + $eavUIConfig.globals.ModuleContext.AppId + '&';
         },
 
         urls: {
-            managePermissions: function (appId, targetId) {
-                return $eavUIConfig.baseUrl() + "ctl=permissions&Target=" + targetId;
+            exportContent: function (appId) {
+                return "/todo?appId=" + appId;
+            },
+            importContent: function (appId) {
+                return "/todo?appId=" + appId;
+            },
+            ngRoot: function () {
+                return "/dist/";
+            },
+            pipelineDesigner: function (appId, pipelineId) {
+                return "/Pages/ngwrapper.cshtml?ng=pipeline-designer&AppId=" + appId + "&pipelineId=" + pipelineId;
+                //return '/Pages/ngwrapper.aspx?AppId=' + appId + '&PipelineId=' + pipelineId;
             }
+        },
+        languages: {
+            languages: [{ key: 'en-us', name: 'English (United States)' }, { key: 'de-de', name: 'Deutsch (Deutschland)' }],
+            defaultLanguage: 'en-us',
+            currentLanguage: 'en-us',
+            i18nRoot: todofilesRoot + "/dist/i18n/"
         }
+
+
     };
-});
+//});
 
 if (window.angular) // needed because the file is also included in older non-angular dialogs
-    angular.module('eavGlobalConfigurationProvider', []).factory('eavGlobalConfigurationProvider', function ($location) {
+    angular.module('EavConfiguration', [])
+        .constant("languages", window.$eavUIConfig.languages)
+        .factory('eavConfig', function ($location) {
 
-        // Get DNN ModuleContext
-        var globals = $('div[data-2sxc-globals]').data('2sxc-globals');
-        if (!globals)
-            alert('Please ensure the DNN-Page is in Edit-Mode');
+            var dnnModuleId = $location.search().mid;
+        //// Get DNN ModuleContext
+        //var globals = $('div[data-2sxc-globals]').data('2sxc-globals');
+        //if (!globals)
+        //    alert('Please ensure the DNN-Page is in Edit-Mode');
 
-        var getApiAdditionalHeaders = function () {
-            var sf = $.ServicesFramework(globals.ModuleContext.ModuleId);
+        //var getApiAdditionalHeaders = function () {
+        //    var sf = $.ServicesFramework(globals.ModuleContext.ModuleId);
 
-            return {
-                ModuleId: sf.getModuleId(),
-                TabId: sf.getTabId(),
-                RequestVerificationToken: sf.getAntiForgeryValue()
-            };
-        }
+        //    return {
+        //        ModuleId: sf.getModuleId(),
+        //        TabId: sf.getTabId(),
+        //        RequestVerificationToken: sf.getAntiForgeryValue()
+        //    };
+        //}
 
-        var baseUrl = globals.FullUrl + '?mid=' + globals.ModuleContext.ModuleId + '&popUp=true&AppId=' + globals.ModuleContext.AppId + '&';
+        //var baseUrl = globals.FullUrl + '?mid=' + globals.ModuleContext.ModuleId + '&popUp=true&AppId=' + globals.ModuleContext.AppId + '&';
 
-        var getItemFormUrl = function (mode, params, preventRedirect) {
-            if (mode == 'New')
-                params.editMode = 'New';
-            if (!params.ReturnUrl)
-                params.ReturnUrl = $location.url();
-            if (preventRedirect)
-                params.PreventRedirect = true;
-            if (typeof globals.DefaultLanguageID == 'number')
-                params.cultureDimension = globals.DefaultLanguageID;
-            return baseUrl + 'ctl=editcontentgroup&' + $.param(params);
-        };
+        //var getItemFormUrl = function (mode, params, preventRedirect) {
+        //    if (mode == 'New')
+        //        params.editMode = 'New';
+        //    if (!params.ReturnUrl)
+        //        params.ReturnUrl = $location.url();
+        //    if (preventRedirect)
+        //        params.PreventRedirect = true;
+        //    if (typeof globals.DefaultLanguageID == 'number')
+        //        params.cultureDimension = globals.DefaultLanguageID;
+        //    return baseUrl + 'ctl=editcontentgroup&' + $.param(params);
+        //};
 
         return {
-            api: {
-                baseUrl: globals.ApplicationPath + 'DesktopModules/2sxc/API',
-                additionalHeaders: getApiAdditionalHeaders(),
-                defaultParams: {
-                    portalId: globals.ModuleContext.PortalId,
-                    moduleId: globals.ModuleContext.ModuleId,
-                    tabId: globals.ModuleContext.TabId
-                }
-            },
+            //api: {
+            //    baseUrl: globals.ApplicationPath + 'DesktopModules/2sxc/API',
+            //    // additionalHeaders: getApiAdditionalHeaders(),
+            //    defaultParams: {
+            //        portalId: globals.ModuleContext.PortalId,
+            //        moduleId: globals.ModuleContext.ModuleId,
+            //        tabId: globals.ModuleContext.TabId
+            //    }
+            //},
             dialogClass: 'dnnFormPopup',
             itemForm: {
                 getNewItemUrl: function (attributeSetId, assignmentObjectTypeId, params, preventRedirect, prefill) {
@@ -120,8 +143,15 @@ if (window.angular) // needed because the file is also included in older non-ang
                         { From: 'unsaved3', Out: 'Default', To: 'Out', In: 'Default' }
                     ]
                 },
-                testParameters: '[Module:ModuleID]=' + globals.ModuleContext.ModuleId
+                testParameters: '[Module:ModuleID]=' + dnnModuleId // globals.ModuleContext.ModuleId
             },
-            assignmentObjectTypeIdDataPipeline: 4
+            metadataOfEntity: 4,
+            metadataOfAttribute: 2,
+
+            // new
+            contentType: {
+                defaultScope: "2SexyContent" //todo: must change this for 2sxc
+            }
+
         }
     });

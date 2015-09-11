@@ -91,6 +91,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\Microsoft.Practices.Unity.Configuration.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\Newtonsoft.Json.dll</HintPath>
@@ -546,9 +550,6 @@
     <Content Include="Settings.ascx" />
     <Content Include="SettingsWrapper.ascx" />
     <Content Include="SexyContent\EAV\AngularServices\eav4ng.js" />
-    <Content Include="SexyContent\EAV\AngularServices\EavApiService.js" />
-    <Content Include="SexyContent\EAV\AngularServices\EavDialogService.js" />
-    <Content Include="SexyContent\EAV\AngularServices\EavGlobalConfigurationProvider.js" />
     <Content Include="SexyContent\EAV\AngularServices\eavNgSvcs.js" />
     <Content Include="SexyContent\EAV\AngularServices\NotificationService.js" />
     <Content Include="Extensions\Thumbnailer.aspx" />
@@ -567,6 +568,7 @@
     <Content Include="js\template-selector\template-selector.min.js.map" />
     <Content Include="README.md" />
     <Content Include="js\dnn-inpage-edit.min.js.map" />
+    <Content Include="SexyContent\EAV\AngularServices\eav-configuration-in-sxc.js" />
     <Content Include="SexyContent\EAV\FormlyEditUI\edit-contentgroup.html" />
     <Content Include="SexyContent\EAV\FormlyEditUI\edit-contentgroup-dnnwrapper.js" />
     <Content Include="SexyContent\EAV\FormlyEditUI\edit-entity.html" />
@@ -593,6 +595,8 @@
     <Content Include="SexyContent\EAV\FormlyEditUI\services\defaultvalue-service.js" />
     <Content Include="SexyContent\EAV\FormlyEditUI\_EditContentGroup.cshtml" />
     <Content Include="bower.json" />
+    <Content Include="AdministrationNg\_Content.cshtml" />
+    <None Include="AdministrationNg\Content.cshtml" />
     <None Include="SqlDataProvider\01.00.00.SqlDataProvider" />
     <Content Include="SexyContent\EAV\FormlyEditUI\edit-entity.js" />
     <Content Include="SexyContent\EAV\FormlyEditUI\fieldtemplates\eav-fieldtemplates.js" />
