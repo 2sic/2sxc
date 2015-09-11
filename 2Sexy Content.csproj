@@ -259,6 +259,7 @@
     <Compile Include="SexyContent\EAV\FieldTemplates\EditorProvider.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="SexyContent\WebApi\TemplateController.cs" />
     <Compile Include="SexyContent\WebApi\ContentGroupController.cs" />
     <Compile Include="SexyContent\EAVExtensions\EavApiProxies\ContentTypeController.cs" />
     <Compile Include="SexyContent\WebApi\Dnn\HyperlinkController.cs" />
@@ -595,8 +596,8 @@
     <Content Include="SexyContent\EAV\FormlyEditUI\services\defaultvalue-service.js" />
     <Content Include="SexyContent\EAV\FormlyEditUI\_EditContentGroup.cshtml" />
     <Content Include="bower.json" />
-    <Content Include="AdministrationNg\_Content.cshtml" />
-    <None Include="AdministrationNg\Content.cshtml" />
+    <Content Include="admin-v2\_Content.cshtml" />
+    <Content Include="packages.config" />
     <None Include="SqlDataProvider\01.00.00.SqlDataProvider" />
     <Content Include="SexyContent\EAV\FormlyEditUI\edit-entity.js" />
     <Content Include="SexyContent\EAV\FormlyEditUI\fieldtemplates\eav-fieldtemplates.js" />
@@ -762,6 +763,7 @@
     <Content Include="Administration\App_LocalResources\EAVManagement.ascx.de-DE.resx" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="src\admin\apps\" />
     <Folder Include="Upgrade\Log\" />
   </ItemGroup>
   <ItemGroup>

@@ -174,3 +174,4 @@ grunt*/
 bower_components/
 packages/
 dist/
+tmp/

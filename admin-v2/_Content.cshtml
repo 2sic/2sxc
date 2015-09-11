@@ -1,17 +1,49 @@
-﻿@using ToSic.SexyContent
+﻿@using DotNetNuke.Common
+@using DotNetNuke.Entities.Controllers
+@using DotNetNuke.Entities.Portals
+@using ToSic.SexyContent
+@using Assembly = System.Reflection.Assembly
 @inherits DotNetNuke.Web.Razor.DotNetNukeWebPage
 
 <h1>TEST</h1>
 
 @{
-    @*var appId = SexyContent.GetAppIdFromModule(Dnn.Module);
+    var appId = SexyContent.GetAppIdFromModule(Dnn.Module);
     var zoneId = SexyContent.GetZoneID(Dnn.Module.PortalID);
-    var Sexy = new SexyContent(zoneId.Value, appId.Value, true, Dnn.Module.OwnerPortalID);*@
+    var Sexy = new SexyContent(zoneId.Value, appId.Value, true, Dnn.Module.OwnerPortalID);
 
 
     var ng = Request.QueryString["ng"];
 
     const bool useMinifiedAdmin = false;
+
+    var gsUrl = "http://gettingstarted.2sexycontent.org/router.aspx?"
+
+                // Add version & module infos
+                + "DnnVersion=" + Assembly.GetAssembly(typeof (Globals)).GetName().Version.ToString(4)
+                + "&2SexyContentVersion=" + SexyContent.ModuleVersion
+                + "&ModuleName=" + Dnn.Module.DesktopModule.ModuleName
+                + "&ModuleId=" + Dnn.Module.ModuleID
+                + "&PortalID=" + Dnn.Portal.PortalId
+                + "&ZoneID=" + zoneId.Value
+                + "&DefaultLanguage=" + PortalSettings.Current.DefaultLanguage
+                + "&CurrentLanguage=" + PortalSettings.Current.CultureCode;
+;
+            // Add AppStaticName and Version
+            if (appId.HasValue && Dnn.Module.DesktopModule.ModuleName != "2sxc")
+            {
+                var app = SexyContent.GetApp(zoneId.Value, appId.Value, Sexy.OwnerPS);
+
+                gsUrl += "&AppGuid=" + app.AppGuid;
+                if (app.Configuration != null)
+                {
+                    gsUrl += "&AppVersion=" + app.Configuration.Version;
+                    gsUrl += "&AppOriginalId=" + app.Configuration.OriginalId;
+                }
+            }
+
+            var HostSettings = HostController.Instance.GetSettingsDictionary();
+            gsUrl += HostSettings.ContainsKey("GUID") ? "&DnnGUID=" + HostSettings["GUID"] : "";
 }
 
     @*Only load jQuery for the pipeline designer, others don't need it and it's much faster!*@
@@ -23,9 +55,16 @@
         <script src='~/desktopmodules/tosic_sexycontent/js/angularjs/toaster.js'></script>
     }
 
+<script>
+    window.mainConfig = {
+        gettingStartedUrl: "@gsUrl"
+    }
+</script>
 
 
-    <div sxc-app="ContentTypesApp" id="editEntity@(Dnn.Module.ModuleID)" ng-include="'content-types/content-types.html'" ng-dependencies="InitParametersFromUrl,ContentTypesApp"></div>
+<div sxc-app="MainSxcApp" ng-include="'main/main.html'" ng-dependencies="InitParametersFromUrl,MainSxcApp"></div>
+
+@*<div sxc-app="ContentTypesApp" id="editEntity@(Dnn.Module.ModuleID)" ng-include="'content-types/content-types.html'" ng-dependencies="InitParametersFromUrl,ContentTypesApp"></div>*@
 
 
     @*CSS stuff*@
@@ -57,8 +96,11 @@
     <script src='~/desktopmodules/tosic_sexycontent/sexycontent/eav/angularservices/eavngsvcs.js'></script>
     <script src='~/desktopmodules/tosic_sexycontent/dist/admin/tosic-eav-admin.js'></script>
 
+@*New! sxc stuff*@
+<script src="~/desktopmodules/tosic_sexycontent/dist/admin/sxc-admin.js"></script>
 
-    @*Edit Scripts and stuff - used everywhere*@
+
+@*Edit Scripts and stuff - used everywhere*@
 
     <script src="~/desktopmodules/tosic_sexycontent/dist/edit/tosic-eav-edit.js"></script>
     <link rel="stylesheet" href="~/desktopmodules/tosic_sexycontent/dist/edit/edit.min.css" />

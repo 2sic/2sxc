@@ -1,0 +1,27 @@
+﻿{
+  "Main": {
+    "Title": "Administration",
+    "Tab": {
+      "GS": "Getting started",
+      "CD": "Content / Data",
+      "VT": "Views / Templates",
+      "IE": "Import / Export",
+      "PL": "Portal / Languages",
+      "AS": "App Settings"
+    }
+  },
+  "Templates": {
+    "Title": "Manage Templates",
+    "InfoHideAdvanced": "Improve the user experience for the content-editor by hiding advanced features from him. If your portal contains a security role called “2sxc designers”, then non-members will not see buttons like Edit Template or Manage Templates. How-To documented <a href='http://2sxc.org/en/help?tag=hide-advanced' target='_blank'>here</a>.",
+    "Table": {
+      "TName": "Template Name",
+      "TPath": "Path",
+      "CType": "Content Type",
+      "DemoC": "Demo item",
+      "Hide": "Hide",
+      "UrlKey": "Url key",
+      "Permissions": "Perm."
+    }
+  }
+
+}
