@@ -129,7 +129,7 @@ angular.module('2sxc4ng', ['ng'])
 
     // Provide the sxc helper for this module
     .factory('sxc', function (AppInstanceId) {
-        console.log('creating sxc service for id: ' + AppInstanceId);
+        if(window.console) console.log('creating sxc service for id: ' + AppInstanceId);
         if (!$2sxc) throw "the Angular service 'sxc' can't find the global $2sxc controller";
         var ngSxc = $2sxc(AppInstanceId);    // make this service be the 2sxc-controller for this module
         return ngSxc;

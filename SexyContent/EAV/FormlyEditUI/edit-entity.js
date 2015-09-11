@@ -45,7 +45,7 @@
 
 		vm.formFields = null;
 
-		$http.get('eav/ContentType/GetContentTypeConfiguration?contentTypeName=' + encodeURIComponent($scope.contentTypeName))
+		$http.get('eav/ContentType/GetFields?staticName=' + encodeURIComponent($scope.contentTypeName))
 			.then(function(result) {
 				vm.debug = result;
 

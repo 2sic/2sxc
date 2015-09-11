@@ -13,8 +13,12 @@
     "angular-formly-templates-bootstrap": "6.0.0",
     "api-check": "7.5.0",
     "promise-window": "1.0.0",
+<<<<<<< HEAD
     "jsPlumb": "1.7.2",
     "angularjs-toaster": "0.4.15"
+=======
+    "angular-google-maps": "~2.2.0"
+>>>>>>> Formly
   },
   "private": true,
   "resolutions": {
