@@ -18,10 +18,13 @@
       "TPath": "Path",
       "CType": "Content Type",
       "DemoC": "Demo item",
-      "Hide": "Hide",
+      "Show": "Show",
       "UrlKey": "Url key",
-      "Permissions": "Perm."
+      "Actions": "Actions"
     }
+  },
+  "TemplateEdit": {
+    "Title": "Edit Template - todo"
   }
 
 }

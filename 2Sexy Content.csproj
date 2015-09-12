@@ -604,6 +604,16 @@
     <Content Include="SexyContent\EAV\FormlyEditUI\fieldtemplates\WebForms\WebFormsBridge.ascx" />
     <Content Include="SexyContent\GettingStarted\GettingStartedFrame.ascx" />
     <Content Include="SqlDataProvider\05.02.01.SqlDataProvider" />
+    <Content Include="src\sxc-admin\apps\apps-controller.js" />
+    <Content Include="src\sxc-admin\apps\apps.html" />
+    <Content Include="src\sxc-admin\filters\sxc-filters.js" />
+    <Content Include="src\sxc-admin\main\main.html" />
+    <Content Include="src\sxc-admin\main\main-controller.js" />
+    <Content Include="src\sxc-admin\services\i18n.js" />
+    <Content Include="src\sxc-admin\services\templates-services.js" />
+    <Content Include="src\sxc-admin\templates\template-edit.html" />
+    <Content Include="src\sxc-admin\templates\templates-controller.js" />
+    <Content Include="src\sxc-admin\templates\templates.html" />
     <Content Include="Styles\Edit.css" />
     <Content Include="Styles\EditDataSource\demo-new.css" />
     <Content Include="Styles\EditDataSource\flowchartDemo.css" />
@@ -652,6 +662,7 @@
     <Content Include="SqlDataProvider\07.02.02.SqlDataProvider" />
     <None Include="SqlDataProvider\Uninstall.SqlDataProvider" />
     <Content Include="web.config" />
+    <Content Include="src\i18n\sxc-admin-en.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Administration\App_LocalResources\ManageTemplates.ascx.resx" />
@@ -763,7 +774,6 @@
     <Content Include="Administration\App_LocalResources\EAVManagement.ascx.de-DE.resx" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="src\admin\apps\" />
     <Folder Include="Upgrade\Log\" />
   </ItemGroup>
   <ItemGroup>

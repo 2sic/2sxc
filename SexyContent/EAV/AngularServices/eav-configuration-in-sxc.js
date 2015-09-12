@@ -148,9 +148,9 @@ if (window.angular) // needed because the file is also included in older non-ang
             metadataOfEntity: 4,
             metadataOfAttribute: 2,
 
-            // new
             contentType: {
-                defaultScope: "2SexyContent" //todo: must change this for 2sxc
+                defaultScope: "2SexyContent",
+                template: "2SexyContent-Template"
             }
 
         }

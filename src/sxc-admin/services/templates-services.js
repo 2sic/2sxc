@@ -8,7 +8,7 @@ angular.module('TemplatesServices', ['ng', 'eavNgSvcs', "EavConfiguration"])
             };
 
             svc = angular.extend(svc, svcCreator.implementLiveList(function getAll() {
-                return $http.get('sxc/templates/get', { params: { appId: svc.appId } });
+                return $http.get('app/template/getall', { params: { appId: svc.appId } });
             }));
 
             // delete, then reload

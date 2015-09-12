@@ -5,16 +5,13 @@
         "SxcTemplates",         // inline templates
         "EavAdminUi",           // dialog (modal) controller
         "Sxci18n",              // multi-language stuff
-        "ContentTypesApp"
+        "SxcFilters",           // for inline unsafe urls
+        "ContentTypesApp",
+        "TemplatesApp"
     ])
         .constant("createdBy", "2sic")          // just a demo how to use constant or value configs in AngularJS
         .constant("license", "MIT")             // these wouldn't be necessary, just added for learning exprience
         .controller("Main", MainController)
-        .filter('trustAsResourceUrl', function ($sce) {
-            return function (val) {
-                return $sce.trustAsResourceUrl(val);
-            };
-        })
         ;
 
     function MainController(eavAdminDialogs, eavConfig, appId, $modalInstance) {
