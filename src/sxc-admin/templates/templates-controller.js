@@ -19,9 +19,10 @@
         };
 
         vm.add = function add() {
-            alert('todo');
-            // todo: JSRefactor continue here
-            var resolve = eavAdminDialogs.CreateResolve({ appId: appId, contentType: eavConfig.contentType.template});
+            var resolve = eavAdminDialogs.CreateResolve({
+                appId: appId,
+                svc: svc
+            });
             return eavAdminDialogs.OpenModal(
                 "templates/edit.html",
                 "TemplateEdit as vm",

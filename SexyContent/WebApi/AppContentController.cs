@@ -106,7 +106,7 @@ namespace ToSic.SexyContent.WebApi
 		public IEnumerable<Dictionary<string, object>> GetAssignedEntities(int assignmentObjectTypeId, Guid keyGuid, string contentType)
 		{
             InitEavAndSerializer();
-	        return new MetadataController().GetAssignedEntities(assignmentObjectTypeId, keyGuid, contentType);
+	        return new MetadataController().GetAssignedEntities(assignmentObjectTypeId, "guid", keyGuid.ToString(), contentType);
 		}
 
         [HttpDelete]

@@ -255,6 +255,7 @@
     <Compile Include="SexyContent\ContentGroups.cs" />
     <Compile Include="SexyContent\DataSources\DnnSqlDataSource.cs" />
     <Compile Include="SexyContent\DataSources\DnnFormAndList.cs" />
+    <Compile Include="SexyContent\EAVExtensions\EavApiProxies\MetadataController.cs" />
     <Compile Include="SexyContent\EAVExtensions\EavApiProxies\EntitiesController.cs" />
     <Compile Include="SexyContent\EAV\FieldTemplates\EditorProvider.cs">
       <SubType>ASPXCodeBehind</SubType>
@@ -611,7 +612,8 @@
     <Content Include="src\sxc-admin\main\main-controller.js" />
     <Content Include="src\sxc-admin\services\i18n.js" />
     <Content Include="src\sxc-admin\services\templates-services.js" />
-    <Content Include="src\sxc-admin\templates\template-edit.html" />
+    <Content Include="src\sxc-admin\templates\edit.html" />
+    <Content Include="src\sxc-admin\templates\templates-edit-controller.js" />
     <Content Include="src\sxc-admin\templates\templates-controller.js" />
     <Content Include="src\sxc-admin\templates\templates.html" />
     <Content Include="Styles\Edit.css" />

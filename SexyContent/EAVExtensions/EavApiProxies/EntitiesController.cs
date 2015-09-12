@@ -52,16 +52,17 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 		}
 
 
+        //2015-09-12 deprecated this - should use the metadata-controller
 		/// <summary>
 		/// Get Entities with specified AssignmentObjectTypeId and Key
 		/// </summary>
 		[HttpGet]
-		public IEnumerable<Dictionary<string, object>> GetAssignedEntities(int assignmentObjectTypeId, Guid keyGuid, string contentType, int appId)
-		{
-		    var metadataController = new ToSic.Eav.WebApi.MetadataController();
-            EnsureSerializerHasSxc();
-            return metadataController.GetAssignedEntities(assignmentObjectTypeId, keyGuid, contentType, appId);
-		}
+		//public IEnumerable<Dictionary<string, object>> GetAssignedEntities(int assignmentObjectTypeId, Guid keyGuid, string contentType, int appId)
+		//{
+		//    var metadataController = new ToSic.Eav.WebApi.MetadataController();
+  //          EnsureSerializerHasSxc();
+  //          return metadataController.GetAssignedEntities(assignmentObjectTypeId, keyGuid, contentType, appId);
+		//}
 
         [HttpDelete]
 	    public void Delete(string contentType, int id, int appId)
