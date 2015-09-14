@@ -1,11 +1,11 @@
 ﻿    <div class="modal-header">
-        <button class="btn pull-right" type="button" ng-click="vm.close()">
-            <span class="glyphicon glyphicon-remove"></span>
-        </button>
-        <h3 class="modal-title" translate="Permissions.Title">Permission</h3>
+        <button icon="remove" class="btn pull-right" type="button" ng-click="vm.close()"></button>
+        <h3 class="modal-title" translate="AppManagement.Title"></h3>
     </div>
     <div class="modal-body">
-
+        <button type="button" class="btn btn-default" ng-click="vm.search()">
+            <span icon="search"></span> {{ 'AppManagement.Buttons.Browse' | translate }}
+        </button>
         <button type="button" class="btn btn-default" ng-click="vm.add()">
             <span class="glyphicon glyphicon-plus"></span>
         </button>
@@ -16,20 +16,21 @@
         <table class="table table-striped table-hover">
             <thead>
             <tr>
-                <th translate="Permissions.Table.Name"></th>
-                <th translate="Permissions.Table.Id"></th>
-                <th translate="Permissions.Table.Condition"></th>
-                <th translate="Permissions.Table.Grant"></th>
-                <th translate="Permissions.Table.Actions"></th>
+                <th translate="AppManagement.Table.Name"></th>
+                <th translate="AppManagement.Table.Folder"></th>
+                <th translate="AppManagement.Table.Templates"></th>
+                <th translate="AppManagement.Table.Show"></th>
+                <th translate="AppManagement.Table.Actions"></th>
             </tr>
             </thead>
             <tbody>
             <tr ng-repeat="item in vm.items | orderBy:'Title'">
-                <td><a ng-click="vm.edit(item)">{{item.Title}}</a></td>
-                <td>{{item.Id}}</td>
-                <td>{{item.Condition}}</td>
-                <td>{{item.Grant}}</td>
-                <td>
+                <td tooltip="{{item.Id}}"><a ng-click="vm.edit(item)">{{item.Title}}</a></td>
+                <td>{{item.Folder}}</td>
+                <td>note: create 2 icons here, an @ if it has Razr, an [] if it has tokens</td>
+                <td>create eye-icon here open/close</td>
+                <td>Actions: needs "config=cog, export=export, delete=remove"
+                    
                     <button type="button" class="btn btn-xs" ng-click="vm.tryToDelete(item)">
                         <span class="glyphicon glyphicon-remove"></span>
                     </button>

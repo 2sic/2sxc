@@ -1,8 +1,12 @@
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
 
-    angular.module("AppsApp", ['PermissionsServices', "EavConfiguration", 'EavAdminUi'])
-        .constant('createdBy', '2sic')          // just a demo how to use constant or value configs in AngularJS
-        .constant('license', 'MIT')             // these wouldn't be necessary, just added for learning exprience
+    angular.module("AppManagementApp", [
+        "PermissionsServices",
+        "EavConfiguration",
+        "SxcTemplates",         // inline templates
+        "EavAdminUi",           // dialog (modal) controller
+        "Eavi18n"               // multi-language stuff
+    ])
         .controller("AppList", AppListController)
         ;
 
@@ -15,7 +19,7 @@
         };
 
         vm.add = function add() {
-            eavAdminDialogs.openMetadataNew('entity', svc.PermissionTargetGuid, svc.ctName, svc.liveListReload);
+            eavAdminDialogs.openMetadataNew("entity", svc.PermissionTargetGuid, svc.ctName, svc.liveListReload);
         };
 
         vm.items = svc.liveList();
@@ -28,7 +32,7 @@
         vm.refresh = svc.liveListReload;
 
         vm.close = function () {
-            $modalInstance.dismiss('cancel');
+            $modalInstance.dismiss("cancel");
         };
     }
 

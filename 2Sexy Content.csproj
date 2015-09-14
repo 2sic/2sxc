@@ -607,9 +607,16 @@
     <Content Include="SqlDataProvider\05.02.01.SqlDataProvider" />
     <Content Include="src\sxc-admin\apps\apps-controller.js" />
     <Content Include="src\sxc-admin\apps\apps.html" />
+    <Content Include="src\sxc-admin\app-settings\app-settings-controller.js" />
+    <Content Include="src\sxc-admin\app-settings\app-settings.html" />
+    <Content Include="src\sxc-admin\importexport\export.html" />
     <Content Include="src\sxc-admin\filters\sxc-filters.js" />
+    <Content Include="src\sxc-admin\importexport\importexport-controller.js" />
+    <Content Include="src\sxc-admin\importexport\import.html" />
+    <Content Include="src\sxc-admin\importexport\intro.html" />
     <Content Include="src\sxc-admin\main\main.html" />
     <Content Include="src\sxc-admin\main\main-controller.js" />
+    <Content Include="src\sxc-admin\services\importexport-services.js" />
     <Content Include="src\sxc-admin\services\templates-services.js" />
     <Content Include="src\sxc-admin\templates\edit.html" />
     <Content Include="src\sxc-admin\templates\templates-edit-controller.js" />
