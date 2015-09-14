@@ -4,7 +4,8 @@
         "EavConfiguration",     // config
         "SxcTemplates",         // inline templates
         "EavAdminUi",           // dialog (modal) controller
-        "Eavi18n"              // multi-language stuff
+        "Eavi18n",              // multi-language stuff
+        "ImportExportServices"
         //"SxcFilters",           // for inline unsafe urls
     ])
         .controller("ImportExportIntro", IntroController)

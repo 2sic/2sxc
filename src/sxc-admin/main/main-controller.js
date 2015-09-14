@@ -8,7 +8,8 @@
         "SxcFilters",           // for inline unsafe urls
         "ContentTypesApp",
         "TemplatesApp",
-        "ImportExportApp"
+        "ImportExportApp",
+        "AppSettingsApp"
     ])
         .config(function($translatePartialLoaderProvider) {
                  $translatePartialLoaderProvider.addPart("sxc-admin");

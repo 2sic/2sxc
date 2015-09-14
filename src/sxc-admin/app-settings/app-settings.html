@@ -1,0 +1,32 @@
+﻿<div>
+    <div class="modal-body">
+        <h3 translate="AppConfig.Title"></h3>
+        <div translate="AppConfig.Intro"></div>
+
+        <div>
+            <h4 translate="AppConfig.Settings.Title"></h4>
+            <div translate="AppConfig.Settings.Intro"></div>
+            <button icon="pencil" ng-click="vm.editSettings()" class="btn btn-primary" type="button">
+                <span translate="AppConfig.Settings.Edit"></span>
+            </button>
+
+            <button icon="cog" ng-click="vm.confSettings()" class="btn" type="button">
+                <span translate="AppConfig.Settings.Config"></span>
+            </button>
+        </div>
+        <br/>
+        <br/>
+        <div>
+            <h4 translate="AppConfig.Resources.Title"></h4>
+            <div translate="AppConfig.Resources.Intro"></div>
+            <button icon="pencil" ng-click="vm.editResources()" class="btn btn-primary" type="button">
+                {{'AppConfig.Resources.Edit' | translate}}
+            </button>
+
+            <button icon="cog" ng-click="vm.confResources()" class="btn" type="button">
+                {{'AppConfig.Resources.Config' | translate}}
+            </button>
+        </div>
+
+    </div>
+</div>

@@ -71,8 +71,8 @@
                     <tab-heading>
                         <span icon="cog"></span> {{'Main.Tab.AS' | translate }}
                     </tab-heading>
-                    <div ng-if="vm.view == 'portal'">
-                        <h3>app settings - still missing</h3>
+                    <div ng-if="vm.view == 'app'">
+                        <div ng-controller="AppSettings as vm" ng-include="'app-settings/app-settings.html'"></div>
 
                     </div>
                 </tab>

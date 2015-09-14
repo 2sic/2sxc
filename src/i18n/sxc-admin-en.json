@@ -68,10 +68,22 @@
     }
   },
   "Portal": {
-
+    "Title": "Virtual Database (VDB)",
+    "VdbLabel": "Virtual Database for this Portal",
+    "Rename": "Note to 2tk - rename is not necessary any more, don't implement!"
   },
-  "Languages": {
-
+  "Language": {
+    "Title": "Languages / Cultures",
+    "Intro": "Manage the languages / cultures for this zone (this portal)",
+    "Table": {
+      "Code": "Code",
+      "Culture": "Culture",
+      "Actions": ""
+    },
+    "Buttons": {
+      "Enable": "enable",
+      "Disable": "disable"
+    }
   },
   "AppConfig": {
     "Title": "App Configuration",
@@ -93,6 +105,21 @@
     },
     "Export": {
       "Export": "export this app"
+    }
+  },
+  "AppManagement": {
+    "Title": "Manage Apps in this Zone (Portal)",
+    "Table": {
+      "Name": "Name",
+      "Folder": "Folder",
+      "Templates": "Allowed Templates",
+      "Show": "Show",
+      "Action": "Actions"
+    },
+    "Buttons": {
+      "Browse": "browse app catalog",
+      "Import": "import app",
+      "Add": "create app"
     }
   }
 }
