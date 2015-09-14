@@ -38,6 +38,7 @@ namespace ToSic.SexyContent
 				{
                     // add edit-mode CSS
                     ClientResourceManager.RegisterStyleSheet(Page, "~/desktopmodules/tosic_sexycontent/edit.css");
+                    ClientResourceManager.RegisterStyleSheet(Page, "~/desktopmodules/tosic_sexycontent/bower_components/bootstrap/dist/css/bootstrap.min.css");
 
 					// ToDo: Move these RegisterScripts to JS to prevent including AngularJS twice (from other modules)
                     ClientResourceManager.RegisterScript(Page, "~/desktopmodules/tosic_sexycontent/js/angularjs/angular.min.js", 80);

@@ -25,6 +25,74 @@
   },
   "TemplateEdit": {
     "Title": "Edit Template - todo"
-  }
+  },
+  "WebAPIData": {
+    "Title": "Get content as if it were data for your template or JavaScript",
+    "Intro": "Use the query designer to create complex queries. They can be used in normal templates (Token/Razor) or in JavaScript. Or you can create your custom JSON-WebAPI which is only for JavaScript - for example to save something, retrieve a file or perform a query too complex for the designer. Read more about <a href='http://2sxc.org/en/Docs/tag/Data%20and%20Data%20Sources' target='_blank'>coding data pipelines</a> and about <a href='http://2sxc.org/en/Docs/tag/Data%20and%20Data%20Sources' target='_blank'>using the data in JavaScript with jQuery, AngularJS and more</a>.",
+    "Visual": {
+      "Title": "Visual Data Query",
+      "Intro": "Use the Visual Query Designer (Pipeline-Designer) to create queries to data from 2sxc, SQL, RSS and more.",
+      "Button": "Visual Query Designer"
+    },
+    "WebApi": {
+      "Title": "WebApi for this App",
+      "Intro": "Create a WebApi within minutes by placing the source code in the folder called API and inheriting the correct interface. Try it out by creating one automatically and pressing here. Read more about the <a href='http://2sxc.org/en/Docs-Manuals/Feature/feature/3361' target='_blank'>WebApi</a> or the <a href='http://2sxc.org/en/Docs-Manuals/Feature/feature/3360' target='_blank'>C# data editing API</a>.",
+      "ListTitle": "The following list shows the .cs files in the App-API folder:",
+      "InfoMissingFolder": "(the directory does not exist)",
+      "QuickStart": "For a quick start, we recommend that you install the WebApi demo-app. It contains some WebAPI controllers with various actions and some example views to use these controllers. Download <a href='http://2sxc.org/en/Apps/tag/WebApi' target='_blank'>WebApi demos in the App-Catalog</a>."
+    }
+  },
+  "ImportExport": {
+    "Title": "Import Templates and Content <em>into</em> this App/Content",
+    "Intro": "This import will add Content-Types, Templates and Content-Items to the <strong>current</strong> Content or App. ",
+    "Alternatives": "<ul><li>If you want to import a new App, go to <em>App-Management</em></li> <li>If you want to import Tables/Lists of content-items, go to the tab <em>Content / Data</em></li><li>To export an the entire Content (to migrate / duplicate this site) or to export an App, go to <em>App-Management</em></li> <li>To exports lists (tables) of Content-Items please go to the tab <em>Content / Data</em></li> </ul>",
+    "FurtherHelp": "For further help visit <a href='http://2sxc.org/en/help?tag=import' target='_blank'>2sxc Help</a>.",
+    "Import": {
+      "Title": "Import a content export (.zip) or a partial export (.xml)",
+      "Explanation": "This import will add Content-Types, Templates and Content-Items to the current Content or App.",
+      "Select": "select file to import",
+      "Choose": "Choose file",
+      "ButtonExport": "Partial Export"
+    },
+    "Export": {
+      "Title": "Partial Export of Content Types, Template Configuration and Content",
+      "Intro": "This is an advanced export feature to export parts of this Content / App. It will create an XML-file for you which you can import into another site or App",
+      "FurtherHelp": "For further help visit <a href='http://2sxc.org/en/help?tag=export' target='_blank'>2sxc Help</a>.",
+      "Data": {
+        "GroupHeading": "Content Type: {{name}} ({{id}}",
+        "Templates": "Templates",
+        "Items": "Content Items",
+        "SimpleTemplates": "Templates without content type"
+      },
+      "ButtonExport": "Export"
+    }
+  },
+  "Portal": {
 
+  },
+  "Languages": {
+
+  },
+  "AppConfig": {
+    "Title": "App Configuration",
+    "Intro": "Configure the App and special App-settings here.",
+    "Settings": {
+      "Title": "App Settings",
+      "Intro": "Settings are configurations used by the app - like SQL-connection strings, default \"items-to-show\" numbers and things like that. They can also be multi-language, so that a setting (like default RSS-Feed) could be different in each language.",
+      "Edit": "edit app settings",
+      "Config": "configure app settings"
+    },
+    "Resources": {
+      "Title": "App Resources",
+      "Intro": "Resources are used for labels and things like that in the App. They are usually needed to create multi-lingual views and such, and should not be used for App-Settings.",
+      "Edit": "edit app resources",
+      "Config": "configure app resources"
+    },
+    "Definition": {
+      "Edit": "edit app definition"
+    },
+    "Export": {
+      "Export": "export this app"
+    }
+  }
 }

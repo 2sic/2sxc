@@ -15,14 +15,26 @@
         var svc = templatesSvc(appId);
 
         vm.edit = function edit(item) {
-            eavAdminDialogs.openItemEditWithEntityId(item.Id, svc.liveListReload);
+            var url = vm.getOldEditUrl();
+            url += (url.indexOf("?") == -1) ? "?" : "&";
+            url += "templateid=" + item.Id;
+            window.open(url);
+            // eavAdminDialogs.openItemEditWithEntityId(item.Id, svc.liveListReload);
+        };
+
+        vm.getOldEditUrl = function() {
+            var myUrl = window.location.href;
+            var newUrl = myUrl.replace("/ctl/content/", "/ctl/edittemplate/")
+                .replace("ctl=content", "ctl=edittemplate");
+
+            return newUrl;
         };
 
         vm.add = function add() {
             // templ till the edit dialog is JS-only
+            window.open(vm.getOldEditUrl());
 
             // probably afterwards
-
             var resolve = eavAdminDialogs.CreateResolve({
                 appId: appId,
                 svc: svc
@@ -36,6 +48,7 @@
         };
 
         vm.items = svc.liveList();
+        vm.refresh = svc.liveListReload;
 
         vm.permissions = function permissions(item) {
             return eavAdminDialogs.openPermissionsForGuid(appId, item.Guid, svc.liveListReload);

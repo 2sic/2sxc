@@ -7,7 +7,8 @@
         "Eavi18n",              // multi-language stuff
         "SxcFilters",           // for inline unsafe urls
         "ContentTypesApp",
-        "TemplatesApp"
+        "TemplatesApp",
+        "ImportExportApp"
     ])
         .config(function($translatePartialLoaderProvider) {
                  $translatePartialLoaderProvider.addPart("sxc-admin");

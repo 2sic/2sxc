@@ -52,7 +52,7 @@
                         <span icon="random"></span> {{'Main.Tab.IE' | translate }}
                     </tab-heading>
                     <div ng-if="vm.view == 'importexport'">
-                        <h3>import / export - still missing</h3>
+                        <div ng-controller="ImportExportIntro as vm" ng-include="'importexport/intro.html'"></div>
 
                     </div>
                 </tab>
