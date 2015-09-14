@@ -31,10 +31,10 @@
             }
         },
         languages: {
-            languages: [{ key: 'en-us', name: 'English (United States)' }, { key: 'de-de', name: 'Deutsch (Deutschland)' }],
-            defaultLanguage: 'en-us',
-            currentLanguage: 'en-us',
-            i18nRoot: todofilesRoot + "/dist/i18n/"
+            languages: [{ key: "en-us", name: "English (United States)" }, { key: "de-de", name: "Deutsch (Deutschland)" }],
+            defaultLanguage: "en-us",
+            currentLanguage: "en-us",
+            i18nRoot: todofilesRoot + "dist/i18n/"
         }
 
 
@@ -42,9 +42,9 @@
 //});
 
 if (window.angular) // needed because the file is also included in older non-angular dialogs
-    angular.module('EavConfiguration', [])
+    angular.module("EavConfiguration", [])
         .constant("languages", window.$eavUIConfig.languages)
-        .factory('eavConfig', function ($location) {
+        .factory("eavConfig", function ($location) {
 
             var dnnModuleId = $location.search().mid;
         //// Get DNN ModuleContext
@@ -86,15 +86,15 @@ if (window.angular) // needed because the file is also included in older non-ang
             //        tabId: globals.ModuleContext.TabId
             //    }
             //},
-            dialogClass: 'dnnFormPopup',
+            dialogClass: "dnnFormPopup",
             itemForm: {
                 getNewItemUrl: function (attributeSetId, assignmentObjectTypeId, params, preventRedirect, prefill) {
                     if (prefill)
                         params.prefill = JSON.stringify(prefill);
-                    return getItemFormUrl('New', angular.extend({ AttributeSetId: attributeSetId, AssignmentObjectTypeId: assignmentObjectTypeId }, params), preventRedirect);
+                    return getItemFormUrl("New", angular.extend({ AttributeSetId: attributeSetId, AssignmentObjectTypeId: assignmentObjectTypeId }, params), preventRedirect);
                 },
                 getEditItemUrl: function (entityId, params, preventRedirect) {
-                    return getItemFormUrl('Edit', angular.extend({ EntityId: entityId }, params), preventRedirect);
+                    return getItemFormUrl("Edit", angular.extend({ EntityId: entityId }, params), preventRedirect);
                 }
             },
             adminUrls: {
@@ -104,46 +104,46 @@ if (window.angular) // needed because the file is also included in older non-ang
             },
             pipelineDesigner: {
                 getUrl: function (appId, pipelineId) {
-                    return baseUrl + 'ctl=pipelinedesigner&PipelineId=' + pipelineId;
+                    return baseUrl + "ctl=pipelinedesigner&PipelineId=" + pipelineId;
                 },
                 outDataSource: {
-                    className: 'SexyContentTemplate',
-                    in: ['ListContent', 'Default'],
+                    className: "SexyContentTemplate",
+                    in: ["ListContent", "Default"],
                     //in: ['ListPresentation', 'Presentation', 'ListContent', 'Default'],
-                    name: '2sxc Target (View or API)',
-                    description: 'The template/script which will show this data',
+                    name: "2sxc Target (View or API)",
+                    description: "The template/script which will show this data",
                     visualDesignerData: { Top: 20, Left: 420 }
                 },
                 defaultPipeline: {
                     dataSources: [
                         {
-                            entityGuid: 'unsaved1',
-                            partAssemblyAndType: 'ToSic.Eav.DataSources.Caches.ICache, ToSic.Eav',
+                            entityGuid: "unsaved1",
+                            partAssemblyAndType: "ToSic.Eav.DataSources.Caches.ICache, ToSic.Eav",
                             visualDesignerData: { Top: 800, Left: 440 }
                         },
                         {
-                            entityGuid: 'unsaved2',
-                            partAssemblyAndType: 'ToSic.Eav.DataSources.PublishingFilter, ToSic.Eav',
+                            entityGuid: "unsaved2",
+                            partAssemblyAndType: "ToSic.Eav.DataSources.PublishingFilter, ToSic.Eav",
                             visualDesignerData: { Top: 620, Left: 440 }
                         },
                         {
-                            entityGuid: 'unsaved3',
-                            partAssemblyAndType: 'ToSic.SexyContent.DataSources.ModuleDataSource, ToSic.SexyContent',
+                            entityGuid: "unsaved3",
+                            partAssemblyAndType: "ToSic.SexyContent.DataSources.ModuleDataSource, ToSic.SexyContent",
                             visualDesignerData: { Top: 440, Left: 440 }
                         }
                     ],
                     streamWiring: [
-                        { From: 'unsaved1', Out: 'Default', To: 'unsaved2', In: 'Default' },
-                        { From: 'unsaved1', Out: 'Drafts', To: 'unsaved2', In: 'Drafts' },
-                        { From: 'unsaved1', Out: 'Published', To: 'unsaved2', In: 'Published' },
-                        { From: 'unsaved2', Out: 'Default', To: 'unsaved3', In: 'Default' },
+                        { From: "unsaved1", Out: "Default", To: "unsaved2", In: "Default" },
+                        { From: "unsaved1", Out: "Drafts", To: "unsaved2", In: "Drafts" },
+                        { From: "unsaved1", Out: "Published", To: "unsaved2", In: "Published" },
+                        { From: "unsaved2", Out: "Default", To: "unsaved3", In: "Default" },
                         //{ From: 'unsaved3', Out: 'ListPresentation', To: 'Out', In: 'ListPresentation' },
-                        { From: 'unsaved3', Out: 'ListContent', To: 'Out', In: 'ListContent' },
+                        { From: "unsaved3", Out: "ListContent", To: "Out", In: "ListContent" },
                         //{ From: 'unsaved3', Out: 'Presentation', To: 'Out', In: 'Presentation' },
-                        { From: 'unsaved3', Out: 'Default', To: 'Out', In: 'Default' }
+                        { From: "unsaved3", Out: "Default", To: "Out", In: "Default" }
                     ]
                 },
-                testParameters: '[Module:ModuleID]=' + dnnModuleId // globals.ModuleContext.ModuleId
+                testParameters: "[Module:ModuleID]=" + dnnModuleId // globals.ModuleContext.ModuleId
             },
             metadataOfEntity: 4,
             metadataOfAttribute: 2,

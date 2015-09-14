@@ -1,16 +1,16 @@
-(function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
+(function () { 
 
     angular.module("TemplatesApp", [
         "TemplatesServices",
         "EavConfiguration",
         "EavAdminUi",
-        "Sxci18n"])
-        .constant("createdBy", "2sic")          // just a demo how to use constant or value configs in AngularJS
-        .constant("license", "MIT")             // these wouldn't be necessary, just added for learning exprience
+        "Eavi18n",
+        "EavDirectives"
+    ])
         .controller("TemplateList", TemplateListController)
         ;
 
-    function TemplateListController(templatesSvc, eavAdminDialogs, eavConfig, appId, $modalInstance) {
+    function TemplateListController(templatesSvc, eavAdminDialogs, eavConfig, appId, $modalInstance, $sce) {
         var vm = this;
         var svc = templatesSvc(appId);
 

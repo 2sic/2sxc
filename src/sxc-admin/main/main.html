@@ -10,7 +10,7 @@
             <tabset>
                 <tab>
                     <tab-heading>
-                        <i class="glyphicon glyphicon-home"></i> {{'Main.Tab.GS' | translate }}
+                        <span icon="home"></span> {{'Main.Tab.GS' | translate }}
                     </tab-heading>
 
 
@@ -30,7 +30,7 @@
 
                 <tab select="vm.view='content'">
                     <tab-heading>
-                        <i class="glyphicon glyphicon-list"></i> {{'Main.Tab.CD' | translate }}
+                        <span icon="list"></span> {{'Main.Tab.CD' | translate }}
                     </tab-heading>
                     <div ng-if="vm.view == 'content'">
                         <div ng-controller="List as vm" ng-include="'content-types/content-types.html'"></div>
@@ -39,7 +39,7 @@
 
                 <tab select="vm.view='view'">
                     <tab-heading>
-                        <i class="glyphicon glyphicon-picture"></i> {{'Main.Tab.VT' | translate }}
+                        <span icon="picture"></span> {{'Main.Tab.VT' | translate }}
                     </tab-heading>
                     <div ng-if="vm.view == 'view'">
                         <div ng-controller="TemplateList as vm" ng-include="'templates/templates.html'"></div>
@@ -49,7 +49,7 @@
 
                 <tab select="vm.view='importexport'">
                     <tab-heading>
-                        <i class="glyphicon glyphicon-random"></i> {{'Main.Tab.IE' | translate }}
+                        <span icon="random"></span> {{'Main.Tab.IE' | translate }}
                     </tab-heading>
                     <div ng-if="vm.view == 'importexport'">
                         <h3>import / export - still missing</h3>
@@ -59,7 +59,7 @@
 
                 <tab select="vm.view='portal'">
                     <tab-heading>
-                        <i class="glyphicon glyphicon-globe"></i> {{'Main.Tab.PL' | translate }}
+                        <span icon="globe"></span> {{'Main.Tab.PL' | translate }}
                     </tab-heading>
                     <div ng-if="vm.view == 'portal'">
                         <h3>portal / language - still missing</h3>
@@ -69,7 +69,7 @@
 
                 <tab select="vm.view='app'">
                     <tab-heading>
-                        <i class="glyphicon glyphicon-cog"></i> {{'Main.Tab.AS' | translate }}
+                        <span icon="cog"></span> {{'Main.Tab.AS' | translate }}
                     </tab-heading>
                     <div ng-if="vm.view == 'portal'">
                         <h3>app settings - still missing</h3>

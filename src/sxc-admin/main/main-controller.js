@@ -4,13 +4,15 @@
         "EavConfiguration",     // config
         "SxcTemplates",         // inline templates
         "EavAdminUi",           // dialog (modal) controller
-        "Sxci18n",              // multi-language stuff
+        "Eavi18n",              // multi-language stuff
         "SxcFilters",           // for inline unsafe urls
         "ContentTypesApp",
         "TemplatesApp"
     ])
-        .constant("createdBy", "2sic")          // just a demo how to use constant or value configs in AngularJS
-        .constant("license", "MIT")             // these wouldn't be necessary, just added for learning exprience
+        .config(function($translatePartialLoaderProvider) {
+                 $translatePartialLoaderProvider.addPart("sxc-admin");
+            })
+
         .controller("Main", MainController)
         ;
 
@@ -22,14 +24,6 @@
 
         // var svc = templatesSvc(appId);
 
-        vm.edit = function edit(item) {
-            alert('todo');
-        }; 
-
-        vm.add = function add() {
-            alert('todo');
-        };
-        
         vm.close = function () {
             $modalInstance.dismiss("cancel");
         };

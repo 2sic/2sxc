@@ -8,8 +8,10 @@
                 return $sce.trustAsResourceUrl(val);
             };
         })
-
-        .filter('treatAsSafeHtml')
-    ;
+        .filter('trustHtml', function($sce) {
+            return function(text) {
+                return $sce.trustAsHtml(text);
+            };
+        });
 
 } ());

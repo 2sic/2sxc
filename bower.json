@@ -8,7 +8,7 @@
     "angular-bootstrap": "0.13.3",
     "ocLazyLoad": "1.0.4",
     "angular-translate": "2.7.2",
-    "angular-translate-loader-static-files": "2.7.2",
+    "angular-translate-loader-partial": "2.7.2",
     "angular-formly": "6.24.23",
     "angular-formly-templates-bootstrap": "6.0.0",
     "api-check": "7.5.0",
