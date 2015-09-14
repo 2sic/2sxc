@@ -1,12 +1,12 @@
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
 
-    angular.module("PermissionsApp", ['PermissionsServices', "EavConfiguration", 'EavAdminUi'])
+    angular.module("AppsApp", ['PermissionsServices', "EavConfiguration", 'EavAdminUi'])
         .constant('createdBy', '2sic')          // just a demo how to use constant or value configs in AngularJS
         .constant('license', 'MIT')             // these wouldn't be necessary, just added for learning exprience
-        .controller("PermissionList", PermissionListController)
+        .controller("AppList", AppListController)
         ;
 
-    function PermissionListController(permissionsSvc, eavAdminDialogs, eavConfig, appId, targetGuid, $modalInstance /* $location */) {
+    function AppListController(permissionsSvc, eavAdminDialogs, eavConfig, appId, targetGuid, $modalInstance /* $location */) {
         var vm = this;
         var svc = permissionsSvc(appId, targetGuid);
 

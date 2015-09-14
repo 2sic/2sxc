@@ -19,9 +19,14 @@
     function MainController(eavAdminDialogs, eavConfig, appId, $modalInstance) {
         var vm = this;
         vm.view = "start";
-        alert(window.mainConfig.gettingStartedUrl);
+
         vm.gettingStartedUrl = (window.mainConfig) ? window.mainConfig.gettingStartedUrl : "http://gettingstarted.2sxc.org";
 
+        //vm.gettingStartedUrl = function() {
+        //    return (window.mainConfig) ?
+        //        window.mainConfig.gettingStartedUrl
+        //        : "http://gettingstarted.2sxc.org";
+        //};
         // var svc = templatesSvc(appId);
 
         vm.close = function () {

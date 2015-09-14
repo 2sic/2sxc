@@ -14,10 +14,12 @@ namespace ToSic.SexyContent.WebApi
 
 	    [HttpGet]
 	    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-	    public IEnumerable<object> GetAll()
+	    public IEnumerable<object> GetAll(int appId)
 	    {
-            var attributeSetList = Sexy.GetAvailableContentTypes(SexyContent.AttributeSetScope).ToList();
-            var templateList = Sexy.Templates.GetAllTemplates();
+            var sxc = Request.GetSxcOfModuleContext(appId);
+
+            var attributeSetList = sxc.GetAvailableContentTypes(SexyContent.AttributeSetScope).ToList();
+            var templateList = sxc.Templates.GetAllTemplates();
             var templates = from c in templateList
                             select new
                             {

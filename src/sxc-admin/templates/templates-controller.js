@@ -19,6 +19,10 @@
         };
 
         vm.add = function add() {
+            // templ till the edit dialog is JS-only
+
+            // probably afterwards
+
             var resolve = eavAdminDialogs.CreateResolve({
                 appId: appId,
                 svc: svc

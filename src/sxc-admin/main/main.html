@@ -1,4 +1,4 @@
-﻿<div ngx-controller="Main as vm">
+﻿<div ng-controller="Main as vm">
     <div class="modal-header">
         <button class="btn pull-right" type="button" ng-click="vm.close()">
             <span class="glyphicon glyphicon-remove"></span>
@@ -13,8 +13,8 @@
                         <span icon="home"></span> {{'Main.Tab.GS' | translate }}
                     </tab-heading>
 
+                    <iframe ng-src="{{ vm.gettingStartedUrl | trustAsResourceUrl }}" style="border: none; width: 100%; height: 500px"></iframe>
 
-                    <iframe class="sc-iframe-gettingstarted" runat="server" id="ifrGettingStarted" ng-src="{{vm.gettingStartedUrl | trustAsResourceUrl }}" style="border:none; width:100%; height:500px"></iframe>
                     <div ng-hide="true">
                         original script, maybe we need it
                         $(document).ready(function () {
@@ -79,9 +79,6 @@
             </tabset>
 
         </div>
-
-
-        View {{vm.view}}
 
 
     </div>
