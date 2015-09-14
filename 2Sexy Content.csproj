@@ -610,7 +610,6 @@
     <Content Include="src\sxc-admin\filters\sxc-filters.js" />
     <Content Include="src\sxc-admin\main\main.html" />
     <Content Include="src\sxc-admin\main\main-controller.js" />
-    <Content Include="src\sxc-admin\services\i18n.js" />
     <Content Include="src\sxc-admin\services\templates-services.js" />
     <Content Include="src\sxc-admin\templates\edit.html" />
     <Content Include="src\sxc-admin\templates\templates-edit-controller.js" />

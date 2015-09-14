@@ -23,27 +23,27 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 
         #region Content-Type Get, Delete, Save
         [HttpGet]
-        public IEnumerable<dynamic> Get(string scope = null, bool withStatistics = false)
+        public IEnumerable<dynamic> Get(int appId, string scope = null, bool withStatistics = false)
         {
-            return eavCtc.Get(App.AppId, scope, withStatistics);
+            return eavCtc.Get(appId, scope, withStatistics);
         }
 
         [HttpGet]
-        public IContentType Get(string contentTypeId, string scope = null)
+        public IContentType Get(int appId, string contentTypeId, string scope = null)
         {
-            return eavCtc.Get(App.AppId, contentTypeId, scope);
+            return eavCtc.Get(appId, contentTypeId, scope);
         }
 
         [HttpDelete]
-        public bool Delete(string staticName)
+        public bool Delete(int appId, string staticName)
         {
-            return eavCtc.Delete(App.AppId, staticName);
+            return eavCtc.Delete(appId, staticName);
         }
 
         [HttpPost]
-        public bool Save(Dictionary<string, string> item)
+        public bool Save(int appId, Dictionary<string, string> item)
         {
-            return eavCtc.Save(App.AppId, item);
+            return eavCtc.Save(appId, item);
         }
         #endregion
 
@@ -56,9 +56,9 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
         [HttpGet]
         //[SupportedModules("2sxc,2sxc-app")]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<dynamic> GetFields(string staticName)
+        public IEnumerable<dynamic> GetFields(int appId, string staticName)
         {
-			return eavCtc.GetFields(this.App.AppId, staticName);
+			return eavCtc.GetFields(appId, staticName);
         }
 
         #endregion

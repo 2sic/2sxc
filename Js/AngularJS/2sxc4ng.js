@@ -91,7 +91,8 @@ $2sxc.ng = {
         // if nothing found, try normal URL because DNN places parameters in /key/value notation
         if (results === null) {
             // Otherwise try parts of the URL
-            var matches = window.location.pathname.match(new RegExp("/appId/([^/]+)", "i"));
+            var matches = window.location.pathname.match(new RegExp("/" + name + "/([^/]+)", "i"));
+            // var matches = window.location.pathname.match("/" + name + "/([^/]+)", 'i');
 
             // Check if we found anything, if we do find it, we must reverse the results so we get the "last" one in case there are multiple hits
             if (matches !== null && matches.length > 1) 
