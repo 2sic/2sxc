@@ -17,9 +17,13 @@ angular.module("SxcAdminUi", [
             return eavAdminDialogs.OpenModal("main/main.html", "Main as vm", "xlg", resolve, closeCallback);
         };
 
-            svc.closeThis = function closeThisTotalPopup() {
-                $2sxc.totalPopup.closeThis();
-            };
+        svc.openTotal = function openTotal(url, callback) {
+            $2sxc.totalPopup.open(url, callback);
+        };
+
+        svc.closeThis = function closeThisTotalPopup() {
+            $2sxc.totalPopup.closeThis();
+        };
         //svc.reopenAppMain = function roam(appId, closeCallback) {
 
         //};

@@ -49,8 +49,9 @@
             url = url
                 .replace(new RegExp("appid=[0-9]+", "i"), "appid=" + item.Id)
                 .replace("dialog=zone", "dialog=app");
-            
-            window.open(url);
+
+            sxcDialogs.openTotal(url, svc.liveListReload);
+            //window.open(url);
             //sxcDialogs.openAppMain(item.Id, svc.liveListReload);
         };
 

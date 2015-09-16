@@ -91,14 +91,14 @@
             lib: path + "bower_components/",
             dist: path + "dist/",
             api: siteRoot + "desktopmodules/2sxc/api/",
-            jsExt: ".min.js", // ".min.js" or ".gz.js" or ".js"
+            jsExt: ".js"// ".min.js", // ".min.js" or ".gz.js" or ".js"
         };
 
         // default set needed for all UIs like angular, animate, translate
-        addScript("../../js/angularjs/angular.autoext");
-        addScript("../../js/angularjs/angular-resource.autoext");
+        addScript($dlg.lib + "angular/angular.autoext");
+        addScript($dlg.lib + "angular-resource/angular-resource.autoext");
 
-        addScript("../../js/angularjs/angular-animate.autoext");
+        addScript($dlg.lib + "angular-animate/angular-animate.autoext");
         addScript($dlg.lib + "angular-translate/angular-translate.autoext");
         addScript($dlg.lib + "angular-translate-loader-partial/angular-translate-loader-partial.autoext");
         addScript($dlg.lib + "angular-bootstrap/ui-bootstrap-tpls.autoext");
@@ -119,7 +119,7 @@
         addScript($dlg.lib + "api-check/dist/api-check.js"); // apiCheck is used by formly to validate its api
         addScript($dlg.lib + "angular-formly/dist/formly.autoext"); // This is the current state of master for formly core.
         addScript($dlg.lib + "angular-formly-templates-bootstrap/dist/angular-formly-templates-bootstrap.autoext"); // This is the current state of master for the bootstrap templates
-        addScript($dlg.lib + "angular-bootstrap-file-field/dist/angular-bootstrap-file-field.autoext");
+        addScript($dlg.lib + "angular-bootstrap-file-field/dist/angular-bootstrap-file-field.min.js"); // only has min in dist
 
         // Functionality only needed by the pipeline designers
         if ($dlg.dialog === "pipeline-designer") {

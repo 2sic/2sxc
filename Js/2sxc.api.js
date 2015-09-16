@@ -233,7 +233,13 @@
         open: function openTotalPopup(url, callback) {
             var ifrm = document.createElement("iframe");
             ifrm.setAttribute("allowtransparency", "true");
-            ifrm.setAttribute("style", "position: absolute;top: 0;left: 0;width: 100%;height: 100%;");
+            // count parents to see how high the z-index needs to be
+            var z = 1500, p = window;
+            while (p !== window.top && z < 1600) {
+                z++;
+                p = p.parent;
+            };
+            ifrm.setAttribute("style", "position: absolute;top: 0;left: 0;width: 100%;height: 100%; z-index: " + z);
             ifrm.setAttribute("src", url);
             document.body.appendChild(ifrm);
             $2sxc.totalPopup.frame = ifrm;
