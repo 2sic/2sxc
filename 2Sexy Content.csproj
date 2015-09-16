@@ -606,8 +606,8 @@
     <Content Include="SexyContent\EAV\FormlyEditUI\fieldtemplates\WebForms\WebFormsBridge.ascx" />
     <Content Include="SexyContent\GettingStarted\GettingStartedFrame.ascx" />
     <Content Include="SqlDataProvider\05.02.01.SqlDataProvider" />
-    <Content Include="src\sxc-admin\apps\apps-controller.js" />
-    <Content Include="src\sxc-admin\apps\apps.html" />
+    <Content Include="src\sxc-admin\apps-management\apps-controller.js" />
+    <Content Include="src\sxc-admin\apps-management\apps.html" />
     <Content Include="src\sxc-admin\app-settings\app-settings-controller.js" />
     <Content Include="src\sxc-admin\app-settings\app-settings.html" />
     <Content Include="src\sxc-admin\importexport\export.html" />
@@ -619,9 +619,10 @@
     <Content Include="src\sxc-admin\language-settings\languages.html" />
     <Content Include="src\sxc-admin\main\main.html" />
     <Content Include="src\sxc-admin\main\main-controller.js" />
-    <Content Include="src\sxc-admin\services\importexport-services.js" />
-    <Content Include="src\sxc-admin\services\languages.js" />
-    <Content Include="src\sxc-admin\services\templates-services.js" />
+    <Content Include="src\sxc-admin\services\importexport-service.js" />
+    <Content Include="src\sxc-admin\services\languages-service.js" />
+    <Content Include="src\sxc-admin\services\apps-service.js" />
+    <Content Include="src\sxc-admin\services\templates-service.js" />
     <Content Include="src\sxc-admin\templates\edit.html" />
     <Content Include="src\sxc-admin\templates\templates-edit-controller.js" />
     <Content Include="src\sxc-admin\templates\templates-controller.js" />

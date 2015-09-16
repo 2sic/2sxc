@@ -13,7 +13,7 @@ angular.module('SxcServices')//, ['ng', 'eavNgSvcs', "EavConfiguration"])
 
             // delete, then reload
             svc.delete = function del(id) {
-                return $http.delete('sxc/templates/delete', {params: {appId: svc.appId, id: id }})
+                return $http.delete('app/templates/delete', {params: {appId: svc.appId, id: id }})
                     .then(svc.liveListReload);
             };
             return svc;

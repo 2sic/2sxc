@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav;
@@ -12,11 +13,12 @@ namespace ToSic.SexyContent.WebApi
     /// This one supplies portal-wide (or cross-portal) settings / configuration
     /// </summary>
 	[SupportedModules("2sxc,2sxc-app")]
-	public class SystemController : SxcApiController
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+
+    public class SystemController : SxcApiController
 	{
 
 	    [HttpGet]
-	    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 	    public dynamic GetLanguages()
 	    {
 	        var portalId = Dnn.Portal.PortalId;
@@ -38,17 +40,50 @@ namespace ToSic.SexyContent.WebApi
 	    /// <param name="maybeEntity"></param>
 	    /// <returns></returns>
 	    [HttpGet]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public void SwitchLanguage(string cultureCode, bool enable)
 	    {
-            //var Item = e.Item as GridEditableItem;
-            // var CultureCode = Item.GetDataKeyValue("Code").ToString();
-
             // Activate or Deactivate the Culture
             Sexy.SetCultureState(cultureCode, enable, Dnn.Portal.PortalId);
 	    }
 
-        
+
+        #region Apps
+
+        [HttpGet]
+        public dynamic Apps(int zoneId)
+        {
+            var list = SexyContent.GetApps(zoneId, true, new PortalSettings(Dnn.Module.OwnerPortalID));
+            return list.Select(a => new
+            {
+                Id = a.AppId,
+                IsApp = a.AppGuid != "Default",
+                Guid = a.AppGuid,
+                a.Name,
+                a.Folder,
+                IsHidden = a.Hidden,
+                //Tokens = a.Settings?.AllowTokenTemplates ?? false,
+                //Razor = a.Configuration?.AllowRazorTemplates ?? false,
+                ConfigurationId = a.Configuration?.EntityId ?? null
+            }).ToList();
+        }
+
+        [HttpDelete]
+        public new void App(int zoneId, int appId)
+        {
+            
+            var sexy = new SexyContent(zoneId, appId, false);
+
+            sexy.RemoveApp(appId, Dnn.User.UserID);
+        }
+
+        [HttpPost]
+        public new void App(int zoneId, string name)
+        {
+            SexyContent.AddApp(zoneId, name, new PortalSettings(Dnn.Module.OwnerPortalID));
+        }
+
+        #endregion
+
 
     }
 }

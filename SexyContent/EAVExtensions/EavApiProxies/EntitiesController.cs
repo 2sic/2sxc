@@ -23,9 +23,6 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 		public EntitiesController(): base()
 		{
 			Eav.Configuration.SetConnectionString("SiteSqlServer");
-
-            // Improve the serializer so it's aware of the 2sxc-context (module, portal etc.)
-//		    (eavWebApi.Serializer as Serializer).Sxc = Sexy;
 		}
 
 	    private void EnsureSerializerHasSxc()

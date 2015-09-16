@@ -58,8 +58,11 @@
     }
 </script>
 
+ @*this is the main app for one specific app*@ 
+@*<div sxc-app="MainSxcApp" ng-include="'main/main.html'" ng-dependencies="InitParametersFromUrl,MainSxcApp"></div>*@
 
-<div sxc-app="MainSxcApp" ng-include="'main/main.html'" ng-dependencies="InitParametersFromUrl,MainSxcApp"></div>
+@*Now the manage-all-apps app*@
+<div sxc-app="AppsManagementApp" ng-include="'apps-management/apps.html'" ng-dependencies="InitParametersFromUrl,AppsManagementApp"></div>
 
 @*<div sxc-app="ContentTypesApp" id="editEntity@(Dnn.Module.ModuleID)" ng-include="'content-types/content-types.html'" ng-dependencies="InitParametersFromUrl,ContentTypesApp"></div>*@
 

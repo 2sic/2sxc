@@ -112,9 +112,9 @@
     "Table": {
       "Name": "Name",
       "Folder": "Folder",
-      "Templates": "Allowed Templates",
-      "Show": "Show",
-      "Action": "Actions"
+      "Templates": "Templates",
+      "Show": "show this app to users",
+      "Actions": "Actions"
     },
     "Buttons": {
       "Browse": "browse app catalog",
