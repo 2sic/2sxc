@@ -227,19 +227,23 @@
     $2sxc.beta = {};
     $2sxc._data = {};
     
+
+    // this creates a full-screen iframe-popup and provides a close-command to finish the dialog as needed
     $2sxc.totalPopup = {
-        open: function openTotalPopup(url) {
+        open: function openTotalPopup(url, callback) {
             var ifrm = document.createElement("iframe");
             ifrm.setAttribute("allowtransparency", "true");
             ifrm.setAttribute("style", "position: absolute;top: 0;left: 0;width: 100%;height: 100%;");
             ifrm.setAttribute("src", url);
             document.body.appendChild(ifrm);
             $2sxc.totalPopup.frame = ifrm;
+            $2sxc.totalPopup.callback = callback;
         },
         close: function closeTotalPopup() {
             if ($2sxc.totalPopup.frame) {
                 var frm = $2sxc.totalPopup.frame;
                 frm.parentNode.removeChild(frm);
+                $2sxc.totalPopup.callback();
             }
         },
         closeThis: function closeThis() {

@@ -104,10 +104,10 @@
         addScript($dlg.lib + "angular-bootstrap/ui-bootstrap-tpls.autoext");
 
         // 2sxc scripts
-        addScript("../../js/2sxc.api.js");
+        addScript("../../js/2sxc.api.autoext");
 
         // 2sxc versions of eav scripts (with alternate configuration etc.)
-        addScript("../../js/angularjs/2sxc4ng.js");
+        addScript("../../js/angularjs/2sxc4ng.autoext");
         addScript("../../sexycontent/eav/angularservices/eav-configuration-in-sxc.js");
 
         // eav and 2sxc applications
@@ -152,7 +152,7 @@
         <li>load optional scripts for pipeline designer</li>
         <li>handle close</li> 
         <li>manage app should hide certain things if editing the main content-app</li>
-        <li><a onclick="$2sxc.totalPopup.open('http://2sexycontent.2dm.2sic/desktopmodules/tosic_sexycontent/dist/dnn/ui.html#zoneid=2&tid=55&mid=426&appid=2&dialog=zone')">test</a></li>
+        <li><a onclick="$2sxc.totalPopup.open('http://2sexycontent.2dm.2sic/desktopmodules/tosic_sexycontent/dist/dnn/ui.html#zoneid=2&tid=55&mid=426&appid=2&dialog=zone', function () { })">test</a></li>
     </ol>
 <script>
     document.write("dialog: " + $dlg.dialog);
