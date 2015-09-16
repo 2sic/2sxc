@@ -227,31 +227,23 @@
     $2sxc.beta = {};
     $2sxc._data = {};
     
-    // New helper method - it's needed to get 
-    //$2sxc.getParamFromUrl = function getParamFromUrl(paramName) {
-    //    var result = null;
-    //    // First, try to get it from URL-Query
-    //    var query = window.location.search.substring(1);
-    //    var vars = query.split("&");
-    //    for (var i = 0; i < vars.length; i++) {
-    //        var pair = vars[i].split("=");
-    //        if (pair[0] == paramName) { result = pair[1]; }
-    //    }
-
-    //    if (result)
-    //        return result;
-
-    //    // Otherwise try parts of the URL
-    //    var matches = window.location.pathname.match("/" + paramName + "/([^/]+)", 'i');
-
-    //    // Check if we found anything
-    //    if (matches != null && matches.length > 1) {
-    //        matches = matches.reverse(); // must reverse, because it may have found more than one and then we want the one at the end of the URL
-    //        result = matches[0];
-    //    }
-
-    //    if (result)
-    //        return result;
-
-    //}
+    $2sxc.totalPopup = {
+        open: function openTotalPopup(url) {
+            var ifrm = document.createElement("iframe");
+            ifrm.setAttribute("allowtransparency", "true");
+            ifrm.setAttribute("style", "position: absolute;top: 0;left: 0;width: 100%;height: 100%;");
+            ifrm.setAttribute("src", url);
+            document.body.appendChild(ifrm);
+            $2sxc.totalPopup.frame = ifrm;
+        },
+        close: function closeTotalPopup() {
+            if ($2sxc.totalPopup.frame) {
+                var frm = $2sxc.totalPopup.frame;
+                frm.parentNode.removeChild(frm);
+            }
+        },
+        closeThis: function closeThis() {
+            window.parent.$2sxc.totalPopup.close();
+        }
+    }
 })();

@@ -144,18 +144,19 @@
         createFakeSf($dlg);
     </script>
 </head>
-<body>
+<body style="background-color:transparent">
     <h2>todo</h2>
     <ol>
-        <li>include all include-files</li>
         <li>get full screen iframe to work</li>
         <li>load getting-startedurl from WS</li>
         <li>load optional scripts for pipeline designer</li>
-        <li>handle close</li>
-        <li>get this ui-stuff into dist</li>
-        <li>manage app should hide certain things if editing content</li>
-
+        <li>handle close</li> 
+        <li>manage app should hide certain things if editing the main content-app</li>
+        <li><a onclick="$2sxc.totalPopup.open('http://2sexycontent.2dm.2sic/desktopmodules/tosic_sexycontent/dist/dnn/ui.html#zoneid=2&tid=55&mid=426&appid=2&dialog=zone')">test</a></li>
     </ol>
+<script>
+    document.write("dialog: " + $dlg.dialog);
+</script>
 
 <script>
     if ($dlg.dialog !== "pipeline-designer")
@@ -164,13 +165,6 @@
         document.write('<div sxc-app="PipelineDesigner" ng-include="\'pipelines/pipeline-designer.html\'" ng-dependencies="InitParametersFromUrl,PipelineDesigner"></div>');
     }
 </script>
-
-
-        <!--<div ng-if="vm.dialog == 'pipeline-designer'">
-            <div sxc-app="PipelineDesigner" ng-include="'pipelines/pipeline-designer.html'" ng-controller="PipelineDesigner" ng-dependencies="InitParametersFromUrl,PipelineDesigner"></div>
-        </div>-->
-
-    <!--<div sxc-app="AppsManagementApp" ng-include="'apps-management/apps.html'" ng-dependencies="InitParametersFromUrl,AppsManagementApp"></div>-->
 
 </body>
 </html>

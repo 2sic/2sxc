@@ -8,15 +8,13 @@
         .controller("DialogHost", DialogHostController)
         ;
 
-    function DialogHostController(zoneId, appId, dialog, sxcDialogs, eavAdminDialogs) {
+    function DialogHostController(zoneId, appId, dialog, sxcDialogs, $window) {
         var vm = this;
         vm.dialog = dialog;
         var initialDialog = dialog;
 
         vm.close = function close() {
-            //todo: close window, pass message on to top-frame
-            alert('close');
-            // window.close();
+            sxcDialogs.closeThis();
         };
 
         switch (initialDialog) {

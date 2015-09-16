@@ -60,6 +60,15 @@ module.exports = function (grunt) {
                     }
 
                 ]
+            },
+            dnnUi: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: "src/dnn/", 
+                        src: ["**/*.*"],
+                        dest: "dist/dnn/"
+                    }]
             }
         },
 
@@ -95,12 +104,6 @@ module.exports = function (grunt) {
                 src: sxcadmin.tmp + "**/*.js",
                 dest: sxcadmin.concatFile
             }
-            // CSS not used yet
-            //,
-            //pipelineCss: {
-            //    src: [admin.tmp + "pipelines/pipeline-designer.css"],
-            //    dest: admin.dist + concatPipelineCss
-            //}
         },
 
 
@@ -195,7 +198,7 @@ module.exports = function (grunt) {
 
         watch: {
             sxcbuild: {
-                files: ["gruntfile.js", sxcadmin.cwd + "**"],
+                files: ["gruntfile.js", sxcadmin.cwd + "**", "src/dnn/**", "src/i18n/**"],
                 tasks: ["build"]
             }
         }
