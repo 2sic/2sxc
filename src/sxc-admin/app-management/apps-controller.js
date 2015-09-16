@@ -1,11 +1,11 @@
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
 
-    angular.module("AppManagementApp", [
-        "PermissionsServices",
+    angular.module("AppsManagementApp", [
+        "EavServices",
         "EavConfiguration",
+        "SxcServices",
         "SxcTemplates",         // inline templates
         "EavAdminUi",           // dialog (modal) controller
-        "Eavi18n"               // multi-language stuff
     ])
         .controller("AppList", AppListController)
         ;

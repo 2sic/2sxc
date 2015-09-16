@@ -1,10 +1,10 @@
 (function () { 
 
     angular.module("TemplatesApp", [
-        "TemplatesServices",
+        "SxcServices",
         "EavConfiguration",
         "EavAdminUi",
-        "Eavi18n",
+        "EavServices",
         "EavDirectives"
     ])
         .controller("TemplateList", TemplateListController)

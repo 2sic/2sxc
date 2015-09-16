@@ -2,11 +2,9 @@
 
     angular.module("AppSettingsApp", [
         "EavConfiguration",     // 
-        "ContentTypeServices",
-        "ContentItemsServices",
+        "EavServices",
         "SxcTemplates",         // inline templates
         "EavAdminUi",           // dialog (modal) controller
-        "Eavi18n"              // multi-language stuff
     ])
         .controller("AppSettings", AppSettingsController)
         ;

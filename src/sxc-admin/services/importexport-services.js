@@ -1,4 +1,4 @@
-angular.module('ImportExportServices', ['ng', 'eavNgSvcs', "EavConfiguration"])
+angular.module('SxcServices')//, ['ng', 'eavNgSvcs', "EavConfiguration"])
     .factory('importExportSvc', function($http, eavConfig, svcCreator) {
 
         // Construct a service for this specific appId

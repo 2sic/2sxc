@@ -1,5 +1,5 @@
-angular.module('SxcServices')//, ['ng', 'eavNgSvcs', "EavConfiguration"])
-    .factory('templatesSvc', function($http, eavConfig, svcCreator) {
+angular.module('SxcServices')
+    .factory('languagesSvc', function($http, eavConfig, svcCreator) {
 
         // Construct a service for this specific appId
         return function createSvc(appId) {
@@ -8,14 +8,15 @@ angular.module('SxcServices')//, ['ng', 'eavNgSvcs', "EavConfiguration"])
             };
 
             svc = angular.extend(svc, svcCreator.implementLiveList(function getAll() {
-                return $http.get('app/template/getall', { params: { appId: svc.appId } });
+                return $http.get('app/system/getlanguages');//, { params: { appId: svc.appId } });
             }));
 
             // delete, then reload
-            svc.delete = function del(id) {
-                return $http.delete('sxc/templates/delete', {params: {appId: svc.appId, id: id }})
+            svc.toggle = function toggle(item) {
+                return $http.get('app/system/switchlanguage', {params: {cultureCode: item.Code, enable: !item.IsEnabled }})
                     .then(svc.liveListReload);
             };
+
             return svc;
         };
     });

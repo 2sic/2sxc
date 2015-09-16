@@ -57,16 +57,6 @@
                     </div>
                 </tab>
 
-                <tab select="vm.view='portal'">
-                    <tab-heading>
-                        <span icon="globe"></span> {{'Main.Tab.PL' | translate }}
-                    </tab-heading>
-                    <div ng-if="vm.view == 'portal'">
-                        <h3>portal / language - still missing</h3>
-
-                    </div>
-                </tab>
-
                 <tab select="vm.view='app'">
                     <tab-heading>
                         <span icon="cog"></span> {{'Main.Tab.AS' | translate }}
@@ -76,6 +66,19 @@
 
                     </div>
                 </tab>
+
+                <tab select="vm.view='portal'">
+                    <tab-heading>
+                        <span icon="globe"></span> {{'Main.Tab.PL' | translate }}
+                    </tab-heading>
+                    <div ng-if="vm.view == 'portal'">
+                        <h3 translate="Main.Portal.Title"></h3>
+                        <div translate="Main.Portal.Intro"></div>
+                        <div ng-controller="LanguageSettings as vm" ng-include="'language-settings/languages.html'"></div>
+
+                    </div>
+                </tab>
+
             </tabset>
 
         </div>

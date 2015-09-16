@@ -8,6 +8,10 @@
       "IE": "Import / Export",
       "PL": "Portal / Languages",
       "AS": "App Settings"
+    },
+    "Portal": {
+      "Title": "Settings for the entire portal",
+      "Intro": "These settings apply to all content and all apps within this portal."
     }
   },
   "Templates": {
@@ -74,15 +78,11 @@
   },
   "Language": {
     "Title": "Languages / Cultures",
-    "Intro": "Manage the languages / cultures for this zone (this portal)",
+    "Intro": "Manage the enabled / disable languages for this Zone (this portal)",
     "Table": {
       "Code": "Code",
       "Culture": "Culture",
-      "Actions": ""
-    },
-    "Buttons": {
-      "Enable": "enable",
-      "Disable": "disable"
+      "Status": "Status"
     }
   },
   "AppConfig": {

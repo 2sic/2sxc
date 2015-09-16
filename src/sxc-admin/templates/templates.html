@@ -41,12 +41,14 @@ ListP: {{item.ListPresentationType.DemoTitle}} ({{item.ListPresentationType.Demo
                     <span icon="{{ item.IsHidden ? 'close' : 'eye-open'}}"></span>
                 </td>
                 <td tooltip="{{item.ViewNameInUrl}}">{{item.ViewNameInUrl}}</td>
-                <td>
+                <td  style="white-space: nowrap;">
                     <button type="button" class="btn btn-xs" ng-click="vm.permissions(item)">
                         <span icon="user"></span>&nbsp;/&nbsp;<span icon="lock"></span>
                     </button>
 
-                    <button icon="remove" type="button" class="btn btn-xs" ng-click="vm.tryToDelete(item)"> </button>
+                    <button type="button" class="btn btn-xs" ng-click="vm.tryToDelete(item)">
+                        <span icon="remove"></span>
+                    </button>
                 </td>
             </tr>
             <tr ng-if="!vm.items.length">

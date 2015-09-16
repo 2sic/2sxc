@@ -4,14 +4,16 @@
         "EavConfiguration",     // config
         "SxcTemplates",         // inline templates
         "EavAdminUi",           // dialog (modal) controller
-        "Eavi18n",              // multi-language stuff
+        "EavServices",          // multi-language stuff
         "SxcFilters",           // for inline unsafe urls
         "ContentTypesApp",
         "TemplatesApp",
         "ImportExportApp",
-        "AppSettingsApp"
+        "AppSettingsApp",
+        "SystemSettingsApp"
     ])
-        .config(function($translatePartialLoaderProvider) {
+        .config(function ($translatePartialLoaderProvider) {
+                // ensure the language pack is loaded
                  $translatePartialLoaderProvider.addPart("sxc-admin");
             })
 

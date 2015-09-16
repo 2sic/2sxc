@@ -30,11 +30,6 @@ namespace ToSic.SexyContent.WebApi
                                 ListContentType = MiniCTSpecs(attributeSetList, c.ListContentTypeStaticName, c.ListContentDemoEntity),
                                 ListPresentationType = MiniCTSpecs(attributeSetList, c.ListPresentationTypeStaticName, c.ListPresentationDemoEntity),
                                 TemplatePath = c.Path,
-                                //DemoC = MiniESpecs(c.ContentDemoEntity),
-                                //DemoP = MiniESpecs(c.PresentationDemoEntity),
-                                //DemoLC = MiniESpecs(c.ListContentDemoEntity),
-                                //DemoLP = MiniESpecs(c.ListPresentationDemoEntity),
-                                //DemoEntityId = c.ContentDemoEntity != null ? c.ContentDemoEntity.EntityId : new int?(),
                                 c.IsHidden,
                                 c.ViewNameInUrl,
                                 c.Guid
@@ -62,15 +57,6 @@ namespace ToSic.SexyContent.WebApi
 
             };
 	    }
-
-	    //private dynamic MiniESpecs(IEntity maybeEntity)
-	    //{
-	    //    return new
-	    //    {
-	    //        Id = maybeEntity?.EntityId ?? 0,
-	    //        Name = maybeEntity?.GetBestValue("Title") ?? ""
-	    //    };
-	    //}
 
 	    [HttpDelete]
 	    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
