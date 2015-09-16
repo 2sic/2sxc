@@ -51,12 +51,19 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 			return entitesController.GetEntities(contentType, cultureCode, appId);
 		}
 
+	    [HttpGet]
+	    public IEnumerable<Dictionary<string, object>> GetAllOfTypeForAdmin(int appId, string contentType)
+	    {
+	        EnsureSerializerHasSxc();
+	        return entitesController.GetAllOfTypeForAdmin(appId, contentType);
+	    }
+
 
         //2015-09-12 deprecated this - should use the metadata-controller
-		/// <summary>
-		/// Get Entities with specified AssignmentObjectTypeId and Key
-		/// </summary>
-		[HttpGet]
+        /// <summary>
+        /// Get Entities with specified AssignmentObjectTypeId and Key
+        /// </summary>
+        [HttpGet]
 		//public IEnumerable<Dictionary<string, object>> GetAssignedEntities(int assignmentObjectTypeId, Guid keyGuid, string contentType, int appId)
 		//{
 		//    var metadataController = new ToSic.Eav.WebApi.MetadataController();

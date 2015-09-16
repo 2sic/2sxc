@@ -6,12 +6,12 @@
         <div>
             <h4 translate="AppConfig.Settings.Title"></h4>
             <div translate="AppConfig.Settings.Intro"></div>
-            <button icon="pencil" ng-click="vm.editSettings()" class="btn btn-primary" type="button">
-                <span translate="AppConfig.Settings.Edit"></span>
+            <button icon="pencil" ng-disabled="!vm.ready()" ng-click="vm.edit('App-Settings')" class="btn btn-primary" type="button">
+                {{ 'AppConfig.Settings.Edit' | translate }}
             </button>
 
-            <button icon="cog" ng-click="vm.confSettings()" class="btn" type="button">
-                <span translate="AppConfig.Settings.Config"></span>
+            <button icon="cog" ng-disabled="!vm.ready()" ng-click="vm.config('App-Settings')" class="btn" type="button">
+                {{ 'AppConfig.Settings.Config' | translate }}
             </button>
         </div>
         <br/>
@@ -19,11 +19,11 @@
         <div>
             <h4 translate="AppConfig.Resources.Title"></h4>
             <div translate="AppConfig.Resources.Intro"></div>
-            <button icon="pencil" ng-click="vm.editResources()" class="btn btn-primary" type="button">
+            <button icon="pencil" ng-disabled="!vm.ready()"  ng-click="vm.edit('App-Resources')" class="btn btn-primary" type="button">
                 {{'AppConfig.Resources.Edit' | translate}}
             </button>
 
-            <button icon="cog" ng-click="vm.confResources()" class="btn" type="button">
+            <button icon="cog" ng-disabled="!vm.ready()"  ng-click="vm.config('App-Resources')" class="btn" type="button">
                 {{'AppConfig.Resources.Config' | translate}}
             </button>
         </div>
