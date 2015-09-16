@@ -15,7 +15,7 @@
                 <tr ng-repeat="item in vm.items | orderBy:['ContentType.Name','Name']">
                     <td>{{item.Code}}</td>
                     <td>{{item.Culture}}</span></td>
-                    <td style="white-space: nowrap;">
+                    <td class="text-nowrap">
                         <span icon="{{ item.IsEnabled ? 'eye-open' : 'eye-close' }}"></span>
                         <button icon="{{ item.IsEnabled ? 'pause' : 'play' }}" type="button" class="btn btn-xs" ng-click="vm.toggle(item)"></button>
                     </td>

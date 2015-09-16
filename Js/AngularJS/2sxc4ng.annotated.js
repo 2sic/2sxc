@@ -85,14 +85,18 @@ $2sxc.ng = {
     // get url param - mainly needed for mid=### in admin-dialogs
     getParameterByName: function getParameterByName(name) {
         name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-            results = regex.exec(location.search);
+        var searchRx = new RegExp("[\\?&]" + name + "=([^&#]*)", "i");
+        var results = searchRx.exec(location.search);
+
+        if (results === null) {
+            var hashRx = new RegExp("[#&]" + name + "=([^&#]*)", "i");
+            results = hashRx.exec(location.hash);
+        }
 
         // if nothing found, try normal URL because DNN places parameters in /key/value notation
         if (results === null) {
             // Otherwise try parts of the URL
             var matches = window.location.pathname.match(new RegExp("/" + name + "/([^/]+)", "i"));
-            // var matches = window.location.pathname.match("/" + name + "/([^/]+)", 'i');
 
             // Check if we found anything, if we do find it, we must reverse the results so we get the "last" one in case there are multiple hits
             if (matches !== null && matches.length > 1) 

@@ -43,13 +43,20 @@
                 svc.delete(item.Id);
         };
 
+        // todo: make this open an i-frame lightbox instead of a new window
         vm.manage = function manage(item) {
-            sxcDialogs.openAppMain(item.Id, svc.liveListReload);
+            var url = window.location.href;
+            url = url
+                .replace(new RegExp("appid=[0-9]+", "i"), "appid=" + item.Id)
+                .replace("dialog=zone", "dialog=app");
+            
+            window.open(url);
+            //sxcDialogs.openAppMain(item.Id, svc.liveListReload);
         };
 
         vm.export = function exp(item)
         {
-            alert('todo');
+            alert("todo");
         };
 
         vm.close = function () {

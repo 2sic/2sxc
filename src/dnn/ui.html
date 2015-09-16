@@ -1,0 +1,176 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Content Editing UI</title>
+    <meta charset="utf-8"/>
+    <script>
+        // Important functions to ensure everything else works
+        // this block only contains the functions, no calls done here
+
+        function getParameterByName(name) {
+            // warning: this method is duplicated in 3 places - keep them in sync. 
+            // locations are eav, 2sxc4ng and ui.html
+            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+            var searchRx = new RegExp("[\\?&]" + name + "=([^&#]*)", "i");
+            var results = searchRx.exec(location.search);
+
+            if (results === null) {
+                var hashRx = new RegExp("[#&]" + name + "=([^&#]*)", "i");
+                results = hashRx.exec(location.hash);
+            }
+
+            // if nothing found, try normal URL because DNN places parameters in /key/value notation
+            if (results === null) {
+                // Otherwise try parts of the URL
+                var matches = window.location.pathname.match(new RegExp("/" + name + "/([^/]+)", "i"));
+
+                // Check if we found anything, if we do find it, we must reverse the results so we get the "last" one in case there are multiple hits
+                if (matches !== null && matches.length > 1)
+                    results = matches.reverse()[0];
+            } else
+                results = results[1];
+
+            return results === null ? "" : decodeURIComponent(results.replace(/\+/g, " "));
+        }
+
+        function getRequiredParameter(name) {
+            var found = getParameterByName(name);
+            if (found === "")
+                alert("Required parameter (" + name + ") missing from url - cannot continue");
+            return found;
+        }
+
+        // this creates an object on $.ServicesFramework
+        // it looks like the DNN object and is necessary so that scripts relying on it will work
+        // it basically fakes it, but contains the correct infos like getTabId etc. without needing the full DNN
+        function createFakeSf(dlgParams) {
+            if (window.$ === undefined)
+                window.$ = {};
+            var dollar = window.$;
+            var modId = getParameterByName('mid');
+            if (modId === "")
+                alert("ModuleId (mid) missing - cannot continue");
+            dollar.ServicesFramework = function(id) {
+                return {
+                    name: "This is a fake DNN ServicesFramework",
+                    description: "It enables stuff to work which thinks it needs this, but doesn't really",
+                    getTabId: function () { return dlgParams.tabId; },
+                    getAntiForgeryValue: function() { return "abcdefgihjklmnop"; },
+                    getServiceRoot: function() { return dlgParams.api; }
+                }
+            }
+        }
+
+        // add a script right then and there to the document
+        function addScript(src) {
+            var script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = src.replace(".autoext", $dlg.jsExt);
+            document.write(script.outerHTML); // needs doc.write to ensure in-sync loading of the files
+        }
+
+        // add a style to the document header
+        function addStyle(src) {
+            var style = document.createElement("link");
+            style.setAttribute("rel", "stylesheet");
+            style.setAttribute("type", "text/css");
+            style.setAttribute("href", src);
+            document.getElementsByTagName('head')[0].appendChild(style);
+        }
+
+    </script>
+
+    <script>
+        var siteRoot = window.location.pathname.substring(0, window.location.pathname.toLowerCase().indexOf("desktopmodules"));
+        var path = siteRoot + "desktopmodules/tosic_sexycontent/";
+        var $dlg = {
+            modId: getRequiredParameter("mid"),
+            tabId: getRequiredParameter("tid"),
+            dialog: getRequiredParameter("dialog"),
+            root: path,
+            lib: path + "bower_components/",
+            dist: path + "dist/",
+            api: siteRoot + "desktopmodules/2sxc/api/",
+            jsExt: ".min.js", // ".min.js" or ".gz.js" or ".js"
+        };
+
+        // default set needed for all UIs like angular, animate, translate
+        addScript("../../js/angularjs/angular.autoext");
+        addScript("../../js/angularjs/angular-resource.autoext");
+
+        addScript("../../js/angularjs/angular-animate.autoext");
+        addScript($dlg.lib + "angular-translate/angular-translate.autoext");
+        addScript($dlg.lib + "angular-translate-loader-partial/angular-translate-loader-partial.autoext");
+        addScript($dlg.lib + "angular-bootstrap/ui-bootstrap-tpls.autoext");
+
+        // 2sxc scripts
+        addScript("../../js/2sxc.api.js");
+
+        // 2sxc versions of eav scripts (with alternate configuration etc.)
+        addScript("../../js/angularjs/2sxc4ng.js");
+        addScript("../../sexycontent/eav/angularservices/eav-configuration-in-sxc.js");
+
+        // eav and 2sxc applications
+        addScript($dlg.dist + "admin/tosic-eav-admin.js");
+        addScript($dlg.dist + "admin/sxc-admin.js");
+
+        // this is all stuff needed by the edit UI
+        addScript($dlg.dist + "edit/tosic-eav-edit.js");
+        addScript($dlg.lib + "api-check/dist/api-check.js"); // apiCheck is used by formly to validate its api
+        addScript($dlg.lib + "angular-formly/dist/formly.autoext"); // This is the current state of master for formly core.
+        addScript($dlg.lib + "angular-formly-templates-bootstrap/dist/angular-formly-templates-bootstrap.autoext"); // This is the current state of master for the bootstrap templates
+        addScript($dlg.lib + "angular-bootstrap-file-field/dist/angular-bootstrap-file-field.autoext");
+
+        // Functionality only needed by the pipeline designers
+        if ($dlg.dialog === "pipeline-designer") {
+            addScript($dlg.lib + "jquery/dist/jquery.autoext");
+            addScript($dlg.lib + "jquery-ui/jquery-ui.autoext");
+
+            addScript("../../js/angularjs/toaster.js");
+            addScript($dlg.lib + "jsplumb/dist/js/jquery.jsPlumb-1.7.2-min.js");
+
+            addStyle($dlg.dist + "admin/pipeline-designer.min.css");
+        }
+
+        // generic style stuff
+        addStyle($dlg.lib + "bootstrap/dist/css/bootstrap.min.css");
+        addStyle($dlg.lib + "bootstrap/dist/css/bootstrap-theme.min.css");
+
+        // CSS overrides etc.
+        addStyle($dlg.dist + "admin/eav-admin.min.css");
+
+    </script>
+    <script>
+        createFakeSf($dlg);
+    </script>
+</head>
+<body>
+    <h2>todo</h2>
+    <ol>
+        <li>include all include-files</li>
+        <li>get full screen iframe to work</li>
+        <li>load getting-startedurl from WS</li>
+        <li>load optional scripts for pipeline designer</li>
+        <li>handle close</li>
+        <li>get this ui-stuff into dist</li>
+        <li>manage app should hide certain things if editing content</li>
+
+    </ol>
+
+<script>
+    if ($dlg.dialog !== "pipeline-designer")
+        document.write('<div sxc-app="DialogHost" ng-dependencies="InitParametersFromUrl,DialogHost" ng-controller="DialogHost as vm"></div>');
+    else {
+        document.write('<div sxc-app="PipelineDesigner" ng-include="\'pipelines/pipeline-designer.html\'" ng-dependencies="InitParametersFromUrl,PipelineDesigner"></div>');
+    }
+</script>
+
+
+        <!--<div ng-if="vm.dialog == 'pipeline-designer'">
+            <div sxc-app="PipelineDesigner" ng-include="'pipelines/pipeline-designer.html'" ng-controller="PipelineDesigner" ng-dependencies="InitParametersFromUrl,PipelineDesigner"></div>
+        </div>-->
+
+    <!--<div sxc-app="AppsManagementApp" ng-include="'apps-management/apps.html'" ng-dependencies="InitParametersFromUrl,AppsManagementApp"></div>-->
+
+</body>
+</html>

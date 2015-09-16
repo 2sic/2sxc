@@ -1,4 +1,4 @@
-﻿<div ng-controller="Main as vm">
+﻿<div>
     <div class="modal-header">
         <button class="btn pull-right" type="button" ng-click="vm.close()">
             <span class="glyphicon glyphicon-remove"></span>
@@ -10,7 +10,7 @@
             <tabset>
                 <tab>
                     <tab-heading>
-                        <span icon="home"></span> {{'Main.Tab.GS' | translate }}
+                        <span icon="home" tooltip="{{'Main.Tab.GettingStarted' | translate }}"></span> {{'Main.Tab.GS' | translate }}
                     </tab-heading>
 
                     <iframe ng-src="{{ vm.gettingStartedUrl | trustAsResourceUrl }}" style="border: none; width: 100%; height: 500px"></iframe>
@@ -30,16 +30,27 @@
 
                 <tab select="vm.view='content'">
                     <tab-heading>
-                        <span icon="list"></span> {{'Main.Tab.CD' | translate }}
+                        <span icon="list" tooltip="{{'Main.Tab.ContentData' | translate }}"></span> {{'Main.Tab.CD' | translate }}
                     </tab-heading>
                     <div ng-if="vm.view == 'content'">
                         <div ng-controller="List as vm" ng-include="'content-types/content-types.html'"></div>
                     </div>
                 </tab>
 
+
+                <tab select="vm.view='query'">
+                    <tab-heading>
+                        <span icon="filter" tooltip="{{'Main.Tab.Query' | translate }}"></span> {{'Main.Tab.Q' | translate }}
+                    </tab-heading>
+                    <div ng-if="vm.view == 'query'">
+                        <div ng-controller="PipelineManagement as vm" ng-include="'pipelines/pipelines.html'"></div>
+
+                    </div>
+                </tab>
+
                 <tab select="vm.view='view'">
                     <tab-heading>
-                        <span icon="picture"></span> {{'Main.Tab.VT' | translate }}
+                        <span icon="picture" tooltip="{{'Main.Tab.ViewsTemplates' | translate }}"></span> {{'Main.Tab.VT' | translate }}
                     </tab-heading>
                     <div ng-if="vm.view == 'view'">
                         <div ng-controller="TemplateList as vm" ng-include="'templates/templates.html'"></div>
@@ -47,9 +58,22 @@
                     </div>
                 </tab>
 
+
+
+
+                <tab select="vm.view='webapi'">
+                    <tab-heading>
+                        <span icon="flash" tooltip="{{'Main.Tab.WebApi' | translate }}"></span> {{'Main.Tab.WA' | translate }}
+                    </tab-heading>
+                    <div ng-if="vm.view == 'webapi'">
+                        <h4>WebApi - todo</h4>
+
+                    </div>
+                </tab>
+
                 <tab select="vm.view='importexport'">
                     <tab-heading>
-                        <span icon="random"></span> {{'Main.Tab.IE' | translate }}
+                        <span icon="transfer" tooltip="{{'Main.Tab.ImportExport' | translate }}"></span> {{'Main.Tab.IE' | translate }}
                     </tab-heading>
                     <div ng-if="vm.view == 'importexport'">
                         <div ng-controller="ImportExportIntro as vm" ng-include="'importexport/intro.html'"></div>
@@ -57,9 +81,12 @@
                     </div>
                 </tab>
 
+
+
+
                 <tab select="vm.view='app'">
                     <tab-heading>
-                        <span icon="cog"></span> {{'Main.Tab.AS' | translate }}
+                        <span icon="cog" tooltip="{{'Main.Tab.AppSettings' | translate }}"></span> {{'Main.Tab.AS' | translate }}
                     </tab-heading>
                     <div ng-if="vm.view == 'app'">
                         <div ng-controller="AppSettings as vm" ng-include="'app-settings/app-settings.html'"></div>
@@ -69,7 +96,7 @@
 
                 <tab select="vm.view='portal'">
                     <tab-heading>
-                        <span icon="globe"></span> {{'Main.Tab.PL' | translate }}
+                        <span icon="globe" tooltip="{{'Main.Tab.PortalLanguages' | translate }}"></span> {{'Main.Tab.PL' | translate }}
                     </tab-heading>
                     <div ng-if="vm.view == 'portal'">
                         <h3 translate="Main.Portal.Title"></h3>

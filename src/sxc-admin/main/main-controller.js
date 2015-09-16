@@ -7,6 +7,7 @@
         "EavServices",          // multi-language stuff
         "SxcFilters",           // for inline unsafe urls
         "ContentTypesApp",
+        "PipelineManagement",
         "TemplatesApp",
         "ImportExportApp",
         "AppSettingsApp",

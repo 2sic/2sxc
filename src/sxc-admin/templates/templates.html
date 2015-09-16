@@ -41,7 +41,7 @@ ListP: {{item.ListPresentationType.DemoTitle}} ({{item.ListPresentationType.Demo
                     <span icon="{{ item.IsHidden ? 'close' : 'eye-open'}}"></span>
                 </td>
                 <td tooltip="{{item.ViewNameInUrl}}">{{item.ViewNameInUrl}}</td>
-                <td  style="white-space: nowrap;">
+                <td class="text-nowrap">
                     <button type="button" class="btn btn-xs" ng-click="vm.permissions(item)">
                         <span icon="user"></span>&nbsp;/&nbsp;<span icon="lock"></span>
                     </button>
@@ -60,8 +60,8 @@ ListP: {{item.ListPresentationType.DemoTitle}} ({{item.ListPresentationType.Demo
     <div class="" translate="Templates.InfoHideAdvanced"></div>
 </div>
 
-<style>
+<!--<style>
     .tooltip-inner {
         white-space: pre-wrap;
     }
-</style>
+</style>-->

@@ -2,12 +2,22 @@
   "Main": {
     "Title": "Administration",
     "Tab": {
-      "GS": "Getting started",
-      "CD": "Content / Data",
-      "VT": "Views / Templates",
-      "IE": "Import / Export",
-      "PL": "Portal / Languages",
-      "AS": "App Settings"
+      "GS": "",
+      "GettingStarted": "Getting started",
+      "CD": "",
+      "ContentData": "Content / Data",
+      "VT": "",
+      "ViewsTemplates": "Views / Templates",
+      "Q": "",
+      "Query": "Query Designer",
+      "WA": "",
+      "WebApi": "WebApi / Data",
+      "IE": "",
+      "ImportExport": "Import / Export",
+      "PL": "",
+      "PortalLanguages": "Portal / Languages",
+      "AS": "",
+      "AppSettings": "App Settings"
     },
     "Portal": {
       "Title": "Settings for the entire portal",
@@ -31,12 +41,14 @@
     "Title": "Edit Template - todo"
   },
   "WebAPIData": {
-    "Title": "Get content as if it were data for your template or JavaScript",
-    "Intro": "Use the query designer to create complex queries. They can be used in normal templates (Token/Razor) or in JavaScript. Or you can create your custom JSON-WebAPI which is only for JavaScript - for example to save something, retrieve a file or perform a query too complex for the designer. Read more about <a href='http://2sxc.org/en/Docs/tag/Data%20and%20Data%20Sources' target='_blank'>coding data pipelines</a> and about <a href='http://2sxc.org/en/Docs/tag/Data%20and%20Data%20Sources' target='_blank'>using the data in JavaScript with jQuery, AngularJS and more</a>.",
-    "Visual": {
-      "Title": "Visual Data Query",
-      "Intro": "Use the Visual Query Designer (Pipeline-Designer) to create queries to data from 2sxc, SQL, RSS and more.",
-      "Button": "Visual Query Designer"
+    "unused": {
+      "Title": "Get content as if it were data for your template or JavaScript",
+      "Intro": "Use the query designer to create complex queries. They can be used in normal templates (Token/Razor) or in JavaScript. Or you can create your custom JSON-WebAPI which is only for JavaScript - for example to save something, retrieve a file or perform a query too complex for the designer. Read more about <a href='http://2sxc.org/en/Docs/tag/Data%20and%20Data%20Sources' target='_blank'>coding data pipelines</a> and about <a href='http://2sxc.org/en/Docs/tag/Data%20and%20Data%20Sources' target='_blank'>using the data in JavaScript with jQuery, AngularJS and more</a>.",
+      "Visual": {
+        "Title": "Visual Data Query",
+        "Intro": "Use the Visual Query Designer (Pipeline-Designer) to create queries to data from 2sxc, SQL, RSS and more.",
+        "Button": "Visual Query Designer"
+      }
     },
     "WebApi": {
       "Title": "WebApi for this App",

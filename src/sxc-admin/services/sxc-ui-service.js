@@ -4,21 +4,27 @@
 angular.module("SxcAdminUi", [
     "ng",
     "ui.bootstrap",         // for the $modal etc.
-    "EavConfiguration",
+    //"EavConfiguration",
     "MainSxcApp",
+    "AppsManagementApp",
     "EavAdminUi",           // dialog (modal) controller
 ])
-    .factory("sxcDialogs", function ($modal, eavAdminDialogs, eavConfig) {
-
+    .factory("sxcDialogs", function ($modal, eavAdminDialogs) {
         var svc = {};
 
-        //#region Content Items dialogs
         svc.openAppMain = function oam(appId, closeCallback) {
             var resolve = eavAdminDialogs.CreateResolve({ appId: appId });
-            var callbacks = { close: closeCallback };
-            return eavAdminDialogs.OpenModal("main/main.html", "Main as vm", "lg", resolve, callbacks);
+            return eavAdminDialogs.OpenModal("main/main.html", "Main as vm", "xlg", resolve, closeCallback);
         };
-        //#endregion
+
+        //svc.reopenAppMain = function roam(appId, closeCallback) {
+
+        //};
+
+        svc.openZoneMain = function ozm(zoneId, closeCallback) {
+            var resolve = eavAdminDialogs.CreateResolve({ zoneId: zoneId });
+            return eavAdminDialogs.OpenModal("apps-management/apps.html", "AppList as vm", "xlg", resolve, closeCallback);
+        };
 
         return svc;
     })
