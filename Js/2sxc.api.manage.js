@@ -28,22 +28,16 @@ $2sxc.getManageController = function(id) {
             lightbox: true,
             hideFirst: false,
             action: function(settings, event) {
-                manageController._openNgDialog(settings);
+                manageController._openNgDialog(settings, event);
             }
         },
-        //'editinline': {
-        //    title: "Edit inline",
-        //    icon: "glyphicon-pencil",
-        //    lightbox: false,
-        //    action: function(settings, event) { alert("not implemented yet"); }
-        //},
         'new': {
             title: "New",
             icon: "glyphicon-plus",
             lightbox: true,
             hideFirst: false,
             action: function(settings, event) {
-                manageController._openNgDialog($.extend({}, settings, { sortOrder: settings.sortOrder + 1 }));
+                manageController._openNgDialog($.extend({}, settings, { sortOrder: settings.sortOrder + 1 }), event);
             }
         },
         'add': {
@@ -145,26 +139,10 @@ $2sxc.getManageController = function(id) {
             if (settings.cultureDimension && settings.cultureDimension !== null)
                 params.cultureDimension = settings.cultureDimension;
 
-            //if (settings.action == "new")
-            //    params.editMode = "New";
-            //
-            //if (!settings.useModuleList) {
-            //    if (settings.action != "new")
-            //        params.entityId = settings.entityId;
-            //    if (settings.contentType || settings.attributeSetName)
-            //        params.attributeSetName = settings.contentType || settings.attributeSetName;
-            //} else {
-            //    params.sortOrder = settings.sortOrder;
-            //    params.contentGroupId = settings.contentGroupId;
-            //}
-
             if (settings.action == "replace") {
                 params.ctl = "settingswrapper";
                 params.ItemType = (settings.sortOrder != -1) ? "Content" : "ListContent"; // 'Content';
             }
-
-            //if (settings.prefill)
-            //    params.prefill = JSON.stringify(settings.prefill);
 
             return settings.dialogUrl
                 + (settings.dialogUrl.indexOf("?") == -1 ? "?" : "&")
@@ -192,9 +170,9 @@ $2sxc.getManageController = function(id) {
             // when not using a list, ...
             if (!settings.useModuleList) {
                 if (settings.action != "new")
-                    params.eid = settings.entityId;
+                    params.entityid = settings.entityId;
                 if (settings.contentType || settings.attributeSetName)
-                    params.type = settings.contentType || settings.attributeSetName;
+                    params.contenttype = settings.contentType || settings.attributeSetName;
             }
             // when using a list, the sort-order is important to find the right item
             else {
@@ -233,11 +211,14 @@ $2sxc.getManageController = function(id) {
         },
 
         // open a new dialog of the angular-ui
-        _openNgDialog: function(settings, closeCallback) {
+        _openNgDialog: function(settings, event, closeCallback) {
 
             var link = manageController.getNgLink(settings);
 
-            $2sxc.totalPopup.open(link, closeCallback);
+            if (event.shiftKey)
+                window.open(link);
+            else
+                $2sxc.totalPopup.open(link, closeCallback);
         },
 
         // Perform a toolbar button-action - basically get the configuration and execute it's action

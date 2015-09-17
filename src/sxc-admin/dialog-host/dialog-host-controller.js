@@ -8,7 +8,7 @@
         .controller("DialogHost", DialogHostController)
         ;
 
-    function DialogHostController(zoneId, appId, dialog, sxcDialogs, $window) {
+    function DialogHostController(zoneId, appId, entityId, dialog, sxcDialogs, eavAdminDialogs) {
         var vm = this;
         vm.dialog = dialog;
         var initialDialog = dialog;
@@ -20,6 +20,7 @@
         switch (initialDialog) {
             case "edit":
                 // todo: editor
+                eavAdminDialogs.openItemEditWithEntityId(entityId, vm.close);
                 break;
             case "zone":
                 sxcDialogs.openZoneMain(zoneId, vm.close);
