@@ -10,16 +10,16 @@
 
         var controller = $2sxc._controllers[id] ? $2sxc._controllers[id] : $2sxc._controllers[id] = {
             // <NewIn7>
-            serviceScopes: ['app', 'app-api', 'app-query', 'app-content', 'eav', 'view'],
-            serviceRoot: $.ServicesFramework(id).getServiceRoot('2sxc'),
+            serviceScopes: ["app", "app-api", "app-query", "app-content", "eav", "view"],
+            serviceRoot: $.ServicesFramework(id).getServiceRoot("2sxc"),
             resolveServiceUrl: function resolveServiceUrl(virtualPath) {
-            	var scope = virtualPath.split('/')[0].toLowerCase();
+            	var scope = virtualPath.split("/")[0].toLowerCase();
 
             	// stop if it's not one of our special paths
                 if (controller.serviceScopes.indexOf(scope) == -1)
                 	return virtualPath;
 
-                return controller.serviceRoot + scope + '/' + virtualPath.substring(virtualPath.indexOf('/') + 1);
+                return controller.serviceRoot + scope + "/" + virtualPath.substring(virtualPath.indexOf("/") + 1);
             },
             // </NewIn7>
             data: {
@@ -29,7 +29,7 @@
                     if (url.indexOf("#"))
                         url = url.substr(0, url.indexOf("#"));
                     url += (window.location.href.indexOf("?") != -1 ? "&" : "?") + "mid=" + id + "&standalone=true&popUp=true&type=data";
-                    if (typeof params == 'string') // text like 'id=7'
+                    if (typeof params == "string") // text like 'id=7'
                         url += "&" + params;
                     return url;
                 },
@@ -57,14 +57,14 @@
                         source.success = function (data) {
 
                             for (var dataSetName in data) {
-                                if (data[dataSetName].List != null) {
+                                if (data[dataSetName].List !== null) {
                                     controller.data["in"][dataSetName] = data[dataSetName];
                                     controller.data["in"][dataSetName].name = dataSetName;
                                 }
                             }
 
-                            if (controller.data["in"]["Default"])
-                                controller.List = controller.data["in"]["Default"].List;
+                            if (controller.data["in"].Default)
+                                controller.List = controller.data["in"].Default.List;
 
                             if (source.origSuccess)
                                 source.origSuccess(controller.data);
@@ -133,13 +133,13 @@
                         params = { id: params };
 
                     // If the first parameter is a string, resolve settings
-                    if (typeof settings == 'string') {
-                        var controllerAction = settings.split('/');
+                    if (typeof settings == "string") {
+                        var controllerAction = settings.split("/");
                         var controllerName = controllerAction[0];
                         var actionName = controllerAction[1];
 
-                        if (controllerName == '' || actionName == '')
-                            alert('Error: controller or action not defined. Will continue with likely errors.');
+                        if (controllerName === "" || actionName === "")
+                            alert("Error: controller or action not defined. Will continue with likely errors.");
 
                         settings = {
                             controller: controllerName,
@@ -151,7 +151,7 @@
                     }
 
                     var defaults = {
-                        method: method == null ? 'POST' : method,
+                        method: method === null ? "POST" : method,
                         params: null,
                         preventAutoFail: false
                     };
@@ -175,7 +175,7 @@
                 },
                 getActionUrl: function (settings) {
                     var sf = $.ServicesFramework(id);
-                    return sf.getServiceRoot('2sxc') + "app-api/" + settings.controller + "/" + settings.action + (settings.params == null ? "" : ("?" + $.param(settings.params)));
+                    return sf.getServiceRoot("2sxc") + "app-api/" + settings.controller + "/" + settings.action + (settings.params === null ? "" : ("?" + $.param(settings.params)));
                 }
             },
 
@@ -185,7 +185,7 @@
                                 console.log(result);
 
                 // if it's an unspecified 0-error, it's probably not an error but a cancelled request, (happens when closing popups containing angularJS)
-                if (result.status == 0)
+                if (result.status === 0)
                     return;
 
                             // let's try to show good messages in most cases
@@ -200,13 +200,13 @@
                                 if (msgDet) infoText += "\n\nDetail: " + msgDet;
 
 
-                                if (msgDet && msgDet.indexOf("No action was found") == 0)
+                                if (msgDet && msgDet.indexOf("No action was found") === 0)
                                     if (msgDet.indexOf("that matches the name") > 0)
                                         infoText += "\n\nTip from 2sxc: you probably got the action-name wrong in your JS.";
                                     else if (msgDet.indexOf("that matches the request.") > 0)
                                         infoText += "\n\nTip from 2sxc: Seems like the parameters are the wrong amount or type.";
 
-                                if (msg.indexOf("Controller") == 0 && msg.indexOf("not found") > 0)
+                                if (msg.indexOf("Controller") === 0 && msg.indexOf("not found") > 0)
                                     infoText += "\n\nTip from 2sxc: you probably spelled the controller name wrong or forgot to remove the word 'controller' from the call in JS. To call a controller called 'DemoController' only use 'Demo'.";
 
                             }
@@ -238,7 +238,7 @@
             while (p !== window.top && z < 1600) {
                 z++;
                 p = p.parent;
-            };
+            }
             ifrm.setAttribute("style", "position: absolute;top: 0;left: 0;width: 100%;height: 100%; z-index: " + z);
             ifrm.setAttribute("src", url);
             document.body.appendChild(ifrm);
@@ -255,5 +255,5 @@
         closeThis: function closeThis() {
             window.parent.$2sxc.totalPopup.close();
         }
-    }
+    };
 })();

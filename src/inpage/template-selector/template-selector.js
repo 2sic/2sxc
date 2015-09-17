@@ -1,23 +1,24 @@
-(function () {
-    var module = angular.module('2sxc.view', ["2sxc4ng", "pascalprecht.translate"]);
+﻿(function () {
+    var module = angular.module("2sxc.view", ["2sxc4ng", "pascalprecht.translate", "SxcInpageTemplates"]);
 
-    module.config(["$translateProvider", "AppInstanceId", function ($translateProvider, AppInstanceId) {
+    module.config(function ($translateProvider, AppInstanceId) {
         
         var globals = $2sxc(AppInstanceId).manage._manageInfo;
         
         // add translation table
         $translateProvider
-          .preferredLanguage(globals.lang)
-          .useSanitizeValueStrategy('escape')
-          .fallbackLanguage(globals.fallbackLang)
-          .useStaticFilesLoader({
-              // todo: path...
-              prefix: globals.applicationRoot + 'desktopmodules/tosic_sexycontent/i18n/inpage-',
-              suffix: '.js'
-          });
-    }]);
+            .preferredLanguage(globals.lang)
+            .useSanitizeValueStrategy("escape")
+            .fallbackLanguage(globals.fallbackLang)
+            .useLoaderCache(true)
+            .useStaticFilesLoader({
+                // todo: path...
+                prefix: globals.applicationRoot + "desktopmodules/tosic_sexycontent/dist/i18n/inpage-",
+                suffix: ".js"
+            });
+    });
 
-    module.controller('TemplateSelectorCtrl', ["$scope", "$attrs", "moduleApiService", "$filter", "$q", "$window", function($scope, $attrs, moduleApiService, $filter, $q, $window) {
+    module.controller("TemplateSelectorCtrl", function($scope, $attrs, moduleApiService, $filter, $q, $window) {
         var vm = this;
         var realScope = $scope;
 
@@ -32,7 +33,7 @@
             // Return all templates for App
             if (!vm.manageInfo.isContentApp)
                 return vm.templates;
-            return $filter('filter')(vm.templates, contentTypeId == "_LayoutElement" ? { ContentTypeStaticName: "" } : { ContentTypeStaticName: contentTypeId }, true);
+            return $filter("filter")(vm.templates, contentTypeId == "_LayoutElement" ? { ContentTypeStaticName: "" } : { ContentTypeStaticName: contentTypeId }, true);
         };
         vm.contentTypeId = vm.manageInfo.contentTypeId;
         vm.templateId = vm.manageInfo.templateId;
@@ -52,9 +53,9 @@
                 vm.templates = res[1].data;
 
                 // Add option for no content type if there are templates without
-                if ($filter('filter')(vm.templates, { ContentTypeStaticName: "" }, true).length > 0) {
+                if ($filter("filter")(vm.templates, { ContentTypeStaticName: "" }, true).length > 0) {
                 	vm.contentTypes.push({ StaticName: "_LayoutElement", Name: "Layout element" });
-                    vm.contentTypes = $filter('orderBy')(vm.contentTypes, 'Name');
+                    vm.contentTypes = $filter("orderBy")(vm.contentTypes, "Name");
                 }
 
                 vm.loading--;
@@ -62,7 +63,7 @@
 
         };
 
-        realScope.$watch('vm.templateId', function (newTemplateId, oldTemplateId) {
+        realScope.$watch("vm.templateId", function (newTemplateId, oldTemplateId) {
         	if (newTemplateId != oldTemplateId) {
         		//alert("templateId changed");
         		if (vm.manageInfo.isContentApp)
@@ -81,25 +82,25 @@
         	}
         });
 
-        realScope.$watch('vm.contentTypeId', function (newContentTypeId, oldContentTypeId) {
+        realScope.$watch("vm.contentTypeId", function (newContentTypeId, oldContentTypeId) {
         	if (newContentTypeId == oldContentTypeId)
         		return;
         	// Select first template if contentType changed
         	var firstTemplateId = vm.filteredTemplates(newContentTypeId)[0].TemplateId; // $filter('filter')(vm.templates, { AttributeSetId: vm.contentTypeId == null ? "!!" : vm.contentTypeId })[0].TemplateID;
-        	if (vm.templateId != firstTemplateId && firstTemplateId != null)
+        	if (vm.templateId !== firstTemplateId && firstTemplateId !== null)
         		vm.templateId = firstTemplateId;
         });
 
-        if (vm.appId != null && vm.manageInfo.templateChooserVisible)
+        if (vm.appId !== null && vm.manageInfo.templateChooserVisible)
             vm.reloadTemplates();
 
-        realScope.$watch('vm.manageInfo.templateChooserVisible', function(visible, oldVisible) {
-            if (visible != oldVisible && vm.appId != null && visible)
+        realScope.$watch("vm.manageInfo.templateChooserVisible", function(visible, oldVisible) {
+            if (visible !== oldVisible && vm.appId !== null && visible)
                 vm.reloadTemplates();
         });
 
-        realScope.$watch('vm.appId', function (newAppId, oldAppId) {
-            if (newAppId == oldAppId || newAppId == null)
+        realScope.$watch("vm.appId", function (newAppId, oldAppId) {
+            if (newAppId === oldAppId || newAppId === null)
                 return;
 
             if (newAppId == -1) {
@@ -181,9 +182,9 @@
         	});
         };
 
-    }]);
+    });
 
-    module.factory('moduleApiService', ["$http", function($http) {
+    module.factory("moduleApiService", function($http) {
         return function (moduleId) {
             function apiService(modId, settings) {
                 return $http(settings);
@@ -191,69 +192,69 @@
             return {
                 saveTemplateId: function(templateId) {
                     return apiService(moduleId, {
-                        url: 'View/Module/SaveTemplateId',
+                        url: "View/Module/SaveTemplateId",
                         params: { templateId: templateId }
                     });
                 },
             	setPreviewTemplateId: function(templateId) {
             		return apiService(moduleId, {
-            			url: 'View/Module/SetPreviewTemplateId',
+            			url: "View/Module/SetPreviewTemplateId",
             			params: { templateId: templateId }
             		});
 	            },
                 addItem: function(sortOrder) {
                     return apiService(moduleId, {
-                        url: 'View/Module/AddItem',
+                        url: "View/Module/AddItem",
                         params: { sortOrder: sortOrder }
                     });
                 },
                 getSelectableApps: function() {
                     return apiService(moduleId, {
-                        url: 'View/Module/GetSelectableApps'
+                        url: "View/Module/GetSelectableApps"
                     });
                 },
                 setAppId: function(appId) {
                     return apiService(moduleId, {
-                        url: 'View/Module/SetAppId',
+                        url: "View/Module/SetAppId",
                         params: { appId: appId }
                     });
                 },
                 getSelectableContentTypes: function () {
                     return apiService(moduleId, {
-                        url: 'View/Module/GetSelectableContentTypes'
+                        url: "View/Module/GetSelectableContentTypes"
                     });
                 },
                 getSelectableTemplates: function() {
                     return apiService(moduleId, {
-                        url: 'View/Module/GetSelectableTemplates'
+                        url: "View/Module/GetSelectableTemplates"
                     });
                 },
                 setTemplateChooserState: function(state) {
                     return apiService(moduleId, {
-                        url: 'View/Module/SetTemplateChooserState',
+                        url: "View/Module/SetTemplateChooserState",
                         params: { state: state }
                     });
                 },
                 renderTemplate: function(templateId) {
                     return apiService(moduleId, {
-                        url: 'View/Module/RenderTemplate',
+                        url: "View/Module/RenderTemplate",
                         params: { templateId: templateId }
                     });
                 },
                 changeOrder: function (sortOrder, destinationSortOrder) {
                 	return apiService(moduleId, {
-                		url: 'View/Module/ChangeOrder',
+                		url: "View/Module/ChangeOrder",
                 		params: { sortOrder: sortOrder, destinationSortOrder: destinationSortOrder }
                 	});
                 },
                 removeFromList: function (sortOrder) {
                 	return apiService(moduleId, {
-                		url: 'View/Module/RemoveFromList',
+                		url: "View/Module/RemoveFromList",
                 		params: { sortOrder: sortOrder }
                 	});
                 }
             };
         };
-    }]);
+    });
 
 })();

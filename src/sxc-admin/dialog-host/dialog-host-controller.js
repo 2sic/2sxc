@@ -32,6 +32,8 @@
                 //eavDialogs.editPipeline(appId, pipelineId, closeCallback);
                 break;
             default:
+                alert("Trying to open an unknown dialog (" + initialDialog + "). Will close again.");
+                vm.close();
                 throw "Trying to open a dialog, don't know which one";
         }
     }

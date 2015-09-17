@@ -12,6 +12,15 @@ module.exports = function (grunt) {
         concatFile: "dist/admin/sxc-admin.js",
         uglifyFile: "dist/admin/sxc-admin.min.js"
     };
+    var inpage = {
+        cwd: "src/inpage/",
+        cwdJs: ["src/inpage/**/*.js"],
+        tmp: "tmp/inpage/",
+        templates: "tmp/inpage/inpage-templates.js",
+        dist: "dist/admin/",
+        concatFile: "dist/inpage/inpage.js",
+        uglifyFile: "dist/inpage/inpage.min.js"
+    };
     var i18n = {
         cwd: "src/i18n/",
         dist: "dist/i18n/"
@@ -25,11 +34,12 @@ module.exports = function (grunt) {
         pkg: grunt.file.readJSON("package.json"),
 
         jshint: {
-            all: ["gruntfile.js", sxcadmin.cwd, sxc4ng]
-
-            // Sxc: ['js/2sxc.api.js'], // commented out for now, has about 10 suggestions but won't fix them yet
-            // SxcManage: ['js/2sxc.api.manage.js'], // 2015-05-07 has about 13 suggestions, won't fix yet
-            // SxcTemplate: ['js/template-selector/template-selector.js'], // 2015-05-07 has about 4 suggestions for null-comparison, won't fix yet
+            options: {
+                laxbreak: true,
+                scripturl: true
+            },
+            all: ["gruntfile.js", sxcadmin.cwd, inpage.cwd, sxc4ng],
+            Sxc: ["js/2sxc.api.js", "js/2sxc.api.manage.js"]//, "js/template-selector/template-selector.js"],
         },
 
         clean: {
@@ -44,6 +54,18 @@ module.exports = function (grunt) {
                         cwd: sxcadmin.cwd,
                         src: ["**", "!**/*Spec.js"],
                         dest: sxcadmin.tmp
+                    },
+                    {
+                        expand: true,
+                        cwd: inpage.cwd,
+                        src: ["**/*.*"],
+                        dest: inpage.tmp
+                    },
+                    {
+                        expand: true,
+                        cwd: "src/dnn/",
+                        src: ["**/*.*"],
+                        dest: "dist/dnn/"
                     }
                 ]
             },
@@ -60,15 +82,6 @@ module.exports = function (grunt) {
                     }
 
                 ]
-            },
-            dnnUi: {
-                files: [
-                    {
-                        expand: true,
-                        cwd: "src/dnn/", 
-                        src: ["**/*.*"],
-                        dest: "dist/dnn/"
-                    }]
             }
         },
 
@@ -96,6 +109,29 @@ module.exports = function (grunt) {
                         dest: sxcadmin.templates
                     }
                 ]
+            },
+            inpage: {
+                options: {
+                    module: "SxcInpageTemplates",
+                    append: true,
+                    htmlmin: {
+                        collapseBooleanAttributes: true,
+                        collapseWhitespace: true,
+                        removeAttributeQuotes: true,
+                        removeComments: true,
+                        removeEmptyAttributes: true,
+                        removeRedundantAttributes: false,
+                        removeScriptTypeAttributes: true,
+                        removeStyleLinkTypeAttributes: true
+                    }
+                },
+                files: [
+                    {
+                        cwd: inpage.tmp,
+                        src: ["**/*.html"],
+                        dest: inpage.templates
+                    }
+                ]
             }
         },
 
@@ -103,6 +139,10 @@ module.exports = function (grunt) {
             default: {
                 src: sxcadmin.tmp + "**/*.js",
                 dest: sxcadmin.concatFile
+            },
+            inpage: {
+                src: inpage.tmp + "**/*.js",
+                dest: inpage.concatFile
             }
         },
 
@@ -117,16 +157,21 @@ module.exports = function (grunt) {
                 src: sxcadmin.concatFile,
                 extDot: "last"          // Extensions in filenames begin after the last dot 
             },
+            inpage: {
+                expand: true,
+                src: inpage.concatFile,
+                extDot: "last"          // Extensions in filenames begin after the last dot 
+            },
             Sxc4ng: {
                 files: {
                     'js/AngularJS/2sxc4ng.annotated.js': ["js/AngularJS/2sxc4ng.js"]
                 }
             },
-            SxcModuleUi: {
-                    files: {
-                        'js/template-selector/template-selector.annotated.js': ["js/template-selector/template-selector.js"]
-                    }
-            }
+            //SxcModuleUi: {
+            //        files: {
+            //            'js/template-selector/template-selector.annotated.js': ["js/template-selector/template-selector.js"]
+            //        }
+            //}
         },
 
         uglify: {
@@ -138,6 +183,10 @@ module.exports = function (grunt) {
                 src: sxcadmin.concatFile,
                 dest: sxcadmin.uglifyFile
             },
+            inpage: {
+                src: inpage.concatFile,
+                dest: inpage.uglifyFile
+            },
             Sxc4ng: {
                 files: {
                     'js/AngularJS/2sxc4ng.min.js': ["js/AngularJS/2sxc4ng.annotated.js"]
@@ -147,16 +196,16 @@ module.exports = function (grunt) {
                 files: {
                     'js/2sxc.api.min.js': ["js/2sxc.api.js"],
                     'js/2sxc.api.manage.min.js': ["js/2sxc.api.manage.js"],
-                    'js/template-selector/template-selector.min.js': ["js/template-selector/template-selector.annotated.js"],
+                    //'js/template-selector/template-selector.min.js': ["js/template-selector/template-selector.annotated.js"],
                     'js/dnn-inpage-edit.min.js': ["js/dnn-inpage-edit.js"]
-    }
-            },
-            SxcModuleUi: {
-                files: {
-                    'js/template-selector/template-selector.min.js': ["js/template-selector/template-selector.annotated.js"]
                 }
+            },
+            //SxcModuleUi: {
+            //    files: {
+            //        'js/template-selector/template-selector.min.js': ["js/template-selector/template-selector.annotated.js"]
+            //    }
 
-            }
+            //}
         },
         
         // not in use yet
@@ -198,7 +247,7 @@ module.exports = function (grunt) {
 
         watch: {
             sxcbuild: {
-                files: ["gruntfile.js", sxcadmin.cwd + "**", "src/dnn/**", "src/i18n/**"],
+                files: ["gruntfile.js", "src/**"],
                 tasks: ["build"]
             }
         }

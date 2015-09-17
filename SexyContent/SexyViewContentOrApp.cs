@@ -36,24 +36,26 @@ namespace ToSic.SexyContent
 				// If logged in, inject Edit JavaScript, and delete / add items
 				if (UserMayEditThisModule)
 				{
+				    var root = "~/desktopmodules/tosic_sexycontent/";
+				    var ext = ".js"; // ".min.js";
                     // add edit-mode CSS
-                    ClientResourceManager.RegisterStyleSheet(Page, "~/desktopmodules/tosic_sexycontent/edit.css");
-                    ClientResourceManager.RegisterStyleSheet(Page, "~/desktopmodules/tosic_sexycontent/bower_components/bootstrap/dist/css/bootstrap.min.css");
+                    ClientResourceManager.RegisterStyleSheet(Page, root + "edit.css");
+                    //ClientResourceManager.RegisterStyleSheet(Page, root + "bower_components/bootstrap/dist/css/bootstrap.min.css");
 
 					// ToDo: Move these RegisterScripts to JS to prevent including AngularJS twice (from other modules)
-                    ClientResourceManager.RegisterScript(Page, "~/desktopmodules/tosic_sexycontent/js/angularjs/angular.min.js", 80);
-                    ClientResourceManager.RegisterScript(Page, "~/desktopmodules/tosic_sexycontent/js/template-selector/template-selector.min.js", 81);
+                    ClientResourceManager.RegisterScript(Page, root + "js/angularjs/angular.min.js", 80);
+                    ClientResourceManager.RegisterScript(Page, root + "dist/inpage/inpage" + ext, 81);
 
                     // New: multi-language stuff
-                    ClientResourceManager.RegisterScript(Page, "~/desktopmodules/tosic_sexycontent/bower_components/angular-translate/angular-translate.min.js", 82);
-                    ClientResourceManager.RegisterScript(Page, "~/desktopmodules/tosic_sexycontent/bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.min.js", 83);
+                    ClientResourceManager.RegisterScript(Page, root + "bower_components/angular-translate/angular-translate" + ext, 82);
+                    ClientResourceManager.RegisterScript(Page, root + "bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files" + ext, 83);
 
-                    ClientResourceManager.RegisterScript(Page, "~/desktopmodules/tosic_sexycontent/js/dnn-inpage-edit.min.js", 82);
+                    ClientResourceManager.RegisterScript(Page, root + "js/dnn-inpage-edit" + ext, 82);
 
-                    ClientResourceManager.RegisterScript(Page, "~/desktopmodules/tosic_sexycontent/js/2sxc.api.min.js", 90);
-                    ClientResourceManager.RegisterScript(Page, "~/desktopmodules/tosic_sexycontent/js/2sxc.api.manage.min.js", 91);
+                    ClientResourceManager.RegisterScript(Page, root + "js/2sxc.api" + ext, 90);
+                    ClientResourceManager.RegisterScript(Page, root + "js/2sxc.api.manage" + ext, 91);
 
-                    ClientResourceManager.RegisterScript(Page, "~/desktopmodules/tosic_sexycontent/js/angularjs/2sxc4ng.min.js", 93); 
+                    ClientResourceManager.RegisterScript(Page, root + "js/angularjs/2sxc4ng" + ext, 93); 
 
 					var hasContent = AppId.HasValue && Template != null && ContentGroup.Exists;
 					var templateChooserVisible = Settings.ContainsKey(SexyContent.SettingsShowTemplateChooser) ?
@@ -67,6 +69,7 @@ namespace ToSic.SexyContent
 						{
 							isEditMode = UserMayEditThisModule, templateChooserVisible, hasContent,
 							isContentApp = IsContentApp,
+                            zoneId = ZoneId.HasValue ? ZoneId.Value : 0,
 							appId = AppId,
 							isList = AppId.HasValue && ContentGroup.Content.Count > 1,
 							templateId = Template != null ? Template.TemplateId : new int?(),

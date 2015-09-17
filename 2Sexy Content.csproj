@@ -486,8 +486,8 @@
     <Content Include="Extensions\Imazen_ImageResizer\ImageResizer.txt" />
     <Content Include="Extensions\Imazen_ImageResizer\license.txt" />
     <Content Include="gruntfile.js" />
-    <Content Include="i18n\inpage-de.js" />
-    <Content Include="i18n\inpage-en.js" />
+    <None Include="src\i18n\inpage-de.json" />
+    <None Include="src\i18n\inpage-en.json" />
     <Content Include="icon-app.png" />
     <Content Include="icon.png" />
     <Content Include="Images\ajax-loader.gif" />
@@ -503,10 +503,9 @@
     <Content Include="js\2sxc.api.manage.min.js" />
     <Content Include="js\2sxc.api.min.js" />
     <Content Include="js\dnn-inpage-edit.min.js" />
-    <Content Include="js\template-selector\template-selector-view.html" />
-    <Content Include="js\template-selector\template-selector-app.html" />
-    <Content Include="js\template-selector\template-selector.annotated.js" />
-    <Content Include="js\template-selector\template-selector.js" />
+    <Content Include="src\inpage\template-selector\template-selector-view.html" />
+    <Content Include="src\inpage\template-selector\template-selector-app.html" />
+    <Content Include="src\inpage\template-selector\template-selector.js" />
     <Content Include="js\angularjs\2sxc4ng.annotated.js" />
     <Content Include="js\angularjs\2sxc4ng.js" />
     <Content Include="js\angularjs\2sxc4ng.min.js" />
@@ -543,7 +542,6 @@
     <Content Include="js\EditDataSource\jsPlumb\mootools.jsPlumb-1.4.0-RC1.js" />
     <Content Include="js\EditDataSource\jsPlumb\yui.jsPlumb-1.4.0-RC1.js" />
     <Content Include="js\ItemForm.js" />
-    <Content Include="js\template-selector\template-selector.min.js" />
     <Content Include="js\dnn-inpage-edit.js" />
     <Content Include="Administration\ManageTemplates.ascx" />
     <Content Include="license.txt" />
@@ -568,7 +566,6 @@
     <Content Include="bootstrap\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="bootstrap\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="bootstrap\fonts\glyphicons-halflings-regular.woff2" />
-    <Content Include="js\template-selector\template-selector.min.js.map" />
     <Content Include="README.md" />
     <Content Include="js\dnn-inpage-edit.min.js.map" />
     <Content Include="SexyContent\EAV\AngularServices\eav-configuration-in-sxc.js" />
@@ -606,10 +603,12 @@
     <Content Include="SexyContent\EAV\FormlyEditUI\fieldtemplates\WebForms\WebFormsBridge.ascx" />
     <Content Include="SexyContent\GettingStarted\GettingStartedFrame.ascx" />
     <Content Include="SqlDataProvider\05.02.01.SqlDataProvider" />
+    <Content Include="src\dnn\ui.html" />
     <Content Include="src\sxc-admin\apps-management\apps-controller.js" />
     <Content Include="src\sxc-admin\apps-management\apps.html" />
     <Content Include="src\sxc-admin\app-settings\app-settings-controller.js" />
     <Content Include="src\sxc-admin\app-settings\app-settings.html" />
+    <Content Include="src\sxc-admin\dialog-host\dialog-host-controller.js" />
     <Content Include="src\sxc-admin\importexport\export.html" />
     <Content Include="src\sxc-admin\filters\sxc-filters.js" />
     <Content Include="src\sxc-admin\importexport\importexport-controller.js" />
@@ -622,6 +621,7 @@
     <Content Include="src\sxc-admin\services\importexport-service.js" />
     <Content Include="src\sxc-admin\services\languages-service.js" />
     <Content Include="src\sxc-admin\services\apps-service.js" />
+    <Content Include="src\sxc-admin\services\sxc-ui-service.js" />
     <Content Include="src\sxc-admin\services\templates-service.js" />
     <Content Include="src\sxc-admin\templates\edit.html" />
     <Content Include="src\sxc-admin\templates\templates-edit-controller.js" />

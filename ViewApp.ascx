@@ -3,7 +3,7 @@
 <asp:Placeholder runat="server" ID="pnlTemplateChooser" Visible="false" EnableViewState="False">
     <div sxc-app="2sxc.view" id="tselector<%= ModuleId %>" ng-controller="TemplateSelectorCtrl as vm" 
         data-moduleid="<%= ModuleId %>" class="sc-selector-wrapper" 
-        ng-include="'<%= ResolveUrl("~") %>desktopmodules/tosic_sexycontent/js/template-selector/template-selector-app.html'" 
+        ng-include="'template-selector/template-selector-app.html'" 
         data-importAppDialog="<%= EditUrl("", "", SexyContent.ControlKeys.AppImport) %>" 
         data-importAppText="<%= LocalizeString("GetMoreApps.Text") %>" >
     </div>

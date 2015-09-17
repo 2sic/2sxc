@@ -144,21 +144,18 @@
         createFakeSf($dlg);
     </script>
 </head>
-<body style="background-color:transparent">
+<body style="background-color:transparent" >
     <h2>todo</h2>
     <ol>
-        <li>get full screen iframe to work</li>
         <li>load getting-startedurl from WS</li>
-        <li>load optional scripts for pipeline designer</li>
-        <li>handle close</li> 
         <li>manage app should hide certain things if editing the main content-app</li>
         <li><a onclick="$2sxc.totalPopup.open('http://2sexycontent.2dm.2sic/desktopmodules/tosic_sexycontent/dist/dnn/ui.html#zoneid=2&tid=55&mid=426&appid=2&dialog=zone', function () { })">test</a></li>
     </ol>
-<script>
-    document.write("dialog: " + $dlg.dialog);
-</script>
 
 <script>
+    // note: the pipeline designer is special - it doesn't open a modal-dialog
+    // ...but should be shown directly
+    // all others will be modal-oened by the DialogHost App
     if ($dlg.dialog !== "pipeline-designer")
         document.write('<div sxc-app="DialogHost" ng-dependencies="InitParametersFromUrl,DialogHost" ng-controller="DialogHost as vm"></div>');
     else {

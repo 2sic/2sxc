@@ -4,7 +4,7 @@
     <%-- todo:2rm - auto-select template doesn't quite work when not inline-template --%>
     <div sxc-app="2sxc.view" id="tselector<%= ModuleId %>" ng-controller="TemplateSelectorCtrl as vm" 
         data-moduleid="<%= ModuleId %>" class="sc-selector-wrapper" 
-        ng-include="'<%= ResolveUrl("~") %>desktopmodules/tosic_sexycontent/js/template-selector/template-selector-view.html'">
+        ng-include="'template-selector/template-selector-view.html'">
     </div>
     
 </asp:Placeholder>

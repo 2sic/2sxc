@@ -1,86 +1,130 @@
 ﻿// A helper-controller in charge of opening edit-dialogs + creating the toolbars for it
-$2sxc.getManageController = function (id) {
+$2sxc.getManageController = function(id) {
 
-    var moduleElement = $('.DnnModule-' + id);
-    var manageInfo = $.parseJSON(moduleElement.find('.Mod2sxcC, .Mod2sxcappC').attr('data-2sxc')).manage;
+    var moduleElement = $(".DnnModule-" + id);
+    var manageInfo = $.parseJSON(moduleElement.find(".Mod2sxcC, .Mod2sxcappC").attr("data-2sxc")).manage;
+    manageInfo.ngDialogUrl = manageInfo.applicationRoot + "desktopmodules/tosic_sexycontent/dist/dnn/ui.html";
+    manageInfo.ngDialogParams = {
+        zoneId: manageInfo.zoneId,
+        appId: manageInfo.appId,
+        tid: manageInfo.config.tabId,
+        mid: manageInfo.config.moduleId
+    };
     var toolbarConfig = manageInfo.config;
     toolbarConfig.returnUrl = window.location.href;
-    var isEditMode = manageInfo.isEditMode;
+
     var sf = $.ServicesFramework(id);
 
     // all the standard buttons with the display configuration and click-action
     var actionButtonsConf = {
         'default': {
-            icon: 'glyphicon-fire', hideFirst: true,
-            action: function (settings, event) { alert('not implemented yet') }
+            icon: "glyphicon-fire",
+            hideFirst: true,
+            action: function(settings, event) { alert("not implemented yet"); }
         },
         'edit': {
-            title: 'Edit', icon: 'glyphicon-pencil', lightbox: true, hideFirst: false,
-            action: function (settings, event) {
-                manageController._openDialog(settings);
+            title: "Edit",
+            icon: "glyphicon-pencil",
+            lightbox: true,
+            hideFirst: false,
+            action: function(settings, event) {
+                manageController._openNgDialog(settings);
             }
         },
-        'editinline': {
-            title: 'Edit inline', icon: 'glyphicon-pencil', lightbox: false,
-            action: function (settings, event) { alert('not implemented yet') }
-        },
+        //'editinline': {
+        //    title: "Edit inline",
+        //    icon: "glyphicon-pencil",
+        //    lightbox: false,
+        //    action: function(settings, event) { alert("not implemented yet"); }
+        //},
         'new': {
-            title: 'New', icon: 'glyphicon-plus', lightbox: true, hideFirst: false,
-            action: function (settings, event) {
-                manageController._openDialog($.extend({}, settings, { sortOrder: settings.sortOrder + 1 }));
+            title: "New",
+            icon: "glyphicon-plus",
+            lightbox: true,
+            hideFirst: false,
+            action: function(settings, event) {
+                manageController._openNgDialog($.extend({}, settings, { sortOrder: settings.sortOrder + 1 }));
             }
         },
         'add': {
-            title: 'Add', icon: 'glyphicon-plus', lightbox: false, hideFirst: true,
-            action: function (settings, event) {
+            title: "Add",
+            icon: "glyphicon-plus",
+            lightbox: false,
+            hideFirst: true,
+            action: function(settings, event) {
                 // ToDo: Remove dependency to AngularJS, should use 2sxc.api.js
                 manageController._getSelectorScope().addItem(settings.sortOrder + 1);
             }
         },
         'replace': {
-            title: 'Replace', icon: 'glyphicon-random', lightbox: false, hideFirst: true,
-            action: function (settings, event) {
+            title: "Replace",
+            icon: "glyphicon-random",
+            lightbox: false,
+            hideFirst: true,
+            action: function(settings, event) {
                 manageController._openDialog(settings);
             }
         },
         'publish': {
-            title: 'Published', icon: 'glyphicon-eye-open disabled', icon2: 'glyphicon-eye-close disabled', lightbox: false, hideFirst: true, disabled: true,
-            action: function (settings, event) {
-                alert('Status: ' + (settings.isPublished ? 'published' : 'not published'));
+            title: "Published",
+            icon: "glyphicon-eye-open disabled",
+            icon2: "glyphicon-eye-close disabled",
+            lightbox: false,
+            hideFirst: true,
+            disabled: true,
+            action: function(settings, event) {
+                alert("Status: " + (settings.isPublished ? "published" : "not published"));
             }
         },
         'moveup': {
-            title: 'Move up', icon: 'glyphicon-arrow-up', icon2: 'glyphicon-arrow-up', lightbox: false, hideFirst: true, disabled: false,
-            action: function (settings, event) {
+            title: "Move up",
+            icon: "glyphicon-arrow-up",
+            icon2: "glyphicon-arrow-up",
+            lightbox: false,
+            hideFirst: true,
+            disabled: false,
+            action: function(settings, event) {
                 manageController._getSelectorScope().changeOrder(settings.sortOrder, Math.max(settings.sortOrder - 1, 0));
             }
         },
         'movedown': {
-            title: 'Move down', icon: 'glyphicon-arrow-down', icon2: 'glyphicon-arrow-down', lightbox: false, hideFirst: true, disabled: false,
-            action: function (settings, event) {
+            title: "Move down",
+            icon: "glyphicon-arrow-down",
+            icon2: "glyphicon-arrow-down",
+            lightbox: false,
+            hideFirst: true,
+            disabled: false,
+            action: function(settings, event) {
                 manageController._getSelectorScope().changeOrder(settings.sortOrder, settings.sortOrder + 1);
             }
         },
         'remove': {
-            title: 'remove', icon: 'glyphicon-remove-circle', lightbox: false, hideFirst: true, disabled: true,
-            action: function (settings, event) {
+            title: "remove",
+            icon: "glyphicon-remove-circle",
+            lightbox: false,
+            hideFirst: true,
+            disabled: true,
+            action: function(settings, event) {
                 if (confirm("This will remove this content-item from this list, but not delete it (so you can add it again later). \nSee 2sxc.org/help for more. \n\nOk to remove?")) {
                     manageController._getSelectorScope().removeFromList(settings.sortOrder);
                 }
             }
         },
         'more': {
-            title: 'More', icon: 'glyphicon-option-horizontal', icon2: 'glyphicon-option-vertical', borlightboxder: false, hideFirst: false,
-            action: function (settings, event) {
-                $(event.target).toggleClass(this.icon).toggleClass(this.icon2).closest('ul.sc-menu').toggleClass('showAll');
+            title: "More",
+            icon: "glyphicon-option-horizontal",
+            icon2: "glyphicon-option-vertical",
+            borlightboxder: false,
+            hideFirst: false,
+            action: function(settings, event) {
+                $(event.target).toggleClass(this.icon).toggleClass(this.icon2).closest("ul.sc-menu").toggleClass("showAll");
             }
         }
     };
 
     var manageController = {
-
-        isEditMode: function () {
-            return isEditMode;
+        isEditMode: function() {
+            return manageInfo.isEditMode;
         },
 
         // The config object has the following properties:
@@ -89,76 +133,131 @@ $2sxc.getManageController = function (id) {
 
         _manageInfo: manageInfo,
 
-        getLink: function (settings) {
+        getLink: function(settings) {
             settings = $.extend({}, toolbarConfig, settings);
 
             var params = {
-                ctl: 'editcontentgroup',
+                ctl: "editcontentgroup",
                 mid: settings.moduleId,
                 returnUrl: settings.returnUrl
             };
 
-            if (settings.cultureDimension && settings.cultureDimension != null)
+            if (settings.cultureDimension && settings.cultureDimension !== null)
                 params.cultureDimension = settings.cultureDimension;
 
-            if (settings.action == 'new')
-                params.editMode = "New";
+            //if (settings.action == "new")
+            //    params.editMode = "New";
+            //
+            //if (!settings.useModuleList) {
+            //    if (settings.action != "new")
+            //        params.entityId = settings.entityId;
+            //    if (settings.contentType || settings.attributeSetName)
+            //        params.attributeSetName = settings.contentType || settings.attributeSetName;
+            //} else {
+            //    params.sortOrder = settings.sortOrder;
+            //    params.contentGroupId = settings.contentGroupId;
+            //}
 
+            if (settings.action == "replace") {
+                params.ctl = "settingswrapper";
+                params.ItemType = (settings.sortOrder != -1) ? "Content" : "ListContent"; // 'Content';
+            }
+
+            //if (settings.prefill)
+            //    params.prefill = JSON.stringify(settings.prefill);
+
+            return settings.dialogUrl
+                + (settings.dialogUrl.indexOf("?") == -1 ? "?" : "&")
+                + $.param(params);
+        },
+
+        // create an edit-dialog link
+        // needs the followings data:
+        // zoneid, tid (tabid), mid (moduleid), appid
+        // dialog=[zone|app|...]
+        // lang=..., flang=
+        // todo: language number? or text?
+        getNgLink: function(settings) {
+            settings = $.extend({}, toolbarConfig, settings);
+
+            var params = {
+                dialog: "edit",
+                mode: (settings.action === "new") ? "new" : "edit"
+            };
+
+            // add language info
+            if (settings.cultureDimension && settings.cultureDimension !== null)
+                params.langnum = settings.cultureDimension;
+
+            // when not using a list, ...
             if (!settings.useModuleList) {
-                if (settings.action != 'new')
-                    params.entityId = settings.entityId;
+                if (settings.action != "new")
+                    params.eid = settings.entityId;
                 if (settings.contentType || settings.attributeSetName)
-                    params.attributeSetName = settings.contentType || settings.attributeSetName;
-            } else {
-                params.sortOrder = settings.sortOrder;
-                params.contentGroupId = settings.contentGroupId;
+                    params.type = settings.contentType || settings.attributeSetName;
+            }
+            // when using a list, the sort-order is important to find the right item
+            else {
+                params.groupid = settings.contentGroupId;
+                params.sortorder = settings.sortOrder;
             }
 
-            if (settings.action == 'replace') {
-                params.ctl = 'settingswrapper';
-                params.ItemType = (settings.sortOrder != -1) ? 'Content' : 'ListContent';// 'Content';
-            }
+            //if (settings.action == "replace") {
+            //    params.ctl = "settingswrapper";
+            //    params.ItemType = (settings.sortOrder != -1) ? "Content" : "ListContent";// 'Content';
+            //}
 
+            // when doing new, there may be a prefill in the link to initialize the new item
             if (settings.prefill)
                 params.prefill = JSON.stringify(settings.prefill);
 
-            return settings.dialogUrl
-                + (settings.dialogUrl.indexOf('?') == -1 ? '?' : '&')
+            return manageInfo.ngDialogUrl
+                + "#"
+                + $.param(manageInfo.ngDialogParams)
+                + "&"
                 + $.param(params);
         },
 
         // Open a dialog within DNN as a lightbox or as a link, depending on DNN-config
-        _openDialog: function (settings) {
+        _openDialog: function(settings) {
 
             var link = manageController.getLink(settings);
 
             if (window.dnnModal && dnnModal.show) {
-                link += (link.indexOf('?') == -1 ? '?' : '&') + "popUp=true";
-                dnnModal.show(link, /*showReturn*/true, 550, 950, true, '');
+                link += (link.indexOf("?") == -1 ? "?" : "&") + "popUp=true";
+                dnnModal.show(link, /*showReturn*/true, 550, 950, true, "");
             } else {
                 window.location = link;
             }
 
         },
 
+        // open a new dialog of the angular-ui
+        _openNgDialog: function(settings, closeCallback) {
+
+            var link = manageController.getNgLink(settings);
+
+            $2sxc.totalPopup.open(link, closeCallback);
+        },
+
         // Perform a toolbar button-action - basically get the configuration and execute it's action
-        action: function (settings, event) {
+        action: function(settings, event) {
             var origEvent = event || window.event; // pre-save event because afterwards we have a promise, so the event-object changes; funky syntax is because of browser differences
             var conf = actionButtonsConf[settings.action] || actionButtonsConf.default;
-            manageController._getSelectorScope().saveTemplateId().then(function () {
-            	conf.action(settings, origEvent);
+            manageController._getSelectorScope().saveTemplateId().then(function() {
+                conf.action(settings, origEvent);
             });
         },
 
         // Generate a button (an <a>-tag) for one specific toolbar-action. 
         // Expects: settings, an object containing the specs for the expected buton
-        getButton: function (settings) {
+        getButton: function(settings) {
             // if the button belongs to a content-item, move the specs to the item into the settings-object
             if (settings.entity && settings.entity._2sxcEditInformation) {
                 if (settings.entity._2sxcEditInformation.entityId) {
                     settings.entityId = settings.entity._2sxcEditInformation.entityId;
                 }
-                if (settings.entity._2sxcEditInformation.sortOrder != null) {
+                if (settings.entity._2sxcEditInformation.sortOrder !== null) {
                     settings.sortOrder = settings.entity._2sxcEditInformation.sortOrder;
                     settings.useModuleList = true;
                 }
@@ -168,19 +267,19 @@ $2sxc.getManageController = function (id) {
             // retrieve configuration for this button
             var conf = actionButtonsConf[settings.action] || actionButtonsConf.default;
 
-            var button = $('<a />', {
-                'class': 'sc-' + settings.action + ' '
-                    + (settings.hideFirst || conf.hideFirst ? 'hideFirst' : '')
-                    + ' ' + (conf.lightbox ? 'box' : ''),
-                'onclick': 'javascript:$2sxc(' + id + ').manage.action(' + JSON.stringify(settings) + ', event);',
+            var button = $("<a />", {
+                'class': "sc-" + settings.action + " "
+                    + (settings.hideFirst || conf.hideFirst ? "hideFirst" : "")
+                    + " " + (conf.lightbox ? "box" : ""),
+                'onclick': "javascript:$2sxc(" + id + ").manage.action(" + JSON.stringify(settings) + ", event);",
                 'title': conf.title
             });
-            var symbol = $('<span class="glyphicon ' + conf.icon + '" aria-hidden="true"></span>');
+            var symbol = $("<span class=\"glyphicon " + conf.icon + "\" aria-hidden=\"true\"></span>");
 
             // if publish-button and not published yet, show button (otherwise hidden) & change icon
-            if (settings.action == "publish" && settings.isPublished == false) {
-                button.toggleClass('hideFirst', false)
-                    .attr('title', "Unpublished");
+            if (settings.action == "publish" && settings.isPublished === false) {
+                button.toggleClass("hideFirst", false)
+                    .attr("title", "Unpublished");
                 symbol.toggleClass(conf.icon, false)
                     .toggleClass(conf.icon2, true);
             }
@@ -192,7 +291,7 @@ $2sxc.getManageController = function (id) {
 
         // Builds the toolbar and returns it as HTML
         // expects settings - either for 1 button or for an array of buttons
-        getToolbar: function (settings) {
+        getToolbar: function(settings) {
             var buttons = [];
 
             if (settings.action) {
@@ -205,49 +304,49 @@ $2sxc.getManageController = function (id) {
             } else {
                 // Create a standard menu with all standard buttons
                 // first button: edit
-                buttons.push($.extend({}, settings, { action: 'edit' }));
+                buttons.push($.extend({}, settings, { action: "edit" }));
 
                 // add applicable list buttons - add=add item below; new=lightbox-dialog
-                if (toolbarConfig.isList && settings.sortOrder != -1) {     // if list and not the list-header
-                    buttons.push($.extend({}, settings, { action: 'new' }));
+                if (toolbarConfig.isList && settings.sortOrder != -1) { // if list and not the list-header
+                    buttons.push($.extend({}, settings, { action: "new" }));
                     if (settings.useModuleList) {
-                        buttons.push($.extend({}, settings, { action: 'add' }));
-                        if (settings.sortOrder != 0)
-                            buttons.push($.extend({}, settings, { action: 'moveup' }));
-                        buttons.push($.extend({}, settings, { action: 'movedown' }));
+                        buttons.push($.extend({}, settings, { action: "add" }));
+                        if (settings.sortOrder !== 0)
+                            buttons.push($.extend({}, settings, { action: "moveup" }));
+                        buttons.push($.extend({}, settings, { action: "movedown" }));
                     }
                 }
-                buttons.push($.extend({}, settings, { action: 'publish' }));
+                buttons.push($.extend({}, settings, { action: "publish" }));
                 if (toolbarConfig.isList) {
-                    buttons.push($.extend({}, settings, { action: 'replace' }));
-                    buttons.push($.extend({}, settings, { action: 'remove' })); // only provide remove on lists
+                    buttons.push($.extend({}, settings, { action: "replace" }));
+                    buttons.push($.extend({}, settings, { action: "remove" })); // only provide remove on lists
                 }
-                buttons.push($.extend({}, settings, { action: 'more' }));
+                buttons.push($.extend({}, settings, { action: "more" }));
             }
 
-            var tbClasses = 'sc-menu' + ((settings.sortOrder == -1) ? ' listContent' : '');
-            var toolbar = $('<ul />', { 'class': tbClasses, 'onclick': 'javascript: var e = arguments[0] || window.event; e.stopPropagation();' });
+            var tbClasses = "sc-menu" + ((settings.sortOrder == -1) ? " listContent" : "");
+            var toolbar = $("<ul />", { 'class': tbClasses, 'onclick': "javascript: var e = arguments[0] || window.event; e.stopPropagation();" });
 
             for (var i = 0; i < buttons.length; i++)
-                toolbar.append($('<li />').append($(manageController.getButton(buttons[i]))));
+                toolbar.append($("<li />").append($(manageController.getButton(buttons[i]))));
 
             return toolbar[0].outerHTML;
         },
 
         // find all toolbar-info-attributes in the HTML, convert to <ul><li> toolbar
-        _processToolbars: function () {
-            $('.sc-menu[data-toolbar]', $(".DnnModule-" + id)).each(function () {
-                var toolbarSettings = $.parseJSON($(this).attr('data-toolbar'));
+        _processToolbars: function() {
+            $(".sc-menu[data-toolbar]", $(".DnnModule-" + id)).each(function() {
+                var toolbarSettings = $.parseJSON($(this).attr("data-toolbar"));
                 $(this).replaceWith($2sxc(id).manage.getToolbar(toolbarSettings));
             });
         },
 
-        _getSelectorScope: function () {
-            var selectorElement = document.querySelector('.DnnModule-' + id + ' .sc-selector-wrapper');
+        _getSelectorScope: function() {
+            var selectorElement = document.querySelector(".DnnModule-" + id + " .sc-selector-wrapper");
             return angular.element(selectorElement).scope().vm;
         }
 
     };
 
     return manageController;
-}
+};
