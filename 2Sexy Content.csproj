@@ -595,7 +595,6 @@
     <Content Include="SexyContent\EAV\FormlyEditUI\services\defaultvalue-service.js" />
     <Content Include="SexyContent\EAV\FormlyEditUI\_EditContentGroup.cshtml" />
     <Content Include="bower.json" />
-    <Content Include="admin-v2\_Content.cshtml" />
     <Content Include="packages.config" />
     <None Include="SqlDataProvider\01.00.00.SqlDataProvider" />
     <Content Include="SexyContent\EAV\FormlyEditUI\edit-entity.js" />

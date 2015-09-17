@@ -92,11 +92,14 @@ namespace ToSic.SexyContent.WebApi
         [HttpGet]
         public dynamic DialogSettings(int appId)
         {
+            var sxc = Request.GetSxcOfModuleContext(appId);
+
             return new
             {
-                lang = PortalSettings.Current.CultureCode,
-                langDef = PortalSettings.Current.DefaultLanguage,
-                gettingStartedUrl = GettingStartedUrl(appId)
+                IsContent = sxc.App.AppGuid == "Default",
+                Language = PortalSettings.Current.CultureCode,
+                LanguageDefault = PortalSettings.Current.DefaultLanguage,
+                GettingStartedUrl = GettingStartedUrl(sxc.App)
             };
         }
 
@@ -104,8 +107,9 @@ namespace ToSic.SexyContent.WebApi
         // warnings related to his dnn or 2sxc version
         // infos based on his languages
         // redirects based on the app he's looking at, etc.
-        private string GettingStartedUrl(int appId)
+        private string GettingStartedUrl(App app)
         {
+            //int appId = sxc.AppId.Value;
             var gsUrl = "http://gettingstarted.2sexycontent.org/router.aspx?"
 
                         // Add version & module infos
@@ -114,14 +118,14 @@ namespace ToSic.SexyContent.WebApi
                         + "&ModuleName=" + Dnn.Module.DesktopModule.ModuleName
                         + "&ModuleId=" + Dnn.Module.ModuleID
                         + "&PortalID=" + Dnn.Portal.PortalId
-                        + "&ZoneID=" + Sexy.App.ZoneId
+                        + "&ZoneID=" + app.ZoneId
                         + "&DefaultLanguage=" + PortalSettings.Current.DefaultLanguage
                         + "&CurrentLanguage=" + PortalSettings.Current.CultureCode;
             ;
             // Add AppStaticName and Version
             if (Dnn.Module.DesktopModule.ModuleName != "2sxc")
             {
-                var app = Sexy.App;// SexyContent.GetApp(sexy, appId.Value, Sexy.OwnerPS);
+                //var app = sxc.App;// SexyContent.GetApp(sexy, appId.Value, Sexy.OwnerPS);
 
                 gsUrl += "&AppGuid=" + app.AppGuid;
                 if (app.Configuration != null)

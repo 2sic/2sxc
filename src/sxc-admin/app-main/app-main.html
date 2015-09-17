@@ -13,7 +13,7 @@
                         <span icon="home" tooltip="{{'Main.Tab.GettingStarted' | translate }}"></span> {{'Main.Tab.GS' | translate }}
                     </tab-heading>
 
-                    <iframe ng-src="{{ vm.gettingStartedUrl | trustAsResourceUrl }}" style="border: none; width: 100%; height: 500px"></iframe>
+                    <iframe ng-src="{{ vm.config.GettingStartedUrl | trustAsResourceUrl }}" style="border: none; width: 100%; height: 500px"></iframe>
 
                     <div ng-hide="true">
                         original script, maybe we need it
@@ -38,7 +38,7 @@
                 </tab>
 
 
-                <tab select="vm.view='query'">
+                <tab select="vm.view='query'" ng-if="!vm.config.IsContent">
                     <tab-heading>
                         <span icon="filter" tooltip="{{'Main.Tab.Query' | translate }}"></span> {{'Main.Tab.Q' | translate }}
                     </tab-heading>
@@ -61,7 +61,7 @@
 
 
 
-                <tab select="vm.view='webapi'">
+                <tab select="vm.view='webapi'" ng-if="!vm.config.IsContent">
                     <tab-heading>
                         <span icon="flash" tooltip="{{'Main.Tab.WebApi' | translate }}"></span> {{'Main.Tab.WA' | translate }}
                     </tab-heading>
@@ -84,7 +84,7 @@
 
 
 
-                <tab select="vm.view='app'">
+                <tab select="vm.view='app'" ng-if="!vm.config.IsContent">
                     <tab-heading>
                         <span icon="cog" tooltip="{{'Main.Tab.AppSettings' | translate }}"></span> {{'Main.Tab.AS' | translate }}
                     </tab-heading>

@@ -20,6 +20,7 @@
         .controller("AppMain", MainController)
         .factory("appDialogConfigSvc", function(appId, $http) {
             var svc = {};
+                alert('in svc' + appId);
             // this will retrieve an advanced getting-started url to use in an the iframe
             svc.getDialogSettings = function gettingStartedUrl() {
                 return $http.get("app/system/dialogsettings", { params: { appId: appId } });
@@ -31,9 +32,9 @@
     function MainController(eavAdminDialogs, eavConfig, appId, appDialogConfigSvc, $modalInstance) {
         var vm = this;
         vm.view = "start";
-
+        alert('in app' + appId);
         appDialogConfigSvc.getDialogSettings().then(function(result) {
-            vm.gettingStartedUrl = result.data.gettingStartedUrl;
+            vm.config = result.data;//.GettingStartedUrl;
         });
 
         vm.close = function () {
