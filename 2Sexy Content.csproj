@@ -616,12 +616,14 @@
     <Content Include="src\sxc-admin\importexport\intro.html" />
     <Content Include="src\sxc-admin\language-settings\language-settings.js" />
     <Content Include="src\sxc-admin\language-settings\languages.html" />
-    <Content Include="src\sxc-admin\main\main.html" />
-    <Content Include="src\sxc-admin\main\main-controller.js" />
+    <Content Include="src\sxc-admin\app-main\app-main.html" />
+    <Content Include="src\sxc-admin\app-main\app-main-controller.js" />
+    <Content Include="src\sxc-admin\replace-content\replace-content-controller.js" />
+    <Content Include="src\sxc-admin\replace-content\replace-content.html" />
     <Content Include="src\sxc-admin\services\importexport-service.js" />
     <Content Include="src\sxc-admin\services\languages-service.js" />
     <Content Include="src\sxc-admin\services\apps-service.js" />
-    <Content Include="src\sxc-admin\services\sxc-ui-service.js" />
+    <Content Include="src\sxc-admin\services\sxc-dialogs-service.js" />
     <Content Include="src\sxc-admin\services\templates-service.js" />
     <Content Include="src\sxc-admin\templates\edit.html" />
     <Content Include="src\sxc-admin\templates\templates-edit-controller.js" />

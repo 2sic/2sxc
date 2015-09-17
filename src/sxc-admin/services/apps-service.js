@@ -21,6 +21,7 @@ angular.module("SxcServices")
                 return $http.delete("app/system/app", {params: {appId: appId }})
                     .then(svc.liveListReload);
             };
+
             return svc;
         };
     });

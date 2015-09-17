@@ -94,15 +94,18 @@ namespace ToSic.SexyContent.WebApi
         {
             return new
             {
+                lang = PortalSettings.Current.CultureCode,
+                langDef = PortalSettings.Current.DefaultLanguage,
                 gettingStartedUrl = GettingStartedUrl(appId)
             };
         }
 
+        // build a getting-started url which is used to correctly show the user infos like
+        // warnings related to his dnn or 2sxc version
+        // infos based on his languages
+        // redirects based on the app he's looking at, etc.
         private string GettingStartedUrl(int appId)
         {
-            //var appId = SexyContent.GetAppIdFromModule(Dnn.Module);
-//             var zoneId = SexyContent.GetZoneID(Dnn.Module.PortalID);
-            // var Sexy = new SexyContent(zoneId.Value, appId, true, Dnn.Module.OwnerPortalID);
             var gsUrl = "http://gettingstarted.2sexycontent.org/router.aspx?"
 
                         // Add version & module infos

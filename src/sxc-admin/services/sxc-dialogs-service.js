@@ -14,7 +14,7 @@ angular.module("SxcAdminUi", [
 
         svc.openAppMain = function oam(appId, closeCallback) {
             var resolve = eavAdminDialogs.CreateResolve({ appId: appId });
-            return eavAdminDialogs.OpenModal("main/main.html", "Main as vm", "xlg", resolve, closeCallback);
+            return eavAdminDialogs.OpenModal("app-main/app-main.html", "AppMain as vm", "xlg", resolve, closeCallback);
         };
 
         svc.openTotal = function openTotal(url, callback) {
