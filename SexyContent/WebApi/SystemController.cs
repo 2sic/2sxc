@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web.Http;
 using DotNetNuke.Common;
@@ -139,6 +140,19 @@ namespace ToSic.SexyContent.WebApi
             gsUrl += HostSettings.ContainsKey("GUID") ? "&DnnGUID=" + HostSettings["GUID"] : "";
             return gsUrl;
         }
+
+        [HttpGet]
+        public List<string> WebAPiFiles(int appId)
+        {
+            var sxc = Request.GetSxcOfModuleContext(appId);
+            var path = Path.Combine(sxc.App.PhysicalPath, "Api");
+            if (Directory.Exists(path))
+                return Directory.GetFiles(path, "*.cs")
+                    .Select(Path.GetFileName)
+                    .ToList<string>();
+
+            return new List<string>();
+        } 
         #endregion
 
 

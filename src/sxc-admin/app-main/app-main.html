@@ -66,8 +66,7 @@
                         <span icon="flash" tooltip="{{'Main.Tab.WebApi' | translate }}"></span> {{'Main.Tab.WA' | translate }}
                     </tab-heading>
                     <div ng-if="vm.view == 'webapi'">
-                        <h4>WebApi - todo</h4>
-
+                        <div ng-controller="WebApiMain as vm" ng-include="'web-api/web-api.html'"></div>
                     </div>
                 </tab>
 

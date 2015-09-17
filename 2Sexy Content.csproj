@@ -620,6 +620,7 @@
     <Content Include="src\sxc-admin\replace-content\replace-content-controller.js" />
     <Content Include="src\sxc-admin\replace-content\replace-content.html" />
     <Content Include="src\sxc-admin\services\importexport-service.js" />
+    <Content Include="src\sxc-admin\services\web-api-service.js" />
     <Content Include="src\sxc-admin\services\languages-service.js" />
     <Content Include="src\sxc-admin\services\apps-service.js" />
     <Content Include="src\sxc-admin\services\sxc-dialogs-service.js" />
@@ -628,6 +629,8 @@
     <Content Include="src\sxc-admin\templates\templates-edit-controller.js" />
     <Content Include="src\sxc-admin\templates\templates-controller.js" />
     <Content Include="src\sxc-admin\templates\templates.html" />
+    <Content Include="src\sxc-admin\web-api\web-api-controller.js" />
+    <Content Include="src\sxc-admin\web-api\web-api.html" />
     <Content Include="Styles\Edit.css" />
     <Content Include="Styles\EditDataSource\demo-new.css" />
     <Content Include="Styles\EditDataSource\flowchartDemo.css" />
