@@ -1,4 +1,8 @@
 ﻿/* global angular */
+
+// TODO - merge this into the contentGroup controller - it shouldn't need an own controller for this in Formly
+
+
 (function () {
 	'use strict';
 

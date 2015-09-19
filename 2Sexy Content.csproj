@@ -619,6 +619,7 @@
     <Content Include="src\sxc-admin\app-main\app-main-controller.js" />
     <Content Include="src\sxc-admin\replace-content\replace-content-controller.js" />
     <Content Include="src\sxc-admin\replace-content\replace-content.html" />
+    <Content Include="src\sxc-admin\services\content-group-service.js" />
     <Content Include="src\sxc-admin\services\importexport-service.js" />
     <Content Include="src\sxc-admin\services\init-sxc-params-from-url.js" />
     <Content Include="src\sxc-admin\services\web-api-service.js" />

@@ -34,8 +34,8 @@ angular.module("SxcAdminUi", [
             return eavAdminDialogs.OpenModal("apps-management/apps.html", "AppList as vm", "xlg", resolve, closeCallback);
         };
 
-        svc.openReplaceContent = function orc(groupId, groupSet, groupIndex, closeCallback) {
-            var resolve = eavAdminDialogs.CreateResolve({ groupId: groupId, groupSet : groupSet, groupIndex:groupIndex});
+        svc.openReplaceContent = function orc(appId, groupGuid, groupPart, groupIndex, closeCallback) {
+            var resolve = eavAdminDialogs.CreateResolve({ groupGuid: groupGuid, groupPart: groupPart, groupIndex: groupIndex });
             return eavAdminDialogs.OpenModal("replace-content/replace-content.html", "ReplaceDialog as vm", "xlg", resolve, closeCallback);
         };
 

@@ -15,21 +15,22 @@
 // - pipelineId
 // - $modalInstance (the dummy object, if needed)
 
-(function () {
+//(function () {
     angular.module("InitSxcParametersFromUrl", ["2sxc4ng"])
         .factory("dialog", function($2sxc) {
             return $2sxc.urlParams.get("dialog");
         })
-            .factory("groupId", function ($2sxc) {
-                return $2sxc.urlParams.get("dialog");
-            })
-            .factory("groupSet", function ($2sxc) {
-                return $2sxc.urlParams.get("groupset");
-            })
-            .factory("groupIndex", function ($2sxc) {
-                return $2sxc.urlParams.get("groupindex");
-            });
+        .factory("groupGuid", function ($2sxc) {
+            return $2sxc.urlParams.get("groupguid");
+        })
+        .factory("groupPart", function ($2sxc) {
+            return $2sxc.urlParams.get("grouppart");
+        })
+        .factory("groupIndex", function ($2sxc) {
+            return $2sxc.urlParams.get("groupindex");
+        })
+    ;
 
 
 
-}());
+// }());

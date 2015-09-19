@@ -11,12 +11,27 @@
         .controller("ReplaceDialog", ReplaceContentController)
         ;
 
-    function ReplaceContentController(appId, groupId, groupSet, groupIndex) {
+    function ReplaceContentController(appId, entityId, groupGuid, groupPart, groupIndex, contentGroupSvc, $modalInstance) {
         var vm = this;
-        var svc = {};
-        vm.items = svc.liveList();
+        vm.item = {
+            id: entityId,
+            guid: groupGuid,
+            part: groupPart,
+            index: groupIndex
+        };
+
+        var svc = contentGroupSvc(appId).replaceContentItemResource;
+
+        vm.options = svc.get(vm.item);
+
+        vm.ok = function ok() {
+            svc.save(vm.item).$promise.then(function() {
+                $modalInstance.dismiss("cancel");
+            });
+        };
         
-        vm.toggle = svc.toggle;
+        vm.close = function () { $modalInstance.dismiss("cancel"); };
+
     }
 
 } ());

@@ -8,7 +8,7 @@
         .controller("DialogHost", DialogHostController)
         ;
 
-    function DialogHostController(zoneId, appId, entityId, groupId, groupIndex, dialog, sxcDialogs, eavAdminDialogs) {
+    function DialogHostController(zoneId, appId, entityId, $2sxc, dialog, sxcDialogs, eavAdminDialogs) {
         var vm = this;
         vm.dialog = dialog;
         var initialDialog = dialog;
@@ -32,7 +32,10 @@
                 break;
             case "replace":
                 // this is the "replace item in a list" dialog
-                sxcDialogs.openReplaceContent(appId, groupId, groupIndex, vm.close);
+                var groupGuid = $2sxc.urlParams.get("groupguid");
+                var groupPart = $2sxc.urlParams.get("grouppart");
+                var groupIndex = $2sxc.urlParams.get("groupindex");
+                sxcDialogs.openReplaceContent(appId, groupGuid, groupPart, groupIndex, vm.close);
                 break;
             case "pipeline-designer":
                 // Don't do anything, as the template already loads the app in fullscreen-mode

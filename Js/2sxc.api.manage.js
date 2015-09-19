@@ -127,27 +127,27 @@ $2sxc.getManageController = function(id) {
 
         _manageInfo: manageInfo,
 
-        getLink: function(settings) {
-            settings = $.extend({}, toolbarConfig, settings);
+        //getLink: function(settings) {
+        //    settings = $.extend({}, toolbarConfig, settings);
 
-            var params = {
-                ctl: "editcontentgroup",
-                mid: settings.moduleId,
-                returnUrl: settings.returnUrl
-            };
+        //    var params = {
+        //        ctl: "editcontentgroup",
+        //        mid: settings.moduleId,
+        //        returnUrl: settings.returnUrl
+        //    };
 
-            if (settings.cultureDimension && settings.cultureDimension !== null)
-                params.cultureDimension = settings.cultureDimension;
+        //    if (settings.cultureDimension && settings.cultureDimension !== null)
+        //        params.cultureDimension = settings.cultureDimension;
 
-            if (settings.action == "replace") {
-                params.ctl = "settingswrapper";
-                params.ItemType = (settings.sortOrder != -1) ? "Content" : "ListContent"; // 'Content';
-            }
+        //    if (settings.action == "replace") {
+        //        params.ctl = "settingswrapper";
+        //        params.ItemType = (settings.sortOrder != -1) ? "Content" : "ListContent"; // 'Content';
+        //    }
 
-            return settings.dialogUrl
-                + (settings.dialogUrl.indexOf("?") == -1 ? "?" : "&")
-                + $.param(params);
-        },
+        //    return settings.dialogUrl
+        //        + (settings.dialogUrl.indexOf("?") == -1 ? "?" : "&")
+        //        + $.param(params);
+        //},
 
         // create an edit-dialog link
         // needs the followings data:
@@ -167,23 +167,23 @@ $2sxc.getManageController = function(id) {
             if (settings.cultureDimension && settings.cultureDimension !== null)
                 params.langnum = settings.cultureDimension;
 
-            // when not using a list, ...
+            // when not using a content-group list, ...
             if (!settings.useModuleList) {
-                if (settings.action != "new")
+                if (settings.action !== "new")
                     params.entityid = settings.entityId;
                 if (settings.contentType || settings.attributeSetName)
                     params.contenttype = settings.contentType || settings.attributeSetName;
             }
             // when using a list, the sort-order is important to find the right item
             else {
-                params.groupid = settings.contentGroupId;
+                params.groupGuid = settings.contentGroupId;
                 params.sortorder = settings.sortOrder;
             }
 
             if (settings.action === "replace") {
-                // params.ctl = "settingswrapper";
                 params.dialog = "replace";
-                params.replacelist = (settings.sortOrder !== -1) ? "content" : "listcontent";
+                params.groupPart = (settings.sortOrder !== -1) ? "content" : "listcontent";
+                params.groupIndex = settings.sortOrder;
             }
 
             // when doing new, there may be a prefill in the link to initialize the new item
@@ -198,18 +198,18 @@ $2sxc.getManageController = function(id) {
         },
 
         // Open a dialog within DNN as a lightbox or as a link, depending on DNN-config
-        _openDialog: function(settings) {
+        //_openDialog: function(settings) {
 
-            var link = manageController.getLink(settings);
+        //    var link = manageController.getLink(settings);
 
-            if (window.dnnModal && dnnModal.show) {
-                link += (link.indexOf("?") == -1 ? "?" : "&") + "popUp=true";
-                dnnModal.show(link, /*showReturn*/true, 550, 950, true, "");
-            } else {
-                window.location = link;
-            }
+        //    if (window.dnnModal && dnnModal.show) {
+        //        link += (link.indexOf("?") == -1 ? "?" : "&") + "popUp=true";
+        //        dnnModal.show(link, /*showReturn*/true, 550, 950, true, "");
+        //    } else {
+        //        window.location = link;
+        //    }
 
-        },
+        //},
 
         // open a new dialog of the angular-ui
         _openNgDialog: function(settings, event, closeCallback) {

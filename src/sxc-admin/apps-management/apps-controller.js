@@ -60,9 +60,7 @@
             alert("todo");
         };
 
-        vm.close = function () {
-            $modalInstance.dismiss("cancel");
-        };
+        vm.close = function () { $modalInstance.dismiss("cancel");};
     }
 
 } ());
