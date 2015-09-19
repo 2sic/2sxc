@@ -12,13 +12,14 @@ angular.module("SxcServices")
             }));
 
             svc.create = function create(name) {
-                return $http.post("app/system/app", { name: name })
+                return $http.post("app/system/app", {}, { params: { zoneId: svc.zoneId, name: name } })
                     .then(svc.liveListReload);
             };
 
             // delete, then reload
+            // for unclear reason, the verb DELETE fails, so I'm using get for now
             svc.delete = function del(appId) {
-                return $http.delete("app/system/app", {params: {appId: appId }})
+                return $http.get("app/system/deleteapp", {params: { zoneId: svc.zoneId, appId: appId } })
                     .then(svc.liveListReload);
             };
 

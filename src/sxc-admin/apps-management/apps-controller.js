@@ -29,7 +29,7 @@
 
         vm.add = function add() {
             // todo: ask
-            var result = confirm("Enter App Name (will also be used for folder)");
+            var result = prompt("Enter App Name (will also be used for folder)");
             if (result)
 
             // todo: create
@@ -38,7 +38,7 @@
 
         
         vm.tryToDelete = function tryToDelete(item) {
-            var result = input("This cannot be undone. To really delete this app, type (or copy/past) the app-name here: Delete '" + item.Name + "' (" + item.Id + ") ?");
+            var result = prompt("This cannot be undone. To really delete this app, type (or copy/past) the app-name here: Delete '" + item.Name + "' (" + item.Id + ") ?");
             if(result === item.Name)
                 svc.delete(item.Id);
         };

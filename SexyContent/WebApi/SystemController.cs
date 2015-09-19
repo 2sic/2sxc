@@ -18,6 +18,7 @@ namespace ToSic.SexyContent.WebApi
     /// This one supplies portal-wide (or cross-portal) settings / configuration
     /// </summary>
 	[SupportedModules("2sxc,2sxc-app")]
+    
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     public class SystemController : SxcApiController
 	{
@@ -71,17 +72,20 @@ namespace ToSic.SexyContent.WebApi
             }).ToList();
         }
 
-        [HttpDelete]
-        public new void App(int zoneId, int appId)
+        [HttpGet]
+        public void DeleteApp(int zoneId, int appId)
         {
-            
+            // Important note: the dnn-object will fail
+            // if it's running in the context of a module without real content-types
+            // so this web-service only works, when running from a real module
+            // sometimes while testing you forget to use real module-ids and then this fails
             var sexy = new SexyContent(zoneId, appId, false);
-
-            sexy.RemoveApp(appId, Dnn.User.UserID);
+            var userId = Dnn.User.UserID;
+            sexy.RemoveApp(appId, userId);
         }
 
         [HttpPost]
-        public new void App(int zoneId, string name)
+        public void App(int zoneId, string name)
         {
             SexyContent.AddApp(zoneId, name, new PortalSettings(Dnn.Module.OwnerPortalID));
         }

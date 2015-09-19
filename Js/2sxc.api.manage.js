@@ -168,10 +168,8 @@ $2sxc.getManageController = function(id) {
                 params.prefill = JSON.stringify(settings.prefill);
 
             return manageInfo.ngDialogUrl
-                + "#"
-                + $.param(manageInfo.ngDialogParams)
-                + "&"
-                + $.param(params);
+                + "#" + $.param(manageInfo.ngDialogParams)
+                + "&" + $.param(params);
         },
 
         // open a new dialog of the angular-ui
