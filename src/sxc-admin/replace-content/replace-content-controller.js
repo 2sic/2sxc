@@ -1,15 +1,10 @@
-(function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
+(function () { 
 
     angular.module("ReplaceContentApp", [
-        "EavConfiguration",     // 
-        //"EavServices",
-        "SxcServices",
-        "SxcTemplates",         // inline templates
-        "EavAdminUi",           // dialog (modal) controller
-    ])
-
-        .controller("ReplaceDialog", ReplaceContentController)
-        ;
+            "SxcServices",
+            "EavAdminUi"         // dialog (modal) controller
+        ])
+        .controller("ReplaceDialog", ReplaceContentController);
 
     function ReplaceContentController(appId, entityId, groupGuid, groupPart, groupIndex, contentGroupSvc, $modalInstance) {
         var vm = this;
@@ -20,12 +15,13 @@
             index: groupIndex
         };
 
-        var svc = contentGroupSvc(appId).replaceContentItemResource;
+        var svc = contentGroupSvc(appId);
+        var res = svc.replace;
 
-        vm.options = svc.get(vm.item);
+        vm.options = res.get(vm.item);
 
         vm.ok = function ok() {
-            svc.save(vm.item).$promise.then(function() {
+            res.save(vm.item).$promise.then(function() {
                 $modalInstance.dismiss("cancel");
             });
         };

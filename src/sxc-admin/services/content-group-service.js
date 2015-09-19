@@ -1,13 +1,13 @@
 
-// todo: merge sxcContentGroupService into this ASAP
-
 angular.module("SxcServices")
     .factory("contentGroupSvc", function($http, eavConfig, svcCreator, $resource) {
 
         // Construct a service for this specific appId
         return function createSvc(appId) {
             var svc = {};
-            svc.replaceContentItemResource = $resource("app/contentgroup/replace",
+
+
+            svc.replace = $resource("app/contentgroup/replace",
             { appId: appId, guid: "@guid", part: "@part", index: "@index" },
             {
                 get: { method: "GET", isArray:true },
