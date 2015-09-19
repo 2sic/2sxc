@@ -8,7 +8,7 @@
         .controller("DialogHost", DialogHostController)
         ;
 
-    function DialogHostController(zoneId, appId, entityId, dialog, sxcDialogs, eavAdminDialogs) {
+    function DialogHostController(zoneId, appId, entityId, groupId, groupIndex, dialog, sxcDialogs, eavAdminDialogs) {
         var vm = this;
         vm.dialog = dialog;
         var initialDialog = dialog;
@@ -23,14 +23,20 @@
                 eavAdminDialogs.openItemEditWithEntityId(entityId, vm.close);
                 break;
             case "zone":
+                // this is the zone-config dialog showing mainly all the apps
                 sxcDialogs.openZoneMain(zoneId, vm.close);
                 break;
             case "app":
+                // this opens the manage-an-app with content-types, views, etc.
                 sxcDialogs.openAppMain(appId, vm.close);
+                break;
+            case "replace":
+                // this is the "replace item in a list" dialog
+                sxcDialogs.openReplaceContent(appId, groupId, groupIndex, vm.close);
                 break;
             case "pipeline-designer":
                 // Don't do anything, as the template already loads the app in fullscreen-mode
-                //eavDialogs.editPipeline(appId, pipelineId, closeCallback);
+                // eavDialogs.editPipeline(appId, pipelineId, closeCallback);
                 break;
             default:
                 alert("Trying to open an unknown dialog (" + initialDialog + "). Will close again.");

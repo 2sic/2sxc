@@ -5,26 +5,26 @@
     It will then look for all sxc-apps and initialize them, ensuring that $http is pre-configured to work with DNN
 */
 $2sxc.ng = {
-    appAttribute: 'sxc-app',
-    ngAttrPrefixes: ['ng-', 'data-ng-', 'ng:', 'x-ng-'],
-    iidAttrNames: ['app-instanceid', 'data-instanceid', 'id'],
-    ngAttrDependencies: 'dependencies', // new 2015-09-25
+    appAttribute: "sxc-app",
+    ngAttrPrefixes: ["ng-", "data-ng-", "ng:", "x-ng-"],
+    iidAttrNames: ["app-instanceid", "data-instanceid", "id"],
+    ngAttrDependencies: "dependencies", 
 
     // bootstrap: an App-Start-Help; normally you won't call this manually as it will be auto-bootstrapped. 
     // All params optional except for 'element'
     bootstrap: function (element, ngModName, iid, dependencies, config) {
-        // first, try to get moduleId from URL
-        
-        iid = iid || $2sxc.ng.findInstanceId(element) || $2sxc.ng.getParameterByName('mid'); // use fn-param, or get from DOM, or get url-param
+        // first, try to get moduleId from function-param or from from URL
+        iid = iid || $2sxc.ng.findInstanceId(element) || $2sxc.urlParams.get("mid"); 
+
+        // then provide access to the dnn-services framework (or a fake thereof)
         var sf = $.ServicesFramework(iid);
 
         // create a micro-module to configure sxc-init parameters, add to dependencies. Note that the order is important!
-        angular.module('confSxcApp' + iid, [])
-            // .constant('iid', iid)
-            .constant('AppInstanceId', iid)
-            .constant('AppServiceFramework', sf)
-            .constant('HttpHeaders', { "ModuleId": iid, "TabId": sf.getTabId(), "RequestVerificationToken": sf.getAntiForgeryValue() });
-        var allDependencies = ['confSxcApp' + iid, '2sxc4ng'].concat(dependencies || [ngModName]);
+        angular.module("confSxcApp" + iid, [])
+            .constant("AppInstanceId", iid)
+            .constant("AppServiceFramework", sf)
+            .constant("HttpHeaders", { "ModuleId": iid, "TabId": sf.getTabId(), "RequestVerificationToken": sf.getAntiForgeryValue() });
+        var allDependencies = ["confSxcApp" + iid, "2sxc4ng"].concat(dependencies || [ngModName]);
 
         angular.element(document).ready(function () {
 			try {
@@ -42,7 +42,7 @@ $2sxc.ng = {
         for (var i = 0; i < $2sxc.ng.iidAttrNames.length; i++)
             attrib = ngElement.attr($2sxc.ng.iidAttrNames[i]);
         if (attrib) {
-            var iid = parseInt(attrib.toString().replace(/\D/g, '')); // filter all characters if necessary
+            var iid = parseInt(attrib.toString().replace(/\D/g, "")); // filter all characters if necessary
             if (!iid) throw "iid or instanceId (the DNN moduleid) not supplied and automatic lookup failed. Please set app-tag attribute iid or give id in bootstrap call";
             return iid;
         }
@@ -51,13 +51,13 @@ $2sxc.ng = {
     // Auto-bootstrap all sub-tags having an 'sxc-app' attribute - for Multiple-Apps-per-Page
     bootstrapAll: function bootstrapAll(element) {
         element = element || document;
-        var allAppTags = element.querySelectorAll('[' + $2sxc.ng.appAttribute + ']');
+        var allAppTags = element.querySelectorAll("[" + $2sxc.ng.appAttribute + "]");
         angular.forEach(allAppTags, function (appTag) {
 		    var ngModName = appTag.getAttribute($2sxc.ng.appAttribute);
 		    var configDependencyInjection = { strictDi: $2sxc.ng.getNgAttribute(appTag, "strict-di") !== null };
             // new 2015-09-05
 		    var dependencies = $2sxc.ng.getNgAttribute(appTag, $2sxc.ng.ngAttrDependencies);
-		    if (dependencies) dependencies = dependencies.split(',');
+		    if (dependencies) dependencies = dependencies.split(",");
 		    $2sxc.ng.bootstrap(appTag, ngModName, null, dependencies, configDependencyInjection);
         });
     },
@@ -76,41 +76,15 @@ $2sxc.ng = {
         element = angular.element(element);
         for (i = 0; i < ii; ++i) {
             attr = $2sxc.ng.ngAttrPrefixes[i] + ngAttr;
-            if (typeof (attr = element.attr(attr)) == 'string')
+            if (typeof (attr = element.attr(attr)) == "string")
                 return attr;
         }
         return null;
     },
-
-    // get url param - mainly needed for mid=### in admin-dialogs
-    getParameterByName: function getParameterByName(name) {
-        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-        var searchRx = new RegExp("[\\?&]" + name + "=([^&#]*)", "i");
-        var results = searchRx.exec(location.search);
-
-        if (results === null) {
-            var hashRx = new RegExp("[#&]" + name + "=([^&#]*)", "i");
-            results = hashRx.exec(location.hash);
-        }
-
-        // if nothing found, try normal URL because DNN places parameters in /key/value notation
-        if (results === null) {
-            // Otherwise try parts of the URL
-            var matches = window.location.pathname.match(new RegExp("/" + name + "/([^/]+)", "i"));
-
-            // Check if we found anything, if we do find it, we must reverse the results so we get the "last" one in case there are multiple hits
-            if (matches !== null && matches.length > 1) 
-                results = matches.reverse()[0]; 
-        } else 
-            results = results[1];
-        
-        return results === null ? "" : decodeURIComponent(results.replace(/\+/g, " "));
-    }
-
 };
 $2sxc.ng.autoRunBootstrap();
 
-angular.module('2sxc4ng', ['ng'])
+angular.module("2sxc4ng", ["ng"])
     // Configure $http for DNN web services (security tokens etc.)
     .config(function ($httpProvider, HttpHeaders) {
         angular.extend($httpProvider.defaults.headers.common, HttpHeaders);
@@ -132,45 +106,51 @@ angular.module('2sxc4ng', ['ng'])
 
     })
 
-    // Provide the sxc helper for this module
-    .factory('sxc', function (AppInstanceId) {
-        if(window.console) console.log('creating sxc service for id: ' + AppInstanceId);
+    // provide the global $2sxc object to angular modules as a clear, clean dependency
+    .factory("$2sxc", function () {
         if (!$2sxc) throw "the Angular service 'sxc' can't find the global $2sxc controller";
+        return $2sxc;
+    })
+
+    // Provide the app-specific sxc helper for this module
+    .factory("sxc", function (AppInstanceId, $2sxc) {
+        if(window.console) console.log("creating sxc service for id: " + AppInstanceId);
         var ngSxc = $2sxc(AppInstanceId);    // make this service be the 2sxc-controller for this module
         return ngSxc;
     })
 
+
     /// Standard entity commands like get one, many etc.
-    .factory('content', function ($http) {
+    .factory("content", function ($http) {
         // construct a service just for this content-type
         return function (contentType) {
             var oneType = {};
             oneType.contentType = contentType;
-            oneType.root = 'app-content/' + contentType;
+            oneType.root = "app-content/" + contentType;
 
             // will get one or all of a content-type, depending on if an id was supplied
             oneType.get = oneType.read = function get(id) {
-                return $http.get(oneType.root + (id ? '/' + id : ''));
+                return $http.get(oneType.root + (id ? "/" + id : ""));
             };
             oneType.create = function create(values) {
                 return $http.post(oneType.root, values);
             };
             oneType.update = oneType.patch = function update(values, id) {
                 var realId = id || values.Id || values.id;  // automatically use the correct Id
-                return $http.post(oneType.root + '/' + realId, values);
+                return $http.post(oneType.root + "/" + realId, values);
             };
             oneType.delete = function del(id) {
-                return $http.delete(oneType.root + '/' + id);
+                return $http.delete(oneType.root + "/" + id);
             };
             return oneType;
         };
     })
 
     /// simple helper service which will call a query
-    .factory('query', function ($http) {
+    .factory("query", function ($http) {
         return function (name) {
             var qry = {};
-            qry.root = 'app-query/' + name;
+            qry.root = "app-query/" + name;
 
             qry.get = function (config) {
                 return $http.get(qry.root, config);

@@ -7,6 +7,7 @@ angular.module("SxcAdminUi", [
     //"EavConfiguration",
     "MainSxcApp",
     "AppsManagementApp",
+    "ReplaceContentApp",
     "EavAdminUi",           // dialog (modal) controller
 ])
     .factory("sxcDialogs", function ($modal, eavAdminDialogs) {
@@ -31,6 +32,11 @@ angular.module("SxcAdminUi", [
         svc.openZoneMain = function ozm(zoneId, closeCallback) {
             var resolve = eavAdminDialogs.CreateResolve({ zoneId: zoneId });
             return eavAdminDialogs.OpenModal("apps-management/apps.html", "AppList as vm", "xlg", resolve, closeCallback);
+        };
+
+        svc.openReplaceContent = function orc(groupId, groupSet, groupIndex, closeCallback) {
+            var resolve = eavAdminDialogs.CreateResolve({ groupId: groupId, groupSet : groupSet, groupIndex:groupIndex});
+            return eavAdminDialogs.OpenModal("replace-content/replace-content.html", "ReplaceDialog as vm", "xlg", resolve, closeCallback);
         };
 
         return svc;

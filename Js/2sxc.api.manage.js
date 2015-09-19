@@ -13,7 +13,7 @@ $2sxc.getManageController = function(id) {
     var toolbarConfig = manageInfo.config;
     toolbarConfig.returnUrl = window.location.href;
 
-    var sf = $.ServicesFramework(id);
+    // var sf = $.ServicesFramework(id);
 
     // all the standard buttons with the display configuration and click-action
     var actionButtonsConf = {
@@ -56,7 +56,7 @@ $2sxc.getManageController = function(id) {
             lightbox: false,
             hideFirst: true,
             action: function(settings, event) {
-                manageController._openDialog(settings);
+                manageController._openNgDialog(settings, event);
             }
         },
         'publish': {
@@ -180,10 +180,11 @@ $2sxc.getManageController = function(id) {
                 params.sortorder = settings.sortOrder;
             }
 
-            //if (settings.action == "replace") {
-            //    params.ctl = "settingswrapper";
-            //    params.ItemType = (settings.sortOrder != -1) ? "Content" : "ListContent";// 'Content';
-            //}
+            if (settings.action === "replace") {
+                // params.ctl = "settingswrapper";
+                params.dialog = "replace";
+                params.replacelist = (settings.sortOrder !== -1) ? "content" : "listcontent";
+            }
 
             // when doing new, there may be a prefill in the link to initialize the new item
             if (settings.prefill)

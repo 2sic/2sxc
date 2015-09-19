@@ -3,43 +3,9 @@
 <head>
     <title>Content Editing UI</title>
     <meta charset="utf-8"/>
+    <!-- first load the main 2sxc because it contains some url-param methods -->
+    <script src="../../js/2sxc.api.min.js"></script>
     <script>
-        // Important functions to ensure everything else works
-        // this block only contains the functions, no calls done here
-
-        function getParameterByName(name) {
-            // warning: this method is duplicated in 3 places - keep them in sync. 
-            // locations are eav, 2sxc4ng and ui.html
-            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-            var searchRx = new RegExp("[\\?&]" + name + "=([^&#]*)", "i");
-            var results = searchRx.exec(location.search);
-
-            if (results === null) {
-                var hashRx = new RegExp("[#&]" + name + "=([^&#]*)", "i");
-                results = hashRx.exec(location.hash);
-            }
-
-            // if nothing found, try normal URL because DNN places parameters in /key/value notation
-            if (results === null) {
-                // Otherwise try parts of the URL
-                var matches = window.location.pathname.match(new RegExp("/" + name + "/([^/]+)", "i"));
-
-                // Check if we found anything, if we do find it, we must reverse the results so we get the "last" one in case there are multiple hits
-                if (matches !== null && matches.length > 1)
-                    results = matches.reverse()[0];
-            } else
-                results = results[1];
-
-            return results === null ? "" : decodeURIComponent(results.replace(/\+/g, " "));
-        }
-
-        function getRequiredParameter(name) {
-            var found = getParameterByName(name);
-            if (found === "")
-                alert("Required parameter (" + name + ") missing from url - cannot continue");
-            return found;
-        }
-
         // this creates an object on $.ServicesFramework
         // it looks like the DNN object and is necessary so that scripts relying on it will work
         // it basically fakes it, but contains the correct infos like getTabId etc. without needing the full DNN
@@ -47,7 +13,7 @@
             if (window.$ === undefined)
                 window.$ = {};
             var dollar = window.$;
-            var modId = getParameterByName('mid');
+            var modId = $2sxc.urlParams.get('mid');
             if (modId === "")
                 alert("ModuleId (mid) missing - cannot continue");
             dollar.ServicesFramework = function(id) {
@@ -84,9 +50,9 @@
         var siteRoot = window.location.pathname.substring(0, window.location.pathname.toLowerCase().indexOf("desktopmodules"));
         var path = siteRoot + "desktopmodules/tosic_sexycontent/";
         var $dlg = {
-            modId: getRequiredParameter("mid"),
-            tabId: getRequiredParameter("tid"),
-            dialog: getRequiredParameter("dialog"),
+            modId: $2sxc.urlParams.require("mid"),// getRequiredParameter("mid"),
+            tabId: $2sxc.urlParams.require("tid"),//getRequiredParameter("tid"),
+            dialog: $2sxc.urlParams.require("dialog"),//getRequiredParameter("dialog"),
             root: path,
             lib: path + "bower_components/",
             dist: path + "dist/",
@@ -104,7 +70,7 @@
         addScript($dlg.lib + "angular-bootstrap/ui-bootstrap-tpls.autoext");
 
         // 2sxc scripts
-        addScript("../../js/2sxc.api.autoext");
+        // addScript("../../js/2sxc.api.autoext");
 
         // 2sxc versions of eav scripts (with alternate configuration etc.)
         addScript("../../js/angularjs/2sxc4ng.autoext");
@@ -151,9 +117,9 @@
     // ...but should be shown directly
     // all others will be modal-oened by the DialogHost App
     if ($dlg.dialog !== "pipeline-designer")
-        document.write('<div sxc-app="DialogHost" ng-dependencies="InitParametersFromUrl,DialogHost" ng-controller="DialogHost as vm"></div>');
+        document.write('<div sxc-app="DialogHost" ng-dependencies="InitParametersFromUrl,InitSxcParametersFromUrl,DialogHost" ng-controller="DialogHost as vm"></div>');
     else {
-        document.write('<div sxc-app="PipelineDesigner" ng-include="\'pipelines/pipeline-designer.html\'" ng-dependencies="InitParametersFromUrl,PipelineDesigner"></div>');
+        document.write('<div sxc-app="PipelineDesigner" ng-include="\'pipelines/pipeline-designer.html\'" ng-dependencies="InitParametersFromUrl,InitSxcParametersFromUrl,PipelineDesigner"></div>');
     }
 </script>
 

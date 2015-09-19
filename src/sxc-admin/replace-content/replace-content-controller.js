@@ -8,14 +8,14 @@
         "EavAdminUi",           // dialog (modal) controller
     ])
 
-        .controller("LanguageSettings", LanguagesSettingsController)
+        .controller("ReplaceDialog", ReplaceContentController)
         ;
 
-    function LanguagesSettingsController(appId, groupId, groupIndex) {
+    function ReplaceContentController(appId, groupId, groupSet, groupIndex) {
         var vm = this;
         var svc = {};
         vm.items = svc.liveList();
-
+        
         vm.toggle = svc.toggle;
     }
 

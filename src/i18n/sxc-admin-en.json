@@ -133,5 +133,10 @@
       "Import": "import app",
       "Add": "create app"
     }
+  },
+  "ReplaceContent": {
+    "Title": "Replace Content Item",
+    "Intro": "By replacing a content-item you can make a other content appear in the slot of the original content.",
+    "ChoosItem": "Choose item:"
   }
 }
