@@ -69,8 +69,8 @@
         addScript($dlg.lib + "angular-translate-loader-partial/angular-translate-loader-partial.autoext");
         addScript($dlg.lib + "angular-bootstrap/ui-bootstrap-tpls.autoext");
 
-        // 2sxc scripts
-        // addScript("../../js/2sxc.api.autoext");
+        // promise-window - needed till we get rid of all old dialogs
+        addScript($dlg.lib + "promise-window/dist/promise-window.autoext");
 
         // 2sxc versions of eav scripts (with alternate configuration etc.)
         addScript("../../js/angularjs/2sxc4ng.autoext");

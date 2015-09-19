@@ -20,6 +20,9 @@
         .factory("dialog", function($2sxc) {
             return $2sxc.urlParams.get("dialog");
         })
+        .factory("tabId", function($2sxc) {
+            return $2sxc.urlParams.get("tid");
+        })
         .factory("groupGuid", function ($2sxc) {
             return $2sxc.urlParams.get("groupguid");
         })

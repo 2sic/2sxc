@@ -171,10 +171,12 @@ namespace ToSic.SexyContent
 
 			Sexy.Templates.UpdateTemplate(templateId, txtTemplateName.Text, templatePath, ctrContentType.ContentTypeStaticName, ctrContentType.DemoEntityID, ctrPresentationType.ContentTypeStaticName, ctrPresentationType.DemoEntityID, ctrListContentType.ContentTypeStaticName, ctrListContentType.DemoEntityID, ctrListPresentationType.ContentTypeStaticName, ctrListPresentationType.DemoEntityID, ddlTemplateTypes.SelectedValue, chkHidden.Checked, ddlTemplateLocations.SelectedValue, chkEnableList.Checked, chkPublishSource.Checked, txtPublishStreams.Text, pipelineEntityId, txtViewNameInUrl.Text);
 
-			// Redirect to the manage templates control
-			var RedirectUrl = UrlUtils.PopUpUrl(Globals.NavigateURL(SexyContent.ControlKeys.ManageTemplates, "mid", ModuleId.ToString(), SexyContent.AppIDString, AppId.ToString()), this, PortalSettings, false, true);
-			Response.Redirect(RedirectUrl);
+			// old Redirect to the manage templates control
+			//var RedirectUrl = UrlUtils.PopUpUrl(Globals.NavigateURL(SexyContent.ControlKeys.ManageTemplates, "mid", ModuleId.ToString(), SexyContent.AppIDString, AppId.ToString()), this, PortalSettings, false, true);
+			//Response.Redirect(RedirectUrl);
 
+            // New 2015-09-19 close this window - temporary solution till this dialog is obsolete
+            Response.Write("<script>window.close();</script>");
         }
 
 		protected void SetTemplateDefaultSelector(int TemplateID, ContentTypeAndDemoSelector Selector)

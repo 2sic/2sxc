@@ -3,14 +3,48 @@
 
 angular.module("SxcAdminUi", [
     "ng",
-    "ui.bootstrap",         // for the $modal etc.
+    "ui.bootstrap", // for the $modal etc.
     "MainSxcApp",
     "AppsManagementApp",
     "ReplaceContentApp",
     "SystemSettingsApp",
     "SxcTemplates",
-    "EavAdminUi",           // dialog (modal) controller
+    "EavAdminUi", // dialog (modal) controller
 ])
+    .factory("oldDialogs", function (tabId, AppInstanceId, appId) {
+        var svc = {};
+
+        // todo: maybe needs something to get the real root-address
+        svc.oldRootUrl = "/Default.aspx?tabid={{tabid}}&mid={{mid}}&ctl={{ctl}}&appid={{appid}}&popUp=true"
+            .replace("{{tabid}}", tabId)
+            .replace("{{mid}}", AppInstanceId)
+            .replace("{{appid}}", appId);
+
+            svc.getUrl = function getUrl(ctlName) {
+                return svc.oldRootUrl
+                    .replace("{{ctl}}", ctlName);
+            };
+
+            svc.showInfoOld = function showInfoOld() {
+                // alert("Info! \n\n This dialog still uses the old DNN-dialogs. It will open in a new window. After saving/closing that, please refresh this page to see changes made.");
+            };
+
+            svc.editTemplate = function edit(itemId, callback) {
+                svc.showInfoOld();
+                var url = svc.getUrl("edittemplate")
+                    + ((itemId === 0) ? "" : "&templateid=" + itemId);
+                svc.openPromiseWindow(url, callback);
+            };
+
+            svc.openPromiseWindow = function opw(url, callback) {
+                PromiseWindow.open(url).then(
+                    // Success & error both should do the callack
+                    callback, callback
+                );
+            };
+
+            return svc;
+        })
     .factory("sxcDialogs", function ($modal, eavAdminDialogs) {
         var svc = {};
 

@@ -10,41 +10,33 @@
         .controller("TemplateList", TemplateListController)
         ;
 
-    function TemplateListController(templatesSvc, eavAdminDialogs, eavConfig, appId, $modalInstance, $sce) {
+    function TemplateListController(templatesSvc, eavAdminDialogs, eavConfig, appId, oldDialogs, $modalInstance, $sce) {
         var vm = this;
         var svc = templatesSvc(appId);
 
         vm.edit = function edit(item) {
-            var url = vm.getOldEditUrl();
-            url += (url.indexOf("?") == -1) ? "?" : "&";
-            url += "templateid=" + item.Id;
-            window.open(url);
+            oldDialogs.editTemplate(item.Id, svc.liveListReload);
             // eavAdminDialogs.openItemEditWithEntityId(item.Id, svc.liveListReload);
         };
 
-        vm.getOldEditUrl = function() {
-            var myUrl = window.location.href;
-            var newUrl = myUrl.replace("/ctl/content/", "/ctl/edittemplate/")
-                .replace("ctl=content", "ctl=edittemplate");
-
-            return newUrl;
-        };
-
         vm.add = function add() {
-            // templ till the edit dialog is JS-only
-            window.open(vm.getOldEditUrl());
+            oldDialogs.editTemplate(0, svc.liveListReload);
 
-            // probably afterwards
-            var resolve = eavAdminDialogs.CreateResolve({
-                appId: appId,
-                svc: svc
-            });
-            return eavAdminDialogs.OpenModal(
-                "templates/edit.html",
-                "TemplateEdit as vm",
-                "lg",
-                resolve,
-                svc.liveListReload);
+            return;
+            // templ till the edit dialog is JS-only
+            //window.open(vm.getOldEditUrl());
+
+            //// probably afterwards
+            //var resolve = eavAdminDialogs.CreateResolve({
+            //    appId: appId,
+            //    svc: svc
+            //});
+            //return eavAdminDialogs.OpenModal(
+            //    "templates/edit.html",
+            //    "TemplateEdit as vm",
+            //    "lg",
+            //    resolve,
+            //    svc.liveListReload);
         };
 
         vm.items = svc.liveList();
