@@ -13,7 +13,7 @@
 
     function LanguagesSettingsController(languagesSvc, eavConfig, appId) {
         var vm = this;
-        var svc = languagesSvc();//appId, "2SexyContent-App");
+        var svc = languagesSvc();
         vm.items = svc.liveList();
 
         // vm.refresh = 

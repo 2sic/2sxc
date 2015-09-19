@@ -129,9 +129,9 @@
       "Actions": "Actions"
     },
     "Buttons": {
-      "Browse": "browse app catalog",
+      "Browse": "more apps",
       "Import": "import app",
-      "Add": "create app"
+      "Create": "create"
     }
   },
   "ReplaceContent": {

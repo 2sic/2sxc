@@ -28,12 +28,9 @@
         };
 
         vm.add = function add() {
-            // todo: ask
             var result = prompt("Enter App Name (will also be used for folder)");
             if (result)
-
-            // todo: create
-            svc.create(result);
+                svc.create(result);
         };
 
         
@@ -43,7 +40,8 @@
                 svc.delete(item.Id);
         };
 
-        // todo: make this open an i-frame lightbox instead of a new window
+        // note that manage MUST open in a new iframe, to give the entire application 
+        // a new initial context. otherwise we get problems with AppId and similar
         vm.manage = function manage(item) {
             var url = window.location.href;
             url = url
@@ -51,13 +49,24 @@
                 .replace("dialog=zone", "dialog=app");
 
             sxcDialogs.openTotal(url, svc.liveListReload);
-            //window.open(url);
-            //sxcDialogs.openAppMain(item.Id, svc.liveListReload);
+        };
+
+
+        vm.browseCatalog = function() {
+            window.open("http://2sxc.org/apps");
+        };
+
+        vm.import = function imp() {
+            alert('todo');
         };
 
         vm.export = function exp(item)
         {
             alert("todo");
+        };
+
+        vm.languages = function languages() {
+            sxcDialogs.openLanguages(zoneId, vm.refresh);
         };
 
         vm.close = function () { $modalInstance.dismiss("cancel");};
