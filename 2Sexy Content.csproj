@@ -176,13 +176,6 @@
     <Compile Include="Administration\Apps\AppExport.ascx.designer.cs">
       <DependentUpon>AppExport.ascx</DependentUpon>
     </Compile>
-    <Compile Include="Administration\Apps\AppConfig.ascx.cs">
-      <DependentUpon>AppConfig.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Administration\Apps\AppConfig.ascx.designer.cs">
-      <DependentUpon>AppConfig.ascx</DependentUpon>
-    </Compile>
     <Compile Include="Administration\Apps\AppManagement.ascx.cs">
       <DependentUpon>AppManagement.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -210,20 +203,6 @@
     </Compile>
     <Compile Include="Administration\DataImport.ascx.designer.cs">
       <DependentUpon>DataImport.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="Administration\WebApiHelp.ascx.cs">
-      <DependentUpon>WebApiHelp.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Administration\WebApiHelp.ascx.designer.cs">
-      <DependentUpon>WebApiHelp.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="Administration\GettingStarted.ascx.cs">
-      <DependentUpon>GettingStarted.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Administration\GettingStarted.ascx.designer.cs">
-      <DependentUpon>GettingStarted.ascx</DependentUpon>
     </Compile>
     <Compile Include="Administration\PortalConfiguration.ascx.cs">
       <DependentUpon>PortalConfiguration.ascx</DependentUpon>
@@ -428,23 +407,13 @@
     <Compile Include="View.ascx.designer.cs">
       <DependentUpon>View.ascx</DependentUpon>
     </Compile>
-    <Compile Include="Administration\ManageTemplates.ascx.designer.cs">
-      <DependentUpon>ManageTemplates.ascx</DependentUpon>
-    </Compile>
     <Compile Include="Administration\EditTemplate.ascx.designer.cs">
       <DependentUpon>EditTemplate.ascx</DependentUpon>
     </Compile>
     <Compile Include="Settings.ascx.designer.cs">
       <DependentUpon>Settings.ascx</DependentUpon>
     </Compile>
-    <Compile Include="SettingsWrapper.ascx.designer.cs">
-      <DependentUpon>SettingsWrapper.ascx</DependentUpon>
-    </Compile>
     <Compile Include="SexyContent\SexyContent.cs" />
-    <Compile Include="Administration\ManageTemplates.ascx.cs">
-      <DependentUpon>ManageTemplates.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
     <Compile Include="Administration\EditTemplate.ascx.cs">
       <DependentUpon>EditTemplate.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -454,24 +423,17 @@
       <DependentUpon>Settings.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="SettingsWrapper.ascx.cs">
-      <DependentUpon>SettingsWrapper.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
     <Compile Include="SexyContent\Engines\TokenEngine\FilteredNameValueCollectionPropertyAccess.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\TokenReplaceDnn.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />
     <Content Include="Administration\Apps\AppExport.ascx" />
-    <Content Include="Administration\Apps\AppConfig.ascx" />
     <Content Include="Administration\Apps\AppManagement.ascx" />
     <Content Include="Administration\Apps\AppImport.ascx" />
     <Content Include="Administration\DataExport.ascx" />
     <Content Include="Administration\DataImport.ascx" />
-    <Content Include="Administration\WebApiHelp.ascx" />
     <Content Include="Administration\Export.js" />
-    <Content Include="Administration\GettingStarted.ascx" />
     <Content Include="Administration\PortalConfiguration.ascx" />
     <Content Include="Administration\ContentTypeAndDemoSelector.ascx" />
     <Content Include="Administration\Registers.ascx" />
@@ -543,13 +505,11 @@
     <Content Include="js\EditDataSource\jsPlumb\yui.jsPlumb-1.4.0-RC1.js" />
     <Content Include="js\ItemForm.js" />
     <Content Include="js\dnn-inpage-edit.js" />
-    <Content Include="Administration\ManageTemplates.ascx" />
     <Content Include="license.txt" />
     <Content Include="edit.css" />
     <Content Include="Administration\EditTemplate.ascx" />
     <Content Include="ReleaseNotes.txt" />
     <Content Include="Settings.ascx" />
-    <Content Include="SettingsWrapper.ascx" />
     <Content Include="SexyContent\EAV\AngularServices\eav4ng.js" />
     <Content Include="SexyContent\EAV\AngularServices\eavNgSvcs.js" />
     <Content Include="SexyContent\EAV\AngularServices\NotificationService.js" />
