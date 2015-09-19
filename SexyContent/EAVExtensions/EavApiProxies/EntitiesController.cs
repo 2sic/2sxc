@@ -97,7 +97,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 		{
             EnsureSerializerHasSxc();
             // todo refactor-verify
-            return new Eav.WebApi.ContentTypeController().Get(appId, contentType, null);
+            return new Eav.WebApi.ContentTypeController().GetSingle(appId, contentType, null);
             // return entitesController.GetContentType(contentType, appId);
 		}
 

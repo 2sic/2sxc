@@ -62,7 +62,7 @@ namespace ToSic.SexyContent.WebApi
 	    private void PerformSecurityCheck(string contentType, PermissionGrant grant, bool autoAllowAdmin = false)
 	    {
             // Check if we can find this content-type
-            var ct = new Eav.WebApi.ContentTypeController().Get(App.AppId, contentType, null);
+            var ct = new Eav.WebApi.ContentTypeController().GetSingle(App.AppId, contentType, null);
             if(ct == null)
                 ThrowHttpError(HttpStatusCode.NotFound, "Could not find Content Type '" + contentType + "'.", "content-types");
             
