@@ -13,8 +13,6 @@ $2sxc.getManageController = function(id) {
     var toolbarConfig = manageInfo.config;
     toolbarConfig.returnUrl = window.location.href;
 
-    // var sf = $.ServicesFramework(id);
-
     // all the standard buttons with the display configuration and click-action
     var actionButtonsConf = {
         'default': {
@@ -127,27 +125,6 @@ $2sxc.getManageController = function(id) {
 
         _manageInfo: manageInfo,
 
-        //getLink: function(settings) {
-        //    settings = $.extend({}, toolbarConfig, settings);
-
-        //    var params = {
-        //        ctl: "editcontentgroup",
-        //        mid: settings.moduleId,
-        //        returnUrl: settings.returnUrl
-        //    };
-
-        //    if (settings.cultureDimension && settings.cultureDimension !== null)
-        //        params.cultureDimension = settings.cultureDimension;
-
-        //    if (settings.action == "replace") {
-        //        params.ctl = "settingswrapper";
-        //        params.ItemType = (settings.sortOrder != -1) ? "Content" : "ListContent"; // 'Content';
-        //    }
-
-        //    return settings.dialogUrl
-        //        + (settings.dialogUrl.indexOf("?") == -1 ? "?" : "&")
-        //        + $.param(params);
-        //},
 
         // create an edit-dialog link
         // needs the followings data:
@@ -196,20 +173,6 @@ $2sxc.getManageController = function(id) {
                 + "&"
                 + $.param(params);
         },
-
-        // Open a dialog within DNN as a lightbox or as a link, depending on DNN-config
-        //_openDialog: function(settings) {
-
-        //    var link = manageController.getLink(settings);
-
-        //    if (window.dnnModal && dnnModal.show) {
-        //        link += (link.indexOf("?") == -1 ? "?" : "&") + "popUp=true";
-        //        dnnModal.show(link, /*showReturn*/true, 550, 950, true, "");
-        //    } else {
-        //        window.location = link;
-        //    }
-
-        //},
 
         // open a new dialog of the angular-ui
         _openNgDialog: function(settings, event, closeCallback) {
@@ -299,10 +262,15 @@ $2sxc.getManageController = function(id) {
                     }
                 }
                 buttons.push($.extend({}, settings, { action: "publish" }));
-                if (toolbarConfig.isList) {
+
+                // the replace button only makes sense if it's a content-group
+                if (settings.useModuleList)
                     buttons.push($.extend({}, settings, { action: "replace" }));
-                    buttons.push($.extend({}, settings, { action: "remove" })); // only provide remove on lists
-                }
+
+                // only provide remove on lists
+                if (toolbarConfig.isList) 
+                    buttons.push($.extend({}, settings, { action: "remove" })); 
+                
                 buttons.push($.extend({}, settings, { action: "more" }));
             }
 
