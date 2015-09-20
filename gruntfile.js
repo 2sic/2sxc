@@ -21,6 +21,14 @@ module.exports = function (grunt) {
         concatFile: "dist/inpage/inpage.js",
         uglifyFile: "dist/inpage/inpage.min.js"
     };
+    var eavconf = {
+        cwd: "src/config/",
+        cwdJs: ["src/config/**/*.js"],
+        tmp: "tmp/config/",
+        dist: "dist/config/",
+        concatFile: "dist/config/config.js",
+        uglifyFile: "dist/config/config.min.js"
+    };
     var i18n = {
         cwd: "src/i18n/",
         dist: "dist/i18n/"
@@ -38,8 +46,8 @@ module.exports = function (grunt) {
                 laxbreak: true,
                 scripturl: true
             },
-            all: ["gruntfile.js", sxcadmin.cwd, inpage.cwd, sxc4ng],
-            Sxc: ["js/2sxc.api.js", "js/2sxc.api.manage.js"]//, "js/template-selector/template-selector.js"],
+            all: ["gruntfile.js", sxcadmin.cwd, inpage.cwd, eavconf.cwd, sxc4ng],
+            Sxc: ["js/2sxc.api.js"]
         },
 
         clean: {
@@ -60,6 +68,12 @@ module.exports = function (grunt) {
                         cwd: inpage.cwd,
                         src: ["**/*.*"],
                         dest: inpage.tmp
+                    },
+                    {
+                        expand: true,
+                        cwd: eavconf.cwd,
+                        src: ["**/*.*"],
+                        dest: eavconf.tmp
                     },
                     {
                         expand: true,
@@ -143,6 +157,10 @@ module.exports = function (grunt) {
             inpage: {
                 src: inpage.tmp + "**/*.js",
                 dest: inpage.concatFile
+            },
+            eavconf: {
+                src: eavconf.tmp + "**/*.js",
+                dest: eavconf.concatFile
             }
         },
 
@@ -162,16 +180,16 @@ module.exports = function (grunt) {
                 src: inpage.concatFile,
                 extDot: "last"          // Extensions in filenames begin after the last dot 
             },
+            eavconf: {
+                expand: true,
+                src: eavconf.concatFile,
+                extDot: "last"          // Extensions in filenames begin after the last dot 
+            },
             Sxc4ng: {
                 files: {
                     'js/AngularJS/2sxc4ng.annotated.js': ["js/AngularJS/2sxc4ng.js"]
                 }
-            },
-            //SxcModuleUi: {
-            //        files: {
-            //            'js/template-selector/template-selector.annotated.js': ["js/template-selector/template-selector.js"]
-            //        }
-            //}
+            }
         },
 
         uglify: {
@@ -187,6 +205,10 @@ module.exports = function (grunt) {
                 src: inpage.concatFile,
                 dest: inpage.uglifyFile
             },
+            eavconf: {
+                src: eavconf.concatFile,
+                dest: eavconf.uglifyFile
+            },
             Sxc4ng: {
                 files: {
                     'js/AngularJS/2sxc4ng.min.js': ["js/AngularJS/2sxc4ng.annotated.js"]
@@ -195,17 +217,9 @@ module.exports = function (grunt) {
             SxcCore: {
                 files: {
                     'js/2sxc.api.min.js': ["js/2sxc.api.js"],
-                    'js/2sxc.api.manage.min.js': ["js/2sxc.api.manage.js"],
-                    //'js/template-selector/template-selector.min.js': ["js/template-selector/template-selector.annotated.js"],
                     'js/dnn-inpage-edit.min.js': ["js/dnn-inpage-edit.js"]
                 }
-            },
-            //SxcModuleUi: {
-            //    files: {
-            //        'js/template-selector/template-selector.min.js': ["js/template-selector/template-selector.annotated.js"]
-            //    }
-
-            //}
+            }
         },
         
         // not in use yet

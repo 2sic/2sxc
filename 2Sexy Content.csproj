@@ -461,8 +461,7 @@
     <Content Include="Images\Edit.png" />
     <Content Include="Administration\Import.ascx" />
     <Content Include="Images\Save.png" />
-    <Content Include="js\2sxc.api.manage.js" />
-    <Content Include="js\2sxc.api.manage.min.js" />
+    <Content Include="src\inpage\module-toolbar\2sxc.api.manage.js" />
     <Content Include="js\2sxc.api.min.js" />
     <Content Include="js\dnn-inpage-edit.min.js" />
     <Content Include="src\inpage\template-selector\template-selector-view.html" />
@@ -511,15 +510,12 @@
     <Content Include="ReleaseNotes.txt" />
     <Content Include="Settings.ascx" />
     <Content Include="SexyContent\EAV\AngularServices\eav4ng.js" />
-    <Content Include="SexyContent\EAV\AngularServices\eavNgSvcs.js" />
-    <Content Include="SexyContent\EAV\AngularServices\NotificationService.js" />
     <Content Include="Extensions\Thumbnailer.aspx" />
     <Content Include="js\2sxc.api.js" />
     <Content Include="Extensions\ToSic_vCard\vCard.ashx" />
     <Content Include="BuildScripts\ModulePackage.Targets" />
     <Content Include="BuildScripts\MSBuild.Community.Tasks.targets" />
     <Content Include="package.json" />
-    <Content Include="js\2sxc.api.manage.min.js.map" />
     <Content Include="js\2sxc.api.min.js.map" />
     <Content Include="js\angularjs\2sxc4ng.min.js.map" />
     <Content Include="bootstrap\fonts\glyphicons-halflings-regular.eot" />
@@ -528,7 +524,7 @@
     <Content Include="bootstrap\fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="README.md" />
     <Content Include="js\dnn-inpage-edit.min.js.map" />
-    <Content Include="SexyContent\EAV\AngularServices\eav-configuration-in-sxc.js" />
+    <Content Include="src\config\eav-configuration-in-sxc.js" />
     <Content Include="SexyContent\EAV\FormlyEditUI\edit-contentgroup.html" />
     <Content Include="SexyContent\EAV\FormlyEditUI\edit-contentgroup-dnnwrapper.js" />
     <Content Include="SexyContent\EAV\FormlyEditUI\edit-entity.html" />

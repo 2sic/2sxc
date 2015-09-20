@@ -38,24 +38,24 @@ namespace ToSic.SexyContent
 				{
 				    var root = "~/desktopmodules/tosic_sexycontent/";
 				    var ext = ".js"; // ".min.js";
+
                     // add edit-mode CSS
                     ClientResourceManager.RegisterStyleSheet(Page, root + "edit.css");
-                    //ClientResourceManager.RegisterStyleSheet(Page, root + "bower_components/bootstrap/dist/css/bootstrap.min.css");
 
 					// ToDo: Move these RegisterScripts to JS to prevent including AngularJS twice (from other modules)
                     ClientResourceManager.RegisterScript(Page, root + "js/angularjs/angular.min.js", 80);
-                    ClientResourceManager.RegisterScript(Page, root + "dist/inpage/inpage" + ext, 81);
 
                     // New: multi-language stuff
-                    ClientResourceManager.RegisterScript(Page, root + "bower_components/angular-translate/angular-translate" + ext, 82);
-                    ClientResourceManager.RegisterScript(Page, root + "bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files" + ext, 83);
+				    ClientResourceManager.RegisterScript(Page, root + "dist/lib/i18n/set.min.js");
 
                     ClientResourceManager.RegisterScript(Page, root + "js/dnn-inpage-edit" + ext, 82);
 
                     ClientResourceManager.RegisterScript(Page, root + "js/2sxc.api" + ext, 90);
-                    ClientResourceManager.RegisterScript(Page, root + "js/2sxc.api.manage" + ext, 91);
+                    ClientResourceManager.RegisterScript(Page, root + "dist/inpage/inpage" + ext, 91);
+                    // ClientResourceManager.RegisterScript(Page, root + "js/2sxc.api.manage" + ext, 91);
 
                     ClientResourceManager.RegisterScript(Page, root + "js/angularjs/2sxc4ng" + ext, 93); 
+                    ClientResourceManager.RegisterScript(Page, root + "dist/config/config" + ext, 93); 
 
 					var hasContent = AppId.HasValue && Template != null && ContentGroup.Exists;
 					var templateChooserVisible = Settings.ContainsKey(SexyContent.SettingsShowTemplateChooser) ?
