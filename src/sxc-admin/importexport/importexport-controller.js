@@ -13,31 +13,40 @@
         .controller("Export", ExportController)
         ;
 
-    function IntroController(eavAdminDialogs, eavConfig, appId) {
+    function IntroController(eavAdminDialogs, eavConfig, oldDialogs, appId) {
         var vm = this;
+        function blankCallback() { }
 
-        vm.import = function() {
-            // probably afterwards
-            var resolve = eavAdminDialogs.CreateResolve({
-                appId: appId
-            });
-            return eavAdminDialogs.OpenModal(
-                "importexport/import.html",
-                "Import as vm",
-                "lg",
-                resolve);
+        vm.exportAll = function exp() {
+            oldDialogs.appExport(appId, blankCallback);
         };
 
-        vm.export = function() {
+        vm.import = function () {
+            oldDialogs.importPartial(appId, blankCallback);
+
             // probably afterwards
-            var resolve = eavAdminDialogs.CreateResolve({
-                appId: appId
-            });
-            return eavAdminDialogs.OpenModal(
-                "importexport/export.html",
-                "Export as vm",
-                "lg",
-                resolve);
+            //var resolve = eavAdminDialogs.CreateResolve({
+            //    appId: appId
+            //});
+            //return eavAdminDialogs.OpenModal(
+            //    "importexport/import.html",
+            //    "Import as vm",
+            //    "lg",
+            //    resolve, blankCallback);
+        };
+
+        vm.export = function () {
+            oldDialogs.exportPartial(appId, blankCallback);
+
+            // probably afterwards
+            //var resolve = eavAdminDialogs.CreateResolve({
+            //    appId: appId
+            //});
+            //return eavAdminDialogs.OpenModal(
+            //    "importexport/export.html",
+            //    "Export as vm",
+            //    "lg",
+            //    resolve, blankCallback);
         };
     }
 

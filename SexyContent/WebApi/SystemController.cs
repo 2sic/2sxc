@@ -75,12 +75,8 @@ namespace ToSic.SexyContent.WebApi
         [HttpGet]
         public void DeleteApp(int zoneId, int appId)
         {
-            // Important note: the dnn-object will fail
-            // if it's running in the context of a module without real content-types
-            // so this web-service only works, when running from a real module
-            // sometimes while testing you forget to use real module-ids and then this fails
             var sexy = new SexyContent(zoneId, appId, false);
-            var userId = Dnn.User.UserID;
+            var userId = PortalSettings.Current.UserId;
             sexy.RemoveApp(appId, userId);
         }
 
@@ -114,21 +110,23 @@ namespace ToSic.SexyContent.WebApi
         // redirects based on the app he's looking at, etc.
         private string GettingStartedUrl(App app)
         {
+            var dnn = PortalSettings.Current;
+            var mod = Request.FindModuleInfo();
             //int appId = sxc.AppId.Value;
             var gsUrl = "http://gettingstarted.2sexycontent.org/router.aspx?"
 
                         // Add version & module infos
                         + "DnnVersion=" + Assembly.GetAssembly(typeof(Globals)).GetName().Version.ToString(4)
                         + "&2SexyContentVersion=" + SexyContent.ModuleVersion
-                        + "&ModuleName=" + Dnn.Module.DesktopModule.ModuleName
-                        + "&ModuleId=" + Dnn.Module.ModuleID
-                        + "&PortalID=" + Dnn.Portal.PortalId
+                        + "&ModuleName=" + mod.DesktopModule.ModuleName
+                        + "&ModuleId=" + mod.ModuleID
+                        + "&PortalID=" + dnn.PortalId
                         + "&ZoneID=" + app.ZoneId
-                        + "&DefaultLanguage=" + PortalSettings.Current.DefaultLanguage
-                        + "&CurrentLanguage=" + PortalSettings.Current.CultureCode;
+                        + "&DefaultLanguage=" + dnn.DefaultLanguage
+                        + "&CurrentLanguage=" + dnn.CultureCode;
             ;
             // Add AppStaticName and Version
-            if (Dnn.Module.DesktopModule.ModuleName != "2sxc")
+            if (mod.DesktopModule.ModuleName != "2sxc")
             {
                 //var app = sxc.App;// SexyContent.GetApp(sexy, appId.Value, Sexy.OwnerPS);
 

@@ -16,7 +16,7 @@
         .controller("AppList", AppListController)
         ;
 
-    function AppListController(appsSvc, eavAdminDialogs, sxcDialogs, eavConfig, zoneId, $modalInstance) {
+    function AppListController(appsSvc, eavAdminDialogs, sxcDialogs, eavConfig, zoneId, oldDialogs, $modalInstance) {
         var vm = this;
 
         var svc = appsSvc(zoneId);
@@ -36,8 +36,12 @@
         
         vm.tryToDelete = function tryToDelete(item) {
             var result = prompt("This cannot be undone. To really delete this app, type (or copy/past) the app-name here: Delete '" + item.Name + "' (" + item.Id + ") ?");
+            if (result === null)
+                return;
             if(result === item.Name)
                 svc.delete(item.Id);
+            else 
+                alert("input did not match - will not delete");
         };
 
         // note that manage MUST open in a new iframe, to give the entire application 
@@ -57,12 +61,12 @@
         };
 
         vm.import = function imp() {
-            alert('todo');
+            oldDialogs.appImport(svc.liveListReload);
         };
 
         vm.export = function exp(item)
         {
-            alert("todo");
+            oldDialogs.appExport(item.Id, svc.liveListReload);
         };
 
         vm.languages = function languages() {

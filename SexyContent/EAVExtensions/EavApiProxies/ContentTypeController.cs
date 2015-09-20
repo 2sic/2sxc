@@ -34,6 +34,12 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
             return eavCtc.GetSingle(appId, contentTypeId, scope);
         }
 
+        [HttpGet]
+        public IContentType GetSingle(int appId, string contentTypeStaticName, string scope = null)
+        {
+            return eavCtc.GetSingle(appId, contentTypeStaticName, scope);
+        }
+
         [HttpDelete]
         public bool Delete(int appId, string staticName)
         {

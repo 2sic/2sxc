@@ -2,27 +2,27 @@
 <html>
 <head>
     <title>Content Editing UI</title>
-    <meta charset="utf-8"/>
+    <meta charset="utf-8" />
     <!-- first load the main 2sxc because it contains some url-param methods -->
     <script src="../../js/2sxc.api.min.js"></script>
     <script>
         // this creates an object on $.ServicesFramework
         // it looks like the DNN object and is necessary so that scripts relying on it will work
         // it basically fakes it, but contains the correct infos like getTabId etc. without needing the full DNN
-        function createFakeSf(dlgParams) {
+        function createFakeSf(apiUrl) {
             if (window.$ === undefined)
                 window.$ = {};
             var dollar = window.$;
-            var modId = $2sxc.urlParams.get('mid');
+            var modId = $2sxc.urlParams.require("mid");
             if (modId === "")
                 alert("ModuleId (mid) missing - cannot continue");
-            dollar.ServicesFramework = function(id) {
+            dollar.ServicesFramework = function (id) {
                 return {
                     name: "This is a fake DNN ServicesFramework",
                     description: "It enables stuff to work which thinks it needs this, but doesn't really",
-                    getTabId: function () { return dlgParams.tabId; },
-                    getAntiForgeryValue: function() { return "abcdefgihjklmnop"; },
-                    getServiceRoot: function() { return dlgParams.api; }
+                    getTabId: function () { return $2sxc.urlParams.require("tid"); },
+                    getAntiForgeryValue: function () { return "abcdefgihjklmnop"; },
+                    getServiceRoot: function () { return apiUrl; }
                 }
             }
         }
@@ -31,7 +31,7 @@
         function addScript(src) {
             var script = document.createElement('script');
             script.type = 'text/javascript';
-            script.src = src.replace(".autoext", $dlg.jsExt);
+            // script.src = src.replace(".autoext", ".js");
             document.write(script.outerHTML); // needs doc.write to ensure in-sync loading of the files
         }
 
@@ -46,82 +46,46 @@
 
     </script>
 
+    <!--default set needed for all UIs like angular, animate, translate-->
+    <script src="../lib/angular/set.min.js"></script>
+
+    <!--2sxc stuff like bootloader, configuration, eav-admin, sxc-admin and eav-edit -->
+    <script src="../../js/angularjs/2sxc4ng.min.js"></script>
+    <script src="../../sexycontent/eav/angularservices/eav-configuration-in-sxc.js"></script>
+    <script src="../admin/eav-admin.js"></script>
+    <script src="../admin/sxc-admin.js"></script>
+    <script src="../edit/eav-edit.js"></script>
+
+    <!-- style sheets -->
+    <link rel="stylesheet" type="text/css" href="../lib/angular/set.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../admin/eav-admin.min.css"/>
+
     <script>
-        var siteRoot = window.location.pathname.substring(0, window.location.pathname.toLowerCase().indexOf("desktopmodules"));
-        var path = siteRoot + "desktopmodules/tosic_sexycontent/";
-        var $dlg = {
-            modId: $2sxc.urlParams.require("mid"),// getRequiredParameter("mid"),
-            tabId: $2sxc.urlParams.require("tid"),//getRequiredParameter("tid"),
-            dialog: $2sxc.urlParams.require("dialog"),//getRequiredParameter("dialog"),
-            root: path,
-            lib: path + "bower_components/",
-            dist: path + "dist/",
-            api: siteRoot + "desktopmodules/2sxc/api/",
-            jsExt: ".js"// ".min.js", // ".min.js" or ".gz.js" or ".js"
-        };
-
-        // default set needed for all UIs like angular, animate, translate
-        addScript($dlg.lib + "angular/angular.autoext");
-        addScript($dlg.lib + "angular-resource/angular-resource.autoext");
-
-        addScript($dlg.lib + "angular-animate/angular-animate.autoext");
-        addScript($dlg.lib + "angular-translate/angular-translate.autoext");
-        addScript($dlg.lib + "angular-translate-loader-partial/angular-translate-loader-partial.autoext");
-        addScript($dlg.lib + "angular-bootstrap/ui-bootstrap-tpls.autoext");
-
-        // promise-window - needed till we get rid of all old dialogs
-        addScript($dlg.lib + "promise-window/dist/promise-window.autoext");
-
-        // 2sxc versions of eav scripts (with alternate configuration etc.)
-        addScript("../../js/angularjs/2sxc4ng.autoext");
-        addScript("../../sexycontent/eav/angularservices/eav-configuration-in-sxc.js");
-
-        // eav and 2sxc applications
-        addScript($dlg.dist + "admin/tosic-eav-admin.js");
-        addScript($dlg.dist + "admin/sxc-admin.js");
-
-        // this is all stuff needed by the edit UI
-        addScript($dlg.dist + "edit/tosic-eav-edit.js");
-        addScript($dlg.lib + "api-check/dist/api-check.js"); // apiCheck is used by formly to validate its api
-        addScript($dlg.lib + "angular-formly/dist/formly.autoext"); // This is the current state of master for formly core.
-        addScript($dlg.lib + "angular-formly-templates-bootstrap/dist/angular-formly-templates-bootstrap.autoext"); // This is the current state of master for the bootstrap templates
-        addScript($dlg.lib + "angular-bootstrap-file-field/dist/angular-bootstrap-file-field.min.js"); // only has min in dist
+        var apiUrl = window.location.pathname.substring(0, window.location.pathname.toLowerCase().indexOf("desktopmodules"))
+            + "desktopmodules/2sxc/api/";
+        var dialogName = $2sxc.urlParams.require("dialog");
 
         // Functionality only needed by the pipeline designers
-        if ($dlg.dialog === "pipeline-designer") {
-            addScript($dlg.lib + "jquery/dist/jquery.autoext");
-            addScript($dlg.lib + "jquery-ui/jquery-ui.autoext");
-
-            addScript("../../js/angularjs/toaster.js");
-            addScript($dlg.lib + "jsplumb/dist/js/jquery.jsPlumb-1.7.2-min.js");
-
-            addStyle($dlg.dist + "admin/pipeline-designer.min.css");
+        if (dialogName === "pipeline-designer") {
+            addScript("../lib/pipeline/set.min.js");
+            addStyle("../admin/pipeline-designer.min.css");
         }
 
-        // generic style stuff
-        addStyle($dlg.lib + "bootstrap/dist/css/bootstrap.min.css");
-        addStyle($dlg.lib + "bootstrap/dist/css/bootstrap-theme.min.css");
-
-        // CSS overrides etc.
-        addStyle($dlg.dist + "admin/eav-admin.min.css");
-
-    </script>
-    <script>
-        createFakeSf($dlg);
+        createFakeSf(apiUrl);
     </script>
 </head>
-<body style="background-color:transparent" >
+<body style="background-color:transparent">
 
-<script>
-    // note: the pipeline designer is special - it doesn't open a modal-dialog
-    // ...but should be shown directly
-    // all others will be modal-oened by the DialogHost App
-    if ($dlg.dialog !== "pipeline-designer")
-        document.write('<div sxc-app="DialogHost" ng-dependencies="InitParametersFromUrl,InitSxcParametersFromUrl,DialogHost" ng-controller="DialogHost as vm"></div>');
-    else {
-        document.write('<div sxc-app="PipelineDesigner" ng-include="\'pipelines/pipeline-designer.html\'" ng-dependencies="InitParametersFromUrl,InitSxcParametersFromUrl,PipelineDesigner"></div>');
-    }
-</script>
+    <script>
+        // note: the pipeline designer is special - it doesn't open a modal-dialog
+        // ...but should be shown directly
+        // all others will be modal-opened by the DialogHost App
+        if (dialogName !== "pipeline-designer")
+            document.write('<div sxc-app="DialogHost" ng-dependencies="InitParametersFromUrl,InitSxcParametersFromUrl,DialogHost" ng-controller="DialogHost as vm"></div>');
+        else {
+            document.write('<div sxc-app="PipelineDesigner" ng-include="\'pipelines/pipeline-designer.html\'" ng-dependencies="InitParametersFromUrl,InitSxcParametersFromUrl,PipelineDesigner"></div>');
+        }
+    </script>
 
 </body>
 </html>

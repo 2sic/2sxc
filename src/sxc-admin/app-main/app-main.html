@@ -70,7 +70,7 @@
                     </div>
                 </tab>
 
-                <tab select="vm.view='importexport'">
+                <!--<tab select="vm.view='importexport'">
                     <tab-heading>
                         <span icon="transfer" tooltip="{{'Main.Tab.ImportExport' | translate }}"></span> {{'Main.Tab.IE' | translate }}
                     </tab-heading>
@@ -78,18 +78,21 @@
                         <div ng-controller="ImportExportIntro as vm" ng-include="'importexport/intro.html'"></div>
 
                     </div>
-                </tab>
+                </tab>-->
 
 
 
 
-                <tab select="vm.view='app'" ng-if="!vm.config.IsContent">
+                <tab select="vm.view='app'">
                     <tab-heading>
                         <span icon="cog" tooltip="{{'Main.Tab.AppSettings' | translate }}"></span> {{'Main.Tab.AS' | translate }}
                     </tab-heading>
                     <div ng-if="vm.view == 'app'">
-                        <div ng-controller="AppSettings as vm" ng-include="'app-settings/app-settings.html'"></div>
-
+                        <div ng-if="!vm.config.IsContent">
+                            <div ng-controller="AppSettings as vm" ng-include="'app-settings/app-settings.html'"></div>
+                            <br />                            
+                        </div>
+                        <div ng-controller="ImportExportIntro as vm" ng-include="'importexport/intro.html'"></div>
                     </div>
                 </tab>
 

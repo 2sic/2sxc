@@ -35,7 +35,7 @@
     </asp:ListView>
     <ul class="dnnActions dnnClear">
         <li>
-            <a href="<%= EditUrl("", "", "appmanagement") %>" class="dnnPrimaryAction"><%= LocalizeString("hlkClose.Text") %></a>
+            <a href="javascript:window.close();" class="dnnPrimaryAction"><%= LocalizeString("hlkClose.Text") %></a>
         </li>
     </ul>
 </asp:Panel>

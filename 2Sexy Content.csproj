@@ -176,12 +176,12 @@
     <Compile Include="Administration\Apps\AppExport.ascx.designer.cs">
       <DependentUpon>AppExport.ascx</DependentUpon>
     </Compile>
-    <Compile Include="Administration\Apps\AppManagement.ascx.cs">
-      <DependentUpon>AppManagement.ascx</DependentUpon>
+    <Compile Include="Administration\Apps\x AppManagement.ascx.cs">
+      <DependentUpon>x AppManagement.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Administration\Apps\AppManagement.ascx.designer.cs">
-      <DependentUpon>AppManagement.ascx</DependentUpon>
+    <Compile Include="Administration\Apps\x AppManagement.ascx.designer.cs">
+      <DependentUpon>x AppManagement.ascx</DependentUpon>
     </Compile>
     <Compile Include="Administration\Apps\AppImport.ascx.cs">
       <DependentUpon>AppImport.ascx</DependentUpon>
@@ -429,7 +429,7 @@
   <ItemGroup>
     <Content Include=".gitignore" />
     <Content Include="Administration\Apps\AppExport.ascx" />
-    <Content Include="Administration\Apps\AppManagement.ascx" />
+    <Content Include="Administration\Apps\x AppManagement.ascx" />
     <Content Include="Administration\Apps\AppImport.ascx" />
     <Content Include="Administration\DataExport.ascx" />
     <Content Include="Administration\DataImport.ascx" />

@@ -3,13 +3,14 @@
     angular.module("AppSettingsApp", [
         "EavConfiguration",     // 
         "EavServices",
+        "SxcServices",
         "SxcTemplates",         // inline templates
         "EavAdminUi",           // dialog (modal) controller
     ])
         .controller("AppSettings", AppSettingsController)
         ;
 
-    function AppSettingsController(eavAdminDialogs, contentTypeSvc, contentItemsSvc, eavConfig, appId, $filter) {
+    function AppSettingsController(eavAdminDialogs, contentTypeSvc, contentItemsSvc, eavConfig, appId, oldDialogs, $filter) {
         var vm = this;
         var svc = contentTypeSvc(appId, "2SexyContent-App");
         vm.items = svc.liveList();
@@ -38,6 +39,34 @@
             });
         };
 
+        //vm.export = function exp() {
+        //    oldDialogs.appExport(appId, svc.liveListReload);
+        //};
+
+        //vm.importParts = function() {
+        //    // probably afterwards
+        //    var resolve = eavAdminDialogs.CreateResolve({
+        //        appId: appId
+        //    });
+        //    return eavAdminDialogs.OpenModal(
+        //        "importexport/import.html",
+        //        "Import as vm",
+        //        "lg",
+        //        resolve);
+        //};
+
+        //vm.exportParts = function() {
+        //    // probably afterwards
+        //    var resolve = eavAdminDialogs.CreateResolve({
+        //        appId: appId
+        //    });
+        //    return eavAdminDialogs.OpenModal(
+        //        "importexport/export.html",
+        //        "Export as vm",
+        //        "lg",
+        //        resolve);
+        //};
+    
     }
 
 } ());

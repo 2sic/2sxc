@@ -67,5 +67,6 @@ Contains:<br/>
 <ul class="dnnActions">
     <li>
         <asp:LinkButton runat="server" ID="btnExportApp" OnClick="btnExportApp_OnClick" Text="Export" CssClass="dnnPrimaryAction"></asp:LinkButton>
+            <a href="javascript:window.close();" class="dnnPrimaryAction">close</a>
     </li>
 </ul>

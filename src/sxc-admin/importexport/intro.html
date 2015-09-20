@@ -1,16 +1,30 @@
 ﻿<div>
     <div class="modal-header">
-        <!--<button icon="remove" class="btn pull-right" type="button" ng-click="vm.close()"></button>-->
-        <h3 class="modal-title" translate="ImportExport.Title"></h3>
+        <h3 class="modal-title" translate="AppConfig.Export.Title"></h3>
     </div>
     <div class="modal-body">
-        <div translate="ImportExport.Intro"></div>
-        <div translate="ImportExport.Alternatives"></div>
-        <div translate="ImportExport.FurtherHelp"></div>
-
-        <button icon="import" ng-click="vm.import()" class="btn" type="button" > import</button>
-
-        <button icon="export" ng-click="vm.export()" class="btn" type="button" > export</button>
-         
+        <div translate="AppConfig.Export.Intro"></div>
+        <button icon="export" ng-click="vm.exportAll()" class="btn" type="button">
+            {{'AppConfig.Export.Button' | translate}}
+        </button>
     </div>
-</div>
+        <br />
+
+
+        <div class="modal-header">
+            <h3 class="modal-title" translate="ImportExport.Title"></h3>
+        </div>
+        <div class="modal-body">
+            <div translate="ImportExport.Intro"></div>
+            <div translate="ImportExport.FurtherHelp"></div>
+
+            <button icon="import" ng-click="vm.import()" class="btn" type="button">
+                {{'ImportExport.Buttons.Import' | translate}}
+            </button>
+
+            <button icon="export" ng-click="vm.export()" class="btn" type="button">
+                {{'ImportExport.Buttons.Export' | translate}}
+            </button>
+
+        </div>
+    </div>

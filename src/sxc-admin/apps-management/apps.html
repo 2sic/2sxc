@@ -35,14 +35,14 @@
                     <td>
                         <span tooltip="
 Id: {{item.Id}}
-Guid: {{item.Guid}}">{{item.Name}}</span>
+Guid: {{item.Guid}}"><a ng-click="vm.manage(item)">{{item.Name}}</a></span>
                     </td>
                     <td>{{item.Folder}}</td>
                     <!--<td></td>-->
                     <td><span icon="{{ item.IsHidden ? 'eye-close' : 'eye-open' }}"></span> </td>
                     <td>
                         <button icon="cog" ng-disabled="!item.IsApp" type="button" class="btn btn-xs" ng-click="vm.config(item)"></button>
-                        <button icon="pencil" class="btn btn-xs" type="button" ng-click="vm.manage(item)"></button>
+                        <!--<button icon="pencil" class="btn btn-xs" type="button" ng-click="vm.manage(item)"></button>-->
                         <button icon="export" class="btn btn-xs" type="button" ng-click="vm.export(item)"></button>
                         <button icon="remove" ng-disabled="{{!item.IsApp}}" type="button" class="btn btn-xs" ng-click="vm.tryToDelete(item)"></button>
                     </td>

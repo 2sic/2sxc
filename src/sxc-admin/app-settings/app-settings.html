@@ -14,19 +14,29 @@
                 {{ 'AppConfig.Settings.Config' | translate }}
             </button>
         </div>
-        <br/>
-        <br/>
+        <br />
+        <br />
         <div>
             <h4 translate="AppConfig.Resources.Title"></h4>
             <div translate="AppConfig.Resources.Intro"></div>
-            <button icon="pencil" ng-disabled="!vm.ready()"  ng-click="vm.edit('App-Resources')" class="btn btn-primary" type="button">
+            <button icon="pencil" ng-disabled="!vm.ready()" ng-click="vm.edit('App-Resources')" class="btn btn-primary" type="button">
                 {{'AppConfig.Resources.Edit' | translate}}
             </button>
 
-            <button icon="cog" ng-disabled="!vm.ready()"  ng-click="vm.config('App-Resources')" class="btn" type="button">
+            <button icon="cog" ng-disabled="!vm.ready()" ng-click="vm.config('App-Resources')" class="btn" type="button">
                 {{'AppConfig.Resources.Config' | translate}}
             </button>
         </div>
+        <br />
 
+        <!--<div>
+            <h4 translate="AppConfig.Export.Title"></h4>
+            <div translate="AppConfig.Export.Intro"></div>
+            <button icon="export" ng-disabled="!vm.ready()" ng-click="vm.export()" class="btn" type="button">
+                {{'AppConfig.Export.Button' | translate}}
+            </button>
+        </div>
+        <br />-->
+       
     </div>
 </div>

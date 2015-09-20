@@ -1,7 +1,5 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="Import.ascx.cs" Inherits="ToSic.SexyContent.Import" %>
 <%@ Register TagPrefix="dnn" TagName="Label" Src="~/controls/LabelControl.ascx" %>
-<%@ Register TagName="AdministrationRegisters" TagPrefix="SexyContent" Src="Registers.ascx" %>
-<SexyContent:AdministrationRegisters runat="server"></SexyContent:AdministrationRegisters>
 
 
 <asp:Panel runat="server" class="dnnForm dnnSexyContentImport dnnClear" id="pnlUpload">
@@ -22,7 +20,7 @@
     </fieldset>
     <ul class="dnnActions dnnClear">
         <li><asp:LinkButton ID="btnUpload" runat="server" CssClass="dnnPrimaryAction" ResourceKey="btnUpload" OnClick="btnUpload_Click"></asp:LinkButton></li>
-        <li><asp:Hyperlink ID="hlkExport" runat="server" CssClass="dnnSecondaryAction" ResourceKey="btnExport"></asp:Hyperlink></li>
+        <li style="display:none"><asp:Hyperlink ID="hlkExport" runat="server" CssClass="dnnSecondaryAction" ResourceKey="btnExport"></asp:Hyperlink></li>
     </ul>
 </asp:Panel>
 

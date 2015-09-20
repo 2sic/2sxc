@@ -16,19 +16,14 @@
         },
 
         urls: {
-            exportContent: function (appId) {
-                return "/todo?appId=" + appId;
-            },
-            importContent: function (appId) {
-                return "/todo?appId=" + appId;
-            },
             ngRoot: function () {
                 return "/dist/";
-            },
-            pipelineDesigner: function (appId, pipelineId) {
-                return "/Pages/ngwrapper.cshtml?ng=pipeline-designer&AppId=" + appId + "&pipelineId=" + pipelineId;
-                //return '/Pages/ngwrapper.aspx?AppId=' + appId + '&PipelineId=' + pipelineId;
             }
+            //,
+            //pipelineDesigner: function (appId, pipelineId) {
+            //    return "ui.html#dialog=pipeline-designer&appId=" + appId + "&pipelineId=" + pipelineId;
+            //    //return '/Pages/ngwrapper.aspx?AppId=' + appId + '&PipelineId=' + pipelineId;
+            //}
         },
         languages: {
             languages: [{ key: "en-us", name: "English (United States)" }, { key: "de-de", name: "Deutsch (Deutschland)" }],
@@ -100,6 +95,9 @@ if (window.angular) // needed because the file is also included in older non-ang
             adminUrls: {
                 managePermissions: function (appId, targetId) {
                     return $eavUIConfig.urls.managePermissions(appId, targetId); //$eavUIConfig.baseUrl() + "ctl=permissions&Target=" + targetId;
+                },
+                pipelineDesigner: function(appId, pipelineId) {
+                    return "ui.html#dialog=pipeline-designer&appId=" + appId + "&pipelineId=" + pipelineId;
                 }
             },
             pipelineDesigner: {

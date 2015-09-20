@@ -71,7 +71,7 @@
         
         <ul class="dnnActions dnnClear">
             <li><asp:LinkButton ID="btnExport" runat="server" CssClass="dnnPrimaryAction" ResourceKey="hlkExport" OnClick="btnExport_Click"></asp:LinkButton></li>
-            <li><asp:HyperLink ID="hlkCancel" runat="server" CssClass="dnnSecondaryAction" ResourceKey="hlkCancel"></asp:HyperLink></li>
+            <li style="display: none"><asp:HyperLink ID="hlkCancel" runat="server" CssClass="dnnSecondaryAction" ResourceKey="hlkCancel"></asp:HyperLink></li>
         </ul>
     </fieldset>
 </asp:Panel>

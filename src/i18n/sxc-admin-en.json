@@ -59,16 +59,18 @@
     "QuickStart": "For a quick start, we recommend that you install the WebApi demo-app. It contains some WebAPI controllers with various actions and some example views to use these controllers. Download <a href='http://2sxc.org/en/Apps/tag/WebApi' target='_blank'>WebApi demos in the App-Catalog</a> or read more about it in <a href='http://2sxc.org/en/help?tag=webapi' target='_blank'>help</a>"
   },
   "ImportExport": {
-    "Title": "Import Templates and Content <em>into</em> this App/Content",
-    "Intro": "This import will add Content-Types, Templates and Content-Items to the <strong>current</strong> Content or App. ",
-    "Alternatives": "<ul><li>If you want to import a new App, go to <em>App-Management</em></li> <li>If you want to import Tables/Lists of content-items, go to the tab <em>Content / Data</em></li><li>To export an the entire Content (to migrate / duplicate this site) or to export an App, go to <em>App-Management</em></li> <li>To exports lists (tables) of Content-Items please go to the tab <em>Content / Data</em></li> </ul>",
+    "Title": "Export or Import <em>parts</em> of this App/Content",
+    "Intro": "Create an xml or zip containing <em>parts</em> of this app, to import into another app or content. Or import such a parts-package.",
     "FurtherHelp": "For further help visit <a href='http://2sxc.org/en/help?tag=import' target='_blank'>2sxc Help</a>.",
+          "Buttons": {
+        "Import": "import",
+        "Export": "export"
+      },
     "Import": {
       "Title": "Import a content export (.zip) or a partial export (.xml)",
       "Explanation": "This import will add Content-Types, Templates and Content-Items to the current Content or App.",
       "Select": "select file to import",
-      "Choose": "Choose file",
-      "ButtonExport": "Partial Export"
+      "Choose": "Choose file"
     },
     "Export": {
       "Title": "Partial Export of Content Types, Template Configuration and Content",
@@ -116,7 +118,9 @@
       "Edit": "edit app definition"
     },
     "Export": {
-      "Export": "export this app"
+      "Title": "Export this <em>entire</em> App",
+      "Intro": "Create an app-package (zip) which can be installed in another portal",
+      "Button": "export"
     }
   },
   "AppManagement": {
@@ -131,7 +135,8 @@
     "Buttons": {
       "Browse": "more apps",
       "Import": "import app",
-      "Create": "create"
+      "Create": "create",
+      "Export": "export app"
     }
   },
   "ReplaceContent": {
