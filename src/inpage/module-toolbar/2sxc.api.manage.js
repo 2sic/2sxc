@@ -4,6 +4,7 @@ $2sxc.getManageController = function(id) {
     var moduleElement = $(".DnnModule-" + id);
     var manageInfo = $.parseJSON(moduleElement.find(".Mod2sxcC, .Mod2sxcappC").attr("data-2sxc")).manage;
     manageInfo.ngDialogUrl = manageInfo.applicationRoot + "desktopmodules/tosic_sexycontent/dist/dnn/ui.html";
+
     manageInfo.ngDialogParams = {
         zoneId: manageInfo.zoneId,
         appId: manageInfo.appId,

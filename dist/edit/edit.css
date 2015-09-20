@@ -1,0 +1,14 @@
+.eav-entityselect-item { border: 1px solid #DDD;width: 295px;background: url('../../../../../Images/Drag.gif') 2px 7px no-repeat #FAFAFA;margin-top: -1px; }
+.eav-entityselect ol { margin-top: 1px; }
+.eav-entityselect-item div { padding: 3px 10px 3px 20px;position: relative;line-height: 25px; }
+.eav-entityselect-item span { display: block; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;padding-right: 25px; }
+.eav-entityselect-item-remove { width: 31px;height: 31px;background:url('../../../../../Images/Delete.png') center center no-repeat;display: block;text-indent: -9999px;position: absolute;right: 0px;top: 0px;cursor: pointer; }
+.eav-entityselect-selector { width: 200px; }
+.eav-entityselect-selector option[disabled], .eav-entityselect-selector option:disabled { color: #dddddd; }
+.angular-ui-tree-placeholder { margin: 0; }
+
+.eav-localization { }
+.eav-localization-lock { float: right; display: inline-block; }
+.eav-localization-lock-open { color: #228b22; }
+.eav-localization-dropdown { margin-top: 20px; }
+.eav-localization:hover .eav-localization-dropdown { display: block; }

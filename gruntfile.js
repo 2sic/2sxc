@@ -8,9 +8,9 @@ module.exports = function (grunt) {
         cwdJs: ["src/sxc-admin/**/*.js"],
         tmp: "tmp/sxc-admin/",
         templates: "tmp/sxc-admin/sxc-templates.js",
-        dist: "dist/admin/",
-        concatFile: "dist/admin/sxc-admin.js",
-        uglifyFile: "dist/admin/sxc-admin.min.js"
+        dist: "dist/sxc-admin/",
+        concatFile: "dist/sxc-admin/sxc-admin.js",
+        uglifyFile: "dist/sxc-admin/sxc-admin.min.js"
     };
     var inpage = {
         cwd: "src/inpage/",
@@ -51,6 +51,7 @@ module.exports = function (grunt) {
         },
 
         clean: {
+            dist: distRoot + "**/*", // only do this when you will re-copy the eav stuff into here
             tmp: tmpRoot + "**/*"
         },
 

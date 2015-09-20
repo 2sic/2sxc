@@ -1,0 +1,41 @@
+/* These are helpers to create larger dialogs than available by default in boostrap*/
+.modal-xlg {
+     width: 95%;
+}
+.modal-max {
+     width: 100%;
+}
+
+
+/* this helps that tooltips can wrap as we want them to */
+.tooltip-inner {
+    white-space: pre-wrap;
+}
+
+
+/* since we have many windows on other windows, I want to reduce opacity so it's more see-through */
+.modal-backdrop.in {
+    opacity: .1;
+}
+ 
+/* used for the custom file picker */
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}

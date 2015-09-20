@@ -172,6 +172,5 @@ grunt*/
 # 2sxc Upgrade Logs
 /Upgrade/Log
 packages/
-dist/
 tmp/
 bower_components
