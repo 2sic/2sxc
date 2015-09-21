@@ -26,6 +26,12 @@ var $2sxcActionMenuMapper = function (moduleId) {
         },
         edit: function () {
             $2sxc(moduleId).manage.action({ 'action': 'edit', 'useModuleList': true, 'sortOrder': 0 });
+        },
+        adminApp: function () {
+            $2sxc(moduleId).manage._openNgDialog({ 'action': 'app' });
+        },
+        adminZone: function () {
+            $2sxc(moduleId).manage._openNgDialog({ 'action': 'zone' });
         }
     };
 };

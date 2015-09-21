@@ -263,7 +263,7 @@ namespace ToSic.SexyContent
 								if (Template != null)
 								{
 									// Edit item
-									Actions.Add(GetNextActionID(), LocalizeString("ActionEdit.Text"), "", "", "edit.gif", "javascript:$2sxcActionMenuMapper(" + ModuleId + ").edit();", "test", true,
+									Actions.Add(GetNextActionID(), LocalizeString("ActionEdit.Text"), "", "", "edit.gif", "javascript:$2sxcActionMenuMapper(" + ModuleId + ", event).edit();", "test", true,
 										SecurityAccessLevel.Edit, true, false);
 								}
 							}
@@ -295,18 +295,16 @@ namespace ToSic.SexyContent
 								Actions.Add(GetNextActionID(), LocalizeString("ActionEditTemplateFile.Text"), ModuleActionType.EditContent, "templatehelp", "edit.gif", EditUrl(TabId, SexyContent.ControlKeys.EditTemplateFile, false, "mid", ModuleId.ToString(), "TemplateID", Template.TemplateId.ToString()), false, SecurityAccessLevel.Admin, true, true);
 							}
 
-							// Administrator functions
+							// App management
 							if (ZoneId.HasValue && AppId.HasValue)
-								Actions.Add(GetNextActionID(), "Admin" + (IsContentApp ? "" : " " + Sexy.App.Name), "Admin.Action",
-											"gettingstarted", "action_settings.gif", EditUrl("", "", "gettingstarted", SexyContent.AppIDString + "=" + AppId),
-											false, SecurityAccessLevel.Admin, true, false);
+                                Actions.Add(GetNextActionID(), "Admin" + (IsContentApp ? "" : " " + Sexy.App.Name), "", "", "edit.gif", "javascript:$2sxcActionMenuMapper(" + ModuleId + ").adminApp();", "", true,
+                                        SecurityAccessLevel.Admin, true, false);
 
-							// App Management
-							if (!IsContentApp)
-								Actions.Add(GetNextActionID(), "Apps Management", "AppManagement.Action",
-										"appmanagement", "action_settings.gif", EditUrl("", "", "appmanagement"),
-										false, SecurityAccessLevel.Admin, true, false);
-						}
+                            // Zone management (app list)
+                            if (!IsContentApp)
+                                Actions.Add(GetNextActionID(), "Apps Management", "AppManagement.Action", "", "action_settings.gif", "javascript:$2sxcActionMenuMapper(" + ModuleId + ").adminZone();", "", true,
+                                        SecurityAccessLevel.Admin, true, false);
+                        }
 					}
 					return _ModuleActions;
 				}

@@ -177,6 +177,12 @@ $2sxc.getManageController = function(id) {
                 params.groupPart = (settings.sortOrder !== -1) ? "content" : "listcontent";
                 params.groupIndex = settings.sortOrder;
             }
+            else if (settings.action === "app") {
+                params.dialog = "app";
+            }
+            else if (settings.action === "zone") {
+                params.dialog = "zone";
+            }
 
             // when doing new, there may be a prefill in the link to initialize the new item
             if (settings.prefill)
@@ -189,10 +195,10 @@ $2sxc.getManageController = function(id) {
 
         // open a new dialog of the angular-ui
         _openNgDialog: function(settings, event, closeCallback) {
-
+            
             var link = manageController.getNgLink(settings);
 
-            if (event.shiftKey)
+            if (window.event && event.shiftKey)
                 window.open(link);
             else
                 $2sxc.totalPopup.open(link, closeCallback);
