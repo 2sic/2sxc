@@ -218,7 +218,7 @@ module.exports = function (grunt) {
             SxcCore: {
                 files: {
                     'js/2sxc.api.min.js': ["js/2sxc.api.js"],
-                    'js/dnn-inpage-edit.min.js': ["js/dnn-inpage-edit.js"]
+                    //'js/dnn-inpage-edit.min.js': ["js/dnn-inpage-edit.js"]
                 }
             }
         },
