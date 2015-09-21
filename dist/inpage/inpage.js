@@ -1,3 +1,26 @@
+
+
+
+// Maps actions of the module menu to JS actions - needed because onclick event can't be set (actually, a bug in DNN)
+var $2sxcActionMenuMapper = function (moduleId) {
+    return {
+        changeLayoutOrContent: function () {
+            $2sxc(moduleId).manage._getSelectorScope().setTemplateChooserState(true);
+        },
+        addItem: function () {
+            $2sxc(moduleId).manage.action({ 'action': 'add', 'useModuleList': true });
+        },
+        edit: function () {
+            $2sxc(moduleId).manage.action({ 'action': 'edit', 'useModuleList': true, 'sortOrder': 0 });
+        },
+        adminApp: function () {
+            $2sxc(moduleId).manage._openNgDialog({ 'action': 'app' });
+        },
+        adminZone: function () {
+            $2sxc(moduleId).manage._openNgDialog({ 'action': 'zone' });
+        }
+    };
+};
 angular.module('SxcInpageTemplates',[]).run(['$templateCache', function($templateCache) {
   'use strict';
 
@@ -13,7 +36,26 @@ angular.module('SxcInpageTemplates',[]).run(['$templateCache', function($templat
 }]);
 
 // A helper-controller in charge of opening edit-dialogs + creating the toolbars for it
-$2sxc.getManageController = function(id) {
+
+// Toolbar bootstrapping (initialize all toolbars after loading page)
+$(document).ready(function () {
+    // Prevent propagation of the click (if menu was clicked)
+    $('.sc-menu').click(function (e) {
+        e.stopPropagation();
+    });
+
+    var modules = $('.DnnModule-2sxc .Mod2sxcC[data-2sxc], .DnnModule-2sxc-app .Mod2sxcappC[data-2sxc]');
+
+    modules.each(function () {
+        var moduleId = $(this).data("2sxc").moduleId;
+        $2sxc(moduleId).manage._processToolbars();
+    });
+
+    window.EavEditDialogs = [];
+});
+
+// all in-page toolbars etc.
+$2sxc.getManageController = function (id) {
 
     var moduleElement = $(".DnnModule-" + id);
     var manageInfo = $.parseJSON(moduleElement.find(".Mod2sxcC, .Mod2sxcappC").attr("data-2sxc")).manage;
