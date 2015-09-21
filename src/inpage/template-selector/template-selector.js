@@ -74,6 +74,13 @@
 
         };
 
+        vm.reload = function () {
+            if (vm.manageInfo.isContentApp)
+                vm.renderTemplate(vm.templateId);
+            else
+                $window.location.reload();
+        };
+
         realScope.$watch("vm.templateId", function (newTemplateId, oldTemplateId) {
         	if (newTemplateId != oldTemplateId) {
         		//alert("templateId changed");

@@ -196,12 +196,16 @@ $2sxc.getManageController = function(id) {
         // open a new dialog of the angular-ui
         _openNgDialog: function(settings, event, closeCallback) {
             
+            var callback = function () {
+                manageController._getSelectorScope().reload();
+                closeCallback();
+            };
             var link = manageController.getNgLink(settings);
 
             if (window.event && event.shiftKey)
                 window.open(link);
             else
-                $2sxc.totalPopup.open(link, closeCallback);
+                $2sxc.totalPopup.open(link, callback);
         },
 
         // Perform a toolbar button-action - basically get the configuration and execute it's action
@@ -393,6 +397,13 @@ $2sxc.getManageController = function(id) {
                 vm.loading--;
             });
 
+        };
+
+        vm.reload = function () {
+            if (vm.manageInfo.isContentApp)
+                vm.renderTemplate(vm.templateId);
+            else
+                $window.location.reload();
         };
 
         realScope.$watch("vm.templateId", function (newTemplateId, oldTemplateId) {
