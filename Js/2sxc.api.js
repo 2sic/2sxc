@@ -240,14 +240,16 @@
                 z++;
                 p = p.parent;
             }
-            ifrm.setAttribute("style", "position: absolute;top: 0;left: 0;width: 100%;height: 100%; z-index: " + z);
+            ifrm.setAttribute("style", "position: fixed;top: 0;left: 0;width: 100%;height: 100%; z-index: " + z);
             ifrm.setAttribute("src", url);
             document.body.appendChild(ifrm);
+            document.body.className += ' sxc-popup-open';
             $2sxc.totalPopup.frame = ifrm;
             $2sxc.totalPopup.callback = callback;
         },
         close: function closeTotalPopup() {
             if ($2sxc.totalPopup.frame) {
+                document.body.className = document.body.className.replace('sxc-popup-open', '');
                 var frm = $2sxc.totalPopup.frame;
                 frm.parentNode.removeChild(frm);
                 $2sxc.totalPopup.callback();
