@@ -509,7 +509,6 @@
     <Content Include="Administration\EditTemplate.ascx" />
     <Content Include="ReleaseNotes.txt" />
     <Content Include="Settings.ascx" />
-    <Content Include="SexyContent\EAV\AngularServices\eav4ng.js" />
     <Content Include="Extensions\Thumbnailer.aspx" />
     <Content Include="js\2sxc.api.js" />
     <Content Include="Extensions\ToSic_vCard\vCard.ashx" />
