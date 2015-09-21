@@ -142,8 +142,10 @@ $2sxc.getManageController = function(id) {
             };
 
             // add language info
-            if (settings.cultureDimension && settings.cultureDimension !== null)
-                params.langnum = settings.cultureDimension;
+            //if (settings.cultureDimension && settings.cultureDimension !== null)
+            //    params.langnum = settings.cultureDimension;
+            //params.lang = 
+            // ToDo: Add language configuration - how can I do the same in eav?
 
             // when not using a content-group list, ...
             if (!settings.useModuleList) {

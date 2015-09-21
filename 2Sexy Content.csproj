@@ -410,19 +410,12 @@
     <Compile Include="Administration\EditTemplate.ascx.designer.cs">
       <DependentUpon>EditTemplate.ascx</DependentUpon>
     </Compile>
-    <Compile Include="Settings.ascx.designer.cs">
-      <DependentUpon>Settings.ascx</DependentUpon>
-    </Compile>
     <Compile Include="SexyContent\SexyContent.cs" />
     <Compile Include="Administration\EditTemplate.ascx.cs">
       <DependentUpon>EditTemplate.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Settings.ascx.cs">
-      <DependentUpon>Settings.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
     <Compile Include="SexyContent\Engines\TokenEngine\FilteredNameValueCollectionPropertyAccess.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\TokenReplaceDnn.cs" />
   </ItemGroup>
@@ -508,7 +501,6 @@
     <Content Include="edit.css" />
     <Content Include="Administration\EditTemplate.ascx" />
     <Content Include="ReleaseNotes.txt" />
-    <Content Include="Settings.ascx" />
     <Content Include="SexyContent\EAV\AngularServices\eav4ng.js" />
     <Content Include="Extensions\Thumbnailer.aspx" />
     <Content Include="js\2sxc.api.js" />
@@ -643,7 +635,6 @@
   <ItemGroup>
     <Content Include="Administration\App_LocalResources\ManageTemplates.ascx.resx" />
     <Content Include="Administration\App_LocalResources\EditTemplate.ascx.resx" />
-    <Content Include="App_LocalResources\Settings.ascx.resx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_LocalResources\View.ascx.resx" />
@@ -651,7 +642,6 @@
   <ItemGroup>
     <Content Include="Administration\App_LocalResources\EditTemplate.ascx.de-DE.resx" />
     <Content Include="Administration\App_LocalResources\ManageTemplates.ascx.de-DE.resx" />
-    <Content Include="App_LocalResources\Settings.ascx.de-DE.resx" />
     <Content Include="App_LocalResources\View.ascx.de-DE.resx" />
   </ItemGroup>
   <ItemGroup>
@@ -667,12 +657,6 @@
     <Content Include="App_LocalResources\EditTemplateFile.ascx.de-DE.resx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_LocalResources\SettingsControl.ascx.de-DE.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_LocalResources\SettingsControl.ascx.resx" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Administration\App_LocalResources\Export.ascx.de-DE.resx" />
   </ItemGroup>
   <ItemGroup>
@@ -686,12 +670,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_LocalResources\EditList.ascx.de-DE.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_LocalResources\SettingsWrapper.ascx.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_LocalResources\SettingsWrapper.ascx.de-DE.resx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_LocalResources\EditContentGroup.ascx.resx" />
