@@ -65,8 +65,12 @@ $2sxc.getManageController = function (id) {
         zoneId: manageInfo.zoneId,
         appId: manageInfo.appId,
         tid: manageInfo.config.tabId,
-        mid: manageInfo.config.moduleId
+        mid: manageInfo.config.moduleId,
+        lang: manageInfo.lang,
+        langpri: manageInfo.langPrimary,
+        langs: manageInfo.languages
     };
+
     var toolbarConfig = manageInfo.config;
     toolbarConfig.returnUrl = window.location.href;
 
@@ -246,7 +250,7 @@ $2sxc.getManageController = function (id) {
             };
             var link = manageController.getNgLink(settings);
 
-            if (window.event && event.shiftKey)
+            if (event && event.shiftKey)
                 window.open(link);
             else
                 $2sxc.totalPopup.open(link, callback);

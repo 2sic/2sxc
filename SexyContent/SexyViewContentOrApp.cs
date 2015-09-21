@@ -84,11 +84,16 @@ namespace ToSic.SexyContent
 								cultureDimension = AppId.HasValue ? Sexy.GetCurrentLanguageID() : new int?(),
 								isList = Template != null && Template.UseForList
 							},
+                            applicationRoot = ResolveUrl("~"),
                             lang = System.Threading.Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName.ToLower(),
-                            fallbackLang = new [] {"en"},
-                            applicationRoot = ResolveUrl("~")
-						}
-					}));
+                            // fallbackLang = new [] {"en"},
+                            langPrimary = PortalSettings.DefaultLanguage.ToLower(),
+                            languages = new [] { "en-en:somethnig", "de-de:deutschland", "it-it:italy" }
+				    
+                            // SexyContent.GetCulturesWithActiveState(PortalId, ZoneId.Value).Where(c => c.Active).Select(c => c.Code.ToLower() + ":" + c.Text).ToArray()
+
+                        }
+                    }));
 
 				}
 			}
