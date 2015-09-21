@@ -48,8 +48,6 @@ namespace ToSic.SexyContent
                     // New: multi-language stuff
 				    ClientResourceManager.RegisterScript(Page, root + "dist/lib/i18n/set.min.js");
 
-                    ClientResourceManager.RegisterScript(Page, root + "js/dnn-inpage-edit" + ext, 82);
-
                     ClientResourceManager.RegisterScript(Page, root + "js/2sxc.api" + ext, 90);
                     ClientResourceManager.RegisterScript(Page, root + "dist/inpage/inpage" + ext, 91);
                     // ClientResourceManager.RegisterScript(Page, root + "js/2sxc.api.manage" + ext, 91);
@@ -86,11 +84,16 @@ namespace ToSic.SexyContent
 								cultureDimension = AppId.HasValue ? Sexy.GetCurrentLanguageID() : new int?(),
 								isList = Template != null && Template.UseForList
 							},
+                            applicationRoot = ResolveUrl("~"),
                             lang = System.Threading.Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName.ToLower(),
-                            fallbackLang = new [] {"en"},
-                            applicationRoot = ResolveUrl("~")
-						}
-					}));
+                            // fallbackLang = new [] {"en"},
+                            langPrimary = PortalSettings.DefaultLanguage.ToLower(),
+                            languages = new [] { "en-en:somethnig", "de-de:deutschland", "it-it:italy" }
+				    
+                            // SexyContent.GetCulturesWithActiveState(PortalId, ZoneId.Value).Where(c => c.Active).Select(c => c.Code.ToLower() + ":" + c.Text).ToArray()
+
+                        }
+                    }));
 
 				}
 			}

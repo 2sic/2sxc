@@ -4,19 +4,53 @@
 // the following config-stuff is not in angular, because some settings are needed in dialogs which are not built with angularJS yet.
 // they are included in the same file for conveniance and to motivate the remaining dialogs to get migrated to AngularJS
 
-//$(function () {
+(function () {
     var todofilesRoot = "/desktopmodules/tosic_sexycontent/";
+
+    // will contain some settings which are filled in different ways
     window.$eavUIConfig = {
-        // Get DNN ModuleContext
-        // globals: $('div[data-2sxc-globals]').data('2sxc-globals'),
         languages: {
-            languages: [{ key: "en-us", name: "English (United States)" }, { key: "de-de", name: "Deutsch (Deutschland)" }],
-            defaultLanguage: "en-us",
-            currentLanguage: "en-us",
+            //languages: [{ key: "en-us", name: "English (United States)" }, { key: "de-de", name: "Deutsch (Deutschland)" }],
+            uiFallback: "en", // just for the resources files of eav/2sxc
             i18nRoot: todofilesRoot + "dist/i18n/"
         }
-    };
-//});
+    }; 
+
+
+    if (jQuery !== undefined) { // in dnn-page there is a jquery, which also allows us to find attributes
+        // in jQuery-Mode I have to wait till the document is ready
+        $(function() {
+            var moduleElement = $(document);
+            var manageInfo = $.parseJSON($(moduleElement.find(".Mod2sxcC, .Mod2sxcappC")[0]).attr("data-2sxc")).manage;
+            window.$eavUIConfig.languages.defaultLanguage = manageInfo.langPrimary;
+            window.$eavUIConfig.languages.currentLanguage = manageInfo.lang;
+            window.$eavUIConfig.languages.currentLanguage = manageInfo.languages;
+        });
+    }
+    else {
+        window.$eavUIConfig.languages.defaultLanguage = $2sxc.urlParams.require("langpri");
+        window.$eavUIConfig.languages.currentLanguage = $2sxc.urlParams.require("lang");
+        window.$eavUIConfig.languages.currentLanguage = $2sxc.urlParams.require("langs");
+    }
+
+    function getLanguagesFromUrl() {
+        var langsInUrl = $2sxc.urlParams.get("langs");
+    }
+
+    //window.$eavUIConfig = {
+    //    // Get DNN ModuleContext
+    //    // globals: $('div[data-2sxc-globals]').data('2sxc-globals'),
+
+
+    //    languages: {
+    //        languages: [{ key: "en-us", name: "English (United States)" }, { key: "de-de", name: "Deutsch (Deutschland)" }],
+    //        uiFallback: "en", // just for the resources files of eav/2sxc
+    //        defaultLanguage: manageInfo.langPrimary,// $2sxc.urlParams.get("langpri"), // primary language in the portal (for content-fallback)
+    //        currentLanguage: manageInfo.lang,// $2sxc.urlParams.get("lang"),    // the current language
+    //        i18nRoot: todofilesRoot + "dist/i18n/"
+    //    }
+    //};
+})();
 
 if (window.angular) // needed because the file is also included in older non-angular dialogs
     angular.module("EavConfiguration", [])

@@ -456,7 +456,6 @@
     <Content Include="Images\Save.png" />
     <Content Include="src\inpage\module-toolbar\2sxc.api.manage.js" />
     <Content Include="js\2sxc.api.min.js" />
-    <Content Include="js\dnn-inpage-edit.min.js" />
     <Content Include="src\inpage\template-selector\template-selector-view.html" />
     <Content Include="src\inpage\template-selector\template-selector-app.html" />
     <Content Include="src\inpage\template-selector\template-selector.js" />
@@ -496,7 +495,6 @@
     <Content Include="js\EditDataSource\jsPlumb\mootools.jsPlumb-1.4.0-RC1.js" />
     <Content Include="js\EditDataSource\jsPlumb\yui.jsPlumb-1.4.0-RC1.js" />
     <Content Include="js\ItemForm.js" />
-    <Content Include="js\dnn-inpage-edit.js" />
     <Content Include="license.txt" />
     <Content Include="edit.css" />
     <Content Include="Administration\EditTemplate.ascx" />
@@ -515,7 +513,6 @@
     <Content Include="bootstrap\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="bootstrap\fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="README.md" />
-    <Content Include="js\dnn-inpage-edit.min.js.map" />
     <Content Include="src\config\eav-configuration-in-sxc.js" />
     <Content Include="SexyContent\EAV\FormlyEditUI\edit-contentgroup.html" />
     <Content Include="SexyContent\EAV\FormlyEditUI\edit-contentgroup-dnnwrapper.js" />
