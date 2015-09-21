@@ -48,8 +48,6 @@ namespace ToSic.SexyContent
                     // New: multi-language stuff
 				    ClientResourceManager.RegisterScript(Page, root + "dist/lib/i18n/set.min.js");
 
-                    ClientResourceManager.RegisterScript(Page, root + "js/dnn-inpage-edit" + ext, 82);
-
                     ClientResourceManager.RegisterScript(Page, root + "js/2sxc.api" + ext, 90);
                     ClientResourceManager.RegisterScript(Page, root + "dist/inpage/inpage" + ext, 91);
                     // ClientResourceManager.RegisterScript(Page, root + "js/2sxc.api.manage" + ext, 91);
