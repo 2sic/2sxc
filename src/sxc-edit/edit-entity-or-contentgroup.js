@@ -2,7 +2,7 @@
 (function() {
 	'use strict';
 
-	var app = angular.module('sxcEditContentGroup', ['eavEditEntity', 'eavLocalization', 'SxcEditTemplates', 'sxcEditContentGroupSvc']);
+	var app = angular.module('sxcEditContentGroup', ['eavEditEntity', 'eavLocalization', 'sxcFieldTemplates', 'SxcEditTemplates', 'sxcEditContentGroupSvc']);
 	app.directive('editContentGroup', function() {
 		return {
 		    templateUrl: 'edit-entity-or-contentgroup.html',

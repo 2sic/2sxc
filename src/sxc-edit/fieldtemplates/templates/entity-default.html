@@ -1,0 +1,19 @@
+﻿<div class="eav-entityselect">
+	<div ui-tree="options" data-empty-place-holder-enabled="false">
+		<ol ui-tree-nodes ng-model="model[options.key]">
+			<li ng-repeat="item in model[options.key]" ui-tree-node class="eav-entityselect-item">
+				<div ui-tree-handle>
+					<span title="{{getEntityText(item) + ' (' + item + ')'}}">{{getEntityText(item)}}</span>
+					<a data-nodrag title="Remove this item" ng-click="remove(this)" class="eav-entityselect-item-remove">[remove]</a>
+				</div>
+			</li>
+		</ol>
+	</div>
+
+	<select class="eav-entityselect-selector form-control" ng-model="selectedEntity" ng-change="addEntity()" ng-show="to.settings.Entity.AllowMultiValue || model[options.key].length < 1">
+		<option value="">-- choose --</option>
+		<option value="new" ng-if="createEntityAllowed()">-- new --</option>
+		<option ng-repeat="item in availableEntities" ng-disabled="model[options.key].indexOf(item.Value) != -1" value="{{item.Value}}">{{item.Text}}</option>
+	</select>
+
+</div>

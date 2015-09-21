@@ -586,6 +586,8 @@
     <Content Include="src\sxc-edit\edit-entity-or-contentgroup.html" />
     <Content Include="src\sxc-edit\edit-entity-or-contentgroup.js" />
     <Content Include="src\sxc-edit\fieldtemplates\sxc-fieldtemplates.js" />
+    <Content Include="src\sxc-edit\fieldtemplates\templates\entity-default.css" />
+    <Content Include="src\sxc-edit\fieldtemplates\templates\entity-default.html" />
     <Content Include="src\sxc-edit\fieldtemplates\templates\hyperlink-default-filemanager.html" />
     <Content Include="src\sxc-edit\fieldtemplates\templates\hyperlink-default-pagepicker.html" />
     <Content Include="src\sxc-edit\fieldtemplates\templates\hyperlink-default.html" />

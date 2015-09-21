@@ -654,7 +654,7 @@ angular.module("SxcAdminUi", [
 
         svc.openContentEdit = function oce(edit, closeCallback) {
             var resolve = eavAdminDialogs.CreateResolve(edit);
-            return eavAdminDialogs.OpenModal("edit-entity-or-contentgroup.html", "editContentGroupDnnWrapperCtrl as vm", "lg", resolve, closeCallback);
+            return eavAdminDialogs.OpenModal("edit-contentgroup-dnnwrapper.html", "editContentGroupDnnWrapperCtrl as vm", "lg", resolve, closeCallback);
         };
 
         svc.openLanguages = function orc(zoneId, closeCallback) {

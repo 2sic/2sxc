@@ -20,7 +20,7 @@
 	});
 
 	// The controller for the main form directive
-	app.controller('EditEntityCtrl', ["$http", "$scope", "formlyConfig", "contentTypeFieldSvc", "entitiesSvc", function editEntityCtrl($http, $scope, formlyConfig, contentTypeFieldSvc, entitiesSvc) {
+	app.controller('EditEntityCtrl', ["appId", "$http", "$scope", "formlyConfig", "contentTypeFieldSvc", "entitiesSvc", function editEntityCtrl(appId, $http, $scope, formlyConfig, contentTypeFieldSvc, entitiesSvc) {
 
 		var vm = this;
 		vm.editInDefaultLanguageFirst = function () {
@@ -50,7 +50,7 @@
 
 		var loadContentType = function () {
 
-		    contentTypeFieldSvc(1, { StaticName: vm.entity.Type.Name }).getFields() // ToDo: use correct AppId
+		    contentTypeFieldSvc(appId, { StaticName: vm.entity.Type.Name }).getFields()
 			.then(function (result) {
 			    vm.debug = result;
 
@@ -82,7 +82,7 @@
 	    // Load existing entity if defined
 		
 		if (!!$scope.entityId) {
-		    entitiesSvc.getMultiLanguage(1, $scope.contentTypeName, $scope.entityId) // ToDo: Use correct App-Id
+		    entitiesSvc.getMultiLanguage(appId, $scope.contentTypeName, $scope.entityId)
                 .then(function (result) {
                     vm.entity = result.data;
                     loadContentType();
@@ -91,17 +91,6 @@
 		    vm.entity = entitiesSvc.newEntity($scope.contentTypeName);
 		    loadContentType();
 		}
-
-
-		//// Load existing entity if defined
-		//if ($scope.entityId) {
-		//	entitiesSvc.getMultiLanguage(1, $scope.contentTypeName, $scope.entityId) // ToDo: Use correct App-Id
-		//		.then(function (result) {
-		//			vm.entity = result.data;
-		//		});
-		//} else {
-		//    vm.entity = entitiesSvc.newEntity();
-		//}
 
 		// Returns the field type for an attribute configuration
 		var getType = function(attributeConfiguration) {
@@ -122,7 +111,7 @@
 			return (type + '-' + subType);
 		};
 	}]);
-
+    
 	
 
 })();
