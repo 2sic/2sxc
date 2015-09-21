@@ -8,7 +8,7 @@
         .controller("DialogHost", DialogHostController)
         ;
 
-    function DialogHostController(zoneId, appId, entityId, $2sxc, dialog, sxcDialogs, eavAdminDialogs) {
+    function DialogHostController(zoneId, appId, $2sxc, dialog, sxcDialogs, eavAdminDialogs) {
         var vm = this;
         vm.dialog = dialog;
         var initialDialog = dialog;
@@ -19,8 +19,19 @@
 
         switch (initialDialog) {
             case "edit":
-                // todo: editor
-                eavAdminDialogs.openItemEditWithEntityId(entityId, vm.close);
+                // todo: editor, AssignmentObjectType, AssignmentId etc.
+                //var entityId = $2sxc.urlParams.get("entityId");
+                //var groupGuid = $2sxc.urlParams.get("typename");
+                //var groupGuid = $2sxc.urlParams.get("groupguid");
+                //var groupPart = $2sxc.urlParams.get("grouppart");
+                //var groupIndex = $2sxc.urlParams.get("groupindex");
+                sxcDialogs.openContentEdit({
+                    entityId: $2sxc.urlParams.get("entityid"),
+                    typeName: $2sxc.urlParams.get("typename"),
+                    groupGuid: $2sxc.urlParams.get("groupguid"),
+                    groupPart: $2sxc.urlParams.get("grouppart"),
+                    groupIndex: $2sxc.urlParams.get("groupindex")
+                }, vm.close);
                 break;
             case "zone":
                 // this is the zone-config dialog showing mainly all the apps

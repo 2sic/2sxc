@@ -208,7 +208,7 @@
         .controller("DialogHost", DialogHostController)
         ;
 
-    function DialogHostController(zoneId, appId, entityId, $2sxc, dialog, sxcDialogs, eavAdminDialogs) {
+    function DialogHostController(zoneId, appId, $2sxc, dialog, sxcDialogs, eavAdminDialogs) {
         var vm = this;
         vm.dialog = dialog;
         var initialDialog = dialog;
@@ -219,8 +219,19 @@
 
         switch (initialDialog) {
             case "edit":
-                // todo: editor
-                eavAdminDialogs.openItemEditWithEntityId(entityId, vm.close);
+                // todo: editor, AssignmentObjectType, AssignmentId etc.
+                //var entityId = $2sxc.urlParams.get("entityId");
+                //var groupGuid = $2sxc.urlParams.get("typename");
+                //var groupGuid = $2sxc.urlParams.get("groupguid");
+                //var groupPart = $2sxc.urlParams.get("grouppart");
+                //var groupIndex = $2sxc.urlParams.get("groupindex");
+                sxcDialogs.openContentEdit({
+                    entityId: $2sxc.urlParams.get("entityid"),
+                    typeName: $2sxc.urlParams.get("typename"),
+                    groupGuid: $2sxc.urlParams.get("groupguid"),
+                    groupPart: $2sxc.urlParams.get("grouppart"),
+                    groupIndex: $2sxc.urlParams.get("groupindex")
+                }, vm.close);
                 break;
             case "zone":
                 // this is the zone-config dialog showing mainly all the apps
@@ -247,7 +258,7 @@
                 throw "Trying to open a dialog, don't know which one";
         }
     }
-    DialogHostController.$inject = ["zoneId", "appId", "entityId", "$2sxc", "dialog", "sxcDialogs", "eavAdminDialogs"];
+    DialogHostController.$inject = ["zoneId", "appId", "$2sxc", "dialog", "sxcDialogs", "eavAdminDialogs"];
 
 } ());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
@@ -549,6 +560,8 @@ angular.module("SxcAdminUi", [
     "ReplaceContentApp",
     "SystemSettingsApp",
     "SxcTemplates",
+    "SxcEditTemplates",
+    "SxcEditContentGroupDnnWrapper",
     "EavAdminUi", // dialog (modal) controller
 ])
     .factory("oldDialogs", ["tabId", "AppInstanceId", "appId", function (tabId, AppInstanceId, appId) {
@@ -637,6 +650,11 @@ angular.module("SxcAdminUi", [
         svc.openReplaceContent = function orc(appId, groupGuid, groupPart, groupIndex, closeCallback) {
             var resolve = eavAdminDialogs.CreateResolve({ groupGuid: groupGuid, groupPart: groupPart, groupIndex: groupIndex });
             return eavAdminDialogs.OpenModal("replace-content/replace-content.html", "ReplaceDialog as vm", "xlg", resolve, closeCallback);
+        };
+
+        svc.openContentEdit = function oce(edit, closeCallback) {
+            var resolve = eavAdminDialogs.CreateResolve(edit);
+            return eavAdminDialogs.OpenModal("edit-entity-or-contentgroup.html", "editContentGroupDnnWrapperCtrl as vm", "lg", resolve, closeCallback);
         };
 
         svc.openLanguages = function orc(zoneId, closeCallback) {

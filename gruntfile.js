@@ -12,6 +12,15 @@ module.exports = function (grunt) {
         concatFile: "dist/sxc-admin/sxc-admin.js",
         uglifyFile: "dist/sxc-admin/sxc-admin.min.js"
     };
+    var sxcedit = {
+        cwd: "src/sxc-edit/",
+        cwdJs: ["src/sxc-edit/**/*.js"],
+        tmp: "tmp/sxc-edit/",
+        templates: "tmp/sxc-edit/sxc-templates.js",
+        dist: "dist/sxc-edit/",
+        concatFile: "dist/sxc-edit/sxc-edit.js",
+        uglifyFile: "dist/sxc-edit/sxc-edit.min.js"
+    };
     var inpage = {
         cwd: "src/inpage/",
         cwdJs: ["src/inpage/**/*.js"],
@@ -46,7 +55,7 @@ module.exports = function (grunt) {
                 laxbreak: true,
                 scripturl: true
             },
-            all: ["gruntfile.js", sxcadmin.cwd, inpage.cwd, eavconf.cwd, sxc4ng],
+            all: ["gruntfile.js", sxcadmin.cwd, inpage.cwd, eavconf.cwd, sxcedit.cwd, sxc4ng],
             Sxc: ["js/2sxc.api.js"]
         },
 
@@ -63,6 +72,12 @@ module.exports = function (grunt) {
                         cwd: sxcadmin.cwd,
                         src: ["**", "!**/*Spec.js"],
                         dest: sxcadmin.tmp
+                    },
+                    {
+                        expand: true,
+                        cwd: sxcedit.cwd,
+                        src: ["**", "!**/*Spec.js"],
+                        dest: sxcedit.tmp
                     },
                     {
                         expand: true,
@@ -125,6 +140,29 @@ module.exports = function (grunt) {
                     }
                 ]
             },
+            sxcedit: {
+                options: {
+                    module: "SxcEditTemplates",
+                    append: true,
+                    htmlmin: {
+                        collapseBooleanAttributes: true,
+                        collapseWhitespace: true,
+                        removeAttributeQuotes: true,
+                        removeComments: true,
+                        removeEmptyAttributes: true,
+                        removeRedundantAttributes: false,
+                        removeScriptTypeAttributes: true,
+                        removeStyleLinkTypeAttributes: true
+                    }
+                },
+                files: [
+                    {
+                        cwd: sxcedit.tmp,
+                        src: ["**/*.html"],
+                        dest: sxcedit.templates
+                    }
+                ]
+            },
             inpage: {
                 options: {
                     module: "SxcInpageTemplates",
@@ -155,6 +193,10 @@ module.exports = function (grunt) {
                 src: sxcadmin.tmp + "**/*.js",
                 dest: sxcadmin.concatFile
             },
+            sxcedit: {
+                src: sxcedit.tmp + "**/*.js",
+                dest: sxcedit.concatFile
+            },
             inpage: {
                 src: inpage.tmp + "**/*.js",
                 dest: inpage.concatFile
@@ -174,6 +216,11 @@ module.exports = function (grunt) {
             sxcadmin: {
                 expand: true,
                 src: sxcadmin.concatFile,
+                extDot: "last"          // Extensions in filenames begin after the last dot 
+            },
+            sxcedit: {
+                expand: true,
+                src: sxcedit.concatFile,
                 extDot: "last"          // Extensions in filenames begin after the last dot 
             },
             inpage: {
@@ -201,6 +248,10 @@ module.exports = function (grunt) {
             sxcadmin: {
                 src: sxcadmin.concatFile,
                 dest: sxcadmin.uglifyFile
+            },
+            sxcedit: {
+                src: sxcedit.concatFile,
+                dest: sxcedit.uglifyFile
             },
             inpage: {
                 src: inpage.concatFile,

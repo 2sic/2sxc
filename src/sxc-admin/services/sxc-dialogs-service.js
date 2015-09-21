@@ -9,6 +9,8 @@ angular.module("SxcAdminUi", [
     "ReplaceContentApp",
     "SystemSettingsApp",
     "SxcTemplates",
+    "SxcEditTemplates",
+    "SxcEditContentGroupDnnWrapper",
     "EavAdminUi", // dialog (modal) controller
 ])
     .factory("oldDialogs", function (tabId, AppInstanceId, appId) {
@@ -97,6 +99,11 @@ angular.module("SxcAdminUi", [
         svc.openReplaceContent = function orc(appId, groupGuid, groupPart, groupIndex, closeCallback) {
             var resolve = eavAdminDialogs.CreateResolve({ groupGuid: groupGuid, groupPart: groupPart, groupIndex: groupIndex });
             return eavAdminDialogs.OpenModal("replace-content/replace-content.html", "ReplaceDialog as vm", "xlg", resolve, closeCallback);
+        };
+
+        svc.openContentEdit = function oce(edit, closeCallback) {
+            var resolve = eavAdminDialogs.CreateResolve(edit);
+            return eavAdminDialogs.OpenModal("edit-entity-or-contentgroup.html", "editContentGroupDnnWrapperCtrl as vm", "lg", resolve, closeCallback);
         };
 
         svc.openLanguages = function orc(zoneId, closeCallback) {

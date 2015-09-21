@@ -581,6 +581,16 @@
     <Content Include="src\sxc-admin\templates\templates.html" />
     <Content Include="src\sxc-admin\web-api\web-api-controller.js" />
     <Content Include="src\sxc-admin\web-api\web-api.html" />
+    <Content Include="src\sxc-edit\edit-contentgroup-dnnwrapper.html" />
+    <Content Include="src\sxc-edit\edit-contentgroup-dnnwrapper.js" />
+    <Content Include="src\sxc-edit\edit-entity-or-contentgroup.html" />
+    <Content Include="src\sxc-edit\edit-entity-or-contentgroup.js" />
+    <Content Include="src\sxc-edit\fieldtemplates\sxc-fieldtemplates.js" />
+    <Content Include="src\sxc-edit\fieldtemplates\templates\hyperlink-default-filemanager.html" />
+    <Content Include="src\sxc-edit\fieldtemplates\templates\hyperlink-default-pagepicker.html" />
+    <Content Include="src\sxc-edit\fieldtemplates\templates\hyperlink-default.html" />
+    <Content Include="src\sxc-edit\fieldtemplates\templates\string-wysiwyg.html" />
+    <Content Include="src\sxc-edit\services\contentgroup-service.js" />
     <Content Include="Styles\Edit.css" />
     <Content Include="Styles\EditDataSource\demo-new.css" />
     <Content Include="Styles\EditDataSource\flowchartDemo.css" />
