@@ -17,7 +17,7 @@
     }; 
 
 
-    if (jQuery) { // in dnn-page there is a jquery, which also allows us to find attributes
+    if (jQuery !== undefined) { // in dnn-page there is a jquery, which also allows us to find attributes
         // in jQuery-Mode I have to wait till the document is ready
         $(function() {
             var moduleElement = $(document);
