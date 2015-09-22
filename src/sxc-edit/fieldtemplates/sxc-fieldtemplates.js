@@ -20,13 +20,6 @@
 			controller: 'FieldTemplate-HyperlinkCtrl as vm'
 		});
 
-		formlyConfigProvider.setType({
-			name: 'entity-default',
-			templateUrl: 'fieldtemplates/templates/entity-default.html',
-			wrapper: ['bootstrapLabel', 'bootstrapHasError'],
-			controller: 'FieldTemplate-EntityCtrl'
-		});
-
 	});
 
 	app.controller('FieldTemplate-HyperlinkCtrl', function ($modal, $scope, $http, sxc) {
@@ -118,70 +111,6 @@
 			if (newValue != oldValue)
 				vm.bridge.setReadOnly(newValue);
 		});
-
-	});
-
-	app.controller('FieldTemplate-EntityCtrl', function($scope, $http, $filter, $modal) {
-
-		$scope.availableEntities = [];
-
-		if ($scope.model[$scope.options.key] === null)
-			$scope.model[$scope.options.key] = [];
-
-		$scope.addEntity = function() {
-			if ($scope.selectedEntity == "new")
-				$scope.openNewEntityDialog();
-			else
-				$scope.model[$scope.options.key].push(parseInt($scope.selectedEntity));
-			$scope.selectedEntity = "";
-		};
-
-		$scope.createEntityAllowed = function () {
-			return $scope.to.settings.Entity.EntityType !== null && $scope.to.settings.Entity.EntityType !== "";
-		};
-
-		$scope.openNewEntityDialog = function () {
-
-			var modalInstance = $modal.open({
-				template: '<div style="padding:20px;"><edit-content-group edit="vm.edit"></edit-content-group></div>',
-				controller: function(entityType) {
-					var vm = this;
-					vm.edit = { contentTypeName: entityType };
-				},
-				controllerAs: 'vm',
-				resolve: {
-					entityType: function() {
-						return $scope.to.settings.Entity.EntityType;
-					}
-				}
-			});
-
-			modalInstance.result.then(function() {
-				$scope.getAvailableEntities();
-			});
-
-		};
-
-		$scope.getAvailableEntities = function () {
-			$http({
-				method: 'GET',
-				url: 'eav/EntityPicker/getavailableentities',
-				params: {
-					entityType: $scope.to.settings.Entity.EntityType,
-					// ToDo: dimensionId: $scope.configuration.DimensionId
-				}
-			}).then(function(data) {
-				$scope.availableEntities = data.data;
-			});
-		};
-
-		$scope.getEntityText = function (entityId) {
-		    var entities = $filter('filter')($scope.availableEntities, { Value: entityId });
-		    return entities.length > 0 ? entities[0].Text : "(Entity not found)";
-		};
-
-		// Initialize entities
-		$scope.getAvailableEntities();
 
 	});
 

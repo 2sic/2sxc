@@ -1773,6 +1773,10 @@ angular.module("eavNgSvcs", ["ng"])
 			};
 		};
         
+		svc.save = function save(appId, newData) {
+		    return $http.post("eav/entities/save", newData, { params: { appId: appId } });
+		};
+
         return svc;
     }])
 

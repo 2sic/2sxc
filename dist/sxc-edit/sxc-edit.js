@@ -140,13 +140,6 @@
 			controller: 'FieldTemplate-HyperlinkCtrl as vm'
 		});
 
-		formlyConfigProvider.setType({
-			name: 'entity-default',
-			templateUrl: 'fieldtemplates/templates/entity-default.html',
-			wrapper: ['bootstrapLabel', 'bootstrapHasError'],
-			controller: 'FieldTemplate-EntityCtrl'
-		});
-
 	}]);
 
 	app.controller('FieldTemplate-HyperlinkCtrl', ["$modal", "$scope", "$http", "sxc", function ($modal, $scope, $http, sxc) {
@@ -241,70 +234,6 @@
 
 	}]);
 
-	app.controller('FieldTemplate-EntityCtrl', ["$scope", "$http", "$filter", "$modal", function($scope, $http, $filter, $modal) {
-
-		$scope.availableEntities = [];
-
-		if ($scope.model[$scope.options.key] === null)
-			$scope.model[$scope.options.key] = [];
-
-		$scope.addEntity = function() {
-			if ($scope.selectedEntity == "new")
-				$scope.openNewEntityDialog();
-			else
-				$scope.model[$scope.options.key].push(parseInt($scope.selectedEntity));
-			$scope.selectedEntity = "";
-		};
-
-		$scope.createEntityAllowed = function () {
-			return $scope.to.settings.Entity.EntityType !== null && $scope.to.settings.Entity.EntityType !== "";
-		};
-
-		$scope.openNewEntityDialog = function () {
-
-			var modalInstance = $modal.open({
-				template: '<div style="padding:20px;"><edit-content-group edit="vm.edit"></edit-content-group></div>',
-				controller: ["entityType", function(entityType) {
-					var vm = this;
-					vm.edit = { contentTypeName: entityType };
-				}],
-				controllerAs: 'vm',
-				resolve: {
-					entityType: function() {
-						return $scope.to.settings.Entity.EntityType;
-					}
-				}
-			});
-
-			modalInstance.result.then(function() {
-				$scope.getAvailableEntities();
-			});
-
-		};
-
-		$scope.getAvailableEntities = function () {
-			$http({
-				method: 'GET',
-				url: 'eav/EntityPicker/getavailableentities',
-				params: {
-					entityType: $scope.to.settings.Entity.EntityType,
-					// ToDo: dimensionId: $scope.configuration.DimensionId
-				}
-			}).then(function(data) {
-				$scope.availableEntities = data.data;
-			});
-		};
-
-		$scope.getEntityText = function (entityId) {
-		    var entities = $filter('filter')($scope.availableEntities, { Value: entityId });
-		    return entities.length > 0 ? entities[0].Text : "(Entity not found)";
-		};
-
-		// Initialize entities
-		$scope.getAvailableEntities();
-
-	}]);
-
 	app.directive('webFormsBridge', ["sxc", function (sxc) {
 		var webFormsBridgeUrl = sxc._editContentGroupConfig.tabBaseUrl + "?ctl=webformsbridge&mid=" + sxc.id + "&popUp=true";
 
@@ -372,11 +301,6 @@ angular.module('SxcEditTemplates',[]).run(['$templateCache', function($templateC
 
   $templateCache.put('edit-entity-or-contentgroup.html',
     "<div><eav-language-switcher></eav-language-switcher><div ng-repeat=\"entityToEdit in vm.entitiesToEdit\"><h2 ng-if=entityToEdit.editControlTitle>{{entityToEdit.editControlTitle}}</h2><div class=bg-info style=padding:12px ng-if=\"entityToEdit.isPresentation && entityToEdit.useDefaultValues\">The default values are used currently. <a class=\"btn btn-default\" ng-click=\"entityToEdit.useDefaultValues = false;\">Create</a></div><div ng-if=!entityToEdit.useDefaultValues><div class=pull-right ng-if=entityToEdit.isPresentation><a class=\"btn btn-default\" ng-click=\"entityToEdit.useDefaultValues = true;\">Use default values</a></div><eav-edit-entity content-type-name={{entityToEdit.contentTypeName}} entity-id={{entityToEdit.entityId}} register-edit-control=vm.registerEditControl></eav-edit-entity></div></div><button ng-disabled=!vm.isValid() ng-click=vm.save() class=\"btn btn-primary submit-button\">Save</button></div>"
-  );
-
-
-  $templateCache.put('fieldtemplates/templates/entity-default.html',
-    "<div class=eav-entityselect><div ui-tree=options data-empty-place-holder-enabled=false><ol ui-tree-nodes ng-model=model[options.key]><li ng-repeat=\"item in model[options.key]\" ui-tree-node class=eav-entityselect-item><div ui-tree-handle><span title=\"{{getEntityText(item) + ' (' + item + ')'}}\">{{getEntityText(item)}}</span> <a data-nodrag title=\"Remove this item\" ng-click=remove(this) class=eav-entityselect-item-remove>[remove]</a></div></li></ol></div><select class=\"eav-entityselect-selector form-control\" ng-model=selectedEntity ng-change=addEntity() ng-show=\"to.settings.Entity.AllowMultiValue || model[options.key].length < 1\"><option value=\"\">-- choose --</option><option value=new ng-if=createEntityAllowed()>-- new --</option><option ng-repeat=\"item in availableEntities\" ng-disabled=\"model[options.key].indexOf(item.Value) != -1\" value={{item.Value}}>{{item.Text}}</option></select></div>"
   );
 
 
