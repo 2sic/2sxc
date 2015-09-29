@@ -1,5 +1,5 @@
 ﻿<div>
-	<eav-language-switcher></eav-language-switcher>
+	<!--<eav-language-switcher></eav-language-switcher>
 
 	<div ng-repeat="entityToEdit in vm.entitiesToEdit">
 		<h2 ng-if="entityToEdit.editControlTitle">{{entityToEdit.editControlTitle}}</h2>
@@ -14,5 +14,7 @@
 			<eav-edit-entity content-type-name="{{entityToEdit.contentTypeName}}" entity-id="{{entityToEdit.entityId}}" register-edit-control="vm.registerEditControl"></eav-edit-entity>
 		</div>
 	</div>
-	<button ng-disabled="!vm.isValid()" ng-click="vm.save()" class="btn btn-primary submit-button">Save</button>
+	<button ng-disabled="!vm.isValid()" ng-click="vm.save()" class="btn btn-primary submit-button">Save</button>-->
+
+    <eav-edit-entities edit-package-request="vm.editPackageRequest"></eav-edit-entities>
 </div>

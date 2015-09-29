@@ -8,6 +8,7 @@ using ToSic.Eav;
 using ToSic.Eav.DataSources;
 using ToSic.SexyContent.Serializers;
 using ToSic.SexyContent.WebApi;
+using System.Linq;
 
 namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 {
@@ -27,7 +28,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 
 	    private void EnsureSerializerHasSxc()
 	    {
-            (entitesController.Serializer as Serializer).Sxc = Sexy;	        
+            (entitesController.Serializer as Serializer).Sxc = Sexy;
 	    }
 
         [HttpGet]
@@ -37,11 +38,45 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
             return entitesController.GetOne(contentType, id, appId, cultureCode);
         }
 
-        
+
+        [HttpPost]
+        public dynamic GetPackage([FromBody]  EditPackageRequest packageRequest)
+        {
+            if (packageRequest.Type == "entities")
+                return entitesController.GetPackage(App.AppId, packageRequest);
+            
+            if(packageRequest.Type != "group")
+                throw new NotSupportedException("Package type " + packageRequest.Type + " is not supported.");
+
+            var contentGroup = Sexy.ContentGroups.GetContentGroup(packageRequest.GroupGuid);
+
+            return new
+            {
+                entities = packageRequest.GroupSet.Select(s => new {
+                    packageInfo = new {
+                        type = "group",
+                        groupGuid = packageRequest.GroupGuid,
+                        groupSet = s,
+                        groupIndex = packageRequest.GroupIndex,
+                        contentTypeName = contentGroup.Template.ContentTypeStaticName // UI needs to know which content type to load...
+                    },
+                    entity = contentGroup[s].Count > packageRequest.GroupIndex && contentGroup[s][packageRequest.GroupIndex] != null ?
+                        entitesController.GetOne(App.AppId, contentGroup.Template.ContentTypeStaticName, contentGroup[s][packageRequest.GroupIndex].EntityId) :
+                        null
+                })
+            };
+        }
+
+        public class EditPackageRequest : ToSic.Eav.WebApi.EntitiesController.EditPackageRequestEntities {
+            public Guid GroupGuid { get; set; }
+            public string[] GroupSet { get; set; }
+            public int GroupIndex { get; set; }
+        }
+
         /// <summary>
-		/// Get all Entities of specified Type
-		/// </summary>
-		[HttpGet]
+        /// Get all Entities of specified Type
+        /// </summary>
+        [HttpGet]
         public IEnumerable<Dictionary<string, object>> GetEntities(string contentType, int appId, string cultureCode = null)
 		{
             EnsureSerializerHasSxc();
@@ -60,7 +95,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
         /// <summary>
         /// Get Entities with specified AssignmentObjectTypeId and Key
         /// </summary>
-        [HttpGet]
+        //[HttpGet]
 		//public IEnumerable<Dictionary<string, object>> GetAssignedEntities(int assignmentObjectTypeId, Guid keyGuid, string contentType, int appId)
 		//{
 		//    var metadataController = new ToSic.Eav.WebApi.MetadataController();

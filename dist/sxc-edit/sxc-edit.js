@@ -20,7 +20,7 @@
 (function() {
 	'use strict';
 
-	var app = angular.module('sxcEditContentGroup', ['eavEditEntity', 'eavLocalization', 'sxcFieldTemplates', 'SxcEditTemplates', 'sxcEditContentGroupSvc']);
+	var app = angular.module('sxcEditContentGroup', ['eavEditEntity', 'eavLocalization', 'sxcFieldTemplates', 'SxcEditTemplates', 'eavEditEntity']);
 	app.directive('editContentGroup', function() {
 		return {
 		    templateUrl: 'edit-entity-or-contentgroup.html',
@@ -33,87 +33,105 @@
 		};
 	});
 
-	app.controller('editContentGroupCtrl', ["$q", "$scope", "sxcContentGroupService", function($q, $scope, sxcContentGroupService) {
+	app.controller('editContentGroupCtrl', ["$q", "$scope", function($q, $scope) {
 		var vm = this;
 
+	    // Prepare parameters
+	    var entityId = $scope.edit.entityId;
+	    var contentTypeName = $scope.edit.contentTypeName;
+	    var contentGroupGuid = $scope.edit.contentGroupGuid;
+	    //var mode = $scope.edit.mode;
+	    var sortOrder = $scope.edit.sortOrder;
+
+	    if (contentGroupGuid) {
+	        vm.editPackageRequest = {
+	            type: 'group',
+	            groupGuid: contentGroupGuid,
+                groupSet: ['content'],
+                groupIndex: sortOrder
+	        };
+	    }
+	    else {
+	        vm.editPackageRequest = {
+	            type: 'entities',
+	            entities: [{
+	                contentTypeName: contentTypeName,
+                    entityId: entityId
+	            }]
+	        };
+	    }
+
 		// This array holds the entities to edit
-		vm.entitiesToEdit = [];
+		//vm.entitiesToEdit = [];
 
-		// Prepare parameters
-		var entityId = $scope.edit.entityId;
-		var contentTypeName = $scope.edit.contentTypeName;
-		var contentGroupGuid = $scope.edit.contentGroupGuid;
-		//var mode = $scope.edit.mode;
-		var sortOrder = $scope.edit.sortOrder;
+		//// Edit a content group - first load the contentgroup configuration
+		//// Then add entities to edit from configuration
+		//if (contentGroupGuid) {
+		//	// ToDo: Refactor - move to service and move api
+		//	sxcContentGroupService.get(contentGroupGuid).then(function (result) {
+		//		var contentGroup = result.data;
 
-		// Edit a content group - first load the contentgroup configuration
-		// Then add entities to edit from configuration
-		if (contentGroupGuid) {
-			// ToDo: Refactor - move to service and move api
-			sxcContentGroupService.get(contentGroupGuid).then(function (result) {
-				var contentGroup = result.data;
+		//		// Template must be set to edit something
+		//		if(!contentGroup.Template)
+		//			alert('No template defined');
 
-				// Template must be set to edit something
-				if(!contentGroup.Template)
-					alert('No template defined');
+		//		console.log(result);
 
-				console.log(result);
+		//		// Use either default or List types. Reset sortOrder to 0 for List types.
+		//		var editTypes = sortOrder == -1 ? ['ListContent', 'ListPresentation'] : ['Content', 'Presentation'];
+		//		if (sortOrder == -1)
+		//			sortOrder = 0;
 
-				// Use either default or List types. Reset sortOrder to 0 for List types.
-				var editTypes = sortOrder == -1 ? ['ListContent', 'ListPresentation'] : ['Content', 'Presentation'];
-				if (sortOrder == -1)
-					sortOrder = 0;
+		//		angular.forEach(editTypes, function (editType, i) {
+		//			var contentTypeName = contentGroup.Template[editType + 'TypeStaticName'];
 
-				angular.forEach(editTypes, function (editType, i) {
-					var contentTypeName = contentGroup.Template[editType + 'TypeStaticName'];
+		//			var entityToEdit = {
+		//				contentTypeName: contentTypeName,
+		//				entityId: contentGroup[editType][sortOrder],
+		//				editControlTitle: editType
+		//			};
 
-					var entityToEdit = {
-						contentTypeName: contentTypeName,
-						entityId: contentGroup[editType][sortOrder],
-						editControlTitle: editType
-					};
+		//			if (editType.indexOf("Presentation") != -1)
+		//				entityToEdit.isPresentation = true;
+		//			if (entityToEdit.isPresentation && !entityToEdit.entityId)
+		//				entityToEdit.useDefaultValues = true;
 
-					if (editType.indexOf("Presentation") != -1)
-						entityToEdit.isPresentation = true;
-					if (entityToEdit.isPresentation && !entityToEdit.entityId)
-						entityToEdit.useDefaultValues = true;
+		//			if (contentTypeName)
+		//				vm.entitiesToEdit.push(entityToEdit);
+		//		});
 
-					if (contentTypeName)
-						vm.entitiesToEdit.push(entityToEdit);
-				});
-
-				console.log(vm.entitiesToEdit);
-			});
-		}
+		//		console.log(vm.entitiesToEdit);
+		//	});
+		//}
 		
-		if (entityId) // User wants to edit a single entity
-			vm.entitiesToEdit.push({ entityId: entityId, editControlTitle: 'Entity' });
-		else if (contentTypeName && !contentGroupGuid) // EntityId not specified, but contentTypeName - user wants to add an item of this type
-			vm.entitiesToEdit.push({ contentTypeName: contentTypeName, editControlTitle: 'Entity' });
+		//if (entityId) // User wants to edit a single entity
+		//	vm.entitiesToEdit.push({ entityId: entityId, editControlTitle: 'Entity' });
+		//else if (contentTypeName && !contentGroupGuid) // EntityId not specified, but contentTypeName - user wants to add an item of this type
+		//	vm.entitiesToEdit.push({ contentTypeName: contentTypeName, editControlTitle: 'Entity' });
 
-		vm.registeredControls = [];
-		vm.registerEditControl = function(control) {
-			vm.registeredControls.push(control);
-		};
+		//vm.registeredControls = [];
+		//vm.registerEditControl = function(control) {
+		//	vm.registeredControls.push(control);
+		//};
 
-		vm.isValid = function() {
-			var valid = true;
-			angular.forEach(vm.registeredControls, function(e, i) {
-				if (!e.isValid())
-					valid = false;
-			});
-			return valid;
-		};
+		//vm.isValid = function() {
+		//	var valid = true;
+		//	angular.forEach(vm.registeredControls, function(e, i) {
+		//		if (!e.isValid())
+		//			valid = false;
+		//	});
+		//	return valid;
+		//};
 
-		vm.save = function() {
-			var savePromises = [];
-			angular.forEach(vm.registeredControls, function(e, i) {
-				savePromises.push(e.save());
-			});
-			$q.all(savePromises).then(function() {
-				alert("All save promises resolved!");
-			});
-		};
+		//vm.save = function() {
+		//	var savePromises = [];
+		//	angular.forEach(vm.registeredControls, function(e, i) {
+		//		savePromises.push(e.save());
+		//	});
+		//	$q.all(savePromises).then(function() {
+		//		alert("All save promises resolved!");
+		//	});
+		//};
 	}]);
 
 })();
@@ -276,21 +294,21 @@
 // TODO - merge this into the contentGroup controller - it shouldn't need an own controller for this in Formly
 
 
-(function () {
-	'use strict';
+//(function () {
+//	'use strict';
 
-	angular.module('sxcEditContentGroupSvc', []).factory('sxcContentGroupService', ["$http", function ($http) {
+//	angular.module('sxcEditContentGroupSvc', []).factory('sxcContentGroupService', function ($http) {
 
-		return {
-			get: function (contentGroupGuid) {
-				// Returns a typed default value from the string representation
-				return $http.get('app/ContentGroup/Get?contentGroupGuid=' + contentGroupGuid);
-			}
-		};
+//		return {
+//			get: function (contentGroupGuid) {
+//				// Returns a typed default value from the string representation
+//				return $http.get('app/ContentGroup/Get?contentGroupGuid=' + contentGroupGuid);
+//			}
+//		};
 
-	}]);
+//	});
 
-})();
+//})();
 angular.module('SxcEditTemplates',[]).run(['$templateCache', function($templateCache) {
   'use strict';
 
@@ -300,7 +318,7 @@ angular.module('SxcEditTemplates',[]).run(['$templateCache', function($templateC
 
 
   $templateCache.put('edit-entity-or-contentgroup.html',
-    "<div><eav-language-switcher></eav-language-switcher><div ng-repeat=\"entityToEdit in vm.entitiesToEdit\"><h2 ng-if=entityToEdit.editControlTitle>{{entityToEdit.editControlTitle}}</h2><div class=bg-info style=padding:12px ng-if=\"entityToEdit.isPresentation && entityToEdit.useDefaultValues\">The default values are used currently. <a class=\"btn btn-default\" ng-click=\"entityToEdit.useDefaultValues = false;\">Create</a></div><div ng-if=!entityToEdit.useDefaultValues><div class=pull-right ng-if=entityToEdit.isPresentation><a class=\"btn btn-default\" ng-click=\"entityToEdit.useDefaultValues = true;\">Use default values</a></div><eav-edit-entity content-type-name={{entityToEdit.contentTypeName}} entity-id={{entityToEdit.entityId}} register-edit-control=vm.registerEditControl></eav-edit-entity></div></div><button ng-disabled=!vm.isValid() ng-click=vm.save() class=\"btn btn-primary submit-button\">Save</button></div>"
+    "<div><eav-edit-entities edit-package-request=vm.editPackageRequest></eav-edit-entities></div>"
   );
 
 

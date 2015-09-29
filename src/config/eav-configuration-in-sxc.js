@@ -4,6 +4,7 @@
 // the following config-stuff is not in angular, because some settings are needed in dialogs which are not built with angularJS yet.
 // they are included in the same file for conveniance and to motivate the remaining dialogs to get migrated to AngularJS
 
+
 (function () {
     var todofilesRoot = "/desktopmodules/tosic_sexycontent/";
 
@@ -17,7 +18,7 @@
     }; 
 
 
-    if (jQuery !== undefined) { // in dnn-page there is a jquery, which also allows us to find attributes
+    if (window.jQuery !== undefined) { // in dnn-page there is a jquery, which also allows us to find attributes
         // in jQuery-Mode I have to wait till the document is ready
         $(function() {
             var moduleElement = $(document);

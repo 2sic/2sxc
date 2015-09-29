@@ -14,37 +14,38 @@ namespace ToSic.SexyContent.WebApi
 	public class ContentGroupController : SxcApiController
 	{
 
-		[HttpGet]
-		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-		public object Get([FromUri] Guid contentGroupGuid)
-		{
-		    var contentGroup = GetContentGroup(contentGroupGuid);
+        // ToDo 2rm: Check if this is needed somewhere...
+        //[HttpGet]
+        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        //public object Get([FromUri] Guid contentGroupGuid)
+        //{
+        //    var contentGroup = GetContentGroup(contentGroupGuid);
 
-		    return new
-			{
-				Guid = contentGroup.ContentGroupGuid,
-				Content = contentGroup.Content.Select(e => e == null ? new int?() : e.EntityId).ToArray(),
-				Presentation = contentGroup.Presentation.Select(e => e == null ? new int?() : e.EntityId).ToArray(),
-				ListContent = contentGroup.ListContent.Select(e => e.EntityId).ToArray(),
-				ListPresentation = contentGroup.ListPresentation.Select(e => e.EntityId).ToArray(),
-				Template = contentGroup.Template == null ? null : new {
-					contentGroup.Template.Name,
-					contentGroup.Template.ContentTypeStaticName,
-					contentGroup.Template.PresentationTypeStaticName,
-					contentGroup.Template.ListContentTypeStaticName,
-					contentGroup.Template.ListPresentationTypeStaticName
-				}
-			};
-		}
+        //    return new
+        //	{
+        //		Guid = contentGroup.ContentGroupGuid,
+        //		Content = contentGroup.Content.Select(e => e == null ? new int?() : e.EntityId).ToArray(),
+        //		Presentation = contentGroup.Presentation.Select(e => e == null ? new int?() : e.EntityId).ToArray(),
+        //		ListContent = contentGroup.ListContent.Select(e => e.EntityId).ToArray(),
+        //		ListPresentation = contentGroup.ListPresentation.Select(e => e.EntityId).ToArray(),
+        //		Template = contentGroup.Template == null ? null : new {
+        //			contentGroup.Template.Name,
+        //			contentGroup.Template.ContentTypeStaticName,
+        //			contentGroup.Template.PresentationTypeStaticName,
+        //			contentGroup.Template.ListContentTypeStaticName,
+        //			contentGroup.Template.ListPresentationTypeStaticName
+        //		}
+        //	};
+        //}
 
-	    private ContentGroup GetContentGroup(Guid contentGroupGuid)
-	    {
-	        var contentGroup = Sexy.ContentGroups.GetContentGroup(contentGroupGuid);
+        private ContentGroup GetContentGroup(Guid contentGroupGuid)
+        {
+            var contentGroup = Sexy.ContentGroups.GetContentGroup(contentGroupGuid);
 
-	        if (contentGroup == null)
-	            throw new Exception("ContentGroup with Guid " + contentGroupGuid + " does not exist.");
-	        return contentGroup;
-	    }
+            if (contentGroup == null)
+                throw new Exception("ContentGroup with Guid " + contentGroupGuid + " does not exist.");
+            return contentGroup;
+        }
 
         [HttpGet]
 	    public IEnumerable<dynamic> Replace(Guid guid, string part, int index)

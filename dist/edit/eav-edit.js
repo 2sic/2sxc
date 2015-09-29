@@ -281,7 +281,7 @@
 
 	    $scope.availableEntities = [];
 
-	    if ($scope.model[$scope.options.key] === null || $scope.model[$scope.options.key].Values[0].Value === "")
+	    if ($scope.model[$scope.options.key] === undefined || $scope.model[$scope.options.key].Values[0].Value === "")
 	        $scope.model[$scope.options.key] = { Values: [{ Value: [], Dimensions: {} }] };
 
 	    $scope.chosenEntities = $scope.model[$scope.options.key].Values[0].Value;

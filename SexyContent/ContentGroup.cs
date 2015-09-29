@@ -123,15 +123,15 @@ namespace ToSic.SexyContent
 		{
 			get
 			{
-				switch (type)
+				switch (type.ToLower())
 				{
-					case "Content":
+					case "content":
 						return Content;
-					case "Presentation":
+					case "presentation":
 						return Presentation;
-					case "ListContent":
+					case "listcontent":
 						return ListContent;
-					case "ListPresentation":
+					case "listpresentation":
 						return ListPresentation;
 					default:
 						throw new Exception("Type " + type + " not allowed");
