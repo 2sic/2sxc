@@ -3,15 +3,18 @@
 	'use strict';
 
 	var app = angular.module('SxcEditContentGroupDnnWrapper', ['sxcEditContentGroup']);
-	app.controller('editContentGroupDnnWrapperCtrl', ["entityId", "typeName", "groupGuid", "groupIndex", function (entityId, typeName, groupGuid, groupIndex) {
+	app.controller('editContentGroupDnnWrapperCtrl', ["entityId", "typeName", "groupGuid", "groupSet", "groupIndex", "$modalInstance", function (entityId, typeName, groupGuid, groupSet, groupIndex, $modalInstance) {
 		var vm = this;
 		// Prepare URL parameters, which are passed to edit directive
 		vm.edit = {
 			entityId: entityId,
-			contentTypeName: typeName,
-			contentGroupGuid: groupGuid,
-			sortOrder: groupIndex
+			typeName: typeName,
+			groupGuid: groupGuid,
+			groupIndex: groupIndex,
+            groupSet: groupSet
 		};
+
+		vm.close = $modalInstance.close;
 	}]);
 
 })();
@@ -38,24 +41,24 @@
 
 	    // Prepare parameters
 	    var entityId = $scope.edit.entityId;
-	    var contentTypeName = $scope.edit.contentTypeName;
-	    var contentGroupGuid = $scope.edit.contentGroupGuid;
+	    var typeName = $scope.edit.typeName;
+	    var groupGuid = $scope.edit.groupGuid;
 	    //var mode = $scope.edit.mode;
-	    var sortOrder = $scope.edit.sortOrder;
+	    var groupIndex = $scope.edit.groupIndex;
 
-	    if (contentGroupGuid) {
+	    if (groupGuid) {
 	        vm.editPackageRequest = {
 	            type: 'group',
-	            groupGuid: contentGroupGuid,
-                groupSet: ['content'],
-                groupIndex: sortOrder
+	            groupGuid: groupGuid,
+                groupSet: ['content', 'presentation'],
+                groupIndex: groupIndex
 	        };
 	    }
 	    else {
 	        vm.editPackageRequest = {
 	            type: 'entities',
 	            entities: [{
-	                contentTypeName: contentTypeName,
+	                contentTypeName: typeName,
                     entityId: entityId
 	            }]
 	        };
@@ -242,7 +245,7 @@ angular.module('SxcEditTemplates',[]).run(['$templateCache', function($templateC
   'use strict';
 
   $templateCache.put('edit-contentgroup-dnnwrapper.html',
-    "<edit-content-group edit=vm.edit></edit-content-group>"
+    "<div class=modal-header><button class=\"btn pull-right\" type=button icon=remove ng-click=vm.close()></button><h3 class=modal-title>Edit</h3></div><div class=modal-body><edit-content-group edit=vm.edit></edit-content-group></div>"
   );
 
 

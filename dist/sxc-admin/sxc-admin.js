@@ -516,8 +516,8 @@ angular.module("SxcServices")//, ['ng', 'eavNgSvcs', "EavConfiguration"])
         .factory("groupGuid", ["$2sxc", function ($2sxc) {
             return $2sxc.urlParams.get("groupguid");
         }])
-        .factory("groupPart", ["$2sxc", function ($2sxc) {
-            return $2sxc.urlParams.get("grouppart");
+        .factory("groupSet", ["$2sxc", function ($2sxc) {
+            return $2sxc.urlParams.get("groupset");
         }])
         .factory("groupIndex", ["$2sxc", function ($2sxc) {
             return $2sxc.urlParams.get("groupindex");

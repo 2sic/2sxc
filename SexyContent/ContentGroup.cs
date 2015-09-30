@@ -166,7 +166,13 @@ namespace ToSic.SexyContent
 
 		private void UpdateEntities(string type, IEnumerable<int?> entityIds)
 		{
-			if (type == "Presentation" && entityIds.Count() > Content.Count)
+            // ToDo: Try to get rid of this code...
+            if (type == "content") type = "Content";
+            if (type == "presentation") type = "Presentation";
+            if (type == "listcontent") type = "ListContent";
+            if (type == "listpresentation") type = "ListPresentation";
+
+            if (type == "Presentation" && entityIds.Count() > Content.Count)
 				throw new Exception("Presentation may not contain more items than Content.");
 
 			var values = new Dictionary<string, object>

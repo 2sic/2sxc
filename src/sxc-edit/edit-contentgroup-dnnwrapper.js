@@ -3,15 +3,18 @@
 	'use strict';
 
 	var app = angular.module('SxcEditContentGroupDnnWrapper', ['sxcEditContentGroup']);
-	app.controller('editContentGroupDnnWrapperCtrl', function (entityId, typeName, groupGuid, groupIndex) {
+	app.controller('editContentGroupDnnWrapperCtrl', function (entityId, typeName, groupGuid, groupSet, groupIndex, $modalInstance) {
 		var vm = this;
 		// Prepare URL parameters, which are passed to edit directive
 		vm.edit = {
 			entityId: entityId,
-			contentTypeName: typeName,
-			contentGroupGuid: groupGuid,
-			sortOrder: groupIndex
+			typeName: typeName,
+			groupGuid: groupGuid,
+			groupIndex: groupIndex,
+            groupSet: groupSet
 		};
+
+		vm.close = $modalInstance.close;
 	});
 
 })();

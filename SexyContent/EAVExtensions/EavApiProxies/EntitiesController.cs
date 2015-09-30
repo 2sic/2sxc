@@ -54,6 +54,8 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
             {
                 entities = packageRequest.GroupSet.Select(s => {
                     var contentTypeStaticName = contentGroup.Template.GetTypeStaticName(s);
+                    if (contentTypeStaticName == "")
+                        return null;
                     return new
                     {
                         packageInfo = new
@@ -68,7 +70,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
                             entitiesController.GetOne(App.AppId, contentTypeStaticName, contentGroup[s][packageRequest.GroupIndex].EntityId) :
                             null
                     };
-                })
+                }).Where(c => c != null)
             };
         }
 
@@ -85,18 +87,24 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
             {
                 // Save entity in EAV
                 success = success && entitiesController.Save(entity.Entity, appId);
+
+                // Get saved entity (to get its ID) - ToDo: Should get ID from Save method, would clean up this code
+                var dataSource = DataSource.GetInitialDataSource(App.ZoneId, App.AppId, false);
+                dataSource = DataSource.GetDataSource<EntityTypeFilter>(App.ZoneId, App.AppId, dataSource);
+                ((EntityTypeFilter)dataSource).TypeName = entity.Entity.Type.StaticName;
+                var savedEntity = dataSource.List.Where(p => p.Value.EntityGuid == entity.Entity.Guid).Select(p => p.Value).FirstOrDefault();
+
+                if (savedEntity == null)
+                    throw new Exception("Saved entity not found - not able to save contentgroup");
+
                 // ... then update contentgroup info (if defined)
-
-                if (entity.Entity.Id == 0)
-                    throw new Exception("Entity was not created - entity has no Id");
-
-                if(entity.PackageInfo.type == "group")
+                if (entity.PackageInfo.type == "group")
                 {
                     var contentGroup = Sexy.ContentGroups.GetContentGroup((Guid)entity.PackageInfo.groupGuid);
                     var groupSet = (string)entity.PackageInfo.groupSet;
                     var groupIndex = (int)entity.PackageInfo.groupIndex;
-                    if (contentGroup[groupSet].Count <= groupIndex || contentGroup[groupSet][groupIndex].EntityId != entity.Entity.Id)
-                    contentGroup.UpdateEntity(groupSet, groupIndex, entity.Entity.Id);
+                    if (contentGroup[groupSet].Count <= groupIndex || contentGroup[groupSet][groupIndex] == null || contentGroup[groupSet][groupIndex].EntityId != savedEntity.EntityId)
+                        contentGroup.UpdateEntity(groupSet, groupIndex, savedEntity.EntityId);
                 }
             }
             return success;

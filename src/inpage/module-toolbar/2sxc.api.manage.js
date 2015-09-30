@@ -177,17 +177,17 @@ $2sxc.getManageController = function (id) {
                 if (settings.action !== "new")
                     params.entityid = settings.entityId;
                 if (settings.contentType || settings.attributeSetName)
-                    params.contenttype = settings.contentType || settings.attributeSetName;
+                    params.contenttypename = settings.contentType || settings.attributeSetName;
             }
             // when using a list, the sort-order is important to find the right item
             else {
                 params.groupGuid = settings.contentGroupId;
-                params.sortorder = settings.sortOrder;
+                params.groupIndex = settings.sortOrder;
             }
 
             if (settings.action === "replace") {
                 params.dialog = "replace";
-                params.groupPart = (settings.sortOrder !== -1) ? "content" : "listcontent";
+                params.groupSet = (settings.sortOrder !== -1) ? "content" : "listcontent";
                 params.groupIndex = settings.sortOrder;
             }
             else if (settings.action === "app") {

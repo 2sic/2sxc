@@ -20,24 +20,24 @@
 
 	    // Prepare parameters
 	    var entityId = $scope.edit.entityId;
-	    var contentTypeName = $scope.edit.contentTypeName;
-	    var contentGroupGuid = $scope.edit.contentGroupGuid;
+	    var typeName = $scope.edit.typeName;
+	    var groupGuid = $scope.edit.groupGuid;
 	    //var mode = $scope.edit.mode;
-	    var sortOrder = $scope.edit.sortOrder;
+	    var groupIndex = $scope.edit.groupIndex;
 
-	    if (contentGroupGuid) {
+	    if (groupGuid) {
 	        vm.editPackageRequest = {
 	            type: 'group',
-	            groupGuid: contentGroupGuid,
-                groupSet: ['content'],
-                groupIndex: sortOrder
+	            groupGuid: groupGuid,
+                groupSet: ['content', 'presentation'],
+                groupIndex: groupIndex
 	        };
 	    }
 	    else {
 	        vm.editPackageRequest = {
 	            type: 'entities',
 	            entities: [{
-	                contentTypeName: contentTypeName,
+	                contentTypeName: typeName,
                     entityId: entityId
 	            }]
 	        };
