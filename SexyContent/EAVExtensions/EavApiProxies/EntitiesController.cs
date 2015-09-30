@@ -19,7 +19,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 	[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 	public class EntitiesController : SxcApiController // DnnApiController
 	{
-	    private Eav.WebApi.EntitiesController entitesController = new Eav.WebApi.EntitiesController();
+	    private Eav.WebApi.EntitiesController entitiesController = new Eav.WebApi.EntitiesController();
 
 		public EntitiesController(): base()
 		{
@@ -28,14 +28,14 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 
 	    private void EnsureSerializerHasSxc()
 	    {
-            (entitesController.Serializer as Serializer).Sxc = Sexy;
+            (entitiesController.Serializer as Serializer).Sxc = Sexy;
 	    }
 
         [HttpGet]
         public Dictionary<string, object> GetOne(string contentType, int id, int appId, string cultureCode = null)
         {
             EnsureSerializerHasSxc();
-            return entitesController.GetOne(contentType, id, appId, cultureCode);
+            return entitiesController.GetOne(contentType, id, appId, cultureCode);
         }
 
 
@@ -43,7 +43,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
         public dynamic GetPackage([FromBody]  EditPackageRequest packageRequest)
         {
             if (packageRequest.Type == "entities")
-                return entitesController.GetPackage(App.AppId, packageRequest);
+                return entitiesController.GetPackage(App.AppId, packageRequest);
             
             if(packageRequest.Type != "group")
                 throw new NotSupportedException("Package type " + packageRequest.Type + " is not supported.");
@@ -52,17 +52,22 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 
             return new
             {
-                entities = packageRequest.GroupSet.Select(s => new {
-                    packageInfo = new {
-                        type = "group",
-                        groupGuid = packageRequest.GroupGuid,
-                        groupSet = s,
-                        groupIndex = packageRequest.GroupIndex,
-                        contentTypeName = contentGroup.Template.ContentTypeStaticName // UI needs to know which content type to load...
-                    },
-                    entity = contentGroup[s].Count > packageRequest.GroupIndex && contentGroup[s][packageRequest.GroupIndex] != null ?
-                        entitesController.GetOne(App.AppId, contentGroup.Template.ContentTypeStaticName, contentGroup[s][packageRequest.GroupIndex].EntityId) :
-                        null
+                entities = packageRequest.GroupSet.Select(s => {
+                    var contentTypeStaticName = contentGroup.Template.GetTypeStaticName(s);
+                    return new
+                    {
+                        packageInfo = new
+                        {
+                            type = "group",
+                            groupGuid = packageRequest.GroupGuid,
+                            groupSet = s,
+                            groupIndex = packageRequest.GroupIndex,
+                            contentTypeName = contentTypeStaticName // UI needs to know which content type to load...
+                        },
+                        entity = contentGroup[s].Count > packageRequest.GroupIndex && contentGroup[s][packageRequest.GroupIndex] != null ?
+                            entitiesController.GetOne(App.AppId, contentTypeStaticName, contentGroup[s][packageRequest.GroupIndex].EntityId) :
+                            null
+                    };
                 })
             };
         }
@@ -73,6 +78,27 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
             public int GroupIndex { get; set; }
         }
 
+        public bool SavePackage([FromUri] int appId, [FromBody] Eav.WebApi.EntitiesController.EditPackage editPackage)
+        {
+            var success = true;
+            foreach (var entity in editPackage.Entities)
+            {
+                // Save entity in EAV
+                success = success && entitiesController.Save(entity.Entity, appId);
+                // ... then update contentgroup info (if defined)
+
+                if (entity.Entity.Id == 0)
+                    throw new Exception("Entity was not created - got no Id");
+
+                if(entity.PackageInfo.type == "group")
+                {
+                    var contentGroup = Sexy.ContentGroups.GetContentGroup((Guid)entity.PackageInfo.groupGuid);
+                    contentGroup.UpdateEntity(entity.PackageInfo.groupSet, entity.PackageInfo.groupIndex, entity.Entity.Id);
+                }
+            }
+            return success;
+        }
+
         /// <summary>
         /// Get all Entities of specified Type
         /// </summary>
@@ -80,14 +106,14 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
         public IEnumerable<Dictionary<string, object>> GetEntities(string contentType, int appId, string cultureCode = null)
 		{
             EnsureSerializerHasSxc();
-			return entitesController.GetEntities(contentType, cultureCode, appId);
+			return entitiesController.GetEntities(contentType, cultureCode, appId);
 		}
 
 	    [HttpGet]
 	    public IEnumerable<Dictionary<string, object>> GetAllOfTypeForAdmin(int appId, string contentType)
 	    {
 	        EnsureSerializerHasSxc();
-	        return entitesController.GetAllOfTypeForAdmin(appId, contentType);
+	        return entitiesController.GetAllOfTypeForAdmin(appId, contentType);
 	    }
 
 
@@ -107,13 +133,13 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 	    public void Delete(string contentType, int id, int appId)
         {
             EnsureSerializerHasSxc();
-            entitesController.Delete(contentType, id, App.AppId);
+            entitiesController.Delete(contentType, id, App.AppId);
         }
         [HttpDelete]
         public void Delete(string contentType, Guid guid, int appId)
         {
             EnsureSerializerHasSxc();
-            entitesController.Delete(contentType, guid, App.AppId);
+            entitiesController.Delete(contentType, guid, App.AppId);
         }
 
 

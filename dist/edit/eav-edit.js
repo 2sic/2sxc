@@ -47,7 +47,7 @@
                 angular.forEach(vm.editPackage.entities, function (v, i) {
 
                     // If the entity is null, it does not exist yet. Create a new one
-                    if (vm.editPackage.entities[i].entity === null && vm.editPackage.entities[i].packageInfo.contentTypeName !== undefined)
+                    if (!vm.editPackage.entities[i].entity && !!vm.editPackage.entities[i].packageInfo.contentTypeName)
                         vm.editPackage.entities[i].entity = entitiesSvc.newEntity(vm.editPackage.entities[i].packageInfo.contentTypeName);
 
                     vm.editPackage.entities[i].entity = enhanceEntity(vm.editPackage.entities[i].entity);
@@ -369,7 +369,7 @@ angular.module('eavEditTemplates',[]).run(['$templateCache', function($templateC
 
 
   $templateCache.put('localization/formly-localization-wrapper.html',
-    "<eav-localization-scope-control></eav-localization-scope-control><div ng-if=\"value !== null\"><eav-localization-menu field-model=model[options.key] options=options value=value></eav-localization-menu><formly-transclude></formly-transclude></div><p class=bg-info style=padding:12px ng-if=!value>Please create the value for <i>'{{to.label}}'</i> in the default language before translating it.</p>"
+    "<eav-localization-scope-control></eav-localization-scope-control><div ng-if=!!value><eav-localization-menu field-model=model[options.key] options=options value=value></eav-localization-menu><formly-transclude></formly-transclude></div><p class=bg-info style=padding:12px ng-if=!value>Please create the value for <i>'{{to.label}}'</i> in the default language before translating it.</p>"
   );
 
 
@@ -439,12 +439,16 @@ angular.module('eavEditTemplates',[]).run(['$templateCache', function($templateC
 					var fieldModel = scope.model[scope.options.key];
 
 					// If current language = default language and there are no values, create an empty value object
-					if (langConf.currentLanguage == langConf.defaultLanguage) {
-						if (fieldModel.Values.length === 0) {
-						    var defaultValue = eavDefaultValueService(scope.options);
-						    fieldModel.addVs(defaultValue, langConf.currentLanguage); // Assign default language dimension
-						}
+					if (fieldModel.Values.length === 0) {
+					    if (langConf.currentLanguage == langConf.defaultLanguage) {
+					        var defaultValue = eavDefaultValueService(scope.options);
+					        fieldModel.addVs(defaultValue, langConf.currentLanguage); // Assign default language dimension
+					    }
+					    else { // There are no values - value must be edited in default language first
+					        return;
+					    }
 					}
+
 
 				    // Assign default language if no dimension is set
 					if (Object.keys(fieldModel.Values[0].Dimensions).length === 0)

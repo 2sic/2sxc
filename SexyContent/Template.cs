@@ -32,6 +32,23 @@ namespace ToSic.SexyContent
 		public string Type { get { return (string)_templateEntity.GetBestValue("Type"); } }
         public Guid Guid { get { return (Guid)_templateEntity.GetBestValue("EntityGuid"); } }
 
+        public string GetTypeStaticName(string groupSet)
+        {
+            switch(groupSet.ToLower())
+            {
+                case "content":
+                    return ContentTypeStaticName;
+                case "presentation":
+                    return PresentationTypeStaticName;
+                case "listcontent":
+                    return ListContentTypeStaticName;
+                case "listpresentation":
+                    return ListPresentationTypeStaticName;
+                default:
+                    throw new NotSupportedException("Unknown groupset: " + groupSet);
+            }
+        }
+
 	    public bool IsHidden
 	    {
 		    get
