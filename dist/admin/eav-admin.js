@@ -1860,11 +1860,13 @@ angular.module("EavAdminUi", ["ng",
         
         //#region Item - new, edit
             svc.openItemNew = function oin(contentTypeName, closeCallback) {
-                return svc.openItemEditWithEntityIdX(svc.CreateResolve({ mode: "new", entityId: null, contentTypeName: contentTypeName }), closeCallback);
+                var resolve = svc.CreateResolve({ mode: "new", entityId: null, contentTypeName: contentTypeName });
+                return svc.openItemEditWithEntityIdX(resolve, closeCallback);
             };
 
             svc.openItemEditWithEntityId = function oie(entityId, closeCallback) {
-                return svc.openItemEditWithEntityIdX(svc.CreateResolve({ mode: "edit", entityId: entityId, contentTypeName:null }), closeCallback );
+                var resolve = svc.CreateResolve({ mode: "edit", entityId: entityId, contentTypeName: null });
+                return svc.openItemEditWithEntityIdX(resolve, closeCallback);
             };
 
             svc.openItemEditWithEntityIdX = function oieweix(resolve, callbacks) {
@@ -2043,12 +2045,12 @@ angular.module("eavNgSvcs", ["ng"])
 			return $http.get("eav/entities/getone", { params: { contentType: contentType, id: id, appId: appId, format: "multi-language" } });
 		};
 
-		svc.getPackage = function (appId, packageRequest) {
-		    return $http.post("eav/entities/getpackage", packageRequest, { params: { appId: appId } });
+		svc.getManyForEditing = function (appId, items) {
+		    return $http.post("eav/entities/getmanyforediting", items, { params: { appId: appId } });
 		};
 
-		svc.savePackage = function (appId, editPackage) {
-		    return $http.post("eav/entities/savepackage", editPackage, { params: { appId: appId } });
+		svc.saveMany = function (appId, items) {
+		    return $http.post("eav/entities/savemany", items, { params: { appId: appId } });
 		};
 
         svc.delete = function del(type, id) {
@@ -2126,7 +2128,6 @@ angular.module("EavServices")
     angular.module("EavServices")
 
     .config(["$translateProvider", "languages", "$translatePartialLoaderProvider", function ($translateProvider, languages, $translatePartialLoaderProvider) {
-            console.log(languages); // ToDo: Remove this line again
             $translateProvider
                 .preferredLanguage(languages.currentLanguage.split("-")[0])
                 .useSanitizeValueStrategy("escapeParameters")   // this is very important to allow html in the JSON files

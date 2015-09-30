@@ -1,73 +1,3 @@
-/* global angular */
-(function () {
-	'use strict';
-
-	var app = angular.module('SxcEditContentGroupDnnWrapper', ['sxcEditContentGroup']);
-	app.controller('editContentGroupDnnWrapperCtrl', ["entityId", "typeName", "groupGuid", "groupSet", "groupIndex", "$modalInstance", function (entityId, typeName, groupGuid, groupSet, groupIndex, $modalInstance) {
-		var vm = this;
-		// Prepare URL parameters, which are passed to edit directive
-		vm.edit = {
-			entityId: entityId,
-			typeName: typeName,
-			groupGuid: groupGuid,
-			groupIndex: groupIndex,
-            groupSet: groupSet
-		};
-
-		vm.close = $modalInstance.close;
-	}]);
-
-})();
-
-/* global angular */
-(function() {
-	'use strict';
-
-	var app = angular.module('sxcEditContentGroup', ['eavEditEntity', 'eavLocalization', 'sxcFieldTemplates', 'SxcEditTemplates', 'eavEditEntity']);
-	app.directive('editContentGroup', function() {
-		return {
-		    templateUrl: 'edit-entity-or-contentgroup.html',
-			restrict: 'E',
-			scope: {
-				edit: '=edit'
-			},
-			controller: 'editContentGroupCtrl',
-			controllerAs: 'vm'
-		};
-	});
-
-	app.controller('editContentGroupCtrl', ["$q", "$scope", function($q, $scope) {
-		var vm = this;
-
-	    // Prepare parameters
-	    var entityId = $scope.edit.entityId;
-	    var typeName = $scope.edit.typeName;
-	    var groupGuid = $scope.edit.groupGuid;
-	    //var mode = $scope.edit.mode;
-	    var groupIndex = $scope.edit.groupIndex;
-
-	    if (groupGuid) {
-	        vm.editPackageRequest = {
-	            type: 'group',
-	            groupGuid: groupGuid,
-                groupSet: ['content', 'presentation'],
-                groupIndex: groupIndex
-	        };
-	    }
-	    else {
-	        vm.editPackageRequest = {
-	            type: 'entities',
-	            entities: [{
-	                contentTypeName: typeName,
-                    entityId: entityId
-	            }]
-	        };
-	    }
-
-	}]);
-
-})();
-
 
 (function () {
 	'use strict';
@@ -244,16 +174,6 @@
 angular.module('SxcEditTemplates',[]).run(['$templateCache', function($templateCache) {
   'use strict';
 
-  $templateCache.put('edit-contentgroup-dnnwrapper.html',
-    "<div class=modal-header><button class=\"btn pull-right\" type=button icon=remove ng-click=vm.close()></button><h3 class=modal-title>Edit</h3></div><div class=modal-body><edit-content-group edit=vm.edit></edit-content-group></div>"
-  );
-
-
-  $templateCache.put('edit-entity-or-contentgroup.html',
-    "<div><eav-edit-entities edit-package-request=vm.editPackageRequest></eav-edit-entities></div>"
-  );
-
-
   $templateCache.put('fieldtemplates/templates/hyperlink-default-filemanager.html',
     "<div><iframe class=sxc-dialog-filemanager-iframe style=\"width:100%; height:100%; overflow:hidden\" scrolling=no web-forms-bridge=bridge bridge-type=filemanager bridge-sync-height=false></iframe></div><style>.sxc-dialog-filemanager .modal-dialog { width: 100%;height: 100%;margin: 0; }\r" +
     "\n" +
@@ -277,4 +197,57 @@ angular.module('SxcEditTemplates',[]).run(['$templateCache', function($templateC
     "<iframe style=width:100% web-forms-bridge=vm.bridge bridge-type=wysiwyg bridge-sync-height=true></iframe>"
   );
 
+
+  $templateCache.put('wrappers/dnn-wrapper.html',
+    "<div class=modal-header><button class=\"btn pull-right\" type=button icon=remove ng-click=vm.close()></button><h3 class=modal-title>Edit</h3></div><div class=modal-body><div><eav-edit-entities edit-package-request=vm.editPackageRequest after-save-event=vm.afterSave></eav-edit-entities></div></div>"
+  );
+
 }]);
+
+
+(function () {
+	'use strict';
+
+    angular.module('SxcEditContentGroupDnnWrapper', [
+        'eavEditEntity',
+        'eavLocalization',
+        'sxcFieldTemplates',
+        'SxcEditTemplates',
+        'eavEditEntity'
+    ])
+
+	.controller('EditInDnn', ["entityId", "typeName", "groupGuid", "groupSet", "groupIndex", "$modalInstance", function (entityId, typeName, groupGuid, groupSet, groupIndex, $modalInstance) {
+		var vm = this;
+
+		if (groupGuid) {
+		    vm.editPackageRequest = {
+		        type: 'group',
+		        groupGuid: groupGuid,
+		        groupSet: ['content', 'presentation'],
+		        groupIndex: groupIndex
+		    };
+		}
+		else {
+		    vm.editPackageRequest = {
+		        type: 'entities',
+		        entities: [{
+		            contentTypeName: typeName,
+		            entityId: entityId
+		        }]
+		    };
+		}
+
+	    // this is the callback after saving - needed to close everything
+		vm.afterSave = function (result) {
+		    if (result.status === 200)
+		        vm.close();
+		    else {
+		        alert("Something went wrong - maybe parts worked, maybe not. Sorry :(");
+		    }
+
+		};
+
+		vm.close = $modalInstance.close;
+	}]);
+
+})();

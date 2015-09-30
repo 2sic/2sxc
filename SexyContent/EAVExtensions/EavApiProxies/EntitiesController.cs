@@ -40,10 +40,10 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 
 
         [HttpPost]
-        public dynamic GetPackage([FromBody]  EditPackageRequest packageRequest)
+        public dynamic GetManyForEditing([FromBody]  EditPackageRequest packageRequest)
         {
             if (packageRequest.Type == "entities")
-                return entitiesController.GetPackage(App.AppId, packageRequest);
+                return entitiesController.GetManyForEditing(App.AppId, packageRequest);
             
             if(packageRequest.Type != "group")
                 throw new NotSupportedException("Package type " + packageRequest.Type + " is not supported.");
@@ -80,13 +80,16 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
             public int GroupIndex { get; set; }
         }
 
-        public bool SavePackage([FromUri] int appId, [FromBody] Eav.WebApi.EntitiesController.EditPackage editPackage)
+
+        [HttpPost]
+        // todo: should refactor to save all items in 1 transaction
+        public bool SaveMany([FromUri] int appId, [FromBody] Eav.WebApi.EntitiesController.EditPackage editPackage)
         {
             var success = true;
             foreach (var entity in editPackage.Entities)
             {
                 // Save entity in EAV
-                success = success && entitiesController.Save(entity.Entity, appId);
+                success = success && entitiesController.SaveOne(entity.Entity, appId);
 
                 // Get saved entity (to get its ID) - ToDo: Should get ID from Save method, would clean up this code
                 var dataSource = DataSource.GetInitialDataSource(App.ZoneId, App.AppId, false);
