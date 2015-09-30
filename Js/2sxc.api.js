@@ -289,8 +289,11 @@
 
         require: function getRequiredParameter(name) {
             var found = $2sxc.urlParams.get(name);
-            if (found === "")
-                alert("Required parameter (" + name + ") missing from url - cannot continue");
+            if (found === "") {
+                var message = "Required parameter (" + name + ") missing from url - cannot continue";
+                alert(message);
+                throw message;
+            }
             return found;
         }
     };

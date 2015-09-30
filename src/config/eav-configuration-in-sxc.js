@@ -25,13 +25,13 @@
             var manageInfo = $.parseJSON($(moduleElement.find(".Mod2sxcC, .Mod2sxcappC")[0]).attr("data-2sxc")).manage;
             window.$eavUIConfig.languages.defaultLanguage = manageInfo.langPrimary;
             window.$eavUIConfig.languages.currentLanguage = manageInfo.lang;
-            window.$eavUIConfig.languages.currentLanguage = manageInfo.languages;
+            window.$eavUIConfig.languages.languages = manageInfo.languages;
         });
     }
     else {
         window.$eavUIConfig.languages.defaultLanguage = $2sxc.urlParams.require("langpri");
         window.$eavUIConfig.languages.currentLanguage = $2sxc.urlParams.require("lang");
-        window.$eavUIConfig.languages.currentLanguage = $2sxc.urlParams.require("langs");
+        window.$eavUIConfig.languages.languages = JSON.parse($2sxc.urlParams.require("langs"));
     }
 
     function getLanguagesFromUrl() {

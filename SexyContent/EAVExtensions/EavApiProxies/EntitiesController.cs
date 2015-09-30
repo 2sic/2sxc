@@ -88,12 +88,15 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
                 // ... then update contentgroup info (if defined)
 
                 if (entity.Entity.Id == 0)
-                    throw new Exception("Entity was not created - got no Id");
+                    throw new Exception("Entity was not created - entity has no Id");
 
                 if(entity.PackageInfo.type == "group")
                 {
                     var contentGroup = Sexy.ContentGroups.GetContentGroup((Guid)entity.PackageInfo.groupGuid);
-                    contentGroup.UpdateEntity(entity.PackageInfo.groupSet, entity.PackageInfo.groupIndex, entity.Entity.Id);
+                    var groupSet = (string)entity.PackageInfo.groupSet;
+                    var groupIndex = (int)entity.PackageInfo.groupIndex;
+                    if (contentGroup[groupSet].Count <= groupIndex || contentGroup[groupSet][groupIndex].EntityId != entity.Entity.Id)
+                    contentGroup.UpdateEntity(groupSet, groupIndex, entity.Entity.Id);
                 }
             }
             return success;

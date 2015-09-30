@@ -60,37 +60,35 @@ namespace ToSic.SexyContent
 						Boolean.Parse(Settings[SexyContent.SettingsShowTemplateChooser].ToString())
 						: !hasContent;
 
-					((ModuleHost)Parent).Attributes.Add("data-2sxc", JsonConvert.SerializeObject(new
-					{
-						moduleId = ModuleId,
-						manage = new
-						{
-							isEditMode = UserMayEditThisModule, templateChooserVisible, hasContent,
-							isContentApp = IsContentApp,
+                    ((ModuleHost)Parent).Attributes.Add("data-2sxc", JsonConvert.SerializeObject(new
+                    {
+                        moduleId = ModuleId,
+                        manage = new
+                        {
+                            isEditMode = UserMayEditThisModule, templateChooserVisible, hasContent,
+                            isContentApp = IsContentApp,
                             zoneId = ZoneId.HasValue ? ZoneId.Value : 0,
-							appId = AppId,
-							isList = AppId.HasValue && ContentGroup.Content.Count > 1,
-							templateId = Template != null ? Template.TemplateId : new int?(),
-							contentTypeId = Template != null ? Template.ContentTypeStaticName : "",
-							config = new
-							{
-								portalId = PortalId,
-								tabId = TabId,
-								moduleId = ModuleId,
-								contentGroupId = AppId.HasValue ? ContentGroup.ContentGroupGuid : (Guid?)null,
-								dialogUrl = Globals.NavigateURL(TabId),
-								returnUrl = Request.RawUrl,
-								appPath = AppId.HasValue ? Sexy.App.Path : null,
-								cultureDimension = AppId.HasValue ? Sexy.GetCurrentLanguageID() : new int?(),
-								isList = Template != null && Template.UseForList
-							},
+                            appId = AppId,
+                            isList = AppId.HasValue && ContentGroup.Content.Count > 1,
+                            templateId = Template != null ? Template.TemplateId : new int?(),
+                            contentTypeId = Template != null ? Template.ContentTypeStaticName : "",
+                            config = new
+                            {
+                                portalId = PortalId,
+                                tabId = TabId,
+                                moduleId = ModuleId,
+                                contentGroupId = AppId.HasValue ? ContentGroup.ContentGroupGuid : (Guid?)null,
+                                dialogUrl = Globals.NavigateURL(TabId),
+                                returnUrl = Request.RawUrl,
+                                appPath = AppId.HasValue ? Sexy.App.Path : null,
+                                cultureDimension = AppId.HasValue ? Sexy.GetCurrentLanguageID() : new int?(),
+                                isList = Template != null && Template.UseForList
+                            },
                             applicationRoot = ResolveUrl("~"),
-                            lang = System.Threading.Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName.ToLower(),
+                            lang = PortalSettings.CultureCode.ToLower(), //System.Threading.Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName.ToLower(),
                             // fallbackLang = new [] {"en"},
                             langPrimary = PortalSettings.DefaultLanguage.ToLower(),
-                            languages = new [] { "en-en:somethnig", "de-de:deutschland", "it-it:italy" }
-				    
-                            // SexyContent.GetCulturesWithActiveState(PortalId, ZoneId.Value).Where(c => c.Active).Select(c => c.Code.ToLower() + ":" + c.Text).ToArray()
+                            languages = SexyContent.GetCulturesWithActiveState(PortalId, ZoneId.Value).Where(c => c.Active).Select(c => new { key = c.Code.ToLower(), name = c.Text }) //new [] { "en-en:somethnig", "de-de:deutschland", "it-it:italy" }
 
                         }
                     }));

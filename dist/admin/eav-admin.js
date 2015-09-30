@@ -2126,6 +2126,7 @@ angular.module("EavServices")
     angular.module("EavServices")
 
     .config(["$translateProvider", "languages", "$translatePartialLoaderProvider", function ($translateProvider, languages, $translatePartialLoaderProvider) {
+            console.log(languages); // ToDo: Remove this line again
             $translateProvider
                 .preferredLanguage(languages.currentLanguage.split("-")[0])
                 .useSanitizeValueStrategy("escapeParameters")   // this is very important to allow html in the JSON files

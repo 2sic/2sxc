@@ -12,9 +12,9 @@
         
         // add translation table
         $translateProvider
-            .preferredLanguage(globals.lang)
-            .useSanitizeValueStrategy("escapeParameters") // this is very important to allow html in the JSON files
-            .fallbackLanguage(globals.fallbackLang)
+            .preferredLanguage(languages.currentLanguage.split("-")[0])
+            .useSanitizeValueStrategy("escapeParameters")   // this is very important to allow html in the JSON files
+            .fallbackLanguage(languages.defaultLanguage.split("-")[0])
             .useLoader("$translatePartialLoader", {
                 urlTemplate: languages.i18nRoot + "{part}-{lang}.js"
             })

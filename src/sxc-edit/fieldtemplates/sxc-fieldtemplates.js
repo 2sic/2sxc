@@ -115,7 +115,7 @@
 	});
 
 	app.directive('webFormsBridge', function (sxc) {
-		var webFormsBridgeUrl = sxc._editContentGroupConfig.tabBaseUrl + "?ctl=webformsbridge&mid=" + sxc.id + "&popUp=true";
+	    var webFormsBridgeUrl = '/?tabid=' + $2sxc.urlParams.require("tid") + "&ctl=webformsbridge&mid=" + sxc.id + "&popUp=true";
 
 		return {
 			restrict: 'A',

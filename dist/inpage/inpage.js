@@ -68,7 +68,7 @@ $2sxc.getManageController = function (id) {
         mid: manageInfo.config.moduleId,
         lang: manageInfo.lang,
         langpri: manageInfo.langPrimary,
-        langs: manageInfo.languages
+        langs: JSON.stringify(manageInfo.languages)
     };
 
     var toolbarConfig = manageInfo.config;
@@ -204,8 +204,10 @@ $2sxc.getManageController = function (id) {
             // add language info
             //if (settings.cultureDimension && settings.cultureDimension !== null)
             //    params.langnum = settings.cultureDimension;
-            //params.lang = 
-            // ToDo: Add language configuration - how can I do the same in eav?
+            //params.lang = window.$eavUIConfig.languages.currentLanguage;
+            //params.langs = window.$eavUIConfig.languages.languages;
+            //params.langpri = window.$eavUIConfig.languages.defaultLanguage;
+            // ToDo: 2rm - discuss with 2dm - Add language configuration - how can I do the same in eav?
 
             // when not using a content-group list, ...
             if (!settings.useModuleList) {
@@ -385,9 +387,9 @@ $2sxc.getManageController = function (id) {
         
         // add translation table
         $translateProvider
-            .preferredLanguage(globals.lang)
-            .useSanitizeValueStrategy("escapeParameters") // this is very important to allow html in the JSON files
-            .fallbackLanguage(globals.fallbackLang)
+            .preferredLanguage(languages.currentLanguage.split("-")[0])
+            .useSanitizeValueStrategy("escapeParameters")   // this is very important to allow html in the JSON files
+            .fallbackLanguage(languages.defaultLanguage.split("-")[0])
             .useLoader("$translatePartialLoader", {
                 urlTemplate: languages.i18nRoot + "{part}-{lang}.js"
             })
