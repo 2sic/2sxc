@@ -200,6 +200,7 @@ $2sxc.getManageController = function (id) {
                 dialog: "edit",
                 mode: (settings.action === "new") ? "new" : "edit"
             };
+            var items = [];
 
             // add language info
             //if (settings.cultureDimension && settings.cultureDimension !== null)
@@ -212,20 +213,28 @@ $2sxc.getManageController = function (id) {
             // when not using a content-group list, ...
             if (!settings.useModuleList) {
                 if (settings.action !== "new")
-                    params.entityid = settings.entityId;
+                    items.push({ EntityId: settings.entityId });
+                    // params.entityid = settings.entityId;
                 if (settings.contentType || settings.attributeSetName)
-                    params.contenttypename = settings.contentType || settings.attributeSetName;
+                    items.push({ ContentTypeName: settings.contentType || settings.attributeSetName });
+                    // params.contenttypename = settings.contentType || settings.attributeSetName;
             }
             // when using a list, the sort-order is important to find the right item
-            else {
-                params.groupGuid = settings.contentGroupId;
-                params.groupIndex = settings.sortOrder;
+            if(settings.useModuleList || settings.action === "replace") {
+                items.push({ Group: {
+                    Guid: settings.contentGroupId,
+                    Index: settings.sortOrder,
+                    Set: (settings.sortOrder !== -1) ? "content" : "listcontent"
+                    }
+                });
+                //params.groupGuid = settings.contentGroupId;
+                //params.groupIndex = settings.sortOrder;
             }
 
             if (settings.action === "replace") {
                 params.dialog = "replace";
-                params.groupSet = (settings.sortOrder !== -1) ? "content" : "listcontent";
-                params.groupIndex = settings.sortOrder;
+                //params.groupSet = (settings.sortOrder !== -1) ? "content" : "listcontent";
+                //params.groupIndex = settings.sortOrder;
             }
             else if (settings.action === "app") {
                 params.dialog = "app";
@@ -233,6 +242,9 @@ $2sxc.getManageController = function (id) {
             else if (settings.action === "zone") {
                 params.dialog = "zone";
             }
+
+            if (items.length)
+                params.items = JSON.stringify(items);
 
             // when doing new, there may be a prefill in the link to initialize the new item
             if (settings.prefill)

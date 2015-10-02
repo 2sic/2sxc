@@ -578,10 +578,8 @@
     <Content Include="src\sxc-admin\templates\templates.html" />
     <Content Include="src\sxc-admin\web-api\web-api-controller.js" />
     <Content Include="src\sxc-admin\web-api\web-api.html" />
-    <Content Include="src\sxc-edit\edit-contentgroup-dnnwrapper.html" />
-    <Content Include="src\sxc-edit\edit-contentgroup-dnnwrapper.js" />
-    <Content Include="src\sxc-edit\edit-entity-or-contentgroup.html" />
-    <Content Include="src\sxc-edit\edit-entity-or-contentgroup.js" />
+    <Content Include="src\sxc-edit\wrappers\dnn-wrapper.html" />
+    <Content Include="src\sxc-edit\wrappers\dnn-wrapper-controller.js" />
     <Content Include="src\sxc-edit\fieldtemplates\sxc-fieldtemplates.js" />
     <Content Include="src\sxc-edit\fieldtemplates\templates\hyperlink-default-filemanager.html" />
     <Content Include="src\sxc-edit\fieldtemplates\templates\hyperlink-default-pagepicker.html" />
@@ -735,6 +733,7 @@
     <Content Include="Administration\App_LocalResources\EAVManagement.ascx.de-DE.resx" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="src\sxc-edit\form\" />
     <Folder Include="Upgrade\Log\" />
   </ItemGroup>
   <ItemGroup>

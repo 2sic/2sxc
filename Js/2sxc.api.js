@@ -11,7 +11,7 @@
         // either get the cached controller from previous calls, or create a new one
         var controller = $2sxc._controllers[id] ? $2sxc._controllers[id] : $2sxc._controllers[id] = {
             // <NewIn7>
-            serviceScopes: ["app", "app-api", "app-query", "app-content", "eav", "view"],
+            serviceScopes: ["app", "app-api", "app-query", "app-content", "eav", "view", "dnn"],
             serviceRoot: $.ServicesFramework(id).getServiceRoot("2sxc"),
             resolveServiceUrl: function resolveServiceUrl(virtualPath) {
             	var scope = virtualPath.split("/")[0].toLowerCase();

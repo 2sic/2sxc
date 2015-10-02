@@ -204,12 +204,12 @@
 })();
 /* global angular */
 (function () {
-    'use strict';
+    "use strict";
 
-    var app = angular.module('eavEditEntity');
+    var app = angular.module("eavEditEntity");
 
     // The controller for the main form directive
-    app.controller('EditEntities', ["appId", "$http", "$scope", "entitiesSvc", "$modalInstance", function editEntityCtrl(appId, $http, $scope, entitiesSvc, $modalInstance) {
+    app.controller("EditEntities", ["appId", "$http", "$scope", "entitiesSvc", function editEntityCtrl(appId, $http, $scope, entitiesSvc) {
 
         var vm = this;
 
@@ -230,21 +230,21 @@
         };
 
         vm.save = function () {
-            entitiesSvc.saveMany(appId, vm.editPackage).then(vm.afterSaveEvent);
+            entitiesSvc.saveMany(appId, vm.items).then(vm.afterSaveEvent);
         };
 
-        vm.editPackage = null;
+        vm.items = null;
 
-        entitiesSvc.getManyForEditing(appId, $scope.editPackageRequest)
+        entitiesSvc.getManyForEditing(appId, $scope.itemList)
             .then(function (result) {
-                vm.editPackage = result.data;
-                angular.forEach(vm.editPackage.entities, function (v, i) {
+                vm.items = result.data;
+                angular.forEach(vm.items, function (v, i) {
 
                     // If the entity is null, it does not exist yet. Create a new one
-                    if (!vm.editPackage.entities[i].entity && !!vm.editPackage.entities[i].packageInfo.contentTypeName)
-                        vm.editPackage.entities[i].entity = entitiesSvc.newEntity(vm.editPackage.entities[i].packageInfo.contentTypeName);
+                    if (!vm.items[i].Entity && !!vm.items[i].Header.ContentTypeName)
+                        vm.items[i].Entity = entitiesSvc.newEntity(vm.items[i].Header.ContentTypeName);
 
-                    vm.editPackage.entities[i].entity = enhanceEntity(vm.editPackage.entities[i].entity);
+                    vm.items[i].Entity = enhanceEntity(vm.items[i].Entity);
                 });
             });
 
@@ -255,20 +255,20 @@
 })();
 
 (function () {
-    'use strict';
+    "use strict";
 
-    var app = angular.module('eavEditEntity');
+    var app = angular.module("eavEditEntity");
 
-    app.directive('eavEditEntities', function () {
+    app.directive("eavEditEntities", function () {
         return {
-            templateUrl: 'form/edit-many-entities.html',
-            restrict: 'E',
+            templateUrl: "form/edit-many-entities.html",
+            restrict: "E",
             scope: {
-                editPackageRequest: '=editPackageRequest',
-                afterSaveEvent: '=afterSaveEvent'
+                itemList: "=",
+                afterSaveEvent: "="
             },
-            controller: 'EditEntities',
-            controllerAs: 'vm'
+            controller: "EditEntities",
+            controllerAs: "vm"
         };
     });
 
@@ -276,12 +276,12 @@
 })();
 
 (function () {
-	'use strict';
+	"use strict";
 
-	var app = angular.module('eavEditEntity'); 
+	var app = angular.module("eavEditEntity"); 
 
 	// The controller for the main form directive
-    app.controller('EditEntityFormCtrl', ["appId", "$http", "$scope", "formlyConfig", "contentTypeFieldSvc", "entitiesSvc", function editEntityCtrl(appId, $http, $scope, formlyConfig, contentTypeFieldSvc, entitiesSvc) {
+    app.controller("EditEntityFormCtrl", ["appId", "$http", "$scope", "formlyConfig", "contentTypeFieldSvc", function editEntityCtrl(appId, $http, $scope, formlyConfig, contentTypeFieldSvc) {
 
 		var vm = this;
 		vm.editInDefaultLanguageFirst = function () {
@@ -327,7 +327,7 @@
 			            },
 			            hide: (e.Metadata.All.VisibleInEditUI ? !e.Metadata.All.VisibleInEditUI : false),
 			            expressionProperties: {
-			                'templateOptions.disabled': 'options.templateOptions.disabled' // Needed for dynamic update of the disabled property
+			                'templateOptions.disabled': "options.templateOptions.disabled" // Needed for dynamic update of the disabled property
 			            }
 			        });
 			    });
@@ -348,14 +348,14 @@
 			subType = subType ? subType.toLowerCase() : null;
 
 			// Special case: override subtype for string-textarea
-			if (type === 'string' && e.Metadata.String !== undefined && e.Metadata.String.RowCount > 1)
-				subType = 'textarea';
+			if (type === "string" && e.Metadata.String !== undefined && e.Metadata.String.RowCount > 1)
+				subType = "textarea";
 
 			// Use subtype 'default' if none is specified - or type does not exist
-			if (!subType || !formlyConfig.getType(type + '-' + subType))
-				subType = 'default';
+			if (!subType || !formlyConfig.getType(type + "-" + subType))
+				subType = "default";
 
-			return (type + '-' + subType);
+			return (type + "-" + subType);
 		};
 	}]);
     
@@ -364,20 +364,19 @@
 })();
 
 (function () {
-	'use strict';
+	"use strict";
 
-	angular.module('eavEditEntity')
-        .directive('eavEditEntityForm', function () {
+	angular.module("eavEditEntity")
+        .directive("eavEditEntityForm", function () {
 		return {
-		    templateUrl: 'form/edit-single-entity.html',
-			restrict: 'E',
+		    templateUrl: "form/edit-single-entity.html",
+			restrict: "E",
 			scope: {
-				contentTypeName: '@contentTypeName',
-				entity: '=entity',
-				registerEditControl: '=registerEditControl'
+				entity: "=",
+				registerEditControl: "="
 			},
-			controller: 'EditEntityFormCtrl',
-			controllerAs: 'vm'
+			controller: "EditEntityFormCtrl",
+			controllerAs: "vm"
 		};
 	});
 	
@@ -392,7 +391,7 @@ angular.module('eavEditTemplates',[]).run(['$templateCache', function($templateC
 
 
   $templateCache.put('form/edit-many-entities.html',
-    "<div ng-if=\"vm.editPackage != null\"><eav-language-switcher></eav-language-switcher><div ng-repeat=\"p in vm.editPackage.entities\"><eav-edit-entity-form entity=p.entity register-edit-control=vm.registerEditControl></eav-edit-entity-form></div><button ng-disabled=!vm.isValid() ng-click=vm.save() class=\"btn btn-primary submit-button\">Save</button></div>"
+    "<div ng-if=\"vm.items != null\"><eav-language-switcher></eav-language-switcher><div ng-repeat=\"p in vm.items\"><eav-edit-entity-form entity=p.Entity register-edit-control=vm.registerEditControl></eav-edit-entity-form></div><button ng-disabled=!vm.isValid() ng-click=vm.save() class=\"btn btn-primary submit-button\">Save</button></div>"
   );
 
 
@@ -417,7 +416,7 @@ angular.module('eavEditTemplates',[]).run(['$templateCache', function($templateC
 
 
   $templateCache.put('wrappers/edit-entity-wrapper.html',
-    "<div class=modal-header><button class=\"btn pull-right\" type=button icon=remove ng-click=vm.close()></button><h3 class=modal-title>Edit entity</h3></div><div class=modal-body><eav-edit-entities edit-package-request=vm.editPackageRequest after-save-event=vm.afterSave></eav-edit-entities></div>"
+    "<div class=modal-header><button class=\"btn pull-right\" type=button icon=remove ng-click=vm.close()></button><h3 class=modal-title>Edit entity</h3></div><div class=modal-body><eav-edit-entities item-list=vm.itemList after-save-event=vm.afterSave></eav-edit-entities></div>"
   );
 
 }]);
@@ -672,21 +671,15 @@ angular.module('eavEditTemplates',[]).run(['$templateCache', function($templateC
 })();
 /* global angular */
 (function () {
-	'use strict';
+	"use strict";
 
-	var app = angular.module('eavEditEntity');
+	var app = angular.module("eavEditEntity");
 
 	// The controller for the main form directive
-	app.controller('EditEntityWrapperCtrl', ["$q", "$http", "$scope", "contentTypeName", "entityId", "$modalInstance", function editEntityCtrl($q, $http, $scope, contentTypeName, entityId, $modalInstance) {
+	app.controller("EditEntityWrapperCtrl", ["$q", "$http", "$scope", "items", "$modalInstance", function editEntityCtrl($q, $http, $scope, items, $modalInstance) {
 
 		var vm = this;
-		vm.editPackageRequest = {
-            type: 'entities',
-            entities: [{
-		        contentTypeName: contentTypeName,
-		        entityId: entityId
-		    }]
-		};
+	    vm.itemList = items;
 
         // this is the callback after saving - needed to close everything
 		vm.afterSave = function (result) {

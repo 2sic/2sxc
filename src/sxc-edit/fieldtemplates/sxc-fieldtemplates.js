@@ -1,28 +1,28 @@
 ﻿
 (function () {
-	'use strict';
+	"use strict";
 
 	/* This app registers all field templates for 2sxc in the angularjs sxcFieldTemplates app */
 
-    var app = angular.module('sxcFieldTemplates', ['formly', 'formlyBootstrap', 'ui.bootstrap', 'ui.tree', '2sxc4ng', 'SxcEditTemplates'], function (formlyConfigProvider) {
+    var app = angular.module("sxcFieldTemplates", ["formly", "formlyBootstrap", "ui.bootstrap", "ui.tree", "2sxc4ng", "SxcEditTemplates"], function (formlyConfigProvider) {
 
 		formlyConfigProvider.setType({
-			name: 'string-wysiwyg',
-			templateUrl: 'fieldtemplates/templates/string-wysiwyg.html',
-			wrapper: ['bootstrapLabel', 'bootstrapHasError', 'eavLocalization'],
-			controller: 'FieldTemplate-WysiwygCtrl as vm'
+			name: "string-wysiwyg",
+			templateUrl: "fieldtemplates/templates/string-wysiwyg.html",
+			wrapper: ["bootstrapLabel", "bootstrapHasError", "eavLocalization"],
+			controller: "FieldTemplate-WysiwygCtrl as vm"
 		});
 
 		formlyConfigProvider.setType({
-			name: 'hyperlink-default',
-			templateUrl: 'fieldtemplates/templates/hyperlink-default.html',
-			wrapper: ['bootstrapLabel', 'bootstrapHasError', 'eavLocalization'],
-			controller: 'FieldTemplate-HyperlinkCtrl as vm'
+			name: "hyperlink-default",
+			templateUrl: "fieldtemplates/templates/hyperlink-default.html",
+			wrapper: ["bootstrapLabel", "bootstrapHasError", "eavLocalization"],
+			controller: "FieldTemplate-HyperlinkCtrl as vm"
 		});
-
+        
 	});
 
-	app.controller('FieldTemplate-HyperlinkCtrl', function ($modal, $scope, $http, sxc) {
+	app.controller("FieldTemplate-HyperlinkCtrl", function ($modal, $scope, $http, sxc) {
 
 		var vm = this;
 		vm.modalInstance = null;
@@ -36,8 +36,8 @@
 					if (value) {
 						$scope.value.Value = value;
 
-						if (type == "file") {
-							$http.get('dnn/Hyperlink/GetFileByPath?relativePath=' + encodeURIComponent(value)).then(function (result) {
+						if (type === "file") {
+							$http.get("dnn/Hyperlink/GetFileByPath?relativePath=" + encodeURIComponent(value)).then(function (result) {
 								if(result.data)
 									$scope.value.Value = "File:" + result.data.FileId;
 							});
@@ -53,12 +53,12 @@
 		};
 
 		// Update test-link if necessary
-		$scope.$watch('value.Value', function (newValue, oldValue) {
+		$scope.$watch("value.Value", function (newValue, oldValue) {
 			if (!newValue)
 				return;
 
-			if (newValue.indexOf("File") != -1 || newValue.indexOf("Page") != -1) {
-				$http.get('eav/FieldTemplateHyperlink/ResolveHyperlink?hyperlink=' + encodeURIComponent(newValue)).then(function (result) {
+			if (newValue.indexOf("File") !== -1 || newValue.indexOf("Page") !== -1) {
+				$http.get("dnn/Hyperlink/ResolveHyperlink?hyperlink=" + encodeURIComponent(newValue)).then(function (result) {
 					if(result.data)
 						vm.testLink = result.data;
 				});
@@ -67,12 +67,12 @@
 
 		vm.openDialog = function (type, options) {
 
-			var template = type == 'pagepicker' ? 'pagepicker' : 'filemanager';
+			var template = type === "pagepicker" ? "pagepicker" : "filemanager";
 			vm.bridge.dialogType = type;
 			vm.bridge.params.CurrentValue = $scope.value.Value;
 
 			vm.modalInstance = $modal.open({
-				templateUrl: 'fieldtemplates/templates/hyperlink-default-' + template + '.html',
+				templateUrl: "fieldtemplates/templates/hyperlink-default-" + template + ".html",
 				resolve: {
 					bridge: function() {
 						return vm.bridge;
@@ -81,13 +81,13 @@
 				controller: function($scope, bridge) {
 					$scope.bridge = bridge;
 				},
-				windowClass: 'sxc-dialog-filemanager'
+				windowClass: "sxc-dialog-filemanager"
 			});
 		};
 
 	});
 
-	app.controller('FieldTemplate-WysiwygCtrl', function ($scope) {
+	app.controller("FieldTemplate-WysiwygCtrl", function ($scope) {
 
 		var vm = this;
 
@@ -98,44 +98,44 @@
 					$scope.value.Value = newValue;
 				});
 			},
-			setValue: function () { console.log('Error: setValue has no override'); },
-			setReadOnly: function() { console.log('Error: setReadOnly has no override'); }
+			setValue: function () { console.log("Error: setValue has no override"); },
+			setReadOnly: function() { console.log("Error: setReadOnly has no override"); }
 		};
 
-		$scope.$watch('value.Value', function (newValue, oldValue) {
-			if (newValue != oldValue)
+		$scope.$watch("value.Value", function (newValue, oldValue) {
+			if (newValue !== oldValue)
 				vm.bridge.setValue(newValue);
 		});
 
-		$scope.$watch('to.disabled', function (newValue, oldValue) {
-			if (newValue != oldValue)
+		$scope.$watch("to.disabled", function (newValue, oldValue) {
+			if (newValue !== oldValue)
 				vm.bridge.setReadOnly(newValue);
 		});
 
 	});
 
-	app.directive('webFormsBridge', function (sxc) {
-	    var webFormsBridgeUrl = '/?tabid=' + $2sxc.urlParams.require("tid") + "&ctl=webformsbridge&mid=" + sxc.id + "&popUp=true";
+	app.directive("webFormsBridge", function (sxc) {
+	    var webFormsBridgeUrl = "/?tabid=" + $2sxc.urlParams.require("tid") + "&ctl=webformsbridge&mid=" + sxc.id + "&popUp=true";
 
 		return {
-			restrict: 'A',
+			restrict: "A",
 			scope: {
 				type: "@bridgeType",
 				bridge: "=webFormsBridge",
-				bridgeSyncHeight: "@bridgeSyncHeight",
+				bridgeSyncHeight: "@bridgeSyncHeight"
 			},
 			link: function (scope, elem, attrs) {
-				elem[0].src = webFormsBridgeUrl + '&type=' + scope.type + (scope.bridge.params ? "&" + $.param(scope.bridge.params) : "");
-				elem.on('load', function () {					
+				elem[0].src = webFormsBridgeUrl + "&type=" + scope.type + (scope.bridge.params ? "&" + $.param(scope.bridge.params) : "");
+				elem.on("load", function () {					
 					var w = elem[0].contentWindow || elem[0];
 					w.connectBridge(scope.bridge);
 
 					// Sync height
-					if (scope.bridgeSyncHeight == "true") {
+					if (scope.bridgeSyncHeight === "true") {
 						
 						var resize = function () {
-							elem.css('height', '');
-							elem.css('height', w.document.body.scrollHeight + "px");
+							elem.css("height", "");
+							elem.css("height", w.document.body.scrollHeight + "px");
 						};
 
 						//w.$(w).resize(resize); // Performance issues when uncommenting this line...

@@ -9,6 +9,7 @@ using ToSic.Eav.DataSources;
 using ToSic.SexyContent.Serializers;
 using ToSic.SexyContent.WebApi;
 using System.Linq;
+using ToSic.Eav.WebApi.Formats;
 
 namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 {
@@ -40,57 +41,78 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 
 
         [HttpPost]
-        public dynamic GetManyForEditing([FromBody]  EditPackageRequest packageRequest)
+        public dynamic GetManyForEditing([FromBody]  List<EntityWithHeader> items)
         {
-            if (packageRequest.Type == "entities")
-                return entitiesController.GetManyForEditing(App.AppId, packageRequest);
-            
-            if(packageRequest.Type != "group")
-                throw new NotSupportedException("Package type " + packageRequest.Type + " is not supported.");
-
-            var contentGroup = Sexy.ContentGroups.GetContentGroup(packageRequest.GroupGuid);
-
-            return new
+            // go through all the groups, assign relevant info so that we can then do get-many
+            var entities = items.Where(i => i.Group != null).ToList();
+            foreach (var s in entities)
             {
-                entities = packageRequest.GroupSet.Select(s => {
-                    var contentTypeStaticName = contentGroup.Template.GetTypeStaticName(s);
-                    if (contentTypeStaticName == "")
-                        return null;
-                    return new
-                    {
-                        packageInfo = new
-                        {
-                            type = "group",
-                            groupGuid = packageRequest.GroupGuid,
-                            groupSet = s,
-                            groupIndex = packageRequest.GroupIndex,
-                            contentTypeName = contentTypeStaticName // UI needs to know which content type to load...
-                        },
-                        entity = contentGroup[s].Count > packageRequest.GroupIndex && contentGroup[s][packageRequest.GroupIndex] != null ?
-                            entitiesController.GetOne(App.AppId, contentTypeStaticName, contentGroup[s][packageRequest.GroupIndex].EntityId) :
-                            null
-                    };
-                }).Where(c => c != null)
-            };
+                var contentGroup = Sexy.ContentGroups.GetContentGroup(s.Group.Guid);
+                var contentTypeStaticName = contentGroup.Template.GetTypeStaticName(s.Group.Set);
+                if (contentTypeStaticName == "")
+                    continue;
+
+                // Header should be null, so we have to create one first
+                s.Header = new Eav.WebApi.EntitiesController.ItemIdentifier();
+
+                s.Header.ContentTypeName = contentTypeStaticName;
+                s.Header.EntityId = (contentGroup[s.Group.Set].Count > s.Group.Index &&
+                                     contentGroup[s.Group.Set][s.Group.Index] != null)
+                    ? contentGroup[s.Group.Set][s.Group.Index].EntityId
+                    : 0;
+            }
+
+            // Now get all
+            return entitiesController.GetManyForEditing(App.AppId, items.Select(i =>  i.Header).ToList());
+
+            // todo: find out how to handle "Presentation" items
+
+            //.
+            //Select(s => {
+            //        return new
+            //        {
+            //            packageInfo = new
+            //            {
+            //                type = "group",
+            //                groupGuid = s.Group.Guid,
+            //                groupSet = s,
+            //                groupIndex = s.Group.Index,
+            //                contentTypeName = contentTypeStaticName // UI needs to know which content type to load...
+            //            },
+            //            entity = contentGroup[s.Group.Set].Count > s.Group.Index && contentGroup[s.Group.Set][s.Group.Index] != null ?
+            //                entitiesController.GetOne(App.AppId, contentTypeStaticName, contentGroup[s.Group.Set][s.Group.Index].EntityId) :
+            //                null
+            //        };
+            //    }).Where(c => c != null)
+
         }
 
-        public class EditPackageRequest : ToSic.Eav.WebApi.EntitiesController.EditPackageRequestEntities {
-            public Guid GroupGuid { get; set; }
-            public string[] GroupSet { get; set; }
-            public int GroupIndex { get; set; }
+
+        public class EntityWithHeader: Eav.WebApi.EntitiesController.EntityWithHeader
+        {
+            public GroupAssignment Group { get; set; }
         }
+
+	    public class GroupAssignment
+	    {
+            public Guid Guid { get; set; }
+            public string Set { get; set; }
+            public int Index { get; set; }
+	    }
 
 
         [HttpPost]
         // todo: should refactor to save all items in 1 transaction
-        public bool SaveMany([FromUri] int appId, [FromBody] Eav.WebApi.EntitiesController.EditPackage editPackage)
+        public bool SaveMany([FromUri] int appId, [FromBody] List<EntityWithHeader> items)
         {
-            var success = true;
-            foreach (var entity in editPackage.Entities)
-            {
-                // Save entity in EAV
-                success = success && entitiesController.SaveOne(entity.Entity, appId);
+            // var success = true;
 
+            // first, save all to do it in 1 transaction
+            entitiesController.SaveMany(appId, items.Select(i => new Eav.WebApi.EntitiesController.EntityWithHeader() { Header = i.Header, Entity = i.Entity}).ToList());
+
+            // now assign all content-groups as needed
+            foreach (var entity in items)
+            {
                 // Get saved entity (to get its ID) - ToDo: Should get ID from Save method, would clean up this code
                 var dataSource = DataSource.GetInitialDataSource(App.ZoneId, App.AppId, false);
                 dataSource = DataSource.GetDataSource<EntityTypeFilter>(App.ZoneId, App.AppId, dataSource);
@@ -101,16 +123,16 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
                     throw new Exception("Saved entity not found - not able to save contentgroup");
 
                 // ... then update contentgroup info (if defined)
-                if (entity.PackageInfo.type == "group")
+                if (entity.Group != null)
                 {
-                    var contentGroup = Sexy.ContentGroups.GetContentGroup((Guid)entity.PackageInfo.groupGuid);
-                    var groupSet = (string)entity.PackageInfo.groupSet;
-                    var groupIndex = (int)entity.PackageInfo.groupIndex;
+                    var contentGroup = Sexy.ContentGroups.GetContentGroup(entity.Group.Guid);
+                    var groupSet = entity.Group.Set;
+                    var groupIndex = entity.Group.Index;
                     if (contentGroup[groupSet].Count <= groupIndex || contentGroup[groupSet][groupIndex] == null || contentGroup[groupSet][groupIndex].EntityId != savedEntity.EntityId)
                         contentGroup.UpdateEntity(groupSet, groupIndex, savedEntity.EntityId);
                 }
             }
-            return success;
+            return true;
         }
 
         /// <summary>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ToSic.Eav;
 using ToSic.Eav.Data;
+using ToSic.Eav.Interfaces;
 
 namespace ToSic.SexyContent.EAVExtensions
 {
@@ -37,6 +38,11 @@ namespace ToSic.SexyContent.EAVExtensions
         }
         public int AssignmentObjectTypeId {
             get { return _baseEntity.AssignmentObjectTypeId; }
+        }
+
+        public IMetadata Metadata
+        {
+            get { return _baseEntity.Metadata; }
         }
         public Dictionary<string, IAttribute> Attributes {
             get { return _baseEntity.Attributes; }

@@ -23,15 +23,26 @@
         .factory("tabId", function($2sxc) {
             return $2sxc.urlParams.get("tid");
         })
-        .factory("groupGuid", function ($2sxc) {
-            return $2sxc.urlParams.get("groupguid");
+        .factory("items", function ($2sxc) {
+                var found = $2sxc.urlParams.get("items");
+                if (found)
+                    return (found) ? JSON.parse(found) : null;
+            })
+        .factory("prefill", function ($2sxc) {
+                var found = $2sxc.urlParams.get("prefill");
+                if (found)
+                    return (found) ? JSON.parse(found) : null;
         })
-        .factory("groupSet", function ($2sxc) {
-            return $2sxc.urlParams.get("groupset");
-        })
-        .factory("groupIndex", function ($2sxc) {
-            return $2sxc.urlParams.get("groupindex");
-        })
+        //.factory("groupGuid", function ($2sxc) {
+        //    return $2sxc.urlParams.get("groupguid");
+        //})
+        //.factory("groupSet", function ($2sxc) {
+        //    return $2sxc.urlParams.get("groupset");
+        //})
+        //.factory("groupIndex", function ($2sxc) {
+        //    return $2sxc.urlParams.get("groupindex");
+        //})
+    
     ;
 
 

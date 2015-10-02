@@ -208,7 +208,7 @@
         .controller("DialogHost", DialogHostController)
         ;
 
-    function DialogHostController(zoneId, appId, $2sxc, dialog, sxcDialogs, eavAdminDialogs) {
+    function DialogHostController(zoneId, appId, items, $2sxc, dialog, sxcDialogs, eavAdminDialogs) {
         var vm = this;
         vm.dialog = dialog;
         var initialDialog = dialog;
@@ -225,13 +225,15 @@
                 //var groupGuid = $2sxc.urlParams.get("groupguid");
                 //var groupPart = $2sxc.urlParams.get("grouppart");
                 //var groupIndex = $2sxc.urlParams.get("groupindex");
-                sxcDialogs.openContentEdit({
-                    entityId: $2sxc.urlParams.get("entityid"),
-                    typeName: $2sxc.urlParams.get("typename"),
-                    groupGuid: $2sxc.urlParams.get("groupguid"),
-                    groupPart: $2sxc.urlParams.get("grouppart"),
-                    groupIndex: $2sxc.urlParams.get("groupindex")
-                }, vm.close);
+                eavAdminDialogs.openEditItems(items, vm.close);
+
+                //sxcDialogs.openContentEdit({
+                //    entityId: $2sxc.urlParams.get("entityid"),
+                //    typeName: $2sxc.urlParams.get("typename"),
+                //    groupGuid: $2sxc.urlParams.get("groupguid"),
+                //    groupPart: $2sxc.urlParams.get("grouppart"),
+                //    groupIndex: $2sxc.urlParams.get("groupindex")
+                //}, vm.close);
                 break;
             case "zone":
                 // this is the zone-config dialog showing mainly all the apps
@@ -258,7 +260,7 @@
                 throw "Trying to open a dialog, don't know which one";
         }
     }
-    DialogHostController.$inject = ["zoneId", "appId", "$2sxc", "dialog", "sxcDialogs", "eavAdminDialogs"];
+    DialogHostController.$inject = ["zoneId", "appId", "items", "$2sxc", "dialog", "sxcDialogs", "eavAdminDialogs"];
 
 } ());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
@@ -513,15 +515,26 @@ angular.module("SxcServices")//, ['ng', 'eavNgSvcs', "EavConfiguration"])
         .factory("tabId", ["$2sxc", function($2sxc) {
             return $2sxc.urlParams.get("tid");
         }])
-        .factory("groupGuid", ["$2sxc", function ($2sxc) {
-            return $2sxc.urlParams.get("groupguid");
+        .factory("items", ["$2sxc", function ($2sxc) {
+                var found = $2sxc.urlParams.get("items");
+                if (found)
+                    return (found) ? JSON.parse(found) : null;
+            }])
+        .factory("prefill", ["$2sxc", function ($2sxc) {
+                var found = $2sxc.urlParams.get("prefill");
+                if (found)
+                    return (found) ? JSON.parse(found) : null;
         }])
-        .factory("groupSet", ["$2sxc", function ($2sxc) {
-            return $2sxc.urlParams.get("groupset");
-        }])
-        .factory("groupIndex", ["$2sxc", function ($2sxc) {
-            return $2sxc.urlParams.get("groupindex");
-        }])
+        //.factory("groupGuid", function ($2sxc) {
+        //    return $2sxc.urlParams.get("groupguid");
+        //})
+        //.factory("groupSet", function ($2sxc) {
+        //    return $2sxc.urlParams.get("groupset");
+        //})
+        //.factory("groupIndex", function ($2sxc) {
+        //    return $2sxc.urlParams.get("groupindex");
+        //})
+    
     ;
 
 
