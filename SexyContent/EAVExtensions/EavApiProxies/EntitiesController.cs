@@ -41,64 +41,46 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 
 
         [HttpPost]
-        public dynamic GetManyForEditing([FromBody]  List<EntityWithHeader> items)
+        public dynamic GetManyForEditing([FromBody]  List<ItemIdentifier> items)
         {
+            // this will contain the list of the items we'll really return
+            var newItems = new List<ItemIdentifier>();
+
             // go through all the groups, assign relevant info so that we can then do get-many
-            var entities = items.Where(i => i.Group != null).ToList();
-            foreach (var s in entities)
+            foreach (var s in items)
             {
+                // only do special processing if it's a "group" item
+                if (s.Group == null)
+                {
+                    newItems.Add(s);
+                    continue;
+                }
+                
                 var contentGroup = Sexy.ContentGroups.GetContentGroup(s.Group.Guid);
-                var contentTypeStaticName = contentGroup.Template.GetTypeStaticName(s.Group.Set);
+                var contentTypeStaticName = contentGroup.Template.GetTypeStaticName(s.Group.Part);
+
+                // if there is no content-type for this, then skip it (don't deliver anything)
                 if (contentTypeStaticName == "")
                     continue;
 
-                // Header should be null, so we have to create one first
-                s.Header = new Eav.WebApi.EntitiesController.ItemIdentifier();
+                var part = contentGroup[s.Group.Part];
+                s.ContentTypeName = contentTypeStaticName;
+                if (!s.Group.Add && // not in add-mode
+                              part.Count > s.Group.Index && // has as many items as desired
+                              part[s.Group.Index] != null) // and the slot has something
+                    s.EntityId = part[s.Group.Index].EntityId;
 
-                s.Header.ContentTypeName = contentTypeStaticName;
-                s.Header.EntityId = (contentGroup[s.Group.Set].Count > s.Group.Index &&
-                                     contentGroup[s.Group.Set][s.Group.Index] != null)
-                    ? contentGroup[s.Group.Set][s.Group.Index].EntityId
-                    : 0;
+                newItems.Add(s);
             }
 
             // Now get all
-            return entitiesController.GetManyForEditing(App.AppId, items.Select(i =>  i.Header).ToList());
+            return entitiesController.GetManyForEditing(App.AppId, newItems);
 
             // todo: find out how to handle "Presentation" items
-
-            //.
-            //Select(s => {
-            //        return new
-            //        {
-            //            packageInfo = new
-            //            {
-            //                type = "group",
-            //                groupGuid = s.Group.Guid,
-            //                groupSet = s,
-            //                groupIndex = s.Group.Index,
-            //                contentTypeName = contentTypeStaticName // UI needs to know which content type to load...
-            //            },
-            //            entity = contentGroup[s.Group.Set].Count > s.Group.Index && contentGroup[s.Group.Set][s.Group.Index] != null ?
-            //                entitiesController.GetOne(App.AppId, contentTypeStaticName, contentGroup[s.Group.Set][s.Group.Index].EntityId) :
-            //                null
-            //        };
-            //    }).Where(c => c != null)
+            
 
         }
 
-
-        public class EntityWithHeader: Eav.WebApi.EntitiesController.EntityWithHeader
-        {
-            public GroupAssignment Group { get; set; }
-        }
-
-	    public class GroupAssignment
-	    {
-            public Guid Guid { get; set; }
-            public string Set { get; set; }
-            public int Index { get; set; }
-	    }
 
 
         [HttpPost]
@@ -108,29 +90,50 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
             // var success = true;
 
             // first, save all to do it in 1 transaction
-            entitiesController.SaveMany(appId, items.Select(i => new Eav.WebApi.EntitiesController.EntityWithHeader() { Header = i.Header, Entity = i.Entity}).ToList());
+            entitiesController.SaveMany(appId, items.Select(i => new EntityWithHeader { Header = i.Header, Entity = i.Entity}).ToList());
 
             // now assign all content-groups as needed
-            foreach (var entity in items)
+
+            var groupItems = items
+                .Where(i => i.Header.Group != null)
+                .GroupBy( i => i.Header.Group.Guid.ToString() + i.Header.Group.Index.ToString() + i.Header.Group.Add);
+            foreach (var entitySets in groupItems)
             {
+                var contItem = entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == "content") ??
+                              entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == "listcontent");
+                if(contItem == null)
+                    throw new Exception("unexpected group-entity assigment, cannot figure it out");
+
+                var presItem = entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == "presentation") ??
+                              entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == "listpresentation");
+
+                // Get group to assign to and parameters
+                var contentGroup = Sexy.ContentGroups.GetContentGroup(contItem.Header.Group.Guid);
+                var partName = contItem.Header.Group.Part;
+                var part = contentGroup[partName];
+                var index = contItem.Header.Group.Index;
+
                 // Get saved entity (to get its ID) - ToDo: Should get ID from Save method, would clean up this code
                 var dataSource = DataSource.GetInitialDataSource(App.ZoneId, App.AppId, false);
-                dataSource = DataSource.GetDataSource<EntityTypeFilter>(App.ZoneId, App.AppId, dataSource);
-                ((EntityTypeFilter)dataSource).TypeName = entity.Entity.Type.StaticName;
-                var savedEntity = dataSource.List.Where(p => p.Value.EntityGuid == entity.Entity.Guid).Select(p => p.Value).FirstOrDefault();
+                var contentEntity = dataSource.LightList.FirstOrDefault(p => p.EntityGuid == contItem.Entity.Guid);
 
-                if (savedEntity == null)
-                    throw new Exception("Saved entity not found - not able to save contentgroup");
+                if (contentEntity == null)
+                    throw new Exception("Saved entity not found - not able to update ContentGroup");
 
-                // ... then update contentgroup info (if defined)
-                if (entity.Group != null)
+                int? presentationId = null;
+                if (presItem != null)
+                    presentationId =
+                        dataSource.LightList.FirstOrDefault(p => p.EntityGuid == presItem.Entity.Guid).EntityId;
+                
+
+                if (contItem.Header.Group.Add) // this cannot be auto-detected, it must be specified
                 {
-                    var contentGroup = Sexy.ContentGroups.GetContentGroup(entity.Group.Guid);
-                    var groupSet = entity.Group.Set;
-                    var groupIndex = entity.Group.Index;
-                    if (contentGroup[groupSet].Count <= groupIndex || contentGroup[groupSet][groupIndex] == null || contentGroup[groupSet][groupIndex].EntityId != savedEntity.EntityId)
-                        contentGroup.UpdateEntity(groupSet, groupIndex, savedEntity.EntityId);
+                    contentGroup.AddContentAndPresentationEntity(partName, index, contentEntity.EntityId, presentationId);
                 }
+                // otherwise it's an update 
+                else if (part.Count <= index || part[index] == null || part[index].EntityId != contentEntity.EntityId)
+                    contentGroup.UpdateEntity(partName, index, contentEntity.EntityId);
+
             }
             return true;
         }

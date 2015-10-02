@@ -26,7 +26,7 @@ namespace ToSic.SexyContent.ViewAPI
         public void AddItem([FromUri] int? sortOrder = null)
         {
 			var contentGroup = Sexy.ContentGroups.GetContentGroupForModule(ActiveModule.ModuleID);
-			contentGroup.AddContentAndPresentationEntity(sortOrder);
+			contentGroup.AddContentAndPresentationEntity("content", sortOrder, null, null);
         }
 
         [HttpGet]
@@ -163,7 +163,7 @@ namespace ToSic.SexyContent.ViewAPI
 			try
 			{
 				var contentGroup = Sexy.ContentGroups.GetContentGroupForModule(ActiveModule.ModuleID);
-				contentGroup.RemoveContentAndPresentationEntities(sortOrder);
+				contentGroup.RemoveContentAndPresentationEntities("content", sortOrder);
 			}
 			catch (Exception e)
 			{

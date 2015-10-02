@@ -111,7 +111,7 @@ namespace ToSic.SexyContent
 			if(!contentGroup.Exists)
 				CreateContentGroup(moduleId, templateId);
 			else
-				contentGroup.Update(templateId);
+				contentGroup.UpdateTemplate(templateId);
 		}
 
 		public ContentGroup GetContentGroupForModule(int moduleId)

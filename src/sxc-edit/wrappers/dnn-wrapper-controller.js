@@ -14,23 +14,6 @@
 		var vm = this;
 
             vm.editPackageRequest = items;
-		//if (groupGuid) {
-		//    vm.editPackageRequest = {
-		//        type: 'group',
-		//        groupGuid: groupGuid,
-		//        groupSet: ['content', 'presentation'],
-		//        groupIndex: groupIndex
-		//    };
-		//}
-		//else {
-		//    vm.editPackageRequest = {
-		//        type: 'entities',
-		//        entities: [{
-		//            contentTypeName: typeName,
-		//            entityId: entityId
-		//        }]
-		//    };
-		//}
 
 	    // this is the callback after saving - needed to close everything
 		vm.afterSave = function (result) {

@@ -244,34 +244,6 @@
     <Compile Include="SexyContent\WebApi\ContentGroupController.cs" />
     <Compile Include="SexyContent\EAVExtensions\EavApiProxies\ContentTypeController.cs" />
     <Compile Include="SexyContent\WebApi\Dnn\HyperlinkController.cs" />
-    <Compile Include="SexyContent\EAV\FormlyEditUI\fieldtemplates\WebForms\FileManager.ascx.cs">
-      <DependentUpon>FileManager.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="SexyContent\EAV\FormlyEditUI\fieldtemplates\WebForms\FileManager.ascx.designer.cs">
-      <DependentUpon>FileManager.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="SexyContent\EAV\FormlyEditUI\fieldtemplates\WebForms\Wysiwyg.ascx.cs">
-      <DependentUpon>Wysiwyg.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="SexyContent\EAV\FormlyEditUI\fieldtemplates\WebForms\Wysiwyg.ascx.designer.cs">
-      <DependentUpon>Wysiwyg.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="SexyContent\EAV\FormlyEditUI\fieldtemplates\WebForms\PagePicker.ascx.cs">
-      <DependentUpon>PagePicker.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="SexyContent\EAV\FormlyEditUI\fieldtemplates\WebForms\PagePicker.ascx.designer.cs">
-      <DependentUpon>PagePicker.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="SexyContent\EAV\FormlyEditUI\fieldtemplates\WebForms\WebFormsBridge.ascx.cs">
-      <DependentUpon>WebFormsBridge.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="SexyContent\EAV\FormlyEditUI\fieldtemplates\WebForms\WebFormsBridge.ascx.designer.cs">
-      <DependentUpon>WebFormsBridge.ascx</DependentUpon>
-    </Compile>
     <Compile Include="SexyContent\EAV\Implementation\ValueConverter\SexyContentValueConverter.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\TokenReplaceEav.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\ValueProviderWrapperForPropertyAccess.cs" />
@@ -454,6 +426,7 @@
     <Content Include="Images\Edit.png" />
     <Content Include="Administration\Import.ascx" />
     <Content Include="Images\Save.png" />
+    <Content Include="src\inpage\dnn-menu-helper\dnn-inpage-edit.js" />
     <Content Include="src\inpage\module-toolbar\2sxc.api.manage.js" />
     <Content Include="js\2sxc.api.min.js" />
     <Content Include="src\inpage\template-selector\template-selector-view.html" />
@@ -514,37 +487,9 @@
     <Content Include="bootstrap\fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="README.md" />
     <Content Include="src\config\eav-configuration-in-sxc.js" />
-    <Content Include="SexyContent\EAV\FormlyEditUI\edit-contentgroup.html" />
-    <Content Include="SexyContent\EAV\FormlyEditUI\edit-contentgroup-dnnwrapper.js" />
-    <Content Include="SexyContent\EAV\FormlyEditUI\edit-entity.html" />
-    <Content Include="SexyContent\EAV\FormlyEditUI\localization\eav-localization-menu.js" />
-    <Content Include="SexyContent\EAV\FormlyEditUI\localization\eav-localization.js" />
-    <Content Include="SexyContent\EAV\FormlyEditUI\fieldtemplates\sxc-fieldtemplates.js" />
-    <Content Include="SexyContent\EAV\FormlyEditUI\fieldtemplates\templates\entity-default.html" />
-    <Content Include="SexyContent\EAV\FormlyEditUI\fieldtemplates\templates\entity-default.css" />
-    <Content Include="SexyContent\EAV\FormlyEditUI\fieldtemplates\templates\hyperlink-default-filemanager.html" />
-    <Content Include="SexyContent\EAV\FormlyEditUI\fieldtemplates\templates\hyperlink-default-pagepicker.html" />
-    <Content Include="SexyContent\EAV\FormlyEditUI\fieldtemplates\templates\hyperlink-default.html" />
-    <Content Include="SexyContent\EAV\FormlyEditUI\fieldtemplates\templates\string-wysiwyg.html" />
-    <Content Include="SexyContent\EAV\FormlyEditUI\fieldtemplates\WebForms\FileManager.ascx" />
-    <Content Include="SexyContent\EAV\FormlyEditUI\fieldtemplates\WebForms\Wysiwyg.ascx" />
-    <Content Include="SexyContent\EAV\FormlyEditUI\fieldtemplates\WebForms\PagePicker.ascx" />
-    <Content Include="SexyContent\EAV\FormlyEditUI\edit-contentgroup.js" />
-    <Content Include="SexyContent\EAV\FormlyEditUI\localization\formly-localization-wrapper.html" />
-    <Content Include="SexyContent\EAV\FormlyEditUI\localization\images\locked.png" />
-    <Content Include="SexyContent\EAV\FormlyEditUI\localization\images\unlocked.png" />
-    <Content Include="SexyContent\EAV\FormlyEditUI\localization\language-switcher.html" />
-    <Content Include="SexyContent\EAV\FormlyEditUI\localization\localization-menu.css" />
-    <Content Include="SexyContent\EAV\FormlyEditUI\localization\localization-menu.html" />
-    <Content Include="SexyContent\EAV\FormlyEditUI\services\contentgroup-service.js" />
-    <Content Include="SexyContent\EAV\FormlyEditUI\services\defaultvalue-service.js" />
-    <Content Include="SexyContent\EAV\FormlyEditUI\_EditContentGroup.cshtml" />
     <Content Include="bower.json" />
     <Content Include="packages.config" />
     <None Include="SqlDataProvider\01.00.00.SqlDataProvider" />
-    <Content Include="SexyContent\EAV\FormlyEditUI\edit-entity.js" />
-    <Content Include="SexyContent\EAV\FormlyEditUI\fieldtemplates\eav-fieldtemplates.js" />
-    <Content Include="SexyContent\EAV\FormlyEditUI\fieldtemplates\WebForms\WebFormsBridge.ascx" />
     <Content Include="SexyContent\GettingStarted\GettingStartedFrame.ascx" />
     <Content Include="SqlDataProvider\05.02.01.SqlDataProvider" />
     <Content Include="src\dnn\ui.html" />

@@ -96,8 +96,8 @@ angular.module("SxcAdminUi", [
         //#endregion
 
         // the replace-content item
-        svc.openReplaceContent = function orc(appId, groupGuid, groupPart, groupIndex, closeCallback) {
-            var resolve = eavAdminDialogs.CreateResolve({ groupGuid: groupGuid, groupPart: groupPart, groupIndex: groupIndex });
+        svc.openReplaceContent = function orc(item, closeCallback) {
+            var resolve = eavAdminDialogs.CreateResolve({ item: item });
             return eavAdminDialogs.OpenModal("replace-content/replace-content.html", "ReplaceDialog as vm", "xlg", resolve, closeCallback);
         };
 

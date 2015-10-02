@@ -41,7 +41,7 @@ namespace ToSic.SexyContent
 			switch (e.CommandName)
 			{
 				case "add":
-					ContentGroup.AddContentAndPresentationEntity(sortOrder + 1);
+					ContentGroup.AddContentAndPresentationEntity("content", sortOrder + 1, null, null);
 					Response.Redirect(Request.RawUrl);
 					break;
 				case "addwithedit":

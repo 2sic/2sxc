@@ -19,21 +19,7 @@
 
         switch (initialDialog) {
             case "edit":
-                // todo: editor, AssignmentObjectType, AssignmentId etc.
-                //var entityId = $2sxc.urlParams.get("entityId");
-                //var groupGuid = $2sxc.urlParams.get("typename");
-                //var groupGuid = $2sxc.urlParams.get("groupguid");
-                //var groupPart = $2sxc.urlParams.get("grouppart");
-                //var groupIndex = $2sxc.urlParams.get("groupindex");
                 eavAdminDialogs.openEditItems(items, vm.close);
-
-                //sxcDialogs.openContentEdit({
-                //    entityId: $2sxc.urlParams.get("entityid"),
-                //    typeName: $2sxc.urlParams.get("typename"),
-                //    groupGuid: $2sxc.urlParams.get("groupguid"),
-                //    groupPart: $2sxc.urlParams.get("grouppart"),
-                //    groupIndex: $2sxc.urlParams.get("groupindex")
-                //}, vm.close);
                 break;
             case "zone":
                 // this is the zone-config dialog showing mainly all the apps
@@ -45,10 +31,7 @@
                 break;
             case "replace":
                 // this is the "replace item in a list" dialog
-                var groupGuid = $2sxc.urlParams.get("groupguid");
-                var groupPart = $2sxc.urlParams.get("grouppart");
-                var groupIndex = $2sxc.urlParams.get("groupindex");
-                sxcDialogs.openReplaceContent(appId, groupGuid, groupPart, groupIndex, vm.close);
+                sxcDialogs.openReplaceContent(items[0], vm.close);
                 break;
             case "pipeline-designer":
                 // Don't do anything, as the template already loads the app in fullscreen-mode

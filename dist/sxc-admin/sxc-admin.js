@@ -219,21 +219,7 @@
 
         switch (initialDialog) {
             case "edit":
-                // todo: editor, AssignmentObjectType, AssignmentId etc.
-                //var entityId = $2sxc.urlParams.get("entityId");
-                //var groupGuid = $2sxc.urlParams.get("typename");
-                //var groupGuid = $2sxc.urlParams.get("groupguid");
-                //var groupPart = $2sxc.urlParams.get("grouppart");
-                //var groupIndex = $2sxc.urlParams.get("groupindex");
                 eavAdminDialogs.openEditItems(items, vm.close);
-
-                //sxcDialogs.openContentEdit({
-                //    entityId: $2sxc.urlParams.get("entityid"),
-                //    typeName: $2sxc.urlParams.get("typename"),
-                //    groupGuid: $2sxc.urlParams.get("groupguid"),
-                //    groupPart: $2sxc.urlParams.get("grouppart"),
-                //    groupIndex: $2sxc.urlParams.get("groupindex")
-                //}, vm.close);
                 break;
             case "zone":
                 // this is the zone-config dialog showing mainly all the apps
@@ -245,10 +231,7 @@
                 break;
             case "replace":
                 // this is the "replace item in a list" dialog
-                var groupGuid = $2sxc.urlParams.get("groupguid");
-                var groupPart = $2sxc.urlParams.get("grouppart");
-                var groupIndex = $2sxc.urlParams.get("groupindex");
-                sxcDialogs.openReplaceContent(appId, groupGuid, groupPart, groupIndex, vm.close);
+                sxcDialogs.openReplaceContent(items[0], vm.close);
                 break;
             case "pipeline-designer":
                 // Don't do anything, as the template already loads the app in fullscreen-mode
@@ -387,13 +370,13 @@
         ])
         .controller("ReplaceDialog", ReplaceContentController);
 
-    function ReplaceContentController(appId, entityId, groupGuid, groupPart, groupIndex, contentGroupSvc, $modalInstance) {
+    function ReplaceContentController(appId, item, contentGroupSvc, $modalInstance) {
         var vm = this;
         vm.item = {
-            id: entityId,
-            guid: groupGuid,
-            part: groupPart,
-            index: groupIndex
+            id: item.EntityId,
+            guid: item.Group.Guid,
+            part: item.Group.Part,
+            index: item.Group.Index
         };
 
         var svc = contentGroupSvc(appId);
@@ -402,15 +385,13 @@
         vm.options = res.get(vm.item);
 
         vm.ok = function ok() {
-            res.save(vm.item).$promise.then(function() {
-                $modalInstance.dismiss("cancel");
-            });
+            res.save(vm.item).$promise.then(vm.close);
         };
         
         vm.close = function () { $modalInstance.dismiss("cancel"); };
 
     }
-    ReplaceContentController.$inject = ["appId", "entityId", "groupGuid", "groupPart", "groupIndex", "contentGroupSvc", "$modalInstance"];
+    ReplaceContentController.$inject = ["appId", "item", "contentGroupSvc", "$modalInstance"];
 
 } ());
 // Init the main eav services module
@@ -660,8 +641,8 @@ angular.module("SxcAdminUi", [
         //#endregion
 
         // the replace-content item
-        svc.openReplaceContent = function orc(appId, groupGuid, groupPart, groupIndex, closeCallback) {
-            var resolve = eavAdminDialogs.CreateResolve({ groupGuid: groupGuid, groupPart: groupPart, groupIndex: groupIndex });
+        svc.openReplaceContent = function orc(item, closeCallback) {
+            var resolve = eavAdminDialogs.CreateResolve({ item: item });
             return eavAdminDialogs.OpenModal("replace-content/replace-content.html", "ReplaceDialog as vm", "xlg", resolve, closeCallback);
         };
 

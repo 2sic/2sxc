@@ -83,14 +83,7 @@ namespace ToSic.SexyContent.WebApi
 	    [HttpPost]
 	    public void Replace(Guid guid, string part, int index, int entityId)
 	    {
-            // convert lower-case param to the internally needed casing
-	        if (part.ToLower() == "content")
-	            part = "Content";
-	        if (part.ToLower() == "listcontent")
-	            part = "ListContent";
-
             var contentGroup = Sexy.ContentGroups.GetContentGroup(guid);
-
             contentGroup.UpdateEntity(part, index, entityId);
         }
     }

@@ -32,9 +32,9 @@ namespace ToSic.SexyContent
 		public string Type { get { return (string)_templateEntity.GetBestValue("Type"); } }
         public Guid Guid { get { return (Guid)_templateEntity.GetBestValue("EntityGuid"); } }
 
-        public string GetTypeStaticName(string groupSet)
+        public string GetTypeStaticName(string groupPart)
         {
-            switch(groupSet.ToLower())
+            switch(groupPart.ToLower())
             {
                 case "content":
                     return ContentTypeStaticName;
@@ -45,7 +45,7 @@ namespace ToSic.SexyContent
                 case "listpresentation":
                     return ListPresentationTypeStaticName;
                 default:
-                    throw new NotSupportedException("Unknown groupset: " + groupSet);
+                    throw new NotSupportedException("Unknown group part: " + groupPart);
             }
         }
 

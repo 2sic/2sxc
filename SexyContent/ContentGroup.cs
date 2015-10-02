@@ -9,8 +9,14 @@ namespace ToSic.SexyContent
 {
 	public class ContentGroup
 	{
+        #region NamingConstants
+        public const string cContent = "Content";
+	    public const string cPresentation = "Presentation";
+	    public const string cListC = "ListContent";
+	    public const string cListP = "ListPresentation";
+        #endregion
 
-		private IEntity _contentGroupEntity;
+        private IEntity _contentGroupEntity;
 		private readonly int _zoneId;
 		private readonly int _appId;
 
@@ -46,7 +52,8 @@ namespace ToSic.SexyContent
 			get { return _contentGroupEntity != null; }
 		}
 
-		private Template _template;
+        #region Template stuff
+        private Template _template;
 		public Template Template
 		{
 			get
@@ -71,17 +78,30 @@ namespace ToSic.SexyContent
 				return _template;
 			}
 		}
+        public void UpdateTemplate(int? templateId)
+		{
+			var values = new Dictionary<string, object>
+			{
+				{ "Template", templateId.HasValue ? new[] { templateId.Value } : new int[]{} }
+			};
 
-		public int ContentGroupId { get { return _contentGroupEntity.EntityId; } }
+		    var context = EavDataController.Instance(_zoneId, _appId).Entities;// EavContext.Instance(_zoneId, _appId);
+			context.UpdateEntity(_contentGroupEntity.EntityGuid, values);
+		}
+        #endregion
+
+
+        public int ContentGroupId { get { return _contentGroupEntity.EntityId; } }
 		public Guid ContentGroupGuid { get { return _contentGroupEntity == null ? Guid.Empty : _contentGroupEntity.EntityGuid; } }
 
-		public List<IEntity> Content
+        #region Retrieve the lists - either as object or by the type-indexer
+        public List<IEntity> Content
 		{
 			get
 			{
 				if (_contentGroupEntity != null)
 				{
-					var list = ((EntityRelationship) _contentGroupEntity.GetBestValue("Content")).ToList();
+					var list = ((EntityRelationship) _contentGroupEntity.GetBestValue(cContent)).ToList();
 					if (list.Count > 0)
 						return list;
 				}
@@ -96,7 +116,7 @@ namespace ToSic.SexyContent
 			{
 				if(_contentGroupEntity == null)
 					return new List<IEntity>();
-				return ((EntityRelationship) _contentGroupEntity.GetBestValue("Presentation")).ToList();
+				return ((EntityRelationship) _contentGroupEntity.GetBestValue(cPresentation)).ToList();
 			}
 		}
 
@@ -106,7 +126,7 @@ namespace ToSic.SexyContent
 			{
 				if (_contentGroupEntity == null)
 					return new List<IEntity>();
-				return ((EntityRelationship)_contentGroupEntity.GetBestValue("ListContent")).ToList();
+				return ((EntityRelationship)_contentGroupEntity.GetBestValue(cListC)).ToList();
 			}
 		}
 		public List<IEntity> ListPresentation
@@ -115,7 +135,7 @@ namespace ToSic.SexyContent
 			{
 				if (_contentGroupEntity == null)
 					return new List<IEntity>(); 
-				return((EntityRelationship)_contentGroupEntity.GetBestValue("ListPresentation")).ToList();
+				return((EntityRelationship)_contentGroupEntity.GetBestValue(cListP)).ToList();
 			}
 		}
 
@@ -139,47 +159,39 @@ namespace ToSic.SexyContent
 			}
 		}
 
-		public void Update(int? templateId)
-		{
-			var values = new Dictionary<string, object>
-			{
-				{ "Template", templateId.HasValue ? new[] { templateId.Value } : new int[]{} }
-			};
-
-		    var context = EavDataController.Instance(_zoneId, _appId).Entities;// EavContext.Instance(_zoneId, _appId);
-			context.UpdateEntity(_contentGroupEntity.EntityGuid, values);
-		}
+	    public List<int?> ListWithNulls(string type)
+	    {
+            return this[type].Select(p => p?.EntityId).ToList();
+        } 
+        #endregion  
 
 		public void UpdateEntity(string type, int sortOrder, int? entityId)
 		{
 			if (sortOrder == -1)
-				sortOrder = 0;
+                throw new Exception("Sortorder is never -1 any more; deprecated");
 
-			var entityIds = this[type].Select(p => p == null ? new int?() : p.EntityId).ToList();
+			var entityIds = this[type].Select(p => p?.EntityId).ToList();
 
+            // if necessary, add to end
 			if (entityIds.Count < sortOrder + 1)
 				entityIds.AddRange(Enumerable.Repeat(new int?(), (sortOrder + 1) - entityIds.Count));
 
 			entityIds[sortOrder] = entityId;
-			UpdateEntities(type, entityIds);
+			SaveChangedLists(PrepareSavePackage(type, entityIds));
 		}
 
-		private void UpdateEntities(string type, IEnumerable<int?> entityIds)
+		private void SaveChangedLists(Dictionary<string, int?[]> values)
 		{
-            // ToDo: Try to get rid of this code...
-            if (type == "content") type = "Content";
-            if (type == "presentation") type = "Presentation";
-            if (type == "listcontent") type = "ListContent";
-            if (type == "listpresentation") type = "ListPresentation";
-
-            if (type == "Presentation" && entityIds.Count() > Content.Count)
-				throw new Exception("Presentation may not contain more items than Content.");
-
-			var values = new Dictionary<string, object>
-			{
-				{ type, entityIds.ToArray() }
-			};
-
+            // ensure that there are never more presentations than values
+		    if (values.ContainsKey(cPresentation))
+		    {
+		        var contentCount = Content.Count;
+		        if (values.ContainsKey(cContent))
+		            contentCount = values[cContent].Length;
+                if(values[cPresentation].Length > contentCount)
+				    throw new Exception("Presentation may not contain more items than Content.");
+		    }
+            
 		    var context = EavDataController.Instance(_zoneId, _appId).Entities;// EavContext.Instance(_zoneId, _appId);
 			context.UpdateEntity(_contentGroupEntity.EntityGuid, values);
 
@@ -187,87 +199,92 @@ namespace ToSic.SexyContent
 			_contentGroupEntity = new ContentGroups(_zoneId, _appId).GetContentGroup(_contentGroupEntity.EntityGuid)._contentGroupEntity;
 		}
 
-		/// <summary>
-		/// Removes entities from a group. This will also remove the corresponding presentation entities.
-		/// </summary>
-		/// <param name="contentGroupGuid"></param>
-		/// <param name="type"></param>
-		/// <param name="sortOrder"></param>
-		public void RemoveContentAndPresentationEntities(int sortOrder)
-		{
-			var type = "Content";
-			if (sortOrder == -1)
-			{
-				type = "ListContent";
-				sortOrder = 0;
-			}
+	    private Dictionary<string, int?[]> PrepareSavePackage(string type, IEnumerable<int?> entityIds, Dictionary<string, int?[]> alreadyInitializedDictionary = null)
+	    {
+		    type = ReCapitalizePartName(type);
+            if(alreadyInitializedDictionary == null) alreadyInitializedDictionary = new Dictionary<string, int?[]>();
+	        alreadyInitializedDictionary.Add(type, entityIds.ToArray());
+	        return alreadyInitializedDictionary;
+	    }
 
-			RemoveEntity(type, sortOrder);
-			RemoveEntity(type.Replace("Content", "Presentation"), sortOrder);
+
+	    private string ReCapitalizePartName(string partName)
+	    {
+	        partName = partName.ToLower();
+            if (partName == cContent.ToLower()) partName = cContent;
+            else if (partName == cPresentation.ToLower()) partName = cPresentation;
+            else if (partName == cListC.ToLower()) partName = cListC;
+            else if (partName == cListP.ToLower()) partName = cListP;
+            else throw new Exception("Wanted to capitalize part name - but part name unknown: " + partName);
+	        return partName;
+	    }
+
+        /// <summary>
+        /// Removes entities from a group. This will also remove the corresponding presentation entities.
+        /// </summary>
+        /// <param name="contentGroupGuid"></param>
+        /// <param name="type">Should be "Content" or "ListContent"</param>
+        /// <param name="sortOrder"></param>
+        public void RemoveContentAndPresentationEntities(string type, int sortOrder)
+        {
+
+			var list1 = ListWithNulls(type);
+            list1.RemoveAt(sortOrder); 
+            var type2 = ReCapitalizePartName(type).Replace(cContent, cPresentation);
+            var list2 = ListWithNulls(type2);
+            list2.RemoveAt(sortOrder);
+			SaveChangedLists(PrepareSavePackage(type, list1, PrepareSavePackage(type2, list2)));
 		}
 
-		public void RemovePresentationEntity(int sortOrder)
-		{
-			UpdateEntity(sortOrder == -1 ? "ListPresentation" : "Presentation", sortOrder, null);
-		}
 
-		private void RemoveEntity(string type, int sortOrder)
+	    /// <summary>
+	    /// If SortOrder is not specified, adds at the end
+	    /// </summary>
+	    /// <param name="type"></param>
+	    /// <param name="sortOrder"></param>
+	    /// <param name="contentId"></param>
+	    /// <param name="presentationId"></param>
+	    public void AddContentAndPresentationEntity(string type, int? sortOrder, int? contentId, int? presentationId)
 		{
-			var entityIds = this[type].Select(p => p == null ? new int?() : p.EntityId).ToList();
-			entityIds.RemoveAt(sortOrder);
-			UpdateEntities(type, entityIds);
-		}
-
-		/// <summary>
-		/// If SortOrder is not specified, adds at the end
-		/// </summary>
-		/// <param name="sortOrder"></param>
-		public void AddContentAndPresentationEntity(int? sortOrder)
-		{
-			// ToDo: Fix duplicate code (see above)
-			var type = "Content";
-			if (sortOrder == -1)
-			{
-				type = "ListContent";
-				sortOrder = 0;
-			}
-
+            if(type.ToLower() != cContent.ToLower())
+                throw new Exception("This is only meant to work for content, not for list-content");
+            
 			if (!sortOrder.HasValue)
 				sortOrder = Content.Count;
 
-			SyncContentAndPresentationEntitiesCount();
-			AddEntity(type, sortOrder.Value);
-			AddEntity(type.Replace("Content", "Presentation"), sortOrder.Value);
-		}
+		    var list1 = ListWithNulls(type);
+			list1.Insert(sortOrder.Value, contentId);
 
-		public void AddEntity(string type, int sortOrder)
-		{
-			var entityIds = this[type].Select(p => p == null ? new int?() : p.EntityId).ToList();
-			entityIds.Insert(sortOrder, new int?());
-			UpdateEntities(type, entityIds);
-		}
+	        var list2 = GetPresentationIdWithSameLengthAsContent();
+            list2.Insert(sortOrder.Value, presentationId);
 
-		private void SyncContentAndPresentationEntitiesCount()
+            SaveChangedLists(PrepareSavePackage(cContent, list1, PrepareSavePackage(cPresentation, list2)));
+
+        }
+
+
+		private List<int?> GetPresentationIdWithSameLengthAsContent()
 		{
 			var difference = Content.Count - Presentation.Count;
 
 			if (difference < 0)
 				throw new Exception("There are more Presentation elements than Content elements.");
 
+			var entityIds = ListWithNulls(cPresentation);// Presentation.Select(p => p?.EntityId).ToList();
+
+            // extend as necessary
 			if (difference != 0)
-			{
-				var entityIds = Presentation.Select(p => p == null ? new int?() : p.EntityId).ToList();
 				entityIds.AddRange(Enumerable.Repeat(new int?(), difference));
-				UpdateEntities("Presentation", entityIds);
-			}
+
+            return entityIds;// SaveChangedLists(PrepareSavePackage(cPresentation, entityIds));
 		}
 
 		public void ReorderEntities(int sortOrder, int destinationSortOrder)
 		{
-			SyncContentAndPresentationEntitiesCount();
 
-			var contentIds = Content.Select(p => p == null ? new int?() : p.EntityId).ToList();
-			var presentationIds = Presentation.Select(p => p == null ? new int?() : p.EntityId).ToList();
+		    var contentIds = ListWithNulls(cContent);// Content.Select(p => p?.EntityId).ToList();
+			var presentationIds = GetPresentationIdWithSameLengthAsContent();
+		    //var presentationIds = ListWithNulls(cPresentation);// Presentation.Select(p => p == null ? new int?() : p.EntityId).ToList();
 
 			var contentId = contentIds[sortOrder];
 			var presentationId = presentationIds[sortOrder];
@@ -278,8 +295,11 @@ namespace ToSic.SexyContent
 			contentIds.Insert(destinationSortOrder, contentId);
 			presentationIds.Insert(destinationSortOrder, presentationId);
 
-			UpdateEntities("Content", contentIds);
-			UpdateEntities("Presentation", presentationIds);
+		    var list = PrepareSavePackage(cContent, contentIds);
+		    list = PrepareSavePackage(cPresentation, presentationIds, list);
+            SaveChangedLists(list);
+            //         UpdateEntities(cContent, contentIds);
+			//UpdateEntities(cPresentation, presentationIds);
 		}
 	}
 }

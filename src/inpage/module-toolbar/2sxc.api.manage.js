@@ -3,11 +3,11 @@
 // Toolbar bootstrapping (initialize all toolbars after loading page)
 $(document).ready(function () {
     // Prevent propagation of the click (if menu was clicked)
-    $('.sc-menu').click(function (e) {
+    $(".sc-menu").click(function (e) {
         e.stopPropagation();
     });
 
-    var modules = $('.DnnModule-2sxc .Mod2sxcC[data-2sxc], .DnnModule-2sxc-app .Mod2sxcappC[data-2sxc]');
+    var modules = $(".DnnModule-2sxc .Mod2sxcC[data-2sxc], .DnnModule-2sxc-app .Mod2sxcappC[data-2sxc]");
 
     modules.each(function () {
         var moduleId = $(this).data("2sxc").moduleId;
@@ -185,27 +185,27 @@ $2sxc.getManageController = function (id) {
             // when using a list, the sort-order is important to find the right item
             if(settings.useModuleList || settings.action === "replace") {
                 items.push({ Group: {
-                    Guid: settings.contentGroupId,
-                    Index: settings.sortOrder,
-                    Set: (settings.sortOrder !== -1) ? "content" : "listcontent"
+                        Guid: settings.contentGroupId,
+                        Index: settings.sortOrder,
+                        Part: (settings.sortOrder !== -1) ? "content" : "listcontent",
+                        Add: settings.action === "new"
                     }
                 });
-                //params.groupGuid = settings.contentGroupId;
-                //params.groupIndex = settings.sortOrder;
+                if (settings.action !== "replace") // if not replace, also add the presentation
+                    items.push({
+                        Group: {
+                            Guid: settings.contentGroupId,
+                            Index: settings.sortOrder,
+                            Part: (settings.sortOrder !== -1) ? "presentation" : "listpresentation",
+                            Add: settings.action === "new"
+                        }
+                    });
             }
 
-            if (settings.action === "replace") {
-                params.dialog = "replace";
-                //params.groupSet = (settings.sortOrder !== -1) ? "content" : "listcontent";
-                //params.groupIndex = settings.sortOrder;
-            }
-            else if (settings.action === "app") {
-                params.dialog = "app";
-            }
-            else if (settings.action === "zone") {
-                params.dialog = "zone";
-            }
-
+            if (settings.action === "replace" || settings.action === "app" || settings.action === "zone") 
+                params.dialog = settings.action;
+            
+            // Serialize/json-ify the complex items-list
             if (items.length)
                 params.items = JSON.stringify(items);
 
