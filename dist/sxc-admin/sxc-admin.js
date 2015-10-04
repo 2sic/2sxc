@@ -477,16 +477,10 @@ angular.module("SxcServices")//, ['ng', 'eavNgSvcs', "EavConfiguration"])
 // a connection to the Url, but only when it is the root
 // So the trick is to just include this file - which will provide values for the important attribute
 //
-// As of now, it only supplies
-// * dialog
-//
-// note that the following params are already taken care of by the InitParametersFromUrl of the EAV:
-// - appId
-// - zoneId
-// - entityId
-// - contentTypeName
-// - pipelineId
-// - $modalInstance (the dummy object, if needed)
+// As of now, it supplies
+// - dialog -> which dialog to show
+// - tabid -> the url tab id
+// - items - list of items to edit
 
 //(function () {
     angular.module("InitSxcParametersFromUrl", ["2sxc4ng"])
@@ -500,22 +494,7 @@ angular.module("SxcServices")//, ['ng', 'eavNgSvcs', "EavConfiguration"])
                 var found = $2sxc.urlParams.get("items");
                 if (found)
                     return (found) ? JSON.parse(found) : null;
-            }])
-        .factory("prefill", ["$2sxc", function ($2sxc) {
-                var found = $2sxc.urlParams.get("prefill");
-                if (found)
-                    return (found) ? JSON.parse(found) : null;
         }])
-        //.factory("groupGuid", function ($2sxc) {
-        //    return $2sxc.urlParams.get("groupguid");
-        //})
-        //.factory("groupSet", function ($2sxc) {
-        //    return $2sxc.urlParams.get("groupset");
-        //})
-        //.factory("groupIndex", function ($2sxc) {
-        //    return $2sxc.urlParams.get("groupindex");
-        //})
-    
     ;
 
 

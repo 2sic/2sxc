@@ -1,22 +1,5 @@
 ﻿// A helper-controller in charge of opening edit-dialogs + creating the toolbars for it
 
-// Toolbar bootstrapping (initialize all toolbars after loading page)
-$(document).ready(function () {
-    // Prevent propagation of the click (if menu was clicked)
-    $(".sc-menu").click(function (e) {
-        e.stopPropagation();
-    });
-
-    var modules = $(".DnnModule-2sxc .Mod2sxcC[data-2sxc], .DnnModule-2sxc-app .Mod2sxcappC[data-2sxc]");
-
-    modules.each(function () {
-        var moduleId = $(this).data("2sxc").moduleId;
-        $2sxc(moduleId).manage._processToolbars();
-    });
-
-    window.EavEditDialogs = [];
-});
-
 // all in-page toolbars etc.
 $2sxc.getManageController = function (id) {
 
@@ -165,22 +148,14 @@ $2sxc.getManageController = function (id) {
             };
             var items = [];
 
-            // add language info
-            //if (settings.cultureDimension && settings.cultureDimension !== null)
-            //    params.langnum = settings.cultureDimension;
-            //params.lang = window.$eavUIConfig.languages.currentLanguage;
-            //params.langs = window.$eavUIConfig.languages.languages;
-            //params.langpri = window.$eavUIConfig.languages.defaultLanguage;
             // ToDo: 2rm - discuss with 2dm - Add language configuration - how can I do the same in eav?
 
             // when not using a content-group list, ...
             if (!settings.useModuleList) {
                 if (settings.action !== "new")
                     items.push({ EntityId: settings.entityId });
-                    // params.entityid = settings.entityId;
                 if (settings.contentType || settings.attributeSetName)
                     items.push({ ContentTypeName: settings.contentType || settings.attributeSetName });
-                    // params.contenttypename = settings.contentType || settings.attributeSetName;
             }
             // when using a list, the sort-order is important to find the right item
             if(settings.useModuleList || settings.action === "replace") {
@@ -210,8 +185,11 @@ $2sxc.getManageController = function (id) {
                 params.items = JSON.stringify(items);
 
             // when doing new, there may be a prefill in the link to initialize the new item
-            if (settings.prefill)
-                params.prefill = JSON.stringify(settings.prefill);
+            if (settings.prefill) {
+                var prefill = JSON.stringify(settings.prefill);
+                for (var i = 0; i < items.length; i++)
+                    items[i].Prefill = prefill;
+            }
 
             return manageInfo.ngDialogUrl
                 + "#" + $.param(manageInfo.ngDialogParams)
@@ -270,7 +248,7 @@ $2sxc.getManageController = function (id) {
             var symbol = $("<span class=\"glyphicon " + conf.icon + "\" aria-hidden=\"true\"></span>");
 
             // if publish-button and not published yet, show button (otherwise hidden) & change icon
-            if (settings.action == "publish" && settings.isPublished === false) {
+            if (settings.action === "publish" && settings.isPublished === false) {
                 button.toggleClass("hideFirst", false)
                     .attr("title", "Unpublished");
                 symbol.toggleClass(conf.icon, false)

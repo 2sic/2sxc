@@ -505,6 +505,7 @@
                     svc.setScope(inp);
             });
         };
+
         vm.isGuid = function isGuid(txtToTest) {
             var patt = new RegExp(/[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}/i);
             return patt.test(txtToTest); // note: can't use the txtToTest.match because it causes infinite digest cycles
@@ -659,122 +660,6 @@ angular.module("EavDirectives", [])
         };
     })
 ;
-
-
-// Note: the entity-reader is meant for admin-purposes. 
-// It does not try to do fallback, because the admin-UI MUST know the real data
-function enhanceEntity(entity) {
-    var enhancer = this; 
-
-    enhancer.enhanceWithCount = function (obj) {
-        obj.count = function () {
-            var key, count = 0;
-            for (key in this)
-                if (this.hasOwnProperty(key) && typeof this[key] != 'function')
-                    count++;
-            return count;
-        };
-    }; 
-
-    // this will enhance a Values with necessary methods
-    enhancer.enhanceVs = function (vs) {
-        vs.hasLanguage = function (language) { return this.Dimensions.hasOwnProperty(language); };
-        vs.setLanguage = function (language, shareMode) { this.Dimensions[language] = shareMode; };
-        vs.languageMode = function(language) { return (this.hasLanguage(language)) ? this.Dimensions[language] : null; };
-
-        // ToDo: Fix enhance dimensions - or use alternative Object.keys(vs.Dimensions).length
-        //if(typeof vs.Dimensions != "undefined")
-            //enhancer.enhanceWithCount(vs.Dimensions);
-        return vs;
-    };
-
-    // this will enhance an attribute
-    enhancer.enhanceAtt = function(att) {
-        att.getVsWithLanguage = function(language) {
-            // try to find it based on the language - it then has a property matching the language
-            for (var v = 0; v < this.Values.length; v++)
-                if (this.Values[v].hasLanguage(language))
-                    return this.Values[v];
-
-            // if we don't find it, we must report it back as such
-            return null;
-        };
-
-        att.setLanguageToVs = function(vs, language, shareMode) {
-            // check if it's already there, if yes, just ensure shareMode, then done
-            if (vs.hasLanguage(language))
-                return vs.setLanguage(language, shareMode);
-
-            // otherwise find the language if it's anywhere else and remove that first; 
-            // note that this might delete a value set, so we should only do it after checking if it wasn't already right
-            this.removeLanguage(language);
-
-            // now set it anew
-            return vs.setLanguage(language, shareMode);
-        };
-
-        att.removeLanguage = function(language) {
-            var value = this.getVsWithLanguage(language);
-            if (value === null)
-                return;
-            delete value.Dimensions[language];
-
-            // check if the vs still has any properties left, if not, remove it entirely - unless it's the last one...
-            if (Object.keys(value.Dimensions).length === 0 && this.Values.length > 0)
-                this.removeVs(value);
-        };
-
-        att.removeVs = function(vs) {
-            for (var v = 0; v < this.Values.length; v++)
-                if (this.Values[v] === vs)
-                    this.Values.splice(v, 1);
-        };
-
-        // todo: when adding VS - ensure the events are added too...
-        att.addVs = function(value, language, shareMode) {
-            var dimensions = {};
-            dimensions[language] = (shareMode === null ? true : shareMode);
-            var newVs = { "Value": value, "Dimensions": dimensions };
-            // ToDo: enhancer.enhanceWithCount(newVs.Dimensions);
-            this.Values.push(enhancer.enhanceVs(newVs));
-        };
-
-        // Now go through the Values and give them more commands
-        for (var v = 0; v < att.Values.length; v++)
-            enhancer.enhanceVs(att.Values[v]);
-
-        return att;
-    };
-
-    // this will enhance an entity
-    enhancer.enhanceEntity = function(ent) {
-        ent.getTitle = function() {
-            ent.getAttribute(ent.TitleAttributeName);
-        };
-
-        ent.hasAttribute = function(attrName) {
-            return ent.Attributes[attrName] !== undefined;
-        };
-
-        ent.getAttribute = function(attrName) {
-            return ent.Attributes[attrName];
-        };
-
-        // ToDo: Discuss with 2dm 
-        ent.Attributes.addAttribute = function (attrName) {
-            ent.Attributes[attrName] = { Values: [] };
-            enhancer.enhanceAtt(ent.Attributes[attrName]);
-        };
-
-        for (var attKey in ent.Attributes)
-            if(ent.Attributes.hasOwnProperty(attKey) && typeof(ent.Attributes[attKey]) != 'function')
-                enhancer.enhanceAtt(ent.Attributes[attKey]);
-
-        return ent;
-    };
-
-    return enhancer.enhanceEntity(entity);
-}
 angular.module('eavTemplates',[]).run(['$templateCache', function($templateCache) {
   'use strict';
 
@@ -784,7 +669,7 @@ angular.module('eavTemplates',[]).run(['$templateCache', function($templateCache
 
 
   $templateCache.put('content-import-export/content-import.html',
-    "<div class=modal-header><button class=\"btn pull-right\" type=button icon=remove ng-click=vm.close()></button><h3 class=modal-title><span translate=Content.Import.Title></span> <span ng-show=\"vm.viewStateSelected > 0\" translate=Content.Import.TitleSteps translate-values=\"{step: vm.viewStateSelected}\"></span></h3></div><div ng-switch=vm.viewStateSelected><div ng-switch-when=1><div class=modal-body><div translate=Content.Import.Help></div><formly-form form=vm.form model=vm.formValues fields=vm.formFields></formly-form><div class=text-warning translate=Content.Import.Messages.BackupContentBefore></div></div><div class=modal-footer><button type=button class=\"btn btn-default\" ng-click=vm.evaluateContent() ng-disabled=\"!vm.formValues.File || !vm.formValues.File.filename\" translate=Content.Import.Commands.Preview></button></div></div><div ng-switch-when=0><div class=modal-body><img src=\"/Scripts/images/ui-ajax-loader.gif\"> {{'Content.Import.Messages.WaitingForResponse' | translate}}</div></div><div ng-switch-when=2><div class=modal-body><div ng-if=vm.evaluationResult.Succeeded><h4 translate=Content.Import.Evaluation.Detail.Title translate-values=\"{filename: vm.formValues.File.filename}\"></h4><h5 translate=Content.Import.Evaluation.Detail.File.Title></h5><ul><li translate=Content.Import.Evaluation.Detail.File.ElementCount translate-values=\"{count: vm.evaluationResult.Detail.DocumentElementsCount}\"></li><li translate=Content.Import.Evaluation.Detail.File.LanguageCount translate-values=\"{count: vm.evaluationResult.Detail.LanguagesInDocumentCount}\"></li><li translate=Content.Import.Evaluation.Detail.File.Attributes translate-values=\"{count: vm.evaluationResult.Detail.AttributeNamesInDocument.length, attributes: vm.evaluationResult.Detail.AttributeNamesInDocument.join(', ')}\"></li></ul><h5 translate=Content.Import.Evaluation.Detail.Entities.Title></h5><ul><li translate=Content.Import.Evaluation.Detail.Entities.Create translate-values=\"{count: vm.evaluationResult.Detail.AmountOfEntitiesCreated}\"></li><li translate=Content.Import.Evaluation.Detail.Entities.Update translate-values=\"{count: vm.evaluationResult.Detail.AmountOfEntitiesUpdated}\"></li><li translate=Content.Import.Evaluation.Detail.Entities.Delete translate-values=\"{count: vm.evaluationResult.Detail.AmountOfEntitiesDeleted}\"></li><li translate=Content.Import.Evaluation.Detail.Entities.AttributesIgnored translate-values=\"{count: vm.evaluationResult.Detail.AttributeNamesNotImported.length, attributes: vm.evaluationResult.Detail.AttributeNamesNotImported.join(', ')}\"></li></ul><div class=text-warning translate=Content.Import.Messages.ImportCanTakeSomeTime></div></div><div ng-if=!vm.evaluationResult.Succeeded><h4 translate=Content.Import.Evaluation.Error.Title translate-values=\"{filename: vm.formValues.File.filename}\"></h4><ul><li ng-repeat=\"error in vm.evaluationResult.Detail\"><div><span translate=Content.Import.Evaluation.Error.Codes.{{error.ErrorCode}}></span></div><div ng-if=error.ErrorDetail><i translate=Content.Import.Evaluation.Error.Detail translate-values=\"{detail: error.ErrorDetail}\"></i></div><div ng-if=error.LineNumber><i translate=Content.Import.Evaluation.Error.LineNumber&quot; translate-values=\"{number: error.LineNumber}\"></i></div><div ng-if=error.LineDetail><i translate=Content.Import.Evaluation.Error.LineDetail translate-values=\"{detail: error.LineDetail}\"></i></div></li></ul></div></div><div class=modal-footer><button type=button class=\"btn pull-left\" ng-click=vm.back() icon=arrow-left></button> <button type=button class=\"btn btn-default\" ng-click=vm.importContent() translate=Content.Import.Commands.Import ng-disabled=!vm.evaluationResult.Succeeded></button></div></div><div ng-switch-when=3><div class=modal-body><span ng-show=vm.importResult.Succeeded translate=Content.Import.Messages.ImportSucceeded></span> <span ng-hide=vm.importResult.Succeeded translate=Content.Import.Messages.ImportFailed></span></div></div><pre>{{vm.formValues | json}}</pre></div>"
+    "<div class=modal-header><button class=\"btn pull-right\" type=button icon=remove ng-click=vm.close()></button><h3 class=modal-title><span translate=Content.Import.Title></span> <span ng-show=\"vm.viewStateSelected > 0\" translate=Content.Import.TitleSteps translate-values=\"{step: vm.viewStateSelected}\"></span></h3></div><div ng-switch=vm.viewStateSelected><div ng-switch-when=1><div class=modal-body><div translate=Content.Import.Help></div><formly-form form=vm.form model=vm.formValues fields=vm.formFields></formly-form><div class=text-warning translate=Content.Import.Messages.BackupContentBefore></div></div><div class=modal-footer><button type=button class=\"btn btn-default pull-left\" ng-click=vm.evaluateContent() ng-disabled=\"!vm.formValues.File || !vm.formValues.File.filename\" translate=Content.Import.Commands.Preview></button></div></div><div ng-switch-when=0><div class=modal-body><img src=\"/Scripts/images/ui-ajax-loader.gif\"> {{'Content.Import.Messages.WaitingForResponse' | translate}}</div></div><div ng-switch-when=2><div class=modal-body><div ng-if=vm.evaluationResult.Succeeded><h4 translate=Content.Import.Evaluation.Detail.Title translate-values=\"{filename: vm.formValues.File.filename}\"></h4><h5 translate=Content.Import.Evaluation.Detail.File.Title></h5><ul><li translate=Content.Import.Evaluation.Detail.File.ElementCount translate-values=\"{count: vm.evaluationResult.Detail.DocumentElementsCount}\"></li><li translate=Content.Import.Evaluation.Detail.File.LanguageCount translate-values=\"{count: vm.evaluationResult.Detail.LanguagesInDocumentCount}\"></li><li translate=Content.Import.Evaluation.Detail.File.Attributes translate-values=\"{count: vm.evaluationResult.Detail.AttributeNamesInDocument.length, attributes: vm.evaluationResult.Detail.AttributeNamesInDocument.join(', ')}\"></li></ul><h5 translate=Content.Import.Evaluation.Detail.Entities.Title></h5><ul><li translate=Content.Import.Evaluation.Detail.Entities.Create translate-values=\"{count: vm.evaluationResult.Detail.AmountOfEntitiesCreated}\"></li><li translate=Content.Import.Evaluation.Detail.Entities.Update translate-values=\"{count: vm.evaluationResult.Detail.AmountOfEntitiesUpdated}\"></li><li translate=Content.Import.Evaluation.Detail.Entities.Delete translate-values=\"{count: vm.evaluationResult.Detail.AmountOfEntitiesDeleted}\"></li><li translate=Content.Import.Evaluation.Detail.Entities.AttributesIgnored translate-values=\"{count: vm.evaluationResult.Detail.AttributeNamesNotImported.length, attributes: vm.evaluationResult.Detail.AttributeNamesNotImported.join(', ')}\"></li></ul><div class=text-warning translate=Content.Import.Messages.ImportCanTakeSomeTime></div></div><div ng-if=!vm.evaluationResult.Succeeded><h4 translate=Content.Import.Evaluation.Error.Title translate-values=\"{filename: vm.formValues.File.filename}\"></h4><ul><li ng-repeat=\"error in vm.evaluationResult.Detail\"><div><span translate=Content.Import.Evaluation.Error.Codes.{{error.ErrorCode}}></span></div><div ng-if=error.ErrorDetail><i translate=Content.Import.Evaluation.Error.Detail translate-values=\"{detail: error.ErrorDetail}\"></i></div><div ng-if=error.LineNumber><i translate=Content.Import.Evaluation.Error.LineNumber&quot; translate-values=\"{number: error.LineNumber}\"></i></div><div ng-if=error.LineDetail><i translate=Content.Import.Evaluation.Error.LineDetail translate-values=\"{detail: error.LineDetail}\"></i></div></li></ul></div></div><div class=modal-footer><button type=button class=\"btn pull-left\" ng-click=vm.back() icon=arrow-left></button> <button type=button class=\"btn btn-default pull-left\" ng-click=vm.importContent() translate=Content.Import.Commands.Import ng-disabled=!vm.evaluationResult.Succeeded></button></div></div><div ng-switch-when=3><div class=modal-body><span ng-show=vm.importResult.Succeeded translate=Content.Import.Messages.ImportSucceeded></span> <span ng-hide=vm.importResult.Succeeded translate=Content.Import.Messages.ImportFailed></span></div></div><pre>{{vm.formValues | json}}</pre></div>"
   );
 
 
@@ -809,12 +694,12 @@ angular.module('eavTemplates',[]).run(['$templateCache', function($templateCache
 
 
   $templateCache.put('content-types/content-types-edit.html',
-    "<div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=ContentTypeEdit.Title></h3></div><div class=modal-body>{{ \"ContentTypeEdit.Name\" | translate }}:<br><input ng-model=\"vm.item.Name\"><br>{{ \"ContentTypeEdit.Description\" | translate }}:<br><input ng-model=\"vm.item.Description\"><br>{{ \"ContentTypeEdit.Scope\" | translate }}:<br><input disabled ng-model=\"vm.item.Scope\"></div><div class=modal-footer><button icon=ok class=\"btn btn-primary\" type=button ng-click=vm.ok()></button></div>"
+    "<div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=ContentTypeEdit.Title></h3></div><div class=modal-body>{{ \"ContentTypeEdit.Name\" | translate }}:<br><input ng-model=\"vm.item.Name\"><br>{{ \"ContentTypeEdit.Description\" | translate }}:<br><input ng-model=\"vm.item.Description\"><br>{{ \"ContentTypeEdit.Scope\" | translate }}:<br><input disabled ng-model=\"vm.item.Scope\"></div><div class=modal-footer><button icon=ok class=\"btn btn-primary pull-left\" type=button ng-click=vm.ok()></button></div>"
   );
 
 
   $templateCache.put('content-types/content-types-field-edit.html',
-    "<div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=Fields.TitleEdit></h3></div><div class=modal-body><table class=\"table table-hover\"><thead><tr><th translate=Fields.Table.Name></th><th translate=Fields.Table.DataType>Data Type</th></tr></thead><tbody><tr ng-repeat=\"item in vm.items\"><td><input ng-model=item.StaticName ng-required=\"true\"></td><td><select ng-model=item.Type ng-options=\"o for o in vm.types track by o\"></select></td></tr><tr ng-if=!vm.items.length><td colspan=100 translate=General.Messages.NothingFound></td></tr></tbody></table></div><div class=modal-footer><button icon=ok class=\"btn btn-primary\" type=button ng-click=vm.ok()></button></div>"
+    "<div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=Fields.TitleEdit></h3></div><div class=modal-body><table class=\"table table-hover\"><thead><tr><th translate=Fields.Table.Name></th><th translate=Fields.Table.DataType>Data Type</th></tr></thead><tbody><tr ng-repeat=\"item in vm.items\"><td><input ng-model=item.StaticName ng-required=\"true\"></td><td><select ng-model=item.Type ng-options=\"o for o in vm.types track by o\"></select></td></tr><tr ng-if=!vm.items.length><td colspan=100 translate=General.Messages.NothingFound></td></tr></tbody></table></div><div class=modal-footer><button icon=ok class=\"btn btn-primary pull-left\" type=button ng-click=vm.ok()></button></div>"
   );
 
 
@@ -881,13 +766,15 @@ angular.module('eavTemplates',[]).run(['$templateCache', function($templateCache
 
 } ());
 angular.module("PipelineDesigner", [
-    "PipelineDesigner.filters",
-    "ngResource",
-    "toaster",
-    "EavConfiguration",
-    "eavDialogService",
-    "EavServices",
-    "eavTemplates"])
+        "PipelineDesigner.filters",
+        "ngResource",
+        "EavConfiguration",
+        "eavDialogService",
+        "EavServices",
+        "eavTemplates",
+        "eavNgSvcs",
+        "EavAdminUi"
+    ])
 
 // datasource directive makes an element a DataSource with jsPlumb
     .directive("datasource", ["$timeout", function($timeout) {
@@ -905,49 +792,7 @@ angular.module("PipelineDesigner", [
                 }
             }
         };
-    }])
-
-// Show Notifications using toaster
-    .factory("uiNotification", [
-        "toaster", function(toaster) {
-            "use strict";
-
-            var showNote = function(type, title, body, autoHide) {
-                // wrap toaster in ready-Event because notes would't be show if teaster is used before
-                angular.element(document).ready(function() {
-                    toaster.clear();
-                    toaster.pop(type, title, body, autoHide ? null : 0);
-                });
-            };
-
-            return {
-                clear: function() {
-                    toaster.clear();
-                },
-                error: function(title, bodyOrError) {
-                    var message;
-                    // test whether bodyOrError is an Error from Web API
-                    if (bodyOrError && bodyOrError.data && bodyOrError.data.Message) {
-                        message = bodyOrError.data.Message;
-                        if (bodyOrError.data.ExceptionMessage)
-                            message += "\n" + bodyOrError.data.ExceptionMessage;
-                    } else
-                        message = bodyOrError;
-
-                    showNote("error", title, message);
-                },
-                note: function(title, body, autoHide) {
-                    showNote("note", title, body, autoHide);
-                },
-                success: function(title, body, autoHide) {
-                    showNote("success", title, body, autoHide);
-                },
-                wait: function(title) {
-                    showNote("note", title ? title : "Please wait ..", "This shouldn't take long", false);
-                }
-            };
-        }
-    ]);
+    }]);
 
 // Filters for "ClassName, AssemblyName"
 angular.module("PipelineDesigner.filters", []).filter("typename", function () {
@@ -973,558 +818,563 @@ angular.module("PipelineDesigner.filters", []).filter("typename", function () {
 // todo: refactor the pipeline designer to use the new eavAdminUi service
 
 /*jshint laxbreak:true */
-angular.module("PipelineDesigner")
-
-    .controller("PipelineDesignerController",
-			
-	["appId", "pipelineId", "$scope", "pipelineService", "$location", "$timeout", "$filter", "uiNotification", "eavDialogService", "$log", "eavConfig", "$q", function (appId, pipelineId, $scope, pipelineService, $location, $timeout, $filter, uiNotification, eavDialogService, $log, eavConfig, $q) {
-		"use strict";
-        
-		// Init
-		uiNotification.wait();
-		$scope.readOnly = true;
-		$scope.dataSourcesCount = 0;
-		$scope.dataSourceIdPrefix = "dataSource_";
-		$scope.debug = false;
-
-		// Load Pipeline Data
-	    $scope.PipelineEntityId = pipelineId;
-
-	    pipelineService.setAppId(appId);
-
-		// Get Data from PipelineService (Web API)
-		pipelineService.getPipeline($scope.PipelineEntityId).then(function (success) {
-			$scope.pipelineData = success;
-			$scope.readOnly = !success.Pipeline.AllowEdit;
-			uiNotification.note("Ready", $scope.readOnly ? "This pipeline is read only" : "You can now design the Pipeline. \nNote that there are still a few UI bugs.\nVisit 2sxc.org/help for more.", true);
-
-			// If a new Pipeline is made, init new Pipeline
-			if (!$scope.PipelineEntityId || $scope.pipelineData.DataSources.length === 1)
-				initNewPipeline();
-		}, function (reason) {
-			uiNotification.error("Loading Pipeline failed", reason);
-		});
-
-		// init new jsPlumb Instance
-		jsPlumb.ready(function () {
-			$scope.jsPlumbInstance = jsPlumb.getInstance({
-				Connector: ["Bezier", { curviness: 70 }],
-				HoverPaintStyle: {
-					lineWidth: 4,
-					strokeStyle: "#216477",
-					outlineWidth: 2,
-					outlineColor: "white"
-				},
-				PaintStyle: {
-					lineWidth: 4,
-					strokeStyle: "#61B7CF",
-					joinstyle: "round",
-					outlineColor: "white",
-					outlineWidth: 2
-				},
-				Container: "pipelineContainer"
-			});
-			// If connection on Out-DataSource was removed, remove custom Endpoint
-			$scope.jsPlumbInstance.bind("connectionDetached", function (info) {
-				if (info.targetId == $scope.dataSourceIdPrefix + "Out") {
-					var fixedEndpoints = angular.element(info.target).scope().dataSource.Definition().In;
-					var label = info.targetEndpoint.getOverlay("endpointLabel").label;
-					if (fixedEndpoints.indexOf(label) == -1) {
-						$timeout(function () {
-							$scope.jsPlumbInstance.deleteEndpoint(info.targetEndpoint);
-						});
-					}
-				}
-			});
-			// If a new connection is created, ask for a name of the In-Stream
-			$scope.jsPlumbInstance.bind("connection", function (info) {
-				if (!$scope.connectionsInitialized) return;
-
-				// Repeat until a valid Stream-Name is provided by the user
-				var repeatCount = 0;
-				var endpointHandling = function(endpoint) {
-				    var label = endpoint.getOverlay("endpointLabel").getLabel();
-				    if (label === labelPrompt && info.targetEndpoint.id !== endpoint.id && angular.element(endpoint.canvas).hasClass("targetEndpoint")) 
-				        targetEndpointHavingSameLabel = endpoint;
-				};
-				while (true) {
-					repeatCount++;
-
-					var promptMessage = "Please name the Stream";
-					if (repeatCount > 1)
-						promptMessage += ". Ensure the name is not used by any other Stream on this DataSource.";
-
-					var endpointLabel = info.targetEndpoint.getOverlay("endpointLabel");
-					var labelPrompt = prompt(promptMessage, endpointLabel.getLabel());
-					if (labelPrompt)
-						endpointLabel.setLabel(labelPrompt);
-					else
-						continue;
-
-					// Check if any other Target-Endpoint has the same Stream-Name (Label)
-					var endpoints = $scope.jsPlumbInstance.getEndpoints(info.target.id);
-					var targetEndpointHavingSameLabel = null;
-
-				    angular.forEach(endpoints, endpointHandling);
-					if (targetEndpointHavingSameLabel)
-						continue;
-
-					break;
-				}
-			});
-		});
-
-		// #region jsPlumb Endpoint Definitions
-	    var getEndpointOverlays = function(isSource) {
-	        return [
-	            [
-	                "Label", {
-	                    id: "endpointLabel",
-	                    location: [0.5, isSource ? -0.5 : 1.5],
-	                    label: "Default",
-	                    cssClass: isSource ? "endpointSourceLabel" : "endpointTargetLabel",
-	                    events: {
-	                        dblclick: function(labelOverlay) {
-	                            if ($scope.readOnly) return;
-
-	                            var newLabel = prompt("Rename Stream", labelOverlay.label);
-	                            if (newLabel)
-	                                labelOverlay.setLabel(newLabel);
-	                        }
-	                    }
-	                }
-	            ]
-	        ];
-	    };
-
-		// the definition of source endpoints (the small blue ones)
-		var sourceEndpoint = {
-			paintStyle: { fillStyle: "transparent", radius: 10, lineWidth: 0 },
-			cssClass: "sourceEndpoint",
-			maxConnections: -1,
-			isSource: true,
-			anchor: ["Continuous", { faces: ["top"] }],
-			overlays: getEndpointOverlays(true)
-		};
-
-		// the definition of target endpoints (will appear when the user drags a connection) 
-		var targetEndpoint = {
-			paintStyle: { fillStyle: "transparent", radius: 10, lineWidth: 0 },
-			cssClass: "targetEndpoint",
-			maxConnections: 1,
-			isTarget: true,
-			anchor: ["Continuous", { faces: ["bottom"] }],
-			overlays: getEndpointOverlays(false),
-			dropOptions: { hoverClass: "hover", activeClass: "active" }
-		};
-		// #endregion
-
-		// make a DataSource with Endpoints, called by the datasource-Directive
-	    $scope.makeDataSource = function(dataSource, element) {
-	        // suspend drawing and initialise
-	        $scope.jsPlumbInstance.doWhileSuspended(function() {
-	            // Add Out- and In-Endpoints from Definition
-	            var dataSourceDefinition = dataSource.Definition();
-	            if (dataSourceDefinition !== null) {
-	                // Add Out-Endpoints
-	                angular.forEach(dataSourceDefinition.Out, function(name) {
-	                    addEndpoint(element, name, false);
-	                });
-	                // Add In-Endpoints
-	                angular.forEach(dataSourceDefinition.In, function(name) {
-	                    addEndpoint(element, name, true);
-	                });
-	                // make the DataSource a Target for new Endpoints (if .In is an Array)
-	                if (dataSourceDefinition.In) {
-	                    var targetEndpointUnlimited = targetEndpoint;
-	                    targetEndpointUnlimited.maxConnections = -1;
-	                    $scope.jsPlumbInstance.makeTarget(element, targetEndpointUnlimited);
-	                }
-
-	                $scope.jsPlumbInstance.makeSource(element, sourceEndpoint, { filter: ".ep .glyphicon" });
-	            }
-
-	            // make DataSources draggable
-	            if (!$scope.readOnly) {
-	                $scope.jsPlumbInstance.draggable(element, {
-	                    grid: [20, 20],
-	                    drag: $scope.dataSourceDrag
-	                });
-	            }
-	        });
-
-	        $scope.dataSourcesCount++;
-	    };
-
-		// Add a jsPlumb Endpoint to an Element
-	    var addEndpoint = function(element, name, isIn) {
-	        if (!element.length) {
-	            $log.error({ message: "Element not found", selector: element.selector });
-	            return;
-	        }
-
-	        var dataSource = element.scope().dataSource;
-	        var uuid = element.attr("id") + (isIn ? "_in_" : "_out_") + name;
-	        var params = {
-	            uuid: uuid,
-	            enabled: !dataSource.ReadOnly || dataSource.EntityGuid == "Out" // Endpoints on Out-DataSource must be always enabled
-	        };
-	        var endPoint = $scope.jsPlumbInstance.addEndpoint(element, (isIn ? targetEndpoint : sourceEndpoint), params);
-	        endPoint.getOverlay("endpointLabel").setLabel(name);
-	    };
-
-		// Initialize jsPlumb Connections once after all DataSources were created in the DOM
-		$scope.connectionsInitialized = false;
-		$scope.$on("ngRepeatFinished", function () {
-			if ($scope.connectionsInitialized) return;
-
-			// suspend drawing and initialise
-			$scope.jsPlumbInstance.doWhileSuspended(function () {
-				initWirings($scope.pipelineData.Pipeline.StreamWiring);
-			});
-			$scope.repaint();	// repaint so continuous connections are aligned correctly
-
-			$scope.connectionsInitialized = true;
-		});
-	    var initWirings = function(streamWiring) {
-	        angular.forEach(streamWiring, function(wire) {
-	            // read connections from Pipeline
-	            var sourceElementId = $scope.dataSourceIdPrefix + wire.From;
-	            var fromUuid = sourceElementId + "_out_" + wire.Out;
-	            var targetElementId = $scope.dataSourceIdPrefix + wire.To;
-	            var toUuid = targetElementId + "_in_" + wire.In;
-
-	            // Ensure In- and Out-Endpoint exist
-	            if (!$scope.jsPlumbInstance.getEndpoint(fromUuid))
-	                addEndpoint(jsPlumb.getSelector("#" + sourceElementId), wire.Out, false);
-	            if (!$scope.jsPlumbInstance.getEndpoint(toUuid))
-	                addEndpoint(jsPlumb.getSelector("#" + targetElementId), wire.In, true);
-
-	            try {
-	                $scope.jsPlumbInstance.connect({ uuids: [fromUuid, toUuid] });
-	            } catch (e) {
-	                $log.error({ message: "Connection failed", from: fromUuid, to: toUuid });
-	            }
-	        });
-	    };
-
-		// Init a new Pipeline with DataSources and Wirings from Configuration
-	    var initNewPipeline = function() {
-	        angular.forEach(eavConfig.pipelineDesigner.defaultPipeline.dataSources, function(dataSource) {
-	            $scope.addDataSource(dataSource.partAssemblyAndType, dataSource.visualDesignerData, false, dataSource.entityGuid);
-	        });
-
-	        // Wait until all DataSources were created
-	        var initWiringsListener = $scope.$on("ngRepeatFinished", function() {
-	            $scope.connectionsInitialized = false;
-	            initWirings(eavConfig.pipelineDesigner.defaultPipeline.streamWiring);
-	            $scope.connectionsInitialized = true;
-
-	            initWiringsListener(); // unbind the Listener
-	        });
-	    };
-
-		// Add new DataSource
-	    $scope.addDataSource = function(partAssemblyAndType, visualDesignerData, autoSave, entityGuid) {
-	        if (!partAssemblyAndType) {
-	            partAssemblyAndType = $scope.addDataSourceType.PartAssemblyAndType;
-	            $scope.addDataSourceType = null;
-	        }
-	        if (!visualDesignerData)
-	            visualDesignerData = { Top: 100, Left: 100 };
-
-	        var newDataSource = {
-	            VisualDesignerData: visualDesignerData,
-	            Name: $filter("typename")(partAssemblyAndType, "className"),
-	            Description: "",
-	            PartAssemblyAndType: partAssemblyAndType,
-	            EntityGuid: entityGuid || "unsaved" + ($scope.dataSourcesCount + 1)
-	        };
-	        // Extend it with a Property to it's Definition
-	        newDataSource = angular.extend(newDataSource, pipelineService.getNewDataSource($scope.pipelineData, newDataSource));
-
-	        $scope.pipelineData.DataSources.push(newDataSource);
-
-	        if (autoSave !== false)
-	            $scope.savePipeline();
-	    };
-
-		// Delete a DataSource
-	    $scope.remove = function(index) {
-	        var dataSource = $scope.pipelineData.DataSources[index];
-	        if (!confirm("Delete DataSource \"" + (dataSource.Name || "(unnamed)") + "\"?")) return;
-	        var elementId = $scope.dataSourceIdPrefix + dataSource.EntityGuid;
-	        $scope.jsPlumbInstance.selectEndpoints({ element: elementId }).remove();
-	        $scope.pipelineData.DataSources.splice(index, 1);
-	    };
-
-		// Edit name of a DataSource
-	    $scope.editName = function(dataSource) {
-	        if (dataSource.ReadOnly) return;
-
-	        var newName = prompt("Rename DataSource", dataSource.Name);
-	        if (newName !== undefined && newName.trim())
-	            dataSource.Name = newName;
-	    };
-
-		// Edit Description of a DataSource
-	    $scope.editDescription = function(dataSource) {
-	        if (dataSource.ReadOnly) return;
-
-	        var newDescription = prompt("Edit Description", dataSource.Description);
-	        if (newDescription !== undefined && newDescription.trim())
-	            dataSource.Description = newDescription;
-	    };
-
-		// Update DataSource Position on Drag
-	    $scope.dataSourceDrag = function() {
-	        var $this = $(this);
-	        var offset = $this.offset();
-	        var dataSource = $this.scope().dataSource;
-	        $scope.$apply(function() {
-	            dataSource.VisualDesignerData.Top = Math.round(offset.top);
-	            dataSource.VisualDesignerData.Left = Math.round(offset.left);
-	        });
-	    };
-
-		// Configure a DataSource
-	    $scope.configureDataSource = function(dataSource) {
-	        if (dataSource.ReadOnly) return;
-
-	        // Ensure dataSource Entity is saved
-	        if (!dataSourceIsPersisted(dataSource)) {
-	            $scope.savePipeline();
-	            return;
-	        }
-
-	        uiNotification.wait();
-
-	        pipelineService.getDataSourceConfigurationUrl(dataSource).then(function(url) {
-	            uiNotification.clear();
-	            eavDialogService.open({ url: url, title: "Configure DataSource " + dataSource.Name });
-	        }, function(error) {
-	            uiNotification.error("Open Configuration UI failed", error);
-	        });
-	    };
-
-		// Test wether a DataSource is persisted on the Server
-	    var dataSourceIsPersisted = function(dataSource) {
-	        return dataSource.EntityGuid.indexOf("unsaved") === -1;
-	    };
-
-		// Show/Hide Endpoint Overlays
-		$scope.showEndpointOverlays = true;
-	    $scope.toggleEndpointOverlays = function() {
-	        $scope.showEndpointOverlays = !$scope.showEndpointOverlays;
-
-	        var endpoints = $scope.jsPlumbInstance.selectEndpoints();
-	        if ($scope.showEndpointOverlays)
-	            endpoints.showOverlays();
-	        else
-	            endpoints.hideOverlays();
-	    };
-
-		// Edit Pipeline Entity
-	    $scope.editPipelineEntity = function() {
-	        // save Pipeline, then open Edit Dialog
-	        $scope.savePipeline().then(function() {
-	            eavDialogService.open({
-	                url: pipelineService.getPipelineUrl("edit", $scope.PipelineEntityId),
-	                title: "Edit Test Values",
-	                onClose: function() {
-	                    pipelineService.getPipeline($scope.PipelineEntityId).then(pipelineSaved);
-	                }
-	            });
-	        });
-	    };
-
-		// Sync jsPlumb Connections and StreamsOut to the pipelineData-Object
-	    var syncPipelineData = function() {
-	        var connectionInfos = [];
-	        angular.forEach($scope.jsPlumbInstance.getAllConnections(), function(connection) {
-	            connectionInfos.push({
-	                From: connection.sourceId.substr($scope.dataSourceIdPrefix.length),
-	                Out: connection.endpoints[0].getOverlay("endpointLabel").label,
-	                To: connection.targetId.substr($scope.dataSourceIdPrefix.length),
-	                In: connection.endpoints[1].getOverlay("endpointLabel").label
-	            });
-	        });
-	        $scope.pipelineData.Pipeline.StreamWiring = connectionInfos;
-
-	        var streamsOut = [];
-	        $scope.jsPlumbInstance.selectEndpoints({ target: $scope.dataSourceIdPrefix + "Out" }).each(function(endpoint) {
-	            streamsOut.push(endpoint.getOverlay("endpointLabel").label);
-	        });
-	        $scope.pipelineData.Pipeline.StreamsOut = streamsOut.join(",");
-	    };
-
-		// #region Save Pipeline
-		// Save Pipeline
-		// returns a Promise about the saving state
-	    $scope.savePipeline = function(successHandler) {
-	        uiNotification.wait("Saving...");
-	        $scope.readOnly = true;
-
-	        syncPipelineData();
-
-	        var deferred = $q.defer();
-
-	        if (typeof successHandler == "undefined") // set default success Handler
-	            successHandler = pipelineSaved;
-
-	        pipelineService.savePipeline($scope.pipelineData.Pipeline, $scope.pipelineData.DataSources).then(successHandler, function(reason) {
-	            uiNotification.error("Save Pipeline failed", reason);
-	            $scope.readOnly = false;
-	            deferred.reject();
-	        }).then(function() {
-	            deferred.resolve();
-	        });
-
-	        return deferred.promise;
-	    };
-
-		// Handle Pipeline Saved, success contains the updated Pipeline Data
-		var pipelineSaved = function (success) {
-			// Update PipelineData with data retrieved from the Server
-			$scope.pipelineData.Pipeline = success.Pipeline;
-			$scope.PipelineEntityId = success.Pipeline.EntityId /*EntityId*/;
-			$location.search("PipelineId", success.Pipeline.EntityId /*EntityId*/);
-			$scope.readOnly = !success.Pipeline.AllowEdit;
-			$scope.pipelineData.DataSources = success.DataSources;
-			pipelineService.postProcessDataSources($scope.pipelineData);
-
-			uiNotification.success("Saved", "Pipeline " + success.Pipeline.EntityId /*EntityId*/ + " saved and loaded", true);
-
-			// Reset jsPlumb, re-Init Connections
-			$scope.jsPlumbInstance.reset();
-			$scope.connectionsInitialized = false;
-		};
-		// #endregion
-
-		// Repaint jsPlumb
-	    $scope.repaint = function() {
-	        $scope.jsPlumbInstance.repaintEverything();
-	    };
-
-		// Show/Hide Debug info
-	    $scope.toogleDebug = function() {
-	        $scope.debug = !$scope.debug;
-	    };
-
-		// Query the Pipeline
-	    $scope.queryPipeline = function() {
-	        var query = function() {
-	            // Query pipelineService for the result...
-	            uiNotification.wait("Running Query ...");
-
-	            pipelineService.queryPipeline($scope.PipelineEntityId).then(function(success) {
-	                // Show Result in a UI-Dialog
-	                uiNotification.clear();
-	                eavDialogService.open({
-	                    title: "Query result",
-	                    content: "<div><div>The Full result was logged to the Browser Console. Further down you'll find more debug-infos. </div>"
-	                        + "<h3>Parameters used</h3><div>" + ($scope.pipelineData.Pipeline.TestParameters.length > 5 ? $scope.pipelineData.Pipeline.TestParameters.replace("\n", "<br>") : "no test params specified") + "</div> "
-	                        + "<h3>Query result - executed in " + success.QueryTimer.Milliseconds + "ms (" + success.QueryTimer.Ticks + "tx)</h3><div> <pre id=\"pipelineQueryResult\">" + $filter("json")(success.Query) + "</pre>" + showConnectionTable(success) + "</div>"
-	                        + "</div"
-	                });
-	                $timeout(function() {
-	                    showEntityCountOnStreams(success);
-	                });
-	                $log.debug(success);
-	            }, function(reason) {
-	                uiNotification.error("Query failed", reason);
-	            });
-	        };
-
-	        // Create html-table with connection debug-info
-	        var showConnectionTable = function(result) {
-	            var srcTbl = "<h3>Sources</h3>" +
-	                "<table><tr><th>Guid</th><th>Type</th><th>Config</th></tr>";
-	            var src = result.Sources;
-	            for (var s in src) {
-	                if (s[0] != "$") {
-	                    srcTbl += "<tr><td><pre>" + s.substring(0, 13) + "...</pre></td><td>" + src[s].Type + "</td><td>";
-	                    var cnf = src[s].Configuration;
-	                    for (var c in cnf)
-	                        if (c[0] != "$")
-	                            srcTbl += "<b>" + c + "</b>" + "=" + cnf[c] + "</br>";
-	                    srcTbl += "</td></tr>";
-	                }
-	            }
-	            srcTbl += "</table>";
-
-
-	            srcTbl += "<h3>Streams</h3>" +
-	                "<table><tr><th>Source</th><th>Target</th><th>Items</th><th>Err</th></tr>";
-	            src = result.Streams;
-	            for (var sr in src) {
-	                if (sr[0] != "$") {
-	                    srcTbl += "<tr><td><pre>"
-	                        + src[sr].Source.substring(0, 13) + ":" + src[sr].SourceOut + "</pre></td><td><pre>"
-	                        + src[sr].Target.substring(0, 13) + ":" + src[sr].TargetIn + "</pre></td><td>"
-	                        + src[sr].Count + "</td><td>"
-	                        + src[sr].Error + "</td></tr>";
-	                }
-	            }
-	            srcTbl += "</table>";
-
-	            return srcTbl;
-	        };
-
-	        var showEntityCountOnStreams = function(result) {
-	            angular.forEach(result.Streams, function(stream) {
-	                // Find jsPlumb Connection for the current Stream
-	                var sourceElementId = $scope.dataSourceIdPrefix + stream.Source;
-	                var targetElementId = $scope.dataSourceIdPrefix + stream.Target;
-	                if (stream.Target === "00000000-0000-0000-0000-000000000000")
-	                    targetElementId = $scope.dataSourceIdPrefix + "Out";
-
-	                var fromUuid = sourceElementId + "_out_" + stream.SourceOut;
-	                var toUuid = targetElementId + "_in_" + stream.TargetIn;
-
-	                var sourceEndpoint = $scope.jsPlumbInstance.getEndpoint(fromUuid);
-	                var streamFound = false;
-	                if (sourceEndpoint) {
-	                    angular.forEach(sourceEndpoint.connections, function(connection) {
-	                        if (connection.endpoints[1].getUuid() === toUuid) {
-	                            // when connection found, update it's label with the Entities-Count
-	                            connection.setLabel({
-	                                label: stream.Count.toString(),
-	                                cssClass: "streamEntitiesCount"
-	                            });
-	                            streamFound = true;
-	                            return;
-	                        }
-	                    });
-	                }
-
-	                if (!streamFound)
-	                    $log.error("Stream not found", stream, sourceEndpoint);
-	            });
-	        };
-
-	        // Ensure the Pipeline is saved
-	        $scope.savePipeline().then(query);
-	    };
-
-		// Clone the Pipeline
-	    $scope.clonePipeline = function() {
-	        if (!confirm("Clone Pipeline " + $scope.PipelineEntityId + "?")) return;
-
-	        // Clone and get new PipelineEntityId
-	        var clone = function() {
-	            return pipelineService.clonePipeline($scope.PipelineEntityId);
-	        };
-	        // Get the new Pipeline (Pipeline and DataSources)
-	        var getClonePipeline = function(success) {
-	            return pipelineService.getPipeline(success.EntityId /*EntityId*/);
-	        };
-
-	        // Save, clone, get clone, load clone
-	        $scope.savePipeline(null).then(clone).then(getClonePipeline).then(pipelineSaved);
-	    };
-	}]);
-
+(function () {
+
+    angular.module("PipelineDesigner")
+        .controller("PipelineDesignerController",
+            ["appId", "pipelineId", "$scope", "pipelineService", "$location", "$timeout", "$filter", "uiNotification", "eavDialogService", "eavAdminDialogs", "$log", "eavConfig", "$q", function (appId, pipelineId, $scope, pipelineService, $location, $timeout, $filter, uiNotification, eavDialogService, eavAdminDialogs, $log, eavConfig, $q) {
+                "use strict";
+
+                // Init
+                uiNotification.wait();
+                $scope.readOnly = true;
+                $scope.dataSourcesCount = 0;
+                $scope.dataSourceIdPrefix = "dataSource_";
+                $scope.debug = false;
+
+                // Load Pipeline Data
+                $scope.PipelineEntityId = pipelineId;
+
+                pipelineService.setAppId(appId);
+
+                // Get Data from PipelineService (Web API)
+                pipelineService.getPipeline($scope.PipelineEntityId)
+                    .then(function(success) {
+                        $scope.pipelineData = success;
+
+                        // If a new (empty) Pipeline is made, init new Pipeline
+                        if (!$scope.PipelineEntityId || $scope.pipelineData.DataSources.length === 1) {
+                            $scope.readOnly = false;
+                            initNewPipeline();
+                        } else {
+                            // if read only, show message
+                            $scope.readOnly = !success.Pipeline.AllowEdit;
+                            uiNotification.note("Ready", $scope.readOnly ? "This pipeline is read only" : "You can now design the Pipeline. \nNote that there are still a few UI bugs.\nVisit 2sxc.org/help for more.", true);
+                        }
+                    }, function(reason) {
+                        uiNotification.error("Loading Pipeline failed", reason);
+                    });
+
+                // init new jsPlumb Instance
+                jsPlumb.ready(function() {
+                    $scope.jsPlumbInstance = jsPlumb.getInstance({
+                        Connector: ["Bezier", { curviness: 70 }],
+                        HoverPaintStyle: {
+                            lineWidth: 4,
+                            strokeStyle: "#216477",
+                            outlineWidth: 2,
+                            outlineColor: "white"
+                        },
+                        PaintStyle: {
+                            lineWidth: 4,
+                            strokeStyle: "#61B7CF",
+                            joinstyle: "round",
+                            outlineColor: "white",
+                            outlineWidth: 2
+                        },
+                        Container: "pipelineContainer"
+                    });
+
+                    // If connection on Out-DataSource was removed, remove custom Endpoint
+                    $scope.jsPlumbInstance.bind("connectionDetached", function(info) {
+                        if (info.targetId == $scope.dataSourceIdPrefix + "Out") {
+                            var fixedEndpoints = angular.element(info.target).scope().dataSource.Definition().In;
+                            var label = info.targetEndpoint.getOverlay("endpointLabel").label;
+                            if (fixedEndpoints.indexOf(label) == -1) {
+                                $timeout(function() {
+                                    $scope.jsPlumbInstance.deleteEndpoint(info.targetEndpoint);
+                                });
+                            }
+                        }
+                    });
+
+                    // If a new connection is created, ask for a name of the In-Stream
+                    $scope.jsPlumbInstance.bind("connection", function(info) {
+                        if (!$scope.connectionsInitialized) return;
+
+                        // Repeat until a valid Stream-Name is provided by the user
+                        var repeatCount = 0;
+                        var endpointHandling = function(endpoint) {
+                            var label = endpoint.getOverlay("endpointLabel").getLabel();
+                            if (label === labelPrompt && info.targetEndpoint.id !== endpoint.id && angular.element(endpoint.canvas).hasClass("targetEndpoint"))
+                                targetEndpointHavingSameLabel = endpoint;
+                        };
+                        while (true) {
+                            repeatCount++;
+
+                            var promptMessage = "Please name the Stream";
+                            if (repeatCount > 1)
+                                promptMessage += ". Ensure the name is not used by any other Stream on this DataSource.";
+
+                            var endpointLabel = info.targetEndpoint.getOverlay("endpointLabel");
+                            var labelPrompt = prompt(promptMessage, endpointLabel.getLabel());
+                            if (labelPrompt)
+                                endpointLabel.setLabel(labelPrompt);
+                            else
+                                continue;
+
+                            // Check if any other Target-Endpoint has the same Stream-Name (Label)
+                            var endpoints = $scope.jsPlumbInstance.getEndpoints(info.target.id);
+                            var targetEndpointHavingSameLabel = null;
+
+                            angular.forEach(endpoints, endpointHandling);
+                            if (targetEndpointHavingSameLabel)
+                                continue;
+
+                            break;
+                        }
+                    });
+                });
+
+                // #region jsPlumb Endpoint Definitions
+                var getEndpointOverlays = function(isSource) {
+                    return [
+                        [
+                            "Label", {
+                                id: "endpointLabel",
+                                location: [0.5, isSource ? -0.5 : 1.5],
+                                label: "Default",
+                                cssClass: isSource ? "endpointSourceLabel" : "endpointTargetLabel",
+                                events: {
+                                    dblclick: function(labelOverlay) {
+                                        if ($scope.readOnly) return;
+
+                                        var newLabel = prompt("Rename Stream", labelOverlay.label);
+                                        if (newLabel)
+                                            labelOverlay.setLabel(newLabel);
+                                    }
+                                }
+                            }
+                        ]
+                    ];
+                };
+
+                // the definition of source endpoints (the small blue ones)
+                var sourceEndpoint = {
+                    paintStyle: { fillStyle: "transparent", radius: 10, lineWidth: 0 },
+                    cssClass: "sourceEndpoint",
+                    maxConnections: -1,
+                    isSource: true,
+                    anchor: ["Continuous", { faces: ["top"] }],
+                    overlays: getEndpointOverlays(true)
+                };
+
+                // the definition of target endpoints (will appear when the user drags a connection) 
+                var targetEndpoint = {
+                    paintStyle: { fillStyle: "transparent", radius: 10, lineWidth: 0 },
+                    cssClass: "targetEndpoint",
+                    maxConnections: 1,
+                    isTarget: true,
+                    anchor: ["Continuous", { faces: ["bottom"] }],
+                    overlays: getEndpointOverlays(false),
+                    dropOptions: { hoverClass: "hover", activeClass: "active" }
+                };
+                // #endregion
+
+                // make a DataSource with Endpoints, called by the datasource-Directive
+                $scope.makeDataSource = function(dataSource, element) {
+                    // suspend drawing and initialise
+                    $scope.jsPlumbInstance.doWhileSuspended(function() {
+                        // Add Out- and In-Endpoints from Definition
+                        var dataSourceDefinition = dataSource.Definition();
+                        if (dataSourceDefinition !== null) {
+                            // Add Out-Endpoints
+                            angular.forEach(dataSourceDefinition.Out, function(name) {
+                                addEndpoint(element, name, false);
+                            });
+                            // Add In-Endpoints
+                            angular.forEach(dataSourceDefinition.In, function(name) {
+                                addEndpoint(element, name, true);
+                            });
+                            // make the DataSource a Target for new Endpoints (if .In is an Array)
+                            if (dataSourceDefinition.In) {
+                                var targetEndpointUnlimited = targetEndpoint;
+                                targetEndpointUnlimited.maxConnections = -1;
+                                $scope.jsPlumbInstance.makeTarget(element, targetEndpointUnlimited);
+                            }
+
+                            $scope.jsPlumbInstance.makeSource(element, sourceEndpoint, { filter: ".ep .glyphicon" });
+                        }
+
+                        // make DataSources draggable
+                        if (!$scope.readOnly) {
+                            $scope.jsPlumbInstance.draggable(element, {
+                                grid: [20, 20],
+                                drag: $scope.dataSourceDrag
+                            });
+                        }
+                    });
+
+                    $scope.dataSourcesCount++;
+                };
+
+                // Add a jsPlumb Endpoint to an Element
+                var addEndpoint = function(element, name, isIn) {
+                    if (!element.length) {
+                        $log.error({ message: "Element not found", selector: element.selector });
+                        return;
+                    }
+                    console.log(element);
+                    var dataSource = element.scope().dataSource;
+                    var uuid = element.attr("id") + (isIn ? "_in_" : "_out_") + name;
+                    var params = {
+                        uuid: uuid,
+                        enabled: !dataSource.ReadOnly || dataSource.EntityGuid == "Out" // Endpoints on Out-DataSource must be always enabled
+                    };
+                    var endPoint = $scope.jsPlumbInstance.addEndpoint(element, (isIn ? targetEndpoint : sourceEndpoint), params);
+                    endPoint.getOverlay("endpointLabel").setLabel(name);
+                };
+
+                // Initialize jsPlumb Connections once after all DataSources were created in the DOM
+                $scope.connectionsInitialized = false;
+                $scope.$on("ngRepeatFinished", function() {
+                    if ($scope.connectionsInitialized) return;
+
+                    // suspend drawing and initialise
+                    $scope.jsPlumbInstance.doWhileSuspended(function() {
+                        initWirings($scope.pipelineData.Pipeline.StreamWiring);
+                    });
+                    $scope.repaint(); // repaint so continuous connections are aligned correctly
+
+                    $scope.connectionsInitialized = true;
+                });
+
+
+                var initWirings = function(streamWiring) {
+                    angular.forEach(streamWiring, function(wire) {
+                        // read connections from Pipeline
+                        var sourceElementId = $scope.dataSourceIdPrefix + wire.From;
+                        var fromUuid = sourceElementId + "_out_" + wire.Out;
+                        var targetElementId = $scope.dataSourceIdPrefix + wire.To;
+                        var toUuid = targetElementId + "_in_" + wire.In;
+
+                        // Ensure In- and Out-Endpoint exist
+                        if (!$scope.jsPlumbInstance.getEndpoint(fromUuid))
+                            addEndpoint(jsPlumb.getSelector("#" + sourceElementId), wire.Out, false);
+                        if (!$scope.jsPlumbInstance.getEndpoint(toUuid))
+                            addEndpoint(jsPlumb.getSelector("#" + targetElementId), wire.In, true);
+
+                        try {
+                            $scope.jsPlumbInstance.connect({ uuids: [fromUuid, toUuid] });
+                        } catch (e) {
+                            $log.error({ message: "Connection failed", from: fromUuid, to: toUuid });
+                        }
+                    });
+
+                    // $scope.jsPlumbInstance.getConnections
+
+                };
+
+                // Init a new Pipeline with DataSources and Wirings from Configuration
+                var initNewPipeline = function () {
+                    var templateForNew = eavConfig.pipelineDesigner.defaultPipeline.dataSources;
+                    angular.forEach(templateForNew, function(dataSource) {
+                        $scope.addDataSource(dataSource.partAssemblyAndType, dataSource.visualDesignerData, false, dataSource.entityGuid);
+                    });
+
+                    // Wait until all DataSources were created
+                    var initWiringsListener = $scope.$on("ngRepeatFinished", function() {
+                        $scope.connectionsInitialized = false;
+                        initWirings(eavConfig.pipelineDesigner.defaultPipeline.streamWiring);
+                        $scope.connectionsInitialized = true;
+
+                        initWiringsListener(); // unbind the Listener
+                    });
+                };
+
+                // Add new DataSource
+                $scope.addDataSource = function(partAssemblyAndType, visualDesignerData, autoSave, entityGuid) {
+                    if (!partAssemblyAndType) {
+                        partAssemblyAndType = $scope.addDataSourceType.PartAssemblyAndType;
+                        $scope.addDataSourceType = null;
+                    }
+                    if (!visualDesignerData)
+                        visualDesignerData = { Top: 100, Left: 100 };
+
+                    var newDataSource = {
+                        VisualDesignerData: visualDesignerData,
+                        Name: $filter("typename")(partAssemblyAndType, "className"),
+                        Description: "",
+                        PartAssemblyAndType: partAssemblyAndType,
+                        EntityGuid: entityGuid || "unsaved" + ($scope.dataSourcesCount + 1)
+                    };
+                    // Extend it with a Property to it's Definition
+                    newDataSource = angular.extend(newDataSource, pipelineService.getNewDataSource($scope.pipelineData, newDataSource));
+
+                    $scope.pipelineData.DataSources.push(newDataSource);
+
+                    if (autoSave !== false)
+                        $scope.savePipeline();
+                };
+
+                // Delete a DataSource
+                $scope.remove = function(index) {
+                    var dataSource = $scope.pipelineData.DataSources[index];
+                    if (!confirm("Delete DataSource \"" + (dataSource.Name || "(unnamed)") + "\"?")) return;
+                    var elementId = $scope.dataSourceIdPrefix + dataSource.EntityGuid;
+                    $scope.jsPlumbInstance.selectEndpoints({ element: elementId }).remove();
+                    $scope.pipelineData.DataSources.splice(index, 1);
+                };
+
+                // Edit name of a DataSource
+                $scope.editName = function(dataSource) {
+                    if (dataSource.ReadOnly) return;
+
+                    var newName = prompt("Rename DataSource", dataSource.Name);
+                    if (newName !== undefined && newName.trim())
+                        dataSource.Name = newName;
+                };
+
+                // Edit Description of a DataSource
+                $scope.editDescription = function(dataSource) {
+                    if (dataSource.ReadOnly) return;
+
+                    var newDescription = prompt("Edit Description", dataSource.Description);
+                    if (newDescription !== undefined && newDescription.trim())
+                        dataSource.Description = newDescription;
+                };
+
+                // Update DataSource Position on Drag
+                $scope.dataSourceDrag = function() {
+                    var $this = $(this);
+                    var offset = $this.offset();
+                    var dataSource = $this.scope().dataSource;
+                    $scope.$apply(function() {
+                        dataSource.VisualDesignerData.Top = Math.round(offset.top);
+                        dataSource.VisualDesignerData.Left = Math.round(offset.left);
+                    });
+                };
+
+                // Configure a DataSource
+                $scope.configureDataSource = function(dataSource) {
+                    if (dataSource.ReadOnly) return;
+
+                    // Ensure dataSource Entity is saved
+                    if (!dataSourceIsPersisted(dataSource)) {
+                        $scope.savePipeline();
+                        return;
+                    }
+
+                    pipelineService.editDataSourcePart(dataSource);
+
+                };
+
+                // Test wether a DataSource is persisted on the Server
+                var dataSourceIsPersisted = function(dataSource) {
+                    return dataSource.EntityGuid.indexOf("unsaved") === -1;
+                };
+
+                // Show/Hide Endpoint Overlays
+                $scope.showEndpointOverlays = true;
+                $scope.toggleEndpointOverlays = function() {
+                    $scope.showEndpointOverlays = !$scope.showEndpointOverlays;
+
+                    var endpoints = $scope.jsPlumbInstance.selectEndpoints();
+                    if ($scope.showEndpointOverlays)
+                        endpoints.showOverlays();
+                    else
+                        endpoints.hideOverlays();
+                };
+
+                // Edit Pipeline Entity
+                $scope.editPipelineEntity = function() {
+                    // save Pipeline, then open Edit Dialog
+                    $scope.savePipeline().then(function() {
+
+                        eavAdminDialogs.openEditItems([{ EntityId: $scope.PipelineEntityId }], function() {
+                            pipelineService.getPipeline($scope.PipelineEntityId).then(pipelineSaved);
+                        });
+
+                    });
+                };
+
+                // Sync jsPlumb Connections and StreamsOut to the pipelineData-Object
+                var syncPipelineData = function() {
+                    var connectionInfos = [];
+                    angular.forEach($scope.jsPlumbInstance.getAllConnections(), function(connection) {
+                        connectionInfos.push({
+                            From: connection.sourceId.substr($scope.dataSourceIdPrefix.length),
+                            Out: connection.endpoints[0].getOverlay("endpointLabel").label,
+                            To: connection.targetId.substr($scope.dataSourceIdPrefix.length),
+                            In: connection.endpoints[1].getOverlay("endpointLabel").label
+                        });
+                    });
+                    $scope.pipelineData.Pipeline.StreamWiring = connectionInfos;
+
+                    var streamsOut = [];
+                    $scope.jsPlumbInstance.selectEndpoints({ target: $scope.dataSourceIdPrefix + "Out" }).each(function(endpoint) {
+                        streamsOut.push(endpoint.getOverlay("endpointLabel").label);
+                    });
+                    $scope.pipelineData.Pipeline.StreamsOut = streamsOut.join(",");
+                };
+
+                // #region Save Pipeline
+                // Save Pipeline
+                // returns a Promise about the saving state
+                $scope.savePipeline = function(successHandler) {
+                    uiNotification.wait("Saving...");
+                    $scope.readOnly = true;
+
+                    syncPipelineData();
+
+                    var deferred = $q.defer();
+
+                    if (typeof successHandler == "undefined") // set default success Handler
+                        successHandler = pipelineSaved;
+
+                    pipelineService.savePipeline($scope.pipelineData.Pipeline, $scope.pipelineData.DataSources).then(successHandler, function(reason) {
+                        uiNotification.error("Save Pipeline failed", reason);
+                        $scope.readOnly = false;
+                        deferred.reject();
+                    }).then(function() {
+                        deferred.resolve();
+                    });
+
+                    return deferred.promise;
+                };
+
+                // Handle Pipeline Saved, success contains the updated Pipeline Data
+                var pipelineSaved = function(success) {
+                    // Update PipelineData with data retrieved from the Server
+                    $scope.pipelineData.Pipeline = success.Pipeline;
+                    $scope.PipelineEntityId = success.Pipeline.EntityId /*EntityId*/;
+                    $location.search("PipelineId", success.Pipeline.EntityId /*EntityId*/);
+                    $scope.readOnly = !success.Pipeline.AllowEdit;
+                    $scope.pipelineData.DataSources = success.DataSources;
+                    pipelineService.postProcessDataSources($scope.pipelineData);
+
+                    uiNotification.success("Saved", "Pipeline " + success.Pipeline.EntityId /*EntityId*/ + " saved and loaded", true);
+
+                    // Reset jsPlumb, re-Init Connections
+                    $scope.jsPlumbInstance.reset();
+                    $scope.connectionsInitialized = false;
+                };
+                // #endregion
+
+                // Repaint jsPlumb
+                $scope.repaint = function() {
+                    $scope.jsPlumbInstance.repaintEverything();
+                };
+
+                // Show/Hide Debug info
+                $scope.toogleDebug = function() {
+                    $scope.debug = !$scope.debug;
+                };
+
+                // Query the Pipeline
+                $scope.queryPipeline = function() {
+                    var query = function() {
+                        // Query pipelineService for the result...
+                        uiNotification.wait("Running Query ...");
+
+                        pipelineService.queryPipeline($scope.PipelineEntityId).then(function(success) {
+                            // Show Result in a UI-Dialog
+                            uiNotification.clear();
+                            eavDialogService.open({
+                                title: "Query result",
+                                content: "<div><div>The Full result was logged to the Browser Console. Further down you'll find more debug-infos. </div>"
+                                    + "<h3>Parameters used</h3><div>" + ($scope.pipelineData.Pipeline.TestParameters.length > 5 ? $scope.pipelineData.Pipeline.TestParameters.replace("\n", "<br>") : "no test params specified") + "</div> "
+                                    + "<h3>Query result - executed in " + success.QueryTimer.Milliseconds + "ms (" + success.QueryTimer.Ticks + "tx)</h3><div> <pre id=\"pipelineQueryResult\">" + $filter("json")(success.Query) + "</pre>" + showConnectionTable(success) + "</div>"
+                                    + "</div"
+                            });
+                            $timeout(function() {
+                                showEntityCountOnStreams(success);
+                            });
+                            $log.debug(success);
+                        }, function(reason) {
+                            uiNotification.error("Query failed", reason);
+                        });
+                    };
+
+                    // Create html-table with connection debug-info
+                    var showConnectionTable = function(result) {
+                        var srcTbl = "<h3>Sources</h3>" +
+                            "<table><tr><th>Guid</th><th>Type</th><th>Config</th></tr>";
+                        var src = result.Sources;
+                        for (var s in src) {
+                            if (s[0] != "$") {
+                                srcTbl += "<tr><td><pre>" + s.substring(0, 13) + "...</pre></td><td>" + src[s].Type + "</td><td>";
+                                var cnf = src[s].Configuration;
+                                for (var c in cnf)
+                                    if (c[0] != "$")
+                                        srcTbl += "<b>" + c + "</b>" + "=" + cnf[c] + "</br>";
+                                srcTbl += "</td></tr>";
+                            }
+                        }
+                        srcTbl += "</table>";
+
+
+                        srcTbl += "<h3>Streams</h3>" +
+                            "<table><tr><th>Source</th><th>Target</th><th>Items</th><th>Err</th></tr>";
+                        src = result.Streams;
+                        for (var sr in src) {
+                            if (sr[0] != "$") {
+                                srcTbl += "<tr><td><pre>"
+                                    + src[sr].Source.substring(0, 13) + ":" + src[sr].SourceOut + "</pre></td><td><pre>"
+                                    + src[sr].Target.substring(0, 13) + ":" + src[sr].TargetIn + "</pre></td><td>"
+                                    + src[sr].Count + "</td><td>"
+                                    + src[sr].Error + "</td></tr>";
+                            }
+                        }
+                        srcTbl += "</table>";
+
+                        return srcTbl;
+                    };
+
+                    var showEntityCountOnStreams = function(result) {
+                        angular.forEach(result.Streams, function(stream) {
+                            // Find jsPlumb Connection for the current Stream
+                            var sourceElementId = $scope.dataSourceIdPrefix + stream.Source;
+                            var targetElementId = $scope.dataSourceIdPrefix + stream.Target;
+                            if (stream.Target === "00000000-0000-0000-0000-000000000000")
+                                targetElementId = $scope.dataSourceIdPrefix + "Out";
+
+                            var fromUuid = sourceElementId + "_out_" + stream.SourceOut;
+                            var toUuid = targetElementId + "_in_" + stream.TargetIn;
+
+                            var sourceEndpoint = $scope.jsPlumbInstance.getEndpoint(fromUuid);
+                            var streamFound = false;
+                            if (sourceEndpoint) {
+                                angular.forEach(sourceEndpoint.connections, function(connection) {
+                                    if (connection.endpoints[1].getUuid() === toUuid) {
+                                        // when connection found, update it's label with the Entities-Count
+                                        connection.setLabel({
+                                            label: stream.Count.toString(),
+                                            cssClass: "streamEntitiesCount"
+                                        });
+                                        streamFound = true;
+                                        return;
+                                    }
+                                });
+                            }
+
+                            if (!streamFound)
+                                $log.error("Stream not found", stream, sourceEndpoint);
+                        });
+                    };
+
+                    // Ensure the Pipeline is saved
+                    $scope.savePipeline().then(query);
+                };
+
+                // Clone the Pipeline
+                $scope.clonePipeline = function() {
+                    if (!confirm("Clone Pipeline " + $scope.PipelineEntityId + "?")) return;
+
+                    // Clone and get new PipelineEntityId
+                    var clone = function() {
+                        return pipelineService.clonePipeline($scope.PipelineEntityId);
+                    };
+                    // Get the new Pipeline (Pipeline and DataSources)
+                    var getClonePipeline = function(success) {
+                        return pipelineService.getPipeline(success.EntityId /*EntityId*/);
+                    };
+
+                    // Save, clone, get clone, load clone
+                    $scope.savePipeline(null).then(clone).then(getClonePipeline).then(pipelineSaved);
+                };
+            }]);
+})();
 // Config and Controller for the Pipeline Management UI
 angular.module("PipelineManagement", [
     "EavServices",
@@ -1532,7 +1382,7 @@ angular.module("PipelineManagement", [
     "eavNgSvcs",
     "EavAdminUi"
 ]).
-	controller("PipelineManagement", ["$modalInstance", "appId", "pipelineService", "eavAdminDialogs", function ($modalInstance, appId, pipelineService, eavAdminDialogs) {
+	controller("PipelineManagement", ["$modalInstance", "appId", "pipelineService", "eavAdminDialogs", "eavConfig", function ($modalInstance, appId, pipelineService, eavAdminDialogs, eavConfig) {
 	    var vm = this;
         vm.appId = appId;
 
@@ -1573,12 +1423,16 @@ angular.module("PipelineManagement", [
         };
 
         vm.add = function add() {
-            eavAdminDialogs.openItemNew(pipelineService.dataPipelineAttributeSetId, vm.refresh);
+            var items = [{
+                    ContentTypeName: "DataPipeline",
+                    Prefill: { TestParameters: eavConfig.pipelineDesigner.testParameters }
+                }];
+            eavAdminDialogs.openEditItems(items, vm.refresh);
         };
 
         vm.edit = function edit(item) {
             eavAdminDialogs.openItemEditWithEntityId(item.Id, vm.refresh);
-        };
+        }; 
 
         vm.design = function design(item) {
             return eavAdminDialogs.editPipeline(vm.appId, item.Id, vm.refresh);
@@ -1645,6 +1499,7 @@ angular.module("EavServices", [
     "EavConfiguration",     // global configuration
     "pascalprecht.translate",
     "ngResource",           // only needed for the pipeline-service, maybe not necessary any more?
+    "toaster"
 ]);
 
 angular.module("EavServices")
@@ -1842,16 +1697,16 @@ angular.module("EavAdminUi", ["ng",
 ])
     .factory("eavAdminDialogs", ["$modal", "eavConfig", "eavManagementSvc", "contentTypeSvc", "$window", function ($modal, eavConfig, eavManagementSvc, contentTypeSvc, $window) {
 
-        var svc = {};
+            var svc = {};
 
-        //#region Content Items dialogs
-        svc.openContentItems = function oci(appId, staticName, itemId, closeCallback) {
+            //#region List of Content Items dialogs
+            svc.openContentItems = function oci(appId, staticName, itemId, closeCallback) {
                 var resolve = svc.CreateResolve({ appId: appId, contentType: staticName, contentTypeId: itemId });
                 return svc.OpenModal("content-items/content-items.html", "ContentItemsList as vm", "xlg", resolve, closeCallback);
             };
-        //#endregion
+            //#endregion
 
-        //#region content import export
+            //#region content import export
             svc.openContentImport = function ocimp(appId, staticName, closeCallback) {
                 var resolve = svc.CreateResolve({ appId: appId, contentType: staticName });
                 return svc.OpenModal("content-import-export/content-import.html", "ContentImport as vm", "lg", resolve, closeCallback);
@@ -1862,9 +1717,9 @@ angular.module("EavAdminUi", ["ng",
                 return svc.OpenModal("content-import-export/content-export.html", "ContentExport as vm", "lg", resolve, closeCallback);
             };
 
-        //#endregion
+            //#endregion
 
-        //#region ContentType dialogs
+            //#region ContentType dialogs
 
             svc.openContentTypeEdit = function octe(item, closeCallback) {
                 var resolve = svc.CreateResolve({ item: item });
@@ -1875,15 +1730,15 @@ angular.module("EavAdminUi", ["ng",
                 var resolve = svc.CreateResolve({ contentType: item });
                 return svc.OpenModal("content-types/content-types-fields.html", "FieldList as vm", "lg", resolve, closeCallback);
             };
-        //#endregion
+            //#endregion
         
-        //#region Item - new, edit
+            //#region Item - new, edit
             svc.openItemNew = function oin(contentTypeName, closeCallback) {
-                svc.openEditItems([{ ContentTypeName: contentTypeName }], closeCallback);
+                return svc.openEditItems([{ ContentTypeName: contentTypeName }], closeCallback);
             };
 
             svc.openItemEditWithEntityId = function oie(entityId, closeCallback) {
-                svc.openEditItems([{ EntityId: entityId }], closeCallback);
+                return svc.openEditItems([{ EntityId: entityId }], closeCallback);
             };
 
             svc.openEditItems = function oel(items, closeCallback) {
@@ -1896,9 +1751,9 @@ angular.module("EavAdminUi", ["ng",
                     svc.CreateResolve({ entityId: entityId }),
                     closeCallback);
             };
-        //#endregion
+            //#endregion
 
-        //#region Metadata - mainly new
+            //#region Metadata - mainly new
             svc.openMetadataNew = function omdn(appId, targetType, targetId, metadataType, closeCallback) {
                 var metadata = {};
                 switch (targetType) {
@@ -1921,27 +1776,29 @@ angular.module("EavAdminUi", ["ng",
 
                 svc.openEditItems(items, closeCallback);
             };
-        //#endregion
+            //#endregion
 
-        //#region Permissions Dialog
+            //#region Permissions Dialog
             svc.openPermissionsForGuid = function opfg(appId, targetGuid, closeCallback) {
                 var resolve = svc.CreateResolve({ appId: appId, targetGuid: targetGuid });
                 return svc.OpenModal("permissions/permissions.html", "PermissionList as vm", "lg", resolve, closeCallback);
             };
-        //#endregion
+            //#endregion
 
-        //#region Pipeline Designer
+            //#region Pipeline Designer
             svc.editPipeline = function ep(appId, pipelineId, closeCallback) {
                 var url = eavConfig.adminUrls.pipelineDesigner(appId, pipelineId);
                 $window.open(url);
                 return;
             };
-        //#endregion
+            //#endregion
 
 
 
         //#region Internal helpers
             svc._attachCallbacks = function attachCallbacks(promise, callbacks) {
+                if (typeof (callbacks) === "undefined")
+                    return;
                 if (typeof (callbacks) === "function") // if it's only one callback, use it for all close-cases
                     callbacks = { close: callbacks };
                 return promise.result.then(callbacks.success || callbacks.close, callbacks.error || callbacks.close, callbacks.notify || callbacks.close);
@@ -2080,7 +1937,7 @@ angular.module("eavNgSvcs", ["ng"])
 					StaticName: contentTypeName
 				},
 				Attributes: {},
-                Published: true
+                IsPublished: true
 			};
 		};
         
@@ -2133,6 +1990,11 @@ angular.module("EavServices")
             return svc;
         };
     }]);
+/* The main component for language inclusion
+ * Ensure the dependencies work, that the url-schema is prepared etc.
+ * 
+ */
+
 (function () {
     angular.module("EavServices")
 
@@ -2156,7 +2018,10 @@ angular.module("EavServices")
         $rootScope.$on("$translatePartialLoaderStructureChanged", function () {
             $translate.refresh();
         });
-    }]);
+    }])
+
+    //.factory("")
+    ;
 })();
 // By default, eav-controls assume that all their parameters (appId, etc.) are instantiated by the bootstrapper
 // but the "root" component must get it from the url
@@ -2264,7 +2129,7 @@ angular.module("EavServices")
 // PipelineService provides an interface to the Server Backend storing Pipelines and their Pipeline Parts
 
 angular.module("EavServices")
-    .factory("pipelineService", ["$resource", "$q", "$filter", "eavConfig", "$http", "contentTypeSvc", function($resource, $q, $filter, eavConfig, $http, contentTypeSvc) {
+    .factory("pipelineService", ["$resource", "$q", "$filter", "eavConfig", "$http", "contentTypeSvc", "eavManagementSvc", "eavAdminDialogs", function ($resource, $q, $filter, eavConfig, $http, contentTypeSvc, eavManagementSvc, eavAdminDialogs) {
         "use strict";
         var svc = {};
         // Web API Service
@@ -2378,39 +2243,33 @@ angular.module("EavServices")
             clonePipeline: function(pipelineEntityId) {
                 return svc.pipelineResource.get({ action: "ClonePipeline", appId: svc.appId, Id: pipelineEntityId }).$promise;
             },
+
+
             // Get the URL to configure a DataSource
-            getDataSourceConfigurationUrl: function(dataSource) {
+            editDataSourcePart: function(dataSource) {
                 var dataSourceFullName = $filter("typename")(dataSource.PartAssemblyAndType, "classFullName");
                 var contentTypeName = "|Config " + dataSourceFullName; // todo refactor centralize
                 var assignmentObjectTypeId = 4; // todo refactor centralize
                 var keyGuid = dataSource.EntityGuid;
                 var preventRedirect = true;
 
-                var deferred = $q.defer();
-
                 // Query for existing Entity
-                svc.entitiesResource.query({ action: "GetAssignedEntities", appId: svc.appId, assignmentObjectTypeId: assignmentObjectTypeId, keyType: "guid", key: keyGuid, contentType: contentTypeName }, function (success) {
+                eavManagementSvc.getAssignedItems(assignmentObjectTypeId, keyGuid, contentTypeName).then(function (result) { 
+                    var success = result.data;
                     if (success.length) // Edit existing Entity
-                        deferred.resolve(eavConfig.itemForm.getEditItemUrl(success[0].Id /*EntityId*/, null, preventRedirect));
+                        eavAdminDialogs.openItemEditWithEntityId(success[0].Id);
                     else { // Create new Entity
-                        // todo: this is a get-content-type, it shouldn't be using the entitiesResource
-                        // todo: but I'm not sure when it is being used
-                        svc.entitiesResource.get({ action: "GetContentType", appId: svc.appId, contentType: contentTypeName }, function (contentType) {
-                            // test for "null"-response
-                            if (contentType[0] == "n" && contentType[1] == "u" && contentType[2] == "l" && contentType[3] == "l")
-                                deferred.reject("Content Type " + contentTypeName + " not found.");
-                            else
-                                deferred.resolve(eavConfig.itemForm.getNewItemUrl(contentType.AttributeSetId, assignmentObjectTypeId, { KeyGuid: keyGuid, ReturnUrl: null }, preventRedirect));
-                        }, function(reason) {
-                            deferred.reject(reason);
-                        });
+                        var items = [{
+                                ContentTypeName: contentTypeName,
+                                Metadata: {
+                                    TargetType: assignmentObjectTypeId,
+                                    KeyType: "guid",
+                                    Key: keyGuid
+                                }}];
+                        eavAdminDialogs.openEditItems(items);
                     }
-                }, function(reason) {
-                    deferred.reject(reason);
                 });
-
-                return deferred.promise;
-            },
+            }
 
         });
 
@@ -2490,3 +2349,44 @@ angular.module("EavServices")
     })
 
 ;
+
+angular.module("EavServices")
+    .factory("uiNotification", ["toaster", function (toaster) {
+            "use strict";
+
+            var showNote = function (type, title, body, autoHide) {
+                // wrap toaster in ready-Event because notes would't be show if teaster is used before
+                angular.element(document).ready(function () {
+                    toaster.clear();
+                    toaster.pop(type, title, body, autoHide ? null : 0);
+                });
+            };
+
+            return {
+                clear: function () {
+                    toaster.clear();
+                },
+                error: function (title, bodyOrError) {
+                    var message;
+                    // test whether bodyOrError is an Error from Web API
+                    if (bodyOrError && bodyOrError.data && bodyOrError.data.Message) {
+                        message = bodyOrError.data.Message;
+                        if (bodyOrError.data.ExceptionMessage)
+                            message += "\n" + bodyOrError.data.ExceptionMessage;
+                    } else
+                        message = bodyOrError;
+
+                    showNote("error", title, message);
+                },
+                note: function (title, body, autoHide) {
+                    showNote("note", title, body, autoHide);
+                },
+                success: function (title, body, autoHide) {
+                    showNote("success", title, body, autoHide);
+                },
+                wait: function (title) {
+                    showNote("note", title ? title : "Please wait ..", "This shouldn't take long", false);
+                }
+            };
+        }]
+    );

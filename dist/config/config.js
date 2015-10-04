@@ -15,10 +15,9 @@
             uiFallback: "en", // just for the resources files of eav/2sxc
             i18nRoot: todofilesRoot + "dist/i18n/"
         }
-    }; 
+    };
 
-
-    if (window.jQuery !== undefined) { // in dnn-page there is a jquery, which also allows us to find attributes
+    if (window.jQuery !== undefined && location.href.indexOf("ui.html") === -1) { // in dnn-page there is a jquery, which also allows us to find attributes
         // in jQuery-Mode I have to wait till the document is ready
         $(function() {
             var moduleElement = $(document);
@@ -59,68 +58,24 @@ if (window.angular) // needed because the file is also included in older non-ang
         .factory("eavConfig", ["$location", function ($location) {
 
             var dnnModuleId = $location.search().mid;
-        // Get DNN ModuleContext
-        //var globals = $('div[data-2sxc-globals]').data('2sxc-globals');
-        //if (!globals)
-        //    alert('Please ensure the DNN-Page is in Edit-Mode');
-        //
-        //var getApiAdditionalHeaders = function () {
-        //    var sf = $.ServicesFramework(globals.ModuleContext.ModuleId);
-        //
-        //    return {
-        //        ModuleId: sf.getModuleId(),
-        //        TabId: sf.getTabId(),
-        //        RequestVerificationToken: sf.getAntiForgeryValue()
-        //    };
-        //}
-        //
-        //var baseUrl = globals.FullUrl + '?mid=' + globals.ModuleContext.ModuleId + '&popUp=true&AppId=' + globals.ModuleContext.AppId + '&';
-        //
-        //var getItemFormUrl = function (mode, params, preventRedirect) {
-        //    if (mode == 'New')
-        //        params.editMode = 'New';
-        //    if (!params.ReturnUrl)
-        //        params.ReturnUrl = $location.url();
-        //    if (preventRedirect)
-        //        params.PreventRedirect = true;
-        //    if (typeof globals.DefaultLanguageID == 'number')
-        //        params.cultureDimension = globals.DefaultLanguageID;
-        //    return baseUrl + 'ctl=editcontentgroup&' + $.param(params);
-        //};
 
             return {
-                //api: {
-                //    baseUrl: globals.ApplicationPath + 'DesktopModules/2sxc/API',
-                //    // additionalHeaders: getApiAdditionalHeaders(),
-                //    defaultParams: {
-                //        portalId: globals.ModuleContext.PortalId,
-                //        moduleId: globals.ModuleContext.ModuleId,
-                //        tabId: globals.ModuleContext.TabId
-                //    }
-                //},
                 dialogClass: "dnnFormPopup",
-                itemForm: {
-                    getNewItemUrl: function(attributeSetId, assignmentObjectTypeId, params, preventRedirect, prefill) {
-                        if (prefill)
-                            params.prefill = JSON.stringify(prefill);
-                        return getItemFormUrl("New", angular.extend({ AttributeSetId: attributeSetId, AssignmentObjectTypeId: assignmentObjectTypeId }, params), preventRedirect);
-                    },
-                    getEditItemUrl: function(entityId, params, preventRedirect) {
-                        return getItemFormUrl("Edit", angular.extend({ EntityId: entityId }, params), preventRedirect);
-                    }
-                },
+
                 adminUrls: {
-                    managePermissions: function(appId, targetId) {
-                        return $eavUIConfig.urls.managePermissions(appId, targetId); //$eavUIConfig.baseUrl() + "ctl=permissions&Target=" + targetId;
-                    },
-                    pipelineDesigner: function(appId, pipelineId) {
-                        return "ui.html#dialog=pipeline-designer&appId=" + appId + "&pipelineId=" + pipelineId;
+                    pipelineDesigner: function (appId, pipelineId) {
+                        return "ui.html#"
+                            + "dialog=pipeline-designer"
+                            + "&appId=" + appId + "&pipelineId=" + pipelineId
+                            + "&zoneid=" + $2sxc.urlParams.get("zoneId")
+                            + "&tid=" + $2sxc.urlParams.get("tid")
+                            + "&mid=" + $2sxc.urlParams.get("mid")
+                            + "&lang=" + $2sxc.urlParams.get("lang")
+                            + "&langpri=" + $2sxc.urlParams.get("langpri")
+                            + "&langs=" + $2sxc.urlParams.get("langs");
                     }
                 },
                 pipelineDesigner: {
-                    getUrl: function(appId, pipelineId) {
-                        return baseUrl + "ctl=pipelinedesigner&PipelineId=" + pipelineId;
-                    },
                     outDataSource: {
                         className: "SexyContentTemplate",
                         in: ["ListContent", "Default"],
@@ -133,12 +88,12 @@ if (window.angular) // needed because the file is also included in older non-ang
                         dataSources: [
                             {
                                 entityGuid: "unsaved1",
-                                partAssemblyAndType: "ToSic.Eav.DataSources.Caches.ICache, ToSic.Eav",
+                                partAssemblyAndType: "ToSic.Eav.DataSources.Caches.ICache, ToSic.Eav.DataSources",
                                 visualDesignerData: { Top: 800, Left: 440 }
                             },
                             {
                                 entityGuid: "unsaved2",
-                                partAssemblyAndType: "ToSic.Eav.DataSources.PublishingFilter, ToSic.Eav",
+                                partAssemblyAndType: "ToSic.Eav.DataSources.PublishingFilter, ToSic.Eav.DataSources",
                                 visualDesignerData: { Top: 620, Left: 440 }
                             },
                             {
