@@ -749,6 +749,11 @@ angular.module('eavTemplates',[]).run(['$templateCache', function($templateCache
     "<div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=Pipeline.Manage.Title></h3></div><div class=\"modal-body ng-cloak\"><div translate=Pipeline.Manage.Intro></div><div><button icon=plus type=button class=\"btn btn-default\" ng-click=vm.add()></button> <button icon=repeat type=button class=btn ng-click=vm.refresh()></button> <button icon=flash type=button class=btn ng-click=vm.liveEval()></button><table class=\"table table-striped table-hover\"><thead><tr><th translate=Pipeline.Manage.Table.Id></th><th translate=Pipeline.Manage.Table.Name></th><th translate=Pipeline.Manage.Table.Description></th><th translate=Pipeline.Manage.Table.Actions></th></tr></thead><tbody><tr ng-repeat=\"pipeline in vm.pipelines | orderBy:'Name'\"><td>{{pipeline.Id}}</td><td><a ng-click=vm.edit(pipeline)>{{pipeline.Name}}</a></td><td>{{pipeline.Description}}</td><td class=text-nowrap><button icon=edit title=\"{{ 'General.Buttons.Edit' | translate }}\" class=\"btn btn-xs btn-default\" ng-click=vm.design(pipeline)></button> <button icon=user title=\"{{ 'General.Buttons.Permissions' | translate }}\" type=button class=\"btn btn-xs\" ng-click=vm.permissions(pipeline)></button> <button icon=duplicate title=\"{{ 'General.Buttons.Copy' | translate }}\" type=button class=\"btn btn-xs\" ng-click=vm.clone(pipeline)></button> <button icon=remove title=\"{{ 'General.Buttons.Delete' | translate }}\" type=button class=\"btn btn-xs\" ng-click=vm.delete(pipeline)></button></td></tr><tr ng-if=!vm.pipelines.length><td colspan=100 translate=General.Messages.NothingFound></td></tr></tbody></table></div></div>"
   );
 
+
+  $templateCache.put('pipelines/query-stats.html',
+    "<div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=Pipeline.Stats.Title></h3></div><div class=modal-body><div translate=Pipeline.Stats.Intro></div><div><h3 translate=Pipeline.Stats.ParamTitle></h3><div translate=Pipeline.Stats.ExecutedIn translate-values=\"{ ms: vm.timeUsed, ticks: vm.ticksUsed }\"></div><div><ul><li ng-repeat=\"param in vm.testParameters\">{{param}}</li></ul></div></div><div><h3 translate=Pipeline.Stats.QueryTitle></h3><pre>{{vm.result | json}}</pre></div><div><h3 translate=Pipeline.Stats.SourcesAndStreamsTitle></h3><h4 translate=Pipeline.Stats.Sources.Title></h4><table><tr><th translate=Pipeline.Stats.Sources.Guid></th><th translate=Pipeline.Stats.Sources.Type></th><th translate=Pipeline.Stats.Sources.Config></th></tr><tr ng-repeat=\"s in vm.sources\"><td tooltip={{s}}><pre>{{s.Guid.substring(0, 13)}}...</pre></td><td>{{s.Type}}</td><td tooltip={{s.Configuration}}><ol><li ng-repeat=\"(key, value) in s.Configuration\"><b>{{key}}</b>=<em>{{value}}</em></li></ol></td></tr></table><h4 translate=Pipeline.Stats.Streams.Title></h4><table><tr><th translate=Pipeline.Stats.Streams.Source></th><th translate=Pipeline.Stats.Streams.Target></th><th translate=Pipeline.Stats.Streams.Items></th><th translate=Pipeline.Stats.Streams.Error></th></tr><tr ng-repeat=\"sr in vm.streams\"><td><pre>{{sr.Source.substring(0, 13) + \":\" + sr.SourceOut}}</pre></td><td><pre>{{sr.Target.substring(0, 13) + \":\" + sr.TargetIn}}</pre></td><td><span>{{sr.Count}}</span></td><td><span>{{sr.Error}}</span></td></tr></table></div></div>"
+  );
+
 }]);
 
 (function () { 
@@ -791,7 +796,6 @@ angular.module("PipelineDesigner", [
         "PipelineDesigner.filters",
         "ngResource",
         "EavConfiguration",
-        "eavDialogService",
         "EavServices",
         "eavTemplates",
         "eavNgSvcs",
@@ -844,7 +848,7 @@ angular.module("PipelineDesigner.filters", []).filter("typename", function () {
 
     angular.module("PipelineDesigner")
         .controller("PipelineDesignerController",
-            ["appId", "pipelineId", "$scope", "pipelineService", "$location", "$timeout", "$filter", "uiNotification", "eavDialogService", "eavAdminDialogs", "$log", "eavConfig", "$q", function (appId, pipelineId, $scope, pipelineService, $location, $timeout, $filter, uiNotification, eavDialogService, eavAdminDialogs, $log, eavConfig, $q) {
+            ["appId", "pipelineId", "$scope", "pipelineService", "$location", "$timeout", "$filter", "uiNotification", "eavAdminDialogs", "$log", "eavConfig", "$q", function (appId, pipelineId, $scope, pipelineService, $location, $timeout, $filter, uiNotification, eavAdminDialogs, $log, eavConfig, $q) {
                 "use strict";
 
                 // Init
@@ -1305,13 +1309,10 @@ angular.module("PipelineDesigner.filters", []).filter("typename", function () {
                         pipelineService.queryPipeline($scope.PipelineEntityId).then(function(success) {
                             // Show Result in a UI-Dialog
                             uiNotification.clear();
-                            eavDialogService.open({
-                                title: "Query result",
-                                content: "<div><div>The Full result was logged to the Browser Console. Further down you'll find more debug-infos. </div>"
-                                    + "<h3>Parameters used</h3><div>" + ($scope.pipelineData.Pipeline.TestParameters.length > 5 ? $scope.pipelineData.Pipeline.TestParameters.replace("\n", "<br>") : "no test params specified") + "</div> "
-                                    + "<h3>Query result - executed in " + success.QueryTimer.Milliseconds + "ms (" + success.QueryTimer.Ticks + "tx)</h3><div> <pre id=\"pipelineQueryResult\">" + $filter("json")(success.Query) + "</pre>" + showConnectionTable(success) + "</div>"
-                                    + "</div"
-                            });
+
+                            var resolve = eavAdminDialogs.CreateResolve({ testParams: $scope.pipelineData.Pipeline.TestParameters, result: success });
+                            eavAdminDialogs.OpenModal("pipelines/query-stats.html", "QueryStats as vm", "lg", resolve);
+
                             $timeout(function() {
                                 showEntityCountOnStreams(success);
                             });
@@ -1321,40 +1322,6 @@ angular.module("PipelineDesigner.filters", []).filter("typename", function () {
                         });
                     };
 
-                    // Create html-table with connection debug-info
-                    var showConnectionTable = function(result) {
-                        var srcTbl = "<h3>Sources</h3>" +
-                            "<table><tr><th>Guid</th><th>Type</th><th>Config</th></tr>";
-                        var src = result.Sources;
-                        for (var s in src) {
-                            if (s[0] != "$") {
-                                srcTbl += "<tr><td><pre>" + s.substring(0, 13) + "...</pre></td><td>" + src[s].Type + "</td><td>";
-                                var cnf = src[s].Configuration;
-                                for (var c in cnf)
-                                    if (c[0] != "$")
-                                        srcTbl += "<b>" + c + "</b>" + "=" + cnf[c] + "</br>";
-                                srcTbl += "</td></tr>";
-                            }
-                        }
-                        srcTbl += "</table>";
-
-
-                        srcTbl += "<h3>Streams</h3>" +
-                            "<table><tr><th>Source</th><th>Target</th><th>Items</th><th>Err</th></tr>";
-                        src = result.Streams;
-                        for (var sr in src) {
-                            if (sr[0] != "$") {
-                                srcTbl += "<tr><td><pre>"
-                                    + src[sr].Source.substring(0, 13) + ":" + src[sr].SourceOut + "</pre></td><td><pre>"
-                                    + src[sr].Target.substring(0, 13) + ":" + src[sr].TargetIn + "</pre></td><td>"
-                                    + src[sr].Count + "</td><td>"
-                                    + src[sr].Error + "</td></tr>";
-                            }
-                        }
-                        srcTbl += "</table>";
-
-                        return srcTbl;
-                    };
 
                     var showEntityCountOnStreams = function(result) {
                         angular.forEach(result.Streams, function(stream) {
@@ -1479,55 +1446,33 @@ angular.module("PipelineManagement", [
         };
         vm.close = function () { $modalInstance.dismiss("cancel"); };
     }]);
-// todo: get rid of this
+/*jshint laxbreak:true */
+(function() {
 
-// it's only used in the pipeline-designer-controller, and seems to be to open modal-dialogs to edit something
+    angular.module("PipelineDesigner")
+        .controller("QueryStats", ["testParams", "result", "$modalInstance", function (testParams, result, $modalInstance) {
+                var vm = this;
+                var success = result;
+                vm.testParameters = testParams.split("\n");
+                vm.timeUsed = success.QueryTimer.Milliseconds;
+                vm.ticksUsed = success.QueryTimer.Ticks;
+                vm.result = success.Query;
 
-// won't be necessary any more when Formly works
+                vm.sources = success.Sources;
+                vm.streams = success.Streams;
 
-angular.module('eavDialogService', ["EavConfiguration"])
-    .factory('eavDialogService', ["eavConfig", function (eavConfig) {
-		return {
-			open: function (params) {
+                vm.connections = "todo";
 
-				params = $.extend({
-					url: "",
-					width: 950,
-					height: 600,
-					onClose: function () { },
-					title: null
-				}, params);
 
-				if (window.top.EavEditDialogs === null)
-					window.top.EavEditDialogs = [];
+                vm.close = function () {
+                    $modalInstance.dismiss("cancel");
+                };
 
-				var dialogElement;
-				if (params.url)
-					dialogElement = '<div id="EavNewEditDialog"' + window.top.EavEditDialogs.length + '"><iframe style="position:absolute; top:0; right:0; left:0; bottom:0; height:100%; width:100%; border:0" src="' + params.url + '"></iframe></div>';
-				else if (params.content)
-					dialogElement = params.content;
-				else
-					dialogElement = '<div>no url and no content specified</div>';
 
-				window.top.jQuery(dialogElement).dialog({
-					title: params.title,
-					autoOpen: true,
-					modal: true,
-					width: params.width,
-					dialogClass: eavConfig.dialogClass,
-					height: params.height,
-					close: function (event, ui) {
-						$(this).remove();
-						params.onClose();
-						window.top.EavEditDialogs.pop();
-					}
-				});
 
-				window.top.EavEditDialogs.push(dialogElement);
-			}
-		};
-	}]
-);
+            }]
+        );
+})();
 // Init the main eav services module
 angular.module("EavServices", [
     "ng",                   // Angular for $http etc.
@@ -1538,7 +1483,7 @@ angular.module("EavServices", [
 ]);
 
 angular.module("EavServices")
-    .factory("contentItemsSvc", ["$http", "entitiesSvc", "eavManagementSvc", "svcCreator", function($http, entitiesSvc, eavManagementSvc, svcCreator) {
+    .factory("contentItemsSvc", ["$http", "entitiesSvc", "metadataSvc", "svcCreator", function($http, entitiesSvc, metadataSvc, svcCreator) {
             return function createContentItemsSvc(appId, contentType) {
                 var svc = {};
                 svc.contentType = contentType;
@@ -1709,7 +1654,7 @@ angular.module("EavServices")
 
         svc.autoEnableAsNeeded = function (evt) {
             evt = window.event || evt;
-            var ctrlAndShiftPressed = evt.ctrlKey && evt.shiftKey;
+            var ctrlAndShiftPressed = evt.ctrlKey;
             if (ctrlAndShiftPressed)
                 svc.on = !svc.on;
         };
@@ -1756,7 +1701,7 @@ angular.module("EavAdminUi", ["ng",
     "HistoryApp",            // the item-history app
 	"eavEditEntity"			// the edit-app
 ])
-    .factory("eavAdminDialogs", ["$modal", "eavConfig", "eavManagementSvc", "contentTypeSvc", "$window", function ($modal, eavConfig, eavManagementSvc, contentTypeSvc, $window) {
+    .factory("eavAdminDialogs", ["$modal", "eavConfig", "contentTypeSvc", "$window", function ($modal, eavConfig, contentTypeSvc, $window) {
 
             var svc = {};
 
@@ -1909,10 +1854,6 @@ angular.module("EavAdminUi", ["ng",
 ;
 /*  this file contains various eav-angular services
  *  1. the basic configuration enforcing html5 mode
- *  2. a management-dialog which simply gets the appid if in the url
- *  3. eavManagementSvc - provides some services to retrieve metadata and similar for eav-management dialogs
- *  4. svcCreator - a helper to quickly create services
- *  5. entitiesSvc - a service to get/delete entities
  */
 
 angular.module("eavNgSvcs", ["ng"])
@@ -1925,102 +1866,9 @@ angular.module("eavNgSvcs", ["ng"])
             });
         } ])
 
-    /// Provide state-information related to the current open dialog
-    .factory("eavManagementDialog", ["$location", function($location){
-        var result = {};
-        var srch = $location.search();
-        result.appId = srch.AppId || srch.appId || srch.appid;
-        return result;
-    }])
-
-    /// Management actions which are rather advanced metadata kind of actions
-    .factory("eavManagementSvc", ["$http", "eavManagementDialog", function($http, eavManagementDialog) {
-        var svc = {};
-
-        // Retrieve extra content-type info
-        svc.getContentTypeDefinition = function getContentTypeDefinition(contentTypeName) {
-            alert("using the wrong method - should use the content-type controller. Will work for now, change code please");
-            return $http.get("eav/contenttype/get", { params: { appId: eavManagementDialog.appId, contentTypeId: contentTypeName } });
-        };
-
-        // Find all items assigned to a GUID
-        svc.getAssignedItems = function getAssignedItems(assignedToId, keyGuid, contentTypeName) {
-            return $http.get("eav/metadata/getassignedentities", {
-                params: {
-                    appId: eavManagementDialog.appId,
-                    assignmentObjectTypeId: assignedToId,
-                    keyType: "guid",
-                    key: keyGuid,
-                    contentType: contentTypeName
-                }
-            });
-        };
-        return svc;
-    }])
-
-    /// Standard entity commands like get one, many etc.
-    .factory("entitiesSvc", ["$http", "eavManagementDialog", function ($http, eavManagementDialog) {
-        var svc = {};
-
-        svc.get = function get(contentType, id) {
-            return id ?
-                $http.get("eav/entities/getone", { params: { 'contentType': contentType, 'id': id, 'appId': eavManagementDialog.appId } })
-                : $http.get("eav/entities/getentities", { params: { 'contentType': contentType, 'appId': eavManagementDialog.appId }});
-        };
-
-		svc.getMultiLanguage = function getMultiLanguage(appId, contentType, id) {
-			return $http.get("eav/entities/getone", { params: { contentType: contentType, id: id, appId: appId, format: "multi-language" } });
-		};
-
-		svc.getManyForEditing = function (appId, items) {
-		    return $http.post("eav/entities/getmanyforediting", items, { params: { appId: appId } });
-		};
-
-		svc.saveMany = function (appId, items) {
-		    return $http.post("eav/entities/savemany", items, { params: { appId: appId } });
-		};
-
-        svc.delete = function del(type, id) {
-            return $http.delete("eav/entities/delete", {
-                params: {
-                    'contentType': type,
-                    'id': id,
-                    'appId': eavManagementDialog.appId
-                }
-            });
-        };
-
-		svc.newEntity = function(contentTypeName) {
-			return {
-				Id: null,
-				Guid: generateUUID(),
-				Type: {
-					StaticName: contentTypeName
-				},
-				Attributes: {},
-                IsPublished: true
-			};
-		};
-        
-		svc.save = function save(appId, newData) {
-		    return $http.post("eav/entities/save", newData, { params: { appId: appId } });
-		};
-
-        return svc;
-    }])
 
 ;
 
-// Generate Guid - code from http://stackoverflow.com/a/8809472
-function generateUUID() {
-    var d = new Date().getTime();
-    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-        var r = (d + Math.random() * 16) % 16 | 0;
-        d = Math.floor(d / 16);
-        return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-    });
-    return uuid;
-}
 
 angular.module("EavServices")
     .factory("historySvc", ["$http", "svcCreator", function($http, svcCreator) { 
@@ -2154,9 +2002,31 @@ angular.module("EavServices")
         return results === null ? "" : decodeURIComponent(results.replace(/\+/g, " "));
     }
 }());
+// metadata
+// retrieves metadata for an entity or an attribute
 
 angular.module("EavServices")
-    .factory("permissionsSvc", ["$http", "eavConfig", "entitiesSvc", "eavManagementSvc", "svcCreator", "contentTypeSvc", function($http, eavConfig, entitiesSvc, eavManagementSvc, svcCreator, contentTypeSvc) {
+    /// Management actions which are rather advanced metadata kind of actions
+    .factory("metadataSvc", ["$http", "appId", function($http, appId) {
+        var svc = {};
+
+        // Find all items assigned to a GUID
+        svc.getMetadata = function getMetadata(assignedToId, keyGuid, contentTypeName) {
+            return $http.get("eav/metadata/getassignedentities", {
+                params: {
+                    appId: appId,
+                    assignmentObjectTypeId: assignedToId,
+                    keyType: "guid",
+                    key: keyGuid,
+                    contentType: contentTypeName
+                }
+            });
+        };
+        return svc;
+    }]);
+
+angular.module("EavServices")
+    .factory("permissionsSvc", ["$http", "eavConfig", "entitiesSvc", "metadataSvc", "svcCreator", "contentTypeSvc", function($http, eavConfig, entitiesSvc, metadataSvc, svcCreator, contentTypeSvc) {
         var eavConf = eavConfig;
 
         // Construct a service for this specific targetGuid
@@ -2171,7 +2041,7 @@ angular.module("EavServices")
 
             svc = angular.extend(svc, svcCreator.implementLiveList(function getAll() {
                 // todo: refactor this - get out of the eavmanagemnetsvc
-                return eavManagementSvc.getAssignedItems(svc.EntityAssignment, svc.PermissionTargetGuid, svc.ctName).then(svc.updateLiveAll);
+                return metadataSvc.getMetadata(svc.EntityAssignment, svc.PermissionTargetGuid, svc.ctName).then(svc.updateLiveAll);
             }));
 
             // Get ID of this content-type 
@@ -2190,7 +2060,7 @@ angular.module("EavServices")
 // PipelineService provides an interface to the Server Backend storing Pipelines and their Pipeline Parts
 
 angular.module("EavServices")
-    .factory("pipelineService", ["$resource", "$q", "$filter", "eavConfig", "$http", "contentTypeSvc", "eavManagementSvc", "eavAdminDialogs", function ($resource, $q, $filter, eavConfig, $http, contentTypeSvc, eavManagementSvc, eavAdminDialogs) {
+    .factory("pipelineService", ["$resource", "$q", "$filter", "eavConfig", "$http", "contentTypeSvc", "metadataSvc", "eavAdminDialogs", function ($resource, $q, $filter, eavConfig, $http, contentTypeSvc, metadataSvc, eavAdminDialogs) {
         "use strict";
         var svc = {};
         // Web API Service
@@ -2312,10 +2182,9 @@ angular.module("EavServices")
                 var contentTypeName = "|Config " + dataSourceFullName; // todo refactor centralize
                 var assignmentObjectTypeId = 4; // todo refactor centralize
                 var keyGuid = dataSource.EntityGuid;
-                var preventRedirect = true;
 
                 // Query for existing Entity
-                eavManagementSvc.getAssignedItems(assignmentObjectTypeId, keyGuid, contentTypeName).then(function (result) { 
+                metadataSvc.getMetadata(assignmentObjectTypeId, keyGuid, contentTypeName).then(function (result) { 
                     var success = result.data;
                     if (success.length) // Edit existing Entity
                         eavAdminDialogs.openItemEditWithEntityId(success[0].Id);

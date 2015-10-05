@@ -36,8 +36,10 @@
 					if (value) {
 						$scope.value.Value = value;
 
+
 						if (type === "file") {
-							$http.get("dnn/Hyperlink/GetFileByPath?relativePath=" + encodeURIComponent(value)).then(function (result) {
+					        var valueWithoutVersion = value.replace(/\?ver=[0-9\-]*$/gi, "");
+					        $http.get("dnn/Hyperlink/GetFileByPath?relativePath=" + encodeURIComponent(valueWithoutVersion)).then(function (result) {
 								if(result.data)
 									$scope.value.Value = "File:" + result.data.FileId;
 							});
@@ -199,7 +201,7 @@ angular.module('SxcEditTemplates',[]).run(['$templateCache', function($templateC
 
 
   $templateCache.put('fieldtemplates/templates/hyperlink-default.html',
-    "<div><div class=input-group dropdown><input type=text class=form-control ng-model=value.Value> <span class=input-group-btn><button type=button id=single-button class=\"btn btn-default dropdown-toggle\" dropdown-toggle ng-disabled=to.disabled>...</button></span><ul class=\"dropdown-menu pull-right\" role=menu><li role=menuitem><a ng-click=\"vm.openDialog('pagepicker')\" href=javascript:void(0)>Page Picker</a></li><li role=menuitem><a ng-click=\"vm.openDialog('imagemanager')\" href=javascript:void(0)>Image Manager</a></li><li role=menuitem><a ng-click=\"vm.openDialog('documentmanager')\" href=javascript:void(0)>Document Manager</a></li></ul></div><div class=small>Test: <a href={{vm.testLink}} target=_blank>{{vm.testLink}}</a></div></div>"
+    "<div><div class=input-group dropdown><input type=text class=form-control ng-model=value.Value> <span class=input-group-btn><button type=button id=single-button class=\"btn btn-default dropdown-toggle\" dropdown-toggle ng-disabled=to.disabled><span icon=option-horizontal></span></button></span><ul class=\"dropdown-menu pull-right\" role=menu><li role=menuitem><a ng-click=\"vm.openDialog('pagepicker')\" href=javascript:void(0)>Page Picker</a></li><li role=menuitem><a ng-click=\"vm.openDialog('imagemanager')\" href=javascript:void(0)>Image Manager</a></li><li role=menuitem><a ng-click=\"vm.openDialog('documentmanager')\" href=javascript:void(0)>Document Manager</a></li></ul></div><div ng-if=value.Value class=small>Test: <a href={{vm.testLink}} target=_blank>{{vm.testLink}}</a></div></div>"
   );
 
 

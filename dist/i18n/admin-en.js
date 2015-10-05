@@ -87,143 +87,164 @@
     },
     "Designer": {
 
+    },
+    "Stats": {
+      "Title": "Query Results",
+      "Intro": "The Full result was logged to the Browser Console. Further down you'll find more debug-infos.",
+      "ParamTitle": "Parameters & Statistics",
+      "ExecutedIn": "Executed in {{ms}}ms ({{ticks}} ticks)",
+      "QueryTitle": "Query Results",
+      "SourcesAndStreamsTitle": "Sources and Streams",
+      "Sources": {
+        "Title": "Sources",
+        "Guid": "Guid",
+        "Type": "Type",
+        "Config": "Configuration"
+      },
+      "Streams": {
+        "Title": "Streams",
+        "Source": "Source",
+        "Target": "Target",
+        "Items": "Items",
+        "Error": "Error"
+      }
     }
   },
-  "Content": {
-    "Manage": {
-      "Title": "Manage Content / Data",
-      "Table": {
-        "Id": "ID",
-        "Published": "Publ",
-        "Title": "Title",
-        "Actions": ""
-      },
-      "NoTitle": "- no title -"
-    },
-    "Publish": {
-      "PnV": "published and visible",
-      "DoP": "this is a draft of another published item",
-      "D": "not published at the moment",
-      "HD": "has draft: {{id}}",
-      "HP": "will replace published: {{id}}"
-    },
-    "Export": {
-      "Title": "Export Content / Data",
-      "Help": "This will generate an XML file which you can edit in Excel. If you just want to import new data, use this to export the schema that you can then fill in using Excel. Please visit <a href='http://2sxc.org/help' target='_blank'>http://2sxc.org/help</a> for more instructions.",
-      "Commands": {
-        "Export": "Export"
-      },
-      "Fields": {
-        "Language": {
-          "Label": "Languages",
-          "Options": {
-            "All": "All"
-          }
+    "Content": {
+      "Manage": {
+        "Title": "Manage Content / Data",
+        "Table": {
+          "Id": "ID",
+          "Published": "Publ",
+          "Title": "Title",
+          "Actions": ""
         },
-        "LanguageReferences": {
-          "Label": "Value references to other languages",
-          "Options": {
-            "Link": "Keep references to other languages (for re-import)",
-            "Resolve": "Replace references with values"
-          }
-        },
-        "ResourcesReferences": {
-          "Label": "File / page references",
-          "Options": {
-            "Link": "Keep references (for re-import, for example Page:4711)",
-            "Resolve": "Replace references with real URLs (for example /Portals/0...)"
-          }
-        },
-        "RecordExport": {
-          "Label": "Export data",
-          "Options": {
-            "Blank": "No, just export blank data schema (for new data import)",
-            "All": "Yes, export all content-items"
-          }
-        }
-      }
-    },
-    "Import": {
-      "Title": "Import Content / Data Step",
-      "TitleSteps":  "{{step}} of 3",
-      "Help": "This will import content-items into 2sxc. It requires that you already defined the content-type before you try importing, and that you created the import-file using the template provided by the Export. Please visit <a href='http://2sxc.org/help' target='_blank'>http://2sxc.org/help</a> for more instructions.",
-      "Fields": {
-        "File": {
-          "Label": "Choose file"
-        },
-        "ResourcesReferences": {
-          "Label": "References to pages / files",
-          "Options": {
-            "Keep": "Import links as written in the file (for example /Portals/...)",
-            "Resolve": "Try to resolve pathes to references"
-          }
-        },
-        "ClearEntities": {
-          "Label": "Clear all other entities",
-          "Options": {
-            "None": "Keep all entities not found in import",
-            "All": "Remove all entities not found in import"
-          }
-        }
+        "NoTitle": "- no title -"
       },
-      "Commands": {
-        "Preview": "Preview Import",
-        "Import": "Import"
+      "Publish": {
+        "PnV": "published and visible",
+        "DoP": "this is a draft of another published item",
+        "D": "not published at the moment",
+        "HD": "has draft: {{id}}",
+        "HP": "will replace published: {{id}}"
       },
-      "Messages": {
-        "BackupContentBefore": "Remember to backup your DNN first!",
-
-        "WaitingForResponse": "Please wait while processing...",
-
-        "ImportSucceeded": "Import done.",
-        "ImportFailed": "Import failed.",
-
-        "ImportCanTakeSomeTime": "Note: The import validates much data and may take several minutes."
-      },
-      "Evaluation": {
-        "Error": {
-          "Title": "Try to import file '{{filename}}'",
-          "Codes": {
-            "0": "Unknown error occured.",
-            "1": "Selected content-type does not exist.",
-            "2": "Document is not a valid XML file.",
-            "3": "Selected content-type does not match the content-type in the XML file.",
-            "4": "The language is not supported.",
-            "5": "The document does not specify all languages for all entities.",
-            "6": "Language reference cannot be parsed, the language is not supported.",
-            "7": "Language reference cannot be parsed, the read-write protection is not supported.",
-            "8": "Value cannot be read, because of it has an invalid format."
+      "Export": {
+        "Title": "Export Content / Data",
+        "Help": "This will generate an XML file which you can edit in Excel. If you just want to import new data, use this to export the schema that you can then fill in using Excel. Please visit <a href='http://2sxc.org/help' target='_blank'>http://2sxc.org/help</a> for more instructions.",
+        "Commands": {
+          "Export": "Export"
+        },
+        "Fields": {
+          "Language": {
+            "Label": "Languages",
+            "Options": {
+              "All": "All"
+            }
           },
-          "Detail": "Details: {{detail}}",
-          "LineNumber": "Line-no: {{number}}",
-          "LineDetail": "Line-details: {{detail}}"
-        },
-        "Detail": {
-          "Title": "Try to import file '{{filename}}'",
+          "LanguageReferences": {
+            "Label": "Value references to other languages",
+            "Options": {
+              "Link": "Keep references to other languages (for re-import)",
+              "Resolve": "Replace references with values"
+            }
+          },
+          "ResourcesReferences": {
+            "Label": "File / page references",
+            "Options": {
+              "Link": "Keep references (for re-import, for example Page:4711)",
+              "Resolve": "Replace references with real URLs (for example /Portals/0...)"
+            }
+          },
+          "RecordExport": {
+            "Label": "Export data",
+            "Options": {
+              "Blank": "No, just export blank data schema (for new data import)",
+              "All": "Yes, export all content-items"
+            }
+          }
+        }
+      },
+      "Import": {
+        "Title": "Import Content / Data Step",
+        "TitleSteps": "{{step}} of 3",
+        "Help": "This will import content-items into 2sxc. It requires that you already defined the content-type before you try importing, and that you created the import-file using the template provided by the Export. Please visit <a href='http://2sxc.org/help' target='_blank'>http://2sxc.org/help</a> for more instructions.",
+        "Fields": {
           "File": {
-            "Title": "File contains:",
-            "ElementCount": "{{count}} content-items (records/entities)",
-            "LanguageCount": "{{count}} languages",
-            "Attributes": "{{count}} columns: {{attributes}}"
+            "Label": "Choose file"
           },
-          "Entities": {
-            "Title": "If you press Import, it will:",
-            "Create": "Create {{count}} content-items",
-            "Update": "Update {{count}} content-items",
-            "Delete": "Delete {{count}} content-items",
-            "AttributesIgnored": "Ignore {{count}} columns: {{attributes}}"
+          "ResourcesReferences": {
+            "Label": "References to pages / files",
+            "Options": {
+              "Keep": "Import links as written in the file (for example /Portals/...)",
+              "Resolve": "Try to resolve pathes to references"
+            }
+          },
+          "ClearEntities": {
+            "Label": "Clear all other entities",
+            "Options": {
+              "None": "Keep all entities not found in import",
+              "All": "Remove all entities not found in import"
+            }
+          }
+        },
+        "Commands": {
+          "Preview": "Preview Import",
+          "Import": "Import"
+        },
+        "Messages": {
+          "BackupContentBefore": "Remember to backup your DNN first!",
+
+          "WaitingForResponse": "Please wait while processing...",
+
+          "ImportSucceeded": "Import done.",
+          "ImportFailed": "Import failed.",
+
+          "ImportCanTakeSomeTime": "Note: The import validates much data and may take several minutes."
+        },
+        "Evaluation": {
+          "Error": {
+            "Title": "Try to import file '{{filename}}'",
+            "Codes": {
+              "0": "Unknown error occured.",
+              "1": "Selected content-type does not exist.",
+              "2": "Document is not a valid XML file.",
+              "3": "Selected content-type does not match the content-type in the XML file.",
+              "4": "The language is not supported.",
+              "5": "The document does not specify all languages for all entities.",
+              "6": "Language reference cannot be parsed, the language is not supported.",
+              "7": "Language reference cannot be parsed, the read-write protection is not supported.",
+              "8": "Value cannot be read, because of it has an invalid format."
+            },
+            "Detail": "Details: {{detail}}",
+            "LineNumber": "Line-no: {{number}}",
+            "LineDetail": "Line-details: {{detail}}"
+          },
+          "Detail": {
+            "Title": "Try to import file '{{filename}}'",
+            "File": {
+              "Title": "File contains:",
+              "ElementCount": "{{count}} content-items (records/entities)",
+              "LanguageCount": "{{count}} languages",
+              "Attributes": "{{count}} columns: {{attributes}}"
+            },
+            "Entities": {
+              "Title": "If you press Import, it will:",
+              "Create": "Create {{count}} content-items",
+              "Update": "Update {{count}} content-items",
+              "Delete": "Delete {{count}} content-items",
+              "AttributesIgnored": "Ignore {{count}} columns: {{attributes}}"
+            }
           }
         }
-      }
-    },
-    "History": {
-      "Title": "History of {{id}}",
-      "Table": {
-        "Id": "#",
-        "When": "When",
-        "User": "User",
-        "Actions": ""
+      },
+      "History": {
+        "Title": "History of {{id}}",
+        "Table": {
+          "Id": "#",
+          "When": "When",
+          "User": "User",
+          "Actions": ""
+        }
       }
     }
   }
-}

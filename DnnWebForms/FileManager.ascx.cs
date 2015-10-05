@@ -16,7 +16,7 @@ namespace ToSic.SexyContent.EAV.FormlyEditUI.FieldTemplates.WebForms
 	{
 		/* Parameters provided through QueryString parameters */
 		private string Paths {
-			get { return Request.QueryString["Paths"]; }
+			get { return Request.QueryString["Paths"] ?? ""; }
 		}
 
 		private string CurrentValue

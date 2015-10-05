@@ -389,8 +389,27 @@
               <name>ToSic.Eav.dll</name>
             </assembly>
             <assembly>
-              <name>ToSic.Eav.ManagementUI.dll</name>
+              <name>ToSic.Eav.Core.dll</name>
             </assembly>
+            <assembly>
+              <name>ToSic.Eav.DataSources.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Eav.ImportExport.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Eav.Persistence.EF4.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Eav.Tokens.dll</name>
+            </assembly>
+            <assembly>
+              <name>ToSic.Eav.WebApi.dll</name>
+            </assembly>            
+            
+            <!--<assembly>
+              <name>ToSic.Eav.ManagementUI.dll</name>
+            </assembly>-->
             <assembly>
               <name>Microsoft.Practices.Unity.dll</name>
             </assembly>

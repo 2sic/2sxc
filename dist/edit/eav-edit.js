@@ -6,13 +6,18 @@
         "formly",
         "ui.bootstrap",
         "eavFieldTemplates",
-        "eavNgSvcs",
         "EavServices",
         "eavEditTemplates"
 	]);
 
 
 })();
+// this changes JSON-serialization for dates, because we usually want the time to be the same across time zones instead of keeping the same moment
+Date.prototype.toJSON = function() {
+    var x = new Date(this);
+    x.setHours(x.getHours() - x.getTimezoneOffset() / 60);
+    return x.toISOString();
+};
 
 (function() {
 	"use strict";
@@ -130,7 +135,7 @@
 	});
 
 
-	eavFieldTemplates.controller("FieldTemplate-EntityCtrl", ["$scope", "$http", "$filter", "$modal", "eavManagementDialog", function ($scope, $http, $filter, $modal, eavManagementDialog) {
+	eavFieldTemplates.controller("FieldTemplate-EntityCtrl", ["$scope", "$http", "$filter", "$modal", "appId", function ($scope, $http, $filter, $modal, appId) {
 
 	    if (!$scope.to.settings.Entity)
 	        $scope.to.settings.Entity = {};
@@ -182,7 +187,7 @@
 	            url: "eav/EntityPicker/getavailableentities",
 	            params: {
 	                contentTypeName: $scope.to.settings.Entity.EntityType,
-	                appId: eavManagementDialog.appId
+	                appId: appId
 	                // ToDo: dimensionId: $scope.configuration.DimensionId
 	            }
 	        }).then(function (data) {
@@ -243,14 +248,25 @@
             return dirty;
         };
 
-        vm.save = function () {
-            entitiesSvc.saveMany(appId, vm.items).then(vm.afterSaveEvent);
+        $scope.state.setPristine = function() {
+            angular.forEach(vm.registeredControls, function(e, i) {
+                e.setPristine();
+            });
         };
 
+        vm.save = function () {
+            entitiesSvc.saveMany(appId, vm.items).then(function(result) {
+                $scope.state.setPristine();
+                vm.afterSaveEvent(result);
+            });
+        };
+
+        // todo: get toaster to work
         // todo: translate
         vm.saveAndKeepOpen = function () {
-                uiNotification.note("Saving", "", true);
-            entitiesSvc.saveMany(appId, vm.items).then(function () {
+            uiNotification.note("Saving", "", true);
+            entitiesSvc.saveMany(appId, vm.items).then(function() {
+                $scope.state.setPristine();
                 uiNotification.note("Saved", "", true);
             });
         };
@@ -325,7 +341,8 @@
 		// Place functions here that should be available from the parent of the directive
 		vm.control = {
 		    isValid: function () { return vm.form.$valid; },
-            isDirty: function() { return vm.form.$dirty; }
+		    isDirty: function () { return vm.form.$dirty; },
+		    setPristine: function () { vm.form.$setPristine(); }
 		};
 
 		// Register this control in the parent control
@@ -804,7 +821,8 @@ function enhanceEntity(entity) {
 (function () {
 	'use strict';
 
-	angular.module('eavEditEntity').service('eavDefaultValueService', function () {
+	angular.module('eavEditEntity')
+        .service('eavDefaultValueService', function () {
 		// Returns a typed default value from the string representation
 		return function parseDefaultValue(fieldConfig) {
 			var e = fieldConfig;
@@ -829,6 +847,70 @@ function enhanceEntity(entity) {
 		};
 	});
 
+})();
+/* global angular */
+(function () {
+	"use strict";
+
+    angular.module("eavEditEntity")
+        /// Standard entity commands like get one, many etc.
+        .factory("entitiesSvc", ["$http", "appId", function($http, appId) {
+            var svc = {};
+
+            svc.getManyForEditing = function(appId, items) {
+                return $http.post("eav/entities/getmanyforediting", items, { params: { appId: appId } });
+            };
+
+            svc.saveMany = function(appId, items) {
+                // first clean up unnecessary nodes - just to make sure we don't miss-read the JSONs transferred
+                var removeTempValue = function(value, key) { delete value._currentValue; };
+                var itmCopy = angular.copy(items);
+                for (var ei = 0; ei < itmCopy.length; ei++)
+                    angular.forEach(itmCopy[ei].Entity.Attributes, removeTempValue);
+
+                return $http.post("eav/entities/savemany", itmCopy, { params: { appId: appId } });
+            };
+
+            svc.delete = function del(type, id) {
+                return $http.delete("eav/entities/delete", {
+                    params: {
+                        'contentType': type,
+                        'id': id,
+                        'appId': appId
+                    }
+                });
+            };
+
+            svc.newEntity = function(contentTypeName) {
+                return {
+                    Id: null,
+                    Guid: generateUuid(),
+                    Type: {
+                        StaticName: contentTypeName
+                    },
+                    Attributes: {},
+                    IsPublished: true
+                };
+            };
+
+            svc.save = function save(appId, newData) {
+                return $http.post("eav/entities/save", newData, { params: { appId: appId } });
+            };
+
+            return svc;
+        }]);
+
+
+    // Generate Guid - code from http://stackoverflow.com/a/8809472
+    function generateUuid() {
+        var d = new Date().getTime();
+        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = (d + Math.random() * 16) % 16 | 0;
+            d = Math.floor(d / 16);
+            return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+        });
+        return uuid;
+    }
 })();
 /* global angular */
 (function () {

@@ -64,8 +64,16 @@
     <ItemGroup>
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.SexyContent.Razor.dll" />
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.SexyContent.dll" />
-      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.ManagementUI.dll" />
+      <!-- <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.ManagementUI.dll" /> -->
+      
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.dll" />
+      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.Core.dll" />
+      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.DataSources.dll" />
+      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.ImportExport.dll" />
+      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.Persistence.EF4.dll" />
+      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.Tokens.dll" />
+      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ToSic.Eav.WebApi.dll" />
+
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\protobuf-net.dll" />
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\Microsoft.Practices.Unity.dll" />
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\Microsoft.Practices.Unity.Configuration.dll" />

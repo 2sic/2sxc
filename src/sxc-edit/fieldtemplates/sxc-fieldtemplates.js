@@ -36,8 +36,10 @@
 					if (value) {
 						$scope.value.Value = value;
 
+
 						if (type === "file") {
-							$http.get("dnn/Hyperlink/GetFileByPath?relativePath=" + encodeURIComponent(value)).then(function (result) {
+					        var valueWithoutVersion = value.replace(/\?ver=[0-9\-]*$/gi, "");
+					        $http.get("dnn/Hyperlink/GetFileByPath?relativePath=" + encodeURIComponent(valueWithoutVersion)).then(function (result) {
 								if(result.data)
 									$scope.value.Value = "File:" + result.data.FileId;
 							});
