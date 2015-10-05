@@ -9,14 +9,14 @@
 		formlyConfigProvider.setType({
 			name: "string-wysiwyg",
 			templateUrl: "fieldtemplates/templates/string-wysiwyg.html",
-			wrapper: ["bootstrapLabel", "bootstrapHasError", "eavLocalization"],
+			wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"],
 			controller: "FieldTemplate-WysiwygCtrl as vm"
 		});
 
 		formlyConfigProvider.setType({
 			name: "hyperlink-default",
 			templateUrl: "fieldtemplates/templates/hyperlink-default.html",
-			wrapper: ["bootstrapLabel", "bootstrapHasError", "eavLocalization"],
+			wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"],
 			controller: "FieldTemplate-HyperlinkCtrl as vm"
 		});
         

@@ -19,18 +19,19 @@
 
 	/* This app registers all field templates for EAV in the angularjs eavFieldTemplates app */
 
-	var eavFieldTemplates = angular.module("eavFieldTemplates", ["formly", "formlyBootstrap", "ui.bootstrap", "eavLocalization", "eavEditTemplates"], ["formlyConfigProvider", function (formlyConfigProvider) {
+	var eavFieldTemplates = angular.module("eavFieldTemplates", ["formly", "formlyBootstrap", "ui.bootstrap", "eavLocalization", "eavEditTemplates"])
+        .config(["formlyConfigProvider", function (formlyConfigProvider) {
 
 	    formlyConfigProvider.setType({
 	        name: "string-default",
 	        template: "<input class=\"form-control\" ng-model=\"value.Value\">",
-	        wrapper: ["bootstrapLabel", "bootstrapHasError", "eavLocalization"]
+	        wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"]
 	    });
 
 	    formlyConfigProvider.setType({
 	        name: "string-dropdown",
 	        template: "<select class=\"form-control\" ng-model=\"value.Value\"></select>",
-	        wrapper: ["bootstrapLabel", "bootstrapHasError", "eavLocalization"],
+	        wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"],
 	        defaultOptions: function defaultOptions(options) {
 				
 	            // DropDown field: Convert string configuration for dropdown values to object, which will be bound to the select
@@ -62,7 +63,7 @@
 	    formlyConfigProvider.setType({
 	        name: "string-textarea",
 	        template: "<textarea class=\"form-control\" ng-model=\"value.Value\"></textarea>",
-	        wrapper: ["bootstrapLabel", "bootstrapHasError", "eavLocalization"],
+	        wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"],
 	        defaultOptions: {
 	            ngModelAttrs: {
 	                '{{to.settings.String.RowCount}}': { value: "rows" },
@@ -74,7 +75,7 @@
 	    formlyConfigProvider.setType({
 	        name: "number-default",
 	        template: "<input type=\"number\" class=\"form-control\" ng-model=\"value.Value\">{{vm.isGoogleMap}}",
-	        wrapper: ["bootstrapLabel", "bootstrapHasError", "eavLocalization"],
+	        wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"],
 	        defaultOptions: {
 	            ngModelAttrs: {
 	                '{{to.settings.Number.Min}}': { value: "min" },
@@ -88,12 +89,12 @@
 	    formlyConfigProvider.setType({
 	        name: "boolean-default",
 	        template: "<div class=\"checkbox\">\n\t<label>\n\t\t<input type=\"checkbox\"\n           class=\"formly-field-checkbox\"\n\t\t       ng-model=\"value.Value\">\n\t\t{{to.label}}\n\t\t{{to.required ? '*' : ''}}\n\t</label>\n</div>\n",
-	        wrapper: ["bootstrapLabel", "bootstrapHasError", "eavLocalization"]
+	        wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"]
 	    });
 
 	    formlyConfigProvider.setType({
 	        name: "datetime-default",
-	        wrapper: ["bootstrapLabel", "bootstrapHasError", "eavLocalization"],
+	        wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"],
 	        template: "<div>" +
                 "<div class=\"input-group\">" +
                     "<div class=\"input-group-addon\" style=\"cursor:pointer;\" ng-click=\"to.isOpen = true;\">" +
@@ -113,10 +114,14 @@
 		formlyConfigProvider.setType({
 		    name: "entity-default",
 		    templateUrl: "fields/templates/entity-default.html",
-		    wrapper: ["bootstrapLabel", "bootstrapHasError"],
+		    wrapper: ["eavLabel", "bootstrapHasError"],
 		    controller: "FieldTemplate-EntityCtrl"
 		});
 
+	    formlyConfigProvider.setWrapper({
+	        name: 'eavLabel',
+            templateUrl: "fields/eav-label.html"
+	    });
 	}]);
 
 	eavFieldTemplates.controller("FieldTemplate-NumberCtrl", function () {
@@ -298,7 +303,7 @@
 	var app = angular.module("eavEditEntity"); 
 
 	// The controller for the main form directive
-    app.controller("EditEntityFormCtrl", ["appId", "$http", "$scope", "formlyConfig", "contentTypeFieldSvc", function editEntityCtrl(appId, $http, $scope, formlyConfig, contentTypeFieldSvc) {
+    app.controller("EditEntityFormCtrl", ["appId", "$http", "$scope", "formlyConfig", "contentTypeFieldSvc", "$sce", function editEntityCtrl(appId, $http, $scope, formlyConfig, contentTypeFieldSvc, $sce) {
 
 		var vm = this;
 		vm.editInDefaultLanguageFirst = function () {
@@ -339,8 +344,9 @@
 			            templateOptions: {
 			                required: !!e.Metadata.All.Required,
 			                label: e.Metadata.All.Name === undefined ? e.StaticName : e.Metadata.All.Name,
-			                description: e.Metadata.All.Notes,
-			                settings: e.Metadata
+			                description: $sce.trustAsHtml(e.Metadata.All.Notes),
+			                settings: e.Metadata,
+                            header: $scope.header
 			            },
 			            hide: (e.Metadata.All.VisibleInEditUI ? !e.Metadata.All.VisibleInEditUI : false),
 			            expressionProperties: {
@@ -389,7 +395,8 @@
 		    templateUrl: "form/edit-single-entity.html",
 			restrict: "E",
 			scope: {
-				entity: "=",
+			    entity: "=",
+                header: "=",
 				registerEditControl: "="
 			},
 			controller: "EditEntityFormCtrl",
@@ -402,13 +409,18 @@
 angular.module('eavEditTemplates',[]).run(['$templateCache', function($templateCache) {
   'use strict';
 
+  $templateCache.put('fields/eav-label.html',
+    "<div><label for={{id}} class=\"control-label {{to.labelSrOnly ? 'sr-only' : ''}}\" ng-if=to.label>{{to.label}} {{to.required ? '*' : ''}} <a ng-click=\"to.showDescription = !to.showDescription\" href=javascript:void(0); ng-if=\"to.description && to.description != ''\" title={{to.description}}><i class=\"glyphicon glyphicon-info-sign\"></i></a></label><p ng-if=to.showDescription class=bg-info style=\"padding: 5px\" ng-bind-html=to.description></p><formly-transclude></formly-transclude></div>"
+  );
+
+
   $templateCache.put('fields/templates/entity-default.html',
     "<div class=eav-entityselect><div ui-tree=options data-empty-place-holder-enabled=false><ol ui-tree-nodes ng-model=chosenEntities><li ng-repeat=\"item in chosenEntities\" ui-tree-node class=eav-entityselect-item><div ui-tree-handle><span title=\"{{getEntityText(item) + ' (' + item + ')'}}\">{{getEntityText(item)}}</span> <a data-nodrag title=\"Remove this item\" ng-click=remove(this) class=eav-entityselect-item-remove>[remove]</a></div></li></ol></div><select class=\"eav-entityselect-selector form-control\" ng-model=selectedEntity ng-change=addEntity() ng-show=\"to.settings.Entity.AllowMultiValue || chosenEntities.length < 1\"><option value=\"\">-- choose --</option><option value=new ng-if=createEntityAllowed()>-- new --</option><option ng-repeat=\"item in availableEntities\" ng-disabled=\"chosenEntities.indexOf(item.Value) != -1\" value={{item.Value}}>{{item.Text}}</option></select></div>"
   );
 
 
   $templateCache.put('form/edit-many-entities.html',
-    "<div ng-if=\"vm.items != null\"><eav-language-switcher></eav-language-switcher><div ng-repeat=\"p in vm.items\"><eav-edit-entity-form entity=p.Entity register-edit-control=vm.registerEditControl></eav-edit-entity-form></div><button ng-disabled=!vm.isValid() ng-click=vm.save() class=\"btn btn-primary submit-button\"><span icon=ok tooltip=\"{{ 'Button.Save' | translate }}\"></span></button> <span ng-if=vm.willPublish icon=eye-open tooltip=\"{{ 'Status.Published' | translate }} - {{ 'Message.WillPublish' | translate }}\" ng-click=vm.togglePublish()></span> <span ng-if=!vm.willPublish icon=eye-close tooltip=\"{{ 'Status.Unpublished' | translate }} - {{ 'Message.WontPublish' | translate }}\" ng-click=vm.togglePublish()></span> <button class=\"btn pull-right\"><span icon=option-horizontal tooltip=\"{{ 'Button.MoreOptions' | translate\r" +
+    "<div ng-if=\"vm.items != null\"><eav-language-switcher></eav-language-switcher><div ng-repeat=\"p in vm.items\"><eav-edit-entity-form entity=p.Entity header=p.Header register-edit-control=vm.registerEditControl></eav-edit-entity-form></div><button ng-disabled=!vm.isValid() ng-click=vm.save() class=\"btn btn-primary submit-button\"><span icon=ok tooltip=\"{{ 'Button.Save' | translate }}\"></span></button> <span ng-if=vm.willPublish icon=eye-open tooltip=\"{{ 'Status.Published' | translate }} - {{ 'Message.WillPublish' | translate }}\" ng-click=vm.togglePublish()></span> <span ng-if=!vm.willPublish icon=eye-close tooltip=\"{{ 'Status.Unpublished' | translate }} - {{ 'Message.WontPublish' | translate }}\" ng-click=vm.togglePublish()></span> <button class=\"btn pull-right\"><span icon=option-horizontal tooltip=\"{{ 'Button.MoreOptions' | translate\r" +
     "\n" +
     "}}\"></span></button> <button class=\"btn pull-right\" ng-click=vm.saveAndKeepOpen()><span icon=check tooltip=\"{{ 'Button.SaveAndKeepOpen' | translate }}\"></span></button></div>"
   );
@@ -425,7 +437,7 @@ angular.module('eavEditTemplates',[]).run(['$templateCache', function($templateC
 
 
   $templateCache.put('localization/language-switcher.html',
-    "<ul class=\"nav nav-pills\" style=margin-left:0><li ng-repeat=\"l in languages.languages\" ng-class=\"{ active: languages.currentLanguage == l.key }\"><a ng-click=\"languages.currentLanguage = l.key;\" href=javascript:void(0);>{{l.name}}</a></li></ul>"
+    "<ul class=\"nav nav-pills\" style=\"margin-left:0; margin-bottom: 15px\"><li ng-repeat=\"l in languages.languages\" ng-class=\"{ active: languages.currentLanguage == l.key }\"><a ng-click=\"languages.currentLanguage = l.key;\" href=javascript:void(0);>{{l.name}}</a></li></ul>"
   );
 
 
@@ -787,6 +799,10 @@ function enhanceEntity(entity) {
 		return function parseDefaultValue(fieldConfig) {
 			var e = fieldConfig;
 			var d = e.templateOptions.settings.DefaultValue;
+
+		    if (e.templateOptions.header.Prefill && e.templateOptions.header.Prefill[e.key]) {
+			    d = e.templateOptions.header.Prefill[e.key];
+			}
 
 			switch (e.type.split('-')[0]) {
 				case 'boolean':
