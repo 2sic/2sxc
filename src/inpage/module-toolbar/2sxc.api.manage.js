@@ -138,7 +138,6 @@ $2sxc.getManageController = function (id) {
         // zoneid, tid (tabid), mid (moduleid), appid
         // dialog=[zone|app|...]
         // lang=..., flang=
-        // todo: language is a number? or text?
         getNgLink: function(settings) {
             settings = $.extend({}, toolbarConfig, settings);
 
@@ -148,8 +147,6 @@ $2sxc.getManageController = function (id) {
             };
             var items = [];
 
-            // ToDo: 2rm - discuss with 2dm - Add language configuration - how can I do the same in eav?
-
             // when not using a content-group list, ...
             if (!settings.useModuleList) {
                 if (settings.action !== "new")
@@ -158,13 +155,16 @@ $2sxc.getManageController = function (id) {
                     items.push({ ContentTypeName: settings.contentType || settings.attributeSetName });
             }
             // when using a list, the sort-order is important to find the right item
-            if(settings.useModuleList || settings.action === "replace") {
-                items.push({ Group: {
+            if (settings.useModuleList || settings.action === "replace") {
+                var isListHeader = (settings.sortOrder !== -1);
+                items.push({
+                    Group: {
                         Guid: settings.contentGroupId,
                         Index: settings.sortOrder,
                         Part: (settings.sortOrder !== -1) ? "content" : "listcontent",
                         Add: settings.action === "new"
-                    }
+                    },
+                    Title: isListHeader ? "Content" : "List Content"
                 });
                 if (settings.action !== "replace") // if not replace, also add the presentation
                     items.push({
@@ -173,7 +173,8 @@ $2sxc.getManageController = function (id) {
                             Index: settings.sortOrder,
                             Part: (settings.sortOrder !== -1) ? "presentation" : "listpresentation",
                             Add: settings.action === "new"
-                        }
+                        },
+                        Title: isListHeader ? "Presentation" : "List Presentation"
                     });
             }
 
