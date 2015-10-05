@@ -12,7 +12,8 @@
 
 
 })();
-// this changes JSON-serialization for dates, because we usually want the time to be the same across time zones instead of keeping the same moment
+// this changes JSON-serialization for dates, 
+// because we usually want the time to be the same across time zones and NOT keeping the same moment
 Date.prototype.toJSON = function() {
     var x = new Date(this);
     x.setHours(x.getHours() - x.getTimezoneOffset() / 60);
@@ -33,8 +34,7 @@ Date.prototype.toJSON = function() {
 	        wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"]
 	    });
 
-	    formlyConfigProvider.setType({
-	        name: "string-dropdown",
+	    formlyConfigProvider.setType({ name: "string-dropdown",
 	        template: "<select class=\"form-control\" ng-model=\"value.Value\"></select>",
 	        wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"],
 	        defaultOptions: function defaultOptions(options) {
@@ -426,7 +426,8 @@ Date.prototype.toJSON = function() {
 			scope: {
 			    entity: "=",
                 header: "=",
-				registerEditControl: "="
+                registerEditControl: "=",
+                readOnly: "="
 			},
 			controller: "EditEntityFormCtrl",
 			controllerAs: "vm"
@@ -449,7 +450,7 @@ angular.module('eavEditTemplates',[]).run(['$templateCache', function($templateC
 
 
   $templateCache.put('form/edit-many-entities.html',
-    "<div ng-if=\"vm.items != null\" ng-click=vm.debug.autoEnableAsNeeded($event)><eav-language-switcher></eav-language-switcher><div ng-repeat=\"p in vm.items\"><h4>{{p.Header.Title ? p.Header.Title : 'Edit'}}</h4><eav-edit-entity-form entity=p.Entity header=p.Header register-edit-control=vm.registerEditControl></eav-edit-entity-form></div><button ng-disabled=!vm.isValid() ng-click=vm.save() class=\"btn btn-primary submit-button\"><span icon=ok tooltip=\"{{ 'Button.Save' | translate }}\"></span></button> <button class=btn ng-click=vm.saveAndKeepOpen()><span icon=check tooltip=\"{{ 'Button.SaveAndKeepOpen' | translate }}\"></span></button> <span ng-if=vm.willPublish icon=eye-open tooltip=\"{{ 'Status.Published' | translate }} - {{ 'Message.WillPublish' | translate }}\" ng-click=vm.togglePublish()></span> <span ng-if=!vm.willPublish icon=eye-close tooltip=\"{{ 'Status.Unpublished' | translate }} - {{ 'Message.WontPublish' | translate }}\" ng-click=vm.togglePublish()></span> <span ng-if=vm.debug.on><button tooltip=debug icon=zoom-in class=btn ng-click=\"vm.showDebugItems = !vm.showDebugItems\"></button></span> <span class=pull-right ng-if=false>todo: show more buttons... <button class=btn><span icon=option-horizontal tooltip=\"{{ 'Button.MoreOptions' | translate }}\"></span></button></span><div ng-if=\"vm.debug.on && vm.showDebugItems\"><pre>{{ vm.items | json }}</pre></div></div>"
+    "<div ng-if=\"vm.items != null\" ng-click=vm.debug.autoEnableAsNeeded($event)><eav-language-switcher></eav-language-switcher><div ng-repeat=\"p in vm.items\"><h4 tooltip={{p.Header.Group}}>{{p.Header.Title ? p.Header.Title : 'Edit'}} <span ng-if=true><span ng-if=p.Header.Group.LeaveBlank icon=ban-circle ng-click=\"p.Header.Group.LeaveBlank = false\" tooltip=\"this item is locked and will stay empty/default. The values are shown for your convenience. Click here to unlock if needed.\"></span> <span ng-if=!p.Header.Group.LeaveBlank icon=ban-circle ng-click=\"p.Header.Group.LeaveBlank = true\" tooltip=\"this item is open for editing. Click here to lock / remove it and revert to default.\"></span></span></h4><eav-edit-entity-form entity=p.Entity header=p.Header register-edit-control=vm.registerEditControl read-only=p.Header.Group.LeaveBlank></eav-edit-entity-form></div><button ng-disabled=!vm.isValid() ng-click=vm.save() class=\"btn btn-primary submit-button\"><span icon=ok tooltip=\"{{ 'Button.Save' | translate }}\"></span></button> <button class=btn ng-click=vm.saveAndKeepOpen()><span icon=check tooltip=\"{{ 'Button.SaveAndKeepOpen' | translate }}\"></span></button> <span ng-if=vm.willPublish icon=eye-open tooltip=\"{{ 'Status.Published' | translate }} - {{ 'Message.WillPublish' | translate }}\" ng-click=vm.togglePublish()></span> <span ng-if=!vm.willPublish icon=eye-close tooltip=\"{{ 'Status.Unpublished' | translate }} - {{ 'Message.WontPublish' | translate }}\" ng-click=vm.togglePublish()></span> <span ng-if=vm.debug.on><button tooltip=debug icon=zoom-in class=btn ng-click=\"vm.showDebugItems = !vm.showDebugItems\"></button></span> <span class=pull-right ng-if=false>todo: show more buttons... <button class=btn><span icon=option-horizontal tooltip=\"{{ 'Button.MoreOptions' | translate }}\"></span></button></span><div ng-if=\"vm.debug.on && vm.showDebugItems\"><pre>{{ vm.items | json }}</pre></div></div>"
   );
 
 
@@ -540,9 +541,11 @@ angular.module('eavEditTemplates',[]).run(['$templateCache', function($templateC
 					}
 
 
-				    // Assign default language if no dimension is set
+                    // todo: discuss w/2rm 2dm changed this 2015-10-05 - I think the false was wrong
+				    // Assign default language if no dimension is set - new: if multiple languages are in use!!!
 					if (Object.keys(fieldModel.Values[0].Dimensions).length === 0)
-					    fieldModel.Values[0].Dimensions[langConf.defaultLanguage] = false;
+                        if(langConf.languages.length > 0)
+				            fieldModel.Values[0].Dimensions[langConf.defaultLanguage] = true; // false;
 
 					var valueToEdit;
 

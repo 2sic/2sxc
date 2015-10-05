@@ -165,19 +165,31 @@ namespace ToSic.SexyContent
         } 
         #endregion  
 
-		public void UpdateEntity(string type, int sortOrder, int? entityId)
+		public void UpdateEntity(string type, int sortOrder, int? entityId, bool updatePresentation, int? presentationId)
 		{
 			if (sortOrder == -1)
                 throw new Exception("Sortorder is never -1 any more; deprecated");
 
-			var entityIds = this[type].Select(p => p?.EntityId).ToList();
+		    var listMain = ListWithNulls(type);// this[type].Select(p => p?.EntityId).ToList();
 
             // if necessary, add to end
-			if (entityIds.Count < sortOrder + 1)
-				entityIds.AddRange(Enumerable.Repeat(new int?(), (sortOrder + 1) - entityIds.Count));
+			if (listMain.Count < sortOrder + 1)
+				listMain.AddRange(Enumerable.Repeat(new int?(), (sortOrder + 1) - listMain.Count));
 
-			entityIds[sortOrder] = entityId;
-			SaveChangedLists(PrepareSavePackage(type, entityIds));
+			listMain[sortOrder] = entityId;
+		    var package = PrepareSavePackage(type, listMain);
+
+            if (updatePresentation)
+		    {
+		        var type2 = ReCapitalizePartName(type).Replace(cContent, cPresentation);
+		        var listPres = ListWithNulls(type2);
+		        if (listPres.Count < sortOrder + 1)
+		            listPres.AddRange(Enumerable.Repeat(new int?(), (sortOrder + 1) - listPres.Count));
+		        listPres[sortOrder] = presentationId;
+		        package = PrepareSavePackage(type2, listPres, package);
+		    }
+
+		    SaveChangedLists(package);
 		}
 
 		private void SaveChangedLists(Dictionary<string, int?[]> values)

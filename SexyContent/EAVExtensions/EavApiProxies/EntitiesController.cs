@@ -70,6 +70,13 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
                               part[s.Group.Index] != null) // and the slot has something
                     s.EntityId = part[s.Group.Index].EntityId;
 
+                // tell the UI that it should not actually use this data yet, keep it locked
+                if (s.Group.Part.ToLower().Contains("presentation")) {
+                    s.Group.SlotCanBeEmpty = true;  // all presentations can always be locked
+                    if (s.EntityId == 0)
+                        s.Group.SlotIsEmpty = true; // if it is blank, then lock this one to begin with
+                }
+                
                 newItems.Add(s);
             }
 
@@ -90,6 +97,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
             // var success = true;
 
             // first, save all to do it in 1 transaction
+            // note that it won't save the SlotIsEmpty ones, as these won't be needed
             entitiesController.SaveMany(appId, items.Select(i => new EntityWithHeader { Header = i.Header, Entity = i.Entity}).ToList());
 
             // now assign all content-groups as needed
@@ -128,11 +136,11 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 
                 if (contItem.Header.Group.Add) // this cannot be auto-detected, it must be specified
                 {
-                    contentGroup.AddContentAndPresentationEntity(partName, index, contentEntity.EntityId, presentationId);
+                    contentGroup.AddContentAndPresentationEntity(partName, index, contentEntity.EntityId, presItem.Header.Group.SlotIsEmpty ? null : presentationId);
                 }
                 // otherwise it's an update 
                 else if (part.Count <= index || part[index] == null || part[index].EntityId != contentEntity.EntityId)
-                    contentGroup.UpdateEntity(partName, index, contentEntity.EntityId);
+                    contentGroup.UpdateEntity(partName, index, contentEntity.EntityId, true, presItem.Header.Group.SlotIsEmpty ? null : presentationId);
 
             }
             return true;
