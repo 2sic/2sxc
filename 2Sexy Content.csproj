@@ -230,6 +230,34 @@
       <DependentUpon>Services.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="DnnWebForms\FileManager.ascx.cs">
+      <DependentUpon>FileManager.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="DnnWebForms\FileManager.ascx.designer.cs">
+      <DependentUpon>FileManager.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="DnnWebForms\PagePicker.ascx.cs">
+      <DependentUpon>PagePicker.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="DnnWebForms\PagePicker.ascx.designer.cs">
+      <DependentUpon>PagePicker.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="DnnWebForms\WebFormsBridge.ascx.cs">
+      <DependentUpon>WebFormsBridge.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="DnnWebForms\WebFormsBridge.ascx.designer.cs">
+      <DependentUpon>WebFormsBridge.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="DnnWebForms\Wysiwyg.ascx.cs">
+      <DependentUpon>Wysiwyg.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="DnnWebForms\Wysiwyg.ascx.designer.cs">
+      <DependentUpon>Wysiwyg.ascx</DependentUpon>
+    </Compile>
     <Compile Include="SexyContent\ContentGroup.cs" />
     <Compile Include="SexyContent\ContentGroups.cs" />
     <Compile Include="SexyContent\DataSources\DnnSqlDataSource.cs" />
@@ -405,6 +433,10 @@
     <Content Include="API\Services.asmx" />
     <Content Include="bootstrap\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="BuildScripts\MSBuild.Community.Tasks.dll" />
+    <Content Include="DnnWebForms\FileManager.ascx" />
+    <Content Include="DnnWebForms\PagePicker.ascx" />
+    <Content Include="DnnWebForms\WebFormsBridge.ascx" />
+    <Content Include="DnnWebForms\Wysiwyg.ascx" />
     <Content Include="EditDataSource.ascx" />
     <Content Include="EditList.ascx" />
     <Content Include="EditTemplateFile.ascx" />

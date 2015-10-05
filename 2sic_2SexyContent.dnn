@@ -340,7 +340,7 @@
                   </moduleControl>
 									<moduleControl>
 										<controlKey>webformsbridge</controlKey>
-										<controlSrc>DesktopModules/ToSIC_SexyContent/SexyContent/EAV/FormlyEditUI/FieldTemplates/WebForms/WebFormsBridge.ascx</controlSrc>
+										<controlSrc>DesktopModules/ToSIC_SexyContent/DnnWebForms/WebFormsBridge.ascx</controlSrc>
 										<supportsPartialRendering>False</supportsPartialRendering>
 										<controlTitle>Formly FieldTemplate WebForms Bridge</controlTitle>
 										<controlType>Edit</controlType>

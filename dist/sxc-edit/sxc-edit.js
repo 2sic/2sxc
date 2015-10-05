@@ -4,7 +4,7 @@
 
 	/* This app registers all field templates for 2sxc in the angularjs sxcFieldTemplates app */
 
-    var app = angular.module("sxcFieldTemplates", ["formly", "formlyBootstrap", "ui.bootstrap", "ui.tree", "2sxc4ng", "SxcEditTemplates"], ["formlyConfigProvider", function (formlyConfigProvider) {
+	var app = angular.module("sxcFieldTemplates", ["formly", "formlyBootstrap", "ui.bootstrap", "ui.tree", "2sxc4ng", "SxcEditTemplates", "EavConfiguration"], ["formlyConfigProvider", function (formlyConfigProvider) {
 
 		formlyConfigProvider.setType({
 			name: "string-wysiwyg",
@@ -114,8 +114,8 @@
 
 	}]);
 
-	app.directive("webFormsBridge", ["sxc", function (sxc) {
-	    var webFormsBridgeUrl = "/?tabid=" + $2sxc.urlParams.require("tid") + "&ctl=webformsbridge&mid=" + sxc.id + "&popUp=true";
+	app.directive("webFormsBridge", ["sxc", "webRoot", function (sxc, webRoot) {
+	    var webFormsBridgeUrl = webRoot + "?tabid=" + $2sxc.urlParams.require("tid") + "&ctl=webformsbridge&mid=" + sxc.id + "&popUp=true";
 
 		return {
 			restrict: "A",
@@ -125,7 +125,17 @@
 				bridgeSyncHeight: "@bridgeSyncHeight"
 			},
 			link: function (scope, elem, attrs) {
-				elem[0].src = webFormsBridgeUrl + "&type=" + scope.type + (scope.bridge.params ? "&" + $.param(scope.bridge.params) : "");
+
+			    var params = "";
+			    if (scope.bridge.params) {
+			        params = Object.keys(scope.bridge.params).map(function (prop) {
+			            if (scope.bridge.params[prop] === null || scope.bridge.params[prop] === '')
+			                return;
+			            return [prop, scope.bridge.params[prop]].map(encodeURIComponent).join("=");
+			        }).join("&");
+			    }
+
+			    elem[0].src = webFormsBridgeUrl + "&type=" + scope.type + (scope.bridge.params ? "&" + params : "");
 				elem.on("load", function () {					
 					var w = elem[0].contentWindow || elem[0];
 					w.connectBridge(scope.bridge);
@@ -175,7 +185,7 @@ angular.module('SxcEditTemplates',[]).run(['$templateCache', function($templateC
   'use strict';
 
   $templateCache.put('fieldtemplates/templates/hyperlink-default-filemanager.html',
-    "<div><iframe class=sxc-dialog-filemanager-iframe style=\"width:100%; height:100%; overflow:hidden\" scrolling=no web-forms-bridge=bridge bridge-type=filemanager bridge-sync-height=false></iframe></div><style>.sxc-dialog-filemanager .modal-dialog { width: 100%;height: 100%;margin: 0; }\r" +
+    "<div><iframe class=sxc-dialog-filemanager-iframe style=\"width:100%; height:100%; overflow:hidden; border: 0\" scrolling=no web-forms-bridge=bridge bridge-type=filemanager bridge-sync-height=false></iframe></div><style>.sxc-dialog-filemanager .modal-dialog { width: 100%;height: 100%;margin: 0; }\r" +
     "\n" +
     "\t.sxc-dialog-filemanager .modal-content { background: none;height: 100%; }\r" +
     "\n" +
@@ -184,7 +194,7 @@ angular.module('SxcEditTemplates',[]).run(['$templateCache', function($templateC
 
 
   $templateCache.put('fieldtemplates/templates/hyperlink-default-pagepicker.html',
-    "<div><div class=modal-header><h3 class=modal-title>Select a page</h3></div><div class=modal-body style=\"height:370px; width:600px\"><iframe style=\"width:100%; height:350px\" web-forms-bridge=bridge bridge-type=pagepicker bridge-sync-height=false></iframe></div><div class=modal-footer></div></div>"
+    "<div><div class=modal-header><h3 class=modal-title>Select a page</h3></div><div class=modal-body style=\"height:370px; width:600px\"><iframe style=\"width:100%; height: 350px; border: 0\" web-forms-bridge=bridge bridge-type=pagepicker bridge-sync-height=false></iframe></div><div class=modal-footer></div></div>"
   );
 
 
@@ -194,7 +204,7 @@ angular.module('SxcEditTemplates',[]).run(['$templateCache', function($templateC
 
 
   $templateCache.put('fieldtemplates/templates/string-wysiwyg.html',
-    "<iframe style=width:100% web-forms-bridge=vm.bridge bridge-type=wysiwyg bridge-sync-height=true></iframe>"
+    "<iframe style=\"width:100%; border: 0\" web-forms-bridge=vm.bridge bridge-type=wysiwyg bridge-sync-height=true></iframe>"
   );
 
 

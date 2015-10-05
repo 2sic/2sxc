@@ -55,6 +55,7 @@
 if (window.angular) // needed because the file is also included in older non-angular dialogs
     angular.module("EavConfiguration", [])
         .constant("languages", window.$eavUIConfig.languages)
+        .constant("webRoot", '/')
         .factory("eavConfig", function ($location) {
 
             var dnnModuleId = $location.search().mid;
