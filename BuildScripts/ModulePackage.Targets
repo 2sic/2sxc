@@ -29,7 +29,12 @@
       <DefaultExclude Include="ModulePackages\**" />
 			<DefaultExclude Include="2Sexy Content Testing\**" />
 			<DefaultExclude Include=".git\**" />
-      <DefaultExclude Include="**\node_modules\**" /> 
+      <DefaultExclude Include="**\node_modules\**" />
+      <DefaultExclude Include="**\bower_components\**" />
+      <DefaultExclude Include="packages\**" />
+      <DefaultExclude Include="src\**" />
+      <DefaultExclude Include="tmp\**" />
+      <DefaultExclude Include=".vs\**" />
     </ItemGroup>
 
     <ItemGroup>

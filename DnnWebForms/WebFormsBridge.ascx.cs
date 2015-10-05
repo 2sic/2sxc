@@ -18,17 +18,17 @@ namespace ToSic.SexyContent.EAV.FormlyEditUI.FieldTemplates.WebForms
 			switch (Request.QueryString["type"].ToLower())
 			{
 				case "pagepicker":
-					var controlPagePicker = (PagePicker)LoadControl("~/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/FormlyEditUI/FieldTemplates/WebForms/PagePicker.ascx");
+					var controlPagePicker = (PagePicker)LoadControl("~/DesktopModules/ToSIC_SexyContent/DnnWebForms/PagePicker.ascx");
 					controlPagePicker.PortalId = this.PortalId;
 					pnlBridgeContent.Controls.Add(controlPagePicker);
 					break;
 				case "wysiwyg":
-					var controlWysiwyg = (Wysiwyg)LoadControl("~/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/FormlyEditUI/FieldTemplates/WebForms/Wysiwyg.ascx");
+					var controlWysiwyg = (Wysiwyg)LoadControl("~/DesktopModules/ToSIC_SexyContent/DnnWebForms/Wysiwyg.ascx");
 					controlWysiwyg.PortalId = this.PortalId;
 					pnlBridgeContent.Controls.Add(controlWysiwyg);
 					break;
 				case "filemanager":
-					var controlFileManager = (FileManager)LoadControl("~/DesktopModules/ToSIC_SexyContent/SexyContent/EAV/FormlyEditUI/FieldTemplates/WebForms/FileManager.ascx");
+					var controlFileManager = (FileManager)LoadControl("~/DesktopModules/ToSIC_SexyContent/DnnWebForms/FileManager.ascx");
 					controlFileManager.PortalId = this.PortalId;
 					pnlBridgeContent.Controls.Add(controlFileManager);
 					break;

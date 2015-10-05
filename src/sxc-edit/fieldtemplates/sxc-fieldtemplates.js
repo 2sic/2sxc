@@ -4,19 +4,19 @@
 
 	/* This app registers all field templates for 2sxc in the angularjs sxcFieldTemplates app */
 
-    var app = angular.module("sxcFieldTemplates", ["formly", "formlyBootstrap", "ui.bootstrap", "ui.tree", "2sxc4ng", "SxcEditTemplates"], function (formlyConfigProvider) {
+	var app = angular.module("sxcFieldTemplates", ["formly", "formlyBootstrap", "ui.bootstrap", "ui.tree", "2sxc4ng", "SxcEditTemplates", "EavConfiguration"], function (formlyConfigProvider) {
 
 		formlyConfigProvider.setType({
 			name: "string-wysiwyg",
 			templateUrl: "fieldtemplates/templates/string-wysiwyg.html",
-			wrapper: ["bootstrapLabel", "bootstrapHasError", "eavLocalization"],
+			wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"],
 			controller: "FieldTemplate-WysiwygCtrl as vm"
 		});
 
 		formlyConfigProvider.setType({
 			name: "hyperlink-default",
 			templateUrl: "fieldtemplates/templates/hyperlink-default.html",
-			wrapper: ["bootstrapLabel", "bootstrapHasError", "eavLocalization"],
+			wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"],
 			controller: "FieldTemplate-HyperlinkCtrl as vm"
 		});
         
@@ -114,8 +114,8 @@
 
 	});
 
-	app.directive("webFormsBridge", function (sxc) {
-	    var webFormsBridgeUrl = "/?tabid=" + $2sxc.urlParams.require("tid") + "&ctl=webformsbridge&mid=" + sxc.id + "&popUp=true";
+	app.directive("webFormsBridge", function (sxc, webRoot) {
+	    var webFormsBridgeUrl = webRoot + "?tabid=" + $2sxc.urlParams.require("tid") + "&ctl=webformsbridge&mid=" + sxc.id + "&popUp=true";
 
 		return {
 			restrict: "A",
@@ -125,7 +125,17 @@
 				bridgeSyncHeight: "@bridgeSyncHeight"
 			},
 			link: function (scope, elem, attrs) {
-				elem[0].src = webFormsBridgeUrl + "&type=" + scope.type + (scope.bridge.params ? "&" + $.param(scope.bridge.params) : "");
+
+			    var params = "";
+			    if (scope.bridge.params) {
+			        params = Object.keys(scope.bridge.params).map(function (prop) {
+			            if (scope.bridge.params[prop] === null || scope.bridge.params[prop] === '')
+			                return;
+			            return [prop, scope.bridge.params[prop]].map(encodeURIComponent).join("=");
+			        }).join("&");
+			    }
+
+			    elem[0].src = webFormsBridgeUrl + "&type=" + scope.type + (scope.bridge.params ? "&" + params : "");
 				elem.on("load", function () {					
 					var w = elem[0].contentWindow || elem[0];
 					w.connectBridge(scope.bridge);

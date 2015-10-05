@@ -230,6 +230,34 @@
       <DependentUpon>Services.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="DnnWebForms\FileManager.ascx.cs">
+      <DependentUpon>FileManager.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="DnnWebForms\FileManager.ascx.designer.cs">
+      <DependentUpon>FileManager.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="DnnWebForms\PagePicker.ascx.cs">
+      <DependentUpon>PagePicker.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="DnnWebForms\PagePicker.ascx.designer.cs">
+      <DependentUpon>PagePicker.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="DnnWebForms\WebFormsBridge.ascx.cs">
+      <DependentUpon>WebFormsBridge.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="DnnWebForms\WebFormsBridge.ascx.designer.cs">
+      <DependentUpon>WebFormsBridge.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="DnnWebForms\Wysiwyg.ascx.cs">
+      <DependentUpon>Wysiwyg.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="DnnWebForms\Wysiwyg.ascx.designer.cs">
+      <DependentUpon>Wysiwyg.ascx</DependentUpon>
+    </Compile>
     <Compile Include="SexyContent\ContentGroup.cs" />
     <Compile Include="SexyContent\ContentGroups.cs" />
     <Compile Include="SexyContent\DataSources\DnnSqlDataSource.cs" />
@@ -403,8 +431,11 @@
     <Content Include="Administration\ContentTypeAndDemoSelector.ascx" />
     <Content Include="Administration\Registers.ascx" />
     <Content Include="API\Services.asmx" />
-    <Content Include="bootstrap\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="BuildScripts\MSBuild.Community.Tasks.dll" />
+    <Content Include="DnnWebForms\FileManager.ascx" />
+    <Content Include="DnnWebForms\PagePicker.ascx" />
+    <Content Include="DnnWebForms\WebFormsBridge.ascx" />
+    <Content Include="DnnWebForms\Wysiwyg.ascx" />
     <Content Include="EditDataSource.ascx" />
     <Content Include="EditList.ascx" />
     <Content Include="EditTemplateFile.ascx" />
@@ -482,10 +513,6 @@
     <Content Include="package.json" />
     <Content Include="js\2sxc.api.min.js.map" />
     <Content Include="js\angularjs\2sxc4ng.min.js.map" />
-    <Content Include="bootstrap\fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="bootstrap\fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="bootstrap\fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="bootstrap\fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="README.md" />
     <Content Include="src\config\eav-configuration-in-sxc.js" />
     <Content Include="bower.json" />
@@ -532,9 +559,6 @@
     <Content Include="src\sxc-edit\fieldtemplates\templates\hyperlink-default.html" />
     <Content Include="src\sxc-edit\fieldtemplates\templates\string-wysiwyg.html" />
     <Content Include="src\sxc-edit\services\contentgroup-service.js" />
-    <Content Include="Styles\Edit.css" />
-    <Content Include="Styles\EditDataSource\demo-new.css" />
-    <Content Include="Styles\EditDataSource\flowchartDemo.css" />
     <Content Include="TemplateHelpGrid.ascx" />
     <Content Include="Upgrade\07.00.00.xml" />
     <Content Include="Upgrade\07.02.00.xml" />

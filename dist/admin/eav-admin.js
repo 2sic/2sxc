@@ -124,6 +124,23 @@
     contentExportController.$inject = ["appId", "contentType", "contentExportService", "eavAdminDialogs", "eavConfig", "languages", "$modalInstance", "$filter"];
 }());
 (function () {
+
+    angular.module("ContentExportApp")
+         .factory("contentExportService", contentExportService);
+
+
+    function contentExportService() {
+        var srvc = {
+            exportContent: exportContent,
+        };
+        return srvc;
+
+        function exportContent(args) {
+            window.open("/api/eav/ContentExport/ExportContent?appId=" + args.AppId + "&language=" + args.Language + "&defaultLanguage=" + args.DefaultLanguage + "&contentType=" + args.ContentType + "&recordExport=" + args.RecordExport + "&resourcesReferences=" + args.ResourcesReferences + "&languageReferences=" + args.LanguageReferences, "_self", "");
+        }
+    }
+}());
+(function () {
     angular.module("ContentFormlyTypes", [
         "naif.base64",
         "formly",
@@ -178,10 +195,11 @@
     angular.module("ContentImportApp")
         .controller("ContentImport", contentImportController);
 
-    function contentImportController(appId, contentType, contentImportService, eavAdminDialogs, eavConfig, languages, $modalInstance, $filter) {
+    function contentImportController(appId, contentType, contentImportService, eavAdminDialogs, eavConfig, languages, debugState, $modalInstance, $filter) {
         var translate = $filter("translate");
 
         var vm = this;
+        vm.debug = debugState;
 
         vm.formValues = {};
 
@@ -292,7 +310,7 @@
             $modalInstance.dismiss("cancel");
         };
     }
-    contentImportController.$inject = ["appId", "contentType", "contentImportService", "eavAdminDialogs", "eavConfig", "languages", "$modalInstance", "$filter"];
+    contentImportController.$inject = ["appId", "contentType", "contentImportService", "eavAdminDialogs", "eavConfig", "languages", "debugState", "$modalInstance", "$filter"];
 }());
 (function () {
 
@@ -459,9 +477,11 @@
 
 
     /// Manage the list of content-types
-    function contentTypeListController(contentTypeSvc, eavAdminDialogs, appId, $translate) {
+    function contentTypeListController(contentTypeSvc, eavAdminDialogs, appId, debugState, $translate) {
         var vm = this;
         var svc = contentTypeSvc(appId);
+
+        vm.debug = debugState;
 
         vm.items = svc.liveList();
         vm.refresh = svc.liveListReload;
@@ -522,8 +542,9 @@
         vm.openImport = function openImport(item) {
             return eavAdminDialogs.openContentImport(svc.appId, item.StaticName, vm.refresh);
         };
+
     }
-    contentTypeListController.$inject = ["contentTypeSvc", "eavAdminDialogs", "appId", "$translate"];
+    contentTypeListController.$inject = ["contentTypeSvc", "eavAdminDialogs", "appId", "debugState", "$translate"];
 
     /// Edit or add a content-type
     /// Note that the svc can also be null if you don't already have it, the system will then create its own
@@ -604,8 +625,9 @@
         };
 
         vm.createItemDefinition = function createItemDefinition(item, metadataType) {
+            var title = metadataType == "All" ? "General" : metadataType;
             return item.Metadata[metadataType] !== undefined
-                ? { EntityId: item.Metadata[metadataType].Id, Title: "General" }  // if defined, return the entity-number to edit
+                ? { EntityId: item.Metadata[metadataType].Id, Title: title }  // if defined, return the entity-number to edit
                 : {
                     ContentTypeName: "@" + metadataType,        // otherwise the content type for new-assegnment
                     Metadata: {
@@ -613,7 +635,7 @@
                         KeyType: "number",
                         TargetType: eavConfig.metadataOfAttribute
                     },
-                    Title: metadataType
+                    Title: title
                 };      
         };
     }
@@ -669,7 +691,7 @@ angular.module('eavTemplates',[]).run(['$templateCache', function($templateCache
 
 
   $templateCache.put('content-import-export/content-import.html',
-    "<div class=modal-header><button class=\"btn pull-right\" type=button icon=remove ng-click=vm.close()></button><h3 class=modal-title><span translate=Content.Import.Title></span> <span ng-show=\"vm.viewStateSelected > 0\" translate=Content.Import.TitleSteps translate-values=\"{step: vm.viewStateSelected}\"></span></h3></div><div ng-switch=vm.viewStateSelected><div ng-switch-when=1><div class=modal-body><div translate=Content.Import.Help></div><formly-form form=vm.form model=vm.formValues fields=vm.formFields></formly-form><div class=text-warning translate=Content.Import.Messages.BackupContentBefore></div></div><div class=modal-footer><button type=button class=\"btn btn-default pull-left\" ng-click=vm.evaluateContent() ng-disabled=\"!vm.formValues.File || !vm.formValues.File.filename\" translate=Content.Import.Commands.Preview></button></div></div><div ng-switch-when=0><div class=modal-body><img src=\"/Scripts/images/ui-ajax-loader.gif\"> {{'Content.Import.Messages.WaitingForResponse' | translate}}</div></div><div ng-switch-when=2><div class=modal-body><div ng-if=vm.evaluationResult.Succeeded><h4 translate=Content.Import.Evaluation.Detail.Title translate-values=\"{filename: vm.formValues.File.filename}\"></h4><h5 translate=Content.Import.Evaluation.Detail.File.Title></h5><ul><li translate=Content.Import.Evaluation.Detail.File.ElementCount translate-values=\"{count: vm.evaluationResult.Detail.DocumentElementsCount}\"></li><li translate=Content.Import.Evaluation.Detail.File.LanguageCount translate-values=\"{count: vm.evaluationResult.Detail.LanguagesInDocumentCount}\"></li><li translate=Content.Import.Evaluation.Detail.File.Attributes translate-values=\"{count: vm.evaluationResult.Detail.AttributeNamesInDocument.length, attributes: vm.evaluationResult.Detail.AttributeNamesInDocument.join(', ')}\"></li></ul><h5 translate=Content.Import.Evaluation.Detail.Entities.Title></h5><ul><li translate=Content.Import.Evaluation.Detail.Entities.Create translate-values=\"{count: vm.evaluationResult.Detail.AmountOfEntitiesCreated}\"></li><li translate=Content.Import.Evaluation.Detail.Entities.Update translate-values=\"{count: vm.evaluationResult.Detail.AmountOfEntitiesUpdated}\"></li><li translate=Content.Import.Evaluation.Detail.Entities.Delete translate-values=\"{count: vm.evaluationResult.Detail.AmountOfEntitiesDeleted}\"></li><li translate=Content.Import.Evaluation.Detail.Entities.AttributesIgnored translate-values=\"{count: vm.evaluationResult.Detail.AttributeNamesNotImported.length, attributes: vm.evaluationResult.Detail.AttributeNamesNotImported.join(', ')}\"></li></ul><div class=text-warning translate=Content.Import.Messages.ImportCanTakeSomeTime></div></div><div ng-if=!vm.evaluationResult.Succeeded><h4 translate=Content.Import.Evaluation.Error.Title translate-values=\"{filename: vm.formValues.File.filename}\"></h4><ul><li ng-repeat=\"error in vm.evaluationResult.Detail\"><div><span translate=Content.Import.Evaluation.Error.Codes.{{error.ErrorCode}}></span></div><div ng-if=error.ErrorDetail><i translate=Content.Import.Evaluation.Error.Detail translate-values=\"{detail: error.ErrorDetail}\"></i></div><div ng-if=error.LineNumber><i translate=Content.Import.Evaluation.Error.LineNumber&quot; translate-values=\"{number: error.LineNumber}\"></i></div><div ng-if=error.LineDetail><i translate=Content.Import.Evaluation.Error.LineDetail translate-values=\"{detail: error.LineDetail}\"></i></div></li></ul></div></div><div class=modal-footer><button type=button class=\"btn pull-left\" ng-click=vm.back() icon=arrow-left></button> <button type=button class=\"btn btn-default pull-left\" ng-click=vm.importContent() translate=Content.Import.Commands.Import ng-disabled=!vm.evaluationResult.Succeeded></button></div></div><div ng-switch-when=3><div class=modal-body><span ng-show=vm.importResult.Succeeded translate=Content.Import.Messages.ImportSucceeded></span> <span ng-hide=vm.importResult.Succeeded translate=Content.Import.Messages.ImportFailed></span></div></div><pre>{{vm.formValues | json}}</pre></div>"
+    "<div ng-click=vm.debug.autoEnableAsNeeded($event)><div class=modal-header><button class=\"btn pull-right\" type=button icon=remove ng-click=vm.close()></button><h3 class=modal-title><span translate=Content.Import.Title></span> <span ng-show=\"vm.viewStateSelected > 0\" translate=Content.Import.TitleSteps translate-values=\"{step: vm.viewStateSelected}\"></span></h3></div><div ng-switch=vm.viewStateSelected><div ng-switch-when=1><div class=modal-body><div translate=Content.Import.Help></div><formly-form form=vm.form model=vm.formValues fields=vm.formFields></formly-form><div class=text-warning translate=Content.Import.Messages.BackupContentBefore></div></div><div class=modal-footer><button type=button class=\"btn btn-default pull-left\" ng-click=vm.evaluateContent() ng-disabled=\"!vm.formValues.File || !vm.formValues.File.filename\" translate=Content.Import.Commands.Preview></button></div></div><div ng-switch-when=0><div class=modal-body><img src=\"/Scripts/images/ui-ajax-loader.gif\"> {{'Content.Import.Messages.WaitingForResponse' | translate}}</div></div><div ng-switch-when=2><div class=modal-body><div ng-if=vm.evaluationResult.Succeeded><h4 translate=Content.Import.Evaluation.Detail.Title translate-values=\"{filename: vm.formValues.File.filename}\"></h4><h5 translate=Content.Import.Evaluation.Detail.File.Title></h5><ul><li translate=Content.Import.Evaluation.Detail.File.ElementCount translate-values=\"{count: vm.evaluationResult.Detail.DocumentElementsCount}\"></li><li translate=Content.Import.Evaluation.Detail.File.LanguageCount translate-values=\"{count: vm.evaluationResult.Detail.LanguagesInDocumentCount}\"></li><li translate=Content.Import.Evaluation.Detail.File.Attributes translate-values=\"{count: vm.evaluationResult.Detail.AttributeNamesInDocument.length, attributes: vm.evaluationResult.Detail.AttributeNamesInDocument.join(', ')}\"></li></ul><h5 translate=Content.Import.Evaluation.Detail.Entities.Title></h5><ul><li translate=Content.Import.Evaluation.Detail.Entities.Create translate-values=\"{count: vm.evaluationResult.Detail.AmountOfEntitiesCreated}\"></li><li translate=Content.Import.Evaluation.Detail.Entities.Update translate-values=\"{count: vm.evaluationResult.Detail.AmountOfEntitiesUpdated}\"></li><li translate=Content.Import.Evaluation.Detail.Entities.Delete translate-values=\"{count: vm.evaluationResult.Detail.AmountOfEntitiesDeleted}\"></li><li translate=Content.Import.Evaluation.Detail.Entities.AttributesIgnored translate-values=\"{count: vm.evaluationResult.Detail.AttributeNamesNotImported.length, attributes: vm.evaluationResult.Detail.AttributeNamesNotImported.join(', ')}\"></li></ul><div class=text-warning translate=Content.Import.Messages.ImportCanTakeSomeTime></div></div><div ng-if=!vm.evaluationResult.Succeeded><h4 translate=Content.Import.Evaluation.Error.Title translate-values=\"{filename: vm.formValues.File.filename}\"></h4><ul><li ng-repeat=\"error in vm.evaluationResult.Detail\"><div><span translate=Content.Import.Evaluation.Error.Codes.{{error.ErrorCode}}></span></div><div ng-if=error.ErrorDetail><i translate=Content.Import.Evaluation.Error.Detail translate-values=\"{detail: error.ErrorDetail}\"></i></div><div ng-if=error.LineNumber><i translate=Content.Import.Evaluation.Error.LineNumber&quot; translate-values=\"{number: error.LineNumber}\"></i></div><div ng-if=error.LineDetail><i translate=Content.Import.Evaluation.Error.LineDetail translate-values=\"{detail: error.LineDetail}\"></i></div></li></ul></div></div><div class=modal-footer><button type=button class=\"btn pull-left\" ng-click=vm.back() icon=arrow-left></button> <button type=button class=\"btn btn-default pull-left\" ng-click=vm.importContent() translate=Content.Import.Commands.Import ng-disabled=!vm.evaluationResult.Succeeded></button></div></div><div ng-switch-when=3><div class=modal-body><span ng-show=vm.importResult.Succeeded translate=Content.Import.Messages.ImportSucceeded></span> <span ng-hide=vm.importResult.Succeeded translate=Content.Import.Messages.ImportFailed></span></div></div><div ng-if=vm.debug.on><h3>Debug infos</h3><pre>{{vm.formValues | json}}</pre></div></div></div>"
   );
 
 
@@ -709,7 +731,7 @@ angular.module('eavTemplates',[]).run(['$templateCache', function($templateCache
 
 
   $templateCache.put('content-types/content-types.html',
-    "<div class=modal-header><h3 class=modal-title translate=ContentTypes.Title></h3></div><div class=modal-body><div ng-controller=\"List as vm\" class=ng-cloak><button icon=plus title=\"{{ 'General.Buttons.Add' | translate }}\" type=button class=\"btn btn-default\" ng-click=vm.edit()></button> <button icon=repeat title=\"{{ 'General.Buttons.Refresh' | translate }}\" type=button class=btn ng-click=vm.refresh()></button> <button icon=record title=\"{{ 'ContentTypes.Buttons.ChangeScope' | translate }}\" type=button class=btn ng-click=vm.changeScope()></button> <button icon=flash title=\"{{ 'General.Buttons.System' | translate }}\" type=button class=btn ng-click=vm.liveEval()></button><table class=\"table table-hover\"><thead><tr><th translate=ContentTypes.TypesTable.Name></th><th translate=ContentTypes.TypesTable.Description></th><th translate=ContentTypes.TypesTable.Fields></th><th translate=ContentTypes.TypesTable.Items></th><th translate=ContentTypes.TypesTable.Actions></th><th></th></tr></thead><tbody><tr ng-if=vm.items.isLoaded ng-repeat=\"item in vm.items | orderBy:'Name'\"><td><a ng-click=vm.edit(item) target=_self>{{item.Name}}</a></td><td>{{item.Description}}</td><td><button type=button class=\"btn btn-xs btn-default\" ng-click=vm.editFields(item)><span icon=cog>&nbsp;{{item.Fields}}</span></button></td><td><button type=button class=\"btn btn-xs btn-default\" ng-click=vm.editItems(item)><span icon=list>&nbsp;{{item.Items}}</span></button></td><td class=text-nowrap><button icon=export tooltip=\"{{ 'ContentTypes.Buttons.Export' | translate }}\" type=button class=\"btn btn-xs\" ng-click=vm.openExport(item)></button> <button icon=import tooltip=\"{{ 'ContentTypes.Buttons.Import' | translate }}\" type=button class=\"btn btn-xs\" ng-click=vm.openImport(item)></button> <button icon=user type=button class=\"btn btn-xs\" ng-click=vm.permissions(item) ng-if=vm.isGuid(item.StaticName)></button></td><td><button icon=remove type=button class=\"btn btn-xs\" ng-click=vm.tryToDelete(item)></button></td></tr><tr ng-if=!vm.items.length><td colspan=100>{{ 'General.Messages.Loading' | translate }} / {{ 'General.Messages.NothingFound' | translate }}</td></tr></tbody></table></div></div><div><h3>todo</h3><ol><li>get validators to work on all dialogs</li><li>this dialog doesn't refresh properly when I add/change stuff</li></ol></div>"
+    "<div ng-controller=\"List as vm\" ng-click=vm.debug.autoEnableAsNeeded($event)><div class=modal-header><h3 class=modal-title translate=ContentTypes.Title></h3></div><div class=modal-body><button icon=plus title=\"{{ 'General.Buttons.Add' | translate }}\" type=button class=\"btn btn-default\" ng-click=vm.edit()></button> <button icon=repeat title=\"{{ 'General.Buttons.Refresh' | translate }}\" type=button class=btn ng-click=vm.refresh()></button> <span ng-if=vm.debug.on><button icon=record title=\"{{ 'ContentTypes.Buttons.ChangeScope' | translate }}\" type=button class=btn ng-click=vm.changeScope()></button> <button icon=flash title=\"{{ 'General.Buttons.System' | translate }}\" type=button class=btn ng-click=vm.liveEval()></button></span><table class=\"table table-hover\"><thead><tr><th translate=ContentTypes.TypesTable.Name></th><th translate=ContentTypes.TypesTable.Description></th><th translate=ContentTypes.TypesTable.Fields></th><th translate=ContentTypes.TypesTable.Items></th><th translate=ContentTypes.TypesTable.Actions></th><th></th></tr></thead><tbody><tr ng-if=vm.items.isLoaded ng-repeat=\"item in vm.items | orderBy:'Name'\"><td><a ng-click=vm.edit(item) target=_self>{{item.Name}}</a></td><td>{{item.Description}}</td><td><button type=button class=\"btn btn-xs btn-default\" ng-click=vm.editFields(item)><span icon=cog>&nbsp;{{item.Fields}}</span></button></td><td><button type=button class=\"btn btn-xs btn-default\" ng-click=vm.editItems(item)><span icon=list>&nbsp;{{item.Items}}</span></button></td><td class=text-nowrap><button icon=export tooltip=\"{{ 'ContentTypes.Buttons.Export' | translate }}\" type=button class=\"btn btn-xs\" ng-click=vm.openExport(item)></button> <button icon=import tooltip=\"{{ 'ContentTypes.Buttons.Import' | translate }}\" type=button class=\"btn btn-xs\" ng-click=vm.openImport(item)></button> <button icon=user type=button class=\"btn btn-xs\" ng-click=vm.permissions(item) ng-if=vm.isGuid(item.StaticName)></button></td><td><button icon=remove type=button class=\"btn btn-xs\" ng-click=vm.tryToDelete(item)></button></td></tr><tr ng-if=!vm.items.length><td colspan=100>{{ 'General.Messages.Loading' | translate }} / {{ 'General.Messages.NothingFound' | translate }}</td></tr></tbody></table></div><div ng-if=vm.debug.on><h3>Notes / Debug / ToDo</h3><ol><li>get validators to work on all dialogs</li><li>this dialog doesn't refresh properly when I add/change stuff</li></ol></div></div>"
   );
 
 
@@ -719,7 +741,7 @@ angular.module('eavTemplates',[]).run(['$templateCache', function($templateCache
 
 
   $templateCache.put('pipelines/pipeline-designer.html',
-    "<div class=ng-cloak><div ng-controller=PipelineDesignerController><div id=pipelineContainer><div ng-repeat=\"dataSource in pipelineData.DataSources\" datasource id=dataSource_{{dataSource.EntityGuid}} class=dataSource ng-attr-style=\"top: {{dataSource.VisualDesignerData.Top}}px; left: {{dataSource.VisualDesignerData.Left}}px\"><div class=configure ng-click=configureDataSource(dataSource) title=\"Configure this DataSource\" ng-if=!dataSource.ReadOnly><span class=\"glyphicon glyphicon-list-alt\"></span></div><div class=name title=\"Click to edit the Name\" ng-click=editName(dataSource)>{{dataSource.Name || '(unnamed)'}}</div><br><div class=description title=\"Click to edit the Description\" ng-click=editDescription(dataSource)>{{dataSource.Description || '(no description)'}}</div><br><div class=typename ng-attr-title={{dataSource.PartAssemblyAndType}}>Type: {{dataSource.PartAssemblyAndType | typename: 'className'}}</div><div class=ep title=\"Drag a new Out-Connection from here\" ng-if=!dataSource.ReadOnly><span class=\"glyphicon glyphicon-plus-sign\"></span></div><div class=\"delete glyphicon glyphicon-remove\" title=\"Delete this DataSource\" ng-click=remove($index) ng-if=!dataSource.ReadOnly></div></div></div><div class=\"actions panel panel-default\"><div class=panel-heading><span class=pull-left>Actions</span> <a href=http://2sxc.org/help class=\"btn btn-info btn-xs pull-right\" target=_blank><span class=\"glyphicon glyphicon-question-sign\"></span> Help</a></div><div class=panel-body><button type=button class=\"btn btn-primary btn-block\" ng-disabled=readOnly ng-click=savePipeline()><span class=\"glyphicon glyphicon-floppy-save\"></span> Save</button><select class=form-control ng-model=addDataSourceType ng-disabled=readOnly ng-change=addDataSource() ng-options=\"d.ClassName for d in pipelineData.InstalledDataSources | filter: {allowNew: '!false'} | orderBy: 'ClassName'\"><option value=\"\">-- Add DataSource --</option></select><button type=button class=\"btn btn-default btn-sm\" title=\"Query the Data of this Pipeline\" ng-click=queryPipeline()><span class=\"glyphicon glyphicon-play\"></span> Query</button> <button type=button class=\"btn btn-default btn-sm\" title=\"Clone this Pipeline with all DataSources and Configurations\" ng-click=clonePipeline() ng-disabled=!PipelineEntityId><span class=\"glyphicon glyphicon-share-alt\"></span> Clone</button> <button type=button class=\"btn btn-default btn-sm\" ng-click=editPipelineEntity()><span class=\"glyphicon glyphicon-pencil\"></span> Test Parameters</button> <button type=button class=\"btn btn-info btn-xs\" ng-click=toggleEndpointOverlays()><span class=\"glyphicon glyphicon-info-sign\"></span> {{showEndpointOverlays ? 'Hide' : 'Show' }} Overlays</button> <button type=button class=\"btn btn-info btn-xs\" ng-click=repaint()><span class=\"glyphicon glyphicon-repeat\"></span> Repaint</button> <button type=button class=\"btn btn-info btn-xs\" ng-click=toogleDebug()><span class=\"glyphicon glyphicon-info-sign\"></span> {{debug ? 'Hide' : 'Show'}} Debug Info</button></div></div><toaster-container></toaster-container><pre ng-if=debug>{{pipelineData | json}}</pre></div></div>"
+    "<div class=ng-cloak><div ng-controller=PipelineDesignerController><div id=pipelineContainer><div ng-repeat=\"dataSource in pipelineData.DataSources\" datasource guid={{dataSource.EntityGuid}} id=dataSource_{{dataSource.EntityGuid}} class=dataSource ng-attr-style=\"top: {{dataSource.VisualDesignerData.Top}}px; left: {{dataSource.VisualDesignerData.Left}}px\"><div class=configure ng-click=configureDataSource(dataSource) title=\"Configure this DataSource\" ng-if=!dataSource.ReadOnly><span class=\"glyphicon glyphicon-list-alt\"></span></div><div class=name title=\"Click to edit the Name\" ng-click=editName(dataSource)>{{dataSource.Name || '(unnamed)'}}</div><br><div class=description title=\"Click to edit the Description\" ng-click=editDescription(dataSource)>{{dataSource.Description || '(no description)'}}</div><br><div class=typename ng-attr-title={{dataSource.PartAssemblyAndType}}>Type: {{dataSource.PartAssemblyAndType | typename: 'className'}}</div><div class=ep title=\"Drag a new Out-Connection from here\" ng-if=!dataSource.ReadOnly><span class=\"glyphicon glyphicon-plus-sign\"></span></div><div class=\"delete glyphicon glyphicon-remove\" title=\"Delete this DataSource\" ng-click=remove($index) ng-if=!dataSource.ReadOnly></div></div></div><div class=\"actions panel panel-default\"><div class=panel-heading><span class=pull-left>Actions</span> <a href=http://2sxc.org/help class=\"btn btn-info btn-xs pull-right\" target=_blank><span class=\"glyphicon glyphicon-question-sign\"></span> Help</a></div><div class=panel-body><button type=button class=\"btn btn-primary btn-block\" ng-disabled=readOnly ng-click=savePipeline()><span class=\"glyphicon glyphicon-floppy-save\"></span> Save</button><select class=form-control ng-model=addDataSourceType ng-disabled=readOnly ng-change=addDataSource() ng-options=\"d.ClassName for d in pipelineData.InstalledDataSources | filter: {allowNew: '!false'} | orderBy: 'ClassName'\"><option value=\"\">-- Add DataSource --</option></select><button type=button class=\"btn btn-default btn-sm\" title=\"Query the Data of this Pipeline\" ng-click=queryPipeline()><span class=\"glyphicon glyphicon-play\"></span> Query</button> <button type=button class=\"btn btn-default btn-sm\" title=\"Clone this Pipeline with all DataSources and Configurations\" ng-click=clonePipeline() ng-disabled=!PipelineEntityId><span class=\"glyphicon glyphicon-share-alt\"></span> Clone</button> <button type=button class=\"btn btn-default btn-sm\" ng-click=editPipelineEntity()><span class=\"glyphicon glyphicon-pencil\"></span> Test Parameters</button> <button type=button class=\"btn btn-info btn-xs\" ng-click=toggleEndpointOverlays()><span class=\"glyphicon glyphicon-info-sign\"></span> {{showEndpointOverlays ? 'Hide' : 'Show' }} Overlays</button> <button type=button class=\"btn btn-info btn-xs\" ng-click=repaint()><span class=\"glyphicon glyphicon-repeat\"></span> Repaint</button> <button type=button class=\"btn btn-info btn-xs\" ng-click=toogleDebug()><span class=\"glyphicon glyphicon-info-sign\"></span> {{debug ? 'Hide' : 'Show'}} Debug Info</button></div></div><toaster-container></toaster-container><pre ng-if=debug>{{pipelineData | json}}</pre></div></div>"
   );
 
 
@@ -837,6 +859,13 @@ angular.module("PipelineDesigner.filters", []).filter("typename", function () {
 
                 pipelineService.setAppId(appId);
 
+                $scope.findDataSourceOfElement = function fdsog(element) {
+                    var guid = element.attributes.guid.value;
+                    var list = $scope.pipelineData.DataSources;
+                    var found = $filter("filter")(list, { EntityGuid: guid })[0];
+                    return found;
+                };
+
                 // Get Data from PipelineService (Web API)
                 pipelineService.getPipeline($scope.PipelineEntityId)
                     .then(function(success) {
@@ -878,7 +907,8 @@ angular.module("PipelineDesigner.filters", []).filter("typename", function () {
                     // If connection on Out-DataSource was removed, remove custom Endpoint
                     $scope.jsPlumbInstance.bind("connectionDetached", function(info) {
                         if (info.targetId == $scope.dataSourceIdPrefix + "Out") {
-                            var fixedEndpoints = angular.element(info.target).scope().dataSource.Definition().In;
+                            var element = angular.element(info.target);
+                            var fixedEndpoints = $scope.findDataSourceOfElement(element) /* element.scope() */.dataSource.Definition().In;
                             var label = info.targetEndpoint.getOverlay("endpointLabel").label;
                             if (fixedEndpoints.indexOf(label) == -1) {
                                 $timeout(function() {
@@ -1015,8 +1045,13 @@ angular.module("PipelineDesigner.filters", []).filter("typename", function () {
                         return;
                     }
                     console.log(element);
-                    var dataSource = element.scope().dataSource;
-                    var uuid = element.attr("id") + (isIn ? "_in_" : "_out_") + name;
+
+                    var dataSource = $scope.findDataSourceOfElement(element[0]);
+                    // old, using jQuery - var dataSource = element.scope().dataSource;
+
+
+                    var uuid = element[0].id + (isIn ? "_in_" : "_out_") + name;
+                    // old - using jQuery - var uuid = element.attr("id") + (isIn ? "_in_" : "_out_") + name;
                     var params = {
                         uuid: uuid,
                         enabled: !dataSource.ReadOnly || dataSource.EntityGuid == "Out" // Endpoints on Out-DataSource must be always enabled
@@ -1136,9 +1171,9 @@ angular.module("PipelineDesigner.filters", []).filter("typename", function () {
 
                 // Update DataSource Position on Drag
                 $scope.dataSourceDrag = function() {
-                    var $this = $(this);
+                    var $this = /* angular.element(this); /*/  $(this);
                     var offset = $this.offset();
-                    var dataSource = $this.scope().dataSource;
+                    var dataSource = $scope.findDataSourceOfElement($this).dataSource;// $this.scope().dataSource;
                     $scope.$apply(function() {
                         dataSource.VisualDesignerData.Top = Math.round(offset.top);
                         dataSource.VisualDesignerData.Left = Math.round(offset.left);
@@ -1655,6 +1690,32 @@ angular.module("EavServices")
         };
 
     }]);
+// uiDebug
+// will add
+// vm.debug -> shows if in debug mode - bind ng-ifs to this
+// vm.maybeEnableDebug - a method which checks for ctrl+shift-click and if yes, changes debug state
+//
+// How to use
+// 1. add uiDebug to your controller dependencies like:    contentImportController(appId, ..., debugState, $modalInstance, $filter)
+// 2. add a line after creating your vm-object like:       vm.debug = debugState;
+// 3. add a click event as far out as possible on html:    <div ng-click="vm.debug.autoEnableAsNeeded($event)">
+// 4. wrap your hidden stuff in an ng-if:                  <div ng-if="vm.debug.on">
+
+angular.module("EavServices")
+    .factory("debugState", function () {
+        var svc = {
+            on: false
+        };
+
+        svc.autoEnableAsNeeded = function (evt) {
+            evt = window.event || evt;
+            var ctrlAndShiftPressed = evt.ctrlKey && evt.shiftKey;
+            if (ctrlAndShiftPressed)
+                svc.on = !svc.on;
+        };
+
+        return svc;
+    });
 /*  this file contains a service to handle 
  * How it works
  * This service tries to open a modal dialog if it can, otherwise a new window returning a promise to allow
