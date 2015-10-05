@@ -234,6 +234,15 @@
             return valid;
         };
 
+        $scope.state.isDirty = function() {
+            var dirty = false;
+            angular.forEach(vm.registeredControls, function(e, i) {
+                if (e.isDirty())
+                    dirty = true;
+            });
+            return dirty;
+        };
+
         vm.save = function () {
             entitiesSvc.saveMany(appId, vm.items).then(vm.afterSaveEvent);
         };
@@ -288,7 +297,8 @@
             restrict: "E",
             scope: {
                 itemList: "=",
-                afterSaveEvent: "="
+                afterSaveEvent: "=",
+                state: "="
             },
             controller: "EditEntities",
             controllerAs: "vm"
@@ -314,7 +324,8 @@
 		// The control object is available outside the directive
 		// Place functions here that should be available from the parent of the directive
 		vm.control = {
-			isValid: function() { return vm.form.$valid; }
+		    isValid: function () { return vm.form.$valid; },
+            isDirty: function() { return vm.form.$dirty; }
 		};
 
 		// Register this control in the parent control
@@ -446,7 +457,7 @@ angular.module('eavEditTemplates',[]).run(['$templateCache', function($templateC
 
 
   $templateCache.put('wrappers/edit-entity-wrapper.html',
-    "<div class=modal-header><button class=\"btn pull-right\" type=button icon=remove ng-click=vm.close()></button><h3 class=modal-title>Edit entity</h3></div><div class=modal-body><eav-edit-entities item-list=vm.itemList after-save-event=vm.afterSave></eav-edit-entities></div>"
+    "<div class=modal-header><button class=\"btn pull-right\" type=button icon=remove ng-click=vm.close()></button><h3 class=modal-title>Edit entity</h3></div><div class=modal-body><eav-edit-entities item-list=vm.itemList after-save-event=vm.afterSave state=vm.state></eav-edit-entities></div>"
   );
 
 }]);
@@ -828,22 +839,32 @@ function enhanceEntity(entity) {
 	// The controller for the main form directive
 	app.controller("EditEntityWrapperCtrl", ["$q", "$http", "$scope", "items", "$modalInstance", function editEntityCtrl($q, $http, $scope, items, $modalInstance) {
 
-		var vm = this;
+	    var vm = this;
 	    vm.itemList = items;
 
-        // this is the callback after saving - needed to close everything
-		vm.afterSave = function (result) {
-		    if (result.status === 200)
-		        vm.close();
-		    else {
-		        alert("Something went wrong - maybe parts worked, maybe not. Sorry :("); 
-		    }
+	    // this is the callback after saving - needed to close everything
+	    vm.afterSave = function(result) {
+	        if (result.status === 200)
+	            vm.close();
+	        else {
+	            alert("Something went wrong - maybe parts worked, maybe not. Sorry :(");
+	        }
+	    };
 
-		};
-		
-		vm.close = function () {
+	    vm.state = {
+	        isDirty: function() {
+	            throw "Inner control must override this function.";
+	        }
+	    };
+
+	    vm.close = function () {
 		    $modalInstance.dismiss("cancel");
 		};
+
+	    $scope.$on('modal.closing', function(e) {
+	        if (vm.state.isDirty() && !confirm("You have unsaved changes. Do you really want to exit?"))
+	            e.preventDefault();
+	    });
 	}]);
 
 })();
