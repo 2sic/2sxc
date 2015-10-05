@@ -52,8 +52,11 @@
         var dialogName = $2sxc.urlParams.require("dialog");
 
         // Functionality only needed by the pipeline designers - then it will also load jQuery, otherwise not
-        if (dialogName === "pipeline-designer") 
+        if (dialogName === "pipeline-designer") {
             addScript("../lib/pipeline/jq.min.js");
+            addScript("../lib/pipeline/set.min.js");
+            addStyle("../admin/pipeline-designer.min.css");
+        }
     </script>
 
 
@@ -77,26 +80,19 @@
     <link rel="stylesheet" type="text/css" href="../admin/eav-admin.min.css"/>
     <link rel="stylesheet" type="text/css" href="../edit/edit.min.css" />
 
-    <script>
+    <!--<script>
         // Functionality only needed by the pipeline designers 
         if (dialogName === "pipeline-designer") {
             addScript("../lib/pipeline/set.min.js");
             addStyle("../admin/pipeline-designer.min.css");
         }
-    </script>
+    </script>-->
 
     <script>
-        alert('got here 3');
-
-
         // this must come close to the end, after a closed script which might load jQuery
         var apiUrl = window.location.pathname.substring(0, window.location.pathname.toLowerCase().indexOf("desktopmodules"))
             + "desktopmodules/2sxc/api/";
         createFakeSf(apiUrl);
-
-        alert('got here 4');
-
-
     </script>
 </head>
 <body style="background-color:transparent">
