@@ -8,11 +8,11 @@
             <span icon="search"></span> {{ 'AppManagement.Buttons.Browse' | translate }}
         </button>
         <button type="button" class="btn btn-default" ng-click="vm.import()">
-            <span icon="import"></span> {{ 'AppManagement.Buttons.Import' | translate }}
+            <span icon="import" tooltip="{{ 'AppManagement.Buttons.Import' | translate }}"></span> 
         </button>
 
-        <button type="button" class="btn btn-default" ng-click="vm.create()">
-            <span icon="plus"></span> {{ 'AppManagement.Buttons.Create' | translate }}
+        <button type="button" class="btn btn-default" ng-click="vm.add()">
+            <span icon="plus" tooltip="{{ 'AppManagement.Buttons.Create' | translate }}"></span> 
         </button>
         <button type="button" class="btn" ng-click="vm.refresh()">
             <span icon="repeat"></span>
