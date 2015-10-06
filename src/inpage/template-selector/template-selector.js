@@ -199,6 +199,11 @@
         		vm.renderTemplate(vm.templateId);
         	});
         };
+        vm.publish = function(part, sortOrder) {
+            moduleApi.publish(part, sortOrder).then(function() {
+                vm.renderTemplate(vm.templateId);
+            });
+        };
 
     });
 
@@ -263,6 +268,12 @@
                 	return apiService(moduleId, {
                 		url: "View/Module/ChangeOrder",
                 		params: { sortOrder: sortOrder, destinationSortOrder: destinationSortOrder }
+                	});
+                },
+                publish: function(part, sortOrder) {
+                 	return apiService(moduleId, {
+                		url: "view/module/publish",
+                		params: { part: part, sortOrder: sortOrder }
                 	});
                 },
                 removeFromList: function (sortOrder) {

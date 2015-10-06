@@ -66,13 +66,21 @@ $2sxc.getManageController = function (id) {
         },
         'publish': {
             title: "Published",
-            icon: "glyphicon-eye-open disabled",
-            icon2: "glyphicon-eye-close disabled",
+            icon: "glyphicon-eye-open",
+            icon2: "glyphicon-eye-close",
             lightbox: false,
             hideFirst: true,
             disabled: true,
-            action: function(settings, event) {
-                alert("Status: " + (settings.isPublished ? "published" : "not published"));
+            action: function (settings, event) {
+                if (settings.isPublished) {
+                    alert("already published");
+                    return;
+                }
+                var part = settings.sortOrder == -1 ? "listcontent" : "content";
+                var index = settings.sortOrder == -1 ? 0 : settings.sortOrder;
+                manageController._getSelectorScope().publish(part, index);
+
+                //alert("Status: " + (settings.isPublished ? "published" : "not published"));
             }
         },
         'moveup': {
