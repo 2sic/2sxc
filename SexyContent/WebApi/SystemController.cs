@@ -20,13 +20,13 @@ namespace ToSic.SexyContent.WebApi
 	[SupportedModules("2sxc,2sxc-app")]
     
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public class SystemController : SxcApiController
+    public class SystemController : DnnApiController
 	{
 
 	    [HttpGet]
 	    public dynamic GetLanguages()
 	    {
-	        var portalId = Dnn.Portal.PortalId;
+	        var portalId = PortalSettings.PortalId;
             var zoneId = SexyContent.GetZoneID(portalId);
             var cultures = SexyContent.GetCulturesWithActiveState(portalId, zoneId.Value).Select(c => new
             {
@@ -48,7 +48,11 @@ namespace ToSic.SexyContent.WebApi
         public void SwitchLanguage(string cultureCode, bool enable)
 	    {
             // Activate or Deactivate the Culture
-            Sexy.SetCultureState(cultureCode, enable, Dnn.Portal.PortalId);
+            var portalId = PortalSettings.PortalId;
+            var zoneId = SexyContent.GetZoneID(portalId);
+	        var cache = DataSource.GetCache(zoneId.Value);
+            var sexy = new SexyContent(zoneId.Value, cache.AppId);
+            sexy.SetCultureState(cultureCode, enable, PortalSettings.PortalId);
 	    }
 
 
@@ -57,7 +61,7 @@ namespace ToSic.SexyContent.WebApi
         [HttpGet]
         public dynamic Apps(int zoneId)
         {
-            var list = SexyContent.GetApps(zoneId, true, new PortalSettings(Dnn.Module.OwnerPortalID));
+            var list = SexyContent.GetApps(zoneId, true, new PortalSettings(ActiveModule.OwnerPortalID));
             return list.Select(a => new
             {
                 Id = a.AppId,
@@ -83,7 +87,7 @@ namespace ToSic.SexyContent.WebApi
         [HttpPost]
         public void App(int zoneId, string name)
         {
-            SexyContent.AddApp(zoneId, name, new PortalSettings(Dnn.Module.OwnerPortalID));
+            SexyContent.AddApp(zoneId, name, new PortalSettings(ActiveModule.OwnerPortalID));
         }
 
         #endregion
