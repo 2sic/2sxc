@@ -370,8 +370,9 @@
         ])
         .controller("ReplaceDialog", ReplaceContentController);
 
-    function ReplaceContentController(appId, item, contentGroupSvc, $modalInstance) {
+    function ReplaceContentController(appId, item, contentGroupSvc, $modalInstance, $filter) {
         var vm = this;
+        vm.options = [];
         vm.item = {
             id: item.EntityId,
             guid: item.Group.Guid,
@@ -380,18 +381,20 @@
         };
 
         var svc = contentGroupSvc(appId);
-        var res = svc.replace;
 
-        vm.options = res.get(vm.item);
+        svc.getItems(vm.item).then(function (result) {
+            vm.options = result.data.Items;
+            vm.item.id = result.data.SelectedId;
+        });
 
         vm.ok = function ok() {
-            res.save(vm.item).$promise.then(vm.close);
+            svc.saveItem(vm.item).then(vm.close);
         };
         
         vm.close = function () { $modalInstance.dismiss("cancel"); };
 
     }
-    ReplaceContentController.$inject = ["appId", "item", "contentGroupSvc", "$modalInstance"];
+    ReplaceContentController.$inject = ["appId", "item", "contentGroupSvc", "$modalInstance", "$filter"];
 
 } ());
 // Init the main eav services module
@@ -435,15 +438,21 @@ angular.module("SxcServices")
 
         // Construct a service for this specific appId
         return function createSvc(appId) {
-            var svc = {};
+            var svc = {
+                getItems: function(item) {
+                    return $http('app/contentgroup/replace', { appId: appId, guid: item.guid, part: item.part, index: item.index });
+                },
+                saveItem: function(item) {
+                    return $http.post('app/contentgroup/replace', { guid: item.guid, part: item.part, index: item.index, entityId: item.id });
+                }
+            };
 
-
-            svc.replace = $resource("app/contentgroup/replace",
-            { appId: appId, guid: "@guid", part: "@part", index: "@index" },
-            {
-                get: { method: "GET", isArray:true },
-                save: {method: "POST", params: { entityId: "@id" }}
-            });
+            //svc.replace = $resource("",
+            //,
+            //{
+            //    get: { method: "GET", isArray:true },
+            //    save: {method: "POST", params: { entityId: "@id" }}
+            //});
 
             return svc;
         };
@@ -690,7 +699,7 @@ angular.module('SxcTemplates',[]).run(['$templateCache', function($templateCache
 
 
   $templateCache.put('apps-management/apps.html',
-    "<div><div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=AppManagement.Title></h3></div><div class=modal-body><button type=button class=\"btn btn-default\" ng-click=vm.browseCatalog()><span icon=search></span> {{ 'AppManagement.Buttons.Browse' | translate }}</button> <button type=button class=\"btn btn-default\" ng-click=vm.import()><span icon=import></span> {{ 'AppManagement.Buttons.Import' | translate }}</button> <button type=button class=\"btn btn-default\" ng-click=vm.create()><span icon=plus></span> {{ 'AppManagement.Buttons.Create' | translate }}</button> <button type=button class=btn ng-click=vm.refresh()><span icon=repeat></span></button> <button type=button class=btn ng-click=vm.languages()><span icon=globe></span></button><table class=\"table table-striped table-hover\"><thead><tr><th translate=AppManagement.Table.Name></th><th translate=AppManagement.Table.Folder></th><th><span icon=eye-open tooltip=\"{{ 'AppManagement.Table.Show' | translate }}\"></span></th><th translate=AppManagement.Table.Actions></th></tr></thead><tbody><tr ng-repeat=\"item in vm.items | orderBy:'Title'\"><td><span tooltip=\"\r" +
+    "<div><div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=AppManagement.Title></h3></div><div class=modal-body><button type=button class=\"btn btn-default\" ng-click=vm.browseCatalog()><span icon=search></span> {{ 'AppManagement.Buttons.Browse' | translate }}</button> <button type=button class=\"btn btn-default\" ng-click=vm.import()><span icon=import tooltip=\"{{ 'AppManagement.Buttons.Import' | translate }}\"></span></button> <button type=button class=\"btn btn-default\" ng-click=vm.add()><span icon=plus tooltip=\"{{ 'AppManagement.Buttons.Create' | translate }}\"></span></button> <button type=button class=btn ng-click=vm.refresh()><span icon=repeat></span></button> <button type=button class=btn ng-click=vm.languages()><span icon=globe></span></button><table class=\"table table-striped table-hover\"><thead><tr><th translate=AppManagement.Table.Name></th><th translate=AppManagement.Table.Folder></th><th><span icon=eye-open tooltip=\"{{ 'AppManagement.Table.Show' | translate }}\"></span></th><th translate=AppManagement.Table.Actions></th></tr></thead><tbody><tr ng-repeat=\"item in vm.items | orderBy:'Title'\"><td><span tooltip=\"\r" +
     "\n" +
     "Id: {{item.Id}}\r" +
     "\n" +
@@ -719,7 +728,7 @@ angular.module('SxcTemplates',[]).run(['$templateCache', function($templateCache
 
 
   $templateCache.put('replace-content/replace-content.html',
-    "<div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=ReplaceContent.Title></h3></div><div><div class=modal-body><p translate=ReplaceContent.Intro></p><h3>todo: pre-select of existing item doesn't work yet</h3><div translate=ReplaceContent.ChooseItem></div><div><td><select ng-model=vm.item.id ng-options=\"opt.Id as ((opt.Title || '[?]') + ' (' + opt.Id + ')') for opt in vm.options track by opt.Id\"></select></td></div></div></div><div class=modal-footer><button icon=ok class=\"btn btn-primary\" type=button ng-click=vm.ok()></button></div>"
+    "<div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=ReplaceContent.Title></h3></div><div><div class=modal-body><p translate=ReplaceContent.Intro></p><h3>todo: pre-select of existing item doesn't work yet</h3><div translate=ReplaceContent.ChooseItem></div><div><td><select ng-model=vm.item.EntityId ng-options=\"opt.Id as ((opt.Title || '[?]') + ' (' + opt.Id + ')') for opt in vm.options\"></select></td></div>{{vm.item | json}}</div></div><div class=modal-footer><button icon=ok class=\"btn btn-primary\" type=button ng-click=vm.ok()></button></div>"
   );
 
 

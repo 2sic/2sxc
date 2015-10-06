@@ -6,8 +6,9 @@
         ])
         .controller("ReplaceDialog", ReplaceContentController);
 
-    function ReplaceContentController(appId, item, contentGroupSvc, $modalInstance) {
+    function ReplaceContentController(appId, item, contentGroupSvc, $modalInstance, $filter) {
         var vm = this;
+        vm.options = [];
         vm.item = {
             id: item.EntityId,
             guid: item.Group.Guid,
@@ -16,12 +17,14 @@
         };
 
         var svc = contentGroupSvc(appId);
-        var res = svc.replace;
 
-        vm.options = res.get(vm.item);
+        svc.getItems(vm.item).then(function (result) {
+            vm.options = result.data.Items;
+            vm.item.id = result.data.SelectedId;
+        });
 
         vm.ok = function ok() {
-            res.save(vm.item).$promise.then(vm.close);
+            svc.saveItem(vm.item).then(vm.close);
         };
         
         vm.close = function () { $modalInstance.dismiss("cancel"); };

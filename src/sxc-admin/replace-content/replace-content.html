@@ -9,9 +9,9 @@
         <h3>todo: pre-select of existing item doesn't work yet</h3>
         <div translate="ReplaceContent.ChooseItem"></div>
         <div>
-            <td><select ng-model="vm.item.id" ng-options="opt.Id as ((opt.Title || '[?]') + ' (' + opt.Id + ')') for opt in vm.options track by opt.Id"></select></td>
+            <td><select ng-model="vm.item.EntityId" ng-options="opt.Id as ((opt.Title || '[?]') + ' (' + opt.Id + ')') for opt in vm.options"></select></td>
         </div>
-
+        {{vm.item | json}}
     </div>
 </div>
 <div class="modal-footer">
