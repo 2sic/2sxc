@@ -405,11 +405,7 @@
             </assembly>
             <assembly>
               <name>ToSic.Eav.WebApi.dll</name>
-            </assembly>            
-            
-            <!--<assembly>
-              <name>ToSic.Eav.ManagementUI.dll</name>
-            </assembly>-->
+            </assembly>
             <assembly>
               <name>Microsoft.Practices.Unity.dll</name>
             </assembly>
