@@ -19,6 +19,9 @@
   },
   "General": {
   },
+  "EditEntity": {
+    "Title": "Edit"
+  },
   "Dialog1": {
   },
   "dialog2": {
