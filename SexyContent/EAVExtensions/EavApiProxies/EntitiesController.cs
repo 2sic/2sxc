@@ -41,7 +41,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 
 
         [HttpPost]
-        public dynamic GetManyForEditing([FromBody]  List<ItemIdentifier> items)
+        public dynamic GetManyForEditing([FromBody]  List<ItemIdentifier> items, int appId)
         {
             // this will contain the list of the items we'll really return
             var newItems = new List<ItemIdentifier>();
@@ -81,7 +81,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
             }
 
             // Now get all
-            return entitiesController.GetManyForEditing(App.AppId, newItems);
+            return entitiesController.GetManyForEditing(appId, newItems);
 
             // todo: find out how to handle "Presentation" items
             
@@ -121,25 +121,23 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
                 var part = contentGroup[partName];
                 var index = contItem.Header.Group.Index;
 
-                // Get saved entity (to get its ID) - ToDo: Should get ID from Save method, would clean up this code
-                //var dataSource = DataSource.GetInitialDataSource(App.ZoneId, App.AppId, false);
-                //var contentEntity = dataSource.LightList.FirstOrDefault(p => p.EntityGuid == contItem.Entity.Guid);
+                // Get saved entity (to get its ID)
                 if (!postSaveIds.ContainsKey(contItem.Entity.Guid) )
                     throw new Exception("Saved entity not found - not able to update ContentGroup");
 
                 int postSaveId = postSaveIds[contItem.Entity.Guid];
 
                 int? presentationId = null;
-                if (postSaveIds.ContainsKey(presItem.Entity.Guid))
-                    presentationId = postSaveIds[presItem.Entity.Guid];
 
-                presentationId = presItem.Header.Group.SlotIsEmpty ? null : presentationId; // use null if it shouldn't have one
+                if (presItem != null)
+                {
+                    if (postSaveIds.ContainsKey(presItem.Entity.Guid))
+                        presentationId = postSaveIds[presItem.Entity.Guid];
 
-                //if (presItem != null)
-                //    presentationId =
-                //        dataSource.LightList.FirstOrDefault(p => p.EntityGuid == presItem.Entity.Guid).EntityId;
-
-
+                    presentationId = presItem.Header.Group.SlotIsEmpty ? null : presentationId;
+                        // use null if it shouldn't have one
+                }
+                
                 if (contItem.Header.Group.Add) // this cannot be auto-detected, it must be specified
                 {
                     contentGroup.AddContentAndPresentationEntity(partName, index, postSaveId, presentationId);

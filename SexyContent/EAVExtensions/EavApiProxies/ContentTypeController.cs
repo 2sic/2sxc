@@ -68,9 +68,9 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
         }
 
         [HttpGet]
-        public string[] DataTypes()
+        public string[] DataTypes(int appId)
         {
-            return eavCtc.DataTypes(App.AppId);
+            return eavCtc.DataTypes(appId);
         }
 
         [HttpGet]
