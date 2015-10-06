@@ -95,13 +95,15 @@
 
 		// Everything the WebForms bridge (iFrame) should have access to
 		vm.bridge = {
-			onChanged: function (newValue) {
+		    initialValue: "",
+            initialReadOnly: false,
+		    onChanged: function (newValue) {
 				$scope.$apply(function () {
 					$scope.value.Value = newValue;
 				});
 			},
-			setValue: function () { console.log("Error: setValue has no override"); },
-			setReadOnly: function() { console.log("Error: setReadOnly has no override"); }
+			setValue: function (value) { vm.bridge.initialValue = value; },
+			setReadOnly: function(readOnly) { vm.bridge.initialReadOnly = readOnly; }
 		};
 
 		$scope.$watch("value.Value", function (newValue, oldValue) {

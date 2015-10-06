@@ -67,6 +67,30 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 			return eavCtc.GetFields(appId, staticName);
         }
 
+        [HttpGet]
+        public string[] DataTypes()
+        {
+            return eavCtc.DataTypes(App.AppId);
+        }
+
+        [HttpGet]
+        public int AddField(int appId, int contentTypeId, string staticName, string type, int sortOrder)
+        {
+            return eavCtc.AddField(appId, contentTypeId, staticName, type, sortOrder);
+        }
+
+        [HttpDelete]
+        public bool DeleteField(int appId, int contentTypeId, int attributeId)
+        {
+            return eavCtc.DeleteField(appId, contentTypeId, attributeId);
+        }
+
+        [HttpGet]
+        public void SetTitle(int appId, int contentTypeId, int attributeId)
+        {
+            eavCtc.SetTitle(appId, attributeId, contentTypeId);
+        }
+
         #endregion
 
 

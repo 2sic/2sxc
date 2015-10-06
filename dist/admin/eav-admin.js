@@ -399,6 +399,18 @@
             if (confirm("Delete '" + "title-unknown-yet" + "' (" + item.Id + ") ?"))
                 svc.delete(item.Id);
         };
+
+        vm.openDuplicate = function openDuplicate(item) {
+            var items = [
+                {
+                    ContentTypeName: contentType,
+                    DuplicateEntity: item.Id
+                }
+            ];
+            eavAdminDialogs.openEditItems(items, svc.liveListReload);
+
+        };
+
         vm.close = function () { $modalInstance.dismiss("cancel"); };
 
     }
@@ -635,7 +647,8 @@
                         KeyType: "number",
                         TargetType: eavConfig.metadataOfAttribute
                     },
-                    Title: title
+                    Title: title,
+                    Prefill: { Name: item.StaticName }
                 };      
         };
     }
@@ -701,7 +714,7 @@ angular.module('eavTemplates',[]).run(['$templateCache', function($templateCache
 
 
   $templateCache.put('content-items/content-items.html',
-    "<div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=Content.Manage.Title></h3></div><div class=modal-body><button icon=plus type=button class=\"btn btn-default\" ng-click=vm.add()></button> <button icon=repeat type=button class=btn ng-click=vm.refresh()></button><div style=\"overflow: auto\"><table class=\"table table-striped table-hover\"><thead><tr><th translate=Content.Manage.Table.Id></th><th translate=Content.Manage.Table.Published></th><th translate=Content.Manage.Table.Title style=\"width: 200px\"></th><th translate=Content.Manage.Table.Actions></th><th ng-repeat=\"col in vm.dynamicColumns\">{{col.StaticName}}</th></tr></thead><tbody><tr ng-repeat=\"item in vm.items\"><td class=text-nowrap><span>{{item.Id}}</span></td><td class=text-nowrap><span class=glyphicon ng-class=\"{'glyphicon-ok-circle': item.IsPublished, 'glyphicon-ban-circle' : !item.IsPublished && !item.Published, 'glyphicon-record' : !item.IsPublished && item.Published }\" tooltip=\"{{ 'Content.Publish.' + (item.IsPublished ? 'PnV': item.Published ? 'DoP' : 'D') | translate }}\"></span> <span icon=\"{{ item.Draft ? 'paperclip' : item.Published ? 'export' : '' }}\" tooltip=\"{{ (item.Draft ? 'Content.Publish.HD' :'') | translate:'{ id: item.Draft.RepositoryId}' }}{{ (item.Published ? 'Content.Publish.HP' :'') | translate:'{ id: item.Published.RepositoryId}' }}\"></span> <span ng-if=item.Metadata tooltip=\"Metadata for type {{ item.Metadata.TargetType}}, id {{ item.Metadata.KeyNumber }}{{ item.Metadata.KeyString }}{{ item.Metadata.KeyGuid }}\" icon=tag></span></td><td><div style=\"height: 20px; width: 200px; position: relative; overflow: hidden; white-space: nowrap; text-overflow: ellipsis\" tooltip={{item.Title}}><a ng-click=vm.edit(item)>{{item.Title}}{{ (!item.Title ? 'Content.Manage.NoTitle':'') | translate }}</a></div></td><td><button icon=remove type=button class=\"btn btn-xs\" ng-click=vm.tryToDelete(item)></button></td><td ng-repeat=\"col in vm.dynamicColumns\"><div style=\"height: 20px; max-width: 100px; position: relative; overflow: hidden; text-overflow: ellipsis\" tooltip={{item[col.StaticName]}}>{{item[col.StaticName].toString().substring(0,25)}}</div></td></tr><tr ng-if=!vm.items.length><td colspan=100 translate=General.Messages.NothingFound></td></tr></tbody></table></div></div>"
+    "<div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=Content.Manage.Title></h3></div><div class=modal-body><button icon=plus type=button class=\"btn btn-default\" ng-click=vm.add()></button> <button icon=repeat type=button class=btn ng-click=vm.refresh()></button><div style=\"overflow: auto\"><table class=\"table table-striped table-hover\"><thead><tr><th translate=Content.Manage.Table.Id></th><th translate=Content.Manage.Table.Published></th><th translate=Content.Manage.Table.Title style=\"width: 200px\"></th><th translate=Content.Manage.Table.Actions></th><th ng-repeat=\"col in vm.dynamicColumns\">{{col.StaticName}}</th></tr></thead><tbody><tr ng-repeat=\"item in vm.items\"><td class=text-nowrap><span>{{item.Id}}</span></td><td class=text-nowrap><span class=glyphicon ng-class=\"{'glyphicon-ok-circle': item.IsPublished, 'glyphicon-ban-circle' : !item.IsPublished && !item.Published, 'glyphicon-record' : !item.IsPublished && item.Published }\" tooltip=\"{{ 'Content.Publish.' + (item.IsPublished ? 'PnV': item.Published ? 'DoP' : 'D') | translate }}\"></span> <span icon=\"{{ item.Draft ? 'paperclip' : item.Published ? 'export' : '' }}\" tooltip=\"{{ (item.Draft ? 'Content.Publish.HD' :'') | translate:'{ id: item.Draft.RepositoryId}' }}{{ (item.Published ? 'Content.Publish.HP' :'') | translate:'{ id: item.Published.RepositoryId}' }}\"></span> <span ng-if=item.Metadata tooltip=\"Metadata for type {{ item.Metadata.TargetType}}, id {{ item.Metadata.KeyNumber }}{{ item.Metadata.KeyString }}{{ item.Metadata.KeyGuid }}\" icon=tag></span></td><td><div style=\"height: 20px; width: 200px; position: relative; overflow: hidden; white-space: nowrap; text-overflow: ellipsis\" tooltip={{item.Title}}><a ng-click=vm.edit(item)>{{item.Title}}{{ (!item.Title ? 'Content.Manage.NoTitle':'') | translate }}</a></div></td><td><button icon=duplicate type=button class=\"btn btn-xs\" ng-click=vm.openDuplicate(item)></button> <button icon=remove type=button class=\"btn btn-xs\" ng-click=vm.tryToDelete(item)></button></td><td ng-repeat=\"col in vm.dynamicColumns\"><div style=\"height: 20px; max-width: 100px; position: relative; overflow: hidden; text-overflow: ellipsis\" tooltip={{item[col.StaticName]}}>{{item[col.StaticName].toString().substring(0,25)}}</div></td></tr><tr ng-if=!vm.items.length><td colspan=100 translate=General.Messages.NothingFound></td></tr></tbody></table></div></div>"
   );
 
 

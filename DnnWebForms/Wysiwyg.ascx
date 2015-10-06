@@ -10,7 +10,7 @@
 	window.connectBridge = function(bridge) {
 		window.bridge = bridge;
 		$(document).ready(function() {
-			initWysiwyg();
+		    initWysiwyg();
 		});
 	};
 
@@ -28,7 +28,6 @@
 		controller.onChanged = function (v) {
 			bridge.onChanged(v);
 		};
-		
 
 		// Check if CKEDITOR is used
 		if (window.CKEDITOR) {
@@ -106,6 +105,9 @@
 			editor.get_textArea().addEventListener("keyup", updateValue, false);
 			$(document).on('keyup mouseup', updateValue);
 		}
+
+		bridge.setValue(bridge.initialValue);
+		bridge.setReadOnly(bridge.initialReadOnly);
 	}
 	
 </script>

@@ -295,6 +295,11 @@ Date.prototype.toJSON = function() {
             });
         };
 
+        vm.toggleSlotIsEmpty = function (item) {
+            if (!item.Header.Group)
+                item.Header.Group = {};
+            item.Header.Group.SlotIsEmpty = !item.Header.Group.SlotIsEmpty;
+        };
 
     }]);
 
@@ -340,8 +345,8 @@ Date.prototype.toJSON = function() {
 		// The control object is available outside the directive
 		// Place functions here that should be available from the parent of the directive
 		vm.control = {
-		    isValid: function () { return vm.form.$valid; },
-		    isDirty: function () { return vm.form.$dirty; },
+		    isValid: function () { return vm.form && vm.form.$valid; },
+		    isDirty: function () { return !vm.form || vm.form.$dirty; },
 		    setPristine: function () { vm.form.$setPristine(); }
 		};
 
@@ -352,7 +357,7 @@ Date.prototype.toJSON = function() {
 		vm.model = null;
 		vm.entity = $scope.entity;
 
-		vm.formFields = null;
+		vm.formFields = [];
 
 
 		var loadContentType = function () {
@@ -375,15 +380,25 @@ Date.prototype.toJSON = function() {
 			                label: e.Metadata.All.Name === undefined ? e.StaticName : e.Metadata.All.Name,
 			                description: $sce.trustAsHtml(e.Metadata.All.Notes),
 			                settings: e.Metadata,
-                            header: $scope.header
+			                header: $scope.header,
+                            langReadOnly: false // Will be set by the language directive to override the disabled state
 			            },
 			            hide: (e.Metadata.All.VisibleInEditUI === false ? !debugState.on : false),
-			            expressionProperties: {
-			                'templateOptions.disabled': "options.templateOptions.disabled" // Needed for dynamic update of the disabled property
+			            expressionProperties: { // Needed for dynamic update of the disabled property
+			                'templateOptions.disabled': 'options.templateOptions.disabled'
+			            },
+			            watcher: {
+			                expression: function (field, scope, stop) {
+			                    return (field.templateOptions.header.Group && field.templateOptions.header.Group.SlotIsEmpty) || field.templateOptions.langReadOnly;
+			                },
+			                listener: function(field, newValue, oldValue, scope, stopWatching) {
+			                    field.templateOptions.disabled = newValue;
+			                }
 			            }
 			        });
 			    });
-			});
+
+		    });
 		};
 
 	    // Load existing entity if defined
@@ -426,8 +441,7 @@ Date.prototype.toJSON = function() {
 			scope: {
 			    entity: "=",
                 header: "=",
-                registerEditControl: "=",
-                readOnly: "="
+                registerEditControl: "="
 			},
 			controller: "EditEntityFormCtrl",
 			controllerAs: "vm"
@@ -440,7 +454,7 @@ angular.module('eavEditTemplates',[]).run(['$templateCache', function($templateC
   'use strict';
 
   $templateCache.put('fields/eav-label.html',
-    "<div><label for={{id}} class=\"control-label {{to.labelSrOnly ? 'sr-only' : ''}}\" ng-if=to.label>{{to.label}} {{to.required ? '*' : ''}} <a ng-click=\"to.showDescription = !to.showDescription\" href=javascript:void(0); ng-if=\"to.description && to.description != ''\" title={{to.description}}><i class=\"glyphicon glyphicon-info-sign\"></i></a></label><p ng-if=to.showDescription class=bg-info style=\"padding: 5px\" ng-bind-html=to.description></p><formly-transclude></formly-transclude></div>"
+    "<div><label for={{id}} class=\"control-label {{to.labelSrOnly ? 'sr-only' : ''}}\" ng-if=to.label>{{to.label}} {{to.required ? '*' : ''}} <a tabindex=-1 ng-click=\"to.showDescription = !to.showDescription\" href=javascript:void(0); ng-if=\"to.description && to.description != ''\" title={{to.description}}><i icon=info-sign></i></a></label><p ng-if=to.showDescription class=bg-info style=\"padding: 5px\" ng-bind-html=to.description></p><formly-transclude></formly-transclude></div>"
   );
 
 
@@ -450,12 +464,12 @@ angular.module('eavEditTemplates',[]).run(['$templateCache', function($templateC
 
 
   $templateCache.put('form/edit-many-entities.html',
-    "<div ng-if=\"vm.items != null\" ng-click=vm.debug.autoEnableAsNeeded($event)><eav-language-switcher></eav-language-switcher><div ng-repeat=\"p in vm.items\"><h4 tooltip={{p.Header.Group}}>{{p.Header.Title ? p.Header.Title : 'Edit'}} <span ng-if=true><span ng-if=p.Header.Group.LeaveBlank icon=ban-circle ng-click=\"p.Header.Group.LeaveBlank = false\" tooltip=\"this item is locked and will stay empty/default. The values are shown for your convenience. Click here to unlock if needed.\"></span> <span ng-if=!p.Header.Group.LeaveBlank icon=ban-circle ng-click=\"p.Header.Group.LeaveBlank = true\" tooltip=\"this item is open for editing. Click here to lock / remove it and revert to default.\"></span></span></h4><eav-edit-entity-form entity=p.Entity header=p.Header register-edit-control=vm.registerEditControl read-only=p.Header.Group.LeaveBlank></eav-edit-entity-form></div><button ng-disabled=!vm.isValid() ng-click=vm.save() class=\"btn btn-primary submit-button\"><span icon=ok tooltip=\"{{ 'Button.Save' | translate }}\"></span></button> <button class=btn ng-click=vm.saveAndKeepOpen()><span icon=check tooltip=\"{{ 'Button.SaveAndKeepOpen' | translate }}\"></span></button> <span ng-if=vm.willPublish icon=eye-open tooltip=\"{{ 'Status.Published' | translate }} - {{ 'Message.WillPublish' | translate }}\" ng-click=vm.togglePublish()></span> <span ng-if=!vm.willPublish icon=eye-close tooltip=\"{{ 'Status.Unpublished' | translate }} - {{ 'Message.WontPublish' | translate }}\" ng-click=vm.togglePublish()></span> <span ng-if=vm.debug.on><button tooltip=debug icon=zoom-in class=btn ng-click=\"vm.showDebugItems = !vm.showDebugItems\"></button></span> <span class=pull-right ng-if=false>todo: show more buttons... <button class=btn><span icon=option-horizontal tooltip=\"{{ 'Button.MoreOptions' | translate }}\"></span></button></span><div ng-if=\"vm.debug.on && vm.showDebugItems\"><pre>{{ vm.items | json }}</pre></div></div>"
+    "<div ng-if=\"vm.items != null\" ng-click=vm.debug.autoEnableAsNeeded($event)><eav-language-switcher></eav-language-switcher><div ng-repeat=\"p in vm.items\"><h4>{{p.Header.Title ? p.Header.Title : 'Edit'}} <span ng-if=p.Header.Group.SlotCanBeEmpty><span ng-if=p.Header.Group.SlotIsEmpty icon=ban-circle ng-click=vm.toggleSlotIsEmpty(p) tooltip=\"this item is locked and will stay empty/default. The values are shown for your convenience. Click here to unlock if needed.\"></span> <span ng-if=!p.Header.Group.SlotIsEmpty icon=ok-circle ng-click=vm.toggleSlotIsEmpty(p) tooltip=\"this item is open for editing. Click here to lock / remove it and revert to default.\"></span></span> <span class=pull-right ng-click=\"p.collapse = !p.collapse\"><span ng-if=p.collapse icon=plus-sign></span> <span ng-if=!p.collapse icon=minus-sign></span></span></h4><eav-edit-entity-form entity=p.Entity header=p.Header register-edit-control=vm.registerEditControl ng-hide=p.collapse></eav-edit-entity-form></div><button ng-disabled=!vm.isValid() ng-click=vm.save() class=\"btn btn-primary submit-button\"><span icon=ok tooltip=\"{{ 'Button.Save' | translate }}\"></span></button> <button class=btn ng-click=vm.saveAndKeepOpen()><span icon=check tooltip=\"{{ 'Button.SaveAndKeepOpen' | translate }}\"></span></button> <span ng-if=vm.willPublish icon=eye-open tooltip=\"{{ 'Status.Published' | translate }} - {{ 'Message.WillPublish' | translate }}\" ng-click=vm.togglePublish()></span> <span ng-if=!vm.willPublish icon=eye-close tooltip=\"{{ 'Status.Unpublished' | translate }} - {{ 'Message.WontPublish' | translate }}\" ng-click=vm.togglePublish()></span> <span ng-if=vm.debug.on><button tooltip=debug icon=zoom-in class=btn ng-click=\"vm.showDebugItems = !vm.showDebugItems\"></button></span> <span class=pull-right ng-if=false>todo: show more buttons... <button class=btn><span icon=option-horizontal tooltip=\"{{ 'Button.MoreOptions' | translate }}\"></span></button></span><div ng-if=\"vm.debug.on && vm.showDebugItems\"><pre>{{ vm.items | json }}</pre></div></div>"
   );
 
 
   $templateCache.put('form/edit-single-entity.html',
-    "<div ng-show=vm.editInDefaultLanguageFirst()>Please edit this in the default language first.</div><div ng-show=!vm.editInDefaultLanguageFirst()><formly-form ng-submit=vm.onSubmit() form=vm.form model=vm.entity.Attributes fields=vm.formFields></formly-form></div>"
+    "<div ng-show=vm.editInDefaultLanguageFirst()>Please edit this in the default language first.</div><div ng-show=!vm.editInDefaultLanguageFirst()><formly-form ng-if=\"vm.formFields && vm.formFields.length\" ng-submit=vm.onSubmit() form=vm.form model=vm.entity.Attributes fields=vm.formFields></formly-form></div>"
   );
 
 
@@ -545,7 +559,7 @@ angular.module('eavEditTemplates',[]).run(['$templateCache', function($templateC
 				    // Assign default language if no dimension is set - new: if multiple languages are in use!!!
 					if (Object.keys(fieldModel.Values[0].Dimensions).length === 0)
                         if(langConf.languages.length > 0)
-				            fieldModel.Values[0].Dimensions[langConf.defaultLanguage] = true; // false;
+				            fieldModel.Values[0].Dimensions[langConf.defaultLanguage] = false; // set to "not-read-only"
 
 					var valueToEdit;
 
@@ -578,7 +592,7 @@ angular.module('eavEditTemplates',[]).run(['$templateCache', function($templateC
 					var writable = (langConf.currentLanguage == langConf.defaultLanguage) ||
                         (scope.value && scope.value.Dimensions[langConf.currentLanguage] === false);
 
-					scope.to.disabled = !writable;
+					scope.to.langReadOnly = !writable;
 				};
 
 				initCurrentValue();
