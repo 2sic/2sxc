@@ -4,7 +4,8 @@
     </div>
     <div class="modal-body">
         <div translate="AppConfig.Export.Intro"></div>
-        <button icon="export" ng-click="vm.exportAll()" class="btn" type="button">
+        <button ng-click="vm.exportAll()" class="btn" type="button">
+            <i icon="export"></i>
             {{'AppConfig.Export.Button' | translate}}
         </button>
     </div>
@@ -18,11 +19,13 @@
             <div translate="ImportExport.Intro"></div>
             <div translate="ImportExport.FurtherHelp"></div>
 
-            <button icon="import" ng-click="vm.import()" class="btn" type="button">
+            <button ng-click="vm.import()" class="btn" type="button">
+                <i icon="import"></i>
                 {{'ImportExport.Buttons.Import' | translate}}
             </button>
 
-            <button icon="export" ng-click="vm.export()" class="btn" type="button">
+            <button ng-click="vm.export()" class="btn" type="button">
+                <i icon="export"></i>
                 {{'ImportExport.Buttons.Export' | translate}}
             </button>
 
