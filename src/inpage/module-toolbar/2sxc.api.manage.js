@@ -156,25 +156,26 @@ $2sxc.getManageController = function (id) {
             }
             // when using a list, the sort-order is important to find the right item
             if (settings.useModuleList || settings.action === "replace") {
-                var isListHeader = (settings.sortOrder !== -1);
+                var normalContent = (settings.sortOrder !== -1);
+                var index = normalContent ? settings.sortOrder : 0;
                 items.push({
                     Group: {
                         Guid: settings.contentGroupId,
-                        Index: settings.sortOrder,
-                        Part: isListHeader ? "content" : "listcontent",
+                        Index: index,
+                        Part: normalContent ? "content" : "listcontent",
                         Add: settings.action === "new"
                     },
-                    Title: isListHeader ? "Content" : "List Content"
+                    Title: normalContent ? "Content" : "List Content"
                 });
                 if (settings.action !== "replace") // if not replace, also add the presentation
                     items.push({
                         Group: {
                             Guid: settings.contentGroupId,
-                            Index: settings.sortOrder,
-                            Part: isListHeader ? "presentation" : "listpresentation",
+                            Index: index,
+                            Part: normalContent ? "presentation" : "listpresentation",
                             Add: settings.action === "new"
                         },
-                        Title: isListHeader ? "Presentation" : "List Presentation"
+                        Title: normalContent ? "Presentation" : "List Presentation"
                     });
             }
 
