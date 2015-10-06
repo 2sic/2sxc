@@ -29,6 +29,10 @@
         
         vm.close = function () { $modalInstance.dismiss("cancel"); };
 
+        vm.convertToInt = function (id) {
+            return parseInt(id);
+        };
+
     }
 
 } ());

@@ -6,10 +6,10 @@ angular.module("SxcServices")
         return function createSvc(appId) {
             var svc = {
                 getItems: function(item) {
-                    return $http('app/contentgroup/replace', { appId: appId, guid: item.guid, part: item.part, index: item.index });
+                    return $http.get('app/contentgroup/replace', { params: { appId: appId, guid: item.guid, part: item.part, index: item.index } });
                 },
                 saveItem: function(item) {
-                    return $http.post('app/contentgroup/replace', { guid: item.guid, part: item.part, index: item.index, entityId: item.id });
+                    return $http.post('app/contentgroup/replace', {}, { params: { guid: item.guid, part: item.part, index: item.index, entityId: item.id } });
                 }
             };
 

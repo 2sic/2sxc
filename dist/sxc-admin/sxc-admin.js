@@ -393,6 +393,10 @@
         
         vm.close = function () { $modalInstance.dismiss("cancel"); };
 
+        vm.convertToInt = function (id) {
+            return parseInt(id);
+        };
+
     }
     ReplaceContentController.$inject = ["appId", "item", "contentGroupSvc", "$modalInstance", "$filter"];
 
@@ -440,10 +444,10 @@ angular.module("SxcServices")
         return function createSvc(appId) {
             var svc = {
                 getItems: function(item) {
-                    return $http('app/contentgroup/replace', { appId: appId, guid: item.guid, part: item.part, index: item.index });
+                    return $http.get('app/contentgroup/replace', { params: { appId: appId, guid: item.guid, part: item.part, index: item.index } });
                 },
                 saveItem: function(item) {
-                    return $http.post('app/contentgroup/replace', { guid: item.guid, part: item.part, index: item.index, entityId: item.id });
+                    return $http.post('app/contentgroup/replace', {}, { params: { guid: item.guid, part: item.part, index: item.index, entityId: item.id } });
                 }
             };
 
@@ -631,7 +635,7 @@ angular.module("SxcAdminUi", [
         // the replace-content item
         svc.openReplaceContent = function orc(item, closeCallback) {
             var resolve = eavAdminDialogs.CreateResolve({ item: item });
-            return eavAdminDialogs.OpenModal("replace-content/replace-content.html", "ReplaceDialog as vm", "xlg", resolve, closeCallback);
+            return eavAdminDialogs.OpenModal("replace-content/replace-content.html", "ReplaceDialog as vm", "lg", resolve, closeCallback);
         };
 
         svc.openContentEdit = function oce(edit, closeCallback) {
@@ -728,7 +732,7 @@ angular.module('SxcTemplates',[]).run(['$templateCache', function($templateCache
 
 
   $templateCache.put('replace-content/replace-content.html',
-    "<div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=ReplaceContent.Title></h3></div><div><div class=modal-body><p translate=ReplaceContent.Intro></p><h3>todo: pre-select of existing item doesn't work yet</h3><div translate=ReplaceContent.ChooseItem></div><div><td><select ng-model=vm.item.EntityId ng-options=\"opt.Id as ((opt.Title || '[?]') + ' (' + opt.Id + ')') for opt in vm.options\"></select></td></div>{{vm.item | json}}</div></div><div class=modal-footer><button icon=ok class=\"btn btn-primary\" type=button ng-click=vm.ok()></button></div>"
+    "<div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=ReplaceContent.Title></h3></div><div><div class=modal-body><p translate=ReplaceContent.Intro></p><div translate=ReplaceContent.ChooseItem></div><div><td><select ng-model=vm.item.id ng-options=\"vm.convertToInt(key) as ((value || '[?]') + ' (' + key + ')') for (key,value) in vm.options\"></select></td></div>{{vm.item | json}}</div></div><div class=modal-footer><button icon=ok class=\"btn btn-primary\" type=button ng-click=vm.ok()></button></div>"
   );
 
 
