@@ -48,7 +48,7 @@ namespace ToSic.SexyContent.WebApi
         }
 
         [HttpGet]
-	    public IEnumerable<dynamic> Replace(Guid guid, string part, int index)
+	    public ReplaceSet Replace(Guid guid, string part, int index)
 	    {
 	        part = part.ToLower();
             var contentGroup = GetContentGroup(guid);
@@ -72,12 +72,19 @@ namespace ToSic.SexyContent.WebApi
 
 
 	        var dataSource = App.Data[ct.Name];// attributeSetName];
-            var results = dataSource.List.Select(p => new {
-                    Id = p.Value.EntityId,
-                    Title = p.Value.GetBestValue("EntityTitle")
-                });
+            var results = dataSource.List.ToDictionary(p => p.Value.EntityId, p => p.Value.GetBestValue("EntityTitle").ToString());
+	    
+	        return new ReplaceSet
+	        {
+	            SelectedId = set[index].EntityId,
+                Items = results
+	        };
+	    }
 
-	        return results;
+	    public class ReplaceSet
+	    {
+	        public int? SelectedId { get; set; }
+            public Dictionary<int, string> Items { get; set; }  
 	    }
 
 	    [HttpPost]
