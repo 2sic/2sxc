@@ -270,12 +270,13 @@ namespace ToSic.SexyContent
 							}
 							else
 							{
-								// Edit List
-								Actions.Add(GetNextActionID(), LocalizeString("ActionList.Text"),
-									ModuleActionType.ContentOptions, "editlist", "edit.gif",
-									EditUrl(TabId, SexyContent.ControlKeys.EditList, false, "mid",
-										ModuleId.ToString()), false,
-									SecurityAccessLevel.Edit, true, false);
+                                // Removed edit list - does not work yet
+								//// Edit List
+								//Actions.Add(GetNextActionID(), LocalizeString("ActionList.Text"),
+								//	ModuleActionType.ContentOptions, "editlist", "edit.gif",
+								//	EditUrl(TabId, SexyContent.ControlKeys.EditList, false, "mid",
+								//		ModuleId.ToString()), false,
+								//	SecurityAccessLevel.Edit, true, false);
 							}
 
 							if (Template != null && Template.UseForList)
