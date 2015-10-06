@@ -1,7 +1,7 @@
 ﻿.sc-element { position:relative; }
 .sc-element .sc-menu { position:absolute; right:5px; top:5px; display:none; }
 .sc-element:hover .sc-menu { display: block; }
-.sc-menu { list-style-type:none; margin:0; padding:0px;display: inline;z-index: 99999; }
+.sc-menu { list-style-type:none; margin:0; padding:0px;display: inline;z-index: 1499; }
 .sc-menu li { list-style-type:none; padding:0!important; margin:0!important; display:inline; }
 .sc-menu a { display:inline-block!important; margin-right:4px!important;cursor: pointer;margin-left: 0 !important; }
 .sc-menu a span { width: 16px!important;height: 16px!important;background-color: #96D500; border-color: #96D500; border-width: 3px; border-style: solid; box-sizing: content-box;

@@ -113,8 +113,13 @@ Date.prototype.toJSON = function() {
 	                datepickerOptions: {},
 	                datepickerPopup: "dd.MM.yyyy"
 	            }
-	        }
-		});
+	        },
+	        link: function (scope, el, attrs) {
+	            function convertDateToUTC(date) { return new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()); }
+                if (scope.value && scope.value.Value && typeof(scope.value.Value) === 'string')
+                    scope.value.Value = convertDateToUTC(new Date(scope.value.Value));
+            }
+	    });
 
 		formlyConfigProvider.setType({
 		    name: "entity-default",
@@ -280,6 +285,10 @@ Date.prototype.toJSON = function() {
                     // If the entity is null, it does not exist yet. Create a new one
                     if (!vm.items[i].Entity && !!vm.items[i].Header.ContentTypeName)
                         vm.items[i].Entity = entitiesSvc.newEntity(vm.items[i].Header.ContentTypeName);
+
+                    else {
+                        entitiesSvc.ensureGuid(vm.items[i]);
+                    }
 
                     vm.items[i].Entity = enhanceEntity(vm.items[i].Entity);
                 });
@@ -885,7 +894,21 @@ function enhanceEntity(entity) {
                 for (var ei = 0; ei < itmCopy.length; ei++)
                     angular.forEach(itmCopy[ei].Entity.Attributes, removeTempValue);
 
-                return $http.post("eav/entities/savemany", itmCopy, { params: { appId: appId } });
+                return $http.post("eav/entities/savemany", itmCopy, { params: { appId: appId } }).then(function (serverKeys) {
+                    var syncUpdatedKeys = function(value, key) {
+                        // first ensure we don't break something
+                        var ent = value.Entity;
+                        if ((ent.Id === null || ent.Id === 0) && (ent.Guid !== null || typeof (ent.Guid) !== "undefined" || ent.Guid !== "00000000-0000-0000-0000-000000000000")) {
+                            // try to find it in the return material to re-assign it
+                            var newId = serverKeys.data[ent.Guid];
+                            value.Entity.Id = newId;
+                            value.Header.ID = newId;
+                        }
+                    };
+                    angular.forEach(items, syncUpdatedKeys);
+
+                    return serverKeys;
+                });
             };
 
             svc.delete = function del(type, id) {
@@ -908,6 +931,14 @@ function enhanceEntity(entity) {
                     Attributes: {},
                     IsPublished: true
                 };
+            };
+
+            svc.ensureGuid = function ensureGuid(item) {
+                var ent = item.Entity;
+                if ((ent.Id === null || ent.Id === 0) && (ent.Guid === null || typeof (ent.Guid) === "undefined" || ent.Guid === "00000000-0000-0000-0000-000000000000")) {
+                    item.Entity.Guid = generateUuid();
+                    item.Header.Guid = item.Entity.Guid;
+                }
             };
 
             svc.save = function save(appId, newData) {

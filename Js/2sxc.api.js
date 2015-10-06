@@ -232,17 +232,22 @@
     // this creates a full-screen iframe-popup and provides a close-command to finish the dialog as needed
     $2sxc.totalPopup = {
         open: function openTotalPopup(url, callback) {
-            var ifrm = document.createElement("iframe");
-            ifrm.setAttribute("allowtransparency", "true");
             // count parents to see how high the z-index needs to be
             var z = 1500, p = window;
             while (p !== window.top && z < 1600) {
                 z++;
                 p = p.parent;
             }
-            ifrm.setAttribute("style", "position: fixed;top: 0;left: 0;width: 100%;height: 100%; z-index: " + z);
+
+            var wrapper = document.createElement("div");
+            wrapper.setAttribute("style", " top: 0;left: 0;width: 100%;height: 100%; position:fixed; z-index:" + z);
+            document.body.appendChild(wrapper);
+
+            var ifrm = document.createElement("iframe");
+            ifrm.setAttribute("allowtransparency", "true");
+            ifrm.setAttribute("style", "top: 0;left: 0;width: 100%;height: 100%;");
             ifrm.setAttribute("src", url);
-            document.body.appendChild(ifrm);
+            wrapper.appendChild(ifrm);
             document.body.className += ' sxc-popup-open';
             $2sxc.totalPopup.frame = ifrm;
             $2sxc.totalPopup.callback = callback;
@@ -251,7 +256,7 @@
             if ($2sxc.totalPopup.frame) {
                 document.body.className = document.body.className.replace('sxc-popup-open', '');
                 var frm = $2sxc.totalPopup.frame;
-                frm.parentNode.removeChild(frm);
+                frm.parentNode.parentNode.removeChild(frm.parentNode);
                 $2sxc.totalPopup.callback();
             }
         },

@@ -198,7 +198,7 @@ $2sxc.getManageController = function (id) {
                     Group: {
                         Guid: settings.contentGroupId,
                         Index: settings.sortOrder,
-                        Part: (settings.sortOrder !== -1) ? "content" : "listcontent",
+                        Part: isListHeader ? "content" : "listcontent",
                         Add: settings.action === "new"
                     },
                     Title: isListHeader ? "Content" : "List Content"
@@ -208,7 +208,7 @@ $2sxc.getManageController = function (id) {
                         Group: {
                             Guid: settings.contentGroupId,
                             Index: settings.sortOrder,
-                            Part: (settings.sortOrder !== -1) ? "presentation" : "listpresentation",
+                            Part: isListHeader ? "presentation" : "listpresentation",
                             Add: settings.action === "new"
                         },
                         Title: isListHeader ? "Presentation" : "List Presentation"
