@@ -74,7 +74,7 @@ namespace ToSic.SexyContent.WebApi
 	        var dataSource = App.Data[ct.Name];// attributeSetName];
             var results = dataSource.List.Select(p => new {
                     Id = p.Value.EntityId,
-                    Title = p.Value.GetBestValue("Title")
+                    Title = p.Value.GetBestValue("EntityTitle")
                 });
 
 	        return results;
