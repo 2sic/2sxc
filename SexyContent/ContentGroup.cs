@@ -165,8 +165,9 @@ namespace ToSic.SexyContent
         } 
         #endregion  
 
-		public void UpdateEntity(string type, int sortOrder, int? entityId, bool updatePresentation, int? presentationId)
+		public void UpdateEntityIfChanged(string type, int sortOrder, int? entityId, bool updatePresentation, int? presentationId)
 		{
+		    var somethingChanged = false;
 			if (sortOrder == -1)
                 throw new Exception("Sortorder is never -1 any more; deprecated");
 
@@ -176,7 +177,11 @@ namespace ToSic.SexyContent
 			if (listMain.Count < sortOrder + 1)
 				listMain.AddRange(Enumerable.Repeat(new int?(), (sortOrder + 1) - listMain.Count));
 
-			listMain[sortOrder] = entityId;
+		    if (listMain[sortOrder] != entityId) { 
+		        listMain[sortOrder] = entityId;
+		        somethingChanged = true;
+		    }
+
 		    var package = PrepareSavePackage(type, listMain);
 
             if (updatePresentation)
@@ -185,11 +190,15 @@ namespace ToSic.SexyContent
 		        var listPres = ListWithNulls(type2);
 		        if (listPres.Count < sortOrder + 1)
 		            listPres.AddRange(Enumerable.Repeat(new int?(), (sortOrder + 1) - listPres.Count));
-		        listPres[sortOrder] = presentationId;
+		        if (listPres[sortOrder] != presentationId) {
+		            listPres[sortOrder] = presentationId;
+		            somethingChanged = true;
+		        }
 		        package = PrepareSavePackage(type2, listPres, package);
 		    }
 
-		    SaveChangedLists(package);
+		    if (somethingChanged)
+		        SaveChangedLists(package);
 		}
 
 		private void SaveChangedLists(Dictionary<string, int?[]> values)

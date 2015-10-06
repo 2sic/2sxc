@@ -92,13 +92,13 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 
         [HttpPost]
         // todo: should refactor to save all items in 1 transaction
-        public bool SaveMany([FromUri] int appId, [FromBody] List<EntityWithHeader> items)
+        public Dictionary<Guid, int> SaveMany([FromUri] int appId, [FromBody] List<EntityWithHeader> items)
         {
             // var success = true;
 
             // first, save all to do it in 1 transaction
             // note that it won't save the SlotIsEmpty ones, as these won't be needed
-            entitiesController.SaveMany(appId, items.Select(i => new EntityWithHeader { Header = i.Header, Entity = i.Entity}).ToList());
+            var postSaveIds = entitiesController.SaveMany(appId, items.Select(i => new EntityWithHeader { Header = i.Header, Entity = i.Entity}).ToList());
 
             // now assign all content-groups as needed
 
@@ -122,28 +122,34 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
                 var index = contItem.Header.Group.Index;
 
                 // Get saved entity (to get its ID) - ToDo: Should get ID from Save method, would clean up this code
-                var dataSource = DataSource.GetInitialDataSource(App.ZoneId, App.AppId, false);
-                var contentEntity = dataSource.LightList.FirstOrDefault(p => p.EntityGuid == contItem.Entity.Guid);
-
-                if (contentEntity == null)
+                //var dataSource = DataSource.GetInitialDataSource(App.ZoneId, App.AppId, false);
+                //var contentEntity = dataSource.LightList.FirstOrDefault(p => p.EntityGuid == contItem.Entity.Guid);
+                if (!postSaveIds.ContainsKey(contItem.Entity.Guid) )
                     throw new Exception("Saved entity not found - not able to update ContentGroup");
 
+                int postSaveId = postSaveIds[contItem.Entity.Guid];
+
                 int? presentationId = null;
-                if (presItem != null)
-                    presentationId =
-                        dataSource.LightList.FirstOrDefault(p => p.EntityGuid == presItem.Entity.Guid).EntityId;
-                
+                if (postSaveIds.ContainsKey(presItem.Entity.Guid))
+                    presentationId = postSaveIds[presItem.Entity.Guid];
+
+                presentationId = presItem.Header.Group.SlotIsEmpty ? null : presentationId; // use null if it shouldn't have one
+
+                //if (presItem != null)
+                //    presentationId =
+                //        dataSource.LightList.FirstOrDefault(p => p.EntityGuid == presItem.Entity.Guid).EntityId;
+
 
                 if (contItem.Header.Group.Add) // this cannot be auto-detected, it must be specified
                 {
-                    contentGroup.AddContentAndPresentationEntity(partName, index, contentEntity.EntityId, presItem.Header.Group.SlotIsEmpty ? null : presentationId);
+                    contentGroup.AddContentAndPresentationEntity(partName, index, postSaveId, presentationId);
                 }
                 // otherwise it's an update 
-                else if (part.Count <= index || part[index] == null || part[index].EntityId != contentEntity.EntityId)
-                    contentGroup.UpdateEntity(partName, index, contentEntity.EntityId, true, presItem.Header.Group.SlotIsEmpty ? null : presentationId);
+                else // if (part.Count <= index || part[index] == null)
+                    contentGroup.UpdateEntityIfChanged(partName, index, postSaveId, true, presentationId);
 
             }
-            return true;
+            return postSaveIds;
         }
 
         /// <summary>

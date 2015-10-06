@@ -84,7 +84,7 @@ namespace ToSic.SexyContent.WebApi
 	    public void Replace(Guid guid, string part, int index, int entityId)
 	    {
             var contentGroup = Sexy.ContentGroups.GetContentGroup(guid);
-            contentGroup.UpdateEntity(part, index, entityId, false, null);
+            contentGroup.UpdateEntityIfChanged(part, index, entityId, false, null);
         }
     }
     }
