@@ -6,6 +6,10 @@
 <Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="MSBuild.Community.Tasks.Targets" />
   <Target Name="PackageModule" Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <!-- Move the node_modules folder outside the project folder - path length issue -->
+    <Exec Command="mkdir ..\ToSIC_SexyContent-build-temp" />
+    <Exec Command="move node_modules ..\ToSIC_SexyContent-build-temp\node_modules" />
+    
     <XmlRead Prefix="n"
                     Namespace="http://schemas.microsoft.com/developer/msbuild/2003"
                     XPath="dotnetnuke/packages/package[1]/@version"
@@ -131,6 +135,9 @@
     <!-- Cleanup -->
     <RemoveDir Directories="$(TempPackageFolder)" />
     <RemoveDir Directories="$(TempPackageResourcesFolder)" />
-    
+
+    <!-- Move node_modules folder back -->
+    <Exec Command="move ..\ToSIC_SexyContent-build-temp\node_modules node_modules" />
+    <Exec Command="rmdir ..\ToSIC_SexyContent-build-temp" />
   </Target>
 </Project>
