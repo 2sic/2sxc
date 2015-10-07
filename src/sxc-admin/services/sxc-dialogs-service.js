@@ -10,7 +10,7 @@ angular.module("SxcAdminUi", [
     "SystemSettingsApp",
     "SxcTemplates",
     "SxcEditTemplates",
-    "SxcEditContentGroupDnnWrapper",
+    //"SxcEditContentGroupDnnWrapper",
     "EavAdminUi", // dialog (modal) controller
 ])
     .factory("oldDialogs", function (tabId, AppInstanceId, appId) {
@@ -101,10 +101,11 @@ angular.module("SxcAdminUi", [
             return eavAdminDialogs.OpenModal("replace-content/replace-content.html", "ReplaceDialog as vm", "lg", resolve, closeCallback);
         };
 
-        svc.openContentEdit = function oce(edit, closeCallback) {
-            var resolve = eavAdminDialogs.CreateResolve(edit);
-            return eavAdminDialogs.OpenModal("wrappers/dnn-wrapper.html", "EditInDnn as vm", "lg", resolve, closeCallback);
-        };
+        // 2dm 2015-10-07 - don't think this is in use, remove
+        //svc.openContentEdit = function oce(edit, closeCallback) {
+        //    var resolve = eavAdminDialogs.CreateResolve(edit);
+        //    return eavAdminDialogs.OpenModal("wrappers/dnn-wrapper.html", "EditInDnn as vm", "lg", resolve, closeCallback);
+        //};
 
         svc.openLanguages = function orc(zoneId, closeCallback) {
             var resolve = eavAdminDialogs.CreateResolve({ zoneId: zoneId });
