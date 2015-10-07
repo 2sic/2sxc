@@ -4,7 +4,9 @@
 
 	/* This app registers all field templates for 2sxc in the angularjs sxcFieldTemplates app */
 
-	var app = angular.module("sxcFieldTemplates", ["formly", "formlyBootstrap", "ui.bootstrap", "ui.tree", "2sxc4ng", "SxcEditTemplates", "EavConfiguration"], function (formlyConfigProvider) {
+	var app = angular.module("sxcFieldTemplates")
+
+    .config(function (formlyConfigProvider) {
 
 		formlyConfigProvider.setType({
 			name: "string-wysiwyg",
