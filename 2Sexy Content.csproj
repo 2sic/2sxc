@@ -169,6 +169,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Adam\AdamController.cs" />
+    <Compile Include="Adam\GuidHelpers.cs" />
     <Compile Include="Administration\Apps\AppExport.ascx.cs">
       <DependentUpon>AppExport.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -504,7 +506,6 @@
     <Content Include="edit.css" />
     <Content Include="Administration\EditTemplate.ascx" />
     <Content Include="ReleaseNotes.txt" />
-    <Content Include="SexyContent\EAV\AngularServices\eav4ng.js" />
     <Content Include="Extensions\Thumbnailer.aspx" />
     <Content Include="js\2sxc.api.js" />
     <Content Include="Extensions\ToSic_vCard\vCard.ashx" />
