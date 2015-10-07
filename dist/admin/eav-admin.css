@@ -68,3 +68,6 @@
 .mini-btn-4 {
     width: 160px
 }
+
+/* Global link styling */
+a { cursor: pointer; }

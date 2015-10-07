@@ -2,9 +2,11 @@
 .help-block { display:none; }
 .eav-entityselect-item { border: 1px solid #DDD;width: 295px; margin-top: -1px; }
 .eav-entityselect ol { margin-top: 1px; }
-.eav-entityselect-item div { padding: 3px 10px 3px 20px;position: relative;line-height: 25px; }
-.eav-entityselect-item span { display: block; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;padding-right: 25px; }
-.eav-entityselect-item-remove { width: 31px;height: 31px; display: block;position: absolute;right: 0px;top: 0px;cursor: pointer; }
+.eav-entityselect-sort { margin-top: 3px; }
+.eav-entityselect-item div { padding: 3px 10px 3px 10px;position: relative;line-height: 25px;background: #EFEFEF; }
+.eav-entityselect-item div:hover { background: #EBEBEB; }
+.eav-entityselect-item span { display: block; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;padding-right: 25px;padding-left: 10px;font-weight: normal; }
+.eav-entityselect-item-remove { display: block;position: absolute;right: 0px;top: 0px;cursor: pointer;padding: 4px 9px 2px; }
 .eav-entityselect-selector { width: 200px; }
 .eav-entityselect-selector option[disabled], .eav-entityselect-selector option:disabled { color: #dddddd; }
 .angular-ui-tree-placeholder { margin: 0; }
