@@ -103,13 +103,21 @@ $2sxc.getManageController = function (id) {
         },
         'publish': {
             title: "Published",
-            icon: "glyphicon-eye-open disabled",
-            icon2: "glyphicon-eye-close disabled",
+            icon: "glyphicon-eye-open",
+            icon2: "glyphicon-eye-close",
             lightbox: false,
             hideFirst: true,
             disabled: true,
-            action: function(settings, event) {
-                alert("Status: " + (settings.isPublished ? "published" : "not published"));
+            action: function (settings, event) {
+                if (settings.isPublished) {
+                    alert("already published");
+                    return;
+                }
+                var part = settings.sortOrder == -1 ? "listcontent" : "content";
+                var index = settings.sortOrder == -1 ? 0 : settings.sortOrder;
+                manageController._getSelectorScope().publish(part, index);
+
+                //alert("Status: " + (settings.isPublished ? "published" : "not published"));
             }
         },
         'moveup': {
@@ -193,25 +201,26 @@ $2sxc.getManageController = function (id) {
             }
             // when using a list, the sort-order is important to find the right item
             if (settings.useModuleList || settings.action === "replace") {
-                var isListHeader = (settings.sortOrder !== -1);
+                var normalContent = (settings.sortOrder !== -1);
+                var index = normalContent ? settings.sortOrder : 0;
                 items.push({
                     Group: {
                         Guid: settings.contentGroupId,
-                        Index: settings.sortOrder,
-                        Part: isListHeader ? "content" : "listcontent",
+                        Index: index,
+                        Part: normalContent ? "content" : "listcontent",
                         Add: settings.action === "new"
                     },
-                    Title: isListHeader ? "Content" : "List Content"
+                    Title: normalContent ? "Content" : "List Content"
                 });
                 if (settings.action !== "replace") // if not replace, also add the presentation
                     items.push({
                         Group: {
                             Guid: settings.contentGroupId,
-                            Index: settings.sortOrder,
-                            Part: isListHeader ? "presentation" : "listpresentation",
+                            Index: index,
+                            Part: normalContent ? "presentation" : "listpresentation",
                             Add: settings.action === "new"
                         },
-                        Title: isListHeader ? "Presentation" : "List Presentation"
+                        Title: normalContent ? "Presentation" : "List Presentation"
                     });
             }
 
@@ -583,6 +592,11 @@ $(document).ready(function () {
         		vm.renderTemplate(vm.templateId);
         	});
         };
+        vm.publish = function(part, sortOrder) {
+            moduleApi.publish(part, sortOrder).then(function() {
+                vm.renderTemplate(vm.templateId);
+            });
+        };
 
     }]);
 
@@ -647,6 +661,12 @@ $(document).ready(function () {
                 	return apiService(moduleId, {
                 		url: "View/Module/ChangeOrder",
                 		params: { sortOrder: sortOrder, destinationSortOrder: destinationSortOrder }
+                	});
+                },
+                publish: function(part, sortOrder) {
+                 	return apiService(moduleId, {
+                		url: "view/module/publish",
+                		params: { part: part, sortOrder: sortOrder }
                 	});
                 },
                 removeFromList: function (sortOrder) {

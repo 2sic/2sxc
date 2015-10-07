@@ -155,7 +155,42 @@ namespace ToSic.SexyContent.ViewAPI
 			}
 		}
 
-		[HttpGet]
+        [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        [ValidateAntiForgeryToken]
+        public bool Publish(string part, int sortOrder)
+        {
+            try
+            {
+                var contentGroup = Sexy.ContentGroups.GetContentGroupForModule(ActiveModule.ModuleID);
+                var contEntity = contentGroup[part][sortOrder];
+                var presKey = part.ToLower() == "content" ? "presentation" : "listpresentation";
+                var presEntity = contentGroup[presKey][sortOrder];
+
+                var hasPresentation = presEntity != null;
+
+                // make sure we really have the draft item an not the live one
+                var contDraft = contEntity.IsPublished ? contEntity.GetDraft() : contEntity;
+                if (contEntity != null && !contDraft.IsPublished)
+                    Sexy.ContentContext.Publishing.PublishEntity(contDraft.RepositoryId, !hasPresentation); // don't save yet if has pres...
+
+                if (hasPresentation)
+                {
+                    var presDraft = presEntity.IsPublished ? presEntity.GetDraft() : presEntity;
+                    if (!presDraft.IsPublished)
+                        Sexy.ContentContext.Publishing.PublishEntity(presDraft.RepositoryId, true);
+                }
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                Exceptions.LogException(e);
+                throw;
+            }
+        }
+
+        [HttpGet]
 		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
 		[ValidateAntiForgeryToken]
 		public void RemoveFromList([FromUri] int sortOrder)

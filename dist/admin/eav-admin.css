@@ -39,3 +39,32 @@
     cursor: inherit;
     display: block;
 }
+
+.hide-overflow-text {
+    display: block;
+    white-space: nowrap;
+    position: relative;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.table-manage-eav {
+    table-layout: fixed;
+     width: 100%
+}
+
+.col-id {
+    width: 40px
+}
+.mini-btn-1 {
+    width: 40px
+}
+.mini-btn-2 {
+    width: 80px
+}
+.mini-btn-3 {
+    width: 120px
+}
+.mini-btn-4 {
+    width: 160px
+}

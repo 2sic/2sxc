@@ -9,7 +9,8 @@
       "Permissions": "permissions",
       "Edit": "edit",
       "Delete": "delete",
-      "Copy": "copy"
+      "Copy": "copy",
+      "Rename": "rename"
     },
     "Messages": {
       "Loading": "loading...",
@@ -48,13 +49,12 @@
     "Scope": "Scope"
   },
   "Fields": {
-    "Title": "Content Type Fields EN",
+    "Title": "Content Type Fields",
     "TitleEdit": "Add Fields",
     "Table": {
       "Title": "Title",
       "Name": "Static Name",
       "DataType": "Data Type",
-      "Edit": "Edit & Data Type",
       "Label": "Label",
       "InputType": "Input Type",
       "Notes": "Notes",
@@ -115,7 +115,7 @@
         "Title": "Manage Content / Data",
         "Table": {
           "Id": "ID",
-          "Published": "Publ",
+          "Status": "Status",
           "Title": "Title",
           "Actions": ""
         },

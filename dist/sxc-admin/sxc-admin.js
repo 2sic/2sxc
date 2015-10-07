@@ -732,7 +732,7 @@ angular.module('SxcTemplates',[]).run(['$templateCache', function($templateCache
 
 
   $templateCache.put('replace-content/replace-content.html',
-    "<div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=ReplaceContent.Title></h3></div><div><div class=modal-body><p translate=ReplaceContent.Intro></p><div translate=ReplaceContent.ChooseItem></div><div><td><select ng-model=vm.item.id ng-options=\"vm.convertToInt(key) as ((value || '[?]') + ' (' + key + ')') for (key,value) in vm.options\"></select></td></div>{{vm.item | json}}</div></div><div class=modal-footer><button icon=ok class=\"btn btn-primary\" type=button ng-click=vm.ok()></button></div>"
+    "<div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=ReplaceContent.Title></h3></div><div><div class=modal-body><p translate=ReplaceContent.Intro></p><div translate=ReplaceContent.ChooseItem></div><div><td><select ng-model=vm.item.id ng-options=\"vm.convertToInt(key) as ((value || '[?]') + ' (' + key + ')') for (key,value) in vm.options\"></select></td></div></div></div><div class=modal-footer><button icon=ok class=\"btn btn-default pull-left\" type=button ng-click=vm.ok()></button></div>"
   );
 
 
