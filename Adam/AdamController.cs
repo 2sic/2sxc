@@ -25,44 +25,17 @@ namespace ToSic.SexyContent.Adam
         // todo:idea that it would auto-take a setting from app-settings if it exists :)
 
         public const string AdamRootFolder = "adam/";
-        public const string AdamAppRootFolder = "adam/[AppPath]/";
-        public const string AdamFolderMask = "adam/[AppPath]/[Guid22]/[FieldName]/";
+        public const string AdamAppRootFolder = "adam/[AppFolder]/";
+        public const string AdamFolderMask = "adam/[AppFolder]/[Guid22]/[FieldName]/";
         private string AdamAllowedExtensions = "jpg,png,gif"; // todo: pdf, word, etc.
         public const int MaxFileSizeMb = 10;
 
-        #region Initializers
 
-        // private Eav.WebApi.WebApi _eavWebApi;
-
-        //public AdamController()
-        //{
-        //    // Eav.Configuration.SetConnectionString("SiteSqlServer");
-        //}
-
-        //private void InitEavAndSerializer()
-        //{
-        //    // Improve the serializer so it's aware of the 2sxc-context (module, portal etc.)
-        //    _eavWebApi = new Eav.WebApi.WebApi(App.AppId);
-        //    ((Serializer)_eavWebApi.Serializer).Sxc = Sexy;
-        //}
-
-        #endregion
-
-
-        //[HttpPost]
-        //[HttpPut]
-        //public dynamic Upload(int id, string field)
-        //{
-        //    // get the entity
-        //    var ent = App.Data["Default"].List[id];
-        //    return Upload(ent, field);
-        //}
-
-        //[HttpPost]
+        [HttpPost]
         [HttpPut]
-        public UploadResult Upload(string contentTypeName, Guid guid, string field)
+        public UploadResult Upload(string contentType, Guid guid, string field)
         {
-            return UploadOne(contentTypeName, guid, field);
+            return UploadOne(contentType, guid, field);
         }
 
         private UploadResult UploadOne(string contentTypeName, Guid guid, string field)
@@ -177,27 +150,29 @@ namespace ToSic.SexyContent.Adam
         /// Get the folder specified in App.Settings (BasePath) combined with the module's ID
         /// Will create the folder if it does not exist
         /// </summary>
-        public IFolderInfo Folder(Guid entityGuid, string fieldName)
+        private IFolderInfo Folder(Guid entityGuid, string fieldName)
         {
 
             if (_folder == null)
             {
                 var folderManager = FolderManager.Instance;
 
-                var basePath = AdamAppRootFolder.Replace("[AppPath]", App.Path);
+                var basePath = AdamAppRootFolder.Replace("[AppFolder]", App.Folder);
 
-                var path = AdamFolderMask.Replace("[AppPath]", App.Path)
+                var path = AdamFolderMask
+                    .Replace("[AppFolder]", App.Folder)
                     .Replace("[Guid22]", GuidHelpers.Compress22(entityGuid))
                     .Replace("[FieldName]", fieldName);
 
-                // Create base folder if not exists
-                if (!folderManager.FolderExists(Dnn.Portal.PortalId, basePath))
-                    folderManager.AddFolder(Dnn.Portal.PortalId, basePath);
-
-                // Create images folder for this module if not exists
-                if (!folderManager.FolderExists(Dnn.Portal.PortalId, path))
-                    folderManager.AddFolder(Dnn.Portal.PortalId, path);
-
+                // create all folders to ensure they exist. Must do one-by-one because dnn must have it in the catalog
+                var pathParts = path.Split('/');
+                var pathToCheck = ""; // pathParts[0];
+                for (var i = 0; i < pathParts.Length; i++) {
+                    pathToCheck += pathParts[i] + "/";
+                    if (!folderManager.FolderExists(Dnn.Portal.PortalId, pathToCheck))
+                        folderManager.AddFolder(Dnn.Portal.PortalId, pathToCheck);
+                }
+                
                 _folder = folderManager.GetFolder(Dnn.Portal.PortalId, path);
             }
 

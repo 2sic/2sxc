@@ -1,6 +1,8 @@
 ﻿<div>
-    <div class="input-group" dropdown>
-        <input type="text" class="form-control" ng-model="value.Value">
+    <div class="input-group dropzone" dropdown>
+        <input type="text" class="form-control" ng-model="value.Value" tooltip="drop file here to auto-upload
+for help see 2sxc.org/help?tag=adam
+ADAM - sponsored with love by 2sic.com">
         <span class="input-group-btn">
             <button type="button" id="single-button" class="btn btn-default dropdown-toggle" dropdown-toggle ng-disabled="to.disabled">
                 <span icon="option-horizontal"></span>
@@ -12,6 +14,4 @@
             <li role="menuitem"><a ng-click="vm.openDialog('documentmanager')" href="javascript:void(0)">Document Manager</a></li>
         </ul>
     </div><div ng-if="value.Value" class="small">Test: <a href="{{vm.testLink}}" target="_blank">{{vm.testLink}}</a></div>
-
-    <div class="dropzone" dropzone="">test target!</div>
 </div>

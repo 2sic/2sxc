@@ -10,6 +10,7 @@ angular.module("SxcAdminUi", [
     "SystemSettingsApp",
     "SxcTemplates",
     "SxcEditTemplates",
+    "sxcFieldTemplates",
     //"SxcEditContentGroupDnnWrapper",
     "EavAdminUi", // dialog (modal) controller
 ])

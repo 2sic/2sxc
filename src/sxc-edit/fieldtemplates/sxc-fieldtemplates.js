@@ -30,7 +30,7 @@
 		vm.modalInstance = null;
 		vm.testLink = "";
 		
-		vm.bridge = {
+		vm.bridge = { 
 			valueChanged: function(value, type) {
 				$scope.$apply(function () {
 

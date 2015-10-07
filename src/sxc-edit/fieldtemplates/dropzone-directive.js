@@ -1,13 +1,14 @@
 ﻿/* js/fileAppDirectives */
 
-angular.module('sxcFieldTemplates')
-    .directive('dropzone', function (sxc, tabId) {
+angular.module("sxcFieldTemplates")
+    .directive("dropzone", function (sxc, tabId) {
         return {
-            restrict: 'C',
+            restrict: "C",
             link: function (scope, element, attrs) {
                 var header = scope.$parent.to.header;
                 var field = scope.$parent.options.key;
-                var url = sxc.resolveServiceUrl('app-content/' + header.ContentTypeName + '/' + header.Guid + '/' + field);
+                var tempGuid = header.ContentTypeName; // todo: this is wrong, it should have the entityguid, but I don't know where to find it
+                var url = sxc.resolveServiceUrl("app-content/" + header.ContentTypeName + "/" + tempGuid + "/" + field);
 
                 var config = {
                     url: url,// 'http://localhost:8080/upload',
@@ -20,7 +21,10 @@ angular.module('sxcFieldTemplates')
                     headers: {
                         "ModuleId": sxc.id,
                         "TabId": tabId
-                    }
+                    },
+
+                    previewTemplate: "<span></span>",
+                    dictDefaultMessage: ""
 
                 };
 
@@ -35,8 +39,14 @@ angular.module('sxcFieldTemplates')
                     //    });
                     //},
 
-                    //'success': function(file, response) {
-                    //}
+                    'success': function (file, response) {
+                        if (response.Success) {
+                            scope.$parent.value.Value = "File:" + response.FileId;
+                            scope.$apply();
+                        } else {
+                            alert("Upload failed because: " + response.Error);
+                        }
+                    }
 
                 };
 

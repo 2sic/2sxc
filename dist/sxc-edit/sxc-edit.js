@@ -4,7 +4,95 @@
 
 	/* This app registers all field templates for 2sxc in the angularjs sxcFieldTemplates app */
 
-	var app = angular.module("sxcFieldTemplates", ["formly", "formlyBootstrap", "ui.bootstrap", "ui.tree", "2sxc4ng", "SxcEditTemplates", "EavConfiguration"], ["formlyConfigProvider", function (formlyConfigProvider) {
+    angular.module("sxcFieldTemplates", [
+        "formly",
+        "formlyBootstrap",
+        "ui.bootstrap",
+        "ui.tree",
+        "2sxc4ng",
+        "SxcEditTemplates",
+        "EavConfiguration"
+        //"ngDropzone"
+    ]);
+
+})();
+/* js/fileAppDirectives */
+
+angular.module("sxcFieldTemplates")
+    .directive("dropzone", ["sxc", "tabId", function (sxc, tabId) {
+        return {
+            restrict: "C",
+            link: function (scope, element, attrs) {
+                var header = scope.$parent.to.header;
+                var field = scope.$parent.options.key;
+                var tempGuid = header.ContentTypeName; // todo: this is wrong, it should have the entityguid, but I don't know where to find it
+                var url = sxc.resolveServiceUrl("app-content/" + header.ContentTypeName + "/" + tempGuid + "/" + field);
+
+                var config = {
+                    url: url,// 'http://localhost:8080/upload',
+                    maxFilesize: 100,
+                    paramName: "uploadfile",
+                    maxThumbnailFilesize: 10,
+                    //parallelUploads: 1,
+                    //autoProcessQueue: true, // false
+                    
+                    headers: {
+                        "ModuleId": sxc.id,
+                        "TabId": tabId
+                    },
+
+                    previewTemplate: "<span></span>",
+                    dictDefaultMessage: ""
+
+                };
+
+                var eventHandlers = {
+                    //'addedfile': function(file) {
+                    //    scope.file = file;
+                    //    if (this.files[1] !== null) {
+                    //        this.removeFile(this.files[0]);
+                    //    }
+                    //    scope.$apply(function() {
+                    //        scope.fileAdded = true;
+                    //    });
+                    //},
+
+                    'success': function (file, response) {
+                        if (response.Success) {
+                            scope.$parent.value.Value = "File:" + response.FileId;
+                            scope.$apply();
+                        } else {
+                            alert("Upload failed because: " + response.Error);
+                        }
+                    }
+
+                };
+
+                dropzone = new Dropzone(element[0], config);
+
+                angular.forEach(eventHandlers, function(handler, event) {
+                    dropzone.on(event, handler);
+                });
+
+                scope.processDropzone = function() {
+                    dropzone.processQueue();
+                };
+
+                scope.resetDropzone = function() {
+                    dropzone.removeAllFiles();
+                };
+            }
+        };
+    }]);
+
+(function () {
+	"use strict";
+
+	/* This app registers all field templates for 2sxc in the angularjs sxcFieldTemplates app */
+
+	var app = angular.module("sxcFieldTemplates")
+
+    .config(["formlyConfigProvider", function (formlyConfigProvider) {
 
 		formlyConfigProvider.setType({
 			name: "string-wysiwyg",
@@ -28,7 +116,7 @@
 		vm.modalInstance = null;
 		vm.testLink = "";
 		
-		vm.bridge = {
+		vm.bridge = { 
 			valueChanged: function(value, type) {
 				$scope.$apply(function () {
 
@@ -203,7 +291,11 @@ angular.module('SxcEditTemplates',[]).run(['$templateCache', function($templateC
 
 
   $templateCache.put('fieldtemplates/templates/hyperlink-default.html',
-    "<div><div class=input-group dropdown><input type=text class=form-control ng-model=value.Value> <span class=input-group-btn><button type=button id=single-button class=\"btn btn-default dropdown-toggle\" dropdown-toggle ng-disabled=to.disabled><span icon=option-horizontal></span></button></span><ul class=\"dropdown-menu pull-right\" role=menu><li role=menuitem><a ng-click=\"vm.openDialog('pagepicker')\" href=javascript:void(0)>Page Picker</a></li><li role=menuitem><a ng-click=\"vm.openDialog('imagemanager')\" href=javascript:void(0)>Image Manager</a></li><li role=menuitem><a ng-click=\"vm.openDialog('documentmanager')\" href=javascript:void(0)>Document Manager</a></li></ul></div><div ng-if=value.Value class=small>Test: <a href={{vm.testLink}} target=_blank>{{vm.testLink}}</a></div></div>"
+    "<div><div class=\"input-group dropzone\" dropdown><input type=text class=form-control ng-model=value.Value tooltip=\"drop file here to auto-upload\r" +
+    "\n" +
+    "for help see 2sxc.org/help?tag=adam\r" +
+    "\n" +
+    "ADAM - sponsored with love by 2sic.com\"> <span class=input-group-btn><button type=button id=single-button class=\"btn btn-default dropdown-toggle\" dropdown-toggle ng-disabled=to.disabled><span icon=option-horizontal></span></button></span><ul class=\"dropdown-menu pull-right\" role=menu><li role=menuitem><a ng-click=\"vm.openDialog('pagepicker')\" href=javascript:void(0)>Page Picker</a></li><li role=menuitem><a ng-click=\"vm.openDialog('imagemanager')\" href=javascript:void(0)>Image Manager</a></li><li role=menuitem><a ng-click=\"vm.openDialog('documentmanager')\" href=javascript:void(0)>Document Manager</a></li></ul></div><div ng-if=value.Value class=small>Test: <a href={{vm.testLink}} target=_blank>{{vm.testLink}}</a></div></div>"
   );
 
 
@@ -211,41 +303,4 @@ angular.module('SxcEditTemplates',[]).run(['$templateCache', function($templateC
     "<iframe style=\"width:100%; border: 0\" web-forms-bridge=vm.bridge bridge-type=wysiwyg bridge-sync-height=true></iframe>"
   );
 
-
-  $templateCache.put('wrappers/dnn-wrapper.html',
-    "<div class=modal-header><button class=\"btn pull-right\" type=button icon=remove ng-click=vm.close()></button><h3 class=modal-title>Edit</h3></div><div class=modal-body><div><eav-edit-entities edit-package-request=vm.editPackageRequest after-save-event=vm.afterSave></eav-edit-entities></div></div>"
-  );
-
 }]);
-
-
-(function () {
-	'use strict';
-
-    angular.module('SxcEditContentGroupDnnWrapper', [
-        'eavEditEntity',
-        'eavLocalization',
-        'sxcFieldTemplates',
-        'SxcEditTemplates',
-        'eavEditEntity'
-    ])
-
-	.controller('EditInDnn', ["items", "$modalInstance", function (items, /*entityId, typeName, groupGuid, groupSet, groupIndex, */ $modalInstance) {
-		var vm = this;
-
-            vm.editPackageRequest = items;
-
-	    // this is the callback after saving - needed to close everything
-		vm.afterSave = function (result) {
-		    if (result.status === 200)
-		        vm.close();
-		    else {
-		        alert("Something went wrong - maybe parts worked, maybe not. Sorry :(");
-		    }
-
-		};
-
-		vm.close = $modalInstance.close;
-	}]);
-
-})();
