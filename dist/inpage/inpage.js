@@ -95,7 +95,7 @@ $2sxc.getManageController = function (id) {
         'replace': {
             title: "Replace",
             icon: "glyphicon-random",
-            lightbox: false,
+            lightbox: true,
             hideFirst: true,
             action: function(settings, event) {
                 manageController._openNgDialog(settings, event);
