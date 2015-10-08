@@ -27,7 +27,7 @@ namespace ToSic.SexyContent.Adam
         public const string AdamRootFolder = "adam/";
         public const string AdamAppRootFolder = "adam/[AppFolder]/";
         public const string AdamFolderMask = "adam/[AppFolder]/[Guid22]/[FieldName]/";
-        private string AdamAllowedExtensions = "jpg,png,gif"; // todo: pdf, word, etc.
+        private string AdamAllowedExtensions = "jpg,png,gif,doc,docx,xls,xlsx,pdf,txt"; // todo: use field config or dnn-security
         public const int MaxFileSizeMb = 10;
 
 
@@ -59,6 +59,9 @@ namespace ToSic.SexyContent.Adam
                 throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.BadRequest,
                     "Requested field '" + field + "' type doesn't allow upload"));// { HttpStatusCode = HttpStatusCode.BadRequest });
 
+            // check for special extensions
+            // if(fieldDef.)
+
             try
             {
                 var folder = Folder(guid, field);
@@ -66,6 +69,8 @@ namespace ToSic.SexyContent.Adam
                 if (filesCollection.Count > 0)
                 {
                     var originalFile = filesCollection[0];
+
+                    // todo: check content-type extensions...
 
                     // Check file size and extension
                     var extension = Path.GetExtension(originalFile.FileName).ToLower().Replace(".", "");
@@ -75,7 +80,8 @@ namespace ToSic.SexyContent.Adam
                     if (originalFile.ContentLength > (1024 * 1024 * MaxFileSizeMb))
                         return new UploadResult { Success = false, Error = App.Resources.UploadFileSizeLimitExceeded };
 
-                    var fileName = originalFile.FileName;
+                    var fileName = originalFile.FileName
+                        .Replace("%", "per");
 
                     // Make sure the image does not exist yet (change file name)
                     for (int i = 1; FileManager.Instance.FileExists(folder, Path.GetFileName(fileName)); i++)

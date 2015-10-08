@@ -83,7 +83,7 @@ angular.module("eavFieldTemplates")
 
 	/* This app registers all field templates for EAV in the angularjs eavFieldTemplates app */
 
-	var eavFieldTemplates = angular.module("eavFieldTemplates", ["formly", "formlyBootstrap", "ui.bootstrap", "eavLocalization", "eavEditTemplates", "ui.tree"])
+	var eavFieldTemplates = angular.module("eavFieldTemplates")//, ["formly", "formlyBootstrap", "ui.bootstrap", "eavLocalization", "eavEditTemplates", "ui.tree"])
         .config(["formlyConfigProvider", function (formlyConfigProvider) {
 
 
@@ -355,11 +355,11 @@ angular.module("eavFieldTemplates")
 
                     // If the entity is null, it does not exist yet. Create a new one
                     if (!vm.items[i].Entity && !!vm.items[i].Header.ContentTypeName)
-                        vm.items[i].Entity = entitiesSvc.newEntity(vm.items[i].Header.ContentTypeName);
+                        vm.items[i].Entity = entitiesSvc.newEntity(vm.items[i].Header);
 
-                    else {
-                        entitiesSvc.ensureGuid(vm.items[i]);
-                    }
+                    //else {
+                    //    entitiesSvc.ensureGuid(vm.items[i]);
+                    //}
 
                     vm.items[i].Entity = enhanceEntity(vm.items[i].Entity);
                 });
@@ -992,25 +992,25 @@ function enhanceEntity(entity) {
                 });
             };
 
-            svc.newEntity = function(contentTypeName) {
+            svc.newEntity = function(header) {
                 return {
                     Id: null,
-                    Guid: generateUuid(),
+                    Guid: header.Guid, // generateUuid(),
                     Type: {
-                        StaticName: contentTypeName
+                        StaticName: header.ContentTypeName // contentTypeName
                     },
                     Attributes: {},
                     IsPublished: true
                 };
             };
 
-            svc.ensureGuid = function ensureGuid(item) {
-                var ent = item.Entity;
-                if ((ent.Id === null || ent.Id === 0) && (ent.Guid === null || typeof (ent.Guid) === "undefined" || ent.Guid === "00000000-0000-0000-0000-000000000000")) {
-                    item.Entity.Guid = generateUuid();
-                    item.Header.Guid = item.Entity.Guid;
-                }
-            };
+            //svc.ensureGuid = function ensureGuid(item) {
+            //    var ent = item.Entity;
+            //    if ((ent.Id === null || ent.Id === 0) && (ent.Guid === null || typeof (ent.Guid) === "undefined" || ent.Guid === "00000000-0000-0000-0000-000000000000")) {
+            //        item.Entity.Guid = generateUuid();
+            //        item.Header.Guid = item.Entity.Guid;
+            //    }
+            //};
 
             svc.save = function save(appId, newData) {
                 return $http.post("eav/entities/save", newData, { params: { appId: appId } });
@@ -1021,15 +1021,15 @@ function enhanceEntity(entity) {
 
 
     // Generate Guid - code from http://stackoverflow.com/a/8809472
-    function generateUuid() {
-        var d = new Date().getTime();
-        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-            var r = (d + Math.random() * 16) % 16 | 0;
-            d = Math.floor(d / 16);
-            return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-        });
-        return uuid;
-    }
+    //function generateUuid() {
+    //    var d = new Date().getTime();
+    //    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    //        var r = (d + Math.random() * 16) % 16 | 0;
+    //        d = Math.floor(d / 16);
+    //        return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    //    });
+    //    return uuid;
+    //}
 })();
 /* global angular */
 (function () {

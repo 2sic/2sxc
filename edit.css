@@ -78,8 +78,8 @@
   content: "\e235";
 }
 
-.glyphicon-remove-circle:before {
-  content: "\e088";
+.glyphicon-remove:before {
+  content: "\e014";
 }
 .glyphicon-fire:before {
   content: "\e104";

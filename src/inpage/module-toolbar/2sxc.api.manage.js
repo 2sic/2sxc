@@ -107,7 +107,7 @@ $2sxc.getManageController = function (id) {
         },
         'remove': {
             title: "remove",
-            icon: "glyphicon-remove-circle",
+            icon: "glyphicon-remove",
             lightbox: false,
             hideFirst: true,
             disabled: true,

@@ -73,10 +73,12 @@ namespace ToSic.SexyContent.WebApi
 
 	        var dataSource = App.Data[ct.Name];// attributeSetName];
             var results = dataSource.List.ToDictionary(p => p.Value.EntityId, p => p.Value.GetBestValue("EntityTitle").ToString());
-	    
-	        return new ReplaceSet
+
+            var selectedId = set[index]?.EntityId;
+
+            return new ReplaceSet
 	        {
-	            SelectedId = set[index].EntityId,
+	            SelectedId = selectedId,
                 Items = results
 	        };
 	    }

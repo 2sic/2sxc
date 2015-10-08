@@ -13,5 +13,13 @@ ADAM - sponsored with love by 2sic.com">
             <li role="menuitem"><a ng-click="vm.openDialog('imagemanager')" href="javascript:void(0)">Image Manager</a></li>
             <li role="menuitem"><a ng-click="vm.openDialog('documentmanager')" href="javascript:void(0)">Document Manager</a></li>
         </ul>
-    </div><div ng-if="value.Value" class="small">Test: <a href="{{vm.testLink}}" target="_blank">{{vm.testLink}}</a></div>
+    </div>
+    <div ng-if="value.Value">
+        <a href="{{vm.testLink}}" target="_blank">
+            <i icon="new-window"></i>
+        </a>&nbsp;... {{vm.testLink.substr(vm.testLink.lastIndexOf("/"), 100)}}
+    </div>
+
+    <div>todo: upload progress</div>
+    <div ng-if="vm.debug.on">todo: test-url shortening, nice progress indicator, thumbnail preview if it's a pic</div>
 </div>

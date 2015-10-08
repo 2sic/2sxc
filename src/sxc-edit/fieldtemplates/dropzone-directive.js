@@ -7,17 +7,15 @@ angular.module("sxcFieldTemplates")
             link: function (scope, element, attrs) {
                 var header = scope.$parent.to.header;
                 var field = scope.$parent.options.key;
-                var tempGuid = header.ContentTypeName; // todo: this is wrong, it should have the entityguid, but I don't know where to find it
-                var url = sxc.resolveServiceUrl("app-content/" + header.ContentTypeName + "/" + tempGuid + "/" + field);
+                var entityGuid = header.Guid; 
+                var url = sxc.resolveServiceUrl("app-content/" + header.ContentTypeName + "/" + entityGuid + "/" + field);
 
                 var config = {
                     url: url,// 'http://localhost:8080/upload',
                     maxFilesize: 100,
                     paramName: "uploadfile",
                     maxThumbnailFilesize: 10,
-                    //parallelUploads: 1,
-                    //autoProcessQueue: true, // false
-                    
+
                     headers: {
                         "ModuleId": sxc.id,
                         "TabId": tabId

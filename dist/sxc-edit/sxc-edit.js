@@ -25,17 +25,15 @@ angular.module("sxcFieldTemplates")
             link: function (scope, element, attrs) {
                 var header = scope.$parent.to.header;
                 var field = scope.$parent.options.key;
-                var tempGuid = header.ContentTypeName; // todo: this is wrong, it should have the entityguid, but I don't know where to find it
-                var url = sxc.resolveServiceUrl("app-content/" + header.ContentTypeName + "/" + tempGuid + "/" + field);
+                var entityGuid = header.Guid; 
+                var url = sxc.resolveServiceUrl("app-content/" + header.ContentTypeName + "/" + entityGuid + "/" + field);
 
                 var config = {
                     url: url,// 'http://localhost:8080/upload',
                     maxFilesize: 100,
                     paramName: "uploadfile",
                     maxThumbnailFilesize: 10,
-                    //parallelUploads: 1,
-                    //autoProcessQueue: true, // false
-                    
+
                     headers: {
                         "ModuleId": sxc.id,
                         "TabId": tabId
@@ -295,7 +293,7 @@ angular.module('SxcEditTemplates',[]).run(['$templateCache', function($templateC
     "\n" +
     "for help see 2sxc.org/help?tag=adam\r" +
     "\n" +
-    "ADAM - sponsored with love by 2sic.com\"> <span class=input-group-btn><button type=button id=single-button class=\"btn btn-default dropdown-toggle\" dropdown-toggle ng-disabled=to.disabled><span icon=option-horizontal></span></button></span><ul class=\"dropdown-menu pull-right\" role=menu><li role=menuitem><a ng-click=\"vm.openDialog('pagepicker')\" href=javascript:void(0)>Page Picker</a></li><li role=menuitem><a ng-click=\"vm.openDialog('imagemanager')\" href=javascript:void(0)>Image Manager</a></li><li role=menuitem><a ng-click=\"vm.openDialog('documentmanager')\" href=javascript:void(0)>Document Manager</a></li></ul></div><div ng-if=value.Value class=small>Test: <a href={{vm.testLink}} target=_blank>{{vm.testLink}}</a></div></div>"
+    "ADAM - sponsored with love by 2sic.com\"> <span class=input-group-btn><button type=button id=single-button class=\"btn btn-default dropdown-toggle\" dropdown-toggle ng-disabled=to.disabled><span icon=option-horizontal></span></button></span><ul class=\"dropdown-menu pull-right\" role=menu><li role=menuitem><a ng-click=\"vm.openDialog('pagepicker')\" href=javascript:void(0)>Page Picker</a></li><li role=menuitem><a ng-click=\"vm.openDialog('imagemanager')\" href=javascript:void(0)>Image Manager</a></li><li role=menuitem><a ng-click=\"vm.openDialog('documentmanager')\" href=javascript:void(0)>Document Manager</a></li></ul></div><div ng-if=value.Value><a href={{vm.testLink}} target=_blank><i icon=new-window></i></a>&nbsp;... {{vm.testLink.substr(vm.testLink.lastIndexOf(\"/\"), 100)}}</div><div>todo: upload progress</div><div ng-if=vm.debug.on>todo: test-url shortening, nice progress indicator, thumbnail preview if it's a pic</div></div>"
   );
 
 
