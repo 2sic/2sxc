@@ -11,7 +11,7 @@ angular.module("sxcFieldTemplates")
                 var url = sxc.resolveServiceUrl("app-content/" + header.ContentTypeName + "/" + entityGuid + "/" + field);
 
                 var config = {
-                    url: url,// 'http://localhost:8080/upload',
+                    url: url,
                     maxFilesize: 100,
                     paramName: "uploadfile",
                     maxThumbnailFilesize: 10,
@@ -21,9 +21,10 @@ angular.module("sxcFieldTemplates")
                         "TabId": tabId
                     },
 
-                    //previewTemplate: "<span></span>",
-                    //dictDefaultMessage: "" 
-
+                    //previewTemplate: "<div></div>",
+                    dictDefaultMessage: "",
+                    addRemoveLinks: true,
+                    previewsContainer: '.dropzone-previews'
                 };
 
                 var eventHandlers = {
@@ -45,10 +46,12 @@ angular.module("sxcFieldTemplates")
                             alert("Upload failed because: " + response.Error);
                         }
                     }
-
                 };
 
-                dropzone = new Dropzone(element[0], config);
+                var dropzone = new Dropzone(element[0], config);
+
+                document.addEventListener('dragenter', function() { document.body.className += " sxc-dragging"; });
+                document.addEventListener('dragleave', function () { document.body.className = document.body.className.replace("sxc-dragging", ""); });
 
                 angular.forEach(eventHandlers, function(handler, event) {
                     dropzone.on(event, handler);

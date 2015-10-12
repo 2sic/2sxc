@@ -19,7 +19,8 @@ module.exports = function (grunt) {
         templates: "tmp/sxc-edit/sxc-templates.js",
         dist: "dist/sxc-edit/",
         concatFile: "dist/sxc-edit/sxc-edit.js",
-        uglifyFile: "dist/sxc-edit/sxc-edit.min.js"
+        uglifyFile: "dist/sxc-edit/sxc-edit.min.js",
+        concatCss: "dist/sxc-edit/sxc-edit.css"
     };
     var inpage = {
         cwd: "src/inpage/",
@@ -204,7 +205,11 @@ module.exports = function (grunt) {
             eavconf: {
                 src: eavconf.tmp + "**/*.js",
                 dest: eavconf.concatFile
-            }
+            },
+            adminCss: {
+                src: sxcedit.tmp + "**/*.css",
+                dest: sxcedit.concatCss
+            },
         },
 
 

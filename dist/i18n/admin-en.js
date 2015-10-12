@@ -80,8 +80,8 @@
     },
     "TitleExportImport": "Export / Import",
     "Buttons": {
-      "Export": "Export",
-      "Import": "Import",
+      "Export": "export",
+      "Import": "import",
       "ChangeScope": "change scope",
       "ChangeScopeQuestion": "This is an advanced feature to show content-types of another scope. Don't use this if you don't know what you're doing, as content-types of other scopes are usually hidden for a good reason."
     }

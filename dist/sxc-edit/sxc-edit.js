@@ -29,7 +29,7 @@ angular.module("sxcFieldTemplates")
                 var url = sxc.resolveServiceUrl("app-content/" + header.ContentTypeName + "/" + entityGuid + "/" + field);
 
                 var config = {
-                    url: url,// 'http://localhost:8080/upload',
+                    url: url,
                     maxFilesize: 100,
                     paramName: "uploadfile",
                     maxThumbnailFilesize: 10,
@@ -39,9 +39,10 @@ angular.module("sxcFieldTemplates")
                         "TabId": tabId
                     },
 
-                    //previewTemplate: "<span></span>",
-                    //dictDefaultMessage: "" 
-
+                    //previewTemplate: "<div></div>",
+                    dictDefaultMessage: "",
+                    addRemoveLinks: true,
+                    previewsContainer: '.dropzone-previews'
                 };
 
                 var eventHandlers = {
@@ -63,10 +64,12 @@ angular.module("sxcFieldTemplates")
                             alert("Upload failed because: " + response.Error);
                         }
                     }
-
                 };
 
-                dropzone = new Dropzone(element[0], config);
+                var dropzone = new Dropzone(element[0], config);
+
+                document.addEventListener('dragenter', function() { document.body.className += " sxc-dragging"; });
+                document.addEventListener('dragleave', function () { document.body.className = document.body.className.replace("sxc-dragging", ""); });
 
                 angular.forEach(eventHandlers, function(handler, event) {
                     dropzone.on(event, handler);
@@ -289,11 +292,11 @@ angular.module('SxcEditTemplates',[]).run(['$templateCache', function($templateC
 
 
   $templateCache.put('fieldtemplates/templates/hyperlink-default.html',
-    "<div><div class=\"input-group dropzone\" dropdown><input type=text class=form-control ng-model=value.Value tooltip=\"drop file here to auto-upload\r" +
+    "<div><div class=\"input-group dropzone\" dropdown><div><input type=text class=form-control ng-model=value.Value tooltip=\"drop file here to auto-upload\r" +
     "\n" +
     "for help see 2sxc.org/help?tag=adam\r" +
     "\n" +
-    "ADAM - sponsored with love by 2sic.com\"> <span class=input-group-btn><button type=button id=single-button class=\"btn btn-default dropdown-toggle\" dropdown-toggle ng-disabled=to.disabled><span icon=option-horizontal></span></button></span><ul class=\"dropdown-menu pull-right\" role=menu><li role=menuitem><a ng-click=\"vm.openDialog('pagepicker')\" href=javascript:void(0)>Page Picker</a></li><li role=menuitem><a ng-click=\"vm.openDialog('imagemanager')\" href=javascript:void(0)>Image Manager</a></li><li role=menuitem><a ng-click=\"vm.openDialog('documentmanager')\" href=javascript:void(0)>Document Manager</a></li></ul></div><div ng-if=value.Value><a href={{vm.testLink}} target=_blank><i icon=new-window></i></a><span tooltip={{vm.testLink}}>&nbsp;... {{vm.testLink.substr(vm.testLink.lastIndexOf(\"/\"), 100)}}</span></div><div>todo: upload progress</div><div ng-if=vm.debug.on>todo: test-url shortening, nice progress indicator, thumbnail preview if it's a pic</div></div>"
+    "ADAM - sponsored with love by 2sic.com\"> <span class=input-group-btn><button type=button id=single-button class=\"btn btn-default dropdown-toggle\" dropdown-toggle ng-disabled=to.disabled><span icon=option-horizontal></span></button></span><ul class=\"dropdown-menu pull-right\" role=menu><li role=menuitem><a ng-click=\"vm.openDialog('pagepicker')\" href=javascript:void(0)>Page Picker</a></li><li role=menuitem><a ng-click=\"vm.openDialog('imagemanager')\" href=javascript:void(0)>Image Manager</a></li><li role=menuitem><a ng-click=\"vm.openDialog('documentmanager')\" href=javascript:void(0)>Document Manager</a></li></ul></div><div><div class=dropzone-previews></div></div></div><div ng-if=value.Value><a href={{vm.testLink}} target=_blank><i icon=new-window></i></a><span tooltip={{vm.testLink}}>&nbsp;... {{vm.testLink.substr(vm.testLink.lastIndexOf(\"/\"), 100)}}</span></div><div>todo: upload progress</div><div ng-if=vm.debug.on>todo: test-url shortening, nice progress indicator, thumbnail preview if it's a pic</div></div>"
   );
 
 
