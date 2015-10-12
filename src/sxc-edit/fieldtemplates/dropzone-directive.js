@@ -21,8 +21,8 @@ angular.module("sxcFieldTemplates")
                         "TabId": tabId
                     },
 
-                    previewTemplate: "<span></span>",
-                    dictDefaultMessage: ""
+                    //previewTemplate: "<span></span>",
+                    //dictDefaultMessage: "" 
 
                 };
 

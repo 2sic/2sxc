@@ -482,10 +482,12 @@ angular.module("eavFieldTemplates")
 			            hide: (e.Metadata.All.VisibleInEditUI === false ? !debugState.on : false),
 			            expressionProperties: {
 			                // Needed for dynamic update of the disabled property
-			                'templateOptions.disabled': 'options.templateOptions.disabled' 
+			                'templateOptions.disabled': 'options.templateOptions.disabled' // doesn't set anything, just here to ensure formly causes update-binding
+                            //'templateOptions.disabled': 'options.templateOptions.disabled'
 			            },
 			            watcher: [
 			                {
+                                // changes when a entity becomes enabled / disabled
 			                    expression: function(field, scope, stop) {
 			                        return (field.templateOptions.header.Group && field.templateOptions.header.Group.SlotIsEmpty) || field.templateOptions.langReadOnly;
 			                    },
@@ -567,7 +569,7 @@ angular.module("eavFieldTemplates")
 	var app = angular.module("eavEditEntity");
 
 	// The controller for the main form directive
-	app.controller("EditEntityWrapperCtrl", ["$q", "$http", "$scope", "items", "$modalInstance", function editEntityCtrl($q, $http, $scope, items, $modalInstance) {
+	app.controller("EditEntityWrapperCtrl", ["$q", "$http", "$scope", "items", "$modalInstance", "$window", function editEntityCtrl($q, $http, $scope, items, $modalInstance, $window) {
 
 	    var vm = this;
 	    vm.itemList = items;
@@ -591,10 +593,14 @@ angular.module("eavFieldTemplates")
 		    $modalInstance.close(result);
 		};
 
-	    $scope.$on('modal.closing', function(e) {
+	    $scope.$on('modal.closing', vm.maybeLeave);
+
+	    vm.maybeLeave = function maybeLeave(e) {
 	        if (vm.state.isDirty() && !confirm("You have unsaved changes. Do you really want to exit?"))
 	            e.preventDefault();
-	    });
+	    };
+
+	    $window.onbeforeunload = vm.maybeLeave;
 	}]);
 
 })();
@@ -647,7 +653,7 @@ angular.module('eavEditTemplates',[]).run(['$templateCache', function($templateC
 
 
   $templateCache.put('wrappers/eav-label.html',
-    "<div kng-if=!to.collapse><label for={{id}} class=\"control-label {{to.labelSrOnly ? 'sr-only' : ''}}\" ng-if=to.label>{{to.label}} {{to.required ? '*' : ''}} <a tabindex=-1 ng-click=\"to.showDescription = !to.showDescription\" href=javascript:void(0); ng-if=\"to.description && to.description != ''\" title={{to.description}}><i icon=info-sign></i></a></label><p ng-if=to.showDescription class=bg-info style=\"padding: 5px\" ng-bind-html=to.description></p><formly-transclude></formly-transclude></div>"
+    "<div ng-show=!to.collapse><label for={{id}} class=\"control-label {{to.labelSrOnly ? 'sr-only' : ''}}\" ng-if=to.label>{{to.label}} {{to.required ? '*' : ''}} <a tabindex=-1 ng-click=\"to.showDescription = !to.showDescription\" href=javascript:void(0); ng-if=\"to.description && to.description != ''\" title={{to.description}}><i icon=info-sign></i></a></label><p ng-if=to.showDescription class=bg-info style=\"padding: 5px\" ng-bind-html=to.description></p><formly-transclude></formly-transclude></div>"
   );
 
 

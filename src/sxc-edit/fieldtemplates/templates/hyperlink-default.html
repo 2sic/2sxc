@@ -17,7 +17,7 @@ ADAM - sponsored with love by 2sic.com">
     <div ng-if="value.Value">
         <a href="{{vm.testLink}}" target="_blank">
             <i icon="new-window"></i>
-        </a>&nbsp;... {{vm.testLink.substr(vm.testLink.lastIndexOf("/"), 100)}}
+        </a><span tooltip="{{vm.testLink}}">&nbsp;... {{vm.testLink.substr(vm.testLink.lastIndexOf("/"), 100)}}</span>
     </div>
 
     <div>todo: upload progress</div>

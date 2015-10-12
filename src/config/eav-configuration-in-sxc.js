@@ -25,7 +25,6 @@
             lng.defaultLanguage = manageInfo.langPrimary;
             lng.currentLanguage = manageInfo.lang;
             lng.languages = manageInfo.languages;
-            alert(window.$eavUIConfig.languages.i18nRoot);
        });
     }
     else {
@@ -34,7 +33,6 @@
         lng.defaultLanguage = $2sxc.urlParams.require("langpri");
         lng.currentLanguage = $2sxc.urlParams.require("lang");
         lng.languages = JSON.parse($2sxc.urlParams.require("langs"));
-        alert(window.$eavUIConfig.languages.i18nRoot);
     }
 
 })();
