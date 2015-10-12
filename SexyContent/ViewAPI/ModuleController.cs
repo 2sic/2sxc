@@ -172,13 +172,13 @@ namespace ToSic.SexyContent.ViewAPI
                 // make sure we really have the draft item an not the live one
                 var contDraft = contEntity.IsPublished ? contEntity.GetDraft() : contEntity;
                 if (contEntity != null && !contDraft.IsPublished)
-                    Sexy.ContentContext.Publishing.PublishEntity(contDraft.RepositoryId, !hasPresentation); // don't save yet if has pres...
+                    Sexy.ContentContext.Publishing.PublishDraftInDbEntity(contDraft.RepositoryId, !hasPresentation); // don't save yet if has pres...
 
                 if (hasPresentation)
                 {
                     var presDraft = presEntity.IsPublished ? presEntity.GetDraft() : presEntity;
                     if (!presDraft.IsPublished)
-                        Sexy.ContentContext.Publishing.PublishEntity(presDraft.RepositoryId, true);
+                        Sexy.ContentContext.Publishing.PublishDraftInDbEntity(presDraft.RepositoryId, true);
                 }
 
                 return true;

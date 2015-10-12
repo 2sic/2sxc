@@ -25,6 +25,50 @@
       "Title": "title"
     }
   },
+  "DataType": {
+    "Boolean": {
+      "Short": "yes/no",
+      "ShortTech": "Boolean",
+      "Choice": "Boolean (yes/no)",
+      "Explanation": "Yes/no or true/false values"
+    },
+    "DateTime": {
+      "Short": "date/time",
+      "ShortTech": "DateTime",
+      "Choice": "Date and/or time",
+      "Explanation": "for date, time or combined values"
+    },
+    "Entity": {
+      "Short": "item(s)",
+      "ShortTech": "Entity",
+      "Choice": "Other item(s) - aka Entity",
+      "Explanation": "one or more other content-items"
+    },
+    "Hyperlink": {
+      "Short": "link",
+      "ShortTech": "Hyperlink",
+      "Choice": "Link / file reference",
+      "Explanation": "hyperlink or reference to a picture / file"
+    },
+    "Number": {
+      "Short": "number",
+      "ShortTech": "Decimal",
+      "Choice": "Number",
+      "Explanation": "any kind of number"
+    },
+    "String": {
+      "Short": "text",
+      "ShortTech": "String",
+      "Choice": "Text / string",
+      "Explanation": "any kind of text"
+    },
+    "Empty": {
+      "Short": "empty",
+      "ShortTech": "Empty",
+      "Choice": "Empty - for form-titles etc.",
+      "Explanation": "use to structure your form"
+    }
+  },
   "ContentTypes": {
     "Title": "Content-Types and Data",
     "TypesTable": {
@@ -126,7 +170,7 @@
         "DoP": "this is a draft of another published item",
         "D": "not published at the moment",
         "HD": "has draft: {{id}}",
-        "HP": "will replace published: {{id}}"
+        "HP": "will replace published"
       },
       "Export": {
         "Title": "Export Content / Data",

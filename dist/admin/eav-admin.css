@@ -71,3 +71,5 @@
 
 /* Global link styling */
 a { cursor: pointer; }
+
+.clickable { cursor:pointer; }
