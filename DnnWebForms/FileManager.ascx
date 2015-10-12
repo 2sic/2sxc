@@ -41,6 +41,10 @@
 					args.CssClasses = [];
 					dialogOpener.open('DocumentManager', args);
 			}
+
+		    $('.TelerikModalOverlay').click(function() {
+		        window.bridge.valueChanged(null);
+		    });
 		});
 
 	};
