@@ -19,7 +19,7 @@
 /* js/fileAppDirectives */
 
 angular.module("sxcFieldTemplates")
-    .directive("dropzone", ["sxc", "tabId", function (sxc, tabId) {
+    .directive("dropzone", ["sxc", "tabId", "dragClass", function (sxc, tabId, dragClass) {
         return {
             restrict: "C",
             link: function (scope, element, attrs) {
@@ -41,20 +41,20 @@ angular.module("sxcFieldTemplates")
 
                     //previewTemplate: "<div></div>",
                     dictDefaultMessage: "",
-                    addRemoveLinks: true,
+                    addRemoveLinks: false,
                     previewsContainer: '.dropzone-previews'
                 };
 
                 var eventHandlers = {
-                    //'addedfile': function(file) {
-                    //    scope.file = file;
-                    //    if (this.files[1] !== null) {
-                    //        this.removeFile(this.files[0]);
-                    //    }
-                    //    scope.$apply(function() {
-                    //        scope.fileAdded = true;
-                    //    });
-                    //},
+                    'addedfile': function(file) {
+                        //scope.file = file;
+                        //if (this.files[1] !== null) {
+                        //    this.removeFile(this.files[0]);
+                        //}
+                        scope.$apply(function() {
+                            scope.fileAdded = true;
+                        });
+                    },
 
                     'success': function (file, response) {
                         if (response.Success) {
@@ -67,9 +67,6 @@ angular.module("sxcFieldTemplates")
                 };
 
                 var dropzone = new Dropzone(element[0], config);
-
-                document.addEventListener('dragenter', function() { document.body.className += " sxc-dragging"; });
-                document.addEventListener('dragleave', function () { document.body.className = document.body.className.replace("sxc-dragging", ""); });
 
                 angular.forEach(eventHandlers, function(handler, event) {
                     dropzone.on(event, handler);
@@ -292,11 +289,11 @@ angular.module('SxcEditTemplates',[]).run(['$templateCache', function($templateC
 
 
   $templateCache.put('fieldtemplates/templates/hyperlink-default.html',
-    "<div><div class=\"input-group dropzone\" dropdown><div><input type=text class=form-control ng-model=value.Value tooltip=\"drop file here to auto-upload\r" +
+    "<div><div class=dropzone><div class=input-group dropdown><input type=text class=form-control ng-model=value.Value tooltip=\"drop file here to auto-upload\r" +
     "\n" +
     "for help see 2sxc.org/help?tag=adam\r" +
     "\n" +
-    "ADAM - sponsored with love by 2sic.com\"> <span class=input-group-btn><button type=button id=single-button class=\"btn btn-default dropdown-toggle\" dropdown-toggle ng-disabled=to.disabled><span icon=option-horizontal></span></button></span><ul class=\"dropdown-menu pull-right\" role=menu><li role=menuitem><a ng-click=\"vm.openDialog('pagepicker')\" href=javascript:void(0)>Page Picker</a></li><li role=menuitem><a ng-click=\"vm.openDialog('imagemanager')\" href=javascript:void(0)>Image Manager</a></li><li role=menuitem><a ng-click=\"vm.openDialog('documentmanager')\" href=javascript:void(0)>Document Manager</a></li></ul></div><div><div class=dropzone-previews></div></div></div><div ng-if=value.Value><a href={{vm.testLink}} target=_blank><i icon=new-window></i></a><span tooltip={{vm.testLink}}>&nbsp;... {{vm.testLink.substr(vm.testLink.lastIndexOf(\"/\"), 100)}}</span></div><div>todo: upload progress</div><div ng-if=vm.debug.on>todo: test-url shortening, nice progress indicator, thumbnail preview if it's a pic</div></div>"
+    "ADAM - sponsored with love by 2sic.com\"><div ng-if=value.Value><a href={{vm.testLink}} target=_blank><i icon=new-window></i></a><span tooltip={{vm.testLink}}>&nbsp;... {{vm.testLink.substr(vm.testLink.lastIndexOf(\"/\"), 100)}}</span></div><span class=input-group-btn style=\"vertical-align: top\"><button type=button id=single-button class=\"btn btn-default dropdown-toggle\" dropdown-toggle ng-disabled=to.disabled><span icon=option-horizontal></span></button></span><ul class=\"dropdown-menu pull-right\" role=menu><li role=menuitem><a ng-click=\"vm.openDialog('pagepicker')\" href=javascript:void(0)>Page Picker</a></li><li role=menuitem><a ng-click=\"vm.openDialog('imagemanager')\" href=javascript:void(0)>Image Manager</a></li><li role=menuitem><a ng-click=\"vm.openDialog('documentmanager')\" href=javascript:void(0)>Document Manager</a></li></ul></div><div class=dropzone-previews></div><div class=small ng-show=fileAdded>Sponsored with ♥ by <a href=\"http://www.2sic.com/\">2sic.com</a></div></div><div ng-if=vm.debug.on>todo: test-url shortening, nice progress indicator, thumbnail preview if it's a pic</div></div>"
   );
 
 

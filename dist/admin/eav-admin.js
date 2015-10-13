@@ -1680,6 +1680,23 @@ angular.module("EavServices")
 
         return svc;
     });
+// This service adds CSS classes to body when something is dragged onto the page
+angular.module("EavServices")
+    .factory("dragClass", function () {
+
+        document.addEventListener('dragover', function() {
+            if(this === document)
+                document.body.classList.add("eav-dragging");
+        });
+        document.addEventListener('dragleave', function() {
+            if(this === document)
+                document.body.classList.remove("eav-dragging");
+        });
+
+        return {};
+
+    });
+
 /*  this file contains a service to handle 
  * How it works
  * This service tries to open a modal dialog if it can, otherwise a new window returning a promise to allow

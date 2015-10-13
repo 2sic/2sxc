@@ -1,7 +1,7 @@
 ﻿/* js/fileAppDirectives */
 
 angular.module("sxcFieldTemplates")
-    .directive("dropzone", function (sxc, tabId) {
+    .directive("dropzone", function (sxc, tabId, dragClass) {
         return {
             restrict: "C",
             link: function (scope, element, attrs) {
@@ -23,20 +23,20 @@ angular.module("sxcFieldTemplates")
 
                     //previewTemplate: "<div></div>",
                     dictDefaultMessage: "",
-                    addRemoveLinks: true,
+                    addRemoveLinks: false,
                     previewsContainer: '.dropzone-previews'
                 };
 
                 var eventHandlers = {
-                    //'addedfile': function(file) {
-                    //    scope.file = file;
-                    //    if (this.files[1] !== null) {
-                    //        this.removeFile(this.files[0]);
-                    //    }
-                    //    scope.$apply(function() {
-                    //        scope.fileAdded = true;
-                    //    });
-                    //},
+                    'addedfile': function(file) {
+                        //scope.file = file;
+                        //if (this.files[1] !== null) {
+                        //    this.removeFile(this.files[0]);
+                        //}
+                        scope.$apply(function() {
+                            scope.fileAdded = true;
+                        });
+                    },
 
                     'success': function (file, response) {
                         if (response.Success) {
@@ -49,9 +49,6 @@ angular.module("sxcFieldTemplates")
                 };
 
                 var dropzone = new Dropzone(element[0], config);
-
-                document.addEventListener('dragenter', function() { document.body.className += " sxc-dragging"; });
-                document.addEventListener('dragleave', function () { document.body.className = document.body.className.replace("sxc-dragging", ""); });
 
                 angular.forEach(eventHandlers, function(handler, event) {
                     dropzone.on(event, handler);

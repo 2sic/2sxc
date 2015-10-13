@@ -1,10 +1,15 @@
 ﻿<div>
-    <div class="input-group dropzone" dropdown>
-        <div>
+    <div class="dropzone" >
+        <div class="input-group" dropdown>
             <input type="text" class="form-control" ng-model="value.Value" tooltip="drop file here to auto-upload
 for help see 2sxc.org/help?tag=adam
 ADAM - sponsored with love by 2sic.com">
-            <span class="input-group-btn">
+            <div ng-if="value.Value">
+                <a href="{{vm.testLink}}" target="_blank">
+                    <i icon="new-window"></i>
+                </a><span tooltip="{{vm.testLink}}">&nbsp;... {{vm.testLink.substr(vm.testLink.lastIndexOf("/"), 100)}}</span>
+            </div>
+            <span class="input-group-btn" style="vertical-align: top;">
                 <button type="button" id="single-button" class="btn btn-default dropdown-toggle" dropdown-toggle ng-disabled="to.disabled">
                     <span icon="option-horizontal"></span>
                 </button>
@@ -15,16 +20,12 @@ ADAM - sponsored with love by 2sic.com">
                 <li role="menuitem"><a ng-click="vm.openDialog('documentmanager')" href="javascript:void(0)">Document Manager</a></li>
             </ul>
         </div>
-        <div>
-            <div class="dropzone-previews"></div>
+        <div class="dropzone-previews">
+        </div>
+        <div class="small" ng-show="fileAdded">
+            Sponsored with ♥ by <a href="http://www.2sic.com/">2sic.com</a>
         </div>
     </div>
-    <div ng-if="value.Value">
-        <a href="{{vm.testLink}}" target="_blank">
-            <i icon="new-window"></i>
-        </a><span tooltip="{{vm.testLink}}">&nbsp;... {{vm.testLink.substr(vm.testLink.lastIndexOf("/"), 100)}}</span>
-    </div>
 
-    <div>todo: upload progress</div>
     <div ng-if="vm.debug.on">todo: test-url shortening, nice progress indicator, thumbnail preview if it's a pic</div>
 </div>

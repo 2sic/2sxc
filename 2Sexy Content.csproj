@@ -553,7 +553,7 @@
     <Content Include="src\sxc-admin\web-api\web-api-controller.js" />
     <Content Include="src\sxc-admin\web-api\web-api.html" />
     <Content Include="src\sxc-edit\fieldtemplates\dropzone-directive.js" />
-    <Content Include="src\sxc-edit\fieldtemplates\templates\dropzone-custom.min.css" />
+    <Content Include="src\sxc-edit\fieldtemplates\dropzone-custom.css" />
     <Content Include="src\sxc-edit\fieldtemplates\_sxc-fieldtemplates-app.js" />
     <Content Include="src\sxc-edit\fieldtemplates\sxc-fieldtemplates.js" />
     <Content Include="src\sxc-edit\fieldtemplates\templates\hyperlink-default-filemanager.html" />
