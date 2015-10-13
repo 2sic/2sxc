@@ -1,6 +1,6 @@
 ﻿<dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="2SexyContent" type="Module" version="07.03.00">
+    <package name="2SexyContent" type="Module" version="07.03.01">
       <friendlyName> Content</friendlyName>
       <description>2sxc is a DNN Extension to create attractive and designed content. It solves the common problem, allowing the web designer to create designed templates for different content elements, so that the user must only fill in fields and receive a perfectly designed and animated output.</description>
       <iconFile>icon.png</iconFile>
@@ -179,7 +179,7 @@
             <script type="UnInstall">
               <path>SqlDataProvider</path>
               <name>Uninstall.SqlDataProvider</name>
-              <version>07.03.00</version>
+              <version>07.03.01</version>
             </script>
           </scripts>
         </component>
@@ -376,7 +376,7 @@
             <attributes>
               <businessControllerClass>ToSic.SexyContent.SexyContent, ToSic.SexyContent</businessControllerClass>
               <desktopModuleID>[DESKTOPMODULEID]</desktopModuleID>
-              <upgradeVersionsList>01.00.00,05.05.00,06.06.00,06.06.04,07.00.00,07.00.03,07.02.00,07.02.02,07.03.00</upgradeVersionsList>
+              <upgradeVersionsList>01.00.00,05.05.00,06.06.00,06.06.04,07.00.00,07.00.03,07.02.00,07.02.02,07.03.00,07.03.01</upgradeVersionsList>
             </attributes>
           </eventMessage>
         </component>
@@ -646,7 +646,7 @@
       </components>
     </package>
 
-    <package name="2SexyContent-App" type="Module" version="07.03.00">
+    <package name="2SexyContent-App" type="Module" version="07.03.01">
       <friendlyName> App</friendlyName>
       <description>2sxc App is an extension that allows to install and use a 2sxc app.</description>
       <iconFile>icon-app.png</iconFile>
