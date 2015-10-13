@@ -34,7 +34,10 @@ namespace ToSic.SexyContent
 
 		public static string UpgradeModule(string version)
 		{
-			if (IsUpgradeComplete(version))
+            // Configure Unity
+            new UnityConfig().Configure();
+
+            if (IsUpgradeComplete(version))
 				throw new Exception("2sxc upgrade for version " + version + " started, but it looks like the upgrade for this version is already complete. Aborting upgrade.");
 
 			if (IsUpgradeRunning)

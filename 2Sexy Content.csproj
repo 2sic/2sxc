@@ -269,6 +269,7 @@
     <Compile Include="SexyContent\EAV\FieldTemplates\EditorProvider.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="SexyContent\UnityConfig.cs" />
     <Compile Include="SexyContent\WebApi\SystemController.cs" />
     <Compile Include="SexyContent\WebApi\TemplateController.cs" />
     <Compile Include="SexyContent\WebApi\ContentGroupController.cs" />

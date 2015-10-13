@@ -199,6 +199,7 @@ namespace ToSic.SexyContent
 
         static SexyContent()
         {
+            new UnityConfig().Configure();
             SetEAVConnectionString();
         }
 
