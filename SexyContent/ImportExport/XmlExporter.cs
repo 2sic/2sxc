@@ -8,6 +8,7 @@ using System.Xml;
 using System.Xml.Linq;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.FileSystem;
+using Telerik.Web.Data.Extensions;
 using ToSic.Eav;
 
 namespace ToSic.SexyContent.ImportExport
@@ -128,7 +129,7 @@ namespace ToSic.SexyContent.ImportExport
                             // Add Attribute MetaData
                             from c in
                                 Sexy.ContentContext.Entities.GetEntities(Constants.AssignmentObjectTypeIdFieldProperties,
-                                    x.AttributeID)
+                                    x.AttributeID).ToList()
                             select GetEntityXElement(c)
                             );
 

@@ -37,7 +37,7 @@ namespace ToSic.SexyContent
             // Configure Unity
             new UnityConfig().Configure();
 
-            if (IsUpgradeComplete(version))
+            if (version != "01.00.00" && IsUpgradeComplete(version)) // Abort upgrade if it's already done - if version is 01.00.00, the module has probably been uninstalled - continue in this case.
 				throw new Exception("2sxc upgrade for version " + version + " started, but it looks like the upgrade for this version is already complete. Aborting upgrade.");
 
 			if (IsUpgradeRunning)
@@ -80,6 +80,9 @@ namespace ToSic.SexyContent
 						LogSuccessfulUpgrade("07.00.03", false);
 						LogSuccessfulUpgrade("07.02.00", false);
 						break;
+                    case "07.03.01":
+                        EnsurePipelineDesignerAttributeSets(); // Need to ensure this again because of upgrade problems
+				        break;
 				}
 
 				// Increase ClientDependency version upon each upgrade (System and all Portals)

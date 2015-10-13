@@ -233,7 +233,7 @@ namespace ToSic.SexyContent.ImportExport
 			var importEntities = GetImportEntities(xmlSource.Elements("Entities").Elements("Entity"), SexyContent.AssignmentObjectTypeIDDefault);
 
 			var import = new Eav.Import.Import(_zoneId, _appId, UserName);
-			import.RunImport(importAttributeSets, importEntities, true, true);
+			import.RunImport(importAttributeSets, importEntities);
 			ImportLog.AddRange(GetExportImportMessagesFromImportLog(import.ImportLog));
 
 			if (xmlSource.Elements("Templates").Any())
