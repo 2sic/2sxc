@@ -546,7 +546,11 @@ $(document).ready(function () {
 
 			// Save only if the currently saved is not the same as the new
         	if (!vm.manageInfo.hasContent || vm.savedTemplateId != vm.templateId) {
-        		promises.push(moduleApi.saveTemplateId(vm.templateId));
+        		promises.push(moduleApi.saveTemplateId(vm.templateId).then(function(result) {
+        		    // Make sure that ContentGroupGuid is updated accordingly
+        		    var guid = result.data;
+		            $2sxc(moduleId).manage._manageInfo.config.contentGroupId = guid;
+		        }));
         		vm.savedTemplateId = vm.templateId;
         		promises.push(vm.setTemplateChooserState(false));
 	        }

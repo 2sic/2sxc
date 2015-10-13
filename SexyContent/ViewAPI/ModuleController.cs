@@ -32,9 +32,9 @@ namespace ToSic.SexyContent.ViewAPI
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         [ValidateAntiForgeryToken]
-		public void SaveTemplateId([FromUri] int templateId)
+		public Guid SaveTemplateId([FromUri] int templateId)
         {
-			Sexy.ContentGroups.SaveTemplateId(ActiveModule.ModuleID, templateId);
+			return Sexy.ContentGroups.SaveTemplateId(ActiveModule.ModuleID, templateId);
         }
 
         [HttpGet]

@@ -99,7 +99,7 @@ namespace ToSic.SexyContent
 			moduleController.DeleteModuleSetting(moduleId, PreviewTemplateIdString);
 		}
 
-		public void SaveTemplateId(int moduleId, int templateId)
+		public Guid SaveTemplateId(int moduleId, int templateId)
 		{
 			// Remove the previewTemplateId (because it's not needed as soon Content is inserted)
 			DeletePreviewTemplateId(moduleId);
@@ -109,9 +109,10 @@ namespace ToSic.SexyContent
 			var contentGroup = GetContentGroupForModule(moduleId);
 
 			if(!contentGroup.Exists)
-				CreateContentGroup(moduleId, templateId);
-			else
-				contentGroup.UpdateTemplate(templateId);
+				return CreateContentGroup(moduleId, templateId);
+
+            contentGroup.UpdateTemplate(templateId);
+		    return contentGroup.ContentGroupGuid;
 		}
 
 		public ContentGroup GetContentGroupForModule(int moduleId)
