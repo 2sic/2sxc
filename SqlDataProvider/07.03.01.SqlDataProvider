@@ -1,0 +1,11 @@
+﻿-- make sure sql rolls back automatically in case of error.
+SET XACT_ABORT ON
+
+BEGIN TRANSACTION SexyContentUpdate;
+
+IF NOT EXISTS(SELECT * FROM ToSIC_EAV_AttributeTypes WHERE [Type] = 'Empty')
+	INSERT INTO ToSIC_EAV_AttributeTypes ([Type]) VALUES ('Empty')
+
+-- Commit the transaction
+COMMIT TRANSACTION SexyContentUpdate;
+--ROLLBACK TRANSACTION SexyContentUpdate;
