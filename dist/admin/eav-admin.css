@@ -72,4 +72,42 @@
 /* Global link styling */
 a { cursor: pointer; }
 
+.btn-square {
+    height: 34px;
+    width: 34px;
+    padding-left: 9px;
+}
+
+.btn-lg.btn-square {
+    height: 46px;
+    width: 46px;
+    padding-left: 13px;
+    padding-top: 11px;
+}
+
+.btn-xs.btn-square {
+    height: 22px;
+    width: 22px;
+    text-align: center;
+    padding-left: 4px;
+}
+
+.btn-xs.btn-square i {
+    padding-top: 2px;
+}
+
 .clickable { cursor:pointer; }
+/*.clickable:hover { text-decoration: underline }*/
+.clickable-row:hover .clickable { text-decoration: underline }
+
+.low-priority .glyphicon, .low-priority.glyphicon {
+    color: lightgray;
+}
+
+h3:hover .low-priority.glyphicon, h4:hover .low-priority.glyphicon {
+    color: #3bafda;
+}
+
+h3.clickable:hover, h4.clickable:hover {
+      color: #3bafda;
+}
