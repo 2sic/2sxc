@@ -79,6 +79,9 @@ namespace ToSic.SexyContent.WebApi
         [HttpGet]
         public void DeleteApp(int zoneId, int appId)
         {
+            if (zoneId != SexyContent.GetZoneID(this.PortalSettings.PortalId))
+                throw new Exception("This app does not belong to portal " + this.PortalSettings.PortalId);
+
             var sexy = new SexyContent(zoneId, appId, false);
             var userId = PortalSettings.Current.UserId;
             sexy.RemoveApp(appId, userId);

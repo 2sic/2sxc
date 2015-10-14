@@ -239,7 +239,16 @@ namespace ToSic.SexyContent.ImportExport
                     }
                     catch (InvalidFileExtensionException e)
                     {
-                        messages.Add(new ExportImportMessage("File '" + destinationFileName + "' not copied because the file extension is not allowed.", ExportImportMessage.MessageTypes.Error));
+                        messages.Add(
+                            new ExportImportMessage(
+                                "File '" + destinationFileName +
+                                "' not copied because the file extension is not allowed.",
+                                ExportImportMessage.MessageTypes.Error));
+                        Exceptions.LogException(e);
+                    }
+                    catch (Exception e)
+                    {
+                        messages.Add(new ExportImportMessage("Can't copy file '" + destinationFileName + "' because of an unkown error. The exception has been logged to the event log.", ExportImportMessage.MessageTypes.Warning));
                         Exceptions.LogException(e);
                     }
                 }
