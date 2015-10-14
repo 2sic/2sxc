@@ -16,32 +16,34 @@
         .controller("AppList", AppListController)
         ;
 
-    function AppListController(appsSvc, eavAdminDialogs, sxcDialogs, eavConfig, zoneId, oldDialogs, $modalInstance) {
+    function AppListController(appsSvc, eavAdminDialogs, sxcDialogs, eavConfig, zoneId, oldDialogs, $modalInstance, $filter) {
         var vm = this;
 
         var svc = appsSvc(zoneId);
         vm.items = svc.liveList();
         vm.refresh = svc.liveListReload;
+        var translate = $filter("translate");
 
         vm.config = function config(item) {
             eavAdminDialogs.openItemEditWithEntityId(item.ConfigurationId, svc.liveListReload);
         };
 
         vm.add = function add() {
-            var result = prompt("Enter App Name (will also be used for folder)");
+            var result = prompt(translate("AppManagement.Prompt.NewApp"));
             if (result)
                 svc.create(result);
         };
 
         
         vm.tryToDelete = function tryToDelete(item) {
-            var result = prompt("This cannot be undone. To really delete this app, type (or copy/past) the app-name here: Delete '" + item.Name + "' (" + item.Id + ") ?");
+            var result = prompt(translate("AppManagement.Prompt.DeleteApp", { name: item.Name, id: item.Id}));
+                //prompt("This cannot be undone. To really delete this app, type (or copy/past) the app-name here: Delete '" + item.Name + "' (" + item.Id + ") ?");
             if (result === null)
                 return;
             if(result === item.Name)
                 svc.delete(item.Id);
             else 
-                alert("input did not match - will not delete");
+                alert(translate("AppManagement.Prompt.FailedDelete"));
         };
 
         // note that manage MUST open in a new iframe, to give the entire application 

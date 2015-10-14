@@ -415,12 +415,6 @@ $(document).ready(function () {
             })
             .useLoaderCache(true);
 
-            //.useStaticFilesLoader({
-            //    // todo: path...
-            //    prefix: globals.applicationRoot + "desktopmodules/tosic_sexycontent/dist/i18n/inpage-",
-            //    suffix: ".js"
-        //})
-
         $translatePartialLoaderProvider.addPart("inpage");
     }]);
 

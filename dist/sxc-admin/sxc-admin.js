@@ -136,32 +136,34 @@
         .controller("AppList", AppListController)
         ;
 
-    function AppListController(appsSvc, eavAdminDialogs, sxcDialogs, eavConfig, zoneId, oldDialogs, $modalInstance) {
+    function AppListController(appsSvc, eavAdminDialogs, sxcDialogs, eavConfig, zoneId, oldDialogs, $modalInstance, $filter) {
         var vm = this;
 
         var svc = appsSvc(zoneId);
         vm.items = svc.liveList();
         vm.refresh = svc.liveListReload;
+        var translate = $filter("translate");
 
         vm.config = function config(item) {
             eavAdminDialogs.openItemEditWithEntityId(item.ConfigurationId, svc.liveListReload);
         };
 
         vm.add = function add() {
-            var result = prompt("Enter App Name (will also be used for folder)");
+            var result = prompt(translate("AppManagement.Prompt.NewApp"));
             if (result)
                 svc.create(result);
         };
 
         
         vm.tryToDelete = function tryToDelete(item) {
-            var result = prompt("This cannot be undone. To really delete this app, type (or copy/past) the app-name here: Delete '" + item.Name + "' (" + item.Id + ") ?");
+            var result = prompt(translate("AppManagement.Prompt.DeleteApp", { name: item.Name, id: item.Id}));
+                //prompt("This cannot be undone. To really delete this app, type (or copy/past) the app-name here: Delete '" + item.Name + "' (" + item.Id + ") ?");
             if (result === null)
                 return;
             if(result === item.Name)
                 svc.delete(item.Id);
             else 
-                alert("input did not match - will not delete");
+                alert(translate("AppManagement.Prompt.FailedDelete"));
         };
 
         // note that manage MUST open in a new iframe, to give the entire application 
@@ -195,7 +197,7 @@
 
         vm.close = function () { $modalInstance.dismiss("cancel");};
     }
-    AppListController.$inject = ["appsSvc", "eavAdminDialogs", "sxcDialogs", "eavConfig", "zoneId", "oldDialogs", "$modalInstance"];
+    AppListController.$inject = ["appsSvc", "eavAdminDialogs", "sxcDialogs", "eavConfig", "zoneId", "oldDialogs", "$modalInstance", "$filter"];
 
 } ());
 (function () { 
@@ -358,6 +360,8 @@
         };
 
         vm.toggle = svc.toggle;
+
+        vm.save = svc.save;
     }
     LanguagesSettingsController.$inject = ["languagesSvc", "eavConfig", "appId"];
 
@@ -532,6 +536,11 @@ angular.module("SxcServices")
             // delete, then reload
             svc.toggle = function toggle(item) {
                 return $http.get("app/system/switchlanguage", {params: {cultureCode: item.Code, enable: !item.IsEnabled }})
+                    .then(svc.liveListReload);
+            };
+
+            svc.save = function save(item) {
+                return $http.get("app/system/switchlanguage", { params: { cultureCode: item.Code, enable: item.IsEnabled } })
                     .then(svc.liveListReload);
             };
 
@@ -732,7 +741,7 @@ angular.module('SxcTemplates',[]).run(['$templateCache', function($templateCache
 
 
   $templateCache.put('language-settings/languages.html',
-    "<div><div class=modal-body><h4 translate=Language.Title></h4><div translate=Language.Intro></div><table class=\"table table-striped table-hover\"><thead><tr><th translate=Language.Table.Code></th><th translate=Language.Table.Culture></th><th translate=Language.Table.Status></th></tr></thead><tbody><tr ng-repeat=\"item in vm.items | orderBy:['ContentType.Name','Name']\"><td>{{item.Code}}</td><td>{{item.Culture}}</td><td class=text-nowrap><span icon=\"{{ item.IsEnabled ? 'eye-open' : 'eye-close' }}\"></span> <button icon=\"{{ item.IsEnabled ? 'pause' : 'play' }}\" type=button class=\"btn btn-xs\" ng-click=vm.toggle(item)></button></td></tr><tr ng-if=!vm.items.length><td colspan=100 translate=General.Messages.NothingFound></td></tr></tbody></table></div></div>"
+    "<div><div class=modal-header><h4 translate=Language.Title></h4></div><div class=modal-body><div translate=Language.Intro></div><table class=\"table table-hover\"><thead><tr><th translate=Language.Table.Code></th><th translate=Language.Table.Culture></th><th translate=Language.Table.Status></th></tr></thead><tbody><tr ng-repeat=\"item in vm.items | orderBy:['ContentType.Name','Name']\" class=clickable-row ng-click=vm.toggle(item)><td class=clickable>{{item.Code}}</td><td class=clickable>{{item.Culture}}</td><td class=\"clickable text-nowrap\"><span ng-click=vm.save(item) stop-event=click><switch ng-model=item.IsEnabled></switch></span></td></tr><tr ng-if=!vm.items.length><td colspan=100 translate=General.Messages.NothingFound></td></tr></tbody></table>&nbsp;</div></div>"
   );
 
 
@@ -830,7 +839,7 @@ angular.module('SxcTemplates',[]).run(['$templateCache', function($templateCache
         };
 
         vm.tryToDelete = function tryToDelete(item) {
-            if (confirm("Delete '" + item.Title + "' (" + item.Id + ") ?"))
+            if (confirm(translate("General.Messages.DeleteEntity", { title: item.Title, id: item.Id})))
                 svc.delete(item.Id);
         };
 
@@ -871,8 +880,9 @@ angular.module('SxcTemplates',[]).run(['$templateCache', function($templateCache
         .controller("WebApiMain", WebApiMainController)
         ;
 
-    function WebApiMainController(appId, webApiSvc, eavAdminDialogs, $modalInstance) {
+    function WebApiMainController(appId, webApiSvc, eavAdminDialogs, $modalInstance, $filter) {
         var vm = this;
+        var translate = $filter('translate');
         
         var svc = webApiSvc(appId);
 
@@ -880,12 +890,12 @@ angular.module('SxcTemplates',[]).run(['$templateCache', function($templateCache
         vm.refresh = svc.liveListReload;
 
         vm.add = function add() {
-            alert("there is no automatic add yet - please do it manually in the 'api' folder. Just copy one of an existing project to get started.");
+            alert(translate("WebApi.AddDoesntExist"));
         };
 
         // not implemented yet...
         vm.tryToDelete = function tryToDelete(item) {
-            if (confirm("Delete '" + item.Title + "' (" + item.Id + ") ?"))
+            if (confirm(translate("General.Messages.DeleteEntity", { title: item.Title, id: item.Id})))   //"Delete '" + item.Title + "' (" + item.Id + ") ?"))
                 svc.delete(item.Id);
         };
 
@@ -893,6 +903,6 @@ angular.module('SxcTemplates',[]).run(['$templateCache', function($templateCache
             $modalInstance.dismiss("cancel");
         };
     }
-    WebApiMainController.$inject = ["appId", "webApiSvc", "eavAdminDialogs", "$modalInstance"];
+    WebApiMainController.$inject = ["appId", "webApiSvc", "eavAdminDialogs", "$modalInstance", "$filter"];
 
 } ());

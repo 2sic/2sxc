@@ -19,6 +19,7 @@
     },
     "Questions": {
       "Delete": "are you sure you want to delete {{target}}?",
+      "DeleteEntity": "delete '{{title}}' ({{id}}?",
       "SystemInput": "This is for very advanced operations. Only use this if you know what you're doing. \n\n Enter admin commands:"
     },
     "Terms": {

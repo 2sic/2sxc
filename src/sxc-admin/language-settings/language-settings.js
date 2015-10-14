@@ -22,6 +22,8 @@
         };
 
         vm.toggle = svc.toggle;
+
+        vm.save = svc.save;
     }
 
 } ());

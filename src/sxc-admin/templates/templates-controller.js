@@ -47,7 +47,7 @@
         };
 
         vm.tryToDelete = function tryToDelete(item) {
-            if (confirm("Delete '" + item.Title + "' (" + item.Id + ") ?"))
+            if (confirm(translate("General.Messages.DeleteEntity", { title: item.Title, id: item.Id})))
                 svc.delete(item.Id);
         };
 

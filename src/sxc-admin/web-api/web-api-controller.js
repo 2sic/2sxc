@@ -10,8 +10,9 @@
         .controller("WebApiMain", WebApiMainController)
         ;
 
-    function WebApiMainController(appId, webApiSvc, eavAdminDialogs, $modalInstance) {
+    function WebApiMainController(appId, webApiSvc, eavAdminDialogs, $modalInstance, $filter) {
         var vm = this;
+        var translate = $filter('translate');
         
         var svc = webApiSvc(appId);
 
@@ -19,12 +20,12 @@
         vm.refresh = svc.liveListReload;
 
         vm.add = function add() {
-            alert("there is no automatic add yet - please do it manually in the 'api' folder. Just copy one of an existing project to get started.");
+            alert(translate("WebApi.AddDoesntExist"));
         };
 
         // not implemented yet...
         vm.tryToDelete = function tryToDelete(item) {
-            if (confirm("Delete '" + item.Title + "' (" + item.Id + ") ?"))
+            if (confirm(translate("General.Messages.DeleteEntity", { title: item.Title, id: item.Id})))   //"Delete '" + item.Title + "' (" + item.Id + ") ?"))
                 svc.delete(item.Id);
         };
 

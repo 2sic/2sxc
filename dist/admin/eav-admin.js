@@ -482,12 +482,11 @@
             })             
     ;
 }());
-(function () { 
+(function() {
 
     angular.module("ContentTypesApp")
         .controller("List", contentTypeListController)
-        .controller("Edit", contentTypeEditController)
-    ;
+        .controller("Edit", contentTypeEditController);
 
 
     /// Manage the list of content-types
@@ -751,7 +750,7 @@ angular.module('eavTemplates',[]).run(['$templateCache', function($templateCache
 
 
   $templateCache.put('content-types/content-types-field-edit.html',
-    "<div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=Fields.TitleEdit></h3></div><div class=modal-body><table class=\"table table-hover table-manage-eav\"><thead><tr><th translate=Fields.Table.Name style=\"width: 200px\"></th><th translate=Fields.Table.DataType style=\"width: 150px\">Data Type</th><th></th></tr></thead><tbody><tr ng-repeat=\"item in vm.items\"><td><input ng-model=item.StaticName ng-required=\"true\"></td><td><select ng-model=item.Type ng-options=\"o as 'DataType.' + o + '.Choice' | translate for o in vm.types | orderBy: 'toString()' \"></select></td><td></td></tr></tbody></table></div><div class=modal-footer><button icon=ok class=\"btn btn-default pull-left\" type=button ng-click=vm.ok()></button></div>"
+    "<div class=modal-header><button icon=remove class=\"btn btn-default btn-square pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=Fields.TitleEdit></h3></div><div class=modal-body><table class=\"table table-hover table-manage-eav\"><thead><tr><th translate=Fields.Table.Name style=\"width: 280px\"></th><th translate=Fields.Table.DataType style=\"width: 150px\">Data Type</th><th></th></tr></thead><tbody><tr ng-repeat=\"item in vm.items\"><td><input ng-model=item.StaticName ng-required=true class=input-lg style=\"width: 250px\"></td><td><select class=input-lg ng-model=item.Type ng-options=\"o as 'DataType.' + o + '.Choice' | translate for o in vm.types | orderBy: 'toString()' \"></select></td><td></td></tr></tbody></table></div><div class=modal-footer><button icon=ok class=\"btn btn-lg btn-primary btn-square pull-left\" type=button ng-click=vm.ok()></button></div>"
   );
 
 

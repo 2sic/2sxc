@@ -38,7 +38,7 @@
     }
   },
   "TemplateEdit": {
-    "Title": "Edit Template - todo"
+    "Title": "Edit Template"
   },
   "WebAPIData": {
     "unused": {
@@ -56,16 +56,17 @@
     "Intro": "Create a WebApi within minutes by placing the source code in the folder called API and inheriting the correct interface. Try it out by creating one automatically and pressing here. Read more about the <a href='http://2sxc.org/en/Docs-Manuals/Feature/feature/3361' target='_blank'>WebApi</a> or the <a href='http://2sxc.org/en/Docs-Manuals/Feature/feature/3360' target='_blank'>C# data editing API</a>.",
     "ListTitle": "The following list shows the .cs files in the App-API folder:",
     "InfoMissingFolder": "(the directory does not exist)",
-    "QuickStart": "For a quick start, we recommend that you install the WebApi demo-app. It contains some WebAPI controllers with various actions and some example views to use these controllers. Download <a href='http://2sxc.org/en/Apps/tag/WebApi' target='_blank'>WebApi demos in the App-Catalog</a> or read more about it in <a href='http://2sxc.org/en/help?tag=webapi' target='_blank'>help</a>"
+    "QuickStart": "For a quick start, we recommend that you install the WebApi demo-app. It contains some WebAPI controllers with various actions and some example views to use these controllers. Download <a href='http://2sxc.org/en/Apps/tag/WebApi' target='_blank'>WebApi demos in the App-Catalog</a> or read more about it in <a href='http://2sxc.org/en/help?tag=webapi' target='_blank'>help</a>",
+    "AddDoesntExist": "there is no automatic add yet - please do it manually in the 'api' folder. Just copy one of an existing project to get started."
   },
   "ImportExport": {
     "Title": "Export or Import <em>parts</em> of this App/Content",
     "Intro": "Create an xml or zip containing <em>parts</em> of this app, to import into another app or content. Or import such a parts-package.",
     "FurtherHelp": "For further help visit <a href='http://2sxc.org/en/help?tag=import' target='_blank'>2sxc Help</a>.",
-          "Buttons": {
-        "Import": "import",
-        "Export": "export"
-      },
+    "Buttons": {
+      "Import": "import",
+      "Export": "export"
+    },
     "Import": {
       "Title": "Import a content export (.zip) or a partial export (.xml)",
       "Explanation": "This import will add Content-Types, Templates and Content-Items to the current Content or App.",
@@ -137,11 +138,40 @@
       "Import": "import app",
       "Create": "create",
       "Export": "export app"
+    },
+    "Prompt": {
+      "NewApp": "Enter App Name (will also be used for folder)",
+      "DeleteApp": "This cannot be undone. To really delete this app, type (or copy/paste) the app-name here: sure you want to delete '{{name}}' ({{id}}) ?",
+      "FailedDelete": "input did not match - will not delete"
     }
   },
   "ReplaceContent": {
     "Title": "Replace Content Item",
     "Intro": "By replacing a content-item you can make a other content appear in the slot of the original content.",
     "ChooseItem": "Choose item:"
+  },
+
+
+
+  "Edit": {
+    "Fields": {
+      "Hyperlink": {
+        "Default": {
+          "Tooltip1": "drop files here to auto-upload",
+          "Tooltip2": "for help see 2sxc.org/help?tag=adam",
+          "Tooltip3": "ADAM - sponsored with love by 2sic.com",
+          "AdamUploadLabel": "quick-upload using ADAM",
+          "MenuAdam": "Upload file with Adam",
+          "MenuPage": "Page Picker",
+          "MenuImage": "Image Manager",
+          "MenuDocs": "Document Manager",
+          "SponsoredLine": "<a href='http://2sxc.org/help?tag=adam' target='_blank' tooltip='ADAM is the Automatic Digital Assets Manager - click to discover more'>Adam</a> is sponsored with ♥ by <a tabindex='-1' href='http://2sic.com/' target='_blank'>2sic.com</a>"
+        },
+        "FileManager": { },
+        "PagePicker": {
+          "Title": "Select a web page"
+        }
+      }
+    }
   }
 }
