@@ -152,7 +152,7 @@ namespace ToSic.SexyContent
 					AppId
 				},
 				PortalSettings.ActiveTab.FullUrl,
-				ApplicationPath = (Request.IsSecureConnection ? "https://" : "http://") + PortalAlias.HTTPAlias + "/",
+				PortalRoot = (Request.IsSecureConnection ? "https://" : "http://") + PortalAlias.HTTPAlias + "/",
 				DefaultLanguageID = Sexy != null ? Sexy.ContentContext.Dimensions.GetLanguageId(PortalSettings.DefaultLanguage) : null
 			}));
 		}

@@ -5,6 +5,7 @@ $2sxc.getManageController = function (id) {
 
     var moduleElement = $(".DnnModule-" + id);
     var manageInfo = $.parseJSON(moduleElement.find(".Mod2sxcC, .Mod2sxcappC").attr("data-2sxc")).manage;
+    var sxcGlobals = $.parseJSON(moduleElement.find(".Mod2sxcC, .Mod2sxcappC").attr("data-2sxc-globals"));
     manageInfo.ngDialogUrl = manageInfo.applicationRoot + "desktopmodules/tosic_sexycontent/dist/dnn/ui.html";
 
     manageInfo.ngDialogParams = {
@@ -14,7 +15,8 @@ $2sxc.getManageController = function (id) {
         mid: manageInfo.config.moduleId,
         lang: manageInfo.lang,
         langpri: manageInfo.langPrimary,
-        langs: JSON.stringify(manageInfo.languages)
+        langs: JSON.stringify(manageInfo.languages),
+        portalroot: sxcGlobals.PortalRoot
     };
 
     var toolbarConfig = manageInfo.config;
