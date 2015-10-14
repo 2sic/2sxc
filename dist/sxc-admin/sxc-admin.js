@@ -374,7 +374,7 @@
         ])
         .controller("ReplaceDialog", ReplaceContentController);
 
-    function ReplaceContentController(appId, item, contentGroupSvc, $modalInstance, $filter) {
+    function ReplaceContentController(appId, item, contentGroupSvc, eavAdminDialogs, $modalInstance, $filter) {
         var vm = this;
         vm.options = [];
         vm.item = {
@@ -386,10 +386,13 @@
 
         var svc = contentGroupSvc(appId);
 
-        svc.getItems(vm.item).then(function (result) {
-            vm.options = result.data.Items;
-            vm.item.id = result.data.SelectedId;
-        });
+        vm.reload = function() {
+            return svc.getItems(vm.item).then(function(result) {
+                vm.options = result.data.Items;
+                vm.item.id = result.data.SelectedId;
+            });
+        };
+        vm.reload();
 
         vm.ok = function ok() {
             svc.saveItem(vm.item).then(vm.close);
@@ -401,8 +404,26 @@
             return parseInt(id);
         };
 
+        vm.copySelected = function copySelected() {
+            var selectedId = vm.item.id;
+            var items = [
+                {
+                    //ContentTypeName: contentType,
+                    DuplicateEntity: vm.item.id
+                }
+            ];
+            eavAdminDialogs.openEditItems(items, vm.reloadAfterCopy);
+            // todo: on re-load a select would be nice
+        };
+
+        vm.reloadAfterCopy = function reloadAfterCopy(result) {
+            var copy = result.data;
+            vm.reload().then(function() {
+                vm.item.id = copy[Object.keys(copy)[0]]; // get id of first item
+            });
+        };
     }
-    ReplaceContentController.$inject = ["appId", "item", "contentGroupSvc", "$modalInstance", "$filter"];
+    ReplaceContentController.$inject = ["appId", "item", "contentGroupSvc", "eavAdminDialogs", "$modalInstance", "$filter"];
 
 } ());
 // Init the main eav services module
@@ -746,7 +767,7 @@ angular.module('SxcTemplates',[]).run(['$templateCache', function($templateCache
 
 
   $templateCache.put('replace-content/replace-content.html',
-    "<div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=ReplaceContent.Title></h3></div><div><div class=modal-body><p translate=ReplaceContent.Intro></p><div translate=ReplaceContent.ChooseItem></div><div><td><select ng-model=vm.item.id ng-options=\"vm.convertToInt(key) as ((value || '[?]') + ' (' + key + ')') for (key,value) in vm.options\"></select></td></div></div></div><div class=modal-footer><button icon=ok class=\"btn btn-default pull-left\" type=button ng-click=vm.ok()></button></div>"
+    "<div class=modal-header><button class=\"btn btn-default btn-square pull-right\" type=button ng-click=vm.close()><i icon=remove></i></button><h3 class=modal-title translate=ReplaceContent.Title></h3></div><div><div class=modal-body><p translate=ReplaceContent.Intro></p><div translate=ReplaceContent.ChooseItem></div><div><select class=input-lg ng-model=vm.item.id ng-options=\"vm.convertToInt(key) as ((value || '[?]') + ' (' + key + ')') for (key,value) in vm.options\"></select>&nbsp;<button type=button class=\"btn btn-default btn-lg\"><i icon=duplicate ng-click=vm.copySelected()></i></button></div></div></div><div class=modal-footer><button class=\"btn btn-primary btn-square btn-lg pull-left\" type=button ng-click=vm.ok()><i icon=ok></i></button></div>"
   );
 
 
