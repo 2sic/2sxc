@@ -120,8 +120,8 @@
 
 	});
 
-	app.directive("webFormsBridge", function (sxc, webRoot) {
-	    var webFormsBridgeUrl = webRoot + "?tabid=" + $2sxc.urlParams.require("tid") + "&ctl=webformsbridge&mid=" + sxc.id + "&popUp=true";
+	app.directive("webFormsBridge", function (sxc, portalRoot) {
+	    var webFormsBridgeUrl = portalRoot + "?tabid=" + $2sxc.urlParams.require("tid") + "&ctl=webformsbridge&mid=" + sxc.id + "&popUp=true";
 
 		return {
 			restrict: "A",

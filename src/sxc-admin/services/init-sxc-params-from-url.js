@@ -17,6 +17,9 @@
         .factory("tabId", function($2sxc) {
             return $2sxc.urlParams.get("tid");
         })
+        .factory("portalRoot", function ($2sxc) {
+            return $2sxc.urlParams.get("portalroot");
+        })
         .factory("items", function ($2sxc) {
                 var found = $2sxc.urlParams.get("items");
                 if (found)
