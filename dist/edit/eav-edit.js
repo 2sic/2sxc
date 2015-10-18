@@ -52,6 +52,47 @@ angular.module("eavFieldTemplates")
             wrapper: ["bootstrapHasError", "eavLocalization", "collapsible"]
         });
     }]);
+/* 
+ * Field: Custom - Default (basically something you should never see)
+ */
+
+angular.module("eavFieldTemplates")
+    .config(["formlyConfigProvider", "defaultFieldWrappers", function(formlyConfigProvider, defaultFieldWrappers) {
+
+        formlyConfigProvider.setType({
+            name: "custom-gps",
+            templateUrl: "fields/custom-gps/custom-gps.html",
+            wrapper: defaultFieldWrappers,
+            controller: "FieldTemplate-CustomGpsController"
+        });
+    }])
+    .controller("FieldTemplate-CustomGpsController", ["$scope", "$filter", "$modal", "appId", "debugState", "eavAdminDialogs", function ($scope, $filter, $modal, appId, debugState, eavAdminDialogs) {
+        $scope.debug = debugState;
+        // try to find the settings, where to copy the field to...
+        $scope.latField = "";
+        $scope.LongField = "";
+
+        var controlSettings = $scope.to.settings["custom-gps"];
+        if (controlSettings) {
+            $scope.latField = controlSettings.LatField || null;
+        }
+        // alert('gps' + $scope.latField);
+
+    }]);
+/* 
+ * Field: Custom - Default (basically something you should never see)
+ */
+
+angular.module("eavFieldTemplates")
+    .config(["formlyConfigProvider", "defaultFieldWrappers", function (formlyConfigProvider, defaultFieldWrappers) {
+
+        formlyConfigProvider.setType({
+            name: "custom-default",
+            templateUrl: "fields/custom/custom-default.html",
+            wrapper: defaultFieldWrappers
+        });
+
+    }]);
 // this changes JSON-serialization for dates, 
 // because we usually want the time to be the same across time zones and NOT keeping the same moment
 Date.prototype.toJSON = function() {
@@ -255,7 +296,7 @@ angular.module("eavFieldTemplates")
             defaultOptions: function defaultOptions(options) {
 
                 // DropDown field: Convert string configuration for dropdown values to object, which will be bound to the select
-                if (!options.templateOptions.options && options.templateOptions.settings.String.DropdownValues) {
+                if (!options.templateOptions.settings && options.templateOptions.settings.String && options.templateOptions.settings.String.DropdownValues) {
                     var o = options.templateOptions.settings.String.DropdownValues;
                     o = o.replace(/\r/g, "").split("\n");
                     o = o.map(function (e, i) {
@@ -426,6 +467,7 @@ angular.module("eavFieldTemplates")
 })();
 
 (function () {
+    /* jshint laxbreak:true */
 	"use strict";
 
 	var app = angular.module("eavEditEntity"); 
@@ -532,19 +574,30 @@ angular.module("eavFieldTemplates")
 		var getType = function(attributeConfiguration) {
 			var e = attributeConfiguration;
 			var type = e.Type.toLowerCase();
-			var subType = e.Metadata.String ? e.Metadata.String.InputType : null;
+		    var inputType = "";
+		    // new: the All can - and should - have an input-type which doesn't change
+			if (e.Metadata.All && e.Metadata.All.InputType) {
+			    inputType = e.Metadata.All.InputType;
+			} else {
+		        var subType = e.Metadata.String
+		            ? e.Metadata.String.InputType
+		            : null;
 
-			subType = subType ? subType.toLowerCase() : null;
+			    subType = subType ? subType.toLowerCase() : null;
 
-			// Special case: override subtype for string-textarea
-			if (type === "string" && e.Metadata.String && e.Metadata.String.RowCount > 1)
-				subType = "textarea";
+			    // Special case: override subtype for string-textarea
+                // todo: probably shouldn't do this any more...
+			    if (type === "string" && e.Metadata.String && e.Metadata.String.RowCount > 1)
+			        subType = "textarea";
+
+			    inputType = type + "-" + subType;
+			}
 
 			// Use subtype 'default' if none is specified - or type does not exist
-			if (!subType || !formlyConfig.getType(type + "-" + subType))
-				subType = "default";
+		    if (!inputType || !formlyConfig.getType(inputType))
+		        inputType = type + "-default";
 
-			return (type + "-" + subType);
+			return (inputType);
 		};
 	}]);
     
@@ -630,6 +683,16 @@ angular.module('eavEditTemplates',[]).run(['$templateCache', function($templateC
   );
 
 
+  $templateCache.put('fields/custom-gps/custom-gps.html',
+    "<div><div class=\"alert alert-danger\">GPS-Picker 2 - not implemented yet <input class=\"form-control input-lg\" ng-pattern=vm.regexPattern ng-model=value.Value></div><div ng-if=debug.on><h4>debug info</h4><div>lat field name: '{{ latField}}' long-field name: '{{longField}}'</div></div></div>"
+  );
+
+
+  $templateCache.put('fields/custom/custom-default.html',
+    "<div class=\"alert alert-danger\">ERROR - This is a custom field, you shouldn't see this. You only see this because the custom-dialog is missing.</div><input class=\"form-control input-lg\" ng-pattern=vm.regexPattern ng-model=value.Value>"
+  );
+
+
   $templateCache.put('fields/empty/empty-default.html',
     "<span></span>"
   );
@@ -641,7 +704,7 @@ angular.module('eavEditTemplates',[]).run(['$templateCache', function($templateC
 
 
   $templateCache.put('form/edit-many-entities.html',
-    "<div ng-if=\"vm.items != null\" ng-click=vm.debug.autoEnableAsNeeded($event)><eav-language-switcher></eav-language-switcher><div ng-repeat=\"p in vm.items\" class=group-entity><h3 class=clickable ng-click=\"p.collapse = !p.collapse\">{{p.Header.Title ? p.Header.Title : 'EditEntity.DefaultTitle' | translate }}&nbsp; <span ng-if=p.Header.Group.SlotCanBeEmpty ng-click=vm.toggleSlotIsEmpty(p) stop-event=click><switch ng-model=p.slotIsUsed class=tosic-blue style=\"top: 6px\" tooltip=\"{{'EditEntity.SlotUsed' + p.slotIsUsed | translate}}\"></switch></span> <span class=\"pull-right clickable\" style=\"font-size: smaller\"><span class=\"low-priority collapse-entity-button\" ng-if=p.collapse icon=plus-sign></span> <span class=\"low-priority collapse-entity-button\" ng-if=!p.collapse icon=minus-sign></span></span></h3><eav-edit-entity-form entity=p.Entity header=p.Header register-edit-control=vm.registerEditControl ng-hide=p.collapse></eav-edit-entity-form></div><div><button ng-disabled=\"!vm.isValid() || vm.isWorking\" ng-click=vm.save(true) type=button class=\"btn btn-primary btn-lg btn-square submit-button\"><span icon=ok tooltip=\"{{ 'Button.Save' | translate }}\"></span></button> <button ng-disabled=\"!vm.isValid() || vm.isWorking\" class=\"btn btn-default btn-lg btn-square\" type=button ng-click=vm.save(false)><span icon=check tooltip=\"{{ 'Button.SaveAndKeepOpen' | translate }}\"></span></button> &nbsp;<switch ng-model=vm.willPublish class=tosic-blue style=\"top: 13px\"></switch>&nbsp; <span ng-click=vm.togglePublish() class=save-published-icon><i ng-if=vm.willPublish icon=eye-open tooltip=\"{{ 'Status.Published' | translate }} - {{ 'Message.WillPublish' | translate }}\"></i> <i ng-if=!vm.willPublish icon=eye-close tooltip=\"{{ 'Status.Unpublished' | translate }} - {{ 'Message.WontPublish' | translate }}\"></i></span> <span ng-if=vm.debug.on><button tooltip=debug icon=zoom-in class=btn ng-click=\"vm.showDebugItems = !vm.showDebugItems\"></button></span></div><div ng-if=\"vm.debug.on && vm.showDebugItems\"><pre>{{ vm.items | json }}</pre></div></div>"
+    "<div ng-if=\"vm.items != null\" ng-click=vm.debug.autoEnableAsNeeded($event)><eav-language-switcher></eav-language-switcher><div ng-repeat=\"p in vm.items\" class=group-entity><h3 class=clickable ng-click=\"p.collapse = !p.collapse\">{{p.Header.Title ? p.Header.Title : 'EditEntity.DefaultTitle' | translate }}&nbsp; <span ng-if=p.Header.Group.SlotCanBeEmpty ng-click=vm.toggleSlotIsEmpty(p) stop-event=click><switch ng-model=p.slotIsUsed class=tosic-blue style=\"top: 6px\" tooltip=\"{{'EditEntity.SlotUsed' + p.slotIsUsed | translate}}\"></switch></span> <span class=\"pull-right clickable\" style=\"font-size: smaller\"><span class=\"low-priority collapse-entity-button\" ng-if=p.collapse icon=plus-sign></span> <span class=\"low-priority collapse-entity-button\" ng-if=!p.collapse icon=minus-sign></span></span></h3><eav-edit-entity-form entity=p.Entity header=p.Header register-edit-control=vm.registerEditControl ng-hide=p.collapse></eav-edit-entity-form></div><div><button ng-disabled=\"!vm.isValid() || vm.isWorking\" ng-click=vm.save(true) type=button class=\"btn btn-primary btn-lg btn-square submit-button\"><span icon=ok tooltip=\"{{ 'Button.Save' | translate }}\"></span></button> <button ng-disabled=\"!vm.isValid() || vm.isWorking\" class=\"btn btn-default btn-lg btn-square\" type=button ng-click=vm.save(false)><span icon=check tooltip=\"{{ 'Button.SaveAndKeepOpen' | translate }}\"></span></button> &nbsp;<switch ng-model=vm.willPublish class=tosic-blue style=\"top: 13px\"></switch>&nbsp; <span ng-click=vm.togglePublish() class=save-published-icon><i ng-if=vm.willPublish icon=eye-open tooltip=\"{{ 'Status.Published' | translate }} - {{ 'Message.WillPublish' | translate }}\"></i> <i ng-if=!vm.willPublish icon=eye-close tooltip=\"{{ 'Status.Unpublished' | translate }} - {{ 'Message.WontPublish' | translate }}\"></i></span> <span ng-if=vm.debug.on><button tooltip=debug icon=zoom-in class=btn ng-click=\"vm.showDebugItems = !vm.showDebugItems\"></button></span><show-debug-availability class=pull-right style=\"margin-top: 20px\"></show-debug-availability></div><div ng-if=\"vm.debug.on && vm.showDebugItems\"><pre>{{ vm.items | json }}</pre></div></div>"
   );
 
 
