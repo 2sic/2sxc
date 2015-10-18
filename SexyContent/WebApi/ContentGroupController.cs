@@ -95,5 +95,30 @@ namespace ToSic.SexyContent.WebApi
             var contentGroup = Sexy.ContentGroups.GetContentGroup(guid);
             contentGroup.UpdateEntityIfChanged(part, index, entityId, false, null);
         }
+
+	    [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        public object ItemList(Guid guid)
+	    {
+	        var cg = GetContentGroup(guid);
+
+	        var list = cg.Content.Select((c, index) => new
+	        {
+                Index = index,
+	            Id = c.EntityId,
+	            Guid = c.EntityGuid,
+	            Title = c.Title
+	        }).ToList();
+
+	        return list;
+	    }
+
+	    [HttpPost]
+	    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+	    public bool ItemList(Guid guid, int[] List)
+	    {
+
+	        return true;
+	    }
     }
     }

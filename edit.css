@@ -95,4 +95,8 @@
 }
 
 .glyphicon-random:before {
-  content: "\e110";
+    content: "\e110";
+}
+.glyphicon-sort:before {
+  content: "\e150";
+}

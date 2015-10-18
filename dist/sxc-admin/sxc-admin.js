@@ -236,6 +236,9 @@
                 // this is the "replace item in a list" dialog
                 sxcDialogs.openReplaceContent(items[0], vm.close);
                 break;
+            case "sort":
+                sxcDialogs.openReorderContentList(items[0], vm.close);
+                break;
             case "pipeline-designer":
                 // Don't do anything, as the template already loads the app in fullscreen-mode
                 // eavDialogs.editPipeline(appId, pipelineId, closeCallback);
@@ -369,6 +372,54 @@
 } ());
 (function () { 
 
+    angular.module("ReorderContentApp", [
+            "SxcServices",
+            "EavAdminUi"         // dialog (modal) controller
+        ])
+        .controller("ReorderContentList", ReorderContentController);
+
+    function ReorderContentController(appId, item, contentGroupSvc, eavAdminDialogs, $modalInstance, $filter) {
+        var vm = this;
+        vm.items = [];
+        vm.item = {
+            id: item.EntityId,
+            guid: item.Group.Guid,
+            part: item.Group.Part,
+            index: item.Group.Index
+        };
+
+        var svc = contentGroupSvc(appId);
+
+        vm.reload = function() {
+            return svc.getList(vm.item).then(function(result) {
+                vm.items = result.data;
+            });
+        };
+        vm.reload();
+
+        vm.ok = function ok() {
+            svc.saveList(vm.items).then(vm.close);
+        };
+        
+        vm.close = function () { $modalInstance.dismiss("cancel"); };
+
+        //vm.convertToInt = function (id) {
+        //    return parseInt(id);
+        //};
+
+
+        //vm.reloadAfterCopy = function reloadAfterCopy(result) {
+        //    var copy = result.data;
+        //    vm.reload().then(function() {
+        //        vm.item.id = copy[Object.keys(copy)[0]]; 
+        //    });
+        //};
+    }
+    ReorderContentController.$inject = ["appId", "item", "contentGroupSvc", "eavAdminDialogs", "$modalInstance", "$filter"];
+
+} ());
+(function () { 
+
     angular.module("ReplaceContentApp", [
             "SxcServices",
             "EavAdminUi"         // dialog (modal) controller
@@ -474,7 +525,18 @@ angular.module("SxcServices")
                 },
                 saveItem: function(item) {
                     return $http.post('app/contentgroup/replace', {}, { params: { guid: item.guid, part: item.part, index: item.index, entityId: item.id } });
+                },
+
+                getList: function(item) {
+                    return $http.get('app/contentgroup/itemlist', { params: { appId: appId, guid: item.guid } });
+                },
+
+                saveList: function (item, resortedList) {
+                    alert("not implemented yet");
+                    return;
+                    //return $http.post('app/contentgroup/itemlist', { params: { appId: appId, guid: item.guid, list: resortedList } });
                 }
+
             };
 
             //svc.replace = $resource("",
@@ -578,6 +640,7 @@ angular.module("SxcAdminUi", [
     "MainSxcApp",
     "AppsManagementApp",
     "ReplaceContentApp",
+    "ReorderContentApp",
     "SystemSettingsApp",
     "SxcTemplates",
     "SxcEditTemplates",
@@ -671,6 +734,11 @@ angular.module("SxcAdminUi", [
         svc.openReplaceContent = function orc(item, closeCallback) {
             var resolve = eavAdminDialogs.CreateResolve({ item: item });
             return eavAdminDialogs.OpenModal("replace-content/replace-content.html", "ReplaceDialog as vm", "lg", resolve, closeCallback);
+        };
+
+        svc.openReorderContentList = function orcl(item, closeCallback) {
+            var resolve = eavAdminDialogs.CreateResolve({ item: item });
+            return eavAdminDialogs.OpenModal("reorder-content-list/reorder-content-list.html", "ReorderContentList as vm", "", resolve, closeCallback);
         };
 
         // 2dm 2015-10-07 - don't think this is in use, remove
@@ -767,8 +835,13 @@ angular.module('SxcTemplates',[]).run(['$templateCache', function($templateCache
   );
 
 
+  $templateCache.put('reorder-content-list/reorder-content-list.html',
+    "<div class=modal-header><button class=\"btn btn-default btn-square pull-right\" type=button ng-click=vm.close()><i icon=remove></i></button><h3 class=modal-title translate=ReorderContentList.Title></h3><h2>not yet implemented!</h2></div><div><div class=modal-body><p translate=ReorderContentList.Intro></p><div ui-tree=options data-empty-placeholder-enabled=false><ol ui-tree-nodes ng-model=vm.items><li ng-repeat=\"item in vm.items\" ui-tree-node class=eav-entityselect-item><div ui-tree-handle><i icon=move title=\"{{ 'FieldType.Entity.DragMove' | translate }}\" class=\"pull-left eav-entityselect-sort\" ng-show=to.settings.Entity.AllowMultiValue></i> {{item.Id}}</div></li></ol></div></div></div><div class=modal-footer><button class=\"btn btn-primary btn-square btn-lg pull-left\" type=button ng-click=vm.ok()><i icon=ok></i></button></div>"
+  );
+
+
   $templateCache.put('replace-content/replace-content.html',
-    "<div class=modal-header><button class=\"btn btn-default btn-square pull-right\" type=button ng-click=vm.close()><i icon=remove></i></button><h3 class=modal-title translate=ReplaceContent.Title></h3></div><div><div class=modal-body><p translate=ReplaceContent.Intro></p><div translate=ReplaceContent.ChooseItem></div><div><select class=input-lg ng-model=vm.item.id ng-options=\"vm.convertToInt(key) as ((value || '[?]') + ' (' + key + ')') for (key,value) in vm.options\"></select>&nbsp;<button type=button class=\"btn btn-default btn-lg\"><i icon=duplicate ng-click=vm.copySelected()></i></button></div></div></div><div class=modal-footer><button class=\"btn btn-primary btn-square btn-lg pull-left\" type=button ng-click=vm.ok()><i icon=ok></i></button></div>"
+    "<div class=modal-header><button class=\"btn btn-default btn-square pull-right\" type=button ng-click=vm.close()><i icon=remove></i></button><h3 class=modal-title translate=ReplaceContent.Title></h3></div><div><div class=modal-body><p translate=ReplaceContent.Intro></p><div translate=ReplaceContent.ChooseItem></div><div><select class=input-lg ng-model=vm.item.id ng-options=\"vm.convertToInt(key) as ((value || '[?]') + ' (' + key + ')') for (key,value) in vm.options\"></select>&nbsp;<button type=button class=\"btn btn-lg\"><i icon=duplicate ng-click=vm.copySelected()></i></button></div></div></div><div class=modal-footer><button class=\"btn btn-primary btn-square btn-lg pull-left\" type=button ng-click=vm.ok()><i icon=ok></i></button></div>"
   );
 
 

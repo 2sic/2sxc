@@ -144,6 +144,15 @@ $2sxc.getManageController = function (id) {
                 manageController._getSelectorScope().changeOrder(settings.sortOrder, settings.sortOrder + 1);
             }
         },
+        'sort': {
+            title: "Sort",
+            icon: "glyphicon-sort",
+            lightbox: true,
+            hideFirst: true,
+            action: function (settings, event) {
+                manageController._openNgDialog(settings, event);
+            }
+        },
         'remove': {
             title: "remove",
             icon: "glyphicon-minus",
@@ -202,7 +211,7 @@ $2sxc.getManageController = function (id) {
                     items.push({ ContentTypeName: settings.contentType || settings.attributeSetName });
             }
             // when using a list, the sort-order is important to find the right item
-            if (settings.useModuleList || settings.action === "replace") {
+            if (settings.useModuleList || settings.action === "replace" || settings.action === "sort") {
                 var normalContent = (settings.sortOrder !== -1);
                 var index = normalContent ? settings.sortOrder : 0;
                 items.push({
@@ -226,9 +235,9 @@ $2sxc.getManageController = function (id) {
                     });
             }
 
-            if (settings.action === "replace" || settings.action === "app" || settings.action === "zone") 
+            if (settings.action === "replace" || settings.action === "app" || settings.action === "zone" || settings.action === "sort")
                 params.dialog = settings.action;
-            
+
             // Serialize/json-ify the complex items-list
             if (items.length)
                 params.items = JSON.stringify(items);
@@ -327,7 +336,7 @@ $2sxc.getManageController = function (id) {
                 buttons.push($.extend({}, settings, { action: "edit" }));
 
                 // add applicable list buttons - add=add item below; new=lightbox-dialog
-                if (toolbarConfig.isList && settings.sortOrder != -1) { // if list and not the list-header
+                if (toolbarConfig.isList && settings.sortOrder !== -1) { // if list and not the list-header
                     buttons.push($.extend({}, settings, { action: "new" }));
                     if (settings.useModuleList) {
                         buttons.push($.extend({}, settings, { action: "add" }));
@@ -335,6 +344,7 @@ $2sxc.getManageController = function (id) {
                             buttons.push($.extend({}, settings, { action: "moveup" }));
                         buttons.push($.extend({}, settings, { action: "movedown" }));
                     }
+                    buttons.push($.extend({}, settings, { action: "sort" }));
                 }
                 buttons.push($.extend({}, settings, { action: "publish" }));
 

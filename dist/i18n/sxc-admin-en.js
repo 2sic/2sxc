@@ -150,7 +150,10 @@
     "Intro": "By replacing a content-item you can make a other content appear in the slot of the original content.",
     "ChooseItem": "Choose item:"
   },
-
+  "ReorderContentList": {
+    "Title": "Re-order list of content-items",
+    "Intro": "Sort by dragging as you need, then save"
+  },
 
 
   "Edit": {

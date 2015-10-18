@@ -7,6 +7,7 @@ angular.module("SxcAdminUi", [
     "MainSxcApp",
     "AppsManagementApp",
     "ReplaceContentApp",
+    "ReorderContentApp",
     "SystemSettingsApp",
     "SxcTemplates",
     "SxcEditTemplates",
@@ -100,6 +101,11 @@ angular.module("SxcAdminUi", [
         svc.openReplaceContent = function orc(item, closeCallback) {
             var resolve = eavAdminDialogs.CreateResolve({ item: item });
             return eavAdminDialogs.OpenModal("replace-content/replace-content.html", "ReplaceDialog as vm", "lg", resolve, closeCallback);
+        };
+
+        svc.openReorderContentList = function orcl(item, closeCallback) {
+            var resolve = eavAdminDialogs.CreateResolve({ item: item });
+            return eavAdminDialogs.OpenModal("reorder-content-list/reorder-content-list.html", "ReorderContentList as vm", "", resolve, closeCallback);
         };
 
         // 2dm 2015-10-07 - don't think this is in use, remove

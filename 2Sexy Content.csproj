@@ -538,6 +538,8 @@
     <Content Include="src\sxc-admin\language-settings\languages.html" />
     <Content Include="src\sxc-admin\app-main\app-main.html" />
     <Content Include="src\sxc-admin\app-main\app-main-controller.js" />
+    <Content Include="src\sxc-admin\reorder-content-list\reorder-content-list-controller.js" />
+    <Content Include="src\sxc-admin\reorder-content-list\reorder-content-list.html" />
     <Content Include="src\sxc-admin\replace-content\replace-content-controller.js" />
     <Content Include="src\sxc-admin\replace-content\replace-content.html" />
     <Content Include="src\sxc-admin\services\content-group-service.js" />
