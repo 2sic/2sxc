@@ -701,9 +701,9 @@ angular.module("SxcServices")//, ['ng', 'eavNgSvcs', "EavConfiguration"])
                 return $http.get("app/template/getall", { params: { appId: svc.appId } });
             }));
 
-            // delete, then reload
+            // delete, then reload, for now must use httpget because delete sometimes causes issues
             svc.delete = function del(id) {
-                return $http.delete("app/templates/delete", {params: {appId: svc.appId, id: id }})
+                return $http.get("app/template/delete", {params: {appId: svc.appId, Id: id }})
                     .then(svc.liveListReload);
             };
             return svc;
@@ -824,9 +824,10 @@ angular.module('SxcTemplates',[]).run(['$templateCache', function($templateCache
         .controller("TemplateList", TemplateListController)
         ;
 
-    function TemplateListController(templatesSvc, eavAdminDialogs, eavConfig, appId, debugState, oldDialogs, $modalInstance, $sce) {
+    function TemplateListController(templatesSvc, eavAdminDialogs, eavConfig, appId, debugState, oldDialogs, translate, $modalInstance, $sce) {
         var vm = this;
         vm.debug = debugState;
+
         var svc = templatesSvc(appId);
 
         vm.edit = function edit(item) {
@@ -862,7 +863,7 @@ angular.module('SxcTemplates',[]).run(['$templateCache', function($templateCache
         };
 
         vm.tryToDelete = function tryToDelete(item) {
-            if (confirm(translate("General.Messages.DeleteEntity", { title: item.Title, id: item.Id})))
+            if (confirm(translate("General.Questions.DeleteEntity", { title: item.Name, id: item.Id})))
                 svc.delete(item.Id);
         };
 
@@ -870,7 +871,7 @@ angular.module('SxcTemplates',[]).run(['$templateCache', function($templateCache
             $modalInstance.dismiss("cancel");
         };
     }
-    TemplateListController.$inject = ["templatesSvc", "eavAdminDialogs", "eavConfig", "appId", "debugState", "oldDialogs", "$modalInstance", "$sce"];
+    TemplateListController.$inject = ["templatesSvc", "eavAdminDialogs", "eavConfig", "appId", "debugState", "oldDialogs", "translate", "$modalInstance", "$sce"];
 
 } ());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife

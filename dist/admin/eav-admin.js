@@ -13,9 +13,7 @@
     angular.module("ContentExportApp")
         .controller("ContentExport", contentExportController);
 
-    function contentExportController(appId, contentType, contentExportService, eavAdminDialogs, eavConfig, languages, $modalInstance, $filter) {
-        var translate = $filter("translate");
-
+    function contentExportController(appId, contentType, contentExportService, eavAdminDialogs, eavConfig, languages, $modalInstance, $filter, translate) {
 
         var vm = this;
 
@@ -121,7 +119,7 @@
             $modalInstance.dismiss("cancel");
         };
     }
-    contentExportController.$inject = ["appId", "contentType", "contentExportService", "eavAdminDialogs", "eavConfig", "languages", "$modalInstance", "$filter"];
+    contentExportController.$inject = ["appId", "contentType", "contentExportService", "eavAdminDialogs", "eavConfig", "languages", "$modalInstance", "$filter", "translate"];
 }());
 (function () {
 
@@ -195,8 +193,7 @@
     angular.module("ContentImportApp")
         .controller("ContentImport", contentImportController);
 
-    function contentImportController(appId, contentType, contentImportService, eavAdminDialogs, eavConfig, languages, debugState, $modalInstance, $filter) {
-        var translate = $filter("translate");
+    function contentImportController(appId, contentType, contentImportService, eavAdminDialogs, eavConfig, languages, debugState, $modalInstance, $filter, translate) {
 
         var vm = this;
         vm.debug = debugState;
@@ -310,7 +307,7 @@
             $modalInstance.dismiss("cancel");
         };
     }
-    contentImportController.$inject = ["appId", "contentType", "contentImportService", "eavAdminDialogs", "eavConfig", "languages", "debugState", "$modalInstance", "$filter"];
+    contentImportController.$inject = ["appId", "contentType", "contentImportService", "eavAdminDialogs", "eavConfig", "languages", "debugState", "$modalInstance", "$filter", "translate"];
 }());
 (function () {
 
@@ -680,7 +677,7 @@
     ;
 
     /// The controller to manage the fields-list
-    function contentTypeFieldListController(appId, contentTypeFieldSvc, contentType, $modalInstance, $modal, eavAdminDialogs, $filter, $translate, eavConfig) {
+    function contentTypeFieldListController(appId, contentTypeFieldSvc, contentType, $modalInstance, $modal, eavAdminDialogs, $filter, $translate, translate, eavConfig) {
         var vm = this;
         var svc = contentTypeFieldSvc(appId, contentType);
 
@@ -749,7 +746,7 @@
         };
 
         vm.createItemDefinition = function createItemDefinition(item, metadataType) {
-            var title = metadataType === "All" ? $filter("translate")("DataType.All.Title") : metadataType; 
+            var title = metadataType === "All" ? translate("DataType.All.Title") : metadataType; 
             return item.Metadata[metadataType] !== undefined
                 ? { EntityId: item.Metadata[metadataType].Id, Title: title }  // if defined, return the entity-number to edit
                 : {
@@ -764,7 +761,7 @@
                 };      
         };
     }
-    contentTypeFieldListController.$inject = ["appId", "contentTypeFieldSvc", "contentType", "$modalInstance", "$modal", "eavAdminDialogs", "$filter", "$translate", "eavConfig"];
+    contentTypeFieldListController.$inject = ["appId", "contentTypeFieldSvc", "contentType", "$modalInstance", "$modal", "eavAdminDialogs", "$filter", "$translate", "translate", "eavConfig"];
 
 }());
 
@@ -1839,8 +1836,7 @@ angular.module("EavServices")
  */
 
 angular.module("EavServices")
-    .factory("debugState", ["$filter", "toastr", function ($filter, toastr) {
-        var translate = $filter("translate");
+    .factory("debugState", ["translate", "toastr", function (translate, toastr) {
         var svc = {
             on: false
         };
@@ -2145,7 +2141,9 @@ angular.module("EavServices")
         });
     }])
 
-    //.factory("")
+    .factory("translate", ["$filter", function($filter) {
+                return $filter("translate");
+            }])
     ;
 })();
 // By default, eav-controls assume that all their parameters (appId, etc.) are instantiated by the bootstrapper

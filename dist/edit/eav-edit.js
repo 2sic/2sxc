@@ -133,9 +133,7 @@ angular.module("eavFieldTemplates")
         });
 
     }])
-    .controller("FieldTemplate-EntityCtrl", ["$scope", "$http", "$filter", "$modal", "appId", "eavAdminDialogs", function ($scope, $http, $filter, $modal, appId, eavAdminDialogs) {
-        var translate = $filter("translate");
-
+    .controller("FieldTemplate-EntityCtrl", ["$scope", "$http", "$filter", "translate", "$modal", "appId", "eavAdminDialogs", function ($scope, $http, $filter, translate, $modal, appId, eavAdminDialogs) {
         if (!$scope.to.settings.Entity)
             $scope.to.settings.Entity = {};
 
@@ -188,7 +186,7 @@ angular.module("eavFieldTemplates")
 
         $scope.getEntityText = function(entityId) {
             var entities = $filter("filter")($scope.availableEntities, { Value: entityId });
-            return entities.length > 0 ? entities[0].Text : translate("FieldType.Entity.EntityNotFound"); // "(Entity not found)";
+            return entities.length > 0 ? entities[0].Text : translate("FieldType.Entity.EntityNotFound"); 
         };
 
         $scope.remove = function (item) {
@@ -335,12 +333,11 @@ angular.module("eavFieldTemplates")
     var app = angular.module("eavEditEntity");
 
     // The controller for the main form directive
-    app.controller("EditEntities", ["appId", "$http", "$scope", "entitiesSvc", "toastr", "$filter", "debugState", function editEntityCtrl(appId, $http, $scope, entitiesSvc, toastr, $filter, debugState) {
+    app.controller("EditEntities", ["appId", "$http", "$scope", "entitiesSvc", "toastr", "translate", "debugState", function editEntityCtrl(appId, $http, $scope, entitiesSvc, toastr, translate, debugState) {
 
         var vm = this;
         vm.debug = debugState;
         vm.isWorking = 0; // isWorking is > 0 when any $http request runs
-        var translate = $filter("translate");
 
         vm.registeredControls = [];
         vm.registerEditControl = function (control) {
@@ -616,11 +613,10 @@ angular.module("eavFieldTemplates")
 	var app = angular.module("eavEditEntity");
 
 	// The controller for the main form directive
-	app.controller("EditEntityWrapperCtrl", ["$q", "$http", "$scope", "items", "$modalInstance", "$window", "$filter", function editEntityCtrl($q, $http, $scope, items, $modalInstance, $window, $filter) {
+	app.controller("EditEntityWrapperCtrl", ["$q", "$http", "$scope", "items", "$modalInstance", "$window", "translate", function editEntityCtrl($q, $http, $scope, items, $modalInstance, $window, translate) {
 
 	    var vm = this;
 	    vm.itemList = items;
-	    var translate = $filter("translate");
 
 	    // this is the callback after saving - needed to close everything
 	    vm.afterSave = function(result) {
@@ -764,11 +760,10 @@ angular.module('eavEditTemplates',[]).run(['$templateCache', function($templateC
 			template: "",
 			link: function (scope, element, attrs) {
 			},
-			controller: ["$scope", "$filter", "eavDefaultValueService", "languages", function ($scope, $filter, eavDefaultValueService, languages) { // Can't use controllerAs because of transcluded scope
+			controller: ["$scope", "$filter", "translate", "eavDefaultValueService", "languages", function ($scope, $filter, translate, eavDefaultValueService, languages) { // Can't use controllerAs because of transcluded scope
 
 				var scope = $scope;
 				var langConf = languages;
-			    var translate = $filter("translate");
 
 				var initCurrentValue = function() {
 
@@ -863,9 +858,8 @@ angular.module('eavEditTemplates',[]).run(['$templateCache', function($templateC
 			templateUrl: "localization/localization-menu.html",
 			link: function (scope, element, attrs) { },
 			controllerAs: "vm",
-			controller: ["$scope", "languages", "$filter", function ($scope, languages, $filter) {
+			controller: ["$scope", "languages", "translate", function ($scope, languages, translate) {
 			    var vm = this;
-			    var translate = $filter("translate");
 			    var lblDefault = translate("LangMenu.UseDefault");
 			    var lblIn = translate("LangMenu.In");
 
