@@ -30,12 +30,13 @@
         })
         ;
 
-    function MainController(eavAdminDialogs, eavConfig, appId, appDialogConfigSvc, $modalInstance) {
+    function MainController(eavAdminDialogs, eavConfig, appId, debugState, appDialogConfigSvc, $modalInstance) {
         var vm = this;
+        vm.debug = debugState;
         vm.view = "start";
 
         appDialogConfigSvc.getDialogSettings().then(function (result) {
-            vm.config = result.data;//.GettingStartedUrl;
+            vm.config = result.data;
         });
 
         vm.close = function () {

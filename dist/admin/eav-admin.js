@@ -882,7 +882,7 @@ angular.module('eavTemplates',[]).run(['$templateCache', function($templateCache
 
 
   $templateCache.put('pipelines/pipelines.html',
-    "<div class=modal-header><h3 class=modal-title translate=Pipeline.Manage.Title></h3></div><div class=\"modal-body ng-cloak\"><div translate=Pipeline.Manage.Intro></div><div><button icon=plus type=button class=\"btn btn-default\" ng-click=vm.add()></button> <button icon=repeat type=button class=btn ng-click=vm.refresh()></button> <button icon=flash type=button class=btn ng-click=vm.liveEval()></button><table class=\"table table-striped table-hover table-manage-eav\"><thead><tr><th translate=Pipeline.Manage.Table.Id class=col-id></th><th translate=Pipeline.Manage.Table.Name></th><th translate=Pipeline.Manage.Table.Description></th><th translate=Pipeline.Manage.Table.Actions class=mini-btn-4></th></tr></thead><tbody><tr ng-repeat=\"pipeline in vm.pipelines | orderBy:'Name'\"><td>{{pipeline.Id}}</td><td><a ng-click=vm.edit(pipeline)>{{pipeline.Name}}</a></td><td>{{pipeline.Description}}</td><td class=\"text-nowrap mini-btn-4\"><button icon=edit title=\"{{ 'General.Buttons.Edit' | translate }}\" class=\"btn btn-xs btn-default\" ng-click=vm.design(pipeline)></button> <button icon=user title=\"{{ 'General.Buttons.Permissions' | translate }}\" type=button class=\"btn btn-xs\" ng-click=vm.permissions(pipeline)></button> <button icon=duplicate title=\"{{ 'General.Buttons.Copy' | translate }}\" type=button class=\"btn btn-xs\" ng-click=vm.clone(pipeline)></button> <button icon=remove title=\"{{ 'General.Buttons.Delete' | translate }}\" type=button class=\"btn btn-xs\" ng-click=vm.delete(pipeline)></button></td></tr><tr ng-if=!vm.pipelines.length><td colspan=100 translate=General.Messages.NothingFound></td></tr></tbody></table></div></div>"
+    "<div ng-click=vm.debug.autoEnableAsNeeded($event)><div class=modal-header><h3 class=modal-title translate=Pipeline.Manage.Title></h3></div><div class=\"modal-body ng-cloak\"><div translate=Pipeline.Manage.Intro></div><div><button icon=plus type=button class=\"btn btn-primary btn-square\" ng-click=vm.add()></button> <span class=btn-group ng-if=vm.debug.on><button type=button class=\"btn btn-warning btn-square\" ng-click=vm.refresh()><i icon=repeat></i></button> <button type=button class=\"btn btn-warning btn-square\" ng-click=vm.liveEval()><i icon=flash></i></button></span><table class=\"table table-hover table-manage-eav\"><thead><tr><th translate=Pipeline.Manage.Table.Id class=col-id></th><th translate=Pipeline.Manage.Table.Name></th><th translate=Pipeline.Manage.Table.Description></th><th translate=Pipeline.Manage.Table.Actions class=mini-btn-4></th></tr></thead><tbody><tr ng-repeat=\"pipeline in vm.pipelines | orderBy:'Name'\" class=clickable-row ng-click=vm.design(pipeline)><td class=clickable>{{pipeline.Id}}</td><td class=clickable>{{pipeline.Name}}</td><td class=clickable>{{pipeline.Description}}</td><td class=\"text-nowrap mini-btn-4\" stop-event=click><span class=btn-group><button title=\"{{ 'General.Buttons.Edit' | translate }}\" class=\"btn btn-xs\" ng-click=vm.edit(pipeline)><i icon=cog></i></button> <button title=\"{{ 'General.Buttons.Copy' | translate }}\" type=button class=\"btn btn-xs\" ng-click=vm.clone(pipeline)><i icon=duplicate></i></button> <button title=\"{{ 'General.Buttons.Permissions' | translate }}\" type=button class=\"btn btn-xs\" ng-click=vm.permissions(pipeline)><i icon=user></i></button></span> <button title=\"{{ 'General.Buttons.Delete' | translate }}\" type=button class=\"btn btn-xs\" ng-click=vm.delete(pipeline)><i icon=remove></i></button></td></tr><tr ng-if=!vm.pipelines.length><td colspan=100 translate=General.Messages.NothingFound></td></tr></tbody></table></div><show-debug-availability class=pull-right></show-debug-availability></div></div>"
   );
 
 
@@ -977,18 +977,19 @@ angular.module("PipelineDesigner.filters", []).filter("typename", function () {
 	};
 });
 // AngularJS Controller for the >>>> Pipeline Designer
-// todo: refactor the pipeline designer to use the new eavAdminUi service
 
-/*jshint laxbreak:true */
 (function () {
+    /*jshint laxbreak:true */
 
     angular.module("PipelineDesigner")
         .controller("PipelineDesignerController",
-            ["appId", "pipelineId", "$scope", "pipelineService", "$location", "$timeout", "$filter", "uiNotification", "eavAdminDialogs", "$log", "eavConfig", "$q", function (appId, pipelineId, $scope, pipelineService, $location, $timeout, $filter, uiNotification, eavAdminDialogs, $log, eavConfig, $q) {
+            ["appId", "pipelineId", "$scope", "pipelineService", "$location", "$timeout", "$filter", "toastrWithHttpErrorHandling", "eavAdminDialogs", "$log", "eavConfig", "$q", function (appId, pipelineId, $scope, pipelineService, $location, $timeout, $filter, toastrWithHttpErrorHandling, eavAdminDialogs, $log, eavConfig, $q) {
                 "use strict";
 
                 // Init
-                uiNotification.wait();
+                var toastr = toastrWithHttpErrorHandling;
+                var waitMsg = toastr.info("This shouldn't take long", "Please wait...");
+
                 $scope.readOnly = true;
                 $scope.dataSourcesCount = 0;
                 $scope.dataSourceIdPrefix = "dataSource_";
@@ -1018,10 +1019,12 @@ angular.module("PipelineDesigner.filters", []).filter("typename", function () {
                         } else {
                             // if read only, show message
                             $scope.readOnly = !success.Pipeline.AllowEdit;
-                            uiNotification.note("Ready", $scope.readOnly ? "This pipeline is read only" : "You can now design the Pipeline. \nNote that there are still a few UI bugs.\nVisit 2sxc.org/help for more.", true);
+                            toastr.clear(waitMsg);
+                            toastr.info($scope.readOnly ? "This pipeline is read only" : "You can now design the Pipeline. \nNote that there are still a few UI bugs.\nVisit 2sxc.org/help for more.",
+                                "Ready", { autoDismiss: true });
                         }
                     }, function(reason) {
-                        uiNotification.error("Loading Pipeline failed", reason);
+                        toastr.error(reason, "Loading Pipeline failed");
                     });
 
                 // init new jsPlumb Instance
@@ -1046,11 +1049,11 @@ angular.module("PipelineDesigner.filters", []).filter("typename", function () {
 
                     // If connection on Out-DataSource was removed, remove custom Endpoint
                     $scope.jsPlumbInstance.bind("connectionDetached", function(info) {
-                        if (info.targetId == $scope.dataSourceIdPrefix + "Out") {
+                        if (info.targetId === $scope.dataSourceIdPrefix + "Out") {
                             var element = angular.element(info.target);
                             var fixedEndpoints = $scope.findDataSourceOfElement(element) /* element.scope() */.dataSource.Definition().In;
                             var label = info.targetEndpoint.getOverlay("endpointLabel").label;
-                            if (fixedEndpoints.indexOf(label) == -1) {
+                            if (fixedEndpoints.indexOf(label) === -1) {
                                 $timeout(function() {
                                     $scope.jsPlumbInstance.deleteEndpoint(info.targetEndpoint);
                                 });
@@ -1386,8 +1389,8 @@ angular.module("PipelineDesigner.filters", []).filter("typename", function () {
                 // #region Save Pipeline
                 // Save Pipeline
                 // returns a Promise about the saving state
-                $scope.savePipeline = function(successHandler) {
-                    uiNotification.wait("Saving...");
+                $scope.savePipeline = function (successHandler) {
+                    var waitMsg = toastr.info("This shouldn't take long", "Saving...");
                     $scope.readOnly = true;
 
                     syncPipelineData();
@@ -1398,7 +1401,7 @@ angular.module("PipelineDesigner.filters", []).filter("typename", function () {
                         successHandler = pipelineSaved;
 
                     pipelineService.savePipeline($scope.pipelineData.Pipeline, $scope.pipelineData.DataSources).then(successHandler, function(reason) {
-                        uiNotification.error("Save Pipeline failed", reason);
+                        toastr.error(reason, "Save Pipeline failed");
                         $scope.readOnly = false;
                         deferred.reject();
                     }).then(function() {
@@ -1418,7 +1421,8 @@ angular.module("PipelineDesigner.filters", []).filter("typename", function () {
                     $scope.pipelineData.DataSources = success.DataSources;
                     pipelineService.postProcessDataSources($scope.pipelineData);
 
-                    uiNotification.success("Saved", "Pipeline " + success.Pipeline.EntityId /*EntityId*/ + " saved and loaded", true);
+                    toastr.clear();
+                    toastr.success("Pipeline " + success.Pipeline.EntityId + " saved and loaded", "Saved", { autoDismiss: true });
 
                     // Reset jsPlumb, re-Init Connections
                     $scope.jsPlumbInstance.reset();
@@ -1440,11 +1444,11 @@ angular.module("PipelineDesigner.filters", []).filter("typename", function () {
                 $scope.queryPipeline = function() {
                     var query = function() {
                         // Query pipelineService for the result...
-                        uiNotification.wait("Running Query ...");
+                        toastr.info("Running Query ...");
 
                         pipelineService.queryPipeline($scope.PipelineEntityId).then(function(success) {
                             // Show Result in a UI-Dialog
-                            uiNotification.clear();
+                            toastr.clear();
 
                             var resolve = eavAdminDialogs.CreateResolve({ testParams: $scope.pipelineData.Pipeline.TestParameters, result: success });
                             eavAdminDialogs.OpenModal("pipelines/query-stats.html", "QueryStats as vm", "lg", resolve);
@@ -1454,7 +1458,7 @@ angular.module("PipelineDesigner.filters", []).filter("typename", function () {
                             });
                             $log.debug(success);
                         }, function(reason) {
-                            uiNotification.error("Query failed", reason);
+                            toastr.error(reason, "Query failed");
                         });
                     };
 
@@ -1520,8 +1524,9 @@ angular.module("PipelineManagement", [
     "eavNgSvcs",
     "EavAdminUi"
 ]).
-	controller("PipelineManagement", ["$modalInstance", "appId", "pipelineService", "eavAdminDialogs", "eavConfig", function ($modalInstance, appId, pipelineService, eavAdminDialogs, eavConfig) {
+	controller("PipelineManagement", ["$modalInstance", "appId", "pipelineService", "debugState", "eavAdminDialogs", "eavConfig", function ($modalInstance, appId, pipelineService, debugState, eavAdminDialogs, eavConfig) {
 	    var vm = this;
+        vm.debug = debugState;
         vm.appId = appId;
 
 	    pipelineService.setAppId(appId);
@@ -1615,7 +1620,8 @@ angular.module("EavServices", [
     "EavConfiguration",     // global configuration
     "pascalprecht.translate",
     "ngResource",           // only needed for the pipeline-service, maybe not necessary any more?
-    "toaster"
+    "ngAnimate",
+    "toastr"
 ]);
 
 angular.module("EavServices")
@@ -1682,7 +1688,23 @@ angular.module("EavServices")
             };
 
 	        svc.getFields = function getFields() {
-		        return $http.get("eav/contenttype/getfields", { params: { "appid": svc.appId, "staticName": svc.contentType.StaticName } });
+	            return $http.get("eav/contenttype/getfields", { params: { "appid": svc.appId, "staticName": svc.contentType.StaticName } })
+	            .then(function(result) {
+	                // merge the settings into one, with correct priority sequence
+	                if (result.data ) {
+	                    for (var i = 0; i < result.data.length; i++) {
+	                        var fld = result.data[i];
+	                        if(!fld.Metadata)
+                                continue;
+	                        var md = fld.Metadata;
+	                        var allMd = md.All;
+	                        var typeMd = md[fld.Type];
+	                        var inputMd = md[fld.InputType];
+	                        md.merged = angular.merge({}, allMd, typeMd, inputMd);
+	                    }
+	                }
+	                    return result;
+	                });
 	        };
 
             svc = angular.extend(svc, svcCreator.implementLiveList(svc.getFields));
@@ -1842,11 +1864,11 @@ angular.module("EavServices")
 angular.module("EavServices")
     .factory("dragClass", function () {
 
-        document.addEventListener('dragover', function() {
+        document.addEventListener("dragover", function() {
             if(this === document)
                 document.body.classList.add("eav-dragging");
         });
-        document.addEventListener('dragleave', function() {
+        document.addEventListener("dragleave", function() {
             if(this === document)
                 document.body.classList.remove("eav-dragging");
         });
@@ -2475,42 +2497,61 @@ angular.module("EavServices")
 ;
 
 angular.module("EavServices")
-    .factory("uiNotification", ["toaster", function (toaster) {
-            "use strict";
+    // the config is important to ensure our toaster has a common setup
+    .config(["toastrConfig", function(toastrConfig) {
+        angular.extend(toastrConfig, {
+            autoDismiss: false,
+            containerId: "toast-container",
+            maxOpened: 5, // def is 0    
+            newestOnTop: true,
+            positionClass: "toast-top-right",
+            preventDuplicates: false,
+            preventOpenDuplicates: false,
+            target: "body"
+        });
+    }])
 
-            var showNote = function (type, title, body, autoHide) {
-                // wrap toaster in ready-Event because notes would't be show if teaster is used before
-                angular.element(document).ready(function () {
-                    toaster.clear();
-                    toaster.pop(type, title, body, autoHide ? null : 0);
-                });
-            };
+    .factory("toastrWithHttpErrorHandling", ["toastr", function (toastr) {
+        toastr.error1 = toastr.error;
+        toastr.error = function errorWithHttpErrorDisplay(messageOrHttpError, title, optionsOverride) {
+            var message;
+            // test whether bodyOrError is an Error from Web API
+            if (messageOrHttpError && messageOrHttpError.data && messageOrHttpError.data.Message) {
+                message = messageOrHttpError.data.Message;
+                if (messageOrHttpError.data.ExceptionMessage)
+                    message += "\n" + messageOrHttpError.data.ExceptionMessage;
+            } else
+                message = messageOrHttpError;
 
-            return {
-                clear: function () {
-                    toaster.clear();
-                },
-                error: function (title, bodyOrError) {
-                    var message;
-                    // test whether bodyOrError is an Error from Web API
-                    if (bodyOrError && bodyOrError.data && bodyOrError.data.Message) {
-                        message = bodyOrError.data.Message;
-                        if (bodyOrError.data.ExceptionMessage)
-                            message += "\n" + bodyOrError.data.ExceptionMessage;
-                    } else
-                        message = bodyOrError;
+            toastr.error2(message, title, optionsOverride);
+        };
+        return toastr;
+    }])
 
-                    showNote("error", title, message);
-                },
-                note: function (title, body, autoHide) {
-                    showNote("note", title, body, autoHide);
-                },
-                success: function (title, body, autoHide) {
-                    showNote("success", title, body, autoHide);
-                },
-                wait: function (title) {
-                    showNote("note", title ? title : "Please wait ..", "This shouldn't take long", false);
-                }
-            };
-        }]
-    );
+    // this is an old service - used only in the pipeline designer. Don't reuse! just call the toastr directly
+    //.factory("uiNotification", function (toastr) {
+    //        "use strict";
+
+    //        var toaster = toastr;
+
+    //        return {
+    //            clear: function () {
+    //                toaster.clear();
+    //            },
+    //            error: function (title, bodyOrError) {
+    //                var message;
+    //                // test whether bodyOrError is an Error from Web API
+    //                if (bodyOrError && bodyOrError.data && bodyOrError.data.Message) {
+    //                    message = bodyOrError.data.Message;
+    //                    if (bodyOrError.data.ExceptionMessage)
+    //                        message += "\n" + bodyOrError.data.ExceptionMessage;
+    //                } else
+    //                    message = bodyOrError;
+
+    //                toastr.error(title, body, { autoDismiss: false });
+    //            }
+
+    //        };
+    //    }
+    //)
+;

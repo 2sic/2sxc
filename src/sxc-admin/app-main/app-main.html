@@ -1,7 +1,7 @@
-﻿<div>
+﻿<div ng-click="vm.debug.autoEnableAsNeeded($event)">
     <div class="modal-header">
-        <button class="btn pull-right" type="button" ng-click="vm.close()">
-            <span class="glyphicon glyphicon-remove"></span>
+        <button class="btn btn-default btn-square pull-right" type="button" ng-click="vm.close()">
+            <i icon="remove"></i>
         </button>
         <h3 class="modal-title" translate="Main.Title"></h3>
     </div>
@@ -114,4 +114,5 @@
 
 
     </div>
+    <show-debug-availability class="pull-right"></show-debug-availability>
 </div>

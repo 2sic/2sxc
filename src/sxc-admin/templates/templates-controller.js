@@ -10,8 +10,9 @@
         .controller("TemplateList", TemplateListController)
         ;
 
-    function TemplateListController(templatesSvc, eavAdminDialogs, eavConfig, appId, oldDialogs, $modalInstance, $sce) {
+    function TemplateListController(templatesSvc, eavAdminDialogs, eavConfig, appId, debugState, oldDialogs, $modalInstance, $sce) {
         var vm = this;
+        vm.debug = debugState;
         var svc = templatesSvc(appId);
 
         vm.edit = function edit(item) {

@@ -2,7 +2,7 @@
 (function () {
 	"use strict";
 
-	angular.module("eavEditEntity", [
+    angular.module("eavEditEntity", [
         "formly",
         "ui.bootstrap",
         "eavFieldTemplates",
@@ -11,10 +11,8 @@
         "uiSwitch",
         "toastr",
         "ngAnimate"
+    ]);
 
-	])
-
-    ;
 
 
 })();
@@ -51,33 +49,6 @@ angular.module("eavFieldTemplates")
             templateUrl: "fields/boolean/boolean-default.html",
             wrapper: ["bootstrapHasError", "eavLocalization", "collapsible"]
         });
-    }]);
-/* 
- * Field: Custom - Default (basically something you should never see)
- */
-
-angular.module("eavFieldTemplates")
-    .config(["formlyConfigProvider", "defaultFieldWrappers", function(formlyConfigProvider, defaultFieldWrappers) {
-
-        formlyConfigProvider.setType({
-            name: "custom-gps",
-            templateUrl: "fields/custom-gps/custom-gps.html",
-            wrapper: defaultFieldWrappers,
-            controller: "FieldTemplate-CustomGpsController"
-        });
-    }])
-    .controller("FieldTemplate-CustomGpsController", ["$scope", "$filter", "$modal", "appId", "debugState", "eavAdminDialogs", function ($scope, $filter, $modal, appId, debugState, eavAdminDialogs) {
-        $scope.debug = debugState;
-        // try to find the settings, where to copy the field to...
-        $scope.latField = "";
-        $scope.LongField = "";
-
-        var controlSettings = $scope.to.settings["custom-gps"];
-        if (controlSettings) {
-            $scope.latField = controlSettings.LatField || null;
-        }
-        // alert('gps' + $scope.latField);
-
     }]);
 /* 
  * Field: Custom - Default (basically something you should never see)
@@ -260,6 +231,20 @@ angular.module("eavFieldTemplates")
         var vm = this;
         // ToDo: Implement Google Map
     });
+/* 
+ * Field: String - Disabled
+ */
+
+angular.module("eavFieldTemplates")
+    .config(["formlyConfigProvider", "defaultFieldWrappers", function (formlyConfigProvider, defaultFieldWrappers) {
+
+        formlyConfigProvider.setType({
+            name: "string-disabled",
+            template: "<div>disb<input class=\"form-control input-lg\" ng-model=\"value.Value\" ng-disabled='true'> {{value.Value}} </div>",
+            wrapper: defaultFieldWrappers
+        });
+
+    }]);
 /* 
  * Field: String - Default
  */
@@ -535,7 +520,6 @@ angular.module("eavFieldTemplates")
 			            expressionProperties: {
 			                // Needed for dynamic update of the disabled property
 			                'templateOptions.disabled': 'options.templateOptions.disabled' // doesn't set anything, just here to ensure formly causes update-binding
-                            //'templateOptions.disabled': 'options.templateOptions.disabled'
 			            },
 			            watcher: [
 			                {
@@ -680,11 +664,6 @@ angular.module('eavEditTemplates',[]).run(['$templateCache', function($templateC
 
   $templateCache.put('fields/boolean/boolean-default.html',
     "<div class=\"checkbox checkbox-labeled\"><switch ng-model=value.Value class=\"tosic-green pull-left\" ng-disabled=to.disabled></switch><input type=checkbox class=formly-field-checkbox ng-model=value.Value style=\"display: none\"><div ng-include=\"'wrappers/eav-label.html'\"></div></div>"
-  );
-
-
-  $templateCache.put('fields/custom-gps/custom-gps.html',
-    "<div><div class=\"alert alert-danger\">GPS-Picker 2 - not implemented yet <input class=\"form-control input-lg\" ng-pattern=vm.regexPattern ng-model=value.Value></div><div ng-if=debug.on><h4>debug info</h4><div>lat field name: '{{ latField}}' long-field name: '{{longField}}'</div></div></div>"
   );
 
 
