@@ -136,8 +136,8 @@ angular.module("sxcFieldTemplates")
 				});
 			},
 			params: {
-				Paths: $scope.to.settings.Hyperlink.Paths,
-				FileFilter: $scope.to.settings.Hyperlink.FileFilter
+				Paths: $scope.to.settings.Hyperlink ? $scope.to.settings.Hyperlink.Paths : "",
+				FileFilter: $scope.to.settings.Hyperlink ? $scope.to.settings.Hyperlink.FileFilter : ""
 			}
 		};
 
