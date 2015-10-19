@@ -448,6 +448,7 @@
     <Content Include="Extensions\Imazen_ImageResizer\license.txt" />
     <Content Include="gruntfile.js" />
     <Content Include="SqlDataProvider\07.03.01.SqlDataProvider" />
+    <Content Include="SqlDataProvider\07.03.03.SqlDataProvider" />
     <None Include="src\i18n\inpage-de.json" />
     <None Include="src\i18n\inpage-en.json" />
     <Content Include="icon-app.png" />
