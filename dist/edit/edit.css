@@ -2,16 +2,15 @@
 /* field grouping */
 
 .group-entity {
-    border-right-color: darkgray;
+    border-right-color: lightgray;
     border-right-style: solid;
     border-right-width: 2px;
 }
 
 .group-field-set {
-    border-right-color: blue;
+    /*border-right-color: blue;
     border-right-style: solid;
-    border-right-width: 2px;
-    
+    border-right-width: 2px;*/
 }
 
 /* must correct checkbox labels */
@@ -20,10 +19,6 @@
     padding-left: 15px;
 }
 
-/* toggle-switch buttons */
-span.switch {
-    /*top: 13px;*/
-}
 
 .checkbox {
     height: 34px;
@@ -41,31 +36,26 @@ span.switch {
     border-color: #0087F4;
 }
 
-
-/* this one adds a glyphicon - duplicate type from .glyphicon */
-
-
-/*.switch.inner-glyphicon small {
-  position: relative;
-  top: 1px;
-  display: inline-block;
-  font-family: 'Glyphicons Halflings';
-  font-style: normal;
-  font-weight: normal;
-    font-size: 20px;
-  line-height: 1;
-
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+.save-published-icon {
+    font-size: 24px; 
+}
+.save-published-icon i {
+    position: relative;
+    top: 9px;
 }
 
-.switch.inner-glyphicon.eye-open small:before {
-  content: "\e105";
+.collapse-entity-button {
+    position: relative;
+    left: 13px;
+    top: 0;
+    padding-top: 8px;
+    background-color: white;
 }
-.switch.inner-glyphicon.eye-close small:before {
-  content: "\e106";
-}*/
 
+.collapse-fieldgroup-button {
+    position: relative;
+    left: 5px;
+}
 .checkbox.checkbox-labeled input[type='checkbox'] { margin-left:0; }
 .eav-entityselect-item { border: 1px solid #DDD;width: 295px; margin-top: -1px; }
 .eav-entityselect ol { margin-top: 1px; }

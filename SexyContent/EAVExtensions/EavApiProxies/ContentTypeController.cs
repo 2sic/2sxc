@@ -74,9 +74,9 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
         }
 
         [HttpGet]
-        public int AddField(int appId, int contentTypeId, string staticName, string type, int sortOrder)
+        public int AddField(int appId, int contentTypeId, string staticName, string type, string inputType, int sortOrder)
         {
-            return eavCtc.AddField(appId, contentTypeId, staticName, type, sortOrder);
+            return eavCtc.AddField(appId, contentTypeId, staticName, type, inputType, sortOrder);
         }
 
         [HttpDelete]

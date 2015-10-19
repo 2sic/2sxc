@@ -17,6 +17,11 @@ angular.module("SxcServices")
                     .then(svc.liveListReload);
             };
 
+            svc.save = function save(item) {
+                return $http.get("app/system/switchlanguage", { params: { cultureCode: item.Code, enable: item.IsEnabled } })
+                    .then(svc.liveListReload);
+            };
+
             return svc;
         };
     });

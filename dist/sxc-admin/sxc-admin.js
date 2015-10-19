@@ -30,19 +30,20 @@
         }])
         ;
 
-    function MainController(eavAdminDialogs, eavConfig, appId, appDialogConfigSvc, $modalInstance) {
+    function MainController(eavAdminDialogs, eavConfig, appId, debugState, appDialogConfigSvc, $modalInstance) {
         var vm = this;
+        vm.debug = debugState;
         vm.view = "start";
 
         appDialogConfigSvc.getDialogSettings().then(function (result) {
-            vm.config = result.data;//.GettingStartedUrl;
+            vm.config = result.data;
         });
 
         vm.close = function () {
             $modalInstance.dismiss("cancel");
         };
     }
-    MainController.$inject = ["eavAdminDialogs", "eavConfig", "appId", "appDialogConfigSvc", "$modalInstance"];
+    MainController.$inject = ["eavAdminDialogs", "eavConfig", "appId", "debugState", "appDialogConfigSvc", "$modalInstance"];
 
 } ());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
@@ -136,32 +137,34 @@
         .controller("AppList", AppListController)
         ;
 
-    function AppListController(appsSvc, eavAdminDialogs, sxcDialogs, eavConfig, zoneId, oldDialogs, $modalInstance) {
+    function AppListController(appsSvc, eavAdminDialogs, sxcDialogs, eavConfig, zoneId, oldDialogs, $modalInstance, $filter) {
         var vm = this;
 
         var svc = appsSvc(zoneId);
         vm.items = svc.liveList();
         vm.refresh = svc.liveListReload;
+        var translate = $filter("translate");
 
         vm.config = function config(item) {
             eavAdminDialogs.openItemEditWithEntityId(item.ConfigurationId, svc.liveListReload);
         };
 
         vm.add = function add() {
-            var result = prompt("Enter App Name (will also be used for folder)");
+            var result = prompt(translate("AppManagement.Prompt.NewApp"));
             if (result)
                 svc.create(result);
         };
 
         
         vm.tryToDelete = function tryToDelete(item) {
-            var result = prompt("This cannot be undone. To really delete this app, type (or copy/past) the app-name here: Delete '" + item.Name + "' (" + item.Id + ") ?");
+            var result = prompt(translate("AppManagement.Prompt.DeleteApp", { name: item.Name, id: item.Id}));
+                //prompt("This cannot be undone. To really delete this app, type (or copy/past) the app-name here: Delete '" + item.Name + "' (" + item.Id + ") ?");
             if (result === null)
                 return;
             if(result === item.Name)
                 svc.delete(item.Id);
             else 
-                alert("input did not match - will not delete");
+                alert(translate("AppManagement.Prompt.FailedDelete"));
         };
 
         // note that manage MUST open in a new iframe, to give the entire application 
@@ -195,7 +198,7 @@
 
         vm.close = function () { $modalInstance.dismiss("cancel");};
     }
-    AppListController.$inject = ["appsSvc", "eavAdminDialogs", "sxcDialogs", "eavConfig", "zoneId", "oldDialogs", "$modalInstance"];
+    AppListController.$inject = ["appsSvc", "eavAdminDialogs", "sxcDialogs", "eavConfig", "zoneId", "oldDialogs", "$modalInstance", "$filter"];
 
 } ());
 (function () { 
@@ -232,6 +235,9 @@
             case "replace":
                 // this is the "replace item in a list" dialog
                 sxcDialogs.openReplaceContent(items[0], vm.close);
+                break;
+            case "sort":
+                sxcDialogs.openReorderContentList(items[0], vm.close);
                 break;
             case "pipeline-designer":
                 // Don't do anything, as the template already loads the app in fullscreen-mode
@@ -358,8 +364,58 @@
         };
 
         vm.toggle = svc.toggle;
+
+        vm.save = svc.save;
     }
     LanguagesSettingsController.$inject = ["languagesSvc", "eavConfig", "appId"];
+
+} ());
+(function () { 
+
+    angular.module("ReorderContentApp", [
+            "SxcServices",
+            "EavAdminUi"         // dialog (modal) controller
+        ])
+        .controller("ReorderContentList", ReorderContentController);
+
+    function ReorderContentController(appId, item, contentGroupSvc, eavAdminDialogs, $modalInstance, $filter) {
+        var vm = this;
+        vm.items = [];
+        vm.item = {
+            id: item.EntityId,
+            guid: item.Group.Guid,
+            part: item.Group.Part,
+            index: item.Group.Index
+        };
+
+        var svc = contentGroupSvc(appId);
+
+        vm.reload = function() {
+            return svc.getList(vm.item).then(function(result) {
+                vm.items = result.data;
+            });
+        };
+        vm.reload();
+
+        vm.ok = function ok() {
+            svc.saveList(vm.items).then(vm.close);
+        };
+        
+        vm.close = function () { $modalInstance.dismiss("cancel"); };
+
+        //vm.convertToInt = function (id) {
+        //    return parseInt(id);
+        //};
+
+
+        //vm.reloadAfterCopy = function reloadAfterCopy(result) {
+        //    var copy = result.data;
+        //    vm.reload().then(function() {
+        //        vm.item.id = copy[Object.keys(copy)[0]]; 
+        //    });
+        //};
+    }
+    ReorderContentController.$inject = ["appId", "item", "contentGroupSvc", "eavAdminDialogs", "$modalInstance", "$filter"];
 
 } ());
 (function () { 
@@ -370,7 +426,7 @@
         ])
         .controller("ReplaceDialog", ReplaceContentController);
 
-    function ReplaceContentController(appId, item, contentGroupSvc, $modalInstance, $filter) {
+    function ReplaceContentController(appId, item, contentGroupSvc, eavAdminDialogs, $modalInstance, $filter) {
         var vm = this;
         vm.options = [];
         vm.item = {
@@ -382,10 +438,13 @@
 
         var svc = contentGroupSvc(appId);
 
-        svc.getItems(vm.item).then(function (result) {
-            vm.options = result.data.Items;
-            vm.item.id = result.data.SelectedId;
-        });
+        vm.reload = function() {
+            return svc.getItems(vm.item).then(function(result) {
+                vm.options = result.data.Items;
+                vm.item.id = result.data.SelectedId;
+            });
+        };
+        vm.reload();
 
         vm.ok = function ok() {
             svc.saveItem(vm.item).then(vm.close);
@@ -397,8 +456,26 @@
             return parseInt(id);
         };
 
+        vm.copySelected = function copySelected() {
+            var selectedId = vm.item.id;
+            var items = [
+                {
+                    //ContentTypeName: contentType,
+                    DuplicateEntity: vm.item.id
+                }
+            ];
+            eavAdminDialogs.openEditItems(items, vm.reloadAfterCopy);
+            // todo: on re-load a select would be nice
+        };
+
+        vm.reloadAfterCopy = function reloadAfterCopy(result) {
+            var copy = result.data;
+            vm.reload().then(function() {
+                vm.item.id = copy[Object.keys(copy)[0]]; // get id of first item
+            });
+        };
     }
-    ReplaceContentController.$inject = ["appId", "item", "contentGroupSvc", "$modalInstance", "$filter"];
+    ReplaceContentController.$inject = ["appId", "item", "contentGroupSvc", "eavAdminDialogs", "$modalInstance", "$filter"];
 
 } ());
 // Init the main eav services module
@@ -448,7 +525,18 @@ angular.module("SxcServices")
                 },
                 saveItem: function(item) {
                     return $http.post('app/contentgroup/replace', {}, { params: { guid: item.guid, part: item.part, index: item.index, entityId: item.id } });
+                },
+
+                getList: function(item) {
+                    return $http.get('app/contentgroup/itemlist', { params: { appId: appId, guid: item.guid } });
+                },
+
+                saveList: function (item, resortedList) {
+                    alert("not implemented yet");
+                    return;
+                    //return $http.post('app/contentgroup/itemlist', { params: { appId: appId, guid: item.guid, list: resortedList } });
                 }
+
             };
 
             //svc.replace = $resource("",
@@ -535,6 +623,11 @@ angular.module("SxcServices")
                     .then(svc.liveListReload);
             };
 
+            svc.save = function save(item) {
+                return $http.get("app/system/switchlanguage", { params: { cultureCode: item.Code, enable: item.IsEnabled } })
+                    .then(svc.liveListReload);
+            };
+
             return svc;
         };
     }]);
@@ -547,6 +640,7 @@ angular.module("SxcAdminUi", [
     "MainSxcApp",
     "AppsManagementApp",
     "ReplaceContentApp",
+    "ReorderContentApp",
     "SystemSettingsApp",
     "SxcTemplates",
     "SxcEditTemplates",
@@ -642,6 +736,11 @@ angular.module("SxcAdminUi", [
             return eavAdminDialogs.OpenModal("replace-content/replace-content.html", "ReplaceDialog as vm", "lg", resolve, closeCallback);
         };
 
+        svc.openReorderContentList = function orcl(item, closeCallback) {
+            var resolve = eavAdminDialogs.CreateResolve({ item: item });
+            return eavAdminDialogs.OpenModal("reorder-content-list/reorder-content-list.html", "ReorderContentList as vm", "", resolve, closeCallback);
+        };
+
         // 2dm 2015-10-07 - don't think this is in use, remove
         //svc.openContentEdit = function oce(edit, closeCallback) {
         //    var resolve = eavAdminDialogs.CreateResolve(edit);
@@ -670,9 +769,9 @@ angular.module("SxcServices")//, ['ng', 'eavNgSvcs', "EavConfiguration"])
                 return $http.get("app/template/getall", { params: { appId: svc.appId } });
             }));
 
-            // delete, then reload
+            // delete, then reload, for now must use httpget because delete sometimes causes issues
             svc.delete = function del(id) {
-                return $http.delete("app/templates/delete", {params: {appId: svc.appId, id: id }})
+                return $http.get("app/template/delete", {params: {appId: svc.appId, Id: id }})
                     .then(svc.liveListReload);
             };
             return svc;
@@ -698,7 +797,7 @@ angular.module('SxcTemplates',[]).run(['$templateCache', function($templateCache
   'use strict';
 
   $templateCache.put('app-main/app-main.html',
-    "<div><div class=modal-header><button class=\"btn pull-right\" type=button ng-click=vm.close()><span class=\"glyphicon glyphicon-remove\"></span></button><h3 class=modal-title translate=Main.Title></h3></div><div class=modal-body><div><tabset><tab><tab-heading><span icon=home tooltip=\"{{'Main.Tab.GettingStarted' | translate }}\"></span> {{'Main.Tab.GS' | translate }}</tab-heading><iframe ng-src=\"{{ vm.config.GettingStartedUrl | trustAsResourceUrl }}\" style=\"border: none; width: 100%; height: 500px\"></iframe><div ng-hide=true>original script, maybe we need it $(document).ready(function () { $(window).bind(\"resize\", function () { var GettingStartedFrame = $(\".sc-iframe-gettingstarted\"); GettingStartedFrame.height($(window).height() - 50); }); $(window).trigger(\"resize\"); });</div></tab><tab select=\"vm.view='content'\"><tab-heading><span icon=list tooltip=\"{{'Main.Tab.ContentData' | translate }}\"></span> {{'Main.Tab.CD' | translate }}</tab-heading><div ng-if=\"vm.view == 'content'\"><div ng-controller=\"List as vm\" ng-include=\"'content-types/content-types.html'\"></div></div></tab><tab select=\"vm.view='query'\" ng-if=!vm.config.IsContent><tab-heading><span icon=filter tooltip=\"{{'Main.Tab.Query' | translate }}\"></span> {{'Main.Tab.Q' | translate }}</tab-heading><div ng-if=\"vm.view == 'query'\"><div ng-controller=\"PipelineManagement as vm\" ng-include=\"'pipelines/pipelines.html'\"></div></div></tab><tab select=\"vm.view='view'\"><tab-heading><span icon=picture tooltip=\"{{'Main.Tab.ViewsTemplates' | translate }}\"></span> {{'Main.Tab.VT' | translate }}</tab-heading><div ng-if=\"vm.view == 'view'\"><div ng-controller=\"TemplateList as vm\" ng-include=\"'templates/templates.html'\"></div></div></tab><tab select=\"vm.view='webapi'\" ng-if=!vm.config.IsContent><tab-heading><span icon=flash tooltip=\"{{'Main.Tab.WebApi' | translate }}\"></span> {{'Main.Tab.WA' | translate }}</tab-heading><div ng-if=\"vm.view == 'webapi'\"><div ng-controller=\"WebApiMain as vm\" ng-include=\"'web-api/web-api.html'\"></div></div></tab><tab select=\"vm.view='app'\"><tab-heading><span icon=cog tooltip=\"{{'Main.Tab.AppSettings' | translate }}\"></span> {{'Main.Tab.AS' | translate }}</tab-heading><div ng-if=\"vm.view == 'app'\"><div ng-if=!vm.config.IsContent><div ng-controller=\"AppSettings as vm\" ng-include=\"'app-settings/app-settings.html'\"></div><br></div><div ng-controller=\"ImportExportIntro as vm\" ng-include=\"'importexport/intro.html'\"></div></div></tab><tab select=\"vm.view='portal'\"><tab-heading><span icon=globe tooltip=\"{{'Main.Tab.PortalLanguages' | translate }}\"></span> {{'Main.Tab.PL' | translate }}</tab-heading><div ng-if=\"vm.view == 'portal'\"><h3 translate=Main.Portal.Title></h3><div translate=Main.Portal.Intro></div><div ng-controller=\"LanguageSettings as vm\" ng-include=\"'language-settings/languages.html'\"></div></div></tab></tabset></div></div></div>"
+    "<div ng-click=vm.debug.autoEnableAsNeeded($event)><div class=modal-header><button class=\"btn btn-default btn-square pull-right\" type=button ng-click=vm.close()><i icon=remove></i></button><h3 class=modal-title translate=Main.Title></h3></div><div class=modal-body><div><tabset><tab><tab-heading><span icon=home tooltip=\"{{'Main.Tab.GettingStarted' | translate }}\"></span> {{'Main.Tab.GS' | translate }}</tab-heading><iframe ng-src=\"{{ vm.config.GettingStartedUrl | trustAsResourceUrl }}\" style=\"border: none; width: 100%; height: 500px\"></iframe><div ng-hide=true>original script, maybe we need it $(document).ready(function () { $(window).bind(\"resize\", function () { var GettingStartedFrame = $(\".sc-iframe-gettingstarted\"); GettingStartedFrame.height($(window).height() - 50); }); $(window).trigger(\"resize\"); });</div></tab><tab select=\"vm.view='content'\"><tab-heading><span icon=list tooltip=\"{{'Main.Tab.ContentData' | translate }}\"></span> {{'Main.Tab.CD' | translate }}</tab-heading><div ng-if=\"vm.view == 'content'\"><div ng-controller=\"List as vm\" ng-include=\"'content-types/content-types.html'\"></div></div></tab><tab select=\"vm.view='query'\" ng-if=!vm.config.IsContent><tab-heading><span icon=filter tooltip=\"{{'Main.Tab.Query' | translate }}\"></span> {{'Main.Tab.Q' | translate }}</tab-heading><div ng-if=\"vm.view == 'query'\"><div ng-controller=\"PipelineManagement as vm\" ng-include=\"'pipelines/pipelines.html'\"></div></div></tab><tab select=\"vm.view='view'\"><tab-heading><span icon=picture tooltip=\"{{'Main.Tab.ViewsTemplates' | translate }}\"></span> {{'Main.Tab.VT' | translate }}</tab-heading><div ng-if=\"vm.view == 'view'\"><div ng-controller=\"TemplateList as vm\" ng-include=\"'templates/templates.html'\"></div></div></tab><tab select=\"vm.view='webapi'\" ng-if=!vm.config.IsContent><tab-heading><span icon=flash tooltip=\"{{'Main.Tab.WebApi' | translate }}\"></span> {{'Main.Tab.WA' | translate }}</tab-heading><div ng-if=\"vm.view == 'webapi'\"><div ng-controller=\"WebApiMain as vm\" ng-include=\"'web-api/web-api.html'\"></div></div></tab><tab select=\"vm.view='app'\"><tab-heading><span icon=cog tooltip=\"{{'Main.Tab.AppSettings' | translate }}\"></span> {{'Main.Tab.AS' | translate }}</tab-heading><div ng-if=\"vm.view == 'app'\"><div ng-if=!vm.config.IsContent><div ng-controller=\"AppSettings as vm\" ng-include=\"'app-settings/app-settings.html'\"></div><br></div><div ng-controller=\"ImportExportIntro as vm\" ng-include=\"'importexport/intro.html'\"></div></div></tab><tab select=\"vm.view='portal'\"><tab-heading><span icon=globe tooltip=\"{{'Main.Tab.PortalLanguages' | translate }}\"></span> {{'Main.Tab.PL' | translate }}</tab-heading><div ng-if=\"vm.view == 'portal'\"><h3 translate=Main.Portal.Title></h3><div translate=Main.Portal.Intro></div><div ng-controller=\"LanguageSettings as vm\" ng-include=\"'language-settings/languages.html'\"></div></div></tab></tabset></div></div><show-debug-availability class=pull-right></show-debug-availability></div>"
   );
 
 
@@ -727,17 +826,22 @@ angular.module('SxcTemplates',[]).run(['$templateCache', function($templateCache
 
 
   $templateCache.put('importexport/intro.html',
-    "<div><div class=modal-header><h3 class=modal-title translate=AppConfig.Export.Title></h3></div><div class=modal-body><div translate=AppConfig.Export.Intro></div><button ng-click=vm.exportAll() class=btn type=button><i icon=export></i> {{'AppConfig.Export.Button' | translate}}</button></div><br><div class=modal-header><h3 class=modal-title translate=ImportExport.Title></h3></div><div class=modal-body><div translate=ImportExport.Intro></div><div translate=ImportExport.FurtherHelp></div><button ng-click=vm.import() class=btn type=button><i icon=import></i> {{'ImportExport.Buttons.Import' | translate}}</button> <button ng-click=vm.export() class=btn type=button><i icon=export></i> {{'ImportExport.Buttons.Export' | translate}}</button></div></div>"
+    "<div><div class=modal-header><h3 class=modal-title translate=AppConfig.Export.Title></h3></div><div class=modal-body><div translate=AppConfig.Export.Intro></div><button ng-click=vm.exportAll() class=\"btn btn-primary\" type=button><i icon=export></i> {{'AppConfig.Export.Button' | translate}}</button></div><br><div class=modal-header><h3 class=modal-title translate=ImportExport.Title></h3></div><div class=modal-body><div translate=ImportExport.Intro></div><div translate=ImportExport.FurtherHelp></div><button ng-click=vm.import() class=\"btn btn-primary\" type=button><i icon=import></i> {{'ImportExport.Buttons.Import' | translate}}</button> <button ng-click=vm.export() class=\"btn btn-primary\" type=button><i icon=export></i> {{'ImportExport.Buttons.Export' | translate}}</button></div></div>"
   );
 
 
   $templateCache.put('language-settings/languages.html',
-    "<div><div class=modal-body><h4 translate=Language.Title></h4><div translate=Language.Intro></div><table class=\"table table-striped table-hover\"><thead><tr><th translate=Language.Table.Code></th><th translate=Language.Table.Culture></th><th translate=Language.Table.Status></th></tr></thead><tbody><tr ng-repeat=\"item in vm.items | orderBy:['ContentType.Name','Name']\"><td>{{item.Code}}</td><td>{{item.Culture}}</td><td class=text-nowrap><span icon=\"{{ item.IsEnabled ? 'eye-open' : 'eye-close' }}\"></span> <button icon=\"{{ item.IsEnabled ? 'pause' : 'play' }}\" type=button class=\"btn btn-xs\" ng-click=vm.toggle(item)></button></td></tr><tr ng-if=!vm.items.length><td colspan=100 translate=General.Messages.NothingFound></td></tr></tbody></table></div></div>"
+    "<div><div class=modal-header><h4 translate=Language.Title></h4></div><div class=modal-body><div translate=Language.Intro></div><table class=\"table table-hover\"><thead><tr><th translate=Language.Table.Code></th><th translate=Language.Table.Culture></th><th translate=Language.Table.Status></th></tr></thead><tbody><tr ng-repeat=\"item in vm.items | orderBy:['ContentType.Name','Name']\" class=clickable-row ng-click=vm.toggle(item)><td class=clickable>{{item.Code}}</td><td class=clickable>{{item.Culture}}</td><td class=\"clickable text-nowrap\"><span ng-click=vm.save(item) stop-event=click><switch ng-model=item.IsEnabled></switch></span></td></tr><tr ng-if=!vm.items.length><td colspan=100 translate=General.Messages.NothingFound></td></tr></tbody></table>&nbsp;</div></div>"
+  );
+
+
+  $templateCache.put('reorder-content-list/reorder-content-list.html',
+    "<div class=modal-header><button class=\"btn btn-default btn-square pull-right\" type=button ng-click=vm.close()><i icon=remove></i></button><h3 class=modal-title translate=ReorderContentList.Title></h3><h2>not yet implemented!</h2></div><div><div class=modal-body><p translate=ReorderContentList.Intro></p><div ui-tree=options data-empty-placeholder-enabled=false><ol ui-tree-nodes ng-model=vm.items><li ng-repeat=\"item in vm.items\" ui-tree-node class=eav-entityselect-item><div ui-tree-handle><i icon=move title=\"{{ 'FieldType.Entity.DragMove' | translate }}\" class=\"pull-left eav-entityselect-sort\" ng-show=to.settings.Entity.AllowMultiValue></i> {{item.Id}}</div></li></ol></div></div></div><div class=modal-footer><button class=\"btn btn-primary btn-square btn-lg pull-left\" type=button ng-click=vm.ok()><i icon=ok></i></button></div>"
   );
 
 
   $templateCache.put('replace-content/replace-content.html',
-    "<div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=ReplaceContent.Title></h3></div><div><div class=modal-body><p translate=ReplaceContent.Intro></p><div translate=ReplaceContent.ChooseItem></div><div><td><select ng-model=vm.item.id ng-options=\"vm.convertToInt(key) as ((value || '[?]') + ' (' + key + ')') for (key,value) in vm.options\"></select></td></div></div></div><div class=modal-footer><button icon=ok class=\"btn btn-default pull-left\" type=button ng-click=vm.ok()></button></div>"
+    "<div class=modal-header><button class=\"btn btn-default btn-square pull-right\" type=button ng-click=vm.close()><i icon=remove></i></button><h3 class=modal-title translate=ReplaceContent.Title></h3></div><div><div class=modal-body><p translate=ReplaceContent.Intro></p><div translate=ReplaceContent.ChooseItem></div><div><select class=input-lg ng-model=vm.item.id ng-options=\"vm.convertToInt(key) as ((value || '[?]') + ' (' + key + ')') for (key,value) in vm.options\"></select>&nbsp;<button type=button class=\"btn btn-lg\"><i icon=duplicate ng-click=vm.copySelected()></i></button></div></div></div><div class=modal-footer><button class=\"btn btn-primary btn-square btn-lg pull-left\" type=button ng-click=vm.ok()><i icon=ok></i></button></div>"
   );
 
 
@@ -751,7 +855,7 @@ angular.module('SxcTemplates',[]).run(['$templateCache', function($templateCache
 
 
   $templateCache.put('templates/templates.html',
-    "<div class=modal-body><button icon=plus type=button class=\"btn btn-default\" ng-click=vm.add()></button> <button icon=repeat type=button class=btn ng-click=vm.refresh()></button><table class=\"table table-striped table-hover\"><thead><tr><th translate=Templates.Table.TName></th><th translate=Templates.Table.TPath></th><th translate=Templates.Table.CType></th><th translate=Templates.Table.DemoC></th><th tooltip=\"{{'Templates.Table.Show' | translate}}\"><span icon=eye-open></span></th><th translate=Templates.Table.UrlKey></th><th translate=Templates.Table.Actions></th></tr></thead><tbody><tr ng-repeat=\"item in vm.items | orderBy:['ContentType.Name','Name']\"><td><a ng-click=vm.edit(item)>{{item.Name}}</a></td><td><span tooltip={{item.TemplatePath}}>...{{item.TemplatePath.split(\"/\").pop()}}</span></td><td><span tooltip=\"\r" +
+    "<div class=modal-body><button icon=plus type=button class=\"btn btn-primary btn-square\" ng-click=vm.add()></button> <span class=btn-group ng-if=vm.debug.on><button icon=repeat type=button class=\"btn btn-square\" ng-click=vm.refresh()></button></span><table class=\"table table-hover\"><thead><tr><th translate=Templates.Table.TName></th><th translate=Templates.Table.TPath></th><th translate=Templates.Table.CType></th><th translate=Templates.Table.DemoC></th><th><span tooltip=\"{{'Templates.Table.Show' | translate}}\"><i icon=eye-open></i></span></th><th translate=Templates.Table.UrlKey></th><th translate=Templates.Table.Actions></th></tr></thead><tbody><tr ng-repeat=\"item in vm.items | orderBy:['ContentType.Name','Name']\" class=clickable-row ng-click=vm.edit(item)><td class=clickable>{{item.Name}}</td><td class=clickable><span tooltip={{item.TemplatePath}}>...{{item.TemplatePath.split(\"/\").pop()}}</span></td><td class=clickable><span tooltip=\"\r" +
     "\n" +
     "Cont: {{item.ContentType.Name}} ({{item.ContentType.Id}})\r" +
     "\n" +
@@ -761,7 +865,7 @@ angular.module('SxcTemplates',[]).run(['$templateCache', function($templateCache
     "\n" +
     "ListP: {{item.ListPresentationType.Name}} ({{item.ListPresentationType.Id}})\r" +
     "\n" +
-    "\">{{item.ContentType.Name}}</span></td><td><span tooltip=\"\r" +
+    "\">{{item.ContentType.Name}}</span></td><td class=clickable><span tooltip=\"\r" +
     "\n" +
     "Demo: {{item.ContentType.DemoTitle}} ({{item.ContentType.DemoId}})\r" +
     "\n" +
@@ -771,12 +875,12 @@ angular.module('SxcTemplates',[]).run(['$templateCache', function($templateCache
     "\n" +
     "ListP: {{item.ListPresentationType.DemoTitle}} ({{item.ListPresentationType.DemoId}})\r" +
     "\n" +
-    "\">{{item.ContentType.DemoId}}</span></td><td><span icon=\"{{ item.IsHidden ? 'close' : 'eye-open'}}\"></span></td><td tooltip={{item.ViewNameInUrl}}>{{item.ViewNameInUrl}}</td><td class=text-nowrap><button type=button class=\"btn btn-xs\" ng-click=vm.permissions(item)><span icon=user></span>&nbsp;/&nbsp;<span icon=lock></span></button> <button type=button class=\"btn btn-xs\" ng-click=vm.tryToDelete(item)><span icon=remove></span></button></td></tr><tr ng-if=!vm.items.length><td colspan=100 translate=General.Messages.NothingFound></td></tr></tbody></table><div translate=Templates.InfoHideAdvanced></div></div>"
+    "\">{{item.ContentType.DemoId}}</span></td><td><span icon=\"{{ item.IsHidden ? 'close' : 'eye-open'}}\"></span></td><td class=clickable><span tooltip={{item.ViewNameInUrl}}>{{item.ViewNameInUrl}}</span></td><td class=text-nowrap stop-event=click><button type=button class=\"btn btn-xs btn-square\" ng-click=vm.permissions(item)><i icon=user></i></button> <button type=button class=\"btn btn-xs btn-square\" ng-click=vm.tryToDelete(item)><span icon=remove></span></button></td></tr><tr ng-if=!vm.items.length><td colspan=100 translate=General.Messages.NothingFound></td></tr></tbody></table><div translate=Templates.InfoHideAdvanced></div></div>"
   );
 
 
   $templateCache.put('web-api/web-api.html',
-    "<div class=modal-header><h3 class=modal-title translate=WebApi.Title></h3></div><div class=modal-body><p translate=WebApi.Intro></p><button icon=plus type=button class=\"btn btn-default\" ng-click=vm.add()></button> <button icon=repeat type=button class=btn ng-click=vm.refresh()></button><table class=\"table table-striped table-hover\"><thead><tr><th translate=WebApi.ListTitle></th></tr></thead><tbody><tr ng-repeat=\"item in vm.items | orderBy:['ContentType.Name','Name']\"><td><span tooltip={{item.TemplatePath}}>{{item}}</span></td></tr><tr ng-if=!vm.items.length><td colspan=100 translate=General.Messages.NothingFound></td></tr></tbody></table><p translate=WebApi.QuickStart></p></div>"
+    "<div class=modal-header><h3 class=modal-title translate=WebApi.Title></h3></div><div class=modal-body><p translate=WebApi.Intro></p><button icon=plus type=button class=\"btn btn-square\" ng-click=vm.add()></button> <button icon=repeat type=button class=\"btn btn-square\" ng-click=vm.refresh()></button><table class=\"table table-hover\"><thead><tr><th translate=WebApi.ListTitle></th></tr></thead><tbody><tr ng-repeat=\"item in vm.items | orderBy:['ContentType.Name','Name']\"><td><span tooltip={{item.TemplatePath}}>{{item}}</span></td></tr><tr ng-if=!vm.items.length><td colspan=100 translate=General.Messages.NothingFound></td></tr></tbody></table><p translate=WebApi.QuickStart></p></div>"
   );
 
 }]);
@@ -793,8 +897,10 @@ angular.module('SxcTemplates',[]).run(['$templateCache', function($templateCache
         .controller("TemplateList", TemplateListController)
         ;
 
-    function TemplateListController(templatesSvc, eavAdminDialogs, eavConfig, appId, oldDialogs, $modalInstance, $sce) {
+    function TemplateListController(templatesSvc, eavAdminDialogs, eavConfig, appId, debugState, oldDialogs, translate, $modalInstance, $sce) {
         var vm = this;
+        vm.debug = debugState;
+
         var svc = templatesSvc(appId);
 
         vm.edit = function edit(item) {
@@ -830,7 +936,7 @@ angular.module('SxcTemplates',[]).run(['$templateCache', function($templateCache
         };
 
         vm.tryToDelete = function tryToDelete(item) {
-            if (confirm("Delete '" + item.Title + "' (" + item.Id + ") ?"))
+            if (confirm(translate("General.Questions.DeleteEntity", { title: item.Name, id: item.Id})))
                 svc.delete(item.Id);
         };
 
@@ -838,7 +944,7 @@ angular.module('SxcTemplates',[]).run(['$templateCache', function($templateCache
             $modalInstance.dismiss("cancel");
         };
     }
-    TemplateListController.$inject = ["templatesSvc", "eavAdminDialogs", "eavConfig", "appId", "oldDialogs", "$modalInstance", "$sce"];
+    TemplateListController.$inject = ["templatesSvc", "eavAdminDialogs", "eavConfig", "appId", "debugState", "oldDialogs", "translate", "$modalInstance", "$sce"];
 
 } ());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
@@ -871,8 +977,9 @@ angular.module('SxcTemplates',[]).run(['$templateCache', function($templateCache
         .controller("WebApiMain", WebApiMainController)
         ;
 
-    function WebApiMainController(appId, webApiSvc, eavAdminDialogs, $modalInstance) {
+    function WebApiMainController(appId, webApiSvc, eavAdminDialogs, $modalInstance, $filter) {
         var vm = this;
+        var translate = $filter('translate');
         
         var svc = webApiSvc(appId);
 
@@ -880,12 +987,12 @@ angular.module('SxcTemplates',[]).run(['$templateCache', function($templateCache
         vm.refresh = svc.liveListReload;
 
         vm.add = function add() {
-            alert("there is no automatic add yet - please do it manually in the 'api' folder. Just copy one of an existing project to get started.");
+            alert(translate("WebApi.AddDoesntExist"));
         };
 
         // not implemented yet...
         vm.tryToDelete = function tryToDelete(item) {
-            if (confirm("Delete '" + item.Title + "' (" + item.Id + ") ?"))
+            if (confirm(translate("General.Messages.DeleteEntity", { title: item.Title, id: item.Id})))   //"Delete '" + item.Title + "' (" + item.Id + ") ?"))
                 svc.delete(item.Id);
         };
 
@@ -893,6 +1000,6 @@ angular.module('SxcTemplates',[]).run(['$templateCache', function($templateCache
             $modalInstance.dismiss("cancel");
         };
     }
-    WebApiMainController.$inject = ["appId", "webApiSvc", "eavAdminDialogs", "$modalInstance"];
+    WebApiMainController.$inject = ["appId", "webApiSvc", "eavAdminDialogs", "$modalInstance", "$filter"];
 
 } ());

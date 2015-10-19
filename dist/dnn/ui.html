@@ -6,6 +6,9 @@
     <!-- first load the main 2sxc because it contains some url-param methods -->
     <script src="../../js/2sxc.api.min.js"></script>
     <script>
+        // the version to append to each asset, to ensure reload after an upgrade
+        var sxcVersionParam = "sxcver=07.03.03";
+
         // this creates an object on $.ServicesFramework
         // it looks like the DNN object and is necessary so that scripts relying on it will work
         // it basically fakes it, but contains the correct infos like getTabId etc. without needing the full DNN
@@ -31,7 +34,7 @@
         function addScript(src) {
             var script = document.createElement('script');
             script.type = 'text/javascript';
-            script.src = src;
+            script.src = src + "?" + sxcVersionParam;
             document.write(script.outerHTML); // needs doc.write to ensure in-sync loading of the files
         }
 
@@ -40,8 +43,8 @@
             var style = document.createElement("link");
             style.setAttribute("rel", "stylesheet");
             style.setAttribute("type", "text/css");
-            style.setAttribute("href", src);
-            document.getElementsByTagName('head')[0].appendChild(style);
+            style.setAttribute("href", src + "?" + sxcVersionParam);
+            document.getElementsByTagName("head")[0].appendChild(style);
         }
 
     </script>
@@ -57,28 +60,28 @@
             addScript("../lib/pipeline/set.min.js");
             addStyle("../admin/pipeline-designer.min.css");
         }
+
+        var scripts = [
+            '../lib/angular/set.min.js',            // default set needed for all UIs like angular, animate, translate
+            '../../js/angularjs/2sxc4ng.min.js',    //2sxc stuff like bootloader, configuration
+            '../config/config.js',
+            '../admin/eav-admin.js',                //Main parts like eav-admin, sxc-admin and eav-edit
+            '../sxc-admin/sxc-admin.js',
+            '../edit/eav-edit.js',
+            '../sxc-edit/sxc-edit.js'
+        ];
+        var styles = [
+            '../lib/angular/set.min.css',
+            '../admin/eav-admin.min.css',
+            '../edit/edit.min.css',
+            '../sxc-edit/sxc-edit.css'
+        ];
+        for (var s = 0; s < scripts.length; s++)
+            addScript(scripts[s]);
+        for (var s = 0; s < styles.length; s++)
+            addStyle(styles[s]);
+
     </script>
-
-
-    <!--default set needed for all UIs like angular, animate, translate-->
-    <script src="../lib/angular/set.min.js"></script>
-
-    <!--2sxc stuff like bootloader, configuration-->
-    <script src="../../js/angularjs/2sxc4ng.min.js"></script>
-    <script src="../config/config.js"></script>
-
-    <!--Main parts like eav-admin, sxc-admin and eav-edit--> 
-    <script src="../admin/eav-admin.js"></script>
-    <script src="../sxc-admin/sxc-admin.js"></script>
-    <script src="../edit/eav-edit.js"></script>
-    <script src="../sxc-edit/sxc-edit.js"></script>
-
-
-    <!-- style sheets -->
-    <link rel="stylesheet" type="text/css" href="../lib/angular/set.min.css"/>
-    <link rel="stylesheet" type="text/css" href="../admin/eav-admin.min.css"/>
-    <link rel="stylesheet" type="text/css" href="../edit/edit.min.css"/>
-    <link rel="stylesheet" type="text/css" href="../sxc-edit/sxc-edit.css" />
 
     <script>
         // this must come close to the end, after a closed script which might load jQuery
@@ -89,8 +92,7 @@
 <body style="background-color:transparent">
 
     <script>
-        // note: the pipeline designer is special - it doesn't open a modal-dialog
-        // ...but should be shown directly
+        // note: the pipeline designer is special - it doesn't open a modal-dialog but should be shown directly
         // all others will be modal-opened by the DialogHost App
         if (dialogName !== "pipeline-designer")
             document.write('<div sxc-app="DialogHost" ng-dependencies="InitParametersFromUrl,InitSxcParametersFromUrl,DialogHost" ng-controller="DialogHost as vm"></div>');

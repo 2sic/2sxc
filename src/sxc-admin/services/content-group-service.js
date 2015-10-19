@@ -10,7 +10,18 @@ angular.module("SxcServices")
                 },
                 saveItem: function(item) {
                     return $http.post('app/contentgroup/replace', {}, { params: { guid: item.guid, part: item.part, index: item.index, entityId: item.id } });
+                },
+
+                getList: function(item) {
+                    return $http.get('app/contentgroup/itemlist', { params: { appId: appId, guid: item.guid } });
+                },
+
+                saveList: function (item, resortedList) {
+                    alert("not implemented yet");
+                    return;
+                    //return $http.post('app/contentgroup/itemlist', { params: { appId: appId, guid: item.guid, list: resortedList } });
                 }
+
             };
 
             //svc.replace = $resource("",

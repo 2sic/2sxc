@@ -11,9 +11,9 @@ angular.module("SxcServices")//, ['ng', 'eavNgSvcs', "EavConfiguration"])
                 return $http.get("app/template/getall", { params: { appId: svc.appId } });
             }));
 
-            // delete, then reload
+            // delete, then reload, for now must use httpget because delete sometimes causes issues
             svc.delete = function del(id) {
-                return $http.delete("app/templates/delete", {params: {appId: svc.appId, id: id }})
+                return $http.get("app/template/delete", {params: {appId: svc.appId, Id: id }})
                     .then(svc.liveListReload);
             };
             return svc;
