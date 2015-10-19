@@ -563,6 +563,7 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
         {
             var userName = "System-ModuleUpgrade-070303";
             
+            // 1. Import new Attributes for @All content type
             var xmlToImport =
                 File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/07.03.03-01.xml"));
             var xmlImport = new XmlImport("en-US", userName, true);
@@ -574,6 +575,7 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
                 throw new Exception("The 2sxc module upgrade to 07.03.03 failed: " + messages);
             }
 
+            // 2. Import ContentType-InputType and entities for it
             xmlToImport =
                 File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/07.03.03-02.xml"));
             xmlImport = new XmlImport("en-US", userName, true);
@@ -584,6 +586,9 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
                 var messages = String.Join("\r\n- ", xmlImport.ImportLog.Select(p => p.Message).ToArray());
                 throw new Exception("The 2sxc module upgrade to 07.03.03 failed: " + messages);
             }
+
+            // Hide all unneeded fields - all fields for string, number: all but "Number of Decimals", Minimum and Maximum
+
 
         }
 
