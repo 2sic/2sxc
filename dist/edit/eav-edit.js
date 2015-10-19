@@ -315,7 +315,7 @@ angular.module("eavFieldTemplates")
     var app = angular.module("eavEditEntity");
 
     // The controller for the main form directive
-    app.controller("EditEntities", ["appId", "$http", "$scope", "entitiesSvc", "toastr", "translate", "debugState", function editEntityCtrl(appId, $http, $scope, entitiesSvc, toastr, translate, debugState) {
+    app.controller("EditEntities", ["appId", "$http", "$scope", "entitiesSvc", "toastr", "$translate", "debugState", function editEntityCtrl(appId, $http, $scope, entitiesSvc, toastr, $translate, debugState) {
 
         var vm = this;
         vm.debug = debugState;
@@ -354,11 +354,11 @@ angular.module("eavFieldTemplates")
 
         vm.save = function (close) {
             vm.isWorking++;
-            var saving = toastr.info(translate("Message.Saving"));
+            var saving = toastr.info($translate.instant("Message.Saving"));
             entitiesSvc.saveMany(appId, vm.items).then(function (result) {
                 toastr.clear(saving);
                 $scope.state.setPristine();
-                toastr.success(translate("Message.Saved"), { timeOut: 3000 });
+                toastr.success($translate.instant("Message.Saved"), { timeOut: 3000 });
                 if(close)
                     vm.afterSaveEvent(result);
                 vm.isWorking--;
@@ -492,7 +492,8 @@ angular.module("eavFieldTemplates")
 			                settings: e.Metadata,
 			                header: $scope.header,
                             canCollapse: lastGroupHeadingId > 0 && !isFieldHeading,
-			                fieldGroup: vm.formFields[lastGroupHeadingId],
+                            fieldGroup: vm.formFields[lastGroupHeadingId],
+                            disabled: e.Metadata.All.Disabled,
 			                langReadOnly: false // Will be set by the language directive to override the disabled state
 			            },
 			            hide: (e.Metadata.All.VisibleInEditUI === false ? !debugState.on : false),
@@ -504,7 +505,9 @@ angular.module("eavFieldTemplates")
 			                {
                                 // changes when a entity becomes enabled / disabled
 			                    expression: function(field, scope, stop) {
-			                        return (field.templateOptions.header.Group && field.templateOptions.header.Group.SlotIsEmpty) || field.templateOptions.langReadOnly;
+			                        return e.Metadata.All.Disabled ||
+                                        (field.templateOptions.header.Group && field.templateOptions.header.Group.SlotIsEmpty) ||
+                                        field.templateOptions.langReadOnly;
 			                    },
 			                    listener: function(field, newValue, oldValue, scope, stopWatching) {
 			                        field.templateOptions.disabled = newValue;
@@ -590,7 +593,7 @@ angular.module("eavFieldTemplates")
 	var app = angular.module("eavEditEntity");
 
 	// The controller for the main form directive
-	app.controller("EditEntityWrapperCtrl", ["$q", "$http", "$scope", "items", "$modalInstance", "$window", "translate", function editEntityCtrl($q, $http, $scope, items, $modalInstance, $window, translate) {
+	app.controller("EditEntityWrapperCtrl", ["$q", "$http", "$scope", "items", "$modalInstance", "$window", "$translate", function editEntityCtrl($q, $http, $scope, items, $modalInstance, $window, $translate) {
 
 	    var vm = this;
 	    vm.itemList = items;
@@ -600,13 +603,13 @@ angular.module("eavFieldTemplates")
 	        if (result.status === 200)
 	            vm.close(result);
 	        else {
-	            alert(translate("Errors.UnclearError"));
+	            alert($translate.instant("Errors.UnclearError"));
 	        }
 	    };
 
 	    vm.state = {
 	        isDirty: function() {
-	            throw translate("Errors.InnerControlMustOverride");
+	            throw $translate.instant("Errors.InnerControlMustOverride");
 	        }
 	    };
 
@@ -614,10 +617,10 @@ angular.module("eavFieldTemplates")
 		    $modalInstance.close(result);
 		};
 
-	    var unsavedChangesText = translate("Errors.UnsavedChanges");
+	    var unsavedChangesText = $translate.instant("Errors.UnsavedChanges");
 
 	    vm.maybeLeave = function maybeLeave(e) {
-	        if (vm.state.isDirty() && !confirm(unsavedChangesText + " " + translate("Message.ExitOk")))
+	        if (vm.state.isDirty() && !confirm(unsavedChangesText + " " + $translate.instant("Message.ExitOk")))
 	            e.preventDefault();
 	    };
 
@@ -737,7 +740,7 @@ angular.module('eavEditTemplates',[]).run(['$templateCache', function($templateC
 			template: "",
 			link: function (scope, element, attrs) {
 			},
-			controller: ["$scope", "$filter", "translate", "eavDefaultValueService", "languages", function ($scope, $filter, translate, eavDefaultValueService, languages) { // Can't use controllerAs because of transcluded scope
+			controller: ["$scope", "$filter", "$translate", "eavDefaultValueService", "languages", function ($scope, $filter, $translate, eavDefaultValueService, languages) { // Can't use controllerAs because of transcluded scope
 
 				var scope = $scope;
 				var langConf = languages;
@@ -761,8 +764,6 @@ angular.module('eavEditTemplates',[]).run(['$templateCache', function($templateC
 					    }
 					}
 
-
-                    // todo: discuss w/2rm 2dm changed this 2015-10-05 - I think the false was wrong
 				    // Assign default language if no dimension is set - new: if multiple languages are in use!!!
 					if (Object.keys(fieldModel.Values[0].Dimensions).length === 0)
                         if(langConf.languages.length > 0)
@@ -785,7 +786,7 @@ angular.module('eavEditTemplates',[]).run(['$templateCache', function($templateC
 					// 3. Use the first value if there is only one
 					if (valueToEdit === undefined) {
 						if (fieldModel.Values.length > 1)
-						    throw translate("Errors.DefLangNotFound") + " " + $scope.options.key;
+						    throw $translate.instant("Errors.DefLangNotFound") + " " + $scope.options.key;
 						// Use the first value
 						valueToEdit = fieldModel.Values[0];
 					}
@@ -835,10 +836,10 @@ angular.module('eavEditTemplates',[]).run(['$templateCache', function($templateC
 			templateUrl: "localization/localization-menu.html",
 			link: function (scope, element, attrs) { },
 			controllerAs: "vm",
-			controller: ["$scope", "languages", "translate", function ($scope, languages, translate) {
+			controller: ["$scope", "languages", "$translate", function ($scope, languages, $translate) {
 			    var vm = this;
-			    var lblDefault = translate("LangMenu.UseDefault");
-			    var lblIn = translate("LangMenu.In");
+			    var lblDefault = $translate.instant("LangMenu.UseDefault");
+			    var lblIn = $translate.instant("LangMenu.In");
 
 				vm.fieldModel = $scope.fieldModel;
 				vm.languages = languages;
@@ -854,7 +855,7 @@ angular.module('eavEditTemplates',[]).run(['$templateCache', function($templateC
 				        return lblDefault;
 				    if (Object.keys($scope.value.Dimensions).length === 1 && $scope.value.Dimensions[languages.currentLanguage] === false)
 				        return "";
-				    return translate("LangMenu.In", { languages: Object.keys($scope.value.Dimensions).join(", ") });
+				    return $translate.instant("LangMenu.In", { languages: Object.keys($scope.value.Dimensions).join(", ") });
 				    // "in " + Object.keys($scope.value.Dimensions).join(", ");
 				};
 
@@ -864,9 +865,9 @@ angular.module('eavEditTemplates',[]).run(['$templateCache', function($templateC
 				    angular.forEach($scope.value.Dimensions, function (value, key) {
 				        (value ? usedIn : editableIn).push(key);
 				    });
-				    var tooltip = translate("LangMenu.EditableIn", { languages: editableIn.join(", ") }); // "editable in " + editableIn.join(", ");
+				    var tooltip = $translate.instant("LangMenu.EditableIn", { languages: editableIn.join(", ") }); // "editable in " + editableIn.join(", ");
 				    if (usedIn.length > 0)
-				        tooltip += translate("LangMenu.AlsoUsedIn", { languages: usedIn.join(", ") });// ", also used in " + usedIn.join(", ");
+				        tooltip += $translate.instant("LangMenu.AlsoUsedIn", { languages: usedIn.join(", ") });// ", also used in " + usedIn.join(", ");
 				    return tooltip;
 				};
 
