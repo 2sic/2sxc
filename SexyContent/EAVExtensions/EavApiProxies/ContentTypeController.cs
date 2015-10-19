@@ -40,6 +40,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
             return eavCtc.GetSingle(appId, contentTypeStaticName, scope);
         }
 
+        [HttpGet]
         [HttpDelete]
         public bool Delete(int appId, string staticName)
         {
@@ -74,11 +75,18 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
         }
 
         [HttpGet]
+        public IEnumerable<Dictionary<string, object>> InputTypes(int appId)
+        {
+            return eavCtc.InputTypes(appId);
+        }
+
+        [HttpGet]
         public int AddField(int appId, int contentTypeId, string staticName, string type, string inputType, int sortOrder)
         {
             return eavCtc.AddField(appId, contentTypeId, staticName, type, inputType, sortOrder);
         }
 
+        [HttpGet]
         [HttpDelete]
         public bool DeleteField(int appId, int contentTypeId, int attributeId)
         {
@@ -91,6 +99,11 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
             eavCtc.SetTitle(appId, attributeId, contentTypeId);
         }
 
+        [HttpGet]
+        public bool UpdateInputType(int appId, int attributeId, string inputType)
+        {
+            return eavCtc.UpdateInputType(appId, attributeId, inputType);
+        }
         #endregion
 
 

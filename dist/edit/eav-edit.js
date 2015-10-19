@@ -1114,7 +1114,7 @@ function enhanceEntity(entity) {
             };
 
             svc.delete = function del(type, id) {
-                return $http.delete("eav/entities/delete", {
+                return $http.get("eav/entities/delete", {
                     params: {
                         'contentType': type,
                         'id': id,
