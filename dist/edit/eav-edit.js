@@ -238,7 +238,7 @@ angular.module("eavFieldTemplates")
 
         formlyConfigProvider.setType({
             name: "string-disabled",
-            template: "<div>disb<input class=\"form-control input-lg\" ng-model=\"value.Value\" ng-disabled='true'> {{value.Value}} </div>",
+            template: "<input class=\"form-control input-lg\" ng-model=\"value.Value\" ng-disabled='true'>",
             wrapper: defaultFieldWrappers
         });
 
@@ -252,7 +252,8 @@ angular.module("eavFieldTemplates")
 
         formlyConfigProvider.setType({
             name: "string-default",
-            template: "<input class=\"form-control input-lg\" ng-pattern=\"vm.regexPattern\" ng-model=\"value.Value\">",
+            template: "<div><input class=\"form-control input-lg\" ng-if=\"!(options.templateOptions.settings.String.RowCount > 1)\" ng-pattern=\"vm.regexPattern\" ng-model=\"value.Value\">" +
+                "<textarea ng-if=\"options.templateOptions.settings.String.RowCount > 1\" rows=\"{{options.templateOptions.settings.String.RowCount}}\" class=\"form-control input-lg\" ng-model=\"value.Value\"></textarea></div>",
             wrapper: defaultFieldWrappers, 
             controller: "FieldTemplate-StringCtrl as vm"
         });
@@ -264,6 +265,8 @@ angular.module("eavFieldTemplates")
         if (stringSettings && stringSettings.ValidationRegExJavaScript)
             validationRegexString = stringSettings.ValidationRegExJavaScript;
         vm.regexPattern = new RegExp(validationRegexString, 'i');
+
+        console.log($scope.options.templateOptions);
     }]);
 /* 
  * Field: String - Dropdown
@@ -303,27 +306,6 @@ angular.module("eavFieldTemplates")
 
             }
         });
-    }]);
-/* 
- * Field: String - Textarea
- */
-
-angular.module("eavFieldTemplates")
-    .config(["formlyConfigProvider", "defaultFieldWrappers", function (formlyConfigProvider, defaultFieldWrappers) {
-
-        formlyConfigProvider.setType({
-            name: "string-textarea",
-            template: "<textarea class=\"form-control input-lg\" ng-model=\"value.Value\"></textarea>",
-            wrapper: defaultFieldWrappers,
-            defaultOptions: {
-                ngModelAttrs: {
-                    '{{to.settings.String.RowCount}}': { value: "rows" },
-                    cols: { attribute: "cols" }
-                }
-            }
-        });
-
-
     }]);
 /* global angular */
 (function () {
@@ -565,11 +547,6 @@ angular.module("eavFieldTemplates")
 		            : null;
 
 			    subType = subType ? subType.toLowerCase() : null;
-
-			    // Special case: override subtype for string-textarea
-                // todo: probably shouldn't do this any more...
-			    if (type === "string" && e.Metadata.String && e.Metadata.String.RowCount > 1)
-			        subType = "textarea";
 
 			    inputType = type + "-" + subType;
 			}
@@ -1137,7 +1114,7 @@ function enhanceEntity(entity) {
             };
 
             svc.delete = function del(type, id) {
-                return $http.delete("eav/entities/delete", {
+                return $http.get("eav/entities/delete", {
                     params: {
                         'contentType': type,
                         'id': id,

@@ -10,7 +10,7 @@
         .controller("TemplateList", TemplateListController)
         ;
 
-    function TemplateListController(templatesSvc, eavAdminDialogs, eavConfig, appId, debugState, oldDialogs, translate, $modalInstance, $sce) {
+    function TemplateListController(templatesSvc, eavAdminDialogs, eavConfig, appId, debugState, oldDialogs, $translate, $modalInstance, $sce) {
         var vm = this;
         vm.debug = debugState;
 
@@ -49,7 +49,7 @@
         };
 
         vm.tryToDelete = function tryToDelete(item) {
-            if (confirm(translate("General.Questions.DeleteEntity", { title: item.Name, id: item.Id})))
+            if (confirm($translate.instant("General.Questions.DeleteEntity", { title: item.Name, id: item.Id})))
                 svc.delete(item.Id);
         };
 

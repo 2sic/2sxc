@@ -264,6 +264,8 @@
     <Compile Include="SexyContent\ContentGroups.cs" />
     <Compile Include="SexyContent\DataSources\DnnSqlDataSource.cs" />
     <Compile Include="SexyContent\DataSources\DnnFormAndList.cs" />
+    <Compile Include="SexyContent\EAVExtensions\EavApiProxies\ContentExportController.cs" />
+    <Compile Include="SexyContent\EAVExtensions\EavApiProxies\ContentImportController.cs" />
     <Compile Include="SexyContent\EAVExtensions\EavApiProxies\MetadataController.cs" />
     <Compile Include="SexyContent\EAVExtensions\EavApiProxies\EntitiesController.cs" />
     <Compile Include="SexyContent\EAV\FieldTemplates\EditorProvider.cs">

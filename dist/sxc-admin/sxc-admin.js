@@ -137,34 +137,34 @@
         .controller("AppList", AppListController)
         ;
 
-    function AppListController(appsSvc, eavAdminDialogs, sxcDialogs, eavConfig, zoneId, oldDialogs, $modalInstance, $filter) {
+    function AppListController(appsSvc, eavAdminDialogs, sxcDialogs, eavConfig, zoneId, oldDialogs, $modalInstance, $translate) {
         var vm = this;
 
         var svc = appsSvc(zoneId);
         vm.items = svc.liveList();
         vm.refresh = svc.liveListReload;
-        var translate = $filter("translate");
+        //var translate = $filter("translate");
 
         vm.config = function config(item) {
             eavAdminDialogs.openItemEditWithEntityId(item.ConfigurationId, svc.liveListReload);
         };
 
         vm.add = function add() {
-            var result = prompt(translate("AppManagement.Prompt.NewApp"));
+            var result = prompt($translate.instant("AppManagement.Prompt.NewApp"));
             if (result)
                 svc.create(result);
         };
 
         
         vm.tryToDelete = function tryToDelete(item) {
-            var result = prompt(translate("AppManagement.Prompt.DeleteApp", { name: item.Name, id: item.Id}));
+            var result = prompt($translate.instant("AppManagement.Prompt.DeleteApp", { name: item.Name, id: item.Id}));
                 //prompt("This cannot be undone. To really delete this app, type (or copy/past) the app-name here: Delete '" + item.Name + "' (" + item.Id + ") ?");
             if (result === null)
                 return;
             if(result === item.Name)
                 svc.delete(item.Id);
             else 
-                alert(translate("AppManagement.Prompt.FailedDelete"));
+                alert($translate.instant("AppManagement.Prompt.FailedDelete"));
         };
 
         // note that manage MUST open in a new iframe, to give the entire application 
@@ -198,7 +198,7 @@
 
         vm.close = function () { $modalInstance.dismiss("cancel");};
     }
-    AppListController.$inject = ["appsSvc", "eavAdminDialogs", "sxcDialogs", "eavConfig", "zoneId", "oldDialogs", "$modalInstance", "$filter"];
+    AppListController.$inject = ["appsSvc", "eavAdminDialogs", "sxcDialogs", "eavConfig", "zoneId", "oldDialogs", "$modalInstance", "$translate"];
 
 } ());
 (function () { 
@@ -897,7 +897,7 @@ angular.module('SxcTemplates',[]).run(['$templateCache', function($templateCache
         .controller("TemplateList", TemplateListController)
         ;
 
-    function TemplateListController(templatesSvc, eavAdminDialogs, eavConfig, appId, debugState, oldDialogs, translate, $modalInstance, $sce) {
+    function TemplateListController(templatesSvc, eavAdminDialogs, eavConfig, appId, debugState, oldDialogs, $translate, $modalInstance, $sce) {
         var vm = this;
         vm.debug = debugState;
 
@@ -936,7 +936,7 @@ angular.module('SxcTemplates',[]).run(['$templateCache', function($templateCache
         };
 
         vm.tryToDelete = function tryToDelete(item) {
-            if (confirm(translate("General.Questions.DeleteEntity", { title: item.Name, id: item.Id})))
+            if (confirm($translate.instant("General.Questions.DeleteEntity", { title: item.Name, id: item.Id})))
                 svc.delete(item.Id);
         };
 
@@ -944,7 +944,7 @@ angular.module('SxcTemplates',[]).run(['$templateCache', function($templateCache
             $modalInstance.dismiss("cancel");
         };
     }
-    TemplateListController.$inject = ["templatesSvc", "eavAdminDialogs", "eavConfig", "appId", "debugState", "oldDialogs", "translate", "$modalInstance", "$sce"];
+    TemplateListController.$inject = ["templatesSvc", "eavAdminDialogs", "eavConfig", "appId", "debugState", "oldDialogs", "$translate", "$modalInstance", "$sce"];
 
 } ());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
@@ -977,9 +977,8 @@ angular.module('SxcTemplates',[]).run(['$templateCache', function($templateCache
         .controller("WebApiMain", WebApiMainController)
         ;
 
-    function WebApiMainController(appId, webApiSvc, eavAdminDialogs, $modalInstance, $filter) {
+    function WebApiMainController(appId, webApiSvc, eavAdminDialogs, $modalInstance, $translate) {
         var vm = this;
-        var translate = $filter('translate');
         
         var svc = webApiSvc(appId);
 
@@ -987,12 +986,12 @@ angular.module('SxcTemplates',[]).run(['$templateCache', function($templateCache
         vm.refresh = svc.liveListReload;
 
         vm.add = function add() {
-            alert(translate("WebApi.AddDoesntExist"));
+            alert($translate.instant("WebApi.AddDoesntExist"));
         };
 
         // not implemented yet...
         vm.tryToDelete = function tryToDelete(item) {
-            if (confirm(translate("General.Messages.DeleteEntity", { title: item.Title, id: item.Id})))   //"Delete '" + item.Title + "' (" + item.Id + ") ?"))
+            if (confirm($translate.instant("General.Messages.DeleteEntity", { title: item.Title, id: item.Id})))   //"Delete '" + item.Title + "' (" + item.Id + ") ?"))
                 svc.delete(item.Id);
         };
 
@@ -1000,6 +999,6 @@ angular.module('SxcTemplates',[]).run(['$templateCache', function($templateCache
             $modalInstance.dismiss("cancel");
         };
     }
-    WebApiMainController.$inject = ["appId", "webApiSvc", "eavAdminDialogs", "$modalInstance", "$filter"];
+    WebApiMainController.$inject = ["appId", "webApiSvc", "eavAdminDialogs", "$modalInstance", "$translate"];
 
 } ());
