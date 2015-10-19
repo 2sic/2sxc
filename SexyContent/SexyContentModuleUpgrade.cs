@@ -83,6 +83,9 @@ namespace ToSic.SexyContent
                     case "07.03.01":
                         EnsurePipelineDesignerAttributeSets(); // Need to ensure this again because of upgrade problems
 				        break;
+                    case "07.03.03":
+                        Version070303();
+				        break;
 				}
 
 				// Increase ClientDependency version upon each upgrade (System and all Portals)
@@ -108,7 +111,7 @@ namespace ToSic.SexyContent
 
 		internal static void FinishAbortedUpgrade() {
 			// Maybe this list can somehow be extracted from the module manifest?
-			var upgradeVersionList = new[] { "07.00.00", "07.00.03", "07.02.00", "07.02.02", "07.03.00", "07.03.01", "07.03.02" };
+			var upgradeVersionList = new[] { "07.00.00", "07.00.03", "07.02.00", "07.02.02", "07.03.00", "07.03.01", "07.03.02", "07.03.03" };
 
 			// Run upgrade again for all versions that do not have a corresponding logfile
 			foreach(var upgradeVersion in upgradeVersionList) {
@@ -556,12 +559,39 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
 
 		}
 
+        private static void Version070303()
+        {
+            var userName = "System-ModuleUpgrade-070303";
+            
+            var xmlToImport =
+                File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/07.03.03-01.xml"));
+            var xmlImport = new XmlImport("en-US", userName, true);
+            var success = xmlImport.ImportXml(Constants.DefaultZoneId, Constants.MetaDataAppId, XDocument.Parse(xmlToImport));
 
-		/// <summary>
-		/// Copy a Directory recursive
-		/// </summary>
-		/// <remarks>Source: http://msdn.microsoft.com/en-us/library/bb762914(v=vs.110).aspx </remarks>
-		private static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs)
+            if (!success)
+            {
+                var messages = String.Join("\r\n- ", xmlImport.ImportLog.Select(p => p.Message).ToArray());
+                throw new Exception("The 2sxc module upgrade to 07.03.03 failed: " + messages);
+            }
+
+            xmlToImport =
+                File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/07.03.03-02.xml"));
+            xmlImport = new XmlImport("en-US", userName, true);
+            success = xmlImport.ImportXml(Constants.DefaultZoneId, Constants.MetaDataAppId, XDocument.Parse(xmlToImport));
+
+            if (!success)
+            {
+                var messages = String.Join("\r\n- ", xmlImport.ImportLog.Select(p => p.Message).ToArray());
+                throw new Exception("The 2sxc module upgrade to 07.03.03 failed: " + messages);
+            }
+
+        }
+
+        /// <summary>
+        /// Copy a Directory recursive
+        /// </summary>
+        /// <remarks>Source: http://msdn.microsoft.com/en-us/library/bb762914(v=vs.110).aspx </remarks>
+        private static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs)
 		{
 			// Get the subdirectories for the specified directory.
 			var dir = new DirectoryInfo(sourceDirName);

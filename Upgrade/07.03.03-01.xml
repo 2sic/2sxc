@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<SexyContent FileVersion="07.00.00" MinimumRequiredVersion="07.00.00" ModuleVersion="07.03.03" ExportDate="2015-10-19T13:29:36.0158002+02:00">
+  <Header>
+    <Language Default="en-US" />
+    <Dimensions />
+  </Header>
+  <AttributeSets>
+    <AttributeSet StaticName="@All" Name="@All" Description="the fields used on all input types" Scope="System"  AlwaysShareConfiguration="true">
+      <Attributes>
+        <Attribute StaticName="Disabled" Type="Boolean" IsTitle="false">
+          <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@All" AttributeSetName="@All" EntityGUID="cc32781a-a65e-4bcc-9493-6f13517eac2f">
+            <Value Key="Name" Value="Disabled" Type="String" />
+            <Value Key="Notes" Value="Will permanently disable a field in the UI - so the user can see the value but not change it. You'll be able to change it using code or by prefilling it." Type="String" />
+            <Value Key="VisibleInEditUI" Value="True" Type="Boolean" />
+            <Value Key="Required" Value="False" Type="Boolean" />
+            <Value Key="DefaultValue" Value="False" Type="String" />
+          </Entity>
+          <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@Boolean" AttributeSetName="@Boolean" EntityGUID="bf4e5235-fc51-49b7-8a01-c3cf1f2bad06" />
+        </Attribute>
+        <Attribute StaticName="InputType" Type="String" IsTitle="false">
+          <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@All" AttributeSetName="@All" EntityGUID="d4c711d6-464e-4e28-9ae7-87275551b895">
+            <Value Key="Name" Value="Input Type" Type="String" />
+            <Value Key="Notes" Value="Hidden field which tells the UI what input-type to use in a dynamic form" Type="String" />
+            <Value Key="VisibleInEditUI" Value="True" Type="Boolean" />
+            <Value Key="Required" Value="False" Type="Boolean" />
+            <Value Key="DefaultValue" Value="" Type="String" />
+            <Value Key="Disabled" Value="True" Type="Boolean" />
+          </Entity>
+          <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@String" AttributeSetName="@String" EntityGUID="50ba8cf7-9834-41b1-9594-2449bd9aa008">
+            <Value Key="DropdownValues" Value="" Type="String" />
+            <Value Key="ValidationRegEx" Value="" Type="String" />
+            <Value Key="RowCount" Value="" Type="Number" />
+            <Value Key="ValidationRegExJavaScript" Value="" Type="String" />
+            <Value Key="ValidationAutomatic" Value="" Type="String" />
+            <Value Key="WysiwygHeight" Value="" Type="Number" />
+            <Value Key="WysiwygWidth" Value="" Type="Number" />
+          </Entity>
+        </Attribute>
+        <Attribute StaticName="ValidationRegExJavaScript" Type="String" IsTitle="false">
+          <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@All" AttributeSetName="@All" EntityGUID="cd5802e5-26bf-462d-9a09-0b358b71c8b4">
+            <Value Key="Name" Value="ValidationRegExJavaScript" Type="String" />
+            <Value Key="Notes" Value="Help text: regular expression to validate the input - the UI will not allow saving if this condition is not met - see &lt;a href=&quot;2sxc.org/help?tag=validation&quot; target=&quot;_blank&quot;&gt;help with tag validation&lt;/a&gt; for more infos" Type="String" />
+            <Value Key="VisibleInEditUI" Value="True" Type="Boolean" />
+            <Value Key="Required" Value="False" Type="Boolean" />
+            <Value Key="DefaultValue" Value="" Type="String" />
+          </Entity>
+          <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@String" AttributeSetName="@String" EntityGUID="cdd22884-8904-42fb-a9de-87a3b1d66b57">
+            <Value Key="DropdownValues" Value="" Type="String" />
+            <Value Key="ValidationRegEx" Value="" Type="String" />
+            <Value Key="RowCount" Value="" Type="Number" />
+            <Value Key="ValidationRegExJavaScript" Value="" Type="String" />
+            <Value Key="ValidationAutomatic" Value="" Type="String" />
+            <Value Key="WysiwygHeight" Value="" Type="Number" />
+            <Value Key="WysiwygWidth" Value="" Type="Number" />
+          </Entity>
+        </Attribute>
+      </Attributes>
+    </AttributeSet>
+  </AttributeSets>
+  <Entities>
+    <Entity AssignmentObjectType="Default" AttributeSetStaticName="ContentType-InputType" AttributeSetName="ContentType-InputType" EntityGUID="000b3e37-da92-499f-985f-2e5e917ea19b">
+      <Value Key="Type" Value="string-default" Type="String">
+      </Value>
+      <Value Key="Label" Value="default (one/multiline)" Type="String">
+      </Value>
+      <Value Key="Description" Value="For simple text fields, single or multi-line" Type="String">
+      </Value>
+    </Entity>
+    <Entity AssignmentObjectType="Default" AttributeSetStaticName="ContentType-InputType" AttributeSetName="ContentType-InputType" EntityGUID="3b629cba-7b21-4bc4-b16f-a64fa525980b">
+      <Value Key="Type" Value="string-dropdown" Type="String">
+      </Value>
+      <Value Key="Label" Value="drop-down" Type="String">
+      </Value>
+      <Value Key="Description" Value="Standard drop-down with text entries" Type="String">
+      </Value>
+    </Entity>
+    <Entity AssignmentObjectType="Default" AttributeSetStaticName="ContentType-InputType" AttributeSetName="ContentType-InputType" EntityGUID="7c8aad9f-40a8-4756-94fb-2c3e58e8a2f6">
+      <Value Key="Type" Value="string-wysiwyg" Type="String">
+      </Value>
+      <Value Key="Label" Value="wysiwyg editor (recommended)" Type="String">
+      </Value>
+      <Value Key="Description" Value="light wysiwyg-editor (recommended) - without images or advanced formating, as is usually the case in professional content-templates." Type="String">
+      </Value>
+    </Entity>
+    <Entity AssignmentObjectType="Default" AttributeSetStaticName="ContentType-InputType" AttributeSetName="ContentType-InputType" EntityGUID="c106b6cb-282c-456e-a482-37b02f7787d4">
+      <Value Key="Type" Value="string-wysiwyg-adv" Type="String">
+      </Value>
+      <Value Key="Label" Value="wysiwyg full (not recommended)" Type="String">
+      </Value>
+      <Value Key="Description" Value="A full wysiwyg-editor - not recommended, as users will usually use feature they should not." Type="String">
+      </Value>
+    </Entity>
+    <Entity AssignmentObjectType="Default" AttributeSetStaticName="ContentType-InputType" AttributeSetName="ContentType-InputType" EntityGUID="909599f9-67a0-4924-b5c1-07fe6d961bf4">
+      <Value Key="Type" Value="number-default" Type="String">
+      </Value>
+      <Value Key="Label" Value="default (number input)" Type="String">
+      </Value>
+      <Value Key="Description" Value="standard number input field with 0 or more decimals" Type="String">
+      </Value>
+    </Entity>
+    <Entity AssignmentObjectType="Default" AttributeSetStaticName="ContentType-InputType" AttributeSetName="ContentType-InputType" EntityGUID="f4f7802b-16a0-4e4e-9acd-adc43442e283">
+      <Value Key="Type" Value="boolean-default" Type="String">
+      </Value>
+      <Value Key="Label" Value="default (yes/no slider)" Type="String">
+      </Value>
+      <Value Key="Description" Value="for yes/no values (actually true/false) - shows a slider in the UI" Type="String">
+      </Value>
+    </Entity>
+    <Entity AssignmentObjectType="Default" AttributeSetStaticName="ContentType-InputType" AttributeSetName="ContentType-InputType" EntityGUID="637664f3-854d-41af-99f0-30f93700bd8e">
+      <Value Key="Type" Value="custom-gps" Type="String">
+      </Value>
+      <Value Key="Label" Value="GPS Picker" Type="String">
+      </Value>
+      <Value Key="Description" Value="to pick a location with a map - can also store the values in separate number fields and auto-find an address based on values in the form" Type="String">
+      </Value>
+      <Value Key="Assets" Value="[System:Path]/dist/edit/extensions/field-custom-gps/custom-gps.min.js" Type="String">
+      </Value>
+    </Entity>
+    <Entity AssignmentObjectType="Default" AttributeSetStaticName="ContentType-InputType" AttributeSetName="ContentType-InputType" EntityGUID="1f3935f6-2759-4f79-a1d5-f7d701694cd7">
+      <Value Key="Type" Value="datetime-default" Type="String">
+      </Value>
+      <Value Key="Label" Value="default (date/time picker)" Type="String">
+      </Value>
+      <Value Key="Description" Value="for normal date / time selections" Type="String">
+      </Value>
+    </Entity>
+    <Entity AssignmentObjectType="Default" AttributeSetStaticName="ContentType-InputType" AttributeSetName="ContentType-InputType" EntityGUID="01c38a10-bfb2-41a1-969b-ec96e1451cb6">
+      <Value Key="Type" Value="empty-default" Type="String">
+      </Value>
+      <Value Key="Label" Value="title / field-group" Type="String">
+      </Value>
+      <Value Key="Description" Value="to provide titles and field-grouping in your input form - will not save anything" Type="String">
+      </Value>
+    </Entity>
+    <Entity AssignmentObjectType="Default" AttributeSetStaticName="ContentType-InputType" AttributeSetName="ContentType-InputType" EntityGUID="beac6422-a639-4160-92bf-f76f4a73f756">
+      <Value Key="Type" Value="entity-default" Type="String">
+      </Value>
+      <Value Key="Label" Value="default (entity picker)" Type="String">
+      </Value>
+      <Value Key="Description" Value="to choose one or more content items preserving the sorting-order" Type="String">
+      </Value>
+    </Entity>
+    <Entity AssignmentObjectType="Default" AttributeSetStaticName="ContentType-InputType" AttributeSetName="ContentType-InputType" EntityGUID="44853b51-5714-4e25-ab58-87fc9c45b995">
+      <Value Key="Type" Value="hyperlink-default" Type="String">
+      </Value>
+      <Value Key="Label" Value="default (link, page, file, ...)" Type="String">
+      </Value>
+      <Value Key="Description" Value="use to refer to a page, image, document, whatever" Type="String">
+      </Value>
+    </Entity>
+    <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@string-default" AttributeSetName="@string-default" EntityGUID="bd7b7c85-4eee-400e-beda-a30befb455e4">
+      <Value Key="RowCount" Value="12" Type="Number">
+      </Value>
+    </Entity>
+    <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@string-default" AttributeSetName="@string-default" EntityGUID="dc13ade0-95d1-4a68-8fd1-f8e2b30f4402">
+      <Value Key="RowCount" Value="2" Type="Number">
+      </Value>
+    </Entity>
+  </Entities>
+  <PortalFiles />
+</SexyContent>
