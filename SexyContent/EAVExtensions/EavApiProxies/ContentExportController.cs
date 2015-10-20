@@ -14,9 +14,11 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
     /// <summary>
     /// Web API Controller for the Pipeline Designer UI
     /// </summary>
-    [SupportedModules("2sxc,2sxc-app")]
-    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public class ContentExportController : SxcApiController
+    // [SupportedModules("2sxc,2sxc-app")]
+    
+    // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
+    [AllowAnonymous]
+    public class ContentExportController : DnnApiController // SxcApiController
 	{
         private readonly Eav.WebApi.ContentExportController eavCtc;
         public ContentExportController()
@@ -26,10 +28,14 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 
 
         [HttpGet]
+        [AllowAnonymous]
         public HttpResponseMessage ExportContent(int appId, string language, string defaultLanguage, string contentType,
             RecordExport recordExport, ResourceReferenceExport resourcesReferences,
             LanguageReferenceExport languageReferences)
         {
+            // do security check
+            if(!PortalSettings.UserInfo.IsInRole("Administrators")) // note: user.isinrole didn't work
+                throw new HttpRequestException("Needs admin permissions to do this");
             return eavCtc.ExportContent(appId, language, defaultLanguage, contentType, recordExport, resourcesReferences,
                 languageReferences);
         }

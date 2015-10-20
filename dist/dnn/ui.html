@@ -60,6 +60,14 @@
             addScript("../lib/pipeline/set.min.js");
             addStyle("../admin/pipeline-designer.min.css");
         }
+    </script>
+    <script>
+        // this must come close to the end, after a closed script which might load jQuery
+        var apiUrl = $2sxc.urlParams.require("portalroot") + "desktopmodules/2sxc/api/";
+        createFakeSf(apiUrl);
+    </script>
+
+    <script>
 
         var scripts = [
             '../lib/angular/set.min.js',            // default set needed for all UIs like angular, animate, translate
@@ -83,11 +91,6 @@
 
     </script>
 
-    <script>
-        // this must come close to the end, after a closed script which might load jQuery
-        var apiUrl = $2sxc.urlParams.require("portalroot") + "desktopmodules/2sxc/api/";
-        createFakeSf(apiUrl);
-    </script>
 </head>
 <body style="background-color:transparent">
 
