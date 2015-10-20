@@ -36,7 +36,8 @@ namespace ToSic.SexyContent
         {
             get
             {
-                return SexyContent.GetZoneID(ModuleConfiguration.OwnerPortalID);
+                return (!UserInfo.IsSuperUser ? SexyContent.GetZoneID(ModuleConfiguration.OwnerPortalID) : 
+                    (!String.IsNullOrEmpty(Request.QueryString["ZoneId"]) ? int.Parse(Request.QueryString["ZoneId"]) : SexyContent.GetZoneID(ModuleConfiguration.OwnerPortalID)));
             }
         }
 

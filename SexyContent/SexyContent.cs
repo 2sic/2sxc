@@ -914,15 +914,15 @@ namespace ToSic.SexyContent
 
         #region Get ContentTypes
 
-        public IEnumerable<IContentType> GetAvailableContentTypes(string scope)
+        public IEnumerable<IContentType> GetAvailableContentTypes(string scope, bool includeAttributeTypes = false)
         {
-            return GetAvailableContentTypes().Where(p => p.Scope == scope);
+            return GetAvailableContentTypes(includeAttributeTypes).Where(p => p.Scope == scope);
             }
 
-        public IEnumerable<IContentType> GetAvailableContentTypes()
+        public IEnumerable<IContentType> GetAvailableContentTypes(bool includeAttributeTypes = false)
             {
             var contentTypes = ((BaseCache) DataSource.GetCache(ZoneId.Value, AppId.Value)).GetContentTypes();
-            return contentTypes.Select(c => c.Value).Where(c => !c.Name.StartsWith("@")).OrderBy(c => c.Name);
+            return contentTypes.Select(c => c.Value).Where(c => includeAttributeTypes || !c.Name.StartsWith("@")).OrderBy(c => c.Name);
         }
 
         public IEnumerable<IContentType> GetAvailableContentTypesForVisibleTemplates()

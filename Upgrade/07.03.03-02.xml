@@ -40,7 +40,7 @@
             </Value>
             <Value Key="ValidationRegEx" Value="" Type="String">
             </Value>
-            <Value Key="RowCount" Value="" Type="Number">
+            <Value Key="RowCount" Value="10" Type="Number">
             </Value>
             <Value Key="ValidationRegExJavaScript" Value="" Type="String">
             </Value>
@@ -245,6 +245,8 @@
       <Value Key="Label" Value="GPS Picker" Type="String">
       </Value>
       <Value Key="Description" Value="to pick a location with a map - can also store the values in separate number fields and auto-find an address based on values in the form" Type="String">
+      </Value>
+      <Value Key="Assets" Value="[System:Path]/dist/edit/extensions/field-custom-gps/custom-gps.min.js" Type="String">
       </Value>
     </Entity>
     <Entity AssignmentObjectType="Default" AttributeSetStaticName="ContentType-InputType" AttributeSetName="ContentType-InputType" EntityGUID="1f3935f6-2759-4f79-a1d5-f7d701694cd7">

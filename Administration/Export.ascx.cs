@@ -11,14 +11,33 @@ namespace ToSic.SexyContent
 {
     public partial class Export : SexyControlAdminBase
     {
+        private string _scope = "2SexyContent";
+        private int _appId;
+        private int _zoneId;
+        private SexyContent _sexy;
 
         protected void Page_Load(object sender, EventArgs e)
         {
             hlkCancel.NavigateUrl = Globals.NavigateURL(TabId, "", null);
 
-            var contentTypes = Sexy.GetAvailableContentTypes("2SexyContent");
-            var templates = Sexy.Templates.GetAllTemplates();
-            var entities = DataSource.GetInitialDataSource(ZoneId.Value, AppId.Value, false);
+            _appId = AppId.Value;
+            _zoneId = ZoneId.Value;
+
+            if (UserInfo.IsSuperUser)
+            {
+                _scope = !String.IsNullOrEmpty(Request.QueryString["Scope"]) ? Request.QueryString["Scope"] : "2SexyContent";
+                _appId = !String.IsNullOrEmpty(Request.QueryString["AppId"]) ? int.Parse(Request.QueryString["AppId"]) : _appId;
+                _zoneId = !String.IsNullOrEmpty(Request.QueryString["ZoneId"]) ? int.Parse(Request.QueryString["ZoneId"]) : _zoneId;
+                _sexy = new SexyContent(_zoneId, _appId);
+            }
+            else
+            {
+                _sexy = Sexy;
+            }
+
+            var contentTypes = _sexy.GetAvailableContentTypes(_scope, true);
+            var templates = _sexy.Templates.GetAllTemplates();
+            var entities = DataSource.GetInitialDataSource(_zoneId, _appId, false);
             var language = Thread.CurrentThread.CurrentCulture.Name;
 
             var data = new {
@@ -31,7 +50,7 @@ namespace ToSic.SexyContent
                         p.ContentTypeStaticName,
                         p.Name
                     }),
-                    Entities = entities.List.Where(en => en.Value.Type.AttributeSetId == c.AttributeSetId).Select(en => Sexy.GetDictionaryFromEntity(en.Value, language))
+                    Entities = entities.List.Where(en => en.Value.Type.AttributeSetId == c.AttributeSetId).Select(en => _sexy.GetDictionaryFromEntity(en.Value, language))
                 }),
                 templatesWithoutContentType = templates.Where(p => !String.IsNullOrEmpty(p.ContentTypeStaticName)).Select(t => new
                 {
@@ -50,10 +69,10 @@ namespace ToSic.SexyContent
 
             var contentTypeIds = txtSelectedContentTypes.Text.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
             var entityIds = txtSelectedEntities.Text.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            var templateIds = txtSelectedTemplates.Text.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            //var templateIds = txtSelectedTemplates.Text.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
             var messages = new List<ExportImportMessage>();
-            var xml = new XmlExporter(ZoneId.Value, AppId.Value, false, contentTypeIds, entityIds).GenerateNiceXml();//contentTypeIds, entityIds, out messages);
+            var xml = new XmlExporter(_zoneId, _appId, false, contentTypeIds, entityIds).GenerateNiceXml();
 
             Response.Clear();
             Response.Write(xml);
