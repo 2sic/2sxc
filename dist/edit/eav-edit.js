@@ -133,7 +133,7 @@ angular.module("eavFieldTemplates")
         });
 
     }])
-    .controller("FieldTemplate-EntityCtrl", ["$scope", "$http", "$filter", "translate", "$modal", "appId", "eavAdminDialogs", function ($scope, $http, $filter, translate, $modal, appId, eavAdminDialogs) {
+    .controller("FieldTemplate-EntityCtrl", ["$scope", "$http", "$filter", "$translate", "$modal", "appId", "eavAdminDialogs", function ($scope, $http, $filter, $translate, $modal, appId, eavAdminDialogs) {
         if (!$scope.to.settings.Entity)
             $scope.to.settings.Entity = {};
 
@@ -186,7 +186,7 @@ angular.module("eavFieldTemplates")
 
         $scope.getEntityText = function(entityId) {
             var entities = $filter("filter")($scope.availableEntities, { Value: entityId });
-            return entities.length > 0 ? entities[0].Text : translate("FieldType.Entity.EntityNotFound"); 
+            return entities.length > 0 ? entities[0].Text : $translate.instant("FieldType.Entity.EntityNotFound"); 
         };
 
         $scope.remove = function (item) {
@@ -229,20 +229,6 @@ angular.module("eavFieldTemplates")
         var vm = this;
         // ToDo: Implement Google Map
     });
-/* 
- * Field: String - Disabled
- */
-
-angular.module("eavFieldTemplates")
-    .config(["formlyConfigProvider", "defaultFieldWrappers", function (formlyConfigProvider, defaultFieldWrappers) {
-
-        formlyConfigProvider.setType({
-            name: "string-disabled",
-            template: "<input class=\"form-control input-lg\" ng-model=\"value.Value\" ng-disabled='true'>",
-            wrapper: defaultFieldWrappers
-        });
-
-    }]);
 /* 
  * Field: String - Default
  */

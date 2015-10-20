@@ -10,7 +10,9 @@
             <tabset>
                 <tab>
                     <tab-heading>
-                        <span icon="home" tooltip="{{'Main.Tab.GettingStarted' | translate }}"></span> {{'Main.Tab.GS' | translate }}
+                        <span tooltip="{{'Main.Tab.GettingStarted' | translate }}">
+                            <i icon="home"></i> {{'Main.Tab.GS' | translate | trustHtml }}
+                        </span>
                     </tab-heading>
 
                     <iframe ng-src="{{ vm.config.GettingStartedUrl | trustAsResourceUrl }}" style="border: none; width: 100%; height: 500px"></iframe>
@@ -85,7 +87,7 @@
 
                 <tab select="vm.view='app'">
                     <tab-heading>
-                        <span icon="cog" tooltip="{{'Main.Tab.AppSettings' | translate }}"></span> {{'Main.Tab.AS' | translate }}
+                        <span icon="unchecked" tooltip="{{'Main.Tab.AppSettings' | translate }}"></span> {{'Main.Tab.AS' | translate }}
                     </tab-heading>
                     <div ng-if="vm.view == 'app'">
                         <div ng-if="!vm.config.IsContent">

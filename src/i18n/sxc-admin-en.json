@@ -2,21 +2,21 @@
   "Main": {
     "Title": "Administration",
     "Tab": {
-      "GS": "",
+      "GS": "Home",
       "GettingStarted": "Getting started",
-      "CD": "",
-      "ContentData": "Content / Data",
-      "VT": "",
+      "CD": "Data",
+      "ContentData": "Content",
+      "VT": "Views",
       "ViewsTemplates": "Views / Templates",
-      "Q": "",
+      "Q": "Query",
       "Query": "Query Designer",
-      "WA": "",
+      "WA": "WebApi",
       "WebApi": "WebApi / Data",
       "IE": "",
       "ImportExport": "Import / Export",
-      "PL": "",
+      "PL": "Global",
       "PortalLanguages": "Portal / Languages",
-      "AS": "",
+      "AS": "App",
       "AppSettings": "App Settings"
     },
     "Portal": {
@@ -116,6 +116,8 @@
       "Config": "configure app resources"
     },
     "Definition": {
+      "Title": "App Package Definition",
+      "Intro": "The app-package definition is important when exporting/importing this app.",
       "Edit": "edit app definition"
     },
     "Export": {

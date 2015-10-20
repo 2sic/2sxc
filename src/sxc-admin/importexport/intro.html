@@ -1,33 +1,33 @@
-﻿<div>
-    <div class="modal-header">
-        <h3 class="modal-title" translate="AppConfig.Export.Title"></h3>
-    </div>
-    <div class="modal-body">
-        <div translate="AppConfig.Export.Intro"></div>
-        <button ng-click="vm.exportAll()" class="btn btn-primary" type="button">
-            <i icon="export"></i>
-            {{'AppConfig.Export.Button' | translate}}
-        </button>
-    </div>
-        <br />
-
-
-        <div class="modal-header">
-            <h3 class="modal-title" translate="ImportExport.Title"></h3>
+﻿<div class="modal-body">
+    <div>
+        <div class="pull-left btn-group-vertical">
+            <button tooltip="{{'AppConfig.Export.Button' | translate}}" ng-click="vm.exportAll()" class="btn btn-square btn-primary" type="button">
+                <i icon="export"></i>
+            </button>
         </div>
-        <div class="modal-body">
+        <div style="margin-left: 50px">
+            <h4 class="modal-title" translate="AppConfig.Export.Title"></h4>
+            <div translate="AppConfig.Export.Intro"></div>
+        </div>
+    </div>
+
+    <br />
+
+    <div>
+        <div class="pull-left btn-group-vertical">
+            <button tooltip="{{'ImportExport.Buttons.Export' | translate}}" ng-click="vm.export()" class="btn btn-square btn-primary" type="button">
+                <i icon="export"></i>
+            </button>
+
+            <button tooltip="{{'ImportExport.Buttons.Import' | translate}}" ng-click="vm.import()" class="btn btn-square btn-primary" type="button">
+                <i icon="import"></i>
+            </button>
+        </div>
+        <div style="margin-left: 50px">
+            <h4 class="modal-title" translate="ImportExport.Title"></h4>
             <div translate="ImportExport.Intro"></div>
             <div translate="ImportExport.FurtherHelp"></div>
-
-            <button ng-click="vm.import()" class="btn btn-primary" type="button">
-                <i icon="import"></i>
-                {{'ImportExport.Buttons.Import' | translate}}
-            </button>
-
-            <button ng-click="vm.export()" class="btn btn-primary" type="button">
-                <i icon="export"></i>
-                {{'ImportExport.Buttons.Export' | translate}}
-            </button>
-
         </div>
     </div>
+
+</div>

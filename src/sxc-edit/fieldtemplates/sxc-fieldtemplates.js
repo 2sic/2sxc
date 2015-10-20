@@ -29,7 +29,19 @@
 		var vm = this;
 		vm.modalInstance = null;
 		vm.testLink = "";
-		
+		vm.checkImgRegEx = /(?:([^:\/?#]+):)?(?:\/\/([^\/?#]*))?([^?#]*\.(?:jpg|jpeg|gif|png))(?:\?([^#]*))?(?:#(.*))?/i;
+
+		vm.isImage = function () {
+		    var value = $scope.value;
+		    return vm.checkImgRegEx.test(vm.testLink);
+		};
+		vm.thumbnailUrl = function thumbnailUrl(size) {
+	        if (size === 1)
+	            return vm.testLink + "?w=46&h=46&mode=crop";
+	        if(size===2)
+	            return vm.testLink + "?w=500&h=400&mode=max";
+	    };
+
 		vm.bridge = { 
 			valueChanged: function(value, type) {
 				$scope.$apply(function () {
