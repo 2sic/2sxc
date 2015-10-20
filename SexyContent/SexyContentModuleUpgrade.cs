@@ -572,7 +572,7 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
             if (!success)
             {
                 var messages = String.Join("\r\n- ", xmlImport.ImportLog.Select(p => p.Message).ToArray());
-                throw new Exception("The 2sxc module upgrade to 07.03.03 failed: " + messages);
+                throw new Exception("The 2sxc module upgrade to 07.03.03-01 failed: " + messages);
             }
 
             // 2. Import ContentType-InputType and entities for it
@@ -584,10 +584,20 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
             if (!success)
             {
                 var messages = String.Join("\r\n- ", xmlImport.ImportLog.Select(p => p.Message).ToArray());
-                throw new Exception("The 2sxc module upgrade to 07.03.03 failed: " + messages);
+                throw new Exception("The 2sxc module upgrade to 07.03.03-02 failed: " + messages);
             }
 
-            // Hide all unneeded fields - all fields for string, number: all but "Number of Decimals", Minimum and Maximum
+            // 3. Hide all unneeded fields - all fields for string, number: all but "Number of Decimals", Minimum and Maximum
+            xmlToImport =
+                File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/07.03.03-03.xml"));
+            xmlImport = new XmlImport("en-US", userName, true);
+            success = xmlImport.ImportXml(Constants.DefaultZoneId, Constants.MetaDataAppId, XDocument.Parse(xmlToImport), false); // special note - change existing values
+
+            if (!success)
+            {
+                var messages = String.Join("\r\n- ", xmlImport.ImportLog.Select(p => p.Message).ToArray());
+                throw new Exception("The 2sxc module upgrade to 07.03.03-03 failed: " + messages);
+            }
 
 
         }

@@ -187,7 +187,7 @@ namespace ToSic.SexyContent.ImportExport
 		/// <summary>
 		/// Do the import
 		/// </summary>
-		public bool ImportXml(int zoneId, int appId, XDocument doc)
+		public bool ImportXml(int zoneId, int appId, XDocument doc, bool leaveExistingValuesUntouched = true)
 		{
 			_sexy = new SexyContent(zoneId, appId, false);
 			_appId = appId;
@@ -232,7 +232,7 @@ namespace ToSic.SexyContent.ImportExport
 			var importAttributeSets = GetImportAttributeSets(xmlSource.Element("AttributeSets").Elements("AttributeSet"));
 			var importEntities = GetImportEntities(xmlSource.Elements("Entities").Elements("Entity"), SexyContent.AssignmentObjectTypeIDDefault);
 
-			var import = new Eav.Import.Import(_zoneId, _appId, UserName);
+			var import = new Eav.Import.Import(_zoneId, _appId, UserName, leaveExistingValuesUntouched);
 			import.RunImport(importAttributeSets, importEntities);
 			ImportLog.AddRange(GetExportImportMessagesFromImportLog(import.ImportLog));
 
