@@ -38,6 +38,8 @@
 		vm.thumbnailUrl = function thumbnailUrl(size) {
 	        if (size === 1)
 	            return vm.testLink + "?w=46&h=46&mode=crop";
+	        if(size===2)
+	            return vm.testLink + "?w=500&h=400&mode=max";
 	    };
 
 		vm.bridge = { 

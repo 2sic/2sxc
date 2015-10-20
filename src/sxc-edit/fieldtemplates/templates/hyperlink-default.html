@@ -1,7 +1,7 @@
 ﻿<div>
     <div class="dropzone">
         <div class="input-group" dropdown>
-            <div ng-if="value.Value && vm.isImage()" class="input-group-addon btn-default" style="width: 50px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; padding-left: 0px; padding-right: 0px; border-left-width: 0px; border-bottom-width: 0px; background-color: transparent; background-image: url('{{vm.thumbnailUrl(1)}}') "> </div>
+            <div ng-if="value.Value && vm.isImage()" class="input-group-addon btn-default" style="width: 50px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; padding-left: 0px; padding-right: 0px; border-left-width: 0px; border-bottom-width: 0px; background-color: transparent; background-image: url('{{vm.thumbnailUrl(1)}}')" ng-mouseover="vm.showPreview = true" ng-mouseleave="vm.showPreview = false"> </div>
             <input type="text" class="form-control input-lg" ng-model="value.Value" tooltip="{{'Edit.Fields.Hyperlink.Default.Tooltip1' | translate }}
 {{'Edit.Fields.Hyperlink.Default.Tooltip2' | translate }}
 ADAM - sponsored with ♥ by 2sic.com">
@@ -20,12 +20,18 @@ ADAM - sponsored with ♥ by 2sic.com">
                 <li role="menuitem"><a ng-click="vm.openDialog('imagemanager')" href="javascript:void(0)"><i icon="picture"></i> <span  translate="Edit.Fields.Hyperlink.Default.MenuImage"></span></a></li>
                 <li role="menuitem"><a ng-click="vm.openDialog('documentmanager')" href="javascript:void(0)"><i icon="file"></i> <span  translate="Edit.Fields.Hyperlink.Default.MenuDocs"></span></a></li>
             </ul>
-    </div>
-    <div ng-if="value.Value">
-        <a href="{{vm.testLink}}" target="_blank" tabindex="-1">
-            <i icon="new-window"></i>
-        </a><span tooltip="{{vm.testLink}}">&nbsp;... {{vm.testLink.substr(vm.testLink.lastIndexOf("/"), 100)}}</span>
-    </div>
+        </div>
+        <div ng-if="vm.showPreview" style="position: relative">
+            <div style="position: absolute;z-index: 100;background: white;top: 10px;text-align: center;left: 0;right: 0;">
+                <img src="{{vm.thumbnailUrl(2)}}" />
+            </div>
+        </div>
+        <div ng-if="value.Value">
+            <a href="{{vm.testLink}}" target="_blank" tabindex="-1" tooltip="{{vm.testLink}}">
+                <i icon="new-window"></i>
+                <span>&nbsp;... {{vm.testLink.substr(vm.testLink.lastIndexOf("/"), 100)}}</span>
+            </a>
+        </div>
 
         <div class="dropzone-previews">
         </div>
