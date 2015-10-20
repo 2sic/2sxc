@@ -5,7 +5,7 @@
     <Dimensions />
   </Header>
   <AttributeSets>
-    <AttributeSet StaticName="@Number" Name="@Number" Description="Configuration for a number field" Scope="System">
+    <AttributeSet StaticName="@Number" Name="@Number" Description="Configuration for a number field" Scope="System" AlwaysShareConfiguration="true">
       <Attributes>
         <Attribute StaticName="ValidationRegEx" Type="String" IsTitle="false">
           <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@All" AttributeSetName="@All" EntityGUID="8e75cf3d-0c22-4c3c-8d92-6f0cd4675e87">
@@ -29,7 +29,7 @@
         </Attribute>
       </Attributes>
     </AttributeSet>
-    <AttributeSet StaticName="@String" Name="@String" Description="String UI Definitions" Scope="System">
+    <AttributeSet StaticName="@String" Name="@String" Description="String UI Definitions" Scope="System" AlwaysShareConfiguration="true">
       <Attributes>
         <Attribute StaticName="InputType" Type="String" IsTitle="true">
           <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@All" AttributeSetName="@All" EntityGUID="a953c639-d604-4927-8e76-191e35ea8a87">

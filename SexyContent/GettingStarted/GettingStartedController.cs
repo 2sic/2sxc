@@ -33,7 +33,7 @@ namespace ToSic.SexyContent.GettingStarted
             catch (Exception ex)
             {
                 Exceptions.LogException(ex);
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "An error occurred while installing the app: " + ex.Message, ex);
+                throw new Exception("An error occurred while installing the app: " + ex.Message, ex);
             }
             
             return Request.CreateResponse(success ? HttpStatusCode.OK : HttpStatusCode.InternalServerError, new { success, messages });
