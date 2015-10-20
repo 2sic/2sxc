@@ -16,17 +16,20 @@
         .controller("AppList", AppListController)
         ;
 
-    function AppListController(appsSvc, eavAdminDialogs, sxcDialogs, eavConfig, zoneId, oldDialogs, $modalInstance, $translate) {
+    function AppListController(appsSvc, eavAdminDialogs, sxcDialogs, eavConfig, appSettings, zoneId, oldDialogs, $modalInstance, $translate) {
         var vm = this;
 
         var svc = appsSvc(zoneId);
         vm.items = svc.liveList();
         vm.refresh = svc.liveListReload;
-        //var translate = $filter("translate");
 
-        vm.config = function config(item) {
-            eavAdminDialogs.openItemEditWithEntityId(item.ConfigurationId, svc.liveListReload);
-        };
+        // config from here fails, because it has to open the full dialog in another app
+        //vm.config = function config(item) {
+        //    var settings = appSettings(item.Id);
+        //    settings.editPackage(svc.liveListReload);
+        //    //alert("known bug: atm in this beta this feature has a bug - it only works for the app, in which you opened this dialog. ");
+        //    //eavAdminDialogs.openItemEditWithEntityId(item.ConfigurationId, svc.liveListReload);
+        //};
 
         vm.add = function add() {
             var result = prompt($translate.instant("AppManagement.Prompt.NewApp"));

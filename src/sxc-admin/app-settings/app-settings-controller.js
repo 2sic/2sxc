@@ -10,9 +10,9 @@
         .controller("AppSettings", AppSettingsController)
         ;
 
-    function AppSettingsController(eavAdminDialogs, contentTypeSvc, contentItemsSvc, eavConfig, appId, oldDialogs, $filter) {
+    function AppSettingsController(appSettings, appId) {
         var vm = this;
-        var svc = contentTypeSvc(appId, "2SexyContent-App");
+        var svc = appSettings(appId);
         vm.items = svc.liveList();
 
         vm.ready = function ready() {
@@ -21,23 +21,14 @@
 
         /// Open a content-type configuration dialog for a type (for settins / resources) 
         vm.config = function openConf(staticName) {
-            var found = $filter("filter")(vm.items, { StaticName: staticName }, true);
-            if (found.length !== 1)
-                throw "Found too many settings for the type " + staticName;
-            var item = found[0];
-            return eavAdminDialogs.openContentTypeFields(item, svc.liveListReload);
+            return svc.openConfig(staticName);
         };
 
         vm.edit = function edit(staticName) {
-            var contentSvc = contentItemsSvc(appId, staticName);
-            return contentSvc.liveListReload().then(function(result) {
-                var found = result.data;
-                if (found.length !== 1)
-                    throw "Found too many settings for the type " + staticName;
-                var item = found[0];
-                return eavAdminDialogs.openItemEditWithEntityId(item.Id, svc.liveListReload);
-            });
+            return svc.edit(staticName);
         };
+
+        vm.editPackage = svc.editPackage;
 
         //vm.export = function exp() {
         //    oldDialogs.appExport(appId, svc.liveListReload);
@@ -66,7 +57,7 @@
         //        "lg",
         //        resolve);
         //};
-    
+
     }
 
 } ());
