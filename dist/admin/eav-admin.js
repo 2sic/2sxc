@@ -127,7 +127,7 @@
          .factory("contentExportService", contentExportService);
 
 
-    function contentExportService($http, apiRoot, sxc) {
+    function contentExportService($http, sxc) {
         var srvc = {
             exportContent: exportContent,
         };
@@ -139,7 +139,7 @@
             window.open(/* apiRoot + "eav/ContentExport/ExportContent */ url + "?appId=" + args.AppId + "&language=" + args.Language + "&defaultLanguage=" + args.DefaultLanguage + "&contentType=" + args.ContentType + "&recordExport=" + args.RecordExport + "&resourcesReferences=" + args.ResourcesReferences + "&languageReferences=" + args.LanguageReferences, "_self", "");
         }
     }
-    contentExportService.$inject = ["$http", "apiRoot", "sxc"];
+    contentExportService.$inject = ["$http", "sxc"];
 }());
 (function () {
     angular.module("ContentFormlyTypes", [
