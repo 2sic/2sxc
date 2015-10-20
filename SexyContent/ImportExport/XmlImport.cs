@@ -91,7 +91,7 @@ namespace ToSic.SexyContent.ImportExport
 		{
 			_fileIdCorrectionList = new Dictionary<int, int>();
 
-			if (!sexyContentNode.Elements("PortalFiles").Any())
+			if (!sexyContentNode.Elements("PortalFiles").Any() || !PortalId.HasValue)
 				return;
 
 			var portalId = PortalId.Value;
