@@ -93,8 +93,17 @@ angular.module("sxcFieldTemplates")
 
     .config(["formlyConfigProvider", function (formlyConfigProvider) {
 
+        // for now identical with -adv, but later will change
 		formlyConfigProvider.setType({
 			name: "string-wysiwyg",
+			templateUrl: "fieldtemplates/templates/string-wysiwyg.html",
+			wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"],
+			controller: "FieldTemplate-WysiwygCtrl as vm"
+		});
+
+        // for now identical with -adv, but later will change
+		formlyConfigProvider.setType({
+			name: "string-wysiwyg-adv",
 			templateUrl: "fieldtemplates/templates/string-wysiwyg.html",
 			wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"],
 			controller: "FieldTemplate-WysiwygCtrl as vm"

@@ -170,7 +170,7 @@ $2sxc.getManageController = function (id) {
             if (!settings.useModuleList) {
                 if (settings.action !== "new")
                     items.push({ EntityId: settings.entityId });
-                if (settings.contentType || settings.attributeSetName)
+                else if (settings.contentType || settings.attributeSetName)
                     items.push({ ContentTypeName: settings.contentType || settings.attributeSetName });
             }
             // when using a list, the sort-order is important to find the right item
