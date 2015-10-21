@@ -20,7 +20,8 @@ module.exports = function (grunt) {
         dist: "dist/sxc-edit/",
         concatFile: "dist/sxc-edit/sxc-edit.js",
         uglifyFile: "dist/sxc-edit/sxc-edit.min.js",
-        concatCss: "dist/sxc-edit/sxc-edit.css"
+        concatCss: "dist/sxc-edit/sxc-edit.css",
+        concatCssMin: "dist/admin/sxc-edit.min.css"
     };
     var inpage = {
         cwd: "src/inpage/",
@@ -279,23 +280,22 @@ module.exports = function (grunt) {
             }
         },
         
-        // not in use yet
-        //cssmin: {
-        //    options: {
-        //        shorthandCompacting: false,
-        //        roundingPrecision: -1
-        //    },
-        //    target: {
-        //        files: [{
-        //            expand: true,
-        //            cwd: distRoot,
-        //            src: ["**/*.css", "!**/*.min.css"],
-        //            dest: distRoot,
-        //            ext: ".min.css"
-        //        }
-        //        ]
-        //    }
-        //},
+        cssmin: {
+            options: {
+                shorthandCompacting: false,
+                roundingPrecision: -1
+            },
+            target: {
+                files: [{
+                    expand: true,
+                    cwd: distRoot,
+                    src: ["**/*.css", "!**/*.min.css"],
+                    dest: distRoot,
+                    ext: ".min.css"
+                }
+                ]
+            }
+        },
 
         compress: {
             main: {
@@ -347,7 +347,7 @@ module.exports = function (grunt) {
         "concat",
         "ngAnnotate",
         "uglify",
-        //"cssmin",
+        "cssmin",
         //"clean:tmp",
         "watch:sxcbuild"
 
