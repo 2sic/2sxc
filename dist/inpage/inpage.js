@@ -90,7 +90,7 @@ $2sxc.getManageController = function (id) {
         },
         'add': {
             title: "Add",
-            icon: "glyphicon-plus",
+            icon: "glyphicon-plus-sign",
             lightbox: false,
             hideFirst: true,
             action: function(settings, event) {
@@ -159,7 +159,7 @@ $2sxc.getManageController = function (id) {
         },
         'remove': {
             title: "remove",
-            icon: "glyphicon-minus",
+            icon: "glyphicon-minus-sign",
             lightbox: false,
             hideFirst: true,
             disabled: true,
@@ -176,7 +176,7 @@ $2sxc.getManageController = function (id) {
             borlightboxder: false,
             hideFirst: false,
             action: function(settings, event) {
-                $(event.target).toggleClass(this.icon).toggleClass(this.icon2).closest("ul.sc-menu").toggleClass("showAll");
+                $(event.target).parent().find("i").toggleClass(this.icon).toggleClass(this.icon2).closest("ul.sc-menu").toggleClass("showAll");
             }
         }
     };
@@ -307,7 +307,8 @@ $2sxc.getManageController = function (id) {
                 'onclick': "javascript:$2sxc(" + id + ").manage.action(" + JSON.stringify(settings) + ", event);",
                 'title': conf.title
             });
-            var symbol = $("<span class=\"glyphicon " + conf.icon + "\" aria-hidden=\"true\"></span>");
+            var box = $("<div/>");
+            var symbol = $("<i class=\"glyphicon " + conf.icon + "\" aria-hidden=\"true\"></i>");
 
             // if publish-button and not published yet, show button (otherwise hidden) & change icon
             if (settings.action === "publish" && settings.isPublished === false) {
@@ -317,7 +318,7 @@ $2sxc.getManageController = function (id) {
                     .toggleClass(conf.icon2, true);
             }
 
-            button.html(symbol);
+            button.html(box.html(symbol));
 
             return button[0].outerHTML;
         },

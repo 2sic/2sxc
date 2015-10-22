@@ -4,13 +4,38 @@
 .sc-menu { list-style-type:none; margin:0; padding:0px;display: inline;z-index: 1499; }
 .sc-menu li { list-style-type:none; padding:0!important; margin:0!important; display:inline; }
 .sc-menu a { display:inline-block!important; margin-right:4px!important;cursor: pointer;margin-left: 0 !important; }
-.sc-menu a span { width: 16px!important;height: 16px!important;background-color: #96D500; border-color: #96D500; border-width: 3px; border-style: solid; box-sizing: content-box;
-                  border-radius: 6px; -webkit-border-radius: 6px; -moz-border-radius: 6px;
+
+.sc-menu a div { 
+    width: 28px!important;
+    height: 28px!important;
+    background-color: #0088f4;
+    /*background-color: #96D500; 
+    border-color: #96D500;*/ 
+    /* border-width: 3px;  */
+    border-style: solid; 
+    box-sizing: content-box;
+    border-radius: 3px;
+    -webkit-border-radius: 3px; 
+    -moz-border-radius: 3px;
+    color: #fff; 
+    text-align: center; 
+    /*padding: 2px;*/ 
+    font-size: 15px }
+.sc-menu a div i {
+    margin-left: auto;
+    margin-right: auto;
+}
+/*
+    .sc-menu a span { width: 18px!important;height: 18px!important;background-color: #96D500; border-color: #96D500; border-width: 3px; border-style: solid; box-sizing: content-box;
+                  border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px;
                   color: #fff; text-align: center; padding: 2px; font-size: 13px}
+
+*/
+
 .sc-menu.listContent a span {background-color: #007100; border-color: #007100;}
 .sc-menu a.hideFirst { display: none!important }
 .showAll a.hideFirst { display:  inline-block!important }
-.sc-menu a.box span { border-color: #666 }
+/*.sc-menu a.box span { border-color: #666 } */
 .sc-menu span.disabled { color: #aaa}
 /* 2dm 2015-10-22 doesn't seem to be in effect any more as we're droping dependency on Mod2SxcC 
 .Mod2sxcC .dnnFormMessage select, .Mod2sxcappC .dnnFormMessage select { margin-bottom:0; }
@@ -66,6 +91,12 @@
 }
 .glyphicon-plus:before {
   content: "\2b";
+}
+.glyphicon-plus-sign:before {
+  content: "\e081";
+}
+.glyphicon-minus-sign:before {
+  content: "\e082";
 }
 .glyphicon-minus:before {
   content: "\2212";
