@@ -40,8 +40,7 @@
 if (window.angular) // needed because the file is also included in older non-angular dialogs
     angular.module("EavConfiguration", [])
         .constant("languages", window.$eavUIConfig.languages)
-        //.constant("webRoot", '/')
-        .factory("eavConfig", function ($location) {
+        .factory("eavConfig", function ($location, sxc, portalRoot, systemRoot, appRoot) {
 
             var dnnModuleId = $location.search().mid;
 
@@ -60,6 +59,23 @@ if (window.angular) // needed because the file is also included in older non-ang
                             + "&langpri=" + $2sxc.urlParams.get("langpri")
                             + "&langs=" + $2sxc.urlParams.get("langs");
                     }
+                },
+                getUrlPrefix: function (area) {
+                    var result = "";
+                    if (area === "api") {
+                        var url = sxc.resolveServiceUrl("eav/");
+                        result = url.substr(0, url.length - 5);
+                    }
+                    //var systemRoot = websiteRoot + "desktopmodules/tosic_sexycontent";
+                    if (area === "system")      result = systemRoot;                   // used to link to JS-stuff and similar
+                    if (area === "zone")        result = portalRoot;                   // used to link to the site-root (like an image)
+                    if (area === "app")         result = appRoot;                      // used to find the app-root of something inside an app
+                    if (area === "dialog")      result = systemRoot + "dnn";          // note: not tested yet
+                    if (area === "dialog-page") result = systemRoot + "dnn/ui.html";  // note: not tested yet
+                    
+                    if (result.endsWith("/")) 
+                        result = result.substring(0, result.length - 1);
+                    return result;
                 },
                 pipelineDesigner: {
                     outDataSource: {
@@ -93,13 +109,11 @@ if (window.angular) // needed because the file is also included in older non-ang
                             { From: "unsaved1", Out: "Drafts", To: "unsaved2", In: "Drafts" },
                             { From: "unsaved1", Out: "Published", To: "unsaved2", In: "Published" },
                             { From: "unsaved2", Out: "Default", To: "unsaved3", In: "Default" },
-                            //{ From: 'unsaved3', Out: 'ListPresentation', To: 'Out', In: 'ListPresentation' },
                             { From: "unsaved3", Out: "ListContent", To: "Out", In: "ListContent" },
-                            //{ From: 'unsaved3', Out: 'Presentation', To: 'Out', In: 'Presentation' },
                             { From: "unsaved3", Out: "Default", To: "Out", In: "Default" }
                         ]
                     },
-                    testParameters: "[Module:ModuleID]=" + dnnModuleId // globals.ModuleContext.ModuleId
+                    testParameters: "[Module:ModuleID]=" + dnnModuleId 
                 },
                 metadataOfEntity: 4,
                 metadataOfAttribute: 2,

@@ -423,7 +423,7 @@ angular.module("eavFieldTemplates")
 	var app = angular.module("eavEditEntity"); 
 
 	// The controller for the main form directive
-    app.controller("EditEntityFormCtrl", ["appId", "$http", "$scope", "formlyConfig", "contentTypeFieldSvc", "$sce", "debugState", function editEntityCtrl(appId, $http, $scope, formlyConfig, contentTypeFieldSvc, $sce, debugState) {
+	app.controller("EditEntityFormCtrl", ["appId", "$http", "$scope", "formlyConfig", "contentTypeFieldSvc", "$sce", "debugState", "customInputTypes", function editEntityCtrl(appId, $http, $scope, formlyConfig, contentTypeFieldSvc, $sce, debugState, customInputTypes) {
 
 		var vm = this;
 		vm.editInDefaultLanguageFirst = function () {
@@ -451,70 +451,75 @@ angular.module("eavFieldTemplates")
 		var loadContentType = function () {
 
 		    contentTypeFieldSvc(appId, { StaticName: vm.entity.Type.StaticName }).getFields()
-			.then(function (result) {
-			    vm.debug = result;
+		        .then(function(result) {
+		            vm.debug = result;
 
-			    // Transform EAV content type configuration to formFields (formly configuration)
+		            // Transform EAV content type configuration to formFields (formly configuration)
 		            var lastGroupHeadingId = 0;
-			    angular.forEach(result.data, function (e, i) {
+		            angular.forEach(result.data, function(e, i) {
 
-			        if (e.Metadata.All === undefined)
-			            e.Metadata.All = {};
+		                if (e.Metadata.All === undefined)
+		                    e.Metadata.All = {};
 
-			        var fieldType = getType(e);
+		                var fieldType = getType(e);
 
-                    // always remember the last heading so all the following fields know to look there for collapse-setting
-			        var isFieldHeading = (fieldType === "empty-default");
-			        if(isFieldHeading)  
-			            lastGroupHeadingId = i;
+		                // always remember the last heading so all the following fields know to look there for collapse-setting
+		                var isFieldHeading = (fieldType === "empty-default");
+		                if (isFieldHeading)
+		                    lastGroupHeadingId = i;
 
-			        var nextField = {
-			            key: e.StaticName,
-			            type: fieldType,
-			            templateOptions: {
-			                required: !!e.Metadata.All.Required,
-			                label: e.Metadata.All.Name === undefined ? e.StaticName : e.Metadata.All.Name,
-			                description: $sce.trustAsHtml(e.Metadata.All.Notes),
-			                settings: e.Metadata,
-			                header: $scope.header,
-                            canCollapse: lastGroupHeadingId > 0 && !isFieldHeading,
-                            fieldGroup: vm.formFields[lastGroupHeadingId],
-                            disabled: e.Metadata.All.Disabled,
-			                langReadOnly: false // Will be set by the language directive to override the disabled state
-			            },
-			            hide: (e.Metadata.All.VisibleInEditUI === false ? !debugState.on : false),
-			            expressionProperties: {
-			                // Needed for dynamic update of the disabled property
-			                'templateOptions.disabled': 'options.templateOptions.disabled' // doesn't set anything, just here to ensure formly causes update-binding
-			            },
-			            watcher: [
-			                {
-                                // changes when a entity becomes enabled / disabled
-			                    expression: function(field, scope, stop) {
-			                        return e.Metadata.All.Disabled ||
-                                        (field.templateOptions.header.Group && field.templateOptions.header.Group.SlotIsEmpty) ||
-                                        field.templateOptions.langReadOnly;
-			                    },
-			                    listener: function(field, newValue, oldValue, scope, stopWatching) {
-			                        field.templateOptions.disabled = newValue;
-			                    }
-			                },
-                            {   // handle collapse / open
-                                expression: function (field, scope, stop) {
-                                    // only change values if it can collapse...
-			                        return (field.templateOptions.canCollapse) ? field.templateOptions.fieldGroup.templateOptions.collapseGroup : null;
-			                    },
-			                    listener: function (field, newValue, oldValue, scope, stopWatching) {
-			                        if (field.templateOptions.canCollapse)
-			                            field.templateOptions.collapse = newValue;
-			                    }
-			                }
-			            ]
-			        };
-			        vm.formFields.push(nextField);
-			    });
+		                var nextField = {
+		                    key: e.StaticName,
+		                    type: fieldType,
+		                    templateOptions: {
+		                        required: !!e.Metadata.All.Required,
+		                        label: e.Metadata.All.Name === undefined ? e.StaticName : e.Metadata.All.Name,
+		                        description: $sce.trustAsHtml(e.Metadata.All.Notes),
+		                        settings: e.Metadata,
+		                        header: $scope.header,
+		                        canCollapse: lastGroupHeadingId > 0 && !isFieldHeading,
+		                        fieldGroup: vm.formFields[lastGroupHeadingId],
+		                        disabled: e.Metadata.All.Disabled,
+		                        langReadOnly: false // Will be set by the language directive to override the disabled state
+		                    },
+		                    hide: (e.Metadata.All.VisibleInEditUI === false ? !debugState.on : false),
+		                    expressionProperties: {
+		                        // Needed for dynamic update of the disabled property
+		                        'templateOptions.disabled': 'options.templateOptions.disabled' // doesn't set anything, just here to ensure formly causes update-binding
+		                    },
+		                    watcher: [
+		                        {
+		                            // changes when a entity becomes enabled / disabled
+		                            expression: function(field, scope, stop) {
+		                                return e.Metadata.All.Disabled ||
+		                                    (field.templateOptions.header.Group && field.templateOptions.header.Group.SlotIsEmpty) ||
+		                                    field.templateOptions.langReadOnly;
+		                            },
+		                            listener: function(field, newValue, oldValue, scope, stopWatching) {
+		                                field.templateOptions.disabled = newValue;
+		                            }
+		                        },
+		                        {
+                                    // handle collapse / open
+		                            expression: function(field, scope, stop) {
+		                                // only change values if it can collapse...
+		                                return (field.templateOptions.canCollapse) ? field.templateOptions.fieldGroup.templateOptions.collapseGroup : null;
+		                            },
+		                            listener: function(field, newValue, oldValue, scope, stopWatching) {
+		                                if (field.templateOptions.canCollapse)
+		                                    field.templateOptions.collapse = newValue;
+		                            }
+		                        }
+		                    ]
+		                };
 
-		    });
+		                if (e.InputTypeConfig)
+		                    customInputTypes.addInputType(e.InputTypeConfig);
+
+		                vm.formFields.push(nextField);
+		            });
+
+		        });
 		};
 
 	    // Load existing entity if defined
@@ -1032,6 +1037,65 @@ function enhanceEntity(entity) {
 
     return enhancer.enhanceEntity(entity);
 }
+/* global angular */
+(function () {
+	"use strict";
+
+	angular.module("eavEditEntity")
+        .service("customInputTypes", ["eavConfig", function (eavConfig) {
+            // Returns a typed default value from the string representation
+            var svc = {};
+	        var inputTypesOnPage = {};
+
+	        svc.addInputType = function addInputType(config) {
+                // check if anything defined - older configurations don't have anything and will default to string-default anyhow
+	            if (config === undefined || config === null)
+	                return;
+
+                // only add one if it has not been added yet
+	            if (inputTypesOnPage[config.Type] !== undefined)
+	                return;
+
+	            inputTypesOnPage[config.Type] = config;
+
+	            svc.loadNewAssets(config);
+	        };
+
+	        svc.loadNewAssets = function loadNewAssets(config) {
+	            if (config.Assets === undefined || config.Assets === null || !config.Assets)
+	                return;
+
+	            // todo: split by new-line
+	            var list = config.Assets.split("\n");//.replace(/\n/g, "~").split("~");
+
+	            // todo: add to document
+                for(var a = 0; a < list.length; a++)
+                    svc.addHeadJsOrCssTag(svc.resolveSpecialPaths(list[a]));
+	        };
+
+	        svc.resolveSpecialPaths = function resolve(url) {
+	            url = url.replace(/\[System:Path\]/i, eavConfig.getUrlPrefix("system"))
+	                .replace(/\[Zone:Path\]/i, eavConfig.getUrlPrefix("zone"))
+	                .replace(/\[App:Path\]/i, eavConfig.getUrlPrefix("app"));
+	            return url;
+	        };
+
+	        svc.addHeadJsOrCssTag = function(url) {
+	            if (url.indexOf(".js") > 0) {
+	                var oHead = document.getElementsByTagName("HEAD").item(0);
+	                var oScript = document.createElement("script");
+	                oScript.type = "text/javascript";
+	                oScript.src = url;
+	                oHead.appendChild(oScript);
+	            } else if (url.indexOf(".css") > 0) {
+	                alert("css include not implemented yet");
+	            }
+	        };
+
+	        return svc;
+	    }]);
+
+})();
 /* global angular */
 (function () {
 	"use strict";

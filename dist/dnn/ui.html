@@ -34,7 +34,7 @@
         function addScript(src) {
             var script = document.createElement('script');
             script.type = 'text/javascript';
-            script.src = src + "?" + sxcVersionParam;
+            script.src = toMinOrNotToMin(src) + "?" + sxcVersionParam;
             document.write(script.outerHTML); // needs doc.write to ensure in-sync loading of the files
         }
 
@@ -45,6 +45,13 @@
             style.setAttribute("type", "text/css");
             style.setAttribute("href", src + "?" + sxcVersionParam);
             document.getElementsByTagName("head")[0].appendChild(style);
+        }
+
+        var noMin = true;
+        function toMinOrNotToMin(url) {
+            if (!noMin || url.indexOf("lib") > -1)
+                return url;
+            return url.replace(".min", "");
         }
 
     </script>

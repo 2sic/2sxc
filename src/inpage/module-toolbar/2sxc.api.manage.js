@@ -16,7 +16,8 @@ $2sxc.getManageController = function (id) {
         lang: manageInfo.lang,
         langpri: manageInfo.langPrimary,
         langs: JSON.stringify(manageInfo.languages),
-        portalroot: sxcGlobals.PortalRoot
+        portalroot: sxcGlobals.PortalRoot,
+        websiteroot: manageInfo.applicationRoot
     };
 
     var toolbarConfig = manageInfo.config;

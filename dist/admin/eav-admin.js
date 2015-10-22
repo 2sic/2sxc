@@ -127,19 +127,18 @@
          .factory("contentExportService", contentExportService);
 
 
-    function contentExportService($http, sxc) {
+    function contentExportService($http, eavConfig) {
         var srvc = {
             exportContent: exportContent,
         };
         return srvc;
 
         function exportContent(args) {
-            var url = sxc.resolveServiceUrl("eav/ContentExport/ExportContent");
-            //$http.get("eav/ContentExport/ExportContent?appId=" + args.AppId + "&language=" + args.Language + "&defaultLanguage=" + args.DefaultLanguage + "&contentType=" + args.ContentType + "&recordExport=" + args.RecordExport + "&resourcesReferences=" + args.ResourcesReferences + "&languageReferences=" + args.LanguageReferences, "_self");
-            window.open(/* apiRoot + "eav/ContentExport/ExportContent */ url + "?appId=" + args.AppId + "&language=" + args.Language + "&defaultLanguage=" + args.DefaultLanguage + "&contentType=" + args.ContentType + "&recordExport=" + args.RecordExport + "&resourcesReferences=" + args.ResourcesReferences + "&languageReferences=" + args.LanguageReferences, "_self", "");
+            var url = eavConfig.getUrlPrefix("api") + "/eav/ContentExport/ExportContent";
+            window.open(url + "?appId=" + args.AppId + "&language=" + args.Language + "&defaultLanguage=" + args.DefaultLanguage + "&contentType=" + args.ContentType + "&recordExport=" + args.RecordExport + "&resourcesReferences=" + args.ResourcesReferences + "&languageReferences=" + args.LanguageReferences, "_self", "");
         }
     }
-    contentExportService.$inject = ["$http", "sxc"];
+    contentExportService.$inject = ["$http", "eavConfig"];
 }());
 (function () {
     angular.module("ContentFormlyTypes", [

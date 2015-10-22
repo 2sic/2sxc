@@ -625,8 +625,19 @@ angular.module("SxcServices")//, ['ng', 'eavNgSvcs', "EavConfiguration"])
         .factory("tabId", ["$2sxc", function($2sxc) {
             return $2sxc.urlParams.get("tid");
         }])
+
+        .factory("websiteRoot", ["$2sxc", function ($2sxc) {
+            return $2sxc.urlParams.get("websiteroot");
+        }])
+        .factory("systemRoot", ["websiteRoot", function (websiteRoot) {
+            return websiteRoot + "desktopmodules/tosic_sexycontent/";
+        }])
         .factory("portalRoot", ["$2sxc", function ($2sxc) {
             return $2sxc.urlParams.get("portalroot");
+        }])
+        .factory("appRoot", ["$2sxc", function ($2sxc) {
+                // alert("todo - not implemented yet");
+                return "todo - not implemented yet"; // $2sxc.urlParams.get("appRoot");
         }])
         .factory("items", ["$2sxc", function ($2sxc) {
                 var found = $2sxc.urlParams.get("items");

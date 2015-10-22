@@ -17,8 +17,19 @@
         .factory("tabId", function($2sxc) {
             return $2sxc.urlParams.get("tid");
         })
+
+        .factory("websiteRoot", function ($2sxc) {
+            return $2sxc.urlParams.get("websiteroot");
+        })
+        .factory("systemRoot", function (websiteRoot) {
+            return websiteRoot + "desktopmodules/tosic_sexycontent/";
+        })
         .factory("portalRoot", function ($2sxc) {
             return $2sxc.urlParams.get("portalroot");
+        })
+        .factory("appRoot", function ($2sxc) {
+                // alert("todo - not implemented yet");
+                return "todo - not implemented yet"; // $2sxc.urlParams.get("appRoot");
         })
         .factory("items", function ($2sxc) {
                 var found = $2sxc.urlParams.get("items");
