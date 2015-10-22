@@ -28,8 +28,7 @@
             return $2sxc.urlParams.get("portalroot");
         })
         .factory("appRoot", function ($2sxc) {
-                // alert("todo - not implemented yet");
-                return "todo - not implemented yet"; // $2sxc.urlParams.get("appRoot");
+                return $2sxc.urlParams.get("appRoot");
         })
         .factory("items", function ($2sxc) {
                 var found = $2sxc.urlParams.get("items");

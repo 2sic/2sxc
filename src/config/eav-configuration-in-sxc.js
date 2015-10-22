@@ -66,12 +66,12 @@ if (window.angular) // needed because the file is also included in older non-ang
                         var url = sxc.resolveServiceUrl("eav/");
                         result = url.substr(0, url.length - 5);
                     }
-                    //var systemRoot = websiteRoot + "desktopmodules/tosic_sexycontent";
-                    if (area === "system")      result = systemRoot;                   // used to link to JS-stuff and similar
-                    if (area === "zone")        result = portalRoot;                   // used to link to the site-root (like an image)
-                    if (area === "app")         result = appRoot;                      // used to find the app-root of something inside an app
-                    if (area === "dialog")      result = systemRoot + "dnn";          // note: not tested yet
-                    if (area === "dialog-page") result = systemRoot + "dnn/ui.html";  // note: not tested yet
+
+                    if (area === "system")      result = systemRoot;                    // used to link to JS-stuff and similar
+                    if (area === "zone")        result = portalRoot;                    // used to link to the site-root (like an image)
+                    if (area === "app")         result = appRoot;                       // used to find the app-root of something inside an app
+                    if (area === "dialog")      result = systemRoot + "dnn";            // note: not tested yet
+                    if (area === "dialog-page") result = systemRoot + "dnn/ui.html";    // note: not tested yet
                     
                     if (result.endsWith("/")) 
                         result = result.substring(0, result.length - 1);
