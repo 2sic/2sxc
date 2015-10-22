@@ -47,7 +47,7 @@
             document.getElementsByTagName("head")[0].appendChild(style);
         }
 
-        var noMin = true;
+        var noMin = ($2sxc.urlParams.get("debug") === "true");
         function toMinOrNotToMin(url) {
             if (!noMin || url.indexOf("lib") > -1)
                 return url;
