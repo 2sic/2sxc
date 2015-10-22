@@ -128,6 +128,7 @@ namespace ToSic.SexyContent
         {
             get
             {
+                return DotNetNuke.Security.Permissions.ModulePermissionController.CanEditModuleContent(ModuleContext.Configuration);
                 return ModuleContext.IsEditable;
             }
         }
