@@ -823,12 +823,12 @@ angular.module('eavTemplates',[]).run(['$templateCache', function($templateCache
 
 
   $templateCache.put('content-items/content-edit.html',
-    "<div class=modal-header><button type=button class=\"btn btn-default\" ng-click=vm.history()><span class=\"glyphicon glyphicon-time\">history / todo</span></button><h3 class=modal-title>Edit / New Content</h3></div><div class=modal-body>this is where the edit appears. Would edit entity {{vm.entityId}} or add a {{vm.contentType}} - depending on the mode: {{vm.mode}}<h3>Use cases</h3><ol><li>Edit an existing entity with ID</li><li>Create a new entity of a certaint content-type, just save and done (like from a \"new\" button without content-group)</li><li>Create a new entity of a certain type and assign it to a metadata thing (guid, int, string)</li><li>Create a new entity and put it into a content-group at the right place</li><li>Edit content-group: item + presentation</li><li>Edit multiple IDs/or new/mix: Edit multiple items with IDs</li></ol>init of 1 edit - entity-id in storage - new-type + optional: assignment-id + assignment-type - array of the above --- [{id 17}, {type: \"person\"}, {type: person, asstype: 4, target: 0205}] - content-group</div>"
+    "<div class=modal-header><button type=button class=\"btn btn-default btn-subtle\" ng-click=vm.history()><span class=\"glyphicon glyphicon-time\">history / todo</span></button><h3 class=modal-title>Edit / New Content</h3></div><div class=modal-body>this is where the edit appears. Would edit entity {{vm.entityId}} or add a {{vm.contentType}} - depending on the mode: {{vm.mode}}<h3>Use cases</h3><ol><li>Edit an existing entity with ID</li><li>Create a new entity of a certaint content-type, just save and done (like from a \"new\" button without content-group)</li><li>Create a new entity of a certain type and assign it to a metadata thing (guid, int, string)</li><li>Create a new entity and put it into a content-group at the right place</li><li>Edit content-group: item + presentation</li><li>Edit multiple IDs/or new/mix: Edit multiple items with IDs</li></ol>init of 1 edit - entity-id in storage - new-type + optional: assignment-id + assignment-type - array of the above --- [{id 17}, {type: \"person\"}, {type: person, asstype: 4, target: 0205}] - content-group</div>"
   );
 
 
   $templateCache.put('content-items/content-items.html',
-    "<div ng-click=vm.debug.autoEnableAsNeeded($event)><div class=modal-header><button class=\"btn btn-default btn-square pull-right\" type=button ng-click=vm.close()><i icon=remove></i></button><h3 class=modal-title translate=Content.Manage.Title></h3></div><div class=modal-body><button type=button class=\"btn btn-primary btn-square\" ng-click=vm.add()><i icon=plus></i></button> <button ng-if=vm.debug.on type=button class=\"btn btn-warning btn-square\" ng-click=vm.refresh()><i icon=repeat></i></button><div style=\"overflow: auto\"><table class=\"table table-hover table-manage-eav\"><thead><tr><th translate=Content.Manage.Table.Id class=col-id></th><th translate=Content.Manage.Table.Status style=\"width: 60px\"></th><th translate=Content.Manage.Table.Title style=\"width: 200px\"></th><th translate=Content.Manage.Table.Actions class=mini-btn-2></th><th ng-repeat=\"col in vm.dynamicColumns\" style=\"width: 10%\">{{col.StaticName}}</th></tr></thead><tbody><tr ng-repeat=\"item in vm.items | orderBy: ['Id','-IsPublished'] \" class=clickable-row ng-click=vm.edit(item)><td class=\"text-nowrap clickable\" style=\"text-align: right\"><span tooltip=\"Id: {{item.Id}}\r" +
+    "<div ng-click=vm.debug.autoEnableAsNeeded($event)><div class=modal-header><button class=\"btn btn-default btn-square btn-subtle pull-right\" type=button ng-click=vm.close()><i icon=remove></i></button><h3 class=modal-title translate=Content.Manage.Title></h3></div><div class=modal-body><button type=button class=\"btn btn-primary btn-square\" ng-click=vm.add()><i icon=plus></i></button> <button ng-if=vm.debug.on type=button class=\"btn btn-warning btn-square\" ng-click=vm.refresh()><i icon=repeat></i></button><div style=\"overflow: auto\"><table class=\"table table-hover table-manage-eav\"><thead><tr><th translate=Content.Manage.Table.Id class=col-id></th><th translate=Content.Manage.Table.Status style=\"width: 60px\"></th><th translate=Content.Manage.Table.Title style=\"width: 200px\"></th><th translate=Content.Manage.Table.Actions class=mini-btn-2></th><th ng-repeat=\"col in vm.dynamicColumns\" style=\"width: 10%\">{{col.StaticName}}</th></tr></thead><tbody><tr ng-repeat=\"item in vm.items | orderBy: ['Id','-IsPublished'] \" class=clickable-row ng-click=vm.edit(item)><td class=\"text-nowrap clickable\" style=\"text-align: right\"><span tooltip=\"Id: {{item.Id}}\r" +
     "\n" +
     "RepoId: {{item.RepositoryId}}\r" +
     "\n" +
@@ -839,32 +839,32 @@ angular.module('eavTemplates',[]).run(['$templateCache', function($templateCache
 
 
   $templateCache.put('content-items/history-details.html',
-    "<div><div class=modal-header><button class=\"btn btn-primary pull-right\" type=button ng-click=vm.close()><span class=\"glyphicon glyphicon-remove\"></span></button><h3 class=modal-title>History Details {{vm.ChangeId}} of {{vm.entityId}}</h3></div><div class=modal-body><h1>todo</h1><table class=\"table table-striped table-hover\"><thead><tr><th>Field</th><th>Language</th><th>Value</th><th>SharedWith</th></tr></thead><tbody><tr ng-repeat=\"item in vm.items | orderBy:SysCreatedDate:reverse\"><td>{{item.Field}}</td><td>{{item.Language}}</td><td>{{item.Value}}</td><td>{{item.SharedWith}}</td></tr><tr ng-if=!vm.items.length><td colspan=100>No History</td></tr></tbody></table><button class=\"btn btn-primary pull-right\" type=button ng-click=vm.restore()><span class=\"glyphicon glyphicon-ok\">todo restore</span></button></div></div>"
+    "<div><div class=modal-header><button class=\"btn btn-default btn-subtle btn-square pull-right\" type=button ng-click=vm.close()><span class=\"glyphicon glyphicon-remove\"></span></button><h3 class=modal-title>History Details {{vm.ChangeId}} of {{vm.entityId}}</h3></div><div class=modal-body><h1>todo</h1><table class=\"table table-striped table-hover\"><thead><tr><th>Field</th><th>Language</th><th>Value</th><th>SharedWith</th></tr></thead><tbody><tr ng-repeat=\"item in vm.items | orderBy:SysCreatedDate:reverse\"><td>{{item.Field}}</td><td>{{item.Language}}</td><td>{{item.Value}}</td><td>{{item.SharedWith}}</td></tr><tr ng-if=!vm.items.length><td colspan=100>No History</td></tr></tbody></table><button class=\"btn btn-primary pull-right\" type=button ng-click=vm.restore()><span class=\"glyphicon glyphicon-ok\">todo restore</span></button></div></div>"
   );
 
 
   $templateCache.put('content-items/history.html',
-    "<div><div class=modal-header><button class=\"btn btn-primary pull-right\" type=button ng-click=vm.close()><span class=\"glyphicon glyphicon-remove\"></span></button><h3 class=modal-title>{{ \"Content.History.Title\" | translate:'{ id:vm.entityId }' }}History of {{vm.entityId}}</h3></div><div class=modal-body><table class=\"table table-striped table-hover\"><thead><tr><th translate=Content.History.Table.Id></th><th translate=Content.History.Table.When></th><th translate=Content.History.Table.User></th><th translate=Content.History.Table.Action></th></tr></thead><tbody><tr ng-repeat=\"item in vm.items | orderBy:SysCreatedDate:reverse\"><td><span tooltip=\"ChangeId: {{item.ChangeId}}\">{{item.VirtualVersion}}</span></td><td>{{item.SysCreatedDate.replace(\"T\", \" \")}}</td><td>{{item.User}}</td><td><button type=button class=\"btn btn-xs\" ng-click=vm.details(item)><span class=\"glyphicon glyphicon-search\"></span></button></td></tr><tr ng-if=!vm.items.length><td colspan=100 translate=General.Messages.NothingFound></td></tr></tbody></table></div></div>"
+    "<div><div class=modal-header><button class=\"btn btn-default btn-square btn-subtle pull-right\" type=button ng-click=vm.close()><span class=\"glyphicon glyphicon-remove\"></span></button><h3 class=modal-title>{{ \"Content.History.Title\" | translate:'{ id:vm.entityId }' }}History of {{vm.entityId}}</h3></div><div class=modal-body><table class=\"table table-striped table-hover\"><thead><tr><th translate=Content.History.Table.Id></th><th translate=Content.History.Table.When></th><th translate=Content.History.Table.User></th><th translate=Content.History.Table.Action></th></tr></thead><tbody><tr ng-repeat=\"item in vm.items | orderBy:SysCreatedDate:reverse\"><td><span tooltip=\"ChangeId: {{item.ChangeId}}\">{{item.VirtualVersion}}</span></td><td>{{item.SysCreatedDate.replace(\"T\", \" \")}}</td><td>{{item.User}}</td><td><button type=button class=\"btn btn-xs\" ng-click=vm.details(item)><span class=\"glyphicon glyphicon-search\"></span></button></td></tr><tr ng-if=!vm.items.length><td colspan=100 translate=General.Messages.NothingFound></td></tr></tbody></table></div></div>"
   );
 
 
   $templateCache.put('content-types/content-types-edit.html',
-    "<div ng-click=vm.debug.autoEnableAsNeeded($event)><div class=modal-header><button class=\"btn btn-default btn-square pull-right\" type=button ng-click=vm.close()><i icon=remove></i></button><h3 class=modal-title translate=ContentTypeEdit.Title></h3></div><div class=modal-body>{{ \"ContentTypeEdit.Name\" | translate }}:<br><input ng-model=vm.item.Name class=\"input-lg\"><br>{{ \"ContentTypeEdit.Description\" | translate }}:<br><input ng-model=vm.item.Description class=\"input-lg\"><br><div>{{ \"ContentTypeEdit.Scope\" | translate }}:<br><span ng-if=vm.debug.on><div class=\"alert alert-danger\">the scope should almost never be changed - <a href=\"http://2sxc.org/help?tag=scope\" _target=_blank>see help</a></div></span> <input ng-disabled=!vm.debug.on ng-model=vm.item.Scope class=\"input-lg\"></div><div ng-if=vm.debug.on class=alert-danger><h3>Static Name</h3><input type=checkbox class=input-lg ng-model=\"vm.item.ChangeStaticName\"> Really edit StaticName??? - this is usually a very bad idea<br><input ng-model=vm.item.NewStaticName ng-disabled=!vm.item.ChangeStaticName class=\"input-lg\"></div><div ng-if=vm.debug.on class=alert-danger><h3>Shared Content Type</h3><div>Note: this can't be edited in the UI, for now if you really know what you're doing, do it in the DB</div><div>Uses Type Definition of: {{vm.item.SharedDefId}}</div></div></div><div class=modal-footer><button class=\"btn btn-primary btn-square pull-left btn-lg\" type=button ng-click=vm.ok()><i icon=ok></i></button><show-debug-availability class=pull-right style=\"margin-top: 20px\"></show-debug-availability></div></div>"
+    "<div ng-click=vm.debug.autoEnableAsNeeded($event)><div class=modal-header><button class=\"btn btn-default btn-square btn-subtle pull-right\" type=button ng-click=vm.close()><i icon=remove></i></button><h3 class=modal-title translate=ContentTypeEdit.Title></h3></div><div class=modal-body>{{ \"ContentTypeEdit.Name\" | translate }}:<br><input ng-model=vm.item.Name class=\"input-lg\"><br>{{ \"ContentTypeEdit.Description\" | translate }}:<br><input ng-model=vm.item.Description class=\"input-lg\"><br><div>{{ \"ContentTypeEdit.Scope\" | translate }}:<br><span ng-if=vm.debug.on><div class=\"alert alert-danger\">the scope should almost never be changed - <a href=\"http://2sxc.org/help?tag=scope\" _target=_blank>see help</a></div></span> <input ng-disabled=!vm.debug.on ng-model=vm.item.Scope class=\"input-lg\"></div><div ng-if=vm.debug.on class=alert-danger><h3>Static Name</h3><input type=checkbox class=input-lg ng-model=\"vm.item.ChangeStaticName\"> Really edit StaticName??? - this is usually a very bad idea<br><input ng-model=vm.item.NewStaticName ng-disabled=!vm.item.ChangeStaticName class=\"input-lg\"></div><div ng-if=vm.debug.on class=alert-danger><h3>Shared Content Type</h3><div>Note: this can't be edited in the UI, for now if you really know what you're doing, do it in the DB</div><div>Uses Type Definition of: {{vm.item.SharedDefId}}</div></div></div><div class=modal-footer><button class=\"btn btn-primary btn-square pull-left btn-lg\" type=button ng-click=vm.ok()><i icon=ok></i></button><show-debug-availability class=pull-right style=\"margin-top: 20px\"></show-debug-availability></div></div>"
   );
 
 
   $templateCache.put('content-types/content-types-field-edit.html',
-    "<div class=modal-header><button icon=remove class=\"btn btn-default btn-square pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=Fields.TitleEdit></h3></div><div class=modal-body><table class=\"table table-hover table-manage-eav\"><thead><tr><th translate=Fields.Table.Name style=\"width: 33%\"></th><th translate=Fields.Table.DataType style=\"width: 33%\">Data Type</th><th translate=Fields.Table.InputType style=\"width: 33%\">Input Type</th></tr></thead><tbody><tr ng-repeat=\"item in vm.items\"><td><input ng-model=item.StaticName ng-required=true class=input-lg style=\"width: 100%\" disabled></td><td><input ng-model=item.Type disabled class=input-lg style=\"width: 100%\"></td><td><select class=input-lg ng-model=item.InputType style=\"width: 100%\" tooltip=\"{{ (vm.allInputTypes | filter: { inputType: item.InputType})[0].description }}\" ng-options=\"o.inputType as o.label for o in vm.allInputTypes | filter: {dataType: item.Type.toLowerCase() } \"></select></td></tr></tbody></table></div><div class=modal-footer><button icon=ok class=\"btn btn-lg btn-primary btn-square pull-left\" type=button ng-click=vm.ok()></button></div>"
+    "<div class=modal-header><button icon=remove class=\"btn btn-default btn-square btn-subtle pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=Fields.TitleEdit></h3></div><div class=modal-body><table class=\"table table-hover table-manage-eav\"><thead><tr><th translate=Fields.Table.Name style=\"width: 33%\"></th><th translate=Fields.Table.DataType style=\"width: 33%\">Data Type</th><th translate=Fields.Table.InputType style=\"width: 33%\">Input Type</th></tr></thead><tbody><tr ng-repeat=\"item in vm.items\"><td><input ng-model=item.StaticName ng-required=true class=input-lg style=\"width: 100%\" disabled></td><td><input ng-model=item.Type disabled class=input-lg style=\"width: 100%\"></td><td><select class=input-lg ng-model=item.InputType style=\"width: 100%\" tooltip=\"{{ (vm.allInputTypes | filter: { inputType: item.InputType})[0].description }}\" ng-options=\"o.inputType as o.label for o in vm.allInputTypes | filter: {dataType: item.Type.toLowerCase() } \"></select></td></tr></tbody></table></div><div class=modal-footer><button icon=ok class=\"btn btn-lg btn-primary btn-square pull-left\" type=button ng-click=vm.ok()></button></div>"
   );
 
 
   $templateCache.put('content-types/content-types-fields-add.html',
-    "<div class=modal-header><button icon=remove class=\"btn btn-default btn-square pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=Fields.TitleEdit></h3></div><div class=modal-body><table class=\"table table-hover table-manage-eav\"><thead><tr><th translate=Fields.Table.Name style=\"width: 33%\"></th><th translate=Fields.Table.DataType style=\"width: 33%\">Data Type</th><th translate=Fields.Table.InputType style=\"width: 33%\">Input Type</th></tr></thead><tbody><tr ng-repeat=\"item in vm.items\"><td><input ng-model=item.StaticName ng-required=true class=input-lg style=\"width: 100%\"></td><td><select class=input-lg ng-model=item.Type style=\"width: 100%\" tooltip=\"{{ 'DataType.' + item.Type + '.Explanation' | translate }}\" ng-options=\"o as 'DataType.' + o + '.Choice' | translate for o in vm.types | orderBy: 'toString()' \" ng-change=vm.resetSubTypes(item)><option>-- select --</option></select></td><td><select class=input-lg ng-model=item.InputType style=\"width: 100%\" tooltip=\"{{ (vm.allInputTypes | filter: { inputType: item.InputType})[0].description }}\" ng-options=\"o.inputType as o.label for o in vm.allInputTypes | filter: {dataType: item.Type.toLowerCase() } \"></select></td></tr></tbody></table></div><div class=modal-footer><button icon=ok class=\"btn btn-lg btn-primary btn-square pull-left\" type=button ng-click=vm.ok()></button></div>"
+    "<div class=modal-header><button icon=remove class=\"btn btn-default btn-square btn-subtle pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=Fields.TitleEdit></h3></div><div class=modal-body><table class=\"table table-hover table-manage-eav\"><thead><tr><th translate=Fields.Table.Name style=\"width: 33%\"></th><th translate=Fields.Table.DataType style=\"width: 33%\">Data Type</th><th translate=Fields.Table.InputType style=\"width: 33%\">Input Type</th></tr></thead><tbody><tr ng-repeat=\"item in vm.items\"><td><input ng-model=item.StaticName ng-required=true class=input-lg style=\"width: 100%\"></td><td><select class=input-lg ng-model=item.Type style=\"width: 100%\" tooltip=\"{{ 'DataType.' + item.Type + '.Explanation' | translate }}\" ng-options=\"o as 'DataType.' + o + '.Choice' | translate for o in vm.types | orderBy: 'toString()' \" ng-change=vm.resetSubTypes(item)><option>-- select --</option></select></td><td><select class=input-lg ng-model=item.InputType style=\"width: 100%\" tooltip=\"{{ (vm.allInputTypes | filter: { inputType: item.InputType})[0].description }}\" ng-options=\"o.inputType as o.label for o in vm.allInputTypes | filter: {dataType: item.Type.toLowerCase() } \"></select></td></tr></tbody></table></div><div class=modal-footer><button icon=ok class=\"btn btn-lg btn-primary btn-square pull-left\" type=button ng-click=vm.ok()></button></div>"
   );
 
 
   $templateCache.put('content-types/content-types-fields.html',
-    "<div><div class=modal-header><button class=\"btn btn-default btn-square pull-right\" type=button ng-click=vm.close()><i icon=remove></i></button><h3 class=modal-title translate=Fields.Title></h3></div><div class=modal-body><button icon=plus ng-click=vm.add() class=\"btn btn-primary btn-square\"></button><table class=\"table table-hover table-manage-eav\"><thead><tr><th translate=Fields.Table.Title class=mini-btn-1></th><th translate=Fields.Table.Name style=\"width: 40%\"></th><th translate=Fields.Table.DataType style=\"width: 20%\"></th><th translate=Fields.Table.InputType style=\"width: 20%\"></th><th translate=Fields.Table.Label style=\"width: 30%\"></th><th translate=Fields.Table.Notes style=\"width: 50%\"></th><th translate=Fields.Table.Sort class=mini-btn-2></th><th translate=Fields.Table.Action class=mini-btn-1></th></tr></thead><tbody><tr ng-repeat=\"item in vm.items | orderBy: 'SortOrder'\" class=clickable-row ng-click=\"vm.createOrEditMetadata(item, item.Type)\"><td stop-event=click><button type=button class=\"btn btn-xs btn-square\" ng-style=\"(item.IsTitle ? '' : 'color: transparent !important')\" ng-click=vm.setTitle(item)><i icon=\"{{item.IsTitle ? 'star' : 'star-empty'}}\"></i></button></td><td class=clickable><span tooltip=\"{{ 'Id: ' + item.Id}}\">{{item.StaticName}}</span></td><td class=\"text-nowrap clickable\">{{item.Type}}</td><td class=\"text-nowrap InputType\" stop-event=click><span class=clickable tooltip={{item.InputType}} ng-click=vm.edit(item)><i icon=pencil></i> {{item.InputType.substring(item.InputType.indexOf('-') + 1, 100)}}</span></td><td class=\"text-nowrap clickable\">{{item.Metadata.All.Name}}</td><td class=\"text-nowrap clickable\"><div class=hide-overflow-text>{{item.Metadata.All.Notes}}</div></td><td class=text-nowrap stop-event=click><button icon=arrow-up type=button class=\"btn btn-xs btn-square\" ng-disabled=$first ng-click=vm.moveUp(item)></button> <button icon=arrow-down type=button class=\"btn btn-xs btn-square\" ng-disabled=$last ng-click=vm.moveDown(item)></button></td><td stop-event=click><button icon=remove type=button class=\"btn btn-xs btn-square\" ng-click=vm.tryToDelete(item)></button></td></tr><tr ng-if=!vm.items.length><td colspan=100 translate=General.Messages.NothingFound></td></tr></tbody></table></div></div>"
+    "<div><div class=modal-header><button class=\"btn btn-default btn-subtle btn-square pull-right\" type=button ng-click=vm.close()><i icon=remove></i></button><h3 class=modal-title translate=Fields.Title></h3></div><div class=modal-body><button icon=plus ng-click=vm.add() class=\"btn btn-primary btn-square\"></button><table class=\"table table-hover table-manage-eav\"><thead><tr><th translate=Fields.Table.Title class=mini-btn-1></th><th translate=Fields.Table.Name style=\"width: 40%\"></th><th translate=Fields.Table.DataType style=\"width: 20%\"></th><th translate=Fields.Table.InputType style=\"width: 20%\"></th><th translate=Fields.Table.Label style=\"width: 30%\"></th><th translate=Fields.Table.Notes style=\"width: 50%\"></th><th translate=Fields.Table.Sort class=mini-btn-2></th><th translate=Fields.Table.Action class=mini-btn-1></th></tr></thead><tbody><tr ng-repeat=\"item in vm.items | orderBy: 'SortOrder'\" class=clickable-row ng-click=\"vm.createOrEditMetadata(item, item.Type)\"><td stop-event=click><button type=button class=\"btn btn-xs btn-square\" ng-style=\"(item.IsTitle ? '' : 'color: transparent !important')\" ng-click=vm.setTitle(item)><i icon=\"{{item.IsTitle ? 'star' : 'star-empty'}}\"></i></button></td><td class=clickable><span tooltip=\"{{ 'Id: ' + item.Id}}\">{{item.StaticName}}</span></td><td class=\"text-nowrap clickable\">{{item.Type}}</td><td class=\"text-nowrap InputType\" stop-event=click><span class=clickable tooltip={{item.InputType}} ng-click=vm.edit(item)><i icon=pencil></i> {{item.InputType.substring(item.InputType.indexOf('-') + 1, 100)}}</span></td><td class=\"text-nowrap clickable\">{{item.Metadata.All.Name}}</td><td class=\"text-nowrap clickable\"><div class=hide-overflow-text>{{item.Metadata.All.Notes}}</div></td><td class=text-nowrap stop-event=click><button icon=arrow-up type=button class=\"btn btn-xs btn-square\" ng-disabled=$first ng-click=vm.moveUp(item)></button> <button icon=arrow-down type=button class=\"btn btn-xs btn-square\" ng-disabled=$last ng-click=vm.moveDown(item)></button></td><td stop-event=click><button icon=remove type=button class=\"btn btn-xs btn-square\" ng-click=vm.tryToDelete(item)></button></td></tr><tr ng-if=!vm.items.length><td colspan=100 translate=General.Messages.NothingFound></td></tr></tbody></table></div></div>"
   );
 
 
@@ -2450,13 +2450,13 @@ angular.module("EavServices")
 angular.module("EavServices")
     // This is a helper-factory to create services which manage one live list
     // check examples with the permissions-service or the content-type-service how we use it
-    .factory("svcCreator", function() {
+    .factory("svcCreator", ["toastr", "$translate", function (toastr, $translate) {
         var creator = {};
 
         // construct a object which has liveListCache, liveListReload(), liveListReset(),  
-        creator.implementLiveList = function(getLiveList) {
+        creator.implementLiveList = function (getLiveList, disableToastr) {
             var t = {};
-
+            t.disableToastr = !!disableToastr;
             t.liveListCache = [];                   // this is the cached list
             t.liveListCache.isLoaded = false;
 
@@ -2468,6 +2468,7 @@ angular.module("EavServices")
 
             // use a promise-result to re-fill the live list of all items, return the promise again
             t._liveListUpdateWithResult = function updateLiveAll(result) {
+                toastr.clear(t.msg);
                 t.liveListCache.length = 0; // clear
                 for (var i = 0; i < result.data.length; i++)
                     t.liveListCache.push(result.data[i]);
@@ -2478,6 +2479,10 @@ angular.module("EavServices")
             t.liveListSourceRead = getLiveList;
 
             t.liveListReload = function getAll() {
+                // show loading - must use the promise-mode because this may be used early before the language has arrived
+                $translate("General.Messages.Loading").then(function(msg) {
+                    t.msg = toastr.info(msg);
+                });
                 return t.liveListSourceRead()
                     .then(t._liveListUpdateWithResult);
             };
@@ -2490,7 +2495,7 @@ angular.module("EavServices")
         };
         return creator;
 
-    })
+    }])
 
 ;
 
@@ -2525,31 +2530,4 @@ angular.module("EavServices")
         };
         return toastr;
     }])
-
-    // this is an old service - used only in the pipeline designer. Don't reuse! just call the toastr directly
-    //.factory("uiNotification", function (toastr) {
-    //        "use strict";
-
-    //        var toaster = toastr;
-
-    //        return {
-    //            clear: function () {
-    //                toaster.clear();
-    //            },
-    //            error: function (title, bodyOrError) {
-    //                var message;
-    //                // test whether bodyOrError is an Error from Web API
-    //                if (bodyOrError && bodyOrError.data && bodyOrError.data.Message) {
-    //                    message = bodyOrError.data.Message;
-    //                    if (bodyOrError.data.ExceptionMessage)
-    //                        message += "\n" + bodyOrError.data.ExceptionMessage;
-    //                } else
-    //                    message = bodyOrError;
-
-    //                toastr.error(title, body, { autoDismiss: false });
-    //            }
-
-    //        };
-    //    }
-    //)
 ;

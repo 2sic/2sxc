@@ -98,6 +98,9 @@ a { cursor: pointer; }
 .btn-xs.btn-square i {
     padding-top: 2px;
 }
+.btn.btn-default.btn-subtle {
+    border: none;
+}
 
 .clickable { cursor:pointer; }
 .clickable:hover { text-decoration: underline }
@@ -109,8 +112,28 @@ a { cursor: pointer; }
 
 h3:hover .low-priority.glyphicon, h4:hover .low-priority.glyphicon {
     color: #3bafda;
+    text-decoration: none;
 }
 
 h3.clickable:hover, h4.clickable:hover {
-      color: #3bafda;
+    color: #3bafda;
+    text-decoration: none;
+}
+
+
+/* Toastr Color Specs for 2sic colors */
+.toast {
+  background-color: #030303;
+}
+.toast-success {
+  background-color: #97d600;
+}
+.toast-error {
+  background-color: #E9573F;
+}
+.toast-info {
+  background-color: #0088f4;
+}
+.toast-warning {
+  background-color: #F6BB42;
 }

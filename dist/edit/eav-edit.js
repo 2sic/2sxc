@@ -660,7 +660,7 @@ angular.module('eavEditTemplates',[]).run(['$templateCache', function($templateC
 
 
   $templateCache.put('form/main-form.html',
-    "<div class=modal-body><button class=\"btn btn-default btn-square pull-right\" type=button ng-click=vm.close()><i icon=remove></i></button><eav-edit-entities item-list=vm.itemList after-save-event=vm.afterSave state=vm.state></eav-edit-entities></div>"
+    "<div class=modal-body><button class=\"btn btn-default btn-square btn-subtle pull-right\" type=button ng-click=vm.close()><i icon=remove></i></button><eav-edit-entities item-list=vm.itemList after-save-event=vm.afterSave state=vm.state></eav-edit-entities></div>"
   );
 
 
