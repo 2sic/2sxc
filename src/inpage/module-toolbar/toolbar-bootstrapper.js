@@ -6,7 +6,8 @@ $(document).ready(function () {
         e.stopPropagation();
     });
 
-    var modules = $(".DnnModule-2sxc .Mod2sxcC[data-2sxc], .DnnModule-2sxc-app .Mod2sxcappC[data-2sxc]");
+    //var modules = $(".DnnModule-2sxc .Mod2sxcC[data-2sxc], .DnnModule-2sxc-app .Mod2sxcappC[data-2sxc]");
+    var modules = $("div[data-2sxc]");
 
     modules.each(function () {
         var moduleId = $(this).data("2sxc").moduleId;

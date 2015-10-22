@@ -12,7 +12,9 @@
 .showAll a.hideFirst { display:  inline-block!important }
 .sc-menu a.box span { border-color: #666 }
 .sc-menu span.disabled { color: #aaa}
+/* 2dm 2015-10-22 doesn't seem to be in effect any more as we're droping dependency on Mod2SxcC 
 .Mod2sxcC .dnnFormMessage select, .Mod2sxcappC .dnnFormMessage select { margin-bottom:0; }
+*/
 
 /* Template / ContentType / App-Selector */
 .sc-selector-wrapper { position: relative;overflow: hidden; }

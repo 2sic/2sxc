@@ -4,8 +4,10 @@
 $2sxc.getManageController = function (id) {
 
     var moduleElement = $(".DnnModule-" + id);
-    var manageInfo = $.parseJSON(moduleElement.find(".Mod2sxcC, .Mod2sxcappC").attr("data-2sxc")).manage;
-    var sxcGlobals = $.parseJSON(moduleElement.find(".Mod2sxcC, .Mod2sxcappC").attr("data-2sxc-globals"));
+    //var manageInfo = $.parseJSON(moduleElement.find(".Mod2sxcC, .Mod2sxcappC").attr("data-2sxc")).manage;
+    //var sxcGlobals = $.parseJSON(moduleElement.find(".Mod2sxcC, .Mod2sxcappC").attr("data-2sxc-globals"));
+    var manageInfo = $.parseJSON(moduleElement.find("div[data-2sxc]").attr("data-2sxc")).manage;
+    var sxcGlobals = $.parseJSON(moduleElement.find("div[data-2sxc-globals]").attr("data-2sxc-globals"));
     manageInfo.ngDialogUrl = manageInfo.applicationRoot + "desktopmodules/tosic_sexycontent/dist/dnn/ui.html";
 
     manageInfo.ngDialogParams = {

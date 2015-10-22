@@ -19,7 +19,8 @@
         // in jQuery-Mode I have to wait till the document is ready
         $(function() {
             var moduleElement = $(document);
-            var manageInfo = $.parseJSON($(moduleElement.find(".Mod2sxcC, .Mod2sxcappC")[0]).attr("data-2sxc")).manage;
+            // var manageInfo = $.parseJSON($(moduleElement.find(".Mod2sxcC, .Mod2sxcappC")[0]).attr("data-2sxc")).manage;
+            var manageInfo = $.parseJSON($(moduleElement.find("div[data-2sxc]")[0]).attr("data-2sxc")).manage;
             var lng = window.$eavUIConfig.languages;
             lng.i18nRoot = manageInfo.applicationRoot + "desktopmodules/tosic_sexycontent/dist/i18n/";
             lng.defaultLanguage = manageInfo.langPrimary;
