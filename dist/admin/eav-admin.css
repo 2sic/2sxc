@@ -137,3 +137,32 @@ h3.clickable:hover, h4.clickable:hover {
 .toast-warning {
   background-color: #F6BB42;
 }
+
+
+/* corrections for the nav-tab (would be white/gray */
+.nav-tabs {
+    background-color: white;
+}
+
+.nav-tabs > li.active {
+    border-top-style: solid;
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+    border-top-color: #0088f4;
+}
+
+.nav-tabs > li {
+    border-left-style: none;
+}
+
+.nav-tabs > li > a:hover {
+    background-color: white;
+    border-top-color: #93CEFF;
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+    border-top-style: solid;
+}
+
+.modal-content {
+    padding-bottom: 10px;
+}

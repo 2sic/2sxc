@@ -46,7 +46,7 @@
 
 .collapse-entity-button {
     position: relative;
-    left: 13px;
+    /*left: 13px;*/
     top: 0;
     padding-top: 8px;
     background-color: white;
