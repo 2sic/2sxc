@@ -15,11 +15,11 @@ angular.module("SxcAdminUi", [
     //"SxcEditContentGroupDnnWrapper",
     "EavAdminUi", // dialog (modal) controller
 ])
-    .factory("oldDialogs", function (tabId, AppInstanceId, appId) {
+    .factory("oldDialogs", function (tabId, AppInstanceId, appId, websiteRoot) {
         var svc = {};
 
         // todo: maybe needs something to get the real root-address
-        svc.oldRootUrl = "/Default.aspx?tabid={{tabid}}&mid={{mid}}&ctl={{ctl}}&appid={{appid}}&popUp=true"
+        svc.oldRootUrl = websiteRoot + "Default.aspx?tabid={{tabid}}&mid={{mid}}&ctl={{ctl}}&appid={{appid}}&popUp=true"
             .replace("{{tabid}}", tabId)
             .replace("{{mid}}", AppInstanceId);
 
