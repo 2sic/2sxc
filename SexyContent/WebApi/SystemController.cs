@@ -65,15 +65,22 @@ namespace ToSic.SexyContent.WebApi
             return list.Select(a => new
             {
                 Id = a.AppId,
-                IsApp = a.AppGuid != "Default",
+                IsApp = a.AppGuid != Constants.DefaultAppName,
                 Guid = a.AppGuid,
                 a.Name,
                 a.Folder,
+                AppRoot = GetPath(zoneId, a.AppId),
                 IsHidden = a.Hidden,
                 //Tokens = a.Settings?.AllowTokenTemplates ?? false,
                 //Razor = a.Configuration?.AllowRazorTemplates ?? false,
                 ConfigurationId = a.Configuration?.EntityId ?? null
             }).ToList();
+        }
+
+        private string GetPath(int zoneId, int appId)
+        {
+            var sexy = new SexyContent(zoneId, appId);
+            return sexy.App.Path;
         }
 
         [HttpGet]

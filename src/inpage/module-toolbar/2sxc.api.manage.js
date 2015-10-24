@@ -20,7 +20,8 @@ $2sxc.getManageController = function (id) {
         langs: JSON.stringify(manageInfo.languages),
         portalroot: sxcGlobals.PortalRoot,
         websiteroot: manageInfo.applicationRoot,
-        approot: manageInfo.appPath + "/" // this is the only value which doesn't have a slash by default
+        // note that the app-root doesn't exist when opening "manage-app"
+        approot: (manageInfo.appPath) ? manageInfo.appPath + "/" : null // this is the only value which doesn't have a slash by default
     };
 
     var toolbarConfig = manageInfo.config;

@@ -55,6 +55,7 @@
             var url = window.location.href;
             url = url
                 .replace(new RegExp("appid=[0-9]*", "i"), "appid=" + item.Id) // note: sometimes it doesn't have an appid, so it's [0-9]* instead of [0-9]+
+                .replace(/approot=[^&]*/, "approot=" + item.AppRoot + "/")
                 .replace("dialog=zone", "dialog=app");
 
             sxcDialogs.openTotal(url, svc.liveListReload);
