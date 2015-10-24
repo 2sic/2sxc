@@ -35,7 +35,7 @@ $2sxc.getManageController = function (id) {
             action: function(settings, event) { alert("not implemented yet"); }
         },
         'edit': {
-            title: "Edit",
+            title: "edit",
             icon: "glyphicon-pencil",
             lightbox: true,
             hideFirst: false,
@@ -44,7 +44,7 @@ $2sxc.getManageController = function (id) {
             }
         },
         'new': {
-            title: "New",
+            title: "new",
             icon: "glyphicon-plus",
             lightbox: true,
             hideFirst: false,
@@ -53,7 +53,7 @@ $2sxc.getManageController = function (id) {
             }
         },
         'add': {
-            title: "Add",
+            title: "add demo",
             icon: "glyphicon-plus-sign",
             lightbox: false,
             hideFirst: true,
@@ -63,7 +63,7 @@ $2sxc.getManageController = function (id) {
             }
         },
         'replace': {
-            title: "Replace",
+            title: "replace",
             icon: "glyphicon-random",
             lightbox: true,
             hideFirst: true,
@@ -72,7 +72,7 @@ $2sxc.getManageController = function (id) {
             }
         },
         'publish': {
-            title: "Published",
+            title: "published",
             icon: "glyphicon-eye-open",
             icon2: "glyphicon-eye-close",
             lightbox: false,
@@ -91,7 +91,7 @@ $2sxc.getManageController = function (id) {
             }
         },
         'moveup': {
-            title: "Move up",
+            title: "move up",
             icon: "glyphicon-arrow-up",
             icon2: "glyphicon-arrow-up",
             lightbox: false,
@@ -102,7 +102,7 @@ $2sxc.getManageController = function (id) {
             }
         },
         'movedown': {
-            title: "Move down",
+            title: "move down",
             icon: "glyphicon-arrow-down",
             icon2: "glyphicon-arrow-down",
             lightbox: false,
@@ -113,7 +113,7 @@ $2sxc.getManageController = function (id) {
             }
         },
         'sort': {
-            title: "Sort",
+            title: "sort",
             icon: "glyphicon-sort",
             lightbox: true,
             hideFirst: true,
@@ -134,7 +134,7 @@ $2sxc.getManageController = function (id) {
             }
         },
         'more': {
-            title: "More",
+            title: "more actions",
             icon: "glyphicon-option-horizontal",
             icon2: "glyphicon-option-vertical",
             borlightboxder: false,

@@ -376,7 +376,7 @@
     function ReorderContentController(appId, item, contentGroupSvc, eavAdminDialogs, $modalInstance, $filter) {
         var vm = this;
         vm.items = [];
-        vm.item = {
+        vm.contentGroup = {
             id: item.EntityId,
             guid: item.Group.Guid,
             part: item.Group.Part,
@@ -386,29 +386,18 @@
         var svc = contentGroupSvc(appId);
 
         vm.reload = function() {
-            return svc.getList(vm.item).then(function(result) {
+            return svc.getList(vm.contentGroup).then(function (result) {
                 vm.items = result.data;
             });
         };
         vm.reload();
 
         vm.ok = function ok() {
-            svc.saveList(vm.items).then(vm.close);
+            svc.saveList(vm.contentGroup, vm.items).then(vm.close);
         };
         
         vm.close = function () { $modalInstance.dismiss("cancel"); };
 
-        //vm.convertToInt = function (id) {
-        //    return parseInt(id);
-        //};
-
-
-        //vm.reloadAfterCopy = function reloadAfterCopy(result) {
-        //    var copy = result.data;
-        //    vm.reload().then(function() {
-        //        vm.item.id = copy[Object.keys(copy)[0]]; 
-        //    });
-        //};
     }
     ReorderContentController.$inject = ["appId", "item", "contentGroupSvc", "eavAdminDialogs", "$modalInstance", "$filter"];
 
@@ -562,24 +551,15 @@ angular.module("SxcServices")
                     return $http.post('app/contentgroup/replace', {}, { params: { guid: item.guid, part: item.part, index: item.index, entityId: item.id } });
                 },
 
-                getList: function(item) {
-                    return $http.get('app/contentgroup/itemlist', { params: { appId: appId, guid: item.guid } });
+                getList: function (contentGroup) {
+                    return $http.get('app/contentgroup/itemlist', { params: { appId: appId, guid: contentGroup.guid } });
                 },
 
-                saveList: function (item, resortedList) {
-                    alert("not implemented yet");
-                    return;
-                    //return $http.post('app/contentgroup/itemlist', { params: { appId: appId, guid: item.guid, list: resortedList } });
+                saveList: function (contentGroup, resortedList) {
+                    return $http.post('app/contentgroup/itemlist', resortedList, { params: { appId: appId, guid: contentGroup.guid } });
                 }
 
             };
-
-            //svc.replace = $resource("",
-            //,
-            //{
-            //    get: { method: "GET", isArray:true },
-            //    save: {method: "POST", params: { entityId: "@id" }}
-            //});
 
             return svc;
         };
@@ -881,7 +861,7 @@ angular.module('SxcTemplates',[]).run(['$templateCache', function($templateCache
 
 
   $templateCache.put('reorder-content-list/reorder-content-list.html',
-    "<div class=modal-header><button class=\"btn btn-default btn-square btn-subtle pull-right\" type=button ng-click=vm.close()><i icon=remove></i></button><h3 class=modal-title translate=ReorderContentList.Title></h3><h2>not yet implemented!</h2></div><div><div class=modal-body><p translate=ReorderContentList.Intro></p><div ui-tree=options data-empty-placeholder-enabled=false><ol ui-tree-nodes ng-model=vm.items><li ng-repeat=\"item in vm.items\" ui-tree-node class=eav-entityselect-item><div ui-tree-handle><i icon=move title=\"{{ 'FieldType.Entity.DragMove' | translate }}\" class=\"pull-left eav-entityselect-sort\" ng-show=to.settings.Entity.AllowMultiValue></i> {{item.Id}}</div></li></ol></div></div></div><div class=modal-footer><button class=\"btn btn-primary btn-square btn-lg pull-left\" type=button ng-click=vm.ok()><i icon=ok></i></button></div>"
+    "<div class=modal-header><button class=\"btn btn-default btn-square btn-subtle pull-right\" type=button ng-click=vm.close()><i icon=remove></i></button><h3 class=modal-title translate=ReorderContentList.Title></h3></div><div><div class=modal-body><p translate=ReorderContentList.Intro></p><div ui-tree=options data-empty-placeholder-enabled=false><ol ui-tree-nodes ng-model=vm.items><li ng-repeat=\"item in vm.items\" ui-tree-node class=eav-entityselect-item><div ui-tree-handle><i icon=move title=\"{{ 'FieldType.Entity.DragMove' | translate }}\" class=\"pull-left eav-entityselect-sort\"></i> &nbsp; {{item.Title}} ({{item.Id}})</div></li></ol></div></div></div><div class=modal-footer><button class=\"btn btn-primary btn-square btn-lg pull-left\" type=button ng-click=vm.ok()><i icon=ok></i></button></div>"
   );
 
 

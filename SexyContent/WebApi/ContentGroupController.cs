@@ -98,27 +98,39 @@ namespace ToSic.SexyContent.WebApi
 
 	    [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public object ItemList(Guid guid)
+        public List<SortedEntityItem> ItemList(Guid guid)
 	    {
 	        var cg = GetContentGroup(guid);
 
-	        var list = cg.Content.Select((c, index) => new
+	        var list = cg.Content.Select((c, index) => new SortedEntityItem
 	        {
                 Index = index,
 	            Id = c.EntityId,
 	            Guid = c.EntityGuid,
-	            Title = c.Title
+	            Title = c.GetBestValue("EntityTitle").ToString()
 	        }).ToList();
 
 	        return list;
 	    }
 
+	    public class SortedEntityItem
+	    {
+	        public int Index;
+	        public int Id;
+	        public Guid Guid;
+	        public string Title;
+	    }
+
 	    [HttpPost]
 	    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-	    public bool ItemList(Guid guid, int[] List)
+	    public bool ItemList([FromUri] Guid guid, List<SortedEntityItem> List)
 	    {
+            var cg = GetContentGroup(guid);
 
-	        return true;
+	        var sequence = List.Select(i => i.Index).ToArray();
+
+	        cg.ReorderAll(sequence);
+            return true;
 	    }
     }
     }

@@ -12,24 +12,15 @@ angular.module("SxcServices")
                     return $http.post('app/contentgroup/replace', {}, { params: { guid: item.guid, part: item.part, index: item.index, entityId: item.id } });
                 },
 
-                getList: function(item) {
-                    return $http.get('app/contentgroup/itemlist', { params: { appId: appId, guid: item.guid } });
+                getList: function (contentGroup) {
+                    return $http.get('app/contentgroup/itemlist', { params: { appId: appId, guid: contentGroup.guid } });
                 },
 
-                saveList: function (item, resortedList) {
-                    alert("not implemented yet");
-                    return;
-                    //return $http.post('app/contentgroup/itemlist', { params: { appId: appId, guid: item.guid, list: resortedList } });
+                saveList: function (contentGroup, resortedList) {
+                    return $http.post('app/contentgroup/itemlist', resortedList, { params: { appId: appId, guid: contentGroup.guid } });
                 }
 
             };
-
-            //svc.replace = $resource("",
-            //,
-            //{
-            //    get: { method: "GET", isArray:true },
-            //    save: {method: "POST", params: { entityId: "@id" }}
-            //});
 
             return svc;
         };
