@@ -94,6 +94,12 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
         }
 
         [HttpGet]
+        public bool Reorder(int appId, int contentTypeId, int attributeId, string direction)
+        {
+            return eavCtc.Reorder(appId, contentTypeId, attributeId, direction);
+        }
+
+        [HttpGet]
         public void SetTitle(int appId, int contentTypeId, int attributeId)
         {
             eavCtc.SetTitle(appId, attributeId, contentTypeId);
