@@ -47,37 +47,44 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
             var newItems = new List<ItemIdentifier>();
 
             // go through all the groups, assign relevant info so that we can then do get-many
-            foreach (var s in items)
+            foreach (var reqItem in items)
             {
                 // only do special processing if it's a "group" item
-                if (s.Group == null)
+                if (reqItem.Group == null)
                 {
-                    newItems.Add(s);
+                    newItems.Add(reqItem);
                     continue;
                 }
                 
-                var contentGroup = Sexy.ContentGroups.GetContentGroup(s.Group.Guid);
-                var contentTypeStaticName = contentGroup.Template.GetTypeStaticName(s.Group.Part);
+                var contentGroup = Sexy.ContentGroups.GetContentGroup(reqItem.Group.Guid);
+                var contentTypeStaticName = contentGroup.Template.GetTypeStaticName(reqItem.Group.Part);
 
                 // if there is no content-type for this, then skip it (don't deliver anything)
                 if (contentTypeStaticName == "")
                     continue;
 
-                var part = contentGroup[s.Group.Part];
-                s.ContentTypeName = contentTypeStaticName;
-                if (!s.Group.Add && // not in add-mode
-                              part.Count > s.Group.Index && // has as many items as desired
-                              part[s.Group.Index] != null) // and the slot has something
-                    s.EntityId = part[s.Group.Index].EntityId;
+                var part = contentGroup[reqItem.Group.Part];
+                reqItem.ContentTypeName = contentTypeStaticName;
+                if (!reqItem.Group.Add && // not in add-mode
+                              part.Count > reqItem.Group.Index && // has as many items as desired
+                              part[reqItem.Group.Index] != null) // and the slot has something
+                    reqItem.EntityId = part[reqItem.Group.Index].EntityId;
 
                 // tell the UI that it should not actually use this data yet, keep it locked
-                if (s.Group.Part.ToLower().Contains("presentation")) {
-                    s.Group.SlotCanBeEmpty = true;  // all presentations can always be locked
-                    if (s.EntityId == 0)
-                        s.Group.SlotIsEmpty = true; // if it is blank, then lock this one to begin with
+                if (reqItem.Group.Part.ToLower().Contains("presentation")) {
+                    reqItem.Group.SlotCanBeEmpty = true;  // all presentations can always be locked
+                    if (reqItem.EntityId == 0)
+                    {
+                        reqItem.Group.SlotIsEmpty = true; // if it is blank, then lock this one to begin with
+                        
+                        reqItem.DuplicateEntity =
+                            reqItem.Group.Part.ToLower() == "presentation"
+                            ? contentGroup.Template.PresentationDemoEntity??.EntityId
+                            : contentGroup.Template.ListPresentationDemoEntity??.EntityId;
+                    }
                 }
                 
-                newItems.Add(s);
+                newItems.Add(reqItem);
             }
 
             // Now get all

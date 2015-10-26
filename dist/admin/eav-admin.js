@@ -2450,7 +2450,7 @@ angular.module("EavServices")
 angular.module("EavServices")
     // This is a helper-factory to create services which manage one live list
     // check examples with the permissions-service or the content-type-service how we use it
-    .factory("svcCreator", ["toastr", "$translate", function (toastr, $translate) {
+    .factory("svcCreator", ["toastr", "$translate", "$timeout", function (toastr, $translate, $timeout) {
         var creator = {};
 
         // construct a object which has liveListCache, liveListReload(), liveListReset(),  
@@ -2468,7 +2468,14 @@ angular.module("EavServices")
 
             // use a promise-result to re-fill the live list of all items, return the promise again
             t._liveListUpdateWithResult = function updateLiveAll(result) {
-                toastr.clear(t.msg);
+                if (t.msg.isOpened)
+                    toastr.clear(t.msg);
+                else {
+                    $timeout(300).then(function() {
+                            toastr.clear(t.msg);
+                        }
+                    );
+                }
                 t.liveListCache.length = 0; // clear
                 for (var i = 0; i < result.data.length; i++)
                     t.liveListCache.push(result.data[i]);
