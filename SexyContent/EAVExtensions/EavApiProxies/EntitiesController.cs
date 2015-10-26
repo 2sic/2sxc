@@ -79,8 +79,8 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
                         
                         reqItem.DuplicateEntity =
                             reqItem.Group.Part.ToLower() == "presentation"
-                            ? contentGroup.Template.PresentationDemoEntity??.EntityId
-                            : contentGroup.Template.ListPresentationDemoEntity??.EntityId;
+                            ? contentGroup.Template.PresentationDemoEntity?.EntityId as int?
+                            : contentGroup.Template.ListPresentationDemoEntity?.EntityId as int?;
                     }
                 }
                 
