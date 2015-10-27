@@ -602,6 +602,25 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
 
         }
 
+        private static void Version080002()
+        {
+            var userName = "System-ModuleUpgrade-080002";
+
+            // Fix AddressMask field in GPS settings content type
+            var xmlToImport =
+                File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/08.00.02.xml"));
+            var xmlImport = new XmlImport("en-US", userName, true);
+            var success = xmlImport.ImportXml(Constants.DefaultZoneId, Constants.MetaDataAppId, XDocument.Parse(xmlToImport), false); // special note - change existing values
+
+            if (!success)
+            {
+                var messages = String.Join("\r\n- ", xmlImport.ImportLog.Select(p => p.Message).ToArray());
+                throw new Exception("The 2sxc module upgrade to 08.00.02 failed: " + messages);
+            }
+
+
+        }
+
         /// <summary>
         /// Copy a Directory recursive
         /// </summary>

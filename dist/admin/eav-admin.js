@@ -2129,7 +2129,7 @@ angular.module("EavServices")
             $translateProvider
                 .preferredLanguage(languages.currentLanguage.split("-")[0])
                 .useSanitizeValueStrategy("escapeParameters") // this is very important to allow html in the JSON files
-                .fallbackLanguage(languages.defaultLanguage.split("-")[0])
+                .fallbackLanguage(languages.fallbackLanguage)
                 .useLoader("$translatePartialLoader", {
                     urlTemplate: languages.i18nRoot + "{part}-{lang}.js"
                 })

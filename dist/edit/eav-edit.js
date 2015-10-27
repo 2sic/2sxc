@@ -518,6 +518,7 @@ angular.module("eavFieldTemplates")
 	                    disabled: e.Metadata.All.Disabled,
 	                    langReadOnly: false // Will be set by the language directive to override the disabled state
 	                },
+	                className: "type-" + e.Type.toLowerCase() + " input-" + fieldType + " field-" + e.StaticName.toLowerCase(),
 	                hide: (e.Metadata.All.VisibleInEditUI === false ? !debugState.on : false),
 	                expressionProperties: {
 	                    // Needed for dynamic update of the disabled property
@@ -571,7 +572,7 @@ angular.module("eavFieldTemplates")
 			}
 
 			if (inputType && inputType.indexOf("-") === -1) // has input-type, but missing main type, this happens with old types like string wysiyg
-		        inputType = type + inputType;
+		        inputType = type + "-" + inputType;
 
 		    // this type may have assets, so the definition may be late-loaded
 		    var typeAlreadyRegistered = formlyConfig.getType(inputType);
