@@ -571,7 +571,7 @@ angular.module("eavFieldTemplates")
 			}
 
 			if (inputType && inputType.indexOf("-") === -1) // has input-type, but missing main type, this happens with old types like string wysiyg
-		        inputType = type + inputType;
+		        inputType = type + "-" + inputType;
 
 		    // this type may have assets, so the definition may be late-loaded
 		    var typeAlreadyRegistered = formlyConfig.getType(inputType);
