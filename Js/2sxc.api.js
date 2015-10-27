@@ -182,8 +182,15 @@
 
             // Show a nice error with more infos around 2sxc
             showDetailedHttpError: function showDetailedHttpError(result) {
-                            if (window.console)
-                                console.log(result);
+                if (window.console)
+                    console.log(result);
+
+                if (result.status === 404 && result.config && result.config.url.indexOf("/dist/i18n/") > -1) {
+                    if (window.console)
+                        console.log("just fyi: failed to load language resource; will have to use default");
+                    return result;
+                }
+
 
                 // if it's an unspecified 0-error, it's probably not an error but a cancelled request, (happens when closing popups containing angularJS)
                 if (result.status === 0)

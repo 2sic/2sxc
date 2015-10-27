@@ -27,7 +27,10 @@ namespace ToSic.SexyContent.Adam
         public const string AdamRootFolder = "adam/";
         public const string AdamAppRootFolder = "adam/[AppFolder]/";
         public const string AdamFolderMask = "adam/[AppFolder]/[Guid22]/[FieldName]/";
-        private string AdamAllowedExtensions = "jpg,png,gif,doc,docx,xls,xlsx,pdf,txt"; // todo: use field config or dnn-security
+
+        private string AdamAllowedExtensions =
+            // "jpg,png,gif,doc,docx,xls,xlsx,pdf,txt"; // todo: use field config or dnn-security
+            "jpg,jpeg,jpe,gif,bmp,png,doc,docx,xls,xlsx,ppt,pptx,pdf,txt,xml,xsl,xsd,css,zip,ico,avi,mpg,mpeg,mp3,wmv,mov,wav,ico";
         public const int MaxFileSizeMb = 10;
 
 

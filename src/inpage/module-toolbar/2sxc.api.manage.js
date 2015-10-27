@@ -4,8 +4,6 @@
 $2sxc.getManageController = function (id) {
 
     var moduleElement = $(".DnnModule-" + id);
-    //var manageInfo = $.parseJSON(moduleElement.find(".Mod2sxcC, .Mod2sxcappC").attr("data-2sxc")).manage;
-    //var sxcGlobals = $.parseJSON(moduleElement.find(".Mod2sxcC, .Mod2sxcappC").attr("data-2sxc-globals"));
     var manageInfo = $.parseJSON(moduleElement.find("div[data-2sxc]").attr("data-2sxc")).manage;
     var sxcGlobals = $.parseJSON(moduleElement.find("div[data-2sxc-globals]").attr("data-2sxc-globals"));
     manageInfo.ngDialogUrl = manageInfo.applicationRoot + "desktopmodules/tosic_sexycontent/dist/dnn/ui.html";
@@ -21,7 +19,7 @@ $2sxc.getManageController = function (id) {
         portalroot: sxcGlobals.PortalRoot,
         websiteroot: manageInfo.applicationRoot,
         // note that the app-root doesn't exist when opening "manage-app"
-        approot: (manageInfo.appPath) ? manageInfo.appPath + "/" : null // this is the only value which doesn't have a slash by default
+        approot: (manageInfo.config && manageInfo.config.appPath) ? manageInfo.config.appPath : null // this is the only value which doesn't have a slash by default
     };
 
     var toolbarConfig = manageInfo.config;

@@ -80,7 +80,7 @@ namespace ToSic.SexyContent
                                 contentGroupId = AppId.HasValue ? ContentGroup.ContentGroupGuid : (Guid?)null,
                                 dialogUrl = Globals.NavigateURL(TabId),
                                 returnUrl = Request.RawUrl,
-                                appPath = AppId.HasValue ? Sexy.App.Path : null,
+                                appPath = AppId.HasValue ? Sexy.App.Path + "/" : null,
                                 cultureDimension = AppId.HasValue ? Sexy.GetCurrentLanguageID() : new int?(),
                                 isList = Template != null && Template.UseForList
                             },

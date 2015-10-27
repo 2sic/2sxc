@@ -11,7 +11,7 @@
     // will contain some settings which are filled in different ways
     window.$eavUIConfig = {
         languages: {
-            uiFallback: "en" // just for the resources files of eav/2sxc
+            fallbackLanguage: "en" // just for the resources files of eav/2sxc
         }
     };
 
