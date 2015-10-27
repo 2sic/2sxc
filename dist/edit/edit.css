@@ -56,6 +56,8 @@
     position: relative;
     left: 5px;
 }
+
+.angular-google-map-container { height: 400px; }
 .checkbox.checkbox-labeled input[type='checkbox'] { margin-left:0; }
 .eav-entityselect-item { border: 1px solid #DDD;width: 295px; margin-top: -1px; }
 .eav-entityselect ol { margin-top: 1px; }

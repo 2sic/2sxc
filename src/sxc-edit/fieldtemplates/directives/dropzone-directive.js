@@ -24,7 +24,7 @@ angular.module("sxcFieldTemplates")
                     //previewTemplate: "<div></div>",
                     dictDefaultMessage: "",
                     addRemoveLinks: false,
-                    previewsContainer: '.dropzone-previews',
+                    previewsContainer: '.field-' + field.toLowerCase() +  ' .dropzone-previews',
                     clickable: '.dropzone-adam'
                 };
 
