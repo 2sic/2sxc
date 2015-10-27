@@ -32,7 +32,7 @@
           </Entity>
         </Attribute>
         <Attribute StaticName="AddressMask" Type="String" IsTitle="true">
-          <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@All" AttributeSetName="@All" EntityGUID="7d2f0975-1d87-4d5d-8ec3-071c1b23e6f0">
+          <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@All" AttributeSetName="@All" EntityGUID="c659bd81-da0c-40d0-9b9d-5737b7109b7a">
             <Value Key="Name" Value="Address Mask" Type="String">
             </Value>
             <Value Key="Notes" Value="An initial address to search for or better - tokens of form-fields to find an address in the map. example: [Address] [Zip] [City]" Type="String" />
@@ -44,7 +44,7 @@
             </Value>
             <Value Key="Disabled" Value="False" Type="Boolean" />
           </Entity>
-          <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@String" AttributeSetName="@String" EntityGUID="9ba3bc83-d714-4f2c-92c2-b6795b9e6cd9">
+          <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@String" AttributeSetName="@String" EntityGUID="f5368576-dc1b-4b42-a3b8-45209af7ab63">
             <Value Key="DropdownValues" Value="" Type="String" />
             <Value Key="InputType" Value="" Type="String" />
             <Value Key="ValidationRegEx" Value="" Type="String" />

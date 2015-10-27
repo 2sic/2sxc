@@ -86,6 +86,9 @@ namespace ToSic.SexyContent
                     case "07.03.03":
                         Version070303();
 				        break;
+                    case "08.00.02":
+                        Version080002();
+                        break;
 				}
 
 				// Increase ClientDependency version upon each upgrade (System and all Portals)
