@@ -34,6 +34,19 @@ angular.module('SxcInpageTemplates',[]).run(['$templateCache', function($templat
   );
 
 }]);
+angular.module('SxcInpageTemplates',[]).run(['$templateCache', function($templateCache) {
+  'use strict';
+
+  $templateCache.put('template-selector/template-selector-app.html',
+    "<div ng-cloak ng-show=vm.manageInfo.templateChooserVisible class=\"dnnFormMessage dnnFormInfo\"><div class=sc-selectors><select ng-show=!vm.manageInfo.isContentApp ng-model=vm.appId class=sc-selector-app ng-options=\"a.AppId as a.Name for a in vm.apps\" ng-disabled=\"vm.manageInfo.hasContent || vm.manageInfo.isList\"><option value=\"\" ng-disabled=\"vm.appId != null\" translate=TemplatePicker.AppPickerDefault></option></select><select ng-show=vm.manageInfo.isContentApp ng-model=vm.contentTypeId ng-options=\"c.StaticName as c.Name for c in vm.contentTypes\" class=sc-selector-contenttype ng-disabled=\"vm.manageInfo.hasContent || vm.manageInfo.isList\"><option ng-disabled=\"vm.contentTypeId != ''\" value=\"\" translate=TemplatePicker.ContentTypePickerDefault></option></select><select ng-show=\"vm.manageInfo.isContentApp ? vm.contentTypeId != 0 : (vm.savedAppId != null &&  vm.filteredTemplates().length > 1)\" ng-model=vm.templateId class=sc-selector-template ng-options=\"t.TemplateId as t.Name for t in vm.filteredTemplates(vm.contentTypeId)\"></select></div><div class=sc-selector-actions><a ng-show=\"vm.templateId != null && vm.savedTemplateId != vm.templateId\" ng-click=vm.saveTemplateId(); class=sc-selector-save title=\"{{ 'TemplatePicker.Save' | translate }}\">{{ 'TemplatePicker.Save' | translate }}</a> <a ng-show=\"vm.savedTemplateId != null\" class=sc-selector-close ng-click=vm.setTemplateChooserState(false); title=\"{{ 'TemplatePicker.Close' | translate }}\">{{ 'TemplatePicker.Close' | translate }}</a></div><div class=\"sc-loading sc-loading-nobg\" ng-show=vm.loading></div></div>"
+  );
+
+
+  $templateCache.put('template-selector/template-selector-view.html',
+    "<div ng-cloak ng-show=vm.manageInfo.templateChooserVisible class=\"dnnFormMessage dnnFormInfo\"><div class=sc-selectors><select ng-show=!vm.manageInfo.isContentApp ng-model=vm.appId class=sc-selector-app ng-options=\"a.AppId as a.Name for a in vm.apps\"><option value=\"\" translate=TemplatePicker.AppPickerDefault></option></select><select ng-show=vm.manageInfo.isContentApp ng-model=vm.contentTypeId ng-options=\"c.StaticName as c.Name for c in vm.contentTypes\" class=sc-selector-contenttype ng-disabled=\"vm.manageInfo.hasContent || vm.manageInfo.isList\"><option ng-disabled=\"vm.contentTypeId != ''\" value=\"\" translate=TemplatePicker.ContentTypePickerDefault></option></select><select ng-show=\"vm.manageInfo.isContentApp ? vm.contentTypeId != 0 : vm.savedAppId != null\" ng-model=vm.templateId class=sc-selector-template ng-options=\"t.TemplateId as t.Name for t in vm.filteredTemplates(vm.contentTypeId)\"></select></div><div class=sc-selector-actions><a ng-show=\"vm.templateId != null && vm.savedTemplateId != vm.templateId\" ng-click=vm.saveTemplateId(); class=sc-selector-save title=\"{{ 'TemplatePicker.Save' | translate }}\">{{ 'TemplatePicker.Save' | translate }}</a> <a ng-show=\"vm.savedTemplateId != null\" class=sc-selector-close ng-click=vm.setTemplateChooserState(false); title=\"{{ 'TemplatePicker.Cancel' | translate }}\">{{ 'TemplatePicker.Cancel' | translate }}</a></div><div class=\"sc-loading sc-loading-nobg\" ng-show=loading></div></div>"
+  );
+
+}]);
 
 // A helper-controller in charge of opening edit-dialogs + creating the toolbars for it
 
@@ -41,8 +54,6 @@ angular.module('SxcInpageTemplates',[]).run(['$templateCache', function($templat
 $2sxc.getManageController = function (id) {
 
     var moduleElement = $(".DnnModule-" + id);
-    //var manageInfo = $.parseJSON(moduleElement.find(".Mod2sxcC, .Mod2sxcappC").attr("data-2sxc")).manage;
-    //var sxcGlobals = $.parseJSON(moduleElement.find(".Mod2sxcC, .Mod2sxcappC").attr("data-2sxc-globals"));
     var manageInfo = $.parseJSON(moduleElement.find("div[data-2sxc]").attr("data-2sxc")).manage;
     var sxcGlobals = $.parseJSON(moduleElement.find("div[data-2sxc-globals]").attr("data-2sxc-globals"));
     manageInfo.ngDialogUrl = manageInfo.applicationRoot + "desktopmodules/tosic_sexycontent/dist/dnn/ui.html";
@@ -58,7 +69,7 @@ $2sxc.getManageController = function (id) {
         portalroot: sxcGlobals.PortalRoot,
         websiteroot: manageInfo.applicationRoot,
         // note that the app-root doesn't exist when opening "manage-app"
-        approot: (manageInfo.appPath) ? manageInfo.appPath + "/" : null // this is the only value which doesn't have a slash by default
+        approot: (manageInfo.config && manageInfo.config.appPath) ? manageInfo.config.appPath : null // this is the only value which doesn't have a slash by default
     };
 
     var toolbarConfig = manageInfo.config;
