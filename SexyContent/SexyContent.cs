@@ -852,7 +852,7 @@ namespace ToSic.SexyContent
             }
 
             int appId;
-            if (appIdString != null && int.TryParse(appIdString.ToString(), out appId))
+            if (appIdString != null && int.TryParse(appIdString.ToString().Split(',')[0], out appId))
                 return appId;
 
             return null;
