@@ -102,7 +102,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
         [HttpGet]
         public void SetTitle(int appId, int contentTypeId, int attributeId)
         {
-            eavCtc.SetTitle(appId, attributeId, contentTypeId);
+            eavCtc.SetTitle(appId, contentTypeId, attributeId);
         }
 
         [HttpGet]

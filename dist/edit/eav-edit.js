@@ -105,7 +105,7 @@ angular.module("eavFieldTemplates")
                         "<i class=\"glyphicon glyphicon-calendar\"></i>" +
                     "</div>" +
                     "<input class=\"form-control input-lg\" ng-model=\"value.Value\" is-open=\"to.isOpen\" datepicker-options=\"to.datepickerOptions\" datepicker-popup />" +
-				    "<timepicker ng-show=\"to.settings.DateTime.UseTimePicker\" ng-model=\"value.Value\" show-meridian=\"ismeridian\"></timepicker>" +
+				    "<timepicker ng-show=\"to.settings.merged.UseTimePicker\" ng-model=\"value.Value\" show-meridian=\"ismeridian\"></timepicker>" +
                 "</div>",
             defaultOptions: {
                 templateOptions: {
@@ -152,8 +152,8 @@ angular.module("eavFieldTemplates")
 
     }])
     .controller("FieldTemplate-EntityCtrl", ["$scope", "$http", "$filter", "$translate", "$modal", "appId", "eavAdminDialogs", function ($scope, $http, $filter, $translate, $modal, appId, eavAdminDialogs) {
-        if (!$scope.to.settings.Entity)
-            $scope.to.settings.Entity = {};
+        if (!$scope.to.settings.merged)
+            $scope.to.settings.merged = {};
 
         $scope.availableEntities = [];
 
@@ -171,7 +171,7 @@ angular.module("eavFieldTemplates")
         };
 
         $scope.createEntityAllowed = function() {
-            return $scope.to.settings.Entity.EntityType !== null && $scope.to.settings.Entity.EntityType !== "";
+            return $scope.to.settings.merged.EntityType !== null && $scope.to.settings.merged.EntityType !== "";
         };
 
         $scope.openNewEntityDialog = function() {
@@ -184,7 +184,7 @@ angular.module("eavFieldTemplates")
                 });
             }
 
-            eavAdminDialogs.openItemNew($scope.to.settings.Entity.EntityType, reload);
+            eavAdminDialogs.openItemNew($scope.to.settings.merged.EntityType, reload);
 
         };
 
@@ -193,7 +193,7 @@ angular.module("eavFieldTemplates")
                 method: "GET",
                 url: "eav/EntityPicker/getavailableentities",
                 params: {
-                    contentTypeName: $scope.to.settings.Entity.EntityType,
+                    contentTypeName: $scope.to.settings.merged.EntityType,
                     appId: appId
                     // ToDo: dimensionId: $scope.configuration.DimensionId
                 }
@@ -236,16 +236,15 @@ angular.module("eavFieldTemplates")
             wrapper: defaultFieldWrappers,
             defaultOptions: {
                 ngModelAttrs: {
-                    '{{to.settings.Number.Min}}': { value: "min" },
-                    '{{to.settings.Number.Max}}': { value: "max" },
-                    '{{to.settings.Number.Decimals ? "^[0-9]+(\.[0-9]{1," + to.settings.Number.Decimals + "})?$" : null}}': { value: "pattern" }
+                    '{{to.settings.merged.Min}}': { value: "min" },
+                    '{{to.settings.merged.Max}}': { value: "max" },
+                    '{{to.settings.merged.Decimals ? "^[0-9]+(\.[0-9]{1," + to.settings.merged.Decimals + "})?$" : null}}': { value: "pattern" }
                 }
             },
             controller: "FieldTemplate-NumberCtrl as vm"
         });
     }]).controller("FieldTemplate-NumberCtrl", function () {
         var vm = this;
-        // ToDo: Implement Google Map
     });
 /* 
  * Field: String - Default
@@ -256,8 +255,8 @@ angular.module("eavFieldTemplates")
 
         formlyConfigProvider.setType({
             name: "string-default",
-            template: "<div><input class=\"form-control input-lg\" ng-if=\"!(options.templateOptions.settings.String.RowCount > 1)\" ng-pattern=\"vm.regexPattern\" ng-model=\"value.Value\">" +
-                "<textarea ng-if=\"options.templateOptions.settings.String.RowCount > 1\" rows=\"{{options.templateOptions.settings.String.RowCount}}\" class=\"form-control input-lg\" ng-model=\"value.Value\"></textarea></div>",
+            template: "<div><input class=\"form-control input-lg\" ng-if=\"!(options.templateOptions.settings.merged.RowCount > 1)\" ng-pattern=\"vm.regexPattern\" ng-model=\"value.Value\">" +
+                "<textarea ng-if=\"options.templateOptions.settings.merged.RowCount > 1\" rows=\"{{options.templateOptions.settings.merged.RowCount}}\" class=\"form-control input-lg\" ng-model=\"value.Value\"></textarea></div>",
             wrapper: defaultFieldWrappers, 
             controller: "FieldTemplate-StringCtrl as vm"
         });
@@ -265,7 +264,7 @@ angular.module("eavFieldTemplates")
     }]).controller("FieldTemplate-StringCtrl", ["$scope", function ($scope) {
         var vm = this;
         var validationRegexString = ".*";
-        var stringSettings = $scope.options.templateOptions.settings.String;
+        var stringSettings = $scope.options.templateOptions.settings.merged;
         if (stringSettings && stringSettings.ValidationRegExJavaScript)
             validationRegexString = stringSettings.ValidationRegExJavaScript;
         vm.regexPattern = new RegExp(validationRegexString, 'i');
@@ -286,8 +285,8 @@ angular.module("eavFieldTemplates")
             defaultOptions: function defaultOptions(options) {
 
                 // DropDown field: Convert string configuration for dropdown values to object, which will be bound to the select
-                if (!options.templateOptions.settings && options.templateOptions.settings.String && options.templateOptions.settings.String.DropdownValues) {
-                    var o = options.templateOptions.settings.String.DropdownValues;
+                if (options.templateOptions.settings && options.templateOptions.settings.merged && options.templateOptions.settings.merged.DropdownValues) {
+                    var o = options.templateOptions.settings.merged.DropdownValues;
                     o = o.replace(/\r/g, "").split("\n");
                     o = o.map(function (e, i) {
                         var s = e.split(":");
@@ -678,7 +677,7 @@ angular.module('eavEditTemplates',[]).run(['$templateCache', function($templateC
 
 
   $templateCache.put('fields/entity/entity-default.html',
-    "<div class=eav-entityselect><div ui-tree=options data-empty-placeholder-enabled=false><ol ui-tree-nodes ng-model=chosenEntities><li ng-repeat=\"item in chosenEntities\" ui-tree-node class=eav-entityselect-item><div ui-tree-handle><i icon=move title=\"{{ 'FieldType.Entity.DragMove' | translate }}\" class=\"pull-left eav-entityselect-sort\" ng-show=to.settings.Entity.AllowMultiValue></i> <span title=\"{{getEntityText(item) + ' (' + item + ')'}}\">{{getEntityText(item)}}</span> <span class=eav-entityselect-item-actions><span data-nodrag title=\"{{ 'FieldType.Entity.Edit' | translate }}\" ng-click=edit(item)><i icon=pencil></i></span> <span data-nodrag title=\"{{ 'FieldType.Entity.Remove' | translate }}\" ng-click=remove(this) class=eav-entityselect-item-remove><i icon=remove></i></span></span></div></li></ol></div><select class=\"eav-entityselect-selector form-control input-lg\" ng-model=selectedEntity ng-change=addEntity() ng-show=\"to.settings.Entity.AllowMultiValue || chosenEntities.length < 1\"><option value=\"\" translate=FieldType.Entity.Choose></option><option value=new ng-if=createEntityAllowed() translate=FieldType.Entity.New></option><option ng-repeat=\"item in availableEntities\" ng-disabled=\"chosenEntities.indexOf(item.Value) != -1\" value={{item.Value}}>{{item.Text}}</option></select></div>"
+    "<div class=eav-entityselect><div ui-tree=options data-empty-placeholder-enabled=false><ol ui-tree-nodes ng-model=chosenEntities><li ng-repeat=\"item in chosenEntities\" ui-tree-node class=eav-entityselect-item><div ui-tree-handle><i icon=move title=\"{{ 'FieldType.Entity.DragMove' | translate }}\" class=\"pull-left eav-entityselect-sort\" ng-show=to.settings.Entity.AllowMultiValue></i> <span title=\"{{getEntityText(item) + ' (' + item + ')'}}\">{{getEntityText(item)}}</span> <span class=eav-entityselect-item-actions><span data-nodrag title=\"{{ 'FieldType.Entity.Edit' | translate }}\" ng-click=edit(item)><i icon=pencil></i></span> <span data-nodrag title=\"{{ 'FieldType.Entity.Remove' | translate }}\" ng-click=remove(this) class=eav-entityselect-item-remove><i icon=remove></i></span></span></div></li></ol></div><select class=\"eav-entityselect-selector form-control input-lg\" ng-model=selectedEntity ng-change=addEntity() ng-show=\"to.settings.merged.AllowMultiValue || chosenEntities.length < 1\"><option value=\"\" translate=FieldType.Entity.Choose></option><option value=new ng-if=createEntityAllowed() translate=FieldType.Entity.New></option><option ng-repeat=\"item in availableEntities\" ng-disabled=\"chosenEntities.indexOf(item.Value) != -1\" value={{item.Value}}>{{item.Text}}</option></select></div>"
   );
 
 
