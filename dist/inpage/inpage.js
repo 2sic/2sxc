@@ -479,6 +479,9 @@ $(document).ready(function () {
         };
 
         vm.reload = function () {
+            if (!vm.templateId)
+                return;
+            
             if (vm.manageInfo.isContentApp)
                 vm.renderTemplate(vm.templateId);
             else
