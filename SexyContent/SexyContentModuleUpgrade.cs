@@ -89,6 +89,9 @@ namespace ToSic.SexyContent
                     case "08.00.02":
                         Version080002();
                         break;
+                    case "08.00.04":
+                        Version080004();
+                        break;
                 }
 
                 // Increase ClientDependency version upon each upgrade (System and all Portals)
@@ -115,7 +118,7 @@ namespace ToSic.SexyContent
         internal static void FinishAbortedUpgrade()
         {
             // Maybe this list can somehow be extracted from the module manifest?
-            var upgradeVersionList = new[] { "07.00.00", "07.00.03", "07.02.00", "07.02.02", "07.03.00", "07.03.01", "07.03.02", "07.03.03", "07.03.04", "08.00.00", "08.00.01", "08.00.02", "08.00.03" };
+            var upgradeVersionList = new[] { "07.00.00", "07.00.03", "07.02.00", "07.02.02", "07.03.00", "07.03.01", "07.03.02", "07.03.03", "07.03.04", "08.00.00", "08.00.01", "08.00.02", "08.00.03", "08.00.04" };
 
             // Run upgrade again for all versions that do not have a corresponding logfile
             foreach (var upgradeVersion in upgradeVersionList)
@@ -622,6 +625,25 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
             {
                 var messages = String.Join("\r\n- ", xmlImport.ImportLog.Select(p => p.Message).ToArray());
                 throw new Exception("The 2sxc module upgrade to 08.00.02 failed: " + messages);
+            }
+
+
+        }
+
+        private static void Version080004()
+        {
+            var userName = "System-ModuleUpgrade-080004";
+
+            // Fix AddressMask field in GPS settings content type
+            var xmlToImport =
+                File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/08.00.04.xml"));
+            var xmlImport = new XmlImport("en-US", userName, true);
+            var success = xmlImport.ImportXml(Constants.DefaultZoneId, Constants.MetaDataAppId, XDocument.Parse(xmlToImport), false); // special note - change existing values
+
+            if (!success)
+            {
+                var messages = String.Join("\r\n- ", xmlImport.ImportLog.Select(p => p.Message).ToArray());
+                throw new Exception("The 2sxc module upgrade to 08.00.04 failed: " + messages);
             }
 
 

@@ -258,8 +258,8 @@ angular.module("sxcFieldTemplates")
 				});
 			},
 			params: {
-				Paths: $scope.to.settings.Hyperlink ? $scope.to.settings.Hyperlink.Paths : "",
-				FileFilter: $scope.to.settings.Hyperlink ? $scope.to.settings.Hyperlink.FileFilter : ""
+			    Paths: $scope.to.settings.merged ? $scope.to.settings.merged.Paths : "",
+			    FileFilter: $scope.to.settings.merged ? $scope.to.settings.merged.FileFilter : ""
 			}
 		};
 

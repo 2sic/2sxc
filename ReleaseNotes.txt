@@ -1,6 +1,6 @@
 <p>Read the <a href="http://sexycontent.codeplex.com/wikipage?title=Release%20Notes" target="_blank">release notes on CodePlex</a></p>
 
 <p>
-<span style="color: red">When upgrading from v6 to v7 the process may take so long that a timeout occurs on server restart. </span>
-If this happens the installation cannot finish, but it can resume from the point where it stopped. To make it resume, just install the 2sxc 7 package AGAIN and it will auto-continue where it left off. 
+<span style="color: red">When upgrading to v8, the process may take so long that a timeout occurs on server restart. </span>
+If this happens the installation cannot finish, but it can resume from the point where it stopped. To make it resume, just install the 2sxc 8 package AGAIN and it will auto-continue where it left off. 
 </p>
