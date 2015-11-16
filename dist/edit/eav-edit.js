@@ -365,6 +365,10 @@ angular.module("eavFieldTemplates")
                 if(close)
                     vm.afterSaveEvent(result);
                 vm.isWorking--;
+            }, function errorWhileSaving(response) {
+                toastr.clear(saving);
+                toastr.error($translate.instant("Message.ErrorWhileSaving"));
+                vm.isWorking--;
             });
         };
 
@@ -1254,6 +1258,7 @@ function enhanceEntity(entity) {
                     angular.forEach(itmCopy[ei].Entity.Attributes, removeTempValue);
 
                 return $http.post("eav/entities/savemany", itmCopy, { params: { appId: appId } }).then(function (serverKeys) {
+                    alert('success function called');
                     var syncUpdatedKeys = function(value, key) {
                         // first ensure we don't break something
                         var ent = value.Entity;
