@@ -8,6 +8,7 @@
 .sc-menu a div { 
     width: 28px!important;
     height: 28px!important;
+    line-height:28px!important;
     background-color: #0088f4;
     /*background-color: #96D500; 
     border-color: #96D500;*/ 

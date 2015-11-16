@@ -46,9 +46,9 @@ angular.module("SxcAdminUi", [
                 svc.openPromiseWindow(url, callback);
             };
 
-            svc.appExport = function appExport(callback) {
+            svc.appExport = function appExport(altAppId, callback) {
                 svc.showInfoOld();
-                var url = svc.getUrl("appexport", 0);
+                var url = svc.getUrl("appexport", altAppId);
                 svc.openPromiseWindow(url, callback);
             };
 

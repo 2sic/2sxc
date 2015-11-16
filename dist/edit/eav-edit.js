@@ -566,9 +566,12 @@ angular.module("eavFieldTemplates")
 			var inputType = "";
 
 		    // new: the All can - and should - have an input-type which doesn't change
-			if (e.Metadata.merged && e.Metadata.merged.InputType) {
+		    // First look in Metadata.All if an InputType is defined (All should override the setting, which is not the case when using only merged)
+			if (e.Metadata.All && e.Metadata.All.InputType)
+			    inputType = e.Metadata.All.InputType;
+            // If not, look in merged
+			else if (e.Metadata.merged && e.Metadata.merged.InputType)
 			    inputType = e.Metadata.merged.InputType;
-			}
 
 			if (inputType && inputType.indexOf("-") === -1) // has input-type, but missing main type, this happens with old types like string wysiyg
 		        inputType = type + "-" + inputType;
