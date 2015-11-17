@@ -84,7 +84,7 @@
     
     <ul class="dnnActions dnnClear">
         <li><asp:LinkButton runat="server" ID="btnUpdate" ResourceKey="btnUpdate" OnClick="btnUpdate_Click" CssClass="dnnPrimaryAction"></asp:LinkButton></li>
-        <li><asp:HyperLink runat="server" ID="hlkCancel" ResourceKey="hlkCancel" CssClass="dnnSecondaryAction"></asp:HyperLink></li>
+        <li><a id="hlkCancel" class="dnnSecondaryAction" onclick="window.close();">Cancel</a></li>
     </ul>
 </div>
 

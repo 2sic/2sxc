@@ -13,6 +13,7 @@
   "Message": {
     "Saving": "saving...",
     "Saved": "saved",
+    "ErrorWhileSaving":  "There was an error while saving.",
     "WillPublish": "will publish when saving",
     "WontPublish": "will not publish when saving",
     "PleaseCreateDefLang": "Please edit this in the default language first.",
