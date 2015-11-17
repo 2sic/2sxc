@@ -668,7 +668,7 @@ angular.module('eavEditTemplates',[]).run(['$templateCache', function($templateC
   'use strict';
 
   $templateCache.put('fields/boolean/boolean-default.html',
-    "<div class=\"checkbox checkbox-labeled\"><switch ng-model=value.Value class=\"tosic-green pull-left\" ng-disabled=to.disabled></switch><input type=checkbox class=formly-field-checkbox ng-model=value.Value style=\"display: none\"><div ng-include=\"'wrappers/eav-label.html'\"></div></div>"
+    "<div class=\"checkbox checkbox-labeled\"><switch class=\"tosic-green pull-left\" ng-model=value.Value></switch><div ng-include=\"'wrappers/eav-label.html'\"></div></div>"
   );
 
 
