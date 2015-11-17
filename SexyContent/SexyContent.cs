@@ -46,7 +46,7 @@ namespace ToSic.SexyContent
     {
         #region Constants
 
-        public const string ModuleVersion = "08.00.04"; // always the newest version
+        public const string ModuleVersion = "08.00.05"; // always the newest version
         public const string TemplateID = "TemplateID";
 		public const string ContentGroupGuidString = "ToSIC_SexyContent_ContentGroupGuid";
         public const string AppIDString = "AppId";
