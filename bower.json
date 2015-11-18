@@ -5,7 +5,8 @@
     "ocLazyLoad": "1.0.4",
     "angular-google-maps": "~2.2.0",
     "dropzone": "4.0.1",
-    "angular-dropzone": "0.1.2"
+    "angular-dropzone": "0.1.2",
+    "2sxc-eav-languages": "2sic/2sxc-eav-languages"
   },
   "private": true,
   "resolutions": {
