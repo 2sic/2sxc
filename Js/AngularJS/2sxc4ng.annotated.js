@@ -64,6 +64,12 @@ $2sxc.ng = {
 
     // if the page contains angular, do auto-bootstrap of all 2sxc apps
     autoRunBootstrap: function autoRunBootstrap() {
+        // prevent multiple bootstrapping in case this file was included multiple times
+        if (window.bootstrappingAlreadyStarted)
+            return;
+        window.bootstrappingAlreadyStarted = true;
+
+        // bootstrap, if it has angular
         if (angular)
             angular.element(document).ready(function () {
                 $2sxc.ng.bootstrapAll();
