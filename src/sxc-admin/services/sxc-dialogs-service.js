@@ -15,7 +15,7 @@ angular.module("SxcAdminUi", [
     //"SxcEditContentGroupDnnWrapper",
     "EavAdminUi", // dialog (modal) controller
 ])
-    .factory("oldDialogs", function (tabId, AppInstanceId, appId, websiteRoot) {
+    .factory("oldDialogs", function (tabId, AppInstanceId, appId, websiteRoot, $q) {
         var svc = {};
 
         // todo: maybe needs something to get the real root-address
@@ -36,6 +36,8 @@ angular.module("SxcAdminUi", [
         // this is needed for all older, not-yet-migrated ascx-parts
             svc.openPromiseWindow = function opw(url, callback) {
                 // note that Success & error both should do the callback, mostly a list-refresh
+                if(!window.Promise) // Special workaround to enable promiseWindow in IE without jQuery
+                    PromiseWindow.defaultConfig.promiseProvider = PromiseWindow.getAPlusPromiseProvider($q);
                 PromiseWindow.open(url).then(callback, callback);
             };
 
