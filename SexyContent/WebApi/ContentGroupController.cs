@@ -107,7 +107,7 @@ namespace ToSic.SexyContent.WebApi
                 Index = index,
 	            Id = c?.EntityId ?? 0,
 	            Guid = c?.EntityGuid ?? Guid.Empty,
-	            Title = c?.GetBestValue("EntityTitle")?.ToString() ?? "" ?? "{demo}"
+	            Title = c?.GetBestValue("EntityTitle")?.ToString() ?? ""
 	        }).ToList();
 
 	        return list;
