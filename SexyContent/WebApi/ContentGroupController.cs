@@ -72,7 +72,7 @@ namespace ToSic.SexyContent.WebApi
 
 
 	        var dataSource = App.Data[ct.Name];// attributeSetName];
-            var results = dataSource.List.ToDictionary(p => p.Value.EntityId, p => p.Value.GetBestValue("EntityTitle").ToString());
+            var results = dataSource.List.ToDictionary(p => p.Value.EntityId, p => (p.Value.GetBestValue("EntityTitle")??"").ToString());
 
             var selectedId = set[index]?.EntityId;
 
@@ -107,7 +107,7 @@ namespace ToSic.SexyContent.WebApi
                 Index = index,
 	            Id = c.EntityId,
 	            Guid = c.EntityGuid,
-	            Title = c.GetBestValue("EntityTitle").ToString()
+	            Title = (c.GetBestValue("EntityTitle")??"").ToString()
 	        }).ToList();
 
 	        return list;
