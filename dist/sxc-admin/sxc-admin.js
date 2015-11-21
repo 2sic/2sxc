@@ -749,11 +749,20 @@ angular.module("SxcAdminUi", [
 
         //#region Total-Popup open / close
         svc.openTotal = function openTotal(url, callback) {
-            $2sxc.totalPopup.open(url, callback);
+            return $2sxc.totalPopup.open(svc.browserFixUrlCaching(url), callback);
         };
 
+            svc.browserFixUrlCaching = function(url) {
+                // this fixes a caching issue on IE and FF - see https://github.com/2sic/2sxc/issues/444
+                // by default I only need to do this on IE and FF, but to remain consistent, I always do it
+                var urlCheck = /(\/ui.html(\?time=[0-9]*)*)#/gi;
+                if (url.match(urlCheck)) 
+                    url = url.replace(urlCheck, "/ui.html?time=" + new Date().getTime() + "#");
+                return url;
+            };
+
         svc.closeThis = function closeThisTotalPopup() {
-            $2sxc.totalPopup.closeThis();
+            return $2sxc.totalPopup.closeThis();
         };
         //#endregion
 
