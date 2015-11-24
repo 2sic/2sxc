@@ -118,7 +118,7 @@ namespace ToSic.SexyContent
         internal static void FinishAbortedUpgrade()
         {
             // Maybe this list can somehow be extracted from the module manifest?
-            var upgradeVersionList = new[] { "07.00.00", "07.00.03", "07.02.00", "07.02.02", "07.03.00", "07.03.01", "07.03.02", "07.03.03", "07.03.04", "08.00.00", "08.00.01", "08.00.02", "08.00.03", "08.00.04", "08.00.05" };
+            var upgradeVersionList = new[] { "07.00.00", "07.00.03", "07.02.00", "07.02.02", "07.03.00", "07.03.01", "07.03.02", "07.03.03", "07.03.04", "08.00.00", "08.00.01", "08.00.02", "08.00.03", "08.00.04", "08.00.05", "08.00.06" };
 
             // Run upgrade again for all versions that do not have a corresponding logfile
             foreach (var upgradeVersion in upgradeVersionList)

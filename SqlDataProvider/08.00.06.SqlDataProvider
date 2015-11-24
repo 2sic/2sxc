@@ -1,0 +1,45 @@
+﻿-- make sure sql rolls back automatically in case of error.
+SET XACT_ABORT ON
+
+BEGIN TRANSACTION SexyContentUpdate;
+
+/****** Object:  StoredProcedure [dbo].[ToSIC_EAV_ChangeLogSet]    Script Date: 26.10.2015 09:35:10 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+ALTER PROCEDURE [dbo].[ToSIC_EAV_ChangeLogSet]
+  @ChangeID int
+AS
+
+SET NOCOUNT ON
+
+-- Remove all context items older than an 5 minutes ago
+DELETE FROM [dbo].[ToSIC_EAV_ContextInfo] WHERE [UpdatedAt] < DATEADD(mi, -5, GETUTCDATE())
+
+IF SERVERPROPERTY('edition') <> 'SQL Azure' OR CAST(SERVERPROPERTY('ProductVersion') AS CHAR(2)) >= '12'
+BEGIN
+    DECLARE @b varbinary(128)
+    SET @b = CONVERT(varbinary(128),newid())
+    EXEC sp_executesql @statement=N'SET CONTEXT_INFO @b',@params=N'@b varbinary(128)',@b=@b
+	print @b
+END
+
+DECLARE @ContextInfo varbinary(128)
+SELECT @ContextInfo = CONTEXT_INFO()
+
+IF EXISTS (SELECT * FROM [dbo].[ToSIC_EAV_ContextInfo] WHERE [ContextInfo] = @ContextInfo)
+	UPDATE [dbo].[ToSIC_EAV_ContextInfo]
+	SET
+		[ChangeID] = @ChangeID,
+		[UpdatedAt] = GETUTCDATE()
+	WHERE
+		ContextInfo = @ContextInfo
+ELSE
+	INSERT INTO [dbo].[ToSIC_EAV_ContextInfo] ([ContextInfo], [ChangeID], [UpdatedAt]) VALUES (@ContextInfo, @ChangeID, GETUTCDATE());
+
+
+-- Commit the transaction
+COMMIT TRANSACTION SexyContentUpdate;
+--ROLLBACK TRANSACTION SexyContentUpdate;
