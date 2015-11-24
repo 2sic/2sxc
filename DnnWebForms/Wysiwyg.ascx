@@ -102,6 +102,7 @@
 
 			editor.attachEventHandler('onselectionchange', updateValue);
 			editor.attachEventHandler('onmousedown', updateValue);
+			editor.attachEventHandler('onkeyup', updateValue);
 			editor.get_textArea().addEventListener("keyup", updateValue, false);
 			$(document).on('keyup mouseup', updateValue);
 		}
