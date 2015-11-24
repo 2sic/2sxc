@@ -17,7 +17,6 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 	/// Proxy Class to the EAV EntitiesController (Web API Controller)
 	/// </summary>
 	[SupportedModules("2sxc,2sxc-app")]
-	[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 	public class EntitiesController : SxcApiController // DnnApiController
 	{
 	    private Eav.WebApi.EntitiesController entitiesController = new Eav.WebApi.EntitiesController();
@@ -33,6 +32,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 	    }
 
         [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public Dictionary<string, object> GetOne(string contentType, int id, int appId, string cultureCode = null)
         {
             EnsureSerializerHasSxc();
@@ -41,6 +41,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 
 
         [HttpPost]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public dynamic GetManyForEditing([FromBody]  List<ItemIdentifier> items, int appId)
         {
             // this will contain the list of the items we'll really return
@@ -98,6 +99,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 
 
         [HttpPost]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         // todo: should refactor to save all items in 1 transaction
         public Dictionary<Guid, int> SaveMany([FromUri] int appId, [FromBody] List<EntityWithHeader> items)
         {
@@ -161,6 +163,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
         /// Get all Entities of specified Type
         /// </summary>
         [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public IEnumerable<Dictionary<string, object>> GetEntities(string contentType, int appId, string cultureCode = null)
 		{
             EnsureSerializerHasSxc();
@@ -168,7 +171,8 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 		}
 
 	    [HttpGet]
-	    public IEnumerable<Dictionary<string, object>> GetAllOfTypeForAdmin(int appId, string contentType)
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        public IEnumerable<Dictionary<string, object>> GetAllOfTypeForAdmin(int appId, string contentType)
 	    {
 	        EnsureSerializerHasSxc();
 	        return entitiesController.GetAllOfTypeForAdmin(appId, contentType);
@@ -189,13 +193,15 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 
         [HttpDelete]
         [HttpGet]
-	    public void Delete(string contentType, int id, int appId)
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        public void Delete(string contentType, int id, int appId)
         {
             EnsureSerializerHasSxc();
             entitiesController.Delete(contentType, id, App.AppId);
         }
         [HttpDelete]
         [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public void Delete(string contentType, Guid guid, int appId)
         {
             EnsureSerializerHasSxc();
@@ -204,7 +210,8 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 
 
 	    [HttpPost]
-	    public Dictionary<string, object> CreateOrUpdate(string contentType, int id = 0)
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        public Dictionary<string, object> CreateOrUpdate(string contentType, int id = 0)
 	    {
 	        throw new NotImplementedException();
 	    }
@@ -214,7 +221,8 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 		/// Get a ContentType by Name
 		/// </summary>
 		[HttpGet]
-		public IContentType GetContentType(string contentType, int appId)
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        public IContentType GetContentType(string contentType, int appId)
 		{
             EnsureSerializerHasSxc();
             // todo refactor-verify
