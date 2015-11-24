@@ -70,7 +70,7 @@ $2sxc.getManageController = function (id) {
             action: function(settings, event) { alert("not implemented yet"); }
         },
         'edit': {
-            title: "edit",
+            title: "Toolbar.Edit",
             icon: "glyphicon-pencil",
             lightbox: true,
             hideFirst: false,
@@ -79,7 +79,7 @@ $2sxc.getManageController = function (id) {
             }
         },
         'new': {
-            title: "new",
+            title: "Toolbar.New",
             icon: "glyphicon-plus",
             lightbox: true,
             hideFirst: false,
@@ -88,7 +88,7 @@ $2sxc.getManageController = function (id) {
             }
         },
         'add': {
-            title: "add demo",
+            title: "Toolbar.AddDemo",
             icon: "glyphicon-plus-sign",
             lightbox: false,
             hideFirst: true,
@@ -98,7 +98,7 @@ $2sxc.getManageController = function (id) {
             }
         },
         'replace': {
-            title: "replace",
+            title: "Toolbar.Replace",
             icon: "glyphicon-random",
             lightbox: true,
             hideFirst: true,
@@ -107,7 +107,7 @@ $2sxc.getManageController = function (id) {
             }
         },
         'publish': {
-            title: "published",
+            title: "Toolbar.Published",
             icon: "glyphicon-eye-open",
             icon2: "glyphicon-eye-close",
             lightbox: false,
@@ -126,7 +126,7 @@ $2sxc.getManageController = function (id) {
             }
         },
         'moveup': {
-            title: "move up",
+            title: "Toolbar.MoveUp",
             icon: "glyphicon-arrow-up",
             icon2: "glyphicon-arrow-up",
             lightbox: false,
@@ -137,7 +137,7 @@ $2sxc.getManageController = function (id) {
             }
         },
         'movedown': {
-            title: "move down",
+            title: "Toolbar.MoveDown",
             icon: "glyphicon-arrow-down",
             icon2: "glyphicon-arrow-down",
             lightbox: false,
@@ -148,7 +148,7 @@ $2sxc.getManageController = function (id) {
             }
         },
         'sort': {
-            title: "sort",
+            title: "Toolbar.Sort",
             icon: "glyphicon-sort",
             lightbox: true,
             hideFirst: true,
@@ -157,7 +157,7 @@ $2sxc.getManageController = function (id) {
             }
         },
         'remove': {
-            title: "remove",
+            title: "Toolbar.Remove",
             icon: "glyphicon-minus-sign",
             lightbox: false,
             hideFirst: true,
@@ -169,7 +169,7 @@ $2sxc.getManageController = function (id) {
             }
         },
         'more': {
-            title: "more actions",
+            title: "Toolbar.MoreActions",
             icon: "glyphicon-option-horizontal",
             icon2: "glyphicon-option-vertical",
             borlightboxder: false,
@@ -224,7 +224,7 @@ $2sxc.getManageController = function (id) {
                         Part: normalContent ? "content" : "listcontent",
                         Add: settings.action === "new"
                     },
-                    Title: normalContent ? "Content" : "List Content"
+                    Title: manageController._getSelectorScope().translate("EditFormTitle." + (normalContent ? "Content" : "ListContent"))
                 });
                 if (settings.action !== "replace") // if not replace, also add the presentation
                     items.push({
@@ -234,7 +234,7 @@ $2sxc.getManageController = function (id) {
                             Part: normalContent ? "presentation" : "listpresentation",
                             Add: settings.action === "new"
                         },
-                        Title: normalContent ? "Presentation" : "List Presentation"
+                        Title: manageController._getSelectorScope().translate("EditFormTitle." + (normalContent ? "Presentation" : "ListPresentation"))
                     });
             }
 
@@ -304,7 +304,7 @@ $2sxc.getManageController = function (id) {
                     + (settings.hideFirst || conf.hideFirst ? "hideFirst" : "")
                     + " " + (conf.lightbox ? "box" : ""),
                 'onclick': "javascript:$2sxc(" + id + ").manage.action(" + JSON.stringify(settings) + ", event);",
-                'title': conf.title
+                'title': manageController._getSelectorScope().translate(conf.title)
             });
             var box = $("<div/>");
             var symbol = $("<i class=\"glyphicon " + conf.icon + "\" aria-hidden=\"true\"></i>");
@@ -400,10 +400,13 @@ $(document).ready(function () {
     //var modules = $(".DnnModule-2sxc .Mod2sxcC[data-2sxc], .DnnModule-2sxc-app .Mod2sxcappC[data-2sxc]");
     var modules = $("div[data-2sxc]");
 
-    modules.each(function () {
-        var moduleId = $(this).data("2sxc").moduleId;
-        $2sxc(moduleId).manage._processToolbars();
-    });
+    // Ensure the _processToolbar is called after the next event cycle to make sure that the Angular app (template selector) is loaded first
+    window.setTimeout(function () {
+        modules.each(function () {
+            var moduleId = $(this).data("2sxc").moduleId;
+            $2sxc(moduleId).manage._processToolbars();
+        });
+    }, 0);
 
     window.EavEditDialogs = [];
 });
@@ -433,7 +436,7 @@ $(document).ready(function () {
         $translatePartialLoaderProvider.addPart("inpage");
     }]);
 
-    module.controller("TemplateSelectorCtrl", ["$scope", "$attrs", "moduleApiService", "$filter", "$q", "$window", function($scope, $attrs, moduleApiService, $filter, $q, $window) {
+    module.controller("TemplateSelectorCtrl", ["$scope", "$attrs", "moduleApiService", "$filter", "$q", "$window", "$translate", function($scope, $attrs, moduleApiService, $filter, $q, $window, $translate) {
         var vm = this;
         var realScope = $scope;
 
@@ -615,6 +618,7 @@ $(document).ready(function () {
                 vm.renderTemplate(vm.templateId);
             });
         };
+        vm.translate = function (key) { return $translate.instant(key); };
 
     }]);
 

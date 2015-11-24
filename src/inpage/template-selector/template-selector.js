@@ -23,7 +23,7 @@
         $translatePartialLoaderProvider.addPart("inpage");
     });
 
-    module.controller("TemplateSelectorCtrl", function($scope, $attrs, moduleApiService, $filter, $q, $window) {
+    module.controller("TemplateSelectorCtrl", function($scope, $attrs, moduleApiService, $filter, $q, $window, $translate) {
         var vm = this;
         var realScope = $scope;
 
@@ -205,6 +205,7 @@
                 vm.renderTemplate(vm.templateId);
             });
         };
+        vm.translate = function (key) { return $translate.instant(key); };
 
     });
 
