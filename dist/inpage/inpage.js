@@ -424,7 +424,7 @@ $(document).ready(function () {
         $translateProvider
             .preferredLanguage(languages.currentLanguage.split("-")[0])
             .useSanitizeValueStrategy("escapeParameters")   // this is very important to allow html in the JSON files
-            .fallbackLanguage(languages.defaultLanguage.split("-")[0])
+            .fallbackLanguage(languages.fallbackLanguage)
             .useLoader("$translatePartialLoader", {
                 urlTemplate: languages.i18nRoot + "{part}-{lang}.js"
             })
@@ -433,7 +433,7 @@ $(document).ready(function () {
         $translatePartialLoaderProvider.addPart("inpage");
     }]);
 
-    module.controller("TemplateSelectorCtrl", ["$scope", "$attrs", "moduleApiService", "$filter", "$q", "$window", function($scope, $attrs, moduleApiService, $filter, $q, $window) {
+    module.controller("TemplateSelectorCtrl", ["$scope", "$attrs", "moduleApiService", "$filter", "$q", "$window", "$translate", function($scope, $attrs, moduleApiService, $filter, $q, $window, $translate) {
         var vm = this;
         var realScope = $scope;
 
@@ -615,6 +615,7 @@ $(document).ready(function () {
                 vm.renderTemplate(vm.templateId);
             });
         };
+        vm.translate = function (key) { return $translate.instant(key); };
 
     }]);
 
