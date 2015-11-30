@@ -364,9 +364,12 @@ module.exports = function (grunt) {
         "uglify",
         "cssmin",
         //"clean:tmp",
-        "watch:sxcbuild"
-
     ]);
+
+    grunt.registerTask("build-auto", [
+        "watch:sxcbuild"
+    ]);
+
   grunt.registerTask("default", ["jshint", "ngAnnotate", "uglify"]);
 
 };
