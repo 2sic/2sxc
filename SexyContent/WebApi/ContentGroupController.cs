@@ -10,9 +10,9 @@ using ToSic.Eav.DataSources;
 
 namespace ToSic.SexyContent.WebApi
 {
-	[SupportedModules("2sxc,2sxc-app")]
-	public class ContentGroupController : SxcApiController
-	{
+    [SupportedModules("2sxc,2sxc-app")]
+    public class ContentGroupController : SxcApiController
+    {
 
         // ToDo 2rm: Check if this is needed somewhere...
         //[HttpGet]
@@ -48,9 +48,9 @@ namespace ToSic.SexyContent.WebApi
         }
 
         [HttpGet]
-	    public ReplaceSet Replace(Guid guid, string part, int index)
-	    {
-	        part = part.ToLower();
+        public ReplaceSet Replace(Guid guid, string part, int index)
+        {
+            part = part.ToLower();
             var contentGroup = GetContentGroup(guid);
 
             // try to get the entityId. Sometimes it will try to get #0 which doesn't exist yet, that's why it has these checks
@@ -61,76 +61,101 @@ namespace ToSic.SexyContent.WebApi
                 throw new Exception("Cannot find content group");
 
 
-            var attributeSetName = part == "content" ? contentGroup.Template.ContentTypeStaticName : contentGroup.Template.ListContentTypeStaticName;
+            var attributeSetName = part == "content"
+                ? contentGroup.Template.ContentTypeStaticName
+                : contentGroup.Template.ListContentTypeStaticName;
 
             // if no type was defined in this set, then return an empty list as there is nothing to choose from
-	        if (String.IsNullOrEmpty(attributeSetName))
-	            return null;
+            if (String.IsNullOrEmpty(attributeSetName))
+                return null;
 
-	        var cache = App.Data.Cache;// DataSource.GetCache()
-	        var ct = cache.GetContentType(attributeSetName);
+            var cache = App.Data.Cache; // DataSource.GetCache()
+            var ct = cache.GetContentType(attributeSetName);
 
 
-	        var dataSource = App.Data[ct.Name];// attributeSetName];
-            var results = dataSource.List.ToDictionary(p => p.Value.EntityId, p => p.Value.GetBestValue("EntityTitle")?.ToString() ?? "");
+            var dataSource = App.Data[ct.Name]; // attributeSetName];
+            var results = dataSource.List.ToDictionary(p => p.Value.EntityId,
+                p => p.Value.GetBestValue("EntityTitle")?.ToString() ?? "");
 
             var selectedId = set[index]?.EntityId;
 
             return new ReplaceSet
-	        {
-	            SelectedId = selectedId,
+            {
+                SelectedId = selectedId,
                 Items = results
-	        };
-	    }
+            };
+        }
 
-	    public class ReplaceSet
-	    {
-	        public int? SelectedId { get; set; }
-            public Dictionary<int, string> Items { get; set; }  
-	    }
+        public class ReplaceSet
+        {
+            public int? SelectedId { get; set; }
+            public Dictionary<int, string> Items { get; set; }
+        }
 
-	    [HttpPost]
-	    public void Replace(Guid guid, string part, int index, int entityId)
-	    {
+        [HttpPost]
+        public void Replace(Guid guid, string part, int index, int entityId)
+        {
             var contentGroup = Sexy.ContentGroups.GetContentGroup(guid);
             contentGroup.UpdateEntityIfChanged(part, index, entityId, false, null);
         }
 
-	    [HttpGet]
+        [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public List<SortedEntityItem> ItemList(Guid guid)
-	    {
-	        var cg = GetContentGroup(guid);
-
-	        var list = cg.Content.Select((c, index) => new SortedEntityItem
-	        {
-                Index = index,
-	            Id = c?.EntityId ?? 0,
-	            Guid = c?.EntityGuid ?? Guid.Empty,
-	            Title = c?.GetBestValue("EntityTitle")?.ToString() ?? ""
-	        }).ToList();
-
-	        return list;
-	    }
-
-	    public class SortedEntityItem
-	    {
-	        public int Index;
-	        public int Id;
-	        public Guid Guid;
-	        public string Title;
-	    }
-
-	    [HttpPost]
-	    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-	    public bool ItemList([FromUri] Guid guid, List<SortedEntityItem> List)
-	    {
+        {
             var cg = GetContentGroup(guid);
 
-	        var sequence = List.Select(i => i.Index).ToArray();
+            var list = cg.Content.Select((c, index) => new SortedEntityItem
+            {
+                Index = index,
+                Id = c?.EntityId ?? 0,
+                Guid = c?.EntityGuid ?? Guid.Empty,
+                Title = c?.GetBestValue("EntityTitle")?.ToString() ?? "",
+                Type = c?.Type.StaticName ?? cg.Template.ContentTypeStaticName
+            }).ToList();
 
-	        cg.ReorderAll(sequence);
+            return list;
+        }
+         
+
+        [HttpPost]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        public bool ItemList([FromUri] Guid guid, List<SortedEntityItem> List)
+        {
+            var cg = GetContentGroup(guid);
+
+            var sequence = List.Select(i => i.Index).ToArray();
+
+            cg.ReorderAll(sequence);
             return true;
-	    }
+        }
+
+        [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        public SortedEntityItem Header(Guid guid)
+        {
+            var cg = GetContentGroup(guid);
+
+            var header = cg.ListContent.FirstOrDefault();
+
+            return new SortedEntityItem
+            {
+                Index = 0,
+                Id = header?.EntityId ?? 0,
+                Guid = header?.EntityGuid ?? Guid.Empty,
+                Title = header?.GetBestValue("EntityTitle")?.ToString() ?? "",
+                Type = header?.Type.StaticName?? cg.Template.ListContentTypeStaticName
+            };
+        }
+
+
+        public class SortedEntityItem
+        {
+            public int Index;
+            public int Id;
+            public Guid Guid;
+            public string Title;
+            public string Type;
+        }
     }
-    }
+}

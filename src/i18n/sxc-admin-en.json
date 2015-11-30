@@ -152,9 +152,14 @@
     "Intro": "By replacing a content-item you can make a other content appear in the slot of the original content.",
     "ChooseItem": "Choose item:"
   },
-  "ReorderContentList": {
-    "Title": "Re-order list of content-items",
-    "Intro": "Sort by dragging as you need, then save"
+  
+  "ManageContentList": {
+    "Title": "Manage content-item lists",
+
+    "HeaderIntro": "You can manage the list header here (if it is defined)",
+    "NoHeaderInThisList": "(this list has no header)",
+
+    "Intro": "Sort the items by dragging as you need, then save"
   },
 
 

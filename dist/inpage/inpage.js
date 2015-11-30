@@ -149,7 +149,7 @@ $2sxc.getManageController = function (id) {
         },
         'sort': {
             title: "Toolbar.Sort",
-            icon: "glyphicon-sort",
+            icon: "glyphicon-th-list",
             lightbox: true,
             hideFirst: true,
             action: function (settings, event) {

@@ -232,7 +232,7 @@
                 sxcDialogs.openReplaceContent(items[0], vm.close);
                 break;
             case "sort":
-                sxcDialogs.openReorderContentList(items[0], vm.close);
+                sxcDialogs.openManageContentList(items[0], vm.close);
                 break;
             case "pipeline-designer":
                 // Don't do anything, as the template already loads the app in fullscreen-mode
@@ -365,17 +365,24 @@
     LanguagesSettingsController.$inject = ["languagesSvc", "eavConfig", "appId"];
 
 } ());
-(function () { 
+(function () {
 
     angular.module("ReorderContentApp", [
             "SxcServices",
-            "EavAdminUi"         // dialog (modal) controller
-        ])
-        .controller("ReorderContentList", ReorderContentController);
+            "EavAdminUi" // dialog (modal) controller
+    ])
 
-    function ReorderContentController(appId, item, contentGroupSvc, eavAdminDialogs, $modalInstance, $filter) {
+        .config(["$translatePartialLoaderProvider", function($translatePartialLoaderProvider) {
+            // ensure the language pack is loaded
+            $translatePartialLoaderProvider.addPart("inpage");
+        }])
+
+        .controller("ManageContentList", ManageContentController);
+
+    function ManageContentController(appId, item, contentGroupSvc, eavAdminDialogs, $modalInstance, $translate) {
         var vm = this;
         vm.items = [];
+        vm.header = {};
         vm.contentGroup = {
             id: item.EntityId,
             guid: item.Group.Guid,
@@ -385,21 +392,53 @@
 
         var svc = contentGroupSvc(appId);
 
-        vm.reload = function() {
+        vm.reload = function () {
             return svc.getList(vm.contentGroup).then(function (result) {
                 vm.items = result.data;
             });
         };
         vm.reload();
 
+        vm.reloadHeader = function() {
+            return svc.getHeader(vm.contentGroup).then(function(result) {
+                vm.header = result.data;
+            });
+        };
+        vm.reloadHeader();
+
         vm.ok = function ok() {
             svc.saveList(vm.contentGroup, vm.items).then(vm.close);
         };
         
+        // note: not perfect yet - won't edit presentation of header
+        vm.editHeader = function editHeader() {
+            var items = [];
+            items.push({
+                Group: {
+                    Guid: vm.contentGroup.guid,
+                    Index: 0,
+                    Part: "listcontent",
+                    Add: vm.header.Id === "0"
+                },
+                Title: $translate.instant("EditFormTitle.ListContent")
+            });
+            items.push({
+                Group: {
+                    Guid: vm.contentGroup.guid,
+                    Index: 0,
+                    Part: "listpresentation",
+                    Add: vm.header.Id === "0"
+                },
+                Title: $translate.instant("EditFormTitle.ListPresentation")
+            });
+            eavAdminDialogs.openEditItems(items, vm.reloadHeader);
+
+        };
+
         vm.close = function () { $modalInstance.dismiss("cancel"); };
 
     }
-    ReorderContentController.$inject = ["appId", "item", "contentGroupSvc", "eavAdminDialogs", "$modalInstance", "$filter"];
+    ManageContentController.$inject = ["appId", "item", "contentGroupSvc", "eavAdminDialogs", "$modalInstance", "$translate"];
 
 } ());
 (function () { 
@@ -557,7 +596,12 @@ angular.module("SxcServices")
 
                 saveList: function (contentGroup, resortedList) {
                     return $http.post('app/contentgroup/itemlist', resortedList, { params: { appId: appId, guid: contentGroup.guid } });
+                },
+
+                getHeader: function (contentGroup) {
+                    return $http.get('app/contentgroup/header', { params: { appId: appId, guid: contentGroup.guid } });
                 }
+
 
             };
 
@@ -772,9 +816,9 @@ angular.module("SxcAdminUi", [
             return eavAdminDialogs.OpenModal("replace-content/replace-content.html", "ReplaceDialog as vm", "lg", resolve, closeCallback);
         };
 
-        svc.openReorderContentList = function orcl(item, closeCallback) {
+        svc.openManageContentList = function orcl(item, closeCallback) {
             var resolve = eavAdminDialogs.CreateResolve({ item: item });
-            return eavAdminDialogs.OpenModal("reorder-content-list/reorder-content-list.html", "ReorderContentList as vm", "", resolve, closeCallback);
+            return eavAdminDialogs.OpenModal("manage-content-list/manage-content-list.html", "ManageContentList as vm", "", resolve, closeCallback);
         };
 
         // 2dm 2015-10-07 - don't think this is in use, remove
@@ -871,8 +915,8 @@ angular.module('SxcTemplates',[]).run(['$templateCache', function($templateCache
   );
 
 
-  $templateCache.put('reorder-content-list/reorder-content-list.html',
-    "<div class=modal-header><button class=\"btn btn-default btn-square btn-subtle pull-right\" type=button ng-click=vm.close()><i icon=remove></i></button><h3 class=modal-title translate=ReorderContentList.Title></h3></div><div><div class=modal-body><p translate=ReorderContentList.Intro></p><div ui-tree=options data-empty-placeholder-enabled=false><ol ui-tree-nodes ng-model=vm.items><li ng-repeat=\"item in vm.items\" ui-tree-node class=eav-entityselect-item style=\"width: 100%\"><div ui-tree-handle><i icon=move title=\"{{ 'FieldType.Entity.DragMove' | translate }}\" class=\"pull-left eav-entityselect-sort\"></i> &nbsp; {{item.Title}} ({{item.Id}})</div></li></ol></div></div></div><div class=modal-footer><button class=\"btn btn-primary btn-square btn-lg pull-left\" type=button ng-click=vm.ok()><i icon=ok></i></button></div>"
+  $templateCache.put('manage-content-list/manage-content-list.html',
+    "<div class=modal-header><button class=\"btn btn-default btn-square btn-subtle pull-right\" type=button ng-click=vm.close()><i icon=remove></i></button><h3 class=modal-title translate=ManageContentList.Title></h3></div><div><div class=modal-body><div><p translate=ManageContentList.HeaderIntro></p><div><a ng-if=vm.header.Type ng-click=vm.editHeader()>{{ vm.header.Title }} <i icon=pencil class=pull-right></i></a> <span ng-if=!vm.header.Type translate=ManageContentList.NoHeaderInThisList></span></div><br></div><div><p translate=ManageContentList.Intro></p><div ui-tree=options data-empty-placeholder-enabled=false><ol ui-tree-nodes ng-model=vm.items><li ng-repeat=\"item in vm.items\" ui-tree-node class=eav-entityselect-item style=\"width: 100%\"><div ui-tree-handle><i icon=move title=\"{{ 'FieldType.Entity.DragMove' | translate }}\" class=\"pull-left eav-entityselect-sort\"></i> &nbsp; {{item.Title}} ({{item.Id}})</div></li></ol></div></div></div></div><div class=modal-footer><button class=\"btn btn-primary btn-square btn-lg pull-left\" type=button ng-click=vm.ok()><i icon=ok></i></button></div>"
   );
 
 

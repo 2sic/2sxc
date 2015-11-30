@@ -114,9 +114,9 @@ angular.module("SxcAdminUi", [
             return eavAdminDialogs.OpenModal("replace-content/replace-content.html", "ReplaceDialog as vm", "lg", resolve, closeCallback);
         };
 
-        svc.openReorderContentList = function orcl(item, closeCallback) {
+        svc.openManageContentList = function orcl(item, closeCallback) {
             var resolve = eavAdminDialogs.CreateResolve({ item: item });
-            return eavAdminDialogs.OpenModal("reorder-content-list/reorder-content-list.html", "ReorderContentList as vm", "", resolve, closeCallback);
+            return eavAdminDialogs.OpenModal("manage-content-list/manage-content-list.html", "ManageContentList as vm", "", resolve, closeCallback);
         };
 
         // 2dm 2015-10-07 - don't think this is in use, remove

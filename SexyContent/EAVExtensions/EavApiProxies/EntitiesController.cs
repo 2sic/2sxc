@@ -103,14 +103,11 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
         // todo: should refactor to save all items in 1 transaction
         public Dictionary<Guid, int> SaveMany([FromUri] int appId, [FromBody] List<EntityWithHeader> items)
         {
-            // var success = true;
-
             // first, save all to do it in 1 transaction
             // note that it won't save the SlotIsEmpty ones, as these won't be needed
             var postSaveIds = entitiesController.SaveMany(appId, items.Select(i => new EntityWithHeader { Header = i.Header, Entity = i.Entity}).ToList());
 
             // now assign all content-groups as needed
-
             var groupItems = items
                 .Where(i => i.Header.Group != null)
                 .GroupBy( i => i.Header.Group.Guid.ToString() + i.Header.Group.Index.ToString() + i.Header.Group.Add);
@@ -156,6 +153,21 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
                     contentGroup.UpdateEntityIfChanged(partName, index, postSaveId, true, presentationId);
 
             }
+
+            #region update-module-title
+            // check the contentGroup as to what should be the module title, then try to set it
+            // technically it could have multiple different groups to save in, 
+            // ...but for now we'll just update the current modules title
+            var modContentGroup = Sexy.ContentGroups.GetContentGroupForModule(Dnn.Module.ModuleID);
+
+            // todo: differentiate between published and not
+
+            var titleItem = modContentGroup.ListContent.FirstOrDefault() ?? modContentGroup.Content.FirstOrDefault();
+
+            if (titleItem != null)
+                Dnn.Module.ModuleTitle = titleItem.GetBestValue("EntityTitle").ToString();
+            #endregion
+
             return postSaveIds;
         }
 

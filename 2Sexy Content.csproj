@@ -199,13 +199,6 @@
     <Compile Include="Administration\ContentTypeAndDemoSelector.ascx.designer.cs">
       <DependentUpon>ContentTypeAndDemoSelector.ascx</DependentUpon>
     </Compile>
-    <Compile Include="Administration\Registers.ascx.cs">
-      <DependentUpon>Registers.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Administration\Registers.ascx.designer.cs">
-      <DependentUpon>Registers.ascx</DependentUpon>
-    </Compile>
     <Compile Include="API\SecurityContext.cs" />
     <Compile Include="API\Services.asmx.cs">
       <DependentUpon>Services.asmx</DependentUpon>
@@ -284,13 +277,6 @@
     </Compile>
     <Compile Include="EditDataSource.ascx.designer.cs">
       <DependentUpon>EditDataSource.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="EditList.ascx.cs">
-      <DependentUpon>EditList.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="EditList.ascx.designer.cs">
-      <DependentUpon>EditList.ascx</DependentUpon>
     </Compile>
     <Compile Include="EditTemplateFile.ascx.cs">
       <DependentUpon>EditTemplateFile.ascx</DependentUpon>
@@ -410,7 +396,6 @@
     <Content Include="Administration\Apps\AppImport.ascx" />
     <Content Include="Administration\Export.js" />
     <Content Include="Administration\ContentTypeAndDemoSelector.ascx" />
-    <Content Include="Administration\Registers.ascx" />
     <Content Include="API\Services.asmx" />
     <Content Include="BuildScripts\MSBuild.Community.Tasks.dll" />
     <Content Include="DnnWebForms\FileManager.ascx" />
@@ -418,7 +403,6 @@
     <Content Include="DnnWebForms\WebFormsBridge.ascx" />
     <Content Include="DnnWebForms\Wysiwyg.ascx" />
     <Content Include="EditDataSource.ascx" />
-    <Content Include="EditList.ascx" />
     <Content Include="EditTemplateFile.ascx" />
     <Content Include="Administration\Export.ascx" />
     <Content Include="Extensions\404.png" />
@@ -518,8 +502,8 @@
     <Content Include="src\sxc-admin\language-settings\languages.html" />
     <Content Include="src\sxc-admin\app-main\app-main.html" />
     <Content Include="src\sxc-admin\app-main\app-main-controller.js" />
-    <Content Include="src\sxc-admin\reorder-content-list\reorder-content-list-controller.js" />
-    <Content Include="src\sxc-admin\reorder-content-list\reorder-content-list.html" />
+    <Content Include="src\sxc-admin\manage-content-list\manage-content-list-controller.js" />
+    <Content Include="src\sxc-admin\manage-content-list\manage-content-list.html" />
     <Content Include="src\sxc-admin\replace-content\replace-content-controller.js" />
     <Content Include="src\sxc-admin\replace-content\replace-content.html" />
     <Content Include="src\sxc-admin\services\app-settings.js" />
