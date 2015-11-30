@@ -18,7 +18,12 @@ angular.module("SxcServices")
 
                 saveList: function (contentGroup, resortedList) {
                     return $http.post('app/contentgroup/itemlist', resortedList, { params: { appId: appId, guid: contentGroup.guid } });
+                },
+
+                getHeader: function (contentGroup) {
+                    return $http.get('app/contentgroup/header', { params: { appId: appId, guid: contentGroup.guid } });
                 }
+
 
             };
 

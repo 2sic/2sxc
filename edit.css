@@ -134,3 +134,6 @@
 .glyphicon-sort:before {
   content: "\e150";
 }
+.glyphicon-th-list:before {
+  content: "\e012";
+}

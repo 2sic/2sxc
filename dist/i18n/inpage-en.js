@@ -14,7 +14,7 @@
     "Published": "published",
     "MoveUp": "move up",
     "MoveDown": "move down",
-    "Sort": "sort",
+    "Sort": "sort / manage list",
     "Remove": "remove",
     "MoreActions": "more actions"
   },
