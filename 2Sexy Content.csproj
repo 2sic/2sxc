@@ -192,27 +192,6 @@
     <Compile Include="Administration\Apps\AppImport.ascx.designer.cs">
       <DependentUpon>AppImport.ascx</DependentUpon>
     </Compile>
-    <Compile Include="Administration\DataExport.ascx.cs">
-      <DependentUpon>DataExport.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Administration\DataExport.ascx.designer.cs">
-      <DependentUpon>DataExport.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="Administration\DataImport.ascx.cs">
-      <DependentUpon>DataImport.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Administration\DataImport.ascx.designer.cs">
-      <DependentUpon>DataImport.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="Administration\PortalConfiguration.ascx.cs">
-      <DependentUpon>PortalConfiguration.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Administration\PortalConfiguration.ascx.designer.cs">
-      <DependentUpon>PortalConfiguration.ascx</DependentUpon>
-    </Compile>
     <Compile Include="Administration\ContentTypeAndDemoSelector.ascx.cs">
       <DependentUpon>ContentTypeAndDemoSelector.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -429,10 +408,7 @@
     <Content Include="Administration\Apps\AppExport.ascx" />
     <Content Include="Administration\Apps\x AppManagement.ascx" />
     <Content Include="Administration\Apps\AppImport.ascx" />
-    <Content Include="Administration\DataExport.ascx" />
-    <Content Include="Administration\DataImport.ascx" />
     <Content Include="Administration\Export.js" />
-    <Content Include="Administration\PortalConfiguration.ascx" />
     <Content Include="Administration\ContentTypeAndDemoSelector.ascx" />
     <Content Include="Administration\Registers.ascx" />
     <Content Include="API\Services.asmx" />
@@ -626,7 +602,6 @@
     <Content Include="src\sxc-admin\services\_sxc-services.js" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Administration\App_LocalResources\ManageTemplates.ascx.resx" />
     <Content Include="Administration\App_LocalResources\EditTemplate.ascx.resx" />
   </ItemGroup>
   <ItemGroup>
@@ -634,7 +609,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Administration\App_LocalResources\EditTemplate.ascx.de-DE.resx" />
-    <Content Include="Administration\App_LocalResources\ManageTemplates.ascx.de-DE.resx" />
     <Content Include="App_LocalResources\View.ascx.de-DE.resx" />
   </ItemGroup>
   <ItemGroup>
@@ -689,36 +663,16 @@
     <Content Include="App_LocalResources\TemplateHelpGrid.ascx.de-DE.resx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Administration\App_LocalResources\PortalConfiguration.ascx.resx" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Administration\App_LocalResources\Registers.ascx.resx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Administration\App_LocalResources\Registers.ascx.de-DE.resx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Administration\App_LocalResources\PortalConfiguration.ascx.de-DE.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Administration\App_LocalResources\DataImport.ascx.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Administration\App_LocalResources\DataImport.ascx.de-DE.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Administration\App_LocalResources\DataExport.ascx.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Administration\App_LocalResources\DataExport.ascx.de-DE.resx" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="App_LocalResources\EditEntity.ascx.de-DE.resx" />
     <Content Include="App_LocalResources\EditEntity.ascx.resx" />
     <Content Include="Administration\Apps\App_LocalResources\AppConfig.ascx.resx" />
     <Content Include="Administration\App_LocalResources\WebApiHelp.ascx.resx" />
-    <Content Include="Administration\App_LocalResources\EAVManagement.ascx.resx" />
-    <Content Include="Administration\App_LocalResources\EAVManagement.ascx.de-DE.resx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="src\sxc-edit\form\" />
