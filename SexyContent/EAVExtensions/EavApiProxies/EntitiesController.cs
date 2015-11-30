@@ -158,9 +158,8 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
             // check the contentGroup as to what should be the module title, then try to set it
             // technically it could have multiple different groups to save in, 
             // ...but for now we'll just update the current modules title
+            // note: it also correctly handles published/unpublished, but I'm not sure why :)
             var modContentGroup = Sexy.ContentGroups.GetContentGroupForModule(Dnn.Module.ModuleID);
-
-            // todo: differentiate between published and not
 
             var titleItem = modContentGroup.ListContent.FirstOrDefault() ?? modContentGroup.Content.FirstOrDefault();
 
