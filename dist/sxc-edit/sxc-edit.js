@@ -93,7 +93,7 @@ angular.module("sxcFieldTemplates")
 
 
 	.directive("webFormsBridge", ["sxc", "portalRoot", function (sxc, portalRoot) {
-	    var webFormsBridgeUrl = portalRoot + "?tabid=" + $2sxc.urlParams.require("tid") + "&ctl=webformsbridge&mid=" + sxc.id + "&popUp=true";
+	    var webFormsBridgeUrl = portalRoot + "Default.aspx?tabid=" + $2sxc.urlParams.require("tid") + "&ctl=webformsbridge&mid=" + sxc.id + "&popUp=true";
 
 		return {
 			restrict: "A",
