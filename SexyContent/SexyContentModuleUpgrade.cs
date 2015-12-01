@@ -18,6 +18,8 @@ using ToSic.SexyContent.ImportExport;
 using System.Text;
 using System.Web.Hosting;
 using ToSic.Eav.BLL;
+using DotNetNuke.Entities.Modules;
+using DotNetNuke.Entities.Modules.Definitions;
 
 namespace ToSic.SexyContent
 {
@@ -92,6 +94,9 @@ namespace ToSic.SexyContent
                     case "08.00.04":
                         Version080004();
                         break;
+                    case "08.00.07":
+                        Version080007();
+                        break;
                 }
 
                 // Increase ClientDependency version upon each upgrade (System and all Portals)
@@ -118,7 +123,7 @@ namespace ToSic.SexyContent
         internal static void FinishAbortedUpgrade()
         {
             // Maybe this list can somehow be extracted from the module manifest?
-            var upgradeVersionList = new[] { "07.00.00", "07.00.03", "07.02.00", "07.02.02", "07.03.00", "07.03.01", "07.03.02", "07.03.03", "07.03.04", "08.00.00", "08.00.01", "08.00.02", "08.00.03", "08.00.04", "08.00.05", "08.00.06" };
+            var upgradeVersionList = new[] { "07.00.00", "07.00.03", "07.02.00", "07.02.02", "07.03.00", "07.03.01", "07.03.02", "07.03.03", "07.03.04", "08.00.00", "08.00.01", "08.00.02", "08.00.03", "08.00.04", "08.00.05", "08.00.06", "08.00.07" };
 
             // Run upgrade again for all versions that do not have a corresponding logfile
             foreach (var upgradeVersion in upgradeVersionList)
@@ -648,6 +653,33 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
 
 
         }
+
+        private static void Version080007()
+        {
+            var desktopModuleNames = new[] { "2sxc", "2sxc-app" };
+
+            // Remove settings and settingswrapper control
+            foreach(var d in desktopModuleNames)
+            {
+                var dmi = DesktopModuleController.GetDesktopModuleByModuleName(d, -1);
+                if (dmi != null)
+                {
+                    var mdi = dmi.ModuleDefinitions.FirstOrDefault();
+                    
+                    if (mdi.Value != null)
+                    {
+                        var settingsControl = ModuleControlController.GetModuleControlByControlKey("settings", mdi.Value.ModuleDefID);
+                        if(settingsControl != null)
+                            ModuleControlController.DeleteModuleControl(settingsControl.ModuleControlID);
+                        var settingsWrapperControl = ModuleControlController.GetModuleControlByControlKey("settingswrapper", mdi.Value.ModuleDefID);
+                        if (settingsWrapperControl != null)
+                            ModuleControlController.DeleteModuleControl(settingsWrapperControl.ModuleControlID);
+                    }
+                }
+            }
+            
+        }
+        
 
         /// <summary>
         /// Copy a Directory recursive
