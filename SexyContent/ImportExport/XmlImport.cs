@@ -268,21 +268,24 @@ namespace ToSic.SexyContent.ImportExport
 				var attributes = new List<ImportAttribute>();
                 var titleAttribute = new ImportAttribute();
 
-				foreach (var xElementAttribute in attributeSet.Element("Attributes").Elements("Attribute"))
-				{
-                    var attribute = new ImportAttribute
-					{
-						StaticName = xElementAttribute.Attribute("StaticName").Value,
-						Type = xElementAttribute.Attribute("Type").Value,
-						AttributeMetaData = GetImportEntities(xElementAttribute.Elements("Entity"), Constants.AssignmentObjectTypeIdFieldProperties)
-					};
+                if (attributeSet.Elements("Attributes").Any())
+                {
+                    foreach (var xElementAttribute in attributeSet.Element("Attributes").Elements("Attribute"))
+                    {
+                        var attribute = new ImportAttribute
+                        {
+                            StaticName = xElementAttribute.Attribute("StaticName").Value,
+                            Type = xElementAttribute.Attribute("Type").Value,
+                            AttributeMetaData = GetImportEntities(xElementAttribute.Elements("Entity"), Constants.AssignmentObjectTypeIdFieldProperties)
+                        };
 
-					attributes.Add(attribute);
+                        attributes.Add(attribute);
 
-					// Set Title Attribute
-					if (Boolean.Parse(xElementAttribute.Attribute("IsTitle").Value))
-						titleAttribute = attribute;
-				}
+                        // Set Title Attribute
+                        if (Boolean.Parse(xElementAttribute.Attribute("IsTitle").Value))
+                            titleAttribute = attribute;
+                    }
+                }
 
 				// Add AttributeSet
                 importAttributeSets.Add(new ImportAttributeSet
@@ -293,7 +296,8 @@ namespace ToSic.SexyContent.ImportExport
 					Attributes = attributes,
 					Scope = attributeSet.Attributes("Scope").Any() ? attributeSet.Attribute("Scope").Value : SexyContent.AttributeSetScope,
 					AlwaysShareConfiguration = AllowSystemChanges && attributeSet.Attributes("AlwaysShareConfiguration").Any() && Boolean.Parse(attributeSet.Attribute("AlwaysShareConfiguration").Value),
-					TitleAttribute = titleAttribute
+                    UsesConfigurationOfAttributeSet = attributeSet.Attributes("UsesConfigurationOfAttributeSet").Any() ? attributeSet.Attribute("UsesConfigurationOfAttributeSet").Value : "",
+                    TitleAttribute = titleAttribute
 				});
 			}
 

@@ -91,9 +91,6 @@ namespace ToSic.SexyContent.ImportExport
                     _isAppExport && Sexy.App.AppGuid != "Default"
                         ? new XElement("App",
                             new XAttribute("Guid", Sexy.App.AppGuid)
-                            //new XAttribute("Name", Sexy.App.Name),
-                            //new XAttribute("Version", Sexy.App.Configuration.Version),
-                            //new XAttribute("Folder", Sexy.App.Folder)
                             )
                         : null,
                     new XElement("Language", new XAttribute("Default", PortalSettings.Current.DefaultLanguage)),
@@ -143,6 +140,13 @@ namespace ToSic.SexyContent.ImportExport
                         new XAttribute("Description", Set.Description),
                         new XAttribute("Scope", Set.Scope),
                         Attributes);
+
+                    // Add Ghost-Info if content type inherits from another content type
+                    if (Set.UsesConfigurationOfAttributeSet.HasValue)
+                    {
+                        var parentAttributeSet = Sexy.ContentContext.SqlDb.AttributeSets.First(a => a.AttributeSetID ==  Set.UsesConfigurationOfAttributeSet.Value && a.ChangeLogDeleted == null);
+                        AttributeSet.Add(new XAttribute("UsesConfigurationOfAttributeSet", parentAttributeSet.StaticName));
+                    }
 
                     AttributeSets.Add(AttributeSet);
                 }
