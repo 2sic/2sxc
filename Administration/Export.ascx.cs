@@ -6,6 +6,7 @@ using DotNetNuke.Common;
 using Newtonsoft.Json;
 using ToSic.Eav;
 using ToSic.SexyContent.ImportExport;
+using System.Web;
 
 namespace ToSic.SexyContent
 {
@@ -79,7 +80,12 @@ namespace ToSic.SexyContent
             Response.AddHeader("Content-Disposition", string.Format("attachment; filename={0}", "SexyContent-Export.xml"));
             Response.AddHeader("Content-Length", xml.Length.ToString());
             Response.ContentType = "text/xml";
-            Response.End();
+            if (Response.IsClientConnected)
+            {
+                Response.Flush();
+            }
+            Response.SuppressContent = true;
+            HttpContext.Current.ApplicationInstance.CompleteRequest();
         }
 
     }

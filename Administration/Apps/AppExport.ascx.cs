@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Web;
 using ToSic.SexyContent.ImportExport;
 
 namespace ToSic.SexyContent.Administration.Apps
@@ -27,8 +28,12 @@ namespace ToSic.SexyContent.Administration.Apps
 
                 stream.WriteTo(Response.OutputStream);
 
-                Response.Flush();
-                Response.End();
+                if (Response.IsClientConnected)
+                {
+                    Response.Flush();
+                }
+                Response.SuppressContent = true;
+                HttpContext.Current.ApplicationInstance.CompleteRequest();
             }
         }
     }
