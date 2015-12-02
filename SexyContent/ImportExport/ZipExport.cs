@@ -35,8 +35,9 @@ namespace ToSic.SexyContent.ImportExport
         {
             // Get Export XML
             var attributeSets = _sexy.GetAvailableContentTypes(SexyContent.AttributeSetScope).ToList();
-            attributeSets.AddRange(_sexy.GetAvailableContentTypes(SexyContent.AttributeSetScopeApps));
-            attributeSets = attributeSets.Where(a => !a.UsesConfigurationOfAttributeSet.HasValue).ToList();
+            var attrSetsApp = _sexy.GetAvailableContentTypes(SexyContent.AttributeSetScopeApps);
+            attrSetsApp = attrSetsApp.Where(a => !a.UsesConfigurationOfAttributeSet.HasValue).ToList(); // todo: the full real rule should be - don't include those, whose master is always-inherit
+            attributeSets.AddRange(attrSetsApp);
 
             var attributeSetIds = attributeSets.Select(p => p.AttributeSetId.ToString()).ToArray();
 			var entities = SexyContent.GetInitialDataSource(_zoneId, _appId).Out["Default"].List.Where(e => e.Value.AssignmentObjectTypeId != SexyContent.AssignmentObjectTypeIDSexyContentTemplate

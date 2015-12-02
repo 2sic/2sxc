@@ -1954,7 +1954,7 @@ angular.module("EavAdminUi", ["ng",
 
             svc.openContentTypeEdit = function octe(item, closeCallback) {
                 var resolve = svc.CreateResolve({ item: item });
-                return svc.OpenModal("content-types/content-types-edit.html", "Edit as vm", "sm", resolve, closeCallback);
+                return svc.OpenModal("content-types/content-types-edit.html", "Edit as vm", "", resolve, closeCallback);
             };
 
             svc.openContentTypeFields = function octf(item, closeCallback) {
