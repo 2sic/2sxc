@@ -243,7 +243,6 @@ $2sxc.getManageController = function (id) {
 
             // when doing new, there may be a prefill in the link to initialize the new item
             if (settings.prefill) {
-                //var prefill = JSON.stringify(settings.prefill);
                 for (var i = 0; i < items.length; i++)
                     items[i].Prefill = settings.prefill;
             }
