@@ -69,11 +69,12 @@ namespace ToSic.SexyContent
             pnlChoose.Visible = false;
 
             var contentTypeIds = txtSelectedContentTypes.Text.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
-            var entityIds = txtSelectedEntities.Text.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            //var templateIds = txtSelectedTemplates.Text.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            var entityIds = txtSelectedEntities.Text.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            entityIds.AddRange(txtSelectedTemplates.Text.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries));
+            //var templateIds = ;
 
             var messages = new List<ExportImportMessage>();
-            var xml = new XmlExporter(_zoneId, _appId, false, contentTypeIds, entityIds).GenerateNiceXml();
+            var xml = new XmlExporter(_zoneId, _appId, false, contentTypeIds, entityIds.ToArray()).GenerateNiceXml();
 
             Response.Clear();
             Response.Write(xml);
