@@ -50,7 +50,6 @@ namespace ToSic.SexyContent
 
                     ClientResourceManager.RegisterScript(Page, root + "js/2sxc.api" + ext, 90);
                     ClientResourceManager.RegisterScript(Page, root + "dist/inpage/inpage" + ext, 91);
-                    // ClientResourceManager.RegisterScript(Page, root + "js/2sxc.api.manage" + ext, 91);
 
                     ClientResourceManager.RegisterScript(Page, root + "js/angularjs/2sxc4ng" + ext, 93); 
                     ClientResourceManager.RegisterScript(Page, root + "dist/config/config" + ext, 93); 
