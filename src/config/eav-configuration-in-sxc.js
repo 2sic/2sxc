@@ -43,8 +43,6 @@ if (window.angular) // needed because the file is also included in older non-ang
         .constant("languages", window.$eavUIConfig.languages)
         .factory("eavConfig", function ($location, sxc, portalRoot, systemRoot, appRoot, AppInstanceId) {
 
-            // var dnnModuleId = $location.search().mid;
-
             return {
                 dialogClass: "dnnFormPopup",
 
@@ -101,7 +99,7 @@ if (window.angular) // needed because the file is also included in older non-ang
                             { From: "unsaved3", Out: "Default", To: "Out", In: "Default" }
                         ]
                     },
-                    testParameters: "[Module:ModuleID]=" + AppInstanceId // dnnModuleId 
+                    testParameters: "[Module:ModuleID]=" + AppInstanceId 
                 },
                 metadataOfEntity: 4,
                 metadataOfAttribute: 2,
