@@ -41,26 +41,13 @@
 if (window.angular) // needed because the file is also included in older non-angular dialogs
     angular.module("EavConfiguration", [])
         .constant("languages", window.$eavUIConfig.languages)
-        .factory("eavConfig", ["$location", "sxc", "portalRoot", "systemRoot", "appRoot", function ($location, sxc, portalRoot, systemRoot, appRoot) {
+        .factory("eavConfig", ["$location", "sxc", "portalRoot", "systemRoot", "appRoot", "AppInstanceId", function ($location, sxc, portalRoot, systemRoot, appRoot, AppInstanceId) {
 
-            var dnnModuleId = $location.search().mid;
+            // var dnnModuleId = $location.search().mid;
 
             return {
                 dialogClass: "dnnFormPopup",
 
-                adminUrls: {
-                    pipelineDesigner: function (appId, pipelineId) {
-                        return "ui.html#"
-                            + "dialog=pipeline-designer"
-                            + "&appId=" + appId + "&pipelineId=" + pipelineId
-                            + "&zoneid=" + $2sxc.urlParams.get("zoneId")
-                            + "&tid=" + $2sxc.urlParams.get("tid")
-                            + "&mid=" + $2sxc.urlParams.get("mid")
-                            + "&lang=" + $2sxc.urlParams.get("lang")
-                            + "&langpri=" + $2sxc.urlParams.get("langpri")
-                            + "&langs=" + $2sxc.urlParams.get("langs");
-                    }
-                },
                 getUrlPrefix: function (area) {
                     var result = "";
                     if (area === "api") {
@@ -114,7 +101,7 @@ if (window.angular) // needed because the file is also included in older non-ang
                             { From: "unsaved3", Out: "Default", To: "Out", In: "Default" }
                         ]
                     },
-                    testParameters: "[Module:ModuleID]=" + dnnModuleId 
+                    testParameters: "[Module:ModuleID]=" + AppInstanceId // dnnModuleId 
                 },
                 metadataOfEntity: 4,
                 metadataOfAttribute: 2,

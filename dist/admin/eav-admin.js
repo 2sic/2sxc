@@ -2019,8 +2019,7 @@ angular.module("EavAdminUi", ["ng",
 
             //#region Pipeline Designer
             svc.editPipeline = function ep(appId, pipelineId, closeCallback) {
-                var url = eavConfig.adminUrls.pipelineDesigner(appId, pipelineId);
-                url = svc.derivedUrl({
+                var url = svc.derivedUrl({
                     dialog: "pipeline-designer",
                     pipelineId: pipelineId
                 });
