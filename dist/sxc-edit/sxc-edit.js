@@ -268,11 +268,15 @@ angular.module("sxcFieldTemplates")
 			if (!newValue)
 				return;
 
-			if (newValue.indexOf("File") !== -1 || newValue.indexOf("Page") !== -1) {
+		    // handle short-ID links like file:17
+		    var linkLowered = newValue.toLowerCase();
+		    if (linkLowered.indexOf("file") !== -1 || linkLowered.indexOf("page") !== -1) {
 				$http.get("dnn/Hyperlink/ResolveHyperlink?hyperlink=" + encodeURIComponent(newValue)).then(function (result) {
 					if(result.data)
 						vm.testLink = result.data;
 				});
+			} else {
+			    vm.testLink = newValue;
 			}
 		});
 
