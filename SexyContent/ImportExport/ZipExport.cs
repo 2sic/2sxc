@@ -34,10 +34,6 @@ namespace ToSic.SexyContent.ImportExport
         public MemoryStream ExportApp(bool includeContentGroups = false, bool resetAppGuid = false)
         {
             // Get Export XML
-            //var attributeSets = _sexy.GetAvailableContentTypes(SexyContent.AttributeSetScope).ToList();
-            //var attrSetsApp = _sexy.GetAvailableContentTypes(SexyContent.AttributeSetScopeApps);
-            //attrSetsApp = attrSetsApp.Where(a => !a.UsesConfigurationOfAttributeSet.HasValue).ToList(); // todo: the full real rule should be - don't include those, whose master is always-inherit
-            //attributeSets.AddRange(attrSetsApp);
             var attributeSets = _sexy.GetAvailableContentTypes(true);
             attributeSets = attributeSets.Where(a => !a.ConfigurationIsOmnipresent);
 
