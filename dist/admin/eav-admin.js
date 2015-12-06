@@ -1975,7 +1975,7 @@ angular.module("EavAdminUi", ["ng",
 
             svc.openEditItems = function oel(items, closeCallback) {
                 var resolve = svc.CreateResolve({ items: items });
-                return svc.OpenModal("form/main-form.html", "EditEntityWrapperCtrl as vm", "lg", resolve, closeCallback);
+                return svc.OpenModal("form/main-form.html", "EditEntityWrapperCtrl as vm", "ent-edit", resolve, closeCallback);
             };
 
             svc.openItemHistory = function ioh(entityId, closeCallback) {
