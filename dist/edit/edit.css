@@ -46,7 +46,6 @@
 
 .collapse-entity-button {
     position: relative;
-    /*left: 13px;*/
     top: 0;
     padding-top: 8px;
     background-color: white;
@@ -58,6 +57,17 @@
 }
 
 .angular-google-map-container { height: 400px; }
+
+/* shrink space a bit in input boxes as it's too large by default '*/
+.input-lg { padding-left: 8px; padding-right: 8px }
+
+/* This should make sure the entity-edit dialog is always 100% screen width on small screens, but not lager than 1000px */
+.modal-ent-edit { 
+    max-width: 1000px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
 .checkbox.checkbox-labeled input[type='checkbox'] { margin-left:0; }
 .eav-entityselect-item { border: 1px solid #DDD;width: 295px; margin-top: -1px; }
 .eav-entityselect ol { margin-top: 1px; }

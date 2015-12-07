@@ -16,7 +16,7 @@ namespace ToSic.SexyContent.ImportExport
         private readonly int _zoneId;
         private readonly SexyContent _sexy;
         private string _sexycontentContentgroupName = "2SexyContent-ContentGroup";
-        private string _blankGuid = "00000000-0000-0000-0000-000000000000";
+        private string _blankGuid = Guid.Empty.ToString();// "00000000-0000-0000-0000-000000000000";
         private string _zipFolderForPortalFiles = "PortalFiles";
         private string _zipFolderForAppStuff = "2sexy";
         private string _AppXmlFileName = "App.xml";
@@ -34,10 +34,8 @@ namespace ToSic.SexyContent.ImportExport
         public MemoryStream ExportApp(bool includeContentGroups = false, bool resetAppGuid = false)
         {
             // Get Export XML
-            var attributeSets = _sexy.GetAvailableContentTypes(SexyContent.AttributeSetScope).ToList();
-            var attrSetsApp = _sexy.GetAvailableContentTypes(SexyContent.AttributeSetScopeApps);
-            attrSetsApp = attrSetsApp.Where(a => !a.UsesConfigurationOfAttributeSet.HasValue).ToList(); // todo: the full real rule should be - don't include those, whose master is always-inherit
-            attributeSets.AddRange(attrSetsApp);
+            var attributeSets = _sexy.GetAvailableContentTypes(true);
+            attributeSets = attributeSets.Where(a => !a.ConfigurationIsOmnipresent);
 
             var attributeSetIds = attributeSets.Select(p => p.AttributeSetId.ToString()).ToArray();
 			var entities = SexyContent.GetInitialDataSource(_zoneId, _appId).Out["Default"].List.Where(e => e.Value.AssignmentObjectTypeId != SexyContent.AssignmentObjectTypeIDSexyContentTemplate
