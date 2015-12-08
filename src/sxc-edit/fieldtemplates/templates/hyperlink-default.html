@@ -55,13 +55,13 @@ ADAM - sponsored with ♥ by 2sic.com">
                     </div>
                 </div>
 
-            <!--
+            
             <div class="dz-preview" ng-disabled="to.disabled" ng-click="vm.adam.addFolder()">
                 <div class="dz-image" style="background-color: whitesmoke">
                 </div>
                 <div class="dz-details" style="opacity: 1">
                     <div class="dz-size">
-                        <button type="button" class="btn btn-primary btn-lg" ng-disabled="to.disabled">
+                        <button type="button" class="btn btn-default btn-lg" ng-disabled="to.disabled">
                             <i icon="plus"></i>
                             <i icon="th-large"></i>
                         </button>
@@ -71,10 +71,25 @@ ADAM - sponsored with ♥ by 2sic.com">
                     </div>
                 </div>
             </div>
-                -->
+
+                <div class="dz-preview" ng-disabled="to.disabled" ng-if="vm.adam.folders.length > 0" ng-click="vm.adam.goUp()">
+                    <div class="dz-image" style="background-color: whitesmoke">
+                    </div>
+                    <div class="dz-details" style="opacity: 1">
+                        <div class="dz-size">
+                            <button type="button" class="btn btn-default btn-square btn-lg" ng-disabled="to.disabled">
+                                <i icon="level-up"></i>
+                            </button>
+                        </div>
+                        <div class="dz-filename">
+                            <span data-dz-name="">up</span>
+                        </div>
+                    </div>
+                </div>
 
 
-                <div class="dz-preview" ng-class="{ 'dz-success': value.Value.toLowerCase() == 'file:' + item.Id }" ng-repeat="item in vm.items | filter: { IsFolder:false} | orderBy:'-IsFolder'" ng-click="vm.adam.select(item)">
+
+                <div class="dz-preview" ng-class="{ 'dz-success': value.Value.toLowerCase() == 'file:' + item.Id }" ng-repeat="item in vm.items  | orderBy:'-IsFolder'" ng-click="vm.adam.select(item)">
                     <div ng-if="item.Type == 'image'" class="dz-image">
                         <img data-dz-thumbnail="" alt="{{ item.Id + ':' + item.Name }}" ng-src="{{ '/portals/0/' + item.Path + '?w=120&h=120&mode=crop' }}">
                     </div>
@@ -102,6 +117,7 @@ ADAM - sponsored with ♥ by 2sic.com">
                             <span data-dz-name="">{{ item.Name }}</span>
                         </div>
                         <div class="dz-filename">
+                            <span ng-click="vm.adam.del(item)" stop-event="click"><i icon="remove"></i></span>
                             <span ng-if="!item.IsFolder" data-dz-name="">{{ (item.Size / 1024).toFixed(0) }} kb</span>
                         </div>
                     </div>

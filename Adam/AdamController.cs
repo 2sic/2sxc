@@ -209,8 +209,8 @@ namespace ToSic.SexyContent.Adam
             return Items(guid, field, subfolder);
         }
 
-        [HttpDelete]
-        public bool Asset(Guid guid, string field, string subfolder, bool isFolder, int id)
+        [HttpGet]
+        public bool Delete(Guid guid, string field, string subfolder, bool isFolder, int id)
         {
             ExplicitlyRecheckEditPermissions();
 
@@ -270,7 +270,7 @@ namespace ToSic.SexyContent.Adam
             // create all folders to ensure they exist. Must do one-by-one because dnn must have it in the catalog
             var pathParts = path.Split('/');
             var pathToCheck = ""; // pathParts[0];
-            foreach (string part in pathParts)
+            foreach (string part in pathParts.Where(p => !string.IsNullOrEmpty(p)))
             {
                 pathToCheck += part + "/";
                 if (folderManager.FolderExists(Dnn.Portal.PortalId, pathToCheck)) continue;

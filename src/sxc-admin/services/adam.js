@@ -21,10 +21,11 @@ angular.module("SxcServices")
 
             svc.goIntoFolder = function(childFolder) {
                 svc.folders.push(childFolder);
-                var pathParts = childFolder.Path.split('/');
+                var pathParts = childFolder.Path.split("/");
                 var subPath = "";
-                for (var c = svc.folders.length + 3; c < pathParts.length; c++)
-                    subPath += pathParts[c] + "/";
+                for (var c = 0; c < svc.folders.length; c++)
+                    subPath = pathParts[pathParts.length - c - 2] + "/" + subPath;
+
                 subPath = subPath.replace("//", "/");
                 if (subPath[subPath.length - 1] === "/")
                     subPath = subPath.substr(0, subPath.length - 1);
@@ -34,14 +35,25 @@ angular.module("SxcServices")
                 // now assemble the correct subfolder based on the folders-array
                 svc.subfolder = subPath;
                 svc.liveListReload();
-                //alert(subPath);
                 return subPath;
+            };
+
+            svc.goUp = function() {
+                if (svc.folders.length > 0)
+                    svc.folders.pop();
+                if (svc.folders.length > 0) {
+                    svc.subfolder = svc.folders[svc.folders.length - 1].Subfolder;
+                } else {
+                    svc.subfolder = "";
+                }
+                svc.liveListReload();
+                return svc.subfolder;
             };
 
             // delete, then reload
             // IF verb DELETE fails, so I'm using get for now
-            svc.delete = function del(isFolder, id) {
-                return $http.delete(svc.url + "/delete", {}, { params: { subfolder: svc.subfolder, isFolder: isFolder, id: id } })
+            svc.delete = function del(item) {
+                return $http.get(svc.url + "/delete", { params: { subfolder: svc.subfolder, isFolder: item.IsFolder, id: item.Id } })
                     .then(svc.liveListReload);
             };
 

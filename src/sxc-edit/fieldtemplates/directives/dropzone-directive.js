@@ -39,7 +39,7 @@ angular.module("sxcFieldTemplates")
 
                     "processing": function (file) {
                         this.options.url = (scope.adam.subFolder === "")
-                            ? this.options.url
+                            ? this.options.urlRoot
                             : this.options.urlRoot + "?subfolder=" + scope.adam.subFolder;
                     },
 

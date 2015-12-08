@@ -116,6 +116,7 @@
 
 	        vm.adam.get = function() {
 	            vm.items = vm.adam.svc.liveList();
+	            vm.adam.folders = vm.adam.svc.folders;
 	        };
 
 	        vm.adam.toggle = function toggle() {
@@ -138,10 +139,18 @@
 	                .then(vm.adam.refresh);
 	        };
 
+	        vm.adam.del = function del(item) {
+	            var ok = window.confirm("delete ok?");
+	            if (ok)
+	                vm.adam.svc.delete(item);
+	        };
+
 	        vm.adam.goIntoFolder = function(folder) {
-	            // todo: go to sub-folder
 	            var subFolder = vm.adam.svc.goIntoFolder(folder);
 	            vm.adam.subFolder = subFolder;
+	        };
+	        vm.adam.goUp = function () {
+	            vm.adam.subFolder = vm.adam.svc.goUp();
 	        };
 	        //#endregion
 	    });
