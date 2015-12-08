@@ -23,7 +23,14 @@ $2sxc.ng = {
         angular.module("confSxcApp" + iid, [])
             .constant("AppInstanceId", iid)
             .constant("AppServiceFramework", sf)
-            .constant("HttpHeaders", { "ModuleId": iid, "TabId": sf.getTabId(), "RequestVerificationToken": sf.getAntiForgeryValue() });
+            .constant("HttpHeaders", {
+                "ModuleId": iid,
+                "TabId": sf.getTabId(),
+                "RequestVerificationToken": sf.getAntiForgeryValue(),
+                "Debugging-Hint": "bootstrapped by 2sxc4ng",
+                "Cache-Control": "no-cache", // had to add because of browser ajax caching issue #437
+                "Pragma": "no-cache"
+            });
         var allDependencies = ["confSxcApp" + iid, "2sxc4ng"].concat(dependencies || [ngModName]);
 
         angular.element(document).ready(function () {
