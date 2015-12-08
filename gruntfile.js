@@ -332,6 +332,9 @@ module.exports = function (grunt) {
         
 
         watch: {
+            options : {
+                atBegin: true
+            },
             sxcbuild: {
                 files: ["gruntfile.js", "src/**"],
                 tasks: ["build"]

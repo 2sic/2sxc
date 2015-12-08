@@ -11,8 +11,8 @@
         "ui.tree",
         "2sxc4ng",
         "SxcEditTemplates",
-        "EavConfiguration"
-        //"ngDropzone"
+        "EavConfiguration",
+        "SxcServices"
     ]);
 
 })();
@@ -30,6 +30,7 @@ angular.module("sxcFieldTemplates")
 
                 var config = {
                     url: url,
+                    urlRoot: url,
                     maxFilesize: 100,
                     paramName: "uploadfile",
                     maxThumbnailFilesize: 10,
@@ -48,13 +49,16 @@ angular.module("sxcFieldTemplates")
 
                 var eventHandlers = {
                     'addedfile': function(file) {
-                        //scope.file = file;
-                        //if (this.files[1] !== null) {
-                        //    this.removeFile(this.files[0]);
-                        //}
                         scope.$apply(function() {
                             scope.fileAdded = true;
+                            scope.uploading = true;
                         });
+                    },
+
+                    "processing": function (file) {
+                        this.options.url = (scope.adam.subFolder === "")
+                            ? this.options.url
+                            : this.options.urlRoot + "?subfolder=" + scope.adam.subFolder;
                     },
 
                     'success': function (file, response) {
@@ -63,6 +67,14 @@ angular.module("sxcFieldTemplates")
                             scope.$apply();
                         } else {
                             alert("Upload failed because: " + response.Error);
+                        }
+                    },
+
+                    "queuecomplete": function (file) {
+                        if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
+                            scope.uploading = false;
+                            if (scope.adam && scope.adam.queueComplete)
+                                scope.adam.queueComplete();
                         }
                     }
                 };
@@ -149,67 +161,6 @@ angular.module("sxcFieldTemplates")
 
     .config(["formlyConfigProvider", function (formlyConfigProvider) {
 
-        // for now identical with -adv, but later will change
-		formlyConfigProvider.setType({
-			name: "string-wysiwyg",
-			templateUrl: "fieldtemplates/templates/string-wysiwyg.html",
-			wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"],
-			controller: "FieldTemplate-WysiwygCtrl as vm"
-		});
-
-        // for now identical with -adv, but later will change
-		formlyConfigProvider.setType({
-			name: "string-wysiwyg-adv",
-			templateUrl: "fieldtemplates/templates/string-wysiwyg.html",
-			wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"],
-			controller: "FieldTemplate-WysiwygCtrl as vm"
-		});
-
-        
-	}])
-
-
-	.controller("FieldTemplate-WysiwygCtrl", ["$scope", function ($scope) {
-
-		var vm = this;
-
-		// Everything the WebForms bridge (iFrame) should have access to
-		vm.bridge = {
-		    initialValue: "",
-            initialReadOnly: false,
-		    onChanged: function (newValue) {
-				$scope.$apply(function () {
-					$scope.value.Value = newValue;
-				});
-			},
-			setValue: function (value) { vm.bridge.initialValue = value; },
-			setReadOnly: function(readOnly) { vm.bridge.initialReadOnly = readOnly; }
-		};
-
-		$scope.$watch("value.Value", function (newValue, oldValue) {
-			if (newValue !== oldValue)
-				vm.bridge.setValue(newValue);
-		});
-
-		$scope.$watch("to.disabled", function (newValue, oldValue) {
-			if (newValue !== oldValue)
-				vm.bridge.setReadOnly(newValue);
-		});
-
-	}]);
-
-
-})();
-
-(function () {
-	"use strict";
-
-	/* This app registers all field templates for 2sxc in the angularjs sxcFieldTemplates app */
-
-	angular.module("sxcFieldTemplates")
-
-    .config(["formlyConfigProvider", function (formlyConfigProvider) {
-
 		formlyConfigProvider.setType({
 			name: "hyperlink-default",
 			templateUrl: "fieldtemplates/templates/hyperlink-default.html",
@@ -219,9 +170,10 @@ angular.module("sxcFieldTemplates")
         
 	}])
 
-	.controller("FieldTemplate-HyperlinkCtrl", ["$modal", "$scope", "$http", "sxc", function ($modal, $scope, $http, sxc) {
+	.controller("FieldTemplate-HyperlinkCtrl", ["$modal", "$scope", "$http", "sxc", "adamSvc", "debugState", function ($modal, $scope, $http, sxc, adamSvc, debugState) {
 
-		var vm = this;
+	    var vm = this;
+	    vm.debug = debugState;
 		vm.modalInstance = null;
 		vm.testLink = "";
 		vm.checkImgRegEx = /(?:([^:\/?#]+):)?(?:\/\/([^\/?#]*))?([^?#]*\.(?:jpg|jpeg|gif|png))(?:\?([^#]*))?(?:#(.*))?/i;
@@ -300,6 +252,112 @@ angular.module("sxcFieldTemplates")
 			});
 		};
 
+		vm.getExistingFiles = function () {
+		};
+
+	    //#region adam
+		var header = $scope.to.header;
+		var field = $scope.options.key;
+		var entityGuid = header.Guid;
+
+            $scope.adam = vm.adam = {
+                show: false,
+                subFolder: ""
+	        };
+            vm.adam.svc = adamSvc(header.ContentTypeName, entityGuid, field, "");
+            vm.adam.refresh = vm.adam.svc.liveListReload;
+
+	        vm.adam.get = function() {
+	            vm.items = vm.adam.svc.liveList();
+	        };
+
+	        vm.adam.toggle = function toggle() {
+	            vm.adam.show = !vm.adam.show;
+	            vm.adam.get();
+	        };
+	        vm.adam.select = function (fileItem) {
+	            if (!fileItem.IsFolder)
+	                $scope.value.Value = "File:" + fileItem.Id;
+	            else 
+	                vm.adam.goIntoFolder(fileItem);
+	        };
+	        vm.adam.queueComplete = function qC() {
+	            vm.adam.refresh();
+	        };
+
+	        vm.adam.addFolder = function() {
+	            var folderName = window.prompt("Folder Name?");
+	            vm.adam.svc.addFolder(folderName)
+	                .then(vm.adam.refresh);
+	        };
+
+	        vm.adam.goIntoFolder = function(folder) {
+	            // todo: go to sub-folder
+	            var subFolder = vm.adam.svc.goIntoFolder(folder);
+	            vm.adam.subFolder = subFolder;
+	        };
+	        //#endregion
+	    }]);
+
+
+})();
+
+(function () {
+	"use strict";
+
+	/* This app registers all field templates for 2sxc in the angularjs sxcFieldTemplates app */
+
+	angular.module("sxcFieldTemplates")
+
+    .config(["formlyConfigProvider", function (formlyConfigProvider) {
+
+        // for now identical with -adv, but later will change
+		formlyConfigProvider.setType({
+			name: "string-wysiwyg",
+			templateUrl: "fieldtemplates/templates/string-wysiwyg.html",
+			wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"],
+			controller: "FieldTemplate-WysiwygCtrl as vm"
+		});
+
+        // for now identical with -adv, but later will change
+		formlyConfigProvider.setType({
+			name: "string-wysiwyg-adv",
+			templateUrl: "fieldtemplates/templates/string-wysiwyg.html",
+			wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"],
+			controller: "FieldTemplate-WysiwygCtrl as vm"
+		});
+
+        
+	}])
+
+
+	.controller("FieldTemplate-WysiwygCtrl", ["$scope", function ($scope) {
+
+		var vm = this;
+
+		// Everything the WebForms bridge (iFrame) should have access to
+		vm.bridge = {
+		    initialValue: "",
+            initialReadOnly: false,
+		    onChanged: function (newValue) {
+				$scope.$apply(function () {
+					$scope.value.Value = newValue;
+				});
+			},
+			setValue: function (value) { vm.bridge.initialValue = value; },
+			setReadOnly: function(readOnly) { vm.bridge.initialReadOnly = readOnly; }
+		};
+
+		$scope.$watch("value.Value", function (newValue, oldValue) {
+			if (newValue !== oldValue)
+				vm.bridge.setValue(newValue);
+		});
+
+		$scope.$watch("to.disabled", function (newValue, oldValue) {
+			if (newValue !== oldValue)
+				vm.bridge.setReadOnly(newValue);
+		});
+
 	}]);
 
 
@@ -346,7 +404,7 @@ angular.module('SxcEditTemplates',[]).run(['$templateCache', function($templateC
     "\n" +
     "{{'Edit.Fields.Hyperlink.Default.Tooltip2' | translate }}\r" +
     "\n" +
-    "ADAM - sponsored with ♥ by 2sic.com\"> <span class=input-group-btn style=\"vertical-align: top\"><button type=button class=\"btn btn-primary dropzone-adam input-lg\" ng-disabled=to.disabled tooltip=\"{{'Edit.Fields.Hyperlink.Default.AdamUploadLabel' | translate }}\"><i icon=upload></i> <i icon=apple></i></button> <button tabindex=-1 type=button class=\"btn btn-default dropdown-toggle input-lg\" dropdown-toggle ng-disabled=to.disabled><i icon=option-horizontal></i></button></span><ul class=\"dropdown-menu pull-right\" role=menu><li role=menuitem><a class=dropzone-adam href=javascript:void(0);><i icon=apple></i> <span translate=Edit.Fields.Hyperlink.Default.MenuAdam></span></a></li><li role=menuitem ng-if=\"to.settings['merged'].ShowPagePicker\"><a ng-click=\"vm.openDialog('pagepicker')\" href=javascript:void(0)><i icon=home></i> <span translate=Edit.Fields.Hyperlink.Default.MenuPage></span></a></li><li role=menuitem ng-if=\"to.settings['merged'].ShowImageManager\"><a ng-click=\"vm.openDialog('imagemanager')\" href=javascript:void(0)><i icon=picture></i> <span translate=Edit.Fields.Hyperlink.Default.MenuImage></span></a></li><li role=menuitem ng-if=\"to.settings['merged'].ShowFileManager\"><a ng-click=\"vm.openDialog('documentmanager')\" href=javascript:void(0)><i icon=file></i> <span translate=Edit.Fields.Hyperlink.Default.MenuDocs></span></a></li></ul></div><div ng-if=vm.showPreview style=\"position: relative\"><div style=\"position: absolute;z-index: 100;background: white;top: 10px;text-align: center;left: 0;right: 0\"><img ng-src=\"{{vm.thumbnailUrl(2)}}\"></div></div><div ng-if=value.Value><a href={{vm.testLink}} target=_blank tabindex=-1 tooltip={{vm.testLink}}><i icon=new-window></i> <span>&nbsp;... {{vm.testLink.substr(vm.testLink.lastIndexOf(\"/\"), 100)}}</span></a></div><div class=dropzone-previews></div><div class=small ng-show=fileAdded><a href=\"http://2sxc.org/help?tag=adam\" target=_blank tooltip=\"ADAM is the Automatic Digital Assets Manager - click to discover more\"><i icon=apple></i> Adam</a> is sponsored with ♥ by <a tabindex=-1 href=\"http://2sic.com/\" target=_blank>2sic.com</a></div></div></div>"
+    "ADAM - sponsored with ♥ by 2sic.com\"> <span class=input-group-btn style=\"vertical-align: top\"><button type=button class=\"btn btn-primary xdropzone-adam btn-lg\" ng-disabled=to.disabled tooltip=\"{{'Edit.Fields.Hyperlink.Default.AdamUploadLabel' | translate }}\" ng-click=vm.adam.toggle()><i icon=upload></i> <i icon=apple></i></button> <button tabindex=-1 type=button class=\"btn btn-default dropdown-toggle btn-lg btn-square\" dropdown-toggle ng-disabled=to.disabled><i icon=option-horizontal></i></button></span><ul class=\"dropdown-menu pull-right\" role=menu><li role=menuitem><a class=dropzone-adam href=javascript:void(0);><i icon=apple></i> <span translate=Edit.Fields.Hyperlink.Default.MenuAdam></span></a></li><li role=menuitem ng-if=\"to.settings['merged'].ShowPagePicker\"><a ng-click=\"vm.openDialog('pagepicker')\" href=javascript:void(0)><i icon=home></i> <span translate=Edit.Fields.Hyperlink.Default.MenuPage></span></a></li><li role=menuitem ng-if=\"to.settings['merged'].ShowImageManager\"><a ng-click=\"vm.openDialog('imagemanager')\" href=javascript:void(0)><i icon=picture></i> <span translate=Edit.Fields.Hyperlink.Default.MenuImage></span></a></li><li role=menuitem ng-if=\"to.settings['merged'].ShowFileManager\"><a ng-click=\"vm.openDialog('documentmanager')\" href=javascript:void(0)><i icon=file></i> <span translate=Edit.Fields.Hyperlink.Default.MenuDocs></span></a></li></ul></div><div ng-if=vm.showPreview style=\"position: relative\"><div style=\"position: absolute; z-index: 100; background: white; top: 10px; text-align: center; left: 0; right: 0\"><img ng-src=\"{{vm.thumbnailUrl(2)}}\"></div></div><div class=\"small pull-right\"><a href=\"http://2sxc.org/help?tag=adam\" target=_blank tooltip=\"ADAM is the Automatic Digital Assets Manager - click to discover more\"><i icon=apple></i> Adam</a> is sponsored with ♥ by <a tabindex=-1 href=\"http://2sic.com/\" target=_blank>2sic.com</a></div><div ng-if=value.Value><a href={{vm.testLink}} target=_blank tabindex=-1 tooltip={{vm.testLink}}><i icon=new-window></i> <span>&nbsp;... {{vm.testLink.substr(vm.testLink.lastIndexOf(\"/\"), 100)}}</span></a></div><div ng-show=vm.adam.show><div><div class=\"dz-preview dropzone-adam\" ng-disabled=to.disabled tooltip=\"{{'Edit.Fields.Hyperlink.Default.AdamUploadLabel' | translate }}\"><div class=dz-image style=\"background-color: whitesmoke\"></div><div class=dz-details style=\"opacity: 1\"><div class=dz-size><button type=button class=\"btn btn-primary btn-lg\" ng-disabled=to.disabled><i icon=plus></i> <i icon=file></i></button></div><div class=dz-filename><span data-dz-name=\"\">drag & drop files</span></div></div></div><div class=dz-preview ng-class=\"{ 'dz-success': value.Value.toLowerCase() == 'file:' + item.Id }\" ng-repeat=\"item in vm.items | filter: { IsFolder:false} | orderBy:'-IsFolder'\" ng-click=vm.adam.select(item)><div ng-if=\"item.Type == 'image'\" class=dz-image><img data-dz-thumbnail=\"\" alt=\"{{ item.Id + ':' + item.Name }}\" ng-src=\"{{ '/portals/0/' + item.Path + '?w=120&h=120&mode=crop' }}\"></div><div ng-if=\"item.Type == 'folder'\" class=dz-image style=\"background-color: whitesmoke\"></div><div class=\"dz-details file-type-{{item.Type}}\"><div class=dz-size ng-if=\"item.Type == 'image'\"><span data-dz-size=\"\"><strong>{{ item.Id }}</strong></span></div><div class=dz-size ng-if=\"item.Type == 'folder'\"><span data-dz-size=\"\" style=\"font-size: xx-large\"><i icon=th-large></i></span></div><div class=dz-size ng-if=\"item.Type == 'document' || item.Type == 'file'\"><span data-dz-size=\"\"><button type=button class=\"btn btn-subtle btn-lg\" ng-disabled=to.disabled><i icon=file></i></button></span></div><div class=dz-filename><span data-dz-name=\"\">{{ item.Name }}</span></div><div class=dz-filename><span ng-if=!item.IsFolder data-dz-name=\"\">{{ (item.Size / 1024).toFixed(0) }} kb</span></div></div><div class=dz-error-message><span data-dz-errormessage=\"\"></span></div><div class=dz-success-mark><svg width=54px height=54px viewbox=\"0 0 54 54\" version=1.1 xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink xmlns:sketch=http://www.bohemiancoding.com/sketch/ns><title>Check</title><defs></defs><g id=Page-1 stroke=none stroke-width=1 fill=none fill-rule=evenodd sketch:type=MSPage><path d=\"M23.5,31.8431458 L17.5852419,25.9283877 C16.0248253,24.3679711 13.4910294,24.366835 11.9289322,25.9289322 C10.3700136,27.4878508 10.3665912,30.0234455 11.9283877,31.5852419 L20.4147581,40.0716123 C20.5133999,40.1702541 20.6159315,40.2626649 20.7218615,40.3488435 C22.2835669,41.8725651 24.794234,41.8626202 26.3461564,40.3106978 L43.3106978,23.3461564 C44.8771021,21.7797521 44.8758057,19.2483887 43.3137085,17.6862915 C41.7547899,16.1273729 39.2176035,16.1255422 37.6538436,17.6893022 L23.5,31.8431458 Z M27,53 C41.3594035,53 53,41.3594035 53,27 C53,12.6405965 41.3594035,1 27,1 C12.6405965,1 1,12.6405965 1,27 C1,41.3594035 12.6405965,53 27,53 Z\" id=Oval-2 stroke-opacity=0.198794158 stroke=#747474 fill-opacity=0.816519475 fill=#FFFFFF sketch:type=MSShapeGroup></path></g></svg></div></div></div></div><div ng-show=uploading><div class=dropzone-previews></div></div></div></div>"
   );
 
 

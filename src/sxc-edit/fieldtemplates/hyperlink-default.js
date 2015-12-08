@@ -17,9 +17,10 @@
         
 	})
 
-	.controller("FieldTemplate-HyperlinkCtrl", function ($modal, $scope, $http, sxc) {
+	.controller("FieldTemplate-HyperlinkCtrl", function ($modal, $scope, $http, sxc, adamSvc, debugState) {
 
-		var vm = this;
+	    var vm = this;
+	    vm.debug = debugState;
 		vm.modalInstance = null;
 		vm.testLink = "";
 		vm.checkImgRegEx = /(?:([^:\/?#]+):)?(?:\/\/([^\/?#]*))?([^?#]*\.(?:jpg|jpeg|gif|png))(?:\?([^#]*))?(?:#(.*))?/i;
@@ -98,7 +99,52 @@
 			});
 		};
 
-	});
+		vm.getExistingFiles = function () {
+		};
+
+	    //#region adam
+		var header = $scope.to.header;
+		var field = $scope.options.key;
+		var entityGuid = header.Guid;
+
+            $scope.adam = vm.adam = {
+                show: false,
+                subFolder: ""
+	        };
+            vm.adam.svc = adamSvc(header.ContentTypeName, entityGuid, field, "");
+            vm.adam.refresh = vm.adam.svc.liveListReload;
+
+	        vm.adam.get = function() {
+	            vm.items = vm.adam.svc.liveList();
+	        };
+
+	        vm.adam.toggle = function toggle() {
+	            vm.adam.show = !vm.adam.show;
+	            vm.adam.get();
+	        };
+	        vm.adam.select = function (fileItem) {
+	            if (!fileItem.IsFolder)
+	                $scope.value.Value = "File:" + fileItem.Id;
+	            else 
+	                vm.adam.goIntoFolder(fileItem);
+	        };
+	        vm.adam.queueComplete = function qC() {
+	            vm.adam.refresh();
+	        };
+
+	        vm.adam.addFolder = function() {
+	            var folderName = window.prompt("Folder Name?");
+	            vm.adam.svc.addFolder(folderName)
+	                .then(vm.adam.refresh);
+	        };
+
+	        vm.adam.goIntoFolder = function(folder) {
+	            // todo: go to sub-folder
+	            var subFolder = vm.adam.svc.goIntoFolder(folder);
+	            vm.adam.subFolder = subFolder;
+	        };
+	        //#endregion
+	    });
 
 
 })();

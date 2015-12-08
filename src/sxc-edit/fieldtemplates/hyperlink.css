@@ -1,0 +1,12 @@
+﻿
+.file-type-image {
+    
+}
+
+.file-type-document {
+    
+}
+
+.dropzone .dz-preview .dz-details.file-type-folder {
+    opacity: 1
+}
