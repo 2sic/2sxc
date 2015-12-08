@@ -482,6 +482,7 @@
     <Content Include="src\sxc-admin\manage-content-list\manage-content-list.html" />
     <Content Include="src\sxc-admin\replace-content\replace-content-controller.js" />
     <Content Include="src\sxc-admin\replace-content\replace-content.html" />
+    <Content Include="src\sxc-admin\services\adam.js" />
     <Content Include="src\sxc-admin\services\app-settings.js" />
     <Content Include="src\sxc-admin\services\content-group-service.js" />
     <Content Include="src\sxc-admin\services\importexport-service.js" />
@@ -500,6 +501,7 @@
     <Content Include="src\sxc-edit\fieldtemplates\directives\web-forms-bridge-directive.js" />
     <Content Include="src\sxc-edit\fieldtemplates\directives\dropzone-directive.js" />
     <Content Include="src\sxc-edit\fieldtemplates\dropzone-custom.css" />
+    <Content Include="src\sxc-edit\fieldtemplates\hyperlink.css" />
     <Content Include="src\sxc-edit\fieldtemplates\string-wysiwyg.js" />
     <Content Include="src\sxc-edit\fieldtemplates\_sxc-fieldtemplates-app.js" />
     <Content Include="src\sxc-edit\fieldtemplates\hyperlink-default.js" />

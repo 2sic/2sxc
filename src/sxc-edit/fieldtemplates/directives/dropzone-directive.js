@@ -12,6 +12,7 @@ angular.module("sxcFieldTemplates")
 
                 var config = {
                     url: url,
+                    urlRoot: url,
                     maxFilesize: 100,
                     paramName: "uploadfile",
                     maxThumbnailFilesize: 10,
@@ -30,13 +31,16 @@ angular.module("sxcFieldTemplates")
 
                 var eventHandlers = {
                     'addedfile': function(file) {
-                        //scope.file = file;
-                        //if (this.files[1] !== null) {
-                        //    this.removeFile(this.files[0]);
-                        //}
                         scope.$apply(function() {
                             scope.fileAdded = true;
+                            scope.uploading = true;
                         });
+                    },
+
+                    "processing": function (file) {
+                        this.options.url = (scope.adam.subFolder === "")
+                            ? this.options.url
+                            : this.options.urlRoot + "?subfolder=" + scope.adam.subFolder;
                     },
 
                     'success': function (file, response) {
@@ -45,6 +49,14 @@ angular.module("sxcFieldTemplates")
                             scope.$apply();
                         } else {
                             alert("Upload failed because: " + response.Error);
+                        }
+                    },
+
+                    "queuecomplete": function (file) {
+                        if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
+                            scope.uploading = false;
+                            if (scope.adam && scope.adam.queueComplete)
+                                scope.adam.queueComplete();
                         }
                     }
                 };

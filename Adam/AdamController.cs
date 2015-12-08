@@ -38,12 +38,12 @@ namespace ToSic.SexyContent.Adam
 
         [HttpPost]
         [HttpPut]
-        public UploadResult Upload(string contentType, Guid guid, string field)
+        public UploadResult Upload(string contentType, Guid guid, string field, [FromUri] string subFolder = "")
         {
-            return UploadOne(contentType, guid, field);
+            return UploadOne(contentType, guid, field, subFolder);
         }
 
-        private UploadResult UploadOne(string contentTypeName, Guid guid, string field)
+        private UploadResult UploadOne(string contentTypeName, Guid guid, string field, string subFolder)
         {
             // Check if the request contains multipart/form-data.
             if (!Request.Content.IsMimeMultipartContent())
@@ -69,7 +69,9 @@ namespace ToSic.SexyContent.Adam
 
             try
             {
-                var folder = Folder(guid, field, "", true);
+                var folder = Folder(guid, field);
+                if(!string.IsNullOrEmpty(subFolder)) 
+                    folder = Folder(guid, field, subFolder, false);
                 var filesCollection = HttpContext.Current.Request.Files;
                 if (filesCollection.Count > 0)
                 {
@@ -163,7 +165,7 @@ namespace ToSic.SexyContent.Adam
             var folderManager = FolderManager.Instance;
 
             // get root and at the same time auto-create the core folder in case it's missing (important)
-            Folder(guid, field, "", autoCreate: true);
+            Folder(guid, field);
 
             // try to see if we can get into the subfolder - will throw error if missing
             var current = Folder(guid, field, subfolder, false);
@@ -171,7 +173,7 @@ namespace ToSic.SexyContent.Adam
             var subfolders = folderManager.GetFolders(current);
             var files = folderManager.GetFiles(current);
 
-            var adamFolders = subfolders.Select(f => new AdamItem(f));
+            var adamFolders = subfolders.Where(s => s.FolderID != current.FolderID).Select(f => new AdamItem(f));
             var adamFiles = files.Select(f => new AdamItem(f));
 
             var all = adamFolders.Concat(adamFiles);
@@ -196,7 +198,7 @@ namespace ToSic.SexyContent.Adam
             ExplicitlyRecheckEditPermissions();
 
             // get root and at the same time auto-create the core folder in case it's missing (important)
-            var root = Folder(guid, field, "", true);
+            var root = Folder(guid, field);
 
             // try to see if we can get into the subfolder - will throw error if missing
             var current = Folder(guid, field, subfolder, false);
@@ -252,36 +254,43 @@ namespace ToSic.SexyContent.Adam
         /// </summary>
         private IFolderInfo Folder(Guid entityGuid, string fieldName, string subFolder, bool autoCreate)
         {
+            IFolderInfo fldr;
 
-            if (_folder == null)
+            var folderManager = FolderManager.Instance;
+
+            var basePath = AdamAppRootFolder.Replace("[AppFolder]", App.Folder);
+
+            var path = AdamFolderMask
+                .Replace("[AppFolder]", App.Folder)
+                .Replace("[Guid22]", GuidHelpers.Compress22(entityGuid))
+                .Replace("[FieldName]", fieldName)
+                .Replace("[SubFolder]", subFolder) // often blank, so it will just be removed
+                .Replace("//", "/");    // sometimes has duplicate slashes if subfolder blank but sub-sub is given
+
+            // create all folders to ensure they exist. Must do one-by-one because dnn must have it in the catalog
+            var pathParts = path.Split('/');
+            var pathToCheck = ""; // pathParts[0];
+            foreach (string part in pathParts)
             {
-                var folderManager = FolderManager.Instance;
-
-                var basePath = AdamAppRootFolder.Replace("[AppFolder]", App.Folder);
-
-                var path = AdamFolderMask
-                    .Replace("[AppFolder]", App.Folder)
-                    .Replace("[Guid22]", GuidHelpers.Compress22(entityGuid))
-                    .Replace("[FieldName]", fieldName)
-                    .Replace("[SubFolder]", subFolder); // often blank, so it will just be removed
-
-                // create all folders to ensure they exist. Must do one-by-one because dnn must have it in the catalog
-                var pathParts = path.Split('/');
-                var pathToCheck = ""; // pathParts[0];
-                foreach (string part in pathParts)
-                {
-                    pathToCheck += part + "/";
-                    if (folderManager.FolderExists(Dnn.Portal.PortalId, pathToCheck)) continue;
-                    if (autoCreate)
-                        folderManager.AddFolder(Dnn.Portal.PortalId, pathToCheck);
-                    else
-                        throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest) { ReasonPhrase = "subfolder " + pathToCheck + "not found" });
-                }
-                
-                _folder = folderManager.GetFolder(Dnn.Portal.PortalId, path);
+                pathToCheck += part + "/";
+                if (folderManager.FolderExists(Dnn.Portal.PortalId, pathToCheck)) continue;
+                if (autoCreate)
+                    folderManager.AddFolder(Dnn.Portal.PortalId, pathToCheck);
+                else
+                    throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest) { ReasonPhrase = "subfolder " + pathToCheck + "not found" });
             }
+                
+            fldr = folderManager.GetFolder(Dnn.Portal.PortalId, path);
 
 
+
+            return fldr;
+        }
+
+        private IFolderInfo Folder(Guid entityGuid, string fieldName)
+        {
+            if (_folder == null)
+                _folder = Folder(entityGuid, fieldName, "", true);
             return _folder;
         }
 
