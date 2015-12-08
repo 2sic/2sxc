@@ -98,7 +98,7 @@ ADAM - sponsored with ♥ by 2sic.com">
                     </div>
 
                     <div class="dz-details file-type-{{item.Type}}">
-                        <div class="dz-size" ng-if="item.Type == 'image'">
+                        <div class="dz-size file-icon" ng-if="item.Type == 'image'">
                             <span data-dz-size=""><strong>{{ item.Id }}</strong></span>
                         </div>
                         <div class="dz-size" ng-if="item.Type == 'folder'">
@@ -106,7 +106,7 @@ ADAM - sponsored with ♥ by 2sic.com">
                                     <i icon="th-large"></i>
                             </span>
                         </div>
-                        <div class="dz-size" ng-if="item.Type == 'document' || item.Type == 'file'">
+                        <div class="dz-size file-actions" ng-if="item.Type == 'document' || item.Type == 'file'">
                             <span data-dz-size="">
                                 <button type="button" class="btn btn-subtle btn-lg" ng-disabled="to.disabled">
                                     <i icon="file"></i>

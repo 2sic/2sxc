@@ -10,3 +10,7 @@
 .dropzone .dz-preview .dz-details.file-type-folder {
     opacity: 1
 }
+
+.dropzone .dz-preview .dz-details.file-type-folder .file-actions {
+    opacity: 0
+}
