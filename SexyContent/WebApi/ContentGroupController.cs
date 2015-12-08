@@ -48,6 +48,7 @@ namespace ToSic.SexyContent.WebApi
         }
 
         [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public ReplaceSet Replace(Guid guid, string part, int index)
         {
             part = part.ToLower();
@@ -93,6 +94,7 @@ namespace ToSic.SexyContent.WebApi
         }
 
         [HttpPost]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void Replace(Guid guid, string part, int index, int entityId)
         {
             var contentGroup = Sexy.ContentGroups.GetContentGroup(guid);

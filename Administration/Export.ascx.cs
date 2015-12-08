@@ -6,6 +6,7 @@ using DotNetNuke.Common;
 using Newtonsoft.Json;
 using ToSic.Eav;
 using ToSic.SexyContent.ImportExport;
+using System.Web;
 
 namespace ToSic.SexyContent
 {
@@ -68,18 +69,24 @@ namespace ToSic.SexyContent
             pnlChoose.Visible = false;
 
             var contentTypeIds = txtSelectedContentTypes.Text.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
-            var entityIds = txtSelectedEntities.Text.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            //var templateIds = txtSelectedTemplates.Text.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            var entityIds = txtSelectedEntities.Text.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            entityIds.AddRange(txtSelectedTemplates.Text.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries));
+            //var templateIds = ;
 
             var messages = new List<ExportImportMessage>();
-            var xml = new XmlExporter(_zoneId, _appId, false, contentTypeIds, entityIds).GenerateNiceXml();
+            var xml = new XmlExporter(_zoneId, _appId, false, contentTypeIds, entityIds.ToArray()).GenerateNiceXml();
 
             Response.Clear();
             Response.Write(xml);
             Response.AddHeader("Content-Disposition", string.Format("attachment; filename={0}", "SexyContent-Export.xml"));
             Response.AddHeader("Content-Length", xml.Length.ToString());
             Response.ContentType = "text/xml";
-            Response.End();
+            if (Response.IsClientConnected)
+            {
+                Response.Flush();
+            }
+            Response.SuppressContent = true;
+            HttpContext.Current.ApplicationInstance.CompleteRequest();
         }
 
     }

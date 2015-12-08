@@ -32,7 +32,7 @@
                             <li ng-repeat="template in contentType.Templates">
                                 <a ng-click="template._2sxcExport = !template._2sxcExport;" ng-class="{active: template._2sxcExport}">
                                     <input type="checkbox" ng-model="template._2sxcExport" ng-click="$event.stopPropagation()" />
-                                    {{template.Name}} ({{template.TemplateID}})
+                                    {{template.Name}} ({{template.TemplateId}})
 
                                     <i ng-init="currentTemplateDefaults = templateDefaultFilter(template.TemplateDefaults);">
                                         <span ng-if="currentTemplateDefaults.length > 0" style="margin-left:15px;">Demo-Entities: </span>
@@ -63,7 +63,7 @@
                 <li ng-repeat="template in templatesWithoutContentType">
                     <a ng-click="template._2sxcExport = !template._2sxcExport;" ng-class="{active: template._2sxcExport}">
                         <input type="checkbox" ng-model="template._2sxcExport" ng-click="$event.stopPropagation()" />
-                        {{template.Name}} ({{template.TemplateID}})
+                        {{template.Name}} ({{template.TemplateId}})
                     </a>
                 </li>
             </ul>

@@ -1927,6 +1927,7 @@ angular.module("EavAdminUi", ["ng",
 	"eavEditEntity"			// the edit-app
 ])
     .factory("eavAdminDialogs", ["$modal", "eavConfig", "contentTypeSvc", "$window", function ($modal, eavConfig, contentTypeSvc, $window) {
+            /*jshint laxbreak:true */
 
             var svc = {};
 
@@ -1954,7 +1955,7 @@ angular.module("EavAdminUi", ["ng",
 
             svc.openContentTypeEdit = function octe(item, closeCallback) {
                 var resolve = svc.CreateResolve({ item: item });
-                return svc.OpenModal("content-types/content-types-edit.html", "Edit as vm", "sm", resolve, closeCallback);
+                return svc.OpenModal("content-types/content-types-edit.html", "Edit as vm", "", resolve, closeCallback);
             };
 
             svc.openContentTypeFields = function octf(item, closeCallback) {
@@ -1974,7 +1975,7 @@ angular.module("EavAdminUi", ["ng",
 
             svc.openEditItems = function oel(items, closeCallback) {
                 var resolve = svc.CreateResolve({ items: items });
-                return svc.OpenModal("form/main-form.html", "EditEntityWrapperCtrl as vm", "lg", resolve, closeCallback);
+                return svc.OpenModal("form/main-form.html", "EditEntityWrapperCtrl as vm", "ent-edit", resolve, closeCallback);
             };
 
             svc.openItemHistory = function ioh(entityId, closeCallback) {
@@ -2018,12 +2019,37 @@ angular.module("EavAdminUi", ["ng",
 
             //#region Pipeline Designer
             svc.editPipeline = function ep(appId, pipelineId, closeCallback) {
-                var url = eavConfig.adminUrls.pipelineDesigner(appId, pipelineId);
+                var url = svc.derivedUrl({
+                    dialog: "pipeline-designer",
+                    pipelineId: pipelineId
+                });
                 $window.open(url);
                 return;
             };
             //#endregion
 
+        //#region GenerateUrlBasedOnCurrent
+            svc.derivedUrl = function derivedUrl(varsToReplace) {
+                var url = window.location.href;
+                for (var prop in varsToReplace)
+                    if (varsToReplace.hasOwnProperty(prop))
+                        url = svc.replaceOrAddOneParam(url, prop, varsToReplace[prop]);
+
+                return url;
+                //url = url
+                //    .replace(new RegExp("appid=[0-9]*", "i"), "appid=" + item.Id) // note: sometimes it doesn't have an appid, so it's [0-9]* instead of [0-9]+
+                //    .replace(/approot=[^&]*/, "approot=" + item.AppRoot + "/")
+                //    .replace("dialog=zone", "dialog=app");
+            };
+
+            svc.replaceOrAddOneParam = function replaceOneParam(original, param, value) {
+                var rule = new RegExp("(" + param + "=).*?(&)", "i");
+                var newText = rule.test(original)
+                    ? original.replace(rule, "$1" + value + "$2")
+                    : original + "&" + param + "=" + value;
+                return newText;
+            };
+        //#endregion
 
 
         //#region Internal helpers

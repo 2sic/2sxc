@@ -241,16 +241,15 @@ $2sxc.getManageController = function (id) {
             if (settings.action === "replace" || settings.action === "app" || settings.action === "zone" || settings.action === "sort")
                 params.dialog = settings.action;
 
+            // when doing new, there may be a prefill in the link to initialize the new item
+            if (settings.prefill) {
+                for (var i = 0; i < items.length; i++)
+                    items[i].Prefill = settings.prefill;
+            }
+
             // Serialize/json-ify the complex items-list
             if (items.length)
                 params.items = JSON.stringify(items);
-
-            // when doing new, there may be a prefill in the link to initialize the new item
-            if (settings.prefill) {
-                var prefill = JSON.stringify(settings.prefill);
-                for (var i = 0; i < items.length; i++)
-                    items[i].Prefill = prefill;
-            }
 
             return manageInfo.ngDialogUrl
                 + "#" + $.param(manageInfo.ngDialogParams)

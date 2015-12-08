@@ -21,7 +21,7 @@
                     selectedTemplates = selectedTemplates.concat($filter('filter')(e.Templates, { _2sxcExport: true }));
                 });
                 selectedTemplates = selectedTemplates.concat($filter('filter')($scope.templatesWithoutContentType, { _2sxcExport: true }));
-                return $.map(selectedTemplates, function (e, i) { return e.TemplateID; }).join(",");
+                return $.map(selectedTemplates, function (e, i) { return e.TemplateId; }).join(",");
             };
 
             $scope.selectedEntitiesString = function() {

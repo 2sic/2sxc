@@ -105,17 +105,26 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
         {
             // first, save all to do it in 1 transaction
             // note that it won't save the SlotIsEmpty ones, as these won't be needed
-            var postSaveIds = entitiesController.SaveMany(appId, items.Select(i => new EntityWithHeader { Header = i.Header, Entity = i.Entity}).ToList());
+            var postSaveIds = entitiesController.SaveMany(appId, items.Select(i => new EntityWithHeader { Header = i.Header, Entity = i.Entity }).ToList());
 
             // now assign all content-groups as needed
             var groupItems = items
                 .Where(i => i.Header.Group != null)
-                .GroupBy( i => i.Header.Group.Guid.ToString() + i.Header.Group.Index.ToString() + i.Header.Group.Add);
+                .GroupBy(i => i.Header.Group.Guid.ToString() + i.Header.Group.Index.ToString() + i.Header.Group.Add);
+
+            if (groupItems.Any())
+                DoAdditionalGroupProcessing(postSaveIds, groupItems);
+
+            return postSaveIds;
+        }
+
+        private void DoAdditionalGroupProcessing(Dictionary<Guid, int> postSaveIds, IEnumerable<IGrouping<string, EntityWithHeader>> groupItems)
+        {
             foreach (var entitySets in groupItems)
             {
                 var contItem = entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == "content") ??
                               entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == "listcontent");
-                if(contItem == null)
+                if (contItem == null)
                     throw new Exception("unexpected group-entity assigment, cannot figure it out");
 
                 var presItem = entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == "presentation") ??
@@ -128,7 +137,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
                 var index = contItem.Header.Group.Index;
 
                 // Get saved entity (to get its ID)
-                if (!postSaveIds.ContainsKey(contItem.Entity.Guid) )
+                if (!postSaveIds.ContainsKey(contItem.Entity.Guid))
                     throw new Exception("Saved entity not found - not able to update ContentGroup");
 
                 int postSaveId = postSaveIds[contItem.Entity.Guid];
@@ -141,9 +150,9 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
                         presentationId = postSaveIds[presItem.Entity.Guid];
 
                     presentationId = presItem.Header.Group.SlotIsEmpty ? null : presentationId;
-                        // use null if it shouldn't have one
+                    // use null if it shouldn't have one
                 }
-                
+
                 if (contItem.Header.Group.Add) // this cannot be auto-detected, it must be specified
                 {
                     contentGroup.AddContentAndPresentationEntity(partName, index, postSaveId, presentationId);
@@ -163,11 +172,9 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 
             var titleItem = modContentGroup.ListContent.FirstOrDefault() ?? modContentGroup.Content.FirstOrDefault();
 
-            if (titleItem != null)
+            if (titleItem != null && titleItem.GetBestValue("EntityTitle") != null)
                 Dnn.Module.ModuleTitle = titleItem.GetBestValue("EntityTitle").ToString();
             #endregion
-
-            return postSaveIds;
         }
 
         /// <summary>
