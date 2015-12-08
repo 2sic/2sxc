@@ -107,9 +107,14 @@
 		    var adam = adamSvc(header.ContentTypeName, entityGuid, field, "");
 	        vm.items = adam.liveList();
 	        vm.refresh = adam.liveListReload;
+		};
+
+	    vm.setToExisting = function(fileItem) {
+	        if (!fileItem.IsFolder)
+	            $scope.value.Value = "File:" + fileItem.Id;
 	    };
 
-	});
+	    });
 
 
 })();

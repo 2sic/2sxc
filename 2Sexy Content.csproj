@@ -170,6 +170,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Adam\AdamController.cs" />
+    <Compile Include="Adam\AdamItem.cs" />
     <Compile Include="Adam\GuidHelpers.cs" />
     <Compile Include="Administration\Apps\AppExport.ascx.cs">
       <DependentUpon>AppExport.ascx</DependentUpon>
@@ -501,7 +502,7 @@
     <Content Include="src\sxc-edit\fieldtemplates\dropzone-custom.css" />
     <Content Include="src\sxc-edit\fieldtemplates\string-wysiwyg.js" />
     <Content Include="src\sxc-edit\fieldtemplates\_sxc-fieldtemplates-app.js" />
-    <Content Include="src\sxc-edit\fieldtemplates\sxc-fieldtemplates.js" />
+    <Content Include="src\sxc-edit\fieldtemplates\hyperlink-default.js" />
     <Content Include="src\sxc-edit\fieldtemplates\templates\hyperlink-default-filemanager.html" />
     <Content Include="src\sxc-edit\fieldtemplates\templates\hyperlink-default-pagepicker.html" />
     <Content Include="src\sxc-edit\fieldtemplates\templates\hyperlink-default.html" />

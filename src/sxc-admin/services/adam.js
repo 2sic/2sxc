@@ -4,17 +4,17 @@ angular.module("SxcServices")
         // Construct a service for this specific appId
         return function createSvc(contentType, entityGuid, field, subfolder) {
             var svc = {
-                url: sxc.resolveServiceUrl("app-content/" + contentType + "/" + entityGuid + "/" + field + "/"),
+                url: sxc.resolveServiceUrl("app-content/" + contentType + "/" + entityGuid + "/" + field),
                 subfolder: subfolder
             };
 
             svc = angular.extend(svc, svcCreator.implementLiveList(function getAll() {
-                return $http.get(svc.url + "items", { params: { subfolder: svc.subfolder } });
+                return $http.get(svc.url + "/items", { params: { subfolder: svc.subfolder } });
             }));
 
             // create folder
             svc.add = function add(newfolder) {
-                return $http.post(svc.url + "folder", {}, { params: { subfolder: svc.subfolder, newFolder: newfolder } })
+                return $http.post(svc.url + "/folder", {}, { params: { subfolder: svc.subfolder, newFolder: newfolder } })
                     .then(svc.liveListReload);
             };
 
@@ -22,7 +22,7 @@ angular.module("SxcServices")
             // delete, then reload
             // IF verb DELETE fails, so I'm using get for now
             svc.delete = function del(isFolder, id) {
-                return $http.delete(svc.url + "delete", {}, { params: { subfolder: svc.subfolder, isFolder: isFolder, id: id } })
+                return $http.delete(svc.url + "/delete", {}, { params: { subfolder: svc.subfolder, isFolder: isFolder, id: id } })
                     .then(svc.liveListReload);
             };
 

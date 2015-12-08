@@ -275,7 +275,7 @@ namespace ToSic.SexyContent.Adam
                     if (autoCreate)
                         folderManager.AddFolder(Dnn.Portal.PortalId, pathToCheck);
                     else
-                        throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest) { ReasonPhrase = "subfolder " + subfolder + "not found" });
+                        throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest) { ReasonPhrase = "subfolder " + pathToCheck + "not found" });
                 }
                 
                 _folder = folderManager.GetFolder(Dnn.Portal.PortalId, path);
