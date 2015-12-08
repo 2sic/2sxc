@@ -6,9 +6,22 @@
         "Cancel": "Annuler",
 		"Close": "Fermer"
     },
-    "Template": "Template",
-    "Category": "Catégorie",
-    "Send": "Envoyer", 
-    "SendingMessage": "Envoi...",
-    "ThanksMessage": "Merci..."
+ "Toolbar": {
+    "Edit": "Edit",
+    "New": "Ajout",
+    "AddDemo": "ajout démo",
+    "Replace": "remplacer",
+    "Published": "publié",
+    "MoveUp": "haut",
+    "MoveDown": "bas",
+    "Sort": "tri/config liste",
+    "Remove": "Supprimer",
+    "MoreActions": "Autres"
+  },
+  "EditFormTitle": {
+    "Content": "Contenu",
+    "Presentation": "Config Présentation",
+    "ListContent": "Entête de liste",
+    "ListPresentation":  "Présentation entête"
+  }
 }

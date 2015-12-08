@@ -52,6 +52,7 @@ angular.module("eavFieldTemplates",
     .constant("defaultFieldWrappers", [
         "eavLabel",
         "bootstrapHasError",
+        "disablevisually",
         "eavLocalization",
         "collapsible"
     ])
@@ -65,7 +66,7 @@ angular.module("eavFieldTemplates")
         formlyConfigProvider.setType({
             name: "boolean-default",
             templateUrl: "fields/boolean/boolean-default.html",
-            wrapper: ["bootstrapHasError", "eavLocalization", "collapsible"]
+            wrapper: ["bootstrapHasError", "disablevisually", "eavLocalization", "collapsible"]
         });
     }]);
 /* 
@@ -688,7 +689,7 @@ angular.module('eavEditTemplates',[]).run(['$templateCache', function($templateC
 
 
   $templateCache.put('form/edit-many-entities.html',
-    "<div ng-if=\"vm.items != null\" ng-click=vm.debug.autoEnableAsNeeded($event)><eav-language-switcher></eav-language-switcher><div ng-repeat=\"p in vm.items\" class=group-entity><h3 class=clickable ng-click=\"p.collapse = !p.collapse\">{{p.Header.Title ? p.Header.Title : 'EditEntity.DefaultTitle' | translate }}&nbsp; <span ng-if=p.Header.Group.SlotCanBeEmpty ng-click=vm.toggleSlotIsEmpty(p) stop-event=click><switch ng-model=p.slotIsUsed class=tosic-blue style=\"top: 6px\" tooltip=\"{{'EditEntity.SlotUsed' + p.slotIsUsed | translate}}\"></switch></span> <span class=\"pull-right clickable\" style=\"font-size: smaller\"><span class=\"low-priority collapse-entity-button\" ng-if=p.collapse icon=plus-sign></span> <span class=\"low-priority collapse-entity-button\" ng-if=!p.collapse icon=minus-sign></span></span></h3><eav-edit-entity-form entity=p.Entity header=p.Header register-edit-control=vm.registerEditControl ng-hide=p.collapse></eav-edit-entity-form></div><div><button ng-disabled=\"!vm.isValid() || vm.isWorking\" ng-click=vm.save(true) type=button class=\"btn btn-primary btn-lg submit-button\"><span icon=ok tooltip=\"{{ 'Button.Save' | translate }}\"></span> &nbsp;<span translate=Button.Save></span></button> &nbsp; <button ng-disabled=\"!vm.isValid() || vm.isWorking\" class=\"btn btn-default btn-lg btn-square\" type=button ng-click=vm.save(false)><span icon=check tooltip=\"{{ 'Button.SaveAndKeepOpen' | translate }}\"></span></button> &nbsp;<switch ng-model=vm.willPublish class=tosic-blue style=\"top: 13px\"></switch>&nbsp; <span ng-click=\"vm.willPublish = !vm.willPublish;\" class=save-published-icon><i ng-if=vm.willPublish icon=eye-open tooltip=\"{{ 'Status.Published' | translate }} - {{ 'Message.WillPublish' | translate }}\"></i> <i ng-if=!vm.willPublish icon=eye-close tooltip=\"{{ 'Status.Unpublished' | translate }} - {{ 'Message.WontPublish' | translate }}\"></i></span> <span ng-if=vm.debug.on><button tooltip=debug icon=zoom-in class=btn ng-click=\"vm.showDebugItems = !vm.showDebugItems\"></button></span><show-debug-availability class=pull-right style=\"margin-top: 20px\"></show-debug-availability></div><div ng-if=\"vm.debug.on && vm.showDebugItems\"><pre>{{ vm.items | json }}</pre></div></div>"
+    "<div ng-if=\"vm.items != null\" ng-click=vm.debug.autoEnableAsNeeded($event)><eav-language-switcher is-disabled=!vm.isValid()></eav-language-switcher><div ng-repeat=\"p in vm.items\" class=group-entity><h3 class=clickable ng-click=\"p.collapse = !p.collapse\">{{p.Header.Title ? p.Header.Title : 'EditEntity.DefaultTitle' | translate }}&nbsp; <span ng-if=p.Header.Group.SlotCanBeEmpty ng-click=vm.toggleSlotIsEmpty(p) stop-event=click><switch ng-model=p.slotIsUsed class=tosic-blue style=\"top: 6px\" tooltip=\"{{'EditEntity.SlotUsed' + p.slotIsUsed | translate}}\"></switch></span> <span class=\"pull-right clickable\" style=\"font-size: smaller\"><span class=\"low-priority collapse-entity-button\" ng-if=p.collapse icon=plus-sign></span> <span class=\"low-priority collapse-entity-button\" ng-if=!p.collapse icon=minus-sign></span></span></h3><eav-edit-entity-form entity=p.Entity header=p.Header register-edit-control=vm.registerEditControl ng-hide=p.collapse></eav-edit-entity-form></div><div><button ng-disabled=\"!vm.isValid() || vm.isWorking\" ng-click=vm.save(true) type=button class=\"btn btn-primary btn-lg submit-button\"><span icon=ok tooltip=\"{{ 'Button.Save' | translate }}\"></span> &nbsp;<span translate=Button.Save></span></button> &nbsp; <button ng-disabled=\"!vm.isValid() || vm.isWorking\" class=\"btn btn-default btn-lg btn-square\" type=button ng-click=vm.save(false)><span icon=check tooltip=\"{{ 'Button.SaveAndKeepOpen' | translate }}\"></span></button> &nbsp;<switch ng-model=vm.willPublish class=tosic-blue style=\"top: 13px\"></switch>&nbsp; <span ng-click=\"vm.willPublish = !vm.willPublish;\" class=save-published-icon><i ng-if=vm.willPublish icon=eye-open tooltip=\"{{ 'Status.Published' | translate }} - {{ 'Message.WillPublish' | translate }}\"></i> <i ng-if=!vm.willPublish icon=eye-close tooltip=\"{{ 'Status.Unpublished' | translate }} - {{ 'Message.WontPublish' | translate }}\"></i></span> <span ng-if=vm.debug.on><button tooltip=debug icon=zoom-in class=btn ng-click=\"vm.showDebugItems = !vm.showDebugItems\"></button></span><show-debug-availability class=pull-right style=\"margin-top: 20px\"></show-debug-availability></div><div ng-if=\"vm.debug.on && vm.showDebugItems\"><pre>{{ vm.items | json }}</pre></div></div>"
   );
 
 
@@ -708,17 +709,22 @@ angular.module('eavEditTemplates',[]).run(['$templateCache', function($templateC
 
 
   $templateCache.put('localization/language-switcher.html',
-    "<tabset><tab ng-repeat=\"l in languages.languages\" heading=\"{{ l.name.substring(0, l.name.indexOf('(') > 0 ? l.name.indexOf('(') - 1 : 100 ) }}\" ng-click=\"languages.currentLanguage = l.key\" tooltip={{l.name}}></tab></tabset>"
+    "<tabset><tab ng-repeat=\"l in languages.languages\" heading=\"{{ l.name.substring(0, l.name.indexOf('(') > 0 ? l.name.indexOf('(') - 1 : 100 ) }}\" ng-click=\"!isDisabled ? languages.currentLanguage = l.key : false;\" disable=isDisabled active=\"languages.currentLanguage == l.key\" tooltip={{l.name}}></tab></tabset>"
   );
 
 
   $templateCache.put('localization/localization-menu.html',
-    "<div dropdown is-open=status.isopen class=eav-localization><a class=eav-localization-lock ng-if=vm.isDefaultLanguage() title={{vm.tooltip()}} ng-class=\"{ 'eav-localization-lock-open': !options.templateOptions.disabled }\" dropdown-toggle href=javascript:void(0)>{{vm.infoMessage()}} <i class=\"glyphicon glyphicon-globe\"></i></a><ul class=\"dropdown-menu multi-level pull-right eav-localization-dropdown\" role=menu aria-labelledby=single-button><li role=menuitem><a ng-disabled=vm.enableTranslate() ng-click=vm.actions.translate() translate=LangMenu.Unlink></a></li><li role=menuitem><a ng-click=vm.actions.linkDefault() translate=LangMenu.LinkDefault></a></li><li role=menuitem class=dropdown-submenu><a href=# translate=LangMenu.GoogleTranslate></a><ul class=dropdown-menu><li ng-repeat=\"language in vm.languages.languages\" class=disabled role=menuitem><a ng-click=vm.actions.autoTranslate(language.key) title={{language.name}} href=#>{{language.key}}</a></li></ul></li><li role=menuitem class=dropdown-submenu><a href=# translate=LangMenu.Copy></a><ul class=dropdown-menu><li ng-repeat=\"language in vm.languages.languages\" ng-class=\"{ disabled: options.templateOptions.disabled || !vm.hasLanguage(language.key) }\" role=menuitem><a ng-click=vm.actions.copyFrom(language.key) title={{language.name}} href=#>{{language.key}}</a></li></ul></li><li role=menuitem class=dropdown-submenu><a href=# translate=LangMenu.Use></a><ul class=dropdown-menu><li ng-repeat=\"language in vm.languages.languages\" ng-class=\"{ disabled: !vm.hasLanguage(language.key) }\" role=menuitem><a ng-click=vm.actions.useFrom(language.key) title={{language.name}} href=#>{{language.key}}</a></li></ul></li><li role=menuitem class=dropdown-submenu><a href=# translate=LangMenu.Share></a><ul class=dropdown-menu><li ng-repeat=\"language in vm.languages.languages\" ng-class=\"{ disabled: !vm.hasLanguage(language.key) }\" role=menuitem><a ng-click=vm.actions.shareFrom(language.key) title={{language.name}} href=#>{{language.key}}</a></li></ul></li></ul></div>"
+    "<div dropdown is-open=status.isopen class=eav-localization style=z-index:{{index+1}}><a class=eav-localization-lock ng-if=vm.isDefaultLanguage() title={{vm.tooltip()}} ng-class=\"{ 'eav-localization-lock-open': !options.templateOptions.disabled }\" dropdown-toggle href=javascript:void(0)>{{vm.infoMessage()}} <i class=\"glyphicon glyphicon-globe\"></i></a><ul class=\"dropdown-menu multi-level pull-right eav-localization-dropdown\" role=menu aria-labelledby=single-button><li role=menuitem><a ng-disabled=vm.enableTranslate() ng-click=vm.actions.translate() translate=LangMenu.Unlink></a></li><li role=menuitem><a ng-click=vm.actions.linkDefault() translate=LangMenu.LinkDefault></a></li><li role=menuitem class=dropdown-submenu><a href=# translate=LangMenu.GoogleTranslate></a><ul class=dropdown-menu><li ng-repeat=\"language in vm.languages.languages\" class=disabled role=menuitem><a ng-click=vm.actions.autoTranslate(language.key) title={{language.name}} href=#>{{language.key}}</a></li></ul></li><li role=menuitem class=dropdown-submenu><a href=# translate=LangMenu.Copy></a><ul class=dropdown-menu><li ng-repeat=\"language in vm.languages.languages\" ng-class=\"{ disabled: options.templateOptions.disabled || !vm.hasLanguage(language.key) }\" role=menuitem><a ng-click=vm.actions.copyFrom(language.key) title={{language.name}} href=#>{{language.key}}</a></li></ul></li><li role=menuitem class=dropdown-submenu><a href=# translate=LangMenu.Use></a><ul class=dropdown-menu><li ng-repeat=\"language in vm.languages.languages\" ng-class=\"{ disabled: !vm.hasLanguage(language.key) }\" role=menuitem><a ng-click=vm.actions.useFrom(language.key) title={{language.name}} href=#>{{language.key}}</a></li></ul></li><li role=menuitem class=dropdown-submenu><a href=# translate=LangMenu.Share></a><ul class=dropdown-menu><li ng-repeat=\"language in vm.languages.languages\" ng-class=\"{ disabled: !vm.hasLanguage(language.key) }\" role=menuitem><a ng-click=vm.actions.shareFrom(language.key) title={{language.name}} href=#>{{language.key}}</a></li></ul></li></ul></div>"
   );
 
 
   $templateCache.put('wrappers/collapsible.html',
     "<div ng-show=!to.collapse class=group-field-set><formly-transclude></formly-transclude></div>"
+  );
+
+
+  $templateCache.put('wrappers/disablevisually.html',
+    "<div visually-disabled={{to.disabled}}><formly-transclude></formly-transclude></div>"
   );
 
 
@@ -758,7 +764,10 @@ angular.module('eavEditTemplates',[]).run(['$templateCache', function($templateC
 			templateUrl: "localization/language-switcher.html",
 			controller: ["$scope", "languages", function($scope, languages) {
 				$scope.languages = languages;
-			}]
+			}],
+			scope: {
+			    isDisabled: "=isDisabled"
+			}
 		};
 	});
 
@@ -1314,6 +1323,18 @@ function enhanceEntity(entity) {
             formlyConfigProvider.setWrapper({
                 name: 'collapsible',
                 templateUrl: "wrappers/collapsible.html"
+            });
+        }]);
+})();
+
+(function() {
+	"use strict";
+
+    angular.module("eavFieldTemplates")
+        .config(["formlyConfigProvider", function(formlyConfigProvider) {
+            formlyConfigProvider.setWrapper({
+                name: 'disablevisually',
+                templateUrl: "wrappers/disablevisually.html"
             });
         }]);
 })();

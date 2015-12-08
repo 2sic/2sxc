@@ -152,8 +152,10 @@
     "Intro": "En remplacant un content-item on peut en faire apparaitre un autre au même emplacement.",
     "ChooseItem": "Choix de l'item :"
   },
-  "ReorderContentList": {
-    "Title": "Ré-ordonner la liste des content-items",
+  "ManageContentList": {
+    "Title": "Configuration des listes d'items",
+    "HeaderIntro": "Configuration de l'entête de liste (s'il y en a un)",
+    "NoHeaderInThisList": "(cette liste n'a pas d'entête)",
     "Intro": "Repositionner à la souris, puis Enregistrer"
   },
 
