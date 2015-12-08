@@ -17,9 +17,10 @@
         
 	})
 
-	.controller("FieldTemplate-HyperlinkCtrl", function ($modal, $scope, $http, sxc) {
+	.controller("FieldTemplate-HyperlinkCtrl", function ($modal, $scope, $http, sxc, adamSvc, debugState) {
 
-		var vm = this;
+	    var vm = this;
+	    vm.debug = debugState;
 		vm.modalInstance = null;
 		vm.testLink = "";
 		vm.checkImgRegEx = /(?:([^:\/?#]+):)?(?:\/\/([^\/?#]*))?([^?#]*\.(?:jpg|jpeg|gif|png))(?:\?([^#]*))?(?:#(.*))?/i;
@@ -97,6 +98,16 @@
 				windowClass: "sxc-dialog-filemanager"
 			});
 		};
+
+		vm.getExistingFiles = function () {
+		    var header = $scope.to.header;
+		    var field = $scope.options.key;
+		    var entityGuid = header.Guid;
+
+		    var adam = adamSvc(header.ContentTypeName, entityGuid, field, "");
+	        vm.items = adam.liveList();
+	        vm.refresh = adam.liveListReload;
+	    };
 
 	});
 

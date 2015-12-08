@@ -11,8 +11,8 @@
         "ui.tree",
         "2sxc4ng",
         "SxcEditTemplates",
-        "EavConfiguration"
-        //"ngDropzone"
+        "EavConfiguration",
+        "SxcServices"
     ]);
 
 })();

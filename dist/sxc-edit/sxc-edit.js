@@ -11,8 +11,8 @@
         "ui.tree",
         "2sxc4ng",
         "SxcEditTemplates",
-        "EavConfiguration"
-        //"ngDropzone"
+        "EavConfiguration",
+        "SxcServices"
     ]);
 
 })();
@@ -149,67 +149,6 @@ angular.module("sxcFieldTemplates")
 
     .config(["formlyConfigProvider", function (formlyConfigProvider) {
 
-        // for now identical with -adv, but later will change
-		formlyConfigProvider.setType({
-			name: "string-wysiwyg",
-			templateUrl: "fieldtemplates/templates/string-wysiwyg.html",
-			wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"],
-			controller: "FieldTemplate-WysiwygCtrl as vm"
-		});
-
-        // for now identical with -adv, but later will change
-		formlyConfigProvider.setType({
-			name: "string-wysiwyg-adv",
-			templateUrl: "fieldtemplates/templates/string-wysiwyg.html",
-			wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"],
-			controller: "FieldTemplate-WysiwygCtrl as vm"
-		});
-
-        
-	}])
-
-
-	.controller("FieldTemplate-WysiwygCtrl", ["$scope", function ($scope) {
-
-		var vm = this;
-
-		// Everything the WebForms bridge (iFrame) should have access to
-		vm.bridge = {
-		    initialValue: "",
-            initialReadOnly: false,
-		    onChanged: function (newValue) {
-				$scope.$apply(function () {
-					$scope.value.Value = newValue;
-				});
-			},
-			setValue: function (value) { vm.bridge.initialValue = value; },
-			setReadOnly: function(readOnly) { vm.bridge.initialReadOnly = readOnly; }
-		};
-
-		$scope.$watch("value.Value", function (newValue, oldValue) {
-			if (newValue !== oldValue)
-				vm.bridge.setValue(newValue);
-		});
-
-		$scope.$watch("to.disabled", function (newValue, oldValue) {
-			if (newValue !== oldValue)
-				vm.bridge.setReadOnly(newValue);
-		});
-
-	}]);
-
-
-})();
-
-(function () {
-	"use strict";
-
-	/* This app registers all field templates for 2sxc in the angularjs sxcFieldTemplates app */
-
-	angular.module("sxcFieldTemplates")
-
-    .config(["formlyConfigProvider", function (formlyConfigProvider) {
-
 		formlyConfigProvider.setType({
 			name: "hyperlink-default",
 			templateUrl: "fieldtemplates/templates/hyperlink-default.html",
@@ -219,9 +158,10 @@ angular.module("sxcFieldTemplates")
         
 	}])
 
-	.controller("FieldTemplate-HyperlinkCtrl", ["$modal", "$scope", "$http", "sxc", function ($modal, $scope, $http, sxc) {
+	.controller("FieldTemplate-HyperlinkCtrl", ["$modal", "$scope", "$http", "sxc", "adamSvc", "debugState", function ($modal, $scope, $http, sxc, adamSvc, debugState) {
 
-		var vm = this;
+	    var vm = this;
+	    vm.debug = debugState;
 		vm.modalInstance = null;
 		vm.testLink = "";
 		vm.checkImgRegEx = /(?:([^:\/?#]+):)?(?:\/\/([^\/?#]*))?([^?#]*\.(?:jpg|jpeg|gif|png))(?:\?([^#]*))?(?:#(.*))?/i;
@@ -300,6 +240,77 @@ angular.module("sxcFieldTemplates")
 			});
 		};
 
+		vm.getExistingFiles = function () {
+		    var header = $scope.to.header;
+		    var field = $scope.options.key;
+		    var entityGuid = header.Guid;
+
+		    var adam = adamSvc(header.ContentTypeName, entityGuid, field, "");
+	        vm.items = adam.liveList();
+	        vm.refresh = adam.liveListReload;
+	    };
+
+	}]);
+
+
+})();
+
+(function () {
+	"use strict";
+
+	/* This app registers all field templates for 2sxc in the angularjs sxcFieldTemplates app */
+
+	angular.module("sxcFieldTemplates")
+
+    .config(["formlyConfigProvider", function (formlyConfigProvider) {
+
+        // for now identical with -adv, but later will change
+		formlyConfigProvider.setType({
+			name: "string-wysiwyg",
+			templateUrl: "fieldtemplates/templates/string-wysiwyg.html",
+			wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"],
+			controller: "FieldTemplate-WysiwygCtrl as vm"
+		});
+
+        // for now identical with -adv, but later will change
+		formlyConfigProvider.setType({
+			name: "string-wysiwyg-adv",
+			templateUrl: "fieldtemplates/templates/string-wysiwyg.html",
+			wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"],
+			controller: "FieldTemplate-WysiwygCtrl as vm"
+		});
+
+        
+	}])
+
+
+	.controller("FieldTemplate-WysiwygCtrl", ["$scope", function ($scope) {
+
+		var vm = this;
+
+		// Everything the WebForms bridge (iFrame) should have access to
+		vm.bridge = {
+		    initialValue: "",
+            initialReadOnly: false,
+		    onChanged: function (newValue) {
+				$scope.$apply(function () {
+					$scope.value.Value = newValue;
+				});
+			},
+			setValue: function (value) { vm.bridge.initialValue = value; },
+			setReadOnly: function(readOnly) { vm.bridge.initialReadOnly = readOnly; }
+		};
+
+		$scope.$watch("value.Value", function (newValue, oldValue) {
+			if (newValue !== oldValue)
+				vm.bridge.setValue(newValue);
+		});
+
+		$scope.$watch("to.disabled", function (newValue, oldValue) {
+			if (newValue !== oldValue)
+				vm.bridge.setReadOnly(newValue);
+		});
+
 	}]);
 
 
@@ -346,7 +357,7 @@ angular.module('SxcEditTemplates',[]).run(['$templateCache', function($templateC
     "\n" +
     "{{'Edit.Fields.Hyperlink.Default.Tooltip2' | translate }}\r" +
     "\n" +
-    "ADAM - sponsored with ♥ by 2sic.com\"> <span class=input-group-btn style=\"vertical-align: top\"><button type=button class=\"btn btn-primary dropzone-adam input-lg\" ng-disabled=to.disabled tooltip=\"{{'Edit.Fields.Hyperlink.Default.AdamUploadLabel' | translate }}\"><i icon=upload></i> <i icon=apple></i></button> <button tabindex=-1 type=button class=\"btn btn-default dropdown-toggle input-lg\" dropdown-toggle ng-disabled=to.disabled><i icon=option-horizontal></i></button></span><ul class=\"dropdown-menu pull-right\" role=menu><li role=menuitem><a class=dropzone-adam href=javascript:void(0);><i icon=apple></i> <span translate=Edit.Fields.Hyperlink.Default.MenuAdam></span></a></li><li role=menuitem ng-if=\"to.settings['merged'].ShowPagePicker\"><a ng-click=\"vm.openDialog('pagepicker')\" href=javascript:void(0)><i icon=home></i> <span translate=Edit.Fields.Hyperlink.Default.MenuPage></span></a></li><li role=menuitem ng-if=\"to.settings['merged'].ShowImageManager\"><a ng-click=\"vm.openDialog('imagemanager')\" href=javascript:void(0)><i icon=picture></i> <span translate=Edit.Fields.Hyperlink.Default.MenuImage></span></a></li><li role=menuitem ng-if=\"to.settings['merged'].ShowFileManager\"><a ng-click=\"vm.openDialog('documentmanager')\" href=javascript:void(0)><i icon=file></i> <span translate=Edit.Fields.Hyperlink.Default.MenuDocs></span></a></li></ul></div><div ng-if=vm.showPreview style=\"position: relative\"><div style=\"position: absolute;z-index: 100;background: white;top: 10px;text-align: center;left: 0;right: 0\"><img ng-src=\"{{vm.thumbnailUrl(2)}}\"></div></div><div ng-if=value.Value><a href={{vm.testLink}} target=_blank tabindex=-1 tooltip={{vm.testLink}}><i icon=new-window></i> <span>&nbsp;... {{vm.testLink.substr(vm.testLink.lastIndexOf(\"/\"), 100)}}</span></a></div><div class=dropzone-previews></div><div class=small ng-show=fileAdded><a href=\"http://2sxc.org/help?tag=adam\" target=_blank tooltip=\"ADAM is the Automatic Digital Assets Manager - click to discover more\"><i icon=apple></i> Adam</a> is sponsored with ♥ by <a tabindex=-1 href=\"http://2sic.com/\" target=_blank>2sic.com</a></div></div></div>"
+    "ADAM - sponsored with ♥ by 2sic.com\"> <span class=input-group-btn style=\"vertical-align: top\"><button type=button class=\"btn btn-primary dropzone-adam input-lg\" ng-disabled=to.disabled tooltip=\"{{'Edit.Fields.Hyperlink.Default.AdamUploadLabel' | translate }}\"><i icon=upload></i> <i icon=apple></i></button> <button tabindex=-1 type=button class=\"btn btn-default dropdown-toggle input-lg\" dropdown-toggle ng-disabled=to.disabled><i icon=option-horizontal></i></button></span><ul class=\"dropdown-menu pull-right\" role=menu><li role=menuitem><a class=dropzone-adam href=javascript:void(0);><i icon=apple></i> <span translate=Edit.Fields.Hyperlink.Default.MenuAdam></span></a></li><li role=menuitem ng-if=\"to.settings['merged'].ShowPagePicker\"><a ng-click=\"vm.openDialog('pagepicker')\" href=javascript:void(0)><i icon=home></i> <span translate=Edit.Fields.Hyperlink.Default.MenuPage></span></a></li><li role=menuitem ng-if=\"to.settings['merged'].ShowImageManager\"><a ng-click=\"vm.openDialog('imagemanager')\" href=javascript:void(0)><i icon=picture></i> <span translate=Edit.Fields.Hyperlink.Default.MenuImage></span></a></li><li role=menuitem ng-if=\"to.settings['merged'].ShowFileManager\"><a ng-click=\"vm.openDialog('documentmanager')\" href=javascript:void(0)><i icon=file></i> <span translate=Edit.Fields.Hyperlink.Default.MenuDocs></span></a></li></ul></div><div ng-if=vm.showPreview style=\"position: relative\"><div style=\"position: absolute;z-index: 100;background: white;top: 10px;text-align: center;left: 0;right: 0\"><img ng-src=\"{{vm.thumbnailUrl(2)}}\"></div></div><div ng-if=value.Value><a href={{vm.testLink}} target=_blank tabindex=-1 tooltip={{vm.testLink}}><i icon=new-window></i> <span>&nbsp;... {{vm.testLink.substr(vm.testLink.lastIndexOf(\"/\"), 100)}}</span></a></div><div class=dropzone-previews></div><div class=small ng-show=fileAdded><a href=\"http://2sxc.org/help?tag=adam\" target=_blank tooltip=\"ADAM is the Automatic Digital Assets Manager - click to discover more\"><i icon=apple></i> Adam</a> is sponsored with ♥ by <a tabindex=-1 href=\"http://2sic.com/\" target=_blank>2sic.com</a></div><div ng-if=vm.debug.on><span ng-click=vm.getExistingFiles()>test and watch fiddler !</span></div></div></div>"
   );
 
 
