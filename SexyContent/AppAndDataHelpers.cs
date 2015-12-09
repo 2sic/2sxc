@@ -6,6 +6,7 @@ using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.ValueProvider;
+using ToSic.SexyContent.Adam;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Razor.Helpers;
@@ -83,6 +84,8 @@ namespace ToSic.SexyContent
         public DnnHelper Dnn { get; private set; }
 		public SxcHelper Sxc { get; private set; }
 
+
+        #region AsDynamic overrides
         /// <summary>
         /// Transform a IEntity to a DynamicEntity as dynamic object
         /// </summary>
@@ -152,7 +155,7 @@ namespace ToSic.SexyContent
         {
             return entities.Select(e => AsDynamic(e));
         }
-
+        #endregion
 
         private IValueCollectionProvider _configurationProvider;
         private IValueCollectionProvider ConfigurationProvider
@@ -208,11 +211,39 @@ namespace ToSic.SexyContent
             return src;
         }
 
-		public dynamic Content { get; set; }
+        #region basic properties like Content, Presentation, ListContent, ListPresentation
+
+        public dynamic Content { get; set; }
 		public dynamic Presentation { get; set; }
 		public dynamic ListContent { get; set; }
 		public dynamic ListPresentation { get; set; }
 		public List<Element> List { get; set; }
+        #endregion
+
+        #region Adam (beta / experimental)
+
+        /// <summary>
+        /// Provides an Adam instance for this item and field
+        /// </summary>
+        /// <param name="entity">The entity, often Content or similar</param>
+        /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
+        /// <returns>An Adam object for navigating the assets</returns>
+        public AdamNavigator Adam(DynamicEntity entity, string fieldName)
+        {
+            return Adam(AsEntity(entity), fieldName);
+        }
+
+        /// <summary>
+        /// Provides an Adam instance for this item and field
+        /// </summary>
+        /// <param name="entity">The entity, often Content or similar</param>
+        /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
+        /// <returns>An Adam object for navigating the assets</returns>
+        public AdamNavigator Adam(IEntity entity, string fieldName)
+        {
+            return new AdamNavigator(App, Dnn, entity.EntityGuid, fieldName);
+        }
+        #endregion
 
     }
 }

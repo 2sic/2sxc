@@ -23,15 +23,16 @@ namespace ToSic.SexyContent.Adam
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
    public class AdamController: SxcApiController
     {
+        public Core Core;
+
+        private void PrepCore(Guid entityGuid, string fieldName)
+        {
+            Core = new Core(App, Dnn, entityGuid, fieldName);
+        }
+
         // todo: centralize once it works
         // todo:idea that it would auto-take a setting from app-settings if it exists :)
-
-        public const string AdamRootFolder = "adam/";
-        public const string AdamAppRootFolder = "adam/[AppFolder]/";
-        public const string AdamFolderMask = "adam/[AppFolder]/[Guid22]/[FieldName]/[SubFolder]";
-
         private string AdamAllowedExtensions =
-            // "jpg,png,gif,doc,docx,xls,xlsx,pdf,txt"; // todo: use field config or dnn-security
             "jpg,jpeg,jpe,gif,bmp,png,doc,docx,xls,xlsx,ppt,pptx,pdf,txt,xml,xsl,xsd,css,zip,ico,avi,mpg,mpeg,mp3,wmv,mov,wav,ico";
         public const int MaxFileSizeMb = 10;
 
@@ -49,10 +50,8 @@ namespace ToSic.SexyContent.Adam
             if (!Request.Content.IsMimeMultipartContent())
                 throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
 
-            // check dnn security
-            if (!DotNetNuke.Security.Permissions.ModulePermissionController.CanEditModuleContent(Dnn.Module))
-                throw new HttpResponseException(HttpStatusCode.Forbidden);
-            // return new UploadResult { Success = false, Error = App.Resources.UploadNoPermission };
+            ExplicitlyRecheckEditPermissions();
+            PrepCore(guid, field);
 
             // Get the content-type definition
             var cache = App.Data.Cache;
@@ -65,13 +64,12 @@ namespace ToSic.SexyContent.Adam
                     "Requested field '" + field + "' type doesn't allow upload"));// { HttpStatusCode = HttpStatusCode.BadRequest });
 
             // check for special extensions
-            // if(fieldDef.)
 
             try
             {
-                var folder = Folder(guid, field);
+                var folder = Core.Folder();
                 if(!string.IsNullOrEmpty(subFolder)) 
-                    folder = Folder(guid, field, subFolder, false);
+                    folder = Core.Folder(subFolder, false);
                 var filesCollection = HttpContext.Current.Request.Files;
                 if (filesCollection.Count > 0)
                 {
@@ -161,14 +159,14 @@ namespace ToSic.SexyContent.Adam
         public IEnumerable<AdamItem> Items(Guid guid, string field, string subfolder)
         {
             ExplicitlyRecheckEditPermissions();
-
+            PrepCore(guid, field);
             var folderManager = FolderManager.Instance;
 
             // get root and at the same time auto-create the core folder in case it's missing (important)
-            Folder(guid, field);
+            Core.Folder();
 
             // try to see if we can get into the subfolder - will throw error if missing
-            var current = Folder(guid, field, subfolder, false);
+            var current = Core.Folder(subfolder, false);
 
             var subfolders = folderManager.GetFolders(current);
             var files = folderManager.GetFiles(current);
@@ -196,15 +194,16 @@ namespace ToSic.SexyContent.Adam
         public IEnumerable<AdamItem> Folder(Guid guid, string field, string subfolder, string newFolder)
         {
             ExplicitlyRecheckEditPermissions();
+            PrepCore(guid, field);
 
             // get root and at the same time auto-create the core folder in case it's missing (important)
-            var root = Folder(guid, field);
+            Core.Folder();
 
             // try to see if we can get into the subfolder - will throw error if missing
-            var current = Folder(guid, field, subfolder, false);
+            Core.Folder(subfolder, false);
 
             // now access the subfolder, creating it if missing (which is what we want
-            var createdSubfolder = Folder(guid, field, subfolder + "/" + newFolder, true);
+            Core.Folder(subfolder + "/" + newFolder, true);
 
             return Items(guid, field, subfolder);
         }
@@ -213,9 +212,10 @@ namespace ToSic.SexyContent.Adam
         public bool Delete(Guid guid, string field, string subfolder, bool isFolder, int id)
         {
             ExplicitlyRecheckEditPermissions();
+            PrepCore(guid, field);
 
             // try to see if we can get into the subfolder - will throw error if missing
-            var current = Folder(guid, field, subfolder, false);
+            var current = Core.Folder(subfolder, false);
             
             var folderManager = FolderManager.Instance;
             var fileManager = FileManager.Instance;
@@ -246,53 +246,6 @@ namespace ToSic.SexyContent.Adam
 
         #endregion
 
-        private IFolderInfo _folder;
-
-        /// <summary>
-        /// Get the folder specified in App.Settings (BasePath) combined with the module's ID
-        /// Will create the folder if it does not exist
-        /// </summary>
-        private IFolderInfo Folder(Guid entityGuid, string fieldName, string subFolder, bool autoCreate)
-        {
-            IFolderInfo fldr;
-
-            var folderManager = FolderManager.Instance;
-
-            var basePath = AdamAppRootFolder.Replace("[AppFolder]", App.Folder);
-
-            var path = AdamFolderMask
-                .Replace("[AppFolder]", App.Folder)
-                .Replace("[Guid22]", GuidHelpers.Compress22(entityGuid))
-                .Replace("[FieldName]", fieldName)
-                .Replace("[SubFolder]", subFolder) // often blank, so it will just be removed
-                .Replace("//", "/");    // sometimes has duplicate slashes if subfolder blank but sub-sub is given
-
-            // create all folders to ensure they exist. Must do one-by-one because dnn must have it in the catalog
-            var pathParts = path.Split('/');
-            var pathToCheck = ""; // pathParts[0];
-            foreach (string part in pathParts.Where(p => !string.IsNullOrEmpty(p)))
-            {
-                pathToCheck += part + "/";
-                if (folderManager.FolderExists(Dnn.Portal.PortalId, pathToCheck)) continue;
-                if (autoCreate)
-                    folderManager.AddFolder(Dnn.Portal.PortalId, pathToCheck);
-                else
-                    throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest) { ReasonPhrase = "subfolder " + pathToCheck + "not found" });
-            }
-                
-            fldr = folderManager.GetFolder(Dnn.Portal.PortalId, path);
-
-
-
-            return fldr;
-        }
-
-        private IFolderInfo Folder(Guid entityGuid, string fieldName)
-        {
-            if (_folder == null)
-                _folder = Folder(entityGuid, fieldName, "", true);
-            return _folder;
-        }
 
     }
 }

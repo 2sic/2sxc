@@ -171,6 +171,8 @@
   <ItemGroup>
     <Compile Include="Adam\AdamController.cs" />
     <Compile Include="Adam\AdamItem.cs" />
+    <Compile Include="Adam\AdamNavigator.cs" />
+    <Compile Include="Adam\Core.cs" />
     <Compile Include="Adam\GuidHelpers.cs" />
     <Compile Include="Administration\Apps\AppExport.ascx.cs">
       <DependentUpon>AppExport.ascx</DependentUpon>
