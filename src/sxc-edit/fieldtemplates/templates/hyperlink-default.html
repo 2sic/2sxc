@@ -113,14 +113,10 @@ ADAM - sponsored with ♥ by 2sic.com">
                         </div>
                         <div class="dz-size file-actions" ng-if="item.Type == 'document' || item.Type == 'file'">
                             <span data-dz-size="">
-                                <button type="button" class="btn btn-subtle btn-lg" ng-disabled="to.disabled">
-                                    <i icon="file"></i>
-                                </button>
+                                <button type="button" class="btn btn-subtle btn-lg" ng-disabled="to.disabled"><i icon="file"></i></button>
                             </span>
                         </div>
-                        <div class="dz-filename">
-                            <span data-dz-name="">{{ item.Name }}</span>
-                        </div>
+                        <div class="dz-filename"><span data-dz-name="">{{ item.Name }}</span></div>
                         <div class="dz-filename">
                             <span ng-click="vm.adam.del(item)" stop-event="click"><i icon="remove"></i></span>
                             <span data-dz-name="">{{ (item.Size / 1024).toFixed(0) }} kb</span>
