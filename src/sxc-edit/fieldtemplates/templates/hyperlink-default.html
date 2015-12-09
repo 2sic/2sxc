@@ -55,8 +55,8 @@ ADAM - sponsored with ♥ by 2sic.com">
                     </div>
                 </div>
 
-            
-            <div class="dz-preview" ng-disabled="to.disabled" ng-click="vm.adam.addFolder()">
+            <!-- folder stuff -->
+            <div ng-show="vm.debug.on" class="dz-preview" ng-disabled="to.disabled" ng-click="vm.adam.addFolder()">
                 <div class="dz-image" style="background-color: whitesmoke">
                 </div>
                 <div class="dz-details" style="opacity: 1">
@@ -72,7 +72,7 @@ ADAM - sponsored with ♥ by 2sic.com">
                 </div>
             </div>
 
-                <div class="dz-preview" ng-disabled="to.disabled" ng-if="vm.adam.folders.length > 0" ng-click="vm.adam.goUp()">
+                <div ng-show="vm.debug.on" class="dz-preview" ng-disabled="to.disabled" ng-if="vm.adam.folders.length > 0" ng-click="vm.adam.goUp()">
                     <div class="dz-image" style="background-color: whitesmoke">
                     </div>
                     <div class="dz-details" style="opacity: 1">
@@ -89,22 +89,27 @@ ADAM - sponsored with ♥ by 2sic.com">
 
 
 
-                <div class="dz-preview" ng-class="{ 'dz-success': value.Value.toLowerCase() == 'file:' + item.Id }" ng-repeat="item in vm.items  | orderBy:'-IsFolder'" ng-click="vm.adam.select(item)">
+                <div ng-show="vm.debug.on" class="dz-preview" ng-repeat="item in vm.items | filter: { IsFolder: true }  | orderBy:'Name'" ng-click="vm.adam.select(item)">
+                    <div ng-if="item.Type == 'folder'" class="dz-image" style="background-color: whitesmoke"> </div>
+                    <div class="dz-details file-type-{{item.Type}}">
+                        <div class="dz-size" ng-if="item.Type == 'folder'">
+                            <span data-dz-size="" style="font-size: xx-large"><i icon="th-large"></i></span>
+                        </div>
+                        <div class="dz-filename"><span data-dz-name="">{{ item.Name }}</span></div>
+                        <div class="dz-filename"><span ng-click="vm.adam.del(item)" stop-event="click"><i icon="remove"></i></span></div>
+                    </div>
+                </div>
+
+
+                <!-- files -->
+                <div class="dz-preview" ng-class="{ 'dz-success': value.Value.toLowerCase() == 'file:' + item.Id }" ng-repeat="item in vm.items | filter: { IsFolder: false }  | orderBy:'Name'" ng-click="vm.adam.select(item)">
                     <div ng-if="item.Type == 'image'" class="dz-image">
                         <img data-dz-thumbnail="" alt="{{ item.Id + ':' + item.Name }}" ng-src="{{ '/portals/0/' + item.Path + '?w=120&h=120&mode=crop' }}">
-                    </div>
-                    <div ng-if="item.Type == 'folder'" class="dz-image" style="background-color: whitesmoke">
-
                     </div>
 
                     <div class="dz-details file-type-{{item.Type}}">
                         <div class="dz-size file-icon" ng-if="item.Type == 'image'">
                             <span data-dz-size=""><strong>{{ item.Id }}</strong></span>
-                        </div>
-                        <div class="dz-size" ng-if="item.Type == 'folder'">
-                            <span data-dz-size="" style="font-size: xx-large">
-                                    <i icon="th-large"></i>
-                            </span>
                         </div>
                         <div class="dz-size file-actions" ng-if="item.Type == 'document' || item.Type == 'file'">
                             <span data-dz-size="">
@@ -118,10 +123,9 @@ ADAM - sponsored with ♥ by 2sic.com">
                         </div>
                         <div class="dz-filename">
                             <span ng-click="vm.adam.del(item)" stop-event="click"><i icon="remove"></i></span>
-                            <span ng-if="!item.IsFolder" data-dz-name="">{{ (item.Size / 1024).toFixed(0) }} kb</span>
+                            <span data-dz-name="">{{ (item.Size / 1024).toFixed(0) }} kb</span>
                         </div>
                     </div>
-                    <div class="dz-error-message"><span data-dz-errormessage=""></span></div>
                     <div class="dz-success-mark">
                         <svg width="54px" height="54px" viewBox="0 0 54 54" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
                             <title>Check</title>
