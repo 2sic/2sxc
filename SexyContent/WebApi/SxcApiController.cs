@@ -4,6 +4,7 @@ using DotNetNuke.Web.Api;
 using ToSic.Eav;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.ValueProvider;
+using ToSic.SexyContent.Adam;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Razor.Helpers;
 
@@ -175,6 +176,32 @@ namespace ToSic.SexyContent.WebApi
 			get { return AppAndDataHelpers.List; }
 		}
 
+        #endregion
+
+
+        #region Adam (beta / experimental)
+
+        /// <summary>
+        /// Provides an Adam instance for this item and field
+        /// </summary>
+        /// <param name="entity">The entity, often Content or similar</param>
+        /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
+        /// <returns>An Adam object for navigating the assets</returns>
+        public AdamNavigator Adam(DynamicEntity entity, string fieldName)
+        {
+            return AppAndDataHelpers.Adam(AsEntity(entity), fieldName);
+        }
+
+        /// <summary>
+        /// Provides an Adam instance for this item and field
+        /// </summary>
+        /// <param name="entity">The entity, often Content or similar</param>
+        /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
+        /// <returns>An Adam object for navigating the assets</returns>
+        public AdamNavigator Adam(IEntity entity, string fieldName)
+        {
+            return AppAndDataHelpers.Adam(entity, fieldName);
+        }
         #endregion
 
     }
