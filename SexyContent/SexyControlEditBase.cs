@@ -22,6 +22,7 @@ namespace ToSic.SexyContent
 				RegisterGlobalsAttribute();
             }
 
+        #region basic properties like Sexy, App, Zone, etc.
         private SexyContent _sexy;
         protected SexyContent Sexy
         {
@@ -49,7 +50,7 @@ namespace ToSic.SexyContent
                 return SexyContent.GetAppIdFromModule(ModuleConfiguration);
             }
         }
-
+        #endregion
 
         public bool IsContentApp
         {
@@ -161,6 +162,10 @@ namespace ToSic.SexyContent
 		}
 
 
+        /// <summary>
+        /// Check different conditions (app/content) to determine if getting-started should be shown
+        /// </summary>
+        /// <returns></returns>
         public bool ShowGettingStarted()
         {
             if (IsContentApp)
