@@ -12,16 +12,23 @@ namespace ToSic.SexyContent.GettingStarted
 
         protected void Page_Load(object sender, EventArgs e)
         {
-
             ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
 
+            GettingStartedUrl();
+        }
+
+        public string GettingStartedUrl()
+        {
             var gettingStartedSrc = "http://gettingstarted.2sexycontent.org/router.aspx?";
 
             // Add desired destination
-            gettingStartedSrc += "destination=" + (ModuleConfiguration.DesktopModule.ModuleName == "2sxc" ? "autoconfigurecontent" : "autoconfigureapp");
+            gettingStartedSrc += "destination=" +
+                                 (ModuleConfiguration.DesktopModule.ModuleName == "2sxc"
+                                     ? "autoconfigurecontent"
+                                     : "autoconfigureapp");
 
             // Add DNN Version
-            gettingStartedSrc += "&DnnVersion=" + Assembly.GetAssembly(typeof(Globals)).GetName().Version.ToString(4);
+            gettingStartedSrc += "&DnnVersion=" + Assembly.GetAssembly(typeof (Globals)).GetName().Version.ToString(4);
             // Add 2SexyContent Version
             gettingStartedSrc += "&2SexyContentVersion=" + SexyContent.ModuleVersion;
             // Add module type
@@ -54,9 +61,7 @@ namespace ToSic.SexyContent.GettingStarted
             gettingStartedSrc += "&CurrentLanguage=" + PortalSettings.CultureCode;
 
             // Set src to iframe
-            frGettingStarted.Attributes["src"] = gettingStartedSrc;
-
+            return gettingStartedSrc;
         }
-
     }
 }

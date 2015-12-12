@@ -1,7 +1,7 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="GettingStartedFrame.ascx.cs" Inherits="ToSic.SexyContent.GettingStarted.GettingStartedFrame" %>
 
 <div style="position:relative;">
-    <iframe runat="server" id="frGettingStarted" src="" width="100%" height="300px"></iframe>
+    <iframe id="frGettingStarted" src="<%= GettingStartedUrl() %>" width="100%" height="300px"></iframe>
 
     <script type="text/javascript">
     
@@ -33,7 +33,7 @@
 
             }
             else if (data.action == "resize") {
-                $("#<%=frGettingStarted.ClientID %>").height(data.height);
+                $(".DnnModule-<%= ModuleID %> #frGettingStarted").height(data.height);
             }
         }
 
