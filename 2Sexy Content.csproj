@@ -366,13 +366,6 @@
     <Compile Include="TemplateHelpGrid.ascx.designer.cs">
       <DependentUpon>TemplateHelpGrid.ascx</DependentUpon>
     </Compile>
-    <Compile Include="ViewApp.ascx.cs">
-      <DependentUpon>ViewApp.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="ViewApp.ascx.designer.cs">
-      <DependentUpon>ViewApp.ascx</DependentUpon>
-    </Compile>
     <Compile Include="View.ascx.cs">
       <DependentUpon>View.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

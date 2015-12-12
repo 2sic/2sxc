@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using DotNetNuke.Entities.Modules;
+using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Tabs;
 using DotNetNuke.Services.Installer.Dependencies;
 using DotNetNuke.UI.Modules;
@@ -158,5 +159,21 @@ namespace ToSic.SexyContent
 				DefaultLanguageID = Sexy != null ? Sexy.ContentContext.Dimensions.GetLanguageId(PortalSettings.DefaultLanguage) : null
 			}));
 		}
+
+
+        public bool ShowGettingStarted()
+        {
+            if (IsContentApp)
+            {
+                var noTemplatesYet = !Sexy.Templates.GetVisibleTemplates().Any();
+                return noTemplatesYet && IsEditable && UserInfo.IsInRole(PortalSettings.AdministratorRoleName);
+            }
+            else
+            {
+                return IsEditable && UserInfo.IsInRole(PortalSettings.AdministratorRoleName) &&
+                       !SexyContent.GetApps(ZoneId.Value, false, new PortalSettings(ModuleConfiguration.OwnerPortalID))
+                           .Any();
+            }
+        }
     }
 }
