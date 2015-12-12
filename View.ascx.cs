@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Linq;
 using DotNetNuke.Entities.Modules;
-using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Exceptions;
 using ToSic.SexyContent.GettingStarted;
-
-// Warning: This code is 99% identical View.ascx.cs and ViewApp.ascx.cs. These should be merged! Dangerous to keep them apart
 
 namespace ToSic.SexyContent
 {
