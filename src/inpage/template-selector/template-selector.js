@@ -1,27 +1,5 @@
 ﻿(function () {
-    var module = angular.module("2sxc.view", [
-        "2sxc4ng",
-        "pascalprecht.translate",
-        "SxcInpageTemplates",
-        "EavConfiguration"
-    ]);
-
-    module.config(function ($translateProvider, AppInstanceId, $translatePartialLoaderProvider, languages) {
-        
-        var globals = $2sxc(AppInstanceId).manage._manageInfo;
-        
-        // add translation table
-        $translateProvider
-            .preferredLanguage(languages.currentLanguage.split("-")[0])
-            .useSanitizeValueStrategy("escapeParameters")   // this is very important to allow html in the JSON files
-            .fallbackLanguage(languages.fallbackLanguage)
-            .useLoader("$translatePartialLoader", {
-                urlTemplate: languages.i18nRoot + "{part}-{lang}.js"
-            })
-            .useLoaderCache(true);
-
-        $translatePartialLoaderProvider.addPart("inpage");
-    });
+    var module = angular.module("2sxc.view");
 
     module.controller("TemplateSelectorCtrl", function($scope, $attrs, moduleApiService, $filter, $q, $window, $translate) {
         var vm = this;
@@ -78,42 +56,45 @@
                 $window.location.reload();
         };
 
+        if (vm.appId !== null && vm.manageInfo.templateChooserVisible)
+            vm.reloadTemplates();
+
+        // todo: 2dm working on this
         realScope.$watch("vm.templateId", function (newTemplateId, oldTemplateId) {
-        	if (newTemplateId != oldTemplateId) {
+        	if (newTemplateId !== oldTemplateId) {
         		//alert("templateId changed");
         		if (vm.manageInfo.isContentApp)
         			vm.renderTemplate(newTemplateId);
         		else {
         			vm.loading++;
-			        var promise;
-			        if (vm.manageInfo.hasContent)
-				        promise = vm.saveTemplateId(newTemplateId);
-			        else
-				        promise = vm.setPreviewTemplateId(newTemplateId);
-			        promise.then(function() {
+        			//var promise = (vm.manageInfo.hasContent)
+                    //    ? vm.saveTemplateId(newTemplateId)
+                    //    : vm.setPreviewTemplateId(newTemplateId);
+
+        			vm.saveTemplateIdButDontAddGroup.then(function () {
         				$window.location.reload();
 			        });
         		}
         	}
         });
 
+        // Auto-set view-dropdown if content-type changed
         realScope.$watch("vm.contentTypeId", function (newContentTypeId, oldContentTypeId) {
         	if (newContentTypeId == oldContentTypeId)
         		return;
         	// Select first template if contentType changed
-        	var firstTemplateId = vm.filteredTemplates(newContentTypeId)[0].TemplateId; // $filter('filter')(vm.templates, { AttributeSetId: vm.contentTypeId == null ? "!!" : vm.contentTypeId })[0].TemplateID;
+        	var firstTemplateId = vm.filteredTemplates(newContentTypeId)[0].TemplateId; 
         	if (vm.templateId !== firstTemplateId && firstTemplateId !== null)
         		vm.templateId = firstTemplateId;
         });
 
-        if (vm.appId !== null && vm.manageInfo.templateChooserVisible)
-            vm.reloadTemplates();
-
+        // Show/hide this template chooser
         realScope.$watch("vm.manageInfo.templateChooserVisible", function(visible, oldVisible) {
             if (visible !== oldVisible && vm.appId !== null && visible)
                 vm.reloadTemplates();
         });
 
+        // Save/reload on app-change
         realScope.$watch("vm.appId", function (newAppId, oldAppId) {
             if (newAppId === oldAppId || newAppId === null)
                 return;
@@ -128,10 +109,11 @@
             });
         });
 
+        // Init App-Dropdown if it's an app-selector
         if (!vm.manageInfo.isContentApp) {
             moduleApi.getSelectableApps().then(function(data) {
                 vm.apps = data.data;
-                vm.apps.push({ Name: $attrs.importapptext, AppId: -1 });
+                vm.apps.push({ Name: $translate.instant('TemplatePicker.GetMoreApps'), AppId: -1 });
             });
         }
 
@@ -145,25 +127,36 @@
             });
         };
 
-        vm.saveTemplateId = function () {
+        vm.saveTemplateIdButDontAddGroup = function ecgic(newTemplateId) {
+            var promise = (vm.manageInfo.hasContent)
+                ? vm.saveTemplateId(newTemplateId)
+                : vm.setPreviewTemplateId(newTemplateId);
+            return promise;
+        };
+
+        vm.saveTemplateId = function (newTemplateId) {
+            newTemplateId = newTemplateId || vm.templateId;
         	var promises = [];
 
+            // todo: this condition could be part of the 500 problem?
 			// Save only if the currently saved is not the same as the new
-        	if (!vm.manageInfo.hasContent || vm.savedTemplateId != vm.templateId) {
-        		promises.push(moduleApi.saveTemplateId(vm.templateId).then(function(result) {
-        		    // Make sure that ContentGroupGuid is updated accordingly
-        		    var guid = result.data;
-		            $2sxc(moduleId).manage._manageInfo.config.contentGroupId = guid;
-		        }));
-        		vm.savedTemplateId = vm.templateId;
+        	if (!vm.manageInfo.hasContent || vm.savedTemplateId !== newTemplateId) {
+	            promises.push(moduleApi.saveTemplateId(newTemplateId)
+	                .then(function(result) {
+	                    // Make sure that ContentGroupGuid is updated accordingly
+	                    var guid = result.data;
+	                    $2sxc(moduleId).manage._manageInfo.config.contentGroupId = guid;
+	                }));
+        		vm.savedTemplateId = newTemplateId;
         		promises.push(vm.setTemplateChooserState(false));
 	        }
 
+            // todo: this doesn't enforce a sequence - maybe a problem?
             return $q.all(promises);
         };
 
-	    vm.setPreviewTemplateId = function() {
-		    return moduleApi.setPreviewTemplateId(vm.templateId);
+	    vm.setPreviewTemplateId = function(newTemplateId) {
+	        return moduleApi.setPreviewTemplateId(newTemplateId);
 	    };
 
         vm.renderTemplate = function (templateId) {
@@ -209,83 +202,5 @@
 
     });
 
-    module.factory("moduleApiService", function($http) {
-        return function (moduleId) {
-            function apiService(modId, settings) {
-                return $http(settings);
-            }
-            return {
-                saveTemplateId: function(templateId) {
-                    return apiService(moduleId, {
-                        url: "View/Module/SaveTemplateId",
-                        params: { templateId: templateId }
-                    });
-                },
-            	setPreviewTemplateId: function(templateId) {
-            		return apiService(moduleId, {
-            			url: "View/Module/SetPreviewTemplateId",
-            			params: { templateId: templateId }
-            		});
-	            },
-                addItem: function(sortOrder) {
-                    return apiService(moduleId, {
-                        url: "View/Module/AddItem",
-                        params: { sortOrder: sortOrder }
-                    });
-                },
-                getSelectableApps: function() {
-                    return apiService(moduleId, {
-                        url: "View/Module/GetSelectableApps"
-                    });
-                },
-                setAppId: function(appId) {
-                    return apiService(moduleId, {
-                        url: "View/Module/SetAppId",
-                        params: { appId: appId }
-                    });
-                },
-                getSelectableContentTypes: function () {
-                    return apiService(moduleId, {
-                        url: "View/Module/GetSelectableContentTypes"
-                    });
-                },
-                getSelectableTemplates: function() {
-                    return apiService(moduleId, {
-                        url: "View/Module/GetSelectableTemplates"
-                    });
-                },
-                setTemplateChooserState: function(state) {
-                    return apiService(moduleId, {
-                        url: "View/Module/SetTemplateChooserState",
-                        params: { state: state }
-                    });
-                },
-                renderTemplate: function(templateId) {
-                    return apiService(moduleId, {
-                        url: "View/Module/RenderTemplate",
-                        params: { templateId: templateId }
-                    });
-                },
-                changeOrder: function (sortOrder, destinationSortOrder) {
-                	return apiService(moduleId, {
-                		url: "View/Module/ChangeOrder",
-                		params: { sortOrder: sortOrder, destinationSortOrder: destinationSortOrder }
-                	});
-                },
-                publish: function(part, sortOrder) {
-                 	return apiService(moduleId, {
-                		url: "view/module/publish",
-                		params: { part: part, sortOrder: sortOrder }
-                	});
-                },
-                removeFromList: function (sortOrder) {
-                	return apiService(moduleId, {
-                		url: "View/Module/RemoveFromList",
-                		params: { sortOrder: sortOrder }
-                	});
-                }
-            };
-        };
-    });
 
 })();

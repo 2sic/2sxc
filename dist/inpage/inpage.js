@@ -24,13 +24,8 @@ var $2sxcActionMenuMapper = function (moduleId) {
 angular.module('SxcInpageTemplates',[]).run(['$templateCache', function($templateCache) {
   'use strict';
 
-  $templateCache.put('template-selector/template-selector-app.html',
-    "<div ng-cloak ng-show=vm.manageInfo.templateChooserVisible class=\"dnnFormMessage dnnFormInfo\"><div class=sc-selectors><select ng-show=!vm.manageInfo.isContentApp ng-model=vm.appId class=sc-selector-app ng-options=\"a.AppId as a.Name for a in vm.apps\" ng-disabled=\"vm.manageInfo.hasContent || vm.manageInfo.isList\"><option value=\"\" ng-disabled=\"vm.appId != null\" translate=TemplatePicker.AppPickerDefault></option></select><select ng-show=vm.manageInfo.isContentApp ng-model=vm.contentTypeId ng-options=\"c.StaticName as c.Name for c in vm.contentTypes\" class=sc-selector-contenttype ng-disabled=\"vm.manageInfo.hasContent || vm.manageInfo.isList\"><option ng-disabled=\"vm.contentTypeId != ''\" value=\"\" translate=TemplatePicker.ContentTypePickerDefault></option></select><select ng-show=\"vm.manageInfo.isContentApp ? vm.contentTypeId != 0 : (vm.savedAppId != null &&  vm.filteredTemplates().length > 1)\" ng-model=vm.templateId class=sc-selector-template ng-options=\"t.TemplateId as t.Name for t in vm.filteredTemplates(vm.contentTypeId)\"></select></div><div class=sc-selector-actions><a ng-show=\"vm.templateId != null && vm.savedTemplateId != vm.templateId\" ng-click=vm.saveTemplateId(); class=sc-selector-save title=\"{{ 'TemplatePicker.Save' | translate }}\">{{ 'TemplatePicker.Save' | translate }}</a> <a ng-show=\"vm.savedTemplateId != null\" class=sc-selector-close ng-click=vm.setTemplateChooserState(false); title=\"{{ 'TemplatePicker.' (vm.manageInfo.isContentApp ? 'Cancel' : 'Close') | translate }}\">{{ 'TemplatePicker.' (vm.manageInfo.isContentApp ? 'Cancel' : 'Close') | translate }}</a></div><div class=\"sc-loading sc-loading-nobg\" ng-show=vm.loading></div></div>"
-  );
-
-
-  $templateCache.put('template-selector/template-selector-view.html',
-    "<div ng-cloak ng-show=vm.manageInfo.templateChooserVisible class=\"dnnFormMessage dnnFormInfo\"><div class=sc-selectors><select ng-show=!vm.manageInfo.isContentApp ng-model=vm.appId class=sc-selector-app ng-options=\"a.AppId as a.Name for a in vm.apps\" ng-disabled=\"vm.manageInfo.hasContent || vm.manageInfo.isList\"><option value=\"\" ng-disabled=\"vm.appId != null\" translate=TemplatePicker.AppPickerDefault></option></select><select ng-show=vm.manageInfo.isContentApp ng-model=vm.contentTypeId ng-options=\"c.StaticName as c.Name for c in vm.contentTypes\" class=sc-selector-contenttype ng-disabled=\"vm.manageInfo.hasContent || vm.manageInfo.isList\"><option ng-disabled=\"vm.contentTypeId != ''\" value=\"\" translate=TemplatePicker.ContentTypePickerDefault></option></select><select ng-show=\"vm.manageInfo.isContentApp ? vm.contentTypeId != 0 : (vm.savedAppId != null &&  vm.filteredTemplates().length > 1)\" ng-model=vm.templateId class=sc-selector-template ng-options=\"t.TemplateId as t.Name for t in vm.filteredTemplates(vm.contentTypeId)\"></select></div><div class=sc-selector-actions><a ng-show=\"vm.templateId != null && vm.savedTemplateId != vm.templateId\" ng-click=vm.saveTemplateId(); class=sc-selector-save title=\"{{ 'TemplatePicker.Save' | translate }}\">{{ 'TemplatePicker.Save' | translate }}</a> <a ng-show=\"vm.savedTemplateId != null\" class=sc-selector-close ng-click=vm.setTemplateChooserState(false); title=\"{{ 'TemplatePicker.' (vm.manageInfo.isContentApp ? 'Cancel' : 'Close') | translate }}\">{{ 'TemplatePicker.' (vm.manageInfo.isContentApp ? 'Cancel' : 'Close') | translate }}</a></div><div class=\"sc-loading sc-loading-nobg\" ng-show=vm.loading></div></div>"
+  $templateCache.put('template-selector/template-selector.html',
+    "<div ng-cloak ng-show=vm.manageInfo.templateChooserVisible class=\"dnnFormMessage dnnFormInfo\"><div class=sc-selectors><select ng-show=!vm.manageInfo.isContentApp ng-model=vm.appId class=sc-selector-app ng-options=\"a.AppId as a.Name for a in vm.apps\" ng-disabled=\"vm.manageInfo.hasContent || vm.manageInfo.isList\"><option value=\"\" ng-disabled=\"vm.appId != null\" translate=TemplatePicker.AppPickerDefault></option></select><select ng-show=vm.manageInfo.isContentApp ng-model=vm.contentTypeId class=sc-selector-contenttype ng-options=\"c.StaticName as c.Name for c in vm.contentTypes\" ng-disabled=\"vm.manageInfo.hasContent || vm.manageInfo.isList\"><option ng-disabled=\"vm.contentTypeId != ''\" value=\"\" translate=TemplatePicker.ContentTypePickerDefault></option></select><select ng-show=\"vm.manageInfo.isContentApp ? vm.contentTypeId != 0 : (vm.savedAppId != null &&  vm.filteredTemplates().length > 1)\" ng-model=vm.templateId class=sc-selector-template ng-options=\"t.TemplateId as t.Name for t in vm.filteredTemplates(vm.contentTypeId)\"></select></div><div class=sc-selector-actions><a ng-show=\"vm.templateId != null && vm.savedTemplateId != vm.templateId\" ng-click=vm.saveTemplateIdButDontAddGroup(vm.templateId); class=sc-selector-save title=\"{{ 'TemplatePicker.Save' | translate }}\">{{ 'TemplatePicker.Save' | translate }}</a> <a ng-show=\"vm.savedTemplateId != null\" class=sc-selector-close ng-click=vm.setTemplateChooserState(false); title=\"{{ 'TemplatePicker.' + (vm.manageInfo.isContentApp ? 'Cancel' : 'Close') | translate }}\">{{ 'TemplatePicker.' + (vm.manageInfo.isContentApp ? 'Cancel' : 'Close') | translate }}</a></div><div class=\"sc-loading sc-loading-nobg\" ng-show=vm.loading></div></div>"
   );
 
 }]);
@@ -435,197 +430,18 @@ $(document).ready(function () {
         $translatePartialLoaderProvider.addPart("inpage");
     }]);
 
-    module.controller("TemplateSelectorCtrl", ["$scope", "$attrs", "moduleApiService", "$filter", "$q", "$window", "$translate", function($scope, $attrs, moduleApiService, $filter, $q, $window, $translate) {
-        var vm = this;
-        var realScope = $scope;
 
-        var moduleId = $attrs.moduleid;
-        var moduleApi = moduleApiService(moduleId);
-
-        vm.manageInfo = $2sxc(moduleId).manage._manageInfo;
-        vm.apps = [];
-        vm.contentTypes = [];
-        vm.templates = [];
-        vm.filteredTemplates = function (contentTypeId) {
-            // Return all templates for App
-            if (!vm.manageInfo.isContentApp)
-                return vm.templates;
-            return $filter("filter")(vm.templates, contentTypeId == "_LayoutElement" ? { ContentTypeStaticName: "" } : { ContentTypeStaticName: contentTypeId }, true);
-        };
-        vm.contentTypeId = vm.manageInfo.contentTypeId;
-        vm.templateId = vm.manageInfo.templateId;
-        vm.savedTemplateId = vm.manageInfo.templateId;
-        vm.appId = vm.manageInfo.appId;
-        vm.savedAppId = vm.manageInfo.appId;
-        vm.loading = 0;
-
-        vm.reloadTemplates = function() {
-
-            vm.loading++;
-            var getContentTypes = moduleApi.getSelectableContentTypes();
-            var getTemplates = moduleApi.getSelectableTemplates();
-
-            $q.all([getContentTypes, getTemplates]).then(function (res) {
-                vm.contentTypes = res[0].data;
-                vm.templates = res[1].data;
-
-                // Add option for no content type if there are templates without
-                if ($filter("filter")(vm.templates, { ContentTypeStaticName: "" }, true).length > 0) {
-                	vm.contentTypes.push({ StaticName: "_LayoutElement", Name: "Layout element" });
-                    vm.contentTypes = $filter("orderBy")(vm.contentTypes, "Name");
-                }
-
-                vm.loading--;
-            });
-
-        };
-
-        vm.reload = function () {
-            if (!vm.templateId)
-                return;
-            
-            if (vm.manageInfo.isContentApp)
-                vm.renderTemplate(vm.templateId);
-            else
-                $window.location.reload();
-        };
-
-        realScope.$watch("vm.templateId", function (newTemplateId, oldTemplateId) {
-        	if (newTemplateId != oldTemplateId) {
-        		//alert("templateId changed");
-        		if (vm.manageInfo.isContentApp)
-        			vm.renderTemplate(newTemplateId);
-        		else {
-        			vm.loading++;
-			        var promise;
-			        if (vm.manageInfo.hasContent)
-				        promise = vm.saveTemplateId(newTemplateId);
-			        else
-				        promise = vm.setPreviewTemplateId(newTemplateId);
-			        promise.then(function() {
-        				$window.location.reload();
-			        });
-        		}
-        	}
-        });
-
-        realScope.$watch("vm.contentTypeId", function (newContentTypeId, oldContentTypeId) {
-        	if (newContentTypeId == oldContentTypeId)
-        		return;
-        	// Select first template if contentType changed
-        	var firstTemplateId = vm.filteredTemplates(newContentTypeId)[0].TemplateId; // $filter('filter')(vm.templates, { AttributeSetId: vm.contentTypeId == null ? "!!" : vm.contentTypeId })[0].TemplateID;
-        	if (vm.templateId !== firstTemplateId && firstTemplateId !== null)
-        		vm.templateId = firstTemplateId;
-        });
-
-        if (vm.appId !== null && vm.manageInfo.templateChooserVisible)
-            vm.reloadTemplates();
-
-        realScope.$watch("vm.manageInfo.templateChooserVisible", function(visible, oldVisible) {
-            if (visible !== oldVisible && vm.appId !== null && visible)
-                vm.reloadTemplates();
-        });
-
-        realScope.$watch("vm.appId", function (newAppId, oldAppId) {
-            if (newAppId === oldAppId || newAppId === null)
-                return;
-
-            if (newAppId == -1) {
-                window.location = $attrs.importappdialog;
-                return;
-            }
-
-            moduleApi.setAppId(newAppId).then(function() {
-                $window.location.reload();
-            });
-        });
-
-        if (!vm.manageInfo.isContentApp) {
-            moduleApi.getSelectableApps().then(function(data) {
-                vm.apps = data.data;
-                vm.apps.push({ Name: $attrs.importapptext, AppId: -1 });
-            });
-        }
-
-        vm.setTemplateChooserState = function (state) {
-            // Reset templateid / cancel template change
-            if (!state)
-                vm.templateId = vm.savedTemplateId;
-
-            return moduleApi.setTemplateChooserState(state).then(function () {
-                vm.manageInfo.templateChooserVisible = state;
-            });
-        };
-
-        vm.saveTemplateId = function () {
-        	var promises = [];
-
-			// Save only if the currently saved is not the same as the new
-        	if (!vm.manageInfo.hasContent || vm.savedTemplateId != vm.templateId) {
-        		promises.push(moduleApi.saveTemplateId(vm.templateId).then(function(result) {
-        		    // Make sure that ContentGroupGuid is updated accordingly
-        		    var guid = result.data;
-		            $2sxc(moduleId).manage._manageInfo.config.contentGroupId = guid;
-		        }));
-        		vm.savedTemplateId = vm.templateId;
-        		promises.push(vm.setTemplateChooserState(false));
-	        }
-
-            return $q.all(promises);
-        };
-
-	    vm.setPreviewTemplateId = function() {
-		    return moduleApi.setPreviewTemplateId(vm.templateId);
-	    };
-
-        vm.renderTemplate = function (templateId) {
-            vm.loading++;
-            moduleApi.renderTemplate(templateId).then(function (response) {
-                try {
-                    vm.insertRenderedTemplate(response.data);
-                    $2sxc(moduleId).manage._processToolbars();
-                } catch (e) {
-                    console.log("Error while rendering template:");
-                    console.log(e);
-                }
-                vm.loading--;
-            });
-        };
-
-        vm.insertRenderedTemplate = function(renderedTemplate) {
-            $(".DnnModule-" + moduleId + " .sc-viewport").html(renderedTemplate);
-        };
-
-		// ToDo: Remove this here, as it's not used in TemplateSelector - should move to 2sxc.api.manage.js
-        vm.addItem = function(sortOrder) {
-            moduleApi.addItem(sortOrder).then(function () {
-                vm.renderTemplate(vm.templateId);
-            });
-        };
-        vm.removeFromList = function (sortOrder) {
-        	moduleApi.removeFromList(sortOrder).then(function () {
-        		vm.renderTemplate(vm.templateId);
-        	});
-        };
-        vm.changeOrder = function (sortOrder, desintationSortOrder) {
-        	moduleApi.changeOrder(sortOrder, desintationSortOrder).then(function () {
-        		vm.renderTemplate(vm.templateId);
-        	});
-        };
-        vm.publish = function(part, sortOrder) {
-            moduleApi.publish(part, sortOrder).then(function() {
-                vm.renderTemplate(vm.templateId);
-            });
-        };
-        vm.translate = function (key) { return $translate.instant(key); };
-
-    }]);
+})();
+(function () {
+    var module = angular.module("2sxc.view");
 
     module.factory("moduleApiService", ["$http", function($http) {
         return function (moduleId) {
+
             function apiService(modId, settings) {
                 return $http(settings);
             }
+
             return {
                 saveTemplateId: function(templateId) {
                     return apiService(moduleId, {
@@ -699,5 +515,211 @@ $(document).ready(function () {
             };
         };
     }]);
+
+})();
+(function () {
+    var module = angular.module("2sxc.view");
+
+    module.controller("TemplateSelectorCtrl", ["$scope", "$attrs", "moduleApiService", "$filter", "$q", "$window", "$translate", function($scope, $attrs, moduleApiService, $filter, $q, $window, $translate) {
+        var vm = this;
+        var realScope = $scope;
+
+        var moduleId = $attrs.moduleid;
+        var moduleApi = moduleApiService(moduleId);
+
+        vm.manageInfo = $2sxc(moduleId).manage._manageInfo;
+        vm.apps = [];
+        vm.contentTypes = [];
+        vm.templates = [];
+        vm.filteredTemplates = function (contentTypeId) {
+            // Return all templates for App
+            if (!vm.manageInfo.isContentApp)
+                return vm.templates;
+            return $filter("filter")(vm.templates, contentTypeId == "_LayoutElement" ? { ContentTypeStaticName: "" } : { ContentTypeStaticName: contentTypeId }, true);
+        };
+        vm.contentTypeId = vm.manageInfo.contentTypeId;
+        vm.templateId = vm.manageInfo.templateId;
+        vm.savedTemplateId = vm.manageInfo.templateId;
+        vm.appId = vm.manageInfo.appId;
+        vm.savedAppId = vm.manageInfo.appId;
+        vm.loading = 0;
+
+        vm.reloadTemplates = function() {
+
+            vm.loading++;
+            var getContentTypes = moduleApi.getSelectableContentTypes();
+            var getTemplates = moduleApi.getSelectableTemplates();
+
+            $q.all([getContentTypes, getTemplates]).then(function (res) {
+                vm.contentTypes = res[0].data;
+                vm.templates = res[1].data;
+
+                // Add option for no content type if there are templates without
+                if ($filter("filter")(vm.templates, { ContentTypeStaticName: "" }, true).length > 0) {
+                	vm.contentTypes.push({ StaticName: "_LayoutElement", Name: "Layout element" });
+                    vm.contentTypes = $filter("orderBy")(vm.contentTypes, "Name");
+                }
+
+                vm.loading--;
+            });
+
+        };
+
+        vm.reload = function () {
+            if (!vm.templateId)
+                return;
+            
+            if (vm.manageInfo.isContentApp)
+                vm.renderTemplate(vm.templateId);
+            else
+                $window.location.reload();
+        };
+
+        if (vm.appId !== null && vm.manageInfo.templateChooserVisible)
+            vm.reloadTemplates();
+
+        // todo: 2dm working on this
+        realScope.$watch("vm.templateId", function (newTemplateId, oldTemplateId) {
+        	if (newTemplateId !== oldTemplateId) {
+        		//alert("templateId changed");
+        		if (vm.manageInfo.isContentApp)
+        			vm.renderTemplate(newTemplateId);
+        		else {
+        			vm.loading++;
+        			//var promise = (vm.manageInfo.hasContent)
+                    //    ? vm.saveTemplateId(newTemplateId)
+                    //    : vm.setPreviewTemplateId(newTemplateId);
+
+        			vm.saveTemplateIdButDontAddGroup.then(function () {
+        				$window.location.reload();
+			        });
+        		}
+        	}
+        });
+
+        // Auto-set view-dropdown if content-type changed
+        realScope.$watch("vm.contentTypeId", function (newContentTypeId, oldContentTypeId) {
+        	if (newContentTypeId == oldContentTypeId)
+        		return;
+        	// Select first template if contentType changed
+        	var firstTemplateId = vm.filteredTemplates(newContentTypeId)[0].TemplateId; 
+        	if (vm.templateId !== firstTemplateId && firstTemplateId !== null)
+        		vm.templateId = firstTemplateId;
+        });
+
+        // Show/hide this template chooser
+        realScope.$watch("vm.manageInfo.templateChooserVisible", function(visible, oldVisible) {
+            if (visible !== oldVisible && vm.appId !== null && visible)
+                vm.reloadTemplates();
+        });
+
+        // Save/reload on app-change
+        realScope.$watch("vm.appId", function (newAppId, oldAppId) {
+            if (newAppId === oldAppId || newAppId === null)
+                return;
+
+            if (newAppId == -1) {
+                window.location = $attrs.importappdialog;
+                return;
+            }
+
+            moduleApi.setAppId(newAppId).then(function() {
+                $window.location.reload();
+            });
+        });
+
+        // Init App-Dropdown if it's an app-selector
+        if (!vm.manageInfo.isContentApp) {
+            moduleApi.getSelectableApps().then(function(data) {
+                vm.apps = data.data;
+                vm.apps.push({ Name: $translate.instant('TemplatePicker.GetMoreApps'), AppId: -1 });
+            });
+        }
+
+        vm.setTemplateChooserState = function (state) {
+            // Reset templateid / cancel template change
+            if (!state)
+                vm.templateId = vm.savedTemplateId;
+
+            return moduleApi.setTemplateChooserState(state).then(function () {
+                vm.manageInfo.templateChooserVisible = state;
+            });
+        };
+
+        vm.saveTemplateIdButDontAddGroup = function ecgic(newTemplateId) {
+            var promise = (vm.manageInfo.hasContent)
+                ? vm.saveTemplateId(newTemplateId)
+                : vm.setPreviewTemplateId(newTemplateId);
+            return promise;
+        };
+
+        vm.saveTemplateId = function (newTemplateId) {
+            newTemplateId = newTemplateId || vm.templateId;
+        	var promises = [];
+
+            // todo: this condition could be part of the 500 problem?
+			// Save only if the currently saved is not the same as the new
+        	if (!vm.manageInfo.hasContent || vm.savedTemplateId !== newTemplateId) {
+	            promises.push(moduleApi.saveTemplateId(newTemplateId)
+	                .then(function(result) {
+	                    // Make sure that ContentGroupGuid is updated accordingly
+	                    var guid = result.data;
+	                    $2sxc(moduleId).manage._manageInfo.config.contentGroupId = guid;
+	                }));
+        		vm.savedTemplateId = newTemplateId;
+        		promises.push(vm.setTemplateChooserState(false));
+	        }
+
+            // todo: this doesn't enforce a sequence - maybe a problem?
+            return $q.all(promises);
+        };
+
+	    vm.setPreviewTemplateId = function(newTemplateId) {
+	        return moduleApi.setPreviewTemplateId(newTemplateId);
+	    };
+
+        vm.renderTemplate = function (templateId) {
+            vm.loading++;
+            moduleApi.renderTemplate(templateId).then(function (response) {
+                try {
+                    vm.insertRenderedTemplate(response.data);
+                    $2sxc(moduleId).manage._processToolbars();
+                } catch (e) {
+                    console.log("Error while rendering template:");
+                    console.log(e);
+                }
+                vm.loading--;
+            });
+        };
+
+        vm.insertRenderedTemplate = function(renderedTemplate) {
+            $(".DnnModule-" + moduleId + " .sc-viewport").html(renderedTemplate);
+        };
+
+		// ToDo: Remove this here, as it's not used in TemplateSelector - should move to 2sxc.api.manage.js
+        vm.addItem = function(sortOrder) {
+            moduleApi.addItem(sortOrder).then(function () {
+                vm.renderTemplate(vm.templateId);
+            });
+        };
+        vm.removeFromList = function (sortOrder) {
+        	moduleApi.removeFromList(sortOrder).then(function () {
+        		vm.renderTemplate(vm.templateId);
+        	});
+        };
+        vm.changeOrder = function (sortOrder, desintationSortOrder) {
+        	moduleApi.changeOrder(sortOrder, desintationSortOrder).then(function () {
+        		vm.renderTemplate(vm.templateId);
+        	});
+        };
+        vm.publish = function(part, sortOrder) {
+            moduleApi.publish(part, sortOrder).then(function() {
+                vm.renderTemplate(vm.templateId);
+            });
+        };
+        vm.translate = function (key) { return $translate.instant(key); };
+
+    }]);
+
 
 })();

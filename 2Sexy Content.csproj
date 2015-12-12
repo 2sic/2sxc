@@ -425,8 +425,9 @@
     <Content Include="src\inpage\module-toolbar\2sxc.api.manage.js" />
     <Content Include="js\2sxc.api.min.js" />
     <Content Include="src\inpage\module-toolbar\toolbar-bootstrapper.js" />
-    <Content Include="src\inpage\template-selector\template-selector-view.html" />
-    <Content Include="src\inpage\template-selector\template-selector-app.html" />
+    <Content Include="src\inpage\template-selector\moduleService.js" />
+    <Content Include="src\inpage\template-selector\2sxc.view_app.js" />
+    <Content Include="src\inpage\template-selector\template-selector.html" />
     <Content Include="src\inpage\template-selector\template-selector.js" />
     <Content Include="js\angularjs\2sxc4ng.annotated.js" />
     <Content Include="js\angularjs\2sxc4ng.js" />

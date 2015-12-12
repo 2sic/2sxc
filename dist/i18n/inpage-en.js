@@ -2,6 +2,7 @@
   "TemplatePicker": {
     "AppPickerDefault": "&lt;Choose App&gt;",
     "ContentTypePickerDefault": "&lt;Choose Content Type&gt;",
+    "GetMoreApps": "get more apps...",
     "Save": "Save and close",
     "Cancel": "Cancel change",
     "Close": "Close"

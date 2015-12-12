@@ -37,7 +37,7 @@ namespace ToSic.SexyContent
 				if (UserMayEditThisModule)
 				{
 				    var root = "~/desktopmodules/tosic_sexycontent/";
-				    var ext = ".min.js";// ".js"; // ".min.js";
+				    var ext = string.IsNullOrEmpty(Request.QueryString["debug"]) ? ".min.js" : ".js"; // ".min.js";
 
                     // add edit-mode CSS
                     ClientResourceManager.RegisterStyleSheet(Page, root + "edit.css");
