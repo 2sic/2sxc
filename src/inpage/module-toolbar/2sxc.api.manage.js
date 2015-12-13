@@ -56,7 +56,6 @@ $2sxc.getManageController = function (id) {
             lightbox: false,
             hideFirst: true,
             action: function(settings, event) {
-                // ToDo: Remove dependency to AngularJS, should use 2sxc.api.js
                 manageController._getSelectorScope().addItem(settings.sortOrder + 1);
             }
         },
@@ -238,7 +237,7 @@ $2sxc.getManageController = function (id) {
         action: function(settings, event) {
             var origEvent = event || window.event; // pre-save event because afterwards we have a promise, so the event-object changes; funky syntax is because of browser differences
             var conf = actionButtonsConf[settings.action] || actionButtonsConf.default;
-            manageController._getSelectorScope().saveTemplateId().then(function() {
+            manageController._getSelectorScope().prepareToAddContent().then(function () {
                 conf.action(settings, origEvent);
             });
         },

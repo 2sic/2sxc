@@ -74,8 +74,7 @@
 
             // App
             vm.loading++;
-            vm.persistTemplate(newTemplateId, false)
-            //vm.saveTemplateIdButDontAddGroup(newTemplateId, false)
+            vm.persistTemplate(false)
                 .then(function() { $window.location.reload(); });
         });
 
@@ -87,12 +86,6 @@
         	var firstTemplateId = vm.filteredTemplates(newContentTypeId)[0].TemplateId; 
         	if (vm.templateId !== firstTemplateId && firstTemplateId !== null)
         		vm.templateId = firstTemplateId;
-        });
-
-        // Show/hide this template chooser
-        realScope.$watch("vm.manageInfo.templateChooserVisible", function(visible, oldVisible) {
-            if (visible !== oldVisible && vm.appId !== null && visible)
-                vm.reloadTemplates();
         });
 
         // Save/reload on app-change or show import-window
@@ -110,34 +103,34 @@
             });
         });
 
-
+        // Cancel and reset back to original state
         vm.cancelTemplateChange = function() {
             vm.templateId = vm.undoTemplateId;
             vm.contentTypeId = vm.undoContentTypeId;
-            vm.setTemplateChooserState(false);
+            vm.manageInfo.templateChooserVisible = false;
+            if (vm.manageInfo.isContentApp)
+                vm.reloadTemplates();
         };
 
-        vm.setTemplateChooserState = function (state) {
-            return svc.setTemplateChooserState(state).then(function () {
-                vm.manageInfo.templateChooserVisible = state;
-            });
-        };
-
-        vm.persistTemplate = function (newTemplateId, forceCreate, hideTemplateChooser) {
-            var promises = [];
-
-			// Save only if the currently saved is not the same as the new
-            if(vm.undoTemplateId !== newTemplateId) {
-                promises.push(svc.saveTemplate(newTemplateId, forceCreate, hideTemplateChooser)
-                    .then(function (result) {
+        // store the template state to the server, optionally force create of content, and hide the selector
+        vm.persistTemplate = function(forceCreate, selectorVisibility) {
+                // Save only if the currently saved is not the same as the new
+            var promiseToSetState = ((vm.undoTemplateId === vm.templateId)
+                    ? ((vm.manageInfo.templateChooserVisible)
+                        ? svc.setTemplateChooserState(false) // hide in case it was visible
+                        : $q.when(null)) // all is ok, create empty promise to allow chaining the result
+                    : svc.saveTemplate(vm.templateId, forceCreate, selectorVisibility)
+                    .then(function(result) {
                         sxc.manage._manageInfo.config.contentGroupId = result.data; // update internal ContentGroupGuid 
-                        vm.undoTemplateId = newTemplateId; // remember for future undo
-                        vm.undoContentTypeId = vm.contentTypeId; // remember ...
-                        vm.manageInfo.templateChooserVisible = false;
-                    }));
-            }
+                    })
+            );
+            var promiseToCorrectUi = promiseToSetState.then(function() {
+                    vm.undoTemplateId = vm.templateId;          // remember for future undo
+                    vm.undoContentTypeId = vm.contentTypeId;    // remember ...
+                    vm.manageInfo.templateChooserVisible = false;
+                });
 
-            return $q.all(promises);
+            return promiseToCorrectUi;
         };
 
         vm.renderTemplate = function (templateId) {
@@ -154,9 +147,27 @@
             });
         };
 
+        vm.show = function(stateChange) {
+            if (stateChange !== undefined)
+                vm.manageInfo.templateChooserVisible = stateChange;
+
+            if (vm.appId !== null && vm.manageInfo.templateChooserVisible) 
+                vm.reloadTemplates();
+        };
+
+        // reload by ajax or page, depeding on mode (used in toolbar)
+        vm.reload = function () {
+            if (!vm.templateId)
+                return;
+
+            if (vm.manageInfo.isContentApp)
+                vm.renderTemplate(vm.templateId);
+            else
+                $window.location.reload();
+        };
+
         //#region initialize this
-        if (vm.appId !== null && vm.manageInfo.templateChooserVisible)
-            vm.reloadTemplates();
+        vm.show(); // show if it has to, or not
 
         // Init App-Dropdown if it's an app-selector
         if (!vm.manageInfo.isContentApp) {
@@ -171,7 +182,12 @@
 
 
         //#region commands for the toolbar like add, remove, publish, translate, ..
-		// ToDo: Remove this here, as it's not used in TemplateSelector - should move to 2sxc.api.manage.js
+        // ToDo: Remove this here, as it's not used in TemplateSelector - should move to 2sxc.api.manage.js
+
+        vm.prepareToAddContent = function () {
+            return vm.persistTemplate(true, false);
+        };
+
         vm.addItem = function(sortOrder) {
             svc.addItem(sortOrder).then(function () {
                 vm.renderTemplate(vm.templateId);

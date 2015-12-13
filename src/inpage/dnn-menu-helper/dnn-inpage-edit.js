@@ -5,7 +5,7 @@
 var $2sxcActionMenuMapper = function (moduleId) {
     return {
         changeLayoutOrContent: function () {
-            $2sxc(moduleId).manage._getSelectorScope().setTemplateChooserState(true);
+            $2sxc(moduleId).manage._getSelectorScope().show(true);
         },
         addItem: function () {
             $2sxc(moduleId).manage.action({ 'action': 'add', 'useModuleList': true });

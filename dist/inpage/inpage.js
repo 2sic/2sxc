@@ -5,7 +5,7 @@
 var $2sxcActionMenuMapper = function (moduleId) {
     return {
         changeLayoutOrContent: function () {
-            $2sxc(moduleId).manage._getSelectorScope().setTemplateChooserState(true);
+            $2sxc(moduleId).manage._getSelectorScope().show(true);
         },
         addItem: function () {
             $2sxc(moduleId).manage.action({ 'action': 'add', 'useModuleList': true });
@@ -25,7 +25,7 @@ angular.module('SxcInpageTemplates',[]).run(['$templateCache', function($templat
   'use strict';
 
   $templateCache.put('template-selector/template-selector.html',
-    "<div ng-cloak ng-show=vm.manageInfo.templateChooserVisible class=\"dnnFormMessage dnnFormInfo\"><div class=sc-selectors><select ng-show=!vm.manageInfo.isContentApp ng-model=vm.appId class=sc-selector-app ng-options=\"a.AppId as a.Name for a in vm.apps\" ng-disabled=\"vm.manageInfo.hasContent || vm.manageInfo.isList\"><option value=\"\" ng-disabled=\"vm.appId != null\" translate=TemplatePicker.AppPickerDefault></option></select><select ng-show=vm.manageInfo.isContentApp ng-model=vm.contentTypeId class=sc-selector-contenttype ng-options=\"c.StaticName as c.Name for c in vm.contentTypes\" ng-disabled=\"vm.manageInfo.hasContent || vm.manageInfo.isList\"><option ng-disabled=\"vm.contentTypeId != ''\" value=\"\" translate=TemplatePicker.ContentTypePickerDefault></option></select><select ng-show=\"vm.manageInfo.isContentApp ? vm.contentTypeId != 0 : (vm.savedAppId != null &&  vm.filteredTemplates().length > 1)\" ng-model=vm.templateId class=sc-selector-template ng-options=\"t.TemplateId as t.Name for t in vm.filteredTemplates(vm.contentTypeId)\"></select></div><div class=sc-selector-actions><a ng-show=\"vm.templateId != null && vm.savedTemplateId != vm.templateId\" class=sc-selector-save ng-click=\"vm.persistTemplate(vm.templateId, false, !vm.manageInfo.isContentApp);\" title=\"{{ 'TemplatePicker.Save' | translate }}\">{{ 'TemplatePicker.Save' | translate }}</a> <a ng-show=\"vm.undoTemplateId != null\" class=sc-selector-close ng-click=vm.cancelTemplateChange(); title=\"{{ 'TemplatePicker.' + (vm.manageInfo.isContentApp ? 'Cancel' : 'Close') | translate }}\">{{ 'TemplatePicker.' + (vm.manageInfo.isContentApp ? 'Cancel' : 'Close') | translate }}</a></div><div class=\"sc-loading sc-loading-nobg\" ng-show=vm.loading></div></div>"
+    "<div ng-cloak ng-show=vm.manageInfo.templateChooserVisible class=\"dnnFormMessage dnnFormInfo\"><div class=sc-selectors><select ng-show=!vm.manageInfo.isContentApp ng-model=vm.appId class=sc-selector-app ng-options=\"a.AppId as a.Name for a in vm.apps\" ng-disabled=\"vm.manageInfo.hasContent || vm.manageInfo.isList\"><option value=\"\" ng-disabled=\"vm.appId != null\" translate=TemplatePicker.AppPickerDefault></option></select><select ng-show=vm.manageInfo.isContentApp ng-model=vm.contentTypeId class=sc-selector-contenttype ng-options=\"c.StaticName as c.Name for c in vm.contentTypes\" ng-disabled=\"vm.manageInfo.hasContent || vm.manageInfo.isList\"><option ng-disabled=\"vm.contentTypeId != ''\" value=\"\" translate=TemplatePicker.ContentTypePickerDefault></option></select><select ng-show=\"vm.manageInfo.isContentApp ? vm.contentTypeId != 0 : (vm.savedAppId != null &&  vm.filteredTemplates().length > 1)\" ng-model=vm.templateId class=sc-selector-template ng-options=\"t.TemplateId as t.Name for t in vm.filteredTemplates(vm.contentTypeId)\"></select></div><div class=sc-selector-actions><a ng-show=\"vm.templateId != null && vm.savedTemplateId != vm.templateId\" class=sc-selector-save ng-click=\"vm.persistTemplate(false, vm.manageInfo.isContentApp);\" title=\"{{ 'TemplatePicker.Save' | translate }}\">{{ 'TemplatePicker.Save' | translate }}</a> <a ng-show=\"vm.undoTemplateId != null\" class=sc-selector-close ng-click=vm.cancelTemplateChange(); title=\"{{ 'TemplatePicker.' + (vm.manageInfo.isContentApp ? 'Cancel' : 'Close') | translate }}\">{{ 'TemplatePicker.' + (vm.manageInfo.isContentApp ? 'Cancel' : 'Close') | translate }}</a></div><div class=\"sc-loading sc-loading-nobg\" ng-show=vm.loading></div></div>"
   );
 
 }]);
@@ -88,7 +88,6 @@ $2sxc.getManageController = function (id) {
             lightbox: false,
             hideFirst: true,
             action: function(settings, event) {
-                // ToDo: Remove dependency to AngularJS, should use 2sxc.api.js
                 manageController._getSelectorScope().addItem(settings.sortOrder + 1);
             }
         },
@@ -270,7 +269,7 @@ $2sxc.getManageController = function (id) {
         action: function(settings, event) {
             var origEvent = event || window.event; // pre-save event because afterwards we have a promise, so the event-object changes; funky syntax is because of browser differences
             var conf = actionButtonsConf[settings.action] || actionButtonsConf.default;
-            manageController._getSelectorScope().saveTemplateId().then(function() {
+            manageController._getSelectorScope().prepareToAddContent().then(function () {
                 conf.action(settings, origEvent);
             });
         },
@@ -566,8 +565,7 @@ $(document).ready(function () {
 
             // App
             vm.loading++;
-            vm.persistTemplate(newTemplateId, false)
-            //vm.saveTemplateIdButDontAddGroup(newTemplateId, false)
+            vm.persistTemplate(false)
                 .then(function() { $window.location.reload(); });
         });
 
@@ -579,12 +577,6 @@ $(document).ready(function () {
         	var firstTemplateId = vm.filteredTemplates(newContentTypeId)[0].TemplateId; 
         	if (vm.templateId !== firstTemplateId && firstTemplateId !== null)
         		vm.templateId = firstTemplateId;
-        });
-
-        // Show/hide this template chooser
-        realScope.$watch("vm.manageInfo.templateChooserVisible", function(visible, oldVisible) {
-            if (visible !== oldVisible && vm.appId !== null && visible)
-                vm.reloadTemplates();
         });
 
         // Save/reload on app-change or show import-window
@@ -602,34 +594,34 @@ $(document).ready(function () {
             });
         });
 
-
+        // Cancel and reset back to original state
         vm.cancelTemplateChange = function() {
             vm.templateId = vm.undoTemplateId;
             vm.contentTypeId = vm.undoContentTypeId;
-            vm.setTemplateChooserState(false);
+            vm.manageInfo.templateChooserVisible = false;
+            if (vm.manageInfo.isContentApp)
+                vm.reloadTemplates();
         };
 
-        vm.setTemplateChooserState = function (state) {
-            return svc.setTemplateChooserState(state).then(function () {
-                vm.manageInfo.templateChooserVisible = state;
-            });
-        };
-
-        vm.persistTemplate = function (newTemplateId, forceCreate, hideTemplateChooser) {
-            var promises = [];
-
-			// Save only if the currently saved is not the same as the new
-            if(vm.undoTemplateId !== newTemplateId) {
-                promises.push(svc.saveTemplate(newTemplateId, forceCreate, hideTemplateChooser)
-                    .then(function (result) {
+        // store the template state to the server, optionally force create of content, and hide the selector
+        vm.persistTemplate = function(forceCreate, selectorVisibility) {
+                // Save only if the currently saved is not the same as the new
+            var promiseToSetState = ((vm.undoTemplateId === vm.templateId)
+                    ? ((vm.manageInfo.templateChooserVisible)
+                        ? svc.setTemplateChooserState(false) // hide in case it was visible
+                        : $q.when(null)) // all is ok, create empty promise to allow chaining the result
+                    : svc.saveTemplate(vm.templateId, forceCreate, selectorVisibility)
+                    .then(function(result) {
                         sxc.manage._manageInfo.config.contentGroupId = result.data; // update internal ContentGroupGuid 
-                        vm.undoTemplateId = newTemplateId; // remember for future undo
-                        vm.undoContentTypeId = vm.contentTypeId; // remember ...
-                        vm.manageInfo.templateChooserVisible = false;
-                    }));
-            }
+                    })
+            );
+            var promiseToCorrectUi = promiseToSetState.then(function() {
+                    vm.undoTemplateId = vm.templateId;          // remember for future undo
+                    vm.undoContentTypeId = vm.contentTypeId;    // remember ...
+                    vm.manageInfo.templateChooserVisible = false;
+                });
 
-            return $q.all(promises);
+            return promiseToCorrectUi;
         };
 
         vm.renderTemplate = function (templateId) {
@@ -646,9 +638,27 @@ $(document).ready(function () {
             });
         };
 
+        vm.show = function(stateChange) {
+            if (stateChange !== undefined)
+                vm.manageInfo.templateChooserVisible = stateChange;
+
+            if (vm.appId !== null && vm.manageInfo.templateChooserVisible) 
+                vm.reloadTemplates();
+        };
+
+        // reload by ajax or page, depeding on mode (used in toolbar)
+        vm.reload = function () {
+            if (!vm.templateId)
+                return;
+
+            if (vm.manageInfo.isContentApp)
+                vm.renderTemplate(vm.templateId);
+            else
+                $window.location.reload();
+        };
+
         //#region initialize this
-        if (vm.appId !== null && vm.manageInfo.templateChooserVisible)
-            vm.reloadTemplates();
+        vm.show(); // show if it has to, or not
 
         // Init App-Dropdown if it's an app-selector
         if (!vm.manageInfo.isContentApp) {
@@ -663,7 +673,12 @@ $(document).ready(function () {
 
 
         //#region commands for the toolbar like add, remove, publish, translate, ..
-		// ToDo: Remove this here, as it's not used in TemplateSelector - should move to 2sxc.api.manage.js
+        // ToDo: Remove this here, as it's not used in TemplateSelector - should move to 2sxc.api.manage.js
+
+        vm.prepareToAddContent = function () {
+            return vm.persistTemplate(true, false);
+        };
+
         vm.addItem = function(sortOrder) {
             svc.addItem(sortOrder).then(function () {
                 vm.renderTemplate(vm.templateId);
