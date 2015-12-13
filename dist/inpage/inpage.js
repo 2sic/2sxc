@@ -657,7 +657,7 @@ $(document).ready(function () {
         // store the template state to the server, optionally force create of content, and hide the selector
         vm.persistTemplate = function(forceCreate, selectorVisibility) {
             // Save only if the currently saved is not the same as the new
-            var groupExistsAndTemplateUnchanged = !!vm.hasContent && (vm.undoTemplateId === vm.templateId);
+            var groupExistsAndTemplateUnchanged = !!vm.manageInfo.hasContent && (vm.undoTemplateId === vm.templateId);
             var promiseToSetState;
             if (groupExistsAndTemplateUnchanged)
                 promiseToSetState = (vm.manageInfo.templateChooserVisible)
