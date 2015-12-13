@@ -4,12 +4,12 @@
     module.factory("moduleApiService", function($http) {
         return {
 
-            saveTemplateToContentGroup: function(templateId) {
-                return $http.get("View/Module/SaveTemplateId", { params: { templateId: templateId } });
-            },
-
-            savePreviewTemplateId: function(templateId) {
-                return $http.get("View/Module/SetPreviewTemplateId", { params: { templateId: templateId } });
+            saveTemplate: function (templateId, forceCreateContentGroup, newTemplateChooserState) {
+                return $http.get("View/Module/SaveTemplateId", { params: {
+                    templateId: templateId,
+                    forceCreateContentGroup: forceCreateContentGroup,
+                    newTemplateChooserState: newTemplateChooserState
+                } });
             },
 
             addItem: function(sortOrder) {

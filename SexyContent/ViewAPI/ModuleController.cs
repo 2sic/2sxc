@@ -32,17 +32,19 @@ namespace ToSic.SexyContent.ViewAPI
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         [ValidateAntiForgeryToken]
-		public Guid SaveTemplateId([FromUri] int templateId)
+		public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup, bool? newTemplateChooserState = null)
         {
-			return Sexy.ContentGroups.SaveTemplateId(ActiveModule.ModuleID, templateId);
-        }
+            Guid? result = null;
+            var contentGroup = Sexy.ContentGroups.GetContentGroupForModule(ActiveModule.ModuleID);
+            if (contentGroup.Exists || forceCreateContentGroup)
+                result = Sexy.ContentGroups.SaveTemplateId(ActiveModule.ModuleID, templateId);
+            else
+                Sexy.ContentGroups.SetPreviewTemplateId(ActiveModule.ModuleID, templateId);
 
-        [HttpGet]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        [ValidateAntiForgeryToken]
-		public void SetPreviewTemplateId([FromUri] int templateId)
-        {
-			Sexy.ContentGroups.SetPreviewTemplateId(ActiveModule.ModuleID, templateId);
+            if(newTemplateChooserState.HasValue)
+                SetTemplateChooserState(newTemplateChooserState.Value);
+
+            return result;
         }
 
         [HttpGet]

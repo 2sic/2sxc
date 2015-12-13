@@ -25,7 +25,7 @@ angular.module('SxcInpageTemplates',[]).run(['$templateCache', function($templat
   'use strict';
 
   $templateCache.put('template-selector/template-selector.html',
-    "<div ng-cloak ng-show=vm.manageInfo.templateChooserVisible class=\"dnnFormMessage dnnFormInfo\"><div class=sc-selectors><select ng-show=!vm.manageInfo.isContentApp ng-model=vm.appId class=sc-selector-app ng-options=\"a.AppId as a.Name for a in vm.apps\" ng-disabled=\"vm.manageInfo.hasContent || vm.manageInfo.isList\"><option value=\"\" ng-disabled=\"vm.appId != null\" translate=TemplatePicker.AppPickerDefault></option></select><select ng-show=vm.manageInfo.isContentApp ng-model=vm.contentTypeId class=sc-selector-contenttype ng-options=\"c.StaticName as c.Name for c in vm.contentTypes\" ng-disabled=\"vm.manageInfo.hasContent || vm.manageInfo.isList\"><option ng-disabled=\"vm.contentTypeId != ''\" value=\"\" translate=TemplatePicker.ContentTypePickerDefault></option></select><select ng-show=\"vm.manageInfo.isContentApp ? vm.contentTypeId != 0 : (vm.savedAppId != null &&  vm.filteredTemplates().length > 1)\" ng-model=vm.templateId class=sc-selector-template ng-options=\"t.TemplateId as t.Name for t in vm.filteredTemplates(vm.contentTypeId)\"></select></div><div class=sc-selector-actions><a ng-show=\"vm.templateId != null && vm.savedTemplateId != vm.templateId\" class=sc-selector-save ng-click=\"vm.saveTemplateIdButDontAddGroup(vm.templateId, vm.manageInfo.isContentApp);\" title=\"{{ 'TemplatePicker.Save' | translate }}\">{{ 'TemplatePicker.Save' | translate }}</a> <a ng-show=\"vm.undoTemplateId != null\" class=sc-selector-close ng-click=vm.setTemplateChooserState(false); title=\"{{ 'TemplatePicker.' + (vm.manageInfo.isContentApp ? 'Cancel' : 'Close') | translate }}\">{{ 'TemplatePicker.' + (vm.manageInfo.isContentApp ? 'Cancel' : 'Close') | translate }}</a></div><div class=\"sc-loading sc-loading-nobg\" ng-show=vm.loading></div></div>"
+    "<div ng-cloak ng-show=vm.manageInfo.templateChooserVisible class=\"dnnFormMessage dnnFormInfo\"><div class=sc-selectors><select ng-show=!vm.manageInfo.isContentApp ng-model=vm.appId class=sc-selector-app ng-options=\"a.AppId as a.Name for a in vm.apps\" ng-disabled=\"vm.manageInfo.hasContent || vm.manageInfo.isList\"><option value=\"\" ng-disabled=\"vm.appId != null\" translate=TemplatePicker.AppPickerDefault></option></select><select ng-show=vm.manageInfo.isContentApp ng-model=vm.contentTypeId class=sc-selector-contenttype ng-options=\"c.StaticName as c.Name for c in vm.contentTypes\" ng-disabled=\"vm.manageInfo.hasContent || vm.manageInfo.isList\"><option ng-disabled=\"vm.contentTypeId != ''\" value=\"\" translate=TemplatePicker.ContentTypePickerDefault></option></select><select ng-show=\"vm.manageInfo.isContentApp ? vm.contentTypeId != 0 : (vm.savedAppId != null &&  vm.filteredTemplates().length > 1)\" ng-model=vm.templateId class=sc-selector-template ng-options=\"t.TemplateId as t.Name for t in vm.filteredTemplates(vm.contentTypeId)\"></select></div><div class=sc-selector-actions><a ng-show=\"vm.templateId != null && vm.savedTemplateId != vm.templateId\" class=sc-selector-save ng-click=\"vm.persistTemplate(vm.templateId, false, !vm.manageInfo.isContentApp);\" title=\"{{ 'TemplatePicker.Save' | translate }}\">{{ 'TemplatePicker.Save' | translate }}</a> <a ng-show=\"vm.undoTemplateId != null\" class=sc-selector-close ng-click=vm.cancelTemplateChange(); title=\"{{ 'TemplatePicker.' + (vm.manageInfo.isContentApp ? 'Cancel' : 'Close') | translate }}\">{{ 'TemplatePicker.' + (vm.manageInfo.isContentApp ? 'Cancel' : 'Close') | translate }}</a></div><div class=\"sc-loading sc-loading-nobg\" ng-show=vm.loading></div></div>"
   );
 
 }]);
@@ -438,12 +438,12 @@ $(document).ready(function () {
     module.factory("moduleApiService", ["$http", function($http) {
         return {
 
-            saveTemplateToContentGroup: function(templateId) {
-                return $http.get("View/Module/SaveTemplateId", { params: { templateId: templateId } });
-            },
-
-            savePreviewTemplateId: function(templateId) {
-                return $http.get("View/Module/SetPreviewTemplateId", { params: { templateId: templateId } });
+            saveTemplate: function (templateId, forceCreateContentGroup, newTemplateChooserState) {
+                return $http.get("View/Module/SaveTemplateId", { params: {
+                    templateId: templateId,
+                    forceCreateContentGroup: forceCreateContentGroup,
+                    newTemplateChooserState: newTemplateChooserState
+                } });
             },
 
             addItem: function(sortOrder) {
@@ -556,17 +556,6 @@ $(document).ready(function () {
                 });
         };
 
-        // 2015-12-13 2dm - doesn't seem used...
-        //vm.reload = function () {
-        //    if (!vm.templateId)
-        //        return;
-        //       
-        //    if (vm.manageInfo.isContentApp)
-        //        vm.renderTemplate(vm.templateId);
-        //    else
-        //        $window.location.reload();
-        //};
-
         realScope.$watch("vm.templateId", function (newTemplateId, oldTemplateId) {
             if (newTemplateId === oldTemplateId)
                 return;
@@ -577,7 +566,8 @@ $(document).ready(function () {
 
             // App
             vm.loading++;
-            vm.saveTemplateIdButDontAddGroup(newTemplateId, false)
+            vm.persistTemplate(newTemplateId, false)
+            //vm.saveTemplateIdButDontAddGroup(newTemplateId, false)
                 .then(function() { $window.location.reload(); });
         });
 
@@ -613,58 +603,40 @@ $(document).ready(function () {
         });
 
 
-        vm.setTemplateChooserState = function (state) {
-            // Reset templateid / cancel template change
-            if (!state) {
-                vm.templateId = vm.undoTemplateId;
-                vm.contentTypeId = vm.undoContentTypeId;
-            }
+        vm.cancelTemplateChange = function() {
+            vm.templateId = vm.undoTemplateId;
+            vm.contentTypeId = vm.undoContentTypeId;
+            vm.setTemplateChooserState(false);
+        };
 
+        vm.setTemplateChooserState = function (state) {
             return svc.setTemplateChooserState(state).then(function () {
                 vm.manageInfo.templateChooserVisible = state;
             });
         };
 
-        vm.saveTemplateIdButDontAddGroup = function ecgic(newTemplateId, close) {
-            var promise = (vm.manageInfo.hasContent)
-                ? vm.saveTemplateToContentGroup(newTemplateId)
-                : vm.savePreviewTemplateId(newTemplateId);
+        vm.persistTemplate = function (newTemplateId, forceCreate, hideTemplateChooser) {
+            var promises = [];
 
-            if (close)
-                promise = promise.then(function() { vm.setTemplateChooserState(false); });
-            return promise;
-        };
-
-        vm.saveTemplateToContentGroup = function (newTemplateId) {
-            newTemplateId = newTemplateId || vm.templateId;
-        	var promises = [];
-
-            // todo: this condition could be part of the 500 problem?
 			// Save only if the currently saved is not the same as the new
-        	if (!vm.manageInfo.hasContent || vm.undoTemplateId !== newTemplateId) {
-	            promises.push(svc.saveTemplateToContentGroup(newTemplateId)
-	                .then(function(result) {
-	                    // Make sure that ContentGroupGuid is updated accordingly
-	                    var guid = result.data;
-	                    sxc.manage._manageInfo.config.contentGroupId = guid;
-	                }));
-	            vm.undoTemplateId = newTemplateId;          // remember for future undo
-	            vm.undoContentTypeId = vm.contentTypeId;    // remember ...
-        		promises.push(vm.setTemplateChooserState(false));
-	        }
+            if(vm.undoTemplateId !== newTemplateId) {
+                promises.push(svc.saveTemplate(newTemplateId, forceCreate, hideTemplateChooser)
+                    .then(function (result) {
+                        sxc.manage._manageInfo.config.contentGroupId = result.data; // update internal ContentGroupGuid 
+                        vm.undoTemplateId = newTemplateId; // remember for future undo
+                        vm.undoContentTypeId = vm.contentTypeId; // remember ...
+                        vm.manageInfo.templateChooserVisible = false;
+                    }));
+            }
 
-            // todo: this doesn't enforce a sequence - maybe a problem?
             return $q.all(promises);
         };
-
-	    vm.savePreviewTemplateId = svc.savePreviewTemplateId;
 
         vm.renderTemplate = function (templateId) {
             vm.loading++;
             svc.renderTemplate(templateId).then(function (response) {
                 try {
                     $(viewPortSelector).html(response.data);
-                    // vm.insertRenderedTemplate(response.data);
                     sxc.manage._processToolbars();
                 } catch (e) {
                     console.log("Error while rendering template:");
@@ -673,12 +645,6 @@ $(document).ready(function () {
                 vm.loading--;
             });
         };
-
-        // not used 2015-12-13
-        //vm.insertRenderedTemplate = function(renderedTemplate) {
-        //    $(viewPortSelector).html(renderedTemplate);
-        //};
-
 
         //#region initialize this
         if (vm.appId !== null && vm.manageInfo.templateChooserVisible)

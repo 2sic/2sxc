@@ -64,17 +64,6 @@
                 });
         };
 
-        // 2015-12-13 2dm - doesn't seem used...
-        //vm.reload = function () {
-        //    if (!vm.templateId)
-        //        return;
-        //       
-        //    if (vm.manageInfo.isContentApp)
-        //        vm.renderTemplate(vm.templateId);
-        //    else
-        //        $window.location.reload();
-        //};
-
         realScope.$watch("vm.templateId", function (newTemplateId, oldTemplateId) {
             if (newTemplateId === oldTemplateId)
                 return;
@@ -85,7 +74,8 @@
 
             // App
             vm.loading++;
-            vm.saveTemplateIdButDontAddGroup(newTemplateId, false)
+            vm.persistTemplate(newTemplateId, false)
+            //vm.saveTemplateIdButDontAddGroup(newTemplateId, false)
                 .then(function() { $window.location.reload(); });
         });
 
@@ -121,58 +111,40 @@
         });
 
 
-        vm.setTemplateChooserState = function (state) {
-            // Reset templateid / cancel template change
-            if (!state) {
-                vm.templateId = vm.undoTemplateId;
-                vm.contentTypeId = vm.undoContentTypeId;
-            }
+        vm.cancelTemplateChange = function() {
+            vm.templateId = vm.undoTemplateId;
+            vm.contentTypeId = vm.undoContentTypeId;
+            vm.setTemplateChooserState(false);
+        };
 
+        vm.setTemplateChooserState = function (state) {
             return svc.setTemplateChooserState(state).then(function () {
                 vm.manageInfo.templateChooserVisible = state;
             });
         };
 
-        vm.saveTemplateIdButDontAddGroup = function ecgic(newTemplateId, close) {
-            var promise = (vm.manageInfo.hasContent)
-                ? vm.saveTemplateToContentGroup(newTemplateId)
-                : vm.savePreviewTemplateId(newTemplateId);
+        vm.persistTemplate = function (newTemplateId, forceCreate, hideTemplateChooser) {
+            var promises = [];
 
-            if (close)
-                promise = promise.then(function() { vm.setTemplateChooserState(false); });
-            return promise;
-        };
-
-        vm.saveTemplateToContentGroup = function (newTemplateId) {
-            newTemplateId = newTemplateId || vm.templateId;
-        	var promises = [];
-
-            // todo: this condition could be part of the 500 problem?
 			// Save only if the currently saved is not the same as the new
-        	if (!vm.manageInfo.hasContent || vm.undoTemplateId !== newTemplateId) {
-	            promises.push(svc.saveTemplateToContentGroup(newTemplateId)
-	                .then(function(result) {
-	                    // Make sure that ContentGroupGuid is updated accordingly
-	                    var guid = result.data;
-	                    sxc.manage._manageInfo.config.contentGroupId = guid;
-	                }));
-	            vm.undoTemplateId = newTemplateId;          // remember for future undo
-	            vm.undoContentTypeId = vm.contentTypeId;    // remember ...
-        		promises.push(vm.setTemplateChooserState(false));
-	        }
+            if(vm.undoTemplateId !== newTemplateId) {
+                promises.push(svc.saveTemplate(newTemplateId, forceCreate, hideTemplateChooser)
+                    .then(function (result) {
+                        sxc.manage._manageInfo.config.contentGroupId = result.data; // update internal ContentGroupGuid 
+                        vm.undoTemplateId = newTemplateId; // remember for future undo
+                        vm.undoContentTypeId = vm.contentTypeId; // remember ...
+                        vm.manageInfo.templateChooserVisible = false;
+                    }));
+            }
 
-            // todo: this doesn't enforce a sequence - maybe a problem?
             return $q.all(promises);
         };
-
-	    vm.savePreviewTemplateId = svc.savePreviewTemplateId;
 
         vm.renderTemplate = function (templateId) {
             vm.loading++;
             svc.renderTemplate(templateId).then(function (response) {
                 try {
                     $(viewPortSelector).html(response.data);
-                    // vm.insertRenderedTemplate(response.data);
                     sxc.manage._processToolbars();
                 } catch (e) {
                     console.log("Error while rendering template:");
@@ -181,12 +153,6 @@
                 vm.loading--;
             });
         };
-
-        // not used 2015-12-13
-        //vm.insertRenderedTemplate = function(renderedTemplate) {
-        //    $(viewPortSelector).html(renderedTemplate);
-        //};
-
 
         //#region initialize this
         if (vm.appId !== null && vm.manageInfo.templateChooserVisible)
