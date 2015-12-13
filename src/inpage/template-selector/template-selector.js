@@ -135,7 +135,8 @@
                     vm.undoTemplateId = vm.templateId;          // remember for future undo
                     vm.undoContentTypeId = vm.contentTypeId;    // remember ...
                     vm.manageInfo.templateChooserVisible = false;
-                    vm.manageInfo.hasContent = true;
+                    if(!vm.manageInfo.hasContent)               // if it didn't have content, then it only has now...
+                        vm.manageInfo.hasContent = forceCreate; // ...if we forced it to
             });
 
             return promiseToCorrectUi;
