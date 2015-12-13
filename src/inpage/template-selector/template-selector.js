@@ -164,12 +164,13 @@
         };
 
         vm.toggle = function () {
-            // test
             vm.manageInfo.someTest = "a value";
             if (vm.manageInfo.templateChooserVisible)
                 vm.cancelTemplateChange();
-            else
+            else {
                 vm.show(true);
+                svc.setTemplateChooserState(true);
+            }
         };
 
         // reload by ajax or page, depeding on mode (used in toolbar)
