@@ -25,7 +25,7 @@ angular.module('SxcInpageTemplates',[]).run(['$templateCache', function($templat
   'use strict';
 
   $templateCache.put('template-selector/template-selector.html',
-    "<div ng-cloak ng-show=vm.manageInfo.templateChooserVisible class=\"dnnFormMessage dnnFormInfo\"><div class=sc-selectors><select ng-show=!vm.manageInfo.isContentApp ng-model=vm.appId class=sc-selector-app ng-options=\"a.AppId as a.Name for a in vm.apps\" ng-disabled=\"vm.manageInfo.hasContent || vm.manageInfo.isList\"><option value=\"\" ng-disabled=\"vm.appId != null\" translate=TemplatePicker.AppPickerDefault></option></select><select ng-show=vm.manageInfo.isContentApp ng-model=vm.contentTypeId class=sc-selector-contenttype ng-options=\"c.StaticName as c.Name for c in vm.contentTypes\" ng-disabled=\"vm.manageInfo.hasContent || vm.manageInfo.isList\"><option ng-disabled=\"vm.contentTypeId != ''\" value=\"\" translate=TemplatePicker.ContentTypePickerDefault></option></select><select ng-show=\"vm.manageInfo.isContentApp ? vm.contentTypeId != 0 : (vm.savedAppId != null &&  vm.filteredTemplates().length > 1)\" ng-model=vm.templateId class=sc-selector-template ng-options=\"t.TemplateId as t.Name for t in vm.filteredTemplates(vm.contentTypeId)\"></select></div><div class=sc-selector-actions><a ng-show=\"vm.templateId != null && vm.savedTemplateId != vm.templateId\" class=sc-selector-save ng-click=\"vm.persistTemplate(false, vm.manageInfo.isContentApp);\" title=\"{{ 'TemplatePicker.Save' | translate }}\">{{ 'TemplatePicker.Save' | translate }}</a> <a ng-show=\"vm.undoTemplateId != null\" class=sc-selector-close ng-click=vm.cancelTemplateChange(); title=\"{{ 'TemplatePicker.' + (vm.manageInfo.isContentApp ? 'Cancel' : 'Close') | translate }}\">{{ 'TemplatePicker.' + (vm.manageInfo.isContentApp ? 'Cancel' : 'Close') | translate }}</a></div><div class=\"sc-loading sc-loading-nobg\" ng-show=vm.loading></div></div>"
+    "<div ng-cloak ng-show=vm.manageInfo.templateChooserVisible class=\"dnnFormMessage dnnFormInfo\"><div class=sc-selectors><select ng-show=!vm.manageInfo.isContentApp ng-model=vm.appId class=sc-selector-app ng-options=\"a.AppId as a.Name for a in vm.apps\" ng-disabled=\"vm.manageInfo.hasContent || vm.manageInfo.isList\"><option value=\"\" ng-disabled=\"vm.appId != null\" translate=TemplatePicker.AppPickerDefault></option></select><select ng-show=vm.manageInfo.isContentApp ng-model=vm.contentTypeId class=sc-selector-contenttype ng-options=\"c.StaticName as c.Name for c in vm.contentTypes\" ng-disabled=\"vm.manageInfo.hasContent || vm.manageInfo.isList\"><option ng-disabled=\"vm.contentTypeId != ''\" value=\"\" translate=TemplatePicker.ContentTypePickerDefault></option></select><select ng-show=\"vm.manageInfo.isContentApp ? vm.contentTypeId != 0 : (vm.savedAppId != null &&  vm.filteredTemplates().length > 1)\" ng-model=vm.templateId class=sc-selector-template ng-options=\"t.TemplateId as t.Name for t in vm.filteredTemplates(vm.contentTypeId)\"></select></div><div class=sc-selector-actions><a ng-show=\"vm.templateId != null && vm.savedTemplateId != vm.templateId\" class=sc-selector-save ng-click=\"vm.persistTemplate(false, false);\" title=\"{{ 'TemplatePicker.Save' | translate }}\">{{ 'TemplatePicker.Save' | translate }}</a> <a ng-show=\"vm.undoTemplateId != null\" class=sc-selector-close ng-click=vm.cancelTemplateChange(); title=\"{{ 'TemplatePicker.' + (vm.manageInfo.isContentApp ? 'Cancel' : 'Close') | translate }}\">{{ 'TemplatePicker.' + (vm.manageInfo.isContentApp ? 'Cancel' : 'Close') | translate }}</a></div><div class=\"sc-loading sc-loading-nobg\" ng-show=vm.loading></div></div>"
   );
 
 }]);
@@ -599,22 +599,29 @@ $(document).ready(function () {
             vm.templateId = vm.undoTemplateId;
             vm.contentTypeId = vm.undoContentTypeId;
             vm.manageInfo.templateChooserVisible = false;
-            if (vm.manageInfo.isContentApp)
+            svc.setTemplateChooserState(false);
+            if (vm.manageInfo.isContentApp) // necessary to show the original template again
                 vm.reloadTemplates();
         };
 
         // store the template state to the server, optionally force create of content, and hide the selector
         vm.persistTemplate = function(forceCreate, selectorVisibility) {
-                // Save only if the currently saved is not the same as the new
-            var promiseToSetState = ((vm.undoTemplateId === vm.templateId)
-                    ? ((vm.manageInfo.templateChooserVisible)
-                        ? svc.setTemplateChooserState(false) // hide in case it was visible
-                        : $q.when(null)) // all is ok, create empty promise to allow chaining the result
-                    : svc.saveTemplate(vm.templateId, forceCreate, selectorVisibility)
-                    .then(function(result) {
-                        sxc.manage._manageInfo.config.contentGroupId = result.data; // update internal ContentGroupGuid 
-                    })
-            );
+            // Save only if the currently saved is not the same as the new
+            var groupExistsAndTemplateUnchanged = !!vm.hasContent && (vm.undoTemplateId === vm.templateId);
+            var promiseToSetState;
+            if (groupExistsAndTemplateUnchanged)
+                promiseToSetState = (vm.manageInfo.templateChooserVisible)
+                    ? svc.setTemplateChooserState(false) // hide in case it was visible
+                    : $q.when(null); // all is ok, create empty promise to allow chaining the result
+            else
+                promiseToSetState = svc.saveTemplate(vm.templateId, forceCreate, selectorVisibility)
+                    .then(function (result) {
+                        var newGuid = result.data;
+                        if (console)
+                            console.log("created content group " + newGuid);
+                        sxc.manage._manageInfo.config.contentGroupId = newGuid; // update internal ContentGroupGuid 
+                    });
+            
             var promiseToCorrectUi = promiseToSetState.then(function() {
                     vm.undoTemplateId = vm.templateId;          // remember for future undo
                     vm.undoContentTypeId = vm.contentTypeId;    // remember ...

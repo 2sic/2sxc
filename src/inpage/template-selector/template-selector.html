@@ -25,7 +25,7 @@
 
     <div class="sc-selector-actions">
         <a ng-show="vm.templateId != null && vm.savedTemplateId != vm.templateId" class="sc-selector-save"
-           ng-click="vm.persistTemplate(false, vm.manageInfo.isContentApp);"
+           ng-click="vm.persistTemplate(false, false);"
            title="{{ 'TemplatePicker.Save' | translate }}">
             {{ 'TemplatePicker.Save' | translate }}
         </a>

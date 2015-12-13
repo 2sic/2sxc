@@ -58,7 +58,7 @@ namespace ToSic.SexyContent
 
                     // minor workaround because the settings in the cache are wrong after using a page template
 				    var tempVisibleStatus = TryToGetReliableSetting(SexyContent.SettingsShowTemplateChooser);
-				    var templateChooserVisible = Boolean.Parse(tempVisibleStatus ?? "false");
+				    var templateChooserVisible = Boolean.Parse(tempVisibleStatus ?? "true");
 
 
                     ((ModuleHost)Parent).Attributes.Add("data-2sxc", JsonConvert.SerializeObject(new

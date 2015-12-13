@@ -108,22 +108,29 @@
             vm.templateId = vm.undoTemplateId;
             vm.contentTypeId = vm.undoContentTypeId;
             vm.manageInfo.templateChooserVisible = false;
-            if (vm.manageInfo.isContentApp)
+            svc.setTemplateChooserState(false);
+            if (vm.manageInfo.isContentApp) // necessary to show the original template again
                 vm.reloadTemplates();
         };
 
         // store the template state to the server, optionally force create of content, and hide the selector
         vm.persistTemplate = function(forceCreate, selectorVisibility) {
-                // Save only if the currently saved is not the same as the new
-            var promiseToSetState = ((vm.undoTemplateId === vm.templateId)
-                    ? ((vm.manageInfo.templateChooserVisible)
-                        ? svc.setTemplateChooserState(false) // hide in case it was visible
-                        : $q.when(null)) // all is ok, create empty promise to allow chaining the result
-                    : svc.saveTemplate(vm.templateId, forceCreate, selectorVisibility)
-                    .then(function(result) {
-                        sxc.manage._manageInfo.config.contentGroupId = result.data; // update internal ContentGroupGuid 
-                    })
-            );
+            // Save only if the currently saved is not the same as the new
+            var groupExistsAndTemplateUnchanged = !!vm.hasContent && (vm.undoTemplateId === vm.templateId);
+            var promiseToSetState;
+            if (groupExistsAndTemplateUnchanged)
+                promiseToSetState = (vm.manageInfo.templateChooserVisible)
+                    ? svc.setTemplateChooserState(false) // hide in case it was visible
+                    : $q.when(null); // all is ok, create empty promise to allow chaining the result
+            else
+                promiseToSetState = svc.saveTemplate(vm.templateId, forceCreate, selectorVisibility)
+                    .then(function (result) {
+                        var newGuid = result.data;
+                        if (console)
+                            console.log("created content group " + newGuid);
+                        sxc.manage._manageInfo.config.contentGroupId = newGuid; // update internal ContentGroupGuid 
+                    });
+            
             var promiseToCorrectUi = promiseToSetState.then(function() {
                     vm.undoTemplateId = vm.templateId;          // remember for future undo
                     vm.undoContentTypeId = vm.contentTypeId;    // remember ...
