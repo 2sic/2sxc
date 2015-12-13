@@ -55,7 +55,7 @@ $2sxc.getManageController = function (id) {
     };
 
     var toolbarConfig = manageInfo.config;
-    toolbarConfig.returnUrl = window.location.href;
+    toolbarConfig.returnUrl = window.location.href;  // probably unused...
 
     // all the standard buttons with the display configuration and click-action
     var actionButtonsConf = {
@@ -224,7 +224,6 @@ $2sxc.getManageController = function (id) {
 
         _manageInfo: manageInfo,
 
-
         // create an edit-dialog link
         // needs the followings data:
         // zoneid, tid (tabid), mid (moduleid), appid
@@ -341,7 +340,6 @@ $2sxc.getManageController = function (id) {
                 showClasses += " show-" + classesList[c];
             var button = $("<a />", {
                 'class': "sc-" + settings.action + " "
-                    // + (settings.hideFirst || conf.hideFirst ? "hideFirst" : "")
                     + " " + (conf.lightbox ? "box" : "")
                     + showClasses,
                 'onclick': "javascript:$2sxc(" + id + ").manage.action(" + JSON.stringify(settings) + ", event);",
@@ -369,7 +367,6 @@ $2sxc.getManageController = function (id) {
 
             if (settings.action) {
                 // if single item with specified action, use this as our button-list
-                //settings = [settings];
                 buttons = [settings];
             } else if ($.isArray(settings)) {
                 // if it is an array, use that. Otherwise assume that we auto-generate all buttons with supplied settings
@@ -400,14 +397,12 @@ $2sxc.getManageController = function (id) {
                 // the replace button only makes sense if it's a content-group
                 if (settings.useModuleList)
                     buttons.push($.extend({}, settings, { action: "replace" }));
-
                 
                 buttons.push($.extend({}, settings, { action: "layout" }));
-
                 buttons.push($.extend({}, settings, { action: "more" }));
             }
 
-            var tbClasses = "sc-menu showDefault" + ((settings.sortOrder == -1) ? " listContent" : "");
+            var tbClasses = "sc-menu showDefault" + ((settings.sortOrder === -1) ? " listContent" : "");
             var toolbar = $("<ul />", { 'class': tbClasses, 'onclick': "javascript: var e = arguments[0] || window.event; e.stopPropagation();" });
 
             for (var i = 0; i < buttons.length; i++)
