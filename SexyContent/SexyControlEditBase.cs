@@ -135,11 +135,22 @@ namespace ToSic.SexyContent
             get { return Template != null && Template.UseForList; }
         }
 
+        private bool? _userMayEdit = null;
         protected bool UserMayEditThisModule
         {
             get
             {
-                return DotNetNuke.Security.Permissions.ModulePermissionController.CanEditModuleContent(ModuleContext.Configuration);
+                if (_userMayEdit.HasValue)
+                    return _userMayEdit.Value;
+
+                var okOnModule = DotNetNuke.Security.Permissions.ModulePermissionController.CanEditModuleContent(ModuleContext.Configuration);
+
+                _userMayEdit = okOnModule;
+                // if a user only has tab-edit but not module edit and is not admin, this needs additional confirmation (probably dnn bug)
+                if(!okOnModule)
+                    _userMayEdit = DotNetNuke.Security.Permissions.TabPermissionController.HasTabPermission("EDIT");
+
+                return _userMayEdit.Value;
                 return ModuleContext.IsEditable;
             }
         }
