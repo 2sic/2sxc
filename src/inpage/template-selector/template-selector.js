@@ -135,7 +135,8 @@
                     vm.undoTemplateId = vm.templateId;          // remember for future undo
                     vm.undoContentTypeId = vm.contentTypeId;    // remember ...
                     vm.manageInfo.templateChooserVisible = false;
-                });
+                    vm.manageInfo.hasContent = true;
+            });
 
             return promiseToCorrectUi;
         };

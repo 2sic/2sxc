@@ -115,8 +115,6 @@ $2sxc.getManageController = function (id) {
                 var part = settings.sortOrder == -1 ? "listcontent" : "content";
                 var index = settings.sortOrder == -1 ? 0 : settings.sortOrder;
                 manageController._getSelectorScope().publish(part, index);
-
-                //alert("Status: " + (settings.isPublished ? "published" : "not published"));
             }
         },
         'moveup': {
@@ -156,7 +154,8 @@ $2sxc.getManageController = function (id) {
             lightbox: false,
             hideFirst: true,
             disabled: true,
-            action: function(settings, event) {
+            action: function (settings, event) {
+                // todo: i18n
                 if (confirm("This will remove this content-item from this list, but not delete it (so you can add it again later). \nSee 2sxc.org/help for more. \n\nOk to remove?")) {
                     manageController._getSelectorScope().removeFromList(settings.sortOrder);
                 }
@@ -168,6 +167,7 @@ $2sxc.getManageController = function (id) {
             icon2: "glyphicon-option-vertical",
             borlightboxder: false,
             hideFirst: false,
+            uiActionOnly: true, // so it doesn't create the content when used
             action: function(settings, event) {
                 $(event.target).parent().find("i").toggleClass(this.icon).toggleClass(this.icon2).closest("ul.sc-menu").toggleClass("showAll");
             }
@@ -269,9 +269,13 @@ $2sxc.getManageController = function (id) {
         action: function(settings, event) {
             var origEvent = event || window.event; // pre-save event because afterwards we have a promise, so the event-object changes; funky syntax is because of browser differences
             var conf = actionButtonsConf[settings.action] || actionButtonsConf.default;
-            manageController._getSelectorScope().prepareToAddContent().then(function () {
-                conf.action(settings, origEvent);
-            });
+            if (conf.uiActionOnly)
+                return conf.action(settings, origEvent);
+            else
+                // if more than just a UI-action, then it needs to be sure the content-group is created first
+                manageController._getSelectorScope().prepareToAddContent().then(function () {
+                    conf.action(settings, origEvent);
+                });
         },
 
         // Generate a button (an <a>-tag) for one specific toolbar-action. 
@@ -626,7 +630,8 @@ $(document).ready(function () {
                     vm.undoTemplateId = vm.templateId;          // remember for future undo
                     vm.undoContentTypeId = vm.contentTypeId;    // remember ...
                     vm.manageInfo.templateChooserVisible = false;
-                });
+                    vm.manageInfo.hasContent = true;
+            });
 
             return promiseToCorrectUi;
         };

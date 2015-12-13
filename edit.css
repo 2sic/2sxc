@@ -137,3 +137,6 @@
 .glyphicon-th-list:before {
   content: "\e012";
 }
+.glyphicon-sound-stereo:before {
+  content: "\e189";
+}
