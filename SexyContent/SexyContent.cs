@@ -837,7 +837,8 @@ namespace ToSic.SexyContent
                     appIdString = HttpContext.Current.Request.QueryString["AppId"];
                 else
                 {
-					var appName = module.ModuleSettings[AppNameString];
+                    // todo: fix 2dm
+                    var appName = TryToGetReliableSetting(module, AppNameString);//  module.ModuleSettings[AppNameString];
 
 	                if (appName != null)
 	                {
@@ -845,9 +846,6 @@ namespace ToSic.SexyContent
 		                var x = ((BaseCache) DataSource.GetCache(Constants.DefaultZoneId, Constants.MetaDataAppId)).LastRefresh;
 						appIdString = ((BaseCache) DataSource.GetCache(Constants.DefaultZoneId, Constants.MetaDataAppId)).ZoneApps[zoneId.Value].Apps.Where(p => p.Value == (string)appName).Select(p => p.Key).FirstOrDefault();
 	                }
-
-                    // Get AppId from ModuleSettings
-                    //appIdString = module.ModuleSettings[SexyContent.AppIDString];
                 }
             }
 
@@ -1214,7 +1212,24 @@ namespace ToSic.SexyContent
         {
 			return SexyContentModuleUpgrade.UpgradeModule(Version);
         }
-        
+
+        #endregion
+
+        #region Settings (because DNN doesn't do it reliably)
+
+        public static string TryToGetReliableSetting(ModuleInfo module, string settingName)
+        {
+            if (module.ModuleSettings.ContainsKey(settingName))
+                return module.ModuleSettings[settingName].ToString();
+
+            // if not found, it could be a caching issue
+            var settings = new ModuleController().GetModuleSettings(module.ModuleID);
+            if (settings.ContainsKey(settingName))
+                return settings[settingName].ToString();
+
+            return null;
+        }
+
         #endregion
     }
 }

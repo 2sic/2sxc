@@ -334,9 +334,6 @@ namespace ToSic.SexyContent
 	            return settings[settingName].ToString();
 
 	        return null;
-	    
-	        
-
 	    }
     }
 }

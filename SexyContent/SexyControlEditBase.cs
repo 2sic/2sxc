@@ -43,11 +43,20 @@ namespace ToSic.SexyContent
             }
         }
 
+        private int? _cachedAppId = null;
+        private bool _appIdCached = false;
         protected virtual int? AppId
         {
             get
             {
-                return SexyContent.GetAppIdFromModule(ModuleConfiguration);
+                if (!_appIdCached)
+                {
+                    _cachedAppId = SexyContent.GetAppIdFromModule(ModuleConfiguration);
+                    _appIdCached = true;
+                }
+                return _cachedAppId;
+
+                // return SexyContent.GetAppIdFromModule(ModuleConfiguration);
             }
         }
         #endregion
