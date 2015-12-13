@@ -57,8 +57,8 @@ namespace ToSic.SexyContent
 					var hasContent = AppId.HasValue && Template != null && ContentGroup.Exists;
 
                     // minor workaround because the settings in the cache are wrong after using a page template
-				    var tempVisibleStatus = TryToGetReliableSetting(SexyContent.SettingsShowTemplateChooser);
-				    var templateChooserVisible = Boolean.Parse(tempVisibleStatus ?? "true");
+				    var tempVisibleStatus = SexyContent.TryToGetReliableSetting(ModuleConfiguration, SexyContent.SettingsShowTemplateChooser);
+				    var templateChooserVisible = bool.Parse(tempVisibleStatus ?? "true");
 
 
                     ((ModuleHost)Parent).Attributes.Add("data-2sxc", JsonConvert.SerializeObject(new
@@ -322,18 +322,5 @@ namespace ToSic.SexyContent
 		}
 
 		#endregion
-
-	    private string TryToGetReliableSetting(string settingName)
-	    {
-	        if (Settings.ContainsKey(settingName))
-	            return Settings[settingName].ToString();
-
-            // if not found, it could be a caching issue
-            var settings = new ModuleController().GetModuleSettings(ModuleId);
-	        if (settings.ContainsKey(settingName))
-	            return settings[settingName].ToString();
-
-	        return null;
-	    }
     }
 }
