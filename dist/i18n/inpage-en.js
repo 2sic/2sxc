@@ -14,11 +14,15 @@
     "AddDemo": "add demo",
     "Replace": "replace",
     "Published": "published",
+    "Unpublished": "unpublished",
+    "AlreadyPublished": "already published",
     "MoveUp": "move up",
     "MoveDown": "move down",
     "Sort": "sort / manage list",
     "Remove": "remove",
-    "MoreActions": "more actions"
+    "ChangeLayout": "change layout",
+    "MoreActions": "more actions",
+    "ConfirmRemove": "This will remove this content-item from this list, but not delete it (so you can add it again later). \nSee 2sxc.org/help for more. \n\nOk to remove?"
   },
   "EditFormTitle": {
     "Content": "Content",

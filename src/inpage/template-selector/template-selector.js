@@ -163,6 +163,15 @@
                 vm.reloadTemplates();
         };
 
+        vm.toggle = function () {
+            // test
+            vm.manageInfo.someTest = "a value";
+            if (vm.manageInfo.templateChooserVisible)
+                vm.cancelTemplateChange();
+            else
+                vm.show(true);
+        };
+
         // reload by ajax or page, depeding on mode (used in toolbar)
         vm.reload = function () {
             if (!vm.templateId)

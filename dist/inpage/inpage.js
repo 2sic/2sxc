@@ -68,18 +68,20 @@ $2sxc.getManageController = function (id) {
             title: "Toolbar.Edit",
             icon: "glyphicon-pencil",
             lightbox: true,
-            hideFirst: false,
+            hideFirst: true,
+            showOn: "default",
             action: function(settings, event) {
-                manageController._openNgDialog(settings, event);
+                tbContr._openNgDialog(settings, event);
             }
         },
         'new': {
             title: "Toolbar.New",
             icon: "glyphicon-plus",
             lightbox: true,
-            hideFirst: false,
+            hideFirst: true,
+            showOn: "default",
             action: function(settings, event) {
-                manageController._openNgDialog($.extend({}, settings, { sortOrder: settings.sortOrder + 1 }), event);
+                tbContr._openNgDialog($.extend({}, settings, { sortOrder: settings.sortOrder + 1 }), event);
             }
         },
         'add': {
@@ -87,8 +89,9 @@ $2sxc.getManageController = function (id) {
             icon: "glyphicon-plus-sign",
             lightbox: false,
             hideFirst: true,
+            showOn: "edit",
             action: function(settings, event) {
-                manageController._getSelectorScope().addItem(settings.sortOrder + 1);
+                tbContr._getSelectorScope().addItem(settings.sortOrder + 1);
             }
         },
         'replace': {
@@ -96,8 +99,9 @@ $2sxc.getManageController = function (id) {
             icon: "glyphicon-random",
             lightbox: true,
             hideFirst: true,
+            showOn: "edit",
             action: function(settings, event) {
-                manageController._openNgDialog(settings, event);
+                tbContr._openNgDialog(settings, event);
             }
         },
         'publish': {
@@ -107,14 +111,15 @@ $2sxc.getManageController = function (id) {
             lightbox: false,
             hideFirst: true,
             disabled: true,
+            showOn: "edit",
             action: function (settings, event) {
                 if (settings.isPublished) {
-                    alert("already published");
+                    alert(tbContr.translate("Toolbar.AlreadyPublished")); 
                     return;
                 }
-                var part = settings.sortOrder == -1 ? "listcontent" : "content";
-                var index = settings.sortOrder == -1 ? 0 : settings.sortOrder;
-                manageController._getSelectorScope().publish(part, index);
+                var part = settings.sortOrder === -1 ? "listcontent" : "content";
+                var index = settings.sortOrder === -1 ? 0 : settings.sortOrder;
+                tbContr._getSelectorScope().publish(part, index);
             }
         },
         'moveup': {
@@ -124,8 +129,9 @@ $2sxc.getManageController = function (id) {
             lightbox: false,
             hideFirst: true,
             disabled: false,
+            showOn: "edit",
             action: function(settings, event) {
-                manageController._getSelectorScope().changeOrder(settings.sortOrder, Math.max(settings.sortOrder - 1, 0));
+                tbContr._getSelectorScope().changeOrder(settings.sortOrder, Math.max(settings.sortOrder - 1, 0));
             }
         },
         'movedown': {
@@ -135,8 +141,9 @@ $2sxc.getManageController = function (id) {
             lightbox: false,
             hideFirst: true,
             disabled: false,
+            showOn: "edit",
             action: function(settings, event) {
-                manageController._getSelectorScope().changeOrder(settings.sortOrder, settings.sortOrder + 1);
+                tbContr._getSelectorScope().changeOrder(settings.sortOrder, settings.sortOrder + 1);
             }
         },
         'sort': {
@@ -144,8 +151,9 @@ $2sxc.getManageController = function (id) {
             icon: "glyphicon-th-list",
             lightbox: true,
             hideFirst: true,
+            showOn: "design",
             action: function (settings, event) {
-                manageController._openNgDialog(settings, event);
+                tbContr._openNgDialog(settings, event);
             }
         },
         'remove': {
@@ -154,27 +162,58 @@ $2sxc.getManageController = function (id) {
             lightbox: false,
             hideFirst: true,
             disabled: true,
+            showOn: "edit",
             action: function (settings, event) {
-                // todo: i18n
-                if (confirm("This will remove this content-item from this list, but not delete it (so you can add it again later). \nSee 2sxc.org/help for more. \n\nOk to remove?")) {
-                    manageController._getSelectorScope().removeFromList(settings.sortOrder);
+                if (confirm(tbContr.translate("Toolbar.ConfirmRemove"))) {
+                    tbContr._getSelectorScope().removeFromList(settings.sortOrder);
                 }
             }
         },
-        'more': {
+        'layout': {
+            title: "Toolbar.ChangeLayout",
+            icon: "glyphicon-sound-stereo",
+            lightbox: false,
+            hideFirst: true,
+            showOn: "design",
+            uiActionOnly: true, // so it doesn't create the content when used
+            action: function (settings, event) {
+                tbContr._getSelectorScope().toggle();
+            }
+        },
+        "more": {
             title: "Toolbar.MoreActions",
             icon: "glyphicon-option-horizontal",
             icon2: "glyphicon-option-vertical",
             borlightboxder: false,
             hideFirst: false,
+            showOn: "default,edit,design",
             uiActionOnly: true, // so it doesn't create the content when used
-            action: function(settings, event) {
-                $(event.target).parent().find("i").toggleClass(this.icon).toggleClass(this.icon2).closest("ul.sc-menu").toggleClass("showAll");
+            action: function (settings, event) {
+                var moreButton = $(event.target).parent().find("i");
+                var fullMenu = moreButton.closest("ul.sc-menu");
+                switch(moreButton.attr("data-state")) {
+                    case undefined:
+                    case "0":
+                        moreButton.addClass("mode-more");
+                        fullMenu.removeClass("showDefault").addClass("showEdit");
+                        moreButton.attr("data-state", "1");
+                        break;
+                    case "1":
+                        moreButton.removeClass("mode-more").removeClass(this.icon).addClass(this.icon2);
+                        fullMenu.removeClass("showEdit").removeClass("showDefault").addClass("showDesign");
+                        moreButton.attr("data-state", "2");
+                        break;
+                    case "2":
+                        moreButton.addClass(this.icon).removeClass(this.icon2);
+                        fullMenu.removeClass("showDesign").addClass("showDefault");
+                        moreButton.attr("data-state", "0");
+                        break;
+                }
             }
         }
     };
 
-    var manageController = {
+    var tbContr = {
         isEditMode: function() {
             return manageInfo.isEditMode;
         },
@@ -218,7 +257,7 @@ $2sxc.getManageController = function (id) {
                         Part: normalContent ? "content" : "listcontent",
                         Add: settings.action === "new"
                     },
-                    Title: manageController._getSelectorScope().translate("EditFormTitle." + (normalContent ? "Content" : "ListContent"))
+                    Title: tbContr.translate("EditFormTitle." + (normalContent ? "Content" : "ListContent"))
                 });
                 if (settings.action !== "replace") // if not replace, also add the presentation
                     items.push({
@@ -228,7 +267,7 @@ $2sxc.getManageController = function (id) {
                             Part: normalContent ? "presentation" : "listpresentation",
                             Add: settings.action === "new"
                         },
-                        Title: manageController._getSelectorScope().translate("EditFormTitle." + (normalContent ? "Presentation" : "ListPresentation"))
+                        Title: tbContr.translate("EditFormTitle." + (normalContent ? "Presentation" : "ListPresentation"))
                     });
             }
 
@@ -254,10 +293,10 @@ $2sxc.getManageController = function (id) {
         _openNgDialog: function(settings, event, closeCallback) {
             
             var callback = function () {
-                manageController._getSelectorScope().reload();
+                tbContr._getSelectorScope().reload();
                 closeCallback();
             };
-            var link = manageController.getNgLink(settings);
+            var link = tbContr.getNgLink(settings);
 
             if (event && event.shiftKey)
                 window.open(link);
@@ -273,7 +312,7 @@ $2sxc.getManageController = function (id) {
                 return conf.action(settings, origEvent);
             else
                 // if more than just a UI-action, then it needs to be sure the content-group is created first
-                manageController._getSelectorScope().prepareToAddContent().then(function () {
+                tbContr._getSelectorScope().prepareToAddContent().then(function () {
                     conf.action(settings, origEvent);
                 });
         },
@@ -296,22 +335,26 @@ $2sxc.getManageController = function (id) {
             // retrieve configuration for this button
             var conf = actionButtonsConf[settings.action] || actionButtonsConf.default;
 
+            var showClasses = "";
+            var classesList = conf.showOn.split(",");
+            for (var c = 0; c < classesList.length; c++)
+                showClasses += " show-" + classesList[c];
             var button = $("<a />", {
                 'class': "sc-" + settings.action + " "
-                    + (settings.hideFirst || conf.hideFirst ? "hideFirst" : "")
-                    + " " + (conf.lightbox ? "box" : ""),
+                    // + (settings.hideFirst || conf.hideFirst ? "hideFirst" : "")
+                    + " " + (conf.lightbox ? "box" : "")
+                    + showClasses,
                 'onclick': "javascript:$2sxc(" + id + ").manage.action(" + JSON.stringify(settings) + ", event);",
-                'title': manageController._getSelectorScope().translate(conf.title)
+                'title': tbContr.translate(conf.title)
             });
             var box = $("<div/>");
             var symbol = $("<i class=\"glyphicon " + conf.icon + "\" aria-hidden=\"true\"></i>");
 
             // if publish-button and not published yet, show button (otherwise hidden) & change icon
             if (settings.action === "publish" && settings.isPublished === false) {
-                button.toggleClass("hideFirst", false)
-                    .attr("title", "Unpublished");
-                symbol.toggleClass(conf.icon, false)
-                    .toggleClass(conf.icon2, true);
+                button.addClass("show-default").removeClass("show-edit")
+                    .attr("title", tbContr.translate("Toolbar.Unpublished")); 
+                symbol.removeClass(conf.icon).addClass(conf.icon2);
             }
 
             button.html(box.html(symbol));
@@ -339,8 +382,13 @@ $2sxc.getManageController = function (id) {
                 // add applicable list buttons - add=add item below; new=lightbox-dialog
                 if (toolbarConfig.isList && settings.sortOrder !== -1) { // if list and not the list-header
                     buttons.push($.extend({}, settings, { action: "new" }));
-                    if (settings.useModuleList) {
+                    if (settings.useModuleList) 
                         buttons.push($.extend({}, settings, { action: "add" }));
+
+                    // only provide remove on lists
+                    buttons.push($.extend({}, settings, { action: "remove" }));
+
+                    if (settings.useModuleList) {
                         if (settings.sortOrder !== 0)
                             buttons.push($.extend({}, settings, { action: "moveup" }));
                         buttons.push($.extend({}, settings, { action: "movedown" }));
@@ -353,18 +401,17 @@ $2sxc.getManageController = function (id) {
                 if (settings.useModuleList)
                     buttons.push($.extend({}, settings, { action: "replace" }));
 
-                // only provide remove on lists
-                if (toolbarConfig.isList) 
-                    buttons.push($.extend({}, settings, { action: "remove" })); 
                 
+                buttons.push($.extend({}, settings, { action: "layout" }));
+
                 buttons.push($.extend({}, settings, { action: "more" }));
             }
 
-            var tbClasses = "sc-menu" + ((settings.sortOrder == -1) ? " listContent" : "");
+            var tbClasses = "sc-menu showDefault" + ((settings.sortOrder == -1) ? " listContent" : "");
             var toolbar = $("<ul />", { 'class': tbClasses, 'onclick': "javascript: var e = arguments[0] || window.event; e.stopPropagation();" });
 
             for (var i = 0; i < buttons.length; i++)
-                toolbar.append($("<li />").append($(manageController.getButton(buttons[i]))));
+                toolbar.append($("<li />").append($(tbContr.getButton(buttons[i]))));
 
             return toolbar[0].outerHTML;
         },
@@ -380,11 +427,15 @@ $2sxc.getManageController = function (id) {
         _getSelectorScope: function() {
             var selectorElement = document.querySelector(".DnnModule-" + id + " .sc-selector-wrapper");
             return angular.element(selectorElement).scope().vm;
+        },
+
+        translate: function(key) {
+            return tbContr._getSelectorScope().translate(key);
         }
 
     };
 
-    return manageController;
+    return tbContr;
 };
 
 // Toolbar bootstrapping (initialize all toolbars after loading page)
@@ -656,6 +707,15 @@ $(document).ready(function () {
 
             if (vm.appId !== null && vm.manageInfo.templateChooserVisible) 
                 vm.reloadTemplates();
+        };
+
+        vm.toggle = function () {
+            // test
+            vm.manageInfo.someTest = "a value";
+            if (vm.manageInfo.templateChooserVisible)
+                vm.cancelTemplateChange();
+            else
+                vm.show(true);
         };
 
         // reload by ajax or page, depeding on mode (used in toolbar)
