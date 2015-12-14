@@ -1021,6 +1021,11 @@ angular.module('SxcTemplates',[]).run(['$templateCache', function($templateCache
   );
 
 
+  $templateCache.put('view-edit/view-edit-help.html',
+    "<div ng-click=vm.debug.autoEnableAsNeeded($event)><div class=modal-header><button class=\"btn btn-default btn-square btn-subtle pull-right\" type=button ng-click=vm.close()><i icon=remove></i></button><h3 class=modal-title translate=EditView.Help.Title></h3></div><div class=modal-body><div><tabset><tab><tab-heading><span tooltip=\"{{'EditView.Help.Content' | translate }}\"><i icon=home></i> {{'EditView.Help.Content' | translate | trustHtml }}</span></tab-heading>todo: content-fields + toolbar</tab><tab select=\"vm.view='content'\"><tab-heading><span icon=list tooltip=\"{{'EditView.Help.List' | translate }}\"></span> {{'EditView.Help.List' | translate }}</tab-heading></tab><tab select=\"vm.view='query'\"><tab-heading><span icon=filter tooltip=\"{{'EditView.App' | translate }}\"></span> {{'EditView.App' | translate }}</tab-heading>ToDo: app path etc. also app settings and app resources</tab><tab select=\"vm.view='xxx'\"><tab-heading><span icon=picture tooltip=\"{{'EditView.Dnn' | translate }}\"></span> {{'todo' | translate }}</tab-heading>todo: query string, time, etc. portal, module, tab</tab><tab select=\"vm.view='xxx'\"><tab-heading><span icon=flash tooltip=\"{{'EditView.User' | translate }}\"></span> {{'EditView.User' | translate }}</tab-heading>todo</tab><tab select=\"vm.view='app'\"><tab-heading><span icon=unchecked tooltip=\"{{'todo' | translate }}\"></span> {{'todo' | translate }}</tab-heading>todo</tab><tab select=\"vm.view='portal'\"><tab-heading><span icon=globe tooltip=\"{{'todo' | translate }}\"></span> {{'todo' | translate }}</tab-heading></tab></tabset><h2>{{vm.collectionTitle}}</h2><div ng-repeat=\"set in vm.sets\"><h3>{{set.title}}</h3><table class=\"table table-hover\" style=\"width: 100%; table-layout: auto; empty-cells: show\"><thead><tr><th translate=EditView.Help.Code></th><th translate=EditView.Help.Instructions></th><th translate=EditView.Help.Suggestions></th></tr></thead><tbody><tr ng-repeat=\"item in set.items\"><td>{{item.code}}</td><td>{{item.help}}</td><td>{{item.suggestions}}</td></tr></tbody></table></div></div></div><show-debug-availability class=pull-right></show-debug-availability></div>"
+  );
+
+
   $templateCache.put('web-api/web-api.html',
     "<div class=modal-header><h3 class=modal-title translate=WebApi.Title></h3></div><div class=modal-body><p translate=WebApi.Intro></p><button icon=plus type=button class=\"btn btn-square\" ng-click=vm.add()></button> <button icon=repeat type=button class=\"btn btn-square\" ng-click=vm.refresh()></button><table class=\"table table-hover\"><thead><tr><th translate=WebApi.ListTitle></th></tr></thead><tbody><tr ng-repeat=\"item in vm.items | orderBy:['ContentType.Name','Name']\"><td><span tooltip={{item.TemplatePath}}>{{item}}</span></td></tr><tr ng-if=!vm.items.length><td colspan=100 translate=General.Messages.NothingFound></td></tr></tbody></table><p translate=WebApi.QuickStart></p></div>"
   );
@@ -1107,6 +1112,69 @@ angular.module('SxcTemplates',[]).run(['$templateCache', function($templateCache
     TemplateEditController.$inject = ["svc", "eavAdminDialogs", "eavConfig", "appId", "$modalInstance"];
 
 } ());
+(function () { 
+
+    angular.module("ViewEdit", [
+        "EavConfiguration",  
+        "EavServices",
+        "SxcServices",
+        "SxcTemplates"
+    ]);
+
+} ());
+(function () { 
+
+    angular.module("ViewEdit")
+
+        .controller("HelpController", HelpControllerController)
+        ;
+
+    function HelpControllerController(languagesSvc, eavConfig, appId) {
+        var vm = this;
+        var svc = languagesSvc();
+        vm.items = svc.liveList();
+
+        // vm.refresh = 
+        vm.ready = function ready() {
+            return vm.items.length > 0;
+        };
+
+    }
+    HelpControllerController.$inject = ["languagesSvc", "eavConfig", "appId"];
+
+} ());
+
+angular.module("ViewEdit")
+    .factory("helpSvc", ["$http", "eavConfig", "svcCreator", function($http, eavConfig, svcCreator) {
+
+        // Construct a service for this specific appId
+        return function createSvc(appId, templateId) {
+            var svc = {
+                getItems: function(item) {
+                    return $http.get('app/contentgroup/replace', { params: { appId: appId, guid: item.guid, part: item.part, index: item.index } });
+                },
+                saveItem: function(item) {
+                    return $http.post('app/contentgroup/replace', {}, { params: { guid: item.guid, part: item.part, index: item.index, entityId: item.id } });
+                },
+
+                getList: function (contentGroup) {
+                    return $http.get('app/contentgroup/itemlist', { params: { appId: appId, guid: contentGroup.guid } });
+                },
+
+                saveList: function (contentGroup, resortedList) {
+                    return $http.post('app/contentgroup/itemlist', resortedList, { params: { appId: appId, guid: contentGroup.guid } });
+                },
+
+                getHeader: function (contentGroup) {
+                    return $http.get('app/contentgroup/header', { params: { appId: appId, guid: contentGroup.guid } });
+                }
+
+
+            };
+
+            return svc;
+        };
+    }]);
 (function () { 
 
     angular.module("WebApiApp", [
