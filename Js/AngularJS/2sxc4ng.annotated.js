@@ -170,6 +170,37 @@ angular.module("2sxc4ng", ["ng"])
             };
             return qry;
         };
+    }]).directive('sxcToolbar', ["AppInstanceId", function SxcToolbar(AppInstanceId) {
+        return {
+            restrict: 'E',
+            scope: {
+                entity: '&for',
+                entityId: '&forId',
+                actions: '&custom',
+                forContentType: '&forContentType'
+            },
+            link: function (scope, element, attrs) {
+                var manageCtrl = $2sxc(AppInstanceId).manage;
+                var toolbar = '';
+
+                if(manageCtrl)
+                {
+                    console.log(scope.entityId());
+                    if (scope.entity() !== undefined)
+                        toolbar = manageCtrl.getToolbar([{ "entity": scope.entity(), "action": "edit" }]);
+                    else if (scope.entityId() !== undefined)
+                        toolbar = manageCtrl.getToolbar([{ "entityId": scope.entityId(), "action": "edit" }]);
+                    else if (scope.actions() !== undefined)
+                        toolbar = manageCtrl.getToolbar(scope.actions());
+                    else if (scope.forContentType() !== undefined)
+                        toolbar = manageCtrl.getToolbar([{ "action": "new", contentType: scope.forContentType() }]);
+
+                    console.log(scope.actions());
+                }
+
+                element.html(toolbar);
+            }
+        };
     }])
 
 /* Todo: future feature
