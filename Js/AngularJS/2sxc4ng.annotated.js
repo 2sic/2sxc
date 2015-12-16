@@ -185,7 +185,7 @@ angular.module("2sxc4ng", ["ng"])
 
                 if(manageCtrl)
                 {
-                    console.log(scope.entityId());
+                    
                     if (scope.entity() !== undefined)
                         toolbar = manageCtrl.getToolbar([{ "entity": scope.entity(), "action": "edit" }]);
                     else if (scope.entityId() !== undefined)
@@ -195,7 +195,6 @@ angular.module("2sxc4ng", ["ng"])
                     else if (scope.forContentType() !== undefined)
                         toolbar = manageCtrl.getToolbar([{ "action": "new", contentType: scope.forContentType() }]);
 
-                    console.log(scope.actions());
                 }
 
                 element.html(toolbar);
