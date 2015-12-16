@@ -90,7 +90,8 @@ namespace ToSic.SexyContent.ImportExport
                 if (!Directory.Exists(portalFilePath))
                     Directory.CreateDirectory(portalFilePath);
                 
-                File.Copy(file.PhysicalPath, Path.Combine(portalFilesDirectory.FullName, file.RelativePath.Replace('/', '\\')));
+                if (File.Exists(file.PhysicalPath))
+                    File.Copy(file.PhysicalPath, Path.Combine(portalFilesDirectory.FullName, file.RelativePath.Replace('/', '\\')));
             }
             
             // Save export xml
