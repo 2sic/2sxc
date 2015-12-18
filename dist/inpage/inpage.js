@@ -323,8 +323,9 @@ $2sxc.getManageController = function (id) {
             if (settings.entity && settings.entity._2sxcEditInformation) {
                 if (settings.entity._2sxcEditInformation.entityId) {
                     settings.entityId = settings.entity._2sxcEditInformation.entityId;
+                    settings.useModuleList = false;
                 }
-                if (settings.entity._2sxcEditInformation.sortOrder !== null) {
+                if (settings.entity._2sxcEditInformation.sortOrder) {
                     settings.sortOrder = settings.entity._2sxcEditInformation.sortOrder;
                     settings.useModuleList = true;
                 }
@@ -665,10 +666,15 @@ $(document).ready(function () {
                     : $q.when(null); // all is ok, create empty promise to allow chaining the result
             else
                 promiseToSetState = svc.saveTemplate(vm.templateId, forceCreate, selectorVisibility)
-                    .then(function (result) {
+                    .then(function(result) {
+                        if (result.status !== 200) { // only continue if ok
+                            alert("error - result not ok, was not able to create ContentGroup");
+                            return;
+                        }
                         var newGuid = result.data;
+                        newGuid = newGuid.replace(/[\",\']/g, ""); // fixes a special case where the guid is given with quotes (dependes on version of angularjs) issue #532
                         if (console)
-                            console.log("created content group " + newGuid);
+                            console.log("created content group {" + newGuid + "}");
                         sxc.manage._manageInfo.config.contentGroupId = newGuid; // update internal ContentGroupGuid 
                     });
             

@@ -291,8 +291,9 @@ $2sxc.getManageController = function (id) {
             if (settings.entity && settings.entity._2sxcEditInformation) {
                 if (settings.entity._2sxcEditInformation.entityId) {
                     settings.entityId = settings.entity._2sxcEditInformation.entityId;
+                    settings.useModuleList = false;
                 }
-                if (settings.entity._2sxcEditInformation.sortOrder !== null) {
+                if (settings.entity._2sxcEditInformation.sortOrder) {
                     settings.sortOrder = settings.entity._2sxcEditInformation.sortOrder;
                     settings.useModuleList = true;
                 }
