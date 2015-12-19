@@ -1,0 +1,22 @@
+﻿<div ng-click="vm.debug.autoEnableAsNeeded($event)">
+    <div class="modal-header">
+        <button class="btn btn-default btn-square btn-subtle pull-right" type="button" ng-click="vm.close()">
+            <i icon="remove"></i>
+        </button>
+        <h3 class="modal-title" translate="todo.Title"></h3>
+    </div>
+
+    <div class="modal-body">
+        <p translate="todo.Intro"></p>
+
+        todo: editor
+        <textarea ng-model="vm.view.source"></textarea>
+
+        todo: help
+
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary btn-square btn-lg pull-left" type="button" ng-click="vm.save()"><i icon="ok"></i></button>
+    </div>
+    <show-debug-availability class="pull-right"></show-debug-availability>
+</div>

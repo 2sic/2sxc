@@ -5,9 +5,9 @@
         .controller("HelpController", HelpControllerController)
         ;
 
-    function HelpControllerController(languagesSvc, eavConfig, appId) {
+    function HelpControllerController(viewHelpSvc) { // }, eavConfig, appId) {
         var vm = this;
-        var svc = languagesSvc();
+        var svc = viewHelpSvc;
         vm.items = svc.liveList();
 
         // vm.refresh = 
