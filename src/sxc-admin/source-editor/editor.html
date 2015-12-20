@@ -11,7 +11,6 @@
 
         {{vm.view.FileName }} ({{vm.view.Type }})
         <div class="row">
-            <div class="pull-right col-md-4">help stuff...</div>
             <div class="col-md-8" ui-ace="{
     useWrapMode : true,
     useSoftTabs: true,
@@ -29,11 +28,18 @@
 }" style="height: 400px;" ng-model="vm.view.Code">
 
             </div>
+            <div class="pull-right col-md-4">
+                <h3>translate:Code Snippets</h3>
+                <select class="input-lg" ng-model="vm.snippetSet" ng-options="key for (key , value) in vm.snippets"></select>
+                <ul>
+                    <li ng-repeat="snip in vm.snippetSet" tooltip="click to insert" ng-click="vm.addSnippet(snip)">{{snip}}</li>
+                </ul>
+            </div>
         </div>
+
 
         <a ng-click="vm.addSnippet('[Content:something]')">add something</a>
 
-        todo: help
 
     </div>
     <div class="modal-footer">

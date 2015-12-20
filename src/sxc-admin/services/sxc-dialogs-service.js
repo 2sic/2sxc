@@ -12,7 +12,7 @@ angular.module("SxcAdminUi", [
     "SxcTemplates",
     "SxcEditTemplates",
     "sxcFieldTemplates",
-    "ViewEdit",
+    "SourceEditor",
     //"SxcEditContentGroupDnnWrapper",
     "EavAdminUi", // dialog (modal) controller
 ])
@@ -123,7 +123,7 @@ angular.module("SxcAdminUi", [
 
         svc.openViewEdit = function ove(item, closeCallback) {
             var resolve = eavAdminDialogs.CreateResolve({ item: item });
-            return eavAdminDialogs.OpenModal("view-edit/view-edit.html", "ViewEdit as vm", "xlg", resolve, closeCallback);
+            return eavAdminDialogs.OpenModal("source-editor/editor.html", "Editor as vm", "xlg", resolve, closeCallback);
         };
 
         // 2dm 2015-10-07 - don't think this is in use, remove

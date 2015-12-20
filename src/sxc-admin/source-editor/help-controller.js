@@ -1,11 +1,11 @@
 (function () { 
 
-    angular.module("ViewEdit")
+    angular.module("SourceEditor")
 
-        .controller("HelpController", HelpControllerController)
+        .controller("Help", HelpController)
         ;
 
-    function HelpControllerController(viewHelpSvc) { // }, eavConfig, appId) {
+    function HelpController(viewHelpSvc) { // }, eavConfig, appId) {
         var vm = this;
         var svc = viewHelpSvc;
         vm.items = svc.liveList();

@@ -779,7 +779,7 @@ angular.module("SxcAdminUi", [
     "SxcTemplates",
     "SxcEditTemplates",
     "sxcFieldTemplates",
-    "ViewEdit",
+    "SourceEditor",
     //"SxcEditContentGroupDnnWrapper",
     "EavAdminUi", // dialog (modal) controller
 ])
@@ -890,7 +890,7 @@ angular.module("SxcAdminUi", [
 
         svc.openViewEdit = function ove(item, closeCallback) {
             var resolve = eavAdminDialogs.CreateResolve({ item: item });
-            return eavAdminDialogs.OpenModal("view-edit/view-edit.html", "ViewEdit as vm", "xlg", resolve, closeCallback);
+            return eavAdminDialogs.OpenModal("source-editor/editor.html", "Editor as vm", "xlg", resolve, closeCallback);
         };
 
         // 2dm 2015-10-07 - don't think this is in use, remove
@@ -941,6 +941,128 @@ angular.module("SxcServices")
             svc = angular.extend(svc, svcCreator.implementLiveList(function getAll() {
                 return $http.get("app/system/webapifiles", { params: { appId: svc.appId } });
             }));
+
+            return svc;
+        };
+    }]);
+(function () { 
+
+    angular.module("SourceEditor", [
+        "EavConfiguration",  
+        "EavServices",
+        "SxcServices",
+        "SxcTemplates",
+        "ui.ace"
+    ]);
+
+} ());
+(function () { 
+
+    angular.module("SourceEditor")
+
+        .controller("Editor", EditorController)
+        ;
+
+    function EditorController(sourceSvc, helpSvc, item, $modalInstance, $scope) {
+        var vm = this;
+        var svc = sourceSvc(item.EntityId);
+        var help = helpSvc(item.EntiyId);
+        vm.view = {};
+        vm.editor = null;
+
+        svc.get().then(function(result) {
+            vm.view = result.data;
+        });
+
+        vm.snippets = help.getSnippets();
+
+        vm.close = function () { $modalInstance.dismiss("cancel"); };
+
+        vm.save = function() {
+            svc.save(vm.view).then(vm.close);
+        };
+
+        vm.addSnippet = function addSnippet(snippet) {
+            var snippetManager = ace.require("ace/snippets").snippetManager;
+            snippetManager.insertSnippet(vm.editor, snippet);
+        };
+
+        $scope.aceLoaded = function(_editor) {
+            // Options
+            vm.editor = _editor;
+        };
+
+    }
+    EditorController.$inject = ["sourceSvc", "helpSvc", "item", "$modalInstance", "$scope"];
+
+} ());
+(function () { 
+
+    angular.module("SourceEditor")
+
+        .controller("Help", HelpController)
+        ;
+
+    function HelpController(viewHelpSvc) { // }, eavConfig, appId) {
+        var vm = this;
+        var svc = viewHelpSvc;
+        vm.items = svc.liveList();
+
+        // vm.refresh = 
+        vm.ready = function ready() {
+            return vm.items.length > 0;
+        };
+
+    }
+    HelpController.$inject = ["viewHelpSvc"];
+
+} ());
+
+angular.module("SourceEditor")
+    .factory("helpSvc", ["$http", "eavConfig", "svcCreator", function($http, eavConfig, svcCreator) {
+
+        // Construct a service for this specific appId
+        return function createSvc(templateId) {
+
+            var sets = {
+                "Main": [
+                    { "Stuff": "[Content:stuff]" },
+                    { "Other": "[Content:other]" }
+                ],
+                "List": [
+                    { "Title": "[List:Something]" },
+                    { "Other": "[List:Other]" },
+                    { "then": "[List:then]" }
+                ]
+            };
+
+            var svc = {
+                getSnippets: function() {
+                    return sets;
+                }
+
+
+            };
+
+            return svc;
+        };
+    }]);
+
+angular.module("SourceEditor")
+    .factory("sourceSvc", ["$http", function($http) {
+
+        // Construct a service for this specific appId
+        return function createSvc(templateId) {
+            var svc = {
+                get: function() {
+                    return $http.get('view/template/template', { params: { templateId: templateId } });
+                },
+
+                save: function(item) {
+                    return $http.post('view/template/template', item, { params: { templateId: templateId} });
+                }
+
+            };
 
             return svc;
         };
@@ -997,6 +1119,44 @@ angular.module('SxcTemplates',[]).run(['$templateCache', function($templateCache
   );
 
 
+  $templateCache.put('source-editor/editor.html',
+    "<div ng-click=vm.debug.autoEnableAsNeeded($event)><div class=modal-header><button class=\"btn btn-default btn-square btn-subtle pull-right\" type=button ng-click=vm.close()><i icon=remove></i></button><h3 class=modal-title translate=todo.Title></h3></div><div class=modal-body><p translate=todo.Intro></p>{{vm.view.FileName }} ({{vm.view.Type }})<div class=row><div class=col-md-8 ui-ace=\"{\r" +
+    "\n" +
+    "    useWrapMode : true,\r" +
+    "\n" +
+    "    useSoftTabs: true,\r" +
+    "\n" +
+    "    showGutter: true,\r" +
+    "\n" +
+    "    theme:'twilight',\r" +
+    "\n" +
+    "    mode: 'html',\r" +
+    "\n" +
+    "    onLoad: aceLoaded,\r" +
+    "\n" +
+    "    require: ['ace/ext/language_tools'],\r" +
+    "\n" +
+    "    advanced: {\r" +
+    "\n" +
+    "        enableSnippets: true,\r" +
+    "\n" +
+    "        enableBasicAutocompletion: true,\r" +
+    "\n" +
+    "        enableLiveAutocompletion: true\r" +
+    "\n" +
+    "    }\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "}\" style=\"height: 400px\" ng-model=vm.view.Code></div><div class=\"pull-right col-md-4\"><h3>translate:Code Snippets</h3><select class=input-lg ng-model=vm.snippetSet ng-options=\"key for (key , value) in vm.snippets\"></select><ul><li ng-repeat=\"snip in vm.snippetSet\" tooltip=\"click to insert\" ng-click=vm.addSnippet(snip)>{{snip}}</li></ul></div></div><a ng-click=\"vm.addSnippet('[Content:something]')\">add something</a></div><div class=modal-footer><button class=\"btn btn-primary btn-square btn-lg pull-left\" type=button ng-click=vm.save()><i icon=ok></i></button></div><show-debug-availability class=pull-right></show-debug-availability></div>"
+  );
+
+
+  $templateCache.put('source-editor/help.html',
+    "<div class=modal-header><h3 class=modal-title translate=EditView.Help.Title></h3></div><div class=modal-body><div><tabset><tab><tab-heading><span tooltip=\"{{'EditView.Help.Content' | translate }}\"><i icon=home></i> {{'EditView.Help.Content' | translate | trustHtml }}</span></tab-heading>todo: content-fields + toolbar</tab><tab select=\"vm.view='content'\"><tab-heading><span icon=list tooltip=\"{{'EditView.Help.List' | translate }}\"></span> {{'EditView.Help.List' | translate }}</tab-heading></tab><tab select=\"vm.view='query'\"><tab-heading><span icon=filter tooltip=\"{{'EditView.App' | translate }}\"></span> {{'EditView.App' | translate }}</tab-heading>ToDo: app path etc. also app settings and app resources</tab><tab select=\"vm.view='xxx'\"><tab-heading><span icon=picture tooltip=\"{{'EditView.Dnn' | translate }}\"></span> {{'todo' | translate }}</tab-heading>todo: query string, time, etc. portal, module, tab</tab><tab select=\"vm.view='xxx'\"><tab-heading><span icon=flash tooltip=\"{{'EditView.User' | translate }}\"></span> {{'EditView.User' | translate }}</tab-heading>todo</tab><tab select=\"vm.view='app'\"><tab-heading><span icon=unchecked tooltip=\"{{'todo' | translate }}\"></span> {{'todo' | translate }}</tab-heading>todo</tab><tab select=\"vm.view='portal'\"><tab-heading><span icon=globe tooltip=\"{{'todo' | translate }}\"></span> {{'todo' | translate }}</tab-heading></tab></tabset><h2>{{vm.collectionTitle}}</h2><div ng-repeat=\"set in vm.sets\"><h3>{{set.title}}</h3><table class=\"table table-hover\" style=\"width: 100%; table-layout: auto; empty-cells: show\"><thead><tr><th translate=EditView.Help.Code></th><th translate=EditView.Help.Instructions></th><th translate=EditView.Help.Suggestions></th></tr></thead><tbody><tr ng-repeat=\"item in set.items\"><td>{{item.code}}</td><td>{{item.help}}</td><td>{{item.suggestions}}</td></tr></tbody></table></div></div></div><show-debug-availability class=pull-right></show-debug-availability>"
+  );
+
+
   $templateCache.put('templates/edit.html',
     "<div class=modal-header><button class=\"btn pull-right\" type=button ng-click=vm.close()><span class=\"glyphicon glyphicon-remove\"></span></button><h3 class=modal-title translate=TemplateEdit.Title></h3></div><div class=modal-body>For template metadata - not for source... todo todo todo</div><style>.tooltip-inner {\r" +
     "\n" +
@@ -1028,44 +1188,6 @@ angular.module('SxcTemplates',[]).run(['$templateCache', function($templateCache
     "ListP: {{item.ListPresentationType.DemoTitle}} ({{item.ListPresentationType.DemoId}})\r" +
     "\n" +
     "\">{{item.ContentType.DemoId}}</span></td><td><span icon=\"{{ item.IsHidden ? 'close' : 'eye-open'}}\"></span></td><td class=clickable><span tooltip={{item.ViewNameInUrl}}>{{item.ViewNameInUrl}}</span></td><td class=text-nowrap stop-event=click><button type=button class=\"btn btn-xs btn-square\" ng-click=vm.permissions(item)><i icon=user></i></button> <button type=button class=\"btn btn-xs btn-square\" ng-click=vm.tryToDelete(item)><span icon=remove></span></button></td></tr><tr ng-if=!vm.items.length><td colspan=100 translate=General.Messages.NothingFound></td></tr></tbody></table><div translate=Templates.InfoHideAdvanced></div></div>"
-  );
-
-
-  $templateCache.put('view-edit/view-edit-help.html',
-    "<div class=modal-header><h3 class=modal-title translate=EditView.Help.Title></h3></div><div class=modal-body><div><tabset><tab><tab-heading><span tooltip=\"{{'EditView.Help.Content' | translate }}\"><i icon=home></i> {{'EditView.Help.Content' | translate | trustHtml }}</span></tab-heading>todo: content-fields + toolbar</tab><tab select=\"vm.view='content'\"><tab-heading><span icon=list tooltip=\"{{'EditView.Help.List' | translate }}\"></span> {{'EditView.Help.List' | translate }}</tab-heading></tab><tab select=\"vm.view='query'\"><tab-heading><span icon=filter tooltip=\"{{'EditView.App' | translate }}\"></span> {{'EditView.App' | translate }}</tab-heading>ToDo: app path etc. also app settings and app resources</tab><tab select=\"vm.view='xxx'\"><tab-heading><span icon=picture tooltip=\"{{'EditView.Dnn' | translate }}\"></span> {{'todo' | translate }}</tab-heading>todo: query string, time, etc. portal, module, tab</tab><tab select=\"vm.view='xxx'\"><tab-heading><span icon=flash tooltip=\"{{'EditView.User' | translate }}\"></span> {{'EditView.User' | translate }}</tab-heading>todo</tab><tab select=\"vm.view='app'\"><tab-heading><span icon=unchecked tooltip=\"{{'todo' | translate }}\"></span> {{'todo' | translate }}</tab-heading>todo</tab><tab select=\"vm.view='portal'\"><tab-heading><span icon=globe tooltip=\"{{'todo' | translate }}\"></span> {{'todo' | translate }}</tab-heading></tab></tabset><h2>{{vm.collectionTitle}}</h2><div ng-repeat=\"set in vm.sets\"><h3>{{set.title}}</h3><table class=\"table table-hover\" style=\"width: 100%; table-layout: auto; empty-cells: show\"><thead><tr><th translate=EditView.Help.Code></th><th translate=EditView.Help.Instructions></th><th translate=EditView.Help.Suggestions></th></tr></thead><tbody><tr ng-repeat=\"item in set.items\"><td>{{item.code}}</td><td>{{item.help}}</td><td>{{item.suggestions}}</td></tr></tbody></table></div></div></div><show-debug-availability class=pull-right></show-debug-availability>"
-  );
-
-
-  $templateCache.put('view-edit/view-edit.html',
-    "<div ng-click=vm.debug.autoEnableAsNeeded($event)><div class=modal-header><button class=\"btn btn-default btn-square btn-subtle pull-right\" type=button ng-click=vm.close()><i icon=remove></i></button><h3 class=modal-title translate=todo.Title></h3></div><div class=modal-body><p translate=todo.Intro></p>{{vm.view.FileName }} ({{vm.view.Type }})<div class=row><div class=\"pull-right col-md-4\">help stuff...</div><div class=col-md-8 ui-ace=\"{\r" +
-    "\n" +
-    "    useWrapMode : true,\r" +
-    "\n" +
-    "    useSoftTabs: true,\r" +
-    "\n" +
-    "    showGutter: true,\r" +
-    "\n" +
-    "    theme:'twilight',\r" +
-    "\n" +
-    "    mode: 'html',\r" +
-    "\n" +
-    "    onLoad: aceLoaded,\r" +
-    "\n" +
-    "    require: ['ace/ext/language_tools'],\r" +
-    "\n" +
-    "    advanced: {\r" +
-    "\n" +
-    "        enableSnippets: true,\r" +
-    "\n" +
-    "        enableBasicAutocompletion: true,\r" +
-    "\n" +
-    "        enableLiveAutocompletion: true\r" +
-    "\n" +
-    "    }\r" +
-    "\n" +
-    "\r" +
-    "\n" +
-    "}\" style=\"height: 400px\" ng-model=vm.view.Code></div></div><a ng-click=\"vm.addSnippet('[Content:something]')\">add something</a> todo: help</div><div class=modal-footer><button class=\"btn btn-primary btn-square btn-lg pull-left\" type=button ng-click=vm.save()><i icon=ok></i></button></div><show-debug-availability class=pull-right></show-debug-availability></div>"
   );
 
 
@@ -1155,127 +1277,6 @@ angular.module('SxcTemplates',[]).run(['$templateCache', function($templateCache
     TemplateEditController.$inject = ["svc", "eavAdminDialogs", "eavConfig", "appId", "$modalInstance"];
 
 } ());
-(function () { 
-
-    angular.module("ViewEdit", [
-        "EavConfiguration",  
-        "EavServices",
-        "SxcServices",
-        "SxcTemplates",
-        "ui.ace"
-    ]);
-
-} ());
-(function () { 
-
-    angular.module("ViewEdit")
-
-        .controller("ViewEdit", ViewEditController)
-        ;
-
-    function ViewEditController(viewSvc, item, $modalInstance, $scope) {
-        var vm = this;
-        var svc = viewSvc(item.EntityId);
-        vm.view = {};
-        vm.editor = null;
-
-        svc.get().then(function(result) {
-            vm.view = result.data;
-        });
-
-        vm.close = function () { $modalInstance.dismiss("cancel"); };
-
-        vm.save = function() {
-            svc.save(vm.view).then(vm.close);
-        };
-
-        vm.addSnippet = function addSnippet(snippet) {
-            var snippetManager = ace.require("ace/snippets").snippetManager;
-            snippetManager.insertSnippet(vm.editor, snippet);
-        };
-
-        $scope.aceLoaded = function(_editor) {
-            // Options
-            vm.editor = _editor;
-        };
-
-    }
-    ViewEditController.$inject = ["viewSvc", "item", "$modalInstance", "$scope"];
-
-} ());
-(function () { 
-
-    angular.module("ViewEdit")
-
-        .controller("HelpController", HelpControllerController)
-        ;
-
-    function HelpControllerController(viewHelpSvc) { // }, eavConfig, appId) {
-        var vm = this;
-        var svc = viewHelpSvc;
-        vm.items = svc.liveList();
-
-        // vm.refresh = 
-        vm.ready = function ready() {
-            return vm.items.length > 0;
-        };
-
-    }
-    HelpControllerController.$inject = ["viewHelpSvc"];
-
-} ());
-
-angular.module("ViewEdit")
-    .factory("viewHelpSvc", ["$http", "eavConfig", "svcCreator", function($http, eavConfig, svcCreator) {
-
-        // Construct a service for this specific appId
-        return function createSvc(appId, templateId) {
-            var svc = {
-                getItems: function(item) {
-                    return $http.get('app/contentgroup/replace', { params: { appId: appId, guid: item.guid, part: item.part, index: item.index } });
-                },
-                saveItem: function(item) {
-                    return $http.post('app/contentgroup/replace', {}, { params: { guid: item.guid, part: item.part, index: item.index, entityId: item.id } });
-                },
-
-                getList: function (contentGroup) {
-                    return $http.get('app/contentgroup/itemlist', { params: { appId: appId, guid: contentGroup.guid } });
-                },
-
-                saveList: function (contentGroup, resortedList) {
-                    return $http.post('app/contentgroup/itemlist', resortedList, { params: { appId: appId, guid: contentGroup.guid } });
-                },
-
-                getHeader: function (contentGroup) {
-                    return $http.get('app/contentgroup/header', { params: { appId: appId, guid: contentGroup.guid } });
-                }
-
-
-            };
-
-            return svc;
-        };
-    }]);
-
-angular.module("ViewEdit")
-    .factory("viewSvc", ["$http", function($http) {
-
-        // Construct a service for this specific appId
-        return function createSvc(templateId) {
-            var svc = {
-                get: function() {
-                    return $http.get('view/template/template', { params: { templateId: templateId } });
-                },
-
-                save: function(item) {
-                    return $http.post('view/template/template', item, { params: { templateId: templateId} });
-                }
-
-            };
-
-            return svc;
-        };
-    }]);
 (function () { 
 
     angular.module("WebApiApp", [

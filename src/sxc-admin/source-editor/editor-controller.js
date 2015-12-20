@@ -1,19 +1,22 @@
 (function () { 
 
-    angular.module("ViewEdit")
+    angular.module("SourceEditor")
 
-        .controller("ViewEdit", ViewEditController)
+        .controller("Editor", EditorController)
         ;
 
-    function ViewEditController(viewSvc, item, $modalInstance, $scope) {
+    function EditorController(sourceSvc, helpSvc, item, $modalInstance, $scope) {
         var vm = this;
-        var svc = viewSvc(item.EntityId);
+        var svc = sourceSvc(item.EntityId);
+        var help = helpSvc(item.EntiyId);
         vm.view = {};
         vm.editor = null;
 
         svc.get().then(function(result) {
             vm.view = result.data;
         });
+
+        vm.snippets = help.getSnippets();
 
         vm.close = function () { $modalInstance.dismiss("cancel"); };
 

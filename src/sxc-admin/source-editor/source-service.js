@@ -1,6 +1,6 @@
 
-angular.module("ViewEdit")
-    .factory("viewSvc", function($http) {
+angular.module("SourceEditor")
+    .factory("sourceSvc", function($http) {
 
         // Construct a service for this specific appId
         return function createSvc(templateId) {

@@ -1,6 +1,6 @@
 (function () { 
 
-    angular.module("ViewEdit", [
+    angular.module("SourceEditor", [
         "EavConfiguration",  
         "EavServices",
         "SxcServices",
