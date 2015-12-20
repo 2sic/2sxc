@@ -121,9 +121,9 @@ angular.module("SxcAdminUi", [
         };
 
 
-        svc.openViewEdit = function ove(closeCallback) {
-            var resolve = eavAdminDialogs.CreateResolve();
-            return eavAdminDialogs.OpenModal("view-edit/view-edit.html", "ViewEdit as vm", "lg", resolve, closeCallback);
+        svc.openViewEdit = function ove(item, closeCallback) {
+            var resolve = eavAdminDialogs.CreateResolve({ item: item });
+            return eavAdminDialogs.OpenModal("view-edit/view-edit.html", "ViewEdit as vm", "xlg", resolve, closeCallback);
         };
 
         // 2dm 2015-10-07 - don't think this is in use, remove

@@ -4,7 +4,8 @@
         "EavConfiguration",  
         "EavServices",
         "SxcServices",
-        "SxcTemplates"
+        "SxcTemplates",
+        "ui.ace"
     ]);
 
 } ());

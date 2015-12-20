@@ -148,6 +148,17 @@ $2sxc.getManageController = function (id) {
                 tbContr._getSelectorScope().toggle();
             }
         },
+        'template': {
+            title: "Toolbar.EditView",
+            icon: "glyphicon-option-horizontal",
+            lightbox: true,
+            hideFirst: true,
+            showOn: "design",
+            uiActionOnly: true, // so it doesn't create the content when used
+            action: function (settings, event) {
+                tbContr._openNgDialog(settings, event);
+            }
+        },
         "more": {
             title: "Toolbar.MoreActions",
             icon: "glyphicon-option-horizontal",
@@ -238,8 +249,11 @@ $2sxc.getManageController = function (id) {
                     });
             }
 
-            if (settings.action === "replace" || settings.action === "app" || settings.action === "zone" || settings.action === "sort")
+            if(["replace", "app", "zone", "sort", "template"].indexOf(settings.action) !== -1)
                 params.dialog = settings.action;
+
+            if (settings.action === "template")
+                items = [{ EntityId: manageInfo.templateId }];
 
             // when doing new, there may be a prefill in the link to initialize the new item
             if (settings.prefill) {
@@ -368,6 +382,7 @@ $2sxc.getManageController = function (id) {
                     buttons.push($.extend({}, settings, { action: "replace" }));
                 
                 buttons.push($.extend({}, settings, { action: "layout" }));
+                buttons.push($.extend({}, settings, { action: "template" }));
                 buttons.push($.extend({}, settings, { action: "more" }));
             }
 

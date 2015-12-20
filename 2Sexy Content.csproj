@@ -246,7 +246,8 @@
     <Compile Include="SexyContent\EAV\FieldTemplates\EditorProvider.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="SexyContent\ViewManager\ViewEditor.cs" />
+    <Compile Include="SexyContent\ViewAPI\TemplateController.cs" />
+    <Compile Include="SexyContent\ViewManager\TemplateEditor.cs" />
     <Compile Include="SexyContent\UnityConfig.cs" />
     <Compile Include="SexyContent\WebApi\SystemController.cs" />
     <Compile Include="SexyContent\WebApi\TemplateController.cs" />
@@ -495,7 +496,7 @@
     <Content Include="src\sxc-admin\templates\templates-controller.js" />
     <Content Include="src\sxc-admin\templates\templates.html" />
     <Content Include="src\sxc-admin\view-edit\view-edit-controller.js" />
-    <Content Include="src\sxc-admin\view-edit\view-edit-service.js" />
+    <Content Include="src\sxc-admin\view-edit\view-service.js" />
     <Content Include="src\sxc-admin\view-edit\view-edit-help-service.js" />
     <Content Include="src\sxc-admin\view-edit\view-edit.html" />
     <Content Include="src\sxc-admin\view-edit\_view-edit.js" />

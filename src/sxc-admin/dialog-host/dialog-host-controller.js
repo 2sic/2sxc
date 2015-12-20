@@ -36,8 +36,8 @@
             case "sort":
                 sxcDialogs.openManageContentList(items[0], vm.close);
                 break;
-            case "view":
-                sxcDialogs.openViewEdit(vm.close);
+            case "template":
+                sxcDialogs.openViewEdit(items[0], vm.close);
                 break;
             case "pipeline-designer":
                 // Don't do anything, as the template already loads the app in fullscreen-mode

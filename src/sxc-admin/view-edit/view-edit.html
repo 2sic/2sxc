@@ -9,8 +9,29 @@
     <div class="modal-body">
         <p translate="todo.Intro"></p>
 
-        todo: editor
-        <textarea ng-model="vm.view.source"></textarea>
+        {{vm.view.FileName }} ({{vm.view.Type }})
+        <div class="row">
+            <div class="pull-right col-md-4">help stuff...</div>
+            <div class="col-md-8" ui-ace="{
+    useWrapMode : true,
+    useSoftTabs: true,
+    showGutter: true,
+    theme:'twilight',
+    mode: 'html',
+    onLoad: aceLoaded,
+    require: ['ace/ext/language_tools'],
+    advanced: {
+        enableSnippets: true,
+        enableBasicAutocompletion: true,
+        enableLiveAutocompletion: true
+    }
+
+}" style="height: 400px;" ng-model="vm.view.Code">
+
+            </div>
+        </div>
+
+        <a ng-click="vm.addSnippet('[Content:something]')">add something</a>
 
         todo: help
 

@@ -7,7 +7,7 @@
     <script src="../../js/2sxc.api.min.js"></script>
     <script>
         // the version to append to each asset, to ensure reload after an upgrade
-        var sxcVersionParam = "sxcver=08.00.10";
+        var sxcVersionParam = "sxcver=08.00.11";
 
         // this creates an object on $.ServicesFramework
         // it looks like the DNN object and is necessary so that scripts relying on it will work
@@ -96,6 +96,13 @@
         for (var s = 0; s < styles.length; s++)
             addStyle(styles[s]);
 
+
+        if (dialogName === "template") {
+            addScript("../../bower_components/ace-builds/src-min-noconflict/ace.js");
+            addScript("../../bower_components/ace-builds/src-min-noconflict/mode-html.js");
+            addScript("../../bower_components/ace-builds/src-min-noconflict/ext-language_tools.js");
+            addScript("../../bower_components/angular-ui-ace/ui-ace.js");
+        }
     </script>
 
 </head>
