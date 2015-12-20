@@ -969,7 +969,7 @@ angular.module("SxcServices")
         .controller("Editor", EditorController)
         ;
 
-    function EditorController(sourceSvc, snippetSvc, item, $modalInstance, $scope, $sce) {
+    function EditorController(sourceSvc, snippetSvc, item, $modalInstance, $scope) {
         var vm = this;
         var svc = sourceSvc(item.EntityId);
         vm.view = {};
@@ -980,20 +980,14 @@ angular.module("SxcServices")
             svc.initSnippets(vm.view);
         });
 
+        // load appropriate snippets from the snippet service
         svc.initSnippets = function(template) {
             vm.snipSvc = snippetSvc(template);
             vm.snippets = vm.snipSvc.getSnippets();
             vm.snippetSet = "Content";    // select default
+            vm.snippetHelp = vm.snipSvc.help;
+            vm.snippetLabel = vm.snipSvc.label;
         };
-
-        vm.snippetLabel = function(set, subset, key) {
-            return vm.snipSvc.label(set, subset, key);
-        };
-        vm.snippetHelp = function(set, subset, key) {
-            return vm.snipSvc.help(set, subset, key);
-        };
-
-
 
         vm.close = function () { $modalInstance.dismiss("cancel"); };
 
@@ -1007,42 +1001,50 @@ angular.module("SxcServices")
         };
 
         $scope.aceLoaded = function(_editor) {
-            // Options
             vm.editor = _editor;
         };
 
     }
-    EditorController.$inject = ["sourceSvc", "snippetSvc", "item", "$modalInstance", "$scope", "$sce"];
+    EditorController.$inject = ["sourceSvc", "snippetSvc", "item", "$modalInstance", "$scope"];
 
 } ());
 
 angular.module("SourceEditor")
-    .factory("snippetSvc", ["$http", "eavConfig", "svcCreator", "$translate", function($http, eavConfig, svcCreator, $translate) {
+    .factory("snippetSvc", ["$http", "eavConfig", "svcCreator", "$translate", "contentTypeFieldSvc", function($http, eavConfig, svcCreator, $translate, contentTypeFieldSvc) {
+
+        // todo
+        // 1. get fields and field-help from service
+        // 2. difference in help razor / tokens
 
         // Construct a service for this specific appId
         return function createSvc(templateConfiguration) {
+
+
+            // Data schema
+            // if it has an "[" at the beginning of a key, these will be shown for token only, and the [ will be removed
+            // if it has a "@" at the beginning, it will be razor only, and the @ will be removed
 
             var sets = {
                 "Content": {
                     "General": 
                         {
-                            "Toolbar": "[Content:Toolbar]"
+                            "[Toolbar": "[${1:Content}:Toolbar]",
+                            "@Toolbar": "@${1:Content}.Toolbar",
+                            "[ToolbarFloat": "<div class=\"sc-element\">[${1:Content}:Toolbar]</div>",
+                            "@ToolbarFloat": "<div class=\"sc-element\">@${1:Content}.Toolbar</div>",
                         },
-                    "Fields": {
-                        
-                    }
-                },
-                "Presentation": {
-                    "Fields": {
-                        
-                    }
+                    "Fields": {},
+                    "PresentationFields": {}
                 },
                 "List": {
                     "Header": {
-                        "[ListContent:Toolbar]": null
+                        "[Toolbar": "[List:Toolbar]",
+                        "@Toolbar": "@List.Toolbar",
+                        "[ToolbarFloat": "<div class=\"sc-element\">[List:Toolbar]</div>",
+                        "@ToolbarFloat": "<div class=\"sc-element\">@List.Toolbar</div>",
                     },
                     "Repeaters": {
-                        "<repeat... tag": "<repeat repeat=\"Employee in Data:Default\">...[Employee:Title]...</repeat>",
+                        "<repeat... tag": "<repeat repeat=\"${1:Employee} in Data:${2:Default}\">...[${1}:Title]...</repeat>",
                         "Index0": "[Content:Repeater:Index]",
                         "Index1": "[Content:Repeater:Index1]",
                         "Count": "[Content:Repeater:Count]",
@@ -1053,9 +1055,8 @@ angular.module("SourceEditor")
                         "Alternator4": "[Content:Repeater:Alternator4]",
                         "Alternator5":"[Content:Repeater:Alternator5]"
                     },
-                    "Fields": {
-                        
-                    }
+                    "Fields": { },
+                    "PresentationFields": {}
                 },
                 "App": {
                     "General": {
@@ -1075,17 +1076,54 @@ angular.module("SourceEditor")
                 }
             };
 
+            //function filterAwayNotNeededSnippets(key, value) {
+            //}
+
+
             var svc = {
+                cachedSnippets: null,
                 getSnippets: function () {
+                    if (svc.cachedSnippets !== null)
+                        return svc.cachedSnippets;
+
+                    // maybe remove list-infos
                     if (!templateConfiguration.HasList)
                         delete sets.List;
 
-                    if (!templateConfiguration.HasApp)
+                    // maybe remove App-infos
+                    if (!templateConfiguration.HasApp) 
                         delete sets.App;
 
+                    // filter for token/razor snippets
+                    svc.traverse(sets, svc.filterAwayNotNeededSnippets);
+
+                    angular.forEach(sets, function(setValue, setKey) {
+                        angular.forEach(setValue, function(subSetValue, subSetKey) {
+                            angular.forEach(subSetValue, function(itemValue, itemKey) {
+                                svc.expandSnippetInfo(subSetValue, setKey, subSetKey, itemKey, itemValue);
+                    }); }); });
+
+                    //#region Retrieve all relevant content-types and infos
+                    if (templateConfiguration.TypeContent)
+                        svc.loadContentType(sets.Content.Fields, templateConfiguration.TypeContent, "Content");
+                    if (templateConfiguration.TypeContentPresentation)
+                        svc.loadContentType(sets.Content.PresentationFields, templateConfiguration.TypeContentPresentation, "Content.Presentation");
+                    if (templateConfiguration.TypeList)
+                        svc.loadContentType(sets.List.Fields, templateConfiguration.TypeList, "List");
+                    if (templateConfiguration.TypeListPresentation)
+                        svc.loadContentType(sets.List.PresentationFields, templateConfiguration.TypeListPresentation, "List.Presentation");
+
+                    if (templateConfiguration.HasApp) {
+                         svc.loadContentType(sets.App.Resources, "AppResources", "App.Resources");
+                         svc.loadContentType(sets.App.Settings, "AppSettings", "App.Settings");
+                    }
+                    //#endregion
+
+                    svc.cachedSnippets = sets;
                     return sets;
                 },
 
+                //#region help / translate
                 help: function help(set, subset, snip) {
                     var key = svc.getHelpKey(set, subset, snip, "Help");
 
@@ -1109,8 +1147,87 @@ angular.module("SourceEditor")
                     var key = root + "." + set + "." + subset + "." + snip;
                     key += addition;
                     return key;
+                },
+
+                //#endregion
+
+                //#region scan the configuration and filter unneeded snippets
+                traverse: function(o, func) {
+                    for (var i in o) {
+                        if (!o.hasOwnProperty(i))
+                            continue;
+                        func.apply(this, [o, i, o[i]]);
+                        //going on step down in the object tree!!
+                        if (o[i] !== null && typeof (o[i]) == "object") 
+                            svc.traverse(o[i], func);
+                    }
+                },
+
+                filterAwayNotNeededSnippets: function (parent, key, value) {
+                    // check if we have a special prefix
+                    var prefix = key[0];
+                    var found = svc.keyPrefixes.indexOf(prefix);
+                    
+                    // always remove the original, even if not necessary, to preserve order
+                    delete parent[key];
+
+                    if (found !== -1) {
+                        if (prefix !== svc.allowedKeyPrefix)
+                            return; // don't even add it any more
+                        key = key.substr(1);
+                    }
+
+                    parent[key] = value;
+                },
+
+                keyPrefixes: ["@", "["],
+                allowedKeyPrefix: (templateConfiguration.Type.indexOf("Razor") > -1) ? "@" : "[",
+                //#endregion
+
+                expandSnippetInfo: function(target, setName, subsetName, key, value) {
+                    if (value instanceof Object)
+                        return;
+                    target[key] = { "key": key, "label": svc.label(setName, subsetName, key), "snip": value, "help": svc.help(setName, subsetName, key) };
+                },
+
+                //#region get fields in content types
+                loadContentType: function (target, type, prefix) {
+                    contentTypeFieldSvc(templateConfiguration.AppId, { StaticName: type }).getFields()
+                        .then(function (result) {
+                            // first add common items if the content-type actually exists
+                            angular.forEach(result.data, function (value) {
+                                var fieldname = value.StaticName;
+                                var description = value.Metadata.merged.Notes || "" + " (" + value.Type.toLowerCase() + ") ";
+                                var placeholder = svc.valuePlaceholder(prefix, fieldname);
+                                target[fieldname] = {
+                                    key: fieldname,
+                                    label: fieldname,
+                                    snip: placeholder,
+                                    help: description
+                                };
+                            });
+
+                            var std = ["EntityId", "EntityTitle", "EntityGuid"];
+                            if (result.data.length)
+                                for (var i = 0; i < std.length; i++)
+                                    target[std[i]] = {
+                                        key: std[i],
+                                        label: std[i],
+                                        snip: svc.valuePlaceholder(prefix, std[i]),
+                                        help: $translate.instant("SourceEditorSnippets.StandardFields." + std[i] + ".Help")
+                                    };
+
+                        });
+                },
+
+                valuePlaceholder: function(obj, val) {
+                    return (templateConfiguration.Type.indexOf("Razor") > -1)
+                        ? "@" + obj + "." + val
+                        : "[" + obj.replace(".", ":") + ":" + val + "]";
                 }
-            };
+
+                //#endregion
+        };
 
 
             return svc;
@@ -1136,6 +1253,32 @@ angular.module("SourceEditor")
             return svc;
         };
     }]);
+(function () {
+
+    angular.module("SourceEditor")
+
+        // helps convert an object with keys to an array to allow sorting
+        // from https://github.com/petebacondarwin/angular-toArrayFilter
+        .filter('toArray', function() {
+            return function(obj, addKey) {
+                if (!angular.isObject(obj)) return obj;
+                if (addKey === false) {
+                    return Object.keys(obj).map(function(key) {
+                        return obj[key];
+                    });
+                } else {
+                    return Object.keys(obj).map(function(key) {
+                        var value = obj[key];
+                        return angular.isObject(value) ?
+                            Object.defineProperty(value, '$key', { enumerable: false, value: key }) :
+                            { $key: key, $value: value };
+                    });
+                }
+            };
+        });
+
+
+} ());
 angular.module('SxcTemplates',[]).run(['$templateCache', function($templateCache) {
   'use strict';
 
@@ -1189,35 +1332,31 @@ angular.module('SxcTemplates',[]).run(['$templateCache', function($templateCache
 
 
   $templateCache.put('source-editor/editor.html',
-    "<div ng-click=vm.debug.autoEnableAsNeeded($event)><div class=modal-header><button class=\"btn btn-default btn-square btn-subtle pull-right\" type=button ng-click=vm.close()><i icon=remove></i></button><h3 class=modal-title translate=SourceEditor.Title></h3></div><div class=modal-body><p translate=SourceEditor.Intro></p><div class=row><div class=col-md-8>{{vm.view.FileName }} ({{vm.view.Type }})<div ui-ace=\"{\r" +
+    "<div ng-click=vm.debug.autoEnableAsNeeded($event)><div class=modal-header><button class=\"btn btn-default btn-square btn-subtle pull-right\" type=button ng-click=vm.close()><i icon=remove></i></button><h3 class=modal-title translate=SourceEditor.Title></h3></div><div class=modal-body><div class=row><div class=col-md-8><div tooltip=\"{{ vm.view.FileName }}\">{{ vm.view.FileName.substr(vm.view.FileName.lastIndexOf(\"\\\\\") + 1) }} ({{vm.view.Type }})</div><div ng-model=vm.view.Code style=\"height: 400px\" ui-ace=\"{\r" +
     "\n" +
-    "    useWrapMode : true,\r" +
+    "                    useWrapMode : true,\r" +
     "\n" +
-    "    useSoftTabs: true,\r" +
+    "                    useSoftTabs: true,\r" +
     "\n" +
-    "    showGutter: true,\r" +
+    "                    showGutter: true,\r" +
     "\n" +
-    "    theme:'twilight',\r" +
+    "                    theme:'twilight',\r" +
     "\n" +
-    "    mode: 'html',\r" +
+    "                    mode: 'html',\r" +
     "\n" +
-    "    onLoad: aceLoaded,\r" +
+    "                    onLoad: aceLoaded,\r" +
     "\n" +
-    "    require: ['ace/ext/language_tools'],\r" +
+    "                    require: ['ace/ext/language_tools'],\r" +
     "\n" +
-    "    advanced: {\r" +
+    "                    advanced: {\r" +
     "\n" +
-    "        enableSnippets: true,\r" +
+    "                        enableSnippets: true,\r" +
     "\n" +
-    "        enableBasicAutocompletion: true,\r" +
+    "                        enableBasicAutocompletion: true,\r" +
     "\n" +
-    "        enableLiveAutocompletion: true\r" +
+    "                        enableLiveAutocompletion: true\r" +
     "\n" +
-    "    }\r" +
-    "\n" +
-    "\r" +
-    "\n" +
-    "}\" style=\"height: 400px\" ng-model=vm.view.Code></div></div><div class=\"pull-right col-md-4\"><h3 translate=SourceEditor.Snippets.Title>translate:Code Snippets</h3><div translate=SourceEditor.Snippets.Intro></div><select class=input-lg ng-model=vm.snippetSet ng-options=\"key as key for (key , value) in vm.snippets\"></select><div ng-repeat=\"(subsetName, subsetValue) in vm.snippets[vm.snippetSet]\"><h4>{{subsetName}}</h4><ul><li ng-repeat=\"(key, value) in subsetValue\" tooltip=\"{{ vm.snippetHelp(vm.snippetSet, subsetName, key) }}\" ng-click=\"vm.addSnippet(value || key)\">{{vm.snippetLabel(vm.snippetSet, subsetName, key)}}</li></ul></div></div></div></div><div class=modal-footer><button class=\"btn btn-primary btn-square btn-lg pull-left\" type=button ng-click=vm.save()><i icon=ok></i></button></div><show-debug-availability class=pull-right></show-debug-availability></div>"
+    "                    }}\"></div></div><div class=\"pull-right col-md-4\"><div><strong translate=SourceEditor.SnippetsSection.Title></strong> <i icon=question-sign style=\"opacity: 0.3\" ng-click=\"showSnippetInfo = !showSnippetInfo\"></i><div ng-if=showSnippetInfo translate=SourceEditor.SnippetsSection.Intro></div></div><select class=input-lg width=100% ng-model=vm.snippetSet ng-options=\"key as key for (key , value) in vm.snippets\" tooltip=\"{{ 'SourceEditorSnippets.' + vm.snippetSet + '.Help'  | translate}}\"></select><div>&nbsp;</div><div ng-repeat=\"(subsetName, subsetValue) in vm.snippets[vm.snippetSet]\"><strong tooltip=\"{{ 'SourceEditorSnippets.' + vm.snippetSet + '.' + subsetName + '.Help'  | translate}}\">{{ 'SourceEditorSnippets.' + vm.snippetSet + '.' + subsetName + '.Title' | translate}}</strong><ul><li ng-repeat=\"value in subsetValue | toArray | orderBy: '$key'\" tooltip=\"{{ value.help }}\"><span ng-click=vm.addSnippet(value.snip)>{{value.label}}</span> <i icon=info-sign style=\"opacity: 0.3\" ng-click=\"show = !show\"></i><div ng-if=show><div>{{value.snip}}</div><div><em>{{value.help}}</em></div></div></li></ul></div></div></div></div><div class=modal-footer><button class=\"btn btn-primary btn-square btn-lg pull-left\" type=button ng-click=vm.save()><i icon=ok></i></button></div><show-debug-availability class=pull-right></show-debug-availability></div>"
   );
 
 

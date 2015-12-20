@@ -7,37 +7,44 @@
     </div>
 
     <div class="modal-body">
-        <p translate="SourceEditor.Intro"></p>
-
         <div class="row">
             <div class="col-md-8">
-                {{vm.view.FileName }} ({{vm.view.Type }})
-                <div ui-ace="{
-    useWrapMode : true,
-    useSoftTabs: true,
-    showGutter: true,
-    theme:'twilight',
-    mode: 'html',
-    onLoad: aceLoaded,
-    require: ['ace/ext/language_tools'],
-    advanced: {
-        enableSnippets: true,
-        enableBasicAutocompletion: true,
-        enableLiveAutocompletion: true
-    }
-
-}" style="height: 400px;" ng-model="vm.view.Code">
-
+                <div tooltip="{{ vm.view.FileName }}">
+                    {{ vm.view.FileName.substr(vm.view.FileName.lastIndexOf("\\") + 1) }} ({{vm.view.Type }})
+                </div>
+                <div ng-model="vm.view.Code" style="height: 400px;" ui-ace="{
+                    useWrapMode : true,
+                    useSoftTabs: true,
+                    showGutter: true,
+                    theme:'twilight',
+                    mode: 'html',
+                    onLoad: aceLoaded,
+                    require: ['ace/ext/language_tools'],
+                    advanced: {
+                        enableSnippets: true,
+                        enableBasicAutocompletion: true,
+                        enableLiveAutocompletion: true
+                    }}">
                 </div>
             </div>
             <div class="pull-right col-md-4">
-                <h3 translate="SourceEditor.Snippets.Title">translate:Code Snippets</h3>
-                <div translate="SourceEditor.Snippets.Intro"></div>
-                <select class="input-lg" ng-model="vm.snippetSet" ng-options="key as key for (key , value) in vm.snippets"></select>
+                <div>
+                    <strong translate="SourceEditor.SnippetsSection.Title"></strong> <i icon="question-sign" style="opacity: 0.3" ng-click="showSnippetInfo = !showSnippetInfo"></i>
+                    <div ng-if="showSnippetInfo" translate="SourceEditor.SnippetsSection.Intro"></div>
+                </div>
+                <select class="input-lg" width="100%" ng-model="vm.snippetSet" ng-options="key as key for (key , value) in vm.snippets" tooltip="{{ 'SourceEditorSnippets.' + vm.snippetSet + '.Help'  | translate}}"></select>
+                <div>&nbsp;</div>
                 <div ng-repeat="(subsetName, subsetValue) in vm.snippets[vm.snippetSet]">
-                    <h4>{{subsetName}}</h4>
+                    <strong tooltip="{{ 'SourceEditorSnippets.' + vm.snippetSet + '.' + subsetName + '.Help'  | translate}}">{{ 'SourceEditorSnippets.' + vm.snippetSet + '.' + subsetName + '.Title'  | translate}}</strong>
                     <ul>
-                        <li ng-repeat="(key, value) in subsetValue" tooltip="{{ vm.snippetHelp(vm.snippetSet, subsetName, key) }}" ng-click="vm.addSnippet(value || key)">{{vm.snippetLabel(vm.snippetSet, subsetName, key)}}</li>
+                        <li ng-repeat="value in subsetValue | toArray | orderBy: '$key'" tooltip="{{ value.help }}">
+                            <span ng-click="vm.addSnippet(value.snip)">{{value.label}}</span> <i icon="info-sign" style="opacity: 0.3" ng-click="show = !show"></i>
+                            <div ng-if="show">
+                                <div>{{value.snip}}</div>
+                                <div><em>{{value.help}}</em>
+                                </div>
+                            </div>
+                        </li>
                     </ul>
 
                 </div>

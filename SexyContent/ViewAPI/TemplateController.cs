@@ -31,6 +31,7 @@ namespace ToSic.SexyContent.ViewAPI
             t.Name = templ.Name;
             t.HasList = templ.UseForList;
             t.HasApp = App.Name != "Content";
+            t.AppId = App.AppId;
             t.TypeContent = templ.ContentTypeStaticName;
             t.TypeContentPresentation = templ.PresentationTypeStaticName;
             t.TypeList = templ.ListContentTypeStaticName;
@@ -66,6 +67,7 @@ namespace ToSic.SexyContent.ViewAPI
         public string Type = "Token";
         public bool HasList;
         public bool HasApp;
+        public int AppId;
         public Dictionary<string,string> Streams = new Dictionary<string, string>();
     }
 }

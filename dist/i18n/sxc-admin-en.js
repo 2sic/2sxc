@@ -186,8 +186,7 @@
 
   "SourceEditor": {
     "Title": "Source Editor",
-    "Intro": "This editor helps you make template changes on the fly and shows you many snippets you can use to create great templates.",
-    "Snippets": {
+    "SnippetsSection": {
       "Title": "Snippets",
       "Intro": "click on any snippet to insert"
     }

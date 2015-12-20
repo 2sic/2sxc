@@ -1,38 +1,66 @@
 ﻿{
-  "NoteToTranslators": {
+  "Note To Translators": {
     "1": "You probably don't want to translate this",
-    "2": "Because it's mostly technical and these users will probably be fine with English. But if you do translate it, great! Just remember that it means more maintenance"
+    "2": "Because it's mostly technical and these users will probably be fine with English. ",
+    "3": "But if you do translate it, great! Just remember that it means more maintenance"
   },
   "SourceEditorSnippets": {
-
-    "Content": {
-      "General": {
-        "ToolbarKey": "[Content:Toolbar]",
-        "ToolbarHelp": "Toolbar for inline editing with 2sxc. If used inside a &lt;div class&equals;&quot;sc-element&quot;&gt; then the toolbar will float"
-      },
-
-
-
-
-      "Title": "Content and Content-Presentation"
+    "StandardFields": {
+      "EntityId.Help": "the id as number of the current entity (content-item)",
+      "EntityTitle.Help": "the title of the current entity (content-item) based on the content-type configuration",
+      "EntityGuid.Help": "the guid-id of the current entity (content-item)"
     },
-    "List": {
-      "Header": {
-        "ToolbarKey": "Header toolbar",
-        "ToolbarHelp": "Outputs the toolbar to edit list information"
+    "Content": {
+      "Title": "Content and Content-Presentation",
+      "Help": "the most common data placeholder in a template",
+
+      "General": {
+        "Title": "General placeholders",
+        "Help": "various common placeholders",
+        "ToolbarKey": "Toolbar",
+        "ToolbarHelp": "Toolbar for inline editing with 2sxc. If used inside a <div class=\"sc-element\"> then the toolbar will automatically float",
+        "ToolbarFloatKey": "Toolbar floating",
+        "ToolbarFloatHelp": "toolbar together with the <div> tag in which it floats"
       },
+
+      "Fields.Title": "Fields",
+      "Fields.Help": "fields of the content item as configured in the content-type",
+
+      "PresentationFields.Title": "Presentation fields",
+      "PresentationFields.Help": "presentation settings as configured in the content-type of presentation"
+    },
+
+
+    "List": {
+      "Title": "List and List-Presentation",
+      "Help": "list functionality in this template - if lists are enabled",
+
+      "Header": {
+        "Title": "Header general",
+        "Help": "this is the header of a list",
+
+        "ToolbarKey": "Header toolbar",
+        "ToolbarHelp": "Outputs the toolbar to edit list information - place in a <div> to float like other toolbars"
+      },
+
+      "Fields.Title": "List fields",
+      "Fields.Help": "fields of the header content-item",
+
+      "PresentationFields.Title": "List presentation fields",
+      "PresentationFields.Help": "list presentation settings - usually for settings like paging-size, show-intro, etc.",
 
       "Repeaters": {
-
+        "Title": "Repeaters",
+        "Help": "placeholders as well as loop-templates and more"
       },
 
-      "Title": "List and List-Presentation",
       "Sets": [
         {
           "Id": "list",
           "Title": "List Header"
 
         },
+
         {
           "Title": "Important List Codes",
           "Items": [

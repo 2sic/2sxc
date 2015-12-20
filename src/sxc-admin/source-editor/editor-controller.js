@@ -5,7 +5,7 @@
         .controller("Editor", EditorController)
         ;
 
-    function EditorController(sourceSvc, snippetSvc, item, $modalInstance, $scope, $sce) {
+    function EditorController(sourceSvc, snippetSvc, item, $modalInstance, $scope) {
         var vm = this;
         var svc = sourceSvc(item.EntityId);
         vm.view = {};
@@ -16,20 +16,14 @@
             svc.initSnippets(vm.view);
         });
 
+        // load appropriate snippets from the snippet service
         svc.initSnippets = function(template) {
             vm.snipSvc = snippetSvc(template);
             vm.snippets = vm.snipSvc.getSnippets();
             vm.snippetSet = "Content";    // select default
+            vm.snippetHelp = vm.snipSvc.help;
+            vm.snippetLabel = vm.snipSvc.label;
         };
-
-        vm.snippetLabel = function(set, subset, key) {
-            return vm.snipSvc.label(set, subset, key);
-        };
-        vm.snippetHelp = function(set, subset, key) {
-            return vm.snipSvc.help(set, subset, key);
-        };
-
-
 
         vm.close = function () { $modalInstance.dismiss("cancel"); };
 
@@ -43,7 +37,6 @@
         };
 
         $scope.aceLoaded = function(_editor) {
-            // Options
             vm.editor = _editor;
         };
 
