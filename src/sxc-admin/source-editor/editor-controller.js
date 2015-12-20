@@ -5,18 +5,31 @@
         .controller("Editor", EditorController)
         ;
 
-    function EditorController(sourceSvc, helpSvc, item, $modalInstance, $scope) {
+    function EditorController(sourceSvc, snippetSvc, item, $modalInstance, $scope, $sce) {
         var vm = this;
         var svc = sourceSvc(item.EntityId);
-        var help = helpSvc(item.EntiyId);
         vm.view = {};
         vm.editor = null;
 
         svc.get().then(function(result) {
             vm.view = result.data;
+            svc.initSnippets(vm.view);
         });
 
-        vm.snippets = help.getSnippets();
+        svc.initSnippets = function(template) {
+            vm.snipSvc = snippetSvc(template);
+            vm.snippets = vm.snipSvc.getSnippets();
+            vm.snippetSet = "Content";    // select default
+        };
+
+        vm.snippetLabel = function(set, subset, key) {
+            return vm.snipSvc.label(set, subset, key);
+        };
+        vm.snippetHelp = function(set, subset, key) {
+            return vm.snipSvc.help(set, subset, key);
+        };
+
+
 
         vm.close = function () { $modalInstance.dismiss("cancel"); };
 

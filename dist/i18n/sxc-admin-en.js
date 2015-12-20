@@ -152,7 +152,7 @@
     "Intro": "By replacing a content-item you can make a other content appear in the slot of the original content.",
     "ChooseItem": "Choose item:"
   },
-  
+
   "ManageContentList": {
     "Title": "Manage content-item lists",
 
@@ -161,7 +161,6 @@
 
     "Intro": "Sort the items by dragging as you need, then save"
   },
-
 
   "Edit": {
     "Fields": {
@@ -182,6 +181,15 @@
           "Title": "Select a web page"
         }
       }
+    }
+  },
+
+  "SourceEditor": {
+    "Title": "Source Editor",
+    "Intro": "This editor helps you make template changes on the fly and shows you many snippets you can use to create great templates.",
+    "Snippets": {
+      "Title": "Snippets",
+      "Intro": "click on any snippet to insert"
     }
   }
 }

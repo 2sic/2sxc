@@ -953,7 +953,13 @@ angular.module("SxcServices")
         "SxcServices",
         "SxcTemplates",
         "ui.ace"
-    ]);
+    ])
+
+    .config(["$translatePartialLoaderProvider", function ($translatePartialLoaderProvider) {
+        // ensure the language pack is loaded
+        $translatePartialLoaderProvider.addPart("source-editor-snippets");
+    }])
+    ;
 
 } ());
 (function () { 
@@ -963,18 +969,31 @@ angular.module("SxcServices")
         .controller("Editor", EditorController)
         ;
 
-    function EditorController(sourceSvc, helpSvc, item, $modalInstance, $scope) {
+    function EditorController(sourceSvc, snippetSvc, item, $modalInstance, $scope, $sce) {
         var vm = this;
         var svc = sourceSvc(item.EntityId);
-        var help = helpSvc(item.EntiyId);
         vm.view = {};
         vm.editor = null;
 
         svc.get().then(function(result) {
             vm.view = result.data;
+            svc.initSnippets(vm.view);
         });
 
-        vm.snippets = help.getSnippets();
+        svc.initSnippets = function(template) {
+            vm.snipSvc = snippetSvc(template);
+            vm.snippets = vm.snipSvc.getSnippets();
+            vm.snippetSet = "Content";    // select default
+        };
+
+        vm.snippetLabel = function(set, subset, key) {
+            return vm.snipSvc.label(set, subset, key);
+        };
+        vm.snippetHelp = function(set, subset, key) {
+            return vm.snipSvc.help(set, subset, key);
+        };
+
+
 
         vm.close = function () { $modalInstance.dismiss("cancel"); };
 
@@ -993,56 +1012,106 @@ angular.module("SxcServices")
         };
 
     }
-    EditorController.$inject = ["sourceSvc", "helpSvc", "item", "$modalInstance", "$scope"];
-
-} ());
-(function () { 
-
-    angular.module("SourceEditor")
-
-        .controller("Help", HelpController)
-        ;
-
-    function HelpController(viewHelpSvc) { // }, eavConfig, appId) {
-        var vm = this;
-        var svc = viewHelpSvc;
-        vm.items = svc.liveList();
-
-        // vm.refresh = 
-        vm.ready = function ready() {
-            return vm.items.length > 0;
-        };
-
-    }
-    HelpController.$inject = ["viewHelpSvc"];
+    EditorController.$inject = ["sourceSvc", "snippetSvc", "item", "$modalInstance", "$scope", "$sce"];
 
 } ());
 
 angular.module("SourceEditor")
-    .factory("helpSvc", ["$http", "eavConfig", "svcCreator", function($http, eavConfig, svcCreator) {
+    .factory("snippetSvc", ["$http", "eavConfig", "svcCreator", "$translate", function($http, eavConfig, svcCreator, $translate) {
 
         // Construct a service for this specific appId
-        return function createSvc(templateId) {
+        return function createSvc(templateConfiguration) {
 
             var sets = {
-                "Main": [
-                    { "Stuff": "[Content:stuff]" },
-                    { "Other": "[Content:other]" }
-                ],
-                "List": [
-                    { "Title": "[List:Something]" },
-                    { "Other": "[List:Other]" },
-                    { "then": "[List:then]" }
-                ]
+                "Content": {
+                    "General": 
+                        {
+                            "Toolbar": "[Content:Toolbar]"
+                        },
+                    "Fields": {
+                        
+                    }
+                },
+                "Presentation": {
+                    "Fields": {
+                        
+                    }
+                },
+                "List": {
+                    "Header": {
+                        "[ListContent:Toolbar]": null
+                    },
+                    "Repeaters": {
+                        "<repeat... tag": "<repeat repeat=\"Employee in Data:Default\">...[Employee:Title]...</repeat>",
+                        "Index0": "[Content:Repeater:Index]",
+                        "Index1": "[Content:Repeater:Index1]",
+                        "Count": "[Content:Repeater:Count]",
+                        "IsFirst": "[Content:Repeater:IsFirst]",
+                        "IsLast": "[Content:Repeater:IsLast]",
+                        "Alternator2": "[Content:Repeater:Alternator2]",
+                        "Alternator3": "[Content:Repeater:Alternator3]",
+                        "Alternator4": "[Content:Repeater:Alternator4]",
+                        "Alternator5":"[Content:Repeater:Alternator5]"
+                    },
+                    "Fields": {
+                        
+                    }
+                },
+                "App": {
+                    "General": {
+                        "[App:Path]": null,
+                        "[App:PhysicalPath]": null,
+                        "[App:AppGuid]": null,
+                        "[App:AppId]": null,
+                        "[App:Name]": null,
+                        "[App:Folder]": null
+                    },
+                    "Resources": {
+                        
+                    },
+                    "Settings": {
+                        
+                    }
+                }
             };
 
             var svc = {
-                getSnippets: function() {
+                getSnippets: function () {
+                    if (!templateConfiguration.HasList)
+                        delete sets.List;
+
+                    if (!templateConfiguration.HasApp)
+                        delete sets.App;
+
                     return sets;
+                },
+
+                help: function help(set, subset, snip) {
+                    var key = svc.getHelpKey(set, subset, snip, "Help");
+
+                    var result = $translate.instant(key);
+                    if (result === key)
+                        result = "";
+                    return result;
+                },
+
+                label: function label(set, subset, snip) {
+                    var key = svc.getHelpKey(set, subset, snip, "Key");
+
+                    var result = $translate.instant(key);
+                    if (result === key)
+                        result = snip;
+                    return result;
+                },
+
+                getHelpKey: function(set, subset, snip, addition) {
+                    var root = "SourceEditorSnippets";
+                    var key = root + "." + set + "." + subset + "." + snip;
+                    key += addition;
+                    return key;
                 }
-
-
             };
+
 
             return svc;
         };
@@ -1120,7 +1189,7 @@ angular.module('SxcTemplates',[]).run(['$templateCache', function($templateCache
 
 
   $templateCache.put('source-editor/editor.html',
-    "<div ng-click=vm.debug.autoEnableAsNeeded($event)><div class=modal-header><button class=\"btn btn-default btn-square btn-subtle pull-right\" type=button ng-click=vm.close()><i icon=remove></i></button><h3 class=modal-title translate=todo.Title></h3></div><div class=modal-body><p translate=todo.Intro></p>{{vm.view.FileName }} ({{vm.view.Type }})<div class=row><div class=col-md-8 ui-ace=\"{\r" +
+    "<div ng-click=vm.debug.autoEnableAsNeeded($event)><div class=modal-header><button class=\"btn btn-default btn-square btn-subtle pull-right\" type=button ng-click=vm.close()><i icon=remove></i></button><h3 class=modal-title translate=SourceEditor.Title></h3></div><div class=modal-body><p translate=SourceEditor.Intro></p><div class=row><div class=col-md-8>{{vm.view.FileName }} ({{vm.view.Type }})<div ui-ace=\"{\r" +
     "\n" +
     "    useWrapMode : true,\r" +
     "\n" +
@@ -1148,12 +1217,7 @@ angular.module('SxcTemplates',[]).run(['$templateCache', function($templateCache
     "\n" +
     "\r" +
     "\n" +
-    "}\" style=\"height: 400px\" ng-model=vm.view.Code></div><div class=\"pull-right col-md-4\"><h3>translate:Code Snippets</h3><select class=input-lg ng-model=vm.snippetSet ng-options=\"key for (key , value) in vm.snippets\"></select><ul><li ng-repeat=\"snip in vm.snippetSet\" tooltip=\"click to insert\" ng-click=vm.addSnippet(snip)>{{snip}}</li></ul></div></div><a ng-click=\"vm.addSnippet('[Content:something]')\">add something</a></div><div class=modal-footer><button class=\"btn btn-primary btn-square btn-lg pull-left\" type=button ng-click=vm.save()><i icon=ok></i></button></div><show-debug-availability class=pull-right></show-debug-availability></div>"
-  );
-
-
-  $templateCache.put('source-editor/help.html',
-    "<div class=modal-header><h3 class=modal-title translate=EditView.Help.Title></h3></div><div class=modal-body><div><tabset><tab><tab-heading><span tooltip=\"{{'EditView.Help.Content' | translate }}\"><i icon=home></i> {{'EditView.Help.Content' | translate | trustHtml }}</span></tab-heading>todo: content-fields + toolbar</tab><tab select=\"vm.view='content'\"><tab-heading><span icon=list tooltip=\"{{'EditView.Help.List' | translate }}\"></span> {{'EditView.Help.List' | translate }}</tab-heading></tab><tab select=\"vm.view='query'\"><tab-heading><span icon=filter tooltip=\"{{'EditView.App' | translate }}\"></span> {{'EditView.App' | translate }}</tab-heading>ToDo: app path etc. also app settings and app resources</tab><tab select=\"vm.view='xxx'\"><tab-heading><span icon=picture tooltip=\"{{'EditView.Dnn' | translate }}\"></span> {{'todo' | translate }}</tab-heading>todo: query string, time, etc. portal, module, tab</tab><tab select=\"vm.view='xxx'\"><tab-heading><span icon=flash tooltip=\"{{'EditView.User' | translate }}\"></span> {{'EditView.User' | translate }}</tab-heading>todo</tab><tab select=\"vm.view='app'\"><tab-heading><span icon=unchecked tooltip=\"{{'todo' | translate }}\"></span> {{'todo' | translate }}</tab-heading>todo</tab><tab select=\"vm.view='portal'\"><tab-heading><span icon=globe tooltip=\"{{'todo' | translate }}\"></span> {{'todo' | translate }}</tab-heading></tab></tabset><h2>{{vm.collectionTitle}}</h2><div ng-repeat=\"set in vm.sets\"><h3>{{set.title}}</h3><table class=\"table table-hover\" style=\"width: 100%; table-layout: auto; empty-cells: show\"><thead><tr><th translate=EditView.Help.Code></th><th translate=EditView.Help.Instructions></th><th translate=EditView.Help.Suggestions></th></tr></thead><tbody><tr ng-repeat=\"item in set.items\"><td>{{item.code}}</td><td>{{item.help}}</td><td>{{item.suggestions}}</td></tr></tbody></table></div></div></div><show-debug-availability class=pull-right></show-debug-availability>"
+    "}\" style=\"height: 400px\" ng-model=vm.view.Code></div></div><div class=\"pull-right col-md-4\"><h3 translate=SourceEditor.Snippets.Title>translate:Code Snippets</h3><div translate=SourceEditor.Snippets.Intro></div><select class=input-lg ng-model=vm.snippetSet ng-options=\"key as key for (key , value) in vm.snippets\"></select><div ng-repeat=\"(subsetName, subsetValue) in vm.snippets[vm.snippetSet]\"><h4>{{subsetName}}</h4><ul><li ng-repeat=\"(key, value) in subsetValue\" tooltip=\"{{ vm.snippetHelp(vm.snippetSet, subsetName, key) }}\" ng-click=\"vm.addSnippet(value || key)\">{{vm.snippetLabel(vm.snippetSet, subsetName, key)}}</li></ul></div></div></div></div><div class=modal-footer><button class=\"btn btn-primary btn-square btn-lg pull-left\" type=button ng-click=vm.save()><i icon=ok></i></button></div><show-debug-availability class=pull-right></show-debug-availability></div>"
   );
 
 

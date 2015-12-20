@@ -3,15 +3,16 @@
         <button class="btn btn-default btn-square btn-subtle pull-right" type="button" ng-click="vm.close()">
             <i icon="remove"></i>
         </button>
-        <h3 class="modal-title" translate="todo.Title"></h3>
+        <h3 class="modal-title" translate="SourceEditor.Title"></h3>
     </div>
 
     <div class="modal-body">
-        <p translate="todo.Intro"></p>
+        <p translate="SourceEditor.Intro"></p>
 
-        {{vm.view.FileName }} ({{vm.view.Type }})
         <div class="row">
-            <div class="col-md-8" ui-ace="{
+            <div class="col-md-8">
+                {{vm.view.FileName }} ({{vm.view.Type }})
+                <div ui-ace="{
     useWrapMode : true,
     useSoftTabs: true,
     showGutter: true,
@@ -27,19 +28,22 @@
 
 }" style="height: 400px;" ng-model="vm.view.Code">
 
+                </div>
             </div>
             <div class="pull-right col-md-4">
-                <h3>translate:Code Snippets</h3>
-                <select class="input-lg" ng-model="vm.snippetSet" ng-options="key for (key , value) in vm.snippets"></select>
-                <ul>
-                    <li ng-repeat="snip in vm.snippetSet" tooltip="click to insert" ng-click="vm.addSnippet(snip)">{{snip}}</li>
-                </ul>
+                <h3 translate="SourceEditor.Snippets.Title">translate:Code Snippets</h3>
+                <div translate="SourceEditor.Snippets.Intro"></div>
+                <select class="input-lg" ng-model="vm.snippetSet" ng-options="key as key for (key , value) in vm.snippets"></select>
+                <div ng-repeat="(subsetName, subsetValue) in vm.snippets[vm.snippetSet]">
+                    <h4>{{subsetName}}</h4>
+                    <ul>
+                        <li ng-repeat="(key, value) in subsetValue" tooltip="{{ vm.snippetHelp(vm.snippetSet, subsetName, key) }}" ng-click="vm.addSnippet(value || key)">{{vm.snippetLabel(vm.snippetSet, subsetName, key)}}</li>
+                    </ul>
+
+                </div>
+
             </div>
         </div>
-
-
-        <a ng-click="vm.addSnippet('[Content:something]')">add something</a>
-
 
     </div>
     <div class="modal-footer">
