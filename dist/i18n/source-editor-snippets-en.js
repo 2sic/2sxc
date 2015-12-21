@@ -8,7 +8,10 @@
     "StandardFields": {
       "EntityId.Help": "the id as number of the current entity (content-item)",
       "EntityTitle.Help": "the title of the current entity (content-item) based on the content-type configuration",
-      "EntityGuid.Help": "the guid-id of the current entity (content-item)"
+      "EntityGuid.Help": "the guid-id of the current entity (content-item)",
+      "EntityType.Help": "the type name like 'Person' or 'SimpleContent'",
+      "IsPublished.Help": "true/false if this information is published - public user only see published content",
+      "Modified.Help": "internal information when this content-item was last modified"
     },
     "Content": {
       "Title": "Content and Content-Presentation",
@@ -17,10 +20,10 @@
       "General": {
         "Title": "General placeholders",
         "Help": "various common placeholders",
-        "ToolbarKey": "Toolbar",
-        "ToolbarHelp": "Toolbar for inline editing with 2sxc. If used inside a <div class=\"sc-element\"> then the toolbar will automatically float",
-        "ToolbarFloatKey": "Toolbar floating",
-        "ToolbarFloatHelp": "toolbar together with the <div> tag in which it floats"
+        "Toolbar.Key": "Toolbar",
+        "Toolbar.Help": "Toolbar for inline editing with 2sxc. If used inside a <div class=\"sc-element\"> then the toolbar will automatically float",
+        "ToolbarFloat.Key": "Toolbar floating",
+        "ToolbarFloat.Help": "toolbar together with the <div> tag in which it floats"
       },
 
       "Fields.Title": "Fields",
@@ -39,8 +42,8 @@
         "Title": "Header general",
         "Help": "this is the header of a list",
 
-        "ToolbarKey": "Header toolbar",
-        "ToolbarHelp": "Outputs the toolbar to edit list information - place in a <div> to float like other toolbars"
+        "Toolbar.Key": "Header toolbar",
+        "Toolbar.Help": "Outputs the toolbar to edit list information - place in a <div> to float like other toolbars"
       },
 
       "Fields.Title": "List fields",
@@ -51,7 +54,23 @@
 
       "Repeaters": {
         "Title": "Repeaters",
-        "Help": "placeholders as well as loop-templates and more"
+        "Help": "placeholders as well as loop-templates and more",
+
+        "Repeater.Help": "Allows defining the repeating part of the template."
+      },
+      "LoopItems": {
+        "Title": "Loop Items (inside a repeater)",
+        "Help": "placeholders for things inside a repeater",
+
+        "Index.Help": "Index of the current item",
+        "Index1.Help": "Index of the current item + 1 (for numbering lists)",
+        "Count.Help": "Count of items in the list",
+        "IsFirst.Help": "Outputs 'First' if current item is the first one",
+        "IsLast.Help": "Outputs 'Last' if current item is the last one",
+        "Alternator2.Help": "Outputs 0 or 1 depending on items index",
+        "Alternator3.Help": "Outputs 0, 1 or 2 depending on items index",
+        "Alternator4.Help": "Outputs 0, 1, 2 or 3 depending on items index",
+        "Alternator5.Help": "Outputs 0, 1, 2, 3 or 4 depending on items index"
       },
 
       "Sets": [
@@ -85,11 +104,27 @@
 
     },
 
-    "AdditionalRazorSets": { "Text": "SystemRazor,ListRazor,AppRazor" },
-    "AdditionalTokenSets": { "Text": "SystemTokens,ListTokens,AppTokens,PortalTokens,TabTokens,ModuleTokens,QueryStringTokens,UserTokens,ProfileTokens" },
-    "AppRazor": { "List": "@App.Path=returns the url to the current app, for integrating scripts, images etc. For example, use as @App.Path\/scripts\/knockout.js\n@App.PhysicalPath=physical path, in c:\\\n@App.AppGuid=internal GUID - should stay the same across all systems for this specific App\n@App.AppId=ID in the current DB. Is a different number in every App-Installation\n@App.Name=internal name\n@App.Folder=folder\n@App.Resources.ANYKEY=any resource defined in the App - usually used for multilanguage labels like @App.Resources.FirstName\n@App.Settings.ANYKEY=any type of setting defined in the App - usually used for configuration like details-pages @App.Settings.DetailsLink" },
-    "AppTokens": { "List": "[App:Path]=returns the url to the current app, for integrating scripts, images etc. For example, use as [App:Path]\/scripts\/knockout.js\n[App:PhysicalPath]=the physical path, in case you want access to the C:\\path for some reason\n[App:Resources:...]=any resource defined in the App - usually used for multilanguage labels like [App:Resources:FirstName]\n[App:Settings:...]=any type of setting defined in the App - usually used for configuration like details-pages [App:Settings:DetailsLink]" },
-    "ListRazor": { "List": "@ListContent.Toolbar«Toolbar for inline editing with 2sxc. If used inside a <div class=\"sc-element\"> then the toolbar will float»\n\t<ul>\n\t@foreach(var e in List) {\n\t\tvar Content = e.Content;\n\t\t<li class=\"sc-element\">\n\t\t\t@Html.Raw(Content.Toolbar)\n\t\t\t@Content.EntityTitle\n\t\t<\/li>\n\t}\n\t<\/ul>«Demo-Loop how to cycle through items»" },
+    "App": {
+      "Title": "App",
+      "Help": "App fields and placeholders",
+      "General": {
+        "Title": "General",
+        "Help": "General App placeholders",
+
+        "Path": "returns the url to the current app, for integrating scripts, images etc. For example, use as ***\/scripts\/knockout.js",
+        "PhysicalPath": "physical path, in c:\\",
+        "AppGuid": "internal GUID - should stay the same across all systems for this specific App",
+        "AppId": "ID in the current DB. Is a different number in every App-Installation",
+        "Name": "internal name",
+        "Folder": "folder of the 2sxc-app"
+      },
+
+      "Resources.Title": "App Resources",
+      "Resources.Help": "from the app resources content-type which can be configured in the app tab of the app-dialog - usually multi-language",
+      "Settings.Title": "App Settings",
+      "Settings.Help": "from the app settings content-type which can be configured in the app tab of the app-dialog - usually single-language but can be multi-language"
+    },
+
 
     "ModuleTokens": {
       "List": "[Module:Description]=Module Definition Description \n[Module:EndDate]=Module Display Until Date \n[Module:Footer]=Module Footer Text \n[Module:FriendlyName]=Module Definition Name \n[Module:Header]=Module Header Text \n[Module:HelpURL]=Module Help URL \n[Module:IconFile]=Module Path to Icon File \n[Module:ModuleTitle]=Module Title \n[Module:PaneName]=Module Name of Pane (where the module resides) \n[Module:StartDate]=Module Display from Date",
@@ -107,7 +142,6 @@
       "List": "[Querystring:Name]=Value of Querystring Name",
       "Title": "QueryString (URL-Parameters) Tokens"
     },
-    "SystemRazor": { "List": "@Content.Toolbar=SexyContent Toolbar" },
 
     "TabTokens": {
       "List": "[Tab:Description]=Page Description Text for Search Engine \n[Tab:EndDate]=Page Display Until Date \n[Tab:FullUrl]=Page Full URL \n[Tab:IconFile]=Page Relative Path to Icon File \n[Tab:KeyWords]=Page Keywords for Search Engine \n[Tab:PageHeadText]=Page Header Text \n[Tab:StartDate]=Page Display from Date \n[Tab:TabName]=Page Name \n[Tab:TabPath]=Page Relative Path \n[Tab:Title]=Page Title (Window Title) \n[Tab:URL]=Page URL",

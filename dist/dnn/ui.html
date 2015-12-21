@@ -77,10 +77,10 @@
     <script>
 
         var scripts = [
-            '../lib/angular/set.min.js',            // default set needed for all UIs like angular, animate, translate
-            '../../js/angularjs/2sxc4ng.min.js',    // 2sxc stuff like bootloader, configuration
+            '../lib/angular/set.min.js', // default set needed for all UIs like angular, animate, translate
+            '../../js/angularjs/2sxc4ng.min.js', // 2sxc stuff like bootloader, configuration
             '../config/config.min.js',
-            '../admin/eav-admin.min.js',            // Main parts like eav-admin, sxc-admin and eav-edit
+            '../admin/eav-admin.min.js', // Main parts like eav-admin, sxc-admin and eav-edit
             '../sxc-admin/sxc-admin.min.js',
             '../edit/eav-edit.min.js',
             '../sxc-edit/sxc-edit.min.js'
@@ -98,13 +98,15 @@
 
 
         //if (dialogName === "template") {
-            addScript("../../bower_components/ace-builds/src-min-noconflict/ace.js");
-            addScript("../../bower_components/ace-builds/src-min-noconflict/mode-html.js");
-            addScript("../../bower_components/ace-builds/src-min-noconflict/ext-language_tools.js");
-            addScript("../../bower_components/angular-ui-ace/ui-ace.js");
+        //addScript("../../bower_components/ace-builds/src-min-noconflict/ace.js");
+        // addScript("../../bower_components/ace-builds/src-min-noconflict/mode-html.js");
+        //addScript("../../bower_components/ace-builds/src-min-noconflict/ext-language_tools.js");
+        addScript("../../bower_components/angular-ui-ace/ui-ace.js");
         //}
     </script>
-
+    <script src="//cdn.jsdelivr.net/ace/1.2.2/noconflict/ace.js"></script>
+    <script src="//cdn.jsdelivr.net/ace/1.2.2/noconflict/ext-language_tools.js"></script>
+    
 </head>
 <body style="background-color:transparent">
 

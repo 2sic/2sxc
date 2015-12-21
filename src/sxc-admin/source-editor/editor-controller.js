@@ -34,6 +34,7 @@
         vm.addSnippet = function addSnippet(snippet) {
             var snippetManager = ace.require("ace/snippets").snippetManager;
             snippetManager.insertSnippet(vm.editor, snippet);
+            vm.editor.focus();
         };
 
         $scope.aceLoaded = function(_editor) {

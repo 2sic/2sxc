@@ -34,10 +34,12 @@ angular.module("SourceEditor")
                         "@ToolbarFloat": "<div class=\"sc-element\">@List.Toolbar</div>",
                     },
                     "Repeaters": {
-                        "<repeat... tag": "<repeat repeat=\"${1:Employee} in Data:${2:Default}\">...[${1}:Title]...</repeat>",
-                        "Index0": "[Content:Repeater:Index]",
-                        "Index1": "[Content:Repeater:Index1]",
+                        "Repeater": "<repeat repeat=\"${1:Employee} in Data:${2:Default}\">...[${1}:Title]...</repeat>"
+                    },
+                    "LoopItems":{
                         "Count": "[Content:Repeater:Count]",
+                        "Index": "[Content:Repeater:Index]",
+                        "Index1": "[Content:Repeater:Index1]",
                         "IsFirst": "[Content:Repeater:IsFirst]",
                         "IsLast": "[Content:Repeater:IsLast]",
                         "Alternator2": "[Content:Repeater:Alternator2]",
@@ -50,12 +52,18 @@ angular.module("SourceEditor")
                 },
                 "App": {
                     "General": {
-                        "[App:Path]": null,
-                        "[App:PhysicalPath]": null,
-                        "[App:AppGuid]": null,
-                        "[App:AppId]": null,
-                        "[App:Name]": null,
-                        "[App:Folder]": null
+                        "[Path": "[App:Path]",
+                        "[PhysicalPath": "[App:PhysicalPath]",
+                        "[Guid": "[App:AppGuid]",
+                        "[AppId": "[App:AppId]",
+                        "[Name": "[App:Name]",
+                        "[Folder": "[App:Folder]",
+                        "@Path": "@App.Path",
+                        "@PhysicalPath": "@App.PhysicalPath",
+                        "@Guid": "@App.AppGuid",
+                        "@AppId": "@App.AppId",
+                        "@Name": "@App.Name",
+                        "@Folder": "@App.Folder"
                     },
                     "Resources": {
                         
@@ -63,6 +71,14 @@ angular.module("SourceEditor")
                     "Settings": {
                         
                     }
+                },
+                "[Dnn": {
+                    "Portal": {},
+                    "Tab": {},
+                    "Module": {}                    
+                },
+                "[Environment": {
+                    "QueryString": {}
                 }
             };
 
@@ -104,8 +120,8 @@ angular.module("SourceEditor")
                         svc.loadContentType(sets.List.PresentationFields, templateConfiguration.TypeListPresentation, "List.Presentation");
 
                     if (templateConfiguration.HasApp) {
-                         svc.loadContentType(sets.App.Resources, "AppResources", "App.Resources");
-                         svc.loadContentType(sets.App.Settings, "AppSettings", "App.Settings");
+                         svc.loadContentType(sets.App.Resources, "App-Resources", "App.Resources");
+                         svc.loadContentType(sets.App.Settings, "App-Settings", "App.Settings");
                     }
                     //#endregion
 
@@ -115,7 +131,7 @@ angular.module("SourceEditor")
 
                 //#region help / translate
                 help: function help(set, subset, snip) {
-                    var key = svc.getHelpKey(set, subset, snip, "Help");
+                    var key = svc.getHelpKey(set, subset, snip, ".Help");
 
                     var result = $translate.instant(key);
                     if (result === key)
@@ -124,7 +140,7 @@ angular.module("SourceEditor")
                 },
 
                 label: function label(set, subset, snip) {
-                    var key = svc.getHelpKey(set, subset, snip, "Key");
+                    var key = svc.getHelpKey(set, subset, snip, ".Key");
 
                     var result = $translate.instant(key);
                     if (result === key)
@@ -197,7 +213,7 @@ angular.module("SourceEditor")
                                 };
                             });
 
-                            var std = ["EntityId", "EntityTitle", "EntityGuid"];
+                            var std = ["EntityId", "EntityTitle", "EntityGuid", "EntityType", "IsPublished", "Modified"];
                             if (result.data.length)
                                 for (var i = 0; i < std.length; i++)
                                     target[std[i]] = {
