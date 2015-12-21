@@ -157,3 +157,7 @@
 .glyphicon-sound-stereo:before {
   content: "\e189";
 }
+
+.glyphicon-qrcode:before {
+  content: "\e039";
+}

@@ -55,7 +55,6 @@ $2sxc.getManageController = function (id) {
     };
 
     var toolbarConfig = manageInfo.config;
-    toolbarConfig.returnUrl = window.location.href;  // probably unused...
 
     // all the standard buttons with the display configuration and click-action
     var actionButtonsConf = {
@@ -182,7 +181,7 @@ $2sxc.getManageController = function (id) {
         },
         'template': {
             title: "Toolbar.EditView",
-            icon: "glyphicon-option-horizontal",
+            icon: "glyphicon-qrcode",
             lightbox: true,
             hideFirst: true,
             showOn: "design",
@@ -414,7 +413,8 @@ $2sxc.getManageController = function (id) {
                     buttons.push($.extend({}, settings, { action: "replace" }));
                 
                 buttons.push($.extend({}, settings, { action: "layout" }));
-                buttons.push($.extend({}, settings, { action: "template" }));
+                if($2sxc.urlParams.get("debug") === "true")
+                    buttons.push($.extend({}, settings, { action: "template" }));
                 buttons.push($.extend({}, settings, { action: "more" }));
             }
 
