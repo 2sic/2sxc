@@ -72,8 +72,18 @@ angular.module("SourceEditor")
                         
                     }
                 },
-                "[Dnn": {
-                    "Portal": {},
+                "[DnnToken": {
+                    "Portal": {
+                        "Currency": "[Portal:Currency]",
+                        "Description": "[Portal:Description]",
+                        "Email": "[Portal:Email]",
+                        "FooterText": "[Portal:FooterText]",
+                        "HomeDirectory": "[Portal:HomeDirectory]",
+                        "LogoFile": "[Portal:LogoFile]",
+                        "PortalName": "[Portal:PortalName]",
+                        "PortalAlias": "[Portal:PortalAlias]",
+                        "TimeZoneOffset":"[Portal:TimeZoneOffset]"
+                    },
                     "Tab": {},
                     "Module": {}                    
                 },
