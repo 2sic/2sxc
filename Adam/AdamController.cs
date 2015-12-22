@@ -33,7 +33,7 @@ namespace ToSic.SexyContent.Adam
         // todo: centralize once it works
         // todo:idea that it would auto-take a setting from app-settings if it exists :)
         private string AdamAllowedExtensions =
-            "jpg,jpeg,jpe,gif,bmp,png,doc,docx,xls,xlsx,ppt,pptx,pdf,txt,xml,xsl,xsd,css,zip,ico,avi,mpg,mpeg,mp3,wmv,mov,wav,ico";
+            "jpg,jpeg,jpe,gif,bmp,png,doc,docx,xls,xlsx,ppt,pptx,pdf,txt,xml,xsl,xsd,css,zip,ico,avi,mpg,mpeg,mp3,wmv,mov,wav,ico,vcf";
         public const int MaxFileSizeMb = 10;
 
 
