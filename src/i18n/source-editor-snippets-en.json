@@ -145,19 +145,45 @@
 
 
 
+
       "todo": "continue-here",
 
-    "TabTokens": {
-      "List": "[Tab:Description]=Page Description Text for Search Engine \n[Tab:EndDate]=Page Display Until Date \n[Tab:FullUrl]=Page Full URL \n[Tab:IconFile]=Page Relative Path to Icon File \n[Tab:KeyWords]=Page Keywords for Search Engine \n[Tab:PageHeadText]=Page Header Text \n[Tab:StartDate]=Page Display from Date \n[Tab:TabName]=Page Name \n[Tab:TabPath]=Page Relative Path \n[Tab:Title]=Page Title (Window Title) \n[Tab:URL]=Page URL",
-      "Title": "Tab (Page) Tokens"
-    },
+      "TabTokens": {
+        "List": "[Tab:Description]=Page Description Text for Search Engine \n[Tab:EndDate]=Page Display Until Date \n[Tab:FullUrl]=Page Full URL \n[Tab:IconFile]=Page Relative Path to Icon File \n[Tab:KeyWords]=Page Keywords for Search Engine \n[Tab:PageHeadText]=Page Header Text \n[Tab:StartDate]=Page Display from Date \n[Tab:TabName]=Page Name \n[Tab:TabPath]=Page Relative Path \n[Tab:Title]=Page Title (Window Title) \n[Tab:URL]=Page URL",
+        "Title": "Tab (Page) Tokens"
+      },
 
-            "ModuleTokens": {
+      "ModuleTokens": {
         "List": "[Module:Description]=Module Definition Description \n[Module:EndDate]=Module Display Until Date \n[Module:Footer]=Module Footer Text \n[Module:FriendlyName]=Module Definition Name \n[Module:Header]=Module Header Text \n[Module:HelpURL]=Module Help URL \n[Module:IconFile]=Module Path to Icon File \n[Module:ModuleTitle]=Module Title \n[Module:PaneName]=Module Name of Pane (where the module resides) \n[Module:StartDate]=Module Display from Date",
         "Title": "Module Tokens"
       }
     },
+    "DnnRazor": {
+      "Title": "Dnn objects (module, tab, portal, etc.)",
+      "Help": "find more on <a href='http://2sxc.org/en/Docs-Manuals/Feature/feature/3602'>token list</a>",
+      "Module.Title": "Module",
 
+      "Tab.Title": "Tab (page)",
+      "Tab.EndDate.Help": "for automatic hiding of the page",
+
+      "Portal.Title": "Portal",
+      "Portal.Current.Help": "static method returning the current portal portal-settings",
+      "Portal.Default.Help": "(AdminContainer, AdminSkin, ControlPanelMode, etc.)",
+      "Portal.HomeTabId.Help": "the root page",
+      "Portal.LoginTabId.Help": "where the normal login usually goes to",
+      "Portal.Search.Help": "various values like IncludeCommon, IncludeTagInfoFilter etc."
+
+
+    },
+    "DnnRazorUser": {
+      "Title": "Dnn user information",
+      "User.Title": "User",
+      "User.Membership.Help": "these are asp.net memberships, you probably don't need them",
+      "User.Roles.Help": "these are DNN roles",
+      "Profile.Title": "Profile",
+      "Profile.Help": "profile information as configured in your portal, like city etc.",
+      "Profile.AnyValue.Help": "any property of the user profile as configured in your portal"
+    },
 
     "ProfileTokens": {
       "List": "[Profile:]=Use any default or custom Profile Property as listed in Profile Property Definition section of Manage User Accounts. Use non-localized Property Name only.",
@@ -177,4 +203,4 @@
       "Title": "User Tokens"
     }
   }
-}
+  }
