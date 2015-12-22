@@ -410,7 +410,6 @@
     <Content Include="SqlDataProvider\07.03.01.SqlDataProvider" />
     <Content Include="SqlDataProvider\07.03.03.SqlDataProvider" />
     <Content Include="SqlDataProvider\08.00.06.SqlDataProvider" />
-    <Content Include="src\dev-data-edit-view\source-editor-snippet-help-en.json" />
     <Content Include="src\sxc-admin\source-editor\source-editor-snippets.json" />
     <None Include="src\i18n\inpage-de.json" />
     <None Include="src\i18n\inpage-en.json" />
