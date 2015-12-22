@@ -19,10 +19,12 @@
         // load appropriate snippets from the snippet service
         svc.initSnippets = function(template) {
             vm.snipSvc = snippetSvc(template);
-            vm.snippets = vm.snipSvc.getSnippets();
-            vm.snippetSet = "Content";    // select default
-            vm.snippetHelp = vm.snipSvc.help;
-            vm.snippetLabel = vm.snipSvc.label;
+            vm.snipSvc.getSnippets().then(function(result) {
+                vm.snippets = result;
+                vm.snippetSet = "Content";    // select default
+                vm.snippetHelp = vm.snipSvc.help;
+                vm.snippetLabel = vm.snipSvc.label;
+            });
         };
 
         vm.close = function () { $modalInstance.dismiss("cancel"); };

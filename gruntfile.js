@@ -121,6 +121,21 @@ module.exports = function (grunt) {
 
                 ]
             },
+            data: { // currently only used for source-editor-snippets
+                files: [
+                    {
+                        expand: true,
+                        flatten: true,
+                        cwd: "src/sxc-admin/", 
+                        src: ["**/*.json"],
+                        dest: "dist/sxc-admin/", 
+                        rename: function (dest, src) {
+                            return dest + src.replace(".json", ".js");
+                        }
+                    }
+
+                ]
+            },
             languagePacks: {
                 files: [
                     {

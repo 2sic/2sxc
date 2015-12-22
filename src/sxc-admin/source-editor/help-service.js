@@ -1,113 +1,37 @@
-
+// This service delivers all snippets, translated etc. to the sourc-editor UI
 angular.module("SourceEditor")
-    .factory("snippetSvc", function($http, eavConfig, svcCreator, $translate, contentTypeFieldSvc) {
-
-        // todo
-        // 1. get fields and field-help from service
-        // 2. difference in help razor / tokens
+    .factory("snippetSvc", function($http, eavConfig, svcCreator, $translate, contentTypeFieldSvc, $q) {
 
         // Construct a service for this specific appId
         return function createSvc(templateConfiguration) {
 
-
-            // Data schema
-            // if it has an "[" at the beginning of a key, these will be shown for token only, and the [ will be removed
-            // if it has a "@" at the beginning, it will be razor only, and the @ will be removed
-
-            var sets = {
-                "Content": {
-                    "General": 
-                        {
-                            "[Toolbar": "[${1:Content}:Toolbar]",
-                            "@Toolbar": "@${1:Content}.Toolbar",
-                            "[ToolbarFloat": "<div class=\"sc-element\">[${1:Content}:Toolbar]</div>",
-                            "@ToolbarFloat": "<div class=\"sc-element\">@${1:Content}.Toolbar</div>",
-                        },
-                    "Fields": {},
-                    "PresentationFields": {}
-                },
-                "List": {
-                    "Header": {
-                        "[Toolbar": "[List:Toolbar]",
-                        "@Toolbar": "@List.Toolbar",
-                        "[ToolbarFloat": "<div class=\"sc-element\">[List:Toolbar]</div>",
-                        "@ToolbarFloat": "<div class=\"sc-element\">@List.Toolbar</div>",
-                    },
-                    "Repeaters": {
-                        "Repeater": "<repeat repeat=\"${1:Employee} in Data:${2:Default}\">...[${1}:Title]...</repeat>"
-                    },
-                    "LoopItems":{
-                        "Count": "[Content:Repeater:Count]",
-                        "Index": "[Content:Repeater:Index]",
-                        "Index1": "[Content:Repeater:Index1]",
-                        "IsFirst": "[Content:Repeater:IsFirst]",
-                        "IsLast": "[Content:Repeater:IsLast]",
-                        "Alternator2": "[Content:Repeater:Alternator2]",
-                        "Alternator3": "[Content:Repeater:Alternator3]",
-                        "Alternator4": "[Content:Repeater:Alternator4]",
-                        "Alternator5":"[Content:Repeater:Alternator5]"
-                    },
-                    "Fields": { },
-                    "PresentationFields": {}
-                },
-                "App": {
-                    "General": {
-                        "[Path": "[App:Path]",
-                        "[PhysicalPath": "[App:PhysicalPath]",
-                        "[Guid": "[App:AppGuid]",
-                        "[AppId": "[App:AppId]",
-                        "[Name": "[App:Name]",
-                        "[Folder": "[App:Folder]",
-                        "@Path": "@App.Path",
-                        "@PhysicalPath": "@App.PhysicalPath",
-                        "@Guid": "@App.AppGuid",
-                        "@AppId": "@App.AppId",
-                        "@Name": "@App.Name",
-                        "@Folder": "@App.Folder"
-                    },
-                    "Resources": {
-                        
-                    },
-                    "Settings": {
-                        
-                    }
-                },
-                "[DnnToken": {
-                    "Portal": {
-                        "Currency": "[Portal:Currency]",
-                        "Description": "[Portal:Description]",
-                        "Email": "[Portal:Email]",
-                        "FooterText": "[Portal:FooterText]",
-                        "HomeDirectory": "[Portal:HomeDirectory]",
-                        "LogoFile": "[Portal:LogoFile]",
-                        "PortalName": "[Portal:PortalName]",
-                        "PortalAlias": "[Portal:PortalAlias]",
-                        "TimeZoneOffset":"[Portal:TimeZoneOffset]"
-                    },
-                    "Tab": {},
-                    "Module": {}                    
-                },
-                "[Environment": {
-                    "QueryString": {}
-                }
-            };
-
-            //function filterAwayNotNeededSnippets(key, value) {
-            //}
-
-
             var svc = {
-                cachedSnippets: null,
-                getSnippets: function () {
-                    if (svc.cachedSnippets !== null)
-                        return svc.cachedSnippets;
+                cachedSnippets: {},
+                loaded: false,
+
+                /// Main function, loads all snippets, translates
+                /// returns the object tree as a promise
+                getSnippets: function() {
+                    if (svc.loaded)
+                        return $q(function(resolve, reject) { resolve(svc.cachedSnippets); });
+
+                    return svc.loadSnippets().then(function(result) {
+                        var sets = svc.initSnippetsWithConfig(result.data.Snippets);
+                        for (var x in sets)
+                            svc.cachedSnippets[x] = sets[x];
+                        svc.loaded = true;
+                        return (svc.cachedSnippets);
+                    });
+                },
+
+                initSnippetsWithConfig: function(sets) {
 
                     // maybe remove list-infos
                     if (!templateConfiguration.HasList)
                         delete sets.List;
 
                     // maybe remove App-infos
-                    if (!templateConfiguration.HasApp) 
+                    if (!templateConfiguration.HasApp)
                         delete sets.App;
 
                     // filter for token/razor snippets
@@ -117,7 +41,9 @@ angular.module("SourceEditor")
                         angular.forEach(setValue, function(subSetValue, subSetKey) {
                             angular.forEach(subSetValue, function(itemValue, itemKey) {
                                 svc.expandSnippetInfo(subSetValue, setKey, subSetKey, itemKey, itemValue);
-                    }); }); });
+                            });
+                        });
+                    });
 
                     //#region Retrieve all relevant content-types and infos
                     if (templateConfiguration.TypeContent)
@@ -130,13 +56,17 @@ angular.module("SourceEditor")
                         svc.loadContentType(sets.List.PresentationFields, templateConfiguration.TypeListPresentation, "List.Presentation");
 
                     if (templateConfiguration.HasApp) {
-                         svc.loadContentType(sets.App.Resources, "App-Resources", "App.Resources");
-                         svc.loadContentType(sets.App.Settings, "App-Settings", "App.Settings");
+                        svc.loadContentType(sets.App.Resources, "App-Resources", "App.Resources");
+                        svc.loadContentType(sets.App.Settings, "App-Settings", "App.Settings");
                     }
                     //#endregion
 
                     svc.cachedSnippets = sets;
                     return sets;
+                },
+
+                loadSnippets: function() {
+                    return $http.get("../sxc-admin/source-editor-snippets.js");
                 },
 
                 //#region help / translate
@@ -174,16 +104,16 @@ angular.module("SourceEditor")
                             continue;
                         func.apply(this, [o, i, o[i]]);
                         //going on step down in the object tree!!
-                        if (o[i] !== null && typeof (o[i]) == "object") 
+                        if (o[i] !== null && typeof (o[i]) == "object")
                             svc.traverse(o[i], func);
                     }
                 },
 
-                filterAwayNotNeededSnippets: function (parent, key, value) {
+                filterAwayNotNeededSnippets: function(parent, key, value) {
                     // check if we have a special prefix
                     var prefix = key[0];
                     var found = svc.keyPrefixes.indexOf(prefix);
-                    
+
                     // always remove the original, even if not necessary, to preserve order
                     delete parent[key];
 
@@ -207,11 +137,11 @@ angular.module("SourceEditor")
                 },
 
                 //#region get fields in content types
-                loadContentType: function (target, type, prefix) {
+                loadContentType: function(target, type, prefix) {
                     contentTypeFieldSvc(templateConfiguration.AppId, { StaticName: type }).getFields()
-                        .then(function (result) {
+                        .then(function(result) {
                             // first add common items if the content-type actually exists
-                            angular.forEach(result.data, function (value) {
+                            angular.forEach(result.data, function(value) {
                                 var fieldname = value.StaticName;
                                 var description = value.Metadata.merged.Notes || "" + " (" + value.Type.toLowerCase() + ") ";
                                 var placeholder = svc.valuePlaceholder(prefix, fieldname);
@@ -243,7 +173,7 @@ angular.module("SourceEditor")
                 }
 
                 //#endregion
-        };
+            };
 
 
             return svc;
