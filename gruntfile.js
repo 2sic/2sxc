@@ -41,11 +41,6 @@ module.exports = function (grunt) {
         concatFile: "dist/config/config.js",
         uglifyFile: "dist/config/config.min.js"
     };
-    var languagePacks = {
-        cwd: "bower_components/2sxc-eav-languages/dist/i18n/",
-        dist: "dist/i18n/",
-        filter: ["**/*.js", "!**-en.js"]
-    };
     var sxc4ng = "js/AngularJS/2sxc4ng.js";
 
 
@@ -129,16 +124,6 @@ module.exports = function (grunt) {
                         }
                     }
 
-                ]
-            },
-            languagePacks: {
-                files: [
-                    {
-                        expand: true,
-                        cwd: languagePacks.cwd,
-                        src: languagePacks.filter,
-                        dest: languagePacks.dist
-                    }
                 ]
             }
         },
