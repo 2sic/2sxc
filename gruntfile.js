@@ -303,7 +303,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-contrib-concat");
     grunt.loadNpmTasks("grunt-contrib-copy");
     grunt.loadNpmTasks("grunt-contrib-clean");
-    //grunt.loadNpmTasks("grunt-ng-templates");
     grunt.loadNpmTasks("grunt-angular-templates");
     grunt.loadNpmTasks("grunt-contrib-compress");
     grunt.loadNpmTasks("grunt-contrib-cssmin");
