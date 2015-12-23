@@ -27,6 +27,4 @@ module.exports = function (grunt) {
         }
 
     });
-
-    grunt.registerTask("build-i18n", ["copy:i18n"]);
 };

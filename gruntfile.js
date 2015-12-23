@@ -101,29 +101,7 @@ module.exports = function (grunt) {
                         cwd: eavconf.cwd,
                         src: ["**/*.*"],
                         dest: eavconf.tmp
-                    },
-                    {
-                        expand: true,
-                        cwd: "src/dnn/",
-                        src: ["**/*.*"],
-                        dest: "dist/dnn/"
                     }
-                ]
-            },
-
-            data: { // currently only used for source-editor-snippets
-                files: [
-                    {
-                        expand: true,
-                        flatten: true,
-                        cwd: "src/sxc-admin/", 
-                        src: ["**/*.json"],
-                        dest: "dist/sxc-admin/", 
-                        rename: function (dest, src) {
-                            return dest + src.replace(".json", ".js");
-                        }
-                    }
-
                 ]
             }
         },
@@ -352,8 +330,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-contrib-compress");
     grunt.loadNpmTasks("grunt-contrib-cssmin");
 
-    // require("./grunt-tasks/i18n-gruntfile.js")(grunt);
-
     grunt.task.loadTasks("grunt-tasks");
 
     // Default task(s).
@@ -361,6 +337,7 @@ module.exports = function (grunt) {
         "jshint",
         "clean:tmp",
         "copy",
+        //"copy:dnn",
         "ngtemplates",
         "concat",
         "ngAnnotate",
