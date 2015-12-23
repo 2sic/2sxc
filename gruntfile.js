@@ -41,10 +41,6 @@ module.exports = function (grunt) {
         concatFile: "dist/config/config.js",
         uglifyFile: "dist/config/config.min.js"
     };
-    var i18n = {
-        cwd: "src/i18n/",
-        dist: "dist/i18n/"
-    };
     var languagePacks = {
         cwd: "bower_components/2sxc-eav-languages/dist/i18n/",
         dist: "dist/i18n/",
@@ -55,9 +51,21 @@ module.exports = function (grunt) {
 
 
   // Project configuration.
-    grunt.initConfig({
+    grunt.initConfig();
+    
+    grunt.config.merge({
         pkg: grunt.file.readJSON("package.json"),
 
+        paths: {
+            bower: "bower_components",
+            dist: "dist",
+            libs: "libs",
+            publish: "publish",
+            src: "src",
+            temp: "tmp",
+            tests: "tests"
+        },
+        
         jshint: {
             options: {
                 laxbreak: true,
@@ -107,20 +115,7 @@ module.exports = function (grunt) {
                     }
                 ]
             },
-            i18n: {
-                files: [
-                    {
-                        expand: true,
-                        cwd: "src/i18n/", 
-                        src: ["**/*.json"],
-                        dest: "dist/i18n/", 
-                        rename: function (dest, src) {
-                            return dest + src.replace(".json", ".js");
-                        }
-                    }
 
-                ]
-            },
             data: { // currently only used for source-editor-snippets
                 files: [
                     {
@@ -371,6 +366,10 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-ng-templates");
     grunt.loadNpmTasks("grunt-contrib-compress");
     grunt.loadNpmTasks("grunt-contrib-cssmin");
+
+    // require("./grunt-tasks/i18n-gruntfile.js")(grunt);
+
+    grunt.task.loadTasks("grunt-tasks");
 
     // Default task(s).
     grunt.registerTask("build", [
