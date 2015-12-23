@@ -2,13 +2,14 @@
 
     angular.module("DialogHost", [
         "SxcAdminUi",
-        "EavAdminUi"
+        "EavAdminUi",
+        "oc.lazyLoad"
     ])
          
         .controller("DialogHost", DialogHostController)
         ;
 
-    function DialogHostController(zoneId, appId, items, $2sxc, dialog, sxcDialogs, eavAdminDialogs) {
+    function DialogHostController(zoneId, appId, items, $2sxc, dialog, sxcDialogs, eavAdminDialogs, $ocLazyLoad) {
         var vm = this;
         vm.dialog = dialog;
         var initialDialog = dialog;
@@ -37,7 +38,10 @@
                 sxcDialogs.openManageContentList(items[0], vm.close);
                 break;
             case "template":
-                sxcDialogs.openViewEdit(items[0], vm.close);
+                // designer, must first load more dependencies...
+                $ocLazyLoad.load("../sxc-designer/sxc-designer.min.js").then(function() {
+                    sxcDialogs.openViewEdit(items[0], vm.close);
+                });
                 break;
             case "pipeline-designer":
                 // Don't do anything, as the template already loads the app in fullscreen-mode

@@ -391,7 +391,7 @@ angular.module("sxcFieldTemplates")
 //	});
 
 //})();
-angular.module('SxcEditTemplates',[]).run(['$templateCache', function($templateCache) {
+angular.module('SxcEditTemplates', []).run(['$templateCache', function($templateCache) {
   'use strict';
 
   $templateCache.put('fieldtemplates/templates/hyperlink-default-filemanager.html',

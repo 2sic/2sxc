@@ -12,7 +12,7 @@ angular.module("SxcAdminUi", [
     "SxcTemplates",
     "SxcEditTemplates",
     "sxcFieldTemplates",
-    "SourceEditor",
+    //"SourceEditor",
     //"SxcEditContentGroupDnnWrapper",
     "EavAdminUi", // dialog (modal) controller
 ])

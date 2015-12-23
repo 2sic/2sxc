@@ -21,7 +21,7 @@ var $2sxcActionMenuMapper = function (moduleId) {
         }
     };
 };
-angular.module('SxcInpageTemplates',[]).run(['$templateCache', function($templateCache) {
+angular.module('SxcInpageTemplates', []).run(['$templateCache', function($templateCache) {
   'use strict';
 
   $templateCache.put('template-selector/template-selector.html',
