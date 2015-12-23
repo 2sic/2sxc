@@ -17,12 +17,22 @@ module.exports = function (grunt) {
                             return dest + src.replace(".json", ".js");
                         }
                     }
+                ]
+            },
+            "source-editor-libs": {
+                files: [
+                    {
+                        expand: true,
+                        flatten: true,
+                        cwd: "<%= paths.bower %>/angular-ui-ace/",
+                        src: ["**/*.js"],
+                        dest: "<%= paths.dist %>/lib/angular-ui-ace/"
+                    }
 
                 ]
+                
             }
         }
 
     });
-
-    grunt.registerTask("build-source-editor", ["copy:source-editor-data"]);
 };

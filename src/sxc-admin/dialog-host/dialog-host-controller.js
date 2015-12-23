@@ -39,9 +39,21 @@
                 break;
             case "template":
                 // designer, must first load more dependencies...
-                $ocLazyLoad.load("../sxc-designer/sxc-designer.min.js").then(function() {
-                    sxcDialogs.openViewEdit(items[0], vm.close);
-                });
+                //var cdn = $ocLazyLoad.load([
+                //    "//cdn.jsdelivr.net/ace/1.2.2/noconflict/ace.js",
+                //    "//cdn.jsdelivr.net/ace/1.2.2/noconflict/ext-language_tools.js"
+                //]);
+                var locals =
+                    //cdn.then(function () {
+                    //return
+                    $ocLazyLoad.load([
+                        "../lib/angular-ui-ace/ui-ace.min.js",
+                        "../sxc-designer/sxc-designer.min.js"
+                    ]);
+                //});
+                locals.then(function() {
+                        sxcDialogs.openViewEdit(items[0], vm.close);
+                    });
                 break;
             case "pipeline-designer":
                 // Don't do anything, as the template already loads the app in fullscreen-mode

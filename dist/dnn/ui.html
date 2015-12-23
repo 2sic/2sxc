@@ -61,12 +61,9 @@
         // check if we must load jquery - if we do, it has to happen very early!
         var dialogName = $2sxc.urlParams.require("dialog");
 
-        // Functionality only needed by the pipeline designers - then it will also load jQuery, otherwise not
-        if (dialogName === "pipeline-designer") {
+        // load jquery first - but only needed by the pipeline designers - otherwise not
+        if (dialogName === "pipeline-designer") 
             addScript("../lib/pipeline/jq.min.js");
-            addScript("../lib/pipeline/set.min.js");
-            addStyle("../admin/pipeline-designer.min.css");
-        }
     </script>
     <script>
         // this must come close to the end, after a closed script which might load jQuery
@@ -95,17 +92,23 @@
             addScript(scripts[s]);
         for (var s = 0; s < styles.length; s++)
             addStyle(styles[s]);
-
-
-        //if (dialogName === "template") {
-        //addScript("../../bower_components/ace-builds/src-min-noconflict/ace.js");
-        // addScript("../../bower_components/ace-builds/src-min-noconflict/mode-html.js");
-        //addScript("../../bower_components/ace-builds/src-min-noconflict/ext-language_tools.js");
-        addScript("../../bower_components/angular-ui-ace/ui-ace.js");
-        //}
     </script>
-    <script src="//cdn.jsdelivr.net/ace/1.2.2/noconflict/ace.js"></script>
-    <script src="//cdn.jsdelivr.net/ace/1.2.2/noconflict/ext-language_tools.js"></script>
+    <script>
+        // special packages only used by certain dialogs...
+
+        // Functionality only needed by the pipeline designers - then it will also load jQuery, otherwise not
+        if (dialogName === "pipeline-designer") {
+            addScript("../lib/pipeline/set.min.js");
+            addStyle("../admin/pipeline-designer.min.css");
+        }
+
+        // scripts needed only by the template
+        if (dialogName === "template") {
+            addScript("//cdn.jsdelivr.net/ace/1.2.2/noconflict/ace.js");
+            addScript("//cdn.jsdelivr.net/ace/1.2.2/noconflict/ext-language_tools.js");
+        }
+
+    </script>
     
 </head>
 <body style="background-color:transparent">
