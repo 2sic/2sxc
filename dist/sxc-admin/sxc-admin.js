@@ -945,22 +945,6 @@ angular.module("SxcServices")
             return svc;
         };
     }]);
-// doesn't work yet, so commented...
-
-
-//ace.define("ace/snippets/2sxc", ["require", "exports", "module"], function (require, exports, module) {
-//    "use strict";
-//    /*jshint multistr: true */
-
-//    exports.snippetText = "# Some useful 2sxc tags / placeholders \n\
-//# toolbar\n\
-//snippet toolbar \n\
-//	[${1Content}:Toolbar]\n\
-//";
-//    exports.scope = "html";
-
-//});
-
 (function () { 
 
     angular.module("SourceEditor", [
@@ -1004,6 +988,9 @@ angular.module("SxcServices")
                 vm.snippetSet = "Content";    // select default
                 vm.snippetHelp = vm.snipSvc.help;
                 vm.snippetLabel = vm.snipSvc.label;
+
+                // now register the snippets in the editor
+                vm.registerSnippets();
             });
         };
 
@@ -1019,8 +1006,21 @@ angular.module("SxcServices")
             vm.editor.focus();
         };
 
-        $scope.aceLoaded = function(_editor) {
-            vm.editor = _editor;
+        vm.registerSnippets = function registerSnippets() {
+            // ensure we have everything
+            if (!(vm.snipSvc && vm.editor))
+                return;
+            // try to add my snippets
+            var snippetManager = ace.require("ace/snippets").snippetManager;
+            var snippets = vm.snipSvc.snippetsToRegister();
+            var parsed = snippetManager.parseSnippetFile(snippets.snippetText, snippets.scope);
+            snippetManager.register(parsed);
+        };
+
+        // this event is called when the editor is ready
+        $scope.aceLoaded = function (_editor) {
+            vm.editor = _editor;        // remember the editor for later actions
+            vm.registerSnippets();      // try to register the snippets
         };
 
     }
@@ -1199,9 +1199,23 @@ angular.module("SourceEditor")
                     return (templateConfiguration.Type.indexOf("Razor") > -1)
                         ? "@" + obj + "." + val
                         : "[" + obj.replace(".", ":") + ":" + val + "]";
-                }
+                },
 
                 //#endregion
+
+                /*jshint multistr: true */
+
+                snippetsToRegister: function() {
+                    var testSnippets = {};
+                    testSnippets.snippetText = "# Some useful 2sxc tags / placeholders \n\
+# toolbar\n\
+snippet toolbar \n\
+	[${1:Content}:Toolbar]\n\
+";
+                    testSnippets.scope = "_";// "html";
+                    return testSnippets;
+                }
+
             };
 
 

@@ -170,9 +170,23 @@ angular.module("SourceEditor")
                     return (templateConfiguration.Type.indexOf("Razor") > -1)
                         ? "@" + obj + "." + val
                         : "[" + obj.replace(".", ":") + ":" + val + "]";
-                }
+                },
 
                 //#endregion
+
+                /*jshint multistr: true */
+
+                snippetsToRegister: function() {
+                    var testSnippets = {};
+                    testSnippets.snippetText = "# Some useful 2sxc tags / placeholders \n\
+# toolbar\n\
+snippet toolbar \n\
+	[${1:Content}:Toolbar]\n\
+";
+                    testSnippets.scope = "_";// "html";
+                    return testSnippets;
+                }
+
             };
 
 

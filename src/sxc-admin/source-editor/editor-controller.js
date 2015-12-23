@@ -24,6 +24,9 @@
                 vm.snippetSet = "Content";    // select default
                 vm.snippetHelp = vm.snipSvc.help;
                 vm.snippetLabel = vm.snipSvc.label;
+
+                // now register the snippets in the editor
+                vm.registerSnippets();
             });
         };
 
@@ -39,8 +42,21 @@
             vm.editor.focus();
         };
 
-        $scope.aceLoaded = function(_editor) {
-            vm.editor = _editor;
+        vm.registerSnippets = function registerSnippets() {
+            // ensure we have everything
+            if (!(vm.snipSvc && vm.editor))
+                return;
+            // try to add my snippets
+            var snippetManager = ace.require("ace/snippets").snippetManager;
+            var snippets = vm.snipSvc.snippetsToRegister();
+            var parsed = snippetManager.parseSnippetFile(snippets.snippetText, snippets.scope);
+            snippetManager.register(parsed);
+        };
+
+        // this event is called when the editor is ready
+        $scope.aceLoaded = function (_editor) {
+            vm.editor = _editor;        // remember the editor for later actions
+            vm.registerSnippets();      // try to register the snippets
         };
 
     }

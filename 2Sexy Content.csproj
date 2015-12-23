@@ -499,7 +499,7 @@
     <Content Include="src\sxc-admin\templates\templates.html" />
     <Content Include="src\sxc-admin\source-editor\editor-controller.js" />
     <Content Include="src\sxc-admin\source-editor\source-service.js" />
-    <Content Include="src\sxc-admin\source-editor\help-service.js" />
+    <Content Include="src\sxc-admin\source-editor\snippets.service.js" />
     <Content Include="src\sxc-admin\source-editor\editor.html" />
     <Content Include="src\sxc-admin\source-editor\app-source-edit.js" />
     <Content Include="src\sxc-admin\web-api\web-api-controller.js" />
