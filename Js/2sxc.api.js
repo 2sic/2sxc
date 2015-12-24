@@ -310,4 +310,11 @@
         }
     };
 
+    // debug state which is needed in various places
+    $2sxc.debug = {
+        load: ($2sxc.urlParams.get("debug") === "true"),
+        renameScript: function toMinOrNotToMin(url) {
+            return (!$2sxc.debug.load) ? url : url.replace(".min", "");
+        }
+    };
 })();

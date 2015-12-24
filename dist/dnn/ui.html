@@ -47,11 +47,10 @@
             document.getElementsByTagName("head")[0].appendChild(style);
         }
 
-        var noMin = ($2sxc.urlParams.get("debug") === "true");
+        //var noMin = ($2sxc.urlParams.get("debug") === "true");
         function toMinOrNotToMin(url) {
-            if (!noMin || url.indexOf("lib") > -1)
-                return url;
-            return url.replace(".min", "");
+            return (url.indexOf("lib") > -1) ?
+                url : $2sxc.debug.renameScript(url);
         }
 
     </script>

@@ -235,21 +235,12 @@
                 sxcDialogs.openManageContentList(items[0], vm.close);
                 break;
             case "template":
-                // designer, must first load more dependencies...
-                //var cdn = $ocLazyLoad.load([
-                //    "//cdn.jsdelivr.net/ace/1.2.2/noconflict/ace.js",
-                //    "//cdn.jsdelivr.net/ace/1.2.2/noconflict/ext-language_tools.js"
-                //]);
-                //var locals =
-                //    //cdn.then(function () {
-                //    //return
-                    $ocLazyLoad.load([
+                // lazy load this to ensure the module is "registered" inside 2sxc
+                $ocLazyLoad.load([
                         //"../lib/angular-ui-ace/ui-ace.min.js",
-                        "../sxc-designer/sxc-designer.min.js"
+                        $2sxc.debug.renameScript("../sxc-designer/sxc-designer.min.js")
                     ])
-                ////});
-                //locals
-                        .then(function() {
+                    .then(function() {
                         sxcDialogs.openViewEdit(items[0], vm.close);
                     });
                 break;
@@ -795,8 +786,6 @@ angular.module("SxcAdminUi", [
     "SxcTemplates",
     "SxcEditTemplates",
     "sxcFieldTemplates",
-    //"SourceEditor",
-    //"SxcEditContentGroupDnnWrapper",
     "EavAdminUi", // dialog (modal) controller
 ])
     .factory("oldDialogs", ["tabId", "AppInstanceId", "appId", "websiteRoot", "$q", function (tabId, AppInstanceId, appId, websiteRoot, $q) {

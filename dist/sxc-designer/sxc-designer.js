@@ -69,6 +69,7 @@
             var snippets = vm.snipSvc.snippetsToRegister();
             var parsed = snippetManager.parseSnippetFile(snippets.snippetText, snippets.scope);
             snippetManager.register(parsed);
+
         };
 
         // this event is called when the editor is ready
@@ -222,7 +223,7 @@ angular.module("SourceEditor")
                 //#region get fields in content types
                 loadContentType: function(target, type, prefix) {
                     contentTypeFieldSvc(templateConfiguration.AppId, { StaticName: type }).getFields()
-                        .then(function(result) {
+                        .then(function (result) {
                             // first add common items if the content-type actually exists
                             angular.forEach(result.data, function(value) {
                                 var fieldname = value.StaticName;
@@ -264,6 +265,9 @@ angular.module("SourceEditor")
                     testSnippets.snippetText = "# Some useful 2sxc tags / placeholders \n\
 # toolbar\n\
 snippet toolbar \n\
+key Toolbar \n\
+title Toolbar \n\
+help Toolbar for inline editing with 2sxc. If used inside a <div class=\"sc-element\"> then the toolbar will automatically float \n\
 	[${1:Content}:Toolbar]\n\
 ";
                     testSnippets.scope = "_";// "html";

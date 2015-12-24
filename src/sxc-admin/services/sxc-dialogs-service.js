@@ -12,8 +12,6 @@ angular.module("SxcAdminUi", [
     "SxcTemplates",
     "SxcEditTemplates",
     "sxcFieldTemplates",
-    //"SourceEditor",
-    //"SxcEditContentGroupDnnWrapper",
     "EavAdminUi", // dialog (modal) controller
 ])
     .factory("oldDialogs", function (tabId, AppInstanceId, appId, websiteRoot, $q) {

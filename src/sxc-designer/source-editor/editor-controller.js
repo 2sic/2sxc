@@ -53,6 +53,7 @@
             var snippets = vm.snipSvc.snippetsToRegister();
             var parsed = snippetManager.parseSnippetFile(snippets.snippetText, snippets.scope);
             snippetManager.register(parsed);
+
         };
 
         // this event is called when the editor is ready
