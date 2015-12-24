@@ -497,6 +497,7 @@
     <Content Include="src\sxc-admin\services\apps-service.js" />
     <Content Include="src\sxc-admin\services\sxc-dialogs-service.js" />
     <Content Include="src\sxc-admin\services\templates-service.js" />
+    <Content Include="src\sxc-designer\source-editor\snippets.constants.js" />
     <Content Include="src\sxc-designer\source-editor\toArray-filter.js" />
     <Content Include="src\sxc-admin\templates\edit.html" />
     <Content Include="src\sxc-admin\templates\templates-edit-controller.js" />

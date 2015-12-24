@@ -26,17 +26,24 @@
 
         var vm = this;
         var svc = sourceSvc(item.EntityId);
-        vm.view = {};
+        vm.view = null;
         vm.editor = null;
 
-        svc.get().then(function(result) {
-            vm.view = result.data;
-            svc.initSnippets(vm.view);
-        });
+        activate();
+
+        function activate() {
+            // get started...
+            svc.get().then(function(result) {
+                vm.view = result.data;
+                vm.registerSnippets();
+                //svc.initSnippets(vm.view);
+            });            
+        }
+
+
 
         // load appropriate snippets from the snippet service
-        svc.initSnippets = function(template) {
-            vm.snipSvc = snippetSvc(template);
+        svc.initSnippets = function() {
             vm.snipSvc.getSnippets().then(function(result) {
                 vm.snippets = result;
                 vm.snippetSet = "Content";    // select default
@@ -62,14 +69,13 @@
 
         vm.registerSnippets = function registerSnippets() {
             // ensure we have everything
-            if (!(vm.snipSvc && vm.editor))
+            if (!(vm.view && vm.editor))
                 return;
-            // try to add my snippets
-            var snippetManager = ace.require("ace/snippets").snippetManager;
-            var snippets = vm.snipSvc.snippetsToRegister();
-            var parsed = snippetManager.parseSnippetFile(snippets.snippetText, snippets.scope);
-            snippetManager.register(parsed);
 
+            vm.snipSvc = snippetSvc(vm.view, ace);
+            vm.snipSvc.registerSnippets("razor");
+
+            //svc.initSnippets();
         };
 
         // this event is called when the editor is ready
@@ -82,16 +88,83 @@
     EditorController.$inject = ["sourceSvc", "snippetSvc", "item", "$modalInstance", "$scope", "$translate"];
 
 } ());
+(function () {
+    /*jshint multistr: true */
+
+    angular.module("SourceEditor")
+
+        .constant("snippets", {
+            "tokens":
+                "# Some useful 2sxc tags / placeholders \n\
+# toolbar\n\
+snippet toolbar \n\
+key Toolbar \n\
+title Toolbar \n\
+help Toolbar for inline editing with 2sxc. If used inside a <div class=\"sc-element\"> then the toolbar will automatically float \n\
+	[${1:Content}:Toolbar]\n\
+",
+
+
+            "html": "",
+
+
+
+            "razor": "# Some useful 2sxc tags / placeholders \n\
+#######################\n\
+### Razor App stuff\n\
+# path\n\
+set app\n\
+title Path \n\
+help returns the url to the current app, for integrating scripts, images etc. For example, use as ***\/scripts\/knockout.js\n\
+snippet path \n\
+	@App.Path\n\
+# physical path\n\
+set app\n\
+title Physical path \n\
+help physical path, in c:\\\n\
+snippet physical path \n\
+	@App.PhysicalPath\n\
+# App Guid \n\
+set app\n\
+title App Guid \n\
+help internal GUID - should stay the same across all systems for this specific App \n\
+snippet app guid \n\
+	@App.AppGuid\n\
+# App Id \n\
+set app\n\
+title App Id \n\
+help Id in the current data base. Is a different number in every App-Installation \n\
+snippet app id \n\
+	@App.AppId\n\
+# App Name \n\
+set app\n\
+title App Name \n\
+help internal name \n\
+snippet app name \n\
+	@App.Name\n\
+# App Folder \n\
+set app\n\
+title App Folder \n\
+help folder of the 2sxc-app, often used to create paths to scripts or join some values. if you only need to reference a script, please use App.Path \n\
+snippet app folder \n\
+	@App.Folder\n\
+            "
+            });
+
+
+} ());
 // This service delivers all snippets, translated etc. to the sourc-editor UI
 angular.module("SourceEditor")
-    .factory("snippetSvc", ["$http", "eavConfig", "svcCreator", "$translate", "contentTypeFieldSvc", "$q", function($http, eavConfig, svcCreator, $translate, contentTypeFieldSvc, $q) {
+    .factory("snippetSvc", ["$http", "eavConfig", "svcCreator", "$translate", "contentTypeFieldSvc", "$q", "snippets", function($http, eavConfig, svcCreator, $translate, contentTypeFieldSvc, $q, snippets) {
 
         // Construct a service for this specific appId
-        return function createSvc(templateConfiguration) {
+        return function createSvc(templateConfiguration, ace) {
 
             var svc = {
                 cachedSnippets: {},
+                parsed: [],
                 loaded: false,
+                ace: ace,
 
                 /// Main function, loads all snippets, translates
                 /// returns the object tree as a promise
@@ -119,7 +192,8 @@ angular.module("SourceEditor")
                         delete sets.App;
 
                     // filter for token/razor snippets
-                    svc.traverse(sets, svc.filterAwayNotNeededSnippets);
+                    // todo: re-implement
+                    // svc.traverse(sets, svc.filterAwayNotNeededSnippets);
 
                     angular.forEach(sets, function(setValue, setKey) {
                         angular.forEach(setValue, function(subSetValue, subSetKey) {
@@ -258,20 +332,11 @@ angular.module("SourceEditor")
 
                 //#endregion
 
-                /*jshint multistr: true */
-
-                snippetsToRegister: function() {
-                    var testSnippets = {};
-                    testSnippets.snippetText = "# Some useful 2sxc tags / placeholders \n\
-# toolbar\n\
-snippet toolbar \n\
-key Toolbar \n\
-title Toolbar \n\
-help Toolbar for inline editing with 2sxc. If used inside a <div class=\"sc-element\"> then the toolbar will automatically float \n\
-	[${1:Content}:Toolbar]\n\
-";
-                    testSnippets.scope = "_";// "html";
-                    return testSnippets;
+                registerSnippets: function(type) {
+                    // try to add my snippets
+                    var snippetManager = ace.require("ace/snippets").snippetManager;
+                    svc.parsed = snippetManager.parseSnippetFile(snippets[type], "_");
+                    snippetManager.register(svc.parsed);
                 }
 
             };

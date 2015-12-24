@@ -1,13 +1,15 @@
 // This service delivers all snippets, translated etc. to the sourc-editor UI
 angular.module("SourceEditor")
-    .factory("snippetSvc", function($http, eavConfig, svcCreator, $translate, contentTypeFieldSvc, $q) {
+    .factory("snippetSvc", function($http, eavConfig, svcCreator, $translate, contentTypeFieldSvc, $q, snippets) {
 
         // Construct a service for this specific appId
-        return function createSvc(templateConfiguration) {
+        return function createSvc(templateConfiguration, ace) {
 
             var svc = {
                 cachedSnippets: {},
+                parsed: [],
                 loaded: false,
+                ace: ace,
 
                 /// Main function, loads all snippets, translates
                 /// returns the object tree as a promise
@@ -35,7 +37,8 @@ angular.module("SourceEditor")
                         delete sets.App;
 
                     // filter for token/razor snippets
-                    svc.traverse(sets, svc.filterAwayNotNeededSnippets);
+                    // todo: re-implement
+                    // svc.traverse(sets, svc.filterAwayNotNeededSnippets);
 
                     angular.forEach(sets, function(setValue, setKey) {
                         angular.forEach(setValue, function(subSetValue, subSetKey) {
@@ -174,20 +177,11 @@ angular.module("SourceEditor")
 
                 //#endregion
 
-                /*jshint multistr: true */
-
-                snippetsToRegister: function() {
-                    var testSnippets = {};
-                    testSnippets.snippetText = "# Some useful 2sxc tags / placeholders \n\
-# toolbar\n\
-snippet toolbar \n\
-key Toolbar \n\
-title Toolbar \n\
-help Toolbar for inline editing with 2sxc. If used inside a <div class=\"sc-element\"> then the toolbar will automatically float \n\
-	[${1:Content}:Toolbar]\n\
-";
-                    testSnippets.scope = "_";// "html";
-                    return testSnippets;
+                registerSnippets: function(type) {
+                    // try to add my snippets
+                    var snippetManager = ace.require("ace/snippets").snippetManager;
+                    svc.parsed = snippetManager.parseSnippetFile(snippets[type], "_");
+                    snippetManager.register(svc.parsed);
                 }
 
             };

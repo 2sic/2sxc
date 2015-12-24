@@ -52,13 +52,7 @@
         "[Guid": "[App:AppGuid]",
         "[AppId": "[App:AppId]",
         "[Name": "[App:Name]",
-        "[Folder": "[App:Folder]",
-        "@Path": "@App.Path",
-        "@PhysicalPath": "@App.PhysicalPath",
-        "@Guid": "@App.AppGuid",
-        "@AppId": "@App.AppId",
-        "@Name": "@App.Name",
-        "@Folder": "@App.Folder"
+        "[Folder": "[App:Folder]"
       },
       "Resources": { },
       "Settings": { }

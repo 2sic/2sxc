@@ -10,17 +10,24 @@
 
         var vm = this;
         var svc = sourceSvc(item.EntityId);
-        vm.view = {};
+        vm.view = null;
         vm.editor = null;
 
-        svc.get().then(function(result) {
-            vm.view = result.data;
-            svc.initSnippets(vm.view);
-        });
+        activate();
+
+        function activate() {
+            // get started...
+            svc.get().then(function(result) {
+                vm.view = result.data;
+                vm.registerSnippets();
+                //svc.initSnippets(vm.view);
+            });            
+        }
+
+
 
         // load appropriate snippets from the snippet service
-        svc.initSnippets = function(template) {
-            vm.snipSvc = snippetSvc(template);
+        svc.initSnippets = function() {
             vm.snipSvc.getSnippets().then(function(result) {
                 vm.snippets = result;
                 vm.snippetSet = "Content";    // select default
@@ -46,14 +53,13 @@
 
         vm.registerSnippets = function registerSnippets() {
             // ensure we have everything
-            if (!(vm.snipSvc && vm.editor))
+            if (!(vm.view && vm.editor))
                 return;
-            // try to add my snippets
-            var snippetManager = ace.require("ace/snippets").snippetManager;
-            var snippets = vm.snipSvc.snippetsToRegister();
-            var parsed = snippetManager.parseSnippetFile(snippets.snippetText, snippets.scope);
-            snippetManager.register(parsed);
 
+            vm.snipSvc = snippetSvc(vm.view, ace);
+            vm.snipSvc.registerSnippets("razor");
+
+            //svc.initSnippets();
         };
 
         // this event is called when the editor is ready
