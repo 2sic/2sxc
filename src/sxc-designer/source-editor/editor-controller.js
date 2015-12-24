@@ -5,7 +5,9 @@
         .controller("Editor", EditorController)
         ;
 
-    function EditorController(sourceSvc, snippetSvc, item, $modalInstance, $scope) {
+    function EditorController(sourceSvc, snippetSvc, item, $modalInstance, $scope, $translate) {
+        $translate.refresh();   // necessary to load stuff added in this lazy-loaded app
+
         var vm = this;
         var svc = sourceSvc(item.EntityId);
         vm.view = {};

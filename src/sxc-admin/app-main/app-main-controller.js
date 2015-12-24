@@ -1,4 +1,4 @@
-(function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
+(function() { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
 
     angular.module("MainSxcApp", [
             "EavConfiguration", // config
@@ -27,8 +27,7 @@
                 return $http.get("app/system/dialogsettings", { params: { appId: appId } });
             };
             return svc;
-        })
-        ;
+        });
 
     function MainController(eavAdminDialogs, eavConfig, appId, debugState, appDialogConfigSvc, $modalInstance) {
         var vm = this;

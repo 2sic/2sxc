@@ -1,4 +1,4 @@
-(function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
+(function() { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
 
     angular.module("MainSxcApp", [
             "EavConfiguration", // config
@@ -27,8 +27,7 @@
                 return $http.get("app/system/dialogsettings", { params: { appId: appId } });
             };
             return svc;
-        }])
-        ;
+        }]);
 
     function MainController(eavAdminDialogs, eavConfig, appId, debugState, appDialogConfigSvc, $modalInstance) {
         var vm = this;
@@ -241,15 +240,16 @@
                 //    "//cdn.jsdelivr.net/ace/1.2.2/noconflict/ace.js",
                 //    "//cdn.jsdelivr.net/ace/1.2.2/noconflict/ext-language_tools.js"
                 //]);
-                var locals =
-                    //cdn.then(function () {
-                    //return
+                //var locals =
+                //    //cdn.then(function () {
+                //    //return
                     $ocLazyLoad.load([
-                        "../lib/angular-ui-ace/ui-ace.min.js",
+                        //"../lib/angular-ui-ace/ui-ace.min.js",
                         "../sxc-designer/sxc-designer.min.js"
-                    ]);
-                //});
-                locals.then(function() {
+                    ])
+                ////});
+                //locals
+                        .then(function() {
                         sxcDialogs.openViewEdit(items[0], vm.close);
                     });
                 break;

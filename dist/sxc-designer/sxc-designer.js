@@ -1,18 +1,17 @@
-(function () { 
+(function () {
 
     angular.module("SourceEditor", [
-        "EavConfiguration",  
-        "EavServices",
-        "SxcServices",
-        "SxcTemplates",
-        "ui.ace"
-    ])
-
-    .config(["$translatePartialLoaderProvider", function ($translatePartialLoaderProvider) {
-        // ensure the language pack is loaded
-        $translatePartialLoaderProvider.addPart("source-editor-snippets");
-    }])
-    ;
+            "EavConfiguration",
+            "EavServices",
+            "SxcServices",
+            "SxcTemplates",
+            "pascalprecht.translate",
+            "ui.ace"
+        ])
+        .config(["$translatePartialLoaderProvider", function($translatePartialLoaderProvider) {
+            // ensure the language pack is loaded
+            $translatePartialLoaderProvider.addPart("source-editor-snippets");
+        }]);
 
 } ());
 (function () { 
@@ -22,7 +21,9 @@
         .controller("Editor", EditorController)
         ;
 
-    function EditorController(sourceSvc, snippetSvc, item, $modalInstance, $scope) {
+    function EditorController(sourceSvc, snippetSvc, item, $modalInstance, $scope, $translate) {
+        $translate.refresh();   // necessary to load stuff added in this lazy-loaded app
+
         var vm = this;
         var svc = sourceSvc(item.EntityId);
         vm.view = {};
@@ -77,7 +78,7 @@
         };
 
     }
-    EditorController.$inject = ["sourceSvc", "snippetSvc", "item", "$modalInstance", "$scope"];
+    EditorController.$inject = ["sourceSvc", "snippetSvc", "item", "$modalInstance", "$scope", "$translate"];
 
 } ());
 // This service delivers all snippets, translated etc. to the sourc-editor UI
@@ -148,7 +149,7 @@ angular.module("SourceEditor")
                 },
 
                 loadSnippets: function() {
-                    return $http.get("../sxc-admin/source-editor-snippets.js");
+                    return $http.get("../sxc-designer/source-editor-snippets.js");
                 },
 
                 //#region help / translate

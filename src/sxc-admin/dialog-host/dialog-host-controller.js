@@ -43,15 +43,16 @@
                 //    "//cdn.jsdelivr.net/ace/1.2.2/noconflict/ace.js",
                 //    "//cdn.jsdelivr.net/ace/1.2.2/noconflict/ext-language_tools.js"
                 //]);
-                var locals =
-                    //cdn.then(function () {
-                    //return
+                //var locals =
+                //    //cdn.then(function () {
+                //    //return
                     $ocLazyLoad.load([
-                        "../lib/angular-ui-ace/ui-ace.min.js",
+                        //"../lib/angular-ui-ace/ui-ace.min.js",
                         "../sxc-designer/sxc-designer.min.js"
-                    ]);
-                //});
-                locals.then(function() {
+                    ])
+                ////});
+                //locals
+                        .then(function() {
                         sxcDialogs.openViewEdit(items[0], vm.close);
                     });
                 break;

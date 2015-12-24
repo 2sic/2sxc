@@ -66,7 +66,7 @@ angular.module("SourceEditor")
                 },
 
                 loadSnippets: function() {
-                    return $http.get("../sxc-admin/source-editor-snippets.js");
+                    return $http.get("../sxc-designer/source-editor-snippets.js");
                 },
 
                 //#region help / translate
