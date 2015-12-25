@@ -37,6 +37,9 @@
     "grunt-contrib-clean": "0.6.0",
     "grunt-angular-templates": "0.5.9",
     "grunt-contrib-compress": "0.13.0",
-    "grunt-contrib-cssmin": "0.13.0"
+    "grunt-contrib-cssmin": "0.13.0",
+
+    
+    "json.excel": "0.0.3"
   }
 }

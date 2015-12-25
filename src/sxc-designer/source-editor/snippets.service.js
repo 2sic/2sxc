@@ -177,6 +177,7 @@ angular.module("SourceEditor")
 
                 //#endregion
 
+                // register the snippets in the snippet manager
                 registerSnippets: function(type) {
                     // try to add my snippets
                     var snippetManager = ace.require("ace/snippets").snippetManager;

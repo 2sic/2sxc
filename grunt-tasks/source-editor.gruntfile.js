@@ -32,7 +32,20 @@ module.exports = function (grunt) {
                 ]
                 
             }
+        },
+        go: {
+            options: {
+                excel: "<%= paths.src %>/sxc-designer/source-editor/snippets.xlsx",
+                json: "<%= paths.dist %>/sxc-designer/snippets.json.js",
+                to: "json",
+                formating: true
+            },
+            dist: {}
         }
 
     });
+
+    grunt.loadNpmTasks('json.excel');
+
+    grunt.registerTask('build-snippets', ['go']);
 };

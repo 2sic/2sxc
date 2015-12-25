@@ -20,7 +20,6 @@
             svc.get().then(function(result) {
                 vm.view = result.data;
                 vm.registerSnippets();
-                //svc.initSnippets(vm.view);
             });            
         }
 
@@ -57,7 +56,7 @@
                 return;
 
             vm.snipSvc = snippetSvc(vm.view, ace);
-            vm.snipSvc.registerSnippets("razor");
+            vm.snipSvc.registerSnippets("razor"); // todo: ensure this param is dynamic
 
             //svc.initSnippets();
         };

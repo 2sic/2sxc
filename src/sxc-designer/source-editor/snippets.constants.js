@@ -2,7 +2,6 @@
     /*jshint multistr: true */
 
     angular.module("SourceEditor")
-
         .constant("snippets", {
             "tokens":
                 "# Some useful 2sxc tags / placeholders \n\
@@ -16,7 +15,6 @@ help Toolbar for inline editing with 2sxc. If used inside a <div class=\"sc-elem
 
 
             "html": "",
-
 
 
             "razor": "# Some useful 2sxc tags / placeholders \n\
@@ -58,8 +56,55 @@ title App Folder \n\
 help folder of the 2sxc-app, often used to create paths to scripts or join some values. if you only need to reference a script, please use App.Path \n\
 snippet app folder \n\
 	@App.Folder\n\
-            "
-            });
+            ",
+            "razor2": {
+                "App": [
+                    {
+                        "key": "path",
+                        "title": "Path",
+                        "help": "returns the url to the current app, for integrating scripts, images etc. For example, use as ***\/scripts\/knockout.js",
+                        "snippet": "path",
+                        "content": "@App.Path"
+                    },
+                    {
+                        "key": "physical path",
+                        "title": "Physical path",
+                        "help": "physical path, in c:\\",
+                        "snippet": "physical path",
+                        "content": "@App.PhysicalPath"
+                    },
+                    {
+                        "key": "App Guid",
+                        "title": "App Guid",
+                        "help": "internal GUID - should stay the same across all systems for this specific App",
+                        "snippet": "app guid",
+                        "content": "@App.AppGuid"
+                    },
+                    {
+                        "key": "App Id",
+                        "title": "App Id",
+                        "help": "Id in the current data base. Is a different number in every App-Installation",
+                        "snippet": "app id",
+                        "content": "@App.AppId"
+                    },
+                    {
+                        "key": "App Name",
+                        "title": "App Name",
+                        "help": "internal name",
+                        "snippet": "app name",
+                        "content": "@App.Name"
+                    },
+                    {
+                        "key": "App Folder",
+                        "title": "App Folder",
+                        "help": "folder of the 2sxc-app, often used to create paths to scripts or join some values. if you only need to reference a script, please use App.Path",
+                        "snippet": "app folder",
+                        "content": "@App.Folder"
+                    }
+                ]
+
+            }
+        });
 
 
 } ());
