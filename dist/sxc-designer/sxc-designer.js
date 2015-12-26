@@ -36,7 +36,7 @@
 
         // load appropriate snippets from the snippet service
         svc.initSnippets = function (template) {
-            vm.snipSvc = snippetSvc(template);
+            vm.snipSvc = snippetSvc(template, ace);
             vm.snipSvc.getSnippets().then(function (result) {
                 vm.snippets = result;
                 vm.snippetSet = "Content";    // select default
@@ -65,10 +65,11 @@
             if (!(vm.snipSvc && vm.editor))
                 return;
             // try to add my snippets
-            var snippetManager = ace.require("ace/snippets").snippetManager;
-            var snippets = vm.snipSvc.snippetsToRegister();
-            var parsed = snippetManager.parseSnippetFile(snippets.snippetText, snippets.scope);
-            snippetManager.register(parsed);
+            vm.snipSvc.registerInEditor();
+            //var snippetManager = ace.require("ace/snippets").snippetManager;
+            //var snippets = vm.snipSvc.snippetsToRegister();
+            //var parsed = snippetManager.parseSnippetFile(snippets.snippetText, snippets.scope);
+            //snippetManager.register(parsed);
         };
 
         // this event is called when the editor is ready
@@ -196,13 +197,14 @@ angular.module("SourceEditor")
     .factory("snippetSvc", ["$http", "eavConfig", "svcCreator", "$translate", "contentTypeFieldSvc", "$q", function ($http, eavConfig, svcCreator, $translate, contentTypeFieldSvc, $q) {
 
         // Construct a service for this specific appId
-        return function createSvc(templateConfiguration) {
+        return function createSvc(templateConfiguration, ace) {
 
             var svc = {
                 cachedSnippets: {},
                 loaded: false,
-                tree: null,
-                list: null,
+                list: null, // snippets as list in a format for the editor
+                tree: null, // snippets as tree for the drop-down tool
+                ace: ace,   // source editor object
 
                 /// Main function, loads all snippets, translates
                 /// returns the object tree as a promise
@@ -211,9 +213,10 @@ angular.module("SourceEditor")
                         return $q(function (resolve, reject) { resolve(svc.cachedSnippets); });
 
                     return svc.loadTable().then(function (result) {
-                        svc.list = result.data.snippets;
+                        // filter for token/razor snippets
+                        svc.list = svc.filterAwayNotNeededSnippetsList(result.data.snippets);
 
-                        var sets = svc.initSnippetsWithConfig(result.data.snippets);
+                        var sets = svc.initSnippetsWithConfig(svc.list);
                         for (var x in sets)
                             svc.cachedSnippets[x] = sets[x];
                         svc.loaded = true;
@@ -222,9 +225,7 @@ angular.module("SourceEditor")
                 },
 
                 initSnippetsWithConfig: function (sets) {
-                    // new
-                    svc.tree = svc.makeTree(sets);
-                    sets = svc.tree;
+                    sets = svc.tree = svc.makeTree(sets);
 
                     sets.Content = { Fields: {}, PresentationFields: {} };
                     // maybe remove list-infos
@@ -236,15 +237,7 @@ angular.module("SourceEditor")
                         sets.App = { Resources: {}, Settings: {} };
 
                     // filter for token/razor snippets
-                    svc.traverse(sets, svc.filterAwayNotNeededSnippets);
-
-                    //angular.forEach(sets, function (setValue, setKey) {
-                    //    angular.forEach(setValue, function (subSetValue, subSetKey) {
-                    //        angular.forEach(subSetValue, function (itemValue, itemKey) {
-                    //            svc.expandSnippetInfo(subSetValue, setKey, subSetKey, itemKey, itemValue);
-                    //        });
-                    //    });
-                    //});
+                    // svc.traverse(sets, svc.filterAwayNotNeededSnippetsTree);
 
                     //#region Retrieve all relevant content-types and infos
                     if (templateConfiguration.TypeContent)
@@ -266,10 +259,6 @@ angular.module("SourceEditor")
                     return sets;
                 },
 
-                loadSnippets: function () {
-                    return $http.get("../sxc-designer/source-editor-snippets.js");
-                },
-
                 loadTable: function () {
                     return $http.get("../sxc-designer/snippets.json.js");
                 },
@@ -281,7 +270,7 @@ angular.module("SourceEditor")
                             tree[o.set] = {};
                         if (tree[o.set][o.subset] === undefined)
                             tree[o.set][o.subset] = [];
-                        var reformatted = { "key": o.key, "label": svc.label(o.set, o.subset, o.key), "snip": o.content, "help": o.help || svc.help(o.set, o.subset, o.key) };
+                        var reformatted = { "key": o.name, "label": svc.label(o.set, o.subset, o.name), "snip": o.content, "help": o.help || svc.help(o.set, o.subset, o.name) };
 
                         tree[o.set][o.subset].push(reformatted);
                     }
@@ -327,7 +316,21 @@ angular.module("SourceEditor")
                     }
                 },
 
-                filterAwayNotNeededSnippets: function (parent, key, value) {
+                filterAwayNotNeededSnippetsList: function (list) {
+                    var newList = [];
+                    for (var i = 0; i < list.length; i++) {
+                        var itm = list[i];
+                        var setHasPrefix = svc.keyPrefixes.indexOf(itm.set[0]);
+                        if (setHasPrefix === -1 || (setHasPrefix === svc.keyPrefixIndex)) {
+                            newList.push(itm);
+                            // if necessary, remove first char
+                            if(setHasPrefix===svc.keyPrefixIndex)
+                                itm.set = itm.set.substr(1);
+                        }
+                    }
+                    return newList;
+                },
+                filterAwayNotNeededSnippetsTree: function (parent, key, value) {
                     // check if we have a special prefix
                     var prefix = key[0];
                     var found = svc.keyPrefixes.indexOf(prefix);
@@ -345,14 +348,9 @@ angular.module("SourceEditor")
                 },
 
                 keyPrefixes: ["@", "["],
+                keyPrefixIndex: (templateConfiguration.Type.indexOf("Razor") > -1) ? 0 : 1,
                 allowedKeyPrefix: (templateConfiguration.Type.indexOf("Razor") > -1) ? "@" : "[",
                 //#endregion
-
-                expandSnippetInfo: function (target, setName, subsetName, key, value) {
-                    if (value instanceof Object)
-                        return;
-                    target[key] = { "key": key, "label": svc.label(setName, subsetName, key), "snip": value, "help": svc.help(setName, subsetName, key) };
-                },
 
                 //#region get fields in content types
                 loadContentType: function (target, type, prefix) {
@@ -392,22 +390,12 @@ angular.module("SourceEditor")
 
                 //#endregion
 
-                /*jshint multistr: true */
-
-                snippetsToRegister: function () {
-                    var testSnippets = {};
-                    testSnippets.snippetText = "# Some useful 2sxc tags / placeholders \n\
-# toolbar\n\
-snippet toolbar \n\
-key Toolbar \n\
-title Toolbar \n\
-help Toolbar for inline editing with 2sxc. If used inside a <div class=\"sc-element\"> then the toolbar will automatically float \n\
-	[${1:Content}:Toolbar]\n\
-";
-                    testSnippets.scope = "_";// "html";
-                    return testSnippets;
+                registerInEditor: function() {
+                    // try to add my snippets
+                    var snippetManager = ace.require("ace/snippets").snippetManager;
+                    //svc.parsed = snippetManager.parseSnippetFile(svc.list, "_");
+                    snippetManager.register(svc.list);
                 }
-
             };
 
 

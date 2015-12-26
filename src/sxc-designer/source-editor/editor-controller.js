@@ -20,7 +20,7 @@
 
         // load appropriate snippets from the snippet service
         svc.initSnippets = function (template) {
-            vm.snipSvc = snippetSvc(template);
+            vm.snipSvc = snippetSvc(template, ace);
             vm.snipSvc.getSnippets().then(function (result) {
                 vm.snippets = result;
                 vm.snippetSet = "Content";    // select default
@@ -49,10 +49,11 @@
             if (!(vm.snipSvc && vm.editor))
                 return;
             // try to add my snippets
-            var snippetManager = ace.require("ace/snippets").snippetManager;
-            var snippets = vm.snipSvc.snippetsToRegister();
-            var parsed = snippetManager.parseSnippetFile(snippets.snippetText, snippets.scope);
-            snippetManager.register(parsed);
+            vm.snipSvc.registerInEditor();
+            //var snippetManager = ace.require("ace/snippets").snippetManager;
+            //var snippets = vm.snipSvc.snippetsToRegister();
+            //var parsed = snippetManager.parseSnippetFile(snippets.snippetText, snippets.scope);
+            //snippetManager.register(parsed);
         };
 
         // this event is called when the editor is ready
