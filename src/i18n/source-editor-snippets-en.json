@@ -122,69 +122,27 @@
       "Title": "Dnn (Portal, Tab, Module, ...)",
       "Help": "every dnn-token like Portal, Tab, Module, etc.",
 
-      "Portal": {
-        "Title": "Portal Tokens",
-        "Currency.Help": "Currency String",
-        "Description.Help": "Portal Description",
-        "Email.Help": "Portal Admin Email",
-        "FooterText.Help": "Portal Copyright Text",
-        "HomeDirectory": "Portal Path (relative) of Home Directory",
-        "LogoFile": "Portal Path to Logo File",
-        "PortalName": "Portal Name",
-        "PortalAlias": "Portal URL",
-        "TimeZoneOffset": "Difference in Minutes between Portal Default Time and UTC"
-      },
-
-
-
-
-
-      "todo": "continue-here",
-
-      "TabTokens": {
-        "List": "[Tab:Description]=Page Description Text for Search Engine \n[Tab:EndDate]=Page Display Until Date \n[Tab:FullUrl]=Page Full URL \n[Tab:IconFile]=Page Relative Path to Icon File \n[Tab:KeyWords]=Page Keywords for Search Engine \n[Tab:PageHeadText]=Page Header Text \n[Tab:StartDate]=Page Display from Date \n[Tab:TabName]=Page Name \n[Tab:TabPath]=Page Relative Path \n[Tab:Title]=Page Title (Window Title) \n[Tab:URL]=Page URL",
-        "Title": "Tab (Page) Tokens"
-      },
-
-      "ModuleTokens": {
-        "List": "[Module:Description]=Module Definition Description \n[Module:EndDate]=Module Display Until Date \n[Module:Footer]=Module Footer Text \n[Module:FriendlyName]=Module Definition Name \n[Module:Header]=Module Header Text \n[Module:HelpURL]=Module Help URL \n[Module:IconFile]=Module Path to Icon File \n[Module:ModuleTitle]=Module Title \n[Module:PaneName]=Module Name of Pane (where the module resides) \n[Module:StartDate]=Module Display from Date",
-        "Title": "Module Tokens"
-      }
+      "Portal.Title": "Portal Tokens",
+      "TabTokens.Title": "Tab (Page) Tokens",
+      "ModuleTokens.Title": "Module Tokens"
     },
     "DnnRazor": {
       "Title": "Dnn objects (module, tab, portal, etc.)",
       "Help": "find more on <a href='http://2sxc.org/en/Docs-Manuals/Feature/feature/3602'>token list</a>",
       "Module.Title": "Module",
-
       "Tab.Title": "Tab (page)",
-      "Tab.EndDate.Help": "for automatic hiding of the page",
-
       "Portal.Title": "Portal"
-
     },
-    "DnnRazorUser": {
+    "User": {
       "Title": "Dnn user information",
-      "User.Title": "User",
+      "Basic.Title": "Basic user properties",
       "Profile.Title": "Profile",
       "Profile.Help": "profile information as configured in your portal, like city etc."
     },
-
-    "ProfileTokens": {
-      "List": "[Profile:]=Use any default or custom Profile Property as listed in Profile Property Definition section of Manage User Accounts. Use non-localized Property Name only.",
-      "Title": "User Profile Tokens"
-    },
-    "QueryStringTokens": {
-      "List": "[Querystring:Name]=Value of Querystring Name",
-      "Title": "QueryString (URL-Parameters) Tokens"
-    },
-
-    "TimeTokens": {
-      "List": "[DateTime:Now]=Current Date and Time \n[Ticks:Now]=CPU Tick Count for Current Second \n[Ticks:Today]=CPU Tick Count since Midnight \n[Ticks:TicksPerDay]=CPU Ticks per Day (for calculations)",
-      "Title": "Time Tokens"
-    },
-    "UserTokens": {
-      "List": "[User:DisplayName]=User’s Display Name \n[User:Email]=User’s Email Address \n[User:FirstName]=User’s First Name \n[User:FullName]=(deprecated)\n[User:LastName]=User’s Last Name \n[User:Username]=User’s Login User Name",
-      "Title": "User Tokens"
+    "Environment": {
+      "Title": "Environment / System",
+      "QueryString.Title": "QueryString (URL-Parameters) Tokens",
+      "Time.Title": "Time Tokens"
     }
   }
-  }
+}

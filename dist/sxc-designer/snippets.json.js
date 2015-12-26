@@ -430,7 +430,7 @@
             "name": "EndDate",
             "title": "",
             "content": "@Dnn.Tab.EndDate",
-            "help": ""
+            "help": "for automatic hiding of the page"
         },
         {
             "set": "@DnnRazor",
@@ -1113,111 +1113,111 @@
             "help": ""
         },
         {
-            "set": "@DnnRazor",
-            "subset": "User",
+            "set": "@User",
+            "subset": "Basic",
             "name": "DisplayName",
             "title": "",
             "content": "@Dnn.User.DisplayName",
             "help": ""
         },
         {
-            "set": "@DnnRazor",
-            "subset": "User",
+            "set": "@User",
+            "subset": "Basic",
             "name": "Email",
             "title": "",
             "content": "@Dnn.User.Email",
             "help": ""
         },
         {
-            "set": "@DnnRazor",
-            "subset": "User",
+            "set": "@User",
+            "subset": "Basic",
             "name": "FirstName",
             "title": "",
             "content": "@Dnn.User.FirstName",
             "help": ""
         },
         {
-            "set": "@DnnRazor",
-            "subset": "User",
+            "set": "@User",
+            "subset": "Basic",
             "name": "FullName",
             "title": "",
             "content": "@Dnn.User.FullName",
             "help": ""
         },
         {
-            "set": "@DnnRazor",
-            "subset": "User",
+            "set": "@User",
+            "subset": "Basic",
             "name": "IsDeleted",
             "title": "",
             "content": "@Dnn.User.IsDeleted",
             "help": ""
         },
         {
-            "set": "@DnnRazor",
-            "subset": "User",
+            "set": "@User",
+            "subset": "Basic",
             "name": "IsInRole",
             "title": "",
             "content": "@Dnn.User.IsInRole(string RoleName)",
             "help": ""
         },
         {
-            "set": "@DnnRazor",
-            "subset": "User",
+            "set": "@User",
+            "subset": "Basic",
             "name": "IsSuperUser",
             "title": "",
             "content": "@Dnn.User.IsSuperUser",
             "help": ""
         },
         {
-            "set": "@DnnRazor",
-            "subset": "User",
+            "set": "@User",
+            "subset": "Basic",
             "name": "LastName",
             "title": "",
             "content": "@Dnn.User.LastName",
             "help": ""
         },
         {
-            "set": "@DnnRazor",
-            "subset": "User",
+            "set": "@User",
+            "subset": "Basic",
             "name": "Membership",
             "title": "",
             "content": "@Dnn.User.Membership",
             "help": "these are asp.net memberships, you probably don't need them"
         },
         {
-            "set": "@DnnRazor",
-            "subset": "User",
+            "set": "@User",
+            "subset": "Basic",
             "name": "PortalId",
             "title": "",
             "content": "@Dnn.User.PortalId",
             "help": ""
         },
         {
-            "set": "@DnnRazor",
-            "subset": "User",
+            "set": "@User",
+            "subset": "Basic",
             "name": "Roles",
             "title": "",
             "content": "@Dnn.User.Roles",
             "help": "these are DNN roles"
         },
         {
-            "set": "@DnnRazor",
-            "subset": "User",
+            "set": "@User",
+            "subset": "Basic",
             "name": "UserID",
             "title": "",
             "content": "@Dnn.User.UserID",
             "help": ""
         },
         {
-            "set": "@DnnRazor",
-            "subset": "User",
+            "set": "@User",
+            "subset": "Basic",
             "name": "Username",
             "title": "",
             "content": "@Dnn.User.Username",
             "help": ""
         },
         {
-            "set": "@DnnRazor",
+            "set": "@User",
             "subset": "Profile",
             "name": "AnyValue",
             "title": "",
@@ -1386,11 +1386,179 @@
         },
         {
             "set": "[DnnToken",
+            "subset": "Module",
+            "name": "Description",
+            "title": "",
+            "content": "[Module:Description]",
+            "help": "Module Definition Description"
+        },
+        {
+            "set": "[DnnToken",
+            "subset": "Module",
+            "name": "EndDate",
+            "title": "",
+            "content": "[Module:EndDate]",
+            "help": "Module Display Until Date"
+        },
+        {
+            "set": "[DnnToken",
+            "subset": "Module",
+            "name": "Footer",
+            "title": "",
+            "content": "[Module:Footer]",
+            "help": "Module Footer Text"
+        },
+        {
+            "set": "[DnnToken",
+            "subset": "Module",
+            "name": "FriendlyName",
+            "title": "",
+            "content": "[Module:FriendlyName]",
+            "help": "Module Definition Name"
+        },
+        {
+            "set": "[DnnToken",
+            "subset": "Module",
+            "name": "Header",
+            "title": "",
+            "content": "[Module:Header]",
+            "help": "Module Header Text"
+        },
+        {
+            "set": "[DnnToken",
+            "subset": "Module",
+            "name": "HelpUrl",
+            "title": "",
+            "content": "[Module:HelpURL]",
+            "help": "Module Help URL"
+        },
+        {
+            "set": "[DnnToken",
+            "subset": "Module",
+            "name": "IconFile",
+            "title": "",
+            "content": "[Module:IconFile]",
+            "help": "Module Path to Icon File"
+        },
+        {
+            "set": "[DnnToken",
+            "subset": "Module",
+            "name": "Title",
+            "title": "",
+            "content": "[Module:ModuleTitle]",
+            "help": "Module Title"
+        },
+        {
+            "set": "[DnnToken",
+            "subset": "Module",
+            "name": "PaneName",
+            "title": "",
+            "content": "[Module:PaneName]",
+            "help": "Module Name of Pane (where the module resides)"
+        },
+        {
+            "set": "[DnnToken",
+            "subset": "Module",
+            "name": "StartDate",
+            "title": "",
+            "content": "[Module:StartDate]",
+            "help": "Module Display from Date"
+        },
+        {
+            "set": "[DnnToken",
+            "subset": "Tab",
+            "name": "Description",
+            "title": "",
+            "content": "[Tab:Description]",
+            "help": "Page Description Text for Search Engine"
+        },
+        {
+            "set": "[DnnToken",
+            "subset": "Tab",
+            "name": "EndDate",
+            "title": "",
+            "content": "[Tab:EndDate]",
+            "help": "Page Display Until Date"
+        },
+        {
+            "set": "[DnnToken",
+            "subset": "Tab",
+            "name": "FullUrl",
+            "title": "",
+            "content": "[Tab:FullUrl]",
+            "help": "Page Full URL"
+        },
+        {
+            "set": "[DnnToken",
+            "subset": "Tab",
+            "name": "IconFile",
+            "title": "",
+            "content": "[Tab:IconFile]",
+            "help": "Page Relative Path to Icon File"
+        },
+        {
+            "set": "[DnnToken",
+            "subset": "Tab",
+            "name": "KeyWords",
+            "title": "",
+            "content": "[Tab:KeyWords]",
+            "help": "Page Keywords for Search Engine"
+        },
+        {
+            "set": "[DnnToken",
+            "subset": "Tab",
+            "name": "PageHeadtext",
+            "title": "",
+            "content": "[Tab:PageHeadText]",
+            "help": "Page Header Text"
+        },
+        {
+            "set": "[DnnToken",
+            "subset": "Tab",
+            "name": "StartDate",
+            "title": "",
+            "content": "[Tab:StartDate]",
+            "help": "Page Display from Date"
+        },
+        {
+            "set": "[DnnToken",
+            "subset": "Tab",
+            "name": "TabName",
+            "title": "",
+            "content": "[Tab:TabName]",
+            "help": "Page Name"
+        },
+        {
+            "set": "[DnnToken",
+            "subset": "Tab",
+            "name": "TabPath",
+            "title": "",
+            "content": "[Tab:TabPath]",
+            "help": "Page Relative Path"
+        },
+        {
+            "set": "[DnnToken",
+            "subset": "Tab",
+            "name": "Title",
+            "title": "",
+            "content": "[Tab:Title]",
+            "help": "Page Title (Window Title)"
+        },
+        {
+            "set": "[DnnToken",
+            "subset": "Tab",
+            "name": "Url",
+            "title": "",
+            "content": "[Tab:URL]",
+            "help": "Page URL"
+        },
+        {
+            "set": "[DnnToken",
             "subset": "Portal",
             "name": "Currency",
             "title": "",
             "content": "[Portal:Currency]",
-            "help": ""
+            "help": "Currency String"
         },
         {
             "set": "[DnnToken",
@@ -1398,7 +1566,7 @@
             "name": "Description",
             "title": "",
             "content": "[Portal:Description]",
-            "help": ""
+            "help": "Portal Description"
         },
         {
             "set": "[DnnToken",
@@ -1406,7 +1574,7 @@
             "name": "Email",
             "title": "",
             "content": "[Portal:Email]",
-            "help": ""
+            "help": "Portal Admin Email"
         },
         {
             "set": "[DnnToken",
@@ -1414,7 +1582,7 @@
             "name": "FooterText",
             "title": "",
             "content": "[Portal:FooterText]",
-            "help": ""
+            "help": "Portal Copyright Text"
         },
         {
             "set": "[DnnToken",
@@ -1422,7 +1590,7 @@
             "name": "HomeDirectory",
             "title": "",
             "content": "[Portal:HomeDirectory]",
-            "help": ""
+            "help": "Portal Path (relative) of Home Directory"
         },
         {
             "set": "[DnnToken",
@@ -1430,7 +1598,7 @@
             "name": "LogoFile",
             "title": "",
             "content": "[Portal:LogoFile]",
-            "help": ""
+            "help": "Portal Path to Logo File"
         },
         {
             "set": "[DnnToken",
@@ -1438,7 +1606,7 @@
             "name": "PortalName",
             "title": "",
             "content": "[Portal:PortalName]",
-            "help": ""
+            "help": "Portal Name"
         },
         {
             "set": "[DnnToken",
@@ -1446,7 +1614,7 @@
             "name": "PortalAlias",
             "title": "",
             "content": "[Portal:PortalAlias]",
-            "help": ""
+            "help": "Portal URL"
         },
         {
             "set": "[DnnToken",
@@ -1454,7 +1622,103 @@
             "name": "TimeZoneOffset",
             "title": "",
             "content": "[Portal:TimeZoneOffset]",
-            "help": ""
+            "help": "Difference in Minutes between Portal Default Time and UTC"
+        },
+        {
+            "set": "[User",
+            "subset": "Basic",
+            "name": "DisplayName",
+            "title": "",
+            "content": "[User:DisplayName]",
+            "help": "User’s Display Name"
+        },
+        {
+            "set": "[User",
+            "subset": "Basic",
+            "name": "Email",
+            "title": "",
+            "content": "[User:Email]",
+            "help": "User’s Email Address"
+        },
+        {
+            "set": "[User",
+            "subset": "Basic",
+            "name": "FirstName",
+            "title": "",
+            "content": "[User:FirstName]",
+            "help": "User’s First Name"
+        },
+        {
+            "set": "[User",
+            "subset": "Basic",
+            "name": "FullName",
+            "title": "",
+            "content": "[User:FullName]",
+            "help": "(deprecated)"
+        },
+        {
+            "set": "[User",
+            "subset": "Basic",
+            "name": "LastName",
+            "title": "",
+            "content": "[User:LastName]",
+            "help": "User’s Last Name"
+        },
+        {
+            "set": "[User",
+            "subset": "Basic",
+            "name": "UserName",
+            "title": "",
+            "content": "[User:Username]",
+            "help": "User’s Login User Name"
+        },
+        {
+            "set": "[User",
+            "subset": "Profile",
+            "name": "Profile",
+            "title": "",
+            "content": "[Profile:${1:City}]",
+            "help": "Use any default or custom Profile Property as listed in Profile Property Definition section of Manage User Accounts. Use non-localized Property Name only."
+        },
+        {
+            "set": "[Environment",
+            "subset": "QueryString",
+            "name": "QueryString",
+            "title": "",
+            "content": "[QueryString:${1:ParameterName}]",
+            "help": "Value of Querystring Name"
+        },
+        {
+            "set": "[Environment",
+            "subset": "Time",
+            "name": "Now",
+            "title": "",
+            "content": "[DateTime:Now]",
+            "help": "Current Date and Time"
+        },
+        {
+            "set": "[Environment",
+            "subset": "Time",
+            "name": "Ticks-Now",
+            "title": "",
+            "content": "[Ticks:Now]",
+            "help": "CPU Tick Count for Current Second"
+        },
+        {
+            "set": "[Environment",
+            "subset": "Time",
+            "name": "Ticks-Today",
+            "title": "",
+            "content": "[Ticks:Today]",
+            "help": "CPU Tick Count since Midnight"
+        },
+        {
+            "set": "[Environment",
+            "subset": "Time",
+            "name": "Ticks-Per-Day",
+            "title": "",
+            "content": "[Ticks:TicksPerDay]",
+            "help": "CPU Ticks per Day (for calculations)"
         }
     ]
 }
