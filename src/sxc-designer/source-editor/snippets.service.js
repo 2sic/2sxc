@@ -1,24 +1,26 @@
 // This service delivers all snippets, translated etc. to the sourc-editor UI
 angular.module("SourceEditor")
-    .factory("snippetSvc", function($http, eavConfig, svcCreator, $translate, contentTypeFieldSvc, $q, snippets) {
+    .factory("snippetSvc", function ($http, eavConfig, svcCreator, $translate, contentTypeFieldSvc, $q) {
 
         // Construct a service for this specific appId
-        return function createSvc(templateConfiguration, ace) {
+        return function createSvc(templateConfiguration) {
 
             var svc = {
                 cachedSnippets: {},
-                parsed: [],
                 loaded: false,
-                ace: ace,
+                tree: null,
+                list: null,
 
                 /// Main function, loads all snippets, translates
                 /// returns the object tree as a promise
-                getSnippets: function() {
+                getSnippets: function () {
                     if (svc.loaded)
-                        return $q(function(resolve, reject) { resolve(svc.cachedSnippets); });
+                        return $q(function (resolve, reject) { resolve(svc.cachedSnippets); });
 
-                    return svc.loadSnippets().then(function(result) {
-                        var sets = svc.initSnippetsWithConfig(result.data.Snippets);
+                    return svc.loadTable().then(function (result) {
+                        svc.list = result.data.snippets;
+
+                        var sets = svc.initSnippetsWithConfig(result.data.snippets);
                         for (var x in sets)
                             svc.cachedSnippets[x] = sets[x];
                         svc.loaded = true;
@@ -26,27 +28,30 @@ angular.module("SourceEditor")
                     });
                 },
 
-                initSnippetsWithConfig: function(sets) {
+                initSnippetsWithConfig: function (sets) {
+                    // new
+                    svc.tree = svc.makeTree(sets);
+                    sets = svc.tree;
 
+                    sets.Content = { Fields: {}, PresentationFields: {} };
                     // maybe remove list-infos
-                    if (!templateConfiguration.HasList)
-                        delete sets.List;
+                    if (templateConfiguration.HasList)
+                        sets.List = { Fields: {}, PresentationFields: {} };
 
                     // maybe remove App-infos
-                    if (!templateConfiguration.HasApp)
-                        delete sets.App;
+                    if (templateConfiguration.HasApp)
+                        sets.App = { Resources: {}, Settings: {} };
 
                     // filter for token/razor snippets
-                    // todo: re-implement
-                    // svc.traverse(sets, svc.filterAwayNotNeededSnippets);
+                    svc.traverse(sets, svc.filterAwayNotNeededSnippets);
 
-                    angular.forEach(sets, function(setValue, setKey) {
-                        angular.forEach(setValue, function(subSetValue, subSetKey) {
-                            angular.forEach(subSetValue, function(itemValue, itemKey) {
-                                svc.expandSnippetInfo(subSetValue, setKey, subSetKey, itemKey, itemValue);
-                            });
-                        });
-                    });
+                    //angular.forEach(sets, function (setValue, setKey) {
+                    //    angular.forEach(setValue, function (subSetValue, subSetKey) {
+                    //        angular.forEach(subSetValue, function (itemValue, itemKey) {
+                    //            svc.expandSnippetInfo(subSetValue, setKey, subSetKey, itemKey, itemValue);
+                    //        });
+                    //    });
+                    //});
 
                     //#region Retrieve all relevant content-types and infos
                     if (templateConfiguration.TypeContent)
@@ -68,10 +73,27 @@ angular.module("SourceEditor")
                     return sets;
                 },
 
-                loadSnippets: function() {
+                loadSnippets: function () {
                     return $http.get("../sxc-designer/source-editor-snippets.js");
                 },
 
+                loadTable: function () {
+                    return $http.get("../sxc-designer/snippets.json.js");
+                },
+                makeTree: function(list) {
+                    var tree = {};
+                    for (var i = 0; i < list.length; i++) {
+                        var o = list[i];
+                        if (tree[o.set] === undefined)
+                            tree[o.set] = {};
+                        if (tree[o.set][o.subset] === undefined)
+                            tree[o.set][o.subset] = [];
+                        var reformatted = { "key": o.key, "label": svc.label(o.set, o.subset, o.key), "snip": o.content, "help": o.help || svc.help(o.set, o.subset, o.key) };
+
+                        tree[o.set][o.subset].push(reformatted);
+                    }
+                    return tree;
+                },
                 //#region help / translate
                 help: function help(set, subset, snip) {
                     var key = svc.getHelpKey(set, subset, snip, ".Help");
@@ -91,7 +113,7 @@ angular.module("SourceEditor")
                     return result;
                 },
 
-                getHelpKey: function(set, subset, snip, addition) {
+                getHelpKey: function (set, subset, snip, addition) {
                     var root = "SourceEditorSnippets";
                     var key = root + "." + set + "." + subset + "." + snip;
                     key += addition;
@@ -101,7 +123,7 @@ angular.module("SourceEditor")
                 //#endregion
 
                 //#region scan the configuration and filter unneeded snippets
-                traverse: function(o, func) {
+                traverse: function (o, func) {
                     for (var i in o) {
                         if (!o.hasOwnProperty(i))
                             continue;
@@ -112,7 +134,7 @@ angular.module("SourceEditor")
                     }
                 },
 
-                filterAwayNotNeededSnippets: function(parent, key, value) {
+                filterAwayNotNeededSnippets: function (parent, key, value) {
                     // check if we have a special prefix
                     var prefix = key[0];
                     var found = svc.keyPrefixes.indexOf(prefix);
@@ -133,18 +155,18 @@ angular.module("SourceEditor")
                 allowedKeyPrefix: (templateConfiguration.Type.indexOf("Razor") > -1) ? "@" : "[",
                 //#endregion
 
-                expandSnippetInfo: function(target, setName, subsetName, key, value) {
+                expandSnippetInfo: function (target, setName, subsetName, key, value) {
                     if (value instanceof Object)
                         return;
                     target[key] = { "key": key, "label": svc.label(setName, subsetName, key), "snip": value, "help": svc.help(setName, subsetName, key) };
                 },
 
                 //#region get fields in content types
-                loadContentType: function(target, type, prefix) {
+                loadContentType: function (target, type, prefix) {
                     contentTypeFieldSvc(templateConfiguration.AppId, { StaticName: type }).getFields()
                         .then(function (result) {
                             // first add common items if the content-type actually exists
-                            angular.forEach(result.data, function(value) {
+                            angular.forEach(result.data, function (value) {
                                 var fieldname = value.StaticName;
                                 var description = value.Metadata.merged.Notes || "" + " (" + value.Type.toLowerCase() + ") ";
                                 var placeholder = svc.valuePlaceholder(prefix, fieldname);
@@ -169,7 +191,7 @@ angular.module("SourceEditor")
                         });
                 },
 
-                valuePlaceholder: function(obj, val) {
+                valuePlaceholder: function (obj, val) {
                     return (templateConfiguration.Type.indexOf("Razor") > -1)
                         ? "@" + obj + "." + val
                         : "[" + obj.replace(".", ":") + ":" + val + "]";
@@ -177,12 +199,20 @@ angular.module("SourceEditor")
 
                 //#endregion
 
-                // register the snippets in the snippet manager
-                registerSnippets: function(type) {
-                    // try to add my snippets
-                    var snippetManager = ace.require("ace/snippets").snippetManager;
-                    svc.parsed = snippetManager.parseSnippetFile(snippets[type], "_");
-                    snippetManager.register(svc.parsed);
+                /*jshint multistr: true */
+
+                snippetsToRegister: function () {
+                    var testSnippets = {};
+                    testSnippets.snippetText = "# Some useful 2sxc tags / placeholders \n\
+# toolbar\n\
+snippet toolbar \n\
+key Toolbar \n\
+title Toolbar \n\
+help Toolbar for inline editing with 2sxc. If used inside a <div class=\"sc-element\"> then the toolbar will automatically float \n\
+	[${1:Content}:Toolbar]\n\
+";
+                    testSnippets.scope = "_";// "html";
+                    return testSnippets;
                 }
 
             };

@@ -109,17 +109,7 @@
       "Help": "App fields and placeholders",
       "General": {
         "Title": "General",
-        "Help": "General App placeholders",
-
-
-        "old": {
-          "Path": "returns the url to the current app, for integrating scripts, images etc. For example, use as ***\/scripts\/knockout.js",
-          "PhysicalPath": "physical path, in c:\\",
-          "AppGuid": "internal GUID - should stay the same across all systems for this specific App",
-          "AppId": "Id in the current data base. Is a different number in every App-Installation",
-          "Name": "internal name",
-          "Folder": "folder of the 2sxc-app"
-        }
+        "Help": "General App placeholders"
       },
 
       "Resources.Title": "App Resources",
@@ -169,23 +159,14 @@
       "Tab.Title": "Tab (page)",
       "Tab.EndDate.Help": "for automatic hiding of the page",
 
-      "Portal.Title": "Portal",
-      "Portal.Current.Help": "static method returning the current portal portal-settings",
-      "Portal.Default.Help": "(AdminContainer, AdminSkin, ControlPanelMode, etc.)",
-      "Portal.HomeTabId.Help": "the root page",
-      "Portal.LoginTabId.Help": "where the normal login usually goes to",
-      "Portal.Search.Help": "various values like IncludeCommon, IncludeTagInfoFilter etc."
-
+      "Portal.Title": "Portal"
 
     },
     "DnnRazorUser": {
       "Title": "Dnn user information",
       "User.Title": "User",
-      "User.Membership.Help": "these are asp.net memberships, you probably don't need them",
-      "User.Roles.Help": "these are DNN roles",
       "Profile.Title": "Profile",
-      "Profile.Help": "profile information as configured in your portal, like city etc.",
-      "Profile.AnyValue.Help": "any property of the user profile as configured in your portal"
+      "Profile.Help": "profile information as configured in your portal, like city etc."
     },
 
     "ProfileTokens": {

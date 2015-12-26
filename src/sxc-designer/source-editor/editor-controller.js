@@ -1,33 +1,27 @@
-(function () { 
+(function () {
 
     angular.module("SourceEditor")
 
         .controller("Editor", EditorController)
-        ;
+    ;
 
     function EditorController(sourceSvc, snippetSvc, item, $modalInstance, $scope, $translate) {
         $translate.refresh();   // necessary to load stuff added in this lazy-loaded app
 
         var vm = this;
         var svc = sourceSvc(item.EntityId);
-        vm.view = null;
+        vm.view = {};
         vm.editor = null;
 
-        activate();
-
-        function activate() {
-            // get started...
-            svc.get().then(function(result) {
-                vm.view = result.data;
-                vm.registerSnippets();
-            });            
-        }
-
-
+        svc.get().then(function (result) {
+            vm.view = result.data;
+            svc.initSnippets(vm.view);
+        });
 
         // load appropriate snippets from the snippet service
-        svc.initSnippets = function() {
-            vm.snipSvc.getSnippets().then(function(result) {
+        svc.initSnippets = function (template) {
+            vm.snipSvc = snippetSvc(template);
+            vm.snipSvc.getSnippets().then(function (result) {
                 vm.snippets = result;
                 vm.snippetSet = "Content";    // select default
                 vm.snippetHelp = vm.snipSvc.help;
@@ -40,7 +34,7 @@
 
         vm.close = function () { $modalInstance.dismiss("cancel"); };
 
-        vm.save = function() {
+        vm.save = function () {
             svc.save(vm.view).then(vm.close);
         };
 
@@ -52,13 +46,13 @@
 
         vm.registerSnippets = function registerSnippets() {
             // ensure we have everything
-            if (!(vm.view && vm.editor))
+            if (!(vm.snipSvc && vm.editor))
                 return;
-
-            vm.snipSvc = snippetSvc(vm.view, ace);
-            vm.snipSvc.registerSnippets("razor"); // todo: ensure this param is dynamic
-
-            //svc.initSnippets();
+            // try to add my snippets
+            var snippetManager = ace.require("ace/snippets").snippetManager;
+            var snippets = vm.snipSvc.snippetsToRegister();
+            var parsed = snippetManager.parseSnippetFile(snippets.snippetText, snippets.scope);
+            snippetManager.register(parsed);
         };
 
         // this event is called when the editor is ready
@@ -69,4 +63,4 @@
 
     }
 
-} ());
+}());
