@@ -87,6 +87,11 @@ namespace ToSic.SexyContent
                                 cultureDimension = AppId.HasValue ? Sexy.GetCurrentLanguageID() : new int?(),
                                 isList = Template != null && Template.UseForList
                             },
+                            user = new
+                            {
+                                canDesign = SexyContent.IsInSexyContentDesignersGroup(UserInfo), // will be true for admins or for people in the designers-group
+                                canDevelop = UserInfo.IsSuperUser // will be true for host-users, false for all others
+                            },
                             applicationRoot = ResolveUrl("~"),
                             lang = PortalSettings.CultureCode.ToLower(), //System.Threading.Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName.ToLower(),
                             // fallbackLang = new [] {"en"},
