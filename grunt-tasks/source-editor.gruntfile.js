@@ -5,20 +5,6 @@ module.exports = function (grunt) {
 
     grunt.config.merge({
         copy: {
-            "source-editor-data" : { // currently only used for source-editor-snippets
-                files: [
-                    {
-                        expand: true,
-                        flatten: true,
-                        cwd: "<%= paths.src %>/sxc-designer/",
-                        src: ["**/*.json"],
-                        dest: "<%= paths.dist %>/sxc-designer/",
-                        rename: function (dest, src) {
-                            return dest + src.replace(".json", ".js");
-                        }
-                    }
-                ]
-            },
             "source-editor-libs": {
                 files: [
                     {
@@ -45,7 +31,7 @@ module.exports = function (grunt) {
 
     });
 
-    grunt.loadNpmTasks('json.excel');
+    grunt.loadNpmTasks("json.excel");
 
-    grunt.registerTask('build-snippets', ['go']);
+    grunt.registerTask("build-snippets", ["go"]);
 };

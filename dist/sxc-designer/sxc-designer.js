@@ -82,116 +82,6 @@
     EditorController.$inject = ["sourceSvc", "snippetSvc", "item", "$modalInstance", "$scope", "$translate"];
 
 }());
-(function () {
-    /*jshint multistr: true */
-
-    angular.module("SourceEditor")
-        .constant("snippets", {
-            "tokens":
-                "# Some useful 2sxc tags / placeholders \n\
-# toolbar\n\
-snippet toolbar \n\
-key Toolbar \n\
-title Toolbar \n\
-help Toolbar for inline editing with 2sxc. If used inside a <div class=\"sc-element\"> then the toolbar will automatically float \n\
-	[${1:Content}:Toolbar]\n\
-",
-
-
-            "html": "",
-
-
-            "razor": "# Some useful 2sxc tags / placeholders \n\
-#######################\n\
-### Razor App stuff\n\
-# path\n\
-set app\n\
-title Path \n\
-help returns the url to the current app, for integrating scripts, images etc. For example, use as ***\/scripts\/knockout.js\n\
-snippet path \n\
-	@App.Path\n\
-# physical path\n\
-set app\n\
-title Physical path \n\
-help physical path, in c:\\\n\
-snippet physical path \n\
-	@App.PhysicalPath\n\
-# App Guid \n\
-set app\n\
-title App Guid \n\
-help internal GUID - should stay the same across all systems for this specific App \n\
-snippet app guid \n\
-	@App.AppGuid\n\
-# App Id \n\
-set app\n\
-title App Id \n\
-help Id in the current data base. Is a different number in every App-Installation \n\
-snippet app id \n\
-	@App.AppId\n\
-# App Name \n\
-set app\n\
-title App Name \n\
-help internal name \n\
-snippet app name \n\
-	@App.Name\n\
-# App Folder \n\
-set app\n\
-title App Folder \n\
-help folder of the 2sxc-app, often used to create paths to scripts or join some values. if you only need to reference a script, please use App.Path \n\
-snippet app folder \n\
-	@App.Folder\n\
-            ",
-            "razor2": {
-                "App": [
-                    {
-                        "key": "path",
-                        "title": "Path",
-                        "help": "returns the url to the current app, for integrating scripts, images etc. For example, use as ***\/scripts\/knockout.js",
-                        "snippet": "path",
-                        "content": "@App.Path"
-                    },
-                    {
-                        "key": "physical path",
-                        "title": "Physical path",
-                        "help": "physical path, in c:\\",
-                        "snippet": "physical path",
-                        "content": "@App.PhysicalPath"
-                    },
-                    {
-                        "key": "App Guid",
-                        "title": "App Guid",
-                        "help": "internal GUID - should stay the same across all systems for this specific App",
-                        "snippet": "app guid",
-                        "content": "@App.AppGuid"
-                    },
-                    {
-                        "key": "App Id",
-                        "title": "App Id",
-                        "help": "Id in the current data base. Is a different number in every App-Installation",
-                        "snippet": "app id",
-                        "content": "@App.AppId"
-                    },
-                    {
-                        "key": "App Name",
-                        "title": "App Name",
-                        "help": "internal name",
-                        "snippet": "app name",
-                        "content": "@App.Name"
-                    },
-                    {
-                        "key": "App Folder",
-                        "title": "App Folder",
-                        "help": "folder of the 2sxc-app, often used to create paths to scripts or join some values. if you only need to reference a script, please use App.Path",
-                        "snippet": "app folder",
-                        "content": "@App.Folder"
-                    }
-                ]
-
-            }
-        });
-
-
-} ());
 // This service delivers all snippets, translated etc. to the sourc-editor UI
 angular.module("SourceEditor")
     .factory("snippetSvc", ["$http", "eavConfig", "svcCreator", "$translate", "contentTypeFieldSvc", "$q", function ($http, eavConfig, svcCreator, $translate, contentTypeFieldSvc, $q) {
@@ -206,6 +96,8 @@ angular.module("SourceEditor")
                 tree: null, // snippets as tree for the drop-down tool
                 ace: ace,   // source editor object
 
+
+                // #region load jsons and prepare for binding as tree and for the editor
                 /// Main function, loads all snippets, translates
                 /// returns the object tree as a promise
                 getSnippets: function () {
@@ -227,29 +119,24 @@ angular.module("SourceEditor")
                 initSnippetsWithConfig: function (sets) {
                     sets = svc.tree = svc.makeTree(sets);
 
-                    sets.Content = { Fields: {}, PresentationFields: {} };
-                    // maybe remove list-infos
-                    if (templateConfiguration.HasList)
-                        sets.List = { Fields: {}, PresentationFields: {} };
-
-                    // maybe remove App-infos
-                    if (templateConfiguration.HasApp)
-                        sets.App = { Resources: {}, Settings: {} };
-
-                    // filter for token/razor snippets
-                    // svc.traverse(sets, svc.filterAwayNotNeededSnippetsTree);
-
                     //#region Retrieve all relevant content-types and infos
+                    sets.Content = { Fields: {}, PresentationFields: {} };
                     if (templateConfiguration.TypeContent)
                         svc.loadContentType(sets.Content.Fields, templateConfiguration.TypeContent, "Content");
                     if (templateConfiguration.TypeContentPresentation)
                         svc.loadContentType(sets.Content.PresentationFields, templateConfiguration.TypeContentPresentation, "Content.Presentation");
-                    if (templateConfiguration.TypeList)
-                        svc.loadContentType(sets.List.Fields, templateConfiguration.TypeList, "List");
-                    if (templateConfiguration.TypeListPresentation)
-                        svc.loadContentType(sets.List.PresentationFields, templateConfiguration.TypeListPresentation, "List.Presentation");
 
+                    if (templateConfiguration.HasList) {
+                        sets.List = { Fields: {}, PresentationFields: {} };
+                        if (templateConfiguration.TypeList)
+                            svc.loadContentType(sets.List.Fields, templateConfiguration.TypeList, "List");
+                        if (templateConfiguration.TypeListPresentation)
+                            svc.loadContentType(sets.List.PresentationFields, templateConfiguration.TypeListPresentation, "List.Presentation");
+                    }
+
+                    // maybe App-infos
                     if (templateConfiguration.HasApp) {
+                        sets.App = { Resources: {}, Settings: {} };
                         svc.loadContentType(sets.App.Resources, "App-Resources", "App.Resources");
                         svc.loadContentType(sets.App.Settings, "App-Settings", "App.Settings");
                     }
@@ -262,6 +149,8 @@ angular.module("SourceEditor")
                 loadTable: function () {
                     return $http.get("../sxc-designer/snippets.json.js");
                 },
+
+                // Convert the list into a tree with set/subset/item
                 makeTree: function(list) {
                     var tree = {};
                     for (var i = 0; i < list.length; i++) {
@@ -276,6 +165,8 @@ angular.module("SourceEditor")
                     }
                     return tree;
                 },
+                // #endregion
+
                 //#region help / translate
                 help: function help(set, subset, snip) {
                     var key = svc.getHelpKey(set, subset, snip, ".Help");
@@ -296,26 +187,14 @@ angular.module("SourceEditor")
                 },
 
                 getHelpKey: function (set, subset, snip, addition) {
-                    var root = "SourceEditorSnippets";
-                    var key = root + "." + set + "." + subset + "." + snip;
-                    key += addition;
-                    return key;
+                    return "SourceEditorSnippets" + "." + set + "." + subset + "." + snip + addition;
                 },
 
                 //#endregion
 
                 //#region scan the configuration and filter unneeded snippets
-                traverse: function (o, func) {
-                    for (var i in o) {
-                        if (!o.hasOwnProperty(i))
-                            continue;
-                        func.apply(this, [o, i, o[i]]);
-                        //going on step down in the object tree!!
-                        if (o[i] !== null && typeof (o[i]) == "object")
-                            svc.traverse(o[i], func);
-                    }
-                },
 
+                // scan the list for sets starting with @ or [ and filter if not needed right now
                 filterAwayNotNeededSnippetsList: function (list) {
                     var newList = [];
                     for (var i = 0; i < list.length; i++) {
@@ -330,26 +209,9 @@ angular.module("SourceEditor")
                     }
                     return newList;
                 },
-                filterAwayNotNeededSnippetsTree: function (parent, key, value) {
-                    // check if we have a special prefix
-                    var prefix = key[0];
-                    var found = svc.keyPrefixes.indexOf(prefix);
-
-                    // always remove the original, even if not necessary, to preserve order
-                    delete parent[key];
-
-                    if (found !== -1) {
-                        if (prefix !== svc.allowedKeyPrefix)
-                            return; // don't even add it any more
-                        key = key.substr(1);
-                    }
-
-                    parent[key] = value;
-                },
 
                 keyPrefixes: ["@", "["],
                 keyPrefixIndex: (templateConfiguration.Type.indexOf("Razor") > -1) ? 0 : 1,
-                allowedKeyPrefix: (templateConfiguration.Type.indexOf("Razor") > -1) ? "@" : "[",
                 //#endregion
 
                 //#region get fields in content types
@@ -390,10 +252,9 @@ angular.module("SourceEditor")
 
                 //#endregion
 
+                /// add the list to the snippet manager so it works for typing
                 registerInEditor: function() {
-                    // try to add my snippets
                     var snippetManager = ace.require("ace/snippets").snippetManager;
-                    //svc.parsed = snippetManager.parseSnippetFile(svc.list, "_");
                     snippetManager.register(svc.list);
                 }
             };

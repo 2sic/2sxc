@@ -1,9 +1,0 @@
-set	 key	 title	 tobTrigger	 content	 help
-App	 AppName	 App Name	 app name	 @App.Name	 internal name
-
-path	Path	returns the url to the current app	 for integrating scripts	 images etc. For example	 use as ***\/scripts\/knockout.js	path	@App.Path	 
-physical path	Physical path	physical path	 in c:\\	physical path	@App.PhysicalPath	 
-App Guid	App Guid	internal GUID - should stay the same across all systems for this specific App	app guid	@App.AppGuid	 
-App Id	App Id	Id in the current data base. Is a different number in every App-Installation	app id	@App.AppId	 
-App Name	App Name	internal name	app name	@App.Name	
-App Folder	App Folder	folder of the 2sxc-app	 often used to create paths to scripts or join some values. if you only need to reference a script	 please use App.Path	app folder	@App.Folder

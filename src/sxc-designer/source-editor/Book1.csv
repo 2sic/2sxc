@@ -1,7 +1,0 @@
-set;key;title;tabTrigger; content;help;;;
-App;Path;returns the url to the current app;path;@App.Path;path for integrating scripts,  images etc. For example  use as ***\/scripts\/knockout.js;;; 
-App;PhysPath;physical path;physical path;@App.PhysicalPath;physical path in c:\\;;;
-App;AppGuid;App Guid;app guid;@App.AppGuid;internal GUID - should stay the same across all systems for this specific App;; ;
-App;AppId;App Id;app id;@App.AppId;Id in the current data base. Is a different number in every App-Installation;; ;
-App;AppName;App Name;app name;@App.Name;internal name;;;
-App;AppFolder;folder of the 2sxc-app;app folder;@App.Folder;often used to create paths to scripts or join some values. if you only need to reference a script,  please use App.Path;;;

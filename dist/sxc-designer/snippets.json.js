@@ -51,7 +51,7 @@
         {
             "set": "@DnnRazor",
             "subset": "Content",
-            "name": "@Toolbar",
+            "name": "Toolbar",
             "title": "",
             "content": "@${1:Content}.Toolbar",
             "help": ""
@@ -59,7 +59,7 @@
         {
             "set": "@DnnRazor",
             "subset": "Content",
-            "name": "@ToolbarFloat",
+            "name": "ToolbarFloat",
             "title": "",
             "content": "<div class=\\sc-element\\>@${1:Content}.Toolbar</div>",
             "help": ""
@@ -67,7 +67,7 @@
         {
             "set": "@DnnRazor",
             "subset": "List",
-            "name": "@Toolbar",
+            "name": "Toolbar",
             "title": "Header toolbar",
             "content": "@List.Toolbar",
             "help": "Outputs the toolbar to edit list information - place in a <div> to float like other toolbars"
@@ -75,7 +75,7 @@
         {
             "set": "@DnnRazor",
             "subset": "List",
-            "name": "@ToolbarFloat",
+            "name": "ToolbarFloat",
             "title": "",
             "content": "<div class=\\sc-element\\>@List.Toolbar</div>",
             "help": ""
@@ -1223,6 +1223,238 @@
             "title": "",
             "content": "@Dnn.User.Profile.GetPropertyValue(\\${1:City}\\)",
             "help": "any property of the user profile as configured in your portal"
+        },
+        {
+            "set": "[Content",
+            "subset": "General",
+            "name": "Toolbar",
+            "title": "",
+            "content": "[${1:Content}:Toolbar]",
+            "help": ""
+        },
+        {
+            "set": "[Content",
+            "subset": "General",
+            "name": "ToolbarFloat",
+            "title": "",
+            "content": "<div class=\\sc-element\\>[${1:Content}:Toolbar]</div>",
+            "help": ""
+        },
+        {
+            "set": "[List",
+            "subset": "Header",
+            "name": "Toolbar",
+            "title": "",
+            "content": "[List:Toolbar]",
+            "help": ""
+        },
+        {
+            "set": "[List",
+            "subset": "Header",
+            "name": "ToolbarFloat",
+            "title": "",
+            "content": "<div class=\\sc-element\\>[List:Toolbar]</div>",
+            "help": ""
+        },
+        {
+            "set": "[List",
+            "subset": "Repeater",
+            "name": "Repeater",
+            "title": "",
+            "content": "<repeat repeat=\\${1:Employee} in Data:${2:Default}\\>...[${1}:Title]...</repeat>",
+            "help": ""
+        },
+        {
+            "set": "[List",
+            "subset": "LoopItems",
+            "name": "Count",
+            "title": "",
+            "content": "[${1:Employee}:Repeater:Count]",
+            "help": ""
+        },
+        {
+            "set": "[List",
+            "subset": "LoopItems",
+            "name": "Index",
+            "title": "",
+            "content": "[${1:Employee}:Repeater:Index]",
+            "help": ""
+        },
+        {
+            "set": "[List",
+            "subset": "LoopItems",
+            "name": "Index1",
+            "title": "",
+            "content": "[${1:Employee}:Repeater:Index1]",
+            "help": ""
+        },
+        {
+            "set": "[List",
+            "subset": "LoopItems",
+            "name": "IsFirst",
+            "title": "",
+            "content": "[${1:Employee}:Repeater:IsFirst]",
+            "help": ""
+        },
+        {
+            "set": "[List",
+            "subset": "LoopItems",
+            "name": "IsLast",
+            "title": "",
+            "content": "[${1:Employee}:Repeater:IsLast]",
+            "help": ""
+        },
+        {
+            "set": "[List",
+            "subset": "LoopItems",
+            "name": "Alternator2",
+            "title": "",
+            "content": "[${1:Employee}:Repeater:Alternator2]",
+            "help": ""
+        },
+        {
+            "set": "[List",
+            "subset": "LoopItems",
+            "name": "Alternator3",
+            "title": "",
+            "content": "[${1:Employee}:Repeater:Alternator3]",
+            "help": ""
+        },
+        {
+            "set": "[List",
+            "subset": "LoopItems",
+            "name": "Alternator4",
+            "title": "",
+            "content": "[${1:Employee}:Repeater:Alternator4]",
+            "help": ""
+        },
+        {
+            "set": "[List",
+            "subset": "LoopItems",
+            "name": "Alternator5",
+            "title": "",
+            "content": "[${1:Employee}:Repeater:Alternator5]",
+            "help": ""
+        },
+        {
+            "set": "[DnnToken",
+            "subset": "App",
+            "name": "Path",
+            "title": "",
+            "content": "[App:Path]",
+            "help": ""
+        },
+        {
+            "set": "[DnnToken",
+            "subset": "App",
+            "name": "PhysicalPath",
+            "title": "",
+            "content": "[App:PhysicalPath]",
+            "help": ""
+        },
+        {
+            "set": "[DnnToken",
+            "subset": "App",
+            "name": "Guid",
+            "title": "",
+            "content": "[App:AppGuid]",
+            "help": ""
+        },
+        {
+            "set": "[DnnToken",
+            "subset": "App",
+            "name": "AppId",
+            "title": "",
+            "content": "[App:AppId]",
+            "help": ""
+        },
+        {
+            "set": "[DnnToken",
+            "subset": "App",
+            "name": "Name",
+            "title": "",
+            "content": "[App:Name]",
+            "help": ""
+        },
+        {
+            "set": "[DnnToken",
+            "subset": "App",
+            "name": "Folder",
+            "title": "",
+            "content": "[App:Folder]",
+            "help": ""
+        },
+        {
+            "set": "[DnnToken",
+            "subset": "Portal",
+            "name": "Currency",
+            "title": "",
+            "content": "[Portal:Currency]",
+            "help": ""
+        },
+        {
+            "set": "[DnnToken",
+            "subset": "Portal",
+            "name": "Description",
+            "title": "",
+            "content": "[Portal:Description]",
+            "help": ""
+        },
+        {
+            "set": "[DnnToken",
+            "subset": "Portal",
+            "name": "Email",
+            "title": "",
+            "content": "[Portal:Email]",
+            "help": ""
+        },
+        {
+            "set": "[DnnToken",
+            "subset": "Portal",
+            "name": "FooterText",
+            "title": "",
+            "content": "[Portal:FooterText]",
+            "help": ""
+        },
+        {
+            "set": "[DnnToken",
+            "subset": "Portal",
+            "name": "HomeDirectory",
+            "title": "",
+            "content": "[Portal:HomeDirectory]",
+            "help": ""
+        },
+        {
+            "set": "[DnnToken",
+            "subset": "Portal",
+            "name": "LogoFile",
+            "title": "",
+            "content": "[Portal:LogoFile]",
+            "help": ""
+        },
+        {
+            "set": "[DnnToken",
+            "subset": "Portal",
+            "name": "PortalName",
+            "title": "",
+            "content": "[Portal:PortalName]",
+            "help": ""
+        },
+        {
+            "set": "[DnnToken",
+            "subset": "Portal",
+            "name": "PortalAlias",
+            "title": "",
+            "content": "[Portal:PortalAlias]",
+            "help": ""
+        },
+        {
+            "set": "[DnnToken",
+            "subset": "Portal",
+            "name": "TimeZoneOffset",
+            "title": "",
+            "content": "[Portal:TimeZoneOffset]",
+            "help": ""
         }
     ]
 }
