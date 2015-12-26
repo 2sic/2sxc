@@ -50,11 +50,14 @@ $2sxc.getManageController = function (id) {
         langs: JSON.stringify(manageInfo.languages),
         portalroot: sxcGlobals.PortalRoot,
         websiteroot: manageInfo.applicationRoot,
+        user: manageInfo.user,
         // note that the app-root doesn't exist when opening "manage-app"
         approot: (manageInfo.config && manageInfo.config.appPath) ? manageInfo.config.appPath : null // this is the only value which doesn't have a slash by default
     };
 
     var toolbarConfig = manageInfo.config;
+    var enableTools = manageInfo.user.canDesign;
+    var enableDevelop = manageInfo.user.canDevelop;
 
     // all the standard buttons with the display configuration and click-action
     var actionButtonsConf = {
@@ -184,7 +187,7 @@ $2sxc.getManageController = function (id) {
             icon: "glyphicon-qrcode",
             lightbox: true,
             hideFirst: true,
-            showOn: "design",
+            showOn: "admin",
             uiActionOnly: true, // so it doesn't create the content when used
             action: function (settings, event) {
                 tbContr._openNgDialog(settings, event);
@@ -192,33 +195,22 @@ $2sxc.getManageController = function (id) {
         },
         "more": {
             title: "Toolbar.MoreActions",
-            icon: "glyphicon-option-horizontal",
-            icon2: "glyphicon-option-vertical",
+            icon: "mode0",
             borlightboxder: false,
             hideFirst: false,
-            showOn: "default,edit,design",
-            uiActionOnly: true, // so it doesn't create the content when used
+            showOn: "default,edit,design,admin",
+            uiActionOnly: true, // so it doesn't create the content when clicked
             action: function (settings, event) {
                 var moreButton = $(event.target).parent().find("i");
                 var fullMenu = moreButton.closest("ul.sc-menu");
-                switch(moreButton.attr("data-state")) {
-                    case undefined:
-                    case "0":
-                        moreButton.addClass("mode-more");
-                        fullMenu.removeClass("showDefault").addClass("showEdit");
-                        moreButton.attr("data-state", "1");
-                        break;
-                    case "1":
-                        moreButton.removeClass("mode-more").removeClass(this.icon).addClass(this.icon2);
-                        fullMenu.removeClass("showEdit").removeClass("showDefault").addClass("showDesign");
-                        moreButton.attr("data-state", "2");
-                        break;
-                    case "2":
-                        moreButton.addClass(this.icon).removeClass(this.icon2);
-                        fullMenu.removeClass("showDesign").addClass("showDefault");
-                        moreButton.attr("data-state", "0");
-                        break;
-                }
+                var state = Number(moreButton.attr("data-state") || 0);
+                var newState = (state + 1) % (enableTools ? 4 : 3); // if tools are enabled, there are 4 states
+
+                fullMenu.removeClass("show-set-0 show-set-1 show-set-2 show-set-3");
+                fullMenu.addClass("show-set-" + newState);
+                moreButton.removeClass("mode0 mode1 mode2 mode3");
+                moreButton.addClass("mode" + newState);
+                moreButton.attr("data-state", newState);
             }
         }
     };
@@ -413,12 +405,12 @@ $2sxc.getManageController = function (id) {
                     buttons.push($.extend({}, settings, { action: "replace" }));
                 
                 buttons.push($.extend({}, settings, { action: "layout" }));
-                if($2sxc.urlParams.get("debug") === "true")
+                if(enableTools)
                     buttons.push($.extend({}, settings, { action: "develop" }));
                 buttons.push($.extend({}, settings, { action: "more" }));
             }
 
-            var tbClasses = "sc-menu showDefault" + ((settings.sortOrder === -1) ? " listContent" : "");
+            var tbClasses = "sc-menu show-set-0" + ((settings.sortOrder === -1) ? " listContent" : "");
             var toolbar = $("<ul />", { 'class': tbClasses, 'onclick': "javascript: var e = arguments[0] || window.event; e.stopPropagation();" });
 
             for (var i = 0; i < buttons.length; i++)

@@ -94,7 +94,6 @@ namespace ToSic.SexyContent
                             },
                             applicationRoot = ResolveUrl("~"),
                             lang = PortalSettings.CultureCode.ToLower(), //System.Threading.Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName.ToLower(),
-                            // fallbackLang = new [] {"en"},
                             langPrimary = PortalSettings.DefaultLanguage.ToLower(),
                             languages = SexyContent.GetCulturesWithActiveState(PortalId, ZoneId.Value).Where(c => c.Active).Select(c => new { key = c.Code.ToLower(), name = c.Text }) //new [] { "en-en:somethnig", "de-de:deutschland", "it-it:italy" }
 
