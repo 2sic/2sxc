@@ -195,22 +195,19 @@ $2sxc.getManageController = function (id) {
         },
         "more": {
             title: "Toolbar.MoreActions",
-            icon: "mode0",
+            icon: "mode0 btn-mode",
             borlightboxder: false,
             hideFirst: false,
             showOn: "default,edit,design,admin",
             uiActionOnly: true, // so it doesn't create the content when clicked
             action: function (settings, event) {
-                var moreButton = $(event.target).parent().find("i");
-                var fullMenu = moreButton.closest("ul.sc-menu");
-                var state = Number(moreButton.attr("data-state") || 0);
+                var fullMenu = $(event.target).closest("ul.sc-menu");
+                var state = Number(fullMenu.attr("data-state") || 0);
                 var newState = (state + 1) % (enableTools ? 4 : 3); // if tools are enabled, there are 4 states
 
-                fullMenu.removeClass("show-set-0 show-set-1 show-set-2 show-set-3");
-                fullMenu.addClass("show-set-" + newState);
-                moreButton.removeClass("mode0 mode1 mode2 mode3");
-                moreButton.addClass("mode" + newState);
-                moreButton.attr("data-state", newState);
+                fullMenu.removeClass("show-set-" + state)
+                    .addClass("show-set-" + newState)
+                    .attr("data-state", newState);
             }
         }
     };

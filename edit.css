@@ -46,22 +46,17 @@
 .sc-menu .mode0 {
     
 }
-.mode0:before { content: "\e234";   }
-.mode1:before { content: "\e234";   }
-.mode2:before { content: "\e235";   }
-.mode3:before { content: "\e235";   }
-.sc-menu .mode1 {
-    -ms-transform: rotate(45deg); /* IE 9 */
-    transform: rotate(45deg);
-    left: -2px;
-    top: +2px;
-}
-
-.sc-menu .mode3 {
+.show-set-0 i.btn-mode:before { content: "\e234";   }
+.show-set-1 i.btn-mode:before { content: "\e234";   }
+.show-set-2 i.btn-mode:before { content: "\e235";   }
+.show-set-3 i.btn-mode:before { content: "\e235";   }
+.show-set-1 i.btn-mode, .show-set-3 i.btn-mode { 
     -ms-transform: rotate(45deg); /* IE 9 */
     transform: rotate(45deg);
     top: +2px;
 }
+.show-set-0 i.btn-mode {    top: 2px; }
+.show-set-1 i.btn-mode {    left: -2px; }
 
 /* Template / ContentType / App-Selector */
 .sc-selector-wrapper { position: relative;overflow: hidden; }
