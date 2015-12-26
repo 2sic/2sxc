@@ -27,11 +27,20 @@ module.exports = function (grunt) {
                 formating: true
             },
             dist: {}
+        },
+        watch: {
+            options: {
+                atBegin: true
+            },
+            snippets: {
+                files: ["<%= paths.src %>/sxc-develop/source-editor/snippets.xlsx"],
+                tasks: ["go"]
+            }
         }
 
     });
 
     grunt.loadNpmTasks("json.excel");
 
-    grunt.registerTask("build-snippets", ["go"]);
+    grunt.registerTask("build-snippets-auto", ["watch:snippets"]);
 };

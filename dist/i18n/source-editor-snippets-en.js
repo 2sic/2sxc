@@ -143,6 +143,14 @@
       "Title": "Environment / System",
       "QueryString.Title": "QueryString (URL-Parameters) Tokens",
       "Time.Title": "Time Tokens"
+    },
+    "C#": {
+      "Title": "c# code",
+      "Basics.Title": "Basics like using or function blocks"
+    },
+    "Html": {
+      "Title": "Html snippets",
+      "Resources.Title": "Resources like javascripts and css"
     }
   }
 }

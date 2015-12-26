@@ -10,17 +10,17 @@ angular.module("SourceEditor")
                 loaded: false,
                 list: null, // snippets as list in a format for the editor
                 tree: null, // snippets as tree for the drop-down tool
-                ace: ace,   // source editor object
+                ace: ace, // source editor object
 
 
                 // #region load jsons and prepare for binding as tree and for the editor
                 /// Main function, loads all snippets, translates
                 /// returns the object tree as a promise
-                getSnippets: function () {
+                getSnippets: function() {
                     if (svc.loaded)
-                        return $q(function (resolve, reject) { resolve(svc.cachedSnippets); });
+                        return $q(function(resolve, reject) { resolve(svc.cachedSnippets); });
 
-                    return svc.loadTable().then(function (result) {
+                    return svc.loadTable().then(function(result) {
                         // filter for token/razor snippets
                         svc.list = svc.filterAwayNotNeededSnippetsList(result.data.snippets);
 
@@ -32,7 +32,7 @@ angular.module("SourceEditor")
                     });
                 },
 
-                initSnippetsWithConfig: function (sets) {
+                initSnippetsWithConfig: function(sets) {
                     sets = svc.tree = svc.makeTree(sets);
 
                     //#region Retrieve all relevant content-types and infos
@@ -62,7 +62,7 @@ angular.module("SourceEditor")
                     return sets;
                 },
 
-                loadTable: function () {
+                loadTable: function() {
                     return $http.get("../sxc-develop/snippets.json.js");
                 },
 
@@ -102,7 +102,7 @@ angular.module("SourceEditor")
                     return result;
                 },
 
-                getHelpKey: function (set, subset, snip, addition) {
+                getHelpKey: function(set, subset, snip, addition) {
                     return "SourceEditorSnippets" + "." + set + "." + subset + "." + snip + addition;
                 },
 
@@ -111,7 +111,7 @@ angular.module("SourceEditor")
                 //#region scan the configuration and filter unneeded snippets
 
                 // scan the list for sets starting with @ or [ and filter if not needed right now
-                filterAwayNotNeededSnippetsList: function (list) {
+                filterAwayNotNeededSnippetsList: function(list) {
                     var newList = [];
                     for (var i = 0; i < list.length; i++) {
                         var itm = list[i];
@@ -119,7 +119,7 @@ angular.module("SourceEditor")
                         if (setHasPrefix === -1 || (setHasPrefix === svc.keyPrefixIndex)) {
                             newList.push(itm);
                             // if necessary, remove first char
-                            if(setHasPrefix===svc.keyPrefixIndex)
+                            if (setHasPrefix === svc.keyPrefixIndex)
                                 itm.set = itm.set.substr(1);
                         }
                     }
@@ -131,20 +131,33 @@ angular.module("SourceEditor")
                 //#endregion
 
                 //#region get fields in content types
-                loadContentType: function (target, type, prefix) {
+                loadContentType: function(target, type, prefix) {
                     contentTypeFieldSvc(templateConfiguration.AppId, { StaticName: type }).getFields()
-                        .then(function (result) {
+                        .then(function(result) {
                             // first add common items if the content-type actually exists
-                            angular.forEach(result.data, function (value) {
+                            angular.forEach(result.data, function(value) {
                                 var fieldname = value.StaticName;
                                 var description = value.Metadata.merged.Notes || "" + " (" + value.Type.toLowerCase() + ") ";
                                 var placeholder = svc.valuePlaceholder(prefix, fieldname);
-                                target[fieldname] = {
+                                var snipDef = target[fieldname] = {
                                     key: fieldname,
                                     label: fieldname,
                                     snip: placeholder,
                                     help: description
                                 };
+                                // add more snippets if it could be an image
+                                if (value.Type === "Hyperlink") {
+                                    target[fieldname + "-tu"] = angular.extend({}, snipDef, {
+                                        key: fieldname + " - thumb url",
+                                        label: fieldname + " - thumb url",
+                                        snip: svc.imageResizeSnippet(snipDef.snip, false)
+                                    });
+                                    target[fieldname + "-ti"] = angular.extend({}, snipDef, {
+                                        key: fieldname + " - thumb img",
+                                        label: fieldname + " - thumb img",
+                                        snip: svc.imageResizeSnippet(snipDef.snip, true)
+                                    });
+                                }
                             });
 
                             var std = ["EntityId", "EntityTitle", "EntityGuid", "EntityType", "IsPublished", "Modified"];
@@ -160,12 +173,18 @@ angular.module("SourceEditor")
                         });
                 },
 
-                valuePlaceholder: function (obj, val) {
+                valuePlaceholder: function(obj, val) {
                     return (templateConfiguration.Type.indexOf("Razor") > -1)
                         ? "@" + obj + "." + val
                         : "[" + obj.replace(".", ":") + ":" + val + "]";
                 },
 
+                imageResizeSnippet: function(basicPlaceholder, addImgTag) {
+                    var snip = basicPlaceholder + "?w=${1:200}&h=${2:200}&mode=${3:crop}";
+                    if (addImgTag)
+                        snip = "<img src=\"" + snip + "\">";
+                    return snip;
+                },
                 //#endregion
 
                 /// add the list to the snippet manager so it works for typing

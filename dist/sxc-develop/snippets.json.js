@@ -49,7 +49,7 @@
             "help": "often used to create paths to scripts or join some values. if you only need to reference a script,  please use App.Path"
         },
         {
-            "set": "@DnnRazor",
+            "set": "@Content",
             "subset": "Content",
             "name": "Toolbar",
             "title": "",
@@ -57,27 +57,35 @@
             "help": ""
         },
         {
-            "set": "@DnnRazor",
+            "set": "@Content",
             "subset": "Content",
             "name": "ToolbarFloat",
             "title": "",
-            "content": "<div class=\\sc-element\\>\r\n    @${1:Content}.Toolbar\r\n</div>",
+            "content": "<div class=\"sc-element\">\r\n    @${1:Content}.Toolbar\r\n</div>",
             "help": ""
         },
         {
-            "set": "@DnnRazor",
-            "subset": "List",
+            "set": "@List",
+            "subset": "Header",
             "name": "List-Toolbar",
             "title": "Header toolbar",
             "content": "@List.Toolbar",
             "help": "Outputs the toolbar to edit list information - place in a <div> to float like other toolbars"
         },
         {
-            "set": "@DnnRazor",
-            "subset": "List",
+            "set": "@List",
+            "subset": "Header",
             "name": "List-ToolbarFloat",
             "title": "",
-            "content": "<div class=\\sc-element\\>@List.Toolbar</div>",
+            "content": "<div class=\"sc-element\">\r\n    @List.Toolbar\r\n</div>",
+            "help": ""
+        },
+        {
+            "set": "@List",
+            "subset": "Repeater",
+            "name": "foreach loop",
+            "title": "",
+            "content": "@foreach(var ${1:cont} in AsDynamic(Data[\"${2:Default}\"])){\r\n    <div class=\"sc-element\">\r\n        @${1}.EntityTitle\r\n        @${1}.Toolbar\r\n    </div>\r\n}",
             "help": ""
         },
         {
@@ -1225,6 +1233,46 @@
             "help": "any property of the user profile as configured in your portal"
         },
         {
+            "set": "@User",
+            "subset": "Permissions",
+            "name": "IsEditMode",
+            "title": "",
+            "content": "@if (DotNetNuke.Common.Globals.IsEditMode())\r\n{\r\n        <div> stuff here which only appears in edit mode </div>\r\n}",
+            "help": ""
+        },
+        {
+            "set": "@C#",
+            "subset": "Basics",
+            "name": "using",
+            "title": "",
+            "content": "@using ${1:System.Data.Linq}",
+            "help": ""
+        },
+        {
+            "set": "@C#",
+            "subset": "Basics",
+            "name": "comment, server-side",
+            "title": "",
+            "content": "@* \r\n\r\nserver side multi-line comment\r\n\r\n*@",
+            "help": ""
+        },
+        {
+            "set": "@C#",
+            "subset": "Basics",
+            "name": "functions block server-side",
+            "title": "",
+            "content": "@functions{\r\n\r\n}",
+            "help": ""
+        },
+        {
+            "set": "@C#",
+            "subset": "Basics",
+            "name": "",
+            "title": "",
+            "content": "",
+            "help": ""
+        },
+        {
             "set": "[Content",
             "subset": "General",
             "name": "Toolbar",
@@ -1719,6 +1767,38 @@
             "title": "",
             "content": "[Ticks:TicksPerDay]",
             "help": "CPU Ticks per Day (for calculations)"
+        },
+        {
+            "set": "[Html",
+            "subset": "Resources",
+            "name": "script",
+            "title": "",
+            "content": "<script src=\"[App:Path]/dist/${1:myscripts}.js\" type=\"text/javascript\" data-enableoptimizations=\"100\"></script>",
+            "help": ""
+        },
+        {
+            "set": "[Html",
+            "subset": "Resources",
+            "name": "css, style-sheet",
+            "title": "",
+            "content": "<link rel=\"stylesheet\" href=\"[App:Path]/assets/AppCatalog.css\" data-enableoptimizations=\"100\"/>",
+            "help": ""
+        },
+        {
+            "set": "@Html",
+            "subset": "Resources",
+            "name": "script",
+            "title": "",
+            "content": "<script src=\"@App.Path/dist/${1:myscripts}.js\" type=\"text/javascript\" data-enableoptimizations=\"100\"></script>",
+            "help": ""
+        },
+        {
+            "set": "@Html",
+            "subset": "Resources",
+            "name": "css, style-sheet",
+            "title": "",
+            "content": "<link rel=\"stylesheet\" href=\"@App.Path/assets/AppCatalog.css\" data-enableoptimizations=\"100\"/>",
+            "help": ""
         }
     ]
 }
