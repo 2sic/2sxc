@@ -21,8 +21,8 @@ module.exports = function (grunt) {
         },
         go: {
             options: {
-                excel: "<%= paths.src %>/sxc-designer/source-editor/snippets.xlsx",
-                json: "<%= paths.dist %>/sxc-designer/snippets.json.js",
+                excel: "<%= paths.src %>/sxc-develop/source-editor/snippets.xlsx",
+                json: "<%= paths.dist %>/sxc-develop/snippets.json.js",
                 to: "json",
                 formating: true
             },

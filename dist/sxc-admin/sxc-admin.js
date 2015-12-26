@@ -234,14 +234,14 @@
             case "sort":
                 sxcDialogs.openManageContentList(items[0], vm.close);
                 break;
-            case "template":
+            case "develop":
                 // lazy load this to ensure the module is "registered" inside 2sxc
                 $ocLazyLoad.load([
                         //"../lib/angular-ui-ace/ui-ace.min.js",
-                        $2sxc.debug.renameScript("../sxc-designer/sxc-designer.min.js")
+                        $2sxc.debug.renameScript("../sxc-develop/sxc-develop.min.js")
                     ])
                     .then(function() {
-                        sxcDialogs.openViewEdit(items[0], vm.close);
+                        sxcDialogs.openDevelop(items[0], vm.close);
                     });
                 break;
             case "pipeline-designer":
@@ -893,7 +893,7 @@ angular.module("SxcAdminUi", [
         };
 
 
-        svc.openViewEdit = function ove(item, closeCallback) {
+        svc.openDevelop = function ove(item, closeCallback) {
             var resolve = eavAdminDialogs.CreateResolve({ item: item });
             return eavAdminDialogs.OpenModal("source-editor/editor.html", "Editor as vm", "xlg", resolve, closeCallback);
         };

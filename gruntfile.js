@@ -42,13 +42,13 @@ module.exports = function (grunt) {
         uglifyFile: "dist/config/config.min.js"
     };
     var designer = {
-        cwd: "src/sxc-designer/",
-        cwdJs: ["src/sxc-designer/**/*.js"],
-        tmp: "tmp/sxc-designer/",
-        templates: "tmp/sxc-designer/sxc-templates.js",
-        dist: "dist/sxc-designer/",
-        concatFile: "dist/sxc-designer/sxc-designer.js",
-        uglifyFile: "dist/sxc-designer/sxc-designer.min.js"
+        cwd: "src/sxc-develop/",
+        cwdJs: ["src/sxc-develop/**/*.js"],
+        tmp: "tmp/sxc-develop/",
+        templates: "tmp/sxc-develop/sxc-templates.js",
+        dist: "dist/sxc-develop/",
+        concatFile: "dist/sxc-develop/sxc-develop.js",
+        uglifyFile: "dist/sxc-develop/sxc-develop.min.js"
     };
 
 

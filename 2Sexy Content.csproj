@@ -408,7 +408,7 @@
     <Content Include="Extensions\Imazen_ImageResizer\license.txt" />
     <Content Include="grunt-tasks\sxc-api.gruntfile.js" />
     <Content Include="grunt-tasks\dnn.gruntfile.js" />
-    <Content Include="grunt-tasks\source-editor.gruntfile.js" />
+    <Content Include="grunt-tasks\develop.gruntfile.js" />
     <Content Include="grunt-tasks\inpage.gruntfile.js" />
     <Content Include="grunt-tasks\import-languages.gruntfile.js" />
     <Content Include="grunt-tasks\i18n.gruntfile.js" />
@@ -416,8 +416,6 @@
     <Content Include="SqlDataProvider\07.03.01.SqlDataProvider" />
     <Content Include="SqlDataProvider\07.03.03.SqlDataProvider" />
     <Content Include="SqlDataProvider\08.00.06.SqlDataProvider" />
-    <None Include="src\sxc-designer\source-editor\snippets.csv" />
-    <Content Include="src\sxc-designer\source-editor\source-editor-snippets.json" />
     <None Include="src\i18n\inpage-de.json" />
     <None Include="src\i18n\inpage-en.json" />
     <Content Include="icon-app.png" />
@@ -498,17 +496,17 @@
     <Content Include="src\sxc-admin\services\apps-service.js" />
     <Content Include="src\sxc-admin\services\sxc-dialogs-service.js" />
     <Content Include="src\sxc-admin\services\templates-service.js" />
-    <Content Include="src\sxc-designer\source-editor\snippets.constants.js" />
-    <Content Include="src\sxc-designer\source-editor\toArray-filter.js" />
+    <None Include="src\sxc-develop\source-editor\README.md" />
+    <Content Include="src\sxc-develop\source-editor\toArray-filter.js" />
     <Content Include="src\sxc-admin\templates\edit.html" />
     <Content Include="src\sxc-admin\templates\templates-edit-controller.js" />
     <Content Include="src\sxc-admin\templates\templates-controller.js" />
     <Content Include="src\sxc-admin\templates\templates.html" />
-    <Content Include="src\sxc-designer\source-editor\editor-controller.js" />
-    <Content Include="src\sxc-designer\source-editor\source-service.js" />
-    <Content Include="src\sxc-designer\source-editor\snippets.service.js" />
-    <Content Include="src\sxc-designer\source-editor\editor.html" />
-    <Content Include="src\sxc-designer\source-editor\app-source-edit.js" />
+    <Content Include="src\sxc-develop\source-editor\editor-controller.js" />
+    <Content Include="src\sxc-develop\source-editor\source-service.js" />
+    <Content Include="src\sxc-develop\source-editor\snippets.service.js" />
+    <Content Include="src\sxc-develop\source-editor\editor.html" />
+    <Content Include="src\sxc-develop\source-editor\app-source-edit.js" />
     <Content Include="src\sxc-admin\web-api\web-api-controller.js" />
     <Content Include="src\sxc-admin\web-api\web-api.html" />
     <Content Include="src\sxc-edit\fieldtemplates\directives\web-forms-bridge-directive.js" />
@@ -576,6 +574,7 @@
     <Content Include="src\i18n\sxc-admin-en.json" />
     <Content Include="src\sxc-admin\services\_sxc-services.js" />
     <Content Include="src\i18n\source-editor-snippets-en.json" />
+    <Content Include="src\sxc-develop\source-editor\snippets.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Administration\App_LocalResources\EditTemplate.ascx.resx" />

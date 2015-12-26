@@ -1,90 +1,6 @@
-(function () {
-
-    angular.module("SourceEditor", [
-            "EavConfiguration",
-            "EavServices",
-            "SxcServices",
-            "SxcTemplates",
-            "pascalprecht.translate",
-            "ui.ace"
-        ])
-        .config(["$translatePartialLoaderProvider", function($translatePartialLoaderProvider) {
-            // ensure the language pack is loaded
-            $translatePartialLoaderProvider.addPart("source-editor-snippets");
-        }]);
-
-} ());
-(function () {
-
-    angular.module("SourceEditor")
-
-        .controller("Editor", EditorController)
-    ;
-
-    function EditorController(sourceSvc, snippetSvc, item, $modalInstance, $scope, $translate) {
-        $translate.refresh();   // necessary to load stuff added in this lazy-loaded app
-
-        var vm = this;
-        var svc = sourceSvc(item.EntityId);
-        vm.view = {};
-        vm.editor = null;
-
-        svc.get().then(function (result) {
-            vm.view = result.data;
-            svc.initSnippets(vm.view);
-        });
-
-        // load appropriate snippets from the snippet service
-        svc.initSnippets = function (template) {
-            vm.snipSvc = snippetSvc(template, ace);
-            vm.snipSvc.getSnippets().then(function (result) {
-                vm.snippets = result;
-                vm.snippetSet = "Content";    // select default
-                vm.snippetHelp = vm.snipSvc.help;
-                vm.snippetLabel = vm.snipSvc.label;
-
-                // now register the snippets in the editor
-                vm.registerSnippets();
-            });
-        };
-
-        vm.close = function () { $modalInstance.dismiss("cancel"); };
-
-        vm.save = function () {
-            svc.save(vm.view).then(vm.close);
-        };
-
-        vm.addSnippet = function addSnippet(snippet) {
-            var snippetManager = ace.require("ace/snippets").snippetManager;
-            snippetManager.insertSnippet(vm.editor, snippet);
-            vm.editor.focus();
-        };
-
-        vm.registerSnippets = function registerSnippets() {
-            // ensure we have everything
-            if (!(vm.snipSvc && vm.editor))
-                return;
-            // try to add my snippets
-            vm.snipSvc.registerInEditor();
-            //var snippetManager = ace.require("ace/snippets").snippetManager;
-            //var snippets = vm.snipSvc.snippetsToRegister();
-            //var parsed = snippetManager.parseSnippetFile(snippets.snippetText, snippets.scope);
-            //snippetManager.register(parsed);
-        };
-
-        // this event is called when the editor is ready
-        $scope.aceLoaded = function (_editor) {
-            vm.editor = _editor;        // remember the editor for later actions
-            vm.registerSnippets();      // try to register the snippets
-        };
-
-    }
-    EditorController.$inject = ["sourceSvc", "snippetSvc", "item", "$modalInstance", "$scope", "$translate"];
-
-}());
 // This service delivers all snippets, translated etc. to the sourc-editor UI
 angular.module("SourceEditor")
-    .factory("snippetSvc", ["$http", "eavConfig", "svcCreator", "$translate", "contentTypeFieldSvc", "$q", function ($http, eavConfig, svcCreator, $translate, contentTypeFieldSvc, $q) {
+    .factory("snippetSvc", function ($http, eavConfig, svcCreator, $translate, contentTypeFieldSvc, $q) {
 
         // Construct a service for this specific appId
         return function createSvc(templateConfiguration, ace) {
@@ -147,7 +63,7 @@ angular.module("SourceEditor")
                 },
 
                 loadTable: function () {
-                    return $http.get("../sxc-designer/snippets.json.js");
+                    return $http.get("../sxc-develop/snippets.json.js");
                 },
 
                 // Convert the list into a tree with set/subset/item
@@ -253,7 +169,9 @@ angular.module("SourceEditor")
                 //#endregion
 
                 /// add the list to the snippet manager so it works for typing
-                registerInEditor: function() {
+                registerInEditor: function () {
+                    if (svc.list === null)
+                        throw "can't register snippets because list is not loaded";
                     var snippetManager = ace.require("ace/snippets").snippetManager;
                     snippetManager.register(svc.list);
                 }
@@ -262,82 +180,4 @@ angular.module("SourceEditor")
 
             return svc;
         };
-    }]);
-
-angular.module("SourceEditor")
-    .factory("sourceSvc", ["$http", function($http) {
-
-        // Construct a service for this specific appId
-        return function createSvc(templateId) {
-            var svc = {
-                get: function() {
-                    return $http.get('view/template/template', { params: { templateId: templateId } });
-                },
-
-                save: function(item) {
-                    return $http.post('view/template/template', item, { params: { templateId: templateId} });
-                }
-
-            };
-
-            return svc;
-        };
-    }]);
-(function () {
-
-    angular.module("SourceEditor")
-
-        // helps convert an object with keys to an array to allow sorting
-        // from https://github.com/petebacondarwin/angular-toArrayFilter
-        .filter('toArray', function() {
-            return function(obj, addKey) {
-                if (!angular.isObject(obj)) return obj;
-                if (addKey === false) {
-                    return Object.keys(obj).map(function(key) {
-                        return obj[key];
-                    });
-                } else {
-                    return Object.keys(obj).map(function(key) {
-                        var value = obj[key];
-                        return angular.isObject(value) ?
-                            Object.defineProperty(value, '$key', { enumerable: false, value: key }) :
-                            { $key: key, $value: value };
-                    });
-                }
-            };
-        });
-
-
-} ());
-angular.module('SourceEditor').run(['$templateCache', function($templateCache) {
-  'use strict';
-
-  $templateCache.put('source-editor/editor.html',
-    "<div ng-click=vm.debug.autoEnableAsNeeded($event)><div class=modal-header><button class=\"btn btn-default btn-square btn-subtle pull-right\" type=button ng-click=vm.close()><i icon=remove></i></button><h3 class=modal-title translate=SourceEditor.Title></h3></div><div class=modal-body><div class=row><div class=col-md-8><div tooltip=\"{{ vm.view.FileName }}\">{{ vm.view.FileName.substr(vm.view.FileName.lastIndexOf(\"\\\\\") + 1) }} ({{vm.view.Type }})</div><div ng-model=vm.view.Code style=\"height: 400px\" ui-ace=\"{\r" +
-    "\n" +
-    "                    useWrapMode : true,\r" +
-    "\n" +
-    "                    useSoftTabs: true,\r" +
-    "\n" +
-    "                    showGutter: true,\r" +
-    "\n" +
-    "                    theme:'twilight',\r" +
-    "\n" +
-    "                    mode: 'html',\r" +
-    "\n" +
-    "                    onLoad: aceLoaded,\r" +
-    "\n" +
-    "                    require: ['ace/ext/language_tools'],\r" +
-    "\n" +
-    "                    advanced: {\r" +
-    "\n" +
-    "                        enableSnippets: true,\r" +
-    "\n" +
-    "                        enableBasicAutocompletion: true,\r" +
-    "\n" +
-    "                        enableLiveAutocompletion: true\r" +
-    "\n" +
-    "                    }}\"></div></div><div class=\"pull-right col-md-4\"><div><strong translate=SourceEditor.SnippetsSection.Title></strong> <i icon=question-sign style=\"opacity: 0.3\" ng-click=\"showSnippetInfo = !showSnippetInfo\"></i><div ng-if=showSnippetInfo translate=SourceEditor.SnippetsSection.Intro></div></div><select class=input-lg width=100% ng-model=vm.snippetSet ng-options=\"key as ('SourceEditorSnippets.' + key + '.Title' | translate) for (key , value) in vm.snippets\" tooltip=\"{{ 'SourceEditorSnippets.' + vm.snippetSet + '.Help'  | translate}}\"></select><div>&nbsp;</div><div ng-repeat=\"(subsetName, subsetValue) in vm.snippets[vm.snippetSet]\"><strong tooltip=\"{{ 'SourceEditorSnippets.' + vm.snippetSet + '.' + subsetName + '.Help'  | translate}}\">{{ 'SourceEditorSnippets.' + vm.snippetSet + '.' + subsetName + '.Title' | translate}}</strong><ul><li ng-repeat=\"value in subsetValue | toArray | orderBy: '$key'\" tooltip=\"{{ value.snip }}\"><span ng-click=vm.addSnippet(value.snip)>{{value.label}}</span> <i icon=info-sign style=\"opacity: 0.3\" ng-click=\"show = !show\" ng-show=value.help></i><div ng-if=show><em>{{value.help}}</em></div></li></ul></div></div></div></div><div class=modal-footer><button class=\"btn btn-primary btn-square btn-lg pull-left\" type=button ng-click=vm.save()><i icon=ok></i></button></div><show-debug-availability class=pull-right></show-debug-availability></div>"
-  );
-
-}]);
+    });

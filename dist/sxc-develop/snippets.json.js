@@ -61,13 +61,13 @@
             "subset": "Content",
             "name": "ToolbarFloat",
             "title": "",
-            "content": "<div class=\\sc-element\\>@${1:Content}.Toolbar</div>",
+            "content": "<div class=\\sc-element\\>\r\n    @${1:Content}.Toolbar\r\n</div>",
             "help": ""
         },
         {
             "set": "@DnnRazor",
             "subset": "List",
-            "name": "Toolbar",
+            "name": "List-Toolbar",
             "title": "Header toolbar",
             "content": "@List.Toolbar",
             "help": "Outputs the toolbar to edit list information - place in a <div> to float like other toolbars"
@@ -75,7 +75,7 @@
         {
             "set": "@DnnRazor",
             "subset": "List",
-            "name": "ToolbarFloat",
+            "name": "List-ToolbarFloat",
             "title": "",
             "content": "<div class=\\sc-element\\>@List.Toolbar</div>",
             "help": ""
@@ -1243,7 +1243,7 @@
         {
             "set": "[List",
             "subset": "Header",
-            "name": "Toolbar",
+            "name": "List-Toolbar",
             "title": "",
             "content": "[List:Toolbar]",
             "help": ""
@@ -1251,7 +1251,7 @@
         {
             "set": "[List",
             "subset": "Header",
-            "name": "ToolbarFloat",
+            "name": "List-ToolbarFloat",
             "title": "",
             "content": "<div class=\\sc-element\\>[List:Toolbar]</div>",
             "help": ""

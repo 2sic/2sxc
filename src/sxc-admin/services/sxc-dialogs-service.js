@@ -119,7 +119,7 @@ angular.module("SxcAdminUi", [
         };
 
 
-        svc.openViewEdit = function ove(item, closeCallback) {
+        svc.openDevelop = function ove(item, closeCallback) {
             var resolve = eavAdminDialogs.CreateResolve({ item: item });
             return eavAdminDialogs.OpenModal("source-editor/editor.html", "Editor as vm", "xlg", resolve, closeCallback);
         };

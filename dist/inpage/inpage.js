@@ -179,7 +179,7 @@ $2sxc.getManageController = function (id) {
                 tbContr._getSelectorScope().toggle();
             }
         },
-        'template': {
+        'develop': {
             title: "Toolbar.EditView",
             icon: "glyphicon-qrcode",
             lightbox: true,
@@ -280,10 +280,10 @@ $2sxc.getManageController = function (id) {
                     });
             }
 
-            if(["replace", "app", "zone", "sort", "template"].indexOf(settings.action) !== -1)
+            if(["replace", "app", "zone", "sort", "develop"].indexOf(settings.action) !== -1)
                 params.dialog = settings.action;
 
-            if (settings.action === "template")
+            if (settings.action === "develop")
                 items = [{ EntityId: manageInfo.templateId }];
 
             // when doing new, there may be a prefill in the link to initialize the new item
@@ -414,7 +414,7 @@ $2sxc.getManageController = function (id) {
                 
                 buttons.push($.extend({}, settings, { action: "layout" }));
                 if($2sxc.urlParams.get("debug") === "true")
-                    buttons.push($.extend({}, settings, { action: "template" }));
+                    buttons.push($.extend({}, settings, { action: "develop" }));
                 buttons.push($.extend({}, settings, { action: "more" }));
             }
 
