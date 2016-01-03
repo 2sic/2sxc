@@ -6,7 +6,7 @@
 {{'Edit.Fields.Hyperlink.Default.Tooltip2' | translate }}
 ADAM - sponsored with ♥ by 2sic.com">
             <span class="input-group-btn" style="vertical-align: top;">
-                <button type="button" class="btn btn-primary xdropzone-adam btn-lg" ng-disabled="to.disabled" tooltip="{{'Edit.Fields.Hyperlink.Default.AdamUploadLabel' | translate }}" ng-click="vm.adam.toggle()">
+                <button type="button" class="btn btn-primary btn-lg" ng-disabled="to.disabled" tooltip="{{'Edit.Fields.Hyperlink.Default.AdamUploadLabel' | translate }}" ng-click="vm.adam.toggle()">
                     <i icon="upload"></i>
                     <i icon="apple"></i>
                 </button>
@@ -47,7 +47,8 @@ ADAM - sponsored with ♥ by 2sic.com">
             update-callback="vm.setValue"
         ></adam-browser>
 
-       
+        <dropzone-upload-preview></dropzone-upload-preview>
+
         <div ng-show="uploading">
             <div class="dropzone-previews">
             </div>

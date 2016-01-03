@@ -24,6 +24,8 @@
 
         // load svc...
         vm.svc = adamSvc(vm.contentTypeName, vm.entityGuid, vm.fieldName, vm.subFolder);
+
+        // refresh - also used by callback after an upload completed
         vm.refresh = vm.svc.liveListReload;
 
         vm.get = function () {
@@ -43,10 +45,6 @@
             else
                 vm.goIntoFolder(fileItem);
         };
-
-        //vm.queueComplete = function qC() {
-        //    vm.refresh();
-        //};
 
         vm.addFolder = function () {
             var folderName = window.prompt("Folder Name?");

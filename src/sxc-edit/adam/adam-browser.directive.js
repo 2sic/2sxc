@@ -9,10 +9,10 @@
 
                 //replace: true,
                 transclude: false,
-                //link: function postLink(scope, elem, attrs) {
-                //    var icn = attrs.icon;
-                //    elem.addClass("glyphicon glyphicon-" + icn);
-                //},
+                require: '^dropzone',
+                link: function postLink(scope, elem, attrs, dropzoneCtrl) {
+                    dropzoneCtrl.adam = scope.vm;
+                },
                 scope: {
                     contentTypeName: "=",
                     entityGuid: "=",
