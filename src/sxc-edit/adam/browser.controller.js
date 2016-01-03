@@ -17,6 +17,7 @@
         vm.showFolders = $scope.showFolders;
         vm.subFolder = $scope.subFolder || "";
         vm.disabled = $scope.ngDisabled;
+        vm.enableSelect = $scope.enableSelect || true;
 
         vm.activate = function () {
             if($scope.autoLoad)
@@ -42,21 +43,23 @@
                 vm.get();
         };
 
+        vm.openUpload = function() {
+            vm.dropzone.openUpload();
+        };
+
         vm.select = function (fileItem) {
-            if (vm.disabled)
+            if (vm.disabled || !vm.enableSelect)
                 return;
-            if (!fileItem.IsFolder)
-                $scope.updateCallback("File:" + fileItem.Id);
-            else
-                vm.goIntoFolder(fileItem);
+            $scope.updateCallback("File:" + fileItem.Id);
         };
 
         vm.addFolder = function () {
             if (vm.disabled)
                 return;
             var folderName = window.prompt("Folder Name?");
-            vm.svc.addFolder(folderName)
-                .then(vm.refresh);
+            if (folderName)
+                vm.svc.addFolder(folderName)
+                    .then(vm.refresh);
         };
 
         vm.del = function del(item) {

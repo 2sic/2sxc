@@ -12,7 +12,8 @@
                 require: "^dropzone",
                 link: function postLink(scope, elem, attrs, dropzoneCtrl) {
                     // connect this adam to the dropzone
-                    dropzoneCtrl.adam = scope.vm;
+                    dropzoneCtrl.adam = scope.vm;       // so the dropzone controller knows what path etc.
+                    scope.vm.dropzone = dropzoneCtrl;   // so we can require an "open file browse" dialog
                 },
                 scope: {
                     contentTypeName: "=",
@@ -23,6 +24,7 @@
                     autoLoad: "=",
                     updateCallback: "=",
                     registerSelf: "=",
+                    enableSelect: "=",
                     ngDisabled: "="
                 },
                 controller: "BrowserController",

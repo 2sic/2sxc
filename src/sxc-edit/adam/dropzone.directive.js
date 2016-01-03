@@ -24,9 +24,11 @@ angular.module("Adam")
 
                     dictDefaultMessage: "",
                     addRemoveLinks: false,
-                    previewsContainer: ".field-" + field.toLowerCase() + " .dropzone-previews",
-                    clickable: ".field-" + field.toLowerCase() + " .dropzone-adam"
+                    previewsContainer: ".field-" + field.toLowerCase() + " .dropzone-previews"
+                    //clickable: ".field-" + field.toLowerCase() + " .dropzone-adam"
                 };
+
+
 
                 var eventHandlers = {
                     'addedfile': function(file) {
@@ -70,6 +72,10 @@ angular.module("Adam")
 
                 scope.resetDropzone = function() {
                     dropzone.removeAllFiles();
+                };
+
+                controller.openUpload = function() {
+                    dropzone.hiddenFileInput.click();
                 };
             },
 

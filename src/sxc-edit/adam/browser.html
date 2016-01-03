@@ -1,6 +1,6 @@
 ﻿<div ng-if="vm.show" class="">
     <!-- info for dropping stuff here -->
-    <div class="dz-preview dropzone-adam" ng-disabled="vm.disabled" tooltip="{{'Edit.Fields.Hyperlink.Default.AdamUploadLabel' | translate }}">
+    <div class="dz-preview dropzone-adam" ng-disabled="vm.disabled" tooltip="{{'Edit.Fields.Hyperlink.Default.AdamUploadLabel' | translate }}" ng-click="vm.openUpload()">
         <div class="dz-image" style="background-color: whitesmoke">
         </div>
         <div class="dz-details" style="opacity: 1">
@@ -51,7 +51,7 @@
 
 
     <!-- folder list -->
-    <div ng-show="vm.showFolders || vm.debug.on" class="dz-preview" ng-repeat="item in vm.items | filter: { IsFolder: true }  | orderBy:'Name'" ng-click="vm.select(item)">
+    <div ng-show="vm.showFolders || vm.debug.on" class="dz-preview" ng-repeat="item in vm.items | filter: { IsFolder: true }  | orderBy:'Name'" ng-click="vm.goIntoFolder(item)">
         <div ng-if="item.Type == 'folder'" class="dz-image" style="background-color: whitesmoke"> </div>
         <div class="dz-details file-type-{{item.Type}}">
             <div class="dz-size" ng-if="item.Type == 'folder'">
@@ -63,7 +63,7 @@
     </div>
 
     <!-- files -->
-    <div class="dz-preview" ng-class="{ 'dz-success': value.Value.toLowerCase() == 'file:' + item.Id }" ng-repeat="item in vm.items | filter: { IsFolder: false }  | orderBy:'Name'" ng-click="vm.select(item)" ng-disabled="vm.disabled">
+    <div class="dz-preview" ng-class="{ 'dz-success': value.Value.toLowerCase() == 'file:' + item.Id }" ng-repeat="item in vm.items | filter: { IsFolder: false }  | orderBy:'Name'" ng-click="vm.select(item)" ng-disabled="vm.disabled || !vm.enableSelect">
         <div ng-if="item.Type == 'image'" class="dz-image">
             <img data-dz-thumbnail="" alt="{{ item.Id + ':' + item.Name }}" ng-src="{{ '/portals/0/' + item.Path + '?w=120&h=120&mode=crop' }}">
         </div>
