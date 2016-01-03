@@ -37,7 +37,7 @@ ADAM - sponsored with ♥ by 2sic.com">
             </a>
         </div>
 
-        <!-- this is where the directive should be added -->
+        <!-- The ADAM file browser, requires the uploader wrapped around it -->
         <adam-browser
             content-type-name="to.header.ContentTypeName"
             entity-guid="to.header.Guid"
@@ -47,11 +47,8 @@ ADAM - sponsored with ♥ by 2sic.com">
             update-callback="vm.setValue"
         ></adam-browser>
 
+        <!-- the preview of the uploader -->
         <dropzone-upload-preview></dropzone-upload-preview>
 
-        <div ng-show="uploading">
-            <div class="dropzone-previews">
-            </div>
-        </div>
     </div>
 </div>

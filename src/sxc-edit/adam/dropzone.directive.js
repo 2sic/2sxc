@@ -72,6 +72,8 @@ angular.module("Adam")
                     dropzone.removeAllFiles();
                 };
             },
+
+            // This controller is needed, because it needs an API which can talk to other directives
             controller: function() {
                 var vm = this;
                 vm.adam = {

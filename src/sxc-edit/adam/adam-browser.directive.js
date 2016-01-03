@@ -9,8 +9,9 @@
 
                 //replace: true,
                 transclude: false,
-                require: '^dropzone',
+                require: "^dropzone",
                 link: function postLink(scope, elem, attrs, dropzoneCtrl) {
+                    // connect this adam to the dropzone
                     dropzoneCtrl.adam = scope.vm;
                 },
                 scope: {

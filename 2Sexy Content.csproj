@@ -521,7 +521,7 @@
     <Content Include="src\sxc-edit\fieldtemplates\hyperlink.css" />
     <Content Include="src\sxc-edit\fieldtemplates\string-wysiwyg.js" />
     <Content Include="src\sxc-edit\fieldtemplates\templates\hyperlink-library.html" />
-    <Content Include="src\sxc-edit\_sxc-fieldtemplates-app.js" />
+    <Content Include="src\sxc-edit\fieldtemplates\_sxc-fieldtemplates-app.js" />
     <Content Include="src\sxc-edit\fieldtemplates\hyperlink-default.js" />
     <Content Include="src\sxc-edit\fieldtemplates\templates\hyperlink-default-filemanager.html" />
     <Content Include="src\sxc-edit\fieldtemplates\templates\hyperlink-default-pagepicker.html" />
