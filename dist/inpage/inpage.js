@@ -425,11 +425,11 @@ $2sxc.getManageController = function (id) {
                     buttons.push($.extend({}, settings, { action: "replace" }));
                 
                 buttons.push($.extend({}, settings, { action: "layout" }));
-                if(enableTools)
-                    buttons.push($.extend({}, settings, { action: "develop" }));
-                if (!isContent) {
+                if (enableTools) {
                     buttons.push($.extend({}, settings, { action: "app" }));
-                    buttons.push($.extend({}, settings, { action: "manage-apps" }));
+                    buttons.push($.extend({}, settings, { action: "develop" }));
+                    if (!isContent) 
+                        buttons.push($.extend({}, settings, { action: "manage-apps" }));
                 }
                 buttons.push($.extend({}, settings, { action: "more" }));
             }

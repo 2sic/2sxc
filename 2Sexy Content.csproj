@@ -437,7 +437,7 @@
     <Content Include="src\sxc-edit\adam\dropzone.directive.js" />
     <Content Include="src\sxc-edit\adam\_adam.js" />
     <Content Include="src\inpage\dnn-menu-helper\dnn-inpage-edit.js" />
-    <Content Include="src\inpage\module-toolbar\2sxc.api.manage.js" />
+    <Content Include="src\inpage\module-toolbar\inpage-toolbar.js" />
     <Content Include="js\2sxc.api.min.js" />
     <Content Include="src\inpage\module-toolbar\toolbar-bootstrapper.js" />
     <Content Include="src\inpage\template-selector\moduleService.js" />
