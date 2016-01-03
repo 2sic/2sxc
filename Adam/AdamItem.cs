@@ -6,7 +6,7 @@ namespace ToSic.SexyContent.Adam
 
     {
         public bool IsFolder;
-        public int Id, ParentId, Size;
+        public int Id, ParentId, Size, MetadataId;
         public string Path, Name, Type;
 
         public AdamItem(IFileInfo original)

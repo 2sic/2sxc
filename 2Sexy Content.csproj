@@ -170,6 +170,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Adam\AdamController.cs" />
+    <Compile Include="Adam\AdamFile.cs" />
+    <Compile Include="Adam\AdamFolder.cs" />
     <Compile Include="Adam\AdamItem.cs" />
     <Compile Include="Adam\AdamNavigator.cs" />
     <Compile Include="Adam\Core.cs" />
@@ -429,6 +431,7 @@
     <Content Include="Images\Edit.png" />
     <Content Include="Administration\Import.ascx" />
     <Content Include="Images\Save.png" />
+    <Content Include="src\sxc-edit\adam\adam.css" />
     <Content Include="src\sxc-edit\adam\browser.controller.js" />
     <Content Include="src\sxc-edit\adam\browser.directive.js" />
     <Content Include="src\sxc-edit\adam\browser.html" />

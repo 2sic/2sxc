@@ -171,8 +171,11 @@ namespace ToSic.SexyContent.Adam
             var subfolders = folderManager.GetFolders(current);
             var files = folderManager.GetFiles(current);
 
-            var adamFolders = subfolders.Where(s => s.FolderID != current.FolderID).Select(f => new AdamItem(f));
-            var adamFiles = files.Select(f => new AdamItem(f));
+            var adamFolders =
+                subfolders.Where(s => s.FolderID != current.FolderID)
+                    .Select(f => new AdamItem(f) {MetadataId = Core.GetMetadataId(f.FolderID, true)});
+            var adamFiles = files
+                .Select(f => new AdamItem(f) {MetadataId = Core.GetMetadataId(f.FileId, false)});
 
             var all = adamFolders.Concat(adamFiles);
 

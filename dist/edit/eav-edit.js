@@ -714,7 +714,7 @@ angular.module('eavEditTemplates',[]).run(['$templateCache', function($templateC
 
 
   $templateCache.put('localization/localization-menu.html',
-    "<div dropdown is-open=status.isopen class=eav-localization style=\"z-index:{{1000 - index}}\"><a class=eav-localization-lock ng-click=vm.actions.translate(); ng-if=vm.isDefaultLanguage() title={{vm.tooltip()}} ng-class=\"{ 'eav-localization-lock-open': !options.templateOptions.disabled }\" dropdown-toggle>{{vm.infoMessage()}} <i class=\"glyphicon glyphicon-globe\"></i></a><ul class=\"dropdown-menu multi-level pull-right eav-localization-dropdown\" role=menu aria-labelledby=single-button><li role=menuitem><a ng-disabled=vm.enableTranslate() ng-click=vm.actions.translate() translate=LangMenu.Unlink></a></li><li role=menuitem><a ng-click=vm.actions.linkDefault() translate=LangMenu.LinkDefault></a></li><li role=menuitem class=dropdown-submenu><a href=# translate=LangMenu.GoogleTranslate></a><ul class=dropdown-menu><li ng-repeat=\"language in vm.languages.languages\" class=disabled role=menuitem><a ng-click=vm.actions.autoTranslate(language.key) title={{language.name}} href=#>{{language.key}}</a></li></ul></li><li role=menuitem class=dropdown-submenu><a href=# translate=LangMenu.Copy></a><ul class=dropdown-menu><li ng-repeat=\"language in vm.languages.languages\" ng-class=\"{ disabled: options.templateOptions.disabled || !vm.hasLanguage(language.key) }\" role=menuitem><a ng-click=vm.actions.copyFrom(language.key) title={{language.name}} href=#>{{language.key}}</a></li></ul></li><li role=menuitem class=dropdown-submenu><a href=# translate=LangMenu.Use></a><ul class=dropdown-menu><li ng-repeat=\"language in vm.languages.languages\" ng-class=\"{ disabled: !vm.hasLanguage(language.key) }\" role=menuitem><a ng-click=vm.actions.useFrom(language.key) title={{language.name}} href=#>{{language.key}}</a></li></ul></li><li role=menuitem class=dropdown-submenu><a href=# translate=LangMenu.Share></a><ul class=dropdown-menu><li ng-repeat=\"language in vm.languages.languages\" ng-class=\"{ disabled: !vm.hasLanguage(language.key) }\" role=menuitem><a ng-click=vm.actions.shareFrom(language.key) title={{language.name}} href=#>{{language.key}}</a></li></ul></li></ul></div>"
+    "<div dropdown is-open=status.isopen class=eav-localization style=\"z-index:{{1000 - index}}\"><a class=eav-localization-lock ng-click=vm.actions.toggleTranslate(); ng-if=vm.isDefaultLanguage() title={{vm.tooltip()}} ng-class=\"{ 'eav-localization-lock-open': !options.templateOptions.disabled }\" dropdown-toggle>{{vm.infoMessage()}} <i class=\"glyphicon glyphicon-globe\"></i></a><ul class=\"dropdown-menu multi-level pull-right eav-localization-dropdown\" role=menu aria-labelledby=single-button><li role=menuitem><a ng-disabled=vm.enableTranslate() ng-click=vm.actions.translate() translate=LangMenu.Unlink></a></li><li role=menuitem><a ng-click=vm.actions.linkDefault() translate=LangMenu.LinkDefault></a></li><li role=menuitem class=dropdown-submenu><a href=# translate=LangMenu.GoogleTranslate></a><ul class=dropdown-menu><li ng-repeat=\"language in vm.languages.languages\" class=disabled role=menuitem><a ng-click=vm.actions.autoTranslate(language.key) title={{language.name}} href=#>{{language.key}}</a></li></ul></li><li role=menuitem class=dropdown-submenu><a href=# translate=LangMenu.Copy></a><ul class=dropdown-menu><li ng-repeat=\"language in vm.languages.languages\" ng-class=\"{ disabled: options.templateOptions.disabled || !vm.hasLanguage(language.key) }\" role=menuitem><a ng-click=vm.actions.copyFrom(language.key) title={{language.name}} href=#>{{language.key}}</a></li></ul></li><li role=menuitem class=dropdown-submenu><a href=# translate=LangMenu.Use></a><ul class=dropdown-menu><li ng-repeat=\"language in vm.languages.languages\" ng-class=\"{ disabled: !vm.hasLanguage(language.key) }\" role=menuitem><a ng-click=vm.actions.useFrom(language.key) title={{language.name}} href=#>{{language.key}}</a></li></ul></li><li role=menuitem class=dropdown-submenu><a href=# translate=LangMenu.Share></a><ul class=dropdown-menu><li ng-repeat=\"language in vm.languages.languages\" ng-class=\"{ disabled: !vm.hasLanguage(language.key) }\" role=menuitem><a ng-click=vm.actions.shareFrom(language.key) title={{language.name}} href=#>{{language.key}}</a></li></ul></li></ul></div>"
   );
 
 
@@ -887,7 +887,7 @@ angular.module('eavEditTemplates',[]).run(['$templateCache', function($templateC
 				};
 
 				vm.isDefaultLanguage = function () { return languages.currentLanguage != languages.defaultLanguage; };
-				vm.enableTranslate = function () { return true; };
+				vm.enableTranslate = function () { return vm.fieldModel.getVsWithLanguage(languages.currentLanguage) === null; };
 
 				vm.infoMessage = function () {
 				    if (Object.keys($scope.value.Dimensions).length === 1 && $scope.value.Dimensions[languages.defaultLanguage] === false)
@@ -911,10 +911,17 @@ angular.module('eavEditTemplates',[]).run(['$templateCache', function($templateC
 				};
 
 				vm.actions = {
+				    toggleTranslate: function toggleTranslate() {
+				        if (vm.enableTranslate())
+				            vm.actions.translate();
+				        else
+				            vm.actions.linkDefault();
+				    },
 				    translate: function trnslt() {
-				        //if (vm.enableTranslate())
-				        vm.fieldModel.removeLanguage(languages.currentLanguage);
-				        vm.fieldModel.addVs($scope.value.Value, languages.currentLanguage, false);
+				        if (vm.enableTranslate()) {
+				            vm.fieldModel.removeLanguage(languages.currentLanguage);
+				            vm.fieldModel.addVs($scope.value.Value, languages.currentLanguage, false);
+				        }
 				    },
 				    linkDefault: function linkDefault() {
 				        vm.fieldModel.removeLanguage(languages.currentLanguage);
@@ -1044,7 +1051,7 @@ function enhanceEntity(entity) {
         // todo: when adding VS - ensure the events are added too...
         att.addVs = function(value, language, shareMode) {
             var dimensions = {};
-            dimensions[language] = (shareMode === null ? true : shareMode);
+            dimensions[language] = ((shareMode === null || shareMode === undefined) ? false : shareMode);
             var newVs = { "Value": value, "Dimensions": dimensions };
             // ToDo: enhancer.enhanceWithCount(newVs.Dimensions);
             this.Values.push(enhancer.enhanceVs(newVs));

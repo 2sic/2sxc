@@ -103,6 +103,7 @@ if (window.angular) // needed because the file is also included in older non-ang
                 },
                 metadataOfEntity: 4,
                 metadataOfAttribute: 2,
+                metadataOfCmsObject: 10,
 
                 contentType: {
                     defaultScope: "2SexyContent",

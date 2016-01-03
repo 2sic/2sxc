@@ -1,3 +1,10 @@
+.metadata-exists {
+    color: #0088f4
+}
+
+.metadata-missing {
+    
+}
 /*
  * The MIT License
  * Copyright (c) 2012 Matias Meno <m@tias.me>

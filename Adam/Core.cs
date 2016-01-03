@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Web.Razor.Helpers;
+using ToSic.Eav;
 
 namespace ToSic.SexyContent.Adam
 {
@@ -95,5 +97,14 @@ namespace ToSic.SexyContent.Adam
                 _folder = Folder("", true);
             return _folder;
         }
+
+        public int GetMetadataId(int id, bool isFolder)
+        {
+            var items = App.Data.Metadata.GetAssignedEntities(Constants.AssignmentObjectTypeCmsObject,
+                (isFolder ? "folder:" : "file:") + id);
+
+            return items.FirstOrDefault()?.EntityId ?? 0;
+        }
+
     }
 }

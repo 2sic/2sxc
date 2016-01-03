@@ -44,7 +44,7 @@
                 </button>
             </div>
             <div class="dz-filename">
-                <span data-dz-name="">up to level {{vm.currentFolderDepth() - 1}}</span>
+                <span data-dz-name="">up</span>
             </div>
         </div>
     </div>
@@ -52,20 +52,24 @@
 
     <!-- folder list -->
     <div ng-show="vm.showFolders || vm.debug.on" class="dz-preview" ng-repeat="item in vm.items | filter: { IsFolder: true }  | orderBy:'Name'" ng-click="vm.goIntoFolder(item)">
-        <div ng-if="item.Type == 'folder'" class="dz-image" style="background-color: whitesmoke"> </div>
+        <div class="dz-image" style="background-color: whitesmoke"> </div>
         <div class="dz-details file-type-{{item.Type}}">
-            <div class="dz-size" ng-if="item.Type == 'folder'">
-                <span data-dz-size="" style="font-size: xx-large"><i icon="th-large"></i></span>
-            </div>
-            <div class="dz-filename"><span data-dz-name="">{{ item.Name }}</span></div>
+            <span class="pull-right" ng-class="{'metadata-exists': item.MetadataId > 0}" style="font-size: large" 
+                  ng-click="vm.editFolderMetadata(item)"
+                  ng-if="vm.folderMetadataContentType"
+                  stop-event="click">
+                <span tooltip="{{item.MetadataId}}"><i icon="tag"></i></span>
+            </span>
+            <span data-dz-size="" style="font-size: xx-large"><i icon="th-large"></i></span>
+            <div class="dz-filename"><span data-dz-name="">{{ item.Name }}{{ vm.debug.on ? "(lvl:" + vm.currentFolderDepth() + ")" : ""}}</span></div>
             <div class="dz-filename"><span ng-click="vm.del(item)" stop-event="click" ng-disabled="vm.disabled"><i icon="remove"></i></span></div>
         </div>
     </div>
-
     <!-- files -->
     <div class="dz-preview" ng-class="{ 'dz-success': value.Value.toLowerCase() == 'file:' + item.Id }" ng-repeat="item in vm.items | filter: { IsFolder: false }  | orderBy:'Name'" ng-click="vm.select(item)" ng-disabled="vm.disabled || !vm.enableSelect">
         <div ng-if="item.Type == 'image'" class="dz-image">
-            <img data-dz-thumbnail="" alt="{{ item.Id + ':' + item.Name }}" ng-src="{{ '/portals/0/' + item.Path + '?w=120&h=120&mode=crop' }}">
+            <img data-dz-thumbnail="" alt="{{ item.Id + ':' + item.Name
+}}" ng-src="{{ '/portals/0/' + item.Path + '?w=120&h=120&mode=crop' }}">
         </div>
 
         <div class="dz-details file-type-{{item.Type}}">

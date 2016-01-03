@@ -7,7 +7,7 @@
     // The controller for the main form directive
     app.controller("BrowserController", BrowserController);
     
-    function BrowserController($scope, adamSvc, debugState) {
+    function BrowserController($scope, adamSvc, debugState, eavConfig, eavAdminDialogs) {
         var vm = this;
         vm.debug = debugState;
         vm.contentTypeName = $scope.contentTypeName;
@@ -35,6 +35,7 @@
             if ($scope.registerSelf)
                 $scope.registerSelf(vm);
         };
+
 
         // load svc...
         vm.svc = adamSvc(vm.contentTypeName, vm.entityGuid, vm.fieldName, vm.subFolder);
@@ -96,6 +97,35 @@
 
         vm.allowCreateFolder = function() {
             return vm.svc.folders.length < vm.folderDepth;
+        };
+
+        //#endregion
+
+        //#region
+        vm.editFolderMetadata = function(item) {
+            var items = [
+                vm._itemDefinition(item, vm.folderMetadataContentType)
+            ];
+
+            eavAdminDialogs.openEditItems(items, vm.refresh);
+
+        };
+
+        vm._itemDefinition = function (item, metadataType) {
+            var title = "Metadata"; // todo: i18n
+            return item.MetadataId !== 0
+                ? { EntityId: item.MetadataId, Title: title } // if defined, return the entity-number to edit
+                : {
+                    ContentTypeName: metadataType, // otherwise the content type for new-assegnment
+                    Metadata: {
+                        Key: (item.Type === "folder" ? "folder" : "file") + ":" + item.Id,
+                        KeyType: "string",
+                        TargetType: eavConfig.metadataOfCmsObject
+                    },
+                    Title: title,
+                    Prefill: { EntityTitle: item.Name } // possibly prefill the entity title 
+                };
+
         };
 
         //#endregion
