@@ -173,3 +173,10 @@
 .glyphicon-dashboard:before {
   content: "\e141";
 }
+.glyphicon-stop:before {
+  content: "\e074";
+}
+
+.glyphicon-th-large:before {
+  content: "\e010";
+}

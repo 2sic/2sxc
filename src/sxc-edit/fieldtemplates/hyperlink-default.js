@@ -14,6 +14,13 @@
 			wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"],
 			controller: "FieldTemplate-HyperlinkCtrl as vm"
 		});
+
+		formlyConfigProvider.setType({
+		    name: "hyperlink-library",
+		    templateUrl: "fieldtemplates/templates/hyperlink-default.html",
+		    wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"],
+		    controller: "FieldTemplate-HyperlinkCtrl as vm"
+		});
         
 	})
 
@@ -24,6 +31,8 @@
 		vm.modalInstance = null;
 		vm.testLink = "";
 		vm.checkImgRegEx = /(?:([^:\/?#]+):)?(?:\/\/([^\/?#]*))?([^?#]*\.(?:jpg|jpeg|gif|png))(?:\?([^#]*))?(?:#(.*))?/i;
+		vm.asLibrary = $scope.to.type === "hyperlink-library";
+	    vm.enableFolders = vm.asLibrary;
 
 		vm.isImage = function () {
 		    var value = $scope.value;
@@ -102,56 +111,62 @@
 		vm.getExistingFiles = function () {
 		};
 
+	    //#region new adam: callbacks only
+	    vm.setValue = function(url) {
+	        $scope.value.Value = url;
+	    };
+        //#endregion
+
 	    //#region adam
-		var header = $scope.to.header;
-		var field = $scope.options.key;
-		var entityGuid = header.Guid;
+		//var header = $scope.to.header;
+		//var field = $scope.options.key;
+		//var entityGuid = header.Guid;
 
-            $scope.adam = vm.adam = {
-                show: false,
-                subFolder: ""
-	        };
-            vm.adam.svc = adamSvc(header.ContentTypeName, entityGuid, field, "");
-            vm.adam.refresh = vm.adam.svc.liveListReload;
+        //    $scope.adam = vm.adam = {
+        //        show: false,
+        //        subFolder: ""
+	    //    };
+        //    vm.adam.svc = adamSvc(header.ContentTypeName, entityGuid, field, "");
+        //    vm.adam.refresh = vm.adam.svc.liveListReload;
 
-	        vm.adam.get = function() {
-	            vm.items = vm.adam.svc.liveList();
-	            vm.adam.folders = vm.adam.svc.folders;
-	        };
+	    //    vm.adam.get = function() {
+	    //        vm.items = vm.adam.svc.liveList();
+	    //        vm.adam.folders = vm.adam.svc.folders;
+	    //    };
 
-	        vm.adam.toggle = function toggle() {
-	            vm.adam.show = !vm.adam.show;
-	            vm.adam.get();
-	        };
-	        vm.adam.select = function (fileItem) {
-	            if (!fileItem.IsFolder)
-	                $scope.value.Value = "File:" + fileItem.Id;
-	            else 
-	                vm.adam.goIntoFolder(fileItem);
-	        };
-	        vm.adam.queueComplete = function qC() {
-	            vm.adam.refresh();
-	        };
+	    //    vm.adam.toggle = function toggle() {
+	    //        vm.adam.show = !vm.adam.show;
+	    //        vm.adam.get();
+	    //    };
+	    //    vm.adam.select = function (fileItem) {
+	    //        if (!fileItem.IsFolder)
+	    //            $scope.value.Value = "File:" + fileItem.Id;
+	    //        else 
+	    //            vm.adam.goIntoFolder(fileItem);
+	    //    };
+	    //    vm.adam.queueComplete = function qC() {
+	    //        vm.adam.refresh();
+	    //    };
 
-	        vm.adam.addFolder = function() {
-	            var folderName = window.prompt("Folder Name?");
-	            vm.adam.svc.addFolder(folderName)
-	                .then(vm.adam.refresh);
-	        };
+	    //    vm.adam.addFolder = function() {
+	    //        var folderName = window.prompt("Folder Name?");
+	    //        vm.adam.svc.addFolder(folderName)
+	    //            .then(vm.adam.refresh);
+	    //    };
 
-	        vm.adam.del = function del(item) {
-	            var ok = window.confirm("delete ok?");
-	            if (ok)
-	                vm.adam.svc.delete(item);
-	        };
+	    //    vm.adam.del = function del(item) {
+	    //        var ok = window.confirm("delete ok?");
+	    //        if (ok)
+	    //            vm.adam.svc.delete(item);
+	    //    };
 
-	        vm.adam.goIntoFolder = function(folder) {
-	            var subFolder = vm.adam.svc.goIntoFolder(folder);
-	            vm.adam.subFolder = subFolder;
-	        };
-	        vm.adam.goUp = function () {
-	            vm.adam.subFolder = vm.adam.svc.goUp();
-	        };
+	    //    vm.adam.goIntoFolder = function(folder) {
+	    //        var subFolder = vm.adam.svc.goIntoFolder(folder);
+	    //        vm.adam.subFolder = subFolder;
+	    //    };
+	    //    vm.adam.goUp = function () {
+	    //        vm.adam.subFolder = vm.adam.svc.goUp();
+	    //    };
 	        //#endregion
 	    });
 

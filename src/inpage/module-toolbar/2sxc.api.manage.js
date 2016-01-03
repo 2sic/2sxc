@@ -26,6 +26,7 @@ $2sxc.getManageController = function (id) {
     var toolbarConfig = manageInfo.config;
     var enableTools = manageInfo.user.canDesign;
     var enableDevelop = manageInfo.user.canDevelop;
+    var isContent = manageInfo.isContentApp;
 
     // all the standard buttons with the display configuration and click-action
     var actionButtonsConf = {
@@ -151,8 +152,30 @@ $2sxc.getManageController = function (id) {
             }
         },
         'develop': {
-            title: "Toolbar.EditView",
+            title: "Toolbar.EditView", // todo
             icon: "glyphicon-qrcode",
+            lightbox: true,
+            hideFirst: true,
+            showOn: "admin",
+            uiActionOnly: true, // so it doesn't create the content when used
+            action: function (settings, event) {
+                tbContr._openNgDialog(settings, event);
+            }
+        },
+        'app': {
+            title: "Toolbar.App",
+            icon: "glyphicon-stop",
+            lightbox: true,
+            hideFirst: true,
+            showOn: "admin",
+            uiActionOnly: true, // so it doesn't create the content when used
+            action: function (settings, event) {
+                tbContr._openNgDialog(settings, event);
+            }
+        },
+        'manage-apps': {
+            title: "Toolbar.ManageApps",
+            icon: "glyphicon-th-large",
             lightbox: true,
             hideFirst: true,
             showOn: "admin",
@@ -372,6 +395,10 @@ $2sxc.getManageController = function (id) {
                 buttons.push($.extend({}, settings, { action: "layout" }));
                 if(enableTools)
                     buttons.push($.extend({}, settings, { action: "develop" }));
+                if (!isContent) {
+                    buttons.push($.extend({}, settings, { action: "app" }));
+                    buttons.push($.extend({}, settings, { action: "manage-apps" }));
+                }
                 buttons.push($.extend({}, settings, { action: "more" }));
             }
 

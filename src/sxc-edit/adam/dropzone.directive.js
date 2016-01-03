@@ -32,7 +32,7 @@ angular.module("sxcFieldTemplates")
                 var eventHandlers = {
                     'addedfile': function(file) {
                         scope.$apply(function() {
-                            scope.fileAdded = true;
+                            // scope.fileAdded = true; // seems unused
                             scope.uploading = true;
                         });
                     },

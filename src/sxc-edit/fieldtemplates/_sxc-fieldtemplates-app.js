@@ -12,7 +12,8 @@
         "2sxc4ng",
         "SxcEditTemplates",
         "EavConfiguration",
-        "SxcServices"
+        "SxcServices",
+        "Adam"
     ]);
 
 })();
