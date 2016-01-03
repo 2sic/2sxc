@@ -19,8 +19,11 @@
                     entityGuid: "=",
                     fieldName: "=",
                     subFolder: "=",
+                    showFolders: "=",
                     autoLoad: "=",
-                    updateCallback: "="
+                    updateCallback: "=",
+                    registerSelf: "=",
+                    ngDisabled: "="
                 },
                 controller: "BrowserController",
                 controllerAs: "vm"

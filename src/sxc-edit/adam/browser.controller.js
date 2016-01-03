@@ -14,12 +14,15 @@
         vm.entityGuid = $scope.entityGuid;
         vm.fieldName = $scope.fieldName;
         vm.show = false;
-        vm.showFolders = false;
+        vm.showFolders = $scope.showFolders;
         vm.subFolder = $scope.subFolder || "";
+        vm.disabled = $scope.ngDisabled;
 
         vm.activate = function () {
             if($scope.autoLoad)
                 vm.toggle();
+            if ($scope.registerSelf)
+                $scope.registerSelf(vm);
         };
 
         // load svc...
@@ -40,6 +43,8 @@
         };
 
         vm.select = function (fileItem) {
+            if (vm.disabled)
+                return;
             if (!fileItem.IsFolder)
                 $scope.updateCallback("File:" + fileItem.Id);
             else
@@ -47,12 +52,16 @@
         };
 
         vm.addFolder = function () {
+            if (vm.disabled)
+                return;
             var folderName = window.prompt("Folder Name?");
             vm.svc.addFolder(folderName)
                 .then(vm.refresh);
         };
 
         vm.del = function del(item) {
+            if (vm.disabled)
+                return;
             var ok = window.confirm("delete ok?");
             if (ok)
                 vm.svc.delete(item);

@@ -1,12 +1,11 @@
-﻿<h1>adam included</h1>
-<div class="">
+﻿<div ng-if="vm.show" class="">
     <!-- info for dropping stuff here -->
-    <div class="dz-preview dropzone-adam" ng-disabled="to.disabled" tooltip="{{'Edit.Fields.Hyperlink.Default.AdamUploadLabel' | translate }}">
+    <div class="dz-preview dropzone-adam" ng-disabled="vm.disabled" tooltip="{{'Edit.Fields.Hyperlink.Default.AdamUploadLabel' | translate }}">
         <div class="dz-image" style="background-color: whitesmoke">
         </div>
         <div class="dz-details" style="opacity: 1">
             <div class="dz-size">
-                <button type="button" class="btn btn-primary btn-lg" ng-disabled="to.disabled">
+                <button type="button" class="btn btn-primary btn-lg" ng-disabled="vm.disabled">
                     <i icon="plus"></i>
                     <i icon="file"></i>
                 </button>
@@ -18,12 +17,12 @@
     </div>
 
     <!-- folders - not always shown -->
-    <div ng-show="vm.debug.on" class="dz-preview" ng-disabled="to.disabled" ng-click="vm.addFolder()">
+    <div ng-show="vm.showFolders || vm.debug.on" class="dz-preview" ng-disabled="vm.disabled" ng-click="vm.addFolder()">
         <div class="dz-image" style="background-color: whitesmoke">
         </div>
         <div class="dz-details" style="opacity: 1">
             <div class="dz-size">
-                <button type="button" class="btn btn-default btn-lg" ng-disabled="to.disabled">
+                <button type="button" class="btn btn-default btn-lg" ng-disabled="vm.disabled">
                     <i icon="plus"></i>
                     <i icon="th-large"></i>
                 </button>
@@ -35,12 +34,12 @@
     </div>
 
     <!-- browse up a folder - not always shown -->
-    <div ng-show="vm.debug.on" class="dz-preview" ng-disabled="to.disabled" ng-if="vm.folders.length > 0" ng-click="vm.goUp()">
+    <div ng-show="vm.showFolders || vm.debug.on" class="dz-preview" ng-disabled="vm.disabled" ng-if="vm.folders.length > 0" ng-click="vm.goUp()">
         <div class="dz-image" style="background-color: whitesmoke">
         </div>
         <div class="dz-details" style="opacity: 1">
             <div class="dz-size">
-                <button type="button" class="btn btn-default btn-square btn-lg" ng-disabled="to.disabled">
+                <button type="button" class="btn btn-default btn-square btn-lg" ng-disabled="vm.disabled">
                     <i icon="level-up"></i>
                 </button>
             </div>
@@ -52,19 +51,19 @@
 
 
     <!-- folder list -->
-    <div ng-show="vm.debug.on" class="dz-preview" ng-repeat="item in vm.items | filter: { IsFolder: true }  | orderBy:'Name'" ng-click="vm.select(item)">
+    <div ng-show="vm.showFolders || vm.debug.on" class="dz-preview" ng-repeat="item in vm.items | filter: { IsFolder: true }  | orderBy:'Name'" ng-click="vm.select(item)">
         <div ng-if="item.Type == 'folder'" class="dz-image" style="background-color: whitesmoke"> </div>
         <div class="dz-details file-type-{{item.Type}}">
             <div class="dz-size" ng-if="item.Type == 'folder'">
                 <span data-dz-size="" style="font-size: xx-large"><i icon="th-large"></i></span>
             </div>
             <div class="dz-filename"><span data-dz-name="">{{ item.Name }}</span></div>
-            <div class="dz-filename"><span ng-click="vm.del(item)" stop-event="click"><i icon="remove"></i></span></div>
+            <div class="dz-filename"><span ng-click="vm.del(item)" stop-event="click" ng-disabled="vm.disabled"><i icon="remove"></i></span></div>
         </div>
     </div>
 
     <!-- files -->
-    <div class="dz-preview" ng-class="{ 'dz-success': value.Value.toLowerCase() == 'file:' + item.Id }" ng-repeat="item in vm.items | filter: { IsFolder: false }  | orderBy:'Name'" ng-click="vm.select(item)">
+    <div class="dz-preview" ng-class="{ 'dz-success': value.Value.toLowerCase() == 'file:' + item.Id }" ng-repeat="item in vm.items | filter: { IsFolder: false }  | orderBy:'Name'" ng-click="vm.select(item)" ng-disabled="vm.disabled">
         <div ng-if="item.Type == 'image'" class="dz-image">
             <img data-dz-thumbnail="" alt="{{ item.Id + ':' + item.Name }}" ng-src="{{ '/portals/0/' + item.Path + '?w=120&h=120&mode=crop' }}">
         </div>
@@ -75,7 +74,7 @@
             </div>
             <div class="dz-size file-actions" ng-if="item.Type == 'document' || item.Type == 'file'">
                 <span data-dz-size="">
-                    <button type="button" class="btn btn-subtle btn-lg" ng-disabled="to.disabled"><i icon="file"></i></button>
+                    <button type="button" class="btn btn-subtle btn-lg" ng-disabled="vm.disabled"><i icon="file"></i></button>
                 </span>
             </div>
             <div class="dz-filename"><span data-dz-name="">{{ item.Name }}</span></div>
@@ -100,8 +99,6 @@
 <div>
     todo:
     <ul>
-        <li>move disabled away from to.disabled</li>
         <li>i18n incl. in-code alerts</li>
     </ul>
 </div>
-<h1>end directive</h1>

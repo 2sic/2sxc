@@ -6,7 +6,7 @@
 {{'Edit.Fields.Hyperlink.Default.Tooltip2' | translate }}
 ADAM - sponsored with ♥ by 2sic.com">
             <span class="input-group-btn" style="vertical-align: top;">
-                <button type="button" class="btn btn-primary btn-lg" ng-disabled="to.disabled" tooltip="{{'Edit.Fields.Hyperlink.Default.AdamUploadLabel' | translate }}" ng-click="vm.adam.toggle()">
+                <button type="button" class="btn btn-primary btn-lg" ng-disabled="to.disabled" tooltip="{{'Edit.Fields.Hyperlink.Default.AdamUploadLabel' | translate }}" ng-click="vm.toggleAdam()">
                     <i icon="upload"></i>
                     <i icon="apple"></i>
                 </button>
@@ -42,9 +42,12 @@ ADAM - sponsored with ♥ by 2sic.com">
             content-type-name="to.header.ContentTypeName"
             entity-guid="to.header.Guid"
             field-name="options.key"
-            auto-load="true"
+            auto-load="false"
+            show-folders="false"
             sub-folder=""
             update-callback="vm.setValue"
+            register-self="vm.registerAdam"
+            ng-disabled="to.disabled"
         ></adam-browser>
 
         <!-- the preview of the uploader -->
