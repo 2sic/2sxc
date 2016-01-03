@@ -16,14 +16,24 @@
                     scope.vm.dropzone = dropzoneCtrl;   // so we can require an "open file browse" dialog
                 },
                 scope: {
+                    // Identity fields
                     contentTypeName: "=",
                     entityGuid: "=",
                     fieldName: "=",
+
+                    // configuration general
                     subFolder: "=",
-                    showFolders: "=",
+                    folderDepth: "=", 
+                    metadataContentType: "=",
+                    folderMetadataContentType: "=",
+                    allowAssetsInRoot: "=",
+
+                    // binding and cross-component communication
                     autoLoad: "=",
                     updateCallback: "=",
                     registerSelf: "=",
+
+                    // basic functionality
                     enableSelect: "=",
                     ngDisabled: "="
                 },

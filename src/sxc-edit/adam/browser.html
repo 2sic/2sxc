@@ -17,7 +17,7 @@
     </div>
 
     <!-- folders - not always shown -->
-    <div ng-show="vm.showFolders || vm.debug.on" class="dz-preview" ng-disabled="vm.disabled" ng-click="vm.addFolder()">
+    <div ng-show="vm.allowCreateFolder() || vm.debug.on" class="dz-preview" ng-disabled="vm.disabled" ng-click="vm.addFolder()">
         <div class="dz-image" style="background-color: whitesmoke">
         </div>
         <div class="dz-details" style="opacity: 1">
@@ -44,7 +44,7 @@
                 </button>
             </div>
             <div class="dz-filename">
-                <span data-dz-name="">up</span>
+                <span data-dz-name="">up to level {{vm.currentFolderDepth() - 1}}</span>
             </div>
         </div>
     </div>

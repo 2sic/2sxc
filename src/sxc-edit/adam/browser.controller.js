@@ -14,8 +14,18 @@
         vm.entityGuid = $scope.entityGuid;
         vm.fieldName = $scope.fieldName;
         vm.show = false;
-        vm.showFolders = $scope.showFolders;
         vm.subFolder = $scope.subFolder || "";
+
+        vm.folderDepth = (typeof $scope.folderDepth !== 'undefined' && $scope.folderDepth !== null)
+            ? $scope.folderDepth
+            : 2;
+        vm.showFolders = !!vm.folderDepth;
+        vm.allowAssetsInRoot = $scope.allowAssetsInRoot || true;
+        vm.folderMetadataContentType = $scope.folderMetadataContentType || "";
+        vm.metadataContentType = $scope.metadataContentType || "";
+        vm.defaultMetadataContentType = vm.metadataContentType.split("\n")[0]; // first line is the rule for all
+
+
         vm.disabled = $scope.ngDisabled;
         vm.enableSelect = $scope.enableSelect || true;
 
@@ -79,6 +89,15 @@
         vm.goUp = function () {
             vm.subFolder = vm.svc.goUp();
         };
+
+        vm.currentFolderDepth = function() {
+            return vm.svc.folders.length;
+        };
+
+        vm.allowCreateFolder = function() {
+            return vm.svc.folders.length < vm.folderDepth;
+        };
+
         //#endregion
 
         vm.activate();
