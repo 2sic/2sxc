@@ -85,15 +85,16 @@ namespace ToSic.SexyContent.Adam
                     if (originalFile.ContentLength > (1024 * 1024 * MaxFileSizeMb))
                         return new UploadResult { Success = false, Error = App.Resources.UploadFileSizeLimitExceeded };
 
+                    // remove forbidden / troubling file name characters
                     var fileName = originalFile.FileName
-                        .Replace("%", "per");
+                        .Replace("%", "per")
+                        .Replace("#", "hash");
 
                     // Make sure the image does not exist yet (change file name)
                     for (int i = 1; FileManager.Instance.FileExists(folder, Path.GetFileName(fileName)); i++)
-                    {
-                        fileName = Path.GetFileNameWithoutExtension(originalFile.FileName) + "-" + i +
-                                    Path.GetExtension(originalFile.FileName);
-                    }
+                        fileName = Path.GetFileNameWithoutExtension(fileName)
+                                   + "-" + i +
+                                   Path.GetExtension(fileName);
 
                     // Everything is ok, add file
                     var dnnFile = FileManager.Instance.AddFile(folder, Path.GetFileName(fileName), originalFile.InputStream);

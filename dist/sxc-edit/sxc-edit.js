@@ -576,11 +576,10 @@ angular.module("Adam")
             vm.toggleAdam = function toggle() {
                 vm.adam.toggle();
             };
-            $scope.afterUpload = function(fileItem) {
-                $scope.value.Value = "File:" + fileItem.Id;
-                $scope.$apply();
-                // vm.setValue;
-            };
+            $scope.afterUpload = vm.setValue;// function(fileItem) {
+            //    $scope.value.Value = "File:" + fileItem.Id;
+            //    $scope.$apply();
+            //};
 
             //#endregion
 
