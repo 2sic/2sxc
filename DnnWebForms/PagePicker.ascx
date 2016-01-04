@@ -21,10 +21,13 @@
 	}
 
 	function SelectionChanged(selectedItem) {
-		var url = "";
-		if (selectedItem.key != "")
-			url = "Page:" + selectedItem.key;
-		bridge.valueChanged(url);
+        var result = {}
+		if (selectedItem.key !== "") 
+            result = {
+                id: selectedItem.key,
+                name: selectedItem.value
+            }
+	    bridge.valueChanged(result, "page");
 	}
 </script>
 

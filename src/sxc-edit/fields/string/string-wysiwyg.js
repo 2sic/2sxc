@@ -35,11 +35,16 @@
                 inline: true, // use the div, not an iframe
                 automatic_uploads: false, // we're using our own upload mechanism
                 menubar: true, // don't add a second row of menus
-                toolbar: "adam dnnpage dnnfile dnnimg | undo redo removeformat | styleselect | bold italic | bullist numlist outdent indent | alignleft aligncenter alignright | link image |"
+                toolbar: "assets dnn | undo redo removeformat | styleselect | bold italic | bullist numlist outdent indent | alignleft aligncenter alignright | link image |"
                     + "code",
                 plugins: "code contextmenu autolink tabfocus",
-                contextmenu: "link image inserttable | cell row column deletetable",
+                contextmenu: "link image",
                 // plugins: 'advlist autolink link image lists charmap print preview',
+
+                // Url Rewriting in images and pages
+                //convert_urls: false,  // don't use this, would keep the domain which is often a test-domain
+                relative_urls: false,   // keep urls with full path so starting with a "/" - otherwise it would rewrite them to a "../../.." syntax
+
                 skin: "lightgray",
                 theme: "modern",
                 statusbar: true,
@@ -78,12 +83,17 @@
                 if (!value) return;
 
                 // Convert file path to file ID if type file is specified
-                $scope.value.Value = value;
-                if (type === "file") {
-                    alert("todo: add link to file or img tag");
-                } else {
-                    alert("todo: add page tag");
-                }
+                // $scope.value.Value = value;
+                var promise = dnnBridgeSvc.getUrlOfId(type + ":" + (value.id || value.FileId)); // id on page, FileId on file
+                if (promise)
+                    promise.then(function(result) {
+                        if (type === "file") {
+                            alert("todo: add link to file or img tag");
+                        } else { // page
+                            vm.editor.insertContent("<a href=\"" + result.data + "\">" + value.name + "</a>");
+                        }
+                    });
+
             });
         };
 
@@ -93,6 +103,43 @@
     }
 
     function addTinyMceToolbarButtons(editor, vm) {
+        editor.addButton("assets", {
+            type: "splitbutton",
+            text: "Assets",
+            icon: "code custom glyphicon glyphicon-apple",
+            onclick: function () {
+                vm.toggleAdam();
+            },
+            menu: [
+            {
+                text: "Adam",
+                icon: "code custom glyphicon glyphicon-apple",
+                onclick: function() {
+                    vm.toggleAdam();
+                }
+            },{
+                    text: "Page",
+                    icon: "code custom glyphicon glyphicon-apple",
+                    onclick: function () {
+                        vm.openDnnDialog("pagepicker");
+                    }
+                }, {
+                    text: "Image",
+                    icon: "code custom glyphicon glyphicon-apple",
+                    onclick: function () {
+                        vm.openDnnDialog("documentmanager");
+                    }
+                }, {
+                    text: "File",
+                    icon: "code custom glyphicon glyphicon-apple",
+                    onclick: function () {
+                        vm.openDnnDialog("imagemanager");
+                    }
+                }
+            ]
+        });
+
+
         editor.addButton("adam", {
             text: "Adam",
             icon: "code custom glyphicon glyphicon-apple",
@@ -100,25 +147,32 @@
                 vm.toggleAdam();
             }
         });
-        editor.addButton("dnnpage", {
-            text: "Page",
+        editor.addButton("dnn", {
+            type: "menubutton",
+            text: "DNN",
             icon: "code custom glyphicon glyphicon-apple",
-            onclick: function () {
-                vm.openDnnDialog("pagepicker");
-            }
+            menu: [
+                {
+                    text: "Page",
+                    icon: "code custom glyphicon glyphicon-apple",
+                    onclick: function() {
+                        vm.openDnnDialog("pagepicker");
+                    }
+                }, {
+                    text: "Image",
+                    icon: "code custom glyphicon glyphicon-apple",
+                    onclick: function() {
+                        vm.openDnnDialog("documentmanager");
+                    }
+                }, {
+                    text: "File",
+                    icon: "code custom glyphicon glyphicon-apple",
+                    onclick: function() {
+                        vm.openDnnDialog("imagemanager");
+                    }
+                }
+            ]
         });
-        editor.addButton("dnnimg", {
-            text: "Image",
-            icon: "code custom glyphicon glyphicon-apple",
-            onclick: function () {
-                vm.openDnnDialog("documentmanager");
-            }
-        });
-        editor.addButton("dnnfile", {
-            text: "File",
-            icon: "code custom glyphicon glyphicon-apple",
-            onclick: function () {
-                vm.openDnnDialog("imagemanager");
-            }
-        });    }
+
+    }
 })();

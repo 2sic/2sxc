@@ -54,7 +54,9 @@
                     if (!value) return;
                     
                     // Convert file path to file ID if type file is specified
-                    $scope.value.Value = value;
+                    if (type === "page") {
+                        $scope.value.Value = "page:" + value.id;
+                    }
                     if (type === "file") {
                         dnnBridgeSvc.convertPathToId(value, type)
                             .then(function(result) {
