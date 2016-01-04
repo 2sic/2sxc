@@ -754,11 +754,11 @@ angular.module("sxcFieldTemplates")
                 //onChange: function (e) {
                 //    // put logic here for keypress and cut/paste changes
                 //},
-                inline: true, // use the div, not an iframe
-                automatic_uploads: false, // we're using our own upload mechanism
-                menubar: true, // don't add a second row of menus
-                toolbar: "assets dnn | undo redo removeformat | styleselect | bold italic | bullist numlist outdent indent | alignleft aligncenter alignright | link image |"
-                    + "code",
+                inline: true,               // use the div, not an iframe
+                automatic_uploads: false,   // we're using our own upload mechanism
+                menubar: true,              // don't add a second row of menus
+                toolbar: "assets dnn | undo redo removeformat | styleselect | bold italic | bullist numlist outdent indent | alignleft aligncenter alignright | link image"
+                    + "| code",
                 plugins: "code contextmenu autolink tabfocus",
                 contextmenu: "link image",
                 // plugins: 'advlist autolink link image lists charmap print preview',
@@ -766,6 +766,7 @@ angular.module("sxcFieldTemplates")
                 // Url Rewriting in images and pages
                 //convert_urls: false,  // don't use this, would keep the domain which is often a test-domain
                 relative_urls: false,   // keep urls with full path so starting with a "/" - otherwise it would rewrite them to a "../../.." syntax
+                object_resizing: false, // don't allow manual scaling of images
 
                 skin: "lightgray",
                 theme: "modern",
@@ -773,6 +774,19 @@ angular.module("sxcFieldTemplates")
                 setup: function (editor) {
                     vm.editor = editor;
                     addTinyMceToolbarButtons(editor, vm);
+
+                    // make sure the model isn't dirty
+                    var x = $scope.value.Value;
+
+                    editor.on("init", function() {
+                        var y = $scope.value.Value;
+                    });
+                    editor.on("dirty", function() {
+                        var y = $scope.value.Value;
+                    });
+                    editor.on("loadcontent", function() {
+                        var y = $scope.value.Value;
+                    });
                 }
             };
         };
@@ -788,6 +802,7 @@ angular.module("sxcFieldTemplates")
 
         vm.toggleAdam = function toggle() {
             vm.adam.toggle();
+            $scope.$apply();
         };
 
         //#endregion
