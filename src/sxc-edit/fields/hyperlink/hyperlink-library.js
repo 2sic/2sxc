@@ -7,7 +7,7 @@
 
             formlyConfigProvider.setType({
                 name: "hyperlink-library",
-                templateUrl: "fieldtemplates/templates/hyperlink-library.html",
+                templateUrl: "fields/hyperlink/hyperlink-library.html",
                 wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"],
                 controller: "FieldTemplate-Library as vm"
             });

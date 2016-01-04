@@ -393,7 +393,7 @@ angular.module("Adam")
 
             formlyConfigProvider.setType({
                 name: "hyperlink-default",
-                templateUrl: "fieldtemplates/templates/hyperlink-default.html",
+                templateUrl: "fields/hyperlink/hyperlink-default.html",
                 wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"],
                 controller: "FieldTemplate-HyperlinkCtrl as vm"
             });
@@ -467,7 +467,7 @@ angular.module("Adam")
                 vm.bridge.params.CurrentValue = $scope.value.Value;
 
                 vm.modalInstance = $modal.open({
-                    templateUrl: "fieldtemplates/templates/hyperlink-default-" + template + ".html",
+                    templateUrl: "fields/dnn-bridge/hyperlink-default-" + template + ".html",
                     resolve: {
                         bridge: function() {
                             return vm.bridge;
@@ -507,7 +507,7 @@ angular.module("Adam")
 
             formlyConfigProvider.setType({
                 name: "hyperlink-library",
-                templateUrl: "fieldtemplates/templates/hyperlink-library.html",
+                templateUrl: "fields/hyperlink/hyperlink-library.html",
                 wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"],
                 controller: "FieldTemplate-Library as vm"
             });
@@ -551,7 +551,7 @@ angular.module("Adam")
         // for now identical with -adv, but later will change
 		formlyConfigProvider.setType({
 			name: "string-wysiwyg",
-			templateUrl: "fieldtemplates/templates/string-wysiwyg.html",
+			templateUrl: "fields/string/string-wysiwyg-dnn.html",
 			wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"],
 			controller: "FieldTemplate-WysiwygCtrl as vm"
 		});
@@ -559,7 +559,7 @@ angular.module("Adam")
         // for now identical with -adv, but later will change
 		formlyConfigProvider.setType({
 			name: "string-wysiwyg-adv",
-			templateUrl: "fieldtemplates/templates/string-wysiwyg.html",
+			templateUrl: "fields/string/string-wysiwyg-dnn.html",
 			wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"],
 			controller: "FieldTemplate-WysiwygCtrl as vm"
 		});
@@ -614,7 +614,7 @@ angular.module('SxcEditTemplates', []).run(['$templateCache', function($template
   );
 
 
-  $templateCache.put('fieldtemplates/templates/hyperlink-default-filemanager.html',
+  $templateCache.put('fields/dnn-bridge/hyperlink-default-filemanager.html',
     "<div><iframe class=sxc-dialog-filemanager-iframe style=\"width:100%; height:100%; overflow:hidden; border: 0\" scrolling=no web-forms-bridge=bridge bridge-type=filemanager bridge-sync-height=false></iframe></div><style>.sxc-dialog-filemanager .modal-dialog { width: 100%;height: 100%;margin: 0; }\r" +
     "\n" +
     "\t.sxc-dialog-filemanager .modal-content { background: none;height: 100%; }\r" +
@@ -623,12 +623,12 @@ angular.module('SxcEditTemplates', []).run(['$templateCache', function($template
   );
 
 
-  $templateCache.put('fieldtemplates/templates/hyperlink-default-pagepicker.html',
+  $templateCache.put('fields/dnn-bridge/hyperlink-default-pagepicker.html',
     "<div><div class=modal-header><h3 class=modal-title translate=Edit.Fields.Hyperlink.PagePicker.Title></h3></div><div class=modal-body style=\"height:370px; width:600px\"><iframe style=\"width:100%; height: 350px; border: 0\" web-forms-bridge=bridge bridge-type=pagepicker bridge-sync-height=false></iframe></div><div class=modal-footer></div></div>"
   );
 
 
-  $templateCache.put('fieldtemplates/templates/hyperlink-default.html',
+  $templateCache.put('fields/hyperlink/hyperlink-default.html',
     "<div><div class=dropzone><div class=input-group dropdown><div ng-if=\"value.Value && vm.isImage()\" class=\"input-group-addon btn-default\" style=\"width: 46px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; padding-left: 0px; padding-right: 0px; border-left-width: 0px; border-bottom-width: 0px; background-color: transparent; background-image: url('{{vm.thumbnailUrl(1)}}')\" ng-mouseover=\"vm.showPreview = true\" ng-mouseleave=\"vm.showPreview = false\"></div><input type=text class=\"form-control input-lg\" ng-model=value.Value tooltip=\"{{'Edit.Fields.Hyperlink.Default.Tooltip1' | translate }}\r" +
     "\n" +
     "{{'Edit.Fields.Hyperlink.Default.Tooltip2' | translate }}\r" +
@@ -637,13 +637,18 @@ angular.module('SxcEditTemplates', []).run(['$templateCache', function($template
   );
 
 
-  $templateCache.put('fieldtemplates/templates/hyperlink-library.html',
+  $templateCache.put('fields/hyperlink/hyperlink-library.html',
     "<div><div class=dropzone><adam-browser content-type-name=to.header.ContentTypeName entity-guid=to.header.Guid field-name=options.key auto-load=true sub-folder=\"\" folder-depth=to.settings.merged.FolderDepth metadata-content-type=to.settings.merged.MetadataContentType folder-metadata-content-type=to.settings.merged.FolderMetadataContentType allow-assets-in-root=to.settings.merged.allowAssetsInRoot enable-select=false update-callback=vm.setValue register-self=vm.registerAdam></adam-browser><dropzone-upload-preview></dropzone-upload-preview><div class=\"small pull-right\"><a href=\"http://2sxc.org/help?tag=adam\" target=_blank tooltip=\"ADAM is the Automatic Digital Assets Manager - click to discover more\"><i icon=apple></i> Adam</a> is sponsored with ♥ by <a tabindex=-1 href=\"http://2sic.com/\" target=_blank>2sic.com</a></div></div></div>"
   );
 
 
-  $templateCache.put('fieldtemplates/templates/string-wysiwyg.html',
+  $templateCache.put('fields/string/string-wysiwyg-dnn.html',
     "<iframe style=\"width:100%; border: 0\" web-forms-bridge=vm.bridge bridge-type=wysiwyg bridge-sync-height=true></iframe>"
+  );
+
+
+  $templateCache.put('fields/string/string-wysiwyg.html',
+    "todo: tinymce<iframe style=\"width:100%; border: 0\" web-forms-bridge=vm.bridge bridge-type=wysiwyg bridge-sync-height=true></iframe>"
   );
 
 }]);

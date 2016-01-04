@@ -7,7 +7,7 @@
 
             formlyConfigProvider.setType({
                 name: "hyperlink-default",
-                templateUrl: "fieldtemplates/templates/hyperlink-default.html",
+                templateUrl: "fields/hyperlink/hyperlink-default.html",
                 wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"],
                 controller: "FieldTemplate-HyperlinkCtrl as vm"
             });
@@ -81,7 +81,7 @@
                 vm.bridge.params.CurrentValue = $scope.value.Value;
 
                 vm.modalInstance = $modal.open({
-                    templateUrl: "fieldtemplates/templates/hyperlink-default-" + template + ".html",
+                    templateUrl: "fields/dnn-bridge/hyperlink-default-" + template + ".html",
                     resolve: {
                         bridge: function() {
                             return vm.bridge;

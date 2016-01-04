@@ -519,18 +519,19 @@
     <Content Include="src\sxc-develop\source-editor\app-source-edit.js" />
     <Content Include="src\sxc-admin\web-api\web-api-controller.js" />
     <Content Include="src\sxc-admin\web-api\web-api.html" />
-    <Content Include="src\sxc-edit\fieldtemplates\directives\web-forms-bridge-directive.js" />
-    <Content Include="src\sxc-edit\fieldtemplates\dropzone-custom.css" />
-    <Content Include="src\sxc-edit\fieldtemplates\hyperlink-library.js" />
-    <Content Include="src\sxc-edit\fieldtemplates\hyperlink.css" />
-    <Content Include="src\sxc-edit\fieldtemplates\string-wysiwyg.js" />
-    <Content Include="src\sxc-edit\fieldtemplates\templates\hyperlink-library.html" />
-    <Content Include="src\sxc-edit\fieldtemplates\_sxc-fieldtemplates-app.js" />
-    <Content Include="src\sxc-edit\fieldtemplates\hyperlink-default.js" />
-    <Content Include="src\sxc-edit\fieldtemplates\templates\hyperlink-default-filemanager.html" />
-    <Content Include="src\sxc-edit\fieldtemplates\templates\hyperlink-default-pagepicker.html" />
-    <Content Include="src\sxc-edit\fieldtemplates\templates\hyperlink-default.html" />
-    <Content Include="src\sxc-edit\fieldtemplates\templates\string-wysiwyg.html" />
+    <Content Include="src\sxc-edit\fields\directives\web-forms-bridge-directive.js" />
+    <Content Include="src\sxc-edit\fields\hyperlink\dropzone-custom.css" />
+    <Content Include="src\sxc-edit\fields\hyperlink\hyperlink-library.js" />
+    <Content Include="src\sxc-edit\fields\hyperlink\hyperlink.css" />
+    <Content Include="src\sxc-edit\fields\string\string-wysiwyg.html" />
+    <Content Include="src\sxc-edit\fields\string\string-wysiwyg.js" />
+    <Content Include="src\sxc-edit\fields\hyperlink\hyperlink-library.html" />
+    <Content Include="src\sxc-edit\fields\_sxc-fieldtemplates-app.js" />
+    <Content Include="src\sxc-edit\fields\hyperlink\hyperlink-default.js" />
+    <Content Include="src\sxc-edit\fields\dnn-bridge\hyperlink-default-filemanager.html" />
+    <Content Include="src\sxc-edit\fields\dnn-bridge\hyperlink-default-pagepicker.html" />
+    <Content Include="src\sxc-edit\fields\hyperlink\hyperlink-default.html" />
+    <Content Include="src\sxc-edit\fields\string\string-wysiwyg-dnn.html" />
     <Content Include="TemplateHelpGrid.ascx" />
     <Content Include="Upgrade\07.00.00.xml" />
     <Content Include="Upgrade\07.02.00.xml" />
@@ -662,7 +663,6 @@
     <Content Include="Administration\App_LocalResources\WebApiHelp.ascx.resx" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="src\sxc-edit\form\" />
     <Folder Include="Upgrade\Log\" />
   </ItemGroup>
   <ItemGroup>
