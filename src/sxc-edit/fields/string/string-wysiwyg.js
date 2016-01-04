@@ -24,8 +24,10 @@
         })
         .controller("FieldWysiwygTinyMce", FieldWysiwygTinyMceController);
 
-    function FieldWysiwygTinyMceController($scope, dnnBridgeSvc) {
-            var vm = this;
+    function FieldWysiwygTinyMceController($scope, dnnBridgeSvc, $ocLazyLoad) {
+        // quickl load some depedencies first
+        
+        var vm = this;
 
         vm.activate = function() {
             $scope.tinymceOptions = {
@@ -120,40 +122,40 @@
 
         //#endregion
 
-        vm.activate();        
+        $ocLazyLoad.load({
+            serie: true,
+            files: [
+                "//cdn.tinymce.com/4/tinymce.min.js",
+                "../../bower_components/angular-ui-tinymce/src/tinymce.js"
+            ]
+        }).then(function () {
+            window.tinymce.init();
+
+            alert('will do');
+            vm.activate();
+
+        });
     }
 
     function addTinyMceToolbarButtons(editor, vm) {
         editor.addButton("assets", {
             type: "splitbutton",
-            text: "Assets",
-            icon: "code custom glyphicon glyphicon-apple",
-            onclick: function () {
+            text: "",
+            icon: "image", 
+            onclick: function() {
                 vm.toggleAdam();
             },
             menu: [
-            {
-                text: "Adam",
-                icon: "code custom glyphicon glyphicon-apple",
-                onclick: function() {
-                    vm.toggleAdam();
-                }
-            },{
-                    text: "Page",
-                    icon: "code custom glyphicon glyphicon-apple",
-                    onclick: function () {
-                        vm.openDnnDialog("pagepicker");
+                {
+                    text: "from ADAM (recommended)",
+                    icon: "image", 
+                    onclick: function() {
+                        vm.toggleAdam();
                     }
                 }, {
-                    text: "Image",
-                    icon: "code custom glyphicon glyphicon-apple",
-                    onclick: function () {
-                        vm.openDnnDialog("documentmanager");
-                    }
-                }, {
-                    text: "File",
-                    icon: "code custom glyphicon glyphicon-apple",
-                    onclick: function () {
+                    text: "from DNN (all files in DNN, slower)",
+                    icon: "image",
+                    onclick: function() {
                         vm.openDnnDialog("imagemanager");
                     }
                 }
@@ -171,25 +173,25 @@
         editor.addButton("dnn", {
             type: "menubutton",
             text: "DNN",
-            icon: "code custom glyphicon glyphicon-apple",
+            icon: "link",
             menu: [
                 {
-                    text: "Page",
-                    icon: "code custom glyphicon glyphicon-apple",
+                    text: "file from ADAM (automatic, recommended)",
+                    icon: "newdocument",
                     onclick: function() {
-                        vm.openDnnDialog("pagepicker");
+                        vm.toggleAdam();
                     }
                 }, {
-                    text: "Image",
-                    icon: "code custom glyphicon glyphicon-apple",
+                    text: "file from DNN",
+                    icon: "newdocument custom glyphicon glyphicon-apple",
                     onclick: function() {
                         vm.openDnnDialog("documentmanager");
                     }
                 }, {
-                    text: "File",
-                    icon: "code custom glyphicon glyphicon-apple",
+                    text: "page in DNN",
+                    icon: "copy",
                     onclick: function() {
-                        vm.openDnnDialog("imagemanager");
+                        vm.openDnnDialog("pagepicker");
                     }
                 }
             ]

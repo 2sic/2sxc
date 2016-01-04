@@ -443,7 +443,15 @@
 .mce-textbox {color:#333!important}
 
 .mce-btn:hover, .mce-btn:focus { border-color:whitesmoke!important}
-.mce-splitbtn .mce-open.mce-active {background-color: whitesmoke!important}
+.mce-splitbtn .mce-open.mce-active {
+    /*background-color: whitesmoke !important;*/
+    opacity: 0.5;
+}
+.mce-menu-item .mce-caret {
+    border-left-color: whitesmoke !important;
+}
+
+.mce-caret { border-top-color: whitesmoke!important}
 
 .mce-i-apple:before {
     position: relative;
