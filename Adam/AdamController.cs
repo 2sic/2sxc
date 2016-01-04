@@ -98,7 +98,7 @@ namespace ToSic.SexyContent.Adam
                     // Everything is ok, add file
                     var dnnFile = FileManager.Instance.AddFile(folder, Path.GetFileName(fileName), originalFile.InputStream);
 
-                    return new UploadResult { Success = true, Error = "", Filename = Path.GetFileName(fileName), FileId = dnnFile.FileId, FullPath = dnnFile.RelativePath };
+                    return new UploadResult { Success = true, Error = "", Name = Path.GetFileName(fileName), Id = dnnFile.FileId, Path = dnnFile.RelativePath };
                 }
 
                 return new UploadResult { Success = false, Error = "No image was uploaded." };

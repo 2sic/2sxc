@@ -45,8 +45,9 @@ angular.module("Adam")
 
                     'success': function(file, response) {
                         if (response.Success) {
-                            scope.$parent.value.Value = "File:" + response.FileId;
-                            scope.$apply();
+                            scope.$parent.afterUpload(response);
+                            //scope.$parent.value.Value = "File:" + response.FileId;
+                            //scope.$apply();
                         } else {
                             alert("Upload failed because: " + response.Error);
                         }

@@ -104,6 +104,11 @@
             vm.toggleAdam = function toggle() {
                 vm.adam.toggle();
             };
+            $scope.afterUpload = function(fileItem) {
+                $scope.value.Value = "File:" + fileItem.FileId;
+                $scope.$apply();
+                // vm.setValue;
+            };
 
             //#endregion
 

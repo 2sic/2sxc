@@ -337,8 +337,9 @@ angular.module("Adam")
 
                     'success': function(file, response) {
                         if (response.Success) {
-                            scope.$parent.value.Value = "File:" + response.FileId;
-                            scope.$apply();
+                            scope.$parent.afterUpload(response);
+                            //scope.$parent.value.Value = "File:" + response.FileId;
+                            //scope.$apply();
                         } else {
                             alert("Upload failed because: " + response.Error);
                         }
@@ -563,6 +564,11 @@ angular.module("Adam")
             };
             vm.toggleAdam = function toggle() {
                 vm.adam.toggle();
+            };
+            $scope.afterUpload = function(fileItem) {
+                $scope.value.Value = "File:" + fileItem.FileId;
+                $scope.$apply();
+                // vm.setValue;
             };
 
             //#endregion

@@ -4,8 +4,8 @@
     {
         public bool Success { get; set; }
         public string Error { get; set; }
-        public string Filename { get; set; }
-        public int FileId { get; set; }
-        public string FullPath { get; set; }
+        public string Name { get; set; }
+        public int Id { get; set; }
+        public string Path { get; set; }
     }
 }
