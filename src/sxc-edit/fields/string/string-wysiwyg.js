@@ -24,7 +24,7 @@
         })
         .controller("FieldWysiwygTinyMce", FieldWysiwygTinyMceController);
 
-    function FieldWysiwygTinyMceController($scope) {
+    function FieldWysiwygTinyMceController($scope, dnnBridgeSvc) {
             var vm = this;
 
         vm.activate = function() {
@@ -35,7 +35,7 @@
                 inline: true, // use the div, not an iframe
                 automatic_uploads: false, // we're using our own upload mechanism
                 menubar: true, // don't add a second row of menus
-                toolbar: "mybutton | undo redo removeformat | styleselect | bold italic | bullist numlist outdent indent | alignleft aligncenter alignright | link image |"
+                toolbar: "adam dnnpage dnnfile dnnimg | undo redo removeformat | styleselect | bold italic | bullist numlist outdent indent | alignleft aligncenter alignright | link image |"
                     + "code",
                 plugins: "code contextmenu autolink tabfocus",
                 contextmenu: "link image inserttable | cell row column deletetable",
@@ -65,16 +65,60 @@
 
         //#endregion
 
+        //#region DNN stuff
+
+        // open the dialog
+        vm.openDnnDialog = function (type) {
+            dnnBridgeSvc.open(type, "", { Paths: null, FileFilter: null }, vm.processResultOfDnnBridge);
+        };
+
+        // the callback when something was selected
+        vm.processResultOfDnnBridge = function (value, type) {
+            $scope.$apply(function () {
+                if (!value) return;
+
+                // Convert file path to file ID if type file is specified
+                $scope.value.Value = value;
+                if (type === "file") {
+                    alert("todo: add link to file or img tag");
+                } else {
+                    alert("todo: add page tag");
+                }
+            });
+        };
+
+        //#endregion
+
         vm.activate();        
     }
 
     function addTinyMceToolbarButtons(editor, vm) {
-        editor.addButton("mybutton", {
-            text: "My button",
+        editor.addButton("adam", {
+            text: "Adam",
             icon: "code custom glyphicon glyphicon-apple",
             onclick: function () {
                 vm.toggleAdam();
             }
         });
-    }
+        editor.addButton("dnnpage", {
+            text: "Page",
+            icon: "code custom glyphicon glyphicon-apple",
+            onclick: function () {
+                vm.openDnnDialog("pagepicker");
+            }
+        });
+        editor.addButton("dnnimg", {
+            text: "Image",
+            icon: "code custom glyphicon glyphicon-apple",
+            onclick: function () {
+                vm.openDnnDialog("documentmanager");
+            }
+        });
+        editor.addButton("dnnfile", {
+            text: "File",
+            icon: "code custom glyphicon glyphicon-apple",
+            onclick: function () {
+                vm.openDnnDialog("imagemanager");
+            }
+        });    }
 })();

@@ -1,8 +1,8 @@
 ﻿
+// this is in charge of the iframe which shows the dnn-bridge components
+
 (function () {
 	"use strict";
-
-	/* This app registers all field templates for 2sxc in the angularjs sxcFieldTemplates app */
 
 	angular.module("sxcFieldTemplates")
 

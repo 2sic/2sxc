@@ -12,11 +12,10 @@
                 controller: "FieldTemplate-HyperlinkCtrl as vm"
             });
         })
-        .controller("FieldTemplate-HyperlinkCtrl", function($modal, $scope, $http, sxc, adamSvc, debugState) {
+        .controller("FieldTemplate-HyperlinkCtrl", function ($modal, $scope, $http, sxc, adamSvc, debugState, dnnBridgeSvc) {
 
             var vm = this;
             vm.debug = debugState;
-            vm.modalInstance = null;
             vm.testLink = "";
             vm.checkImgRegEx = /(?:([^:\/?#]+):)?(?:\/\/([^\/?#]*))?([^?#]*\.(?:jpg|jpeg|gif|png))(?:\?([^#]*))?(?:#(.*))?/i;
 
@@ -31,67 +30,51 @@
                     return vm.testLink + "?w=500&h=400&mode=max";
             };
 
-            vm.bridge = {
-                valueChanged: function(value, type) {
-                    $scope.$apply(function() {
-
-                        // Convert file path to file ID if type file is specified
-                        if (value) {
-                            $scope.value.Value = value;
-
-
-                            if (type === "file") {
-                                var valueWithoutVersion = value.replace(/\?ver=[0-9\-]*$/gi, "");
-                                $http.get("dnn/Hyperlink/GetFileByPath?relativePath=" + encodeURIComponent(valueWithoutVersion)).then(function(result) {
-                                    if (result.data)
-                                        $scope.value.Value = "File:" + result.data.FileId;
-                                });
-                            }
-                        }
-                        vm.modalInstance.close();
-                    });
-                },
-                params: {
-                    Paths: $scope.to.settings.merged ? $scope.to.settings.merged.Paths : "",
-                    FileFilter: $scope.to.settings.merged ? $scope.to.settings.merged.FileFilter : ""
-                }
-            };
-
-            // Update test-link if necessary
+            // Update test-link if necessary - both when typing or if link was set by dialogs
             $scope.$watch("value.Value", function(newValue, oldValue) {
                 if (!newValue)
                     return;
 
                 // handle short-ID links like file:17
-                var linkLowered = newValue.toLowerCase();
-                if (linkLowered.indexOf("file") !== -1 || linkLowered.indexOf("page") !== -1) {
-                    $http.get("dnn/Hyperlink/ResolveHyperlink?hyperlink=" + encodeURIComponent(newValue)).then(function(result) {
-                        if (result.data)
+                var promise = dnnBridgeSvc.getUrlOfId(newValue);
+                if(promise)
+                    promise.then(function (result) {
+                        if (result.data) 
                             vm.testLink = result.data;
                     });
-                } else {
+                else 
                     vm.testLink = newValue;
-                }
             });
 
-            vm.openDialog = function(type, options) {
+            //#region dnn-bridge dialogs
 
-                var template = type === "pagepicker" ? "pagepicker" : "filemanager";
-                vm.bridge.dialogType = type;
-                vm.bridge.params.CurrentValue = $scope.value.Value;
-
-                vm.modalInstance = $modal.open({
-                    templateUrl: "fields/dnn-bridge/hyperlink-default-" + template + ".html",
-                    resolve: {
-                        bridge: function() {
-                            return vm.bridge;
-                        }
-                    },
-                    controller: function($scope, bridge) {
-                        $scope.bridge = bridge;
-                    },
-                    windowClass: "sxc-dialog-filemanager"
+            // the callback when something was selected
+            vm.processResultOfDnnBridge = function(value, type) {
+                $scope.$apply(function() {
+                    if (!value) return;
+                    
+                    // Convert file path to file ID if type file is specified
+                    $scope.value.Value = value;
+                    if (type === "file") {
+                        dnnBridgeSvc.convertPathToId(value, type)
+                            .then(function(result) {
+                                if (result.data)
+                                    $scope.value.Value = "file:" + result.data.FileId;
+                            });
+                    }
                 });
+            };
+
+            // open the dialog
+            vm.openDialog = function (type) {
+                dnnBridgeSvc.open(
+                    type,
+                    $scope.value.Value,
+                    {
+                        Paths: $scope.to.settings.merged ? $scope.to.settings.merged.Paths : "",
+                        FileFilter: $scope.to.settings.merged ? $scope.to.settings.merged.FileFilter : ""
+                    },
+                    vm.processResultOfDnnBridge);
             };
 
             //#region new adam: callbacks only
@@ -101,13 +84,10 @@
             vm.setValue = function(fileItem) {
                 $scope.value.Value = "File:" + fileItem.Id;
             };
+            $scope.afterUpload = vm.setValue;   // binding for dropzone
             vm.toggleAdam = function toggle() {
                 vm.adam.toggle();
             };
-            $scope.afterUpload = vm.setValue;// function(fileItem) {
-            //    $scope.value.Value = "File:" + fileItem.Id;
-            //    $scope.$apply();
-            //};
 
             //#endregion
 

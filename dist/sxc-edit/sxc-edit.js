@@ -414,11 +414,66 @@ angular.module("Adam")
     ]);
 
 })();
+// This is the service which allows opening dnn-bridge dialogs and processes the results
+
+angular.module("sxcFieldTemplates")
+    .factory("dnnBridgeSvc", ["$modal", "$http", "eavConfig", "sxc", function($modal, $http, eavConfig, sxc) {
+        var svc = {};
+        svc.open = function open(type, oldValue, params, callback) {
+            var template = type === "pagepicker" ? "pagepicker" : "filemanager";
+
+            var connector = {
+                params: params,
+                valueChanged: callback,
+                dialogType: type
+            };
+
+            connector.valueChanged = function valueChanged(value, type) {
+                connector.modalInstance.close();
+                callback(value, type);
+            };
+
+            connector.params.CurrentValue = oldValue;
+
+            connector.modalInstance = $modal.open({
+                templateUrl: "fields/dnn-bridge/hyperlink-default-" + template + ".html",
+                resolve: {
+                    bridge: function () {
+                        return connector;
+                    }
+                },
+                controller: ["$scope", "bridge", function ($scope, bridge) {
+                    $scope.bridge = bridge;
+                }],
+                windowClass: "sxc-dialog-filemanager"
+            });
+
+            return connector.modalInstance;
+        };
+
+        // convert the url to a Id-code
+        svc.convertPathToId = function(path, type) {
+            var pathWithoutVersion = path.replace(/\?ver=[0-9\-]*$/gi, "");
+            var promise = $http.get("dnn/Hyperlink/GetFileByPath?relativePath=" + encodeURIComponent(pathWithoutVersion));
+            return promise;
+        };
+
+        // handle short-ID links like file:17
+        svc.getUrlOfId = function(idCode) {
+            var linkLowered = idCode.toLowerCase();
+            if (linkLowered.indexOf("file:") !== -1 || linkLowered.indexOf("page:") !== -1)
+                return $http.get("dnn/Hyperlink/ResolveHyperlink?hyperlink=" + encodeURIComponent(idCode));
+            return null;
+        };
+
+        return svc;
+
+    }]);
+
+// this is in charge of the iframe which shows the dnn-bridge components
 
 (function () {
 	"use strict";
-
-	/* This app registers all field templates for 2sxc in the angularjs sxcFieldTemplates app */
 
 	angular.module("sxcFieldTemplates")
 
@@ -484,11 +539,10 @@ angular.module("Adam")
                 controller: "FieldTemplate-HyperlinkCtrl as vm"
             });
         }])
-        .controller("FieldTemplate-HyperlinkCtrl", ["$modal", "$scope", "$http", "sxc", "adamSvc", "debugState", function($modal, $scope, $http, sxc, adamSvc, debugState) {
+        .controller("FieldTemplate-HyperlinkCtrl", ["$modal", "$scope", "$http", "sxc", "adamSvc", "debugState", "dnnBridgeSvc", function ($modal, $scope, $http, sxc, adamSvc, debugState, dnnBridgeSvc) {
 
             var vm = this;
             vm.debug = debugState;
-            vm.modalInstance = null;
             vm.testLink = "";
             vm.checkImgRegEx = /(?:([^:\/?#]+):)?(?:\/\/([^\/?#]*))?([^?#]*\.(?:jpg|jpeg|gif|png))(?:\?([^#]*))?(?:#(.*))?/i;
 
@@ -503,67 +557,51 @@ angular.module("Adam")
                     return vm.testLink + "?w=500&h=400&mode=max";
             };
 
-            vm.bridge = {
-                valueChanged: function(value, type) {
-                    $scope.$apply(function() {
-
-                        // Convert file path to file ID if type file is specified
-                        if (value) {
-                            $scope.value.Value = value;
-
-
-                            if (type === "file") {
-                                var valueWithoutVersion = value.replace(/\?ver=[0-9\-]*$/gi, "");
-                                $http.get("dnn/Hyperlink/GetFileByPath?relativePath=" + encodeURIComponent(valueWithoutVersion)).then(function(result) {
-                                    if (result.data)
-                                        $scope.value.Value = "File:" + result.data.FileId;
-                                });
-                            }
-                        }
-                        vm.modalInstance.close();
-                    });
-                },
-                params: {
-                    Paths: $scope.to.settings.merged ? $scope.to.settings.merged.Paths : "",
-                    FileFilter: $scope.to.settings.merged ? $scope.to.settings.merged.FileFilter : ""
-                }
-            };
-
-            // Update test-link if necessary
+            // Update test-link if necessary - both when typing or if link was set by dialogs
             $scope.$watch("value.Value", function(newValue, oldValue) {
                 if (!newValue)
                     return;
 
                 // handle short-ID links like file:17
-                var linkLowered = newValue.toLowerCase();
-                if (linkLowered.indexOf("file") !== -1 || linkLowered.indexOf("page") !== -1) {
-                    $http.get("dnn/Hyperlink/ResolveHyperlink?hyperlink=" + encodeURIComponent(newValue)).then(function(result) {
-                        if (result.data)
+                var promise = dnnBridgeSvc.getUrlOfId(newValue);
+                if(promise)
+                    promise.then(function (result) {
+                        if (result.data) 
                             vm.testLink = result.data;
                     });
-                } else {
+                else 
                     vm.testLink = newValue;
-                }
             });
 
-            vm.openDialog = function(type, options) {
+            //#region dnn-bridge dialogs
 
-                var template = type === "pagepicker" ? "pagepicker" : "filemanager";
-                vm.bridge.dialogType = type;
-                vm.bridge.params.CurrentValue = $scope.value.Value;
-
-                vm.modalInstance = $modal.open({
-                    templateUrl: "fields/dnn-bridge/hyperlink-default-" + template + ".html",
-                    resolve: {
-                        bridge: function() {
-                            return vm.bridge;
-                        }
-                    },
-                    controller: ["$scope", "bridge", function($scope, bridge) {
-                        $scope.bridge = bridge;
-                    }],
-                    windowClass: "sxc-dialog-filemanager"
+            // the callback when something was selected
+            vm.processResultOfDnnBridge = function(value, type) {
+                $scope.$apply(function() {
+                    if (!value) return;
+                    
+                    // Convert file path to file ID if type file is specified
+                    $scope.value.Value = value;
+                    if (type === "file") {
+                        dnnBridgeSvc.convertPathToId(value, type)
+                            .then(function(result) {
+                                if (result.data)
+                                    $scope.value.Value = "file:" + result.data.FileId;
+                            });
+                    }
                 });
+            };
+
+            // open the dialog
+            vm.openDialog = function (type) {
+                dnnBridgeSvc.open(
+                    type,
+                    $scope.value.Value,
+                    {
+                        Paths: $scope.to.settings.merged ? $scope.to.settings.merged.Paths : "",
+                        FileFilter: $scope.to.settings.merged ? $scope.to.settings.merged.FileFilter : ""
+                    },
+                    vm.processResultOfDnnBridge);
             };
 
             //#region new adam: callbacks only
@@ -573,13 +611,10 @@ angular.module("Adam")
             vm.setValue = function(fileItem) {
                 $scope.value.Value = "File:" + fileItem.Id;
             };
+            $scope.afterUpload = vm.setValue;   // binding for dropzone
             vm.toggleAdam = function toggle() {
                 vm.adam.toggle();
             };
-            $scope.afterUpload = vm.setValue;// function(fileItem) {
-            //    $scope.value.Value = "File:" + fileItem.Id;
-            //    $scope.$apply();
-            //};
 
             //#endregion
 
@@ -709,7 +744,7 @@ angular.module("Adam")
         }])
         .controller("FieldWysiwygTinyMce", FieldWysiwygTinyMceController);
 
-    function FieldWysiwygTinyMceController($scope) {
+    function FieldWysiwygTinyMceController($scope, dnnBridgeSvc) {
             var vm = this;
 
         vm.activate = function() {
@@ -720,7 +755,7 @@ angular.module("Adam")
                 inline: true, // use the div, not an iframe
                 automatic_uploads: false, // we're using our own upload mechanism
                 menubar: true, // don't add a second row of menus
-                toolbar: "mybutton | undo redo removeformat | styleselect | bold italic | bullist numlist outdent indent | alignleft aligncenter alignright | link image |"
+                toolbar: "adam dnnpage dnnfile dnnimg | undo redo removeformat | styleselect | bold italic | bullist numlist outdent indent | alignleft aligncenter alignright | link image |"
                     + "code",
                 plugins: "code contextmenu autolink tabfocus",
                 contextmenu: "link image inserttable | cell row column deletetable",
@@ -750,19 +785,63 @@ angular.module("Adam")
 
         //#endregion
 
+        //#region DNN stuff
+
+        // open the dialog
+        vm.openDnnDialog = function (type) {
+            dnnBridgeSvc.open(type, "", { Paths: null, FileFilter: null }, vm.processResultOfDnnBridge);
+        };
+
+        // the callback when something was selected
+        vm.processResultOfDnnBridge = function (value, type) {
+            $scope.$apply(function () {
+                if (!value) return;
+
+                // Convert file path to file ID if type file is specified
+                $scope.value.Value = value;
+                if (type === "file") {
+                    alert("todo: add link to file or img tag");
+                } else {
+                    alert("todo: add page tag");
+                }
+            });
+        };
+
+        //#endregion
+
         vm.activate();        
     }
-    FieldWysiwygTinyMceController.$inject = ["$scope"];
+    FieldWysiwygTinyMceController.$inject = ["$scope", "dnnBridgeSvc"];
 
     function addTinyMceToolbarButtons(editor, vm) {
-        editor.addButton("mybutton", {
-            text: "My button",
+        editor.addButton("adam", {
+            text: "Adam",
             icon: "code custom glyphicon glyphicon-apple",
             onclick: function () {
                 vm.toggleAdam();
             }
         });
-    }
+        editor.addButton("dnnpage", {
+            text: "Page",
+            icon: "code custom glyphicon glyphicon-apple",
+            onclick: function () {
+                vm.openDnnDialog("pagepicker");
+            }
+        });
+        editor.addButton("dnnimg", {
+            text: "Image",
+            icon: "code custom glyphicon glyphicon-apple",
+            onclick: function () {
+                vm.openDnnDialog("documentmanager");
+            }
+        });
+        editor.addButton("dnnfile", {
+            text: "File",
+            icon: "code custom glyphicon glyphicon-apple",
+            onclick: function () {
+                vm.openDnnDialog("imagemanager");
+            }
+        });    }
 })();
 angular.module('SxcEditTemplates', []).run(['$templateCache', function($templateCache) {
   'use strict';
