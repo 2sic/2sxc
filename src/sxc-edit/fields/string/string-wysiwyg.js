@@ -57,6 +57,8 @@
         vm.setValue = function (fileItem) {
             vm.editor.insertContent("<img src=\"" + fileItem.fullPath + "\">");
         };
+        $scope.afterUpload = vm.setValue;
+
         vm.toggleAdam = function toggle() {
             vm.adam.toggle();
         };

@@ -105,7 +105,7 @@
                 vm.adam.toggle();
             };
             $scope.afterUpload = function(fileItem) {
-                $scope.value.Value = "File:" + fileItem.FileId;
+                $scope.value.Value = "File:" + fileItem.Id;
                 $scope.$apply();
                 // vm.setValue;
             };

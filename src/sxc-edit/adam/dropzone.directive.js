@@ -1,14 +1,15 @@
 ﻿/* js/fileAppDirectives */
 
 angular.module("Adam")
-    .directive("dropzone", function (sxc, tabId, dragClass) {
+    .directive("dropzone", function (sxc, tabId, dragClass, adamSvc) {
         return {
             restrict: "C",
             link: function(scope, element, attrs, controller) {
                 var header = scope.$parent.to.header;
                 var field = scope.$parent.options.key;
                 var entityGuid = header.Guid;
-                var url = sxc.resolveServiceUrl("app-content/" + header.ContentTypeName + "/" + entityGuid + "/" + field);
+                var svc = adamSvc(header.ContentTypeName, entityGuid, field, "");
+                var url = svc.url;// sxc.resolveServiceUrl("app-content/" + header.ContentTypeName + "/" + entityGuid + "/" + field);
 
                 var config = {
                     url: url,
@@ -38,13 +39,15 @@ angular.module("Adam")
                     },
 
                     "processing": function(file) {
-                        this.options.url = (controller.adam.subFolder === "")
-                            ? this.options.urlRoot
-                            : this.options.urlRoot + "?subfolder=" + controller.adam.subFolder;
+                        this.options.url = svc.uploadUrl(controller.adam.subFolder);
+                        //(controller.adam.subFolder === "")
+                        //    ? this.options.urlRoot
+                        //    : this.options.urlRoot + "?subfolder=" + controller.adam.subFolder;
                     },
 
                     'success': function(file, response) {
                         if (response.Success) {
+                            svc.addFullPath(response);  // calculate additional infos
                             scope.$parent.afterUpload(response);
                             //scope.$parent.value.Value = "File:" + response.FileId;
                             //scope.$apply();

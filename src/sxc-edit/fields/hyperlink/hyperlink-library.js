@@ -24,9 +24,11 @@
             vm.registerAdam = function(adam) {
                 vm.adam = adam;
             };
-            vm.setValue = function(url) {
-                $scope.value.Value = url;
-            };
+            //vm.setValue = function(url) {
+            //    $scope.value.Value = url;
+            //};
+            $scope.afterUpload = function(fileItem) {};
+
             vm.toggleAdam = function toggle() {
                 vm.adam.toggle();
             };

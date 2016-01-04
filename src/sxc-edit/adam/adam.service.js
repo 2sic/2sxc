@@ -8,16 +8,24 @@ angular.module("Adam")
                 subfolder: subfolder,
                 folders: [],
                 adamRoot: appRoot.substr(0, appRoot.indexOf("2sxc"))
-        };
+            };
+
+            // get the correct url for uploading as it is needed by external services (dropzone)
+            svc.uploadUrl = function(targetSubfolder) {
+                return (targetSubfolder === "")
+                    ? svc.url
+                    : svc.url + "?subfolder=" + targetSubfolder;
+            };
+
+            // extend a json-response with a path (based on the adam-root) to also have a fullPath
+            svc.addFullPath = function addFullPath(value, key) {
+                value.fullPath = svc.adamRoot + value.Path;
+            };
 
             svc = angular.extend(svc, svcCreator.implementLiveList(function getAll() {
                 return $http.get(svc.url + "/items", { params: { subfolder: svc.subfolder } })
                     .then(function (result) {
-                        function addFullPath(value, key) {
-                            value.fullPath = svc.adamRoot + value.Path;
-                        }
-
-                        angular.forEach(result.data, addFullPath);
+                        angular.forEach(result.data, svc.addFullPath);
                         return result;
                     });
             }));

@@ -34,16 +34,24 @@ angular.module("Adam")
                 subfolder: subfolder,
                 folders: [],
                 adamRoot: appRoot.substr(0, appRoot.indexOf("2sxc"))
-        };
+            };
+
+            // get the correct url for uploading as it is needed by external services (dropzone)
+            svc.uploadUrl = function(targetSubfolder) {
+                return (targetSubfolder === "")
+                    ? svc.url
+                    : svc.url + "?subfolder=" + targetSubfolder;
+            };
+
+            // extend a json-response with a path (based on the adam-root) to also have a fullPath
+            svc.addFullPath = function addFullPath(value, key) {
+                value.fullPath = svc.adamRoot + value.Path;
+            };
 
             svc = angular.extend(svc, svcCreator.implementLiveList(function getAll() {
                 return $http.get(svc.url + "/items", { params: { subfolder: svc.subfolder } })
                     .then(function (result) {
-                        function addFullPath(value, key) {
-                            value.fullPath = svc.adamRoot + value.Path;
-                        }
-
-                        angular.forEach(result.data, addFullPath);
+                        angular.forEach(result.data, svc.addFullPath);
                         return result;
                     });
             }));
@@ -293,14 +301,15 @@ angular.module("Adam")
 /* js/fileAppDirectives */
 
 angular.module("Adam")
-    .directive("dropzone", ["sxc", "tabId", "dragClass", function (sxc, tabId, dragClass) {
+    .directive("dropzone", ["sxc", "tabId", "dragClass", "adamSvc", function (sxc, tabId, dragClass, adamSvc) {
         return {
             restrict: "C",
             link: function(scope, element, attrs, controller) {
                 var header = scope.$parent.to.header;
                 var field = scope.$parent.options.key;
                 var entityGuid = header.Guid;
-                var url = sxc.resolveServiceUrl("app-content/" + header.ContentTypeName + "/" + entityGuid + "/" + field);
+                var svc = adamSvc(header.ContentTypeName, entityGuid, field, "");
+                var url = svc.url;// sxc.resolveServiceUrl("app-content/" + header.ContentTypeName + "/" + entityGuid + "/" + field);
 
                 var config = {
                     url: url,
@@ -330,13 +339,15 @@ angular.module("Adam")
                     },
 
                     "processing": function(file) {
-                        this.options.url = (controller.adam.subFolder === "")
-                            ? this.options.urlRoot
-                            : this.options.urlRoot + "?subfolder=" + controller.adam.subFolder;
+                        this.options.url = svc.uploadUrl(controller.adam.subFolder);
+                        //(controller.adam.subFolder === "")
+                        //    ? this.options.urlRoot
+                        //    : this.options.urlRoot + "?subfolder=" + controller.adam.subFolder;
                     },
 
                     'success': function(file, response) {
                         if (response.Success) {
+                            svc.addFullPath(response);  // calculate additional infos
                             scope.$parent.afterUpload(response);
                             //scope.$parent.value.Value = "File:" + response.FileId;
                             //scope.$apply();
@@ -566,7 +577,7 @@ angular.module("Adam")
                 vm.adam.toggle();
             };
             $scope.afterUpload = function(fileItem) {
-                $scope.value.Value = "File:" + fileItem.FileId;
+                $scope.value.Value = "File:" + fileItem.Id;
                 $scope.$apply();
                 // vm.setValue;
             };
@@ -604,9 +615,11 @@ angular.module("Adam")
             vm.registerAdam = function(adam) {
                 vm.adam = adam;
             };
-            vm.setValue = function(url) {
-                $scope.value.Value = url;
-            };
+            //vm.setValue = function(url) {
+            //    $scope.value.Value = url;
+            //};
+            $scope.afterUpload = function(fileItem) {};
+
             vm.toggleAdam = function toggle() {
                 vm.adam.toggle();
             };
@@ -730,6 +743,8 @@ angular.module("Adam")
         vm.setValue = function (fileItem) {
             vm.editor.insertContent("<img src=\"" + fileItem.fullPath + "\">");
         };
+        $scope.afterUpload = vm.setValue;
+
         vm.toggleAdam = function toggle() {
             vm.adam.toggle();
         };
