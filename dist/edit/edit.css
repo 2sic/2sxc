@@ -49,6 +49,11 @@
     top: 0;
     padding-top: 8px;
     background-color: white;
+    color: white;
+}
+
+.clickable:hover .collapse-entity-button {
+    color: #0087F4;
 }
 
 .collapse-fieldgroup-button {
@@ -59,7 +64,26 @@
 .angular-google-map-container { height: 400px; }
 
 /* shrink space a bit in input boxes as it's too large by default '*/
-.input-lg { padding-left: 8px; padding-right: 8px }
+.input-lg {
+     padding-left: 8px;
+    padding-right: 8px;
+    border-radius: 4px;
+}
+
+/*.input-lg {
+    
+    border-left-style: none;
+    border-right-style: none;
+    border-top-style: none;
+    xborder-bottom-left-radius: 3px;
+    xborder-bottom-right-radius: 3px;
+    padding-left: 0;
+    xpadding-bottom: 0;
+    xpadding-top: 0;
+    xheight: 25px;
+    padding-right: 2px;
+
+}*/
 
 /* This should make sure the entity-edit dialog is always 100% screen width on small screens, but not lager than 1000px */
 .modal-ent-edit { 

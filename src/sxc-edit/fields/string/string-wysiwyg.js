@@ -32,24 +32,25 @@
                 //onChange: function (e) {
                 //    // put logic here for keypress and cut/paste changes
                 //},
-                inline: true,               // use the div, not an iframe
-                automatic_uploads: false,   // we're using our own upload mechanism
-                menubar: true,              // don't add a second row of menus
-                toolbar: "assets dnn | undo redo removeformat | styleselect | bold italic | bullist numlist outdent indent | alignleft aligncenter alignright | link image"
+                inline: true, // use the div, not an iframe
+                automatic_uploads: false, // we're using our own upload mechanism
+                menubar: true, // don't add a second row of menus
+                toolbar: "assets dnn | undo redo removeformat | styleselect | bold italic | bullist numlist outdent indent "
+                    // + "| alignleft aligncenter alignright "
+                    + "| link image "
                     + "| code",
-                plugins: "code contextmenu autolink tabfocus",
+                plugins: "code contextmenu autolink tabfocus image",
                 contextmenu: "link image",
-                // plugins: 'advlist autolink link image lists charmap print preview',
 
                 // Url Rewriting in images and pages
                 //convert_urls: false,  // don't use this, would keep the domain which is often a test-domain
-                relative_urls: false,   // keep urls with full path so starting with a "/" - otherwise it would rewrite them to a "../../.." syntax
+                relative_urls: false, // keep urls with full path so starting with a "/" - otherwise it would rewrite them to a "../../.." syntax
                 object_resizing: false, // don't allow manual scaling of images
 
                 skin: "lightgray",
                 theme: "modern",
                 statusbar: true,
-                setup: function (editor) {
+                setup: function(editor) {
                     vm.editor = editor;
                     addTinyMceToolbarButtons(editor, vm);
 
@@ -98,14 +99,19 @@
                 if (!value) return;
 
                 // Convert file path to file ID if type file is specified
-                // $scope.value.Value = value;
                 var promise = dnnBridgeSvc.getUrlOfId(type + ":" + (value.id || value.FileId)); // id on page, FileId on file
                 if (promise)
-                    promise.then(function(result) {
+                    promise.then(function (result) {
+                        var previouslySelected = vm.editor.selection.getContent();
+
                         if (type === "file") {
-                            alert("todo: add link to file or img tag");
+                            var fileName = result.data.substr(result.data.lastIndexOf("/"));
+                            fileName = fileName.substr(0, fileName.lastIndexOf("."));
+                            vm.editor.insertContent("<a href=\"" + result.data + "\">" + (previouslySelected || fileName) + "</a>");
+                        } else if (type === "image") {
+                            vm.editor.insertContent("<img src=\"" + result.data + "\">");
                         } else { // page
-                            vm.editor.insertContent("<a href=\"" + result.data + "\">" + value.name + "</a>");
+                            vm.editor.insertContent("<a href=\"" + result.data + "\">" + (previouslySelected || value.name) + "</a>");
                         }
                     });
 

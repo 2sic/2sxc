@@ -415,6 +415,36 @@
 .dropzone .dz-preview .dz-details.file-type-folder .file-actions {
     opacity: 0
 }
+.field-string-wysiwyg-mce-box {
+    position: relative;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(170,178,189);
+    border-radius: 4px;
+    padding: 8px;
+    font-size: larger;
+}
+
+
+.mce-tinymce.mce-container.mce-tinymce-inline {
+    background-color: #0087F4;
+}
+.mce-tinymce.mce-container.mce-toolbar {
+    background-color: #0087F4;
+}
+.mce-container, .mce-panel, .mce-btn {
+    color: white!important;
+    background-color: #0087F4!important;
+}
+
+.mce-menubar .mce-menubtn button span, .mce-ico { color: white!important;}
+.mce-container, .mce-container *, .mce-widget, .mce-widget *, .mce-reset { color: white !important;}
+
+.mce-textbox {color:#333!important}
+
+.mce-btn:hover, .mce-btn:focus { border-color:whitesmoke!important}
+.mce-splitbtn .mce-open.mce-active {background-color: whitesmoke!important}
+
 .mce-i-apple:before {
     position: relative;
   top: 1px;

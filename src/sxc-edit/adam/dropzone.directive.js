@@ -25,8 +25,9 @@ angular.module("Adam")
 
                     dictDefaultMessage: "",
                     addRemoveLinks: false,
-                    previewsContainer: ".field-" + field.toLowerCase() + " .dropzone-previews"
-                    //clickable: ".field-" + field.toLowerCase() + " .dropzone-adam"
+                    previewsContainer: ".field-" + field.toLowerCase() + " .dropzone-previews",
+                    // we need a clickable, because otherwise the entire area is clickable. so i'm just making the preview clickable, as it's not important
+                    clickable: ".field-" + field.toLowerCase() + " .invisible-clickable" // " .dropzone-adam"
                 };
 
 

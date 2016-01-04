@@ -21,8 +21,8 @@
 		if (!path)
 			path = args.value.getAttribute("href", 2);
 
-		var url = path.indexOf("%") != -1 ? decodeURIComponent(path) : path;
-		window.bridge.valueChanged(url, 'file');
+		var url = path.indexOf("%") !== -1 ? decodeURIComponent(path) : path;
+		window.bridge.valueChanged(url, (window.bridge === 'imagemanager') ? "image" : "file");
 	}
 
 	// Call this function from outside to register the actual bridge

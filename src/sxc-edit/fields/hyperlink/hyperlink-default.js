@@ -57,7 +57,7 @@
                     if (type === "page") {
                         $scope.value.Value = "page:" + value.id;
                     }
-                    if (type === "file") {
+                    if (type === "file" || type === "image") {
                         dnnBridgeSvc.convertPathToId(value, type)
                             .then(function(result) {
                                 if (result.data)

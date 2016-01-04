@@ -325,8 +325,9 @@ angular.module("Adam")
 
                     dictDefaultMessage: "",
                     addRemoveLinks: false,
-                    previewsContainer: ".field-" + field.toLowerCase() + " .dropzone-previews"
-                    //clickable: ".field-" + field.toLowerCase() + " .dropzone-adam"
+                    previewsContainer: ".field-" + field.toLowerCase() + " .dropzone-previews",
+                    // we need a clickable, because otherwise the entire area is clickable. so i'm just making the preview clickable, as it's not important
+                    clickable: ".field-" + field.toLowerCase() + " .invisible-clickable" // " .dropzone-adam"
                 };
 
 
@@ -584,7 +585,7 @@ angular.module("sxcFieldTemplates")
                     if (type === "page") {
                         $scope.value.Value = "page:" + value.id;
                     }
-                    if (type === "file") {
+                    if (type === "file" || type === "image") {
                         dnnBridgeSvc.convertPathToId(value, type)
                             .then(function(result) {
                                 if (result.data)
@@ -754,24 +755,25 @@ angular.module("sxcFieldTemplates")
                 //onChange: function (e) {
                 //    // put logic here for keypress and cut/paste changes
                 //},
-                inline: true,               // use the div, not an iframe
-                automatic_uploads: false,   // we're using our own upload mechanism
-                menubar: true,              // don't add a second row of menus
-                toolbar: "assets dnn | undo redo removeformat | styleselect | bold italic | bullist numlist outdent indent | alignleft aligncenter alignright | link image"
+                inline: true, // use the div, not an iframe
+                automatic_uploads: false, // we're using our own upload mechanism
+                menubar: true, // don't add a second row of menus
+                toolbar: "assets dnn | undo redo removeformat | styleselect | bold italic | bullist numlist outdent indent "
+                    // + "| alignleft aligncenter alignright "
+                    + "| link image "
                     + "| code",
-                plugins: "code contextmenu autolink tabfocus",
+                plugins: "code contextmenu autolink tabfocus image",
                 contextmenu: "link image",
-                // plugins: 'advlist autolink link image lists charmap print preview',
 
                 // Url Rewriting in images and pages
                 //convert_urls: false,  // don't use this, would keep the domain which is often a test-domain
-                relative_urls: false,   // keep urls with full path so starting with a "/" - otherwise it would rewrite them to a "../../.." syntax
+                relative_urls: false, // keep urls with full path so starting with a "/" - otherwise it would rewrite them to a "../../.." syntax
                 object_resizing: false, // don't allow manual scaling of images
 
                 skin: "lightgray",
                 theme: "modern",
                 statusbar: true,
-                setup: function (editor) {
+                setup: function(editor) {
                     vm.editor = editor;
                     addTinyMceToolbarButtons(editor, vm);
 
@@ -820,14 +822,19 @@ angular.module("sxcFieldTemplates")
                 if (!value) return;
 
                 // Convert file path to file ID if type file is specified
-                // $scope.value.Value = value;
                 var promise = dnnBridgeSvc.getUrlOfId(type + ":" + (value.id || value.FileId)); // id on page, FileId on file
                 if (promise)
-                    promise.then(function(result) {
+                    promise.then(function (result) {
+                        var previouslySelected = vm.editor.selection.getContent();
+
                         if (type === "file") {
-                            alert("todo: add link to file or img tag");
+                            var fileName = result.data.substr(result.data.lastIndexOf("/"));
+                            fileName = fileName.substr(0, fileName.lastIndexOf("."));
+                            vm.editor.insertContent("<a href=\"" + result.data + "\">" + (previouslySelected || fileName) + "</a>");
+                        } else if (type === "image") {
+                            vm.editor.insertContent("<img src=\"" + result.data + "\">");
                         } else { // page
-                            vm.editor.insertContent("<a href=\"" + result.data + "\">" + value.name + "</a>");
+                            vm.editor.insertContent("<a href=\"" + result.data + "\">" + (previouslySelected || value.name) + "</a>");
                         }
                     });
 
@@ -925,7 +932,7 @@ angular.module('SxcEditTemplates', []).run(['$templateCache', function($template
 
 
   $templateCache.put('adam/dropzone-upload-preview.html',
-    "<div ng-show=uploading><div class=dropzone-previews></div></div>"
+    "<div ng-show=uploading><div class=dropzone-previews></div><span class=invisible-clickable data-note=\"just a fake, invisble area for dropzone\"></span></div>"
   );
 
 
@@ -963,7 +970,7 @@ angular.module('SxcEditTemplates', []).run(['$templateCache', function($template
 
 
   $templateCache.put('fields/string/string-wysiwyg-tinymce.html',
-    "<div><div class=dropzone><div ui-tinymce=tinymceOptions ng-model=value.Value></div><adam-browser content-type-name=to.header.ContentTypeName entity-guid=to.header.Guid field-name=options.key auto-load=false folder-depth=0 sub-folder=\"\" update-callback=vm.setValue register-self=vm.registerAdam ng-disabled=to.disabled></adam-browser><dropzone-upload-preview></dropzone-upload-preview><div class=\"small pull-right\"><a href=\"http://2sxc.org/help?tag=adam\" target=_blank tooltip=\"ADAM is the Automatic Digital Assets Manager - click to discover more\">supports <i icon=apple></i> Adam - just drop files</a> with ♥ by <a tabindex=-1 href=\"http://2sic.com/\" target=_blank>2sic.com</a></div></div></div>"
+    "<div><div class=dropzone><div ui-tinymce=tinymceOptions ng-model=value.Value class=field-string-wysiwyg-mce-box></div><adam-browser content-type-name=to.header.ContentTypeName entity-guid=to.header.Guid field-name=options.key auto-load=false folder-depth=0 sub-folder=\"\" update-callback=vm.setValue register-self=vm.registerAdam ng-disabled=to.disabled></adam-browser><dropzone-upload-preview></dropzone-upload-preview><div class=\"small pull-right\"><a href=\"http://2sxc.org/help?tag=adam\" target=_blank tooltip=\"ADAM is the Automatic Digital Assets Manager - click to discover more\">supports <i icon=apple></i> Adam - just drop files</a> with ♥ by <a tabindex=-1 href=\"http://2sic.com/\" target=_blank>2sic.com</a></div></div></div>"
   );
 
 }]);
