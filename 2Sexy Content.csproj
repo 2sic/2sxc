@@ -176,6 +176,7 @@
     <Compile Include="Adam\AdamNavigator.cs" />
     <Compile Include="Adam\Core.cs" />
     <Compile Include="Adam\GuidHelpers.cs" />
+    <Compile Include="Adam\UploadResult.cs" />
     <Compile Include="Administration\Apps\AppExport.ascx.cs">
       <DependentUpon>AppExport.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -496,7 +497,7 @@
     <Content Include="src\sxc-admin\manage-content-list\manage-content-list.html" />
     <Content Include="src\sxc-admin\replace-content\replace-content-controller.js" />
     <Content Include="src\sxc-admin\replace-content\replace-content.html" />
-    <Content Include="src\sxc-admin\services\adam.service.js" />
+    <Content Include="src\sxc-edit\adam\adam.service.js" />
     <Content Include="src\sxc-admin\services\app-settings.js" />
     <Content Include="src\sxc-admin\services\content-group-service.js" />
     <Content Include="src\sxc-admin\services\importexport-service.js" />
@@ -523,9 +524,11 @@
     <Content Include="src\sxc-edit\fields\hyperlink\dropzone-custom.css" />
     <Content Include="src\sxc-edit\fields\hyperlink\hyperlink-library.js" />
     <Content Include="src\sxc-edit\fields\hyperlink\hyperlink.css" />
-    <Content Include="src\sxc-edit\fields\string\string-wysiwyg.html" />
+    <Content Include="src\sxc-edit\fields\string\string-wysiwyg-dnn.js" />
+    <Content Include="src\sxc-edit\fields\string\string-wysiwyg-tinymce.html" />
     <Content Include="src\sxc-edit\fields\string\string-wysiwyg.js" />
     <Content Include="src\sxc-edit\fields\hyperlink\hyperlink-library.html" />
+    <Content Include="src\sxc-edit\fields\string\wysiwyg-mce.css" />
     <Content Include="src\sxc-edit\fields\_sxc-fieldtemplates-app.js" />
     <Content Include="src\sxc-edit\fields\hyperlink\hyperlink-default.js" />
     <Content Include="src\sxc-edit\fields\dnn-bridge\hyperlink-default-filemanager.html" />

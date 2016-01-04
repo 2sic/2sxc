@@ -65,11 +65,13 @@
             <div class="dz-filename"><span ng-click="vm.del(item)" stop-event="click" ng-disabled="vm.disabled"><i icon="remove"></i></span></div>
         </div>
     </div>
+
+
     <!-- files -->
     <div class="dz-preview" ng-class="{ 'dz-success': value.Value.toLowerCase() == 'file:' + item.Id }" ng-repeat="item in vm.items | filter: { IsFolder: false }  | orderBy:'Name'" ng-click="vm.select(item)" ng-disabled="vm.disabled || !vm.enableSelect">
         <div ng-if="item.Type == 'image'" class="dz-image">
             <img data-dz-thumbnail="" alt="{{ item.Id + ':' + item.Name
-}}" ng-src="{{ '/portals/0/' + item.Path + '?w=120&h=120&mode=crop' }}">
+}}" ng-src="{{ item.fullPath + '?w=120&h=120&mode=crop' }}">
         </div>
 
         <div class="dz-details file-type-{{item.Type}}">

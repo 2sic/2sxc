@@ -58,8 +58,8 @@ namespace ToSic.SexyContent.Adam
             var contentType = cache.GetContentType(contentTypeName);
             var fieldDef = contentType[field];
 
-            // check if this field exists and is actually a file-field
-            if (fieldDef == null || fieldDef.Type != "Hyperlink")
+            // check if this field exists and is actually a file-field or a string (wysiwyg) field
+            if (fieldDef == null || !(fieldDef.Type != "Hyperlink" || fieldDef.Type != "String"))
                 throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.BadRequest,
                     "Requested field '" + field + "' type doesn't allow upload"));// { HttpStatusCode = HttpStatusCode.BadRequest });
 
@@ -144,14 +144,6 @@ namespace ToSic.SexyContent.Adam
             //}
         }
 
-        public class UploadResult
-        {
-            public bool Success { get; set; }
-            public string Error { get; set; }
-            public string Filename { get; set; }
-            public int FileId { get; set; }
-            public string FullPath { get; set; }
-        }
 
         #region adam-file manager
 

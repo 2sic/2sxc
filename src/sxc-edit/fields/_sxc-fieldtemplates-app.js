@@ -13,7 +13,8 @@
         "SxcEditTemplates",
         "EavConfiguration",
         "SxcServices",
-        "Adam"
+        "Adam",
+        "ui.tinymce"
     ]);
 
 })();

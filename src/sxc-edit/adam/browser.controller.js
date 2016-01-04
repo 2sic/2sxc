@@ -7,7 +7,7 @@
     // The controller for the main form directive
     app.controller("BrowserController", BrowserController);
     
-    function BrowserController($scope, adamSvc, debugState, eavConfig, eavAdminDialogs) {
+    function BrowserController($scope, adamSvc, debugState, eavConfig, eavAdminDialogs, appRoot) {
         var vm = this;
         vm.debug = debugState;
         vm.contentTypeName = $scope.contentTypeName;
@@ -15,6 +15,7 @@
         vm.fieldName = $scope.fieldName;
         vm.show = false;
         vm.subFolder = $scope.subFolder || "";
+        vm.appRoot = appRoot;
 
         vm.folderDepth = (typeof $scope.folderDepth !== 'undefined' && $scope.folderDepth !== null)
             ? $scope.folderDepth
@@ -61,7 +62,7 @@
         vm.select = function (fileItem) {
             if (vm.disabled || !vm.enableSelect)
                 return;
-            $scope.updateCallback("File:" + fileItem.Id);
+            $scope.updateCallback(fileItem);
         };
 
         vm.addFolder = function () {

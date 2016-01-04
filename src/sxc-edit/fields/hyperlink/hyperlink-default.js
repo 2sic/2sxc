@@ -98,8 +98,8 @@
             vm.registerAdam = function(adam) {
                 vm.adam = adam;
             };
-            vm.setValue = function(url) {
-                $scope.value.Value = url;
+            vm.setValue = function(fileItem) {
+                $scope.value.Value = "File:" + fileItem.Id;
             };
             vm.toggleAdam = function toggle() {
                 vm.adam.toggle();

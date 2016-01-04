@@ -1,16 +1,25 @@
-angular.module("SxcServices")
-    .factory("adamSvc", function($http, eavConfig, sxc, svcCreator) {
+angular.module("Adam")
+    .factory("adamSvc", function($http, eavConfig, sxc, svcCreator, appRoot) {
 
         // Construct a service for this specific appId
         return function createSvc(contentType, entityGuid, field, subfolder) {
             var svc = {
                 url: sxc.resolveServiceUrl("app-content/" + contentType + "/" + entityGuid + "/" + field),
                 subfolder: subfolder,
-                folders: []
-            };
+                folders: [],
+                adamRoot: appRoot.substr(0, appRoot.indexOf("2sxc"))
+        };
 
             svc = angular.extend(svc, svcCreator.implementLiveList(function getAll() {
-                return $http.get(svc.url + "/items", { params: { subfolder: svc.subfolder } });
+                return $http.get(svc.url + "/items", { params: { subfolder: svc.subfolder } })
+                    .then(function (result) {
+                        function addFullPath(value, key) {
+                            value.fullPath = svc.adamRoot + value.Path;
+                        }
+
+                        angular.forEach(result.data, addFullPath);
+                        return result;
+                    });
             }));
 
             // create folder

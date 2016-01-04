@@ -3,7 +3,8 @@
     angular.module("Adam", [
         "SxcServices",
         "EavConfiguration", // config
-        "EavServices" // multi-language stuff
+        "EavServices", // multi-language stuff
+        //"InitSxcParametersFromUrl"
             //"SxcTemplates", // inline templates
             //"EavAdminUi", // dialog (modal) controller
             //"SxcFilters", // for inline unsafe urls

@@ -415,3 +415,17 @@
 .dropzone .dz-preview .dz-details.file-type-folder .file-actions {
     opacity: 0
 }
+.mce-i-apple:before {
+    position: relative;
+  top: 1px;
+  display: inline-block;
+  font-family: 'Glyphicons Halflings';
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+    content:"\f179"
+}

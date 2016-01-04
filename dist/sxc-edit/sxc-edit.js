@@ -3,7 +3,8 @@
     angular.module("Adam", [
         "SxcServices",
         "EavConfiguration", // config
-        "EavServices" // multi-language stuff
+        "EavServices", // multi-language stuff
+        //"InitSxcParametersFromUrl"
             //"SxcTemplates", // inline templates
             //"EavAdminUi", // dialog (modal) controller
             //"SxcFilters", // for inline unsafe urls
@@ -23,6 +24,77 @@
         ;
 
 } ());
+angular.module("Adam")
+    .factory("adamSvc", ["$http", "eavConfig", "sxc", "svcCreator", "appRoot", function($http, eavConfig, sxc, svcCreator, appRoot) {
+
+        // Construct a service for this specific appId
+        return function createSvc(contentType, entityGuid, field, subfolder) {
+            var svc = {
+                url: sxc.resolveServiceUrl("app-content/" + contentType + "/" + entityGuid + "/" + field),
+                subfolder: subfolder,
+                folders: [],
+                adamRoot: appRoot.substr(0, appRoot.indexOf("2sxc"))
+        };
+
+            svc = angular.extend(svc, svcCreator.implementLiveList(function getAll() {
+                return $http.get(svc.url + "/items", { params: { subfolder: svc.subfolder } })
+                    .then(function (result) {
+                        function addFullPath(value, key) {
+                            value.fullPath = svc.adamRoot + value.Path;
+                        }
+
+                        angular.forEach(result.data, addFullPath);
+                        return result;
+                    });
+            }));
+
+            // create folder
+            svc.addFolder = function add(newfolder) {
+                return $http.post(svc.url + "/folder", {}, { params: { subfolder: svc.subfolder, newFolder: newfolder } })
+                    .then(svc.liveListReload);
+            };
+
+            svc.goIntoFolder = function(childFolder) {
+                svc.folders.push(childFolder);
+                var pathParts = childFolder.Path.split("/");
+                var subPath = "";
+                for (var c = 0; c < svc.folders.length; c++)
+                    subPath = pathParts[pathParts.length - c - 2] + "/" + subPath;
+
+                subPath = subPath.replace("//", "/");
+                if (subPath[subPath.length - 1] === "/")
+                    subPath = subPath.substr(0, subPath.length - 1);
+
+                childFolder.Subfolder = subPath;
+
+                // now assemble the correct subfolder based on the folders-array
+                svc.subfolder = subPath;
+                svc.liveListReload();
+                return subPath;
+            };
+
+            svc.goUp = function() {
+                if (svc.folders.length > 0)
+                    svc.folders.pop();
+                if (svc.folders.length > 0) {
+                    svc.subfolder = svc.folders[svc.folders.length - 1].Subfolder;
+                } else {
+                    svc.subfolder = "";
+                }
+                svc.liveListReload();
+                return svc.subfolder;
+            };
+
+            // delete, then reload
+            // IF verb DELETE fails, so I'm using get for now
+            svc.delete = function del(item) {
+                return $http.get(svc.url + "/delete", { params: { subfolder: svc.subfolder, isFolder: item.IsFolder, id: item.Id } })
+                    .then(svc.liveListReload);
+            };
+
+            return svc;
+        };
+    }]);
 (function () {
     /* jshint laxbreak:true */
     "use strict";
@@ -32,7 +104,7 @@
     // The controller for the main form directive
     app.controller("BrowserController", BrowserController);
     
-    function BrowserController($scope, adamSvc, debugState, eavConfig, eavAdminDialogs) {
+    function BrowserController($scope, adamSvc, debugState, eavConfig, eavAdminDialogs, appRoot) {
         var vm = this;
         vm.debug = debugState;
         vm.contentTypeName = $scope.contentTypeName;
@@ -40,6 +112,7 @@
         vm.fieldName = $scope.fieldName;
         vm.show = false;
         vm.subFolder = $scope.subFolder || "";
+        vm.appRoot = appRoot;
 
         vm.folderDepth = (typeof $scope.folderDepth !== 'undefined' && $scope.folderDepth !== null)
             ? $scope.folderDepth
@@ -86,7 +159,7 @@
         vm.select = function (fileItem) {
             if (vm.disabled || !vm.enableSelect)
                 return;
-            $scope.updateCallback("File:" + fileItem.Id);
+            $scope.updateCallback(fileItem);
         };
 
         vm.addFolder = function () {
@@ -157,7 +230,7 @@
 
         vm.activate();
     }
-    BrowserController.$inject = ["$scope", "adamSvc", "debugState", "eavConfig", "eavAdminDialogs"];
+    BrowserController.$inject = ["$scope", "adamSvc", "debugState", "eavConfig", "eavAdminDialogs", "appRoot"];
 
 })();
 
@@ -324,7 +397,8 @@ angular.module("Adam")
         "SxcEditTemplates",
         "EavConfiguration",
         "SxcServices",
-        "Adam"
+        "Adam",
+        "ui.tinymce"
     ]);
 
 })();
@@ -484,8 +558,8 @@ angular.module("Adam")
             vm.registerAdam = function(adam) {
                 vm.adam = adam;
             };
-            vm.setValue = function(url) {
-                $scope.value.Value = url;
+            vm.setValue = function(fileItem) {
+                $scope.value.Value = "File:" + fileItem.Id;
             };
             vm.toggleAdam = function toggle() {
                 vm.adam.toggle();
@@ -550,14 +624,6 @@ angular.module("Adam")
 
         // for now identical with -adv, but later will change
 		formlyConfigProvider.setType({
-			name: "string-wysiwyg",
-			templateUrl: "fields/string/string-wysiwyg-dnn.html",
-			wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"],
-			controller: "FieldTemplate-WysiwygCtrl as vm"
-		});
-
-        // for now identical with -adv, but later will change
-		formlyConfigProvider.setType({
 			name: "string-wysiwyg-adv",
 			templateUrl: "fields/string/string-wysiwyg-dnn.html",
 			wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"],
@@ -599,13 +665,92 @@ angular.module("Adam")
 
 
 })();
+// todo
+// finish toolbar based on https://www.tinymce.com/docs/advanced/editor-control-identifiers/#toolbarcontrols
+// - more buttons
+// - more unimportant buttons, hidden in a sub-menu
+//
+// finish right-click actions
+// 
+// review further plugins/functionalty
+(function () {
+	"use strict";
+
+    angular.module("sxcFieldTemplates")
+        .config(["formlyConfigProvider", function(formlyConfigProvider) {
+
+            // for now identical with -adv, but later will change
+            formlyConfigProvider.setType({
+                name: "string-wysiwyg",
+                templateUrl: "fields/string/string-wysiwyg-tinymce.html",
+                wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"],
+                controller: "FieldWysiwygTinyMce as vm"
+            });
+
+
+        }])
+        .controller("FieldWysiwygTinyMce", FieldWysiwygTinyMceController);
+
+    function FieldWysiwygTinyMceController($scope) {
+            var vm = this;
+
+        vm.activate = function() {
+            $scope.tinymceOptions = {
+                //onChange: function (e) {
+                //    // put logic here for keypress and cut/paste changes
+                //},
+                inline: true, // use the div, not an iframe
+                automatic_uploads: false, // we're using our own upload mechanism
+                menubar: true, // don't add a second row of menus
+                toolbar: "mybutton | undo redo removeformat | styleselect | bold italic | bullist numlist outdent indent | alignleft aligncenter alignright | link image |"
+                    + "code",
+                plugins: "code contextmenu autolink tabfocus",
+                contextmenu: "link image inserttable | cell row column deletetable",
+                // plugins: 'advlist autolink link image lists charmap print preview',
+                skin: "lightgray",
+                theme: "modern",
+                statusbar: true,
+                setup: function (editor) {
+                    vm.editor = editor;
+                    addTinyMceToolbarButtons(editor, vm);
+                }
+            };
+        };
+
+        //#region new adam: callbacks only
+        vm.registerAdam = function (adam) {
+            vm.adam = adam;
+        };
+        vm.setValue = function (fileItem) {
+            vm.editor.insertContent("<img src=\"" + fileItem.fullPath + "\">");
+        };
+        vm.toggleAdam = function toggle() {
+            vm.adam.toggle();
+        };
+
+        //#endregion
+
+        vm.activate();        
+    }
+    FieldWysiwygTinyMceController.$inject = ["$scope"];
+
+    function addTinyMceToolbarButtons(editor, vm) {
+        editor.addButton("mybutton", {
+            text: "My button",
+            icon: "code custom glyphicon glyphicon-apple",
+            onclick: function () {
+                vm.toggleAdam();
+            }
+        });
+    }
+})();
 angular.module('SxcEditTemplates', []).run(['$templateCache', function($templateCache) {
   'use strict';
 
   $templateCache.put('adam/browser.html',
     "<div ng-if=vm.show><div class=\"dz-preview dropzone-adam\" ng-disabled=vm.disabled tooltip=\"{{'Edit.Fields.Hyperlink.Default.AdamUploadLabel' | translate }}\" ng-click=vm.openUpload()><div class=dz-image style=\"background-color: whitesmoke\"></div><div class=dz-details style=\"opacity: 1\"><div class=dz-size><button type=button class=\"btn btn-primary btn-lg\" ng-disabled=vm.disabled><i icon=plus></i> <i icon=file></i></button></div><div class=dz-filename><span data-dz-name=\"\">drag & drop files</span></div></div></div><div ng-show=\"vm.allowCreateFolder() || vm.debug.on\" class=dz-preview ng-disabled=vm.disabled ng-click=vm.addFolder()><div class=dz-image style=\"background-color: whitesmoke\"></div><div class=dz-details style=\"opacity: 1\"><div class=dz-size><button type=button class=\"btn btn-default btn-lg\" ng-disabled=vm.disabled><i icon=plus></i> <i icon=th-large></i></button></div><div class=dz-filename><span data-dz-name=\"\">new folder</span></div></div></div><div ng-show=\"vm.showFolders || vm.debug.on\" class=dz-preview ng-disabled=vm.disabled ng-if=\"vm.folders.length > 0\" ng-click=vm.goUp()><div class=dz-image style=\"background-color: whitesmoke\"></div><div class=dz-details style=\"opacity: 1\"><div class=dz-size><button type=button class=\"btn btn-default btn-square btn-lg\" ng-disabled=vm.disabled><i icon=level-up></i></button></div><div class=dz-filename><span data-dz-name=\"\">up</span></div></div></div><div ng-show=\"vm.showFolders || vm.debug.on\" class=dz-preview ng-repeat=\"item in vm.items | filter: { IsFolder: true }  | orderBy:'Name'\" ng-click=vm.goIntoFolder(item)><div class=dz-image style=\"background-color: whitesmoke\"></div><div class=\"dz-details file-type-{{item.Type}}\"><span class=pull-right ng-class=\"{'metadata-exists': item.MetadataId > 0}\" style=\"font-size: large\" ng-click=vm.editFolderMetadata(item) ng-if=vm.folderMetadataContentType stop-event=click><span tooltip={{item.MetadataId}}><i icon=tag></i></span></span> <span data-dz-size=\"\" style=\"font-size: xx-large\"><i icon=th-large></i></span><div class=dz-filename><span data-dz-name=\"\">{{ item.Name }}{{ vm.debug.on ? \"(lvl:\" + vm.currentFolderDepth() + \")\" : \"\"}}</span></div><div class=dz-filename><span ng-click=vm.del(item) stop-event=click ng-disabled=vm.disabled><i icon=remove></i></span></div></div></div><div class=dz-preview ng-class=\"{ 'dz-success': value.Value.toLowerCase() == 'file:' + item.Id }\" ng-repeat=\"item in vm.items | filter: { IsFolder: false }  | orderBy:'Name'\" ng-click=vm.select(item) ng-disabled=\"vm.disabled || !vm.enableSelect\"><div ng-if=\"item.Type == 'image'\" class=dz-image><img data-dz-thumbnail=\"\" alt=\"{{ item.Id + ':' + item.Name\r" +
     "\n" +
-    "}}\" ng-src=\"{{ '/portals/0/' + item.Path + '?w=120&h=120&mode=crop' }}\"></div><div class=\"dz-details file-type-{{item.Type}}\"><div class=\"dz-size file-icon\" ng-if=\"item.Type == 'image'\"><span data-dz-size=\"\"><strong>{{ item.Id }}</strong></span></div><div class=\"dz-size file-actions\" ng-if=\"item.Type == 'document' || item.Type == 'file'\"><span data-dz-size=\"\"><button type=button class=\"btn btn-subtle btn-lg\" ng-disabled=vm.disabled><i icon=file></i></button></span></div><div class=dz-filename><span data-dz-name=\"\">{{ item.Name }}</span></div><div class=dz-filename><span ng-click=vm.del(item) stop-event=click><i icon=remove></i></span> <span data-dz-name=\"\">{{ (item.Size / 1024).toFixed(0) }} kb</span></div></div><div class=dz-success-mark><svg width=54px height=54px viewbox=\"0 0 54 54\" version=1.1 xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink xmlns:sketch=http://www.bohemiancoding.com/sketch/ns><title>Check</title><defs></defs><g id=Page-1 stroke=none stroke-width=1 fill=none fill-rule=evenodd sketch:type=MSPage><path d=\"M23.5,31.8431458 L17.5852419,25.9283877 C16.0248253,24.3679711 13.4910294,24.366835 11.9289322,25.9289322 C10.3700136,27.4878508 10.3665912,30.0234455 11.9283877,31.5852419 L20.4147581,40.0716123 C20.5133999,40.1702541 20.6159315,40.2626649 20.7218615,40.3488435 C22.2835669,41.8725651 24.794234,41.8626202 26.3461564,40.3106978 L43.3106978,23.3461564 C44.8771021,21.7797521 44.8758057,19.2483887 43.3137085,17.6862915 C41.7547899,16.1273729 39.2176035,16.1255422 37.6538436,17.6893022 L23.5,31.8431458 Z M27,53 C41.3594035,53 53,41.3594035 53,27 C53,12.6405965 41.3594035,1 27,1 C12.6405965,1 1,12.6405965 1,27 C1,41.3594035 12.6405965,53 27,53 Z\" id=Oval-2 stroke-opacity=0.198794158 stroke=#747474 fill-opacity=0.816519475 fill=#FFFFFF sketch:type=MSShapeGroup></path></g></svg></div></div></div>"
+    "}}\" ng-src=\"{{ item.fullPath + '?w=120&h=120&mode=crop' }}\"></div><div class=\"dz-details file-type-{{item.Type}}\"><div class=\"dz-size file-icon\" ng-if=\"item.Type == 'image'\"><span data-dz-size=\"\"><strong>{{ item.Id }}</strong></span></div><div class=\"dz-size file-actions\" ng-if=\"item.Type == 'document' || item.Type == 'file'\"><span data-dz-size=\"\"><button type=button class=\"btn btn-subtle btn-lg\" ng-disabled=vm.disabled><i icon=file></i></button></span></div><div class=dz-filename><span data-dz-name=\"\">{{ item.Name }}</span></div><div class=dz-filename><span ng-click=vm.del(item) stop-event=click><i icon=remove></i></span> <span data-dz-name=\"\">{{ (item.Size / 1024).toFixed(0) }} kb</span></div></div><div class=dz-success-mark><svg width=54px height=54px viewbox=\"0 0 54 54\" version=1.1 xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink xmlns:sketch=http://www.bohemiancoding.com/sketch/ns><title>Check</title><defs></defs><g id=Page-1 stroke=none stroke-width=1 fill=none fill-rule=evenodd sketch:type=MSPage><path d=\"M23.5,31.8431458 L17.5852419,25.9283877 C16.0248253,24.3679711 13.4910294,24.366835 11.9289322,25.9289322 C10.3700136,27.4878508 10.3665912,30.0234455 11.9283877,31.5852419 L20.4147581,40.0716123 C20.5133999,40.1702541 20.6159315,40.2626649 20.7218615,40.3488435 C22.2835669,41.8725651 24.794234,41.8626202 26.3461564,40.3106978 L43.3106978,23.3461564 C44.8771021,21.7797521 44.8758057,19.2483887 43.3137085,17.6862915 C41.7547899,16.1273729 39.2176035,16.1255422 37.6538436,17.6893022 L23.5,31.8431458 Z M27,53 C41.3594035,53 53,41.3594035 53,27 C53,12.6405965 41.3594035,1 27,1 C12.6405965,1 1,12.6405965 1,27 C1,41.3594035 12.6405965,53 27,53 Z\" id=Oval-2 stroke-opacity=0.198794158 stroke=#747474 fill-opacity=0.816519475 fill=#FFFFFF sketch:type=MSShapeGroup></path></g></svg></div></div></div>"
   );
 
 
@@ -647,8 +792,8 @@ angular.module('SxcEditTemplates', []).run(['$templateCache', function($template
   );
 
 
-  $templateCache.put('fields/string/string-wysiwyg.html',
-    "todo: tinymce<iframe style=\"width:100%; border: 0\" web-forms-bridge=vm.bridge bridge-type=wysiwyg bridge-sync-height=true></iframe>"
+  $templateCache.put('fields/string/string-wysiwyg-tinymce.html',
+    "<div><div class=dropzone><div ui-tinymce=tinymceOptions ng-model=value.Value></div><adam-browser content-type-name=to.header.ContentTypeName entity-guid=to.header.Guid field-name=options.key auto-load=false folder-depth=0 sub-folder=\"\" update-callback=vm.setValue register-self=vm.registerAdam ng-disabled=to.disabled></adam-browser><dropzone-upload-preview></dropzone-upload-preview><div class=\"small pull-right\"><a href=\"http://2sxc.org/help?tag=adam\" target=_blank tooltip=\"ADAM is the Automatic Digital Assets Manager - click to discover more\">supports <i icon=apple></i> Adam - just drop files</a> with ♥ by <a tabindex=-1 href=\"http://2sic.com/\" target=_blank>2sic.com</a></div></div></div>"
   );
 
 }]);
