@@ -102,7 +102,7 @@
 
         //#endregion
 
-        //#region
+        //#region Metadata
         vm.editFolderMetadata = function(item) {
             var items = [
                 vm._itemDefinition(item, vm.folderMetadataContentType)
@@ -112,6 +112,7 @@
 
         };
 
+        // todo: move to service, shouldn't be part of the application
         vm._itemDefinition = function (item, metadataType) {
             var title = "Metadata"; // todo: i18n
             return item.MetadataId !== 0
