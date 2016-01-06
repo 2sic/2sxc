@@ -11,30 +11,17 @@
                 controller: "FieldWysiwygTinyMce as vm"
             });
         })
-        .directive('test', function($compile) {
+        .directive('lazyLoadTinymce', function ($compile) {
             return {
-                restrict: 'A',
-                //transclude: true,
-                //template: '<span>loading editor...</p>',
-                link: function(scope, element, attrs, ctrl, transclude) {
-                    console.log("content was:" + transclude);
-                },
-
+                restrict: 'E',
                 controller: function ($scope, $element, $interval, $window) {
                     var checkIfTinyMceLoaded = $interval(function() {
-                        if ($window.tinymce) {
-                            $window.tinymce.baseURL = "//cdn.tinymce.com/4";
-                            var orig = $element[0].innerHTML.replace(/lazy-/g, "");
-                            //var orig2 = '<div ui-tinymce="tinymceOptions" ng-model="value.Value" class="field-string-wysiwyg-mce-box"></div>';
-                            //var el2 = $compile(orig2)($scope);
-                            var el = $compile(orig)($scope);
+                        if (!$window.tinymce) return;
                             $interval.cancel(checkIfTinyMceLoaded);
-                            $element.replaceWith(el);//.parent().append(el);
-                        } else {
-                            console.log("waiting to load TinyMCE...");
-                        }
-                    }, 500);
-
+                            var orig = $element[0].innerHTML.replace(/lazy-/g, "");
+                            var el = $compile(orig)($scope);
+                            $element.replaceWith(el);
+                    }, 10);
                 }
             };
         })
@@ -42,27 +29,21 @@
 
         .controller("FieldWysiwygTinyMce", FieldWysiwygTinyMceController);
 
-    function FieldWysiwygTinyMceController($scope, dnnBridgeSvc, $ocLazyLoad, $interval) {
+    function FieldWysiwygTinyMceController($scope, dnnBridgeSvc, $ocLazyLoad) {
         var vm = this;
-
-        var interv = $interval(function () {
-            console.log("found tiny: " + window.tinymce + "; element:" + $scope);
-            if (window.tinymce)
-                $interval.cancel(interv);
-        }, 100);
 
         vm.activate = function () {
 
             var plugins = [
-                "code",     // allow view / edit source
+                "code",         // allow view / edit source
                 "contextmenu",  // right-click menu for things like insert, etc.
-                "autolink", // automatically convert www.xxx links to real links
-                "tabfocus", // get in an out of the editor with tab
-                "image",    // image button and image-settings
-                "link",     // link button + ctrl+k to add link
-                "autosave", // temp-backups the content in case the browser crashes, allows restore
-                "paste",    // enables paste as text
-                "anchor",   // allows users to set an anchor inside the text
+                "autolink",     // automatically convert www.xxx links to real links
+                "tabfocus",     // get in an out of the editor with tab
+                "image",        // image button and image-settings
+                "link",         // link button + ctrl+k to add link
+                "autosave",     // temp-backups the content in case the browser crashes, allows restore
+                "paste",        // enables paste as text
+                "anchor",       // allows users to set an anchor inside the text
             ];
             $scope.tinymceOptions = {
                 baseURL: "//cdn.tinymce.com/4",
@@ -163,18 +144,10 @@
             serie: true,
             files: [
                 "//cdn.tinymce.com/4/tinymce.min.js",
-                "../../bower_components/angular-ui-tinymce/src/tinymce.js"
+                //"../../bower_components/angular-ui-tinymce/src/tinymce.js"
             ]
-        }).then(function () {
-            //window.tinymce.init();
-
-            console.log('lazy loaded');
-            console.log("found after lazy: " + window.tinymce);
-            //$scope.$apply();
-            vm.activate();
-
         });
-        //vm.activate();
+        vm.activate();
     }
 
     function addTinyMceToolbarButtons(editor, vm) {

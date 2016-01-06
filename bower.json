@@ -8,8 +8,6 @@
     "angular-dropzone": "0.1.2",
     "2sxc-eav-languages": "2sic/2sxc-eav-languages",
     "angular-ui-ace": "0.2.3",
-
-    "tinymce": "4.3.2",
     "angular-ui-tinymce": "0.0.12"
   },
   "private": true,
