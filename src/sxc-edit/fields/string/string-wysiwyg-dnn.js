@@ -10,7 +10,7 @@
 
         // for now identical with -adv, but later will change
 		formlyConfigProvider.setType({
-			name: "string-wysiwyg-adv",
+			name: "string-wysiwyg-dnn",
 			templateUrl: "fields/string/string-wysiwyg-dnn.html",
 			wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"],
 			controller: "FieldTemplate-WysiwygCtrl as vm"

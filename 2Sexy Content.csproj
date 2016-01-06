@@ -525,9 +525,11 @@
     <Content Include="src\sxc-edit\fields\hyperlink\dropzone-custom.css" />
     <Content Include="src\sxc-edit\fields\hyperlink\hyperlink-library.js" />
     <Content Include="src\sxc-edit\fields\hyperlink\hyperlink.css" />
+    <Content Include="src\sxc-edit\fields\string\string-wysiwyg-adv.html" />
+    <Content Include="src\sxc-edit\fields\string\string-wysiwyg-adv.js" />
     <Content Include="src\sxc-edit\fields\string\string-wysiwyg-dnn.js" />
     <Content Include="src\sxc-edit\fields\string\string-wysiwyg-tinymce.html" />
-    <Content Include="src\sxc-edit\fields\string\string-wysiwyg.js" />
+    <Content Include="src\sxc-edit\fields\string\string-wysiwyg-tinymce.js" />
     <Content Include="src\sxc-edit\fields\hyperlink\hyperlink-library.html" />
     <Content Include="src\sxc-edit\fields\string\wysiwyg-mce.css" />
     <Content Include="src\sxc-edit\fields\_sxc-fieldtemplates-app.js" />

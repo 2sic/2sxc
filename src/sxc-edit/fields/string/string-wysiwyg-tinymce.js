@@ -1,35 +1,23 @@
-﻿// todo
-// finish toolbar based on https://www.tinymce.com/docs/advanced/editor-control-identifiers/#toolbarcontrols
-// - more buttons
-// - more unimportant buttons, hidden in a sub-menu
-//
-// finish right-click actions
-// 
-// review further plugins/functionalty
+﻿
 (function () {
 	"use strict";
 
     angular.module("sxcFieldTemplates")
         .config(function(formlyConfigProvider) {
-
-            // for now identical with -adv, but later will change
             formlyConfigProvider.setType({
-                name: "string-wysiwyg",
+                name: "string-wysiwyg-tinymce",
                 templateUrl: "fields/string/string-wysiwyg-tinymce.html",
                 wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"],
                 controller: "FieldWysiwygTinyMce as vm"
             });
-
-
         })
         .controller("FieldWysiwygTinyMce", FieldWysiwygTinyMceController);
 
     function FieldWysiwygTinyMceController($scope, dnnBridgeSvc, $ocLazyLoad) {
-        // quickl load some depedencies first
-        
         var vm = this;
 
         vm.activate = function () {
+
             var plugins = [
                 "code",     // allow view / edit source
                 "contextmenu",  // right-click menu for things like insert, etc.

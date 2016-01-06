@@ -676,13 +676,33 @@ angular.module("sxcFieldTemplates")
 
 	/* This app registers all field templates for 2sxc in the angularjs sxcFieldTemplates app */
 
+    angular.module("sxcFieldTemplates")
+        .config(["formlyConfigProvider", function(formlyConfigProvider) {
+
+            // for now identical with -adv, but later will change
+            formlyConfigProvider.setType({
+                name: "string-wysiwyg-adv",
+                templateUrl: "fields/string/string-wysiwyg-adv.html",
+                wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"]
+            });
+
+
+        }]);
+
+})();
+
+(function () {
+	"use strict";
+
+	/* This app registers all field templates for 2sxc in the angularjs sxcFieldTemplates app */
+
 	angular.module("sxcFieldTemplates")
 
     .config(["formlyConfigProvider", function (formlyConfigProvider) {
 
         // for now identical with -adv, but later will change
 		formlyConfigProvider.setType({
-			name: "string-wysiwyg-adv",
+			name: "string-wysiwyg-dnn",
 			templateUrl: "fields/string/string-wysiwyg-dnn.html",
 			wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"],
 			controller: "FieldTemplate-WysiwygCtrl as vm"
@@ -723,38 +743,26 @@ angular.module("sxcFieldTemplates")
 
 
 })();
-// todo
-// finish toolbar based on https://www.tinymce.com/docs/advanced/editor-control-identifiers/#toolbarcontrols
-// - more buttons
-// - more unimportant buttons, hidden in a sub-menu
-//
-// finish right-click actions
-// 
-// review further plugins/functionalty
+
 (function () {
 	"use strict";
 
     angular.module("sxcFieldTemplates")
         .config(["formlyConfigProvider", function(formlyConfigProvider) {
-
-            // for now identical with -adv, but later will change
             formlyConfigProvider.setType({
-                name: "string-wysiwyg",
+                name: "string-wysiwyg-tinymce",
                 templateUrl: "fields/string/string-wysiwyg-tinymce.html",
                 wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"],
                 controller: "FieldWysiwygTinyMce as vm"
             });
-
-
         }])
         .controller("FieldWysiwygTinyMce", FieldWysiwygTinyMceController);
 
     function FieldWysiwygTinyMceController($scope, dnnBridgeSvc, $ocLazyLoad) {
-        // quickl load some depedencies first
-        
         var vm = this;
 
         vm.activate = function () {
+
             var plugins = [
                 "code",     // allow view / edit source
                 "contextmenu",  // right-click menu for things like insert, etc.
@@ -1051,6 +1059,11 @@ angular.module('SxcEditTemplates', []).run(['$templateCache', function($template
 
   $templateCache.put('fields/hyperlink/hyperlink-library.html',
     "<div><div class=dropzone><adam-browser content-type-name=to.header.ContentTypeName entity-guid=to.header.Guid field-name=options.key auto-load=true sub-folder=\"\" folder-depth=to.settings.merged.FolderDepth metadata-content-type=to.settings.merged.MetadataContentType folder-metadata-content-type=to.settings.merged.FolderMetadataContentType allow-assets-in-root=to.settings.merged.allowAssetsInRoot enable-select=false update-callback=vm.setValue register-self=vm.registerAdam></adam-browser><dropzone-upload-preview></dropzone-upload-preview><div class=\"small pull-right\"><a href=\"http://2sxc.org/help?tag=adam\" target=_blank tooltip=\"ADAM is the Automatic Digital Assets Manager - click to discover more\"><i icon=apple></i> Adam</a> is sponsored with ♥ by <a tabindex=-1 href=\"http://2sic.com/\" target=_blank>2sic.com</a></div></div></div>"
+  );
+
+
+  $templateCache.put('fields/string/string-wysiwyg-adv.html',
+    "<div>this would be an advanced, configurable WYSIWYG. It does not exist yet :).</div>"
   );
 
 

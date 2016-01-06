@@ -108,6 +108,14 @@ if (window.angular) // needed because the file is also included in older non-ang
                 contentType: {
                     defaultScope: "2SexyContent",
                     template: "2SexyContent-Template"
+                },
+
+                // use this to set defaults for field types OR to provide an alternat type if one is deprecated
+                formly: {
+                    inputTypeReplacementMap: {
+                        "string-wysiwyg": "string-wysiwyg-tinymce"
+                        //"string-wysiwyg": "string-wysiwyg-dnn"
+                    }
                 }
 
             };
