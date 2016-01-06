@@ -5,6 +5,7 @@ using DotNetNuke.Entities.Modules;
 using ToSic.Eav;
 using ToSic.Eav.BLL;
 using ToSic.Eav.DataSources;
+using DotNetNuke.Services.Localization;
 
 namespace ToSic.SexyContent
 {
@@ -64,9 +65,10 @@ namespace ToSic.SexyContent
 
 			var entity = context.AddEntity(contentType.AttributeSetId, values, null, null);
 
-			new ModuleController().UpdateModuleSetting(moduleId, SexyContent.ContentGroupGuidString, entity.EntityGUID.ToString());
+            // Update contentGroup Guid for this module
+            SexyContent.UpdateModuleSettingForAllLanguages(moduleId, SexyContent.ContentGroupGuidString, entity.EntityGUID.ToString());
 
-			return entity.EntityGUID;
+            return entity.EntityGUID;
 		}
 
 
@@ -90,13 +92,15 @@ namespace ToSic.SexyContent
 			var dataSource = DataSource.GetInitialDataSource(_zoneId, _appId);
 			var previewTemplateGuid = dataSource.List[previewTemplateId].EntityGuid;
 
-			moduleController.UpdateModuleSetting(moduleId, PreviewTemplateIdString, previewTemplateGuid.ToString());
-		}
+            //moduleController.UpdateModuleSetting(moduleId, PreviewTemplateIdString, previewTemplateGuid.ToString());
+            SexyContent.UpdateModuleSettingForAllLanguages(moduleId, PreviewTemplateIdString, previewTemplateGuid.ToString());
+        }
 
 		public static void DeletePreviewTemplateId(int moduleId)
 		{
-			var moduleController = new ModuleController();
-			moduleController.DeleteModuleSetting(moduleId, PreviewTemplateIdString);
+            //var moduleController = new ModuleController();
+            //moduleController.DeleteModuleSetting(moduleId, PreviewTemplateIdString);
+            SexyContent.UpdateModuleSettingForAllLanguages(moduleId, PreviewTemplateIdString, null);
 		}
 
 		public Guid SaveTemplateId(int moduleId, int templateId)
