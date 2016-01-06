@@ -674,7 +674,7 @@ angular.module("eavFieldTemplates")
 	}]);
 
 })();
-angular.module('eavEditTemplates',[]).run(['$templateCache', function($templateCache) {
+angular.module('eavEditTemplates', []).run(['$templateCache', function($templateCache) {
   'use strict';
 
   $templateCache.put('fields/boolean/boolean-default.html',

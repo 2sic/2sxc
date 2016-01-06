@@ -14,9 +14,7 @@ module.exports = function (grunt) {
                         src: ["**/*.js"],
                         dest: "<%= paths.dist %>/lib/angular-ui-ace/"
                     }
-
                 ]
-                
             }
         },
         go: {

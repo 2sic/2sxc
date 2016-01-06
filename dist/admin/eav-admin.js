@@ -815,7 +815,7 @@ angular.module("EavDirectives", [])
 
 
 })();
-angular.module('eavTemplates',[]).run(['$templateCache', function($templateCache) {
+angular.module('eavTemplates', []).run(['$templateCache', function($templateCache) {
   'use strict';
 
   $templateCache.put('content-import-export/content-export.html',
