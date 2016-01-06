@@ -143,6 +143,9 @@ angular.module("sxcFieldTemplates")
 						w.$(w.document).ready(function() {
 							resize();
 						});
+						w.$(w.document).on('triggerbridgeresize', function () {
+						    window.setTimeout(resize, 0);
+						});
 
 					}
 				});

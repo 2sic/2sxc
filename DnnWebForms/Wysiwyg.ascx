@@ -55,7 +55,10 @@
 					});
 
 			};
+
+			var preventChangeEvent = false;
 			controller.setValue = function (value) {
+			    preventChangeEvent = true;
 				// If the instance is not yet ready, set textarea, else via CKEditor API
 				if (!CKEDITOR.instances[instanceId] || !CKEDITOR.instances[instanceId].instanceReady)
 					$("textarea.editor").val(value);
@@ -63,8 +66,9 @@
 					var editor = CKEDITOR.instances[instanceId];
 					editor.setData(value);
 					// After setting the data, set readOnlyState again - else the background color will be reset
-					Controller.SetReadOnly(editor.readOnly);
+					controller.setReadOnly(editor.readOnly);
 				}
+				preventChangeEvent = false;
 			};
 			controller.getValue = function () {
 				// If instance is not yet ready, get HTML out of the textarea, else via CKEditor API
@@ -73,6 +77,12 @@
 				var editor = CKEDITOR.instances[instanceId]; //ev.editor;
 				return editor.getData();
 			};
+
+			CKEDITOR.instances[instanceId].on('change', function () {
+			    if (!preventChangeEvent)
+			        controller.onChanged(controller.getValue());
+			});
+			CKEDITOR.instances[instanceId].on('instanceReady', function () { $(document).trigger('triggerbridgeresize'); });
 		}
 		else {
 			// Use default Telerik RadEditor
