@@ -46,7 +46,7 @@ namespace ToSic.SexyContent
     {
         #region Constants
 
-        public const string ModuleVersion = "08.00.11"; // always the newest version
+        public const string ModuleVersion = "08.00.12"; // always the newest version
         public const string TemplateID = "TemplateID";
 		public const string ContentGroupGuidString = "ToSIC_SexyContent_ContentGroupGuid";
         public const string AppIDString = "AppId";
@@ -868,11 +868,13 @@ namespace ToSic.SexyContent
 			var zoneId = GetZoneID(module.OwnerPortalID);
             
             if (appId == 0 || !appId.HasValue)
-		        moduleController.DeleteModuleSetting(module.ModuleID, AppNameString);
+                //moduleController.DeleteModuleSetting(module.ModuleID, AppNameString);
+                UpdateModuleSettingForAllLanguages(module.ModuleID, AppNameString, null);
             else
 	        {
 		        var appName = ((BaseCache) DataSource.GetCache(0, 0)).ZoneApps[zoneId.Value].Apps[appId.Value];
-				moduleController.UpdateModuleSetting(module.ModuleID, AppNameString, appName);
+                //moduleController.UpdateModuleSetting(module.ModuleID, AppNameString, appName);
+                UpdateModuleSettingForAllLanguages(module.ModuleID, AppNameString, appName);
 	        }
 
 			// Change to 1. available template if app has been set
@@ -1228,6 +1230,36 @@ namespace ToSic.SexyContent
                 return settings[settingName].ToString();
 
             return null;
+        }
+
+        /// <summary>
+        /// Update a setting for all language-versions of a module
+        /// </summary>
+        public static void UpdateModuleSettingForAllLanguages(int moduleId, string key, string value)
+        {
+            var moduleController = new ModuleController();
+
+            // Find this module in other languages and update contentGroupGuid
+            var originalModule = moduleController.GetModule(moduleId);
+            var languages = LocaleController.Instance.GetLocales(originalModule.PortalID);
+
+            if (!originalModule.IsDefaultLanguage && originalModule.DefaultLanguageModule != null)
+                originalModule = originalModule.DefaultLanguageModule;
+
+            foreach (var language in languages)
+            {
+                // Find module for given Culture
+                var moduleByCulture = moduleController.GetModuleByCulture(originalModule.ModuleID, originalModule.TabID, originalModule.PortalID, language.Value);
+
+                // Break if no module found
+                if (moduleByCulture == null)
+                    continue;
+
+                if(value == null)
+                    moduleController.DeleteModuleSetting(moduleByCulture.ModuleID, key);
+                else
+                    moduleController.UpdateModuleSetting(moduleByCulture.ModuleID, key, value);
+            }
         }
 
         #endregion

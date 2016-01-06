@@ -703,6 +703,8 @@ $(document).ready(function () {
                             return;
                         }
                         var newGuid = result.data;
+                        if (newGuid === null)
+                            return;
                         newGuid = newGuid.replace(/[\",\']/g, ""); // fixes a special case where the guid is given with quotes (dependes on version of angularjs) issue #532
                         if (console)
                             console.log("created content group {" + newGuid + "}");
