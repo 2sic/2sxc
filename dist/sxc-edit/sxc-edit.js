@@ -412,7 +412,7 @@ angular.module("Adam")
         "EavConfiguration",
         "SxcServices",
         "Adam",
-        "ui.tinymce",   // connector to tiny-mce for angular
+        //"ui.tinymce",   // connector to tiny-mce for angular
         "oc.lazyLoad"   // needed to lazy-load the MCE editor from the cloud
     ]);
 
@@ -885,13 +885,13 @@ angular.module("sxcFieldTemplates")
 
         //#endregion
 
-        $ocLazyLoad.load({
-            serie: true,
-            files: [
-                "//cdn.tinymce.com/4/tinymce.min.js",
-                //"../../bower_components/angular-ui-tinymce/src/tinymce.js"
-            ]
-        });
+        //$ocLazyLoad.load({
+        //    serie: true,
+        //    files: [
+        //        "//cdn.tinymce.com/4/tinymce.min.js",
+        //        "../../bower_components/angular-ui-tinymce/src/tinymce.js"
+        //    ]
+        //});
         vm.activate();
     }
     FieldWysiwygTinyMceController.$inject = ["$scope", "dnnBridgeSvc", "$ocLazyLoad"];

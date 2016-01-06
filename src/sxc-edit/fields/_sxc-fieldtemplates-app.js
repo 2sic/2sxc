@@ -14,7 +14,7 @@
         "EavConfiguration",
         "SxcServices",
         "Adam",
-        "ui.tinymce",   // connector to tiny-mce for angular
+        //"ui.tinymce",   // connector to tiny-mce for angular
         "oc.lazyLoad"   // needed to lazy-load the MCE editor from the cloud
     ]);
 

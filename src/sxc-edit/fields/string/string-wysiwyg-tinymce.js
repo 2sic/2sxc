@@ -140,13 +140,13 @@
 
         //#endregion
 
-        $ocLazyLoad.load({
-            serie: true,
-            files: [
-                "//cdn.tinymce.com/4/tinymce.min.js",
-                //"../../bower_components/angular-ui-tinymce/src/tinymce.js"
-            ]
-        });
+        //$ocLazyLoad.load({
+        //    serie: true,
+        //    files: [
+        //        "//cdn.tinymce.com/4/tinymce.min.js",
+        //        "../../bower_components/angular-ui-tinymce/src/tinymce.js"
+        //    ]
+        //});
         vm.activate();
     }
 

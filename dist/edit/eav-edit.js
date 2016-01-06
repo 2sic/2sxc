@@ -478,7 +478,13 @@ angular.module("eavFieldTemplates")
 		            // Transform EAV content type configuration to formFields (formly configuration)
 
                     // first: add all custom types to re-load these scripts and styles
-		            angular.forEach(result.data, function(e, i) {
+		            angular.forEach(result.data, function (e, i) {
+		                // check in config input-type replacement map if the specified type should be replaced by another
+		                if (e.InputType && eavConfig.formly.inputTypeReplacementMap[e.InputType]) {
+		                    e.InputType = eavConfig.formly.inputTypeReplacementMap[e.InputType];
+		                }
+
+		                eavConfig.formly.inputTypeReconfig(e);  // provide custom overrides etc. if necessary
 		                if (e.InputTypeConfig)
 		                    customInputTypes.addInputType(e);
 		            });
@@ -571,8 +577,8 @@ angular.module("eavFieldTemplates")
 
 		    // new: the All can - and should - have an input-type which doesn't change
 		    // First look in Metadata.All if an InputType is defined (All should override the setting, which is not the case when using only merged)
-			if (e.Metadata.All && e.Metadata.All.InputType)
-			    inputType = e.Metadata.All.InputType;
+			if (e.InputType !== "unknown") // the input type of @All is here from the web service // Metadata.All && e.Metadata.All.InputType)
+			    inputType = e.InputType;
             // If not, look in merged
 			else if (e.Metadata.merged && e.Metadata.merged.InputType)
 			    inputType = e.Metadata.merged.InputType;
@@ -580,9 +586,9 @@ angular.module("eavFieldTemplates")
 			if (inputType && inputType.indexOf("-") === -1) // has input-type, but missing main type, this happens with old types like string wysiyg
 		        inputType = type + "-" + inputType;
 
-            // check in config input-type replacement map
-		    if (inputType && eavConfig.formly.inputTypeReplacementMap[inputType])
-		        inputType = eavConfig.formly.inputTypeReplacementMap[inputType];
+            //// check in config input-type replacement map if the specified type should be replaced by another
+		    //if (inputType && eavConfig.formly.inputTypeReplacementMap[inputType])
+		    //    inputType = eavConfig.formly.inputTypeReplacementMap[inputType];
 
 		    // this type may have assets, so the definition may be late-loaded
 		    var typeAlreadyRegistered = formlyConfig.getType(inputType);
@@ -1119,11 +1125,6 @@ function enhanceEntity(entity) {
 	            if (config === undefined || config === null)
 	                return;
 
-	            // only add one if it has not been added yet
-                // commented out - believe this won't work when using ocLazyLoad
-	            //if (svc.inputTypesOnPage[config.Type] !== undefined)
-	            //    return;
-
 	            svc.inputTypesOnPage[config.Type] = config;
 
 	            svc.addToLoadQueue(config);
@@ -1142,12 +1143,6 @@ function enhanceEntity(entity) {
 	                var asset = list[a].trim();
 	                if (asset.length > 5) { // ensure we skip empty lines etc.
 	                    svc.assetsToLoad.push(svc.resolveSpecialPaths(asset));
-	                    // add to document
-	                    //if (svc.addHeadJsOrCssTag(svc.resolveSpecialPaths(asset))) {
-	                    //    // note: returns true if it has JS, in which case we monitor for success before binding the form
-	                    //    // config.hasJsAssets = true;
-	                    //    config.assetsLoaded = false;
-	                    //}
 	                }
 	            }
 	        };
@@ -1155,46 +1150,7 @@ function enhanceEntity(entity) {
 	        // now create promise and wait for everything to load
 	        svc.loadWithPromise = function loadWithPromise() {
 	            return $ocLazyLoad.load(svc.assetsToLoad);
-	            //var cycleDuration = 100;
-	            //return $q(function(resolve, reject) {
-	            //    var msg = toastr.info("todo translate: loading custom input types");
 
-	            //    return $ocLazyLoad.load(svc.assetsToLoad);
-
-	                //var totalTime = 0;
-	                //var maxTime = 2000;
-	                //var finishNow = false;
-	                //svc.checkloop = $interval(function() {
-	                //    var allLoaded = true;
-	                //    angular.forEach(svc.inputTypesOnPage, function(config, type) { 
-	                //        if (!config.assetsLoaded) {
-	                //            if (svc.checkDependencyArrival(config.Type)) {
-	                //                config.assetsLoaded = true;
-	                //            } else
-	                //                allLoaded = false;
-	                //        }
-	                //    });
-
-	                //    if (allLoaded) {
-	                //        toastr.clear(msg);
-	                //        toastr.info("todo translate: all loadded");
-	                //        finishNow = true;
-	                //    } else {
-	                //        totalTime += cycleDuration;
-	                //        if (totalTime > maxTime) {
-	                //            toastr.clear(msg);
-	                //            toastr.warning("todo translate - not able to load all types within " + maxTime / 1000 + " seconds, will continue without. See 2sxc.org/help?tag=custom-input", "todo translate error");
-	                //            finishNow = true;
-	                //        }
-	                //    }
-
-                    //    if (finishNow) {
-                    //        $interval.cancel(svc.checkloop);
-	                //        resolve();
-                    //    }
-	                //}, cycleDuration);
-
-	            //});
 	        };
 
 	        svc.resolveSpecialPaths = function resolve(url) {
@@ -1203,21 +1159,6 @@ function enhanceEntity(entity) {
 	                .replace(/\[App:Path\]/i, eavConfig.getUrlPrefix("app"));
 	            return url;
 	        };
-
-	        //svc.addHeadJsOrCssTag = function (url) {
-	        //    url = url.trim();
-	        //    if (url.indexOf(".js") > 0) {
-	        //        var oHead = document.getElementsByTagName("HEAD").item(0);
-	        //        var oScript = document.createElement("script");
-	        //        oScript.type = "text/javascript";
-	        //        oScript.src = url;
-	        //        oHead.appendChild(oScript);
-	        //        return true;
-	        //    } else if (url.indexOf(".css") > 0) {
-	        //        alert("css include not implemented yet");
-	        //        return false;
-	        //    }
-	        //};
 
 	        svc.checkDependencyArrival = function cda(typeName) {
 	            return !!formlyConfig.getType(typeName);

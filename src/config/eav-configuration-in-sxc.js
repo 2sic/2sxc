@@ -115,7 +115,27 @@ if (window.angular) // needed because the file is also included in older non-ang
                     inputTypeReplacementMap: {
                         "string-wysiwyg": "string-wysiwyg-tinymce"
                         //"string-wysiwyg": "string-wysiwyg-dnn"
+                    },
+                    // used to inject additional / change config if necessary
+                    inputTypeReconfig: function (field) {
+                        var config = field.InputTypeConfig || {}; // note: can be null
+                        var applyChanges = false;
+                        switch (field.InputType) {
+                            case "string-wysiwyg-tinymce":
+                                config.Assets = "//cdn.tinymce.com/4/tinymce.min.js\n" +
+                                    "../../bower_components/angular-ui-tinymce/src/tinymce.js";
+                                applyChanges = true;
+                                break;
+                            case "unknown": // server default if not defined
+                                break;
+                            default:        // default if not defined in this list
+                                break;
+
+                        }
+                        if (applyChanges && !field.InputTypeConfig)
+                            field.InputTypeConfig = config;
                     }
+
                 }
 
             };
