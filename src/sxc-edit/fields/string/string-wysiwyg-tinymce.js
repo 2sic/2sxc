@@ -11,25 +11,10 @@
                 controller: "FieldWysiwygTinyMce as vm"
             });
         })
-        .directive('lazyLoadTinymce', function ($compile) {
-            return {
-                restrict: 'E',
-                controller: function ($scope, $element, $interval, $window) {
-                    var checkIfTinyMceLoaded = $interval(function() {
-                        if (!$window.tinymce) return;
-                            $interval.cancel(checkIfTinyMceLoaded);
-                            var orig = $element[0].innerHTML.replace(/lazy-/g, "");
-                            var el = $compile(orig)($scope);
-                            $element.replaceWith(el);
-                    }, 10);
-                }
-            };
-        })
-
 
         .controller("FieldWysiwygTinyMce", FieldWysiwygTinyMceController);
 
-    function FieldWysiwygTinyMceController($scope, dnnBridgeSvc, $ocLazyLoad) {
+    function FieldWysiwygTinyMceController($scope, dnnBridgeSvc) {
         var vm = this;
 
         vm.activate = function () {
@@ -140,13 +125,6 @@
 
         //#endregion
 
-        //$ocLazyLoad.load({
-        //    serie: true,
-        //    files: [
-        //        "//cdn.tinymce.com/4/tinymce.min.js",
-        //        "../../bower_components/angular-ui-tinymce/src/tinymce.js"
-        //    ]
-        //});
         vm.activate();
     }
 

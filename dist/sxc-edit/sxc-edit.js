@@ -756,25 +756,10 @@ angular.module("sxcFieldTemplates")
                 controller: "FieldWysiwygTinyMce as vm"
             });
         }])
-        .directive('lazyLoadTinymce', ["$compile", function ($compile) {
-            return {
-                restrict: 'E',
-                controller: ["$scope", "$element", "$interval", "$window", function ($scope, $element, $interval, $window) {
-                    var checkIfTinyMceLoaded = $interval(function() {
-                        if (!$window.tinymce) return;
-                            $interval.cancel(checkIfTinyMceLoaded);
-                            var orig = $element[0].innerHTML.replace(/lazy-/g, "");
-                            var el = $compile(orig)($scope);
-                            $element.replaceWith(el);
-                    }, 10);
-                }]
-            };
-        }])
-
 
         .controller("FieldWysiwygTinyMce", FieldWysiwygTinyMceController);
 
-    function FieldWysiwygTinyMceController($scope, dnnBridgeSvc, $ocLazyLoad) {
+    function FieldWysiwygTinyMceController($scope, dnnBridgeSvc) {
         var vm = this;
 
         vm.activate = function () {
@@ -885,16 +870,9 @@ angular.module("sxcFieldTemplates")
 
         //#endregion
 
-        //$ocLazyLoad.load({
-        //    serie: true,
-        //    files: [
-        //        "//cdn.tinymce.com/4/tinymce.min.js",
-        //        "../../bower_components/angular-ui-tinymce/src/tinymce.js"
-        //    ]
-        //});
         vm.activate();
     }
-    FieldWysiwygTinyMceController.$inject = ["$scope", "dnnBridgeSvc", "$ocLazyLoad"];
+    FieldWysiwygTinyMceController.$inject = ["$scope", "dnnBridgeSvc"];
 
     function addTinyMceToolbarButtons(editor, vm) {
 
@@ -1084,7 +1062,7 @@ angular.module('SxcEditTemplates', []).run(['$templateCache', function($template
 
 
   $templateCache.put('fields/string/string-wysiwyg-tinymce.html',
-    "<div><div class=dropzone><lazy-load-tinymce><div lazy-ui-tinymce=tinymceOptions lazy-ng-model=value.Value class=field-string-wysiwyg-mce-box></div></lazy-load-tinymce><adam-browser content-type-name=to.header.ContentTypeName entity-guid=to.header.Guid field-name=options.key auto-load=false folder-depth=0 sub-folder=\"\" update-callback=vm.setValue register-self=vm.registerAdam ng-disabled=to.disabled></adam-browser><dropzone-upload-preview></dropzone-upload-preview><div class=\"small pull-right\"><a href=\"http://2sxc.org/help?tag=adam\" target=_blank tooltip=\"ADAM is the Automatic Digital Assets Manager - click to discover more\">supports <i icon=apple></i> Adam - just drop files</a> with ♥ by <a tabindex=-1 href=\"http://2sic.com/\" target=_blank>2sic.com</a></div></div></div>"
+    "<div><div class=dropzone><div ui-tinymce=tinymceOptions ng-model=value.Value class=field-string-wysiwyg-mce-box></div><adam-browser content-type-name=to.header.ContentTypeName entity-guid=to.header.Guid field-name=options.key auto-load=false folder-depth=0 sub-folder=\"\" update-callback=vm.setValue register-self=vm.registerAdam ng-disabled=to.disabled></adam-browser><dropzone-upload-preview></dropzone-upload-preview><div class=\"small pull-right\"><a href=\"http://2sxc.org/help?tag=adam\" target=_blank tooltip=\"ADAM is the Automatic Digital Assets Manager - click to discover more\">supports <i icon=apple></i> Adam - just drop files</a> with ♥ by <a tabindex=-1 href=\"http://2sic.com/\" target=_blank>2sic.com</a></div></div></div>"
   );
 
 }]);
