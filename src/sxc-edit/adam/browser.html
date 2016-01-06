@@ -16,7 +16,7 @@
         </div>
     </div>
 
-    <!-- folders - not always shown -->
+    <!-- add folder - not always shown -->
     <div ng-show="vm.allowCreateFolder() || vm.debug.on" class="dz-preview" ng-disabled="vm.disabled" ng-click="vm.addFolder()">
         <div class="dz-image" style="background-color: whitesmoke">
         </div>
@@ -49,8 +49,7 @@
         </div>
     </div>
 
-
-    <!-- folder list -->
+    <!-- folder list - not always shown -->
     <div ng-show="vm.showFolders || vm.debug.on" class="dz-preview" ng-repeat="item in vm.items | filter: { IsFolder: true }  | orderBy:'Name'" ng-click="vm.goIntoFolder(item)">
         <div class="dz-image" style="background-color: whitesmoke"> </div>
         <div class="dz-details file-type-{{item.Type}}">
@@ -68,20 +67,22 @@
 
 
     <!-- files -->
-    <div class="dz-preview" ng-class="{ 'dz-success': value.Value.toLowerCase() == 'file:' + item.Id }" ng-repeat="item in vm.items | filter: { IsFolder: false }  | orderBy:'Name'" ng-click="vm.select(item)" ng-disabled="vm.disabled || !vm.enableSelect">
-        <div ng-if="item.Type == 'image'" class="dz-image">
+    <div class="dz-preview" ng-class="{ 'dz-success': value.Value.toLowerCase() == 'file:' + item.Id }" ng-repeat="item in (vm.items | filter: { IsFolder: false }) | filter: (vm.showImagesOnly ? {Type: 'image'} : {})  | orderBy:'Name'" ng-click="vm.select(item)" ng-disabled="vm.disabled || !vm.enableSelect">
+        <div ng-if="item.Type !== 'image'" class="dz-image" style="background-color: whitesmoke">
+            <div class="" style="padding-left: 5px;padding-right: 5px;padding-top: 10px;padding-bottom: 10px;min-width: 100%;min-height: 100%;text-align: center;">
+                <span style="font-size: 5em">
+                    <i icon="file"></i>
+                </span>
+            </div>
+        </div>
+        <div ng-if="item.Type === 'image'" class="dz-image">
             <img data-dz-thumbnail="" alt="{{ item.Id + ':' + item.Name
 }}" ng-src="{{ item.fullPath + '?w=120&h=120&mode=crop' }}">
         </div>
 
         <div class="dz-details file-type-{{item.Type}}">
-            <div class="dz-size file-icon" ng-if="item.Type == 'image'">
+            <div class="dz-size file-icon">
                 <span data-dz-size=""><strong>{{ item.Id }}</strong></span>
-            </div>
-            <div class="dz-size file-actions" ng-if="item.Type == 'document' || item.Type == 'file'">
-                <span data-dz-size="">
-                    <button type="button" class="btn btn-subtle btn-lg" ng-disabled="vm.disabled"><i icon="file"></i></button>
-                </span>
             </div>
             <div class="dz-filename"><span data-dz-name="">{{ item.Name }}</span></div>
             <div class="dz-filename">

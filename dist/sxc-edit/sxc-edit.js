@@ -122,6 +122,9 @@ angular.module("Adam")
         vm.subFolder = $scope.subFolder || "";
         vm.appRoot = appRoot;
 
+        //$scope.showImagesOnly = ;
+        vm.showImagesOnly = $scope.showImagesOnly = $scope.showImagesOnly || false;
+
         vm.folderDepth = (typeof $scope.folderDepth !== 'undefined' && $scope.folderDepth !== null)
             ? $scope.folderDepth
             : 2;
@@ -154,8 +157,16 @@ angular.module("Adam")
             vm.folders = vm.svc.folders;
         };
 
-        vm.toggle = function toggle() {
-            vm.show = !vm.show;
+        vm.toggle = function toggle(newConfig) {
+            var settingsChanged = false;
+            if (newConfig) {
+                settingsChanged = (vm.showImagesOnly !== newConfig.showImagesOnly);
+                vm.showImagesOnly = newConfig.showImagesOnly;
+            }
+            //var settingsChanged = ($scope.showImagesOnly !== vm.showImagesOnly);
+            // vm.showImagesOnly = $scope.showImagesOnly;  // update this on every toggle
+            vm.show = settingsChanged || !vm.show;      // if settings changed, always show
+            // vm.show = !vm.show;
             if (vm.show)
                 vm.get();
         };
@@ -272,6 +283,7 @@ angular.module("Adam")
                     metadataContentType: "=",
                     folderMetadataContentType: "=",
                     allowAssetsInRoot: "=",
+                    showImagesOnly: "=",
 
                     // binding and cross-component communication
                     autoLoad: "=",
@@ -747,6 +759,7 @@ angular.module("sxcFieldTemplates")
 (function () {
 	"use strict";
 
+    // Register in Angular Formly
     angular.module("sxcFieldTemplates")
         .config(["formlyConfigProvider", function(formlyConfigProvider) {
             formlyConfigProvider.setType({
@@ -825,12 +838,17 @@ angular.module("sxcFieldTemplates")
             vm.adam = adam;
         };
         vm.setValue = function (fileItem) {
-            vm.editor.insertContent("<img src=\"" + fileItem.fullPath + "\">");
+            if (/* fileItem.Type === "image"  && */ vm.adamModeImage) {
+                vm.editor.insertContent("<img src=\"" + fileItem.fullPath + "\">");
+            } else {
+                vm.editor.insertContent("<a href=\"" + fileItem.fullPath + "\">" + fileItem.Name + "</a>");
+            }
         };
         $scope.afterUpload = vm.setValue;
 
-        vm.toggleAdam = function toggle() {
-            vm.adam.toggle();
+        vm.toggleAdam = function toggle(imagesOnly) {
+            vm.adamModeImage = imagesOnly;
+            vm.adam.toggle({showImagesOnly: imagesOnly});
             $scope.$apply();
         };
 
@@ -892,7 +910,7 @@ angular.module("sxcFieldTemplates")
                     text: "file in ADAM (recommended)",
                     icon: "newdocument",
                     onclick: function() {
-                        vm.toggleAdam();
+                        vm.toggleAdam(false);
                     }
                 }, {
                     text: "file in DNN",
@@ -915,14 +933,14 @@ angular.module("sxcFieldTemplates")
             text: "",
             icon: "image",
             onclick: function() {
-                vm.toggleAdam();
+                vm.toggleAdam(true);
             },
             menu: [
                 {
                     text: "from ADAM (recommended)",
                     icon: "image",
                     onclick: function() {
-                        vm.toggleAdam();
+                        vm.toggleAdam(true);
                     }
                 }, {
                     text: "from DNN (all files in DNN, slower)",
@@ -947,7 +965,7 @@ angular.module("sxcFieldTemplates")
             text: "image from ADAM",
             icon: "image",
             onclick: function () {
-                vm.toggleAdam();
+                vm.toggleAdam(true);
             }
         });
         //editor.addButton("dnn", {
@@ -1012,9 +1030,9 @@ angular.module('SxcEditTemplates', []).run(['$templateCache', function($template
   'use strict';
 
   $templateCache.put('adam/browser.html',
-    "<div ng-if=vm.show><div class=\"dz-preview dropzone-adam\" ng-disabled=vm.disabled tooltip=\"{{'Edit.Fields.Hyperlink.Default.AdamUploadLabel' | translate }}\" ng-click=vm.openUpload()><div class=dz-image style=\"background-color: whitesmoke\"></div><div class=dz-details style=\"opacity: 1\"><div class=dz-size><button type=button class=\"btn btn-primary btn-lg\" ng-disabled=vm.disabled><i icon=plus></i> <i icon=file></i></button></div><div class=dz-filename><span data-dz-name=\"\">drag & drop files</span></div></div></div><div ng-show=\"vm.allowCreateFolder() || vm.debug.on\" class=dz-preview ng-disabled=vm.disabled ng-click=vm.addFolder()><div class=dz-image style=\"background-color: whitesmoke\"></div><div class=dz-details style=\"opacity: 1\"><div class=dz-size><button type=button class=\"btn btn-default btn-lg\" ng-disabled=vm.disabled><i icon=plus></i> <i icon=th-large></i></button></div><div class=dz-filename><span data-dz-name=\"\">new folder</span></div></div></div><div ng-show=\"vm.showFolders || vm.debug.on\" class=dz-preview ng-disabled=vm.disabled ng-if=\"vm.folders.length > 0\" ng-click=vm.goUp()><div class=dz-image style=\"background-color: whitesmoke\"></div><div class=dz-details style=\"opacity: 1\"><div class=dz-size><button type=button class=\"btn btn-default btn-square btn-lg\" ng-disabled=vm.disabled><i icon=level-up></i></button></div><div class=dz-filename><span data-dz-name=\"\">up</span></div></div></div><div ng-show=\"vm.showFolders || vm.debug.on\" class=dz-preview ng-repeat=\"item in vm.items | filter: { IsFolder: true }  | orderBy:'Name'\" ng-click=vm.goIntoFolder(item)><div class=dz-image style=\"background-color: whitesmoke\"></div><div class=\"dz-details file-type-{{item.Type}}\"><span class=pull-right ng-class=\"{'metadata-exists': item.MetadataId > 0}\" style=\"font-size: large\" ng-click=vm.editFolderMetadata(item) ng-if=vm.folderMetadataContentType stop-event=click><span tooltip={{item.MetadataId}}><i icon=tag></i></span></span> <span data-dz-size=\"\" style=\"font-size: xx-large\"><i icon=th-large></i></span><div class=dz-filename><span data-dz-name=\"\">{{ item.Name }}{{ vm.debug.on ? \"(lvl:\" + vm.currentFolderDepth() + \")\" : \"\"}}</span></div><div class=dz-filename><span ng-click=vm.del(item) stop-event=click ng-disabled=vm.disabled><i icon=remove></i></span></div></div></div><div class=dz-preview ng-class=\"{ 'dz-success': value.Value.toLowerCase() == 'file:' + item.Id }\" ng-repeat=\"item in vm.items | filter: { IsFolder: false }  | orderBy:'Name'\" ng-click=vm.select(item) ng-disabled=\"vm.disabled || !vm.enableSelect\"><div ng-if=\"item.Type == 'image'\" class=dz-image><img data-dz-thumbnail=\"\" alt=\"{{ item.Id + ':' + item.Name\r" +
+    "<div ng-if=vm.show><div class=\"dz-preview dropzone-adam\" ng-disabled=vm.disabled tooltip=\"{{'Edit.Fields.Hyperlink.Default.AdamUploadLabel' | translate }}\" ng-click=vm.openUpload()><div class=dz-image style=\"background-color: whitesmoke\"></div><div class=dz-details style=\"opacity: 1\"><div class=dz-size><button type=button class=\"btn btn-primary btn-lg\" ng-disabled=vm.disabled><i icon=plus></i> <i icon=file></i></button></div><div class=dz-filename><span data-dz-name=\"\">drag & drop files</span></div></div></div><div ng-show=\"vm.allowCreateFolder() || vm.debug.on\" class=dz-preview ng-disabled=vm.disabled ng-click=vm.addFolder()><div class=dz-image style=\"background-color: whitesmoke\"></div><div class=dz-details style=\"opacity: 1\"><div class=dz-size><button type=button class=\"btn btn-default btn-lg\" ng-disabled=vm.disabled><i icon=plus></i> <i icon=th-large></i></button></div><div class=dz-filename><span data-dz-name=\"\">new folder</span></div></div></div><div ng-show=\"vm.showFolders || vm.debug.on\" class=dz-preview ng-disabled=vm.disabled ng-if=\"vm.folders.length > 0\" ng-click=vm.goUp()><div class=dz-image style=\"background-color: whitesmoke\"></div><div class=dz-details style=\"opacity: 1\"><div class=dz-size><button type=button class=\"btn btn-default btn-square btn-lg\" ng-disabled=vm.disabled><i icon=level-up></i></button></div><div class=dz-filename><span data-dz-name=\"\">up</span></div></div></div><div ng-show=\"vm.showFolders || vm.debug.on\" class=dz-preview ng-repeat=\"item in vm.items | filter: { IsFolder: true }  | orderBy:'Name'\" ng-click=vm.goIntoFolder(item)><div class=dz-image style=\"background-color: whitesmoke\"></div><div class=\"dz-details file-type-{{item.Type}}\"><span class=pull-right ng-class=\"{'metadata-exists': item.MetadataId > 0}\" style=\"font-size: large\" ng-click=vm.editFolderMetadata(item) ng-if=vm.folderMetadataContentType stop-event=click><span tooltip={{item.MetadataId}}><i icon=tag></i></span></span> <span data-dz-size=\"\" style=\"font-size: xx-large\"><i icon=th-large></i></span><div class=dz-filename><span data-dz-name=\"\">{{ item.Name }}{{ vm.debug.on ? \"(lvl:\" + vm.currentFolderDepth() + \")\" : \"\"}}</span></div><div class=dz-filename><span ng-click=vm.del(item) stop-event=click ng-disabled=vm.disabled><i icon=remove></i></span></div></div></div><div class=dz-preview ng-class=\"{ 'dz-success': value.Value.toLowerCase() == 'file:' + item.Id }\" ng-repeat=\"item in (vm.items | filter: { IsFolder: false }) | filter: (vm.showImagesOnly ? {Type: 'image'} : {})  | orderBy:'Name'\" ng-click=vm.select(item) ng-disabled=\"vm.disabled || !vm.enableSelect\"><div ng-if=\"item.Type !== 'image'\" class=dz-image style=\"background-color: whitesmoke\"><div style=\"padding-left: 5px;padding-right: 5px;padding-top: 10px;padding-bottom: 10px;min-width: 100%;min-height: 100%;text-align: center\"><span style=\"font-size: 5em\"><i icon=file></i></span></div></div><div ng-if=\"item.Type === 'image'\" class=dz-image><img data-dz-thumbnail=\"\" alt=\"{{ item.Id + ':' + item.Name\r" +
     "\n" +
-    "}}\" ng-src=\"{{ item.fullPath + '?w=120&h=120&mode=crop' }}\"></div><div class=\"dz-details file-type-{{item.Type}}\"><div class=\"dz-size file-icon\" ng-if=\"item.Type == 'image'\"><span data-dz-size=\"\"><strong>{{ item.Id }}</strong></span></div><div class=\"dz-size file-actions\" ng-if=\"item.Type == 'document' || item.Type == 'file'\"><span data-dz-size=\"\"><button type=button class=\"btn btn-subtle btn-lg\" ng-disabled=vm.disabled><i icon=file></i></button></span></div><div class=dz-filename><span data-dz-name=\"\">{{ item.Name }}</span></div><div class=dz-filename><span ng-click=vm.del(item) stop-event=click><i icon=remove></i></span> <span data-dz-name=\"\">{{ (item.Size / 1024).toFixed(0) }} kb</span></div></div><div class=dz-success-mark><svg width=54px height=54px viewbox=\"0 0 54 54\" version=1.1 xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink xmlns:sketch=http://www.bohemiancoding.com/sketch/ns><title>Check</title><defs></defs><g id=Page-1 stroke=none stroke-width=1 fill=none fill-rule=evenodd sketch:type=MSPage><path d=\"M23.5,31.8431458 L17.5852419,25.9283877 C16.0248253,24.3679711 13.4910294,24.366835 11.9289322,25.9289322 C10.3700136,27.4878508 10.3665912,30.0234455 11.9283877,31.5852419 L20.4147581,40.0716123 C20.5133999,40.1702541 20.6159315,40.2626649 20.7218615,40.3488435 C22.2835669,41.8725651 24.794234,41.8626202 26.3461564,40.3106978 L43.3106978,23.3461564 C44.8771021,21.7797521 44.8758057,19.2483887 43.3137085,17.6862915 C41.7547899,16.1273729 39.2176035,16.1255422 37.6538436,17.6893022 L23.5,31.8431458 Z M27,53 C41.3594035,53 53,41.3594035 53,27 C53,12.6405965 41.3594035,1 27,1 C12.6405965,1 1,12.6405965 1,27 C1,41.3594035 12.6405965,53 27,53 Z\" id=Oval-2 stroke-opacity=0.198794158 stroke=#747474 fill-opacity=0.816519475 fill=#FFFFFF sketch:type=MSShapeGroup></path></g></svg></div></div></div>"
+    "}}\" ng-src=\"{{ item.fullPath + '?w=120&h=120&mode=crop' }}\"></div><div class=\"dz-details file-type-{{item.Type}}\"><div class=\"dz-size file-icon\"><span data-dz-size=\"\"><strong>{{ item.Id }}</strong></span></div><div class=dz-filename><span data-dz-name=\"\">{{ item.Name }}</span></div><div class=dz-filename><span ng-click=vm.del(item) stop-event=click><i icon=remove></i></span> <span data-dz-name=\"\">{{ (item.Size / 1024).toFixed(0) }} kb</span></div></div><div class=dz-success-mark><svg width=54px height=54px viewbox=\"0 0 54 54\" version=1.1 xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink xmlns:sketch=http://www.bohemiancoding.com/sketch/ns><title>Check</title><defs></defs><g id=Page-1 stroke=none stroke-width=1 fill=none fill-rule=evenodd sketch:type=MSPage><path d=\"M23.5,31.8431458 L17.5852419,25.9283877 C16.0248253,24.3679711 13.4910294,24.366835 11.9289322,25.9289322 C10.3700136,27.4878508 10.3665912,30.0234455 11.9283877,31.5852419 L20.4147581,40.0716123 C20.5133999,40.1702541 20.6159315,40.2626649 20.7218615,40.3488435 C22.2835669,41.8725651 24.794234,41.8626202 26.3461564,40.3106978 L43.3106978,23.3461564 C44.8771021,21.7797521 44.8758057,19.2483887 43.3137085,17.6862915 C41.7547899,16.1273729 39.2176035,16.1255422 37.6538436,17.6893022 L23.5,31.8431458 Z M27,53 C41.3594035,53 53,41.3594035 53,27 C53,12.6405965 41.3594035,1 27,1 C12.6405965,1 1,12.6405965 1,27 C1,41.3594035 12.6405965,53 27,53 Z\" id=Oval-2 stroke-opacity=0.198794158 stroke=#747474 fill-opacity=0.816519475 fill=#FFFFFF sketch:type=MSShapeGroup></path></g></svg></div></div></div>"
   );
 
 
@@ -1062,7 +1080,7 @@ angular.module('SxcEditTemplates', []).run(['$templateCache', function($template
 
 
   $templateCache.put('fields/string/string-wysiwyg-tinymce.html',
-    "<div><div class=dropzone><div ui-tinymce=tinymceOptions ng-model=value.Value class=field-string-wysiwyg-mce-box></div><adam-browser content-type-name=to.header.ContentTypeName entity-guid=to.header.Guid field-name=options.key auto-load=false folder-depth=0 sub-folder=\"\" update-callback=vm.setValue register-self=vm.registerAdam ng-disabled=to.disabled></adam-browser><dropzone-upload-preview></dropzone-upload-preview><div class=\"small pull-right\"><a href=\"http://2sxc.org/help?tag=adam\" target=_blank tooltip=\"ADAM is the Automatic Digital Assets Manager - click to discover more\">supports <i icon=apple></i> Adam - just drop files</a> with ♥ by <a tabindex=-1 href=\"http://2sic.com/\" target=_blank>2sic.com</a></div></div></div>"
+    "<div><div class=dropzone><div ui-tinymce=tinymceOptions ng-model=value.Value class=field-string-wysiwyg-mce-box></div><adam-browser content-type-name=to.header.ContentTypeName entity-guid=to.header.Guid field-name=options.key auto-load=false folder-depth=0 sub-folder=\"\" update-callback=vm.setValue register-self=vm.registerAdam show-images-only=vm.adamModeImage ng-disabled=to.disabled></adam-browser><dropzone-upload-preview></dropzone-upload-preview><div class=\"small pull-right\"><a href=\"http://2sxc.org/help?tag=adam\" target=_blank tooltip=\"ADAM is the Automatic Digital Assets Manager - click to discover more\">supports <i icon=apple></i> Adam - just drop files</a> with ♥ by <a tabindex=-1 href=\"http://2sic.com/\" target=_blank>2sic.com</a></div></div></div>"
   );
 
 }]);

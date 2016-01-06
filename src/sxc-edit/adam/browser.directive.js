@@ -27,6 +27,7 @@
                     metadataContentType: "=",
                     folderMetadataContentType: "=",
                     allowAssetsInRoot: "=",
+                    showImagesOnly: "=",
 
                     // binding and cross-component communication
                     autoLoad: "=",

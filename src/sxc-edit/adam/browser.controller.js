@@ -17,6 +17,9 @@
         vm.subFolder = $scope.subFolder || "";
         vm.appRoot = appRoot;
 
+        //$scope.showImagesOnly = ;
+        vm.showImagesOnly = $scope.showImagesOnly = $scope.showImagesOnly || false;
+
         vm.folderDepth = (typeof $scope.folderDepth !== 'undefined' && $scope.folderDepth !== null)
             ? $scope.folderDepth
             : 2;
@@ -49,8 +52,16 @@
             vm.folders = vm.svc.folders;
         };
 
-        vm.toggle = function toggle() {
-            vm.show = !vm.show;
+        vm.toggle = function toggle(newConfig) {
+            var settingsChanged = false;
+            if (newConfig) {
+                settingsChanged = (vm.showImagesOnly !== newConfig.showImagesOnly);
+                vm.showImagesOnly = newConfig.showImagesOnly;
+            }
+            //var settingsChanged = ($scope.showImagesOnly !== vm.showImagesOnly);
+            // vm.showImagesOnly = $scope.showImagesOnly;  // update this on every toggle
+            vm.show = settingsChanged || !vm.show;      // if settings changed, always show
+            // vm.show = !vm.show;
             if (vm.show)
                 vm.get();
         };

@@ -2,6 +2,7 @@
 (function () {
 	"use strict";
 
+    // Register in Angular Formly
     angular.module("sxcFieldTemplates")
         .config(function(formlyConfigProvider) {
             formlyConfigProvider.setType({
@@ -80,12 +81,17 @@
             vm.adam = adam;
         };
         vm.setValue = function (fileItem) {
-            vm.editor.insertContent("<img src=\"" + fileItem.fullPath + "\">");
+            if (/* fileItem.Type === "image"  && */ vm.adamModeImage) {
+                vm.editor.insertContent("<img src=\"" + fileItem.fullPath + "\">");
+            } else {
+                vm.editor.insertContent("<a href=\"" + fileItem.fullPath + "\">" + fileItem.Name + "</a>");
+            }
         };
         $scope.afterUpload = vm.setValue;
 
-        vm.toggleAdam = function toggle() {
-            vm.adam.toggle();
+        vm.toggleAdam = function toggle(imagesOnly) {
+            vm.adamModeImage = imagesOnly;
+            vm.adam.toggle({showImagesOnly: imagesOnly});
             $scope.$apply();
         };
 
@@ -146,7 +152,7 @@
                     text: "file in ADAM (recommended)",
                     icon: "newdocument",
                     onclick: function() {
-                        vm.toggleAdam();
+                        vm.toggleAdam(false);
                     }
                 }, {
                     text: "file in DNN",
@@ -169,14 +175,14 @@
             text: "",
             icon: "image",
             onclick: function() {
-                vm.toggleAdam();
+                vm.toggleAdam(true);
             },
             menu: [
                 {
                     text: "from ADAM (recommended)",
                     icon: "image",
                     onclick: function() {
-                        vm.toggleAdam();
+                        vm.toggleAdam(true);
                     }
                 }, {
                     text: "from DNN (all files in DNN, slower)",
@@ -201,7 +207,7 @@
             text: "image from ADAM",
             icon: "image",
             onclick: function () {
-                vm.toggleAdam();
+                vm.toggleAdam(true);
             }
         });
         //editor.addButton("dnn", {
