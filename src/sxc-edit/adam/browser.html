@@ -18,7 +18,8 @@
 
     <!-- add folder - not always shown -->
     <div ng-show="vm.allowCreateFolder() || vm.debug.on" class="dz-preview" ng-disabled="vm.disabled" ng-click="vm.addFolder()">
-        <div class="dz-image" style="background-color: whitesmoke">
+        <div class="dz-image adam-browse-background-icon-wrapper" >
+            <i class="icon-folder-empty"></i>
         </div>
         <div class="dz-details" style="opacity: 1">
             <div class="dz-size">
@@ -35,14 +36,11 @@
 
     <!-- browse up a folder - not always shown -->
     <div ng-show="vm.showFolders || vm.debug.on" class="dz-preview" ng-disabled="vm.disabled" ng-if="vm.folders.length > 0" ng-click="vm.goUp()">
-        <div class="dz-image" style="background-color: whitesmoke">
+        <div class="dz-image adam-browse-background-icon-wrapper">
+            <i class="icon-level-up"></i>
         </div>
         <div class="dz-details" style="opacity: 1">
-            <div class="dz-size">
-                <button type="button" class="btn btn-default btn-square btn-lg" ng-disabled="vm.disabled">
-                    <i icon="level-up"></i>
-                </button>
-            </div>
+
             <div class="dz-filename">
                 <span data-dz-name="">up</span>
             </div>
@@ -51,15 +49,17 @@
 
     <!-- folder list - not always shown -->
     <div ng-show="vm.showFolders || vm.debug.on" class="dz-preview" ng-repeat="item in vm.items | filter: { IsFolder: true }  | orderBy:'Name'" ng-click="vm.goIntoFolder(item)">
-        <div class="dz-image" style="background-color: whitesmoke"> </div>
+        <div class="dz-image adam-browse-background-icon-wrapper">
+            <i class="icon-folder-empty"></i>
+        </div>
         <div class="dz-details file-type-{{item.Type}}">
-            <span class="pull-right" ng-class="{'metadata-exists': item.MetadataId > 0}" style="font-size: large" 
+            <span class="pull-right" ng-class="{'metadata-exists': item.MetadataId > 0}" style="font-size: large"
                   ng-click="vm.editFolderMetadata(item)"
                   ng-if="vm.folderMetadataContentType"
                   stop-event="click">
                 <span tooltip="{{item.MetadataId}}"><i icon="tag"></i></span>
             </span>
-            <span data-dz-size="" style="font-size: xx-large"><i icon="th-large"></i></span>
+            
             <div class="dz-filename"><span data-dz-name="">{{ item.Name }}{{ vm.debug.on ? "(lvl:" + vm.currentFolderDepth() + ")" : ""}}</span></div>
             <div class="dz-filename"><span ng-click="vm.del(item)" stop-event="click" ng-disabled="vm.disabled"><i icon="remove"></i></span></div>
         </div>
@@ -68,12 +68,8 @@
 
     <!-- files -->
     <div class="dz-preview" ng-class="{ 'dz-success': value.Value.toLowerCase() == 'file:' + item.Id }" ng-repeat="item in (vm.items | filter: { IsFolder: false }) | filter: (vm.showImagesOnly ? {Type: 'image'} : {})  | orderBy:'Name'" ng-click="vm.select(item)" ng-disabled="vm.disabled || !vm.enableSelect">
-        <div ng-if="item.Type !== 'image'" class="dz-image" style="background-color: whitesmoke">
-            <div class="" style="padding-left: 5px;padding-right: 5px;padding-top: 10px;padding-bottom: 10px;min-width: 100%;min-height: 100%;text-align: center;">
-                <span style="font-size: 5em">
-                    <i icon="file"></i>
-                </span>
-            </div>
+        <div ng-if="item.Type !== 'image'" class="dz-image adam-browse-background-icon-wrapper">
+            <i class="icon-doc"></i>
         </div>
         <div ng-if="item.Type === 'image'" class="dz-image">
             <img data-dz-thumbnail="" alt="{{ item.Id + ':' + item.Name

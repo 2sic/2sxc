@@ -432,6 +432,7 @@
     <Content Include="Images\Edit.png" />
     <Content Include="Administration\Import.ascx" />
     <Content Include="Images\Save.png" />
+    <Content Include="src\sxc-edit\adam\2sxc-icons.css" />
     <Content Include="src\sxc-edit\adam\adam.css" />
     <Content Include="src\sxc-edit\adam\browser.controller.js" />
     <Content Include="src\sxc-edit\adam\browser.directive.js" />
@@ -592,6 +593,7 @@
     <Content Include="src\sxc-admin\services\_sxc-services.js" />
     <Content Include="src\i18n\source-editor-snippets-en.json" />
     <Content Include="src\sxc-develop\source-editor\snippets.xlsx" />
+    <Content Include="src\sxc-edit\adam\2sxc-icons.woff" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Administration\App_LocalResources\EditTemplate.ascx.resx" />
