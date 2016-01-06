@@ -11,10 +11,45 @@
                 controller: "FieldWysiwygTinyMce as vm"
             });
         })
+        .directive('test', function($compile) {
+            return {
+                restrict: 'A',
+                //transclude: true,
+                //template: '<span>loading editor...</p>',
+                link: function(scope, element, attrs, ctrl, transclude) {
+                    console.log("content was:" + transclude);
+                },
+
+                controller: function ($scope, $element, $interval, $window) {
+                    var checkIfTinyMceLoaded = $interval(function() {
+                        if ($window.tinymce) {
+                            $window.tinymce.baseURL = "//cdn.tinymce.com/4";
+                            var orig = $element[0].innerHTML.replace(/lazy-/g, "");
+                            //var orig2 = '<div ui-tinymce="tinymceOptions" ng-model="value.Value" class="field-string-wysiwyg-mce-box"></div>';
+                            //var el2 = $compile(orig2)($scope);
+                            var el = $compile(orig)($scope);
+                            $interval.cancel(checkIfTinyMceLoaded);
+                            $element.replaceWith(el);//.parent().append(el);
+                        } else {
+                            console.log("waiting to load TinyMCE...");
+                        }
+                    }, 500);
+
+                }
+            };
+        })
+
+
         .controller("FieldWysiwygTinyMce", FieldWysiwygTinyMceController);
 
-    function FieldWysiwygTinyMceController($scope, dnnBridgeSvc, $ocLazyLoad) {
+    function FieldWysiwygTinyMceController($scope, dnnBridgeSvc, $ocLazyLoad, $interval) {
         var vm = this;
+
+        var interv = $interval(function () {
+            console.log("found tiny: " + window.tinymce + "; element:" + $scope);
+            if (window.tinymce)
+                $interval.cancel(interv);
+        }, 100);
 
         vm.activate = function () {
 
@@ -30,6 +65,7 @@
                 "anchor",   // allows users to set an anchor inside the text
             ];
             $scope.tinymceOptions = {
+                baseURL: "//cdn.tinymce.com/4",
                 //onChange: function (e) {
                 //    // put logic here for keypress and cut/paste changes
                 //},
@@ -123,20 +159,22 @@
 
         //#endregion
 
-        //$ocLazyLoad.load({
-        //    serie: true,
-        //    files: [
-        //        //"//cdn.tinymce.com/4/tinymce.min.js",
-        //        "../../bower_components/angular-ui-tinymce/src/tinymce.js"
-        //    ]
-        //}).then(function () {
-        //    //window.tinymce.init();
+        $ocLazyLoad.load({
+            serie: true,
+            files: [
+                "//cdn.tinymce.com/4/tinymce.min.js",
+                "../../bower_components/angular-ui-tinymce/src/tinymce.js"
+            ]
+        }).then(function () {
+            //window.tinymce.init();
 
-        //    alert('will do');
-        //    vm.activate();
+            console.log('lazy loaded');
+            console.log("found after lazy: " + window.tinymce);
+            //$scope.$apply();
+            vm.activate();
 
-        //});
-        vm.activate();
+        });
+        //vm.activate();
     }
 
     function addTinyMceToolbarButtons(editor, vm) {

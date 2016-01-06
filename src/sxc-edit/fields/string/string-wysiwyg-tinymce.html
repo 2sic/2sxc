@@ -1,6 +1,13 @@
 ﻿<div>
     <div class="dropzone">
-        <div ui-tinymce="tinymceOptions" ng-model="value.Value" class="field-string-wysiwyg-mce-box"></div>
+        before
+        <div xtest text="original click me"></div>
+        <div test>
+            <div lazy-ui-tinymce="tinymceOptions" lazy-ng-model="value.Value" class="field-string-wysiwyg-mce-box"></div>
+        </div>
+        after
+        <div ng-if="window.tinymce" ui-tinymce="tinymceOptions" ng-model="value.Value" class="field-string-wysiwyg-mce-box"></div>
+        after-if
 
         <!-- The ADAM file browser, requires the uploader wrapped around it -->
         <adam-browser content-type-name="to.header.ContentTypeName"
