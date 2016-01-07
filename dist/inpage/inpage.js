@@ -69,7 +69,7 @@ $2sxc.getManageController = function (id) {
         },
         'edit': {
             title: "Toolbar.Edit",
-            icon: "glyphicon-pencil",
+            iclass: "icon-sxc-pencil",
             lightbox: true,
             hideFirst: true,
             showOn: "default",
@@ -79,7 +79,7 @@ $2sxc.getManageController = function (id) {
         },
         'new': {
             title: "Toolbar.New",
-            icon: "glyphicon-plus",
+            iclass: "icon-sxc-plus",
             lightbox: true,
             hideFirst: true,
             showOn: "default",
@@ -89,7 +89,7 @@ $2sxc.getManageController = function (id) {
         },
         'add': {
             title: "Toolbar.AddDemo",
-            icon: "glyphicon-plus-sign",
+            iclass: "icon-sxc-plus-circled",
             lightbox: false,
             hideFirst: true,
             showOn: "edit",
@@ -99,7 +99,7 @@ $2sxc.getManageController = function (id) {
         },
         'replace': {
             title: "Toolbar.Replace",
-            icon: "glyphicon-random",
+            iclass: "icon-sxc-replace",
             lightbox: true,
             hideFirst: true,
             showOn: "edit",
@@ -109,8 +109,9 @@ $2sxc.getManageController = function (id) {
         },
         'publish': {
             title: "Toolbar.Published",
-            icon: "glyphicon-eye-open",
-            icon2: "glyphicon-eye-close",
+            icon2: "glyphicon-eye-close", //todo
+            iclass: "icon-sxc-eye",
+            iclass2: "icon-sxc-eye-off",
             lightbox: false,
             hideFirst: true,
             disabled: true,
@@ -127,8 +128,7 @@ $2sxc.getManageController = function (id) {
         },
         'moveup': {
             title: "Toolbar.MoveUp",
-            icon: "glyphicon-arrow-up",
-            icon2: "glyphicon-arrow-up",
+            iclass: "icon-sxc-move-up",
             lightbox: false,
             hideFirst: true,
             disabled: false,
@@ -139,8 +139,7 @@ $2sxc.getManageController = function (id) {
         },
         'movedown': {
             title: "Toolbar.MoveDown",
-            icon: "glyphicon-arrow-down",
-            icon2: "glyphicon-arrow-down",
+            iclass: "icon-sxc-move-down",
             lightbox: false,
             hideFirst: true,
             disabled: false,
@@ -151,7 +150,7 @@ $2sxc.getManageController = function (id) {
         },
         'sort': {
             title: "Toolbar.Sort",
-            icon: "glyphicon-th-list",
+            iclass: "icon-sxc-th-list",
             lightbox: true,
             hideFirst: true,
             showOn: "design",
@@ -161,7 +160,7 @@ $2sxc.getManageController = function (id) {
         },
         'remove': {
             title: "Toolbar.Remove",
-            icon: "glyphicon-minus-sign",
+            iclass: "icon-sxc-minus-circled",
             lightbox: false,
             hideFirst: true,
             disabled: true,
@@ -174,7 +173,7 @@ $2sxc.getManageController = function (id) {
         },
         'layout': {
             title: "Toolbar.ChangeLayout",
-            icon: "glyphicon-sound-stereo",
+            iclass: "icon-sxc-layout",
             lightbox: false,
             hideFirst: true,
             showOn: "design",
@@ -185,7 +184,7 @@ $2sxc.getManageController = function (id) {
         },
         'develop': {
             title: "Toolbar.EditView", // todo
-            icon: "glyphicon-qrcode",
+            iclass: "icon-sxc-code",
             lightbox: true,
             hideFirst: true,
             showOn: "admin",
@@ -196,7 +195,7 @@ $2sxc.getManageController = function (id) {
         },
         'app': {
             title: "Toolbar.App",
-            icon: "glyphicon-stop",
+            iclass: "icon-sxc-settings",
             lightbox: true,
             hideFirst: true,
             showOn: "admin",
@@ -207,7 +206,8 @@ $2sxc.getManageController = function (id) {
         },
         'manage-apps': {
             title: "Toolbar.ManageApps",
-            icon: "glyphicon-th-large",
+            //icon: "glyphicon-th-large",
+            iclass: "icon-sxc-manage",
             lightbox: true,
             hideFirst: true,
             showOn: "admin",
@@ -372,7 +372,7 @@ $2sxc.getManageController = function (id) {
                 'title': tbContr.translate(conf.title)
             });
             var box = $("<div/>");
-            var symbol = $("<i class=\"glyphicon " + conf.icon + "\" aria-hidden=\"true\"></i>");
+            var symbol = $("<i class=\"glyphicon " + conf.icon + " " + conf.iclass + "\" aria-hidden=\"true\"></i>");
 
             // if publish-button and not published yet, show button (otherwise hidden) & change icon
             if (settings.action === "publish" && settings.isPublished === false) {

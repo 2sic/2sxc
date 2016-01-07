@@ -1,6 +1,28 @@
+.metadata-exists {
+    color: #0088f4
+}
+
+.adam-browse-background-icon {
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    min-width: 100%;
+    min-height: 100%;
+    text-align: center;
+}
+.adam-browse-background-icon i {
+    font-size: 5em;
+}
+.adam-browse-background {
+        background-color: whitesmoke;
+}
+.metadata-missing {
+    
+}
 @font-face {
-  font-family: '2sxc-icons';
-    src: url('../lib/fonts/2sxc-icons.woff?66742253') format('woff');
+  font-family: 'app-icons';
+    src: url('../lib/fonts/app-icons.woff?87396608') format('woff');
   font-weight: normal;
   font-style: normal;
 }
@@ -9,14 +31,14 @@
 /*
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
-    font-family: '2sxc-icons';
-    src: url('../font/2sxc-icons.svg?66742253#2sxc-icons') format('svg');
+    font-family: 'app-icons';
+    src: url('../font/app-icons.svg?87396608#app-icons') format('svg');
   }
 }
 */
  
  [class^="icon-"]:before, [class*=" icon-"]:before {
-  font-family: "2sxc-icons";
+  font-family: "app-icons";
   font-style: normal;
   font-weight: normal;
   speak: none;
@@ -73,28 +95,8 @@
 .icon-star-half-alt:before { content: '\e814'; } /* '' */
 .icon-tag:before { content: '\e815'; } /* '' */
 .icon-user:before { content: '\e816'; } /* '' */
-.metadata-exists {
-    color: #0088f4
-}
-
-.adam-browse-background-icon {
-    padding-left: 5px;
-    padding-right: 5px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    min-width: 100%;
-    min-height: 100%;
-    text-align: center;
-}
-.adam-browse-background-icon i {
-    font-size: 5em;
-}
-.adam-browse-background {
-        background-color: whitesmoke;
-}
-.metadata-missing {
-    
-}
+.icon-plus-squared:before { content: '\e817'; } /* '' */
+.icon-minus-squared:before { content: '\e818'; } /* '' */
 /*
  * The MIT License
  * Copyright (c) 2012 Matias Meno <m@tias.me>

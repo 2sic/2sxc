@@ -34,8 +34,6 @@ namespace ToSic.SexyContent.Adam
 
         // todo: centralize once it works
         // todo:idea that it would auto-take a setting from app-settings if it exists :)
-        //private string AdamAllowedExtensions =
-        //    "jpg,jpeg,jpe,gif,bmp,png,doc,docx,xls,xlsx,ppt,pptx,pdf,txt,xml,xsl,xsd,css,zip,ico,avi,mpg,mpeg,mp3,wmv,mov,wav,ico,vcf";
         public const int MaxFileSizeMb = 10;
 
 
@@ -77,13 +75,17 @@ namespace ToSic.SexyContent.Adam
                 {
                     var originalFile = filesCollection[0];
 
-                    // todo: check content-type extensions...
+                    #region check content-type extensions...
 
                     // Check file size and extension
                     //var extension = Path.GetExtension(originalFile.FileName).ToLower().Replace(".", "");
                     //if (!AdamAllowedExtensions.Contains(extension))
-                    if(!IsAllowedExtension(originalFile.FileName))
+                    if(!IsAllowedDnnExtension(originalFile.FileName))
                         throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+
+                    // todo: check metadata of the FieldDef to see if still allowed
+
+                    #endregion
 
                     if (originalFile.ContentLength > (1024 * 1024 * MaxFileSizeMb))
                         return new UploadResult { Success = false, Error = App.Resources.UploadFileSizeLimitExceeded };
@@ -112,7 +114,7 @@ namespace ToSic.SexyContent.Adam
                 return new UploadResult { Success = false, Error = e.Message };
             }
 
-
+            #region experiment with asyc - not supported by current version of .net framework
             //string root = HttpContext.Current.Server.MapPath("~/App_Data");
             //var provider = new MultipartFormDataStreamProvider(root);
 
@@ -146,6 +148,7 @@ namespace ToSic.SexyContent.Adam
             //{
             //    return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             //}
+            #endregion
         }
 
 
@@ -248,7 +251,7 @@ namespace ToSic.SexyContent.Adam
 
         #region Helper to check extension based on DNN settings
         // mostly a copy from https://github.com/dnnsoftware/Dnn.Platform/blob/115ae75da6b152f77ad36312eb76327cdc55edd7/DNN%20Platform/Modules/Journal/FileUploadController.cs#L72
-        private static bool IsAllowedExtension(string fileName)
+        private static bool IsAllowedDnnExtension(string fileName)
         {
             var extension = Path.GetExtension(fileName);
 

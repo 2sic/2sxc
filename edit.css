@@ -84,6 +84,127 @@
 /* Prevent scrolling when sxc popup is open */
 .sxc-popup-open { overflow:hidden; }
 
+
+
+/* new fonts */
+
+@font-face {
+  font-family: 'inpage-icons';
+  src: url('dist/lib/fonts/inpage-icons.woff?33443275') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+ [class^="icon-sxc-"]:before, [class*=" icon-sxc-"]:before {
+  font-family: "inpage-icons";
+  font-style: normal;
+  font-weight: normal;
+  speak: none;
+ 
+  display: inline-block;
+  text-decoration: inherit;
+  width: 1em;
+  margin-right: .2em;
+  text-align: center;
+  /* opacity: .8; */
+ 
+  /* For safety - reset parent styles, that can break glyph codes*/
+  font-variant: normal;
+  text-transform: none;
+ 
+  /* fix buttons height, for twitter bootstrap */
+  line-height: 1em;
+ 
+  /* Animation center compensation - margins should be symmetric */
+  /* remove if not needed */
+  margin-left: .2em;
+ 
+  /* you can be more comfortable with increased icons size */
+   font-size: 130%; 
+ 
+  /* Font smoothing. That was taken from TWBS */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+ 
+  /* Uncomment for 3D effect */
+  /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
+}
+ 
+.icon-sxc-options:before { content: '\e800'; } /* '' */
+.icon-sxc-options-vert:before { content: '\e801'; } /* '' */
+.icon-sxc-plus:before { content: '\e802'; } /* '' */
+.icon-sxc-plus-circled:before { content: '\e803'; } /* '' */
+.icon-sxc-minus:before { content: '\e804'; } /* '' */
+.icon-sxc-minus-circled:before { content: '\e805'; } /* '' */
+.icon-sxc-layout:before { content: '\e806'; } /* '' */
+.icon-sxc-th-list:before { content: '\e807'; } /* '' */
+.icon-sxc-replace:before { content: '\e808'; } /* '' */
+.icon-sxc-eye:before { content: '\e809'; } /* '' */
+.icon-sxc-eye-off:before { content: '\e80a'; } /* '' */
+.icon-sxc-move-down:before { content: '\e80b'; } /* '' */
+.icon-sxc-move-up:before { content: '\e80c'; } /* '' */
+.icon-sxc-code:before { content: '\e80d'; } /* '' */
+.icon-sxc-settings:before { content: '\e80e'; } /* '' */
+.icon-sxc-manage:before { content: '\e80f'; } /* '' */
+.icon-sxc-pencil:before { content: '\e810'; } /* '' */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* oooooooooooooooooooold */
 /*!
  * Bootstrap v3.3.4 (http://getbootstrap.com)
  * Copyright 2011-2015 Twitter, Inc.

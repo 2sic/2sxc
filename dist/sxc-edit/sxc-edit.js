@@ -350,7 +350,7 @@ angular.module("Adam")
                 var field = scope.$parent.options.key;
                 var entityGuid = header.Guid;
                 var svc = adamSvc(header.ContentTypeName, entityGuid, field, "");
-                var url = svc.url;// sxc.resolveServiceUrl("app-content/" + header.ContentTypeName + "/" + entityGuid + "/" + field);
+                var url = svc.url;
 
                 var config = {
                     url: url,
@@ -382,17 +382,12 @@ angular.module("Adam")
 
                     "processing": function(file) {
                         this.options.url = svc.uploadUrl(controller.adam.subFolder);
-                        //(controller.adam.subFolder === "")
-                        //    ? this.options.urlRoot
-                        //    : this.options.urlRoot + "?subfolder=" + controller.adam.subFolder;
                     },
 
                     'success': function(file, response) {
                         if (response.Success) {
                             svc.addFullPath(response);  // calculate additional infos
                             scope.$parent.afterUpload(response);
-                            //scope.$parent.value.Value = "File:" + response.FileId;
-                            //scope.$apply();
                         } else {
                             alert("Upload failed because: " + response.Error);
                         }
