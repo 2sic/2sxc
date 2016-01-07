@@ -83,7 +83,8 @@
         vm.setValue = function (fileItem) {
             if (/* fileItem.Type === "image"  && */ vm.adamModeImage) {
                 vm.editor.insertContent("<img src=\"" + fileItem.fullPath + "\">");
-            } else {
+            }
+            else {
                 vm.editor.insertContent("<a href=\"" + fileItem.fullPath + "\">" + fileItem.Name + "</a>");
             }
         };

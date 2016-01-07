@@ -140,6 +140,29 @@
 
         //#endregion
 
+        //#region icons
+        vm.icons = {
+            doc: "file-word",
+            docx: "file-word",
+            xls: "file-excel",
+            xlsx: "file-excel",
+            ppt: "file-powerpoint",
+            pptx: "file-powerpoint",
+            pdf: "file-pdf",
+            mp3: "file-audio",
+            mp4: "file-video",
+            zip: "file-archive",
+            rar: "file-archive",
+            txt: "file-text",
+            html: "file-code",
+            css: "file-code"
+        };
+        vm.icon = function (item) {
+            var ext = item.Name.substr(item.Name.lastIndexOf(".") + 1);
+            return "icon-" + (vm.icons[ext] || "file");
+        };
+        //#endregion
+
         vm.activate();
     }
 

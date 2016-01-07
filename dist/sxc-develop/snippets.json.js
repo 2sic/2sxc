@@ -85,7 +85,7 @@
             "subset": "Repeater",
             "name": "foreach loop",
             "title": "",
-            "content": "@foreach(var ${1:cont} in AsDynamic(Data[\"${2:Default}\"])){\r\n    <div class=\"sc-element\">\r\n        @${1}.EntityTitle\r\n        @${1}.Toolbar\r\n    </div>\r\n}",
+            "content": "@foreach(var ${1:cont} in AsDynamic(Data[\"${2:Default}\"])){\r\n    <div class=\"sc-element\">\r\n        @${1}.EntityTitle\r\n        @${1}.Toolbar\r\n    </div>\r\n}…",
             "help": ""
         },
         {

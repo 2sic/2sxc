@@ -1,10 +1,6 @@
 @font-face {
   font-family: '2sxc-icons';
-/*   src: url('../font/2sxc-icons.eot?42363849');
- */  src: /* url('../font/2sxc-icons.eot?42363849#iefix') format('embedded-opentype'), */
-       url('../lib/fonts/2sxc-icons.woff?42363849') format('woff')/* ,
-       url('../font/2sxc-icons.ttf?42363849') format('truetype'),
-       url('../font/2sxc-icons.svg?42363849#2sxc-icons') format('svg') */;
+    src: url('../lib/fonts/2sxc-icons.woff?66742253') format('woff');
   font-weight: normal;
   font-style: normal;
 }
@@ -14,7 +10,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: '2sxc-icons';
-    src: url('../font/2sxc-icons.svg?42363849#2sxc-icons') format('svg');
+    src: url('../font/2sxc-icons.svg?66742253#2sxc-icons') format('svg');
   }
 }
 */
@@ -58,19 +54,29 @@
 .icon-file-word:before { content: '\e801'; } /* '' */
 .icon-file-pdf:before { content: '\e802'; } /* '' */
 .icon-file-excel:before { content: '\e803'; } /* '' */
-.icon-doc:before { content: '\e804'; } /* '' */
+.icon-file:before { content: '\e804'; } /* '' */
 .icon-file-powerpoint:before { content: '\e805'; } /* '' */
 .icon-file-archive:before { content: '\e806'; } /* '' */
-.icon-doc-text:before { content: '\e807'; } /* '' */
+.icon-file-text:before { content: '\e807'; } /* '' */
 .icon-level-up:before { content: '\e808'; } /* '' */
 .icon-apple:before { content: '\e809'; } /* '' */
 .icon-up-circled2:before { content: '\e80a'; } /* '' */
+.icon-plus:before { content: '\e80b'; } /* '' */
+.icon-plus-circled:before { content: '\e80c'; } /* '' */
+.icon-minus:before { content: '\e80d'; } /* '' */
+.icon-minus-circled:before { content: '\e80e'; } /* '' */
+.icon-file-code:before { content: '\e80f'; } /* '' */
+.icon-file-video:before { content: '\e810'; } /* '' */
+.icon-file-audio:before { content: '\e811'; } /* '' */
+.icon-star:before { content: '\e812'; } /* '' */
+.icon-star-empty:before { content: '\e813'; } /* '' */
+.icon-star-half-alt:before { content: '\e814'; } /* '' */
+.icon-tag:before { content: '\e815'; } /* '' */
 .metadata-exists {
     color: #0088f4
 }
 
-.adam-browse-background-icon-wrapper {
-    background-color: whitesmoke;
+.adam-browse-background-icon {
     padding-left: 5px;
     padding-right: 5px;
     padding-top: 10px;
@@ -78,7 +84,12 @@
     min-width: 100%;
     min-height: 100%;
     text-align: center;
-    font-size: 5em
+}
+.adam-browse-background-icon i {
+    font-size: 5em;
+}
+.adam-browse-background {
+        background-color: whitesmoke;
 }
 .metadata-missing {
     

@@ -1,34 +1,36 @@
 ﻿<div ng-if="vm.show" class="">
     <!-- info for dropping stuff here -->
     <div class="dz-preview dropzone-adam" ng-disabled="vm.disabled" tooltip="{{'Edit.Fields.Hyperlink.Default.AdamUploadLabel' | translate }}" ng-click="vm.openUpload()">
-        <div class="dz-image" style="background-color: whitesmoke">
+        <div class="dz-image adam-browse-background-icon adam-browse-background" xstyle="background-color: whitesmoke">
+            <i class="icon-up-circled2"></i>
         </div>
         <div class="dz-details" style="opacity: 1">
-            <div class="dz-size">
-                <button type="button" class="btn btn-primary btn-lg" ng-disabled="vm.disabled">
-                    <i icon="plus"></i>
-                    <i icon="file"></i>
-                </button>
-            </div>
             <div class="dz-filename">
-                <span data-dz-name="">drag & drop files</span>
+                <span data-dz-name="">drop files</span>
             </div>
         </div>
     </div>
 
     <!-- add folder - not always shown -->
     <div ng-show="vm.allowCreateFolder() || vm.debug.on" class="dz-preview" ng-disabled="vm.disabled" ng-click="vm.addFolder()">
-        <div class="dz-image adam-browse-background-icon-wrapper" >
-            <i class="icon-folder-empty"></i>
+        <div class="dz-image adam-browse-background-icon adam-browse-background">
+            <div class="">
+                <i class="icon-folder-empty"></i>
+            </div>
+        </div>
+        <div class="dz-details adam-browse-background-icon" style="opacity: 1">
+            <i class="icon-plus" style="font-size: 3em"></i>
         </div>
         <div class="dz-details" style="opacity: 1">
             <div class="dz-size">
-                <button type="button" class="btn btn-default btn-lg" ng-disabled="vm.disabled">
-                    <i icon="plus"></i>
-                    <i icon="th-large"></i>
-                </button>
+
             </div>
-            <div class="dz-filename">
+            <!-- todo: position -->
+            <div class="dz-filename" style="
+    position: absolute;
+    padding-bottom: 0;
+    padding-top: 50%;
+">
                 <span data-dz-name="">new folder</span>
             </div>
         </div>
@@ -36,7 +38,7 @@
 
     <!-- browse up a folder - not always shown -->
     <div ng-show="vm.showFolders || vm.debug.on" class="dz-preview" ng-disabled="vm.disabled" ng-if="vm.folders.length > 0" ng-click="vm.goUp()">
-        <div class="dz-image adam-browse-background-icon-wrapper">
+        <div class="dz-image  adam-browse-background-icon adam-browse-background">
             <i class="icon-level-up"></i>
         </div>
         <div class="dz-details" style="opacity: 1">
@@ -49,15 +51,16 @@
 
     <!-- folder list - not always shown -->
     <div ng-show="vm.showFolders || vm.debug.on" class="dz-preview" ng-repeat="item in vm.items | filter: { IsFolder: true }  | orderBy:'Name'" ng-click="vm.goIntoFolder(item)">
-        <div class="dz-image adam-browse-background-icon-wrapper">
+        <div class="dz-image  adam-browse-background-icon adam-browse-background">
             <i class="icon-folder-empty"></i>
         </div>
+
         <div class="dz-details file-type-{{item.Type}}">
             <span class="pull-right" ng-class="{'metadata-exists': item.MetadataId > 0}" style="font-size: large"
                   ng-click="vm.editFolderMetadata(item)"
                   ng-if="vm.folderMetadataContentType"
                   stop-event="click">
-                <span tooltip="{{item.MetadataId}}"><i icon="tag"></i></span>
+                <span tooltip="{{item.MetadataId}}"><i class="icon-tag" style="font-size: larger"></i></span>
             </span>
             
             <div class="dz-filename"><span data-dz-name="">{{ item.Name }}{{ vm.debug.on ? "(lvl:" + vm.currentFolderDepth() + ")" : ""}}</span></div>
@@ -68,8 +71,8 @@
 
     <!-- files -->
     <div class="dz-preview" ng-class="{ 'dz-success': value.Value.toLowerCase() == 'file:' + item.Id }" ng-repeat="item in (vm.items | filter: { IsFolder: false }) | filter: (vm.showImagesOnly ? {Type: 'image'} : {})  | orderBy:'Name'" ng-click="vm.select(item)" ng-disabled="vm.disabled || !vm.enableSelect">
-        <div ng-if="item.Type !== 'image'" class="dz-image adam-browse-background-icon-wrapper">
-            <i class="icon-doc"></i>
+        <div ng-if="item.Type !== 'image'" class="dz-image  adam-browse-background-icon adam-browse-background">
+            <i ng-class="vm.icon(item)"></i>
         </div>
         <div ng-if="item.Type === 'image'" class="dz-image">
             <img data-dz-thumbnail="" alt="{{ item.Id + ':' + item.Name
