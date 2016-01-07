@@ -863,15 +863,20 @@ angular.module("sxcFieldTemplates")
         vm.registerAdam = function (adam) {
             vm.adam = adam;
         };
-        vm.setValue = function (fileItem) {
-            if (/* fileItem.Type === "image"  && */ vm.adamModeImage) {
-                vm.editor.insertContent("<img src=\"" + fileItem.fullPath + "\">");
-            }
-            else {
-                vm.editor.insertContent("<a href=\"" + fileItem.fullPath + "\">" + fileItem.Name + "</a>");
-            }
+
+
+        vm.setValue = function (fileItem, modeImage) {
+            if (modeImage === undefined)        // if not supplied, use the setting in the adam
+                modeImage = vm.adamModeImage; 
+            vm.editor.insertContent(modeImage
+                ? "<img src=\"" + fileItem.fullPath + "\">"
+                : "<a href=\"" + fileItem.fullPath + "\">" + fileItem.Name.substr(0, fileItem.Name.lastIndexOf(".")) + "</a>");
         };
-        $scope.afterUpload = vm.setValue;
+
+        // this is the event called by dropzone as something is dropped
+        $scope.afterUpload = function(fileItem) {   
+            vm.setValue(fileItem, fileItem.Type === "image");
+        };
 
         vm.toggleAdam = function toggle(imagesOnly) {
             vm.adamModeImage = imagesOnly;

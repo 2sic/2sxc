@@ -106,5 +106,29 @@ namespace ToSic.SexyContent.Adam
             return items.FirstOrDefault()?.EntityId ?? 0;
         }
 
+        #region type information
+        internal string TypeName(string ext)
+        {
+            switch (ext.ToLower())
+            {
+                case "png":
+                case "jpg":
+                case "jpgx":
+                case "jpeg":
+                case "gif":
+                    return "image";
+                case "doc":
+                case "docx":
+                case "txt":
+                case "pdf":
+                case "xls":
+                case "xlsx":
+                    return "document";
+                default:
+                    return "file";
+            }
+        }
+        #endregion
+
     }
 }

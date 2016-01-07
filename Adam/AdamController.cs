@@ -104,7 +104,15 @@ namespace ToSic.SexyContent.Adam
                     // Everything is ok, add file
                     var dnnFile = FileManager.Instance.AddFile(folder, Path.GetFileName(fileName), originalFile.InputStream);
 
-                    return new UploadResult { Success = true, Error = "", Name = Path.GetFileName(fileName), Id = dnnFile.FileId, Path = dnnFile.RelativePath };
+                    return new UploadResult
+                    {
+                        Success = true,
+                        Error = "",
+                        Name = Path.GetFileName(fileName),
+                        Id = dnnFile.FileId,
+                        Path = dnnFile.RelativePath,
+                        Type = Core.TypeName(dnnFile.Extension)
+                    };
                 }
 
                 return new UploadResult { Success = false, Error = "No image was uploaded." };
@@ -174,7 +182,7 @@ namespace ToSic.SexyContent.Adam
                 subfolders.Where(s => s.FolderID != current.FolderID)
                     .Select(f => new AdamItem(f) {MetadataId = Core.GetMetadataId(f.FolderID, true)});
             var adamFiles = files
-                .Select(f => new AdamItem(f) {MetadataId = Core.GetMetadataId(f.FileId, false)});
+                .Select(f => new AdamItem(f) {MetadataId = Core.GetMetadataId(f.FileId, false), Type = Core.TypeName(f.Extension)});
 
             var all = adamFolders.Concat(adamFiles);
 
