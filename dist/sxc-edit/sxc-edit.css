@@ -72,6 +72,7 @@
 .icon-star-empty:before { content: '\e813'; } /* '' */
 .icon-star-half-alt:before { content: '\e814'; } /* '' */
 .icon-tag:before { content: '\e815'; } /* '' */
+.icon-user:before { content: '\e816'; } /* '' */
 .metadata-exists {
     color: #0088f4
 }

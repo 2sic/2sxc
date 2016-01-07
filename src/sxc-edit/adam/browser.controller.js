@@ -150,15 +150,23 @@
             pptx: "file-powerpoint",
             pdf: "file-pdf",
             mp3: "file-audio",
+            avi: "file-video",
+            mpg: "file-video",
+            mpeg: "file-video",
+            mov: "file-video",
             mp4: "file-video",
             zip: "file-archive",
             rar: "file-archive",
             txt: "file-text",
             html: "file-code",
-            css: "file-code"
+            css: "file-code",
+            xml: "file-code",
+            xsl: "file-code",
+            vcf: "user"
+
         };
         vm.icon = function (item) {
-            var ext = item.Name.substr(item.Name.lastIndexOf(".") + 1);
+            var ext = item.Name.substr(item.Name.lastIndexOf(".") + 1).toLowerCase();
             return "icon-" + (vm.icons[ext] || "file");
         };
         //#endregion

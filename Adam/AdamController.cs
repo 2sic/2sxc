@@ -6,6 +6,8 @@ using System.Net;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
+using DotNetNuke.Common;
+using DotNetNuke.Entities.Host;
 using DotNetNuke.Security;
 using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Web.Api;
@@ -32,8 +34,8 @@ namespace ToSic.SexyContent.Adam
 
         // todo: centralize once it works
         // todo:idea that it would auto-take a setting from app-settings if it exists :)
-        private string AdamAllowedExtensions =
-            "jpg,jpeg,jpe,gif,bmp,png,doc,docx,xls,xlsx,ppt,pptx,pdf,txt,xml,xsl,xsd,css,zip,ico,avi,mpg,mpeg,mp3,wmv,mov,wav,ico,vcf";
+        //private string AdamAllowedExtensions =
+        //    "jpg,jpeg,jpe,gif,bmp,png,doc,docx,xls,xlsx,ppt,pptx,pdf,txt,xml,xsl,xsd,css,zip,ico,avi,mpg,mpeg,mp3,wmv,mov,wav,ico,vcf";
         public const int MaxFileSizeMb = 10;
 
 
@@ -78,8 +80,9 @@ namespace ToSic.SexyContent.Adam
                     // todo: check content-type extensions...
 
                     // Check file size and extension
-                    var extension = Path.GetExtension(originalFile.FileName).ToLower().Replace(".", "");
-                    if (!AdamAllowedExtensions.Contains(extension))
+                    //var extension = Path.GetExtension(originalFile.FileName).ToLower().Replace(".", "");
+                    //if (!AdamAllowedExtensions.Contains(extension))
+                    if(!IsAllowedExtension(originalFile.FileName))
                         throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
 
                     if (originalFile.ContentLength > (1024 * 1024 * MaxFileSizeMb))
@@ -242,6 +245,20 @@ namespace ToSic.SexyContent.Adam
 
         #endregion
 
+
+        #region Helper to check extension based on DNN settings
+        // mostly a copy from https://github.com/dnnsoftware/Dnn.Platform/blob/115ae75da6b152f77ad36312eb76327cdc55edd7/DNN%20Platform/Modules/Journal/FileUploadController.cs#L72
+        private static bool IsAllowedExtension(string fileName)
+        {
+            var extension = Path.GetExtension(fileName);
+
+            //regex matches a dot followed by 1 or more chars followed by a semi-colon
+            //regex is meant to block files like "foo.asp;.png" which can take advantage
+            //of a vulnerability in IIS6 which treasts such files as .asp, not .png
+            return !string.IsNullOrEmpty(extension)
+                   && Host.AllowedExtensionWhitelist.IsAllowedExtension(extension.ToLower());
+        }
+        #endregion
 
     }
 }
