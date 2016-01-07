@@ -31,7 +31,6 @@ $2sxc.getManageController = function (id) {
     // all the standard buttons with the display configuration and click-action
     var actionButtonsConf = {
         'default': {
-            icon: "glyphicon-fire",
             hideFirst: true,
             action: function(settings, event) { alert("not implemented yet"); }
         },
@@ -53,6 +52,17 @@ $2sxc.getManageController = function (id) {
             showOn: "default",
             action: function(settings, event) {
                 tbContr._openNgDialog($.extend({}, settings, { sortOrder: settings.sortOrder + 1 }), event);
+            }
+        },
+        'layout': {
+            title: "Toolbar.ChangeLayout",
+            iclass: "icon-sxc-glasses",
+            lightbox: false,
+            hideFirst: true,
+            showOn: "default",
+            uiActionOnly: true, // so it doesn't create the content when used
+            action: function (settings, event) {
+                tbContr._getSelectorScope().toggle();
             }
         },
         'add': {
@@ -77,7 +87,6 @@ $2sxc.getManageController = function (id) {
         },
         'publish': {
             title: "Toolbar.Published",
-            icon2: "glyphicon-eye-close", //todo
             iclass: "icon-sxc-eye",
             iclass2: "icon-sxc-eye-off",
             lightbox: false,
@@ -118,7 +127,7 @@ $2sxc.getManageController = function (id) {
         },
         'sort': {
             title: "Toolbar.Sort",
-            iclass: "icon-sxc-th-list",
+            iclass: "icon-sxc-list-numbered",
             lightbox: true,
             hideFirst: true,
             showOn: "design",
@@ -137,17 +146,6 @@ $2sxc.getManageController = function (id) {
                 if (confirm(tbContr.translate("Toolbar.ConfirmRemove"))) {
                     tbContr._getSelectorScope().removeFromList(settings.sortOrder);
                 }
-            }
-        },
-        'layout': {
-            title: "Toolbar.ChangeLayout",
-            iclass: "icon-sxc-layout",
-            lightbox: false,
-            hideFirst: true,
-            showOn: "design",
-            uiActionOnly: true, // so it doesn't create the content when used
-            action: function (settings, event) {
-                tbContr._getSelectorScope().toggle();
             }
         },
         'develop': {
@@ -174,7 +172,6 @@ $2sxc.getManageController = function (id) {
         },
         'manage-apps': {
             title: "Toolbar.ManageApps",
-            //icon: "glyphicon-th-large",
             iclass: "icon-sxc-manage",
             lightbox: true,
             hideFirst: true,
@@ -186,7 +183,7 @@ $2sxc.getManageController = function (id) {
         },
         "more": {
             title: "Toolbar.MoreActions",
-            icon: "mode0 btn-mode",
+            iclass: "icon-sxc-options btn-mode",
             borlightboxder: false,
             hideFirst: false,
             showOn: "default,edit,design,admin",
@@ -340,13 +337,13 @@ $2sxc.getManageController = function (id) {
                 'title': tbContr.translate(conf.title)
             });
             var box = $("<div/>");
-            var symbol = $("<i class=\"glyphicon " + conf.icon + " " + conf.iclass + "\" aria-hidden=\"true\"></i>");
+            var symbol = $("<i class=\"" + conf.iclass + "\" aria-hidden=\"true\"></i>");
 
             // if publish-button and not published yet, show button (otherwise hidden) & change icon
             if (settings.action === "publish" && settings.isPublished === false) {
                 button.addClass("show-default").removeClass("show-edit")
                     .attr("title", tbContr.translate("Toolbar.Unpublished")); 
-                symbol.removeClass(conf.icon).addClass(conf.icon2);
+                symbol.removeClass(conf.iclass).addClass(conf.iclass2);
             }
 
             button.html(box.html(symbol));

@@ -409,6 +409,7 @@
     <Content Include="Extensions\404.png" />
     <Content Include="Extensions\Imazen_ImageResizer\ImageResizer.txt" />
     <Content Include="Extensions\Imazen_ImageResizer\license.txt" />
+    <Content Include="grunt-tasks\fonts.gruntfile.js" />
     <Content Include="grunt-tasks\sxc-api.gruntfile.js" />
     <Content Include="grunt-tasks\dnn.gruntfile.js" />
     <Content Include="grunt-tasks\develop.gruntfile.js" />
