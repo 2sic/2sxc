@@ -123,7 +123,7 @@ if (window.angular) // needed because the file is also included in older non-ang
                         switch (field.InputType) {
                             case "string-wysiwyg-tinymce":
                                 config.Assets = "//cdn.tinymce.com/4/tinymce.min.js\n" +
-                                    "../../bower_components/angular-ui-tinymce/src/tinymce.js";
+                                    "../edit/extensions/field-string-wysiwyg-tinymce/set.js";
                                 applyChanges = true;
                                 break;
                             case "unknown": // server default if not defined
