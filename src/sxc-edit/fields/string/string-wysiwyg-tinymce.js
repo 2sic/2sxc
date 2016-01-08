@@ -35,7 +35,7 @@
             var modes = {
                 standard: {
                     menubar: false,
-                    toolbar: " undo redo removeformat | styleselect | bold italic | h1 h2 hgroup | bullist numlist outdent indent "
+                    toolbar: " undo redo removeformat | bold formatgroup | h1 h2 hgroup | bullist numlist outdent indent "
                     + "| adamlink linkgroup "
                     + "| modeadvanced ",
                 },
@@ -235,8 +235,21 @@
                 },
                 { icon: "alignleft", onclick: function() { editor.execCommand("JustifyLeft"); } },
                 { icon: "aligncenter", onclick: function() { editor.execCommand("JustifyCenter"); } },
-                { icon: "alignright", onclick: function() { editor.execCommand("JustifyRight"); } },
+                { icon: "alignright", onclick: function() { editor.execCommand("JustifyRight"); } }
             ]
+        });
+
+        editor.addButton("formatgroup", {
+            type: "splitbutton",
+            text: "",
+            icon: "italic",
+            onclick: function() {   editor.execCommand("italic");   },
+            menu: [
+                {   icon: "strikethrough", onclick: function () { editor.execCommand("strikethrough"); } },
+                {   icon: "superscript",    onclick: function() { editor.execCommand("superscript"); }  },
+                {   icon: "subscript",    onclick: function() { editor.execCommand("subscript"); }  }
+            ]
+
         });
 
         function switchModes(mode) {
