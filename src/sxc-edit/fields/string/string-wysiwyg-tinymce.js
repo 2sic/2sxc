@@ -31,6 +31,21 @@
                 "paste",        // enables paste as text
                 "anchor",       // allows users to set an anchor inside the text
             ];
+
+            //var menubars = {
+            //    standard: false,
+            //    advanced: true,
+            //};
+
+            var modes = {
+                standard: {
+                    menubar: false
+                },
+                advanced: {
+                    menubar: true
+                }
+            };
+
             $scope.tinymceOptions = {
                 baseURL: "//cdn.tinymce.com/4",
                 //onChange: function (e) {
@@ -38,10 +53,11 @@
                 //},
                 inline: true, // use the div, not an iframe
                 automatic_uploads: false, // we're using our own upload mechanism
-                menubar: true, // don't add a second row of menus
+                menubar: modes.standard.menubar, // don't add a second row of menus
+                modes: modes,
                 //menubar: 'format table',
 
-                toolbar1: " undo redo removeformat | styleselect | bold italic | h1 h2 hgroup | bullist numlist outdent indent "
+                toolbar: " undo redo removeformat | styleselect | bold italic | h1 h2 hgroup | bullist numlist outdent indent "
                     + "| images linkgroup "
                     + "| code showhidemenu ",
                 //toolbar2: "code",
@@ -217,7 +233,25 @@
             text: "mb",
             icon: " icon-file",
             onclick: function () {
-                angular.element(editor).querySelectorAll("div.mce-toolbar-grp").hide();
+                editor.settings.toolbar = "code";
+                editor.settings.menubar = editor.settings.modes.advanced.menubar;
+
+                editor.theme.panel.remove();    // kill current toolbar
+                //editor.init();                  // re-init the toolbar
+
+                //editor.theme.panel.render();
+                //editor.theme.panel.show();
+
+                //editor.show();                  // show it again
+                //editor.activate();
+
+                editor.theme.renderUI(editor);//editor);
+
+                //editor.focus();
+                //editor.remove();
+                //editor.show();
+
+                //angular.element(editor).querySelectorAll("div.mce-toolbar-grp").hide();
                 //$(this.contentAreaContainer.parentElement).find(
                 //vm.editor.toggleAdam(true);
             }

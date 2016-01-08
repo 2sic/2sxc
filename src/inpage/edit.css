@@ -28,7 +28,7 @@
 }
 
 .sc-menu.listContent a span {background-color: #007100; border-color: #007100;}
-.sc-menu a /*.hideFirst */ { display: none!important }
+.sc-menu a { display: none!important }
 .show-set-0 a.show-default { display: inline-block!important}
 .show-set-1 a.show-edit { display: inline-block!important}
 .show-set-2 a.show-design {display: inline-block!important}
@@ -73,8 +73,9 @@
 
 
 
-/* new fonts */
 
+/* The font icons we use for the inpage buttons */
+/* only use the WOFF, as all modern browsers support that */
 @font-face {
   font-family: 'inpage-icons';
   src: url('../lib/fonts/inpage-icons.woff?33443275') format('woff');
