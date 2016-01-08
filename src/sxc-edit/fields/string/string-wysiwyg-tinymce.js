@@ -32,17 +32,18 @@
                 "anchor",       // allows users to set an anchor inside the text
             ];
 
-            //var menubars = {
-            //    standard: false,
-            //    advanced: true,
-            //};
-
             var modes = {
                 standard: {
-                    menubar: false
+                    menubar: false,
+                    toolbar: " undo redo removeformat | styleselect | bold italic | h1 h2 hgroup | bullist numlist outdent indent "
+                    + "| linkgroup "
+                    + "| modeadvanced ",
                 },
                 advanced: {
-                    menubar: true
+                    menubar: true,
+                    toolbar: " undo redo removeformat | styleselect | bold italic | h1 h2 hgroup | bullist numlist outdent indent "
+                    + "| images linkgroup "
+                    + "| code modestandard ",
                 }
             };
 
@@ -53,14 +54,9 @@
                 //},
                 inline: true, // use the div, not an iframe
                 automatic_uploads: false, // we're using our own upload mechanism
-                menubar: modes.standard.menubar, // don't add a second row of menus
-                modes: modes,
-                //menubar: 'format table',
-
-                toolbar: " undo redo removeformat | styleselect | bold italic | h1 h2 hgroup | bullist numlist outdent indent "
-                    + "| images linkgroup "
-                    + "| code showhidemenu ",
-                //toolbar2: "code",
+                modes: modes,            // for later switch to another mode
+                menubar: modes.standard.menubar,    // basic menu (none)
+                toolbar: modes.standard.toolbar,    // basic toolbar
                 plugins: plugins.join(" "),
                 contextmenu: "link image adamimage",
                 autosave_ask_before_unload: false,
@@ -228,33 +224,31 @@
             ]
         });
 
+        function switchModes(mode) {
+            editor.settings.toolbar = editor.settings.modes[mode].toolbar;
+            editor.settings.menubar = editor.settings.modes[mode].menubar;
+            
+            editor.theme.panel.remove();    // kill current toolbar
+            editor.theme.renderUI(editor);
+            editor.execCommand("mceFocus");
+            //editor.init();                // re-init the toolbar
 
-        editor.addButton("showhidemenu", {
-            text: "mb",
-            icon: " icon-file",
-            onclick: function () {
-                editor.settings.toolbar = "code";
-                editor.settings.menubar = editor.settings.modes.advanced.menubar;
+            //editor.theme.panel.render();
+            //editor.theme.panel.show();
 
-                editor.theme.panel.remove();    // kill current toolbar
-                //editor.init();                  // re-init the toolbar
+            //editor.focus();
+            //editor.remove();
+            //editor.show();
+        }
 
-                //editor.theme.panel.render();
-                //editor.theme.panel.show();
+        editor.addButton("modestandard", {
+            icon: " icon-cancel",
+            onclick: function () { switchModes("standard"); }
+        });
 
-                //editor.show();                  // show it again
-                //editor.activate();
-
-                editor.theme.renderUI(editor);//editor);
-
-                //editor.focus();
-                //editor.remove();
-                //editor.show();
-
-                //angular.element(editor).querySelectorAll("div.mce-toolbar-grp").hide();
-                //$(this.contentAreaContainer.parentElement).find(
-                //vm.editor.toggleAdam(true);
-            }
+        editor.addButton("modeadvanced", {
+            icon: " icon-pro",
+            onclick: function () {  switchModes("advanced");    }
         });
 
 

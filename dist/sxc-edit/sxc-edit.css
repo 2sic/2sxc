@@ -92,9 +92,7 @@ font-size: large;position: absolute;right: -15px;top: 50px;font-size: 1.8em;
 .adam-browse-background {
         background-color: whitesmoke;
 }
-.metadata-missing {
-    
-}
+
 
 .icon-folder-empty:before { content: '\e800'; } /* '' */
 .icon-file-word:before { content: '\e801'; } /* '' */
@@ -118,7 +116,7 @@ font-size: large;position: absolute;right: -15px;top: 50px;font-size: 1.8em;
 .icon-star-empty:before { content: '\e813'; } /* '' */
 .icon-star-half-alt:before { content: '\e814'; } /* '' */
 .icon-tag:before { content: '\e815'; } /* '' */
-.icon-user:before { content: '\e816'; } /* '' */
+.icon-pro:before { content: '\e816'; } /* '' */
 .icon-plus-squared:before { content: '\e817'; } /* '' */
 .icon-minus-squared:before { content: '\e818'; } /* '' */
 .icon-apple:before { content: '\e819'; } /* '' */
@@ -126,6 +124,12 @@ font-size: large;position: absolute;right: -15px;top: 50px;font-size: 1.8em;
 .icon-align-right:before { content: '\e81b'; } /* '' */
 .icon-cancel:before { content: '\e81c'; } /* '' */
 .icon-ok:before { content: '\e81d'; } /* '' */
+.icon-link-ext:before { content: '\e81e'; } /* '' */
+.icon-heart:before { content: '\e81f'; } /* '' */
+.icon-options:before { content: '\e820'; } /* '' */
+.icon-file-vcard:before { content: '\e821'; } /* '' */
+.icon-settings:before { content: '\e822'; } /* '' */
+.icon-manage:before { content: '\e823'; } /* '' */
 @font-face {
   font-family: 'app-icons';
     src: url('../lib/fonts/app-icons.woff?87396608') format('woff');
