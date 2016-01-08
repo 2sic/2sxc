@@ -3,11 +3,12 @@
     <div class="dz-preview dropzone-adam" ng-disabled="vm.disabled" tooltip="{{'Edit.Fields.Hyperlink.Default.AdamUploadLabel' | translate }}" ng-click="vm.openUpload()">
         <div class="dz-image adam-browse-background-icon adam-browse-background" xstyle="background-color: whitesmoke">
             <i class="icon-up-circled2"></i>
+            <div class="adam-short-label">drop files</div>
         </div>
         <div class="dz-details" style="opacity: 1">
-            <div class="dz-filename">
+            <!--<div class="dz-filename">
                 <span data-dz-name="">drop files</span>
-            </div>
+            </div>-->
         </div>
     </div>
 
@@ -16,23 +17,15 @@
         <div class="dz-image adam-browse-background-icon adam-browse-background">
             <div class="">
                 <i class="icon-folder-empty"></i>
+                <div class="adam-short-label">new folder</div>
             </div>
         </div>
         <div class="dz-details adam-browse-background-icon" style="opacity: 1">
-            <i class="icon-plus" style="font-size: 3em"></i>
+            <i class="icon-plus"></i>
+
         </div>
         <div class="dz-details" style="opacity: 1">
-            <div class="dz-size">
 
-            </div>
-            <!-- todo: position -->
-            <div class="dz-filename" style="
-    position: absolute;
-    padding-bottom: 0;
-    padding-top: 50%;
-">
-                <span data-dz-name="">new folder</span>
-            </div>
         </div>
     </div>
 
@@ -40,55 +33,65 @@
     <div ng-show="vm.showFolders || vm.debug.on" class="dz-preview" ng-disabled="vm.disabled" ng-if="vm.folders.length > 0" ng-click="vm.goUp()">
         <div class="dz-image  adam-browse-background-icon adam-browse-background">
             <i class="icon-level-up"></i>
+            <div class="adam-short-label">up</div>
         </div>
         <div class="dz-details" style="opacity: 1">
 
-            <div class="dz-filename">
+            <!--<div class="dz-filename">
                 <span data-dz-name="">up</span>
-            </div>
+            </div>-->
         </div>
     </div>
 
     <!-- folder list - not always shown -->
     <div ng-show="vm.showFolders || vm.debug.on" class="dz-preview" ng-repeat="item in vm.items | filter: { IsFolder: true }  | orderBy:'Name'" ng-click="vm.goIntoFolder(item)">
-        <div class="dz-image  adam-browse-background-icon adam-browse-background">
+        <div class="dz-image adam-blur adam-browse-background-icon adam-browse-background">
             <i class="icon-folder-empty"></i>
+            <div class="short-label">{{ item.Name }}</div>
         </div>
 
         <div class="dz-details file-type-{{item.Type}}">
-            <span class="pull-right" ng-class="{'metadata-exists': item.MetadataId > 0}" style="font-size: large"
-                  ng-click="vm.editFolderMetadata(item)"
-                  ng-if="vm.folderMetadataContentType"
-                  stop-event="click">
-                <span tooltip="{{item.MetadataId}}"><i class="icon-tag" style="font-size: larger"></i></span>
-            </span>
-            
-            <div class="dz-filename"><span data-dz-name="">{{ item.Name }}{{ vm.debug.on ? "(lvl:" + vm.currentFolderDepth() + ")" : ""}}</span></div>
-            <div class="dz-filename"><span ng-click="vm.del(item)" stop-event="click" ng-disabled="vm.disabled"><i icon="remove"></i></span></div>
+            <span ng-click="vm.del(item)" stop-event="click" class="adam-delete-button"><i icon="remove"></i></span>
+            <div class="adam-full-name-area">
+                <div class="adam-full-name">{{ item.Name }}</div>
+            </div>
         </div>
+
+        <span class="adam-tag" ng-class="{'metadata-exists': item.MetadataId > 0}"
+              ng-click="vm.editFolderMetadata(item)"
+              ng-if="vm.folderMetadataContentType"
+              stop-event="click"
+              tooltip="{{item.MetadataId}}">
+            <i class="icon-tag" style="font-size: larger"></i>
+        </span>
     </div>
 
 
     <!-- files -->
     <div class="dz-preview" ng-class="{ 'dz-success': value.Value.toLowerCase() == 'file:' + item.Id }" ng-repeat="item in (vm.items | filter: { IsFolder: false }) | filter: (vm.showImagesOnly ? {Type: 'image'} : {})  | orderBy:'Name'" ng-click="vm.select(item)" ng-disabled="vm.disabled || !vm.enableSelect">
-        <div ng-if="item.Type !== 'image'" class="dz-image  adam-browse-background-icon adam-browse-background">
+        <div ng-if="item.Type !== 'image'" class="dz-image adam-blur  adam-browse-background-icon adam-browse-background">
             <i ng-class="vm.icon(item)"></i>
+            <div class="adam-short-label">{{ item.Name }}</div>
         </div>
         <div ng-if="item.Type === 'image'" class="dz-image">
             <img data-dz-thumbnail="" alt="{{ item.Id + ':' + item.Name
 }}" ng-src="{{ item.fullPath + '?w=120&h=120&mode=crop' }}">
         </div>
 
+
+
         <div class="dz-details file-type-{{item.Type}}">
-            <div class="dz-size file-icon">
-                <span data-dz-size=""><strong>{{ item.Id }}</strong></span>
+            <span ng-click="vm.del(item)" stop-event="click" class="adam-delete-button"><i icon="remove"></i></span>
+            <div class="adam-full-name-area">
+                <div class="adam-full-name">{{ item.Name }}</div>
             </div>
-            <div class="dz-filename"><span data-dz-name="">{{ item.Name }}</span></div>
-            <div class="dz-filename">
-                <span ng-click="vm.del(item)" stop-event="click"><i icon="remove"></i></span>
-                <span data-dz-name="">{{ (item.Size / 1024).toFixed(0) }} kb</span>
+            <div class="dz-filename adam-short-label">
+                <span>#{{ item.Id }} - {{ (item.Size / 1024).toFixed(0) }} kb</span>
             </div>
         </div>
+
+
+
         <div class="dz-success-mark">
             <svg width="54px" height="54px" viewBox="0 0 54 54" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
                 <title>Check</title>

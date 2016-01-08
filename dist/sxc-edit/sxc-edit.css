@@ -11,8 +11,74 @@
     min-height: 100%;
     text-align: center;
 }
+
 .adam-browse-background-icon i {
-    font-size: 5em;
+    font-size: 4em;
+}
+.dz-details i {
+    font-size: 1em;
+
+}
+.adam-tag {
+font-size: large;position: absolute;right: -15px;top: 50px;font-size: 1.8em;
+    z-index: 30;
+}
+
+.adam-delete-button {
+    
+    position: absolute;
+    top: 8px;
+    right: 8px;
+
+}
+
+.dz-details {
+    bottom: 0;
+}
+
+.dropzone .dz-preview:hover .adam-blur {
+    -webkit-transform:scale(1.05,1.05);
+    -moz-transform:scale(1.05,1.05);
+    -ms-transform:scale(1.05,1.05);
+    -o-transform:scale(1.05,1.05);
+    transform:scale(1.05,1.05);
+    -webkit-filter:blur(8px);
+    filter:blur(8px)
+}
+
+
+
+/*label under the icon*/
+.adam-short-label  {
+    text-overflow: ellipsis;
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 10px;
+}
+
+.adam-full-name {
+    background-color: rgba(255,255,255,.8);
+    border-radius: 3px;
+    word-break: break-all;
+    width: 80%;
+    max-width: 95%;
+    max-height: 57px;
+    overflow: hidden;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+}
+.adam-full-name-area {
+    height: 60px;
+    display: block;
 }
 .adam-browse-background {
         background-color: whitesmoke;
@@ -491,22 +557,6 @@
         border-left: 6px solid transparent;
         border-right: 6px solid transparent;
         border-bottom: 6px solid #be2626; }
-
-.file-type-image {
-    
-}
-
-.file-type-document {
-    
-}
-
-.dropzone .dz-preview .dz-details.file-type-folder {
-    opacity: 1
-}
-
-.dropzone .dz-preview .dz-details.file-type-folder .file-actions {
-    opacity: 0
-}
 .field-string-wysiwyg-mce-box {
     position: relative;
     border-style: solid;
