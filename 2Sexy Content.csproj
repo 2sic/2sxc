@@ -434,7 +434,8 @@
     <Content Include="Images\Edit.png" />
     <Content Include="Administration\Import.ascx" />
     <Content Include="Images\Save.png" />
-    <Content Include="src\sxc-edit\adam\app-icons.css" />
+    <Content Include="src\sxc-edit\app-icons-codes.css" />
+    <Content Include="src\sxc-edit\app-icons.css" />
     <Content Include="src\sxc-edit\adam\adam.css" />
     <Content Include="src\sxc-edit\adam\browser.controller.js" />
     <Content Include="src\sxc-edit\adam\browser.directive.js" />
@@ -463,7 +464,7 @@
     <Content Include="js\angularjs\toaster.js" />
     <Content Include="js\ItemForm.js" />
     <Content Include="license.txt" />
-    <Content Include="edit.css" />
+    <Content Include="src\inpage\edit.css" />
     <Content Include="Administration\EditTemplate.ascx" />
     <Content Include="ReleaseNotes.txt" />
     <Content Include="Extensions\Thumbnailer.aspx" />

@@ -40,7 +40,7 @@ namespace ToSic.SexyContent
 				    var ext = string.IsNullOrEmpty(Request.QueryString["debug"]) ? ".min.js" : ".js"; // ".min.js";
 
                     // add edit-mode CSS
-                    ClientResourceManager.RegisterStyleSheet(Page, root + "edit.css");
+                    ClientResourceManager.RegisterStyleSheet(Page, root + "dist/inpage/inpage.min.css");//"edit.css");
 
 					// ToDo: Move these RegisterScripts to JS to prevent including AngularJS twice (from other modules)
                     ClientResourceManager.RegisterScript(Page, root + "js/angularjs/angular.min.js", 80);

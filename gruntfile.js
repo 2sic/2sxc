@@ -31,7 +31,9 @@ module.exports = function (grunt) {
         templates: "tmp/inpage/inpage-templates.js",
         dist: "dist/admin/",
         concatFile: "dist/inpage/inpage.js",
-        uglifyFile: "dist/inpage/inpage.min.js"
+        uglifyFile: "dist/inpage/inpage.min.js",
+        concatCss: "dist/inpage/inpage.css",
+        concatCssMin: "dist/inpage/inpage.min.css"
     };
     var eavconf = {
         cwd: "src/config/",
@@ -218,6 +220,10 @@ module.exports = function (grunt) {
             adminCss: {
                 src: sxcedit.tmp + "**/*.css",
                 dest: sxcedit.concatCss
+            },
+            inpageCss: {
+                src: inpage.tmp + "**/*.css",
+                dest: inpage.concatCss
             }
         },
 

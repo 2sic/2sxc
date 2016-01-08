@@ -11,7 +11,7 @@
     "angular-ui-ace": "0.2.3",
     "angular-ui-tinymce": "0.0.12"
 
-  },
+  }, 
   "private": true,
   "resolutions": {
     "dropzone": "4.0.1"

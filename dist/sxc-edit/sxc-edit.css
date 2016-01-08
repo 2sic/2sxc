@@ -35,11 +35,10 @@ font-size: large;position: absolute;right: -15px;top: 50px;font-size: 1.8em;
 }
 
 .adam-delete-button {
-    
     position: absolute;
-    top: 8px;
-    right: 8px;
-
+    top: 4px;
+    right: 4px;
+    font-size: 1.4em;
 }
 
 .dz-details {
@@ -96,6 +95,37 @@ font-size: large;position: absolute;right: -15px;top: 50px;font-size: 1.8em;
 .metadata-missing {
     
 }
+
+.icon-folder-empty:before { content: '\e800'; } /* '' */
+.icon-file-word:before { content: '\e801'; } /* '' */
+.icon-file-pdf:before { content: '\e802'; } /* '' */
+.icon-file-excel:before { content: '\e803'; } /* '' */
+.icon-file:before { content: '\e804'; } /* '' */
+.icon-file-powerpoint:before { content: '\e805'; } /* '' */
+.icon-file-archive:before { content: '\e806'; } /* '' */
+.icon-file-text:before { content: '\e807'; } /* '' */
+.icon-level-up:before { content: '\e808'; } /* '' */
+.icon-align-left:before { content: '\e809'; } /* '' */
+.icon-up-circled2:before { content: '\e80a'; } /* '' */
+.icon-plus:before { content: '\e80b'; } /* '' */
+.icon-plus-circled:before { content: '\e80c'; } /* '' */
+.icon-minus:before { content: '\e80d'; } /* '' */
+.icon-minus-circled:before { content: '\e80e'; } /* '' */
+.icon-file-code:before { content: '\e80f'; } /* '' */
+.icon-file-video:before { content: '\e810'; } /* '' */
+.icon-file-audio:before { content: '\e811'; } /* '' */
+.icon-star:before { content: '\e812'; } /* '' */
+.icon-star-empty:before { content: '\e813'; } /* '' */
+.icon-star-half-alt:before { content: '\e814'; } /* '' */
+.icon-tag:before { content: '\e815'; } /* '' */
+.icon-user:before { content: '\e816'; } /* '' */
+.icon-plus-squared:before { content: '\e817'; } /* '' */
+.icon-minus-squared:before { content: '\e818'; } /* '' */
+.icon-apple:before { content: '\e819'; } /* '' */
+.icon-align-center:before { content: '\e81a'; } /* '' */
+.icon-align-right:before { content: '\e81b'; } /* '' */
+.icon-cancel:before { content: '\e81c'; } /* '' */
+.icon-ok:before { content: '\e81d'; } /* '' */
 @font-face {
   font-family: 'app-icons';
     src: url('../lib/fonts/app-icons.woff?87396608') format('woff');
@@ -113,6 +143,9 @@ font-size: large;position: absolute;right: -15px;top: 50px;font-size: 1.8em;
 }
 */
  
+.icon-lg {
+    font-size: 120%;
+}
  [class^="icon-"]:before, [class*=" icon-"]:before {
   font-family: "app-icons";
   font-style: normal;
@@ -148,31 +181,6 @@ font-size: large;position: absolute;right: -15px;top: 50px;font-size: 1.8em;
   /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
 }
  
-.icon-folder-empty:before { content: '\e800'; } /* '' */
-.icon-file-word:before { content: '\e801'; } /* '' */
-.icon-file-pdf:before { content: '\e802'; } /* '' */
-.icon-file-excel:before { content: '\e803'; } /* '' */
-.icon-file:before { content: '\e804'; } /* '' */
-.icon-file-powerpoint:before { content: '\e805'; } /* '' */
-.icon-file-archive:before { content: '\e806'; } /* '' */
-.icon-file-text:before { content: '\e807'; } /* '' */
-.icon-level-up:before { content: '\e808'; } /* '' */
-.icon-apple:before { content: '\e809'; } /* '' */
-.icon-up-circled2:before { content: '\e80a'; } /* '' */
-.icon-plus:before { content: '\e80b'; } /* '' */
-.icon-plus-circled:before { content: '\e80c'; } /* '' */
-.icon-minus:before { content: '\e80d'; } /* '' */
-.icon-minus-circled:before { content: '\e80e'; } /* '' */
-.icon-file-code:before { content: '\e80f'; } /* '' */
-.icon-file-video:before { content: '\e810'; } /* '' */
-.icon-file-audio:before { content: '\e811'; } /* '' */
-.icon-star:before { content: '\e812'; } /* '' */
-.icon-star-empty:before { content: '\e813'; } /* '' */
-.icon-star-half-alt:before { content: '\e814'; } /* '' */
-.icon-tag:before { content: '\e815'; } /* '' */
-.icon-user:before { content: '\e816'; } /* '' */
-.icon-plus-squared:before { content: '\e817'; } /* '' */
-.icon-minus-squared:before { content: '\e818'; } /* '' */
 /*
  * The MIT License
  * Copyright (c) 2012 Matias Meno <m@tias.me>

@@ -1,0 +1,119 @@
+﻿.sc-element { position:relative; }
+.sc-element .sc-menu { position:absolute; right:5px; top:5px; display:none; }
+.sc-element:hover .sc-menu { display: block; }
+.sc-menu { list-style-type:none; margin:0; padding:0px;display: inline;z-index: 1499; }
+.sc-menu li { list-style-type:none; padding:0!important; margin:0!important; display:inline; }
+.sc-menu a { display:inline-block!important; margin-right:4px!important;cursor: pointer;margin-left: 0 !important; }
+
+.sc-menu a div { 
+    width: 28px!important;
+    height: 28px!important;
+    line-height:28px!important;
+    background-color: #0088f4;
+    /*background-color: #96D500; 
+    border-color: #96D500;*/ 
+    /* border-width: 3px;  */
+    border-style: solid; 
+    box-sizing: content-box;
+    border-radius: 3px;
+    -webkit-border-radius: 3px; 
+    -moz-border-radius: 3px;
+    color: #fff; 
+    text-align: center; 
+    /*padding: 2px;*/ 
+    font-size: 15px }
+.sc-menu a div i {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.sc-menu.listContent a span {background-color: #007100; border-color: #007100;}
+.sc-menu a /*.hideFirst */ { display: none!important }
+.show-set-0 a.show-default { display: inline-block!important}
+.show-set-1 a.show-edit { display: inline-block!important}
+.show-set-2 a.show-design {display: inline-block!important}
+.show-set-3 a.show-admin {display: inline-block!important}
+
+.sc-menu span.disabled { color: #aaa}
+
+.show-set-1 i.btn-mode:before { 
+    -ms-transform: rotate(45deg); /* IE 9 */
+    transform: rotate(45deg);
+}
+.show-set-2 i.btn-mode:before { 
+    -ms-transform: rotate(90deg); /* IE 9 */
+    transform: rotate(90deg);
+}
+.show-set-3 i.btn-mode:before { 
+    -ms-transform: rotate(135deg); /* IE 9 */
+    transform: rotate(135deg);
+}
+
+
+/* Template / ContentType / App-Selector */
+.sc-selector-wrapper { position: relative;overflow: hidden; }
+.sc-selector-wrapper .dnnFormInfo { overflow: hidden;padding: 9px;max-width:none; }
+.sc-selector-wrapper a { cursor: pointer; }
+.sc-selectors { max-width: 100% !important;float: left;width: 300px; }
+.sc-selectors select { display: block;width: 100%;font-family: sans-serif;font-size: 13px;font-weight: 400;font-style: normal;color: #666;line-height: 16px;padding: 9px; }
+.sc-selector-contenttype, .sc-selector-app { margin-bottom: 3px!important; }
+.sc-selector-actions { margin-top: 46px; }
+.sc-selector-close { background: url(images/Delete.png) center center no-repeat; height: 30px; width: 30px; display: inline-block; text-indent: -9999px; }
+.sc-selector-save { background: url(images/Save.png) center center no-repeat;height: 30px;width: 30px; display: inline-block; text-indent: -9999px; }
+
+.sc-selectors select[disabled] { opacity: 0.5 }
+.sc-selectors input[disabled] { opacity: 0.5 }
+
+
+/* Loading sign */
+.sc-loading { position: absolute;top: 0;left: 0;width: 100%;height: 100%;background: url(images/ajax-loader.gif) center center no-repeat rgba(255,255,255,0.7); }
+
+/* Prevent scrolling when sxc popup is open */
+.sxc-popup-open { overflow:hidden; }
+
+
+
+/* new fonts */
+
+@font-face {
+  font-family: 'inpage-icons';
+  src: url('../lib/fonts/inpage-icons.woff?33443275') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+ [class^="icon-sxc-"]:before, [class*=" icon-sxc-"]:before {
+  font-family: "inpage-icons";
+  font-style: normal;
+  font-weight: normal;
+  speak: none;
+ 
+  display: inline-block;
+  text-decoration: inherit;
+  width: 1em;
+  margin-right: .2em;
+  text-align: center;
+  /* opacity: .8; */
+ 
+  /* For safety - reset parent styles, that can break glyph codes*/
+  font-variant: normal;
+  text-transform: none;
+ 
+  /* fix buttons height, for twitter bootstrap */
+  line-height: 1em;
+ 
+  /* Animation center compensation - margins should be symmetric */
+  /* remove if not needed */
+  margin-left: .2em;
+ 
+  /* you can be more comfortable with increased icons size */
+   font-size: 130%; 
+ 
+  /* Font smoothing. That was taken from TWBS */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+ 
+  /* Uncomment for 3D effect */
+  /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
+}
