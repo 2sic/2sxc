@@ -810,7 +810,7 @@ angular.module("sxcFieldTemplates")
                 "tabfocus",     // get in an out of the editor with tab
                 "image",        // image button and image-settings
                 "link",         // link button + ctrl+k to add link
-                "autosave",     // temp-backups the content in case the browser crashes, allows restore
+                // "autosave",     // temp-backups the content in case the browser crashes, allows restore
                 "paste",        // enables paste as text
                 "anchor",       // allows users to set an anchor inside the text
             ];
@@ -822,9 +822,12 @@ angular.module("sxcFieldTemplates")
                 inline: true, // use the div, not an iframe
                 automatic_uploads: false, // we're using our own upload mechanism
                 menubar: true, // don't add a second row of menus
-                toolbar: " undo redo removeformat | styleselect | bold italic | h1 h2 hgroup | bullist numlist outdent indent "
+                //menubar: 'format table',
+
+                toolbar1: " undo redo removeformat | styleselect | bold italic | h1 h2 hgroup | bullist numlist outdent indent "
                     + "| images linkgroup "
-                    + "| code",
+                    + "| code showhidemenu ",
+                //toolbar2: "code",
                 plugins: plugins.join(" "),
                 contextmenu: "link image adamimage",
                 autosave_ask_before_unload: false,
@@ -935,9 +938,7 @@ angular.module("sxcFieldTemplates")
                 editor.execCommand("mceLink");
             },
             menu: [
-                { icon: "link", text: "web link", onclick: function() { editor.execCommand("mceLink"); } },
-                { icon: "unlink", text: "remove link", onclick: function() { editor.execCommand("unlink"); } },
-                { icon: "anchor", text: "set anchor", onclick: function() { editor.execCommand("mceAnchor"); } },
+                //{ icon: "link", text: "web link", onclick: function() { editor.execCommand("mceLink"); } },
                 {
                     text: "file in ADAM (recommended)",
                     icon: "newdocument",
@@ -956,7 +957,10 @@ angular.module("sxcFieldTemplates")
                     onclick: function() {
                         vm.openDnnDialog("pagepicker");
                     }
-                }
+                },
+                { icon: "unlink", text: "remove link", onclick: function () { editor.execCommand("unlink"); } },
+                { icon: "anchor", text: "insert anchor (#-link target)", onclick: function () { editor.execCommand("mceAnchor"); } },
+
             ]
         });
 
@@ -993,39 +997,16 @@ angular.module("sxcFieldTemplates")
         });
 
 
-        editor.addButton("adamimage", {
-            text: "image from ADAM",
-            icon: "image",
+        editor.addButton("showhidemenu", {
+            text: "mb",
+            icon: " icon-file",
             onclick: function () {
-                vm.toggleAdam(true);
+                angular.element(editor).querySelectorAll("div.mce-toolbar-grp").hide();
+                //$(this.contentAreaContainer.parentElement).find(
+                //vm.editor.toggleAdam(true);
             }
         });
-        //editor.addButton("dnn", {
-        //    type: "menubutton",
-        //    text: "DNN",
-        //    icon: "link",
-        //    menu: [
-        //        {
-        //            text: "file from ADAM (automatic, recommended)",
-        //            icon: "newdocument",
-        //            onclick: function() {
-        //                vm.toggleAdam();
-        //            }
-        //        }, {
-        //            text: "file from DNN",
-        //            icon: "newdocument custom glyphicon glyphicon-apple",
-        //            onclick: function() {
-        //                vm.openDnnDialog("documentmanager");
-        //            }
-        //        }, {
-        //            text: "page in DNN",
-        //            icon: "copy",
-        //            onclick: function() {
-        //                vm.openDnnDialog("pagepicker");
-        //            }
-        //        }
-        //    ]
-        //});
+
 
         // h1, h2, etc. buttons, inspired by http://blog.ionelmc.ro/2013/10/17/tinymce-formatting-toolbar-buttons/
         ["pre", "p", "code", "h1", "h2", "h3", "h4", "h5", "h6"].forEach(function (name) {
