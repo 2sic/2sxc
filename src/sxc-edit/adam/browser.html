@@ -20,9 +20,8 @@
                 <div class="adam-short-label">new folder</div>
             </div>
         </div>
-        <div class="dz-details adam-browse-background-icon" style="opacity: 1">
-            <i class="icon-plus"></i>
-
+        <div class="adam-background adam-browse-background-icon">
+            <i class="icon-plus" style="font-size: 2em; top: 13px; position: relative;"></i>
         </div>
         <div class="dz-details" style="opacity: 1">
 
@@ -32,14 +31,11 @@
     <!-- browse up a folder - not always shown -->
     <div ng-show="vm.showFolders || vm.debug.on" class="dz-preview" ng-disabled="vm.disabled" ng-if="vm.folders.length > 0" ng-click="vm.goUp()">
         <div class="dz-image  adam-browse-background-icon adam-browse-background">
-            <i class="icon-level-up"></i>
+            <i class="icon-folder-empty"></i>
             <div class="adam-short-label">up</div>
         </div>
-        <div class="dz-details" style="opacity: 1">
-
-            <!--<div class="dz-filename">
-                <span data-dz-name="">up</span>
-            </div>-->
+        <div class="adam-background adam-browse-background-icon">
+            <i class="icon-level-up" style="font-size: 2em; top: 13px; position: relative;"></i>
         </div>
     </div>
 

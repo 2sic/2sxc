@@ -15,10 +15,20 @@
 .adam-browse-background-icon i {
     font-size: 4em;
 }
-.dz-details i {
-    font-size: 1em;
 
+.adam-background {
+    z-index: 20;
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 13px;
+    min-width: 100%;
+    max-width: 100%;
+    padding: 2em 1em;
+    text-align: center;
+    line-height: 150%;
 }
+
 .adam-tag {
 font-size: large;position: absolute;right: -15px;top: 50px;font-size: 1.8em;
     z-index: 30;
