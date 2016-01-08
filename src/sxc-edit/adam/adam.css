@@ -92,3 +92,7 @@ font-size: large;position: absolute;right: -15px;top: 50px;font-size: 1.8em;
 .adam-browse-background {
         background-color: whitesmoke;
 }
+
+.mce-ico[class^="icon-"]:before, .mce-ico[class*=" icon-"]:before {
+    margin-left: 0;
+}

@@ -36,7 +36,7 @@
                 standard: {
                     menubar: false,
                     toolbar: " undo redo removeformat | styleselect | bold italic | h1 h2 hgroup | bullist numlist outdent indent "
-                    + "| linkgroup "
+                    + "| adamlink linkgroup "
                     + "| modeadvanced ",
                 },
                 advanced: {
@@ -157,8 +157,34 @@
 
     function addTinyMceToolbarButtons(editor, vm) {
 
-        editor.addButton("linkgroup",
-        {
+        // group with adam-link, dnn-link
+        editor.addButton("adamlink", {
+            type: "splitbutton",
+            icon: " icon-file-pdf",
+            title: "Link using ADAM - just drop files",
+            onclick: function() {
+                vm.toggleAdam(false);
+            },
+            menu: [
+                {
+                    text: "link ADAM-file (recommended)",
+                    tooltip: "link a file from the Automatic Digital Asset Manager",
+                    icon: " icon-file-pdf",
+                    onclick: function() {
+                        vm.toggleAdam(false);
+                    }
+                }, {
+                    text: "link DNN-file (slow)",
+                    icon: " icon-file",
+                    onclick: function() {
+                        vm.openDnnDialog("documentmanager");
+                    }
+                }
+            ]
+        });
+
+        // group with web-link, page-link, unlink, anchor
+        editor.addButton("linkgroup", {
             type: "splitbutton",
             icon: "link",
             title: "Link",
@@ -166,32 +192,21 @@
                 editor.execCommand("mceLink");
             },
             menu: [
-                //{ icon: "link", text: "web link", onclick: function() { editor.execCommand("mceLink"); } },
+                { icon: "link", text: "Link", onclick: function () { editor.execCommand("mceLink"); } },
                 {
-                    text: "file in ADAM (recommended)",
-                    icon: "newdocument",
-                    onclick: function() {
-                        vm.toggleAdam(false);
-                    }
-                }, {
-                    text: "file in DNN",
-                    icon: "newdocument",
-                    onclick: function() {
-                        vm.openDnnDialog("documentmanager");
-                    }
-                }, {
-                    text: "page in DNN",
-                    icon: "copy",
+                    text: "link to another page",
+                    icon: " icon-sitemap",
                     onclick: function() {
                         vm.openDnnDialog("pagepicker");
                     }
                 },
                 { icon: "unlink", text: "remove link", onclick: function () { editor.execCommand("unlink"); } },
-                { icon: "anchor", text: "insert anchor (#-link target)", onclick: function () { editor.execCommand("mceAnchor"); } },
+                { icon: " icon-anchor", text: "insert anchor (#-link target)", onclick: function () { editor.execCommand("mceAnchor"); } },
 
             ]
         });
 
+        // group with images (adam)
         editor.addButton("images", {
             type: "splitbutton",
             text: "",
@@ -231,23 +246,23 @@
             editor.theme.panel.remove();    // kill current toolbar
             editor.theme.renderUI(editor);
             editor.execCommand("mceFocus");
-            //editor.init();                // re-init the toolbar
 
-            //editor.theme.panel.render();
-            //editor.theme.panel.show();
+            document.getElementById("dummyfocus").focus();
 
-            //editor.focus();
-            //editor.remove();
-            //editor.show();
+            setTimeout(function() {
+                editor.focus();
+            }, 100);
         }
 
         editor.addButton("modestandard", {
             icon: " icon-cancel",
+            tooltip: "basic mode",
             onclick: function () { switchModes("standard"); }
         });
 
         editor.addButton("modeadvanced", {
             icon: " icon-pro",
+            tooltip: "pro mode",
             onclick: function () {  switchModes("advanced");    }
         });
 

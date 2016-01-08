@@ -819,7 +819,7 @@ angular.module("sxcFieldTemplates")
                 standard: {
                     menubar: false,
                     toolbar: " undo redo removeformat | styleselect | bold italic | h1 h2 hgroup | bullist numlist outdent indent "
-                    + "| linkgroup "
+                    + "| adamlink linkgroup "
                     + "| modeadvanced ",
                 },
                 advanced: {
@@ -941,8 +941,34 @@ angular.module("sxcFieldTemplates")
 
     function addTinyMceToolbarButtons(editor, vm) {
 
-        editor.addButton("linkgroup",
-        {
+        // group with adam-link, dnn-link
+        editor.addButton("adamlink", {
+            type: "splitbutton",
+            icon: " icon-file-pdf",
+            title: "Link using ADAM - just drop files",
+            onclick: function() {
+                vm.toggleAdam(false);
+            },
+            menu: [
+                {
+                    text: "link ADAM-file (recommended)",
+                    tooltip: "link a file from the Automatic Digital Asset Manager",
+                    icon: " icon-file-pdf",
+                    onclick: function() {
+                        vm.toggleAdam(false);
+                    }
+                }, {
+                    text: "link DNN-file (slow)",
+                    icon: " icon-file",
+                    onclick: function() {
+                        vm.openDnnDialog("documentmanager");
+                    }
+                }
+            ]
+        });
+
+        // group with web-link, page-link, unlink, anchor
+        editor.addButton("linkgroup", {
             type: "splitbutton",
             icon: "link",
             title: "Link",
@@ -950,32 +976,21 @@ angular.module("sxcFieldTemplates")
                 editor.execCommand("mceLink");
             },
             menu: [
-                //{ icon: "link", text: "web link", onclick: function() { editor.execCommand("mceLink"); } },
+                { icon: "link", text: "Link", onclick: function () { editor.execCommand("mceLink"); } },
                 {
-                    text: "file in ADAM (recommended)",
-                    icon: "newdocument",
-                    onclick: function() {
-                        vm.toggleAdam(false);
-                    }
-                }, {
-                    text: "file in DNN",
-                    icon: "newdocument",
-                    onclick: function() {
-                        vm.openDnnDialog("documentmanager");
-                    }
-                }, {
-                    text: "page in DNN",
-                    icon: "copy",
+                    text: "link to another page",
+                    icon: " icon-sitemap",
                     onclick: function() {
                         vm.openDnnDialog("pagepicker");
                     }
                 },
                 { icon: "unlink", text: "remove link", onclick: function () { editor.execCommand("unlink"); } },
-                { icon: "anchor", text: "insert anchor (#-link target)", onclick: function () { editor.execCommand("mceAnchor"); } },
+                { icon: " icon-anchor", text: "insert anchor (#-link target)", onclick: function () { editor.execCommand("mceAnchor"); } },
 
             ]
         });
 
+        // group with images (adam)
         editor.addButton("images", {
             type: "splitbutton",
             text: "",
@@ -1015,23 +1030,23 @@ angular.module("sxcFieldTemplates")
             editor.theme.panel.remove();    // kill current toolbar
             editor.theme.renderUI(editor);
             editor.execCommand("mceFocus");
-            //editor.init();                // re-init the toolbar
 
-            //editor.theme.panel.render();
-            //editor.theme.panel.show();
+            document.getElementById("dummyfocus").focus();
 
-            //editor.focus();
-            //editor.remove();
-            //editor.show();
+            setTimeout(function() {
+                editor.focus();
+            }, 100);
         }
 
         editor.addButton("modestandard", {
             icon: " icon-cancel",
+            tooltip: "basic mode",
             onclick: function () { switchModes("standard"); }
         });
 
         editor.addButton("modeadvanced", {
             icon: " icon-pro",
+            tooltip: "pro mode",
             onclick: function () {  switchModes("advanced");    }
         });
 
@@ -1121,7 +1136,7 @@ angular.module('SxcEditTemplates', []).run(['$templateCache', function($template
 
 
   $templateCache.put('fields/string/string-wysiwyg-tinymce.html',
-    "<div><div class=dropzone><div ui-tinymce=tinymceOptions ng-model=value.Value class=field-string-wysiwyg-mce-box></div><adam-browser content-type-name=to.header.ContentTypeName entity-guid=to.header.Guid field-name=options.key auto-load=false folder-depth=0 sub-folder=\"\" update-callback=vm.setValue register-self=vm.registerAdam show-images-only=vm.adamModeImage ng-disabled=to.disabled></adam-browser><dropzone-upload-preview></dropzone-upload-preview><div class=\"small pull-right\"><a href=\"http://2sxc.org/help?tag=adam\" target=_blank tooltip=\"ADAM is the Automatic Digital Assets Manager - click to discover more\">supports <i icon=apple></i> Adam - just drop files</a> with ♥ by <a tabindex=-1 href=\"http://2sic.com/\" target=_blank>2sic.com</a></div></div></div>"
+    "<div><div class=dropzone><div ui-tinymce=tinymceOptions ng-model=value.Value class=field-string-wysiwyg-mce-box></div><adam-browser content-type-name=to.header.ContentTypeName entity-guid=to.header.Guid field-name=options.key auto-load=false folder-depth=0 sub-folder=\"\" update-callback=vm.setValue register-self=vm.registerAdam show-images-only=vm.adamModeImage ng-disabled=to.disabled></adam-browser><span id=dummyfocus tabindex=-1></span><dropzone-upload-preview></dropzone-upload-preview><div class=\"small pull-right\"><a href=\"http://2sxc.org/help?tag=adam\" target=_blank tooltip=\"ADAM is the Automatic Digital Assets Manager - click to discover more\">supports <i icon=apple></i> Adam - just drop files</a> with ♥ by <a tabindex=-1 href=\"http://2sic.com/\" target=_blank>2sic.com</a></div></div></div>"
   );
 
 }]);
