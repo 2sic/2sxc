@@ -1,9 +1,11 @@
 
 .icon-sxc-list-numbered:before { content: '\e800'; } /* '' */
+.icon-sxc-ok:before { content: '\e801'; } /* '' */
 .icon-sxc-plus:before { content: '\e802'; } /* '' */
 .icon-sxc-plus-circled:before { content: '\e803'; } /* '' */
 .icon-sxc-minus:before { content: '\e804'; } /* '' */
 .icon-sxc-minus-circled:before { content: '\e805'; } /* '' */
+.icon-sxc-cancel:before { content: '\e806'; } /* '' */
 .icon-sxc-replace:before { content: '\e808'; } /* '' */
 .icon-sxc-eye:before { content: '\e809'; } /* '' */
 .icon-sxc-eye-off:before { content: '\e80a'; } /* '' */

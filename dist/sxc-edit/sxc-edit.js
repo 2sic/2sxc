@@ -828,7 +828,7 @@ angular.module("sxcFieldTemplates")
                     toolbar: " undo redo removeformat "
                     + "| bold formatgroup "
                     + "| h1 h2 hgroup " 
-                    + "| bullist numlist outdent indent "
+                    + "| numlist "// not needed since now context senitive: " outdent indent "
                     + "| adamlink linkgroup "
                     + "| modeadvanced ",
                     contextmenu: "charmap hr",
@@ -986,7 +986,7 @@ angular.module("sxcFieldTemplates")
                     vm.openDnnDialog("pagepicker");
                 }
             },
-            { icon: "unlink", text: "remove link", onclick: function() { editor.execCommand("unlink"); } },
+            //{ icon: "unlink", text: "remove link", onclick: function() { editor.execCommand("unlink"); } },
         ]
         };
         var linkgroupPro = angular.copy(linkgroup);
@@ -1035,8 +1035,8 @@ angular.module("sxcFieldTemplates")
             onclick: function() {   editor.execCommand("italic");   },
             menu: [
                 {   icon: "strikethrough", onclick: function () { editor.execCommand("strikethrough"); } },
-                {   icon: "superscript",    onclick: function() { editor.execCommand("superscript"); }  },
-                {   icon: "subscript",    onclick: function() { editor.execCommand("subscript"); }  }
+                {   icon: "superscript",   onclick: function() { editor.execCommand("superscript"); }  },
+                {   icon: "subscript",     onclick: function() { editor.execCommand("subscript"); }  }
             ]
 
         });
@@ -1111,8 +1111,9 @@ angular.module("sxcFieldTemplates")
                 return selectorMatched;
             };
         }
-        editor.addContextToolbar(makeTagDetector("a"), "link");
+        editor.addContextToolbar(makeTagDetector("a"), "link unlink");
         editor.addContextToolbar(makeTagDetector("img"), "image | alignleft aligncenter alignright");
+        editor.addContextToolbar(makeTagDetector("li"), "bullist numlist | outdent indent");
         //#endregion
     }
 
