@@ -811,37 +811,50 @@ angular.module("sxcFieldTemplates")
                 "image",        // image button and image-settings
                 "link",         // link button + ctrl+k to add link
                 // "autosave",     // temp-backups the content in case the browser crashes, allows restore
-                "paste",        // enables paste as text
+                "paste",        // enables paste as text from word etc. https://www.tinymce.com/docs/plugins/paste/
                 "anchor",       // allows users to set an anchor inside the text
+                "charmap",      // character map https://www.tinymce.com/docs/plugins/visualchars/
+                "hr",           // hr
+                "media",        // video embed
+                "nonbreaking",  // add button to insert &nbsp; https://www.tinymce.com/docs/plugins/nonbreaking/
+                "searchreplace",// search/replace https://www.tinymce.com/docs/plugins/searchreplace/
+                "table",        // https://www.tinymce.com/docs/plugins/searchreplace/
+
             ];
 
             var modes = {
                 standard: {
                     menubar: false,
-                    toolbar: " undo redo removeformat | bold formatgroup | h1 h2 hgroup | bullist numlist outdent indent "
+                    toolbar: " undo redo removeformat "
+                    + "| bold formatgroup "
+                    + "| h1 h2 hgroup " 
+                    + "| bullist numlist outdent indent "
                     + "| adamlink linkgroup "
                     + "| modeadvanced ",
+                    contextmenu: "charmap hr",
                 },
                 advanced: {
                     menubar: true,
-                    toolbar: " undo redo removeformat | styleselect | bold italic | h1 h2 hgroup | bullist numlist outdent indent "
-                    + "| images linkgroup "
+                    toolbar: " undo redo removeformat "
+                    + "| styleselect "
+                    + "| bold italic "
+                    + "| h1 h2 hgroup "
+                    + "| bullist numlist outdent indent "
+                    + "| images linkgrouppro "
                     + "| code modestandard ",
+                    contextmenu: "link image | charmap hr adamimage",
                 }
             };
 
             $scope.tinymceOptions = {
                 baseURL: "//cdn.tinymce.com/4",
-                //onChange: function (e) {
-                //    // put logic here for keypress and cut/paste changes
-                //},
-                inline: true, // use the div, not an iframe
-                automatic_uploads: false, // we're using our own upload mechanism
-                modes: modes,            // for later switch to another mode
+                inline: true,               // use the div, not an iframe
+                automatic_uploads: false,   // we're using our own upload mechanism
+                modes: modes,               // for later switch to another mode
                 menubar: modes.standard.menubar,    // basic menu (none)
                 toolbar: modes.standard.toolbar,    // basic toolbar
                 plugins: plugins.join(" "),
-                contextmenu: "link image adamimage",
+                contextmenu: modes.standard.contextmenu, //"link image | charmap hr adamimage",
                 autosave_ask_before_unload: false,
                 paste_as_text: true,
                 
@@ -851,25 +864,14 @@ angular.module("sxcFieldTemplates")
                 relative_urls: false, // keep urls with full path so starting with a "/" - otherwise it would rewrite them to a "../../.." syntax
                 object_resizing: false, // don't allow manual scaling of images
 
+                // General looks
                 skin: "lightgray",
                 theme: "modern",
-                statusbar: true,    // doesn't work in inline :(
+                // statusbar: true,    // doesn't work in inline :(
+
                 setup: function(editor) {
                     vm.editor = editor;
                     addTinyMceToolbarButtons(editor, vm);
-
-                    // make sure the model isn't dirty
-                    var x = $scope.value.Value;
-
-                    editor.on("init", function() {
-                        var y = $scope.value.Value;
-                    });
-                    editor.on("dirty", function() {
-                        var y = $scope.value.Value;
-                    });
-                    editor.on("loadcontent", function() {
-                        var y = $scope.value.Value;
-                    });
                 }
             };
         };
@@ -967,8 +969,8 @@ angular.module("sxcFieldTemplates")
             ]
         });
 
-        // group with web-link, page-link, unlink, anchor
-        editor.addButton("linkgroup", {
+        //#region link group with web-link, page-link, unlink, anchor
+        var linkgroup = {
             type: "splitbutton",
             icon: "link",
             title: "Link",
@@ -976,19 +978,22 @@ angular.module("sxcFieldTemplates")
                 editor.execCommand("mceLink");
             },
             menu: [
-                { icon: "link", text: "Link", onclick: function () { editor.execCommand("mceLink"); } },
-                {
-                    text: "link to another page",
-                    icon: " icon-sitemap",
-                    onclick: function() {
-                        vm.openDnnDialog("pagepicker");
-                    }
-                },
-                { icon: "unlink", text: "remove link", onclick: function () { editor.execCommand("unlink"); } },
-                { icon: " icon-anchor", text: "insert anchor (#-link target)", onclick: function () { editor.execCommand("mceAnchor"); } },
-
-            ]
-        });
+            { icon: "link", text: "Link", onclick: function() { editor.execCommand("mceLink"); } },
+            {
+                text: "link to another page",
+                icon: " icon-sitemap",
+                onclick: function() {
+                    vm.openDnnDialog("pagepicker");
+                }
+            },
+            { icon: "unlink", text: "remove link", onclick: function() { editor.execCommand("unlink"); } },
+        ]
+        };
+        var linkgroupPro = angular.copy(linkgroup);
+        linkgroupPro.menu.push({ icon: " icon-anchor", text: "insert anchor (#-link target)", onclick: function() { editor.execCommand("mceAnchor"); } });
+        editor.addButton("linkgroup", linkgroup);
+        editor.addButton("linkgrouppro", linkgroupPro);
+        //#endregion
 
         // group with images (adam)
         editor.addButton("images", {
@@ -1036,9 +1041,11 @@ angular.module("sxcFieldTemplates")
 
         });
 
+        //#region mode switching and the buttons for it
         function switchModes(mode) {
             editor.settings.toolbar = editor.settings.modes[mode].toolbar;
             editor.settings.menubar = editor.settings.modes[mode].menubar;
+            // editor.settings.contextmenu = editor.settings.modes[mode].contextmenu; - doesn't work at the moment
             
             editor.theme.panel.remove();    // kill current toolbar
             editor.theme.renderUI(editor);
@@ -1062,9 +1069,10 @@ angular.module("sxcFieldTemplates")
             tooltip: "pro mode",
             onclick: function () {  switchModes("advanced");    }
         });
+        //#endregion
 
 
-        // h1, h2, etc. buttons, inspired by http://blog.ionelmc.ro/2013/10/17/tinymce-formatting-toolbar-buttons/
+        //#region h1, h2, etc. buttons, inspired by http://blog.ionelmc.ro/2013/10/17/tinymce-formatting-toolbar-buttons/
         ["pre", "p", "code", "h1", "h2", "h3", "h4", "h5", "h6"].forEach(function (name) {
             editor.addButton(name, {
                 tooltip: "Toggle " + name,
@@ -1093,8 +1101,25 @@ angular.module("sxcFieldTemplates")
                 editor.buttons.p
             ]
         }));
+        //#endregion
+
+        //#region my context toolbars for links
+        function makeTagDetector(tagWeNeedInTheTagPath) {
+            return function tagDetector(currentElement) {
+                // check if we are in a tag within a specific tag
+                var selectorMatched = editor.dom.is(currentElement, tagWeNeedInTheTagPath) && editor.getBody().contains(currentElement);
+                return selectorMatched;
+            };
+        }
+        editor.addContextToolbar(makeTagDetector("a"), "link");
+        editor.addContextToolbar(makeTagDetector("img"), "image | alignleft aligncenter alignright");
+        //#endregion
     }
+
 })();
+
+
+
 angular.module('SxcEditTemplates', []).run(['$templateCache', function($templateCache) {
   'use strict';
 

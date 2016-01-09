@@ -36,6 +36,14 @@
 
 .mce-caret { border-top-color: whitesmoke!important}
 
+.mce-tab {
+    background-color: #329ff6!important;
+}
+
+.mce-tab.mce-active {
+    background-color: #0087f4!important;
+}
+
 .mce-i-apple:before {
     position: relative;
   top: 1px;
