@@ -31,8 +31,8 @@
     else {
         var lng = window.$eavUIConfig.languages;
         lng.i18nRoot = location.href.substring(0, location.href.indexOf("dist/dnn/ui.html")) + "dist/i18n/";
-        lng.defaultLanguage = $2sxc.urlParams.require("langpri");
-        lng.currentLanguage = $2sxc.urlParams.require("lang");
+        lng.defaultLanguage = $2sxc.urlParams.require("langpri");   // the primary content-language - for first translation 
+        lng.currentLanguage = $2sxc.urlParams.require("lang");      // the current ui language used for i18n and/or for content
         lng.languages = JSON.parse($2sxc.urlParams.require("langs"));
     }
 

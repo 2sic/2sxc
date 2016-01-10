@@ -60,6 +60,16 @@ namespace ToSic.SexyContent
 				    var tempVisibleStatus = SexyContent.TryToGetReliableSetting(ModuleConfiguration, SexyContent.SettingsShowTemplateChooser);
 				    var templateChooserVisible = bool.Parse(tempVisibleStatus ?? "true");
 
+				    var languages =
+				        SexyContent.GetCulturesWithActiveState(PortalId, ZoneId.Value)
+				            .Where(c => c.Active)
+				            .Select(c => new {key = c.Code.ToLower(), name = c.Text});
+
+				    var priLang = PortalSettings.DefaultLanguage.ToLower(); // primary language 
+
+                    // for now, don't filter by existing languages, this causes side-effects in many cases. 
+				    //if (!languages.Where(l => l.key == priLang).Any())
+				    //    priLang = "";
 
                     ((ModuleHost)Parent).Attributes.Add("data-2sxc", JsonConvert.SerializeObject(new
                     {
@@ -94,8 +104,8 @@ namespace ToSic.SexyContent
                             },
                             applicationRoot = ResolveUrl("~"),
                             lang = PortalSettings.CultureCode.ToLower(), //System.Threading.Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName.ToLower(),
-                            langPrimary = PortalSettings.DefaultLanguage.ToLower(),
-                            languages = SexyContent.GetCulturesWithActiveState(PortalId, ZoneId.Value).Where(c => c.Active).Select(c => new { key = c.Code.ToLower(), name = c.Text }) //new [] { "en-en:somethnig", "de-de:deutschland", "it-it:italy" }
+                            langPrimary = priLang,
+                            languages = languages
 
                         }
                     }));
