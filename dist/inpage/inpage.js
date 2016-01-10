@@ -62,15 +62,15 @@ $2sxc.getManageController = function (id) {
 
     // all the standard buttons with the display configuration and click-action
     var actionButtonsConf = {
-        'default': {
-            hideFirst: true,
-            action: function(settings, event) { alert("not implemented yet"); }
-        },
+        //'default': {
+        //    hideFirst: true,
+        //    action: function(settings, event) { alert("not implemented yet"); }
+        //},
         'edit': {
             title: "Toolbar.Edit",
             iclass: "icon-sxc-pencil",
-            lightbox: true,
-            hideFirst: true,
+            // lightbox: true,
+            // hideFirst: true,
             showOn: "default",
             action: function(settings, event) {
                 tbContr._openNgDialog(settings, event);
@@ -79,8 +79,8 @@ $2sxc.getManageController = function (id) {
         'new': {
             title: "Toolbar.New",
             iclass: "icon-sxc-plus",
-            lightbox: true,
-            hideFirst: true,
+            // lightbox: true,
+            // hideFirst: true,
             showOn: "default",
             action: function(settings, event) {
                 tbContr._openNgDialog($.extend({}, settings, { sortOrder: settings.sortOrder + 1 }), event);
@@ -89,8 +89,8 @@ $2sxc.getManageController = function (id) {
         'layout': {
             title: "Toolbar.ChangeLayout",
             iclass: "icon-sxc-glasses",
-            lightbox: false,
-            hideFirst: true,
+            // lightbox: false,
+            // hideFirst: true,
             showOn: "default",
             uiActionOnly: true, // so it doesn't create the content when used
             action: function (settings, event) {
@@ -100,8 +100,8 @@ $2sxc.getManageController = function (id) {
         'add': {
             title: "Toolbar.AddDemo",
             iclass: "icon-sxc-plus-circled",
-            lightbox: false,
-            hideFirst: true,
+            // lightbox: false,
+            // hideFirst: true,
             showOn: "edit",
             action: function(settings, event) {
                 tbContr._getSelectorScope().addItem(settings.sortOrder + 1);
@@ -110,8 +110,8 @@ $2sxc.getManageController = function (id) {
         'replace': {
             title: "Toolbar.Replace",
             iclass: "icon-sxc-replace",
-            lightbox: true,
-            hideFirst: true,
+            // lightbox: true,
+            // hideFirst: true,
             showOn: "edit",
             action: function(settings, event) {
                 tbContr._openNgDialog(settings, event);
@@ -121,8 +121,8 @@ $2sxc.getManageController = function (id) {
             title: "Toolbar.Published",
             iclass: "icon-sxc-eye",
             iclass2: "icon-sxc-eye-off",
-            lightbox: false,
-            hideFirst: true,
+            // lightbox: false,
+            // hideFirst: true,
             disabled: true,
             showOn: "edit",
             action: function (settings, event) {
@@ -138,8 +138,8 @@ $2sxc.getManageController = function (id) {
         'moveup': {
             title: "Toolbar.MoveUp",
             iclass: "icon-sxc-move-up",
-            lightbox: false,
-            hideFirst: true,
+            // lightbox: false,
+            // hideFirst: true,
             disabled: false,
             showOn: "edit",
             action: function(settings, event) {
@@ -149,8 +149,8 @@ $2sxc.getManageController = function (id) {
         'movedown': {
             title: "Toolbar.MoveDown",
             iclass: "icon-sxc-move-down",
-            lightbox: false,
-            hideFirst: true,
+            // lightbox: false,
+            // hideFirst: true,
             disabled: false,
             showOn: "edit",
             action: function(settings, event) {
@@ -160,8 +160,8 @@ $2sxc.getManageController = function (id) {
         'sort': {
             title: "Toolbar.Sort",
             iclass: "icon-sxc-list-numbered",
-            lightbox: true,
-            hideFirst: true,
+            // lightbox: true,
+            // hideFirst: true,
             showOn: "design",
             action: function (settings, event) {
                 tbContr._openNgDialog(settings, event);
@@ -170,8 +170,8 @@ $2sxc.getManageController = function (id) {
         'remove': {
             title: "Toolbar.Remove",
             iclass: "icon-sxc-minus-circled",
-            lightbox: false,
-            hideFirst: true,
+            // lightbox: false,
+            // hideFirst: true,
             disabled: true,
             showOn: "edit",
             action: function (settings, event) {
@@ -183,8 +183,8 @@ $2sxc.getManageController = function (id) {
         'develop': {
             title: "Toolbar.EditView", // todo
             iclass: "icon-sxc-code",
-            lightbox: true,
-            hideFirst: true,
+            // lightbox: true,
+            // hideFirst: true,
             showOn: "admin",
             uiActionOnly: true, // so it doesn't create the content when used
             action: function (settings, event) {
@@ -194,19 +194,19 @@ $2sxc.getManageController = function (id) {
         'app': {
             title: "Toolbar.App",
             iclass: "icon-sxc-settings",
-            lightbox: true,
-            hideFirst: true,
+            // lightbox: true,
+            // hideFirst: true,
             showOn: "admin",
             uiActionOnly: true, // so it doesn't create the content when used
             action: function (settings, event) {
                 tbContr._openNgDialog(settings, event);
             }
         },
-        'manage-apps': {
+        'zone': {
             title: "Toolbar.ManageApps",
             iclass: "icon-sxc-manage",
-            lightbox: true,
-            hideFirst: true,
+            // lightbox: true,
+            // hideFirst: true,
             showOn: "admin",
             uiActionOnly: true, // so it doesn't create the content when used
             action: function (settings, event) {
@@ -216,8 +216,8 @@ $2sxc.getManageController = function (id) {
         "more": {
             title: "Toolbar.MoreActions",
             iclass: "icon-sxc-options btn-mode",
-            borlightboxder: false,
-            hideFirst: false,
+            // lightbox: false,
+            // hideFirst: false,
             showOn: "default,edit,design,admin",
             uiActionOnly: true, // so it doesn't create the content when clicked
             action: function (settings, event) {
@@ -328,7 +328,7 @@ $2sxc.getManageController = function (id) {
         // Perform a toolbar button-action - basically get the configuration and execute it's action
         action: function(settings, event) {
             var origEvent = event || window.event; // pre-save event because afterwards we have a promise, so the event-object changes; funky syntax is because of browser differences
-            var conf = actionButtonsConf[settings.action] || actionButtonsConf.default;
+            var conf = actionButtonsConf[settings.action];// || actionButtonsConf.default;
             if (conf.uiActionOnly)
                 return conf.action(settings, origEvent);
             else
@@ -355,7 +355,7 @@ $2sxc.getManageController = function (id) {
             }
 
             // retrieve configuration for this button
-            var conf = actionButtonsConf[settings.action] || actionButtonsConf.default;
+            var conf = actionButtonsConf[settings.action];// || actionButtonsConf.default;
 
             var showClasses = "";
             var classesList = conf.showOn.split(",");
@@ -363,7 +363,7 @@ $2sxc.getManageController = function (id) {
                 showClasses += " show-" + classesList[c];
             var button = $("<a />", {
                 'class': "sc-" + settings.action + " "
-                    + " " + (conf.lightbox ? "box" : "")
+                    // + " " + (conf.lightbox ? "box" : "")
                     + showClasses,
                 'onclick': "javascript:$2sxc(" + id + ").manage.action(" + JSON.stringify(settings) + ", event);",
                 'title': tbContr.translate(conf.title)
@@ -426,7 +426,7 @@ $2sxc.getManageController = function (id) {
                     buttons.push($.extend({}, settings, { action: "app" }));
                     buttons.push($.extend({}, settings, { action: "develop" }));
                     if (!isContent) 
-                        buttons.push($.extend({}, settings, { action: "manage-apps" }));
+                        buttons.push($.extend({}, settings, { action: "zone" }));
                 }
                 buttons.push($.extend({}, settings, { action: "more" }));
             }
