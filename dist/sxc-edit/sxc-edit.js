@@ -942,6 +942,47 @@ angular.module("sxcFieldTemplates")
     FieldWysiwygTinyMceController.$inject = ["$scope", "dnnBridgeSvc"];
 
     function addTinyMceToolbarButtons(editor, vm) {
+        //#region helpers like initOnPostRender(name)
+
+        // helper function to add activate/deactivate to buttons like alignleft, alignright etc.
+        function initOnPostRender(name) { // copied from https://github.com/tinymce/tinymce/blob/ddfa0366fc700334f67b2c57f8c6e290abf0b222/js/tinymce/classes/ui/FormatControls.js#L232-L249
+            return function () {
+                var self = this;
+
+                if (editor.formatter) {
+                    editor.formatter.formatChanged(name, function (state) {
+                        self.active(state);
+                    });
+                } else {
+                    editor.on("init", function () {
+                        editor.formatter.formatChanged(name, function (state) {
+                            self.active(state);
+                        });
+                    });
+                }
+            };
+        }
+
+        //#endregion
+
+        //#region register formats
+
+        // the method that will register everything
+        function registerTinyMceFormats(editor, vm) {
+            editor.formatter.register({
+                imgwidth100: [{ selector: "img", collapsed: false, styles: { 'width': "100%" } }],
+                imgwidth50: [{ selector: "img", collapsed: false, styles: { 'width': "50%" } }],
+                imgwidth33: [{ selector: "img", collapsed: false, styles: { 'width': "33%" } }],
+                imgwidth25: [{ selector: "img", collapsed: false, styles: { 'width': "25%" } }]
+            });
+        }
+
+        // call register once the editor-object is ready
+        editor.on('init', function() {
+            registerTinyMceFormats(editor, vm);
+        });
+
+        //#endregion
 
         // group with adam-link, dnn-link
         editor.addButton("adamlink", {
@@ -974,9 +1015,12 @@ angular.module("sxcFieldTemplates")
             type: "splitbutton",
             icon: "link",
             title: "Link",
-            onclick: function() {
+            cmd: "link",
+            onPostRender: initOnPostRender("link"),
+            xonclick: function() {
                 editor.execCommand("mceLink");
             },
+            
             menu: [
             { icon: "link", text: "Link", onclick: function() { editor.execCommand("mceLink"); } },
             {
@@ -1032,11 +1076,12 @@ angular.module("sxcFieldTemplates")
             type: "splitbutton",
             text: "",
             icon: "italic",
-            onclick: function() {   editor.execCommand("italic");   },
+            cmd: "italic",
+            onPostRender: initOnPostRender("italic"),
             menu: [
-                {   icon: "strikethrough", onclick: function () { editor.execCommand("strikethrough"); } },
-                {   icon: "superscript",   onclick: function() { editor.execCommand("superscript"); }  },
-                {   icon: "subscript",     onclick: function() { editor.execCommand("subscript"); }  }
+                { icon: "strikethrough", text: "strikethrough", onclick: function () { editor.execCommand("strikethrough"); } },
+                {   icon: "superscript", text: "superscript", onclick: function() { editor.execCommand("superscript"); }  },
+                {   icon: "subscript", text: "subscript", onclick: function() { editor.execCommand("subscript"); }  }
             ]
 
         });
@@ -1103,7 +1148,21 @@ angular.module("sxcFieldTemplates")
         }));
         //#endregion
 
-        //#region my context toolbars for links
+        //#region image alignment / size buttons
+        editor.addButton("alignimgleft", {icon: " icon-align-left", cmd: "JustifyLeft", onPostRender: initOnPostRender("alignleft")});
+        editor.addButton("alignimgcenter", { icon: " icon-align-center", cmd: "justifycenter", onPostRender: initOnPostRender("aligncenter") });
+        editor.addButton("alignimgright", { icon: " icon-align-right", cmd: "justifyright", onPostRender: initOnPostRender("alignright") });
+        editor.addButton("alignimg100", {icon: " icon-resize-horizontal",
+            onclick: function() {   editor.formatter.apply("imgwidth100");  },
+            onPostRender: initOnPostRender("imgwidth100")
+        });
+        editor.addButton("alignimg50", {icon: " icon-resize-horizontal",
+            onclick: function() {   editor.formatter.apply("imgwidth50");  },
+            onPostRender: initOnPostRender("imgwidth50")
+        });
+        //#endregion
+
+        //#region my context toolbars for links, images and lists (ul/li)
         function makeTagDetector(tagWeNeedInTheTagPath) {
             return function tagDetector(currentElement) {
                 // check if we are in a tag within a specific tag
@@ -1112,7 +1171,7 @@ angular.module("sxcFieldTemplates")
             };
         }
         editor.addContextToolbar(makeTagDetector("a"), "link unlink");
-        editor.addContextToolbar(makeTagDetector("img"), "image | alignleft aligncenter alignright");
+        editor.addContextToolbar(makeTagDetector("img"), "image | alignimgleft alignimgcenter alignimgright alignimg100 alignimg50 | removeformat | remove");
         editor.addContextToolbar(makeTagDetector("li"), "bullist numlist | outdent indent");
         //#endregion
     }

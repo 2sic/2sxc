@@ -136,6 +136,8 @@ font-size: large;position: absolute;right: -15px;top: 50px;font-size: 1.8em;
 .icon-smile:before { content: '\e824'; } /* '' */
 .icon-anchor:before { content: '\e825'; } /* '' */
 .icon-sitemap:before { content: '\e826'; } /* '' */
+.icon-resize-horizontal:before { content: '\e827'; } /* '' */
+.icon-spinner:before { content: '\e828'; } /* '' */
 @font-face {
   font-family: 'app-icons';
     src: url('../lib/fonts/app-icons.woff?87396608') format('woff');
