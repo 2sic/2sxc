@@ -427,6 +427,8 @@
     <Content Include="icon.png" />
     <Content Include="Administration\Import.ascx" />
     <Content Include="src\inpage\inpage-icons-codes.css" />
+    <Content Include="src\sxc-edit\adam\adam-hint.html" />
+    <Content Include="src\sxc-edit\adam\adam-hint.directive.js" />
     <Content Include="src\sxc-edit\app-icons-codes.css" />
     <Content Include="src\sxc-edit\app-icons.css" />
     <Content Include="src\sxc-edit\adam\adam.css" />
@@ -534,6 +536,7 @@
     <Content Include="src\sxc-edit\fields\dnn-bridge\hyperlink-default-pagepicker.html" />
     <Content Include="src\sxc-edit\fields\hyperlink\hyperlink-default.html" />
     <Content Include="src\sxc-edit\fields\string\string-wysiwyg-dnn.html" />
+    <Content Include="src\sxc-edit\temp-icon-fix.css" />
     <Content Include="TemplateHelpGrid.ascx" />
     <Content Include="Upgrade\07.00.00.xml" />
     <Content Include="Upgrade\07.02.00.xml" />

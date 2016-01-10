@@ -138,6 +138,8 @@ font-size: large;position: absolute;right: -15px;top: 50px;font-size: 1.8em;
 .icon-sitemap:before { content: '\e826'; } /* '' */
 .icon-resize-horizontal:before { content: '\e827'; } /* '' */
 .icon-spinner:before { content: '\e828'; } /* '' */
+.icon-file-image:before { content: '\e829'; } /* '' */
+.icon-image:before { content: '\e82a'; } /* '' */
 @font-face {
   font-family: 'app-icons';
     src: url('../lib/fonts/app-icons.woff?87396608') format('woff');
@@ -646,4 +648,13 @@ font-size: large;position: absolute;right: -15px;top: 50px;font-size: 1.8em;
   -moz-osx-font-smoothing: grayscale;
 
     content:"\f179"
+}
+
+
+/* temporary fix till icons and icon classes / buttons are replaced in EAV with font-icons */
+
+.temp-icon-fix, 
+.btn-lg.btn-square.temp-icon-fix {
+    padding-left: 10px;
+    padding-right: 13px;
 }
