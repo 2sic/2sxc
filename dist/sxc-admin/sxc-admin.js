@@ -206,6 +206,16 @@
         .controller("DialogHost", DialogHostController)
         ;
 
+    function preLoadAgGrid($ocLazyLoad) {
+        return $ocLazyLoad.load([
+                        "../lib/ag-grid/ag-grid.min.js",
+                        "../lib/ag-grid/ag-grid.min.css"
+
+            //$2sxc.debug.renameScript("../sxc-develop/sxc-develop.min.js")
+        ]);
+
+    }
+
     function DialogHostController(zoneId, appId, items, $2sxc, dialog, sxcDialogs, eavAdminDialogs, $ocLazyLoad) {
         var vm = this;
         vm.dialog = dialog;
@@ -225,7 +235,9 @@
                 break;
             case "app":
                 // this opens the manage-an-app with content-types, views, etc.
-                sxcDialogs.openAppMain(appId, vm.close);
+                preLoadAgGrid($ocLazyLoad).then(function() {
+                    sxcDialogs.openAppMain(appId, vm.close);
+                });
                 break;
             case "replace":
                 // this is the "replace item in a list" dialog
