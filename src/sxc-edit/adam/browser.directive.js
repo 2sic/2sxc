@@ -15,6 +15,8 @@
                     dropzoneCtrl.adam = scope.vm;       // so the dropzone controller knows what path etc.
                     scope.vm.dropzone = dropzoneCtrl;   // so we can require an "open file browse" dialog
                 },
+
+                // todo: change "scope" to bindToController whenever I have time - http://blog.thoughtram.io/angularjs/2015/01/02/exploring-angular-1.3-bindToController.html
                 scope: {
                     // Identity fields
                     contentTypeName: "=",
@@ -39,6 +41,7 @@
                 },
                 controller: "BrowserController",
                 controllerAs: "vm"
+
             };
         });
 })();

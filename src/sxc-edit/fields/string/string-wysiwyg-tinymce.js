@@ -89,12 +89,18 @@
 
                 setup: function(editor) {
                     vm.editor = editor;
+                    if ($scope.tinymceOptions.language)
+                        initLangResources(editor, $scope.tinymceOptions.language);
                     addTinyMceToolbarButtons(editor, vm);
                 }
             };
 
             // check if it's an additionally translated language
             var lang2 = languages.currentLanguage.substr(0, 2);
+
+            // test mode
+            // lang2 = "de";
+
             if (availableLanguages.indexOf(lang2) >= 0)
                 angular.extend($scope.tinymceOptions, {
                     language: lang2,
@@ -167,6 +173,14 @@
         vm.activate();
     }
 
+    // todo
+    function initLangResources(editor, language) {
+        tinymce.addI18n("de", {
+            "pro mode": "profi modus"
+        });
+        //editor.i18n.add("de", ["pro mode", "profi-modus"]);
+    }
+
     function addTinyMceToolbarButtons(editor, vm) {
         //#region helpers like initOnPostRender(name)
 
@@ -214,7 +228,7 @@
         editor.addButton("adamlink", {
             type: "splitbutton",
             icon: " icon-file-pdf",
-            title: "Link using ADAM - just drop files",
+            title: "Link using ADAM - just drop files", // todo: i18n
             onclick: function() {
                 vm.toggleAdam(false);
             },
@@ -291,22 +305,23 @@
                     onclick: function () { editor.execCommand("mceImage"); }
 
                 },
-                { icon: "alignleft", onclick: function() { editor.execCommand("JustifyLeft"); } },
-                { icon: "aligncenter", onclick: function() { editor.execCommand("JustifyCenter"); } },
-                { icon: "alignright", onclick: function() { editor.execCommand("JustifyRight"); } }
+                { icon: "alignleft", tooltip:"Align left", onclick: function() { editor.execCommand("JustifyLeft"); } },
+                { icon: "aligncenter", tooltip: "Align center", onclick: function() { editor.execCommand("JustifyCenter"); } },
+                { icon: "alignright", tooltip: "Align right", onclick: function() { editor.execCommand("JustifyRight"); } }
             ]
         });
 
         editor.addButton("formatgroup", {
             type: "splitbutton",
+            tooltip: "Italic",
             text: "",
             icon: "italic",
             cmd: "italic",
             onPostRender: initOnPostRender("italic"),
             menu: [
-                { icon: "strikethrough", text: "strikethrough", onclick: function () { editor.execCommand("strikethrough"); } },
-                {   icon: "superscript", text: "superscript", onclick: function() { editor.execCommand("superscript"); }  },
-                {   icon: "subscript", text: "subscript", onclick: function() { editor.execCommand("subscript"); }  }
+                { icon: "strikethrough", text: "Strikethrough", onclick: function () { editor.execCommand("strikethrough"); } },
+                {   icon: "superscript", text: "Superscript", onclick: function() { editor.execCommand("superscript"); }  },
+                {   icon: "subscript", text: "Subscript", onclick: function() { editor.execCommand("subscript"); }  }
             ]
 
         });
@@ -343,15 +358,24 @@
 
 
         //#region h1, h2, etc. buttons, inspired by http://blog.ionelmc.ro/2013/10/17/tinymce-formatting-toolbar-buttons/
-        ["pre", "p", "code", "h1", "h2", "h3", "h4", "h5", "h6"].forEach(function (name) {
-            editor.addButton(name, {
-                tooltip: "Toggle " + name,
-                text: name.toUpperCase(),
-                onclick: function() { editor.execCommand("mceToggleFormat", false, name); },
+        // note that the complex array is needede because auto-translate only happens if the string is identical
+        [["pre", "pre"],
+            ["p", "Paragraph", "Paragraph"],
+            ["code", "Code", "Code"],
+            ["h1", "Heading 1", "H1"],
+            ["h2", "Heading 2", "H2"],
+            ["h3", "Heading 3", "H3"],
+            ["h4", "Heading 4", "Heading 4"],
+            ["h5", "Heading 5", "Heading 5"],
+            ["h6", "Heading 6", "Heading 6"]].forEach(function (tag) {
+            editor.addButton(tag[0], {
+                tooltip: tag[1],
+                text: tag[2],
+                onclick: function() { editor.execCommand("mceToggleFormat", false, tag[0]); },
                 onPostRender: function() {
                     var self = this,
                         setup = function() {
-                            editor.formatter.formatChanged(name, function(state) {
+                            editor.formatter.formatChanged(tag[0], function(state) {
                                 self.active(state);
                             });
                         };
@@ -374,14 +398,14 @@
         //#endregion
 
         //#region image alignment / size buttons
-        editor.addButton("alignimgleft", {icon: " icon-align-left", cmd: "JustifyLeft", onPostRender: initOnPostRender("alignleft")});
-        editor.addButton("alignimgcenter", { icon: " icon-align-center", cmd: "justifycenter", onPostRender: initOnPostRender("aligncenter") });
-        editor.addButton("alignimgright", { icon: " icon-align-right", cmd: "justifyright", onPostRender: initOnPostRender("alignright") });
-        editor.addButton("alignimg100", {icon: " icon-resize-horizontal",
+        editor.addButton("alignimgleft", { icon: " icon-align-left", tooltip: "Align left", cmd: "JustifyLeft", onPostRender: initOnPostRender("alignleft") });
+        editor.addButton("alignimgcenter", { icon: " icon-align-center", tooltip: "Align center", cmd: "justifycenter", onPostRender: initOnPostRender("aligncenter") });
+        editor.addButton("alignimgright", { icon: " icon-align-right", tooltip: "Align right", cmd: "justifyright", onPostRender: initOnPostRender("alignright") });
+        editor.addButton("alignimg100", {icon: " icon-resize-horizontal", tooltip: "100%",
             onclick: function() {   editor.formatter.apply("imgwidth100");  },
             onPostRender: initOnPostRender("imgwidth100")
         });
-        editor.addButton("alignimg50", {icon: " icon-resize-horizontal",
+        editor.addButton("alignimg50", {icon: " icon-resize-horizontal", tooltip: "50%",
             onclick: function() {   editor.formatter.apply("imgwidth50");  },
             onPostRender: initOnPostRender("imgwidth50")
         });
