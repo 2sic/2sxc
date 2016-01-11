@@ -49,10 +49,10 @@
         </div>
 
         <span class="adam-tag" ng-class="{'metadata-exists': item.MetadataId > 0}"
-              ng-click="vm.editFolderMetadata(item)"
-              ng-if="vm.folderMetadataContentType"
+              ng-click="vm.editMetadata(item)"
+              ng-if="vm.getMetadataType(item)"
               stop-event="click"
-              tooltip="{{item.MetadataId}}">
+              tooltip="{{vm.getMetadataType(item)}}:{{item.MetadataId}}">
             <i class="icon-tag" style="font-size: larger"></i>
         </span>
     </div>
@@ -81,6 +81,13 @@
             </div>
         </div>
 
+        <span class="adam-tag" ng-class="{'metadata-exists': item.MetadataId > 0}"
+              ng-click="vm.editMetadata(item)"
+              ng-if="vm.getMetadataType(item)"
+              stop-event="click"
+              tooltip="{{vm.getMetadataType(item)}}:{{item.MetadataId}}">
+            <i class="icon-tag" style="font-size: larger"></i>
+        </span>
 
 
         <div class="dz-success-mark">

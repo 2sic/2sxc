@@ -24,8 +24,7 @@
                     // configuration general
                     subFolder: "=",
                     folderDepth: "=", 
-                    metadataContentType: "=",
-                    folderMetadataContentType: "=",
+                    metadataContentTypes: "=",
                     allowAssetsInRoot: "=",
                     showImagesOnly: "=",
 

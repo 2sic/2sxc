@@ -25,9 +25,7 @@
             : 2;
         vm.showFolders = !!vm.folderDepth;
         vm.allowAssetsInRoot = $scope.allowAssetsInRoot || true;
-        vm.folderMetadataContentType = $scope.folderMetadataContentType || "";
-        vm.metadataContentType = $scope.metadataContentType || "";
-        vm.defaultMetadataContentType = vm.metadataContentType.split("\n")[0]; // first line is the rule for all
+        vm.metadataContentTypes = $scope.metadataContentTypes || "";
 
 
         vm.disabled = $scope.ngDisabled;
@@ -111,13 +109,41 @@
         //#endregion
 
         //#region Metadata
-        vm.editFolderMetadata = function(item) {
+        vm.editMetadata = function(item) {
             var items = [
-                vm._itemDefinition(item, vm.folderMetadataContentType)
+                vm._itemDefinition(item, vm.getMetadataType(item))
             ];
 
             eavAdminDialogs.openEditItems(items, vm.refresh);
 
+        };
+
+        vm.getMetadataType = function(item) {
+            var found;
+
+            // check if it's a folder and if this has a special registration
+            if (item.Type === "folder") {
+                found = vm.metadataContentTypes.match(/^(folder)(:)([^\n]*)/im);
+                if (found)
+                    return found[3];
+                else 
+                    return null;
+            }
+
+            // check if the extension has a special registration
+            // -- not implemented yet
+
+            // check if the type "image" or "document" has a special registration
+            // -- not implemneted yet
+
+
+            // nothing found so far, go for the default with nothing as the prefix 
+            found = vm.metadataContentTypes.match(/^([^:\n]*)(\n|$)/im);
+            if (found)
+                return found[1];
+
+            // this is if we don't find anything
+            return null;
         };
 
         // todo: move to service, shouldn't be part of the application
