@@ -1,3 +1,75 @@
+
+/* #region ag-Grid (Content Items) */
+.content-items-agnostic {
+	height: 100%;
+}
+.ag-grid-wrapper {
+	height: 100%;
+}
+.ag-cell, .ag-header-cell {
+	padding: 8px
+}
+.ag-cell {
+	border-bottom: 1px solid #ddd;
+}
+.ag-header-cell {
+	text-align: left
+}
+.ag-header-cell-text {
+	font-weight: bold;
+}
+.ag-header-container {
+	border-bottom: 2px solid #DDD;
+}
+
+.ag-header-icon {
+	padding-right: 2px;
+}
+
+.ag-filter-checkbox {
+  position: relative;
+  top: 2px;
+  left: 2px;
+}
+.ag-filter-header-container {
+  border-bottom: 1px solid #d3d3d3;
+}
+.ag-filter-apply-panel {
+  border-top: 1px solid #d3d3d3;
+  padding: 2px;
+}
+.ag-filter {
+  border: 1px solid #000;
+  background-color: #f0f0f0;
+}
+.ag-filter label {
+	font-weight: normal;
+}
+.ag-filter-value {
+  margin-left: 4px;
+}
+
+.ag-header-cell-menu-button {
+  padding: 2px;
+  border: 1px solid transparent;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box; /* When using bootstrap, box-sizing was set to 'border-box' */
+}
+.ag-header-cell-menu-button:hover {
+  border: 1px solid #000;
+}
+
+
+.ag-row:hover {
+  background-color: #f5f5f5;
+}
+.ag-row:hover .clickable {
+	text-decoration: underline;
+}
+/* #endregion */
 /* These are helpers to create larger dialogs than available by default in boostrap*/
 .modal-xlg {
      width: 95%;
@@ -5,6 +77,22 @@
 .modal-max {
      width: 100%;
 }
+.modal-fullscreen {
+	width: 95%;
+	height: calc(100% - 30px);
+	margin-bottom: auto;
+}
+
+	.modal-fullscreen .modal-content {
+		height: 100%;
+		padding-bottom: 0;
+		border-radius: 0;
+	}
+
+	.modal-fullscreen .modal-body {
+	height: calc(100% - 130px);
+}
+
 
 
 /* this helps that tooltips can wrap as we want them to */
@@ -166,3 +254,5 @@ h3.clickable:hover, h4.clickable:hover {
 .modal-content {
     padding-bottom: 10px;
 }
+
+

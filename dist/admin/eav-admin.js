@@ -359,6 +359,237 @@
     EditContentItemController.$inject = ["mode", "entityId", "contentType", "eavAdminDialogs", "$modalInstance"];
 
 } ());
+(function () {
+	'use strict';
+
+	angular.module("ContentItemsAppAgnostic", [
+        "EavConfiguration",
+        "EavAdminUi",
+        "EavServices",
+		// "agGrid" // needs this, but can't hardwire the dependency as it would cause problems with lazy-loading
+	])
+        .controller("ContentItemsList", contentItemsListController)
+	;
+
+	function contentItemsListController(contentItemsSvc, eavConfig, appId, contentType, eavAdminDialogs, debugState, $modalInstance, $q, $window) {
+		/* jshint validthis:true */
+		var vm = angular.extend(this, {
+			debug: debugState,
+			gridOptions: {
+				enableSorting: true,
+				enableFilter: true,
+				rowHeight: 39,
+				colWidth: 155,
+				headerHeight: 38,
+				angularCompileRows: true
+			},
+			add: add,
+			refresh: setRowData,
+			tryToDelete: tryToDelete,
+			openDuplicate: openDuplicate,
+			close: close
+		});
+		var svc;
+
+		var staticColumns = [
+			{
+				headerName: "ID",
+				field: "Id",
+				width: 50,
+				template: '<span tooltip-append-to-body="true" tooltip="Id: {{data.Id}}\nRepoId: {{data.RepositoryId}}\nGuid: {{data.Guid}}" ng-bind="data.Id"></span>',
+				cellClass: "clickable",
+				filter: 'number',
+				onCellClicked: openEditDialog
+			},
+			{
+				headerName: "Status",
+				field: "IsPublished",
+				width: 70,
+				suppressSorting: true,
+				suppressMenu: true,
+				template: '<span class="glyphicon" ng-class="{\'glyphicon-eye-open\': data.IsPublished, \'glyphicon-eye-close\' : !data.IsPublished}" tooltip-append-to-body="true" tooltip="{{ \'Content.Publish.\' + (data.IsPublished ? \'PnV\': data.Published ? \'DoP\' : \'D\') | translate }}"></span> <span icon="{{ data.Draft ? \'link\' : data.Published ? \'link\' : \'\' }}" tooltip-append-to-body="true" tooltip="{{ (data.Draft ? \'Content.Publish.HD\' :\'\') | translate:\'{ id: data.Draft.RepositoryId}\' }}\n{{ (data.Published ? \'Content.Publish.HP\' :\'\') | translate }} #{{ data.Published.RepositoryId }}"></span> <span ng-if="data.Metadata" tooltip-append-to-body="true" tooltip="Metadata for type {{ data.Metadata.TargetType}}, id {{ data.Metadata.KeyNumber }}{{ data.Metadata.KeyString }}{{ data.Metadata.KeyGuid }}" icon="tag"></span>'
+			},
+			{
+				headerName: "Title",
+				field: "Title",
+				width: 216,
+				cellClass: "clickable",
+				template: '<span tooltip-append-to-body="true" tooltip="{{data.Title}}" ng-bind="data.Title + \' \' + ((!data.Title ? \'Content.Manage.NoTitle\':\'\') | translate)"></span>',
+				filter: 'text',
+				onCellClicked: openEditDialog
+			},
+			{
+				headerName: "",
+				width: 70,
+				suppressSorting: true,
+				suppressMenu: true,
+				template: '<button type="button" class="btn btn-xs btn-square" ng-click="vm.openDuplicate(data)" tooltip-append-to-body="true" tooltip="{{ \'General.Buttons.Copy\' | translate }}"><i icon="duplicate"></i></button> <button type="button" class="btn btn-xs btn-square" ng-click="vm.tryToDelete(data)" tooltip-append-to-body="true" tooltip="{{ \'General.Buttons.Delete\' | translate }}"><i icon="remove"></i> </button>'
+			}
+		];
+
+		activate();
+
+		function activate() {
+			svc = contentItemsSvc(appId, contentType);
+
+			$q.all([setRowData(), svc.getColumns()])
+				.then(function (success) {
+					var columnDefs = getColumnDefs(success[1].data);
+					vm.gridOptions.api.setColumnDefs(columnDefs);
+				});
+		}
+
+		function add() {
+			eavAdminDialogs.openItemNew(contentType, setRowData);
+		}
+
+		function openEditDialog(params) {
+			eavAdminDialogs.openItemEditWithEntityId(params.data.Id, setRowData);
+		}
+
+		// Get/Update Grid Row-Data
+		function setRowData() {
+			if (vm.gridOptions.api)
+				vm.gridOptions.api.setRowData(null);
+
+			return svc.liveListSourceRead().then(function (success) {
+				vm.gridOptions.api.setRowData(success.data);
+			});
+		}
+
+		// get Grid Column-Definitions from an Array of EAV-Attributes
+		function getColumnDefs(eavAttributes) {
+			var columnDefs = staticColumns;
+
+			angular.forEach(eavAttributes, function (eavAttribute) {
+				if (eavAttribute.IsTitle) {
+					staticColumns[2].eavAttribute = eavAttribute;
+					return;	// don't add Title-Field twice
+				}
+
+				var colDef = {
+					eavAttribute: eavAttribute,
+					headerName: eavAttribute.StaticName,
+					field: eavAttribute.StaticName,
+					cellRenderer: cellRendererDefault,
+					filterParams: { cellRenderer: cellRendererDefaultFilter }
+				};
+
+
+				switch (eavAttribute.Type) {
+					case "Entity":
+						try {
+							colDef.allowMultiValue = eavAttribute.Metadata.Entity.AllowMultiValue;
+						} catch (e) {
+							colDef.allowMultiValue = true;
+						}
+
+						colDef.cellRenderer = cellRendererEntity;
+						colDef.valueGetter = valueGetterEntityField;
+						break;
+					case "DateTime":
+						try {
+							colDef.useTimePicker = eavAttribute.Metadata.DateTime.UseTimePicker;
+						} catch (e) {
+							colDef.useTimePicker = false;
+						}
+						colDef.valueGetter = valueGetterDateTime;
+						break;
+					case "Boolean":
+						colDef.valueGetter = valueGetterBoolean;
+						break;
+					case "Number":
+						colDef.filter = 'number';
+						break;
+				}
+
+				columnDefs.push(colDef);
+			});
+
+			return columnDefs;
+		}
+
+		//#region Column Value-Getter and Cell Renderer
+		function valueGetterEntityField(params) {
+			var rawValue = params.data[params.colDef.field];
+			if (rawValue.length === 0)
+				return null;
+
+			return rawValue.map(function (item) {
+				return item.Title;
+			});
+		}
+
+		function valueGetterDateTime(params) {
+			var rawValue = params.data[params.colDef.field];
+			if (!rawValue)
+				return null;
+
+			// remove 'Z' and replace 'T'
+			return params.colDef.useTimePicker ? rawValue.substr(0, 19).replace('T', ' ') : rawValue.substr(0, 10);
+		}
+
+		function valueGetterBoolean(params) {
+			var rawValue = params.data[params.colDef.field];
+			if (typeof rawValue != "boolean")
+				return null;
+
+			return rawValue.toString();
+		}
+
+		function cellRendererDefault(params) {
+			if (typeof (params.value) != "string" || params.value === null)
+				return params.value;
+
+			var encodedValue = htmlEncode(params.value);
+			return '<span title="' + encodedValue + '">' + encodedValue + '</span>';
+		}
+
+		function cellRendererDefaultFilter(params) {
+			return cellRendererDefault(params) || "(empty)";
+		}
+
+		// htmlencode strings (source: http://stackoverflow.com/a/7124052)
+		function htmlEncode(text) {
+			return text.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+		}
+
+		function cellRendererEntity(params) {
+			if (!Array.isArray(params.value))
+				return null;
+
+			var encodedValue = htmlEncode(params.value.join(", "));
+			var result = '<span title="' + encodedValue + '">';
+			if (params.colDef.allowMultiValue)
+				result += '<span class="badge badge-primary">' + params.value.length + '</span> ';
+			result += encodedValue + '</span>';
+
+			return result;
+		}
+		// #endregion
+
+		function tryToDelete(item) {
+			if (confirm("Delete '" + item.Title + "' (" + item.RepositoryId + ") ?"))
+				svc.delete(item.RepositoryId);
+		}
+
+		function openDuplicate(item) {
+			var items = [
+		        {
+		        	ContentTypeName: contentType,
+		        	DuplicateEntity: item.Id
+		        }
+			];
+			eavAdminDialogs.openEditItems(items, svc.liveListReload);
+		}
+
+		function close() {
+			$modalInstance.dismiss("cancel");
+		}
+	}
+	contentItemsListController.$inject = ["contentItemsSvc", "eavConfig", "appId", "contentType", "eavAdminDialogs", "debugState", "$modalInstance", "$q", "$window"];
+
+}());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
 
     angular.module("ContentItemsApp", [
@@ -830,6 +1061,11 @@ angular.module('eavTemplates', []).run(['$templateCache', function($templateCach
 
   $templateCache.put('content-items/content-edit.html',
     "<div class=modal-header><button type=button class=\"btn btn-default btn-subtle\" ng-click=vm.history()><span class=\"glyphicon glyphicon-time\">history / todo</span></button><h3 class=modal-title>Edit / New Content</h3></div><div class=modal-body>this is where the edit appears. Would edit entity {{vm.entityId}} or add a {{vm.contentType}} - depending on the mode: {{vm.mode}}<h3>Use cases</h3><ol><li>Edit an existing entity with ID</li><li>Create a new entity of a certaint content-type, just save and done (like from a \"new\" button without content-group)</li><li>Create a new entity of a certain type and assign it to a metadata thing (guid, int, string)</li><li>Create a new entity and put it into a content-group at the right place</li><li>Edit content-group: item + presentation</li><li>Edit multiple IDs/or new/mix: Edit multiple items with IDs</li></ol>init of 1 edit - entity-id in storage - new-type + optional: assignment-id + assignment-type - array of the above --- [{id 17}, {type: \"person\"}, {type: person, asstype: 4, target: 0205}] - content-group</div>"
+  );
+
+
+  $templateCache.put('content-items/content-items-agnostic.html',
+    "<div ng-click=vm.debug.autoEnableAsNeeded($event) class=content-items-agnostic><div class=modal-header><button class=\"btn btn-default btn-square btn-subtle pull-right\" type=button ng-click=vm.close()><i icon=remove></i></button><h3 class=modal-title translate=Content.Manage.Title></h3></div><div class=modal-body><button type=button class=\"btn btn-primary btn-square\" ng-click=vm.add()><i icon=plus></i></button> <button ng-if=vm.debug.on type=button class=\"btn btn-warning btn-square\" ng-click=vm.refresh()><i icon=repeat></i></button><div ag-grid=vm.gridOptions class=ag-grid-wrapper></div><show-debug-availability class=pull-right></show-debug-availability></div></div>"
   );
 
 
@@ -1914,12 +2150,14 @@ angular.module("EavServices")
 // 1. Import / Export
 // 2. Pipeline Designer
 
+// var contentItemsModule = $eavOnlyHelpers.urlParams.get("oldgrid") ? "ContentItemsApp" : "ContentItemsAppAgnostic";
+
 angular.module("EavAdminUi", ["ng",
     "ui.bootstrap",         // for the $modal etc.
     "EavServices",
     "eavTemplates",         // Provides all cached templates
     "PermissionsApp",       // Permissions dialogs to manage permissions
-    "ContentItemsApp",      // Content-items dialog - not working atm?
+    "ContentItemsAppAgnostic", // contentItemsModule,      // Content-items dialog - not working atm?
     "PipelineManagement",   // Manage pipelines
     "ContentImportApp",
     "ContentExportApp",
@@ -1933,8 +2171,14 @@ angular.module("EavAdminUi", ["ng",
 
             //#region List of Content Items dialogs
             svc.openContentItems = function oci(appId, staticName, itemId, closeCallback) {
-                var resolve = svc.CreateResolve({ appId: appId, contentType: staticName, contentTypeId: itemId });
-                return svc.OpenModal("content-items/content-items.html", "ContentItemsList as vm", "xlg", resolve, closeCallback);
+            	var resolve = svc.CreateResolve({ appId: appId, contentType: staticName, contentTypeId: itemId });
+            	var templateName = "content-items";
+	            var size = "xlg";
+	            if (true) { //!$eavOnlyHelpers.urlParams.get("oldgrid")) {
+	            	templateName += "-agnostic";
+	            	size = "fullscreen";
+	            }
+	            return svc.OpenModal("content-items/" + templateName + ".html", "ContentItemsList as vm", size, resolve, closeCallback);
             };
             //#endregion
 
