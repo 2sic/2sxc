@@ -79,6 +79,7 @@
                 // Url Rewriting in images and pages
                 //convert_urls: false,  // don't use this, would keep the domain which is often a test-domain
                 relative_urls: false, // keep urls with full path so starting with a "/" - otherwise it would rewrite them to a "../../.." syntax
+                default_link_target: "_blank",  // auto-use blank as default link-target
                 object_resizing: false, // don't allow manual scaling of images
 
                 // General looks
@@ -231,9 +232,8 @@
             type: "splitbutton",
             icon: "link",
             title: "Link",
-            cmd: "link",
             onPostRender: initOnPostRender("link"),
-            xonclick: function() {
+            onclick: function() {
                 editor.execCommand("mceLink");
             },
             
