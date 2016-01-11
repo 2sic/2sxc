@@ -12,8 +12,13 @@ $(document).ready(function () {
     // Ensure the _processToolbar is called after the next event cycle to make sure that the Angular app (template selector) is loaded first
     window.setTimeout(function () {
         modules.each(function () {
-            var moduleId = $(this).data("2sxc").moduleId;
-            $2sxc(moduleId).manage._processToolbars();
+            try {
+                var moduleId = $(this).data("2sxc").moduleId;
+                $2sxc(moduleId).manage._processToolbars();
+            } catch (e) { // Make sure that if one app breaks, others continue to work
+                if (console && console.error)
+                    console.error(e);
+            }
         });
     }, 0);
 
