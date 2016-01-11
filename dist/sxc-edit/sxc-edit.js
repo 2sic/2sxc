@@ -836,10 +836,11 @@ angular.module("sxcFieldTemplates")
 
         .controller("FieldWysiwygTinyMce", FieldWysiwygTinyMceController);
 
-    function FieldWysiwygTinyMceController($scope, dnnBridgeSvc) {
+    function FieldWysiwygTinyMceController($scope, dnnBridgeSvc, languages) {
         var vm = this;
 
         vm.activate = function () {
+            var availableLanguages = "de,es,fr,it,uk".split(",");
 
             var plugins = [
                 "code",         // allow view / edit source
@@ -896,10 +897,6 @@ angular.module("sxcFieldTemplates")
                 autosave_ask_before_unload: false,
                 paste_as_text: true,
                 
-                // test
-                language: "de",
-                language_url: "../i18n/lib/de.js",
-
                 // Url Rewriting in images and pages
                 //convert_urls: false,  // don't use this, would keep the domain which is often a test-domain
                 relative_urls: false, // keep urls with full path so starting with a "/" - otherwise it would rewrite them to a "../../.." syntax
@@ -916,6 +913,15 @@ angular.module("sxcFieldTemplates")
                     addTinyMceToolbarButtons(editor, vm);
                 }
             };
+
+            // check if it's an additionally translated language
+            var lang2 = languages.currentLanguage.substr(0, 2);
+            if (availableLanguages.indexOf(lang2) >= 0)
+                angular.extend($scope.tinymceOptions, {
+                    language: lang2,
+                    language_url: "../i18n/lib/tinymce/" + lang2 + ".js"
+                });
+
         };
 
         //#region new adam: callbacks only
@@ -981,7 +987,7 @@ angular.module("sxcFieldTemplates")
 
         vm.activate();
     }
-    FieldWysiwygTinyMceController.$inject = ["$scope", "dnnBridgeSvc"];
+    FieldWysiwygTinyMceController.$inject = ["$scope", "dnnBridgeSvc", "languages"];
 
     function addTinyMceToolbarButtons(editor, vm) {
         //#region helpers like initOnPostRender(name)
