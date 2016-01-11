@@ -97,6 +97,9 @@ namespace ToSic.SexyContent
                     case "08.00.07":
                         Version080007();
                         break;
+                    case "08.01.00":
+                        Version080100();
+                        break;
                 }
 
                 // Increase ClientDependency version upon each upgrade (System and all Portals)
@@ -679,7 +682,24 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
             }
             
         }
-        
+
+        private static void Version080100()
+        {
+            var userName = "System-ModuleUpgrade-080100";
+
+            // Add new content types and entities
+            var xmlToImport =
+                File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/08.01.00.xml"));
+            var xmlImport = new XmlImport("en-US", userName, true);
+            var success = xmlImport.ImportXml(Constants.DefaultZoneId, Constants.MetaDataAppId, XDocument.Parse(xmlToImport), false); // special note - change existing values
+
+            if (!success)
+            {
+                var messages = String.Join("\r\n- ", xmlImport.ImportLog.Select(p => p.Message).ToArray());
+                throw new Exception("The 2sxc module upgrade to 08.01.00 failed: " + messages);
+            }
+
+        }
 
         /// <summary>
         /// Copy a Directory recursive

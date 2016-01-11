@@ -546,6 +546,7 @@
     <Content Include="Upgrade\07.03.03-01.xml" />
     <Content Include="Upgrade\07.03.03-03.xml" />
     <Content Include="Upgrade\08.00.04.xml" />
+    <Content Include="Upgrade\08.01.00.xml" />
     <Content Include="ViewApp.ascx" />
     <Content Include="View.ascx" />
     <Content Include="WebConfigTemplate.config" />
