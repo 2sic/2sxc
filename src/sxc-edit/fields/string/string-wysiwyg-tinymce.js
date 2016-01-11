@@ -75,6 +75,9 @@
                 autosave_ask_before_unload: false,
                 paste_as_text: true,
                 
+                // test
+                language: "de",
+                language_url: "../i18n/lib/de.js",
 
                 // Url Rewriting in images and pages
                 //convert_urls: false,  // don't use this, would keep the domain which is often a test-domain

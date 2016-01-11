@@ -11,10 +11,8 @@
 
     function preLoadAgGrid($ocLazyLoad) {
         return $ocLazyLoad.load([
-                        "../lib/ag-grid/ag-grid.min.js",
-                        "../lib/ag-grid/ag-grid.min.css"
-
-            //$2sxc.debug.renameScript("../sxc-develop/sxc-develop.min.js")
+            "../lib/ag-grid/ag-grid.min.js",
+            "../lib/ag-grid/ag-grid.min.css"
         ]);
 
     }
