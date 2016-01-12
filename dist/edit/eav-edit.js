@@ -805,7 +805,9 @@ angular.module('eavEditTemplates', []).run(['$templateCache', function($template
 					if (fieldModel.Values.length === 0) {
 					    if (langConf.currentLanguage == langConf.defaultLanguage) {
 					        var defaultValue = eavDefaultValueService(scope.options);
-					        fieldModel.addVs(defaultValue, langConf.currentLanguage); // Assign default language dimension
+                            // Add default language if we are in a ml environment, else don't add any
+					        var languageToAdd = langConf.languages.length > 0 ? langConf.currentLanguage : null;
+					        fieldModel.addVs(defaultValue, languageToAdd);
 					    }
 					    else { // There are no values - value must be edited in default language first
 					        return;
@@ -1061,7 +1063,8 @@ function enhanceEntity(entity) {
         // todo: when adding VS - ensure the events are added too...
         att.addVs = function(value, language, shareMode) {
             var dimensions = {};
-            dimensions[language] = ((shareMode === null || shareMode === undefined) ? false : shareMode);
+            if(language !== null)
+                dimensions[language] = ((shareMode === null || shareMode === undefined) ? false : shareMode);
             var newVs = { "Value": value, "Dimensions": dimensions };
             // ToDo: enhancer.enhanceWithCount(newVs.Dimensions);
             this.Values.push(enhancer.enhanceVs(newVs));

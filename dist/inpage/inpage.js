@@ -18,6 +18,9 @@ var $2sxcActionMenuMapper = function (moduleId) {
         },
         adminZone: function () {
             $2sxc(moduleId).manage._openNgDialog({ 'action': 'zone' });
+        },
+        develop: function () {
+            $2sxc(moduleId).manage._openNgDialog({ 'action': 'develop' });
         }
     };
 };

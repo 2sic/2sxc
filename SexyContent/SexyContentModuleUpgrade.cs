@@ -659,28 +659,7 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
 
         private static void Version080007()
         {
-            var desktopModuleNames = new[] { "2sxc", "2sxc-app" };
-
-            // Remove settings and settingswrapper control
-            foreach(var d in desktopModuleNames)
-            {
-                var dmi = DesktopModuleController.GetDesktopModuleByModuleName(d, -1);
-                if (dmi != null)
-                {
-                    var mdi = dmi.ModuleDefinitions.FirstOrDefault();
-                    
-                    if (mdi.Value != null)
-                    {
-                        var settingsControl = ModuleControlController.GetModuleControlByControlKey("settings", mdi.Value.ModuleDefID);
-                        if(settingsControl != null)
-                            ModuleControlController.DeleteModuleControl(settingsControl.ModuleControlID);
-                        var settingsWrapperControl = ModuleControlController.GetModuleControlByControlKey("settingswrapper", mdi.Value.ModuleDefID);
-                        if (settingsWrapperControl != null)
-                            ModuleControlController.DeleteModuleControl(settingsWrapperControl.ModuleControlID);
-                    }
-                }
-            }
-            
+            RemoveModuleControls(new[] { "settings", "settingswrapper" });
         }
 
         private static void Version080100()
@@ -699,6 +678,8 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
                 throw new Exception("The 2sxc module upgrade to 08.01.00 failed: " + messages);
             }
 
+            // Remove unneeded control key for template file editing
+            RemoveModuleControls(new[] { "edittemplatefile" });
         }
 
         /// <summary>
@@ -737,6 +718,31 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
                 {
                     var temppath = Path.Combine(destDirName, subdir.Name);
                     DirectoryCopy(subdir.FullName, temppath, copySubDirs);
+                }
+            }
+        }
+
+        private static void RemoveModuleControls(IEnumerable<string> controls)
+        {
+            var desktopModuleNames = new[] { "2sxc", "2sxc-app" };
+
+            // Remove settings and settingswrapper control
+            foreach (var d in desktopModuleNames)
+            {
+                var dmi = DesktopModuleController.GetDesktopModuleByModuleName(d, -1);
+                if (dmi != null)
+                {
+                    var mdi = dmi.ModuleDefinitions.FirstOrDefault();
+
+                    if (mdi.Value != null)
+                    {
+                        foreach (var c in controls)
+                        {
+                            var settingsControl = ModuleControlController.GetModuleControlByControlKey(c, mdi.Value.ModuleDefID);
+                            if (settingsControl != null)
+                                ModuleControlController.DeleteModuleControl(settingsControl.ModuleControlID);
+                        }
+                    }
                 }
             }
         }
