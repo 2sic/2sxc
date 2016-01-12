@@ -15,6 +15,26 @@
 
         .controller("FieldWysiwygTinyMce", FieldWysiwygTinyMceController);
 
+    var defLanguage = "en_US", // needed to check if the language changed
+        labelsEn =
+        {
+            linkAdamFile: "Link ADAM-file (recommended)",
+            linkAdamFileHover: "Link using ADAM - just drop files",
+            linkDnnFile: "Link DNN-file (all files, slow)",
+            linkDnnFileHover: "Link a DNN-file",
+            linkPage: "Link to another page",
+            linkPageHover: "Link a page from the current site",
+            modePro: "Switch to advanced mode",
+            modeStd: "Switch to standard mode",
+            H1: "H1",
+            H2: "H2"
+        },
+        labelsDe = {
+            modePro: "profi modus",
+            "H1": "Ü1",
+            "H2": "Ü2"
+        };
+
     function FieldWysiwygTinyMceController($scope, dnnBridgeSvc, languages) {
         var vm = this;
 
@@ -87,6 +107,8 @@
                 theme: "modern",
                 // statusbar: true,    // doesn't work in inline :(
 
+                language: "en",
+
                 setup: function(editor) {
                     vm.editor = editor;
                     if ($scope.tinymceOptions.language)
@@ -99,7 +121,7 @@
             var lang2 = languages.currentLanguage.substr(0, 2);
 
             // test mode
-            // lang2 = "de";
+            //lang2 = "de";
 
             if (availableLanguages.indexOf(lang2) >= 0)
                 angular.extend($scope.tinymceOptions, {
@@ -175,10 +197,11 @@
 
     // todo
     function initLangResources(editor, language) {
-        tinymce.addI18n("de", {
-            "pro mode": "profi modus"
-        });
-        //editor.i18n.add("de", ["pro mode", "profi-modus"]);
+        tinymce.addI18n("de", labelsDe);
+        tinymce.addI18n("en", labelsEn);
+
+
+//editor.i18n.add("de", ["pro mode", "profi-modus"]);
     }
 
     function addTinyMceToolbarButtons(editor, vm) {
@@ -288,13 +311,15 @@
             },
             menu: [
                 {
-                    text: "from ADAM (recommended)",
+                    text: "linkAdamFile", //"from ADAM (recommended)",
+                    tooltip: "linkAdamFileHover",
                     icon: "image",
                     onclick: function() {
                         vm.toggleAdam(true);
                     }
                 }, {
-                    text: "from DNN (all files in DNN, slower)",
+                    text: "linkDnnFile", //"from DNN (all files in DNN, slower)",
+                    tooltip: "linkDnnFileHover",
                     icon: "image",
                     onclick: function() {
                         vm.openDnnDialog("imagemanager");
@@ -313,7 +338,7 @@
 
         editor.addButton("formatgroup", {
             type: "splitbutton",
-            tooltip: "Italic",
+            tooltip: "Italic",  // will be autotranslated
             text: "",
             icon: "italic",
             cmd: "italic",
@@ -336,8 +361,10 @@
             editor.theme.renderUI(editor);
             editor.execCommand("mceFocus");
 
+            // focus away...
             document.getElementById("dummyfocus").focus();
 
+            // ...and focus back a bit later
             setTimeout(function() {
                 editor.focus();
             }, 100);
@@ -345,21 +372,21 @@
 
         editor.addButton("modestandard", {
             icon: " icon-cancel",
-            tooltip: "basic mode",
+            tooltip: "modeStd",
             onclick: function () { switchModes("standard"); }
         });
 
         editor.addButton("modeadvanced", {
             icon: " icon-pro",
-            tooltip: "pro mode",
+            tooltip: "modeStd",
             onclick: function () {  switchModes("advanced");    }
         });
         //#endregion
 
-
+        // i18n ok
         //#region h1, h2, etc. buttons, inspired by http://blog.ionelmc.ro/2013/10/17/tinymce-formatting-toolbar-buttons/
         // note that the complex array is needede because auto-translate only happens if the string is identical
-        [["pre", "pre"],
+        [["pre", "Preformatted", "Preformatted"],
             ["p", "Paragraph", "Paragraph"],
             ["code", "Code", "Code"],
             ["h1", "Heading 1", "H1"],
@@ -397,6 +424,7 @@
         }));
         //#endregion
 
+        // i18n ok
         //#region image alignment / size buttons
         editor.addButton("alignimgleft", { icon: " icon-align-left", tooltip: "Align left", cmd: "JustifyLeft", onPostRender: initOnPostRender("alignleft") });
         editor.addButton("alignimgcenter", { icon: " icon-align-center", tooltip: "Align center", cmd: "justifycenter", onPostRender: initOnPostRender("aligncenter") });
@@ -411,6 +439,7 @@
         });
         //#endregion
 
+        // i18n ok
         //#region my context toolbars for links, images and lists (ul/li)
         function makeTagDetector(tagWeNeedInTheTagPath) {
             return function tagDetector(currentElement) {
