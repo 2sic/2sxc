@@ -5,7 +5,7 @@
     <Dimensions />
   </Header>
   <AttributeSets>
-    <AttributeSet StaticName="@hyperlink-library" Name="@hyperlink-library" Description="to configure a library-field" Scope="System">
+    <AttributeSet StaticName="@hyperlink-library" Name="@hyperlink-library" Description="to configure a library-field" Scope="System" AlwaysShareConfiguration="true">
       <Attributes>
         <Attribute StaticName="FolderDepth" Type="Number" IsTitle="true">
           <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@All" AttributeSetName="@All" EntityGUID="55fd7bae-6abf-45ac-8420-efd027b690c0">
