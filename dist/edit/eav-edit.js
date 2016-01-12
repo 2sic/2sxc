@@ -656,15 +656,16 @@ angular.module("eavFieldTemplates")
 		    $modalInstance.close(result);
 		};
 
-	    var unsavedChangesText = $translate.instant("Errors.UnsavedChanges");
 
 	    vm.maybeLeave = function maybeLeave(e) {
+	        var unsavedChangesText = $translate.instant("Errors.UnsavedChanges");
 	        if (vm.state.isDirty() && !confirm(unsavedChangesText + " " + $translate.instant("Message.ExitOk")))
 	            e.preventDefault();
 	    };
 
 	    $scope.$on('modal.closing', vm.maybeLeave);
 	    $window.addEventListener('beforeunload', function (e) {
+	        var unsavedChangesText = $translate.instant("Errors.UnsavedChanges");
 	        if (vm.state.isDirty()) {
 	            (e || window.event).returnValue = unsavedChangesText; //Gecko + IE
 	            return unsavedChangesText; //Gecko + Webkit, Safari, Chrome etc.
