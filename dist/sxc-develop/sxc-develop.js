@@ -16,6 +16,7 @@
 } ());
 (function () {
 
+    EditorController.$inject = ["sourceSvc", "snippetSvc", "item", "$modalInstance", "$scope", "$translate"];
     angular.module("SourceEditor")
 
         .controller("Editor", EditorController)
@@ -79,7 +80,6 @@
         };
 
     }
-    EditorController.$inject = ["sourceSvc", "snippetSvc", "item", "$modalInstance", "$scope", "$translate"];
 
 }());
 // This service delivers all snippets, translated etc. to the sourc-editor UI

@@ -120,6 +120,7 @@ angular.module("Adam")
     /* jshint laxbreak:true */
     "use strict";
 
+    BrowserController.$inject = ["$scope", "adamSvc", "debugState", "eavConfig", "eavAdminDialogs", "appRoot"];
     var app = angular.module("Adam"); 
 
     // The controller for the main form directive
@@ -317,7 +318,6 @@ angular.module("Adam")
 
         vm.activate();
     }
-    BrowserController.$inject = ["$scope", "adamSvc", "debugState", "eavConfig", "eavAdminDialogs", "appRoot"];
 
 })();
 
@@ -827,6 +827,7 @@ angular.module("sxcFieldTemplates")
 	"use strict";
 
     // Register in Angular Formly
+    FieldWysiwygTinyMceController.$inject = ["$scope", "dnnBridgeSvc", "languages"];
     angular.module("sxcFieldTemplates")
         .config(["formlyConfigProvider", function(formlyConfigProvider) {
             formlyConfigProvider.setType({
@@ -1030,7 +1031,6 @@ angular.module("sxcFieldTemplates")
 
         vm.activate();
     }
-    FieldWysiwygTinyMceController.$inject = ["$scope", "dnnBridgeSvc", "languages"];
 
     // todo - later use i18n from angular-translate
     function initLangResources(editor, language) {
