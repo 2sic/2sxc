@@ -159,7 +159,7 @@ namespace ToSic.SexyContent
 
 			if (Template.ContentTypeStaticName != "" && Template.ContentDemoEntity == null && ContentGroup.Content.All(e => e == null))
 			{
-				var toolbar = IsEditable ? "<ul class='sc-menu' data-toolbar='" + JsonConvert.SerializeObject(new { sortOrder = 0, useModuleList = true, action = "edit" }) + "'></ul>" : "";
+				var toolbar = "<ul class='sc-menu' data-toolbar='" + JsonConvert.SerializeObject(new { sortOrder = 0, useModuleList = true, action = "edit" }) + "'></ul>";
 				ShowMessage(LocalizeString("NoDemoItem.Text") + " " + toolbar, pnlMessage);
 				return;
 			}
