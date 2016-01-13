@@ -416,13 +416,12 @@
     <Content Include="grunt-tasks\develop.gruntfile.js" />
     <Content Include="grunt-tasks\inpage.gruntfile.js" />
     <Content Include="grunt-tasks\import-languages.gruntfile.js" />
-    <Content Include="grunt-tasks\i18n.gruntfile.js" />
+    <Content Include="grunt-tasks\i18n\gruntfile.js" />
     <Content Include="gruntfile.js" />
     <Content Include="SqlDataProvider\07.03.01.SqlDataProvider" />
     <Content Include="SqlDataProvider\07.03.03.SqlDataProvider" />
     <Content Include="SqlDataProvider\08.00.06.SqlDataProvider" />
     <Content Include="SqlDataProvider\08.01.00.SqlDataProvider" />
-    <None Include="src\i18n\inpage-en.json" />
     <Content Include="icon-app.png" />
     <Content Include="icon.png" />
     <Content Include="Administration\Import.ascx" />
@@ -529,6 +528,7 @@
     <Content Include="src\sxc-edit\fields\string\string-wysiwyg-tinymce.html" />
     <Content Include="src\sxc-edit\fields\string\string-wysiwyg-tinymce.js" />
     <Content Include="src\sxc-edit\fields\hyperlink\hyperlink-library.html" />
+    <Content Include="src\sxc-edit\fields\string\temp.js" />
     <Content Include="src\sxc-edit\fields\string\wysiwyg-mce.css" />
     <Content Include="src\sxc-edit\fields\_sxc-fieldtemplates-app.js" />
     <Content Include="src\sxc-edit\fields\hyperlink\hyperlink-default.js" />
@@ -588,7 +588,6 @@
     <Content Include="SqlDataProvider\07.02.02.SqlDataProvider" />
     <None Include="SqlDataProvider\Uninstall.SqlDataProvider" />
     <Content Include="web.config" />
-    <Content Include="src\i18n\sxc-admin-en.json" />
     <Content Include="src\sxc-admin\services\_sxc-services.js" />
     <Content Include="src\i18n\source-editor-snippets-en.json" />
     <Content Include="src\sxc-develop\source-editor\snippets.xlsx" />

@@ -7,7 +7,7 @@ module.exports = function (grunt) {
         languagePacks: {
             cwd: "<%= paths.bower %>/2sxc-eav-languages/dist/i18n/",
             dist: "<%= paths.dist %>/i18n/",
-            filter: ["**/*.js", "!**-en.js"]
+            filter: ["**/*.js"]
         },
 
 

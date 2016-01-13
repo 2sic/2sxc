@@ -15,39 +15,22 @@
 
         .controller("FieldWysiwygTinyMce", FieldWysiwygTinyMceController);
 
-    var defLanguage = "en_US", // needed to check if the language changed
-        labelsEn =
-        {
-            linkAdamFile: "Link ADAM-file (recommended)",
-            linkAdamFileHover: "Link using ADAM - just drop files using the Automatic Digital Assets Manager",
-            linkDnnFile: "Link DNN-file",
-            linkDnnFileHover: "Link a DNN-file (all files, slow)",
-            linkPage: "Link to another page",
-            linkPageHover: "Link a page from the current site",
-            linkAnchorHover: "Anchor to link to using .../page#anchorname",
-            modePro: "Switch to advanced mode",
-            modeStd: "Switch to standard mode",
-            H1: "H1",
-            H2: "H2",
-            Remove: "Remove"
-        },
-        // todo: move this to i18n later on
-        labelsDe = {
-            linkAdamFile: "ADAM-Datei (empfohlen)",
-            linkAdamFileHover: "ADAM-Dateien verlinken - Dateien einfach hierhin ziehen - verwendet den Automatic Digital Assets Manager",
-            linkDnnFile: "DNN-Datei verlinken",
-            linkDnnFileHover: "DNN-Datei verlinken (alle Dateien, langsam)",
-            linkPage: "Seite verlinken",
-            linkPageHover: "Eine Seite aus dieser Website verlinken",
-            linkAnchorHover: "Texmarke (Anchor) für Verlinkung mit .../page#anchorname",
-            modePro: "Zum Profi-Modus wechseln",
-            modeStd: "Zum Standard-Modus wechseln",
-            "H1": "Ü1",
-            "H2": "Ü2",
-            Remove: "Entfernen"
-        };
+    var translationsMce = [
+            "Link.AdamFile",
+            "Link.AdamFile.Tooltip",
+            "Link.DnnFile",
+            "Link.DnnFile.Tooltip",
+            "Link.Page",
+            "Link.Page.Tooltip",
+            "Link.Anchor.Tooltip",
+            "SwitchMode.Pro",
+            "SwitchMode.Standard",
+            "H1",
+            "H2",
+            "Remove"
+        ];
 
-    function FieldWysiwygTinyMceController($scope, dnnBridgeSvc, languages) {
+    function FieldWysiwygTinyMceController($scope, dnnBridgeSvc, languages, $translate) {
         var vm = this;
 
         vm.activate = function () {
@@ -124,7 +107,7 @@
                 setup: function(editor) {
                     vm.editor = editor;
                     if ($scope.tinymceOptions.language)
-                        initLangResources(editor, $scope.tinymceOptions.language);
+                        initLangResources(editor, $scope.tinymceOptions.language, $translate);
                     addTinyMceToolbarButtons(editor, vm);
                 }
             };
@@ -207,10 +190,19 @@
         vm.activate();
     }
 
-    // todo - later use i18n from angular-translate
-    function initLangResources(editor, language) {
-        tinymce.addI18n("de", labelsDe);
-        tinymce.addI18n("en", labelsEn);
+    // Initialize the tinymce resources which we translate ourselves
+    function initLangResources(editor, language, $translate) {
+        var keys = [], mceTransObject = {}, prefix = "Extension.TinyMce.";
+
+        // create array to request values from $translate
+        for (var k = 0; k < translationsMce.length; k++)
+            keys.push(prefix + translationsMce[k]);
+        var translations = $translate.instant(keys);
+
+        // reconvert to the keys / structure which tinyMce needs and hand it in
+        for (k = 0; k < translationsMce.length; k++)
+            mceTransObject[translationsMce[k]] = translations[prefix + translationsMce[k]];
+        tinymce.addI18n(language, mceTransObject);
     }
 
     function addTinyMceToolbarButtons(editor, vm) {
@@ -261,21 +253,21 @@
         editor.addButton("adamlink", {
             type: "splitbutton",
             icon: " icon-file-pdf",
-            title: "linkAdamFileHover",
+            title: "Link.AdamFile.Tooltip",
             onclick: function() {
                 vm.toggleAdam(false);
             },
             menu: [
                 {
-                    text: "linkAdamFile",
-                    tooltip: "linkAdamFileHover",
+                    text: "Link.AdamFile",
+                    tooltip: "Link.AdamFile.Tooltip",
                     icon: " icon-file-pdf",
                     onclick: function() {
                         vm.toggleAdam(false);
                     }
                 }, {
-                    text: "linkDnnFile",
-                    tooltip: "linkDnnFileHover",
+                    text: "Link.DnnFile",
+                    tooltip: "Link.DnnFile.Tooltip",
                     icon: " icon-file",
                     onclick: function () {
                         vm.openDnnDialog("documentmanager");
@@ -298,8 +290,8 @@
             menu: [
             { icon: "link", text: "Link", onclick: function() { editor.execCommand("mceLink"); } },
             {
-                text: "linkPage",
-                tooltip: "linkPageHover",
+                text: "Link.Page",
+                tooltip: "Link.Page.Tooltip",
                 icon: " icon-sitemap",
                 onclick: function() {
                     vm.openDnnDialog("pagepicker");
@@ -308,7 +300,7 @@
         ]
         };
         var linkgroupPro = angular.copy(linkgroup);
-        linkgroupPro.menu.push({ icon: " icon-anchor", text: "Anchor", tooltip: "linkAnchorHover", onclick: function() { editor.execCommand("mceAnchor"); } });
+        linkgroupPro.menu.push({ icon: " icon-anchor", text: "Anchor", tooltip: "Link.Anchor.Tooltip", onclick: function() { editor.execCommand("mceAnchor"); } });
         editor.addButton("linkgroup", linkgroup);
         editor.addButton("linkgrouppro", linkgroupPro);
         //#endregion
@@ -324,15 +316,15 @@
             },
             menu: [
                 {
-                    text: "linkAdamFile", 
-                    tooltip: "linkAdamFileHover",
+                    text: "Link.AdamFile", 
+                    tooltip: "Link.AdamFile.Tooltip",
                     icon: "image",
                     onclick: function() {
                         vm.toggleAdam(true);
                     }
                 }, {
-                    text: "linkDnnFile", 
-                    tooltip: "linkDnnFileHover",
+                    text: "Link.DnnFile", 
+                    tooltip: "Link.DnnFile.Tooltip",
                     icon: "image",
                     onclick: function() {
                         vm.openDnnDialog("imagemanager");
@@ -388,13 +380,13 @@
 
         editor.addButton("modestandard", {
             icon: " icon-cancel",
-            tooltip: "modeStd",
+            tooltip: "SwitchMode.Standard",
             onclick: function () { switchModes("standard"); }
         });
 
         editor.addButton("modeadvanced", {
             icon: " icon-pro",
-            tooltip: "modeStd",
+            tooltip: "SwitchMode.Pro",
             onclick: function () {  switchModes("advanced");    }
         });
         //#endregion

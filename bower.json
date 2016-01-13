@@ -6,7 +6,7 @@
     "angular-google-maps": "~2.2.0",
     "dropzone": "4.0.1",
     "angular-dropzone": "0.1.2",
-    "2sxc-eav-languages": "2sic/2sxc-eav-languages",
+    "2sxc-eav-languages": "2sic/2sxc-eav-languages#8c55a2f",
     "2sxc-icons": "2sic/2sxc-icons#v.08.01.00.009",
     "angular-ui-ace": "0.2.3",
     "angular-ui-tinymce": "0.0.12"
