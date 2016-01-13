@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading;
 using System.Web.Http;
 using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Web.Razor.Helpers;
@@ -18,6 +19,7 @@ namespace ToSic.SexyContent.Adam
         public const string AdamFolderMask = "adam/[AppFolder]/[Guid22]/[FieldName]/[SubFolder]";
         #endregion
 
+        private SexyContent Sexy;
         private App App;
         private Razor.Helpers.DnnHelper Dnn;
         private readonly Guid entityGuid;
@@ -25,8 +27,9 @@ namespace ToSic.SexyContent.Adam
         private IFolderManager folderManager = FolderManager.Instance;
     
 
-        public Core(App app, Razor.Helpers.DnnHelper dnn, Guid eGuid, string fName)
+        public Core(SexyContent sexy, App app, Razor.Helpers.DnnHelper dnn, Guid eGuid, string fName)
         {
+            Sexy = sexy;
             App = app;
             Dnn = dnn;
             entityGuid = eGuid;
@@ -91,6 +94,11 @@ namespace ToSic.SexyContent.Adam
             return path;
         }
 
+        public string GenerateWebPath(AdamFile currentFile)
+        {
+            return Dnn.Portal.HomeDirectory + currentFile.Folder + currentFile.FileName;
+        }
+
         internal IFolderInfo Folder()
         {
             if (_folder == null)
@@ -100,10 +108,32 @@ namespace ToSic.SexyContent.Adam
 
         public int GetMetadataId(int id, bool isFolder)
         {
-            var items = App.Data.Metadata.GetAssignedEntities(Constants.AssignmentObjectTypeCmsObject,
-                (isFolder ? "folder:" : "file:") + id);
+            var items = GetFirstMetadataEntity(id, isFolder);
+            //App.Data.Metadata.GetAssignedEntities(Constants.AssignmentObjectTypeCmsObject,
+            //    (isFolder ? "folder:" : "file:") + id);
 
-            return items.FirstOrDefault()?.EntityId ?? 0;
+            return items?.EntityId ?? 0;
+        }
+
+        public IEntity GetFirstMetadataEntity(int id, bool isFolder)
+        {
+            return App.Data.Metadata.GetAssignedEntities(Constants.AssignmentObjectTypeCmsObject, 
+                (isFolder ? "folder:" : "file:") + id)
+                .FirstOrDefault();
+        }
+        public DynamicEntity GetFirstMetadata(int id, bool isFolder)
+        {
+            var meta = GetFirstMetadataEntity(id, isFolder);
+
+            if (meta == null)
+            {
+                var emptyMetadata = new Dictionary<string, object>();
+                emptyMetadata.Add("Title", "");
+                meta = new Eav.Data.Entity(0, "", emptyMetadata, "Title");
+            }
+            return new DynamicEntity(meta, new[] {Thread.CurrentThread.CurrentCulture.Name}, Sexy);
+
+
         }
 
         #region type information

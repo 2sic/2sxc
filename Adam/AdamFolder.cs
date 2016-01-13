@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DotNetNuke.Services.FileSystem;
-using ToSic.Eav;
 
 namespace ToSic.SexyContent.Adam
 {
     public class AdamFolder : FolderInfo
     {
-        public App App;
+        public Core Core;
+        //public App App;
 
         private IFolderManager _fldm = FolderManager.Instance;
         private IFileManager _filem = FileManager.Instance;
@@ -16,15 +16,8 @@ namespace ToSic.SexyContent.Adam
         /// Metadata for this folder
         /// This is usually an entity which has additional information related to this file
         /// </summary>
-        public IEntity Metadata
-        {
-            get
-            {
-                return App.Data.Metadata.GetAssignedEntities(Constants.AssignmentObjectTypeCmsObject, "folder:" + FolderID)
-                    .FirstOrDefault();
-            }
-        }
-
+        public DynamicEntity Metadata => Core.GetFirstMetadata(FolderID, true);
+        public bool HasMetadata => Core.GetFirstMetadataEntity(FolderID, false) != null;
 
 
         private IEnumerable<AdamFolder> _folders;
@@ -63,8 +56,8 @@ namespace ToSic.SexyContent.Adam
                         UniqueId = f.UniqueId,
                         VersionGuid = f.VersionGuid,
                         WorkflowID = f.WorkflowID,
-                        App = App
-
+                        //App = App,
+                        Core = Core
                     }).ToList()
                                ?? new List<AdamFolder>();
                 }
@@ -97,12 +90,13 @@ namespace ToSic.SexyContent.Adam
                         Width = f.Width,
                         Height = f.Height,
                         ContentType = f.ContentType,
+                        FileId = f.FileId,
                         Folder = f.Folder,
                         FolderId = f.FolderId,
                         StorageLocation = f.StorageLocation,
                         IsCached = f.IsCached,
                         SHA1Hash = f.SHA1Hash,
-                        App = App
+                        Core = Core
                     }).ToList()
                     ?? new List<AdamFile>();
                 }

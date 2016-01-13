@@ -8,12 +8,10 @@ namespace ToSic.SexyContent.Adam
 {
     public class AdamNavigator : AdamFolder
     {
-        public Core Core;
-
-        public AdamNavigator(App app, Razor.Helpers.DnnHelper dnn, Guid entityGuid, string fieldName)
+        public AdamNavigator(SexyContent sexy, App app, Razor.Helpers.DnnHelper dnn, Guid entityGuid, string fieldName)
         {
-            Core = new Core(app, dnn, entityGuid, fieldName);
-            App = app;
+            Core = new Core(sexy, app, dnn, entityGuid, fieldName);
+            //App = app;
 
             if (!Exists)
                 return;
@@ -40,7 +38,6 @@ namespace ToSic.SexyContent.Adam
             UniqueId = f.UniqueId;
             VersionGuid = f.VersionGuid;
             WorkflowID = f.WorkflowID;
-
         }
 
         public string Root => Core.GeneratePath("");

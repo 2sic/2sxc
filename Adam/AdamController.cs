@@ -29,7 +29,7 @@ namespace ToSic.SexyContent.Adam
 
         private void PrepCore(Guid entityGuid, string fieldName)
         {
-            Core = new Core(App, Dnn, entityGuid, fieldName);
+            Core = new Core(Sexy, App, Dnn, entityGuid, fieldName);
         }
 
         // todo: centralize once it works
