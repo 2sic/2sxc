@@ -7,8 +7,10 @@ angular.module("SourceEditor")
 
             var svc = {
                 cachedSnippets: {},
+                inputTypeSnippets: {},
+                inputTypes: InputTypeSnippetHandler(),
                 loaded: false,
-                list: null, // snippets as list in a format for the editor
+                list: [], // snippets as list in a format for the editor
                 tree: null, // snippets as tree for the drop-down tool
                 ace: ace, // source editor object
 
@@ -22,7 +24,12 @@ angular.module("SourceEditor")
 
                     return svc.loadTable().then(function(result) {
                         // filter for token/razor snippets
-                        svc.list = svc.filterAwayNotNeededSnippetsList(result.data.snippets);
+                        var relevant = svc.filterAwayNotNeededSnippetsList(result.data.snippets);
+                        var inputTypesArray = [];
+
+                        svc.splitSnippetsBySystemType(relevant, svc.list, inputTypesArray);
+                        svc.inputTypeSnippets = svc.catalogInputTypeSnippets(inputTypesArray);
+                        // inputTypeSnippets = svc.extractInputTypeSnippets(result.data.snippets);
 
                         var sets = svc.initSnippetsWithConfig(svc.list);
                         for (var x in sets)
@@ -52,7 +59,8 @@ angular.module("SourceEditor")
 
                     // maybe App-infos
                     if (templateConfiguration.HasApp) {
-                        sets.App = { Resources: {}, Settings: {} };
+                        sets.App.Resources = {};
+                        sets.App.Settings = {};
                         svc.loadContentType(sets.App.Resources, "App-Resources", "App.Resources");
                         svc.loadContentType(sets.App.Settings, "App-Settings", "App.Settings");
                     }
@@ -117,13 +125,38 @@ angular.module("SourceEditor")
                         var itm = list[i];
                         var setHasPrefix = svc.keyPrefixes.indexOf(itm.set[0]);
                         if (setHasPrefix === -1 || (setHasPrefix === svc.keyPrefixIndex)) {
-                            newList.push(itm);
                             // if necessary, remove first char
                             if (setHasPrefix === svc.keyPrefixIndex)
                                 itm.set = itm.set.substr(1);
+
+                            newList.push(itm);
                         }
                     }
                     return newList;
+                },
+
+                splitSnippetsBySystemType: function(list, standardArray, inputTypeArray) {
+                    for (var i = 0; i < list.length; i++) {
+                        var itm = list[i];
+                        var systemSnippet = itm.set[0] === "\\";
+                        if (!systemSnippet)
+                            standardArray.push(itm);
+                        else {
+                            itm.set = itm.set.substr(1);
+                            inputTypeArray.push(itm);
+                        }
+                    }
+
+                },
+
+                catalogInputTypeSnippets: function (list) {
+                    var inputTypeList = {};
+                    for (var i = 0; i < list.length; i++) {
+                        if (inputTypeList[list[i].subset] === undefined)
+                            inputTypeList[list[i].subset] = [];
+                        inputTypeList[list[i].subset].push(list[i]);
+                    }
+                    return inputTypeList;
                 },
 
                 keyPrefixes: ["@", "["],
@@ -137,27 +170,27 @@ angular.module("SourceEditor")
                             // first add common items if the content-type actually exists
                             angular.forEach(result.data, function(value) {
                                 var fieldname = value.StaticName;
-                                var description = value.Metadata.merged.Notes || "" + " (" + value.Type.toLowerCase() + ") ";
-                                var placeholder = svc.valuePlaceholder(prefix, fieldname);
-                                var snipDef = target[fieldname] = {
+                                target[fieldname] = {
                                     key: fieldname,
                                     label: fieldname,
-                                    snip: placeholder,
-                                    help: description
+                                    snip: svc.valuePlaceholder(prefix, fieldname),
+                                    help: value.Metadata.merged.Notes || "" + " (" + value.Type.toLowerCase() + ") "
                                 };
-                                // add more snippets if it could be an image
-                                if (value.Type === "Hyperlink") {
-                                    target[fieldname + "-tu"] = angular.extend({}, snipDef, {
-                                        key: fieldname + " - thumb url",
-                                        label: fieldname + " - thumb url",
-                                        snip: svc.imageResizeSnippet(snipDef.snip, false)
-                                    });
-                                    target[fieldname + "-ti"] = angular.extend({}, snipDef, {
-                                        key: fieldname + " - thumb img",
-                                        label: fieldname + " - thumb img",
-                                        snip: svc.imageResizeSnippet(snipDef.snip, true)
-                                    });
-                                }
+                        
+                                // try to add generic snippets specific to this input-type
+                                var snipDefaults = angular.copy(target[fieldname]); // must be a copy, because target[fieldname] will grow
+
+                                var inputType = value.InputType;
+                                var genericSnippet = svc.inputTypeSnippets[inputType];
+
+                                if (genericSnippet)
+                                    for (var g = 0; g < genericSnippet.length; g++) {
+                                        target[fieldname + "-" + genericSnippet[g].name] = angular.extend({}, snipDefaults, {
+                                            key: fieldname + " - " + genericSnippet[g].name,
+                                            label: fieldname + " - " + genericSnippet[g].name,
+                                            snip: svc.inputTypes.localizeGenericSnippet(genericSnippet[g].content, prefix, value.StaticName)
+                                        });
+                                    }
                             });
 
                             var std = ["EntityId", "EntityTitle", "EntityGuid", "EntityType", "IsPublished", "Modified"];
@@ -173,18 +206,18 @@ angular.module("SourceEditor")
                         });
                 },
 
+                localizeGenericSnippet: function (snip, objName, fieldName) {
+                    snip = snip.replace(/\{var\}/gi, objName)
+                        .replace(/\{prop\}/gi, fieldName);
+                    return snip;
+                },
+
                 valuePlaceholder: function(obj, val) {
                     return (templateConfiguration.Type.indexOf("Razor") > -1)
                         ? "@" + obj + "." + val
                         : "[" + obj.replace(".", ":") + ":" + val + "]";
                 },
 
-                imageResizeSnippet: function(basicPlaceholder, addImgTag) {
-                    var snip = basicPlaceholder + "?w=${1:200}&h=${2:200}&mode=${3:crop}";
-                    if (addImgTag)
-                        snip = "<img src=\"" + snip + "\">";
-                    return snip;
-                },
                 //#endregion
 
                 /// add the list to the snippet manager so it works for typing
@@ -199,4 +232,15 @@ angular.module("SourceEditor")
 
             return svc;
         };
+
+        function InputTypeSnippetHandler() {
+            var itsh = {
+                localizeGenericSnippet: function (snip, objName, fieldName) {
+                    snip = snip.replace(/\{var\}/gi, objName)
+                        .replace(/\{prop\}/gi, fieldName);
+                    return snip;
+                }
+            };
+            return itsh;
+        }
     });

@@ -1,7 +1,7 @@
 {
     "snippets": [
         {
-            "set": "@DnnRazor",
+            "set": "@App",
             "subset": "App",
             "name": "Path",
             "title": "returns the url to the current app",
@@ -9,7 +9,7 @@
             "help": "path for integrating scripts,  images etc. For example  use as @App.Path/scripts/knockout.js"
         },
         {
-            "set": "@DnnRazor",
+            "set": "@App",
             "subset": "App",
             "name": "PhysPath",
             "title": "physical path",
@@ -17,7 +17,7 @@
             "help": "physical path in c:\\"
         },
         {
-            "set": "@DnnRazor",
+            "set": "@App",
             "subset": "App",
             "name": "AppGuid",
             "title": "App Guid",
@@ -25,7 +25,7 @@
             "help": "internal GUID - should stay the same across all systems for this specific App"
         },
         {
-            "set": "@DnnRazor",
+            "set": "@App",
             "subset": "App",
             "name": "AppId",
             "title": "App Id",
@@ -33,7 +33,7 @@
             "help": "Id in the current data base. Is a different number in every App-Installation"
         },
         {
-            "set": "@DnnRazor",
+            "set": "@App",
             "subset": "App",
             "name": "AppName",
             "title": "App Name",
@@ -41,7 +41,7 @@
             "help": "internal name"
         },
         {
-            "set": "@DnnRazor",
+            "set": "@App",
             "subset": "App",
             "name": "AppFolder",
             "title": "folder of the 2sxc-app",
@@ -1385,52 +1385,52 @@
             "help": ""
         },
         {
-            "set": "[DnnToken",
+            "set": "[App",
             "subset": "App",
             "name": "Path",
             "title": "",
             "content": "[App:Path]",
-            "help": ""
+            "help": "path for integrating scripts,  images etc. For example  use as @App.Path/scripts/knockout.js"
         },
         {
-            "set": "[DnnToken",
+            "set": "[App",
             "subset": "App",
             "name": "PhysicalPath",
             "title": "",
             "content": "[App:PhysicalPath]",
-            "help": ""
+            "help": "physical path in c:\\"
         },
         {
-            "set": "[DnnToken",
+            "set": "[App",
             "subset": "App",
             "name": "Guid",
             "title": "",
             "content": "[App:AppGuid]",
-            "help": ""
+            "help": "internal GUID - should stay the same across all systems for this specific App"
         },
         {
-            "set": "[DnnToken",
+            "set": "[App",
             "subset": "App",
             "name": "AppId",
             "title": "",
             "content": "[App:AppId]",
-            "help": ""
+            "help": "Id in the current data base. Is a different number in every App-Installation"
         },
         {
-            "set": "[DnnToken",
+            "set": "[App",
             "subset": "App",
             "name": "Name",
             "title": "",
             "content": "[App:Name]",
-            "help": ""
+            "help": "internal name"
         },
         {
-            "set": "[DnnToken",
+            "set": "[App",
             "subset": "App",
             "name": "Folder",
             "title": "",
             "content": "[App:Folder]",
-            "help": ""
+            "help": "often used to create paths to scripts or join some values. if you only need to reference a script,  please use App.Path"
         },
         {
             "set": "[DnnToken",
@@ -1799,6 +1799,46 @@
             "title": "",
             "content": "<link rel=\"stylesheet\" href=\"@App.Path/assets/AppCatalog.css\" data-enableoptimizations=\"100\"/>",
             "help": ""
+        },
+        {
+            "set": "@\\InputType",
+            "subset": "hyperlink-library",
+            "name": "loop across assets",
+            "title": "",
+            "content": "@foreach(var ${3:pic} in Adam(${1:Content}, \"${2:Screenshots}\").Files){\r\n <div style=\"clear: both\">\r\n  <img src=\"@${3:pic}.Url?w=200&h=200&mode=crop\" title=\"@${3:pic}.FileName\" style=\"float: right\">\r\n  <h3>@${3:pic}.Metadata.${10:Title}</h3>\r\n  Has Meta: @${3:pic}.HasMetadata \r\n  <div>Description: @Html.Raw(${3:pic}.Metadata.${11:Description})</div>\r\n </div>\r\n}",
+            "help": "Large example with looping ADAM assets"
+        },
+        {
+            "set": "@\\InputType",
+            "subset": "hyperlink-default",
+            "name": "thumbnail url",
+            "title": "",
+            "content": "@$101{var}.$102{prop}?w=${1:200}&h=${2:200}&mode=${3:crop}",
+            "help": "Thumbnail URL with crop-mode"
+        },
+        {
+            "set": "@\\InputType",
+            "subset": "hyperlink-default",
+            "name": "thumbnail IMG tag",
+            "title": "",
+            "content": "<img src=\"@$101{var}.$102{prop}?w=${1:200}&h=${2:200}&mode=${3:crop}\">",
+            "help": "Thumbnail IMG tag with crop-mode"
+        },
+        {
+            "set": "[\\InputType",
+            "subset": "hyperlink-default",
+            "name": "thumbnail url",
+            "title": "",
+            "content": "[$101{var}:$102{prop}]?w=${1:200}&h=${2:200}&mode=${3:crop}",
+            "help": "Thumbnail URL with crop-mode"
+        },
+        {
+            "set": "[\\InputType",
+            "subset": "hyperlink-default",
+            "name": "thumbnail IMG tag",
+            "title": "",
+            "content": "<img src=\"[$101{var}:$102{prop}]?w=${1:200}&h=${2:200}&mode=${3:crop}\">",
+            "help": "Thumbnail IMG tag with crop-mode"
         }
     ]
 }
