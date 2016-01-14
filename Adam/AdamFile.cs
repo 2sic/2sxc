@@ -2,7 +2,7 @@
 
 namespace ToSic.SexyContent.Adam
 {
-    public class AdamFile : FileInfo
+    public class AdamFile : FileInfo, IAdamItem
     {
         public Core Core;
 
@@ -15,5 +15,7 @@ namespace ToSic.SexyContent.Adam
         public bool HasMetadata => Core.GetFirstMetadataEntity(FileId, false) != null;
 
         public  string Url => Core.GenerateWebPath(this);
+
+        public string Type => Core.TypeName(Extension);
     }
 }

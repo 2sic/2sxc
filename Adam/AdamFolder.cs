@@ -4,7 +4,7 @@ using DotNetNuke.Services.FileSystem;
 
 namespace ToSic.SexyContent.Adam
 {
-    public class AdamFolder : FolderInfo
+    public class AdamFolder : FolderInfo, IAdamItem
     {
         public Core Core;
         //public App App;
@@ -17,8 +17,12 @@ namespace ToSic.SexyContent.Adam
         /// This is usually an entity which has additional information related to this file
         /// </summary>
         public DynamicEntity Metadata => Core.GetFirstMetadata(FolderID, true);
+
+        public string Url => Core.GenerateWebPath(this);
+
         public bool HasMetadata => Core.GetFirstMetadataEntity(FolderID, false) != null;
 
+        public string Type => "folder";
 
         private IEnumerable<AdamFolder> _folders;
 

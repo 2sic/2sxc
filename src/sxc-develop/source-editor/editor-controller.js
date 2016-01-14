@@ -34,8 +34,9 @@
 
         vm.close = function () { $modalInstance.dismiss("cancel"); };
 
-        vm.save = function () {
-            svc.save(vm.view).then(vm.close);
+        vm.save = function (autoClose) {
+            var after = autoClose ? vm.close : function() {};
+            svc.save(vm.view).then(after);
         };
 
         vm.addSnippet = function addSnippet(snippet) {

@@ -99,6 +99,11 @@ namespace ToSic.SexyContent.Adam
             return Dnn.Portal.HomeDirectory + currentFile.Folder + currentFile.FileName;
         }
 
+        public string GenerateWebPath(AdamFolder currentFolder)
+        {
+            return Dnn.Portal.HomeDirectory + currentFolder.FolderPath;
+        }
+
         internal IFolderInfo Folder()
         {
             if (_folder == null)

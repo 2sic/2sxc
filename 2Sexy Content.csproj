@@ -176,6 +176,7 @@
     <Compile Include="Adam\AdamNavigator.cs" />
     <Compile Include="Adam\Core.cs" />
     <Compile Include="Adam\GuidHelpers.cs" />
+    <Compile Include="Adam\IAdamItem.cs" />
     <Compile Include="Adam\UploadResult.cs" />
     <Compile Include="Administration\Apps\AppExport.ascx.cs">
       <DependentUpon>AppExport.ascx</DependentUpon>

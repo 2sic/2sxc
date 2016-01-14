@@ -19,14 +19,14 @@
                     theme:'sqlserver',
                     mode: 'html',
                     onLoad: aceLoaded,
-                    require: ['ace/ext/language_tools'],
+                    require: ['ace/ext/language_tools', '//xyz/something'],
                     advanced: {
                         enableSnippets: true,
                         enableBasicAutocompletion: true,
                         enableLiveAutocompletion: true
                     },
-                    rendererOptions: { 
-                        fontSize: 16 
+                    rendererOptions: {
+                        fontSize: 16
                     }
                      }">
                 </div>
@@ -50,13 +50,12 @@
                             </div>
                             <ul ng-if="showMore">
                                 <li ng-repeat="more in value.more | toArray | orderBy: '$key'" tooltip="{{ value.snip }}">
-                                <span ng-click="vm.addSnippet(more.snip)">{{more.label}}</span>
-                                <i icon="info-sign" style="opacity: 0.3" ng-click="show = !show" ng-show="more.help"></i>
-                                <div ng-if="show">
-                                    <em>{{more.help}}</em>
-                                </div>
-                            </ul
-                            >
+                                    <span ng-click="vm.addSnippet(more.snip)">{{more.label}}</span>
+                                    <i icon="info-sign" style="opacity: 0.3" ng-click="show = !show" ng-show="more.help"></i>
+                                    <div ng-if="show">
+                                        <em>{{more.help}}</em>
+                                    </div>
+                            </ul>
                         </li>
                     </ul>
 
@@ -67,7 +66,15 @@
 
     </div>
     <div class="modal-footer">
-        <button class="btn btn-primary btn-square btn-lg pull-left" type="button" ng-click="vm.save()"><i icon="ok"></i></button>
+        <div class="pull-left">
+            <button class="btn btn-primary btn-lg xxbtn-square" type="button" ng-click="vm.save(false)">
+                <span icon="check" tooltip="{{ 'Button.SaveAndKeepOpen' | translate }}"></span>
+                {{ 'Button.SaveAndKeepOpen' | translate }}
+            </button>
+            &nbsp;
+            <button class="btn btn-default btn-square btn-lg" type="button" ng-click="vm.save(true)"><i icon="ok"></i></button>
+            &nbsp;
+        </div>
     </div>
     <show-debug-availability class="pull-right"></show-debug-availability>
 </div>
