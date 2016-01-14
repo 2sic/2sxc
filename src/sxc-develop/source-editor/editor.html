@@ -16,7 +16,7 @@
                     useWrapMode : true,
                     useSoftTabs: true,
                     showGutter: true,
-                    theme:'twilight',
+                    theme:'sqlserver',
                     mode: 'html',
                     onLoad: aceLoaded,
                     require: ['ace/ext/language_tools'],
@@ -24,7 +24,11 @@
                         enableSnippets: true,
                         enableBasicAutocompletion: true,
                         enableLiveAutocompletion: true
-                    }}">
+                    },
+                    rendererOptions: { 
+                        fontSize: 16 
+                    }
+                     }">
                 </div>
             </div>
             <div class="pull-right col-md-4">
