@@ -39,8 +39,20 @@
                     <ul>
                         <li ng-repeat="value in subsetValue | toArray | orderBy: '$key'" tooltip="{{ value.snip }}">
                             <span ng-click="vm.addSnippet(value.snip)">{{value.label}}</span>
+                            <a ng-show="value.more" ng-click="showMore = !showMore"><i icon="plus"></i>more</a>
                             <i icon="info-sign" style="opacity: 0.3" ng-click="show = !show" ng-show="value.help"></i>
-                            <div ng-if="show"><em>{{value.help}}</em></div>
+                            <div ng-if="show">
+                                <em>{{value.help}}</em>
+                            </div>
+                            <ul ng-if="showMore">
+                                <li ng-repeat="more in value.more | toArray | orderBy: '$key'" tooltip="{{ value.snip }}">
+                                <span ng-click="vm.addSnippet(more.snip)">{{more.label}}</span>
+                                <i icon="info-sign" style="opacity: 0.3" ng-click="show = !show" ng-show="more.help"></i>
+                                <div ng-if="show">
+                                    <em>{{more.help}}</em>
+                                </div>
+                            </ul
+                            >
                         </li>
                     </ul>
 

@@ -7,7 +7,7 @@ angular.module("SourceEditor")
 
             var svc = {
                 cachedSnippets: {},
-                inputTypeSnippets: {},
+                //inputTypeSnippets: {},
                 inputTypes: InputTypeSnippetHandler(),
                 loaded: false,
                 list: [], // snippets as list in a format for the editor
@@ -25,11 +25,7 @@ angular.module("SourceEditor")
                     return svc.loadTable().then(function(result) {
                         // filter for token/razor snippets
                         var relevant = svc.filterAwayNotNeededSnippetsList(result.data.snippets);
-                        var inputTypesArray = [];
-
-                        svc.splitSnippetsBySystemType(relevant, svc.list, inputTypesArray);
-                        svc.inputTypeSnippets = svc.catalogInputTypeSnippets(inputTypesArray);
-                        // inputTypeSnippets = svc.extractInputTypeSnippets(result.data.snippets);
+                        svc.inputTypes.extractInputTypeSnippets(relevant, svc.list);
 
                         var sets = svc.initSnippetsWithConfig(svc.list);
                         for (var x in sets)
@@ -70,6 +66,7 @@ angular.module("SourceEditor")
                     return sets;
                 },
 
+                // load snippets from server
                 loadTable: function() {
                     return $http.get("../sxc-develop/snippets.json.js");
                 },
@@ -135,29 +132,6 @@ angular.module("SourceEditor")
                     return newList;
                 },
 
-                splitSnippetsBySystemType: function(list, standardArray, inputTypeArray) {
-                    for (var i = 0; i < list.length; i++) {
-                        var itm = list[i];
-                        var systemSnippet = itm.set[0] === "\\";
-                        if (!systemSnippet)
-                            standardArray.push(itm);
-                        else {
-                            itm.set = itm.set.substr(1);
-                            inputTypeArray.push(itm);
-                        }
-                    }
-
-                },
-
-                catalogInputTypeSnippets: function (list) {
-                    var inputTypeList = {};
-                    for (var i = 0; i < list.length; i++) {
-                        if (inputTypeList[list[i].subset] === undefined)
-                            inputTypeList[list[i].subset] = [];
-                        inputTypeList[list[i].subset].push(list[i]);
-                    }
-                    return inputTypeList;
-                },
 
                 keyPrefixes: ["@", "["],
                 keyPrefixIndex: (templateConfiguration.Type.indexOf("Razor") > -1) ? 0 : 1,
@@ -180,17 +154,7 @@ angular.module("SourceEditor")
                                 // try to add generic snippets specific to this input-type
                                 var snipDefaults = angular.copy(target[fieldname]); // must be a copy, because target[fieldname] will grow
 
-                                var inputType = value.InputType;
-                                var genericSnippet = svc.inputTypeSnippets[inputType];
-
-                                if (genericSnippet)
-                                    for (var g = 0; g < genericSnippet.length; g++) {
-                                        target[fieldname + "-" + genericSnippet[g].name] = angular.extend({}, snipDefaults, {
-                                            key: fieldname + " - " + genericSnippet[g].name,
-                                            label: fieldname + " - " + genericSnippet[g].name,
-                                            snip: svc.inputTypes.localizeGenericSnippet(genericSnippet[g].content, prefix, value.StaticName)
-                                        });
-                                    }
+                                svc.inputTypes.attachSnippets(target, prefix, fieldname, value.InputType, snipDefaults);
                             });
 
                             var std = ["EntityId", "EntityTitle", "EntityGuid", "EntityType", "IsPublished", "Modified"];
@@ -204,12 +168,6 @@ angular.module("SourceEditor")
                                     };
 
                         });
-                },
-
-                localizeGenericSnippet: function (snip, objName, fieldName) {
-                    snip = snip.replace(/\{var\}/gi, objName)
-                        .replace(/\{prop\}/gi, fieldName);
-                    return snip;
                 },
 
                 valuePlaceholder: function(obj, val) {
@@ -235,9 +193,59 @@ angular.module("SourceEditor")
 
         function InputTypeSnippetHandler() {
             var itsh = {
-                localizeGenericSnippet: function (snip, objName, fieldName) {
-                    snip = snip.replace(/\{var\}/gi, objName)
-                        .replace(/\{prop\}/gi, fieldName);
+                inputTypeSnippets: {},
+
+                extractInputTypeSnippets: function(list, standardArray) {
+                    var inputTypeArray = [];
+
+                    for (var i = 0; i < list.length; i++) {
+                        var itm = list[i];
+                        var systemSnippet = itm.set[0] === "\\";
+                        if (!systemSnippet)
+                            standardArray.push(itm);
+                        else {
+                            itm.set = itm.set.substr(1);
+                            inputTypeArray.push(itm);
+                        }
+                    }
+                    itsh.inputTypeSnippets = itsh.catalogInputTypeSnippets(inputTypeArray);
+                },
+
+                catalogInputTypeSnippets: function(list) {
+                    var inputTypeList = {};
+                    for (var i = 0; i < list.length; i++) {
+                        if (inputTypeList[list[i].subset] === undefined)
+                            inputTypeList[list[i].subset] = [];
+                        inputTypeList[list[i].subset].push(list[i]);
+                    }
+                    return inputTypeList;
+                },
+
+                attachSnippets: function(target, prefix, fieldname, inputType, snipDefaults) {
+                    var genericSnippet = itsh.inputTypeSnippets[inputType];
+
+                    if (!genericSnippet)
+                        return;
+
+                    if (target[fieldname].more === undefined)
+                        target[fieldname].more = [];
+                    var fieldSnips = target[fieldname].more;
+                    for(var g = 0;g < genericSnippet.length;g++)
+                        try {
+                            fieldSnips[fieldname + "-" + genericSnippet[g].name] = angular.extend({}, snipDefaults, {
+                                key: fieldname + " - " + genericSnippet[g].name,
+                                label: genericSnippet[g].name,
+                                snip: itsh.localizeGenericSnippet(genericSnippet[g].content, prefix, fieldname),
+                                collapse: true
+                            });
+                        } finally {
+                        }
+
+                },
+
+                localizeGenericSnippet: function(snip, objName, fieldName) {
+                    snip = snip.replace(/(\$\{[0-9]+\:)var(\})/gi, "$1" + objName + "$2")
+                        .replace(/(\$\{[0-9]+\:)prop(\})/gi, "$1" + fieldName + "$2");
                     return snip;
                 }
             };

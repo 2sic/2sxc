@@ -1806,7 +1806,7 @@
             "name": "loop across assets",
             "title": "",
             "content": "@foreach(var ${3:pic} in Adam(${1:Content}, \"${2:Screenshots}\").Files){\r\n <div style=\"clear: both\">\r\n  <img src=\"@${3:pic}.Url?w=200&h=200&mode=crop\" title=\"@${3:pic}.FileName\" style=\"float: right\">\r\n  <h3>@${3:pic}.Metadata.${10:Title}</h3>\r\n  Has Meta: @${3:pic}.HasMetadata \r\n  <div>Description: @Html.Raw(${3:pic}.Metadata.${11:Description})</div>\r\n </div>\r\n}",
-            "help": "Large example with looping ADAM assets"
+            "help": "Adam: Large example with looping ADAM assets"
         },
         {
             "set": "@\\InputType",

@@ -91,7 +91,7 @@ angular.module("SourceEditor")
 
             var svc = {
                 cachedSnippets: {},
-                inputTypeSnippets: {},
+                //inputTypeSnippets: {},
                 inputTypes: InputTypeSnippetHandler(),
                 loaded: false,
                 list: [], // snippets as list in a format for the editor
@@ -109,11 +109,7 @@ angular.module("SourceEditor")
                     return svc.loadTable().then(function(result) {
                         // filter for token/razor snippets
                         var relevant = svc.filterAwayNotNeededSnippetsList(result.data.snippets);
-                        var inputTypesArray = [];
-
-                        svc.splitSnippetsBySystemType(relevant, svc.list, inputTypesArray);
-                        svc.inputTypeSnippets = svc.catalogInputTypeSnippets(inputTypesArray);
-                        // inputTypeSnippets = svc.extractInputTypeSnippets(result.data.snippets);
+                        svc.inputTypes.extractInputTypeSnippets(relevant, svc.list);
 
                         var sets = svc.initSnippetsWithConfig(svc.list);
                         for (var x in sets)
@@ -154,6 +150,7 @@ angular.module("SourceEditor")
                     return sets;
                 },
 
+                // load snippets from server
                 loadTable: function() {
                     return $http.get("../sxc-develop/snippets.json.js");
                 },
@@ -219,29 +216,6 @@ angular.module("SourceEditor")
                     return newList;
                 },
 
-                splitSnippetsBySystemType: function(list, standardArray, inputTypeArray) {
-                    for (var i = 0; i < list.length; i++) {
-                        var itm = list[i];
-                        var systemSnippet = itm.set[0] === "\\";
-                        if (!systemSnippet)
-                            standardArray.push(itm);
-                        else {
-                            itm.set = itm.set.substr(1);
-                            inputTypeArray.push(itm);
-                        }
-                    }
-
-                },
-
-                catalogInputTypeSnippets: function (list) {
-                    var inputTypeList = {};
-                    for (var i = 0; i < list.length; i++) {
-                        if (inputTypeList[list[i].subset] === undefined)
-                            inputTypeList[list[i].subset] = [];
-                        inputTypeList[list[i].subset].push(list[i]);
-                    }
-                    return inputTypeList;
-                },
 
                 keyPrefixes: ["@", "["],
                 keyPrefixIndex: (templateConfiguration.Type.indexOf("Razor") > -1) ? 0 : 1,
@@ -264,17 +238,7 @@ angular.module("SourceEditor")
                                 // try to add generic snippets specific to this input-type
                                 var snipDefaults = angular.copy(target[fieldname]); // must be a copy, because target[fieldname] will grow
 
-                                var inputType = value.InputType;
-                                var genericSnippet = svc.inputTypeSnippets[inputType];
-
-                                if (genericSnippet)
-                                    for (var g = 0; g < genericSnippet.length; g++) {
-                                        target[fieldname + "-" + genericSnippet[g].name] = angular.extend({}, snipDefaults, {
-                                            key: fieldname + " - " + genericSnippet[g].name,
-                                            label: fieldname + " - " + genericSnippet[g].name,
-                                            snip: svc.inputTypes.localizeGenericSnippet(genericSnippet[g].content, prefix, value.StaticName)
-                                        });
-                                    }
+                                svc.inputTypes.attachSnippets(target, prefix, fieldname, value.InputType, snipDefaults);
                             });
 
                             var std = ["EntityId", "EntityTitle", "EntityGuid", "EntityType", "IsPublished", "Modified"];
@@ -288,12 +252,6 @@ angular.module("SourceEditor")
                                     };
 
                         });
-                },
-
-                localizeGenericSnippet: function (snip, objName, fieldName) {
-                    snip = snip.replace(/\{var\}/gi, objName)
-                        .replace(/\{prop\}/gi, fieldName);
-                    return snip;
                 },
 
                 valuePlaceholder: function(obj, val) {
@@ -319,9 +277,59 @@ angular.module("SourceEditor")
 
         function InputTypeSnippetHandler() {
             var itsh = {
-                localizeGenericSnippet: function (snip, objName, fieldName) {
-                    snip = snip.replace(/\{var\}/gi, objName)
-                        .replace(/\{prop\}/gi, fieldName);
+                inputTypeSnippets: {},
+
+                extractInputTypeSnippets: function(list, standardArray) {
+                    var inputTypeArray = [];
+
+                    for (var i = 0; i < list.length; i++) {
+                        var itm = list[i];
+                        var systemSnippet = itm.set[0] === "\\";
+                        if (!systemSnippet)
+                            standardArray.push(itm);
+                        else {
+                            itm.set = itm.set.substr(1);
+                            inputTypeArray.push(itm);
+                        }
+                    }
+                    itsh.inputTypeSnippets = itsh.catalogInputTypeSnippets(inputTypeArray);
+                },
+
+                catalogInputTypeSnippets: function(list) {
+                    var inputTypeList = {};
+                    for (var i = 0; i < list.length; i++) {
+                        if (inputTypeList[list[i].subset] === undefined)
+                            inputTypeList[list[i].subset] = [];
+                        inputTypeList[list[i].subset].push(list[i]);
+                    }
+                    return inputTypeList;
+                },
+
+                attachSnippets: function(target, prefix, fieldname, inputType, snipDefaults) {
+                    var genericSnippet = itsh.inputTypeSnippets[inputType];
+
+                    if (!genericSnippet)
+                        return;
+
+                    if (target[fieldname].more === undefined)
+                        target[fieldname].more = [];
+                    var fieldSnips = target[fieldname].more;
+                    for(var g = 0;g < genericSnippet.length;g++)
+                        try {
+                            fieldSnips[fieldname + "-" + genericSnippet[g].name] = angular.extend({}, snipDefaults, {
+                                key: fieldname + " - " + genericSnippet[g].name,
+                                label: genericSnippet[g].name,
+                                snip: itsh.localizeGenericSnippet(genericSnippet[g].content, prefix, fieldname),
+                                collapse: true
+                            });
+                        } finally {
+                        }
+
+                },
+
+                localizeGenericSnippet: function(snip, objName, fieldName) {
+                    snip = snip.replace(/(\$\{[0-9]+\:)var(\})/gi, "$1" + objName + "$2")
+                        .replace(/(\$\{[0-9]+\:)prop(\})/gi, "$1" + fieldName + "$2");
                     return snip;
                 }
             };
@@ -402,7 +410,7 @@ angular.module('SourceEditor').run(['$templateCache', function($templateCache) {
     "\n" +
     "                        enableLiveAutocompletion: true\r" +
     "\n" +
-    "                    }}\"></div></div><div class=\"pull-right col-md-4\"><div><strong translate=SourceEditor.SnippetsSection.Title></strong> <i icon=question-sign style=\"opacity: 0.3\" ng-click=\"showSnippetInfo = !showSnippetInfo\"></i><div ng-if=showSnippetInfo translate=SourceEditor.SnippetsSection.Intro></div></div><select class=input-lg width=100% ng-model=vm.snippetSet ng-options=\"key as ('SourceEditorSnippets.' + key + '.Title' | translate) for (key , value) in vm.snippets\" tooltip=\"{{ 'SourceEditorSnippets.' + vm.snippetSet + '.Help'  | translate}}\"></select><div>&nbsp;</div><div ng-repeat=\"(subsetName, subsetValue) in vm.snippets[vm.snippetSet]\"><strong tooltip=\"{{ 'SourceEditorSnippets.' + vm.snippetSet + '.' + subsetName + '.Help'  | translate}}\">{{ 'SourceEditorSnippets.' + vm.snippetSet + '.' + subsetName + '.Title' | translate}}</strong><ul><li ng-repeat=\"value in subsetValue | toArray | orderBy: '$key'\" tooltip=\"{{ value.snip }}\"><span ng-click=vm.addSnippet(value.snip)>{{value.label}}</span> <i icon=info-sign style=\"opacity: 0.3\" ng-click=\"show = !show\" ng-show=value.help></i><div ng-if=show><em>{{value.help}}</em></div></li></ul></div></div></div></div><div class=modal-footer><button class=\"btn btn-primary btn-square btn-lg pull-left\" type=button ng-click=vm.save()><i icon=ok></i></button></div><show-debug-availability class=pull-right></show-debug-availability></div>"
+    "                    }}\"></div></div><div class=\"pull-right col-md-4\"><div><strong translate=SourceEditor.SnippetsSection.Title></strong> <i icon=question-sign style=\"opacity: 0.3\" ng-click=\"showSnippetInfo = !showSnippetInfo\"></i><div ng-if=showSnippetInfo translate=SourceEditor.SnippetsSection.Intro></div></div><select class=input-lg width=100% ng-model=vm.snippetSet ng-options=\"key as ('SourceEditorSnippets.' + key + '.Title' | translate) for (key , value) in vm.snippets\" tooltip=\"{{ 'SourceEditorSnippets.' + vm.snippetSet + '.Help'  | translate}}\"></select><div>&nbsp;</div><div ng-repeat=\"(subsetName, subsetValue) in vm.snippets[vm.snippetSet]\"><strong tooltip=\"{{ 'SourceEditorSnippets.' + vm.snippetSet + '.' + subsetName + '.Help'  | translate}}\">{{ 'SourceEditorSnippets.' + vm.snippetSet + '.' + subsetName + '.Title' | translate}}</strong><ul><li ng-repeat=\"value in subsetValue | toArray | orderBy: '$key'\" tooltip=\"{{ value.snip }}\"><span ng-click=vm.addSnippet(value.snip)>{{value.label}}</span> <a ng-show=value.more ng-click=\"showMore = !showMore\"><i icon=plus></i>more</a> <i icon=info-sign style=\"opacity: 0.3\" ng-click=\"show = !show\" ng-show=value.help></i><div ng-if=show><em>{{value.help}}</em></div><ul ng-if=showMore><li ng-repeat=\"more in value.more | toArray | orderBy: '$key'\" tooltip=\"{{ value.snip }}\"><span ng-click=vm.addSnippet(more.snip)>{{more.label}}</span> <i icon=info-sign style=\"opacity: 0.3\" ng-click=\"show = !show\" ng-show=more.help></i><div ng-if=show><em>{{more.help}}</em></div></li></ul></li></ul></div></div></div></div><div class=modal-footer><button class=\"btn btn-primary btn-square btn-lg pull-left\" type=button ng-click=vm.save()><i icon=ok></i></button></div><show-debug-availability class=pull-right></show-debug-availability></div>"
   );
 
 }]);
