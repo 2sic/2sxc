@@ -113,8 +113,8 @@ namespace ToSic.SexyContent
         public const string AttributeSetStaticNameApps = "2SexyContent-App";
         public const string AttributeSetStaticNameAppResources = "App-Resources";
         public const string AttributeSetStaticNameAppSettings = "App-Settings";
-        public const string TemporaryDirectory = "~/DesktopModules/ToSIC_SexyContent/Temporary";
-
+        //public const string TemporaryDirectory = "~/DesktopModules/ToSIC_SexyContent/Temporary";
+        public const string TemporaryDirectory = "~/DesktopModules/ToSIC_SexyContent/_";
         #endregion
 
         #region Properties
