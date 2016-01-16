@@ -25,11 +25,11 @@ namespace ToSic.SexyContent.Adam
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
    public class AdamController: SxcApiController
     {
-        public Core Core;
+        public EntityBase EntityBase;
 
         private void PrepCore(Guid entityGuid, string fieldName)
         {
-            Core = new Core(Sexy, App, Dnn, entityGuid, fieldName);
+            EntityBase = new EntityBase(Sexy, App, Dnn.Portal, entityGuid, fieldName);
         }
 
         // todo: centralize once it works
@@ -67,9 +67,9 @@ namespace ToSic.SexyContent.Adam
 
             try
             {
-                var folder = Core.Folder();
+                var folder = EntityBase.Folder();
                 if(!string.IsNullOrEmpty(subFolder)) 
-                    folder = Core.Folder(subFolder, false);
+                    folder = EntityBase.Folder(subFolder, false);
                 var filesCollection = HttpContext.Current.Request.Files;
                 if (filesCollection.Count > 0)
                 {
@@ -111,7 +111,7 @@ namespace ToSic.SexyContent.Adam
                         Name = Path.GetFileName(fileName),
                         Id = dnnFile.FileId,
                         Path = dnnFile.RelativePath,
-                        Type = Core.TypeName(dnnFile.Extension)
+                        Type = EntityBase.TypeName(dnnFile.Extension)
                     };
                 }
 
@@ -170,19 +170,19 @@ namespace ToSic.SexyContent.Adam
             var folderManager = FolderManager.Instance;
 
             // get root and at the same time auto-create the core folder in case it's missing (important)
-            Core.Folder();
+            EntityBase.Folder();
 
             // try to see if we can get into the subfolder - will throw error if missing
-            var current = Core.Folder(subfolder, false);
+            var current = EntityBase.Folder(subfolder, false);
 
             var subfolders = folderManager.GetFolders(current);
             var files = folderManager.GetFiles(current);
 
             var adamFolders =
                 subfolders.Where(s => s.FolderID != current.FolderID)
-                    .Select(f => new AdamItem(f) {MetadataId = Core.GetMetadataId(f.FolderID, true)});
+                    .Select(f => new AdamItem(f) {MetadataId = EntityBase.GetMetadataId(f.FolderID, true)});
             var adamFiles = files
-                .Select(f => new AdamItem(f) {MetadataId = Core.GetMetadataId(f.FileId, false), Type = Core.TypeName(f.Extension)});
+                .Select(f => new AdamItem(f) {MetadataId = EntityBase.GetMetadataId(f.FileId, false), Type = EntityBase.TypeName(f.Extension)});
 
             var all = adamFolders.Concat(adamFiles);
 
@@ -207,13 +207,13 @@ namespace ToSic.SexyContent.Adam
             PrepCore(guid, field);
 
             // get root and at the same time auto-create the core folder in case it's missing (important)
-            Core.Folder();
+            EntityBase.Folder();
 
             // try to see if we can get into the subfolder - will throw error if missing
-            Core.Folder(subfolder, false);
+            EntityBase.Folder(subfolder, false);
 
             // now access the subfolder, creating it if missing (which is what we want
-            Core.Folder(subfolder + "/" + newFolder, true);
+            EntityBase.Folder(subfolder + "/" + newFolder, true);
 
             return Items(guid, field, subfolder);
         }
@@ -225,7 +225,7 @@ namespace ToSic.SexyContent.Adam
             PrepCore(guid, field);
 
             // try to see if we can get into the subfolder - will throw error if missing
-            var current = Core.Folder(subfolder, false);
+            var current = EntityBase.Folder(subfolder, false);
             
             var folderManager = FolderManager.Instance;
             var fileManager = FileManager.Instance;

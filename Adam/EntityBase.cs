@@ -5,33 +5,38 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Web.Http;
+using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Web.Razor.Helpers;
 using ToSic.Eav;
 
 namespace ToSic.SexyContent.Adam
 {
-    public class Core
+    public class EntityBase
     {
         #region constants
-        public const string AdamRootFolder = "adam/";
-        public const string AdamAppRootFolder = "adam/[AppFolder]/";
-        public const string AdamFolderMask = "adam/[AppFolder]/[Guid22]/[FieldName]/[SubFolder]";
+        //public const string AdamRootFolder = "adam/";
+        private const string AdamFolderMask = "[AdamRoot]/[Guid22]/[FieldName]/[SubFolder]";
         #endregion
 
         private SexyContent Sexy;
         private App App;
-        private Razor.Helpers.DnnHelper Dnn;
+        private AdamManager _adamManager;
+        //private Razor.Helpers.DnnHelper Dnn;
+        private PortalSettings _portalSettings;
         private readonly Guid entityGuid;
         private readonly string fieldName;
         private IFolderManager folderManager = FolderManager.Instance;
     
 
-        public Core(SexyContent sexy, App app, Razor.Helpers.DnnHelper dnn, Guid eGuid, string fName)
+        public EntityBase(SexyContent sexy, App app, PortalSettings ps, Guid eGuid, string fName)
         {
+
+            _portalSettings = ps;
+            _adamManager = new AdamManager(ps.PortalId, app);
             Sexy = sexy;
             App = app;
-            Dnn = dnn;
+            //Dnn = dnn;
             entityGuid = eGuid;
             fieldName = fName;
         }
@@ -46,47 +51,17 @@ namespace ToSic.SexyContent.Adam
         /// </summary>
         internal IFolderInfo Folder(string subFolder, bool autoCreate)
         {
-            IFolderInfo fldr;
-
             var path = GeneratePath(subFolder);
-
-            // create all folders to ensure they exist. Must do one-by-one because dnn must have it in the catalog
-            var pathParts = path.Split('/');
-            var pathToCheck = ""; // pathParts[0];
-            foreach (string part in pathParts.Where(p => !String.IsNullOrEmpty(p)))
-            {
-                pathToCheck += part + "/";
-                if (Exists(pathToCheck)) continue;
-                if (autoCreate)
-                    Add(pathToCheck);
-                else
-                    throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest) { ReasonPhrase = "subfolder " + pathToCheck + "not found" });
-            }
-
-            fldr = Get(path);
-
-            return fldr;
+            return _adamManager.Folder(path, autoCreate);
         }
 
-        internal bool Exists(string path)
-        {
-            return folderManager.FolderExists(Dnn.Portal.PortalId, path);
-        }
-
-        internal  IFolderInfo Add(string path)
-        {
-            return folderManager.AddFolder(Dnn.Portal.PortalId, path);
-        }
-
-        internal IFolderInfo Get(string path)
-        {
-            return folderManager.GetFolder(Dnn.Portal.PortalId, path);
-        }
+        public string EntityRoot => GeneratePath("");
 
         public string GeneratePath(string subFolder)
         {
             var path = AdamFolderMask
-                .Replace("[AppFolder]", App.Folder)
+                .Replace("[AdamRoot]", _adamManager.RootPath)
+                //.Replace("[AppFolder]", App.Folder)
                 .Replace("[Guid22]", GuidHelpers.Compress22(entityGuid))
                 .Replace("[FieldName]", fieldName)
                 .Replace("[SubFolder]", subFolder) // often blank, so it will just be removed
@@ -96,12 +71,12 @@ namespace ToSic.SexyContent.Adam
 
         public string GenerateWebPath(AdamFile currentFile)
         {
-            return Dnn.Portal.HomeDirectory + currentFile.Folder + currentFile.FileName;
+            return _portalSettings.HomeDirectory + currentFile.Folder + currentFile.FileName;
         }
 
         public string GenerateWebPath(AdamFolder currentFolder)
         {
-            return Dnn.Portal.HomeDirectory + currentFolder.FolderPath;
+            return _portalSettings.HomeDirectory + currentFolder.FolderPath;
         }
 
         internal IFolderInfo Folder()
@@ -164,6 +139,7 @@ namespace ToSic.SexyContent.Adam
             }
         }
         #endregion
+
 
     }
 }

@@ -1,22 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.FileSystem;
-using ToSic.Eav;
 
 namespace ToSic.SexyContent.Adam
 {
     public class AdamNavigator : AdamFolder
     {
-        public AdamNavigator(SexyContent sexy, App app, Razor.Helpers.DnnHelper dnn, Guid entityGuid, string fieldName)
+        public AdamNavigator(SexyContent sexy, App app, PortalSettings ps, Guid entityGuid, string fieldName)
         {
-            Core = new Core(sexy, app, dnn, entityGuid, fieldName);
-            //App = app;
+            EntityBase = new EntityBase(sexy, app, ps, entityGuid, fieldName);
+            Manager = new AdamManager(ps.PortalId, app);
 
             if (!Exists)
                 return;
 
-            var f = Core.Get(Root) as FolderInfo;
+            var f = Manager.Get(Root) as FolderInfo;
 
             if (f == null)
                 return;
@@ -40,9 +38,9 @@ namespace ToSic.SexyContent.Adam
             WorkflowID = f.WorkflowID;
         }
 
-        public string Root => Core.GeneratePath("");
+        public string Root => EntityBase.EntityRoot;
 
-        public bool Exists => Core.Exists(Root);
+        public bool Exists => Manager.Exists(Root);
 
     }
 

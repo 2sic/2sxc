@@ -6,7 +6,8 @@ namespace ToSic.SexyContent.Adam
 {
     public class AdamFolder : FolderInfo, IAdamItem
     {
-        public Core Core;
+        public EntityBase EntityBase;
+        public AdamManager Manager;
         //public App App;
 
         private IFolderManager _fldm = FolderManager.Instance;
@@ -16,13 +17,14 @@ namespace ToSic.SexyContent.Adam
         /// Metadata for this folder
         /// This is usually an entity which has additional information related to this file
         /// </summary>
-        public DynamicEntity Metadata => Core.GetFirstMetadata(FolderID, true);
+        public DynamicEntity Metadata => EntityBase.GetFirstMetadata(FolderID, true);
 
-        public string Url => Core.GenerateWebPath(this);
+        public string Url => EntityBase.GenerateWebPath(this);
 
-        public bool HasMetadata => Core.GetFirstMetadataEntity(FolderID, false) != null;
+        public bool HasMetadata => EntityBase.GetFirstMetadataEntity(FolderID, false) != null;
 
         public string Type => "folder";
+
 
         private IEnumerable<AdamFolder> _folders;
 
@@ -61,7 +63,7 @@ namespace ToSic.SexyContent.Adam
                         VersionGuid = f.VersionGuid,
                         WorkflowID = f.WorkflowID,
                         //App = App,
-                        Core = Core
+                        EntityBase = EntityBase
                     }).ToList()
                                ?? new List<AdamFolder>();
                 }
@@ -100,7 +102,7 @@ namespace ToSic.SexyContent.Adam
                         StorageLocation = f.StorageLocation,
                         IsCached = f.IsCached,
                         SHA1Hash = f.SHA1Hash,
-                        Core = Core
+                        EntityBase = EntityBase
                     }).ToList()
                     ?? new List<AdamFile>();
                 }

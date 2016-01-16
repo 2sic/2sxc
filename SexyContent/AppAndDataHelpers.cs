@@ -241,7 +241,7 @@ namespace ToSic.SexyContent
         /// <returns>An Adam object for navigating the assets</returns>
         public AdamNavigator AsAdam(IEntity entity, string fieldName)
         {
-            return new AdamNavigator(_sexy, App, Dnn, entity.EntityGuid, fieldName);
+            return new AdamNavigator(_sexy, App, Dnn.Portal, entity.EntityGuid, fieldName);
         }
         #endregion
 

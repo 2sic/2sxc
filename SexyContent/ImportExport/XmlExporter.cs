@@ -10,6 +10,8 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.FileSystem;
 using Telerik.Web.Data.Extensions;
 using ToSic.Eav;
+using ToSic.SexyContent.Adam;
+using ToSic.SexyContent.Razor.Helpers;
 
 namespace ToSic.SexyContent.ImportExport
 {
@@ -26,6 +28,11 @@ namespace ToSic.SexyContent.ImportExport
         public string[] AttributeSetIDs;
         public string[] EntityIDs;
         public List<ExportImportMessage> Messages = new List<ExportImportMessage>();
+
+        #region simple properties
+        public PortalSettings Portal => PortalSettings.Current;
+
+        #endregion
 
         #region Export
 
@@ -93,7 +100,7 @@ namespace ToSic.SexyContent.ImportExport
                             new XAttribute("Guid", Sexy.App.AppGuid)
                             )
                         : null,
-                    new XElement("Language", new XAttribute("Default", PortalSettings.Current.DefaultLanguage)),
+                    new XElement("Language", new XAttribute("Default", Portal.DefaultLanguage)),
                     new XElement("Dimensions", Dimensions.Select(d => new XElement("Dimension",
                         new XAttribute("DimensionID", d.DimensionID),
                         new XAttribute("Name", d.Name),
@@ -169,6 +176,13 @@ namespace ToSic.SexyContent.ImportExport
 
                 #endregion
 
+                #region Adam files
+                var adam = new AdamManager(Portal.PortalId, Sexy.App);
+                var adamIds = adam.Export.AppFiles;
+
+                _referencedFileIds = _referencedFileIds.Concat(adamIds).ToList();
+                #endregion
+
                 // Create root node "SexyContent" and add ContentTypes, ContentItems and Templates
                 Doc.Add(new XElement("SexyContent",
                     new XAttribute("FileVersion", ImportExport.FileVersion),
@@ -240,56 +254,6 @@ namespace ToSic.SexyContent.ImportExport
 
             return entityXElement;
         }
-
-        ///// <summary>
-        ///// Gets an Entity Value-Key XElement
-        ///// </summary>
-        ///// <param name="Key"></param>
-        ///// <param name="Type"></param>
-        ///// <param name="Value"></param>
-        ///// <returns></returns>
-        //private XElement GetAttributeValueXElement(string Key, EavValue Value, string Type, AttributeSet set)
-        //{
-        //    var value = Value.Value == null ? String.Empty : Value.Value.ToString(CultureInfo.InvariantCulture);
-
-        //    var x = new XElement("Value",
-        //        new XAttribute("Key", Key),
-        //        new XAttribute("Value", value),
-        //        !String.IsNullOrEmpty(Type) ? new XAttribute("Type", Type) : null,
-        //        Value.ValuesDimensions.Select(p => new XElement("Dimension",
-        //                new XAttribute("DimensionID", p.DimensionID),
-        //                new XAttribute("ReadOnly", p.ReadOnly)
-        //            ))
-        //        );
-
-        //    // Special cases for Template ContentTypes
-        //    if (set.StaticName == "2SexyContent-Template-ContentTypes" && !String.IsNullOrEmpty(value))
-        //    {
-        //        switch (Key)
-        //        {
-        //            case "ContentTypeID":
-        //                var attributeSet = Sexy.ContentContext.GetAllAttributeSets().FirstOrDefault(a => a.AttributeSetID == int.Parse(x.Attribute("Value").Value));
-        //                x.Attribute("Value").SetValue(attributeSet != null ? attributeSet.StaticName : String.Empty);
-        //                break;
-        //            case "DemoEntityID":
-        //                var entityID = int.Parse(x.Attribute("Value").Value);
-        //                var demoEntity = Sexy.ContentContext.Entities.FirstOrDefault(e => e.EntityID == entityID);
-        //                x.Attribute("Value").SetValue(demoEntity != null ? demoEntity.EntityGUID.ToString() : String.Empty);
-        //                break;
-        //        }
-        //    }
-
-        //    // Collect all referenced files for adding a file list to the xml later
-        //    if (Type == "Hyperlink")
-        //    {
-        //        var fileRegex = new Regex("^File:(?<FileId>[0-9]+)", RegexOptions.IgnoreCase);
-        //        var a = fileRegex.Match(value);
-        //        if(a.Success && a.Groups["FileId"].Length > 0)
-        //            _referencedFileIds.Add(int.Parse(a.Groups["FileId"].Value));
-        //    }
-
-        //    return x;
-        //}
 
         #endregion
 
