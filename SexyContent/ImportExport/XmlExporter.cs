@@ -15,6 +15,10 @@ using ToSic.SexyContent.Razor.Helpers;
 
 namespace ToSic.SexyContent.ImportExport
 {
+
+    // todo: move all strings to XmlConstants
+
+
     public class XmlExporter
     {
         // initialize data context
@@ -99,10 +103,10 @@ namespace ToSic.SexyContent.ImportExport
                 #region Header
 
                 var Dimensions = Sexy.ContentContext.Dimensions.GetDimensionChildren("Culture");
-                var Header = new XElement("Header",
+                var Header = new XElement(XmlConstants.Header,
                     _isAppExport && Sexy.App.AppGuid != "Default"
-                        ? new XElement("App",
-                            new XAttribute("Guid", Sexy.App.AppGuid)
+                        ? new XElement(XmlConstants.App,
+                            new XAttribute(XmlConstants.Guid, Sexy.App.AppGuid)
                             )
                         : null,
                     new XElement("Language", new XAttribute("Default", Portal.DefaultLanguage)),
@@ -192,7 +196,7 @@ namespace ToSic.SexyContent.ImportExport
                 #endregion
 
                 // Create root node "SexyContent" and add ContentTypes, ContentItems and Templates
-                Doc.Add(new XElement("SexyContent",
+                Doc.Add(new XElement(XmlConstants.RootNode,
                     new XAttribute("FileVersion", ImportExport.FileVersion),
                     new XAttribute("MinimumRequiredVersion", ImportExport.MinimumRequiredVersion),
                     new XAttribute("ModuleVersion", SexyContent.ModuleVersion),
@@ -310,7 +314,7 @@ namespace ToSic.SexyContent.ImportExport
 
         private XElement GetFoldersXElements()
         {
-            return  new XElement("PortalFolders",
+            return  new XElement(XmlConstants.FolderGroup,
                     _referencedFolderIds.Distinct().Select(GetFolderXElement)
                 );
         }
@@ -338,9 +342,9 @@ namespace ToSic.SexyContent.ImportExport
             var folder = folderController.GetFolder(folderId);
             if (folder != null)
             {
-                return new XElement("Folder",
-                        new XAttribute("Id", folderId),
-                        new XAttribute("RelativePath", folder.FolderPath) //todo: check
+                return new XElement(XmlConstants.Folder,
+                        new XAttribute(XmlConstants.FolderNodeId, folderId),
+                        new XAttribute(XmlConstants.FolderNodePath, folder.FolderPath) 
                     );
             }
 

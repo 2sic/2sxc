@@ -15,7 +15,9 @@ using static System.String;
 
 namespace ToSic.SexyContent.ImportExport
 {
-	public class XmlImport
+    // todo: move all strings to XmlConstants
+
+    public class XmlImport
 	{
 		public List<ExportImportMessage> ImportLog;
 
@@ -26,7 +28,8 @@ namespace ToSic.SexyContent.ImportExport
 		private SexyContent _sexy;
 		private int _appId;
 		private int _zoneId;
-		private Dictionary<int, int> _fileIdCorrectionList;
+		private Dictionary<int, int> _fileIdCorrectionList = new Dictionary<int, int>();
+	    private Dictionary<int, int> _folderIdCorrectionList = new Dictionary<int, int>(); 
 
 		/// <summary>
 		/// The default language / culture - example: de-DE
@@ -72,16 +75,16 @@ namespace ToSic.SexyContent.ImportExport
 		public bool IsCompatible(XDocument doc)
 		{
 			// Return if no Root Node "SexyContent"
-			if (!doc.Elements("SexyContent").Any())
+			if (!doc.Elements(XmlConstants.RootNode).Any())
 			{
 				ImportLog.Add(new ExportImportMessage("The XML file you specified does not seem to be a 2sxc Export.", ExportImportMessage.MessageTypes.Error));
 				return false;
 			}
 
 			// Return if Version does not match
-			if (!doc.Element("SexyContent").Attributes().Any(a => a.Name == "MinimumRequiredVersion") || new Version(doc.Element("SexyContent").Attribute("MinimumRequiredVersion").Value) > new Version(SexyContent.ModuleVersion))
+			if (!doc.Element(XmlConstants.RootNode).Attributes().Any(a => a.Name == "MinimumRequiredVersion") || new Version(doc.Element(XmlConstants.RootNode).Attribute("MinimumRequiredVersion").Value) > new Version(SexyContent.ModuleVersion))
 			{
-				ImportLog.Add(new ExportImportMessage("This template or app requires 2sxc " + doc.Element("SexyContent").Attribute("MinimumRequiredVersion").Value + " in order to work, you have version " + SexyContent.ModuleVersion + " installed.", ExportImportMessage.MessageTypes.Error));
+				ImportLog.Add(new ExportImportMessage("This template or app requires 2sxc " + doc.Element(XmlConstants.RootNode).Attribute("MinimumRequiredVersion").Value + " in order to work, you have version " + SexyContent.ModuleVersion + " installed.", ExportImportMessage.MessageTypes.Error));
 				return false;
 			}
 
@@ -90,7 +93,7 @@ namespace ToSic.SexyContent.ImportExport
 
 		private void PrepareFileIdCorrectionList(XElement sexyContentNode)
 		{
-			_fileIdCorrectionList = new Dictionary<int, int>();
+			//_fileIdCorrectionList = new Dictionary<int, int>();
 
 			if (!sexyContentNode.Elements("PortalFiles").Any() || !PortalId.HasValue)
 				return;
@@ -120,21 +123,47 @@ namespace ToSic.SexyContent.ImportExport
 			}
 
 		}
-		#endregion
+        private void PrepareFolderIdCorrectionListAndCreateMissingFolders(XElement sexyContentNode)
+        {
+            //_fileIdCorrectionList = new Dictionary<int, int>();
 
-		//public bool IsCompatible(string xml)
-		//{
-		//	// Parse XDocument from string
-		//	var doc = XDocument.Parse(xml);
-		//	return IsCompatible(doc);
-		//}
+            if (!sexyContentNode.Elements(XmlConstants.FolderGroup).Any() || !PortalId.HasValue) 
+                return;
 
-		/// <summary>
-		/// Creates an app and then imports the xml
-		/// </summary>
-		/// <param name="xml"></param>
-		/// <returns>AppId of the new imported app</returns>
-		public bool ImportApp(int zoneId, XDocument doc, out int? appId)
+            var portalId = PortalId.Value;
+            var folderManager = FolderManager.Instance;
+
+            var portalFiles = sexyContentNode.Element(XmlConstants.FolderGroup).Elements(XmlConstants.Folder); 
+            foreach (var portalFile in portalFiles)
+            {
+                var origId = int.Parse(portalFile.Attribute(XmlConstants.FolderNodeId).Value);
+                var relativePath = portalFile.Attribute(XmlConstants.FolderNodePath).Value;
+                var directory = Path.GetDirectoryName(relativePath).Replace('\\', '/');
+
+                // if not exist, create - important because we need for metadata assignment
+                var folderInfo = (!folderManager.FolderExists(portalId, directory))
+                    ? folderManager.AddFolder(portalId, directory)
+                    : folderManager.GetFolder(portalId, directory);
+
+                _folderIdCorrectionList.Add(origId, folderInfo.FolderID);
+            }
+
+        }
+        #endregion
+
+        //public bool IsCompatible(string xml)
+        //{
+        //	// Parse XDocument from string
+        //	var doc = XDocument.Parse(xml);
+        //	return IsCompatible(doc);
+        //}
+
+        /// <summary>
+        /// Creates an app and then imports the xml
+        /// </summary>
+        /// <param name="xml"></param>
+        /// <returns>AppId of the new imported app</returns>
+        public bool ImportApp(int zoneId, XDocument doc, out int? appId)
 		{
 			// Increase script timeout to prevent timeouts
 			HttpContext.Current.Server.ScriptTimeout = 300;
@@ -151,10 +180,10 @@ namespace ToSic.SexyContent.ImportExport
 			}
 
 			// Get root node "SexyContent"
-			var xmlSource = doc.Element("SexyContent");
-			var xApp = xmlSource.Element("Header").Element("App");
+			var xmlSource = doc.Element(XmlConstants.RootNode);
+			var xApp = xmlSource.Element(XmlConstants.Header).Element(XmlConstants.App);
 
-			var appGuid = xApp.Attribute("Guid").Value;
+			var appGuid = xApp.Attribute(XmlConstants.Guid).Value;
 
 			if (appGuid != "Default")
 			{
@@ -201,11 +230,12 @@ namespace ToSic.SexyContent.ImportExport
 			}
 
 			// Get root node "SexyContent"
-			var xmlSource = doc.Element("SexyContent");
+			var xmlSource = doc.Element(XmlConstants.RootNode);
+            PrepareFolderIdCorrectionListAndCreateMissingFolders(xmlSource);
 			PrepareFileIdCorrectionList(xmlSource);
 
 			#region Prepare dimensions
-			_sourceDimensions = xmlSource.Element("Header").Element("Dimensions").Elements("Dimension").Select(p => new Dimension
+			_sourceDimensions = xmlSource.Element(XmlConstants.Header).Element("Dimensions").Elements("Dimension").Select(p => new Dimension
 			{
 				DimensionID = int.Parse(p.Attribute("DimensionID").Value),
 				Name = p.Attribute("Name").Value,
@@ -214,7 +244,7 @@ namespace ToSic.SexyContent.ImportExport
 				Active = Boolean.Parse(p.Attribute("Active").Value)
 			}).ToList();
 
-			_sourceDefaultLanguage = xmlSource.Element("Header").Element("Language").Attribute("Default").Value;
+			_sourceDefaultLanguage = xmlSource.Element(XmlConstants.Header).Element("Language").Attribute("Default").Value;
 			_sourceDefaultDimensionId = _sourceDimensions.Any() ?
 				_sourceDimensions.FirstOrDefault(p => p.ExternalKey == _sourceDefaultLanguage).DimensionID
 				: new int?();
@@ -472,7 +502,7 @@ namespace ToSic.SexyContent.ImportExport
             switch (entityNode.Attribute("AssignmentObjectType").Value)
 			{
 				// Special case: App AttributeSets must be assigned to the current app
-				case "App":
+				case XmlConstants.App:
 					keyNumber = _appId;
 					assignmentObjectTypeId = SexyContent.AssignmentObjectTypeIDSexyContentApp;
 					break;
@@ -482,13 +512,12 @@ namespace ToSic.SexyContent.ImportExport
 					break;
                 case "CmsObject":
 			        assignmentObjectTypeId = Constants.AssignmentObjectTypeCmsObject;
-                    // todo: correct the file ID
+
                     if(keyString == null)
                         throw new Exception("found cms object, but couldn't find metadata-key of type string, will abort");
 			        var newKey = GetMappedLink(keyString);
 			        if (newKey != null)
 			            keyString = newKey;
-                    //var fileId = keyString.
 			        break;
 			}
             #endregion
