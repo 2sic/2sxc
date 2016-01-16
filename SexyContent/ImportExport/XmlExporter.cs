@@ -184,9 +184,11 @@ namespace ToSic.SexyContent.ImportExport
                 #region Adam files
                 var adam = new AdamManager(Portal.PortalId, Sexy.App);
                 var adamIds = adam.Export.AppFiles;
-                adamIds.ToList().ForEach(AddFileAndFolderToQueue);
+                adamIds.ForEach(AddFileAndFolderToQueue);
 
-                // todo: also add folders in adam without files, as it could have metadata
+                // also add folders in adam - because empty folders may also have metadata assigned
+                var adamFolders = adam.Export.AppFolders;
+                adamFolders.ForEach(AddFolderToQueue);
                 #endregion
 
                 // Create root node "SexyContent" and add ContentTypes, ContentItems and Templates
@@ -278,7 +280,7 @@ namespace ToSic.SexyContent.ImportExport
                 try
                 {
                     var file = DnnFiles.GetFile(fileNum);
-                    _referencedFolderIds.Add(file.FolderId);
+                    AddFolderToQueue(file.FolderId);
                 }
                 finally
                 {
@@ -287,6 +289,11 @@ namespace ToSic.SexyContent.ImportExport
             finally
             {
             }
+        }
+
+        private void AddFolderToQueue(int folderId)
+        {
+            _referencedFolderIds.Add(folderId);
         }
 
         #endregion

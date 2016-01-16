@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Web;
+﻿using System.Collections.Generic;
 using DotNetNuke.Services.FileSystem;
 
 namespace ToSic.SexyContent.Adam
@@ -12,6 +8,8 @@ namespace ToSic.SexyContent.Adam
         IFolderInfo _root;
         private AdamManager _manager;
         List<int> _fileIds = new List<int>();
+        List<int> _folderIds = new List<int>();
+        List<int> _emptyFolderIds = new List<int>();
 
         private IFolderManager _fldm = FolderManager.Instance;
 
@@ -33,11 +31,22 @@ namespace ToSic.SexyContent.Adam
             }
         }
 
+        public List<int> AppFolders
+        {
+            get
+            {
+                if (_folderIds.Count == 0)
+                    AddFolder(_root);
+                return _folderIds;
+            }
+            
+        } 
         private void AddFolder(IFolderInfo fldr)
         {
-            AddFilesInFolder(fldr);
+            _folderIds.Add(fldr.FolderID);  // track of the folder
+            AddFilesInFolder(fldr);         // keep track of the files
 
-            foreach (var f in _fldm.GetFolders(fldr))
+            foreach (var f in _fldm.GetFolders(fldr))   // then add subfolders
                 AddFolder(f);
         }
 
