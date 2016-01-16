@@ -243,6 +243,11 @@ namespace ToSic.SexyContent.ImportExport
 	        if (e.KeyGuid.HasValue)
 		        entityXElement.Add(new XAttribute("KeyGuid", e.KeyGuid));
 
+            if (e.KeyNumber.HasValue)
+                entityXElement.Add(new XAttribute("KeyNumber", e.KeyNumber));
+            if (!string.IsNullOrEmpty(e.KeyString))
+                entityXElement.Add(new XAttribute("KeyString", e.KeyString));
+
             //return new XElement("Entity",
             //    new XAttribute("AssignmentObjectType", e.AssignmentObjectType.Name),
             //    new XAttribute("AttributeSetStaticName", attributeSet.StaticName),
