@@ -10,6 +10,7 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.FileSystem;
 using ToSic.Eav;
 using ToSic.Eav.Import;
+using static System.String;
 
 
 namespace ToSic.SexyContent.ImportExport
@@ -158,7 +159,7 @@ namespace ToSic.SexyContent.ImportExport
 			if (appGuid != "Default")
 			{
 				// Build Guid (take existing, or create a new)
-				if (String.IsNullOrEmpty(appGuid) || appGuid == new Guid().ToString())
+				if (IsNullOrEmpty(appGuid) || appGuid == new Guid().ToString())
 				{
 					appGuid = Guid.NewGuid().ToString();
 				}
@@ -321,7 +322,7 @@ namespace ToSic.SexyContent.ImportExport
 
 				var contentTypeStaticName = template.Attribute("AttributeSetStaticName").Value;
 
-				if (!String.IsNullOrEmpty(contentTypeStaticName) && cache.GetContentType(contentTypeStaticName) == null)
+				if (!IsNullOrEmpty(contentTypeStaticName) && cache.GetContentType(contentTypeStaticName) == null)
 				{
 					ImportLog.Add(
 							new ExportImportMessage(
@@ -334,7 +335,7 @@ namespace ToSic.SexyContent.ImportExport
 				var demoEntityGuid = template.Attribute("DemoEntityGUID").Value;
 				var demoEntityId = new int?();
 
-				if (!String.IsNullOrEmpty(demoEntityGuid))
+				if (!IsNullOrEmpty(demoEntityGuid))
 				{
 					var entityGuid = Guid.Parse(demoEntityGuid);
 					if (_sexy.ContentContext.Entities.EntityExists(entityGuid))
@@ -357,7 +358,7 @@ namespace ToSic.SexyContent.ImportExport
 				var pipelineEntityGuid = template.Attribute("PipelineEntityGUID");
 				var pipelineEntityId = new int?();
 
-				if (pipelineEntityGuid != null && !string.IsNullOrEmpty(pipelineEntityGuid.Value))
+				if (pipelineEntityGuid != null && !IsNullOrEmpty(pipelineEntityGuid.Value))
 				{
 					var entityGuid = Guid.Parse(pipelineEntityGuid.Value);
 					if (_sexy.ContentContext.Entities.EntityExists(entityGuid))
@@ -440,23 +441,35 @@ namespace ToSic.SexyContent.ImportExport
 		/// <param name="assignmentObjectTypeId"></param>
 		/// <param name="keyNumber"></param>
 		/// <returns></returns>
-		private List<ImportEntity> GetImportEntities(IEnumerable<XElement> entities, int assignmentObjectTypeId, int? keyNumber = null)
+		private List<ImportEntity> GetImportEntities(IEnumerable<XElement> entities, int assignmentObjectTypeId)//, int? keyNumber = null)
 		{
-			return entities.Select(e => GetImportEntity(e, assignmentObjectTypeId, keyNumber)).ToList();
+			return entities.Select(e => GetImportEntity(e, assignmentObjectTypeId /*, keyNumber*/)).ToList();
 		}
 
 
 		/// <summary>
 		/// Returns an EAV import entity
 		/// </summary>
-		/// <param name="xEntity">The xml-Element of the entity to import</param>
+		/// <param name="entityNode">The xml-Element of the entity to import</param>
 		/// <param name="assignmentObjectTypeId">assignmentObjectTypeId</param>
 		/// <param name="defaultLanguage">The default language / culture - exmple: de-DE</param>
 		/// <param name="keyNumber">The entity will be assigned to this keyNumber (optional)</param>
 		/// <returns></returns>
-        private ImportEntity GetImportEntity(XElement xEntity, int assignmentObjectTypeId, int? keyNumber = null)
+        private ImportEntity GetImportEntity(XElement entityNode, int assignmentObjectTypeId)//, int? keyNumber = null)
 		{
-			switch (xEntity.Attribute("AssignmentObjectType").Value)
+            #region retrieve optional metadata keys in the import - must happen before we apply corrections like AppId
+            Guid? keyGuid = null;
+            if (entityNode.Attribute("KeyGuid") != null)
+                keyGuid = Guid.Parse(entityNode.Attribute("KeyGuid").Value);
+            int? keyNumber = null;
+            if (entityNode.Attribute("KeyNumber") != null)
+                keyNumber = int.Parse(entityNode.Attribute("KeyNumber").Value);
+
+            string keyString = entityNode.Attribute("KeyString")?.Value;
+            #endregion
+
+            #region check if the xml has an own assignment object type (then we wouldn't use the default)
+            switch (entityNode.Attribute("AssignmentObjectType").Value)
 			{
 				// Special case: App AttributeSets must be assigned to the current app
 				case "App":
@@ -467,49 +480,64 @@ namespace ToSic.SexyContent.ImportExport
                 case "Data Pipeline": // this one is an old key, remove some time in the future; was probably almost never used...
 					assignmentObjectTypeId = Constants.AssignmentObjectTypeEntity;
 					break;
+                case "CmsObject":
+			        assignmentObjectTypeId = Constants.AssignmentObjectTypeCmsObject;
+                    // todo: correct the file ID
+                    if(keyString == null)
+                        throw new Exception("found cms object, but couldn't find metadata-key of type string, will abort");
+			        var newKey = GetMappedLink(keyString);
+			        if (newKey != null)
+			            keyString = newKey;
+                    //var fileId = keyString.
+			        break;
 			}
+            #endregion
 
-			Guid? keyGuid = null;
-			if (xEntity.Attribute("KeyGuid") != null)
-				keyGuid = Guid.Parse(xEntity.Attribute("KeyGuid").Value);
 
-			// Special case #2: Corrent values of Template-Describing entities, and resolve files
+            // Special case #2: Corrent values of Template-Describing entities, and resolve files
 
-			foreach (var sourceValue in xEntity.Elements("Value"))
+            foreach (var sourceValue in entityNode.Elements("Value"))
 			{
 				var sourceValueString = sourceValue.Attribute("Value").Value;
 				var sourceKey = sourceValue.Attribute("Key").Value;
 
 
-				if (!String.IsNullOrEmpty(sourceValueString))
-				{
-					// Correct FileId in Hyperlink fields (takes XML data that lists files)
-					if (sourceValue.Attribute("Type").Value == "Hyperlink")
-					{
-						var fileRegex = new Regex("^File:(?<FileId>[0-9]+)", RegexOptions.IgnoreCase);
-						var a = fileRegex.Match(sourceValueString);
-						if (a.Success && a.Groups["FileId"].Length > 0)
-						{
-							var originalId = int.Parse(a.Groups["FileId"].Value);
-
-							if (_fileIdCorrectionList.ContainsKey(originalId))
-							{
-								var newValue = fileRegex.Replace(sourceValueString, "File:" + _fileIdCorrectionList[originalId]);
-								sourceValue.Attribute("Value").SetValue(newValue);
-							}
-
-						}
-					}
-				}
-
+				// Correct FileId in Hyperlink fields (takes XML data that lists files)
+			    if (!IsNullOrEmpty(sourceValueString) && sourceValue.Attribute("Type").Value == "Hyperlink")
+			    {
+			        string newValue = GetMappedLink(sourceValueString);
+			        if (newValue != null)
+			            sourceValue.Attribute("Value").SetValue(newValue);
+			    }
 			}
 
-			var importEntity = Eav.ImportExport.XmlImport.GetImportEntity(xEntity, assignmentObjectTypeId,
-				_targetDimensions, _sourceDimensions, _sourceDefaultDimensionId, DefaultLanguage, keyNumber, keyGuid);
+			var importEntity = Eav.ImportExport.XmlImport.GetImportEntity(entityNode, assignmentObjectTypeId,
+				_targetDimensions, _sourceDimensions, _sourceDefaultDimensionId, DefaultLanguage, keyNumber, keyGuid, keyString);
 
 			return importEntity;
 		}
 
-		#endregion
+        /// <summary>
+        /// Try to map a link like "file:275" from the import to the target system
+        /// Will return null if nothing appropriate found, so the caller can choose to not do anything
+        /// </summary>
+        /// <param name="sourceValueString"></param>
+        /// <returns></returns>
+	    private string GetMappedLink(string sourceValueString)
+	    {
+	        var fileRegex = new Regex("^File:(?<FileId>[0-9]+)", RegexOptions.IgnoreCase);
+	        var a = fileRegex.Match(sourceValueString);
+
+	        if (a.Success && a.Groups["FileId"].Length > 0)
+	        {
+	            var originalId = int.Parse(a.Groups["FileId"].Value);
+
+	            if (_fileIdCorrectionList.ContainsKey(originalId))
+	                return fileRegex.Replace(sourceValueString, "file:" + _fileIdCorrectionList[originalId]);
+	        }
+	        return null;
+	    }
+
+	    #endregion
 	}
 }

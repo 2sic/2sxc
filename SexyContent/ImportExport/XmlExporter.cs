@@ -19,11 +19,15 @@ namespace ToSic.SexyContent.ImportExport
     {
         // initialize data context
         private readonly SexyContent Sexy;
-        private List<int> _referencedFileIds;
-        public List<IFileInfo> ReferencedFiles;
+        private List<int> _referencedFileIds = new List<int>();
+        private List<int> _referencedFolderIds = new List<int>();
+        public List<IFileInfo> ReferencedFiles = new List<IFileInfo>();
         private int _zoneId;
         private int _appId;
         private readonly bool _isAppExport;
+
+        private IFolderManager DnnFolders = DotNetNuke.Services.FileSystem.FolderManager.Instance;
+        private IFileManager DnnFiles = DotNetNuke.Services.FileSystem.FileManager.Instance;
 
         public string[] AttributeSetIDs;
         public string[] EntityIDs;
@@ -85,8 +89,9 @@ namespace ToSic.SexyContent.ImportExport
                 if (_exportDocument != null)
                     return _exportDocument;
 
-                _referencedFileIds = new List<int>();
-                ReferencedFiles = new List<IFileInfo>();
+                //_referencedFileIds = new List<int>();
+                //_referencedFolderIds = new List<int>();
+                //ReferencedFiles = new List<IFileInfo>();   
 
                 // Create XML document and declaration
                 var Doc = _exportDocument = new XDocument(new XDeclaration("1.0", "UTF-8", "yes"), null);
@@ -179,8 +184,9 @@ namespace ToSic.SexyContent.ImportExport
                 #region Adam files
                 var adam = new AdamManager(Portal.PortalId, Sexy.App);
                 var adamIds = adam.Export.AppFiles;
+                adamIds.ToList().ForEach(AddFileAndFolderToQueue);
 
-                _referencedFileIds = _referencedFileIds.Concat(adamIds).ToList();
+                // todo: also add folders in adam without files, as it could have metadata
                 #endregion
 
                 // Create root node "SexyContent" and add ContentTypes, ContentItems and Templates
@@ -192,7 +198,8 @@ namespace ToSic.SexyContent.ImportExport
                     Header,
                     AttributeSets,
                     Entities,
-                    GetFilesXElements()));
+                    GetFilesXElements(),
+                    GetFoldersXElements()));
                 return Doc;
             }
         }
@@ -235,8 +242,9 @@ namespace ToSic.SexyContent.ImportExport
                 {
                     var fileRegex = new Regex("^File:(?<FileId>[0-9]+)", RegexOptions.IgnoreCase);
                     var a = fileRegex.Match(valueString);
+                    // try remember the file
                     if (a.Success && a.Groups["FileId"].Length > 0)
-                        _referencedFileIds.Add(int.Parse(a.Groups["FileId"].Value));
+                        AddFileAndFolderToQueue(int.Parse(a.Groups["FileId"].Value));
                 }
             }
 
@@ -260,6 +268,27 @@ namespace ToSic.SexyContent.ImportExport
             return entityXElement;
         }
 
+        private void AddFileAndFolderToQueue(int fileNum)
+        {
+            try
+            {
+                _referencedFileIds.Add(fileNum);
+
+                // also try to remember the folder
+                try
+                {
+                    var file = DnnFiles.GetFile(fileNum);
+                    _referencedFolderIds.Add(file.FolderId);
+                }
+                finally
+                {
+                }
+            }
+            finally
+            {
+            }
+        }
+
         #endregion
 
         #region Files & Pages
@@ -268,6 +297,14 @@ namespace ToSic.SexyContent.ImportExport
         {
             return  new XElement("PortalFiles",
                     _referencedFileIds.Distinct().Select(GetFileXElement)
+                );
+        }
+
+
+        private XElement GetFoldersXElements()
+        {
+            return  new XElement("PortalFolders",
+                    _referencedFolderIds.Distinct().Select(GetFolderXElement)
                 );
         }
 
@@ -288,7 +325,20 @@ namespace ToSic.SexyContent.ImportExport
 
             return null;
         }
+        private XElement GetFolderXElement(int folderId)
+        {
+            var folderController = DotNetNuke.Services.FileSystem.FolderManager.Instance;
+            var folder = folderController.GetFolder(folderId);
+            if (folder != null)
+            {
+                return new XElement("Folder",
+                        new XAttribute("Id", folderId),
+                        new XAttribute("RelativePath", folder.FolderPath) //todo: check
+                    );
+            }
 
+            return null;
+        }
         #endregion
 
         /// <summary>
