@@ -134,6 +134,7 @@ $2sxc.getManageController = function (id) {
             title: "Toolbar.Develop", 
             iclass: "icon-sxc-code",
             showOn: "admin",
+            newWindow: true,
             uiActionOnly: true, // so it doesn't create the content when used
             action: function (settings, event) {
                 tbContr._openNgDialog(settings, event);
@@ -261,7 +262,7 @@ $2sxc.getManageController = function (id) {
             };
             var link = tbContr.getNgLink(settings);
 
-            if (event && event.shiftKey)
+            if (settings.newWindow || (event && event.shiftKey))
                 window.open(link);
             else
                 $2sxc.totalPopup.open(link, callback);
@@ -282,39 +283,42 @@ $2sxc.getManageController = function (id) {
 
         // Generate a button (an <a>-tag) for one specific toolbar-action. 
         // Expects: settings, an object containing the specs for the expected buton
-        getButton: function(settings) {
-            // if the button belongs to a content-item, move the specs to the item into the settings-object
-            if (settings.entity && settings.entity._2sxcEditInformation) {
-                if (settings.entity._2sxcEditInformation.entityId) {
-                    settings.entityId = settings.entity._2sxcEditInformation.entityId;
-                    settings.useModuleList = false;
+        getButton: function(btnSettings) {
+            // if the button belongs to a content-item, move the specs up to the item into the settings-object
+            if (btnSettings.entity && btnSettings.entity._2sxcEditInformation) {
+                if (btnSettings.entity._2sxcEditInformation.entityId) {
+                    btnSettings.entityId = btnSettings.entity._2sxcEditInformation.entityId;
+                    btnSettings.useModuleList = false;
                 }
-                if (settings.entity._2sxcEditInformation.sortOrder) {
-                    settings.sortOrder = settings.entity._2sxcEditInformation.sortOrder;
-                    settings.useModuleList = true;
+                if (btnSettings.entity._2sxcEditInformation.sortOrder) {
+                    btnSettings.sortOrder = btnSettings.entity._2sxcEditInformation.sortOrder;
+                    btnSettings.useModuleList = true;
                 }
-                delete settings.entity;
+                delete btnSettings.entity;
             }
 
             // retrieve configuration for this button
-            var conf = actionButtonsConf[settings.action];// || actionButtonsConf.default;
+            var conf = actionButtonsConf[btnSettings.action];// || actionButtonsConf.default;
+            if (conf.newWindow)
+                btnSettings.newWindow = conf.newWindow;
 
             var showClasses = "";
             var classesList = conf.showOn.split(",");
             for (var c = 0; c < classesList.length; c++)
                 showClasses += " show-" + classesList[c];
             var button = $("<a />", {
-                'class': "sc-" + settings.action + " "
+                'class': "sc-" + btnSettings.action + " "
                     // + " " + (conf.lightbox ? "box" : "")
                     + showClasses,
-                'onclick': "javascript:$2sxc(" + id + ").manage.action(" + JSON.stringify(settings) + ", event);",
+                'onclick': "javascript:$2sxc(" + id + ").manage.action(" + JSON.stringify(btnSettings) + ", event);",
                 'title': tbContr.translate(conf.title)
             });
             var box = $("<div/>");
             var symbol = $("<i class=\"" + conf.iclass + "\" aria-hidden=\"true\"></i>");
 
+            // todo: move the following lines into the button-config and just call from here
             // if publish-button and not published yet, show button (otherwise hidden) & change icon
-            if (settings.action === "publish" && settings.isPublished === false) {
+            if (btnSettings.action === "publish" && btnSettings.isPublished === false) {
                 button.addClass("show-default").removeClass("show-edit")
                     .attr("title", tbContr.translate("Toolbar.Unpublished")); 
                 symbol.removeClass(conf.iclass).addClass(conf.iclass2);
@@ -328,50 +332,11 @@ $2sxc.getManageController = function (id) {
         // Builds the toolbar and returns it as HTML
         // expects settings - either for 1 button or for an array of buttons
         getToolbar: function(settings) {
-            var buttons = [];
-
-            if (settings.action) {
-                // if single item with specified action, use this as our button-list
-                buttons = [settings];
-            } else if ($.isArray(settings)) {
-                // if it is an array, use that. Otherwise assume that we auto-generate all buttons with supplied settings
-                buttons = settings;
-            } else {
-                // Create a standard menu with all standard buttons
-                // first button: edit
-                buttons.push($.extend({}, settings, { action: "edit" }));
-
-                // add applicable list buttons - add=add item below; new=lightbox-dialog
-                if (toolbarConfig.isList && settings.sortOrder !== -1) { // if list and not the list-header
-                    buttons.push($.extend({}, settings, { action: "new" }));
-                    if (settings.useModuleList) 
-                        buttons.push($.extend({}, settings, { action: "add" }));
-
-                    // only provide remove on lists
-                    buttons.push($.extend({}, settings, { action: "remove" }));
-
-                    if (settings.useModuleList) {
-                        if (settings.sortOrder !== 0)
-                            buttons.push($.extend({}, settings, { action: "moveup" }));
-                        buttons.push($.extend({}, settings, { action: "movedown" }));
-                    }
-                    buttons.push($.extend({}, settings, { action: "sort" }));
-                }
-                buttons.push($.extend({}, settings, { action: "publish" }));
-
-                // the replace button only makes sense if it's a content-group
-                if (settings.useModuleList)
-                    buttons.push($.extend({}, settings, { action: "replace" }));
-                
-                buttons.push($.extend({}, settings, { action: "layout" }));
-                if (enableTools) {
-                    buttons.push($.extend({}, settings, { action: "app" }));
-                    buttons.push($.extend({}, settings, { action: "develop" }));
-                    if (!isContent) 
-                        buttons.push($.extend({}, settings, { action: "zone" }));
-                }
-                buttons.push($.extend({}, settings, { action: "more" }));
-            }
+            var buttons = settings.action
+                ? [settings] // if single item with specified action, use this as our button-list
+                : $.isArray(settings)
+                ? settings // if it is an array, use that. Otherwise assume that we auto-generate all buttons with supplied settings
+                : tbContr.createDefaultToolbar(settings);
 
             var tbClasses = "sc-menu show-set-0" + ((settings.sortOrder === -1) ? " listContent" : "");
             var toolbar = $("<ul />", { 'class': tbClasses, 'onclick': "javascript: var e = arguments[0] || window.event; e.stopPropagation();" });
@@ -380,6 +345,47 @@ $2sxc.getManageController = function (id) {
                 toolbar.append($("<li />").append($(tbContr.getButton(buttons[i]))));
 
             return toolbar[0].outerHTML;
+        },
+
+        // Assemble a default toolbar instruction set
+        createDefaultToolbar: function (settings) {
+            var buttons = [];
+
+            // Create a standard menu with all standard buttons
+            // first button: edit
+            buttons.push($.extend({}, settings, { action: "edit" }));
+
+            // add applicable list buttons - add=add item below; new=lightbox-dialog
+            if (toolbarConfig.isList && settings.sortOrder !== -1) { // if list and not the list-header
+                buttons.push($.extend({}, settings, { action: "new" }));
+                if (settings.useModuleList)
+                    buttons.push($.extend({}, settings, { action: "add" }));
+
+                // only provide remove on lists
+                buttons.push($.extend({}, settings, { action: "remove" }));
+
+                if (settings.useModuleList) {
+                    if (settings.sortOrder !== 0)
+                        buttons.push($.extend({}, settings, { action: "moveup" }));
+                    buttons.push($.extend({}, settings, { action: "movedown" }));
+                }
+                buttons.push($.extend({}, settings, { action: "sort" }));
+            }
+            buttons.push($.extend({}, settings, { action: "publish" }));
+
+            // the replace button only makes sense if it's a content-group
+            if (settings.useModuleList)
+                buttons.push($.extend({}, settings, { action: "replace" }));
+
+            buttons.push($.extend({}, settings, { action: "layout" }));
+            if (enableTools) {
+                buttons.push($.extend({}, settings, { action: "app" }));
+                buttons.push($.extend({}, settings, { action: "develop" }));
+                if (!isContent)
+                    buttons.push($.extend({}, settings, { action: "zone" }));
+            }
+            buttons.push($.extend({}, settings, { action: "more" }));
+            return buttons;
         },
 
         // find all toolbar-info-attributes in the HTML, convert to <ul><li> toolbar
