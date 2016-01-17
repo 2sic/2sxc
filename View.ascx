@@ -6,7 +6,9 @@
     <%-- note: 95% identical with ViewApp.ascx - merge as soon as possible --%>
     <div sxc-app="2sxc.view" id="tselector<%= ModuleId %>" ng-controller="TemplateSelectorCtrl as vm" 
         data-moduleid="<%= ModuleId %>" class="sc-selector-wrapper" 
-        ng-include="'template-selector/template-selector.html'">
+        ng-include="'template-selector/template-selector.html'"
+        data-importAppDialog="<%= EditUrl("", "", SexyContent.ControlKeys.AppImport) %>"
+        > 
     </div>
 </asp:Placeholder>
 
