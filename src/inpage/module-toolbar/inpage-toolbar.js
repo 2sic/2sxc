@@ -357,10 +357,9 @@ $2sxc.getManageController = function (id) {
 
         // Assemble a default toolbar instruction set
         createDefaultToolbar: function (settings) {
-            var buttons = [];
-
             // Create a standard menu with all standard buttons
             // first button: edit
+            var buttons = [];
             buttons.push($.extend({}, settings, { action: "edit" }));
 
             // add applicable list buttons - add=add item below; new=lightbox-dialog
@@ -387,9 +386,9 @@ $2sxc.getManageController = function (id) {
 
             buttons.push($.extend({}, settings, { action: "layout" }));
             if (enableTools) {
-                buttons.push($.extend({}, settings, { action: "app" }));
                 buttons.push($.extend({}, settings, { action: "develop" }));
                 buttons.push($.extend({}, settings, { action: "contenttype" }));
+                buttons.push($.extend({}, settings, { action: "app" }));
                 buttons.push($.extend({}, settings, { action: "zone" }));
             }
             buttons.push($.extend({}, settings, { action: "more" }));

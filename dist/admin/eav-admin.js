@@ -570,7 +570,7 @@
 
 		function tryToDelete(item) {
 			if (confirm("Delete '" + item.Title + "' (" + item.RepositoryId + ") ?"))
-				svc.delete(item.RepositoryId);
+			    svc.delete(item.RepositoryId).then(setRowData);
 		}
 
 		function openDuplicate(item) {
@@ -2211,6 +2211,7 @@ angular.module("EavAdminUi", ["ng",
                     return svc.OpenModal("content-types/content-types-fields.html", "FieldList as vm", "xlg", resolve, closeCallback);
             };
 
+            // this one assumes we have a content-item, but must first retrieve content-type-infos
             svc.openContentTypeFieldsOfItems = function octf(item, closeCallback) {
                 return entitiesSvc.getManyForEditing(appId, item)
                     .then(function(result) {
@@ -2223,7 +2224,7 @@ angular.module("EavAdminUi", ["ng",
             };
 
 
-//#endregion
+            //#endregion
         
             //#region Item - new, edit
             svc.openItemNew = function oin(contentTypeName, closeCallback) {
