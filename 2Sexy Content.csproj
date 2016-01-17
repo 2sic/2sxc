@@ -420,7 +420,7 @@
     <Content Include="grunt-tasks\develop.gruntfile.js" />
     <Content Include="grunt-tasks\inpage.gruntfile.js" />
     <Content Include="grunt-tasks\import-languages.gruntfile.js" />
-    <Content Include="grunt-tasks\i18n\gruntfile.js" />
+    <Content Include="grunt-tasks\i18n.gruntfile.js" />
     <Content Include="gruntfile.js" />
     <Content Include="SqlDataProvider\07.03.01.SqlDataProvider" />
     <Content Include="SqlDataProvider\07.03.03.SqlDataProvider" />
@@ -645,6 +645,7 @@
     <Content Include="Administration\App_LocalResources\WebApiHelp.ascx.resx" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="grunt-tasks\i18n\" />
     <Folder Include="src\sxc-edit\fields\string\lib\" />
     <Folder Include="Upgrade\Log\" />
   </ItemGroup>

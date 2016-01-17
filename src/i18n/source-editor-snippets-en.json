@@ -52,7 +52,7 @@
       "PresentationFields.Title": "List presentation fields",
       "PresentationFields.Help": "list presentation settings - usually for settings like paging-size, show-intro, etc.",
 
-      "Repeaters": {
+      "Repeater": {
         "Title": "Repeaters",
         "Help": "placeholders as well as loop-templates and more",
 
@@ -106,11 +106,10 @@
 
     "App": {
       "Title": "App",
-      "Help": "App fields and placeholders",
-      "General": {
-        "Title": "General",
-        "Help": "General App placeholders"
-      },
+      "App.Title": "App",
+      "App.Help": "App fields and placeholders",
+      "General.Title": "General",
+      "General.Help": "General App placeholders",
 
       "Resources.Title": "App Resources",
       "Resources.Help": "from the app resources content-type which can be configured in the app tab of the app-dialog - usually multi-language",
@@ -130,14 +129,20 @@
       "Title": "Dnn objects (module, tab, portal, etc.)",
       "Help": "find more on <a href='http://2sxc.org/en/Docs-Manuals/Feature/feature/3602'>token list</a>",
       "Module.Title": "Module",
+      "Module.Help": "All module properties",
       "Tab.Title": "Tab (page)",
-      "Portal.Title": "Portal"
+      "Tab.Help": "all page properties / settings",
+      "Portal.Title": "Portal",
+      "Portal.Help": "everything about the portal / zone you are in"
     },
     "User": {
       "Title": "Dnn user information",
       "Basic.Title": "Basic user properties",
+      "Basic.Help": "default properties which exist in every DNN",
       "Profile.Title": "Profile",
-      "Profile.Help": "profile information as configured in your portal, like city etc."
+      "Profile.Help": "profile information as configured in your portal, like city etc.",
+      "Permissions.Title": "Permissions",
+      "Permissions.Help": "user permissions"
     },
     "Environment": {
       "Title": "Environment / System",
