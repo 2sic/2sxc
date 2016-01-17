@@ -554,16 +554,30 @@ namespace ToSic.SexyContent.ImportExport
         /// <returns></returns>
 	    private string GetMappedLink(string sourceValueString)
 	    {
-	        var fileRegex = new Regex("^File:(?<FileId>[0-9]+)", RegexOptions.IgnoreCase);
+            // file
+	        var fileRegex = new Regex("^File:(?<Id>[0-9]+)", RegexOptions.IgnoreCase);
 	        var a = fileRegex.Match(sourceValueString);
 
-	        if (a.Success && a.Groups["FileId"].Length > 0)
+	        if (a.Success && a.Groups["Id"].Length > 0)
 	        {
-	            var originalId = int.Parse(a.Groups["FileId"].Value);
+	            var originalId = int.Parse(a.Groups["Id"].Value);
 
 	            if (_fileIdCorrectionList.ContainsKey(originalId))
 	                return fileRegex.Replace(sourceValueString, "file:" + _fileIdCorrectionList[originalId]);
 	        }
+
+            // folder
+	        var folderRegEx = new Regex("^folder:(?<Id>[0-9]+)", RegexOptions.IgnoreCase);
+	        var f = folderRegEx.Match(sourceValueString);
+
+	        if (f.Success && f.Groups["Id"].Length > 0)
+	        {
+	            var originalId = int.Parse(f.Groups["Id"].Value);
+
+	            if (_folderIdCorrectionList.ContainsKey(originalId))
+	                return folderRegEx.Replace(sourceValueString, "folder:" + _folderIdCorrectionList[originalId]);
+	        }
+
 	        return null;
 	    }
 
