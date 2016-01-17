@@ -120,8 +120,6 @@ $2sxc.getManageController = function (id) {
         'remove': {
             title: "Toolbar.Remove",
             iclass: "icon-sxc-minus-circled",
-            // lightbox: false,
-            // hideFirst: true,
             disabled: true,
             showOn: "edit",
             action: function (settings, event) {

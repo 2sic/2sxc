@@ -33,6 +33,7 @@
 .show-set-1 a.show-edit { display: inline-block!important}
 .show-set-2 a.show-design {display: inline-block!important}
 .show-set-3 a.show-admin {display: inline-block!important}
+.show-set-3 a.show-admin div { display: inline-block !important; background-color: #007100}
 
 .sc-menu span.disabled { color: #aaa}
 
