@@ -5,7 +5,7 @@
     <div sxc-app="2sxc.view" id="tselector<%= ModuleId %>" ng-controller="TemplateSelectorCtrl as vm" 
         data-moduleid="<%= ModuleId %>" class="sc-selector-wrapper" 
         ng-include="'template-selector/template-selector.html'"
-        <%-- note that the importappdialog is only needed, till import-app works in angular --%>
+        <%-- note that the importappdialog is only needed, till import-app works in angular-only --%>
         data-importAppDialog="<%= EditUrl("", "", SexyContent.ControlKeys.AppImport) %>"
         > 
     </div>

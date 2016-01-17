@@ -551,7 +551,6 @@
     <Content Include="Upgrade\07.03.03-03.xml" />
     <Content Include="Upgrade\08.00.04.xml" />
     <Content Include="Upgrade\08.01.00.xml" />
-    <Content Include="ViewApp.ascx" />
     <Content Include="View.ascx" />
     <Content Include="WebConfigTemplate.config" />
     <None Include="SqlDataProvider\01.00.01.SqlDataProvider" />
@@ -630,34 +629,10 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_LocalResources\EditList.ascx.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_LocalResources\EditList.ascx.de-DE.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_LocalResources\EditContentGroup.ascx.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_LocalResources\EditContentGroup.ascx.de-DE.resx" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Administration\App_LocalResources\ContentTypeAndDemoSelector.ascx.resx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Administration\App_LocalResources\ContentTypeAndDemoSelector.ascx.de-DE.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_LocalResources\EditContentGroupItem.ascx.de-DE.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_LocalResources\EditContentGroupItem.ascx.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_LocalResources\TemplateHelpGrid.ascx.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_LocalResources\TemplateHelpGrid.ascx.de-DE.resx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Administration\App_LocalResources\Registers.ascx.resx" />
@@ -666,8 +641,6 @@
     <Content Include="Administration\App_LocalResources\Registers.ascx.de-DE.resx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_LocalResources\EditEntity.ascx.de-DE.resx" />
-    <Content Include="App_LocalResources\EditEntity.ascx.resx" />
     <Content Include="Administration\Apps\App_LocalResources\AppConfig.ascx.resx" />
     <Content Include="Administration\App_LocalResources\WebApiHelp.ascx.resx" />
   </ItemGroup>
@@ -677,12 +650,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Administration\Apps\App_LocalResources\AppManagement.ascx.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_LocalResources\ViewApp.ascx.de-DE.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_LocalResources\ViewApp.ascx.resx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Administration\Apps\App_LocalResources\AppImport.ascx.resx" />
