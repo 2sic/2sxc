@@ -24,6 +24,7 @@ namespace ToSic.SexyContent.Adam
         public bool HasMetadata => EntityBase.GetFirstMetadataEntity(FolderID, false) != null;
 
         public string Type => "folder";
+        public string Name { get; internal set; }
 
 
         private IEnumerable<AdamFolder> _folders;
@@ -63,7 +64,8 @@ namespace ToSic.SexyContent.Adam
                         VersionGuid = f.VersionGuid,
                         WorkflowID = f.WorkflowID,
                         //App = App,
-                        EntityBase = EntityBase
+                        EntityBase = EntityBase,
+                        Name = f.DisplayName
                     }).ToList()
                                ?? new List<AdamFolder>();
                 }
@@ -102,7 +104,10 @@ namespace ToSic.SexyContent.Adam
                         StorageLocation = f.StorageLocation,
                         IsCached = f.IsCached,
                         SHA1Hash = f.SHA1Hash,
-                        EntityBase = EntityBase
+                        EntityBase = EntityBase,
+
+                        // iAdamItem
+                        Name = System.IO.Path.GetFileNameWithoutExtension(f.FileName)
                     }).ToList()
                     ?? new List<AdamFile>();
                 }

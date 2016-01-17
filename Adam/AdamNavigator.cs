@@ -36,6 +36,9 @@ namespace ToSic.SexyContent.Adam
             UniqueId = f.UniqueId;
             VersionGuid = f.VersionGuid;
             WorkflowID = f.WorkflowID;
+
+            // IAdamItem interface properties
+            Name = DisplayName;
         }
 
         public string Root => EntityBase.EntityRoot;

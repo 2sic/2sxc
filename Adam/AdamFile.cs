@@ -17,5 +17,6 @@ namespace ToSic.SexyContent.Adam
         public  string Url => EntityBase.GenerateWebPath(this);
 
         public string Type => EntityBase.TypeName(Extension);
+        public string Name { get; internal set; }
     }
 }

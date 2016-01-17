@@ -8,6 +8,8 @@
         string Url { get; }
 
         string Type { get; }
+
+        string Name { get; }
     };
 }
 
