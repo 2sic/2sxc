@@ -21,7 +21,7 @@
         .controller("Editor", EditorController)
     ;
 
-    function EditorController(sourceSvc, snippetSvc, item, $modalInstance, $scope, $translate) {
+    function EditorController(sourceSvc, snippetSvc, item, $modalInstance, $window, $scope, $translate) {
         $translate.refresh();   // necessary to load stuff added in this lazy-loaded app
 
         var vm = this;
@@ -48,8 +48,23 @@
             });
         };
 
-        vm.close = function () { $modalInstance.dismiss("cancel"); };
+        //#region close / prevent-close
+        //vm.close = function () { $modalInstance.dismiss("cancel"); };
 
+        vm.maybeLeave = function maybeLeave(e) {
+            if (!confirm($translate.instant("Message.ExitOk")))
+                e.preventDefault();
+        };
+
+        $scope.$on('modal.closing', vm.maybeLeave);
+
+        $window.addEventListener('beforeunload', function (e) {
+            var unsavedChangesText = $translate.instant("Message.ExitOk");
+            (e || window.event).returnValue = unsavedChangesText; //Gecko + IE
+            return unsavedChangesText; //Gecko + Webkit, Safari, Chrome etc.
+        });
+
+        //#endregion
         vm.save = function (autoClose) {
             var after = autoClose ? vm.close : function() {};
             svc.save(vm.view).then(after);
@@ -62,15 +77,10 @@
         };
 
         vm.registerSnippets = function registerSnippets() {
-            // ensure we have everything
+            // ensure we have everything first (this may be called multiple times), then register them
             if (!(vm.snipSvc && vm.editor))
                 return;
-            // try to add my snippets
             vm.snipSvc.registerInEditor();
-            //var snippetManager = ace.require("ace/snippets").snippetManager;
-            //var snippets = vm.snipSvc.snippetsToRegister();
-            //var parsed = snippetManager.parseSnippetFile(snippets.snippetText, snippets.scope);
-            //snippetManager.register(parsed);
         };
 
         // this event is called when the editor is ready
@@ -80,7 +90,7 @@
         };
 
     }
-    EditorController.$inject = ["sourceSvc", "snippetSvc", "item", "$modalInstance", "$scope", "$translate"];
+    EditorController.$inject = ["sourceSvc", "snippetSvc", "item", "$modalInstance", "$window", "$scope", "$translate"];
 
 }());
 // This service delivers all snippets, translated etc. to the sourc-editor UI
@@ -387,7 +397,7 @@ angular.module('SourceEditor').run(['$templateCache', function($templateCache) {
   'use strict';
 
   $templateCache.put('source-editor/editor.html',
-    "<div ng-click=vm.debug.autoEnableAsNeeded($event)><div class=modal-header><button class=\"btn btn-default btn-square btn-subtle pull-right\" type=button ng-click=vm.close()><i icon=remove></i></button><h3 class=modal-title translate=SourceEditor.Title></h3></div><div class=modal-body><div class=row><div class=col-md-8><div tooltip=\"{{ vm.view.FileName }}\">{{ vm.view.FileName.substr(vm.view.FileName.lastIndexOf(\"\\\\\") + 1) }} ({{vm.view.Type }})</div><div ng-model=vm.view.Code style=\"height: 400px\" ui-ace=\"{\r" +
+    "<div ng-click=vm.debug.autoEnableAsNeeded($event)><div class=modal-header><h3 class=modal-title translate=SourceEditor.Title></h3></div><div class=modal-body><div class=row><div class=col-md-8><div tooltip=\"{{ vm.view.FileName }}\">{{ vm.view.FileName.substr(vm.view.FileName.lastIndexOf(\"\\\\\") + 1) }} ({{vm.view.Type }})</div><div ng-model=vm.view.Code style=\"height: 400px\" ui-ace=\"{\r" +
     "\n" +
     "                    useWrapMode : true,\r" +
     "\n" +
@@ -419,7 +429,7 @@ angular.module('SourceEditor').run(['$templateCache', function($templateCache) {
     "\n" +
     "                    }\r" +
     "\n" +
-    "                     }\"></div></div><div class=\"pull-right col-md-4\"><div><strong translate=SourceEditor.SnippetsSection.Title></strong> <i icon=question-sign style=\"opacity: 0.3\" ng-click=\"showSnippetInfo = !showSnippetInfo\"></i><div ng-if=showSnippetInfo translate=SourceEditor.SnippetsSection.Intro></div></div><select class=input-lg width=100% ng-model=vm.snippetSet ng-options=\"key as ('SourceEditorSnippets.' + key + '.Title' | translate) for (key , value) in vm.snippets\" tooltip=\"{{ 'SourceEditorSnippets.' + vm.snippetSet + '.Help'  | translate}}\"></select><div>&nbsp;</div><div ng-repeat=\"(subsetName, subsetValue) in vm.snippets[vm.snippetSet]\"><strong tooltip=\"{{ 'SourceEditorSnippets.' + vm.snippetSet + '.' + subsetName + '.Help'  | translate}}\">{{ 'SourceEditorSnippets.' + vm.snippetSet + '.' + subsetName + '.Title' | translate}}</strong><ul><li ng-repeat=\"value in subsetValue | toArray | orderBy: '$key'\" tooltip=\"{{ value.snip }}\"><span ng-click=vm.addSnippet(value.snip)>{{value.label}}</span> <a ng-show=value.more ng-click=\"showMore = !showMore\"><i icon=plus></i>more</a> <i icon=info-sign style=\"opacity: 0.3\" ng-click=\"show = !show\" ng-show=value.help></i><div ng-if=show><em>{{value.help}}</em></div><ul ng-if=showMore><li ng-repeat=\"more in value.more | toArray | orderBy: '$key'\" tooltip=\"{{ value.snip }}\"><span ng-click=vm.addSnippet(more.snip)>{{more.label}}</span> <i icon=info-sign style=\"opacity: 0.3\" ng-click=\"show = !show\" ng-show=more.help></i><div ng-if=show><em>{{more.help}}</em></div></li></ul></li></ul></div></div></div></div><div class=modal-footer><div class=pull-left><button class=\"btn btn-primary btn-lg xxbtn-square\" type=button ng-click=vm.save(false)><span icon=check tooltip=\"{{ 'Button.SaveAndKeepOpen' | translate }}\"></span> {{ 'Button.SaveAndKeepOpen' | translate }}</button> &nbsp; <button class=\"btn btn-default btn-square btn-lg\" type=button ng-click=vm.save(true)><i icon=ok></i></button> &nbsp;</div></div><show-debug-availability class=pull-right></show-debug-availability></div>"
+    "                }\"></div></div><div class=\"pull-right col-md-4\"><div><strong translate=SourceEditor.SnippetsSection.Title></strong> <i icon=question-sign style=\"opacity: 0.3\" ng-click=\"showSnippetInfo = !showSnippetInfo\"></i><div ng-if=showSnippetInfo translate=SourceEditor.SnippetsSection.Intro></div></div><select class=input-lg width=100% ng-model=vm.snippetSet ng-options=\"key as ('SourceEditorSnippets.' + key + '.Title' | translate) for (key , value) in vm.snippets\" tooltip=\"{{ 'SourceEditorSnippets.' + vm.snippetSet + '.Help'  | translate}}\"></select><div>&nbsp;</div><div ng-repeat=\"(subsetName, subsetValue) in vm.snippets[vm.snippetSet]\"><strong tooltip=\"{{ 'SourceEditorSnippets.' + vm.snippetSet + '.' + subsetName + '.Help'  | translate}}\">{{ 'SourceEditorSnippets.' + vm.snippetSet + '.' + subsetName + '.Title' | translate}}</strong><ul><li ng-repeat=\"value in subsetValue | toArray | orderBy: '$key'\" tooltip=\"{{ value.snip }}\"><span ng-click=vm.addSnippet(value.snip)>{{value.label}}</span> <a ng-show=value.more ng-click=\"showMore = !showMore\"><i icon=plus></i>more</a> <i icon=info-sign style=\"opacity: 0.3\" ng-click=\"show = !show\" ng-show=value.help></i><div ng-if=show><em>{{value.help}}</em></div><ul ng-if=showMore><li ng-repeat=\"more in value.more | toArray | orderBy: '$key'\" tooltip=\"{{ value.snip }}\"><span ng-click=vm.addSnippet(more.snip)>{{more.label}}</span> <i icon=info-sign style=\"opacity: 0.3\" ng-click=\"show = !show\" ng-show=more.help></i><div ng-if=show><em>{{more.help}}</em></div></li></ul></li></ul></div></div></div></div><div class=modal-footer><div class=pull-left><button class=\"btn btn-primary btn-lg xxbtn-square\" type=button ng-click=vm.save(false)><span icon=check tooltip=\"{{ 'Button.SaveAndKeepOpen' | translate }}\"></span> {{ 'Button.SaveAndKeepOpen' | translate }}</button> &nbsp; <button class=\"btn btn-default btn-square btn-lg\" type=button ng-click=vm.save(true)><i icon=ok></i></button> &nbsp;</div></div><show-debug-availability class=pull-right></show-debug-availability></div>"
   );
 
 }]);

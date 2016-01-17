@@ -5,7 +5,7 @@
         .controller("Editor", EditorController)
     ;
 
-    function EditorController(sourceSvc, snippetSvc, item, $modalInstance, $scope, $translate) {
+    function EditorController(sourceSvc, snippetSvc, item, $modalInstance, $window, $scope, $translate) {
         $translate.refresh();   // necessary to load stuff added in this lazy-loaded app
 
         var vm = this;
@@ -32,8 +32,23 @@
             });
         };
 
-        vm.close = function () { $modalInstance.dismiss("cancel"); };
+        //#region close / prevent-close
+        //vm.close = function () { $modalInstance.dismiss("cancel"); };
 
+        vm.maybeLeave = function maybeLeave(e) {
+            if (!confirm($translate.instant("Message.ExitOk")))
+                e.preventDefault();
+        };
+
+        $scope.$on('modal.closing', vm.maybeLeave);
+
+        $window.addEventListener('beforeunload', function (e) {
+            var unsavedChangesText = $translate.instant("Message.ExitOk");
+            (e || window.event).returnValue = unsavedChangesText; //Gecko + IE
+            return unsavedChangesText; //Gecko + Webkit, Safari, Chrome etc.
+        });
+
+        //#endregion
         vm.save = function (autoClose) {
             var after = autoClose ? vm.close : function() {};
             svc.save(vm.view).then(after);
@@ -46,15 +61,10 @@
         };
 
         vm.registerSnippets = function registerSnippets() {
-            // ensure we have everything
+            // ensure we have everything first (this may be called multiple times), then register them
             if (!(vm.snipSvc && vm.editor))
                 return;
-            // try to add my snippets
             vm.snipSvc.registerInEditor();
-            //var snippetManager = ace.require("ace/snippets").snippetManager;
-            //var snippets = vm.snipSvc.snippetsToRegister();
-            //var parsed = snippetManager.parseSnippetFile(snippets.snippetText, snippets.scope);
-            //snippetManager.register(parsed);
         };
 
         // this event is called when the editor is ready
