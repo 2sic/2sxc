@@ -23,6 +23,7 @@
 		"ChangeLayout": "change layout",
 		"App": "configure",
 		"Develop": "edit template",
+		"ContentType": "fields of this content-type",
 		"Zone": "manage apps",
 		"MoreActions": "more actions",
 		"ConfirmRemove": "This will remove this content-item from this list, but not delete it (so you can add it again later). \nSee 2sxc.org/help for more. \n\nOk to remove?"

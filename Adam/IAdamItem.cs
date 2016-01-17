@@ -2,8 +2,11 @@
 {
     interface IAdamItem
     {
+        #region Metadata
         bool HasMetadata { get; }
         DynamicEntity Metadata { get; }
+        #endregion
+
 
         string Url { get; }
 

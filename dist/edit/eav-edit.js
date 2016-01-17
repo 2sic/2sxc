@@ -480,10 +480,14 @@ angular.module("eavFieldTemplates")
                     // first: add all custom types to re-load these scripts and styles
 		            angular.forEach(result.data, function (e, i) {
 		                // check in config input-type replacement map if the specified type should be replaced by another
-		                if (e.InputType && eavConfig.formly.inputTypeReplacementMap[e.InputType]) 
-		                    e.InputType = eavConfig.formly.inputTypeReplacementMap[e.InputType];
+		                //if (e.InputType && eavConfig.formly.inputTypeReplacementMap[e.InputType]) 
+		                //    e.InputType = eavConfig.formly.inputTypeReplacementMap[e.InputType];
 
+
+		                // review type and get additional configs!
+		                e.InputType = vm.getType(e);
 		                eavConfig.formly.inputTypeReconfig(e);  // provide custom overrides etc. if necessary
+
 		                if (e.InputTypeConfig)
 		                    customInputTypes.addInputType(e);
 		            });
@@ -505,7 +509,7 @@ angular.module("eavFieldTemplates")
 	            if (e.Metadata.All === undefined)
 	                e.Metadata.All = {};
 
-	            var fieldType = vm.getType(e);
+	            var fieldType = e.InputType;
 
 	            // always remember the last heading so all the following fields know to look there for collapse-setting
 	            var isFieldHeading = (fieldType === "empty-default");
@@ -568,36 +572,43 @@ angular.module("eavFieldTemplates")
 		    loadContentType();
 
 
-		// Returns the field type for an attribute configuration
-		vm.getType = function(attributeConfiguration) {
-			var e = attributeConfiguration;
-			var type = e.Type.toLowerCase();
-			var inputType = "";
+	    // Returns the field type for an attribute configuration
+		vm.getType = function (attributeConfiguration) {
+		    var e = attributeConfiguration;
+		    var type = e.Type.toLowerCase();
+		    var inputType = "";
 
 		    // new: the All can - and should - have an input-type which doesn't change
 		    // First look in Metadata.All if an InputType is defined (All should override the setting, which is not the case when using only merged)
-			if (e.InputType !== "unknown") // the input type of @All is here from the web service // Metadata.All && e.Metadata.All.InputType)
-			    inputType = e.InputType;
-            // If not, look in merged
-			else if (e.Metadata.merged && e.Metadata.merged.InputType)
-			    inputType = e.Metadata.merged.InputType;
+		    if (e.InputType !== "unknown") // the input type of @All is here from the web service // Metadata.All && e.Metadata.All.InputType)
+		        inputType = e.InputType;
+		        // If not, look in merged
+		    else if (e.Metadata.merged && e.Metadata.merged.InputType)
+		        inputType = e.Metadata.merged.InputType;
 
-			if (inputType && inputType.indexOf("-") === -1) // has input-type, but missing main type, this happens with old types like string wysiyg
+		    if (inputType && inputType.indexOf("-") === -1) // has input-type, but missing main type, this happens with old types like string wysiyg
 		        inputType = type + "-" + inputType;
 
-            //// check in config input-type replacement map if the specified type should be replaced by another
-		    //if (inputType && eavConfig.formly.inputTypeReplacementMap[inputType])
-		    //    inputType = eavConfig.formly.inputTypeReplacementMap[inputType];
+		    var willBeRewrittenByConfig = (inputType && eavConfig.formly.inputTypeReplacementMap[inputType]);
+		    if (!willBeRewrittenByConfig) {
+		        // this type may have assets, so the definition may be late-loaded
+		        var typeAlreadyRegistered = formlyConfig.getType(inputType);    // check if this input-type actually exists - so "string-i-made-this-up" will return undefined
+		        var typeWillRegisterLaterWithAssets = (e.InputTypeConfig ? !!e.InputTypeConfig.Assets : false); // if it will load assets later, then it may still be defined then
 
-		    // this type may have assets, so the definition may be late-loaded
-		    var typeAlreadyRegistered = formlyConfig.getType(inputType);
-		    var typeWillLoadAssetsInAMoment = (e.InputTypeConfig ? !!e.InputTypeConfig.Assets : false);
+		        // Use subtype 'default' if none is specified - or type does not exist
+		        if (!inputType || (!typeAlreadyRegistered && !typeWillRegisterLaterWithAssets))
+		            inputType = type + "-default";
 
-			// Use subtype 'default' if none is specified - or type does not exist
-		    if (!inputType || (!typeAlreadyRegistered && !typeWillLoadAssetsInAMoment))
-		        inputType = type + "-default";
+		        // but re-check if it's in the config! since the name might have changed
+		        willBeRewrittenByConfig = (inputType && eavConfig.formly.inputTypeReplacementMap[inputType]);
+		    }
 
-			return (inputType);
+		    // check in config input-type replacement map if the specified type should be replaced by another
+		    // like "string-wysiwyg" replaced by "string-wysiwyg-tinymce"
+		    if (willBeRewrittenByConfig)
+		        inputType = eavConfig.formly.inputTypeReplacementMap[inputType];
+
+		    return (inputType);
 		};
 	}]);
     

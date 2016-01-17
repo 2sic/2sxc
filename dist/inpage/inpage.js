@@ -173,6 +173,15 @@ $2sxc.getManageController = function (id) {
                 tbContr._openNgDialog(settings, event);
             }
         },
+        'contenttype': {
+            title: "Toolbar.ContentType", 
+            iclass: "icon-sxc-th-list",
+            showOn: "admin",
+            uiActionOnly: true, // so it doesn't create the content when used
+            action: function (settings, event) {
+                tbContr._openNgDialog(settings, event);
+            }
+        },
         'app': {
             title: "Toolbar.App",
             iclass: "icon-sxc-settings",
@@ -266,7 +275,7 @@ $2sxc.getManageController = function (id) {
                     });
             }
 
-            if(["replace", "app", "zone", "sort", "develop"].indexOf(settings.action) !== -1)
+            if(["replace", "app", "zone", "sort", "develop", "contenttype"].indexOf(settings.action) !== -1)
                 params.dialog = settings.action;
 
             if (settings.action === "develop")
@@ -415,8 +424,8 @@ $2sxc.getManageController = function (id) {
             if (enableTools) {
                 buttons.push($.extend({}, settings, { action: "app" }));
                 buttons.push($.extend({}, settings, { action: "develop" }));
-                if (!isContent)
-                    buttons.push($.extend({}, settings, { action: "zone" }));
+                buttons.push($.extend({}, settings, { action: "contenttype" }));
+                buttons.push($.extend({}, settings, { action: "zone" }));
             }
             buttons.push($.extend({}, settings, { action: "more" }));
             return buttons;

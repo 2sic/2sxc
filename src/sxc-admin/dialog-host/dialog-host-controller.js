@@ -57,6 +57,9 @@
                         sxcDialogs.openDevelop(items[0], vm.close);
                     });
                 break;
+            case "contenttype":
+                eavAdminDialogs.openContentTypeFieldsOfItems(items, vm.close);
+                break;
             case "pipeline-designer":
                 // Don't do anything, as the template already loads the app in fullscreen-mode
                 // eavDialogs.editPipeline(appId, pipelineId, closeCallback);
