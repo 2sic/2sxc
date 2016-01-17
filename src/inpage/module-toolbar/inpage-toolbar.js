@@ -112,7 +112,7 @@ $2sxc.getManageController = function (id) {
         'sort': {
             title: "Toolbar.Sort",
             iclass: "icon-sxc-list-numbered",
-            showOn: "design",
+            showOn: "edit",
             action: function (settings, event) {
                 tbContr._openNgDialog(settings, event);
             }
@@ -165,10 +165,11 @@ $2sxc.getManageController = function (id) {
             uiActionOnly: true, // so it doesn't create the content when clicked
             action: function (settings, event) {
                 var fullMenu = $(event.target).closest("ul.sc-menu");
-                var state = Number(fullMenu.attr("data-state") || 0);
-                var newState = (state + 1) % (enableTools ? 4 : 3); // if tools are enabled, there are 4 states
-
-                fullMenu.removeClass("show-set-" + state)
+                var oldState = Number(fullMenu.attr("data-state") || 0);
+                var newState = oldState + 1;
+                if (newState === 2) newState = 3; // state 1 doesn't exist yet - skip
+                newState = newState % (enableTools ? 4 : 3); // if tools are enabled, there are 4 states
+                fullMenu.removeClass("show-set-" + oldState)
                     .addClass("show-set-" + newState)
                     .attr("data-state", newState);
             }
