@@ -407,7 +407,7 @@ angular.module('SourceEditor').run(['$templateCache', function($templateCache) {
     "\n" +
     "                    theme:'sqlserver',\r" +
     "\n" +
-    "                    mode: 'html',\r" +
+    "                    mode: 'razor',\r" +
     "\n" +
     "                    onLoad: aceLoaded,\r" +
     "\n" +
