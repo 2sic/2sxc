@@ -693,7 +693,7 @@
                 <moduleControls>
                   <moduleControl>
                     <controlKey />
-                    <controlSrc>DesktopModules/ToSIC_SexyContent/ViewApp.ascx</controlSrc>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/View.ascx</controlSrc>
                     <supportsPartialRendering>False</supportsPartialRendering>
                     <controlTitle />
                     <controlType>View</controlType>
