@@ -645,7 +645,6 @@
     <Content Include="Administration\App_LocalResources\WebApiHelp.ascx.resx" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="grunt-tasks\i18n\" />
     <Folder Include="src\sxc-edit\fields\string\lib\" />
     <Folder Include="Upgrade\Log\" />
   </ItemGroup>
