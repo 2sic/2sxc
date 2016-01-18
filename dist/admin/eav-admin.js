@@ -371,7 +371,7 @@
         .controller("ContentItemsList", contentItemsListController)
 	;
 
-	function contentItemsListController(contentItemsSvc, eavConfig, appId, contentType, eavAdminDialogs, debugState, $modalInstance, $q, $window) {
+	function contentItemsListController(contentItemsSvc, eavConfig, appId, contentType, eavAdminDialogs, debugState, $modalInstance, $q, $modalStack) {
 		/* jshint validthis:true */
 		var vm = angular.extend(this, {
 			debug: debugState,
@@ -404,10 +404,10 @@
 			{
 				headerName: "Status",
 				field: "IsPublished",
-				width: 70,
+				width: 75,
 				suppressSorting: true,
-				suppressMenu: true,
-				template: '<span class="glyphicon" ng-class="{\'glyphicon-eye-open\': data.IsPublished, \'glyphicon-eye-close\' : !data.IsPublished}" tooltip-append-to-body="true" tooltip="{{ \'Content.Publish.\' + (data.IsPublished ? \'PnV\': data.Published ? \'DoP\' : \'D\') | translate }}"></span> <span icon="{{ data.Draft ? \'link\' : data.Published ? \'link\' : \'\' }}" tooltip-append-to-body="true" tooltip="{{ (data.Draft ? \'Content.Publish.HD\' :\'\') | translate:\'{ id: data.Draft.RepositoryId}\' }}\n{{ (data.Published ? \'Content.Publish.HP\' :\'\') | translate }} #{{ data.Published.RepositoryId }}"></span> <span ng-if="data.Metadata" tooltip-append-to-body="true" tooltip="Metadata for type {{ data.Metadata.TargetType}}, id {{ data.Metadata.KeyNumber }}{{ data.Metadata.KeyString }}{{ data.Metadata.KeyGuid }}" icon="tag"></span>'
+				template: '<span class="glyphicon" ng-class="{\'glyphicon-eye-open\': data.IsPublished, \'glyphicon-eye-close\' : !data.IsPublished}" tooltip-append-to-body="true" tooltip="{{ \'Content.Publish.\' + (data.IsPublished ? \'PnV\': data.Published ? \'DoP\' : \'D\') | translate }}"></span> <span icon="{{ data.Draft ? \'link\' : data.Published ? \'link\' : \'\' }}" tooltip-append-to-body="true" tooltip="{{ (data.Draft ? \'Content.Publish.HD\' :\'\') | translate:\'{ id: data.Draft.RepositoryId}\' }}\n{{ (data.Published ? \'Content.Publish.HP\' :\'\') | translate }} #{{ data.Published.RepositoryId }}"></span> <span ng-if="data.Metadata" tooltip-append-to-body="true" tooltip="Metadata for type {{ data.Metadata.TargetType}}, id {{ data.Metadata.KeyNumber }}{{ data.Metadata.KeyString }}{{ data.Metadata.KeyGuid }}" icon="tag"></span>',
+				valueGetter: valueGetterStatusField
 			},
 			{
 				headerName: "Title",
@@ -432,11 +432,27 @@
 		function activate() {
 			svc = contentItemsSvc(appId, contentType);
 
+			// set RowData an Column Definitions
 			$q.all([setRowData(), svc.getColumns()])
 				.then(function (success) {
 					var columnDefs = getColumnDefs(success[1].data);
 					vm.gridOptions.api.setColumnDefs(columnDefs);
+
+					// resize outer modal (if needed)
+					var bodyWidth = vm.gridOptions.api.gridPanel.eBodyContainer.clientWidth;
+					var viewportWidth = vm.gridOptions.api.gridPanel.eBodyViewport.clientWidth;
+					if (bodyWidth < viewportWidth)
+						setModalWidth(bodyWidth);
 				});
+		}
+
+		// set width of outer angular-ui-modal. This is a quick and dirty solution because there's no official way to do this.
+		// $modalStack.getTop() might get a wrong modal Instance
+		// setting the width with inline css in a controller should be avoided
+		function setModalWidth(width) {
+			var modalDomEl = $modalStack.getTop().value.modalDomEl;
+			var modalDialog = modalDomEl.children();
+			modalDialog.css("width", (width + 47) + "px");	// add some pixels for padding and scrollbars
 		}
 
 		function add() {
@@ -449,11 +465,17 @@
 
 		// Get/Update Grid Row-Data
 		function setRowData() {
-			if (vm.gridOptions.api)
-				vm.gridOptions.api.setRowData(null);
+			var sortModel = {};
+			var filterModel = {};
+			if (vm.gridOptions.api) {
+				sortModel = vm.gridOptions.api.getSortModel();
+				filterModel = vm.gridOptions.api.getFilterModel();
+			}
 
 			return svc.liveListSourceRead().then(function (success) {
 				vm.gridOptions.api.setRowData(success.data);
+				vm.gridOptions.api.setSortModel(sortModel);
+				vm.gridOptions.api.setFilterModel(filterModel);
 			});
 		}
 
@@ -520,6 +542,13 @@
 			});
 		}
 
+		function valueGetterStatusField(params) {
+			return [
+				params.data.IsPublished ? "is published" : "is not published",
+				params.data.Metadata ? "is metadata" : "is not metadata"
+			];
+		}
+
 		function valueGetterDateTime(params) {
 			var rawValue = params.data[params.colDef.field];
 			if (!rawValue)
@@ -570,7 +599,7 @@
 
 		function tryToDelete(item) {
 			if (confirm("Delete '" + item.Title + "' (" + item.RepositoryId + ") ?"))
-			    svc.delete(item.RepositoryId).then(setRowData);
+				svc.delete(item.RepositoryId).then(setRowData);
 		}
 
 		function openDuplicate(item) {
@@ -587,7 +616,7 @@
 			$modalInstance.dismiss("cancel");
 		}
 	}
-	contentItemsListController.$inject = ["contentItemsSvc", "eavConfig", "appId", "contentType", "eavAdminDialogs", "debugState", "$modalInstance", "$q", "$window"];
+	contentItemsListController.$inject = ["contentItemsSvc", "eavConfig", "appId", "contentType", "eavAdminDialogs", "debugState", "$modalInstance", "$q", "$modalStack"];
 
 }());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
