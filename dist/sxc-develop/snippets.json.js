@@ -1829,7 +1829,7 @@
             "subset": "hyperlink-default",
             "name": "thumbnail url",
             "title": "",
-            "content": "@$101{var}.$102{prop}?w=${1:200}&h=${2:200}&mode=${3:crop}",
+            "content": "@${101:var}.${102:prop}?w=${1:200}&h=${2:200}&mode=${3:crop}",
             "help": "Thumbnail URL with crop-mode"
         },
         {
@@ -1837,7 +1837,7 @@
             "subset": "hyperlink-default",
             "name": "thumbnail IMG tag",
             "title": "",
-            "content": "<img src=\"@$101{var}.$102{prop}?w=${1:200}&h=${2:200}&mode=${3:crop}\">",
+            "content": "<img src=\"@${101:var}.${102:prop}?w=${1:200}&h=${2:200}&mode=${3:crop}\">",
             "help": "Thumbnail IMG tag with crop-mode"
         },
         {
@@ -1845,7 +1845,7 @@
             "subset": "hyperlink-default",
             "name": "thumbnail url",
             "title": "",
-            "content": "[$101{var}:$102{prop}]?w=${1:200}&h=${2:200}&mode=${3:crop}",
+            "content": "[${101:var}:${102:prop}]?w=${1:200}&h=${2:200}&mode=${3:crop}",
             "help": "Thumbnail URL with crop-mode"
         },
         {
@@ -1853,7 +1853,7 @@
             "subset": "hyperlink-default",
             "name": "thumbnail IMG tag",
             "title": "",
-            "content": "<img src=\"[$101{var}:$102{prop}]?w=${1:200}&h=${2:200}&mode=${3:crop}\">",
+            "content": "<img src=\"[${101:var}:${102:prop}]?w=${1:200}&h=${2:200}&mode=${3:crop}\">",
             "help": "Thumbnail IMG tag with crop-mode"
         }
     ]
