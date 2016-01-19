@@ -430,7 +430,6 @@
     <Content Include="icon.png" />
     <Content Include="Administration\Import.ascx" />
     <Content Include="src\inpage\inpage-icons-codes.css" />
-    <Content Include="src\sxc-admin\services\ctrl-save.service.js" />
     <Content Include="src\sxc-edit\adam\adam-hint.html" />
     <Content Include="src\sxc-edit\adam\adam-hint.directive.js" />
     <Content Include="src\sxc-edit\app-icons-codes.css" />

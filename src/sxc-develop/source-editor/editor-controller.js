@@ -62,12 +62,6 @@
         function activate() {
             // add ctrl+s to save
             ctrlS.bind(function() { vm.save(false); });
-            //window.addEventListener("keydown", function(e) {
-            //    if (e.keyCode === 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
-            //        e.preventDefault();
-            //        vm.save(false);
-            //    }
-            //}, false);
         }
 
 
