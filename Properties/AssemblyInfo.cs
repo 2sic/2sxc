@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("ToSic.SexyContent")]
-[assembly: AssemblyDescription("2sxc - a module for DotNetNuke")]
+[assembly: AssemblyDescription("2sxc - the content module for DotNetNuke")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("ToSic")]
 [assembly: AssemblyProduct("2SexyContent")]
-[assembly: AssemblyCopyright("© 2sic 2015")]
+[assembly: AssemblyCopyright("© 2sic 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: Guid("bd90b92e-79ec-4846-8998-b56277d5b2b4")]
 
@@ -28,5 +28,5 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
-[assembly: AssemblyVersion("8.1.0.02")]
-[assembly: AssemblyFileVersion("8.1.0.02")]
+[assembly: AssemblyVersion("8.1.0.04")]
+[assembly: AssemblyFileVersion("8.1.0.04")]

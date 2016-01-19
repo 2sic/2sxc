@@ -839,6 +839,7 @@ angular.module("sxcFieldTemplates")
 
         .controller("FieldWysiwygTinyMce", FieldWysiwygTinyMceController);
 
+    // these are the translation keys we must import from angular-translate
     var translationsMce = [
             "Link.AdamFile",
             "Link.AdamFile.Tooltip",
@@ -852,7 +853,10 @@ angular.module("sxcFieldTemplates")
             "H1",
             "H2",
             "Remove"
-        ];
+    ];
+
+    // these are the sizes we can auto-resize to
+    var imgSizes = [100, 75, 70, 66, 60, 50, 40, 33, 30, 25];
 
     function FieldWysiwygTinyMceController($scope, dnnBridgeSvc, languages, $translate) {
         var vm = this;
@@ -1058,12 +1062,16 @@ angular.module("sxcFieldTemplates")
 
         // the method that will register everything
         function registerTinyMceFormats(editor, vm) {
-            editor.formatter.register({
-                imgwidth100: [{ selector: "img", collapsed: false, styles: { 'width': "100%" } }],
-                imgwidth50: [{ selector: "img", collapsed: false, styles: { 'width': "50%" } }],
-                imgwidth33: [{ selector: "img", collapsed: false, styles: { 'width': "33%" } }],
-                imgwidth25: [{ selector: "img", collapsed: false, styles: { 'width': "25%" } }]
-            });
+            var imgformats = {};
+            for (var is = 0; is < imgSizes.length; is++)
+                imgformats["imgwidth" + imgSizes[is]] = [{ selector: "img", collapsed: false, styles: { 'width': imgSizes[is] + "%" } }];
+            editor.formatter.register(imgformats);
+                //{
+                //imgwidth100: [{ selector: "img", collapsed: false, styles: { 'width': "100%" } }],
+                //imgwidth50: [{ selector: "img", collapsed: false, styles: { 'width': "50%" } }],
+                //imgwidth33: [{ selector: "img", collapsed: false, styles: { 'width': "33%" } }],
+                //imgwidth25: [{ selector: "img", collapsed: false, styles: { 'width': "25%" } }]
+                //});
         }
 
         // call register once the editor-object is ready
@@ -1216,7 +1224,6 @@ angular.module("sxcFieldTemplates")
         });
         //#endregion
 
-        // i18n ok
         //#region h1, h2, etc. buttons, inspired by http://blog.ionelmc.ro/2013/10/17/tinymce-formatting-toolbar-buttons/
         // note that the complex array is needede because auto-translate only happens if the string is identical
         [["pre", "Preformatted", "Preformatted"],
@@ -1257,22 +1264,37 @@ angular.module("sxcFieldTemplates")
         }));
         //#endregion
 
-        // i18n ok
+
+
         //#region image alignment / size buttons
         editor.addButton("alignimgleft", { icon: " icon-align-left", tooltip: "Align left", cmd: "JustifyLeft", onPostRender: initOnPostRender("alignleft") });
         editor.addButton("alignimgcenter", { icon: " icon-align-center", tooltip: "Align center", cmd: "justifycenter", onPostRender: initOnPostRender("aligncenter") });
         editor.addButton("alignimgright", { icon: " icon-align-right", tooltip: "Align right", cmd: "justifyright", onPostRender: initOnPostRender("alignright") });
-        editor.addButton("alignimg100", {icon: " icon-resize-horizontal", tooltip: "100%",
+
+        var imgMenuArray = [];
+        function makeImgFormatCall(size) { return function() { editor.formatter.apply("imgwidth" + size); }; }
+        for (var is = 0; is < imgSizes.length; is++) {
+            var config = {
+                icon: " icon-resize-horizontal",
+                tooltip: imgSizes[is] + "%",
+                text: imgSizes[is] + "%",
+                onclick: makeImgFormatCall(imgSizes[is]),
+                onPostRender: initOnPostRender("imgwidth" + imgSizes[is])
+            };
+            editor.addButton("imgresize" + imgSizes[is], config);
+            imgMenuArray.push(config);
+        }
+
+        editor.addButton("resizeimg100", {icon: " icon-resize-horizontal", tooltip: "100%",
             onclick: function() {   editor.formatter.apply("imgwidth100");  },
             onPostRender: initOnPostRender("imgwidth100")
         });
-        editor.addButton("alignimg50", {icon: " icon-resize-horizontal", tooltip: "50%",
-            onclick: function() {   editor.formatter.apply("imgwidth50");  },
-            onPostRender: initOnPostRender("imgwidth50")
-        });
+
+        // group of buttons to resize an image 100%, 50%, etc.
+        editor.addButton("imgresponsive", angular.extend({}, editor.buttons.resizeimg100,
+        { type: "splitbutton", menu: imgMenuArray }));
         //#endregion
 
-        // i18n ok
         //#region my context toolbars for links, images and lists (ul/li)
         function makeTagDetector(tagWeNeedInTheTagPath) {
             return function tagDetector(currentElement) {
@@ -1281,8 +1303,12 @@ angular.module("sxcFieldTemplates")
                 return selectorMatched;
             };
         }
+
+
+
+
         editor.addContextToolbar(makeTagDetector("a"), "link unlink");
-        editor.addContextToolbar(makeTagDetector("img"), "image | alignimgleft alignimgcenter alignimgright alignimg100 alignimg50 | removeformat | remove");
+        editor.addContextToolbar(makeTagDetector("img"), "image | alignimgleft alignimgcenter alignimgright imgresponsive | removeformat | remove");
         editor.addContextToolbar(makeTagDetector("li"), "bullist numlist | outdent indent");
         //#endregion
     }
