@@ -71,6 +71,7 @@
 		"SwitchMode.Standard": "Zum Standard-Modus wechseln",
 		"H1": "Ü1",
 		"H2": "Ü2",
+		"H3": "Ü3",
 		"Remove": "Entfernen"
 	}
 }

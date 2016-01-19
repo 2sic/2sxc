@@ -2096,6 +2096,28 @@ angular.module("EavServices")
         };
 
     }]);
+angular.module("EavServices")
+    .factory("ctrlS", ["$window", function ($window) {
+        var save = {
+            _event: null,
+
+            bind: function bind(action) {
+                save._event = window.addEventListener("keydown", function (e) {
+                    if (e.keyCode === 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+                        e.preventDefault();
+                        action();
+                    }
+                }, false);
+
+            },
+
+            unbind: function unbind() {
+                window.removeEventListener(save._event);
+            }
+        };
+
+        return save;
+    }]);
 /* shared debugState = advancedMode
  * 
  * vm.debug -> shows if in debug mode - bind ng-ifs to this
@@ -2860,4 +2882,20 @@ angular.module("EavServices")
         };
         return toastr;
     }])
+
+    .factory("saveToastr", ["toastr", "$translate", function (toastr, $translate) {
+            function saveWithToaster(promise) {
+                var saving = toastr.info($translate.instant("Message.Saving"));
+                return promise.then(function() {
+                    toastr.clear(saving);
+                    toastr.success($translate.instant("Message.Saved"), { timeOut: 3000 });
+
+                }, function errorWhileSaving() {
+                    toastr.clear(saving);
+                    toastr.error($translate.instant("Message.ErrorWhileSaving"));
+                });
+            }
+
+            return saveWithToaster;
+        }])
 ;

@@ -5,7 +5,7 @@
         .controller("Editor", EditorController)
     ;
 
-    function EditorController(sourceSvc, snippetSvc, item, $modalInstance, $window, $scope, $translate) {
+    function EditorController(sourceSvc, snippetSvc, item, $modalInstance, $window, $scope, $translate, saveToastr, ctrlS) {
         $translate.refresh();   // necessary to load stuff added in this lazy-loaded app
 
         var vm = this;
@@ -49,11 +49,30 @@
         });
 
         //#endregion
-        vm.save = function (autoClose) {
-            var after = autoClose ? vm.close : function() {};
-            svc.save(vm.view).then(after);
-        };
 
+        //#region save
+        vm.save = function (autoClose) {
+            var after = autoClose ? vm.close : function () { };
+            saveToastr(svc.save(vm.view)).then(after);
+        };
+        //#endregion
+
+        activate();
+
+        function activate() {
+            // add ctrl+s to save
+            ctrlS.bind(function() { vm.save(false); });
+            //window.addEventListener("keydown", function(e) {
+            //    if (e.keyCode === 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+            //        e.preventDefault();
+            //        vm.save(false);
+            //    }
+            //}, false);
+        }
+
+
+
+        //#region snippets
         vm.addSnippet = function addSnippet(snippet) {
             var snippetManager = ace.require("ace/snippets").snippetManager;
             snippetManager.insertSnippet(vm.editor, snippet);
@@ -66,6 +85,7 @@
                 return;
             vm.snipSvc.registerInEditor();
         };
+        //#endregion
 
         // this event is called when the editor is ready
         $scope.aceLoaded = function (_editor) {

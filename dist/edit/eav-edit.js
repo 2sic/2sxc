@@ -319,7 +319,7 @@ angular.module("eavFieldTemplates")
     var app = angular.module("eavEditEntity");
 
     // The controller for the main form directive
-    app.controller("EditEntities", ["appId", "$http", "$scope", "entitiesSvc", "toastr", "$translate", "debugState", function editEntityCtrl(appId, $http, $scope, entitiesSvc, toastr, $translate, debugState) {
+    app.controller("EditEntities", ["appId", "$http", "$scope", "entitiesSvc", "saveToastr", "$translate", "debugState", function editEntityCtrl(appId, $http, $scope, entitiesSvc, /*toastr,*/ saveToastr, $translate, debugState) {
 
         var vm = this;
         vm.debug = debugState;
@@ -358,19 +358,27 @@ angular.module("eavFieldTemplates")
 
         vm.save = function (close) {
             vm.isWorking++;
-            var saving = toastr.info($translate.instant("Message.Saving"));
-            entitiesSvc.saveMany(appId, vm.items).then(function (result) {
-                toastr.clear(saving);
+            saveToastr(entitiesSvc.saveMany(appId, vm.items)).then(function (result) {
                 $scope.state.setPristine();
-                toastr.success($translate.instant("Message.Saved"), { timeOut: 3000 });
-                if(close)
+                if (close)
                     vm.afterSaveEvent(result);
                 vm.isWorking--;
             }, function errorWhileSaving(response) {
-                toastr.clear(saving);
-                toastr.error($translate.instant("Message.ErrorWhileSaving"));
                 vm.isWorking--;
             });
+            //var saving = toastr.info($translate.instant("Message.Saving"));
+            //entitiesSvc.saveMany(appId, vm.items).then(function (result) {
+            //    toastr.clear(saving);
+            //    $scope.state.setPristine();
+            //    toastr.success($translate.instant("Message.Saved"), { timeOut: 3000 });
+            //    if(close)
+            //        vm.afterSaveEvent(result);
+            //    vm.isWorking--;
+            //}, function errorWhileSaving(response) {
+            //    toastr.clear(saving);
+            //    toastr.error($translate.instant("Message.ErrorWhileSaving"));
+            //    vm.isWorking--;
+            //});
         };
 
         vm.items = null;
