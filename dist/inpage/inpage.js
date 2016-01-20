@@ -64,8 +64,17 @@ $2sxc.getManageController = function (id) {
     var enableDevelop = manageInfo.user.canDevelop;
     var isContent = manageInfo.isContentApp;
 
+    function buttonConfig(name, translateKey, icon, show, params, more) {
+        return angular.extend({
+            title: "Toolbar." + translateKey,
+            iclass: "icon-sxc-" + icon,
+            showOn: show,
+            params: params
+        }, more);
+    }
     var actionButtonsConf = {
-        'edit': {
+        'edit': //buttonConfig('edit', "Edit", "pencil", "default")
+            {
             title: "Toolbar.Edit",
             iclass: "icon-sxc-pencil",
             params: { mode: "edit" },
@@ -75,10 +84,10 @@ $2sxc.getManageController = function (id) {
             title: "Toolbar.New",
             iclass: "icon-sxc-plus",
             showOn: "default",
-            dialog: "edit",
+            dialog: "edit", // don't use "new" (default) but use "edit"
             params: { mode: "new" },
             addCondition: function(settings) { return toolbarConfig.isList && settings.sortOrder !== -1; },
-            action: function(settings, event) {
+            code: function(settings, event) {
                 tbContr._openNgDialog($.extend({}, settings, { sortOrder: settings.sortOrder + 1 }), event);
             }
         },
@@ -87,7 +96,7 @@ $2sxc.getManageController = function (id) {
             iclass: "icon-sxc-glasses",
             showOn: "default",
             uiActionOnly: true, // so it doesn't create the content when used
-            action: function(settings, event) {
+            code: function(settings, event) {
                 tbContr._getAngularVm().toggle();
             }
         },
@@ -112,7 +121,7 @@ $2sxc.getManageController = function (id) {
             iclass2: "icon-sxc-eye-off",
             disabled: true,
             showOn: "edit",
-            action: function(settings, event) {
+            code: function(settings, event) {
                 if (settings.isPublished) {
                     alert(tbContr.translate("Toolbar.AlreadyPublished"));
                     return;
@@ -128,7 +137,7 @@ $2sxc.getManageController = function (id) {
             disabled: false,
             showOn: "edit",
             addCondition: function(settings) { return toolbarConfig.isList && settings.sortOrder !== -1 && settings.useModuleList && settings.sortOrder !== 0; },
-            action: function(settings, event) {
+            code: function(settings, event) {
                 tbContr._getAngularVm().changeOrder(settings.sortOrder, Math.max(settings.sortOrder - 1, 0));
             }
         },
@@ -138,7 +147,7 @@ $2sxc.getManageController = function (id) {
             disabled: false,
             showOn: "edit",
             addCondition: function(settings) { return toolbarConfig.isList && settings.sortOrder !== -1 && settings.useModuleList; },
-            action: function(settings, event) {
+            code: function(settings, event) {
                 tbContr._getAngularVm().changeOrder(settings.sortOrder, settings.sortOrder + 1);
             }
         },
@@ -154,7 +163,7 @@ $2sxc.getManageController = function (id) {
             disabled: true,
             showOn: "edit",
             addCondition: function(settings) { return toolbarConfig.isList && settings.sortOrder !== -1; },
-            action: function(settings, event) {
+            code: function(settings, event) {
                 if (confirm(tbContr.translate("Toolbar.ConfirmRemove"))) {
                     tbContr._getAngularVm().removeFromList(settings.sortOrder);
                 }
@@ -176,17 +185,12 @@ $2sxc.getManageController = function (id) {
             addCondition: enableTools,
         },
         'contentitems': {
-            /* todo: not implemented yet*/
             title: "Toolbar.ContentItems",
             iclass: "icon-sxc-table",
             showOn: "admin",
             params: { contentTypeName: contentTypeName },
             uiActionOnly: true, // so it doesn't create the content when used
             addCondition: enableTools && contentTypeName,
-            //action: function (settings, event) {
-            //    $.extend(settings, { params: { contentTypeName: contentTypeName } });
-            //    tbContr._openNgDialog(settings, event);
-            //}
         },
         'app': {
             title: "Toolbar.App",
@@ -207,7 +211,7 @@ $2sxc.getManageController = function (id) {
             iclass: "icon-sxc-options btn-mode",
             showOn: "default,edit,design,admin",
             uiActionOnly: true, // so it doesn't create the content when clicked
-            action: function (settings, event) {
+            code: function (settings, event) {
                 var fullMenu = $(event.target).closest("ul.sc-menu");
                 var oldState = Number(fullMenu.attr("data-state") || 0);
                 var newState = oldState + 1;
@@ -231,12 +235,12 @@ $2sxc.getManageController = function (id) {
 
         _manageInfo: manageInfo,
 
-        // create an edit-dialog link
+        // create a dialog link
         getNgLink: function(settings) {
             settings = $.extend({}, toolbarConfig, settings); // merge button with toolbar-settings
 
             var params = {
-                dialog: (settings.action === "new") ? "edit": settings.action,
+                dialog: settings.dialog || settings.action,
             };
             angular.extend(params, settings.params);
             var items = [];
@@ -277,10 +281,9 @@ $2sxc.getManageController = function (id) {
                 items = [{ EntityId: manageInfo.templateId }];
 
             // when doing new, there may be a prefill in the link to initialize the new item
-            if (settings.prefill) {
+            if (settings.prefill) 
                 for (var i = 0; i < items.length; i++)
                     items[i].Prefill = settings.prefill;
-            }
 
             // Serialize/json-ify the complex items-list
             if (items.length)
@@ -310,11 +313,13 @@ $2sxc.getManageController = function (id) {
         action: function(settings, event) {
             var origEvent = event || window.event; // pre-save event because afterwards we have a promise, so the event-object changes; funky syntax is because of browser differences
             var conf = actionButtonsConf[settings.action];
-            if (conf.newWindow)
-                settings.newWindow = conf.newWindow;
-            if (conf.params)
-                settings.params = conf.params;
-            var fn = conf.action || tbContr._openNgDialog; // decide what action to perform
+            if (conf.newWindow) settings.newWindow = conf.newWindow;
+            if (conf.params) settings.params = conf.params;
+            if (conf.dialog) settings.dialog = conf.dialog;
+            if (!settings.dialog) settings.dialog = settings.action; // old code uses "action" as the parameter, now use verb
+
+            var fn = conf.code || tbContr._openNgDialog; // decide what action to perform
+
             if (conf.uiActionOnly)
                 return fn(settings, origEvent);
             
