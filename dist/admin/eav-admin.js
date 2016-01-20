@@ -2227,13 +2227,7 @@ angular.module("EavAdminUi", ["ng",
             //#region List of Content Items dialogs
             svc.openContentItems = function oci(appId, staticName, itemId, closeCallback) {
             	var resolve = svc.CreateResolve({ appId: appId, contentType: staticName, contentTypeId: itemId });
-            	var templateName = "content-items";
-	            var size = "xlg";
-	            if (true) { //!$eavOnlyHelpers.urlParams.get("oldgrid")) {
-	            	templateName += "-agnostic";
-	            	size = "fullscreen";
-	            }
-	            return svc.OpenModal("content-items/" + templateName + ".html", "ContentItemsList as vm", size, resolve, closeCallback);
+            	return svc.OpenModal("content-items/content-items-agnostic.html", "ContentItemsList as vm", "fullscreen", resolve, closeCallback);
             };
             //#endregion
 
