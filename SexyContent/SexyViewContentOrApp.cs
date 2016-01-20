@@ -105,8 +105,7 @@ namespace ToSic.SexyContent
                             applicationRoot = ResolveUrl("~"),
                             lang = PortalSettings.CultureCode.ToLower(), //System.Threading.Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName.ToLower(),
                             langPrimary = priLang,
-                            languages = languages
-
+                            languages
                         }
                     }));
 
