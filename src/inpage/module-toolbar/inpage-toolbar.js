@@ -29,15 +29,11 @@ $2sxc.getManageController = function (id) {
     var enableDevelop = manageInfo.user.canDevelop;
     var isContent = manageInfo.isContentApp;
 
-    // all the standard buttons with the display configuration and click-action
-    var defAction = function(settings, event) {
-        tbContr._openNgDialog(settings, event);
-    };
-
     var actionButtonsConf = {
         'edit': {
             title: "Toolbar.Edit",
             iclass: "icon-sxc-pencil",
+            params: { mode: "edit" },
             showOn: "default",
         },
         'new': {
@@ -45,7 +41,8 @@ $2sxc.getManageController = function (id) {
             iclass: "icon-sxc-plus",
             showOn: "default",
             dialog: "edit",
-            addCondition: function (settings) { return toolbarConfig.isList && settings.sortOrder !== -1; },
+            params: { mode: "new" },
+            addCondition: function(settings) { return toolbarConfig.isList && settings.sortOrder !== -1; },
             action: function(settings, event) {
                 tbContr._openNgDialog($.extend({}, settings, { sortOrder: settings.sortOrder + 1 }), event);
             }
@@ -55,24 +52,24 @@ $2sxc.getManageController = function (id) {
             iclass: "icon-sxc-glasses",
             showOn: "default",
             uiActionOnly: true, // so it doesn't create the content when used
-            action: function (settings, event) {
-                tbContr._getSelectorScope().toggle();
+            action: function(settings, event) {
+                tbContr._getAngularVm().toggle();
             }
         },
         'add': {
             title: "Toolbar.AddDemo",
             iclass: "icon-sxc-plus-circled",
             showOn: "edit",
-            addCondition: function (settings) { return toolbarConfig.isList && settings.sortOrder !== -1 && settings.useModuleList; },
-            action: function (settings, event) {
-                tbContr._getSelectorScope().addItem(settings.sortOrder + 1);
+            addCondition: function(settings) { return toolbarConfig.isList && settings.sortOrder !== -1 && settings.useModuleList; },
+            action: function(settings, event) {
+                tbContr._getAngularVm().addItem(settings.sortOrder + 1);
             }
         },
         'replace': {
             title: "Toolbar.Replace",
             iclass: "icon-sxc-replace",
             showOn: "edit",
-            addCondition: function (settings) { return settings.useModuleList; },
+            addCondition: function(settings) { return settings.useModuleList; },
         },
         'publish': {
             title: "Toolbar.Published",
@@ -80,14 +77,14 @@ $2sxc.getManageController = function (id) {
             iclass2: "icon-sxc-eye-off",
             disabled: true,
             showOn: "edit",
-            action: function (settings, event) {
+            action: function(settings, event) {
                 if (settings.isPublished) {
-                    alert(tbContr.translate("Toolbar.AlreadyPublished")); 
+                    alert(tbContr.translate("Toolbar.AlreadyPublished"));
                     return;
                 }
                 var part = settings.sortOrder === -1 ? "listcontent" : "content";
                 var index = settings.sortOrder === -1 ? 0 : settings.sortOrder;
-                tbContr._getSelectorScope().publish(part, index);
+                tbContr._getAngularVm().publish(part, index);
             }
         },
         'moveup': {
@@ -95,9 +92,9 @@ $2sxc.getManageController = function (id) {
             iclass: "icon-sxc-move-up",
             disabled: false,
             showOn: "edit",
-            addCondition: function (settings) { return toolbarConfig.isList && settings.sortOrder !== -1 && settings.useModuleList && settings.sortOrder !== 0; },
-            action: function (settings, event) {
-                tbContr._getSelectorScope().changeOrder(settings.sortOrder, Math.max(settings.sortOrder - 1, 0));
+            addCondition: function(settings) { return toolbarConfig.isList && settings.sortOrder !== -1 && settings.useModuleList && settings.sortOrder !== 0; },
+            action: function(settings, event) {
+                tbContr._getAngularVm().changeOrder(settings.sortOrder, Math.max(settings.sortOrder - 1, 0));
             }
         },
         'movedown': {
@@ -105,31 +102,31 @@ $2sxc.getManageController = function (id) {
             iclass: "icon-sxc-move-down",
             disabled: false,
             showOn: "edit",
-            addCondition: function (settings) { return toolbarConfig.isList && settings.sortOrder !== -1 && settings.useModuleList; },
-            action: function (settings, event) {
-                tbContr._getSelectorScope().changeOrder(settings.sortOrder, settings.sortOrder + 1);
+            addCondition: function(settings) { return toolbarConfig.isList && settings.sortOrder !== -1 && settings.useModuleList; },
+            action: function(settings, event) {
+                tbContr._getAngularVm().changeOrder(settings.sortOrder, settings.sortOrder + 1);
             }
         },
         'sort': {
             title: "Toolbar.Sort",
             iclass: "icon-sxc-list-numbered",
             showOn: "edit",
-            addCondition: function (settings) { return toolbarConfig.isList && settings.sortOrder !== -1; },
+            addCondition: function(settings) { return toolbarConfig.isList && settings.sortOrder !== -1; },
         },
         'remove': {
             title: "Toolbar.Remove",
             iclass: "icon-sxc-minus-circled",
             disabled: true,
             showOn: "edit",
-            addCondition: function (settings) { return toolbarConfig.isList && settings.sortOrder !== -1; },
-            action: function (settings, event) {
+            addCondition: function(settings) { return toolbarConfig.isList && settings.sortOrder !== -1; },
+            action: function(settings, event) {
                 if (confirm(tbContr.translate("Toolbar.ConfirmRemove"))) {
-                    tbContr._getSelectorScope().removeFromList(settings.sortOrder);
+                    tbContr._getAngularVm().removeFromList(settings.sortOrder);
                 }
             }
         },
         'develop': {
-            title: "Toolbar.Develop", 
+            title: "Toolbar.Develop",
             iclass: "icon-sxc-code",
             showOn: "admin",
             newWindow: true,
@@ -140,7 +137,7 @@ $2sxc.getManageController = function (id) {
             title: "Toolbar.ContentType",
             iclass: "icon-sxc-fields",
             showOn: "admin",
-            uiActionOnly: true, // so it doesn't create the content when used
+            uiActionOnly: true,
             addCondition: enableTools,
         },
         'contentitems': {
@@ -148,12 +145,13 @@ $2sxc.getManageController = function (id) {
             title: "Toolbar.ContentItems",
             iclass: "icon-sxc-table",
             showOn: "admin",
+            params: { contentTypeName: contentTypeName },
             uiActionOnly: true, // so it doesn't create the content when used
-            addCondition: enableTools && contentTypeName !== null,
-            action: function (settings, event) {
-                $.extend(settings, { contentTypeName: contentTypeName  });
-                tbContr._openNgDialog(settings, event);
-            }
+            addCondition: enableTools && contentTypeName,
+            //action: function (settings, event) {
+            //    $.extend(settings, { params: { contentTypeName: contentTypeName } });
+            //    tbContr._openNgDialog(settings, event);
+            //}
         },
         'app': {
             title: "Toolbar.App",
@@ -204,8 +202,8 @@ $2sxc.getManageController = function (id) {
 
             var params = {
                 dialog: (settings.action === "new") ? "edit": settings.action,
-                mode: (settings.action === "new") ? "new" : "edit"
             };
+            angular.extend(params, settings.params);
             var items = [];
 
             // when not using a content-group list, ...
@@ -262,7 +260,7 @@ $2sxc.getManageController = function (id) {
         _openNgDialog: function(settings, event, closeCallback) {
             
             var callback = function () {
-                tbContr._getSelectorScope().reload();
+                tbContr._getAngularVm().reload();
                 closeCallback();
             };
             var link = tbContr.getNgLink(settings);
@@ -279,18 +277,16 @@ $2sxc.getManageController = function (id) {
             var conf = actionButtonsConf[settings.action];
             if (conf.newWindow)
                 settings.newWindow = conf.newWindow;
-
+            if (conf.params)
+                settings.params = conf.params;
+            var fn = conf.action || tbContr._openNgDialog; // decide what action to perform
             if (conf.uiActionOnly)
-                return conf.action(settings, origEvent);
-            else
-                // if more than just a UI-action, then it needs to be sure the content-group is created first
-                tbContr._getSelectorScope().prepareToAddContent().then(function () {
-                    if(conf.action)
-                        conf.action(settings, origEvent);
-                    else 
-                        defAction(settings, origEvent);
-                    
-                });
+                return fn(settings, origEvent);
+            
+            // if more than just a UI-action, then it needs to be sure the content-group is created first
+            tbContr._getAngularVm().prepareToAddContent().then(function() {
+                return fn(settings, origEvent);
+            });
         },
 
         // Generate a button (an <a>-tag) for one specific toolbar-action. 
@@ -378,13 +374,13 @@ $2sxc.getManageController = function (id) {
             });
         },
 
-        _getSelectorScope: function() {
+        _getAngularVm: function() {
             var selectorElement = document.querySelector(".DnnModule-" + id + " .sc-selector-wrapper");
             return angular.element(selectorElement).scope().vm;
         },
 
         translate: function(key) {
-            return tbContr._getSelectorScope().translate(key);
+            return tbContr._getAngularVm().translate(key);
         }
 
     };
