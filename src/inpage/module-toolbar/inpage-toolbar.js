@@ -29,63 +29,36 @@ $2sxc.getManageController = function (id) {
     var enableDevelop = manageInfo.user.canDevelop;
     var isContent = manageInfo.isContentApp;
 
-    function buttonConfig(name, translateKey, icon, show, params, more) {
+    function buttonConfig(name, translateKey, icon, show,  uiOnly, more) {
         return angular.extend({
             title: "Toolbar." + translateKey,
             iclass: "icon-sxc-" + icon,
             showOn: show,
-            params: params
+            uiActionOnly: uiOnly
         }, more);
     }
+
     var actionButtonsConf = {
-        'edit': //buttonConfig('edit', "Edit", "pencil", "default")
-            {
-            title: "Toolbar.Edit",
-            iclass: "icon-sxc-pencil",
-            params: { mode: "edit" },
-            showOn: "default",
-        },
-        'new': {
-            title: "Toolbar.New",
-            iclass: "icon-sxc-plus",
-            showOn: "default",
+        'edit': buttonConfig('edit', "Edit", "pencil", "default", false, { params: { mode: "edit" } }),
+        'new': buttonConfig('new', "New", "plus", "default", false, { params: { mode: "new" } }, {
             dialog: "edit", // don't use "new" (default) but use "edit"
-            params: { mode: "new" },
             addCondition: function(settings) { return toolbarConfig.isList && settings.sortOrder !== -1; },
             code: function(settings, event) {
                 tbContr._openNgDialog($.extend({}, settings, { sortOrder: settings.sortOrder + 1 }), event);
             }
-        },
-        'layout': {
-            title: "Toolbar.ChangeLayout",
-            iclass: "icon-sxc-glasses",
-            showOn: "default",
-            uiActionOnly: true, // so it doesn't create the content when used
-            code: function(settings, event) {
-                tbContr._getAngularVm().toggle();
-            }
-        },
-        'add': {
-            title: "Toolbar.AddDemo",
-            iclass: "icon-sxc-plus-circled",
-            showOn: "edit",
+        }),
+        'add': buttonConfig('add', "AddDemo", "plus-circled", "edit", false, {
             addCondition: function(settings) { return toolbarConfig.isList && settings.sortOrder !== -1 && settings.useModuleList; },
-            action: function(settings, event) {
+            code: function(settings, event) {
                 tbContr._getAngularVm().addItem(settings.sortOrder + 1);
             }
-        },
-        'replace': {
-            title: "Toolbar.Replace",
-            iclass: "icon-sxc-replace",
-            showOn: "edit",
+        }),
+        'replace': buttonConfig('replace', "Replace", "replace", "edit", false, {
             addCondition: function(settings) { return settings.useModuleList; },
-        },
-        'publish': {
-            title: "Toolbar.Published",
-            iclass: "icon-sxc-eye",
+        }),
+        'publish': buttonConfig('publish', "Published", "eye", "edit", false, {
             iclass2: "icon-sxc-eye-off",
             disabled: true,
-            showOn: "edit",
             code: function(settings, event) {
                 if (settings.isPublished) {
                     alert(tbContr.translate("Toolbar.AlreadyPublished"));
@@ -95,7 +68,8 @@ $2sxc.getManageController = function (id) {
                 var index = settings.sortOrder === -1 ? 0 : settings.sortOrder;
                 tbContr._getAngularVm().publish(part, index);
             }
-        },
+        }),
+
         'moveup': {
             title: "Toolbar.MoveUp",
             iclass: "icon-sxc-move-up",
@@ -134,14 +108,27 @@ $2sxc.getManageController = function (id) {
                 }
             }
         },
-        'develop': {
-            title: "Toolbar.Develop",
-            iclass: "icon-sxc-code",
-            showOn: "admin",
-            newWindow: true,
+        'layout': {
+            title: "Toolbar.ChangeLayout",
+            iclass: "icon-sxc-glasses",
+            showOn: "default",
             uiActionOnly: true, // so it doesn't create the content when used
-            addCondition: enableTools,
+            code: function(settings, event) {
+                tbContr._getAngularVm().toggle();
+            }
         },
+        'develop': buttonConfig("develop", "Develop", "code", "admin", true, {
+            newWindow: true,
+            addCondition: enableTools,         
+        }),
+    //{
+    //        title: "Toolbar.Develop",
+    //        iclass: "icon-sxc-code",
+    //        showOn: "admin",
+    //        newWindow: true,
+    //        uiActionOnly: true, // so it doesn't create the content when used
+    //        addCondition: enableTools,
+    //    },
         'contenttype': {
             title: "Toolbar.ContentType",
             iclass: "icon-sxc-fields",
@@ -176,7 +163,7 @@ $2sxc.getManageController = function (id) {
             iclass: "icon-sxc-options btn-mode",
             showOn: "default,edit,design,admin",
             uiActionOnly: true, // so it doesn't create the content when clicked
-            code: function (settings, event) {
+            code: function(settings, event) {
                 var fullMenu = $(event.target).closest("ul.sc-menu");
                 var oldState = Number(fullMenu.attr("data-state") || 0);
                 var newState = oldState + 1;
