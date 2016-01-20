@@ -214,7 +214,7 @@
 
     }
 
-    function DialogHostController(zoneId, appId, items, $2sxc, dialog, sxcDialogs, eavAdminDialogs, $ocLazyLoad) {
+    function DialogHostController(zoneId, appId, items, $2sxc, dialog, sxcDialogs, contentTypeName, eavAdminDialogs, $ocLazyLoad) {
         var vm = this;
         vm.dialog = dialog;
         var initialDialog = dialog;
@@ -257,6 +257,11 @@
             case "contenttype":
                 eavAdminDialogs.openContentTypeFieldsOfItems(items, vm.close);
                 break;
+            case "contentitems":
+                preLoadAgGrid($ocLazyLoad).then(function() {
+                    eavAdminDialogs.openContentItems(appId, contentTypeName, contentTypeName, vm.close);
+                });
+                break;
             case "pipeline-designer":
                 // Don't do anything, as the template already loads the app in fullscreen-mode
                 // eavDialogs.editPipeline(appId, pipelineId, closeCallback);
@@ -267,7 +272,7 @@
                 throw "Trying to open a dialog, don't know which one";
         }
     }
-    DialogHostController.$inject = ["zoneId", "appId", "items", "$2sxc", "dialog", "sxcDialogs", "eavAdminDialogs", "$ocLazyLoad"];
+    DialogHostController.$inject = ["zoneId", "appId", "items", "$2sxc", "dialog", "sxcDialogs", "contentTypeName", "eavAdminDialogs", "$ocLazyLoad"];
 
 } ());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife

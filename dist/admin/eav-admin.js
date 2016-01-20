@@ -2886,13 +2886,14 @@ angular.module("EavServices")
     .factory("saveToastr", ["toastr", "$translate", function (toastr, $translate) {
             function saveWithToaster(promise) {
                 var saving = toastr.info($translate.instant("Message.Saving"));
-                return promise.then(function() {
+                return promise.then(function(result) {
                     toastr.clear(saving);
                     toastr.success($translate.instant("Message.Saved"), { timeOut: 3000 });
-
-                }, function errorWhileSaving() {
+                    return result;
+                }, function errorWhileSaving(result) {
                     toastr.clear(saving);
                     toastr.error($translate.instant("Message.ErrorWhileSaving"));
+                    return result;
                 });
             }
 

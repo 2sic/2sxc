@@ -147,6 +147,16 @@ $2sxc.getManageController = function (id) {
                 tbContr._openNgDialog(settings, event);
             }
         },
+        'contentitems': {
+            /* todo: not implemented yet*/
+            title: "Toolbar.ContentItems",
+            iclass: "icon-sxc-list",
+            showOn: "admin",
+            uiActionOnly: true, // so it doesn't create the content when used
+            action: function (settings, event) {
+                tbContr._openNgDialog(settings, event);
+            }
+        },
         'app': {
             title: "Toolbar.App",
             iclass: "icon-sxc-settings",

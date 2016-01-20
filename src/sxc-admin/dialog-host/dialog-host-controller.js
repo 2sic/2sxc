@@ -17,7 +17,7 @@
 
     }
 
-    function DialogHostController(zoneId, appId, items, $2sxc, dialog, sxcDialogs, eavAdminDialogs, $ocLazyLoad) {
+    function DialogHostController(zoneId, appId, items, $2sxc, dialog, sxcDialogs, contentTypeName, eavAdminDialogs, $ocLazyLoad) {
         var vm = this;
         vm.dialog = dialog;
         var initialDialog = dialog;
@@ -59,6 +59,11 @@
                 break;
             case "contenttype":
                 eavAdminDialogs.openContentTypeFieldsOfItems(items, vm.close);
+                break;
+            case "contentitems":
+                preLoadAgGrid($ocLazyLoad).then(function() {
+                    eavAdminDialogs.openContentItems(appId, contentTypeName, contentTypeName, vm.close);
+                });
                 break;
             case "pipeline-designer":
                 // Don't do anything, as the template already loads the app in fullscreen-mode
