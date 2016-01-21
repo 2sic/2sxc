@@ -121,14 +121,6 @@ $2sxc.getManageController = function (id) {
             newWindow: true,
             addCondition: enableTools,         
         }),
-    //{
-    //        title: "Toolbar.Develop",
-    //        iclass: "icon-sxc-code",
-    //        showOn: "admin",
-    //        newWindow: true,
-    //        uiActionOnly: true, // so it doesn't create the content when used
-    //        addCondition: enableTools,
-    //    },
         'contenttype': {
             title: "Toolbar.ContentType",
             iclass: "icon-sxc-fields",

@@ -33,11 +33,20 @@
         };
 
         //#region close / prevent-close
-        //vm.close = function () { $modalInstance.dismiss("cancel"); };
+        vm.close = function () {
+            vm.maybeLeave();
+            //if (!confirm($translate.instant("Message.ExitOk")))
+            //    return;
+            //window.close();// $modalInstance.dismiss("cancel"); 
+        };
 
         vm.maybeLeave = function maybeLeave(e) {
             if (!confirm($translate.instant("Message.ExitOk")))
-                e.preventDefault();
+                return;
+            window.close();// $modalInstance.dismiss("cancel"); 
+
+            //if (!confirm($translate.instant("Message.ExitOk")))
+            //    e.preventDefault();
         };
 
         $scope.$on('modal.closing', vm.maybeLeave);

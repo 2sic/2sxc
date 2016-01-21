@@ -49,11 +49,20 @@
         };
 
         //#region close / prevent-close
-        //vm.close = function () { $modalInstance.dismiss("cancel"); };
+        vm.close = function () {
+            vm.maybeLeave();
+            //if (!confirm($translate.instant("Message.ExitOk")))
+            //    return;
+            //window.close();// $modalInstance.dismiss("cancel"); 
+        };
 
         vm.maybeLeave = function maybeLeave(e) {
             if (!confirm($translate.instant("Message.ExitOk")))
-                e.preventDefault();
+                return;
+            window.close();// $modalInstance.dismiss("cancel"); 
+
+            //if (!confirm($translate.instant("Message.ExitOk")))
+            //    e.preventDefault();
         };
 
         $scope.$on('modal.closing', vm.maybeLeave);
@@ -411,7 +420,7 @@ angular.module('SourceEditor').run(['$templateCache', function($templateCache) {
   'use strict';
 
   $templateCache.put('source-editor/editor.html',
-    "<div ng-click=vm.debug.autoEnableAsNeeded($event)><div class=modal-header><h3 class=modal-title translate=SourceEditor.Title></h3></div><div class=modal-body><div class=row><div class=col-md-8><div tooltip=\"{{ vm.view.FileName }}\">{{ vm.view.FileName.substr(vm.view.FileName.lastIndexOf(\"\\\\\") + 1) }} ({{vm.view.Type }})</div><div ng-model=vm.view.Code style=\"height: 600px\" ui-ace=\"{\r" +
+    "<div ng-click=vm.debug.autoEnableAsNeeded($event)><div class=modal-header><button class=\"btn btn-default btn-square btn-subtle pull-right\" type=button ng-click=vm.close()><i icon=remove></i></button><h3 class=modal-title translate=SourceEditor.Title></h3></div><div class=modal-body><div class=row><div class=col-md-8><div tooltip=\"{{ vm.view.FileName }}\">{{ vm.view.FileName.substr(vm.view.FileName.lastIndexOf(\"\\\\\") + 1) }} ({{vm.view.Type }})</div><div ng-model=vm.view.Code style=\"height: 600px\" ui-ace=\"{\r" +
     "\n" +
     "                    useWrapMode : true,\r" +
     "\n" +
