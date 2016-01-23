@@ -1,15 +1,15 @@
 ﻿<div>
     <div class="dropzone">
         <div class="input-group" dropdown>
-            <a ng-if="value.Value"
+            <div ng-if="value.Value && vm.isImage()" class="input-group-addon btn-default thumbnail-before-input" style="background-image: url('{{vm.thumbnailUrl(1)}}')" ng-mouseover="vm.showPreview = true" ng-mouseleave="vm.showPreview = false"> </div>
+            <a ng-if="value.Value && !vm.isImage()"
                class="input-group-addon btn-default icon-before-input"
                href="{{vm.testLink}}"
                target="_blank" tabindex="-1"
                tooltip-html-unsafe="{{vm.tooltipUrl(vm.testLink)}}"
                tooltip-placement="right"
-               ng-class="vm.icon()">
-                    <div ng-if="value.Value && vm.isImage()" class="input-group-addon btn-default thumbnail-before-input" style="background-image: url('{{vm.thumbnailUrl(1)}}')" ng-mouseover="vm.showPreview = true" ng-mouseleave="vm.showPreview = false"> </div>
-                    <!--<div ng-if="value.Value && !vm.isImage() && vm.icon()" class="{{vm.icon()}} input-group-addon btn-default icon-before-input"></div>-->
+               ng-class="vm.isImage() ? '':vm.icon()"
+               ng-style="vm.isImage() ? 'background-image: url(\'' + vm.thumbnailUrl(1) +'\')': ''">
                 </a>
             <input type="text" class="form-control input-lg" ng-model="value.Value" tooltip="{{'Edit.Fields.Hyperlink.Default.Tooltip1' | translate }}
 {{'Edit.Fields.Hyperlink.Default.Tooltip2' | translate }}
@@ -38,8 +38,7 @@ ADAM - sponsored with ♥ by 2sic.com">
         <adam-hint></adam-hint>
 
         <div ng-if="value.Value">
-            <a href="{{vm.testLink}}" target="_blank" tabindex="-1" tooltip="{{vm.testLink}}">
-                <i class="icon-link-ext"></i>
+            <a href="{{vm.testLink}}" target="_blank" tabindex="-1" tooltip-html-unsafe="{{vm.tooltipUrl(vm.testLink)}}">
                 <span>&nbsp;... {{vm.testLink.substr(vm.testLink.lastIndexOf("/"), 100)}}</span>
             </a>
         </div>
