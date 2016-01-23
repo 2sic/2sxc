@@ -18,9 +18,7 @@
             vm.debug = debugState;
             vm.testLink = "";
 
-            vm.isImage = function () {
-                return fileType.isImage(vm.testLink);
-            };
+            vm.isImage = function () { return fileType.isImage(vm.testLink); };
             vm.thumbnailUrl = function thumbnailUrl(size) {
                 if (size === 1)
                     return vm.testLink + "?w=46&h=46&mode=crop";
@@ -28,14 +26,8 @@
                     return vm.testLink + "?w=500&h=400&mode=max";
             };
 
-            vm.icon = function () {
-                return fileType.getIconClass(vm.testLink);
-                //return "pdf";
-            };
-            vm.tooltipUrl = function (str) {
-                //return "hello";
-                return str.replace(/\//g, "/&#8203;");
-            };
+            vm.icon = function () { return fileType.getIconClass(vm.testLink); };
+            vm.tooltipUrl = function (str) { return str.replace(/\//g, "/&#8203;"); };
 
             // Update test-link if necessary - both when typing or if link was set by dialogs
             $scope.$watch("value.Value", function(newValue, oldValue) {

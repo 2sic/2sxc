@@ -528,12 +528,11 @@
     <Content Include="src\sxc-edit\fields\hyperlink\hyperlink-library.controller.js" />
     <Content Include="src\sxc-edit\fields\hyperlink\hyperlink.css" />
     <Content Include="src\sxc-edit\fields\string\string-wysiwyg-adv.html" />
-    <Content Include="src\sxc-edit\fields\string\string-wysiwyg-adv.js" />
-    <Content Include="src\sxc-edit\fields\string\string-wysiwyg-dnn.js" />
+    <Content Include="src\sxc-edit\fields\string\string-wysiwyg-adv.controller.js" />
+    <Content Include="src\sxc-edit\fields\string\string-wysiwyg-dnn.controller.js" />
     <Content Include="src\sxc-edit\fields\string\string-wysiwyg-tinymce.html" />
-    <Content Include="src\sxc-edit\fields\string\string-wysiwyg-tinymce.js" />
+    <Content Include="src\sxc-edit\fields\string\string-wysiwyg-tinymce.controller.js" />
     <Content Include="src\sxc-edit\fields\hyperlink\hyperlink-library.html" />
-    <Content Include="src\sxc-edit\fields\string\temp.js" />
     <Content Include="src\sxc-edit\fields\string\wysiwyg-mce.css" />
     <Content Include="src\sxc-edit\fields\_sxc-fieldtemplates-app.js" />
     <Content Include="src\sxc-edit\fields\hyperlink\hyperlink-default.controller.js" />
@@ -646,7 +645,6 @@
     <Content Include="Administration\App_LocalResources\WebApiHelp.ascx.resx" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="src\sxc-edit\fields\string\lib\" />
     <Folder Include="Upgrade\Log\" />
   </ItemGroup>
   <ItemGroup>

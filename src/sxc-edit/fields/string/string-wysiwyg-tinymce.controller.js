@@ -66,7 +66,7 @@
                     + "| bold formatgroup "
                     + "| h1 h2 hgroup " 
                     + "| numlist "// not needed since now context senitive: " outdent indent "
-                    + "| adamlink linkgroup "
+                    + "| linkfiles linkgroup "
                     + "| modeadvanced ",
                     contextmenu: "charmap hr",
                 },
@@ -77,7 +77,7 @@
                     + "| bold italic "
                     + "| h1 h2 hgroup "
                     + "| bullist numlist outdent indent "
-                    + "| images linkgrouppro "
+                    + "| images linkfiles linkgrouppro "
                     + "| code modestandard ",
                     contextmenu: "link image | charmap hr adamimage",
                 }
@@ -166,25 +166,28 @@
 
         // the callback when something was selected
         vm.processResultOfDnnBridge = function (value, type) {
-            $scope.$apply(function () {
+            $scope.$apply(function() {
                 if (!value) return;
 
-                // Convert file path to file ID if type file is specified
-                var promise = dnnBridgeSvc.getUrlOfId(type + ":" + (value.id || value.FileId)); // id on page, FileId on file
-                if (promise)
-                    promise.then(function (result) {
-                        var previouslySelected = vm.editor.selection.getContent();
+                var previouslySelected = vm.editor.selection.getContent();
 
-                        if (type === "file") {
-                            var fileName = result.data.substr(result.data.lastIndexOf("/"));
-                            fileName = fileName.substr(0, fileName.lastIndexOf("."));
-                            vm.editor.insertContent("<a href=\"" + result.data + "\">" + (previouslySelected || fileName) + "</a>");
-                        } else if (type === "image") {
-                            vm.editor.insertContent("<img src=\"" + result.data + "\">");
-                        } else { // page
-                            vm.editor.insertContent("<a href=\"" + result.data + "\">" + (previouslySelected || value.name) + "</a>");
-                        }
+                // case page - must first convert id to real path
+                if (type === "page") {
+                    var promise = dnnBridgeSvc.getUrlOfId(type + ":" + (value.id || value.FileId)); // id on page, FileId on file
+                    return promise.then(function(result) {
+                        vm.editor.insertContent("<a href=\"" + result.data + "\">" + (previouslySelected || value.name) + "</a>");
                     });
+                }
+
+                // not page - then I have a real path, use that
+                if (type === "file") {
+                    var fileName = value.substr(value.lastIndexOf("/") + 1);
+                    fileName = fileName.substr(0, fileName.lastIndexOf("."));
+                    vm.editor.insertContent("<a href=\"" + value + "\">" + (previouslySelected || fileName) + "</a>");
+                } else if (type === "image") {
+                    vm.editor.insertContent("<img src=\"" + value + "\">");
+                }
+
 
             });
         };
@@ -235,18 +238,12 @@
 
         //#region register formats
 
-        // the method that will register everything
+        // the method that will register all formats - like img-sizes
         function registerTinyMceFormats(editor, vm) {
             var imgformats = {};
             for (var is = 0; is < imgSizes.length; is++)
                 imgformats["imgwidth" + imgSizes[is]] = [{ selector: "img", collapsed: false, styles: { 'width': imgSizes[is] + "%" } }];
             editor.formatter.register(imgformats);
-                //{
-                //imgwidth100: [{ selector: "img", collapsed: false, styles: { 'width': "100%" } }],
-                //imgwidth50: [{ selector: "img", collapsed: false, styles: { 'width': "50%" } }],
-                //imgwidth33: [{ selector: "img", collapsed: false, styles: { 'width': "33%" } }],
-                //imgwidth25: [{ selector: "img", collapsed: false, styles: { 'width': "25%" } }]
-                //});
         }
 
         // call register once the editor-object is ready
@@ -256,9 +253,8 @@
 
         //#endregion
 
-        // i18n ok
         // group with adam-link, dnn-link
-        editor.addButton("adamlink", {
+        editor.addButton("linkfiles", {
             type: "splitbutton",
             icon: " icon-file-pdf",
             title: "Link.AdamFile.Tooltip",
@@ -284,7 +280,6 @@
             ]
         });
 
-        // i18n ok
         //#region link group with web-link, page-link, unlink, anchor
         var linkgroup = {
             type: "splitbutton",
@@ -324,19 +319,15 @@
             },
             menu: [
                 {
-                    text: "Link.AdamFile", 
-                    tooltip: "Link.AdamFile.Tooltip",
+                    text: "Image.AdamImage", 
+                    tooltip: "Image.AdamImage.Tooltip",
                     icon: "image",
-                    onclick: function() {
-                        vm.toggleAdam(true);
-                    }
+                    onclick: function() { vm.toggleAdam(true); }
                 }, {
-                    text: "Link.DnnFile", 
-                    tooltip: "Link.DnnFile.Tooltip",
+                    text: "Image.DnnFile", 
+                    tooltip: "Image.DnnFile.Tooltip",
                     icon: "image",
-                    onclick: function() {
-                        vm.openDnnDialog("imagemanager");
-                    }
+                    onclick: function() { vm.openDnnDialog("imagemanager"); }
                 }, {
                     text: "Insert\/edit image", // i18n tinyMce standard
                     icon: "image",
