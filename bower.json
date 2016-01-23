@@ -1,19 +1,11 @@
 {
-  "name": "ToSic.Eav.ManagementUI",
+  "name": "ToSic.2sxc",
   "version": "3.1.0.0",
   "dependencies": {
-    "ocLazyLoad": "1.0.4",
-    "angular-google-maps": "~2.2.0",
-    "dropzone": "4.0.1",
-    "angular-dropzone": "0.1.2",
-    "2sxc-eav-languages": "2sic/2sxc-eav-languages#2d780d3",
-    "2sxc-icons": "2sic/2sxc-icons#0bc746a",
+    "2sxc-eav-languages": "2sic/2sxc-eav-languages#d358325",
+    "2sxc-icons": "2sic/2sxc-icons",
     "angular-ui-ace": "0.2.3",
     "angular-ui-tinymce": "0.0.12"
-
-  }, 
-  "private": true,
-  "resolutions": {
-    "dropzone": "4.0.1"
-  }
+  },
+  "private": true
 }
