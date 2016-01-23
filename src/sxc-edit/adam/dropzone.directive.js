@@ -1,7 +1,7 @@
 ﻿/* js/fileAppDirectives */
 
 angular.module("Adam")
-    .directive("dropzone", function (sxc, tabId, dragClass, adamSvc) {
+    .directive("dropzone", function (sxc, tabId, dragClass, adamSvc, $timeout) {
         return {
             restrict: "C",
             link: function(scope, element, attrs, controller) {
@@ -33,9 +33,12 @@ angular.module("Adam")
 
 
                 var eventHandlers = {
-                    'addedfile': function(file) {
-                        scope.$apply(function() {
-                            scope.uploading = true;
+                    'addedfile': function (file) {
+                        $timeout(function() {
+                            // anything you want can go here and will safely be run on the next digest.
+                            scope.$apply(function() { // this must run in a timeout
+                                scope.uploading = true;
+                            });
                         });
                     },
 

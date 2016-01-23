@@ -383,7 +383,7 @@ angular.module("Adam")
 /* js/fileAppDirectives */
 
 angular.module("Adam")
-    .directive("dropzone", ["sxc", "tabId", "dragClass", "adamSvc", function (sxc, tabId, dragClass, adamSvc) {
+    .directive("dropzone", ["sxc", "tabId", "dragClass", "adamSvc", "$timeout", function (sxc, tabId, dragClass, adamSvc, $timeout) {
         return {
             restrict: "C",
             link: function(scope, element, attrs, controller) {
@@ -415,9 +415,12 @@ angular.module("Adam")
 
 
                 var eventHandlers = {
-                    'addedfile': function(file) {
-                        scope.$apply(function() {
-                            scope.uploading = true;
+                    'addedfile': function (file) {
+                        $timeout(function() {
+                            // anything you want can go here and will safely be run on the next digest.
+                            scope.$apply(function() { // this must run in a timeout
+                                scope.uploading = true;
+                            });
                         });
                     },
 
@@ -1334,7 +1337,7 @@ angular.module('SxcEditTemplates', []).run(['$templateCache', function($template
 
 
   $templateCache.put('adam/dropzone-upload-preview.html',
-    "<div ng-show=uploading><div class=dropzone-previews></div><span class=invisible-clickable data-note=\"just a fake, invisble area for dropzone\"></span></div>"
+    "<div ng-show=uploading><div class=dropzone-previews></div><span class=invisible-clickable data-note=\"just a fake, invisble area for dropzone\">adding content for debugging IE</span></div>"
   );
 
 
