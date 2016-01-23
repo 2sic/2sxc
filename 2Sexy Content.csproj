@@ -432,7 +432,6 @@
     <Content Include="src\inpage\inpage-icons-codes.css" />
     <Content Include="src\sxc-edit\adam\adam-hint.html" />
     <Content Include="src\sxc-edit\adam\adam-hint.directive.js" />
-    <Content Include="src\sxc-edit\adam\file-type.service.js" />
     <Content Include="src\sxc-edit\app-icons-codes.css" />
     <Content Include="src\sxc-edit\app-icons.css" />
     <Content Include="src\sxc-edit\adam\adam.css" />
@@ -526,7 +525,7 @@
     <Content Include="src\sxc-edit\fields\dnn-bridge\dnn-bridge.service.js" />
     <Content Include="src\sxc-edit\fields\dnn-bridge\web-forms-bridge.directive.js" />
     <Content Include="src\sxc-edit\fields\hyperlink\dropzone-custom.css" />
-    <Content Include="src\sxc-edit\fields\hyperlink\hyperlink-library.js" />
+    <Content Include="src\sxc-edit\fields\hyperlink\hyperlink-library.controller.js" />
     <Content Include="src\sxc-edit\fields\hyperlink\hyperlink.css" />
     <Content Include="src\sxc-edit\fields\string\string-wysiwyg-adv.html" />
     <Content Include="src\sxc-edit\fields\string\string-wysiwyg-adv.js" />
@@ -537,7 +536,7 @@
     <Content Include="src\sxc-edit\fields\string\temp.js" />
     <Content Include="src\sxc-edit\fields\string\wysiwyg-mce.css" />
     <Content Include="src\sxc-edit\fields\_sxc-fieldtemplates-app.js" />
-    <Content Include="src\sxc-edit\fields\hyperlink\hyperlink-default.js" />
+    <Content Include="src\sxc-edit\fields\hyperlink\hyperlink-default.controller.js" />
     <Content Include="src\sxc-edit\fields\dnn-bridge\hyperlink-default-filemanager.html" />
     <Content Include="src\sxc-edit\fields\dnn-bridge\hyperlink-default-pagepicker.html" />
     <Content Include="src\sxc-edit\fields\hyperlink\hyperlink-default.html" />

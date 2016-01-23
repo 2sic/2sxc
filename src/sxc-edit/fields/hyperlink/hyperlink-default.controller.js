@@ -32,6 +32,10 @@
                 return fileType.getIconClass(vm.testLink);
                 //return "pdf";
             };
+            vm.tooltipUrl = function (str) {
+                //return "hello";
+                return str.replace(/\//g, "/&#8203;");
+            };
 
             // Update test-link if necessary - both when typing or if link was set by dialogs
             $scope.$watch("value.Value", function(newValue, oldValue) {

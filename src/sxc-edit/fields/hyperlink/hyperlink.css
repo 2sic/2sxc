@@ -18,3 +18,7 @@
     border-bottom-width: 0; 
     background-color: transparent; 
 }
+
+div.dropzone div.input-group div.tooltip-inner {
+    word-wrap: break-word;
+}

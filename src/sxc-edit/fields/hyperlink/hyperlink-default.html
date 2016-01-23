@@ -1,8 +1,16 @@
 ﻿<div>
     <div class="dropzone">
         <div class="input-group" dropdown>
-            <div ng-if="value.Value && vm.isImage()" class="input-group-addon btn-default thumbnail-before-input" style="background-image: url('{{vm.thumbnailUrl(1)}}')" ng-mouseover="vm.showPreview = true" ng-mouseleave="vm.showPreview = false"> </div>
-            <div ng-if="value.Value && !vm.isImage() && vm.icon()" class="{{vm.icon()}} input-group-addon btn-default icon-before-input" ></div>
+            <a ng-if="value.Value"
+               class="input-group-addon btn-default icon-before-input"
+               href="{{vm.testLink}}"
+               target="_blank" tabindex="-1"
+               tooltip-html-unsafe="{{vm.tooltipUrl(vm.testLink)}}"
+               tooltip-placement="right"
+               ng-class="vm.icon()">
+                    <div ng-if="value.Value && vm.isImage()" class="input-group-addon btn-default thumbnail-before-input" style="background-image: url('{{vm.thumbnailUrl(1)}}')" ng-mouseover="vm.showPreview = true" ng-mouseleave="vm.showPreview = false"> </div>
+                    <!--<div ng-if="value.Value && !vm.isImage() && vm.icon()" class="{{vm.icon()}} input-group-addon btn-default icon-before-input"></div>-->
+                </a>
             <input type="text" class="form-control input-lg" ng-model="value.Value" tooltip="{{'Edit.Fields.Hyperlink.Default.Tooltip1' | translate }}
 {{'Edit.Fields.Hyperlink.Default.Tooltip2' | translate }}
 ADAM - sponsored with ♥ by 2sic.com">

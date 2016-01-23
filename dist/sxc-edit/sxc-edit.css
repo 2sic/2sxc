@@ -632,6 +632,10 @@ font-size: large;position: absolute;right: -15px;top: 50px;font-size: 1.8em;
     border-bottom-width: 0; 
     background-color: transparent; 
 }
+
+div.dropzone div.input-group div.tooltip-inner {
+    word-wrap: break-word;
+}
 .field-string-wysiwyg-mce-box {
     position: relative;
     border-style: solid;

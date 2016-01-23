@@ -619,6 +619,10 @@ angular.module("sxcFieldTemplates")
                 return fileType.getIconClass(vm.testLink);
                 //return "pdf";
             };
+            vm.tooltipUrl = function (str) {
+                //return "hello";
+                return str.replace(/\//g, "/&#8203;");
+            };
 
             // Update test-link if necessary - both when typing or if link was set by dialogs
             $scope.$watch("value.Value", function(newValue, oldValue) {
@@ -1334,7 +1338,7 @@ angular.module('SxcEditTemplates', []).run(['$templateCache', function($template
 
 
   $templateCache.put('fields/hyperlink/hyperlink-default.html',
-    "<div><div class=dropzone><div class=input-group dropdown><div ng-if=\"value.Value && vm.isImage()\" class=\"input-group-addon btn-default thumbnail-before-input\" style=\"background-image: url('{{vm.thumbnailUrl(1)}}')\" ng-mouseover=\"vm.showPreview = true\" ng-mouseleave=\"vm.showPreview = false\"></div><div ng-if=\"value.Value && !vm.isImage() && vm.icon()\" class=\"{{vm.icon()}} input-group-addon btn-default icon-before-input\"></div><input type=text class=\"form-control input-lg\" ng-model=value.Value tooltip=\"{{'Edit.Fields.Hyperlink.Default.Tooltip1' | translate }}\r" +
+    "<div><div class=dropzone><div class=input-group dropdown><a ng-if=value.Value class=\"input-group-addon btn-default icon-before-input\" href={{vm.testLink}} target=_blank tabindex=-1 tooltip-html-unsafe={{vm.tooltipUrl(vm.testLink)}} tooltip-placement=right ng-class=vm.icon()><div ng-if=\"value.Value && vm.isImage()\" class=\"input-group-addon btn-default thumbnail-before-input\" style=\"background-image: url('{{vm.thumbnailUrl(1)}}')\" ng-mouseover=\"vm.showPreview = true\" ng-mouseleave=\"vm.showPreview = false\"></div></a> <input type=text class=\"form-control input-lg\" ng-model=value.Value tooltip=\"{{'Edit.Fields.Hyperlink.Default.Tooltip1' | translate }}\r" +
     "\n" +
     "{{'Edit.Fields.Hyperlink.Default.Tooltip2' | translate }}\r" +
     "\n" +
