@@ -125,7 +125,7 @@ angular.module("Adam")
     // The controller for the main form directive
     app.controller("BrowserController", BrowserController);
     
-    function BrowserController($scope, adamSvc, debugState, eavConfig, eavAdminDialogs, appRoot) {
+    function BrowserController($scope, adamSvc, debugState, eavConfig, eavAdminDialogs, appRoot, fileType) {
         var vm = this;
         vm.debug = debugState;
         vm.contentTypeName = $scope.contentTypeName;
@@ -285,39 +285,14 @@ angular.module("Adam")
         //#endregion
 
         //#region icons
-        vm.icons = {
-            doc: "file-word",
-            docx: "file-word",
-            xls: "file-excel",
-            xlsx: "file-excel",
-            ppt: "file-powerpoint",
-            pptx: "file-powerpoint",
-            pdf: "file-pdf",
-            mp3: "file-audio",
-            avi: "file-video",
-            mpg: "file-video",
-            mpeg: "file-video",
-            mov: "file-video",
-            mp4: "file-video",
-            zip: "file-archive",
-            rar: "file-archive",
-            txt: "file-text",
-            html: "file-code",
-            css: "file-code",
-            xml: "file-code",
-            xsl: "file-code",
-            vcf: "user"
-
-        };
         vm.icon = function (item) {
-            var ext = item.Name.substr(item.Name.lastIndexOf(".") + 1).toLowerCase();
-            return "icon-" + (vm.icons[ext] || "file");
+            return fileType.getIconClass(item.Name);
         };
         //#endregion
 
         vm.activate();
     }
-    BrowserController.$inject = ["$scope", "adamSvc", "debugState", "eavConfig", "eavAdminDialogs", "appRoot"];
+    BrowserController.$inject = ["$scope", "adamSvc", "debugState", "eavConfig", "eavAdminDialogs", "appRoot", "fileType"];
 
 })();
 
@@ -624,22 +599,25 @@ angular.module("sxcFieldTemplates")
                 controller: "FieldTemplate-HyperlinkCtrl as vm"
             });
         }])
-        .controller("FieldTemplate-HyperlinkCtrl", ["$modal", "$scope", "$http", "sxc", "adamSvc", "debugState", "dnnBridgeSvc", function ($modal, $scope, $http, sxc, adamSvc, debugState, dnnBridgeSvc) {
+        .controller("FieldTemplate-HyperlinkCtrl", ["$modal", "$scope", "$http", "sxc", "adamSvc", "debugState", "dnnBridgeSvc", "fileType", function ($modal, $scope, $http, sxc, adamSvc, debugState, dnnBridgeSvc, fileType) {
 
             var vm = this;
             vm.debug = debugState;
             vm.testLink = "";
-            vm.checkImgRegEx = /(?:([^:\/?#]+):)?(?:\/\/([^\/?#]*))?([^?#]*\.(?:jpg|jpeg|gif|png))(?:\?([^#]*))?(?:#(.*))?/i;
 
-            vm.isImage = function() {
-                var value = $scope.value;
-                return vm.checkImgRegEx.test(vm.testLink);
+            vm.isImage = function () {
+                return fileType.isImage(vm.testLink);
             };
             vm.thumbnailUrl = function thumbnailUrl(size) {
                 if (size === 1)
                     return vm.testLink + "?w=46&h=46&mode=crop";
                 if (size === 2)
                     return vm.testLink + "?w=500&h=400&mode=max";
+            };
+
+            vm.icon = function () {
+                return fileType.getIconClass(vm.testLink);
+                //return "pdf";
             };
 
             // Update test-link if necessary - both when typing or if link was set by dialogs
@@ -1337,7 +1315,7 @@ angular.module('SxcEditTemplates', []).run(['$templateCache', function($template
 
 
   $templateCache.put('adam/dropzone-upload-preview.html',
-    "<div ng-show=uploading><div class=dropzone-previews></div><span class=invisible-clickable data-note=\"just a fake, invisble area for dropzone\">adding content for debugging IE</span></div>"
+    "<div ng-show=uploading><div class=dropzone-previews></div><span class=invisible-clickable data-note=\"just a fake, invisble area for dropzone\"></span></div>"
   );
 
 
@@ -1356,7 +1334,7 @@ angular.module('SxcEditTemplates', []).run(['$templateCache', function($template
 
 
   $templateCache.put('fields/hyperlink/hyperlink-default.html',
-    "<div><div class=dropzone><div class=input-group dropdown><div ng-if=\"value.Value && vm.isImage()\" class=\"input-group-addon btn-default\" style=\"width: 46px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; padding-left: 0px; padding-right: 0px; border-left-width: 0px; border-bottom-width: 0px; background-color: transparent; background-image: url('{{vm.thumbnailUrl(1)}}')\" ng-mouseover=\"vm.showPreview = true\" ng-mouseleave=\"vm.showPreview = false\"></div><input type=text class=\"form-control input-lg\" ng-model=value.Value tooltip=\"{{'Edit.Fields.Hyperlink.Default.Tooltip1' | translate }}\r" +
+    "<div><div class=dropzone><div class=input-group dropdown><div ng-if=\"value.Value && vm.isImage()\" class=\"input-group-addon btn-default thumbnail-before-input\" style=\"background-image: url('{{vm.thumbnailUrl(1)}}')\" ng-mouseover=\"vm.showPreview = true\" ng-mouseleave=\"vm.showPreview = false\"></div><div ng-if=\"value.Value && !vm.isImage() && vm.icon()\" class=\"{{vm.icon()}} input-group-addon btn-default icon-before-input\"></div><input type=text class=\"form-control input-lg\" ng-model=value.Value tooltip=\"{{'Edit.Fields.Hyperlink.Default.Tooltip1' | translate }}\r" +
     "\n" +
     "{{'Edit.Fields.Hyperlink.Default.Tooltip2' | translate }}\r" +
     "\n" +

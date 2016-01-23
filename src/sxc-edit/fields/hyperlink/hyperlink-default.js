@@ -12,22 +12,25 @@
                 controller: "FieldTemplate-HyperlinkCtrl as vm"
             });
         })
-        .controller("FieldTemplate-HyperlinkCtrl", function ($modal, $scope, $http, sxc, adamSvc, debugState, dnnBridgeSvc) {
+        .controller("FieldTemplate-HyperlinkCtrl", function ($modal, $scope, $http, sxc, adamSvc, debugState, dnnBridgeSvc, fileType) {
 
             var vm = this;
             vm.debug = debugState;
             vm.testLink = "";
-            vm.checkImgRegEx = /(?:([^:\/?#]+):)?(?:\/\/([^\/?#]*))?([^?#]*\.(?:jpg|jpeg|gif|png))(?:\?([^#]*))?(?:#(.*))?/i;
 
-            vm.isImage = function() {
-                var value = $scope.value;
-                return vm.checkImgRegEx.test(vm.testLink);
+            vm.isImage = function () {
+                return fileType.isImage(vm.testLink);
             };
             vm.thumbnailUrl = function thumbnailUrl(size) {
                 if (size === 1)
                     return vm.testLink + "?w=46&h=46&mode=crop";
                 if (size === 2)
                     return vm.testLink + "?w=500&h=400&mode=max";
+            };
+
+            vm.icon = function () {
+                return fileType.getIconClass(vm.testLink);
+                //return "pdf";
             };
 
             // Update test-link if necessary - both when typing or if link was set by dialogs
