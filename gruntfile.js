@@ -218,11 +218,11 @@ module.exports = function (grunt) {
                 dest: designer.concatFile
             },
             adminCss: {
-                src: sxcedit.tmp + "**/*.css",
+                src: sxcedit.cwd + "**/*.css",
                 dest: sxcedit.concatCss
             },
             inpageCss: {
-                src: inpage.tmp + "**/*.css",
+                src: inpage.cwd + "**/*.css",
                 dest: inpage.concatCss
             }
         },
@@ -257,7 +257,7 @@ module.exports = function (grunt) {
                 shorthandCompacting: false,
                 roundingPrecision: -1
             },
-            target: {
+            allInDist: {
                 files: [{
                     expand: true,
                     cwd: distRoot,
@@ -282,20 +282,18 @@ module.exports = function (grunt) {
             }
         },
 
-        // note: jasmine not in use yet
-        jasmine: {
-            
-        },
-        
-
         watch: {
             options : {
                 atBegin: true
             },
             sxcbuild: {
-                files: ["gruntfile.js", "src/**"],
+                files: ["gruntfile.js", "src/**/*.js", "src/**/*.html"],
                 tasks: ["build"]
-            }
+            },
+            cssbuild: {
+                files: ["gruntfile.js", "src/**/*.css"],
+                tasks: ["build-css"]
+            },
         }
 
 
@@ -316,20 +314,31 @@ module.exports = function (grunt) {
     grunt.task.loadTasks("grunt-tasks");
 
     // Default task(s).
+    grunt.registerTask("build-css", [
+        "concat:inpageCss",
+        "concat:adminCss",
+        "cssmin:allInDist"
+    ]);
     grunt.registerTask("build", [
-        "jshint",
+        "jshint:all",
         "clean:tmp",
-        "copy",
-        "ngtemplates",
-        "concat",
-        "ngAnnotate",
+        "copy:build",
+        "ngtemplates:default",
+        "ngtemplates:sxcedit",
+        "ngtemplates:designer",
+        "ngtemplates:inpage",
+        "concat:default",
+        "concat:sxcedit",
+        "concat:inpage",
+        "concat:eavconf",
+        "concat:designer",
+        "ngAnnotate:sxcadmin",
         "uglify",
-        "cssmin"
+        // "cssmin"
     ]);
 
-    grunt.registerTask("build-auto", [
-        "watch:sxcbuild"
-    ]);
+    grunt.registerTask("build-auto", ["watch:sxcbuild"]);
+    grunt.registerTask("build-css-auto", ["watch:cssbuild"]);
 
   grunt.registerTask("default", ["jshint", "ngAnnotate", "uglify"]);
 
