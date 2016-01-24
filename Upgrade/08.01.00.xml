@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<SexyContent FileVersion="07.00.00" MinimumRequiredVersion="07.00.00" ModuleVersion="08.00.12" ExportDate="2016-01-11T11:00:40.7508729+01:00">
+  <Header>
+    <Language Default="en-US" />
+    <Dimensions />
+  </Header>
+  <AttributeSets>
+    <AttributeSet StaticName="@hyperlink-library" Name="@hyperlink-library" Description="to configure a library-field" Scope="System" AlwaysShareConfiguration="true">
+      <Attributes>
+        <Attribute StaticName="FolderDepth" Type="Number" IsTitle="true">
+          <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@All" AttributeSetName="@All" EntityGUID="55fd7bae-6abf-45ac-8420-efd027b690c0">
+            <Value Key="Name" Value="Folder Depth" Type="String" />
+            <Value Key="Notes" Value="&lt;p&gt;If sub folders are allowed and how deply they may be nested. Use 0 for no sub folders, 1 for 1 level only, 2 for 2 levels (like /gallery/subgallery) etc. Use a large number like 100 for practically unlimited sub folders, but not recommended for realistic use cases.&lt;/p&gt;" Type="String" />
+            <Value Key="VisibleInEditUI" Value="True" Type="Boolean" />
+            <Value Key="Required" Value="True" Type="Boolean" />
+            <Value Key="DefaultValue" Value="2" Type="String" />
+            <Value Key="Disabled" Value="False" Type="Boolean" />
+            <Value Key="InputType" Value="number-default" Type="String" />
+            <Value Key="ValidationRegExJavaScript" Value="" Type="String" />
+          </Entity>
+          <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@Number" AttributeSetName="@Number" EntityGUID="ae7c6da3-6fe9-4c66-ad69-56fdfb377294">
+            <Value Key="ValidationRegEx" Value="" Type="String" />
+            <Value Key="ValidationRegExJavaScript" Value="" Type="String" />
+            <Value Key="Decimals" Value="0" Type="Number" />
+            <Value Key="Min" Value="0" Type="Number" />
+            <Value Key="Max" Value="100" Type="Number" />
+            <Value Key="InputType" Value="" Type="String" />
+            <Value Key="AddressMask" Value="" Type="String" />
+          </Entity>
+        </Attribute>
+        <Attribute StaticName="AllowAssetsInRoot" Type="Boolean" IsTitle="false">
+          <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@All" AttributeSetName="@All" EntityGUID="97f13387-efc3-4df2-920c-413b60962254">
+            <Value Key="Name" Value="Allow Assets In Root Folder" Type="String" />
+            <Value Key="Notes" Value="&lt;p&gt;Specifies if files may be placed in the core / root container, or if the user is required to create sub folders. This would be the case if you expect multiple groups of files, but never a top-level list. &lt;/p&gt;" Type="String" />
+            <Value Key="VisibleInEditUI" Value="True" Type="Boolean" />
+            <Value Key="Required" Value="True" Type="Boolean" />
+            <Value Key="DefaultValue" Value="true" Type="String" />
+            <Value Key="Disabled" Value="False" Type="Boolean" />
+            <Value Key="InputType" Value="boolean-default" Type="String" />
+            <Value Key="ValidationRegExJavaScript" Value="" Type="String" />
+          </Entity>
+          <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@Boolean" AttributeSetName="@Boolean" EntityGUID="d42769f3-a31f-4f5b-95d0-6100314a082b" />
+        </Attribute>
+        <Attribute StaticName="MetadataContentTypes" Type="String" IsTitle="false">
+          <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@All" AttributeSetName="@All" EntityGUID="5bae1206-eb21-4d49-b3a4-0f67281c45ae">
+            <Value Key="Name" Value="Metadata Content Types" Type="String" />
+            <Value Key="Notes" Value="&lt;p&gt;The content-type (or types) to be used for assets in this library. To use this, first create a content-type (like DownloadMetadata or MugshotMetadata) and type the name of the content type into this field. Advanced configuration is possible, discover on &lt;a href=&quot;http://2sxc.org/help?tag=adam&quot; target=&quot;_blank&quot;&gt;2sxc.org/help?tag=adam&lt;/a&gt;&lt;/p&gt;&lt;br&gt;" Type="String" />
+            <Value Key="VisibleInEditUI" Value="True" Type="Boolean" />
+            <Value Key="Required" Value="False" Type="Boolean" />
+            <Value Key="DefaultValue" Value="" Type="String" />
+            <Value Key="Disabled" Value="False" Type="Boolean" />
+            <Value Key="InputType" Value="string-default" Type="String" />
+            <Value Key="ValidationRegExJavaScript" Value="" Type="String" />
+          </Entity>
+          <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@String" AttributeSetName="@String" EntityGUID="09175802-3855-42a8-9f55-bf9c0b3873c2">
+            <Value Key="DropdownValues" Value="" Type="String" />
+            <Value Key="InputType" Value="" Type="String" />
+            <Value Key="ValidationRegEx" Value="" Type="String" />
+            <Value Key="RowCount" Value="" Type="Number" />
+            <Value Key="ValidationRegExJavaScript" Value="" Type="String" />
+            <Value Key="ValidationAutomatic" Value="" Type="String" />
+            <Value Key="WysiwygHeight" Value="" Type="Number" />
+            <Value Key="WysiwygWidth" Value="" Type="Number" />
+          </Entity>
+          <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@string-default" AttributeSetName="@string-default" EntityGUID="defbc84e-b4dc-4672-a80f-325ab16cab57">
+            <Value Key="RowCount" Value="10" Type="Number" />
+          </Entity>
+        </Attribute>
+      </Attributes>
+    </AttributeSet>
+  </AttributeSets>
+  <Entities>
+    <Entity AssignmentObjectType="Default" AttributeSetStaticName="ContentType-InputType" AttributeSetName="ContentType-InputType" EntityGUID="4d79fffe-bf1c-4398-98a4-b1ec93969959">
+      <Value Key="Type" Value="hyperlink-library" Type="String" />
+      <Value Key="Label" Value="Library of files" Type="String" />
+      <Value Key="Description" Value="" Type="String" />
+      <Value Key="Assets" Value="" Type="String" />
+    </Entity>
+    <Entity AssignmentObjectType="Default" AttributeSetStaticName="ContentType-InputType" AttributeSetName="ContentType-InputType" EntityGUID="462f6ab8-637d-484d-85ba-e9ba993dd212">
+      <Value Key="Type" Value="string-wysiwyg-dnn" Type="String" />
+      <Value Key="Label" Value="WYSIWYG - DNN Standard" Type="String" />
+      <Value Key="Description" Value="Shows the standard DNN WYSIWYG" Type="String" />
+      <Value Key="Assets" Value="" Type="String" />
+    </Entity>
+    <Entity AssignmentObjectType="Default" AttributeSetStaticName="ContentType-InputType" AttributeSetName="ContentType-InputType" EntityGUID="f2c9d74e-561c-481f-819a-4d446578d2a0">
+      <Value Key="Type" Value="string-wysiwyg-tinymce" Type="String" />
+      <Value Key="Label" Value="WYSIWYG TinyMCE" Type="String" />
+      <Value Key="Description" Value="WYSIWYG editing with TinyMCE" Type="String" />
+      <Value Key="Assets" Value="" Type="String" />
+    </Entity>
+  </Entities>
+  <PortalFiles />
+</SexyContent>

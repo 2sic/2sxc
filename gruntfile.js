@@ -1,4 +1,4 @@
-/// <binding />
+/// <binding ProjectOpened='build-auto' />
 module.exports = function (grunt) {
     "use strict";
     var distRoot = "dist/";
@@ -31,7 +31,9 @@ module.exports = function (grunt) {
         templates: "tmp/inpage/inpage-templates.js",
         dist: "dist/admin/",
         concatFile: "dist/inpage/inpage.js",
-        uglifyFile: "dist/inpage/inpage.min.js"
+        uglifyFile: "dist/inpage/inpage.min.js",
+        concatCss: "dist/inpage/inpage.css",
+        concatCssMin: "dist/inpage/inpage.min.css"
     };
     var eavconf = {
         cwd: "src/config/",
@@ -41,30 +43,39 @@ module.exports = function (grunt) {
         concatFile: "dist/config/config.js",
         uglifyFile: "dist/config/config.min.js"
     };
-    var i18n = {
-        cwd: "src/i18n/",
-        dist: "dist/i18n/"
+    var designer = {
+        cwd: "src/sxc-develop/",
+        cwdJs: ["src/sxc-develop/**/*.js"],
+        tmp: "tmp/sxc-develop/",
+        templates: "tmp/sxc-develop/sxc-templates.js",
+        dist: "dist/sxc-develop/",
+        concatFile: "dist/sxc-develop/sxc-develop.js",
+        uglifyFile: "dist/sxc-develop/sxc-develop.min.js"
     };
-    var languagePacks = {
-        cwd: "bower_components/2sxc-eav-languages/dist/i18n/",
-        dist: "dist/i18n/",
-        filter: ["**/*.js", "!**-en.js"]
-    };
-    var sxc4ng = "js/AngularJS/2sxc4ng.js";
-
 
 
   // Project configuration.
-    grunt.initConfig({
+    grunt.initConfig();
+    
+    grunt.config.merge({
         pkg: grunt.file.readJSON("package.json"),
 
+        paths: {
+            bower: "bower_components",
+            dist: "dist",
+            libs: "libs",
+            publish: "publish",
+            src: "src",
+            temp: "tmp",
+            tests: "tests"
+        },
+        
         jshint: {
             options: {
                 laxbreak: true,
                 scripturl: true
             },
-            all: ["gruntfile.js", sxcadmin.cwd, inpage.cwd, eavconf.cwd, sxcedit.cwd, sxc4ng],
-            Sxc: ["js/2sxc.api.js"]
+            all: ["gruntfile.js", sxcadmin.cwd, inpage.cwd, eavconf.cwd, sxcedit.cwd, designer.cwd]
         },
 
         clean: {
@@ -77,57 +88,9 @@ module.exports = function (grunt) {
                 files: [
                     {
                         expand: true,
-                        cwd: sxcadmin.cwd,
-                        src: ["**", "!**/*Spec.js"],
-                        dest: sxcadmin.tmp
-                    },
-                    {
-                        expand: true,
-                        cwd: sxcedit.cwd,
-                        src: ["**", "!**/*Spec.js"],
-                        dest: sxcedit.tmp
-                    },
-                    {
-                        expand: true,
-                        cwd: inpage.cwd,
-                        src: ["**/*.*"],
-                        dest: inpage.tmp
-                    },
-                    {
-                        expand: true,
-                        cwd: eavconf.cwd,
-                        src: ["**/*.*"],
-                        dest: eavconf.tmp
-                    },
-                    {
-                        expand: true,
-                        cwd: "src/dnn/",
-                        src: ["**/*.*"],
-                        dest: "dist/dnn/"
-                    }
-                ]
-            },
-            i18n: {
-                files: [
-                    {
-                        expand: true,
-                        cwd: "src/i18n/", 
-                        src: ["**/*.json"],
-                        dest: "dist/i18n/", 
-                        rename: function (dest, src) {
-                            return dest + src.replace(".json", ".js");
-                        }
-                    }
-
-                ]
-            },
-            languagePacks: {
-                files: [
-                    {
-                        expand: true,
-                        cwd: languagePacks.cwd,
-                        src: languagePacks.filter,
-                        dest: languagePacks.dist
+                        cwd: "src",
+                        src: ["*/**", "!**/*Spec.js"],
+                        dest: "tmp"
                     }
                 ]
             }
@@ -139,6 +102,7 @@ module.exports = function (grunt) {
                 options: {
                     module: "SxcTemplates",
                     append: true,
+                    standalone: true,
                     htmlmin: {
                         collapseBooleanAttributes: true,
                         collapseWhitespace: true,
@@ -162,6 +126,7 @@ module.exports = function (grunt) {
                 options: {
                     module: "SxcEditTemplates",
                     append: true,
+                    standalone: true,
                     htmlmin: {
                         collapseBooleanAttributes: true,
                         collapseWhitespace: true,
@@ -181,10 +146,35 @@ module.exports = function (grunt) {
                     }
                 ]
             },
+            designer: {
+                options: {
+                    module: "SourceEditor",
+                    append: true,
+                    standalone: false,
+                    htmlmin: {
+                        collapseBooleanAttributes: true,
+                        collapseWhitespace: true,
+                        removeAttributeQuotes: true,
+                        removeComments: true,
+                        removeEmptyAttributes: true,
+                        removeRedundantAttributes: false,
+                        removeScriptTypeAttributes: true,
+                        removeStyleLinkTypeAttributes: true
+                    }
+                },
+                files: [
+                    {
+                        cwd: designer.tmp,
+                        src: ["**/*.html"],
+                        dest: designer.templates
+                    }
+                ]
+            },
             inpage: {
                 options: {
                     module: "SxcInpageTemplates",
                     append: true,
+                    standalone: true,
                     htmlmin: {
                         collapseBooleanAttributes: true,
                         collapseWhitespace: true,
@@ -223,42 +213,30 @@ module.exports = function (grunt) {
                 src: eavconf.tmp + "**/*.js",
                 dest: eavconf.concatFile
             },
+            designer: {
+                src: designer.tmp + "**/*.js",
+                dest: designer.concatFile
+            },
             adminCss: {
-                src: sxcedit.tmp + "**/*.css",
+                src: sxcedit.cwd + "**/*.css",
                 dest: sxcedit.concatCss
             },
+            inpageCss: {
+                src: inpage.cwd + "**/*.css",
+                dest: inpage.concatCss
+            }
         },
 
 
         ngAnnotate: {
             options: {
                 // Task-specific options go here. 
-                // disable sourceMap for now as we can't pass it through to uglify yet (don't know how) sourceMap: true
+                // don't enable sourceMap for now as we can't pass it through to uglify yet (don't know how) sourceMap: true
             },
             sxcadmin: {
                 expand: true,
-                src: sxcadmin.concatFile,
+                src: [sxcadmin.concatFile, sxcedit.concatFile, inpage.concatFile, eavconf.concatFile, designer.concatFile],
                 extDot: "last"          // Extensions in filenames begin after the last dot 
-            },
-            sxcedit: {
-                expand: true,
-                src: sxcedit.concatFile,
-                extDot: "last"          // Extensions in filenames begin after the last dot 
-            },
-            inpage: {
-                expand: true,
-                src: inpage.concatFile,
-                extDot: "last"          // Extensions in filenames begin after the last dot 
-            },
-            eavconf: {
-                expand: true,
-                src: eavconf.concatFile,
-                extDot: "last"          // Extensions in filenames begin after the last dot 
-            },
-            Sxc4ng: {
-                files: {
-                    'js/AngularJS/2sxc4ng.annotated.js': ["js/AngularJS/2sxc4ng.js"]
-                }
             }
         },
 
@@ -267,33 +245,11 @@ module.exports = function (grunt) {
                 banner: "/*! <%= pkg.name %> <%= grunt.template.today(\"yyyy-mm-dd\") %> */\n",
                 sourceMap: true
             },
-            sxcadmin: {
-                src: sxcadmin.concatFile,
-                dest: sxcadmin.uglifyFile
-            },
-            sxcedit: {
-                src: sxcedit.concatFile,
-                dest: sxcedit.uglifyFile
-            },
-            inpage: {
-                src: inpage.concatFile,
-                dest: inpage.uglifyFile
-            },
-            eavconf: {
-                src: eavconf.concatFile,
-                dest: eavconf.uglifyFile
-            },
-            Sxc4ng: {
-                files: {
-                    'js/AngularJS/2sxc4ng.min.js': ["js/AngularJS/2sxc4ng.annotated.js"]
-                }
-            }, 
-            SxcCore: {
-                files: {
-                    'js/2sxc.api.min.js': ["js/2sxc.api.js"],
-                    //'js/dnn-inpage-edit.min.js': ["js/dnn-inpage-edit.js"]
-                }
-            }
+            sxcadmin: { src: sxcadmin.concatFile,   dest: sxcadmin.uglifyFile   },
+            sxcedit: {  src: sxcedit.concatFile,    dest: sxcedit.uglifyFile    },
+            designer: { src: designer.concatFile,   dest: designer.uglifyFile    },
+            inpage: {   src: inpage.concatFile,     dest: inpage.uglifyFile     },
+            eavconf: {  src: eavconf.concatFile,    dest: eavconf.uglifyFile    }
         },
         
         cssmin: {
@@ -301,7 +257,7 @@ module.exports = function (grunt) {
                 shorthandCompacting: false,
                 roundingPrecision: -1
             },
-            target: {
+            allInDist: {
                 files: [{
                     expand: true,
                     cwd: distRoot,
@@ -326,20 +282,18 @@ module.exports = function (grunt) {
             }
         },
 
-        // note: jasmine not in use yet
-        jasmine: {
-            
-        },
-        
-
         watch: {
             options : {
                 atBegin: true
             },
             sxcbuild: {
-                files: ["gruntfile.js", "src/**"],
+                files: ["gruntfile.js", "src/**/*.js", "src/**/*.html"],
                 tasks: ["build"]
-            }
+            },
+            cssbuild: {
+                files: ["gruntfile.js", "src/**/*.css"],
+                tasks: ["build-css"]
+            },
         }
 
 
@@ -353,26 +307,38 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-contrib-concat");
     grunt.loadNpmTasks("grunt-contrib-copy");
     grunt.loadNpmTasks("grunt-contrib-clean");
-    grunt.loadNpmTasks("grunt-ng-templates");
+    grunt.loadNpmTasks("grunt-angular-templates");
     grunt.loadNpmTasks("grunt-contrib-compress");
     grunt.loadNpmTasks("grunt-contrib-cssmin");
 
+    grunt.task.loadTasks("grunt-tasks");
+
     // Default task(s).
+    grunt.registerTask("build-css", [
+        "concat:inpageCss",
+        "concat:adminCss",
+        "cssmin:allInDist"
+    ]);
     grunt.registerTask("build", [
-        "jshint",
+        "jshint:all",
         "clean:tmp",
-        "copy",
-        "ngtemplates",
-        "concat",
-        "ngAnnotate",
+        "copy:build",
+        "ngtemplates:default",
+        "ngtemplates:sxcedit",
+        "ngtemplates:designer",
+        "ngtemplates:inpage",
+        "concat:default",
+        "concat:sxcedit",
+        "concat:inpage",
+        "concat:eavconf",
+        "concat:designer",
+        "ngAnnotate:sxcadmin",
         "uglify",
-        "cssmin",
-        //"clean:tmp",
+        // "cssmin"
     ]);
 
-    grunt.registerTask("build-auto", [
-        "watch:sxcbuild"
-    ]);
+    grunt.registerTask("build-auto", ["watch:sxcbuild"]);
+    grunt.registerTask("build-css-auto", ["watch:cssbuild"]);
 
   grunt.registerTask("default", ["jshint", "ngAnnotate", "uglify"]);
 

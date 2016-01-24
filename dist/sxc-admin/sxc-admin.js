@@ -1,4 +1,4 @@
-(function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
+(function() { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
 
     angular.module("MainSxcApp", [
             "EavConfiguration", // config
@@ -27,8 +27,7 @@
                 return $http.get("app/system/dialogsettings", { params: { appId: appId } });
             };
             return svc;
-        }])
-        ;
+        }]);
 
     function MainController(eavAdminDialogs, eavConfig, appId, debugState, appDialogConfigSvc, $modalInstance) {
         var vm = this;
@@ -200,13 +199,22 @@
 
     angular.module("DialogHost", [
         "SxcAdminUi",
-        "EavAdminUi"
+        "EavAdminUi",
+        "oc.lazyLoad"
     ])
          
         .controller("DialogHost", DialogHostController)
         ;
 
-    function DialogHostController(zoneId, appId, items, $2sxc, dialog, sxcDialogs, eavAdminDialogs) {
+    function preLoadAgGrid($ocLazyLoad) {
+        return $ocLazyLoad.load([
+            "../lib/ag-grid/ag-grid.min.js",
+            "../lib/ag-grid/ag-grid.min.css"
+        ]);
+
+    }
+
+    function DialogHostController(zoneId, appId, items, $2sxc, dialog, sxcDialogs, contentTypeName, eavAdminDialogs, $ocLazyLoad) {
         var vm = this;
         vm.dialog = dialog;
         var initialDialog = dialog;
@@ -225,7 +233,9 @@
                 break;
             case "app":
                 // this opens the manage-an-app with content-types, views, etc.
-                sxcDialogs.openAppMain(appId, vm.close);
+                preLoadAgGrid($ocLazyLoad).then(function() {
+                    sxcDialogs.openAppMain(appId, vm.close);
+                });
                 break;
             case "replace":
                 // this is the "replace item in a list" dialog
@@ -233,6 +243,24 @@
                 break;
             case "sort":
                 sxcDialogs.openManageContentList(items[0], vm.close);
+                break;
+            case "develop":
+                // lazy load this to ensure the module is "registered" inside 2sxc
+                $ocLazyLoad.load([
+                        //"../lib/angular-ui-ace/ui-ace.min.js",
+                        $2sxc.debug.renameScript("../sxc-develop/sxc-develop.min.js")
+                    ])
+                    .then(function() {
+                        sxcDialogs.openDevelop(items[0], vm.close);
+                    });
+                break;
+            case "contenttype":
+                eavAdminDialogs.openContentTypeFieldsOfItems(items, vm.close);
+                break;
+            case "contentitems":
+                preLoadAgGrid($ocLazyLoad).then(function() {
+                    eavAdminDialogs.openContentItems(appId, contentTypeName, contentTypeName, vm.close);
+                });
                 break;
             case "pipeline-designer":
                 // Don't do anything, as the template already loads the app in fullscreen-mode
@@ -244,7 +272,7 @@
                 throw "Trying to open a dialog, don't know which one";
         }
     }
-    DialogHostController.$inject = ["zoneId", "appId", "items", "$2sxc", "dialog", "sxcDialogs", "eavAdminDialogs"];
+    DialogHostController.$inject = ["zoneId", "appId", "items", "$2sxc", "dialog", "sxcDialogs", "contentTypeName", "eavAdminDialogs", "$ocLazyLoad"];
 
 } ());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
@@ -509,68 +537,6 @@ angular.module("SxcServices", [
 //    "pascalprecht.translate",
 ]);
 angular.module("SxcServices")
-    .factory("adamSvc", ["$http", "eavConfig", "sxc", "svcCreator", function($http, eavConfig, sxc, svcCreator) {
-
-        // Construct a service for this specific appId
-        return function createSvc(contentType, entityGuid, field, subfolder) {
-            var svc = {
-                url: sxc.resolveServiceUrl("app-content/" + contentType + "/" + entityGuid + "/" + field),
-                subfolder: subfolder,
-                folders: []
-            };
-
-            svc = angular.extend(svc, svcCreator.implementLiveList(function getAll() {
-                return $http.get(svc.url + "/items", { params: { subfolder: svc.subfolder } });
-            }));
-
-            // create folder
-            svc.addFolder = function add(newfolder) {
-                return $http.post(svc.url + "/folder", {}, { params: { subfolder: svc.subfolder, newFolder: newfolder } })
-                    .then(svc.liveListReload);
-            };
-
-            svc.goIntoFolder = function(childFolder) {
-                svc.folders.push(childFolder);
-                var pathParts = childFolder.Path.split("/");
-                var subPath = "";
-                for (var c = 0; c < svc.folders.length; c++)
-                    subPath = pathParts[pathParts.length - c - 2] + "/" + subPath;
-
-                subPath = subPath.replace("//", "/");
-                if (subPath[subPath.length - 1] === "/")
-                    subPath = subPath.substr(0, subPath.length - 1);
-
-                childFolder.Subfolder = subPath;
-
-                // now assemble the correct subfolder based on the folders-array
-                svc.subfolder = subPath;
-                svc.liveListReload();
-                return subPath;
-            };
-
-            svc.goUp = function() {
-                if (svc.folders.length > 0)
-                    svc.folders.pop();
-                if (svc.folders.length > 0) {
-                    svc.subfolder = svc.folders[svc.folders.length - 1].Subfolder;
-                } else {
-                    svc.subfolder = "";
-                }
-                svc.liveListReload();
-                return svc.subfolder;
-            };
-
-            // delete, then reload
-            // IF verb DELETE fails, so I'm using get for now
-            svc.delete = function del(item) {
-                return $http.get(svc.url + "/delete", { params: { subfolder: svc.subfolder, isFolder: item.IsFolder, id: item.Id } })
-                    .then(svc.liveListReload);
-            };
-
-            return svc;
-        };
-    }]);
-angular.module("SxcServices")
     .factory("appSettings", ["$http", "eavConfig", "svcCreator", "contentTypeSvc", "contentItemsSvc", "eavAdminDialogs", "$filter", function ($http, eavConfig, svcCreator, contentTypeSvc, contentItemsSvc, eavAdminDialogs, $filter) {
 
         // Construct a service for this specific appId
@@ -776,7 +742,6 @@ angular.module("SxcAdminUi", [
     "SxcTemplates",
     "SxcEditTemplates",
     "sxcFieldTemplates",
-    //"SxcEditContentGroupDnnWrapper",
     "EavAdminUi", // dialog (modal) controller
 ])
     .factory("oldDialogs", ["tabId", "AppInstanceId", "appId", "websiteRoot", "$q", function (tabId, AppInstanceId, appId, websiteRoot, $q) {
@@ -883,6 +848,12 @@ angular.module("SxcAdminUi", [
             return eavAdminDialogs.OpenModal("manage-content-list/manage-content-list.html", "ManageContentList as vm", "", resolve, closeCallback);
         };
 
+
+        svc.openDevelop = function ove(item, closeCallback) {
+            var resolve = eavAdminDialogs.CreateResolve({ item: item });
+            return eavAdminDialogs.OpenModal("source-editor/editor.html", "Editor as vm", "xlg", resolve, closeCallback);
+        };
+
         // 2dm 2015-10-07 - don't think this is in use, remove
         //svc.openContentEdit = function oce(edit, closeCallback) {
         //    var resolve = eavAdminDialogs.CreateResolve(edit);
@@ -935,7 +906,7 @@ angular.module("SxcServices")
             return svc;
         };
     }]);
-angular.module('SxcTemplates',[]).run(['$templateCache', function($templateCache) {
+angular.module('SxcTemplates', []).run(['$templateCache', function($templateCache) {
   'use strict';
 
   $templateCache.put('app-main/app-main.html',
@@ -988,7 +959,7 @@ angular.module('SxcTemplates',[]).run(['$templateCache', function($templateCache
 
 
   $templateCache.put('templates/edit.html',
-    "<div class=modal-header><button class=\"btn pull-right\" type=button ng-click=vm.close()><span class=\"glyphicon glyphicon-remove\"></span></button><h3 class=modal-title translate=TemplateEdit.Title></h3></div><div class=modal-body>todo todo todo</div><style>.tooltip-inner {\r" +
+    "<div class=modal-header><button class=\"btn pull-right\" type=button ng-click=vm.close()><span class=\"glyphicon glyphicon-remove\"></span></button><h3 class=modal-title translate=TemplateEdit.Title></h3></div><div class=modal-body>For template metadata - not for source... todo todo todo</div><style>.tooltip-inner {\r" +
     "\n" +
     "    white-space:pre-wrap;\r" +
     "\n" +

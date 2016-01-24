@@ -6,7 +6,7 @@ namespace ToSic.SexyContent.Adam
 
     {
         public bool IsFolder;
-        public int Id, ParentId, Size;
+        public int Id, ParentId, Size, MetadataId;
         public string Path, Name, Type;
 
         public AdamItem(IFileInfo original)
@@ -17,7 +17,7 @@ namespace ToSic.SexyContent.Adam
             Path = original.RelativePath;
             Name = original.FileName;
             Size = original.Size;
-            Type = TypeName(original.Extension);
+            Type = "unknown"; // will be set from the outside
 
         }
 
@@ -32,26 +32,6 @@ namespace ToSic.SexyContent.Adam
             Type = "folder";
         }
 
-        private string TypeName(string ext)
-        {
-            switch (ext.ToLower())
-            {
-                case "png":
-                case "jpg":
-                case "jpgx":
-                case "jpeg":
-                case "gif":
-                    return "image";
-                case "doc":
-                case "docx":
-                case "txt":
-                case "pdf":
-                case "xls":
-                case "xlsx":
-                    return "document";
-                default:
-                    return "file";
-            }
-        }
+
     }
 }

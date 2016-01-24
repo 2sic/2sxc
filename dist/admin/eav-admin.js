@@ -359,6 +359,266 @@
     EditContentItemController.$inject = ["mode", "entityId", "contentType", "eavAdminDialogs", "$modalInstance"];
 
 } ());
+(function () {
+	'use strict';
+
+	angular.module("ContentItemsAppAgnostic", [
+        "EavConfiguration",
+        "EavAdminUi",
+        "EavServices",
+		// "agGrid" // needs this, but can't hardwire the dependency as it would cause problems with lazy-loading
+	])
+        .controller("ContentItemsList", contentItemsListController)
+	;
+
+	function contentItemsListController(contentItemsSvc, eavConfig, appId, contentType, eavAdminDialogs, debugState, $modalInstance, $q, $modalStack) {
+		/* jshint validthis:true */
+		var vm = angular.extend(this, {
+			debug: debugState,
+			gridOptions: {
+				enableSorting: true,
+				enableFilter: true,
+				rowHeight: 39,
+				colWidth: 155,
+				headerHeight: 38,
+				angularCompileRows: true
+			},
+			add: add,
+			refresh: setRowData,
+			tryToDelete: tryToDelete,
+			openDuplicate: openDuplicate,
+			close: close
+		});
+		var svc;
+
+		var staticColumns = [
+			{
+				headerName: "ID",
+				field: "Id",
+				width: 50,
+				template: '<span tooltip-append-to-body="true" tooltip="Id: {{data.Id}}\nRepoId: {{data.RepositoryId}}\nGuid: {{data.Guid}}" ng-bind="data.Id"></span>',
+				cellClass: "clickable",
+				filter: 'number',
+				onCellClicked: openEditDialog
+			},
+			{
+				headerName: "Status",
+				field: "IsPublished",
+				width: 75,
+				suppressSorting: true,
+				template: '<span class="glyphicon" ng-class="{\'glyphicon-eye-open\': data.IsPublished, \'glyphicon-eye-close\' : !data.IsPublished}" tooltip-append-to-body="true" tooltip="{{ \'Content.Publish.\' + (data.IsPublished ? \'PnV\': data.Published ? \'DoP\' : \'D\') | translate }}"></span> <span icon="{{ data.Draft ? \'link\' : data.Published ? \'link\' : \'\' }}" tooltip-append-to-body="true" tooltip="{{ (data.Draft ? \'Content.Publish.HD\' :\'\') | translate:\'{ id: data.Draft.RepositoryId}\' }}\n{{ (data.Published ? \'Content.Publish.HP\' :\'\') | translate }} #{{ data.Published.RepositoryId }}"></span> <span ng-if="data.Metadata" tooltip-append-to-body="true" tooltip="Metadata for type {{ data.Metadata.TargetType}}, id {{ data.Metadata.KeyNumber }}{{ data.Metadata.KeyString }}{{ data.Metadata.KeyGuid }}" icon="tag"></span>',
+				valueGetter: valueGetterStatusField
+			},
+			{
+				headerName: "Title",
+				field: "Title",
+				width: 216,
+				cellClass: "clickable",
+				template: '<span tooltip-append-to-body="true" tooltip="{{data.Title}}" ng-bind="data.Title + \' \' + ((!data.Title ? \'Content.Manage.NoTitle\':\'\') | translate)"></span>',
+				filter: 'text',
+				onCellClicked: openEditDialog
+			},
+			{
+				headerName: "",
+				width: 70,
+				suppressSorting: true,
+				suppressMenu: true,
+				template: '<button type="button" class="btn btn-xs btn-square" ng-click="vm.openDuplicate(data)" tooltip-append-to-body="true" tooltip="{{ \'General.Buttons.Copy\' | translate }}"><i icon="duplicate"></i></button> <button type="button" class="btn btn-xs btn-square" ng-click="vm.tryToDelete(data)" tooltip-append-to-body="true" tooltip="{{ \'General.Buttons.Delete\' | translate }}"><i icon="remove"></i> </button>'
+			}
+		];
+
+		activate();
+
+		function activate() {
+			svc = contentItemsSvc(appId, contentType);
+
+			// set RowData an Column Definitions
+			$q.all([setRowData(), svc.getColumns()])
+				.then(function (success) {
+					var columnDefs = getColumnDefs(success[1].data);
+					vm.gridOptions.api.setColumnDefs(columnDefs);
+
+					// resize outer modal (if needed)
+					var bodyWidth = vm.gridOptions.api.gridPanel.eBodyContainer.clientWidth;
+					var viewportWidth = vm.gridOptions.api.gridPanel.eBodyViewport.clientWidth;
+					if (bodyWidth < viewportWidth)
+						setModalWidth(bodyWidth);
+				});
+		}
+
+		// set width of outer angular-ui-modal. This is a quick and dirty solution because there's no official way to do this.
+		// $modalStack.getTop() might get a wrong modal Instance
+		// setting the width with inline css in a controller should be avoided
+		function setModalWidth(width) {
+			var modalDomEl = $modalStack.getTop().value.modalDomEl;
+			var modalDialog = modalDomEl.children();
+			modalDialog.css("width", (width + 47) + "px");	// add some pixels for padding and scrollbars
+		}
+
+		function add() {
+			eavAdminDialogs.openItemNew(contentType, setRowData);
+		}
+
+		function openEditDialog(params) {
+			eavAdminDialogs.openItemEditWithEntityId(params.data.Id, setRowData);
+		}
+
+		// Get/Update Grid Row-Data
+		function setRowData() {
+			var sortModel = {};
+			var filterModel = {};
+			if (vm.gridOptions.api) {
+				sortModel = vm.gridOptions.api.getSortModel();
+				filterModel = vm.gridOptions.api.getFilterModel();
+			}
+
+			return svc.liveListSourceRead().then(function (success) {
+				vm.gridOptions.api.setRowData(success.data);
+				vm.gridOptions.api.setSortModel(sortModel);
+				vm.gridOptions.api.setFilterModel(filterModel);
+			});
+		}
+
+		// get Grid Column-Definitions from an Array of EAV-Attributes
+		function getColumnDefs(eavAttributes) {
+			var columnDefs = staticColumns;
+
+			angular.forEach(eavAttributes, function (eavAttribute) {
+				if (eavAttribute.IsTitle) {
+					staticColumns[2].eavAttribute = eavAttribute;
+					return;	// don't add Title-Field twice
+				}
+
+				var colDef = {
+					eavAttribute: eavAttribute,
+					headerName: eavAttribute.StaticName,
+					field: eavAttribute.StaticName,
+					cellRenderer: cellRendererDefault,
+					filterParams: { cellRenderer: cellRendererDefaultFilter }
+				};
+
+
+				switch (eavAttribute.Type) {
+					case "Entity":
+						try {
+							colDef.allowMultiValue = eavAttribute.Metadata.Entity.AllowMultiValue;
+						} catch (e) {
+							colDef.allowMultiValue = true;
+						}
+
+						colDef.cellRenderer = cellRendererEntity;
+						colDef.valueGetter = valueGetterEntityField;
+						break;
+					case "DateTime":
+						try {
+							colDef.useTimePicker = eavAttribute.Metadata.DateTime.UseTimePicker;
+						} catch (e) {
+							colDef.useTimePicker = false;
+						}
+						colDef.valueGetter = valueGetterDateTime;
+						break;
+					case "Boolean":
+						colDef.valueGetter = valueGetterBoolean;
+						break;
+					case "Number":
+						colDef.filter = 'number';
+						break;
+				}
+
+				columnDefs.push(colDef);
+			});
+
+			return columnDefs;
+		}
+
+		//#region Column Value-Getter and Cell Renderer
+		function valueGetterEntityField(params) {
+			var rawValue = params.data[params.colDef.field];
+			if (rawValue.length === 0)
+				return null;
+
+			return rawValue.map(function (item) {
+				return item.Title;
+			});
+		}
+
+		function valueGetterStatusField(params) {
+			return [
+				params.data.IsPublished ? "is published" : "is not published",
+				params.data.Metadata ? "is metadata" : "is not metadata"
+			];
+		}
+
+		function valueGetterDateTime(params) {
+			var rawValue = params.data[params.colDef.field];
+			if (!rawValue)
+				return null;
+
+			// remove 'Z' and replace 'T'
+			return params.colDef.useTimePicker ? rawValue.substr(0, 19).replace('T', ' ') : rawValue.substr(0, 10);
+		}
+
+		function valueGetterBoolean(params) {
+			var rawValue = params.data[params.colDef.field];
+			if (typeof rawValue != "boolean")
+				return null;
+
+			return rawValue.toString();
+		}
+
+		function cellRendererDefault(params) {
+			if (typeof (params.value) != "string" || params.value === null)
+				return params.value;
+
+			var encodedValue = htmlEncode(params.value);
+			return '<span title="' + encodedValue + '">' + encodedValue + '</span>';
+		}
+
+		function cellRendererDefaultFilter(params) {
+			return cellRendererDefault(params) || "(empty)";
+		}
+
+		// htmlencode strings (source: http://stackoverflow.com/a/7124052)
+		function htmlEncode(text) {
+			return text.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+		}
+
+		function cellRendererEntity(params) {
+			if (!Array.isArray(params.value))
+				return null;
+
+			var encodedValue = htmlEncode(params.value.join(", "));
+			var result = '<span title="' + encodedValue + '">';
+			if (params.colDef.allowMultiValue)
+				result += '<span class="badge badge-primary">' + params.value.length + '</span> ';
+			result += encodedValue + '</span>';
+
+			return result;
+		}
+		// #endregion
+
+		function tryToDelete(item) {
+			if (confirm("Delete '" + item.Title + "' (" + item.RepositoryId + ") ?"))
+				svc.delete(item.RepositoryId).then(setRowData);
+		}
+
+		function openDuplicate(item) {
+			var items = [
+		        {
+		        	ContentTypeName: contentType,
+		        	DuplicateEntity: item.Id
+		        }
+			];
+			eavAdminDialogs.openEditItems(items, svc.liveListReload);
+		}
+
+		function close() {
+			$modalInstance.dismiss("cancel");
+		}
+	}
+	contentItemsListController.$inject = ["contentItemsSvc", "eavConfig", "appId", "contentType", "eavAdminDialogs", "debugState", "$modalInstance", "$q", "$modalStack"];
+
+}());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
 
     angular.module("ContentItemsApp", [
@@ -483,84 +743,6 @@
             license: "MIT"
             })             
     ;
-}());
-(function() {
-
-    angular.module("ContentTypesApp")
-        .controller("List", contentTypeListController);
-
-
-    /// Manage the list of content-types
-    function contentTypeListController(contentTypeSvc, eavAdminDialogs, appId, debugState, $translate) {
-        var vm = this;
-        var svc = contentTypeSvc(appId);
-
-        vm.debug = debugState;
-
-        vm.items = svc.liveList();
-        vm.refresh = svc.liveListReload;
-
-        vm.tryToDelete = function tryToDelete(item) {
-            $translate("General.Questions.Delete", { target: "'" + item.Name + "' (" + item.Id + ")"}).then(function(msg) {
-                if(confirm(msg))
-                    svc.delete(item);
-            });
-        };
-
-        vm.edit = function edit(item) {
-            if (item === undefined)
-                item = svc.newItem();
-
-            eavAdminDialogs.openContentTypeEdit(item, vm.refresh);
-        };
-
-        vm.editFields = function editFields(item) {
-            eavAdminDialogs.openContentTypeFields(item, vm.refresh);
-        };
-
-        vm.editItems = function editItems(item) {
-            eavAdminDialogs.openContentItems(svc.appId, item.StaticName, item.Id, vm.refresh);
-        };
-
-
-        vm.liveEval = function admin() {
-            $translate("General.Questions.SystemInput").then(function (msg) {
-                var inp = prompt(msg);
-                if(inp)
-                    eval(inp); // jshint ignore:line
-            });
-        };
-
-        // this is to change the scope of the items being shown
-        vm.changeScope = function admin() {
-            $translate("ContentTypes.Buttons.ChangeScopeQuestion").then(function (msg) {
-                var inp = prompt(msg);
-                if (inp)
-                    svc.setScope(inp);
-            });
-        };
-
-        vm.isGuid = function isGuid(txtToTest) {
-            var patt = new RegExp(/[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}/i);
-            return patt.test(txtToTest); // note: can't use the txtToTest.match because it causes infinite digest cycles
-        };
-
-        vm.permissions = function permissions(item) {
-            return eavAdminDialogs.openPermissionsForGuid(svc.appId, item.StaticName, vm.refresh);
-        };
-
-        vm.openExport = function openExport(item) {
-            return eavAdminDialogs.openContentExport(svc.appId, item.StaticName, vm.refresh);
-        };
-
-        vm.openImport = function openImport(item) {
-            return eavAdminDialogs.openContentImport(svc.appId, item.StaticName, vm.refresh);
-        };
-
-    }
-    contentTypeListController.$inject = ["contentTypeSvc", "eavAdminDialogs", "appId", "debugState", "$translate"];
-
-
 }());
 (function() {
 
@@ -775,6 +957,91 @@
     contentTypeFieldListController.$inject = ["appId", "contentTypeFieldSvc", "contentType", "$modalInstance", "$modal", "eavAdminDialogs", "$filter", "$translate", "eavConfig"];
 
 }());
+(function() {
+
+    angular.module("ContentTypesApp")
+        .controller("List", contentTypeListController);
+
+
+    /// Manage the list of content-types
+    function contentTypeListController(contentTypeSvc, eavAdminDialogs, appId, debugState, $translate) {
+        var vm = this;
+        var svc = contentTypeSvc(appId);
+
+        vm.debug = debugState;
+
+        vm.items = svc.liveList();
+        vm.refresh = svc.liveListReload;
+
+        vm.tryToDelete = function tryToDelete(item) {
+            $translate("General.Questions.Delete", { target: "'" + item.Name + "' (" + item.Id + ")"}).then(function(msg) {
+                if(confirm(msg))
+                    svc.delete(item);
+            });
+        };
+
+        vm.edit = function edit(item) {
+            if (item === undefined)
+                item = svc.newItem();
+
+            eavAdminDialogs.openContentTypeEdit(item, vm.refresh);
+        };
+
+        vm.createGhost = function createGhost() {
+            var sourceName = window.prompt("to create a ghost content-type enter source static name / id - this is a very advanced operation - read more about it on 2sxc.org/help?tag=ghost");
+            if (!sourceName)
+                return;
+            svc.createGhost(sourceName);
+        };
+
+        vm.editFields = function editFields(item) {
+            eavAdminDialogs.openContentTypeFields(item, vm.refresh);
+        };
+
+        vm.editItems = function editItems(item) {
+            eavAdminDialogs.openContentItems(svc.appId, item.StaticName, item.Id, vm.refresh);
+        };
+
+
+        vm.liveEval = function admin() {
+            $translate("General.Questions.SystemInput").then(function (msg) {
+                var inp = prompt(msg);
+                if(inp)
+                    eval(inp); // jshint ignore:line
+            });
+        };
+
+        // this is to change the scope of the items being shown
+        vm.changeScope = function admin() {
+            $translate("ContentTypes.Buttons.ChangeScopeQuestion").then(function (msg) {
+                var inp = prompt(msg);
+                if (inp)
+                    svc.setScope(inp);
+            });
+        };
+
+        vm.isGuid = function isGuid(txtToTest) {
+            var patt = new RegExp(/[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}/i);
+            return patt.test(txtToTest); // note: can't use the txtToTest.match because it causes infinite digest cycles
+        };
+
+        vm.permissions = function permissions(item) {
+            return eavAdminDialogs.openPermissionsForGuid(svc.appId, item.StaticName, vm.refresh);
+        };
+
+        vm.openExport = function openExport(item) {
+            return eavAdminDialogs.openContentExport(svc.appId, item.StaticName, vm.refresh);
+        };
+
+        vm.openImport = function openImport(item) {
+            return eavAdminDialogs.openContentImport(svc.appId, item.StaticName, vm.refresh);
+        };
+
+    }
+    contentTypeListController.$inject = ["contentTypeSvc", "eavAdminDialogs", "appId", "debugState", "$translate"];
+
+
+}());
 
 (function () {
     /* jshint laxbreak:true*/
@@ -815,7 +1082,7 @@ angular.module("EavDirectives", [])
 
 
 })();
-angular.module('eavTemplates',[]).run(['$templateCache', function($templateCache) {
+angular.module('eavTemplates', []).run(['$templateCache', function($templateCache) {
   'use strict';
 
   $templateCache.put('content-import-export/content-export.html',
@@ -830,6 +1097,11 @@ angular.module('eavTemplates',[]).run(['$templateCache', function($templateCache
 
   $templateCache.put('content-items/content-edit.html',
     "<div class=modal-header><button type=button class=\"btn btn-default btn-subtle\" ng-click=vm.history()><span class=\"glyphicon glyphicon-time\">history / todo</span></button><h3 class=modal-title>Edit / New Content</h3></div><div class=modal-body>this is where the edit appears. Would edit entity {{vm.entityId}} or add a {{vm.contentType}} - depending on the mode: {{vm.mode}}<h3>Use cases</h3><ol><li>Edit an existing entity with ID</li><li>Create a new entity of a certaint content-type, just save and done (like from a \"new\" button without content-group)</li><li>Create a new entity of a certain type and assign it to a metadata thing (guid, int, string)</li><li>Create a new entity and put it into a content-group at the right place</li><li>Edit content-group: item + presentation</li><li>Edit multiple IDs/or new/mix: Edit multiple items with IDs</li></ol>init of 1 edit - entity-id in storage - new-type + optional: assignment-id + assignment-type - array of the above --- [{id 17}, {type: \"person\"}, {type: person, asstype: 4, target: 0205}] - content-group</div>"
+  );
+
+
+  $templateCache.put('content-items/content-items-agnostic.html',
+    "<div ng-click=vm.debug.autoEnableAsNeeded($event) class=content-items-agnostic><div class=modal-header><button class=\"btn btn-default btn-square btn-subtle pull-right\" type=button ng-click=vm.close()><i icon=remove></i></button><h3 class=modal-title translate=Content.Manage.Title></h3></div><div class=modal-body><button type=button class=\"btn btn-primary btn-square\" ng-click=vm.add()><i icon=plus></i></button> <button ng-if=vm.debug.on type=button class=\"btn btn-warning btn-square\" ng-click=vm.refresh()><i icon=repeat></i></button><div ag-grid=vm.gridOptions class=ag-grid-wrapper></div><show-debug-availability class=pull-right></show-debug-availability></div></div>"
   );
 
 
@@ -855,7 +1127,7 @@ angular.module('eavTemplates',[]).run(['$templateCache', function($templateCache
 
 
   $templateCache.put('content-types/content-types-edit.html',
-    "<div ng-click=vm.debug.autoEnableAsNeeded($event)><div class=modal-header><button class=\"btn btn-default btn-square btn-subtle pull-right\" type=button ng-click=vm.close()><i icon=remove></i></button><h3 class=modal-title translate=ContentTypeEdit.Title></h3></div><div class=modal-body>{{ \"ContentTypeEdit.Name\" | translate }}:<br><input ng-model=vm.item.Name class=\"input-lg\"><br>{{ \"ContentTypeEdit.Description\" | translate }}:<br><input ng-model=vm.item.Description class=\"input-lg\"><br><div>{{ \"ContentTypeEdit.Scope\" | translate }}:<br><span ng-if=vm.debug.on><div class=\"alert alert-danger\">the scope should almost never be changed - <a href=\"http://2sxc.org/help?tag=scope\" _target=_blank>see help</a></div></span> <input ng-disabled=!vm.debug.on ng-model=vm.item.Scope class=\"input-lg\"></div><div ng-if=vm.debug.on class=alert-danger><h3>Static Name</h3><input type=checkbox class=input-lg ng-model=\"vm.item.ChangeStaticName\"> Really edit StaticName??? - this is usually a very bad idea<br><input ng-model=vm.item.NewStaticName ng-disabled=!vm.item.ChangeStaticName class=\"input-lg\"></div><div ng-if=vm.debug.on class=alert-danger><h3>Shared Content Type</h3><div>Note: this can't be edited in the UI, for now if you really know what you're doing, do it in the DB</div><div>Uses Type Definition of: {{vm.item.SharedDefId}}</div></div></div><div class=modal-footer><button class=\"btn btn-primary btn-square pull-left btn-lg\" type=button ng-click=vm.ok()><i icon=ok></i></button><show-debug-availability class=pull-right style=\"margin-top: 20px\"></show-debug-availability></div></div>"
+    "<div ng-click=vm.debug.autoEnableAsNeeded($event)><div class=modal-header><button class=\"btn btn-default btn-square btn-subtle pull-right\" type=button ng-click=vm.close()><i icon=remove></i></button><h3 class=modal-title translate=ContentTypeEdit.Title></h3></div><div class=modal-body>{{ \"ContentTypeEdit.Name\" | translate }}:<br><input ng-model=vm.item.Name class=\"input-lg\"><br>{{ \"ContentTypeEdit.Description\" | translate }}:<br><input ng-model=vm.item.Description class=\"input-lg\"><br><div>{{ \"ContentTypeEdit.Scope\" | translate }}:<br><span ng-if=vm.debug.on><div class=\"alert alert-danger\">the scope should almost never be changed - <a href=\"http://2sxc.org/help?tag=scope\" _target=_blank>see help</a></div></span> <input ng-disabled=!vm.debug.on ng-model=vm.item.Scope class=\"input-lg\"></div><div ng-if=vm.debug.on class=alert-danger><h3>Static Name</h3><input type=checkbox class=input-lg ng-model=\"vm.item.ChangeStaticName\"> Really edit StaticName??? - this is usually a very bad idea<br><input ng-model=vm.item.NewStaticName ng-disabled=!vm.item.ChangeStaticName class=\"input-lg\"></div><div ng-if=vm.debug.on class=alert-danger><h3>Shared Content Type (Ghost)</h3><div>Note: this can't be edited in the UI, for now if you really know what you're doing, do it in the DB</div><div>Uses Type Definition of: {{vm.item.SharedDefId}}</div></div></div><div class=modal-footer><button class=\"btn btn-primary btn-square pull-left btn-lg\" type=button ng-click=vm.ok()><i icon=ok></i></button><show-debug-availability class=pull-right style=\"margin-top: 20px\"></show-debug-availability></div></div>"
   );
 
 
@@ -875,7 +1147,7 @@ angular.module('eavTemplates',[]).run(['$templateCache', function($templateCache
 
 
   $templateCache.put('content-types/content-types.html',
-    "<div ng-controller=\"List as vm\" ng-click=vm.debug.autoEnableAsNeeded($event)><div class=modal-header><h3 class=modal-title translate=ContentTypes.Title></h3></div><div class=modal-body><button title=\"{{ 'General.Buttons.Add' | translate }}\" type=button class=\"btn btn-primary btn-square\" ng-click=vm.edit()><i icon=plus></i></button> <span class=btn-group ng-if=vm.debug.on><button title=\"{{ 'General.Buttons.Refresh' | translate }}\" type=button class=\"btn btn-warning btn-square\" ng-click=vm.refresh()><i icon=repeat></i></button> <button title=\"{{ 'ContentTypes.Buttons.ChangeScope' | translate }}\" type=button class=\"btn btn-warning btn-square\" ng-click=vm.changeScope()><i icon=record></i></button> <button title=\"{{ 'General.Buttons.System' | translate }}\" type=button class=\"btn btn-warning btn-square\" ng-click=vm.liveEval()><i icon=flash></i></button></span><table class=\"table table-hover\" style=\"table-layout: fixed; width: 100%\"><thead><tr><th translate=ContentTypes.TypesTable.Name style=\"width: 50%\"></th><th class=mini-btn-1></th><th translate=ContentTypes.TypesTable.Description style=\"width: 50%\"></th><th translate=ContentTypes.TypesTable.Fields class=mini-btn-2></th><th translate=ContentTypes.TypesTable.Actions class=mini-btn-3></th><th class=mini-btn-1></th></tr></thead><tbody><tr ng-if=vm.items.isLoaded ng-repeat=\"item in vm.items | orderBy:'Name'\" class=clickable-row ng-click=vm.editItems(item)><td class=clickable><span class=\"text-nowrap hide-overflow-text\" style=\"max-width: 400px\" tooltip={{item.Name}}>{{item.Name}}</span></td><td class=clickable style=\"text-align: right\"><div class=\"badge pull-right badge-primary\">{{item.Items}}</div></td><td class=clickable><div class=\"text-nowrap hide-overflow-text\" style=\"max-width: 500px\" tooltip={{item.Description}}>{{item.Description}}</div></td><td stop-event=click><button ng-if=!item.UsesSharedDef type=button class=\"btn btn-xs\" style=\"width: 60px\" ng-click=vm.editFields(item)><span icon=list>&nbsp;{{item.Fields}}</span></button> <button ng-if=item.UsesSharedDef tooltip=\"{{ 'ContentTypes.Messages.SharedDefinition' | translate:item }}\" type=button class=\"btn btn-default btn-xs\" style=\"width: 60px\"><span icon=adjust>&nbsp;{{item.Fields}}</span></button></td><td class=text-nowrap stop-event=click><span class=btn-group><button tooltip=\"{{ 'General.Buttons.Rename' | translate }} - {{  'ContentTypes.Messages.Type' + (item.UsesSharedDef ? 'Shared' : 'Own')  | translate:item }}\" type=button class=\"btn btn-xs btn-square\" ng-click=vm.edit(item)><i icon=\"heart{{ (item.UsesSharedDef ? '-empty' : '') }}\"></i></button> <button tooltip=\"{{ 'ContentTypes.Buttons.Export' | translate }}\" type=button class=\"btn btn-xs btn-square\" ng-click=vm.openExport(item)><i icon=export></i></button> <button tooltip=\"{{ 'ContentTypes.Buttons.Import' | translate }}\" type=button class=\"btn btn-xs btn-square\" ng-click=vm.openImport(item)><i icon=import></i></button> <button type=button class=\"btn btn-xs btn-square\" ng-click=vm.permissions(item) ng-if=vm.isGuid(item.StaticName)><i icon=user></i></button></span></td><td stop-event=click><button icon=remove type=button class=\"btn btn-xs\" ng-click=vm.tryToDelete(item)></button></td></tr><tr ng-if=!vm.items.length><td colspan=100>{{ 'General.Messages.Loading' | translate }} / {{ 'General.Messages.NothingFound' | translate }}</td></tr></tbody></table><show-debug-availability class=pull-right></show-debug-availability></div><div ng-if=vm.debug.on><h3>Notes / Debug / ToDo</h3><ol><li>get validators to work on all dialogs</li></ol></div></div>"
+    "<div ng-controller=\"List as vm\" ng-click=vm.debug.autoEnableAsNeeded($event)><div class=modal-header><h3 class=modal-title translate=ContentTypes.Title></h3></div><div class=modal-body><button title=\"{{ 'General.Buttons.Add' | translate }}\" type=button class=\"btn btn-primary btn-square\" ng-click=vm.edit()><i icon=plus></i></button> <span class=btn-group ng-if=vm.debug.on><button title=\"{{ 'General.Buttons.Refresh' | translate }}\" type=button class=\"btn btn-warning btn-square\" ng-click=vm.refresh()><i icon=repeat></i></button> <button title=todo type=button class=\"btn btn-warning btn-icon\" ng-click=vm.createGhost()><i class=icon-ghost></i></button> <button title=\"{{ 'ContentTypes.Buttons.ChangeScope' | translate }}\" type=button class=\"btn btn-warning btn-square\" ng-click=vm.changeScope()><i icon=record></i></button> <button title=\"{{ 'General.Buttons.System' | translate }}\" type=button class=\"btn btn-warning btn-square\" ng-click=vm.liveEval()><i icon=flash></i></button></span><table class=\"table table-hover\" style=\"table-layout: fixed; width: 100%\"><thead><tr><th translate=ContentTypes.TypesTable.Name style=\"width: 50%\"></th><th class=mini-btn-1></th><th translate=ContentTypes.TypesTable.Description style=\"width: 50%\"></th><th translate=ContentTypes.TypesTable.Fields class=mini-btn-2></th><th translate=ContentTypes.TypesTable.Actions class=mini-btn-3></th><th class=mini-btn-1></th></tr></thead><tbody><tr ng-if=vm.items.isLoaded ng-repeat=\"item in vm.items | orderBy:'Name'\" class=clickable-row ng-click=vm.editItems(item)><td class=clickable><span class=\"text-nowrap hide-overflow-text\" style=\"max-width: 400px\" tooltip={{item.Name}}>{{item.Name}}</span></td><td class=clickable style=\"text-align: right\"><div class=\"badge pull-right badge-primary\">{{item.Items}}</div></td><td class=clickable><div class=\"text-nowrap hide-overflow-text\" style=\"max-width: 500px\" tooltip={{item.Description}}>{{item.Description}}</div></td><td stop-event=click><button ng-if=!item.UsesSharedDef type=button class=\"btn btn-xs\" style=\"width: 60px\" ng-click=vm.editFields(item)><i class=icon-fields></i>&nbsp;<span style=\"width: 22px; text-align: right\">{{item.Fields}}</span></button> <button ng-if=item.UsesSharedDef tooltip=\"{{ 'ContentTypes.Messages.SharedDefinition' | translate:item }}\" type=button class=\"btn btn-default btn-xs\" style=\"width: 60px\"><i class=icon-ghost></i>&nbsp;<span style=\"width: 22px; text-align: right\">{{item.Fields}}</span></button></td><td class=text-nowrap stop-event=click><span class=btn-group><button tooltip=\"{{ 'General.Buttons.Rename' | translate }} - {{  'ContentTypes.Messages.Type' + (item.UsesSharedDef ? 'Shared' : 'Own')  | translate:item }}\" type=button class=\"btn btn-xs btn-square\" ng-click=vm.edit(item)><i icon=\"heart{{ (item.UsesSharedDef ? '-empty' : '') }}\"></i></button> <button tooltip=\"{{ 'ContentTypes.Buttons.Export' | translate }}\" type=button class=\"btn btn-xs btn-square\" ng-click=vm.openExport(item)><i icon=export></i></button> <button tooltip=\"{{ 'ContentTypes.Buttons.Import' | translate }}\" type=button class=\"btn btn-xs btn-square\" ng-click=vm.openImport(item)><i icon=import></i></button> <button type=button class=\"btn btn-xs btn-square\" ng-click=vm.permissions(item) ng-if=vm.isGuid(item.StaticName)><i icon=user></i></button></span></td><td stop-event=click><button icon=remove type=button class=\"btn btn-xs\" ng-click=vm.tryToDelete(item)></button></td></tr><tr ng-if=!vm.items.length><td colspan=100>{{ 'General.Messages.Loading' | translate }} / {{ 'General.Messages.NothingFound' | translate }}</td></tr></tbody></table><show-debug-availability class=pull-right></show-debug-availability></div><div ng-if=vm.debug.on><h3>Notes / Debug / ToDo</h3><ol><li>get validators to work on all dialogs</li></ol></div></div>"
   );
 
 
@@ -1661,6 +1933,56 @@ angular.module("EavServices")
     );
 
 angular.module("EavServices")
+    .factory("contentTypeSvc", ["$http", "eavConfig", "svcCreator", function ($http, eavConfig, svcCreator) {
+        return function appSpecificContentTypeSvc(appId, scope) {
+            var svc = {};
+            svc.scope = scope || eavConfig.contentType.defaultScope;
+            svc.appId = appId;
+
+            svc.retrieveContentTypes = function typeListRetrieve() {
+                return $http.get("eav/contenttype/get/", { params: { "appid": svc.appId, "scope": svc.scope } });
+            };
+
+            svc = angular.extend(svc, svcCreator.implementLiveList(svc.retrieveContentTypes));
+
+            svc.getDetails = function getDetails(contentTypeName) {
+                return $http.get("eav/contenttype/GetSingle", { params: { "appid": svc.appId, "contentTypeStaticName": contentTypeName } });
+            };
+
+            svc.newItem = function newItem() {
+                return {
+                    StaticName: "",
+                    Name: "",
+                    Description: "",
+                    Scope: eavConfig.contentType.defaultScope
+                };
+            };
+
+            svc.save = function save(item) {
+                return $http.post("eav/contenttype/save/", item, { params: { appid: svc.appId } })
+                    .then(svc.liveListReload);
+            };
+
+            svc.delete = function del(item) {
+                return $http.get("eav/contenttype/delete", { params: { appid: svc.appId, staticName: item.StaticName } })
+                    .then(svc.liveListReload);
+            };
+
+            svc.setScope = function setScope(newScope) {
+                svc.scope = newScope;
+                svc.liveListReload();
+            };
+
+            svc.createGhost = function createGhost(sourceStaticName) {
+                return $http.get("eav/contenttype/createghost", { params: { appid: svc.appId, sourceStaticName: sourceStaticName } })
+                    .then(svc.liveListReload);
+            };
+            return svc;
+        };
+
+    }]);
+
+angular.module("EavServices")
     .factory("contentTypeFieldSvc", ["$http", "eavConfig", "svcCreator", "$filter", function($http, eavConfig, svcCreator, $filter) {
         return function createFieldsSvc(appId, contentType) {
             // start with a basic service which implement the live-list functionality
@@ -1786,50 +2108,27 @@ angular.module("EavServices")
             return svc;
         };
     }]);
-
 angular.module("EavServices")
-    .factory("contentTypeSvc", ["$http", "eavConfig", "svcCreator", function ($http, eavConfig, svcCreator) {
-        return function appSpecificContentTypeSvc(appId, scope) {
-            var svc = {};
-            svc.scope = scope || eavConfig.contentType.defaultScope;
-            svc.appId = appId;
+    .factory("ctrlS", ["$window", function ($window) {
+        var save = {
+            _event: null,
 
-            svc.retrieveContentTypes = function typeListRetrieve() {
-                return $http.get("eav/contenttype/get/", { params: { "appid": svc.appId, "scope": svc.scope } });
-            };
+            bind: function bind(action) {
+                save._event = window.addEventListener("keydown", function (e) {
+                    if (e.keyCode === 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+                        e.preventDefault();
+                        action();
+                    }
+                }, false);
 
-            svc = angular.extend(svc, svcCreator.implementLiveList(svc.retrieveContentTypes));
+            },
 
-            svc.getDetails = function getDetails(contentTypeName) {
-                return $http.get("eav/contenttype/GetSingle", { params: { "appid": svc.appId, "contentTypeStaticName": contentTypeName } });
-            };
-
-            svc.newItem = function newItem() {
-                return {
-                    StaticName: "",
-                    Name: "",
-                    Description: "",
-                    Scope: eavConfig.contentType.defaultScope
-                };
-            };
-
-            svc.save = function save(item) {
-                return $http.post("eav/contenttype/save/", item, { params: { appid: svc.appId } })
-                    .then(svc.liveListReload);
-            };
-
-            svc.delete = function del(item) {
-                return $http.get("eav/contenttype/delete", { params: { appid: svc.appId, staticName: item.StaticName } })
-                    .then(svc.liveListReload);
-            };
-
-            svc.setScope = function setScope(newScope) {
-                svc.scope = newScope;
-                svc.liveListReload();
-            };
-            return svc;
+            unbind: function unbind() {
+                window.removeEventListener(save._event);
+            }
         };
 
+        return save;
     }]);
 /* shared debugState = advancedMode
  * 
@@ -1914,27 +2213,33 @@ angular.module("EavServices")
 // 1. Import / Export
 // 2. Pipeline Designer
 
+// var contentItemsModule = $eavOnlyHelpers.urlParams.get("oldgrid") ? "ContentItemsApp" : "ContentItemsAppAgnostic";
+
 angular.module("EavAdminUi", ["ng",
     "ui.bootstrap",         // for the $modal etc.
     "EavServices",
     "eavTemplates",         // Provides all cached templates
     "PermissionsApp",       // Permissions dialogs to manage permissions
-    "ContentItemsApp",      // Content-items dialog - not working atm?
+    "ContentItemsAppAgnostic", // contentItemsModule,      // Content-items dialog - not working atm?
     "PipelineManagement",   // Manage pipelines
     "ContentImportApp",
     "ContentExportApp",
     "HistoryApp",            // the item-history app
 	"eavEditEntity"			// the edit-app
 ])
-    .factory("eavAdminDialogs", ["$modal", "eavConfig", "contentTypeSvc", "$window", function ($modal, eavConfig, contentTypeSvc, $window) {
+    .factory("eavAdminDialogs", ["$modal", "eavConfig", "$window", "entitiesSvc", "contentTypeSvc", "appId", function ($modal, eavConfig, $window,
+        // these are needed just for simple access to some dialogs
+        entitiesSvc,
+        contentTypeSvc,
+        appId) {
             /*jshint laxbreak:true */
 
             var svc = {};
 
             //#region List of Content Items dialogs
             svc.openContentItems = function oci(appId, staticName, itemId, closeCallback) {
-                var resolve = svc.CreateResolve({ appId: appId, contentType: staticName, contentTypeId: itemId });
-                return svc.OpenModal("content-items/content-items.html", "ContentItemsList as vm", "xlg", resolve, closeCallback);
+            	var resolve = svc.CreateResolve({ appId: appId, contentType: staticName, contentTypeId: itemId });
+            	return svc.OpenModal("content-items/content-items-agnostic.html", "ContentItemsList as vm", "fullscreen", resolve, closeCallback);
             };
             //#endregion
 
@@ -1959,9 +2264,23 @@ angular.module("EavAdminUi", ["ng",
             };
 
             svc.openContentTypeFields = function octf(item, closeCallback) {
-                var resolve = svc.CreateResolve({ contentType: item });
-                return svc.OpenModal("content-types/content-types-fields.html", "FieldList as vm", "xlg", resolve, closeCallback);
+                    var resolve = svc.CreateResolve({ contentType: item });
+                    return svc.OpenModal("content-types/content-types-fields.html", "FieldList as vm", "xlg", resolve, closeCallback);
             };
+
+            // this one assumes we have a content-item, but must first retrieve content-type-infos
+            svc.openContentTypeFieldsOfItems = function octf(item, closeCallback) {
+                return entitiesSvc.getManyForEditing(appId, item)
+                    .then(function(result) {
+                        var ctName = result.data[0].Header.ContentTypeName;
+                        var svcForThis = contentTypeSvc(appId); // note: won't specify scope to fallback
+                        return svcForThis.getDetails(ctName).then(function(result2) {
+                            return svc.openContentTypeFields(result2.data, closeCallback);
+                        });
+                    });
+            };
+
+
             //#endregion
         
             //#region Item - new, edit
@@ -2120,6 +2439,65 @@ angular.module("eavNgSvcs", ["ng"])
 
 ;
 
+
+/* File Type Services
+ * Helps check if something is an image (then the UI usually wants a thumbnail)
+ * ...or if it has an icon in the font-library - then it can provide the class name for the icon
+ */
+angular.module("EavServices").service("fileType", function () {
+    var svc = {};
+    svc.iconPrefix = "icon-";
+    svc.defaultIcon = "file";
+    svc.checkImgRegEx = /(?:([^:\/?#]+):)?(?:\/\/([^\/?#]*))?([^?#]*\.(?:jpg|jpeg|gif|png))(?:\?([^#]*))?(?:#(.*))?/i;
+    svc.extensions = {
+        doc: "file-word",
+        docx: "file-word",
+        xls: "file-excel",
+        xlsx: "file-excel",
+        ppt: "file-powerpoint",
+        pptx: "file-powerpoint",
+        pdf: "file-pdf",
+        mp3: "file-audio",
+        avi: "file-video",
+        mpg: "file-video",
+        mpeg: "file-video",
+        mov: "file-video",
+        mp4: "file-video",
+        zip: "file-archive",
+        rar: "file-archive",
+        txt: "file-text",
+        html: "file-code",
+        css: "file-code",
+        xml: "file-code",
+        xsl: "file-code",
+        vcf: "user"
+    };
+
+    svc.getExtension = function(filename) {
+        return filename.substr(filename.lastIndexOf(".") + 1).toLowerCase();
+    };
+
+    svc.getIconClass = function getClass(filename) {
+        return svc.iconPrefix + (svc.extensions[svc.getExtension(filename)] || svc.defaultIcon);
+    };
+    
+    svc.isKnownType = function(filename) {
+        return svc.extensions.indexOf[svc.getExtension(filename)] !== -1;
+    };
+
+    svc.isImage = function(filename) {
+        return svc.checkImgRegEx.test(filename);
+    };
+
+    // not used yet, so commented out
+    //svc.type = function(url) {
+    //    if (svc.isImage(url))
+    //        return "image";
+    //    return "file";
+    //};
+
+    return svc;
+});
 
 angular.module("EavServices")
     .factory("historySvc", ["$http", "svcCreator", function($http, svcCreator) { 
@@ -2569,4 +2947,21 @@ angular.module("EavServices")
         };
         return toastr;
     }])
+
+    .factory("saveToastr", ["toastr", "$translate", function (toastr, $translate) {
+            function saveWithToaster(promise) {
+                var saving = toastr.info($translate.instant("Message.Saving"));
+                return promise.then(function(result) {
+                    toastr.clear(saving);
+                    toastr.success($translate.instant("Message.Saved"), { timeOut: 3000 });
+                    return result;
+                }, function errorWhileSaving(result) {
+                    toastr.clear(saving);
+                    toastr.error($translate.instant("Message.ErrorWhileSaving"));
+                    return result;
+                });
+            }
+
+            return saveWithToaster;
+        }])
 ;

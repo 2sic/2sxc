@@ -24,15 +24,23 @@
     </div>
 
     <div class="sc-selector-actions">
+        &nbsp;
         <a ng-show="vm.templateId != null && vm.savedTemplateId != vm.templateId" class="sc-selector-save"
            ng-click="vm.persistTemplate(false, false);"
            title="{{ 'TemplatePicker.Save' | translate }}">
-            {{ 'TemplatePicker.Save' | translate }}
+            <div>
+                <i class="icon-sxc-ok"></i>
+            </div>
         </a>
+        &nbsp;
         <a ng-show="vm.undoTemplateId != null" class="sc-selector-close" ng-click="vm.cancelTemplateChange();"
            title="{{ 'TemplatePicker.' + (vm.manageInfo.isContentApp ? 'Cancel' : 'Close') | translate }}">
-            {{ 'TemplatePicker.' + (vm.manageInfo.isContentApp ? 'Cancel' : 'Close') | translate }}
+            <div>
+                <i class="icon-sxc-cancel"></i>
+            </div>
         </a>
     </div>
-    <div class="sc-loading sc-loading-nobg" ng-show="vm.loading"></div>
+    <div class="sc-loading" ng-show="vm.loading">
+        <i class="icon-sxc-spinner fa-spin"></i>
+    </div>
 </div>

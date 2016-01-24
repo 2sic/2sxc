@@ -10,11 +10,14 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.FileSystem;
 using ToSic.Eav;
 using ToSic.Eav.Import;
+using static System.String;
 
 
 namespace ToSic.SexyContent.ImportExport
 {
-	public class XmlImport
+    // todo: move all strings to XmlConstants
+
+    public class XmlImport
 	{
 		public List<ExportImportMessage> ImportLog;
 
@@ -25,7 +28,8 @@ namespace ToSic.SexyContent.ImportExport
 		private SexyContent _sexy;
 		private int _appId;
 		private int _zoneId;
-		private Dictionary<int, int> _fileIdCorrectionList;
+		private Dictionary<int, int> _fileIdCorrectionList = new Dictionary<int, int>();
+	    private Dictionary<int, int> _folderIdCorrectionList = new Dictionary<int, int>(); 
 
 		/// <summary>
 		/// The default language / culture - example: de-DE
@@ -71,16 +75,16 @@ namespace ToSic.SexyContent.ImportExport
 		public bool IsCompatible(XDocument doc)
 		{
 			// Return if no Root Node "SexyContent"
-			if (!doc.Elements("SexyContent").Any())
+			if (!doc.Elements(XmlConstants.RootNode).Any())
 			{
 				ImportLog.Add(new ExportImportMessage("The XML file you specified does not seem to be a 2sxc Export.", ExportImportMessage.MessageTypes.Error));
 				return false;
 			}
 
 			// Return if Version does not match
-			if (!doc.Element("SexyContent").Attributes().Any(a => a.Name == "MinimumRequiredVersion") || new Version(doc.Element("SexyContent").Attribute("MinimumRequiredVersion").Value) > new Version(SexyContent.ModuleVersion))
+			if (!doc.Element(XmlConstants.RootNode).Attributes().Any(a => a.Name == "MinimumRequiredVersion") || new Version(doc.Element(XmlConstants.RootNode).Attribute("MinimumRequiredVersion").Value) > new Version(SexyContent.ModuleVersion))
 			{
-				ImportLog.Add(new ExportImportMessage("This template or app requires 2sxc " + doc.Element("SexyContent").Attribute("MinimumRequiredVersion").Value + " in order to work, you have version " + SexyContent.ModuleVersion + " installed.", ExportImportMessage.MessageTypes.Error));
+				ImportLog.Add(new ExportImportMessage("This template or app requires 2sxc " + doc.Element(XmlConstants.RootNode).Attribute("MinimumRequiredVersion").Value + " in order to work, you have version " + SexyContent.ModuleVersion + " installed.", ExportImportMessage.MessageTypes.Error));
 				return false;
 			}
 
@@ -89,7 +93,7 @@ namespace ToSic.SexyContent.ImportExport
 
 		private void PrepareFileIdCorrectionList(XElement sexyContentNode)
 		{
-			_fileIdCorrectionList = new Dictionary<int, int>();
+			//_fileIdCorrectionList = new Dictionary<int, int>();
 
 			if (!sexyContentNode.Elements("PortalFiles").Any() || !PortalId.HasValue)
 				return;
@@ -119,21 +123,47 @@ namespace ToSic.SexyContent.ImportExport
 			}
 
 		}
-		#endregion
+        private void PrepareFolderIdCorrectionListAndCreateMissingFolders(XElement sexyContentNode)
+        {
+            //_fileIdCorrectionList = new Dictionary<int, int>();
 
-		//public bool IsCompatible(string xml)
-		//{
-		//	// Parse XDocument from string
-		//	var doc = XDocument.Parse(xml);
-		//	return IsCompatible(doc);
-		//}
+            if (!sexyContentNode.Elements(XmlConstants.FolderGroup).Any() || !PortalId.HasValue) 
+                return;
 
-		/// <summary>
-		/// Creates an app and then imports the xml
-		/// </summary>
-		/// <param name="xml"></param>
-		/// <returns>AppId of the new imported app</returns>
-		public bool ImportApp(int zoneId, XDocument doc, out int? appId)
+            var portalId = PortalId.Value;
+            var folderManager = FolderManager.Instance;
+
+            var portalFiles = sexyContentNode.Element(XmlConstants.FolderGroup).Elements(XmlConstants.Folder); 
+            foreach (var portalFile in portalFiles)
+            {
+                var origId = int.Parse(portalFile.Attribute(XmlConstants.FolderNodeId).Value);
+                var relativePath = portalFile.Attribute(XmlConstants.FolderNodePath).Value;
+                var directory = Path.GetDirectoryName(relativePath).Replace('\\', '/');
+
+                // if not exist, create - important because we need for metadata assignment
+                var folderInfo = (!folderManager.FolderExists(portalId, directory))
+                    ? folderManager.AddFolder(portalId, directory)
+                    : folderManager.GetFolder(portalId, directory);
+
+                _folderIdCorrectionList.Add(origId, folderInfo.FolderID);
+            }
+
+        }
+        #endregion
+
+        //public bool IsCompatible(string xml)
+        //{
+        //	// Parse XDocument from string
+        //	var doc = XDocument.Parse(xml);
+        //	return IsCompatible(doc);
+        //}
+
+        /// <summary>
+        /// Creates an app and then imports the xml
+        /// </summary>
+        /// <param name="xml"></param>
+        /// <returns>AppId of the new imported app</returns>
+        public bool ImportApp(int zoneId, XDocument doc, out int? appId)
 		{
 			// Increase script timeout to prevent timeouts
 			HttpContext.Current.Server.ScriptTimeout = 300;
@@ -150,15 +180,15 @@ namespace ToSic.SexyContent.ImportExport
 			}
 
 			// Get root node "SexyContent"
-			var xmlSource = doc.Element("SexyContent");
-			var xApp = xmlSource.Element("Header").Element("App");
+			var xmlSource = doc.Element(XmlConstants.RootNode);
+			var xApp = xmlSource.Element(XmlConstants.Header).Element(XmlConstants.App);
 
-			var appGuid = xApp.Attribute("Guid").Value;
+			var appGuid = xApp.Attribute(XmlConstants.Guid).Value;
 
 			if (appGuid != "Default")
 			{
 				// Build Guid (take existing, or create a new)
-				if (String.IsNullOrEmpty(appGuid) || appGuid == new Guid().ToString())
+				if (IsNullOrEmpty(appGuid) || appGuid == new Guid().ToString())
 				{
 					appGuid = Guid.NewGuid().ToString();
 				}
@@ -200,11 +230,12 @@ namespace ToSic.SexyContent.ImportExport
 			}
 
 			// Get root node "SexyContent"
-			var xmlSource = doc.Element("SexyContent");
+			var xmlSource = doc.Element(XmlConstants.RootNode);
+            PrepareFolderIdCorrectionListAndCreateMissingFolders(xmlSource);
 			PrepareFileIdCorrectionList(xmlSource);
 
 			#region Prepare dimensions
-			_sourceDimensions = xmlSource.Element("Header").Element("Dimensions").Elements("Dimension").Select(p => new Dimension
+			_sourceDimensions = xmlSource.Element(XmlConstants.Header).Element("Dimensions").Elements("Dimension").Select(p => new Dimension
 			{
 				DimensionID = int.Parse(p.Attribute("DimensionID").Value),
 				Name = p.Attribute("Name").Value,
@@ -213,7 +244,7 @@ namespace ToSic.SexyContent.ImportExport
 				Active = Boolean.Parse(p.Attribute("Active").Value)
 			}).ToList();
 
-			_sourceDefaultLanguage = xmlSource.Element("Header").Element("Language").Attribute("Default").Value;
+			_sourceDefaultLanguage = xmlSource.Element(XmlConstants.Header).Element("Language").Attribute("Default").Value;
 			_sourceDefaultDimensionId = _sourceDimensions.Any() ?
 				_sourceDimensions.FirstOrDefault(p => p.ExternalKey == _sourceDefaultLanguage).DimensionID
 				: new int?();
@@ -321,7 +352,7 @@ namespace ToSic.SexyContent.ImportExport
 
 				var contentTypeStaticName = template.Attribute("AttributeSetStaticName").Value;
 
-				if (!String.IsNullOrEmpty(contentTypeStaticName) && cache.GetContentType(contentTypeStaticName) == null)
+				if (!IsNullOrEmpty(contentTypeStaticName) && cache.GetContentType(contentTypeStaticName) == null)
 				{
 					ImportLog.Add(
 							new ExportImportMessage(
@@ -334,7 +365,7 @@ namespace ToSic.SexyContent.ImportExport
 				var demoEntityGuid = template.Attribute("DemoEntityGUID").Value;
 				var demoEntityId = new int?();
 
-				if (!String.IsNullOrEmpty(demoEntityGuid))
+				if (!IsNullOrEmpty(demoEntityGuid))
 				{
 					var entityGuid = Guid.Parse(demoEntityGuid);
 					if (_sexy.ContentContext.Entities.EntityExists(entityGuid))
@@ -357,7 +388,7 @@ namespace ToSic.SexyContent.ImportExport
 				var pipelineEntityGuid = template.Attribute("PipelineEntityGUID");
 				var pipelineEntityId = new int?();
 
-				if (pipelineEntityGuid != null && !string.IsNullOrEmpty(pipelineEntityGuid.Value))
+				if (pipelineEntityGuid != null && !IsNullOrEmpty(pipelineEntityGuid.Value))
 				{
 					var entityGuid = Guid.Parse(pipelineEntityGuid.Value);
 					if (_sexy.ContentContext.Entities.EntityExists(entityGuid))
@@ -440,26 +471,38 @@ namespace ToSic.SexyContent.ImportExport
 		/// <param name="assignmentObjectTypeId"></param>
 		/// <param name="keyNumber"></param>
 		/// <returns></returns>
-		private List<ImportEntity> GetImportEntities(IEnumerable<XElement> entities, int assignmentObjectTypeId, int? keyNumber = null)
+		private List<ImportEntity> GetImportEntities(IEnumerable<XElement> entities, int assignmentObjectTypeId)//, int? keyNumber = null)
 		{
-			return entities.Select(e => GetImportEntity(e, assignmentObjectTypeId, keyNumber)).ToList();
+			return entities.Select(e => GetImportEntity(e, assignmentObjectTypeId /*, keyNumber*/)).ToList();
 		}
 
 
 		/// <summary>
 		/// Returns an EAV import entity
 		/// </summary>
-		/// <param name="xEntity">The xml-Element of the entity to import</param>
+		/// <param name="entityNode">The xml-Element of the entity to import</param>
 		/// <param name="assignmentObjectTypeId">assignmentObjectTypeId</param>
 		/// <param name="defaultLanguage">The default language / culture - exmple: de-DE</param>
 		/// <param name="keyNumber">The entity will be assigned to this keyNumber (optional)</param>
 		/// <returns></returns>
-        private ImportEntity GetImportEntity(XElement xEntity, int assignmentObjectTypeId, int? keyNumber = null)
+        private ImportEntity GetImportEntity(XElement entityNode, int assignmentObjectTypeId)//, int? keyNumber = null)
 		{
-			switch (xEntity.Attribute("AssignmentObjectType").Value)
+            #region retrieve optional metadata keys in the import - must happen before we apply corrections like AppId
+            Guid? keyGuid = null;
+            if (entityNode.Attribute("KeyGuid") != null)
+                keyGuid = Guid.Parse(entityNode.Attribute("KeyGuid").Value);
+            int? keyNumber = null;
+            if (entityNode.Attribute("KeyNumber") != null)
+                keyNumber = int.Parse(entityNode.Attribute("KeyNumber").Value);
+
+            string keyString = entityNode.Attribute("KeyString")?.Value;
+            #endregion
+
+            #region check if the xml has an own assignment object type (then we wouldn't use the default)
+            switch (entityNode.Attribute("AssignmentObjectType").Value)
 			{
 				// Special case: App AttributeSets must be assigned to the current app
-				case "App":
+				case XmlConstants.App:
 					keyNumber = _appId;
 					assignmentObjectTypeId = SexyContent.AssignmentObjectTypeIDSexyContentApp;
 					break;
@@ -467,49 +510,77 @@ namespace ToSic.SexyContent.ImportExport
                 case "Data Pipeline": // this one is an old key, remove some time in the future; was probably almost never used...
 					assignmentObjectTypeId = Constants.AssignmentObjectTypeEntity;
 					break;
+                case "CmsObject":
+			        assignmentObjectTypeId = Constants.AssignmentObjectTypeCmsObject;
+
+                    if(keyString == null)
+                        throw new Exception("found cms object, but couldn't find metadata-key of type string, will abort");
+			        var newKey = GetMappedLink(keyString);
+			        if (newKey != null)
+			            keyString = newKey;
+			        break;
 			}
+            #endregion
 
-			Guid? keyGuid = null;
-			if (xEntity.Attribute("KeyGuid") != null)
-				keyGuid = Guid.Parse(xEntity.Attribute("KeyGuid").Value);
 
-			// Special case #2: Corrent values of Template-Describing entities, and resolve files
+            // Special case #2: Corrent values of Template-Describing entities, and resolve files
 
-			foreach (var sourceValue in xEntity.Elements("Value"))
+            foreach (var sourceValue in entityNode.Elements("Value"))
 			{
 				var sourceValueString = sourceValue.Attribute("Value").Value;
 				var sourceKey = sourceValue.Attribute("Key").Value;
 
 
-				if (!String.IsNullOrEmpty(sourceValueString))
-				{
-					// Correct FileId in Hyperlink fields (takes XML data that lists files)
-					if (sourceValue.Attribute("Type").Value == "Hyperlink")
-					{
-						var fileRegex = new Regex("^File:(?<FileId>[0-9]+)", RegexOptions.IgnoreCase);
-						var a = fileRegex.Match(sourceValueString);
-						if (a.Success && a.Groups["FileId"].Length > 0)
-						{
-							var originalId = int.Parse(a.Groups["FileId"].Value);
-
-							if (_fileIdCorrectionList.ContainsKey(originalId))
-							{
-								var newValue = fileRegex.Replace(sourceValueString, "File:" + _fileIdCorrectionList[originalId]);
-								sourceValue.Attribute("Value").SetValue(newValue);
-							}
-
-						}
-					}
-				}
-
+				// Correct FileId in Hyperlink fields (takes XML data that lists files)
+			    if (!IsNullOrEmpty(sourceValueString) && sourceValue.Attribute("Type").Value == "Hyperlink")
+			    {
+			        string newValue = GetMappedLink(sourceValueString);
+			        if (newValue != null)
+			            sourceValue.Attribute("Value").SetValue(newValue);
+			    }
 			}
 
-			var importEntity = Eav.ImportExport.XmlImport.GetImportEntity(xEntity, assignmentObjectTypeId,
-				_targetDimensions, _sourceDimensions, _sourceDefaultDimensionId, DefaultLanguage, keyNumber, keyGuid);
+			var importEntity = Eav.ImportExport.XmlImport.GetImportEntity(entityNode, assignmentObjectTypeId,
+				_targetDimensions, _sourceDimensions, _sourceDefaultDimensionId, DefaultLanguage, keyNumber, keyGuid, keyString);
 
 			return importEntity;
 		}
 
-		#endregion
+        /// <summary>
+        /// Try to map a link like "file:275" from the import to the target system
+        /// Will return null if nothing appropriate found, so the caller can choose to not do anything
+        /// </summary>
+        /// <param name="sourceValueString"></param>
+        /// <returns></returns>
+	    private string GetMappedLink(string sourceValueString)
+	    {
+            // file
+	        var fileRegex = new Regex("^File:(?<Id>[0-9]+)", RegexOptions.IgnoreCase);
+	        var a = fileRegex.Match(sourceValueString);
+
+	        if (a.Success && a.Groups["Id"].Length > 0)
+	        {
+	            var originalId = int.Parse(a.Groups["Id"].Value);
+
+	            if (_fileIdCorrectionList.ContainsKey(originalId))
+	                return fileRegex.Replace(sourceValueString, "file:" + _fileIdCorrectionList[originalId]);
+	        }
+
+            // folder
+	        var folderRegEx = new Regex("^folder:(?<Id>[0-9]+)", RegexOptions.IgnoreCase);
+	        var f = folderRegEx.Match(sourceValueString);
+
+	        if (f.Success && f.Groups["Id"].Length > 0)
+	        {
+	            var originalId = int.Parse(f.Groups["Id"].Value);
+
+	            if (_folderIdCorrectionList.ContainsKey(originalId))
+	                return folderRegEx.Replace(sourceValueString, "folder:" + _folderIdCorrectionList[originalId]);
+	        }
+
+	        return null;
+	    }
+
+	    #endregion
 	}
 }

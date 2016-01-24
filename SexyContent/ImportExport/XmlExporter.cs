@@ -10,22 +10,37 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.FileSystem;
 using Telerik.Web.Data.Extensions;
 using ToSic.Eav;
+using ToSic.SexyContent.Adam;
+using ToSic.SexyContent.Razor.Helpers;
 
 namespace ToSic.SexyContent.ImportExport
 {
+
+    // todo: move all strings to XmlConstants
+
+
     public class XmlExporter
     {
         // initialize data context
         private readonly SexyContent Sexy;
-        private List<int> _referencedFileIds;
-        public List<IFileInfo> ReferencedFiles;
+        private List<int> _referencedFileIds = new List<int>();
+        private List<int> _referencedFolderIds = new List<int>();
+        public List<IFileInfo> ReferencedFiles = new List<IFileInfo>();
         private int _zoneId;
         private int _appId;
         private readonly bool _isAppExport;
 
+        private IFolderManager DnnFolders = DotNetNuke.Services.FileSystem.FolderManager.Instance;
+        private IFileManager DnnFiles = DotNetNuke.Services.FileSystem.FileManager.Instance;
+
         public string[] AttributeSetIDs;
         public string[] EntityIDs;
         public List<ExportImportMessage> Messages = new List<ExportImportMessage>();
+
+        #region simple properties
+        public PortalSettings Portal => PortalSettings.Current;
+
+        #endregion
 
         #region Export
 
@@ -78,8 +93,9 @@ namespace ToSic.SexyContent.ImportExport
                 if (_exportDocument != null)
                     return _exportDocument;
 
-                _referencedFileIds = new List<int>();
-                ReferencedFiles = new List<IFileInfo>();
+                //_referencedFileIds = new List<int>();
+                //_referencedFolderIds = new List<int>();
+                //ReferencedFiles = new List<IFileInfo>();   
 
                 // Create XML document and declaration
                 var Doc = _exportDocument = new XDocument(new XDeclaration("1.0", "UTF-8", "yes"), null);
@@ -87,13 +103,13 @@ namespace ToSic.SexyContent.ImportExport
                 #region Header
 
                 var Dimensions = Sexy.ContentContext.Dimensions.GetDimensionChildren("Culture");
-                var Header = new XElement("Header",
+                var Header = new XElement(XmlConstants.Header,
                     _isAppExport && Sexy.App.AppGuid != "Default"
-                        ? new XElement("App",
-                            new XAttribute("Guid", Sexy.App.AppGuid)
+                        ? new XElement(XmlConstants.App,
+                            new XAttribute(XmlConstants.Guid, Sexy.App.AppGuid)
                             )
                         : null,
-                    new XElement("Language", new XAttribute("Default", PortalSettings.Current.DefaultLanguage)),
+                    new XElement("Language", new XAttribute("Default", Portal.DefaultLanguage)),
                     new XElement("Dimensions", Dimensions.Select(d => new XElement("Dimension",
                         new XAttribute("DimensionID", d.DimensionID),
                         new XAttribute("Name", d.Name),
@@ -169,8 +185,18 @@ namespace ToSic.SexyContent.ImportExport
 
                 #endregion
 
+                #region Adam files
+                var adam = new AdamManager(Portal.PortalId, Sexy.App);
+                var adamIds = adam.Export.AppFiles;
+                adamIds.ForEach(AddFileAndFolderToQueue);
+
+                // also add folders in adam - because empty folders may also have metadata assigned
+                var adamFolders = adam.Export.AppFolders;
+                adamFolders.ForEach(AddFolderToQueue);
+                #endregion
+
                 // Create root node "SexyContent" and add ContentTypes, ContentItems and Templates
-                Doc.Add(new XElement("SexyContent",
+                Doc.Add(new XElement(XmlConstants.RootNode,
                     new XAttribute("FileVersion", ImportExport.FileVersion),
                     new XAttribute("MinimumRequiredVersion", ImportExport.MinimumRequiredVersion),
                     new XAttribute("ModuleVersion", SexyContent.ModuleVersion),
@@ -178,7 +204,8 @@ namespace ToSic.SexyContent.ImportExport
                     Header,
                     AttributeSets,
                     Entities,
-                    GetFilesXElements()));
+                    GetFilesXElements(),
+                    GetFoldersXElements()));
                 return Doc;
             }
         }
@@ -221,13 +248,19 @@ namespace ToSic.SexyContent.ImportExport
                 {
                     var fileRegex = new Regex("^File:(?<FileId>[0-9]+)", RegexOptions.IgnoreCase);
                     var a = fileRegex.Match(valueString);
+                    // try remember the file
                     if (a.Success && a.Groups["FileId"].Length > 0)
-                        _referencedFileIds.Add(int.Parse(a.Groups["FileId"].Value));
+                        AddFileAndFolderToQueue(int.Parse(a.Groups["FileId"].Value));
                 }
             }
 
 	        if (e.KeyGuid.HasValue)
 		        entityXElement.Add(new XAttribute("KeyGuid", e.KeyGuid));
+
+            if (e.KeyNumber.HasValue)
+                entityXElement.Add(new XAttribute("KeyNumber", e.KeyNumber));
+            if (!string.IsNullOrEmpty(e.KeyString))
+                entityXElement.Add(new XAttribute("KeyString", e.KeyString));
 
             //return new XElement("Entity",
             //    new XAttribute("AssignmentObjectType", e.AssignmentObjectType.Name),
@@ -241,55 +274,31 @@ namespace ToSic.SexyContent.ImportExport
             return entityXElement;
         }
 
-        ///// <summary>
-        ///// Gets an Entity Value-Key XElement
-        ///// </summary>
-        ///// <param name="Key"></param>
-        ///// <param name="Type"></param>
-        ///// <param name="Value"></param>
-        ///// <returns></returns>
-        //private XElement GetAttributeValueXElement(string Key, EavValue Value, string Type, AttributeSet set)
-        //{
-        //    var value = Value.Value == null ? String.Empty : Value.Value.ToString(CultureInfo.InvariantCulture);
+        private void AddFileAndFolderToQueue(int fileNum)
+        {
+            try
+            {
+                _referencedFileIds.Add(fileNum);
 
-        //    var x = new XElement("Value",
-        //        new XAttribute("Key", Key),
-        //        new XAttribute("Value", value),
-        //        !String.IsNullOrEmpty(Type) ? new XAttribute("Type", Type) : null,
-        //        Value.ValuesDimensions.Select(p => new XElement("Dimension",
-        //                new XAttribute("DimensionID", p.DimensionID),
-        //                new XAttribute("ReadOnly", p.ReadOnly)
-        //            ))
-        //        );
+                // also try to remember the folder
+                try
+                {
+                    var file = DnnFiles.GetFile(fileNum);
+                    AddFolderToQueue(file.FolderId);
+                }
+                finally
+                {
+                }
+            }
+            finally
+            {
+            }
+        }
 
-        //    // Special cases for Template ContentTypes
-        //    if (set.StaticName == "2SexyContent-Template-ContentTypes" && !String.IsNullOrEmpty(value))
-        //    {
-        //        switch (Key)
-        //        {
-        //            case "ContentTypeID":
-        //                var attributeSet = Sexy.ContentContext.GetAllAttributeSets().FirstOrDefault(a => a.AttributeSetID == int.Parse(x.Attribute("Value").Value));
-        //                x.Attribute("Value").SetValue(attributeSet != null ? attributeSet.StaticName : String.Empty);
-        //                break;
-        //            case "DemoEntityID":
-        //                var entityID = int.Parse(x.Attribute("Value").Value);
-        //                var demoEntity = Sexy.ContentContext.Entities.FirstOrDefault(e => e.EntityID == entityID);
-        //                x.Attribute("Value").SetValue(demoEntity != null ? demoEntity.EntityGUID.ToString() : String.Empty);
-        //                break;
-        //        }
-        //    }
-
-        //    // Collect all referenced files for adding a file list to the xml later
-        //    if (Type == "Hyperlink")
-        //    {
-        //        var fileRegex = new Regex("^File:(?<FileId>[0-9]+)", RegexOptions.IgnoreCase);
-        //        var a = fileRegex.Match(value);
-        //        if(a.Success && a.Groups["FileId"].Length > 0)
-        //            _referencedFileIds.Add(int.Parse(a.Groups["FileId"].Value));
-        //    }
-
-        //    return x;
-        //}
+        private void AddFolderToQueue(int folderId)
+        {
+            _referencedFolderIds.Add(folderId);
+        }
 
         #endregion
 
@@ -299,6 +308,14 @@ namespace ToSic.SexyContent.ImportExport
         {
             return  new XElement("PortalFiles",
                     _referencedFileIds.Distinct().Select(GetFileXElement)
+                );
+        }
+
+
+        private XElement GetFoldersXElements()
+        {
+            return  new XElement(XmlConstants.FolderGroup,
+                    _referencedFolderIds.Distinct().Select(GetFolderXElement)
                 );
         }
 
@@ -319,7 +336,20 @@ namespace ToSic.SexyContent.ImportExport
 
             return null;
         }
+        private XElement GetFolderXElement(int folderId)
+        {
+            var folderController = DotNetNuke.Services.FileSystem.FolderManager.Instance;
+            var folder = folderController.GetFolder(folderId);
+            if (folder != null)
+            {
+                return new XElement(XmlConstants.Folder,
+                        new XAttribute(XmlConstants.FolderNodeId, folderId),
+                        new XAttribute(XmlConstants.FolderNodePath, folder.FolderPath) 
+                    );
+            }
 
+            return null;
+        }
         #endregion
 
         /// <summary>

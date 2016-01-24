@@ -40,7 +40,7 @@ namespace ToSic.SexyContent
 				    var ext = string.IsNullOrEmpty(Request.QueryString["debug"]) ? ".min.js" : ".js"; // ".min.js";
 
                     // add edit-mode CSS
-                    ClientResourceManager.RegisterStyleSheet(Page, root + "edit.css");
+                    ClientResourceManager.RegisterStyleSheet(Page, root + "dist/inpage/inpage.min.css");//"edit.css");
 
 					// ToDo: Move these RegisterScripts to JS to prevent including AngularJS twice (from other modules)
                     ClientResourceManager.RegisterScript(Page, root + "js/angularjs/angular.min.js", 80);
@@ -60,6 +60,16 @@ namespace ToSic.SexyContent
 				    var tempVisibleStatus = SexyContent.TryToGetReliableSetting(ModuleConfiguration, SexyContent.SettingsShowTemplateChooser);
 				    var templateChooserVisible = bool.Parse(tempVisibleStatus ?? "true");
 
+				    var languages =
+				        SexyContent.GetCulturesWithActiveState(PortalId, ZoneId.Value)
+				            .Where(c => c.Active)
+				            .Select(c => new {key = c.Code.ToLower(), name = c.Text});
+
+				    var priLang = PortalSettings.DefaultLanguage.ToLower(); // primary language 
+
+                    // for now, don't filter by existing languages, this causes side-effects in many cases. 
+				    //if (!languages.Where(l => l.key == priLang).Any())
+				    //    priLang = "";
 
                     ((ModuleHost)Parent).Attributes.Add("data-2sxc", JsonConvert.SerializeObject(new
                     {
@@ -87,12 +97,15 @@ namespace ToSic.SexyContent
                                 cultureDimension = AppId.HasValue ? Sexy.GetCurrentLanguageID() : new int?(),
                                 isList = Template != null && Template.UseForList
                             },
+                            user = new
+                            {
+                                canDesign = SexyContent.IsInSexyContentDesignersGroup(UserInfo), // will be true for admins or for people in the designers-group
+                                canDevelop = UserInfo.IsSuperUser // will be true for host-users, false for all others
+                            },
                             applicationRoot = ResolveUrl("~"),
                             lang = PortalSettings.CultureCode.ToLower(), //System.Threading.Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName.ToLower(),
-                            // fallbackLang = new [] {"en"},
-                            langPrimary = PortalSettings.DefaultLanguage.ToLower(),
-                            languages = SexyContent.GetCulturesWithActiveState(PortalId, ZoneId.Value).Where(c => c.Active).Select(c => new { key = c.Code.ToLower(), name = c.Text }) //new [] { "en-en:somethnig", "de-de:deutschland", "it-it:italy" }
-
+                            langPrimary = priLang,
+                            languages
                         }
                     }));
 
@@ -116,7 +129,7 @@ namespace ToSic.SexyContent
 				if(SexyContentModuleUpgrade.IsUpgradeRunning)
 					ShowError("It looks like a 2sxc upgrade is currently running. Please wait for the operation to complete (the upgrade may take a few minutes).", pnlError, "", false);
 				else
-					ShowError("Module upgrade did not complete. Please click the following button to finish the upgrade:<br><a class='dnnPrimaryAction' href='?finishUpgrade=true'>Finish Upgrade</a>", pnlError, "Module upgrade did not complete successfully. Please login as host user to finish the upgrade.", false);
+					ShowError("Module upgrade did not complete (<a href='http://2sxc.org/en/help/tag/install' target='_blank'>more</a>). Please click the following button to finish the upgrade:<br><a class='dnnPrimaryAction' href='?finishUpgrade=true'>Finish Upgrade</a>", pnlError, "Module upgrade did not complete successfully. Please login as host user to finish the upgrade.", false);
 
 				return false;
 			}
@@ -145,7 +158,7 @@ namespace ToSic.SexyContent
 
 			if (Template.ContentTypeStaticName != "" && Template.ContentDemoEntity == null && ContentGroup.Content.All(e => e == null))
 			{
-				var toolbar = IsEditable ? "<ul class='sc-menu' data-toolbar='" + JsonConvert.SerializeObject(new { sortOrder = 0, useModuleList = true, action = "edit" }) + "'></ul>" : "";
+				var toolbar = "<ul class='sc-menu' data-toolbar='" + JsonConvert.SerializeObject(new { sortOrder = 0, useModuleList = true, action = "edit" }) + "'></ul>";
 				ShowMessage(LocalizeString("NoDemoItem.Text") + " " + toolbar, pnlMessage);
 				return;
 			}
@@ -296,9 +309,11 @@ namespace ToSic.SexyContent
 						{
 							if (ZoneId.HasValue && AppId.HasValue && Template != null)
 							{
-								// Edit Template Button
-								Actions.Add(GetNextActionID(), LocalizeString("ActionEditTemplateFile.Text"), ModuleActionType.EditContent, "templatehelp", "edit.gif", EditUrl(TabId, SexyContent.ControlKeys.EditTemplateFile, false, "mid", ModuleId.ToString(), "TemplateID", Template.TemplateId.ToString()), false, SecurityAccessLevel.Admin, true, true);
-							}
+                                // Edit Template Button
+                                //Actions.Add(GetNextActionID(), LocalizeString("ActionEditTemplateFile.Text"), ModuleActionType.EditContent, "templatehelp", "edit.gif", EditUrl(TabId, SexyContent.ControlKeys.EditTemplateFile, false, "mid", ModuleId.ToString(), "TemplateID", Template.TemplateId.ToString()), false, SecurityAccessLevel.Admin, true, true);
+                                Actions.Add(GetNextActionID(), LocalizeString("ActionEditTemplateFile.Text"), ModuleActionType.EditContent, "templatehelp", "edit.gif", "javascript:$2sxcActionMenuMapper(" + ModuleId + ", event).develop();", "test", true,
+                                        SecurityAccessLevel.Edit, true, false);
+                            }
 
 							// App management
 							if (ZoneId.HasValue && AppId.HasValue)

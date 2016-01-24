@@ -6,6 +6,8 @@ using System.Net;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
+using DotNetNuke.Common;
+using DotNetNuke.Entities.Host;
 using DotNetNuke.Security;
 using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Web.Api;
@@ -23,17 +25,15 @@ namespace ToSic.SexyContent.Adam
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
    public class AdamController: SxcApiController
     {
-        public Core Core;
+        public EntityBase EntityBase;
 
         private void PrepCore(Guid entityGuid, string fieldName)
         {
-            Core = new Core(App, Dnn, entityGuid, fieldName);
+            EntityBase = new EntityBase(Sexy, App, Dnn.Portal, entityGuid, fieldName);
         }
 
         // todo: centralize once it works
         // todo:idea that it would auto-take a setting from app-settings if it exists :)
-        private string AdamAllowedExtensions =
-            "jpg,jpeg,jpe,gif,bmp,png,doc,docx,xls,xlsx,ppt,pptx,pdf,txt,xml,xsl,xsd,css,zip,ico,avi,mpg,mpeg,mp3,wmv,mov,wav,ico,vcf";
         public const int MaxFileSizeMb = 10;
 
 
@@ -58,8 +58,8 @@ namespace ToSic.SexyContent.Adam
             var contentType = cache.GetContentType(contentTypeName);
             var fieldDef = contentType[field];
 
-            // check if this field exists and is actually a file-field
-            if (fieldDef == null || fieldDef.Type != "Hyperlink")
+            // check if this field exists and is actually a file-field or a string (wysiwyg) field
+            if (fieldDef == null || !(fieldDef.Type != "Hyperlink" || fieldDef.Type != "String"))
                 throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.BadRequest,
                     "Requested field '" + field + "' type doesn't allow upload"));// { HttpStatusCode = HttpStatusCode.BadRequest });
 
@@ -67,38 +67,52 @@ namespace ToSic.SexyContent.Adam
 
             try
             {
-                var folder = Core.Folder();
+                var folder = EntityBase.Folder();
                 if(!string.IsNullOrEmpty(subFolder)) 
-                    folder = Core.Folder(subFolder, false);
+                    folder = EntityBase.Folder(subFolder, false);
                 var filesCollection = HttpContext.Current.Request.Files;
                 if (filesCollection.Count > 0)
                 {
                     var originalFile = filesCollection[0];
 
-                    // todo: check content-type extensions...
+                    #region check content-type extensions...
 
                     // Check file size and extension
-                    var extension = Path.GetExtension(originalFile.FileName).ToLower().Replace(".", "");
-                    if (!AdamAllowedExtensions.Contains(extension))
+                    //var extension = Path.GetExtension(originalFile.FileName).ToLower().Replace(".", "");
+                    //if (!AdamAllowedExtensions.Contains(extension))
+                    if(!IsAllowedDnnExtension(originalFile.FileName))
                         throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+
+                    // todo: check metadata of the FieldDef to see if still allowed
+
+                    #endregion
 
                     if (originalFile.ContentLength > (1024 * 1024 * MaxFileSizeMb))
                         return new UploadResult { Success = false, Error = App.Resources.UploadFileSizeLimitExceeded };
 
+                    // remove forbidden / troubling file name characters
                     var fileName = originalFile.FileName
-                        .Replace("%", "per");
+                        .Replace("%", "per")
+                        .Replace("#", "hash");
 
                     // Make sure the image does not exist yet (change file name)
                     for (int i = 1; FileManager.Instance.FileExists(folder, Path.GetFileName(fileName)); i++)
-                    {
-                        fileName = Path.GetFileNameWithoutExtension(originalFile.FileName) + "-" + i +
-                                    Path.GetExtension(originalFile.FileName);
-                    }
+                        fileName = Path.GetFileNameWithoutExtension(fileName)
+                                   + "-" + i +
+                                   Path.GetExtension(fileName);
 
                     // Everything is ok, add file
                     var dnnFile = FileManager.Instance.AddFile(folder, Path.GetFileName(fileName), originalFile.InputStream);
 
-                    return new UploadResult { Success = true, Error = "", Filename = Path.GetFileName(fileName), FileId = dnnFile.FileId, FullPath = dnnFile.RelativePath };
+                    return new UploadResult
+                    {
+                        Success = true,
+                        Error = "",
+                        Name = Path.GetFileName(fileName),
+                        Id = dnnFile.FileId,
+                        Path = dnnFile.RelativePath,
+                        Type = EntityBase.TypeName(dnnFile.Extension)
+                    };
                 }
 
                 return new UploadResult { Success = false, Error = "No image was uploaded." };
@@ -108,7 +122,7 @@ namespace ToSic.SexyContent.Adam
                 return new UploadResult { Success = false, Error = e.Message };
             }
 
-
+            #region experiment with asyc - not supported by current version of .net framework
             //string root = HttpContext.Current.Server.MapPath("~/App_Data");
             //var provider = new MultipartFormDataStreamProvider(root);
 
@@ -142,16 +156,9 @@ namespace ToSic.SexyContent.Adam
             //{
             //    return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             //}
+            #endregion
         }
 
-        public class UploadResult
-        {
-            public bool Success { get; set; }
-            public string Error { get; set; }
-            public string Filename { get; set; }
-            public int FileId { get; set; }
-            public string FullPath { get; set; }
-        }
 
         #region adam-file manager
 
@@ -163,16 +170,19 @@ namespace ToSic.SexyContent.Adam
             var folderManager = FolderManager.Instance;
 
             // get root and at the same time auto-create the core folder in case it's missing (important)
-            Core.Folder();
+            EntityBase.Folder();
 
             // try to see if we can get into the subfolder - will throw error if missing
-            var current = Core.Folder(subfolder, false);
+            var current = EntityBase.Folder(subfolder, false);
 
             var subfolders = folderManager.GetFolders(current);
             var files = folderManager.GetFiles(current);
 
-            var adamFolders = subfolders.Where(s => s.FolderID != current.FolderID).Select(f => new AdamItem(f));
-            var adamFiles = files.Select(f => new AdamItem(f));
+            var adamFolders =
+                subfolders.Where(s => s.FolderID != current.FolderID)
+                    .Select(f => new AdamItem(f) {MetadataId = EntityBase.GetMetadataId(f.FolderID, true)});
+            var adamFiles = files
+                .Select(f => new AdamItem(f) {MetadataId = EntityBase.GetMetadataId(f.FileId, false), Type = EntityBase.TypeName(f.Extension)});
 
             var all = adamFolders.Concat(adamFiles);
 
@@ -197,13 +207,13 @@ namespace ToSic.SexyContent.Adam
             PrepCore(guid, field);
 
             // get root and at the same time auto-create the core folder in case it's missing (important)
-            Core.Folder();
+            EntityBase.Folder();
 
             // try to see if we can get into the subfolder - will throw error if missing
-            Core.Folder(subfolder, false);
+            EntityBase.Folder(subfolder, false);
 
             // now access the subfolder, creating it if missing (which is what we want
-            Core.Folder(subfolder + "/" + newFolder, true);
+            EntityBase.Folder(subfolder + "/" + newFolder, true);
 
             return Items(guid, field, subfolder);
         }
@@ -215,7 +225,7 @@ namespace ToSic.SexyContent.Adam
             PrepCore(guid, field);
 
             // try to see if we can get into the subfolder - will throw error if missing
-            var current = Core.Folder(subfolder, false);
+            var current = EntityBase.Folder(subfolder, false);
             
             var folderManager = FolderManager.Instance;
             var fileManager = FileManager.Instance;
@@ -246,6 +256,20 @@ namespace ToSic.SexyContent.Adam
 
         #endregion
 
+
+        #region Helper to check extension based on DNN settings
+        // mostly a copy from https://github.com/dnnsoftware/Dnn.Platform/blob/115ae75da6b152f77ad36312eb76327cdc55edd7/DNN%20Platform/Modules/Journal/FileUploadController.cs#L72
+        private static bool IsAllowedDnnExtension(string fileName)
+        {
+            var extension = Path.GetExtension(fileName);
+
+            //regex matches a dot followed by 1 or more chars followed by a semi-colon
+            //regex is meant to block files like "foo.asp;.png" which can take advantage
+            //of a vulnerability in IIS6 which treasts such files as .asp, not .png
+            return !string.IsNullOrEmpty(extension)
+                   && Host.AllowedExtensionWhitelist.IsAllowedExtension(extension.ToLower());
+        }
+        #endregion
 
     }
 }

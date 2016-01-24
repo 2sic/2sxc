@@ -1,0 +1,24 @@
+﻿.icon-before-input {
+    width: 46px;
+    font-size: x-large;
+    padding-left: 6px;
+    padding-right: 5px;
+    padding-top: 2px;
+    padding-bottom: 3px;
+}
+
+.thumbnail-before-input {
+    width: 46px; 
+    padding-top: 0; 
+    padding-bottom: 0; 
+    border-top-width: 0; 
+    padding-left: 0; 
+    padding-right: 0; 
+    border-left-width: 0; 
+    border-bottom-width: 0; 
+    background-color: transparent; 
+}
+
+div.dropzone div.input-group div.tooltip-inner {
+    word-wrap: break-word;
+}

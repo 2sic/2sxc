@@ -5,7 +5,7 @@
 var $2sxcActionMenuMapper = function (moduleId) {
     return {
         changeLayoutOrContent: function () {
-            $2sxc(moduleId).manage._getSelectorScope().show(true);
+            $2sxc(moduleId).manage.action({ 'action': 'layout' });
         },
         addItem: function () {
             $2sxc(moduleId).manage.action({ 'action': 'add', 'useModuleList': true });
@@ -14,10 +14,13 @@ var $2sxcActionMenuMapper = function (moduleId) {
             $2sxc(moduleId).manage.action({ 'action': 'edit', 'useModuleList': true, 'sortOrder': 0 });
         },
         adminApp: function () {
-            $2sxc(moduleId).manage._openNgDialog({ 'action': 'app' });
+            $2sxc(moduleId).manage.action({ 'action': 'app' });
         },
         adminZone: function () {
-            $2sxc(moduleId).manage._openNgDialog({ 'action': 'zone' });
+            $2sxc(moduleId).manage.action({ 'action': 'zone' });
+        },
+        develop: function () {
+            $2sxc(moduleId).manage.action({ 'action': 'develop' });
         }
     };
 };

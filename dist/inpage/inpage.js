@@ -5,7 +5,7 @@
 var $2sxcActionMenuMapper = function (moduleId) {
     return {
         changeLayoutOrContent: function () {
-            $2sxc(moduleId).manage._getSelectorScope().show(true);
+            $2sxc(moduleId).manage.action({ 'action': 'layout' });
         },
         addItem: function () {
             $2sxc(moduleId).manage.action({ 'action': 'add', 'useModuleList': true });
@@ -14,18 +14,21 @@ var $2sxcActionMenuMapper = function (moduleId) {
             $2sxc(moduleId).manage.action({ 'action': 'edit', 'useModuleList': true, 'sortOrder': 0 });
         },
         adminApp: function () {
-            $2sxc(moduleId).manage._openNgDialog({ 'action': 'app' });
+            $2sxc(moduleId).manage.action({ 'action': 'app' });
         },
         adminZone: function () {
-            $2sxc(moduleId).manage._openNgDialog({ 'action': 'zone' });
+            $2sxc(moduleId).manage.action({ 'action': 'zone' });
+        },
+        develop: function () {
+            $2sxc(moduleId).manage.action({ 'action': 'develop' });
         }
     };
 };
-angular.module('SxcInpageTemplates',[]).run(['$templateCache', function($templateCache) {
+angular.module('SxcInpageTemplates', []).run(['$templateCache', function($templateCache) {
   'use strict';
 
   $templateCache.put('template-selector/template-selector.html',
-    "<div ng-cloak ng-show=vm.manageInfo.templateChooserVisible class=\"dnnFormMessage dnnFormInfo\"><div class=sc-selectors><select ng-show=!vm.manageInfo.isContentApp ng-model=vm.appId class=sc-selector-app ng-options=\"a.AppId as a.Name for a in vm.apps\" ng-disabled=\"vm.manageInfo.hasContent || vm.manageInfo.isList\"><option value=\"\" ng-disabled=\"vm.appId != null\" translate=TemplatePicker.AppPickerDefault></option></select><select ng-show=vm.manageInfo.isContentApp ng-model=vm.contentTypeId class=sc-selector-contenttype ng-options=\"c.StaticName as c.Name for c in vm.contentTypes\" ng-disabled=\"vm.manageInfo.hasContent || vm.manageInfo.isList\"><option ng-disabled=\"vm.contentTypeId != ''\" value=\"\" translate=TemplatePicker.ContentTypePickerDefault></option></select><select ng-show=\"vm.manageInfo.isContentApp ? vm.contentTypeId != 0 : (vm.savedAppId != null &&  vm.filteredTemplates().length > 1)\" ng-model=vm.templateId class=sc-selector-template ng-options=\"t.TemplateId as t.Name for t in vm.filteredTemplates(vm.contentTypeId)\"></select></div><div class=sc-selector-actions><a ng-show=\"vm.templateId != null && vm.savedTemplateId != vm.templateId\" class=sc-selector-save ng-click=\"vm.persistTemplate(false, false);\" title=\"{{ 'TemplatePicker.Save' | translate }}\">{{ 'TemplatePicker.Save' | translate }}</a> <a ng-show=\"vm.undoTemplateId != null\" class=sc-selector-close ng-click=vm.cancelTemplateChange(); title=\"{{ 'TemplatePicker.' + (vm.manageInfo.isContentApp ? 'Cancel' : 'Close') | translate }}\">{{ 'TemplatePicker.' + (vm.manageInfo.isContentApp ? 'Cancel' : 'Close') | translate }}</a></div><div class=\"sc-loading sc-loading-nobg\" ng-show=vm.loading></div></div>"
+    "<div ng-cloak ng-show=vm.manageInfo.templateChooserVisible class=\"dnnFormMessage dnnFormInfo\"><div class=sc-selectors><select ng-show=!vm.manageInfo.isContentApp ng-model=vm.appId class=sc-selector-app ng-options=\"a.AppId as a.Name for a in vm.apps\" ng-disabled=\"vm.manageInfo.hasContent || vm.manageInfo.isList\"><option value=\"\" ng-disabled=\"vm.appId != null\" translate=TemplatePicker.AppPickerDefault></option></select><select ng-show=vm.manageInfo.isContentApp ng-model=vm.contentTypeId class=sc-selector-contenttype ng-options=\"c.StaticName as c.Name for c in vm.contentTypes\" ng-disabled=\"vm.manageInfo.hasContent || vm.manageInfo.isList\"><option ng-disabled=\"vm.contentTypeId != ''\" value=\"\" translate=TemplatePicker.ContentTypePickerDefault></option></select><select ng-show=\"vm.manageInfo.isContentApp ? vm.contentTypeId != 0 : (vm.savedAppId != null &&  vm.filteredTemplates().length > 1)\" ng-model=vm.templateId class=sc-selector-template ng-options=\"t.TemplateId as t.Name for t in vm.filteredTemplates(vm.contentTypeId)\"></select></div><div class=sc-selector-actions>&nbsp; <a ng-show=\"vm.templateId != null && vm.savedTemplateId != vm.templateId\" class=sc-selector-save ng-click=\"vm.persistTemplate(false, false);\" title=\"{{ 'TemplatePicker.Save' | translate }}\"><div><i class=icon-sxc-ok></i></div></a> &nbsp; <a ng-show=\"vm.undoTemplateId != null\" class=sc-selector-close ng-click=vm.cancelTemplateChange(); title=\"{{ 'TemplatePicker.' + (vm.manageInfo.isContentApp ? 'Cancel' : 'Close') | translate }}\"><div><i class=icon-sxc-cancel></i></div></a></div><div class=sc-loading ng-show=vm.loading><i class=\"icon-sxc-spinner fa-spin\"></i></div></div>"
   );
 
 }]);
@@ -50,165 +53,152 @@ $2sxc.getManageController = function (id) {
         langs: JSON.stringify(manageInfo.languages),
         portalroot: sxcGlobals.PortalRoot,
         websiteroot: manageInfo.applicationRoot,
+        user: manageInfo.user,
         // note that the app-root doesn't exist when opening "manage-app"
         approot: (manageInfo.config && manageInfo.config.appPath) ? manageInfo.config.appPath : null // this is the only value which doesn't have a slash by default
     };
 
+    var contentTypeName = manageInfo.contentTypeId; // note: only exists if the template has a content-type
     var toolbarConfig = manageInfo.config;
-    toolbarConfig.returnUrl = window.location.href;  // probably unused...
+    var enableTools = manageInfo.user.canDesign;
+    var enableDevelop = manageInfo.user.canDevelop;
+    var isContent = manageInfo.isContentApp;
 
-    // all the standard buttons with the display configuration and click-action
+    function buttonConfig(name, translateKey, icon, show,  uiOnly, more) {
+        return angular.extend({
+            title: "Toolbar." + translateKey,
+            iclass: "icon-sxc-" + icon,
+            showOn: show,
+            uiActionOnly: uiOnly
+        }, more);
+    }
+
     var actionButtonsConf = {
-        'default': {
-            icon: "glyphicon-fire",
-            hideFirst: true,
-            action: function(settings, event) { alert("not implemented yet"); }
-        },
-        'edit': {
-            title: "Toolbar.Edit",
-            icon: "glyphicon-pencil",
-            lightbox: true,
-            hideFirst: true,
-            showOn: "default",
-            action: function(settings, event) {
-                tbContr._openNgDialog(settings, event);
-            }
-        },
-        'new': {
-            title: "Toolbar.New",
-            icon: "glyphicon-plus",
-            lightbox: true,
-            hideFirst: true,
-            showOn: "default",
-            action: function(settings, event) {
+        'edit': buttonConfig('edit', "Edit", "pencil", "default", false, { params: { mode: "edit" } }),
+        'new': buttonConfig('new', "New", "plus", "default", false, { params: { mode: "new" } }, {
+            dialog: "edit", // don't use "new" (default) but use "edit"
+            addCondition: function(settings) { return toolbarConfig.isList && settings.sortOrder !== -1; },
+            code: function(settings, event) {
                 tbContr._openNgDialog($.extend({}, settings, { sortOrder: settings.sortOrder + 1 }), event);
             }
-        },
-        'add': {
-            title: "Toolbar.AddDemo",
-            icon: "glyphicon-plus-sign",
-            lightbox: false,
-            hideFirst: true,
-            showOn: "edit",
-            action: function(settings, event) {
-                tbContr._getSelectorScope().addItem(settings.sortOrder + 1);
+        }),
+        'add': buttonConfig('add', "AddDemo", "plus-circled", "edit", false, {
+            addCondition: function(settings) { return toolbarConfig.isList && settings.sortOrder !== -1 && settings.useModuleList; },
+            code: function(settings, event) {
+                tbContr._getAngularVm().addItem(settings.sortOrder + 1);
             }
-        },
-        'replace': {
-            title: "Toolbar.Replace",
-            icon: "glyphicon-random",
-            lightbox: true,
-            hideFirst: true,
-            showOn: "edit",
-            action: function(settings, event) {
-                tbContr._openNgDialog(settings, event);
-            }
-        },
-        'publish': {
-            title: "Toolbar.Published",
-            icon: "glyphicon-eye-open",
-            icon2: "glyphicon-eye-close",
-            lightbox: false,
-            hideFirst: true,
+        }),
+        'replace': buttonConfig('replace', "Replace", "replace", "edit", false, {
+            addCondition: function(settings) { return settings.useModuleList; },
+        }),
+        'publish': buttonConfig('publish', "Published", "eye", "edit", false, {
+            iclass2: "icon-sxc-eye-off",
             disabled: true,
-            showOn: "edit",
-            action: function (settings, event) {
+            code: function(settings, event) {
                 if (settings.isPublished) {
-                    alert(tbContr.translate("Toolbar.AlreadyPublished")); 
+                    alert(tbContr.translate("Toolbar.AlreadyPublished"));
                     return;
                 }
                 var part = settings.sortOrder === -1 ? "listcontent" : "content";
                 var index = settings.sortOrder === -1 ? 0 : settings.sortOrder;
-                tbContr._getSelectorScope().publish(part, index);
+                tbContr._getAngularVm().publish(part, index);
             }
-        },
+        }),
+
         'moveup': {
             title: "Toolbar.MoveUp",
-            icon: "glyphicon-arrow-up",
-            icon2: "glyphicon-arrow-up",
-            lightbox: false,
-            hideFirst: true,
+            iclass: "icon-sxc-move-up",
             disabled: false,
             showOn: "edit",
-            action: function(settings, event) {
-                tbContr._getSelectorScope().changeOrder(settings.sortOrder, Math.max(settings.sortOrder - 1, 0));
+            addCondition: function(settings) { return toolbarConfig.isList && settings.sortOrder !== -1 && settings.useModuleList && settings.sortOrder !== 0; },
+            code: function(settings, event) {
+                tbContr._getAngularVm().changeOrder(settings.sortOrder, Math.max(settings.sortOrder - 1, 0));
             }
         },
         'movedown': {
             title: "Toolbar.MoveDown",
-            icon: "glyphicon-arrow-down",
-            icon2: "glyphicon-arrow-down",
-            lightbox: false,
-            hideFirst: true,
+            iclass: "icon-sxc-move-down",
             disabled: false,
             showOn: "edit",
-            action: function(settings, event) {
-                tbContr._getSelectorScope().changeOrder(settings.sortOrder, settings.sortOrder + 1);
+            addCondition: function(settings) { return toolbarConfig.isList && settings.sortOrder !== -1 && settings.useModuleList; },
+            code: function(settings, event) {
+                tbContr._getAngularVm().changeOrder(settings.sortOrder, settings.sortOrder + 1);
             }
         },
         'sort': {
             title: "Toolbar.Sort",
-            icon: "glyphicon-th-list",
-            lightbox: true,
-            hideFirst: true,
-            showOn: "design",
-            action: function (settings, event) {
-                tbContr._openNgDialog(settings, event);
-            }
+            iclass: "icon-sxc-list-numbered",
+            showOn: "edit",
+            addCondition: function(settings) { return toolbarConfig.isList && settings.sortOrder !== -1; },
         },
         'remove': {
             title: "Toolbar.Remove",
-            icon: "glyphicon-minus-sign",
-            lightbox: false,
-            hideFirst: true,
+            iclass: "icon-sxc-minus-circled",
             disabled: true,
             showOn: "edit",
-            action: function (settings, event) {
+            addCondition: function(settings) { return toolbarConfig.isList && settings.sortOrder !== -1; },
+            code: function(settings, event) {
                 if (confirm(tbContr.translate("Toolbar.ConfirmRemove"))) {
-                    tbContr._getSelectorScope().removeFromList(settings.sortOrder);
+                    tbContr._getAngularVm().removeFromList(settings.sortOrder);
                 }
             }
         },
         'layout': {
             title: "Toolbar.ChangeLayout",
-            icon: "glyphicon-sound-stereo",
-            lightbox: false,
-            hideFirst: true,
-            showOn: "design",
+            iclass: "icon-sxc-glasses",
+            showOn: "default",
             uiActionOnly: true, // so it doesn't create the content when used
-            action: function (settings, event) {
-                tbContr._getSelectorScope().toggle();
+            code: function(settings, event) {
+                tbContr._getAngularVm().toggle();
             }
+        },
+        'develop': buttonConfig("develop", "Develop", "code", "admin", true, {
+            newWindow: true,
+            addCondition: enableTools,         
+        }),
+        'contenttype': {
+            title: "Toolbar.ContentType",
+            iclass: "icon-sxc-fields",
+            showOn: "admin",
+            uiActionOnly: true,
+            addCondition: enableTools,
+        },
+        'contentitems': {
+            title: "Toolbar.ContentItems",
+            iclass: "icon-sxc-table",
+            showOn: "admin",
+            params: { contentTypeName: contentTypeName },
+            uiActionOnly: true, // so it doesn't create the content when used
+            addCondition: enableTools && contentTypeName,
+        },
+        'app': {
+            title: "Toolbar.App",
+            iclass: "icon-sxc-settings",
+            showOn: "admin",
+            uiActionOnly: true, // so it doesn't create the content when used
+            addCondition: enableTools,
+        },
+        'zone': {
+            title: "Toolbar.Zone",
+            iclass: "icon-sxc-manage",
+            showOn: "admin",
+            uiActionOnly: true, // so it doesn't create the content when used
+            addCondition: enableTools,
         },
         "more": {
             title: "Toolbar.MoreActions",
-            icon: "glyphicon-option-horizontal",
-            icon2: "glyphicon-option-vertical",
-            borlightboxder: false,
-            hideFirst: false,
-            showOn: "default,edit,design",
-            uiActionOnly: true, // so it doesn't create the content when used
-            action: function (settings, event) {
-                var moreButton = $(event.target).parent().find("i");
-                var fullMenu = moreButton.closest("ul.sc-menu");
-                switch(moreButton.attr("data-state")) {
-                    case undefined:
-                    case "0":
-                        moreButton.addClass("mode-more");
-                        fullMenu.removeClass("showDefault").addClass("showEdit");
-                        moreButton.attr("data-state", "1");
-                        break;
-                    case "1":
-                        moreButton.removeClass("mode-more").removeClass(this.icon).addClass(this.icon2);
-                        fullMenu.removeClass("showEdit").removeClass("showDefault").addClass("showDesign");
-                        moreButton.attr("data-state", "2");
-                        break;
-                    case "2":
-                        moreButton.addClass(this.icon).removeClass(this.icon2);
-                        fullMenu.removeClass("showDesign").addClass("showDefault");
-                        moreButton.attr("data-state", "0");
-                        break;
-                }
+            iclass: "icon-sxc-options btn-mode",
+            showOn: "default,edit,design,admin",
+            uiActionOnly: true, // so it doesn't create the content when clicked
+            code: function(settings, event) {
+                var fullMenu = $(event.target).closest("ul.sc-menu");
+                var oldState = Number(fullMenu.attr("data-state") || 0);
+                var newState = oldState + 1;
+                if (newState === 2) newState = 3; // state 1 doesn't exist yet - skip
+                newState = newState % (enableTools ? 4 : 3); // if tools are enabled, there are 4 states
+                fullMenu.removeClass("show-set-" + oldState)
+                    .addClass("show-set-" + newState)
+                    .attr("data-state", newState);
             }
         }
     };
@@ -224,18 +214,14 @@ $2sxc.getManageController = function (id) {
 
         _manageInfo: manageInfo,
 
-        // create an edit-dialog link
-        // needs the followings data:
-        // zoneid, tid (tabid), mid (moduleid), appid
-        // dialog=[zone|app|...]
-        // lang=..., flang=
+        // create a dialog link
         getNgLink: function(settings) {
-            settings = $.extend({}, toolbarConfig, settings);
+            settings = $.extend({}, toolbarConfig, settings); // merge button with toolbar-settings
 
             var params = {
-                dialog: "edit",
-                mode: (settings.action === "new") ? "new" : "edit"
+                dialog: settings.dialog || settings.action,
             };
+            angular.extend(params, settings.params);
             var items = [];
 
             // when not using a content-group list, ...
@@ -270,14 +256,13 @@ $2sxc.getManageController = function (id) {
                     });
             }
 
-            if (settings.action === "replace" || settings.action === "app" || settings.action === "zone" || settings.action === "sort")
-                params.dialog = settings.action;
+            if (settings.action === "develop")
+                items = [{ EntityId: manageInfo.templateId }];
 
             // when doing new, there may be a prefill in the link to initialize the new item
-            if (settings.prefill) {
+            if (settings.prefill) 
                 for (var i = 0; i < items.length; i++)
                     items[i].Prefill = settings.prefill;
-            }
 
             // Serialize/json-ify the complex items-list
             if (items.length)
@@ -292,12 +277,12 @@ $2sxc.getManageController = function (id) {
         _openNgDialog: function(settings, event, closeCallback) {
             
             var callback = function () {
-                tbContr._getSelectorScope().reload();
+                tbContr._getAngularVm().reload();
                 closeCallback();
             };
             var link = tbContr.getNgLink(settings);
 
-            if (event && event.shiftKey)
+            if (settings.newWindow || (event && event.shiftKey))
                 window.open(link);
             else
                 $2sxc.totalPopup.open(link, callback);
@@ -306,54 +291,60 @@ $2sxc.getManageController = function (id) {
         // Perform a toolbar button-action - basically get the configuration and execute it's action
         action: function(settings, event) {
             var origEvent = event || window.event; // pre-save event because afterwards we have a promise, so the event-object changes; funky syntax is because of browser differences
-            var conf = actionButtonsConf[settings.action] || actionButtonsConf.default;
+            var conf = actionButtonsConf[settings.action];
+            if (conf.newWindow) settings.newWindow = conf.newWindow;
+            if (conf.params) settings.params = conf.params;
+            if (conf.dialog) settings.dialog = conf.dialog;
+            if (!settings.dialog) settings.dialog = settings.action; // old code uses "action" as the parameter, now use verb
+
+            var fn = conf.code || tbContr._openNgDialog; // decide what action to perform
+
             if (conf.uiActionOnly)
-                return conf.action(settings, origEvent);
-            else
-                // if more than just a UI-action, then it needs to be sure the content-group is created first
-                tbContr._getSelectorScope().prepareToAddContent().then(function () {
-                    conf.action(settings, origEvent);
-                });
+                return fn(settings, origEvent);
+            
+            // if more than just a UI-action, then it needs to be sure the content-group is created first
+            tbContr._getAngularVm().prepareToAddContent().then(function() {
+                return fn(settings, origEvent);
+            });
         },
 
         // Generate a button (an <a>-tag) for one specific toolbar-action. 
         // Expects: settings, an object containing the specs for the expected buton
-        getButton: function(settings) {
-            // if the button belongs to a content-item, move the specs to the item into the settings-object
-            if (settings.entity && settings.entity._2sxcEditInformation) {
-                if (settings.entity._2sxcEditInformation.entityId) {
-                    settings.entityId = settings.entity._2sxcEditInformation.entityId;
-                    settings.useModuleList = false;
+        getButton: function(btnSettings) {
+            // if the button belongs to a content-item, move the specs up to the item into the settings-object
+            if (btnSettings.entity && btnSettings.entity._2sxcEditInformation) {
+                if (btnSettings.entity._2sxcEditInformation.entityId) {
+                    btnSettings.entityId = btnSettings.entity._2sxcEditInformation.entityId;
+                    btnSettings.useModuleList = false;
                 }
-                if (settings.entity._2sxcEditInformation.sortOrder) {
-                    settings.sortOrder = settings.entity._2sxcEditInformation.sortOrder;
-                    settings.useModuleList = true;
+                if (btnSettings.entity._2sxcEditInformation.sortOrder) {
+                    btnSettings.sortOrder = btnSettings.entity._2sxcEditInformation.sortOrder;
+                    btnSettings.useModuleList = true;
                 }
-                delete settings.entity;
+                delete btnSettings.entity;
             }
 
             // retrieve configuration for this button
-            var conf = actionButtonsConf[settings.action] || actionButtonsConf.default;
+            var conf = actionButtonsConf[btnSettings.action];
 
             var showClasses = "";
             var classesList = conf.showOn.split(",");
             for (var c = 0; c < classesList.length; c++)
                 showClasses += " show-" + classesList[c];
             var button = $("<a />", {
-                'class': "sc-" + settings.action + " "
-                    + " " + (conf.lightbox ? "box" : "")
-                    + showClasses,
-                'onclick': "javascript:$2sxc(" + id + ").manage.action(" + JSON.stringify(settings) + ", event);",
+                'class': "sc-" + btnSettings.action + " " + showClasses,
+                'onclick': "javascript:$2sxc(" + id + ").manage.action(" + JSON.stringify(btnSettings) + ", event);",
                 'title': tbContr.translate(conf.title)
             });
             var box = $("<div/>");
-            var symbol = $("<i class=\"glyphicon " + conf.icon + "\" aria-hidden=\"true\"></i>");
+            var symbol = $("<i class=\"" + conf.iclass + "\" aria-hidden=\"true\"></i>");
 
+            // todo: move the following lines into the button-config and just call from here
             // if publish-button and not published yet, show button (otherwise hidden) & change icon
-            if (settings.action === "publish" && settings.isPublished === false) {
+            if (btnSettings.action === "publish" && btnSettings.isPublished === false) {
                 button.addClass("show-default").removeClass("show-edit")
                     .attr("title", tbContr.translate("Toolbar.Unpublished")); 
-                symbol.removeClass(conf.icon).addClass(conf.icon2);
+                symbol.removeClass(conf.iclass).addClass(conf.iclass2);
             }
 
             button.html(box.html(symbol));
@@ -364,52 +355,34 @@ $2sxc.getManageController = function (id) {
         // Builds the toolbar and returns it as HTML
         // expects settings - either for 1 button or for an array of buttons
         getToolbar: function(settings) {
-            var buttons = [];
+            var buttons = settings.action
+                ? [settings] // if single item with specified action, use this as our button-list
+                : $.isArray(settings)
+                ? settings // if it is an array, use that. Otherwise assume that we auto-generate all buttons with supplied settings
+                : tbContr.createDefaultToolbar(settings);
 
-            if (settings.action) {
-                // if single item with specified action, use this as our button-list
-                buttons = [settings];
-            } else if ($.isArray(settings)) {
-                // if it is an array, use that. Otherwise assume that we auto-generate all buttons with supplied settings
-                buttons = settings;
-            } else {
-                // Create a standard menu with all standard buttons
-                // first button: edit
-                buttons.push($.extend({}, settings, { action: "edit" }));
-
-                // add applicable list buttons - add=add item below; new=lightbox-dialog
-                if (toolbarConfig.isList && settings.sortOrder !== -1) { // if list and not the list-header
-                    buttons.push($.extend({}, settings, { action: "new" }));
-                    if (settings.useModuleList) 
-                        buttons.push($.extend({}, settings, { action: "add" }));
-
-                    // only provide remove on lists
-                    buttons.push($.extend({}, settings, { action: "remove" }));
-
-                    if (settings.useModuleList) {
-                        if (settings.sortOrder !== 0)
-                            buttons.push($.extend({}, settings, { action: "moveup" }));
-                        buttons.push($.extend({}, settings, { action: "movedown" }));
-                    }
-                    buttons.push($.extend({}, settings, { action: "sort" }));
-                }
-                buttons.push($.extend({}, settings, { action: "publish" }));
-
-                // the replace button only makes sense if it's a content-group
-                if (settings.useModuleList)
-                    buttons.push($.extend({}, settings, { action: "replace" }));
-                
-                buttons.push($.extend({}, settings, { action: "layout" }));
-                buttons.push($.extend({}, settings, { action: "more" }));
-            }
-
-            var tbClasses = "sc-menu showDefault" + ((settings.sortOrder === -1) ? " listContent" : "");
+            var tbClasses = "sc-menu show-set-0" + ((settings.sortOrder === -1) ? " listContent" : "");
             var toolbar = $("<ul />", { 'class': tbClasses, 'onclick': "javascript: var e = arguments[0] || window.event; e.stopPropagation();" });
 
             for (var i = 0; i < buttons.length; i++)
                 toolbar.append($("<li />").append($(tbContr.getButton(buttons[i]))));
 
             return toolbar[0].outerHTML;
+        },
+
+        // Assemble a default toolbar instruction set
+        createDefaultToolbar: function (settings) {
+            // Create a standard menu with all standard buttons
+            var buttons = [];
+            buttons.add = function (verb) {
+                if (Array.isArray(verb))
+                    return verb.forEach(function(val) { buttons.add(val); });
+                var add = actionButtonsConf[verb].addCondition;
+                if (add === undefined || ((typeof (add) === 'function') ? add(settings) : add))
+                    buttons.push($.extend({}, settings, { action: verb }));
+            };
+            buttons.add(["edit", "new", "add", "remove", "moveup", "movedown", "sort", "publish", "replace", "layout", "develop", "contenttype", "contentitems", "app", "zone", "more"]);
+            return buttons;
         },
 
         // find all toolbar-info-attributes in the HTML, convert to <ul><li> toolbar
@@ -420,13 +393,13 @@ $2sxc.getManageController = function (id) {
             });
         },
 
-        _getSelectorScope: function() {
+        _getAngularVm: function() {
             var selectorElement = document.querySelector(".DnnModule-" + id + " .sc-selector-wrapper");
             return angular.element(selectorElement).scope().vm;
         },
 
         translate: function(key) {
-            return tbContr._getSelectorScope().translate(key);
+            return tbContr._getAngularVm().translate(key);
         }
 
     };
@@ -447,8 +420,13 @@ $(document).ready(function () {
     // Ensure the _processToolbar is called after the next event cycle to make sure that the Angular app (template selector) is loaded first
     window.setTimeout(function () {
         modules.each(function () {
-            var moduleId = $(this).data("2sxc").moduleId;
-            $2sxc(moduleId).manage._processToolbars();
+            try {
+                var moduleId = $(this).data("2sxc").moduleId;
+                $2sxc(moduleId).manage._processToolbars();
+            } catch (e) { // Make sure that if one app breaks, others continue to work
+                if (console && console.error)
+                    console.error(e);
+            }
         });
     }, 0);
 

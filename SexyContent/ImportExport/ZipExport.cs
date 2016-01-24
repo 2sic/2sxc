@@ -64,7 +64,9 @@ namespace ToSic.SexyContent.ImportExport
 
             #region Copy needed files to temporary directory
 
-            var temporaryDirectoryPath = HttpContext.Current.Server.MapPath(Path.Combine(SexyContent.TemporaryDirectory, Guid.NewGuid().ToString()));
+            // todo
+            var randomShortFolderName = Guid.NewGuid().ToString().Substring(0, 4);
+            var temporaryDirectoryPath = HttpContext.Current.Server.MapPath(Path.Combine(SexyContent.TemporaryDirectory, randomShortFolderName));
 
             if (!Directory.Exists(temporaryDirectoryPath))
                 Directory.CreateDirectory(temporaryDirectoryPath);
@@ -89,9 +91,19 @@ namespace ToSic.SexyContent.ImportExport
 
                 if (!Directory.Exists(portalFilePath))
                     Directory.CreateDirectory(portalFilePath);
-                
+
                 if (File.Exists(file.PhysicalPath))
-                    File.Copy(file.PhysicalPath, Path.Combine(portalFilesDirectory.FullName, file.RelativePath.Replace('/', '\\')));
+                {
+                    var fullPath = Path.Combine(portalFilesDirectory.FullName, file.RelativePath.Replace('/', '\\'));
+                    try
+                    {
+                        File.Copy(file.PhysicalPath, fullPath);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Error on " + fullPath + " (" + fullPath.Length + ")", e);
+                    }
+                }
             }
             
             // Save export xml

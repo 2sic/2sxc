@@ -1,0 +1,14 @@
+﻿-- make sure sql rolls back automatically in case of error.
+SET XACT_ABORT ON
+
+BEGIN TRANSACTION SexyContentUpdate;
+
+EXEC ToSIC_EAV_ChangeLogAdd 'System'
+
+UPDATE  ToSIC_EAV_AssignmentObjectTypes
+SET              Name = N'CmsObject', Description = N'References to CMS objects like files and pages'
+WHERE     (AssignmentObjectTypeID = 10)
+
+-- Commit the transaction
+COMMIT TRANSACTION SexyContentUpdate;
+--ROLLBACK TRANSACTION SexyContentUpdate;

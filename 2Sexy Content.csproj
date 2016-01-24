@@ -170,10 +170,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Adam\AdamController.cs" />
+    <Compile Include="Adam\AdamFile.cs" />
+    <Compile Include="Adam\AdamFolder.cs" />
     <Compile Include="Adam\AdamItem.cs" />
     <Compile Include="Adam\AdamNavigator.cs" />
-    <Compile Include="Adam\Core.cs" />
+    <Compile Include="Adam\EntityBase.cs" />
+    <Compile Include="Adam\Export.cs" />
     <Compile Include="Adam\GuidHelpers.cs" />
+    <Compile Include="Adam\IAdamItem.cs" />
+    <Compile Include="Adam\AdamManager.cs" />
+    <Compile Include="Adam\UploadResult.cs" />
     <Compile Include="Administration\Apps\AppExport.ascx.cs">
       <DependentUpon>AppExport.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -246,6 +252,9 @@
     <Compile Include="SexyContent\EAV\FieldTemplates\EditorProvider.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="SexyContent\ImportExport\XmlConstants.cs" />
+    <Compile Include="SexyContent\ViewAPI\TemplateController.cs" />
+    <Compile Include="SexyContent\ViewManager\TemplateEditor.cs" />
     <Compile Include="SexyContent\UnityConfig.cs" />
     <Compile Include="SexyContent\WebApi\SystemController.cs" />
     <Compile Include="SexyContent\WebApi\TemplateController.cs" />
@@ -404,25 +413,37 @@
     <Content Include="Extensions\404.png" />
     <Content Include="Extensions\Imazen_ImageResizer\ImageResizer.txt" />
     <Content Include="Extensions\Imazen_ImageResizer\license.txt" />
+    <Content Include="grunt-tasks\field-string-wysiwyg-tinymce.gruntfile.js" />
+    <Content Include="grunt-tasks\fonts.gruntfile.js" />
+    <Content Include="grunt-tasks\sxc-api.gruntfile.js" />
+    <Content Include="grunt-tasks\dnn.gruntfile.js" />
+    <Content Include="grunt-tasks\develop.gruntfile.js" />
+    <Content Include="grunt-tasks\inpage.gruntfile.js" />
+    <Content Include="grunt-tasks\import-languages.gruntfile.js" />
+    <Content Include="grunt-tasks\i18n.gruntfile.js" />
     <Content Include="gruntfile.js" />
     <Content Include="SqlDataProvider\07.03.01.SqlDataProvider" />
     <Content Include="SqlDataProvider\07.03.03.SqlDataProvider" />
     <Content Include="SqlDataProvider\08.00.06.SqlDataProvider" />
-    <None Include="src\i18n\inpage-de.json" />
-    <None Include="src\i18n\inpage-en.json" />
+    <Content Include="SqlDataProvider\08.01.00.SqlDataProvider" />
     <Content Include="icon-app.png" />
     <Content Include="icon.png" />
-    <Content Include="Images\ajax-loader.gif" />
-    <Content Include="Images\Edit-Draft.png" />
-    <Content Include="Images\Add.png" />
-    <Content Include="Images\AddWithEdit.png" />
-    <Content Include="Images\Delete.png" />
-    <Content Include="Images\Drag.gif" />
-    <Content Include="Images\Edit.png" />
     <Content Include="Administration\Import.ascx" />
-    <Content Include="Images\Save.png" />
+    <Content Include="src\inpage\inpage-icons-codes.css" />
+    <Content Include="src\sxc-edit\adam\adam-hint.html" />
+    <Content Include="src\sxc-edit\adam\adam-hint.directive.js" />
+    <Content Include="src\sxc-edit\app-icons-codes.css" />
+    <Content Include="src\sxc-edit\app-icons.css" />
+    <Content Include="src\sxc-edit\adam\adam.css" />
+    <Content Include="src\sxc-edit\adam\browser.controller.js" />
+    <Content Include="src\sxc-edit\adam\browser.directive.js" />
+    <Content Include="src\sxc-edit\adam\browser.html" />
+    <Content Include="src\sxc-edit\adam\dropzone-upload-preview.directive.js" />
+    <Content Include="src\sxc-edit\adam\dropzone-upload-preview.html" />
+    <Content Include="src\sxc-edit\adam\dropzone.directive.js" />
+    <Content Include="src\sxc-edit\adam\_adam.js" />
     <Content Include="src\inpage\dnn-menu-helper\dnn-inpage-edit.js" />
-    <Content Include="src\inpage\module-toolbar\2sxc.api.manage.js" />
+    <Content Include="src\inpage\module-toolbar\inpage-toolbar.js" />
     <Content Include="js\2sxc.api.min.js" />
     <Content Include="src\inpage\module-toolbar\toolbar-bootstrapper.js" />
     <Content Include="src\inpage\template-selector\moduleService.js" />
@@ -441,7 +462,7 @@
     <Content Include="js\angularjs\toaster.js" />
     <Content Include="js\ItemForm.js" />
     <Content Include="license.txt" />
-    <Content Include="edit.css" />
+    <Content Include="src\inpage\edit.css" />
     <Content Include="Administration\EditTemplate.ascx" />
     <Content Include="ReleaseNotes.txt" />
     <Content Include="Extensions\Thumbnailer.aspx" />
@@ -478,7 +499,7 @@
     <Content Include="src\sxc-admin\manage-content-list\manage-content-list.html" />
     <Content Include="src\sxc-admin\replace-content\replace-content-controller.js" />
     <Content Include="src\sxc-admin\replace-content\replace-content.html" />
-    <Content Include="src\sxc-admin\services\adam.js" />
+    <Content Include="src\sxc-edit\adam\adam.service.js" />
     <Content Include="src\sxc-admin\services\app-settings.js" />
     <Content Include="src\sxc-admin\services\content-group-service.js" />
     <Content Include="src\sxc-admin\services\importexport-service.js" />
@@ -488,24 +509,38 @@
     <Content Include="src\sxc-admin\services\apps-service.js" />
     <Content Include="src\sxc-admin\services\sxc-dialogs-service.js" />
     <Content Include="src\sxc-admin\services\templates-service.js" />
+    <None Include="src\sxc-develop\source-editor\README.md" />
+    <Content Include="src\sxc-develop\source-editor\toArray-filter.js" />
     <Content Include="src\sxc-admin\templates\edit.html" />
     <Content Include="src\sxc-admin\templates\templates-edit-controller.js" />
     <Content Include="src\sxc-admin\templates\templates-controller.js" />
     <Content Include="src\sxc-admin\templates\templates.html" />
+    <Content Include="src\sxc-develop\source-editor\editor-controller.js" />
+    <Content Include="src\sxc-develop\source-editor\source-service.js" />
+    <Content Include="src\sxc-develop\source-editor\snippets.service.js" />
+    <Content Include="src\sxc-develop\source-editor\editor.html" />
+    <Content Include="src\sxc-develop\source-editor\app-source-edit.js" />
     <Content Include="src\sxc-admin\web-api\web-api-controller.js" />
     <Content Include="src\sxc-admin\web-api\web-api.html" />
-    <Content Include="src\sxc-edit\fieldtemplates\directives\web-forms-bridge-directive.js" />
-    <Content Include="src\sxc-edit\fieldtemplates\directives\dropzone-directive.js" />
-    <Content Include="src\sxc-edit\fieldtemplates\dropzone-custom.css" />
-    <Content Include="src\sxc-edit\fieldtemplates\hyperlink.css" />
-    <Content Include="src\sxc-edit\fieldtemplates\string-wysiwyg.js" />
-    <Content Include="src\sxc-edit\fieldtemplates\_sxc-fieldtemplates-app.js" />
-    <Content Include="src\sxc-edit\fieldtemplates\hyperlink-default.js" />
-    <Content Include="src\sxc-edit\fieldtemplates\templates\hyperlink-default-filemanager.html" />
-    <Content Include="src\sxc-edit\fieldtemplates\templates\hyperlink-default-pagepicker.html" />
-    <Content Include="src\sxc-edit\fieldtemplates\templates\hyperlink-default.html" />
-    <Content Include="src\sxc-edit\fieldtemplates\templates\string-wysiwyg.html" />
-    <Content Include="src\sxc-edit\services\contentgroup-service.js" />
+    <Content Include="src\sxc-edit\fields\dnn-bridge\dnn-bridge.service.js" />
+    <Content Include="src\sxc-edit\fields\dnn-bridge\web-forms-bridge.directive.js" />
+    <Content Include="src\sxc-edit\fields\hyperlink\dropzone-custom.css" />
+    <Content Include="src\sxc-edit\fields\hyperlink\hyperlink-library.controller.js" />
+    <Content Include="src\sxc-edit\fields\hyperlink\hyperlink.css" />
+    <Content Include="src\sxc-edit\fields\string\string-wysiwyg-adv.html" />
+    <Content Include="src\sxc-edit\fields\string\string-wysiwyg-adv.controller.js" />
+    <Content Include="src\sxc-edit\fields\string\string-wysiwyg-dnn.controller.js" />
+    <Content Include="src\sxc-edit\fields\string\string-wysiwyg-tinymce.html" />
+    <Content Include="src\sxc-edit\fields\string\string-wysiwyg-tinymce.controller.js" />
+    <Content Include="src\sxc-edit\fields\hyperlink\hyperlink-library.html" />
+    <Content Include="src\sxc-edit\fields\string\wysiwyg-mce.css" />
+    <Content Include="src\sxc-edit\fields\_sxc-fieldtemplates-app.js" />
+    <Content Include="src\sxc-edit\fields\hyperlink\hyperlink-default.controller.js" />
+    <Content Include="src\sxc-edit\fields\dnn-bridge\hyperlink-default-filemanager.html" />
+    <Content Include="src\sxc-edit\fields\dnn-bridge\hyperlink-default-pagepicker.html" />
+    <Content Include="src\sxc-edit\fields\hyperlink\hyperlink-default.html" />
+    <Content Include="src\sxc-edit\fields\string\string-wysiwyg-dnn.html" />
+    <Content Include="src\sxc-edit\temp-icon-fix.css" />
     <Content Include="TemplateHelpGrid.ascx" />
     <Content Include="Upgrade\07.00.00.xml" />
     <Content Include="Upgrade\07.02.00.xml" />
@@ -515,7 +550,7 @@
     <Content Include="Upgrade\07.03.03-01.xml" />
     <Content Include="Upgrade\07.03.03-03.xml" />
     <Content Include="Upgrade\08.00.04.xml" />
-    <Content Include="ViewApp.ascx" />
+    <Content Include="Upgrade\08.01.00.xml" />
     <Content Include="View.ascx" />
     <Content Include="WebConfigTemplate.config" />
     <None Include="SqlDataProvider\01.00.01.SqlDataProvider" />
@@ -556,8 +591,9 @@
     <Content Include="SqlDataProvider\07.02.02.SqlDataProvider" />
     <None Include="SqlDataProvider\Uninstall.SqlDataProvider" />
     <Content Include="web.config" />
-    <Content Include="src\i18n\sxc-admin-en.json" />
     <Content Include="src\sxc-admin\services\_sxc-services.js" />
+    <Content Include="src\i18n\source-editor-snippets-en.json" />
+    <Content Include="src\sxc-develop\source-editor\snippets.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Administration\App_LocalResources\EditTemplate.ascx.resx" />
@@ -576,7 +612,9 @@
     <Content Include="Administration\App_LocalResources\Import.ascx.resx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_LocalResources\EditTemplateFile.ascx.resx" />
+    <Content Include="App_LocalResources\EditTemplateFile.ascx.resx">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_LocalResources\EditTemplateFile.ascx.de-DE.resx" />
@@ -591,34 +629,10 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_LocalResources\EditList.ascx.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_LocalResources\EditList.ascx.de-DE.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_LocalResources\EditContentGroup.ascx.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_LocalResources\EditContentGroup.ascx.de-DE.resx" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Administration\App_LocalResources\ContentTypeAndDemoSelector.ascx.resx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Administration\App_LocalResources\ContentTypeAndDemoSelector.ascx.de-DE.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_LocalResources\EditContentGroupItem.ascx.de-DE.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_LocalResources\EditContentGroupItem.ascx.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_LocalResources\TemplateHelpGrid.ascx.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_LocalResources\TemplateHelpGrid.ascx.de-DE.resx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Administration\App_LocalResources\Registers.ascx.resx" />
@@ -627,23 +641,14 @@
     <Content Include="Administration\App_LocalResources\Registers.ascx.de-DE.resx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_LocalResources\EditEntity.ascx.de-DE.resx" />
-    <Content Include="App_LocalResources\EditEntity.ascx.resx" />
     <Content Include="Administration\Apps\App_LocalResources\AppConfig.ascx.resx" />
     <Content Include="Administration\App_LocalResources\WebApiHelp.ascx.resx" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="src\sxc-edit\form\" />
     <Folder Include="Upgrade\Log\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Administration\Apps\App_LocalResources\AppManagement.ascx.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_LocalResources\ViewApp.ascx.de-DE.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_LocalResources\ViewApp.ascx.resx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Administration\Apps\App_LocalResources\AppImport.ascx.resx" />

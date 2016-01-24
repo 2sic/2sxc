@@ -231,7 +231,7 @@
 
     $2sxc._controllers = {};
     $2sxc.metaName = "The 2sxc Controller object";
-    $2sxc.metaVersion = "07.00.03";
+    $2sxc.metaVersion = "08.01.00";
     $2sxc.beta = {};
     $2sxc._data = {};
     
@@ -310,4 +310,11 @@
         }
     };
 
+    // debug state which is needed in various places
+    $2sxc.debug = {
+        load: ($2sxc.urlParams.get("debug") === "true"),
+        renameScript: function toMinOrNotToMin(url) {
+            return (!$2sxc.debug.load) ? url : url.replace(".min", "");
+        }
+    };
 })();

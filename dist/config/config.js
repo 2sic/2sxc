@@ -31,8 +31,8 @@
     else {
         var lng = window.$eavUIConfig.languages;
         lng.i18nRoot = location.href.substring(0, location.href.indexOf("dist/dnn/ui.html")) + "dist/i18n/";
-        lng.defaultLanguage = $2sxc.urlParams.require("langpri");
-        lng.currentLanguage = $2sxc.urlParams.require("lang");
+        lng.defaultLanguage = $2sxc.urlParams.require("langpri");   // the primary content-language - for first translation 
+        lng.currentLanguage = $2sxc.urlParams.require("lang");      // the current ui language used for i18n and/or for content
         lng.languages = JSON.parse($2sxc.urlParams.require("langs"));
     }
 
@@ -103,11 +103,53 @@ if (window.angular) // needed because the file is also included in older non-ang
                 },
                 metadataOfEntity: 4,
                 metadataOfAttribute: 2,
+                metadataOfCmsObject: 10,
 
                 contentType: {
                     defaultScope: "2SexyContent",
                     template: "2SexyContent-Template"
+                },
+
+                // use this to set defaults for field types OR to provide an alternat type if one is deprecated
+                formly: {
+                    inputTypeReplacementMap: {
+                        "string-wysiwyg": "string-wysiwyg-tinymce"
+                        //"string-wysiwyg": "string-wysiwyg-dnn"
+                    },
+                    // used to inject additional / change config if necessary
+                    inputTypeReconfig: function (field) {
+                        var config = field.InputTypeConfig || {}; // note: can be null
+                        var applyChanges = false;
+                        switch (field.InputType) {
+                            case "string-wysiwyg-tinymce":
+                                config.Assets = "//cdn.tinymce.com/4/tinymce.min.js\n" +
+                                    "../edit/extensions/field-string-wysiwyg-tinymce/set.js";
+                                applyChanges = true;
+                                break;
+                            case "unknown": // server default if not defined
+                                break;
+                            default:        // default if not defined in this list
+                                break;
+
+                        }
+                        if (applyChanges && !field.InputTypeConfig)
+                            field.InputTypeConfig = config;
+                    }
+
                 }
 
             };
         }]);
+
+// Polyfill for String.endsWith from https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith
+if (!String.prototype.endsWith) {
+    String.prototype.endsWith = function (searchString, position) {
+        var subjectString = this.toString();
+        if (typeof position !== 'number' || !isFinite(position) || Math.floor(position) !== position || position > subjectString.length) {
+            position = subjectString.length;
+        }
+        position -= searchString.length;
+        var lastIndex = subjectString.indexOf(searchString, position);
+        return lastIndex !== -1 && lastIndex === position;
+    };
+}

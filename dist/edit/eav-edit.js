@@ -319,7 +319,7 @@ angular.module("eavFieldTemplates")
     var app = angular.module("eavEditEntity");
 
     // The controller for the main form directive
-    app.controller("EditEntities", ["appId", "$http", "$scope", "entitiesSvc", "toastr", "$translate", "debugState", function editEntityCtrl(appId, $http, $scope, entitiesSvc, toastr, $translate, debugState) {
+    app.controller("EditEntities", ["appId", "$http", "$scope", "entitiesSvc", "saveToastr", "$translate", "debugState", function editEntityCtrl(appId, $http, $scope, entitiesSvc, /*toastr,*/ saveToastr, $translate, debugState) {
 
         var vm = this;
         vm.debug = debugState;
@@ -358,19 +358,27 @@ angular.module("eavFieldTemplates")
 
         vm.save = function (close) {
             vm.isWorking++;
-            var saving = toastr.info($translate.instant("Message.Saving"));
-            entitiesSvc.saveMany(appId, vm.items).then(function (result) {
-                toastr.clear(saving);
+            saveToastr(entitiesSvc.saveMany(appId, vm.items)).then(function (result) {
                 $scope.state.setPristine();
-                toastr.success($translate.instant("Message.Saved"), { timeOut: 3000 });
-                if(close)
+                if (close)
                     vm.afterSaveEvent(result);
                 vm.isWorking--;
             }, function errorWhileSaving(response) {
-                toastr.clear(saving);
-                toastr.error($translate.instant("Message.ErrorWhileSaving"));
                 vm.isWorking--;
             });
+            //var saving = toastr.info($translate.instant("Message.Saving"));
+            //entitiesSvc.saveMany(appId, vm.items).then(function (result) {
+            //    toastr.clear(saving);
+            //    $scope.state.setPristine();
+            //    toastr.success($translate.instant("Message.Saved"), { timeOut: 3000 });
+            //    if(close)
+            //        vm.afterSaveEvent(result);
+            //    vm.isWorking--;
+            //}, function errorWhileSaving(response) {
+            //    toastr.clear(saving);
+            //    toastr.error($translate.instant("Message.ErrorWhileSaving"));
+            //    vm.isWorking--;
+            //});
         };
 
         vm.items = null;
@@ -444,7 +452,7 @@ angular.module("eavFieldTemplates")
 	var app = angular.module("eavEditEntity"); 
 
 	// The controller for the main form directive
-	app.controller("EditEntityFormCtrl", ["appId", "$http", "$scope", "formlyConfig", "contentTypeFieldSvc", "$sce", "debugState", "customInputTypes", function editEntityCtrl(appId, $http, $scope, formlyConfig, contentTypeFieldSvc, $sce, debugState, customInputTypes) {
+	app.controller("EditEntityFormCtrl", ["appId", "$http", "$scope", "formlyConfig", "contentTypeFieldSvc", "$sce", "debugState", "customInputTypes", "eavConfig", function editEntityCtrl(appId, $http, $scope, formlyConfig, contentTypeFieldSvc, $sce, debugState, customInputTypes, eavConfig) {
 
 		var vm = this;
 		vm.editInDefaultLanguageFirst = function () {
@@ -478,7 +486,16 @@ angular.module("eavFieldTemplates")
 		            // Transform EAV content type configuration to formFields (formly configuration)
 
                     // first: add all custom types to re-load these scripts and styles
-		            angular.forEach(result.data, function(e, i) {
+		            angular.forEach(result.data, function (e, i) {
+		                // check in config input-type replacement map if the specified type should be replaced by another
+		                //if (e.InputType && eavConfig.formly.inputTypeReplacementMap[e.InputType]) 
+		                //    e.InputType = eavConfig.formly.inputTypeReplacementMap[e.InputType];
+
+
+		                // review type and get additional configs!
+		                e.InputType = vm.getType(e);
+		                eavConfig.formly.inputTypeReconfig(e);  // provide custom overrides etc. if necessary
+
 		                if (e.InputTypeConfig)
 		                    customInputTypes.addInputType(e);
 		            });
@@ -500,7 +517,7 @@ angular.module("eavFieldTemplates")
 	            if (e.Metadata.All === undefined)
 	                e.Metadata.All = {};
 
-	            var fieldType = vm.getType(e);
+	            var fieldType = e.InputType;
 
 	            // always remember the last heading so all the following fields know to look there for collapse-setting
 	            var isFieldHeading = (fieldType === "empty-default");
@@ -563,32 +580,43 @@ angular.module("eavFieldTemplates")
 		    loadContentType();
 
 
-		// Returns the field type for an attribute configuration
-		vm.getType = function(attributeConfiguration) {
-			var e = attributeConfiguration;
-			var type = e.Type.toLowerCase();
-			var inputType = "";
+	    // Returns the field type for an attribute configuration
+		vm.getType = function (attributeConfiguration) {
+		    var e = attributeConfiguration;
+		    var type = e.Type.toLowerCase();
+		    var inputType = "";
 
 		    // new: the All can - and should - have an input-type which doesn't change
 		    // First look in Metadata.All if an InputType is defined (All should override the setting, which is not the case when using only merged)
-			if (e.Metadata.All && e.Metadata.All.InputType)
-			    inputType = e.Metadata.All.InputType;
-            // If not, look in merged
-			else if (e.Metadata.merged && e.Metadata.merged.InputType)
-			    inputType = e.Metadata.merged.InputType;
+		    if (e.InputType !== "unknown") // the input type of @All is here from the web service // Metadata.All && e.Metadata.All.InputType)
+		        inputType = e.InputType;
+		        // If not, look in merged
+		    else if (e.Metadata.merged && e.Metadata.merged.InputType)
+		        inputType = e.Metadata.merged.InputType;
 
-			if (inputType && inputType.indexOf("-") === -1) // has input-type, but missing main type, this happens with old types like string wysiyg
+		    if (inputType && inputType.indexOf("-") === -1) // has input-type, but missing main type, this happens with old types like string wysiyg
 		        inputType = type + "-" + inputType;
 
-		    // this type may have assets, so the definition may be late-loaded
-		    var typeAlreadyRegistered = formlyConfig.getType(inputType);
-		    var typeWillLoadAssetsInAMoment = (e.InputTypeConfig ? !!e.InputTypeConfig.Assets : false);
+		    var willBeRewrittenByConfig = (inputType && eavConfig.formly.inputTypeReplacementMap[inputType]);
+		    if (!willBeRewrittenByConfig) {
+		        // this type may have assets, so the definition may be late-loaded
+		        var typeAlreadyRegistered = formlyConfig.getType(inputType);    // check if this input-type actually exists - so "string-i-made-this-up" will return undefined
+		        var typeWillRegisterLaterWithAssets = (e.InputTypeConfig ? !!e.InputTypeConfig.Assets : false); // if it will load assets later, then it may still be defined then
 
-			// Use subtype 'default' if none is specified - or type does not exist
-		    if (!inputType || (!typeAlreadyRegistered && !typeWillLoadAssetsInAMoment))
-		        inputType = type + "-default";
+		        // Use subtype 'default' if none is specified - or type does not exist
+		        if (!inputType || (!typeAlreadyRegistered && !typeWillRegisterLaterWithAssets))
+		            inputType = type + "-default";
 
-			return (inputType);
+		        // but re-check if it's in the config! since the name might have changed
+		        willBeRewrittenByConfig = (inputType && eavConfig.formly.inputTypeReplacementMap[inputType]);
+		    }
+
+		    // check in config input-type replacement map if the specified type should be replaced by another
+		    // like "string-wysiwyg" replaced by "string-wysiwyg-tinymce"
+		    if (willBeRewrittenByConfig)
+		        inputType = eavConfig.formly.inputTypeReplacementMap[inputType];
+
+		    return (inputType);
 		};
 	}]);
     
@@ -647,15 +675,16 @@ angular.module("eavFieldTemplates")
 		    $modalInstance.close(result);
 		};
 
-	    var unsavedChangesText = $translate.instant("Errors.UnsavedChanges");
 
 	    vm.maybeLeave = function maybeLeave(e) {
+	        var unsavedChangesText = $translate.instant("Errors.UnsavedChanges");
 	        if (vm.state.isDirty() && !confirm(unsavedChangesText + " " + $translate.instant("Message.ExitOk")))
 	            e.preventDefault();
 	    };
 
 	    $scope.$on('modal.closing', vm.maybeLeave);
 	    $window.addEventListener('beforeunload', function (e) {
+	        var unsavedChangesText = $translate.instant("Errors.UnsavedChanges");
 	        if (vm.state.isDirty()) {
 	            (e || window.event).returnValue = unsavedChangesText; //Gecko + IE
 	            return unsavedChangesText; //Gecko + Webkit, Safari, Chrome etc.
@@ -665,7 +694,7 @@ angular.module("eavFieldTemplates")
 	}]);
 
 })();
-angular.module('eavEditTemplates',[]).run(['$templateCache', function($templateCache) {
+angular.module('eavEditTemplates', []).run(['$templateCache', function($templateCache) {
   'use strict';
 
   $templateCache.put('fields/boolean/boolean-default.html',
@@ -689,7 +718,7 @@ angular.module('eavEditTemplates',[]).run(['$templateCache', function($templateC
 
 
   $templateCache.put('form/edit-many-entities.html',
-    "<div ng-if=\"vm.items != null\" ng-click=vm.debug.autoEnableAsNeeded($event)><eav-language-switcher is-disabled=!vm.isValid()></eav-language-switcher><div ng-repeat=\"p in vm.items\" class=group-entity><h3 class=clickable ng-click=\"p.collapse = !p.collapse\">{{p.Header.Title ? p.Header.Title : 'EditEntity.DefaultTitle' | translate }}&nbsp; <span ng-if=p.Header.Group.SlotCanBeEmpty ng-click=vm.toggleSlotIsEmpty(p) stop-event=click><switch ng-model=p.slotIsUsed class=tosic-blue style=\"top: 6px\" tooltip=\"{{'EditEntity.SlotUsed' + p.slotIsUsed | translate}}\"></switch></span> <span class=\"pull-right clickable\" style=\"font-size: smaller\"><span class=\"low-priority collapse-entity-button\" ng-if=p.collapse icon=plus-sign></span> <span class=\"low-priority collapse-entity-button\" ng-if=!p.collapse icon=minus-sign></span></span></h3><eav-edit-entity-form entity=p.Entity header=p.Header register-edit-control=vm.registerEditControl ng-hide=p.collapse></eav-edit-entity-form></div><div><button ng-disabled=\"!vm.isValid() || vm.isWorking\" ng-click=vm.save(true) type=button class=\"btn btn-primary btn-lg submit-button\"><span icon=ok tooltip=\"{{ 'Button.Save' | translate }}\"></span> &nbsp;<span translate=Button.Save></span></button> &nbsp; <button ng-disabled=\"!vm.isValid() || vm.isWorking\" class=\"btn btn-default btn-lg btn-square\" type=button ng-click=vm.save(false)><span icon=check tooltip=\"{{ 'Button.SaveAndKeepOpen' | translate }}\"></span></button> &nbsp;<switch ng-model=vm.willPublish class=tosic-blue style=\"top: 13px\"></switch>&nbsp; <span ng-click=\"vm.willPublish = !vm.willPublish;\" class=save-published-icon><i ng-if=vm.willPublish icon=eye-open tooltip=\"{{ 'Status.Published' | translate }} - {{ 'Message.WillPublish' | translate }}\"></i> <i ng-if=!vm.willPublish icon=eye-close tooltip=\"{{ 'Status.Unpublished' | translate }} - {{ 'Message.WontPublish' | translate }}\"></i></span> <span ng-if=vm.debug.on><button tooltip=debug icon=zoom-in class=btn ng-click=\"vm.showDebugItems = !vm.showDebugItems\"></button></span><show-debug-availability class=pull-right style=\"margin-top: 20px\"></show-debug-availability></div><div ng-if=\"vm.debug.on && vm.showDebugItems\"><pre>{{ vm.items | json }}</pre></div></div>"
+    "<div ng-if=\"vm.items != null\" ng-click=vm.debug.autoEnableAsNeeded($event)><eav-language-switcher is-disabled=!vm.isValid()></eav-language-switcher><div ng-repeat=\"p in vm.items\" class=group-entity><h3 class=clickable ng-click=\"p.collapse = !p.collapse\">{{p.Header.Title ? p.Header.Title : 'EditEntity.DefaultTitle' | translate }}&nbsp; <span ng-if=p.Header.Group.SlotCanBeEmpty ng-click=vm.toggleSlotIsEmpty(p) stop-event=click><switch ng-model=p.slotIsUsed class=tosic-blue style=\"top: 6px\" tooltip=\"{{'EditEntity.SlotUsed' + p.slotIsUsed | translate}}\"></switch></span> <span class=\"pull-right clickable\" style=\"font-size: smaller\"><span class=\"low-priority collapse-entity-button\" ng-if=p.collapse icon=plus-sign></span> <span class=collapse-entity-button ng-if=!p.collapse icon=minus-sign></span></span></h3><eav-edit-entity-form entity=p.Entity header=p.Header register-edit-control=vm.registerEditControl ng-hide=p.collapse></eav-edit-entity-form></div><div><button ng-disabled=\"!vm.isValid() || vm.isWorking\" ng-click=vm.save(true) type=button class=\"btn btn-primary btn-lg submit-button\"><span icon=ok tooltip=\"{{ 'Button.Save' | translate }}\"></span> &nbsp;<span translate=Button.Save></span></button> &nbsp; <button ng-disabled=\"!vm.isValid() || vm.isWorking\" class=\"btn btn-default btn-lg btn-square\" type=button ng-click=vm.save(false)><span icon=check tooltip=\"{{ 'Button.SaveAndKeepOpen' | translate }}\"></span></button> &nbsp;<switch ng-model=vm.willPublish class=tosic-blue style=\"top: 13px\"></switch>&nbsp; <span ng-click=\"vm.willPublish = !vm.willPublish;\" class=save-published-icon><i ng-if=vm.willPublish icon=eye-open tooltip=\"{{ 'Status.Published' | translate }} - {{ 'Message.WillPublish' | translate }}\"></i> <i ng-if=!vm.willPublish icon=eye-close tooltip=\"{{ 'Status.Unpublished' | translate }} - {{ 'Message.WontPublish' | translate }}\"></i></span> <span ng-if=vm.debug.on><button tooltip=debug icon=zoom-in class=btn ng-click=\"vm.showDebugItems = !vm.showDebugItems\"></button></span><show-debug-availability class=pull-right style=\"margin-top: 20px\"></show-debug-availability></div><div ng-if=\"vm.debug.on && vm.showDebugItems\"><pre>{{ vm.items | json }}</pre></div></div>"
   );
 
 
@@ -714,7 +743,7 @@ angular.module('eavEditTemplates',[]).run(['$templateCache', function($templateC
 
 
   $templateCache.put('localization/localization-menu.html',
-    "<div dropdown is-open=status.isopen class=eav-localization style=\"z-index:{{1000 - index}}\"><a class=eav-localization-lock ng-click=vm.actions.translate(); ng-if=vm.isDefaultLanguage() title={{vm.tooltip()}} ng-class=\"{ 'eav-localization-lock-open': !options.templateOptions.disabled }\" dropdown-toggle>{{vm.infoMessage()}} <i class=\"glyphicon glyphicon-globe\"></i></a><ul class=\"dropdown-menu multi-level pull-right eav-localization-dropdown\" role=menu aria-labelledby=single-button><li role=menuitem><a ng-disabled=vm.enableTranslate() ng-click=vm.actions.translate() translate=LangMenu.Unlink></a></li><li role=menuitem><a ng-click=vm.actions.linkDefault() translate=LangMenu.LinkDefault></a></li><li role=menuitem class=dropdown-submenu><a href=# translate=LangMenu.GoogleTranslate></a><ul class=dropdown-menu><li ng-repeat=\"language in vm.languages.languages\" class=disabled role=menuitem><a ng-click=vm.actions.autoTranslate(language.key) title={{language.name}} href=#>{{language.key}}</a></li></ul></li><li role=menuitem class=dropdown-submenu><a href=# translate=LangMenu.Copy></a><ul class=dropdown-menu><li ng-repeat=\"language in vm.languages.languages\" ng-class=\"{ disabled: options.templateOptions.disabled || !vm.hasLanguage(language.key) }\" role=menuitem><a ng-click=vm.actions.copyFrom(language.key) title={{language.name}} href=#>{{language.key}}</a></li></ul></li><li role=menuitem class=dropdown-submenu><a href=# translate=LangMenu.Use></a><ul class=dropdown-menu><li ng-repeat=\"language in vm.languages.languages\" ng-class=\"{ disabled: !vm.hasLanguage(language.key) }\" role=menuitem><a ng-click=vm.actions.useFrom(language.key) title={{language.name}} href=#>{{language.key}}</a></li></ul></li><li role=menuitem class=dropdown-submenu><a href=# translate=LangMenu.Share></a><ul class=dropdown-menu><li ng-repeat=\"language in vm.languages.languages\" ng-class=\"{ disabled: !vm.hasLanguage(language.key) }\" role=menuitem><a ng-click=vm.actions.shareFrom(language.key) title={{language.name}} href=#>{{language.key}}</a></li></ul></li></ul></div>"
+    "<div dropdown is-open=status.isopen class=eav-localization style=\"z-index:{{1000 - index}}\"><a class=eav-localization-lock ng-click=vm.actions.toggleTranslate(); ng-if=vm.isDefaultLanguage() title={{vm.tooltip()}} ng-class=\"{ 'eav-localization-lock-open': !options.templateOptions.disabled }\" dropdown-toggle>{{vm.infoMessage()}} <i class=\"glyphicon glyphicon-globe\"></i></a><ul class=\"dropdown-menu multi-level pull-right eav-localization-dropdown\" role=menu aria-labelledby=single-button><li role=menuitem><a ng-disabled=vm.enableTranslate() ng-click=vm.actions.translate() translate=LangMenu.Unlink></a></li><li role=menuitem><a ng-click=vm.actions.linkDefault() translate=LangMenu.LinkDefault></a></li><li role=menuitem class=dropdown-submenu><a href=# translate=LangMenu.GoogleTranslate></a><ul class=dropdown-menu><li ng-repeat=\"language in vm.languages.languages\" class=disabled role=menuitem><a ng-click=vm.actions.autoTranslate(language.key) title={{language.name}} href=#>{{language.key}}</a></li></ul></li><li role=menuitem class=dropdown-submenu><a href=# translate=LangMenu.Copy></a><ul class=dropdown-menu><li ng-repeat=\"language in vm.languages.languages\" ng-class=\"{ disabled: options.templateOptions.disabled || !vm.hasLanguage(language.key) }\" role=menuitem><a ng-click=vm.actions.copyFrom(language.key) title={{language.name}} href=#>{{language.key}}</a></li></ul></li><li role=menuitem class=dropdown-submenu><a href=# translate=LangMenu.Use></a><ul class=dropdown-menu><li ng-repeat=\"language in vm.languages.languages\" ng-class=\"{ disabled: !vm.hasLanguage(language.key) }\" role=menuitem><a ng-click=vm.actions.useFrom(language.key) title={{language.name}} href=#>{{language.key}}</a></li></ul></li><li role=menuitem class=dropdown-submenu><a href=# translate=LangMenu.Share></a><ul class=dropdown-menu><li ng-repeat=\"language in vm.languages.languages\" ng-class=\"{ disabled: !vm.hasLanguage(language.key) }\" role=menuitem><a ng-click=vm.actions.shareFrom(language.key) title={{language.name}} href=#>{{language.key}}</a></li></ul></li></ul></div>"
   );
 
 
@@ -795,7 +824,9 @@ angular.module('eavEditTemplates',[]).run(['$templateCache', function($templateC
 					if (fieldModel.Values.length === 0) {
 					    if (langConf.currentLanguage == langConf.defaultLanguage) {
 					        var defaultValue = eavDefaultValueService(scope.options);
-					        fieldModel.addVs(defaultValue, langConf.currentLanguage); // Assign default language dimension
+                            // Add default language if we are in a ml environment, else don't add any
+					        var languageToAdd = langConf.languages.length > 0 ? langConf.currentLanguage : null;
+					        fieldModel.addVs(defaultValue, languageToAdd);
 					    }
 					    else { // There are no values - value must be edited in default language first
 					        return;
@@ -887,7 +918,7 @@ angular.module('eavEditTemplates',[]).run(['$templateCache', function($templateC
 				};
 
 				vm.isDefaultLanguage = function () { return languages.currentLanguage != languages.defaultLanguage; };
-				vm.enableTranslate = function () { return true; };
+				vm.enableTranslate = function () { return vm.fieldModel.getVsWithLanguage(languages.currentLanguage) === null; };
 
 				vm.infoMessage = function () {
 				    if (Object.keys($scope.value.Dimensions).length === 1 && $scope.value.Dimensions[languages.defaultLanguage] === false)
@@ -911,10 +942,17 @@ angular.module('eavEditTemplates',[]).run(['$templateCache', function($templateC
 				};
 
 				vm.actions = {
+				    toggleTranslate: function toggleTranslate() {
+				        if (vm.enableTranslate())
+				            vm.actions.translate();
+				        else
+				            vm.actions.linkDefault();
+				    },
 				    translate: function trnslt() {
-				        //if (vm.enableTranslate())
-				        vm.fieldModel.removeLanguage(languages.currentLanguage);
-				        vm.fieldModel.addVs($scope.value.Value, languages.currentLanguage, false);
+				        if (vm.enableTranslate()) {
+				            vm.fieldModel.removeLanguage(languages.currentLanguage);
+				            vm.fieldModel.addVs($scope.value.Value, languages.currentLanguage, false);
+				        }
 				    },
 				    linkDefault: function linkDefault() {
 				        vm.fieldModel.removeLanguage(languages.currentLanguage);
@@ -1044,7 +1082,8 @@ function enhanceEntity(entity) {
         // todo: when adding VS - ensure the events are added too...
         att.addVs = function(value, language, shareMode) {
             var dimensions = {};
-            dimensions[language] = (shareMode === null ? true : shareMode);
+            if(language !== null)
+                dimensions[language] = ((shareMode === null || shareMode === undefined) ? false : shareMode);
             var newVs = { "Value": value, "Dimensions": dimensions };
             // ToDo: enhancer.enhanceWithCount(newVs.Dimensions);
             this.Values.push(enhancer.enhanceVs(newVs));
@@ -1108,11 +1147,6 @@ function enhanceEntity(entity) {
 	            if (config === undefined || config === null)
 	                return;
 
-	            // only add one if it has not been added yet
-                // commented out - believe this won't work when using ocLazyLoad
-	            //if (svc.inputTypesOnPage[config.Type] !== undefined)
-	            //    return;
-
 	            svc.inputTypesOnPage[config.Type] = config;
 
 	            svc.addToLoadQueue(config);
@@ -1131,12 +1165,6 @@ function enhanceEntity(entity) {
 	                var asset = list[a].trim();
 	                if (asset.length > 5) { // ensure we skip empty lines etc.
 	                    svc.assetsToLoad.push(svc.resolveSpecialPaths(asset));
-	                    // add to document
-	                    //if (svc.addHeadJsOrCssTag(svc.resolveSpecialPaths(asset))) {
-	                    //    // note: returns true if it has JS, in which case we monitor for success before binding the form
-	                    //    // config.hasJsAssets = true;
-	                    //    config.assetsLoaded = false;
-	                    //}
 	                }
 	            }
 	        };
@@ -1144,46 +1172,7 @@ function enhanceEntity(entity) {
 	        // now create promise and wait for everything to load
 	        svc.loadWithPromise = function loadWithPromise() {
 	            return $ocLazyLoad.load(svc.assetsToLoad);
-	            //var cycleDuration = 100;
-	            //return $q(function(resolve, reject) {
-	            //    var msg = toastr.info("todo translate: loading custom input types");
 
-	            //    return $ocLazyLoad.load(svc.assetsToLoad);
-
-	                //var totalTime = 0;
-	                //var maxTime = 2000;
-	                //var finishNow = false;
-	                //svc.checkloop = $interval(function() {
-	                //    var allLoaded = true;
-	                //    angular.forEach(svc.inputTypesOnPage, function(config, type) { 
-	                //        if (!config.assetsLoaded) {
-	                //            if (svc.checkDependencyArrival(config.Type)) {
-	                //                config.assetsLoaded = true;
-	                //            } else
-	                //                allLoaded = false;
-	                //        }
-	                //    });
-
-	                //    if (allLoaded) {
-	                //        toastr.clear(msg);
-	                //        toastr.info("todo translate: all loadded");
-	                //        finishNow = true;
-	                //    } else {
-	                //        totalTime += cycleDuration;
-	                //        if (totalTime > maxTime) {
-	                //            toastr.clear(msg);
-	                //            toastr.warning("todo translate - not able to load all types within " + maxTime / 1000 + " seconds, will continue without. See 2sxc.org/help?tag=custom-input", "todo translate error");
-	                //            finishNow = true;
-	                //        }
-	                //    }
-
-                    //    if (finishNow) {
-                    //        $interval.cancel(svc.checkloop);
-	                //        resolve();
-                    //    }
-	                //}, cycleDuration);
-
-	            //});
 	        };
 
 	        svc.resolveSpecialPaths = function resolve(url) {
@@ -1192,21 +1181,6 @@ function enhanceEntity(entity) {
 	                .replace(/\[App:Path\]/i, eavConfig.getUrlPrefix("app"));
 	            return url;
 	        };
-
-	        //svc.addHeadJsOrCssTag = function (url) {
-	        //    url = url.trim();
-	        //    if (url.indexOf(".js") > 0) {
-	        //        var oHead = document.getElementsByTagName("HEAD").item(0);
-	        //        var oScript = document.createElement("script");
-	        //        oScript.type = "text/javascript";
-	        //        oScript.src = url;
-	        //        oHead.appendChild(oScript);
-	        //        return true;
-	        //    } else if (url.indexOf(".css") > 0) {
-	        //        alert("css include not implemented yet");
-	        //        return false;
-	        //    }
-	        //};
 
 	        svc.checkDependencyArrival = function cda(typeName) {
 	            return !!formlyConfig.getType(typeName);

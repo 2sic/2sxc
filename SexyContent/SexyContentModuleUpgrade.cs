@@ -97,6 +97,9 @@ namespace ToSic.SexyContent
                     case "08.00.07":
                         Version080007();
                         break;
+                    case "08.01.00":
+                        Version080100();
+                        break;
                 }
 
                 // Increase ClientDependency version upon each upgrade (System and all Portals)
@@ -123,7 +126,7 @@ namespace ToSic.SexyContent
         internal static void FinishAbortedUpgrade()
         {
             // Maybe this list can somehow be extracted from the module manifest?
-            var upgradeVersionList = new[] { "07.00.00", "07.00.03", "07.02.00", "07.02.02", "07.03.00", "07.03.01", "07.03.02", "07.03.03", "07.03.04", "08.00.00", "08.00.01", "08.00.02", "08.00.03", "08.00.04", "08.00.05", "08.00.06", "08.00.07", "08.00.08", "08.00.09", "08.00.10", "08.00.11", "08.00.12" };
+            var upgradeVersionList = new[] { "07.00.00", "07.00.03", "07.02.00", "07.02.02", "07.03.00", "07.03.01", "07.03.02", "07.03.03", "07.03.04", "08.00.00", "08.00.01", "08.00.02", "08.00.03", "08.00.04", "08.00.05", "08.00.06", "08.00.07", "08.00.08", "08.00.09", "08.00.10", "08.00.11", "08.00.12", "08.01.00" };
 
             // Run upgrade again for all versions that do not have a corresponding logfile
             foreach (var upgradeVersion in upgradeVersionList)
@@ -656,30 +659,28 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
 
         private static void Version080007()
         {
-            var desktopModuleNames = new[] { "2sxc", "2sxc-app" };
-
-            // Remove settings and settingswrapper control
-            foreach(var d in desktopModuleNames)
-            {
-                var dmi = DesktopModuleController.GetDesktopModuleByModuleName(d, -1);
-                if (dmi != null)
-                {
-                    var mdi = dmi.ModuleDefinitions.FirstOrDefault();
-                    
-                    if (mdi.Value != null)
-                    {
-                        var settingsControl = ModuleControlController.GetModuleControlByControlKey("settings", mdi.Value.ModuleDefID);
-                        if(settingsControl != null)
-                            ModuleControlController.DeleteModuleControl(settingsControl.ModuleControlID);
-                        var settingsWrapperControl = ModuleControlController.GetModuleControlByControlKey("settingswrapper", mdi.Value.ModuleDefID);
-                        if (settingsWrapperControl != null)
-                            ModuleControlController.DeleteModuleControl(settingsWrapperControl.ModuleControlID);
-                    }
-                }
-            }
-            
+            RemoveModuleControls(new[] { "settings", "settingswrapper" });
         }
-        
+
+        private static void Version080100()
+        {
+            var userName = "System-ModuleUpgrade-080100";
+
+            // Add new content types and entities
+            var xmlToImport =
+                File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/08.01.00.xml"));
+            var xmlImport = new XmlImport("en-US", userName, true);
+            var success = xmlImport.ImportXml(Constants.DefaultZoneId, Constants.MetaDataAppId, XDocument.Parse(xmlToImport), false); // special note - change existing values
+
+            if (!success)
+            {
+                var messages = String.Join("\r\n- ", xmlImport.ImportLog.Select(p => p.Message).ToArray());
+                throw new Exception("The 2sxc module upgrade to 08.01.00 failed: " + messages);
+            }
+
+            // Remove unneeded control key for template file editing
+            RemoveModuleControls(new[] { "edittemplatefile" });
+        }
 
         /// <summary>
         /// Copy a Directory recursive
@@ -717,6 +718,31 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
                 {
                     var temppath = Path.Combine(destDirName, subdir.Name);
                     DirectoryCopy(subdir.FullName, temppath, copySubDirs);
+                }
+            }
+        }
+
+        private static void RemoveModuleControls(IEnumerable<string> controls)
+        {
+            var desktopModuleNames = new[] { "2sxc", "2sxc-app" };
+
+            // Remove settings and settingswrapper control
+            foreach (var d in desktopModuleNames)
+            {
+                var dmi = DesktopModuleController.GetDesktopModuleByModuleName(d, -1);
+                if (dmi != null)
+                {
+                    var mdi = dmi.ModuleDefinitions.FirstOrDefault();
+
+                    if (mdi.Value != null)
+                    {
+                        foreach (var c in controls)
+                        {
+                            var settingsControl = ModuleControlController.GetModuleControlByControlKey(c, mdi.Value.ModuleDefID);
+                            if (settingsControl != null)
+                                ModuleControlController.DeleteModuleControl(settingsControl.ModuleControlID);
+                        }
+                    }
                 }
             }
         }

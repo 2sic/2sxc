@@ -1,3 +1,223 @@
+.metadata-exists {
+    color: #0088f4
+}
+
+.adam-browse-background-icon {
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    min-width: 100%;
+    min-height: 100%;
+    text-align: center;
+}
+
+.adam-browse-background-icon i {
+    font-size: 4em;
+}
+
+.adam-background {
+    z-index: 20;
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 13px;
+    min-width: 100%;
+    max-width: 100%;
+    padding: 2em 1em;
+    text-align: center;
+    line-height: 150%;
+}
+
+.adam-tag {
+font-size: large;position: absolute;right: -15px;top: 50px;font-size: 1.8em;
+    z-index: 30;
+}
+
+.adam-delete-button {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    font-size: 1.4em;
+}
+
+.dz-details {
+    bottom: 0;
+}
+
+.dropzone .dz-preview:hover .adam-blur {
+    -webkit-transform:scale(1.05,1.05);
+    -moz-transform:scale(1.05,1.05);
+    -ms-transform:scale(1.05,1.05);
+    -o-transform:scale(1.05,1.05);
+    transform:scale(1.05,1.05);
+    -webkit-filter:blur(8px);
+    filter:blur(8px)
+}
+
+
+
+/*label under the icon*/
+.adam-short-label  {
+    text-overflow: ellipsis;
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 10px;
+}
+
+.adam-full-name {
+    background-color: rgba(255,255,255,.8);
+    border-radius: 3px;
+    word-break: break-all;
+    width: 80%;
+    max-width: 95%;
+    max-height: 57px;
+    overflow: hidden;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+}
+.adam-full-name-area {
+    height: 60px;
+    display: block;
+}
+.adam-browse-background {
+        background-color: whitesmoke;
+}
+
+.mce-ico[class^="icon-"]:before, .mce-ico[class*=" icon-"]:before {
+    margin-left: 0;
+}
+
+.icon-folder-empty:before { content: '\e800'; } /* '' */
+.icon-file-word:before { content: '\e801'; } /* '' */
+.icon-file-pdf:before { content: '\e802'; } /* '' */
+.icon-file-excel:before { content: '\e803'; } /* '' */
+.icon-file:before { content: '\e804'; } /* '' */
+.icon-file-powerpoint:before { content: '\e805'; } /* '' */
+.icon-file-archive:before { content: '\e806'; } /* '' */
+.icon-file-text:before { content: '\e807'; } /* '' */
+.icon-level-up:before { content: '\e808'; } /* '' */
+.icon-align-left:before { content: '\e809'; } /* '' */
+.icon-up-circled2:before { content: '\e80a'; } /* '' */
+.icon-plus:before { content: '\e80b'; } /* '' */
+.icon-plus-circled:before { content: '\e80c'; } /* '' */
+.icon-minus:before { content: '\e80d'; } /* '' */
+.icon-minus-circled:before { content: '\e80e'; } /* '' */
+.icon-file-code:before { content: '\e80f'; } /* '' */
+.icon-file-video:before { content: '\e810'; } /* '' */
+.icon-file-audio:before { content: '\e811'; } /* '' */
+.icon-star:before { content: '\e812'; } /* '' */
+.icon-star-empty:before { content: '\e813'; } /* '' */
+.icon-star-half-alt:before { content: '\e814'; } /* '' */
+.icon-tag:before { content: '\e815'; } /* '' */
+.icon-pro:before { content: '\e816'; } /* '' */
+.icon-plus-squared:before { content: '\e817'; } /* '' */
+.icon-minus-squared:before { content: '\e818'; } /* '' */
+.icon-apple:before { content: '\e819'; } /* '' */
+.icon-align-center:before { content: '\e81a'; } /* '' */
+.icon-align-right:before { content: '\e81b'; } /* '' */
+.icon-cancel:before { content: '\e81c'; } /* '' */
+.icon-ok:before { content: '\e81d'; } /* '' */
+.icon-link-ext:before { content: '\e81e'; } /* '' */
+.icon-heart:before { content: '\e81f'; } /* '' */
+.icon-options:before { content: '\e820'; } /* '' */
+.icon-file-vcard:before { content: '\e821'; } /* '' */
+.icon-settings:before { content: '\e822'; } /* '' */
+.icon-manage:before { content: '\e823'; } /* '' */
+.icon-smile:before { content: '\e824'; } /* '' */
+.icon-anchor:before { content: '\e825'; } /* '' */
+.icon-sitemap:before { content: '\e826'; } /* '' */
+.icon-resize-horizontal:before { content: '\e827'; } /* '' */
+.icon-spinner:before { content: '\e828'; } /* '' */
+.icon-file-image:before { content: '\e829'; } /* '' */
+.icon-image:before { content: '\e82a'; } /* '' */
+.icon-fields:before { content: '\e82b'; } /* '' */
+.icon-th-list:before { content: '\e82c'; } /* '' */
+.icon-heart-empty:before { content: '\e82d'; } /* '' */
+.icon-circle-empty:before { content: '\e82e'; } /* '' */
+.icon-circle:before { content: '\e82f'; } /* '' */
+.icon-eye:before { content: '\e830'; } /* '' */
+.icon-dot-circled:before { content: '\e831'; } /* '' */
+.icon-code:before { content: '\e832'; } /* '' */
+.icon-lock:before { content: '\e833'; } /* '' */
+.icon-eye-close:before { content: '\e834'; } /* '' */
+.icon-import:before { content: '\e835'; } /* '' */
+.icon-user:before { content: '\e836'; } /* '' */
+.icon-home:before { content: '\e837'; } /* '' */
+.icon-table:before { content: '\e838'; } /* '' */
+.icon-glasses:before { content: '\e839'; } /* '' */
+.icon-globe:before { content: '\e83a'; } /* '' */
+.icon-language:before { content: '\e83b'; } /* '' */
+.icon-fire:before { content: '\e83c'; } /* '' */
+.icon-circle-half:before { content: '\e83d'; } /* '' */
+.icon-export:before { content: '\e83e'; } /* '' */
+.icon-reload:before { content: '\e83f'; } /* '' */
+.icon-flash:before { content: '\e840'; } /* '' */
+.icon-ghost:before { content: '\e841'; } /* '' */
+@font-face {
+  font-family: 'app-icons';
+    src: url('../lib/fonts/app-icons.woff?87396608') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+/* Chrome hack: SVG is rendered more smooth in Windozze. 100% magic, uncomment if you need it. */
+/* Note, that will break hinting! In other OS-es font will be not as sharp as it could be */
+/*
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: 'app-icons';
+    src: url('../font/app-icons.svg?87396608#app-icons') format('svg');
+  }
+}
+*/
+ 
+.icon-lg {
+    font-size: 120%;
+}
+ [class^="icon-"]:before, [class*=" icon-"]:before {
+  font-family: "app-icons";
+  font-style: normal;
+  font-weight: normal;
+  speak: none;
+ 
+  display: inline-block;
+  text-decoration: inherit;
+  width: 1em;
+  margin-right: .2em;
+  text-align: center;
+  /* opacity: .8; */
+ 
+  /* For safety - reset parent styles, that can break glyph codes*/
+  font-variant: normal;
+  text-transform: none;
+ 
+  /* fix buttons height, for twitter bootstrap */
+  line-height: 1em;
+ 
+  /* Animation center compensation - margins should be symmetric */
+  /* remove if not needed */
+  margin-left: .2em;
+ 
+  /* you can be more comfortable with increased icons size */
+  /* font-size: 120%; */
+ 
+  /* Font smoothing. That was taken from TWBS */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+ 
+  /* Uncomment for 3D effect */
+  /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
+}
+ 
 /*
  * The MIT License
  * Copyright (c) 2012 Matias Meno <m@tias.me>
@@ -392,19 +612,96 @@
         border-left: 6px solid transparent;
         border-right: 6px solid transparent;
         border-bottom: 6px solid #be2626; }
-
-.file-type-image {
-    
+.icon-before-input {
+    width: 46px;
+    font-size: x-large;
+    padding-left: 6px;
+    padding-right: 5px;
+    padding-top: 2px;
+    padding-bottom: 3px;
 }
 
-.file-type-document {
-    
+.thumbnail-before-input {
+    width: 46px; 
+    padding-top: 0; 
+    padding-bottom: 0; 
+    border-top-width: 0; 
+    padding-left: 0; 
+    padding-right: 0; 
+    border-left-width: 0; 
+    border-bottom-width: 0; 
+    background-color: transparent; 
 }
 
-.dropzone .dz-preview .dz-details.file-type-folder {
-    opacity: 1
+div.dropzone div.input-group div.tooltip-inner {
+    word-wrap: break-word;
+}
+.field-string-wysiwyg-mce-box {
+    position: relative;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(170,178,189);
+    border-radius: 4px;
+    padding: 8px;
+    font-size: larger;
 }
 
-.dropzone .dz-preview .dz-details.file-type-folder .file-actions {
-    opacity: 0
+
+.mce-tinymce.mce-container.mce-tinymce-inline {
+    background-color: #0087F4;
+}
+.mce-tinymce.mce-container.mce-toolbar {
+    background-color: #0087F4;
+}
+.mce-container, .mce-panel, .mce-btn {
+    color: white!important;
+    background-color: #0087F4!important;
+}
+
+.mce-menubar .mce-menubtn button span, .mce-ico { color: white!important;}
+.mce-container, .mce-container *, .mce-widget, .mce-widget *, .mce-reset { color: white !important;}
+
+.mce-textbox {color:#333!important}
+
+.mce-btn:hover, .mce-btn:focus { border-color:whitesmoke!important}
+.mce-splitbtn .mce-open.mce-active {
+    /*background-color: whitesmoke !important;*/
+    opacity: 0.5;
+}
+.mce-menu-item .mce-caret {
+    border-left-color: whitesmoke !important;
+}
+
+.mce-caret { border-top-color: whitesmoke!important}
+
+.mce-tab {
+    background-color: #329ff6!important;
+}
+
+.mce-tab.mce-active {
+    background-color: #0087f4!important;
+}
+
+.mce-i-apple:before {
+    position: relative;
+  top: 1px;
+  display: inline-block;
+  font-family: 'Glyphicons Halflings';
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+    content:"\f179"
+}
+
+
+/* temporary fix till icons and icon classes / buttons are replaced in EAV with font-icons */
+
+.temp-icon-fix, 
+.btn-lg.btn-square.temp-icon-fix {
+    padding-left: 10px;
+    padding-right: 13px;
 }

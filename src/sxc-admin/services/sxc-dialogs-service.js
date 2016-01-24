@@ -12,7 +12,6 @@ angular.module("SxcAdminUi", [
     "SxcTemplates",
     "SxcEditTemplates",
     "sxcFieldTemplates",
-    //"SxcEditContentGroupDnnWrapper",
     "EavAdminUi", // dialog (modal) controller
 ])
     .factory("oldDialogs", function (tabId, AppInstanceId, appId, websiteRoot, $q) {
@@ -117,6 +116,12 @@ angular.module("SxcAdminUi", [
         svc.openManageContentList = function orcl(item, closeCallback) {
             var resolve = eavAdminDialogs.CreateResolve({ item: item });
             return eavAdminDialogs.OpenModal("manage-content-list/manage-content-list.html", "ManageContentList as vm", "", resolve, closeCallback);
+        };
+
+
+        svc.openDevelop = function ove(item, closeCallback) {
+            var resolve = eavAdminDialogs.CreateResolve({ item: item });
+            return eavAdminDialogs.OpenModal("source-editor/editor.html", "Editor as vm", "xlg", resolve, closeCallback);
         };
 
         // 2dm 2015-10-07 - don't think this is in use, remove

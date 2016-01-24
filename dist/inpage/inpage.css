@@ -1,0 +1,204 @@
+.sc-element { position:relative; }
+.sc-element .sc-menu { position:absolute; right:5px; top:5px; display:none; }
+.sc-element:hover .sc-menu { display: block; }
+.sc-menu { list-style-type:none; margin:0; padding:0px;display: inline;z-index: 1499; }
+.sc-menu li { list-style-type:none; padding:0!important; margin:0!important; display:inline; }
+.sc-menu a { display:inline-block!important; margin-right:4px!important;cursor: pointer;margin-left: 0 !important; }
+
+.sc-menu a div { 
+    width: 28px!important;
+    height: 28px!important;
+    line-height:28px!important;
+    background-color: #0088f4;
+    /*background-color: #96D500; 
+    border-color: #96D500;*/ 
+    /* border-width: 3px;  */
+    border-style: solid; 
+    box-sizing: content-box;
+    border-radius: 3px;
+    -webkit-border-radius: 3px; 
+    -moz-border-radius: 3px;
+    color: #fff; 
+    text-align: center; 
+    /*padding: 2px;*/ 
+    font-size: 15px }
+.sc-menu a div i {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.sc-menu.listContent a span {background-color: #96D500; border-color: #96D500;}
+.sc-menu a { display: none!important }
+.show-set-0 a.show-default { display: inline-block!important}
+.show-set-1 a.show-edit { display: inline-block!important}
+.show-set-2 a.show-design {display: inline-block!important}
+.show-set-3 a.show-admin {display: inline-block!important}
+.show-set-3 a.show-admin div { display: inline-block !important; background-color: #96D500}
+
+.sc-menu span.disabled { color: #aaa}
+
+.show-set-1 i.btn-mode:before { 
+    -ms-transform: rotate(45deg); /* IE 9 */
+    transform: rotate(45deg);
+}
+.show-set-2 i.btn-mode:before { 
+    -ms-transform: rotate(90deg); /* IE 9 */
+    transform: rotate(90deg);
+}
+.show-set-3 i.btn-mode:before { 
+    -ms-transform: rotate(135deg); /* IE 9 */
+    transform: rotate(135deg);
+}
+
+
+/* Template / ContentType / App-Selector */
+.sc-selector-wrapper { position: relative;overflow: hidden; }
+.sc-selector-wrapper .dnnFormInfo { overflow: hidden;padding: 9px;max-width:none; }
+.sc-selector-wrapper a { cursor: pointer; }
+.sc-selectors { max-width: 100% !important;float: left;width: 300px; }
+.sc-selectors select { display: block;width: 100%;font-family: sans-serif;font-size: 13px;font-weight: 400;font-style: normal;color: #666;line-height: 16px;padding: 9px; }
+.sc-selector-contenttype, .sc-selector-app { margin-bottom: 3px!important; }
+.sc-selector-actions { margin-top: 46px; }
+
+/* todo: change to font-icons */
+.sc-selector-actions a div {
+    display: inline-block;
+    width: 28px!important;
+    height: 28px!important;
+    line-height:28px!important;
+    background-color: #0088f4;
+    border-style: solid; 
+    box-sizing: content-box;
+    border-radius: 3px;
+    -webkit-border-radius: 3px; 
+    -moz-border-radius: 3px;
+    color: #fff; 
+    text-align: center; 
+    /*padding: 2px;*/
+    font-size: 15px;
+}
+
+.sc-selectors select[disabled] { opacity: 0.5 }
+.sc-selectors input[disabled] { opacity: 0.5 }
+
+
+/* Loading sign */
+.sc-loading { 
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    color: #0088f4;
+
+    /* temp till we get it corrected*/
+    padding-left: 50%;
+    padding-top: 20px;
+
+}
+
+/* >>> spinner css copied from from font-awesome */
+.fa-spin {
+  -webkit-animation: fa-spin 2s infinite linear;
+  animation: fa-spin 2s infinite linear;
+}
+@-webkit-keyframes fa-spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+@keyframes fa-spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+/* <<< spinner CSS  */
+
+
+
+/* Prevent scrolling when sxc popup is open */
+.sxc-popup-open { overflow:hidden; }
+
+
+
+
+/* The font icons we use for the inpage buttons */
+/* only use the WOFF, as all modern browsers support that */
+@font-face {
+  font-family: 'inpage-icons';
+  src: url('../lib/fonts/inpage-icons.woff?33443275') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+ [class^="icon-sxc-"]:before, [class*=" icon-sxc-"]:before {
+  font-family: "inpage-icons";
+  font-style: normal;
+  font-weight: normal;
+  speak: none;
+ 
+  display: inline-block;
+  text-decoration: inherit;
+  width: 1em;
+  margin-right: .2em;
+  text-align: center;
+  /* opacity: .8; */
+ 
+  /* For safety - reset parent styles, that can break glyph codes*/
+  font-variant: normal;
+  text-transform: none;
+ 
+  /* fix buttons height, for twitter bootstrap */
+  line-height: 1em;
+ 
+  /* Animation center compensation - margins should be symmetric */
+  /* remove if not needed */
+  margin-left: .2em;
+ 
+  /* you can be more comfortable with increased icons size */
+   font-size: 130%; 
+ 
+  /* Font smoothing. That was taken from TWBS */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+ 
+  /* Uncomment for 3D effect */
+  /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
+}
+
+
+.icon-sxc-list-numbered:before { content: '\e800'; } /* '' */
+.icon-sxc-ok:before { content: '\e801'; } /* '' */
+.icon-sxc-plus:before { content: '\e802'; } /* '' */
+.icon-sxc-plus-circled:before { content: '\e803'; } /* '' */
+.icon-sxc-minus:before { content: '\e804'; } /* '' */
+.icon-sxc-minus-circled:before { content: '\e805'; } /* '' */
+.icon-sxc-cancel:before { content: '\e806'; } /* '' */
+.icon-sxc-spinner:before { content: '\e807'; } /* '' */
+.icon-sxc-replace:before { content: '\e808'; } /* '' */
+.icon-sxc-eye:before { content: '\e809'; } /* '' */
+.icon-sxc-eye-off:before { content: '\e80a'; } /* '' */
+.icon-sxc-move-down:before { content: '\e80b'; } /* '' */
+.icon-sxc-move-up:before { content: '\e80c'; } /* '' */
+.icon-sxc-code:before { content: '\e80d'; } /* '' */
+.icon-sxc-settings:before { content: '\e80e'; } /* '' */
+.icon-sxc-manage:before { content: '\e80f'; } /* '' */
+.icon-sxc-pencil:before { content: '\e810'; } /* '' */
+.icon-sxc-options:before { content: '\e811'; } /* '' */
+.icon-sxc-th-list:before { content: '\e812'; } /* '' */
+.icon-sxc-table:before { content: '\e813'; } /* '' */
+.icon-sxc-fields:before { content: '\e814'; } /* '' */
+.icon-sxc-filter:before { content: '\e815'; } /* '' */
+.icon-sxc-list:before { content: '\e816'; } /* '' */
+.icon-sxc-glasses:before { content: '\e819'; } /* '' */

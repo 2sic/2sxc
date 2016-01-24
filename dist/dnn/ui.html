@@ -7,7 +7,7 @@
     <script src="../../js/2sxc.api.min.js"></script>
     <script>
         // the version to append to each asset, to ensure reload after an upgrade
-        var sxcVersionParam = "sxcver=08.00.12";
+        var sxcVersionParam = "sxcver=08.01.00";
 
         // this creates an object on $.ServicesFramework
         // it looks like the DNN object and is necessary so that scripts relying on it will work
@@ -47,11 +47,10 @@
             document.getElementsByTagName("head")[0].appendChild(style);
         }
 
-        var noMin = ($2sxc.urlParams.get("debug") === "true");
+        //var noMin = ($2sxc.urlParams.get("debug") === "true");
         function toMinOrNotToMin(url) {
-            if (!noMin || url.indexOf("lib") > -1)
-                return url;
-            return url.replace(".min", "");
+            return (url.indexOf("lib") > -1) ?
+                url : $2sxc.debug.renameScript(url);
         }
 
     </script>
@@ -61,12 +60,9 @@
         // check if we must load jquery - if we do, it has to happen very early!
         var dialogName = $2sxc.urlParams.require("dialog");
 
-        // Functionality only needed by the pipeline designers - then it will also load jQuery, otherwise not
-        if (dialogName === "pipeline-designer") {
+        // load jquery first - but only needed by the pipeline designers - otherwise not
+        if (dialogName === "pipeline-designer") 
             addScript("../lib/pipeline/jq.min.js");
-            addScript("../lib/pipeline/set.min.js");
-            addStyle("../admin/pipeline-designer.min.css");
-        }
     </script>
     <script>
         // this must come close to the end, after a closed script which might load jQuery
@@ -95,9 +91,26 @@
             addScript(scripts[s]);
         for (var s = 0; s < styles.length; s++)
             addStyle(styles[s]);
+    </script>
+    <script>
+        // special packages only used by certain dialogs...
+
+        // Functionality only needed by the pipeline designers - then it will also load jQuery, otherwise not
+        if (dialogName === "pipeline-designer") {
+            addScript("../lib/pipeline/set.min.js");
+            addStyle("../admin/pipeline-designer.min.css");
+        }
+
+        // scripts needed only by the template
+        if (dialogName === "develop") {
+            addScript("//cdn.jsdelivr.net/ace/1.2.3/noconflict/ace.js");
+            addScript("//cdn.jsdelivr.net/ace/1.2.3/noconflict/ext-language_tools.js");
+            addScript("../lib/angular-ui-ace/ui-ace.min.js");
+            addScript("../sxc-develop/sxc-develop.min.js");
+        }
 
     </script>
-
+    
 </head>
 <body style="background-color:transparent">
 

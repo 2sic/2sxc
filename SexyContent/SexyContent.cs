@@ -46,7 +46,7 @@ namespace ToSic.SexyContent
     {
         #region Constants
 
-        public const string ModuleVersion = "08.00.12"; // always the newest version
+        public const string ModuleVersion = "08.01.00"; // always the newest version
         public const string TemplateID = "TemplateID";
 		public const string ContentGroupGuidString = "ToSIC_SexyContent_ContentGroupGuid";
         public const string AppIDString = "AppId";
@@ -113,8 +113,8 @@ namespace ToSic.SexyContent
         public const string AttributeSetStaticNameApps = "2SexyContent-App";
         public const string AttributeSetStaticNameAppResources = "App-Resources";
         public const string AttributeSetStaticNameAppSettings = "App-Settings";
-        public const string TemporaryDirectory = "~/DesktopModules/ToSIC_SexyContent/Temporary";
-
+        //public const string TemporaryDirectory = "~/DesktopModules/ToSIC_SexyContent/Temporary";
+        public const string TemporaryDirectory = "~/DesktopModules/ToSIC_SexyContent/_";
         #endregion
 
         #region Properties

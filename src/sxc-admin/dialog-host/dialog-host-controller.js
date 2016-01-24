@@ -2,13 +2,22 @@
 
     angular.module("DialogHost", [
         "SxcAdminUi",
-        "EavAdminUi"
+        "EavAdminUi",
+        "oc.lazyLoad"
     ])
          
         .controller("DialogHost", DialogHostController)
         ;
 
-    function DialogHostController(zoneId, appId, items, $2sxc, dialog, sxcDialogs, eavAdminDialogs) {
+    function preLoadAgGrid($ocLazyLoad) {
+        return $ocLazyLoad.load([
+            "../lib/ag-grid/ag-grid.min.js",
+            "../lib/ag-grid/ag-grid.min.css"
+        ]);
+
+    }
+
+    function DialogHostController(zoneId, appId, items, $2sxc, dialog, sxcDialogs, contentTypeName, eavAdminDialogs, $ocLazyLoad) {
         var vm = this;
         vm.dialog = dialog;
         var initialDialog = dialog;
@@ -27,7 +36,9 @@
                 break;
             case "app":
                 // this opens the manage-an-app with content-types, views, etc.
-                sxcDialogs.openAppMain(appId, vm.close);
+                preLoadAgGrid($ocLazyLoad).then(function() {
+                    sxcDialogs.openAppMain(appId, vm.close);
+                });
                 break;
             case "replace":
                 // this is the "replace item in a list" dialog
@@ -35,6 +46,24 @@
                 break;
             case "sort":
                 sxcDialogs.openManageContentList(items[0], vm.close);
+                break;
+            case "develop":
+                // lazy load this to ensure the module is "registered" inside 2sxc
+                $ocLazyLoad.load([
+                        //"../lib/angular-ui-ace/ui-ace.min.js",
+                        $2sxc.debug.renameScript("../sxc-develop/sxc-develop.min.js")
+                    ])
+                    .then(function() {
+                        sxcDialogs.openDevelop(items[0], vm.close);
+                    });
+                break;
+            case "contenttype":
+                eavAdminDialogs.openContentTypeFieldsOfItems(items, vm.close);
+                break;
+            case "contentitems":
+                preLoadAgGrid($ocLazyLoad).then(function() {
+                    eavAdminDialogs.openContentItems(appId, contentTypeName, contentTypeName, vm.close);
+                });
                 break;
             case "pipeline-designer":
                 // Don't do anything, as the template already loads the app in fullscreen-mode

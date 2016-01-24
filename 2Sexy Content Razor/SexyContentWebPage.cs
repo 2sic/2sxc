@@ -221,9 +221,9 @@ namespace ToSic.SexyContent.Razor
         /// <param name="entity">The entity, often Content or similar</param>
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
-        public AdamNavigator Adam(DynamicEntity entity, string fieldName)
+        public AdamNavigator AsAdam(DynamicEntity entity, string fieldName)
         {
-            return AppAndDataHelpers.Adam(AsEntity(entity), fieldName);
+            return AppAndDataHelpers.AsAdam(AsEntity(entity), fieldName);
         }
 
         /// <summary>
@@ -232,9 +232,9 @@ namespace ToSic.SexyContent.Razor
         /// <param name="entity">The entity, often Content or similar</param>
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
-        public AdamNavigator Adam(IEntity entity, string fieldName)
+        public AdamNavigator AsAdam(IEntity entity, string fieldName)
         {
-            return AppAndDataHelpers.Adam(entity, fieldName);
+            return AppAndDataHelpers.AsAdam(entity, fieldName);
         }
         #endregion
 

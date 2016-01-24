@@ -1,0 +1,85 @@
+﻿<div ng-click="vm.debug.autoEnableAsNeeded($event)">
+    <div class="modal-header">
+        <button class="btn btn-default btn-square btn-subtle pull-right" type="button" ng-click="vm.close()"><i icon="remove"></i></button>
+        <h3 class="modal-title" translate="SourceEditor.Title"></h3>
+    </div>
+
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-8">
+                <div tooltip="{{ vm.view.FileName }}">
+                    {{ vm.view.FileName.substr(vm.view.FileName.lastIndexOf("\\") + 1) }} ({{vm.view.Type }})
+                </div>
+                <div ng-model="vm.view.Code" style="height: 600px;" ui-ace="{
+                    useWrapMode : true,
+                    useSoftTabs: true,
+                    showGutter: true,
+                    theme:'sqlserver',
+                    mode: 'razor',
+                    onLoad: aceLoaded,
+                    require: ['ace/ext/language_tools', '//xyz/something'],
+                    advanced: {
+                        enableSnippets: true,
+                        enableBasicAutocompletion: true,
+                        enableLiveAutocompletion: true
+                    },
+                    rendererOptions: {
+                        fontSize: 16
+                    }
+                }">
+                </div>
+            </div>
+            <div class="pull-right col-md-4">
+                <!-- snippets wrapper - should ensure scrolling-->
+                <div>
+                    <strong translate="SourceEditor.SnippetsSection.Title"></strong> <i icon="question-sign" style="opacity: 0.3" ng-click="showSnippetInfo = !showSnippetInfo"></i>
+                    <div ng-if="showSnippetInfo" translate="SourceEditor.SnippetsSection.Intro"></div>
+                </div>
+                <select class="input-lg"
+                        style="width: 90%"
+                        ng-model="vm.snippetSet"
+                        ng-options="key as ('SourceEditorSnippets.' + key + '.Title' | translate) for (key , value) in vm.snippets" 
+                        tooltip="{{ 'SourceEditorSnippets.' + vm.snippetSet + '.Help'  | translate}}"></select>
+                <div>&nbsp;</div>
+                <div style="height: 500px; overflow: auto">
+                    <div ng-repeat="(subsetName, subsetValue) in vm.snippets[vm.snippetSet]">
+                        <strong tooltip="{{ 'SourceEditorSnippets.' + vm.snippetSet + '.' + subsetName + '.Help'  | translate}}">{{ 'SourceEditorSnippets.' + vm.snippetSet + '.' + subsetName + '.Title' | translate}}</strong>
+                        <ul>
+                            <li ng-repeat="value in subsetValue | toArray | orderBy: '$key'" tooltip="{{ value.snip }}">
+                                <span ng-click="vm.addSnippet(value.snip)">{{value.label}}</span>
+                                <a ng-show="value.more" ng-click="showMore = !showMore"><i icon="plus"></i>more</a>
+                                <i icon="info-sign" style="opacity: 0.3" ng-click="show = !show" ng-show="value.help"></i>
+                                <div ng-if="show">
+                                    <em>{{value.help}}</em>
+                                </div>
+                                <ul ng-if="showMore">
+                                    <li ng-repeat="more in value.more | toArray | orderBy: '$key'" tooltip="{{ value.snip }}">
+                                        <span ng-click="vm.addSnippet(more.snip)">{{more.label}}</span>
+                                        <i icon="info-sign" style="opacity: 0.3" ng-click="show = !show" ng-show="more.help"></i>
+                                        <div ng-if="show">
+                                            <em>{{more.help}}</em>
+                                        </div>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <div class="pull-left">
+            <button class="btn btn-primary btn-lg xxbtn-square" type="button" ng-click="vm.save(false)">
+                <span icon="check" tooltip="{{ 'Button.SaveAndKeepOpen' | translate }}"></span>
+                {{ 'Button.SaveAndKeepOpen' | translate }}
+            </button>
+            also supports Ctrl+S
+            <!--&nbsp;
+            <button class="btn btn-default btn-square btn-lg" type="button" ng-click="vm.save(true)"><i icon="ok"></i></button>
+            &nbsp;-->
+        </div>
+    </div>
+    <show-debug-availability class="pull-right"></show-debug-availability>
+</div>
