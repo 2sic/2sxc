@@ -85,8 +85,7 @@
 			"Name": "Name",
 			"Description": "Description",
 			"Fields": "Fields",
-			"Items": "Items",
-			"Actions": ""
+			"Items": "Items"
 		},
 		"TitleExportImport": "Export / Import",
 		"Buttons": {
@@ -117,8 +116,7 @@
 			"Label": "Label",
 			"InputType": "Input Type",
 			"Notes": "Notes",
-			"Sort": "Sort",
-			"Action": ""
+			"Sort": "Sort"
 		},
 		"General": "General"
 	},
@@ -128,8 +126,7 @@
 			"Name": "Name",
 			"Id": "ID",
 			"Condition": "Condition",
-			"Grant": "Grant",
-			"Actions": ""
+			"Grant": "Grant"
 		}
 	},
 	"Pipeline": {
@@ -139,8 +136,7 @@
 			"Table": {
 				"Id": "ID",
 				"Name": "Name",
-				"Description": "Description",
-				"Actions": ""
+				"Description": "Description"
 			}
 		},
 		"Designer": {},
@@ -172,8 +168,7 @@
 			"Table": {
 				"Id": "ID",
 				"Status": "Status",
-				"Title": "Title",
-				"Actions": ""
+				"Title": "Title"
 			},
 			"NoTitle": "- no title -"
 		},
@@ -295,8 +290,7 @@
 			"Table": {
 				"Id": "#",
 				"When": "When",
-				"User": "User",
-				"Actions": ""
+				"User": "User"
 			}
 		}
 	},

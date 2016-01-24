@@ -62,8 +62,12 @@
 	"Extension.TinyMce": {
 		"Link.AdamFile": "Link ADAM-file (recommended)",
 		"Link.AdamFile.Tooltip": "Link using ADAM - just drop files using the Automatic Digital Assets Manager",
+		"Image.AdamImage": "Insert ADAM image (recommended)",
+		"Image.AdamImage.Tooltip": "Image from ADAM- just drop files using the Automatic Digital Assets Manager",
 		"Link.DnnFile": "Link DNN-file",
 		"Link.DnnFile.Tooltip": "Link a DNN-file (all files, slow)",
+		"Image.DnnImage": "Insert DNN image",
+		"Image.DnnImage.Tooltip": "Image from DNN file storage (all files, slow)",
 		"Link.Page": "Link to another page",
 		"Link.Page.Tooltip": "Link a page from the current site",
 		"Link.Anchor.Tooltip": "Anchor to link to using .../page#anchorname",
@@ -71,6 +75,7 @@
 		"SwitchMode.Standard": "Switch to standard mode",
 		"H1": "H1",
 		"H2": "H2",
+		"H3": "H3",
 		"Remove": "Remove"
 	}
 }

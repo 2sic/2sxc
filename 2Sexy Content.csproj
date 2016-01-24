@@ -444,7 +444,6 @@
     <Content Include="src\sxc-edit\adam\_adam.js" />
     <Content Include="src\inpage\dnn-menu-helper\dnn-inpage-edit.js" />
     <Content Include="src\inpage\module-toolbar\inpage-toolbar.js" />
-    <Content Include="js\2sxc.api.min.js" />
     <Content Include="src\inpage\module-toolbar\toolbar-bootstrapper.js" />
     <Content Include="src\inpage\template-selector\moduleService.js" />
     <Content Include="src\inpage\template-selector\2sxc.view_app.js" />
@@ -452,7 +451,6 @@
     <Content Include="src\inpage\template-selector\template-selector.js" />
     <Content Include="js\angularjs\2sxc4ng.annotated.js" />
     <Content Include="js\angularjs\2sxc4ng.js" />
-    <Content Include="js\angularjs\2sxc4ng.min.js" />
     <Content Include="js\angularjs\angular-animate.min.js" />
     <Content Include="js\angularjs\angular-resource.min.js" />
     <Content Include="js\angularjs\angular-ui-tree.min.css" />
@@ -471,7 +469,6 @@
     <Content Include="BuildScripts\ModulePackage.Targets" />
     <Content Include="BuildScripts\MSBuild.Community.Tasks.targets" />
     <Content Include="package.json" />
-    <Content Include="js\2sxc.api.min.js.map" />
     <Content Include="js\angularjs\2sxc4ng.min.js.map" />
     <Content Include="README.md" />
     <Content Include="src\config\eav-configuration-in-sxc.js" />

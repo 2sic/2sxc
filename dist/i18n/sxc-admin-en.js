@@ -12,7 +12,7 @@
 			"Query": "Query Designer",
 			"WA": "WebApi",
 			"WebApi": "WebApi / Data",
-			"IE": "",
+			"IE": "ImpExp",
 			"ImportExport": "Import / Export",
 			"PL": "Global",
 			"PortalLanguages": "Portal / Languages",

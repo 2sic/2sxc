@@ -75,7 +75,7 @@ $2sxc.getManageController = function (id) {
 
     var actionButtonsConf = {
         'edit': buttonConfig('edit', "Edit", "pencil", "default", false, { params: { mode: "edit" } }),
-        'new': buttonConfig('new', "New", "plus", "default", false, { params: { mode: "new" } }, {
+        'new': buttonConfig('new', "New", "plus", "default", false, { params: { mode: "new" },
             dialog: "edit", // don't use "new" (default) but use "edit"
             addCondition: function(settings) { return toolbarConfig.isList && settings.sortOrder !== -1; },
             code: function(settings, event) {

@@ -62,8 +62,12 @@
 	"Extension.TinyMce": {
 		"Link.AdamFile": "ADAM-Datei (empfohlen)",
 		"Link.AdamFile.Tooltip": "ADAM-Dateien verlinken - Dateien einfach hierhin ziehen - verwendet den Automatic Digital Assets Manager",
+		"Image.AdamImage": "ADAM-Bild (empfohlen)",
+		"Image.AdamImage.Tooltip": "ADAM-Bild einfügen - Dateien einfach hierhin ziehen - verwendet den Automatic Digital Assets Manager",
 		"Link.DnnFile": "DNN-Datei verlinken",
 		"Link.DnnFile.Tooltip": "DNN-Datei verlinken (alle Dateien, langsam)",
+		"Image.DnnImage": "DNN-Bild",
+		"Image.DnnImage.Tooltip": "DNN-Bild einfügen (alle Dateien, langsam)",
 		"Link.Page": "Seite verlinken",
 		"Link.Page.Tooltip": "Eine Seite aus dieser Website verlinken",
 		"Link.Anchor.Tooltip": "Texmarke (Anchor) für Verlinkung mit .../page#anchorname",
