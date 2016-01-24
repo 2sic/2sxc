@@ -817,18 +817,24 @@ angular.module("sxcFieldTemplates")
         .controller("FieldWysiwygTinyMce", FieldWysiwygTinyMceController);
 
     // these are the translation keys we must import from angular-translate
+    // as of now we can't just read the content of the json because angular-translate doesn't give external access to the list
     var translationsMce = [
             "Link.AdamFile",
             "Link.AdamFile.Tooltip",
+            "Image.AdamImage",
+            "Image.AdamImage.Tooltip",
             "Link.DnnFile",
             "Link.DnnFile.Tooltip",
             "Link.Page",
             "Link.Page.Tooltip",
+            "Image.DnnImage",
+            "Image.DnnImage.Tooltip",
             "Link.Anchor.Tooltip",
             "SwitchMode.Pro",
             "SwitchMode.Standard",
             "H1",
             "H2",
+            "H3",
             "Remove"
     ];
 
@@ -1110,7 +1116,6 @@ angular.module("sxcFieldTemplates")
         editor.addButton("linkgrouppro", linkgroupPro);
         //#endregion
 
-        // i18n ok
         // group with images (adam) - only in PRO mode
         editor.addButton("images", {
             type: "splitbutton",
@@ -1126,8 +1131,8 @@ angular.module("sxcFieldTemplates")
                     icon: "image",
                     onclick: function() { vm.toggleAdam(true); }
                 }, {
-                    text: "Image.DnnFile", 
-                    tooltip: "Image.DnnFile.Tooltip",
+                    text: "Image.DnnImage", 
+                    tooltip: "Image.DnnImage.Tooltip",
                     icon: "image",
                     onclick: function() { vm.openDnnDialog("imagemanager"); }
                 }, {
@@ -1143,7 +1148,7 @@ angular.module("sxcFieldTemplates")
             ]
         });
 
-        // i18n ok
+        // drop-down with italic, strikethrough, ...
         editor.addButton("formatgroup", {
             type: "splitbutton",
             tooltip: "Italic",  // will be autotranslated
@@ -1159,7 +1164,6 @@ angular.module("sxcFieldTemplates")
 
         });
 
-        // i18n ok
         //#region mode switching and the buttons for it
         function switchModes(mode) {
             editor.settings.toolbar = editor.settings.modes[mode].toolbar;
@@ -1271,9 +1275,6 @@ angular.module("sxcFieldTemplates")
                 return selectorMatched;
             };
         }
-
-
-
 
         editor.addContextToolbar(makeTagDetector("a"), "link unlink");
         editor.addContextToolbar(makeTagDetector("img"), "image | alignimgleft alignimgcenter alignimgright imgresponsive | removeformat | remove");

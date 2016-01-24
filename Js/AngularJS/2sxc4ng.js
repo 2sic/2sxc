@@ -170,7 +170,11 @@ angular.module("2sxc4ng", ["ng"])
             };
             return qry;
         };
-    }).directive('sxcToolbar', function SxcToolbar(AppInstanceId) {
+    })
+
+
+    // BETA - not final. SXC-Toolbar, not ready for production use
+    .directive('sxcToolbar', function SxcToolbar(AppInstanceId) {
         return {
             restrict: 'E',
             scope: {
@@ -201,21 +205,4 @@ angular.module("2sxc4ng", ["ng"])
             }
         };
     })
-
-/* Todo: future feature
-.factory('sxcResource', function(iid, $injector) {
-    return function (url, paramDefaults, actions, options) {
-
-//        // todo: check if resource is loaded
-        // manually get injector, to prevent required dependency and give nice error
-        var inj = angular.injector(['ngResource']);
-        if (!inj)
-            throw 'Error: sxcResource only works if the page also includes angular-resource. So you must either include that, or you should use jQuery AJAX instead.';
-        var res = inj.get('$resource')
-        
-        
-        return res(url, paramDefaults, actions, option);
-    }
-})
-*/
 ;
