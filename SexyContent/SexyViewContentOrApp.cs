@@ -280,7 +280,7 @@ namespace ToSic.SexyContent
 								if (Template != null)
 								{
 									// Edit item
-									Actions.Add(GetNextActionID(), LocalizeString("ActionEdit.Text"), "", "", "edit.gif", "javascript:$2sxcActionMenuMapper(" + ModuleId + ", event).edit();", "test", true,
+									Actions.Add(GetNextActionID(), LocalizeString("ActionEdit.Text"), "", "", "edit.gif", "javascript:$2sxcActionMenuMapper(" + ModuleId + ").edit();", "test", true,
 										SecurityAccessLevel.Edit, true, false);
 								}
 							}
@@ -311,7 +311,7 @@ namespace ToSic.SexyContent
 							{
                                 // Edit Template Button
                                 //Actions.Add(GetNextActionID(), LocalizeString("ActionEditTemplateFile.Text"), ModuleActionType.EditContent, "templatehelp", "edit.gif", EditUrl(TabId, SexyContent.ControlKeys.EditTemplateFile, false, "mid", ModuleId.ToString(), "TemplateID", Template.TemplateId.ToString()), false, SecurityAccessLevel.Admin, true, true);
-                                Actions.Add(GetNextActionID(), LocalizeString("ActionEditTemplateFile.Text"), ModuleActionType.EditContent, "templatehelp", "edit.gif", "javascript:$2sxcActionMenuMapper(" + ModuleId + ", event).develop();", "test", true,
+                                Actions.Add(GetNextActionID(), LocalizeString("ActionEditTemplateFile.Text"), ModuleActionType.EditContent, "templatehelp", "edit.gif", "javascript:$2sxcActionMenuMapper(" + ModuleId + ").develop();", "test", true,
                                         SecurityAccessLevel.Edit, true, false);
                             }
 
