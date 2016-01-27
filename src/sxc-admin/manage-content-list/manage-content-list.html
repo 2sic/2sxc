@@ -16,7 +16,6 @@
             <p translate="ManageContentList.Intro"></p>
             <div ui-tree="options" data-empty-placeholder-enabled="false">
                 <ol ui-tree-nodes ng-model="vm.items">
-
                     <li ng-repeat="item in vm.items" ui-tree-node class="eav-entityselect-item" style="width: 100%">
                         <div ui-tree-handle>
                             <i icon="move" title="{{ 'FieldType.Entity.DragMove' | translate }}" class="pull-left eav-entityselect-sort"></i>
