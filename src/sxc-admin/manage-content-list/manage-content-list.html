@@ -20,8 +20,12 @@
                     <li ng-repeat="item in vm.items" ui-tree-node class="eav-entityselect-item" style="width: 100%">
                         <div ui-tree-handle>
                             <i icon="move" title="{{ 'FieldType.Entity.DragMove' | translate }}" class="pull-left eav-entityselect-sort"></i>
-                            &nbsp;
-                            {{item.Title}} ({{item.Id}})
+                            <span>&nbsp;{{item.Title}} ({{item.Id}})</span>
+                            <span class="eav-entityselect-item-actions">
+                                <span ng-if="item.Id !== 0" data-nodrag title="{{ 'FieldType.Entity.Edit' | translate }}" ng-click="vm.edit(item.Id)">
+                                    <i icon="pencil"></i>
+                                </span>
+                            </span>
                         </div>
                     </li>
                 </ol>

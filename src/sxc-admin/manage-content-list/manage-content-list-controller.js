@@ -68,6 +68,15 @@
 
         };
 
+        vm.edit = function (id) {
+            if (id === null || id === 0)
+                return alert('no can do'); // todo: i18n
+            //var entities = $filter("filter")($scope.availableEntities, { Value: itemGuid });
+            //var id = entities[0].Id;
+
+            eavAdminDialogs.openItemEditWithEntityId(id, vm.reload);
+        };
+
         vm.close = function () { $modalInstance.dismiss("cancel"); };
 
     }

@@ -463,6 +463,15 @@
 
         };
 
+        vm.edit = function (id) {
+            if (id === null || id === 0)
+                return alert('no can do'); // todo: i18n
+            //var entities = $filter("filter")($scope.availableEntities, { Value: itemGuid });
+            //var id = entities[0].Id;
+
+            eavAdminDialogs.openItemEditWithEntityId(id, vm.reload);
+        };
+
         vm.close = function () { $modalInstance.dismiss("cancel"); };
 
     }
@@ -949,7 +958,7 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
 
 
   $templateCache.put('manage-content-list/manage-content-list.html',
-    "<div class=modal-header><button class=\"btn btn-default btn-square btn-subtle pull-right\" type=button ng-click=vm.close()><i icon=remove></i></button><h3 class=modal-title translate=ManageContentList.Title></h3></div><div><div class=modal-body><div><p translate=ManageContentList.HeaderIntro></p><div><a ng-if=vm.header.Type ng-click=vm.editHeader()>{{ vm.header.Title }} <i icon=pencil class=pull-right></i></a> <span ng-if=!vm.header.Type translate=ManageContentList.NoHeaderInThisList></span></div><br></div><div><p translate=ManageContentList.Intro></p><div ui-tree=options data-empty-placeholder-enabled=false><ol ui-tree-nodes ng-model=vm.items><li ng-repeat=\"item in vm.items\" ui-tree-node class=eav-entityselect-item style=\"width: 100%\"><div ui-tree-handle><i icon=move title=\"{{ 'FieldType.Entity.DragMove' | translate }}\" class=\"pull-left eav-entityselect-sort\"></i> &nbsp; {{item.Title}} ({{item.Id}})</div></li></ol></div></div></div></div><div class=modal-footer><button class=\"btn btn-primary btn-square btn-lg pull-left\" type=button ng-click=vm.ok()><i icon=ok></i></button></div>"
+    "<div class=modal-header><button class=\"btn btn-default btn-square btn-subtle pull-right\" type=button ng-click=vm.close()><i icon=remove></i></button><h3 class=modal-title translate=ManageContentList.Title></h3></div><div><div class=modal-body><div><p translate=ManageContentList.HeaderIntro></p><div><a ng-if=vm.header.Type ng-click=vm.editHeader()>{{ vm.header.Title }} <i icon=pencil class=pull-right></i></a> <span ng-if=!vm.header.Type translate=ManageContentList.NoHeaderInThisList></span></div><br></div><div><p translate=ManageContentList.Intro></p><div ui-tree=options data-empty-placeholder-enabled=false><ol ui-tree-nodes ng-model=vm.items><li ng-repeat=\"item in vm.items\" ui-tree-node class=eav-entityselect-item style=\"width: 100%\"><div ui-tree-handle><i icon=move title=\"{{ 'FieldType.Entity.DragMove' | translate }}\" class=\"pull-left eav-entityselect-sort\"></i> <span>&nbsp;{{item.Title}} ({{item.Id}})</span> <span class=eav-entityselect-item-actions><span ng-if=\"item.Id !== 0\" data-nodrag title=\"{{ 'FieldType.Entity.Edit' | translate }}\" ng-click=vm.edit(item.Id)><i icon=pencil></i></span></span></div></li></ol></div></div></div></div><div class=modal-footer><button class=\"btn btn-primary btn-square btn-lg pull-left\" type=button ng-click=vm.ok()><i icon=ok></i></button></div>"
   );
 
 

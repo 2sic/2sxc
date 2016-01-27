@@ -203,17 +203,22 @@ angular.module("eavFieldTemplates")
             });
         };
 
-        $scope.getEntityText = function(entityId) {
+        $scope.getEntityText = function (entityId) {
+            if (entityId === null)
+                return "empty slot"; // todo: i18n
             var entities = $filter("filter")($scope.availableEntities, { Value: entityId });
             return entities.length > 0 ? entities[0].Text : $translate.instant("FieldType.Entity.EntityNotFound"); 
         };
 
-        $scope.remove = function (item) {
-            var index = $scope.chosenEntities.indexOf(item);
+        // remove needs the index --> don't name "remove" - causes problems
+        $scope.removeSlot = function remove(itemGuid, index) {
             $scope.chosenEntities.splice(index, 1);
         };
 
-        $scope.edit = function (itemGuid) {
+        // edit needs the Guid - the index isn't important
+        $scope.edit = function (itemGuid, index) {
+            if (itemGuid === null)
+                return alert('no can do'); // todo: i18n
             var entities = $filter("filter")($scope.availableEntities, { Value: itemGuid });
             var id = entities[0].Id;
 
@@ -713,7 +718,7 @@ angular.module('eavEditTemplates', []).run(['$templateCache', function($template
 
 
   $templateCache.put('fields/entity/entity-default.html',
-    "<div class=eav-entityselect><div ui-tree=options data-empty-placeholder-enabled=false><ol ui-tree-nodes ng-model=chosenEntities><li ng-repeat=\"item in chosenEntities\" ui-tree-node class=eav-entityselect-item><div ui-tree-handle><i icon=move title=\"{{ 'FieldType.Entity.DragMove' | translate }}\" class=\"pull-left eav-entityselect-sort\" ng-show=to.settings.Entity.AllowMultiValue></i> <span title=\"{{getEntityText(item) + ' (' + item + ')'}}\">{{getEntityText(item)}}</span> <span class=eav-entityselect-item-actions><span data-nodrag title=\"{{ 'FieldType.Entity.Edit' | translate }}\" ng-click=edit(item)><i icon=pencil></i></span> <span data-nodrag title=\"{{ 'FieldType.Entity.Remove' | translate }}\" ng-click=remove(this) class=eav-entityselect-item-remove><i icon=minus></i></span></span></div></li></ol></div><select class=\"eav-entityselect-selector form-control input-lg\" ng-model=selectedEntity ng-change=addEntity() ng-show=\"to.settings.merged.AllowMultiValue || chosenEntities.length < 1\"><option value=\"\" translate=FieldType.Entity.Choose></option><option value=new ng-if=createEntityAllowed() translate=FieldType.Entity.New></option><option ng-repeat=\"item in availableEntities\" ng-disabled=\"chosenEntities.indexOf(item.Value) != -1\" value={{item.Value}}>{{item.Text}}</option></select></div>"
+    "<div class=eav-entityselect><div ui-tree=options data-empty-placeholder-enabled=false><ol ui-tree-nodes ng-model=chosenEntities><li ng-repeat=\"item in chosenEntities track by $index\" ui-tree-node class=eav-entityselect-item><div ui-tree-handle><i icon=move title=\"{{ 'FieldType.Entity.DragMove' | translate }}\" class=\"pull-left eav-entityselect-sort\" ng-show=to.settings.Entity.AllowMultiValue></i> <span title=\"{{getEntityText(item) + ' (' + item + ')'}}\">{{getEntityText(item)}}</span> <span class=eav-entityselect-item-actions><span data-nodrag title=\"{{ 'FieldType.Entity.Edit' | translate }}\" ng-click=\"edit(item, index)\"><i icon=pencil></i></span> <span data-nodrag title=\"{{ 'FieldType.Entity.Remove' | translate }}\" ng-click=\"removeSlot(item, $index)\" class=eav-entityselect-item-remove><i icon=minus></i></span></span></div></li></ol></div><select class=\"eav-entityselect-selector form-control input-lg\" ng-model=selectedEntity ng-change=addEntity() ng-show=\"to.settings.merged.AllowMultiValue || chosenEntities.length < 1\"><option value=\"\" translate=FieldType.Entity.Choose></option><option value=new ng-if=createEntityAllowed() translate=FieldType.Entity.New></option><option ng-repeat=\"item in availableEntities\" ng-disabled=\"chosenEntities.indexOf(item.Value) != -1\" value={{item.Value}}>{{item.Text}}</option></select></div>"
   );
 
 
