@@ -111,7 +111,8 @@ angular.module("2sxc4ng", ["ng"])
 
                 // Show very nice error if necessary
                 'responseError': function (rejection) {
-                    sxc.showDetailedHttpError(rejection);
+                    if(!rejection.config.ignoreErrors)
+                        sxc.showDetailedHttpError(rejection);
                     return $q.reject(rejection);
                 }
             };
