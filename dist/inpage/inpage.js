@@ -60,6 +60,7 @@ $2sxc.getManageController = function (id) {
 
     var contentTypeName = manageInfo.contentTypeId; // note: only exists if the template has a content-type
     var toolbarConfig = manageInfo.config;
+    toolbarConfig.contentType = toolbarConfig.contentType || toolbarConfig.attributeSetName;
     var enableTools = manageInfo.user.canDesign;
     var enableDevelop = manageInfo.user.canDevelop;
     var isContent = manageInfo.isContentApp;
@@ -75,13 +76,18 @@ $2sxc.getManageController = function (id) {
 
     var actionButtonsConf = {
         'edit': buttonConfig('edit', "Edit", "pencil", "default", false, { params: { mode: "edit" } }),
+        // new is a dialog to add something, and will not add if cancelled
+        // new can also be used for mini-toolbars which just add an entity not attached to a module
+        // in that case it's essential to add a contentType like 
+        // <ul class="sc-menu" data-toolbar='{"action":"new", "contentType": "Category"}'></ul>
         'new': buttonConfig('new', "New", "plus", "default", false, { params: { mode: "new" },
             dialog: "edit", // don't use "new" (default) but use "edit"
             addCondition: function(settings) { return toolbarConfig.isList && settings.sortOrder !== -1; },
-            code: function(settings, event) {
+            code: function (settings, event) {
                 tbContr._openNgDialog($.extend({}, settings, { sortOrder: settings.sortOrder + 1 }), event);
             }
         }),
+        // add brings no dialog, just add an empty item
         'add': buttonConfig('add', "AddDemo", "plus-circled", "edit", false, {
             addCondition: function(settings) { return toolbarConfig.isList && settings.sortOrder !== -1 && settings.useModuleList; },
             code: function(settings, event) {
@@ -215,8 +221,8 @@ $2sxc.getManageController = function (id) {
         _manageInfo: manageInfo,
 
         // create a dialog link
-        getNgLink: function(settings) {
-            settings = $.extend({}, toolbarConfig, settings); // merge button with toolbar-settings
+        getNgLink: function(specialSettings) {
+            var settings = $.extend({}, toolbarConfig, specialSettings); // merge button with toolbar-settings
 
             var params = {
                 dialog: settings.dialog || settings.action,
