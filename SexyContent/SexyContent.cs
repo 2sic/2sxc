@@ -22,6 +22,7 @@ using DotNetNuke.Security.Roles;
 using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Services.Localization;
 using DotNetNuke.Services.Search.Entities;
+using DotNetNuke.UI.Modules;
 using Newtonsoft.Json;
 using ToSic.Eav;
 using ToSic.Eav.BLL;
@@ -31,6 +32,7 @@ using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Engines.TokenEngine;
+using ToSic.SexyContent.Environment.Interfaces;
 using ToSic.SexyContent.Search;
 using Assembly = System.Reflection.Assembly;
 using FileInfo = System.IO.FileInfo;
@@ -148,6 +150,10 @@ namespace ToSic.SexyContent
 
         #endregion
 
+        #region Environment - should be the place to refactor everything into, which is the host around 2sxc
+        internal Environment.Environment Environment = new Environment.Environment();
+        #endregion
+
         #region AssignmentObjectType Lookups
         /// <summary>
         /// Returns the Default AssignmentObjectTypeID (no assignment / default)
@@ -197,6 +203,9 @@ namespace ToSic.SexyContent
 
         }
 
+        /// <summary>
+        /// This is needed so when the application starts, we can configure our IoC container
+        /// </summary>
         static SexyContent()
         {
             new UnityConfig().Configure();
@@ -206,7 +215,7 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Instanciates Content and Template-Contexts
         /// </summary>
-        public SexyContent(int zoneId, int appId, bool enableCaching = true, int? ownerPortalId = null)
+        public SexyContent(int zoneId, int appId, bool enableCaching = true, int? ownerPortalId = null, ModuleInstanceContext modInstContext = null)
         {
             OwnerPS = ownerPortalId.HasValue ? new PortalSettings(ownerPortalId.Value) : PortalSettings.Current;
             PS = PortalSettings.Current;
@@ -239,6 +248,15 @@ namespace ToSic.SexyContent
             ZoneId = zoneId;
             AppId = appId;
 
+
+            #region Prepare Environment information 
+            // 2016-01 2dm - this is new, the environment is where much code should go to later on
+
+            // Build up the environment. If we know the module context, then use permissions from there
+            Environment.Permissions = (modInstContext != null)
+                ? (IPermissions) new Environment.Dnn7.Permissions(modInstContext)
+                : new Environment.None.Permissions();
+            #endregion
         }
 
         /// <summary>

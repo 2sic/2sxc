@@ -17,13 +17,32 @@ namespace ToSic.SexyContent
         public HtmlString Toolbar {
             get
             {
+                // if it's neither in a running context nor in a running portal, no toolbar
                 if (SexyContext == null || PortalSettings.Current == null)
                     return new HtmlString("");
 
-                if (Entity is IHasEditingData)
-                    return new HtmlString("<ul class='sc-menu' data-toolbar='" + JsonConvert.SerializeObject(new { sortOrder = ((IHasEditingData) Entity).SortOrder, useModuleList = true, isPublished = Entity.IsPublished }) + "'></ul>");
+                // If we're not in a running context, of which we know the permissions, no toolbar
+                if (!SexyContext.Environment.Permissions.UserMayEditContent)
+                    return new HtmlString("");
 
-                return new HtmlString("<ul class='sc-menu' data-toolbar='" + JsonConvert.SerializeObject(new { entityId = Entity.EntityId, isPublished = Entity.IsPublished, attributeSetName = Entity.Type.Name }) + "'></ul>");
+                if (Entity is IHasEditingData)
+                    return new HtmlString("<ul class=\"sc-menu\" data-toolbar='"
+                                          + JsonConvert.SerializeObject(new
+                                          {
+                                              sortOrder = ((IHasEditingData) Entity).SortOrder,
+                                              useModuleList = true,
+                                              isPublished = Entity.IsPublished
+                                          }) 
+                                          + "'></ul>");
+
+                return new HtmlString("<ul class=\"sc-menu\" data-toolbar='"
+                                      + JsonConvert.SerializeObject(new
+                                      {
+                                          entityId = Entity.EntityId,
+                                          isPublished = Entity.IsPublished,
+                                          contentType = Entity.Type.Name
+                                      })
+                                      + "'></ul>");
             }
         }
         private readonly string[] _dimensions;
@@ -74,7 +93,7 @@ namespace ToSic.SexyContent
             #endregion
 
             // new implementation based on revised EAV API
-            var result = Entity.GetBestValue(attributeName, _dimensions);//, out propertyNotFound);
+            var result = Entity.GetBestValue(attributeName, _dimensions);
             propertyNotFound = result == null;
 
             #region handle 2sxc special conversions for file names and entity-lists
