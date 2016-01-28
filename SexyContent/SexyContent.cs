@@ -215,7 +215,7 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Instanciates Content and Template-Contexts
         /// </summary>
-        public SexyContent(int zoneId, int appId, bool enableCaching = true, int? ownerPortalId = null, ModuleInstanceContext modInstContext = null)
+        public SexyContent(int zoneId, int appId, bool enableCaching = true, int? ownerPortalId = null, ModuleInfo moduleInfo = null)
         {
             OwnerPS = ownerPortalId.HasValue ? new PortalSettings(ownerPortalId.Value) : PortalSettings.Current;
             PS = PortalSettings.Current;
@@ -253,8 +253,8 @@ namespace ToSic.SexyContent
             // 2016-01 2dm - this is new, the environment is where much code should go to later on
 
             // Build up the environment. If we know the module context, then use permissions from there
-            Environment.Permissions = (modInstContext != null)
-                ? (IPermissions) new Environment.Dnn7.Permissions(modInstContext)
+            Environment.Permissions = (moduleInfo != null)
+                ? (IPermissions) new Environment.Dnn7.Permissions(moduleInfo)
                 : new Environment.None.Permissions();
             #endregion
         }

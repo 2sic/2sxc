@@ -11,7 +11,7 @@ namespace ToSic.SexyContent.WebApi
             if(!appId.HasValue)
                 appId = SexyContent.GetAppIdFromModule(moduleInfo);
             var zoneId = SexyContent.GetZoneID(moduleInfo.PortalID);
-            return new SexyContent(zoneId.Value, appId.Value, true, moduleInfo.OwnerPortalID);
+            return new SexyContent(zoneId.Value, appId.Value, true, moduleInfo.OwnerPortalID, moduleInfo);
         }
 
     }

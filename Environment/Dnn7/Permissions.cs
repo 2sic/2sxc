@@ -1,15 +1,16 @@
-﻿using DotNetNuke.UI.Modules;
+﻿using DotNetNuke.Entities.Modules;
+using DotNetNuke.UI.Modules;
 using ToSic.SexyContent.Environment.Interfaces;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
     public class Permissions: IPermissions
     {
-        public ModuleInstanceContext ModuleContext;
+        public ModuleInfo ModuleInfo;
 
-        public Permissions(ModuleInstanceContext moduleInstanceContext)
+        public Permissions(ModuleInfo moduleInfo)
         {
-            ModuleContext = moduleInstanceContext;
+            ModuleInfo = moduleInfo;
         }
 
         private bool? _userMayEdit;
@@ -20,7 +21,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 if (_userMayEdit.HasValue)
                     return _userMayEdit.Value;
 
-                var okOnModule = DotNetNuke.Security.Permissions.ModulePermissionController.CanEditModuleContent(ModuleContext.Configuration);
+                var okOnModule = DotNetNuke.Security.Permissions.ModulePermissionController.CanEditModuleContent(ModuleInfo);
 
                 _userMayEdit = okOnModule;
                 // if a user only has tab-edit but not module edit and is not admin, this needs additional confirmation (probably dnn bug)
