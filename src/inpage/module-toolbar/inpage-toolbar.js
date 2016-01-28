@@ -59,22 +59,32 @@ $2sxc.getManageController = function (id) {
                 tbContr._getAngularVm().addItem(settings.sortOrder + 1);
             }
         }),
-        'replace': buttonConfig('replace', "Replace", "replace", "edit", false, {
-            addCondition: function(settings) { return settings.useModuleList; },
-        }),
-        'publish': buttonConfig('publish', "Published", "eye", "edit", false, {
-            iclass2: "icon-sxc-eye-off",
+        'remove': {
+            title: "Toolbar.Remove",
+            iclass: "icon-sxc-minus-circled",
             disabled: true,
+            showOn: "edit",
+            addCondition: function(settings) { return toolbarConfig.isList && settings.sortOrder !== -1; },
             code: function(settings, event) {
-                if (settings.isPublished) {
-                    alert(tbContr.translate("Toolbar.AlreadyPublished"));
-                    return;
+                if (confirm(tbContr.translate("Toolbar.ConfirmRemove"))) {
+                    tbContr._getAngularVm().removeFromList(settings.sortOrder);
                 }
-                var part = settings.sortOrder === -1 ? "listcontent" : "content";
-                var index = settings.sortOrder === -1 ? 0 : settings.sortOrder;
-                tbContr._getAngularVm().publish(part, index);
             }
-        }),
+        },
+
+        // todo: work in progress related to https://github.com/2sic/2sxc/issues/618
+        //'delete': {
+        //    title: "Toolbar.Delete",
+        //    iclass: "icon-sxc-cancel",
+        //    disabled: true,
+        //    showOn: "edit",
+        //    addCondition: function (settings) { return !toolbarConfig.isList; },
+        //    code: function (settings, event) {
+        //        if (confirm(tbContr.translate("Toolbar.ReallyDelete"))) {
+        //            tbContr._getAngularVm().reallyDelete(settings.entityId);
+        //        }
+        //    }
+        //},
 
         'moveup': {
             title: "Toolbar.MoveUp",
@@ -102,18 +112,22 @@ $2sxc.getManageController = function (id) {
             showOn: "edit",
             addCondition: function(settings) { return toolbarConfig.isList && settings.sortOrder !== -1; },
         },
-        'remove': {
-            title: "Toolbar.Remove",
-            iclass: "icon-sxc-minus-circled",
+        'publish': buttonConfig('publish', "Published", "eye", "edit", false, {
+            iclass2: "icon-sxc-eye-off",
             disabled: true,
-            showOn: "edit",
-            addCondition: function(settings) { return toolbarConfig.isList && settings.sortOrder !== -1; },
             code: function(settings, event) {
-                if (confirm(tbContr.translate("Toolbar.ConfirmRemove"))) {
-                    tbContr._getAngularVm().removeFromList(settings.sortOrder);
+                if (settings.isPublished) {
+                    alert(tbContr.translate("Toolbar.AlreadyPublished"));
+                    return;
                 }
+                var part = settings.sortOrder === -1 ? "listcontent" : "content";
+                var index = settings.sortOrder === -1 ? 0 : settings.sortOrder;
+                tbContr._getAngularVm().publish(part, index);
             }
-        },
+        }),
+        'replace': buttonConfig('replace', "Replace", "replace", "edit", false, {
+            addCondition: function(settings) { return settings.useModuleList; },
+        }),
         'layout': {
             title: "Toolbar.ChangeLayout",
             iclass: "icon-sxc-glasses",
@@ -345,14 +359,17 @@ $2sxc.getManageController = function (id) {
         createDefaultToolbar: function (settings) {
             // Create a standard menu with all standard buttons
             var buttons = [];
+
             buttons.add = function (verb) {
-                if (Array.isArray(verb))
-                    return verb.forEach(function(val) { buttons.add(val); });
                 var add = actionButtonsConf[verb].addCondition;
                 if (add === undefined || ((typeof (add) === 'function') ? add(settings) : add))
                     buttons.push($.extend({}, settings, { action: verb }));
             };
-            buttons.add(["edit", "new", "add", "remove", "moveup", "movedown", "sort", "publish", "replace", "layout", "develop", "contenttype", "contentitems", "app", "zone", "more"]);
+
+            for (var btn in actionButtonsConf) 
+                if (actionButtonsConf.hasOwnProperty(btn))
+                    buttons.add(btn);
+
             return buttons;
         },
 

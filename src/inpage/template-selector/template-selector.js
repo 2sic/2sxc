@@ -224,6 +224,12 @@
         		vm.renderTemplate(vm.templateId);
         	});
         };
+
+        // todo: work in progress related to https://github.com/2sic/2sxc/issues/618
+        vm.reallyDelete = function(itemId) {
+            alert("Really delete not implemented yet - would delete: " + itemId);
+        };
+
         vm.changeOrder = function (sortOrder, desintationSortOrder) {
         	svc.changeOrder(sortOrder, desintationSortOrder).then(function () {
         		vm.renderTemplate(vm.templateId);
