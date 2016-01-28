@@ -11,6 +11,7 @@ namespace ToSic.SexyContent.Security
 {
     /// <summary>
     /// Permissions object which checks if the user is allowed to do soemthing based on specific permission
+    /// This checks permissions based on EAV data related to an entity - so pure EAV, no DNN
     /// </summary>
     public class PermissionController
     {

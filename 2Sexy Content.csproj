@@ -241,6 +241,10 @@
     <Compile Include="DnnWebForms\Wysiwyg.ascx.designer.cs">
       <DependentUpon>Wysiwyg.ascx</DependentUpon>
     </Compile>
+    <Compile Include="Environment\Environment.cs" />
+    <Compile Include="Environment\Interfaces\IEnvironment.cs" />
+    <Compile Include="Environment\Interfaces\IPermissions.cs" />
+    <Compile Include="Environment\None\Permissions.cs" />
     <Compile Include="SexyContent\ContentGroup.cs" />
     <Compile Include="SexyContent\ContentGroups.cs" />
     <Compile Include="SexyContent\DataSources\DnnSqlDataSource.cs" />
@@ -253,6 +257,7 @@
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="SexyContent\ImportExport\XmlConstants.cs" />
+    <Compile Include="Environment\Dnn7\Permissions.cs" />
     <Compile Include="SexyContent\ViewAPI\TemplateController.cs" />
     <Compile Include="SexyContent\ViewManager\TemplateEditor.cs" />
     <Compile Include="SexyContent\UnityConfig.cs" />
@@ -642,6 +647,7 @@
     <Content Include="Administration\App_LocalResources\WebApiHelp.ascx.resx" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="SexyContent\Statics\" />
     <Folder Include="Upgrade\Log\" />
   </ItemGroup>
   <ItemGroup>

@@ -29,7 +29,7 @@ namespace ToSic.SexyContent
             get
             {
                 if (_sexy == null && ZoneId.HasValue && AppId.HasValue)
-                    _sexy = new SexyContent(ZoneId.Value, AppId.Value, true, ModuleConfiguration.OwnerPortalID);
+                    _sexy = new SexyContent(ZoneId.Value, AppId.Value, true, ModuleConfiguration.OwnerPortalID, ModuleContext.Configuration);
                 return _sexy;
             }
         }
@@ -135,25 +135,27 @@ namespace ToSic.SexyContent
             get { return Template != null && Template.UseForList; }
         }
 
-        private bool? _userMayEdit = null;
-        protected bool UserMayEditThisModule
-        {
-            get
-            {
-                if (_userMayEdit.HasValue)
-                    return _userMayEdit.Value;
+        protected bool UserMayEditThisModule => Sexy?.Environment?.Permissions.UserMayEditContent ?? false;
 
-                var okOnModule = DotNetNuke.Security.Permissions.ModulePermissionController.CanEditModuleContent(ModuleContext.Configuration);
+        //private bool? _userMayEdit = null;
+        //protected bool UserMayEditThisModule
+        //{
+        //    get
+        //    {
+        //        if (_userMayEdit.HasValue)
+        //            return _userMayEdit.Value;
 
-                _userMayEdit = okOnModule;
-                // if a user only has tab-edit but not module edit and is not admin, this needs additional confirmation (probably dnn bug)
-                if(!okOnModule)
-                    _userMayEdit = DotNetNuke.Security.Permissions.TabPermissionController.HasTabPermission("EDIT");
+        //        var okOnModule = DotNetNuke.Security.Permissions.ModulePermissionController.CanEditModuleContent(ModuleContext.Configuration);
 
-                return _userMayEdit.Value;
-                return ModuleContext.IsEditable;
-            }
-        }
+        //        _userMayEdit = okOnModule;
+        //        // if a user only has tab-edit but not module edit and is not admin, this needs additional confirmation (probably dnn bug)
+        //        if(!okOnModule)
+        //            _userMayEdit = DotNetNuke.Security.Permissions.TabPermissionController.HasTabPermission("EDIT");
+
+        //        return _userMayEdit.Value;
+        //        return ModuleContext.IsEditable;
+        //    }
+        //}
 
         protected bool StandAlone
         {
