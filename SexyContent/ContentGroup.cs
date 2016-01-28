@@ -276,7 +276,8 @@ namespace ToSic.SexyContent
             list1.RemoveAt(sortOrder);
             var type2 = ReCapitalizePartName(type).Replace(cContent, cPresentation);
             var list2 = ListWithNulls(type2);
-            list2.RemoveAt(sortOrder);
+            if (list2.Count > sortOrder)    // in many cases the presentation-list is empty, then there is nothing to remove
+                list2.RemoveAt(sortOrder);
             SaveChangedLists(PrepareSavePackage(type, list1, PrepareSavePackage(type2, list2)));
         }
 
