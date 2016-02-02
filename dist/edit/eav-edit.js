@@ -152,14 +152,14 @@ angular.module("eavFieldTemplates")
         });
 
     }])
-    .controller("FieldTemplate-EntityCtrl", ["$scope", "$http", "$filter", "$translate", "$modal", "appId", "eavAdminDialogs", function ($scope, $http, $filter, $translate, $modal, appId, eavAdminDialogs) {
+    .controller("FieldTemplate-EntityCtrl", ["$scope", "$http", "$filter", "$translate", "$modal", "appId", "eavAdminDialogs", "eavDefaultValueService", function ($scope, $http, $filter, $translate, $modal, appId, eavAdminDialogs, eavDefaultValueService) {
         if (!$scope.to.settings.merged)
             $scope.to.settings.merged = {};
 
         $scope.availableEntities = [];
 
         if ($scope.model[$scope.options.key] === undefined || $scope.model[$scope.options.key].Values[0].Value === "")
-            $scope.model[$scope.options.key] = { Values: [{ Value: [], Dimensions: {} }] };
+            $scope.model[$scope.options.key] = { Values: [{ Value: eavDefaultValueService($scope.options), Dimensions: {} }] };
 
         $scope.chosenEntities = $scope.model[$scope.options.key].Values[0].Value;
 
@@ -1216,7 +1216,7 @@ function enhanceEntity(entity) {
 				case "datetime":
 					return d !== undefined && d !== null && d !== "" ? new Date(d) : null;
 				case "entity":
-					return []; 
+				    return d !== undefined && d !== null ? d : []; 
 				case "number":
 					return null;
 				default:
