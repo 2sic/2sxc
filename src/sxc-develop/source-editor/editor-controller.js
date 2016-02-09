@@ -1,16 +1,18 @@
 (function () {
 
     angular.module("SourceEditor")
-
         .controller("Editor", EditorController)
     ;
 
-    function EditorController(sourceSvc, snippetSvc, item, $modalInstance, $window, $scope, $translate, saveToastr, ctrlS) {
+    function EditorController(sourceSvc, snippetSvc, item, $modalInstance, $window, $scope, $translate, saveToastr, ctrlS, debugState) {
         $translate.refresh();   // necessary to load stuff added in this lazy-loaded app
 
         var vm = this;
+        vm.debug = debugState;
+
         var svc = sourceSvc(item.EntityId);
         vm.view = {};
+        vm.tempCodeBecauseOfBug = "";
         vm.editor = null;
 
         svc.get().then(function (result) {
@@ -40,9 +42,9 @@
         };
         
         // prevent all kind of closing when accidentally just clicking on the side of the dialog
-        $scope.$on('modal.closing', function (e) { e.preventDefault(); });
+        $scope.$on("modal.closing", function (e) { e.preventDefault(); });
 
-        $window.addEventListener('beforeunload', function (e) {
+        $window.addEventListener("beforeunload", function (e) {
             var unsavedChangesText = $translate.instant("Message.ExitOk");
             (e || window.event).returnValue = unsavedChangesText; //Gecko + IE
             return unsavedChangesText; //Gecko + Webkit, Safari, Chrome etc.
@@ -53,7 +55,20 @@
         //#region save
         vm.save = function (autoClose) {
             var after = autoClose ? vm.close : function () { };
-            saveToastr(svc.save(vm.view)).then(after);
+
+            //#region bugfix 607
+            // check if there is still some temp-snippet which we must update first 
+            // - because of issue https://github.com/2sic/2sxc/issues/607
+            // it's very important that we place the text into a copy of the variable
+            // and NOT in the view.Code, otherwise undo will stop working
+            var latestCode = vm.editor.getValue();
+            var savePackage = angular.copy(vm.view);
+            if (savePackage.Code !== latestCode) //{
+                savePackage.Code = latestCode;
+            //#endregion
+
+            // now save with appropriate toaster
+            saveToastr(svc.save(savePackage)).then(after);
         };
         //#endregion
 
@@ -82,7 +97,7 @@
         //#endregion
 
         // this event is called when the editor is ready
-        $scope.aceLoaded = function (_editor) {
+        vm.aceLoaded = function (_editor) {
             vm.editor = _editor;        // remember the editor for later actions
             vm.registerSnippets();      // try to register the snippets
         };
