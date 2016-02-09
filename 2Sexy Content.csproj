@@ -647,6 +647,7 @@
     <Content Include="Administration\App_LocalResources\WebApiHelp.ascx.resx" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="SexyContent\ImportExport\Instructions\" />
     <Folder Include="SexyContent\Statics\" />
     <Folder Include="Upgrade\Log\" />
   </ItemGroup>
