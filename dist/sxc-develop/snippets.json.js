@@ -50,7 +50,7 @@
         },
         {
             "set": "@Content",
-            "subset": "Content",
+            "subset": "General",
             "name": "Toolbar",
             "title": "",
             "content": "@${1:Content}.Toolbar",
@@ -58,7 +58,7 @@
         },
         {
             "set": "@Content",
-            "subset": "Content",
+            "subset": "General",
             "name": "ToolbarFloat",
             "title": "",
             "content": "<div class=\"sc-element\">\r\n    @${1:Content}.Toolbar\r\n</div>",

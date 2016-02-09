@@ -81,7 +81,6 @@
             var savePackage = angular.copy(vm.view);
             if (savePackage.Code !== latestCode) //{
                 savePackage.Code = latestCode;
-
             //#endregion
 
             // now save with appropriate toaster
@@ -164,19 +163,20 @@ angular.module("SourceEditor")
                     sets = svc.tree = svc.makeTree(sets);
 
                     //#region Retrieve all relevant content-types and infos
-                    sets.Content = { Fields: {}, PresentationFields: {} };
+                    sets.Content = angular.extend({}, sets.Content, { Fields: {}, PresentationFields: {} });
                     if (templateConfiguration.TypeContent)
                         svc.loadContentType(sets.Content.Fields, templateConfiguration.TypeContent, "Content");
                     if (templateConfiguration.TypeContentPresentation)
                         svc.loadContentType(sets.Content.PresentationFields, templateConfiguration.TypeContentPresentation, "Content.Presentation");
 
                     if (templateConfiguration.HasList) {
-                        sets.List = { Fields: {}, PresentationFields: {} };
+                        sets.List = angular.extend({}, sets.List, { Fields: {}, PresentationFields: {} });
                         if (templateConfiguration.TypeList)
                             svc.loadContentType(sets.List.Fields, templateConfiguration.TypeList, "List");
                         if (templateConfiguration.TypeListPresentation)
                             svc.loadContentType(sets.List.PresentationFields, templateConfiguration.TypeListPresentation, "List.Presentation");
-                    }
+                    } else 
+                        delete sets.List;
 
                     // maybe App-infos
                     if (templateConfiguration.HasApp) {
