@@ -137,6 +137,22 @@
 .icon-reload:before { content: '\e83f'; } /* '' */
 .icon-flash:before { content: '\e840'; } /* '' */
 .icon-ghost:before { content: '\e841'; } /* '' */
+/* try to override problem CSS of bootstrap
+
+    in this case especially the woff2 format which many iis don't deliver
+
+    note that I don't want WOFF2 and no SVG
+*/
+
+@font-face {
+  font-family: 'Glyphicons Halflings';
+
+    src: url('../lib/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'),
+      /*url('../fonts/glyphicons-halflings-regular.woff2') format('woff2'),*/
+         url('../lib/fonts/glyphicons-halflings-regular.woff') format('woff'),
+         url('../lib/fonts/glyphicons-halflings-regular.ttf') format('truetype');
+}
+
 /* These are helpers to create larger dialogs than available by default in boostrap*/
 .modal-xlg {
      width: 95%;
@@ -331,7 +347,9 @@ h3.clickable:hover, h4.clickable:hover {
 
 @font-face {
   font-family: 'app-icons';
-  src: url('..//lib/fonts/app-icons.woff?11720481') format('woff');
+    src: url('../lib/fonts/app-icons.woff?78331213') format('woff'),
+         url('../lib/fonts/app-icons.eot?78331213#iefix') format('embedded-opentype'),
+         url('../lib/fonts/app-icons.ttf?78331213') format('truetype');
   font-weight: normal;
   font-style: normal;
 }

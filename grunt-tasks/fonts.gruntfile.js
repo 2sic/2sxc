@@ -19,7 +19,7 @@ module.exports = function (grunt) {
                         expand: true,
                         flatten: true,
                         cwd: "<%= fonts.cwd %>",
-                        src: ["**/*.woff"],
+                        src: ["**/*.woff", "**/*.ttf", "**/*.eot"],
                         dest: "<%= fonts.dist %>"
                     },
                     {
