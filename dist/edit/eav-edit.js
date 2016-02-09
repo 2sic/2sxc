@@ -1212,17 +1212,11 @@ function enhanceEntity(entity) {
 
 			switch (e.type.split("-")[0]) {
 				case "boolean":
-					return d !== undefined && d !== null ? d.toLowerCase() == "true" : false;
+					return d !== undefined && d !== null ? d.toLowerCase() === "true" : false;
 				case "datetime":
 					return d !== undefined && d !== null && d !== "" ? new Date(d) : null;
-			    case "entity":
-			        if (Array.isArray(d))
-			            return d;
-			        if (typeof d === 'string')
-			            return [d];
-			        else
-			            return [];
-			        break;
+				case "entity":
+				    return d !== undefined && d !== null ? d : []; 
 				case "number":
 					return null;
 				default:

@@ -34,22 +34,13 @@
 
         //#region close / prevent-close
         vm.close = function () {
-            vm.maybeLeave();
-            //if (!confirm($translate.instant("Message.ExitOk")))
-            //    return;
-            //window.close();// $modalInstance.dismiss("cancel"); 
-        };
-
-        vm.maybeLeave = function maybeLeave(e) {
             if (!confirm($translate.instant("Message.ExitOk")))
                 return;
-            window.close();// $modalInstance.dismiss("cancel"); 
-
-            //if (!confirm($translate.instant("Message.ExitOk")))
-            //    e.preventDefault();
+            window.close();
         };
-
-        $scope.$on('modal.closing', vm.maybeLeave);
+        
+        // prevent all kind of closing when accidentally just clicking on the side of the dialog
+        $scope.$on('modal.closing', function (e) { e.preventDefault(); });
 
         $window.addEventListener('beforeunload', function (e) {
             var unsavedChangesText = $translate.instant("Message.ExitOk");
