@@ -18,9 +18,9 @@ namespace ToSic.SexyContent
     {
         protected void Page_Init(object sender, EventArgs e)
         {
-			if ((UserMayEditThisModule || this is SexyControlAdminBase) && Parent is ModuleHost)
-				RegisterGlobalsAttribute();
-            }
+            if ((UserMayEditThisModule || this is SexyControlAdminBase) && Parent is ModuleHost)
+                RegisterGlobalsAttribute();
+        }
 
         #region basic properties like Sexy, App, Zone, etc.
         private SexyContent _sexy;
@@ -38,7 +38,7 @@ namespace ToSic.SexyContent
         {
             get
             {
-                return (!UserInfo.IsSuperUser ? SexyContent.GetZoneID(ModuleConfiguration.OwnerPortalID) : 
+                return (!UserInfo.IsSuperUser ? SexyContent.GetZoneID(ModuleConfiguration.OwnerPortalID) :
                     (!String.IsNullOrEmpty(Request.QueryString["ZoneId"]) ? int.Parse(Request.QueryString["ZoneId"]) : SexyContent.GetZoneID(ModuleConfiguration.OwnerPortalID)));
             }
         }
@@ -66,20 +66,20 @@ namespace ToSic.SexyContent
             get { return ModuleConfiguration.DesktopModule.ModuleName == "2sxc"; }
         }
 
-	    private ContentGroup _contentGroup;
+        private ContentGroup _contentGroup;
 
-	    protected ContentGroup ContentGroup
-	    {
-		    get
-		    {
-			    if (_contentGroup == null)
-				    _contentGroup =
-					    Sexy.ContentGroups.GetContentGroupForModule(ModuleConfiguration.ModuleID);
-			    return _contentGroup;
-		    }
-	    }
+        protected ContentGroup ContentGroup
+        {
+            get
+            {
+                if (_contentGroup == null)
+                    _contentGroup =
+                        Sexy.ContentGroups.GetContentGroupForModule(ModuleConfiguration.ModuleID);
+                return _contentGroup;
+            }
+        }
 
-		private Template _template;
+        private Template _template;
         protected Template Template
         {
             get
@@ -112,22 +112,22 @@ namespace ToSic.SexyContent
         private Template GetTemplateFromUrl()
         {
             var queryStringPairs = Request.QueryString.AllKeys.Select(key => string.Format("{0}/{1}", key, Request.QueryString[key]).ToLower()).ToArray();
-			var queryStringKeys = Request.QueryString.AllKeys.Select(k => k == null ? "" :  k.ToLower()).ToArray();
+            var queryStringKeys = Request.QueryString.AllKeys.Select(k => k == null ? "" : k.ToLower()).ToArray();
 
-			foreach (var template in Sexy.Templates.GetAllTemplates().Where(t => !string.IsNullOrEmpty(t.ViewNameInUrl)))
-	        {
-			    var viewNameInUrlLowered = template.ViewNameInUrl.ToLower();
-				if (queryStringPairs.Contains(viewNameInUrlLowered))	// match view/details
-				    return template;
-		        if (viewNameInUrlLowered.EndsWith("/.*"))	// match details/.* --> e.g. details/12
-		        {
-			        var keyName = viewNameInUrlLowered.Substring(0, viewNameInUrlLowered.Length - 3);
-					if (queryStringKeys.Contains(keyName))
-						return template;
-		        }
-	        }
+            foreach (var template in Sexy.Templates.GetAllTemplates().Where(t => !string.IsNullOrEmpty(t.ViewNameInUrl)))
+            {
+                var viewNameInUrlLowered = template.ViewNameInUrl.ToLower();
+                if (queryStringPairs.Contains(viewNameInUrlLowered))    // match view/details
+                    return template;
+                if (viewNameInUrlLowered.EndsWith("/.*"))   // match details/.* --> e.g. details/12
+                {
+                    var keyName = viewNameInUrlLowered.Substring(0, viewNameInUrlLowered.Length - 3);
+                    if (queryStringKeys.Contains(keyName))
+                        return template;
+                }
+            }
 
-			return null;
+            return null;
         }
 
         protected bool IsList
@@ -135,7 +135,19 @@ namespace ToSic.SexyContent
             get { return Template != null && Template.UseForList; }
         }
 
-        protected bool UserMayEditThisModule => Sexy?.Environment?.Permissions.UserMayEditContent ?? false;
+        private SexyContent _sexyForSecurityCheck;
+        private SexyContent SexyForSecurityCheck
+        {
+            get
+            {
+                // If Sexy is null, instanciate new SexyContent(ZoneId, 0);
+                if (_sexyForSecurityCheck == null)
+                    _sexyForSecurityCheck = (Sexy == null ? new SexyContent(ZoneId.Value, 0, true, ModuleConfiguration.OwnerPortalID, ModuleConfiguration) : Sexy);
+
+                return _sexyForSecurityCheck;
+            }
+        }
+        protected bool UserMayEditThisModule => SexyForSecurityCheck?.Environment?.Permissions.UserMayEditContent ?? false;
 
         //private bool? _userMayEdit = null;
         //protected bool UserMayEditThisModule
@@ -162,26 +174,26 @@ namespace ToSic.SexyContent
             get { return Request.QueryString["standalone"] == "true"; }
         }
 
-		/// <summary>
-		/// Add data-2sxc-globals Attribute to the DNN ModuleHost
-		/// </summary>
-		private void RegisterGlobalsAttribute()
-		{
-			// Add some required variables to module host div
-			((ModuleHost)Parent).Attributes.Add("data-2sxc-globals", JsonConvert.SerializeObject(new
-			{
-				ModuleContext = new
-				{
-					ModuleContext.PortalId,
-					ModuleContext.TabId,
-					ModuleContext.ModuleId,
-					AppId
-				},
-				PortalSettings.ActiveTab.FullUrl,
-				PortalRoot = (Request.IsSecureConnection ? "https://" : "http://") + PortalAlias.HTTPAlias + "/",
-				DefaultLanguageID = Sexy != null ? Sexy.ContentContext.Dimensions.GetLanguageId(PortalSettings.DefaultLanguage) : null
-			}));
-		}
+        /// <summary>
+        /// Add data-2sxc-globals Attribute to the DNN ModuleHost
+        /// </summary>
+        private void RegisterGlobalsAttribute()
+        {
+            // Add some required variables to module host div
+            ((ModuleHost)Parent).Attributes.Add("data-2sxc-globals", JsonConvert.SerializeObject(new
+            {
+                ModuleContext = new
+                {
+                    ModuleContext.PortalId,
+                    ModuleContext.TabId,
+                    ModuleContext.ModuleId,
+                    AppId
+                },
+                PortalSettings.ActiveTab.FullUrl,
+                PortalRoot = (Request.IsSecureConnection ? "https://" : "http://") + PortalAlias.HTTPAlias + "/",
+                DefaultLanguageID = Sexy != null ? Sexy.ContentContext.Dimensions.GetLanguageId(PortalSettings.DefaultLanguage) : null
+            }));
+        }
 
 
         /// <summary>
