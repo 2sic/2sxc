@@ -35,6 +35,7 @@
 			<DefaultExclude Include=".git\**" />
       <DefaultExclude Include="**\node_modules\**" />
       <DefaultExclude Include="**\bower_components\**" />
+      <DefaultExclude Include="**\grunt-tasks\**" />
       <DefaultExclude Include="packages\**" />
       <DefaultExclude Include="src\**" />
       <DefaultExclude Include="tmp\**" />
