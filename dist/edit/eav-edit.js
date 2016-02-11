@@ -298,7 +298,7 @@ angular.module("eavFieldTemplates")
                         var s = e.split(":");
                         return {
                             name: s[0],
-                            value: s[1] ? s[1] : s[0]
+                            value: (s[1] || s[1] === '') ? s[1] : s[0]
                         };
                     });
                     options.templateOptions.options = o;
