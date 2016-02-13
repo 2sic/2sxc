@@ -10,7 +10,6 @@
 }());
 (function () {
 
-    contentExportController.$inject = ["appId", "contentType", "contentExportService", "eavAdminDialogs", "eavConfig", "languages", "$modalInstance", "$filter", "$translate"];
     angular.module("ContentExportApp")
         .controller("ContentExport", contentExportController);
 
@@ -120,10 +119,10 @@
             $modalInstance.dismiss("cancel");
         };
     }
+    contentExportController.$inject = ["appId", "contentType", "contentExportService", "eavAdminDialogs", "eavConfig", "languages", "$modalInstance", "$filter", "$translate"];
 }());
 (function () {
 
-    contentExportService.$inject = ["$http", "eavConfig"];
     angular.module("ContentExportApp")
          .factory("contentExportService", contentExportService);
 
@@ -139,6 +138,7 @@
             window.open(url + "?appId=" + args.AppId + "&language=" + args.Language + "&defaultLanguage=" + args.DefaultLanguage + "&contentType=" + args.ContentType + "&recordExport=" + args.RecordExport + "&resourcesReferences=" + args.ResourcesReferences + "&languageReferences=" + args.LanguageReferences, "_self", "");
         }
     }
+    contentExportService.$inject = ["$http", "eavConfig"];
 }());
 (function () {
     angular.module("ContentFormlyTypes", [
@@ -192,7 +192,6 @@
 }());
 (function () {
 
-    contentImportController.$inject = ["appId", "contentType", "contentImportService", "eavAdminDialogs", "eavConfig", "languages", "debugState", "$modalInstance", "$filter", "$translate"];
     angular.module("ContentImportApp")
         .controller("ContentImport", contentImportController);
 
@@ -310,10 +309,10 @@
             $modalInstance.dismiss("cancel");
         };
     }
+    contentImportController.$inject = ["appId", "contentType", "contentImportService", "eavAdminDialogs", "eavConfig", "languages", "debugState", "$modalInstance", "$filter", "$translate"];
 }());
 (function () {
 
-    contentImportService.$inject = ["$http"];
     angular.module("ContentImportApp")
          .factory("contentImportService", contentImportService);
 
@@ -333,10 +332,10 @@
             return $http.post("eav/ContentImport/ImportContent", { AppId: args.AppId, DefaultLanguage: args.DefaultLanguage, ContentType: args.ContentType, ContentBase64: args.File.base64, ResourcesReferences: args.ResourcesReferences, ClearEntities: args.ClearEntities });
         }
     }
+    contentImportService.$inject = ["$http"];
 }());
 (function () { 
 
-    EditContentItemController.$inject = ["mode", "entityId", "contentType", "eavAdminDialogs", "$modalInstance"];
     angular.module("ContentEditApp", [
         "EavServices",
         "EavAdminUi"
@@ -357,12 +356,12 @@
 
         vm.close = function () { $modalInstance.dismiss("cancel"); };
     }
+    EditContentItemController.$inject = ["mode", "entityId", "contentType", "eavAdminDialogs", "$modalInstance"];
 
 } ());
 (function () {
 	'use strict';
 
-	contentItemsListController.$inject = ["contentItemsSvc", "eavConfig", "appId", "contentType", "eavAdminDialogs", "debugState", "$modalInstance", "$q", "$modalStack"];
 	angular.module("ContentItemsAppAgnostic", [
         "EavConfiguration",
         "EavAdminUi",
@@ -617,11 +616,11 @@
 			$modalInstance.dismiss("cancel");
 		}
 	}
+	contentItemsListController.$inject = ["contentItemsSvc", "eavConfig", "appId", "contentType", "eavAdminDialogs", "debugState", "$modalInstance", "$q", "$modalStack"];
 
 }());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
 
-    ContentItemsListController.$inject = ["contentItemsSvc", "eavConfig", "appId", "contentType", "eavAdminDialogs", "debugState", "$modalInstance"];
     angular.module("ContentItemsApp", [
         "EavConfiguration",
         "EavAdminUi",
@@ -679,12 +678,11 @@
         vm.close = function () { $modalInstance.dismiss("cancel"); };
 
     }
+    ContentItemsListController.$inject = ["contentItemsSvc", "eavConfig", "appId", "contentType", "eavAdminDialogs", "debugState", "$modalInstance"];
 
 } ());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
 
-    HistoryController.$inject = ["appId", "entityId", "historySvc", "$modalInstance", "$modal"];
-    HistoryDetailsController.$inject = ["changeId", "dataSvc", "$modalInstance"];
     angular.module("HistoryApp", [
         "EavServices",
         "EavConfiguration",
@@ -715,6 +713,7 @@
             });
         };
     }
+    HistoryController.$inject = ["appId", "entityId", "historySvc", "$modalInstance", "$modal"];
 
     function HistoryDetailsController(changeId, dataSvc, $modalInstance) {
         var vm = this;
@@ -729,6 +728,7 @@
 
         vm.close = function () { $modalInstance.dismiss("cancel"); };
     }
+    HistoryDetailsController.$inject = ["changeId", "dataSvc", "$modalInstance"];
 } ());
 // This is the main declaration for the app ContentTypesApp
 (function () {
@@ -746,7 +746,6 @@
 }());
 (function() {
 
-    contentTypeEditController.$inject = ["appId", "item", "contentTypeSvc", "debugState", "$translate", "$modalInstance"];
     angular.module("ContentTypesApp")
         .controller("Edit", contentTypeEditController);
 
@@ -772,11 +771,11 @@
             $modalInstance.dismiss("cancel");
         };
     }
+    contentTypeEditController.$inject = ["appId", "item", "contentTypeSvc", "debugState", "$translate", "$modalInstance"];
 
 }());
 (function () {
     /*jshint laxbreak:true */
-    contentTypeFieldEditController.$inject = ["appId", "svc", "item", "$filter", "$modalInstance"];
     angular.module("ContentTypesApp")
         .controller("FieldEdit", contentTypeFieldEditController)
     ;
@@ -803,10 +802,10 @@
 
         vm.close = function() { $modalInstance.dismiss("cancel"); };
     }
+    contentTypeFieldEditController.$inject = ["appId", "svc", "item", "$filter", "$modalInstance"];
 }());
 (function () {
     /*jshint laxbreak:true */
-    contentTypeFieldsAddController.$inject = ["appId", "svc", "$filter", "$modalInstance"];
     angular.module("ContentTypesApp")
         .controller("FieldsAdd", contentTypeFieldsAddController)
     ;
@@ -856,10 +855,10 @@
 
         vm.close = function() { $modalInstance.dismiss("cancel"); };
     }
+    contentTypeFieldsAddController.$inject = ["appId", "svc", "$filter", "$modalInstance"];
 }());
 /*jshint laxbreak:true */
 (function () {
-    contentTypeFieldListController.$inject = ["appId", "contentTypeFieldSvc", "contentType", "$modalInstance", "$modal", "eavAdminDialogs", "$filter", "$translate", "eavConfig"];
     angular.module("ContentTypesApp")
         .controller("FieldList", contentTypeFieldListController)
     ;
@@ -955,11 +954,11 @@
                 };      
         };
     }
+    contentTypeFieldListController.$inject = ["appId", "contentTypeFieldSvc", "contentType", "$modalInstance", "$modal", "eavAdminDialogs", "$filter", "$translate", "eavConfig"];
 
 }());
 (function() {
 
-    contentTypeListController.$inject = ["contentTypeSvc", "eavAdminDialogs", "appId", "debugState", "$translate"];
     angular.module("ContentTypesApp")
         .controller("List", contentTypeListController);
 
@@ -1039,6 +1038,7 @@
         };
 
     }
+    contentTypeListController.$inject = ["contentTypeSvc", "eavAdminDialogs", "appId", "debugState", "$translate"];
 
 
 }());
@@ -1157,7 +1157,7 @@ angular.module('eavTemplates', []).run(['$templateCache', function($templateCach
 
 
   $templateCache.put('pipelines/pipeline-designer.html',
-    "<div class=ng-cloak><div ng-controller=PipelineDesignerController><div id=pipelineContainer><div ng-repeat=\"dataSource in pipelineData.DataSources\" datasource guid={{dataSource.EntityGuid}} id=dataSource_{{dataSource.EntityGuid}} class=dataSource ng-attr-style=\"top: {{dataSource.VisualDesignerData.Top}}px; left: {{dataSource.VisualDesignerData.Left}}px\"><div class=configure ng-click=configureDataSource(dataSource) title=\"Configure this DataSource\" ng-if=!dataSource.ReadOnly><span class=\"glyphicon glyphicon-list-alt\"></span></div><div class=name title=\"Click to edit the Name\" ng-click=editName(dataSource)>{{dataSource.Name || '(unnamed)'}}</div><br><div class=description title=\"Click to edit the Description\" ng-click=editDescription(dataSource)>{{dataSource.Description || '(no description)'}}</div><br><div class=typename ng-attr-title={{dataSource.PartAssemblyAndType}}>Type: {{dataSource.PartAssemblyAndType | typename: 'className'}}</div><div class=ep title=\"Drag a new Out-Connection from here\" ng-if=!dataSource.ReadOnly><span class=\"glyphicon glyphicon-plus-sign\"></span></div><div class=\"delete glyphicon glyphicon-remove\" title=\"Delete this DataSource\" ng-click=remove($index) ng-if=!dataSource.ReadOnly></div></div></div><div class=\"actions panel panel-default\"><div class=panel-heading><span class=pull-left>Actions</span> <a href=http://2sxc.org/help class=\"btn btn-info btn-xs pull-right\" target=_blank><span class=\"glyphicon glyphicon-question-sign\"></span> Help</a></div><div class=panel-body><button type=button class=\"btn btn-primary btn-block\" ng-disabled=readOnly ng-click=savePipeline()><span class=\"glyphicon glyphicon-floppy-save\"></span> Save</button><select class=form-control ng-model=addDataSourceType ng-disabled=readOnly ng-change=addDataSource() ng-options=\"d.ClassName for d in pipelineData.InstalledDataSources | filter: {allowNew: '!false'} | orderBy: 'ClassName'\"><option value=\"\">-- Add DataSource --</option></select><button type=button class=\"btn btn-default btn-sm\" title=\"Query the Data of this Pipeline\" ng-click=queryPipeline()><span class=\"glyphicon glyphicon-play\"></span> Query</button> <button type=button class=\"btn btn-default btn-sm\" title=\"Clone this Pipeline with all DataSources and Configurations\" ng-click=clonePipeline() ng-disabled=!PipelineEntityId><span class=\"glyphicon glyphicon-share-alt\"></span> Clone</button> <button type=button class=\"btn btn-default btn-sm\" ng-click=editPipelineEntity()><span class=\"glyphicon glyphicon-pencil\"></span> Test Parameters</button> <button type=button class=\"btn btn-info btn-xs\" ng-click=toggleEndpointOverlays()><span class=\"glyphicon glyphicon-info-sign\"></span> {{showEndpointOverlays ? 'Hide' : 'Show' }} Overlays</button> <button type=button class=\"btn btn-info btn-xs\" ng-click=repaint()><span class=\"glyphicon glyphicon-repeat\"></span> Repaint</button> <button type=button class=\"btn btn-info btn-xs\" ng-click=toogleDebug()><span class=\"glyphicon glyphicon-info-sign\"></span> {{debug ? 'Hide' : 'Show'}} Debug Info</button></div></div><toaster-container></toaster-container><pre ng-if=debug>{{pipelineData | json}}</pre></div></div>"
+    "<div class=ng-cloak><div ng-controller=\"PipelineDesignerController as vm\" ng-click=vm.debug.autoEnableAsNeeded($event)><div id=pipelineContainer><div ng-repeat=\"dataSource in pipelineData.DataSources\" datasource guid={{dataSource.EntityGuid}} id=dataSource_{{dataSource.EntityGuid}} class=dataSource ng-attr-style=\"top: {{dataSource.VisualDesignerData.Top}}px; left: {{dataSource.VisualDesignerData.Left}}px\"><div class=configure ng-click=configureDataSource(dataSource) title=\"Configure this DataSource\" ng-if=!dataSource.ReadOnly><span class=\"glyphicon glyphicon-list-alt\"></span></div><div class=name title=\"Click to edit the Name\" ng-click=editName(dataSource)>{{dataSource.Name || '(unnamed)'}}</div><br><div class=description title=\"Click to edit the Description\" ng-click=editDescription(dataSource)>{{dataSource.Description || '(no description)'}}</div><br><div class=typename ng-attr-title={{dataSource.PartAssemblyAndType}}>Type: {{dataSource.PartAssemblyAndType | typename: 'className'}}</div><div class=ep title=\"Drag a new Out-Connection from here\" ng-if=!dataSource.ReadOnly><span class=\"glyphicon glyphicon-plus-sign\"></span></div><div class=\"delete glyphicon glyphicon-remove\" title=\"Delete this DataSource\" ng-click=remove($index) ng-if=!dataSource.ReadOnly></div></div></div><div class=\"actions panel panel-default\"><div class=panel-heading><span class=pull-left>Actions</span> <a href=http://2sxc.org/help class=\"btn btn-info btn-xs pull-right\" target=_blank><span class=\"glyphicon glyphicon-question-sign\"></span> Help</a></div><div class=panel-body><button type=button class=\"btn btn-primary btn-block\" title=\"Query the Data of this Pipeline\" ng-click=queryPipeline()><span class=\"glyphicon glyphicon-play\"></span> Query</button><select class=form-control ng-model=addDataSourceType ng-disabled=readOnly ng-change=addDataSource() ng-options=\"d.ClassName for d in pipelineData.InstalledDataSources | filter: {allowNew: '!false'} | orderBy: 'ClassName'\"><option value=\"\">-- Add DataSource --</option></select><button type=button class=\"btn btn-default btn-block\" ng-click=editPipelineEntity()><span class=\"glyphicon glyphicon-pencil\"></span> Test Parameters</button> <button type=button class=\"btn btn-primary btn-block\" ng-disabled=readOnly ng-click=savePipeline()><span icon=ok></span> Save</button><br><br><button type=button class=\"btn btn-info btn-xs\" ng-click=toggleEndpointOverlays()><span class=\"glyphicon glyphicon-info-sign\"></span> {{showEndpointOverlays ? 'Hide' : 'Show' }} Overlays</button> <button type=button class=\"btn btn-info btn-xs\" ng-click=repaint()><span class=\"glyphicon glyphicon-repeat\"></span> Repaint</button> <button type=button class=\"btn btn-info btn-xs\" ng-if=vm.debug.on ng-click=toogleDebug()><span class=\"glyphicon glyphicon-info-sign\"></span> {{debug ? 'Hide' : 'Show'}} Debug Info</button><show-debug-availability class=pull-right></show-debug-availability></div></div><toaster-container></toaster-container><pre ng-if=debug>{{pipelineData | json}}</pre></div></div>"
   );
 
 
@@ -1174,7 +1174,6 @@ angular.module('eavTemplates', []).run(['$templateCache', function($templateCach
 
 (function () { 
 
-    permissionListController.$inject = ["permissionsSvc", "eavAdminDialogs", "eavConfig", "appId", "targetGuid", "$modalInstance"];
     angular.module("PermissionsApp", [
         "EavServices",
         "EavConfiguration",
@@ -1206,6 +1205,7 @@ angular.module('eavTemplates', []).run(['$templateCache', function($templateCach
             $modalInstance.dismiss("cancel");
         };
     }
+    permissionListController.$inject = ["permissionsSvc", "eavAdminDialogs", "eavConfig", "appId", "targetGuid", "$modalInstance"];
 
 } ());
 angular.module("PipelineDesigner", [
@@ -1261,14 +1261,31 @@ angular.module("PipelineDesigner.filters", []).filter("typename", function () {
 (function () {
     /*jshint laxbreak:true */
 
+    // helper method because we don't have jQuery any more to find the offset
+    function getElementOffset(element) {
+        var de = document.documentElement;
+        var box = element.getBoundingClientRect();
+        var top = box.top + window.pageYOffset - de.clientTop;
+        var left = box.left + window.pageXOffset - de.clientLeft;
+        return { top: top, left: left };
+    }
+
     angular.module("PipelineDesigner")
         .controller("PipelineDesignerController",
-            ["appId", "pipelineId", "$scope", "pipelineService", "$location", "$timeout", "$filter", "toastrWithHttpErrorHandling", "eavAdminDialogs", "$log", "eavConfig", "$q", function (appId, pipelineId, $scope, pipelineService, $location, $timeout, $filter, toastrWithHttpErrorHandling, eavAdminDialogs, $log, eavConfig, $q) {
+            ["appId", "pipelineId", "$scope", "pipelineService", "$location", "debugState", "$timeout", "ctrlS", "$filter", "toastrWithHttpErrorHandling", "eavAdminDialogs", "$log", "eavConfig", "$q", function (appId, pipelineId, $scope, pipelineService, $location, debugState, $timeout, ctrlS, $filter, toastrWithHttpErrorHandling, eavAdminDialogs, $log, eavConfig, $q) {
                 "use strict";
-
+                var vm = this;
                 // Init
+                vm.debug = debugState;
                 var toastr = toastrWithHttpErrorHandling;
                 var waitMsg = toastr.info("This shouldn't take long", "Please wait...");
+
+                function activate() {
+                    // add ctrl+s to save
+                    vm.saveShortcut = ctrlS(function() { vm.savePipeline(); });
+                }
+                activate();
+
 
                 $scope.readOnly = true;
                 $scope.dataSourcesCount = 0;
@@ -1280,6 +1297,7 @@ angular.module("PipelineDesigner.filters", []).filter("typename", function () {
 
                 pipelineService.setAppId(appId);
 
+                // this will retrieve the dataSource info-object for a DOM element
                 $scope.findDataSourceOfElement = function fdsog(element) {
                     var guid = element.attributes.guid.value;
                     var list = $scope.pipelineData.DataSources;
@@ -1307,8 +1325,10 @@ angular.module("PipelineDesigner.filters", []).filter("typename", function () {
                         toastr.error(reason, "Loading Pipeline failed");
                     });
 
+
                 // init new jsPlumb Instance
-                jsPlumb.ready(function() {
+                jsPlumb.ready(function () {
+
                     $scope.jsPlumbInstance = jsPlumb.getInstance({
                         Connector: ["Bezier", { curviness: 70 }],
                         HoverPaintStyle: {
@@ -1326,6 +1346,7 @@ angular.module("PipelineDesigner.filters", []).filter("typename", function () {
                         },
                         Container: "pipelineContainer"
                     });
+
 
                     // If connection on Out-DataSource was removed, remove custom Endpoint
                     $scope.jsPlumbInstance.bind("connectionDetached", function(info) {
@@ -1424,10 +1445,19 @@ angular.module("PipelineDesigner.filters", []).filter("typename", function () {
                 };
                 // #endregion
 
-                // make a DataSource with Endpoints, called by the datasource-Directive
+                // make a DataSource with Endpoints, called by the datasource-Directive (which uses a $timeout)
                 $scope.makeDataSource = function(dataSource, element) {
                     // suspend drawing and initialise
-                    $scope.jsPlumbInstance.doWhileSuspended(function() {
+                	$scope.jsPlumbInstance.batch(function () {
+
+                		// make DataSources draggable. Must happen before makeSource()!
+                		if (!$scope.readOnly) {
+                			$scope.jsPlumbInstance.draggable(element, {
+                				grid: [20, 20],
+                				drag: $scope.dataSourceDrag
+                			});
+                		}
+
                         // Add Out- and In-Endpoints from Definition
                         var dataSourceDefinition = dataSource.Definition();
                         if (dataSourceDefinition !== null) {
@@ -1449,13 +1479,7 @@ angular.module("PipelineDesigner.filters", []).filter("typename", function () {
                             $scope.jsPlumbInstance.makeSource(element, sourceEndpoint, { filter: ".ep .glyphicon" });
                         }
 
-                        // make DataSources draggable
-                        if (!$scope.readOnly) {
-                            $scope.jsPlumbInstance.draggable(element, {
-                                grid: [20, 20],
-                                drag: $scope.dataSourceDrag
-                            });
-                        }
+                        
                     });
 
                     $scope.dataSourcesCount++;
@@ -1470,8 +1494,6 @@ angular.module("PipelineDesigner.filters", []).filter("typename", function () {
                     console.log(element);
 
                     var dataSource = $scope.findDataSourceOfElement(element[0]);
-                    // old, using jQuery - var dataSource = element.scope().dataSource;
-
 
                     var uuid = element[0].id + (isIn ? "_in_" : "_out_") + name;
                     // old - using jQuery - var uuid = element.attr("id") + (isIn ? "_in_" : "_out_") + name;
@@ -1489,7 +1511,7 @@ angular.module("PipelineDesigner.filters", []).filter("typename", function () {
                     if ($scope.connectionsInitialized) return;
 
                     // suspend drawing and initialise
-                    $scope.jsPlumbInstance.doWhileSuspended(function() {
+                    $scope.jsPlumbInstance.batch(function() {
                         initWirings($scope.pipelineData.Pipeline.StreamWiring);
                     });
                     $scope.repaint(); // repaint so continuous connections are aligned correctly
@@ -1579,8 +1601,8 @@ angular.module("PipelineDesigner.filters", []).filter("typename", function () {
                     if (dataSource.ReadOnly) return;
 
                     var newName = prompt("Rename DataSource", dataSource.Name);
-                    if (newName !== undefined && newName.trim())
-                        dataSource.Name = newName;
+                    if (newName && newName.trim())
+                        dataSource.Name = newName.trim();
                 };
 
                 // Edit Description of a DataSource
@@ -1588,15 +1610,14 @@ angular.module("PipelineDesigner.filters", []).filter("typename", function () {
                     if (dataSource.ReadOnly) return;
 
                     var newDescription = prompt("Edit Description", dataSource.Description);
-                    if (newDescription !== undefined && newDescription.trim())
-                        dataSource.Description = newDescription;
+                    if (newDescription && newDescription.trim())
+                        dataSource.Description = newDescription.trim();
                 };
 
                 // Update DataSource Position on Drag
-                $scope.dataSourceDrag = function() {
-                    var $this = /* angular.element(this); /*/  $(this);
-                    var offset = $this.offset();
-                    var dataSource = $scope.findDataSourceOfElement($this).dataSource;// $this.scope().dataSource;
+                $scope.dataSourceDrag = function(draggedWrapper) {
+                    var offset = getElementOffset(draggedWrapper.el);
+                    var dataSource = $scope.findDataSourceOfElement(draggedWrapper.el);
                     $scope.$apply(function() {
                         dataSource.VisualDesignerData.Top = Math.round(offset.top);
                         dataSource.VisualDesignerData.Left = Math.round(offset.left);
@@ -1638,9 +1659,11 @@ angular.module("PipelineDesigner.filters", []).filter("typename", function () {
                 $scope.editPipelineEntity = function() {
                     // save Pipeline, then open Edit Dialog
                     $scope.savePipeline().then(function() {
-
+                        vm.saveShortcut.unbind();
                         eavAdminDialogs.openEditItems([{ EntityId: $scope.PipelineEntityId }], function() {
-                            pipelineService.getPipeline($scope.PipelineEntityId).then(pipelineSaved);
+                            pipelineService.getPipeline($scope.PipelineEntityId)
+                                .then(pipelineSaved)
+                                .then(vm.saveShortcut.rebind);
                         });
 
                     });
@@ -1669,7 +1692,7 @@ angular.module("PipelineDesigner.filters", []).filter("typename", function () {
                 // #region Save Pipeline
                 // Save Pipeline
                 // returns a Promise about the saving state
-                $scope.savePipeline = function (successHandler) {
+                vm.savePipeline = $scope.savePipeline = function (successHandler) {
                     var waitMsg = toastr.info("This shouldn't take long", "Saving...");
                     $scope.readOnly = true;
 
@@ -1889,8 +1912,6 @@ angular.module("PipelineManagement", [
                     $modalInstance.dismiss("cancel");
                 };
 
-
-
             }]
         );
 })();
@@ -2108,27 +2129,65 @@ angular.module("EavServices")
             return svc;
         };
     }]);
+/* 
+ * 
+ * Simple service which takes care of ctrl+S keyboard shortcuts. 
+ * use it as a service for your controller, then add a line like 
+         function activate() {
+            // add ctrl+s to save
+            ctrlS.bind(function() { vm.save(false); });
+        }
+
+ */
+
 angular.module("EavServices")
     .factory("ctrlS", ["$window", function ($window) {
-        var save = {
-            _event: null,
 
-            bind: function bind(action) {
-                save._event = window.addEventListener("keydown", function (e) {
+        // Create a capture Ctrl+S and execute action-object
+        function createSave(action) {
+            var save = {
+                _event: null,
+                _action: null,
+                _isbound: false,
+
+                // this will be called on each keydown, will check if it was a ctrl+S
+                detectCtrlSAndExcecute: function(e) {
                     if (e.keyCode === 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+                        if (save._action === null)
+                            return console.log("can't do anything on ctrl+S, no action registered");
                         e.preventDefault();
-                        action();
+                        save._action();
                     }
-                }, false);
+                },
 
-            },
+                bind: function bind(action) {
+                    save._action = action;
+                    save._isbound = true;
+                    save._event = $window.addEventListener("keydown", save.detectCtrlSAndExcecute, false);
 
-            unbind: function unbind() {
-                window.removeEventListener(save._event);
-            }
-        };
+                },
 
-        return save;
+                unbind: function unbind() {
+                    $window.removeEventListener("keydown", save.detectCtrlSAndExcecute);
+                    save._isbound = false;
+                },
+
+                // re-attach Ctrl+S if it had already been attached previously
+                rebind: function rebind() {
+                    if (save._action === null)
+                        throw "can't rebind, as it was never initially bound";
+                    if (!save._isbound)
+                        throw "can't rebind, as it's still bound";
+                    save.bind(save._action);
+                }
+            };
+
+            save.bind(action);
+
+            return save;
+        }
+
+        return createSave;
     }]);
 /* shared debugState = advancedMode
  * 
