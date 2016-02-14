@@ -2729,7 +2729,7 @@ angular.module("EavServices")
 
             // Get ID of this content-type 
             svc.ctSvc.getDetails(svc.ctName).then(function (result) {
-                svc.ctId = result.data.AttributeSetId;
+                svc.ctId = result.data.Id; // 2016-02-14 previously AttributeSetId;
             });
 
             // delete, then reload
@@ -2898,7 +2898,7 @@ angular.module("EavServices")
             // Init some Content Types, currently only used for getPipelineUrl('new', ...)
             initContentTypes: function initContentTypes() {
                 return contentTypeSvc(svc.appId).getDetails("DataPipeline").then(function (result) {
-                    svc.dataPipelineAttributeSetId = result.data.AttributeSetId;
+                    svc.dataPipelineAttributeSetId = result.data.Id; // 2016-02-14 previously AttributeSetId;
                 });
             },
             // Get all Pipelines of current App

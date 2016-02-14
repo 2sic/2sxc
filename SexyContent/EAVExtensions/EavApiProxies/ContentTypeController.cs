@@ -30,14 +30,14 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IContentType Get(int appId, string contentTypeId, string scope = null)
+        public dynamic Get(int appId, string contentTypeId, string scope = null)
         {
             return eavCtc.GetSingle(appId, contentTypeId, scope);
         }
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IContentType GetSingle(int appId, string contentTypeStaticName, string scope = null)
+        public dynamic GetSingle(int appId, string contentTypeStaticName, string scope = null)
         {
             return eavCtc.GetSingle(appId, contentTypeStaticName, scope);
         }
