@@ -15,8 +15,11 @@
 		"ErrorWhileSaving": "There was an error while saving.",
 		"WillPublish": "will publish when saving",
 		"WontPublish": "will not publish when saving",
-		"PleaseCreateDefLang": "Please edit this in the default language first.",
-		"ExitOk": "Do you really want to exit?"
+		"PleaseCreateDefLang": "please edit this in the default language first.",
+		"ExitOk": "do you really want to exit?",
+		"Deleting": "deleting...",
+		"Ok": "ok",
+		"Error": "error"
 	},
 	"Errors": {
 		"UnclearError": "Something went wrong - maybe parts worked, maybe not. Sorry :(",

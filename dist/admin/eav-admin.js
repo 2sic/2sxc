@@ -1834,8 +1834,10 @@ angular.module("PipelineManagement", [
 
 	    pipelineService.setAppId(appId);
 	    pipelineService.initContentTypes();
+
+	    // 2016-01-14 2dm - commenting out completely, as the getPipelineUrl is probably not used any more
 	    // Make URL-Provider available to the scope
-	    vm.getPipelineUrl = pipelineService.getPipelineUrl;
+	    // vm.getPipelineUrl = pipelineService.getPipelineUrl;
 
 	    // Refresh List of Pipelines
 	    vm.refresh = function () {
@@ -2727,6 +2729,7 @@ angular.module("EavServices")
                 return metadataSvc.getMetadata(svc.EntityAssignment, svc.PermissionTargetGuid, svc.ctName).then(svc.updateLiveAll);
             }));
 
+            // 2016-02-14 2dm commented out, don't think the ctId is ever used...
             // Get ID of this content-type 
             svc.ctSvc.getDetails(svc.ctName).then(function (result) {
                 svc.ctId = result.data.Id; // 2016-02-14 previously AttributeSetId;
@@ -2895,12 +2898,14 @@ angular.module("EavServices")
             setAppId: function (newAppId) {
                 svc.appId = newAppId;
             },
+
+            // 2016-01-14 2dm - commenting out completely, as the getPipelineUrl is probably not used any more
             // Init some Content Types, currently only used for getPipelineUrl('new', ...)
-            initContentTypes: function initContentTypes() {
-                return contentTypeSvc(svc.appId).getDetails("DataPipeline").then(function (result) {
-                    svc.dataPipelineAttributeSetId = result.data.Id; // 2016-02-14 previously AttributeSetId;
-                });
-            },
+            //initContentTypes: function initContentTypes() {
+            //    return contentTypeSvc(svc.appId).getDetails("DataPipeline").then(function (result) {
+            //        svc.dataPipelineAttributeSetId = result.data.Id; // 2016-02-14 previously AttributeSetId;
+            //    });
+            //},
             // Get all Pipelines of current App
             getPipelines: function () {
                 return svc.entitiesResource.query({ action: "GetEntities", appId: svc.appId, contentType: "DataPipeline" });
@@ -2991,7 +2996,7 @@ angular.module("EavServices")
     }])
 
     .factory("toastrWithHttpErrorHandling", ["toastr", function (toastr) {
-        toastr.error1 = toastr.error;
+        toastr.originalError = toastr.error;
         toastr.error = function errorWithHttpErrorDisplay(messageOrHttpError, title, optionsOverride) {
             var message;
             // test whether bodyOrError is an Error from Web API
@@ -3002,13 +3007,16 @@ angular.module("EavServices")
             } else
                 message = messageOrHttpError;
 
-            toastr.error2(message, title, optionsOverride);
+            toastr.originalError(message, title, optionsOverride);
         };
         return toastr;
     }])
 
+    
     .factory("saveToastr", ["toastr", "$translate", function (toastr, $translate) {
-            function saveWithToaster(promise) {
+        function saveWithToaster(promise) {
+            // todo: replace all this with a single-line calling the promise-toaster below...
+            // ? return saveWithToaster(promise, "Message.Saving", "Message.Saved", "Message.ErrorWhileSaving", null, 3000, null);
                 var saving = toastr.info($translate.instant("Message.Saving"));
                 return promise.then(function(result) {
                     toastr.clear(saving);
@@ -3022,5 +3030,23 @@ angular.module("EavServices")
             }
 
             return saveWithToaster;
-        }])
+    }])
+
+    .factory("promiseToastr", ["toastrWithHttpErrorHandling", "$translate", function (toastrWithHttpErrorHandling, $translate) {
+        function saveWithToaster(promise, keyInfo, keyOk, keyError, durInfo, durOk, durError) {
+            var toastr = toastrWithHttpErrorHandling;
+            var saving = toastr.info($translate.instant(keyInfo));
+            return promise.then(function (result) {
+                toastr.clear(saving);
+                toastr.success($translate.instant(keyOk), { timeOut: durOk || 1000 });
+                return result;
+            }, function errorWhileSaving(result) {
+                toastr.clear(saving);
+                toastr.error(result, $translate.instant(keyError));
+                return result;
+            });
+        }
+
+        return saveWithToaster;
+    }])
 ;

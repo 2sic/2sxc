@@ -636,6 +636,13 @@ $(document).ready(function () {
             if (newAppId === oldAppId || newAppId === null)
                 return;
 
+            // special case: manage apps
+            if (newAppId === -2) {
+                alert('not implemented yet, because it would have to call the toolbar, which is bad architecture');
+                return;
+            }
+
+            // special case: add app
             if (newAppId === -1) {
                 window.location = importCommand; // actually does a dnnModal.show...
                 return;
@@ -743,6 +750,7 @@ $(document).ready(function () {
             svc.getSelectableApps()
                 .then(function(data) {
                     vm.apps = data.data;
+                    //vm.apps.push({ Name: $translate.instant("TemplatePicker.ManageApps"), AppId: -2 });
                     vm.apps.push({ Name: $translate.instant("TemplatePicker.GetMoreApps"), AppId: -1 });
                 });
         }
