@@ -124,9 +124,13 @@ namespace ToSic.SexyContent.ImportExport
             return stream;
         }
 
+        /// <summary>
+        /// This adds various files to an app-package, so anybody who gets such a package
+        /// is informed as to what they must do with it.
+        /// </summary>
+        /// <param name="targetPath"></param>
         private void AddInstructionsToPackageFolder(string targetPath)
         {
-            // todo: copy the template files there...
             var srcPath = HttpContext.Current.Server.MapPath(Path.Combine(SexyContent.ToSexyDirectory, "SexyContent\\ImportExport\\Instructions"));
 
             foreach (var file in Directory.GetFiles(srcPath))
