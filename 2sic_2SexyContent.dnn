@@ -441,9 +441,9 @@
             <assembly>
               <name>CsvHelper.dll</name>
             </assembly>
-            <assembly>
+            <!--<assembly>
               <name>protobuf-net.dll</name>
-            </assembly>
+            </assembly>-->
           </assemblies>
         </component>
 
@@ -628,45 +628,7 @@
             </file>
           </files>
           </component>
-        <component type="Config">
-          <config>
-            <configFile>web.config</configFile>
-            <install>
-              <configuration>
-                <nodes>
-                  <node path="/configuration/configSections" action="update" key="name" collision="ignore">
-                    <section name="resizer" type="ImageResizer.ResizerSection,ImageResizer"  requirePermission="false" />
-                  </node>
-                  <node path="/configuration" targetpath="/configuration/resizer" action="update" collision="ignore">
-                    <resizer>
-                      <pipeline fakeExtensions=".ashx" />
-                      <plugins>
-                        <add name="TinyCache" />
-                      </plugins>
-                    </resizer>
-                  </node>
-                  <node path="/configuration/system.web/httpModules" action="update" key="name" collision="ignore">
-                    <add name="ImageResizingModule" type="ImageResizer.InterceptModule"/>
-                  </node>
-                  <node path="/configuration/system.webServer/modules" action="update" key="name" collision="ignore">
-                    <add name="ImageResizingModule" type="ImageResizer.InterceptModule"/>
-                  </node>
-                </nodes>
-              </configuration>
-            </install>
-            <uninstall>
-              <configuration>
-                <nodes>
-                  <node path="/configuration/configSections/section[@name='resizer']" action="remove" />
-                  <node path="/configuration/resizer" action="remove" />
-                  <node path="/configuration/system.web/httpModules/add[@name='ImageResizingModule']" action="remove" />
-                  <node path="/configuration/system.webServer/modules/add[@name='ImageResizingModule']" action="remove" />
-                </nodes>
-              </configuration>
-            </uninstall>
-          </config>
-        </component>
-      </components>
+        </components>
     </package>
 
     <package name="2SexyContent-App" type="Module" version="08.01.03">
@@ -956,6 +918,110 @@
               <name>icon-app.png</name>
             </file>
           </files>
+        </component>
+      </components>
+    </package>
+
+  
+    <!-- the Image-Resizer Pro package - should be identical to the one from http://dnnimageresizer.codeplex.com-->
+        <package name="2sic_Imazen_ImageResizerPro" type="Library" version="04.00.05">
+      <friendlyName>2sic presents Imazen ImageResizer Pro</friendlyName>
+      <description>The Imazen ImageResizer Pro is the legendary ImageResizer by Imazen. The Pro-package contains some advanced plugins which are AGPL licensed. If you need non-AGPL components, use the 2sic_Imazen_ImageResizerLight or license the pro as a commercial component from Imazen. </description>
+      <iconFile>DesktopModules\ToSIC_Imazen_ImageResizer\icon.png</iconFile>
+      <owner>
+        <name>2sic + Imazen</name>
+        <organization>2sic internet solutions (Switzerland)</organization>
+        <url>http://2sxc.org/</url>
+        <email>info@2sxc.org</email>
+      </owner>
+      <license src="License.txt"></license>
+      <releaseNotes src="ReleaseNotes.txt"></releaseNotes>
+      <azureCompatible>true</azureCompatible>
+      <dependencies>
+        <dependency type="CoreVersion">07.02.00</dependency>
+      </dependencies>
+      <components>
+        <component type="Script">
+          <scripts>
+            <basePath>DesktopModules\ToSIC_Imazen_ImageResizer</basePath>
+          </scripts>
+        </component>
+        <component type="Assembly">
+          <assemblies>
+            <basePath>bin</basePath>
+            <assembly>
+              <name>ImageResizer.dll</name>
+            </assembly>
+            <assembly>
+              <name>ImageResizer.Plugins.DiskCache.dll</name>
+            </assembly>
+          </assemblies>
+        </component>
+
+        <component type="File">
+          <files>
+            <basePath>DesktopModules/ToSIC_Imazen_ImageResizer</basePath>
+            <file>
+              <name>icon.png</name>
+            </file>
+            <file>
+              <name>License.txt</name>
+            </file>
+            <file>
+              <name>ReleaseNotes.txt</name>
+            </file>
+          </files>
+        </component>
+					
+        <component type="Config">
+          <config>
+            <configFile>web.config</configFile>
+            <install>
+              <configuration>
+                <nodes>
+                  <node path="/configuration/configSections" action="update" key="name" collision="ignore">
+                    <section name="resizer" type="ImageResizer.ResizerSection,ImageResizer"  requirePermission="false" />
+                  </node>
+                  
+                  <!-- remove potential tinycache-->
+                  <node path="/configuration/resizer/plugins/add[@name='TinyCache']" action="remove" key="name" collision="ignore" />
+
+                  <!-- register resizer if missing -->
+                  <node path="/configuration" action="update" key="name" collision="ignore">
+                    <resizer/>
+                  </node>
+
+                  <!-- register plugins if missing -->
+                  <node path="/configuration/resizer" action="update" key="name" collision="ignore">
+                    <plugins/>
+                  </node>
+
+                  <!-- register the diskcache -->
+                  <node path="/configuration/resizer/plugins" action="update" key="name" collision="ignore">
+										<add name="DiskCache" />
+									</node>
+                    
+                    <!-- Register the http-modules in old/new versions as needed -->
+                  <node path="/configuration/system.web/httpModules" action="update" key="name" collision="ignore">
+                    <add name="ImageResizingModule" type="ImageResizer.InterceptModule"/>
+                  </node>
+                  <node path="/configuration/system.webServer/modules" action="update" key="name" collision="ignore">
+                    <add name="ImageResizingModule" type="ImageResizer.InterceptModule"/>
+                  </node>
+                </nodes>
+              </configuration>
+            </install>
+            <uninstall>
+              <configuration>
+                <nodes>
+                  <node path="/configuration/configSections/section[@name='resizer']" action="remove" />
+                  <node path="/configuration/resizer" action="remove" />
+                  <node path="/configuration/system.web/httpModules/add[@name='ImageResizingModule']" action="remove" />
+                  <node path="/configuration/system.webServer/modules/add[@name='ImageResizingModule']" action="remove" />
+                </nodes>
+              </configuration>
+            </uninstall>
+          </config>
         </component>
       </components>
     </package>

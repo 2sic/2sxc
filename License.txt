@@ -1,9 +1,7 @@
-The MIT License (MIT)
+Everything in 2sxc is <em>free open source</em> :)
 
-Copyright (c) 2012 - 2016 2sic Internet Solutions GmbH Switzerland/Liechtenstein
+2sxc itself is released under the MIT license. It also uses many other open source components with different open-source licenses, from AGPL to X11. 
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+If you want to know more, read our <a href="http://2sxc.org/License" target="_blank">license page</a>. It also contains instructions how to switch from the really cool, copyleft AGPL image resizer to the simpler one with an Apache license.
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+Be sexy - give back to the community or <a href="https://www.kiva.org/invitedby/ijungleboy" target="_blank">to those less fortunate</a>. Contribute your work, support others - share the love. 

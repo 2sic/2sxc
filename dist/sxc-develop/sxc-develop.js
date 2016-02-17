@@ -459,7 +459,31 @@ angular.module('SourceEditor').run(['$templateCache', function($templateCache) {
     "\n" +
     "                    }\r" +
     "\n" +
-    "                }\"></div></div><div class=\"pull-right col-md-4\"><div><strong translate=SourceEditor.SnippetsSection.Title></strong> <i icon=question-sign style=\"opacity: 0.3\" ng-click=\"showSnippetInfo = !showSnippetInfo\"></i><div ng-if=showSnippetInfo translate=SourceEditor.SnippetsSection.Intro></div></div><select class=input-lg style=\"width: 90%\" ng-model=vm.snippetSet ng-options=\"key as ('SourceEditorSnippets.' + key + '.Title' | translate) for (key , value) in vm.snippets\" tooltip=\"{{ 'SourceEditorSnippets.' + vm.snippetSet + '.Help'  | translate}}\"></select><div>&nbsp;</div><div style=\"height: 500px; overflow: auto\"><div ng-repeat=\"(subsetName, subsetValue) in vm.snippets[vm.snippetSet]\"><strong tooltip=\"{{ 'SourceEditorSnippets.' + vm.snippetSet + '.' + subsetName + '.Help'  | translate}}\">{{ 'SourceEditorSnippets.' + vm.snippetSet + '.' + subsetName + '.Title' | translate}}</strong><ul><li ng-repeat=\"value in subsetValue | toArray | orderBy: '$key'\" tooltip=\"{{ value.snip }}\"><span ng-click=vm.addSnippet(value.snip)>{{value.label}}</span> <a ng-show=value.more ng-click=\"showMore = !showMore\"><i icon=plus></i>more</a> <i icon=info-sign style=\"opacity: 0.3\" ng-click=\"show = !show\" ng-show=value.help></i><div ng-if=show><em>{{value.help}}</em></div><ul ng-if=showMore><li ng-repeat=\"more in value.more | toArray | orderBy: '$key'\" tooltip=\"{{ value.snip }}\"><span ng-click=vm.addSnippet(more.snip)>{{more.label}}</span> <i icon=info-sign style=\"opacity: 0.3\" ng-click=\"show = !show\" ng-show=more.help></i><div ng-if=show><em>{{more.help}}</em></div></li></ul></li></ul></div></div></div></div></div><div class=modal-footer><div class=pull-left><button class=\"btn btn-primary btn-lg xxbtn-square\" type=button ng-click=vm.save(false)><span icon=check tooltip=\"{{ 'Button.SaveAndKeepOpen' | translate }}\"></span> {{ 'Button.SaveAndKeepOpen' | translate }}</button> also supports Ctrl+S</div></div><show-debug-availability class=pull-right></show-debug-availability><div ng-if=vm.debug.on><pre>{{vm.view.Code}}</pre></div></div>"
+    "                }\"></div></div><div class=\"pull-right col-md-4\"><div><strong translate=SourceEditor.SnippetsSection.Title></strong> <i icon=question-sign style=\"opacity: 0.3\" ng-click=\"showSnippetInfo = !showSnippetInfo\"></i><div ng-if=showSnippetInfo translate=SourceEditor.SnippetsSection.Intro></div></div><select class=input-lg style=\"width: 90%\" ng-model=vm.snippetSet ng-options=\"key as ('SourceEditorSnippets.' + key + '.Title' | translate) for (key , value) in vm.snippets\" tooltip=\"{{ 'SourceEditorSnippets.' + vm.snippetSet + '.Help'  | translate}}\"></select><div>&nbsp;</div><div style=\"height: 500px; overflow: auto\"><div ng-repeat=\"(subsetName, subsetValue) in vm.snippets[vm.snippetSet]\"><strong tooltip=\"{{ 'SourceEditorSnippets.' + vm.snippetSet + '.' + subsetName + '.Help'  | translate}}\">{{ 'SourceEditorSnippets.' + vm.snippetSet + '.' + subsetName + '.Title' | translate}}</strong><ul><li ng-repeat=\"value in subsetValue | toArray | orderBy: '$key'\" tooltip=\"{{ value.snip }}\"><span ng-click=vm.addSnippet(value.snip)>{{value.label}}</span> <a ng-show=value.more ng-click=\"showMore = !showMore\"><i icon=plus></i>more</a> <i icon=info-sign style=\"opacity: 0.3\" ng-click=\"show = !show\" ng-show=value.help></i><div ng-if=show><em>{{value.help}}</em></div><ul ng-if=showMore><li ng-repeat=\"more in value.more | toArray | orderBy: '$key'\" tooltip=\"{{ value.snip }}\"><span ng-click=vm.addSnippet(more.snip)>{{more.label}}</span> <i icon=info-sign style=\"opacity: 0.3\" ng-click=\"show = !show\" ng-show=more.help></i><div ng-if=show><em>{{more.help}}</em></div></li></ul></li></ul></div></div></div></div></div><div class=modal-footer><div class=pull-left><button class=\"btn btn-primary btn-lg xxbtn-square\" type=button ng-click=vm.save(false)><span icon=check tooltip=\"{{ 'Button.SaveAndKeepOpen' | translate }}\"></span> {{ 'Button.SaveAndKeepOpen' | translate }}</button> also supports Ctrl+S</div></div><show-debug-availability class=pull-right></show-debug-availability><div ng-if=vm.debug.on><pre>{{vm.view.Code}}</pre></div></div><style>/* helper to ensure that razor (which is correctly detected by ACE) is also highlighted */\r" +
+    "\n" +
+    "     .ace_razor {\r" +
+    "\n" +
+    "         background-color: yellow;\r" +
+    "\n" +
+    "     }\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "     /* make sure the highlighted text is also black, otherwise it a kind of gray */\r" +
+    "\n" +
+    "    .ace_punctuation.ace_short.ace_razor {\r" +
+    "\n" +
+    "        color: black;\r" +
+    "\n" +
+    "    }\r" +
+    "\n" +
+    "    \r" +
+    "\n" +
+    "    .ace_punctuation.ace_block.ace_razor {\r" +
+    "\n" +
+    "        color: black;\r" +
+    "\n" +
+    "    }</style>"
   );
 
 }]);
