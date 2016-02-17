@@ -1,6 +1,6 @@
 ﻿<dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="2SexyContent" type="Module" version="08.01.03">
+    <package name="2SexyContent" type="Module" version="08.02.00">
       <friendlyName> Content</friendlyName>
       <description>2sxc is a DNN Extension to create attractive and designed content. It solves the common problem, allowing the web designer to create designed templates for different content elements, so that the user must only fill in fields and receive a perfectly designed and animated output.</description>
       <iconFile>icon.png</iconFile>
@@ -391,7 +391,7 @@
             <attributes>
               <businessControllerClass>ToSic.SexyContent.SexyContent, ToSic.SexyContent</businessControllerClass>
               <desktopModuleID>[DESKTOPMODULEID]</desktopModuleID>
-              <upgradeVersionsList>01.00.00,05.05.00,06.06.00,06.06.04,07.00.00,07.00.03,07.02.00,07.02.02,07.03.00,07.03.01,07.03.02,07.03.03,07.03.04,08.00.00,08.00.01,08.00.02,08.00.03,08.00.04,08.00.05,08.00.06,08.00.07,08.00.08,08.00.09,08.00.10,08.00.11,08.00.12,08.01.00,08.01.01,08.01.02,08.01.03</upgradeVersionsList>
+              <upgradeVersionsList>01.00.00,05.05.00,06.06.00,06.06.04,07.00.00,07.00.03,07.02.00,07.02.02,07.03.00,07.03.01,07.03.02,07.03.03,07.03.04,08.00.00,08.00.01,08.00.02,08.00.03,08.00.04,08.00.05,08.00.06,08.00.07,08.00.08,08.00.09,08.00.10,08.00.11,08.00.12,08.01.00,08.01.01,08.01.02,08.01.03,08.02.00</upgradeVersionsList>
             </attributes>
           </eventMessage>
         </component>
@@ -631,7 +631,7 @@
         </components>
     </package>
 
-    <package name="2SexyContent-App" type="Module" version="08.01.03">
+    <package name="2SexyContent-App" type="Module" version="08.02.00">
       <friendlyName> App</friendlyName>
       <description>2sxc App is an extension that allows to install and use a 2sxc app.</description>
       <iconFile>icon-app.png</iconFile>
@@ -924,7 +924,7 @@
 
   
     <!-- the Image-Resizer Pro package - should be identical to the one from http://dnnimageresizer.codeplex.com-->
-        <package name="2sic_Imazen_ImageResizerPro" type="Library" version="04.00.05">
+    <package name="2sic_Imazen_ImageResizerPro" type="Library" version="04.00.05">
       <friendlyName>2sic presents Imazen ImageResizer Pro</friendlyName>
       <description>The Imazen ImageResizer Pro is the legendary ImageResizer by Imazen. The Pro-package contains some advanced plugins which are AGPL licensed. If you need non-AGPL components, use the 2sic_Imazen_ImageResizerLight or license the pro as a commercial component from Imazen. </description>
       <iconFile>DesktopModules\ToSIC_Imazen_ImageResizer\icon.png</iconFile>
@@ -972,7 +972,7 @@
             </file>
           </files>
         </component>
-					
+
         <component type="Config">
           <config>
             <configFile>web.config</configFile>
@@ -982,26 +982,16 @@
                   <node path="/configuration/configSections" action="update" key="name" collision="ignore">
                     <section name="resizer" type="ImageResizer.ResizerSection,ImageResizer"  requirePermission="false" />
                   </node>
-                  
-                  <!-- remove potential tinycache-->
-                  <node path="/configuration/resizer/plugins/add[@name='TinyCache']" action="remove" key="name" collision="ignore" />
 
-                  <!-- register resizer if missing -->
-                  <node path="/configuration" action="update" key="name" collision="ignore">
-                    <resizer/>
+                  <node path="/configuration" targetpath="/configuration/resizer" action="update" collision="save">
+                    <resizer>
+                      <plugins>
+                        <add name="DiskCache" />
+                      </plugins>
+                    </resizer>
                   </node>
 
-                  <!-- register plugins if missing -->
-                  <node path="/configuration/resizer" action="update" key="name" collision="ignore">
-                    <plugins/>
-                  </node>
-
-                  <!-- register the diskcache -->
-                  <node path="/configuration/resizer/plugins" action="update" key="name" collision="ignore">
-										<add name="DiskCache" />
-									</node>
-                    
-                    <!-- Register the http-modules in old/new versions as needed -->
+                  <!-- Register the http-modules in old/new versions as needed -->
                   <node path="/configuration/system.web/httpModules" action="update" key="name" collision="ignore">
                     <add name="ImageResizingModule" type="ImageResizer.InterceptModule"/>
                   </node>
