@@ -7,7 +7,10 @@
         <p translate="ReplaceContent.Intro"></p>
         <div translate="ReplaceContent.ChooseItem"></div>
         <div>
-            <select class="input-lg" ng-model="vm.item.id" ng-options="vm.convertToInt(key) as ((value || '[?]') + ' (' + key + ')') for (key,value) in vm.options"></select>
+            <select class="input-lg"
+                    ng-model="vm.item.id"
+                    ng-options="vm.convertToInt(key) as ((value || '[?]') + ' (' + key + ')') for (key,value) in vm.options"
+                    style="max-width: 100%"></select>
             &nbsp;<button type="button" class="btn btn-lg" ng-click="vm.copySelected()">
                 <i icon="duplicate"></i>
             </button>
