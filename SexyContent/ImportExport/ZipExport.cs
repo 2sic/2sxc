@@ -64,12 +64,13 @@ namespace ToSic.SexyContent.ImportExport
 
             #region Copy needed files to temporary directory
 
-            // todo
             var randomShortFolderName = Guid.NewGuid().ToString().Substring(0, 4);
             var temporaryDirectoryPath = HttpContext.Current.Server.MapPath(Path.Combine(SexyContent.TemporaryDirectory, randomShortFolderName));
 
             if (!Directory.Exists(temporaryDirectoryPath))
                 Directory.CreateDirectory(temporaryDirectoryPath);
+
+            AddInstructionsToPackageFolder(temporaryDirectoryPath);
 
             var tempDirectory = new DirectoryInfo(temporaryDirectoryPath);
             var appDirectory = tempDirectory.CreateSubdirectory("Apps/" + _sexy.App.Folder + "/");
@@ -121,6 +122,17 @@ namespace ToSic.SexyContent.ImportExport
             tempDirectory.Delete(true);
 
             return stream;
+        }
+
+        private void AddInstructionsToPackageFolder(string targetPath)
+        {
+            // todo: copy the template files there...
+            var srcPath = HttpContext.Current.Server.MapPath(Path.Combine(SexyContent.ToSexyDirectory, "SexyContent\\ImportExport\\Instructions"));
+
+            foreach (var file in Directory.GetFiles(srcPath))
+                File.Copy(file, Path.Combine(targetPath, Path.GetFileName(file)));
+
+
         }
 
         public static void ZipFolder(string RootFolder, string CurrentFolder, ZipOutputStream zStream)
