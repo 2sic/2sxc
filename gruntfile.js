@@ -1,4 +1,4 @@
-/// <binding />
+/// <binding ProjectOpened='build-auto' />
 module.exports = function (grunt) {
     "use strict";
     var distRoot = "dist/";
@@ -323,6 +323,7 @@ module.exports = function (grunt) {
         "jshint:all",
         "clean:tmp",
         "copy:build",
+        "copy:dnn", // for the ui.html
         "ngtemplates:default",
         "ngtemplates:sxcedit",
         "ngtemplates:designer",
