@@ -91,12 +91,12 @@
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\Microsoft.Practices.Unity.dll" />
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\Microsoft.Practices.Unity.Configuration.dll" />
       
-      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ImageResizer.dll" />
-      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ImageResizer.pdb" />
-      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ImageResizer.Plugins.DiskCache.dll" />
-      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ImageResizer.Plugins.DiskCache.pdb" />
-      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ImageResizer.Plugins.TinyCache.dll" />
-      <AssemblyInclude Include="$(MSBuildDnnBinPath)\ImageResizer.Plugins.TinyCache.pdb" />
+      <AssemblyInclude Include="$(ProjetDir)BuildScripts\Binary Dependencies\*.dll" />
+      <!--<AssemblyInclude Include="$(MSBuildDnnBinPath)\ImageResizer.pdb" />-->
+      <!--<AssemblyInclude Include="$(MSBuildDnnBinPath)\ImageResizer.Plugins.DiskCache.dll" />-->
+      <!--<AssemblyInclude Include="$(MSBuildDnnBinPath)\ImageResizer.Plugins.DiskCache.pdb" />-->
+      <!--<AssemblyInclude Include="$(MSBuildDnnBinPath)\ImageResizer.Plugins.TinyCache.dll" />-->
+      <!--<AssemblyInclude Include="$(MSBuildDnnBinPath)\ImageResizer.Plugins.TinyCache.pdb" />-->
       
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\CsvHelper.dll" />
     </ItemGroup>

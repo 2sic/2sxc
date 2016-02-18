@@ -1833,7 +1833,9 @@ angular.module("PipelineManagement", [
         vm.appId = appId;
 
 	    pipelineService.setAppId(appId);
-	    pipelineService.initContentTypes();
+
+        // 2016-02-18 2dm - probably not needed
+	    // pipelineService.initContentTypes();
 
 	    // 2016-01-14 2dm - commenting out completely, as the getPipelineUrl is probably not used any more
 	    // Make URL-Provider available to the scope
@@ -2753,7 +2755,8 @@ angular.module("EavServices")
         svc.pipelineResource = $resource("eav/PipelineDesigner/:action");
         svc.entitiesResource = $resource("eav/Entities/:action");
 
-        svc.dataPipelineAttributeSetId = 0;
+        // 2016-02-18 2dm - not needed?
+        // svc.dataPipelineAttributeSetId = 0;
         svc.appId = 0;
 
         // Get the Definition of a DataSource
@@ -2906,6 +2909,8 @@ angular.module("EavServices")
             //        svc.dataPipelineAttributeSetId = result.data.Id; // 2016-02-14 previously AttributeSetId;
             //    });
             //},
+
+
             // Get all Pipelines of current App
             getPipelines: function () {
                 return svc.entitiesResource.query({ action: "GetEntities", appId: svc.appId, contentType: "DataPipeline" });
