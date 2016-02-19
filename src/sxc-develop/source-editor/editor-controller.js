@@ -76,7 +76,7 @@
 
         function activate() {
             // add ctrl+s to save
-            ctrlS.bind(function() { vm.save(false); });
+            ctrlS(function() { vm.save(false); });
         }
 
 
