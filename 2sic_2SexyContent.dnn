@@ -435,9 +435,9 @@
             <assembly>
               <name>ImageResizer.dll</name>
             </assembly>
-            <assembly>
+            <!--<assembly>
               <name>ImageResizer.Plugins.TinyCache.dll</name>
-            </assembly>
+            </assembly>-->
             <assembly>
               <name>ImageResizer.Plugins.SimpleFilters.dll</name>
             </assembly>
@@ -643,6 +643,23 @@
             </file>
           </files>
           </component>
+        <component type="Cleanup" version="08.02.02">
+          <files>
+            <file>
+              <path>bin</path>
+              <name>ImageResizer.Plugins.TinyCache.dll</name>
+            </file>
+            <file>
+              <path>bin</path>
+              <name>ImageResizer.Plugins.TinyCache.pdb</name>
+            </file>
+            <file>
+              <path>bin</path>
+              <name>protobuf-net.dll</name>
+            </file>
+          </files>
+          </component>
+        
         </components>
     </package>
 
