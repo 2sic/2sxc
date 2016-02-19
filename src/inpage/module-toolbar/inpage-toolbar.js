@@ -227,6 +227,49 @@ $2sxc.getManageController = function (id) {
                     dialog: settings.dialog || settings.action          // the variable used to name the dialog changed in the history of 2sxc from action to dialog
                 }, settings.params),
 
+                // this adds an item of the content-group, based on the group GUID and the sequence number
+                addContentGroupItem: function(guid, index, part, isAdd, sectionLanguageKey) {
+                    cmd.items.push({
+                        Group: { Guid: guid, Index: index, Part: part, Add: isAdd },
+                        Title: tbContr.translate(sectionLanguageKey)
+                    });
+                },
+
+                // this will tell the command to edit a item from the sorted list in the group, optionally together with the presentation item
+                addContentGroupItemSetsToEditList: function (withPresentation) {
+                    var isContentAndNotHeader = (cmd.settings.sortOrder !== -1);
+                    var index = isContentAndNotHeader ? cmd.settings.sortOrder : 0;
+                    var prefix = isContentAndNotHeader ? "" : "List";
+                    var cTerm = prefix + "Content";
+                    var pTerm = prefix + "Presentation";
+                    var isAdd = cmd.settings.action === "new";
+                    var groupId = cmd.settings.contentGroupId;
+                    cmd.addContentGroupItem(groupId, index, cTerm.toLowerCase(), isAdd, "EditFormTitle." + cTerm);
+
+                    //cmd.items.push({
+                    //    Group: {
+                    //        Guid: cmd.settings.contentGroupId,
+                    //        Index: index,
+                    //        Part: isNormalContent ? "content" : "listcontent",
+                    //        Add: cmd.settings.action === "new"
+                    //    },
+                    //    Title: tbContr.translate("EditFormTitle." + (isNormalContent ? "Content" : "ListContent"))
+                    //});
+
+                    if (withPresentation) {
+                        cmd.addContentGroupItem(groupId, index, pTerm.toLowerCase(), isAdd, "EditFormTitle." + pTerm);
+                        //cmd.items.push({
+                        //    Group: {
+                        //        Guid: cmd.settings.contentGroupId,
+                        //        Index: index,
+                        //        Part: isNormalContent ? "presentation" : "listpresentation",
+                        //        Add: cmd.settings.action === "new"
+                        //    },
+                        //    Title: tbContr.translate("EditFormTitle." + (isNormalContent ? "Presentation" : "ListPresentation"))
+                        //});
+                    }
+                },
+
                 generateLink: function() {
                     //#region steps for all actions: prefill, serialize, open-dialog
                     // when doing new, there may be a prefill in the link to initialize the new item
@@ -259,35 +302,35 @@ $2sxc.getManageController = function (id) {
             }
             // when using a list, the sort-order is important to find the right item
             if (cmd.settings.useModuleList || cmd.settings.action === "replace" || cmd.settings.action === "sort") {
-                var normalContent = (cmd.settings.sortOrder !== -1);
-                var index = normalContent ? cmd.settings.sortOrder : 0;
-                cmd.items.push({
-                    Group: {
-                        Guid: cmd.settings.contentGroupId,
-                        Index: index,
-                        Part: normalContent ? "content" : "listcontent",
-                        Add: cmd.settings.action === "new"
-                    },
-                    Title: tbContr.translate("EditFormTitle." + (normalContent ? "Content" : "ListContent"))
-                });
-                if (cmd.settings.action !== "replace") // if not replace, also add the presentation
-                    cmd.items.push({
-                        Group: {
-                            Guid: cmd.settings.contentGroupId,
-                            Index: index,
-                            Part: normalContent ? "presentation" : "listpresentation",
-                            Add: cmd.settings.action === "new"
-                        },
-                        Title: tbContr.translate("EditFormTitle." + (normalContent ? "Presentation" : "ListPresentation"))
-                    });
+                var includePresentation = (cmd.settings.action !== "replace");
+                cmd.addContentGroupItemSetsToEditList(includePresentation);
+                //var normalContent = (cmd.settings.sortOrder !== -1);
+                //var index = normalContent ? cmd.settings.sortOrder : 0;
+                //cmd.items.push({
+                //    Group: {
+                //        Guid: cmd.settings.contentGroupId,
+                //        Index: index,
+                //        Part: normalContent ? "content" : "listcontent",
+                //        Add: cmd.settings.action === "new"
+                //    },
+                //    Title: tbContr.translate("EditFormTitle." + (normalContent ? "Content" : "ListContent"))
+                //});
+                //
+                //if (cmd.settings.action !== "replace") // if not replace, also add the presentation
+                //    cmd.items.push({
+                //        Group: {
+                //            Guid: cmd.settings.contentGroupId,
+                //            Index: index,
+                //            Part: normalContent ? "presentation" : "listpresentation",
+                //            Add: cmd.settings.action === "new"
+                //        },
+                //        Title: tbContr.translate("EditFormTitle." + (normalContent ? "Presentation" : "ListPresentation"))
+                //    });
             }
 
-            // todo...
+            // if the command has own configuration stuff, do that now
             if (cmd.settings.configureCommand)
                 cmd.settings.configureCommand(cmd);
-
-            if (cmd.settings.action === "develop")
-                cmd.items = [{ EntityId: manageInfo.templateId }];
 
             return cmd.generateLink();
         },
@@ -310,13 +353,9 @@ $2sxc.getManageController = function (id) {
         // Perform a toolbar button-action - basically get the configuration and execute it's action
         action: function(settings, event) {
             var conf = actionButtonsConf[settings.action];
-            settings = angular.extend({}, conf, settings);  // merge conf & settings, but settings has higher priority
-            //if (conf.newWindow) settings.newWindow = conf.newWindow;
-            //if (conf.params) settings.params = conf.params;
-            //if (conf.dialog) settings.dialog = conf.dialog;
-            if (!settings.dialog) settings.dialog = settings.action; // old code uses "action" as the parameter, now use verb ? dialog
-
-            settings.code = settings.code || tbContr._openNgDialog; // decide what action to perform
+            settings = angular.extend({}, conf, settings);              // merge conf & settings, but settings has higher priority
+            if (!settings.dialog) settings.dialog = settings.action;    // old code uses "action" as the parameter, now use verb ? dialog
+            if (!settings.code) settings.code = tbContr._openNgDialog;  // decide what action to perform
 
             var origEvent = event || window.event; // pre-save event because afterwards we have a promise, so the event-object changes; funky syntax is because of browser differences
             if (conf.uiActionOnly)
