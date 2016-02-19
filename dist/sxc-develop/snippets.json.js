@@ -1805,7 +1805,7 @@
             "subset": "hyperlink-library",
             "name": "simple loop for assets",
             "title": "",
-            "content": "@foreach(var ${3:pic} in Adam(${1:var}, \"${2:prop}\").Files){\r\n <span>@${3:pic}.Url, @${3:pic}.FileName </span>\r\n}",
+            "content": "@foreach(var ${3:pic} in AsAdam(${1:var}, \"${2:prop}\").Files){\r\n <span>@${3:pic}.Url, @${3:pic}.FileName </span>\r\n}",
             "help": "Adam: simple example with looping ADAM assets"
         },
         {
@@ -1813,7 +1813,7 @@
             "subset": "hyperlink-library",
             "name": "loop with metadata assets",
             "title": "",
-            "content": "@foreach(var ${3:pic} in Adam(${1:var}, \"${2:prop}\").Files){\r\n <div style=\"clear: both\">\r\n  <img src=\"@${3:pic}.Url?w=200&h=200&mode=crop\" title=\"@${3:pic}.FileName\" style=\"float: right\">\r\n  <h3>@${3:pic}.Metadata.${10:Title}</h3>\r\n  Has Meta: @${3:pic}.HasMetadata \r\n  <div>Description: @Html.Raw(${3:pic}.Metadata.${11:Description})</div>\r\n </div>\r\n}",
+            "content": "@foreach(var ${3:pic} in AsAdam(${1:var}, \"${2:prop}\").Files){\r\n <div style=\"clear: both\">\r\n  <img src=\"@${3:pic}.Url?w=200&h=200&mode=crop\" title=\"@${3:pic}.FileName\" style=\"float: right\">\r\n  <h3>@${3:pic}.Metadata.${10:Title}</h3>\r\n  Has Meta: @${3:pic}.HasMetadata \r\n  <div>Description: @Html.Raw(${3:pic}.Metadata.${11:Description})</div>\r\n </div>\r\n}",
             "help": "Adam: Large example with looping ADAM assets"
         },
         {
