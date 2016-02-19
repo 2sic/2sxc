@@ -5,6 +5,9 @@
 .sc-menu li { list-style-type:none; padding:0!important; margin:0!important; display:inline; }
 .sc-menu a { display:inline-block!important; margin-right:4px!important;cursor: pointer;margin-left: 0 !important; }
 
+/* this one is for buttons which can have a full/empty state */
+.sc-menu li a.empty i {opacity: 0.4} 
+
 .sc-menu a div { 
     width: 28px!important;
     height: 28px!important;
@@ -136,9 +139,9 @@
 /* only use the WOFF, as all modern browsers support that */
 @font-face {
   font-family: 'inpage-icons';
-  src: url('../lib/fonts/inpage-icons.woff?4236188') format('woff'),
-       url('../lib/fonts/inpage-icons.eot?4236188#iefix') format('embedded-opentype'),
-       url('../lib/fonts/inpage-icons.ttf?4236188') format('truetype');
+  src: url('../lib/fonts/inpage-icons.woff?4236189') format('woff'),
+       url('../lib/fonts/inpage-icons.eot?4236189#iefix') format('embedded-opentype'),
+       url('../lib/fonts/inpage-icons.ttf?4236189') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
@@ -203,4 +206,7 @@
 .icon-sxc-fields:before { content: '\e814'; } /* '' */
 .icon-sxc-filter:before { content: '\e815'; } /* '' */
 .icon-sxc-list:before { content: '\e816'; } /* '' */
+.icon-sxc-tag:before { content: '\e817'; } /* '' */
+.icon-sxc-sliders:before { content: '\e818'; } /* '' */
 .icon-sxc-glasses:before { content: '\e819'; } /* '' */
+.icon-sxc-language:before { content: '\e81a'; } /* '' */

@@ -5,6 +5,9 @@
 .sc-menu li { list-style-type:none; padding:0!important; margin:0!important; display:inline; }
 .sc-menu a { display:inline-block!important; margin-right:4px!important;cursor: pointer;margin-left: 0 !important; }
 
+/* this one is for buttons which can have a full/empty state */
+.sc-menu li a.empty i {opacity: 0.4} 
+
 .sc-menu a div { 
     width: 28px!important;
     height: 28px!important;

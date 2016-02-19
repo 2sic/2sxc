@@ -82,16 +82,31 @@ $2sxc.getManageController = function (id) {
         // <ul class="sc-menu" data-toolbar='{"action":"new", "contentType": "Category"}'></ul>
         'new': buttonConfig('new', "New", "plus", "default", false, { params: { mode: "new" },
             dialog: "edit", // don't use "new" (default) but use "edit"
-            addCondition: function(settings) { return toolbarConfig.isList && settings.sortOrder !== -1; },
+            addCondition: function(settings) {
+                return settings.useModuleList && settings.sortOrder !== -1; // don't provide new on the header-item
+            },
             code: function (settings, event) {
                 tbContr._openNgDialog($.extend({}, settings, { sortOrder: settings.sortOrder + 1 }), event);
             }
         }),
         // add brings no dialog, just add an empty item
         'add': buttonConfig('add', "AddDemo", "plus-circled", "edit", false, {
-            addCondition: function(settings) { return toolbarConfig.isList && settings.sortOrder !== -1 && settings.useModuleList; },
+            addCondition: function (settings) { return settings.useModuleList && settings.sortOrder !== -1 && settings.useModuleList; },
             code: function(settings, event) {
                 tbContr._getAngularVm().addItem(settings.sortOrder + 1);
+            }
+        }),
+        "metadata" : buttonConfig("metadata", "Metadata", "tag", "default", false, { params: { mode: "new" },
+            dialog: "edit", // don't use "new" (default) but use "edit"
+            dynamicClasses: function (settings) {
+                // if it doesn't have data yet, make it less strong
+                return settings.items && settings.items[0].entityId ? "" : "empty";
+            },
+            addCondition: function (settings) {
+                return settings.items && (settings.items[0].Metadata || settings.items[0].entityId); // only add a metadata-button if there is an items-list
+            },
+            code: function (settings, event) {
+                tbContr._openNgDialog(settings, event);
             }
         }),
         'remove': {
@@ -99,7 +114,7 @@ $2sxc.getManageController = function (id) {
             iclass: "icon-sxc-minus-circled",
             disabled: true,
             showOn: "edit",
-            addCondition: function(settings) { return toolbarConfig.isList && settings.sortOrder !== -1; },
+            addCondition: function (settings) { return settings.useModuleList && settings.sortOrder !== -1; },
             code: function(settings, event) {
                 if (confirm(tbContr.translate("Toolbar.ConfirmRemove"))) {
                     tbContr._getAngularVm().removeFromList(settings.sortOrder);
@@ -113,7 +128,7 @@ $2sxc.getManageController = function (id) {
         //    iclass: "icon-sxc-cancel",
         //    disabled: true,
         //    showOn: "edit",
-        //    addCondition: function (settings) { return !toolbarConfig.isList; },
+        //    addCondition: function (settings) { return !settings.useModuleList; },
         //    code: function (settings, event) {
         //        if (confirm(tbContr.translate("Toolbar.ReallyDelete"))) {
         //            tbContr._getAngularVm().reallyDelete(settings.entityId);
@@ -126,7 +141,7 @@ $2sxc.getManageController = function (id) {
             iclass: "icon-sxc-move-up",
             disabled: false,
             showOn: "edit",
-            addCondition: function(settings) { return toolbarConfig.isList && settings.sortOrder !== -1 && settings.useModuleList && settings.sortOrder !== 0; },
+            addCondition: function (settings) { return settings.useModuleList && settings.sortOrder !== -1 && settings.useModuleList && settings.sortOrder !== 0; },
             code: function(settings, event) {
                 tbContr._getAngularVm().changeOrder(settings.sortOrder, Math.max(settings.sortOrder - 1, 0));
             }
@@ -136,7 +151,7 @@ $2sxc.getManageController = function (id) {
             iclass: "icon-sxc-move-down",
             disabled: false,
             showOn: "edit",
-            addCondition: function(settings) { return toolbarConfig.isList && settings.sortOrder !== -1 && settings.useModuleList; },
+            addCondition: function (settings) { return settings.useModuleList && settings.sortOrder !== -1 && settings.useModuleList; },
             code: function(settings, event) {
                 tbContr._getAngularVm().changeOrder(settings.sortOrder, settings.sortOrder + 1);
             }
@@ -145,7 +160,7 @@ $2sxc.getManageController = function (id) {
             title: "Toolbar.Sort",
             iclass: "icon-sxc-list-numbered",
             showOn: "edit",
-            addCondition: function(settings) { return toolbarConfig.isList && settings.sortOrder !== -1; },
+            addCondition: function (settings) { return settings.useModuleList && settings.sortOrder !== -1; },
         },
         'publish': buttonConfig('publish', "Published", "eye", "edit", false, {
             iclass2: "icon-sxc-eye-off",
@@ -174,7 +189,8 @@ $2sxc.getManageController = function (id) {
         },
         'develop': buttonConfig("develop", "Develop", "code", "admin", true, {
             newWindow: true,
-            addCondition: enableTools,         
+            addCondition: enableTools,
+            configureCommand: function (cmd) { cmd.items = [{ EntityId: manageInfo.templateId }]; }
         }),
         'contenttype': {
             title: "Toolbar.ContentType",
@@ -234,63 +250,103 @@ $2sxc.getManageController = function (id) {
 
         _manageInfo: manageInfo,
 
-        // create a dialog link
-        getNgLink: function(specialSettings) {
-            var settings = $.extend({}, toolbarConfig, specialSettings); // merge button with toolbar-settings
+        // assemble an object which will store the configuration and execute it
+        createCommandObject: function(specialSettings) {
+            var settings = $.extend({}, toolbarConfig, specialSettings); // merge button with general toolbar-settings
+            var cmd = {
+                settings: settings,
+                items: settings.items || [],                            // use predefined or create empty array
+                params: angular.extend({
+                    dialog: settings.dialog || settings.action          // the variable used to name the dialog changed in the history of 2sxc from action to dialog
+                }, settings.params),
 
-            var params = {
-                dialog: settings.dialog || settings.action,
+                // this adds an item of the content-group, based on the group GUID and the sequence number
+                addContentGroupItem: function(guid, index, part, isAdd, sectionLanguageKey) {
+                    cmd.items.push({
+                        Group: { Guid: guid, Index: index, Part: part, Add: isAdd },
+                        Title: tbContr.translate(sectionLanguageKey)
+                    });
+                },
+
+                // this will tell the command to edit a item from the sorted list in the group, optionally together with the presentation item
+                addContentGroupItemSetsToEditList: function (withPresentation) {
+                    var isContentAndNotHeader = (cmd.settings.sortOrder !== -1);
+                    var index = isContentAndNotHeader ? cmd.settings.sortOrder : 0;
+                    var prefix = isContentAndNotHeader ? "" : "List";
+                    var cTerm = prefix + "Content";
+                    var pTerm = prefix + "Presentation";
+                    var isAdd = cmd.settings.action === "new";
+                    var groupId = cmd.settings.contentGroupId;
+                    cmd.addContentGroupItem(groupId, index, cTerm.toLowerCase(), isAdd, "EditFormTitle." + cTerm);
+
+                    if (withPresentation) 
+                        cmd.addContentGroupItem(groupId, index, pTerm.toLowerCase(), isAdd, "EditFormTitle." + pTerm);
+                    
+                },
+
+                generateLink: function() {
+                    //#region steps for all actions: prefill, serialize, open-dialog
+                    // when doing new, there may be a prefill in the link to initialize the new item
+                    if (cmd.settings.prefill)
+                        for (var i = 0; i < cmd.items.length; i++)
+                            cmd.items[i].Prefill = cmd.settings.prefill;
+
+                    // Serialize/json-ify the complex items-list
+                    if (cmd.items.length)
+                        cmd.params.items = JSON.stringify(cmd.items);
+
+                    return manageInfo.ngDialogUrl
+                        + "#" + $.param(manageInfo.ngDialogParams)
+                        + "&" + $.param(cmd.params);
+                    //#endregion
+                }
             };
-            angular.extend(params, settings.params);
-            var items = [];
+            return cmd;
+        },
+        // create a dialog link
+        getNgLink: function (specialSettings) {
+            var cmd = tbContr.createCommandObject(specialSettings);
 
             // when not using a content-group list, ...
-            if (!settings.useModuleList) {
-                if (settings.action !== "new")
-                    items.push({ EntityId: settings.entityId });
-                else if (settings.contentType || settings.attributeSetName)
-                    items.push({ ContentTypeName: settings.contentType || settings.attributeSetName });
+            if (!cmd.settings.useModuleList) {
+                if (cmd.settings.action !== "new" && cmd.settings.entityId) // if it's "edit" and has an entityId, add it
+                    cmd.items.push({ EntityId: cmd.settings.entityId });
+                else if (cmd.settings.contentType || cmd.settings.attributeSetName)
+                    cmd.items.push({ ContentTypeName: cmd.settings.contentType || cmd.settings.attributeSetName });
             }
             // when using a list, the sort-order is important to find the right item
-            if (settings.useModuleList || settings.action === "replace" || settings.action === "sort") {
-                var normalContent = (settings.sortOrder !== -1);
-                var index = normalContent ? settings.sortOrder : 0;
-                items.push({
-                    Group: {
-                        Guid: settings.contentGroupId,
-                        Index: index,
-                        Part: normalContent ? "content" : "listcontent",
-                        Add: settings.action === "new"
-                    },
-                    Title: tbContr.translate("EditFormTitle." + (normalContent ? "Content" : "ListContent"))
-                });
-                if (settings.action !== "replace") // if not replace, also add the presentation
-                    items.push({
-                        Group: {
-                            Guid: settings.contentGroupId,
-                            Index: index,
-                            Part: normalContent ? "presentation" : "listpresentation",
-                            Add: settings.action === "new"
-                        },
-                        Title: tbContr.translate("EditFormTitle." + (normalContent ? "Presentation" : "ListPresentation"))
-                    });
+            if (cmd.settings.useModuleList || cmd.settings.action === "replace" || cmd.settings.action === "sort") {
+                var includePresentation = (cmd.settings.action !== "replace");
+                cmd.addContentGroupItemSetsToEditList(includePresentation);
+                //var normalContent = (cmd.settings.sortOrder !== -1);
+                //var index = normalContent ? cmd.settings.sortOrder : 0;
+                //cmd.items.push({
+                //    Group: {
+                //        Guid: cmd.settings.contentGroupId,
+                //        Index: index,
+                //        Part: normalContent ? "content" : "listcontent",
+                //        Add: cmd.settings.action === "new"
+                //    },
+                //    Title: tbContr.translate("EditFormTitle." + (normalContent ? "Content" : "ListContent"))
+                //});
+                //
+                //if (cmd.settings.action !== "replace") // if not replace, also add the presentation
+                //    cmd.items.push({
+                //        Group: {
+                //            Guid: cmd.settings.contentGroupId,
+                //            Index: index,
+                //            Part: normalContent ? "presentation" : "listpresentation",
+                //            Add: cmd.settings.action === "new"
+                //        },
+                //        Title: tbContr.translate("EditFormTitle." + (normalContent ? "Presentation" : "ListPresentation"))
+                //    });
             }
 
-            if (settings.action === "develop")
-                items = [{ EntityId: manageInfo.templateId }];
+            // if the command has own configuration stuff, do that now
+            if (cmd.settings.configureCommand)
+                cmd.settings.configureCommand(cmd);
 
-            // when doing new, there may be a prefill in the link to initialize the new item
-            if (settings.prefill) 
-                for (var i = 0; i < items.length; i++)
-                    items[i].Prefill = settings.prefill;
-
-            // Serialize/json-ify the complex items-list
-            if (items.length)
-                params.items = JSON.stringify(items);
-
-            return manageInfo.ngDialogUrl
-                + "#" + $.param(manageInfo.ngDialogParams)
-                + "&" + $.param(params);
+            return cmd.generateLink();
         },
 
         // open a new dialog of the angular-ui
@@ -310,21 +366,18 @@ $2sxc.getManageController = function (id) {
 
         // Perform a toolbar button-action - basically get the configuration and execute it's action
         action: function(settings, event) {
-            var origEvent = event || window.event; // pre-save event because afterwards we have a promise, so the event-object changes; funky syntax is because of browser differences
             var conf = actionButtonsConf[settings.action];
-            if (conf.newWindow) settings.newWindow = conf.newWindow;
-            if (conf.params) settings.params = conf.params;
-            if (conf.dialog) settings.dialog = conf.dialog;
-            if (!settings.dialog) settings.dialog = settings.action; // old code uses "action" as the parameter, now use verb
+            settings = angular.extend({}, conf, settings);              // merge conf & settings, but settings has higher priority
+            if (!settings.dialog) settings.dialog = settings.action;    // old code uses "action" as the parameter, now use verb ? dialog
+            if (!settings.code) settings.code = tbContr._openNgDialog;  // decide what action to perform
 
-            var fn = conf.code || tbContr._openNgDialog; // decide what action to perform
-
+            var origEvent = event || window.event; // pre-save event because afterwards we have a promise, so the event-object changes; funky syntax is because of browser differences
             if (conf.uiActionOnly)
-                return fn(settings, origEvent);
+                return settings.code(settings, origEvent);
             
             // if more than just a UI-action, then it needs to be sure the content-group is created first
             tbContr._getAngularVm().prepareToAddContent().then(function() {
-                return fn(settings, origEvent);
+                return settings.code(settings, origEvent);
             });
         },
 
@@ -352,7 +405,8 @@ $2sxc.getManageController = function (id) {
             for (var c = 0; c < classesList.length; c++)
                 showClasses += " show-" + classesList[c];
             var button = $("<a />", {
-                'class': "sc-" + btnSettings.action + " " + showClasses,
+                'class': "sc-" + btnSettings.action + " " + showClasses + (conf.dynamicClasses ? " " + conf.dynamicClasses(btnSettings) : ""),
+                //'style': conf.style ? conf.style() : "",
                 'onclick': "javascript:$2sxc(" + id + ").manage.action(" + JSON.stringify(btnSettings) + ", event);",
                 'title': tbContr.translate(conf.title)
             });

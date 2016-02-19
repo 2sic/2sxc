@@ -63,16 +63,14 @@ $2sxc.getManageController = function (id) {
         }),
         "metadata" : buttonConfig("metadata", "Metadata", "tag", "default", false, { params: { mode: "new" },
             dialog: "edit", // don't use "new" (default) but use "edit"
+            dynamicClasses: function (settings) {
+                // if it doesn't have data yet, make it less strong
+                return settings.items && settings.items[0].entityId ? "" : "empty";
+            },
             addCondition: function (settings) {
                 return settings.items && (settings.items[0].Metadata || settings.items[0].entityId); // only add a metadata-button if there is an items-list
             },
             code: function (settings, event) {
-                if (settings.items[0].entityId) { // check if editing instead of new
-                    alert('edt');
-                    settings.params = { mode: "edit"}; // disable the "new"
-                    //settings.Metadata = {}; // remove metadata-infos
-                }
-                
                 tbContr._openNgDialog(settings, event);
             }
         }),
@@ -372,7 +370,8 @@ $2sxc.getManageController = function (id) {
             for (var c = 0; c < classesList.length; c++)
                 showClasses += " show-" + classesList[c];
             var button = $("<a />", {
-                'class': "sc-" + btnSettings.action + " " + showClasses,
+                'class': "sc-" + btnSettings.action + " " + showClasses + (conf.dynamicClasses ? " " + conf.dynamicClasses(btnSettings) : ""),
+                //'style': conf.style ? conf.style() : "",
                 'onclick': "javascript:$2sxc(" + id + ").manage.action(" + JSON.stringify(btnSettings) + ", event);",
                 'title': tbContr.translate(conf.title)
             });
