@@ -136,9 +136,9 @@
 /* only use the WOFF, as all modern browsers support that */
 @font-face {
   font-family: 'inpage-icons';
-  src: url('../lib/fonts/inpage-icons.woff?4236188') format('woff'),
-       url('../lib/fonts/inpage-icons.eot?4236188#iefix') format('embedded-opentype'),
-       url('../lib/fonts/inpage-icons.ttf?4236188') format('truetype');
+  src: url('../lib/fonts/inpage-icons.woff?4236189') format('woff'),
+       url('../lib/fonts/inpage-icons.eot?4236189#iefix') format('embedded-opentype'),
+       url('../lib/fonts/inpage-icons.ttf?4236189') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
