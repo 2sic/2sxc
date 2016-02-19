@@ -48,7 +48,7 @@ $2sxc.getManageController = function (id) {
         'new': buttonConfig('new', "New", "plus", "default", false, { params: { mode: "new" },
             dialog: "edit", // don't use "new" (default) but use "edit"
             addCondition: function(settings) {
-                return settings.useModuleList && settings.sortOrder !== -1; // don't provide new on the header-item
+                return toolbarConfig.isList && settings.useModuleList && settings.sortOrder !== -1; // don't provide new on the header-item
             },
             code: function (settings, event) {
                 tbContr._openNgDialog($.extend({}, settings, { sortOrder: settings.sortOrder + 1 }), event);
@@ -56,7 +56,7 @@ $2sxc.getManageController = function (id) {
         }),
         // add brings no dialog, just add an empty item
         'add': buttonConfig('add', "AddDemo", "plus-circled", "edit", false, {
-            addCondition: function (settings) { return settings.useModuleList && settings.sortOrder !== -1 && settings.useModuleList; },
+            addCondition: function (settings) { return toolbarConfig.isList && settings.useModuleList && settings.sortOrder !== -1; },
             code: function(settings, event) {
                 tbContr._getAngularVm().addItem(settings.sortOrder + 1);
             }
@@ -79,7 +79,7 @@ $2sxc.getManageController = function (id) {
             iclass: "icon-sxc-minus-circled",
             disabled: true,
             showOn: "edit",
-            addCondition: function (settings) { return settings.useModuleList && settings.sortOrder !== -1; },
+            addCondition: function (settings) { return toolbarConfig.isList && settings.useModuleList && settings.sortOrder !== -1; },
             code: function(settings, event) {
                 if (confirm(tbContr.translate("Toolbar.ConfirmRemove"))) {
                     tbContr._getAngularVm().removeFromList(settings.sortOrder);
@@ -106,7 +106,7 @@ $2sxc.getManageController = function (id) {
             iclass: "icon-sxc-move-up",
             disabled: false,
             showOn: "edit",
-            addCondition: function (settings) { return settings.useModuleList && settings.sortOrder !== -1 && settings.useModuleList && settings.sortOrder !== 0; },
+            addCondition: function (settings) { return toolbarConfig.isList && settings.useModuleList && settings.sortOrder !== -1 && settings.sortOrder !== 0; },
             code: function(settings, event) {
                 tbContr._getAngularVm().changeOrder(settings.sortOrder, Math.max(settings.sortOrder - 1, 0));
             }
@@ -116,7 +116,7 @@ $2sxc.getManageController = function (id) {
             iclass: "icon-sxc-move-down",
             disabled: false,
             showOn: "edit",
-            addCondition: function (settings) { return settings.useModuleList && settings.sortOrder !== -1 && settings.useModuleList; },
+            addCondition: function (settings) { return toolbarConfig.isList && settings.useModuleList && settings.sortOrder !== -1; },
             code: function(settings, event) {
                 tbContr._getAngularVm().changeOrder(settings.sortOrder, settings.sortOrder + 1);
             }
@@ -125,7 +125,7 @@ $2sxc.getManageController = function (id) {
             title: "Toolbar.Sort",
             iclass: "icon-sxc-list-numbered",
             showOn: "edit",
-            addCondition: function (settings) { return settings.useModuleList && settings.sortOrder !== -1; },
+            addCondition: function (settings) { return toolbarConfig.isList && settings.useModuleList && settings.sortOrder !== -1; },
         },
         'publish': buttonConfig('publish', "Published", "eye", "edit", false, {
             iclass2: "icon-sxc-eye-off",
