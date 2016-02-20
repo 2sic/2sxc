@@ -152,7 +152,7 @@ namespace ToSic.SexyContent
         #endregion
 
         #region Environment - should be the place to refactor everything into, which is the host around 2sxc
-        internal Environment.Environment Environment = new Environment.Environment();
+        public Environment.Environment Environment = new Environment.Environment();
         #endregion
 
         #region AssignmentObjectType Lookups

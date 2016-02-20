@@ -10,6 +10,7 @@ using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.Adam;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Engines;
+using ToSic.SexyContent.Environment.Interfaces;
 using ToSic.SexyContent.Razor.Helpers;
 using ToSic.SexyContent.Search;
 
@@ -66,6 +67,10 @@ namespace ToSic.SexyContent.Razor
             get { return AppAndDataHelpers.Data; }
         }
 
+        public IEnvironment Environment => Sexy.Environment;
+        
+
+        #region AsDynamic in many variations
         /// <summary>
         /// Transform a IEntity to a DynamicEntity as dynamic object
         /// </summary>
@@ -135,6 +140,8 @@ namespace ToSic.SexyContent.Razor
         {
             return AppAndDataHelpers.AsDynamic(entities);
         }
+        #endregion
+
 
         public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, IValueCollectionProvider configurationProvider = null)
         {
@@ -213,7 +220,7 @@ namespace ToSic.SexyContent.Razor
         public InstancePurposes InstancePurpose { get; set; }
 
 
-        #region Adam (beta / experimental)
+        #region Adam 
 
         /// <summary>
         /// Provides an Adam instance for this item and field
@@ -239,9 +246,6 @@ namespace ToSic.SexyContent.Razor
         #endregion
 
     }
-
-    // <2sic> Removed DotNetNukeWebPage<T>:DotNetNukeWebPage
-    // </2sic>
 
 
 }

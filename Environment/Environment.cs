@@ -6,7 +6,7 @@ using ToSic.SexyContent.Environment.Interfaces;
 
 namespace ToSic.SexyContent.Environment
 {
-    internal class Environment: IEnvironment
+    public class Environment: IEnvironment
     {
         public IPermissions Permissions { get; internal set; }
     }

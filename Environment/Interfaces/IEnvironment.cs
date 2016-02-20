@@ -1,6 +1,6 @@
 ﻿namespace ToSic.SexyContent.Environment.Interfaces
 {
-    internal interface IEnvironment
+    public interface IEnvironment
     {
         IPermissions Permissions { get; }
     }

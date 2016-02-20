@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ToSic.SexyContent.Environment.Interfaces
 {
-    internal interface IPermissions
+    public interface IPermissions
     {
         bool UserMayEditContent { get; }
     }
