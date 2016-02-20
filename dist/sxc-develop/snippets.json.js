@@ -1841,6 +1841,14 @@
             "help": "Thumbnail IMG tag with crop-mode"
         },
         {
+            "set": "@\\InputType",
+            "subset": "string-wysiwyg",
+            "name": "raw html",
+            "title": "",
+            "content": "@Html.Raw(${101:var}.${102:prop})",
+            "help": "Output the html as html, not as text"
+        },
+        {
             "set": "[\\InputType",
             "subset": "hyperlink-default",
             "name": "thumbnail url",
