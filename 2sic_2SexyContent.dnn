@@ -435,9 +435,6 @@
             <assembly>
               <name>ImageResizer.dll</name>
             </assembly>
-            <!--<assembly>
-              <name>ImageResizer.Plugins.TinyCache.dll</name>
-            </assembly>-->
             
             <assembly>
               <name>ImageResizer.Plugins.SimpleFilters.dll</name>
@@ -458,9 +455,6 @@
               <name>CsvHelper.dll</name>
             </assembly>
             
-            <!--<assembly>
-              <name>protobuf-net.dll</name>
-            </assembly>-->
           </assemblies>
         </component>
 
