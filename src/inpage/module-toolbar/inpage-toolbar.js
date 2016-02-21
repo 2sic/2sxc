@@ -80,21 +80,46 @@ $2sxc.getManageController = function (id) {
             dialog: "edit", // don't use "new" (default) but use "edit"
             dynamicClasses: function (settings) {
                 // if it doesn't have data yet, make it less strong
-                return settings.items && settings.items[0].entityId ? "" : "empty";
+                return settings.entityId ? "" : "empty";
+                // return settings.items && settings.items[0].entityId ? "" : "empty";
             },
             addCondition: function (settings) {
-                return settings.items && (settings.items[0].Metadata || settings.items[0].entityId); // only add a metadata-button if there is an items-list
+                return !!settings.metadata; // only add a metadata-button if it has metadata-infos
+                // return settings.items && (settings.items[0].metadata || settings.items[0].entityId); // only add a metadata-button if there is an items-list
             },
             code: function (settings, event) {
-                // rename the official toolbar attribute "contentType" to the format later needed by webapi
-                for (var i = 0; i < settings.items.length; i++) {
-                    var itm = settings.items[i];
-                    itm.Title = "EditFormTitle.Metadata";
-                    if (!itm.contentTypeName && itm.contentType)
-                        itm.contentTypeName = itm.contentType;
-                }
+                var itm = {
+                    EntityId: settings.entityId,
+                    Title: "EditFormTitle.Metadata",
+                    ContentTypeName: settings.contentType, // correct naming from toolbar-name contentType to web-api expected name ContentTypeName
+                    Metadata: angular.extend({keyType: "string", targetType: 10}, settings.metadata)
+                };
+                // update various infos for metadata dialogs
+                //for (var i = 0; i < settings.items.length; i++) {
+                //    var itm = settings.items[i];
+                //itm.Title = "EditFormTitle.Metadata";
+                //itm.contentTypeName = settings.contentType; // correct naming from toolbar-name contentType to web-api expected name ContentTypeName
+                //var meta = itm.metadata = settings.metadata;
+                    //if (!itm.contentTypeName && itm.contentType)    // correct naming from toolbar-name contentType to web-api expected name ContentTypeName
+                    //    itm.contentTypeName = itm.contentType;
+                    // var meta = settings.metadata;
+                //if (!itm.metadata.targetType) itm.metadata.targetType = 10; // this means it's a CMS-object, like a file, folder etc.
+                //if (!itm.metadata.keyType) itm.metadata.keyType = "string";
+                //}
+
+                // settings.items = [itm];
 
                 tbContr._openNgDialog(settings, event);
+            },
+            configureCommand: function(cmd) {
+                var itm = {
+                    // EntityId: settings.entityId,
+                    Title: "EditFormTitle.Metadata",
+                    // ContentTypeName: settings.contentType, // correct naming from toolbar-name contentType to web-api expected name ContentTypeName
+                    Metadata: angular.extend({ keyType: "string", targetType: 10 }, cmd.settings.metadata)
+                };
+                angular.extend(cmd.items[0], itm);
+
             }
         }),
         'remove': {
@@ -148,7 +173,7 @@ $2sxc.getManageController = function (id) {
             title: "Toolbar.Sort",
             iclass: "icon-sxc-list-numbered",
             showOn: "edit",
-            addCondition: function (settings) { return toolbarConfig.isList && settings.useModuleList && settings.sortOrder !== -1; },
+            addCondition: function (settings) { return toolbarConfig.isList && settings.useModuleList && settings.sortOrder !== -1; }
         },
         'publish': buttonConfig('publish', "Published", "eye", "edit", false, {
             iclass2: "icon-sxc-eye-off",
@@ -178,7 +203,9 @@ $2sxc.getManageController = function (id) {
         'develop': buttonConfig("develop", "Develop", "code", "admin", true, {
             newWindow: true,
             addCondition: enableTools,
-            configureCommand: function (cmd) { cmd.items = [{ EntityId: manageInfo.templateId }]; }
+            configureCommand: function(cmd) {
+                cmd.items = [{ EntityId: manageInfo.templateId }];
+            }
         }),
         'contenttype': {
             title: "Toolbar.ContentType",
@@ -248,6 +275,14 @@ $2sxc.getManageController = function (id) {
                     dialog: settings.dialog || settings.action          // the variable used to name the dialog changed in the history of 2sxc from action to dialog
                 }, settings.params),
 
+                addSimpleItem: function() {
+                    var itm = {};
+                    if (cmd.settings.entityId) itm.EntityId = cmd.settings.entityId;
+                    if (cmd.settings.contentType || cmd.settings.attributeSetName) itm.ContentTypeName = cmd.settings.contentType || cmd.settings.attributeSetName;
+                    if (itm.EntityId || itm.contentType)    // only add if there was stuff to add
+                        cmd.items.push(itm);
+                },
+
                 // this adds an item of the content-group, based on the group GUID and the sequence number
                 addContentGroupItem: function(guid, index, part, isAdd, sectionLanguageKey) {
                     cmd.items.push({
@@ -297,37 +332,12 @@ $2sxc.getManageController = function (id) {
 
             // when not using a content-group list, ...
             if (!cmd.settings.useModuleList) {
-                if (cmd.settings.action !== "new" && cmd.settings.entityId) // if it's "edit" and has an entityId, add it
-                    cmd.items.push({ EntityId: cmd.settings.entityId });
-                else if (cmd.settings.contentType || cmd.settings.attributeSetName)
-                    cmd.items.push({ ContentTypeName: cmd.settings.contentType || cmd.settings.attributeSetName });
+                cmd.addSimpleItem();
             }
             // when using a list, the sort-order is important to find the right item
-            if (cmd.settings.useModuleList || cmd.settings.action === "replace" || cmd.settings.action === "sort") {
-                var includePresentation = (cmd.settings.action !== "replace");
-                cmd.addContentGroupItemSetsToEditList(includePresentation);
-                //var normalContent = (cmd.settings.sortOrder !== -1);
-                //var index = normalContent ? cmd.settings.sortOrder : 0;
-                //cmd.items.push({
-                //    Group: {
-                //        Guid: cmd.settings.contentGroupId,
-                //        Index: index,
-                //        Part: normalContent ? "content" : "listcontent",
-                //        Add: cmd.settings.action === "new"
-                //    },
-                //    Title: tbContr.translate("EditFormTitle." + (normalContent ? "Content" : "ListContent"))
-                //});
-                //
-                //if (cmd.settings.action !== "replace") // if not replace, also add the presentation
-                //    cmd.items.push({
-                //        Group: {
-                //            Guid: cmd.settings.contentGroupId,
-                //            Index: index,
-                //            Part: normalContent ? "presentation" : "listpresentation",
-                //            Add: cmd.settings.action === "new"
-                //        },
-                //        Title: tbContr.translate("EditFormTitle." + (normalContent ? "Presentation" : "ListPresentation"))
-                //    });
+            if (cmd.settings.useModuleList) { // 2016-02-21 replace/sort always use module list:  || cmd.settings.action === "replace" || cmd.settings.action === "sort") {
+                //var includePresentation = (cmd.settings.action !== "replace");
+                cmd.addContentGroupItemSetsToEditList();//includePresentation);
             }
 
             // if the command has own configuration stuff, do that now
