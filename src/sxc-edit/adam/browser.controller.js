@@ -29,7 +29,7 @@
 
 
         vm.disabled = $scope.ngDisabled;
-        vm.enableSelect = $scope.enableSelect || true;
+        vm.enableSelect = ($scope.enableSelect === false) ? false : true; // must do it like this, $scope.enableSelect || true will not work
 
         vm.activate = function () {
             if($scope.autoLoad)
