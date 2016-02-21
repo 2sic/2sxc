@@ -32,12 +32,27 @@ $2sxc.getManageController = function (id) {
 
     function buttonConfig(name, translateKey, icon, show,  uiOnly, more) {
         return angular.extend({
+            name: name,
             title: "Toolbar." + translateKey,
             iclass: "icon-sxc-" + icon,
             showOn: show,
             uiActionOnly: uiOnly
         }, more);
     }
+
+    // minimal documentation regarding a button
+    // the button can have the following properties / methods
+    // - the indexer in the array (usually the same as the name)
+    // - name (created in the buttonConfig)
+    // - title - actually the translation key to retrieve the title (buttonConfig)
+    // - iclass - the icon-class
+    // - showOn - comma separated list of values on which toolbar state to show this on
+    // - uiActionOnly - true/false if this is just something visual; otherwise a webservice will ensure that a content-group exists (for editing etc.)
+    // - addCondition(settings) - would conditionally prevent adding this button by default
+    // - code(settings, event) - the code executed on click, if it's not the default action
+    // - dynamicClasses(settings) - can conditionally add more css-class names to add to the button, like the "empty" added if something doesn't have metadata
+    // - params - ...
+    // - 
 
     var actionButtonsConf = {
         'edit': buttonConfig('edit', "Edit", "pencil", "default", false, { params: { mode: "edit" } }),
@@ -71,6 +86,14 @@ $2sxc.getManageController = function (id) {
                 return settings.items && (settings.items[0].Metadata || settings.items[0].entityId); // only add a metadata-button if there is an items-list
             },
             code: function (settings, event) {
+                // rename the official toolbar attribute "contentType" to the format later needed by webapi
+                for (var i = 0; i < settings.items.length; i++) {
+                    var itm = settings.items[i];
+                    itm.Title = "EditFormTitle.Metadata";
+                    if (!itm.contentTypeName && itm.contentType)
+                        itm.contentTypeName = itm.contentType;
+                }
+
                 tbContr._openNgDialog(settings, event);
             }
         }),
@@ -371,7 +394,6 @@ $2sxc.getManageController = function (id) {
                 showClasses += " show-" + classesList[c];
             var button = $("<a />", {
                 'class': "sc-" + btnSettings.action + " " + showClasses + (conf.dynamicClasses ? " " + conf.dynamicClasses(btnSettings) : ""),
-                //'style': conf.style ? conf.style() : "",
                 'onclick': "javascript:$2sxc(" + id + ").manage.action(" + JSON.stringify(btnSettings) + ", event);",
                 'title': tbContr.translate(conf.title)
             });

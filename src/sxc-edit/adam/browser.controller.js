@@ -148,7 +148,7 @@
 
         // todo: move to service, shouldn't be part of the application
         vm._itemDefinition = function (item, metadataType) {
-            var title = "Metadata"; // todo: i18n
+            var title = "EditFormTitle.Metadata"; // todo: i18n
             return item.MetadataId !== 0
                 ? { EntityId: item.MetadataId, Title: title } // if defined, return the entity-number to edit
                 : {
