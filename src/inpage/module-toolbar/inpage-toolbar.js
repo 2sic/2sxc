@@ -2,7 +2,15 @@
 
 // all in-page toolbars etc.
 $2sxc.getManageController = function (id) {
-
+    //#region helper functions
+    function extend() { // same as angular.extend or jquery.extend, but without that additional dependency
+        for (var i = 1; i < arguments.length; i++)
+            for (var key in arguments[i])
+                if (arguments[i].hasOwnProperty(key))
+                    arguments[0][key] = arguments[i][key];
+        return arguments[0];
+    }
+    //#endregion
     var moduleElement = $(".DnnModule-" + id);
     var manageInfo = $.parseJSON(moduleElement.find("div[data-2sxc]").attr("data-2sxc")).manage;
     var sxcGlobals = $.parseJSON(moduleElement.find("div[data-2sxc-globals]").attr("data-2sxc-globals"));
@@ -31,7 +39,7 @@ $2sxc.getManageController = function (id) {
     var isContent = manageInfo.isContentApp;
 
     function buttonConfig(name, translateKey, icon, show,  uiOnly, more) {
-        return angular.extend({
+        return /* angular. */extend({
             name: name,
             title: "Toolbar." + translateKey,
             iclass: "icon-sxc-" + icon,
@@ -66,7 +74,7 @@ $2sxc.getManageController = function (id) {
                 return toolbarConfig.isList && settings.useModuleList && settings.sortOrder !== -1; // don't provide new on the header-item
             },
             code: function (settings, event) {
-                tbContr._openNgDialog($.extend({}, settings, { sortOrder: settings.sortOrder + 1 }), event);
+                tbContr._openNgDialog(/*$.*/extend({}, settings, { sortOrder: settings.sortOrder + 1 }), event);
             }
         }),
         // add brings no dialog, just add an empty item
@@ -87,39 +95,12 @@ $2sxc.getManageController = function (id) {
                 return !!settings.metadata; // only add a metadata-button if it has metadata-infos
                 // return settings.items && (settings.items[0].metadata || settings.items[0].entityId); // only add a metadata-button if there is an items-list
             },
-            code: function (settings, event) {
-                var itm = {
-                    EntityId: settings.entityId,
-                    Title: "EditFormTitle.Metadata",
-                    ContentTypeName: settings.contentType, // correct naming from toolbar-name contentType to web-api expected name ContentTypeName
-                    Metadata: angular.extend({keyType: "string", targetType: 10}, settings.metadata)
-                };
-                // update various infos for metadata dialogs
-                //for (var i = 0; i < settings.items.length; i++) {
-                //    var itm = settings.items[i];
-                //itm.Title = "EditFormTitle.Metadata";
-                //itm.contentTypeName = settings.contentType; // correct naming from toolbar-name contentType to web-api expected name ContentTypeName
-                //var meta = itm.metadata = settings.metadata;
-                    //if (!itm.contentTypeName && itm.contentType)    // correct naming from toolbar-name contentType to web-api expected name ContentTypeName
-                    //    itm.contentTypeName = itm.contentType;
-                    // var meta = settings.metadata;
-                //if (!itm.metadata.targetType) itm.metadata.targetType = 10; // this means it's a CMS-object, like a file, folder etc.
-                //if (!itm.metadata.keyType) itm.metadata.keyType = "string";
-                //}
-
-                // settings.items = [itm];
-
-                tbContr._openNgDialog(settings, event);
-            },
             configureCommand: function(cmd) {
                 var itm = {
-                    // EntityId: settings.entityId,
                     Title: "EditFormTitle.Metadata",
-                    // ContentTypeName: settings.contentType, // correct naming from toolbar-name contentType to web-api expected name ContentTypeName
-                    Metadata: angular.extend({ keyType: "string", targetType: 10 }, cmd.settings.metadata)
+                    Metadata: /* angular. */ extend({ keyType: "string", targetType: 10 }, cmd.settings.metadata)
                 };
-                angular.extend(cmd.items[0], itm);
-
+                /* angular. */extend(cmd.items[0], itm);
             }
         }),
         'remove': {
@@ -267,19 +248,19 @@ $2sxc.getManageController = function (id) {
 
         // assemble an object which will store the configuration and execute it
         createCommandObject: function(specialSettings) {
-            var settings = $.extend({}, toolbarConfig, specialSettings); // merge button with general toolbar-settings
+            var settings = /* $. */ extend({}, toolbarConfig, specialSettings); // merge button with general toolbar-settings
             var cmd = {
                 settings: settings,
                 items: settings.items || [],                            // use predefined or create empty array
-                params: angular.extend({
+                params: /* angular. */ extend({
                     dialog: settings.dialog || settings.action          // the variable used to name the dialog changed in the history of 2sxc from action to dialog
                 }, settings.params),
 
                 addSimpleItem: function() {
-                    var itm = {};
+                    var itm = {}, ct = cmd.settings.contentType || cmd.settings.attributeSetName; // two ways to name the content-type-name this, v 7.2+ and older
                     if (cmd.settings.entityId) itm.EntityId = cmd.settings.entityId;
-                    if (cmd.settings.contentType || cmd.settings.attributeSetName) itm.ContentTypeName = cmd.settings.contentType || cmd.settings.attributeSetName;
-                    if (itm.EntityId || itm.contentType)    // only add if there was stuff to add
+                    if (ct) itm.ContentTypeName = ct;
+                    if (itm.EntityId || itm.ContentTypeName)    // only add if there was stuff to add
                         cmd.items.push(itm);
                 },
 
@@ -330,15 +311,10 @@ $2sxc.getManageController = function (id) {
         getNgLink: function (specialSettings) {
             var cmd = tbContr.createCommandObject(specialSettings);
 
-            // when not using a content-group list, ...
-            if (!cmd.settings.useModuleList) {
-                cmd.addSimpleItem();
-            }
-            // when using a list, the sort-order is important to find the right item
-            if (cmd.settings.useModuleList) { // 2016-02-21 replace/sort always use module list:  || cmd.settings.action === "replace" || cmd.settings.action === "sort") {
-                //var includePresentation = (cmd.settings.action !== "replace");
-                cmd.addContentGroupItemSetsToEditList();//includePresentation);
-            }
+            if (cmd.settings.useModuleList)
+                cmd.addContentGroupItemSetsToEditList();
+            else
+                cmd.addSimpleItem();            
 
             // if the command has own configuration stuff, do that now
             if (cmd.settings.configureCommand)
@@ -365,7 +341,7 @@ $2sxc.getManageController = function (id) {
         // Perform a toolbar button-action - basically get the configuration and execute it's action
         action: function(settings, event) {
             var conf = actionButtonsConf[settings.action];
-            settings = angular.extend({}, conf, settings);              // merge conf & settings, but settings has higher priority
+            settings = /*angular. */ extend({}, conf, settings);              // merge conf & settings, but settings has higher priority
             if (!settings.dialog) settings.dialog = settings.action;    // old code uses "action" as the parameter, now use verb ? dialog
             if (!settings.code) settings.code = tbContr._openNgDialog;  // decide what action to perform
 
@@ -449,7 +425,7 @@ $2sxc.getManageController = function (id) {
             buttons.add = function (verb) {
                 var add = actionButtonsConf[verb].addCondition;
                 if (add === undefined || ((typeof (add) === 'function') ? add(settings) : add))
-                    buttons.push($.extend({}, settings, { action: verb }));
+                    buttons.push(/*$. */extend({}, settings, { action: verb }));
             };
 
             for (var btn in actionButtonsConf) 
