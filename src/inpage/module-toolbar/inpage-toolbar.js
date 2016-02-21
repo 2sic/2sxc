@@ -288,7 +288,9 @@ $2sxc.getManageController = function (id) {
                     
                 },
 
-                generateLink: function() {
+                generateLink: function () {
+                    // if there is no items-array, create an empty one (it's required later on)
+                    if (!cmd.settings.items) cmd.settings.items = [];
                     //#region steps for all actions: prefill, serialize, open-dialog
                     // when doing new, there may be a prefill in the link to initialize the new item
                     if (cmd.settings.prefill)
@@ -296,7 +298,7 @@ $2sxc.getManageController = function (id) {
                             cmd.items[i].Prefill = cmd.settings.prefill;
 
                     // Serialize/json-ify the complex items-list
-                    if (cmd.items.length)
+                    // if (cmd.items.length)
                         cmd.params.items = JSON.stringify(cmd.items);
 
                     return manageInfo.ngDialogUrl

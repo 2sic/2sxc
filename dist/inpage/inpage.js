@@ -37,7 +37,15 @@ angular.module('SxcInpageTemplates', []).run(['$templateCache', function($templa
 
 // all in-page toolbars etc.
 $2sxc.getManageController = function (id) {
-
+    //#region helper functions
+    function extend() { // same as angular.extend or jquery.extend, but without that additional dependency
+        for (var i = 1; i < arguments.length; i++)
+            for (var key in arguments[i])
+                if (arguments[i].hasOwnProperty(key))
+                    arguments[0][key] = arguments[i][key];
+        return arguments[0];
+    }
+    //#endregion
     var moduleElement = $(".DnnModule-" + id);
     var manageInfo = $.parseJSON(moduleElement.find("div[data-2sxc]").attr("data-2sxc")).manage;
     var sxcGlobals = $.parseJSON(moduleElement.find("div[data-2sxc-globals]").attr("data-2sxc-globals"));
@@ -66,7 +74,8 @@ $2sxc.getManageController = function (id) {
     var isContent = manageInfo.isContentApp;
 
     function buttonConfig(name, translateKey, icon, show,  uiOnly, more) {
-        return angular.extend({
+        return extend({
+            name: name,
             title: "Toolbar." + translateKey,
             iclass: "icon-sxc-" + icon,
             showOn: show,
@@ -74,23 +83,37 @@ $2sxc.getManageController = function (id) {
         }, more);
     }
 
+    // minimal documentation regarding a button
+    // the button can have the following properties / methods
+    // - the indexer in the array (usually the same as the name)
+    // - name (created in the buttonConfig)
+    // - title - actually the translation key to retrieve the title (buttonConfig)
+    // - iclass - the icon-class
+    // - showOn - comma separated list of values on which toolbar state to show this on
+    // - uiActionOnly - true/false if this is just something visual; otherwise a webservice will ensure that a content-group exists (for editing etc.)
+    // - addCondition(settings) - would conditionally prevent adding this button by default
+    // - code(settings, event) - the code executed on click, if it's not the default action
+    // - dynamicClasses(settings) - can conditionally add more css-class names to add to the button, like the "empty" added if something doesn't have metadata
+    // - params - ...
+    // - 
+
     var actionButtonsConf = {
-        'edit': buttonConfig('edit', "Edit", "pencil", "default", false, { params: { mode: "edit" } }),
+        'edit': buttonConfig("edit", "Edit", "pencil", "default", false, { params: { mode: "edit" } }),
         // new is a dialog to add something, and will not add if cancelled
         // new can also be used for mini-toolbars which just add an entity not attached to a module
         // in that case it's essential to add a contentType like 
         // <ul class="sc-menu" data-toolbar='{"action":"new", "contentType": "Category"}'></ul>
-        'new': buttonConfig('new', "New", "plus", "default", false, { params: { mode: "new" },
+        'new': buttonConfig("new", "New", "plus", "default", false, { params: { mode: "new" },
             dialog: "edit", // don't use "new" (default) but use "edit"
             addCondition: function(settings) {
                 return toolbarConfig.isList && settings.useModuleList && settings.sortOrder !== -1; // don't provide new on the header-item
             },
             code: function (settings, event) {
-                tbContr._openNgDialog($.extend({}, settings, { sortOrder: settings.sortOrder + 1 }), event);
+                tbContr._openNgDialog(extend({}, settings, { sortOrder: settings.sortOrder + 1 }), event);
             }
         }),
         // add brings no dialog, just add an empty item
-        'add': buttonConfig('add', "AddDemo", "plus-circled", "edit", false, {
+        'add': buttonConfig("add", "AddDemo", "plus-circled", "edit", false, {
             addCondition: function (settings) { return toolbarConfig.isList && settings.useModuleList && settings.sortOrder !== -1; },
             code: function(settings, event) {
                 tbContr._getAngularVm().addItem(settings.sortOrder + 1);
@@ -100,13 +123,19 @@ $2sxc.getManageController = function (id) {
             dialog: "edit", // don't use "new" (default) but use "edit"
             dynamicClasses: function (settings) {
                 // if it doesn't have data yet, make it less strong
-                return settings.items && settings.items[0].entityId ? "" : "empty";
+                return settings.entityId ? "" : "empty";
+                // return settings.items && settings.items[0].entityId ? "" : "empty";
             },
             addCondition: function (settings) {
-                return settings.items && (settings.items[0].Metadata || settings.items[0].entityId); // only add a metadata-button if there is an items-list
+                return !!settings.metadata; // only add a metadata-button if it has metadata-infos
+                // return settings.items && (settings.items[0].metadata || settings.items[0].entityId); // only add a metadata-button if there is an items-list
             },
-            code: function (settings, event) {
-                tbContr._openNgDialog(settings, event);
+            configureCommand: function(cmd) {
+                var itm = {
+                    Title: "EditFormTitle.Metadata",
+                    Metadata: extend({ keyType: "string", targetType: 10 }, cmd.settings.metadata)
+                };
+                extend(cmd.items[0], itm);
             }
         }),
         'remove': {
@@ -160,9 +189,9 @@ $2sxc.getManageController = function (id) {
             title: "Toolbar.Sort",
             iclass: "icon-sxc-list-numbered",
             showOn: "edit",
-            addCondition: function (settings) { return toolbarConfig.isList && settings.useModuleList && settings.sortOrder !== -1; },
+            addCondition: function (settings) { return toolbarConfig.isList && settings.useModuleList && settings.sortOrder !== -1; }
         },
-        'publish': buttonConfig('publish', "Published", "eye", "edit", false, {
+        'publish': buttonConfig("publish", "Published", "eye", "edit", false, {
             iclass2: "icon-sxc-eye-off",
             disabled: true,
             code: function(settings, event) {
@@ -175,7 +204,7 @@ $2sxc.getManageController = function (id) {
                 tbContr._getAngularVm().publish(part, index);
             }
         }),
-        'replace': buttonConfig('replace', "Replace", "replace", "edit", false, {
+        'replace': buttonConfig("replace", "Replace", "replace", "edit", false, {
             addCondition: function(settings) { return settings.useModuleList; },
         }),
         'layout': {
@@ -190,7 +219,9 @@ $2sxc.getManageController = function (id) {
         'develop': buttonConfig("develop", "Develop", "code", "admin", true, {
             newWindow: true,
             addCondition: enableTools,
-            configureCommand: function (cmd) { cmd.items = [{ EntityId: manageInfo.templateId }]; }
+            configureCommand: function(cmd) {
+                cmd.items = [{ EntityId: manageInfo.templateId }];
+            }
         }),
         'contenttype': {
             title: "Toolbar.ContentType",
@@ -252,13 +283,21 @@ $2sxc.getManageController = function (id) {
 
         // assemble an object which will store the configuration and execute it
         createCommandObject: function(specialSettings) {
-            var settings = $.extend({}, toolbarConfig, specialSettings); // merge button with general toolbar-settings
+            var settings = extend({}, toolbarConfig, specialSettings); // merge button with general toolbar-settings
             var cmd = {
                 settings: settings,
                 items: settings.items || [],                            // use predefined or create empty array
-                params: angular.extend({
+                params: extend({
                     dialog: settings.dialog || settings.action          // the variable used to name the dialog changed in the history of 2sxc from action to dialog
                 }, settings.params),
+
+                addSimpleItem: function() {
+                    var itm = {}, ct = cmd.settings.contentType || cmd.settings.attributeSetName; // two ways to name the content-type-name this, v 7.2+ and older
+                    if (cmd.settings.entityId) itm.EntityId = cmd.settings.entityId;
+                    if (ct) itm.ContentTypeName = ct;
+                    if (itm.EntityId || itm.ContentTypeName)    // only add if there was stuff to add
+                        cmd.items.push(itm);
+                },
 
                 // this adds an item of the content-group, based on the group GUID and the sequence number
                 addContentGroupItem: function(guid, index, part, isAdd, sectionLanguageKey) {
@@ -284,7 +323,9 @@ $2sxc.getManageController = function (id) {
                     
                 },
 
-                generateLink: function() {
+                generateLink: function () {
+                    // if there is no items-array, create an empty one (it's required later on)
+                    if (!cmd.settings.items) cmd.settings.items = [];
                     //#region steps for all actions: prefill, serialize, open-dialog
                     // when doing new, there may be a prefill in the link to initialize the new item
                     if (cmd.settings.prefill)
@@ -292,7 +333,7 @@ $2sxc.getManageController = function (id) {
                             cmd.items[i].Prefill = cmd.settings.prefill;
 
                     // Serialize/json-ify the complex items-list
-                    if (cmd.items.length)
+                    // if (cmd.items.length)
                         cmd.params.items = JSON.stringify(cmd.items);
 
                     return manageInfo.ngDialogUrl
@@ -307,40 +348,10 @@ $2sxc.getManageController = function (id) {
         getNgLink: function (specialSettings) {
             var cmd = tbContr.createCommandObject(specialSettings);
 
-            // when not using a content-group list, ...
-            if (!cmd.settings.useModuleList) {
-                if (cmd.settings.action !== "new" && cmd.settings.entityId) // if it's "edit" and has an entityId, add it
-                    cmd.items.push({ EntityId: cmd.settings.entityId });
-                else if (cmd.settings.contentType || cmd.settings.attributeSetName)
-                    cmd.items.push({ ContentTypeName: cmd.settings.contentType || cmd.settings.attributeSetName });
-            }
-            // when using a list, the sort-order is important to find the right item
-            if (cmd.settings.useModuleList || cmd.settings.action === "replace" || cmd.settings.action === "sort") {
-                var includePresentation = (cmd.settings.action !== "replace");
-                cmd.addContentGroupItemSetsToEditList(includePresentation);
-                //var normalContent = (cmd.settings.sortOrder !== -1);
-                //var index = normalContent ? cmd.settings.sortOrder : 0;
-                //cmd.items.push({
-                //    Group: {
-                //        Guid: cmd.settings.contentGroupId,
-                //        Index: index,
-                //        Part: normalContent ? "content" : "listcontent",
-                //        Add: cmd.settings.action === "new"
-                //    },
-                //    Title: tbContr.translate("EditFormTitle." + (normalContent ? "Content" : "ListContent"))
-                //});
-                //
-                //if (cmd.settings.action !== "replace") // if not replace, also add the presentation
-                //    cmd.items.push({
-                //        Group: {
-                //            Guid: cmd.settings.contentGroupId,
-                //            Index: index,
-                //            Part: normalContent ? "presentation" : "listpresentation",
-                //            Add: cmd.settings.action === "new"
-                //        },
-                //        Title: tbContr.translate("EditFormTitle." + (normalContent ? "Presentation" : "ListPresentation"))
-                //    });
-            }
+            if (cmd.settings.useModuleList)
+                cmd.addContentGroupItemSetsToEditList();
+            else
+                cmd.addSimpleItem();            
 
             // if the command has own configuration stuff, do that now
             if (cmd.settings.configureCommand)
@@ -367,7 +378,7 @@ $2sxc.getManageController = function (id) {
         // Perform a toolbar button-action - basically get the configuration and execute it's action
         action: function(settings, event) {
             var conf = actionButtonsConf[settings.action];
-            settings = angular.extend({}, conf, settings);              // merge conf & settings, but settings has higher priority
+            settings = extend({}, conf, settings);              // merge conf & settings, but settings has higher priority
             if (!settings.dialog) settings.dialog = settings.action;    // old code uses "action" as the parameter, now use verb ? dialog
             if (!settings.code) settings.code = tbContr._openNgDialog;  // decide what action to perform
 
@@ -406,7 +417,6 @@ $2sxc.getManageController = function (id) {
                 showClasses += " show-" + classesList[c];
             var button = $("<a />", {
                 'class': "sc-" + btnSettings.action + " " + showClasses + (conf.dynamicClasses ? " " + conf.dynamicClasses(btnSettings) : ""),
-                //'style': conf.style ? conf.style() : "",
                 'onclick': "javascript:$2sxc(" + id + ").manage.action(" + JSON.stringify(btnSettings) + ", event);",
                 'title': tbContr.translate(conf.title)
             });
@@ -451,8 +461,8 @@ $2sxc.getManageController = function (id) {
 
             buttons.add = function (verb) {
                 var add = actionButtonsConf[verb].addCondition;
-                if (add === undefined || ((typeof (add) === 'function') ? add(settings) : add))
-                    buttons.push($.extend({}, settings, { action: verb }));
+                if (add === undefined || ((typeof (add) === "function") ? add(settings) : add))
+                    buttons.push(extend({}, settings, { action: verb }));
             };
 
             for (var btn in actionButtonsConf) 

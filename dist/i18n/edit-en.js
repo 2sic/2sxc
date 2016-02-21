@@ -19,7 +19,10 @@
 		"ExitOk": "do you really want to exit?",
 		"Deleting": "deleting...",
 		"Ok": "ok",
-		"Error": "error"
+		"Error": "error",
+		"CantSaveProcessing": "can't save because something else is still being processed",
+		"CantSaveInvalid": "form not valid, can't save - errors on: <ul>{0}</ul>",
+		"FieldErrorList": "<li>{field} ({error})</li>"
 	},
 	"Errors": {
 		"UnclearError": "Something went wrong - maybe parts worked, maybe not. Sorry :(",

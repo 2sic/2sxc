@@ -147,7 +147,7 @@ angular.module("Adam")
 
 
         vm.disabled = $scope.ngDisabled;
-        vm.enableSelect = $scope.enableSelect || true;
+        vm.enableSelect = ($scope.enableSelect === false) ? false : true; // must do it like this, $scope.enableSelect || true will not work
 
         vm.activate = function () {
             if($scope.autoLoad)
@@ -266,7 +266,7 @@ angular.module("Adam")
 
         // todo: move to service, shouldn't be part of the application
         vm._itemDefinition = function (item, metadataType) {
-            var title = "Metadata"; // todo: i18n
+            var title = "EditFormTitle.Metadata"; // todo: i18n
             return item.MetadataId !== 0
                 ? { EntityId: item.MetadataId, Title: title } // if defined, return the entity-number to edit
                 : {
@@ -474,7 +474,7 @@ angular.module("Adam")
 // This is the service which allows opening dnn-bridge dialogs and processes the results
 
 angular.module("sxcFieldTemplates")
-    .factory("dnnBridgeSvc", ["$modal", "$http", "eavConfig", "sxc", function($modal, $http, eavConfig, sxc) {
+    .factory("dnnBridgeSvc", ["$modal", "$http", "promiseToastr", "eavConfig", "sxc", function ($modal, $http, promiseToastr, eavConfig, sxc) {
         var svc = {};
         svc.open = function open(type, oldValue, params, callback) {
             var template = type === "pagepicker" ? "pagepicker" : "filemanager";
@@ -511,8 +511,13 @@ angular.module("sxcFieldTemplates")
         // convert the url to a Id-code
         svc.convertPathToId = function(path, type) {
             var pathWithoutVersion = path.replace(/\?ver=[0-9\-]*$/gi, "");
-            var promise = $http.get("dnn/Hyperlink/GetFileByPath?relativePath=" + encodeURIComponent(pathWithoutVersion));
-            return promise;
+            // todo: working on https://github.com/2sic/2sxc/issues/656 but can't reproduce error
+            // this is why I tried ignoreErrors and promisetoaster, but atm there is nothing to work on...
+            var promise = $http.get("dnn/Hyperlink/GetFileByPath?relativePath=" + encodeURIComponent(pathWithoutVersion),
+            {
+                //ignoreErrors: true
+            });
+            return promiseToastr(promise, "Edit.Field.Hyperlink.Message.Loading", "Edit.Field.Hyperlink.Message.Ok", "Edit.Field.Hyperlink.Message.Error", 0, 0, 1000);
         };
 
         // handle short-ID links like file:17

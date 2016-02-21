@@ -324,7 +324,7 @@ angular.module("eavFieldTemplates")
     var app = angular.module("eavEditEntity");
 
     // The controller for the main form directive
-    app.controller("EditEntities", ["appId", "$http", "$scope", "entitiesSvc", "saveToastr", "$translate", "debugState", "ctrlS", function editEntityCtrl(appId, $http, $scope, entitiesSvc, saveToastr, $translate, debugState, ctrlS) {
+    app.controller("EditEntities", ["appId", "$http", "$scope", "entitiesSvc", "toastr", "saveToastr", "$translate", "debugState", "ctrlS", function editEntityCtrl(appId, $http, $scope, entitiesSvc, toastr, saveToastr, $translate, debugState, ctrlS) {
 
         var vm = this;
         vm.debug = debugState;
@@ -383,8 +383,37 @@ angular.module("eavFieldTemplates")
                 });
         };
 
+        vm.showFormErrors = function() {
+                var errors = vm.formErrors();
+                var msgs = [], msgTemplate = $translate.instant("Message.FieldErrorList");
+                for (var set = 0; set < errors.length; set++) {
+                    if (errors[set].required) {
+                        var req = errors[set].required.map(function (itm) { return { field: itm.$name, error: "required" }; });
+                        msgs = msgs.concat(req);
+                    }
+                }
+                var nice = msgs.map(function (err) {
+                    var specs = err.field.split("_");
+
+                    return msgTemplate.replace("{form}", specs[1])
+                        .replace("{field}", specs[3])
+                        .replace("{error}", err.error);
+                });
+            var msg = nice.join("<br/>");
+            return toastr.error($translate.instant("Message.CantSaveInvalid").replace("{0}", msg),
+                $translate.instant("Message.Error"), { allowHtml: true }); 
+        };
+
         // the save-call
         vm.save = function (close) {
+            // check if saving is allowed
+            if (!vm.isValid()) 
+                return vm.showFormErrors();
+
+            if (vm.isWorking > 0)
+                return toastr.error($translate.instant("Message.CantSaveProcessing")); // todo: i18n
+
+            // save
             vm.isWorking++;
             saveToastr(entitiesSvc.saveMany(appId, vm.items)).then(function (result) {
                 $scope.state.setPristine();
@@ -410,6 +439,15 @@ angular.module("eavFieldTemplates")
                     valid = false;
             });
             return valid;
+        };
+
+        vm.formErrors = function () {
+            var list = [];
+            angular.forEach(vm.registeredControls, function (e, i) {
+                if (!e.isValid())
+                    list.push(e.error());
+            });
+            return list;
         };
 
         // check if dirty
@@ -494,7 +532,8 @@ angular.module("eavFieldTemplates")
 		vm.control = {
 		    isValid: function () { return vm.formFields.length === 0 || vm.form && vm.form.$valid; },
 		    isDirty: function () { return (vm.form && vm.form.$dirty); },
-		    setPristine: function () { if(vm.form) vm.form.$setPristine(); }
+		    setPristine: function () { if (vm.form) vm.form.$setPristine(); },
+            error: function () { return vm.form.$error; }
 		};
 
 		// Register this control in the parent control
@@ -748,7 +787,7 @@ angular.module('eavEditTemplates', []).run(['$templateCache', function($template
 
 
   $templateCache.put('form/edit-many-entities.html',
-    "<div ng-if=\"vm.items != null\" ng-click=vm.debug.autoEnableAsNeeded($event)><eav-language-switcher is-disabled=!vm.isValid()></eav-language-switcher><div ng-repeat=\"p in vm.items\" class=group-entity><h3 class=clickable ng-click=\"p.collapse = !p.collapse\">{{p.Header.Title ? p.Header.Title : 'EditEntity.DefaultTitle' | translate }}&nbsp; <span ng-if=p.Header.Group.SlotCanBeEmpty ng-click=vm.toggleSlotIsEmpty(p) stop-event=click><switch ng-model=p.slotIsUsed class=tosic-blue style=\"top: 6px\" tooltip=\"{{'EditEntity.SlotUsed' + p.slotIsUsed | translate}}\"></switch></span> <span class=\"pull-right clickable\" style=\"font-size: smaller\"><span class=\"low-priority collapse-entity-button\" ng-if=p.collapse icon=plus-sign></span> <span class=collapse-entity-button ng-if=!p.collapse icon=minus-sign></span></span></h3><eav-edit-entity-form entity=p.Entity header=p.Header register-edit-control=vm.registerEditControl ng-hide=p.collapse></eav-edit-entity-form></div><div><button ng-disabled=\"!vm.isValid() || vm.isWorking\" ng-click=vm.save(true) type=button class=\"btn btn-primary btn-lg submit-button\"><span icon=ok tooltip=\"{{ 'Button.Save' | translate }}\"></span> &nbsp;<span translate=Button.Save></span></button> &nbsp; <button ng-disabled=\"!vm.isValid() || vm.isWorking\" class=\"btn btn-default btn-lg btn-square\" type=button ng-click=vm.save(false)><span icon=check tooltip=\"{{ 'Button.SaveAndKeepOpen' | translate }}\"></span></button> &nbsp;<switch ng-model=vm.willPublish class=tosic-blue style=\"top: 13px\"></switch>&nbsp; <span ng-click=\"vm.willPublish = !vm.willPublish;\" class=save-published-icon><i ng-if=vm.willPublish icon=eye-open tooltip=\"{{ 'Status.Published' | translate }} - {{ 'Message.WillPublish' | translate }}\"></i> <i ng-if=!vm.willPublish icon=eye-close tooltip=\"{{ 'Status.Unpublished' | translate }} - {{ 'Message.WontPublish' | translate }}\"></i></span> <span ng-if=vm.debug.on><button tooltip=debug icon=zoom-in class=btn ng-click=\"vm.showDebugItems = !vm.showDebugItems\"></button></span><show-debug-availability class=pull-right style=\"margin-top: 20px\"></show-debug-availability></div><div ng-if=\"vm.debug.on && vm.showDebugItems\"><pre>{{ vm.items | json }}</pre></div></div>"
+    "<div ng-if=\"vm.items != null\" ng-click=vm.debug.autoEnableAsNeeded($event)><eav-language-switcher is-disabled=!vm.isValid()></eav-language-switcher><div ng-repeat=\"p in vm.items\" class=group-entity><h3 class=clickable ng-click=\"p.collapse = !p.collapse\">{{p.Header.Title ? p.Header.Title : 'EditEntity.DefaultTitle' | translate }}&nbsp; <span ng-if=p.Header.Group.SlotCanBeEmpty ng-click=vm.toggleSlotIsEmpty(p) stop-event=click><switch ng-model=p.slotIsUsed class=tosic-blue style=\"top: 6px\" tooltip=\"{{'EditEntity.SlotUsed' + p.slotIsUsed | translate}}\"></switch></span> <span class=\"pull-right clickable\" style=\"font-size: smaller\"><span class=\"low-priority collapse-entity-button\" ng-if=p.collapse icon=plus-sign></span> <span class=collapse-entity-button ng-if=!p.collapse icon=minus-sign></span></span></h3><eav-edit-entity-form entity=p.Entity header=p.Header register-edit-control=vm.registerEditControl ng-hide=p.collapse></eav-edit-entity-form></div><div><button ng-class=\"{ 'disabled': vm.isValid() || !vm.isWorking}\" ng-click=vm.save(true) type=button class=\"btn btn-primary btn-lg submit-button\"><span icon=ok tooltip=\"{{ 'Button.Save' | translate }}\"></span> &nbsp;<span translate=Button.Save></span></button> &nbsp; <button ng-class=\"{ 'disabled': vm.isValid() || !vm.isWorking}\" class=\"btn btn-default btn-lg btn-square\" type=button ng-click=vm.save(false)><span icon=check tooltip=\"{{ 'Button.SaveAndKeepOpen' | translate }}\"></span></button> &nbsp;<switch ng-model=vm.willPublish class=tosic-blue style=\"top: 13px\"></switch>&nbsp; <span ng-click=\"vm.willPublish = !vm.willPublish;\" class=save-published-icon><i ng-if=vm.willPublish icon=eye-open tooltip=\"{{ 'Status.Published' | translate }} - {{ 'Message.WillPublish' | translate }}\"></i> <i ng-if=!vm.willPublish icon=eye-close tooltip=\"{{ 'Status.Unpublished' | translate }} - {{ 'Message.WontPublish' | translate }}\"></i></span> <span ng-if=vm.debug.on><button tooltip=debug icon=zoom-in class=btn ng-click=\"vm.showDebugItems = !vm.showDebugItems\"></button></span><show-debug-availability class=pull-right style=\"margin-top: 20px\"></show-debug-availability></div><div ng-if=\"vm.debug.on && vm.showDebugItems\"><pre>{{ vm.items | json }}</pre></div></div>"
   );
 
 
