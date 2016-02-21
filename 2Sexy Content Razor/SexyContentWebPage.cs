@@ -41,10 +41,12 @@ namespace ToSic.SexyContent.Razor
             Context = parentPage.Context;
 
             // Return if parent page is not a SexyContentWebPage
-            if (parentPage.GetType().BaseType != typeof(SexyContentWebPage)) return;
+            if (!(parentPage is SexyContentWebPage)) return;    // 2016-02-22 believe this is necessary with dnn 8 because this razor uses a more complex inheritance with Type<T>
+            //if (parentPage.GetType().BaseType != typeof(SexyContentWebPage)) return;
             
             Html = ((SexyContentWebPage) parentPage).Html;
             Url = ((SexyContentWebPage) parentPage).Url;
+            Sexy = ((SexyContentWebPage) parentPage).Sexy;
             AppAndDataHelpers = ((SexyContentWebPage)parentPage).AppAndDataHelpers;
         }
 
@@ -203,6 +205,25 @@ namespace ToSic.SexyContent.Razor
             webPage.ConfigurePage(this);
             return webPage;
         }
+
+        //public override HelperResult RenderPage(string path, params object[] data)
+        //{
+        //    if (String.IsNullOrEmpty(path))
+        //    {
+        //        throw ExceptionHelper.CreateArgumentNullOrEmptyException("path");
+        //    }
+
+        //    return new HelperResult(writer => {
+        //        path = NormalizePath(path);
+        //        Util.EnsureValidPageType(this, path);
+
+        //        WebPageBase subPage = CreatePageFromVirtualPath(path);
+        //        var pageContext = CreatePageContextFromParameters(isLayoutPage, data);
+
+        //        subPage.ConfigurePage(this);
+        //        subPage.ExecutePageHierarchy(pageContext, writer);
+        //    });
+        //}
 
 
         /// <summary>

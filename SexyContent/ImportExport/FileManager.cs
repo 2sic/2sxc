@@ -17,7 +17,7 @@ namespace ToSic.SexyContent.ImportExport
         /// <summary>
         /// Folder-names of folders which won't be exported or imported
         /// </summary>
-        public string[] ExcludeFolders = { ".git", "node_modules", "bower_components" };
+        public string[] ExcludeFolders = { ".git", "node_modules", "bower_components", ".vs" };
 
         private readonly string _sourceFolder;
 
