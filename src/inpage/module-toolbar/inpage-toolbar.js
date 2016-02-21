@@ -39,7 +39,7 @@ $2sxc.getManageController = function (id) {
     var isContent = manageInfo.isContentApp;
 
     function buttonConfig(name, translateKey, icon, show,  uiOnly, more) {
-        return /* angular. */extend({
+        return extend({
             name: name,
             title: "Toolbar." + translateKey,
             iclass: "icon-sxc-" + icon,
@@ -63,22 +63,22 @@ $2sxc.getManageController = function (id) {
     // - 
 
     var actionButtonsConf = {
-        'edit': buttonConfig('edit', "Edit", "pencil", "default", false, { params: { mode: "edit" } }),
+        'edit': buttonConfig("edit", "Edit", "pencil", "default", false, { params: { mode: "edit" } }),
         // new is a dialog to add something, and will not add if cancelled
         // new can also be used for mini-toolbars which just add an entity not attached to a module
         // in that case it's essential to add a contentType like 
         // <ul class="sc-menu" data-toolbar='{"action":"new", "contentType": "Category"}'></ul>
-        'new': buttonConfig('new', "New", "plus", "default", false, { params: { mode: "new" },
+        'new': buttonConfig("new", "New", "plus", "default", false, { params: { mode: "new" },
             dialog: "edit", // don't use "new" (default) but use "edit"
             addCondition: function(settings) {
                 return toolbarConfig.isList && settings.useModuleList && settings.sortOrder !== -1; // don't provide new on the header-item
             },
             code: function (settings, event) {
-                tbContr._openNgDialog(/*$.*/extend({}, settings, { sortOrder: settings.sortOrder + 1 }), event);
+                tbContr._openNgDialog(extend({}, settings, { sortOrder: settings.sortOrder + 1 }), event);
             }
         }),
         // add brings no dialog, just add an empty item
-        'add': buttonConfig('add', "AddDemo", "plus-circled", "edit", false, {
+        'add': buttonConfig("add", "AddDemo", "plus-circled", "edit", false, {
             addCondition: function (settings) { return toolbarConfig.isList && settings.useModuleList && settings.sortOrder !== -1; },
             code: function(settings, event) {
                 tbContr._getAngularVm().addItem(settings.sortOrder + 1);
@@ -98,9 +98,9 @@ $2sxc.getManageController = function (id) {
             configureCommand: function(cmd) {
                 var itm = {
                     Title: "EditFormTitle.Metadata",
-                    Metadata: /* angular. */ extend({ keyType: "string", targetType: 10 }, cmd.settings.metadata)
+                    Metadata: extend({ keyType: "string", targetType: 10 }, cmd.settings.metadata)
                 };
-                /* angular. */extend(cmd.items[0], itm);
+                extend(cmd.items[0], itm);
             }
         }),
         'remove': {
@@ -156,7 +156,7 @@ $2sxc.getManageController = function (id) {
             showOn: "edit",
             addCondition: function (settings) { return toolbarConfig.isList && settings.useModuleList && settings.sortOrder !== -1; }
         },
-        'publish': buttonConfig('publish', "Published", "eye", "edit", false, {
+        'publish': buttonConfig("publish", "Published", "eye", "edit", false, {
             iclass2: "icon-sxc-eye-off",
             disabled: true,
             code: function(settings, event) {
@@ -169,7 +169,7 @@ $2sxc.getManageController = function (id) {
                 tbContr._getAngularVm().publish(part, index);
             }
         }),
-        'replace': buttonConfig('replace', "Replace", "replace", "edit", false, {
+        'replace': buttonConfig("replace", "Replace", "replace", "edit", false, {
             addCondition: function(settings) { return settings.useModuleList; },
         }),
         'layout': {
@@ -248,11 +248,11 @@ $2sxc.getManageController = function (id) {
 
         // assemble an object which will store the configuration and execute it
         createCommandObject: function(specialSettings) {
-            var settings = /* $. */ extend({}, toolbarConfig, specialSettings); // merge button with general toolbar-settings
+            var settings = extend({}, toolbarConfig, specialSettings); // merge button with general toolbar-settings
             var cmd = {
                 settings: settings,
                 items: settings.items || [],                            // use predefined or create empty array
-                params: /* angular. */ extend({
+                params: extend({
                     dialog: settings.dialog || settings.action          // the variable used to name the dialog changed in the history of 2sxc from action to dialog
                 }, settings.params),
 
@@ -341,7 +341,7 @@ $2sxc.getManageController = function (id) {
         // Perform a toolbar button-action - basically get the configuration and execute it's action
         action: function(settings, event) {
             var conf = actionButtonsConf[settings.action];
-            settings = /*angular. */ extend({}, conf, settings);              // merge conf & settings, but settings has higher priority
+            settings = extend({}, conf, settings);              // merge conf & settings, but settings has higher priority
             if (!settings.dialog) settings.dialog = settings.action;    // old code uses "action" as the parameter, now use verb ? dialog
             if (!settings.code) settings.code = tbContr._openNgDialog;  // decide what action to perform
 
@@ -424,8 +424,8 @@ $2sxc.getManageController = function (id) {
 
             buttons.add = function (verb) {
                 var add = actionButtonsConf[verb].addCondition;
-                if (add === undefined || ((typeof (add) === 'function') ? add(settings) : add))
-                    buttons.push(/*$. */extend({}, settings, { action: verb }));
+                if (add === undefined || ((typeof (add) === "function") ? add(settings) : add))
+                    buttons.push(extend({}, settings, { action: verb }));
             };
 
             for (var btn in actionButtonsConf) 
