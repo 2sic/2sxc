@@ -56,6 +56,14 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
         {
             return eavCtc.Save(appId, item);
         }
+
+        [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
+        public bool CreateGhost(int appId, string sourceStaticName)
+        {
+            return eavCtc.CreateGhost(appId, sourceStaticName);
+        }
+
         #endregion
 
 
