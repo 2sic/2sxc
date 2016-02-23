@@ -4,7 +4,7 @@
 
         <!-- App Selector - only relevant in App-Mode -->
         <select ng-show="!vm.manageInfo.isContentApp" ng-model="vm.appId" class="sc-selector-app"
-                ng-options="a.AppId as a.Name for a in vm.apps"
+                ng-options="a.AppId as (a.Name.indexOf('TemplatePicker.') === 0 ? (a.Name | translate) : a.Name) for a in vm.apps"
                 ng-disabled="vm.manageInfo.hasContent || vm.manageInfo.isList">
             <option value="" ng-disabled="vm.appId != null" translate="TemplatePicker.AppPickerDefault"></option>
         </select>

@@ -207,8 +207,7 @@
             svc.getSelectableApps()
                 .then(function(data) {
                     vm.apps = data.data;
-                    //vm.apps.push({ Name: $translate.instant("TemplatePicker.ManageApps"), AppId: -2 });
-                    vm.apps.push({ Name: $translate.instant("TemplatePicker.GetMoreApps"), AppId: -1 });
+                    vm.apps.push({ Name: "TemplatePicker.GetMoreApps", AppId: -1 });
                 });
         }
 
