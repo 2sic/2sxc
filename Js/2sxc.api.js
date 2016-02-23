@@ -231,7 +231,7 @@
 
     $2sxc._controllers = {};
     $2sxc.metaName = "The 2sxc Controller object";
-    $2sxc.metaVersion = "08.02.02";
+    $2sxc.metaVersion = "08.02.03";
     $2sxc.beta = {};
     $2sxc._data = {};
     
