@@ -5,10 +5,10 @@
 
     <script type="text/javascript">
 
-        window.addEventListener("message", recieveMessage<%= ModuleID %>, false);
+        window.addEventListener("message", receiveMessage<%= ModuleID %>, false);
 
-        function recieveMessage<%= ModuleID %>(event) {
-            var regExToCheckOrigin = /^(http|https):\/\/gettingstarted\.(2sexycontent|2sxc)\.org.*/gi;
+        function receiveMessage<%= ModuleID %>(event) {
+            var regExToCheckOrigin = /^(http|https):\/\/((gettingstarted|[a-z]*)\.)?(2sexycontent|2sxc)\.org(\/.*)?$/gi;
             if (!regExToCheckOrigin.test(event.origin))
                 return;
 
@@ -29,7 +29,9 @@
                 }
 
                 if (confirm("Do you want to install these packages?\n\n" + packagesDisplayNames + "\nThis could take 10 to 60 seconds per package, please don't reload the page while it's installing. You will see a message once it's done and progess is logged to the JS-console.")) {
-                    InstallPackages<%= ModuleID %>(packages);
+                    $("#<%=pnlLoading.ClientID%>").show();
+
+                    runOneInstallJob<%= ModuleID %>(packages, 0);
                 }
 
             }
@@ -71,59 +73,13 @@
                 }
                 errorMessage += " (you might find more informations about the error in the DNN event log).";
                 alert(errorMessage);
-                //success = false;
             });
         }
 
-        function InstallPackages<%= ModuleID %>(packages) {
-
-            $("#<%=pnlLoading.ClientID%>").show();
-            //var sf = $.ServicesFramework(<%= ModuleID %>);
-            var success = true;
-
-            runOneInstallJob<%= ModuleID %>(packages, 0);
-
-            // Loop all packages and install them
-            //for (var i = 0; i < packages.length; i++) {
-
-                // var currentPackage = packages[i];
-
-<%--                runOneInstallJob<%= ModuleID %>(packages, i);--%>
-
-                //$.ajax({
-                //    type: "GET",
-                //    dataType: "json",
-                //    async: false,
-                //    url: sf.getServiceRoot('2sxc') + "GettingStarted/" + "InstallPackage",
-                //    data: "packageUrl=" + currentPackage.url,
-                //    beforeSend: sf.setModuleHeaders
-                //})
-                //    .done(function (e) { })
-                //.error(function (xhr, result, status) {
-                //    var errorMessage = "Something went wrong while installing '" + currentPackage.displayName + "': " + status;
-                //    if(xhr.responseText && xhr.responseText != "")
-                //    {
-                //        var response = $.parseJSON(xhr.responseText);
-                //        if(response.messages)
-                //            errorMessage = errorMessage + " - " + response.messages[0].Message;
-                //        else if(response.Message)
-                //            errorMessage = errorMessage + " - " + response.Message;
-                //    }
-                //    errorMessage += " (you might find more informations about the error in the DNN event log).";
-                //    alert(errorMessage);
-                //    success = false;
-                //});
-
-            //}
-
-            //if (success) {
-            //    alert("Installed  all packages successfully.");
-            //    window.location.reload();
-            //}
-
-        }
 
     </script>
 
-    <div class="sc-loading" id="pnlLoading" runat="server" style="display:none;"></div>
+    <div class="sc-loading" id="pnlLoading" runat="server" style="display:none;">
+        <i class="icon-sxc-spinner animate-spin"></i>
+    </div>
 </div>
