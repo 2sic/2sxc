@@ -27,7 +27,7 @@ namespace ToSic.SexyContent.ImportExport
             {
                 if (_releases == null)
                 {
-                    var releaseXmlFileUrl = "http://autoinstall.2sexycontent.org/2SexyContent-Core/Releases.xml";
+                    var releaseXmlFileUrl = "https://autoinstall.2sxc.org/2SexyContent-Core/Releases.xml";
                     var releaseXmlRequest = (HttpWebRequest)WebRequest.Create(releaseXmlFileUrl);
                     var releaseXmlFileContent = new StreamReader(releaseXmlRequest.GetResponse().GetResponseStream()).ReadToEnd();
                     _releases = XDocument.Parse(releaseXmlFileContent);

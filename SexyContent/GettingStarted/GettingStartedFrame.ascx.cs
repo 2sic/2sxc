@@ -19,7 +19,7 @@ namespace ToSic.SexyContent.GettingStarted
 
         public string GettingStartedUrl()
         {
-            var gettingStartedSrc = "http://gettingstarted.2sexycontent.org/router.aspx?";
+            var gettingStartedSrc = "//gettingstarted.2sxc.org/router.aspx?";
 
             // Add desired destination
             gettingStartedSrc += "destination=" +

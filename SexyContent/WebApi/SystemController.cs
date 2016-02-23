@@ -127,7 +127,7 @@ namespace ToSic.SexyContent.WebApi
             var dnn = PortalSettings.Current;
             var mod = Request.FindModuleInfo();
             //int appId = sxc.AppId.Value;
-            var gsUrl = "http://gettingstarted.2sexycontent.org/router.aspx?"
+            var gsUrl = "//gettingstarted.2sxc.org/router.aspx?" // change to use protocoll neutral base URL, also change to 2sxc
 
                         // Add version & module infos
                         + "DnnVersion=" + Assembly.GetAssembly(typeof(Globals)).GetName().Version.ToString(4)

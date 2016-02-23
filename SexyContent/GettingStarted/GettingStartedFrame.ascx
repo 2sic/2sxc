@@ -8,8 +8,13 @@
         window.addEventListener("message", recieveMessage<%= ModuleID %>, false);
 
         function recieveMessage<%= ModuleID %>(event) {
-            if (event.origin !== "http://gettingstarted.2sexycontent.org")
+            var regExToCheckOrigin = /^(http|https):\/\/gettingstarted\.(2sexycontent|2sxc)\.org.*/gi;
+            if (!regExToCheckOrigin.test(event.origin))
                 return;
+
+            // old one, before we used new domains and optional SSL
+            //if (event.origin !== "http://gettingstarted.2sexycontent.org")
+            //    return;
 
             // Data is sent as text because IE8 and 9 cannot send objects through postMessage
             var data = JSON.parse(event.data);
