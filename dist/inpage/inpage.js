@@ -24,11 +24,95 @@ var $2sxcActionMenuMapper = function (moduleId) {
         }
     };
 };
+
+// note: this is code which still uses jQuery etc., so it's not really clean
+// because of this we're including it as simple code and not packaging it as a service quite yet...
+
+function processInstallMessage(event, modId) {
+    var regExToCheckOrigin = /^(http|https):\/\/((gettingstarted|[a-z]*)\.)?(2sexycontent|2sxc)\.org(\/.*)?$/gi;
+    if (!regExToCheckOrigin.test(event.origin)) {
+        console.error("can't execute, wrong source domain");
+        return;
+    }
+
+    // Data is sent as text because IE8 and 9 cannot send objects through postMessage
+    var data = JSON.parse(event.data);
+
+    // If message does not belong to this module, return
+    if (data.moduleId !== modId)
+        return;
+
+    if (data.action === "install") {
+        var sf = $.ServicesFramework(modId);
+
+        var packages = data.packages;
+        var packagesDisplayNames = "";
+
+        // Loop all packages to install
+        for (var i = 0; i < packages.length; i++) {
+            packagesDisplayNames += "- " + packages[i].displayName + "\n";
+        }
+
+        if (confirm("Do you want to install these packages?\n\n"
+            + packagesDisplayNames + "\nThis could take 10 to 60 seconds per package, "
+            + "please don't reload the page while it's installing. "
+            + "You will see a message once it's done and progess is logged to the JS-console.")) {
+            $(".DnnModule-" + modId + " #pnlLoading").show();
+            var label = $(".DnnModule-" + modId + " #packageName");
+
+            label.html("...");
+
+            runOneInstallJob(packages, 0, sf, label);
+        }
+
+    }
+    else if (data.action === "resize")
+        resizeIFrame(modId, data.height);
+}
+
+function resizeIFrame(modId, height) {
+    $(".DnnModule-" + modId + " #frGettingStarted").height(height);
+}
+
+function runOneInstallJob(packages, i, sf, label) {
+    var currentPackage = packages[i];
+    console.log(currentPackage.displayName + "(" + i + ") started");
+    label.html(currentPackage.displayName);
+    return $.ajax({
+        type: "GET",
+        dataType: "json",
+        async: true,
+        url: sf.getServiceRoot('2sxc') + "GettingStarted/" + "InstallPackage",
+        data: "packageUrl=" + currentPackage.url,
+        beforeSend: sf.setModuleHeaders
+    })
+    .complete(function (jqXHR, textStatus) {
+        console.log(currentPackage.displayName + "(" + i + ") completed");
+        if (i + 1 < packages.length) {
+            runOneInstallJob(packages, i + 1, sf, label);
+        } else {
+            alert("Done installing. If you saw no errors, everything worked.");
+            window.location.reload();
+        }
+    })
+    .error(function (xhr, result, status) {
+        var errorMessage = "Something went wrong while installing '" + currentPackage.displayName + "': " + status;
+        if (xhr.responseText && xhr.responseText !== "") {
+            var response = $.parseJSON(xhr.responseText);
+            if (response.messages)
+                errorMessage = errorMessage + " - " + response.messages[0].Message;
+            else if (response.Message)
+                errorMessage = errorMessage + " - " + response.Message;
+        }
+        errorMessage += " (you might find more informations about the error in the DNN event log).";
+        alert(errorMessage);
+    });
+}
 angular.module('SxcInpageTemplates', []).run(['$templateCache', function($templateCache) {
   'use strict';
 
   $templateCache.put('template-selector/template-selector.html',
-    "<div ng-cloak ng-show=vm.manageInfo.templateChooserVisible class=\"dnnFormMessage dnnFormInfo\"><div class=sc-selectors><select ng-show=!vm.manageInfo.isContentApp ng-model=vm.appId class=sc-selector-app ng-options=\"a.AppId as a.Name for a in vm.apps\" ng-disabled=\"vm.manageInfo.hasContent || vm.manageInfo.isList\"><option value=\"\" ng-disabled=\"vm.appId != null\" translate=TemplatePicker.AppPickerDefault></option></select><select ng-show=vm.manageInfo.isContentApp ng-model=vm.contentTypeId class=sc-selector-contenttype ng-options=\"c.StaticName as c.Name for c in vm.contentTypes\" ng-disabled=\"vm.manageInfo.hasContent || vm.manageInfo.isList\"><option ng-disabled=\"vm.contentTypeId != ''\" value=\"\" translate=TemplatePicker.ContentTypePickerDefault></option></select><select ng-show=\"vm.manageInfo.isContentApp ? vm.contentTypeId != 0 : (vm.savedAppId != null &&  vm.filteredTemplates().length > 1)\" ng-model=vm.templateId class=sc-selector-template ng-options=\"t.TemplateId as t.Name for t in vm.filteredTemplates(vm.contentTypeId)\"></select></div><div class=sc-selector-actions>&nbsp; <a ng-show=\"vm.templateId != null && vm.savedTemplateId != vm.templateId\" class=sc-selector-save ng-click=\"vm.persistTemplate(false, false);\" title=\"{{ 'TemplatePicker.Save' | translate }}\"><div><i class=icon-sxc-ok></i></div></a> &nbsp; <a ng-show=\"vm.undoTemplateId != null\" class=sc-selector-close ng-click=vm.cancelTemplateChange(); title=\"{{ 'TemplatePicker.' + (vm.manageInfo.isContentApp ? 'Cancel' : 'Close') | translate }}\"><div><i class=icon-sxc-cancel></i></div></a></div><div class=sc-loading ng-show=vm.loading><i class=\"icon-sxc-spinner fa-spin\"></i></div></div>"
+    "<div ng-cloak ng-show=vm.manageInfo.templateChooserVisible class=\"dnnFormMessage dnnFormInfo\"><div class=sc-selectors><select ng-show=!vm.manageInfo.isContentApp ng-model=vm.appId class=sc-selector-app ng-options=\"a.AppId as (a.Name.indexOf('TemplatePicker.') === 0 ? (a.Name | translate) : a.Name) for a in vm.apps\" ng-disabled=\"vm.manageInfo.hasContent || vm.manageInfo.isList\"><option value=\"\" ng-disabled=\"vm.appId != null\" translate=TemplatePicker.AppPickerDefault></option></select><select ng-show=vm.manageInfo.isContentApp ng-model=vm.contentTypeId class=sc-selector-contenttype ng-options=\"c.StaticName as c.Name for c in vm.contentTypes\" ng-disabled=\"vm.manageInfo.hasContent || vm.manageInfo.isList\"><option ng-disabled=\"vm.contentTypeId != ''\" value=\"\" translate=TemplatePicker.ContentTypePickerDefault></option></select><select ng-show=\"vm.manageInfo.isContentApp ? vm.contentTypeId != 0 : (vm.savedAppId != null &&  vm.filteredTemplates().length > 1)\" ng-model=vm.templateId class=sc-selector-template ng-options=\"t.TemplateId as t.Name for t in vm.filteredTemplates(vm.contentTypeId)\"></select></div><div class=sc-selector-actions>&nbsp; <a ng-show=\"vm.templateId != null && vm.savedTemplateId != vm.templateId\" class=sc-selector-save ng-click=\"vm.persistTemplate(false, false);\" title=\"{{ 'TemplatePicker.Save' | translate }}\"><div><i class=icon-sxc-ok></i></div></a> &nbsp; <a ng-show=\"vm.undoTemplateId != null\" class=sc-selector-close ng-click=vm.cancelTemplateChange(); title=\"{{ 'TemplatePicker.' + (vm.manageInfo.isContentApp ? 'Cancel' : 'Close') | translate }}\"><div><i class=icon-sxc-cancel></i></div></a></div><div class=sc-loading ng-show=vm.loading><i class=\"icon-sxc-spinner fa-spin\"></i></div><div style=\"position: relative\" ng-if=vm.showRemoteInstaller><iframe id=frGettingStarted ng-src={{vm.remoteInstallerUrl}} width=100% height=300px></iframe><div class=sc-loading id=pnlLoading style=display:none><i class=\"icon-sxc-spinner animate-spin\"></i><br><br><span class=sc-loading-label>installing <span id=packageName>.</span></span></div></div></div>"
   );
 
 }]);
@@ -600,6 +684,10 @@ $(document).ready(function () {
 
             removeFromList: function(sortOrder) {
                 return $http.get("View/Module/RemoveFromList", { params: { sortOrder: sortOrder } });
+            },
+
+            gettingStartedUrl: function() {
+                return $http.get("View/Module/RemoteInstallDialogUrl", { params: { dialog: "gettingstarted"} });
             }
         };
     }]);
@@ -608,7 +696,7 @@ $(document).ready(function () {
 (function () {
     var module = angular.module("2sxc.view");
 
-    module.controller("TemplateSelectorCtrl", ["$scope", "$attrs", "moduleApiService", "AppInstanceId", "sxc", "$filter", "$q", "$window", "$translate", function($scope, $attrs, moduleApiService, AppInstanceId, sxc, $filter, $q, $window, $translate) {
+    module.controller("TemplateSelectorCtrl", ["$scope", "$attrs", "moduleApiService", "AppInstanceId", "sxc", "$filter", "$q", "$window", "$translate", "$sce", function ($scope, $attrs, moduleApiService, AppInstanceId, sxc, $filter, $q, $window, $translate, $sce) {
         //#region constants
         var cViewWithoutContent = "_LayoutElement"; // needed to differentiate the "select item" from the "empty-is-selected" which are both empty
 
@@ -636,6 +724,10 @@ $(document).ready(function () {
         vm.appId = vm.manageInfo.appId;
         vm.savedAppId = vm.manageInfo.appId;
 
+
+        vm.showRemoteInstaller = false;
+        vm.remoteInstallerUrl = "";
+
         vm.loading = 0;
         //#endregion
 
@@ -656,7 +748,7 @@ $(document).ready(function () {
             var getContentTypes = svc.getSelectableContentTypes();
             var getTemplates = svc.getSelectableTemplates();
 
-            $q.all([getContentTypes, getTemplates])
+            return $q.all([getContentTypes, getTemplates])
                 .then(function(res) {
                     vm.contentTypes = res[0].data;
                     vm.templates = res[1].data;
@@ -777,13 +869,52 @@ $(document).ready(function () {
             });
         };
 
+        // Optioally change the show state, then 
+        // check if it should be shown and load/show
         vm.show = function(stateChange) {
-            if (stateChange !== undefined)
+            if (stateChange !== undefined)  // optionally change the show-state
                 vm.manageInfo.templateChooserVisible = stateChange;
 
-            if (vm.appId !== null && vm.manageInfo.templateChooserVisible) 
-                vm.reloadTemplates();
+            if (vm.manageInfo.templateChooserVisible) {
+                var promises = [];
+                if (vm.appId !== null) // if an app had already been chosen OR the content-app (always chosen)
+                    promises.push(vm.reloadTemplates()); 
+
+                // if it's the app-dialog and the app's haven't been loaded yet...
+                if (!vm.manageInfo.isContentApp && vm.apps.length === 0)
+                    promises.push(vm.loadApps());
+                $q.all(promises).then(vm.externalInstaller.showIfConfigIsEmpty);
+            }
         };
+
+        // some helpers to show the i-frame and link up the ablity to then install stuff
+        vm.externalInstaller = {
+            // based on situation, decide if we should show the auto-install IFrame
+            showIfConfigIsEmpty: function () {
+                var showAutoInstaller = (vm.manageInfo.isContentApp) 
+                    ? vm.templates.length === 0 
+                    : vm.apps.length <= 1;
+
+                if (showAutoInstaller)
+                    vm.externalInstaller.setup();
+            },
+
+            configureCallback: function setupCallback() {
+                window.addEventListener("message", function forwardMessage(event) {
+                    processInstallMessage(event, AppInstanceId); // this calls an external, non-angular method to handle resizing & installation...
+                }, false);
+            },
+
+            setup: function() {
+                svc.gettingStartedUrl().then(function(result) {
+                    vm.externalInstaller.configureCallback();
+                    vm.showRemoteInstaller = true;
+                    vm.remoteInstallerUrl = $sce.trustAsResourceUrl(result.data);
+                    console.log(result.data);
+                });
+            }
+        };
+
 
         vm.toggle = function () {
             vm.manageInfo.someTest = "a value";
@@ -806,24 +937,31 @@ $(document).ready(function () {
                 $window.location.reload();
         };
 
-        //#region initialize this
-        vm.show(); // show if it has to, or not
-
-        // Init App-Dropdown if it's an app-selector
-        if (!vm.manageInfo.isContentApp) {
-            svc.getSelectableApps()
+        vm.loadApps = function() {
+            return svc.getSelectableApps()
                 .then(function(data) {
                     vm.apps = data.data;
-                    //vm.apps.push({ Name: $translate.instant("TemplatePicker.ManageApps"), AppId: -2 });
-                    vm.apps.push({ Name: $translate.instant("TemplatePicker.GetMoreApps"), AppId: -1 });
+                    vm.apps.push({ Name: "TemplatePicker.GetMoreApps", AppId: -1 });
                 });
-        }
+        };
+
+        //#region initialize this
+        vm.activate = function() {
+            vm.show(); // show if it has to, or not
+
+            // Init App-Dropdown if it's an app-selector
+            //if (!vm.manageInfo.isContentApp) 
+            //    vm.loadApps().then(function() {
+            //        vm.externalInstaller.showIfConfigIsEmpty();
+            //    });
+        };
+
+        vm.activate();
 
         //#endregion
 
 
         //#region commands for the toolbar like add, remove, publish, translate, ..
-        // ToDo: Remove this here, as it's not used in TemplateSelector - should move to 2sxc.api.manage.js
 
         vm.prepareToAddContent = function () {
             return vm.persistTemplate(true, false);

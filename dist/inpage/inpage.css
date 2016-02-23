@@ -95,9 +95,14 @@
     color: #0088f4;
 
     /* temp till we get it corrected*/
-    padding-left: 50%;
+    text-align: center;
+    /*padding-left: 50%;*/
     padding-top: 20px;
+}
 
+.sc-loading-label {
+    padding: 5px;
+    background-color: white;
 }
 
 /* >>> spinner css copied from from font-awesome */
