@@ -69,8 +69,7 @@ namespace ToSic.SexyContent.Razor
             get { return AppAndDataHelpers.Data; }
         }
 
-        public IEnvironment Environment => Sexy.Environment;
-        
+        public IPermissions Permissions => Sexy.Environment.Permissions;
 
         #region AsDynamic in many variations
         /// <summary>

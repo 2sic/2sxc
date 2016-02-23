@@ -2,8 +2,7 @@
 
 namespace ToSic.SexyContent.Environment.None
 {
-    public class Permissions: IPermissions
+    public class Permissions: Base.Permissions
     {
-        public bool UserMayEditContent { get { return false; } }
     }
 }
