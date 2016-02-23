@@ -64,10 +64,11 @@ namespace ToSic.SexyContent
             }
         }
 
-        protected void btnInstallGettingStarted_Click(object sender, EventArgs e)
-        {
-            var messages = new List<ExportImportMessage>();
-            new GettingStartedImport(ZoneId.Value, AppId.Value).ImportGettingStartedTemplates(UserInfo, messages);
-        }
+        // 2016-02-24 2dm - seems unused
+        //protected void btnInstallGettingStarted_Click(object sender, EventArgs e)
+        //{
+        //    var messages = new List<ExportImportMessage>();
+        //    new GettingStartedImport(ZoneId.Value, AppId.Value).ImportGettingStartedTemplates(UserInfo, messages);
+        //}
     }
 }

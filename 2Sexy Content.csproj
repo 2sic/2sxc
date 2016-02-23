@@ -339,16 +339,8 @@
     <Compile Include="SexyContent\EAVExtensions\EntityInContentGroup.cs" />
     <Compile Include="SexyContent\EAVExtensions\IHasEditingData.cs" />
     <Compile Include="SexyContent\GettingStarted\GettingStartedController.cs" />
-    <Compile Include="SexyContent\GettingStarted\GettingStartedFrame.ascx.cs">
-      <DependentUpon>GettingStartedFrame.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="SexyContent\GettingStarted\GettingStartedFrame.ascx.designer.cs">
-      <DependentUpon>GettingStartedFrame.ascx</DependentUpon>
-    </Compile>
     <Compile Include="SexyContent\IEditContentControl.cs" />
     <Compile Include="SexyContent\ImportExport\ExportImportMessage.cs" />
-    <Compile Include="SexyContent\GettingStarted\GettingStartedImport.cs" />
     <Compile Include="SexyContent\ImportExport\ImportExport.cs" />
     <Compile Include="SexyContent\ImportExport\FileManager.cs" />
     <Compile Include="SexyContent\ImportExport\ImportValue.cs" />
@@ -485,7 +477,6 @@
     <Content Include="bower.json" />
     <Content Include="packages.config" />
     <None Include="SqlDataProvider\01.00.00.SqlDataProvider" />
-    <Content Include="SexyContent\GettingStarted\GettingStartedFrame.ascx" />
     <Content Include="SqlDataProvider\05.02.01.SqlDataProvider" />
     <Content Include="src\dnn\ui.html" />
     <Content Include="src\sxc-admin\apps-management\apps-controller.js" />

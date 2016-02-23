@@ -21,28 +21,31 @@ namespace ToSic.SexyContent.ImportExport
         }
 
         private XDocument _releases;
-        public XDocument Releases
-        {
-            get
-            {
-                if (_releases == null)
-                {
-                    var releaseXmlFileUrl = "https://autoinstall.2sxc.org/2SexyContent-Core/Releases.xml";
-                    var releaseXmlRequest = (HttpWebRequest)WebRequest.Create(releaseXmlFileUrl);
-                    var releaseXmlFileContent = new StreamReader(releaseXmlRequest.GetResponse().GetResponseStream()).ReadToEnd();
-                    _releases = XDocument.Parse(releaseXmlFileContent);
-                }
-                return _releases;
-            }
-        }
 
-        public bool ImportGettingStartedTemplates(UserInfo user, List<ExportImportMessage> messages)
-        {
-            var release = Releases.Element("SexyContentReleases").Elements("Release").Last(p => new Version(p.Attribute("Version").Value) <= new Version(SexyContent.ModuleVersion));
-            var starterPackageUrl = release.Elements("RecommendedPackages").Elements("Package").First().Attribute("PackageUrl").Value;
+        // 2016-02-24 2dm - seems unused
+        //public XDocument Releases
+        //{
+        //    get
+        //    {
+        //        if (_releases == null)
+        //        {
+        //            var releaseXmlFileUrl = "https://autoinstall.2sxc.org/2SexyContent-Core/Releases.xml";
+        //            var releaseXmlRequest = (HttpWebRequest)WebRequest.Create(releaseXmlFileUrl);
+        //            var releaseXmlFileContent = new StreamReader(releaseXmlRequest.GetResponse().GetResponseStream()).ReadToEnd();
+        //            _releases = XDocument.Parse(releaseXmlFileContent);
+        //        }
+        //        return _releases;
+        //    }
+        //}
 
-            return new ZipImport(_zoneId, _appId, user.IsSuperUser).ImportZipFromUrl(starterPackageUrl, messages, false);
-        }
+        // 2016-02-24 2dm - seems unused
+        //public bool ImportGettingStartedTemplates(UserInfo user, List<ExportImportMessage> messages)
+        //{
+        //    var release = Releases.Element("SexyContentReleases").Elements("Release").Last(p => new Version(p.Attribute("Version").Value) <= new Version(SexyContent.ModuleVersion));
+        //    var starterPackageUrl = release.Elements("RecommendedPackages").Elements("Package").First().Attribute("PackageUrl").Value;
+
+        //    return new ZipImport(_zoneId, _appId, user.IsSuperUser).ImportZipFromUrl(starterPackageUrl, messages, false);
+        //}
 
     }
 }
