@@ -51,6 +51,10 @@
 
             removeFromList: function(sortOrder) {
                 return $http.get("View/Module/RemoveFromList", { params: { sortOrder: sortOrder } });
+            },
+
+            gettingStartedUrl: function() {
+                return $http.get("View/Module/RemoteInstallDialogUrl", { params: { dialog: "gettingstarted"} });
             }
         };
     });

@@ -192,24 +192,24 @@ namespace ToSic.SexyContent
             }));
         }
 
-
-        /// <summary>
-        /// Check different conditions (app/content) to determine if getting-started should be shown
-        /// </summary>
-        /// <returns></returns>
-        public bool ShowGettingStarted()
-        {
-            if (IsContentApp)
-            {
-                var noTemplatesYet = !Sexy.Templates.GetVisibleTemplates().Any();
-                return noTemplatesYet && IsEditable && UserInfo.IsInRole(PortalSettings.AdministratorRoleName);
-            }
-            else
-            {
-                return IsEditable && UserInfo.IsInRole(PortalSettings.AdministratorRoleName) &&
-                       !SexyContent.GetApps(ZoneId.Value, false, new PortalSettings(ModuleConfiguration.OwnerPortalID))
-                           .Any();
-            }
-        }
+        // 2016-02-24
+        ///// <summary>
+        ///// Check different conditions (app/content) to determine if getting-started should be shown
+        ///// </summary>
+        ///// <returns></returns>
+        //public bool ShowGettingStarted()
+        //{
+        //    if (IsContentApp)
+        //    {
+        //        var noTemplatesYet = !Sexy.Templates.GetVisibleTemplates().Any();
+        //        return noTemplatesYet && IsEditable && UserInfo.IsInRole(PortalSettings.AdministratorRoleName);
+        //    }
+        //    else
+        //    {
+        //        return IsEditable && UserInfo.IsInRole(PortalSettings.AdministratorRoleName) &&
+        //               !SexyContent.GetApps(ZoneId.Value, false, new PortalSettings(ModuleConfiguration.OwnerPortalID))
+        //                   .Any();
+        //    }
+        //}
     }
 }

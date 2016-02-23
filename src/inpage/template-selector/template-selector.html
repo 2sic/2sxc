@@ -43,4 +43,17 @@
     <div class="sc-loading" ng-show="vm.loading">
         <i class="icon-sxc-spinner fa-spin"></i>
     </div>
+
+    <!-- the auto-installer IFrame, with spinner and everything -->
+    <div style="position: relative;" ng-if="vm.showRemoteInstaller">
+        <iframe id="frGettingStarted" ng-src="{{vm.remoteInstallerUrl}}" width="100%" height="300px"></iframe>
+        <div class="sc-loading" id="pnlLoading" style="display:none;">
+            <i class="icon-sxc-spinner animate-spin"></i>
+            <br />
+            <br />
+            <span class="sc-loading-label">
+                installing <span id="packageName">.</span>
+            </span>
+        </div>
+    </div>
 </div>

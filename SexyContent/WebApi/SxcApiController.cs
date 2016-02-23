@@ -43,24 +43,15 @@ namespace ToSic.SexyContent.WebApi
 
         #region AppAndDataHelpers implementation
 
-        public DnnHelper Dnn
-        {
-            get { return AppAndDataHelpers.Dnn; }
-        }
-		public SxcHelper Sxc
-		{
-			get { return AppAndDataHelpers.Sxc; }
-		}
-        public App App
-        {
-            get { return AppAndDataHelpers.App; }
-        }
-        public ViewDataSource Data
-        {
-            get { return AppAndDataHelpers.Data; }
-        }
+        public DnnHelper Dnn => AppAndDataHelpers.Dnn;
 
-        /// <summary>
+	    public SxcHelper Sxc => AppAndDataHelpers.Sxc;
+
+	    public App App => AppAndDataHelpers.App;
+
+	    public ViewDataSource Data => AppAndDataHelpers.Data;
+
+	    /// <summary>
         /// Transform a IEntity to a DynamicEntity as dynamic object
         /// </summary>
         /// <param name="entity"></param>

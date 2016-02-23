@@ -43,14 +43,14 @@ namespace ToSic.SexyContent
                 if (!isSharedModule)
                 {
                     // If there are no templates configure (content) or no apps (app) yet - show "getting started" frame
-                    if (ShowGettingStarted())
-                    {
-                        pnlGetStarted.Visible = true;
-                        var gettingStartedControl = (GettingStartedFrame)LoadControl("~/DesktopModules/ToSIC_SexyContent/SexyContent/GettingStarted/GettingStartedFrame.ascx");
-                        gettingStartedControl.ModuleID = ModuleId;
-                        gettingStartedControl.ModuleConfiguration = ModuleConfiguration;
-                        pnlGetStarted.Controls.Add(gettingStartedControl);
-                    }
+                    //if (ShowGettingStarted())
+                    //{
+                    //    pnlGetStarted.Visible = true;
+                    //    var gettingStartedControl = (GettingStartedFrame)LoadControl("~/DesktopModules/ToSIC_SexyContent/SexyContent/GettingStarted/GettingStartedFrame.ascx");
+                    //    gettingStartedControl.ModuleID = ModuleId;
+                    //    gettingStartedControl.ModuleConfiguration = ModuleConfiguration;
+                    //    pnlGetStarted.Controls.Add(gettingStartedControl);
+                    //}
 
                     // If not fully configured, show stuff
                     if (UserMayEditThisModule)

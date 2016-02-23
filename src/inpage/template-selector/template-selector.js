@@ -1,7 +1,7 @@
 ﻿(function () {
     var module = angular.module("2sxc.view");
 
-    module.controller("TemplateSelectorCtrl", function($scope, $attrs, moduleApiService, AppInstanceId, sxc, $filter, $q, $window, $translate) {
+    module.controller("TemplateSelectorCtrl", function ($scope, $attrs, moduleApiService, AppInstanceId, sxc, $filter, $q, $window, $translate, $sce) {
         //#region constants
         var cViewWithoutContent = "_LayoutElement"; // needed to differentiate the "select item" from the "empty-is-selected" which are both empty
 
@@ -29,6 +29,10 @@
         vm.appId = vm.manageInfo.appId;
         vm.savedAppId = vm.manageInfo.appId;
 
+
+        vm.showRemoteInstaller = false;
+        vm.remoteInstallerUrl = "";
+
         vm.loading = 0;
         //#endregion
 
@@ -49,7 +53,7 @@
             var getContentTypes = svc.getSelectableContentTypes();
             var getTemplates = svc.getSelectableTemplates();
 
-            $q.all([getContentTypes, getTemplates])
+            return $q.all([getContentTypes, getTemplates])
                 .then(function(res) {
                     vm.contentTypes = res[0].data;
                     vm.templates = res[1].data;
@@ -170,13 +174,52 @@
             });
         };
 
+        // Optioally change the show state, then 
+        // check if it should be shown and load/show
         vm.show = function(stateChange) {
-            if (stateChange !== undefined)
+            if (stateChange !== undefined)  // optionally change the show-state
                 vm.manageInfo.templateChooserVisible = stateChange;
 
-            if (vm.appId !== null && vm.manageInfo.templateChooserVisible) 
-                vm.reloadTemplates();
+            if (vm.manageInfo.templateChooserVisible) {
+                var promises = [];
+                if (vm.appId !== null) // if an app had already been chosen OR the content-app (always chosen)
+                    promises.push(vm.reloadTemplates()); 
+
+                // if it's the app-dialog and the app's haven't been loaded yet...
+                if (!vm.manageInfo.isContentApp && vm.apps.length === 0)
+                    promises.push(vm.loadApps());
+                $q.all(promises).then(vm.externalInstaller.showIfConfigIsEmpty);
+            }
         };
+
+        // some helpers to show the i-frame and link up the ablity to then install stuff
+        vm.externalInstaller = {
+            // based on situation, decide if we should show the auto-install IFrame
+            showIfConfigIsEmpty: function () {
+                var showAutoInstaller = (vm.manageInfo.isContentApp) 
+                    ? vm.templates.length === 0 
+                    : vm.apps.length <= 1;
+
+                if (showAutoInstaller)
+                    vm.externalInstaller.setup();
+            },
+
+            configureCallback: function setupCallback() {
+                window.addEventListener("message", function forwardMessage(event) {
+                    processInstallMessage(event, AppInstanceId); // this calls an external, non-angular method to handle resizing & installation...
+                }, false);
+            },
+
+            setup: function() {
+                svc.gettingStartedUrl().then(function(result) {
+                    vm.externalInstaller.configureCallback();
+                    vm.showRemoteInstaller = true;
+                    vm.remoteInstallerUrl = $sce.trustAsResourceUrl(result.data);
+                    console.log(result.data);
+                });
+            }
+        };
+
 
         vm.toggle = function () {
             vm.manageInfo.someTest = "a value";
@@ -199,23 +242,31 @@
                 $window.location.reload();
         };
 
-        //#region initialize this
-        vm.show(); // show if it has to, or not
-
-        // Init App-Dropdown if it's an app-selector
-        if (!vm.manageInfo.isContentApp) {
-            svc.getSelectableApps()
+        vm.loadApps = function() {
+            return svc.getSelectableApps()
                 .then(function(data) {
                     vm.apps = data.data;
                     vm.apps.push({ Name: "TemplatePicker.GetMoreApps", AppId: -1 });
                 });
-        }
+        };
+
+        //#region initialize this
+        vm.activate = function() {
+            vm.show(); // show if it has to, or not
+
+            // Init App-Dropdown if it's an app-selector
+            //if (!vm.manageInfo.isContentApp) 
+            //    vm.loadApps().then(function() {
+            //        vm.externalInstaller.showIfConfigIsEmpty();
+            //    });
+        };
+
+        vm.activate();
 
         //#endregion
 
 
         //#region commands for the toolbar like add, remove, publish, translate, ..
-        // ToDo: Remove this here, as it's not used in TemplateSelector - should move to 2sxc.api.manage.js
 
         vm.prepareToAddContent = function () {
             return vm.persistTemplate(true, false);

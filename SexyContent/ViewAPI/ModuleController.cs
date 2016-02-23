@@ -5,6 +5,8 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Web.Http;
+using DotNetNuke.Common;
+using DotNetNuke.Entities.Controllers;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
@@ -13,6 +15,7 @@ using Newtonsoft.Json;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.WebApi;
+using Assembly = System.Reflection.Assembly;
 
 namespace ToSic.SexyContent.ViewAPI
 {
@@ -224,6 +227,63 @@ namespace ToSic.SexyContent.ViewAPI
 				throw;
 			}
 		}
+
+        [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        [ValidateAntiForgeryToken]
+        public string RemoteInstallDialogUrl(string dialog)
+        {
+            // note / warning: some duplicate code with SystemController.cs
+
+            if (dialog != "gettingstarted")
+                throw new Exception("unknown dialog name: " + dialog);
+
+            var moduleInfo = Request.FindModuleInfo();
+            var modName = moduleInfo.DesktopModule.ModuleName;
+
+            var isContent = modName == "2sxc";
+            var gettingStartedSrc = "//gettingstarted.2sxc.org/router.aspx?";
+
+            // Add desired destination
+            gettingStartedSrc += "destination=autoconfigure" + (isContent ? "content" : "app");
+
+            // Add DNN Version
+            gettingStartedSrc += "&DnnVersion=" + Assembly.GetAssembly(typeof(Globals)).GetName().Version.ToString(4);
+            // Add 2SexyContent Version
+            gettingStartedSrc += "&2SexyContentVersion=" + SexyContent.ModuleVersion;
+            // Add module type
+            gettingStartedSrc += "&ModuleName=" + modName;
+            // Add module id
+            gettingStartedSrc += "&ModuleId=" + moduleInfo.ModuleID;
+            // Add Portal ID
+            gettingStartedSrc += "&PortalID=" + moduleInfo.PortalID;
+            // Add VDB / Zone ID (if set)
+            var ZoneID = SexyContent.GetZoneID(moduleInfo.PortalID);
+            gettingStartedSrc += ZoneID.HasValue ? "&ZoneID=" + ZoneID.Value : "";
+            // Add AppStaticName and Version
+            //if (App.AppId > 0 && !isContent)
+            //{
+            //    //var app =  SexyContent.GetApp(ZoneId.Value, AppId.Value, Sexy.OwnerPS);
+
+            //    gettingStartedSrc += "&AppGuid=" + App.AppGuid;
+            //    if (App.Configuration != null)
+            //    {
+            //        gettingStartedSrc += "&AppVersion=" + App.Configuration.Version;
+            //        gettingStartedSrc += "&AppOriginalId=" + App.Configuration.OriginalId;
+            //    }
+            //}
+            // Add DNN Guid
+            var HostSettings = HostController.Instance.GetSettingsDictionary();
+            gettingStartedSrc += HostSettings.ContainsKey("GUID") ? "&DnnGUID=" + HostSettings["GUID"] : "";
+            // Add Portal Default Language
+            gettingStartedSrc += "&DefaultLanguage=" + PortalSettings.DefaultLanguage;
+            // Add current language
+            gettingStartedSrc += "&CurrentLanguage=" + PortalSettings.CultureCode;
+
+            // Set src to iframe
+            return gettingStartedSrc;
+        }
+
 
     }
 }
