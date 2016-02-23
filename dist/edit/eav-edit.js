@@ -148,8 +148,19 @@ angular.module("eavFieldTemplates")
             name: "entity-default",
             templateUrl: "fields/entity/entity-default.html",
             wrapper: ["eavLabel", "bootstrapHasError", "collapsible"],
-            controller: "FieldTemplate-EntityCtrl"
+            controller: "FieldTemplate-EntityCtrl",
+            //defaultOptions: {
+            //    validators: {
+            //        required: function (viewValue, modelValue, scope) {
+            //            var value = viewValue || modelValue;
+            //            if (!Array.isArray(value))
+            //                return true;
+            //            return value.length > 0;
+            //        }
+            //    }
+            //}
         });
+
 
     }])
     .controller("FieldTemplate-EntityCtrl", ["$scope", "$http", "$filter", "$translate", "$modal", "appId", "eavAdminDialogs", "eavDefaultValueService", function ($scope, $http, $filter, $translate, $modal, appId, eavAdminDialogs, eavDefaultValueService) {
@@ -163,7 +174,7 @@ angular.module("eavFieldTemplates")
 
         $scope.chosenEntities = $scope.model[$scope.options.key].Values[0].Value;
 
-        $scope.addEntity = function() {
+        $scope.addEntity = function () {            
             if ($scope.selectedEntity === "new")
                 $scope.openNewEntityDialog();
             else
@@ -228,6 +239,30 @@ angular.module("eavFieldTemplates")
         // Initialize entities
         $scope.getAvailableEntities();
 
+    }]).directive('entityValidation', [function() {
+        return {
+            restrict: 'A',
+            require: '?ngModel',
+            link: function(scope, element, attrs, ngModel) {
+                if (!ngModel) return;
+
+                ngModel.$validators.required = function (modelValue, viewValue) {
+
+                    if (!scope.$parent.$parent.to.required)
+                        return true;
+                    var value = modelValue || viewValue;
+                    if (!value || !Array.isArray(value))
+                        return true;
+                    return value.length > 0;
+                };
+
+                scope.$watch(function () {
+                    return ngModel.$viewValue;
+                }, function (newValue) {
+                    ngModel.$validate();
+                }, true);
+            }
+        };
     }]);
 
 /* 
@@ -782,7 +817,7 @@ angular.module('eavEditTemplates', []).run(['$templateCache', function($template
 
 
   $templateCache.put('fields/entity/entity-default.html',
-    "<div class=eav-entityselect><div ui-tree=options data-empty-placeholder-enabled=false><ol ui-tree-nodes ng-model=chosenEntities><li ng-repeat=\"item in chosenEntities track by $index\" ui-tree-node class=eav-entityselect-item><div ui-tree-handle><i icon=move title=\"{{ 'FieldType.Entity.DragMove' | translate }}\" class=\"pull-left eav-entityselect-sort\" ng-show=to.settings.Entity.AllowMultiValue></i> <span title=\"{{getEntityText(item) + ' (' + item + ')'}}\">{{getEntityText(item)}}</span> <span class=eav-entityselect-item-actions><span data-nodrag title=\"{{ 'FieldType.Entity.Edit' | translate }}\" ng-click=\"edit(item, index)\"><i icon=pencil></i></span> <span data-nodrag title=\"{{ 'FieldType.Entity.Remove' | translate }}\" ng-click=\"removeSlot(item, $index)\" class=eav-entityselect-item-remove><i icon=minus></i></span></span></div></li></ol></div><select class=\"eav-entityselect-selector form-control input-lg\" ng-model=selectedEntity ng-change=addEntity() ng-show=\"to.settings.merged.AllowMultiValue || chosenEntities.length < 1\"><option value=\"\" translate=FieldType.Entity.Choose></option><option value=new ng-if=createEntityAllowed() translate=FieldType.Entity.New></option><option ng-repeat=\"item in availableEntities\" ng-disabled=\"chosenEntities.indexOf(item.Value) != -1\" value={{item.Value}}>{{item.Text}}</option></select></div>"
+    "<div class=eav-entityselect><div ui-tree=options data-empty-placeholder-enabled=false><ol ui-tree-nodes ng-model=chosenEntities entity-validation ng-required=false><li ng-repeat=\"item in chosenEntities track by $index\" ui-tree-node class=eav-entityselect-item><div ui-tree-handle><i icon=move title=\"{{ 'FieldType.Entity.DragMove' | translate }}\" class=\"pull-left eav-entityselect-sort\" ng-show=to.settings.Entity.AllowMultiValue></i> <span title=\"{{getEntityText(item) + ' (' + item + ')'}}\">{{getEntityText(item)}}</span> <span class=eav-entityselect-item-actions><span data-nodrag title=\"{{ 'FieldType.Entity.Edit' | translate }}\" ng-click=\"edit(item, index)\"><i icon=pencil></i></span> <span data-nodrag title=\"{{ 'FieldType.Entity.Remove' | translate }}\" ng-click=\"removeSlot(item, $index)\" class=eav-entityselect-item-remove><i icon=minus></i></span></span></div></li></ol></div><select class=\"eav-entityselect-selector form-control input-lg\" formly-skip-ng-model-attrs-manipulator ng-model=selectedEntity ng-change=addEntity() ng-show=\"to.settings.merged.AllowMultiValue || chosenEntities.length < 1\"><option value=\"\" translate=FieldType.Entity.Choose></option><option value=new ng-if=createEntityAllowed() translate=FieldType.Entity.New></option><option ng-repeat=\"item in availableEntities\" ng-disabled=\"chosenEntities.indexOf(item.Value) != -1\" value={{item.Value}}>{{item.Text}}</option></select></div>"
   );
 
 
@@ -1280,7 +1315,7 @@ function enhanceEntity(entity) {
 				case "datetime":
 					return d !== undefined && d !== null && d !== "" ? new Date(d) : null;
 				case "entity":
-				    return d !== undefined && d !== null ? d : []; 
+				    return d !== undefined && d !== null && d !== "" ? d : []; 
 				case "number":
 				    return d !== undefined && d !== null && d !== "" ? Number(d) : "";
                 default:
