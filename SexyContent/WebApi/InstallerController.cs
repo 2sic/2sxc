@@ -8,10 +8,10 @@ using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Api;
 using ToSic.SexyContent.ImportExport;
 
-namespace ToSic.SexyContent.GettingStarted
+namespace ToSic.SexyContent.WebApi
 {
     [SupportedModules("2sxc,2sxc-app")]
-    public class GettingStartedController : DnnApiController
+    public class InstallerController : DnnApiController
     {
 
         [HttpGet]

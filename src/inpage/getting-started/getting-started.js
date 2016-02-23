@@ -56,7 +56,7 @@ function runOneInstallJob(packages, i, sf, label) {
         type: "GET",
         dataType: "json",
         async: true,
-        url: sf.getServiceRoot('2sxc') + "GettingStarted/" + "InstallPackage",
+        url: sf.getServiceRoot('2sxc') + "Installer/" + "InstallPackage",
         data: "packageUrl=" + currentPackage.url,
         beforeSend: sf.setModuleHeaders
     })
