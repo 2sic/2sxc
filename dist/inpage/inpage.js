@@ -585,8 +585,8 @@ $(document).ready(function () {
                 return $http.get("View/Module/SetTemplateChooserState", { params: { state: state } });
             },
 
-            renderTemplate: function(templateId) {
-                return $http.get("View/Module/RenderTemplate", { params: { templateId: templateId } });
+            renderTemplate: function(templateId, lang) {
+                return $http.get("View/Module/RenderTemplate", { params: { templateId: templateId, lang: lang } });
             },
 
             changeOrder: function(sortOrder, destinationSortOrder) {
@@ -765,7 +765,7 @@ $(document).ready(function () {
 
         vm.renderTemplate = function (templateId) {
             vm.loading++;
-            svc.renderTemplate(templateId).then(function (response) {
+            svc.renderTemplate(templateId, vm.manageInfo.lang).then(function (response) {
                 try {
                     $(viewPortSelector).html(response.data);
                     sxc.manage._processToolbars();

@@ -158,7 +158,7 @@
 
         vm.renderTemplate = function (templateId) {
             vm.loading++;
-            svc.renderTemplate(templateId).then(function (response) {
+            svc.renderTemplate(templateId, vm.manageInfo.lang).then(function (response) {
                 try {
                     $(viewPortSelector).html(response.data);
                     sxc.manage._processToolbars();

@@ -110,10 +110,11 @@ span.eav-entityselect-item-remove { display: block;position: absolute;right: 0px
 .eav-entityselect-selector option[disabled], .eav-entityselect-selector option:disabled { color: #dddddd; }
 .angular-ui-tree-placeholder { margin: 0; }
 
-.eav-localization { }
+.formly-field { position:relative; }
+.eav-localization { position:absolute; top:0; right:0; }
 .eav-localization-lock { float: right; display: inline-block; }
 .eav-localization-lock-open { color: #228b22; }
-.eav-localization-dropdown { margin-top: 20px; display:none!important; }
+.eav-localization-dropdown { margin-top: 0px; display:none!important;  }
 .eav-localization:hover .eav-localization-dropdown { display: block!important; }
 /* CSS for multi-level dropdown menu - source: http://bootsnipp.com/snippets/featured/multi-level-dropdown-menu-bs3 */
 
@@ -166,3 +167,4 @@ span.eav-entityselect-item-remove { display: block;position: absolute;right: 0px
 }
 /* must hide help-block because of duplicate description */
 .help-block { display:none; }
+.eav-label { padding-right:150px; }

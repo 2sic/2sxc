@@ -106,10 +106,23 @@ namespace ToSic.SexyContent.ViewAPI
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         [ValidateAntiForgeryToken]
-		public HttpResponseMessage RenderTemplate([FromUri] int templateId)
+		public HttpResponseMessage RenderTemplate([FromUri] int templateId, [FromUri] string lang)
         {
             try
             {
+                // Try setting thread language to enable 2sxc to render the template in this language
+                if(!String.IsNullOrEmpty(lang))
+                {
+                    try
+                    {
+                        var culture = System.Globalization.CultureInfo.GetCultureInfo(lang);
+                        System.Threading.Thread.CurrentThread.CurrentCulture = culture;
+                    }
+                    catch (System.Globalization.CultureNotFoundException) // Fallback if the language specified has not been found
+                    { }
+                }
+                
+
 				var template = Sexy.Templates.GetTemplate(templateId);
 
                 var engine = EngineFactory.CreateEngine(template);
