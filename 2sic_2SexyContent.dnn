@@ -402,6 +402,10 @@
             <assembly>
               <name>ToSic.SexyContent.dll</name>
             </assembly>
+            <!-- trying to include pdb - not possible because the installer will skip anything other than dlls -->
+            <!--<assembly>
+              <name>ToSic.SexyContent.pdb</name>
+            </assembly>-->
             <assembly>
               <name>ToSic.SexyContent.Razor.dll</name>
             </assembly>
@@ -472,6 +476,17 @@
             </file>
           </files>
         </component>
+        
+        <!-- special set of files - the PDB files must also go into the bin folder-->
+        <!-- proof of concept: it works, but shows a warning in the first install step, so not a good idea :( -->
+        <!--<component type="File">
+          <files>
+            <basePath></basePath>
+            <file>
+              <name>bin/ToSic.SexyContent.Razor.pdb</name>
+            </file>
+          </files>
+        </component>-->
 
         <component type="ResourceFile">
           <resourceFiles>
