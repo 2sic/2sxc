@@ -967,6 +967,7 @@
 
   
     <!-- the Image-Resizer Pro package - should be identical to the one from http://dnnimageresizer.codeplex.com-->
+    <!-- note that the version number needs the last digits, because otherwise the user will always be informed that it's already installed -->
     <package name="2sic_Imazen_ImageResizerPro" type="Library" version="04.00.05.01">
       <friendlyName>2sic presents Imazen ImageResizer Pro</friendlyName>
       <description>The Imazen ImageResizer Pro is the legendary ImageResizer by Imazen. The Pro-package contains some advanced plugins which are AGPL licensed. If you need non-AGPL components, use the 2sic_Imazen_ImageResizerLight or license the pro as a commercial component from Imazen. </description>
