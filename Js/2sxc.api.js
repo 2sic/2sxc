@@ -203,9 +203,9 @@
                     : result.data;                  // for angular $http
                             if (srvResp) {
                                 var msg = srvResp.Message;
-                                if (msg) infoText += "\n\nMessage: " + msg;
-                                var msgDet = srvResp.MessageDetail;
-                                if (msgDet) infoText += "\n\nDetail: " + msgDet;
+                                if (msg) infoText += "\nMessage: " + msg;
+                                var msgDet = srvResp.MessageDetail || srvResp.ExceptionMessage;
+                                if (msgDet) infoText += "\nDetail: " + msgDet;
 
 
                                 if (msgDet && msgDet.indexOf("No action was found") === 0)
@@ -218,7 +218,7 @@
                                     infoText += "\n\nTip from 2sxc: you probably spelled the controller name wrong or forgot to remove the word 'controller' from the call in JS. To call a controller called 'DemoController' only use 'Demo'.";
 
                             }
-                            infoText += "\n\nFor further debugging view the JS-console or use fiddler. ";
+                            infoText += "\n\nif you are an advanced user you can learn more about what went wrong - discover how on 2sxc.org/help?tag=debug";
                             alert(infoText);
             }
         };
