@@ -115,7 +115,7 @@ span.eav-entityselect-item-remove { display: block;position: absolute;right: 0px
 .eav-localization-lock { float: right; display: inline-block; }
 .eav-localization-lock-open { color: #228b22; }
 .eav-localization-dropdown { margin-top: 0px; display:none!important;  }
-.eav-localization:hover .eav-localization-dropdown { display: block!important; }
+.eav-localization:hover > .eav-localization-dropdown { display: block!important; }
 /* CSS for multi-level dropdown menu - source: http://bootsnipp.com/snippets/featured/multi-level-dropdown-menu-bs3 */
 
 .dropdown-submenu {
@@ -132,8 +132,10 @@ span.eav-entityselect-item-remove { display: block;position: absolute;right: 0px
     border-radius: 0 6px 6px 6px;
 }
 
+.dropdown-submenu .dropdown-menu { display:none!important; }
+
 .dropdown-submenu:hover>.dropdown-menu {
-    display: block;
+    display: block!important;
 }
 
 .dropdown-submenu>a:after {

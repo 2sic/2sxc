@@ -837,7 +837,7 @@ angular.module('eavEditTemplates', []).run(['$templateCache', function($template
 
 
   $templateCache.put('localization/formly-localization-wrapper.html',
-    "<eav-localization-scope-control></eav-localization-scope-control><div ng-if=!!value><formly-transclude></formly-transclude><eav-localization-menu field-model=model[options.key] options=options value=value index=index></eav-localization-menu></div><p class=bg-info style=padding:12px ng-if=!value translate=LangWrapper.CreateValueInDefFirst translate-values=\"{ fieldname: '{{to.label}}' }\">Please... <i>'{{to.label}}'</i> in the def...</p>"
+    "<eav-localization-scope-control></eav-localization-scope-control><div ng-if=!!value><formly-transclude></formly-transclude><eav-localization-menu form-model=model field-model=model[options.key] options=options value=value index=index></eav-localization-menu></div><p class=bg-info style=padding:12px ng-if=!value translate=LangWrapper.CreateValueInDefFirst translate-values=\"{ fieldname: '{{to.label}}' }\">Please... <i>'{{to.label}}'</i> in the def...</p>"
   );
 
 
@@ -847,7 +847,7 @@ angular.module('eavEditTemplates', []).run(['$templateCache', function($template
 
 
   $templateCache.put('localization/localization-menu.html',
-    "<div dropdown is-open=status.isopen class=eav-localization><a class=eav-localization-lock ng-click=vm.actions.toggleTranslate(); ng-if=vm.isDefaultLanguage() title={{vm.tooltip()}} ng-class=\"{ 'eav-localization-lock-open': !options.templateOptions.disabled }\" dropdown-toggle>{{vm.infoMessage()}} <i class=\"glyphicon glyphicon-globe\"></i></a><ul class=\"dropdown-menu multi-level pull-right eav-localization-dropdown\" role=menu aria-labelledby=single-button><li role=menuitem><a ng-click=vm.actions.translate() translate=LangMenu.Unlink></a></li><li role=menuitem><a ng-click=vm.actions.linkDefault() translate=LangMenu.LinkDefault></a></li><li role=menuitem class=dropdown-submenu><a href=# translate=LangMenu.GoogleTranslate></a><ul class=dropdown-menu><li ng-repeat=\"language in vm.languages.languages\" class=disabled role=menuitem><a ng-click=vm.actions.autoTranslate(language.key) title={{language.name}} href=#>{{language.key}}</a></li></ul></li><li role=menuitem class=dropdown-submenu><a href=# translate=LangMenu.Copy></a><ul class=dropdown-menu><li ng-repeat=\"language in vm.languages.languages\" ng-class=\"{ disabled: options.templateOptions.disabled || !vm.hasLanguage(language.key) }\" role=menuitem><a ng-click=vm.actions.copyFrom(language.key) title={{language.name}} href=#>{{language.key}}</a></li></ul></li><li role=menuitem class=dropdown-submenu><a href=# translate=LangMenu.Use></a><ul class=dropdown-menu><li ng-repeat=\"language in vm.languages.languages\" ng-class=\"{ disabled: !vm.hasLanguage(language.key) }\" role=menuitem><a ng-click=vm.actions.useFrom(language.key) title={{language.name}} href=#>{{language.key}}</a></li></ul></li><li role=menuitem class=dropdown-submenu><a href=# translate=LangMenu.Share></a><ul class=dropdown-menu><li ng-repeat=\"language in vm.languages.languages\" ng-class=\"{ disabled: !vm.hasLanguage(language.key) }\" role=menuitem><a ng-click=vm.actions.shareFrom(language.key) title={{language.name}} href=#>{{language.key}}</a></li></ul></li></ul></div>"
+    "<div dropdown is-open=status.isopen class=eav-localization><a class=eav-localization-lock ng-click=vm.actions.toggleTranslate(); ng-if=vm.isDefaultLanguage() title={{vm.tooltip()}} ng-class=\"{ 'eav-localization-lock-open': !options.templateOptions.disabled }\" dropdown-toggle>{{vm.infoMessage()}} <i class=\"glyphicon glyphicon-globe\"></i></a><ul class=\"dropdown-menu multi-level pull-right eav-localization-dropdown\" role=menu aria-labelledby=single-button><li role=menuitem><a ng-click=vm.actions.translate() translate=LangMenu.Unlink></a></li><li role=menuitem><a ng-click=vm.actions.linkDefault() translate=LangMenu.LinkDefault></a></li><li role=menuitem class=dropdown-submenu><a href=# translate=LangMenu.Copy></a><ul class=dropdown-menu><li ng-repeat=\"language in vm.languages.languages\" ng-class=\"{ disabled: options.templateOptions.disabled || !vm.hasLanguage(language.key) }\" role=menuitem><a ng-click=vm.actions.copyFrom(language.key) title={{language.name}} href=#>{{language.key}}</a></li></ul></li><li role=menuitem class=dropdown-submenu><a href=# translate=LangMenu.Use></a><ul class=dropdown-menu><li ng-repeat=\"language in vm.languages.languages\" ng-class=\"{ disabled: !vm.hasLanguage(language.key) }\" role=menuitem><a ng-click=vm.actions.useFrom(language.key) title={{language.name}} href=#>{{language.key}}</a></li></ul></li><li role=menuitem class=dropdown-submenu><a href=# translate=LangMenu.Share></a><ul class=dropdown-menu><li ng-repeat=\"language in vm.languages.languages\" ng-class=\"{ disabled: !vm.hasLanguage(language.key) }\" role=menuitem><a ng-click=vm.actions.shareFrom(language.key) title={{language.name}} href=#>{{language.key}}</a></li></ul></li><li class=divider></li><li role=menuitem class=dropdown-submenu><a href=# translate=LangMenu.AllFields></a><ul class=dropdown-menu><li role=menuitem><a ng-click=vm.actions.all.translate() translate=LangMenu.Unlink></a></li><li role=menuitem><a ng-click=vm.actions.all.linkDefault() translate=LangMenu.LinkDefault></a></li><li role=menuitem class=dropdown-submenu><a href=# translate=LangMenu.Copy></a><ul class=dropdown-menu><li ng-repeat=\"language in vm.languages.languages\" role=menuitem><a ng-click=vm.actions.all.copyFrom(language.key) title={{language.name}} href=#>{{language.key}}</a></li></ul></li><li role=menuitem class=dropdown-submenu><a href=# translate=LangMenu.Use></a><ul class=dropdown-menu><li ng-repeat=\"language in vm.languages.languages\" role=menuitem><a ng-click=vm.actions.all.useFrom(language.key) title={{language.name}} href=#>{{language.key}}</a></li></ul></li><li role=menuitem class=dropdown-submenu><a href=# translate=LangMenu.Share></a><ul class=dropdown-menu><li ng-repeat=\"language in vm.languages.languages\" role=menuitem><a ng-click=vm.actions.all.shareFrom(language.key) title={{language.name}} href=#>{{language.key}}</a></li></ul></li></ul></li></ul></div>"
   );
 
 
@@ -984,7 +984,6 @@ angular.module('eavEditTemplates', []).run(['$templateCache', function($template
 					if (oldValue === undefined || newValue == oldValue)
 						return;
 					initCurrentValue();
-					console.log("switched language from " + oldValue + " to " + newValue);
 				});
 
 				// ToDo: Could cause performance issues (deep watch array)...
@@ -998,19 +997,21 @@ angular.module('eavEditTemplates', []).run(['$templateCache', function($template
 		};
 	});
 
-	eavLocalization.directive("eavLocalizationMenu", function() {
+	eavLocalization.directive("eavLocalizationMenu", function () {
 		return {
 			restrict: "E",
 			scope: {
 				fieldModel: "=fieldModel",
 				options: "=options",
 				value: "=value",
-                index: "=index"
+				index: "=index",
+                formModel: "=formModel"
 			},
 			templateUrl: "localization/localization-menu.html",
 			link: function (scope, element, attrs) { },
 			controllerAs: "vm",
 			controller: ["$scope", "languages", "$translate", function ($scope, languages, $translate) {
+
 			    var vm = this;
 			    var lblDefault = $translate.instant("LangMenu.UseDefault");
 			    var lblIn = $translate.instant("LangMenu.In");
@@ -1061,27 +1062,69 @@ angular.module('eavEditTemplates', []).run(['$templateCache', function($template
 				    linkDefault: function linkDefault() {
 				        vm.fieldModel.removeLanguage(languages.currentLanguage);
 				    },
-				    autoTranslate: function(languageKey) {
-				        alert(translate("LangMenu.NotImplemented"));
+				    autoTranslate: function (languageKey) {
+				        // Google translate is not implemented yet, because
+                        // there is no longer a free api.
+				        alert($translate.instant("LangMenu.NotImplemented"));
 				    },
 				    copyFrom: function (languageKey) {
 				        if ($scope.options.templateOptions.disabled)
-				            alert(translate("LangMenu.CopyNotPossible"));
-				        var value = vm.fieldModel.getVsWithLanguage(languageKey).Value;
-				        $scope.value.Value = value;
+				            alert($translate.instant("LangMenu.CopyNotPossible"));
+				        else {
+				            var value = vm.fieldModel.getVsWithLanguage(languageKey).Value;
+				            if (vs === null || vs === undefined)
+				                console.log($scope.options.key + ": Can't copy value from " + languageKey + ' because that value does not exist.');
+				            else
+				                $scope.value.Value = value;
+				        }
 				    },
 				    useFrom: function (languageKey) {
-				        vm.fieldModel.removeLanguage(languages.currentLanguage);
 				        var vs = vm.fieldModel.getVsWithLanguage(languageKey);
-				        vs.setLanguage(languages.currentLanguage, true);
+				        if (vs === null || vs === undefined)
+				            console.log($scope.options.key + ": Can't use value from " + languageKey + ' because that value does not exist.');
+				        else {
+				            vm.fieldModel.removeLanguage(languages.currentLanguage);
+				            vs.setLanguage(languages.currentLanguage, true);
+				        }
 				    },
 				    shareFrom: function (languageKey) {
-				        vm.fieldModel.removeLanguage(languages.currentLanguage);
 				        var vs = vm.fieldModel.getVsWithLanguage(languageKey);
-				        vs.setLanguage(languages.currentLanguage, false);
+				        if (vs === null || vs === undefined)
+				            console.log($scope.options.key + ": Can't share value from " + languageKey + ' because that value does not exist.');
+				        else {
+				            vm.fieldModel.removeLanguage(languages.currentLanguage);
+				            vs.setLanguage(languages.currentLanguage, false);
+				        }
+				    },
+				    all: {
+				        translate: function translate() {
+				            forAllMenus('translate');
+				        },
+				        linkDefault: function linkDefault() {
+				            forAllMenus('linkDefault');
+				        },
+				        copyFrom: function (languageKey) {
+				            forAllMenus('copyFrom', languageKey);
+				        },
+				        useFrom: function (languageKey) {
+				            forAllMenus('useFrom', languageKey);
+				        },
+				        shareFrom: function (languageKey) {
+				            forAllMenus('shareFrom', languageKey);
+				        }
 				    }
 				};
 
+			    // Collect all localizationMenus (to enable "all" actions)
+				if ($scope.formModel.localizationMenus === undefined)
+				    $scope.formModel.localizationMenus = [];
+				$scope.formModel.localizationMenus.push(vm.actions);
+
+				var forAllMenus = function (action, languageKey) {
+				    for (var i = 0; i < $scope.formModel.localizationMenus.length; i++) {
+				        $scope.formModel.localizationMenus[i][action](languageKey);
+				    }
+				};
 			}]
 		};
 	});
