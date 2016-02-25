@@ -93,7 +93,18 @@ namespace ToSic.SexyContent.EAV.Implementation.ValueConverter
             if (fileInfo == null)
                 return defaultValue;
 
-            return Path.Combine(new PortalSettings(fileInfo.PortalId).HomeDirectory, fileInfo.RelativePath);
+            #region special handling of issues in case something in the background is broken
+            // there are cases where the PortalSettins will be null or something, and in these cases the serializer would break down
+            // so this is to just ensure that if it can't be converted, it'll just fall back
+            try
+            {
+                return Path.Combine(new PortalSettings(fileInfo.PortalId)?.HomeDirectory ?? "", fileInfo?.RelativePath ?? "");
+            }
+            catch
+            {
+                return defaultValue;
+            }
+            #endregion
         }
 
         private string ResolvePageLink(int linkId, string defaultValue)
