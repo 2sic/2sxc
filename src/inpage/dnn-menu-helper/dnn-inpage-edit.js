@@ -8,7 +8,7 @@ var $2sxcActionMenuMapper = function (moduleId) {
             $2sxc(moduleId).manage.action({ 'action': 'layout' });
         },
         addItem: function () {
-            $2sxc(moduleId).manage.action({ 'action': 'add', 'useModuleList': true });
+            $2sxc(moduleId).manage.action({ 'action': 'add', 'useModuleList': true, 'sortOrder': 0 });
         },
         edit: function () {
             $2sxc(moduleId).manage.action({ 'action': 'edit', 'useModuleList': true, 'sortOrder': 0 });
