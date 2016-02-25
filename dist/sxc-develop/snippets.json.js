@@ -1245,7 +1245,7 @@
             "subset": "Permissions",
             "name": "UserMayEditContent",
             "title": "",
-            "content": "@if(Environment.Permissions.UserMayEditContent)\r\n{\r\n       <!-- stuff, like a custom edit toolbar - here an example -->\r\n       <ul class=\"sc-menu\" data-toolbar='{ \"action\": \"new\", \"contentType\": \"Gallery Image\", \"prefill\": { \"File\": \"File:@c.Image.FileId\" } }'></ul>\r\n}",
+            "content": "@if(Permissions.UserMayEditContent)\r\n{\r\n       <!-- stuff, like a custom edit toolbar - here an example -->\r\n       <ul class=\"sc-menu\" data-toolbar='{ \"action\": \"new\", \"contentType\": \"Gallery Image\", \"prefill\": { \"File\": \"File:@c.Image.FileId\" } }'></ul>\r\n}",
             "help": ""
         },
         {
