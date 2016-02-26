@@ -5,22 +5,22 @@
 var $2sxcActionMenuMapper = function (moduleId) {
     return {
         changeLayoutOrContent: function () {
-            $2sxc(moduleId).manage.action({ 'action': 'layout' });
+            $2sxc(moduleId).manage.action({ "action": "layout" });
         },
         addItem: function () {
-            $2sxc(moduleId).manage.action({ 'action': 'add', 'useModuleList': true });
+            $2sxc(moduleId).manage.action({ "action": "add", "useModuleList": true, "sortOrder": 0 });
         },
         edit: function () {
-            $2sxc(moduleId).manage.action({ 'action': 'edit', 'useModuleList': true, 'sortOrder': 0 });
+            $2sxc(moduleId).manage.action({ "action": "edit", "useModuleList": true, "sortOrder": 0 });
         },
         adminApp: function () {
-            $2sxc(moduleId).manage.action({ 'action': 'app' });
+            $2sxc(moduleId).manage.action({ "action": "app" });
         },
         adminZone: function () {
-            $2sxc(moduleId).manage.action({ 'action': 'zone' });
+            $2sxc(moduleId).manage.action({ "action": "zone" });
         },
         develop: function () {
-            $2sxc(moduleId).manage.action({ 'action': 'develop' });
+            $2sxc(moduleId).manage.action({ "action": "develop" });
         }
     };
 };
@@ -133,7 +133,8 @@ $2sxc.getManageController = function (id) {
     var moduleElement = $(".DnnModule-" + id);
     var manageInfo = $.parseJSON(moduleElement.find("div[data-2sxc]").attr("data-2sxc")).manage;
     var sxcGlobals = $.parseJSON(moduleElement.find("div[data-2sxc-globals]").attr("data-2sxc-globals"));
-    manageInfo.ngDialogUrl = manageInfo.applicationRoot + "desktopmodules/tosic_sexycontent/dist/dnn/ui.html";
+    manageInfo.ngDialogUrl = manageInfo.applicationRoot + "desktopmodules/tosic_sexycontent/dist/dnn/ui.html?v="
+        + manageInfo.config.version;
 
     manageInfo.ngDialogParams = {
         zoneId: manageInfo.zoneId,

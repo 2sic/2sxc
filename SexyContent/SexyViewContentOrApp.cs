@@ -37,10 +37,10 @@ namespace ToSic.SexyContent
 				if (UserMayEditThisModule)
 				{
 				    var root = "~/desktopmodules/tosic_sexycontent/";
-				    var ext = string.IsNullOrEmpty(Request.QueryString["debug"]) ? ".min.js" : ".js"; // ".min.js";
+				    var ext = string.IsNullOrEmpty(Request.QueryString["debug"]) ? ".min.js" : ".js"; 
 
                     // add edit-mode CSS
-                    ClientResourceManager.RegisterStyleSheet(Page, root + "dist/inpage/inpage.min.css");//"edit.css");
+                    ClientResourceManager.RegisterStyleSheet(Page, root + "dist/inpage/inpage.min.css");
 
 					// ToDo: Move these RegisterScripts to JS to prevent including AngularJS twice (from other modules)
                     ClientResourceManager.RegisterScript(Page, root + "js/angularjs/angular.min.js", 80);
@@ -80,11 +80,11 @@ namespace ToSic.SexyContent
                             templateChooserVisible,
                             hasContent,
                             isContentApp = IsContentApp,
-                            zoneId = ZoneId.HasValue ? ZoneId.Value : 0,
+                            zoneId = ZoneId ?? 0,
                             appId = AppId,
                             isList = AppId.HasValue && ContentGroup.Content.Count > 1,
-                            templateId = Template != null ? Template.TemplateId : new int?(),
-                            contentTypeId = Template != null ? Template.ContentTypeStaticName : "",
+                            templateId = Template?.TemplateId,
+                            contentTypeId = Template?.ContentTypeStaticName ?? "",
                             config = new
                             {
                                 portalId = PortalId,
@@ -95,7 +95,8 @@ namespace ToSic.SexyContent
                                 returnUrl = Request.RawUrl,
                                 appPath = AppId.HasValue ? Sexy.App.Path + "/" : null,
                                 cultureDimension = AppId.HasValue ? Sexy.GetCurrentLanguageID() : new int?(),
-                                isList = Template != null && Template.UseForList
+                                isList = Template != null && Template.UseForList,
+                                version = SexyContent.ModuleVersion
                             },
                             user = new
                             {
