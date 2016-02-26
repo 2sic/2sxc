@@ -96,7 +96,7 @@ namespace ToSic.SexyContent
                                 appPath = AppId.HasValue ? Sexy.App.Path + "/" : null,
                                 cultureDimension = AppId.HasValue ? Sexy.GetCurrentLanguageID() : new int?(),
                                 isList = Template != null && Template.UseForList,
-                                version = SexyContent.ModuleVersion
+                                version = SexyContent.Version.ToString()
                             },
                             user = new
                             {

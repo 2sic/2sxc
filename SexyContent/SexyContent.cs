@@ -49,6 +49,9 @@ namespace ToSic.SexyContent
         #region Constants
 
         public const string ModuleVersion = "08.02.03"; // always the newest version
+
+        public static readonly Version Version = Assembly.GetExecutingAssembly().GetName().Version;
+
         public const string TemplateID = "TemplateID";
 		public const string ContentGroupGuidString = "ToSIC_SexyContent_ContentGroupGuid";
         public const string AppIDString = "AppId";
@@ -81,7 +84,7 @@ namespace ToSic.SexyContent
             public const string EditTemplateFile = "edittemplatefile";
             public const string EditTemplateDefaults = "edittemplatedefaults";
             public const string GettingStarted = "gettingstarted";
-            public const string PortalConfiguration = "portalconfiguration";
+            //public const string PortalConfiguration = "portalconfiguration";
             public const string EditDataSource = "editdatasource";
             public const string AppExport = "appexport";
             public const string AppImport = "appimport";
@@ -138,12 +141,7 @@ namespace ToSic.SexyContent
         // must cache App, it gets re-created on each single call - about 10x per request!
         private App _app;
         public App App {
-            get
-            {
-                if(_app == null)
-                    _app = GetApp(ZoneId.Value, AppId.Value, OwnerPS);
-                return _app; // GetApp(ZoneId.Value, AppId.Value, OwnerPS);
-        }
+            get { return _app ?? (_app = GetApp(ZoneId.Value, AppId.Value, OwnerPS)); }
         }
 
         public PortalSettings OwnerPS { get; set; }

@@ -8,22 +8,20 @@
     <script src="../../js/2sxc.api.min.js"></script>
     <script>
         // the version to append to each asset, to ensure reload after an upgrade
-        var sxcVersionParam = "sxcver=" /*"08.02.03"*/ + $2sxc.urlParams.require("v");
+        var sxcVersionParam = "sxcver=" + $2sxc.urlParams.require("sxcver");
 
         // this creates an object on $.ServicesFramework
         // it looks like the DNN object and is necessary so that scripts relying on it will work
         // it basically fakes it, but contains the correct infos like getTabId etc. without needing the full DNN
         function createFakeSf(apiUrl) {
-            if (window.$ === undefined)
-                window.$ = {};
-            var dollar = window.$;
-            var modId = $2sxc.urlParams.require("mid");
-            if (modId === "")
+            if ($2sxc.urlParams.require("mid") === "")
                 alert("ModuleId (mid) missing - cannot continue");
-            dollar.ServicesFramework = function (id) {
+            if (window.$ === undefined) 
+                window.$ = {};
+            window.$.ServicesFramework = function (id) {
                 return {
                     name: "This is a fake DNN ServicesFramework",
-                    description: "It enables stuff to work which thinks it needs this, but doesn't really",
+                    description: "It enables stuff requiring (but not really needing) the sf to work",
                     getTabId: function () { return $2sxc.urlParams.require("tid"); },
                     getAntiForgeryValue: function () { return "abcdefgihjklmnop"; },
                     getServiceRoot: function () { return apiUrl; }

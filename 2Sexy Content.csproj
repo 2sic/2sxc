@@ -189,13 +189,6 @@
     <Compile Include="Administration\Apps\AppExport.ascx.designer.cs">
       <DependentUpon>AppExport.ascx</DependentUpon>
     </Compile>
-    <Compile Include="Administration\Apps\x AppManagement.ascx.cs">
-      <DependentUpon>x AppManagement.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Administration\Apps\x AppManagement.ascx.designer.cs">
-      <DependentUpon>x AppManagement.ascx</DependentUpon>
-    </Compile>
     <Compile Include="Administration\Apps\AppImport.ascx.cs">
       <DependentUpon>AppImport.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -397,7 +390,6 @@
   <ItemGroup>
     <Content Include=".gitignore" />
     <Content Include="Administration\Apps\AppExport.ascx" />
-    <Content Include="Administration\Apps\x AppManagement.ascx" />
     <Content Include="Administration\Apps\AppImport.ascx" />
     <Content Include="Administration\Export.js" />
     <Content Include="Administration\ContentTypeAndDemoSelector.ascx" />
@@ -640,15 +632,11 @@
     <Content Include="Administration\App_LocalResources\Registers.ascx.de-DE.resx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Administration\Apps\App_LocalResources\AppConfig.ascx.resx" />
     <Content Include="Administration\App_LocalResources\WebApiHelp.ascx.resx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="SexyContent\Statics\" />
     <Folder Include="Upgrade\Log\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Administration\Apps\App_LocalResources\AppManagement.ascx.resx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Administration\Apps\App_LocalResources\AppImport.ascx.resx" />

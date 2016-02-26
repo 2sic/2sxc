@@ -14,8 +14,9 @@ $2sxc.getManageController = function (id) {
     var moduleElement = $(".DnnModule-" + id);
     var manageInfo = $.parseJSON(moduleElement.find("div[data-2sxc]").attr("data-2sxc")).manage;
     var sxcGlobals = $.parseJSON(moduleElement.find("div[data-2sxc-globals]").attr("data-2sxc-globals"));
-    manageInfo.ngDialogUrl = manageInfo.applicationRoot + "desktopmodules/tosic_sexycontent/dist/dnn/ui.html?v="
+    manageInfo.ngDialogUrl = manageInfo.applicationRoot + "desktopmodules/tosic_sexycontent/dist/dnn/ui.html?sxcver="
         + manageInfo.config.version;
+
 
     manageInfo.ngDialogParams = {
         zoneId: manageInfo.zoneId,
@@ -38,6 +39,7 @@ $2sxc.getManageController = function (id) {
     var enableTools = manageInfo.user.canDesign;
     var enableDevelop = manageInfo.user.canDevelop;
     var isContent = manageInfo.isContentApp;
+    var isDebug = $2sxc.urlParams.get("debug") ? "&debug=true" : "";
 
     function buttonConfig(name, translateKey, icon, show,  uiOnly, more) {
         return extend({
@@ -304,7 +306,8 @@ $2sxc.getManageController = function (id) {
 
                     return manageInfo.ngDialogUrl
                         + "#" + $.param(manageInfo.ngDialogParams)
-                        + "&" + $.param(cmd.params);
+                        + "&" + $.param(cmd.params)
+                        + isDebug;
                     //#endregion
                 }
             };
