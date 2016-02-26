@@ -20,7 +20,6 @@
     </fieldset>
     <ul class="dnnActions dnnClear">
         <li><asp:LinkButton ID="btnUpload" runat="server" CssClass="dnnPrimaryAction" ResourceKey="btnUpload" OnClick="btnUpload_Click"></asp:LinkButton></li>
-        <li style="display:none"><asp:Hyperlink ID="hlkExport" runat="server" CssClass="dnnSecondaryAction" ResourceKey="btnExport"></asp:Hyperlink></li>
     </ul>
 </asp:Panel>
 

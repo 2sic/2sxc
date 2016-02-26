@@ -6,7 +6,7 @@
         data-moduleid="<%= ModuleId %>" class="sc-selector-wrapper" 
         ng-include="'template-selector/template-selector.html'"
         <%-- note that the importappdialog is only needed, till import-app works in angular-only --%>
-        data-importAppDialog="<%= EditUrl("", "", SexyContent.ControlKeys.AppImport) %>"
+        data-importAppDialog="<%= EditUrl("", "", "appimport") %>"
         > 
     </div>
 </asp:Placeholder>

@@ -11,10 +11,11 @@ namespace ToSic.SexyContent
     public partial class Import : SexyControlAdminBase
     {
 
-        protected void Page_Load(object sender, EventArgs e)
-        {
-            hlkExport.NavigateUrl =  EditUrl(TabId, SexyContent.ControlKeys.Export, true, "mid=" + ModuleId + "&" + SexyContent.AppIDString + "=" + AppId);
-        }
+        // 2016-02-26 2dm probably not needed any more
+        //protected void Page_Load(object sender, EventArgs e)
+        //{
+        //    hlkExport.NavigateUrl =  EditUrl(TabId, SexyContent.ControlKeys.Export, true, "mid=" + ModuleId + "&" + SexyContent.AppIDString + "=" + AppId);
+        //}
 
         protected void btnUpload_Click(object sender, EventArgs e)
         {

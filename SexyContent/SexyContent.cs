@@ -48,9 +48,11 @@ namespace ToSic.SexyContent
     {
         #region Constants
 
-        public const string ModuleVersion = "08.02.03"; // always the newest version
 
         public static readonly Version Version = Assembly.GetExecutingAssembly().GetName().Version;
+        public static readonly string ModuleVersion = Assembly.GetExecutingAssembly().GetName().Version.Major.ToString("00") + "."
+            + Assembly.GetExecutingAssembly().GetName().Version.Minor.ToString("00") + "."
+            + Assembly.GetExecutingAssembly().GetName().Version.Build.ToString("00");
 
         public const string TemplateID = "TemplateID";
 		public const string ContentGroupGuidString = "ToSIC_SexyContent_ContentGroupGuid";
@@ -66,34 +68,6 @@ namespace ToSic.SexyContent
         public const string TokenReplace = "Token";
 	    public const string InternalUserName = "Internal";
 
-        public static class ControlKeys
-        {
-            public const string View = "";
-            public const string Settings = "settings";
-            public const string SettingsWrapper = "settingswrapper";
-            public const string EavManagement = "eavmanagement";
-            public const string EditContentGroup = "editcontentgroup";
-            public const string EditTemplate = "edittemplate";
-            public const string ManageTemplates = "managetemplates";
-            public const string EditList = "editlist";
-            public const string TemplateHelp = "templatehelp";
-            public const string Export = "export";
-            public const string Import = "import";
-            public const string DataExport = "dataexport";
-            public const string DataImport = "dataimport";
-            public const string EditTemplateFile = "edittemplatefile";
-            public const string EditTemplateDefaults = "edittemplatedefaults";
-            public const string GettingStarted = "gettingstarted";
-            //public const string PortalConfiguration = "portalconfiguration";
-            public const string EditDataSource = "editdatasource";
-            public const string AppExport = "appexport";
-            public const string AppImport = "appimport";
-            public const string AppConfig = "appconfig";
-			public const string PipelineManagement = "pipelinemanagement";
-			public const string PipelineDesigner = "pipelinedesigner";
-            public const string WebApiHelp = "WebApiHelp";
-            public const string Permissions = "Permissions";
-        }
 
         public const string PortalHostDirectory = "~/Portals/_default/";
         public const string LocationIDCurrentPortal = "Portal File System";
@@ -118,7 +92,6 @@ namespace ToSic.SexyContent
         public const string AttributeSetStaticNameApps = "2SexyContent-App";
         public const string AttributeSetStaticNameAppResources = "App-Resources";
         public const string AttributeSetStaticNameAppSettings = "App-Settings";
-        //public const string TemporaryDirectory = "~/DesktopModules/ToSIC_SexyContent/Temporary";
         public const string ToSexyDirectory = "~/DesktopModules/ToSIC_SexyContent";
         public const string TemporaryDirectory = "~/DesktopModules/ToSIC_SexyContent/_";
         #endregion
@@ -586,83 +559,6 @@ namespace ToSic.SexyContent
 
         #endregion
 
-        #region URL Handling / Toolbar
-        
-        /// <summary>
-        /// Get the URL for editing MetaData
-        /// </summary>
-        /// <param name="tabId"></param>
-        /// <param name="moduleId"></param>
-        /// <param name="returnUrl"></param>
-        /// <param name="portalSettings"></param>
-        /// <param name="control"></param>
-        /// <param name="attributeSetStaticName"></param>
-        /// <param name="assignmentObjectTypeID"></param>
-        /// <param name="keyNumber"></param>
-        /// <returns></returns>
-        public string GetMetaDataEditUrl(int tabId, int moduleId, string returnUrl, Control control, string attributeSetStaticName, int assignmentObjectTypeID, int keyNumber)
-        {
-            var assignedEntity = DataSource.GetMetaDataSource(ZoneId.Value, AppId.Value).GetAssignedEntities(assignmentObjectTypeID, keyNumber, attributeSetStaticName).FirstOrDefault();
-            var entityId = assignedEntity == null ? new int?() : assignedEntity.EntityId;
-
-            return GetEntityEditLink(entityId , moduleId, tabId, attributeSetStaticName, returnUrl,
-                    assignmentObjectTypeID, keyNumber);
-        }
-
-        private string GetEntityEditLink(int? entityId, int moduleId, int tabId, string attributeSetStaticName, string returnUrl, int? assignmentObjectTypeId, int? keyNumber)
-        {
-            var editUrl = Globals.NavigateURL(tabId, ControlKeys.EditContentGroup, new[] { "mid", moduleId.ToString(), "AppId", AppId.ToString(),
-                "AttributeSetName", attributeSetStaticName, "AssignmentObjectTypeId", assignmentObjectTypeId.ToString(), "KeyNumber", keyNumber.ToString() });
-            editUrl += (editUrl.IndexOf("?") == -1 ? "?" : "&") + "popUp=true&ReturnUrl=" + HttpUtility.UrlEncode(returnUrl);
-
-            if (!entityId.HasValue)
-                editUrl += "&EditMode=New";
-            else
-                editUrl += "&EntityId=" + entityId.Value;
-
-            // If Culture exists, add CultureDimension
-            var languageId = GetCurrentLanguageID();
-            if (languageId.HasValue)
-                editUrl += "&CultureDimension=" + languageId;
-
-            return editUrl;
-        }
-
-        /// <summary>
-        /// Returns the Edit Link for given GroupID and SortOrder
-        /// </summary>
-        /// <param name="Element"></param>
-        /// <param name="ModuleID"></param>
-        /// <param name="TabID"></param>
-        /// <param name="UserID"></param>
-        /// <param name="ReturnUrl"></param>
-        /// <returns></returns>
-        public string GetElementEditLink(Guid ContentGroupID, int SortOrder, int ModuleID, int TabID, string ReturnUrl)
-        {
-            var EditUrl = Globals.NavigateURL(TabID, ControlKeys.EditContentGroup, "mid", ModuleID.ToString(), SortOrderString, SortOrder.ToString(), "ContentGroupID", ContentGroupID.ToString());
-            EditUrl += (EditUrl.IndexOf("?") == -1 ? "?" : "&") + "popUp=true&ReturnUrl=" + HttpUtility.UrlEncode(ReturnUrl);
-
-            // If Culture exists, add CultureDimension
-            var LanguageID = GetCurrentLanguageID();
-            if(LanguageID.HasValue)
-                EditUrl += "&CultureDimension=" + LanguageID;
-
-            return EditUrl;
-        }
-
-        public string GetElementAddWithEditLink(Guid ContentGroupID, int DestinationSortOrder, int ModuleID, int TabID, string ReturnUrl)
-        {
-            return GetElementEditLink(ContentGroupID, DestinationSortOrder, ModuleID, TabID, ReturnUrl) + "&EditMode=New";
-        }
-
-        public string GetElementSettingsLink(Guid ContentGroupID, int sortOrder, int ModuleID, int TabID, string ReturnUrl)
-        {
-            var settingsUrl = Globals.NavigateURL(TabID, ControlKeys.SettingsWrapper, "mid", ModuleID.ToString(), ContentGroupGuidString, ContentGroupID.ToString(), "SortOrder", sortOrder.ToString(), "ItemType", sortOrder == -1 ? "ListContent" : "Content");
-            settingsUrl += (settingsUrl.IndexOf("?") == -1 ? "?" : "&") + "popUp=true&ReturnUrl=" + HttpUtility.UrlEncode(ReturnUrl);
-            return settingsUrl;
-        }
-
-        #endregion
 
         #region Apps
 
@@ -1278,6 +1174,126 @@ namespace ToSic.SexyContent
                     moduleController.UpdateModuleSetting(moduleByCulture.ModuleID, key, value);
             }
         }
+
+        #endregion
+
+
+        // --------------------------------------------------------------------------------------
+        #region removed / deprecated stuff, probably not needed any more
+
+        // 2016-02-26 2dm probably not needed any more
+        //public static class ControlKeys
+        //{
+        //    public const string View = "";
+        //    public const string Settings = "settings";
+        //    public const string SettingsWrapper = "settingswrapper";
+        //    public const string EavManagement = "eavmanagement";
+        //    public const string EditContentGroup = "editcontentgroup";
+        //    public const string EditTemplate = "edittemplate";
+        //    public const string ManageTemplates = "managetemplates";
+        //    public const string EditList = "editlist";
+        //    public const string TemplateHelp = "templatehelp";
+        //    public const string Export = "export";
+        //    public const string Import = "import";
+        //    public const string DataExport = "dataexport";
+        //    public const string DataImport = "dataimport";
+        //    public const string EditTemplateFile = "edittemplatefile";
+        //    public const string EditTemplateDefaults = "edittemplatedefaults";
+        //    public const string GettingStarted = "gettingstarted";
+        //    public const string PortalConfiguration = "portalconfiguration";
+        //    public const string EditDataSource = "editdatasource";
+        //    public const string AppExport = "appexport";
+        //    public const string AppImport = "appimport";
+        //    public const string AppConfig = "appconfig";
+        //    public const string PipelineManagement = "pipelinemanagement";
+        //    public const string PipelineDesigner = "pipelinedesigner";
+        //    public const string WebApiHelp = "WebApiHelp";
+        //    public const string Permissions = "Permissions";
+        //}
+
+
+        #region URL Handling / Toolbar
+
+        ///// <summary>
+        ///// Get the URL for editing MetaData
+        ///// </summary>
+        ///// <param name="tabId"></param>
+        ///// <param name="moduleId"></param>
+        ///// <param name="returnUrl"></param>
+        ///// <param name="portalSettings"></param>
+        ///// <param name="control"></param>
+        ///// <param name="attributeSetStaticName"></param>
+        ///// <param name="assignmentObjectTypeID"></param>
+        ///// <param name="keyNumber"></param>
+        ///// <returns></returns>
+        // 2016-02-26 2dm, probably not needed any more
+        //public string GetMetaDataEditUrl(int tabId, int moduleId, string returnUrl, Control control, string attributeSetStaticName, int assignmentObjectTypeID, int keyNumber)
+        //{
+        //    var assignedEntity = DataSource.GetMetaDataSource(ZoneId.Value, AppId.Value).GetAssignedEntities(assignmentObjectTypeID, keyNumber, attributeSetStaticName).FirstOrDefault();
+        //    var entityId = assignedEntity == null ? new int?() : assignedEntity.EntityId;
+
+        //    return GetEntityEditLink(entityId , moduleId, tabId, attributeSetStaticName, returnUrl,
+        //            assignmentObjectTypeID, keyNumber);
+        //}
+
+        // 2016-02-26 2dm, probably not needed any more
+        //private string GetEntityEditLink(int? entityId, int moduleId, int tabId, string attributeSetStaticName, string returnUrl, int? assignmentObjectTypeId, int? keyNumber)
+        //{
+        //    var editUrl = Globals.NavigateURL(tabId, ControlKeys.EditContentGroup, new[] { "mid", moduleId.ToString(), "AppId", AppId.ToString(),
+        //        "AttributeSetName", attributeSetStaticName, "AssignmentObjectTypeId", assignmentObjectTypeId.ToString(), "KeyNumber", keyNumber.ToString() });
+        //    editUrl += (editUrl.IndexOf("?") == -1 ? "?" : "&") + "popUp=true&ReturnUrl=" + HttpUtility.UrlEncode(returnUrl);
+
+        //    if (!entityId.HasValue)
+        //        editUrl += "&EditMode=New";
+        //    else
+        //        editUrl += "&EntityId=" + entityId.Value;
+
+        //    // If Culture exists, add CultureDimension
+        //    var languageId = GetCurrentLanguageID();
+        //    if (languageId.HasValue)
+        //        editUrl += "&CultureDimension=" + languageId;
+
+        //    return editUrl;
+        //}
+
+        ///// <summary>
+        ///// Returns the Edit Link for given GroupID and SortOrder
+        ///// </summary>
+        ///// <param name="Element"></param>
+        ///// <param name="ModuleID"></param>
+        ///// <param name="TabID"></param>
+        ///// <param name="UserID"></param>
+        ///// <param name="ReturnUrl"></param>
+        ///// <returns></returns>
+        // 2016-02-26 2dm, probably not needed any more
+        //public string GetElementEditLink(Guid ContentGroupID, int SortOrder, int ModuleID, int TabID, string ReturnUrl)
+        //{
+        //    var EditUrl = Globals.NavigateURL(TabID, ControlKeys.EditContentGroup, "mid", ModuleID.ToString(), SortOrderString, SortOrder.ToString(), "ContentGroupID", ContentGroupID.ToString());
+        //    EditUrl += (EditUrl.IndexOf("?") == -1 ? "?" : "&") + "popUp=true&ReturnUrl=" + HttpUtility.UrlEncode(ReturnUrl);
+
+        //    // If Culture exists, add CultureDimension
+        //    var LanguageID = GetCurrentLanguageID();
+        //    if(LanguageID.HasValue)
+        //        EditUrl += "&CultureDimension=" + LanguageID;
+
+        //    return EditUrl;
+        //}
+
+        // 2016-02-26 2dm, probably not needed any more
+        //public string GetElementAddWithEditLink(Guid ContentGroupID, int DestinationSortOrder, int ModuleID, int TabID, string ReturnUrl)
+        //{
+        //    return GetElementEditLink(ContentGroupID, DestinationSortOrder, ModuleID, TabID, ReturnUrl) + "&EditMode=New";
+        //}
+
+        // 2016-02-26 2dm, probably not needed any more
+        //public string GetElementSettingsLink(Guid ContentGroupID, int sortOrder, int ModuleID, int TabID, string ReturnUrl)
+        //{
+        //    var settingsUrl = Globals.NavigateURL(TabID, ControlKeys.SettingsWrapper, "mid", ModuleID.ToString(), ContentGroupGuidString, ContentGroupID.ToString(), "SortOrder", sortOrder.ToString(), "ItemType", sortOrder == -1 ? "ListContent" : "Content");
+        //    settingsUrl += (settingsUrl.IndexOf("?") == -1 ? "?" : "&") + "popUp=true&ReturnUrl=" + HttpUtility.UrlEncode(ReturnUrl);
+        //    return settingsUrl;
+        //}
+
+        #endregion
 
         #endregion
     }
