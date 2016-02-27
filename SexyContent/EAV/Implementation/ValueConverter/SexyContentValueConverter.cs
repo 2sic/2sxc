@@ -80,7 +80,7 @@ namespace ToSic.SexyContent.EAV.Implementation.ValueConverter
             var linkId = int.Parse(match.Groups["id"].Value);
             var linkType = match.Groups["type"].Value;
 
-            if (linkType == "Page")
+            if (linkType.ToLower() == "page")
             {
                 return ResolvePageLink(linkId, value);
             }

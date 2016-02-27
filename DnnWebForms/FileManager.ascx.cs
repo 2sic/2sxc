@@ -8,7 +8,9 @@ using System.Web.UI.WebControls;
 using DotNetNuke.Entities.Portals;
 using Telerik.Web.UI;
 using Telerik.Web.UI.Editor.DialogControls;
+using ToSic.Eav.Implementations.ValueConverter;
 using ToSic.SexyContent.EAV.FieldTemplates;
+using ToSic.SexyContent.EAV.Implementation.ValueConverter;
 
 namespace ToSic.SexyContent.EAV.FormlyEditUI.FieldTemplates.WebForms
 {
@@ -71,11 +73,19 @@ namespace ToSic.SexyContent.EAV.FormlyEditUI.FieldTemplates.WebForms
 			DialogOpener1.DialogDefinitions.Add("DocumentManager", GetDocumentManagerDefinition(paths));
 
 			DialogOpener1.HandlerUrl = "~/DesktopModules/Admin/RadEditorProvider/DialogHandler.aspx?portalid=" + PortalSettings.Current.PortalId + "&tabid=" + PortalSettings.Current.ActiveTab.TabID;
-			
-			if (!String.IsNullOrWhiteSpace(CurrentValue) && CurrentValue.StartsWith("File:"))
-				DialogOpener1.AdditionalQueryString = "&PreselectedItemUrl=" + HttpUtility.UrlEncode(SexyContent.ResolveHyperlinkValues(CurrentValue, PortalSettings.Current));
 
-			DialogOpener1.EnableEmbeddedSkins = _editorProvider._editor.EnableEmbeddedSkins;
+		    if (!String.IsNullOrWhiteSpace(CurrentValue) && CurrentValue.StartsWith("file:", StringComparison.InvariantCultureIgnoreCase))
+		    {
+                var conv = new SexyContentValueConverter();
+		        var realPath = conv.Convert(ConversionScenario.GetFriendlyValue, "Hyperlink", CurrentValue);
+
+		        DialogOpener1.AdditionalQueryString = "&PreselectedItemUrl=" +
+		                                              HttpUtility.UrlEncode(realPath
+                                                          /*SexyContent.ResolveHyperlinkValues(CurrentValue,
+		                                                  PortalSettings.Current)*/);
+		    }
+
+		    DialogOpener1.EnableEmbeddedSkins = _editorProvider._editor.EnableEmbeddedSkins;
 			DialogOpener1.Skin = _editorProvider._editor.Skin;
 		}
 
