@@ -21,7 +21,7 @@ namespace ToSic.SexyContent.Statics
         public static bool SexyContentDesignersGroupConfigured(int portalId)
         {
             var roleControl = new RoleController();
-            var role = roleControl.GetRoleByName(portalId, SexyContent.SexyContentGroupName);
+            var role = roleControl.GetRoleByName(portalId, Settings.SexyContentGroupName);
             return role != null;
         }
 
@@ -32,7 +32,7 @@ namespace ToSic.SexyContent.Statics
         /// <returns></returns>
         public static bool IsInSexyContentDesignersGroup(UserInfo user)
         {
-            return user.IsInRole(SexyContent.SexyContentGroupName);
+            return user.IsInRole(Settings.SexyContentGroupName);
         }
 
         // todo: probably same functionality as Environment.Permissions.UserMayEditContent ??? 

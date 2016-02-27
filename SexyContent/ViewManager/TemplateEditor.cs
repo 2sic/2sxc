@@ -44,7 +44,7 @@ namespace ToSic.SexyContent.ViewManager
                 throw new AccessViolationException("current user may not edit razor templates - requires super user");
 
             // if not super user, check if cross-portal storage (not allowed)
-            if(Template.Location == SexyContent.TemplateLocations.PortalFileSystem)
+            if(Template.Location == Settings.TemplateLocations.PortalFileSystem)
                 throw new AccessViolationException("current user may not edit templates in central storage - requires super user");
         }
 

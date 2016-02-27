@@ -107,8 +107,8 @@ namespace ToSic.SexyContent
             }
 
             // DataBind Template Locations
-            ddlTemplateLocations.Items.Add(new ListItem(LocalizeString("TemplateLocationPortalFileSystem.Text"), SexyContent.TemplateLocations.PortalFileSystem));
-            ddlTemplateLocations.Items.Add(new ListItem(LocalizeString("TemplateLocationHostFileSystem.Text"), SexyContent.TemplateLocations.HostFileSystem));
+            ddlTemplateLocations.Items.Add(new ListItem(LocalizeString("TemplateLocationPortalFileSystem.Text"), ToSic.SexyContent.Settings.TemplateLocations.PortalFileSystem));
+            ddlTemplateLocations.Items.Add(new ListItem(LocalizeString("TemplateLocationHostFileSystem.Text"), ToSic.SexyContent.Settings.TemplateLocations.HostFileSystem));
 
             txtPublishStreams.Text = "Default,ListContent";
 
@@ -222,7 +222,7 @@ namespace ToSic.SexyContent
             valTemplateFileName.Enabled = true;
 
             if(!UserInfo.IsSuperUser)
-                ddlTemplateLocations.Items.Remove(ddlTemplateLocations.Items.FindByValue(SexyContent.TemplateLocations.HostFileSystem));
+                ddlTemplateLocations.Items.Remove(ddlTemplateLocations.Items.FindByValue(ToSic.SexyContent.Settings.TemplateLocations.HostFileSystem));
             
             var ProposedTemplateFile = "";
             if(ddlTemplateTypes.SelectedValue == "C# Razor" || ddlTemplateTypes.SelectedValue == "VB Razor")

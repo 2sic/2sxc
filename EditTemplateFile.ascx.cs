@@ -22,7 +22,7 @@ namespace ToSic.SexyContent
             get
             {
                 return UserInfo.IsSuperUser ||
-                    (Template.Location == SexyContent.TemplateLocations.PortalFileSystem && !Template.IsRazor && UserInfo.IsInRole(PortalSettings.AdministratorRoleName));
+                    (Template.Location == ToSic.SexyContent.Settings.TemplateLocations.PortalFileSystem && !Template.IsRazor && UserInfo.IsInRole(PortalSettings.AdministratorRoleName));
             }
         }
 

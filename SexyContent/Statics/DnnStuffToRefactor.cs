@@ -16,14 +16,14 @@ namespace ToSic.SexyContent.Statics
         /// </summary>
         public void EnsurePortalIsConfigured(SexyContent sxc, HttpServerUtility server, string controlPath)
         {
-            var sexyFolder = new DirectoryInfo(server.MapPath(Path.Combine(sxc.OwnerPS.HomeDirectory, SexyContent.TemplateFolder)));
+            var sexyFolder = new DirectoryInfo(server.MapPath(Path.Combine(sxc.OwnerPS.HomeDirectory, Settings.TemplateFolder)));
             var contentFolder = new DirectoryInfo(Path.Combine(sexyFolder.FullName, "Content"));
-            var webConfigTemplate = new FileInfo(Path.Combine(sexyFolder.FullName, SexyContent.WebConfigFileName));
+            var webConfigTemplate = new FileInfo(Path.Combine(sexyFolder.FullName, Settings.WebConfigFileName));
             if (!(sexyFolder.Exists && webConfigTemplate.Exists && contentFolder.Exists))
             {
                 // configure it
                 var tm = new TemplateManager(sxc);
-                tm.EnsureTemplateFolderExists(server, SexyContent.TemplateLocations.PortalFileSystem);
+                tm.EnsureTemplateFolderExists(server, Settings.TemplateLocations.PortalFileSystem);
             };
         }
 

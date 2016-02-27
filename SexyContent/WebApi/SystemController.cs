@@ -132,7 +132,7 @@ namespace ToSic.SexyContent.WebApi
 
                         // Add version & module infos
                         + "DnnVersion=" + Assembly.GetAssembly(typeof(Globals)).GetName().Version.ToString(4)
-                        + "&2SexyContentVersion=" + SexyContent.ModuleVersion
+                        + "&2SexyContentVersion=" + Settings.ModuleVersion
                         + "&ModuleName=" + mod.DesktopModule.ModuleName
                         + "&ModuleId=" + mod.ModuleID
                         + "&PortalID=" + dnn.PortalId

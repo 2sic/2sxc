@@ -146,7 +146,7 @@ namespace ToSic.SexyContent
         public IEnumerable<IContentType> GetAvailableContentTypesForVisibleTemplates()
         {
             var AvailableTemplates = GetVisibleTemplates();
-            return GetAvailableContentTypes(SexyContent.AttributeSetScope).Where(p => AvailableTemplates.Any(t => t.ContentTypeStaticName == p.StaticName)).OrderBy(p => p.Name);
+            return GetAvailableContentTypes(Settings.AttributeSetScope).Where(p => AvailableTemplates.Any(t => t.ContentTypeStaticName == p.StaticName)).OrderBy(p => p.Name);
         }
 
         public IEnumerable<IContentType> GetAvailableContentTypes(string scope, bool includeAttributeTypes = false)

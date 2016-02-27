@@ -17,7 +17,7 @@ namespace ToSic.SexyContent.Statics
         /// <returns></returns>
         public static int? GetZoneID(int portalId)
         {
-            var zoneSettingKey = SexyContent.PortalSettingsPrefix + "ZoneID";
+            var zoneSettingKey = Settings.PortalSettingsPrefix + "ZoneID";
             var c = PortalController.GetPortalSettingsDictionary(portalId);
             var portalSettings = new PortalSettings(portalId);
 
@@ -46,9 +46,9 @@ namespace ToSic.SexyContent.Statics
         public static void SetZoneID(int? ZoneID, int PortalID)
         {
             if (ZoneID.HasValue)
-                PortalController.UpdatePortalSetting(PortalID, SexyContent.PortalSettingsPrefix + "ZoneID", ZoneID.Value.ToString());
+                PortalController.UpdatePortalSetting(PortalID, Settings.PortalSettingsPrefix + "ZoneID", ZoneID.Value.ToString());
             else
-                PortalController.DeletePortalSetting(PortalID, SexyContent.PortalSettingsPrefix + "ZoneID");
+                PortalController.DeletePortalSetting(PortalID, Settings.PortalSettingsPrefix + "ZoneID");
         }
 
         public static List<Zone> GetZones()

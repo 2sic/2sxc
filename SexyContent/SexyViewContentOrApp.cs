@@ -60,7 +60,7 @@ namespace ToSic.SexyContent
 					var hasContent = AppId.HasValue && Template != null && ContentGroup.Exists;
 
                     // minor workaround because the settings in the cache are wrong after using a page template
-				    var tempVisibleStatus = DnnStuffToRefactor.TryToGetReliableSetting(ModuleConfiguration, SexyContent.SettingsShowTemplateChooser);
+				    var tempVisibleStatus = DnnStuffToRefactor.TryToGetReliableSetting(ModuleConfiguration, ToSic.SexyContent.Settings.SettingsShowTemplateChooser);
 				    var templateChooserVisible = bool.Parse(tempVisibleStatus ?? "true");
 
 				    var languages =
@@ -100,7 +100,7 @@ namespace ToSic.SexyContent
                                 // 2016-02-27 2dm - seems unused
                                 //cultureDimension = AppId.HasValue ? Sexy.GetCurrentLanguageID() : new int?(),
                                 isList = Template != null && Template.UseForList,
-                                version = SexyContent.Version.ToString() // SexyContent.Version.ToString()
+                                version = ToSic.SexyContent.Settings.Version.ToString() // SexyContent.Version.ToString()
                             },
                             user = new
                             {

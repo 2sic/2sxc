@@ -42,9 +42,9 @@ namespace ToSic.SexyContent.Statics
                 EnsureAppIsConfigured(zoneId, appId);
 
                 // Get app-describing entity
-                var appMetaData = DataSource.GetMetaDataSource(zoneId, appId).GetAssignedEntities(ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp, appId, SexyContent.AttributeSetStaticNameApps).FirstOrDefault();
-                var appResources = DataSource.GetMetaDataSource(zoneId, appId).GetAssignedEntities(ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp, appId, SexyContent.AttributeSetStaticNameAppResources).FirstOrDefault();
-                var appSettings = DataSource.GetMetaDataSource(zoneId, appId).GetAssignedEntities(ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp, appId, SexyContent.AttributeSetStaticNameAppSettings).FirstOrDefault();
+                var appMetaData = DataSource.GetMetaDataSource(zoneId, appId).GetAssignedEntities(ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp, appId, Settings.AttributeSetStaticNameApps).FirstOrDefault();
+                var appResources = DataSource.GetMetaDataSource(zoneId, appId).GetAssignedEntities(ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp, appId, Settings.AttributeSetStaticNameAppResources).FirstOrDefault();
+                var appSettings = DataSource.GetMetaDataSource(zoneId, appId).GetAssignedEntities(ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp, appId, Settings.AttributeSetStaticNameAppSettings).FirstOrDefault();
 
                 if (appMetaData != null)
                 {
@@ -90,9 +90,9 @@ namespace ToSic.SexyContent.Statics
         /// <param name="appId"></param>
         public static void EnsureAppIsConfigured(int zoneId, int appId, string appName = null)
         {
-            var appMetaData = DataSource.GetMetaDataSource(zoneId, appId).GetAssignedEntities(ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp, appId, SexyContent.AttributeSetStaticNameApps).FirstOrDefault();
-            var appResources = DataSource.GetMetaDataSource(zoneId, appId).GetAssignedEntities(ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp, appId, SexyContent.AttributeSetStaticNameAppResources).FirstOrDefault();
-            var appSettings = DataSource.GetMetaDataSource(zoneId, appId).GetAssignedEntities(ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp, appId, SexyContent.AttributeSetStaticNameAppSettings).FirstOrDefault();
+            var appMetaData = DataSource.GetMetaDataSource(zoneId, appId).GetAssignedEntities(ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp, appId, Settings.AttributeSetStaticNameApps).FirstOrDefault();
+            var appResources = DataSource.GetMetaDataSource(zoneId, appId).GetAssignedEntities(ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp, appId, Settings.AttributeSetStaticNameAppResources).FirstOrDefault();
+            var appSettings = DataSource.GetMetaDataSource(zoneId, appId).GetAssignedEntities(ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp, appId, Settings.AttributeSetStaticNameAppSettings).FirstOrDefault();
 
             // Get appName from cache
             var eavAppName = ((BaseCache)DataSource.GetCache(zoneId, null)).ZoneApps[zoneId].Apps[appId];
@@ -105,7 +105,7 @@ namespace ToSic.SexyContent.Statics
             if (appMetaData == null)
             {
                 // Add app-describing entity
-                var appAttributeSet = appContext.ContentContext.AttribSet.GetAttributeSet(SexyContent.AttributeSetStaticNameApps).AttributeSetID;
+                var appAttributeSet = appContext.ContentContext.AttribSet.GetAttributeSet(Settings.AttributeSetStaticNameApps).AttributeSetID;
                 var values = new OrderedDictionary
                 {
                     {"DisplayName", String.IsNullOrEmpty(appName) ? eavAppName : appName },
@@ -123,11 +123,11 @@ namespace ToSic.SexyContent.Statics
 
                 AttributeSet settingsAttributeSet;
                 // Add new (empty) ContentType for Settings
-                if (!appContext.ContentContext.AttribSet.AttributeSetExists(SexyContent.AttributeSetStaticNameAppSettings, appId))
-                    settingsAttributeSet = appContext.ContentContext.AttribSet.AddAttributeSet(SexyContent.AttributeSetStaticNameAppSettings,
-                        "Stores settings for an app", SexyContent.AttributeSetStaticNameAppSettings, SexyContent.AttributeSetScopeApps);
+                if (!appContext.ContentContext.AttribSet.AttributeSetExists(Settings.AttributeSetStaticNameAppSettings, appId))
+                    settingsAttributeSet = appContext.ContentContext.AttribSet.AddAttributeSet(Settings.AttributeSetStaticNameAppSettings,
+                        "Stores settings for an app", Settings.AttributeSetStaticNameAppSettings, Settings.AttributeSetScopeApps);
                 else
-                    settingsAttributeSet = appContext.ContentContext.AttribSet.GetAttributeSet(SexyContent.AttributeSetStaticNameAppSettings);
+                    settingsAttributeSet = appContext.ContentContext.AttribSet.GetAttributeSet(Settings.AttributeSetStaticNameAppSettings);
 
                 DataSource.GetCache(zoneId, appId).PurgeCache(zoneId, appId);
                 appContext.ContentContext.Entities.AddEntity(settingsAttributeSet, new OrderedDictionary(), null, appId, ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp);
@@ -138,12 +138,12 @@ namespace ToSic.SexyContent.Statics
                 AttributeSet resourcesAttributeSet;
 
                 // Add new (empty) ContentType for Resources
-                if (!appContext.ContentContext.AttribSet.AttributeSetExists(SexyContent.AttributeSetStaticNameAppResources, appId))
+                if (!appContext.ContentContext.AttribSet.AttributeSetExists(Settings.AttributeSetStaticNameAppResources, appId))
                     resourcesAttributeSet = appContext.ContentContext.AttribSet.AddAttributeSet(
-                        SexyContent.AttributeSetStaticNameAppResources, "Stores resources like translations for an app",
-                        SexyContent.AttributeSetStaticNameAppResources, SexyContent.AttributeSetScopeApps);
+                        Settings.AttributeSetStaticNameAppResources, "Stores resources like translations for an app",
+                        Settings.AttributeSetStaticNameAppResources, Settings.AttributeSetScopeApps);
                 else
-                    resourcesAttributeSet = appContext.ContentContext.AttribSet.GetAttributeSet(SexyContent.AttributeSetStaticNameAppResources);
+                    resourcesAttributeSet = appContext.ContentContext.AttribSet.GetAttributeSet(Settings.AttributeSetStaticNameAppResources);
 
                 DataSource.GetCache(zoneId, appId).PurgeCache(zoneId, appId);
                 appContext.ContentContext.Entities.AddEntity(resourcesAttributeSet, new OrderedDictionary(), null, appId, ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp);
@@ -230,7 +230,7 @@ namespace ToSic.SexyContent.Statics
                 else
                 {
                     // todo: fix 2dm
-                    var appName = DnnStuffToRefactor.TryToGetReliableSetting(module, SexyContent.AppNameString);//  module.ModuleSettings[AppNameString];
+                    var appName = DnnStuffToRefactor.TryToGetReliableSetting(module, Settings.AppNameString);//  module.ModuleSettings[AppNameString];
 
                     if (appName != null)
                     {
@@ -261,12 +261,12 @@ namespace ToSic.SexyContent.Statics
 
             if (appId == 0 || !appId.HasValue)
                 //moduleController.DeleteModuleSetting(module.ModuleID, AppNameString);
-                DnnStuffToRefactor.UpdateModuleSettingForAllLanguages(module.ModuleID, SexyContent.AppNameString, null);
+                DnnStuffToRefactor.UpdateModuleSettingForAllLanguages(module.ModuleID, Settings.AppNameString, null);
             else
             {
                 var appName = ((BaseCache)DataSource.GetCache(0, 0)).ZoneApps[zoneId.Value].Apps[appId.Value];
                 //moduleController.UpdateModuleSetting(module.ModuleID, AppNameString, appName);
-                DnnStuffToRefactor.UpdateModuleSettingForAllLanguages(module.ModuleID, SexyContent.AppNameString, appName);
+                DnnStuffToRefactor.UpdateModuleSettingForAllLanguages(module.ModuleID, Settings.AppNameString, appName);
             }
 
             // Change to 1. available template if app has been set
@@ -288,7 +288,7 @@ namespace ToSic.SexyContent.Statics
 
         public static string AppBasePath(PortalSettings ownerPS)
         {
-            return Path.Combine(ownerPS.HomeDirectory, SexyContent.TemplateFolder);
+            return Path.Combine(ownerPS.HomeDirectory, Settings.TemplateFolder);
         }
 
 

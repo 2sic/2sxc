@@ -67,7 +67,7 @@ namespace ToSic.SexyContent
 			var entity = context.AddEntity(contentType.AttributeSetId, values, null, null);
 
             // Update contentGroup Guid for this module
-            DnnStuffToRefactor.UpdateModuleSettingForAllLanguages(moduleId, SexyContent.ContentGroupGuidString, entity.EntityGUID.ToString());
+            DnnStuffToRefactor.UpdateModuleSettingForAllLanguages(moduleId, Settings.ContentGroupGuidString, entity.EntityGUID.ToString());
 
             return entity.EntityGUID;
 		}
@@ -87,7 +87,7 @@ namespace ToSic.SexyContent
 			var settings = moduleController.GetModuleSettings(moduleId);
 
 			// Do not allow saving the temporary template id if a contentgroup exists for this module
-			if(settings[SexyContent.ContentGroupGuidString] != null)
+			if(settings[Settings.ContentGroupGuidString] != null)
 				throw new Exception("Preview template id cannot be set for a module that already has content.");
 
 			var dataSource = DataSource.GetInitialDataSource(_zoneId, _appId);
@@ -126,14 +126,14 @@ namespace ToSic.SexyContent
 			var settings = moduleControl.GetModuleSettings(moduleId);
 
 			// Return a "faked" ContentGroup if it does not exist yet (with the preview templateId)
-			if (settings[SexyContent.ContentGroupGuidString] == null)
+			if (settings[Settings.ContentGroupGuidString] == null)
 			{
 				var previewTemplateString = settings[PreviewTemplateIdString];
 				return new ContentGroup(previewTemplateString != null ? Guid.Parse(previewTemplateString.ToString()) : new Guid?(), _zoneId, _appId);
 			}
 
 			settings = moduleControl.GetModuleSettings(moduleId);
-			return GetContentGroup(Guid.Parse(settings[SexyContent.ContentGroupGuidString].ToString()));
+			return GetContentGroup(Guid.Parse(settings[Settings.ContentGroupGuidString].ToString()));
 		}
 	}
 }

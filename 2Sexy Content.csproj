@@ -254,6 +254,7 @@
     </Compile>
     <Compile Include="SexyContent\ImportExport\XmlConstants.cs" />
     <Compile Include="Environment\Dnn7\Permissions.cs" />
+    <Compile Include="SexyContent\Settings.cs" />
     <Compile Include="SexyContent\Statics\AppHelpers.cs" />
     <Compile Include="SexyContent\Statics\ContentTypeHelpers.cs" />
     <Compile Include="SexyContent\Statics\DnnStuffToRefactor.cs" />

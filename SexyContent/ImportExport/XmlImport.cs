@@ -83,9 +83,9 @@ namespace ToSic.SexyContent.ImportExport
 			}
 
 			// Return if Version does not match
-			if (!doc.Element(XmlConstants.RootNode).Attributes().Any(a => a.Name == "MinimumRequiredVersion") || new Version(doc.Element(XmlConstants.RootNode).Attribute("MinimumRequiredVersion").Value) > new Version(SexyContent.ModuleVersion))
+			if (!doc.Element(XmlConstants.RootNode).Attributes().Any(a => a.Name == "MinimumRequiredVersion") || new Version(doc.Element(XmlConstants.RootNode).Attribute("MinimumRequiredVersion").Value) > new Version(Settings.ModuleVersion))
 			{
-				ImportLog.Add(new ExportImportMessage("This template or app requires 2sxc " + doc.Element(XmlConstants.RootNode).Attribute("MinimumRequiredVersion").Value + " in order to work, you have version " + SexyContent.ModuleVersion + " installed.", ExportImportMessage.MessageTypes.Error));
+				ImportLog.Add(new ExportImportMessage("This template or app requires 2sxc " + doc.Element(XmlConstants.RootNode).Attribute("MinimumRequiredVersion").Value + " in order to work, you have version " + Settings.ModuleVersion + " installed.", ExportImportMessage.MessageTypes.Error));
 				return false;
 			}
 
@@ -326,7 +326,7 @@ namespace ToSic.SexyContent.ImportExport
 					Name = attributeSet.Attribute("Name").Value,
 					Description = attributeSet.Attribute("Description").Value,
 					Attributes = attributes,
-					Scope = attributeSet.Attributes("Scope").Any() ? attributeSet.Attribute("Scope").Value : SexyContent.AttributeSetScope,
+					Scope = attributeSet.Attributes("Scope").Any() ? attributeSet.Attribute("Scope").Value : Settings.AttributeSetScope,
 					AlwaysShareConfiguration = AllowSystemChanges && attributeSet.Attributes("AlwaysShareConfiguration").Any() && Boolean.Parse(attributeSet.Attribute("AlwaysShareConfiguration").Value),
                     UsesConfigurationOfAttributeSet = attributeSet.Attributes("UsesConfigurationOfAttributeSet").Any() ? attributeSet.Attribute("UsesConfigurationOfAttributeSet").Value : "",
                     TitleAttribute = titleAttribute

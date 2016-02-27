@@ -69,8 +69,8 @@ namespace ToSic.SexyContent.Statics
         /// <param name="templateLocation"></param>
         internal void EnsureTemplateFolderExists(HttpServerUtility server, string templateLocation)
         {
-            var portalPath = templateLocation == SexyContent.TemplateLocations.HostFileSystem ? server.MapPath(SexyContent.PortalHostDirectory) : SxContext.OwnerPS.HomeDirectoryMapPath;
-            var sexyFolderPath = Path.Combine(portalPath, SexyContent.TemplateFolder);
+            var portalPath = templateLocation == Settings.TemplateLocations.HostFileSystem ? server.MapPath(Settings.PortalHostDirectory) : SxContext.OwnerPS.HomeDirectoryMapPath;
+            var sexyFolderPath = Path.Combine(portalPath, Settings.TemplateFolder);
 
             var sexyFolder = new DirectoryInfo(sexyFolderPath);
 
@@ -80,7 +80,7 @@ namespace ToSic.SexyContent.Statics
 
             // Create web.config (copy from DesktopModules folder)
             if (!sexyFolder.GetFiles("web.config").Any())
-                File.Copy(server.MapPath(SexyContent.WebConfigTemplatePath), Path.Combine(sexyFolder.FullName, SexyContent.WebConfigFileName));
+                File.Copy(server.MapPath(Settings.WebConfigTemplatePath), Path.Combine(sexyFolder.FullName, Settings.WebConfigFileName));
 
             // Create a Content folder (or App Folder)
             if (!String.IsNullOrEmpty(App.Folder))
@@ -119,7 +119,7 @@ namespace ToSic.SexyContent.Statics
             }
 
             var files = directory.GetFiles(fileFilter, SearchOption.AllDirectories);
-            return (from d in files where d.Name != SexyContent.WebConfigFileName select (d.FullName).Replace(templatePathRootMapPath + "\\", "").Replace('\\', '/'));
+            return (from d in files where d.Name != Settings.WebConfigFileName select (d.FullName).Replace(templatePathRootMapPath + "\\", "").Replace('\\', '/'));
         }
 
         /// <summary>
@@ -127,8 +127,8 @@ namespace ToSic.SexyContent.Statics
         /// </summary>
         public static string GetTemplatePathRoot(string locationId, App app)
         {
-            var rootFolder = (locationId == SexyContent.TemplateLocations.PortalFileSystem ? app.OwnerPS.HomeDirectory : SexyContent.PortalHostDirectory);
-            rootFolder += SexyContent.TemplateFolder + "/" + app.Folder;
+            var rootFolder = (locationId == Settings.TemplateLocations.PortalFileSystem ? app.OwnerPS.HomeDirectory : Settings.PortalHostDirectory);
+            rootFolder += Settings.TemplateFolder + "/" + app.Folder;
             return rootFolder;
         }
     }

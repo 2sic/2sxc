@@ -199,7 +199,7 @@ namespace ToSic.SexyContent.ImportExport
                 Doc.Add(new XElement(XmlConstants.RootNode,
                     new XAttribute("FileVersion", ImportExport.FileVersion),
                     new XAttribute("MinimumRequiredVersion", ImportExport.MinimumRequiredVersion),
-                    new XAttribute("ModuleVersion", SexyContent.ModuleVersion),
+                    new XAttribute("ModuleVersion", Settings.ModuleVersion),
                     new XAttribute("ExportDate", DateTime.Now),
                     Header,
                     AttributeSets,

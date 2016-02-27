@@ -39,42 +39,7 @@ namespace ToSic.SexyContent
 
         #region Constants
 
-        public static readonly Version Version = Assembly.GetExecutingAssembly().GetName().Version;
-        public static readonly string ModuleVersion = Assembly.GetExecutingAssembly().GetName().Version.Major.ToString("00") + "."
-            + Assembly.GetExecutingAssembly().GetName().Version.Minor.ToString("00") + "."
-            + Assembly.GetExecutingAssembly().GetName().Version.Build.ToString("00");
 
-		public const string ContentGroupGuidString = "ToSIC_SexyContent_ContentGroupGuid";
-        public const string AppIDString = "AppId";
-	    public const string AppNameString = "ToSIC_SexyContent_AppName";
-        public const string SettingsShowTemplateChooser = "ToSIC_SexyContent_ShowTemplateChooser";
-	    public const string InternalUserName = "Internal";
-
-
-        public const string PortalHostDirectory = "~/Portals/_default/";
-        public const string TemplateFolder = "2sxc";
-        public const string PortalSettingsPrefix = "ToSIC_SexyContent_";
-
-        /// <summary>
-        /// Collection of Template Locations
-        /// </summary>
-        public class TemplateLocations
-        {
-            public const string PortalFileSystem = "Portal File System";
-            public const string HostFileSystem = "Host File System";
-        }
-
-        public const string WebConfigTemplatePath = "~/DesktopModules/ToSIC_SexyContent/WebConfigTemplate.config";
-        public const string WebConfigFileName = "web.config";
-        public const string SexyContentGroupName = "2sxc designers";
-        public const string AttributeSetScope = "2SexyContent";
-        public const string AttributeSetScopeApps = "2SexyContent-App";
-        public const string AttributeSetStaticNameTemplateMetaData = "2SexyContent-Template-Metadata";
-        public const string AttributeSetStaticNameApps = "2SexyContent-App";
-        public const string AttributeSetStaticNameAppResources = "App-Resources";
-        public const string AttributeSetStaticNameAppSettings = "App-Settings";
-        public const string ToSexyDirectory = "~/DesktopModules/ToSIC_SexyContent";
-        public const string TemporaryDirectory = "~/DesktopModules/ToSIC_SexyContent/_";
 
         #endregion
 
@@ -159,7 +124,7 @@ namespace ToSic.SexyContent
 
             // Set Properties on ContentContext
             ContentContext = EavDataController.Instance(zoneId, appId); // EavContext.Instance(zoneId, appId);
-            ContentContext.UserName = (HttpContext.Current == null || HttpContext.Current.User == null) ? InternalUserName : HttpContext.Current.User.Identity.Name;
+            ContentContext.UserName = (HttpContext.Current == null || HttpContext.Current.User == null) ? Settings.InternalUserName : HttpContext.Current.User.Identity.Name;
 
             ZoneId = zoneId;
             AppId = appId;
@@ -236,7 +201,8 @@ namespace ToSic.SexyContent
         /// The EAV DataSource
         /// </summary>
         private IDataSource _viewDataSource;// { get; set; }
-		public IDataSource GetViewDataSource(int moduleId, bool showDrafts, Template template)
+
+        public IDataSource GetViewDataSource(int moduleId, bool showDrafts, Template template)
         {
             if (_viewDataSource == null)
             {

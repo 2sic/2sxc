@@ -14,7 +14,7 @@ namespace ToSic.SexyContent
         {
             get
             {
-                var appIdString = Request.QueryString[SexyContent.AppIDString];
+                var appIdString = Request.QueryString[ToSic.SexyContent.Settings.AppIDString];
                 int appId;
                 if (appIdString != null && int.TryParse(appIdString, out appId))
                     return appId;

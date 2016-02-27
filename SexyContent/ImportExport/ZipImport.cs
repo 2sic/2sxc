@@ -46,7 +46,7 @@ namespace ToSic.SexyContent.ImportExport
             if (messages == null)
                 messages = new List<ExportImportMessage>();
 
-            var temporaryDirectory = server.MapPath(Path.Combine(SexyContent.TemporaryDirectory, Guid.NewGuid().ToString()));
+            var temporaryDirectory = server.MapPath(Path.Combine(Settings.TemporaryDirectory, Guid.NewGuid().ToString()));
             var success = true;
 
             try
@@ -140,7 +140,7 @@ namespace ToSic.SexyContent.ImportExport
                                 var sexy = new SexyContent(_zoneId, appId.Value);
 
                                 // Copy all files in 2sexy folder to (portal file system) 2sexy folder
-                                var templateRoot = server.MapPath(TemplateManager.GetTemplatePathRoot(SexyContent.TemplateLocations.PortalFileSystem, sexy.App));
+                                var templateRoot = server.MapPath(TemplateManager.GetTemplatePathRoot(Settings.TemplateLocations.PortalFileSystem, sexy.App));
                                 var appTemplateRoot = Path.Combine(appDirectory, "2sexy");
                                 if (Directory.Exists(appTemplateRoot))
                                     (new FileManager(appTemplateRoot)).CopyAllFiles(templateRoot, false, messages);
@@ -180,7 +180,7 @@ namespace ToSic.SexyContent.ImportExport
 
         public bool ImportZipFromUrl(string packageUrl, List<ExportImportMessage> messages, bool isAppImport)
         {
-            var tempDirectory = new DirectoryInfo(HttpContext.Current.Server.MapPath(SexyContent.TemporaryDirectory));
+            var tempDirectory = new DirectoryInfo(HttpContext.Current.Server.MapPath(Settings.TemporaryDirectory));
             if (!tempDirectory.Exists)
                 Directory.CreateDirectory(tempDirectory.FullName);
 

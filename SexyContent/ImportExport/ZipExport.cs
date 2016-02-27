@@ -66,7 +66,7 @@ namespace ToSic.SexyContent.ImportExport
             #region Copy needed files to temporary directory
 
             var randomShortFolderName = Guid.NewGuid().ToString().Substring(0, 4);
-            var temporaryDirectoryPath = HttpContext.Current.Server.MapPath(Path.Combine(SexyContent.TemporaryDirectory, randomShortFolderName));
+            var temporaryDirectoryPath = HttpContext.Current.Server.MapPath(Path.Combine(Settings.TemporaryDirectory, randomShortFolderName));
 
             if (!Directory.Exists(temporaryDirectoryPath))
                 Directory.CreateDirectory(temporaryDirectoryPath);
@@ -132,7 +132,7 @@ namespace ToSic.SexyContent.ImportExport
         /// <param name="targetPath"></param>
         private void AddInstructionsToPackageFolder(string targetPath)
         {
-            var srcPath = HttpContext.Current.Server.MapPath(Path.Combine(SexyContent.ToSexyDirectory, "SexyContent\\ImportExport\\Instructions"));
+            var srcPath = HttpContext.Current.Server.MapPath(Path.Combine(Settings.ToSexyDirectory, "SexyContent\\ImportExport\\Instructions"));
 
             foreach (var file in Directory.GetFiles(srcPath))
                 File.Copy(file, Path.Combine(targetPath, Path.GetFileName(file)));

@@ -32,7 +32,7 @@ namespace ToSic.SexyContent
 
         static SexyContentModuleUpgrade()
         {
-            UpgradeComplete = IsUpgradeComplete(SexyContent.ModuleVersion);
+            UpgradeComplete = IsUpgradeComplete(Settings.ModuleVersion);
         }
 
         public static string UpgradeModule(string version)
@@ -271,7 +271,7 @@ namespace ToSic.SexyContent
             {
                 dsrcSqlDataSource
             };
-            var import = new Eav.Import.Import(Constants.DefaultZoneId, Constants.MetaDataAppId, SexyContent.InternalUserName);
+            var import = new Eav.Import.Import(Constants.DefaultZoneId, Constants.MetaDataAppId, Settings.InternalUserName);
             import.RunImport(attributeSets, null);
 
             var metaDataCtx = EavDataController.Instance(Constants.DefaultZoneId, Constants.MetaDataAppId);
@@ -279,7 +279,7 @@ namespace ToSic.SexyContent
             metaDataCtx.SqlDb.SaveChanges();
 
             // Run EAV Version Upgrade (also ensures Content Type sharing)
-            var eavVersionUpgrade = new VersionUpgrade(SexyContent.InternalUserName);
+            var eavVersionUpgrade = new VersionUpgrade(Settings.InternalUserName);
             eavVersionUpgrade.EnsurePipelineDesignerAttributeSets();
         }
 

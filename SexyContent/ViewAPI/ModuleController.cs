@@ -56,7 +56,7 @@ namespace ToSic.SexyContent.ViewAPI
         [ValidateAntiForgeryToken]
 		public void SetTemplateChooserState([FromUri] bool state)
 		{
-            DnnStuffToRefactor.UpdateModuleSettingForAllLanguages(ActiveModule.ModuleID, SexyContent.SettingsShowTemplateChooser, state.ToString());
+            DnnStuffToRefactor.UpdateModuleSettingForAllLanguages(ActiveModule.ModuleID, Settings.SettingsShowTemplateChooser, state.ToString());
 
 			//new DotNetNuke.Entities.Modules.ModuleController().UpdateModuleSetting(ActiveModule.ModuleID,
 			//	SexyContent.SettingsShowTemplateChooser, state.ToString());
@@ -251,7 +251,7 @@ namespace ToSic.SexyContent.ViewAPI
             // Add DNN Version
             gettingStartedSrc += "&DnnVersion=" + Assembly.GetAssembly(typeof(Globals)).GetName().Version.ToString(4);
             // Add 2SexyContent Version
-            gettingStartedSrc += "&2SexyContentVersion=" + SexyContent.ModuleVersion;
+            gettingStartedSrc += "&2SexyContentVersion=" + Settings.ModuleVersion;
             // Add module type
             gettingStartedSrc += "&ModuleName=" + modName;
             // Add module id
