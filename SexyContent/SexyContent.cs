@@ -402,63 +402,7 @@ namespace ToSic.SexyContent
                 body.Attributes["class"] = CssClass;
         }
 
-        // todo: must use the build int method in the serializer, this is almost duplicate...
-        /// <summary>
-        /// Resolves File and Page values
-        /// For example, File:123 or Page:123
-        /// </summary>
-        public static string ResolveHyperlinkValues(string value, PortalSettings ownerPortalSettings)
-        {
-            var resultString = value;
-            var regularExpression = Regex.Match(resultString, @"^(?<type>(file|page)):(?<id>[0-9]+)(?<params>(\?|\#).*)?$", RegexOptions.IgnoreCase);
 
-            if (!regularExpression.Success)
-                return value;
-
-            var fileManager = FileManager.Instance;
-            var tabController = new TabController();
-            var type = regularExpression.Groups["type"].Value.ToLower();
-            var id = int.Parse(regularExpression.Groups["id"].Value);
-			var urlParams = regularExpression.Groups["params"].Value ?? "";
-
-			
-            switch (type)
-            {
-                case "file":
-                    var fileInfo = fileManager.GetFile(id);
-                    if (fileInfo != null)
-                        resultString = (fileInfo.StorageLocation == (int)FolderController.StorageLocationTypes.InsecureFileSystem
-                            ? Path.Combine(ownerPortalSettings.HomeDirectory, fileInfo.RelativePath) + urlParams
-                            : fileManager.GetUrl(fileInfo));
-                    break;
-                case "page":
-                    var portalSettings = PortalSettings.Current;
-
-                    // Get full PortalSettings (with portal alias) if module sharing is active
-                    if (PortalSettings.Current != null && PortalSettings.Current.PortalId != ownerPortalSettings.PortalId)
-                    {
-                        var portalAlias = ownerPortalSettings.PrimaryAlias ?? TestablePortalAliasController.Instance.GetPortalAliasesByPortalId(ownerPortalSettings.PortalId).First();
-                        portalSettings = new PortalSettings(id, portalAlias);
-                    }
-                    var tabInfo = tabController.GetTab(id, ownerPortalSettings.PortalId, false);
-                    if (tabInfo != null)
-                    {
-                        if (tabInfo.CultureCode != "" && tabInfo.CultureCode != PortalSettings.Current.CultureCode)
-                        {
-                            var cultureTabInfo = tabController.GetTabByCulture(tabInfo.TabID, tabInfo.PortalID, LocaleController.Instance.GetLocale(PortalSettings.Current.CultureCode));
-
-                            if (cultureTabInfo != null)
-                                tabInfo = cultureTabInfo;
-                        }
-
-                        // Exception in AdvancedURLProvider because ownerPortalSettings.PortalAlias is null
-                        resultString = Globals.NavigateURL(tabInfo.TabID, portalSettings, "", new string[] { }) + urlParams;
-                    }
-                    break;
-            }
-
-            return resultString;
-        }
 
         #endregion
 
@@ -707,6 +651,65 @@ namespace ToSic.SexyContent
 
         //        return dictionary;
         //    }
+
+
+
+        //     /// <summary>
+        //     /// Resolves File and Page values
+        //     /// For example, File:123 or Page:123
+        //     /// </summary>
+        //     public static string ResolveHyperlinkValues(string value, PortalSettings ownerPortalSettings)
+        //     {
+        //         var resultString = value;
+        //         var regularExpression = Regex.Match(resultString, @"^(?<type>(file|page)):(?<id>[0-9]+)(?<params>(\?|\#).*)?$", RegexOptions.IgnoreCase);
+
+        //         if (!regularExpression.Success)
+        //             return value;
+
+        //         var fileManager = FileManager.Instance;
+        //         var tabController = new TabController();
+        //         var type = regularExpression.Groups["type"].Value.ToLower();
+        //         var id = int.Parse(regularExpression.Groups["id"].Value);
+        //var urlParams = regularExpression.Groups["params"].Value ?? "";
+
+
+        //         switch (type)
+        //         {
+        //             case "file":
+        //                 var fileInfo = fileManager.GetFile(id);
+        //                 if (fileInfo != null)
+        //                     resultString = (fileInfo.StorageLocation == (int)FolderController.StorageLocationTypes.InsecureFileSystem
+        //                         ? Path.Combine(ownerPortalSettings.HomeDirectory, fileInfo.RelativePath) + urlParams
+        //                         : fileManager.GetUrl(fileInfo));
+        //                 break;
+        //             case "page":
+        //                 var portalSettings = PortalSettings.Current;
+
+        //                 // Get full PortalSettings (with portal alias) if module sharing is active
+        //                 if (PortalSettings.Current != null && PortalSettings.Current.PortalId != ownerPortalSettings.PortalId)
+        //                 {
+        //                     var portalAlias = ownerPortalSettings.PrimaryAlias ?? TestablePortalAliasController.Instance.GetPortalAliasesByPortalId(ownerPortalSettings.PortalId).First();
+        //                     portalSettings = new PortalSettings(id, portalAlias);
+        //                 }
+        //                 var tabInfo = tabController.GetTab(id, ownerPortalSettings.PortalId, false);
+        //                 if (tabInfo != null)
+        //                 {
+        //                     if (tabInfo.CultureCode != "" && tabInfo.CultureCode != PortalSettings.Current.CultureCode)
+        //                     {
+        //                         var cultureTabInfo = tabController.GetTabByCulture(tabInfo.TabID, tabInfo.PortalID, LocaleController.Instance.GetLocale(PortalSettings.Current.CultureCode));
+
+        //                         if (cultureTabInfo != null)
+        //                             tabInfo = cultureTabInfo;
+        //                     }
+
+        //                     // Exception in AdvancedURLProvider because ownerPortalSettings.PortalAlias is null
+        //                     resultString = Globals.NavigateURL(tabInfo.TabID, portalSettings, "", new string[] { }) + urlParams;
+        //                 }
+        //                 break;
+        //         }
+
+        //         return resultString;
+        //     }
         #endregion
     }
 }

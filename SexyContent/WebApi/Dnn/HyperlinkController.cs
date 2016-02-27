@@ -3,6 +3,8 @@ using DotNetNuke.Security;
 using DotNetNuke.Security.Permissions;
 using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Web.Api;
+using ToSic.Eav.Implementations.ValueConverter;
+using ToSic.SexyContent.EAV.Implementation.ValueConverter;
 
 namespace ToSic.SexyContent.WebApi.Dnn
 {
@@ -29,7 +31,9 @@ namespace ToSic.SexyContent.WebApi.Dnn
 		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
 		public string ResolveHyperlink(string hyperlink)
 		{
-			return SexyContent.ResolveHyperlinkValues(hyperlink, Dnn.Portal);
+            var conv = new SexyContentValueConverter();
+		    return conv.Convert(ConversionScenario.GetFriendlyValue, "Hyperlink", hyperlink);
+            // return SexyContent.ResolveHyperlinkValues(hyperlink, Dnn.Portal);
 		}
 
 		private bool CanUserViewFile(IFileInfo file)

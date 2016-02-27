@@ -21,7 +21,13 @@ namespace ToSic.SexyContent.EAV.Implementation.ValueConverter
 
         // public bool AllowSingletonPerApp = true;
 
-        public string Convert(ConversionScenario scenario, string type, string originalValue)
+
+        //public string Convert(ConversionScenario scenario, string type, string originalValue)
+        //{
+        //    return Convert(scenario, type, originalValue, PortalSettings.Current);
+        //}
+
+        public string Convert(ConversionScenario scenario, string type, string originalValue/*, PortalSettings portalInfo*/)
         {
             switch (scenario)
             {
@@ -44,8 +50,10 @@ namespace ToSic.SexyContent.EAV.Implementation.ValueConverter
         /// </summary>
         /// <param name="potentialFilePath"></param>
         /// <returns></returns>
-        public string TryToResolveOneLinkToInternalDnnCode(string potentialFilePath)
+        private string TryToResolveOneLinkToInternalDnnCode(string potentialFilePath)
         {
+            // note: this can always use the current context, because this should happen
+            // when saving etc. - which is always expected to happen in the owning portal
 	        var portalInfo = PortalSettings.Current; //PortalController.Instance.GetCurrentPortalSettings();
 
             // Try file reference
@@ -59,6 +67,7 @@ namespace ToSic.SexyContent.EAV.Implementation.ValueConverter
             var tabInfo = tabCollection.Select(tab => tab.Value)
                                        .Where(tab => tab.TabPath == potentialFilePath)
                                        .FirstOrDefault();
+
             if (tabInfo != null)
                 return "Page:" + tabInfo.TabID;
 
@@ -94,8 +103,8 @@ namespace ToSic.SexyContent.EAV.Implementation.ValueConverter
                 return defaultValue;
 
             #region special handling of issues in case something in the background is broken
-            // there are cases where the PortalSettins will be null or something, and in these cases the serializer would break down
-            // so this is to just ensure that if it can't be converted, it'll just fall back
+            // there are cases where the PortalSettings will be null or something, and in these cases the serializer would break down
+            // so this is to just ensure that if it can't be converted, it'll just fall back to default
             try
             {
                 return Path.Combine(new PortalSettings(fileInfo.PortalId)?.HomeDirectory ?? "", fileInfo?.RelativePath ?? "");

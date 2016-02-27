@@ -93,35 +93,45 @@ namespace ToSic.SexyContent
             }
             #endregion
 
-            // new implementation based on revised EAV API
-            var result = Entity.GetBestValue(attributeName, _dimensions);
+
+            // 2016-02-27 2dm - fixed to use the full standard ValueConverter - seems to fix some issues
+            var result = Entity.GetBestValue(attributeName, _dimensions, true); // let internal resolver do it all now
+                                                                                // var result = Entity.GetBestValue(attributeName, _dimensions);
+
+            // set out-information
             propertyNotFound = result == null;
+            return result;
 
-            #region handle 2sxc special conversions for file names and entity-lists
 
-            if (!propertyNotFound)
-            {
-	            if (Entity.Attributes.ContainsKey(attributeName))
-	            {
-		            var attribute = Entity.Attributes[attributeName];
-		            if (attribute.Type == "Hyperlink" && result is string)
-			            result = SexyContent.ResolveHyperlinkValues((string) result,
-				            SexyContext == null ? PortalSettings.Current : SexyContext.OwnerPS);
+            // #region handle 2sxc special conversions for file names and entity-lists
 
-		            if (attribute.Type == "Entity" && result is EntityRelationship)
-			            // Convert related entities to Dynamics
-			            result = ((EntityRelationship) result).Select(
-				            p => new DynamicEntity(p, _dimensions, SexyContext)
-				            ).ToList();
-	            }
-	            return result;
-            }
-            #endregion
+            //if (!propertyNotFound)
+            //{
+            // if (Entity.Attributes.ContainsKey(attributeName))
+            // {
+            //  var attribute = Entity.Attributes[attributeName];
+            //  if (attribute.Type == "Hyperlink" && result is string)
+            //   result = SexyContent.ResolveHyperlinkValues((string) result,
+            //    SexyContext == null ? PortalSettings.Current : SexyContext.OwnerPS);
 
-            #region all failed, return null
-            propertyNotFound = true;
-            return null;
-            #endregion
+            //  if (attribute.Type == "Entity" && result is EntityRelationship)
+            //   // Convert related entities to Dynamics
+            //   result = ((EntityRelationship) result).Select(
+            //    p => new DynamicEntity(p, _dimensions, SexyContext)
+            //    ).ToList();
+            // }
+
+            // return result;
+            //}
+            //#endregion
+
+
+
+            //#region all failed, return null
+            //propertyNotFound = true;
+            //return null;
+
+            //#endregion
 
 
         }
