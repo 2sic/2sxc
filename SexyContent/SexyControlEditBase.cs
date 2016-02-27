@@ -140,7 +140,14 @@ namespace ToSic.SexyContent
             {
                 // If Sexy is null, instanciate new SexyContent(ZoneId, 0);
                 if (_sexyForSecurityCheck == null)
-                    _sexyForSecurityCheck = (Sexy == null ? new SexyContent(ZoneId.Value, 0, true, ModuleConfiguration.OwnerPortalID, ModuleConfiguration) : Sexy);
+                {
+                    // because this is a fairly special use case, just make sure everything is initialized...
+                    // ToSic.SexyContent.Settings.EnsureSystemIsInitialized();
+
+                    _sexyForSecurityCheck = (Sexy == null
+                        ? new SexyContent(ZoneId.Value, 0, true, ModuleConfiguration.OwnerPortalID, ModuleConfiguration)
+                        : Sexy);
+                }
 
                 return _sexyForSecurityCheck;
             }

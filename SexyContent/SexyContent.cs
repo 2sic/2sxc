@@ -1,27 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Threading;
 using System.Web;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
-using DotNetNuke.Services.Localization;
 using DotNetNuke.Services.Search.Entities;
 using ToSic.Eav;
 using ToSic.Eav.BLL;
-using ToSic.Eav.DataSources;
-using ToSic.Eav.ValueProvider;
-using ToSic.SexyContent.DataSources;
-using ToSic.SexyContent.Engines.TokenEngine;
 using ToSic.SexyContent.Environment.Interfaces;
 using ToSic.SexyContent.Search;
 using ToSic.SexyContent.Statics;
-using Assembly = System.Reflection.Assembly;
-using FileInfo = System.IO.FileInfo;
-using IDataSource = ToSic.Eav.DataSources.IDataSource;
 
 namespace ToSic.SexyContent
 {
@@ -33,15 +21,9 @@ namespace ToSic.SexyContent
     {
         // todo: finish refactoring
         // currently is still a mix of
-        // - constants
         // - dnn-module
         // - situation-context (like current-app/zone/template)
 
-        #region Constants
-
-
-
-        #endregion
 
         #region Properties
 
@@ -51,7 +33,7 @@ namespace ToSic.SexyContent
         /// </summary>
         public EavDataController ContentContext;
 
-        private int? ZoneId { get; set; }
+        internal int? ZoneId { get; set; }
 
         public int? AppId { get; private set; }
 
@@ -62,11 +44,14 @@ namespace ToSic.SexyContent
         // must cache App, it gets re-created on each single call - about 10x per request!
         private App _app;
         public App App {
-            get { return _app ?? (_app = AppHelpers.GetApp(ZoneId.Value, AppId.Value, OwnerPS)); }
+            get { return _app ?? (_app = AppHelpers.GetApp(ZoneId.Value, AppId.Value, PortalSettingsOfOriginalModule)); }
         }
 
-        public PortalSettings OwnerPS { get; set; }
-        public PortalSettings PS { get; set; }
+        /// <summary>
+        /// This returns the PS of the original module. When a module is mirrored across portals,
+        /// then this will be different from the PortalSettingsOfVisitedPage, otherwise they are the same
+        /// </summary>
+        internal PortalSettings PortalSettingsOfOriginalModule { get; set; }
 
         /// <summary>
         /// Environment - should be the place to refactor everything into, which is the host around 2sxc
@@ -84,28 +69,20 @@ namespace ToSic.SexyContent
         /// </summary>
         public SexyContent() : this(0, 0, true) {}
 
-        /// <summary>
-        /// This is needed so when the application starts, we can configure our IoC container
-        /// </summary>
-        static SexyContent()
-        {
-            new UnityConfig().Configure();
-            SetEavConnectionString();
-        }
+
 
         /// <summary>
         /// Instanciates Content and Template-Contexts
         /// </summary>
         public SexyContent(int zoneId, int appId, bool enableCaching = true, int? ownerPortalId = null, ModuleInfo moduleInfo = null)
         {
-            OwnerPS = ownerPortalId.HasValue ? new PortalSettings(ownerPortalId.Value) : PortalSettings.Current;
-            PS = PortalSettings.Current;
+            PortalSettingsOfOriginalModule = ownerPortalId.HasValue ? new PortalSettings(ownerPortalId.Value) : PortalSettings.Current;
 
             if (zoneId == 0)
-                if (OwnerPS == null || !ZoneHelpers.GetZoneID(OwnerPS.PortalId).HasValue)
+                if (PortalSettingsOfOriginalModule == null || !ZoneHelpers.GetZoneID(PortalSettingsOfOriginalModule.PortalId).HasValue)
                     zoneId = Constants.DefaultZoneId;
                 else
-                    zoneId = ZoneHelpers.GetZoneID(OwnerPS.PortalId).Value;
+                    zoneId = ZoneHelpers.GetZoneID(PortalSettingsOfOriginalModule.PortalId).Value;
 
             if (appId == 0)
                 appId = AppHelpers.GetDefaultAppId(zoneId);
@@ -140,106 +117,6 @@ namespace ToSic.SexyContent
             #endregion
         }
 
-        /// <summary>
-        /// Set EAV's connection string to DNN's
-        /// </summary>
-        public static void SetEavConnectionString()
-        {
-            Eav.Configuration.SetConnectionString("SiteSqlServer");
-        }
-
-        #endregion
-
-
-        #region Get DataSources
-
-        // 2015-04-30 2dm must cache this, shouldn't get re-created on a single call, it's always the same
-        // todo: must ask 2rm if it's ok to cache - can this SexyContent be re-used for other modules?
-        private ValueCollectionProvider _valueCollectionProvider;
-	    public ValueCollectionProvider GetConfigurationProvider(int moduleId)
-        {
-	        if (_valueCollectionProvider == null)
-	        {
-                var provider = new ValueCollectionProvider();
-
-                // only add these in running inside an http-context. Otherwise leave them away!
-                if (HttpContext.Current != null)
-                {
-                    var request = HttpContext.Current.Request;
-                    provider.Sources.Add("querystring", new FilteredNameValueCollectionPropertyAccess("querystring", request.QueryString));
-                    provider.Sources.Add("server", new FilteredNameValueCollectionPropertyAccess("server", request.ServerVariables));
-                    provider.Sources.Add("form", new FilteredNameValueCollectionPropertyAccess("form", request.Form));
-                }
-
-				// Add the standard DNN property sources if PortalSettings object is available
-		        if (PS != null)
-        {
-			        var dnnUsr = PS.UserInfo;
-			        var dnnCult = Thread.CurrentThread.CurrentCulture;
-			        var dnn = new TokenReplaceDnn(App, moduleId, PS, dnnUsr);
-			        var stdSources = dnn.PropertySources;
-			        foreach (var propertyAccess in stdSources)
-				        provider.Sources.Add(propertyAccess.Key,
-					        new ValueProviderWrapperForPropertyAccess(propertyAccess.Key, propertyAccess.Value, dnnUsr, dnnCult));
-		        }
-
-		    provider.Sources.Add("app", new AppPropertyAccess("app", App));
-
-                // add module if it was not already added previously
-	            if (!provider.Sources.ContainsKey("module"))
-	            {
-	                var modulePropertyAccess = new StaticValueProvider("module");
-		    modulePropertyAccess.Properties.Add("ModuleID", moduleId.ToString(CultureInfo.InvariantCulture));
-		    provider.Sources.Add(modulePropertyAccess.Name, modulePropertyAccess);
-                }
-	            _valueCollectionProvider = provider;
-            }
-	        return _valueCollectionProvider;
-        }
-
-        /// <summary>
-        /// The EAV DataSource
-        /// </summary>
-        private IDataSource _viewDataSource;// { get; set; }
-
-        public IDataSource GetViewDataSource(int moduleId, bool showDrafts, Template template)
-        {
-            if (_viewDataSource == null)
-            {
-	            var configurationProvider = GetConfigurationProvider(moduleId);
-
-				// Get ModuleDataSource
-                var initialSource = DataSource.GetInitialDataSource(ZoneId, AppId, showDrafts);
-				var moduleDataSource = DataSource.GetDataSource<ModuleDataSource>(ZoneId, AppId, initialSource, configurationProvider);
-                moduleDataSource.ModuleId = moduleId;
-                if(template != null)
-                    moduleDataSource.OverrideTemplateId = template.TemplateId;
-                moduleDataSource.Sexy = this;
-
-	            var viewDataSourceUpstream = moduleDataSource;
-
-	            // If the Template has a Data-Pipeline, use it instead of the ModuleDataSource created above
-				if (template != null && template.Pipeline != null)
-					viewDataSourceUpstream = null;
-
-				var viewDataSource = DataSource.GetDataSource<ViewDataSource>(ZoneId, AppId, viewDataSourceUpstream, configurationProvider);
-
-				// Take Publish-Properties from the View-Template
-	            if (template != null)
-	            {
-                    viewDataSource.Publish.Enabled = template.PublishData;
-                    viewDataSource.Publish.Streams = template.StreamsToPublish;
-
-					// Append Streams of the Data-Pipeline (this doesn't require a change of the viewDataSource itself)
-		            if (template.Pipeline != null)
-						DataPipelineFactory.GetDataSource(AppId.Value, template.Pipeline.EntityId, configurationProvider, viewDataSource);
-                }
-
-                _viewDataSource = viewDataSource;
-            }
-
-            return _viewDataSource;
-        }
 
         #endregion
 
@@ -273,6 +150,7 @@ namespace ToSic.SexyContent
 
 
         // --------------------------------------------------------------------------------------
+        // 2016-02-27 2dm: the following stuff is all turned off, but still here in case errors appear and we need to see what was originally here
         #region removed / deprecated stuff, probably not needed any more
 
         //public const string ContentGroupItemIDString = "ContentGroupItemID";
@@ -598,6 +476,123 @@ namespace ToSic.SexyContent
 
         //#endregion
 
+
+        #region Get DataSources
+
+        // 2015-04-30 2dm must cache this, shouldn't get re-created on a single call, it's always the same
+        // todo: must ask 2rm if it's ok to cache - can this SexyContent be re-used for other modules?
+        //   private ValueCollectionProvider _valueCollectionProvider;
+        //public ValueCollectionProvider GetConfigProviderForModule(int moduleId, PortalSettings portalSettings)
+        //   {
+        //    if (_valueCollectionProvider != null) return _valueCollectionProvider;
+
+        //    var provider = new ValueCollectionProvider();
+
+        //    // only add these in running inside an http-context. Otherwise leave them away!
+        //    if (HttpContext.Current != null)
+        //    {
+        //        var request = HttpContext.Current.Request;
+        //        provider.Sources.Add("querystring", new FilteredNameValueCollectionPropertyAccess("querystring", request.QueryString));
+        //        provider.Sources.Add("server", new FilteredNameValueCollectionPropertyAccess("server", request.ServerVariables));
+        //        provider.Sources.Add("form", new FilteredNameValueCollectionPropertyAccess("form", request.Form));
+        //    }
+
+        //    // Add the standard DNN property sources if PortalSettings object is available
+        //    if (portalSettings != null)
+        //    {
+        //        var dnnUsr = portalSettings.UserInfo;
+        //        var dnnCult = Thread.CurrentThread.CurrentCulture;
+        //        var dnn = new TokenReplaceDnn(App, moduleId, portalSettings, dnnUsr);
+        //        var stdSources = dnn.PropertySources;
+        //        foreach (var propertyAccess in stdSources)
+        //            provider.Sources.Add(propertyAccess.Key,
+        //                new ValueProviderWrapperForPropertyAccess(propertyAccess.Key, propertyAccess.Value, dnnUsr, dnnCult));
+        //    }
+
+        //    provider.Sources.Add("app", new AppPropertyAccess("app", App));
+
+        //    // add module if it was not already added previously
+        //    if (!provider.Sources.ContainsKey("module"))
+        //    {
+        //        var modulePropertyAccess = new StaticValueProvider("module");
+        //        modulePropertyAccess.Properties.Add("ModuleID", moduleId.ToString(CultureInfo.InvariantCulture));
+        //        provider.Sources.Add(modulePropertyAccess.Name, modulePropertyAccess);
+        //    }
+        //    _valueCollectionProvider = provider;
+        //    return _valueCollectionProvider;
+        //   }
+
+        ///// <summary>
+        ///// The EAV DataSource
+        ///// </summary>
+        //private IDataSource _viewDataSource;// { get; set; }
+
+        //public IDataSource GetViewDataSource(int moduleId, bool showDrafts, Template template)
+        //{
+        //    if (_viewDataSource != null) return _viewDataSource;
+        //    _viewDataSource = ViewDataSource.ForModule(moduleId, showDrafts, template, this);
+        //    return _viewDataSource;
+
+        //2016-02-27 2dm - extracted this away from here
+        //var configurationProvider = GetConfigProviderForModule(moduleId, PS);
+
+        //// Get ModuleDataSource
+        //var initialSource = DataSource.GetInitialDataSource(ZoneId, AppId, showDrafts);
+        //var moduleDataSource = DataSource.GetDataSource<ModuleDataSource>(ZoneId, AppId, initialSource, configurationProvider);
+        //moduleDataSource.ModuleId = moduleId;
+        //if(template != null)
+        //    moduleDataSource.OverrideTemplateId = template.TemplateId;
+        //moduleDataSource.Sexy = this;
+
+        //var viewDataSourceUpstream = moduleDataSource;
+
+        //// If the Template has a Data-Pipeline, use it instead of the ModuleDataSource created above
+        //if (template != null && template.Pipeline != null)
+        //    viewDataSourceUpstream = null;
+
+        //var viewDataSource = DataSource.GetDataSource<ViewDataSource>(ZoneId, AppId, viewDataSourceUpstream, configurationProvider);
+
+        //// Take Publish-Properties from the View-Template
+        //if (template != null)
+        //{
+        //    viewDataSource.Publish.Enabled = template.PublishData;
+        //    viewDataSource.Publish.Streams = template.StreamsToPublish;
+
+        //    // Append Streams of the Data-Pipeline (this doesn't require a change of the viewDataSource itself)
+        //    if (template.Pipeline != null)
+        //        DataPipelineFactory.GetDataSource(AppId.Value, template.Pipeline.EntityId, configurationProvider, viewDataSource);
+        //}
+
+        //_viewDataSource = viewDataSource;
+
+        //return _viewDataSource;
+        //}
+
+        // 2016-02-27 2dm - removed, it was only used in 
+        ///// <summary>
+        ///// This is the PS of the current page.
+        ///// </summary>
+        //internal PortalSettings PortalSettingsOfVisitedPage => PortalSettings.Current;
+
+        ///// <summary>
+        ///// This is needed so when the application starts, we can configure our IoC container
+        ///// </summary>
+        //static SexyContent()
+        //{
+        //    new UnityConfig().Configure();
+        //    SetEavConnectionString();
+        //}
+
+        // 2016-02-27 2dm - moved to settings
+        ///// <summary>
+        ///// Set EAV's connection string to DNN's
+        ///// </summary>
+        //public static void SetEavConnectionString()
+        //{
+        //    Eav.Configuration.SetConnectionString("SiteSqlServer");
+        //}
+
+        #endregion
         #endregion
     }
 }

@@ -130,14 +130,17 @@ namespace ToSic.SexyContent.ViewAPI
 				var template = Sexy.Templates.GetTemplate(templateId);
 
                 var engine = EngineFactory.CreateEngine(template);
-				var dataSource =
-					(ViewDataSource)
-						Sexy.GetViewDataSource(ActiveModule.ModuleID, SecurityHelpers.HasEditPermission(ActiveModule), template);
+                // before 2016-02-27 2dm: 
+                //var dataSource =
+                //	(ViewDataSource)
+                //		Sexy.GetViewDataSource(ActiveModule.ModuleID, SecurityHelpers.HasEditPermission(ActiveModule), template);
+                var dataSource =
+					(ViewDataSource) ViewDataSource.ForModule(ActiveModule.ModuleID, SecurityHelpers.HasEditPermission(ActiveModule), template, Sexy);
                 engine.Init(template, Sexy.App, ActiveModule, dataSource, InstancePurposes.WebView, Sexy);
                 engine.CustomizeData();
 
 				if (template.ContentTypeStaticName != "" && template.ContentDemoEntity == null &&
-				    dataSource["Default"].List.Count == 0)
+				    !dataSource["Default"].List.Any())// .Count == 0)
 				{
 					var toolbar = "<ul class='sc-menu' data-toolbar='" +
 					              JsonConvert.SerializeObject(new {sortOrder = 0, useModuleList = true, action = "edit"}) + "'></ul>";

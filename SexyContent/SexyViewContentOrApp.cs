@@ -189,7 +189,8 @@ namespace ToSic.SexyContent
 				string renderedTemplate;
 
 				var engine = EngineFactory.CreateEngine(Template);
-				var dataSource = (ViewDataSource)Sexy.GetViewDataSource(ModuleId, SecurityHelpers.HasEditPermission(ModuleConfiguration), Template);
+                // before 2016-02-27 2dm: var dataSource = (ViewDataSource)Sexy.GetViewDataSource(ModuleId, SecurityHelpers.HasEditPermission(ModuleConfiguration), Template);
+                var dataSource = (ViewDataSource) ViewDataSource.ForModule(ModuleId, SecurityHelpers.HasEditPermission(ModuleConfiguration), Template, Sexy);
 				engine.Init(Template, Sexy.App, ModuleConfiguration, dataSource, Request.QueryString["type"] == "data" ? InstancePurposes.PublishData : InstancePurposes.WebView, Sexy);
 				engine.CustomizeData();
 

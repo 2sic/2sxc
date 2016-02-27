@@ -84,7 +84,7 @@ namespace ToSic.SexyContent.Engines.TokenEngine
 
         private void InitTokenReplace()
         {
-            var confProv = Sexy.GetConfigurationProvider(ModuleInfo.ModuleID);
+            var confProv = ViewDataSource.GetConfigProviderForModule(ModuleInfo.ModuleID, /*Sexy.PortalSettingsOfVisitedPage,*/ Sexy.App); //Sexy.GetConfigProviderForModule(ModuleInfo.ModuleID, Sexy.PS);
             tokenReplace = new TokenReplaceEav(App, ModuleInfo.ModuleID, PortalSettings.Current, confProv);
             
             // Add the Content and ListContent property sources used always

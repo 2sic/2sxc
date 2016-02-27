@@ -69,7 +69,7 @@ namespace ToSic.SexyContent.Statics
         /// <param name="templateLocation"></param>
         internal void EnsureTemplateFolderExists(HttpServerUtility server, string templateLocation)
         {
-            var portalPath = templateLocation == Settings.TemplateLocations.HostFileSystem ? server.MapPath(Settings.PortalHostDirectory) : SxContext.OwnerPS.HomeDirectoryMapPath;
+            var portalPath = templateLocation == Settings.TemplateLocations.HostFileSystem ? server.MapPath(Settings.PortalHostDirectory) : SxContext.PortalSettingsOfOriginalModule.HomeDirectoryMapPath;
             var sexyFolderPath = Path.Combine(portalPath, Settings.TemplateFolder);
 
             var sexyFolder = new DirectoryInfo(sexyFolderPath);

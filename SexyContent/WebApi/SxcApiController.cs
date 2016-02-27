@@ -23,7 +23,8 @@ namespace ToSic.SexyContent.WebApi
                 if (_appAndDataHelpers == null)
                 {
                     var moduleInfo = Request.FindModuleInfo();
-                    var viewDataSource = Sexy.GetViewDataSource(Request.FindModuleId(), SecurityHelpers.HasEditPermission(moduleInfo), Sexy.ContentGroups.GetContentGroupForModule(moduleInfo.ModuleID).Template);
+                    // before 2016-02-27 2dm: var viewDataSource = Sexy.GetViewDataSource(Request.FindModuleId(), SecurityHelpers.HasEditPermission(moduleInfo), Sexy.ContentGroups.GetContentGroupForModule(moduleInfo.ModuleID).Template);
+                    var viewDataSource = ViewDataSource.ForModule(Request.FindModuleId(), SecurityHelpers.HasEditPermission(moduleInfo), Sexy.ContentGroups.GetContentGroupForModule(moduleInfo.ModuleID).Template, Sexy);
                     _appAndDataHelpers = new AppAndDataHelpers(Sexy, moduleInfo, (ViewDataSource)viewDataSource, Sexy.App);
                 }
                 return _appAndDataHelpers;

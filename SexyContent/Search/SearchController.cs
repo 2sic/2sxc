@@ -7,6 +7,7 @@ using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.Search.Entities;
 using ToSic.Eav;
+using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Statics;
@@ -43,7 +44,8 @@ namespace ToSic.SexyContent.Search
             var template = contentGroup.Template;
 
             // This list will hold all EAV entities to be indexed
-            var dataSource = sexy.GetViewDataSource(moduleInfo.ModuleID, false, template);
+            // before 2016-02-27 2dm: var dataSource = sexy.GetViewDataSource(moduleInfo.ModuleID, false, template);
+            var dataSource = ViewDataSource.ForModule(moduleInfo.ModuleID, false, template, sexy);
 			
             if (template == null)
                 return searchDocuments;
