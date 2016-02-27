@@ -230,7 +230,7 @@ namespace ToSic.SexyContent.Statics
                 else
                 {
                     // todo: fix 2dm
-                    var appName = SexyContent.TryToGetReliableSetting(module, SexyContent.AppNameString);//  module.ModuleSettings[AppNameString];
+                    var appName = DnnStuffToRefactor.TryToGetReliableSetting(module, SexyContent.AppNameString);//  module.ModuleSettings[AppNameString];
 
                     if (appName != null)
                     {
@@ -261,12 +261,12 @@ namespace ToSic.SexyContent.Statics
 
             if (appId == 0 || !appId.HasValue)
                 //moduleController.DeleteModuleSetting(module.ModuleID, AppNameString);
-                SexyContent.UpdateModuleSettingForAllLanguages(module.ModuleID, SexyContent.AppNameString, null);
+                DnnStuffToRefactor.UpdateModuleSettingForAllLanguages(module.ModuleID, SexyContent.AppNameString, null);
             else
             {
                 var appName = ((BaseCache)DataSource.GetCache(0, 0)).ZoneApps[zoneId.Value].Apps[appId.Value];
                 //moduleController.UpdateModuleSetting(module.ModuleID, AppNameString, appName);
-                SexyContent.UpdateModuleSettingForAllLanguages(module.ModuleID, SexyContent.AppNameString, appName);
+                DnnStuffToRefactor.UpdateModuleSettingForAllLanguages(module.ModuleID, SexyContent.AppNameString, appName);
             }
 
             // Change to 1. available template if app has been set

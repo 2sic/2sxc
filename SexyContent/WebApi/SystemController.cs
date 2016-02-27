@@ -7,6 +7,7 @@ using DotNetNuke.Common;
 using DotNetNuke.Entities.Controllers;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
+using DotNetNuke.Services.Localization;
 using DotNetNuke.Web.Api;
 using DotNetNuke.Web.UI.WebControls;
 using ToSic.Eav;
@@ -29,7 +30,7 @@ namespace ToSic.SexyContent.WebApi
 	    {
 	        var portalId = PortalSettings.PortalId;
             var zoneId = ZoneHelpers.GetZoneID(portalId);
-            var cultures = SexyContent.GetCulturesWithActiveState(portalId, zoneId.Value).Select(c => new
+            var cultures = ZoneHelpers.GetCulturesWithActiveState(portalId, zoneId.Value).Select(c => new
             {
                 c.Code,
                 Culture = c.Text,
@@ -53,7 +54,9 @@ namespace ToSic.SexyContent.WebApi
             var zoneId = ZoneHelpers.GetZoneID(portalId);
 	        var cache = DataSource.GetCache(zoneId.Value);
             var sexy = new SexyContent(zoneId.Value, cache.AppId);
-            sexy.SetCultureState(cultureCode, enable, PortalSettings.PortalId);
+            var cultureText = LocaleController.Instance.GetLocale(cultureCode).Text;
+
+            sexy.ContentContext.Dimensions.AddOrUpdateLanguage(cultureCode, cultureText, enable, PortalSettings.PortalId);
 	    }
 
 

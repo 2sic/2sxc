@@ -60,11 +60,11 @@ namespace ToSic.SexyContent
 					var hasContent = AppId.HasValue && Template != null && ContentGroup.Exists;
 
                     // minor workaround because the settings in the cache are wrong after using a page template
-				    var tempVisibleStatus = SexyContent.TryToGetReliableSetting(ModuleConfiguration, SexyContent.SettingsShowTemplateChooser);
+				    var tempVisibleStatus = DnnStuffToRefactor.TryToGetReliableSetting(ModuleConfiguration, SexyContent.SettingsShowTemplateChooser);
 				    var templateChooserVisible = bool.Parse(tempVisibleStatus ?? "true");
 
 				    var languages =
-				        SexyContent.GetCulturesWithActiveState(PortalId, ZoneId.Value)
+				        ZoneHelpers.GetCulturesWithActiveState(PortalId, ZoneId.Value)
 				            .Where(c => c.Active)
 				            .Select(c => new {key = c.Code.ToLower(), name = c.Text});
 
@@ -97,7 +97,8 @@ namespace ToSic.SexyContent
                                 dialogUrl = Globals.NavigateURL(TabId),
                                 returnUrl = Request.RawUrl,
                                 appPath = AppId.HasValue ? Sexy.App.Path + "/" : null,
-                                cultureDimension = AppId.HasValue ? Sexy.GetCurrentLanguageID() : new int?(),
+                                // 2016-02-27 2dm - seems unused
+                                //cultureDimension = AppId.HasValue ? Sexy.GetCurrentLanguageID() : new int?(),
                                 isList = Template != null && Template.UseForList,
                                 version = SexyContent.Version.ToString() // SexyContent.Version.ToString()
                             },

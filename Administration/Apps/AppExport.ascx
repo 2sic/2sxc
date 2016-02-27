@@ -2,6 +2,7 @@
 <%@ Import Namespace="ToSic.Eav" %>
 <%@ Import Namespace="ToSic.SexyContent" %>
 <%@ Import Namespace="System.IO" %>
+<%@ Import Namespace="ToSic.SexyContent.Statics" %>
 
 <%
 	var version = "";
@@ -29,7 +30,7 @@ Contains:<br/>
         <%= DataSource.GetInitialDataSource(ZoneId.Value, AppId.Value).Out["Default"].List.Count %> Entities
     </li>
     <li>
-        <%= SexyContent.GetCulturesWithActiveState(PortalId, ZoneId.Value).Count(p => p.Active) %> Languages
+        <%= ZoneHelpers.GetCulturesWithActiveState(PortalId, ZoneId.Value).Count(p => p.Active) %> Languages
     </li>
     <li>
         <%= Sexy.Templates.GetAllTemplates().Count() %> templates

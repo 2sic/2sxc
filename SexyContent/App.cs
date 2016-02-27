@@ -59,7 +59,7 @@ namespace ToSic.SexyContent
                 _data = DataSource.GetDataSource<DataSources.App>(initialSource.ZoneId,
                     initialSource.AppId, initialSource, initialSource.ConfigurationProvider);
                 var defaultLanguage = "";
-                var languagesActive = SexyContent.GetCulturesWithActiveState(OwnerPS.PortalId, ZoneId).Any(c => c.Active);
+                var languagesActive = ZoneHelpers.GetCulturesWithActiveState(OwnerPS.PortalId, ZoneId).Any(c => c.Active);
                 if (languagesActive)
                     defaultLanguage = OwnerPS.DefaultLanguage;
                 Data.DefaultLanguage = defaultLanguage;

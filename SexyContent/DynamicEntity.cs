@@ -7,7 +7,6 @@ using DotNetNuke.Entities.Portals;
 using Newtonsoft.Json;
 using ToSic.Eav;
 using ToSic.SexyContent.EAVExtensions;
-using EntityRelationship = ToSic.Eav.Data.EntityRelationship;
 
 namespace ToSic.SexyContent
 {
@@ -103,6 +102,7 @@ namespace ToSic.SexyContent
             return result;
 
 
+            // 2016-02-27 2dm - fixed to use the full standard ValueConverter - this is mostly the old stuff
             // #region handle 2sxc special conversions for file names and entity-lists
 
             //if (!propertyNotFound)

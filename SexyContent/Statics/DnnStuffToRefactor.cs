@@ -1,0 +1,78 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Web;
+using DotNetNuke.Entities.Modules;
+using DotNetNuke.Services.Localization;
+
+namespace ToSic.SexyContent.Statics
+{
+    public class DnnStuffToRefactor
+    {
+
+        /// <summary>
+        /// Returns true if the Portal HomeDirectory Contains the 2sxc Folder and this folder contains the web.config and a Content folder
+        /// </summary>
+        public void EnsurePortalIsConfigured(SexyContent sxc, HttpServerUtility server, string controlPath)
+        {
+            var sexyFolder = new DirectoryInfo(server.MapPath(Path.Combine(sxc.OwnerPS.HomeDirectory, SexyContent.TemplateFolder)));
+            var contentFolder = new DirectoryInfo(Path.Combine(sexyFolder.FullName, "Content"));
+            var webConfigTemplate = new FileInfo(Path.Combine(sexyFolder.FullName, SexyContent.WebConfigFileName));
+            if (!(sexyFolder.Exists && webConfigTemplate.Exists && contentFolder.Exists))
+            {
+                // configure it
+                var tm = new TemplateManager(sxc);
+                tm.EnsureTemplateFolderExists(server, SexyContent.TemplateLocations.PortalFileSystem);
+            };
+        }
+
+
+        #region Settings (because DNN doesn't do it reliably)
+
+        public static string TryToGetReliableSetting(ModuleInfo module, string settingName)
+        {
+            if (module.ModuleSettings.ContainsKey(settingName))
+                return module.ModuleSettings[settingName].ToString();
+
+            // if not found, it could be a caching issue
+            var settings = new ModuleController().GetModuleSettings(module.ModuleID);
+            if (settings.ContainsKey(settingName))
+                return settings[settingName].ToString();
+
+            return null;
+        }
+
+
+        /// <summary>
+        /// Update a setting for all language-versions of a module
+        /// </summary>
+        public static void UpdateModuleSettingForAllLanguages(int moduleId, string key, string value)
+        {
+            var moduleController = new ModuleController();
+
+            // Find this module in other languages and update contentGroupGuid
+            var originalModule = moduleController.GetModule(moduleId);
+            var languages = LocaleController.Instance.GetLocales(originalModule.PortalID);
+
+            if (!originalModule.IsDefaultLanguage && originalModule.DefaultLanguageModule != null)
+                originalModule = originalModule.DefaultLanguageModule;
+
+            foreach (var language in languages)
+            {
+                // Find module for given Culture
+                var moduleByCulture = moduleController.GetModuleByCulture(originalModule.ModuleID, originalModule.TabID, originalModule.PortalID, language.Value);
+
+                // Break if no module found
+                if (moduleByCulture == null)
+                    continue;
+
+                if (value == null)
+                    moduleController.DeleteModuleSetting(moduleByCulture.ModuleID, key);
+                else
+                    moduleController.UpdateModuleSetting(moduleByCulture.ModuleID, key, value);
+            }
+        }
+        #endregion
+    }
+}

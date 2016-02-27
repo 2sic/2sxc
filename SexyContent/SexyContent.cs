@@ -4,26 +4,17 @@ using System.Configuration;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web;
-using System.Web.UI;
-using System.Web.UI.HtmlControls;
-using DotNetNuke.Common;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
-using DotNetNuke.Entities.Portals.Internal;
-using DotNetNuke.Entities.Tabs;
-using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Services.Localization;
 using DotNetNuke.Services.Search.Entities;
-using Newtonsoft.Json;
 using ToSic.Eav;
 using ToSic.Eav.BLL;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.DataSources;
-using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Engines.TokenEngine;
 using ToSic.SexyContent.Environment.Interfaces;
 using ToSic.SexyContent.Search;
@@ -40,6 +31,12 @@ namespace ToSic.SexyContent
     /// </summary>
     public class SexyContent : ModuleSearchBase, IUpgradeable
     {
+        // todo: finish refactoring
+        // currently is still a mix of
+        // - constants
+        // - dnn-module
+        // - situation-context (like current-app/zone/template)
+
         #region Constants
 
         public static readonly Version Version = Assembly.GetExecutingAssembly().GetName().Version;
@@ -128,7 +125,7 @@ namespace ToSic.SexyContent
         static SexyContent()
         {
             new UnityConfig().Configure();
-            SetEAVConnectionString();
+            SetEavConnectionString();
         }
 
         /// <summary>
@@ -181,34 +178,13 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Set EAV's connection string to DNN's
         /// </summary>
-        public static void SetEAVConnectionString()
+        public static void SetEavConnectionString()
         {
             Eav.Configuration.SetConnectionString("SiteSqlServer");
         }
 
         #endregion
 
-        #region Ensure Portal is configured when working with 2sxc
-
-
-        /// <summary>
-        /// Returns true if the Portal HomeDirectory Contains the 2sxc Folder and this folder contains the web.config and a Content folder
-        /// </summary>
-        public void EnsurePortalIsConfigured(HttpServerUtility server, string controlPath)
-        {
-            var sexyFolder = new DirectoryInfo(server.MapPath(Path.Combine(OwnerPS.HomeDirectory, TemplateFolder)));
-            var contentFolder = new DirectoryInfo(Path.Combine(sexyFolder.FullName, "Content"));
-            var webConfigTemplate = new FileInfo(Path.Combine(sexyFolder.FullName, WebConfigFileName));
-            if (!(sexyFolder.Exists && webConfigTemplate.Exists && contentFolder.Exists))
-            {
-                // configure it
-                var tm = new TemplateManager(this);
-                tm.EnsureTemplateFolderExists(server, TemplateLocations.PortalFileSystem);
-            };
-        }
-
-
-        #endregion
 
         #region Get DataSources
 
@@ -302,7 +278,7 @@ namespace ToSic.SexyContent
         #endregion
 
 
-        #region DNN Interface Members
+        #region DNN Interface Members - search, upgrade
 
         public override IList<SearchDocument> GetModifiedSearchDocuments(ModuleInfo moduleInfo, DateTime beginDate)
         {
@@ -316,151 +292,18 @@ namespace ToSic.SexyContent
             }
         }
 
-        #endregion
-
-
-        #region Culture Handling
-
-        [Obsolete("Don't use this anymore, use 'GetCurrentLanguageName' (work with strings)")]
-        public int? GetCurrentLanguageID(bool UseDefaultLanguageIfNotFound = false)
-        {
-            var LanguageID = ContentContext.Dimensions.GetLanguageId(Thread.CurrentThread.CurrentCulture.Name);
-            if (!LanguageID.HasValue && UseDefaultLanguageIfNotFound)
-                LanguageID = ContentContext.Dimensions.GetLanguageId(PortalSettings.Current.DefaultLanguage);
-            return LanguageID;
-        }
-
-        public string GetCurrentLanguageName()
-        {
-            return Thread.CurrentThread.CurrentCulture.Name;
-        }
-
-        public void SetCultureState(string CultureCode, bool Active, int PortalID)
-        {
-            var EAVLanguage = ContentContext.Dimensions.GetLanguages().Where(l => l.ExternalKey == CultureCode).FirstOrDefault();
-            // If the language exists in EAV, set the active state, else add it
-            if (EAVLanguage != null)
-                ContentContext.Dimensions.UpdateDimension(EAVLanguage.DimensionID, Active);
-            else
-            {
-                var CultureText = LocaleController.Instance.GetLocale(CultureCode).Text;
-                ContentContext.Dimensions.AddLanguage(CultureText, CultureCode);
-            }
-        }
-
-
         /// <summary>
-        /// Returns all DNN Cultures with active / inactive state
+        /// This is part of the IUpgradeable of DNN
         /// </summary>
-        public static List<CulturesWithActiveState> GetCulturesWithActiveState(int portalId, int zoneId)
+        /// <param name="version"></param>
+        /// <returns></returns>
+        public string UpgradeModule(string version)
         {
-            //var DefaultLanguageID = ContentContext.GetLanguageId();
-            var AvailableEAVLanguages = new SexyContent(zoneId, AppHelpers.GetDefaultAppId(zoneId)).ContentContext.Dimensions.GetLanguages();
-            var DefaultLanguageCode = new PortalSettings(portalId).DefaultLanguage;
-            var DefaultLanguage = AvailableEAVLanguages.Where(p => p.ExternalKey == DefaultLanguageCode).FirstOrDefault();
-            var DefaultLanguageIsActive = DefaultLanguage != null && DefaultLanguage.Active;
-
-            return (from c in LocaleController.Instance.GetLocales(portalId)
-                    select new CulturesWithActiveState
-                    {
-                        Code = c.Value.Code,
-                        Text = c.Value.Text,
-                        Active = AvailableEAVLanguages.Any(a => a.Active && a.ExternalKey == c.Value.Code && a.ZoneID == zoneId),
-                        // Allow State Change only if
-                        // 1. This is the default language and default language is not active or
-                        // 2. This is NOT the default language and default language is active
-                        AllowStateChange = (c.Value.Code == DefaultLanguageCode && !DefaultLanguageIsActive) || (DefaultLanguageIsActive && c.Value.Code != DefaultLanguageCode)
-                    }).OrderByDescending(c => c.Code == DefaultLanguageCode).ThenBy(c => c.Code).ToList();
-
-        }
-
-        public class CulturesWithActiveState
-        {
-            public string Code { get; set; }
-            public string Text { get; set; }
-            public bool Active { get; set; }
-            public bool AllowStateChange { get; set; }
-        }
-
-        public static int? GetLanguageId(int zoneId, string externalKey)
-        {
-            return new SexyContent(zoneId, AppHelpers.GetDefaultAppId(zoneId)).ContentContext.Dimensions.GetLanguageId(externalKey);
+			return SexyContentModuleUpgrade.UpgradeModule(version);
         }
 
         #endregion
 
-        #region Helper Methods
-
-        public static void AddDNNVersionToBodyClass(Control Parent)
-        {
-            // Add DNN Version to body as CSS Class
-            var CssClass = "dnn-" + Assembly.GetAssembly(typeof(Globals)).GetName().Version.Major;
-            var body = (HtmlGenericControl)Parent.Page.FindControl("ctl00$body");
-            if(body.Attributes["class"] != null)
-                body.Attributes["class"] += CssClass;
-            else
-                body.Attributes["class"] = CssClass;
-        }
-
-
-
-        #endregion
-
-        #region Upgrade
-
-        public string UpgradeModule(string Version)
-        {
-			return SexyContentModuleUpgrade.UpgradeModule(Version);
-        }
-
-        #endregion
-
-        #region Settings (because DNN doesn't do it reliably)
-
-        public static string TryToGetReliableSetting(ModuleInfo module, string settingName)
-        {
-            if (module.ModuleSettings.ContainsKey(settingName))
-                return module.ModuleSettings[settingName].ToString();
-
-            // if not found, it could be a caching issue
-            var settings = new ModuleController().GetModuleSettings(module.ModuleID);
-            if (settings.ContainsKey(settingName))
-                return settings[settingName].ToString();
-
-            return null;
-        }
-
-        /// <summary>
-        /// Update a setting for all language-versions of a module
-        /// </summary>
-        public static void UpdateModuleSettingForAllLanguages(int moduleId, string key, string value)
-        {
-            var moduleController = new ModuleController();
-
-            // Find this module in other languages and update contentGroupGuid
-            var originalModule = moduleController.GetModule(moduleId);
-            var languages = LocaleController.Instance.GetLocales(originalModule.PortalID);
-
-            if (!originalModule.IsDefaultLanguage && originalModule.DefaultLanguageModule != null)
-                originalModule = originalModule.DefaultLanguageModule;
-
-            foreach (var language in languages)
-            {
-                // Find module for given Culture
-                var moduleByCulture = moduleController.GetModuleByCulture(originalModule.ModuleID, originalModule.TabID, originalModule.PortalID, language.Value);
-
-                // Break if no module found
-                if (moduleByCulture == null)
-                    continue;
-
-                if(value == null)
-                    moduleController.DeleteModuleSetting(moduleByCulture.ModuleID, key);
-                else
-                    moduleController.UpdateModuleSetting(moduleByCulture.ModuleID, key, value);
-            }
-        }
-
-        #endregion
 
 
         // --------------------------------------------------------------------------------------
@@ -710,6 +553,85 @@ namespace ToSic.SexyContent
 
         //         return resultString;
         //     }
+
+        // 2016-02-27 2dm - doesn't seem to be used any where
+        //public static void AddDNNVersionToBodyClass(Control Parent)
+        //{
+        //    // Add DNN Version to body as CSS Class
+        //    var CssClass = "dnn-" + Assembly.GetAssembly(typeof(Globals)).GetName().Version.Major;
+        //    var body = (HtmlGenericControl)Parent.Page.FindControl("ctl00$body");
+        //    if(body.Attributes["class"] != null)
+        //        body.Attributes["class"] += CssClass;
+        //    else
+        //        body.Attributes["class"] = CssClass;
+        //}
+
+
+        // 2016-02-27 2dm - seems unused
+        //public string GetCurrentLanguageName()
+        //{
+        //    return Thread.CurrentThread.CurrentCulture.Name;
+        //}
+
+
+        // 2016-02-27 2dm - seems unused
+        //public static int? GetLanguageId(int zoneId, string externalKey)
+        //{
+        //    return new SexyContent(zoneId, AppHelpers.GetDefaultAppId(zoneId)).ContentContext.Dimensions.GetLanguageId(externalKey);
+        //}
+
+
+        //#region Culture Handling
+
+        // 2016-02-27 2dm - seems unused, was only used in the SexyViewContentOrApp to pass to JS, but it seems it was never used after that
+        //[Obsolete("Don't use this anymore, use 'GetCurrentLanguageName' (work with strings)")]
+        //public int? GetCurrentLanguageID(bool UseDefaultLanguageIfNotFound = false)
+        //{
+        //    var LanguageID = ContentContext.Dimensions.GetLanguageId(Thread.CurrentThread.CurrentCulture.Name);
+        //    if (!LanguageID.HasValue && UseDefaultLanguageIfNotFound)
+        //        LanguageID = ContentContext.Dimensions.GetLanguageId(PortalSettings.Current.DefaultLanguage);
+        //    return LanguageID;
+        //}
+
+        // 2016-02-27 2dm - moved into EAV - Dimensions object
+        //public void AddOrUpdateLanguage(string cultureCode, string cultureText, bool Active, int PortalID)
+        //{
+        //    var EAVLanguage = ContentContext.Dimensions.GetLanguages().Where(l => l.ExternalKey == cultureCode).FirstOrDefault();
+        //    // If the language exists in EAV, set the active state, else add it
+        //    if (EAVLanguage != null)
+        //        ContentContext.Dimensions.UpdateDimension(EAVLanguage.DimensionID, Active);
+        //    else
+        //    {
+        //        //var cultureText = LocaleController.Instance.GetLocale(cultureCode).Text;
+        //        ContentContext.Dimensions.AddLanguage(cultureText, cultureCode);
+        //    }
+        //}
+
+
+        // #endregion
+
+        // #region Ensure Portal is configured when working with 2sxc
+
+        // 2016-02-27 2dm - moved out...
+        ///// <summary>
+        ///// Returns true if the Portal HomeDirectory Contains the 2sxc Folder and this folder contains the web.config and a Content folder
+        ///// </summary>
+        //public void EnsurePortalIsConfigured(HttpServerUtility server, string controlPath)
+        //{
+        //    var sexyFolder = new DirectoryInfo(server.MapPath(Path.Combine(OwnerPS.HomeDirectory, SexyContent.TemplateFolder)));
+        //    var contentFolder = new DirectoryInfo(Path.Combine(sexyFolder.FullName, "Content"));
+        //    var webConfigTemplate = new FileInfo(Path.Combine(sexyFolder.FullName, SexyContent.WebConfigFileName));
+        //    if (!(sexyFolder.Exists && webConfigTemplate.Exists && contentFolder.Exists))
+        //    {
+        //        // configure it
+        //        var tm = new TemplateManager(this);
+        //        tm.EnsureTemplateFolderExists(server, SexyContent.TemplateLocations.PortalFileSystem);
+        //    };
+        //}
+
+
+        //#endregion
+
         #endregion
     }
 }

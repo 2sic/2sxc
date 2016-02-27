@@ -2,6 +2,7 @@
 using System.Linq;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Exceptions;
+using ToSic.SexyContent.Statics;
 
 namespace ToSic.SexyContent
 {
@@ -46,7 +47,7 @@ namespace ToSic.SexyContent
                         pnlTemplateChooser.Visible = true;
 
                     if (AppId.HasValue)
-                        Sexy.EnsurePortalIsConfigured(Server, ControlPath);
+                        new DnnStuffToRefactor().EnsurePortalIsConfigured(Sexy, Server, ControlPath);
                 }
 
                 if (AppId.HasValue)

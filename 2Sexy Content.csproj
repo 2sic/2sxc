@@ -256,6 +256,7 @@
     <Compile Include="Environment\Dnn7\Permissions.cs" />
     <Compile Include="SexyContent\Statics\AppHelpers.cs" />
     <Compile Include="SexyContent\Statics\ContentTypeHelpers.cs" />
+    <Compile Include="SexyContent\Statics\DnnStuffToRefactor.cs" />
     <Compile Include="SexyContent\Statics\SecurityHelpers.cs" />
     <Compile Include="SexyContent\Statics\TemplateManager.cs" />
     <Compile Include="SexyContent\Statics\ZoneHelpers.cs" />
