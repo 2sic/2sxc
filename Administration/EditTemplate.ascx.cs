@@ -6,14 +6,16 @@ using DotNetNuke.Common.Utilities;
 using ToSic.Eav;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
+using ToSic.SexyContent.Statics;
 
 namespace ToSic.SexyContent
 {
     public partial class EditTemplate : SexyControlAdminBase
     {
+        public const string cTemplateId = "TemplateID";
 
-        private bool ModeIsEdit { get { return !String.IsNullOrEmpty(Request.QueryString[SexyContent.TemplateID]); } }
-        private int TemplateID { get { return Convert.ToInt32(Request.QueryString[SexyContent.TemplateID]); } }
+        private bool ModeIsEdit { get { return !String.IsNullOrEmpty(Request.QueryString[(string) cTemplateId]); } }
+        private int TemplateID { get { return Convert.ToInt32(Request.QueryString[(string) cTemplateId]); } }
         private Template Template;
 
         /// <summary>
@@ -157,13 +159,15 @@ namespace ToSic.SexyContent
         /// <param name="e"></param>
         protected void btnUpdate_Click(object sender, EventArgs e)
         {
+            var tm = new TemplateManager(Sexy);
+
 	        var templatePath = ddlTemplateFiles.SelectedValue;
 
 			if (!pnlSelectTemplateFile.Visible)
-				templatePath = Sexy.CreateTemplateFileIfNotExists(txtTemplateFileName.Text, ddlTemplateTypes.SelectedValue, ddlTemplateLocations.SelectedValue, Server, LocalizeString("NewTemplateFile.DefaultText"));
+				templatePath = tm.CreateTemplateFileIfNotExists(txtTemplateFileName.Text, ddlTemplateTypes.SelectedValue, ddlTemplateLocations.SelectedValue, Server, LocalizeString("NewTemplateFile.DefaultText"));
 
 	        var templateId = ModeIsEdit ? Template.TemplateId : new int?();
-	        var pipelineEntityId = ddlDataPipeline.SelectedValue == "0" ? (int?) null : int.Parse(ddlDataPipeline.SelectedValue);
+	        var pipelineEntityId = ddlDataPipeline.SelectedValue == "0" ? (int?) null : Int32.Parse(ddlDataPipeline.SelectedValue);
 
 			if (!chkSeparateContentPresentation.Checked)
 				ctrPresentationType.ContentTypeStaticName = "";
@@ -270,7 +274,8 @@ namespace ToSic.SexyContent
         /// <param name="TemplateDropDown">The template dropdown to databind</param>
         private void BindTemplateFiles(string TemplateType, string TemplateLocation, DropDownList TemplateDropDown)
         {
-            TemplateDropDown.DataSource = Sexy.GetTemplateFiles(Server, TemplateType, TemplateLocation);
+            var tm= new TemplateManager(Sexy);
+            TemplateDropDown.DataSource = tm.GetTemplateFiles(Server, TemplateType, TemplateLocation);
             TemplateDropDown.DataBind();
         }
 
@@ -286,7 +291,7 @@ namespace ToSic.SexyContent
 		    ddlDataPipeline.DataSource = typeFilter.List.Select(e => new
 			{
 				PipelineEntityID = e.Key,
-				Name = string.Format("{0} ({1})", ((Attribute<string>)e.Value["Name"]).TypedContents, e.Key)
+				Name = String.Format("{0} ({1})", ((Attribute<string>)e.Value["Name"]).TypedContents, e.Key)
 			}).OrderBy(e => e.Name);
 		    ddlDataPipeline.DataBind();
 	    }

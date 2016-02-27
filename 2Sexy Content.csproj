@@ -254,6 +254,11 @@
     </Compile>
     <Compile Include="SexyContent\ImportExport\XmlConstants.cs" />
     <Compile Include="Environment\Dnn7\Permissions.cs" />
+    <Compile Include="SexyContent\Statics\AppHelpers.cs" />
+    <Compile Include="SexyContent\Statics\ContentTypeHelpers.cs" />
+    <Compile Include="SexyContent\Statics\SecurityHelpers.cs" />
+    <Compile Include="SexyContent\Statics\TemplateManager.cs" />
+    <Compile Include="SexyContent\Statics\ZoneHelpers.cs" />
     <Compile Include="SexyContent\ViewAPI\TemplateController.cs" />
     <Compile Include="SexyContent\ViewManager\TemplateEditor.cs" />
     <Compile Include="SexyContent\UnityConfig.cs" />
@@ -635,7 +640,6 @@
     <Content Include="Administration\App_LocalResources\WebApiHelp.ascx.resx" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="SexyContent\Statics\" />
     <Folder Include="Upgrade\Log\" />
   </ItemGroup>
   <ItemGroup>

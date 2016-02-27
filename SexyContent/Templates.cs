@@ -4,6 +4,7 @@ using System.Linq;
 using ToSic.Eav;
 using ToSic.Eav.BLL;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.DataSources.Caches;
 
 namespace ToSic.SexyContent
 {
@@ -30,7 +31,6 @@ namespace ToSic.SexyContent
 
 		public IEnumerable<Template> GetAllTemplates()
 		{
-			
             return TemplateDataSource().List.Select(p => new Template(p.Value)).OrderBy(p => p.Name);
         }
 
@@ -105,5 +105,60 @@ namespace ToSic.SexyContent
 			
 		}
 
-	}
+
+
+
+        /// <summary>
+        /// Returns all templates that should be available in the template selector
+        /// </summary>
+        /// <param name="module"></param>
+        /// <returns></returns>
+        public IEnumerable<Template> GetAvailableTemplatesForSelector(/*ModuleInfo module,*/ int modId, ContentGroups cgContentGroups)
+        {
+            IEnumerable<Template> availableTemplates;
+            var contentGroup = cgContentGroups.GetContentGroupForModule(modId /*module.ModuleID*/);
+            var items = contentGroup.Content;
+
+            if (items.Any(e => e != null))
+                availableTemplates = GetCompatibleTemplates(contentGroup).Where(p => !p.IsHidden);
+            else if (items.Count <= 1)
+                availableTemplates = GetVisibleTemplates();
+            else
+                availableTemplates = GetVisibleTemplates().Where(p => p.UseForList);
+
+            return availableTemplates;
+        }
+
+        private IEnumerable<Template> GetCompatibleTemplates(ContentGroup contentGroup)
+        {
+            var isList = contentGroup.Content.Count > 1;
+
+            var compatibleTemplates = GetAllTemplates().Where(t => t.UseForList || !isList);
+            compatibleTemplates = compatibleTemplates
+                .Where(t => contentGroup.Content.All(c => c == null) || contentGroup.Content.First(e => e != null).Type.StaticName == t.ContentTypeStaticName)
+                .Where(t => contentGroup.Presentation.All(c => c == null) || contentGroup.Presentation.First(e => e != null).Type.StaticName == t.PresentationTypeStaticName)
+                .Where(t => contentGroup.ListContent.All(c => c == null) || contentGroup.ListContent.First(e => e != null).Type.StaticName == t.ListContentTypeStaticName)
+                .Where(t => contentGroup.ListPresentation.All(c => c == null) || contentGroup.ListPresentation.First(e => e != null).Type.StaticName == t.ListPresentationTypeStaticName);
+
+            return compatibleTemplates;
+        }
+
+        public IEnumerable<IContentType> GetAvailableContentTypesForVisibleTemplates()
+        {
+            var AvailableTemplates = GetVisibleTemplates();
+            return GetAvailableContentTypes(SexyContent.AttributeSetScope).Where(p => AvailableTemplates.Any(t => t.ContentTypeStaticName == p.StaticName)).OrderBy(p => p.Name);
+        }
+
+        public IEnumerable<IContentType> GetAvailableContentTypes(string scope, bool includeAttributeTypes = false)
+        {
+            return GetAvailableContentTypes(includeAttributeTypes).Where(p => p.Scope == scope);
+        }
+
+        public IEnumerable<IContentType> GetAvailableContentTypes(bool includeAttributeTypes = false)
+        {
+            var contentTypes = ((BaseCache)DataSource.GetCache(_zoneId, _appId)).GetContentTypes();
+            return contentTypes.Select(c => c.Value).Where(c => includeAttributeTypes || !c.Name.StartsWith("@")).OrderBy(c => c.Name);
+        }
+
+    }
 }

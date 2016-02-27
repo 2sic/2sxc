@@ -10,6 +10,7 @@ using ToSic.SexyContent.Adam;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Razor.Helpers;
+using ToSic.SexyContent.Statics;
 
 namespace ToSic.SexyContent
 {
@@ -57,7 +58,7 @@ namespace ToSic.SexyContent
 
 	        // If PortalSettings is null - for example, while search index runs - HasEditPermission would fail
             // But in search mode, it shouldn't show drafts, so this is ok.
-            App.InitData(PortalSettings.Current != null && SexyContent.HasEditPermission(module), data.ConfigurationProvider);
+            App.InitData(PortalSettings.Current != null && SecurityHelpers.HasEditPermission(module), data.ConfigurationProvider);
         }
 
 	    private Element GetElementFromEntity(IEntity e)
@@ -178,7 +179,7 @@ namespace ToSic.SexyContent
             if (inSource != null)
                 return DataSource.GetDataSource(typeName, inSource.ZoneId, inSource.AppId, inSource, configurationProvider);
 
-            var initialSource = SexyContent.GetInitialDataSource(SexyContent.GetZoneID(Dnn.Portal.PortalId).Value, App.AppId, SexyContent.HasEditPermission(Dnn.Module));
+            var initialSource = DataSource.GetInitialDataSource(ZoneHelpers.GetZoneID(Dnn.Portal.PortalId).Value, App.AppId, SecurityHelpers.HasEditPermission(Dnn.Module));
             return typeName != "" ? DataSource.GetDataSource(typeName, initialSource.ZoneId, initialSource.AppId, initialSource, configurationProvider) : initialSource;
         }
 
@@ -190,7 +191,7 @@ namespace ToSic.SexyContent
             if (inSource != null)
                 return DataSource.GetDataSource<T>(inSource.ZoneId, inSource.AppId, inSource, configurationProvider);
 
-            var initialSource = SexyContent.GetInitialDataSource(SexyContent.GetZoneID(Dnn.Portal.PortalId).Value, App.AppId, SexyContent.HasEditPermission(Dnn.Module));
+            var initialSource = DataSource.GetInitialDataSource(ZoneHelpers.GetZoneID(Dnn.Portal.PortalId).Value, App.AppId, SecurityHelpers.HasEditPermission(Dnn.Module));
             return DataSource.GetDataSource<T>(initialSource.ZoneId, initialSource.AppId, initialSource, configurationProvider);
         }
 

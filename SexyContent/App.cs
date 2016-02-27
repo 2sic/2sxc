@@ -8,6 +8,7 @@ using ToSic.Eav;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.DataSources;
+using ToSic.SexyContent.Statics;
 
 namespace ToSic.SexyContent
 {
@@ -52,7 +53,7 @@ namespace ToSic.SexyContent
             if (_data == null)
             {
                 // ModulePermissionController does not work when indexing, return false for search
-                var initialSource = SexyContent.GetInitialDataSource(ZoneId, AppId, showDrafts);
+                var initialSource = DataSource.GetInitialDataSource(ZoneId, AppId, showDrafts);
 
                 // todo: probably use th efull configuration provider from function params, not from initial source?
                 _data = DataSource.GetDataSource<DataSources.App>(initialSource.ZoneId,
@@ -70,7 +71,7 @@ namespace ToSic.SexyContent
         {
             get
             {
-                var appPath = System.IO.Path.Combine(SexyContent.AppBasePath(OwnerPS), Folder);
+                var appPath = System.IO.Path.Combine(AppHelpers.AppBasePath(OwnerPS), Folder);
                 return VirtualPathUtility.ToAbsolute(appPath);
             }
         }
@@ -78,7 +79,7 @@ namespace ToSic.SexyContent
         {
             get
             {
-                var appPath = System.IO.Path.Combine(SexyContent.AppBasePath(OwnerPS), Folder);
+                var appPath = System.IO.Path.Combine(AppHelpers.AppBasePath(OwnerPS), Folder);
                 return HostingEnvironment.MapPath(appPath);
             }
         }

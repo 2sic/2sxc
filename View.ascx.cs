@@ -45,8 +45,8 @@ namespace ToSic.SexyContent
                     if (UserMayEditThisModule)
                         pnlTemplateChooser.Visible = true;
 
-                    if (AppId.HasValue && !Sexy.PortalIsConfigured(Server, ControlPath))
-                        Sexy.ConfigurePortal(Server);
+                    if (AppId.HasValue)
+                        Sexy.EnsurePortalIsConfigured(Server, ControlPath);
                 }
 
                 if (AppId.HasValue)
@@ -56,7 +56,7 @@ namespace ToSic.SexyContent
                     else if (!IsContentApp && UserMayEditThisModule)
                     // Select first available template automatically if it's not set yet - then refresh page
                     {
-                        var templates = Sexy.GetAvailableTemplatesForSelector(ModuleConfiguration).ToList();
+                        var templates = Sexy.Templates.GetAvailableTemplatesForSelector(ModuleConfiguration.ModuleID, Sexy.ContentGroups).ToList();
                         if (templates.Any())
                         {
                             Sexy.ContentGroups.SetPreviewTemplateId(ModuleConfiguration.ModuleID, templates.First().TemplateId);

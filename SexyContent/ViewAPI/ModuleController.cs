@@ -14,6 +14,7 @@ using DotNetNuke.Web.Api;
 using Newtonsoft.Json;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Engines;
+using ToSic.SexyContent.Statics;
 using ToSic.SexyContent.WebApi;
 using Assembly = System.Reflection.Assembly;
 
@@ -68,9 +69,9 @@ namespace ToSic.SexyContent.ViewAPI
         {
             try
             {
-                var zoneId = SexyContent.GetZoneID(ActiveModule.PortalID);
+                var zoneId = ZoneHelpers.GetZoneID(ActiveModule.PortalID);
 				return
-					SexyContent.GetApps(zoneId.Value, false, new PortalSettings(ActiveModule.OwnerPortalID))
+					AppHelpers.GetApps(zoneId.Value, false, new PortalSettings(ActiveModule.OwnerPortalID))
                         .Where(a => !a.Hidden)
 						.Select(a => new {a.Name, a.AppId});
             }
@@ -86,7 +87,7 @@ namespace ToSic.SexyContent.ViewAPI
         [ValidateAntiForgeryToken]
         public void SetAppId(int? appId)
         {
-            SexyContent.SetAppIdForModule(ActiveModule, appId);
+            AppHelpers.SetAppIdForModule(ActiveModule, appId);
             }
 
         [HttpGet]
@@ -94,7 +95,7 @@ namespace ToSic.SexyContent.ViewAPI
         [ValidateAntiForgeryToken]
         public IEnumerable<object> GetSelectableContentTypes()
         {
-			return Sexy.GetAvailableContentTypesForVisibleTemplates().Select(p => new {p.StaticName, p.Name});
+			return Sexy.Templates.GetAvailableContentTypesForVisibleTemplates().Select(p => new {p.StaticName, p.Name});
         }
 
         [HttpGet]
@@ -102,7 +103,7 @@ namespace ToSic.SexyContent.ViewAPI
         [ValidateAntiForgeryToken]
         public IEnumerable<object> GetSelectableTemplates()
         {
-            var availableTemplates = Sexy.GetAvailableTemplatesForSelector(ActiveModule);
+            var availableTemplates = Sexy.Templates.GetAvailableTemplatesForSelector(ActiveModule.ModuleID, Sexy.ContentGroups);
 			return availableTemplates.Select(t => new {t.TemplateId, t.Name, t.ContentTypeStaticName});
         }
 
@@ -131,7 +132,7 @@ namespace ToSic.SexyContent.ViewAPI
                 var engine = EngineFactory.CreateEngine(template);
 				var dataSource =
 					(ViewDataSource)
-						Sexy.GetViewDataSource(ActiveModule.ModuleID, SexyContent.HasEditPermission(ActiveModule), template);
+						Sexy.GetViewDataSource(ActiveModule.ModuleID, SecurityHelpers.HasEditPermission(ActiveModule), template);
                 engine.Init(template, Sexy.App, ActiveModule, dataSource, InstancePurposes.WebView, Sexy);
                 engine.CustomizeData();
 
@@ -258,7 +259,7 @@ namespace ToSic.SexyContent.ViewAPI
             // Add Portal ID
             gettingStartedSrc += "&PortalID=" + moduleInfo.PortalID;
             // Add VDB / Zone ID (if set)
-            var ZoneID = SexyContent.GetZoneID(moduleInfo.PortalID);
+            var ZoneID = ZoneHelpers.GetZoneID(moduleInfo.PortalID);
             gettingStartedSrc += ZoneID.HasValue ? "&ZoneID=" + ZoneID.Value : "";
             // Add AppStaticName and Version
             //if (App.AppId > 0 && !isContent)

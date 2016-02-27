@@ -4,6 +4,7 @@ using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.UI.Modules;
 using Newtonsoft.Json;
+using ToSic.SexyContent.Statics;
 
 namespace ToSic.SexyContent
 {
@@ -35,8 +36,8 @@ namespace ToSic.SexyContent
         {
             get
             {
-                return (!UserInfo.IsSuperUser ? SexyContent.GetZoneID(ModuleConfiguration.OwnerPortalID) :
-                    (!String.IsNullOrEmpty(Request.QueryString["ZoneId"]) ? int.Parse(Request.QueryString["ZoneId"]) : SexyContent.GetZoneID(ModuleConfiguration.OwnerPortalID)));
+                return (!UserInfo.IsSuperUser ? ZoneHelpers.GetZoneID(ModuleConfiguration.OwnerPortalID) :
+                    (!String.IsNullOrEmpty(Request.QueryString["ZoneId"]) ? int.Parse(Request.QueryString["ZoneId"]) : ZoneHelpers.GetZoneID(ModuleConfiguration.OwnerPortalID)));
             }
         }
 
@@ -48,7 +49,7 @@ namespace ToSic.SexyContent
             {
                 if (!_appIdCached)
                 {
-                    _cachedAppId = SexyContent.GetAppIdFromModule(ModuleConfiguration);
+                    _cachedAppId = AppHelpers.GetAppIdFromModule(ModuleConfiguration);
                     _appIdCached = true;
                 }
                 return _cachedAppId;

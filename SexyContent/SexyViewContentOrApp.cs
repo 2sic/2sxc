@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -16,6 +17,8 @@ using ToSic.Eav;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Security;
+using ToSic.SexyContent.Statics;
+using IDataSource = ToSic.Eav.DataSources.IDataSource;
 
 namespace ToSic.SexyContent
 {
@@ -96,11 +99,11 @@ namespace ToSic.SexyContent
                                 appPath = AppId.HasValue ? Sexy.App.Path + "/" : null,
                                 cultureDimension = AppId.HasValue ? Sexy.GetCurrentLanguageID() : new int?(),
                                 isList = Template != null && Template.UseForList,
-                                version = SexyContent.ModuleVersion // SexyContent.Version.ToString()
+                                version = SexyContent.Version.ToString() // SexyContent.Version.ToString()
                             },
                             user = new
                             {
-                                canDesign = SexyContent.IsInSexyContentDesignersGroup(UserInfo), // will be true for admins or for people in the designers-group
+                                canDesign = SecurityHelpers.IsInSexyContentDesignersGroup(UserInfo), // will be true for admins or for people in the designers-group
                                 canDevelop = UserInfo.IsSuperUser // will be true for host-users, false for all others
                             },
                             applicationRoot = ResolveUrl("~"),
@@ -185,7 +188,7 @@ namespace ToSic.SexyContent
 				string renderedTemplate;
 
 				var engine = EngineFactory.CreateEngine(Template);
-				var dataSource = (ViewDataSource)Sexy.GetViewDataSource(ModuleId, SexyContent.HasEditPermission(ModuleConfiguration), Template);
+				var dataSource = (ViewDataSource)Sexy.GetViewDataSource(ModuleId, SecurityHelpers.HasEditPermission(ModuleConfiguration), Template);
 				engine.Init(Template, Sexy.App, ModuleConfiguration, dataSource, Request.QueryString["type"] == "data" ? InstancePurposes.PublishData : InstancePurposes.WebView, Sexy);
 				engine.CustomizeData();
 
@@ -195,7 +198,7 @@ namespace ToSic.SexyContent
 					if (dataSource.Publish.Enabled)
 					{
 						var publishedStreams = dataSource.Publish.Streams;
-						renderedTemplate = Sexy.GetJsonFromStreams(dataSource, publishedStreams.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries));
+						renderedTemplate = /*Sexy.*/GetJsonFromStreams(dataSource, publishedStreams.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries));
 					}
 					else
 					{
@@ -306,7 +309,7 @@ namespace ToSic.SexyContent
 							Actions.Add(GetNextActionID(), LocalizeString("ActionChangeLayoutOrContent.Text"), "", "", "action_settings.gif", "javascript:$2sxcActionMenuMapper(" + ModuleId + ").changeLayoutOrContent();", false, SecurityAccessLevel.Edit, true, false);
 						}
 
-						if (!SexyContent.SexyContentDesignersGroupConfigured(PortalId) || SexyContent.IsInSexyContentDesignersGroup(UserInfo))
+						if (!SecurityHelpers.SexyContentDesignersGroupConfigured(PortalId) || SecurityHelpers.IsInSexyContentDesignersGroup(UserInfo))
 						{
 							if (ZoneId.HasValue && AppId.HasValue && Template != null)
 							{
@@ -337,6 +340,26 @@ namespace ToSic.SexyContent
 			}
 		}
 
-		#endregion
+        #endregion
+
+        #region JSON stuff
+
+        /// <summary>
+        /// Returns a JSON string for the elements
+        /// </summary>
+        public string GetJsonFromStreams(IDataSource source, string[] streamsToPublish)
+        {
+            var language = Thread.CurrentThread.CurrentCulture.Name;
+
+            var y = streamsToPublish.Where(k => source.Out.ContainsKey(k)).ToDictionary(k => k, s => new
+            {
+                List = (from c in source.Out[s].List select new DynamicEntity(c.Value, new[] { language }, Sexy).ToDictionary() /*Sexy.ToDictionary(c.Value, language)*/).ToList()
+            });
+
+            return JsonConvert.SerializeObject(y);
+        }
+
+
+        #endregion
     }
 }

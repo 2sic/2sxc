@@ -36,7 +36,7 @@ namespace ToSic.SexyContent
                 _sexy = Sexy;
             }
 
-            var contentTypes = _sexy.GetAvailableContentTypes(_scope, true);
+            var contentTypes = _sexy.Templates.GetAvailableContentTypes(_scope, true);
             var templates = _sexy.Templates.GetAllTemplates();
             var entities = DataSource.GetInitialDataSource(_zoneId, _appId, false);
             var language = Thread.CurrentThread.CurrentCulture.Name;
@@ -51,7 +51,7 @@ namespace ToSic.SexyContent
                         p.ContentTypeStaticName,
                         p.Name
                     }),
-                    Entities = entities.List.Where(en => en.Value.Type.AttributeSetId == c.AttributeSetId).Select(en => _sexy.GetDictionaryFromEntity(en.Value, language))
+                    Entities = entities.List.Where(en => en.Value.Type.AttributeSetId == c.AttributeSetId).Select(en => new DynamicEntity(en.Value, new[] { language }, _sexy).ToDictionary() /* _sexy.ToDictionary(en.Value, language) */)
                 }),
                 templatesWithoutContentType = templates.Where(p => !String.IsNullOrEmpty(p.ContentTypeStaticName)).Select(t => new
                 {

@@ -1,5 +1,6 @@
 ﻿using System.Net.Http;
 using DotNetNuke.Web.Api;
+using ToSic.SexyContent.Statics;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -9,8 +10,8 @@ namespace ToSic.SexyContent.WebApi
         {
             var moduleInfo = request.FindModuleInfo();
             if(!appId.HasValue)
-                appId = SexyContent.GetAppIdFromModule(moduleInfo);
-            var zoneId = SexyContent.GetZoneID(moduleInfo.PortalID);
+                appId = AppHelpers.GetAppIdFromModule(moduleInfo);
+            var zoneId = ZoneHelpers.GetZoneID(moduleInfo.PortalID);
             return new SexyContent(zoneId.Value, appId.Value, true, moduleInfo.OwnerPortalID, moduleInfo);
         }
 

@@ -18,7 +18,7 @@ namespace ToSic.SexyContent.WebApi
 	    {
             var sxc = Request.GetSxcOfModuleContext(appId);
 
-            var attributeSetList = sxc.GetAvailableContentTypes(SexyContent.AttributeSetScope).ToList();
+            var attributeSetList = sxc.Templates.GetAvailableContentTypes(SexyContent.AttributeSetScope).ToList();
             var templateList = sxc.Templates.GetAllTemplates();
             var templates = from c in templateList
                             select new

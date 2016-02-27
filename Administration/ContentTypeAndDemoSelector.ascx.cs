@@ -82,7 +82,7 @@ namespace ToSic.SexyContent
 					ddlContentTypes.Items.Add(new ListItem("< no ContentType >", "-1"));
 
 				// DataBind Content Types
-				var AttributeSets = Sexy.GetAvailableContentTypes(SexyContent.AttributeSetScope);
+				var AttributeSets = Sexy.Templates.GetAvailableContentTypes(SexyContent.AttributeSetScope);
 				ddlContentTypes.DataSource = AttributeSets;
 
 				if (AttributeSets.Any(a => a.StaticName == _ContentTypeStaticName))

@@ -10,6 +10,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using DotNetNuke.Web.UI.WebControls;
 using ToSic.Eav;
+using ToSic.SexyContent.Statics;
 using Assembly = System.Reflection.Assembly;
 
 namespace ToSic.SexyContent.WebApi
@@ -27,7 +28,7 @@ namespace ToSic.SexyContent.WebApi
 	    public dynamic GetLanguages()
 	    {
 	        var portalId = PortalSettings.PortalId;
-            var zoneId = SexyContent.GetZoneID(portalId);
+            var zoneId = ZoneHelpers.GetZoneID(portalId);
             var cultures = SexyContent.GetCulturesWithActiveState(portalId, zoneId.Value).Select(c => new
             {
                 c.Code,
@@ -49,7 +50,7 @@ namespace ToSic.SexyContent.WebApi
 	    {
             // Activate or Deactivate the Culture
             var portalId = PortalSettings.PortalId;
-            var zoneId = SexyContent.GetZoneID(portalId);
+            var zoneId = ZoneHelpers.GetZoneID(portalId);
 	        var cache = DataSource.GetCache(zoneId.Value);
             var sexy = new SexyContent(zoneId.Value, cache.AppId);
             sexy.SetCultureState(cultureCode, enable, PortalSettings.PortalId);
@@ -61,7 +62,7 @@ namespace ToSic.SexyContent.WebApi
         [HttpGet]
         public dynamic Apps(int zoneId)
         {
-            var list = SexyContent.GetApps(zoneId, true, new PortalSettings(ActiveModule.OwnerPortalID));
+            var list = AppHelpers.GetApps(zoneId, true, new PortalSettings(ActiveModule.OwnerPortalID));
             return list.Select(a => new
             {
                 Id = a.AppId,
@@ -86,18 +87,15 @@ namespace ToSic.SexyContent.WebApi
         [HttpGet]
         public void DeleteApp(int zoneId, int appId)
         {
-            if (zoneId != SexyContent.GetZoneID(this.PortalSettings.PortalId))
-                throw new Exception("This app does not belong to portal " + this.PortalSettings.PortalId);
-
-            var sexy = new SexyContent(zoneId, appId, false);
             var userId = PortalSettings.Current.UserId;
-            sexy.RemoveApp(appId, userId);
+            //var portalId = this.PortalSettings.PortalId;
+            AppHelpers.RemoveApp(zoneId, appId, this.PortalSettings, userId);
         }
 
         [HttpPost]
         public void App(int zoneId, string name)
         {
-            SexyContent.AddApp(zoneId, name, new PortalSettings(ActiveModule.OwnerPortalID));
+            AppHelpers.AddApp(zoneId, name, new PortalSettings(ActiveModule.OwnerPortalID));
         }
 
         #endregion

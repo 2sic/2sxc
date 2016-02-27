@@ -7,6 +7,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Api;
 using ToSic.SexyContent.ImportExport;
+using ToSic.SexyContent.Statics;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -19,8 +20,8 @@ namespace ToSic.SexyContent.WebApi
         [ValidateAntiForgeryToken]
         public HttpResponseMessage InstallPackage(string packageUrl)
         {
-            var zoneId = SexyContent.GetZoneID(ActiveModule.PortalID);
-            var appId = SexyContent.GetAppIdFromModule(ActiveModule);
+            var zoneId = ZoneHelpers.GetZoneID(ActiveModule.PortalID);
+            var appId = AppHelpers.GetAppIdFromModule(ActiveModule);
             bool success;
 
             // Install package

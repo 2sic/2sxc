@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Web;
@@ -162,6 +163,43 @@ namespace ToSic.SexyContent
         public dynamic GetPublished()
         {
             return new DynamicEntity(Entity.GetPublished(), _dimensions, SexyContext);
+        }
+
+        internal Dictionary<string, object> ToDictionary()
+        {
+            var dynamicEntity = this;
+            var entity = this.Entity;
+            // var dynamicEntity = new DynamicEntity(entity, new[] { language }, this);
+            bool propertyNotFound;
+
+            // Convert DynamicEntity to dictionary
+            var dictionary = ((from d in entity.Attributes select d.Value).ToDictionary(k => k.Name, v =>
+            {
+                var value = dynamicEntity.GetEntityValue(v.Name, out propertyNotFound);
+                if (v.Type == "Entity" && value is List<DynamicEntity>)
+                    return ((List<DynamicEntity>)value).Select(p => new { p.EntityId, p.EntityTitle });
+                return value;
+            }));
+
+            dictionary.Add("EntityId", entity.EntityId);
+            dictionary.Add("Modified", entity.Modified);
+
+            if (entity is EntityInContentGroup && !dictionary.ContainsKey("Presentation"))
+            {
+                var entityInGroup = (EntityInContentGroup)entity;
+                if (entityInGroup.Presentation != null)
+                {
+                    var subItm = new DynamicEntity(entityInGroup, _dimensions, SexyContext);
+                    dictionary.Add("Presentation", subItm.ToDictionary());
+                }
+            }
+
+            if (entity is IHasEditingData)
+                dictionary.Add("_2sxcEditInformation", new { sortOrder = ((IHasEditingData)entity).SortOrder });
+            else
+                dictionary.Add("_2sxcEditInformation", new { entityId = entity.EntityId, title = entity.Title != null ? entity.Title[_dimensions[0]] : "(no title)" });
+
+            return dictionary;
         }
 
     }

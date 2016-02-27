@@ -9,6 +9,7 @@ using DotNetNuke.Services.Search.Entities;
 using ToSic.Eav;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Engines;
+using ToSic.SexyContent.Statics;
 
 namespace ToSic.SexyContent.Search
 {
@@ -22,16 +23,16 @@ namespace ToSic.SexyContent.Search
             var isContentModule = moduleInfo.DesktopModule.ModuleName == "2sxc";
 
             // New Context because PortalSettings.Current is null
-            var zoneId = SexyContent.GetZoneID(moduleInfo.OwnerPortalID);
+            var zoneId = ZoneHelpers.GetZoneID(moduleInfo.OwnerPortalID);
 
             if (!zoneId.HasValue)
                 return searchDocuments;
 
-            int? appId = SexyContent.GetDefaultAppId(zoneId.Value);
+            int? appId = AppHelpers.GetDefaultAppId(zoneId.Value);
 
             if (!isContentModule)
             {
-	            appId = SexyContent.GetAppIdFromModule(moduleInfo);
+	            appId = AppHelpers.GetAppIdFromModule(moduleInfo);
 				if (!appId.HasValue)
 		            return searchDocuments;
             }

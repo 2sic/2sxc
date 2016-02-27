@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using DotNetNuke.Common;
 using DotNetNuke.Web.UI.WebControls;
+using ToSic.SexyContent.Statics;
 
 namespace ToSic.SexyContent
 {
@@ -36,7 +37,7 @@ namespace ToSic.SexyContent
         private string TemplatePath
         {
             get {
-                return Server.MapPath(Path.Combine(SexyContent.GetTemplatePathRoot(Template.Location, Sexy.App), Template.Path));
+                return Server.MapPath(Path.Combine(TemplateManager.GetTemplatePathRoot(Template.Location, Sexy.App), Template.Path));
             }
         }
 

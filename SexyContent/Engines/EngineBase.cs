@@ -8,6 +8,7 @@ using System.Web.UI;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Web.Client.ClientResourceManagement;
 using ToSic.SexyContent.Search;
+using ToSic.SexyContent.Statics;
 using IDataSource = ToSic.Eav.DataSources.IDataSource;
 
 namespace ToSic.SexyContent.Engines
@@ -24,7 +25,7 @@ namespace ToSic.SexyContent.Engines
 
         public void Init(Template template, App app, ModuleInfo hostingModule, IDataSource dataSource, InstancePurposes instancePurposes, SexyContent sexy)
         {
-            var templatePath = VirtualPathUtility.Combine(SexyContent.GetTemplatePathRoot(template.Location, app) + "/", template.Path);
+            var templatePath = VirtualPathUtility.Combine(TemplateManager.GetTemplatePathRoot(template.Location, app) + "/", template.Path);
 
             // Throw Exception if Template does not exist
             if (!File.Exists(HostingEnvironment.MapPath(templatePath)))

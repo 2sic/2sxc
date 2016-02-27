@@ -10,6 +10,7 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.FileSystem;
 using ToSic.Eav;
 using ToSic.Eav.Import;
+using ToSic.SexyContent.Statics;
 using static System.String;
 
 
@@ -194,7 +195,7 @@ namespace ToSic.SexyContent.ImportExport
 				}
 
 				// Adding app to EAV
-				var sexy = new SexyContent(zoneId, SexyContent.GetDefaultAppId(zoneId));
+				var sexy = new SexyContent(zoneId, AppHelpers.GetDefaultAppId(zoneId));
 				var app = sexy.ContentContext.App.AddApp(appGuid);
 				sexy.ContentContext.SqlDb.SaveChanges();
 
@@ -261,7 +262,7 @@ namespace ToSic.SexyContent.ImportExport
 			#endregion
 
 			var importAttributeSets = GetImportAttributeSets(xmlSource.Element("AttributeSets").Elements("AttributeSet"));
-			var importEntities = GetImportEntities(xmlSource.Elements("Entities").Elements("Entity"), SexyContent.AssignmentObjectTypeIDDefault);
+			var importEntities = GetImportEntities(xmlSource.Elements("Entities").Elements("Entity"), ContentTypeHelpers.AssignmentObjectTypeIDDefault);
 
 			var import = new Eav.Import.Import(_zoneId, _appId, UserName, leaveExistingValuesUntouched);
 			import.RunImport(importAttributeSets, importEntities);
@@ -504,7 +505,7 @@ namespace ToSic.SexyContent.ImportExport
 				// Special case: App AttributeSets must be assigned to the current app
 				case XmlConstants.App:
 					keyNumber = _appId;
-					assignmentObjectTypeId = SexyContent.AssignmentObjectTypeIDSexyContentApp;
+					assignmentObjectTypeId = ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp;
 					break;
                 case "Entity":
                 case "Data Pipeline": // this one is an old key, remove some time in the future; was probably almost never used...

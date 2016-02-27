@@ -20,6 +20,7 @@ using System.Web.Hosting;
 using ToSic.Eav.BLL;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Modules.Definitions;
+using ToSic.SexyContent.Statics;
 
 namespace ToSic.SexyContent
 {
@@ -476,7 +477,7 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
                         AttributeSetStaticName = "2SexyContent-Template",
                         EntityGuid = t.NewEntityGuid,
                         IsPublished = true,
-                        AssignmentObjectTypeId = SexyContent.AssignmentObjectTypeIDDefault
+                        AssignmentObjectTypeId = ContentTypeHelpers.AssignmentObjectTypeIDDefault
                     };
                     entity.Values = new Dictionary<string, List<IValueImportModel>>
                     {
@@ -509,7 +510,7 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
                         AttributeSetStaticName = "2SexyContent-ContentGroup",
                         EntityGuid = t.NewEntityGuid,
                         IsPublished = true,
-                        AssignmentObjectTypeId = SexyContent.AssignmentObjectTypeIDDefault
+                        AssignmentObjectTypeId = ContentTypeHelpers.AssignmentObjectTypeIDDefault
                     };
                     entity.Values = new Dictionary<string, List<IValueImportModel>>
                     {

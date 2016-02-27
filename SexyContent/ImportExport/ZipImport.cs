@@ -11,6 +11,7 @@ using DotNetNuke.Services.FileSystem;
 using ICSharpCode.SharpZipLib.Zip;
 using ToSic.Eav;
 using ToSic.Eav.DataSources.Caches;
+using ToSic.SexyContent.Statics;
 
 namespace ToSic.SexyContent.ImportExport
 {
@@ -98,7 +99,7 @@ namespace ToSic.SexyContent.ImportExport
                                             XDocument.Parse(fileContents).Element("SexyContent")
                                                 .Element("Entities").Elements("Entity").Single(e =>e.Attribute("AttributeSetStaticName").Value =="2SexyContent-App")
                                                 .Elements("Value").First(v => v.Attribute("Key").Value == "Folder").Attribute("Value").Value;
-                                        var appPath = Path.Combine(SexyContent.AppBasePath(PortalSettings.Current), folder);
+                                        var appPath = Path.Combine(AppHelpers.AppBasePath(PortalSettings.Current), folder);
 
                                         // Do not import (throw error) if the app directory already exists
                                         if(Directory.Exists(HttpContext.Current.Server.MapPath(appPath)))
@@ -139,7 +140,7 @@ namespace ToSic.SexyContent.ImportExport
                                 var sexy = new SexyContent(_zoneId, appId.Value);
 
                                 // Copy all files in 2sexy folder to (portal file system) 2sexy folder
-                                var templateRoot = server.MapPath(SexyContent.GetTemplatePathRoot(SexyContent.TemplateLocations.PortalFileSystem, sexy.App));
+                                var templateRoot = server.MapPath(TemplateManager.GetTemplatePathRoot(SexyContent.TemplateLocations.PortalFileSystem, sexy.App));
                                 var appTemplateRoot = Path.Combine(appDirectory, "2sexy");
                                 if (Directory.Exists(appTemplateRoot))
                                     (new FileManager(appTemplateRoot)).CopyAllFiles(templateRoot, false, messages);

@@ -10,6 +10,7 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Web.Api;
+using ToSic.SexyContent.Statics;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -45,7 +46,7 @@ namespace ToSic.SexyContent.WebApi
 
                 var controllerTypeName = routeData.Values["controller"] + "Controller";
 
-                var controllerPath = Path.Combine(SexyContent.AppBasePath(portalSettings), sexy.App.Folder,
+                var controllerPath = Path.Combine(AppHelpers.AppBasePath(portalSettings), sexy.App.Folder,
                     "Api/" + controllerTypeName + ".cs");
 
                 if (File.Exists(HostingEnvironment.MapPath(controllerPath)))
