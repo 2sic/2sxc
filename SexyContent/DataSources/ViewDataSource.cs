@@ -13,7 +13,7 @@ namespace ToSic.SexyContent.DataSources
     {
         public DataPublishing Publish = new DataPublishing();
 
-        public static IDataSource ForModule(int moduleId, bool showDrafts, Template template, SexyContent sxc)
+        public static ViewDataSource ForModule(int moduleId, bool showDrafts, Template template, SexyContent sxc)
         {
             var configurationProvider = GetConfigProviderForModule(moduleId, /*sxc.PortalSettingsOfVisitedPage,*/ sxc.App);
 
@@ -47,12 +47,12 @@ namespace ToSic.SexyContent.DataSources
             return viewDataSource;
         }
 
-        public static ValueCollectionProvider GetConfigProviderForModule(int moduleId, /*PortalSettings portalSettings,*/ ToSic.SexyContent.App App)
+        // note: this shouldn't be in this view specifically, because it could be used
+        // in other stuff not related to this view, so refactor when you find time
+        internal static ValueCollectionProvider GetConfigProviderForModule(int moduleId, /*PortalSettings portalSettings,*/ ToSic.SexyContent.App App)
         {
             var portalSettings = PortalSettings.Current;
             
-            //if (_valueCollectionProvider != null) return _valueCollectionProvider;
-
             var provider = new ValueCollectionProvider();
 
             // only add these in running inside an http-context. Otherwise leave them away!

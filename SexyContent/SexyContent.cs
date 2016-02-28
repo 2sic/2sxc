@@ -14,22 +14,17 @@ using ToSic.SexyContent.Statics;
 namespace ToSic.SexyContent
 {
     /// <summary>
-    /// Business Layer
-    /// Centralizes all global constants and business logic
+    /// This is an instance-context of a Content-Module. It basically encapsulates the instance-state, incl.
+    /// IDs of Zone & App, the App, EAV-Context, Template, Content-Groups (if available), Environment and OriginalModule (in case it's from another portal)
+    /// It is needed for just about anything, because without this set of information
+    /// it would be hard to get anything done .
+    /// Note that it also adds the current-user to the state, so that the system can log data-changes to this user
     /// </summary>
     public class SexyContent : ModuleSearchBase, IUpgradeable
     {
-        // todo: finish refactoring
-        // currently is still a mix of
-        // - dnn-module
-        // - situation-context (like current-app/zone/template)
-
-
         #region Properties
-
-        // todo: 2dm - try to refactor the context out of this
         /// <summary>
-        /// The Content Data Context
+        /// The Content Data Context pointing to a full EAV
         /// </summary>
         public EavDataController ContentContext;
 
@@ -41,7 +36,6 @@ namespace ToSic.SexyContent
 
 		public ContentGroups ContentGroups { get; internal set; }
 
-        // must cache App, it gets re-created on each single call - about 10x per request!
         private App _app;
         public App App {
             get { return _app ?? (_app = AppHelpers.GetApp(ZoneId.Value, AppId.Value, PortalSettingsOfOriginalModule)); }
