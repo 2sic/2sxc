@@ -1,19 +1,13 @@
-﻿using System.Runtime.InteropServices;
-using System.Security.Policy;
-using DotNetNuke.Entities.Portals;
-using DotNetNuke.Services.Tokens;
+﻿using DotNetNuke.Entities.Portals;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Web.Hosting;
-using ToSic.Eav;
 using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.DataSources;
-using ToSic.SexyContent.EAVExtensions;
 
 namespace ToSic.SexyContent.Engines.TokenEngine
 {
@@ -21,8 +15,7 @@ namespace ToSic.SexyContent.Engines.TokenEngine
     {
         #region Replacement List to still support old Tokens
         // Version 6 to 7
-        private string[,] upgrade6to7 = new string[,]
-        {
+        private string[,] upgrade6to7 = {
             {"[Presentation:", "[Content:Presentation:"},           // replaces all old direct references to presentation
             {"[ListPresentation:", "[ListContent:Presentation:"},   // Replaces all old references to ListPresentation
             {"[AppSettings:", "[App:Settings:"},                    // Replaces all old Settings
