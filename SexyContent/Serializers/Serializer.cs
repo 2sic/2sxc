@@ -10,7 +10,7 @@ namespace ToSic.SexyContent.Serializers
 {
 	public class Serializer: Eav.Serializers.Serializer
 	{
-		public SexyContent Sxc { get; set; }
+		public InstanceContext Sxc { get; set; }
 
         /// <summary>
         /// Standard constructor, important for Unity when opening this class in dependency-injection mode
@@ -24,7 +24,7 @@ namespace ToSic.SexyContent.Serializers
         /// Common constructor, directly preparing it with 2sxc
         /// </summary>
         /// <param name="sexy"></param>
-        public Serializer(SexyContent sexy)
+        public Serializer(InstanceContext sexy)
         {
             Sxc = sexy;
         }

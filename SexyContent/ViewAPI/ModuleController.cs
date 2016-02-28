@@ -29,7 +29,7 @@ namespace ToSic.SexyContent.ViewAPI
         [ValidateAntiForgeryToken]
         public void AddItem([FromUri] int? sortOrder = null)
         {
-			var contentGroup = Sexy.ContentGroups.GetContentGroupForModule(ActiveModule.ModuleID);
+			var contentGroup = SxcContext.ContentGroups.GetContentGroupForModule(ActiveModule.ModuleID);
 			contentGroup.AddContentAndPresentationEntity("content", sortOrder, null, null);
         }
 
@@ -39,11 +39,11 @@ namespace ToSic.SexyContent.ViewAPI
 		public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup, bool? newTemplateChooserState = null)
         {
             Guid? result = null;
-            var contentGroup = Sexy.ContentGroups.GetContentGroupForModule(ActiveModule.ModuleID);
+            var contentGroup = SxcContext.ContentGroups.GetContentGroupForModule(ActiveModule.ModuleID);
             if (contentGroup.Exists || forceCreateContentGroup)
-                result = Sexy.ContentGroups.SaveTemplateId(ActiveModule.ModuleID, templateId);
+                result = SxcContext.ContentGroups.SaveTemplateId(ActiveModule.ModuleID, templateId);
             else
-                Sexy.ContentGroups.SetPreviewTemplateId(ActiveModule.ModuleID, templateId);
+                SxcContext.ContentGroups.SetPreviewTemplateId(ActiveModule.ModuleID, templateId);
 
             if(newTemplateChooserState.HasValue)
                 SetTemplateChooserState(newTemplateChooserState.Value);
@@ -95,7 +95,7 @@ namespace ToSic.SexyContent.ViewAPI
         [ValidateAntiForgeryToken]
         public IEnumerable<object> GetSelectableContentTypes()
         {
-			return Sexy.Templates.GetAvailableContentTypesForVisibleTemplates().Select(p => new {p.StaticName, p.Name});
+			return SxcContext.Templates.GetAvailableContentTypesForVisibleTemplates().Select(p => new {p.StaticName, p.Name});
         }
 
         [HttpGet]
@@ -103,7 +103,7 @@ namespace ToSic.SexyContent.ViewAPI
         [ValidateAntiForgeryToken]
         public IEnumerable<object> GetSelectableTemplates()
         {
-            var availableTemplates = Sexy.Templates.GetAvailableTemplatesForSelector(ActiveModule.ModuleID, Sexy.ContentGroups);
+            var availableTemplates = SxcContext.Templates.GetAvailableTemplatesForSelector(ActiveModule.ModuleID, SxcContext.ContentGroups);
 			return availableTemplates.Select(t => new {t.TemplateId, t.Name, t.ContentTypeStaticName});
         }
 
@@ -127,16 +127,15 @@ namespace ToSic.SexyContent.ViewAPI
                 }
                 
 
-				var template = Sexy.Templates.GetTemplate(templateId);
+				var template = SxcContext.Templates.GetTemplate(templateId);
 
                 var engine = EngineFactory.CreateEngine(template);
                 // before 2016-02-27 2dm: 
                 //var dataSource =
                 //	(ViewDataSource)
                 //		Sexy.GetViewDataSource(ActiveModule.ModuleID, SecurityHelpers.HasEditPermission(ActiveModule), template);
-                var dataSource =
-					(ViewDataSource) ViewDataSource.ForModule(ActiveModule.ModuleID, SecurityHelpers.HasEditPermission(ActiveModule), template, Sexy);
-                engine.Init(template, Sexy.App, ActiveModule, dataSource, InstancePurposes.WebView, Sexy);
+                var dataSource = SxcContext.DataSource; //(ViewDataSource) ViewDataSource.ForModule(ActiveModule.ModuleID, SecurityHelpers.HasEditPermission(ActiveModule), template, SxcContext);
+                engine.Init(template, SxcContext.App, ActiveModule, dataSource, InstancePurposes.WebView, SxcContext);
                 engine.CustomizeData();
 
 				if (template.ContentTypeStaticName != "" && template.ContentDemoEntity == null &&
@@ -170,7 +169,7 @@ namespace ToSic.SexyContent.ViewAPI
 		{
 			try
 			{
-				var contentGroup = Sexy.ContentGroups.GetContentGroupForModule(ActiveModule.ModuleID);
+				var contentGroup = SxcContext.ContentGroups.GetContentGroupForModule(ActiveModule.ModuleID);
 				contentGroup.ReorderEntities(sortOrder, destinationSortOrder);
 			}
 			catch (Exception e)
@@ -187,7 +186,7 @@ namespace ToSic.SexyContent.ViewAPI
         {
             try
             {
-                var contentGroup = Sexy.ContentGroups.GetContentGroupForModule(ActiveModule.ModuleID);
+                var contentGroup = SxcContext.ContentGroups.GetContentGroupForModule(ActiveModule.ModuleID);
                 var contEntity = contentGroup[part][sortOrder];
                 var presKey = part.ToLower() == "content" ? "presentation" : "listpresentation";
                 var presEntity = contentGroup[presKey][sortOrder];
@@ -197,13 +196,13 @@ namespace ToSic.SexyContent.ViewAPI
                 // make sure we really have the draft item an not the live one
                 var contDraft = contEntity.IsPublished ? contEntity.GetDraft() : contEntity;
                 if (contEntity != null && !contDraft.IsPublished)
-                    Sexy.ContentContext.Publishing.PublishDraftInDbEntity(contDraft.RepositoryId, !hasPresentation); // don't save yet if has pres...
+                    SxcContext.ContentContext.Publishing.PublishDraftInDbEntity(contDraft.RepositoryId, !hasPresentation); // don't save yet if has pres...
 
                 if (hasPresentation)
                 {
                     var presDraft = presEntity.IsPublished ? presEntity.GetDraft() : presEntity;
                     if (!presDraft.IsPublished)
-                        Sexy.ContentContext.Publishing.PublishDraftInDbEntity(presDraft.RepositoryId, true);
+                        SxcContext.ContentContext.Publishing.PublishDraftInDbEntity(presDraft.RepositoryId, true);
                 }
 
                 return true;
@@ -222,7 +221,7 @@ namespace ToSic.SexyContent.ViewAPI
 		{
 			try
 			{
-				var contentGroup = Sexy.ContentGroups.GetContentGroupForModule(ActiveModule.ModuleID);
+				var contentGroup = SxcContext.ContentGroups.GetContentGroupForModule(ActiveModule.ModuleID);
 				contentGroup.RemoveContentAndPresentationEntities("content", sortOrder);
 			}
 			catch (Exception e)

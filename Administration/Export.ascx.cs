@@ -15,7 +15,7 @@ namespace ToSic.SexyContent
         private string _scope = "2SexyContent";
         private int _appId;
         private int _zoneId;
-        private SexyContent _sexy;
+        private InstanceContext _sexy;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -29,7 +29,7 @@ namespace ToSic.SexyContent
                 _scope = !String.IsNullOrEmpty(Request.QueryString["Scope"]) ? Request.QueryString["Scope"] : "2SexyContent";
                 _appId = !String.IsNullOrEmpty(Request.QueryString["AppId"]) ? int.Parse(Request.QueryString["AppId"]) : _appId;
                 _zoneId = !String.IsNullOrEmpty(Request.QueryString["ZoneId"]) ? int.Parse(Request.QueryString["ZoneId"]) : _zoneId;
-                _sexy = new SexyContent(_zoneId, _appId);
+                _sexy = new InstanceContext(_zoneId, _appId);
             }
             else
             {

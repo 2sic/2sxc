@@ -29,7 +29,7 @@ namespace ToSic.SexyContent.Adam
 
         private void PrepCore(Guid entityGuid, string fieldName)
         {
-            EntityBase = new EntityBase(Sexy, App, Dnn.Portal, entityGuid, fieldName);
+            EntityBase = new EntityBase(SxcContext, App, Dnn.Portal, entityGuid, fieldName);
         }
 
         // todo: centralize once it works

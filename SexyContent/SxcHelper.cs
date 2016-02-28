@@ -8,8 +8,8 @@ namespace ToSic.SexyContent
 {
 	public class SxcHelper
 	{
-		private readonly SexyContent Sexy;
-		public SxcHelper(SexyContent sexy)
+		private readonly InstanceContext Sexy;
+		public SxcHelper(InstanceContext sexy)
 		{
 			Sexy = sexy;
 		}

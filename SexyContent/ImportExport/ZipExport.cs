@@ -15,7 +15,7 @@ namespace ToSic.SexyContent.ImportExport
     {
         private readonly int _appId;
         private readonly int _zoneId;
-        private readonly SexyContent _sexy;
+        private readonly InstanceContext _sexy;
         private string _sexycontentContentgroupName = "2SexyContent-ContentGroup";
         private string _blankGuid = Guid.Empty.ToString();// "00000000-0000-0000-0000-000000000000";
         private string _zipFolderForPortalFiles = "PortalFiles";
@@ -28,7 +28,7 @@ namespace ToSic.SexyContent.ImportExport
         {
             _appId = appId;
             _zoneId = zoneId;
-            _sexy = new SexyContent(_zoneId, _appId);
+            _sexy = new InstanceContext(_zoneId, _appId);
             FileManager = new FileManager(_sexy.App.PhysicalPath);
         }
 

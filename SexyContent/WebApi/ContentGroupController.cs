@@ -40,7 +40,7 @@ namespace ToSic.SexyContent.WebApi
 
         private ContentGroup GetContentGroup(Guid contentGroupGuid)
         {
-            var contentGroup = Sexy.ContentGroups.GetContentGroup(contentGroupGuid);
+            var contentGroup = SxcContext.ContentGroups.GetContentGroup(contentGroupGuid);
 
             if (contentGroup == null)
                 throw new Exception("ContentGroup with Guid " + contentGroupGuid + " does not exist.");
@@ -97,7 +97,7 @@ namespace ToSic.SexyContent.WebApi
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void Replace(Guid guid, string part, int index, int entityId)
         {
-            var contentGroup = Sexy.ContentGroups.GetContentGroup(guid);
+            var contentGroup = SxcContext.ContentGroups.GetContentGroup(guid);
             contentGroup.UpdateEntityIfChanged(part, index, entityId, false, null);
         }
 

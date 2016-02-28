@@ -27,9 +27,9 @@ namespace ToSic.SexyContent.Environment.Dnn7
                                         (_moduleInfo = ModuleController.Instance.GetModule(ModuleId,
                                             TabId, false));
 
-        private SexyContent _sxcInstance;
+        private InstanceContext _sxcInstance;
 
-        public SexyContent SxcInstance
+        public InstanceContext SxcInstance
         {
             get
             {
@@ -38,7 +38,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 int? appId;
                 appId = AppHelpers.GetAppIdFromModule(ModuleInfo);
                 var zoneId = ZoneHelpers.GetZoneID(ModuleInfo.PortalID);
-                _sxcInstance = new SexyContent(zoneId.Value, appId.Value, true, ModuleInfo.OwnerPortalID);
+                _sxcInstance = new InstanceContext(zoneId.Value, appId.Value, true, ModuleInfo.OwnerPortalID, ModuleInfo);
                     return _sxcInstance;
             }
         }
@@ -49,7 +49,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             if (_appAndDataHelpers != null)
                 return _appAndDataHelpers;
 
-            var viewDataSource = ViewDataSource.ForModule(ModuleInfo.ModuleID, SecurityHelpers.HasEditPermission(ModuleInfo), SxcInstance.ContentGroups.GetContentGroupForModule(ModuleInfo.ModuleID).Template, SxcInstance);
+            var viewDataSource = SxcInstance.DataSource;// ViewDataSource.ForModule(ModuleInfo.ModuleID, SecurityHelpers.HasEditPermission(ModuleInfo), SxcInstance.ContentGroups.GetContentGroupForModule(ModuleInfo.ModuleID).Template, SxcInstance);
             _appAndDataHelpers = new AppAndDataHelpers(SxcInstance, ModuleInfo, viewDataSource, SxcInstance.App);
 
             return _appAndDataHelpers;

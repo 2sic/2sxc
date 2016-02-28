@@ -50,8 +50,8 @@ namespace ToSic.SexyContent
 		public int ZoneId { get; set; }
 		public int AppId { get; set; }
 
-		private SexyContent _sexy;
-		public SexyContent Sexy
+		private InstanceContext _sexy;
+		public InstanceContext Sexy
 		{
 			get
 			{
@@ -59,7 +59,7 @@ namespace ToSic.SexyContent
 				{
 					if (ZoneId == 0 || AppId == 0)
 						throw new ArgumentNullException("ZoneId and AppId must be set.");
-					_sexy = new SexyContent(ZoneId, AppId);
+					_sexy = new InstanceContext(ZoneId, AppId);
 				}
 				return _sexy;
 			}

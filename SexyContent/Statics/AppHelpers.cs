@@ -100,7 +100,7 @@ namespace ToSic.SexyContent.Statics
             if (eavAppName == Constants.DefaultAppName)
                 return;
 
-            var appContext = new SexyContent(zoneId, appId);
+            var appContext = new InstanceContext(zoneId, appId);
 
             if (appMetaData == null)
             {
@@ -160,7 +160,7 @@ namespace ToSic.SexyContent.Statics
                 throw new ArgumentOutOfRangeException("appName '" + appName + "' not allowed");
 
             // Adding app to EAV
-            var sexy = new SexyContent(zoneId, AppHelpers.GetDefaultAppId(zoneId));
+            var sexy = new InstanceContext(zoneId, AppHelpers.GetDefaultAppId(zoneId));
             var app = sexy.ContentContext.App.AddApp(Guid.NewGuid().ToString());
             sexy.ContentContext.SqlDb.SaveChanges();
 
@@ -174,7 +174,7 @@ namespace ToSic.SexyContent.Statics
             if (zoneId != ZoneHelpers.GetZoneID(ps.PortalId))
                 throw new Exception("This app does not belong to portal " + ps.PortalId);
 
-            var sexy = new SexyContent(zoneId, appId, false);
+            var sexy = new InstanceContext(zoneId, appId, false);
 
             if (appId != sexy.ContentContext.AppId)
                 throw new Exception("An app can only be removed inside of it's own context.");
@@ -272,7 +272,7 @@ namespace ToSic.SexyContent.Statics
             // Change to 1. available template if app has been set
             if (appId.HasValue)
             {
-                var sexyForNewApp = new SexyContent(zoneId.Value, appId.Value, false);
+                var sexyForNewApp = new InstanceContext(zoneId.Value, appId.Value, false);
                 var templates = sexyForNewApp.Templates.GetAvailableTemplatesForSelector(module.ModuleID, sexyForNewApp.ContentGroups).ToList();
                 if (templates.Any())
                     sexyForNewApp.ContentGroups.SetPreviewTemplateId(module.ModuleID, templates.First().TemplateId);

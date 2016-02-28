@@ -46,12 +46,12 @@ namespace ToSic.SexyContent
             }
         }
         private readonly string[] _dimensions;
-        private SexyContent SexyContext { get; set; }
+        private InstanceContext SexyContext { get; set; }
 
         /// <summary>
         /// Constructor with EntityModel and DimensionIds
         /// </summary>
-        public DynamicEntity(IEntity entityModel, string[] dimensions, SexyContent sexy)
+        public DynamicEntity(IEntity entityModel, string[] dimensions, InstanceContext sexy)
         {
             Entity = entityModel;
             _dimensions = dimensions;

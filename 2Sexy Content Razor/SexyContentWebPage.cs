@@ -25,7 +25,7 @@ namespace ToSic.SexyContent.Razor
         protected internal UrlHelper Url { get; internal set; }
 
         // <2sic>
-        protected internal SexyContent Sexy { get; set; }
+        protected internal InstanceContext Sexy { get; set; }
         protected internal AppAndDataHelpers AppAndDataHelpers { get; set; }
         // </2sic>
 

@@ -39,7 +39,7 @@ namespace ToSic.SexyContent.WebApi
 	    {
             // Improve the serializer so it's aware of the 2sxc-context (module, portal etc.)
             _entitiesController = new Eav.WebApi.EntitiesController(App.AppId);
-            ((Serializer)_entitiesController.Serializer).Sxc = Sexy;	        
+            ((Serializer)_entitiesController.Serializer).Sxc = SxcContext;	        
 	    }
 
         /// <summary>

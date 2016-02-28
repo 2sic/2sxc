@@ -21,9 +21,9 @@ namespace ToSic.SexyContent.Engines
         protected ModuleInfo ModuleInfo;
         protected IDataSource DataSource;
         protected InstancePurposes InstancePurposes;
-        protected SexyContent Sexy;
+        protected InstanceContext Sexy;
 
-        public void Init(Template template, App app, ModuleInfo hostingModule, IDataSource dataSource, InstancePurposes instancePurposes, SexyContent sexy)
+        public void Init(Template template, App app, ModuleInfo hostingModule, IDataSource dataSource, InstancePurposes instancePurposes, InstanceContext sexy)
         {
             var templatePath = VirtualPathUtility.Combine(TemplateManager.GetTemplatePathRoot(template.Location, app) + "/", template.Path);
 

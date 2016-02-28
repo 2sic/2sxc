@@ -13,9 +13,9 @@ namespace ToSic.SexyContent.DataSources
     {
         public DataPublishing Publish = new DataPublishing();
 
-        public static ViewDataSource ForModule(int moduleId, bool showDrafts, Template template, SexyContent sxc)
+        internal static ViewDataSource ForModule(int moduleId, bool showDrafts, Template template, InstanceContext sxc)
         {
-            var configurationProvider = GetConfigProviderForModule(moduleId, /*sxc.PortalSettingsOfVisitedPage,*/ sxc.App);
+            var configurationProvider = DataSources.ConfigurationProvider.GetConfigProviderForModule(moduleId, /*sxc.PortalSettingsOfVisitedPage,*/ sxc.App);
 
             // Get ModuleDataSource
             var initialSource = DataSource.GetInitialDataSource(sxc.ZoneId, sxc.AppId, showDrafts);
@@ -45,48 +45,6 @@ namespace ToSic.SexyContent.DataSources
             }
 
             return viewDataSource;
-        }
-
-        // note: this shouldn't be in this view specifically, because it could be used
-        // in other stuff not related to this view, so refactor when you find time
-        internal static ValueCollectionProvider GetConfigProviderForModule(int moduleId, /*PortalSettings portalSettings,*/ ToSic.SexyContent.App App)
-        {
-            var portalSettings = PortalSettings.Current;
-            
-            var provider = new ValueCollectionProvider();
-
-            // only add these in running inside an http-context. Otherwise leave them away!
-            if (HttpContext.Current != null)
-            {
-                var request = HttpContext.Current.Request;
-                provider.Sources.Add("querystring", new FilteredNameValueCollectionPropertyAccess("querystring", request.QueryString));
-                provider.Sources.Add("server", new FilteredNameValueCollectionPropertyAccess("server", request.ServerVariables));
-                provider.Sources.Add("form", new FilteredNameValueCollectionPropertyAccess("form", request.Form));
-            }
-
-            // Add the standard DNN property sources if PortalSettings object is available
-            if (portalSettings != null)
-            {
-                var dnnUsr = portalSettings.UserInfo;
-                var dnnCult = Thread.CurrentThread.CurrentCulture;
-                var dnn = new TokenReplaceDnn(App, moduleId, portalSettings, dnnUsr);
-                var stdSources = dnn.PropertySources;
-                foreach (var propertyAccess in stdSources)
-                    provider.Sources.Add(propertyAccess.Key,
-                        new ValueProviderWrapperForPropertyAccess(propertyAccess.Key, propertyAccess.Value, dnnUsr, dnnCult));
-            }
-
-            provider.Sources.Add("app", new AppPropertyAccess("app", App));
-
-            // add module if it was not already added previously
-            if (!provider.Sources.ContainsKey("module"))
-            {
-                var modulePropertyAccess = new StaticValueProvider("module");
-                modulePropertyAccess.Properties.Add("ModuleID", moduleId.ToString(CultureInfo.InvariantCulture));
-                provider.Sources.Add(modulePropertyAccess.Name, modulePropertyAccess);
-            }
-            var _valueCollectionProvider = provider;
-            return _valueCollectionProvider;
         }
     }
 }

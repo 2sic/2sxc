@@ -245,6 +245,7 @@
     <Compile Include="Environment\None\Permissions.cs" />
     <Compile Include="SexyContent\ContentGroup.cs" />
     <Compile Include="SexyContent\ContentGroups.cs" />
+    <Compile Include="SexyContent\DataSources\ConfigurationProvider.cs" />
     <Compile Include="SexyContent\DataSources\DnnSqlDataSource.cs" />
     <Compile Include="SexyContent\DataSources\DnnFormAndList.cs" />
     <Compile Include="SexyContent\EAVExtensions\EavApiProxies\ContentExportController.cs" />
@@ -387,7 +388,7 @@
     <Compile Include="Administration\EditTemplate.ascx.designer.cs">
       <DependentUpon>EditTemplate.ascx</DependentUpon>
     </Compile>
-    <Compile Include="SexyContent\SexyContent.cs" />
+    <Compile Include="SexyContent\InstanceContext.cs" />
     <Compile Include="Administration\EditTemplate.ascx.cs">
       <DependentUpon>EditTemplate.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

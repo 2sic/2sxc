@@ -13,9 +13,9 @@ namespace ToSic.SexyContent.Statics
         public const string RazorVb = "VB Razor";
         public const string TokenReplace = "Token";
 
-        public SexyContent SxContext;
+        public InstanceContext SxContext;
         public App App;
-        public TemplateManager(SexyContent sxc)
+        public TemplateManager(InstanceContext sxc)
         {
             SxContext = sxc;
             App = sxc.App;

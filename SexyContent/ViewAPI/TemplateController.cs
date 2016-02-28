@@ -19,7 +19,7 @@ namespace ToSic.SexyContent.ViewAPI
         [HttpGet]
         public TemplateInfo Template(int templateId)
         {
-            var viewEditor = new TemplateEditor(Sexy, templateId, UserInfo, PortalSettings);
+            var viewEditor = new TemplateEditor(SxcContext, templateId, UserInfo, PortalSettings);
 
             viewEditor.EnsureUserMayEditTemplate();
             var templ = viewEditor.Template;
@@ -44,7 +44,7 @@ namespace ToSic.SexyContent.ViewAPI
         [HttpPost]
         public bool Template([FromUri] int templateId, TemplateInfo template)
         {
-            var viewEditor = new TemplateEditor(Sexy, templateId, UserInfo, PortalSettings);
+            var viewEditor = new TemplateEditor(SxcContext, templateId, UserInfo, PortalSettings);
 
             viewEditor.EnsureUserMayEditTemplate();
 

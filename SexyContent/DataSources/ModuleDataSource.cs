@@ -10,14 +10,14 @@ namespace ToSic.SexyContent.DataSources
 	[PipelineDesigner]
     public class ModuleDataSource : BaseDataSource
     {
-        private SexyContent _sexy;
+        private InstanceContext _sexy;
 
-        internal SexyContent Sexy
+        internal InstanceContext Sexy
         {
             get
             {
                 if(_sexy == null)
-                    _sexy = new SexyContent(In["Default"].Source.ZoneId, In["Default"].Source.AppId);
+                    _sexy = new InstanceContext(In["Default"].Source.ZoneId, In["Default"].Source.AppId);
                 return _sexy;
             }
             set { _sexy = value; }

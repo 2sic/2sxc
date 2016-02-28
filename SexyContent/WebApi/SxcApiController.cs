@@ -14,7 +14,7 @@ namespace ToSic.SexyContent.WebApi
 	[SupportedModules("2sxc,2sxc-app")]
     public abstract class SxcApiController : DnnApiController, IAppAndDataHelpers
     {
-        private SexyContent _sexyContent;
+        private InstanceContext _instanceContext;
 
         private AppAndDataHelpers _appAndDataHelpers;
         private AppAndDataHelpers AppAndDataHelpers {
@@ -24,21 +24,21 @@ namespace ToSic.SexyContent.WebApi
                 {
                     var moduleInfo = Request.FindModuleInfo();
                     // before 2016-02-27 2dm: var viewDataSource = Sexy.GetViewDataSource(Request.FindModuleId(), SecurityHelpers.HasEditPermission(moduleInfo), Sexy.ContentGroups.GetContentGroupForModule(moduleInfo.ModuleID).Template);
-                    var viewDataSource = ViewDataSource.ForModule(Request.FindModuleId(), SecurityHelpers.HasEditPermission(moduleInfo), Sexy.ContentGroups.GetContentGroupForModule(moduleInfo.ModuleID).Template, Sexy);
-                    _appAndDataHelpers = new AppAndDataHelpers(Sexy, moduleInfo, (ViewDataSource)viewDataSource, Sexy.App);
+                    var viewDataSource = SxcContext.DataSource;// ViewDataSource.ForModule(Request.FindModuleId(), SecurityHelpers.HasEditPermission(moduleInfo), Sexy.ContentGroups.GetContentGroupForModule(moduleInfo.ModuleID).Template, Sexy);
+                    _appAndDataHelpers = new AppAndDataHelpers(SxcContext, moduleInfo, (ViewDataSource)viewDataSource, SxcContext.App);
                 }
                 return _appAndDataHelpers;
             }
         }
 
         // Sexy object should not be accessible for other assemblies - just internal use
-        internal SexyContent Sexy
+        internal InstanceContext SxcContext
         {
             get
             {
-                if (_sexyContent == null)
-                    _sexyContent = Request.GetSxcOfModuleContext();
-                return _sexyContent;
+                if (_instanceContext == null)
+                    _instanceContext = Request.GetSxcOfModuleContext();
+                return _instanceContext;
             }
         }
 

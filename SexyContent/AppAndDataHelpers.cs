@@ -16,9 +16,9 @@ namespace ToSic.SexyContent
 {
     public class AppAndDataHelpers : IAppAndDataHelpers
     {
-        private readonly SexyContent _sexy;
+        private readonly InstanceContext _sexy;
 
-        public AppAndDataHelpers(SexyContent sexy, ModuleInfo module, ViewDataSource data, App app)
+        public AppAndDataHelpers(InstanceContext sexy, ModuleInfo module, ViewDataSource data, App app)
         {
             _sexy = sexy;
             App = app;

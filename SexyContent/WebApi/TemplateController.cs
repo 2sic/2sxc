@@ -62,7 +62,7 @@ namespace ToSic.SexyContent.WebApi
 	    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 	    public bool Delete(int id)
 	    {
-            Sexy.Templates.DeleteTemplate(id);
+            SxcContext.Templates.DeleteTemplate(id);
 	        return true;
 	    }
         

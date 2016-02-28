@@ -38,14 +38,14 @@ namespace ToSic.SexyContent.Search
 		            return searchDocuments;
             }
 
-            var sexy = new SexyContent(zoneId.Value, appId.Value, true, moduleInfo.OwnerPortalID);
+            var sexy = new InstanceContext(zoneId.Value, appId.Value, true, moduleInfo.OwnerPortalID, moduleInfo);
             var language = moduleInfo.CultureCode;
 	        var contentGroup = sexy.ContentGroups.GetContentGroupForModule(moduleInfo.ModuleID);
             var template = contentGroup.Template;
 
             // This list will hold all EAV entities to be indexed
             // before 2016-02-27 2dm: var dataSource = sexy.GetViewDataSource(moduleInfo.ModuleID, false, template);
-            var dataSource = ViewDataSource.ForModule(moduleInfo.ModuleID, false, template, sexy);
+            var dataSource = sexy.DataSource;// ViewDataSource.ForModule(moduleInfo.ModuleID, false, template, sexy);
 			
             if (template == null)
                 return searchDocuments;

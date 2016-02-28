@@ -21,13 +21,13 @@ namespace ToSic.SexyContent
         }
 
         #region basic properties like Sexy, App, Zone, etc.
-        private SexyContent _sexy;
-        protected SexyContent Sexy
+        private InstanceContext _sexy;
+        protected InstanceContext Sexy
         {
             get
             {
                 if (_sexy == null && ZoneId.HasValue && AppId.HasValue)
-                    _sexy = new SexyContent(ZoneId.Value, AppId.Value, true, ModuleConfiguration.OwnerPortalID, ModuleContext.Configuration);
+                    _sexy = new InstanceContext(ZoneId.Value, AppId.Value, true, ModuleConfiguration.OwnerPortalID, ModuleContext.Configuration);
                 return _sexy;
             }
         }
@@ -133,8 +133,8 @@ namespace ToSic.SexyContent
             get { return Template != null && Template.UseForList; }
         }
 
-        private SexyContent _sexyForSecurityCheck;
-        private SexyContent SexyForSecurityCheck
+        private InstanceContext _sexyForSecurityCheck;
+        private InstanceContext SexyForSecurityCheck
         {
             get
             {
@@ -145,7 +145,7 @@ namespace ToSic.SexyContent
                     // ToSic.SexyContent.Settings.EnsureSystemIsInitialized();
 
                     _sexyForSecurityCheck = (Sexy == null
-                        ? new SexyContent(ZoneId.Value, 0, true, ModuleConfiguration.OwnerPortalID, ModuleConfiguration)
+                        ? new InstanceContext(ZoneId.Value, 0, true, ModuleConfiguration.OwnerPortalID, ModuleConfiguration)
                         : Sexy);
                 }
 
