@@ -1,5 +1,4 @@
 ﻿using DotNetNuke.Entities.Modules;
-using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Statics;
 
 namespace ToSic.SexyContent.Environment.Dnn7

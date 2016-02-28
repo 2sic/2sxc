@@ -94,44 +94,48 @@ namespace ToSic.SexyContent
 
 
             // 2016-02-27 2dm - fixed to use the full standard ValueConverter - seems to fix some issues
-            var result = Entity.GetBestValue(attributeName, _dimensions, true); // let internal resolver do it all now
-                                                                                // var result = Entity.GetBestValue(attributeName, _dimensions);
-
-            // set out-information
+            var result = Entity.GetBestValue(attributeName, _dimensions, true); 
+                                                                                
+            if (result is Eav.Data.EntityRelationship)
+                    result = ((Eav.Data.EntityRelationship)result).Select(
+                        p => new DynamicEntity(p, _dimensions, SexyContext)
+                        ).ToList();
+            
+            //set out-information
             propertyNotFound = result == null;
             return result;
 
 
             // 2016-02-27 2dm - fixed to use the full standard ValueConverter - this is mostly the old stuff
             // #region handle 2sxc special conversions for file names and entity-lists
+//            propertyNotFound = result == null;
+//            if (!propertyNotFound)
+//            {
+//                if (Entity.Attributes.ContainsKey(attributeName))
+//                {
+//                    var attribute = Entity.Attributes[attributeName];
+//                    //if (attribute.Type == "Hyperlink" && result is string)
+//                    //    result = SexyContent.ResolveHyperlinkValues((string)result,
+//                    //     SexyContext == null ? PortalSettings.Current : SexyContext.OwnerPS);
 
-            //if (!propertyNotFound)
-            //{
-            // if (Entity.Attributes.ContainsKey(attributeName))
-            // {
-            //  var attribute = Entity.Attributes[attributeName];
-            //  if (attribute.Type == "Hyperlink" && result is string)
-            //   result = SexyContent.ResolveHyperlinkValues((string) result,
-            //    SexyContext == null ? PortalSettings.Current : SexyContext.OwnerPS);
+//                    if (attribute.Type == "Entity" && result is EntityRelationship)
+//                        // Convert related entities to Dynamics
+//                        result = ((EntityRelationship)result).Select(
+//                         p => new DynamicEntity(p, _dimensions, SexyContext)
+//                         ).ToList();
+//                }
 
-            //  if (attribute.Type == "Entity" && result is EntityRelationship)
-            //   // Convert related entities to Dynamics
-            //   result = ((EntityRelationship) result).Select(
-            //    p => new DynamicEntity(p, _dimensions, SexyContext)
-            //    ).ToList();
-            // }
-
-            // return result;
-            //}
-            //#endregion
+//                return result;
+//            }
+//#endregion
 
 
 
-            //#region all failed, return null
-            //propertyNotFound = true;
-            //return null;
+//            #region all failed, return null
+//            propertyNotFound = true;
+//            return null;
 
-            //#endregion
+//            #endregion
 
 
         }

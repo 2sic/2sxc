@@ -121,11 +121,20 @@ if (window.angular) // needed because the file is also included in older non-ang
                         var config = field.InputTypeConfig || {}; // note: can be null
                         var applyChanges = false;
                         switch (field.InputType) {
-                            case "string-wysiwyg-tinymce":
-                                config.Assets = "//cdn.tinymce.com/4/tinymce.min.js\n" +
-                                    "../edit/extensions/field-string-wysiwyg-tinymce/set.js";
-                                applyChanges = true;
-                                break;
+                        case "string-wysiwyg-tinymce":
+                            config.Assets = "//cdn.tinymce.com/4/tinymce.min.js\n" +
+                                "../edit/extensions/field-string-wysiwyg-tinymce/set.js";
+                            applyChanges = true;
+                            break;
+                        case "entity-default":
+                            angular.extend(field.Metadata.merged, {
+                                EnableEdit: true,
+                                EnableCreate: true,
+                                EnableAddExisting: true,
+                                EnableRemove: true,
+                                EnableDelete: false
+                            });
+                        break;
                             case "unknown": // server default if not defined
                                 break;
                             default:        // default if not defined in this list

@@ -66,3 +66,7 @@
 .icon-flash:before { content: '\e840'; } /* '' */
 .icon-ghost:before { content: '\e841'; } /* '' */
 .icon-down-dir:before { content: '\e842'; } /* '' */
+.icon-tags:before { content: '\e843'; } /* '' */
+.icon-pencil:before { content: '\e844'; } /* '' */
+.icon-link:before { content: '\e845'; } /* '' */
+.icon-unlink:before { content: '\e846'; } /* '' */

@@ -38,8 +38,8 @@
 	},
 	"FieldType": {
 		"Entity": {
-			"Choose": "-- choose item to add --",
-			"New": "-- create new --",
+			"Choose": "choose item to add",
+			"New": "create new",
 			"EntityNotFound": "(item not found)",
 			"DragMove": "drag to re-order the list",
 			"Edit": "edit this item",
