@@ -237,6 +237,7 @@
       <DependentUpon>Wysiwyg.ascx</DependentUpon>
     </Compile>
     <Compile Include="Environment\Base\Permissions.cs" />
+    <Compile Include="Environment\Dnn7\DnnBusinessController.cs" />
     <Compile Include="Environment\Dnn7\EngineContext.cs" />
     <Compile Include="Environment\Environment.cs" />
     <Compile Include="Environment\Interfaces\IEnvironment.cs" />

@@ -202,7 +202,7 @@
           <desktopModule>
             <moduleName>2sxc</moduleName>
             <foldername>ToSIC_SexyContent</foldername>
-            <businessControllerClass>ToSic.SexyContent.SexyContent</businessControllerClass>
+            <businessControllerClass>ToSic.SexyContent.Environment.Dnn7.DnnBusinessController</businessControllerClass>
             <supportedFeatures>
               <supportedFeature type="Searchable" />
               <supportedFeature type="Upgradeable" />
@@ -389,7 +389,7 @@
             </processorType>
             <processorCommand>UpgradeModule</processorCommand>
             <attributes>
-              <businessControllerClass>ToSic.SexyContent.SexyContent, ToSic.SexyContent</businessControllerClass>
+              <businessControllerClass>ToSic.SexyContent.Environment.Dnn7.DnnBusinessController</businessControllerClass>
               <desktopModuleID>[DESKTOPMODULEID]</desktopModuleID>
               <upgradeVersionsList>01.00.00,05.05.00,06.06.00,06.06.04,07.00.00,07.00.03,07.02.00,07.02.02,07.03.00,07.03.01,07.03.02,07.03.03,07.03.04,08.00.00,08.00.01,08.00.02,08.00.03,08.00.04,08.00.05,08.00.06,08.00.07,08.00.08,08.00.09,08.00.10,08.00.11,08.00.12,08.01.00,08.01.01,08.01.02,08.01.03,08.02.00,08.02.01,08.02.02,08.02.03</upgradeVersionsList>
             </attributes>
