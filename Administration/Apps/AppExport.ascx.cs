@@ -6,7 +6,7 @@ using ToSic.SexyContent.ImportExport;
 
 namespace ToSic.SexyContent.Administration.Apps
 {
-    public partial class AppExport : SexyControlAdminBase
+    public partial class AppExport : SexyControlAdminBaseWillSoonBeRemoved
     {
 
         protected ZipExport Exporter;

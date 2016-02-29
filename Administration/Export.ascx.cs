@@ -7,10 +7,11 @@ using Newtonsoft.Json;
 using ToSic.Eav;
 using ToSic.SexyContent.ImportExport;
 using System.Web;
+using ToSic.SexyContent.Administration;
 
 namespace ToSic.SexyContent
 {
-    public partial class Export : SexyControlAdminBase
+    public partial class Export : SexyControlAdminBaseWillSoonBeRemoved
     {
         private string _scope = "2SexyContent";
         private int _appId;

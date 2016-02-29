@@ -33,13 +33,13 @@ Contains:<br/>
         <%= ZoneHelpers.GetCulturesWithActiveState(PortalId, ZoneId.Value).Count(p => p.Active) %> Languages
     </li>
     <li>
-        <%= SxcContext.TemplateManager.GetAllTemplates().Count() %> templates
+        <%= SxcContext.AppTemplates.GetAllTemplates().Count() %> templates
     </li>
     <li>
-        Tokens: <%= SxcContext.TemplateManager.GetAllTemplates().Any(p => !p.IsRazor) %>
+        Tokens: <%= SxcContext.AppTemplates.GetAllTemplates().Any(p => !p.IsRazor) %>
     </li>
     <li>
-        Razor: <%= SxcContext.TemplateManager.GetAllTemplates().Any(p => p.IsRazor) %>
+        Razor: <%= SxcContext.AppTemplates.GetAllTemplates().Any(p => p.IsRazor) %>
     </li>
     <li>
         <% if (Directory.Exists(SxcContext.App.PhysicalPath))

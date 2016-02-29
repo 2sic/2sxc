@@ -4,6 +4,7 @@ using System.Linq;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.UI.Modules;
 using Newtonsoft.Json;
+using ToSic.SexyContent.Administration;
 using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent
@@ -16,52 +17,40 @@ namespace ToSic.SexyContent
     {
         protected void Page_Init(object sender, EventArgs e)
         {
-            if ((UserMayEditThisModule || this is SexyControlAdminBase) && Parent is ModuleHost)
-                RegisterGlobalsAttribute();
-        }
-
-        #region basic properties like Sexy, App, Zone, etc.
-        private InstanceContext _sxcContext;
-        protected InstanceContext SxcContext
-        {
-            get
-            {
-                if (_sxcContext == null && ZoneId.HasValue && AppId.HasValue)
-                    _sxcContext = new InstanceContext(ZoneId.Value, AppId.Value, true, ModuleConfiguration.OwnerPortalID, ModuleContext.Configuration);
-                return _sxcContext;
-            }
-        }
-
-        // todo: refactor
-        // + apparently it allows zone-change in the URL if the user is a super-user, which is probably only used in admin-views
-        private int? _zoneId;
-        protected int? ZoneId
-        {
-            get
-            {
-                return _zoneId ??
-                       (_zoneId = (!UserInfo.IsSuperUser
+            // Set ZoneId based on the context
+            var zoneId = (!UserInfo.IsSuperUser
                            ? ZoneHelpers.GetZoneID(ModuleConfiguration.OwnerPortalID)
                            : ZoneHelpers.GetZoneID(!string.IsNullOrEmpty(Request.QueryString["ZoneId"])
                                ? int.Parse(Request.QueryString["ZoneId"])
-                               : ModuleConfiguration.OwnerPortalID)));
+                               : ModuleConfiguration.OwnerPortalID));
+
+            // Set AppId based on the context
+            var appId = AppHelpers.GetAppIdFromModule(ModuleConfiguration);
+
+            // possibly get app-id from url, but only if on an admin-control
+            // the only reason the code is currently here, is because the admin controls will be removed soon (replaced by JS-UIs)
+            if (this is SexyControlAdminBaseWillSoonBeRemoved)
+            {
+                var appIdString = Request.QueryString[SexyContent.Settings.AppIDString];
+                int appId2;
+                if (appIdString != null && int.TryParse(appIdString, out appId2))
+                    appId = appId2;
             }
+
+            // Init SxcContext based on zone/app
+            //if (zoneId.HasValue && appId.HasValue)
+                SxcContext = new InstanceContext(zoneId.Value, appId.Value, true, ModuleConfiguration.OwnerPortalID,
+                    ModuleContext.Configuration);
         }
 
-        private int? _cachedAppId = null;
-        private bool _appIdCached = false;
-        protected virtual int? AppId
-        {
-            get
-            {
-                if (!_appIdCached)
-                {
-                    _cachedAppId = AppHelpers.GetAppIdFromModule(ModuleConfiguration);
-                    _appIdCached = true;
-                }
-                return _cachedAppId;
-            }
-        }
+
+        #region basic properties like Sexy, App, Zone, etc.
+        protected InstanceContext SxcContext { get; set; }
+
+        protected int? ZoneId => SxcContext?.ZoneId;
+
+        protected int? AppId => SxcContext?.AppId;
+
         #endregion
 
         public bool IsContentApp => SxcContext.IsContentApp;// ModuleConfiguration.DesktopModule.ModuleName == "2sxc";
@@ -69,103 +58,77 @@ namespace ToSic.SexyContent
         // private ContentGroup _contentGroup;
         protected ContentGroup ContentGroup => SxcContext.ContentGroup; //  _contentGroup ?? (_contentGroup = SxcContext.ContentGroupManager.GetContentGroupForModule(ModuleConfiguration.ModuleID));
 
-        private Template _template;
-        protected Template Template
-        {
-            get
-            {
-                if (!AppId.HasValue)
-                    return null;
+        #region template loading and stuff...
 
-                if (_template == null)
-                {
-                    // Change Template if URL contains "ViewNameInUrl"
-                    if (!IsContentApp)
-                    {
-                        var urlParams = Request.QueryString;
-                        var templateFromUrl = TryToGetTemplateBasedOnUrlParams(urlParams);
-                        if (templateFromUrl != null)
-                            _template = templateFromUrl;
-                    }
+        protected Template Template => SxcContext.Template;
 
-                    if (_template == null)
-                        _template = ContentGroup.Template;
-                }
+        //private Template _template;
+        //protected Template Template
+        //{
+        //    get
+        //    {
+        //        if (!AppId.HasValue)
+        //            return null;
 
-                return _template;
-            }
-        }
+        //        if (_template == null)
+        //        {
+        //            // Change Template if URL contains "ViewNameInUrl"
+        //            if (!IsContentApp)
+        //            {
+        //                var urlParams = Request.QueryString;
+        //                var templateFromUrl = TryToGetTemplateBasedOnUrlParams(urlParams);
+        //                if (templateFromUrl != null)
+        //                    _template = templateFromUrl;
+        //            }
 
-        /// <summary>
-        /// combine all QueryString Params to a list of key/value lowercase and search for a template having this ViewNameInUrl
-        /// QueryString is never blank in DNN so no there's no test for it
-        /// </summary>
-        private Template TryToGetTemplateBasedOnUrlParams(NameValueCollection urlParams)
-        {
-            var urlParameterDict = urlParams.AllKeys.ToDictionary(key => key?.ToLower() ?? "", key => string.Format("{0}/{1}", key, Request.QueryString[key]).ToLower());
-            //var queryStringPairs = Request.QueryString.AllKeys.Select(key => string.Format("{0}/{1}", key, Request.QueryString[key]).ToLower()).ToArray();
-            // var queryStringKeys = Request.QueryString.AllKeys.Select(k => k?.ToLower() ?? "").ToArray();
+        //            if (_template == null)
+        //                _template = ContentGroup.Template;
+        //        }
 
-            foreach (var template in SxcContext.AppTemplates.GetAllTemplates().Where(t => !string.IsNullOrEmpty(t.ViewNameInUrl)))
-            {
-                var desiredFullViewName = template.ViewNameInUrl.ToLower();
-                if (desiredFullViewName.EndsWith("/.*"))   // match details/.* --> e.g. details/12
-                {
-                    var keyName = desiredFullViewName.Substring(0, desiredFullViewName.Length - 3);
-                    if (urlParameterDict.ContainsKey(keyName))
-                        return template;
-                }
-                else if (urlParameterDict.ContainsValue(desiredFullViewName)) // match view/details
-                    return template;
+        //        return _template;
+        //    }
+        //}
 
-                //var viewNameInUrlLowered = template.ViewNameInUrl.ToLower();
-                //if (queryStringPairs.Contains(viewNameInUrlLowered))    // match view/details
-                //    return template;
-                //if (viewNameInUrlLowered.EndsWith("/.*"))   // match details/.* --> e.g. details/12
-                //{
-                //    var keyName = viewNameInUrlLowered.Substring(0, viewNameInUrlLowered.Length - 3);
-                //    if (queryStringKeys.Contains(keyName))
-                //        return template;
-                //}
-            }
+        ///// <summary>
+        ///// combine all QueryString Params to a list of key/value lowercase and search for a template having this ViewNameInUrl
+        ///// QueryString is never blank in DNN so no there's no test for it
+        ///// </summary>
+        //private Template TryToGetTemplateBasedOnUrlParams(NameValueCollection urlParams)
+        //{
+        //    var urlParameterDict = urlParams.AllKeys.ToDictionary(key => key?.ToLower() ?? "", key => string.Format("{0}/{1}", key, Request.QueryString[key]).ToLower());
+        //    //var queryStringPairs = Request.QueryString.AllKeys.Select(key => string.Format("{0}/{1}", key, Request.QueryString[key]).ToLower()).ToArray();
+        //    // var queryStringKeys = Request.QueryString.AllKeys.Select(k => k?.ToLower() ?? "").ToArray();
 
-            return null;
-        }
+        //    foreach (var template in SxcContext.AppTemplates.GetAllTemplates().Where(t => !string.IsNullOrEmpty(t.ViewNameInUrl)))
+        //    {
+        //        var desiredFullViewName = template.ViewNameInUrl.ToLower();
+        //        if (desiredFullViewName.EndsWith("/.*"))   // match details/.* --> e.g. details/12
+        //        {
+        //            var keyName = desiredFullViewName.Substring(0, desiredFullViewName.Length - 3);
+        //            if (urlParameterDict.ContainsKey(keyName))
+        //                return template;
+        //        }
+        //        else if (urlParameterDict.ContainsValue(desiredFullViewName)) // match view/details
+        //            return template;
 
-        protected bool IsList => Template != null && Template.UseForList;
+        //        //var viewNameInUrlLowered = template.ViewNameInUrl.ToLower();
+        //        //if (queryStringPairs.Contains(viewNameInUrlLowered))    // match view/details
+        //        //    return template;
+        //        //if (viewNameInUrlLowered.EndsWith("/.*"))   // match details/.* --> e.g. details/12
+        //        //{
+        //        //    var keyName = viewNameInUrlLowered.Substring(0, viewNameInUrlLowered.Length - 3);
+        //        //    if (queryStringKeys.Contains(keyName))
+        //        //        return template;
+        //        //}
+        //    }
 
-        private InstanceContext _sexyForSecurityCheck;
-        /// <summary>
-        ///  If Sexy is null, instanciate new SexyContent(ZoneId, 0), otherwise return the existing;
-        /// </summary>
-        private InstanceContext InstanceForSecurityCheck => _sexyForSecurityCheck ?? (_sexyForSecurityCheck = (SxcContext == null
-            ? new InstanceContext(ZoneId.Value, 0, true, ModuleConfiguration.OwnerPortalID, ModuleConfiguration)
-            : SxcContext));
+        //    return null;
+        //}
 
-        protected bool UserMayEditThisModule => InstanceForSecurityCheck?.Environment?.Permissions.UserMayEditContent ?? false;
+        #endregion
 
-        protected bool StandAlone => Request.QueryString["standalone"] == "true";
 
-        /// <summary>
-        /// Add data-2sxc-globals Attribute to the DNN ModuleHost
-        /// </summary>
-        private void RegisterGlobalsAttribute()
-        {
-            // Add some required variables to module host div
-            ((ModuleHost)Parent).Attributes.Add("data-2sxc-globals", JsonConvert.SerializeObject(new
-            {
-                ModuleContext = new
-                {
-                    ModuleContext.PortalId,
-                    ModuleContext.TabId,
-                    ModuleContext.ModuleId,
-                    AppId
-                },
-                PortalSettings.ActiveTab.FullUrl,
-                PortalRoot = (Request.IsSecureConnection ? "https://" : "http://") + PortalAlias.HTTPAlias + "/",
-                DefaultLanguageID = SxcContext != null ? SxcContext.EavAppContext.Dimensions.GetLanguageId(PortalSettings.DefaultLanguage) : null
-            }));
-        }
+
 
     }
 }

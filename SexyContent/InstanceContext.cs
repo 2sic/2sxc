@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections.Specialized;
 using System.Configuration;
+using System.Linq;
 using System.Web;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
 using ToSic.Eav.BLL;
 using ToSic.SexyContent.DataSources;
+using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Environment.Interfaces;
 using ToSic.SexyContent.Internal;
 
@@ -30,9 +33,9 @@ namespace ToSic.SexyContent
 
         public int? AppId { get; }
 
-        internal TemplateManager AppTemplates { get; set; }
+        public TemplateManager AppTemplates { get; set; }
 
-		internal ContentGroupManager AppContentGroups { get; set; }
+		public ContentGroupManager AppContentGroups { get; set; }
 
         private ContentGroup _contentGroup;
         internal ContentGroup ContentGroup => _contentGroup ??
@@ -67,8 +70,75 @@ namespace ToSic.SexyContent
             }
         }
 
+
         #endregion
 
+        #region current template
+        // todo: try to refactor most of this out of this class again
+
+        private bool AllowAutomaticTemplateChangeBasedOnUrlParams => !IsContentApp; 
+        private Template _template;
+        internal Template Template
+        {
+            get
+            {
+                if (_template != null) return _template;
+
+                if (!AppId.HasValue)
+                    return null;
+
+                // Change Template if URL contains "ViewNameInUrl"
+                if (AllowAutomaticTemplateChangeBasedOnUrlParams)
+                {
+                    var urlParams =  HttpContext.Current.Request.QueryString;
+                    var templateFromUrl = TryToGetTemplateBasedOnUrlParams(urlParams);
+                    if (templateFromUrl != null)
+                        _template = templateFromUrl;
+                }
+
+                return _template ?? (_template = ContentGroup.Template);
+            }
+            set { _template = value; }
+        }
+
+        /// <summary>
+        /// combine all QueryString Params to a list of key/value lowercase and search for a template having this ViewNameInUrl
+        /// QueryString is never blank in DNN so no there's no test for it
+        /// </summary>
+        private Template TryToGetTemplateBasedOnUrlParams(NameValueCollection urlParams)
+        {
+            var urlParameterDict = urlParams.AllKeys.ToDictionary(key => key?.ToLower() ?? "", key => string.Format("{0}/{1}", key, urlParams[key]).ToLower());
+            //var queryStringPairs = Request.QueryString.AllKeys.Select(key => string.Format("{0}/{1}", key, Request.QueryString[key]).ToLower()).ToArray();
+            // var queryStringKeys = Request.QueryString.AllKeys.Select(k => k?.ToLower() ?? "").ToArray();
+
+            foreach (var template in AppTemplates.GetAllTemplates().Where(t => !string.IsNullOrEmpty(t.ViewNameInUrl)))
+            {
+                var desiredFullViewName = template.ViewNameInUrl.ToLower();
+                if (desiredFullViewName.EndsWith("/.*"))   // match details/.* --> e.g. details/12
+                {
+                    var keyName = desiredFullViewName.Substring(0, desiredFullViewName.Length - 3);
+                    if (urlParameterDict.ContainsKey(keyName))
+                        return template;
+                }
+                else if (urlParameterDict.ContainsValue(desiredFullViewName)) // match view/details
+                    return template;
+
+                //var viewNameInUrlLowered = template.ViewNameInUrl.ToLower();
+                //if (queryStringPairs.Contains(viewNameInUrlLowered))    // match view/details
+                //    return template;
+                //if (viewNameInUrlLowered.EndsWith("/.*"))   // match details/.* --> e.g. details/12
+                //{
+                //    var keyName = viewNameInUrlLowered.Substring(0, viewNameInUrlLowered.Length - 3);
+                //    if (queryStringKeys.Contains(keyName))
+                //        return template;
+                //}
+            }
+
+            return null;
+        }
+
+
+        #endregion
 
         #region Constructor
 
@@ -120,6 +190,19 @@ namespace ToSic.SexyContent
             #endregion
         }
 
+
+        #endregion
+
+        #region RenderEngine
+
+        public IEngine RenderingEngine(InstancePurposes renderingPurpose)
+        {
+            var engine = EngineFactory.CreateEngine(Template);
+            engine.Init(Template, App, ModuleInfo, DataSource, renderingPurpose, this);
+            engine.CustomizeData(); // this is also important for json-output
+
+            return engine;
+        }
 
         #endregion
     }

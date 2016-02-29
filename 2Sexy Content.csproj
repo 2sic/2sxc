@@ -255,6 +255,7 @@
     <Compile Include="SexyContent\EAV\FieldTemplates\EditorProvider.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="SexyContent\Engines\RenderingException.cs" />
     <Compile Include="SexyContent\ImportExport\XmlConstants.cs" />
     <Compile Include="Environment\Dnn7\Permissions.cs" />
     <Compile Include="SexyContent\Settings.cs" />
@@ -346,7 +347,7 @@
     <Compile Include="SexyContent\Search\SearchIndexException.cs" />
     <Compile Include="SexyContent\Search\SearchInfo.cs" />
     <Compile Include="SexyContent\SexyContentException.cs" />
-    <Compile Include="SexyContent\SexyControlAdminBase.cs">
+    <Compile Include="Administration\SexyControlAdminBaseWillSoonBeRemoved.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="SexyContent\SexyControlEditBase.cs">

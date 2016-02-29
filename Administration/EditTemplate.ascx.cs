@@ -6,10 +6,11 @@ using DotNetNuke.Common.Utilities;
 using ToSic.Eav;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
+using ToSic.SexyContent.Administration;
 
 namespace ToSic.SexyContent
 {
-    public partial class EditTemplate : SexyControlAdminBase
+    public partial class EditTemplate : SexyControlAdminBaseWillSoonBeRemoved
     {
         public const string cTemplateId = "TemplateID";
 
