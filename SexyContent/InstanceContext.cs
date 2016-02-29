@@ -65,7 +65,7 @@ namespace ToSic.SexyContent
         #endregion
 
 
-        #region SexyContent Constructor
+        #region Constructor
 
 
         /// <summary>

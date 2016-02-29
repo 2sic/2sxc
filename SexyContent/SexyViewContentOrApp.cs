@@ -14,7 +14,6 @@ using DotNetNuke.UI.Modules;
 using DotNetNuke.Web.Client.ClientResourceManagement;
 using Newtonsoft.Json;
 using ToSic.Eav;
-using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Security;
 using ToSic.SexyContent.Statics;
@@ -39,80 +38,11 @@ namespace ToSic.SexyContent
 				// If logged in, inject Edit JavaScript, and delete / add items
 				if (UserMayEditThisModule)
 				{
-				    var root = "~/desktopmodules/tosic_sexycontent/";
-				    var ext = string.IsNullOrEmpty(Request.QueryString["debug"]) ? ".min.js" : ".js"; 
+				    RegisterClientDependencies();
 
-                    // add edit-mode CSS
-                    ClientResourceManager.RegisterStyleSheet(Page, root + "dist/inpage/inpage.min.css");
+				    var clientInfos = InfosForTheClientScripts();
 
-					// ToDo: Move these RegisterScripts to JS to prevent including AngularJS twice (from other modules)
-                    ClientResourceManager.RegisterScript(Page, root + "js/angularjs/angular.min.js", 80);
-
-                    // New: multi-language stuff
-				    ClientResourceManager.RegisterScript(Page, root + "dist/lib/i18n/set.min.js");
-
-                    ClientResourceManager.RegisterScript(Page, root + "js/2sxc.api" + ext, 90);
-                    ClientResourceManager.RegisterScript(Page, root + "dist/inpage/inpage" + ext, 91);
-
-                    ClientResourceManager.RegisterScript(Page, root + "js/angularjs/2sxc4ng" + ext, 93); 
-                    ClientResourceManager.RegisterScript(Page, root + "dist/config/config" + ext, 93); 
-
-					var hasContent = AppId.HasValue && Template != null && ContentGroup.Exists;
-
-                    // minor workaround because the settings in the cache are wrong after using a page template
-				    var tempVisibleStatus = DnnStuffToRefactor.TryToGetReliableSetting(ModuleConfiguration, ToSic.SexyContent.Settings.SettingsShowTemplateChooser);
-				    var templateChooserVisible = bool.Parse(tempVisibleStatus ?? "true");
-
-				    var languages =
-				        ZoneHelpers.GetCulturesWithActiveState(PortalId, ZoneId.Value)
-				            .Where(c => c.Active)
-				            .Select(c => new {key = c.Code.ToLower(), name = c.Text});
-
-				    var priLang = PortalSettings.DefaultLanguage.ToLower(); // primary language 
-
-                    // for now, don't filter by existing languages, this causes side-effects in many cases. 
-				    //if (!languages.Where(l => l.key == priLang).Any())
-				    //    priLang = "";
-
-                    ((ModuleHost)Parent).Attributes.Add("data-2sxc", JsonConvert.SerializeObject(new
-                    {
-                        moduleId = ModuleId,
-                        manage = new
-                        {
-                            isEditMode = UserMayEditThisModule,
-                            templateChooserVisible,
-                            hasContent,
-                            isContentApp = IsContentApp,
-                            zoneId = ZoneId ?? 0,
-                            appId = AppId,
-                            isList = AppId.HasValue && ContentGroup.Content.Count > 1,
-                            templateId = Template?.TemplateId,
-                            contentTypeId = Template?.ContentTypeStaticName ?? "",
-                            config = new
-                            {
-                                portalId = PortalId,
-                                tabId = TabId,
-                                moduleId = ModuleId,
-                                contentGroupId = AppId.HasValue ? ContentGroup.ContentGroupGuid : (Guid?)null,
-                                dialogUrl = Globals.NavigateURL(TabId),
-                                returnUrl = Request.RawUrl,
-                                appPath = AppId.HasValue ? Sexy.App.Path + "/" : null,
-                                // 2016-02-27 2dm - seems unused
-                                //cultureDimension = AppId.HasValue ? Sexy.GetCurrentLanguageID() : new int?(),
-                                isList = Template != null && Template.UseForList,
-                                version = ToSic.SexyContent.Settings.Version.ToString() // SexyContent.Version.ToString()
-                            },
-                            user = new
-                            {
-                                canDesign = SecurityHelpers.IsInSexyContentDesignersGroup(UserInfo), // will be true for admins or for people in the designers-group
-                                canDevelop = UserInfo.IsSuperUser // will be true for host-users, false for all others
-                            },
-                            applicationRoot = ResolveUrl("~"),
-                            lang = PortalSettings.CultureCode.ToLower(), //System.Threading.Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName.ToLower(),
-                            langPrimary = priLang,
-                            languages
-                        }
-                    }));
+				    ((ModuleHost)Parent).Attributes.Add("data-2sxc", JsonConvert.SerializeObject(clientInfos));
 
 				}
 			}
@@ -123,7 +53,92 @@ namespace ToSic.SexyContent
 
 		}
 
-		protected bool EnsureUpgrade(Panel pnlError)
+	    private object InfosForTheClientScripts()
+	    {
+	        var hasContent = AppId.HasValue && Template != null && ContentGroup.Exists;
+
+	        // minor workaround because the settings in the cache are wrong after using a page template
+	        var tempVisibleStatus = DnnStuffToRefactor.TryToGetReliableSetting(ModuleConfiguration,
+	            ToSic.SexyContent.Settings.SettingsShowTemplateChooser);
+	        var templateChooserVisible = bool.Parse(tempVisibleStatus ?? "true");
+
+	        var languages =
+	            ZoneHelpers.GetCulturesWithActiveState(PortalId, ZoneId.Value)
+	                .Where(c => c.Active)
+	                .Select(c => new {key = c.Code.ToLower(), name = c.Text});
+
+	        var priLang = PortalSettings.DefaultLanguage.ToLower(); // primary language 
+
+	        // for now, don't filter by existing languages, this causes side-effects in many cases. 
+	        //if (!languages.Where(l => l.key == priLang).Any())
+	        //    priLang = "";
+
+	        var clientInfos = new
+	        {
+	            moduleId = ModuleId,
+	            manage = new
+	            {
+	                isEditMode = UserMayEditThisModule,
+	                templateChooserVisible,
+	                hasContent,
+	                isContentApp = IsContentApp,
+	                zoneId = ZoneId ?? 0,
+	                appId = AppId,
+	                isList = AppId.HasValue && ContentGroup.Content.Count > 1,
+	                templateId = Template?.TemplateId,
+	                contentTypeId = Template?.ContentTypeStaticName ?? "",
+	                config = new
+	                {
+	                    portalId = PortalId,
+	                    tabId = TabId,
+	                    moduleId = ModuleId,
+	                    contentGroupId = AppId.HasValue ? ContentGroup.ContentGroupGuid : (Guid?) null,
+	                    dialogUrl = Globals.NavigateURL(TabId),
+	                    returnUrl = Request.RawUrl,
+	                    appPath = AppId.HasValue ? Sexy.App.Path + "/" : null,
+	                    // 2016-02-27 2dm - seems unused
+	                    //cultureDimension = AppId.HasValue ? Sexy.GetCurrentLanguageID() : new int?(),
+	                    isList = Template != null && Template.UseForList,
+	                    version = ToSic.SexyContent.Settings.Version.ToString() // SexyContent.Version.ToString()
+	                },
+	                user = new
+	                {
+	                    canDesign = SecurityHelpers.IsInSexyContentDesignersGroup(UserInfo),
+	                    // will be true for admins or for people in the designers-group
+	                    canDevelop = UserInfo.IsSuperUser // will be true for host-users, false for all others
+	                },
+	                applicationRoot = ResolveUrl("~"),
+	                lang = PortalSettings.CultureCode.ToLower(),
+	                //System.Threading.Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName.ToLower(),
+	                langPrimary = priLang,
+	                languages
+	            }
+	        };
+	        return clientInfos;
+	    }
+
+	    private void RegisterClientDependencies()
+	    {
+	        var root = "~/desktopmodules/tosic_sexycontent/";
+	        var ext = string.IsNullOrEmpty(Request.QueryString["debug"]) ? ".min.js" : ".js";
+
+	        // add edit-mode CSS
+	        ClientResourceManager.RegisterStyleSheet(Page, root + "dist/inpage/inpage.min.css");
+
+	        // ToDo: Move these RegisterScripts to JS to prevent including AngularJS twice (from other modules)
+	        ClientResourceManager.RegisterScript(Page, root + "js/angularjs/angular.min.js", 80);
+
+	        // New: multi-language stuff
+	        ClientResourceManager.RegisterScript(Page, root + "dist/lib/i18n/set.min.js");
+
+	        ClientResourceManager.RegisterScript(Page, root + "js/2sxc.api" + ext, 90);
+	        ClientResourceManager.RegisterScript(Page, root + "dist/inpage/inpage" + ext, 91);
+
+	        ClientResourceManager.RegisterScript(Page, root + "js/angularjs/2sxc4ng" + ext, 93);
+	        ClientResourceManager.RegisterScript(Page, root + "dist/config/config" + ext, 93);
+	    }
+
+	    protected bool EnsureUpgrade(Panel pnlError)
 		{
 			// Upgrade success check - show message if upgrade did not run successfully
 			if (UserInfo.IsSuperUser && !SexyContentModuleUpgrade.UpgradeComplete)
