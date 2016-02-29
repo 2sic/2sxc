@@ -14,9 +14,10 @@ using DotNetNuke.UI.Modules;
 using DotNetNuke.Web.Client.ClientResourceManagement;
 using Newtonsoft.Json;
 using ToSic.Eav;
+using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Engines;
+using ToSic.SexyContent.Internal;
 using ToSic.SexyContent.Security;
-using ToSic.SexyContent.Statics;
 using IDataSource = ToSic.Eav.DataSources.IDataSource;
 
 namespace ToSic.SexyContent
@@ -29,28 +30,21 @@ namespace ToSic.SexyContent
 
 		protected void Page_Load(object sender, EventArgs e)
 		{
-
+            // always do this, part of the guarantee that everything will work
 			ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
 
-			try
-			{
-
-				// If logged in, inject Edit JavaScript, and delete / add items
-				if (UserMayEditThisModule)
-				{
-				    RegisterClientDependencies();
-
-				    var clientInfos = InfosForTheClientScripts();
-
-				    ((ModuleHost)Parent).Attributes.Add("data-2sxc", JsonConvert.SerializeObject(clientInfos));
-
-				}
-			}
-			catch (Exception ex)
-			{
-				Exceptions.ProcessModuleLoadException(this, ex);
-			}
-
+			// If logged in, inject Edit JavaScript, and delete / add items
+		    if (UserMayEditThisModule)
+		        try
+		        {
+		            RegisterClientDependencies();
+		            var clientInfos = InfosForTheClientScripts();
+		            ((ModuleHost) Parent).Attributes.Add("data-2sxc", JsonConvert.SerializeObject(clientInfos));
+		        }
+		        catch (Exception ex)
+		        {
+		            Exceptions.ProcessModuleLoadException(this, ex);
+		        }
 		}
 
 	    private object InfosForTheClientScripts()
@@ -95,7 +89,7 @@ namespace ToSic.SexyContent
 	                    contentGroupId = AppId.HasValue ? ContentGroup.ContentGroupGuid : (Guid?) null,
 	                    dialogUrl = Globals.NavigateURL(TabId),
 	                    returnUrl = Request.RawUrl,
-	                    appPath = AppId.HasValue ? Sexy.App.Path + "/" : null,
+	                    appPath = AppId.HasValue ? SxcContext.App.Path + "/" : null,
 	                    // 2016-02-27 2dm - seems unused
 	                    //cultureDimension = AppId.HasValue ? Sexy.GetCurrentLanguageID() : new int?(),
 	                    isList = Template != null && Template.UseForList,
@@ -200,36 +194,15 @@ namespace ToSic.SexyContent
 
             try
 			{
-				//var renderTemplate = Template;
 				string renderedTemplate;
 
 				var engine = EngineFactory.CreateEngine(Template);
-                // before 2016-02-27 2dm: var dataSource = (ViewDataSource)Sexy.GetViewDataSource(ModuleId, SecurityHelpers.HasEditPermission(ModuleConfiguration), Template);
-			    var dataSource = Sexy.DataSource;// (ViewDataSource) ViewDataSource.ForModule(ModuleId, SecurityHelpers.HasEditPermission(ModuleConfiguration), Template, Sexy);
-				engine.Init(Template, Sexy.App, ModuleConfiguration, dataSource, Request.QueryString["type"] == "data" ? InstancePurposes.PublishData : InstancePurposes.WebView, Sexy);
+			    var dataSource = SxcContext.DataSource;
+				engine.Init(Template, SxcContext.App, ModuleConfiguration, dataSource, Request.QueryString["type"] == "data" ? InstancePurposes.PublishData : InstancePurposes.WebView, SxcContext);
 				engine.CustomizeData();
 
-				// Output JSON data if type=data in URL
-				if (Request.QueryString["type"] == "data")
-				{
-					if (dataSource.Publish.Enabled)
-					{
-						var publishedStreams = dataSource.Publish.Streams;
-						renderedTemplate = /*Sexy.*/GetJsonFromStreams(dataSource, publishedStreams.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries));
-					}
-					else
-					{
-						Response.StatusCode = 403;
-						var moduleTitle = new ModuleController().GetModule(ModuleId).ModuleTitle;
-						renderedTemplate = JsonConvert.SerializeObject(new { error = "2sxc Content (" + ModuleId + "): " + String.Format(LocalizeString("EnableDataPublishing.Text"), ModuleId, moduleTitle) });
-						Response.TrySkipIisCustomErrors = true;
-					}
-					Response.ContentType = "application/json";
-				}
-				else
-				{
-					renderedTemplate = engine.Render();
-				}
+				// Output JSON data if type=data in URL, otherwise render the template
+				renderedTemplate = Request.QueryString["type"] == "data" ? StreamJsonToClient(dataSource) : engine.Render();
 
 				// If standalone is specified, output just the template without anything else
 				if (StandAlone)
@@ -251,7 +224,35 @@ namespace ToSic.SexyContent
 			}
 		}
 
-		#region Show Message or Errors
+
+	    private string StreamJsonToClient(ViewDataSource dataSource)
+	    {
+	        string renderedTemplate;
+	        if (dataSource.Publish.Enabled)
+	        {
+	            var publishedStreams = dataSource.Publish.Streams;
+	            renderedTemplate = GetJsonFromStreams(dataSource,
+	                publishedStreams.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries));
+	        }
+	        else
+	        {
+	            Response.StatusCode = 403;
+	            var moduleTitle = new ModuleController().GetModule(ModuleId).ModuleTitle;
+	            renderedTemplate =
+	                JsonConvert.SerializeObject(
+	                    new
+	                    {
+	                        error =
+	                            "2sxc Content (" + ModuleId + "): " +
+	                            String.Format(LocalizeString("EnableDataPublishing.Text"), ModuleId, moduleTitle)
+	                    });
+	            Response.TrySkipIisCustomErrors = true;
+	        }
+	        Response.ContentType = "application/json";
+	        return renderedTemplate;
+	    }
+
+	    #region Show Message or Errors
 		protected void ShowMessage(string Message, Panel pnlMessage, bool ShowOnlyEdit = true)
 		{
 			if (!ShowOnlyEdit || UserMayEditThisModule)
@@ -338,7 +339,7 @@ namespace ToSic.SexyContent
 
 							// App management
 							if (ZoneId.HasValue && AppId.HasValue)
-                                Actions.Add(GetNextActionID(), "Admin" + (IsContentApp ? "" : " " + Sexy.App.Name), "", "", "edit.gif", "javascript:$2sxcActionMenuMapper(" + ModuleId + ").adminApp();", "", true,
+                                Actions.Add(GetNextActionID(), "Admin" + (IsContentApp ? "" : " " + SxcContext.App.Name), "", "", "edit.gif", "javascript:$2sxcActionMenuMapper(" + ModuleId + ").adminApp();", "", true,
                                         SecurityAccessLevel.Admin, true, false);
 
                             // Zone management (app list)
@@ -370,7 +371,7 @@ namespace ToSic.SexyContent
 
             var y = streamsToPublish.Where(k => source.Out.ContainsKey(k)).ToDictionary(k => k, s => new
             {
-                List = (from c in source.Out[s].List select new DynamicEntity(c.Value, new[] { language }, Sexy).ToDictionary() /*Sexy.ToDictionary(c.Value, language)*/).ToList()
+                List = (from c in source.Out[s].List select new DynamicEntity(c.Value, new[] { language }, SxcContext).ToDictionary() /*Sexy.ToDictionary(c.Value, language)*/).ToList()
             });
 
             return JsonConvert.SerializeObject(y);

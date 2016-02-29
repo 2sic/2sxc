@@ -20,7 +20,7 @@ using System.Web.Hosting;
 using ToSic.Eav.BLL;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Modules.Definitions;
-using ToSic.SexyContent.Statics;
+using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent
 {

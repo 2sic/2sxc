@@ -10,7 +10,7 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.FileSystem;
 using ToSic.Eav;
 using ToSic.Eav.Import;
-using ToSic.SexyContent.Statics;
+using ToSic.SexyContent.Internal;
 using static System.String;
 
 
@@ -196,8 +196,8 @@ namespace ToSic.SexyContent.ImportExport
 
 				// Adding app to EAV
 				var sexy = new InstanceContext(zoneId, AppHelpers.GetDefaultAppId(zoneId));
-				var app = sexy.ContentContext.App.AddApp(appGuid);
-				sexy.ContentContext.SqlDb.SaveChanges();
+				var app = sexy.EavAppContext.App.AddApp(appGuid);
+				sexy.EavAppContext.SqlDb.SaveChanges();
 
 				appId = app.AppID;
 			}
@@ -250,7 +250,7 @@ namespace ToSic.SexyContent.ImportExport
 				_sourceDimensions.FirstOrDefault(p => p.ExternalKey == _sourceDefaultLanguage).DimensionID
 				: new int?();
 
-			_targetDimensions = _sexy.ContentContext.Dimensions.GetDimensionChildren("Culture");
+			_targetDimensions = _sexy.EavAppContext.Dimensions.GetDimensionChildren("Culture");
 			if (_targetDimensions.Count == 0)
 				_targetDimensions.Add(new Dimension
 				{
@@ -369,8 +369,8 @@ namespace ToSic.SexyContent.ImportExport
 				if (!IsNullOrEmpty(demoEntityGuid))
 				{
 					var entityGuid = Guid.Parse(demoEntityGuid);
-					if (_sexy.ContentContext.Entities.EntityExists(entityGuid))
-						demoEntityId = _sexy.ContentContext.Entities.GetEntity(entityGuid).EntityID;
+					if (_sexy.EavAppContext.Entities.EntityExists(entityGuid))
+						demoEntityId = _sexy.EavAppContext.Entities.GetEntity(entityGuid).EntityID;
 					else
 						ImportLog.Add(
 							new ExportImportMessage(
@@ -392,8 +392,8 @@ namespace ToSic.SexyContent.ImportExport
 				if (pipelineEntityGuid != null && !IsNullOrEmpty(pipelineEntityGuid.Value))
 				{
 					var entityGuid = Guid.Parse(pipelineEntityGuid.Value);
-					if (_sexy.ContentContext.Entities.EntityExists(entityGuid))
-						pipelineEntityId = _sexy.ContentContext.Entities.GetEntity(entityGuid).EntityID;
+					if (_sexy.EavAppContext.Entities.EntityExists(entityGuid))
+						pipelineEntityId = _sexy.EavAppContext.Entities.GetEntity(entityGuid).EntityID;
 					else
 						ImportLog.Add(
 							new ExportImportMessage(
@@ -414,8 +414,8 @@ namespace ToSic.SexyContent.ImportExport
 					if (xmlDemoEntityGuidString != "0" && xmlDemoEntityGuidString != "")
 					{
 						var xmlDemoEntityGuid = Guid.Parse(xmlDemoEntityGuidString);
-						if (_sexy.ContentContext.Entities.EntityExists(xmlDemoEntityGuid))
-							xmlDemoEntityId = _sexy.ContentContext.Entities.GetEntity(xmlDemoEntityGuid).EntityID;
+						if (_sexy.EavAppContext.Entities.EntityExists(xmlDemoEntityGuid))
+							xmlDemoEntityId = _sexy.EavAppContext.Entities.GetEntity(xmlDemoEntityGuid).EntityID;
 					}
 
 					return new
@@ -453,7 +453,7 @@ namespace ToSic.SexyContent.ImportExport
 					listPresentationDemoEntityId = listPresentationDefault.DemoEntityId;
 				}
 
-				_sexy.Templates.UpdateTemplate(null, name, path, contentTypeStaticName, demoEntityId, presentationTypeStaticName, presentationDemoEntityId, listContentTypeStaticName, listContentDemoEntityId, listPresentationTypeStaticName, listPresentationDemoEntityId, type, isHidden, location, useForList, publishData, streamsToPublish, pipelineEntityId, viewNameInUrl);
+				_sexy.AppTemplates.UpdateTemplate(null, name, path, contentTypeStaticName, demoEntityId, presentationTypeStaticName, presentationDemoEntityId, listContentTypeStaticName, listContentDemoEntityId, listPresentationTypeStaticName, listPresentationDemoEntityId, type, isHidden, location, useForList, publishData, streamsToPublish, pipelineEntityId, viewNameInUrl);
 
 				ImportLog.Add(new ExportImportMessage("Template '" + name + "' successfully imported.",
 													 ExportImportMessage.MessageTypes.Information));

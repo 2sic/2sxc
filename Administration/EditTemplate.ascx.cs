@@ -6,7 +6,6 @@ using DotNetNuke.Common.Utilities;
 using ToSic.Eav;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
-using ToSic.SexyContent.Statics;
 
 namespace ToSic.SexyContent
 {
@@ -26,7 +25,7 @@ namespace ToSic.SexyContent
         protected void Page_Init(object sender, EventArgs e)
         {
             if (ModeIsEdit)
-                Template = Sexy.Templates.GetTemplate(TemplateID);
+                Template = SxcContext.AppTemplates.GetTemplate(TemplateID);
 
             var contentTypeSelectors = new[] { ctrContentType, ctrPresentationType, ctrListContentType, ctrListPresentationType };
 
@@ -159,7 +158,7 @@ namespace ToSic.SexyContent
         /// <param name="e"></param>
         protected void btnUpdate_Click(object sender, EventArgs e)
         {
-            var tm = new TemplateManager(Sexy);
+            var tm = new Internal.TemplateManager(SxcContext);
 
 	        var templatePath = ddlTemplateFiles.SelectedValue;
 
@@ -172,7 +171,7 @@ namespace ToSic.SexyContent
 			if (!chkSeparateContentPresentation.Checked)
 				ctrPresentationType.ContentTypeStaticName = "";
 
-			Sexy.Templates.UpdateTemplate(templateId, txtTemplateName.Text, templatePath, ctrContentType.ContentTypeStaticName, ctrContentType.DemoEntityID, ctrPresentationType.ContentTypeStaticName, ctrPresentationType.DemoEntityID, ctrListContentType.ContentTypeStaticName, ctrListContentType.DemoEntityID, ctrListPresentationType.ContentTypeStaticName, ctrListPresentationType.DemoEntityID, ddlTemplateTypes.SelectedValue, chkHidden.Checked, ddlTemplateLocations.SelectedValue, chkEnableList.Checked, chkPublishSource.Checked, txtPublishStreams.Text, pipelineEntityId, txtViewNameInUrl.Text);
+			SxcContext.AppTemplates.UpdateTemplate(templateId, txtTemplateName.Text, templatePath, ctrContentType.ContentTypeStaticName, ctrContentType.DemoEntityID, ctrPresentationType.ContentTypeStaticName, ctrPresentationType.DemoEntityID, ctrListContentType.ContentTypeStaticName, ctrListContentType.DemoEntityID, ctrListPresentationType.ContentTypeStaticName, ctrListPresentationType.DemoEntityID, ddlTemplateTypes.SelectedValue, chkHidden.Checked, ddlTemplateLocations.SelectedValue, chkEnableList.Checked, chkPublishSource.Checked, txtPublishStreams.Text, pipelineEntityId, txtViewNameInUrl.Text);
 
 			// old Redirect to the manage templates control
 			//var RedirectUrl = UrlUtils.PopUpUrl(Globals.NavigateURL(SexyContent.ControlKeys.ManageTemplates, "mid", ModuleId.ToString(), SexyContent.AppIDString, AppId.ToString()), this, PortalSettings, false, true);
@@ -185,7 +184,7 @@ namespace ToSic.SexyContent
 		protected void SetTemplateDefaultSelector(int TemplateID, ContentTypeAndDemoSelector Selector)
 		{
 			var itemType = Selector.ItemType;
-			var template = Sexy.Templates.GetTemplate(TemplateID);
+			var template = SxcContext.AppTemplates.GetTemplate(TemplateID);
 
 			if (itemType == "Content")
 			{
@@ -211,7 +210,7 @@ namespace ToSic.SexyContent
 				Selector.DemoEntityID = template.ListPresentationDemoEntity != null ? template.ListPresentationDemoEntity.EntityId : new int?();
 			}
 
-			Selector.Enabled = !Sexy.ContentGroups.IsConfigurationInUse(TemplateID, itemType);
+			Selector.Enabled = !SxcContext.AppContentGroups.IsConfigurationInUse(TemplateID, itemType);
 		}
 
         protected void btnCreateTemplateFile_Click(object sender, EventArgs e)
@@ -274,7 +273,7 @@ namespace ToSic.SexyContent
         /// <param name="TemplateDropDown">The template dropdown to databind</param>
         private void BindTemplateFiles(string TemplateType, string TemplateLocation, DropDownList TemplateDropDown)
         {
-            var tm= new TemplateManager(Sexy);
+            var tm= new Internal.TemplateManager(SxcContext);
             TemplateDropDown.DataSource = tm.GetTemplateFiles(Server, TemplateType, TemplateLocation);
             TemplateDropDown.DataBind();
         }

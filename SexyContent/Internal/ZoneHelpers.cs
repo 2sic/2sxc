@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Localization;
 using ToSic.Eav;
 
-namespace ToSic.SexyContent.Statics
+namespace ToSic.SexyContent.Internal
 {
     public class ZoneHelpers
     {
@@ -53,13 +52,13 @@ namespace ToSic.SexyContent.Statics
 
         public static List<Zone> GetZones()
         {
-            return new InstanceContext(Constants.DefaultZoneId, AppHelpers.GetDefaultAppId(Constants.DefaultZoneId)).ContentContext.Zone.GetZones();
+            return new InstanceContext(Constants.DefaultZoneId, AppHelpers.GetDefaultAppId(Constants.DefaultZoneId)).EavAppContext.Zone.GetZones();
         }
 
         public static Zone AddZone(string zoneName)
         {
             return
-                new InstanceContext(Constants.DefaultZoneId, AppHelpers.GetDefaultAppId(Constants.DefaultZoneId)).ContentContext.Zone
+                new InstanceContext(Constants.DefaultZoneId, AppHelpers.GetDefaultAppId(Constants.DefaultZoneId)).EavAppContext.Zone
                     .AddZone(zoneName).Item1;
         }
 
@@ -69,7 +68,7 @@ namespace ToSic.SexyContent.Statics
         public static List<CulturesWithActiveState> GetCulturesWithActiveState(int portalId, int zoneId)
         {
             //var DefaultLanguageID = ContentContext.GetLanguageId();
-            var AvailableEAVLanguages = new InstanceContext(zoneId, AppHelpers.GetDefaultAppId(zoneId)).ContentContext.Dimensions.GetLanguages();
+            var AvailableEAVLanguages = new InstanceContext(zoneId, AppHelpers.GetDefaultAppId(zoneId)).EavAppContext.Dimensions.GetLanguages();
             var DefaultLanguageCode = new PortalSettings(portalId).DefaultLanguage;
             var DefaultLanguage = AvailableEAVLanguages.Where(p => p.ExternalKey == DefaultLanguageCode).FirstOrDefault();
             var DefaultLanguageIsActive = DefaultLanguage != null && DefaultLanguage.Active;

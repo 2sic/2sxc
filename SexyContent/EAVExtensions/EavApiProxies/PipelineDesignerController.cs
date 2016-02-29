@@ -79,7 +79,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 		{
 			// Stop if a Template uses this Pipeline
 			var sexy = new InstanceContext(0, appId);
-			var templatesUsingPipeline = sexy.Templates.GetAllTemplates().Where(t => t.Pipeline != null && t.Pipeline.EntityId == id).Select(t => t.TemplateId).ToArray();
+			var templatesUsingPipeline = sexy.AppTemplates.GetAllTemplates().Where(t => t.Pipeline != null && t.Pipeline.EntityId == id).Select(t => t.TemplateId).ToArray();
 			if (templatesUsingPipeline.Any())
 				throw new Exception(string.Format("Pipeline is used by Templates and cant be deleted. Pipeline EntityId: {0}. TemplateIds: {1}", id, string.Join(", ", templatesUsingPipeline)));
 

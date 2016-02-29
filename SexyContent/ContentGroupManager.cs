@@ -6,11 +6,11 @@ using ToSic.Eav;
 using ToSic.Eav.BLL;
 using ToSic.Eav.DataSources;
 using DotNetNuke.Services.Localization;
-using ToSic.SexyContent.Statics;
+using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent
 {
-	public class ContentGroups
+	public class ContentGroupManager
 	{
 		private const string ContentGroupTypeName = "2SexyContent-ContentGroup";
 		private const string PreviewTemplateIdString = "ToSIC_SexyContent_PreviewTemplateId";
@@ -18,7 +18,7 @@ namespace ToSic.SexyContent
 		private readonly int _zoneId;
 		private readonly int _appId;
 
-		public ContentGroups(int zoneId, int appId)
+		public ContentGroupManager(int zoneId, int appId)
 		{
 			_zoneId = zoneId;
 			_appId = appId;

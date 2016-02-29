@@ -1,5 +1,5 @@
 ﻿using DotNetNuke.Entities.Modules;
-using ToSic.SexyContent.Statics;
+using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {

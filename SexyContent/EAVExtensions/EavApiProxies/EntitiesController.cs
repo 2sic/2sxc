@@ -57,7 +57,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
                     continue;
                 }
                 
-                var contentGroup = SxcContext.ContentGroups.GetContentGroup(reqItem.Group.Guid);
+                var contentGroup = SxcContext.AppContentGroups.GetContentGroup(reqItem.Group.Guid);
                 var contentTypeStaticName = contentGroup.Template.GetTypeStaticName(reqItem.Group.Part);
 
                 // if there is no content-type for this, then skip it (don't deliver anything)
@@ -131,7 +131,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
                               entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == "listpresentation");
 
                 // Get group to assign to and parameters
-                var contentGroup = SxcContext.ContentGroups.GetContentGroup(contItem.Header.Group.Guid);
+                var contentGroup = SxcContext.AppContentGroups.GetContentGroup(contItem.Header.Group.Guid);
                 var partName = contItem.Header.Group.Part;
                 var part = contentGroup[partName];
                 var index = contItem.Header.Group.Index;
@@ -168,7 +168,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
             // technically it could have multiple different groups to save in, 
             // ...but for now we'll just update the current modules title
             // note: it also correctly handles published/unpublished, but I'm not sure why :)
-            var modContentGroup = SxcContext.ContentGroups.GetContentGroupForModule(Dnn.Module.ModuleID);
+            var modContentGroup = SxcContext.AppContentGroups.GetContentGroupForModule(Dnn.Module.ModuleID);
 
             var titleItem = modContentGroup.ListContent.FirstOrDefault() ?? modContentGroup.Content.FirstOrDefault();
 

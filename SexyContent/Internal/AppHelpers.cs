@@ -11,7 +11,7 @@ using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
 using ToSic.Eav.DataSources.Caches;
 
-namespace ToSic.SexyContent.Statics
+namespace ToSic.SexyContent.Internal
 {
     public class AppHelpers
     {
@@ -105,7 +105,7 @@ namespace ToSic.SexyContent.Statics
             if (appMetaData == null)
             {
                 // Add app-describing entity
-                var appAttributeSet = appContext.ContentContext.AttribSet.GetAttributeSet(Settings.AttributeSetStaticNameApps).AttributeSetID;
+                var appAttributeSet = appContext.EavAppContext.AttribSet.GetAttributeSet(Settings.AttributeSetStaticNameApps).AttributeSetID;
                 var values = new OrderedDictionary
                 {
                     {"DisplayName", String.IsNullOrEmpty(appName) ? eavAppName : appName },
@@ -115,7 +115,7 @@ namespace ToSic.SexyContent.Statics
                     {"Version", "00.00.01"},
                     {"OriginalId", ""}
                 };
-                appContext.ContentContext.Entities.AddEntity(appAttributeSet, values, null, appId, ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp);
+                appContext.EavAppContext.Entities.AddEntity(appAttributeSet, values, null, appId, ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp);
             }
 
             if (appSettings == null)
@@ -123,14 +123,14 @@ namespace ToSic.SexyContent.Statics
 
                 AttributeSet settingsAttributeSet;
                 // Add new (empty) ContentType for Settings
-                if (!appContext.ContentContext.AttribSet.AttributeSetExists(Settings.AttributeSetStaticNameAppSettings, appId))
-                    settingsAttributeSet = appContext.ContentContext.AttribSet.AddAttributeSet(Settings.AttributeSetStaticNameAppSettings,
+                if (!appContext.EavAppContext.AttribSet.AttributeSetExists(Settings.AttributeSetStaticNameAppSettings, appId))
+                    settingsAttributeSet = appContext.EavAppContext.AttribSet.AddAttributeSet(Settings.AttributeSetStaticNameAppSettings,
                         "Stores settings for an app", Settings.AttributeSetStaticNameAppSettings, Settings.AttributeSetScopeApps);
                 else
-                    settingsAttributeSet = appContext.ContentContext.AttribSet.GetAttributeSet(Settings.AttributeSetStaticNameAppSettings);
+                    settingsAttributeSet = appContext.EavAppContext.AttribSet.GetAttributeSet(Settings.AttributeSetStaticNameAppSettings);
 
                 DataSource.GetCache(zoneId, appId).PurgeCache(zoneId, appId);
-                appContext.ContentContext.Entities.AddEntity(settingsAttributeSet, new OrderedDictionary(), null, appId, ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp);
+                appContext.EavAppContext.Entities.AddEntity(settingsAttributeSet, new OrderedDictionary(), null, appId, ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp);
             }
 
             if (appResources == null)
@@ -138,15 +138,15 @@ namespace ToSic.SexyContent.Statics
                 AttributeSet resourcesAttributeSet;
 
                 // Add new (empty) ContentType for Resources
-                if (!appContext.ContentContext.AttribSet.AttributeSetExists(Settings.AttributeSetStaticNameAppResources, appId))
-                    resourcesAttributeSet = appContext.ContentContext.AttribSet.AddAttributeSet(
+                if (!appContext.EavAppContext.AttribSet.AttributeSetExists(Settings.AttributeSetStaticNameAppResources, appId))
+                    resourcesAttributeSet = appContext.EavAppContext.AttribSet.AddAttributeSet(
                         Settings.AttributeSetStaticNameAppResources, "Stores resources like translations for an app",
                         Settings.AttributeSetStaticNameAppResources, Settings.AttributeSetScopeApps);
                 else
-                    resourcesAttributeSet = appContext.ContentContext.AttribSet.GetAttributeSet(Settings.AttributeSetStaticNameAppResources);
+                    resourcesAttributeSet = appContext.EavAppContext.AttribSet.GetAttributeSet(Settings.AttributeSetStaticNameAppResources);
 
                 DataSource.GetCache(zoneId, appId).PurgeCache(zoneId, appId);
-                appContext.ContentContext.Entities.AddEntity(resourcesAttributeSet, new OrderedDictionary(), null, appId, ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp);
+                appContext.EavAppContext.Entities.AddEntity(resourcesAttributeSet, new OrderedDictionary(), null, appId, ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp);
             }
 
             if (appMetaData == null || appSettings == null || appResources == null)
@@ -161,8 +161,8 @@ namespace ToSic.SexyContent.Statics
 
             // Adding app to EAV
             var sexy = new InstanceContext(zoneId, AppHelpers.GetDefaultAppId(zoneId));
-            var app = sexy.ContentContext.App.AddApp(Guid.NewGuid().ToString());
-            sexy.ContentContext.SqlDb.SaveChanges();
+            var app = sexy.EavAppContext.App.AddApp(Guid.NewGuid().ToString());
+            sexy.EavAppContext.SqlDb.SaveChanges();
 
             EnsureAppIsConfigured(zoneId, app.AppID, appName);
 
@@ -176,7 +176,7 @@ namespace ToSic.SexyContent.Statics
 
             var sexy = new InstanceContext(zoneId, appId, false);
 
-            if (appId != sexy.ContentContext.AppId)
+            if (appId != sexy.EavAppContext.AppId)
                 throw new Exception("An app can only be removed inside of it's own context.");
 
             if (appId == AppHelpers.GetDefaultAppId(zoneId))
@@ -189,7 +189,7 @@ namespace ToSic.SexyContent.Statics
                 Directory.Delete(sexyApp.PhysicalPath, true);
 
             // Delete the app
-            sexy.ContentContext.App.DeleteApp(appId);
+            sexy.EavAppContext.App.DeleteApp(appId);
         }
 
         // 2016-02-26 2dm probably unused
@@ -253,7 +253,7 @@ namespace ToSic.SexyContent.Statics
             var moduleController = new ModuleController();
 
             // Reset temporary template
-            ContentGroups.DeletePreviewTemplateId(module.ModuleID);
+            ContentGroupManager.DeletePreviewTemplateId(module.ModuleID);
 
             // ToDo: Should throw exception if a real ContentGroup exists
 
@@ -273,9 +273,9 @@ namespace ToSic.SexyContent.Statics
             if (appId.HasValue)
             {
                 var sexyForNewApp = new InstanceContext(zoneId.Value, appId.Value, false);
-                var templates = sexyForNewApp.Templates.GetAvailableTemplatesForSelector(module.ModuleID, sexyForNewApp.ContentGroups).ToList();
+                var templates = sexyForNewApp.AppTemplates.GetAvailableTemplatesForSelector(module.ModuleID, sexyForNewApp.AppContentGroups).ToList();
                 if (templates.Any())
-                    sexyForNewApp.ContentGroups.SetPreviewTemplateId(module.ModuleID, templates.First().TemplateId);
+                    sexyForNewApp.AppContentGroups.SetPreviewTemplateId(module.ModuleID, templates.First().TemplateId);
             }
         }
 

@@ -10,7 +10,7 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Web.Api;
-using ToSic.SexyContent.Statics;
+using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.WebApi
 {

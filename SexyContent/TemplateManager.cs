@@ -8,14 +8,14 @@ using ToSic.Eav.DataSources.Caches;
 
 namespace ToSic.SexyContent
 {
-	public class Templates
+	public class TemplateManager
 	{
 		private const string TemplateTypeName = "2SexyContent-Template";
 
 		private readonly int _zoneId;
 		private readonly int _appId;
 
-		public Templates(int zoneId, int appId)
+		public TemplateManager(int zoneId, int appId)
 		{
 			_zoneId = zoneId;
 			_appId = appId;
@@ -113,7 +113,7 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <param name="module"></param>
         /// <returns></returns>
-        public IEnumerable<Template> GetAvailableTemplatesForSelector(/*ModuleInfo module,*/ int modId, ContentGroups cgContentGroups)
+        public IEnumerable<Template> GetAvailableTemplatesForSelector(/*ModuleInfo module,*/ int modId, ContentGroupManager cgContentGroups)
         {
             IEnumerable<Template> availableTemplates;
             var contentGroup = cgContentGroups.GetContentGroupForModule(modId /*module.ModuleID*/);
@@ -159,6 +159,8 @@ namespace ToSic.SexyContent
             var contentTypes = ((BaseCache)DataSource.GetCache(_zoneId, _appId)).GetContentTypes();
             return contentTypes.Select(c => c.Value).Where(c => includeAttributeTypes || !c.Name.StartsWith("@")).OrderBy(c => c.Name);
         }
+
+
 
     }
 }

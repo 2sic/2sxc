@@ -2,7 +2,7 @@
 using System.Linq;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Exceptions;
-using ToSic.SexyContent.Statics;
+using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent
 {
@@ -47,7 +47,7 @@ namespace ToSic.SexyContent
                         pnlTemplateChooser.Visible = true;
 
                     if (AppId.HasValue)
-                        new DnnStuffToRefactor().EnsurePortalIsConfigured(Sexy, Server, ControlPath);
+                        new DnnStuffToRefactor().EnsurePortalIsConfigured(SxcContext, Server, ControlPath);
                 }
 
                 if (AppId.HasValue)
@@ -57,10 +57,10 @@ namespace ToSic.SexyContent
                     else if (!IsContentApp && UserMayEditThisModule)
                     // Select first available template automatically if it's not set yet - then refresh page
                     {
-                        var templates = Sexy.Templates.GetAvailableTemplatesForSelector(ModuleConfiguration.ModuleID, Sexy.ContentGroups).ToList();
+                        var templates = SxcContext.AppTemplates.GetAvailableTemplatesForSelector(ModuleConfiguration.ModuleID, SxcContext.AppContentGroups).ToList();
                         if (templates.Any())
                         {
-                            Sexy.ContentGroups.SetPreviewTemplateId(ModuleConfiguration.ModuleID, templates.First().TemplateId);
+                            SxcContext.AppContentGroups.SetPreviewTemplateId(ModuleConfiguration.ModuleID, templates.First().TemplateId);
                             Response.Redirect(Request.RawUrl);
                         }
                     }

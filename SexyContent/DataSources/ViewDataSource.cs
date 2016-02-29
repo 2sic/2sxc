@@ -23,7 +23,7 @@ namespace ToSic.SexyContent.DataSources
             moduleDataSource.ModuleId = moduleId;
             if (template != null)
                 moduleDataSource.OverrideTemplateId = template.TemplateId;
-            moduleDataSource.Sexy = sxc;
+            moduleDataSource.SxcContext = sxc;
 
             var viewDataSourceUpstream = moduleDataSource;
 

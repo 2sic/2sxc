@@ -3,7 +3,6 @@ using System.IO;
 using System.Web;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
-using ToSic.SexyContent.Statics;
 
 namespace ToSic.SexyContent.ViewManager
 {
@@ -20,7 +19,7 @@ namespace ToSic.SexyContent.ViewManager
         public TemplateEditor(InstanceContext sexy, int templateId, UserInfo userInfo, PortalSettings portalSettings)
         {
             Sexy = sexy;
-            Template = Sexy.Templates.GetTemplate(templateId);
+            Template = Sexy.AppTemplates.GetTemplate(templateId);
             UserInfo = userInfo;
             PortalSettings = portalSettings;
         }
@@ -56,7 +55,7 @@ namespace ToSic.SexyContent.ViewManager
                 return
                     HttpContext.Current.Server.MapPath(
                         Path.Combine(
-                            TemplateManager.GetTemplatePathRoot(Template.Location, Sexy.App),
+                            Internal.TemplateManager.GetTemplatePathRoot(Template.Location, Sexy.App),
                             Template.Path));
             }
         }

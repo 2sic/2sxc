@@ -7,7 +7,7 @@ using ToSic.Eav;
 using ToSic.Eav.BLL;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Environment.Interfaces;
-using ToSic.SexyContent.Statics;
+using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent
 {
@@ -22,29 +22,34 @@ namespace ToSic.SexyContent
     {
         #region Properties
         /// <summary>
-        /// The Content Data Context pointing to a full EAV
+        /// The Content Data Context pointing to a full EAV, pre-configured for this specific App
         /// </summary>
-        public EavDataController ContentContext;
+        public EavDataController EavAppContext;
 
         internal int? ZoneId { get; set; }
 
-        public int? AppId { get; private set; }
+        public int? AppId { get; }
 
-        public Templates Templates { get; internal set; }
+        internal TemplateManager AppTemplates { get; set; }
 
-		public ContentGroups ContentGroups { get; internal set; }
+		internal ContentGroupManager AppContentGroups { get; set; }
+
+        private ContentGroup _contentGroup;
+        internal ContentGroup ContentGroup => _contentGroup ??
+                                               (_contentGroup = AppContentGroups.GetContentGroupForModule(ModuleInfo.ModuleID));
 
         private App _app;
-        public App App {
-            get { return _app ?? (_app = AppHelpers.GetApp(ZoneId.Value, AppId.Value, PortalSettingsOfOriginalModule)); }
-        }
+        public App App => _app ?? (_app = AppHelpers.GetApp(ZoneId.Value, AppId.Value, PortalSettingsOfOriginalModule));
 
         /// <summary>
         /// Environment - should be the place to refactor everything into, which is the host around 2sxc
         /// </summary>
         public Environment.Environment Environment = new Environment.Environment();
 
-        internal ModuleInfo ModuleInfo { get; private set; }
+        internal ModuleInfo ModuleInfo { get; }
+
+        public bool IsContentApp => ModuleInfo.DesktopModule.ModuleName == "2sxc";
+
 
         /// <summary>
         /// This returns the PS of the original module. When a module is mirrored across portals,
@@ -58,7 +63,7 @@ namespace ToSic.SexyContent
             {
                 if(ModuleInfo == null)
                     throw new Exception("Can't get data source, module context unknown. Please only use this on a 2sxc-object which was initialized in a dnn-module context");
-                return ViewDataSource.ForModule(ModuleInfo.ModuleID, SecurityHelpers.HasEditPermission(ModuleInfo), ContentGroups.GetContentGroupForModule(ModuleInfo.ModuleID).Template, this);
+                return ViewDataSource.ForModule(ModuleInfo.ModuleID, SecurityHelpers.HasEditPermission(ModuleInfo), AppContentGroups.GetContentGroupForModule(ModuleInfo.ModuleID).Template, this);
             }
         }
 
@@ -94,12 +99,12 @@ namespace ToSic.SexyContent
                     enableCaching = false;
             }
 
-            Templates = new Templates(zoneId, appId);
-			ContentGroups = new ContentGroups(zoneId, appId);
+            AppTemplates = new TemplateManager(zoneId, appId);
+			AppContentGroups = new ContentGroupManager(zoneId, appId);
 
             // Set Properties on ContentContext
-            ContentContext = EavDataController.Instance(zoneId, appId); // EavContext.Instance(zoneId, appId);
-            ContentContext.UserName = (HttpContext.Current == null || HttpContext.Current.User == null) ? Settings.InternalUserName : HttpContext.Current.User.Identity.Name;
+            EavAppContext = EavDataController.Instance(zoneId, appId); // EavContext.Instance(zoneId, appId);
+            EavAppContext.UserName = (HttpContext.Current == null || HttpContext.Current.User == null) ? Settings.InternalUserName : HttpContext.Current.User.Identity.Name;
 
             ZoneId = zoneId;
             AppId = appId;

@@ -102,7 +102,7 @@ namespace ToSic.SexyContent.ImportExport
 
                 #region Header
 
-                var Dimensions = Sexy.ContentContext.Dimensions.GetDimensionChildren("Culture");
+                var Dimensions = Sexy.EavAppContext.Dimensions.GetDimensionChildren("Culture");
                 var Header = new XElement(XmlConstants.Header,
                     _isAppExport && Sexy.App.AppGuid != "Default"
                         ? new XElement(XmlConstants.App,
@@ -129,11 +129,11 @@ namespace ToSic.SexyContent.ImportExport
                 foreach (var AttributeSetID in AttributeSetIDs)
                 {
                     var ID = int.Parse(AttributeSetID);
-                    var Set = Sexy.ContentContext.AttribSet.GetAttributeSet(ID);
+                    var Set = Sexy.EavAppContext.AttribSet.GetAttributeSet(ID);
                     var Attributes = new XElement("Attributes");
 
                     // Add all Attributes to AttributeSet including meta informations
-                    foreach (var x in Sexy.ContentContext.Attributes.GetAttributesInSet(ID))
+                    foreach (var x in Sexy.EavAppContext.Attributes.GetAttributesInSet(ID))
                     {
                         var Attribute = new XElement("Attribute",
                             new XAttribute("StaticName", x.Attribute.StaticName),
@@ -141,7 +141,7 @@ namespace ToSic.SexyContent.ImportExport
                             new XAttribute("IsTitle", x.IsTitle),
                             // Add Attribute MetaData
                             from c in
-                                Sexy.ContentContext.Entities.GetEntities(Constants.AssignmentObjectTypeIdFieldProperties,
+                                Sexy.EavAppContext.Entities.GetEntities(Constants.AssignmentObjectTypeIdFieldProperties,
                                     x.AttributeID).ToList()
                             select GetEntityXElement(c)
                             );
@@ -160,7 +160,7 @@ namespace ToSic.SexyContent.ImportExport
                     // Add Ghost-Info if content type inherits from another content type
                     if (Set.UsesConfigurationOfAttributeSet.HasValue)
                     {
-                        var parentAttributeSet = Sexy.ContentContext.SqlDb.AttributeSets.First(a => a.AttributeSetID ==  Set.UsesConfigurationOfAttributeSet.Value && a.ChangeLogDeleted == null);
+                        var parentAttributeSet = Sexy.EavAppContext.SqlDb.AttributeSets.First(a => a.AttributeSetID ==  Set.UsesConfigurationOfAttributeSet.Value && a.ChangeLogDeleted == null);
                         AttributeSet.Add(new XAttribute("UsesConfigurationOfAttributeSet", parentAttributeSet.StaticName));
                     }
 
@@ -179,7 +179,7 @@ namespace ToSic.SexyContent.ImportExport
                     var ID = int.Parse(EntityID);
 
                     // Get the entity and ContentType from ContentContext add Add it to ContentItems
-                    var Entity = Sexy.ContentContext.Entities.GetEntity(ID);
+                    var Entity = Sexy.EavAppContext.Entities.GetEntity(ID);
                     Entities.Add(GetEntityXElement(Entity));
                 }
 
@@ -218,7 +218,7 @@ namespace ToSic.SexyContent.ImportExport
         private XElement GetEntityXElement(Entity e)
         {
             //var attributeSet = Sexy.ContentContext.GetAttributeSet(e.AttributeSetID);
-            var entityXElement = new Eav.ImportExport.XmlExport(Sexy.ContentContext).GetEntityXElement(e.EntityID);
+            var entityXElement = new Eav.ImportExport.XmlExport(Sexy.EavAppContext).GetEntityXElement(e.EntityID);
 
             foreach (var value in entityXElement.Elements("Value"))
             {
@@ -232,12 +232,12 @@ namespace ToSic.SexyContent.ImportExport
                     switch (valueKey)
                     {
                         case "ContentTypeID":
-                            var attributeSet = Sexy.ContentContext.AttribSet.GetAllAttributeSets().FirstOrDefault(a => a.AttributeSetID == int.Parse(valueString));
+                            var attributeSet = Sexy.EavAppContext.AttribSet.GetAllAttributeSets().FirstOrDefault(a => a.AttributeSetID == int.Parse(valueString));
                             value.Attribute("Value").SetValue(attributeSet != null ? attributeSet.StaticName : String.Empty);
                             break;
                         case "DemoEntityID":
                             var entityID = int.Parse(valueString);
-                            var demoEntity = Sexy.ContentContext.SqlDb.Entities.FirstOrDefault(en => en.EntityID == entityID);
+                            var demoEntity = Sexy.EavAppContext.SqlDb.Entities.FirstOrDefault(en => en.EntityID == entityID);
                             value.Attribute("Value").SetValue(demoEntity != null ? demoEntity.EntityGUID.ToString() : String.Empty);
                             break;
                     }

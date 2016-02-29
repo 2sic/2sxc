@@ -239,7 +239,7 @@ namespace ToSic.SexyContent
 
             // Refresh content group entity (ensures contentgroup is up to date)
             _contentGroupEntity =
-                new ContentGroups(_zoneId, _appId).GetContentGroup(_contentGroupEntity.EntityGuid)._contentGroupEntity;
+                new ContentGroupManager(_zoneId, _appId).GetContentGroup(_contentGroupEntity.EntityGuid)._contentGroupEntity;
         }
 
         private Dictionary<string, int?[]> PrepareSavePackage(string type, IEnumerable<int?> entityIds,

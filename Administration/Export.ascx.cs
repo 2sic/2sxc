@@ -33,11 +33,11 @@ namespace ToSic.SexyContent
             }
             else
             {
-                _sexy = Sexy;
+                _sexy = SxcContext;
             }
 
-            var contentTypes = _sexy.Templates.GetAvailableContentTypes(_scope, true);
-            var templates = _sexy.Templates.GetAllTemplates();
+            var contentTypes = _sexy.AppTemplates.GetAvailableContentTypes(_scope, true);
+            var templates = _sexy.AppTemplates.GetAllTemplates();
             var entities = DataSource.GetInitialDataSource(_zoneId, _appId, false);
             var language = Thread.CurrentThread.CurrentCulture.Name;
 

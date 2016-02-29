@@ -7,7 +7,7 @@ using System.Xml.Linq;
 using System.Xml.XPath;
 using ICSharpCode.SharpZipLib.Zip;
 using ToSic.Eav;
-using ToSic.SexyContent.Statics;
+using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.ImportExport
 {
@@ -35,7 +35,7 @@ namespace ToSic.SexyContent.ImportExport
         public MemoryStream ExportApp(bool includeContentGroups = false, bool resetAppGuid = false)
         {
             // Get Export XML
-            var attributeSets = _sexy.Templates.GetAvailableContentTypes(true);
+            var attributeSets = _sexy.AppTemplates.GetAvailableContentTypes(true);
             attributeSets = attributeSets.Where(a => !a.ConfigurationIsOmnipresent);
 
             var attributeSetIds = attributeSets.Select(p => p.AttributeSetId.ToString()).ToArray();
