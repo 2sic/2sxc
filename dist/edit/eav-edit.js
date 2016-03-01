@@ -173,13 +173,13 @@ angular.module("eavFieldTemplates")
             $scope.model[$scope.options.key] = { Values: [{ Value: eavDefaultValueService($scope.options), Dimensions: {} }] };
 
         $scope.chosenEntities = $scope.model[$scope.options.key].Values[0].Value;
+        $scope.selectedEntity = null;
 
-        $scope.addEntity = function () {            
-            //if ($scope.selectedEntity === "new")
-            //    $scope.openNewEntityDialog();
-            //else
+        $scope.addEntity = function () {
+            if ($scope.selectedEntity !== null) {
                 $scope.chosenEntities.push($scope.selectedEntity);
-            $scope.selectedEntity = "";
+                $scope.selectedEntity = null;
+            }
         };
 
         $scope.createEntityAllowed = function() {
@@ -223,11 +223,11 @@ angular.module("eavFieldTemplates")
         };
 
         // remove needs the index --> don't name "remove" - causes problems
-        $scope.removeSlot = function remove(itemGuid, index) {
+        $scope.removeSlot = function(itemGuid, index) {
             $scope.chosenEntities.splice(index, 1);
         };
 
-        $scope.deleteItemInSlot = function remove(itemGuid, index) {
+        $scope.deleteItemInSlot = function(itemGuid, index) {
             alert('this feature is not implemented yet, sorry. it will be added some day...');
         };
 
@@ -822,7 +822,7 @@ angular.module('eavEditTemplates', []).run(['$templateCache', function($template
 
 
   $templateCache.put('fields/entity/entity-default.html',
-    "<div class=eav-entityselect><div ui-tree=options data-empty-placeholder-enabled=false ng-show=\"to.settings.merged.EnableCreate || chosenEntities.length > 0\"><ol ui-tree-nodes ng-model=chosenEntities entity-validation ng-required=false><li ng-repeat=\"item in chosenEntities track by $index\" ui-tree-node class=eav-entityselect-item><div ui-tree-handle><i title=\"{{ 'FieldType.Entity.DragMove' | translate }}\" class=\"icon-link pull-left eav-entityselect-icon\" ng-show=to.settings.Entity.AllowMultiValue></i> <span title=\"{{getEntityText(item) + ' (' + item + ')'}}\">{{getEntityText(item)}}</span> <span class=eav-entityselect-item-actions><span data-nodrag title=\"{{ 'FieldType.Entity.Edit' | translate }}\" ng-click=\"edit(item, index)\" ng-if=to.settings.merged.EnableEdit><i class=icon-pencil></i></span> <span data-nodrag title=\"{{ 'FieldType.Entity.Remove' | translate }}\" ng-click=\"removeSlot(item, $index)\" class=eav-entityselect-item-remove ng-if=to.settings.merged.EnableRemove><i ng-class=\"{ 'icon-minus-circled': to.settings.merged.AllowMultiValue, 'icon-down-dir': !to.settings.merged.AllowMultiValue  }\"></i></span> <span data-nodrag title=\"{{ 'FieldType.Entity.Delete' | translate }}\" ng-click=\"deleteItemInSlot(item, $index)\" class=eav-entityselect-item-remove ng-if=to.settings.merged.EnableDelete><i class=icon-cancel></i></span></span></div></li><li class=\"eav-entityselect-item subtle-till-mouseover\" ng-if=to.settings.merged.EnableAddExisting ng-show=\"to.settings.merged.AllowMultiValue || chosenEntities.length < 1\"><div><i class=\"icon-plus-circled pull-left eav-entityselect-icon-before-select\"></i> <span><select class=\"eav-entityselect-selector form-control input-lg\" formly-skip-ng-model-attrs-manipulator ng-model=selectedEntity ng-change=addEntity()><option value=\"\" translate=FieldType.Entity.Choose></option><option ng-repeat=\"item in availableEntities\" ng-disabled=\"chosenEntities.indexOf(item.Value) != -1\" value={{item.Value}}>{{item.Text}}</option></select></span></div></li><li ng-if=\"to.settings.merged.EnableCreate && (to.settings.merged.AllowMultiValue || chosenEntities.length < 1)\" class=\"eav-entityselect-item eav-entityselect-create subtle-till-mouseover\"><div ng-click=openNewEntityDialog()><i class=\"icon-plus pull-left eav-entityselect-icon\"></i> <span>{{ 'FieldType.Entity.New' | translate }}&nbsp;</span></div></li></ol></div></div>"
+    "<div class=eav-entityselect><div ui-tree=options data-empty-placeholder-enabled=false ng-show=\"to.settings.merged.EnableCreate || chosenEntities.length > 0\"><ol ui-tree-nodes ng-model=chosenEntities entity-validation ng-required=false><li ng-repeat=\"item in chosenEntities track by $id(item)\" ui-tree-node class=eav-entityselect-item><div ui-tree-handle><i title=\"{{ 'FieldType.Entity.DragMove' | translate }}\" class=\"icon-link pull-left eav-entityselect-icon\" ng-show=to.settings.Entity.AllowMultiValue></i> <span class=eav-entityselect-item-title title=\"{{getEntityText(item) + ' (' + item + ')'}}\">{{getEntityText(item)}}</span><ul class=eav-entityselect-item-actions data-nodrag><li><a title=\"{{ 'FieldType.Entity.Edit' | translate }}\" ng-click=\"edit(item, index)\" ng-if=to.settings.merged.EnableEdit><i class=icon-pencil></i></a></li><li><a title=\"{{ 'FieldType.Entity.Remove' | translate }}\" ng-click=\"removeSlot(item, $index)\" class=eav-entityselect-item-remove ng-if=to.settings.merged.EnableRemove><i ng-class=\"{ 'icon-minus-circled': to.settings.merged.AllowMultiValue, 'icon-down-dir': !to.settings.merged.AllowMultiValue  }\"></i></a></li><li><a title=\"{{ 'FieldType.Entity.Delete' | translate }}\" ng-click=\"deleteItemInSlot(item, $index)\" class=eav-entityselect-item-remove ng-if=to.settings.merged.EnableDelete><i class=icon-cancel></i></a></li></ul></div></li></ol></div><ol><li class=\"eav-entityselect-item subtle-till-mouseover\" ng-show=\"to.settings.merged.EnableAddExisting && (to.settings.merged.AllowMultiValue || chosenEntities.length < 1)\"><div><i class=\"icon-plus-circled pull-left eav-entityselect-icon-before-select\"></i><div class=eav-entityselect-selector-wrapper><select class=\"eav-entityselect-selector form-control input-lg\" formly-skip-ng-model-attrs-manipulator ng-model=selectedEntity ng-change=addEntity()><option value=\"\" translate=FieldType.Entity.Choose></option><option ng-repeat=\"item in availableEntities\" ng-disabled=\"chosenEntities.indexOf(item.Value) != -1\" value={{item.Value}}>{{item.Text}}</option></select></div></div></li><li ng-if=\"to.settings.merged.EnableCreate && (to.settings.merged.AllowMultiValue || chosenEntities.length < 1)\" class=\"eav-entityselect-item eav-entityselect-create subtle-till-mouseover\"><div ng-click=openNewEntityDialog()><i class=\"icon-plus pull-left eav-entityselect-icon\"></i> <span>{{ 'FieldType.Entity.New' | translate }}&nbsp;</span></div></li></ol></div>"
   );
 
 
