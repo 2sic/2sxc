@@ -1,13 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Hosting;
 using System.Web.UI;
 using DotNetNuke.Entities.Modules;
+using DotNetNuke.Entities.Portals;
+using DotNetNuke.Entities.Users;
 using DotNetNuke.Web.Client.ClientResourceManagement;
+using Newtonsoft.Json;
 using ToSic.SexyContent.Search;
+using ToSic.SexyContent.Security;
 using IDataSource = ToSic.Eav.DataSources.IDataSource;
 
 namespace ToSic.SexyContent.Engines
@@ -28,6 +33,7 @@ namespace ToSic.SexyContent.Engines
 
             // Throw Exception if Template does not exist
             if (!File.Exists(HostingEnvironment.MapPath(templatePath)))
+                // todo: rendering exception
                 throw new SexyContentException("The template file '" + templatePath + "' does not exist.");
 
             Template = template;
@@ -37,6 +43,9 @@ namespace ToSic.SexyContent.Engines
             DataSource = dataSource;
             InstancePurposes = instancePurposes;
             Sexy = sexy;
+
+            CheckExpectedTemplateErrors();
+            CheckTemplatePermissions();
 
             Init();
         }
@@ -134,5 +143,43 @@ namespace ToSic.SexyContent.Engines
 
             return renderedTemplate;
         }
+
+        // todo: i18n
+        private void CheckExpectedTemplateErrors()
+        {
+            //#region Check if everything has values and return if not
+
+            if (Template == null)
+                //{
+                throw new RenderingException("Template Configuration Missing"/* LocalizeString("TemplateConfigurationMissing.Text")*/);
+
+            if (Template.ContentTypeStaticName != "" &&
+                Eav.DataSource.GetCache(App.ZoneId, App.AppId).GetContentType(Template.ContentTypeStaticName) == null)
+                throw new RenderingException("The contents of this module cannot be displayed because it's located in another VDB.");
+
+            if (Template.ContentTypeStaticName != "" && Template.ContentDemoEntity == null &&
+                Sexy.ContentGroup.Content.All(e => e == null))
+            {
+                var toolbar = "<ul class='sc-menu' data-toolbar='" +
+                              JsonConvert.SerializeObject(new { sortOrder = 0, useModuleList = true, action = "edit" }) +
+                              "'></ul>";
+                throw new RenderingException(true, "No demo item found " /*LocalizeString("NoDemoItem.Text")*/ + " " + toolbar);
+            }
+
+        }
+
+        private void CheckTemplatePermissions()
+        {
+            // 2015-05-19 2dm: new: do security check if security exists
+            // should probably happen somewhere else - so it doesn't throw errors when not even rendering...
+            var permissionsOnThisTemplate = new PermissionController(App.ZoneId, App.AppId, Template.Guid, ModuleInfo);
+
+            // Views only use permissions to prevent access, so only check if there are any configured permissions
+            if (!UserInfo.IsInRole(PortalSettings.Current.AdministratorRoleName) && permissionsOnThisTemplate.PermissionList.Any())
+                if (!permissionsOnThisTemplate.UserMay(PermissionGrant.Read))
+                    throw new RenderingException(new UnauthorizedAccessException(
+                        "This view is not accessible for the current user. To give access, change permissions in the view settings. See http://2sxc.org/help?tag=view-permissions"));
+        }
+
     }
 }

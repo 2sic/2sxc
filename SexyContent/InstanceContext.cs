@@ -173,14 +173,15 @@ namespace ToSic.SexyContent
             if (appId == 0)
                 appId = AppHelpers.GetDefaultAppId(zoneId);
 
-            // Only disable caching of templates and contentgroupitems
-            // if AppSetting "ToSIC_SexyContent_EnableCaching" is disabled
-            if(enableCaching)
-            {
-                var cachingSetting = ConfigurationManager.AppSettings["ToSIC_SexyContent_EnableCaching"];
-                if (!String.IsNullOrEmpty(cachingSetting) && cachingSetting.ToLower() == "false")
-                    enableCaching = false;
-            }
+            // 2016-03-01 2dm - this seem to have no use whatsoever, will comment out for now
+            //// Only disable caching of templates and contentgroupitems
+            //// if AppSetting "ToSIC_SexyContent_EnableCaching" is disabled
+            //if(enableCaching)
+            //{
+            //    var cachingSetting = ConfigurationManager.AppSettings["ToSIC_SexyContent_EnableCaching"];
+            //    if (!String.IsNullOrEmpty(cachingSetting) && cachingSetting.ToLower() == "false")
+            //        enableCaching = false;
+            //}
 
             AppTemplates = new TemplateManager(zoneId, appId);
 			AppContentGroups = new ContentGroupManager(zoneId, appId);
