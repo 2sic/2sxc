@@ -142,7 +142,7 @@
     </CreateItem>
     
     <Zip Files="@(ResourcesContent)" WorkingDirectory="$(TempPackageResourcesFolder)" ZipFileName="$(TempPackageFolder)\Resources.zip" />
-    <Zip Files="@(AssemblyHelperContent)" WorkingDirectory="$(TempPackagePdbFolder)" ZipFileName="$(TempPackageFolder)\bin-debug-helpers.zip" />
+    <Zip Files="@(AssemblyHelperContent)" WorkingDirectory="$(TempPackagePdbFolder)" ZipFileName="$(TempPackageFolder)\tosic.bin.debug-helpers.zip" />
     <!--<Copy SourceFiles="$(TempPackageResourcesFolder)\Resources.zip" DestinationFolder="$(TempPackageFolder)" />-->
 
     <CreateItem Include="$(TempPackageFolder)\**\*.*">

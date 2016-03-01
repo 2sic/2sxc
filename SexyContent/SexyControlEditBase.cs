@@ -64,69 +64,6 @@ namespace ToSic.SexyContent
 
         protected Template Template => SxcContext.Template;
 
-        //private Template _template;
-        //protected Template Template
-        //{
-        //    get
-        //    {
-        //        if (!AppId.HasValue)
-        //            return null;
-
-        //        if (_template == null)
-        //        {
-        //            // Change Template if URL contains "ViewNameInUrl"
-        //            if (!IsContentApp)
-        //            {
-        //                var urlParams = Request.QueryString;
-        //                var templateFromUrl = TryToGetTemplateBasedOnUrlParams(urlParams);
-        //                if (templateFromUrl != null)
-        //                    _template = templateFromUrl;
-        //            }
-
-        //            if (_template == null)
-        //                _template = ContentGroup.Template;
-        //        }
-
-        //        return _template;
-        //    }
-        //}
-
-        ///// <summary>
-        ///// combine all QueryString Params to a list of key/value lowercase and search for a template having this ViewNameInUrl
-        ///// QueryString is never blank in DNN so no there's no test for it
-        ///// </summary>
-        //private Template TryToGetTemplateBasedOnUrlParams(NameValueCollection urlParams)
-        //{
-        //    var urlParameterDict = urlParams.AllKeys.ToDictionary(key => key?.ToLower() ?? "", key => string.Format("{0}/{1}", key, Request.QueryString[key]).ToLower());
-        //    //var queryStringPairs = Request.QueryString.AllKeys.Select(key => string.Format("{0}/{1}", key, Request.QueryString[key]).ToLower()).ToArray();
-        //    // var queryStringKeys = Request.QueryString.AllKeys.Select(k => k?.ToLower() ?? "").ToArray();
-
-        //    foreach (var template in SxcContext.AppTemplates.GetAllTemplates().Where(t => !string.IsNullOrEmpty(t.ViewNameInUrl)))
-        //    {
-        //        var desiredFullViewName = template.ViewNameInUrl.ToLower();
-        //        if (desiredFullViewName.EndsWith("/.*"))   // match details/.* --> e.g. details/12
-        //        {
-        //            var keyName = desiredFullViewName.Substring(0, desiredFullViewName.Length - 3);
-        //            if (urlParameterDict.ContainsKey(keyName))
-        //                return template;
-        //        }
-        //        else if (urlParameterDict.ContainsValue(desiredFullViewName)) // match view/details
-        //            return template;
-
-        //        //var viewNameInUrlLowered = template.ViewNameInUrl.ToLower();
-        //        //if (queryStringPairs.Contains(viewNameInUrlLowered))    // match view/details
-        //        //    return template;
-        //        //if (viewNameInUrlLowered.EndsWith("/.*"))   // match details/.* --> e.g. details/12
-        //        //{
-        //        //    var keyName = viewNameInUrlLowered.Substring(0, viewNameInUrlLowered.Length - 3);
-        //        //    if (queryStringKeys.Contains(keyName))
-        //        //        return template;
-        //        //}
-        //    }
-
-        //    return null;
-        //}
-
         #endregion
 
 

@@ -500,9 +500,8 @@
         <!-- pdb files for advanced debugging -->
         <component type="ResourceFile">
           <resourceFiles>
-            <!--<basePath>bin</basePath>-->
             <resourceFile>
-              <name>bin-debug-helpers.zip</name>
+              <name>tosic.bin.debug-helpers.zip</name>
             </resourceFile>
           </resourceFiles>
         </component>
