@@ -20,9 +20,8 @@ namespace ToSic.SexyContent
             // Set ZoneId based on the context
             var zoneId = (!UserInfo.IsSuperUser
                            ? ZoneHelpers.GetZoneID(ModuleConfiguration.OwnerPortalID)
-                           : ZoneHelpers.GetZoneID(!string.IsNullOrEmpty(Request.QueryString["ZoneId"])
-                               ? int.Parse(Request.QueryString["ZoneId"])
-                               : ModuleConfiguration.OwnerPortalID));
+                           : !string.IsNullOrEmpty(Request.QueryString["ZoneId"])
+                               ? int.Parse(Request.QueryString["ZoneId"]) : ZoneHelpers.GetZoneID(ModuleConfiguration.OwnerPortalID));
 
             // Set AppId based on the context
             var appId = AppHelpers.GetAppIdFromModule(ModuleConfiguration);
