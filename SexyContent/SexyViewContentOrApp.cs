@@ -184,6 +184,120 @@ namespace ToSic.SexyContent
         #endregion
         protected bool IsList => Template != null && Template.UseForList;
 
+
+        private string GetRenderedTemplateOrJson()
+	    {
+	        //CheckExpectedTemplateErrors();
+	        //CheckTemplatePermissions();
+
+	        var engine = SxcContext.RenderingEngine(Request.QueryString["type"] == "data"
+	            ? InstancePurposes.PublishData
+	            : InstancePurposes.WebView);
+
+	        // Output JSON data if type=data in URL, otherwise render the template
+	        return Request.QueryString["type"] == "data"
+	            ? StreamJsonToClient(SxcContext.DataSource)
+	            : engine.Render();
+	    }
+
+	    private void CheckTemplatePermissions()
+	    {
+// 2015-05-19 2dm: new: do security check if security exists
+	        // should probably happen somewhere else - so it doesn't throw errors when not even rendering...
+	        var permissionsOnThisTemplate = new PermissionController(ZoneId.Value, AppId.Value, Template.Guid,
+	            ModuleContext.Configuration);
+
+	        // Views only use permissions to prevent access, so only check if there are any configured permissions
+	        if (!UserInfo.IsInRole(PortalSettings.AdministratorRoleName) && permissionsOnThisTemplate.PermissionList.Any())
+	            if (!permissionsOnThisTemplate.UserMay(PermissionGrant.Read))
+	                throw new RenderingException(new UnauthorizedAccessException(
+	                    "This view is not accessible for the current user. To give access, change permissions in the view settings. See http://2sxc.org/help?tag=view-permissions"));
+	    }
+
+	    //private void CheckExpectedTemplateErrors()
+	    //{
+	    //    //#region Check if everything has values and return if not
+
+	    //    if (Template == null)
+	    //    //{
+     //           throw new RenderingException(LocalizeString("TemplateConfigurationMissing.Text"));
+	    //        //ShowError(LocalizeString("TemplateConfigurationMissing.Text"), pnlError);
+	    //        //return true;
+	    //    //}
+
+	    //    if (Template.ContentTypeStaticName != "" &&
+	    //        DataSource.GetCache(ZoneId.Value, AppId.Value).GetContentType(Template.ContentTypeStaticName) == null)
+	    //    //{
+     //           throw new RenderingException("The contents of this module cannot be displayed because it's located in another VDB.");
+	    //        //ShowError("The contents of this module cannot be displayed because it's located in another VDB.", pnlError);
+	    //        //return true;
+	    //    //}
+
+	    //    if (Template.ContentTypeStaticName != "" && Template.ContentDemoEntity == null &&
+	    //        ContentGroup.Content.All(e => e == null))
+     //       {
+     //           var toolbar = "<ul class='sc-menu' data-toolbar='" +
+	    //                      JsonConvert.SerializeObject(new {sortOrder = 0, useModuleList = true, action = "edit"}) +
+	    //                      "'></ul>";
+     //           throw new RenderingException(true, LocalizeString("NoDemoItem.Text") + " " + toolbar);
+     //           //    ShowMessage(LocalizeString("NoDemoItem.Text") + " " + toolbar, pnlMessage);
+     //           //    return true;
+     //       }
+
+     //       //#endregion
+
+     //       //return false;
+     //   }
+
+        #region JSON stuff to transport data in this module as a JSON stream
+        private string StreamJsonToClient(ViewDataSource dataSource)
+        {
+            string renderedTemplate;
+            if (dataSource.Publish.Enabled)
+            {
+                var publishedStreams = dataSource.Publish.Streams;
+                renderedTemplate = GetJsonFromStreams(dataSource,
+                    publishedStreams.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries));
+            }
+            else
+            {
+                Response.StatusCode = 403;
+                var moduleTitle = new ModuleController().GetModule(ModuleId).ModuleTitle;
+                renderedTemplate =
+                    JsonConvert.SerializeObject(
+                        new
+                        {
+                            error =
+                                "2sxc Content (" + ModuleId + "): " +
+                                String.Format(LocalizeString("EnableDataPublishing.Text"), ModuleId, moduleTitle)
+                        });
+                Response.TrySkipIisCustomErrors = true;
+            }
+            Response.ContentType = "application/json";
+            return renderedTemplate;
+        }
+
+        /// <summary>
+        /// Returns a JSON string for the elements
+        /// </summary>
+        public string GetJsonFromStreams(IDataSource source, string[] streamsToPublish)
+        {
+            var language = Thread.CurrentThread.CurrentCulture.Name;
+
+            var y = streamsToPublish.Where(k => source.Out.ContainsKey(k)).ToDictionary(k => k, s => new
+            {
+                List = (from c in source.Out[s].List select new DynamicEntity(c.Value, new[] { language }, SxcContext).ToDictionary() /*Sexy.ToDictionary(c.Value, language)*/).ToList()
+            });
+
+            return JsonConvert.SerializeObject(y);
+        }
+
+
+        #endregion
+
+
+        #region DNN-View-Specific stuff which will stay in this class
+
         /// <summary>
         /// Get the content data and render it with the given template to the page.
         /// </summary>
@@ -222,107 +336,44 @@ namespace ToSic.SexyContent
                 Exceptions.LogException(Ex);
             }
 
-   //         try
-			//{
-			//    var engine =
-			//        SxcContext.RenderingEngine(Request.QueryString["type"] == "data"
-			//            ? InstancePurposes.PublishData
-			//            : InstancePurposes.WebView);
-   //             //   var dataSource = SxcContext.DataSource;
-   //             //var engine = EngineFactory.CreateEngine(Template);
-   //             //engine.Init(Template, SxcContext.App, ModuleConfiguration, dataSource, Request.QueryString["type"] == "data" ? InstancePurposes.PublishData : InstancePurposes.WebView, SxcContext);
-   //             //engine.CustomizeData(); // this is also important for json-output
+            //try
+            //{
+            //    var engine =
+            //        SxcContext.RenderingEngine(Request.QueryString["type"] == "data"
+            //            ? InstancePurposes.PublishData
+            //            : InstancePurposes.WebView);
+            //             //   var dataSource = SxcContext.DataSource;
+            //             //var engine = EngineFactory.CreateEngine(Template);
+            //             //engine.Init(Template, SxcContext.App, ModuleConfiguration, dataSource, Request.QueryString["type"] == "data" ? InstancePurposes.PublishData : InstancePurposes.WebView, SxcContext);
+            //             //engine.CustomizeData(); // this is also important for json-output
 
-   //             // Output JSON data if type=data in URL, otherwise render the template
-   //             var renderedTemplate = Request.QueryString["type"] == "data" ? StreamJsonToClient(SxcContext.DataSource) : engine.Render();
-   //             //renderedTemplate = Request.QueryString["type"] == "data" ? StreamJsonToClient(dataSource) : engine.Render();
+            //             // Output JSON data if type=data in URL, otherwise render the template
+            //             var renderedTemplate = Request.QueryString["type"] == "data" ? StreamJsonToClient(SxcContext.DataSource) : engine.Render();
+            //             //renderedTemplate = Request.QueryString["type"] == "data" ? StreamJsonToClient(dataSource) : engine.Render();
 
-			//	// If standalone is specified, output just the template without anything else
-			//	if (StandAlone)
-			//	{
-			//		Response.Clear();
-			//		Response.Write(renderedTemplate);
-			//		Response.Flush();
-			//		Response.SuppressContent = true;
-			//		HttpContext.Current.ApplicationInstance.CompleteRequest();
-			//	}
-			//	else
-			//		phOutput.Controls.Add(new LiteralControl(renderedTemplate));
-			//}
-			//// Catch errors; log them
-			//catch (Exception Ex)
-			//{
-			//	ShowError(LocalizeString("TemplateError.Text") + ": " + HttpUtility.HtmlEncode(Ex.ToString()), pnlError, LocalizeString("TemplateError.Text"), false);
-			//	Exceptions.LogException(Ex);
-			//}
-		}
-
-	    private string GetRenderedTemplateOrJson()
-	    {
-	        CheckExpectedTemplateErrors();
-
-	        #region PermissionsCheck
-
-	        // 2015-05-19 2dm: new: do security check if security exists
-	        // should probably happen somewhere else - so it doesn't throw errors when not even rendering...
-	        var permissions = new PermissionController(ZoneId.Value, AppId.Value, Template.Guid, ModuleContext.Configuration);
-
-	        // Views only need permissions to limit access, so only check if there are any configured permissions
-	        if (!UserInfo.IsInRole(PortalSettings.AdministratorRoleName) && permissions.PermissionList.Any())
-	            if (!permissions.UserMay(PermissionGrant.Read))
-	                throw new RenderingException(
-	                    new UnauthorizedAccessException(
-	                        "This view is not accessible for the current user. To give access, change permissions in the view settings. See http://2sxc.org/help?tag=view-permissions"));
-
-	        #endregion
-
-	        var engine = SxcContext.RenderingEngine(Request.QueryString["type"] == "data"
-	            ? InstancePurposes.PublishData
-	            : InstancePurposes.WebView);
-
-	        // Output JSON data if type=data in URL, otherwise render the template
-	        return Request.QueryString["type"] == "data"
-	            ? StreamJsonToClient(SxcContext.DataSource)
-	            : engine.Render();
-	    }
-
-	    private void CheckExpectedTemplateErrors()
-	    {
-	        //#region Check if everything has values and return if not
-
-	        if (Template == null)
-	        //{
-                throw new RenderingException(LocalizeString("TemplateConfigurationMissing.Text"));
-	            //ShowError(LocalizeString("TemplateConfigurationMissing.Text"), pnlError);
-	            //return true;
-	        //}
-
-	        if (Template.ContentTypeStaticName != "" &&
-	            DataSource.GetCache(ZoneId.Value, AppId.Value).GetContentType(Template.ContentTypeStaticName) == null)
-	        //{
-                throw new RenderingException("The contents of this module cannot be displayed because it's located in another VDB.");
-	            //ShowError("The contents of this module cannot be displayed because it's located in another VDB.", pnlError);
-	            //return true;
-	        //}
-
-	        if (Template.ContentTypeStaticName != "" && Template.ContentDemoEntity == null &&
-	            ContentGroup.Content.All(e => e == null))
-            {
-                var toolbar = "<ul class='sc-menu' data-toolbar='" +
-	                          JsonConvert.SerializeObject(new {sortOrder = 0, useModuleList = true, action = "edit"}) +
-	                          "'></ul>";
-                throw new RenderingException(true, LocalizeString("NoDemoItem.Text") + " " + toolbar);
-                //    ShowMessage(LocalizeString("NoDemoItem.Text") + " " + toolbar, pnlMessage);
-                //    return true;
-            }
-
-            //#endregion
-
-            //return false;
+            //	// If standalone is specified, output just the template without anything else
+            //	if (StandAlone)
+            //	{
+            //		Response.Clear();
+            //		Response.Write(renderedTemplate);
+            //		Response.Flush();
+            //		Response.SuppressContent = true;
+            //		HttpContext.Current.ApplicationInstance.CompleteRequest();
+            //	}
+            //	else
+            //		phOutput.Controls.Add(new LiteralControl(renderedTemplate));
+            //}
+            //// Catch errors; log them
+            //catch (Exception Ex)
+            //{
+            //	ShowError(LocalizeString("TemplateError.Text") + ": " + HttpUtility.HtmlEncode(Ex.ToString()), pnlError, LocalizeString("TemplateError.Text"), false);
+            //	Exceptions.LogException(Ex);
+            //}
         }
 
-	    #region Show Message or Errors
-		protected void ShowMessage(string Message, Panel pnlMessage, bool ShowOnlyEdit = true)
+
+        #region Show Message or Errors on THIS DNN-Page
+        protected void ShowMessage(string Message, Panel pnlMessage, bool ShowOnlyEdit = true)
 		{
 			if (!ShowOnlyEdit || UserMayEditThisModule)
 			{
@@ -344,7 +395,7 @@ namespace ToSic.SexyContent
 		}
 		#endregion
 
-		#region ModuleActions
+		#region ModuleActions on THIS DNN-Module
 
 		/// <summary>
 		/// Causes DNN to create the menu with all actions like edit entity, new, etc.
@@ -429,50 +480,7 @@ namespace ToSic.SexyContent
 
         #endregion
 
-        #region JSON stuff to transport data in this module as a JSON stream
-        private string StreamJsonToClient(ViewDataSource dataSource)
-        {
-            string renderedTemplate;
-            if (dataSource.Publish.Enabled)
-            {
-                var publishedStreams = dataSource.Publish.Streams;
-                renderedTemplate = GetJsonFromStreams(dataSource,
-                    publishedStreams.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries));
-            }
-            else
-            {
-                Response.StatusCode = 403;
-                var moduleTitle = new ModuleController().GetModule(ModuleId).ModuleTitle;
-                renderedTemplate =
-                    JsonConvert.SerializeObject(
-                        new
-                        {
-                            error =
-                                "2sxc Content (" + ModuleId + "): " +
-                                String.Format(LocalizeString("EnableDataPublishing.Text"), ModuleId, moduleTitle)
-                        });
-                Response.TrySkipIisCustomErrors = true;
-            }
-            Response.ContentType = "application/json";
-            return renderedTemplate;
-        }
-
-        /// <summary>
-        /// Returns a JSON string for the elements
-        /// </summary>
-        public string GetJsonFromStreams(IDataSource source, string[] streamsToPublish)
-        {
-            var language = Thread.CurrentThread.CurrentCulture.Name;
-
-            var y = streamsToPublish.Where(k => source.Out.ContainsKey(k)).ToDictionary(k => k, s => new
-            {
-                List = (from c in source.Out[s].List select new DynamicEntity(c.Value, new[] { language }, SxcContext).ToDictionary() /*Sexy.ToDictionary(c.Value, language)*/).ToList()
-            });
-
-            return JsonConvert.SerializeObject(y);
-        }
-
-
         #endregion
+
     }
 }

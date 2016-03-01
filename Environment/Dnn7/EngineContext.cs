@@ -23,7 +23,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         private ModuleInfo _moduleInfo;
         public ModuleInfo ModuleInfo => _moduleInfo ??
-                                        (_moduleInfo = ModuleController.Instance.GetModule(ModuleId,
+                                        (_moduleInfo = new ModuleController().GetModule(ModuleId,
                                             TabId, false));
 
         private InstanceContext _sxcInstance;
