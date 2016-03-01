@@ -128,18 +128,19 @@ namespace ToSic.SexyContent.ViewAPI
                 
 
 				var template = SxcContext.AppTemplates.GetTemplate(templateId);
-
-                var engine = EngineFactory.CreateEngine(template);
-                // before 2016-02-27 2dm: 
-                //var dataSource =
-                //	(ViewDataSource)
-                //		Sexy.GetViewDataSource(ActiveModule.ModuleID, SecurityHelpers.HasEditPermission(ActiveModule), template);
-                var dataSource = SxcContext.DataSource; //(ViewDataSource) ViewDataSource.ForModule(ActiveModule.ModuleID, SecurityHelpers.HasEditPermission(ActiveModule), template, SxcContext);
-                engine.Init(template, SxcContext.App, ActiveModule, dataSource, InstancePurposes.WebView, SxcContext);
-                engine.CustomizeData();
+                SxcContext.Template = template;
+                var engine = SxcContext.RenderingEngine(InstancePurposes.WebView);
+                //var engine = EngineFactory.CreateEngine(template);
+                //    // before 2016-02-27 2dm: 
+                //    //var dataSource =
+                //    //	(ViewDataSource)
+                //    //		Sexy.GetViewDataSource(ActiveModule.ModuleID, SecurityHelpers.HasEditPermission(ActiveModule), template);
+                //var dataSource = SxcContext.DataSource; //(ViewDataSource) ViewDataSource.ForModule(ActiveModule.ModuleID, SecurityHelpers.HasEditPermission(ActiveModule), template, SxcContext);
+                //engine.Init(template, SxcContext.App, ActiveModule, dataSource, InstancePurposes.WebView, SxcContext);
+                //engine.CustomizeData();
 
 				if (template.ContentTypeStaticName != "" && template.ContentDemoEntity == null &&
-				    !dataSource["Default"].List.Any())// .Count == 0)
+				    !SxcContext.DataSource["Default"].List.Any())// .Count == 0)
 				{
 					var toolbar = "<ul class='sc-menu' data-toolbar='" +
 					              JsonConvert.SerializeObject(new {sortOrder = 0, useModuleList = true, action = "edit"}) + "'></ul>";

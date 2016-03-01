@@ -60,13 +60,18 @@ namespace ToSic.SexyContent
         /// </summary>
         internal PortalSettings PortalSettingsOfOriginalModule { get; set; }
 
+        private ViewDataSource _dataSource;
         public ViewDataSource DataSource
         {
             get
             {
                 if(ModuleInfo == null)
                     throw new Exception("Can't get data source, module context unknown. Please only use this on a 2sxc-object which was initialized in a dnn-module context");
-                return ViewDataSource.ForModule(ModuleInfo.ModuleID, SecurityHelpers.HasEditPermission(ModuleInfo), AppContentGroups.GetContentGroupForModule(ModuleInfo.ModuleID).Template, this);
+
+                return _dataSource ??
+                       (_dataSource =
+                           ViewDataSource.ForModule(ModuleInfo.ModuleID, SecurityHelpers.HasEditPermission(ModuleInfo),
+                               /*AppContentGroups.GetContentGroupForModule(ModuleInfo.ModuleID).*/ Template, this));
             }
         }
 
@@ -78,11 +83,12 @@ namespace ToSic.SexyContent
 
         private bool AllowAutomaticTemplateChangeBasedOnUrlParams => !IsContentApp; 
         private Template _template;
+        private bool _templateLoaded;
         internal Template Template
         {
             get
             {
-                if (_template != null) return _template;
+                if (_template != null || _templateLoaded) return _template;
 
                 if (!AppId.HasValue)
                     return null;
@@ -95,10 +101,17 @@ namespace ToSic.SexyContent
                     if (templateFromUrl != null)
                         _template = templateFromUrl;
                 }
-
-                return _template ?? (_template = ContentGroup.Template);
+                if (_template == null)
+                    _template = ContentGroup.Template;
+                _templateLoaded = true;
+                return _template;
             }
-            set { _template = value; }
+            set
+            {
+                _template = value;
+                _templateLoaded = true;
+                _dataSource = null; // reset this
+            }
         }
 
         /// <summary>

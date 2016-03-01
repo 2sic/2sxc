@@ -26,6 +26,8 @@ namespace ToSic.SexyContent
 
             // Set AppId based on the context
             var appId = AppHelpers.GetAppIdFromModule(ModuleConfiguration);
+            if (appId != null)
+                SettingsAreStored = true;
 
             // possibly get app-id from url, but only if on an admin-control
             // the only reason the code is currently here, is because the admin controls will be removed soon (replaced by JS-UIs)
@@ -39,7 +41,7 @@ namespace ToSic.SexyContent
 
             // Init SxcContext based on zone/app
             //if (zoneId.HasValue && appId.HasValue)
-                SxcContext = new InstanceContext(zoneId.Value, appId.Value, true, ModuleConfiguration.OwnerPortalID,
+                SxcContext = new InstanceContext(zoneId ?? 0, appId ?? 0, true, ModuleConfiguration.OwnerPortalID,
                     ModuleContext.Configuration);
         }
 
@@ -47,10 +49,11 @@ namespace ToSic.SexyContent
         #region basic properties like Sexy, App, Zone, etc.
         protected InstanceContext SxcContext { get; set; }
 
-        protected int? ZoneId => SxcContext?.ZoneId;
+        protected int? ZoneId => SxcContext?.ZoneId ?? 0;
 
-        protected int? AppId => SxcContext?.AppId;
+        protected int? AppId => SettingsAreStored ? SxcContext?.AppId : null; // some systems rely on appid being blank to adapt behaviour if nothing is saved yet
 
+        protected bool SettingsAreStored;
         #endregion
 
         public bool IsContentApp => SxcContext.IsContentApp;// ModuleConfiguration.DesktopModule.ModuleName == "2sxc";

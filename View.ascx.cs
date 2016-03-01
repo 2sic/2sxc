@@ -41,17 +41,18 @@ namespace ToSic.SexyContent
             {
                 var isSharedModule = ModuleConfiguration.PortalID != ModuleConfiguration.OwnerPortalID;
 
+                // check things if it's a module of this portal (ensure everything is ok, etc.)
                 if (!isSharedModule)
                 {
-                    // If not fully configured, show stuff
+                    // if editable, include template chooser
                     if (UserMayEditThisModule)
                         pnlTemplateChooser.Visible = true;
 
-                    if (AppId.HasValue)
+                    if (SettingsAreStored)// AppId.HasValue)
                         new DnnStuffToRefactor().EnsurePortalIsConfigured(SxcContext, Server, ControlPath);
                 }
 
-                if (AppId.HasValue)
+                if (SettingsAreStored) // AppId.HasValue)
                 {
                     if (ContentGroup.Content.Any() && Template != null)
                         ProcessView(phOutput, pnlError, pnlMessage);
