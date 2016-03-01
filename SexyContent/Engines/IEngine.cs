@@ -29,5 +29,6 @@ namespace ToSic.SexyContent.Engines
 
         void CustomizeSearch(Dictionary<string, List<ISearchInfo>> searchInfos, ModuleInfo moduleInfo, DateTime beginDate);
 
+        RenderStatusType PreRenderStatus { get; }
     }
 }

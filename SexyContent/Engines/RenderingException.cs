@@ -4,22 +4,22 @@ namespace ToSic.SexyContent.Engines
 {
     public class RenderingException: Exception
     {
-        public bool IsOnlyMessage = false;
-        public bool ShouldLog => !IsOnlyMessage;
+        public RenderStatusType RenderStatus = RenderStatusType.Error;
+        public bool ShouldLog => RenderStatus != RenderStatusType.Ok;
 
         public RenderingException(string message) : base(message) { }
         public RenderingException(string message, Exception innerException) : base(message, innerException) { }
         public RenderingException(Exception innerException): base("Rendering Exception", innerException) { }
 
-        public RenderingException(bool onlyMessage, string message): base(message)
+        public RenderingException(RenderStatusType renderStat, string message): base(message)
         {
-            IsOnlyMessage = onlyMessage;
+            RenderStatus = renderStat;
         }
 
-        public RenderingException(bool onlyMessage, Exception innerException)
+        public RenderingException(RenderStatusType renderStat, Exception innerException)
             : base("Rendering Message", innerException)
         {
-            IsOnlyMessage = onlyMessage;
+            RenderStatus = renderStat;
         }
     }
 }

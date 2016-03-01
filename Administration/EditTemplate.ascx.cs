@@ -23,8 +23,11 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected void Page_Init(object sender, EventArgs e)
+        protected new void Page_Init(object sender, EventArgs e)
         {
+            // ensure everythnig is pre-initialized
+            base.Page_Init(sender, e);
+
             if (ModeIsEdit)
                 Template = SxcContext.AppTemplates.GetTemplate(TemplateID);
 

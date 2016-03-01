@@ -213,7 +213,9 @@ namespace ToSic.SexyContent
         {
             var engine = EngineFactory.CreateEngine(Template);
             engine.Init(Template, App, ModuleInfo, DataSource, renderingPurpose, this);
-            engine.CustomizeData(); // this is also important for json-output
+            //engine.CustomizeData(); // this is also important for json-output
+
+            //CheckExpectedNoRenderConditions();
 
             return engine;
         }

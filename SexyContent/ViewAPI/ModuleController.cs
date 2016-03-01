@@ -115,21 +115,21 @@ namespace ToSic.SexyContent.ViewAPI
             try
             {
                 // Try setting thread language to enable 2sxc to render the template in this language
-                if(!String.IsNullOrEmpty(lang))
-                {
+                if (!String.IsNullOrEmpty(lang))
                     try
                     {
                         var culture = System.Globalization.CultureInfo.GetCultureInfo(lang);
                         System.Threading.Thread.CurrentThread.CurrentCulture = culture;
                     }
-                    catch (System.Globalization.CultureNotFoundException) // Fallback if the language specified has not been found
-                    { }
-                }
-                
+                    // Fallback / ignore if the language specified has not been found
+                    catch (System.Globalization.CultureNotFoundException) { }
 
-				var template = SxcContext.AppTemplates.GetTemplate(templateId);
+
+                var template = SxcContext.AppTemplates.GetTemplate(templateId);
                 SxcContext.Template = template;
                 var engine = SxcContext.RenderingEngine(InstancePurposes.WebView);
+
+                #region 2016-03-01 old code
                 //var engine = EngineFactory.CreateEngine(template);
                 //    // before 2016-02-27 2dm: 
                 //    //var dataSource =
@@ -139,22 +139,37 @@ namespace ToSic.SexyContent.ViewAPI
                 //engine.Init(template, SxcContext.App, ActiveModule, dataSource, InstancePurposes.WebView, SxcContext);
                 //engine.CustomizeData();
 
-				if (template.ContentTypeStaticName != "" && template.ContentDemoEntity == null &&
-				    !SxcContext.DataSource["Default"].List.Any())// .Count == 0)
-				{
-					var toolbar = "<ul class='sc-menu' data-toolbar='" +
-					              JsonConvert.SerializeObject(new {sortOrder = 0, useModuleList = true, action = "edit"}) + "'></ul>";
-					return new HttpResponseMessage(HttpStatusCode.OK)
-					{
-						Content =
-							new StringContent("<div class='dnnFormMessage dnnFormInfo'>No demo item exists for the selected template. " +
-							                  toolbar + "</div>")
-					};
-				}
+                //if (template.ContentTypeStaticName != "" && template.ContentDemoEntity == null &&
+                //    !SxcContext.DataSource["Default"].List.Any()) // .Count == 0)
+                //{
+                //    var toolbar = "<ul class='sc-menu' data-toolbar='" +
+                //                  JsonConvert.SerializeObject(new { sortOrder = 0, useModuleList = true, action = "edit" }) + "'></ul>";
+                //    return new HttpResponseMessage(HttpStatusCode.OK)
+                //    {
+                //        Content =
+                //        new StringContent("<div class='dnnFormMessage dnnFormInfo'>No demo item exists for the selected template. " +
+                //                          toolbar + "</div>")
+                //    };
+                //}
+                #endregion
 
-                var response = new HttpResponseMessage(HttpStatusCode.OK);
-                response.Content = new StringContent(engine.Render(), Encoding.UTF8, "text/plain");
-                return response;
+                string rendered = engine.Render();
+                return new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(rendered, Encoding.UTF8, "text/plain")
+                };
+                //return response;
+            }
+            catch (RenderingException e)
+            {
+                if (e.RenderStatus == RenderStatusType.MissingData)
+                    return new HttpResponseMessage(HttpStatusCode.OK)
+                    {
+                        Content = new StringContent(EngineBase.ToolbarForEmptyTemplate)
+                    };
+				Exceptions.LogException(e);
+                throw e;
+
             }
             catch (Exception e)
             {

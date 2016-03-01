@@ -14,9 +14,9 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected void Page_Load(object sender, EventArgs e)
+        protected new void Page_Load(object sender, EventArgs e)
         {
-            // Reset messages visible states
+            // Reset messages visible states on every reload
             pnlMessage.Visible = false;
             pnlError.Visible = false;
 
@@ -55,7 +55,7 @@ namespace ToSic.SexyContent
                 if (SettingsAreStored) // AppId.HasValue)
                 {
                     if (ContentGroup.Content.Any() && Template != null)
-                        ProcessView(phOutput, pnlError, pnlMessage);
+                        ProcessView(phOutput, pnlError);//, pnlMessage);
                     else if (!IsContentApp && UserMayEditThisModule)
                     // Select first available template automatically if it's not set yet - then refresh page
                     {
