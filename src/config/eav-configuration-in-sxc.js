@@ -127,13 +127,13 @@ if (window.angular) // needed because the file is also included in older non-ang
                             applyChanges = true;
                             break;
                         case "entity-default":
-                            angular.extend(field.Metadata.merged, {
+                            field.Metadata.merged = angular.extend({
                                 EnableEdit: true,
                                 EnableCreate: true,
                                 EnableAddExisting: true,
                                 EnableRemove: true,
                                 EnableDelete: false
-                            });
+                            }, field.Metadata.merged);
                         break;
                             case "unknown": // server default if not defined
                                 break;
