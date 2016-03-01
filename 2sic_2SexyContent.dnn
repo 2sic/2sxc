@@ -496,6 +496,16 @@
             </resourceFile>
           </resourceFiles>
         </component>
+        
+        <!-- pdb files for advanced debugging -->
+        <component type="ResourceFile">
+          <resourceFiles>
+            <!--<basePath>bin</basePath>-->
+            <resourceFile>
+              <name>bin-debug-helpers.zip</name>
+            </resourceFile>
+          </resourceFiles>
+        </component>
 					
         <component type="Cleanup" version="05.00.00">
           <files>
