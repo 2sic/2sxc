@@ -160,12 +160,20 @@ namespace ToSic.SexyContent.Engines
             if (Template.ContentTypeStaticName != "" && Template.ContentDemoEntity == null &&
                 Sexy.ContentGroup.Content.All(e => e == null))
             {
-                var toolbar = "<ul class='sc-menu' data-toolbar='" +
-                              JsonConvert.SerializeObject(new { sortOrder = 0, useModuleList = true, action = "edit" }) +
-                              "'></ul>";
+                var toolbar = ToolbarForEmptyTemplate;
                 throw new RenderingException(true, "No demo item found " /*LocalizeString("NoDemoItem.Text")*/ + " " + toolbar);
             }
+        }
 
+        private static string ToolbarForEmptyTemplate
+        {
+            get
+            {
+                var toolbar = "<ul class='sc-menu' data-toolbar='" +
+                              JsonConvert.SerializeObject(new {sortOrder = 0, useModuleList = true, action = "edit"}) +
+                              "'></ul>";
+                return toolbar;
+            }
         }
 
         private void CheckTemplatePermissions()
