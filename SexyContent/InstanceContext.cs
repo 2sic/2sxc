@@ -1,13 +1,16 @@
 ﻿using System;
+using System.Collections.Specialized;
 using System.Configuration;
+using System.Linq;
 using System.Web;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
 using ToSic.Eav.BLL;
 using ToSic.SexyContent.DataSources;
+using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Environment.Interfaces;
-using ToSic.SexyContent.Statics;
+using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent
 {
@@ -22,29 +25,34 @@ namespace ToSic.SexyContent
     {
         #region Properties
         /// <summary>
-        /// The Content Data Context pointing to a full EAV
+        /// The Content Data Context pointing to a full EAV, pre-configured for this specific App
         /// </summary>
-        public EavDataController ContentContext;
+        public EavDataController EavAppContext;
 
         internal int? ZoneId { get; set; }
 
-        public int? AppId { get; private set; }
+        public int? AppId { get; }
 
-        public Templates Templates { get; internal set; }
+        public TemplateManager AppTemplates { get; set; }
 
-		public ContentGroups ContentGroups { get; internal set; }
+		public ContentGroupManager AppContentGroups { get; set; }
+
+        private ContentGroup _contentGroup;
+        internal ContentGroup ContentGroup => _contentGroup ??
+                                               (_contentGroup = AppContentGroups.GetContentGroupForModule(ModuleInfo.ModuleID));
 
         private App _app;
-        public App App {
-            get { return _app ?? (_app = AppHelpers.GetApp(ZoneId.Value, AppId.Value, PortalSettingsOfOriginalModule)); }
-        }
+        public App App => _app ?? (_app = AppHelpers.GetApp(ZoneId.Value, AppId.Value, PortalSettingsOfOriginalModule));
 
         /// <summary>
         /// Environment - should be the place to refactor everything into, which is the host around 2sxc
         /// </summary>
         public Environment.Environment Environment = new Environment.Environment();
 
-        internal ModuleInfo ModuleInfo { get; private set; }
+        internal ModuleInfo ModuleInfo { get; }
+
+        public bool IsContentApp => ModuleInfo.DesktopModule.ModuleName == "2sxc";
+
 
         /// <summary>
         /// This returns the PS of the original module. When a module is mirrored across portals,
@@ -52,18 +60,98 @@ namespace ToSic.SexyContent
         /// </summary>
         internal PortalSettings PortalSettingsOfOriginalModule { get; set; }
 
+        private ViewDataSource _dataSource;
         public ViewDataSource DataSource
         {
             get
             {
                 if(ModuleInfo == null)
                     throw new Exception("Can't get data source, module context unknown. Please only use this on a 2sxc-object which was initialized in a dnn-module context");
-                return ViewDataSource.ForModule(ModuleInfo.ModuleID, SecurityHelpers.HasEditPermission(ModuleInfo), ContentGroups.GetContentGroupForModule(ModuleInfo.ModuleID).Template, this);
+
+                return _dataSource ??
+                       (_dataSource =
+                           ViewDataSource.ForModule(ModuleInfo.ModuleID, SecurityHelpers.HasEditPermission(ModuleInfo),
+                               /*AppContentGroups.GetContentGroupForModule(ModuleInfo.ModuleID).*/ Template, this));
             }
         }
 
+
         #endregion
 
+        #region current template
+        // todo: try to refactor most of this out of this class again
+
+        private bool AllowAutomaticTemplateChangeBasedOnUrlParams => !IsContentApp; 
+        private Template _template;
+        private bool _templateLoaded;
+        internal Template Template
+        {
+            get
+            {
+                if (_template != null || _templateLoaded) return _template;
+
+                if (!AppId.HasValue)
+                    return null;
+
+                // Change Template if URL contains "ViewNameInUrl"
+                if (AllowAutomaticTemplateChangeBasedOnUrlParams)
+                {
+                    var urlParams =  HttpContext.Current.Request.QueryString;
+                    var templateFromUrl = TryToGetTemplateBasedOnUrlParams(urlParams);
+                    if (templateFromUrl != null)
+                        _template = templateFromUrl;
+                }
+                if (_template == null)
+                    _template = ContentGroup.Template;
+                _templateLoaded = true;
+                return _template;
+            }
+            set
+            {
+                _template = value;
+                _templateLoaded = true;
+                _dataSource = null; // reset this
+            }
+        }
+
+        /// <summary>
+        /// combine all QueryString Params to a list of key/value lowercase and search for a template having this ViewNameInUrl
+        /// QueryString is never blank in DNN so no there's no test for it
+        /// </summary>
+        private Template TryToGetTemplateBasedOnUrlParams(NameValueCollection urlParams)
+        {
+            var urlParameterDict = urlParams.AllKeys.ToDictionary(key => key?.ToLower() ?? "", key => string.Format("{0}/{1}", key, urlParams[key]).ToLower());
+            //var queryStringPairs = Request.QueryString.AllKeys.Select(key => string.Format("{0}/{1}", key, Request.QueryString[key]).ToLower()).ToArray();
+            // var queryStringKeys = Request.QueryString.AllKeys.Select(k => k?.ToLower() ?? "").ToArray();
+
+            foreach (var template in AppTemplates.GetAllTemplates().Where(t => !string.IsNullOrEmpty(t.ViewNameInUrl)))
+            {
+                var desiredFullViewName = template.ViewNameInUrl.ToLower();
+                if (desiredFullViewName.EndsWith("/.*"))   // match details/.* --> e.g. details/12
+                {
+                    var keyName = desiredFullViewName.Substring(0, desiredFullViewName.Length - 3);
+                    if (urlParameterDict.ContainsKey(keyName))
+                        return template;
+                }
+                else if (urlParameterDict.ContainsValue(desiredFullViewName)) // match view/details
+                    return template;
+
+                //var viewNameInUrlLowered = template.ViewNameInUrl.ToLower();
+                //if (queryStringPairs.Contains(viewNameInUrlLowered))    // match view/details
+                //    return template;
+                //if (viewNameInUrlLowered.EndsWith("/.*"))   // match details/.* --> e.g. details/12
+                //{
+                //    var keyName = viewNameInUrlLowered.Substring(0, viewNameInUrlLowered.Length - 3);
+                //    if (queryStringKeys.Contains(keyName))
+                //        return template;
+                //}
+            }
+
+            return null;
+        }
+
+
+        #endregion
 
         #region Constructor
 
@@ -94,12 +182,12 @@ namespace ToSic.SexyContent
                     enableCaching = false;
             }
 
-            Templates = new Templates(zoneId, appId);
-			ContentGroups = new ContentGroups(zoneId, appId);
+            AppTemplates = new TemplateManager(zoneId, appId);
+			AppContentGroups = new ContentGroupManager(zoneId, appId);
 
             // Set Properties on ContentContext
-            ContentContext = EavDataController.Instance(zoneId, appId); // EavContext.Instance(zoneId, appId);
-            ContentContext.UserName = (HttpContext.Current == null || HttpContext.Current.User == null) ? Settings.InternalUserName : HttpContext.Current.User.Identity.Name;
+            EavAppContext = EavDataController.Instance(zoneId, appId); // EavContext.Instance(zoneId, appId);
+            EavAppContext.UserName = (HttpContext.Current == null || HttpContext.Current.User == null) ? Settings.InternalUserName : HttpContext.Current.User.Identity.Name;
 
             ZoneId = zoneId;
             AppId = appId;
@@ -115,6 +203,19 @@ namespace ToSic.SexyContent
             #endregion
         }
 
+
+        #endregion
+
+        #region RenderEngine
+
+        public IEngine RenderingEngine(InstancePurposes renderingPurpose)
+        {
+            var engine = EngineFactory.CreateEngine(Template);
+            engine.Init(Template, App, ModuleInfo, DataSource, renderingPurpose, this);
+            engine.CustomizeData(); // this is also important for json-output
+
+            return engine;
+        }
 
         #endregion
     }

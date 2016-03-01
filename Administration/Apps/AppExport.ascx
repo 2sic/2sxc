@@ -2,22 +2,22 @@
 <%@ Import Namespace="ToSic.Eav" %>
 <%@ Import Namespace="ToSic.SexyContent" %>
 <%@ Import Namespace="System.IO" %>
-<%@ Import Namespace="ToSic.SexyContent.Statics" %>
+<%@ Import Namespace="ToSic.SexyContent.Internal" %>
 
 <%
 	var version = "";
-	if (Sexy.App.Configuration != null)
-		version = Sexy.App.Configuration.Version;
+	if (SxcContext.App.Configuration != null)
+		version = SxcContext.App.Configuration.Version;
 %>
 
-<h2>Will Export: App-<%= Sexy.App.Name %>-<%= version %>.zip</h2>
+<h2>Will Export: App-<%= SxcContext.App.Name %>-<%= version %>.zip</h2>
 Specs:
 <ul>
     <li>
-        Name: <%= Sexy.App.Name %>
+        Name: <%= SxcContext.App.Name %>
     </li>
     <li>
-        Guid:<%= Sexy.App.AppGuid %>
+        Guid:<%= SxcContext.App.AppGuid %>
     </li>
     <li>
         Version: <%= version %>
@@ -33,16 +33,16 @@ Contains:<br/>
         <%= ZoneHelpers.GetCulturesWithActiveState(PortalId, ZoneId.Value).Count(p => p.Active) %> Languages
     </li>
     <li>
-        <%= Sexy.Templates.GetAllTemplates().Count() %> templates
+        <%= SxcContext.AppTemplates.GetAllTemplates().Count() %> templates
     </li>
     <li>
-        Tokens: <%= Sexy.Templates.GetAllTemplates().Any(p => !p.IsRazor) %>
+        Tokens: <%= SxcContext.AppTemplates.GetAllTemplates().Any(p => !p.IsRazor) %>
     </li>
     <li>
-        Razor: <%= Sexy.Templates.GetAllTemplates().Any(p => p.IsRazor) %>
+        Razor: <%= SxcContext.AppTemplates.GetAllTemplates().Any(p => p.IsRazor) %>
     </li>
     <li>
-        <% if (Directory.Exists(Sexy.App.PhysicalPath))
+        <% if (Directory.Exists(SxcContext.App.PhysicalPath))
            { %>
             <%= Exporter.FileManager.AllTransferableFiles.Count() %> files in the App folder to export of a total of 
             <%= Exporter.FileManager.AllFiles.Count() %> files in the App folder

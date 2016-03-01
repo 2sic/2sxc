@@ -7,10 +7,11 @@ using Newtonsoft.Json;
 using ToSic.Eav;
 using ToSic.SexyContent.ImportExport;
 using System.Web;
+using ToSic.SexyContent.Administration;
 
 namespace ToSic.SexyContent
 {
-    public partial class Export : SexyControlAdminBase
+    public partial class Export : SexyControlAdminBaseWillSoonBeRemoved
     {
         private string _scope = "2SexyContent";
         private int _appId;
@@ -33,11 +34,11 @@ namespace ToSic.SexyContent
             }
             else
             {
-                _sexy = Sexy;
+                _sexy = SxcContext;
             }
 
-            var contentTypes = _sexy.Templates.GetAvailableContentTypes(_scope, true);
-            var templates = _sexy.Templates.GetAllTemplates();
+            var contentTypes = _sexy.AppTemplates.GetAvailableContentTypes(_scope, true);
+            var templates = _sexy.AppTemplates.GetAllTemplates();
             var entities = DataSource.GetInitialDataSource(_zoneId, _appId, false);
             var language = Thread.CurrentThread.CurrentCulture.Name;
 

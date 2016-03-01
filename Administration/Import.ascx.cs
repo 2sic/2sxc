@@ -4,11 +4,12 @@ using System.IO;
 using System.Web.UI.WebControls;
 using System.Xml.Linq;
 using DotNetNuke.Entities.Portals;
+using ToSic.SexyContent.Administration;
 using ToSic.SexyContent.ImportExport;
 
 namespace ToSic.SexyContent
 {
-    public partial class Import : SexyControlAdminBase
+    public partial class Import : SexyControlAdminBaseWillSoonBeRemoved
     {
 
         // 2016-02-26 2dm probably not needed any more

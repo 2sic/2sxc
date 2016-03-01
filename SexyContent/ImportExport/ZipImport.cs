@@ -11,7 +11,7 @@ using DotNetNuke.Services.FileSystem;
 using ICSharpCode.SharpZipLib.Zip;
 using ToSic.Eav;
 using ToSic.Eav.DataSources.Caches;
-using ToSic.SexyContent.Statics;
+using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.ImportExport
 {
@@ -140,7 +140,7 @@ namespace ToSic.SexyContent.ImportExport
                                 var sexy = new InstanceContext(_zoneId, appId.Value);
 
                                 // Copy all files in 2sexy folder to (portal file system) 2sexy folder
-                                var templateRoot = server.MapPath(TemplateManager.GetTemplatePathRoot(Settings.TemplateLocations.PortalFileSystem, sexy.App));
+                                var templateRoot = server.MapPath(Internal.TemplateManager.GetTemplatePathRoot(Settings.TemplateLocations.PortalFileSystem, sexy.App));
                                 var appTemplateRoot = Path.Combine(appDirectory, "2sexy");
                                 if (Directory.Exists(appTemplateRoot))
                                     (new FileManager(appTemplateRoot)).CopyAllFiles(templateRoot, false, messages);

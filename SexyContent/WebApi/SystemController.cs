@@ -11,7 +11,7 @@ using DotNetNuke.Services.Localization;
 using DotNetNuke.Web.Api;
 using DotNetNuke.Web.UI.WebControls;
 using ToSic.Eav;
-using ToSic.SexyContent.Statics;
+using ToSic.SexyContent.Internal;
 using Assembly = System.Reflection.Assembly;
 
 namespace ToSic.SexyContent.WebApi
@@ -56,7 +56,7 @@ namespace ToSic.SexyContent.WebApi
             var sexy = new InstanceContext(zoneId.Value, cache.AppId);
             var cultureText = LocaleController.Instance.GetLocale(cultureCode).Text;
 
-            sexy.ContentContext.Dimensions.AddOrUpdateLanguage(cultureCode, cultureText, enable, PortalSettings.PortalId);
+            sexy.EavAppContext.Dimensions.AddOrUpdateLanguage(cultureCode, cultureText, enable, PortalSettings.PortalId);
 	    }
 
 

@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Web;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Localization;
 
-namespace ToSic.SexyContent.Statics
+namespace ToSic.SexyContent.Internal
 {
     public class DnnStuffToRefactor
     {

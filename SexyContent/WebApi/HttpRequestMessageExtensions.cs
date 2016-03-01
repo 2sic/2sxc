@@ -1,6 +1,6 @@
 ﻿using System.Net.Http;
 using DotNetNuke.Web.Api;
-using ToSic.SexyContent.Statics;
+using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.WebApi
 {

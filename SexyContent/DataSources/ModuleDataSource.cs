@@ -10,17 +10,17 @@ namespace ToSic.SexyContent.DataSources
 	[PipelineDesigner]
     public class ModuleDataSource : BaseDataSource
     {
-        private InstanceContext _sexy;
+        private InstanceContext _sxcContext;
 
-        internal InstanceContext Sexy
+        internal InstanceContext SxcContext
         {
             get
             {
-                if(_sexy == null)
-                    _sexy = new InstanceContext(In["Default"].Source.ZoneId, In["Default"].Source.AppId);
-                return _sexy;
+                if(_sxcContext == null)
+                    _sxcContext = new InstanceContext(In["Default"].Source.ZoneId, In["Default"].Source.AppId);
+                return _sxcContext;
             }
-            set { _sexy = value; }
+            set { _sxcContext = value; }
         }
 
 		private ContentGroup _contentGroup;
@@ -31,7 +31,7 @@ namespace ToSic.SexyContent.DataSources
 				if (!ModuleId.HasValue)
 					throw new Exception("Looking up ContentGroup failed because ModuleId is null.");
 				if (_contentGroup == null)
-					_contentGroup = Sexy.ContentGroups.GetContentGroupForModule(ModuleId.Value);
+					_contentGroup = SxcContext.AppContentGroups.GetContentGroupForModule(ModuleId.Value);
 				return _contentGroup;
             }
         }
@@ -93,7 +93,7 @@ namespace ToSic.SexyContent.DataSources
 			{
 				if (_template == null)
 					_template = OverrideTemplateId.HasValue
-						? Sexy.Templates.GetTemplate(OverrideTemplateId.Value)
+						? SxcContext.AppTemplates.GetTemplate(OverrideTemplateId.Value)
 						: ContentGroup.Template;
 				return _template;
 			}

@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Web.UI.WebControls;
+using ToSic.SexyContent.Administration;
 using ToSic.SexyContent.ImportExport;
 
 namespace ToSic.SexyContent
 {
-    public partial class AppImport : SexyControlAdminBase
+    public partial class AppImport : SexyControlAdminBaseWillSoonBeRemoved
     {
         protected void Page_Load(object sender, EventArgs e)
         {

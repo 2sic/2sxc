@@ -7,7 +7,6 @@ using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.Adam;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Razor.Helpers;
-using ToSic.SexyContent.Statics;
 
 namespace ToSic.SexyContent.WebApi
 {

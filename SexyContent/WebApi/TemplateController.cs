@@ -18,8 +18,8 @@ namespace ToSic.SexyContent.WebApi
 	    {
             var sxc = Request.GetSxcOfModuleContext(appId);
 
-            var attributeSetList = sxc.Templates.GetAvailableContentTypes(Settings.AttributeSetScope).ToList();
-            var templateList = sxc.Templates.GetAllTemplates();
+            var attributeSetList = sxc.AppTemplates.GetAvailableContentTypes(Settings.AttributeSetScope).ToList();
+            var templateList = sxc.AppTemplates.GetAllTemplates();
             var templates = from c in templateList
                             select new
                             {
@@ -62,7 +62,7 @@ namespace ToSic.SexyContent.WebApi
 	    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 	    public bool Delete(int id)
 	    {
-            SxcContext.Templates.DeleteTemplate(id);
+            SxcContext.AppTemplates.DeleteTemplate(id);
 	        return true;
 	    }
         

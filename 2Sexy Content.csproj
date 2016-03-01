@@ -244,7 +244,7 @@
     <Compile Include="Environment\Interfaces\IPermissions.cs" />
     <Compile Include="Environment\None\Permissions.cs" />
     <Compile Include="SexyContent\ContentGroup.cs" />
-    <Compile Include="SexyContent\ContentGroups.cs" />
+    <Compile Include="SexyContent\ContentGroupManager.cs" />
     <Compile Include="SexyContent\DataSources\ConfigurationProvider.cs" />
     <Compile Include="SexyContent\DataSources\DnnSqlDataSource.cs" />
     <Compile Include="SexyContent\DataSources\DnnFormAndList.cs" />
@@ -255,15 +255,16 @@
     <Compile Include="SexyContent\EAV\FieldTemplates\EditorProvider.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="SexyContent\Engines\RenderingException.cs" />
     <Compile Include="SexyContent\ImportExport\XmlConstants.cs" />
     <Compile Include="Environment\Dnn7\Permissions.cs" />
     <Compile Include="SexyContent\Settings.cs" />
-    <Compile Include="SexyContent\Statics\AppHelpers.cs" />
-    <Compile Include="SexyContent\Statics\ContentTypeHelpers.cs" />
-    <Compile Include="SexyContent\Statics\DnnStuffToRefactor.cs" />
-    <Compile Include="SexyContent\Statics\SecurityHelpers.cs" />
-    <Compile Include="SexyContent\Statics\TemplateManager.cs" />
-    <Compile Include="SexyContent\Statics\ZoneHelpers.cs" />
+    <Compile Include="SexyContent\Internal\AppHelpers.cs" />
+    <Compile Include="SexyContent\Internal\ContentTypeHelpers.cs" />
+    <Compile Include="SexyContent\Internal\DnnStuffToRefactor.cs" />
+    <Compile Include="SexyContent\Internal\SecurityHelpers.cs" />
+    <Compile Include="SexyContent\Internal\TemplateManager.cs" />
+    <Compile Include="SexyContent\Internal\ZoneHelpers.cs" />
     <Compile Include="SexyContent\ViewAPI\TemplateController.cs" />
     <Compile Include="SexyContent\ViewManager\TemplateEditor.cs" />
     <Compile Include="SexyContent\UnityConfig.cs" />
@@ -294,20 +295,6 @@
     <Compile Include="SexyContent\AppAndDataHelpers.cs" />
     <Compile Include="SexyContent\SxcHelper.cs" />
     <Compile Include="SexyContent\Template.cs" />
-    <Compile Include="EditDataSource.ascx.cs">
-      <DependentUpon>EditDataSource.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="EditDataSource.ascx.designer.cs">
-      <DependentUpon>EditDataSource.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="EditTemplateFile.ascx.cs">
-      <DependentUpon>EditTemplateFile.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="EditTemplateFile.ascx.designer.cs">
-      <DependentUpon>EditTemplateFile.ascx</DependentUpon>
-    </Compile>
     <Compile Include="Administration\Export.ascx.cs">
       <DependentUpon>Export.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -351,7 +338,7 @@
     <Compile Include="SexyContent\ImportExport\XmlImport.cs" />
     <Compile Include="SexyContent\ImportExport\ZipExport.cs" />
     <Compile Include="SexyContent\ImportExport\ZipImport.cs" />
-    <Compile Include="SexyContent\Templates.cs" />
+    <Compile Include="SexyContent\TemplateManager.cs" />
     <Compile Include="SexyContent\WebApi\AppQueryController.cs" />
     <Compile Include="SexyContent\WebApi\AppContentController.cs" />
     <Compile Include="SexyContent\WebApi\RouteMapper.cs" />
@@ -360,7 +347,7 @@
     <Compile Include="SexyContent\Search\SearchIndexException.cs" />
     <Compile Include="SexyContent\Search\SearchInfo.cs" />
     <Compile Include="SexyContent\SexyContentException.cs" />
-    <Compile Include="SexyContent\SexyControlAdminBase.cs">
+    <Compile Include="Administration\SexyControlAdminBaseWillSoonBeRemoved.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="SexyContent\SexyControlEditBase.cs">
@@ -409,8 +396,6 @@
     <Content Include="DnnWebForms\PagePicker.ascx" />
     <Content Include="DnnWebForms\WebFormsBridge.ascx" />
     <Content Include="DnnWebForms\Wysiwyg.ascx" />
-    <Content Include="EditDataSource.ascx" />
-    <Content Include="EditTemplateFile.ascx" />
     <Content Include="Administration\Export.ascx" />
     <Content Include="Extensions\404.png" />
     <Content Include="Extensions\Imazen_ImageResizer\ImageResizer.txt" />
@@ -645,6 +630,7 @@
     <Content Include="Administration\App_LocalResources\WebApiHelp.ascx.resx" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="SexyContent\Statics\" />
     <Folder Include="Upgrade\Log\" />
   </ItemGroup>
   <ItemGroup>

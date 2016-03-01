@@ -10,7 +10,7 @@ using ToSic.Eav;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Engines;
-using ToSic.SexyContent.Statics;
+using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.Search
 {
@@ -40,7 +40,7 @@ namespace ToSic.SexyContent.Search
 
             var sexy = new InstanceContext(zoneId.Value, appId.Value, true, moduleInfo.OwnerPortalID, moduleInfo);
             var language = moduleInfo.CultureCode;
-	        var contentGroup = sexy.ContentGroups.GetContentGroupForModule(moduleInfo.ModuleID);
+	        var contentGroup = sexy.AppContentGroups.GetContentGroupForModule(moduleInfo.ModuleID);
             var template = contentGroup.Template;
 
             // This list will hold all EAV entities to be indexed

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
 
-namespace ToSic.SexyContent.Statics
+namespace ToSic.SexyContent.Internal
 {
     public class TemplateManager
     {

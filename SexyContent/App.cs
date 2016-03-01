@@ -8,7 +8,7 @@ using ToSic.Eav;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.DataSources;
-using ToSic.SexyContent.Statics;
+using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent
 {

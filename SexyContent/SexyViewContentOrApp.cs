@@ -14,9 +14,11 @@ using DotNetNuke.UI.Modules;
 using DotNetNuke.Web.Client.ClientResourceManagement;
 using Newtonsoft.Json;
 using ToSic.Eav;
+using ToSic.SexyContent.Administration;
+using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Engines;
+using ToSic.SexyContent.Internal;
 using ToSic.SexyContent.Security;
-using ToSic.SexyContent.Statics;
 using IDataSource = ToSic.Eav.DataSources.IDataSource;
 
 namespace ToSic.SexyContent
@@ -26,34 +28,35 @@ namespace ToSic.SexyContent
 	/// </summary>
 	public class SexyViewContentOrApp : SexyControlEditBase
 	{
+        protected void Page_Init(object sender, EventArgs e)
+        {
+            base.Page_Init(sender, e);
+            if ((UserMayEditThisModule || this is SexyControlAdminBaseWillSoonBeRemoved) && Parent is ModuleHost)
+                RegisterGlobalsAttribute();
+        }
 
-		protected void Page_Load(object sender, EventArgs e)
+
+        protected void Page_Load(object sender, EventArgs e)
 		{
-
+            // always do this, part of the guarantee that everything will work
 			ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
 
-			try
-			{
-
-				// If logged in, inject Edit JavaScript, and delete / add items
-				if (UserMayEditThisModule)
-				{
-				    RegisterClientDependencies();
-
-				    var clientInfos = InfosForTheClientScripts();
-
-				    ((ModuleHost)Parent).Attributes.Add("data-2sxc", JsonConvert.SerializeObject(clientInfos));
-
-				}
-			}
-			catch (Exception ex)
-			{
-				Exceptions.ProcessModuleLoadException(this, ex);
-			}
-
+			// If logged in, inject Edit JavaScript, and delete / add items
+		    if (UserMayEditThisModule)
+		        try
+		        {
+		            RegisterClientDependencies();
+		            var clientInfos = InfosForTheClientScripts();
+		            ((ModuleHost) Parent).Attributes.Add("data-2sxc", JsonConvert.SerializeObject(clientInfos));
+		        }
+		        catch (Exception ex)
+		        {
+		            Exceptions.ProcessModuleLoadException(this, ex);
+		        }
 		}
 
-	    private object InfosForTheClientScripts()
+        #region JavaScript stuff to ensure client functionality
+        private object InfosForTheClientScripts()
 	    {
 	        var hasContent = AppId.HasValue && Template != null && ContentGroup.Exists;
 
@@ -95,7 +98,7 @@ namespace ToSic.SexyContent
 	                    contentGroupId = AppId.HasValue ? ContentGroup.ContentGroupGuid : (Guid?) null,
 	                    dialogUrl = Globals.NavigateURL(TabId),
 	                    returnUrl = Request.RawUrl,
-	                    appPath = AppId.HasValue ? Sexy.App.Path + "/" : null,
+	                    appPath = AppId.HasValue ? SxcContext.App.Path + "/" : null,
 	                    // 2016-02-27 2dm - seems unused
 	                    //cultureDimension = AppId.HasValue ? Sexy.GetCurrentLanguageID() : new int?(),
 	                    isList = Template != null && Template.UseForList,
@@ -138,120 +141,187 @@ namespace ToSic.SexyContent
 	        ClientResourceManager.RegisterScript(Page, root + "dist/config/config" + ext, 93);
 	    }
 
-	    protected bool EnsureUpgrade(Panel pnlError)
-		{
-			// Upgrade success check - show message if upgrade did not run successfully
-			if (UserInfo.IsSuperUser && !SexyContentModuleUpgrade.UpgradeComplete)
-			{
-				if (Request.QueryString["finishUpgrade"] == "true")
-					SexyContentModuleUpgrade.FinishAbortedUpgrade();
+        /// <summary>
+        /// Add data-2sxc-globals Attribute to the DNN ModuleHost
+        /// </summary>
+        private void RegisterGlobalsAttribute()
+        {
+            // Add some required variables to module host div
+            ((ModuleHost)Parent).Attributes.Add("data-2sxc-globals", JsonConvert.SerializeObject(new
+            {
+                ModuleContext = new
+                {
+                    ModuleContext.PortalId,
+                    ModuleContext.TabId,
+                    ModuleContext.ModuleId,
+                    AppId
+                },
+                PortalSettings.ActiveTab.FullUrl,
+                PortalRoot = (Request.IsSecureConnection ? "https://" : "http://") + PortalAlias.HTTPAlias + "/",
+                DefaultLanguageID = SxcContext != null ? SxcContext.EavAppContext.Dimensions.GetLanguageId(PortalSettings.DefaultLanguage) : null
+            }));
+        }
+        #endregion
 
-				if(SexyContentModuleUpgrade.IsUpgradeRunning)
-					ShowError("It looks like a 2sxc upgrade is currently running. Please wait for the operation to complete (the upgrade may take a few minutes).", pnlError, "", false);
-				else
-					ShowError("Module upgrade did not complete (<a href='http://2sxc.org/en/help/tag/install' target='_blank'>more</a>). Please click the following button to finish the upgrade:<br><a class='dnnPrimaryAction' href='?finishUpgrade=true'>Finish Upgrade</a>", pnlError, "Module upgrade did not complete successfully. Please login as host user to finish the upgrade.", false);
 
-				return false;
-			}
+        private InstanceContext _sxcInstanceForSecurityChecks;
+        protected bool UserMayEditThisModule
+        {
+            get
+            {
+                if (_sxcInstanceForSecurityChecks == null)
+                    _sxcInstanceForSecurityChecks = SxcContext ?? new InstanceContext(ZoneId.Value, 0, true, ModuleConfiguration.OwnerPortalID, ModuleConfiguration);
+                return _sxcInstanceForSecurityChecks?.Environment?.Permissions.UserMayEditContent ?? false;
+            }
+        }
 
-			return true;
-		}
 
-		/// <summary>
-		/// Get the content data and render it with the given template to the page.
-		/// </summary>
-		protected void ProcessView(PlaceHolder phOutput, Panel pnlError, Panel pnlMessage)
-		{
-			#region Check if everything has values and return if not
 
-			if (Template == null)
-			{
-				ShowError(LocalizeString("TemplateConfigurationMissing.Text"), pnlError);
-				return;
-			}
+        #region stuff explicitly used for the way DNN handles module rendering
+        protected bool StandAlone => Request.QueryString["standalone"] == "true";
 
-			if (Template.ContentTypeStaticName != "" && DataSource.GetCache(ZoneId.Value, AppId.Value).GetContentType(Template.ContentTypeStaticName) == null)
-			{
-				ShowError("The contents of this module cannot be displayed because it's located in another VDB.", pnlError);
-				return;
-			}
 
-			if (Template.ContentTypeStaticName != "" && Template.ContentDemoEntity == null && ContentGroup.Content.All(e => e == null))
-			{
-				var toolbar = "<ul class='sc-menu' data-toolbar='" + JsonConvert.SerializeObject(new { sortOrder = 0, useModuleList = true, action = "edit" }) + "'></ul>";
-				ShowMessage(LocalizeString("NoDemoItem.Text") + " " + toolbar, pnlMessage);
-				return;
-			}
+        #endregion
+        protected bool IsList => Template != null && Template.UseForList;
 
-			#endregion
-
-            #region PermissionsCheck
-            // 2015-05-19 2dm: new: do security check if security exists
-            // should probably happen somewhere else - so it doesn't throw errors when not even rendering...
-            // maybe should show 
-            var permissions = new Security.PermissionController(ZoneId.Value, AppId.Value, Template.Guid, this.ModuleContext.Configuration);
-
-            // Views only need permissions to limit access, so only check if there are any configured permissions
-            if (!UserInfo.IsInRole(PortalSettings.AdministratorRoleName) && permissions.PermissionList.Any())
-                if (!permissions.UserMay(PermissionGrant.Read))
-                    throw new UnauthorizedAccessException("This view is not accessible for the current user. To give access, change permissions in the view settings. See http://2sxc.org/help?tag=view-permissions");
-
-            #endregion
-
+        /// <summary>
+        /// Get the content data and render it with the given template to the page.
+        /// </summary>
+        protected void ProcessView(PlaceHolder phOutput, Panel pnlError, Panel pnlMessage)
+        {
             try
-			{
-				//var renderTemplate = Template;
-				string renderedTemplate;
+            {
+                var renderedTemplate = GetRenderedTemplateOrJson();
 
-				var engine = EngineFactory.CreateEngine(Template);
-                // before 2016-02-27 2dm: var dataSource = (ViewDataSource)Sexy.GetViewDataSource(ModuleId, SecurityHelpers.HasEditPermission(ModuleConfiguration), Template);
-			    var dataSource = Sexy.DataSource;// (ViewDataSource) ViewDataSource.ForModule(ModuleId, SecurityHelpers.HasEditPermission(ModuleConfiguration), Template, Sexy);
-				engine.Init(Template, Sexy.App, ModuleConfiguration, dataSource, Request.QueryString["type"] == "data" ? InstancePurposes.PublishData : InstancePurposes.WebView, Sexy);
-				engine.CustomizeData();
+                // If standalone is specified, output just the template without anything else
+                if (StandAlone)
+                {
+                    Response.Clear();
+                    Response.Write(renderedTemplate);
+                    Response.Flush();
+                    Response.SuppressContent = true;
+                    HttpContext.Current.ApplicationInstance.CompleteRequest();
+                }
+                else
+                    phOutput.Controls.Add(new LiteralControl(renderedTemplate));
+            }
+            catch (RenderingException rex)
+            {
+                if (rex.IsOnlyMessage)
+                    ShowMessage(rex.Message, pnlMessage);
+                else
+                    ShowError(rex.Message, pnlError);
 
-				// Output JSON data if type=data in URL
-				if (Request.QueryString["type"] == "data")
-				{
-					if (dataSource.Publish.Enabled)
-					{
-						var publishedStreams = dataSource.Publish.Streams;
-						renderedTemplate = /*Sexy.*/GetJsonFromStreams(dataSource, publishedStreams.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries));
-					}
-					else
-					{
-						Response.StatusCode = 403;
-						var moduleTitle = new ModuleController().GetModule(ModuleId).ModuleTitle;
-						renderedTemplate = JsonConvert.SerializeObject(new { error = "2sxc Content (" + ModuleId + "): " + String.Format(LocalizeString("EnableDataPublishing.Text"), ModuleId, moduleTitle) });
-						Response.TrySkipIisCustomErrors = true;
-					}
-					Response.ContentType = "application/json";
-				}
-				else
-				{
-					renderedTemplate = engine.Render();
-				}
+                if (rex.ShouldLog)
+                    Exceptions.LogException(rex);
+            }
+            // Catch all other errors; log them
+            catch (Exception Ex)
+            {
+                ShowError(LocalizeString("TemplateError.Text") + ": " + HttpUtility.HtmlEncode(Ex.ToString()), pnlError, LocalizeString("TemplateError.Text"), false);
+                Exceptions.LogException(Ex);
+            }
 
-				// If standalone is specified, output just the template without anything else
-				if (StandAlone)
-				{
-					Response.Clear();
-					Response.Write(renderedTemplate);
-					Response.Flush();
-					Response.SuppressContent = true;
-					HttpContext.Current.ApplicationInstance.CompleteRequest();
-				}
-				else
-					phOutput.Controls.Add(new LiteralControl(renderedTemplate));
-			}
-			// Catch errors; log them
-			catch (Exception Ex)
-			{
-				ShowError(LocalizeString("TemplateError.Text") + ": " + HttpUtility.HtmlEncode(Ex.ToString()), pnlError, LocalizeString("TemplateError.Text"), false);
-				Exceptions.LogException(Ex);
-			}
+   //         try
+			//{
+			//    var engine =
+			//        SxcContext.RenderingEngine(Request.QueryString["type"] == "data"
+			//            ? InstancePurposes.PublishData
+			//            : InstancePurposes.WebView);
+   //             //   var dataSource = SxcContext.DataSource;
+   //             //var engine = EngineFactory.CreateEngine(Template);
+   //             //engine.Init(Template, SxcContext.App, ModuleConfiguration, dataSource, Request.QueryString["type"] == "data" ? InstancePurposes.PublishData : InstancePurposes.WebView, SxcContext);
+   //             //engine.CustomizeData(); // this is also important for json-output
+
+   //             // Output JSON data if type=data in URL, otherwise render the template
+   //             var renderedTemplate = Request.QueryString["type"] == "data" ? StreamJsonToClient(SxcContext.DataSource) : engine.Render();
+   //             //renderedTemplate = Request.QueryString["type"] == "data" ? StreamJsonToClient(dataSource) : engine.Render();
+
+			//	// If standalone is specified, output just the template without anything else
+			//	if (StandAlone)
+			//	{
+			//		Response.Clear();
+			//		Response.Write(renderedTemplate);
+			//		Response.Flush();
+			//		Response.SuppressContent = true;
+			//		HttpContext.Current.ApplicationInstance.CompleteRequest();
+			//	}
+			//	else
+			//		phOutput.Controls.Add(new LiteralControl(renderedTemplate));
+			//}
+			//// Catch errors; log them
+			//catch (Exception Ex)
+			//{
+			//	ShowError(LocalizeString("TemplateError.Text") + ": " + HttpUtility.HtmlEncode(Ex.ToString()), pnlError, LocalizeString("TemplateError.Text"), false);
+			//	Exceptions.LogException(Ex);
+			//}
 		}
 
-		#region Show Message or Errors
+	    private string GetRenderedTemplateOrJson()
+	    {
+	        CheckExpectedTemplateErrors();
+
+	        #region PermissionsCheck
+
+	        // 2015-05-19 2dm: new: do security check if security exists
+	        // should probably happen somewhere else - so it doesn't throw errors when not even rendering...
+	        var permissions = new PermissionController(ZoneId.Value, AppId.Value, Template.Guid, ModuleContext.Configuration);
+
+	        // Views only need permissions to limit access, so only check if there are any configured permissions
+	        if (!UserInfo.IsInRole(PortalSettings.AdministratorRoleName) && permissions.PermissionList.Any())
+	            if (!permissions.UserMay(PermissionGrant.Read))
+	                throw new RenderingException(
+	                    new UnauthorizedAccessException(
+	                        "This view is not accessible for the current user. To give access, change permissions in the view settings. See http://2sxc.org/help?tag=view-permissions"));
+
+	        #endregion
+
+	        var engine = SxcContext.RenderingEngine(Request.QueryString["type"] == "data"
+	            ? InstancePurposes.PublishData
+	            : InstancePurposes.WebView);
+
+	        // Output JSON data if type=data in URL, otherwise render the template
+	        return Request.QueryString["type"] == "data"
+	            ? StreamJsonToClient(SxcContext.DataSource)
+	            : engine.Render();
+	    }
+
+	    private void CheckExpectedTemplateErrors()
+	    {
+	        //#region Check if everything has values and return if not
+
+	        if (Template == null)
+	        //{
+                throw new RenderingException(LocalizeString("TemplateConfigurationMissing.Text"));
+	            //ShowError(LocalizeString("TemplateConfigurationMissing.Text"), pnlError);
+	            //return true;
+	        //}
+
+	        if (Template.ContentTypeStaticName != "" &&
+	            DataSource.GetCache(ZoneId.Value, AppId.Value).GetContentType(Template.ContentTypeStaticName) == null)
+	        //{
+                throw new RenderingException("The contents of this module cannot be displayed because it's located in another VDB.");
+	            //ShowError("The contents of this module cannot be displayed because it's located in another VDB.", pnlError);
+	            //return true;
+	        //}
+
+	        if (Template.ContentTypeStaticName != "" && Template.ContentDemoEntity == null &&
+	            ContentGroup.Content.All(e => e == null))
+            {
+                var toolbar = "<ul class='sc-menu' data-toolbar='" +
+	                          JsonConvert.SerializeObject(new {sortOrder = 0, useModuleList = true, action = "edit"}) +
+	                          "'></ul>";
+                throw new RenderingException(true, LocalizeString("NoDemoItem.Text") + " " + toolbar);
+                //    ShowMessage(LocalizeString("NoDemoItem.Text") + " " + toolbar, pnlMessage);
+                //    return true;
+            }
+
+            //#endregion
+
+            //return false;
+        }
+
+	    #region Show Message or Errors
 		protected void ShowMessage(string Message, Panel pnlMessage, bool ShowOnlyEdit = true)
 		{
 			if (!ShowOnlyEdit || UserMayEditThisModule)
@@ -338,7 +408,7 @@ namespace ToSic.SexyContent
 
 							// App management
 							if (ZoneId.HasValue && AppId.HasValue)
-                                Actions.Add(GetNextActionID(), "Admin" + (IsContentApp ? "" : " " + Sexy.App.Name), "", "", "edit.gif", "javascript:$2sxcActionMenuMapper(" + ModuleId + ").adminApp();", "", true,
+                                Actions.Add(GetNextActionID(), "Admin" + (IsContentApp ? "" : " " + SxcContext.App.Name), "", "", "edit.gif", "javascript:$2sxcActionMenuMapper(" + ModuleId + ").adminApp();", "", true,
                                         SecurityAccessLevel.Admin, true, false);
 
                             // Zone management (app list)
@@ -359,7 +429,33 @@ namespace ToSic.SexyContent
 
         #endregion
 
-        #region JSON stuff
+        #region JSON stuff to transport data in this module as a JSON stream
+        private string StreamJsonToClient(ViewDataSource dataSource)
+        {
+            string renderedTemplate;
+            if (dataSource.Publish.Enabled)
+            {
+                var publishedStreams = dataSource.Publish.Streams;
+                renderedTemplate = GetJsonFromStreams(dataSource,
+                    publishedStreams.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries));
+            }
+            else
+            {
+                Response.StatusCode = 403;
+                var moduleTitle = new ModuleController().GetModule(ModuleId).ModuleTitle;
+                renderedTemplate =
+                    JsonConvert.SerializeObject(
+                        new
+                        {
+                            error =
+                                "2sxc Content (" + ModuleId + "): " +
+                                String.Format(LocalizeString("EnableDataPublishing.Text"), ModuleId, moduleTitle)
+                        });
+                Response.TrySkipIisCustomErrors = true;
+            }
+            Response.ContentType = "application/json";
+            return renderedTemplate;
+        }
 
         /// <summary>
         /// Returns a JSON string for the elements
@@ -370,7 +466,7 @@ namespace ToSic.SexyContent
 
             var y = streamsToPublish.Where(k => source.Out.ContainsKey(k)).ToDictionary(k => k, s => new
             {
-                List = (from c in source.Out[s].List select new DynamicEntity(c.Value, new[] { language }, Sexy).ToDictionary() /*Sexy.ToDictionary(c.Value, language)*/).ToList()
+                List = (from c in source.Out[s].List select new DynamicEntity(c.Value, new[] { language }, SxcContext).ToDictionary() /*Sexy.ToDictionary(c.Value, language)*/).ToList()
             });
 
             return JsonConvert.SerializeObject(y);
