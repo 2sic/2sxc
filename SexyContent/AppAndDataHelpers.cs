@@ -16,13 +16,15 @@ namespace ToSic.SexyContent
 {
     public class AppAndDataHelpers : IAppAndDataHelpers
     {
-        private readonly InstanceContext _sexy;
+        private readonly InstanceContext SxcContext;
 
-        public AppAndDataHelpers(InstanceContext sexy, ModuleInfo module, ViewDataSource data, App app)
+        public AppAndDataHelpers(InstanceContext sexy)//, ModuleInfo module)//, ViewDataSource data)//, App app)
         {
-            _sexy = sexy;
-            App = app;
-            Data = data;
+            ModuleInfo module = sexy.ModuleInfo;
+            ViewDataSource data = sexy.DataSource;
+            SxcContext = sexy;
+            App = sexy.App;// app;
+            Data = sexy.DataSource;// data;
             Dnn = new DnnHelper(module);
 			Sxc = new SxcHelper(sexy);
 	        List = new List<Element>();
@@ -94,7 +96,7 @@ namespace ToSic.SexyContent
         /// <returns></returns>
         public dynamic AsDynamic(IEntity entity)
         {
-            return new DynamicEntity(entity, new[] { Thread.CurrentThread.CurrentCulture.Name }, _sexy);
+            return new DynamicEntity(entity, new[] { Thread.CurrentThread.CurrentCulture.Name }, SxcContext);
         }
 
         /// <summary>
@@ -242,7 +244,7 @@ namespace ToSic.SexyContent
         /// <returns>An Adam object for navigating the assets</returns>
         public AdamNavigator AsAdam(IEntity entity, string fieldName)
         {
-            return new AdamNavigator(_sexy, App, Dnn.Portal, entity.EntityGuid, fieldName);
+            return new AdamNavigator(SxcContext, App, Dnn.Portal, entity.EntityGuid, fieldName);
         }
         #endregion
 

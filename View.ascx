@@ -10,16 +10,16 @@
     </div>
 </asp:Placeholder>
 
-<asp:Panel runat="server" Visible="False" class="dnnFormMessage dnnFormInfo" ID="pnlGetStarted"></asp:Panel>
+<%--<asp:Panel runat="server" Visible="False" class="dnnFormMessage dnnFormInfo" ID="pnlGetStarted"></asp:Panel>
 
 <asp:Panel runat="server" ID="pnlZoneConfigurationMissing" Visible="false" CssClass="dnnFormMessage dnnFormInfo">
     <asp:Label runat="server" ID="lblMissingZoneConfiguration" ResourceKey="ZoneConfigurationMissing"></asp:Label>
     <asp:HyperLink runat="server" ID="hlkConfigureZone" 
         CssClass="dnnSecondaryAction" ResourceKey="hlkConfigureZone"></asp:HyperLink>
-</asp:Panel>
+</asp:Panel>--%>
 
 <asp:Panel runat="server" ID="pnlError" CssClass="dnnFormMessage dnnFormWarning" Visible="false"></asp:Panel>
-<asp:Panel runat="server" ID="pnlMessage" CssClass="dnnFormMessage dnnFormInfo" Visible="false"></asp:Panel>
+<%--<asp:Panel runat="server" ID="pnlMessage" CssClass="dnnFormMessage dnnFormInfo" Visible="false"></asp:Panel>--%>
 
 <div class="sc-viewport">
     <asp:PlaceHolder runat="server" ID="phOutput"></asp:PlaceHolder>

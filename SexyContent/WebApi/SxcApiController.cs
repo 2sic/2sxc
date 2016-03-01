@@ -24,7 +24,7 @@ namespace ToSic.SexyContent.WebApi
                     var moduleInfo = Request.FindModuleInfo();
                     // before 2016-02-27 2dm: var viewDataSource = Sexy.GetViewDataSource(Request.FindModuleId(), SecurityHelpers.HasEditPermission(moduleInfo), Sexy.ContentGroups.GetContentGroupForModule(moduleInfo.ModuleID).Template);
                     var viewDataSource = SxcContext.DataSource;// ViewDataSource.ForModule(Request.FindModuleId(), SecurityHelpers.HasEditPermission(moduleInfo), Sexy.ContentGroups.GetContentGroupForModule(moduleInfo.ModuleID).Template, Sexy);
-                    _appAndDataHelpers = new AppAndDataHelpers(SxcContext, moduleInfo, (ViewDataSource)viewDataSource, SxcContext.App);
+                    _appAndDataHelpers = new AppAndDataHelpers(SxcContext);//, moduleInfo, (ViewDataSource)viewDataSource);//, SxcContext.App);
                 }
                 return _appAndDataHelpers;
             }

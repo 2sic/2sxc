@@ -48,8 +48,8 @@ namespace ToSic.SexyContent.Environment.Dnn7
             if (_appAndDataHelpers != null)
                 return _appAndDataHelpers;
 
-            var viewDataSource = SxcInstance.DataSource;// ViewDataSource.ForModule(ModuleInfo.ModuleID, SecurityHelpers.HasEditPermission(ModuleInfo), SxcInstance.ContentGroups.GetContentGroupForModule(ModuleInfo.ModuleID).Template, SxcInstance);
-            _appAndDataHelpers = new AppAndDataHelpers(SxcInstance, ModuleInfo, viewDataSource, SxcInstance.App);
+            //var viewDataSource = SxcInstance.DataSource;// ViewDataSource.ForModule(ModuleInfo.ModuleID, SecurityHelpers.HasEditPermission(ModuleInfo), SxcInstance.ContentGroups.GetContentGroupForModule(ModuleInfo.ModuleID).Template, SxcInstance);
+            _appAndDataHelpers = new AppAndDataHelpers(SxcInstance);//, ModuleInfo, viewDataSource);//, SxcInstance.App);
 
             return _appAndDataHelpers;
         }

@@ -70,8 +70,7 @@ namespace ToSic.SexyContent
 
                 return _dataSource ??
                        (_dataSource =
-                           ViewDataSource.ForModule(ModuleInfo.ModuleID, SecurityHelpers.HasEditPermission(ModuleInfo),
-                               /*AppContentGroups.GetContentGroupForModule(ModuleInfo.ModuleID).*/ Template, this));
+                           ViewDataSource.ForModule(ModuleInfo.ModuleID, SecurityHelpers.HasEditPermission(ModuleInfo), Template, this));
             }
         }
 
@@ -79,7 +78,7 @@ namespace ToSic.SexyContent
         #endregion
 
         #region current template
-        // todo: try to refactor most of this out of this class again
+        // todo: try to refactor most of the template-stuff out of this class again
 
         private bool AllowAutomaticTemplateChangeBasedOnUrlParams => !IsContentApp; 
         private Template _template;
@@ -121,8 +120,6 @@ namespace ToSic.SexyContent
         private Template TryToGetTemplateBasedOnUrlParams(NameValueCollection urlParams)
         {
             var urlParameterDict = urlParams.AllKeys.ToDictionary(key => key?.ToLower() ?? "", key => string.Format("{0}/{1}", key, urlParams[key]).ToLower());
-            //var queryStringPairs = Request.QueryString.AllKeys.Select(key => string.Format("{0}/{1}", key, Request.QueryString[key]).ToLower()).ToArray();
-            // var queryStringKeys = Request.QueryString.AllKeys.Select(k => k?.ToLower() ?? "").ToArray();
 
             foreach (var template in AppTemplates.GetAllTemplates().Where(t => !string.IsNullOrEmpty(t.ViewNameInUrl)))
             {
@@ -135,16 +132,6 @@ namespace ToSic.SexyContent
                 }
                 else if (urlParameterDict.ContainsValue(desiredFullViewName)) // match view/details
                     return template;
-
-                //var viewNameInUrlLowered = template.ViewNameInUrl.ToLower();
-                //if (queryStringPairs.Contains(viewNameInUrlLowered))    // match view/details
-                //    return template;
-                //if (viewNameInUrlLowered.EndsWith("/.*"))   // match details/.* --> e.g. details/12
-                //{
-                //    var keyName = viewNameInUrlLowered.Substring(0, viewNameInUrlLowered.Length - 3);
-                //    if (queryStringKeys.Contains(keyName))
-                //        return template;
-                //}
             }
 
             return null;
@@ -159,7 +146,7 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Instanciates Content and Template-Contexts
         /// </summary>
-        public InstanceContext(int zoneId, int appId, bool enableCaching = true, int? ownerPortalId = null, ModuleInfo moduleInfo = null)
+        internal InstanceContext(int zoneId, int appId, bool enableCaching = true, int? ownerPortalId = null, ModuleInfo moduleInfo = null)
         {
             ModuleInfo = moduleInfo;
             PortalSettingsOfOriginalModule = ownerPortalId.HasValue ? new PortalSettings(ownerPortalId.Value) : PortalSettings.Current;
@@ -172,16 +159,6 @@ namespace ToSic.SexyContent
 
             if (appId == 0)
                 appId = AppHelpers.GetDefaultAppId(zoneId);
-
-            // 2016-03-01 2dm - this seem to have no use whatsoever, will comment out for now
-            //// Only disable caching of templates and contentgroupitems
-            //// if AppSetting "ToSIC_SexyContent_EnableCaching" is disabled
-            //if(enableCaching)
-            //{
-            //    var cachingSetting = ConfigurationManager.AppSettings["ToSIC_SexyContent_EnableCaching"];
-            //    if (!String.IsNullOrEmpty(cachingSetting) && cachingSetting.ToLower() == "false")
-            //        enableCaching = false;
-            //}
 
             AppTemplates = new TemplateManager(zoneId, appId);
 			AppContentGroups = new ContentGroupManager(zoneId, appId);
@@ -213,10 +190,6 @@ namespace ToSic.SexyContent
         {
             var engine = EngineFactory.CreateEngine(Template);
             engine.Init(Template, App, ModuleInfo, DataSource, renderingPurpose, this);
-            //engine.CustomizeData(); // this is also important for json-output
-
-            //CheckExpectedNoRenderConditions();
-
             return engine;
         }
 

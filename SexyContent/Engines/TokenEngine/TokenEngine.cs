@@ -72,7 +72,7 @@ namespace ToSic.SexyContent.Engines.TokenEngine
 
         private void InitDataHelper()
         {
-            dataHelper = new AppAndDataHelpers(Sexy, ModuleInfo, (ViewDataSource)DataSource, App);
+            dataHelper = new AppAndDataHelpers(Sexy);//, ModuleInfo, (ViewDataSource)DataSource);//, App);
         }
 
         private void InitTokenReplace()

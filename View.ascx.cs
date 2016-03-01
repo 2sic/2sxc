@@ -17,7 +17,7 @@ namespace ToSic.SexyContent
         protected new void Page_Load(object sender, EventArgs e)
         {
             // Reset messages visible states on every reload
-            pnlMessage.Visible = false;
+            //pnlMessage.Visible = false;
             pnlError.Visible = false;
 
             if (!EnsureUpgrade(pnlError))
