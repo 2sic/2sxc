@@ -155,7 +155,7 @@ namespace ToSic.SexyContent.Engines
 
             if (Template.ContentTypeStaticName != "" &&
                 Eav.DataSource.GetCache(App.ZoneId, App.AppId).GetContentType(Template.ContentTypeStaticName) == null)
-                throw new RenderingException("The contents of this module cannot be displayed because it's located in another VDB.");
+                throw new RenderingException("The contents of this module cannot be displayed because I couldn't find the assigned content-type.");
 
             if (Template.ContentTypeStaticName != "" && Template.ContentDemoEntity == null &&
                 Sexy.ContentGroup.Content.All(e => e == null))
@@ -175,7 +175,7 @@ namespace ToSic.SexyContent.Engines
             var permissionsOnThisTemplate = new PermissionController(App.ZoneId, App.AppId, Template.Guid, ModuleInfo);
 
             // Views only use permissions to prevent access, so only check if there are any configured permissions
-            if (!UserInfo.IsInRole(PortalSettings.Current.AdministratorRoleName) && permissionsOnThisTemplate.PermissionList.Any())
+            if (!PortalSettings.Current.UserInfo.IsInRole(PortalSettings.Current.AdministratorRoleName) && permissionsOnThisTemplate.PermissionList.Any())
                 if (!permissionsOnThisTemplate.UserMay(PermissionGrant.Read))
                     throw new RenderingException(new UnauthorizedAccessException(
                         "This view is not accessible for the current user. To give access, change permissions in the view settings. See http://2sxc.org/help?tag=view-permissions"));
