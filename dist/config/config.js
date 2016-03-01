@@ -126,14 +126,19 @@ if (window.angular) // needed because the file is also included in older non-ang
                                 "../edit/extensions/field-string-wysiwyg-tinymce/set.js";
                             applyChanges = true;
                             break;
-                        case "entity-default":
-                            field.Metadata.merged = angular.extend({
-                                EnableEdit: true,
-                                EnableCreate: true,
-                                EnableAddExisting: true,
-                                EnableRemove: true,
-                                EnableDelete: false
-                            }, field.Metadata.merged);
+                            case "entity-default":
+                                var merged = field.Metadata.merged;
+                                var defaults = {
+                                    EnableEdit: true,
+                                    EnableCreate: true,
+                                    EnableAddExisting: true,
+                                    EnableRemove: true,
+                                    EnableDelete: false
+                                };
+                                angular.forEach(defaults, function (value, key) {
+                                    if (merged[key] === null || merged[key] === undefined)
+                                        merged[key] = defaults[key];
+                                });
                         break;
                             case "unknown": // server default if not defined
                                 break;

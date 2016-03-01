@@ -318,7 +318,7 @@ $2sxc.getManageController = function (id) {
             var cmd = tbContr.createCommandObject(specialSettings);
 
             if (cmd.settings.useModuleList)
-                cmd.addContentGroupItemSetsToEditList();
+                cmd.addContentGroupItemSetsToEditList(true);
             else
                 cmd.addSimpleItem();            
 
