@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ToSic.Eav;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.ValueProvider;
@@ -9,10 +10,13 @@ namespace ToSic.SexyContent
 {
     public interface IAppAndDataHelpers
     {
+        [Obsolete("This is now obsolete, please use the app-property of the SxcInstance")]
         App App { get; }
+        [Obsolete("This is now obsolete, please use the data-property of the SxcInstance")]
         ViewDataSource Data { get; }
         DnnHelper Dnn { get; }
-		SxcHelper Sxc { get; }
+
+        SxcHelper Sxc { get; }
 
         /// <summary>
         /// Transform a IEntity to a DynamicEntity as dynamic object

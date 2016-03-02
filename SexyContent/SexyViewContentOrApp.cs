@@ -29,7 +29,7 @@ namespace ToSic.SexyContent
 		{
             // always do this, part of the guarantee that everything will work
 			ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
-            var renderHelp = new RenderingHelpers(_sxcInstance, ModuleContext, ResolveUrl("~"));
+            var renderHelp = new RenderingHelpers(_sxcInstance, ModuleContext, SettingsAreStored, ResolveUrl("~"));
 
 			// If logged in, inject Edit JavaScript, and delete / add items
             if (!UserMayEditThisModule) return;

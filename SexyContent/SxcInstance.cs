@@ -77,7 +77,7 @@ namespace ToSic.SexyContent
 
         #endregion
 
-        #region current template
+        #region current template - must get most of this code out of this class...
         // todo: try to refactor most of the template-stuff out of this class again
 
         private bool AllowAutomaticTemplateChangeBasedOnUrlParams => !IsContentApp; 
@@ -161,6 +161,8 @@ namespace ToSic.SexyContent
             if (appId == 0)
                 appId = AppHelpers.GetDefaultAppId(zoneId);
 
+            ZoneId = zoneId;
+            AppId = appId;
             AppTemplates = new TemplateManager(zoneId, appId);
 			AppContentGroups = new ContentGroupManager(zoneId, appId);
 
@@ -168,8 +170,6 @@ namespace ToSic.SexyContent
             EavAppContext = EavDataController.Instance(zoneId, appId); // EavContext.Instance(zoneId, appId);
             EavAppContext.UserName = (HttpContext.Current == null || HttpContext.Current.User == null) ? Settings.InternalUserName : HttpContext.Current.User.Identity.Name;
 
-            ZoneId = zoneId;
-            AppId = appId;
 
 
             #region Prepare Environment information 

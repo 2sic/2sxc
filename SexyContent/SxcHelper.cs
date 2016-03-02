@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using ToSic.SexyContent.Serializers;
+﻿using ToSic.SexyContent.Serializers;
 
 namespace ToSic.SexyContent
 {
@@ -15,13 +11,6 @@ namespace ToSic.SexyContent
 		}
 
 		private Serializer _serializer;
-		public Serializer Serializer
-		{
-			get {
-			    if (_serializer == null)
-			        _serializer = new Serializer(Sexy);
-			    return _serializer;
-			}
-		}
+		public Serializer Serializer => _serializer ?? (_serializer = new Serializer(Sexy));
 	}
 }

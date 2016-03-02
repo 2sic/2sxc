@@ -22,7 +22,10 @@ namespace ToSic.SexyContent.Environment.Dnn7
         private string ApplicationRoot;
         private ModuleInstanceContext ModuleContext;
 
-        internal RenderingHelpers(SxcInstance sxc, ModuleInstanceContext mic, string appRoot)
+        private int? AppId;
+        private bool _usingStoredConfig;
+
+        internal RenderingHelpers(SxcInstance sxc, ModuleInstanceContext mic, bool hasStoredConfiguration, string appRoot)
         {
             _sxcInstance = sxc;
             PortalSettings = mic.PortalSettings;// PortalSettings.Current;
@@ -31,13 +34,15 @@ namespace ToSic.SexyContent.Environment.Dnn7
             UserInfo = PortalSettings.Current.UserInfo;
             ApplicationRoot = appRoot;
             ModuleContext = mic;
+            _usingStoredConfig = hasStoredConfiguration;
+            AppId = hasStoredConfiguration ? sxc.AppId : null;
 
-            
+
         }
 
         internal object InfosForTheClientScripts()
         {
-            var hasContent = _sxcInstance.AppId.HasValue && _sxcInstance.Template != null && _sxcInstance.ContentGroup.Exists;
+            var hasContent = _usingStoredConfig && _sxcInstance.Template != null && _sxcInstance.ContentGroup.Exists;
 
             // minor workaround because the settings in the cache are wrong after using a page template
             var tempVisibleStatus = DnnStuffToRefactor.TryToGetReliableSetting(_sxcInstance.ModuleInfo,
@@ -65,8 +70,8 @@ namespace ToSic.SexyContent.Environment.Dnn7
                     hasContent,
                     isContentApp = _sxcInstance.IsContentApp,
                     zoneId = _sxcInstance.ZoneId ?? 0,
-                    appId = _sxcInstance.AppId,
-                    isList = _sxcInstance.AppId.HasValue && _sxcInstance.ContentGroup.Content.Count > 1,
+                    appId = _usingStoredConfig ? _sxcInstance.AppId : null,
+                    isList = _usingStoredConfig && _sxcInstance.ContentGroup.Content.Count > 1,
                     templateId = _sxcInstance.Template?.TemplateId,
                     contentTypeId = _sxcInstance.Template?.ContentTypeStaticName ?? "",
                     config = new
@@ -74,10 +79,10 @@ namespace ToSic.SexyContent.Environment.Dnn7
                         portalId = PortalSettings.PortalId,
                         tabId =  TabId,
                         moduleId = ModuleId,
-                        contentGroupId = _sxcInstance.AppId.HasValue ? _sxcInstance.ContentGroup.ContentGroupGuid : (Guid?)null,
+                        contentGroupId = _usingStoredConfig  ? _sxcInstance.ContentGroup.ContentGroupGuid : (Guid?)null,
                         dialogUrl = Globals.NavigateURL(TabId),
                         // 2016-03-01 2dm - probably unused now returnUrl = Request.RawUrl,
-                        appPath = _sxcInstance.AppId.HasValue ? _sxcInstance.App.Path + "/" : null,
+                        appPath = _usingStoredConfig ? _sxcInstance.App.Path + "/" : null,
                         // 2016-02-27 2dm - seems unused
                         //cultureDimension = AppId.HasValue ? Sexy.GetCurrentLanguageID() : new int?(),
                         isList = _sxcInstance.Template?.UseForList ?? false,
@@ -133,7 +138,8 @@ namespace ToSic.SexyContent.Environment.Dnn7
                     ModuleContext.PortalId,
                     ModuleContext.TabId,
                     ModuleContext.ModuleId,
-                    _sxcInstance?.App?.AppId // AppId
+                    AppId = _usingStoredConfig ? 
+                    _sxcInstance?.App?.AppId : null// AppId
                 },
                 PortalSettings.ActiveTab.FullUrl,
                 //PortalRoot = (Request.IsSecureConnection ? "https://" : "http://") + PortalAlias.HTTPAlias + "/",
