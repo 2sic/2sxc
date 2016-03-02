@@ -701,7 +701,16 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
                 var messages = String.Join("\r\n- ", xmlImport.ImportLog.Select(p => p.Message).ToArray());
                 throw new Exception("The 2sxc module upgrade to 08.03.00 failed: " + messages);
             }
-            
+
+            var desktopModuleNames = new[] { "2sxc", "2sxc-app" };
+            // Update BusinessController class name in desktop module info
+            foreach (var d in desktopModuleNames)
+            {
+                var dmi = DesktopModuleController.GetDesktopModuleByModuleName(d, -1);
+                dmi.BusinessControllerClass = "ToSic.SexyContent.Environment.Dnn7.DnnBusinessController";
+                DesktopModuleController.SaveDesktopModule(dmi, false, true);
+            }
+
         }
 
         /// <summary>
