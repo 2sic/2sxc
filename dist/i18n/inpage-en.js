@@ -32,6 +32,7 @@
 		"Content": "Content",
 		"Presentation": "Presentation Settings",
 		"ListContent": "List Header Content",
-		"ListPresentation": "List Presentation Settings"
+		"ListPresentation": "List Presentation Settings",
+		"Metadata": "Add / Edit Metadata"
 	}
 }

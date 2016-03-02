@@ -5,7 +5,7 @@
     <Dimensions />
   </Header>
   <AttributeSets>
-    <AttributeSet StaticName="@All" Name="@All" Description="the fields used on all input types" Scope="System">
+    <AttributeSet StaticName="@All" Name="@All" Description="the fields used on all input types" Scope="System" AlwaysShareConfiguration="true">
       <Attributes>
         <Attribute StaticName="CustomJavaScript" Type="String" IsTitle="false">
           <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@All" AttributeSetName="@All" EntityGUID="c7cdc035-2ea7-4f94-8921-47f9202680f7" KeyNumber="2812">
@@ -25,7 +25,7 @@
         </Attribute>
       </Attributes>
     </AttributeSet>
-    <AttributeSet StaticName="@Entity" Name="@Entity" Description="Entity UI Definitions" Scope="System">
+    <AttributeSet StaticName="@Entity" Name="@Entity" Description="Entity UI Definitions" Scope="System" AlwaysShareConfiguration="true">
       <Attributes>
 		<Attribute StaticName="EnableEdit" Type="Boolean" IsTitle="false">
           <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@All" AttributeSetName="@All" EntityGUID="5903759c-d175-4b3e-9a49-a215d5b679a2" KeyNumber="2804">
