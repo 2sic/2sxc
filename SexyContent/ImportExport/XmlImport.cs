@@ -71,6 +71,7 @@ namespace ToSic.SexyContent.ImportExport
 			ImportLog = new List<ExportImportMessage>();
 			DefaultLanguage = defaultLanguage;
 			AllowSystemChanges = allowSystemChanges;
+		    UserName = userName;
 		}
 
 		public bool IsCompatible(XDocument doc)

@@ -28,8 +28,8 @@ namespace ToSic.SexyContent.WebApi
             var messages = new List<ExportImportMessage>();
             try
             {
-                success = new ZipImport(zoneId.Value, appId, PortalSettings.UserInfo.IsSuperUser).ImportZipFromUrl(
-                    packageUrl, messages, ActiveModule.DesktopModule.ModuleName == "2sxc-app");
+                success = new ZipImport(zoneId.Value, appId, PortalSettings.UserInfo.IsSuperUser)
+                    .ImportZipFromUrl(packageUrl, messages, ActiveModule.DesktopModule.ModuleName == "2sxc-app");
             }
             catch (Exception ex)
             {

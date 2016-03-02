@@ -191,10 +191,15 @@
               <name>08.01.00.SqlDataProvider</name>
               <version>08.01.00</version>
             </script>
+            <script type="Install">
+              <path>SqlDataProvider</path>
+              <name>08.03.01.SqlDataProvider</name>
+              <version>08.03.01</version>
+            </script>
             <script type="UnInstall">
               <path>SqlDataProvider</path>
               <name>Uninstall.SqlDataProvider</name>
-              <version>08.01.00</version>
+              <version>08.03.01</version>
             </script>
           </scripts>
         </component>

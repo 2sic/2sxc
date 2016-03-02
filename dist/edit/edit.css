@@ -109,6 +109,10 @@ li.eav-entityselect-item:last-child { margin-bottom: -2px; }*/
 .eav-entityselect-item > div:hover { background: #8DCAFA; }
 .eav-entityselect-item-title { display: block; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; font-weight: normal; }
 
+.eav-entityselect-table tr th:first-child { width:32px; }
+.eav-entityselect-table tr th:last-child { width: 110px; text-align: right; }
+.eav-entityselect-table th { padding:0!important; line-height:0!important; border:0!important; }
+
 .eav-entityselect-icon { margin-right: 4px; }
 .eav-entityselect-icon-before-select { margin-right: 0; }
 
@@ -116,14 +120,16 @@ li.eav-entityselect-item:last-child { margin-bottom: -2px; }*/
 .subtle-till-mouseover:hover { opacity: 1; }
 
 .eav-entityselect-item-actions {
-    display: block;
-    position: absolute;
+    display: inline-block;
+    /*position: absolute;
     right: 0;
-    top: 0;
+    top: 0;*/
     cursor: pointer;
-    padding: 4px 6px 2px;
+    padding: 0;
     opacity: 0.2;
     list-style-type:none;
+    line-height:14px;
+    margin:0;
 }
 .eav-entityselect-item:hover .eav-entityselect-item-actions { opacity: 1; }
 .eav-entityselect-item-actions li { float:left;}
