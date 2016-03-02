@@ -25,12 +25,12 @@ namespace ToSic.SexyContent.Engines
         protected ModuleInfo ModuleInfo;
         protected IDataSource DataSource;
         protected InstancePurposes InstancePurposes;
-        protected InstanceContext Sexy;
+        protected SxcInstance Sexy;
 
         public RenderStatusType PreRenderStatus { get; internal set; }
 
 
-        public void Init(Template template, App app, ModuleInfo hostingModule, IDataSource dataSource, InstancePurposes instancePurposes, InstanceContext sexy)
+        public void Init(Template template, App app, ModuleInfo hostingModule, IDataSource dataSource, InstancePurposes instancePurposes, SxcInstance sexy)
         {
             var templatePath = VirtualPathUtility.Combine(Internal.TemplateManager.GetTemplatePathRoot(template.Location, app) + "/", template.Path);
 

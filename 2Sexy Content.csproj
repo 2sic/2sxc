@@ -238,8 +238,8 @@
     </Compile>
     <Compile Include="Environment\Base\Permissions.cs" />
     <Compile Include="Environment\Dnn7\DnnBusinessController.cs" />
-    <Compile Include="Environment\Dnn7\EngineContext.cs" />
     <Compile Include="Environment\Dnn7\RenderingHelpers.cs" />
+    <Compile Include="Environment\Dnn7\Factory.cs" />
     <Compile Include="Environment\Environment.cs" />
     <Compile Include="Environment\Interfaces\IEnvironment.cs" />
     <Compile Include="Environment\Interfaces\IPermissions.cs" />
@@ -260,6 +260,7 @@
     <Compile Include="SexyContent\Engines\RenderStatusType.cs" />
     <Compile Include="SexyContent\ImportExport\XmlConstants.cs" />
     <Compile Include="Environment\Dnn7\Permissions.cs" />
+    <Compile Include="SexyContent\ISxcInstance.cs" />
     <Compile Include="SexyContent\Settings.cs" />
     <Compile Include="SexyContent\Internal\AppHelpers.cs" />
     <Compile Include="SexyContent\Internal\ContentTypeHelpers.cs" />
@@ -377,7 +378,7 @@
     <Compile Include="Administration\EditTemplate.ascx.designer.cs">
       <DependentUpon>EditTemplate.ascx</DependentUpon>
     </Compile>
-    <Compile Include="SexyContent\InstanceContext.cs" />
+    <Compile Include="SexyContent\SxcInstance.cs" />
     <Compile Include="Administration\EditTemplate.ascx.cs">
       <DependentUpon>EditTemplate.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

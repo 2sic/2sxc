@@ -6,18 +6,18 @@
 
 <%
 	var version = "";
-	if (SxcContext.App.Configuration != null)
-		version = SxcContext.App.Configuration.Version;
+	if (_sxcInstance.App.Configuration != null)
+		version = _sxcInstance.App.Configuration.Version;
 %>
 
-<h2>Will Export: App-<%= SxcContext.App.Name %>-<%= version %>.zip</h2>
+<h2>Will Export: App-<%= _sxcInstance.App.Name %>-<%= version %>.zip</h2>
 Specs:
 <ul>
     <li>
-        Name: <%= SxcContext.App.Name %>
+        Name: <%= _sxcInstance.App.Name %>
     </li>
     <li>
-        Guid:<%= SxcContext.App.AppGuid %>
+        Guid:<%= _sxcInstance.App.AppGuid %>
     </li>
     <li>
         Version: <%= version %>
@@ -33,16 +33,16 @@ Contains:<br/>
         <%= ZoneHelpers.GetCulturesWithActiveState(PortalId, ZoneId.Value).Count(p => p.Active) %> Languages
     </li>
     <li>
-        <%= SxcContext.AppTemplates.GetAllTemplates().Count() %> templates
+        <%= _sxcInstance.AppTemplates.GetAllTemplates().Count() %> templates
     </li>
     <li>
-        Tokens: <%= SxcContext.AppTemplates.GetAllTemplates().Any(p => !p.IsRazor) %>
+        Tokens: <%= _sxcInstance.AppTemplates.GetAllTemplates().Any(p => !p.IsRazor) %>
     </li>
     <li>
-        Razor: <%= SxcContext.AppTemplates.GetAllTemplates().Any(p => p.IsRazor) %>
+        Razor: <%= _sxcInstance.AppTemplates.GetAllTemplates().Any(p => p.IsRazor) %>
     </li>
     <li>
-        <% if (Directory.Exists(SxcContext.App.PhysicalPath))
+        <% if (Directory.Exists(_sxcInstance.App.PhysicalPath))
            { %>
             <%= Exporter.FileManager.AllTransferableFiles.Count() %> files in the App folder to export of a total of 
             <%= Exporter.FileManager.AllFiles.Count() %> files in the App folder

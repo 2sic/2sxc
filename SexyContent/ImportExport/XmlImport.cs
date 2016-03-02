@@ -26,7 +26,7 @@ namespace ToSic.SexyContent.ImportExport
 		private string _sourceDefaultLanguage;
 		private int? _sourceDefaultDimensionId;
 		private List<Dimension> _targetDimensions;
-		private InstanceContext _sexy;
+		private SxcInstance _sexy;
 		private int _appId;
 		private int _zoneId;
 		private Dictionary<int, int> _fileIdCorrectionList = new Dictionary<int, int>();
@@ -195,7 +195,7 @@ namespace ToSic.SexyContent.ImportExport
 				}
 
 				// Adding app to EAV
-				var sexy = new InstanceContext(zoneId, AppHelpers.GetDefaultAppId(zoneId));
+				var sexy = new SxcInstance(zoneId, AppHelpers.GetDefaultAppId(zoneId));
 				var app = sexy.EavAppContext.App.AddApp(appGuid);
 				sexy.EavAppContext.SqlDb.SaveChanges();
 
@@ -220,7 +220,7 @@ namespace ToSic.SexyContent.ImportExport
 		/// </summary>
 		public bool ImportXml(int zoneId, int appId, XDocument doc, bool leaveExistingValuesUntouched = true)
 		{
-			_sexy = new InstanceContext(zoneId, appId, false);
+			_sexy = new SxcInstance(zoneId, appId, false);
 			_appId = appId;
 			_zoneId = zoneId;
 

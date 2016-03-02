@@ -14,9 +14,9 @@ namespace ToSic.SexyContent.ViewManager
 
         public PortalSettings PortalSettings;
 
-        public InstanceContext Sexy;
+        public SxcInstance Sexy;
 
-        public TemplateEditor(InstanceContext sexy, int templateId, UserInfo userInfo, PortalSettings portalSettings)
+        public TemplateEditor(SxcInstance sexy, int templateId, UserInfo userInfo, PortalSettings portalSettings)
         {
             Sexy = sexy;
             Template = Sexy.AppTemplates.GetTemplate(templateId);

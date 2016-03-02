@@ -22,7 +22,7 @@ namespace ToSic.SexyContent.ImportExport
     public class XmlExporter
     {
         // initialize data context
-        private readonly InstanceContext Sexy;
+        private readonly SxcInstance Sexy;
         private List<int> _referencedFileIds = new List<int>();
         private List<int> _referencedFolderIds = new List<int>();
         public List<IFileInfo> ReferencedFiles = new List<IFileInfo>();
@@ -49,7 +49,7 @@ namespace ToSic.SexyContent.ImportExport
             _zoneId = zoneId;
             _appId = appId;
             _isAppExport = appExport;
-            Sexy = new InstanceContext(_zoneId, _appId);
+            Sexy = new SxcInstance(_zoneId, _appId);
             AttributeSetIDs = attrSetIds;
             EntityIDs = entityIds;
         }

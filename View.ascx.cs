@@ -49,7 +49,7 @@ namespace ToSic.SexyContent
                         pnlTemplateChooser.Visible = true;
 
                     if (SettingsAreStored)// AppId.HasValue)
-                        new DnnStuffToRefactor().EnsurePortalIsConfigured(SxcContext, Server, ControlPath);
+                        new DnnStuffToRefactor().EnsurePortalIsConfigured(_sxcInstance, Server, ControlPath);
                 }
 
                 if (SettingsAreStored) // AppId.HasValue)
@@ -59,10 +59,10 @@ namespace ToSic.SexyContent
                     else if (!IsContentApp && UserMayEditThisModule)
                     // Select first available template automatically if it's not set yet - then refresh page
                     {
-                        var templates = SxcContext.AppTemplates.GetAvailableTemplatesForSelector(ModuleConfiguration.ModuleID, SxcContext.AppContentGroups).ToList();
+                        var templates = _sxcInstance.AppTemplates.GetAvailableTemplatesForSelector(ModuleConfiguration.ModuleID, _sxcInstance.AppContentGroups).ToList();
                         if (templates.Any())
                         {
-                            SxcContext.AppContentGroups.SetPreviewTemplateId(ModuleConfiguration.ModuleID, templates.First().TemplateId);
+                            _sxcInstance.AppContentGroups.SetPreviewTemplateId(ModuleConfiguration.ModuleID, templates.First().TemplateId);
                             Response.Redirect(Request.RawUrl);
                         }
                     }

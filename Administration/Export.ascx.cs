@@ -16,7 +16,7 @@ namespace ToSic.SexyContent
         private string _scope = "2SexyContent";
         private int _appId;
         private int _zoneId;
-        private InstanceContext _sexy;
+        private SxcInstance _sexy;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -30,11 +30,11 @@ namespace ToSic.SexyContent
                 _scope = !String.IsNullOrEmpty(Request.QueryString["Scope"]) ? Request.QueryString["Scope"] : "2SexyContent";
                 _appId = !String.IsNullOrEmpty(Request.QueryString["AppId"]) ? int.Parse(Request.QueryString["AppId"]) : _appId;
                 _zoneId = !String.IsNullOrEmpty(Request.QueryString["ZoneId"]) ? int.Parse(Request.QueryString["ZoneId"]) : _zoneId;
-                _sexy = new InstanceContext(_zoneId, _appId);
+                _sexy = new SxcInstance(_zoneId, _appId);
             }
             else
             {
-                _sexy = SxcContext;
+                _sexy = _sxcInstance;
             }
 
             var contentTypes = _sexy.AppTemplates.GetAvailableContentTypes(_scope, true);

@@ -29,7 +29,7 @@ namespace ToSic.SexyContent
 		{
             // always do this, part of the guarantee that everything will work
 			ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
-            var renderHelp = new RenderingHelpers(SxcContext, ModuleContext, ResolveUrl("~"));
+            var renderHelp = new RenderingHelpers(_sxcInstance, ModuleContext, ResolveUrl("~"));
 
 			// If logged in, inject Edit JavaScript, and delete / add items
             if (!UserMayEditThisModule) return;
@@ -53,13 +53,13 @@ namespace ToSic.SexyContent
 		}
 
 
-        private InstanceContext _sxcInstanceForSecurityChecks;
+        private SxcInstance _sxcInstanceForSecurityChecks;
         protected bool UserMayEditThisModule
         {
             get
             {
                 if (_sxcInstanceForSecurityChecks == null)
-                    _sxcInstanceForSecurityChecks = SxcContext ?? new InstanceContext(ZoneId.Value, 0, true, ModuleConfiguration.OwnerPortalID, ModuleConfiguration);
+                    _sxcInstanceForSecurityChecks = _sxcInstance ?? new SxcInstance(ZoneId.Value, 0, true, ModuleConfiguration.OwnerPortalID, ModuleConfiguration);
                 return _sxcInstanceForSecurityChecks?.Environment?.Permissions.UserMayEditContent ?? false;
             }
         }
@@ -68,13 +68,13 @@ namespace ToSic.SexyContent
 	    {
             // note that initializing the engine will also initialize any custom data-changes
             // so this is needed, even if we will only render to JSON afterwards
-	        var engine = SxcContext.RenderingEngine(Request.QueryString["type"] == "data"
+	        var engine = _sxcInstance.GetRenderingEngine(Request.QueryString["type"] == "data"
 	            ? InstancePurposes.PublishData
 	            : InstancePurposes.WebView);
 
 	        // Output JSON data if type=data in URL, otherwise render the template
 	        return Request.QueryString["type"] == "data"
-	            ? StreamJsonToClient(SxcContext.DataSource)
+	            ? StreamJsonToClient(_sxcInstance.Data)
 	            : engine.Render();
 	    }
 
@@ -116,7 +116,7 @@ namespace ToSic.SexyContent
 
             var y = streamsToPublish.Where(k => source.Out.ContainsKey(k)).ToDictionary(k => k, s => new
             {
-                List = (from c in source.Out[s].List select new DynamicEntity(c.Value, new[] { language }, SxcContext).ToDictionary() /*Sexy.ToDictionary(c.Value, language)*/).ToList()
+                List = (from c in source.Out[s].List select new DynamicEntity(c.Value, new[] { language }, _sxcInstance).ToDictionary() /*Sexy.ToDictionary(c.Value, language)*/).ToList()
             });
 
             return JsonConvert.SerializeObject(y);
@@ -290,7 +290,7 @@ namespace ToSic.SexyContent
 
 							// App management
 							if (ZoneId.HasValue && AppId.HasValue)
-                                actions.Add(GetNextActionID(), "Admin" + (IsContentApp ? "" : " " + SxcContext.App.Name), "", "", "edit.gif", "javascript:$2sxcActionMenuMapper(" + ModuleId + ").adminApp();", "", true,
+                                actions.Add(GetNextActionID(), "Admin" + (IsContentApp ? "" : " " + _sxcInstance.App.Name), "", "", "edit.gif", "javascript:$2sxcActionMenuMapper(" + ModuleId + ").adminApp();", "", true,
                                         SecurityAccessLevel.Admin, true, false);
 
                             // Zone management (app list)

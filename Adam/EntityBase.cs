@@ -19,7 +19,7 @@ namespace ToSic.SexyContent.Adam
         private const string AdamFolderMask = "[AdamRoot]/[Guid22]/[FieldName]/[SubFolder]";
         #endregion
 
-        private InstanceContext Sexy;
+        private SxcInstance Sexy;
         private App App;
         private AdamManager _adamManager;
         //private Razor.Helpers.DnnHelper Dnn;
@@ -29,7 +29,7 @@ namespace ToSic.SexyContent.Adam
         private IFolderManager folderManager = FolderManager.Instance;
     
 
-        public EntityBase(InstanceContext sexy, App app, PortalSettings ps, Guid eGuid, string fName)
+        public EntityBase(SxcInstance sexy, App app, PortalSettings ps, Guid eGuid, string fName)
         {
 
             _portalSettings = ps;

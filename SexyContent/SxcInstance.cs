@@ -21,7 +21,7 @@ namespace ToSic.SexyContent
     /// it would be hard to get anything done .
     /// Note that it also adds the current-user to the state, so that the system can log data-changes to this user
     /// </summary>
-    public class InstanceContext 
+    public class SxcInstance :ISxcInstance
     {
         #region Properties
         /// <summary>
@@ -31,14 +31,14 @@ namespace ToSic.SexyContent
 
         internal int? ZoneId { get; set; }
 
-        public int? AppId { get; }
+        internal int? AppId { get; }
 
         public TemplateManager AppTemplates { get; set; }
 
 		public ContentGroupManager AppContentGroups { get; set; }
 
         private ContentGroup _contentGroup;
-        internal ContentGroup ContentGroup => _contentGroup ??
+        public ContentGroup ContentGroup => _contentGroup ??
                                                (_contentGroup = AppContentGroups.GetContentGroupForModule(ModuleInfo.ModuleID));
 
         private App _app;
@@ -61,7 +61,7 @@ namespace ToSic.SexyContent
         internal PortalSettings PortalSettingsOfOriginalModule { get; set; }
 
         private ViewDataSource _dataSource;
-        public ViewDataSource DataSource
+        public ViewDataSource Data
         {
             get
             {
@@ -83,7 +83,8 @@ namespace ToSic.SexyContent
         private bool AllowAutomaticTemplateChangeBasedOnUrlParams => !IsContentApp; 
         private Template _template;
         private bool _templateLoaded;
-        internal Template Template
+
+        public Template Template
         {
             get
             {
@@ -105,7 +106,7 @@ namespace ToSic.SexyContent
                 _templateLoaded = true;
                 return _template;
             }
-            set
+            internal set
             {
                 _template = value;
                 _templateLoaded = true;
@@ -146,7 +147,7 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Instanciates Content and Template-Contexts
         /// </summary>
-        internal InstanceContext(int zoneId, int appId, bool enableCaching = true, int? ownerPortalId = null, ModuleInfo moduleInfo = null)
+        internal SxcInstance(int zoneId, int appId, bool enableCaching = true, int? ownerPortalId = null, ModuleInfo moduleInfo = null)
         {
             ModuleInfo = moduleInfo;
             PortalSettingsOfOriginalModule = ownerPortalId.HasValue ? new PortalSettings(ownerPortalId.Value) : PortalSettings.Current;
@@ -186,10 +187,17 @@ namespace ToSic.SexyContent
 
         #region RenderEngine
 
-        public IEngine RenderingEngine(InstancePurposes renderingPurpose)
+        public string Render()
+        {
+            var engine = GetRenderingEngine(InstancePurposes.WebView);
+
+            return engine.Render();
+        }
+
+        public IEngine GetRenderingEngine(InstancePurposes renderingPurpose)
         {
             var engine = EngineFactory.CreateEngine(Template);
-            engine.Init(Template, App, ModuleInfo, DataSource, renderingPurpose, this);
+            engine.Init(Template, App, ModuleInfo, Data, renderingPurpose, this);
             return engine;
         }
 

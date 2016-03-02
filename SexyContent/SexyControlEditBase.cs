@@ -40,29 +40,29 @@ namespace ToSic.SexyContent
 
             // Init SxcContext based on zone/app
             //if (zoneId.HasValue && appId.HasValue)
-                SxcContext = new InstanceContext(zoneId ?? 0, appId ?? 0, true, ModuleConfiguration.OwnerPortalID,
+                _sxcInstance = new SxcInstance(zoneId ?? 0, appId ?? 0, true, ModuleConfiguration.OwnerPortalID,
                     ModuleContext.Configuration);
         }
 
 
         #region basic properties like Sexy, App, Zone, etc.
-        protected InstanceContext SxcContext { get; set; }
+        protected SxcInstance _sxcInstance { get; set; }
 
-        protected int? ZoneId => SxcContext?.ZoneId ?? 0;
+        protected int? ZoneId => _sxcInstance?.ZoneId ?? 0;
 
-        protected int? AppId => SettingsAreStored ? SxcContext?.AppId : null; // some systems rely on appid being blank to adapt behaviour if nothing is saved yet
+        protected int? AppId => SettingsAreStored ? _sxcInstance?.AppId : null; // some systems rely on appid being blank to adapt behaviour if nothing is saved yet
 
         protected bool SettingsAreStored;
         #endregion
 
-        public bool IsContentApp => SxcContext.IsContentApp;// ModuleConfiguration.DesktopModule.ModuleName == "2sxc";
+        public bool IsContentApp => _sxcInstance.IsContentApp;// ModuleConfiguration.DesktopModule.ModuleName == "2sxc";
 
         // private ContentGroup _contentGroup;
-        protected ContentGroup ContentGroup => SxcContext.ContentGroup; //  _contentGroup ?? (_contentGroup = SxcContext.ContentGroupManager.GetContentGroupForModule(ModuleConfiguration.ModuleID));
+        protected ContentGroup ContentGroup => _sxcInstance.ContentGroup; //  _contentGroup ?? (_contentGroup = SxcContext.ContentGroupManager.GetContentGroupForModule(ModuleConfiguration.ModuleID));
 
         #region template loading and stuff...
 
-        protected Template Template => SxcContext.Template;
+        protected Template Template => _sxcInstance.Template;
 
         #endregion
 

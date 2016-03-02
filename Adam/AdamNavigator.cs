@@ -6,7 +6,7 @@ namespace ToSic.SexyContent.Adam
 {
     public class AdamNavigator : AdamFolder
     {
-        public AdamNavigator(InstanceContext sexy, App app, PortalSettings ps, Guid entityGuid, string fieldName)
+        public AdamNavigator(SxcInstance sexy, App app, PortalSettings ps, Guid entityGuid, string fieldName)
         {
             EntityBase = new EntityBase(sexy, app, ps, entityGuid, fieldName);
             Manager = new AdamManager(ps.PortalId, app);

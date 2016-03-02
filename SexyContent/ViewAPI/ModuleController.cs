@@ -127,7 +127,7 @@ namespace ToSic.SexyContent.ViewAPI
 
                 var template = SxcContext.AppTemplates.GetTemplate(templateId);
                 SxcContext.Template = template;
-                var engine = SxcContext.RenderingEngine(InstancePurposes.WebView);
+                var engine = SxcContext.GetRenderingEngine(InstancePurposes.WebView);
 
                 #region 2016-03-01 old code
                 //var engine = EngineFactory.CreateEngine(template);

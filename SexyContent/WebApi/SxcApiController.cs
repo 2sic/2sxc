@@ -13,7 +13,7 @@ namespace ToSic.SexyContent.WebApi
 	[SupportedModules("2sxc,2sxc-app")]
     public abstract class SxcApiController : DnnApiController, IAppAndDataHelpers
     {
-        private InstanceContext _instanceContext;
+        private SxcInstance _instanceContext;
 
         private AppAndDataHelpers _appAndDataHelpers;
         private AppAndDataHelpers AppAndDataHelpers {
@@ -23,7 +23,7 @@ namespace ToSic.SexyContent.WebApi
                 {
                     var moduleInfo = Request.FindModuleInfo();
                     // before 2016-02-27 2dm: var viewDataSource = Sexy.GetViewDataSource(Request.FindModuleId(), SecurityHelpers.HasEditPermission(moduleInfo), Sexy.ContentGroups.GetContentGroupForModule(moduleInfo.ModuleID).Template);
-                    var viewDataSource = SxcContext.DataSource;// ViewDataSource.ForModule(Request.FindModuleId(), SecurityHelpers.HasEditPermission(moduleInfo), Sexy.ContentGroups.GetContentGroupForModule(moduleInfo.ModuleID).Template, Sexy);
+                    var viewDataSource = SxcContext.Data;// ViewDataSource.ForModule(Request.FindModuleId(), SecurityHelpers.HasEditPermission(moduleInfo), Sexy.ContentGroups.GetContentGroupForModule(moduleInfo.ModuleID).Template, Sexy);
                     _appAndDataHelpers = new AppAndDataHelpers(SxcContext);//, moduleInfo, (ViewDataSource)viewDataSource);//, SxcContext.App);
                 }
                 return _appAndDataHelpers;
@@ -31,7 +31,7 @@ namespace ToSic.SexyContent.WebApi
         }
 
         // Sexy object should not be accessible for other assemblies - just internal use
-        internal InstanceContext SxcContext
+        internal SxcInstance SxcContext
         {
             get
             {

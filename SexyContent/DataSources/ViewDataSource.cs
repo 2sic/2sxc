@@ -13,7 +13,7 @@ namespace ToSic.SexyContent.DataSources
     {
         public DataPublishing Publish = new DataPublishing();
 
-        internal static ViewDataSource ForModule(int moduleId, bool showDrafts, Template template, InstanceContext sxc)
+        internal static ViewDataSource ForModule(int moduleId, bool showDrafts, Template template, SxcInstance sxc)
         {
             var configurationProvider = DataSources.ConfigurationProvider.GetConfigProviderForModule(moduleId, /*sxc.PortalSettingsOfVisitedPage,*/ sxc.App);
 

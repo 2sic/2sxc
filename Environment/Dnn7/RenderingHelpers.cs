@@ -14,7 +14,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 {
     internal class RenderingHelpers
     {
-        private InstanceContext SxcContext;
+        private SxcInstance _sxcInstance;
         private PortalSettings PortalSettings;
         private int TabId;
         private int ModuleId;
@@ -22,9 +22,9 @@ namespace ToSic.SexyContent.Environment.Dnn7
         private string ApplicationRoot;
         private ModuleInstanceContext ModuleContext;
 
-        internal RenderingHelpers(InstanceContext sxc, ModuleInstanceContext mic, string appRoot)
+        internal RenderingHelpers(SxcInstance sxc, ModuleInstanceContext mic, string appRoot)
         {
-            SxcContext = sxc;
+            _sxcInstance = sxc;
             PortalSettings = mic.PortalSettings;// PortalSettings.Current;
             TabId = mic.TabId;// tabId;
             ModuleId = mic.ModuleId;// modId;
@@ -37,15 +37,15 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         internal object InfosForTheClientScripts()
         {
-            var hasContent = SxcContext.AppId.HasValue && SxcContext.Template != null && SxcContext.ContentGroup.Exists;
+            var hasContent = _sxcInstance.AppId.HasValue && _sxcInstance.Template != null && _sxcInstance.ContentGroup.Exists;
 
             // minor workaround because the settings in the cache are wrong after using a page template
-            var tempVisibleStatus = DnnStuffToRefactor.TryToGetReliableSetting(SxcContext.ModuleInfo,
+            var tempVisibleStatus = DnnStuffToRefactor.TryToGetReliableSetting(_sxcInstance.ModuleInfo,
                 Settings.SettingsShowTemplateChooser);
             var templateChooserVisible = bool.Parse(tempVisibleStatus ?? "true");
 
             var languages =
-                ZoneHelpers.GetCulturesWithActiveState(PortalSettings.PortalId, SxcContext.ZoneId.Value)
+                ZoneHelpers.GetCulturesWithActiveState(PortalSettings.PortalId, _sxcInstance.ZoneId.Value)
                     .Where(c => c.Active)
                     .Select(c => new { key = c.Code.ToLower(), name = c.Text });
 
@@ -60,27 +60,27 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 moduleId = ModuleId,
                 manage = new
                 {
-                    isEditMode = SxcContext?.Environment?.Permissions.UserMayEditContent ?? false,
+                    isEditMode = _sxcInstance?.Environment?.Permissions.UserMayEditContent ?? false,
                     templateChooserVisible,
                     hasContent,
-                    isContentApp = SxcContext.IsContentApp,
-                    zoneId = SxcContext.ZoneId ?? 0,
-                    appId = SxcContext.AppId,
-                    isList = SxcContext.AppId.HasValue && SxcContext.ContentGroup.Content.Count > 1,
-                    templateId = SxcContext.Template?.TemplateId,
-                    contentTypeId = SxcContext.Template?.ContentTypeStaticName ?? "",
+                    isContentApp = _sxcInstance.IsContentApp,
+                    zoneId = _sxcInstance.ZoneId ?? 0,
+                    appId = _sxcInstance.AppId,
+                    isList = _sxcInstance.AppId.HasValue && _sxcInstance.ContentGroup.Content.Count > 1,
+                    templateId = _sxcInstance.Template?.TemplateId,
+                    contentTypeId = _sxcInstance.Template?.ContentTypeStaticName ?? "",
                     config = new
                     {
                         portalId = PortalSettings.PortalId,
                         tabId =  TabId,
                         moduleId = ModuleId,
-                        contentGroupId = SxcContext.AppId.HasValue ? SxcContext.ContentGroup.ContentGroupGuid : (Guid?)null,
+                        contentGroupId = _sxcInstance.AppId.HasValue ? _sxcInstance.ContentGroup.ContentGroupGuid : (Guid?)null,
                         dialogUrl = Globals.NavigateURL(TabId),
                         // 2016-03-01 2dm - probably unused now returnUrl = Request.RawUrl,
-                        appPath = SxcContext.AppId.HasValue ? SxcContext.App.Path + "/" : null,
+                        appPath = _sxcInstance.AppId.HasValue ? _sxcInstance.App.Path + "/" : null,
                         // 2016-02-27 2dm - seems unused
                         //cultureDimension = AppId.HasValue ? Sexy.GetCurrentLanguageID() : new int?(),
-                        isList = SxcContext.Template?.UseForList ?? false,
+                        isList = _sxcInstance.Template?.UseForList ?? false,
                         version = Settings.Version.ToString() // SexyContent.Version.ToString()
                     },
                     user = new
@@ -133,12 +133,12 @@ namespace ToSic.SexyContent.Environment.Dnn7
                     ModuleContext.PortalId,
                     ModuleContext.TabId,
                     ModuleContext.ModuleId,
-                    SxcContext?.App?.AppId // AppId
+                    _sxcInstance?.App?.AppId // AppId
                 },
                 PortalSettings.ActiveTab.FullUrl,
                 //PortalRoot = (Request.IsSecureConnection ? "https://" : "http://") + PortalAlias.HTTPAlias + "/",
                 PortalRoot = "//" + PortalSettings.PortalAlias.HTTPAlias + "/",
-                DefaultLanguageID = SxcContext?.EavAppContext.Dimensions.GetLanguageId(PortalSettings.DefaultLanguage)
+                DefaultLanguageID = _sxcInstance?.EavAppContext.Dimensions.GetLanguageId(PortalSettings.DefaultLanguage)
             };
             return globData;
         }
