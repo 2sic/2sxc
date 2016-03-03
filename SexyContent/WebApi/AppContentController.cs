@@ -62,8 +62,15 @@ namespace ToSic.SexyContent.WebApi
 	    private void PerformSecurityCheck(string contentType, PermissionGrant grant, bool autoAllowAdmin = false)
 	    {
             // Check if we can find this content-type
-            var ct = new Eav.WebApi.ContentTypeController().GetSingle(App.AppId, contentType, null);
-            if(ct == null)
+            var ctc = new Eav.WebApi.ContentTypeController();
+            ctc.SetAppIdAndUser(App.AppId);
+            // var source = InitialDS;
+            var cache = DataSource.GetCache(null, App.AppId);
+            var ct = cache.GetContentType(contentType);
+
+
+            // dynamic ct = new Eav.WebApi.ContentTypeController().GetSingle(App.AppId, contentType, null);
+            if (ct == null)
                 ThrowHttpError(HttpStatusCode.NotFound, "Could not find Content Type '" + contentType + "'.", "content-types");
             
             // Check if the content-type has a GUID as name - only these can have permission assignments

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using DotNetNuke.Entities.Modules;
+using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
 using ToSic.Eav;
 using ToSic.SexyContent.Security;
@@ -21,10 +22,27 @@ namespace ToSic.SexyContent.Security
         public const string Grant = "Grant";
         public string CustomPermissionKey = ""; // "CONTENT";
         readonly string _salPrefix = "SecurityAccessLevel.".ToLower();
+        private readonly string _keyOwner = "Author";
 
         public int AppId { get; private set; }
         public int ZoneId { get; private set; }
         public Guid TargetGuid { get; private set; }
+
+        private IEntity _targetItem;
+
+        public IEntity TargetItem
+        {
+            get
+            {
+                return _targetItem;
+            }
+            set
+            {
+                _targetItem = value;
+                TargetGuid = _targetItem.EntityGuid;
+            } 
+        }
+
         private IEnumerable<IEntity> _permissionList;
 
         public IEnumerable<IEntity> PermissionList
@@ -58,6 +76,15 @@ namespace ToSic.SexyContent.Security
             TargetGuid = targetGuid;
             Module = module;
         }
+
+        public PermissionController(int zoneId, int appId, IEntity targetItem, ModuleInfo module = null)
+        {
+            ZoneId = zoneId;
+            AppId = appId;
+            TargetItem = targetItem;
+            Module = module;
+        }
+
 
         /// <summary>
         /// Check if a user may do something based on the permissions in the background. 
@@ -107,19 +134,26 @@ namespace ToSic.SexyContent.Security
 
             // Check if the current user fits the reason for this grant
             try
-            {
-                var rsn = permissionEntity.GetBestValue(Condition).ToString();
-                if (rsn.ToLower().StartsWith(_salPrefix))
+            {   
+                // check general permissions
+                var condition = permissionEntity.GetBestValue(Condition).ToString();
+                if (condition.ToLower().StartsWith(_salPrefix))
                 {
-                    var salWord = rsn.Substring(_salPrefix.Length);
+                    var salWord = condition.Substring(_salPrefix.Length);
                     var sal = (SecurityAccessLevel)Enum.Parse(typeof(SecurityAccessLevel), salWord);
                     return DotNetNuke.Security.Permissions.ModulePermissionController
                         .HasModuleAccess(sal, CustomPermissionKey, Module);
                 }
+
+                // check owner conditions
+                if (condition == _keyOwner)
+                    // if it's an entity, possibly also check owner-permissions
+                    if (TargetItem != null && TargetItem.Owner == PortalSettings.Current.UserInfo.Username)
+                        return true;
             }
             catch
             {
-                // something happened, assume that this rule cannot describe a "is allowed"
+                // something happened, in this case we assume that this rule cannot described a "is allowed"
                 return false;
             }
 
