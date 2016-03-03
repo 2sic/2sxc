@@ -94,8 +94,8 @@ namespace ToSic.SexyContent
 
 
             // 2016-02-27 2dm - fixed to use the full standard ValueConverter - seems to fix some issues
-            var result = Entity.GetBestValue(attributeName, _dimensions, true); 
-                                                                                
+            var result = Entity.GetBestValue(attributeName, _dimensions, true);
+
             if (result is Eav.Data.EntityRelationship)
                     result = ((Eav.Data.EntityRelationship)result).Select(
                         p => new DynamicEntity(p, _dimensions, _sxcInstance)

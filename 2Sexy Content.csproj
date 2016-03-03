@@ -287,11 +287,6 @@
     <Compile Include="SexyContent\EAVExtensions\EavApiProxies\PipelineDesignerController.cs" />
     <Compile Include="SexyContent\DataSources\App.cs" />
     <Compile Include="SexyContent\DnnHelper.cs" />
-    <Compile Include="SexyContent\SexyContentContext.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>SexyContentContext.edmx</DependentUpon>
-    </Compile>
     <Compile Include="SexyContent\SexyViewContentOrApp.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
@@ -544,10 +539,6 @@
     <Content Include="View.ascx" />
     <Content Include="WebConfigTemplate.config" />
     <None Include="SqlDataProvider\01.00.01.SqlDataProvider" />
-    <EntityDeploy Include="SexyContent\SexyContentContext.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>SexyContentContext.Designer.cs</LastGenOutput>
-    </EntityDeploy>
     <None Include="SqlDataProvider\02.00.00.SqlDataProvider" />
     <None Include="SqlDataProvider\03.00.00.SqlDataProvider" />
     <Content Include="web-Deploy.config" />

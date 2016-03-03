@@ -2,9 +2,12 @@
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using DotNetNuke.Common;
 using DotNetNuke.Entities.Portals;
+using DotNetNuke.Entities.Portals.Internal;
 using DotNetNuke.Entities.Tabs;
 using DotNetNuke.Services.FileSystem;
+using DotNetNuke.Services.Localization;
 using ToSic.Eav;
 using ToSic.Eav.Implementations.ValueConverter;
 
@@ -13,19 +16,6 @@ namespace ToSic.SexyContent.EAV.Implementation.ValueConverter
     public class SexyContentValueConverter : IEavValueConverter
     {
         private string hlnkType = "Hyperlink";
-
-        //public bool UseOnCachePopulation = false;
-        //public bool UseOnValueRead = true;
-        //public bool UseOnValueCreate = false;
-        //public bool UseOnValueSave = true;
-
-        // public bool AllowSingletonPerApp = true;
-
-
-        //public string Convert(ConversionScenario scenario, string type, string originalValue)
-        //{
-        //    return Convert(scenario, type, originalValue, PortalSettings.Current);
-        //}
 
         public string Convert(ConversionScenario scenario, string type, string originalValue/*, PortalSettings portalInfo*/)
         {
@@ -82,18 +72,33 @@ namespace ToSic.SexyContent.EAV.Implementation.ValueConverter
         /// <returns></returns>
         private string TryToResolveDnnCodeToLink(string value)
         {
-            var match = Regex.Match(value, @"(?<type>.+)\:(?<id>\d+)");
-            if (!match.Success)
+            // new
+            var resultString = value;
+            var regularExpression = Regex.Match(resultString, @"^(?<type>(file|page)):(?<id>[0-9]+)(?<params>(\?|\#).*)?$", RegexOptions.IgnoreCase);
+
+            if (!regularExpression.Success)
                 return value;
 
-            var linkId = int.Parse(match.Groups["id"].Value);
-            var linkType = match.Groups["type"].Value;
+            //var fileManager = FileManager.Instance;
+            //var tabController = new TabController();
+            var linkType = regularExpression.Groups["type"].Value.ToLower();
+            var linkId = int.Parse(regularExpression.Groups["id"].Value);
+            var urlParams = regularExpression.Groups["params"].Value ?? "";
 
-            if (linkType.ToLower() == "page")
-            {
-                return ResolvePageLink(linkId, value);
-            }
-            return ResolveFileLink(linkId, value);
+            // old
+
+            //var match = Regex.Match(value, @"(?<type>.+)\:(?<id>\d+)");
+            //if (!match.Success)
+            //    return value;
+
+            //var linkId = int.Parse(match.Groups["id"].Value);
+            //var linkType = match.Groups["type"].Value;
+
+            var result = linkType== "page"
+                ? ResolvePageLink(linkId, value)
+                : ResolveFileLink(linkId, value);
+
+            return result + ((result == value) ? "" : urlParams);
         }
 
         private string ResolveFileLink(int linkId, string defaultValue)
@@ -116,14 +121,42 @@ namespace ToSic.SexyContent.EAV.Implementation.ValueConverter
             #endregion
         }
 
-        private string ResolvePageLink(int linkId, string defaultValue)
+        private string ResolvePageLink(int id, string defaultValue)
         {
             var tabController = new TabController();
-            var tabInfo = tabController.GetTab(linkId);
-            if (tabInfo == null)
-                return defaultValue;
+            // 2016-03-03 before issue #710
+            //var tabInfo = tabController.GetTab(linkId);
+            //if (tabInfo == null)
+            //    return defaultValue;
 
-            return tabInfo.TabPath;
+            //return tabInfo.TabPath;
+            //ownerPortalSettings = SxcInstance.
+            var tabInfo = tabController.GetTab(id);
+            if (tabInfo == null) return defaultValue;
+
+            var portalSettings = PortalSettings.Current;
+
+            // Get full PortalSettings (with portal alias) if module sharing is active
+            if (PortalSettings.Current != null && PortalSettings.Current.PortalId != tabInfo.PortalID)
+            //{
+                portalSettings = new PortalSettings(tabInfo.PortalID); 
+                //var portalAlias = ownerPortalSettings.PrimaryAlias ?? TestablePortalAliasController.Instance.GetPortalAliasesByPortalId(tabInfo.PortalID).First();
+                //portalSettings = new PortalSettings(id, portalAlias);
+            //}
+            if(portalSettings == null) return defaultValue;
+
+            // var tabInfo = tabController.GetTab(id, portalSettings.PortalId, false);
+            // if (tabInfo == null) return defaultValue;
+            if (tabInfo.CultureCode != "" && tabInfo.CultureCode != PortalSettings.Current.CultureCode)
+            {
+                var cultureTabInfo = tabController.GetTabByCulture(tabInfo.TabID, tabInfo.PortalID, LocaleController.Instance.GetLocale(PortalSettings.Current.CultureCode));
+
+                if (cultureTabInfo != null)
+                    tabInfo = cultureTabInfo;
+            }
+
+            // Exception in AdvancedURLProvider because ownerPortalSettings.PortalAlias is null
+            return Globals.NavigateURL(tabInfo.TabID, portalSettings, "", new string[] {});// + urlParams;
         }
     }
 
