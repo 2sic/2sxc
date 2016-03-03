@@ -96,13 +96,13 @@
     </AttributeSet>
     <AttributeSet StaticName="|Config ToSic.Eav.DataSources.OwnerFilter" Name="|Config ToSic.Eav.DataSources.OwnerFilter" Description="to configure the owner-filter" Scope="System" AlwaysShareConfiguration="true">
       <Attributes>
-        <Attribute StaticName="UserId" Type="String" IsTitle="true">
+        <Attribute StaticName="IdentityCode" Type="String" IsTitle="true">
           <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@All" AttributeSetName="@All" EntityGUID="1fbb8425-c34d-4056-bd5d-4596debef5aa" KeyNumber="3000">
-            <Value Key="Name" Value="UserId" Type="String" />
-            <Value Key="Notes" Value="&lt;p&gt;The&amp;nbsp;identifier of the user - in DNN it could be the token [User:Username]. Learn more on &lt;a href=&quot;//2sxc.org/help?tag=datasource-filter-owner&quot; target=&quot;_blank&quot;&gt;2sxc.org/help?tag=datasource-filter-owner&lt;/a&gt;&lt;/p&gt;" Type="String" />
+            <Value Key="Name" Value="Identity Code" Type="String" />
+            <Value Key="Notes" Value="&lt;p&gt;The&amp;nbsp;identifier of the user - in DNN it could be the sequence 'dnn:userid=[User:UserId]'. Learn more on &lt;a href=&quot;//2sxc.org/help?tag=datasource-filter-owner&quot; target=&quot;_blank&quot;&gt;2sxc.org/help?tag=datasource-filter-owner&lt;/a&gt;&lt;/p&gt;" Type="String" />
             <Value Key="VisibleInEditUI" Value="True" Type="Boolean" />
             <Value Key="Required" Value="False" Type="Boolean" />
-            <Value Key="DefaultValue" Value="[User:Username]" Type="String" />
+            <Value Key="DefaultValue" Value="dnn:userid=[User:UserId]" Type="String" />
             <Value Key="Disabled" Value="False" Type="Boolean" />
             <Value Key="InputType" Value="string-default" Type="String" />
             <Value Key="ValidationRegExJavaScript" Value="" Type="String" />
