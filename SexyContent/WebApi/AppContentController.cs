@@ -26,7 +26,7 @@ namespace ToSic.SexyContent.WebApi
 	// [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
 	public class AppContentController : SxcApiController
 	{
-	    private Eav.WebApi.EntitiesController _entitiesController;
+	    private EntitiesController _entitiesController;
 
 		public AppContentController()
 		{
@@ -38,7 +38,9 @@ namespace ToSic.SexyContent.WebApi
 	    private void InitEavAndSerializer()
 	    {
             // Improve the serializer so it's aware of the 2sxc-context (module, portal etc.)
-            _entitiesController = new Eav.WebApi.EntitiesController(App.AppId);
+            _entitiesController = new EntitiesController(App.AppId);
+            _entitiesController.SetUser(Environment.Dnn7.UserIdentity.CurrentUserIdentityToken);
+
             ((Serializer)_entitiesController.Serializer).Sxc = SxcContext;	        
 	    }
 
@@ -59,10 +61,10 @@ namespace ToSic.SexyContent.WebApi
         /// </summary>
         /// <param name="contentType"></param>
         /// <param name="grant"></param>
-	    private void PerformSecurityCheck(string contentType, PermissionGrant grant, bool autoAllowAdmin = false)
+	    private void PerformSecurityCheck(string contentType, PermissionGrant grant, bool autoAllowAdmin = false, IEntity specificItem = null)
 	    {
             // Check if we can find this content-type
-            var ctc = new Eav.WebApi.ContentTypeController();
+            var ctc = new ContentTypeController();
             ctc.SetAppIdAndUser(App.AppId);
             // var source = InitialDS;
             var cache = DataSource.GetCache(null, App.AppId);
@@ -159,8 +161,10 @@ namespace ToSic.SexyContent.WebApi
             var cleanedNewItem = CreateEntityDictionary(contentType, newContentItem);
 
 	        // Get user name/id when creating, would be important if one day checking for author
-	        var x = Dnn.User.UserID;
-	        var userName = (x == -1) ? "Anonymous" : "dnn:id=" + x;
+	        //var x = Dnn.User.UserID;
+	        //var userName = (x == -1) ? "Anonymous" : "dnn:id=" + x;
+
+	        var userName = Environment.Dnn7.UserIdentity.CurrentUserIdentityToken;
 
             // try to create
             App.Data.Create(contentType, cleanedNewItem, userName); // full version, with "who did it" for the log entry
@@ -299,10 +303,14 @@ namespace ToSic.SexyContent.WebApi
         {
             InitEavAndSerializer();
             // Now check standard create-permissions
-            PerformSecurityCheck(contentType, PermissionGrant.Update, true);
 
-            // Check that this ID is actually of this content-type, this throws an error if it's not the correct type
-            _entitiesController.GetOne(contentType, id);
+            // Check that this ID is actually of this content-type,
+            // this throws an error if it's not the correct type
+            IEntity itm = _entitiesController.GetEntityOrThrowError(contentType, id);
+
+
+            PerformSecurityCheck(contentType, PermissionGrant.Update, true, itm);
+
 
             // Convert to case-insensitive dictionary just to be safe!
             newContentItem = new Dictionary<string, object>(newContentItem, StringComparer.OrdinalIgnoreCase);

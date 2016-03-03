@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web.Http;
-using DotNetNuke.Modules.NavigationProvider;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav;
-using ToSic.Eav.DataSources;
 using ToSic.SexyContent.Serializers;
 using ToSic.SexyContent.WebApi;
 using System.Linq;
@@ -24,6 +22,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 		public EntitiesController(): base()
 		{
 			Eav.Configuration.SetConnectionString("SiteSqlServer");
+            entitiesController.SetUser(Environment.Dnn7.UserIdentity.CurrentUserIdentityToken);
 		}
 
 	    private void EnsureSerializerHasSxc()

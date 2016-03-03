@@ -168,7 +168,7 @@ namespace ToSic.SexyContent
 
             // Set Properties on ContentContext
             EavAppContext = EavDataController.Instance(zoneId, appId); // EavContext.Instance(zoneId, appId);
-            EavAppContext.UserName = (HttpContext.Current == null || HttpContext.Current.User == null) ? Settings.InternalUserName : HttpContext.Current.User.Identity.Name;
+            EavAppContext.UserName = SexyContent.Environment.Dnn7.UserIdentity.CurrentUserIdentityToken;// (HttpContext.Current == null || HttpContext.Current.User == null) ? Settings.InternalUserName : HttpContext.Current.User.Identity.Name;
 
 
 

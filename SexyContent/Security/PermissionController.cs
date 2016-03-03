@@ -148,7 +148,7 @@ namespace ToSic.SexyContent.Security
                 // check owner conditions
                 if (condition == _keyOwner)
                     // if it's an entity, possibly also check owner-permissions
-                    if (TargetItem != null && TargetItem.Owner == PortalSettings.Current.UserInfo.Username)
+                    if (TargetItem != null && TargetItem.Owner == Environment.Dnn7.UserIdentity.CurrentUserIdentityToken/* PortalSettings.Current.UserInfo.Username*/)
                         return true;
             }
             catch

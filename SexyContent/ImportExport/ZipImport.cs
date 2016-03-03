@@ -83,7 +83,7 @@ namespace ToSic.SexyContent.ImportExport
                                 {
                                     var fileContents = File.ReadAllText(Path.Combine(appDirectory, xmlFileName));
 	                                var doc = XDocument.Parse(fileContents);
-									var import = new XmlImport(PortalSettings.Current.DefaultLanguage, PortalSettings.Current.UserInfo.Username);
+									var import = new XmlImport(PortalSettings.Current.DefaultLanguage, Environment.Dnn7.UserIdentity.CurrentUserIdentityToken /*PortalSettings.Current.UserInfo.Username*/);
 
 									if (!import.IsCompatible(doc))
 										throw new Exception("The app / package is not compatible with this version of 2sxc.");

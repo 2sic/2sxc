@@ -20,6 +20,8 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
         public ContentImportController()
         {
             eavCtc = new Eav.WebApi.ContentImportController();
+            eavCtc.SetUser(Environment.Dnn7.UserIdentity.CurrentUserIdentityToken);
+
         }
 
 

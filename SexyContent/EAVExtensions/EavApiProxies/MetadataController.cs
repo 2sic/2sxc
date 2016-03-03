@@ -20,6 +20,8 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
         public MetadataController()
         {
             eavMeta = new Eav.WebApi.MetadataController();
+            eavMeta.SetUser(Environment.Dnn7.UserIdentity.CurrentUserIdentityToken);
+
             // eavMeta.GetAssignedEntities();
         }
 

@@ -19,7 +19,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 
 		public PipelineDesignerController()
 		{
-			var userName = PortalSettings.UserInfo.Username;
+			var userName = Environment.Dnn7.UserIdentity.CurrentUserIdentityToken/* PortalSettings.UserInfo.Username*/;
 			_controller = new Eav.WebApi.PipelineDesignerController(userName, "SiteSqlServer");
 		}
 

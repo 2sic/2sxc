@@ -63,7 +63,7 @@ namespace ToSic.SexyContent
                 if (languagesActive)
                     defaultLanguage = OwnerPS.DefaultLanguage;
                 Data.DefaultLanguage = defaultLanguage;
-                Data.CurrentUserName = OwnerPS.UserInfo.Username;
+                Data.CurrentUserName = Environment.Dnn7.UserIdentity.CurrentUserIdentityToken/*OwnerPS.UserInfo.Username*/;
             }
         }
 

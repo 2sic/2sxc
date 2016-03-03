@@ -39,7 +39,7 @@ namespace ToSic.SexyContent
             {
                 var xml = new StreamReader(importStream).ReadToEnd();
 	            var doc = XDocument.Parse(xml);
-                var import = new XmlImport(PortalSettings.Current.DefaultLanguage, PortalSettings.Current.UserInfo.Username);
+                var import = new XmlImport(PortalSettings.Current.DefaultLanguage, Environment.Dnn7.UserIdentity.CurrentUserIdentityToken/* PortalSettings.Current.UserInfo.Username*/);
 				success = import.ImportXml(ZoneId.Value, AppId.Value, doc);
                 messages = import.ImportLog;
             }
