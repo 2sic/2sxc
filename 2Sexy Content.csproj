@@ -250,10 +250,10 @@
     <Compile Include="SexyContent\DataSources\ConfigurationProvider.cs" />
     <Compile Include="SexyContent\DataSources\DnnSqlDataSource.cs" />
     <Compile Include="SexyContent\DataSources\DnnFormAndList.cs" />
-    <Compile Include="SexyContent\EAVExtensions\EavApiProxies\ContentExportController.cs" />
-    <Compile Include="SexyContent\EAVExtensions\EavApiProxies\ContentImportController.cs" />
-    <Compile Include="SexyContent\EAVExtensions\EavApiProxies\MetadataController.cs" />
-    <Compile Include="SexyContent\EAVExtensions\EavApiProxies\EntitiesController.cs" />
+    <Compile Include="WebApi\EavApiProxies\ContentExportController.cs" />
+    <Compile Include="WebApi\EavApiProxies\ContentImportController.cs" />
+    <Compile Include="WebApi\EavApiProxies\MetadataController.cs" />
+    <Compile Include="WebApi\EavApiProxies\EntitiesController.cs" />
     <Compile Include="SexyContent\EAV\FieldTemplates\EditorProvider.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
@@ -269,14 +269,14 @@
     <Compile Include="SexyContent\Internal\SecurityHelpers.cs" />
     <Compile Include="SexyContent\Internal\TemplateManager.cs" />
     <Compile Include="SexyContent\Internal\ZoneHelpers.cs" />
-    <Compile Include="SexyContent\ViewAPI\TemplateController.cs" />
+    <Compile Include="WebApi\ViewAPI\TemplateController.cs" />
     <Compile Include="SexyContent\ViewManager\TemplateEditor.cs" />
     <Compile Include="SexyContent\UnityConfig.cs" />
-    <Compile Include="SexyContent\WebApi\SystemController.cs" />
-    <Compile Include="SexyContent\WebApi\TemplateController.cs" />
-    <Compile Include="SexyContent\WebApi\ContentGroupController.cs" />
-    <Compile Include="SexyContent\EAVExtensions\EavApiProxies\ContentTypeController.cs" />
-    <Compile Include="SexyContent\WebApi\Dnn\HyperlinkController.cs" />
+    <Compile Include="WebApi\SystemController.cs" />
+    <Compile Include="WebApi\TemplateController.cs" />
+    <Compile Include="WebApi\ContentGroupController.cs" />
+    <Compile Include="WebApi\EavApiProxies\ContentTypeController.cs" />
+    <Compile Include="WebApi\Dnn\HyperlinkController.cs" />
     <Compile Include="SexyContent\EAV\Implementation\ValueConverter\SexyContentValueConverter.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\TokenReplaceEav.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\ValueProviderWrapperForPropertyAccess.cs" />
@@ -284,7 +284,7 @@
     <Compile Include="SexyContent\Security\PermissionGrant.cs" />
     <Compile Include="SexyContent\Serializers\Serializer.cs" />
     <Compile Include="SexyContent\SexyContentModuleUpgrade.cs" />
-    <Compile Include="SexyContent\EAVExtensions\EavApiProxies\PipelineDesignerController.cs" />
+    <Compile Include="WebApi\EavApiProxies\PipelineDesignerController.cs" />
     <Compile Include="SexyContent\DataSources\App.cs" />
     <Compile Include="SexyContent\DnnHelper.cs" />
     <Compile Include="SexyContent\SexyViewContentOrApp.cs">
@@ -314,7 +314,7 @@
     <Compile Include="SexyContent\DataSources\Tokens\ModulePropertyAccess.cs" />
     <Compile Include="SexyContent\DataSources\Tokens\QueryStringPropertyAccess.cs" />
     <Compile Include="SexyContent\DataSources\ViewDataSource.cs" />
-    <Compile Include="SexyContent\EAVExtensions\EavApiProxies\EntityPickerController.cs" />
+    <Compile Include="WebApi\EavApiProxies\EntityPickerController.cs" />
     <Compile Include="SexyContent\Element.cs" />
     <Compile Include="SexyContent\DynamicEntity.cs" />
     <Compile Include="SexyContent\Engines\EngineBase.cs" />
@@ -324,10 +324,10 @@
     <Compile Include="SexyContent\Engines\TokenEngine\AppPropertyAccess.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\DynamicEntityPropertyAccess.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\TokenEngine.cs" />
-    <Compile Include="SexyContent\EAVExtensions\EntityDecorator.cs" />
-    <Compile Include="SexyContent\EAVExtensions\EntityInContentGroup.cs" />
-    <Compile Include="SexyContent\EAVExtensions\IHasEditingData.cs" />
-    <Compile Include="SexyContent\WebApi\InstallerController.cs" />
+    <Compile Include="SexyContent\EAV\Extensions\EntityDecorator.cs" />
+    <Compile Include="SexyContent\EAV\Extensions\EntityInContentGroup.cs" />
+    <Compile Include="SexyContent\EAV\Extensions\IHasEditingData.cs" />
+    <Compile Include="WebApi\InstallerController.cs" />
     <Compile Include="SexyContent\IEditContentControl.cs" />
     <Compile Include="SexyContent\ImportExport\ExportImportMessage.cs" />
     <Compile Include="SexyContent\ImportExport\ImportExport.cs" />
@@ -338,9 +338,9 @@
     <Compile Include="SexyContent\ImportExport\ZipExport.cs" />
     <Compile Include="SexyContent\ImportExport\ZipImport.cs" />
     <Compile Include="SexyContent\TemplateManager.cs" />
-    <Compile Include="SexyContent\WebApi\AppQueryController.cs" />
-    <Compile Include="SexyContent\WebApi\AppContentController.cs" />
-    <Compile Include="SexyContent\WebApi\RouteMapper.cs" />
+    <Compile Include="WebApi\AppQueryController.cs" />
+    <Compile Include="WebApi\AppContentController.cs" />
+    <Compile Include="WebApi\RouteMapper.cs" />
     <Compile Include="SexyContent\Search\ISearchInfo.cs" />
     <Compile Include="SexyContent\Search\SearchController.cs" />
     <Compile Include="SexyContent\Search\SearchIndexException.cs" />
@@ -353,10 +353,10 @@
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="SexyContent\TemplateDefault.cs" />
-    <Compile Include="SexyContent\ViewAPI\ModuleController.cs" />
-    <Compile Include="SexyContent\WebApi\HttpRequestMessageExtensions.cs" />
-    <Compile Include="SexyContent\WebApi\SxcApiController.cs" />
-    <Compile Include="SexyContent\WebApi\AppApiControllerSelector.cs" />
+    <Compile Include="WebApi\ViewAPI\ModuleController.cs" />
+    <Compile Include="WebApi\HttpRequestMessageExtensions.cs" />
+    <Compile Include="WebApi\SxcApiController.cs" />
+    <Compile Include="WebApi\AppApiControllerSelector.cs" />
     <Compile Include="TemplateHelpGrid.ascx.cs">
       <DependentUpon>TemplateHelpGrid.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -493,6 +493,7 @@
     <Content Include="src\sxc-admin\services\apps-service.js" />
     <Content Include="src\sxc-admin\services\sxc-dialogs-service.js" />
     <Content Include="src\sxc-admin\services\templates-service.js" />
+    <Content Include="SqlDataProvider\08.03.02.SqlDataProvider" />
     <None Include="src\sxc-develop\source-editor\README.md" />
     <Content Include="src\sxc-develop\source-editor\toArray-filter.js" />
     <Content Include="src\sxc-admin\templates\edit.html" />
@@ -535,7 +536,7 @@
     <Content Include="Upgrade\07.03.03-03.xml" />
     <Content Include="Upgrade\08.00.04.xml" />
     <Content Include="Upgrade\08.01.00.xml" />
-    <Content Include="Upgrade\08.03.01.xml" />
+    <Content Include="Upgrade\08.03.02.xml" />
     <Content Include="View.ascx" />
     <Content Include="WebConfigTemplate.config" />
     <None Include="SqlDataProvider\01.00.01.SqlDataProvider" />
@@ -626,7 +627,6 @@
     <Content Include="Administration\App_LocalResources\WebApiHelp.ascx.resx" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="SexyContent\Statics\" />
     <Folder Include="Upgrade\Log\" />
   </ItemGroup>
   <ItemGroup>

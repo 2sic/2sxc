@@ -103,8 +103,8 @@ namespace ToSic.SexyContent
                         break;
                     case "08.03.00":
                         break;
-                    case "08.03.01":
-                        Version080301();
+                    case "08.03.02":
+                        Version080302();
                         break;
                 }
 
@@ -132,7 +132,7 @@ namespace ToSic.SexyContent
         internal static void FinishAbortedUpgrade()
         {
             // Maybe this list can somehow be extracted from the module manifest?
-            var upgradeVersionList = new[] { "07.00.00", "07.00.03", "07.02.00", "07.02.02", "07.03.00", "07.03.01", "07.03.02", "07.03.03", "07.03.04", "08.00.00", "08.00.01", "08.00.02", "08.00.03", "08.00.04", "08.00.05", "08.00.06", "08.00.07", "08.00.08", "08.00.09", "08.00.10", "08.00.11", "08.00.12", "08.01.00", "08.01.01", "08.01.02", "08.01.03", "08.02.00", "08.02.01", "08.02.02", "08.02.03", "08.03.00", "08.03.01" };
+            var upgradeVersionList = new[] { "07.00.00", "07.00.03", "07.02.00", "07.02.02", "07.03.00", "07.03.01", "07.03.02", "07.03.03", "07.03.04", "08.00.00", "08.00.01", "08.00.02", "08.00.03", "08.00.04", "08.00.05", "08.00.06", "08.00.07", "08.00.08", "08.00.09", "08.00.10", "08.00.11", "08.00.12", "08.01.00", "08.01.01", "08.01.02", "08.01.03", "08.02.00", "08.02.01", "08.02.02", "08.02.03", "08.03.00", "08.03.01", "08.03.02" };
 
             // Run upgrade again for all versions that do not have a corresponding logfile
             foreach (var upgradeVersion in upgradeVersionList)
@@ -688,20 +688,20 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
             RemoveModuleControls(new[] { "edittemplatefile" });
         }
 
-        private static void Version080301()
+        private static void Version080302()
         {
-            var userName = "System-ModuleUpgrade-080301";
+            var userName = "System-ModuleUpgrade-080302";
 
             // Add new content types and entities
             var xmlToImport =
-                File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/08.03.01.xml"));
+                File.ReadAllText(HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/08.03.02.xml"));
             var xmlImport = new XmlImport("en-US", userName, true);
             var success = xmlImport.ImportXml(Constants.DefaultZoneId, Constants.MetaDataAppId, XDocument.Parse(xmlToImport), true);
 
             if (!success)
             {
                 var messages = String.Join("\r\n- ", xmlImport.ImportLog.Select(p => p.Message).ToArray());
-                throw new Exception("The 2sxc module upgrade to 08.03.01 failed: " + messages);
+                throw new Exception("The 2sxc module upgrade to 08.03.02 failed: " + messages);
             }
 
             var desktopModuleNames = new[] { "2sxc", "2sxc-app" };
