@@ -12,7 +12,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
         public IEnumerable<dynamic> GetAvailableEntities(int appId, string contentTypeName = null,
             int? dimensionId = null)
         {
-			return new Eav.WebApi.EntityPickerController().GetAvailableEntities(App.AppId, contentTypeName, dimensionId);
+			return new Eav.WebApi.EntityPickerController().GetAvailableEntities(appId, contentTypeName, dimensionId);
         }
     }
 }
