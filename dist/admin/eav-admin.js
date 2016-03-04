@@ -10,6 +10,7 @@
 }());
 (function () {
 
+    contentExportController.$inject = ["appId", "contentType", "contentExportService", "eavAdminDialogs", "eavConfig", "languages", "$modalInstance", "$filter", "$translate"];
     angular.module("ContentExportApp")
         .controller("ContentExport", contentExportController);
 
@@ -119,10 +120,10 @@
             $modalInstance.dismiss("cancel");
         };
     }
-    contentExportController.$inject = ["appId", "contentType", "contentExportService", "eavAdminDialogs", "eavConfig", "languages", "$modalInstance", "$filter", "$translate"];
 }());
 (function () {
 
+    contentExportService.$inject = ["$http", "eavConfig"];
     angular.module("ContentExportApp")
          .factory("contentExportService", contentExportService);
 
@@ -138,7 +139,6 @@
             window.open(url + "?appId=" + args.AppId + "&language=" + args.Language + "&defaultLanguage=" + args.DefaultLanguage + "&contentType=" + args.ContentType + "&recordExport=" + args.RecordExport + "&resourcesReferences=" + args.ResourcesReferences + "&languageReferences=" + args.LanguageReferences, "_self", "");
         }
     }
-    contentExportService.$inject = ["$http", "eavConfig"];
 }());
 (function () {
     angular.module("ContentFormlyTypes", [
@@ -192,6 +192,7 @@
 }());
 (function () {
 
+    contentImportController.$inject = ["appId", "contentType", "contentImportService", "eavAdminDialogs", "eavConfig", "languages", "debugState", "$modalInstance", "$filter", "$translate"];
     angular.module("ContentImportApp")
         .controller("ContentImport", contentImportController);
 
@@ -309,10 +310,10 @@
             $modalInstance.dismiss("cancel");
         };
     }
-    contentImportController.$inject = ["appId", "contentType", "contentImportService", "eavAdminDialogs", "eavConfig", "languages", "debugState", "$modalInstance", "$filter", "$translate"];
 }());
 (function () {
 
+    contentImportService.$inject = ["$http"];
     angular.module("ContentImportApp")
          .factory("contentImportService", contentImportService);
 
@@ -332,10 +333,10 @@
             return $http.post("eav/ContentImport/ImportContent", { AppId: args.AppId, DefaultLanguage: args.DefaultLanguage, ContentType: args.ContentType, ContentBase64: args.File.base64, ResourcesReferences: args.ResourcesReferences, ClearEntities: args.ClearEntities });
         }
     }
-    contentImportService.$inject = ["$http"];
 }());
 (function () { 
 
+    EditContentItemController.$inject = ["mode", "entityId", "contentType", "eavAdminDialogs", "$modalInstance"];
     angular.module("ContentEditApp", [
         "EavServices",
         "EavAdminUi"
@@ -356,12 +357,12 @@
 
         vm.close = function () { $modalInstance.dismiss("cancel"); };
     }
-    EditContentItemController.$inject = ["mode", "entityId", "contentType", "eavAdminDialogs", "$modalInstance"];
 
 } ());
 (function () {
 	'use strict';
 
+	contentItemsListController.$inject = ["contentItemsSvc", "eavConfig", "appId", "contentType", "eavAdminDialogs", "debugState", "$modalInstance", "$q", "$modalStack"];
 	angular.module("ContentItemsAppAgnostic", [
         "EavConfiguration",
         "EavAdminUi",
@@ -616,11 +617,11 @@
 			$modalInstance.dismiss("cancel");
 		}
 	}
-	contentItemsListController.$inject = ["contentItemsSvc", "eavConfig", "appId", "contentType", "eavAdminDialogs", "debugState", "$modalInstance", "$q", "$modalStack"];
 
 }());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
 
+    ContentItemsListController.$inject = ["contentItemsSvc", "eavConfig", "appId", "contentType", "eavAdminDialogs", "debugState", "$modalInstance"];
     angular.module("ContentItemsApp", [
         "EavConfiguration",
         "EavAdminUi",
@@ -678,11 +679,12 @@
         vm.close = function () { $modalInstance.dismiss("cancel"); };
 
     }
-    ContentItemsListController.$inject = ["contentItemsSvc", "eavConfig", "appId", "contentType", "eavAdminDialogs", "debugState", "$modalInstance"];
 
 } ());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
 
+    HistoryController.$inject = ["appId", "entityId", "historySvc", "$modalInstance", "$modal"];
+    HistoryDetailsController.$inject = ["changeId", "dataSvc", "$modalInstance"];
     angular.module("HistoryApp", [
         "EavServices",
         "EavConfiguration",
@@ -713,7 +715,6 @@
             });
         };
     }
-    HistoryController.$inject = ["appId", "entityId", "historySvc", "$modalInstance", "$modal"];
 
     function HistoryDetailsController(changeId, dataSvc, $modalInstance) {
         var vm = this;
@@ -728,7 +729,6 @@
 
         vm.close = function () { $modalInstance.dismiss("cancel"); };
     }
-    HistoryDetailsController.$inject = ["changeId", "dataSvc", "$modalInstance"];
 } ());
 // This is the main declaration for the app ContentTypesApp
 (function () {
@@ -746,6 +746,7 @@
 }());
 (function() {
 
+    contentTypeEditController.$inject = ["appId", "item", "contentTypeSvc", "debugState", "$translate", "$modalInstance"];
     angular.module("ContentTypesApp")
         .controller("Edit", contentTypeEditController);
 
@@ -771,11 +772,11 @@
             $modalInstance.dismiss("cancel");
         };
     }
-    contentTypeEditController.$inject = ["appId", "item", "contentTypeSvc", "debugState", "$translate", "$modalInstance"];
 
 }());
 (function () {
     /*jshint laxbreak:true */
+    contentTypeFieldEditController.$inject = ["appId", "svc", "item", "$filter", "$modalInstance"];
     angular.module("ContentTypesApp")
         .controller("FieldEdit", contentTypeFieldEditController)
     ;
@@ -802,10 +803,10 @@
 
         vm.close = function() { $modalInstance.dismiss("cancel"); };
     }
-    contentTypeFieldEditController.$inject = ["appId", "svc", "item", "$filter", "$modalInstance"];
 }());
 (function () {
     /*jshint laxbreak:true */
+    contentTypeFieldsAddController.$inject = ["appId", "svc", "$filter", "$modalInstance"];
     angular.module("ContentTypesApp")
         .controller("FieldsAdd", contentTypeFieldsAddController)
     ;
@@ -855,10 +856,10 @@
 
         vm.close = function() { $modalInstance.dismiss("cancel"); };
     }
-    contentTypeFieldsAddController.$inject = ["appId", "svc", "$filter", "$modalInstance"];
 }());
 /*jshint laxbreak:true */
 (function () {
+    contentTypeFieldListController.$inject = ["appId", "contentTypeFieldSvc", "contentType", "$modalInstance", "$modal", "eavAdminDialogs", "$filter", "$translate", "eavConfig"];
     angular.module("ContentTypesApp")
         .controller("FieldList", contentTypeFieldListController)
     ;
@@ -954,11 +955,11 @@
                 };      
         };
     }
-    contentTypeFieldListController.$inject = ["appId", "contentTypeFieldSvc", "contentType", "$modalInstance", "$modal", "eavAdminDialogs", "$filter", "$translate", "eavConfig"];
 
 }());
 (function() {
 
+    contentTypeListController.$inject = ["contentTypeSvc", "eavAdminDialogs", "appId", "debugState", "$translate"];
     angular.module("ContentTypesApp")
         .controller("List", contentTypeListController);
 
@@ -1002,10 +1003,6 @@
             eavAdminDialogs.openContentItems(svc.appId, item.StaticName, item.Id, vm.refresh);
         };
 
-        vm.addItem = function(contentType) {
-            eavAdminDialogs.openItemNew(contentType, vm.refresh);
-        };
-
 
         vm.liveEval = function admin() {
             $translate("General.Questions.SystemInput").then(function (msg) {
@@ -1042,7 +1039,6 @@
         };
 
     }
-    contentTypeListController.$inject = ["contentTypeSvc", "eavAdminDialogs", "appId", "debugState", "$translate"];
 
 
 }());
@@ -1151,7 +1147,7 @@ angular.module('eavTemplates', []).run(['$templateCache', function($templateCach
 
 
   $templateCache.put('content-types/content-types.html',
-    "<div ng-controller=\"List as vm\" ng-click=vm.debug.autoEnableAsNeeded($event)><div class=modal-header><h3 class=modal-title translate=ContentTypes.Title></h3></div><div class=modal-body><button title=\"{{ 'General.Buttons.Add' | translate }}\" type=button class=\"btn btn-primary btn-square\" ng-click=vm.edit()><i icon=plus></i></button> <span class=btn-group ng-if=vm.debug.on><button title=\"{{ 'General.Buttons.Refresh' | translate }}\" type=button class=\"btn btn-warning btn-square\" ng-click=vm.refresh()><i icon=repeat></i></button> <button title=todo type=button class=\"btn btn-warning btn-icon\" ng-click=vm.createGhost()><i class=icon-ghost></i></button> <button title=\"{{ 'ContentTypes.Buttons.ChangeScope' | translate }}\" type=button class=\"btn btn-warning btn-square\" ng-click=vm.changeScope()><i icon=record></i></button> <button title=\"{{ 'General.Buttons.System' | translate }}\" type=button class=\"btn btn-warning btn-square\" ng-click=vm.liveEval()><i icon=flash></i></button></span><table class=\"table table-hover\" style=\"table-layout: fixed; width: 100%\"><thead><tr><th translate=ContentTypes.TypesTable.Name style=\"width: 50%\"></th><th class=mini-btn-1></th><th translate=ContentTypes.TypesTable.Description style=\"width: 50%\"></th><th translate=ContentTypes.TypesTable.Fields class=mini-btn-2></th><th translate=ContentTypes.TypesTable.Actions class=mini-btn-3></th><th class=mini-btn-1></th></tr></thead><tbody><tr ng-if=vm.items.isLoaded ng-repeat=\"item in vm.items | orderBy:'Name'\" class=clickable-row ng-click=vm.editItems(item)><td class=clickable><span class=\"text-nowrap hide-overflow-text\" style=\"max-width: 400px\" tooltip={{item.Name}}>{{item.Name}}</span></td><td class=clickable style=\"text-align: right\"><div class=\"badge pull-right badge-primary hover-pair\" stop-event=click ng-click=vm.addItem(item.StaticName)><span class=hover-default>{{item.Items}}</span><span class=\"hover-hover icon-plus\"></span></div></td><td class=clickable><div class=\"text-nowrap hide-overflow-text\" style=\"max-width: 500px\" tooltip={{item.Description}}>{{item.Description}}</div></td><td stop-event=click><button ng-if=!item.UsesSharedDef type=button class=\"btn btn-xs\" style=\"width: 60px\" ng-click=vm.editFields(item)><i class=icon-fields></i>&nbsp;<span style=\"width: 22px; text-align: right\">{{item.Fields}}</span></button> <button ng-if=item.UsesSharedDef tooltip=\"{{ 'ContentTypes.Messages.SharedDefinition' | translate:item }}\" type=button class=\"btn btn-default btn-xs\" style=\"width: 60px\"><i class=icon-ghost></i>&nbsp;<span style=\"width: 22px; text-align: right\">{{item.Fields}}</span></button></td><td class=text-nowrap stop-event=click><span class=btn-group><button tooltip=\"{{ 'General.Buttons.Rename' | translate }} - {{  'ContentTypes.Messages.Type' + (item.UsesSharedDef ? 'Shared' : 'Own')  | translate:item }}\" type=button class=\"btn btn-xs btn-square\" ng-click=vm.edit(item)><i icon=\"heart{{ (item.UsesSharedDef ? '-empty' : '') }}\"></i></button> <button tooltip=\"{{ 'ContentTypes.Buttons.Export' | translate }}\" type=button class=\"btn btn-xs btn-square\" ng-click=vm.openExport(item)><i icon=export></i></button> <button tooltip=\"{{ 'ContentTypes.Buttons.Import' | translate }}\" type=button class=\"btn btn-xs btn-square\" ng-click=vm.openImport(item)><i icon=import></i></button> <button type=button class=\"btn btn-xs btn-square\" ng-click=vm.permissions(item) ng-if=vm.isGuid(item.StaticName)><i icon=user></i></button></span></td><td stop-event=click><button icon=remove type=button class=\"btn btn-xs\" ng-click=vm.tryToDelete(item)></button></td></tr><tr ng-if=!vm.items.length><td colspan=100>{{ 'General.Messages.Loading' | translate }} / {{ 'General.Messages.NothingFound' | translate }}</td></tr></tbody></table><show-debug-availability class=pull-right></show-debug-availability></div><div ng-if=vm.debug.on><h3>Notes / Debug / ToDo</h3><ol><li>get validators to work on all dialogs</li></ol></div></div>"
+    "<div ng-controller=\"List as vm\" ng-click=vm.debug.autoEnableAsNeeded($event)><div class=modal-header><h3 class=modal-title translate=ContentTypes.Title></h3></div><div class=modal-body><button title=\"{{ 'General.Buttons.Add' | translate }}\" type=button class=\"btn btn-primary btn-square\" ng-click=vm.edit()><i icon=plus></i></button> <span class=btn-group ng-if=vm.debug.on><button title=\"{{ 'General.Buttons.Refresh' | translate }}\" type=button class=\"btn btn-warning btn-square\" ng-click=vm.refresh()><i icon=repeat></i></button> <button title=todo type=button class=\"btn btn-warning btn-icon\" ng-click=vm.createGhost()><i class=icon-ghost></i></button> <button title=\"{{ 'ContentTypes.Buttons.ChangeScope' | translate }}\" type=button class=\"btn btn-warning btn-square\" ng-click=vm.changeScope()><i icon=record></i></button> <button title=\"{{ 'General.Buttons.System' | translate }}\" type=button class=\"btn btn-warning btn-square\" ng-click=vm.liveEval()><i icon=flash></i></button></span><table class=\"table table-hover\" style=\"table-layout: fixed; width: 100%\"><thead><tr><th translate=ContentTypes.TypesTable.Name style=\"width: 50%\"></th><th class=mini-btn-1></th><th translate=ContentTypes.TypesTable.Description style=\"width: 50%\"></th><th translate=ContentTypes.TypesTable.Fields class=mini-btn-2></th><th translate=ContentTypes.TypesTable.Actions class=mini-btn-3></th><th class=mini-btn-1></th></tr></thead><tbody><tr ng-if=vm.items.isLoaded ng-repeat=\"item in vm.items | orderBy:'Name'\" class=clickable-row ng-click=vm.editItems(item)><td class=clickable><span class=\"text-nowrap hide-overflow-text\" style=\"max-width: 400px\" tooltip={{item.Name}}>{{item.Name}}</span></td><td class=clickable style=\"text-align: right\"><div class=\"badge pull-right badge-primary\">{{item.Items}}</div></td><td class=clickable><div class=\"text-nowrap hide-overflow-text\" style=\"max-width: 500px\" tooltip={{item.Description}}>{{item.Description}}</div></td><td stop-event=click><button ng-if=!item.UsesSharedDef type=button class=\"btn btn-xs\" style=\"width: 60px\" ng-click=vm.editFields(item)><i class=icon-fields></i>&nbsp;<span style=\"width: 22px; text-align: right\">{{item.Fields}}</span></button> <button ng-if=item.UsesSharedDef tooltip=\"{{ 'ContentTypes.Messages.SharedDefinition' | translate:item }}\" type=button class=\"btn btn-default btn-xs\" style=\"width: 60px\"><i class=icon-ghost></i>&nbsp;<span style=\"width: 22px; text-align: right\">{{item.Fields}}</span></button></td><td class=text-nowrap stop-event=click><span class=btn-group><button tooltip=\"{{ 'General.Buttons.Rename' | translate }} - {{  'ContentTypes.Messages.Type' + (item.UsesSharedDef ? 'Shared' : 'Own')  | translate:item }}\" type=button class=\"btn btn-xs btn-square\" ng-click=vm.edit(item)><i icon=\"heart{{ (item.UsesSharedDef ? '-empty' : '') }}\"></i></button> <button tooltip=\"{{ 'ContentTypes.Buttons.Export' | translate }}\" type=button class=\"btn btn-xs btn-square\" ng-click=vm.openExport(item)><i icon=export></i></button> <button tooltip=\"{{ 'ContentTypes.Buttons.Import' | translate }}\" type=button class=\"btn btn-xs btn-square\" ng-click=vm.openImport(item)><i icon=import></i></button> <button type=button class=\"btn btn-xs btn-square\" ng-click=vm.permissions(item) ng-if=vm.isGuid(item.StaticName)><i icon=user></i></button></span></td><td stop-event=click><button icon=remove type=button class=\"btn btn-xs\" ng-click=vm.tryToDelete(item)></button></td></tr><tr ng-if=!vm.items.length><td colspan=100>{{ 'General.Messages.Loading' | translate }} / {{ 'General.Messages.NothingFound' | translate }}</td></tr></tbody></table><show-debug-availability class=pull-right></show-debug-availability></div><div ng-if=vm.debug.on><h3>Notes / Debug / ToDo</h3><ol><li>get validators to work on all dialogs</li></ol></div></div>"
   );
 
 
@@ -1178,6 +1174,7 @@ angular.module('eavTemplates', []).run(['$templateCache', function($templateCach
 
 (function () { 
 
+    permissionListController.$inject = ["permissionsSvc", "eavAdminDialogs", "eavConfig", "appId", "targetGuid", "$modalInstance"];
     angular.module("PermissionsApp", [
         "EavServices",
         "EavConfiguration",
@@ -1209,7 +1206,6 @@ angular.module('eavTemplates', []).run(['$templateCache', function($templateCach
             $modalInstance.dismiss("cancel");
         };
     }
-    permissionListController.$inject = ["permissionsSvc", "eavAdminDialogs", "eavConfig", "appId", "targetGuid", "$modalInstance"];
 
 } ());
 angular.module("PipelineDesigner", [

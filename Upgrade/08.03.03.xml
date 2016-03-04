@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<SexyContent FileVersion="07.00.00" MinimumRequiredVersion="07.00.00" ModuleVersion="08.03.02" ExportDate="2016-03-04T09:56:25.2553297+01:00">
+  <Header>
+    <Language Default="en-US" />
+    <Dimensions />
+  </Header>
+  <AttributeSets>
+    <AttributeSet StaticName="PermissionConfiguration" Name="PermissionConfiguration" Description="For configuring permissions." Scope="System" AlwaysShareConfiguration="true">
+      <Attributes>
+        <Attribute StaticName="Condition" Type="String" IsTitle="false">
+          <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@String" AttributeSetName="@String" EntityGUID="118f46a3-f732-4c6f-beae-9a28d23841de" KeyNumber="309">
+            <Value Key="DropdownValues" Value="Please Select:&#xD;&#xA;SecurityAccessLevel.Anonymous&#xD;&#xA;SecurityAccessLevel.View&#xD;&#xA;SecurityAccessLevel.Edit&#xD;&#xA;SecurityAccessLevel.Admin&#xD;&#xA;SecurityAccessLevel.Host&#xD;&#xA;SecurityAccessLevel.ControlPanel&#xD;&#xA;SecurityAccessLevel.SkinObject&#xD;&#xA;SecurityAccessLevel.ViewPermissions&#xD;&#xA;Author / Creator of a Content-Item:Owner" Type="String" />
+          </Entity>
+        </Attribute>
+      </Attributes>
+    </AttributeSet>
+  </AttributeSets>
+  <Entities />
+  <PortalFiles>
+  </PortalFiles>
+  <PortalFolders>
+  </PortalFolders>
+</SexyContent>
