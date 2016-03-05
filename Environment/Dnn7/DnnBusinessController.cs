@@ -39,7 +39,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         /// <returns></returns>
         public string UpgradeModule(string version)
         {
-            return SexyContentModuleUpgrade.UpgradeModule(version);
+            return ModuleUpgrade.UpgradeModule(version);
         }
 
         #endregion

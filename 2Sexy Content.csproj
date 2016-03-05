@@ -283,7 +283,7 @@
     <Compile Include="SexyContent\Security\PermissionController.cs" />
     <Compile Include="SexyContent\Security\PermissionGrant.cs" />
     <Compile Include="SexyContent\Serializers\Serializer.cs" />
-    <Compile Include="SexyContent\SexyContentModuleUpgrade.cs" />
+    <Compile Include="SexyContent\ModuleUpgrade.cs" />
     <Compile Include="WebApi\EavApiProxies\PipelineDesignerController.cs" />
     <Compile Include="SexyContent\DataSources\App.cs" />
     <Compile Include="SexyContent\DnnHelper.cs" />

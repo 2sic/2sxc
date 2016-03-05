@@ -314,124 +314,17 @@ namespace ToSic.SexyContent
         #endregion
 
 
-        // all removed...commented...
-        #region JavaScript stuff to ensure client functionality
-        //   private object InfosForTheClientScripts()
+        // todo: move outside of this system...
+        //protected string CheckUpgradeMessage()
         //{
-        //    var hasContent = AppId.HasValue && Template != null && ContentGroup.Exists;
+        //    // Upgrade success check - show message if upgrade did not run successfully
+        //    if (SexyContentModuleUpgrade.UpgradeComplete) return null;// || !UserInfo.IsSuperUser) return true;
 
-        //    // minor workaround because the settings in the cache are wrong after using a page template
-        //    var tempVisibleStatus = DnnStuffToRefactor.TryToGetReliableSetting(ModuleConfiguration,
-        //        ToSic.SexyContent.Settings.SettingsShowTemplateChooser);
-        //    var templateChooserVisible = bool.Parse(tempVisibleStatus ?? "true");
-
-        //    var languages =
-        //        ZoneHelpers.GetCulturesWithActiveState(PortalId, ZoneId.Value)
-        //            .Where(c => c.Active)
-        //            .Select(c => new {key = c.Code.ToLower(), name = c.Text});
-
-        //    var priLang = PortalSettings.DefaultLanguage.ToLower(); // primary language 
-
-        //    // for now, don't filter by existing languages, this causes side-effects in many cases. 
-        //    //if (!languages.Where(l => l.key == priLang).Any())
-        //    //    priLang = "";
-
-        //    var clientInfos = new
-        //    {
-        //        moduleId = ModuleId,
-        //        manage = new
-        //        {
-        //            isEditMode = UserMayEditThisModule,
-        //            templateChooserVisible,
-        //            hasContent,
-        //            isContentApp = IsContentApp,
-        //            zoneId = ZoneId ?? 0,
-        //            appId = AppId,
-        //            isList = AppId.HasValue && ContentGroup.Content.Count > 1,
-        //            templateId = Template?.TemplateId,
-        //            contentTypeId = Template?.ContentTypeStaticName ?? "",
-        //            config = new
-        //            {
-        //                portalId = PortalId,
-        //                tabId = TabId,
-        //                moduleId = ModuleId,
-        //                contentGroupId = AppId.HasValue ? ContentGroup.ContentGroupGuid : (Guid?) null,
-        //                dialogUrl = Globals.NavigateURL(TabId),
-        //                returnUrl = Request.RawUrl,
-        //                appPath = AppId.HasValue ? SxcContext.App.Path + "/" : null,
-        //                // 2016-02-27 2dm - seems unused
-        //                //cultureDimension = AppId.HasValue ? Sexy.GetCurrentLanguageID() : new int?(),
-        //                isList = Template?.UseForList ?? false,
-        //                version = ToSic.SexyContent.Settings.Version.ToString() // SexyContent.Version.ToString()
-        //            },
-        //            user = new
-        //            {
-        //                canDesign = SecurityHelpers.IsInSexyContentDesignersGroup(UserInfo),
-        //                // will be true for admins or for people in the designers-group
-        //                canDevelop = UserInfo.IsSuperUser // will be true for host-users, false for all others
-        //            },
-        //            applicationRoot = ResolveUrl("~"),
-        //            lang = PortalSettings.CultureCode.ToLower(),
-        //            //System.Threading.Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName.ToLower(),
-        //            langPrimary = priLang,
-        //            languages
-        //        }
-        //    };
-        //    return clientInfos;
-        //}
-
-        //private void RegisterClientDependencies()
-        //{
-        //    var root = "~/desktopmodules/tosic_sexycontent/";
-        //    var ext = string.IsNullOrEmpty(Request.QueryString["debug"]) ? ".min.js" : ".js";
-
-        //    // add edit-mode CSS
-        //    ClientResourceManager.RegisterStyleSheet(Page, root + "dist/inpage/inpage.min.css");
-
-        //    // ToDo: Move these RegisterScripts to JS to prevent including AngularJS twice (from other modules)
-        //    ClientResourceManager.RegisterScript(Page, root + "js/angularjs/angular.min.js", 80);
-
-        //    // New: multi-language stuff
-        //    ClientResourceManager.RegisterScript(Page, root + "dist/lib/i18n/set.min.js");
-
-        //    ClientResourceManager.RegisterScript(Page, root + "js/2sxc.api" + ext, 90);
-        //    ClientResourceManager.RegisterScript(Page, root + "dist/inpage/inpage" + ext, 91);
-
-        //    ClientResourceManager.RegisterScript(Page, root + "js/angularjs/2sxc4ng" + ext, 93);
-        //    ClientResourceManager.RegisterScript(Page, root + "dist/config/config" + ext, 93);
-        //}
-
-        ///// <summary>
-        ///// Add data-2sxc-globals Attribute to the DNN ModuleHost
-        ///// </summary>
-        //private object RegisterGlobalsAttribute()
-        //{
-        //    var globData = new
-        //    {
-        //        ModuleContext = new
-        //        {
-        //            ModuleContext.PortalId,
-        //            ModuleContext.TabId,
-        //            ModuleContext.ModuleId,
-        //            AppId
-        //        },
-        //        PortalSettings.ActiveTab.FullUrl,
-        //        PortalRoot = (Request.IsSecureConnection ? "https://" : "http://") + PortalAlias.HTTPAlias + "/",
-        //        DefaultLanguageID =
-        //            SxcContext != null
-        //                ? SxcContext.EavAppContext.Dimensions.GetLanguageId(PortalSettings.DefaultLanguage)
-        //                : null
-        //    };
-        //    return globData;
-        //}
-        #endregion
-
-        // 2016-03-01 2dm - moved this to page_load for uniformity...
-        //protected void Page_Init(object sender, EventArgs e)
-        //{
-        //    base.Page_Init(sender, e);
-        //    if ((UserMayEditThisModule || this is SexyControlAdminBaseWillSoonBeRemoved) && Parent is ModuleHost)
-        //        RegisterGlobalsAttribute();
+        //    return SexyContentModuleUpgrade.IsUpgradeRunning
+        //        ? "It looks like a 2sxc upgrade is currently running.Please wait for the operation to complete(the upgrade may take a few minutes)."
+        //        : UserInfo.IsSuperUser
+        //            ? "Module upgrade did not complete (<a href='http://2sxc.org/en/help/tag/install' target='_blank'>more</a>). Please click the following button to finish the upgrade: <br><a class='dnnPrimaryAction' onclick='$2sxc.system.finishUpgrade(this)'>Finish Upgrade</a>"
+        //            : "Module upgrade did not complete successfully. Please login as host user to finish the upgrade.";
         //}
 
     }

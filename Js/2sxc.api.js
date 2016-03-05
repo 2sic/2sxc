@@ -317,4 +317,31 @@
             return (!$2sxc.debug.load) ? url : url.replace(".min", "");
         }
     };
+
+    $2sxc.autoFind = function(domElement) {
+        var modParent = $(domElement).closest(".DnnModule");
+        var match, clss = $(domElement).closest(".DnnModule")[0].className.split(/\s+/);
+        for (var c = 0; c < clss.length; c++)
+            if (match = clss[c].match(/^DnnModule-([0-9]+)$/))
+                return $2sxc(Number(match[1]));
+        return null;
+    }
+
+    // upgrade command
+    $2sxc.system = {
+        finishUpgrade: function(domElement) {
+            var mc = $2sxc.autoFind(domElement);
+            var sf = $.ServicesFramework(mc.id);
+            var url = mc.resolveServiceUrl("view/module/finishinstallation");
+            $.ajax({
+                type: "get",
+                url: url,
+                beforeSend: sf.setModuleHeaders
+            }).success(function(result) {
+                alert("Upgrade ok");
+                location.reload();
+            });
+            alert("starting upgrade...");
+        }
+    }
 })();

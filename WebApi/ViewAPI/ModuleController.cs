@@ -11,8 +11,6 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Api;
-using Newtonsoft.Json;
-using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Internal;
 using ToSic.SexyContent.WebApi;
@@ -303,6 +301,21 @@ namespace ToSic.SexyContent.ViewAPI
             return gettingStartedSrc;
         }
 
+        /// <summary>
+        /// Finish system installation
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
+        [ValidateAntiForgeryToken]
+        public bool FinishInstallation()
+        {
+            if (ModuleUpgrade.IsUpgradeRunning)
+                throw new Exception("There seems to be an upgrade running - please wait. If you still see this message after 10 minutes, please restart the web application.");
 
+            ModuleUpgrade.FinishAbortedUpgrade();
+
+            return true;
+        }
     }
 }
