@@ -22,7 +22,7 @@ namespace ToSic.SexyContent.Security
         public const string Grant = "Grant";
         public string CustomPermissionKey = ""; // "CONTENT";
         readonly string _salPrefix = "SecurityAccessLevel.".ToLower();
-        private readonly string _keyOwner = "Author";
+        private readonly string _keyOwner = "Owner";
 
         public int AppId { get; private set; }
         public int ZoneId { get; private set; }
