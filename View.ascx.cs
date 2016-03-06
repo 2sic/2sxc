@@ -19,7 +19,7 @@ namespace ToSic.SexyContent
             //pnlMessage.Visible = false;
             pnlError.Visible = false;
 
-            var notReady = ModuleUpgrade.CheckUpgradeMessage(UserInfo.IsSuperUser);
+            var notReady = Installer.CheckUpgradeMessage(UserInfo.IsSuperUser);
             if(!string.IsNullOrEmpty(notReady))
                 ShowError(notReady, pnlError, notReady, false);
 
@@ -34,7 +34,7 @@ namespace ToSic.SexyContent
         protected void Page_PreRender(object sender, EventArgs e)
         {
 
-            if (!ModuleUpgrade.UpgradeComplete)
+            if (!Installer.UpgradeComplete)
                 return;
 
             try

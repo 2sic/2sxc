@@ -23,7 +23,7 @@ namespace ToSic.SexyContent
             hlkCancel.NavigateUrl = Globals.NavigateURL(TabId, "", null);
 
             _appId = AppId.Value;
-            _zoneId = ZoneId.Value;
+            _zoneId = ZoneId ?? 0;
 
             if (UserInfo.IsSuperUser)
             {

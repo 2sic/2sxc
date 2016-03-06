@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Web;
 using System.Xml.Linq;
 using DotNetNuke.Entities.Portals;
@@ -95,10 +96,20 @@ namespace ToSic.SexyContent.ImportExport
 
                                     if (isAppImport)
                                     {
-                                        var folder =
-                                            XDocument.Parse(fileContents).Element("SexyContent")
-                                                .Element("Entities").Elements("Entity").Single(e =>e.Attribute("AttributeSetStaticName").Value =="2SexyContent-App")
-                                                .Elements("Value").First(v => v.Attribute("Key").Value == "Folder").Attribute("Value").Value;
+                                        var appConfig = XDocument.Parse(fileContents).Element("SexyContent")
+                                            .Element("Entities")
+                                            .Elements("Entity")
+                                            .Single(e => e.Attribute("AttributeSetStaticName").Value == "2SexyContent-App");
+
+                                        #region Version Checks (new in 08.03.03)
+                                        var reqVersionNode = appConfig.Elements("Value")?.FirstOrDefault(v => v.Attribute("Key").Value == "RequiredVersion")?.Attribute("Value")?.Value;
+                                        var reqVersionNodeDnn = appConfig.Elements("Value")?.FirstOrDefault(v => v.Attribute("Key").Value == "RequiredDnnVersion")?.Attribute("Value")?.Value;
+
+                                        CheckRequiredEnvironmentVersions(reqVersionNode, reqVersionNodeDnn);
+
+                                        #endregion
+                                        var folder = appConfig.Elements("Value").First(v => v.Attribute("Key").Value == "Folder").Attribute("Value").Value;
+
                                         var appPath = Path.Combine(AppHelpers.AppBasePath(PortalSettings.Current), folder);
 
                                         // Do not import (throw error) if the app directory already exists
@@ -176,6 +187,27 @@ namespace ToSic.SexyContent.ImportExport
             }
 
             return success;
+        }
+
+        private static void CheckRequiredEnvironmentVersions(string reqVersionNode, string reqVersionNodeDnn)
+        {
+            if (reqVersionNode != null)
+            {
+                var vSxc = Settings.Version;
+                var reqSxcV = Version.Parse(reqVersionNode);
+                if (reqSxcV.CompareTo(vSxc) == 1) // required is bigger
+                    throw new Exception("this app requires 2sxc version " + reqVersionNode +
+                                        ", installed is " + vSxc + ". cannot continue. see also 2sxc.org/en/help?tag=app");
+            }
+
+            if (reqVersionNodeDnn != null)
+            {
+                var vDnn = typeof(PortalSettings).Assembly.GetName().Version;
+                var reqDnnV = Version.Parse(reqVersionNodeDnn);
+                if (reqDnnV.CompareTo(vDnn) == 1) // required is bigger
+                    throw new Exception("this app requires dnn version " + reqVersionNodeDnn +
+                                        ", installed is "+vDnn +". cannot continue. see also 2sxc.org/en/help?tag=app");
+            }
         }
 
         public bool ImportZipFromUrl(string packageUrl, List<ExportImportMessage> messages, bool isAppImport)

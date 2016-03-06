@@ -21,7 +21,7 @@ using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent
 {
-    public class ModuleUpgrade
+    public class Installer
     {
         // todo: Maybe this list can somehow be extracted from the module manifest or placed there...
         public static readonly string[] UpgradeVersionList =
@@ -41,7 +41,7 @@ namespace ToSic.SexyContent
         /// This static initializer will do a one-time check to see if everything is ready,
         /// so subsequent access to this property will not need to do anything any more
         /// </summary>
-        static ModuleUpgrade()
+        static Installer()
         {
             UpgradeComplete = IsUpgradeComplete(Settings.ModuleVersion);
         }
@@ -859,7 +859,7 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
             return IsUpgradeRunning
                 ? "It looks like a 2sxc upgrade is currently running.Please wait for the operation to complete(the upgrade may take a few minutes)."
                 : isSuperUser
-                    ? "Module upgrade did not complete (<a href='http://2sxc.org/en/help/tag/install' target='_blank'>more</a>). Please click the following button to finish the upgrade: <br><a class='dnnPrimaryAction' onclick='$2sxc.system.finishUpgrade(this)'>Finish Upgrade</a>"
+                    ? "Module upgrade did not complete (<a href='http://2sxc.org/en/help/tag/install' target='_blank'>read more</a>). Click to complete: <br><a class='dnnPrimaryAction' onclick='$2sxc.system.finishUpgrade(this)'>complete upgrade</a>"
                     : "Module upgrade did not complete successfully. Please login as host user to finish the upgrade.";
         }
 

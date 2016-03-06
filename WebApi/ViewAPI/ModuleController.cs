@@ -310,10 +310,10 @@ namespace ToSic.SexyContent.ViewAPI
         [ValidateAntiForgeryToken]
         public bool FinishInstallation()
         {
-            if (ModuleUpgrade.IsUpgradeRunning)
+            if (Installer.IsUpgradeRunning)
                 throw new Exception("There seems to be an upgrade running - please wait. If you still see this message after 10 minutes, please restart the web application.");
 
-            ModuleUpgrade.FinishAbortedUpgrade();
+            Installer.FinishAbortedUpgrade();
 
             return true;
         }
