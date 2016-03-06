@@ -4,6 +4,9 @@
         return;
 
     window.$2sxc = function (id) {
+        // if it's a dom-element, use auto-find
+        if ("object" === typeof id)
+            return window.$2sxc.autoFind(id);
 
         if (!$2sxc._data[id])
             $2sxc._data[id] = {};
@@ -17,7 +20,7 @@
             	var scope = virtualPath.split("/")[0].toLowerCase();
 
             	// stop if it's not one of our special paths
-                if (controller.serviceScopes.indexOf(scope) == -1)
+                if (controller.serviceScopes.indexOf(scope) === -1)
                 	return virtualPath;
 
                 return controller.serviceRoot + scope + "/" + virtualPath.substring(virtualPath.indexOf("/") + 1);
@@ -318,8 +321,8 @@
         }
     };
 
+    // will find the controller based on the dom-element
     $2sxc.autoFind = function(domElement) {
-        var modParent = $(domElement).closest(".DnnModule");
         var match, clss = $(domElement).closest(".DnnModule")[0].className.split(/\s+/);
         for (var c = 0; c < clss.length; c++)
             if (match = clss[c].match(/^DnnModule-([0-9]+)$/))
@@ -330,18 +333,14 @@
     // upgrade command
     $2sxc.system = {
         finishUpgrade: function(domElement) {
-            var mc = $2sxc.autoFind(domElement);
-            var sf = $.ServicesFramework(mc.id);
+            var mc = $2sxc(domElement);
             var url = mc.resolveServiceUrl("view/module/finishinstallation");
-            $.ajax({
-                type: "get",
-                url: url,
-                beforeSend: sf.setModuleHeaders
+            $.ajax({ type: "get", url: url, beforeSend: $.ServicesFramework(mc.id).setModuleHeaders
             }).success(function(result) {
-                alert("Upgrade ok");
+                alert("Upgrade ok, restarting the CMS and reloading...");
                 location.reload();
             });
-            alert("starting upgrade...");
+            alert("starting upgrade. This could take a few minutes. You'll see an 'ok' when it's done. Please wait...");
         }
     }
 })();
