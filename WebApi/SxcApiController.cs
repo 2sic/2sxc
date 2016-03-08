@@ -11,6 +11,7 @@ using ToSic.SexyContent.Razor.Helpers;
 namespace ToSic.SexyContent.WebApi
 {
 	[SupportedModules("2sxc,2sxc-app")]
+    [SxcWebApiExceptionHandling]
     public abstract class SxcApiController : DnnApiController, IAppAndDataHelpers
     {
         private SxcInstance _instanceContext;
