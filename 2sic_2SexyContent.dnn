@@ -706,7 +706,7 @@
           <desktopModule>
             <moduleName>2sxc-app</moduleName>
             <foldername>ToSIC_SexyContent</foldername>
-            <businessControllerClass>ToSic.SexyContent.SexyContent</businessControllerClass>
+            <businessControllerClass>ToSic.SexyContent.Environment.Dnn7.DnnBusinessController</businessControllerClass>
             <supportedFeatures>
               <supportedFeature type="Searchable" />
               <supportedFeature type="Upgradeable" />
