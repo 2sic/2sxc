@@ -350,7 +350,12 @@ h3.clickable:hover, h4.clickable:hover {
 }
 
 
+/* hover buttons */
+.hover-pair .hover-default { display: block; }
+.hover-pair:hover .hover-default { display: none; }
 
+.hover-pair .hover-hover { display: none; }
+.hover-pair:hover .hover-hover { display: block; }
 @font-face {
   font-family: 'app-icons';
     src: url('../lib/fonts/app-icons.woff?78331213') format('woff'),
