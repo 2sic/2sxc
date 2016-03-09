@@ -5,6 +5,7 @@ using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav;
+using ToSic.SexyContent.WebApi;
 
 namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 {
@@ -13,6 +14,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 	/// </summary>
 	[SupportedModules("2sxc,2sxc-app")]
 	[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    [SxcWebApiExceptionHandling]
 	public class PipelineDesignerController : DnnApiController
 	{
 		private readonly Eav.WebApi.PipelineDesignerController _controller;

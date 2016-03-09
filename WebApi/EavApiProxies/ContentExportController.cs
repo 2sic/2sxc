@@ -2,6 +2,7 @@
 using System.Web.Http;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.ImportExport.Refactoring.Options;
+using ToSic.SexyContent.WebApi;
 
 namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 {
@@ -12,6 +13,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
     
     // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
     [AllowAnonymous]
+    [SxcWebApiExceptionHandling]
     public class ContentExportController : DnnApiController // SxcApiController
 	{
         private readonly Eav.WebApi.ContentExportController eavCtc;

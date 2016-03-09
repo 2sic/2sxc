@@ -269,6 +269,7 @@
     <Compile Include="SexyContent\Internal\SecurityHelpers.cs" />
     <Compile Include="SexyContent\Internal\TemplateManager.cs" />
     <Compile Include="SexyContent\Internal\ZoneHelpers.cs" />
+    <Compile Include="WebApi\SxcWebApiExceptionHandling.cs" />
     <Compile Include="WebApi\ViewAPI\TemplateController.cs" />
     <Compile Include="SexyContent\ViewManager\TemplateEditor.cs" />
     <Compile Include="SexyContent\UnityConfig.cs" />

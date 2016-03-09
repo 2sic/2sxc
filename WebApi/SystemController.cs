@@ -20,7 +20,7 @@ namespace ToSic.SexyContent.WebApi
     /// This one supplies portal-wide (or cross-portal) settings / configuration
     /// </summary>
 	[SupportedModules("2sxc,2sxc-app")]
-    
+    [SxcWebApiExceptionHandling]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     public class SystemController : DnnApiController
 	{
