@@ -731,6 +731,76 @@ angular.module("sxcFieldTemplates")
 
 
 })();
+/* 
+ * Field: String - font-icon picker
+ */
+
+angular.module("eavFieldTemplates")
+    .config(["formlyConfigProvider", "defaultFieldWrappers", function(formlyConfigProvider, defaultFieldWrappers) {
+
+        formlyConfigProvider.setType({
+            name: "string-font-icon-picker",
+            templateUrl: "fields/string/string-font-icon-picker.html",
+            wrapper: defaultFieldWrappers,
+            controller: "FieldTemplate-String-Font-Icon-Picker as vm"
+        });
+
+    }])
+    .controller("FieldTemplate-String-Font-Icon-Picker", ["$scope", "debugState", function($scope, debugState) {
+        var vm = angular.extend(this, {
+            iconFilter: "", // used for in-line search
+            prefix: "", // used to find the right css-classes
+            previewPrefix: "", // used to preview the icon, in addition to the built-in class
+            icons: [], // list of icons, to be filled
+            useTestValues: false // to prefill with test-values, in case needed
+        });
+
+
+        //#region icon css-class-methods
+        function getIconClasses(className) {
+            var charcount = className.length, foundList = [], duplicateDetector = {};
+            if (!className) return foundList;
+            for (var ssSet = 0; ssSet < document.styleSheets.length; ssSet++) {
+                var classes = document.styleSheets[ssSet].rules || document.styleSheets[ssSet].cssRules;
+                for (var x = 0; x < classes.length; x++)
+                    if (classes[x].selectorText && classes[x].selectorText.substring(0, charcount) === className) {
+                        // prevent duplicate-add...
+                        var txt = classes[x].selectorText,
+                            icnClass = txt.substring(0, txt.indexOf(":")).replace(".", "");
+                        if (!duplicateDetector[icnClass]) {
+                            foundList.push({ rule: classes[x], 'class': icnClass });
+                            duplicateDetector[icnClass] = true;
+                        }
+                    }
+            }
+            return foundList;
+        }
+
+//#endregion
+
+        vm.activate = function() {
+            // get configured
+            var controlSettings = $scope.to.settings["string-font-icon-picker"];
+            vm.files = (controlSettings) ? controlSettings.Files || "" : "";
+            vm.prefix = (controlSettings) ? controlSettings.CssPrefix || "" : "";
+            vm.previewPrefix = (controlSettings) ? controlSettings.CssPrefix || "" : "";
+
+            if (vm.useTestValues)
+                angular.extend(vm, {
+                    iconFilter: "",
+                    prefix: ".glyphicon-",
+                    previewPrefix: "glyphicon",
+                });
+
+            // load the icons
+            vm.icons = getIconClasses(vm.prefix);
+
+            vm.debug = debugState;
+            if (debugState.on) console.log($scope.options.templateOptions);
+        };
+
+        vm.activate();
+    }]);
 
 (function () {
 	"use strict";
@@ -1330,12 +1400,17 @@ angular.module('SxcEditTemplates', []).run(['$templateCache', function($template
     "\n" +
     "{{'Edit.Fields.Hyperlink.Default.Tooltip2' | translate }}\r" +
     "\n" +
-    "ADAM - sponsored with ♥ by 2sic.com\"> <span class=input-group-btn style=\"vertical-align: top\"><button type=button class=\"btn btn-primary btn-lg temp-icon-fix\" ng-disabled=to.disabled tooltip=\"{{'Edit.Fields.Hyperlink.Default.AdamUploadLabel' | translate }}\" ng-click=vm.toggleAdam()><i class=icon-apple></i></button> <button tabindex=-1 type=button class=\"btn btn-default dropdown-toggle btn-lg btn-square temp-icon-fix\" dropdown-toggle ng-disabled=to.disabled><i class=icon-options i></i></button></span><ul class=\"dropdown-menu pull-right\" role=menu><li role=menuitem><a class=dropzone-adam href=javascript:void(0);><i class=icon-apple></i> <span translate=Edit.Fields.Hyperlink.Default.MenuAdam></span></a></li><li role=menuitem ng-if=\"to.settings['merged'].ShowPagePicker\"><a ng-click=\"vm.openDialog('pagepicker')\" href=javascript:void(0)><i class=icon-sitemap xicon=home></i> <span translate=Edit.Fields.Hyperlink.Default.MenuPage></span></a></li><li role=menuitem ng-if=\"to.settings['merged'].ShowImageManager\"><a ng-click=\"vm.openDialog('imagemanager')\" href=javascript:void(0)><i class=icon-file-image xicon=picture></i> <span translate=Edit.Fields.Hyperlink.Default.MenuImage></span></a></li><li role=menuitem ng-if=\"to.settings['merged'].ShowFileManager\"><a ng-click=\"vm.openDialog('documentmanager')\" href=javascript:void(0)><i class=icon-file xicon=file></i> <span translate=Edit.Fields.Hyperlink.Default.MenuDocs></span></a></li></ul></div><div ng-if=vm.showPreview style=\"position: relative\"><div style=\"position: absolute; z-index: 100; background: white; top: 10px; text-align: center; left: 0; right: 0\"><img ng-src=\"{{vm.thumbnailUrl(2)}}\"></div></div><adam-hint></adam-hint><div ng-if=value.Value><a href={{vm.testLink}} target=_blank tabindex=-1 tooltip-html-unsafe={{vm.tooltipUrl(vm.testLink)}}><span>&nbsp;... {{vm.testLink.substr(vm.testLink.lastIndexOf(\"/\"), 100)}}</span></a></div><adam-browser content-type-name=to.header.ContentTypeName entity-guid=to.header.Guid field-name=options.key auto-load=false folder-depth=0 sub-folder=\"\" update-callback=vm.setValue register-self=vm.registerAdam ng-disabled=to.disabled></adam-browser><dropzone-upload-preview></dropzone-upload-preview></div></div>"
+    "ADAM - sponsored with ♥ by 2sic.com\"> <span class=input-group-btn style=\"vertical-align: top\"><button type=button class=\"btn btn-primary btn-lg temp-icon-fix\" ng-disabled=to.disabled tooltip=\"{{'Edit.Fields.Hyperlink.Default.AdamUploadLabel' | translate }}\" ng-click=vm.toggleAdam()><i class=icon-apple></i></button> <button tabindex=-1 type=button class=\"btn btn-default dropdown-toggle btn-lg btn-square temp-icon-fix\" dropdown-toggle ng-disabled=to.disabled><i class=icon-options></i></button></span><ul class=\"dropdown-menu pull-right\" role=menu><li role=menuitem><a class=dropzone-adam href=javascript:void(0);><i class=icon-apple></i> <span translate=Edit.Fields.Hyperlink.Default.MenuAdam></span></a></li><li role=menuitem ng-if=\"to.settings['merged'].ShowPagePicker\"><a ng-click=\"vm.openDialog('pagepicker')\" href=javascript:void(0)><i class=icon-sitemap xicon=home></i> <span translate=Edit.Fields.Hyperlink.Default.MenuPage></span></a></li><li role=menuitem ng-if=\"to.settings['merged'].ShowImageManager\"><a ng-click=\"vm.openDialog('imagemanager')\" href=javascript:void(0)><i class=icon-file-image xicon=picture></i> <span translate=Edit.Fields.Hyperlink.Default.MenuImage></span></a></li><li role=menuitem ng-if=\"to.settings['merged'].ShowFileManager\"><a ng-click=\"vm.openDialog('documentmanager')\" href=javascript:void(0)><i class=icon-file xicon=file></i> <span translate=Edit.Fields.Hyperlink.Default.MenuDocs></span></a></li></ul></div><div ng-if=vm.showPreview style=\"position: relative\"><div style=\"position: absolute; z-index: 100; background: white; top: 10px; text-align: center; left: 0; right: 0\"><img ng-src=\"{{vm.thumbnailUrl(2)}}\"></div></div><adam-hint></adam-hint><div ng-if=value.Value><a href={{vm.testLink}} target=_blank tabindex=-1 tooltip-html-unsafe={{vm.tooltipUrl(vm.testLink)}}><span>&nbsp;... {{vm.testLink.substr(vm.testLink.lastIndexOf(\"/\"), 100)}}</span></a></div><adam-browser content-type-name=to.header.ContentTypeName entity-guid=to.header.Guid field-name=options.key auto-load=false folder-depth=0 sub-folder=\"\" update-callback=vm.setValue register-self=vm.registerAdam ng-disabled=to.disabled></adam-browser><dropzone-upload-preview></dropzone-upload-preview></div></div>"
   );
 
 
   $templateCache.put('fields/hyperlink/hyperlink-library.html',
     "<div><div class=dropzone><adam-browser content-type-name=to.header.ContentTypeName entity-guid=to.header.Guid field-name=options.key auto-load=true sub-folder=\"\" folder-depth=to.settings.merged.FolderDepth metadata-content-types=to.settings.merged.MetadataContentTypes allow-assets-in-root=to.settings.merged.allowAssetsInRoot enable-select=false update-callback=vm.setValue register-self=vm.registerAdam></adam-browser><dropzone-upload-preview></dropzone-upload-preview><adam-hint></adam-hint></div></div>"
+  );
+
+
+  $templateCache.put('fields/string/string-font-icon-picker.html',
+    "<div><input style=\"display: none\" ng-model=\"value.Value\"><div class=input-group dropdown keyboard-nav auto-close=outsideClick><button type=button class=\"btn btn-default btn-lg\" tooltip={{value.Value}} dropdown-toggle><i class=\"{{vm.previewPrefix}} {{value.Value}}\" ng-show=value.Value></i> <span ng-show=!value.Value>&nbsp;&nbsp;</span></button><ul class=\"dropdown-menu icons-menu-columns\" role=menu><li><input disable-auto-close type=search ng-model=vm.iconFilter class=\"makePaymentDropdownSearchBox input-lg\" placeholder=\"search...\"></li><li><a ng-click=\"value.Value = ''\"><i class=icon-cancel></i>clear</a></li><li ng-repeat=\"icn in vm.icons\" role=menuitem ng-show=\"icn.class.indexOf(vm.iconFilter) !== -1\"><a xng-click=\"status.isopen = false\" ng-click=\"value.Value = icn.class; status.isopen = false; alert('ok');\"><i class=\"{{vm.previewPrefix}} {{icn.class}}\"></i> <span tooltip={{icn.class}}>...{{icn.class.substring(vm.prefix.length-1,25)}}</span></a></li></ul></div><div ng-if=vm.debug.on>Infos: found {{vm.icons.length}} items for prefix \"{{vm.prefix}}\" and will use \"{{vm.previewPrefix}}\" as a preview class. Files are: {{vm.files}}</div></div>"
   );
 
 

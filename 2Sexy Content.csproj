@@ -417,6 +417,7 @@
     <Content Include="icon-app.png" />
     <Content Include="icon.png" />
     <Content Include="Administration\Import.ascx" />
+    <Content Include="src\inpage\2sxc._actions.js" />
     <Content Include="src\inpage\getting-started\getting-started.js" />
     <Content Include="src\inpage\inpage-icons-codes.css" />
     <Content Include="src\sxc-edit\adam\adam-hint.html" />
@@ -495,6 +496,7 @@
     <Content Include="src\sxc-admin\services\sxc-dialogs-service.js" />
     <Content Include="src\sxc-admin\services\templates-service.js" />
     <Content Include="SqlDataProvider\08.03.02.SqlDataProvider" />
+    <Content Include="src\inpage\2sxc._lib.js" />
     <None Include="src\sxc-develop\source-editor\README.md" />
     <Content Include="src\sxc-develop\source-editor\toArray-filter.js" />
     <Content Include="src\sxc-admin\templates\edit.html" />

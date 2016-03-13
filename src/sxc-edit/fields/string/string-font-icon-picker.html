@@ -1,0 +1,28 @@
+﻿<div>
+    <input style="display: none" ng-model="value.Value"/> <!-- hidden field, just for formly, maybe not needed? -->
+    <div class="input-group" dropdown keyboard-nav auto-close="outsideClick">
+        <button type="button" class="btn btn-default btn-lg" tooltip="{{value.Value}}" dropdown-toggle>
+            <i class="{{vm.previewPrefix}} {{value.Value}}" ng-show="value.Value"></i>
+            <span ng-show="!value.Value">&nbsp;&nbsp;</span>
+            
+        </button>
+
+        <ul class="dropdown-menu icons-menu-columns" role="menu">
+            <li>
+                <input disable-auto-close type="search" ng-model="vm.iconFilter" class="makePaymentDropdownSearchBox input-lg" placeholder="search..."/>
+            </li>
+            <li>
+                <a ng-click="value.Value = ''">
+                    <i class="icon-cancel"></i>clear
+                </a>
+            </li>
+            <li ng-repeat="icn in vm.icons" role="menuitem"
+                ng-show="icn.class.indexOf(vm.iconFilter) !== -1">
+                <a xng-click="status.isopen = false" ng-click="value.Value = icn.class; status.isopen = false; alert('ok');">
+                    <i class="{{vm.previewPrefix}} {{icn.class}}"></i> <span tooltip="{{icn.class}}">...{{icn.class.substring(vm.prefix.length-1,25)}}</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div ng-if="vm.debug.on">Infos: found {{vm.icons.length}} items for prefix "{{vm.prefix}}" and will use "{{vm.previewPrefix}}" as a preview class. Files are: {{vm.files}}</div>
+</div> 

@@ -163,6 +163,11 @@ font-size: large;position: absolute;right: -15px;top: 50px;font-size: 1.8em;
 .icon-reload:before { content: '\e83f'; } /* '' */
 .icon-flash:before { content: '\e840'; } /* '' */
 .icon-ghost:before { content: '\e841'; } /* '' */
+.icon-down-dir:before { content: '\e842'; } /* '' */
+.icon-tags:before { content: '\e843'; } /* '' */
+.icon-pencil:before { content: '\e844'; } /* '' */
+.icon-link:before { content: '\e845'; } /* '' */
+.icon-unlink:before { content: '\e846'; } /* '' */
 @font-face {
   font-family: 'app-icons';
     src: url('../lib/fonts/app-icons.woff?87396608') format('woff');
@@ -636,6 +641,58 @@ font-size: large;position: absolute;right: -15px;top: 50px;font-size: 1.8em;
 div.dropzone div.input-group div.tooltip-inner {
     word-wrap: break-word;
 }
+/* for boostrap menus which should be scrollable and not unlimited length...*/
+/*.scrollable-menu {
+    height: auto;
+    max-height: 400px;
+    overflow-x: hidden;
+}*/
+
+/* icons-menu classes */
+  .icons-menu-columns {
+    /*height: auto;
+    max-height: 400px;
+    overflow-x: hidden;*/
+    font-size: larger
+  }
+
+  /*.icons-menu-columns li {
+      width: 150px;
+  }*/
+
+/*@media screen and (max-width: 600px) {
+  .icons-menu-columns {
+    height: auto;
+    max-height: 400px;
+    overflow-y: scroll;
+  }
+}*/
+
+@media screen and (min-width: 451px) {
+  .icons-menu-columns {
+    -moz-column-count: 2;
+    -webkit-column-count: 2;
+    column-count: 2;
+    /*width: 500px;*/
+  }
+}
+@media screen and (min-width: 701px) {
+  .icons-menu-columns {
+    -moz-column-count: 3;
+    -webkit-column-count: 3;
+    column-count: 3;
+    /*width: 500px;*/
+  }
+}
+@media screen and (min-width: 951px) {
+  .icons-menu-columns {
+    -moz-column-count: 4;
+    -webkit-column-count: 4;
+    column-count: 4;
+    /*width: 500px;*/
+  }
+}
+
 .field-string-wysiwyg-mce-box {
     position: relative;
     border-style: solid;
