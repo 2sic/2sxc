@@ -4,13 +4,13 @@
     module.controller("TemplateSelectorCtrl", function ($scope, $attrs, moduleApiService, AppInstanceId, sxc, $filter, $q, $window, $translate, $sce) {
         //#region constants
         var cViewWithoutContent = "_LayoutElement"; // needed to differentiate the "select item" from the "empty-is-selected" which are both empty
-
+        var cAppActionManage = -2, cAppActionImport = -1, cAppActionCreate = -3;
+        var viewPortSelector = ".DnnModule-" + AppInstanceId + " .sc-viewport";
         //#endregion
 
         var realScope = $scope;
         var svc = moduleApiService;
         var importCommand = $attrs.importappdialog; // note: ugly dependency, should find a way to remove
-        var viewPortSelector = ".DnnModule-" + AppInstanceId + " .sc-viewport";
 
         //#region vm and basic values / variables attached to vm
         var vm = this;
@@ -98,13 +98,21 @@
                 return;
 
             // special case: manage apps
-            if (newAppId === -2) {
-                alert('not implemented yet, because it would have to call the toolbar, which is bad architecture');
+            if (newAppId === cAppActionManage) {
+                sxc.manage.action({ "action": "zone" });
                 return;
             }
 
+            // special case: create app
+            if (newAppId === cAppActionCreate) {
+                alert('click + in the app-management to create your own app');
+                sxc.manage.action({ "action": "zone" });
+                return;
+            }
+
+
             // special case: add app
-            if (newAppId === -1) {
+            if (newAppId === cAppActionImport) {
                 window.location = importCommand; // actually does a dnnModal.show...
                 return;
             }
@@ -246,7 +254,11 @@
             return svc.getSelectableApps()
                 .then(function(data) {
                     vm.apps = data.data;
-                    vm.apps.push({ Name: "TemplatePicker.GetMoreApps", AppId: -1 });
+                    if (vm.manageInfo.user.canDesign) {
+                        vm.apps.push({ Name: "TemplatePicker.GetMoreApps", AppId: cAppActionImport });
+                        vm.apps.push({ Name: "create your own app...", AppId: cAppActionCreate }); // todo: i18n
+                        vm.apps.push({ Name: "manage apps...", AppId: cAppActionManage }); // todo: i18n
+                    }
                 });
         };
 
