@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<SexyContent FileVersion="07.00.00" MinimumRequiredVersion="07.00.00" ModuleVersion="08.03.04" ExportDate="2016-03-12T09:16:59.749611+01:00">
+  <Header>
+    <Language Default="en-US" />
+  </Header>
+  <AttributeSets>
+    <AttributeSet StaticName="@string-url-path" Name="@string-url-path" Description="Configuration for a string-url-path field" Scope="System" AlwaysShareConfiguration="true">
+      <Attributes>
+        <Attribute StaticName="AutoGenerateMask" Type="String" IsTitle="true">
+          <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@All" AttributeSetName="@All" EntityGUID="ab94187b-9664-4b9e-a8a8-f735c17909ab" KeyNumber="3075">
+            <Value Key="Name" Value="Auto Generate Path Mask" Type="String" />
+            <Value Key="Notes" Value="Will let you automatically pick up a value - like the item-title - and use it to generate the initial path. Default is [Title] which would use the title-field." Type="String" />
+            <Value Key="VisibleInEditUI" Value="True" Type="Boolean" />
+            <Value Key="Required" Value="False" Type="Boolean" />
+            <Value Key="DefaultValue" Value="[Title]" Type="String" />
+            <Value Key="CustomJavaScript" Value="" Type="String" />
+            <Value Key="Disabled" Value="False" Type="Boolean" />
+            <Value Key="InputType" Value="string-default" Type="String" />
+            <Value Key="ValidationRegExJavaScript" Value="" Type="String" />
+          </Entity>
+          <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@string-default" AttributeSetName="@string-default" EntityGUID="a2b35c49-0b18-4484-9bf9-1298cb682de8" KeyNumber="3075">
+            <Value Key="RowCount" Value="1" Type="Number" />
+          </Entity>
+        </Attribute>
+        <Attribute StaticName="AllowSlashes" Type="Boolean" IsTitle="false">
+          <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@All" AttributeSetName="@All" EntityGUID="9903ff12-860f-4dcd-9fd1-ec54deeb7d77" KeyNumber="3076">
+            <Value Key="Name" Value="Allow Slashes inside Path" Type="String" />
+            <Value Key="Notes" Value="This would allow path-parts with slashes inside the path - so word1/word2 would be allowed. Usually you don't want this, because in most cases you will want to have only non-slash words in this url-part." Type="String" />
+            <Value Key="VisibleInEditUI" Value="True" Type="Boolean" />
+            <Value Key="Required" Value="False" Type="Boolean" />
+            <Value Key="DefaultValue" Value="false" Type="String" />
+            <Value Key="CustomJavaScript" Value="" Type="String" />
+            <Value Key="Disabled" Value="False" Type="Boolean" />
+            <Value Key="InputType" Value="boolean-default" Type="String" />
+            <Value Key="ValidationRegExJavaScript" Value="" Type="String" />
+          </Entity>
+        </Attribute>
+      </Attributes>
+    </AttributeSet>
+  </AttributeSets>
+  <Entities>
+    <Entity AssignmentObjectType="Default" AttributeSetStaticName="ContentType-InputType" AttributeSetName="ContentType-InputType" EntityGUID="237aabd3-9cd0-40cf-aab1-d9c02083d90f">
+      <Value Key="Type" Value="string-url-path" Type="String" />
+      <Value Key="Label" Value="URL Path" Type="String" />
+      <Value Key="Description" Value="For fields which should only have url-characters in it - like when you need a link pointing to this item. Can also auto-generate from another field." Type="String" />
+      <Value Key="Assets" Value="" Type="String" />
+    </Entity>
+  </Entities>
+</SexyContent>
