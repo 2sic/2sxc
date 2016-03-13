@@ -29,7 +29,7 @@ namespace ToSic.SexyContent
             "07.00.00", "07.00.03", "07.02.00", "07.02.02", "07.03.00", "07.03.01", "07.03.02", "07.03.03", "07.03.04",
             "08.00.00", "08.00.01", "08.00.02", "08.00.03", "08.00.04", "08.00.05", "08.00.06", "08.00.07", "08.00.08", "08.00.09", "08.00.10", "08.00.11", "08.00.12",
             "08.01.00", "08.01.01", "08.01.02", "08.01.03", "08.02.00", "08.02.01", "08.02.02", "08.02.03",
-            "08.03.00", "08.03.01", "08.03.02", "08.03.03", "08.03.04"
+            "08.03.00", "08.03.01", "08.03.02", "08.03.03", "08.03.04", "08.03.05"
         };
 
         public static readonly bool UpgradeComplete;
@@ -121,6 +121,9 @@ namespace ToSic.SexyContent
                         break;
                     case "08.03.03":
                         Version080303();
+                        break;
+                    case "08.03.05":
+                        ImportXmlSchemaOfVersion("08.03.05", false);
                         break;
                 }
 
@@ -756,14 +759,15 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
                 throw new Exception("The 2sxc module upgrade to 08.03.02 failed: " + messages);
             }
 
-            var desktopModuleNames = new[] { "2sxc", "2sxc-app" };
-            // Update BusinessController class name in desktop module info
-            foreach (var d in desktopModuleNames)
-            {
-                var dmi = DesktopModuleController.GetDesktopModuleByModuleName(d, -1);
-                dmi.BusinessControllerClass = "ToSic.SexyContent.Environment.Dnn7.DnnBusinessController";
-                DesktopModuleController.SaveDesktopModule(dmi, false, true);
-            }
+            // 2016-03-13 2dm: disabled this rename again, because I tested it without and it seems the manifest works, so this could only lead to trouble one day
+            //var desktopModuleNames = new[] { "2sxc", "2sxc-app" };
+            //// Update BusinessController class name in desktop module info
+            //foreach (var d in desktopModuleNames)
+            //{
+            //    var dmi = DesktopModuleController.GetDesktopModuleByModuleName(d, -1);
+            //    dmi.BusinessControllerClass = "ToSic.SexyContent.Environment.Dnn7.DnnBusinessController";
+            //    DesktopModuleController.SaveDesktopModule(dmi, false, true);
+            //}
 
         }
 
@@ -781,6 +785,23 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
             {
                 var messages = String.Join("\r\n- ", xmlImport.ImportLog.Select(p => p.Message).ToArray());
                 throw new Exception("The 2sxc module upgrade to 08.03.03 failed: " + messages);
+            }
+        }
+
+        private static void ImportXmlSchemaOfVersion(string version, bool leaveOriginalsUntouched)
+        {
+            var userName = "System-ModuleUpgrade-" + version;
+            var xmlToImport =
+                File.ReadAllText(
+                    HttpContext.Current.Server.MapPath("~/DesktopModules/ToSIC_SexyContent/Upgrade/" + version + ".xml"));
+            var xmlImport = new XmlImport("en-US", userName, true);
+            var success = xmlImport.ImportXml(Constants.DefaultZoneId, Constants.MetaDataAppId, XDocument.Parse(xmlToImport),
+                leaveOriginalsUntouched); 
+
+            if (!success)
+            {
+                var messages = String.Join("\r\n- ", xmlImport.ImportLog.Select(p => p.Message).ToArray());
+                throw new Exception("The 2sxc module upgrade to " + version + " failed: " + messages);
             }
         }
 
