@@ -541,6 +541,7 @@
     <Content Include="Upgrade\08.03.03.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Upgrade\08.03.05.xml" />
     <Content Include="View.ascx" />
     <Content Include="WebConfigTemplate.config" />
     <None Include="SqlDataProvider\01.00.01.SqlDataProvider" />

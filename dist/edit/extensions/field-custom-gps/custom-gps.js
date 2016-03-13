@@ -266,6 +266,7 @@ angular.module('nemLogging', []).provider('nemSimpleLogger', function() {
             }
         };
 
+        // todo: should replace this block with the new fieldMask service
         $scope.formattedAddress = function () {
             var address = controlSettings.AddressMask;
             if (address === undefined) return "";
@@ -319,4 +320,4 @@ angular.module('nemLogging', []).provider('nemSimpleLogger', function() {
 
     ;
 })();
-angular.module("templates", []).run(["$templateCache", function($templateCache) {$templateCache.put("fields/custom-gps/custom-gps.html","<div>\r\n\r\n\r\n\r\n    <div ng-if=\"debug.on\">\r\n        <h4>debug info</h4>\r\n        <div>lat field name: \'{{latField}}\' long-field name: \'{{longField}}\' </div>\r\n    </div>\r\n    \r\n</div>");}]);
+angular.module("templates", []).run(["$templateCache", function($templateCache) {$templateCache.put("fields/custom-gps/custom-gps.html","<div>\r\n    <div ng-if=\"debug.on\">\r\n        <h4>debug info</h4>\r\n        <div>lat field name: \'{{latField}}\' long-field name: \'{{longField}}\' </div>\r\n    </div>\r\n</div>");}]);
