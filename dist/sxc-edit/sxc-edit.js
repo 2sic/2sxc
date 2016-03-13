@@ -746,7 +746,7 @@ angular.module("eavFieldTemplates")
         });
 
     }])
-    .controller("FieldTemplate-String-Font-Icon-Picker", ["$scope", "debugState", function($scope, debugState) {
+    .controller("FieldTemplate-String-Font-Icon-Picker", ["$scope", "debugState", "$ocLazyLoad", "appRoot", function ($scope, debugState, $ocLazyLoad, appRoot) {
         var vm = angular.extend(this, {
             iconFilter: "", // used for in-line search
             prefix: "", // used to find the right css-classes
@@ -778,6 +778,15 @@ angular.module("eavFieldTemplates")
 
 //#endregion
 
+        //#region load additional resources
+        function loadAdditionalResources(files) {
+            files = files || "";
+            var mapped = files.replace("[App:Path]/", appRoot).replace("//", "/");
+            var fileList = mapped ? mapped.split("\n") : [];
+            return $ocLazyLoad.load(fileList);
+        }
+        //#endregion
+
         vm.activate = function() {
             // get configured
             var controlSettings = $scope.to.settings["string-font-icon-picker"];
@@ -792,8 +801,12 @@ angular.module("eavFieldTemplates")
                     previewPrefix: "glyphicon",
                 });
 
-            // load the icons
-            vm.icons = getIconClasses(vm.prefix);
+            // load all additional css, THEN load the icons
+            loadAdditionalResources(vm.files).then(function() {
+                // load the icons
+                vm.icons = getIconClasses(vm.prefix);
+
+            });
 
             vm.debug = debugState;
             if (debugState.on) console.log($scope.options.templateOptions);
