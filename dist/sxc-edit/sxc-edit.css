@@ -693,6 +693,65 @@ div.dropzone div.input-group div.tooltip-inner {
   }
 }
 
+.dropdown-menu.icons-menu-columns {
+    background-color: white;
+}
+
+.dropdown-menu.icons-menu-columns li a {
+    color: black;
+}
+
+.dropdown-menu.icons-menu-columns .active a,
+.dropdown-menu.icons-menu-columns .active a:focus,
+.dropdown-menu.icons-menu-columns .active a:hover,
+.dropdown-menu.icons-menu-columns li a:focus,
+.dropdown-menu.icons-menu-columns li a:hover {
+    /*color:#fff;*/
+    background-color:#329ff6; /* white; /* #656d78; */  */ 
+    outline:0
+}
+
+.dropdown-menu .divider {
+    background-color:white; /* #656d78; */ border-bottom:none
+}
+
+/*.dropdown-menu .disabled a,.dropdown-menu .disabled a:focus,.dropdown-menu .disabled a:hover {
+    color: #656d78; 
+    cursor:default
+}*/
+
+
+ /*.dropup .dropdown-menu {
+     margin-bottom:0;border-radius:4px 4px 0 0;-webkit-border-radius:4px 4px 0 0;-moz-border-radius:4px 4px 0 0
+ }
+ 
+ .dropdown-submenu{position:relative}
+ .dropdown-submenu .dropdown-menu {
+     top:0;left:100%;margin-top:-6px;margin-left:-1px;border-radius:0 4px 4px;-webkit-border-radius:0 4px 4px;-moz-border-radius:0 4px 4px
+ }
+ 
+ .dropdown-submenu:hover .dropdown-menu {
+     display:block
+ }
+ .dropup .dropdown-submenu .dropdown-menu {
+     top:auto;bottom:0;margin-top:0;margin-bottom:-2px;border-radius:4px 4px 4px 0;-webkit-border-radius:4px 4px 4px 0;-moz-border-radius:4px 4px 4px 0
+ }
+ .dropdown-submenu>a:after {
+     display:block;float:right;width:0;height:0;margin-top:5px;margin-right:-10px;content:" ";border-color:transparent;border-style:solid;border-width:5px 0 5px 5px;border-left-color:#fff
+ }
+ .dropdown-default .dropdown-submenu>a:after {
+     border-left-color:#434a54
+ }
+ .dropdown-submenu:hover a:after {
+     border-left-color:#fff
+ }
+ .dropdown-submenu.pull-left {
+     float:none
+ }
+ .dropdown-submenu.pull-left 
+ .dropdown-menu {
+     left:-100%;margin-left:10px;border-radius:4px 0 4px 4px;-webkit-border-radius:4px 0 4px 4px;-moz-border-radius:4px 0 4px 4px
+ }*/
 .field-string-wysiwyg-mce-box {
     position: relative;
     border-style: solid;
