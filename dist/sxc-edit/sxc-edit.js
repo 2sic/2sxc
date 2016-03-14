@@ -763,16 +763,17 @@ angular.module("eavFieldTemplates")
             if (!className) return foundList;
             for (var ssSet = 0; ssSet < document.styleSheets.length; ssSet++) {
                 var classes = document.styleSheets[ssSet].rules || document.styleSheets[ssSet].cssRules;
-                for (var x = 0; x < classes.length; x++)
-                    if (classes[x].selectorText && classes[x].selectorText.substring(0, charcount) === className) {
-                        // prevent duplicate-add...
-                        var txt = classes[x].selectorText,
-                            icnClass = txt.substring(0, txt.indexOf(":")).replace(".", "");
-                        if (!duplicateDetector[icnClass]) {
-                            foundList.push({ rule: classes[x], 'class': icnClass });
-                            duplicateDetector[icnClass] = true;
+                if(classes)
+                    for (var x = 0; x < classes.length; x++)
+                        if (classes[x].selectorText && classes[x].selectorText.substring(0, charcount) === className) {
+                            // prevent duplicate-add...
+                            var txt = classes[x].selectorText,
+                                icnClass = txt.substring(0, txt.indexOf(":")).replace(".", "");
+                            if (!duplicateDetector[icnClass]) {
+                                foundList.push({ rule: classes[x], 'class': icnClass });
+                                duplicateDetector[icnClass] = true;
+                            }
                         }
-                    }
             }
             return foundList;
         }
@@ -800,7 +801,7 @@ angular.module("eavFieldTemplates")
             var controlSettings = $scope.to.settings["string-font-icon-picker"];
             vm.files = (controlSettings) ? controlSettings.Files || "" : "";
             vm.prefix = (controlSettings) ? controlSettings.CssPrefix || "" : "";
-            vm.previewPrefix = (controlSettings) ? controlSettings.CssPrefix || "" : "";
+            vm.previewPrefix = (controlSettings) ? controlSettings.PreviewCss || "" : "";
 
             if (vm.useTestValues)
                 angular.extend(vm, {
@@ -1374,7 +1375,7 @@ angular.module("eavFieldTemplates")
 
         editor.addContextToolbar(makeTagDetector("a"), "link unlink");
         editor.addContextToolbar(makeTagDetector("img"), "image | alignimgleft alignimgcenter alignimgright imgresponsive | removeformat | remove");
-        editor.addContextToolbar(makeTagDetector("li"), "bullist numlist | outdent indent");
+        editor.addContextToolbar(makeTagDetector("li,ol,ul"), "bullist numlist | outdent indent");
         //#endregion
     }
 
@@ -1431,7 +1432,7 @@ angular.module('SxcEditTemplates', []).run(['$templateCache', function($template
 
 
   $templateCache.put('fields/string/string-font-icon-picker.html',
-    "<div><div dropdown keyboard-nav auto-close=outsideClick is-open=vm.selectorIsOpen><button type=button class=\"btn btn-default btn-lg\" tooltip={{value.Value}} dropdown-toggle><i class=\"{{vm.previewPrefix}} {{value.Value}}\" ng-show=value.Value></i> <span ng-show=!value.Value>&nbsp;&nbsp;</span></button><ul class=\"dropdown-menu icons-menu-columns\" role=menu><li class=input-group disable-auto-close><span class=\"input-group-addon btn-default btn\" ng-click=\"value.Value = ''\"><i class=icon-cancel></i></span> <input type=search ng-model=vm.iconFilter class=\"makePaymentDropdownSearchBox form-control input-lg\" placeholder=\"search...\"></li><li ng-repeat=\"icn in vm.icons\" role=menuitem ng-show=\"icn.class.indexOf(vm.iconFilter) !== -1\"><a ng-click=vm.setIcon(icn.class) xng-click=\"value.Value = icn.class; status.isopen = false;\"><i class=\"{{vm.previewPrefix}} {{icn.class}}\"></i> <span tooltip={{icn.class}}>...{{icn.class.substring(vm.prefix.length-1,25)}}</span></a></li></ul></div><div ng-if=vm.debug.on>Infos: found {{vm.icons.length}} items for prefix \"{{vm.prefix}}\" and will use \"{{vm.previewPrefix}}\" as a preview class. Files are: {{vm.files}}</div></div>"
+    "<div><div dropdown keyboard-nav auto-close=outsideClick is-open=vm.selectorIsOpen><button type=button class=\"btn btn-default btn-lg\" tooltip={{value.Value}} dropdown-toggle><i class=\"{{vm.previewPrefix}} {{value.Value}}\" ng-show=value.Value></i> <span ng-show=!value.Value>&nbsp;&nbsp;</span></button><ul class=\"dropdown-menu icons-menu-columns\" role=menu><li class=input-group disable-auto-close><span class=\"input-group-addon btn-default btn\" ng-click=\"value.Value = ''\"><i class=icon-cancel></i></span> <input type=search ng-model=vm.iconFilter class=\"makePaymentDropdownSearchBox form-control input-lg\" placeholder=\"search...\"></li><li ng-repeat=\"icn in vm.icons\" role=menuitem ng-show=\"icn.class.indexOf(vm.iconFilter) !== -1\"><a ng-click=vm.setIcon(icn.class) xng-click=\"value.Value = icn.class; status.isopen = false;\"><i class=\"{{vm.previewPrefix}} {{icn.class}}\"></i> <span tooltip={{icn.class}}>...{{icn.class.substring(vm.prefix.length-1,25)}}</span></a></li></ul></div><div ng-if=vm.debug.on>Infos: found {{vm.icons.length}} items for prefix \"{{vm.prefix}}\" and will use \"{{vm.previewPrefix}}\" as a preview class. Selected is \"{{value.Value}}\" and files are: {{vm.files}}</div></div>"
   );
 
 

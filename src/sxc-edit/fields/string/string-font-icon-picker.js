@@ -30,16 +30,17 @@ angular.module("eavFieldTemplates")
             if (!className) return foundList;
             for (var ssSet = 0; ssSet < document.styleSheets.length; ssSet++) {
                 var classes = document.styleSheets[ssSet].rules || document.styleSheets[ssSet].cssRules;
-                for (var x = 0; x < classes.length; x++)
-                    if (classes[x].selectorText && classes[x].selectorText.substring(0, charcount) === className) {
-                        // prevent duplicate-add...
-                        var txt = classes[x].selectorText,
-                            icnClass = txt.substring(0, txt.indexOf(":")).replace(".", "");
-                        if (!duplicateDetector[icnClass]) {
-                            foundList.push({ rule: classes[x], 'class': icnClass });
-                            duplicateDetector[icnClass] = true;
+                if(classes)
+                    for (var x = 0; x < classes.length; x++)
+                        if (classes[x].selectorText && classes[x].selectorText.substring(0, charcount) === className) {
+                            // prevent duplicate-add...
+                            var txt = classes[x].selectorText,
+                                icnClass = txt.substring(0, txt.indexOf(":")).replace(".", "");
+                            if (!duplicateDetector[icnClass]) {
+                                foundList.push({ rule: classes[x], 'class': icnClass });
+                                duplicateDetector[icnClass] = true;
+                            }
                         }
-                    }
             }
             return foundList;
         }
@@ -67,7 +68,7 @@ angular.module("eavFieldTemplates")
             var controlSettings = $scope.to.settings["string-font-icon-picker"];
             vm.files = (controlSettings) ? controlSettings.Files || "" : "";
             vm.prefix = (controlSettings) ? controlSettings.CssPrefix || "" : "";
-            vm.previewPrefix = (controlSettings) ? controlSettings.CssPrefix || "" : "";
+            vm.previewPrefix = (controlSettings) ? controlSettings.PreviewCss || "" : "";
 
             if (vm.useTestValues)
                 angular.extend(vm, {
