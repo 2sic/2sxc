@@ -752,8 +752,9 @@ angular.module("eavFieldTemplates")
             prefix: "", // used to find the right css-classes
             previewPrefix: "", // used to preview the icon, in addition to the built-in class
             icons: [], // list of icons, to be filled
-            useTestValues: false // to prefill with test-values, in case needed
-        });
+            useTestValues: false, // to prefill with test-values, in case needed
+            selectorIsOpen: false
+    });
 
 
         //#region icon css-class-methods
@@ -786,6 +787,13 @@ angular.module("eavFieldTemplates")
             return $ocLazyLoad.load(fileList);
         }
         //#endregion
+
+        vm.setIcon = function(newValue) {
+            $scope.value.Value = newValue;
+            vm.selectorIsOpen = false;
+            //$scope.status.isopen = false;
+            $scope.form.$setDirty();
+        };
 
         vm.activate = function() {
             // get configured
@@ -1423,7 +1431,7 @@ angular.module('SxcEditTemplates', []).run(['$templateCache', function($template
 
 
   $templateCache.put('fields/string/string-font-icon-picker.html',
-    "<div><input style=\"display: none\" ng-model=\"value.Value\"><div class=xinput-group dropdown keyboard-nav auto-close=outsideClick><button type=button class=\"btn btn-default btn-lg\" tooltip={{value.Value}} dropdown-toggle><i class=\"{{vm.previewPrefix}} {{value.Value}}\" ng-show=value.Value></i> <span ng-show=!value.Value>&nbsp;&nbsp;</span></button><ul class=\"dropdown-menu icons-menu-columns\" role=menu><li class=input-group><button class=\"input-group-btn btn-lg pull-left\" type=button ng-click=\"value.Value = ''\"><i class=icon-cancel></i>x</button> <input disable-auto-close type=search ng-model=vm.iconFilter class=\"makePaymentDropdownSearchBox input-lg\" placeholder=\"search...\"></li><li ng-repeat=\"icn in vm.icons\" role=menuitem ng-show=\"icn.class.indexOf(vm.iconFilter) !== -1\"><a xng-click=\"status.isopen = false\" ng-click=\"value.Value = icn.class; status.isopen = false; alert('ok');\"><i class=\"{{vm.previewPrefix}} {{icn.class}}\"></i> <span tooltip={{icn.class}}>...{{icn.class.substring(vm.prefix.length-1,25)}}</span></a></li></ul></div><div ng-if=vm.debug.on>Infos: found {{vm.icons.length}} items for prefix \"{{vm.prefix}}\" and will use \"{{vm.previewPrefix}}\" as a preview class. Files are: {{vm.files}}</div>todo:<ul><li>get initial button to stay white when clicked</li><li>get clean-button to be inline with the search-line</li><li>get list to close when clicking on an item</li><li>ensure the model is dirty after selecting an item, so the dialog can't just go away</li></ul></div>"
+    "<div><div dropdown keyboard-nav auto-close=outsideClick is-open=vm.selectorIsOpen><button type=button class=\"btn btn-default btn-lg\" tooltip={{value.Value}} dropdown-toggle><i class=\"{{vm.previewPrefix}} {{value.Value}}\" ng-show=value.Value></i> <span ng-show=!value.Value>&nbsp;&nbsp;</span></button><ul class=\"dropdown-menu icons-menu-columns\" role=menu><li class=input-group disable-auto-close><span class=\"input-group-addon btn-default btn\" ng-click=\"value.Value = ''\"><i class=icon-cancel></i></span> <input type=search ng-model=vm.iconFilter class=\"makePaymentDropdownSearchBox form-control input-lg\" placeholder=\"search...\"></li><li ng-repeat=\"icn in vm.icons\" role=menuitem ng-show=\"icn.class.indexOf(vm.iconFilter) !== -1\"><a ng-click=vm.setIcon(icn.class) xng-click=\"value.Value = icn.class; status.isopen = false;\"><i class=\"{{vm.previewPrefix}} {{icn.class}}\"></i> <span tooltip={{icn.class}}>...{{icn.class.substring(vm.prefix.length-1,25)}}</span></a></li></ul></div><div ng-if=vm.debug.on>Infos: found {{vm.icons.length}} items for prefix \"{{vm.prefix}}\" and will use \"{{vm.previewPrefix}}\" as a preview class. Files are: {{vm.files}}</div></div>"
   );
 
 

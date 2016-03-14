@@ -19,8 +19,9 @@ angular.module("eavFieldTemplates")
             prefix: "", // used to find the right css-classes
             previewPrefix: "", // used to preview the icon, in addition to the built-in class
             icons: [], // list of icons, to be filled
-            useTestValues: false // to prefill with test-values, in case needed
-        });
+            useTestValues: false, // to prefill with test-values, in case needed
+            selectorIsOpen: false
+    });
 
 
         //#region icon css-class-methods
@@ -53,6 +54,13 @@ angular.module("eavFieldTemplates")
             return $ocLazyLoad.load(fileList);
         }
         //#endregion
+
+        vm.setIcon = function(newValue) {
+            $scope.value.Value = newValue;
+            vm.selectorIsOpen = false;
+            //$scope.status.isopen = false;
+            $scope.form.$setDirty();
+        };
 
         vm.activate = function() {
             // get configured

@@ -50,6 +50,11 @@
   }
 }
 
+.input-string-font-icon-picker button {
+    background-color: white !important;
+    color: inherit !important;
+}
+
 .dropdown-menu.icons-menu-columns {
     background-color: white;
 }
