@@ -80,7 +80,7 @@ namespace ToSic.SexyContent.Search
                         Url = "",
                         Description = "",
                         Body = GetJoinedAttributes(entity, language),
-                        Title = entity.Title != null ? entity.Title[language].ToString() : "(no title)",
+                        Title = entity.Title != null && entity.Title[language] != null ? entity.Title[language].ToString() : "(no title)",
                         ModifiedTimeUtc = (entity.Modified == DateTime.MinValue ? DateTime.Now.Date.AddHours(DateTime.Now.Hour) : entity.Modified).ToUniversalTime(),
                         UniqueKey = "2sxc-" + moduleInfo.ModuleID + "-" + (entity.EntityGuid != new Guid() ? entity.EntityGuid.ToString() : (stream.Key + "-" + entity.EntityId)),
                         IsActive = true,
