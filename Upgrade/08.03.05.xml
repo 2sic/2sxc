@@ -2,6 +2,7 @@
 <SexyContent FileVersion="07.00.00" MinimumRequiredVersion="07.00.00" ModuleVersion="08.03.04" ExportDate="2016-03-12T09:16:59.749611+01:00">
   <Header>
     <Language Default="en-US" />
+    <Dimensions />
   </Header>
   <AttributeSets>
     <AttributeSet StaticName="@string-url-path" Name="@string-url-path" Description="Configuration for a string-url-path field" Scope="System" AlwaysShareConfiguration="true">
