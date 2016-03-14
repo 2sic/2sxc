@@ -476,7 +476,7 @@
 
         editor.addContextToolbar(makeTagDetector("a"), "link unlink");
         editor.addContextToolbar(makeTagDetector("img"), "image | alignimgleft alignimgcenter alignimgright imgresponsive | removeformat | remove");
-        editor.addContextToolbar(makeTagDetector("li"), "bullist numlist | outdent indent");
+        editor.addContextToolbar(makeTagDetector("li,ol,ul"), "bullist numlist | outdent indent");
         //#endregion
     }
 
