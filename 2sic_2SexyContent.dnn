@@ -445,7 +445,7 @@
               <name>ImageResizer.dll</name>
             </assembly>
             
-            <assembly>
+            <!--<assembly>
               <name>ImageResizer.Plugins.SimpleFilters.dll</name>
             </assembly>
             <assembly>
@@ -459,7 +459,7 @@
             </assembly>
             <assembly>
               <name>AForge.Math.dll</name>
-            </assembly>
+            </assembly>-->
             <assembly>
               <name>CsvHelper.dll</name>
             </assembly>
@@ -1045,8 +1045,8 @@
                     <resizer>
                       <plugins>
                         <add name="DiskCache" />
-                        <add name="SimpleFilters" />
-                        <add name="AdvancedFilters" />
+                        <!--<add name="SimpleFilters" />
+                        <add name="AdvancedFilters" />-->
                       </plugins>
                     </resizer>
                   </node>

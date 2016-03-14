@@ -92,7 +92,8 @@
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\Microsoft.Practices.Unity.dll" />
       <AssemblyInclude Include="$(MSBuildDnnBinPath)\Microsoft.Practices.Unity.Configuration.dll" />
       
-      <AssemblyInclude Include="$(ProjetDir)BuildScripts\Binary Dependencies\*.dll" />
+      <AssemblyInclude Include="$(ProjectDir)BuildScripts\Binary Dependencies\ImageResizer.dll" />
+      <AssemblyInclude Include="$(ProjectDir)BuildScripts\Binary Dependencies\ImageResizer.Plugins.DiskCache.dll" />
       <!--<AssemblyInclude Include="$(MSBuildDnnBinPath)\ImageResizer.pdb" />-->
       <!--<AssemblyInclude Include="$(MSBuildDnnBinPath)\ImageResizer.Plugins.DiskCache.dll" />-->
       <!--<AssemblyInclude Include="$(MSBuildDnnBinPath)\ImageResizer.Plugins.DiskCache.pdb" />-->
