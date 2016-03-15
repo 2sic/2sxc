@@ -96,9 +96,9 @@ angular.module("SxcAdminUi", [
             svc.browserFixUrlCaching = function(url) {
                 // this fixes a caching issue on IE and FF - see https://github.com/2sic/2sxc/issues/444
                 // by default I only need to do this on IE and FF, but to remain consistent, I always do it
-                var urlCheck = /(\/ui.html(\?time=[0-9]*)*)#/gi;
+                var urlCheck = /(\/ui.html\?sxcver=[0-9\.]*)((&time=)([0-9]*))*/gi;
                 if (url.match(urlCheck)) 
-                    url = url.replace(urlCheck, "/ui.html?time=" + new Date().getTime() + "#");
+                    url = url.replace(urlCheck, "$1&time=" + new Date().getTime());
                 return url;
             };
 
