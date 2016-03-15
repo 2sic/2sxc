@@ -6,6 +6,7 @@ using DotNetNuke.Common;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Portals.Internal;
 using DotNetNuke.Entities.Tabs;
+using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Services.Localization;
 using ToSic.Eav;
@@ -93,12 +94,21 @@ namespace ToSic.SexyContent.EAV.Implementation.ValueConverter
 
             //var linkId = int.Parse(match.Groups["id"].Value);
             //var linkType = match.Groups["type"].Value;
+            try
+            {
+                var result = linkType == "page"
+                    ? ResolvePageLink(linkId, value)
+                    : ResolveFileLink(linkId, value);
 
-            var result = linkType== "page"
-                ? ResolvePageLink(linkId, value)
-                : ResolveFileLink(linkId, value);
+                return result + ((result == value) ? "" : urlParams);
+            }
+            catch (Exception e)
+            {
+                var wrappedEx = new Exception("Error when trying to lookup a friendly url of \"" + value + "\"", e);
+                Exceptions.LogException(wrappedEx);
+                return value;
+            }
 
-            return result + ((result == value) ? "" : urlParams);
         }
 
         private string ResolveFileLink(int linkId, string defaultValue)
