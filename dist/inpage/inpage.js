@@ -923,7 +923,7 @@ $(document).ready(function () {
             showIfConfigIsEmpty: function () {
                 var showAutoInstaller = (vm.manageInfo.isContentApp) 
                     ? vm.templates.length === 0 
-                    : vm.apps.length <= 1;
+                    : vm.appCount === 0;
 
                 if (showAutoInstaller)
                     vm.externalInstaller.setup();
@@ -971,6 +971,7 @@ $(document).ready(function () {
             return svc.getSelectableApps()
                 .then(function(data) {
                     vm.apps = data.data;
+                    vm.appCount = data.data.length; // needed in the future to check if it shows getting started
                     if (vm.manageInfo.user.canDesign) {
                         vm.apps.push({ Name: "TemplatePicker.GetMoreApps", AppId: cAppActionImport });
                         vm.apps.push({ Name: "create your own app...", AppId: cAppActionCreate }); // todo: i18n
