@@ -702,6 +702,12 @@ div.dropzone div.input-group div.tooltip-inner {
     background-color: white;
 }
 
+.icons-menu-columns li {
+-webkit-column-break-inside: avoid; /* Chrome, Safari, Opera */
+          page-break-inside: avoid; /* Firefox */
+               break-inside: avoid; /* IE 10+ */
+}
+
 .dropdown-menu.icons-menu-columns li a {
     color: black;
 }
