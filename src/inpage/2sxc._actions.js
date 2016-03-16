@@ -44,7 +44,7 @@
                     return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; // don't provide new on the header-item
                 },
                 code: function (settings, event, toolbarManager) {
-                    toolbarManager._openNgDialog(extend({}, settings, { sortOrder: settings.sortOrder + 1 }), event);
+                    toolbarManager._openNgDialog($2sxc._lib.extend({}, settings, { sortOrder: settings.sortOrder + 1 }), event);
                 }
             }),
             // add brings no dialog, just add an empty item
@@ -66,9 +66,9 @@
                 configureCommand: function (cmd) {
                     var itm = {
                         Title: "EditFormTitle.Metadata",
-                        Metadata: extend({ keyType: "string", targetType: 10 }, cmd.settings.metadata)
+                        Metadata: $2sxc._lib.extend({ keyType: "string", targetType: 10 }, cmd.settings.metadata)
                     };
-                    extend(cmd.items[0], itm);
+                    $2sxc._lib.extend(cmd.items[0], itm);
                 }
             }),
             'remove': {

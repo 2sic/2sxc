@@ -1045,8 +1045,6 @@
                     <resizer>
                       <plugins>
                         <add name="DiskCache" />
-                        <!--<add name="SimpleFilters" />
-                        <add name="AdvancedFilters" />-->
                       </plugins>
                     </resizer>
                   </node>

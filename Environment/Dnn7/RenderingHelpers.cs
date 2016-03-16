@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
+using System.Web.UI.WebControls;
 using DotNetNuke.Common;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
@@ -108,23 +109,57 @@ namespace ToSic.SexyContent.Environment.Dnn7
         internal void RegisterClientDependencies(Page Page, bool useDebug)
         {
             var root = "~/desktopmodules/tosic_sexycontent/";
-            var ext = /*string.IsNullOrEmpty( Request.QueryString["debug"])*/ useDebug? ".min.js" : ".js";
+            root = Page.ResolveUrl(root);
+            var breakCache = "?sxcver=" + Settings.Version;
+            var ext = (useDebug? ".min.js" : ".js" + breakCache);
+            var ver = Settings.Version.ToString();
 
             // add edit-mode CSS
-            ClientResourceManager.RegisterStyleSheet(Page, root + "dist/inpage/inpage.min.css");
+            RegisterCss(Page, Settings.Version.ToString(), root + "dist/inpage/inpage.min.css");
 
             // ToDo: Move these RegisterScripts to JS to prevent including AngularJS twice (from other modules)
-            ClientResourceManager.RegisterScript(Page, root + "js/angularjs/angular.min.js", 80);
+            // ClientResourceManager.RegisterScript(Page, root + "js/angularjs/angular.min.js" + breakCache, 80);
+            RegisterJs(Page, ver, root + "js/angularjs/angular.min.js");
 
             // New: multi-language stuff
-            ClientResourceManager.RegisterScript(Page, root + "dist/lib/i18n/set.min.js");
+            //ClientResourceManager.RegisterScript(Page, root + "dist/lib/i18n/set.min.js" + breakCache);
+            RegisterJs(Page, ver, root + "dist/lib/i18n/set.min.js");
 
-            ClientResourceManager.RegisterScript(Page, root + "js/2sxc.api" + ext, 90);
-            ClientResourceManager.RegisterScript(Page, root + "dist/inpage/inpage" + ext, 91);
+            //ClientResourceManager.RegisterScript(Page, root + "js/2sxc.api" + ext, 90);
+            //ClientResourceManager.RegisterScript(Page, root + "dist/inpage/inpage" + ext, 91);
+            RegisterJs(Page, ver, root + "js/2sxc.api" + ext);
+            RegisterJs(Page, ver, root + "dist/inpage/inpage" + ext);
 
-            ClientResourceManager.RegisterScript(Page, root + "js/angularjs/2sxc4ng" + ext, 93);
-            ClientResourceManager.RegisterScript(Page, root + "dist/config/config" + ext, 93);
+            //ClientResourceManager.RegisterScript(Page, root + "js/angularjs/2sxc4ng" + ext, 93);
+            //ClientResourceManager.RegisterScript(Page, root + "dist/config/config" + ext, 93);
+            RegisterJs(Page, ver, root + "js/angularjs/2sxc4ng" + ext);
+            RegisterJs(Page, ver, root + "dist/config/config" + ext);
+
         }
+
+        #region add scripts / css with bypassing the official ClientResourceManager
+
+        public static void RegisterJs(Page page, string version, string path)
+        {
+            var url = string.Format("{0}{1}v={2}", path, path.IndexOf('?') > 0 ? '&' : '?', version);
+            page.ClientScript.RegisterClientScriptInclude(typeof(Page), path, url);
+        }
+
+
+
+        public static void RegisterCss(Page page, string version, string path)
+        {
+            ClientResourceManager.RegisterStyleSheet(page, path);
+
+            // alternative, but will add the same tag many times, don't use yet...
+            //var include = new Literal();
+            //include.Text = string.Format("<link href =\"{0}{1}v={2}\" type=\"text/css\" rel=\"stylesheet\" />", 
+            //    path, path.IndexOf('?') > 0 ? '&' : '?', version);
+            //page.Header.Controls.Add(include);
+        }
+
+
+        #endregion
 
         /// <summary>
         /// Add data-2sxc-globals Attribute to the DNN ModuleHost
