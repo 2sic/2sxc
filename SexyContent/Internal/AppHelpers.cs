@@ -245,7 +245,7 @@ namespace ToSic.SexyContent.Internal
             return null;
         }
 
-        private static int GetAppIdFromName(int zoneId, string appName)
+        internal static int GetAppIdFromName(int zoneId, string appName)
         {
             // ToDo: Fix issue in EAV (cache is only ensured when a CacheItem-Property is accessed like LastRefresh)
             var baseCache = ((BaseCache) DataSource.GetCache(Constants.DefaultZoneId, Constants.MetaDataAppId));

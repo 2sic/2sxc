@@ -31,7 +31,7 @@ namespace ToSic.SexyContent
 
         internal int? ZoneId { get; set; }
 
-        internal int? AppId { get; }
+        internal int? AppId { get; private set; }
 
         public TemplateManager AppTemplates { get; set; }
 
@@ -49,7 +49,7 @@ namespace ToSic.SexyContent
         /// </summary>
         public Environment.Environment Environment = new Environment.Environment();
 
-        internal ModuleInfo ModuleInfo { get; }
+        internal ModuleInfo ModuleInfo { get; private set; }
 
         public bool IsContentApp => ModuleInfo.DesktopModule.ModuleName == "2sxc";
 
@@ -149,11 +149,19 @@ namespace ToSic.SexyContent
         /// </summary>
         internal SxcInstance(int zoneId, int appId, bool enableCaching = true, int? ownerPortalId = null, ModuleInfo moduleInfo = null)
         {
+            SharedConstructor(zoneId, appId, ownerPortalId, moduleInfo);
+        }
+
+        private void SharedConstructor(int zoneId, int appId, int? ownerPortalId, ModuleInfo moduleInfo)
+        {
             ModuleInfo = moduleInfo;
-            PortalSettingsOfOriginalModule = ownerPortalId.HasValue ? new PortalSettings(ownerPortalId.Value) : PortalSettings.Current;
+            PortalSettingsOfOriginalModule = ownerPortalId.HasValue
+                ? new PortalSettings(ownerPortalId.Value)
+                : PortalSettings.Current;
 
             if (zoneId == 0)
-                if (PortalSettingsOfOriginalModule == null || !ZoneHelpers.GetZoneID(PortalSettingsOfOriginalModule.PortalId).HasValue)
+                if (PortalSettingsOfOriginalModule == null ||
+                    !ZoneHelpers.GetZoneID(PortalSettingsOfOriginalModule.PortalId).HasValue)
                     zoneId = Constants.DefaultZoneId;
                 else
                     zoneId = ZoneHelpers.GetZoneID(PortalSettingsOfOriginalModule.PortalId).Value;
@@ -164,36 +172,42 @@ namespace ToSic.SexyContent
             ZoneId = zoneId;
             AppId = appId;
             AppTemplates = new TemplateManager(zoneId, appId);
-			AppContentGroups = new ContentGroupManager(zoneId, appId);
+            AppContentGroups = new ContentGroupManager(zoneId, appId);
 
             // Set Properties on ContentContext
-            EavAppContext = EavDataController.Instance(zoneId, appId); 
+            EavAppContext = EavDataController.Instance(zoneId, appId);
             EavAppContext.UserName = SexyContent.Environment.Dnn7.UserIdentity.CurrentUserIdentityToken;
 
-
-
             #region Prepare Environment information 
+
             // 2016-01 2dm - this is new, the environment is where much code should go to later on
 
             // Build up the environment. If we know the module context, then use permissions from there
             Environment.Permissions = (moduleInfo != null)
                 ? (IPermissions) new Environment.Dnn7.Permissions(moduleInfo)
                 : new Environment.None.Permissions();
+
             #endregion
         }
 
-        public SxcInstance(InstanceConfigBeta config, ModuleInfo moduleInfo) : this(config.ZoneId, config.AppId, true, null, moduleInfo)
+        public SxcInstance(InstanceConfigBeta config, ModuleInfo moduleInfo)
         {
+            var zid = ZoneHelpers.GetZoneID(moduleInfo.OwnerPortalID).Value;
+            var apid = AppHelpers.GetAppIdFromName(zid, config.App);
+
+            SharedConstructor(zid, apid, null, moduleInfo);
             // now override the content-group to use the specified one, not the one tied to the module
-            _contentGroup = AppContentGroups.GetContentGroupOrGeneratePreview(config.ContentGroupGuid,
+            _contentGroup = AppContentGroups.GetContentGroupOrGeneratePreview(config.ContentGroup,
                 config.TemporaryTemplate);
         }
         public class InstanceConfigBeta
         {
-            public int ZoneId;
-            public int AppId;
-            public Guid ContentGroupGuid;
+            //public int ZoneId;
+            //public int AppId;
+            public string App;
+            public Guid ContentGroup;
             public string TemporaryTemplate;
+            public bool ShowTemplatePicker;
         }
 
         #endregion
