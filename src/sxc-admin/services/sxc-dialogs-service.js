@@ -18,7 +18,7 @@ angular.module("SxcAdminUi", [
         var svc = {};
 
         // todo: maybe needs something to get the real root-address
-        svc.oldRootUrl = websiteRoot + "Default.aspx?tabid={{tabid}}&mid={{mid}}&ctl={{ctl}}&appid={{appid}}&popUp=true"
+        svc.oldRootUrl = websiteRoot + "Default.aspx?tabid={{tabid}}&mid={{mid}}&ctl={{ctl}}&appid={{appid}}" + "&dnnprintmode=true&SkinSrc=%5bG%5dSkins%2f_default%2fNo+Skin&ContainerSrc=%5bG%5dContainers%2f_default%2fNo+Container" // "&popUp=true"
             .replace("{{tabid}}", tabId)
             .replace("{{mid}}", AppInstanceId);
 
