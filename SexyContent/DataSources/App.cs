@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Api.Api01;
+using ToSic.Eav.Data;
+using ToSic.SexyContent.Interfaces;
 
 namespace ToSic.SexyContent.DataSources
 {
-    public class App: Eav.DataSources.App
+    public class App: Eav.DataSources.App, IAppData
     {
         internal string DefaultLanguage { get; set; }
         internal string CurrentUserName { get; set; }
@@ -40,7 +42,6 @@ namespace ToSic.SexyContent.DataSources
             var x = DataController(userName);
             x.Delete(entityId);
         }
-
  
     }
 }

@@ -1,4 +1,8 @@
-﻿using DotNetNuke.Entities.Modules;
+﻿using System;
+using DotNetNuke.Entities.Modules;
+using DotNetNuke.Entities.Portals;
+using ToSic.Eav.ValueProvider;
+using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.Environment.Dnn7
@@ -9,7 +13,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
     /// </summary>
     public static class Factory
     {
-        public static ISxcInstance GetSxcInstanceForModule(int modId, int tabId)
+        public static ISxcInstance SxcInstanceForModule(int modId, int tabId)
         {
             var moduleInfo = new ModuleController().GetModule(modId, tabId, false);
 
@@ -30,5 +34,35 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
             return appAndDataHelpers;
         }
+
+        /// <summary>
+        /// get a full app-object for accessing data of the app from outside
+        /// </summary>
+        /// <param name="appId"></param>
+        /// <returns></returns>
+        public static IApp App(int appId)
+        {
+            return App(appId, PortalSettings.Current);
+        }
+
+        public static IApp App(int appId, PortalSettings ownerPortalSettings)
+        {
+            if(ownerPortalSettings == null)
+                throw new Exception("no portal settings received");
+
+            var zoneId = ZoneHelpers.GetZoneID(ownerPortalSettings.PortalId);
+
+            if (!zoneId.HasValue)
+                throw new Exception("Cannot find zone-id for portal specified");
+
+            var appStuff = new App(appId, zoneId.Value, ownerPortalSettings);
+
+            var provider = new ValueCollectionProvider(); // use blank provider for now
+
+            appStuff.InitData(false, provider);
+
+            return appStuff;
+        }
+
     }
 }

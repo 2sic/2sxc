@@ -245,6 +245,8 @@
     <Compile Include="Environment\Interfaces\IEnvironment.cs" />
     <Compile Include="Environment\Interfaces\IPermissions.cs" />
     <Compile Include="Environment\None\Permissions.cs" />
+    <Compile Include="Interfaces\IApp.cs" />
+    <Compile Include="Interfaces\IAppData.cs" />
     <Compile Include="SexyContent\ContentGroup.cs" />
     <Compile Include="SexyContent\ContentGroupManager.cs" />
     <Compile Include="SexyContent\DataSources\ConfigurationProvider.cs" />

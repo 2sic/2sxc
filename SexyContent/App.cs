@@ -8,6 +8,7 @@ using ToSic.Eav;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.DataSources;
+using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent
@@ -15,7 +16,7 @@ namespace ToSic.SexyContent
     /// <summary>
     /// The app class gives access to the App-object - for the data and things like the App:Path placeholder in a template
     /// </summary>
-    public class App
+    public class App : IApp
     {
         public int AppId { get; internal set; }
         public int ZoneId { get; internal set; }
@@ -62,8 +63,9 @@ namespace ToSic.SexyContent
                 var languagesActive = ZoneHelpers.GetCulturesWithActiveState(OwnerPS.PortalId, ZoneId).Any(c => c.Active);
                 if (languagesActive)
                     defaultLanguage = OwnerPS.DefaultLanguage;
-                Data.DefaultLanguage = defaultLanguage;
-                Data.CurrentUserName = Environment.Dnn7.UserIdentity.CurrentUserIdentityToken/*OwnerPS.UserInfo.Username*/;
+                var xData = Data as DataSources.App;
+                xData.DefaultLanguage = defaultLanguage;
+                xData.CurrentUserName = Environment.Dnn7.UserIdentity.CurrentUserIdentityToken/*OwnerPS.UserInfo.Username*/;
             }
         }
 
@@ -86,8 +88,8 @@ namespace ToSic.SexyContent
 
         //private IDataSource _data;
         //public IDataSource Data
-        private DataSources.App _data;
-        public DataSources.App Data
+        private IAppData _data;
+        public IAppData Data
         {
             get
             {
