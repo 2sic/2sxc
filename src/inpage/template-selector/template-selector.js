@@ -19,6 +19,7 @@
         vm.templates = [];
 
         vm.manageInfo = sxc.manage._manageInfo;
+        vm.showAdvanced = vm.manageInfo.user.canDesign;
         vm.templateId = vm.manageInfo.templateId;
         vm.undoTemplateId = vm.templateId;
         vm.contentTypeId = (vm.manageInfo.contentTypeId === "" && vm.manageInfo.templateId !== null)
@@ -97,19 +98,6 @@
             if (newAppId === oldAppId || newAppId === null)
                 return;
 
-            // special case: manage apps
-            if (newAppId === cAppActionManage) {
-                sxc.manage.action({ "action": "zone" });
-                return;
-            }
-
-            // special case: create app
-            if (newAppId === cAppActionCreate) {
-                alert('click + in the app-management to create your own app');
-                sxc.manage.action({ "action": "zone" });
-                return;
-            }
-
 
             // special case: add app
             if (newAppId === cAppActionImport) {
@@ -121,6 +109,17 @@
                 $window.location.reload();
             });
         });
+
+        vm.manageApps = function() {
+            sxc.manage.action({ "action": "zone" });
+        };
+        vm.appSettings = function() {
+            sxc.manage.action({ "action": "app" });
+        };
+        vm.installApp = function() {
+            window.location = importCommand; // actually does a dnnModal.show...
+            return;
+        };
 
         // Cancel and reset back to original state
         vm.cancelTemplateChange = function() {
@@ -255,11 +254,9 @@
                 .then(function(data) {
                     vm.apps = data.data;
                     vm.appCount = data.data.length; // needed in the future to check if it shows getting started
-                    if (vm.manageInfo.user.canDesign) {
-                        vm.apps.push({ Name: "TemplatePicker.GetMoreApps", AppId: cAppActionImport });
-                        vm.apps.push({ Name: "create your own app...", AppId: cAppActionCreate }); // todo: i18n
-                        vm.apps.push({ Name: "manage apps...", AppId: cAppActionManage }); // todo: i18n
-                    }
+                    //if (vm.manageInfo.user.canDesign) {
+                    //    vm.apps.push({ Name: "TemplatePicker.GetMoreApps", AppId: cAppActionImport });
+                    //}
                 });
         };
 

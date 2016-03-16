@@ -61,15 +61,15 @@
 .sc-selectors { max-width: 100% !important;float: left;width: 300px; }
 .sc-selectors select { display: block;width: 100%;font-family: sans-serif;font-size: 13px;font-weight: 400;font-style: normal;color: #666;line-height: 16px;padding: 9px; }
 .sc-selector-contenttype, .sc-selector-app { margin-bottom: 3px!important; }
-.sc-selector-actions { margin-top: 46px; }
+.sc-selector-app-actions { margin-top: 6px;height: 28px; }
+.sc-selector-actions { margin-top: 12px; }
 
 /* todo: change to font-icons */
-.sc-selector-actions a div {
+.sc-selector-actions a span, .sc-selector-app-actions a span {
     display: inline-block;
     width: 28px!important;
     height: 28px!important;
     line-height:28px!important;
-    background-color: #0088f4;
     border-style: solid; 
     box-sizing: content-box;
     border-radius: 3px;
@@ -79,6 +79,14 @@
     text-align: center; 
     /*padding: 2px;*/
     font-size: 15px;
+    margin-left: 6px;
+}
+
+.sc-selector-actions a span {
+    background-color: #0088f4;
+}
+.sc-selector-app-actions a span {
+    background-color: #96D500;
 }
 
 .sc-selectors select[disabled] { opacity: 0.5 }

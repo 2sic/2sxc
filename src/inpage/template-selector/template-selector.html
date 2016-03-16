@@ -1,43 +1,71 @@
 ﻿
 <div ng-cloak ng-show="vm.manageInfo.templateChooserVisible" class="dnnFormMessage dnnFormInfo">
     <div class="sc-selectors">
-
         <!-- App Selector - only relevant in App-Mode -->
-        <select ng-show="!vm.manageInfo.isContentApp" ng-model="vm.appId" class="sc-selector-app"
-                ng-options="a.AppId as (a.Name.indexOf('TemplatePicker.') === 0 ? (a.Name | translate) : a.Name) for a in vm.apps"
-                ng-disabled="vm.manageInfo.hasContent || vm.manageInfo.isList">
-            <option value="" ng-disabled="vm.appId != null" translate="TemplatePicker.AppPickerDefault"></option>
-        </select>
+        <div ng-show="!vm.manageInfo.isContentApp">
+            <select ng-model="vm.appId" class="sc-selector-app"
+                    ng-options="a.AppId as (a.Name.indexOf('TemplatePicker.') === 0 ? '[+] ' + (a.Name | translate) : a.Name) for a in vm.apps"
+                    ng-disabled="vm.manageInfo.hasContent || vm.manageInfo.isList">
+                <option value="" ng-disabled="vm.appId != null" translate="TemplatePicker.AppPickerDefault"></option>
+            </select>
 
-        <!-- Content Type selector, only for Content-Mode -->
-        <select ng-show="vm.manageInfo.isContentApp" ng-model="vm.contentTypeId" class="sc-selector-contenttype"
-                ng-options="c.StaticName as c.Name for c in vm.contentTypes"
-                ng-disabled="vm.manageInfo.hasContent || vm.manageInfo.isList">
-            <option ng-disabled="vm.contentTypeId != ''" value="" translate="TemplatePicker.ContentTypePickerDefault"></option>
-        </select>
+            <!-- todo: buttons here which are currently further down-->
+        </div>
 
-        <!-- View / template selector -->
-        <select ng-show="vm.manageInfo.isContentApp ? vm.contentTypeId != 0 : (vm.savedAppId != null &&  vm.filteredTemplates().length > 1)"
-                ng-model="vm.templateId" class="sc-selector-template"
-                ng-options="t.TemplateId as t.Name for t in vm.filteredTemplates(vm.contentTypeId)">
-        </select>
+
+            <!-- Content Type selector, only for Content-Mode -->
+            <select ng-show="vm.manageInfo.isContentApp" ng-model="vm.contentTypeId" class="sc-selector-contenttype"
+                    ng-options="c.StaticName as c.Name for c in vm.contentTypes"
+                    ng-disabled="vm.manageInfo.hasContent || vm.manageInfo.isList">
+                <option ng-disabled="vm.contentTypeId != ''" value="" translate="TemplatePicker.ContentTypePickerDefault"></option>
+            </select>
+
+            <!-- View / template selector -->
+            <select ng-show="vm.manageInfo.isContentApp ? vm.contentTypeId != 0 : (vm.savedAppId != null &&  vm.filteredTemplates().length > 1)"
+                    ng-model="vm.templateId" class="sc-selector-template"
+                    ng-options="t.TemplateId as t.Name for t in vm.filteredTemplates(vm.contentTypeId)"></select>
+        </div>
+
+    <div class="sc-selector-app-actions">
+        <span ng-if="vm.showAdvanced && !vm.manageInfo.isContentApp">
+            <a class="sc-selector-save"
+               ng-if="vm.appId != null"
+               ng-click="vm.appSettings();"
+               title="{{ 'Toolbar.App' | translate }}">
+                <span>
+                    <i class="icon-sxc-settings"></i>
+                </span>
+            </a>
+            <a class="sc-selector-save"
+               ng-click="vm.installApp();"
+               title="{{ 'TemplatePicker.GetMoreApps' | translate }}">
+                <span>
+                    <i class="icon-sxc-plus"></i>
+                </span>
+            </a>
+            <a class="sc-selector-save"
+               ng-click="vm.manageApps();"
+               title="{{ 'Toolbar.Zone' | translate }}">
+                <span>
+                    <i class="icon-sxc-manage"></i>
+                </span>
+            </a>
+
+        </span>
     </div>
-
     <div class="sc-selector-actions">
-        &nbsp;
         <a ng-show="vm.templateId != null && vm.savedTemplateId != vm.templateId" class="sc-selector-save"
            ng-click="vm.persistTemplate(false, false);"
            title="{{ 'TemplatePicker.Save' | translate }}">
-            <div>
+            <span>
                 <i class="icon-sxc-ok"></i>
-            </div>
+            </span>
         </a>
-        &nbsp;
         <a ng-show="vm.undoTemplateId != null" class="sc-selector-close" ng-click="vm.cancelTemplateChange();"
            title="{{ 'TemplatePicker.' + (vm.manageInfo.isContentApp ? 'Cancel' : 'Close') | translate }}">
-            <div>
+            <span>
                 <i class="icon-sxc-cancel"></i>
-            </div>
+            </span>
         </a>
     </div>
     <div class="sc-loading" ng-show="vm.loading">
