@@ -68,11 +68,7 @@ namespace ToSic.SexyContent
                 switch (version)
                 {
                     case "01.00.00": // Make sure that log folder empty on new installations (could happen if 2sxc was already installed on a system)
-                        if (Directory.Exists(HostingEnvironment.MapPath(LogDirectory)))
-                        {
-                            var files = new List<string>(Directory.GetFiles(HostingEnvironment.MapPath(LogDirectory)));
-                            files.ForEach(x => { try { File.Delete(x); } catch { } });
-                        }
+                        MaybeResetUpgradeLogsToStartAgainFromV1();
                         break;
                     case "05.05.00":
                         Version050500();
@@ -148,6 +144,30 @@ namespace ToSic.SexyContent
             return version;
         }
 
+        private static void MaybeResetUpgradeLogsToStartAgainFromV1()
+        {
+            // this condition only applies, if 2sxc upgrade 7 didn't happen yet
+            if (
+                DataSource.GetCache(Constants.DefaultZoneId, Constants.MetaDataAppId)
+                    .GetContentType("2SexyContent-Template") != null) return;
+
+            if (Directory.Exists(HostingEnvironment.MapPath(LogDirectory)))
+            {
+                var files = new List<string>(Directory.GetFiles(HostingEnvironment.MapPath(LogDirectory)));
+                files.ForEach(x =>
+                {
+                    try
+                    {
+                        File.Delete(x);
+                    }
+                    catch
+                    {
+                    }
+                });
+            }
+            return;
+        }
+
         internal static void FinishAbortedUpgrade()
         {
             LogUpgradeStep("", "FinishAbortedUpgrade starting", false);
@@ -184,6 +204,7 @@ namespace ToSic.SexyContent
             var logFilePath = HostingEnvironment.MapPath(LogDirectory + DateTime.Now.ToString("yyyy-MM-dd hh-mm-ss") + " detailed.resources");
             // if (appendToFile || !File.Exists(logFilePath))
                 File.AppendAllText(logFilePath, DetailedLog, Encoding.UTF8);
+            
         }
 
 
