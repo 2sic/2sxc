@@ -124,16 +124,38 @@ namespace ToSic.SexyContent
 		{
 			var moduleControl = new ModuleController();
 			var settings = moduleControl.GetModuleSettings(moduleId);
+		    var maybeGuid = settings[Settings.ContentGroupGuidString];
+		    Guid groupGuid;
+		    Guid.TryParse(maybeGuid?.ToString(), out groupGuid);
+            var previewTemplateString = settings[PreviewTemplateIdString]?.ToString();
 
-			// Return a "faked" ContentGroup if it does not exist yet (with the preview templateId)
-			if (settings[Settings.ContentGroupGuidString] == null)
-			{
-				var previewTemplateString = settings[PreviewTemplateIdString];
-				return new ContentGroup(previewTemplateString != null ? Guid.Parse(previewTemplateString.ToString()) : new Guid?(), _zoneId, _appId);
-			}
-
-			settings = moduleControl.GetModuleSettings(moduleId);
-			return GetContentGroup(Guid.Parse(settings[Settings.ContentGroupGuidString].ToString()));
+            return GetContentGroupOrGeneratePreview(groupGuid, previewTemplateString);
 		}
+
+	    internal ContentGroup GetContentGroupOrGeneratePreview(Guid groupGuid, string previewTemplateString)
+	    {
+// Return a "faked" ContentGroup if it does not exist yet (with the preview templateId)
+	        if (groupGuid == Guid.Empty) // maybeGuid == null)
+	        {
+	            return new ContentGroup(previewTemplateString != null
+	                ? Guid.Parse(previewTemplateString)
+	                : new Guid?(),
+	                _zoneId, _appId);
+	        }
+
+	        // settings = moduleControl.GetModuleSettings(moduleId);
+	        return GetContentGroup(groupGuid); // Guid.Parse(maybeGuid.ToString()));
+	    }
+
+	    //   /// <summary>
+     //   /// generate a dummy content-group with the template specified, so that a preview can be made
+     //   /// </summary>
+     //   /// <param name="previewTemplateString"></param>
+     //   /// <returns></returns>
+	    //private ContentGroup GeneratePreviewContentGroup(object previewTemplateString)
+	    //{
+	    //    return new ContentGroup(previewTemplateString != null ? Guid.Parse(previewTemplateString.ToString()) : new Guid?(),
+	    //        _zoneId, _appId);
+	    //}
 	}
 }

@@ -167,8 +167,8 @@ namespace ToSic.SexyContent
 			AppContentGroups = new ContentGroupManager(zoneId, appId);
 
             // Set Properties on ContentContext
-            EavAppContext = EavDataController.Instance(zoneId, appId); // EavContext.Instance(zoneId, appId);
-            EavAppContext.UserName = SexyContent.Environment.Dnn7.UserIdentity.CurrentUserIdentityToken;// (HttpContext.Current == null || HttpContext.Current.User == null) ? Settings.InternalUserName : HttpContext.Current.User.Identity.Name;
+            EavAppContext = EavDataController.Instance(zoneId, appId); 
+            EavAppContext.UserName = SexyContent.Environment.Dnn7.UserIdentity.CurrentUserIdentityToken;
 
 
 
@@ -182,6 +182,19 @@ namespace ToSic.SexyContent
             #endregion
         }
 
+        public SxcInstance(InstanceConfigBeta config, ModuleInfo moduleInfo) : this(config.ZoneId, config.AppId, true, null, moduleInfo)
+        {
+            // now override the content-group to use the specified one, not the one tied to the module
+            _contentGroup = AppContentGroups.GetContentGroupOrGeneratePreview(config.ContentGroupGuid,
+                config.TemporaryTemplate);
+        }
+        public class InstanceConfigBeta
+        {
+            public int ZoneId;
+            public int AppId;
+            public Guid ContentGroupGuid;
+            public string TemporaryTemplate;
+        }
 
         #endregion
 

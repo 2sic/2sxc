@@ -10,6 +10,7 @@ using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
 using ToSic.Eav.DataSources.Caches;
+using static System.String;
 
 namespace ToSic.SexyContent.Internal
 {
@@ -108,8 +109,8 @@ namespace ToSic.SexyContent.Internal
                 var appAttributeSet = appContext.EavAppContext.AttribSet.GetAttributeSet(Settings.AttributeSetStaticNameApps).AttributeSetID;
                 var values = new OrderedDictionary
                 {
-                    {"DisplayName", String.IsNullOrEmpty(appName) ? eavAppName : appName },
-                    {"Folder", String.IsNullOrEmpty(appName) ? eavAppName : RemoveIllegalCharsFromPath(appName) },
+                    {"DisplayName", IsNullOrEmpty(appName) ? eavAppName : appName },
+                    {"Folder", IsNullOrEmpty(appName) ? eavAppName : RemoveIllegalCharsFromPath(appName) },
                     {"AllowTokenTemplates", "False"},
                     {"AllowRazorTemplates", "False"},
                     {"Version", "00.00.01"},
@@ -156,7 +157,7 @@ namespace ToSic.SexyContent.Internal
 
         public static App AddApp(int zoneId, string appName, PortalSettings ownerPS)
         {
-            if (appName == "Content" || appName == "Default" || String.IsNullOrEmpty(appName) || !Regex.IsMatch(appName, "^[0-9A-Za-z -_]+$"))
+            if (appName == "Content" || appName == "Default" || IsNullOrEmpty(appName) || !Regex.IsMatch(appName, "^[0-9A-Za-z -_]+$"))
                 throw new ArgumentOutOfRangeException("appName '" + appName + "' not allowed");
 
             // Adding app to EAV
@@ -185,7 +186,7 @@ namespace ToSic.SexyContent.Internal
             var sexyApp = AppHelpers.GetApp(zoneId, appId, ps);
 
             // Delete folder
-            if (!String.IsNullOrEmpty(sexyApp.Folder) && Directory.Exists(sexyApp.PhysicalPath))
+            if (!IsNullOrEmpty(sexyApp.Folder) && Directory.Exists(sexyApp.PhysicalPath))
                 Directory.Delete(sexyApp.PhysicalPath, true);
 
             // Delete the app
@@ -225,7 +226,7 @@ namespace ToSic.SexyContent.Internal
 
             if (HttpContext.Current != null)
             {
-                if (!String.IsNullOrEmpty(HttpContext.Current.Request.QueryString["AppId"]))
+                if (!IsNullOrEmpty(HttpContext.Current.Request.QueryString["AppId"]))
                     appIdString = HttpContext.Current.Request.QueryString["AppId"];
                 else
                 {
@@ -233,11 +234,7 @@ namespace ToSic.SexyContent.Internal
                     var appName = DnnStuffToRefactor.TryToGetReliableSetting(module, Settings.AppNameString);//  module.ModuleSettings[AppNameString];
 
                     if (appName != null)
-                    {
-                        // ToDo: Fix issue in EAV (cache is only ensured when a CacheItem-Property is accessed like LastRefresh)
-                        var x = ((BaseCache)DataSource.GetCache(Constants.DefaultZoneId, Constants.MetaDataAppId)).LastRefresh;
-                        appIdString = ((BaseCache)DataSource.GetCache(Constants.DefaultZoneId, Constants.MetaDataAppId)).ZoneApps[zoneId.Value].Apps.Where(p => p.Value == (string)appName).Select(p => p.Key).FirstOrDefault();
-                    }
+                        appIdString = GetAppIdFromName(zoneId.Value, appName);
                 }
             }
 
@@ -246,6 +243,21 @@ namespace ToSic.SexyContent.Internal
                 return appId;
 
             return null;
+        }
+
+        private static int GetAppIdFromName(int zoneId, string appName)
+        {
+            // ToDo: Fix issue in EAV (cache is only ensured when a CacheItem-Property is accessed like LastRefresh)
+            var baseCache = ((BaseCache) DataSource.GetCache(Constants.DefaultZoneId, Constants.MetaDataAppId));
+            var dummy = baseCache.LastRefresh;
+
+            if (IsNullOrEmpty(appName))
+                appName = Constants.DefaultAppName;
+
+            var appId = baseCache.ZoneApps[zoneId].Apps
+                    .Where(p => p.Value == appName).Select(p => p.Key).FirstOrDefault();
+
+            return appId;
         }
 
         public static void SetAppIdForModule(ModuleInfo module, int? appId)
@@ -295,7 +307,7 @@ namespace ToSic.SexyContent.Internal
         internal static string RemoveIllegalCharsFromPath(string path)
         {
             var regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
-            var r = new Regex(String.Format("[{0}]", Regex.Escape(regexSearch)));
+            var r = new Regex(Format("[{0}]", Regex.Escape(regexSearch)));
             return r.Replace(path, "");
         }
     }

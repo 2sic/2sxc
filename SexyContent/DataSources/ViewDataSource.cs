@@ -21,15 +21,18 @@ namespace ToSic.SexyContent.DataSources
             var initialSource = DataSource.GetInitialDataSource(sxc.ZoneId, sxc.AppId, showDrafts);
             var moduleDataSource = DataSource.GetDataSource<ModuleDataSource>(sxc.ZoneId, sxc.AppId, initialSource, configurationProvider);
             moduleDataSource.ModuleId = moduleId;
-            if (template != null)
-                moduleDataSource.OverrideTemplateId = template.TemplateId;
+            //if (template != null)
+            //{
+                //moduleDataSource.OverrideTemplateId = template.TemplateId; // old
+            //}
+            moduleDataSource.OverrideTemplate = template; // new
+            moduleDataSource.UseSxcInstanceContentGroup = true; // new
             moduleDataSource.SxcContext = sxc;
 
-            var viewDataSourceUpstream = moduleDataSource;
-
-            // If the Template has a Data-Pipeline, use it instead of the ModuleDataSource created above
-            if (template != null && template.Pipeline != null)
-                viewDataSourceUpstream = null;
+            // If the Template has a Data-Pipeline, use an empty upstream, else use the ModuleDataSource created above
+            var viewDataSourceUpstream = (template?.Pipeline == null)
+                ? moduleDataSource
+                : null;
 
             var viewDataSource = DataSource.GetDataSource<ViewDataSource>(sxc.ZoneId, sxc.AppId, viewDataSourceUpstream, configurationProvider);
 
