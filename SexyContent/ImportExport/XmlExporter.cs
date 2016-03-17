@@ -286,12 +286,14 @@ namespace ToSic.SexyContent.ImportExport
                     var file = DnnFiles.GetFile(fileNum);
                     AddFolderToQueue(file.FolderId);
                 }
-                finally
+                catch
                 {
+                    // don't do anything, because if the file doesn't exist, its FOLDER should also not land in the queue
                 }
             }
-            finally
+            catch
             {
+                // don't do anything, because if the file doesn't exist, it should also not land in the queue
             }
         }
 
