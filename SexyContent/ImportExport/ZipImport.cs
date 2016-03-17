@@ -281,7 +281,7 @@ namespace ToSic.SexyContent.ImportExport
                     }
                     catch (Exception e)
                     {
-                        messages.Add(new ExportImportMessage("Can't copy file '" + destinationFileName + "' because of an unkown error. The exception has been logged to the event log.", ExportImportMessage.MessageTypes.Warning));
+                        messages.Add(new ExportImportMessage("Can't copy file '" + destinationFileName + "' because of an unkown error. It's likely that your files and folders are not in sync with DNN, usually re-syncing will fix the issue.", ExportImportMessage.MessageTypes.Warning));
                         Exceptions.LogException(e);
                     }
                 }
