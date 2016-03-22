@@ -119,7 +119,7 @@ namespace ToSic.SexyContent
                 demoContentChooser.Items.Add(new ListItem(LocalizeString("ddlDemoRowsDefaultItem.Text"), ""));
 
 	            var dataSource = DataSource.GetInitialDataSource(ZoneId, AppId);
-	            var data = dataSource.List.Where(p => p.Value.Type.StaticName == contentType).Select(p => new { p.Value.EntityId, EntityTitle = p.Value.Title != null ? p.Value.Title[CultureInfo.CurrentCulture.Name].ToString() : "(no title)" });
+	            var data = dataSource.List.Where(p => p.Value.Type.StaticName == contentType).Select(p => new { p.Value.EntityId, EntityTitle = p.Value.Title != null && p.Value.Title[CultureInfo.CurrentCulture.Name] != null ? p.Value.Title[CultureInfo.CurrentCulture.Name].ToString() : "(no title)" });
 					
 				demoContentChooser.DataSource = data;
                 demoContentChooser.Enabled = true;
