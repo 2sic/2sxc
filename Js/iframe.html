@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+	<meta charset="utf-8" />
+</head>
+<body>
+this is the iframe - it works!    
+
+<p>tall</p>
+<p>next one</p>
+<p>and third</p>
+
+<script>
+    window.addEventListener("resize", function() {
+        window.frameElement.syncHeight(document.body.scrollHeight);
+    });
+</script>
+</body>
+</html>
