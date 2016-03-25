@@ -501,6 +501,7 @@
     <Content Include="src\sxc-admin\services\templates-service.js" />
     <Content Include="SqlDataProvider\08.03.02.SqlDataProvider" />
     <Content Include="src\inpage\2sxc._lib.js" />
+    <Content Include="src\inpage\2sxc.contentBlock.js" />
     <None Include="src\sxc-develop\source-editor\README.md" />
     <Content Include="src\sxc-develop\source-editor\toArray-filter.js" />
     <Content Include="src\sxc-admin\templates\edit.html" />

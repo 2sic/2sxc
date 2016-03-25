@@ -47,14 +47,15 @@
                     return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; // don't provide new on the header-item
                 },
                 code: function (settings, event, toolbarManager) {
-                    toolbarManager._openNgDialog($2sxc._lib.extend({}, settings, { sortOrder: settings.sortOrder + 1 }), event);
+                    toolbarManager.openNgDialog($2sxc._lib.extend({}, settings, { sortOrder: settings.sortOrder + 1 }), event);
                 }
             }),
             // add brings no dialog, just add an empty item
             'add': createActionConfig("add", "AddDemo", "plus-circled", "edit", false, {
                 addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; },
-                code: function (settings, event, toolbarManager) {
-                    toolbarManager._getAngularVm().addItem(settings.sortOrder + 1);
+                code: function (settings, event, tbContr) {
+                    tbContr.rootCB // tbContr._getAngularVm()
+                        .addItem(settings.sortOrder + 1);
                 }
             }),
             "metadata": createActionConfig("metadata", "Metadata", "tag", "default", false, {
@@ -82,7 +83,9 @@
                 addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; },
                 code: function (settings, event, tbContr) {
                     if (confirm(tbContr.translate("Toolbar.ConfirmRemove"))) {
-                        tbContr._getAngularVm().removeFromList(settings.sortOrder);
+                        tbContr.rootCB
+                        //tbContr._getAngularVm()
+                            .removeFromList(settings.sortOrder);
                     }
                 }
             },
@@ -107,8 +110,10 @@
                 disabled: false,
                 showOn: "edit",
                 addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1 && settings.sortOrder !== 0; },
-                code: function (settings, event, toolbarManager) {
-                    toolbarManager._getAngularVm().changeOrder(settings.sortOrder, Math.max(settings.sortOrder - 1, 0));
+                code: function (settings, event, tbContr) {
+                    tbContr.rootCB
+                        //toolbarManager._getAngularVm()
+                        .changeOrder(settings.sortOrder, Math.max(settings.sortOrder - 1, 0));
                 }
             },
             'movedown': {
@@ -117,8 +122,10 @@
                 disabled: false,
                 showOn: "edit",
                 addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; },
-                code: function (settings, event, toolbarManager) {
-                    toolbarManager._getAngularVm().changeOrder(settings.sortOrder, settings.sortOrder + 1);
+                code: function (settings, event, tbContr) {
+                    tbContr.rootCB
+                        //tbContr._getAngularVm()
+                        .changeOrder(settings.sortOrder, settings.sortOrder + 1);
                 }
             },
             'sort': {
@@ -130,14 +137,16 @@
             'publish': createActionConfig("publish", "Published", "eye", "edit", false, {
                 iclass2: "icon-sxc-eye-off",
                 disabled: true,
-                code: function (settings, event, toolbarManager) {
+                code: function (settings, event, tbContr) {
                     if (settings.isPublished) {
-                        alert(toolbarManager.translate("Toolbar.AlreadyPublished"));
+                        alert(tbContr.translate("Toolbar.AlreadyPublished"));
                         return;
                     }
                     var part = settings.sortOrder === -1 ? "listcontent" : "content";
                     var index = settings.sortOrder === -1 ? 0 : settings.sortOrder;
-                    toolbarManager._getAngularVm().publish(part, index);
+                    tbContr.rootCB
+                        //toolbarManager._getAngularVm()
+                        .publish(part, index);
                 }
             }),
             'replace': createActionConfig("replace", "Replace", "replace", "edit", false, {
@@ -148,8 +157,11 @@
                 iclass: "icon-sxc-glasses",
                 showOn: "default",
                 uiActionOnly: true, // so it doesn't create the content when used
-                code: function (settings, event, toolbarManager) {
-                    toolbarManager.dialog.toggle();
+                code: function (settings, event, manager) {
+                    if (!manager.dialog)
+                        manager.dialog = manager.action({ "action": "dash-view" });
+                    else
+                        manager.dialog.toggle();
                     //toolbarManager._getAngularVm().toggle();
                 }
             },

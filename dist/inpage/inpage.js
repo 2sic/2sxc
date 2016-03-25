@@ -47,14 +47,15 @@
                     return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; // don't provide new on the header-item
                 },
                 code: function (settings, event, toolbarManager) {
-                    toolbarManager._openNgDialog($2sxc._lib.extend({}, settings, { sortOrder: settings.sortOrder + 1 }), event);
+                    toolbarManager.openNgDialog($2sxc._lib.extend({}, settings, { sortOrder: settings.sortOrder + 1 }), event);
                 }
             }),
             // add brings no dialog, just add an empty item
             'add': createActionConfig("add", "AddDemo", "plus-circled", "edit", false, {
                 addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; },
-                code: function (settings, event, toolbarManager) {
-                    toolbarManager._getAngularVm().addItem(settings.sortOrder + 1);
+                code: function (settings, event, tbContr) {
+                    tbContr.rootCB // tbContr._getAngularVm()
+                        .addItem(settings.sortOrder + 1);
                 }
             }),
             "metadata": createActionConfig("metadata", "Metadata", "tag", "default", false, {
@@ -82,7 +83,9 @@
                 addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; },
                 code: function (settings, event, tbContr) {
                     if (confirm(tbContr.translate("Toolbar.ConfirmRemove"))) {
-                        tbContr._getAngularVm().removeFromList(settings.sortOrder);
+                        tbContr.rootCB
+                        //tbContr._getAngularVm()
+                            .removeFromList(settings.sortOrder);
                     }
                 }
             },
@@ -107,8 +110,10 @@
                 disabled: false,
                 showOn: "edit",
                 addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1 && settings.sortOrder !== 0; },
-                code: function (settings, event, toolbarManager) {
-                    toolbarManager._getAngularVm().changeOrder(settings.sortOrder, Math.max(settings.sortOrder - 1, 0));
+                code: function (settings, event, tbContr) {
+                    tbContr.rootCB
+                        //toolbarManager._getAngularVm()
+                        .changeOrder(settings.sortOrder, Math.max(settings.sortOrder - 1, 0));
                 }
             },
             'movedown': {
@@ -117,8 +122,10 @@
                 disabled: false,
                 showOn: "edit",
                 addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; },
-                code: function (settings, event, toolbarManager) {
-                    toolbarManager._getAngularVm().changeOrder(settings.sortOrder, settings.sortOrder + 1);
+                code: function (settings, event, tbContr) {
+                    tbContr.rootCB
+                        //tbContr._getAngularVm()
+                        .changeOrder(settings.sortOrder, settings.sortOrder + 1);
                 }
             },
             'sort': {
@@ -130,14 +137,16 @@
             'publish': createActionConfig("publish", "Published", "eye", "edit", false, {
                 iclass2: "icon-sxc-eye-off",
                 disabled: true,
-                code: function (settings, event, toolbarManager) {
+                code: function (settings, event, tbContr) {
                     if (settings.isPublished) {
-                        alert(toolbarManager.translate("Toolbar.AlreadyPublished"));
+                        alert(tbContr.translate("Toolbar.AlreadyPublished"));
                         return;
                     }
                     var part = settings.sortOrder === -1 ? "listcontent" : "content";
                     var index = settings.sortOrder === -1 ? 0 : settings.sortOrder;
-                    toolbarManager._getAngularVm().publish(part, index);
+                    tbContr.rootCB
+                        //toolbarManager._getAngularVm()
+                        .publish(part, index);
                 }
             }),
             'replace': createActionConfig("replace", "Replace", "replace", "edit", false, {
@@ -148,8 +157,11 @@
                 iclass: "icon-sxc-glasses",
                 showOn: "default",
                 uiActionOnly: true, // so it doesn't create the content when used
-                code: function (settings, event, toolbarManager) {
-                    toolbarManager.dialog.toggle();
+                code: function (settings, event, manager) {
+                    if (!manager.dialog)
+                        manager.dialog = manager.action({ "action": "dash-view" });
+                    else
+                        manager.dialog.toggle();
                     //toolbarManager._getAngularVm().toggle();
                 }
             },
@@ -225,6 +237,180 @@
 	};
 })();
 
+/* 
+ * this is a content block in the browser
+ * 
+ * A Content Block is a standalone unit of content, with it's own definition of
+ * 1. content items
+ * 2. template
+ * + some other stuff
+ *
+ * it should be able to render itself
+ */
+
+$2sxc.contentBlock = function(sxc, manage) {
+	var viewPortSelector = ".DnnModule-" + sxc.id + " .sc-viewport";
+
+	//#region loads of old stuff, should be cleaned, mostly just copied from the angulare coe
+
+	var cViewWithoutContent = "_LayoutElement"; // needed to differentiate the "select item" from the "empty-is-selected" which are both empty
+
+	var vm = { manageInfo: manage._manageInfo };
+	vm.templateId = vm.manageInfo.templateId;
+    vm.undoTemplateId = vm.templateId;
+    vm.contentTypeId = (vm.manageInfo.contentTypeId === "" && vm.manageInfo.templateId !== null)
+		? cViewWithoutContent           // has template but no content, use placeholder
+		: vm.manageInfo.contentTypeId;
+    vm.undoContentTypeId = vm.contentTypeId;
+
+	//#endregion
+
+    var cb = {
+        sxc: sxc,
+        loading: 0,
+        minfo: manage._manageInfo, // todo: not nice dependecy
+
+        // ajax update/replace the content of the content-block
+        replace: function(newContent) {
+            try {
+                $(viewPortSelector).html(newContent);
+                manage._processToolbars();
+            } catch (e) {
+                console.log("Error while rendering template:");
+                console.log(e);
+            }
+        },
+
+        // retrieve new preview-content with alternate template and then show the result
+        reload: function(templateId) {
+            // if nothing specified, use stored id
+            if (!templateId)
+                templateId = cb.minfo.templateId;
+
+            // if nothing specified / stored, cancel
+            if (!templateId)
+                return;
+
+            // if reloading a non-content-app, re-load the page
+            if (!cb.minfo.isContentApp)
+                return window.location.reload();
+
+            console.log("new loading");
+            var lang = cb.minfo.lang;
+
+            // ajax-call, then replace
+            cb.loading++;
+            return sxc.webApi.get({
+                    url: "view/module/rendertemplate",
+                    params: { templateId: templateId, lang: lang },
+                    dataType: "html"
+                })
+                .then(function(response) {
+                    cb.replace(response);
+                    cb.loading--;
+                });
+        },
+
+        // set a content-item in this block to published, then reload
+        publish: function(part, sortOrder) {
+            return sxc.webApi.get({
+                url: "view/module/publish",
+                params: { part: part, sortOrder: sortOrder }
+            }).then(cb.reload);
+        },
+
+        // remove an item from a list, then reload
+        removeFromList: function(sortOrder) {
+            return sxc.webApi.get({
+                url: "view/module/removefromlist",
+                params: { sortOrder: sortOrder }
+            }).then(cb.reload);
+        },
+
+        // change the order of an item in a list, then reload
+        changeOrder: function(sortOrder, destinationSortOrder) {
+            return sxc.webApi.get({
+                url: "view/module/changeorder",
+                params: { sortOrder: sortOrder, destinationSortOrder: destinationSortOrder }
+            }).then(cb.reload);
+        },
+
+        setTemplateChooserState: function (state) {
+        	return sxc.webApi.get({
+        		url: "View/Module/SetTemplateChooserState",
+        		params: { state: state }
+        	});
+        },
+
+        addItem: function(sortOrder) {
+        	return sxc.webApi.get({
+        		url: "View/Module/AddItem",
+        		params: { sortOrder: sortOrder }
+        	}).then(cb.reload);
+        },
+
+
+
+        saveTemplate: function (templateId, forceCreateContentGroup, newTemplateChooserState) {
+            return sxc.webApi.get({
+                url: "View/Module/SaveTemplateId",
+                params: {
+                    templateId: templateId,
+                    forceCreateContentGroup: forceCreateContentGroup,
+                    newTemplateChooserState: newTemplateChooserState
+                }
+            });
+        },
+
+        // todo...
+        prepareToAddContent: function() {
+            return cb.persistTemplate(true, false);
+        },
+
+        persistTemplate: function(forceCreate, selectorVisibility) {
+            // Save only if the currently saved is not the same as the new
+            var groupExistsAndTemplateUnchanged = !!cb.minfo.hasContent && (vm.undoTemplateId === vm.templateId);
+            var promiseToSetState;
+            if (groupExistsAndTemplateUnchanged)
+                promiseToSetState = (cb.minfo.templateChooserVisible)
+                    ? cb.setTemplateChooserState(false) // hide in case it was visible
+                    : $.when(null); // all is ok, create empty promise to allow chaining the result
+            else
+                promiseToSetState = cb.saveTemplate(vm.templateId, forceCreate, selectorVisibility) 
+                    .then(function(result) {
+                        if (result.status !== 200) { // only continue if ok
+                            alert("error - result not ok, was not able to create ContentGroup");
+                            return;
+                        }
+                        var newGuid = result.data;
+                        if (newGuid === null)
+                            return;
+                        newGuid = newGuid.replace(/[\",\']/g, ""); // fixes a special case where the guid is given with quotes (dependes on version of angularjs) issue #532
+                        if (console)
+                            console.log("created content group {" + newGuid + "}");
+
+                        // todo: will need more complexity
+                        cb.minfo.config.contentGroupId = newGuid; // update internal ContentGroupGuid 
+                    });
+
+            var promiseToCorrectUi = promiseToSetState.then(function() {
+                vm.undoTemplateId = vm.templateId; // remember for future undo
+                vm.undoContentTypeId = vm.contentTypeId; // remember ...
+                cb.minfo.templateChooserVisible = false;
+                // inpagePartner.hide(); // todo
+                alert('todo: should hide toolbar');
+                if (!cb.minfo.hasContent) // if it didn't have content, then it only has now...
+                    cb.minfo.hasContent = forceCreate; // ...if we forced it to
+            });
+
+            return promiseToCorrectUi;
+        }
+
+
+    };
+
+    return cb;
+};
 
 
 
@@ -260,7 +446,7 @@ var $2sxcActionMenuMapper = function (moduleId) {
             // + "onload=\"this.syncHeight(this.contentWindow.document.body.scrollHeight);\""
             //+ "onload=\"this.style.height=this.contentWindow.document.body.scrollHeight + 'px';\""
             + "onresize=\"console.log('resize')\""
-            + "style=\"display: none\""
+            // + "style=\"display: none\""
             + "></iframe>"
         }
     };
@@ -280,8 +466,10 @@ var $2sxcActionMenuMapper = function (moduleId) {
         };
         diagBox.closeCallback = closeCallback;
 
+        diagBox.sxc = $2sxc(iid);
+
         diagBox.getManageInfo = function() {
-            return $2sxc(iid).manage._manageInfo;
+            return diagBox.sxc.manage._manageInfo;
         };
 
         diagBox.getCommands = function() {
@@ -293,14 +481,10 @@ var $2sxcActionMenuMapper = function (moduleId) {
             diagBox.style.height = height + "px";
         };
 
-        diagBox.toggle = function() {
+        diagBox.toggle = function () {
+            alert('toggle');
             diagBox.style.display = diagBox.style.display === "none" ? "" : "none";
             diagBox.vm.toggle(); // tell the dashboard about this
-        };
-
-        diagBox.replaceContent = function (newContent) {
-            $(viewPortSelector).html(newContent);
-            $2sxc(iid).manage._processToolbars();
         };
 
         diagBox.hideFromInside = function () {
@@ -332,7 +516,9 @@ var $2sxcActionMenuMapper = function (moduleId) {
 // A helper-controller in charge of opening edit-dialogs + creating the toolbars for it
 // all in-page toolbars etc.
 
-$2sxc.getManageController = function (id) {
+
+
+$2sxc.getManageController = function (id, sxc) {
     var moduleElement = $(".DnnModule-" + id);
     var manageInfo = $.parseJSON(moduleElement.find("div[data-2sxc]").attr("data-2sxc")).manage;
     var sxcGlobals = $.parseJSON(moduleElement.find("div[data-2sxc-globals]").attr("data-2sxc-globals"));
@@ -365,7 +551,7 @@ $2sxc.getManageController = function (id) {
         actionButtonsConf = $2sxc._actions.create(manageInfo);
 
 
-    var tbContr = {
+    var manage = {
         // public method to find out if it's in edit-mode
         isEditMode: function() {    return manageInfo.isEditMode;   },
 
@@ -376,7 +562,7 @@ $2sxc.getManageController = function (id) {
 
         // assemble an object which will store the configuration and execute it
         createCommandObject: function(specialSettings) {
-            var settings = $2sxc._lib.extend({}, tbContr._toolbarConfig, specialSettings); // merge button with general toolbar-settings
+            var settings = $2sxc._lib.extend({}, manage._toolbarConfig, specialSettings); // merge button with general toolbar-settings
             var cmd = {
                 settings: settings,
                 items: settings.items || [],                            // use predefined or create empty array
@@ -396,7 +582,7 @@ $2sxc.getManageController = function (id) {
                 addContentGroupItem: function(guid, index, part, isAdd, sectionLanguageKey) {
                     cmd.items.push({
                         Group: { Guid: guid, Index: index, Part: part, Add: isAdd },
-                        Title: tbContr.translate(sectionLanguageKey)
+                        Title: manage.translate(sectionLanguageKey)
                     });
                 },
 
@@ -440,8 +626,8 @@ $2sxc.getManageController = function (id) {
         },
 
         // create a dialog link
-        getNgLink: function (specialSettings) {
-            var cmd = tbContr.createCommandObject(specialSettings);
+        linkToNgDialog: function (specialSettings) {
+            var cmd = manage.createCommandObject(specialSettings);
 
             if (cmd.settings.useModuleList)
                 cmd.addContentGroupItemSetsToEditList(true);
@@ -456,13 +642,14 @@ $2sxc.getManageController = function (id) {
         },
 
         // open a new dialog of the angular-ui
-        _openNgDialog: function(settings, event, closeCallback) {
+        openNgDialog: function(settings, event, closeCallback) {
             
             var callback = function () {
-                tbContr._getAngularVm().reload();
+                manage.rootCB.reload();
+                // manage._getAngularVm().reload();
                 closeCallback();
             };
-            var link = tbContr.getNgLink(settings);
+            var link = manage.linkToNgDialog(settings);
 
             if (settings.newWindow || (event && event.shiftKey))
                 return window.open(link);
@@ -480,15 +667,17 @@ $2sxc.getManageController = function (id) {
             var conf = actionButtonsConf[settings.action];
             settings = $2sxc._lib.extend({}, conf, settings);              // merge conf & settings, but settings has higher priority
             if (!settings.dialog) settings.dialog = settings.action;    // old code uses "action" as the parameter, now use verb ? dialog
-            if (!settings.code) settings.code = tbContr._openNgDialog;  // decide what action to perform
+            if (!settings.code) settings.code = manage.openNgDialog;  // decide what action to perform
 
             var origEvent = event || window.event; // pre-save event because afterwards we have a promise, so the event-object changes; funky syntax is because of browser differences
             if (conf.uiActionOnly)
-                return settings.code(settings, origEvent, tbContr);
+                return settings.code(settings, origEvent, manage);
             
             // if more than just a UI-action, then it needs to be sure the content-group is created first
-            tbContr._getAngularVm().prepareToAddContent().then(function() {
-                return settings.code(settings, origEvent, tbContr);
+            //manage._getAngularVm().prepareToAddContent()
+            manage.rootCB.prepareToAddContent()
+                .then(function () {
+                return settings.code(settings, origEvent, manage);
             });
         },
 
@@ -521,14 +710,14 @@ $2sxc.getManageController = function (id) {
             var button = $("<a />", {
                 'class': "sc-" + btnSettings.action + " " + showClasses + (conf.dynamicClasses ? " " + conf.dynamicClasses(btnSettings) : ""),
                 'onclick': "javascript:$2sxc(" + id + ").manage.action(" + JSON.stringify(btnSettings) + ", event);",
-                'title': tbContr.translate(conf.title)
+                'title': manage.translate(conf.title)
             });
 
             // todo: move the following lines into the button-config and just call from here
             // if publish-button and not published yet, show button (otherwise hidden) & change icon
             if (btnSettings.action === "publish" && btnSettings.isPublished === false) {
                 button.addClass("show-default").removeClass("show-edit")
-                    .attr("title", tbContr.translate("Toolbar.Unpublished")); 
+                    .attr("title", manage.translate("Toolbar.Unpublished")); 
                 symbol.removeClass(conf.iclass).addClass(conf.iclass2);
             }
 
@@ -544,13 +733,13 @@ $2sxc.getManageController = function (id) {
                 ? [settings] // if single item with specified action, use this as our button-list
                 : $.isArray(settings)
                 ? settings // if it is an array, use that. Otherwise assume that we auto-generate all buttons with supplied settings
-                : tbContr.createDefaultToolbar(settings);
+                : manage.createDefaultToolbar(settings);
 
             var tbClasses = "sc-menu show-set-0" + ((settings.sortOrder === -1) ? " listContent" : "");
             var toolbar = $("<ul />", { 'class': tbClasses, 'onclick': "javascript: var e = arguments[0] || window.event; e.stopPropagation();" });
 
             for (var i = 0; i < buttons.length; i++)
-                toolbar.append($("<li />").append($(tbContr.getButton(buttons[i]))));
+                toolbar.append($("<li />").append($(manage.getButton(buttons[i]))));
 
             return toolbar[0].outerHTML;
         },
@@ -562,7 +751,7 @@ $2sxc.getManageController = function (id) {
 
             buttons.add = function (verb) {
                 var add = actionButtonsConf[verb].addCondition;
-                if (add === undefined || ((typeof (add) === "function") ? add(settings, tbContr._toolbarConfig) : add))
+                if (add === undefined || ((typeof (add) === "function") ? add(settings, manage._toolbarConfig) : add))
                     buttons.push($2sxc._lib.extend({}, settings, { action: verb }));
             };
 
@@ -581,11 +770,11 @@ $2sxc.getManageController = function (id) {
             });
         },
 
-        _getAngularVm: function () {
-            return tbContr.dialog.getCommands();
-            //var selectorElement = document.querySelector(".DnnModule-" + id + " .sc-selector-wrapper");
-            //return angular.element(selectorElement).scope().vm;
-        },
+        //_getAngularVm: function () {
+        //    return manage.dialog.getCommands();
+        //    //var selectorElement = document.querySelector(".DnnModule-" + id + " .sc-selector-wrapper");
+        //    //return angular.element(selectorElement).scope().vm;
+        //},
 
         translate: function (key) {
             // todo: re-enable translate
@@ -596,9 +785,11 @@ $2sxc.getManageController = function (id) {
     };
 
     // attach & open the mini-dashboard iframe
-    tbContr.dialog = tbContr.action({ "action": "dash-view" });
+    // manage.dialog = manage.action({ "action": "dash-view" });
 
-    return tbContr;
+    manage.rootCB = $2sxc.contentBlock(sxc, manage);
+
+    return manage;
 };
 
 // Toolbar bootstrapping (initialize all toolbars after loading page)

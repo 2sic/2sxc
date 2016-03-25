@@ -7,7 +7,7 @@
             // + "onload=\"this.syncHeight(this.contentWindow.document.body.scrollHeight);\""
             //+ "onload=\"this.style.height=this.contentWindow.document.body.scrollHeight + 'px';\""
             + "onresize=\"console.log('resize')\""
-            + "style=\"display: none\""
+            // + "style=\"display: none\""
             + "></iframe>"
         }
     };
@@ -27,8 +27,10 @@
         };
         diagBox.closeCallback = closeCallback;
 
+        diagBox.sxc = $2sxc(iid);
+
         diagBox.getManageInfo = function() {
-            return $2sxc(iid).manage._manageInfo;
+            return diagBox.sxc.manage._manageInfo;
         };
 
         diagBox.getCommands = function() {
@@ -40,14 +42,10 @@
             diagBox.style.height = height + "px";
         };
 
-        diagBox.toggle = function() {
+        diagBox.toggle = function () {
+            alert('toggle');
             diagBox.style.display = diagBox.style.display === "none" ? "" : "none";
             diagBox.vm.toggle(); // tell the dashboard about this
-        };
-
-        diagBox.replaceContent = function (newContent) {
-            $(viewPortSelector).html(newContent);
-            $2sxc(iid).manage._processToolbars();
         };
 
         diagBox.hideFromInside = function () {

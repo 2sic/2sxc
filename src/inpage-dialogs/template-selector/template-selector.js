@@ -9,8 +9,10 @@
 
             return {
                 dialogContainer: iframe,
+                sxc: iframe.sxc,
+                contentBlock: iframe.sxc.manage.rootCB,
                 getManageInfo: iframe.getManageInfo,
-                replaceContent: iframe.replaceContent,
+                //replaceContent: iframe.replaceContent,
                 hide: iframe.hideFromInside
                 //instanceContext: instanceBlock,
                 //contentBlock: contentBlock
@@ -152,55 +154,56 @@
         };
 
         // store the template state to the server, optionally force create of content, and hide the selector
-        vm.persistTemplate = function(forceCreate, selectorVisibility) {
-            // Save only if the currently saved is not the same as the new
-            var groupExistsAndTemplateUnchanged = !!vm.manageInfo.hasContent && (vm.undoTemplateId === vm.templateId);
-            var promiseToSetState;
-            if (groupExistsAndTemplateUnchanged)
-                promiseToSetState = (vm.manageInfo.templateChooserVisible)
-                    ? svc.setTemplateChooserState(false) // hide in case it was visible
-                    : $q.when(null); // all is ok, create empty promise to allow chaining the result
-            else
-                promiseToSetState = svc.saveTemplate(vm.templateId, forceCreate, selectorVisibility)
-                    .then(function(result) {
-                        if (result.status !== 200) { // only continue if ok
-                            alert("error - result not ok, was not able to create ContentGroup");
-                            return;
-                        }
-                        var newGuid = result.data;
-                        if (newGuid === null)
-                            return;
-                        newGuid = newGuid.replace(/[\",\']/g, ""); // fixes a special case where the guid is given with quotes (dependes on version of angularjs) issue #532
-                        if (console)
-                            console.log("created content group {" + newGuid + "}");
-
-                        // todo: will need more complexity
-                        vm.manageInfo.config.contentGroupId = newGuid; // update internal ContentGroupGuid 
-                    });
-            
-            var promiseToCorrectUi = promiseToSetState.then(function() {
-                    vm.undoTemplateId = vm.templateId;          // remember for future undo
-                    vm.undoContentTypeId = vm.contentTypeId;    // remember ...
-                    vm.manageInfo.templateChooserVisible = false;
-                    inpagePartner.hide();
-                    if(!vm.manageInfo.hasContent)               // if it didn't have content, then it only has now...
-                        vm.manageInfo.hasContent = forceCreate; // ...if we forced it to
-            });
-
-            return promiseToCorrectUi;
-        };
+        //vm.persistTemplate = function(forceCreate, selectorVisibility) {
+        //    // Save only if the currently saved is not the same as the new
+        //    var groupExistsAndTemplateUnchanged = !!vm.manageInfo.hasContent && (vm.undoTemplateId === vm.templateId);
+        //    var promiseToSetState;
+        //    if (groupExistsAndTemplateUnchanged)
+        //        promiseToSetState = (vm.manageInfo.templateChooserVisible)
+        //            ? svc.setTemplateChooserState(false) // hide in case it was visible
+        //            : $q.when(null); // all is ok, create empty promise to allow chaining the result
+        //    else
+        //        promiseToSetState = svc.saveTemplate(vm.templateId, forceCreate, selectorVisibility)
+        //            .then(function(result) {
+        //                if (result.status !== 200) { // only continue if ok
+        //                    alert("error - result not ok, was not able to create ContentGroup");
+        //                    return;
+        //                }
+        //                var newGuid = result.data;
+        //                if (newGuid === null)
+        //                    return;
+        //                newGuid = newGuid.replace(/[\",\']/g, ""); // fixes a special case where the guid is given with quotes (dependes on version of angularjs) issue #532
+        //                if (console)
+        //                    console.log("created content group {" + newGuid + "}");
+        //
+        //                // todo: will need more complexity
+        //                vm.manageInfo.config.contentGroupId = newGuid; // update internal ContentGroupGuid 
+        //            });
+        //    
+        //    var promiseToCorrectUi = promiseToSetState.then(function() {
+        //            vm.undoTemplateId = vm.templateId;          // remember for future undo
+        //            vm.undoContentTypeId = vm.contentTypeId;    // remember ...
+        //            vm.manageInfo.templateChooserVisible = false;
+        //            inpagePartner.hide();
+        //            if(!vm.manageInfo.hasContent)               // if it didn't have content, then it only has now...
+        //                vm.manageInfo.hasContent = forceCreate; // ...if we forced it to
+        //    });
+        //
+        //    return promiseToCorrectUi;
+        //};
 
         vm.renderTemplate = function (templateId) {
-            vm.loading++;
-            svc.renderTemplate(templateId, vm.manageInfo.lang).then(function (response) {
-                try {
-                    inpagePartner.replaceContent(response.data);
-                } catch (e) {
-                    console.log("Error while rendering template:");
-                    console.log(e);
-                }
-                vm.loading--;
-            });
+            // vm.loading++;
+            inpagePartner.contentBlock.reload(templateId);
+            //svc.renderTemplate(templateId, vm.manageInfo.lang).then(function (response) {
+            //    try {
+            //        inpagePartner.replaceContent(response.data);
+            //    } catch (e) {
+            //        console.log("Error while rendering template:");
+            //        console.log(e);
+            //    }
+            //    vm.loading--;
+            //});
         };
 
         // Optioally change the show state, then 
@@ -218,9 +221,10 @@
                 if (!vm.manageInfo.isContentApp && vm.apps.length === 0)
                     promises.push(vm.loadApps());
                 $q.all(promises).then(vm.externalInstaller.showIfConfigIsEmpty);
-            } else {
-                inpagePartner.hide();
             }
+            //else {
+            //    inpagePartner.hide();
+            //}
         };
 
         // some helpers to show the i-frame and link up the ablity to then install stuff
@@ -263,15 +267,15 @@
         };
 
         // reload by ajax or page, depending on mode (used in toolbar)
-        vm.reload = function () {
-            if (!vm.templateId)
-                return;
-
-            if (vm.manageInfo.isContentApp)
-                vm.renderTemplate(vm.templateId);
-            else
-                $window.location.reload();
-        };
+        //vm.reload = function () {
+        //    if (!vm.templateId)
+        //        return;
+        //
+        //    if (vm.manageInfo.isContentApp)
+        //        vm.renderTemplate(vm.templateId);
+        //    else
+        //        $window.location.reload();
+        //};
 
         vm.loadApps = function() {
             return svc.getSelectableApps()
@@ -302,36 +306,36 @@
 
         //#region commands for the toolbar like add, remove, publish, translate, ..
 
-        vm.prepareToAddContent = function () {
-            return vm.persistTemplate(true, false);
-        };
+        //vm.prepareToAddContent = function () {
+        //    return vm.persistTemplate(true, false);
+        //};
 
-        vm.addItem = function(sortOrder) {
-            svc.addItem(sortOrder).then(function () {
-                vm.renderTemplate(vm.templateId);
-            });
-        };
-        vm.removeFromList = function (sortOrder) {
-        	svc.removeFromList(sortOrder).then(function () {
-        		vm.renderTemplate(vm.templateId);
-        	});
-        };
+        //vm.addItem = function(sortOrder) {
+        //    svc.addItem(sortOrder).then(function () {
+        //        vm.renderTemplate(vm.templateId);
+        //    });
+        //};
+        //vm.removeFromList = function (sortOrder) {
+        //	svc.removeFromList(sortOrder).then(function () {
+        //		vm.renderTemplate(vm.templateId);
+        //	});
+        //};
 
         // todo: work in progress related to https://github.com/2sic/2sxc/issues/618
-        vm.reallyDelete = function(itemId) {
-            alert("Really delete not implemented yet - would delete: " + itemId);
-        };
+        //vm.reallyDelete = function(itemId) {
+        //    alert("Really delete not implemented yet - would delete: " + itemId);
+        //};
 
-        vm.changeOrder = function (sortOrder, destSortOrder) {
-        	svc.changeOrder(sortOrder, destSortOrder).then(function () {
-        		vm.renderTemplate(vm.templateId);
-        	});
-        };
-        vm.publish = function(part, sortOrder) {
-            svc.publish(part, sortOrder).then(function() {
-                vm.renderTemplate(vm.templateId);
-            });
-        };
+        //vm.changeOrder = function (sortOrder, destSortOrder) {
+        //	svc.changeOrder(sortOrder, destSortOrder).then(function () {
+        //		vm.renderTemplate(vm.templateId);
+        //	});
+        //};
+        //vm.publish = function(part, sortOrder) {
+        //    svc.publish(part, sortOrder).then(function() {
+        //        vm.renderTemplate(vm.templateId);
+        //    });
+        //};
         vm.translate = function (key) { return $translate.instant(key); };
         //#endregion
     });

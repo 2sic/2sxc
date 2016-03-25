@@ -12,8 +12,10 @@
             $2sxc._data[id] = {};
 
         // either get the cached controller from previous calls, or create a new one
-        var controller = $2sxc._controllers[id] ? $2sxc._controllers[id] : $2sxc._controllers[id] = {
-            // <NewIn7>
+        if ($2sxc._controllers[id])
+            return $2sxc._controllers[id];
+
+        var controller = /*$2sxc._controllers[id] ? $2sxc._controllers[id] : */ $2sxc._controllers[id] = {
             serviceScopes: ["app", "app-api", "app-query", "app-content", "eav", "view", "dnn"],
             serviceRoot: $.ServicesFramework(id).getServiceRoot("2sxc"),
             resolveServiceUrl: function resolveServiceUrl(virtualPath) {
@@ -25,7 +27,6 @@
 
                 return controller.serviceRoot + scope + "/" + virtualPath.substring(virtualPath.indexOf("/") + 1);
             },
-            // </NewIn7>
             data: {
                 // source path defaulting to current page + optional params
                 sourceUrl: function (params) {
@@ -113,22 +114,22 @@
             source: null,
             isLoaded: false,
             lastRefresh: null,
-            manage: $2sxc.getManageController ? $2sxc.getManageController(id) : null,
+            manage: null, // initialize correctly later on
             isEditMode: function () {
                 return controller.manage && controller.manage.isEditMode();
             },
             webApi: {
-                get: function (controllerAction, params, data, preventAutoFail) {
-                    return controller.webApi._action(controllerAction, params, data, preventAutoFail, "GET");
+                get: function (settings, params, data, preventAutoFail) {
+                    return controller.webApi._action(settings, params, data, preventAutoFail, "GET");
                 },
-                post: function (controllerAction, params, data, preventAutoFail) {
-                    return controller.webApi._action(controllerAction, params, data, preventAutoFail, "POST");
+                post: function (settings, params, data, preventAutoFail) {
+                    return controller.webApi._action(settings, params, data, preventAutoFail, "POST");
                 },
-                "delete": function (controllerAction, params, data, preventAutoFail) {
-                    return controller.webApi._action(controllerAction, params, data, preventAutoFail, "DELETE");
+                "delete": function (settings, params, data, preventAutoFail) {
+                    return controller.webApi._action(settings, params, data, preventAutoFail, "DELETE");
                 },
-                put: function (controllerAction, params, data, preventAutoFail) {
-                    return controller.webApi._action(controllerAction, params, data, preventAutoFail, "PUT");
+                put: function (settings, params, data, preventAutoFail) {
+                    return controller.webApi._action(settings, params, data, preventAutoFail, "PUT");
                 },
                 _action: function (settings, params, data, preventAutoFail, method) {
 
@@ -150,6 +151,7 @@
                             action: actionName,
                             params: params,
                             data: data,
+                            url: controllerAction.length > 2 ? settings : null,
                             preventAutoFail: preventAutoFail
                         };
                     }
@@ -164,7 +166,7 @@
 
                     var promise = $.ajax({
                         type: settings.method,
-                        dataType: "json",
+                        dataType: settings.dataType || "json", // default is json if not specified
                         async: true,
                         data: JSON.stringify(settings.data),
                         contentType: "application/json",
@@ -179,7 +181,10 @@
                 },
                 getActionUrl: function (settings) {
                     var sf = $.ServicesFramework(id);
-                    return sf.getServiceRoot("2sxc") + "app-api/" + settings.controller + "/" + settings.action + (settings.params === null ? "" : ("?" + $.param(settings.params)));
+                    var base = (settings.url)
+                        ? controller.resolveServiceUrl(settings.url)
+                        : sf.getServiceRoot("2sxc") + "app-api/" + settings.controller + "/" + settings.action;
+                    return base + (settings.params === null ? "" : ("?" + $.param(settings.params)));
                 }
             },
 
@@ -199,8 +204,8 @@
                 if (result.status === 0)
                     return;
 
-                            // let's try to show good messages in most cases
-                            var infoText = "Had an error talking to the server (status " + result.status + ").";
+                // let's try to show good messages in most cases
+                var infoText = "Had an error talking to the server (status " + result.status + ").";
                 var srvResp = result.responseText ?
                     JSON.parse(result.responseText) // for jquery ajax errors
                     : result.data;                  // for angular $http
@@ -225,6 +230,9 @@
                             alert(infoText);
             }
         };
+
+        // add manage property, but not within initializer, because inside the manage-initializer it may reference 2sxc again
+        controller.manage = $2sxc.getManageController ? $2sxc.getManageController(id, controller) : null,
 
         // Make sure back-reference to controller is set
         controller.data.controller = controller;
@@ -332,7 +340,8 @@
 
     // upgrade command
     $2sxc.system = {
-        finishUpgrade: function(domElement) {
+        finishUpgrade: function (domElement) {
+            // todo: replace with newer $2sxc(domElement).webApi("url...")... syntax
             var mc = $2sxc(domElement);
             var url = mc.resolveServiceUrl("view/module/finishinstallation");
             $.ajax({ type: "get", url: url, beforeSend: $.ServicesFramework(mc.id).setModuleHeaders
