@@ -5,14 +5,13 @@
         return function (vm) {
             // will generate an object necessary to communicate with the outer system
             var iframe = window.frameElement;
-            if (iframe)
-                iframe.vm = vm;
-            var contentBlock = null;
-            var instanceBlock = null;
+            iframe.vm = vm;
+
             return {
                 dialogContainer: iframe,
-                getManageInfo: iframe ? iframe.getManageInfo : null,
-                replaceContent: iframe ? iframe.replaceContent : null,
+                getManageInfo: iframe.getManageInfo,
+                replaceContent: iframe.replaceContent,
+                hide: iframe.hideFromInside
                 //instanceContext: instanceBlock,
                 //contentBlock: contentBlock
             };
@@ -38,7 +37,7 @@
         var inpagePartner = inpageElement(vm);
 
         // the sxc.manage is just to keep the old version running for now
-        vm.manageInfo = sxc.manage ? sxc.manage._manageInfo : inpagePartner.getManageInfo();
+        vm.manageInfo = inpagePartner.getManageInfo();
         vm.showAdvanced = vm.manageInfo.user.canDesign;
         vm.templateId = vm.manageInfo.templateId;
         vm.undoTemplateId = vm.templateId;
@@ -131,10 +130,10 @@
         });
 
         vm.manageApps = function() {
-            sxc.manage.action({ "action": "zone" });
+            sxc.manage.action({ "action": "zone" });    // todo
         };
         vm.appSettings = function() {
-            sxc.manage.action({ "action": "app" });
+            sxc.manage.action({ "action": "app" });     // todo
         };
         vm.installApp = function() {
             window.location = importCommand; // actually does a dnnModal.show...
@@ -146,6 +145,7 @@
             vm.templateId = vm.undoTemplateId;
             vm.contentTypeId = vm.undoContentTypeId;
             vm.manageInfo.templateChooserVisible = false;
+            inpagePartner.hide();
             svc.setTemplateChooserState(false);
             if (vm.manageInfo.isContentApp) // necessary to show the original template again
                 vm.reloadTemplates();
@@ -173,13 +173,16 @@
                         newGuid = newGuid.replace(/[\",\']/g, ""); // fixes a special case where the guid is given with quotes (dependes on version of angularjs) issue #532
                         if (console)
                             console.log("created content group {" + newGuid + "}");
-                        sxc.manage._manageInfo.config.contentGroupId = newGuid; // update internal ContentGroupGuid 
+
+                        // todo: will need more complexity
+                        vm.manageInfo.config.contentGroupId = newGuid; // update internal ContentGroupGuid 
                     });
             
             var promiseToCorrectUi = promiseToSetState.then(function() {
                     vm.undoTemplateId = vm.templateId;          // remember for future undo
                     vm.undoContentTypeId = vm.contentTypeId;    // remember ...
                     vm.manageInfo.templateChooserVisible = false;
+                    inpagePartner.hide();
                     if(!vm.manageInfo.hasContent)               // if it didn't have content, then it only has now...
                         vm.manageInfo.hasContent = forceCreate; // ...if we forced it to
             });
@@ -215,6 +218,8 @@
                 if (!vm.manageInfo.isContentApp && vm.apps.length === 0)
                     promises.push(vm.loadApps());
                 $q.all(promises).then(vm.externalInstaller.showIfConfigIsEmpty);
+            } else {
+                inpagePartner.hide();
             }
         };
 
@@ -257,7 +262,7 @@
             }
         };
 
-        // reload by ajax or page, depeding on mode (used in toolbar)
+        // reload by ajax or page, depending on mode (used in toolbar)
         vm.reload = function () {
             if (!vm.templateId)
                 return;

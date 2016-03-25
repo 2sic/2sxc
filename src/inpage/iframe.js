@@ -42,11 +42,16 @@
 
         diagBox.toggle = function() {
             diagBox.style.display = diagBox.style.display === "none" ? "" : "none";
+            diagBox.vm.toggle(); // tell the dashboard about this
         };
 
         diagBox.replaceContent = function (newContent) {
             $(viewPortSelector).html(newContent);
             $2sxc(iid).manage._processToolbars();
+        };
+
+        diagBox.hideFromInside = function () {
+            diagBox.style.display = "none";
         };
 
         block.prepend(diagBox);
@@ -58,12 +63,14 @@
      * todo
      * - get design to work
      * - get system to create/destroy iframe
-     * - find right position for the iframe
      * - get system to be fast again
      * - extract i18n
      * 
+     * phase 2
+     * - getting-started installer
+     * - get installer to work again
+     * 
      * fine tuning
-     * - get dynamic src
      * - get shrink resize
      * - create the iframe without jquery
      */
