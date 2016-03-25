@@ -134,8 +134,13 @@ $2sxc.getManageController = function (id) {
 
             if (settings.newWindow || (event && event.shiftKey))
                 window.open(link);
-            else
-                $2sxc.totalPopup.open(link, callback);
+            else {
+                if (settings.inlineWindow)
+                    //window.open(link);
+                    $2sxc.dialog.create(id, moduleElement, link, callback);
+                else
+                    $2sxc.totalPopup.open(link, callback);
+            }
         },
 
         // Perform a toolbar button-action - basically get the configuration and execute it's action
@@ -249,7 +254,9 @@ $2sxc.getManageController = function (id) {
             return angular.element(selectorElement).scope().vm;
         },
 
-        translate: function(key) {
+        translate: function (key) {
+            // todo: re-enable translate
+            // return key;
             return tbContr._getAngularVm().translate(key);
         }
 

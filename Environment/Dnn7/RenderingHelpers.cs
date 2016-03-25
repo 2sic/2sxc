@@ -129,6 +129,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             //ClientResourceManager.RegisterScript(Page, root + "dist/inpage/inpage" + ext, 91);
             RegisterJs(Page, ver, root + "js/2sxc.api" + ext);
             RegisterJs(Page, ver, root + "dist/inpage/inpage" + ext);
+            RegisterJs(Page, ver, root + "dist/inpage/inpage-dialogs" + ext);
 
             //ClientResourceManager.RegisterScript(Page, root + "js/angularjs/2sxc4ng" + ext, 93);
             //ClientResourceManager.RegisterScript(Page, root + "dist/config/config" + ext, 93);

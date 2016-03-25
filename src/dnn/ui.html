@@ -80,6 +80,12 @@
             '../edit/eav-edit.min.js',
             '../sxc-edit/sxc-edit.min.js'
         ];
+        var miniDiagScripts = [
+            "../inpage/inpage-dialogs.min.js"
+        ];
+        if (dialogName === "dash-view")
+            scripts = scripts.concat(miniDiagScripts);
+
         var styles = [
             '../lib/angular/set.min.css',
             '../admin/eav-admin.min.css',

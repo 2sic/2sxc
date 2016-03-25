@@ -5,10 +5,10 @@
 
     var ifr = diag.iframe = {};
 
-    diag.create = function(block, iid) {
+    diag.create = function(iid, block, url, closeCallback) {
         block = $(block);
 
-        var diagBox = $("<iframe width='100%' height='50px' src='/desktopmodules/tosic_sexycontent/js/iframe.html'"
+        var diagBox = $("<iframe width='100%' height='200px' src='" + url + "'"
             // + "onload=\"this.syncHeight(this.contentWindow.document.body.scrollHeight);\""
             //+ "onload=\"this.style.height=this.contentWindow.document.body.scrollHeight + 'px';\""
             + "onresize=\"console.log('resize')\""
@@ -16,6 +16,11 @@
 
         diagBox[0].callback = function() {
             alert("got called");
+        };
+        diagBox[0].closeCallback = closeCallback;
+
+        diagBox[0].getManageInfo = function() {
+            return $2sxc(iid).manage._manageInfo;
         };
 
         diagBox[0].syncHeight = function (height) {
@@ -31,7 +36,6 @@
 
     /*
      * todo
-     * - load angular inside...
      * - get design to work
      * - pass parameters in
      * - get ajax-reload to work going out

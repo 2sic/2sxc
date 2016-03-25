@@ -1,7 +1,22 @@
 ﻿(function () {
     var module = angular.module("2sxc.view");
 
-    module.controller("TemplateSelectorCtrl", function ($scope, $attrs, moduleApiService, AppInstanceId, sxc, $filter, $q, $window, $translate, $sce) {
+    module.factory("inpageElement", function () {
+        return function () {
+            // will generate an object necessary to communicate with the outer system
+            var iframe = window.frameElement;
+            var contentBlock = null;
+            var instanceBlock = null;
+            return {
+                dialogContainer: iframe,
+                getManageInfo: iframe ? iframe.getManageInfo : null,
+                //instanceContext: instanceBlock,
+                //contentBlock: contentBlock
+            };
+        };
+    });
+
+    module.controller("TemplateSelectorCtrl", function ($scope, /* $attrs, */ moduleApiService, AppInstanceId, sxc, $filter, $q, $window, $translate, $sce, inpageElement) {
         //#region constants
         var cViewWithoutContent = "_LayoutElement"; // needed to differentiate the "select item" from the "empty-is-selected" which are both empty
         var cAppActionManage = -2, cAppActionImport = -1, cAppActionCreate = -3;
@@ -10,15 +25,17 @@
 
         var realScope = $scope;
         var svc = moduleApiService;
-        var importCommand = $attrs.importappdialog; // note: ugly dependency, should find a way to remove
+        var importCommand = null; // todo! // $attrs.importappdialog; // note: ugly dependency, should find a way to remove
 
         //#region vm and basic values / variables attached to vm
         var vm = this;
         vm.apps = [];
         vm.contentTypes = [];
         vm.templates = [];
+        var inpagePartner = inpageElement();
 
-        vm.manageInfo = sxc.manage._manageInfo;
+        // the sxc.manage is just to keep the old version running for now
+        vm.manageInfo = sxc.manage ? sxc.manage._manageInfo : inpagePartner.getManageInfo();
         vm.showAdvanced = vm.manageInfo.user.canDesign;
         vm.templateId = vm.manageInfo.templateId;
         vm.undoTemplateId = vm.templateId;

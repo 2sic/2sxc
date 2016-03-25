@@ -8,7 +8,7 @@
 
     module.config(function ($translateProvider, AppInstanceId, $translatePartialLoaderProvider, languages) {
         
-        var globals = $2sxc(AppInstanceId).manage._manageInfo;
+        // var globals = $2sxc(AppInstanceId).manage._manageInfo;
         
         // add translation table
         $translateProvider

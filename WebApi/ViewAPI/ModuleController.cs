@@ -18,13 +18,13 @@ using Assembly = System.Reflection.Assembly;
 
 namespace ToSic.SexyContent.ViewAPI
 {
-    [SupportedModules("2sxc,2sxc-app")]
+    // had to disable this, as most requests now come from a lone page [SupportedModules("2sxc,2sxc-app")]
     public class ModuleController : SxcApiController
     {
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        [ValidateAntiForgeryToken]
+        // had to disable this, as most requests now come from a lone page [ValidateAntiForgeryToken]
         public void AddItem([FromUri] int? sortOrder = null)
         {
 			var contentGroup = SxcContext.AppContentGroups.GetContentGroupForModule(ActiveModule.ModuleID);
@@ -33,8 +33,8 @@ namespace ToSic.SexyContent.ViewAPI
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        [ValidateAntiForgeryToken]
-		public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup, bool? newTemplateChooserState = null)
+        // had to disable this, as most requests now come from a lone page [ValidateAntiForgeryToken]
+        public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup, bool? newTemplateChooserState = null)
         {
             Guid? result = null;
             var contentGroup = SxcContext.AppContentGroups.GetContentGroupForModule(ActiveModule.ModuleID);
@@ -51,8 +51,8 @@ namespace ToSic.SexyContent.ViewAPI
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        [ValidateAntiForgeryToken]
-		public void SetTemplateChooserState([FromUri] bool state)
+        // had to disable this, as most requests now come from a lone page [ValidateAntiForgeryToken]
+        public void SetTemplateChooserState([FromUri] bool state)
 		{
             DnnStuffToRefactor.UpdateModuleSettingForAllLanguages(ActiveModule.ModuleID, Settings.SettingsShowTemplateChooser, state.ToString());
 
@@ -62,7 +62,7 @@ namespace ToSic.SexyContent.ViewAPI
 
 		[HttpGet]
 		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-		[ValidateAntiForgeryToken]
+        // had to disable this, as most requests now come from a lone page [ValidateAntiForgeryToken]
         public IEnumerable<object> GetSelectableApps()
         {
             try
@@ -82,7 +82,7 @@ namespace ToSic.SexyContent.ViewAPI
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        [ValidateAntiForgeryToken]
+        // had to disable this, as most requests now come from a lone page [ValidateAntiForgeryToken]
         public void SetAppId(int? appId)
         {
             AppHelpers.SetAppIdForModule(ActiveModule, appId);
@@ -90,7 +90,7 @@ namespace ToSic.SexyContent.ViewAPI
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        [ValidateAntiForgeryToken]
+        // had to disable this, as most requests now come from a lone page [ValidateAntiForgeryToken]
         public IEnumerable<object> GetSelectableContentTypes()
         {
 			return SxcContext.AppTemplates.GetAvailableContentTypesForVisibleTemplates().Select(p => new {p.StaticName, p.Name});
@@ -98,7 +98,7 @@ namespace ToSic.SexyContent.ViewAPI
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        [ValidateAntiForgeryToken]
+        // had to disable this, as most requests now come from a lone page [ValidateAntiForgeryToken]
         public IEnumerable<object> GetSelectableTemplates()
         {
             var availableTemplates = SxcContext.AppTemplates.GetAvailableTemplatesForSelector(ActiveModule.ModuleID, SxcContext.AppContentGroups);
@@ -107,8 +107,8 @@ namespace ToSic.SexyContent.ViewAPI
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        [ValidateAntiForgeryToken]
-		public HttpResponseMessage RenderTemplate([FromUri] int templateId, [FromUri] string lang)
+        // had to disable this, as most requests now come from a lone page [ValidateAntiForgeryToken]
+        public HttpResponseMessage RenderTemplate([FromUri] int templateId, [FromUri] string lang)
         {
             try
             {
@@ -178,8 +178,8 @@ namespace ToSic.SexyContent.ViewAPI
 
 		[HttpGet]
 		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-		[ValidateAntiForgeryToken]
-		public void ChangeOrder([FromUri] int sortOrder, int destinationSortOrder)
+        // had to disable this, as most requests now come from a lone page [ValidateAntiForgeryToken]
+        public void ChangeOrder([FromUri] int sortOrder, int destinationSortOrder)
 		{
 			try
 			{
@@ -195,7 +195,7 @@ namespace ToSic.SexyContent.ViewAPI
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        [ValidateAntiForgeryToken]
+        // had to disable this, as most requests now come from a lone page [ValidateAntiForgeryToken]
         public bool Publish(string part, int sortOrder)
         {
             try
@@ -230,8 +230,8 @@ namespace ToSic.SexyContent.ViewAPI
 
         [HttpGet]
 		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-		[ValidateAntiForgeryToken]
-		public void RemoveFromList([FromUri] int sortOrder)
+        // had to disable this, as most requests now come from a lone page [ValidateAntiForgeryToken]
+        public void RemoveFromList([FromUri] int sortOrder)
 		{
 			try
 			{
@@ -247,7 +247,7 @@ namespace ToSic.SexyContent.ViewAPI
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        [ValidateAntiForgeryToken]
+        // had to disable this, as most requests now come from a lone page [ValidateAntiForgeryToken]
         public string RemoteInstallDialogUrl(string dialog)
         {
             // note / warning: some duplicate code with SystemController.cs
@@ -307,7 +307,7 @@ namespace ToSic.SexyContent.ViewAPI
         /// <returns></returns>
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-        [ValidateAntiForgeryToken]
+        // had to disable this, as most requests now come from a lone page [ValidateAntiForgeryToken]
         public bool FinishInstallation()
         {
             if (Installer.IsUpgradeRunning)
