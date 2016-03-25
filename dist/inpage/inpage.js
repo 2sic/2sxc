@@ -255,20 +255,22 @@ $2sxc.contentBlock = function(sxc, manage) {
 
 	var cViewWithoutContent = "_LayoutElement"; // needed to differentiate the "select item" from the "empty-is-selected" which are both empty
 
-	var vm = { manageInfo: manage._manageInfo };
-	vm.templateId = vm.manageInfo.templateId;
-    vm.undoTemplateId = vm.templateId;
-    vm.contentTypeId = (vm.manageInfo.contentTypeId === "" && vm.manageInfo.templateId !== null)
+    var minfo = manage._manageInfo; // todo: not nice depenecy on internal variable
+
+    var ctid = (minfo.contentTypeId === "" && minfo.templateId !== null)
 		? cViewWithoutContent           // has template but no content, use placeholder
-		: vm.manageInfo.contentTypeId;
-    vm.undoContentTypeId = vm.contentTypeId;
+		: minfo.contentTypeId;
 
 	//#endregion
 
     var cb = {
         sxc: sxc,
-        loading: 0,
-        minfo: manage._manageInfo, // todo: not nice dependecy
+        loading: 0, // counter for multiple ajax running, purpose not clear...
+        minfo: minfo, // todo: not nice dependecy
+        templateId: minfo.templateId,
+        undoTemplateId: minfo.templateId,
+        contentTypeId: ctid,
+		undoContentTypeId: ctid,
 
         // ajax update/replace the content of the content-block
         replace: function(newContent) {
@@ -285,15 +287,18 @@ $2sxc.contentBlock = function(sxc, manage) {
         reload: function(templateId) {
             // if nothing specified, use stored id
             if (!templateId)
-                templateId = cb.minfo.templateId;
+            	templateId = cb.templateId;
 
             // if nothing specified / stored, cancel
             if (!templateId)
-                return;
+                return null;
 
             // if reloading a non-content-app, re-load the page
             if (!cb.minfo.isContentApp)
                 return window.location.reload();
+
+			// remember for future persist/save
+            cb.templateId = templateId;
 
             console.log("new loading");
             var lang = cb.minfo.lang;
@@ -351,7 +356,7 @@ $2sxc.contentBlock = function(sxc, manage) {
 
 
 
-        saveTemplate: function (templateId, forceCreateContentGroup, newTemplateChooserState) {
+        _saveTemplate: function (templateId, forceCreateContentGroup, newTemplateChooserState) {
             return sxc.webApi.get({
                 url: "View/Module/SaveTemplateId",
                 params: {
@@ -369,20 +374,20 @@ $2sxc.contentBlock = function(sxc, manage) {
 
         persistTemplate: function(forceCreate, selectorVisibility) {
             // Save only if the currently saved is not the same as the new
-            var groupExistsAndTemplateUnchanged = !!cb.minfo.hasContent && (vm.undoTemplateId === vm.templateId);
+            var groupExistsAndTemplateUnchanged = !!cb.minfo.hasContent && (cb.undoTemplateId === cb.templateId);
             var promiseToSetState;
             if (groupExistsAndTemplateUnchanged)
                 promiseToSetState = (cb.minfo.templateChooserVisible)
                     ? cb.setTemplateChooserState(false) // hide in case it was visible
                     : $.when(null); // all is ok, create empty promise to allow chaining the result
             else
-                promiseToSetState = cb.saveTemplate(vm.templateId, forceCreate, selectorVisibility) 
-                    .then(function(result) {
-                        if (result.status !== 200) { // only continue if ok
+                promiseToSetState = cb._saveTemplate(cb.templateId, forceCreate, selectorVisibility) 
+                    .then(function (data, textStatus, xhr) {
+                    	if (xhr.status !== 200) { // only continue if ok
                             alert("error - result not ok, was not able to create ContentGroup");
                             return;
                         }
-                        var newGuid = result.data;
+                        var newGuid = data;
                         if (newGuid === null)
                             return;
                         newGuid = newGuid.replace(/[\",\']/g, ""); // fixes a special case where the guid is given with quotes (dependes on version of angularjs) issue #532
@@ -394,11 +399,13 @@ $2sxc.contentBlock = function(sxc, manage) {
                     });
 
             var promiseToCorrectUi = promiseToSetState.then(function() {
-                vm.undoTemplateId = vm.templateId; // remember for future undo
-                vm.undoContentTypeId = vm.contentTypeId; // remember ...
+                cb.undoTemplateId = cb.templateId; // remember for future undo
+                cb.undoContentTypeId = cb.contentTypeId; // remember ...
                 cb.minfo.templateChooserVisible = false;
-                // inpagePartner.hide(); // todo
-                alert('todo: should hide toolbar');
+
+                if (manage.dialog)
+                	manage.dialog.justHide();
+
                 if (!cb.minfo.hasContent) // if it didn't have content, then it only has now...
                     cb.minfo.hasContent = forceCreate; // ...if we forced it to
             });
@@ -446,24 +453,17 @@ var $2sxcActionMenuMapper = function (moduleId) {
             // + "onload=\"this.syncHeight(this.contentWindow.document.body.scrollHeight);\""
             //+ "onload=\"this.style.height=this.contentWindow.document.body.scrollHeight + 'px';\""
             + "onresize=\"console.log('resize')\""
-            // + "style=\"display: none\""
             + "></iframe>"
         }
     };
 
-    //var ifr = diag.iframe = {};
-
     diag.create = function (iid, block, url, closeCallback) {
-        var viewPortSelector = ".DnnModule-" + iid + " .sc-viewport";
-
         block = $(block);
 
         var ifrm = $(diag.templates.inline.replace("{{url}}", url));
 
         var diagBox = ifrm[0];
-        diagBox.callback = function() {
-            alert("got called");
-        };
+
         diagBox.closeCallback = closeCallback;
 
         diagBox.sxc = $2sxc(iid);
@@ -482,12 +482,11 @@ var $2sxcActionMenuMapper = function (moduleId) {
         };
 
         diagBox.toggle = function () {
-            alert('toggle');
             diagBox.style.display = diagBox.style.display === "none" ? "" : "none";
             diagBox.vm.toggle(); // tell the dashboard about this
         };
 
-        diagBox.hideFromInside = function () {
+        diagBox.justHide = function () {
             diagBox.style.display = "none";
         };
 
@@ -496,21 +495,6 @@ var $2sxcActionMenuMapper = function (moduleId) {
         return diagBox;
     };
 
-    /*
-     * todo
-     * - get design to work
-     * - get system to create/destroy iframe
-     * - get system to be fast again
-     * - extract i18n
-     * 
-     * phase 2
-     * - getting-started installer
-     * - get installer to work again
-     * 
-     * fine tuning
-     * - get shrink resize
-     * - create the iframe without jquery
-     */
 })();
 
 // A helper-controller in charge of opening edit-dialogs + creating the toolbars for it

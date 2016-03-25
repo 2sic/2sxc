@@ -12,10 +12,7 @@
                 sxc: iframe.sxc,
                 contentBlock: iframe.sxc.manage.rootCB,
                 getManageInfo: iframe.getManageInfo,
-                //replaceContent: iframe.replaceContent,
-                hide: iframe.hideFromInside
-                //instanceContext: instanceBlock,
-                //contentBlock: contentBlock
+                hide: iframe.justHide
             };
         };
     });
@@ -148,13 +145,15 @@
             vm.contentTypeId = vm.undoContentTypeId;
             vm.manageInfo.templateChooserVisible = false;
             inpagePartner.hide();
-            svc.setTemplateChooserState(false);
+            inpagePartner.contentBlock.setTemplateChooserState(false);
             if (vm.manageInfo.isContentApp) // necessary to show the original template again
                 vm.reloadTemplates();
         };
 
         // store the template state to the server, optionally force create of content, and hide the selector
-        //vm.persistTemplate = function(forceCreate, selectorVisibility) {
+        vm.persistTemplate = function(forceCreate, selectorVisibility) {
+            inpagePartner.contentBlock.persistTemplate(forceCreate, selectorVisibility);
+        };
         //    // Save only if the currently saved is not the same as the new
         //    var groupExistsAndTemplateUnchanged = !!vm.manageInfo.hasContent && (vm.undoTemplateId === vm.templateId);
         //    var promiseToSetState;
@@ -262,7 +261,7 @@
                 vm.cancelTemplateChange();
             else {
                 vm.show(true);
-                svc.setTemplateChooserState(true);
+                inpagePartner.contentBlock.setTemplateChooserState(true);
             }
         };
 
@@ -290,7 +289,7 @@
 
         //#region initialize this
         vm.activate = function() {
-            vm.show(); // show if it has to, or not
+            vm.show(true); // show if it has to, or not
 
             // Init App-Dropdown if it's an app-selector
             //if (!vm.manageInfo.isContentApp) 
