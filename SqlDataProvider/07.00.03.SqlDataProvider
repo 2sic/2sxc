@@ -5,7 +5,7 @@ BEGIN TRANSACTION SexyContentUpdate;
 
 EXEC ToSIC_EAV_ChangeLogAdd 'System'
 
--- Create new AssignmentObjectType for Apps
+-- Create new AssignmentObjectType for Entities
 UPDATE       ToSIC_EAV_AssignmentObjectTypes
 SET                Name = N'Entity', Description = N'For Permissions, Data Pipelines with Pipeline Parts and Configurations'
 WHERE        (AssignmentObjectTypeID = 4)

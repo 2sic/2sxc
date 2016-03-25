@@ -100,3 +100,10 @@
         });
     });
 </script>
+
+<style>
+    /* Workaround for DNN table in NoSkin Container (which has a wrapping table)
+        Ensure width is 100%
+    */
+    #Table1 { width: 100%; padding: 15px; }
+</style>

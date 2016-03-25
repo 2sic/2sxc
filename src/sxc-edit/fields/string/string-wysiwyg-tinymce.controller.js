@@ -100,6 +100,7 @@
                 contextmenu: modes.standard.contextmenu, //"link image | charmap hr adamimage",
                 autosave_ask_before_unload: false,
                 paste_as_text: true,
+                extended_valid_elements: '@[class],i', // allow classes on all elements, allow i elements (allows icon-font tags like <i class="fa fa-...">)
                 
                 // Url Rewriting in images and pages
                 //convert_urls: false,  // don't use this, would keep the domain which is often a test-domain

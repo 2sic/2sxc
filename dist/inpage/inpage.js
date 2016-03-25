@@ -80,7 +80,7 @@
                 disabled: true,
                 showOn: "edit",
                 addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; },
-                code: function (settings, event) {
+                code: function (settings, event, tbContr) {
                     if (confirm(tbContr.translate("Toolbar.ConfirmRemove"))) {
                         tbContr._getAngularVm().removeFromList(settings.sortOrder);
                     }

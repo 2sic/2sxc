@@ -1,6 +1,6 @@
 ﻿<dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="2SexyContent" type="Module" version="08.03.06">
+    <package name="2SexyContent" type="Module" version="08.03.07">
       <friendlyName> Content</friendlyName>
       <description>2sxc is a DNN Extension to create attractive and designed content. It solves the common problem, allowing the web designer to create designed templates for different content elements, so that the user must only fill in fields and receive a perfectly designed and animated output.</description>
       <iconFile>icon.png</iconFile>
@@ -199,7 +199,7 @@
             <script type="UnInstall">
               <path>SqlDataProvider</path>
               <name>Uninstall.SqlDataProvider</name>
-              <version>08.03.06</version>
+              <version>08.03.07</version>
             </script>
           </scripts>
         </component>
@@ -383,6 +383,26 @@
                     <helpUrl />
                     <supportsPopUps>True</supportsPopUps>
                   </moduleControl>
+                  <moduleControl>
+                    <controlKey>appexport</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/Apps/AppExport.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>App Export</controlTitle>
+                    <controlType>Admin</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>appimport</controlKey>
+                    <controlSrc>DesktopModules/ToSIC_SexyContent/Administration/Apps/AppImport.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>App Import</controlTitle>
+                    <controlType>Admin</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <supportsPopUps>True</supportsPopUps>
+                  </moduleControl>
                 </moduleControls>
               </moduleDefinition>
             </moduleDefinitions>
@@ -396,7 +416,7 @@
             <attributes>
               <businessControllerClass>ToSic.SexyContent.Environment.Dnn7.DnnBusinessController</businessControllerClass>
               <desktopModuleID>[DESKTOPMODULEID]</desktopModuleID>
-              <upgradeVersionsList>01.00.00,05.05.00,06.06.00,06.06.04,07.00.00,07.00.03,07.02.00,07.02.02,07.03.00,07.03.01,07.03.02,07.03.03,07.03.04,08.00.00,08.00.01,08.00.02,08.00.03,08.00.04,08.00.05,08.00.06,08.00.07,08.00.08,08.00.09,08.00.10,08.00.11,08.00.12,08.01.00,08.01.01,08.01.02,08.01.03,08.02.00,08.02.01,08.02.02,08.02.03,08.03.00,08.03.01,08.03.02,08.03.03,08.03.04,08.03.05,08.03.06</upgradeVersionsList>
+              <upgradeVersionsList>01.00.00,05.05.00,06.06.00,06.06.04,07.00.00,07.00.03,07.02.00,07.02.02,07.03.00,07.03.01,07.03.02,07.03.03,07.03.04,08.00.00,08.00.01,08.00.02,08.00.03,08.00.04,08.00.05,08.00.06,08.00.07,08.00.08,08.00.09,08.00.10,08.00.11,08.00.12,08.01.00,08.01.01,08.01.02,08.01.03,08.02.00,08.02.01,08.02.02,08.02.03,08.03.00,08.03.01,08.03.02,08.03.03,08.03.04,08.03.05,08.03.06,08.03.07</upgradeVersionsList>
             </attributes>
           </eventMessage>
         </component>
@@ -688,7 +708,7 @@
         </components>
     </package>
 
-    <package name="2SexyContent-App" type="Module" version="08.03.06">
+    <package name="2SexyContent-App" type="Module" version="08.03.07">
       <friendlyName> App</friendlyName>
       <description>2sxc App is an extension that allows to install and use a 2sxc app.</description>
       <iconFile>icon-app.png</iconFile>
