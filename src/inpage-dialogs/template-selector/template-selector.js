@@ -1,7 +1,7 @@
 ﻿(function () {
     var module = angular.module("2sxc.view");
 
-    module.factory("inpageElement", function () {
+    module.factory("contentBlockLink", function () {
         return function (vm) {
             // will generate an object necessary to communicate with the outer system
             var iframe = window.frameElement;
@@ -9,6 +9,7 @@
 
             return {
                 dialogContainer: iframe,
+                window: window.parent, //iframe.parent,
                 sxc: iframe.sxc,
                 contentBlock: iframe.sxc.manage.rootCB,
                 getManageInfo: iframe.getManageInfo,
@@ -17,11 +18,9 @@
         };
     });
 
-    module.controller("TemplateSelectorCtrl", function ($scope, /* $attrs, */ moduleApiService, AppInstanceId, sxc, $filter, $q, $window, $translate, $sce, inpageElement) {
+    module.controller("TemplateSelectorCtrl", function ($scope, /* $attrs, */ moduleApiService, AppInstanceId, sxc, $filter, $q, $window, $translate, $sce, contentBlockLink) {
         //#region constants
         var cViewWithoutContent = "_LayoutElement"; // needed to differentiate the "select item" from the "empty-is-selected" which are both empty
-        var cAppActionManage = -2, cAppActionImport = -1, cAppActionCreate = -3;
-        // var viewPortSelector = ".DnnModule-" + AppInstanceId + " .sc-viewport";
         //#endregion
 
         var realScope = $scope;
@@ -33,10 +32,10 @@
         vm.apps = [];
         vm.contentTypes = [];
         vm.templates = [];
-        var inpagePartner = inpageElement(vm);
+        var wrapper = contentBlockLink(vm);
 
         // the sxc.manage is just to keep the old version running for now
-        vm.manageInfo = inpagePartner.getManageInfo();
+        vm.manageInfo = wrapper.getManageInfo();
         vm.showAdvanced = vm.manageInfo.user.canDesign;
         vm.templateId = vm.manageInfo.templateId;
         vm.undoTemplateId = vm.templateId;
@@ -96,9 +95,8 @@
                 return vm.renderTemplate(newTemplateId);
 
             // App
-            vm.loading++;
             vm.persistTemplate(false)
-                .then(function() { $window.location.reload(); }); // todo: now the parent...
+                .then(wrapper.window.location.reload); 
         });
 
         // Auto-set view-dropdown if content-type changed
@@ -116,96 +114,37 @@
             if (newAppId === oldAppId || newAppId === null)
                 return;
 
-
-            // special case: add app
-            if (newAppId === cAppActionImport) {
-                window.location = importCommand; // actually does a dnnModal.show...
-                return;
-            }
-
-            svc.setAppId(newAppId).then(function() {
-                $window.location.reload();
-            });
+            svc.setAppId(newAppId)
+                .then(wrapper.window.location.reload);
         });
 
-        vm.manageApps = function() {
-            sxc.manage.action({ "action": "zone" });    // todo
-        };
-        vm.appSettings = function() {
-            sxc.manage.action({ "action": "app" });     // todo
-        };
-        vm.installApp = function() {
-            window.location = importCommand; // actually does a dnnModal.show...
+        vm.manageApps = function() {    wrapper.sxc.manage.action({ "action": "zone" });    };
+        vm.appSettings = function() {   wrapper.sxc.manage.action({ "action": "app" });     };
+
+        // this is the one we must refactor out, as the import-command doesn't exist here
+        vm.installApp = function () {
+            wrapper.window.location = importCommand; // actually does a dnnModal.show...
             return;
         };
 
+        // todo: move to content-block
         // Cancel and reset back to original state
         vm.cancelTemplateChange = function() {
             vm.templateId = vm.undoTemplateId;
             vm.contentTypeId = vm.undoContentTypeId;
             vm.manageInfo.templateChooserVisible = false;
-            inpagePartner.hide();
-            inpagePartner.contentBlock.setTemplateChooserState(false);
+            wrapper.hide();
+            wrapper.contentBlock.setTemplateChooserState(false);
             if (vm.manageInfo.isContentApp) // necessary to show the original template again
                 vm.reloadTemplates();
         };
 
         // store the template state to the server, optionally force create of content, and hide the selector
-        vm.persistTemplate = function(forceCreate, selectorVisibility) {
-            inpagePartner.contentBlock.persistTemplate(forceCreate, selectorVisibility);
-        };
-        //    // Save only if the currently saved is not the same as the new
-        //    var groupExistsAndTemplateUnchanged = !!vm.manageInfo.hasContent && (vm.undoTemplateId === vm.templateId);
-        //    var promiseToSetState;
-        //    if (groupExistsAndTemplateUnchanged)
-        //        promiseToSetState = (vm.manageInfo.templateChooserVisible)
-        //            ? svc.setTemplateChooserState(false) // hide in case it was visible
-        //            : $q.when(null); // all is ok, create empty promise to allow chaining the result
-        //    else
-        //        promiseToSetState = svc.saveTemplate(vm.templateId, forceCreate, selectorVisibility)
-        //            .then(function(result) {
-        //                if (result.status !== 200) { // only continue if ok
-        //                    alert("error - result not ok, was not able to create ContentGroup");
-        //                    return;
-        //                }
-        //                var newGuid = result.data;
-        //                if (newGuid === null)
-        //                    return;
-        //                newGuid = newGuid.replace(/[\",\']/g, ""); // fixes a special case where the guid is given with quotes (dependes on version of angularjs) issue #532
-        //                if (console)
-        //                    console.log("created content group {" + newGuid + "}");
-        //
-        //                // todo: will need more complexity
-        //                vm.manageInfo.config.contentGroupId = newGuid; // update internal ContentGroupGuid 
-        //            });
-        //    
-        //    var promiseToCorrectUi = promiseToSetState.then(function() {
-        //            vm.undoTemplateId = vm.templateId;          // remember for future undo
-        //            vm.undoContentTypeId = vm.contentTypeId;    // remember ...
-        //            vm.manageInfo.templateChooserVisible = false;
-        //            inpagePartner.hide();
-        //            if(!vm.manageInfo.hasContent)               // if it didn't have content, then it only has now...
-        //                vm.manageInfo.hasContent = forceCreate; // ...if we forced it to
-        //    });
-        //
-        //    return promiseToCorrectUi;
-        //};
+        vm.persistTemplate = wrapper.contentBlock.persistTemplate;
+        vm.renderTemplate = wrapper.contentBlock.reload;  // just map to that method
 
-        vm.renderTemplate = function (templateId) {
-            // vm.loading++;
-            inpagePartner.contentBlock.reload(templateId);
-            //svc.renderTemplate(templateId, vm.manageInfo.lang).then(function (response) {
-            //    try {
-            //        inpagePartner.replaceContent(response.data);
-            //    } catch (e) {
-            //        console.log("Error while rendering template:");
-            //        console.log(e);
-            //    }
-            //    vm.loading--;
-            //});
-        };
 
-        // Optioally change the show state, then 
+        // Optionally change the show state, then 
         // check if it should be shown and load/show
         vm.show = function(stateChange) {
             if (stateChange !== undefined)  // optionally change the show-state
@@ -221,9 +160,6 @@
                     promises.push(vm.loadApps());
                 $q.all(promises).then(vm.externalInstaller.showIfConfigIsEmpty);
             }
-            //else {
-            //    inpagePartner.hide();
-            //}
         };
 
         // some helpers to show the i-frame and link up the ablity to then install stuff
@@ -261,82 +197,28 @@
                 vm.cancelTemplateChange();
             else {
                 vm.show(true);
-                inpagePartner.contentBlock.setTemplateChooserState(true);
+                wrapper.contentBlock.setTemplateChooserState(true);
             }
         };
-
-        // reload by ajax or page, depending on mode (used in toolbar)
-        //vm.reload = function () {
-        //    if (!vm.templateId)
-        //        return;
-        //
-        //    if (vm.manageInfo.isContentApp)
-        //        vm.renderTemplate(vm.templateId);
-        //    else
-        //        $window.location.reload();
-        //};
 
         vm.loadApps = function() {
             return svc.getSelectableApps()
                 .then(function(data) {
                     vm.apps = data.data;
                     vm.appCount = data.data.length; // needed in the future to check if it shows getting started
-                    //if (vm.manageInfo.user.canDesign) {
-                    //    vm.apps.push({ Name: "TemplatePicker.GetMoreApps", AppId: cAppActionImport });
-                    //}
                 });
         };
 
         //#region initialize this
-        vm.activate = function() {
-            vm.show(true); // show if it has to, or not
 
-            // Init App-Dropdown if it's an app-selector
-            //if (!vm.manageInfo.isContentApp) 
-            //    vm.loadApps().then(function() {
-            //        vm.externalInstaller.showIfConfigIsEmpty();
-            //    });
+        vm.activate = function() {
+            vm.show(true); 
         };
 
         vm.activate();
 
         //#endregion
 
-
-        //#region commands for the toolbar like add, remove, publish, translate, ..
-
-        //vm.prepareToAddContent = function () {
-        //    return vm.persistTemplate(true, false);
-        //};
-
-        //vm.addItem = function(sortOrder) {
-        //    svc.addItem(sortOrder).then(function () {
-        //        vm.renderTemplate(vm.templateId);
-        //    });
-        //};
-        //vm.removeFromList = function (sortOrder) {
-        //	svc.removeFromList(sortOrder).then(function () {
-        //		vm.renderTemplate(vm.templateId);
-        //	});
-        //};
-
-        // todo: work in progress related to https://github.com/2sic/2sxc/issues/618
-        //vm.reallyDelete = function(itemId) {
-        //    alert("Really delete not implemented yet - would delete: " + itemId);
-        //};
-
-        //vm.changeOrder = function (sortOrder, destSortOrder) {
-        //	svc.changeOrder(sortOrder, destSortOrder).then(function () {
-        //		vm.renderTemplate(vm.templateId);
-        //	});
-        //};
-        //vm.publish = function(part, sortOrder) {
-        //    svc.publish(part, sortOrder).then(function() {
-        //        vm.renderTemplate(vm.templateId);
-        //    });
-        //};
-        vm.translate = function (key) { return $translate.instant(key); };
-        //#endregion
     });
 
 

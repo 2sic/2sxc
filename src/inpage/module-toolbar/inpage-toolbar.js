@@ -26,15 +26,10 @@ $2sxc.getManageController = function (id, sxc) {
         approot: (manageInfo.config && manageInfo.config.appPath) ? manageInfo.config.appPath : null // this is the only value which doesn't have a slash by default
     };
 
-    //var contentTypeName = manageInfo.contentTypeId; // note: only exists if the template has a content-type
-    //var toolbarConfig = manageInfo.config;
     manageInfo.config.contentType = manageInfo.config.contentType || manageInfo.config.attributeSetName;
-    // var enableTools = manageInfo.user.canDesign;
-    // var enableDevelop = manageInfo.user.canDevelop;
-    // var isContent = manageInfo.isContentApp;
+
     var isDebug = $2sxc.urlParams.get("debug") ? "&debug=true" : "",
         actionButtonsConf = $2sxc._actions.create(manageInfo);
-
 
     var manage = {
         // public method to find out if it's in edit-mode
@@ -255,12 +250,6 @@ $2sxc.getManageController = function (id, sxc) {
             });
         },
 
-        //_getAngularVm: function () {
-        //    return manage.dialog.getCommands();
-        //    //var selectorElement = document.querySelector(".DnnModule-" + id + " .sc-selector-wrapper");
-        //    //return angular.element(selectorElement).scope().vm;
-        //},
-
         translate: function (key) {
             // todo: re-enable translate
             return "translate:" + key;
@@ -270,7 +259,8 @@ $2sxc.getManageController = function (id, sxc) {
     };
 
     // attach & open the mini-dashboard iframe
-    // manage.dialog = manage.action({ "action": "dash-view" });
+    if (manageInfo.templateChooserVisible)
+        manage.action({ "action": "layout" });
 
     manage.rootCB = $2sxc.contentBlock(sxc, manage);
 

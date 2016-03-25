@@ -54,7 +54,7 @@
             'add': createActionConfig("add", "AddDemo", "plus-circled", "edit", false, {
                 addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; },
                 code: function (settings, event, tbContr) {
-                    tbContr.rootCB // tbContr._getAngularVm()
+                    tbContr.rootCB 
                         .addItem(settings.sortOrder + 1);
                 }
             }),
@@ -84,7 +84,6 @@
                 code: function (settings, event, tbContr) {
                     if (confirm(tbContr.translate("Toolbar.ConfirmRemove"))) {
                         tbContr.rootCB
-                        //tbContr._getAngularVm()
                             .removeFromList(settings.sortOrder);
                     }
                 }
@@ -112,7 +111,6 @@
                 addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1 && settings.sortOrder !== 0; },
                 code: function (settings, event, tbContr) {
                     tbContr.rootCB
-                        //toolbarManager._getAngularVm()
                         .changeOrder(settings.sortOrder, Math.max(settings.sortOrder - 1, 0));
                 }
             },
@@ -124,7 +122,6 @@
                 addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; },
                 code: function (settings, event, tbContr) {
                     tbContr.rootCB
-                        //tbContr._getAngularVm()
                         .changeOrder(settings.sortOrder, settings.sortOrder + 1);
                 }
             },
@@ -145,7 +142,6 @@
                     var part = settings.sortOrder === -1 ? "listcontent" : "content";
                     var index = settings.sortOrder === -1 ? 0 : settings.sortOrder;
                     tbContr.rootCB
-                        //toolbarManager._getAngularVm()
                         .publish(part, index);
                 }
             }),
@@ -162,7 +158,6 @@
                         manager.dialog = manager.action({ "action": "dash-view" });
                     else
                         manager.dialog.toggle();
-                    //toolbarManager._getAngularVm().toggle();
                 }
             },
             'develop': createActionConfig("develop", "Develop", "code", "admin", true, {
@@ -270,7 +265,7 @@ $2sxc.contentBlock = function(sxc, manage) {
         templateId: minfo.templateId,
         undoTemplateId: minfo.templateId,
         contentTypeId: ctid,
-		undoContentTypeId: ctid,
+        undoContentTypeId: ctid,
 
         // ajax update/replace the content of the content-block
         replace: function(newContent) {
@@ -287,7 +282,7 @@ $2sxc.contentBlock = function(sxc, manage) {
         reload: function(templateId) {
             // if nothing specified, use stored id
             if (!templateId)
-            	templateId = cb.templateId;
+                templateId = cb.templateId;
 
             // if nothing specified / stored, cancel
             if (!templateId)
@@ -297,7 +292,7 @@ $2sxc.contentBlock = function(sxc, manage) {
             if (!cb.minfo.isContentApp)
                 return window.location.reload();
 
-			// remember for future persist/save
+            // remember for future persist/save
             cb.templateId = templateId;
 
             console.log("new loading");
@@ -315,13 +310,14 @@ $2sxc.contentBlock = function(sxc, manage) {
                     cb.loading--;
                 });
         },
+        refresh: function() { cb.reload(); },
 
         // set a content-item in this block to published, then reload
         publish: function(part, sortOrder) {
             return sxc.webApi.get({
                 url: "view/module/publish",
                 params: { part: part, sortOrder: sortOrder }
-            }).then(cb.reload);
+            }).then(cb.refresh);
         },
 
         // remove an item from a list, then reload
@@ -329,7 +325,7 @@ $2sxc.contentBlock = function(sxc, manage) {
             return sxc.webApi.get({
                 url: "view/module/removefromlist",
                 params: { sortOrder: sortOrder }
-            }).then(cb.reload);
+            }).then(cb.refresh);
         },
 
         // change the order of an item in a list, then reload
@@ -337,7 +333,7 @@ $2sxc.contentBlock = function(sxc, manage) {
             return sxc.webApi.get({
                 url: "view/module/changeorder",
                 params: { sortOrder: sortOrder, destinationSortOrder: destinationSortOrder }
-            }).then(cb.reload);
+            }).then(cb.refresh);
         },
 
         setTemplateChooserState: function (state) {
@@ -351,10 +347,8 @@ $2sxc.contentBlock = function(sxc, manage) {
         	return sxc.webApi.get({
         		url: "View/Module/AddItem",
         		params: { sortOrder: sortOrder }
-        	}).then(cb.reload);
+        	}).then(cb.refresh);
         },
-
-
 
         _saveTemplate: function (templateId, forceCreateContentGroup, newTemplateChooserState) {
             return sxc.webApi.get({
@@ -525,15 +519,10 @@ $2sxc.getManageController = function (id, sxc) {
         approot: (manageInfo.config && manageInfo.config.appPath) ? manageInfo.config.appPath : null // this is the only value which doesn't have a slash by default
     };
 
-    //var contentTypeName = manageInfo.contentTypeId; // note: only exists if the template has a content-type
-    //var toolbarConfig = manageInfo.config;
     manageInfo.config.contentType = manageInfo.config.contentType || manageInfo.config.attributeSetName;
-    // var enableTools = manageInfo.user.canDesign;
-    // var enableDevelop = manageInfo.user.canDevelop;
-    // var isContent = manageInfo.isContentApp;
+
     var isDebug = $2sxc.urlParams.get("debug") ? "&debug=true" : "",
         actionButtonsConf = $2sxc._actions.create(manageInfo);
-
 
     var manage = {
         // public method to find out if it's in edit-mode
@@ -754,12 +743,6 @@ $2sxc.getManageController = function (id, sxc) {
             });
         },
 
-        //_getAngularVm: function () {
-        //    return manage.dialog.getCommands();
-        //    //var selectorElement = document.querySelector(".DnnModule-" + id + " .sc-selector-wrapper");
-        //    //return angular.element(selectorElement).scope().vm;
-        //},
-
         translate: function (key) {
             // todo: re-enable translate
             return "translate:" + key;
@@ -769,7 +752,8 @@ $2sxc.getManageController = function (id, sxc) {
     };
 
     // attach & open the mini-dashboard iframe
-    // manage.dialog = manage.action({ "action": "dash-view" });
+    if (manageInfo.templateChooserVisible)
+        manage.action({ "action": "layout" });
 
     manage.rootCB = $2sxc.contentBlock(sxc, manage);
 

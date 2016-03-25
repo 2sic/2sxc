@@ -54,7 +54,7 @@
             'add': createActionConfig("add", "AddDemo", "plus-circled", "edit", false, {
                 addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; },
                 code: function (settings, event, tbContr) {
-                    tbContr.rootCB // tbContr._getAngularVm()
+                    tbContr.rootCB 
                         .addItem(settings.sortOrder + 1);
                 }
             }),
@@ -84,7 +84,6 @@
                 code: function (settings, event, tbContr) {
                     if (confirm(tbContr.translate("Toolbar.ConfirmRemove"))) {
                         tbContr.rootCB
-                        //tbContr._getAngularVm()
                             .removeFromList(settings.sortOrder);
                     }
                 }
@@ -112,7 +111,6 @@
                 addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1 && settings.sortOrder !== 0; },
                 code: function (settings, event, tbContr) {
                     tbContr.rootCB
-                        //toolbarManager._getAngularVm()
                         .changeOrder(settings.sortOrder, Math.max(settings.sortOrder - 1, 0));
                 }
             },
@@ -124,7 +122,6 @@
                 addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; },
                 code: function (settings, event, tbContr) {
                     tbContr.rootCB
-                        //tbContr._getAngularVm()
                         .changeOrder(settings.sortOrder, settings.sortOrder + 1);
                 }
             },
@@ -145,7 +142,6 @@
                     var part = settings.sortOrder === -1 ? "listcontent" : "content";
                     var index = settings.sortOrder === -1 ? 0 : settings.sortOrder;
                     tbContr.rootCB
-                        //toolbarManager._getAngularVm()
                         .publish(part, index);
                 }
             }),
@@ -162,7 +158,6 @@
                         manager.dialog = manager.action({ "action": "dash-view" });
                     else
                         manager.dialog.toggle();
-                    //toolbarManager._getAngularVm().toggle();
                 }
             },
             'develop': createActionConfig("develop", "Develop", "code", "admin", true, {

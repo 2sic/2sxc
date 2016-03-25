@@ -31,7 +31,7 @@ $2sxc.contentBlock = function(sxc, manage) {
         templateId: minfo.templateId,
         undoTemplateId: minfo.templateId,
         contentTypeId: ctid,
-		undoContentTypeId: ctid,
+        undoContentTypeId: ctid,
 
         // ajax update/replace the content of the content-block
         replace: function(newContent) {
@@ -48,7 +48,7 @@ $2sxc.contentBlock = function(sxc, manage) {
         reload: function(templateId) {
             // if nothing specified, use stored id
             if (!templateId)
-            	templateId = cb.templateId;
+                templateId = cb.templateId;
 
             // if nothing specified / stored, cancel
             if (!templateId)
@@ -58,7 +58,7 @@ $2sxc.contentBlock = function(sxc, manage) {
             if (!cb.minfo.isContentApp)
                 return window.location.reload();
 
-			// remember for future persist/save
+            // remember for future persist/save
             cb.templateId = templateId;
 
             console.log("new loading");
@@ -76,13 +76,14 @@ $2sxc.contentBlock = function(sxc, manage) {
                     cb.loading--;
                 });
         },
+        refresh: function() { cb.reload(); },
 
         // set a content-item in this block to published, then reload
         publish: function(part, sortOrder) {
             return sxc.webApi.get({
                 url: "view/module/publish",
                 params: { part: part, sortOrder: sortOrder }
-            }).then(cb.reload);
+            }).then(cb.refresh);
         },
 
         // remove an item from a list, then reload
@@ -90,7 +91,7 @@ $2sxc.contentBlock = function(sxc, manage) {
             return sxc.webApi.get({
                 url: "view/module/removefromlist",
                 params: { sortOrder: sortOrder }
-            }).then(cb.reload);
+            }).then(cb.refresh);
         },
 
         // change the order of an item in a list, then reload
@@ -98,7 +99,7 @@ $2sxc.contentBlock = function(sxc, manage) {
             return sxc.webApi.get({
                 url: "view/module/changeorder",
                 params: { sortOrder: sortOrder, destinationSortOrder: destinationSortOrder }
-            }).then(cb.reload);
+            }).then(cb.refresh);
         },
 
         setTemplateChooserState: function (state) {
@@ -112,10 +113,8 @@ $2sxc.contentBlock = function(sxc, manage) {
         	return sxc.webApi.get({
         		url: "View/Module/AddItem",
         		params: { sortOrder: sortOrder }
-        	}).then(cb.reload);
+        	}).then(cb.refresh);
         },
-
-
 
         _saveTemplate: function (templateId, forceCreateContentGroup, newTemplateChooserState) {
             return sxc.webApi.get({
