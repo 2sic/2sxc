@@ -2,14 +2,17 @@
     var module = angular.module("2sxc.view");
 
     module.factory("inpageElement", function () {
-        return function () {
+        return function (vm) {
             // will generate an object necessary to communicate with the outer system
             var iframe = window.frameElement;
+            if (iframe)
+                iframe.vm = vm;
             var contentBlock = null;
             var instanceBlock = null;
             return {
                 dialogContainer: iframe,
                 getManageInfo: iframe ? iframe.getManageInfo : null,
+                replaceContent: iframe ? iframe.replaceContent : null,
                 //instanceContext: instanceBlock,
                 //contentBlock: contentBlock
             };
@@ -20,7 +23,7 @@
         //#region constants
         var cViewWithoutContent = "_LayoutElement"; // needed to differentiate the "select item" from the "empty-is-selected" which are both empty
         var cAppActionManage = -2, cAppActionImport = -1, cAppActionCreate = -3;
-        var viewPortSelector = ".DnnModule-" + AppInstanceId + " .sc-viewport";
+        // var viewPortSelector = ".DnnModule-" + AppInstanceId + " .sc-viewport";
         //#endregion
 
         var realScope = $scope;
@@ -32,7 +35,7 @@
         vm.apps = [];
         vm.contentTypes = [];
         vm.templates = [];
-        var inpagePartner = inpageElement();
+        var inpagePartner = inpageElement(vm);
 
         // the sxc.manage is just to keep the old version running for now
         vm.manageInfo = sxc.manage ? sxc.manage._manageInfo : inpagePartner.getManageInfo();
@@ -97,7 +100,7 @@
             // App
             vm.loading++;
             vm.persistTemplate(false)
-                .then(function() { $window.location.reload(); });
+                .then(function() { $window.location.reload(); }); // todo: now the parent...
         });
 
         // Auto-set view-dropdown if content-type changed
@@ -188,8 +191,7 @@
             vm.loading++;
             svc.renderTemplate(templateId, vm.manageInfo.lang).then(function (response) {
                 try {
-                    $(viewPortSelector).html(response.data);
-                    sxc.manage._processToolbars();
+                    inpagePartner.replaceContent(response.data);
                 } catch (e) {
                     console.log("Error while rendering template:");
                     console.log(e);
@@ -315,8 +317,8 @@
             alert("Really delete not implemented yet - would delete: " + itemId);
         };
 
-        vm.changeOrder = function (sortOrder, desintationSortOrder) {
-        	svc.changeOrder(sortOrder, desintationSortOrder).then(function () {
+        vm.changeOrder = function (sortOrder, destSortOrder) {
+        	svc.changeOrder(sortOrder, destSortOrder).then(function () {
         		vm.renderTemplate(vm.templateId);
         	});
         };

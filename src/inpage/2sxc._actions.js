@@ -149,7 +149,8 @@
                 showOn: "default",
                 uiActionOnly: true, // so it doesn't create the content when used
                 code: function (settings, event, toolbarManager) {
-                    toolbarManager._getAngularVm().toggle();
+                    toolbarManager.dialog.toggle();
+                    //toolbarManager._getAngularVm().toggle();
                 }
             },
             'develop': createActionConfig("develop", "Develop", "code", "admin", true, {

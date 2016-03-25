@@ -149,7 +149,8 @@
                 showOn: "default",
                 uiActionOnly: true, // so it doesn't create the content when used
                 code: function (settings, event, toolbarManager) {
-                    toolbarManager._getAngularVm().toggle();
+                    toolbarManager.dialog.toggle();
+                    //toolbarManager._getAngularVm().toggle();
                 }
             },
             'develop': createActionConfig("develop", "Develop", "code", "admin", true, {
@@ -250,6 +251,77 @@ var $2sxcActionMenuMapper = function (moduleId) {
         }
     };
 };
+(function () {
+
+    var diag = $2sxc.dialog = {
+        mode: "iframe",
+        templates: {
+            inline: "<iframe width='100%' height='200px' src='{{url}}'"
+            // + "onload=\"this.syncHeight(this.contentWindow.document.body.scrollHeight);\""
+            //+ "onload=\"this.style.height=this.contentWindow.document.body.scrollHeight + 'px';\""
+            + "onresize=\"console.log('resize')\""
+            + "style=\"display: none\""
+            + "></iframe>"
+        }
+    };
+
+    //var ifr = diag.iframe = {};
+
+    diag.create = function (iid, block, url, closeCallback) {
+        var viewPortSelector = ".DnnModule-" + iid + " .sc-viewport";
+
+        block = $(block);
+
+        var ifrm = $(diag.templates.inline.replace("{{url}}", url));
+
+        var diagBox = ifrm[0];
+        diagBox.callback = function() {
+            alert("got called");
+        };
+        diagBox.closeCallback = closeCallback;
+
+        diagBox.getManageInfo = function() {
+            return $2sxc(iid).manage._manageInfo;
+        };
+
+        diagBox.getCommands = function() {
+            return diagBox.vm; // created by inner code
+        };
+
+        diagBox.syncHeight = function (height) {
+            console.log("tried resize to " + height);
+            diagBox.style.height = height + "px";
+        };
+
+        diagBox.toggle = function() {
+            diagBox.style.display = diagBox.style.display === "none" ? "" : "none";
+        };
+
+        diagBox.replaceContent = function (newContent) {
+            $(viewPortSelector).html(newContent);
+            $2sxc(iid).manage._processToolbars();
+        };
+
+        block.prepend(diagBox);
+
+        return diagBox;
+    };
+
+    /*
+     * todo
+     * - get design to work
+     * - get system to create/destroy iframe
+     * - find right position for the iframe
+     * - get system to be fast again
+     * - extract i18n
+     * 
+     * fine tuning
+     * - get dynamic src
+     * - get shrink resize
+     * - create the iframe without jquery
+     */
+})();
+
 // A helper-controller in charge of opening edit-dialogs + creating the toolbars for it
 // all in-page toolbars etc.
 
@@ -284,6 +356,7 @@ $2sxc.getManageController = function (id) {
     // var isContent = manageInfo.isContentApp;
     var isDebug = $2sxc.urlParams.get("debug") ? "&debug=true" : "",
         actionButtonsConf = $2sxc._actions.create(manageInfo);
+
 
     var tbContr = {
         // public method to find out if it's in edit-mode
@@ -385,13 +458,13 @@ $2sxc.getManageController = function (id) {
             var link = tbContr.getNgLink(settings);
 
             if (settings.newWindow || (event && event.shiftKey))
-                window.open(link);
+                return window.open(link);
             else {
                 if (settings.inlineWindow)
                     //window.open(link);
-                    $2sxc.dialog.create(id, moduleElement, link, callback);
+                    return $2sxc.dialog.create(id, moduleElement, link, callback);
                 else
-                    $2sxc.totalPopup.open(link, callback);
+                    return $2sxc.totalPopup.open(link, callback);
             }
         },
 
@@ -501,18 +574,22 @@ $2sxc.getManageController = function (id) {
             });
         },
 
-        _getAngularVm: function() {
-            var selectorElement = document.querySelector(".DnnModule-" + id + " .sc-selector-wrapper");
-            return angular.element(selectorElement).scope().vm;
+        _getAngularVm: function () {
+            return tbContr.dialog.getCommands();
+            //var selectorElement = document.querySelector(".DnnModule-" + id + " .sc-selector-wrapper");
+            //return angular.element(selectorElement).scope().vm;
         },
 
         translate: function (key) {
             // todo: re-enable translate
-            // return key;
-            return tbContr._getAngularVm().translate(key);
+            return "translate:" + key;
+            // return tbContr._getAngularVm().translate(key);
         }
 
     };
+
+    // attach & open the mini-dashboard iframe
+    tbContr.dialog = tbContr.action({ "action": "dash-view" });
 
     return tbContr;
 };

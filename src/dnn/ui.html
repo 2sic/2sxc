@@ -123,7 +123,7 @@
         // note: the pipeline designer is special - it doesn't open a modal-dialog but should be shown directly
         // all others will be modal-opened by the DialogHost App
         if (dialogName === "dash-view") {
-            document.write("<div sxc-app=\"2sxc.view\" ng-controller=\"TemplateSelectorCtrl as vm\" class=\"sc-selector-wrapper\" ng-include=\"'template-selector/template-selector.html'\"> </div>");
+            document.write("<div class=\"contentBlockDashboard\" sxc-app=\"2sxc.view\" ng-controller=\"TemplateSelectorCtrl as vm\" class=\"sc-selector-wrapper\" ng-include=\"'template-selector/template-selector.html'\"> </div>");
         } else if (dialogName === "pipeline-designer") {
             document.write('<div sxc-app="PipelineDesigner" ng-include="\'pipelines/pipeline-designer.html\'" ng-dependencies="InitParametersFromUrl,InitSxcParametersFromUrl,PipelineDesigner"></div>');
         } else {

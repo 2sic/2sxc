@@ -33,6 +33,7 @@ $2sxc.getManageController = function (id) {
     var isDebug = $2sxc.urlParams.get("debug") ? "&debug=true" : "",
         actionButtonsConf = $2sxc._actions.create(manageInfo);
 
+
     var tbContr = {
         // public method to find out if it's in edit-mode
         isEditMode: function() {    return manageInfo.isEditMode;   },
@@ -133,13 +134,13 @@ $2sxc.getManageController = function (id) {
             var link = tbContr.getNgLink(settings);
 
             if (settings.newWindow || (event && event.shiftKey))
-                window.open(link);
+                return window.open(link);
             else {
                 if (settings.inlineWindow)
                     //window.open(link);
-                    $2sxc.dialog.create(id, moduleElement, link, callback);
+                    return $2sxc.dialog.create(id, moduleElement, link, callback);
                 else
-                    $2sxc.totalPopup.open(link, callback);
+                    return $2sxc.totalPopup.open(link, callback);
             }
         },
 
@@ -249,18 +250,22 @@ $2sxc.getManageController = function (id) {
             });
         },
 
-        _getAngularVm: function() {
-            var selectorElement = document.querySelector(".DnnModule-" + id + " .sc-selector-wrapper");
-            return angular.element(selectorElement).scope().vm;
+        _getAngularVm: function () {
+            return tbContr.dialog.getCommands();
+            //var selectorElement = document.querySelector(".DnnModule-" + id + " .sc-selector-wrapper");
+            //return angular.element(selectorElement).scope().vm;
         },
 
         translate: function (key) {
             // todo: re-enable translate
-            // return key;
-            return tbContr._getAngularVm().translate(key);
+            return "translate:" + key;
+            // return tbContr._getAngularVm().translate(key);
         }
 
     };
+
+    // attach & open the mini-dashboard iframe
+    tbContr.dialog = tbContr.action({ "action": "dash-view" });
 
     return tbContr;
 };

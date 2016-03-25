@@ -119,22 +119,22 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
             // ToDo: Move these RegisterScripts to JS to prevent including AngularJS twice (from other modules)
             // ClientResourceManager.RegisterScript(Page, root + "js/angularjs/angular.min.js" + breakCache, 80);
-            RegisterJs(Page, ver, root + "js/angularjs/angular.min.js");
+            //RegisterJs(Page, ver, root + "js/angularjs/angular.min.js");
 
             // New: multi-language stuff
             //ClientResourceManager.RegisterScript(Page, root + "dist/lib/i18n/set.min.js" + breakCache);
-            RegisterJs(Page, ver, root + "dist/lib/i18n/set.min.js");
+            //RegisterJs(Page, ver, root + "dist/lib/i18n/set.min.js");
 
             //ClientResourceManager.RegisterScript(Page, root + "js/2sxc.api" + ext, 90);
             //ClientResourceManager.RegisterScript(Page, root + "dist/inpage/inpage" + ext, 91);
             RegisterJs(Page, ver, root + "js/2sxc.api" + ext);
             RegisterJs(Page, ver, root + "dist/inpage/inpage" + ext);
-            RegisterJs(Page, ver, root + "dist/inpage/inpage-dialogs" + ext);
+            //RegisterJs(Page, ver, root + "dist/inpage/inpage-dialogs" + ext);
 
             //ClientResourceManager.RegisterScript(Page, root + "js/angularjs/2sxc4ng" + ext, 93);
             //ClientResourceManager.RegisterScript(Page, root + "dist/config/config" + ext, 93);
-            RegisterJs(Page, ver, root + "js/angularjs/2sxc4ng" + ext);
-            RegisterJs(Page, ver, root + "dist/config/config" + ext);
+            //RegisterJs(Page, ver, root + "js/angularjs/2sxc4ng" + ext);
+            //RegisterJs(Page, ver, root + "dist/config/config" + ext);
 
         }
 
