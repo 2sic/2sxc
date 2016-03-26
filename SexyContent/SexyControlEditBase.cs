@@ -15,44 +15,48 @@ namespace ToSic.SexyContent
     /// </summary>
     public abstract class SexyControlEditBase : PortalModuleBase
     {
+        public ModuleContentBlock ContentBlock;
         protected void Page_Init(object sender, EventArgs e)
         {
+            ContentBlock = new ModuleContentBlock(ModuleConfiguration, UserInfo, Request, UserInfo.IsSuperUser);
             // Set ZoneId based on the context
-            var zoneId = (!UserInfo.IsSuperUser
-                           ? ZoneHelpers.GetZoneID(ModuleConfiguration.OwnerPortalID)
-                           : !string.IsNullOrEmpty(Request.QueryString["ZoneId"])
-                               ? int.Parse(Request.QueryString["ZoneId"]) : ZoneHelpers.GetZoneID(ModuleConfiguration.OwnerPortalID));
+            //var zoneId = (!UserInfo.IsSuperUser
+            //               ? ZoneHelpers.GetZoneID(ModuleConfiguration.OwnerPortalID)
+            //               : !string.IsNullOrEmpty(Request.QueryString["ZoneId"])
+            //                   ? int.Parse(Request.QueryString["ZoneId"]) : ZoneHelpers.GetZoneID(ModuleConfiguration.OwnerPortalID));
 
-            // Set AppId based on the context
-            var appId = AppHelpers.GetAppIdFromModule(ModuleConfiguration);
-            if (appId != null)
-                SettingsAreStored = true;
+            //// Set AppId based on the context
+            //var appId = AppHelpers.GetAppIdFromModule(ModuleConfiguration);
+            //if (appId != null)
+            //    SettingsAreStored = true;
 
             // possibly get app-id from url, but only if on an admin-control
             // the only reason the code is currently here, is because the admin controls will be removed soon (replaced by JS-UIs)
-            if (this is SexyControlAdminBaseWillSoonBeRemoved)
-            {
-                var appIdString = Request.QueryString[SexyContent.Settings.AppIDString];
-                int appId2;
-                if (appIdString != null && int.TryParse(appIdString, out appId2))
-                    appId = appId2;
-            }
+            // 2016-03-23 2dm commented this all out, as the request-string is already checked in the AppHelpers.GetAppIdFromModule(...)
+            //if (this is SexyControlAdminBaseWillSoonBeRemoved)
+            //{
+            //    var appIdString = Request.QueryString[SexyContent.Settings.AppIDString];
+            //    int appId2;
+            //    if (appIdString != null && int.TryParse(appIdString, out appId2))
+            //        appId = appId2;
+            //}
 
             // Init SxcContext based on zone/app
             //if (zoneId.HasValue && appId.HasValue)
-                _sxcInstance = new SxcInstance(zoneId ?? 0, appId ?? 0, true, ModuleConfiguration.OwnerPortalID,
-                    ModuleContext.Configuration);
+                //_sxcInstance = new SxcInstance(ContentBlock.ZoneId ?? 0, ContentBlock.AppId ?? 0, ModuleConfiguration.OwnerPortalID,
+                //    ModuleConfiguration);
         }
 
 
         #region basic properties like Sexy, App, Zone, etc.
-        protected SxcInstance _sxcInstance { get; set; }
+
+        protected SxcInstance _sxcInstance => ContentBlock.SxcInstance;// { get; } //set; }
 
         protected int? ZoneId => _sxcInstance?.ZoneId ?? 0;
 
         protected int? AppId => SettingsAreStored ? _sxcInstance?.AppId : null; // some systems rely on appid being blank to adapt behaviour if nothing is saved yet
 
-        protected bool SettingsAreStored;
+        protected bool SettingsAreStored => ContentBlock.UnreliableInfoThatSettingsAreStored;
         #endregion
 
         public bool IsContentApp => _sxcInstance.IsContentApp;// ModuleConfiguration.DesktopModule.ModuleName == "2sxc";

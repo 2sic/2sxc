@@ -22,9 +22,9 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public static ISxcInstance SxcInstanceForModule(ModuleInfo moduleInfo)
         {
-            var appId = AppHelpers.GetAppIdFromModule(moduleInfo);
-            var zoneId = ZoneHelpers.GetZoneID(moduleInfo.PortalID);
-            ISxcInstance sxcSxcInstance = new SxcInstance(zoneId.Value, appId.Value, true, moduleInfo.OwnerPortalID, moduleInfo);
+            var appId = AppHelpers.GetAppIdFromModule(moduleInfo).Value;
+            var zoneId = ZoneHelpers.GetZoneID(moduleInfo.PortalID).Value;
+            ISxcInstance sxcSxcInstance = new SxcInstance(zoneId, appId, moduleInfo.OwnerPortalID, moduleInfo);
             return sxcSxcInstance;
         }
 

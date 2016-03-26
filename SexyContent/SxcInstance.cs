@@ -147,7 +147,7 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Instanciates Content and Template-Contexts
         /// </summary>
-        internal SxcInstance(int zoneId, int appId, bool enableCaching = true, int? ownerPortalId = null, ModuleInfo moduleInfo = null)
+        internal SxcInstance(int zoneId, int appId, int? ownerPortalId = null, ModuleInfo moduleInfo = null)
         {
             SharedConstructor(zoneId, appId, ownerPortalId, moduleInfo);
         }

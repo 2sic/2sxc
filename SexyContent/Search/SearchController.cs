@@ -38,7 +38,7 @@ namespace ToSic.SexyContent.Search
 		            return searchDocuments;
             }
 
-            var sexy = new SxcInstance(zoneId.Value, appId.Value, true, moduleInfo.OwnerPortalID, moduleInfo);
+            var sexy = new SxcInstance(zoneId.Value, appId.Value, moduleInfo.OwnerPortalID, moduleInfo);
             var language = moduleInfo.CultureCode;
 	        var contentGroup = sexy.AppContentGroups.GetContentGroupForModule(moduleInfo.ModuleID);
             var template = contentGroup.Template;

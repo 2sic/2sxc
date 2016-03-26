@@ -31,12 +31,18 @@ namespace ToSic.SexyContent
 			ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
             var renderHelp = new RenderingHelpers(_sxcInstance, ModuleContext, SettingsAreStored, ResolveUrl("~"));
 
+
 			// If logged in, inject Edit JavaScript, and delete / add items
             if (!UserMayEditThisModule) return;
             try
             {
                 // register scripts and css
                 renderHelp.RegisterClientDependencies(Page, string.IsNullOrEmpty(Request.QueryString["debug"]));
+
+                // new
+                var newSpecs = new ClientInfosAll(ResolveUrl("~"), PortalSettings, ModuleContext, _sxcInstance, UserInfo,
+                    ZoneId ?? 0, SettingsAreStored);
+                ((ModuleHost) Parent).Attributes.Add("data-2sxc-context", JsonConvert.SerializeObject(newSpecs));
 
                 // add instance specific infos to the html-tag
                 var clientInfos = renderHelp.InfosForTheClientScripts();
@@ -59,7 +65,7 @@ namespace ToSic.SexyContent
             get
             {
                 if (_sxcInstanceForSecurityChecks == null)
-                    _sxcInstanceForSecurityChecks = _sxcInstance ?? new SxcInstance(ZoneId.Value, 0, true, ModuleConfiguration.OwnerPortalID, ModuleConfiguration);
+                    _sxcInstanceForSecurityChecks = _sxcInstance ?? new SxcInstance(ZoneId.Value, 0, ModuleConfiguration.OwnerPortalID, ModuleConfiguration);
                 return _sxcInstanceForSecurityChecks?.Environment?.Permissions.UserMayEditContent ?? false;
             }
         }

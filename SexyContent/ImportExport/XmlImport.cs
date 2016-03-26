@@ -221,7 +221,7 @@ namespace ToSic.SexyContent.ImportExport
 		/// </summary>
 		public bool ImportXml(int zoneId, int appId, XDocument doc, bool leaveExistingValuesUntouched = true)
 		{
-			_sexy = new SxcInstance(zoneId, appId, false);
+			_sexy = new SxcInstance(zoneId, appId); // 2016-03-26 2dm this used to have a third parameter false = don't enable caching, which hasn't been respected for a while; removed it
 			_appId = appId;
 			_zoneId = zoneId;
 

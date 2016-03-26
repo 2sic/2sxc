@@ -63,43 +63,39 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
             var clientInfos = new
             {
-                moduleId = ModuleId,
+                moduleId = ModuleId, // inst
                 manage = new
                 {
-                    isEditMode = _sxcInstance?.Environment?.Permissions.UserMayEditContent ?? false,
-                    templateChooserVisible,
-                    hasContent,
-                    isContentApp = _sxcInstance.IsContentApp,
-                    zoneId = _sxcInstance.ZoneId ?? 0,
-                    appId = _usingStoredConfig ? _sxcInstance.AppId : null,
-                    isList = _usingStoredConfig && _sxcInstance.ContentGroup.Content.Count > 1,
-                    templateId = _sxcInstance.Template?.TemplateId,
-                    contentTypeId = _sxcInstance.Template?.ContentTypeStaticName ?? "",
+                    isEditMode = _sxcInstance?.Environment?.Permissions.UserMayEditContent ?? false, // itm level
+                    templateChooserVisible, // cblock... ok
+                    hasContent, // cb ok
+                    isContentApp = _sxcInstance.IsContentApp, // cb
+                    zoneId = _sxcInstance.ZoneId ?? 0, // cb / inst ok
+                    appId = _usingStoredConfig ? _sxcInstance.AppId : null, // cb ok
+                    isList = _usingStoredConfig && _sxcInstance.ContentGroup.Content.Count > 1, // cb ok
+                    templateId = _sxcInstance.Template?.TemplateId, // cb ok
+                    contentTypeId = _sxcInstance.Template?.ContentTypeStaticName ?? "", // cb / itm ok
                     config = new
                     {
-                        portalId = PortalSettings.PortalId,
-                        tabId =  TabId,
-                        moduleId = ModuleId,
-                        contentGroupId = _usingStoredConfig  ? _sxcInstance.ContentGroup.ContentGroupGuid : (Guid?)null,
-                        dialogUrl = Globals.NavigateURL(TabId),
-                        // 2016-03-01 2dm - probably unused now returnUrl = Request.RawUrl,
-                        appPath = _usingStoredConfig ? _sxcInstance.App.Path + "/" : null,
-                        // 2016-02-27 2dm - seems unused
-                        //cultureDimension = AppId.HasValue ? Sexy.GetCurrentLanguageID() : new int?(),
-                        isList = _sxcInstance.Template?.UseForList ?? false,
-                        version = Settings.Version.ToString() // SexyContent.Version.ToString()
+                        portalId = PortalSettings.PortalId, // inst ok
+                        tabId =  TabId, // inst ok
+                        moduleId = ModuleId, // inst ok
+                        contentGroupId = _usingStoredConfig  ? _sxcInstance.ContentGroup.ContentGroupGuid : (Guid?)null, // cb ok
+                        dialogUrl = Globals.NavigateURL(TabId), // syst unused?
+                        appPath = _usingStoredConfig ? _sxcInstance.App.Path + "/" : null, // cb ok
+                        isList = _sxcInstance.Template?.UseForList ?? false, // cb ok
+                        version = Settings.Version.ToString()  // syst ok
                     },
-                    user = new
+                    user = new // ok
                     {
-                        canDesign = SecurityHelpers.IsInSexyContentDesignersGroup(UserInfo),
+                        canDesign = SecurityHelpers.IsInSexyContentDesignersGroup(UserInfo), // syst / inst / cb ok
                         // will be true for admins or for people in the designers-group
-                        canDevelop = UserInfo.IsSuperUser // will be true for host-users, false for all others
+                        canDevelop = UserInfo.IsSuperUser // will be true for host-users, false for all others // syst / inst ok
                     },
-                    applicationRoot = ApplicationRoot,// ResolveUrl("~"),
-                    lang = PortalSettings.CultureCode.ToLower(),
-                    //System.Threading.Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName.ToLower(),
-                    langPrimary = priLang,
-                    languages
+                    applicationRoot = ApplicationRoot,// cb ok
+                    lang = PortalSettings.CultureCode.ToLower(), // syst ok
+                    langPrimary = priLang, // syst ok
+                    languages // syst ok
                 }
             };
             return clientInfos;
@@ -171,19 +167,162 @@ namespace ToSic.SexyContent.Environment.Dnn7
             {
                 ModuleContext = new
                 {
-                    ModuleContext.PortalId,
-                    ModuleContext.TabId,
-                    ModuleContext.ModuleId,
-                    AppId = _usingStoredConfig ? 
-                    _sxcInstance?.App?.AppId : null// AppId
+                    ModuleContext.PortalId, // syst / inst - ok
+                    ModuleContext.TabId,  // syst / inst - ok
+                    ModuleContext.ModuleId, // inst
+                    AppId = _usingStoredConfig ? _sxcInstance?.App?.AppId : null // cb
                 },
-                PortalSettings.ActiveTab.FullUrl,
-                //PortalRoot = (Request.IsSecureConnection ? "https://" : "http://") + PortalAlias.HTTPAlias + "/",
-                PortalRoot = "//" + PortalSettings.PortalAlias.HTTPAlias + "/",
-                DefaultLanguageID = _sxcInstance?.EavAppContext.Dimensions.GetLanguageId(PortalSettings.DefaultLanguage)
+                PortalSettings.ActiveTab.FullUrl, // syst - ok
+                PortalRoot = "//" + PortalSettings.PortalAlias.HTTPAlias + "/", // syst ok
+                DefaultLanguageID = _sxcInstance?.EavAppContext.Dimensions.GetLanguageId(PortalSettings.DefaultLanguage) // unused /  syst - ok
             };
             return globData;
         }
 
     }
+
+    public class ClientInfosAll
+    {
+        public ClientInfosEnvironment Environment;
+        public ClientInfosUser User;
+        public ClientInfosLanguages Language;
+        public ClientInfoContentBlock ContentBlock; // todo: still not sure if these should be separate...
+        public ClientInfoContentGroup ContentGroup;
+
+        public ClientInfosAll(string systemRootUrl, PortalSettings ps, ModuleInstanceContext mic, SxcInstance sxc, UserInfo uinfo, int zoneId, bool isCreated)
+        {
+            Environment = new ClientInfosEnvironment(systemRootUrl, ps, mic);
+            Language = new ClientInfosLanguages(ps, zoneId);
+            User = new ClientInfosUser(uinfo);
+
+            var tempVisibleStatus = DnnStuffToRefactor.TryToGetReliableSetting(sxc.ModuleInfo,
+                Settings.SettingsShowTemplateChooser);
+            var templateChooserVisible = bool.Parse(tempVisibleStatus ?? "true");
+            ContentBlock = new ClientInfoContentBlock(templateChooserVisible, mic.ModuleId, null, 0);
+            ContentGroup = new ClientInfoContentGroup(sxc, isCreated);
+        }
+    }
+
+    public class ClientInfosEnvironment
+    {
+        public int WebsiteId;       // aka PortalId
+        public string WebsiteUrl;
+        // public string WebsiteVersion;
+
+        public int PageId;          // aka TabId
+        public string PageUrl;
+
+        public int InstanceId;      // aka ModuleId
+
+        public string SxcVersion;
+        // public string SxcDialogUrl;
+        public string SxcRootUrl;
+
+        public ClientInfosEnvironment(string systemRootUrl, PortalSettings ps, ModuleInstanceContext mic)
+        {
+            WebsiteId = ps.PortalId;
+            WebsiteUrl = "//" + ps.PortalAlias.HTTPAlias + "/";
+
+            PageId = mic.TabId;
+            PageUrl = ps.ActiveTab.FullUrl;
+
+            InstanceId = mic.ModuleId;
+
+            SxcVersion = Settings.Version.ToString();
+            // SxcDialogUrl = Globals.NavigateURL(PageId);
+            SxcRootUrl = systemRootUrl;
+        }
+    }
+
+    public class ClientInfosUser
+    {
+        public bool CanDesign;
+        public bool CanDevelop;
+
+        public ClientInfosUser(UserInfo uinfo)
+        {
+            CanDesign = SecurityHelpers.IsInSexyContentDesignersGroup(uinfo);
+            CanDevelop = uinfo.IsSuperUser;
+        }
+    }
+
+    public class ClientInfosLanguages
+    {
+        public string Current;
+        public string Primary;
+        public IEnumerable<ClientInfoLanguage> All;
+
+        public ClientInfosLanguages(PortalSettings ps, int zoneId)
+        {
+            Current = ps.CultureCode.ToLower();
+            Primary = ps.DefaultLanguage.ToLower();
+            All = ZoneHelpers.GetCulturesWithActiveState(ps.PortalId, zoneId)
+                    .Where(c => c.Active)
+                    .Select(c => new ClientInfoLanguage() { Key = c.Code.ToLower(), Name = c.Text });
+        }
+    }
+
+    public class ClientInfoLanguage
+    {
+        public string Key;
+        public string Name;
+    }
+
+    public class ClientInfoContentBlock //: ClientInfoEntity
+    {
+        public bool ShowTemplatePicker;
+        // public bool GroupIsCreated;
+        public bool ParentIsEntity;
+        public int ParentId;
+        public string ParentFieldName;
+        public int ParentFieldSortOrder;
+
+        public ClientInfoContentBlock(bool showSelector, /*bool groupIsCreated,*/ int parentId, string parentFieldName, int indexInField)
+        {
+            ShowTemplatePicker = showSelector;
+            //GroupIsCreated = groupIsCreated;
+            ParentIsEntity = false;
+            ParentId = parentId;
+            ParentFieldName = parentFieldName;
+            ParentFieldSortOrder = indexInField;
+        }
+    };
+
+    public class ClientInfoContentGroup: ClientInfoEntity
+    {
+        public bool IsCreated;
+        public bool IsList;
+        public int TemplateId;
+        public string ContentTypeName;
+        public string AppUrl;
+        public bool AppIsContent;
+        public bool HasContent;
+
+        public ClientInfoContentGroup(SxcInstance sxc, bool isCreated)
+        {
+            IsCreated = isCreated;
+            if (isCreated)
+            {
+                Id = sxc.ContentGroup.ContentGroupId;
+                Guid = sxc.ContentGroup.ContentGroupGuid;
+                AppId = sxc.AppId ?? 0;                     // todo: check if the 0 (previously null) causes problems
+                AppUrl = sxc.App.Path + "/";
+                HasContent = sxc.Template != null && sxc.ContentGroup.Exists;
+            }
+            ZoneId = sxc.ZoneId ?? 0;
+            TemplateId = sxc.Template?.TemplateId ?? 0;     // todo: check if the 0 (previously null) causes problems
+            ContentTypeName = sxc.Template?.ContentTypeStaticName ?? "";
+            IsList = isCreated && sxc.ContentGroup.Content.Count > 1;
+        }
+    }
+
+    public abstract class ClientInfoEntity
+    {
+        public int ZoneId;  // the zone of the content-block
+        public int AppId;   // the zone of the content-block
+        public Guid Guid;   // the entity-guid of the content-block
+        public int Id;      // the entity-id of the content-block
+    }
+
+
 }

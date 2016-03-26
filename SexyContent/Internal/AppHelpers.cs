@@ -175,7 +175,7 @@ namespace ToSic.SexyContent.Internal
             if (zoneId != ZoneHelpers.GetZoneID(ps.PortalId))
                 throw new Exception("This app does not belong to portal " + ps.PortalId);
 
-            var sexy = new SxcInstance(zoneId, appId, false);
+            var sexy = new SxcInstance(zoneId, appId);// 2016-03-26 2dm this used to have a third parameter false = don't enable caching, which hasn't been respected for a while; removed it
 
             if (appId != sexy.EavAppContext.AppId)
                 throw new Exception("An app can only be removed inside of it's own context.");
@@ -284,7 +284,7 @@ namespace ToSic.SexyContent.Internal
             // Change to 1. available template if app has been set
             if (appId.HasValue)
             {
-                var sexyForNewApp = new SxcInstance(zoneId.Value, appId.Value, false);
+                var sexyForNewApp = new SxcInstance(zoneId.Value, appId.Value);// 2016-03-26 2dm this used to have a third parameter false = don't enable caching, which hasn't been respected for a while; removed it
                 var templates = sexyForNewApp.AppTemplates.GetAvailableTemplatesForSelector(module.ModuleID, sexyForNewApp.AppContentGroups).ToList();
                 if (templates.Any())
                     sexyForNewApp.AppContentGroups.SetPreviewTemplateId(module.ModuleID, templates.First().TemplateId);
