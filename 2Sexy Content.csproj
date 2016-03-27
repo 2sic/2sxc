@@ -248,6 +248,7 @@
     <Compile Include="Interfaces\IApp.cs" />
     <Compile Include="Interfaces\IAppData.cs" />
     <Compile Include="Interfaces\IContentBlock.cs" />
+    <Compile Include="SexyContent\Internal\AppManagement.cs" />
     <Compile Include="SexyContent\ModuleContentBlock.cs" />
     <Compile Include="SexyContent\ContentGroup.cs" />
     <Compile Include="SexyContent\ContentGroupManager.cs" />

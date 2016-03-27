@@ -12,7 +12,7 @@ namespace ToSic.SexyContent.WebApi
             if(!appId.HasValue)
                 appId = AppHelpers.GetAppIdFromModule(moduleInfo);
             var zoneId = ZoneHelpers.GetZoneID(moduleInfo.PortalID);
-            return new SxcInstance(zoneId.Value, appId.Value, moduleInfo.OwnerPortalID, moduleInfo);
+            return new SxcInstance(zoneId.Value, appId.Value, moduleInfo);
         }
 
     }

@@ -60,12 +60,13 @@ namespace ToSic.SexyContent
 
 
         private SxcInstance _sxcInstanceForSecurityChecks;
-        protected bool UserMayEditThisModule
+        protected bool UserMayEditThisModule // todo: unsure if this works, generating the new sxc without appid = 0
         {
             get
             {
                 if (_sxcInstanceForSecurityChecks == null)
-                    _sxcInstanceForSecurityChecks = _sxcInstance ?? new SxcInstance(ZoneId.Value, 0, ModuleConfiguration.OwnerPortalID, ModuleConfiguration);
+                    _sxcInstanceForSecurityChecks = _sxcInstance 
+                        ?? new ModuleContentBlock(ModuleConfiguration, UserInfo, Request.QueryString, false).SxcInstance ;// new SxcInstance(ZoneId.Value, 0, ModuleConfiguration);
                 return _sxcInstanceForSecurityChecks?.Environment?.Permissions.UserMayEditContent ?? false;
             }
         }

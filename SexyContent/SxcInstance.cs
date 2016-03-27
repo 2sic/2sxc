@@ -24,25 +24,26 @@ namespace ToSic.SexyContent
     public class SxcInstance :ISxcInstance
     {
         #region Properties
+
         /// <summary>
         /// The Content Data Context pointing to a full EAV, pre-configured for this specific App
         /// </summary>
-        public EavDataController EavAppContext;
+        public EavDataController EavAppContext => App.EavContext;
 
         internal int? ZoneId { get; set; }
 
         internal int? AppId { get; private set; }
 
-        public TemplateManager AppTemplates { get; set; }
+        public TemplateManager AppTemplates => App.TemplateManager;
 
-		public ContentGroupManager AppContentGroups { get; set; }
+        public ContentGroupManager AppContentGroups => App.ContentGroupManager;
 
         private ContentGroup _contentGroup;
         public ContentGroup ContentGroup => _contentGroup ??
                                                (_contentGroup = AppContentGroups.GetContentGroupForModule(ModuleInfo.ModuleID));
 
         private App _app;
-        public App App => _app ?? (_app = AppHelpers.GetApp(ZoneId.Value, AppId.Value, PortalSettingsOfOriginalModule));
+        public App App => _app ?? (_app = new App(PortalSettingsOfOriginalModule, AppId.Value, ZoneId.Value));
 
         /// <summary>
         /// Environment - should be the place to refactor everything into, which is the host around 2sxc
@@ -50,6 +51,9 @@ namespace ToSic.SexyContent
         public Environment.Environment Environment = new Environment.Environment();
 
         internal ModuleInfo ModuleInfo { get; private set; }
+
+        internal ModuleContentBlock ContentBlock { get; private set; }
+
 
         public bool IsContentApp => ModuleInfo.DesktopModule.ModuleName == "2sxc";
 
@@ -80,11 +84,12 @@ namespace ToSic.SexyContent
         #region current template - must get most of this code out of this class...
         // todo: try to refactor most of the template-stuff out of this class again
 
-        private bool AllowAutomaticTemplateChangeBasedOnUrlParams => !IsContentApp; 
+        private bool AllowAutomaticTemplateChangeBasedOnUrlParams => !IsContentApp;  // todo: template
+
         private Template _template;
         private bool _templateLoaded;
 
-        public Template Template
+        public Template Template // todo: template
         {
             get
             {
@@ -112,13 +117,13 @@ namespace ToSic.SexyContent
                 _templateLoaded = true;
                 _dataSource = null; // reset this
             }
-        }
+        } 
 
         /// <summary>
         /// combine all QueryString Params to a list of key/value lowercase and search for a template having this ViewNameInUrl
         /// QueryString is never blank in DNN so no there's no test for it
         /// </summary>
-        private Template TryToGetTemplateBasedOnUrlParams(NameValueCollection urlParams)
+        private Template TryToGetTemplateBasedOnUrlParams(NameValueCollection urlParams) // todo: template
         {
             var urlParameterDict = urlParams.AllKeys.ToDictionary(key => key?.ToLower() ?? "", key => string.Format("{0}/{1}", key, urlParams[key]).ToLower());
 
@@ -143,25 +148,25 @@ namespace ToSic.SexyContent
 
         #region Constructor
 
-
         /// <summary>
         /// Instanciates Content and Template-Contexts
         /// </summary>
-        internal SxcInstance(int zoneId, int appId, int? ownerPortalId = null, ModuleInfo moduleInfo = null)
-        {
-            SharedConstructor(zoneId, appId, ownerPortalId, moduleInfo);
-        }
+        //internal SxcInstance(int zoneId, int appId, ModuleInfo moduleInfo)
+        //{
+        //    SharedConstructor(zoneId, appId, moduleInfo);
+        //}
 
-        private void SharedConstructor(int zoneId, int appId, int? ownerPortalId, ModuleInfo moduleInfo)
+        public SxcInstance(int zoneId, int appId, ModuleInfo moduleInfo)
         {
+            int? ownerPortalId = moduleInfo?.OwnerPortalID;
+
             ModuleInfo = moduleInfo;
             PortalSettingsOfOriginalModule = ownerPortalId.HasValue
                 ? new PortalSettings(ownerPortalId.Value)
                 : PortalSettings.Current;
 
             if (zoneId == 0)
-                if (PortalSettingsOfOriginalModule == null ||
-                    !ZoneHelpers.GetZoneID(PortalSettingsOfOriginalModule.PortalId).HasValue)
+                if (PortalSettingsOfOriginalModule == null || !ZoneHelpers.GetZoneID(PortalSettingsOfOriginalModule.PortalId).HasValue)
                     zoneId = Constants.DefaultZoneId;
                 else
                     zoneId = ZoneHelpers.GetZoneID(PortalSettingsOfOriginalModule.PortalId).Value;
@@ -171,12 +176,6 @@ namespace ToSic.SexyContent
 
             ZoneId = zoneId;
             AppId = appId;
-            AppTemplates = new TemplateManager(zoneId, appId);
-            AppContentGroups = new ContentGroupManager(zoneId, appId);
-
-            // Set Properties on ContentContext
-            EavAppContext = EavDataController.Instance(zoneId, appId);
-            EavAppContext.UserName = SexyContent.Environment.Dnn7.UserIdentity.CurrentUserIdentityToken;
 
             #region Prepare Environment information 
 
@@ -190,25 +189,25 @@ namespace ToSic.SexyContent
             #endregion
         }
 
-        public SxcInstance(InstanceConfigBeta config, ModuleInfo moduleInfo)
-        {
-            var zid = ZoneHelpers.GetZoneID(moduleInfo.OwnerPortalID).Value;
-            var apid = AppHelpers.GetAppIdFromName(zid, config.App);
+        //public SxcInstance(InstanceConfigBeta config, ModuleInfo moduleInfo)
+        //{
+        //    var zid = ZoneHelpers.GetZoneID(moduleInfo.OwnerPortalID).Value;
+        //    var apid = AppHelpers.GetAppIdFromName(zid, config.App);
 
-            SharedConstructor(zid, apid, null, moduleInfo);
-            // now override the content-group to use the specified one, not the one tied to the module
-            _contentGroup = AppContentGroups.GetContentGroupOrGeneratePreview(config.ContentGroup,
-                config.TemporaryTemplate);
-        }
-        public class InstanceConfigBeta
-        {
-            //public int ZoneId;
-            //public int AppId;
-            public string App;
-            public Guid ContentGroup;
-            public string TemporaryTemplate;
-            public bool ShowTemplatePicker;
-        }
+        //    SharedConstructor(zid, apid, moduleInfo);
+        //    // now override the content-group to use the specified one, not the one tied to the module
+        //    _contentGroup = AppContentGroups.GetContentGroupOrGeneratePreview(config.ContentGroup,
+        //        config.TemporaryTemplate);
+        //}
+        //public class InstanceConfigBeta
+        //{
+        //    //public int ZoneId;
+        //    //public int AppId;
+        //    public string App;
+        //    public Guid ContentGroup;
+        //    public string TemporaryTemplate;
+        //    public bool ShowTemplatePicker;
+        //}
 
         #endregion
 

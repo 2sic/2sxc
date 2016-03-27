@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -38,7 +39,12 @@ namespace ToSic.SexyContent.Search
 		            return searchDocuments;
             }
 
-            var sexy = new SxcInstance(zoneId.Value, appId.Value, moduleInfo.OwnerPortalID, moduleInfo);
+            // new 2016-03-27
+            var mcb = new ModuleContentBlock(moduleInfo, null, new NameValueCollection(), false);
+            var sexy = mcb.SxcInstance;
+
+            // old 2016-03-27
+            //var sexy = new SxcInstance(zoneId.Value, appId.Value, moduleInfo);
             var language = moduleInfo.CultureCode;
 	        var contentGroup = sexy.AppContentGroups.GetContentGroupForModule(moduleInfo.ModuleID);
             var template = contentGroup.Template;

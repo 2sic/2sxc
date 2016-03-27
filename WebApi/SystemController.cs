@@ -53,10 +53,11 @@ namespace ToSic.SexyContent.WebApi
             var portalId = PortalSettings.PortalId;
             var zoneId = ZoneHelpers.GetZoneID(portalId);
 	        var cache = DataSource.GetCache(zoneId.Value);
-            var sexy = new SxcInstance(zoneId.Value, cache.AppId);
+            //var sexy = new SxcInstance(zoneId.Value, cache.AppId);
+            var app = new App(PortalSettings, cache.AppId, zoneId.Value);
             var cultureText = LocaleController.Instance.GetLocale(cultureCode).Text;
 
-            sexy.EavAppContext.Dimensions.AddOrUpdateLanguage(cultureCode, cultureText, enable, PortalSettings.PortalId);
+            app.EavContext.Dimensions.AddOrUpdateLanguage(cultureCode, cultureText, enable, PortalSettings.PortalId);
 	    }
 
 
@@ -65,7 +66,7 @@ namespace ToSic.SexyContent.WebApi
         [HttpGet]
         public dynamic Apps(int zoneId)
         {
-            var list = AppHelpers.GetApps(zoneId, true, new PortalSettings(ActiveModule.OwnerPortalID));
+            var list = AppManagement.GetApps(zoneId, true, new PortalSettings(ActiveModule.OwnerPortalID));
             return list.Select(a => new
             {
                 Id = a.AppId,
@@ -83,8 +84,9 @@ namespace ToSic.SexyContent.WebApi
 
         private string GetPath(int zoneId, int appId)
         {
-            var sexy = new SxcInstance(zoneId, appId);
-            return sexy.App.Path;
+            //var sexy = new SxcInstance(zoneId, appId);
+            var app = new App(PortalSettings, appId, zoneId);
+            return app.Path;
         }
 
         [HttpGet]
@@ -92,13 +94,13 @@ namespace ToSic.SexyContent.WebApi
         {
             var userId = PortalSettings.Current.UserId;
             //var portalId = this.PortalSettings.PortalId;
-            AppHelpers.RemoveApp(zoneId, appId, this.PortalSettings, userId);
+            AppManagement.RemoveApp(zoneId, appId, this.PortalSettings, userId);
         }
 
         [HttpPost]
         public void App(int zoneId, string name)
         {
-            AppHelpers.AddApp(zoneId, name, new PortalSettings(ActiveModule.OwnerPortalID));
+            AppManagement.AddApp(zoneId, name, new PortalSettings(ActiveModule.OwnerPortalID));
         }
 
         #endregion

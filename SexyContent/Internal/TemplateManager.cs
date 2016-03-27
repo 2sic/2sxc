@@ -127,7 +127,7 @@ namespace ToSic.SexyContent.Internal
         /// </summary>
         public static string GetTemplatePathRoot(string locationId, App app)
         {
-            var rootFolder = (locationId == Settings.TemplateLocations.PortalFileSystem ? app.OwnerPS.HomeDirectory : Settings.PortalHostDirectory);
+            var rootFolder = (locationId == Settings.TemplateLocations.PortalFileSystem ? app.OwnerPortalSettings.HomeDirectory : Settings.PortalHostDirectory);
             rootFolder += Settings.TemplateFolder + "/" + app.Folder;
             return rootFolder;
         }

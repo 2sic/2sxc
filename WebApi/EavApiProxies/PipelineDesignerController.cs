@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav;
@@ -80,8 +81,9 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 		public object DeletePipeline(int appId, int id)
 		{
 			// Stop if a Template uses this Pipeline
-			var sexy = new SxcInstance(0, appId);
-			var templatesUsingPipeline = sexy.AppTemplates.GetAllTemplates().Where(t => t.Pipeline != null && t.Pipeline.EntityId == id).Select(t => t.TemplateId).ToArray();
+			//var sexy = new SxcInstance(0, appId);
+            var app = new App(PortalSettings.Current, appId);
+			var templatesUsingPipeline = app.TemplateManager.GetAllTemplates().Where(t => t.Pipeline != null && t.Pipeline.EntityId == id).Select(t => t.TemplateId).ToArray();
 			if (templatesUsingPipeline.Any())
 				throw new Exception(string.Format("Pipeline is used by Templates and cant be deleted. Pipeline EntityId: {0}. TemplateIds: {1}", id, string.Join(", ", templatesUsingPipeline)));
 

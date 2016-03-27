@@ -19,5 +19,11 @@ namespace ToSic.SexyContent.Interfaces
         Template Template { get; }
 
         ContentGroup ContentGroup { get; }
+
+        App App { get; }
+
+        IAppData Data { get; }
+
+        bool IsContent { get; }
     }
 }

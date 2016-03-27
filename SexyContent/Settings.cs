@@ -13,6 +13,7 @@ namespace ToSic.SexyContent
         public static readonly string AppIDString = "AppId";
         public static readonly string AppNameString = "ToSIC_SexyContent_AppName";
         public static readonly string SettingsShowTemplateChooser = "ToSIC_SexyContent_ShowTemplateChooser";
+        public static readonly string PreviewTemplateIdString = "ToSIC_SexyContent_PreviewTemplateId";
         public static readonly string InternalUserName = "Internal";
 
 

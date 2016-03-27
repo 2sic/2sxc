@@ -26,7 +26,8 @@ namespace ToSic.SexyContent.ImportExport
 		private string _sourceDefaultLanguage;
 		private int? _sourceDefaultDimensionId;
 		private List<Dimension> _targetDimensions;
-		private SxcInstance _sexy;
+		//private SxcInstance _sexy;
+        private App App;
 		private int _appId;
 		private int _zoneId;
 		private Dictionary<int, int> _fileIdCorrectionList = new Dictionary<int, int>();
@@ -196,9 +197,10 @@ namespace ToSic.SexyContent.ImportExport
 				}
 
 				// Adding app to EAV
-				var sexy = new SxcInstance(zoneId, AppHelpers.GetDefaultAppId(zoneId));
-				var app = sexy.EavAppContext.App.AddApp(appGuid);
-				sexy.EavAppContext.SqlDb.SaveChanges();
+                var initApp = new App(PortalSettings.Current, AppHelpers.GetDefaultAppId(zoneId), zoneId);
+				// var sexy = new SxcInstance(zoneId, AppHelpers.GetDefaultAppId(zoneId));
+				var app = initApp.EavContext.App.AddApp(appGuid);
+				initApp.EavContext.SqlDb.SaveChanges();
 
 				appId = app.AppID;
 			}
@@ -221,7 +223,8 @@ namespace ToSic.SexyContent.ImportExport
 		/// </summary>
 		public bool ImportXml(int zoneId, int appId, XDocument doc, bool leaveExistingValuesUntouched = true)
 		{
-			_sexy = new SxcInstance(zoneId, appId); // 2016-03-26 2dm this used to have a third parameter false = don't enable caching, which hasn't been respected for a while; removed it
+			//_sexy = new SxcInstance(zoneId, appId); // 2016-03-26 2dm this used to have a third parameter false = don't enable caching, which hasn't been respected for a while; removed it
+            App = new App(PortalSettings.Current, appId, zoneId);
 			_appId = appId;
 			_zoneId = zoneId;
 
@@ -251,7 +254,7 @@ namespace ToSic.SexyContent.ImportExport
 				_sourceDimensions.FirstOrDefault(p => p.ExternalKey == _sourceDefaultLanguage).DimensionID
 				: new int?();
 
-			_targetDimensions = _sexy.EavAppContext.Dimensions.GetDimensionChildren("Culture");
+			_targetDimensions = App.EavContext.Dimensions.GetDimensionChildren("Culture");
 			if (_targetDimensions.Count == 0)
 				_targetDimensions.Add(new Dimension
 				{
@@ -370,8 +373,8 @@ namespace ToSic.SexyContent.ImportExport
 				if (!IsNullOrEmpty(demoEntityGuid))
 				{
 					var entityGuid = Guid.Parse(demoEntityGuid);
-					if (_sexy.EavAppContext.Entities.EntityExists(entityGuid))
-						demoEntityId = _sexy.EavAppContext.Entities.GetEntity(entityGuid).EntityID;
+					if (App.EavContext.Entities.EntityExists(entityGuid))
+						demoEntityId = App.EavContext.Entities.GetEntity(entityGuid).EntityID;
 					else
 						ImportLog.Add(
 							new ExportImportMessage(
@@ -393,8 +396,8 @@ namespace ToSic.SexyContent.ImportExport
 				if (pipelineEntityGuid != null && !IsNullOrEmpty(pipelineEntityGuid.Value))
 				{
 					var entityGuid = Guid.Parse(pipelineEntityGuid.Value);
-					if (_sexy.EavAppContext.Entities.EntityExists(entityGuid))
-						pipelineEntityId = _sexy.EavAppContext.Entities.GetEntity(entityGuid).EntityID;
+					if (App.EavContext.Entities.EntityExists(entityGuid))
+						pipelineEntityId = App.EavContext.Entities.GetEntity(entityGuid).EntityID;
 					else
 						ImportLog.Add(
 							new ExportImportMessage(
@@ -415,8 +418,8 @@ namespace ToSic.SexyContent.ImportExport
 					if (xmlDemoEntityGuidString != "0" && xmlDemoEntityGuidString != "")
 					{
 						var xmlDemoEntityGuid = Guid.Parse(xmlDemoEntityGuidString);
-						if (_sexy.EavAppContext.Entities.EntityExists(xmlDemoEntityGuid))
-							xmlDemoEntityId = _sexy.EavAppContext.Entities.GetEntity(xmlDemoEntityGuid).EntityID;
+						if (App.EavContext.Entities.EntityExists(xmlDemoEntityGuid))
+							xmlDemoEntityId = App.EavContext.Entities.GetEntity(xmlDemoEntityGuid).EntityID;
 					}
 
 					return new
@@ -454,7 +457,7 @@ namespace ToSic.SexyContent.ImportExport
 					listPresentationDemoEntityId = listPresentationDefault.DemoEntityId;
 				}
 
-				_sexy.AppTemplates.UpdateTemplate(null, name, path, contentTypeStaticName, demoEntityId, presentationTypeStaticName, presentationDemoEntityId, listContentTypeStaticName, listContentDemoEntityId, listPresentationTypeStaticName, listPresentationDemoEntityId, type, isHidden, location, useForList, publishData, streamsToPublish, pipelineEntityId, viewNameInUrl);
+				App.TemplateManager.UpdateTemplate(null, name, path, contentTypeStaticName, demoEntityId, presentationTypeStaticName, presentationDemoEntityId, listContentTypeStaticName, listContentDemoEntityId, listPresentationTypeStaticName, listPresentationDemoEntityId, type, isHidden, location, useForList, publishData, streamsToPublish, pipelineEntityId, viewNameInUrl);
 
 				ImportLog.Add(new ExportImportMessage("Template '" + name + "' successfully imported.",
 													 ExportImportMessage.MessageTypes.Information));

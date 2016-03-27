@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using ToSic.Eav;
 using ToSic.SexyContent.ImportExport;
 using System.Web;
+using DotNetNuke.Entities.Portals;
 using ToSic.SexyContent.Administration;
 
 namespace ToSic.SexyContent
@@ -16,7 +17,8 @@ namespace ToSic.SexyContent
         private string _scope = "2SexyContent";
         private int _appId;
         private int _zoneId;
-        private SxcInstance _sexy;
+        //private SxcInstance _sexy;
+        private App _app;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -30,15 +32,17 @@ namespace ToSic.SexyContent
                 _scope = !String.IsNullOrEmpty(Request.QueryString["Scope"]) ? Request.QueryString["Scope"] : "2SexyContent";
                 _appId = !String.IsNullOrEmpty(Request.QueryString["AppId"]) ? int.Parse(Request.QueryString["AppId"]) : _appId;
                 _zoneId = !String.IsNullOrEmpty(Request.QueryString["ZoneId"]) ? int.Parse(Request.QueryString["ZoneId"]) : _zoneId;
-                _sexy = new SxcInstance(_zoneId, _appId);
+                // _sexy = new SxcInstance(_zoneId, _appId);
+                _app = new App(PortalSettings.Current, _appId, _zoneId);
             }
             else
             {
-                _sexy = _sxcInstance;
+                // _sexy = _sxcInstance;
+                _app = _sxcInstance.App;
             }
 
-            var contentTypes = _sexy.AppTemplates.GetAvailableContentTypes(_scope, true);
-            var templates = _sexy.AppTemplates.GetAllTemplates();
+            var contentTypes = _app.TemplateManager.GetAvailableContentTypes(_scope, true);
+            var templates = _app.TemplateManager.GetAllTemplates();
             var entities = DataSource.GetInitialDataSource(_zoneId, _appId, false);
             var language = Thread.CurrentThread.CurrentCulture.Name;
 
@@ -52,7 +56,7 @@ namespace ToSic.SexyContent
                         p.ContentTypeStaticName,
                         p.Name
                     }),
-                    Entities = entities.List.Where(en => en.Value.Type.AttributeSetId == c.AttributeSetId).Select(en => new DynamicEntity(en.Value, new[] { language }, _sexy).ToDictionary() /* _sexy.ToDictionary(en.Value, language) */)
+                    Entities = entities.List.Where(en => en.Value.Type.AttributeSetId == c.AttributeSetId).Select(en => new DynamicEntity(en.Value, new[] { language }, null /* 2016-03-27 2dm - before was: _sexy*/).ToDictionary() /* _sexy.ToDictionary(en.Value, language) */)
                 }),
                 templatesWithoutContentType = templates.Where(p => !String.IsNullOrEmpty(p.ContentTypeStaticName)).Select(t => new
                 {

@@ -13,7 +13,7 @@ namespace ToSic.SexyContent
 	public class ContentGroupManager
 	{
 		private const string ContentGroupTypeName = "2SexyContent-ContentGroup";
-		private const string PreviewTemplateIdString = "ToSIC_SexyContent_PreviewTemplateId";
+		//private const string PreviewTemplateIdString = "ToSIC_SexyContent_PreviewTemplateId";
 
 		private readonly int _zoneId;
 		private readonly int _appId;
@@ -94,14 +94,14 @@ namespace ToSic.SexyContent
 			var previewTemplateGuid = dataSource.List[previewTemplateId].EntityGuid;
 
             //moduleController.UpdateModuleSetting(moduleId, PreviewTemplateIdString, previewTemplateGuid.ToString());
-            DnnStuffToRefactor.UpdateModuleSettingForAllLanguages(moduleId, PreviewTemplateIdString, previewTemplateGuid.ToString());
+            DnnStuffToRefactor.UpdateModuleSettingForAllLanguages(moduleId, Settings.PreviewTemplateIdString, previewTemplateGuid.ToString());
         }
 
 		public static void DeletePreviewTemplateId(int moduleId)
 		{
             //var moduleController = new ModuleController();
             //moduleController.DeleteModuleSetting(moduleId, PreviewTemplateIdString);
-            DnnStuffToRefactor.UpdateModuleSettingForAllLanguages(moduleId, PreviewTemplateIdString, null);
+            DnnStuffToRefactor.UpdateModuleSettingForAllLanguages(moduleId, Settings.PreviewTemplateIdString, null);
 		}
 
 		public Guid SaveTemplateId(int moduleId, int templateId)
@@ -120,6 +120,7 @@ namespace ToSic.SexyContent
 		    return contentGroup.ContentGroupGuid;
 		}
 
+        // todo: this doesn't look right, will have to mostly move to the new content-block
 		public ContentGroup GetContentGroupForModule(int moduleId)
 		{
 			var moduleControl = new ModuleController();
@@ -127,18 +128,18 @@ namespace ToSic.SexyContent
 		    var maybeGuid = settings[Settings.ContentGroupGuidString];
 		    Guid groupGuid;
 		    Guid.TryParse(maybeGuid?.ToString(), out groupGuid);
-            var previewTemplateString = settings[PreviewTemplateIdString]?.ToString();
+            var previewTemplateString = settings[Settings.PreviewTemplateIdString]?.ToString();
 
             return GetContentGroupOrGeneratePreview(groupGuid, previewTemplateString);
 		}
 
-	    internal ContentGroup GetContentGroupOrGeneratePreview(Guid groupGuid, string previewTemplateString)
+	    internal ContentGroup GetContentGroupOrGeneratePreview(Guid groupGuid, string previewTemplateGuid)
 	    {
 // Return a "faked" ContentGroup if it does not exist yet (with the preview templateId)
 	        if (groupGuid == Guid.Empty) // maybeGuid == null)
 	        {
-	            return new ContentGroup(previewTemplateString != null
-	                ? Guid.Parse(previewTemplateString)
+	            return new ContentGroup(previewTemplateGuid != null
+	                ? Guid.Parse(previewTemplateGuid)
 	                : new Guid?(),
 	                _zoneId, _appId);
 	        }

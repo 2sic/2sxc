@@ -51,8 +51,16 @@ namespace ToSic.SexyContent
 
 			return new Template(templateEntity);
 		}
+        public Template GetTemplate(Guid templateGuid)
+        {
+            return
+                TemplateDataSource()
+                    .List.Where(t => t.Value.EntityGuid == templateGuid)
+                    .Select(t => new Template(t.Value))
+                    .FirstOrDefault();
+        }
 
-		public bool DeleteTemplate(int templateId)
+        public bool DeleteTemplate(int templateId)
 		{
 			var template = GetTemplate(templateId);
             var eavContext = EavDataController.Instance(_zoneId, _appId).Entities; ; //EavContext.Instance(_zoneId, _appId);

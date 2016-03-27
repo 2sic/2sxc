@@ -17,7 +17,8 @@ namespace ToSic.SexyContent.DataSources
             get
             {
                 if(_sxcContext == null)
-                    _sxcContext = new SxcInstance(In["Default"].Source.ZoneId, In["Default"].Source.AppId);
+                    throw new Exception("SxcContent is still null - can't access the SxcContent before initializing it");
+                    // old: _sxcContext = new SxcInstance(In["Default"].Source.ZoneId, In["Default"].Source.AppId);
                 return _sxcContext;
             }
             set { _sxcContext = value; }

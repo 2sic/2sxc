@@ -148,10 +148,11 @@ namespace ToSic.SexyContent.ImportExport
                                     xmlIndex++;
                                 }
 
-                                var sexy = new SxcInstance(_zoneId, appId.Value);
+                                //var sexy = new SxcInstance(_zoneId, appId.Value);
+                                var app = new App(PortalSettings.Current, appId.Value, _zoneId);
 
                                 // Copy all files in 2sexy folder to (portal file system) 2sexy folder
-                                var templateRoot = server.MapPath(Internal.TemplateManager.GetTemplatePathRoot(Settings.TemplateLocations.PortalFileSystem, sexy.App));
+                                var templateRoot = server.MapPath(Internal.TemplateManager.GetTemplatePathRoot(Settings.TemplateLocations.PortalFileSystem, app));
                                 var appTemplateRoot = Path.Combine(appDirectory, "2sexy");
                                 if (Directory.Exists(appTemplateRoot))
                                     (new FileManager(appTemplateRoot)).CopyAllFiles(templateRoot, false, messages);

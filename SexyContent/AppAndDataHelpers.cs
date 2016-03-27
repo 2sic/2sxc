@@ -18,7 +18,7 @@ namespace ToSic.SexyContent
     {
         private readonly SxcInstance _sxcInstance;
 
-        public AppAndDataHelpers(SxcInstance sexy)//, ModuleInfo module)//, ViewDataSource data)//, App app)
+        public AppAndDataHelpers(SxcInstance sexy)
         {
             ModuleInfo module = sexy.ModuleInfo;
             ViewDataSource data = sexy.Data;
@@ -27,9 +27,14 @@ namespace ToSic.SexyContent
             Data = sexy.Data;// data;
             Dnn = new DnnHelper(module);
 			Sxc = new SxcHelper(sexy);
-	        List = new List<Element>();
 
-	        if (data != null)
+            // If PortalSettings is null - for example, while search index runs - HasEditPermission would fail
+            // But in search mode, it shouldn't show drafts, so this is ok.
+            App.InitData(PortalSettings.Current != null && SecurityHelpers.HasEditPermission(module), data.ConfigurationProvider);
+
+            #region Assemble the mapping of the data-stream "default"/Presentation to the List object and the "ListContent" too
+	        List = new List<Element>();
+            if (data != null)
 	        {
 		        if (data.Out.ContainsKey("Default"))
 		        {
@@ -57,10 +62,8 @@ namespace ToSic.SexyContent
 		        }
 
 	        }
+            #endregion
 
-	        // If PortalSettings is null - for example, while search index runs - HasEditPermission would fail
-            // But in search mode, it shouldn't show drafts, so this is ok.
-            App.InitData(PortalSettings.Current != null && SecurityHelpers.HasEditPermission(module), data.ConfigurationProvider);
         }
 
 	    private Element GetElementFromEntity(IEntity e)

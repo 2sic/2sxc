@@ -46,7 +46,7 @@ namespace ToSic.SexyContent
             }
         }
         private readonly string[] _dimensions;
-        private SxcInstance _sxcInstance { get; set; }
+        private SxcInstance _sxcInstance { get; }
 
         /// <summary>
         /// Constructor with EntityModel and DimensionIds

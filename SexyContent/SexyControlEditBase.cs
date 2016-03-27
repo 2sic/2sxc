@@ -18,7 +18,7 @@ namespace ToSic.SexyContent
         public ModuleContentBlock ContentBlock;
         protected void Page_Init(object sender, EventArgs e)
         {
-            ContentBlock = new ModuleContentBlock(ModuleConfiguration, UserInfo, Request, UserInfo.IsSuperUser);
+            ContentBlock = new ModuleContentBlock(ModuleConfiguration, UserInfo, Request.QueryString, UserInfo.IsSuperUser);
             // Set ZoneId based on the context
             //var zoneId = (!UserInfo.IsSuperUser
             //               ? ZoneHelpers.GetZoneID(ModuleConfiguration.OwnerPortalID)
@@ -50,7 +50,7 @@ namespace ToSic.SexyContent
 
         #region basic properties like Sexy, App, Zone, etc.
 
-        protected SxcInstance _sxcInstance => ContentBlock.SxcInstance;// { get; } //set; }
+        protected SxcInstance _sxcInstance => ContentBlock.SxcInstance;
 
         protected int? ZoneId => _sxcInstance?.ZoneId ?? 0;
 
@@ -59,10 +59,10 @@ namespace ToSic.SexyContent
         protected bool SettingsAreStored => ContentBlock.UnreliableInfoThatSettingsAreStored;
         #endregion
 
-        public bool IsContentApp => _sxcInstance.IsContentApp;// ModuleConfiguration.DesktopModule.ModuleName == "2sxc";
+        public bool IsContentApp => _sxcInstance.IsContentApp;
 
         // private ContentGroup _contentGroup;
-        protected ContentGroup ContentGroup => _sxcInstance.ContentGroup; //  _contentGroup ?? (_contentGroup = SxcContext.ContentGroupManager.GetContentGroupForModule(ModuleConfiguration.ModuleID));
+        protected ContentGroup ContentGroup => _sxcInstance.ContentGroup; 
 
         #region template loading and stuff...
 
