@@ -145,7 +145,7 @@ namespace ToSic.SexyContent
             var renderHelp = new RenderingHelpers(this);//, ModuleInfo, ContentBlock.ContentGroupExists);//, ResolveUrl("~"));
             var editInfos = renderHelp.GetClientInfosAll();
             string result = (RenderWithDiv ? "<div class=\"sc-viewport\" " 
-                + (RenderWithEditMetadata ? "data-2sxc-context=\"" + JsonConvert.SerializeObject(editInfos) + "\"" : "") 
+                + (RenderWithEditMetadata ? "data-edit-context=\"" + JsonConvert.SerializeObject(editInfos) + "\"" : "") 
                 + ">\n" : "") 
                 + engine.Render() + 
                 (RenderWithDiv ? "\n</div>" : "");
