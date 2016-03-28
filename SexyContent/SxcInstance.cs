@@ -10,6 +10,7 @@ using ToSic.Eav.BLL;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Environment.Interfaces;
+using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent
@@ -23,7 +24,7 @@ namespace ToSic.SexyContent
     /// </summary>
     public class SxcInstance :ISxcInstance
     {
-        #region Properties
+        #region App-level information
 
         /// <summary>
         /// The Content Data Context pointing to a full EAV, pre-configured for this specific App
@@ -34,194 +35,97 @@ namespace ToSic.SexyContent
 
         internal int? AppId => ContentBlock.AppId;
 
-        public TemplateManager AppTemplates => App.TemplateManager;
+        public App App => ContentBlock.App;
 
-        public ContentGroupManager AppContentGroups => App.ContentGroupManager;
+        public bool IsContentApp => ContentBlock.IsContentApp;
 
-        //private ContentGroup _contentGroup;
+        public TemplateManager AppTemplates => App.TemplateManager; // todo: remove, use App...
+
+        public ContentGroupManager AppContentGroups => App.ContentGroupManager; // todo: remove, use App...
+
+        #endregion
+
+        #region Info for current runtime instance
         public ContentGroup ContentGroup => ContentBlock.ContentGroup;
 
-        //private App _app;
-        public App App => ContentBlock.App;
 
         /// <summary>
         /// Environment - should be the place to refactor everything into, which is the host around 2sxc
         /// </summary>
         public Environment.Environment Environment = new Environment.Environment();
 
-        internal ModuleInfo ModuleInfo => ContentBlock.ModuleInfo;
+        internal ModuleInfo ModuleInfo => (ContentBlock as ModuleContentBlock).ModuleInfo; // mabe pass in...
 
-        internal ModuleContentBlock ContentBlock { get; }
-
-
-        public bool IsContentApp => ContentBlock.IsContentApp;// ModuleInfo.DesktopModule.ModuleName == "2sxc";
+        internal IContentBlock ContentBlock { get; }
 
 
         /// <summary>
         /// This returns the PS of the original module. When a module is mirrored across portals,
         /// then this will be different from the PortalSettingsOfVisitedPage, otherwise they are the same
         /// </summary>
-        internal PortalSettings PortalSettingsOfOriginalModule => ContentBlock.AppOwnerPortalSettings;
+        internal PortalSettings PortalSettingsOfOriginalModule => (ContentBlock as ModuleContentBlock).AppOwnerPortalSettings; // maybe pass in
 
-        //private ViewDataSource _dataSource;
         public ViewDataSource Data => ContentBlock.Data;
-        //{
-        //    get
-        //    {
-        //        if(ModuleInfo == null)
-        //            throw new Exception("Can't get data source, module context unknown. Please only use this on a 2sxc-object which was initialized in a dnn-module context");
-
-        //        return _dataSource ??
-        //               (_dataSource =
-        //                   ViewDataSource.ForModule(ModuleInfo.ModuleID, SecurityHelpers.HasEditPermission(ModuleInfo), Template, this));
-        //    }
-        //}
 
 
         #endregion
 
-        #region current template - must get most of this code out of this class...
-        // todo: try to refactor most of the template-stuff out of this class again
+        #region  template helpers 
 
-        //private bool AllowAutomaticTemplateChangeBasedOnUrlParams => !IsContentApp;  // todo: template
-
-        private Template _template;
-        //private bool _templateLoaded;
-
-        public Template Template 
+        public Template Template
         {
-            get { return _template ?? (_template = ContentBlock.Template); }
-            set { _template = value; }
-}
-//{
-//    get
-//    {
-//        if (_template != null || _templateLoaded) return _template;
+            get { return ContentBlock.Template; }
+            set { ContentBlock.Template = value; }
+        }
 
-//        if (!AppId.HasValue)
-//            return null;
-
-//        // Change Template if URL contains "ViewNameInUrl"
-//        if (AllowAutomaticTemplateChangeBasedOnUrlParams)
-//        {
-//            var urlParams =  HttpContext.Current.Request.QueryString;
-//            var templateFromUrl = TryToGetTemplateBasedOnUrlParams(urlParams);
-//            if (templateFromUrl != null)
-//                _template = templateFromUrl;
-//        }
-//        if (_template == null)
-//            _template = ContentGroup.Template;
-//        _templateLoaded = true;
-//        return _template;
-//    }
-//    internal set
-//    {
-//        _template = value;
-//        _templateLoaded = true;
-//        _dataSource = null; // reset this
-//    }
-//}
-
-/// <summary>
-/// combine all QueryString Params to a list of key/value lowercase and search for a template having this ViewNameInUrl
-/// QueryString is never blank in DNN so no there's no test for it
-/// </summary>
-//private Template TryToGetTemplateBasedOnUrlParams(NameValueCollection urlParams) // todo: template
-//{
-//    var urlParameterDict = urlParams.AllKeys.ToDictionary(key => key?.ToLower() ?? "", key => string.Format("{0}/{1}", key, urlParams[key]).ToLower());
-
-//    foreach (var template in AppTemplates.GetAllTemplates().Where(t => !string.IsNullOrEmpty(t.ViewNameInUrl)))
-//    {
-//        var desiredFullViewName = template.ViewNameInUrl.ToLower();
-//        if (desiredFullViewName.EndsWith("/.*"))   // match details/.* --> e.g. details/12
-//        {
-//            var keyName = desiredFullViewName.Substring(0, desiredFullViewName.Length - 3);
-//            if (urlParameterDict.ContainsKey(keyName))
-//                return template;
-//        }
-//        else if (urlParameterDict.ContainsValue(desiredFullViewName)) // match view/details
-//            return template;
-//    }
-
-//    return null;
-//}
-
-
-#endregion
-
-#region Constructor
-
-/// <summary>
-/// Instanciates Content and Template-Contexts
-/// </summary>
-//internal SxcInstance(int zoneId, int appId, ModuleInfo moduleInfo)
-//{
-//    SharedConstructor(zoneId, appId, moduleInfo);
-//}
-
-public SxcInstance(ModuleContentBlock cb)
+        private void CheckTemplateOverrides()
         {
-            // todo: keep / move url-override here...
+            // #2 Change Template if URL contains the part in the metadata "ViewNameInUrl"
+            var urlParams = HttpContext.Current.Request.QueryString; // todo: reduce dependency on context-current...
+            var templateFromUrl = TryToGetTemplateBasedOnUrlParams(urlParams);
+            if (templateFromUrl != null)
+                Template = templateFromUrl;
+        }
+
+        private Template TryToGetTemplateBasedOnUrlParams(NameValueCollection urlParams)
+        {
+            var urlParameterDict = urlParams.AllKeys.ToDictionary(key => key?.ToLower() ?? "", key =>
+                $"{key}/{urlParams[key]}".ToLower());
+
+            foreach (var template in App.TemplateManager.GetAllTemplates().Where(t => !string.IsNullOrEmpty(t.ViewNameInUrl)))
+            {
+                var desiredFullViewName = template.ViewNameInUrl.ToLower();
+                if (desiredFullViewName.EndsWith("/.*"))   // match details/.* --> e.g. details/12
+                {
+                    var keyName = desiredFullViewName.Substring(0, desiredFullViewName.Length - 3);
+                    if (urlParameterDict.ContainsKey(keyName))
+                        return template;
+                }
+                else if (urlParameterDict.ContainsValue(desiredFullViewName)) // match view/details
+                    return template;
+            }
+
+            return null;
+        }
+
+        #endregion
+
+        #region Constructor
+
+
+        internal SxcInstance(IContentBlock cb)
+        {
 
             ContentBlock = cb;
             // Build up the environment. If we know the module context, then use permissions from there
             Environment.Permissions = (ModuleInfo != null)
                 ? (IPermissions)new Environment.Dnn7.Permissions(ModuleInfo)
                 : new Environment.None.Permissions();
+
+            // url-override of view / data
+            if(!IsContentApp)
+                CheckTemplateOverrides();   // allow view change on apps
         }
-
-        //public SxcInstance(int zoneId, int appId, ModuleInfo moduleInfo)
-        //{
-        //    int? ownerPortalId = moduleInfo?.OwnerPortalID;
-
-        //    ModuleInfo = moduleInfo;
-        //    PortalSettingsOfOriginalModule = ownerPortalId.HasValue
-        //        ? new PortalSettings(ownerPortalId.Value)
-        //        : PortalSettings.Current;
-
-        //    if (zoneId == 0)
-        //        if (PortalSettingsOfOriginalModule == null || !ZoneHelpers.GetZoneID(PortalSettingsOfOriginalModule.PortalId).HasValue)
-        //            zoneId = Constants.DefaultZoneId;
-        //        else
-        //            zoneId = ZoneHelpers.GetZoneID(PortalSettingsOfOriginalModule.PortalId).Value;
-
-        //    if (appId == 0)
-        //        appId = AppHelpers.GetDefaultAppId(zoneId);
-
-        //    ZoneId = zoneId;
-        //    AppId = appId;
-
-        //    #region Prepare Environment information 
-
-        //    // 2016-01 2dm - this is new, the environment is where much code should go to later on
-
-        //    // Build up the environment. If we know the module context, then use permissions from there
-        //    Environment.Permissions = (moduleInfo != null)
-        //        ? (IPermissions) new Environment.Dnn7.Permissions(moduleInfo)
-        //        : new Environment.None.Permissions();
-
-        //    #endregion
-        //}
-
-        //public SxcInstance(InstanceConfigBeta config, ModuleInfo moduleInfo)
-        //{
-        //    var zid = ZoneHelpers.GetZoneID(moduleInfo.OwnerPortalID).Value;
-        //    var apid = AppHelpers.GetAppIdFromName(zid, config.App);
-
-        //    SharedConstructor(zid, apid, moduleInfo);
-        //    // now override the content-group to use the specified one, not the one tied to the module
-        //    _contentGroup = AppContentGroups.GetContentGroupOrGeneratePreview(config.ContentGroup,
-        //        config.TemporaryTemplate);
-        //}
-        //public class InstanceConfigBeta
-        //{
-        //    //public int ZoneId;
-        //    //public int AppId;
-        //    public string App;
-        //    public Guid ContentGroup;
-        //    public string TemporaryTemplate;
-        //    public bool ShowTemplatePicker;
-        //}
 
         #endregion
 

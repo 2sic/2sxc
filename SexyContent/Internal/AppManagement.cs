@@ -101,12 +101,12 @@ namespace ToSic.SexyContent.Internal
             if (eavAppName == Constants.DefaultAppName)
                 return;
 
-            var appContext = new App(PortalSettings.Current, appId, zoneId);//new SxcInstance(zoneId, appId);
-            
+            var EavContext = EavDataController.Instance(zoneId, appId);
+
             if (appMetaData == null)
             {
                 // Add app-describing entity
-                var appAttributeSet = appContext.EavContext.AttribSet.GetAttributeSet(Settings.AttributeSetStaticNameApps).AttributeSetID;
+                var appAttributeSet = EavContext.AttribSet.GetAttributeSet(Settings.AttributeSetStaticNameApps).AttributeSetID;
                 var values = new OrderedDictionary
                 {
                     {"DisplayName", String.IsNullOrEmpty(appName) ? eavAppName : appName },
@@ -116,7 +116,7 @@ namespace ToSic.SexyContent.Internal
                     {"Version", "00.00.01"},
                     {"OriginalId", ""}
                 };
-                appContext.EavContext.Entities.AddEntity(appAttributeSet, values, null, appId, ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp);
+                EavContext.Entities.AddEntity(appAttributeSet, values, null, appId, ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp);
             }
 
             if (appSettings == null)
@@ -124,14 +124,14 @@ namespace ToSic.SexyContent.Internal
 
                 AttributeSet settingsAttributeSet;
                 // Add new (empty) ContentType for Settings
-                if (!appContext.EavContext.AttribSet.AttributeSetExists(Settings.AttributeSetStaticNameAppSettings, appId))
-                    settingsAttributeSet = appContext.EavContext.AttribSet.AddAttributeSet(Settings.AttributeSetStaticNameAppSettings,
+                if (!EavContext.AttribSet.AttributeSetExists(Settings.AttributeSetStaticNameAppSettings, appId))
+                    settingsAttributeSet = EavContext.AttribSet.AddAttributeSet(Settings.AttributeSetStaticNameAppSettings,
                         "Stores settings for an app", Settings.AttributeSetStaticNameAppSettings, Settings.AttributeSetScopeApps);
                 else
-                    settingsAttributeSet = appContext.EavContext.AttribSet.GetAttributeSet(Settings.AttributeSetStaticNameAppSettings);
+                    settingsAttributeSet = EavContext.AttribSet.GetAttributeSet(Settings.AttributeSetStaticNameAppSettings);
 
                 DataSource.GetCache(zoneId, appId).PurgeCache(zoneId, appId);
-                appContext.EavContext.Entities.AddEntity(settingsAttributeSet, new OrderedDictionary(), null, appId, ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp);
+                EavContext.Entities.AddEntity(settingsAttributeSet, new OrderedDictionary(), null, appId, ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp);
             }
 
             if (appResources == null)
@@ -139,15 +139,15 @@ namespace ToSic.SexyContent.Internal
                 AttributeSet resourcesAttributeSet;
 
                 // Add new (empty) ContentType for Resources
-                if (!appContext.EavContext.AttribSet.AttributeSetExists(Settings.AttributeSetStaticNameAppResources, appId))
-                    resourcesAttributeSet = appContext.EavContext.AttribSet.AddAttributeSet(
+                if (!EavContext.AttribSet.AttributeSetExists(Settings.AttributeSetStaticNameAppResources, appId))
+                    resourcesAttributeSet = EavContext.AttribSet.AddAttributeSet(
                         Settings.AttributeSetStaticNameAppResources, "Stores resources like translations for an app",
                         Settings.AttributeSetStaticNameAppResources, Settings.AttributeSetScopeApps);
                 else
-                    resourcesAttributeSet = appContext.EavContext.AttribSet.GetAttributeSet(Settings.AttributeSetStaticNameAppResources);
+                    resourcesAttributeSet = EavContext.AttribSet.GetAttributeSet(Settings.AttributeSetStaticNameAppResources);
 
                 DataSource.GetCache(zoneId, appId).PurgeCache(zoneId, appId);
-                appContext.EavContext.Entities.AddEntity(resourcesAttributeSet, new OrderedDictionary(), null, appId, ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp);
+                EavContext.Entities.AddEntity(resourcesAttributeSet, new OrderedDictionary(), null, appId, ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp);
             }
 
             if (appMetaData == null || appSettings == null || appResources == null)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ToSic.SexyContent.DataSources;
 
 namespace ToSic.SexyContent.Interfaces
 {
@@ -15,15 +16,18 @@ namespace ToSic.SexyContent.Interfaces
         string ParentFieldName { get; }
         int ParentFieldSortOrder { get; }
 
+        #region Values related to the current unit of content / the view
         int AppId { get; }
-        Template Template { get; }
+        int ZoneId { get; }
+        Template Template { get; set; }
 
         ContentGroup ContentGroup { get; }
 
         App App { get; }
 
-        IAppData Data { get; }
+        ViewDataSource Data { get; }
 
-        bool IsContent { get; }
+        bool IsContentApp { get; }
+        #endregion
     }
 }
