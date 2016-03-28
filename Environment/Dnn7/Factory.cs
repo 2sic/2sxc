@@ -23,7 +23,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public static ISxcInstance SxcInstanceForModule(ModuleInfo moduleInfo)
         {
-            ModuleContentBlock mcb = new ModuleContentBlock(moduleInfo, PortalSettings.Current.UserInfo, HttpContext.Current.Request.QueryString, false);
+            ModuleContentBlock mcb = new ModuleContentBlock(moduleInfo, PortalSettings.Current.UserInfo, HttpContext.Current.Request.QueryString);
             return mcb.SxcInstance;
             //var appId = AppHelpers.GetAppIdFromModule(moduleInfo).Value;
             //var zoneId = ZoneHelpers.GetZoneID(moduleInfo.PortalID).Value;

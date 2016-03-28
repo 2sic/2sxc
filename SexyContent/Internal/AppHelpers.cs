@@ -33,6 +33,7 @@ namespace ToSic.SexyContent.Internal
 
             if (HttpContext.Current != null)
             {
+                // todo: #482 this override is an old mechanism which isn't needed any more when we use the web-api!, remove when we get rid of all those web controls
                 if (!IsNullOrEmpty(HttpContext.Current.Request.QueryString["AppId"]))
                     appIdString = HttpContext.Current.Request.QueryString["AppId"];
                 else

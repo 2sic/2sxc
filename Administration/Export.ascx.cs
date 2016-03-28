@@ -38,7 +38,7 @@ namespace ToSic.SexyContent
             else
             {
                 // _sexy = _sxcInstance;
-                _app = _sxcInstance.App;
+                _app = /*_sxcInstance.*/App;
             }
 
             var contentTypes = _app.TemplateManager.GetAvailableContentTypes(_scope, true);

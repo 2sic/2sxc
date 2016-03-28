@@ -66,7 +66,7 @@ namespace ToSic.SexyContent
             {
                 if (_sxcInstanceForSecurityChecks == null)
                     _sxcInstanceForSecurityChecks = _sxcInstance 
-                        ?? new ModuleContentBlock(ModuleConfiguration, UserInfo, Request.QueryString, false).SxcInstance ;// new SxcInstance(ZoneId.Value, 0, ModuleConfiguration);
+                        ?? new ModuleContentBlock(ModuleConfiguration, UserInfo, Request.QueryString).SxcInstance ;// new SxcInstance(ZoneId.Value, 0, ModuleConfiguration);
                 return _sxcInstanceForSecurityChecks?.Environment?.Permissions.UserMayEditContent ?? false;
             }
         }

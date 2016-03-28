@@ -15,7 +15,7 @@ namespace ToSic.SexyContent.WebApi
                 appId = AppHelpers.GetAppIdFromModule(moduleInfo);
             var zoneId = ZoneHelpers.GetZoneID(moduleInfo.PortalID);
             var Req = HttpContext.Current.Request;
-            var contentBlock = new ModuleContentBlock(moduleInfo, PortalSettings.Current.UserInfo, Req.QueryString, false);
+            var contentBlock = new ModuleContentBlock(moduleInfo, PortalSettings.Current.UserInfo, Req.QueryString);
             return contentBlock.SxcInstance;// new SxcInstance(zoneId.Value, appId.Value, moduleInfo);
         }
 

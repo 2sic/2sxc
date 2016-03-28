@@ -23,7 +23,7 @@ namespace ToSic.SexyContent.Administration.Apps
             {
                 Response.Clear();
                 Response.ContentType = "application/zip";
-                Response.AddHeader("content-disposition", "attachment;filename=2sxcApp_" + Regex.Replace(_sxcInstance.App.Name, "[^a-zA-Z0-9-_]", "") + "_" + (_sxcInstance.App.Configuration == null ? "" : _sxcInstance.App.Configuration.Version) + ".zip");
+                Response.AddHeader("content-disposition", "attachment;filename=2sxcApp_" + Regex.Replace(/*_sxcInstance.*/App.Name, "[^a-zA-Z0-9-_]", "") + "_" + (/*_sxcInstance.*/App.Configuration == null ? "" : /*_sxcInstance.*/App.Configuration.Version) + ".zip");
                 Response.Flush();
 
                 stream.WriteTo(Response.OutputStream);

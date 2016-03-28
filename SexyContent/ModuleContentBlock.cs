@@ -19,7 +19,7 @@ namespace ToSic.SexyContent
         public App App { get;  }
 
         public ModuleInfo ModuleInfo;
-        public NameValueCollection UrlParams;
+        //public NameValueCollection UrlParams;
 
         public bool UnreliableInfoThatSettingsAreStored; // todo
         public bool ContentGroupIsCreated;
@@ -74,12 +74,12 @@ namespace ToSic.SexyContent
 
         public ContentGroup ContentGroup { get; }
 
-        public ModuleContentBlock(ModuleInfo moduleInfo, UserInfo userInfo, NameValueCollection queryString, bool allowUrlOverrides)
+        public ModuleContentBlock(ModuleInfo moduleInfo, UserInfo userInfo, NameValueCollection queryString)
         {
             if(moduleInfo == null)
                 throw new Exception("Need valid ModuleInfo / ModuleConfiguration of runtime");
 
-            UrlParams = queryString;
+            //UrlParams = queryString;
             ModuleInfo = moduleInfo;
             ParentId = moduleInfo.ModuleID;
 
@@ -88,12 +88,17 @@ namespace ToSic.SexyContent
                 ? new PortalSettings(moduleInfo.OwnerPortalID)
                 : PortalSettings.Current;
 
+            // todo: #482 this override is an old mechanism which isn't needed any more when we use the web-api!, remove when we get rid of all those web controls
+            // it's also not really part of the content-block, because it will help access OTHER infos of the app...
             // Set ZoneId based on the a) maybe URL (if super-user) or default-of-portal
-            var zoneId = (allowUrlOverrides &&  (userInfo?.IsSuperUser ?? false) && !string.IsNullOrEmpty(UrlParams["ZoneId"])
-                ? int.Parse(UrlParams["ZoneId"])
-                : ZoneHelpers.GetZoneID(moduleInfo.OwnerPortalID));
-            ZoneId = zoneId ?? 0;   // fallback/undefined
+            //var zoneId = ((userInfo?.IsSuperUser ?? false) && !string.IsNullOrEmpty(queryString["ZoneId"])
+            //    ? int.Parse(queryString["ZoneId"])
+            //    : ZoneHelpers.GetZoneID(moduleInfo.OwnerPortalID));
+            //ZoneId = zoneId ?? 0;   // fallback/undefined
+            ZoneId = ZoneHelpers.GetZoneID(moduleInfo.OwnerPortalID) ?? 0; // new
+            
 
+            // todo: #482 this still allows url-app-change, NOT needed any more when we use the web-api!, remove when we get rid of all those web controls
             // Set AppId base on a) name=2sxc> "content"-ID or b) url or c) module-setting or d) null
             var appId = AppHelpers.GetAppIdFromModule(moduleInfo);
             if (appId != null)

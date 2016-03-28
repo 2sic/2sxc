@@ -18,7 +18,7 @@ namespace ToSic.SexyContent
         public ModuleContentBlock ContentBlock;
         protected void Page_Init(object sender, EventArgs e)
         {
-            ContentBlock = new ModuleContentBlock(ModuleConfiguration, UserInfo, Request.QueryString, UserInfo.IsSuperUser);
+            ContentBlock = new ModuleContentBlock(ModuleConfiguration, UserInfo, Request.QueryString);
             // Set ZoneId based on the context
             //var zoneId = (!UserInfo.IsSuperUser
             //               ? ZoneHelpers.GetZoneID(ModuleConfiguration.OwnerPortalID)
