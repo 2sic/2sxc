@@ -34,10 +34,7 @@ namespace ToSic.SexyContent.Internal
 
             // if not found, it could be a caching issue
             var settings = new ModuleController().GetModuleSettings(module.ModuleID);
-            if (settings.ContainsKey(settingName))
-                return settings[settingName].ToString();
-
-            return null;
+            return settings.ContainsKey(settingName) ? settings[settingName].ToString() : null;
         }
 
 

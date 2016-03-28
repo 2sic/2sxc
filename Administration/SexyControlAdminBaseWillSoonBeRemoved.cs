@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web;
 using DotNetNuke.Entities.Modules;
 using ToSic.SexyContent.Internal;
 
@@ -12,7 +13,7 @@ namespace ToSic.SexyContent.Administration
     /// It's needed, because there is a type-detection which allows a few more things - in the other class.
     /// This not-ideal solution is temporaryr, because soon there will be no more webforms-UIs
     /// </summary>
-    public abstract class SexyControlAdminBaseWillSoonBeRemoved : PortalModuleBase //SexyControlEditBase
+    public abstract class SexyControlAdminBaseWillSoonBeRemoved : PortalModuleBase 
     {
         public int? ZoneId;
         public int? AppId;
@@ -27,7 +28,16 @@ namespace ToSic.SexyContent.Administration
                 ? int.Parse(Request.QueryString["ZoneId"])
                 : ZoneHelpers.GetZoneID(ModuleConfiguration.OwnerPortalID));
 
-            AppId = AppHelpers.GetAppIdFromModule(ModuleConfiguration); // todo: this calso contains the url-lookup
+            // try to get the app-id from the url - else get from current module-config
+            string appIdString = null;
+            int appId;
+            if (!string.IsNullOrEmpty(Request.QueryString["AppId"]))
+                appIdString = Request.QueryString["AppId"];
+            if (appIdString != null && int.TryParse(appIdString.Split(',')[0], out appId))
+                AppId = appId;
+            // NO else - it only works with the app-id from the url
+            //else
+            //    AppId = AppHelpers.GetAppIdFromModule(ModuleConfiguration); 
 
             App = new App(PortalSettings, AppId.Value, ZoneId.Value);
 

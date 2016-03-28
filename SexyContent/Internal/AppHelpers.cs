@@ -25,30 +25,12 @@ namespace ToSic.SexyContent.Internal
             var zoneId = ZoneHelpers.GetZoneID(module.OwnerPortalID);
 
             if (module.DesktopModule.ModuleName == "2sxc")
-            {
-                return zoneId.HasValue ? AppHelpers.GetDefaultAppId(zoneId.Value) : new int?();
-            }
+                return zoneId.HasValue ? GetDefaultAppId(zoneId.Value) : new int?();
 
-            object appIdString = null;
+            var appName = DnnStuffToRefactor.TryToGetReliableSetting(module, Settings.AppNameString);
 
-            if (HttpContext.Current != null)
-            {
-                // todo: #482 this override is an old mechanism which isn't needed any more when we use the web-api!, remove when we get rid of all those web controls
-                if (!IsNullOrEmpty(HttpContext.Current.Request.QueryString["AppId"]))
-                    appIdString = HttpContext.Current.Request.QueryString["AppId"];
-                else
-                {
-                    // todo: fix 2dm
-                    var appName = DnnStuffToRefactor.TryToGetReliableSetting(module, Settings.AppNameString);//  module.ModuleSettings[AppNameString];
-
-                    if (appName != null)
-                        appIdString = GetAppIdFromName(zoneId.Value, appName);
-                }
-            }
-
-            int appId;
-            if (appIdString != null && Int32.TryParse(appIdString.ToString().Split(',')[0], out appId))
-                return appId;
+            if (appName != null)
+                return GetAppIdFromName(zoneId.Value, appName);
 
             return null;
         }

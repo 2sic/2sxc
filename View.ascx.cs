@@ -15,8 +15,6 @@ namespace ToSic.SexyContent
         /// <param name="e"></param>
         protected new void Page_Load(object sender, EventArgs e)
         {
-            // Reset messages visible states on every reload
-            //pnlMessage.Visible = false;
             pnlError.Visible = false;
 
             var notReady = Installer.CheckUpgradeMessage(UserInfo.IsSuperUser);

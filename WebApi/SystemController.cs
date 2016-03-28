@@ -110,14 +110,15 @@ namespace ToSic.SexyContent.WebApi
         [HttpGet]
         public dynamic DialogSettings(int appId)
         {
-            var sxc = Request.GetSxcOfModuleContext(appId);
+            //var sxc = Request.GetSxcOfModuleContext(appId);
+            var App = new App(PortalSettings.Current, appId);
 
             return new
             {
-                IsContent = sxc.App.AppGuid == "Default",
+                IsContent = /*sxc.*/App.AppGuid == "Default",
                 Language = PortalSettings.Current.CultureCode,
                 LanguageDefault = PortalSettings.Current.DefaultLanguage,
-                GettingStartedUrl = GettingStartedUrl(sxc.App)
+                GettingStartedUrl = GettingStartedUrl(/*sxc.*/App)
             };
         }
 
@@ -163,8 +164,10 @@ namespace ToSic.SexyContent.WebApi
         [HttpGet]
         public List<string> WebAPiFiles(int appId)
         {
-            var sxc = Request.GetSxcOfModuleContext(appId);
-            var path = Path.Combine(sxc.App.PhysicalPath, "Api");
+            var App = new App(PortalSettings.Current, appId);
+
+            //var sxc = Request.GetSxcOfModuleContext(appId);
+            var path = Path.Combine(/*sxc.*/App.PhysicalPath, "Api");
             if (Directory.Exists(path))
                 return Directory.GetFiles(path, "*.cs")
                     .Select(Path.GetFileName)

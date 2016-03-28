@@ -21,7 +21,7 @@ namespace ToSic.SexyContent
         public ModuleInfo ModuleInfo;
         //public NameValueCollection UrlParams;
 
-        public bool UnreliableInfoThatSettingsAreStored; // todo
+        public bool UnreliableInfoThatSettingsAreStored => ContentGroup?.Exists ?? false;
         public bool ContentGroupIsCreated;
 
         public bool ShowTemplatePicker { get; set; }
@@ -101,9 +101,8 @@ namespace ToSic.SexyContent
             // todo: #482 this still allows url-app-change, NOT needed any more when we use the web-api!, remove when we get rid of all those web controls
             // Set AppId base on a) name=2sxc> "content"-ID or b) url or c) module-setting or d) null
             var appId = AppHelpers.GetAppIdFromModule(moduleInfo);
-            if (appId != null)
-                UnreliableInfoThatSettingsAreStored = true;
-            AppId = appId ?? 0;     // fallback/undefined
+
+            AppId = appId ?? 0;     // fallback/undefined YET
 
             if (AppId != 0)
             {
