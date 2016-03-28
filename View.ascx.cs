@@ -42,19 +42,15 @@ namespace ToSic.SexyContent
                 // check things if it's a module of this portal (ensure everything is ok, etc.)
                 if (!isSharedModule)
                 {
-                    // if editable, include template chooser
-                    if (UserMayEditThisModule)
-                        pnlTemplateChooser.Visible = true;
-
                     if (SettingsAreStored)// AppId.HasValue)
                         new DnnStuffToRefactor().EnsurePortalIsConfigured(_sxcInstance, Server, ControlPath);
                 }
 
                 if (SettingsAreStored) // AppId.HasValue)
                 {
-                    if (ContentGroup.Content.Any() && Template != null)
+                    if (_sxcInstance.ContentGroup.Content.Any() && Template != null)
                         ProcessView(phOutput, pnlError);//, pnlMessage);
-                    else if (!IsContentApp && UserMayEditThisModule)
+                    else if (!_sxcInstance.IsContentApp && UserMayEditThisModule)
                     // Select first available template automatically if it's not set yet - then refresh page
                     {
                         var templates = _sxcInstance.AppTemplates.GetAvailableTemplatesForSelector(ModuleConfiguration.ModuleID, _sxcInstance.AppContentGroups).ToList();

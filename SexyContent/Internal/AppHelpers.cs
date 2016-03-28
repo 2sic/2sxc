@@ -20,20 +20,20 @@ namespace ToSic.SexyContent.Internal
         //    public bool IsDefaultApp;
         //}
 
-        public static int? GetAppIdFromModule(ModuleInfo module)
+        public static int? GetAppIdFromModule(ModuleInfo module, int zoneId)
         {
-            var zoneId = ZoneHelpers.GetZoneID(module.OwnerPortalID);
-
             if (module.DesktopModule.ModuleName == "2sxc")
-                return zoneId.HasValue ? GetDefaultAppId(zoneId.Value) : new int?();
+                return GetDefaultAppId(zoneId);// : new int?();
 
             var appName = DnnStuffToRefactor.TryToGetReliableSetting(module, Settings.AppNameString);
 
             if (appName != null)
-                return GetAppIdFromName(zoneId.Value, appName);
+                return GetAppIdFromName(zoneId, appName);
 
             return null;
         }
+
+
 
         internal static int GetAppIdFromName(int zoneId, string appName)
         {

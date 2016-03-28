@@ -250,7 +250,7 @@ namespace ToSic.SexyContent.Razor
         /// <returns>An Adam object for navigating the assets</returns>
         public AdamNavigator AsAdam(DynamicEntity entity, string fieldName)
         {
-            return AppAndDataHelpers.AsAdam(AsEntity(entity), fieldName);
+            return AppAndDataHelpers.AsAdam(entity, fieldName);
         }
 
         /// <summary>
@@ -263,6 +263,18 @@ namespace ToSic.SexyContent.Razor
         {
             return AppAndDataHelpers.AsAdam(entity, fieldName);
         }
+        #endregion
+
+        #region ContentBlocks
+
+        public SxcInstance AsContentBlock(IEntity entity)
+        {
+            return AppAndDataHelpers.AsContentBlock(entity);
+        }
+        public SxcInstance AsContentBlock(DynamicEntity entity)
+        {
+            return AppAndDataHelpers.AsContentBlock(entity);
+        }        
         #endregion
 
     }

@@ -1,25 +1,26 @@
 ﻿using System;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
+using ToSic.Eav;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent
 {
-    internal class ModuleContentBlock: IContentBlock
+    internal class EntityContentBlock: IContentBlock
     {
+        private IContentBlock Parent;
+
         public int ZoneId { get;  }
         public int AppId { get; }
 
         public App App { get;  }
 
-        public ModuleInfo ModuleInfo;
-
         public bool ContentGroupExists => ContentGroup?.Exists ?? false;
 
         public bool ShowTemplateChooser { get; set; }
-        public bool ParentIsEntity => false;
+        public bool ParentIsEntity => true;
         public int ParentId { get; }
         public string ParentFieldName => null;
         public int ParentFieldSortOrder => 0;
@@ -53,40 +54,60 @@ namespace ToSic.SexyContent
 
         private ViewDataSource _dataSource;
         public ViewDataSource Data => _dataSource 
-            ?? (_dataSource = ViewDataSource.ForContentGroupInSxc(SxcInstance, Template, ModuleInfo.ModuleID));
+            ?? (_dataSource = ViewDataSource.ForContentGroupInSxc(SxcInstance, Template));
 
         public ContentGroup ContentGroup { get; }
 
-        public ModuleContentBlock(ModuleInfo moduleInfo)
-        {
-            if(moduleInfo == null)
-                throw new Exception("Need valid ModuleInfo / ModuleConfiguration of runtime");
+        #region ContentBlock Definition Entity
 
-            ModuleInfo = moduleInfo;
-            ParentId = moduleInfo.ModuleID;
+        private IEntity _contentBlockDefinition;
+        private string _appName;
+        private Guid _contentGroupGuid;
+        private Guid _previewTemplateGuid;
+
+        private void ParseContentBlockDefinition(IEntity cbDefinition)
+        {
+            _contentBlockDefinition = cbDefinition;
+            _appName = _contentBlockDefinition.GetBestValue("App")?.ToString() ?? "";
+
+            string temp = _contentBlockDefinition.GetBestValue("ContentGroup")?.ToString() ?? "";
+            Guid.TryParse(temp, out _contentGroupGuid);
+
+            temp = _contentBlockDefinition.GetBestValue("Template")?.ToString() ?? "";
+            Guid.TryParse(temp, out _previewTemplateGuid);
+            
+            temp = _contentBlockDefinition.GetBestValue("ShowTemplateChooser")?.ToString() ?? "";
+            bool show;
+            if (bool.TryParse(temp, out show))
+                ShowTemplateChooser = show;
+
+        }
+        #endregion
+
+        public EntityContentBlock(IContentBlock parent, IEntity cbDefinition)
+        {
+            ParseContentBlockDefinition(cbDefinition);
+            Parent = parent;
+
+            // ModuleInfo = moduleInfo;
+            ParentId = parent.ContentGroup.ContentGroupId; 
 
             // Ensure we know what portal the stuff is coming from
-            PortalSettings = moduleInfo.OwnerPortalID != moduleInfo.PortalID
-                ? new PortalSettings(moduleInfo.OwnerPortalID)
-                : PortalSettings.Current;
+            PortalSettings = Parent.App.OwnerPortalSettings;
 
-            ZoneId = ZoneHelpers.GetZoneID(moduleInfo.OwnerPortalID) ?? 0; // new
+            ZoneId = Parent.ZoneId;
+
             
-            AppId = AppHelpers.GetAppIdFromModule(moduleInfo, ZoneId) ?? 0;// fallback/undefined YET
+            AppId = AppHelpers.GetAppIdFromName(ZoneId, _appName); // should be 0 if unknown, must test
 
             if (AppId != 0)
             {
                 // try to load the app - if possible
                 App = new App(PortalSettings, AppId, ZoneId);
-                ContentGroup = App.ContentGroupManager.GetContentGroupForModule(moduleInfo.ModuleID);
+                ContentGroup =  App.ContentGroupManager.GetContentGroupOrGeneratePreview(_contentGroupGuid, _previewTemplateGuid);
 
                 // use the content-group template, which already covers stored data + module-level stored settings
                 Template = ContentGroup.Template;
-
-                // - in sxcinstance... CheckTemplateOverrides(); // check url-params, etc.
-
-                // ensure data is initialized
-                // nothing necessary, happens on the property
 
                 // maybe ensure that App.Data is ready?
                 // App.InitData(...)?
@@ -95,9 +116,9 @@ namespace ToSic.SexyContent
 
         private SxcInstance _sxcInstance;
         public SxcInstance SxcInstance => _sxcInstance ??
-                                          (_sxcInstance = new SxcInstance(this, ModuleInfo));
+                                          (_sxcInstance = new SxcInstance(this, Parent.SxcInstance));
 
-        public bool IsContentApp => ModuleInfo.DesktopModule.ModuleName == "2sxc";
+        public bool IsContentApp => _appName == Constants.DefaultAppName;
 
     }
 }

@@ -22,14 +22,30 @@ namespace ToSic.SexyContent
 	/// <summary>
 	/// This class contains code that are both used in ViewApp.ascx.cs and View.ascx.cs
 	/// </summary>
-	public class SexyViewContentOrApp : SexyControlEditBase
-	{
+	public class SexyViewContentOrApp : PortalModuleBase
+    {
+         #region basic properties like Sexy, App, Zone, etc.
+        internal ModuleContentBlock ContentBlock;
+        protected SxcInstance _sxcInstance => ContentBlock.SxcInstance;
+
+        protected int? ZoneId => _sxcInstance?.ZoneId ?? 0;
+
+        protected int? AppId => ContentBlock.ContentGroupExists ? _sxcInstance?.AppId : null; // some systems rely on appid being blank to adapt behaviour if nothing is saved yet
+
+        protected bool SettingsAreStored => ContentBlock.ContentGroupExists;
+        protected Template Template => _sxcInstance.Template;
+        #endregion
+
+        protected void Page_Init(object sender, EventArgs e)
+        {
+            ContentBlock = new ModuleContentBlock(ModuleConfiguration);
+        }
 
         protected void Page_Load(object sender, EventArgs e)
 		{
             // always do this, part of the guarantee that everything will work
 			ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
-            var renderHelp = new RenderingHelpers(_sxcInstance, ModuleContext, SettingsAreStored, ResolveUrl("~"));
+            var renderHelp = new RenderingHelpers(_sxcInstance);
 
 
 			// If logged in, inject Edit JavaScript, and delete / add items
@@ -38,11 +54,6 @@ namespace ToSic.SexyContent
             {
                 // register scripts and css
                 renderHelp.RegisterClientDependencies(Page, string.IsNullOrEmpty(Request.QueryString["debug"]));
-
-                // new
-                var newSpecs = new ClientInfosAll(ResolveUrl("~"), PortalSettings, ModuleContext, _sxcInstance, UserInfo,
-                    ZoneId ?? 0, SettingsAreStored);
-                ((ModuleHost) Parent).Attributes.Add("data-2sxc-context", JsonConvert.SerializeObject(newSpecs));
 
                 // add instance specific infos to the html-tag
                 var clientInfos = renderHelp.InfosForTheClientScripts();
@@ -60,13 +71,13 @@ namespace ToSic.SexyContent
 
 
         private SxcInstance _sxcInstanceForSecurityChecks;
-        protected bool UserMayEditThisModule // todo: unsure if this works, generating the new sxc without appid = 0
+        protected bool UserMayEditThisModule 
         {
             get
             {
                 if (_sxcInstanceForSecurityChecks == null)
                     _sxcInstanceForSecurityChecks = _sxcInstance 
-                        ?? new ModuleContentBlock(ModuleConfiguration, UserInfo, Request.QueryString).SxcInstance ;// new SxcInstance(ZoneId.Value, 0, ModuleConfiguration);
+                        ?? new ModuleContentBlock(ModuleConfiguration).SxcInstance ;
                 return _sxcInstanceForSecurityChecks?.Environment?.Permissions.UserMayEditContent ?? false;
             }
         }
@@ -75,14 +86,13 @@ namespace ToSic.SexyContent
 	    {
             // note that initializing the engine will also initialize any custom data-changes
             // so this is needed, even if we will only render to JSON afterwards
-	        var engine = _sxcInstance.GetRenderingEngine(Request.QueryString["type"] == "data"
-	            ? InstancePurposes.PublishData
-	            : InstancePurposes.WebView);
+            if (Request.QueryString["type"] == "data")
+            {
+                _sxcInstance.GetRenderingEngine(InstancePurposes.PublishData);
+                return StreamJsonToClient(_sxcInstance.Data);
+            }
+            return _sxcInstance.Render().ToString();
 
-	        // Output JSON data if type=data in URL, otherwise render the template
-	        return Request.QueryString["type"] == "data"
-	            ? StreamJsonToClient(_sxcInstance.Data)
-	            : engine.Render();
 	    }
 
 
@@ -170,42 +180,7 @@ namespace ToSic.SexyContent
                 ShowError(LocalizeString("TemplateError.Text") + ": " + HttpUtility.HtmlEncode(Ex.ToString()), pnlError, LocalizeString("TemplateError.Text"), false);
                 Exceptions.LogException(Ex);
             }
-
-            #region  2016-03-01 old stuff, delete later when stable...
-            //try
-            //{
-            //    var engine =
-            //        SxcContext.RenderingEngine(Request.QueryString["type"] == "data"
-            //            ? InstancePurposes.PublishData
-            //            : InstancePurposes.WebView);
-            //             //   var dataSource = SxcContext.DataSource;
-            //             //var engine = EngineFactory.CreateEngine(Template);
-            //             //engine.Init(Template, SxcContext.App, ModuleConfiguration, dataSource, Request.QueryString["type"] == "data" ? InstancePurposes.PublishData : InstancePurposes.WebView, SxcContext);
-            //             //engine.CustomizeData(); // this is also important for json-output
-
-            //             // Output JSON data if type=data in URL, otherwise render the template
-            //             var renderedTemplate = Request.QueryString["type"] == "data" ? StreamJsonToClient(SxcContext.DataSource) : engine.Render();
-            //             //renderedTemplate = Request.QueryString["type"] == "data" ? StreamJsonToClient(dataSource) : engine.Render();
-
-            //	// If standalone is specified, output just the template without anything else
-            //	if (StandAlone)
-            //	{
-            //		Response.Clear();
-            //		Response.Write(renderedTemplate);
-            //		Response.Flush();
-            //		Response.SuppressContent = true;
-            //		HttpContext.Current.ApplicationInstance.CompleteRequest();
-            //	}
-            //	else
-            //		phOutput.Controls.Add(new LiteralControl(renderedTemplate));
-            //}
-            //// Catch errors; log them
-            //catch (Exception Ex)
-            //{
-            //	ShowError(LocalizeString("TemplateError.Text") + ": " + HttpUtility.HtmlEncode(Ex.ToString()), pnlError, LocalizeString("TemplateError.Text"), false);
-            //	Exceptions.LogException(Ex);
-            //}
-            #endregion
+            
         }
 
 
@@ -264,16 +239,7 @@ namespace ToSic.SexyContent
 							        SecurityAccessLevel.Edit, true, false);
 							    //}
 							}
-							else
-							{
-                                // Removed edit list - does not work yet
-								//// Edit List
-								//Actions.Add(GetNextActionID(), LocalizeString("ActionList.Text"),
-								//	ModuleActionType.ContentOptions, "editlist", "edit.gif",
-								//	EditUrl(TabId, SexyContent.ControlKeys.EditList, false, "mid",
-								//		ModuleId.ToString()), false,
-								//	SecurityAccessLevel.Edit, true, false);
-							}
+
 
 							if (Template != null && Template.UseForList)
 							{
@@ -297,11 +263,11 @@ namespace ToSic.SexyContent
 
 							// App management
 							if (ZoneId.HasValue && AppId.HasValue)
-                                actions.Add(GetNextActionID(), "Admin" + (IsContentApp ? "" : " " + _sxcInstance.App.Name), "", "", "edit.gif", "javascript:$2sxcActionMenuMapper(" + ModuleId + ").adminApp();", "", true,
+                                actions.Add(GetNextActionID(), "Admin" + (_sxcInstance.IsContentApp ? "" : " " + _sxcInstance.App.Name), "", "", "edit.gif", "javascript:$2sxcActionMenuMapper(" + ModuleId + ").adminApp();", "", true,
                                         SecurityAccessLevel.Admin, true, false);
 
                             // Zone management (app list)
-                            if (!IsContentApp)
+                            if (!_sxcInstance.IsContentApp)
                                 actions.Add(GetNextActionID(), "Apps Management", "AppManagement.Action", "", "action_settings.gif", "javascript:$2sxcActionMenuMapper(" + ModuleId + ").adminZone();", "", true,
                                         SecurityAccessLevel.Admin, true, false);
                         }
@@ -320,19 +286,6 @@ namespace ToSic.SexyContent
 
         #endregion
 
-
-        // todo: move outside of this system...
-        //protected string CheckUpgradeMessage()
-        //{
-        //    // Upgrade success check - show message if upgrade did not run successfully
-        //    if (SexyContentModuleUpgrade.UpgradeComplete) return null;// || !UserInfo.IsSuperUser) return true;
-
-        //    return SexyContentModuleUpgrade.IsUpgradeRunning
-        //        ? "It looks like a 2sxc upgrade is currently running.Please wait for the operation to complete(the upgrade may take a few minutes)."
-        //        : UserInfo.IsSuperUser
-        //            ? "Module upgrade did not complete (<a href='http://2sxc.org/en/help/tag/install' target='_blank'>more</a>). Please click the following button to finish the upgrade: <br><a class='dnnPrimaryAction' onclick='$2sxc.system.finishUpgrade(this)'>Finish Upgrade</a>"
-        //            : "Module upgrade did not complete successfully. Please login as host user to finish the upgrade.";
-        //}
 
     }
 }

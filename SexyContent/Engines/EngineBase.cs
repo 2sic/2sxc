@@ -51,7 +51,7 @@ namespace ToSic.SexyContent.Engines
             CheckExpectedTemplateErrors();
 
             // check access permissions - before initializing or running data-code in the template
-            CheckTemplatePermissions(sexy.PortalSettingsOfOriginalModule);
+            CheckTemplatePermissions(sexy.AppPortalSettings);
 
             // Run engine-internal init stuff
             Init();

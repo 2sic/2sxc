@@ -130,17 +130,19 @@ namespace ToSic.SexyContent
 		    Guid.TryParse(maybeGuid?.ToString(), out groupGuid);
             var previewTemplateString = settings[Settings.PreviewTemplateIdString]?.ToString();
 
-            return GetContentGroupOrGeneratePreview(groupGuid, previewTemplateString);
+		    var templateGuid = !string.IsNullOrEmpty(previewTemplateString)
+		        ? Guid.Parse(previewTemplateString)
+		        : new Guid();
+
+            return GetContentGroupOrGeneratePreview(groupGuid, templateGuid);
 		}
 
-	    internal ContentGroup GetContentGroupOrGeneratePreview(Guid groupGuid, string previewTemplateGuid)
+	    internal ContentGroup GetContentGroupOrGeneratePreview(Guid groupGuid, Guid previewTemplateGuid)
 	    {
-// Return a "faked" ContentGroup if it does not exist yet (with the preview templateId)
+            // Return a "faked" ContentGroup if it does not exist yet (with the preview templateId)
 	        if (groupGuid == Guid.Empty) // maybeGuid == null)
 	        {
-	            return new ContentGroup(previewTemplateGuid != null
-	                ? Guid.Parse(previewTemplateGuid)
-	                : new Guid?(),
+	            return new ContentGroup(previewTemplateGuid,
 	                _zoneId, _appId);
 	        }
 
@@ -148,15 +150,6 @@ namespace ToSic.SexyContent
 	        return GetContentGroup(groupGuid); // Guid.Parse(maybeGuid.ToString()));
 	    }
 
-	    //   /// <summary>
-     //   /// generate a dummy content-group with the template specified, so that a preview can be made
-     //   /// </summary>
-     //   /// <param name="previewTemplateString"></param>
-     //   /// <returns></returns>
-	    //private ContentGroup GeneratePreviewContentGroup(object previewTemplateString)
-	    //{
-	    //    return new ContentGroup(previewTemplateString != null ? Guid.Parse(previewTemplateString.ToString()) : new Guid?(),
-	    //        _zoneId, _appId);
-	    //}
+
 	}
 }

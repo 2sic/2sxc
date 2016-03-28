@@ -30,7 +30,7 @@ namespace ToSic.SexyContent
 
             // If PortalSettings is null - for example, while search index runs - HasEditPermission would fail
             // But in search mode, it shouldn't show drafts, so this is ok.
-            App.InitData(PortalSettings.Current != null && SecurityHelpers.HasEditPermission(module), data.ConfigurationProvider);
+            App.InitData(PortalSettings.Current != null && sexy.Environment.Permissions.UserMayEditContent /*SecurityHelpers.HasEditPermission(module)*/, data.ConfigurationProvider);
 
             #region Assemble the mapping of the data-stream "default"/Presentation to the List object and the "ListContent" too
 	        List = new List<Element>();
@@ -184,7 +184,7 @@ namespace ToSic.SexyContent
             if (inSource != null)
                 return DataSource.GetDataSource(typeName, inSource.ZoneId, inSource.AppId, inSource, configurationProvider);
 
-            var initialSource = DataSource.GetInitialDataSource(ZoneHelpers.GetZoneID(Dnn.Portal.PortalId).Value, App.AppId, SecurityHelpers.HasEditPermission(Dnn.Module));
+            var initialSource = DataSource.GetInitialDataSource(ZoneHelpers.GetZoneID(Dnn.Portal.PortalId).Value, App.AppId, _sxcInstance.Environment.Permissions.UserMayEditContent/* SecurityHelpers.HasEditPermission(Dnn.Module)*/);
             return typeName != "" ? DataSource.GetDataSource(typeName, initialSource.ZoneId, initialSource.AppId, initialSource, configurationProvider) : initialSource;
         }
 
@@ -196,7 +196,7 @@ namespace ToSic.SexyContent
             if (inSource != null)
                 return DataSource.GetDataSource<T>(inSource.ZoneId, inSource.AppId, inSource, configurationProvider);
 
-            var initialSource = DataSource.GetInitialDataSource(ZoneHelpers.GetZoneID(Dnn.Portal.PortalId).Value, App.AppId, SecurityHelpers.HasEditPermission(Dnn.Module));
+            var initialSource = DataSource.GetInitialDataSource(ZoneHelpers.GetZoneID(Dnn.Portal.PortalId).Value, App.AppId, _sxcInstance.Environment.Permissions.UserMayEditContent /*SecurityHelpers.HasEditPermission(Dnn.Module)*/);
             return DataSource.GetDataSource<T>(initialSource.ZoneId, initialSource.AppId, initialSource, configurationProvider);
         }
 
@@ -226,7 +226,7 @@ namespace ToSic.SexyContent
 		public List<Element> List { get; set; }
         #endregion
 
-        #region Adam (beta / experimental)
+        #region Adam
 
         /// <summary>
         /// Provides an Adam instance for this item and field
@@ -251,5 +251,19 @@ namespace ToSic.SexyContent
         }
         #endregion
 
+        #region ContentBlock
+        // todo:
+        // probably needs overloads with dynamic, list<dynamic> and list<ientity> 
+
+        public SxcInstance AsContentBlock(IEntity entity)
+        {
+            var cb = new EntityContentBlock(_sxcInstance.ContentBlock, entity);
+            return cb.SxcInstance;
+        }
+        public SxcInstance AsContentBlock(DynamicEntity entity)
+        {
+            return AsContentBlock(entity.Entity);
+        }
+        #endregion
     }
 }

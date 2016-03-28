@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using DotNetNuke.Entities.Portals;
 using ToSic.SexyContent.DataSources;
 
 namespace ToSic.SexyContent.Interfaces
@@ -9,7 +10,7 @@ namespace ToSic.SexyContent.Interfaces
     internal interface IContentBlock
     {
         // bool ContentGroupIsCreated { get;  }
-        bool ShowTemplatePicker { get; }
+        bool ShowTemplateChooser { get; }
 
         bool ParentIsEntity { get; }   // alternative is module
         int ParentId { get; }
@@ -19,6 +20,8 @@ namespace ToSic.SexyContent.Interfaces
         #region Values related to the current unit of content / the view
         int AppId { get; }
         int ZoneId { get; }
+        PortalSettings PortalSettings { get; }
+
         Template Template { get; set; }
 
         ContentGroup ContentGroup { get; }
@@ -29,5 +32,8 @@ namespace ToSic.SexyContent.Interfaces
 
         bool IsContentApp { get; }
         #endregion
+        SxcInstance SxcInstance { get; }
+
+        bool ContentGroupExists { get; }
     }
 }

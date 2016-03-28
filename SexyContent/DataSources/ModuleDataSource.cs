@@ -125,9 +125,7 @@ namespace ToSic.SexyContent.DataSources
 	            var contentEntity = contentEntities[i];
 
                 // use demo-entites where available
-				var entityId = contentEntity != null
-					? contentEntity.EntityId :
-					(contentDemoEntity != null ? contentDemoEntity.EntityId : new int?());
+				var entityId = contentEntity?.EntityId ?? contentDemoEntity?.EntityId;
 
                 // We can't deliver entities that are not delivered by base (original stream), so continue
                 if (!entityId.HasValue || !originals.ContainsKey(entityId.Value))

@@ -10,7 +10,6 @@ using ToSic.Eav.BLL;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Caches;
 using ToSic.Eav.ValueProvider;
-using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Internal;
 

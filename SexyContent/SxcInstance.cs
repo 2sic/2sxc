@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Specialized;
-using System.Configuration;
+﻿using System.Collections.Specialized;
 using System.Linq;
 using System.Web;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
-using ToSic.Eav;
+using Newtonsoft.Json;
 using ToSic.Eav.BLL;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Engines;
+using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Environment.Interfaces;
 using ToSic.SexyContent.Interfaces;
-using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent
 {
@@ -54,7 +52,7 @@ namespace ToSic.SexyContent
         /// </summary>
         public Environment.Environment Environment = new Environment.Environment();
 
-        internal ModuleInfo ModuleInfo => (ContentBlock as ModuleContentBlock).ModuleInfo; // mabe pass in...
+        internal ModuleInfo ModuleInfo { get; }
 
         internal IContentBlock ContentBlock { get; }
 
@@ -63,7 +61,7 @@ namespace ToSic.SexyContent
         /// This returns the PS of the original module. When a module is mirrored across portals,
         /// then this will be different from the PortalSettingsOfVisitedPage, otherwise they are the same
         /// </summary>
-        internal PortalSettings PortalSettingsOfOriginalModule => (ContentBlock as ModuleContentBlock).AppOwnerPortalSettings; // maybe pass in
+        internal PortalSettings AppPortalSettings => ContentBlock.PortalSettings; // maybe pass in
 
         public ViewDataSource Data => ContentBlock.Data;
 
@@ -111,12 +109,10 @@ namespace ToSic.SexyContent
         #endregion
 
         #region Constructor
-
-
-        internal SxcInstance(IContentBlock cb)
+        internal SxcInstance(IContentBlock cb, ModuleInfo runtimeModuleInfo)
         {
-
             ContentBlock = cb;
+            ModuleInfo = runtimeModuleInfo;
             // Build up the environment. If we know the module context, then use permissions from there
             Environment.Permissions = (ModuleInfo != null)
                 ? (IPermissions)new Environment.Dnn7.Permissions(ModuleInfo)
@@ -127,15 +123,33 @@ namespace ToSic.SexyContent
                 CheckTemplateOverrides();   // allow view change on apps
         }
 
+        internal SxcInstance(IContentBlock cb, SxcInstance runtimeInstance)
+        {
+            ContentBlock = cb;
+            ModuleInfo = runtimeInstance.ModuleInfo;
+            // Build up the environment. If we know the module context, then use permissions from there
+            Environment.Permissions = runtimeInstance.Environment.Permissions;
+
+            // url-override of view / data
+            if (!IsContentApp)
+                CheckTemplateOverrides();   // allow view change on apps
+        }
         #endregion
 
         #region RenderEngine
-
-        public string Render()
+        private bool RenderWithDiv = true;
+        private bool RenderWithEditMetadata => Environment.Permissions.UserMayEditContent;
+        public HtmlString Render()
         {
             var engine = GetRenderingEngine(InstancePurposes.WebView);
-
-            return engine.Render();
+            var renderHelp = new RenderingHelpers(this);//, ModuleInfo, ContentBlock.ContentGroupExists);//, ResolveUrl("~"));
+            var editInfos = renderHelp.GetClientInfosAll();
+            string result = (RenderWithDiv ? "<div class=\"sc-viewport\" " 
+                + (RenderWithEditMetadata ? "data-2sxc-context=\"" + JsonConvert.SerializeObject(editInfos) + "\"" : "") 
+                + ">\n" : "") 
+                + engine.Render() + 
+                (RenderWithDiv ? "\n</div>" : "");
+            return new HtmlString(result);
         }
 
         public IEngine GetRenderingEngine(InstancePurposes renderingPurpose)

@@ -10,7 +10,7 @@ namespace ToSic.SexyContent.WebApi
         internal static SxcInstance GetSxcOfModuleContext(this HttpRequestMessage request)
         {
             var moduleInfo = request.FindModuleInfo();
-            var contentBlock = new ModuleContentBlock(moduleInfo, PortalSettings.Current.UserInfo, HttpContext.Current.Request.QueryString);
+            var contentBlock = new ModuleContentBlock(moduleInfo);
             return contentBlock.SxcInstance;
         }
 

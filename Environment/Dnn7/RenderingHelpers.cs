@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using DotNetNuke.Common;
+using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
 using DotNetNuke.UI.Modules;
@@ -21,22 +22,25 @@ namespace ToSic.SexyContent.Environment.Dnn7
         private int ModuleId;
         private UserInfo UserInfo;
         private string ApplicationRoot;
-        private ModuleInstanceContext ModuleContext;
+        //private ModuleInstanceContext ModuleContext;
+        private ModuleInfo ModuleInfo;
 
         private int? AppId;
         private bool _usingStoredConfig;
 
-        internal RenderingHelpers(SxcInstance sxc, ModuleInstanceContext mic, bool hasStoredConfiguration, string appRoot)
+        internal RenderingHelpers(SxcInstance sxc)//, ModuleInfo mi, bool hasStoredConfiguration)//, string appRoot)
         {
+            string appRoot = System.Web.VirtualPathUtility.ToAbsolute("~");
+            ModuleInfo = sxc.ModuleInfo;// mi;// mic.Configuration;
             _sxcInstance = sxc;
-            PortalSettings = mic.PortalSettings;// PortalSettings.Current;
-            TabId = mic.TabId;// tabId;
-            ModuleId = mic.ModuleId;// modId;
+            PortalSettings = PortalSettings.Current; // mic.PortalSettings;// PortalSettings.Current;
+            TabId = ModuleInfo.TabID;// tabId;
+            ModuleId = ModuleInfo.ModuleID;// modId;
             UserInfo = PortalSettings.Current.UserInfo;
             ApplicationRoot = appRoot;
-            ModuleContext = mic;
-            _usingStoredConfig = hasStoredConfiguration;
-            AppId = hasStoredConfiguration ? sxc.AppId : null;
+            //ModuleContext = mic;
+            _usingStoredConfig = sxc.ContentBlock.ContentGroupExists;
+            AppId = _sxcInstance.AppId; // hasStoredConfiguration ? sxc.AppId : null;
 
 
         }
@@ -46,6 +50,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             var hasContent = _usingStoredConfig && _sxcInstance.Template != null && _sxcInstance.ContentGroup.Exists;
 
             // minor workaround because the settings in the cache are wrong after using a page template
+            // todo: move this to the content-block or the content-group
             var tempVisibleStatus = DnnStuffToRefactor.TryToGetReliableSetting(_sxcInstance.ModuleInfo,
                 Settings.SettingsShowTemplateChooser);
             var templateChooserVisible = bool.Parse(tempVisibleStatus ?? "true");
@@ -71,7 +76,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
                     hasContent, // cb ok
                     isContentApp = _sxcInstance.IsContentApp, // cb
                     zoneId = _sxcInstance.ZoneId ?? 0, // cb / inst ok
-                    appId = _usingStoredConfig ? _sxcInstance.AppId : null, // cb ok
+                    appId = _sxcInstance.AppId,// _usingStoredConfig ? _sxcInstance.AppId : null, // cb ok
                     isList = _usingStoredConfig && _sxcInstance.ContentGroup.Content.Count > 1, // cb ok
                     templateId = _sxcInstance.Template?.TemplateId, // cb ok
                     contentTypeId = _sxcInstance.Template?.ContentTypeStaticName ?? "", // cb / itm ok
@@ -167,9 +172,9 @@ namespace ToSic.SexyContent.Environment.Dnn7
             {
                 ModuleContext = new
                 {
-                    ModuleContext.PortalId, // syst / inst - ok
-                    ModuleContext.TabId,  // syst / inst - ok
-                    ModuleContext.ModuleId, // inst
+                    ModuleInfo.PortalID, // syst / inst - ok
+                    ModuleInfo.TabID,  // syst / inst - ok
+                    ModuleInfo.ModuleID, // inst
                     AppId = _usingStoredConfig ? _sxcInstance?.App?.AppId : null // cb
                 },
                 PortalSettings.ActiveTab.FullUrl, // syst - ok
@@ -179,6 +184,12 @@ namespace ToSic.SexyContent.Environment.Dnn7
             return globData;
         }
 
+        // new
+        public ClientInfosAll GetClientInfosAll()
+        {
+            return new ClientInfosAll(ApplicationRoot, PortalSettings, ModuleInfo, _sxcInstance, UserInfo,
+                    _sxcInstance.ZoneId ?? 0, _sxcInstance.ContentBlock.ContentGroupExists);
+        }
     }
 
     public class ClientInfosAll
@@ -189,7 +200,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         public ClientInfoContentBlock ContentBlock; // todo: still not sure if these should be separate...
         public ClientInfoContentGroup ContentGroup;
 
-        public ClientInfosAll(string systemRootUrl, PortalSettings ps, ModuleInstanceContext mic, SxcInstance sxc, UserInfo uinfo, int zoneId, bool isCreated)
+        public ClientInfosAll(string systemRootUrl, PortalSettings ps, ModuleInfo mic, SxcInstance sxc, UserInfo uinfo, int zoneId, bool isCreated)
         {
             Environment = new ClientInfosEnvironment(systemRootUrl, ps, mic);
             Language = new ClientInfosLanguages(ps, zoneId);
@@ -198,7 +209,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             var tempVisibleStatus = DnnStuffToRefactor.TryToGetReliableSetting(sxc.ModuleInfo,
                 Settings.SettingsShowTemplateChooser);
             var templateChooserVisible = bool.Parse(tempVisibleStatus ?? "true");
-            ContentBlock = new ClientInfoContentBlock(templateChooserVisible, mic.ModuleId, null, 0);
+            ContentBlock = new ClientInfoContentBlock(templateChooserVisible, mic.ModuleID, null, 0);
             ContentGroup = new ClientInfoContentGroup(sxc, isCreated);
         }
     }
@@ -218,15 +229,15 @@ namespace ToSic.SexyContent.Environment.Dnn7
         // public string SxcDialogUrl;
         public string SxcRootUrl;
 
-        public ClientInfosEnvironment(string systemRootUrl, PortalSettings ps, ModuleInstanceContext mic)
+        public ClientInfosEnvironment(string systemRootUrl, PortalSettings ps, ModuleInfo mic)
         {
             WebsiteId = ps.PortalId;
             WebsiteUrl = "//" + ps.PortalAlias.HTTPAlias + "/";
 
-            PageId = mic.TabId;
+            PageId = mic.TabID;
             PageUrl = ps.ActiveTab.FullUrl;
 
-            InstanceId = mic.ModuleId;
+            InstanceId = mic.ModuleID;
 
             SxcVersion = Settings.Version.ToString();
             // SxcDialogUrl = Globals.NavigateURL(PageId);

@@ -34,13 +34,13 @@ namespace ToSic.SexyContent.Search
 
             if (!isContentModule)
             {
-	            appId = AppHelpers.GetAppIdFromModule(moduleInfo);
+	            appId = AppHelpers.GetAppIdFromModule(moduleInfo, zoneId.Value);
 				if (!appId.HasValue)
 		            return searchDocuments;
             }
 
             // new 2016-03-27
-            var mcb = new ModuleContentBlock(moduleInfo, null, new NameValueCollection());
+            var mcb = new ModuleContentBlock(moduleInfo);
             var sexy = mcb.SxcInstance;
 
             // old 2016-03-27

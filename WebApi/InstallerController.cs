@@ -21,15 +21,15 @@ namespace ToSic.SexyContent.WebApi
         [ValidateAntiForgeryToken]
         public HttpResponseMessage InstallPackage(string packageUrl)
         {
-            var zoneId = ZoneHelpers.GetZoneID(ActiveModule.PortalID);
-            var appId = AppHelpers.GetAppIdFromModule(ActiveModule);
+            var zoneId = ZoneHelpers.GetZoneID(ActiveModule.PortalID).Value;
+            var appId = AppHelpers.GetAppIdFromModule(ActiveModule, zoneId);
             bool success;
 
             // Install package
             var messages = new List<ExportImportMessage>();
             try
             {
-                success = new ZipImport(zoneId.Value, appId, PortalSettings.UserInfo.IsSuperUser)
+                success = new ZipImport(zoneId, appId, PortalSettings.UserInfo.IsSuperUser)
                     .ImportZipFromUrl(packageUrl, messages, ActiveModule.DesktopModule.ModuleName == "2sxc-app");
             }
             catch (Exception ex)
