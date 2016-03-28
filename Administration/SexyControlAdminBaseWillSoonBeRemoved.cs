@@ -14,12 +14,12 @@ namespace ToSic.SexyContent.Administration
     /// </summary>
     public abstract class SexyControlAdminBaseWillSoonBeRemoved : PortalModuleBase //SexyControlEditBase
     {
-        internal int? ZoneId;
-        internal int? AppId;
+        public int? ZoneId;
+        public int? AppId;
 
-        internal App App;
+        public App App;
 
-        internal bool IsContentApp;
+        public bool IsContentApp;
 
         protected void Page_Init(object sender, EventArgs e)
         {
