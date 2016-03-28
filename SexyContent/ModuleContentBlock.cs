@@ -198,7 +198,7 @@ namespace ToSic.SexyContent
         private SxcInstance _sxcInstance;
 
         public SxcInstance SxcInstance => _sxcInstance ??
-                                          (_sxcInstance = new SxcInstance(ZoneId, AppId, ModuleInfo));
+                                          (_sxcInstance = new SxcInstance(this));
 
         public bool IsContentApp => ModuleInfo.DesktopModule.ModuleName == "2sxc";
         private bool AllowAutomaticTemplateChangeBasedOnUrlParams => !IsContentApp;  

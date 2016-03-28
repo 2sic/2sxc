@@ -1,4 +1,6 @@
 ﻿using System.Net.Http;
+using System.Web;
+using DotNetNuke.Entities.Portals;
 using DotNetNuke.Web.Api;
 using ToSic.SexyContent.Internal;
 
@@ -12,7 +14,9 @@ namespace ToSic.SexyContent.WebApi
             if(!appId.HasValue)
                 appId = AppHelpers.GetAppIdFromModule(moduleInfo);
             var zoneId = ZoneHelpers.GetZoneID(moduleInfo.PortalID);
-            return new SxcInstance(zoneId.Value, appId.Value, moduleInfo);
+            var Req = HttpContext.Current.Request;
+            var contentBlock = new ModuleContentBlock(moduleInfo, PortalSettings.Current.UserInfo, Req.QueryString, false);
+            return contentBlock.SxcInstance;// new SxcInstance(zoneId.Value, appId.Value, moduleInfo);
         }
 
     }
