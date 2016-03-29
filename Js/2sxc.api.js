@@ -1,39 +1,42 @@
 ﻿
 (function () {
-    if (window.$2sxc)
-        return;
+    if (window.$2sxc) return;   // prevent double execution
 
-    window.$2sxc = function (id) {
+    window.$2sxc = function (id, cbid) {
         // if it's a dom-element, use auto-find
         if ("object" === typeof id)
             return window.$2sxc.autoFind(id);
 
-        if (!$2sxc._data[id])
-            $2sxc._data[id] = {};
+        // neutralize the id from old "34" format to the new "35-mod:353" format
+        if(!cbid)
+            cbid = "mod:" + id + "-mod: " + id;
+
+        if (!$2sxc._data[cbid])
+            $2sxc._data[cbid] = {};
 
         // either get the cached controller from previous calls, or create a new one
-        if ($2sxc._controllers[id])
-            return $2sxc._controllers[id];
+        if ($2sxc._controllers[cbid])
+            return $2sxc._controllers[cbid];
 
-        var controller = /*$2sxc._controllers[id] ? $2sxc._controllers[id] : */ $2sxc._controllers[id] = {
+        var controller = $2sxc._controllers[cbid] = {
             serviceScopes: ["app", "app-api", "app-query", "app-content", "eav", "view", "dnn"],
             serviceRoot: $.ServicesFramework(id).getServiceRoot("2sxc"),
             resolveServiceUrl: function resolveServiceUrl(virtualPath) {
-            	var scope = virtualPath.split("/")[0].toLowerCase();
+                var scope = virtualPath.split("/")[0].toLowerCase();
 
-            	// stop if it's not one of our special paths
+                // stop if it's not one of our special paths
                 if (controller.serviceScopes.indexOf(scope) === -1)
-                	return virtualPath;
+                    return virtualPath;
 
                 return controller.serviceRoot + scope + "/" + virtualPath.substring(virtualPath.indexOf("/") + 1);
             },
             data: {
                 // source path defaulting to current page + optional params
-                sourceUrl: function (params) {
+                sourceUrl: function(params) {
                     var url = window.location.href;
                     if (url.indexOf("#"))
                         url = url.substr(0, url.indexOf("#"));
-                    url += (window.location.href.indexOf("?") != -1 ? "&" : "?") + "mid=" + id + "&standalone=true&popUp=true&type=data";
+                    url += (window.location.href.indexOf("?") !== -1 ? "&" : "?") + "mid=" + id + "&standalone=true&popUp=true&type=data";
                     if (typeof params == "string") // text like 'id=7'
                         url += "&" + params;
                     return url;
@@ -48,7 +51,7 @@
                 controller: null,
 
                 // Load data via ajax
-                load: function (source) {
+                load: function(source) {
                     // If source is already the data, set it
                     if (source && source.List) {
                         controller.data.setData(source);
@@ -59,7 +62,7 @@
                         if (!source.url)
                             source.url = controller.data.sourceUrl();
                         source.origSuccess = source.success;
-                        source.success = function (data) {
+                        source.success = function(data) {
 
                             for (var dataSetName in data) {
                                 if (data[dataSetName].List !== null) {
@@ -78,7 +81,7 @@
                             controller.lastRefresh = new Date();
                             controller.data._triggerLoaded();
                         };
-                        source.error = function (request) {
+                        source.error = function(request) {
                             alert(JSON.parse(request.responseText).error);
                         };
                         controller.data.source = source;
@@ -86,23 +89,23 @@
                     }
                 },
 
-                reload: function (optionalCallback) {
-					if (optionalCallback)
+                reload: function(optionalCallback) {
+                    if (optionalCallback)
                         controller.data.source.success = optionalCallback;
 
                     $.ajax(controller.data.source);
                     return controller.data;
                 },
 
-                on: function (events, callback) {
+                on: function(events, callback) {
                     return $(controller.data).bind("2scLoad", callback)[0]._triggerLoaded();
                 },
 
-                _triggerLoaded: function () {
+                _triggerLoaded: function() {
                     return controller.isLoaded ? $(controller.data).trigger("2scLoad", [controller.data])[0] : controller.data;
                 },
 
-                one: function (events, callback) {
+                one: function(events, callback) {
                     if (!controller.isLoaded)
                         return $(controller.data).one("2scLoad", callback)[0];
                     callback({}, controller.data);
@@ -111,6 +114,7 @@
             },
 
             id: id,
+            cbid: cbid,
             source: null,
             isLoaded: false,
             lastRefresh: null,
@@ -331,11 +335,11 @@
 
     // will find the controller based on the dom-element
     $2sxc.autoFind = function(domElement) {
-        var match, clss = $(domElement).closest(".DnnModule")[0].className.split(/\s+/);
-        for (var c = 0; c < clss.length; c++)
-            if (match = clss[c].match(/^DnnModule-([0-9]+)$/))
-                return $2sxc(Number(match[1]));
-        return null;
+        var containerTag = $(domElement).closest(".sc-content-block")[0]; 
+        if (!containerTag) return null;
+        var iid = containerTag.getAttribute("data-cb-iid"), cbid = containerTag.getAttribute("data-cb-id");
+        if (!iid || !cbid) return null;
+        return $2sxc(iid, cbid);
     }
 
     // upgrade command

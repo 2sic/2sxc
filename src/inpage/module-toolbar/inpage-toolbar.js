@@ -4,29 +4,40 @@
 
 
 $2sxc.getManageController = function (id, sxc) {
+    function getContentBlockTag(sxci) { return $("div[data-cb-id='" + sxci.cbid + "']")[0]; }
+    function getContextInfo(sxci) { return $.parseJSON(getContentBlockTag(sxci).getAttribute("data-edit-context")); }
+
+    var editContext = getContextInfo(sxc),
+        ecEnv = editContext.Environment,
+        ecCb = editContext.ContentBlock,
+        ecCg = editContext.ContentGroup,
+        ecLang = editContext.Language;
+
     var moduleElement = $(".DnnModule-" + id);
     var manageInfo = $.parseJSON(moduleElement.find("div[data-2sxc]").attr("data-2sxc")).manage;
-    var sxcGlobals = $.parseJSON(moduleElement.find("div[data-2sxc-globals]").attr("data-2sxc-globals"));
-    manageInfo.ngDialogUrl = manageInfo.applicationRoot + "desktopmodules/tosic_sexycontent/dist/dnn/ui.html?sxcver="
-        + manageInfo.config.version;
+    //var sxcGlobals = $.parseJSON(moduleElement.find("div[data-2sxc-globals]").attr("data-2sxc-globals"));
+
+    var ngDialogUrl = ecEnv.WebsiteUrl /*manageInfo.applicationRoot */ + "desktopmodules/tosic_sexycontent/dist/dnn/ui.html?sxcver="
+        + ecEnv.SxcVersion; // manageInfo.config.version;
 
     // assemble all parameters needed for the dialogs if we open anything
-    manageInfo.ngDialogParams = {
-        zoneId: manageInfo.zoneId,
-        appId: manageInfo.appId,
-        tid: manageInfo.config.tabId,
-        mid: manageInfo.config.moduleId,
-        lang: manageInfo.lang,
-        langpri: manageInfo.langPrimary,
-        langs: JSON.stringify(manageInfo.languages),
-        portalroot: sxcGlobals.PortalRoot,
-        websiteroot: manageInfo.applicationRoot,
-        user: manageInfo.user,
+    var ngDialogParams = {
+        zoneId: ecCg.ZoneId,// manageInfo.zoneId,
+        appId: ecCg.AppId,// manageInfo.appId,
+        tid: ecEnv.PageId,// manageInfo.config.tabId,
+        mid: ecEnv.InstanceId, // manageInfo.config.moduleId,
+        lang: ecLang.CURRENT,// manageInfo.lang,
+        langpri: ecLang.Primary, // manageInfo.langPrimary,
+        langs:  JSON.stringify(ecLang.All),//manageInfo.languages),
+        portalroot: ecEnv.SxcRootUrl,//  sxcGlobals.PortalRoot,
+        websiteroot: ecEnv.WebsiteUrl,//  manageInfo.applicationRoot,
+        user: { canDesign: editContext.User.CanDesign } ,// manageInfo.user,
         // note that the app-root doesn't exist when opening "manage-app"
-        approot: (manageInfo.config && manageInfo.config.appPath) ? manageInfo.config.appPath : null // this is the only value which doesn't have a slash by default
+        approot: ecCg.AppUrl || null // this is the only value which doesn't have a slash by default
+        // old approot: (manageInfo.config && manageInfo.config.appPath) ? manageInfo.config.appPath : null // this is the only value which doesn't have a slash by default
     };
 
-    manageInfo.config.contentType = manageInfo.config.contentType || manageInfo.config.attributeSetName;
+    manageInfo.config.contentType = manageInfo.config.contentType || manageInfo.config.attributeSetName; // still support the old name...
 
     var isDebug = $2sxc.urlParams.get("debug") ? "&debug=true" : "",
         actionButtonsConf = $2sxc._actions.create(manageInfo);
@@ -95,8 +106,8 @@ $2sxc.getManageController = function (id, sxc) {
                     // if (cmd.items.length)
                         cmd.params.items = JSON.stringify(cmd.items);
 
-                    return manageInfo.ngDialogUrl
-                        + "#" + $.param(manageInfo.ngDialogParams)
+                    return ngDialogUrl
+                        + "#" + $.param(ngDialogParams)
                         + "&" + $.param(cmd.params)
                         + isDebug;
                     //#endregion
@@ -259,7 +270,7 @@ $2sxc.getManageController = function (id, sxc) {
     };
 
     // attach & open the mini-dashboard iframe
-    if (manageInfo.templateChooserVisible)
+    if (ecCb.ShowTemplatePicker)// manageInfo.templateChooserVisible)
         manage.action({ "action": "layout" });
 
     manage.rootCB = $2sxc.contentBlock(sxc, manage);

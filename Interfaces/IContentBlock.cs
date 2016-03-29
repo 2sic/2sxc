@@ -14,6 +14,7 @@ namespace ToSic.SexyContent.Interfaces
 
         bool ParentIsEntity { get; }   // alternative is module
         int ParentId { get; }
+        string ContentBlockId { get; }
         string ParentFieldName { get; }
         int ParentFieldSortOrder { get; }
 
