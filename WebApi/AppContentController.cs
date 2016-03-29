@@ -306,7 +306,7 @@ namespace ToSic.SexyContent.WebApi
 
             // Check that this ID is actually of this content-type,
             // this throws an error if it's not the correct type
-            IEntity itm = _entitiesController.GetEntityOrThrowError(contentType, id);
+            IEntity itm = _entitiesController.GetEntityOrThrowError(contentType, id, appId: App.AppId);
 
 
             PerformSecurityCheck(contentType, PermissionGrant.Update, true, itm);
