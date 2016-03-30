@@ -1,6 +1,30 @@
 ﻿(function() {
-    $2sxc._toolbarManager = function(id, allActions, toolbarConfig) {
+    $2sxc._toolbarManager = function (sxc, editContext) {
+        var id = sxc.id, cbid = sxc.cbid;
+        var actionParams = {
+            canDesign: editContext.User.CanDesign,
+            templateId: editContext.ContentGroup.TemplateId,
+            contentTypeId: editContext.ContentGroup.ContentTypeName
+        };
+
+        var toolbarConfig = {
+            portalId: editContext.Environment.WebsiteId,
+            tabId: editContext.Environment.PageId,
+            moduleId: editContext.Environment.InstanceId,
+            version: editContext.Environment.SxcVersion,
+
+            contentGroupId: editContext.ContentGroup.Guid,
+            cbIsEntity: editContext.ContentBlock.IsEntity,
+            cbId: editContext.ContentBlock.Id,
+            appPath: editContext.ContentGroup.AppUrl,
+            isList: editContext.ContentGroup.IsList,
+        };
+
+        var allActions = $2sxc._actions.create(actionParams);
+
         var tb = {
+            config: toolbarConfig,
+            actions: allActions,
             // Generate a button (an <a>-tag) for one specific toolbar-action. 
             // Expects: settings, an object containing the specs for the expected buton
             getButton: function(btnSettings) {
@@ -29,7 +53,7 @@
 
                 var button = $("<a />", {
                     'class': "sc-" + btnSettings.action + " " + showClasses + (conf.dynamicClasses ? " " + conf.dynamicClasses(btnSettings) : ""),
-                    'onclick': "javascript:$2sxc(" + id + ").manage.action(" + JSON.stringify(btnSettings) + ", event);",
+                    'onclick': "javascript:$2sxc(" + id + ", " + cbid + ").manage.action(" + JSON.stringify(btnSettings) + ", event);",
                     'title': $2sxc.translate(conf.title)
                 });
 
@@ -86,7 +110,8 @@
             _processToolbars: function() {
                 $(".sc-menu[data-toolbar]", $(".DnnModule-" + id)).each(function() {
                     var toolbarSettings = $.parseJSON($(this).attr("data-toolbar"));
-                    $(this).replaceWith($2sxc(id).manage.getToolbar(toolbarSettings));
+                    var toolbarTag = $(this);
+                    toolbarTag.replaceWith($2sxc(toolbarTag).manage.getToolbar(toolbarSettings));
                 });
             },
 

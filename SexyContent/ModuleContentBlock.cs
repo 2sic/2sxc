@@ -91,7 +91,7 @@ namespace ToSic.SexyContent
                 // nothing necessary, happens on the property
 
                 // maybe ensure that App.Data is ready?
-                // App.InitData(...)?
+                App.InitData(SxcInstance.Environment.Permissions.UserMayEditContent, Data.ConfigurationProvider);
             }
         }
 

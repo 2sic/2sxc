@@ -12,6 +12,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Api;
 using ToSic.SexyContent.Engines;
+using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Internal;
 using ToSic.SexyContent.WebApi;
 using Assembly = System.Reflection.Assembly;
@@ -108,7 +109,7 @@ namespace ToSic.SexyContent.ViewAPI
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         // had to disable this, as most requests now come from a lone page [ValidateAntiForgeryToken]
-        public HttpResponseMessage RenderTemplate([FromUri] int templateId, [FromUri] string lang)
+        public HttpResponseMessage RenderTemplate([FromUri] int templateId, [FromUri] string lang, bool cbIsEntity = false, int cbid = 0)
         {
             try
             {
@@ -122,36 +123,22 @@ namespace ToSic.SexyContent.ViewAPI
                     // Fallback / ignore if the language specified has not been found
                     catch (System.Globalization.CultureNotFoundException) { }
 
+                IContentBlock cbToRender;
+                if (!cbIsEntity)
+                {
+                    cbToRender = SxcContext.ContentBlock;
+                }
+                else
+                {
+                    cbid = Math.Abs(cbid); // remove any "-" in case it has one, which is used to mark an entity-content-block
+                    var cbDef = SxcContext.App.Data["Default"].List[cbid];  // get the content-block definition
+                    cbToRender = new EntityContentBlock(SxcContext.ContentBlock, cbDef);
+                }
+                var template = cbToRender.App.TemplateManager.GetTemplate(templateId);
+                cbToRender.SxcInstance.Template = template;
 
-                var template = SxcContext.AppTemplates.GetTemplate(templateId);
-                SxcContext.Template = template;
-                var engine = SxcContext.GetRenderingEngine(InstancePurposes.WebView);
+                var rendered = cbToRender.SxcInstance.Render().ToString();
 
-                #region 2016-03-01 old code
-                //var engine = EngineFactory.CreateEngine(template);
-                //    // before 2016-02-27 2dm: 
-                //    //var dataSource =
-                //    //	(ViewDataSource)
-                //    //		Sexy.GetViewDataSource(ActiveModule.ModuleID, SecurityHelpers.HasEditPermission(ActiveModule), template);
-                //var dataSource = SxcContext.DataSource; //(ViewDataSource) ViewDataSource.ForModule(ActiveModule.ModuleID, SecurityHelpers.HasEditPermission(ActiveModule), template, SxcContext);
-                //engine.Init(template, SxcContext.App, ActiveModule, dataSource, InstancePurposes.WebView, SxcContext);
-                //engine.CustomizeData();
-
-                //if (template.ContentTypeStaticName != "" && template.ContentDemoEntity == null &&
-                //    !SxcContext.DataSource["Default"].List.Any()) // .Count == 0)
-                //{
-                //    var toolbar = "<ul class='sc-menu' data-toolbar='" +
-                //                  JsonConvert.SerializeObject(new { sortOrder = 0, useModuleList = true, action = "edit" }) + "'></ul>";
-                //    return new HttpResponseMessage(HttpStatusCode.OK)
-                //    {
-                //        Content =
-                //        new StringContent("<div class='dnnFormMessage dnnFormInfo'>No demo item exists for the selected template. " +
-                //                          toolbar + "</div>")
-                //    };
-                //}
-                #endregion
-
-                string rendered = engine.Render();
                 return new HttpResponseMessage(HttpStatusCode.OK)
                 {
                     Content = new StringContent(rendered, Encoding.UTF8, "text/plain")

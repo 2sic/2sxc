@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using DotNetNuke.Entities.Portals;
+﻿using DotNetNuke.Entities.Portals;
 using ToSic.SexyContent.DataSources;
 
 namespace ToSic.SexyContent.Interfaces
@@ -14,6 +10,7 @@ namespace ToSic.SexyContent.Interfaces
 
         bool ParentIsEntity { get; }   // alternative is module
         int ParentId { get; }
+
         int ContentBlockId { get; }
         string ParentFieldName { get; }
         int ParentFieldSortOrder { get; }

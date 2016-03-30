@@ -6,15 +6,17 @@ $(document).ready(function () {
         e.stopPropagation();
     });
 
-    //var modules = $(".DnnModule-2sxc .Mod2sxcC[data-2sxc], .DnnModule-2sxc-app .Mod2sxcappC[data-2sxc]");
-    var modules = $("div[data-2sxc]");
+    var modules = $("div[data-edit-context]");
+
+    if (console) console.log("found " + modules.length + " content blocks");
 
     // Ensure the _processToolbar is called after the next event cycle to make sure that the Angular app (template selector) is loaded first
     window.setTimeout(function () {
         modules.each(function () {
             try {
-                var moduleId = $(this).data("2sxc").moduleId;
-                $2sxc(moduleId).manage._processToolbars();
+                var moduleId = $(this).data("cb-instance");
+                var cbid = $(this).data("cb-id");
+                $2sxc(moduleId, cbid).manage.toolbar._processToolbars();
             } catch (e) { // Make sure that if one app breaks, others continue to work
                 if (console && console.error)
                     console.error(e);

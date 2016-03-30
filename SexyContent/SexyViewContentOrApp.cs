@@ -56,8 +56,8 @@ namespace ToSic.SexyContent
                 renderHelp.RegisterClientDependencies(Page, string.IsNullOrEmpty(Request.QueryString["debug"]));
 
                 // add instance specific infos to the html-tag
-                var clientInfos = renderHelp.InfosForTheClientScripts();
-                ((ModuleHost) Parent).Attributes.Add("data-2sxc", JsonConvert.SerializeObject(clientInfos));
+                //var clientInfos = renderHelp.InfosForTheClientScripts();
+                //((ModuleHost) Parent).Attributes.Add("data-2sxc", JsonConvert.SerializeObject(clientInfos));
 
                 // Add some required variables to module host div which are general global 2sxc-infos
                 //var globalInfos = renderHelp.RegisterGlobalsAttribute();

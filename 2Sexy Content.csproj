@@ -413,6 +413,7 @@
     <Content Include="grunt-tasks\i18n.gruntfile.js" />
     <Content Include="gruntfile.js" />
     <Content Include="js\iframe.html" />
+    <Content Include="src\inpage\2sxc._toolbarManager.js" />
     <Content Include="src\inpage\iframe.js" />
     <Content Include="SexyContent\ImportExport\Instructions\License.txt" />
     <Content Include="SqlDataProvider\07.03.01.SqlDataProvider" />
@@ -438,7 +439,7 @@
     <Content Include="src\sxc-edit\adam\dropzone.directive.js" />
     <Content Include="src\sxc-edit\adam\_adam.js" />
     <Content Include="src\inpage\dnn-menu-helper\dnn-inpage-edit.js" />
-    <Content Include="src\inpage\module-toolbar\inpage-toolbar.js" />
+    <Content Include="src\inpage\2sxc.manageController.js" />
     <Content Include="src\inpage\module-toolbar\toolbar-bootstrapper.js" />
     <Content Include="src\inpage-dialogs\template-selector\moduleService.js" />
     <Content Include="src\inpage-dialogs\template-selector\2sxc.view_app.js" />
@@ -503,6 +504,8 @@
     <Content Include="SqlDataProvider\08.03.02.SqlDataProvider" />
     <Content Include="src\inpage\2sxc._lib.js" />
     <Content Include="src\inpage\2sxc.contentBlock.js" />
+    <Content Include="src\inpage\2sxc.translate.js" />
+    <Content Include="src\inpage\2sxc._contentManagementCommands.js" />
     <None Include="src\sxc-develop\source-editor\README.md" />
     <Content Include="src\sxc-develop\source-editor\toArray-filter.js" />
     <Content Include="src\sxc-admin\templates\edit.html" />

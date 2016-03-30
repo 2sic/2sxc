@@ -69,7 +69,7 @@ $2sxc.contentBlock = function(sxc, manage) {
             cb.loading++;
             return sxc.webApi.get({
                     url: "view/module/rendertemplate",
-                    params: { templateId: templateId, lang: lang },
+                    params: { templateId: templateId, lang: lang, cbisentity: editContext.ContentBlock.IsEntity, cbid: editContext.ContentBlock.Id },
                     dataType: "html"
                 })
                 .then(function(response) {

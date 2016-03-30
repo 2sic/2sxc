@@ -238,7 +238,7 @@
         };
 
         // add manage property, but not within initializer, because inside the manage-initializer it may reference 2sxc again
-        controller.manage = $2sxc.getManageController ? $2sxc.getManageController(id, controller) : null,
+        controller.manage = $2sxc.getManageController ? $2sxc.getManageController(controller) : null,
 
         // Make sure back-reference to controller is set
         controller.data.controller = controller;

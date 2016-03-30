@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.UI;
-using DotNetNuke.Common;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
 using DotNetNuke.Web.Client.ClientResourceManagement;
+using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.Environment.Dnn7
@@ -15,15 +15,15 @@ namespace ToSic.SexyContent.Environment.Dnn7
     {
         private SxcInstance _sxcInstance;
         private PortalSettings PortalSettings;
-        private int TabId;
-        private int ModuleId;
+        //private int TabId;
+        //private int ModuleId;
         private UserInfo UserInfo;
         private string ApplicationRoot;
         //private ModuleInstanceContext ModuleContext;
         private ModuleInfo ModuleInfo;
 
-        private int? AppId;
-        private bool _usingStoredConfig;
+        //private int? AppId;
+        //private bool _usingStoredConfig;
 
         internal RenderingHelpers(SxcInstance sxc)//, ModuleInfo mi, bool hasStoredConfiguration)//, string appRoot)
         {
@@ -31,77 +31,77 @@ namespace ToSic.SexyContent.Environment.Dnn7
             ModuleInfo = sxc.ModuleInfo;// mi;// mic.Configuration;
             _sxcInstance = sxc;
             PortalSettings = PortalSettings.Current; // mic.PortalSettings;// PortalSettings.Current;
-            TabId = ModuleInfo.TabID;// tabId;
-            ModuleId = ModuleInfo.ModuleID;// modId;
+            //TabId = ModuleInfo.TabID;// tabId;
+            //ModuleId = ModuleInfo.ModuleID;// modId;
             UserInfo = PortalSettings.Current.UserInfo;
             ApplicationRoot = appRoot;
             //ModuleContext = mic;
-            _usingStoredConfig = sxc.ContentBlock.ContentGroupExists;
-            AppId = _sxcInstance.AppId; // hasStoredConfiguration ? sxc.AppId : null;
+            //_usingStoredConfig = sxc.ContentBlock.ContentGroupExists;
+            //AppId = _sxcInstance.AppId; // hasStoredConfiguration ? sxc.AppId : null;
 
 
         }
 
-        internal object InfosForTheClientScripts()
-        {
-            var hasContent = _usingStoredConfig && _sxcInstance.Template != null && _sxcInstance.ContentGroup.Exists;
+        //internal object InfosForTheClientScripts()
+        //{
+        //    var hasContent = _usingStoredConfig && _sxcInstance.Template != null && _sxcInstance.ContentGroup.Exists;
 
-            // minor workaround because the settings in the cache are wrong after using a page template
-            // todo: move this to the content-block or the content-group
-            var tempVisibleStatus = DnnStuffToRefactor.TryToGetReliableSetting(_sxcInstance.ModuleInfo,
-                Settings.SettingsShowTemplateChooser);
-            var templateChooserVisible = bool.Parse(tempVisibleStatus ?? "true");
+        //    // minor workaround because the settings in the cache are wrong after using a page template
+        //    // todo: move this to the content-block or the content-group
+        //    var tempVisibleStatus = DnnStuffToRefactor.TryToGetReliableSetting(_sxcInstance.ModuleInfo,
+        //        Settings.SettingsShowTemplateChooser);
+        //    var templateChooserVisible = bool.Parse(tempVisibleStatus ?? "true");
 
-            var languages =
-                ZoneHelpers.GetCulturesWithActiveState(PortalSettings.PortalId, _sxcInstance.ZoneId.Value)
-                    .Where(c => c.Active)
-                    .Select(c => new { key = c.Code.ToLower(), name = c.Text });
+        //    var languages =
+        //        ZoneHelpers.GetCulturesWithActiveState(PortalSettings.PortalId, _sxcInstance.ZoneId.Value)
+        //            .Where(c => c.Active)
+        //            .Select(c => new { key = c.Code.ToLower(), name = c.Text });
 
-            var priLang = PortalSettings.DefaultLanguage.ToLower(); // primary language 
+        //    var priLang = PortalSettings.DefaultLanguage.ToLower(); // primary language 
 
-            // for now, don't filter by existing languages, this causes side-effects in many cases. 
-            //if (!languages.Where(l => l.key == priLang).Any())
-            //    priLang = "";
+        //    // for now, don't filter by existing languages, this causes side-effects in many cases. 
+        //    //if (!languages.Where(l => l.key == priLang).Any())
+        //    //    priLang = "";
 
-            var clientInfos = new
-            {
-                moduleId = ModuleId, // inst
-                manage = new
-                {
-                    isEditMode = _sxcInstance?.Environment?.Permissions.UserMayEditContent ?? false, // itm level
-                    templateChooserVisible, // cblock... ok
-                    hasContent, // cb ok
-                    isContentApp = _sxcInstance.IsContentApp, // cb
-                    zoneId = _sxcInstance.ZoneId ?? 0, // cb / inst ok
-                    appId = _sxcInstance.AppId,// _usingStoredConfig ? _sxcInstance.AppId : null, // cb ok
-                    isList = _usingStoredConfig && _sxcInstance.ContentGroup.Content.Count > 1, // cb ok
-                    templateId = _sxcInstance.Template?.TemplateId, // cb ok
-                    contentTypeId = _sxcInstance.Template?.ContentTypeStaticName ?? "", // cb / itm ok
-                    config = new
-                    {
-                        portalId = PortalSettings.PortalId, // inst ok
-                        tabId =  TabId, // inst ok
-                        moduleId = ModuleId, // inst ok
-                        contentGroupId = _usingStoredConfig  ? _sxcInstance.ContentGroup.ContentGroupGuid : (Guid?)null, // cb ok
-                        dialogUrl = Globals.NavigateURL(TabId), // syst unused?
-                        appPath = _usingStoredConfig ? _sxcInstance.App.Path + "/" : null, // cb ok
-                        isList = _sxcInstance.Template?.UseForList ?? false, // cb ok
-                        version = Settings.Version.ToString()  // syst ok
-                    },
-                    user = new // ok
-                    {
-                        canDesign = SecurityHelpers.IsInSexyContentDesignersGroup(UserInfo), // syst / inst / cb ok
-                        // will be true for admins or for people in the designers-group
-                        canDevelop = UserInfo.IsSuperUser // will be true for host-users, false for all others // syst / inst ok
-                    },
-                    applicationRoot = ApplicationRoot,// cb ok
-                    lang = PortalSettings.CultureCode.ToLower(), // syst ok
-                    langPrimary = priLang, // syst ok
-                    languages // syst ok
-                }
-            };
-            return clientInfos;
-        }
+        //    var clientInfos = new
+        //    {
+        //        moduleId = ModuleId, // inst
+        //        manage = new
+        //        {
+        //            isEditMode = _sxcInstance?.Environment?.Permissions.UserMayEditContent ?? false, // itm level
+        //            templateChooserVisible, // cblock... ok
+        //            hasContent, // cb ok
+        //            isContentApp = _sxcInstance.IsContentApp, // cb
+        //            zoneId = _sxcInstance.ZoneId ?? 0, // cb / inst ok
+        //            appId = _sxcInstance.AppId,// _usingStoredConfig ? _sxcInstance.AppId : null, // cb ok
+        //            isList = _usingStoredConfig && _sxcInstance.ContentGroup.Content.Count > 1, // cb ok
+        //            templateId = _sxcInstance.Template?.TemplateId, // cb ok
+        //            contentTypeId = _sxcInstance.Template?.ContentTypeStaticName ?? "", // cb / itm ok
+        //            config = new
+        //            {
+        //                portalId = PortalSettings.PortalId, // inst ok
+        //                tabId =  TabId, // inst ok
+        //                moduleId = ModuleId, // inst ok
+        //                contentGroupId = _usingStoredConfig  ? _sxcInstance.ContentGroup.ContentGroupGuid : (Guid?)null, // cb ok
+        //                dialogUrl = Globals.NavigateURL(TabId), // syst unused?
+        //                appPath = _usingStoredConfig ? _sxcInstance.App.Path + "/" : null, // cb ok
+        //                isList = _sxcInstance.Template?.UseForList ?? false, // cb ok
+        //                version = Settings.Version.ToString()  // syst ok
+        //            },
+        //            user = new // ok
+        //            {
+        //                canDesign = SecurityHelpers.IsInSexyContentDesignersGroup(UserInfo), // syst / inst / cb ok
+        //                // will be true for admins or for people in the designers-group
+        //                canDevelop = UserInfo.IsSuperUser // will be true for host-users, false for all others // syst / inst ok
+        //            },
+        //            applicationRoot = ApplicationRoot,// cb ok
+        //            lang = PortalSettings.CultureCode.ToLower(), // syst ok
+        //            langPrimary = priLang, // syst ok
+        //            languages // syst ok
+        //        }
+        //    };
+        //    return clientInfos;
+        //}
 
 
         internal void RegisterClientDependencies(Page Page, bool useDebug)
@@ -203,10 +203,11 @@ namespace ToSic.SexyContent.Environment.Dnn7
             Language = new ClientInfosLanguages(ps, zoneId);
             User = new ClientInfosUser(uinfo);
 
-            var tempVisibleStatus = DnnStuffToRefactor.TryToGetReliableSetting(sxc.ModuleInfo,
-                Settings.SettingsShowTemplateChooser);
-            var templateChooserVisible = bool.Parse(tempVisibleStatus ?? "true");
-            ContentBlock = new ClientInfoContentBlock(templateChooserVisible, mic.ModuleID, null, 0);
+            // todo: tempVisibleStatus should come from the ContentBlock...
+            //var tempVisibleStatus = DnnStuffToRefactor.TryToGetReliableSetting(sxc.ModuleInfo,
+            //    Settings.SettingsShowTemplateChooser);
+            //var templateChooserVisible = bool.Parse(tempVisibleStatus ?? "true");
+            ContentBlock = new ClientInfoContentBlock(sxc.ContentBlock, /*templateChooserVisible, mic.ModuleID,*/ null, 0);
             ContentGroup = new ClientInfoContentGroup(sxc, isCreated);
         }
     }
@@ -284,17 +285,18 @@ namespace ToSic.SexyContent.Environment.Dnn7
     {
         public bool ShowTemplatePicker;
         // public bool GroupIsCreated;
-        public bool ParentIsEntity;
-        public int ParentId;
+        public bool IsEntity;
+        // public int RootId;
+        public int Id;
         public string ParentFieldName;
         public int ParentFieldSortOrder;
 
-        public ClientInfoContentBlock(bool showSelector, /*bool groupIsCreated,*/ int parentId, string parentFieldName, int indexInField)
+        internal ClientInfoContentBlock(IContentBlock contentBlock, string parentFieldName, int indexInField)
         {
-            ShowTemplatePicker = showSelector;
+            ShowTemplatePicker = contentBlock.ShowTemplateChooser;
             //GroupIsCreated = groupIsCreated;
-            ParentIsEntity = false;
-            ParentId = parentId;
+            IsEntity = contentBlock.ParentIsEntity;
+            Id = contentBlock.ContentBlockId;
             ParentFieldName = parentFieldName;
             ParentFieldSortOrder = indexInField;
         }

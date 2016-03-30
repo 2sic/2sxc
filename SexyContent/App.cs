@@ -32,6 +32,7 @@ namespace ToSic.SexyContent
         public dynamic Settings { get; internal set; }
         public dynamic Resources { get; internal set; } 
         private IValueCollectionProvider ConfigurationProvider { get; set; }
+        private bool showDraftsInData { get; set; }
 
         #region App-Level TemplateManager, ContentGroupManager, EavContext
         private TemplateManager _templateManager;
@@ -141,23 +142,30 @@ namespace ToSic.SexyContent
         internal void InitData(bool showDrafts, IValueCollectionProvider configurationValues)
         {
             ConfigurationProvider = configurationValues;
+            showDraftsInData = showDrafts;
+        }
 
+        private void ConfigureDataOnDemand()
+        {
+            if(ConfigurationProvider == null)
+                throw new Exception("Cannot provide Data for the object App as crucial information is missing. Please call InitData first to provide this data.");
             // ToDo: Remove this as soon as App.Data getter on App class is fixed #1 and #2
             if (_data == null)
             {
                 // ModulePermissionController does not work when indexing, return false for search
-                var initialSource = DataSource.GetInitialDataSource(ZoneId, AppId, showDrafts);
+                var initialSource = DataSource.GetInitialDataSource(ZoneId, AppId, showDraftsInData);
 
                 // todo: probably use th efull configuration provider from function params, not from initial source?
                 _data = DataSource.GetDataSource<DataSources.App>(initialSource.ZoneId,
                     initialSource.AppId, initialSource, initialSource.ConfigurationProvider);
                 var defaultLanguage = "";
-                var languagesActive = ZoneHelpers.GetCulturesWithActiveState(OwnerPortalSettings.PortalId, ZoneId).Any(c => c.Active);
+                var languagesActive =
+                    ZoneHelpers.GetCulturesWithActiveState(OwnerPortalSettings.PortalId, ZoneId).Any(c => c.Active);
                 if (languagesActive)
                     defaultLanguage = OwnerPortalSettings.DefaultLanguage;
                 var xData = Data as DataSources.App;
                 xData.DefaultLanguage = defaultLanguage;
-                xData.CurrentUserName = Environment.Dnn7.UserIdentity.CurrentUserIdentityToken/*OwnerPS.UserInfo.Username*/;
+                xData.CurrentUserName = Environment.Dnn7.UserIdentity.CurrentUserIdentityToken /*OwnerPS.UserInfo.Username*/;
             }
         }
 
@@ -184,8 +192,8 @@ namespace ToSic.SexyContent
         {
             get
             {
-                if(_data == null)
-                    throw new Exception("Can't access data yet, call InitData first to ensure the context is known.");
+                if (_data == null)
+                        ConfigureDataOnDemand();
                 return _data;
             }
         }
