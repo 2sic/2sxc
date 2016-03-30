@@ -10,7 +10,6 @@
         // neutralize the id from old "34" format to the new "35-mod:353" format
         var cacheKey = id + ":" + cbid;
         if (!cbid) cbid = id;
-        //    cbid = "mod:" + id + "-mod: " + id;
 
         if (!$2sxc._data[cacheKey])
             $2sxc._data[cacheKey] = {};
@@ -123,6 +122,10 @@
             manage: null, // initialize correctly later on
             isEditMode: function () {
                 return controller.manage && controller.manage.isEditMode();
+            },
+            recreate: function() {
+                delete $2sxc._controllers[cacheKey];    // clear cache
+                return $2sxc(controller.id, controller.cbid);   // generate new
             },
             webApi: {
                 get: function (settings, params, data, preventAutoFail) {

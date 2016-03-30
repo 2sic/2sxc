@@ -5,7 +5,7 @@ using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Internal;
 
-namespace ToSic.SexyContent
+namespace ToSic.SexyContent.ContentBlock
 {
     internal class ModuleContentBlock: IContentBlock
     {

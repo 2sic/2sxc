@@ -1,7 +1,7 @@
 ﻿
 (function(){
-$2sxc._contentManagementCommands = function (id) {
-    var moduleElement = $(".DnnModule-" + id);
+$2sxc._contentManagementCommands = function (sxc, targetTag) {
+    // var moduleElement = $(".DnnModule-" + id);
 
     var cmc = {
         editManager: "must-be-added-after-initialization",
@@ -104,7 +104,7 @@ $2sxc._contentManagementCommands = function (id) {
                 return window.open(link);
             else {
                 if (settings.inlineWindow)
-                    return $2sxc.dialog.create(id, moduleElement, link, callback);
+                    return $2sxc._dialog.create(sxc, targetTag, link, callback);
                 else
                     return $2sxc.totalPopup.open(link, callback);
             }

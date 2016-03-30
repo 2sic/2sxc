@@ -1,6 +1,6 @@
 ﻿(function () {
 
-    var diag = $2sxc.dialog = {
+    var diag = $2sxc._dialog = {
         mode: "iframe",
         templates: {
             inline: "<iframe width='100%' height='200px' src='{{url}}'"
@@ -11,16 +11,11 @@
         }
     };
 
-    diag.create = function (iid, block, url, closeCallback) {
-        block = $(block);
-
-        var ifrm = $(diag.templates.inline.replace("{{url}}", url));
-
-        var diagBox = ifrm[0];
+    diag.create = function (sxc, tag, url, closeCallback) {
+        var diagBox = $(diag.templates.inline.replace("{{url}}", url))[0];    // build iframe tag
 
         diagBox.closeCallback = closeCallback;
-
-        diagBox.sxc = $2sxc(iid);
+        diagBox.sxc = sxc;
 
         diagBox.getManageInfo = function() {
             return diagBox.sxc.manage.dialogParameters;
@@ -30,6 +25,7 @@
             return diagBox.vm; // created by inner code
         };
 
+        // todo: sync sizes
         diagBox.syncHeight = function (height) {
             console.log("tried resize to " + height);
             diagBox.style.height = height + "px";
@@ -44,7 +40,7 @@
             diagBox.style.display = "none";
         };
 
-        block.prepend(diagBox);
+        $(tag).prepend(diagBox);
 
         return diagBox;
     };

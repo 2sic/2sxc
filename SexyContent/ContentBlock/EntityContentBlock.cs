@@ -1,12 +1,11 @@
 ﻿using System;
-using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Internal;
 
-namespace ToSic.SexyContent
+namespace ToSic.SexyContent.ContentBlock
 {
     internal class EntityContentBlock: IContentBlock
     {

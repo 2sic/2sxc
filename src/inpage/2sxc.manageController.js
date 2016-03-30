@@ -15,8 +15,8 @@
 
     $2sxc.getManageController = function (sxc) {
         var id = sxc.id, cbid = sxc.cbid;
-        var cb = getContentBlockTag(sxc);
-        var ec = getContextInfo(cb);
+        var cbTag = getContentBlockTag(sxc);
+        var ec = getContextInfo(cbTag);
 
         // assemble all parameters needed for the dialogs if we open anything
         var ngDialogParams = {
@@ -42,7 +42,7 @@
             dialogParameters: ngDialogParams, // used for various dialogs
             toolbarConfig: toolsAndButtons.config, // used to configure buttons / toolbars
             editContext: ec, // metadata necessary to know what/how to edit
-            commands: $2sxc._contentManagementCommands(id),
+            commands: $2sxc._contentManagementCommands(sxc, cbTag),
 
 
             // Perform a toolbar button-action - basically get the configuration and execute it's action
@@ -78,7 +78,7 @@
 
         // finish init of sub-objects
         editManager.commands.init(editManager);
-        editManager.rootCB = $2sxc.contentBlock(sxc, editManager);
+        editManager.rootCB = $2sxc.contentBlock(sxc, editManager, cbTag);
 
         // attach & open the mini-dashboard iframe
         if (ec.ContentBlock.ShowTemplatePicker)

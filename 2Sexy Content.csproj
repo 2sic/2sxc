@@ -248,9 +248,11 @@
     <Compile Include="Interfaces\IApp.cs" />
     <Compile Include="Interfaces\IAppData.cs" />
     <Compile Include="Interfaces\IContentBlock.cs" />
+    <Compile Include="SexyContent\ContentBlock\ContentBlockManagerBase.cs" />
+    <Compile Include="SexyContent\ContentBlock\ModuleContentBlockManager.cs" />
     <Compile Include="SexyContent\Internal\AppManagement.cs" />
-    <Compile Include="SexyContent\EntityContentBlock.cs" />
-    <Compile Include="SexyContent\ModuleContentBlock.cs" />
+    <Compile Include="SexyContent\ContentBlock\EntityContentBlock.cs" />
+    <Compile Include="SexyContent\ContentBlock\ModuleContentBlock.cs" />
     <Compile Include="SexyContent\ContentGroup.cs" />
     <Compile Include="SexyContent\ContentGroupManager.cs" />
     <Compile Include="SexyContent\DataSources\ConfigurationProvider.cs" />
@@ -414,7 +416,7 @@
     <Content Include="gruntfile.js" />
     <Content Include="js\iframe.html" />
     <Content Include="src\inpage\2sxc._toolbarManager.js" />
-    <Content Include="src\inpage\iframe.js" />
+    <Content Include="src\inpage\dialog.js" />
     <Content Include="SexyContent\ImportExport\Instructions\License.txt" />
     <Content Include="SqlDataProvider\07.03.01.SqlDataProvider" />
     <Content Include="SqlDataProvider\07.03.03.SqlDataProvider" />

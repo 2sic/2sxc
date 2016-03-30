@@ -32,9 +32,8 @@
         var enableTools = actionParams.canDesign;
 
         var act = {
-            "dash-view": createActionConfig("dash", "Dashboard", "", "", true, {
-                inlineWindow: true
-            }),
+            // show the basic dashboard which allows view-changing
+            "dash-view": createActionConfig("dash", "Dashboard", "", "", true, { inlineWindow: true }),
             'edit': createActionConfig("edit", "Edit", "pencil", "default", false, { params: { mode: "edit" } }),
             // new is a dialog to add something, and will not add if cancelled
             // new can also be used for mini-toolbars which just add an entity not attached to a module

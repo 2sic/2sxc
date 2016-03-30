@@ -2,6 +2,7 @@
 using System.Web;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Web.Api;
+using ToSic.SexyContent.ContentBlock;
 
 namespace ToSic.SexyContent.WebApi
 {

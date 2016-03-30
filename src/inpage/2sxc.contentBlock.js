@@ -9,14 +9,10 @@
  * it should be able to render itself
  */
 
-$2sxc.contentBlock = function(sxc, manage) {
-	var viewPortSelector = ".DnnModule-" + sxc.id + " .sc-viewport";
-
+$2sxc.contentBlock = function(sxc, manage, cbTag) {
 	//#region loads of old stuff, should be cleaned, mostly just copied from the angulare coe
 
 	var cViewWithoutContent = "_LayoutElement"; // needed to differentiate the "select item" from the "empty-is-selected" which are both empty
-
-    // var manageInfo = manage._manageInfo; // todo: not nice dependecy on internal variable
     var editContext = manage.editContext;
     var ctid = (editContext.ContentGroup.ContentTypeName === "" && editContext.ContentGroup.TemplateId !== null)
         ? cViewWithoutContent // has template but no content, use placeholder
@@ -26,19 +22,20 @@ $2sxc.contentBlock = function(sxc, manage) {
 
     var cb = {
         sxc: sxc,
-        loading: 0, // counter for multiple ajax running, purpose not clear...
         editContext: editContext,    // todo: not ideal depedency, but ok...
-        // minfo: manageInfo, // todo: not nice dependecy; will also need to reload...
-        templateId: editContext.ContentGroup.TemplateId,// manageInfo.templateId,
-        undoTemplateId: editContext.ContentGroup.TemplateId, //manageInfo.templateId,
+
+        templateId: editContext.ContentGroup.TemplateId,
+        undoTemplateId: editContext.ContentGroup.TemplateId, 
         contentTypeId: ctid,
         undoContentTypeId: ctid,
 
         // ajax update/replace the content of the content-block
         replace: function(newContent) {
             try {
-                $(viewPortSelector).html(newContent);
-                manage._processToolbars();
+                $(cbTag).html(newContent);
+                // create new sxc-object
+                cb.sxc = cb.sxc.recreate();
+                cb.sxc.manage.toolbar._processToolbars(); // sub-optimal deep dependency
             } catch (e) {
                 console.log("Error while rendering template:");
                 console.log(e);
@@ -62,63 +59,57 @@ $2sxc.contentBlock = function(sxc, manage) {
             // remember for future persist/save
             cb.templateId = templateId;
 
-            console.log("new loading");
-            var lang = cb.editContext.Language.Current; //.minfo.lang;
+            var lang = cb.editContext.Language.Current; 
 
             // ajax-call, then replace
-            cb.loading++;
-            return sxc.webApi.get({
+            return cb.sxc.webApi.get({
                     url: "view/module/rendertemplate",
                     params: { templateId: templateId, lang: lang, cbisentity: editContext.ContentBlock.IsEntity, cbid: editContext.ContentBlock.Id },
                     dataType: "html"
                 })
-                .then(function(response) {
-                    cb.replace(response);
-                    cb.loading--;
-                });
+                .then(cb.replace);
         },
-        refresh: function() { cb.reload(); },
 
         // set a content-item in this block to published, then reload
         publish: function(part, sortOrder) {
-            return sxc.webApi.get({
+            return cb.sxc.webApi.get({
                 url: "view/module/publish",
                 params: { part: part, sortOrder: sortOrder }
-            }).then(cb.refresh);
+            }).then(cb.reload);
         },
 
         // remove an item from a list, then reload
         removeFromList: function(sortOrder) {
-            return sxc.webApi.get({
+            return cb.sxc.webApi.get({
                 url: "view/module/removefromlist",
                 params: { sortOrder: sortOrder }
-            }).then(cb.refresh);
+            }).then(cb.reload);
         },
 
         // change the order of an item in a list, then reload
         changeOrder: function(sortOrder, destinationSortOrder) {
-            return sxc.webApi.get({
+            return cb.sxc.webApi.get({
                 url: "view/module/changeorder",
                 params: { sortOrder: sortOrder, destinationSortOrder: destinationSortOrder }
-            }).then(cb.refresh);
+            }).then(cb.reload);
         },
 
         setTemplateChooserState: function (state) {
-        	return sxc.webApi.get({
+        	return cb.sxc.webApi.get({
         		url: "View/Module/SetTemplateChooserState",
         		params: { state: state }
         	});
         },
 
         addItem: function(sortOrder) {
-        	return sxc.webApi.get({
+        	return cb.sxc.webApi.get({
         		url: "View/Module/AddItem",
         		params: { sortOrder: sortOrder }
-        	}).then(cb.refresh);
+        	}).then(cb.reload);
         },
 
         _saveTemplate: function (templateId, forceCreateContentGroup, newTemplateChooserState) {
-            return sxc.webApi.get({
+            return cb.sxc.webApi.get({
                 url: "View/Module/SaveTemplateId",
                 params: {
                     templateId: templateId,

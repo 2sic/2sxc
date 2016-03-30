@@ -32,9 +32,8 @@
         var enableTools = actionParams.canDesign;
 
         var act = {
-            "dash-view": createActionConfig("dash", "Dashboard", "", "", true, {
-                inlineWindow: true
-            }),
+            // show the basic dashboard which allows view-changing
+            "dash-view": createActionConfig("dash", "Dashboard", "", "", true, { inlineWindow: true }),
             'edit': createActionConfig("edit", "Edit", "pencil", "default", false, { params: { mode: "edit" } }),
             // new is a dialog to add something, and will not add if cancelled
             // new can also be used for mini-toolbars which just add an entity not attached to a module
@@ -220,8 +219,8 @@
 
 
 (function(){
-$2sxc._contentManagementCommands = function (id) {
-    var moduleElement = $(".DnnModule-" + id);
+$2sxc._contentManagementCommands = function (sxc, targetTag) {
+    // var moduleElement = $(".DnnModule-" + id);
 
     var cmc = {
         editManager: "must-be-added-after-initialization",
@@ -324,7 +323,7 @@ $2sxc._contentManagementCommands = function (id) {
                 return window.open(link);
             else {
                 if (settings.inlineWindow)
-                    return $2sxc.dialog.create(id, moduleElement, link, callback);
+                    return $2sxc._dialog.create(sxc, targetTag, link, callback);
                 else
                     return $2sxc.totalPopup.open(link, callback);
             }
@@ -484,14 +483,10 @@ $2sxc._contentManagementCommands = function (id) {
  * it should be able to render itself
  */
 
-$2sxc.contentBlock = function(sxc, manage) {
-	var viewPortSelector = ".DnnModule-" + sxc.id + " .sc-viewport";
-
+$2sxc.contentBlock = function(sxc, manage, cbTag) {
 	//#region loads of old stuff, should be cleaned, mostly just copied from the angulare coe
 
 	var cViewWithoutContent = "_LayoutElement"; // needed to differentiate the "select item" from the "empty-is-selected" which are both empty
-
-    // var manageInfo = manage._manageInfo; // todo: not nice dependecy on internal variable
     var editContext = manage.editContext;
     var ctid = (editContext.ContentGroup.ContentTypeName === "" && editContext.ContentGroup.TemplateId !== null)
         ? cViewWithoutContent // has template but no content, use placeholder
@@ -501,19 +496,20 @@ $2sxc.contentBlock = function(sxc, manage) {
 
     var cb = {
         sxc: sxc,
-        loading: 0, // counter for multiple ajax running, purpose not clear...
         editContext: editContext,    // todo: not ideal depedency, but ok...
-        // minfo: manageInfo, // todo: not nice dependecy; will also need to reload...
-        templateId: editContext.ContentGroup.TemplateId,// manageInfo.templateId,
-        undoTemplateId: editContext.ContentGroup.TemplateId, //manageInfo.templateId,
+
+        templateId: editContext.ContentGroup.TemplateId,
+        undoTemplateId: editContext.ContentGroup.TemplateId, 
         contentTypeId: ctid,
         undoContentTypeId: ctid,
 
         // ajax update/replace the content of the content-block
         replace: function(newContent) {
             try {
-                $(viewPortSelector).html(newContent);
-                manage._processToolbars();
+                $(cbTag).html(newContent);
+                // create new sxc-object
+                cb.sxc = cb.sxc.recreate();
+                cb.sxc.manage.toolbar._processToolbars(); // sub-optimal deep dependency
             } catch (e) {
                 console.log("Error while rendering template:");
                 console.log(e);
@@ -537,63 +533,57 @@ $2sxc.contentBlock = function(sxc, manage) {
             // remember for future persist/save
             cb.templateId = templateId;
 
-            console.log("new loading");
-            var lang = cb.editContext.Language.Current; //.minfo.lang;
+            var lang = cb.editContext.Language.Current; 
 
             // ajax-call, then replace
-            cb.loading++;
-            return sxc.webApi.get({
+            return cb.sxc.webApi.get({
                     url: "view/module/rendertemplate",
                     params: { templateId: templateId, lang: lang, cbisentity: editContext.ContentBlock.IsEntity, cbid: editContext.ContentBlock.Id },
                     dataType: "html"
                 })
-                .then(function(response) {
-                    cb.replace(response);
-                    cb.loading--;
-                });
+                .then(cb.replace);
         },
-        refresh: function() { cb.reload(); },
 
         // set a content-item in this block to published, then reload
         publish: function(part, sortOrder) {
-            return sxc.webApi.get({
+            return cb.sxc.webApi.get({
                 url: "view/module/publish",
                 params: { part: part, sortOrder: sortOrder }
-            }).then(cb.refresh);
+            }).then(cb.reload);
         },
 
         // remove an item from a list, then reload
         removeFromList: function(sortOrder) {
-            return sxc.webApi.get({
+            return cb.sxc.webApi.get({
                 url: "view/module/removefromlist",
                 params: { sortOrder: sortOrder }
-            }).then(cb.refresh);
+            }).then(cb.reload);
         },
 
         // change the order of an item in a list, then reload
         changeOrder: function(sortOrder, destinationSortOrder) {
-            return sxc.webApi.get({
+            return cb.sxc.webApi.get({
                 url: "view/module/changeorder",
                 params: { sortOrder: sortOrder, destinationSortOrder: destinationSortOrder }
-            }).then(cb.refresh);
+            }).then(cb.reload);
         },
 
         setTemplateChooserState: function (state) {
-        	return sxc.webApi.get({
+        	return cb.sxc.webApi.get({
         		url: "View/Module/SetTemplateChooserState",
         		params: { state: state }
         	});
         },
 
         addItem: function(sortOrder) {
-        	return sxc.webApi.get({
+        	return cb.sxc.webApi.get({
         		url: "View/Module/AddItem",
         		params: { sortOrder: sortOrder }
-        	}).then(cb.refresh);
+        	}).then(cb.reload);
         },
 
         _saveTemplate: function (templateId, forceCreateContentGroup, newTemplateChooserState) {
-            return sxc.webApi.get({
+            return cb.sxc.webApi.get({
                 url: "View/Module/SaveTemplateId",
                 params: {
                     templateId: templateId,
@@ -674,8 +664,8 @@ $2sxc.contentBlock = function(sxc, manage) {
 
     $2sxc.getManageController = function (sxc) {
         var id = sxc.id, cbid = sxc.cbid;
-        var cb = getContentBlockTag(sxc);
-        var ec = getContextInfo(cb);
+        var cbTag = getContentBlockTag(sxc);
+        var ec = getContextInfo(cbTag);
 
         // assemble all parameters needed for the dialogs if we open anything
         var ngDialogParams = {
@@ -701,7 +691,7 @@ $2sxc.contentBlock = function(sxc, manage) {
             dialogParameters: ngDialogParams, // used for various dialogs
             toolbarConfig: toolsAndButtons.config, // used to configure buttons / toolbars
             editContext: ec, // metadata necessary to know what/how to edit
-            commands: $2sxc._contentManagementCommands(id),
+            commands: $2sxc._contentManagementCommands(sxc, cbTag),
 
 
             // Perform a toolbar button-action - basically get the configuration and execute it's action
@@ -737,7 +727,7 @@ $2sxc.contentBlock = function(sxc, manage) {
 
         // finish init of sub-objects
         editManager.commands.init(editManager);
-        editManager.rootCB = $2sxc.contentBlock(sxc, editManager);
+        editManager.rootCB = $2sxc.contentBlock(sxc, editManager, cbTag);
 
         // attach & open the mini-dashboard iframe
         if (ec.ContentBlock.ShowTemplatePicker)
@@ -755,6 +745,55 @@ $2sxc.contentBlock = function(sxc, manage) {
         return key;
     };
     //#endregion
+
+(function () {
+
+    var diag = $2sxc._dialog = {
+        mode: "iframe",
+        templates: {
+            inline: "<iframe width='100%' height='200px' src='{{url}}'"
+            // + "onload=\"this.syncHeight(this.contentWindow.document.body.scrollHeight);\""
+            //+ "onload=\"this.style.height=this.contentWindow.document.body.scrollHeight + 'px';\""
+            + "onresize=\"console.log('resize')\""
+            + "></iframe>"
+        }
+    };
+
+    diag.create = function (sxc, tag, url, closeCallback) {
+        var diagBox = $(diag.templates.inline.replace("{{url}}", url))[0];    // build iframe tag
+
+        diagBox.closeCallback = closeCallback;
+        diagBox.sxc = sxc;
+
+        diagBox.getManageInfo = function() {
+            return diagBox.sxc.manage.dialogParameters;
+        };
+
+        diagBox.getCommands = function() {
+            return diagBox.vm; // created by inner code
+        };
+
+        // todo: sync sizes
+        diagBox.syncHeight = function (height) {
+            console.log("tried resize to " + height);
+            diagBox.style.height = height + "px";
+        };
+
+        diagBox.toggle = function () {
+            diagBox.style.display = diagBox.style.display === "none" ? "" : "none";
+            diagBox.vm.toggle(); // tell the dashboard about this
+        };
+
+        diagBox.justHide = function () {
+            diagBox.style.display = "none";
+        };
+
+        $(tag).prepend(diagBox);
+
+        return diagBox;
+    };
+
+})();
 
 
 
@@ -782,59 +821,6 @@ var $2sxcActionMenuMapper = function (moduleId) {
         }
     };
 };
-(function () {
-
-    var diag = $2sxc.dialog = {
-        mode: "iframe",
-        templates: {
-            inline: "<iframe width='100%' height='200px' src='{{url}}'"
-            // + "onload=\"this.syncHeight(this.contentWindow.document.body.scrollHeight);\""
-            //+ "onload=\"this.style.height=this.contentWindow.document.body.scrollHeight + 'px';\""
-            + "onresize=\"console.log('resize')\""
-            + "></iframe>"
-        }
-    };
-
-    diag.create = function (iid, block, url, closeCallback) {
-        block = $(block);
-
-        var ifrm = $(diag.templates.inline.replace("{{url}}", url));
-
-        var diagBox = ifrm[0];
-
-        diagBox.closeCallback = closeCallback;
-
-        diagBox.sxc = $2sxc(iid);
-
-        diagBox.getManageInfo = function() {
-            return diagBox.sxc.manage.dialogParameters;
-        };
-
-        diagBox.getCommands = function() {
-            return diagBox.vm; // created by inner code
-        };
-
-        diagBox.syncHeight = function (height) {
-            console.log("tried resize to " + height);
-            diagBox.style.height = height + "px";
-        };
-
-        diagBox.toggle = function () {
-            diagBox.style.display = diagBox.style.display === "none" ? "" : "none";
-            diagBox.vm.toggle(); // tell the dashboard about this
-        };
-
-        diagBox.justHide = function () {
-            diagBox.style.display = "none";
-        };
-
-        block.prepend(diagBox);
-
-        return diagBox;
-    };
-
-})();
-
 
 // Toolbar bootstrapping (initialize all toolbars after loading page)
 $(document).ready(function () {

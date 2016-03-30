@@ -3,6 +3,7 @@ using System.Web;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.ValueProvider;
+using ToSic.SexyContent.ContentBlock;
 using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Internal;
 

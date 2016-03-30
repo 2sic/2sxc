@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Web.Http;
 using DotNetNuke.Common;
 using DotNetNuke.Entities.Controllers;
-using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Api;
+using ToSic.SexyContent.ContentBlock;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Internal;
@@ -22,93 +21,92 @@ namespace ToSic.SexyContent.ViewAPI
     // had to disable this, as most requests now come from a lone page [SupportedModules("2sxc,2sxc-app")]
     public class ModuleController : SxcApiController
     {
+        private ModuleContentBlockManager _cbm;
+        private ModuleContentBlockManager ContentBlockManager => _cbm ?? (_cbm = new ModuleContentBlockManager(SxcContext));
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        // had to disable this, as most requests now come from a lone page [ValidateAntiForgeryToken]
         public void AddItem([FromUri] int? sortOrder = null)
         {
-			var contentGroup = SxcContext.AppContentGroups.GetContentGroupForModule(ActiveModule.ModuleID);
-			contentGroup.AddContentAndPresentationEntity("content", sortOrder, null, null);
+            ContentBlockManager.AddItem(sortOrder);
+			//var contentGroup = SxcContext.AppContentGroups.GetContentGroupForModule(ActiveModule.ModuleID);
+			//contentGroup.AddContentAndPresentationEntity("content", sortOrder, null, null);
         }
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        // had to disable this, as most requests now come from a lone page [ValidateAntiForgeryToken]
         public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup, bool? newTemplateChooserState = null)
         {
-            Guid? result = null;
-            var contentGroup = SxcContext.AppContentGroups.GetContentGroupForModule(ActiveModule.ModuleID);
-            if (contentGroup.Exists || forceCreateContentGroup)
-                result = SxcContext.AppContentGroups.SaveTemplateId(ActiveModule.ModuleID, templateId);
-            else
-                SxcContext.AppContentGroups.SetPreviewTemplateId(ActiveModule.ModuleID, templateId);
+            return ContentBlockManager.SaveTemplateId(templateId, forceCreateContentGroup, newTemplateChooserState);
+            //Guid? result = null;
+            //var contentGroup = SxcContext.AppContentGroups.GetContentGroupForModule(ActiveModule.ModuleID);
+            //if (contentGroup.Exists || forceCreateContentGroup)
+            //    result = SxcContext.AppContentGroups.SaveTemplateId(ActiveModule.ModuleID, templateId);
+            //else
+            //    SxcContext.AppContentGroups.SetPreviewTemplateId(ActiveModule.ModuleID, templateId);
 
-            if(newTemplateChooserState.HasValue)
-                SetTemplateChooserState(newTemplateChooserState.Value);
+            //if(newTemplateChooserState.HasValue)
+            //    SetTemplateChooserState(newTemplateChooserState.Value);
 
-            return result;
+            //return result;
         }
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        // had to disable this, as most requests now come from a lone page [ValidateAntiForgeryToken]
         public void SetTemplateChooserState([FromUri] bool state)
 		{
-            DnnStuffToRefactor.UpdateModuleSettingForAllLanguages(ActiveModule.ModuleID, Settings.SettingsShowTemplateChooser, state.ToString());
-
-			//new DotNetNuke.Entities.Modules.ModuleController().UpdateModuleSetting(ActiveModule.ModuleID,
-			//	SexyContent.SettingsShowTemplateChooser, state.ToString());
+            ContentBlockManager.SetTemplateChooserState(state);
+            //DnnStuffToRefactor.UpdateModuleSettingForAllLanguages(ActiveModule.ModuleID, Settings.SettingsShowTemplateChooser, state.ToString());
 		}
 
 		[HttpGet]
 		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        // had to disable this, as most requests now come from a lone page [ValidateAntiForgeryToken]
         public IEnumerable<object> GetSelectableApps()
-        {
-            try
-            {
-                var zoneId = ZoneHelpers.GetZoneID(ActiveModule.PortalID);
-				return
-					AppManagement.GetApps(zoneId.Value, false, new PortalSettings(ActiveModule.OwnerPortalID))
-                        .Where(a => !a.Hidden)
-						.Select(a => new {a.Name, a.AppId});
-            }
-            catch (Exception e)
-            {
-				Exceptions.LogException(e);
-                throw e;
-            }
-        }
+		{
+		    return ContentBlockManager.GetSelectableApps();
+
+		    //        try
+		    //        {
+		    //            var zoneId = ZoneHelpers.GetZoneID(ActiveModule.PortalID);
+		    //return
+		    //	AppManagement.GetApps(zoneId.Value, false, new PortalSettings(ActiveModule.OwnerPortalID))
+		    //                    .Where(a => !a.Hidden)
+		    //		.Select(a => new {a.Name, a.AppId});
+		    //        }
+		    //        catch (Exception e)
+		    //        {
+		    //Exceptions.LogException(e);
+		    //            throw e;
+		    //        }
+		}
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        // had to disable this, as most requests now come from a lone page [ValidateAntiForgeryToken]
         public void SetAppId(int? appId)
         {
-            AppHelpers.SetAppIdForModule(ActiveModule, appId);
+            ContentBlockManager.SetAppId(appId);
+            //AppHelpers.SetAppIdForModule(ActiveModule, appId);
             }
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        // had to disable this, as most requests now come from a lone page [ValidateAntiForgeryToken]
         public IEnumerable<object> GetSelectableContentTypes()
         {
-			return SxcContext.AppTemplates.GetAvailableContentTypesForVisibleTemplates().Select(p => new {p.StaticName, p.Name});
+            return ContentBlockManager.GetSelectableContentTypes();
+			//return SxcContext.AppTemplates.GetAvailableContentTypesForVisibleTemplates().Select(p => new {p.StaticName, p.Name});
         }
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        // had to disable this, as most requests now come from a lone page [ValidateAntiForgeryToken]
         public IEnumerable<object> GetSelectableTemplates()
         {
-            var availableTemplates = SxcContext.AppTemplates.GetAvailableTemplatesForSelector(ActiveModule.ModuleID, SxcContext.AppContentGroups);
-			return availableTemplates.Select(t => new {t.TemplateId, t.Name, t.ContentTypeStaticName});
+            return ContentBlockManager.GetSelectableTemplates();
+   //         var availableTemplates = SxcContext.AppTemplates.GetAvailableTemplatesForSelector(ActiveModule.ModuleID, SxcContext.AppContentGroups);
+			//return availableTemplates.Select(t => new {t.TemplateId, t.Name, t.ContentTypeStaticName});
         }
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        // had to disable this, as most requests now come from a lone page [ValidateAntiForgeryToken]
         public HttpResponseMessage RenderTemplate([FromUri] int templateId, [FromUri] string lang, bool cbIsEntity = false, int cbid = 0)
         {
             try
@@ -165,76 +163,75 @@ namespace ToSic.SexyContent.ViewAPI
 
 		[HttpGet]
 		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        // had to disable this, as most requests now come from a lone page [ValidateAntiForgeryToken]
         public void ChangeOrder([FromUri] int sortOrder, int destinationSortOrder)
 		{
-			try
-			{
-				var contentGroup = SxcContext.AppContentGroups.GetContentGroupForModule(ActiveModule.ModuleID);
-				contentGroup.ReorderEntities(sortOrder, destinationSortOrder);
-			}
-			catch (Exception e)
-			{
-				Exceptions.LogException(e);
-				throw;
-			}
+            ContentBlockManager.ChangeOrder(sortOrder, destinationSortOrder);
+			//try
+			//{
+			//	var contentGroup = SxcContext.AppContentGroups.GetContentGroupForModule(ActiveModule.ModuleID);
+			//	contentGroup.ReorderEntities(sortOrder, destinationSortOrder);
+			//}
+			//catch (Exception e)
+			//{
+			//	Exceptions.LogException(e);
+			//	throw;
+			//}
 		}
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        // had to disable this, as most requests now come from a lone page [ValidateAntiForgeryToken]
         public bool Publish(string part, int sortOrder)
         {
-            try
-            {
-                var contentGroup = SxcContext.AppContentGroups.GetContentGroupForModule(ActiveModule.ModuleID);
-                var contEntity = contentGroup[part][sortOrder];
-                var presKey = part.ToLower() == "content" ? "presentation" : "listpresentation";
-                var presEntity = contentGroup[presKey][sortOrder];
+            return ContentBlockManager.Publish(part, sortOrder);
+            //try
+            //{
+            //    var contentGroup = SxcContext.AppContentGroups.GetContentGroupForModule(ActiveModule.ModuleID);
+            //    var contEntity = contentGroup[part][sortOrder];
+            //    var presKey = part.ToLower() == "content" ? "presentation" : "listpresentation";
+            //    var presEntity = contentGroup[presKey][sortOrder];
 
-                var hasPresentation = presEntity != null;
+            //    var hasPresentation = presEntity != null;
 
-                // make sure we really have the draft item an not the live one
-                var contDraft = contEntity.IsPublished ? contEntity.GetDraft() : contEntity;
-                if (contEntity != null && !contDraft.IsPublished)
-                    SxcContext.EavAppContext.Publishing.PublishDraftInDbEntity(contDraft.RepositoryId, !hasPresentation); // don't save yet if has pres...
+            //    // make sure we really have the draft item an not the live one
+            //    var contDraft = contEntity.IsPublished ? contEntity.GetDraft() : contEntity;
+            //    if (contEntity != null && !contDraft.IsPublished)
+            //        SxcContext.EavAppContext.Publishing.PublishDraftInDbEntity(contDraft.RepositoryId, !hasPresentation); // don't save yet if has pres...
 
-                if (hasPresentation)
-                {
-                    var presDraft = presEntity.IsPublished ? presEntity.GetDraft() : presEntity;
-                    if (!presDraft.IsPublished)
-                        SxcContext.EavAppContext.Publishing.PublishDraftInDbEntity(presDraft.RepositoryId, true);
-                }
+            //    if (hasPresentation)
+            //    {
+            //        var presDraft = presEntity.IsPublished ? presEntity.GetDraft() : presEntity;
+            //        if (!presDraft.IsPublished)
+            //            SxcContext.EavAppContext.Publishing.PublishDraftInDbEntity(presDraft.RepositoryId, true);
+            //    }
 
-                return true;
-            }
-            catch (Exception e)
-            {
-                Exceptions.LogException(e);
-                throw;
-            }
+            //    return true;
+            //}
+            //catch (Exception e)
+            //{
+            //    Exceptions.LogException(e);
+            //    throw;
+            //}
         }
 
         [HttpGet]
 		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        // had to disable this, as most requests now come from a lone page [ValidateAntiForgeryToken]
         public void RemoveFromList([FromUri] int sortOrder)
 		{
-			try
-			{
-				var contentGroup = SxcContext.AppContentGroups.GetContentGroupForModule(ActiveModule.ModuleID);
-				contentGroup.RemoveContentAndPresentationEntities("content", sortOrder);
-			}
-			catch (Exception e)
-			{
-				Exceptions.LogException(e);
-				throw;
-			}
+            ContentBlockManager.RemoveFromList(sortOrder);
+			//try
+			//{
+			//	var contentGroup = SxcContext.AppContentGroups.GetContentGroupForModule(ActiveModule.ModuleID);
+			//	contentGroup.RemoveContentAndPresentationEntities("content", sortOrder);
+			//}
+			//catch (Exception e)
+			//{
+			//	Exceptions.LogException(e);
+			//	throw;
+			//}
 		}
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        // had to disable this, as most requests now come from a lone page [ValidateAntiForgeryToken]
         public string RemoteInstallDialogUrl(string dialog)
         {
             // note / warning: some duplicate code with SystemController.cs
