@@ -21,12 +21,15 @@ namespace ToSic.SexyContent.Environment.Dnn7
                 if (_userMayEdit.HasValue)
                     return _userMayEdit.Value;
 
-                var okOnModule = DotNetNuke.Security.Permissions.ModulePermissionController.CanEditModuleContent(ModuleInfo);
+                // 2016-03-30 2rm: changed code below to simpler HadModuleAccess which seems to do the same
+                _userMayEdit = DotNetNuke.Security.Permissions.ModulePermissionController.HasModuleAccess(DotNetNuke.Security.SecurityAccessLevel.Edit, "EDIT", ModuleInfo);
 
-                _userMayEdit = okOnModule;
-                // if a user only has tab-edit but not module edit and is not admin, this needs additional confirmation (probably dnn bug)
-                if (!okOnModule)
-                    _userMayEdit = DotNetNuke.Security.Permissions.TabPermissionController.HasTabPermission("EDIT");
+                //var okOnModule = DotNetNuke.Security.Permissions.ModulePermissionController.CanEditModuleContent(ModuleInfo);
+
+                //_userMayEdit = okOnModule;
+                //// if a user only has tab-edit but not module edit and is not admin, this needs additional confirmation (probably dnn bug)
+                //if (!okOnModule)
+                //    _userMayEdit = DotNetNuke.Security.Permissions.TabPermissionController.HasTabPermission("EDIT");
 
                 return _userMayEdit.Value;
             }
