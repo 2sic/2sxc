@@ -60,8 +60,8 @@ namespace ToSic.SexyContent
                 ((ModuleHost) Parent).Attributes.Add("data-2sxc", JsonConvert.SerializeObject(clientInfos));
 
                 // Add some required variables to module host div which are general global 2sxc-infos
-                var globalInfos = renderHelp.RegisterGlobalsAttribute();
-                ((ModuleHost)Parent).Attributes.Add("data-2sxc-globals", JsonConvert.SerializeObject(globalInfos));
+                //var globalInfos = renderHelp.RegisterGlobalsAttribute();
+                //((ModuleHost)Parent).Attributes.Add("data-2sxc-globals", JsonConvert.SerializeObject(globalInfos));
             }
             catch (Exception ex)
             {

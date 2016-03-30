@@ -5,7 +5,10 @@
 
 $2sxc.getManageController = function (id, sxc) {
     function getContentBlockTag(sxci) { return $("div[data-cb-id='" + sxci.cbid + "']")[0]; }
-    function getContextInfo(sxci) { return $.parseJSON(getContentBlockTag(sxci).getAttribute("data-edit-context")); }
+    function getContextInfo(sxci) {
+        var attr = getContentBlockTag(sxci).getAttribute("data-edit-context");
+        return $.parseJSON(attr || "");
+    }
 
     var editContext = getContextInfo(sxc),
         ecEnv = editContext.Environment,
@@ -15,41 +18,74 @@ $2sxc.getManageController = function (id, sxc) {
 
     var moduleElement = $(".DnnModule-" + id);
     var manageInfo = $.parseJSON(moduleElement.find("div[data-2sxc]").attr("data-2sxc")).manage;
-    //var sxcGlobals = $.parseJSON(moduleElement.find("div[data-2sxc-globals]").attr("data-2sxc-globals"));
+    // var sxcGlobals = $.parseJSON(moduleElement.find("div[data-2sxc-globals]").attr("data-2sxc-globals"));
 
-    var ngDialogUrl = ecEnv.WebsiteUrl /*manageInfo.applicationRoot */ + "desktopmodules/tosic_sexycontent/dist/dnn/ui.html?sxcver="
+    var ngDialogUrl = ecEnv.SxcRootUrl /*manageInfo.applicationRoot */ + "desktopmodules/tosic_sexycontent/dist/dnn/ui.html?sxcver="
         + ecEnv.SxcVersion; // manageInfo.config.version;
 
     // assemble all parameters needed for the dialogs if we open anything
     var ngDialogParams = {
-        zoneId: ecCg.ZoneId,// manageInfo.zoneId,
-        appId: ecCg.AppId,// manageInfo.appId,
-        tid: ecEnv.PageId,// manageInfo.config.tabId,
-        mid: ecEnv.InstanceId, // manageInfo.config.moduleId,
-        lang: ecLang.CURRENT,// manageInfo.lang,
-        langpri: ecLang.Primary, // manageInfo.langPrimary,
-        langs:  JSON.stringify(ecLang.All),//manageInfo.languages),
-        portalroot: ecEnv.SxcRootUrl,//  sxcGlobals.PortalRoot,
-        websiteroot: ecEnv.WebsiteUrl,//  manageInfo.applicationRoot,
-        user: { canDesign: editContext.User.CanDesign } ,// manageInfo.user,
+        //isEditMode: ecEnv.IsEditable,
+        zoneId: ecCg.ZoneId,
+        appId: ecCg.AppId,
+        tid: ecEnv.PageId,
+        mid: ecEnv.InstanceId, 
+        lang: ecLang.Current,
+        langpri: ecLang.Primary, 
+        langs:  JSON.stringify(ecLang.All),
+        portalroot: ecEnv.WebsiteUrl,
+        websiteroot: ecEnv.SxcRootUrl,
+        user: { canDesign: editContext.User.CanDesign, canDevelop: editContext.User.CanDesign } ,
         // note that the app-root doesn't exist when opening "manage-app"
         approot: ecCg.AppUrl || null // this is the only value which doesn't have a slash by default
-        // old approot: (manageInfo.config && manageInfo.config.appPath) ? manageInfo.config.appPath : null // this is the only value which doesn't have a slash by default
     };
 
-    manageInfo.config.contentType = manageInfo.config.contentType || manageInfo.config.attributeSetName; // still support the old name...
+    var actionParams = {
+        canDesign: editContext.User.CanDesign,
+        templateId: ecCg.TemplateId,
+        contentTypeId: ecCg.ContentTypeName
+    };
+    var toolbarConfig = {
+        portalId: ecEnv.WebsiteId,
+        tabId: ecEnv.PageId,
+        moduleId: ecEnv.InstanceId,
+        contentGroupId: ecCg.ContentTypeName,
+        // dialogUrl: ecEnv.PageUrl, //todo: seems unused, might want to rename in JS
+        appPath: ecCg.AppUrl,
+        isList: ecCg.IsList,
+        version: ecEnv.SxcVersion
+    };
+
+
+    //var OLD = {
+    //    zoneId: manageInfo.zoneId,
+    //    appId: manageInfo.appId,
+    //    tid: manageInfo.config.tabId,
+    //    mid: manageInfo.config.moduleId,
+    //    lang: manageInfo.lang,
+    //    langpri: manageInfo.langPrimary,
+    //    langs: JSON.stringify(manageInfo.languages),
+    //    portalroot: sxcGlobals.PortalRoot,
+    //    websiteroot: manageInfo.applicationRoot,
+    //    user:  manageInfo.user,
+    //    // note that the app-root doesn't exist when opening "manage-app"
+    //    approot: (manageInfo.config && manageInfo.config.appPath) ? manageInfo.config.appPath : null // this is the only value which doesn't have a slash by default
+    //};
+
+    // 2016-03-30 2dm: I think this isn't ever used, that it's a leftover of something previous, because neither values seem to hold anything
+    // manageInfo.config.contentType = manageInfo.config.contentType || manageInfo.config.attributeSetName; // still support the old name...there was a good reason but I don't know it any more...
 
     var isDebug = $2sxc.urlParams.get("debug") ? "&debug=true" : "",
-        actionButtonsConf = $2sxc._actions.create(manageInfo);
+        actionButtonsConf = $2sxc._actions.create(actionParams);// manageInfo);
 
     var manage = {
         // public method to find out if it's in edit-mode
-        isEditMode: function() {    return manageInfo.isEditMode;   },
+        isEditMode: function () { return ecEnv.IsEditable; /* ngDialogParams.isEditMode; manageInfo.isEditMode;  */ },
 
         // The config object has the following properties:
         // portalId, tabId, moduleId, contentGroupId, dialogUrl, returnUrl, appPath
-        _manageInfo: manageInfo,
-        _toolbarConfig: manageInfo.config,
+        _manageInfo: ngDialogParams,// manageInfo,
+        _toolbarConfig: toolbarConfig, // manageInfo.config,
 
         // assemble an object which will store the configuration and execute it
         createCommandObject: function(specialSettings) {

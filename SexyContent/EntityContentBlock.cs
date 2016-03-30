@@ -22,7 +22,7 @@ namespace ToSic.SexyContent
         public bool ShowTemplateChooser { get; set; }
         public bool ParentIsEntity => true;
         public int ParentId { get; }
-        public string ContentBlockId { get; }
+        public int ContentBlockId { get; }
         public string ParentFieldName => null;
         public int ParentFieldSortOrder => 0;
 
@@ -89,8 +89,8 @@ namespace ToSic.SexyContent
         {
             ParseContentBlockDefinition(cbDefinition);
             Parent = parent;
-            ParentId = parent.ParentId; 
-            ContentBlockId = "mod:" + ParentId +  "-ent:" + cbDefinition.EntityId;
+            ParentId = parent.ParentId;
+            ContentBlockId = -cbDefinition.EntityId;// "mod:" + ParentId +  "-ent:" + cbDefinition.EntityId;
 
 
             // Ensure we know what portal the stuff is coming from

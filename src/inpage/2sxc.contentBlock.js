@@ -16,20 +16,20 @@ $2sxc.contentBlock = function(sxc, manage) {
 
 	var cViewWithoutContent = "_LayoutElement"; // needed to differentiate the "select item" from the "empty-is-selected" which are both empty
 
-    var minfo = manage._manageInfo; // todo: not nice depenecy on internal variable
+    var manageInfo = manage._manageInfo; // todo: not nice depenecy on internal variable
 
-    var ctid = (minfo.contentTypeId === "" && minfo.templateId !== null)
+    var ctid = (manageInfo.contentTypeId === "" && manageInfo.templateId !== null)
 		? cViewWithoutContent           // has template but no content, use placeholder
-		: minfo.contentTypeId;
+		: manageInfo.contentTypeId;
 
 	//#endregion
 
     var cb = {
         sxc: sxc,
         loading: 0, // counter for multiple ajax running, purpose not clear...
-        minfo: minfo, // todo: not nice dependecy
-        templateId: minfo.templateId,
-        undoTemplateId: minfo.templateId,
+        minfo: manageInfo, // todo: not nice dependecy; will also need to reload...
+        templateId: manageInfo.templateId,
+        undoTemplateId: manageInfo.templateId,
         contentTypeId: ctid,
         undoContentTypeId: ctid,
 

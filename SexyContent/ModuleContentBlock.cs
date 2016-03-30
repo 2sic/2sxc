@@ -21,7 +21,7 @@ namespace ToSic.SexyContent
         public bool ShowTemplateChooser { get; set; }
         public bool ParentIsEntity => false;
         public int ParentId { get; }
-        public string ContentBlockId { get; }
+        public int ContentBlockId { get; }
         public string ParentFieldName => null;
         public int ParentFieldSortOrder => 0;
 
@@ -65,7 +65,7 @@ namespace ToSic.SexyContent
 
             ModuleInfo = moduleInfo;
             ParentId = moduleInfo.ModuleID;
-            ContentBlockId = "mod:" + ParentId + "-mod:" + ParentId;
+            ContentBlockId = ParentId;// "mod:" + ParentId + "-mod:" + ParentId;
 
             // Ensure we know what portal the stuff is coming from
             PortalSettings = moduleInfo.OwnerPortalID != moduleInfo.PortalID

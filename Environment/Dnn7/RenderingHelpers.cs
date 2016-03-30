@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
 using DotNetNuke.Common;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
-using DotNetNuke.UI.Modules;
 using DotNetNuke.Web.Client.ClientResourceManagement;
 using ToSic.SexyContent.Internal;
 
@@ -163,26 +160,26 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         #endregion
 
-        /// <summary>
-        /// Add data-2sxc-globals Attribute to the DNN ModuleHost
-        /// </summary>
-        internal object RegisterGlobalsAttribute()
-        {
-            var globData = new
-            {
-                ModuleContext = new
-                {
-                    ModuleInfo.PortalID, // syst / inst - ok
-                    ModuleInfo.TabID,  // syst / inst - ok
-                    ModuleInfo.ModuleID, // inst
-                    AppId = _usingStoredConfig ? _sxcInstance?.App?.AppId : null // cb
-                },
-                PortalSettings.ActiveTab.FullUrl, // syst - ok
-                PortalRoot = "//" + PortalSettings.PortalAlias.HTTPAlias + "/", // syst ok
-                DefaultLanguageID = _sxcInstance?.EavAppContext.Dimensions.GetLanguageId(PortalSettings.DefaultLanguage) // unused /  syst - ok
-            };
-            return globData;
-        }
+        ///// <summary>
+        ///// Add data-2sxc-globals Attribute to the DNN ModuleHost
+        ///// </summary>
+        //internal object RegisterGlobalsAttribute()
+        //{
+        //    var globData = new
+        //    {
+        //        ModuleContext = new
+        //        {
+        //            ModuleInfo.PortalID, // syst / inst - ok
+        //            ModuleInfo.TabID,  // syst / inst - ok
+        //            ModuleInfo.ModuleID, // inst
+        //            AppId = _usingStoredConfig ? _sxcInstance?.App?.AppId : null // cb
+        //        },
+        //        PortalSettings.ActiveTab.FullUrl, // syst - ok
+        //        PortalRoot = "//" + PortalSettings.PortalAlias.HTTPAlias + "/", // syst ok
+        //        DefaultLanguageID = _sxcInstance?.EavAppContext.Dimensions.GetLanguageId(PortalSettings.DefaultLanguage) // unused /  syst - ok
+        //    };
+        //    return globData;
+        //}
 
         // new
         public ClientInfosAll GetClientInfosAll()
@@ -202,7 +199,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public ClientInfosAll(string systemRootUrl, PortalSettings ps, ModuleInfo mic, SxcInstance sxc, UserInfo uinfo, int zoneId, bool isCreated)
         {
-            Environment = new ClientInfosEnvironment(systemRootUrl, ps, mic);
+            Environment = new ClientInfosEnvironment(systemRootUrl, ps, mic, sxc);
             Language = new ClientInfosLanguages(ps, zoneId);
             User = new ClientInfosUser(uinfo);
 
@@ -226,10 +223,12 @@ namespace ToSic.SexyContent.Environment.Dnn7
         public int InstanceId;      // aka ModuleId
 
         public string SxcVersion;
-        // public string SxcDialogUrl;
+
         public string SxcRootUrl;
 
-        public ClientInfosEnvironment(string systemRootUrl, PortalSettings ps, ModuleInfo mic)
+        public bool IsEditable;
+
+        public ClientInfosEnvironment(string systemRootUrl, PortalSettings ps, ModuleInfo mic, SxcInstance sxc)
         {
             WebsiteId = ps.PortalId;
             WebsiteUrl = "//" + ps.PortalAlias.HTTPAlias + "/";
@@ -242,6 +241,8 @@ namespace ToSic.SexyContent.Environment.Dnn7
             SxcVersion = Settings.Version.ToString();
             // SxcDialogUrl = Globals.NavigateURL(PageId);
             SxcRootUrl = systemRootUrl;
+
+            IsEditable = sxc?.Environment?.Permissions.UserMayEditContent ?? false;
         }
     }
 

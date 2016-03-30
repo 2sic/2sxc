@@ -28,8 +28,8 @@
     }
 
     $2sxc._actions = {};
-    var thisObj = $2sxc._actions.create = function (manageInfo) {
-        var enableTools = manageInfo.user.canDesign;
+    var thisObj = $2sxc._actions.create = function (actionParams) {
+        var enableTools = actionParams.canDesign;
 
         var act = {
             "dash-view": createActionConfig("dash", "Dashboard", "", "", true, {
@@ -164,7 +164,7 @@
                 newWindow: true,
                 addCondition: enableTools,
                 configureCommand: function (cmd) {
-                    cmd.items = [{ EntityId: manageInfo.templateId }];
+                    cmd.items = [{ EntityId: actionParams.templateId }];
                 }
             }),
             'contenttype': {
@@ -178,9 +178,9 @@
                 title: "Toolbar.ContentItems",
                 iclass: "icon-sxc-table",
                 showOn: "admin",
-                params: { contentTypeName: manageInfo.contentTypeId },
+                params: { contentTypeName: actionParams.contentTypeId },
                 uiActionOnly: true, // so it doesn't create the content when used
-                addCondition: enableTools && manageInfo.contentTypeId,
+                addCondition: enableTools && actionParams.contentTypeId,
             },
             'app': {
                 title: "Toolbar.App",

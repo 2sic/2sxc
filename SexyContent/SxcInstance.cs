@@ -144,8 +144,8 @@ namespace ToSic.SexyContent
             var engine = GetRenderingEngine(InstancePurposes.WebView);
             var renderHelp = new RenderingHelpers(this);//, ModuleInfo, ContentBlock.ContentGroupExists);//, ResolveUrl("~"));
             var editInfos = renderHelp.GetClientInfosAll();
-            string result = (RenderWithDiv ? "<div class=\"sc-viewport sc-content-block\" data-cb-instance=\"" + ContentBlock.ParentId +  "\" data-cb-id=\"mod:" + ContentBlock.ParentId + "-" + ContentBlock.ContentBlockId + "\"" 
-                + (RenderWithEditMetadata ? "data-edit-context=\"" + JsonConvert.SerializeObject(editInfos) + "\"" : "") 
+            string result = (RenderWithDiv ? "<div class=\"sc-viewport sc-content-block\" data-cb-instance=\"" + ContentBlock.ParentId +  "\" data-cb-id=\"" + ContentBlock.ContentBlockId + "\"" 
+                + (RenderWithEditMetadata ? " data-edit-context=\'" + JsonConvert.SerializeObject(editInfos) + "'" : "") 
                 + ">\n" : "") 
                 + engine.Render() + 
                 (RenderWithDiv ? "\n</div>" : "");

@@ -8,17 +8,18 @@
             return window.$2sxc.autoFind(id);
 
         // neutralize the id from old "34" format to the new "35-mod:353" format
-        if(!cbid)
-            cbid = "mod:" + id + "-mod: " + id;
+        var cacheKey = id + ":" + cbid;
+        if (!cbid) cbid = id;
+        //    cbid = "mod:" + id + "-mod: " + id;
 
-        if (!$2sxc._data[cbid])
-            $2sxc._data[cbid] = {};
+        if (!$2sxc._data[cacheKey])
+            $2sxc._data[cacheKey] = {};
 
         // either get the cached controller from previous calls, or create a new one
-        if ($2sxc._controllers[cbid])
-            return $2sxc._controllers[cbid];
+        if ($2sxc._controllers[cacheKey])
+            return $2sxc._controllers[cacheKey];
 
-        var controller = $2sxc._controllers[cbid] = {
+        var controller = $2sxc._controllers[cacheKey] = {
             serviceScopes: ["app", "app-api", "app-query", "app-content", "eav", "view", "dnn"],
             serviceRoot: $.ServicesFramework(id).getServiceRoot("2sxc"),
             resolveServiceUrl: function resolveServiceUrl(virtualPath) {
@@ -115,6 +116,7 @@
 
             id: id,
             cbid: cbid,
+            cacheKey: cbid,
             source: null,
             isLoaded: false,
             lastRefresh: null,
@@ -337,7 +339,7 @@
     $2sxc.autoFind = function(domElement) {
         var containerTag = $(domElement).closest(".sc-content-block")[0]; 
         if (!containerTag) return null;
-        var iid = containerTag.getAttribute("data-cb-iid"), cbid = containerTag.getAttribute("data-cb-id");
+        var iid = containerTag.getAttribute("data-cb-instance"), cbid = containerTag.getAttribute("data-cb-id");
         if (!iid || !cbid) return null;
         return $2sxc(iid, cbid);
     }
