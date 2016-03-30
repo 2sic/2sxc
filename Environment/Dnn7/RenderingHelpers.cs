@@ -307,12 +307,13 @@ namespace ToSic.SexyContent.Environment.Dnn7
         public int TemplateId;
         public string ContentTypeName;
         public string AppUrl;
-        public bool AppIsContent;
+        public bool IsContent;
         public bool HasContent;
 
         public ClientInfoContentGroup(SxcInstance sxc, bool isCreated)
         {
             IsCreated = isCreated;
+            IsContent = sxc.IsContentApp;
             if (isCreated)
             {
                 Id = sxc.ContentGroup.ContentGroupId;

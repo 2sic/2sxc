@@ -82,7 +82,7 @@
                 showOn: "edit",
                 addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; },
                 code: function (settings, event, tbContr) {
-                    if (confirm(tbContr.translate("Toolbar.ConfirmRemove"))) {
+                    if (confirm($2sxc.translate("Toolbar.ConfirmRemove"))) {
                         tbContr.rootCB
                             .removeFromList(settings.sortOrder);
                     }
@@ -136,7 +136,7 @@
                 disabled: true,
                 code: function (settings, event, tbContr) {
                     if (settings.isPublished) {
-                        alert(tbContr.translate("Toolbar.AlreadyPublished"));
+                        alert($2sxc.translate("Toolbar.AlreadyPublished"));
                         return;
                     }
                     var part = settings.sortOrder === -1 ? "listcontent" : "content";

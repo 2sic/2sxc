@@ -23,7 +23,7 @@
         diagBox.sxc = $2sxc(iid);
 
         diagBox.getManageInfo = function() {
-            return diagBox.sxc.manage._manageInfo;
+            return diagBox.sxc.manage.dialogParameters;
         };
 
         diagBox.getCommands = function() {

@@ -16,21 +16,21 @@ $2sxc.contentBlock = function(sxc, manage) {
 
 	var cViewWithoutContent = "_LayoutElement"; // needed to differentiate the "select item" from the "empty-is-selected" which are both empty
 
-    var manageInfo = manage._manageInfo; // todo: not nice depenecy on internal variable
-
-    var ctid = (manageInfo.contentTypeId === "" && manageInfo.templateId !== null)
-		? cViewWithoutContent           // has template but no content, use placeholder
-		: manageInfo.contentTypeId;
+    // var manageInfo = manage._manageInfo; // todo: not nice dependecy on internal variable
+    var editContext = manage.editContext;
+    var ctid = (editContext.ContentGroup.ContentTypeName === "" && editContext.ContentGroup.TemplateId !== null)
+        ? cViewWithoutContent // has template but no content, use placeholder
+        : editContext.ContentGroup.ContentTypeName;// manageInfo.contentTypeId;
 
 	//#endregion
 
     var cb = {
         sxc: sxc,
         loading: 0, // counter for multiple ajax running, purpose not clear...
-        editContext: manage.editContext,
-        minfo: manageInfo, // todo: not nice dependecy; will also need to reload...
-        templateId: manageInfo.templateId,
-        undoTemplateId: manageInfo.templateId,
+        editContext: editContext,    // todo: not ideal depedency, but ok...
+        // minfo: manageInfo, // todo: not nice dependecy; will also need to reload...
+        templateId: editContext.ContentGroup.TemplateId,// manageInfo.templateId,
+        undoTemplateId: editContext.ContentGroup.TemplateId, //manageInfo.templateId,
         contentTypeId: ctid,
         undoContentTypeId: ctid,
 
@@ -56,7 +56,7 @@ $2sxc.contentBlock = function(sxc, manage) {
                 return null;
 
             // if reloading a non-content-app, re-load the page
-            if (!cb.editContext.ContentGroup.AppIsContent)// minfo.isContentApp)
+            if (!cb.editContext.ContentGroup.IsContent)
                 return window.location.reload();
 
             // remember for future persist/save

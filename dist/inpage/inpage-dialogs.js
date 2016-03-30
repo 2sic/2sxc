@@ -217,7 +217,7 @@ angular.module('SxcInpageTemplates', []).run(['$templateCache', function($templa
         var wrapper = contentBlockLink(vm);
 
         // the sxc.manage is just to keep the old version running for now
-        vm.manageInfo = wrapper.getManageInfo();
+        vm.manageInfo = wrapper.getManageInfo(); // gets the dialogParameters
         vm.showAdvanced = vm.manageInfo.user.canDesign;
         vm.templateId = vm.manageInfo.templateId;
         vm.undoTemplateId = vm.templateId;
