@@ -27,6 +27,7 @@ $2sxc.contentBlock = function(sxc, manage) {
     var cb = {
         sxc: sxc,
         loading: 0, // counter for multiple ajax running, purpose not clear...
+        editContext: manage.editContext,
         minfo: manageInfo, // todo: not nice dependecy; will also need to reload...
         templateId: manageInfo.templateId,
         undoTemplateId: manageInfo.templateId,
@@ -55,14 +56,14 @@ $2sxc.contentBlock = function(sxc, manage) {
                 return null;
 
             // if reloading a non-content-app, re-load the page
-            if (!cb.minfo.isContentApp)
+            if (!cb.editContext.ContentGroup.AppIsContent)// minfo.isContentApp)
                 return window.location.reload();
 
             // remember for future persist/save
             cb.templateId = templateId;
 
             console.log("new loading");
-            var lang = cb.minfo.lang;
+            var lang = cb.editContext.Language.Current; //.minfo.lang;
 
             // ajax-call, then replace
             cb.loading++;
@@ -134,10 +135,10 @@ $2sxc.contentBlock = function(sxc, manage) {
 
         persistTemplate: function(forceCreate, selectorVisibility) {
             // Save only if the currently saved is not the same as the new
-            var groupExistsAndTemplateUnchanged = !!cb.minfo.hasContent && (cb.undoTemplateId === cb.templateId);
+            var groupExistsAndTemplateUnchanged = !!cb.editContext.ContentGroup.HasContent && (cb.undoTemplateId === cb.templateId);// !!cb.minfo.hasContent && (cb.undoTemplateId === cb.templateId);
             var promiseToSetState;
             if (groupExistsAndTemplateUnchanged)
-                promiseToSetState = (cb.minfo.templateChooserVisible)
+                promiseToSetState = (cb.editContext.ContentBlock.ShowTemplatePicker)//.minfo.templateChooserVisible)
                     ? cb.setTemplateChooserState(false) // hide in case it was visible
                     : $.when(null); // all is ok, create empty promise to allow chaining the result
             else
@@ -154,20 +155,23 @@ $2sxc.contentBlock = function(sxc, manage) {
                         if (console)
                             console.log("created content group {" + newGuid + "}");
 
-                        // todo: will need more complexity
-                        cb.minfo.config.contentGroupId = newGuid; // update internal ContentGroupGuid 
+                        // todo: will need more complexity / 2016-03-30 unsure if this is actually ever re-used...
+                        // cb.minfo.config.contentGroupId = newGuid; // update internal ContentGroupGuid 
                     });
 
             var promiseToCorrectUi = promiseToSetState.then(function() {
                 cb.undoTemplateId = cb.templateId; // remember for future undo
                 cb.undoContentTypeId = cb.contentTypeId; // remember ...
-                cb.minfo.templateChooserVisible = false;
+                
+                cb.editContext.ContentBlock.ShowTemplatePicker = false; // cb.minfo.templateChooserVisible = false;
 
                 if (manage.dialog)
                 	manage.dialog.justHide();
 
-                if (!cb.minfo.hasContent) // if it didn't have content, then it only has now...
-                    cb.minfo.hasContent = forceCreate; // ...if we forced it to
+                if (!cb.editContext.ContentGroup.HasContent) // if it didn't have content, then it only has now...
+                    cb.editContext.ContentGroup.HasContent = forceCreate;
+                // if (!cb.minfo.hasContent) // if it didn't have content, then it only has now...
+                //    cb.minfo.hasContent = forceCreate; // ...if we forced it to
             });
 
             return promiseToCorrectUi;

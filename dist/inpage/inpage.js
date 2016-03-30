@@ -261,6 +261,7 @@ $2sxc.contentBlock = function(sxc, manage) {
     var cb = {
         sxc: sxc,
         loading: 0, // counter for multiple ajax running, purpose not clear...
+        editContext: manage.editContext,
         minfo: manageInfo, // todo: not nice dependecy; will also need to reload...
         templateId: manageInfo.templateId,
         undoTemplateId: manageInfo.templateId,
@@ -289,14 +290,14 @@ $2sxc.contentBlock = function(sxc, manage) {
                 return null;
 
             // if reloading a non-content-app, re-load the page
-            if (!cb.minfo.isContentApp)
+            if (!cb.editContext.ContentGroup.AppIsContent)// minfo.isContentApp)
                 return window.location.reload();
 
             // remember for future persist/save
             cb.templateId = templateId;
 
             console.log("new loading");
-            var lang = cb.minfo.lang;
+            var lang = cb.editContext.Language.Current; //.minfo.lang;
 
             // ajax-call, then replace
             cb.loading++;
@@ -368,10 +369,10 @@ $2sxc.contentBlock = function(sxc, manage) {
 
         persistTemplate: function(forceCreate, selectorVisibility) {
             // Save only if the currently saved is not the same as the new
-            var groupExistsAndTemplateUnchanged = !!cb.minfo.hasContent && (cb.undoTemplateId === cb.templateId);
+            var groupExistsAndTemplateUnchanged = !!cb.editContext.ContentGroup.HasContent && (cb.undoTemplateId === cb.templateId);// !!cb.minfo.hasContent && (cb.undoTemplateId === cb.templateId);
             var promiseToSetState;
             if (groupExistsAndTemplateUnchanged)
-                promiseToSetState = (cb.minfo.templateChooserVisible)
+                promiseToSetState = (cb.editContext.ContentBlock.ShowTemplatePicker)//.minfo.templateChooserVisible)
                     ? cb.setTemplateChooserState(false) // hide in case it was visible
                     : $.when(null); // all is ok, create empty promise to allow chaining the result
             else
@@ -388,20 +389,23 @@ $2sxc.contentBlock = function(sxc, manage) {
                         if (console)
                             console.log("created content group {" + newGuid + "}");
 
-                        // todo: will need more complexity
-                        cb.minfo.config.contentGroupId = newGuid; // update internal ContentGroupGuid 
+                        // todo: will need more complexity / 2016-03-30 unsure if this is actually ever re-used...
+                        // cb.minfo.config.contentGroupId = newGuid; // update internal ContentGroupGuid 
                     });
 
             var promiseToCorrectUi = promiseToSetState.then(function() {
                 cb.undoTemplateId = cb.templateId; // remember for future undo
                 cb.undoContentTypeId = cb.contentTypeId; // remember ...
-                cb.minfo.templateChooserVisible = false;
+                
+                cb.editContext.ContentBlock.ShowTemplatePicker = false; // cb.minfo.templateChooserVisible = false;
 
                 if (manage.dialog)
                 	manage.dialog.justHide();
 
-                if (!cb.minfo.hasContent) // if it didn't have content, then it only has now...
-                    cb.minfo.hasContent = forceCreate; // ...if we forced it to
+                if (!cb.editContext.ContentGroup.HasContent) // if it didn't have content, then it only has now...
+                    cb.editContext.ContentGroup.HasContent = forceCreate;
+                // if (!cb.minfo.hasContent) // if it didn't have content, then it only has now...
+                //    cb.minfo.hasContent = forceCreate; // ...if we forced it to
             });
 
             return promiseToCorrectUi;
@@ -510,46 +514,10 @@ $2sxc.getManageController = function (id, sxc) {
         ecLang = editContext.Language;
 
     var moduleElement = $(".DnnModule-" + id);
-    var manageInfo = $.parseJSON(moduleElement.find("div[data-2sxc]").attr("data-2sxc")).manage;
+
+    //#region old - cleaning up...
+     var tempmanageInfo = $.parseJSON(moduleElement.find("div[data-2sxc]").attr("data-2sxc")).manage;
     // var sxcGlobals = $.parseJSON(moduleElement.find("div[data-2sxc-globals]").attr("data-2sxc-globals"));
-
-    var ngDialogUrl = ecEnv.SxcRootUrl /*manageInfo.applicationRoot */ + "desktopmodules/tosic_sexycontent/dist/dnn/ui.html?sxcver="
-        + ecEnv.SxcVersion; // manageInfo.config.version;
-
-    // assemble all parameters needed for the dialogs if we open anything
-    var ngDialogParams = {
-        //isEditMode: ecEnv.IsEditable,
-        zoneId: ecCg.ZoneId,
-        appId: ecCg.AppId,
-        tid: ecEnv.PageId,
-        mid: ecEnv.InstanceId, 
-        lang: ecLang.Current,
-        langpri: ecLang.Primary, 
-        langs:  JSON.stringify(ecLang.All),
-        portalroot: ecEnv.WebsiteUrl,
-        websiteroot: ecEnv.SxcRootUrl,
-        user: { canDesign: editContext.User.CanDesign, canDevelop: editContext.User.CanDesign } ,
-        // note that the app-root doesn't exist when opening "manage-app"
-        approot: ecCg.AppUrl || null // this is the only value which doesn't have a slash by default
-    };
-
-    var actionParams = {
-        canDesign: editContext.User.CanDesign,
-        templateId: ecCg.TemplateId,
-        contentTypeId: ecCg.ContentTypeName
-    };
-    var toolbarConfig = {
-        portalId: ecEnv.WebsiteId,
-        tabId: ecEnv.PageId,
-        moduleId: ecEnv.InstanceId,
-        contentGroupId: ecCg.ContentTypeName,
-        // dialogUrl: ecEnv.PageUrl, //todo: seems unused, might want to rename in JS
-        appPath: ecCg.AppUrl,
-        isList: ecCg.IsList,
-        version: ecEnv.SxcVersion
-    };
-
-
     //var OLD = {
     //    zoneId: manageInfo.zoneId,
     //    appId: manageInfo.appId,
@@ -565,6 +533,46 @@ $2sxc.getManageController = function (id, sxc) {
     //    approot: (manageInfo.config && manageInfo.config.appPath) ? manageInfo.config.appPath : null // this is the only value which doesn't have a slash by default
     //};
 
+
+
+    //#endregion
+
+
+    var ngDialogUrl = ecEnv.SxcRootUrl /*manageInfo.applicationRoot */ + "desktopmodules/tosic_sexycontent/dist/dnn/ui.html?sxcver="
+        + ecEnv.SxcVersion; // manageInfo.config.version;
+
+    // assemble all parameters needed for the dialogs if we open anything
+    var ngDialogParams = {
+        zoneId: ecCg.ZoneId,
+        appId: ecCg.AppId,
+        tid: ecEnv.PageId,
+        mid: ecEnv.InstanceId, 
+        lang: ecLang.Current,
+        langpri: ecLang.Primary, 
+        langs:  JSON.stringify(ecLang.All),
+        portalroot: ecEnv.WebsiteUrl,
+        websiteroot: ecEnv.SxcRootUrl,
+        user: { canDesign: editContext.User.CanDesign, canDevelop: editContext.User.CanDesign } ,
+        // note that the app-root doesn't exist when opening "manage-app"
+        approot: ecCg.AppUrl || null // this is the only value which doesn't have a slash by default
+    };
+    var actionParams = {
+        canDesign: editContext.User.CanDesign,
+        templateId: ecCg.TemplateId,
+        contentTypeId: ecCg.ContentTypeName
+    };
+    var toolbarConfig = {
+        portalId: ecEnv.WebsiteId,
+        tabId: ecEnv.PageId,
+        moduleId: ecEnv.InstanceId,
+        contentGroupId: ecCg.Guid,
+        // dialogUrl: ecEnv.PageUrl, //todo: seems unused, might want to rename in JS
+        appPath: ecCg.AppUrl,
+        isList: ecCg.IsList,
+        version: ecEnv.SxcVersion
+    };
+
+
     // 2016-03-30 2dm: I think this isn't ever used, that it's a leftover of something previous, because neither values seem to hold anything
     // manageInfo.config.contentType = manageInfo.config.contentType || manageInfo.config.attributeSetName; // still support the old name...there was a good reason but I don't know it any more...
 
@@ -579,6 +587,7 @@ $2sxc.getManageController = function (id, sxc) {
         // portalId, tabId, moduleId, contentGroupId, dialogUrl, returnUrl, appPath
         _manageInfo: ngDialogParams,// manageInfo,
         _toolbarConfig: toolbarConfig, // manageInfo.config,
+        editContext: editContext,
 
         // assemble an object which will store the configuration and execute it
         createCommandObject: function(specialSettings) {
@@ -792,9 +801,9 @@ $2sxc.getManageController = function (id, sxc) {
 
         translate: function (key) {
             // todo: re-enable translate
-            return "translate:" + key;
+            return key;
             // return tbContr._getAngularVm().translate(key);
-        }
+        }   // todo
 
     };
 

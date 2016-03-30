@@ -17,46 +17,10 @@ $2sxc.getManageController = function (id, sxc) {
         ecLang = editContext.Language;
 
     var moduleElement = $(".DnnModule-" + id);
-    var manageInfo = $.parseJSON(moduleElement.find("div[data-2sxc]").attr("data-2sxc")).manage;
+
+    //#region old - cleaning up...
+     var tempmanageInfo = $.parseJSON(moduleElement.find("div[data-2sxc]").attr("data-2sxc")).manage;
     // var sxcGlobals = $.parseJSON(moduleElement.find("div[data-2sxc-globals]").attr("data-2sxc-globals"));
-
-    var ngDialogUrl = ecEnv.SxcRootUrl /*manageInfo.applicationRoot */ + "desktopmodules/tosic_sexycontent/dist/dnn/ui.html?sxcver="
-        + ecEnv.SxcVersion; // manageInfo.config.version;
-
-    // assemble all parameters needed for the dialogs if we open anything
-    var ngDialogParams = {
-        //isEditMode: ecEnv.IsEditable,
-        zoneId: ecCg.ZoneId,
-        appId: ecCg.AppId,
-        tid: ecEnv.PageId,
-        mid: ecEnv.InstanceId, 
-        lang: ecLang.Current,
-        langpri: ecLang.Primary, 
-        langs:  JSON.stringify(ecLang.All),
-        portalroot: ecEnv.WebsiteUrl,
-        websiteroot: ecEnv.SxcRootUrl,
-        user: { canDesign: editContext.User.CanDesign, canDevelop: editContext.User.CanDesign } ,
-        // note that the app-root doesn't exist when opening "manage-app"
-        approot: ecCg.AppUrl || null // this is the only value which doesn't have a slash by default
-    };
-
-    var actionParams = {
-        canDesign: editContext.User.CanDesign,
-        templateId: ecCg.TemplateId,
-        contentTypeId: ecCg.ContentTypeName
-    };
-    var toolbarConfig = {
-        portalId: ecEnv.WebsiteId,
-        tabId: ecEnv.PageId,
-        moduleId: ecEnv.InstanceId,
-        contentGroupId: ecCg.ContentTypeName,
-        // dialogUrl: ecEnv.PageUrl, //todo: seems unused, might want to rename in JS
-        appPath: ecCg.AppUrl,
-        isList: ecCg.IsList,
-        version: ecEnv.SxcVersion
-    };
-
-
     //var OLD = {
     //    zoneId: manageInfo.zoneId,
     //    appId: manageInfo.appId,
@@ -72,6 +36,46 @@ $2sxc.getManageController = function (id, sxc) {
     //    approot: (manageInfo.config && manageInfo.config.appPath) ? manageInfo.config.appPath : null // this is the only value which doesn't have a slash by default
     //};
 
+
+
+    //#endregion
+
+
+    var ngDialogUrl = ecEnv.SxcRootUrl /*manageInfo.applicationRoot */ + "desktopmodules/tosic_sexycontent/dist/dnn/ui.html?sxcver="
+        + ecEnv.SxcVersion; // manageInfo.config.version;
+
+    // assemble all parameters needed for the dialogs if we open anything
+    var ngDialogParams = {
+        zoneId: ecCg.ZoneId,
+        appId: ecCg.AppId,
+        tid: ecEnv.PageId,
+        mid: ecEnv.InstanceId, 
+        lang: ecLang.Current,
+        langpri: ecLang.Primary, 
+        langs:  JSON.stringify(ecLang.All),
+        portalroot: ecEnv.WebsiteUrl,
+        websiteroot: ecEnv.SxcRootUrl,
+        user: { canDesign: editContext.User.CanDesign, canDevelop: editContext.User.CanDesign } ,
+        // note that the app-root doesn't exist when opening "manage-app"
+        approot: ecCg.AppUrl || null // this is the only value which doesn't have a slash by default
+    };
+    var actionParams = {
+        canDesign: editContext.User.CanDesign,
+        templateId: ecCg.TemplateId,
+        contentTypeId: ecCg.ContentTypeName
+    };
+    var toolbarConfig = {
+        portalId: ecEnv.WebsiteId,
+        tabId: ecEnv.PageId,
+        moduleId: ecEnv.InstanceId,
+        contentGroupId: ecCg.Guid,
+        // dialogUrl: ecEnv.PageUrl, //todo: seems unused, might want to rename in JS
+        appPath: ecCg.AppUrl,
+        isList: ecCg.IsList,
+        version: ecEnv.SxcVersion
+    };
+
+
     // 2016-03-30 2dm: I think this isn't ever used, that it's a leftover of something previous, because neither values seem to hold anything
     // manageInfo.config.contentType = manageInfo.config.contentType || manageInfo.config.attributeSetName; // still support the old name...there was a good reason but I don't know it any more...
 
@@ -86,6 +90,7 @@ $2sxc.getManageController = function (id, sxc) {
         // portalId, tabId, moduleId, contentGroupId, dialogUrl, returnUrl, appPath
         _manageInfo: ngDialogParams,// manageInfo,
         _toolbarConfig: toolbarConfig, // manageInfo.config,
+        editContext: editContext,
 
         // assemble an object which will store the configuration and execute it
         createCommandObject: function(specialSettings) {
@@ -299,9 +304,9 @@ $2sxc.getManageController = function (id, sxc) {
 
         translate: function (key) {
             // todo: re-enable translate
-            return "translate:" + key;
+            return key;
             // return tbContr._getAngularVm().translate(key);
-        }
+        }   // todo
 
     };
 
