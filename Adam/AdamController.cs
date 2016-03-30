@@ -196,8 +196,12 @@ namespace ToSic.SexyContent.Adam
         /// </summary>
         private void ExplicitlyRecheckEditPermissions()
         {
-            if (!DotNetNuke.Security.Permissions.ModulePermissionController.CanEditModuleContent(Dnn.Module))
+            // 2016-03-30 2rm: Changed code below to work with the Environment permission controller
+            if(!SxcContext.Environment.Permissions.UserMayEditContent)
                 throw new HttpResponseException(HttpStatusCode.Forbidden);
+
+            //if (!DotNetNuke.Security.Permissions.ModulePermissionController.CanEditModuleContent(Dnn.Module))
+            //    throw new HttpResponseException(HttpStatusCode.Forbidden);
         }
 
         [HttpPost]
