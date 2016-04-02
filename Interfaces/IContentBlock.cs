@@ -1,4 +1,5 @@
 ﻿using DotNetNuke.Entities.Portals;
+using ToSic.SexyContent.ContentBlock;
 using ToSic.SexyContent.DataSources;
 
 namespace ToSic.SexyContent.Interfaces
@@ -33,5 +34,7 @@ namespace ToSic.SexyContent.Interfaces
         SxcInstance SxcInstance { get; }
 
         bool ContentGroupExists { get; }
+
+        ContentBlockManagerBase Manager { get; }
     }
 }

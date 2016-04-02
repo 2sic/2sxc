@@ -17,6 +17,7 @@ namespace ToSic.SexyContent.ContentBlock
         public ModuleInfo ModuleInfo;
 
         public bool ContentGroupExists => ContentGroup?.Exists ?? false;
+        public ContentBlockManagerBase Manager => new ModuleContentBlockManager(SxcInstance);
 
         public bool ShowTemplateChooser { get; set; }
         public bool ParentIsEntity => false;

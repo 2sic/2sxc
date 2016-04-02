@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -21,8 +22,9 @@ namespace ToSic.SexyContent.ViewAPI
     // had to disable this, as most requests now come from a lone page [SupportedModules("2sxc,2sxc-app")]
     public class ModuleController : SxcApiController
     {
-        private ModuleContentBlockManager _cbm;
-        private ModuleContentBlockManager ContentBlockManager => _cbm ?? (_cbm = new ModuleContentBlockManager(SxcContext));
+        private ContentBlockManagerBase _cbm;
+        private ContentBlockManagerBase ContentBlockManager => _cbm ?? (_cbm = SxcContext.ContentBlock.Manager);
+
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
@@ -128,9 +130,10 @@ namespace ToSic.SexyContent.ViewAPI
                 }
                 else
                 {
-                    cbid = Math.Abs(cbid); // remove any "-" in case it has one, which is used to mark an entity-content-block
-                    var cbDef = SxcContext.App.Data["Default"].List[cbid];  // get the content-block definition
-                    cbToRender = new EntityContentBlock(SxcContext.ContentBlock, cbDef);
+                    cbToRender = new EntityContentBlock(SxcContext.ContentBlock, cbid);
+                    //cbid = Math.Abs(cbid); // remove any "-" in case it has one, which is used to mark an entity-content-block
+                    //var cbDef = SxcContext.App.Data["Default"].List[cbid];  // get the content-block definition
+                    //cbToRender = new EntityContentBlock(SxcContext.ContentBlock, cbDef);
                 }
                 var template = cbToRender.App.TemplateManager.GetTemplate(templateId);
                 cbToRender.SxcInstance.Template = template;

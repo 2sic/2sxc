@@ -673,6 +673,7 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
             appId: ec.ContentGroup.AppId,
             tid: ec.Environment.PageId,
             mid: ec.Environment.InstanceId,
+            cbid: cbid,
             lang: ec.Language.Current,
             langpri: ec.Language.Primary,
             langs: JSON.stringify(ec.Language.All),

@@ -3,9 +3,9 @@ using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.ContentBlock
 {
-    internal class ModuleContentBlockManager: ContentBlockManagerBase
+    internal class EntityContentBlockManager: ContentBlockManagerBase
     {
-        internal ModuleContentBlockManager(SxcInstance sxc)
+        internal EntityContentBlockManager(SxcInstance sxc)
         {
             SxcContext = sxc;
             ModuleID = SxcContext.ModuleInfo.ModuleID;

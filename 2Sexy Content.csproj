@@ -249,6 +249,8 @@
     <Compile Include="Interfaces\IAppData.cs" />
     <Compile Include="Interfaces\IContentBlock.cs" />
     <Compile Include="SexyContent\ContentBlock\ContentBlockManagerBase.cs" />
+    <Compile Include="SexyContent\ContentBlock\ContentBlockBase.cs" />
+    <Compile Include="SexyContent\ContentBlock\EntityContentBlockManager.cs" />
     <Compile Include="SexyContent\ContentBlock\ModuleContentBlockManager.cs" />
     <Compile Include="SexyContent\Internal\AppManagement.cs" />
     <Compile Include="SexyContent\ContentBlock\EntityContentBlock.cs" />
@@ -447,13 +449,7 @@
     <Content Include="src\inpage-dialogs\template-selector\2sxc.view_app.js" />
     <Content Include="src\inpage-dialogs\template-selector\template-selector.html" />
     <Content Include="src\inpage-dialogs\template-selector\template-selector.js" />
-    <Content Include="js\angularjs\2sxc4ng.annotated.js" />
     <Content Include="js\angularjs\2sxc4ng.js" />
-    <Content Include="js\angularjs\angular-animate.min.js" />
-    <Content Include="js\angularjs\angular-resource.min.js" />
-    <Content Include="js\angularjs\angular-ui-tree.min.css" />
-    <Content Include="js\angularjs\angular-ui-tree.min.js" />
-    <Content Include="js\angularjs\angular.min.js" />
     <Content Include="js\angularjs\toaster.css" />
     <Content Include="js\angularjs\toaster.js" />
     <Content Include="js\ItemForm.js" />
@@ -467,7 +463,6 @@
     <Content Include="BuildScripts\ModulePackage.Targets" />
     <Content Include="BuildScripts\MSBuild.Community.Tasks.targets" />
     <Content Include="package.json" />
-    <Content Include="js\angularjs\2sxc4ng.min.js.map" />
     <Content Include="README.md" />
     <Content Include="src\config\eav-configuration-in-sxc.js" />
     <Content Include="bower.json" />
