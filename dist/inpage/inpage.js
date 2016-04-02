@@ -53,7 +53,7 @@
             'add': createActionConfig("add", "AddDemo", "plus-circled", "edit", false, {
                 addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; },
                 code: function (settings, event, tbContr) {
-                    tbContr.rootCB 
+                    tbContr.contentBlock 
                         .addItem(settings.sortOrder + 1);
                 }
             }),
@@ -82,7 +82,7 @@
                 addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; },
                 code: function (settings, event, tbContr) {
                     if (confirm($2sxc.translate("Toolbar.ConfirmRemove"))) {
-                        tbContr.rootCB
+                        tbContr.contentBlock
                             .removeFromList(settings.sortOrder);
                     }
                 }
@@ -109,7 +109,7 @@
                 showOn: "edit",
                 addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1 && settings.sortOrder !== 0; },
                 code: function (settings, event, tbContr) {
-                    tbContr.rootCB
+                    tbContr.contentBlock
                         .changeOrder(settings.sortOrder, Math.max(settings.sortOrder - 1, 0));
                 }
             },
@@ -120,7 +120,7 @@
                 showOn: "edit",
                 addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; },
                 code: function (settings, event, tbContr) {
-                    tbContr.rootCB
+                    tbContr.contentBlock
                         .changeOrder(settings.sortOrder, settings.sortOrder + 1);
                 }
             },
@@ -140,7 +140,7 @@
                     }
                     var part = settings.sortOrder === -1 ? "listcontent" : "content";
                     var index = settings.sortOrder === -1 ? 0 : settings.sortOrder;
-                    tbContr.rootCB
+                    tbContr.contentBlock
                         .publish(part, index);
                 }
             }),
@@ -153,10 +153,11 @@
                 showOn: "default",
                 uiActionOnly: true, // so it doesn't create the content when used
                 code: function (settings, event, manager) {
-                    if (!manager.dialog)
-                        manager.dialog = manager.action({ "action": "dash-view" });
-                    else
-                        manager.dialog.toggle();
+                    manager.contentBlock.dialogToggle();
+                    //if (!manager.dialog)
+                    //    manager.dialog = manager.action({ "action": "dash-view" });
+                    //else
+                    //    manager.dialog.toggle();
                 }
             },
             'develop': createActionConfig("develop", "Develop", "code", "admin", true, {
@@ -220,8 +221,6 @@
 
 (function(){
 $2sxc._contentManagementCommands = function (sxc, targetTag) {
-    // var moduleElement = $(".DnnModule-" + id);
-
     var cmc = {
         editManager: "must-be-added-after-initialization",
         init: function(editor) {
@@ -314,7 +313,7 @@ $2sxc._contentManagementCommands = function (sxc, targetTag) {
         _openNgDialog: function (settings, event, closeCallback) {
 
             var callback = function () {
-                cmc.editManager.rootCB.reload();
+                cmc.editManager.contentBlock.reload();
                 closeCallback();
             };
             var link = cmc._linkToNgDialog(settings);
@@ -507,13 +506,17 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
         replace: function(newContent) {
             try {
                 $(cbTag).html(newContent);
-                // create new sxc-object
-                cb.sxc = cb.sxc.recreate();
-                cb.sxc.manage.toolbar._processToolbars(); // sub-optimal deep dependency
             } catch (e) {
                 console.log("Error while rendering template:");
                 console.log(e);
             }
+        },
+
+        // this one assumes a replace / change has already happened, but now must be finalized...
+        finalizeReplace: function() {
+            // create new sxc-object
+            cb.sxc = cb.sxc.recreate();
+            cb.sxc.manage.toolbar._processToolbars(); // sub-optimal deep dependency
         },
 
         // retrieve new preview-content with alternate template and then show the result
@@ -584,7 +587,7 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
 
         _saveTemplate: function (templateId, forceCreateContentGroup, newTemplateChooserState) {
             return cb.sxc.webApi.get({
-                url: "View/Module/SaveTemplateId",
+                url: "view/module/savetemplateid",
                 params: {
                     templateId: templateId,
                     forceCreateContentGroup: forceCreateContentGroup,
@@ -592,6 +595,48 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
                 }
             });
         },
+
+        // todo: move to content-block
+        // Cancel and reset back to original state
+        cancelTemplateChange: function() {
+            cb.templateId = cb.undoTemplateId;
+            cb.contentTypeId = cb.undoContentTypeId;
+
+            // todo: dialog...
+            sxc.manage.dialog.justHide();
+            cb.setTemplateChooserState(false);
+
+            if (cb.isContentApp) // necessary to show the original template again
+                cb.reloadTemplates();
+        },
+
+        dialogToggle: function () {
+            // check if the dialog already exists, if yes, use that
+            // it can already exist as part of the manage-object, 
+            // ...or if the manage object was reset, we must find it in the DOM
+
+            var diag = manage.dialog;
+            if (!diag) {
+                // todo: look for it in the dom
+            }
+            if (!diag) {
+                // still not found, create it
+                diag = manage.dialog = manage.action({ "action": "dash-view" }); // not ideal, must improve
+
+            } else {
+                diag.toggle();
+            }
+
+            var isVisible = diag.isVisible();
+            if (manage.editContext.ContentBlock.ShowTemplatePicker !== isVisible)
+                cb.setTemplateChooserState(isVisible)
+                    .then(function() {
+                        manage.editContext.ContentBlock.ShowTemplatePicker = isVisible;
+                    });
+
+
+        },
+
 
         // todo...
         prepareToAddContent: function() {
@@ -663,7 +708,6 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
 
 
     $2sxc.getManageController = function (sxc) {
-        var id = sxc.id, cbid = sxc.cbid;
         var cbTag = getContentBlockTag(sxc);
         var ec = getContextInfo(cbTag);
 
@@ -673,14 +717,26 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
             appId: ec.ContentGroup.AppId,
             tid: ec.Environment.PageId,
             mid: ec.Environment.InstanceId,
-            cbid: cbid,
+            cbid: sxc.cbid,
             lang: ec.Language.Current,
             langpri: ec.Language.Primary,
             langs: JSON.stringify(ec.Language.All),
             portalroot: ec.Environment.WebsiteUrl,
             websiteroot: ec.Environment.SxcRootUrl,
+            // todo: probably move the user into the dashboard info
             user: { canDesign: ec.User.CanDesign, canDevelop: ec.User.CanDesign },
             approot: ec.ContentGroup.AppUrl || null // this is the only value which doesn't have a slash by default.  note that the app-root doesn't exist when opening "manage-app"
+        };
+
+        var dashConfig = {
+            appId: ec.ContentGroup.AppId,
+            isContent: ec.ContentGroup.IsContent,
+            hasContent: ec.ContentGroup.HasContent,
+            isList: ec.ContentGroup.IsList,
+            templateId: ec.ContentGroup.TemplateId,
+            contentTypeId: ec.ContentGroup.ContentTypeName,
+            templateChooserVisible: ec.ContentBlock.ShowTemplatePicker, // todo: maybe move to content-goup
+            user: { canDesign: ec.User.CanDesign, canDevelop: ec.User.CanDesign },
         };
 
         var toolsAndButtons = $2sxc._toolbarManager(sxc, ec);
@@ -692,6 +748,7 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
             dialogParameters: ngDialogParams, // used for various dialogs
             toolbarConfig: toolsAndButtons.config, // used to configure buttons / toolbars
             editContext: ec, // metadata necessary to know what/how to edit
+            dashboardConfig: dashConfig,
             commands: $2sxc._contentManagementCommands(sxc, cbTag),
 
 
@@ -707,7 +764,7 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
                     return settings.code(settings, origEvent, editManager);
 
                 // if more than just a UI-action, then it needs to be sure the content-group is created first
-                editManager.rootCB.prepareToAddContent()
+                editManager.contentBlock.prepareToAddContent()
                     .then(function() {
                         return settings.code(settings, origEvent, editManager);
                     });
@@ -728,7 +785,7 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
 
         // finish init of sub-objects
         editManager.commands.init(editManager);
-        editManager.rootCB = $2sxc.contentBlock(sxc, editManager, cbTag);
+        editManager.contentBlock = $2sxc.contentBlock(sxc, editManager, cbTag);
 
         // attach & open the mini-dashboard iframe
         if (ec.ContentBlock.ShowTemplatePicker)
@@ -769,14 +826,8 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
         diagBox.getManageInfo = function() {
             return diagBox.sxc.manage.dialogParameters;
         };
-        diagBox.getAdditionalDashboardConfig = function() {
-            var ec = sxc.manage.editContext;
-            return {
-                isContent: ec.ContentGroup.IsContent,
-                templateId: ec.ContentGroup.TemplateId,
-                contentTypeId: ec.ContentGroup.ContentTypeName,
-                templateChooserVisible: ec.ContentGroup.TemplateChooserVisible,
-            };
+        diagBox.getAdditionalDashboardConfig = function () {
+            return diagBox.sxc.manage.dashboardConfig;
         };
 
         diagBox.getCommands = function() {
@@ -789,16 +840,36 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
             diagBox.style.height = height + "px";
         };
 
+        diagBox.isVisible = function() {
+            return diagBox.style.display !== "none";
+        };
+
+        //diagBox.persistState = function () {
+        //    var currentlyShowing = diagBox.style.display !== "none";
+        //    if (sxc.manage && sxc.manage.rootCB && sxc.manage.editContext.ContentBlock.ShowTemplatePicker !== currentlyShowing)
+        //        sxc.manage.rootCB.setTemplateChooserState(currentlyShowing);
+        //};
+
+        //diagBox.justToggle = function () {
+        //    diagBox.style.display = diagBox.style.display === "none" ? "" : "none";
+        //};
+
         diagBox.toggle = function () {
             diagBox.style.display = diagBox.style.display === "none" ? "" : "none";
-            diagBox.vm.toggle(); // tell the dashboard about this
+            // todo: probably stop toggling, or maybe in the future pass in reset configs
+            //diagBox.vm.toggle(); // tell the inner dashboard about this
+            //diagBox.persistState();
         };
 
         diagBox.justHide = function () {
             diagBox.style.display = "none";
+            //diagBox.persistState();
         };
 
+
         $(tag).prepend(diagBox);
+
+        //diagBox.persistState();
 
         return diagBox;
     };

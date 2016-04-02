@@ -180,7 +180,10 @@
                         data: JSON.stringify(settings.data),
                         contentType: "application/json",
                         url: controller.webApi.getActionUrl(settings),
-                        beforeSend: sf.setModuleHeaders
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader("ContentBlockId", cbid);
+                            sf.setModuleHeaders(xhr);
+                        }
                     });
 
                     if (!settings.preventAutoFail)

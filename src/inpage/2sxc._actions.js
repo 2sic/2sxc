@@ -53,7 +53,7 @@
             'add': createActionConfig("add", "AddDemo", "plus-circled", "edit", false, {
                 addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; },
                 code: function (settings, event, tbContr) {
-                    tbContr.rootCB 
+                    tbContr.contentBlock 
                         .addItem(settings.sortOrder + 1);
                 }
             }),
@@ -82,7 +82,7 @@
                 addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; },
                 code: function (settings, event, tbContr) {
                     if (confirm($2sxc.translate("Toolbar.ConfirmRemove"))) {
-                        tbContr.rootCB
+                        tbContr.contentBlock
                             .removeFromList(settings.sortOrder);
                     }
                 }
@@ -109,7 +109,7 @@
                 showOn: "edit",
                 addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1 && settings.sortOrder !== 0; },
                 code: function (settings, event, tbContr) {
-                    tbContr.rootCB
+                    tbContr.contentBlock
                         .changeOrder(settings.sortOrder, Math.max(settings.sortOrder - 1, 0));
                 }
             },
@@ -120,7 +120,7 @@
                 showOn: "edit",
                 addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; },
                 code: function (settings, event, tbContr) {
-                    tbContr.rootCB
+                    tbContr.contentBlock
                         .changeOrder(settings.sortOrder, settings.sortOrder + 1);
                 }
             },
@@ -140,7 +140,7 @@
                     }
                     var part = settings.sortOrder === -1 ? "listcontent" : "content";
                     var index = settings.sortOrder === -1 ? 0 : settings.sortOrder;
-                    tbContr.rootCB
+                    tbContr.contentBlock
                         .publish(part, index);
                 }
             }),
@@ -153,10 +153,11 @@
                 showOn: "default",
                 uiActionOnly: true, // so it doesn't create the content when used
                 code: function (settings, event, manager) {
-                    if (!manager.dialog)
-                        manager.dialog = manager.action({ "action": "dash-view" });
-                    else
-                        manager.dialog.toggle();
+                    manager.contentBlock.dialogToggle();
+                    //if (!manager.dialog)
+                    //    manager.dialog = manager.action({ "action": "dash-view" });
+                    //else
+                    //    manager.dialog.toggle();
                 }
             },
             'develop': createActionConfig("develop", "Develop", "code", "admin", true, {

@@ -20,14 +20,8 @@
         diagBox.getManageInfo = function() {
             return diagBox.sxc.manage.dialogParameters;
         };
-        diagBox.getAdditionalDashboardConfig = function() {
-            var ec = sxc.manage.editContext;
-            return {
-                isContent: ec.ContentGroup.IsContent,
-                templateId: ec.ContentGroup.TemplateId,
-                contentTypeId: ec.ContentGroup.ContentTypeName,
-                templateChooserVisible: ec.ContentGroup.TemplateChooserVisible,
-            };
+        diagBox.getAdditionalDashboardConfig = function () {
+            return diagBox.sxc.manage.dashboardConfig;
         };
 
         diagBox.getCommands = function() {
@@ -40,16 +34,36 @@
             diagBox.style.height = height + "px";
         };
 
+        diagBox.isVisible = function() {
+            return diagBox.style.display !== "none";
+        };
+
+        //diagBox.persistState = function () {
+        //    var currentlyShowing = diagBox.style.display !== "none";
+        //    if (sxc.manage && sxc.manage.rootCB && sxc.manage.editContext.ContentBlock.ShowTemplatePicker !== currentlyShowing)
+        //        sxc.manage.rootCB.setTemplateChooserState(currentlyShowing);
+        //};
+
+        //diagBox.justToggle = function () {
+        //    diagBox.style.display = diagBox.style.display === "none" ? "" : "none";
+        //};
+
         diagBox.toggle = function () {
             diagBox.style.display = diagBox.style.display === "none" ? "" : "none";
-            diagBox.vm.toggle(); // tell the dashboard about this
+            // todo: probably stop toggling, or maybe in the future pass in reset configs
+            //diagBox.vm.toggle(); // tell the inner dashboard about this
+            //diagBox.persistState();
         };
 
         diagBox.justHide = function () {
             diagBox.style.display = "none";
+            //diagBox.persistState();
         };
 
+
         $(tag).prepend(diagBox);
+
+        //diagBox.persistState();
 
         return diagBox;
     };

@@ -33,13 +33,17 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
         replace: function(newContent) {
             try {
                 $(cbTag).html(newContent);
-                // create new sxc-object
-                cb.sxc = cb.sxc.recreate();
-                cb.sxc.manage.toolbar._processToolbars(); // sub-optimal deep dependency
             } catch (e) {
                 console.log("Error while rendering template:");
                 console.log(e);
             }
+        },
+
+        // this one assumes a replace / change has already happened, but now must be finalized...
+        finalizeReplace: function() {
+            // create new sxc-object
+            cb.sxc = cb.sxc.recreate();
+            cb.sxc.manage.toolbar._processToolbars(); // sub-optimal deep dependency
         },
 
         // retrieve new preview-content with alternate template and then show the result
@@ -110,7 +114,7 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
 
         _saveTemplate: function (templateId, forceCreateContentGroup, newTemplateChooserState) {
             return cb.sxc.webApi.get({
-                url: "View/Module/SaveTemplateId",
+                url: "view/module/savetemplateid",
                 params: {
                     templateId: templateId,
                     forceCreateContentGroup: forceCreateContentGroup,
@@ -118,6 +122,48 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
                 }
             });
         },
+
+        // todo: move to content-block
+        // Cancel and reset back to original state
+        cancelTemplateChange: function() {
+            cb.templateId = cb.undoTemplateId;
+            cb.contentTypeId = cb.undoContentTypeId;
+
+            // todo: dialog...
+            sxc.manage.dialog.justHide();
+            cb.setTemplateChooserState(false);
+
+            if (cb.isContentApp) // necessary to show the original template again
+                cb.reloadTemplates();
+        },
+
+        dialogToggle: function () {
+            // check if the dialog already exists, if yes, use that
+            // it can already exist as part of the manage-object, 
+            // ...or if the manage object was reset, we must find it in the DOM
+
+            var diag = manage.dialog;
+            if (!diag) {
+                // todo: look for it in the dom
+            }
+            if (!diag) {
+                // still not found, create it
+                diag = manage.dialog = manage.action({ "action": "dash-view" }); // not ideal, must improve
+
+            } else {
+                diag.toggle();
+            }
+
+            var isVisible = diag.isVisible();
+            if (manage.editContext.ContentBlock.ShowTemplatePicker !== isVisible)
+                cb.setTemplateChooserState(isVisible)
+                    .then(function() {
+                        manage.editContext.ContentBlock.ShowTemplatePicker = isVisible;
+                    });
+
+
+        },
+
 
         // todo...
         prepareToAddContent: function() {

@@ -44,12 +44,13 @@ namespace ToSic.SexyContent.ContentBlock
                 // use the content-group template, which already covers stored data + module-level stored settings
                 Template = ContentGroup.Template;
 
-                // - in sxcinstance... CheckTemplateOverrides(); // check url-params, etc.
+                // set show-status of the template/view picker
+                var showStatus = moduleInfo.ModuleSettings[Settings.SettingsShowTemplateChooser];
+                bool show;
+                if (bool.TryParse((showStatus ?? true).ToString(), out show))
+                    ShowTemplateChooser = show;
 
-                // ensure data is initialized
-                // nothing necessary, happens on the property
-
-                // maybe ensure that App.Data is ready?
+                // maybe ensure that App.Data is ready
                 App.InitData(SxcInstance.Environment.Permissions.UserMayEditContent, Data.ConfigurationProvider);
             }
         }

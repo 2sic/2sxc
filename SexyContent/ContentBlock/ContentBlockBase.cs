@@ -6,7 +6,7 @@ namespace ToSic.SexyContent.ContentBlock
 {
     internal class ContentBlockBase: IContentBlock
     {
-        protected IContentBlock Parent;
+        internal IContentBlock Parent;
 
         public int ZoneId { get; protected set; }
         public int AppId { get; protected set; }

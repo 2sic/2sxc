@@ -8,6 +8,11 @@ namespace ToSic.SexyContent.ContentBlock
 {
     internal sealed class EntityContentBlock: ContentBlockBase
     {
+        internal const string CbPropertyApp = "App";
+        internal const string CbPropertyContentGroup = "ContentGroup";
+        internal const string CbPropertyTemplate = "Template";
+        internal const string CbPropertyShowChooser = "ShowTemplateChooser";
+
         public override ContentBlockManagerBase Manager => new EntityContentBlockManager(SxcInstance);
         public override bool ParentIsEntity => false;
 
@@ -24,15 +29,15 @@ namespace ToSic.SexyContent.ContentBlock
         private void ParseContentBlockDefinition(IEntity cbDefinition)
         {
             _contentBlockDefinition = cbDefinition;
-            _appName = _contentBlockDefinition.GetBestValue("App")?.ToString() ?? "";
+            _appName = _contentBlockDefinition.GetBestValue(CbPropertyApp)?.ToString() ?? "";
 
-            string temp = _contentBlockDefinition.GetBestValue("ContentGroup")?.ToString() ?? "";
+            string temp = _contentBlockDefinition.GetBestValue(CbPropertyContentGroup)?.ToString() ?? "";
             Guid.TryParse(temp, out _contentGroupGuid);
 
-            temp = _contentBlockDefinition.GetBestValue("Template")?.ToString() ?? "";
+            temp = _contentBlockDefinition.GetBestValue(CbPropertyTemplate)?.ToString() ?? "";
             Guid.TryParse(temp, out _previewTemplateGuid);
-            
-            temp = _contentBlockDefinition.GetBestValue("ShowTemplateChooser")?.ToString() ?? "";
+
+            temp = _contentBlockDefinition.GetBestValue(CbPropertyShowChooser)?.ToString() ?? "";
             bool show;
             if (bool.TryParse(temp, out show))
                 ShowTemplateChooser = show;
@@ -70,8 +75,8 @@ namespace ToSic.SexyContent.ContentBlock
                 // use the content-group template, which already covers stored data + module-level stored settings
                 Template = ContentGroup.Template;
 
-                // maybe ensure that App.Data is ready?
-                // App.InitData(...)?
+                // maybe ensure that App.Data is ready
+                App.InitData(SxcInstance.Environment.Permissions.UserMayEditContent, Data.ConfigurationProvider);
             }
         }
 

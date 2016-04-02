@@ -1,8 +1,6 @@
 ﻿
 (function(){
 $2sxc._contentManagementCommands = function (sxc, targetTag) {
-    // var moduleElement = $(".DnnModule-" + id);
-
     var cmc = {
         editManager: "must-be-added-after-initialization",
         init: function(editor) {
@@ -95,7 +93,7 @@ $2sxc._contentManagementCommands = function (sxc, targetTag) {
         _openNgDialog: function (settings, event, closeCallback) {
 
             var callback = function () {
-                cmc.editManager.rootCB.reload();
+                cmc.editManager.contentBlock.reload();
                 closeCallback();
             };
             var link = cmc._linkToNgDialog(settings);

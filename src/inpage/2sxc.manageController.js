@@ -14,7 +14,6 @@
 
 
     $2sxc.getManageController = function (sxc) {
-        var id = sxc.id, cbid = sxc.cbid;
         var cbTag = getContentBlockTag(sxc);
         var ec = getContextInfo(cbTag);
 
@@ -24,14 +23,26 @@
             appId: ec.ContentGroup.AppId,
             tid: ec.Environment.PageId,
             mid: ec.Environment.InstanceId,
-            cbid: cbid,
+            cbid: sxc.cbid,
             lang: ec.Language.Current,
             langpri: ec.Language.Primary,
             langs: JSON.stringify(ec.Language.All),
             portalroot: ec.Environment.WebsiteUrl,
             websiteroot: ec.Environment.SxcRootUrl,
+            // todo: probably move the user into the dashboard info
             user: { canDesign: ec.User.CanDesign, canDevelop: ec.User.CanDesign },
             approot: ec.ContentGroup.AppUrl || null // this is the only value which doesn't have a slash by default.  note that the app-root doesn't exist when opening "manage-app"
+        };
+
+        var dashConfig = {
+            appId: ec.ContentGroup.AppId,
+            isContent: ec.ContentGroup.IsContent,
+            hasContent: ec.ContentGroup.HasContent,
+            isList: ec.ContentGroup.IsList,
+            templateId: ec.ContentGroup.TemplateId,
+            contentTypeId: ec.ContentGroup.ContentTypeName,
+            templateChooserVisible: ec.ContentBlock.ShowTemplatePicker, // todo: maybe move to content-goup
+            user: { canDesign: ec.User.CanDesign, canDevelop: ec.User.CanDesign },
         };
 
         var toolsAndButtons = $2sxc._toolbarManager(sxc, ec);
@@ -43,6 +54,7 @@
             dialogParameters: ngDialogParams, // used for various dialogs
             toolbarConfig: toolsAndButtons.config, // used to configure buttons / toolbars
             editContext: ec, // metadata necessary to know what/how to edit
+            dashboardConfig: dashConfig,
             commands: $2sxc._contentManagementCommands(sxc, cbTag),
 
 
@@ -58,7 +70,7 @@
                     return settings.code(settings, origEvent, editManager);
 
                 // if more than just a UI-action, then it needs to be sure the content-group is created first
-                editManager.rootCB.prepareToAddContent()
+                editManager.contentBlock.prepareToAddContent()
                     .then(function() {
                         return settings.code(settings, origEvent, editManager);
                     });
@@ -79,7 +91,7 @@
 
         // finish init of sub-objects
         editManager.commands.init(editManager);
-        editManager.rootCB = $2sxc.contentBlock(sxc, editManager, cbTag);
+        editManager.contentBlock = $2sxc.contentBlock(sxc, editManager, cbTag);
 
         // attach & open the mini-dashboard iframe
         if (ec.ContentBlock.ShowTemplatePicker)

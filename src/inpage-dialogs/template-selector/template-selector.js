@@ -11,10 +11,10 @@
                 dialogContainer: iframe,
                 window: window.parent, //iframe.parent,
                 sxc: iframe.sxc,
-                contentBlock: iframe.sxc.manage.rootCB,
+                contentBlock: iframe.sxc.manage.contentBlock,
                 getManageInfo: iframe.getManageInfo,
                 dashInfo: iframe.getAdditionalDashboardConfig,
-                hide: iframe.justHide
+                //hide: iframe.justHide
             };
         };
     });
@@ -35,20 +35,19 @@
         vm.templates = [];
         var wrapper = contentBlockLink(vm);
 
-        // the sxc.manage is just to keep the old version running for now
-        vm.manageInfo = wrapper.getManageInfo(); // gets the dialogParameters
-        var di = wrapper.dashInfo();
+        var di = vm.dashInfo = wrapper.dashInfo();
         vm.isContentApp = di.isContent;
-        vm.showAdvanced = vm.manageInfo.user.canDesign;
-        vm.templateId = di.templateId;// vm.manageInfo.templateId;
-        vm.undoTemplateId = di.templateId;// vm.templateId;
-        vm.contentTypeId = di.contentTypeId // (vm.manageInfo.contentTypeId === "" && vm.manageInfo.templateId !== null)
-            ? cViewWithoutContent // has template but no content, use placeholder
-            : di.contentTypeId;// vm.manageInfo.contentTypeId;
+        vm.showAdvanced = di.user.canDesign;
+        vm.templateId = di.templateId;
+        vm.undoTemplateId = di.templateId;
+        vm.contentTypeId = di.contentTypeId;
+        // (vm.manageInfo.contentTypeId === "" && vm.manageInfo.templateId !== null)
+            //? cViewWithoutContent // has template but no content, use placeholder
+            //: di.contentTypeId;// vm.manageInfo.contentTypeId;
         vm.undoContentTypeId = vm.contentTypeId;
 
-        vm.appId = vm.manageInfo.appId;
-        vm.savedAppId = vm.manageInfo.appId;
+        vm.appId = vm.dashInfo.appId;
+        vm.savedAppId = vm.dashInfo.appId;
 
 
         vm.showRemoteInstaller = false;
@@ -130,17 +129,8 @@
             return;
         };
 
-        // todo: move to content-block
         // Cancel and reset back to original state
-        vm.cancelTemplateChange = function() {
-            vm.templateId = vm.undoTemplateId;
-            vm.contentTypeId = vm.undoContentTypeId;
-            vm.manageInfo.templateChooserVisible = false;
-            wrapper.hide();
-            wrapper.contentBlock.setTemplateChooserState(false);
-            if (vm.isContentApp) // necessary to show the original template again
-                vm.reloadTemplates();
-        };
+        vm.cancelTemplateChange = wrapper.contentBlock.cancelTemplateChange;
 
         // store the template state to the server, optionally force create of content, and hide the selector
         vm.persistTemplate = wrapper.contentBlock.persistTemplate;
@@ -151,9 +141,9 @@
         // check if it should be shown and load/show
         vm.show = function(stateChange) {
             if (stateChange !== undefined)  // optionally change the show-state
-                vm.manageInfo.templateChooserVisible = stateChange;
+                vm.dashInfo.templateChooserVisible = stateChange;
 
-            if (vm.manageInfo.templateChooserVisible) {
+            if (vm.dashInfo.templateChooserVisible) {
                 var promises = [];
                 if (vm.appId !== null) // if an app had already been chosen OR the content-app (always chosen)
                     promises.push(vm.reloadTemplates()); 
@@ -195,12 +185,10 @@
 
 
         vm.toggle = function () {
-            vm.manageInfo.someTest = "a value";
-            if (vm.manageInfo.templateChooserVisible)
+            if (vm.dashInfo.templateChooserVisible)
                 vm.cancelTemplateChange();
             else {
                 vm.show(true);
-                wrapper.contentBlock.setTemplateChooserState(true);
             }
         };
 

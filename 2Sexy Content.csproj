@@ -452,7 +452,6 @@
     <Content Include="js\angularjs\2sxc4ng.js" />
     <Content Include="js\angularjs\toaster.css" />
     <Content Include="js\angularjs\toaster.js" />
-    <Content Include="js\ItemForm.js" />
     <Content Include="license.txt" />
     <Content Include="src\inpage\edit.css" />
     <Content Include="Administration\EditTemplate.ascx" />

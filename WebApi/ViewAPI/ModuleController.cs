@@ -75,7 +75,7 @@ namespace ToSic.SexyContent.ViewAPI
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public HttpResponseMessage RenderTemplate([FromUri] int templateId, [FromUri] string lang, bool cbIsEntity = false, int cbid = 0)
+        public HttpResponseMessage RenderTemplate([FromUri] int templateId, [FromUri] string lang, bool cbIsEntity = false)
         {
             try
             {
@@ -89,9 +89,7 @@ namespace ToSic.SexyContent.ViewAPI
                     // Fallback / ignore if the language specified has not been found
                     catch (System.Globalization.CultureNotFoundException) { }
 
-                var cbToRender = !cbIsEntity 
-                    ? SxcContext.ContentBlock 
-                    : new EntityContentBlock(SxcContext.ContentBlock, cbid);
+                var cbToRender = SxcContext.ContentBlock;
                 var template = cbToRender.App.TemplateManager.GetTemplate(templateId);
                 cbToRender.SxcInstance.Template = template;
 
