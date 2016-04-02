@@ -2,7 +2,7 @@
 <div xng-cloak xng-show="vm.manageInfo.templateChooserVisible" class="dnnFormMessage dnnFormInfo">
     <div class="sc-selectors">
         <!-- App Selector - only relevant in App-Mode -->
-        <div ng-show="!vm.manageInfo.isContentApp">
+        <div ng-show="!vm.isContentApp">
             <select ng-model="vm.appId" class="sc-selector-app input-lg"
                     ng-options="a.AppId as (a.Name.indexOf('TemplatePicker.') === 0 ? '[+] ' + (a.Name | translate) : a.Name) for a in vm.apps"
                     ng-disabled="vm.manageInfo.hasContent || vm.manageInfo.isList">
@@ -10,7 +10,7 @@
             </select>
 
             <span>
-                <span ng-if="vm.showAdvanced && !vm.manageInfo.isContentApp">
+                <span ng-if="vm.showAdvanced && !vm.isContentApp">
                     <button type="button" class="btn btn-default btn-square"
                             ng-if="vm.appId != null"
                             ng-click="vm.appSettings();"
@@ -35,7 +35,7 @@
 
 
         <!-- Content Type selector, only for Content-Mode -->
-        <select ng-show="vm.manageInfo.isContentApp" ng-model="vm.contentTypeId"
+        <select ng-show="vm.isContentApp" ng-model="vm.contentTypeId"
                 class="input-lg"
                 ng-options="c.StaticName as c.Name for c in vm.contentTypes"
                 ng-disabled="vm.manageInfo.hasContent || vm.manageInfo.isList">
@@ -44,7 +44,7 @@
 
         <!-- View / template selector -->
         <div>
-            <select ng-show="vm.manageInfo.isContentApp ? vm.contentTypeId != 0 : (vm.savedAppId != null &&  vm.filteredTemplates().length > 1)"
+            <select ng-show="vm.isContentApp ? vm.contentTypeId != 0 : (vm.savedAppId != null &&  vm.filteredTemplates().length > 1)"
                     class="input-lg"
                     ng-model="vm.templateId" 
                     ng-options="t.TemplateId as t.Name for t in vm.filteredTemplates(vm.contentTypeId)"></select>
@@ -60,7 +60,7 @@
                         class="btn btn-default btn-square"
                         ng-click="vm.cancelTemplateChange();"
                         type="button"
-                        title="{{ 'TemplatePicker.' + (vm.manageInfo.isContentApp ? 'Cancel' : 'Close') | translate }}">
+                        title="{{ 'TemplatePicker.' + (vm.isContentApp ? 'Cancel' : 'Close') | translate }}">
                     <i class="icon-cancel"></i>
                 </button>
         </div>

@@ -13,6 +13,7 @@
                 sxc: iframe.sxc,
                 contentBlock: iframe.sxc.manage.rootCB,
                 getManageInfo: iframe.getManageInfo,
+                dashInfo: iframe.getAdditionalDashboardConfig,
                 hide: iframe.justHide
             };
         };
@@ -36,12 +37,14 @@
 
         // the sxc.manage is just to keep the old version running for now
         vm.manageInfo = wrapper.getManageInfo(); // gets the dialogParameters
+        var di = wrapper.dashInfo();
+        vm.isContentApp = di.isContent;
         vm.showAdvanced = vm.manageInfo.user.canDesign;
-        vm.templateId = vm.manageInfo.templateId;
-        vm.undoTemplateId = vm.templateId;
-        vm.contentTypeId = (vm.manageInfo.contentTypeId === "" && vm.manageInfo.templateId !== null)
-            ? cViewWithoutContent           // has template but no content, use placeholder
-            : vm.manageInfo.contentTypeId;
+        vm.templateId = di.templateId;// vm.manageInfo.templateId;
+        vm.undoTemplateId = di.templateId;// vm.templateId;
+        vm.contentTypeId = di.contentTypeId // (vm.manageInfo.contentTypeId === "" && vm.manageInfo.templateId !== null)
+            ? cViewWithoutContent // has template but no content, use placeholder
+            : di.contentTypeId;// vm.manageInfo.contentTypeId;
         vm.undoContentTypeId = vm.contentTypeId;
 
         vm.appId = vm.manageInfo.appId;
@@ -57,7 +60,7 @@
 
         vm.filteredTemplates = function (contentTypeId) {
             // Don't filter on App - so just return all
-            if (!vm.manageInfo.isContentApp)
+            if (!vm.isContentApp)
                 return vm.templates;
 
             var condition = { ContentTypeStaticName: (contentTypeId === cViewWithoutContent) ? "" : contentTypeId };
@@ -91,7 +94,7 @@
                 return;
 
             // Content (ajax, don't save the changed value)
-            if (vm.manageInfo.isContentApp)
+            if (vm.isContentApp)
                 return vm.renderTemplate(newTemplateId);
 
             // App
@@ -135,7 +138,7 @@
             vm.manageInfo.templateChooserVisible = false;
             wrapper.hide();
             wrapper.contentBlock.setTemplateChooserState(false);
-            if (vm.manageInfo.isContentApp) // necessary to show the original template again
+            if (vm.isContentApp) // necessary to show the original template again
                 vm.reloadTemplates();
         };
 
@@ -156,7 +159,7 @@
                     promises.push(vm.reloadTemplates()); 
 
                 // if it's the app-dialog and the app's haven't been loaded yet...
-                if (!vm.manageInfo.isContentApp && vm.apps.length === 0)
+                if (!vm.isContentApp && vm.apps.length === 0)
                     promises.push(vm.loadApps());
                 $q.all(promises).then(vm.externalInstaller.showIfConfigIsEmpty);
             }
@@ -166,7 +169,7 @@
         vm.externalInstaller = {
             // based on situation, decide if we should show the auto-install IFrame
             showIfConfigIsEmpty: function () {
-                var showAutoInstaller = (vm.manageInfo.isContentApp) 
+                var showAutoInstaller = (vm.isContentApp) 
                     ? vm.templates.length === 0 
                     : vm.appCount === 0;
 

@@ -20,6 +20,15 @@
         diagBox.getManageInfo = function() {
             return diagBox.sxc.manage.dialogParameters;
         };
+        diagBox.getAdditionalDashboardConfig = function() {
+            var ec = sxc.manage.editContext;
+            return {
+                isContent: ec.ContentGroup.IsContent,
+                templateId: ec.ContentGroup.TemplateId,
+                contentTypeId: ec.ContentGroup.ContentTypeName,
+                templateChooserVisible: ec.ContentGroup.TemplateChooserVisible,
+            };
+        };
 
         diagBox.getCommands = function() {
             return diagBox.vm; // created by inner code

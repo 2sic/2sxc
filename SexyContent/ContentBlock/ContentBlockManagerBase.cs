@@ -17,10 +17,14 @@ namespace ToSic.SexyContent.ContentBlock
         protected ContentGroup _cg;
         #region methods which the entity-implementation must customize - so it's virtual
 
-        protected virtual ContentGroup ContentGroup
+        protected ContentGroup ContentGroup
+            => _cg ?? (_cg = SxcContext.ContentGroup);
+
+        protected IEnumerable<Template> GetSelectableTemplatesForWebApi()
         {
-            get { throw new Exception();}
+            return SxcContext.AppTemplates.GetAvailableTemplates(ContentGroup);
         }
+
 
         protected virtual void SavePreviewTemplateId(int templateId)
         {
@@ -41,11 +45,11 @@ namespace ToSic.SexyContent.ContentBlock
             // AppHelpers.SetAppIdForModule(SxcContext.ModuleInfo, appId);
         }
 
-        protected virtual IEnumerable<Template> GetSelectableTemplatesForWebApi()
-        {
-            throw new Exception("must be implemented first in inherited class");
-            // return SxcContext.AppTemplates.GetAvailableTemplatesForSelector(ModuleID, SxcContext.AppContentGroups);
-        }
+        //protected virtual IEnumerable<Template> GetSelectableTemplatesForWebApi()
+        //{
+        //    throw new Exception("must be implemented first in inherited class");
+        //    // return SxcContext.AppTemplates.GetAvailableTemplatesForSelector(ModuleID, SxcContext.AppContentGroups);
+        //}
 
         #endregion
 

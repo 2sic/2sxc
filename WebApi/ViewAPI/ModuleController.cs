@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -12,7 +11,6 @@ using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Api;
 using ToSic.SexyContent.ContentBlock;
 using ToSic.SexyContent.Engines;
-using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Internal;
 using ToSic.SexyContent.WebApi;
 using Assembly = System.Reflection.Assembly;
@@ -31,8 +29,6 @@ namespace ToSic.SexyContent.ViewAPI
         public void AddItem([FromUri] int? sortOrder = null)
         {
             ContentBlockManager.AddItem(sortOrder);
-			//var contentGroup = SxcContext.AppContentGroups.GetContentGroupForModule(ActiveModule.ModuleID);
-			//contentGroup.AddContentAndPresentationEntity("content", sortOrder, null, null);
         }
 
         [HttpGet]
@@ -40,17 +36,6 @@ namespace ToSic.SexyContent.ViewAPI
         public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup, bool? newTemplateChooserState = null)
         {
             return ContentBlockManager.SaveTemplateId(templateId, forceCreateContentGroup, newTemplateChooserState);
-            //Guid? result = null;
-            //var contentGroup = SxcContext.AppContentGroups.GetContentGroupForModule(ActiveModule.ModuleID);
-            //if (contentGroup.Exists || forceCreateContentGroup)
-            //    result = SxcContext.AppContentGroups.SaveTemplateId(ActiveModule.ModuleID, templateId);
-            //else
-            //    SxcContext.AppContentGroups.SetPreviewTemplateId(ActiveModule.ModuleID, templateId);
-
-            //if(newTemplateChooserState.HasValue)
-            //    SetTemplateChooserState(newTemplateChooserState.Value);
-
-            //return result;
         }
 
         [HttpGet]
@@ -58,7 +43,6 @@ namespace ToSic.SexyContent.ViewAPI
         public void SetTemplateChooserState([FromUri] bool state)
 		{
             ContentBlockManager.SetTemplateChooserState(state);
-            //DnnStuffToRefactor.UpdateModuleSettingForAllLanguages(ActiveModule.ModuleID, Settings.SettingsShowTemplateChooser, state.ToString());
 		}
 
 		[HttpGet]
@@ -66,20 +50,6 @@ namespace ToSic.SexyContent.ViewAPI
         public IEnumerable<object> GetSelectableApps()
 		{
 		    return ContentBlockManager.GetSelectableApps();
-
-		    //        try
-		    //        {
-		    //            var zoneId = ZoneHelpers.GetZoneID(ActiveModule.PortalID);
-		    //return
-		    //	AppManagement.GetApps(zoneId.Value, false, new PortalSettings(ActiveModule.OwnerPortalID))
-		    //                    .Where(a => !a.Hidden)
-		    //		.Select(a => new {a.Name, a.AppId});
-		    //        }
-		    //        catch (Exception e)
-		    //        {
-		    //Exceptions.LogException(e);
-		    //            throw e;
-		    //        }
 		}
 
         [HttpGet]
@@ -87,15 +57,13 @@ namespace ToSic.SexyContent.ViewAPI
         public void SetAppId(int? appId)
         {
             ContentBlockManager.SetAppId(appId);
-            //AppHelpers.SetAppIdForModule(ActiveModule, appId);
-            }
+        }
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public IEnumerable<object> GetSelectableContentTypes()
         {
             return ContentBlockManager.GetSelectableContentTypes();
-			//return SxcContext.AppTemplates.GetAvailableContentTypesForVisibleTemplates().Select(p => new {p.StaticName, p.Name});
         }
 
         [HttpGet]
@@ -103,8 +71,6 @@ namespace ToSic.SexyContent.ViewAPI
         public IEnumerable<object> GetSelectableTemplates()
         {
             return ContentBlockManager.GetSelectableTemplates();
-   //         var availableTemplates = SxcContext.AppTemplates.GetAvailableTemplatesForSelector(ActiveModule.ModuleID, SxcContext.AppContentGroups);
-			//return availableTemplates.Select(t => new {t.TemplateId, t.Name, t.ContentTypeStaticName});
         }
 
         [HttpGet]
@@ -123,18 +89,9 @@ namespace ToSic.SexyContent.ViewAPI
                     // Fallback / ignore if the language specified has not been found
                     catch (System.Globalization.CultureNotFoundException) { }
 
-                IContentBlock cbToRender;
-                if (!cbIsEntity)
-                {
-                    cbToRender = SxcContext.ContentBlock;
-                }
-                else
-                {
-                    cbToRender = new EntityContentBlock(SxcContext.ContentBlock, cbid);
-                    //cbid = Math.Abs(cbid); // remove any "-" in case it has one, which is used to mark an entity-content-block
-                    //var cbDef = SxcContext.App.Data["Default"].List[cbid];  // get the content-block definition
-                    //cbToRender = new EntityContentBlock(SxcContext.ContentBlock, cbDef);
-                }
+                var cbToRender = !cbIsEntity 
+                    ? SxcContext.ContentBlock 
+                    : new EntityContentBlock(SxcContext.ContentBlock, cbid);
                 var template = cbToRender.App.TemplateManager.GetTemplate(templateId);
                 cbToRender.SxcInstance.Template = template;
 
@@ -144,7 +101,7 @@ namespace ToSic.SexyContent.ViewAPI
                 {
                     Content = new StringContent(rendered, Encoding.UTF8, "text/plain")
                 };
-                //return response;
+
             }
             catch (RenderingException e)
             {
@@ -169,51 +126,14 @@ namespace ToSic.SexyContent.ViewAPI
         public void ChangeOrder([FromUri] int sortOrder, int destinationSortOrder)
 		{
             ContentBlockManager.ChangeOrder(sortOrder, destinationSortOrder);
-			//try
-			//{
-			//	var contentGroup = SxcContext.AppContentGroups.GetContentGroupForModule(ActiveModule.ModuleID);
-			//	contentGroup.ReorderEntities(sortOrder, destinationSortOrder);
-			//}
-			//catch (Exception e)
-			//{
-			//	Exceptions.LogException(e);
-			//	throw;
-			//}
-		}
+        }
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public bool Publish(string part, int sortOrder)
         {
             return ContentBlockManager.Publish(part, sortOrder);
-            //try
-            //{
-            //    var contentGroup = SxcContext.AppContentGroups.GetContentGroupForModule(ActiveModule.ModuleID);
-            //    var contEntity = contentGroup[part][sortOrder];
-            //    var presKey = part.ToLower() == "content" ? "presentation" : "listpresentation";
-            //    var presEntity = contentGroup[presKey][sortOrder];
 
-            //    var hasPresentation = presEntity != null;
-
-            //    // make sure we really have the draft item an not the live one
-            //    var contDraft = contEntity.IsPublished ? contEntity.GetDraft() : contEntity;
-            //    if (contEntity != null && !contDraft.IsPublished)
-            //        SxcContext.EavAppContext.Publishing.PublishDraftInDbEntity(contDraft.RepositoryId, !hasPresentation); // don't save yet if has pres...
-
-            //    if (hasPresentation)
-            //    {
-            //        var presDraft = presEntity.IsPublished ? presEntity.GetDraft() : presEntity;
-            //        if (!presDraft.IsPublished)
-            //            SxcContext.EavAppContext.Publishing.PublishDraftInDbEntity(presDraft.RepositoryId, true);
-            //    }
-
-            //    return true;
-            //}
-            //catch (Exception e)
-            //{
-            //    Exceptions.LogException(e);
-            //    throw;
-            //}
         }
 
         [HttpGet]
@@ -221,16 +141,6 @@ namespace ToSic.SexyContent.ViewAPI
         public void RemoveFromList([FromUri] int sortOrder)
 		{
             ContentBlockManager.RemoveFromList(sortOrder);
-			//try
-			//{
-			//	var contentGroup = SxcContext.AppContentGroups.GetContentGroupForModule(ActiveModule.ModuleID);
-			//	contentGroup.RemoveContentAndPresentationEntities("content", sortOrder);
-			//}
-			//catch (Exception e)
-			//{
-			//	Exceptions.LogException(e);
-			//	throw;
-			//}
 		}
 
         [HttpGet]

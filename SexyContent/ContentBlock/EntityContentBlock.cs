@@ -1,5 +1,4 @@
 ﻿using System;
-using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Interfaces;
@@ -7,58 +6,13 @@ using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.ContentBlock
 {
-    internal class EntityContentBlock: ContentBlockBase
+    internal sealed class EntityContentBlock: ContentBlockBase
     {
-        //private IContentBlock Parent;
+        public override ContentBlockManagerBase Manager => new EntityContentBlockManager(SxcInstance);
+        public override bool ParentIsEntity => false;
 
-        //public int ZoneId { get; private set; }
-        //public int AppId { get; private set; }
-
-        //public App App { get; private set; }
-
-        //public bool ContentGroupExists => ContentGroup?.Exists ?? false;
-        public ContentBlockManagerBase Manager => new EntityContentBlockManager(SxcInstance);
-    
-
-        //public bool ShowTemplateChooser { get; set; }
-        //public bool ParentIsEntity => true;
-        //public int ParentId { get; private set; }
-        //public int ContentBlockId { get; private set; }
-        //public string ParentFieldName => null;
-        //public int ParentFieldSortOrder => 0;
-
-        #region Template and extensive template-choice initialization
-        //private Template _template;
-
-        //// ensure the data is also set correctly...
-        //// Sequence of determining template
-        //// 3. If content-group exists, use template definition there
-        //// 4. If module-settings exists, use that
-        //// 5. If nothing exists, ensure system knows nothing applied 
-        //// #. possible override: If specifically defined in some object calls (like web-api), use that (set when opening this object?)
-        //// #. possible override in url - and allowed by permissions (admin/host), use that
-        //public Template Template
-        //{
-        //    get 
-        //    {
-        //        return _template; 
-        //    }
-        //    set
-        //    {
-        //        _template = value;
-        //        _dataSource = null; // reset this
-        //    }
-        //}
-
-        #endregion
-
-        //public PortalSettings PortalSettings { get; private set; }
-
-        //private ViewDataSource _dataSource;
-        public ViewDataSource Data => _dataSource 
+        public override ViewDataSource Data => _dataSource 
             ?? (_dataSource = ViewDataSource.ForContentGroupInSxc(SxcInstance, Template));
-
-        //public ContentGroup ContentGroup { get; private set; }
 
         #region ContentBlock Definition Entity
 
@@ -128,11 +82,10 @@ namespace ToSic.SexyContent.ContentBlock
             _constructor(parent, cbDef);
         }
 
-        private SxcInstance _sxcInstance;
-        public SxcInstance SxcInstance => _sxcInstance ??
+        public override SxcInstance SxcInstance => _sxcInstance ??
                                           (_sxcInstance = new SxcInstance(this, Parent.SxcInstance));
 
-        public bool IsContentApp => _appName == Constants.DefaultAppName;
+        public override bool IsContentApp => _appName == Constants.DefaultAppName;
 
     }
 }

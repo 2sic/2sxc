@@ -121,23 +121,29 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <param name="module"></param>
         /// <returns></returns>
-        public IEnumerable<Template> GetAvailableTemplatesForSelector(/*ModuleInfo module,*/ int modId, ContentGroupManager cgContentGroups)
+        public IEnumerable<Template> GetAvailableTemplatesForSelector(int modId, ContentGroupManager cgContentGroups)
         {
-            IEnumerable<Template> availableTemplates;
-            var contentGroup = cgContentGroups.GetContentGroupForModule(modId /*module.ModuleID*/);
-            var items = contentGroup.Content;
-
-            if (items.Any(e => e != null))
-                availableTemplates = GetCompatibleTemplates(contentGroup).Where(p => !p.IsHidden);
-            else if (items.Count <= 1)
-                availableTemplates = GetVisibleTemplates();
-            else
-                availableTemplates = GetVisibleTemplates().Where(p => p.UseForList);
-
-            return availableTemplates;
+            // IEnumerable<Template> availableTemplates;
+            var contentGroup = cgContentGroups.GetContentGroupForModule(modId);
+            return GetAvailableTemplates(contentGroup);
         }
 
-        private IEnumerable<Template> GetCompatibleTemplates(ContentGroup contentGroup)
+	    internal IEnumerable<Template> GetAvailableTemplates(ContentGroup contentGroup)
+	    {
+	        IEnumerable<Template> availableTemplates;
+	        var items = contentGroup.Content;
+
+	        if (items.Any(e => e != null))
+	            availableTemplates = GetCompatibleTemplates(contentGroup).Where(p => !p.IsHidden);
+	        else if (items.Count <= 1)
+	            availableTemplates = GetVisibleTemplates();
+	        else
+	            availableTemplates = GetVisibleTemplates().Where(p => p.UseForList);
+
+	        return availableTemplates;
+	    }
+
+	    private IEnumerable<Template> GetCompatibleTemplates(ContentGroup contentGroup)
         {
             var isList = contentGroup.Content.Count > 1;
 

@@ -12,15 +12,10 @@ namespace ToSic.SexyContent.ContentBlock
         }
         #region methods which the entity-implementation must customize - so it's virtual
 
-        protected override ContentGroup ContentGroup
-            => _cg ?? (_cg = SxcContext.AppContentGroups.GetContentGroupForModule(ModuleID));
-
         protected override void SavePreviewTemplateId(int templateId)
         {
             SxcContext.AppContentGroups.SetPreviewTemplateId(ModuleID, templateId);
         }
-
-
 
         internal override void SetTemplateChooserState(bool state)
         {
@@ -30,11 +25,6 @@ namespace ToSic.SexyContent.ContentBlock
         internal override void SetAppId(int? appId)
         {
             AppHelpers.SetAppIdForModule(SxcContext.ModuleInfo, appId);
-        }
-
-        protected override IEnumerable<Template> GetSelectableTemplatesForWebApi()
-        {
-            return SxcContext.AppTemplates.GetAvailableTemplatesForSelector(ModuleID, SxcContext.AppContentGroups);
         }
 
         #endregion

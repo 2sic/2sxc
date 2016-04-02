@@ -1,15 +1,12 @@
-﻿using System;
-using DotNetNuke.Entities.Portals;
-using ToSic.Eav;
+﻿using DotNetNuke.Entities.Portals;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Interfaces;
-using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.ContentBlock
 {
     internal class ContentBlockBase: IContentBlock
     {
-        protected IContentBlock Parent;//{ get; protected set; };
+        protected IContentBlock Parent;
 
         public int ZoneId { get; protected set; }
         public int AppId { get; protected set; }
@@ -17,11 +14,11 @@ namespace ToSic.SexyContent.ContentBlock
         public App App { get; protected set; }
 
         public bool ContentGroupExists => ContentGroup?.Exists ?? false;
-        public ContentBlockManagerBase Manager => null;
+        public virtual ContentBlockManagerBase Manager => null;
     
 
         public bool ShowTemplateChooser { get; set; }
-        public bool ParentIsEntity => true;
+        public virtual bool ParentIsEntity => false;
         public int ParentId { get; protected set; }
         public int ContentBlockId { get; protected set; }
         public string ParentFieldName => null;
@@ -54,17 +51,19 @@ namespace ToSic.SexyContent.ContentBlock
 
         public PortalSettings PortalSettings { get; protected set; }
 
+        // ReSharper disable once InconsistentNaming
         protected ViewDataSource _dataSource;
-        public ViewDataSource Data => null;
+        public virtual ViewDataSource Data => null;
 
         public ContentGroup ContentGroup { get; protected set; }
 
 
-        private SxcInstance _sxcInstance;
-        public SxcInstance SxcInstance => _sxcInstance ??
+        // ReSharper disable once InconsistentNaming
+        protected SxcInstance _sxcInstance;
+        public virtual SxcInstance SxcInstance => _sxcInstance ??
                                           (_sxcInstance = new SxcInstance(this, Parent.SxcInstance));
 
-        public bool IsContentApp => false;// _appName == Constants.DefaultAppName;
+        public virtual bool IsContentApp => false;
 
     }
 }

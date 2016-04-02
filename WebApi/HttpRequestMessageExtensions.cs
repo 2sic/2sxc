@@ -12,17 +12,18 @@ namespace ToSic.SexyContent.WebApi
     {
         internal static SxcInstance GetSxcOfModuleContext(this HttpRequestMessage request)
         {
+            string cbidHeader = "ContentBlockId";
             var moduleInfo = request.FindModuleInfo();
             IContentBlock contentBlock = new ModuleContentBlock(moduleInfo);
 
             // check if we need an inner block
-            var cbidh = request.Headers.GetValues("ContentBlockId").FirstOrDefault();
-            int cbid;
-            int.TryParse(cbidh, out cbid);
-            if (cbid < 0)   // negative id, so it's an inner block
-                contentBlock = new EntityContentBlock(contentBlock, cbid);
-                //return _cbm = new EntityContentBlockManager(SxcContext);
-
+            if (request.Headers.Contains(cbidHeader)) { 
+                var cbidh = request.Headers.GetValues(cbidHeader).FirstOrDefault();
+                int cbid;
+                int.TryParse(cbidh, out cbid);
+                if (cbid < 0)   // negative id, so it's an inner block
+                    contentBlock = new EntityContentBlock(contentBlock, cbid);
+            }
 
             return contentBlock.SxcInstance;
         }
