@@ -32,7 +32,9 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
         // ajax update/replace the content of the content-block
         replace: function(newContent) {
             try {
-                $(cbTag).html(newContent);
+                var newStuff = $(newContent);
+                $(cbTag).replaceWith(newStuff);
+                cbTag = newStuff;
             } catch (e) {
                 console.log("Error while rendering template:");
                 console.log(e);
@@ -123,18 +125,18 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
             });
         },
 
-        // todo: move to content-block
         // Cancel and reset back to original state
         cancelTemplateChange: function() {
             cb.templateId = cb.undoTemplateId;
             cb.contentTypeId = cb.undoContentTypeId;
 
-            // todo: dialog...
+            // dialog...
             sxc.manage.dialog.justHide();
             cb.setTemplateChooserState(false);
 
-            if (cb.isContentApp) // necessary to show the original template again
-                cb.reloadTemplates();
+            if (cb.editContext.ContentGroup.IsContent) // necessary to show the original template again
+                cb.reload()
+                    .then(cb.finalizeReplace);
         },
 
         dialogToggle: function () {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -9,6 +10,8 @@ using DotNetNuke.Entities.Controllers;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Api;
+using ToSic.Eav;
+using ToSic.Eav.BLL;
 using ToSic.SexyContent.ContentBlock;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Internal;
@@ -26,52 +29,83 @@ namespace ToSic.SexyContent.ViewAPI
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public void AddItem([FromUri] int? sortOrder = null)
-        {
-            ContentBlockManager.AddItem(sortOrder);
-        }
+        public void AddItem([FromUri] int? sortOrder = null) 
+            => ContentBlockManager.AddItem(sortOrder);
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup, bool? newTemplateChooserState = null)
-        {
-            return ContentBlockManager.SaveTemplateId(templateId, forceCreateContentGroup, newTemplateChooserState);
-        }
+            => ContentBlockManager.SaveTemplateId(templateId, forceCreateContentGroup, newTemplateChooserState);
+        
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void SetTemplateChooserState([FromUri] bool state)
-		{
-            ContentBlockManager.SetTemplateChooserState(state);
-		}
+		    => ContentBlockManager.SetTemplateChooserState(state);
+		
 
 		[HttpGet]
 		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public IEnumerable<object> GetSelectableApps()
-		{
-		    return ContentBlockManager.GetSelectableApps();
-		}
+		    => ContentBlockManager.GetSelectableApps();
+		
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void SetAppId(int? appId)
-        {
-            ContentBlockManager.SetAppId(appId);
-        }
+            => ContentBlockManager.SetAppId(appId);
+        
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public IEnumerable<object> GetSelectableContentTypes()
-        {
-            return ContentBlockManager.GetSelectableContentTypes();
-        }
+            => ContentBlockManager.GetSelectableContentTypes();
+        
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public IEnumerable<object> GetSelectableTemplates()
+            => ContentBlockManager.GetSelectableTemplates();
+
+        [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        public string GenerateContentBlock(string parent, string field, int sortOrder, string app = "")
         {
-            return ContentBlockManager.GetSelectableTemplates();
+            var cgApp = SxcContext.App;
+            var context = EavDataController.Instance(cgApp.ZoneId, cgApp.AppId).Entities;
+
+            #region create the new entity --> note that it's the sql-type entity, not a standard ientity
+            var contentType = DataSource.GetCache(cgApp.ZoneId, cgApp.AppId).GetContentType(Settings.AttributeSetStaticNameContentBlockTypeName);
+            var values = new Dictionary<string, object>
+            {
+                {EntityContentBlock.CbPropertyApp, new[] { app }},
+                {EntityContentBlock.CbPropertyShowChooser, new[] { true }},
+                // { EntityContentBlock.CbPropertyTemplate, new int[] {}},
+                // { EntityContentBlock.CbPropertyContentGroup, new int[] {}},
+            };
+
+            var entity = context.AddEntity(contentType.AttributeSetId, values, null, null);
+            #endregion
+
+            #region attach to the current list of items
+            var cbEnt = ((EntityContentBlock) SxcContext.ContentBlock).ContentBlockEntity;
+            var blockList = ((Eav.Data.EntityRelationship)cbEnt.GetBestValue(field)).ToList() ?? new List<IEntity>();
+
+            var intList = blockList.Select(b => b.EntityId).ToList();
+            intList.Insert(sortOrder, entity.EntityID);
+
+            var updateDic = new Dictionary<string, int[]>();
+            updateDic.Add(field, intList.ToArray());
+
+            context.UpdateEntity(cbEnt.EntityGuid, updateDic);
+            #endregion
+
+            // now return a rendered instance
+            var newContentBlock = new EntityContentBlock(SxcContext.ContentBlock, entity.EntityID);
+            return newContentBlock.SxcInstance.Render().ToString();
+
         }
+
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
@@ -99,17 +133,6 @@ namespace ToSic.SexyContent.ViewAPI
                 {
                     Content = new StringContent(rendered, Encoding.UTF8, "text/plain")
                 };
-
-            }
-            catch (RenderingException e)
-            {
-                if (e.RenderStatus == RenderStatusType.MissingData)
-                    return new HttpResponseMessage(HttpStatusCode.OK)
-                    {
-                        Content = new StringContent(EngineBase.ToolbarForEmptyTemplate)
-                    };
-				Exceptions.LogException(e);
-                throw e;
 
             }
             catch (Exception e)

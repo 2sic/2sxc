@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.ContentBlock
@@ -26,6 +27,21 @@ namespace ToSic.SexyContent.ContentBlock
         {
             AppHelpers.SetAppIdForModule(SxcContext.ModuleInfo, appId);
         }
+
+        internal override Guid? SaveTemplateIdInContentGroup(bool isNew, Guid cgGuid)
+        {
+            //bool willCreate = !ContentGroup.Exists;
+            //var cgm = SxcContext.ContentBlock.App.ContentGroupManager;
+            //var cgGuid = cgm.SaveTemplateToContentGroup(ModuleID,
+            //    ContentGroup,
+            //    templateId);
+
+            SxcContext.ContentBlock.App.ContentGroupManager.PersistContentGroupAndBlankTemplateToModule(ModuleID,
+                isNew, cgGuid);
+
+            return cgGuid;
+        }
+
 
         #endregion
 

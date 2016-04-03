@@ -3,7 +3,8 @@
         "2sxc4ng",
         "pascalprecht.translate",
         "SxcInpageTemplates",
-        "EavConfiguration"
+        "EavConfiguration",
+        "ui.bootstrap"
     ]);
 
     module.config(function ($translateProvider, AppInstanceId, $translatePartialLoaderProvider, languages) {

@@ -6,15 +6,12 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Modules.Actions;
-using DotNetNuke.Framework;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
-using DotNetNuke.UI.Modules;
 using Newtonsoft.Json;
 using ToSic.SexyContent.ContentBlock;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Engines;
-using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Internal;
 using IDataSource = ToSic.Eav.DataSources.IDataSource;
 
@@ -33,7 +30,6 @@ namespace ToSic.SexyContent
 
         protected int? AppId => ContentBlock.ContentGroupExists ? _sxcInstance?.AppId : null; // some systems rely on appid being blank to adapt behaviour if nothing is saved yet
 
-        protected bool SettingsAreStored => ContentBlock.ContentGroupExists;
         protected Template Template => _sxcInstance.Template;
         #endregion
 
@@ -42,33 +38,25 @@ namespace ToSic.SexyContent
             ContentBlock = new ModuleContentBlock(ModuleConfiguration);
         }
 
-        protected void Page_Load(object sender, EventArgs e)
-		{
-            // always do this, part of the guarantee that everything will work
-			ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
-            var renderHelp = new RenderingHelpers(_sxcInstance);
+  //      protected void Page_Load(object sender, EventArgs e)
+		//{
+  //          // always do this, part of the guarantee that everything will work
+		//	ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
+  //          if (!UserMayEditThisModule) return;
 
 
-			// If logged in, inject Edit JavaScript, and delete / add items
-            if (!UserMayEditThisModule) return;
-            try
-            {
-                // register scripts and css
-                renderHelp.RegisterClientDependencies(Page, string.IsNullOrEmpty(Request.QueryString["debug"]));
-
-                // add instance specific infos to the html-tag
-                //var clientInfos = renderHelp.InfosForTheClientScripts();
-                //((ModuleHost) Parent).Attributes.Add("data-2sxc", JsonConvert.SerializeObject(clientInfos));
-
-                // Add some required variables to module host div which are general global 2sxc-infos
-                //var globalInfos = renderHelp.RegisterGlobalsAttribute();
-                //((ModuleHost)Parent).Attributes.Add("data-2sxc-globals", JsonConvert.SerializeObject(globalInfos));
-            }
-            catch (Exception ex)
-            {
-                Exceptions.ProcessModuleLoadException(this, ex);
-            }
-		}
+		//	// If logged in, inject Edit JavaScript, and delete / add items
+  //          // register scripts and css
+  //          try
+  //          {
+  //              var renderHelp = new RenderingHelpers(_sxcInstance);
+  //              renderHelp.RegisterClientDependencies(Page, string.IsNullOrEmpty(Request.QueryString["debug"]));
+  //          }
+  //          catch (Exception ex)
+  //          {
+  //              Exceptions.ProcessModuleLoadException(this, ex);
+  //          }
+		//}
 
 
         private SxcInstance _sxcInstanceForSecurityChecks;
@@ -147,7 +135,7 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Get the content data and render it with the given template to the page.
         /// </summary>
-        protected void ProcessView(PlaceHolder phOutput, Panel pnlError)//, Panel pnlMessage)
+        protected void ProcessView(PlaceHolder phOutput, Panel pnlError)
         {
             try
             {
@@ -165,17 +153,6 @@ namespace ToSic.SexyContent
                 else
                     phOutput.Controls.Add(new LiteralControl(renderedTemplate));
             }
-            catch (RenderingException rex)
-            {
-                if (rex.RenderStatus == RenderStatusType.MissingData)
-                    ShowMessage(EngineBase.ToolbarForEmptyTemplate, phOutput);// pnlMessage);
-                else
-                    ShowError(rex.Message, pnlError);
-
-                if (rex.ShouldLog)
-                    Exceptions.LogException(rex);
-            }
-            // Catch all other errors; log them
             catch (Exception Ex)
             {
                 ShowError(LocalizeString("TemplateError.Text") + ": " + HttpUtility.HtmlEncode(Ex.ToString()), pnlError, LocalizeString("TemplateError.Text"), false);

@@ -9,12 +9,11 @@
 
             return {
                 dialogContainer: iframe,
-                window: window.parent, //iframe.parent,
+                window: window.parent, 
                 sxc: iframe.sxc,
                 contentBlock: iframe.sxc.manage.contentBlock,
                 getManageInfo: iframe.getManageInfo,
                 dashInfo: iframe.getAdditionalDashboardConfig,
-                //hide: iframe.justHide
             };
         };
     });
@@ -75,8 +74,8 @@
 
             return $q.all([getContentTypes, getTemplates])
                 .then(function(res) {
-                    vm.contentTypes = res[0].data;
-                    vm.templates = res[1].data;
+                    vm.contentTypes = res[0].data || [];
+                    vm.templates = res[1].data || [];
 
                     // Add option for no content type if there are templates without
                     if ($filter("filter")(vm.templates, { ContentTypeStaticName: "" }, true).length > 0) {
@@ -139,7 +138,8 @@
 
         // Optionally change the show state, then 
         // check if it should be shown and load/show
-        vm.show = function(stateChange) {
+        vm.show = function (stateChange) {
+            // todo 8.4 disabled this, as this info should never be set from here again...
             if (stateChange !== undefined)  // optionally change the show-state
                 vm.dashInfo.templateChooserVisible = stateChange;
 
@@ -183,7 +183,7 @@
             }
         };
 
-
+        // todo 8.4 - this should re-load state if re-shown
         vm.toggle = function () {
             if (vm.dashInfo.templateChooserVisible)
                 vm.cancelTemplateChange();

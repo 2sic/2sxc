@@ -86,7 +86,7 @@ angular.module('SxcInpageTemplates', []).run(['$templateCache', function($templa
   'use strict';
 
   $templateCache.put('template-selector/template-selector.html',
-    "<div xng-cloak xng-show=vm.dashInfo.templateChooserVisible class=\"dnnFormMessage dnnFormInfo\"><div class=sc-selectors><div ng-show=!vm.isContentApp><select ng-model=vm.appId class=\"sc-selector-app input-lg\" ng-options=\"a.AppId as (a.Name.indexOf('TemplatePicker.') === 0 ? '[+] ' + (a.Name | translate) : a.Name) for a in vm.apps\" ng-disabled=\"vm.dashInfo.hasContent || vm.dashInfo.isList\"><option value=\"\" ng-disabled=\"vm.appId != null\" translate=TemplatePicker.AppPickerDefault></option></select><span><span ng-if=\"vm.showAdvanced && !vm.isContentApp\"><button type=button class=\"btn btn-default btn-square\" ng-if=\"vm.appId != null\" ng-click=vm.appSettings(); title=\"{{ 'Toolbar.App' | translate }}\"><i class=icon-settings></i></button> <button type=button class=\"btn btn-default btn-square\" ng-click=vm.installApp(); title=\"{{ 'TemplatePicker.GetMoreApps' | translate }}\"><i class=icon-plus></i></button> <button type=button class=\"btn btn-default btn-square\" ng-click=vm.manageApps(); title=\"{{ 'Toolbar.Zone' | translate }}\"><i class=icon-manage></i></button></span></span></div><select ng-show=vm.isContentApp ng-model=vm.contentTypeId class=input-lg ng-options=\"c.StaticName as c.Name for c in vm.contentTypes\" ng-disabled=\"vm.dashInfo.hasContent || vm.dashInfo.isList\"><option ng-disabled=\"vm.contentTypeId != ''\" value=\"\" translate=TemplatePicker.ContentTypePickerDefault></option></select><div><select ng-show=\"vm.isContentApp ? vm.contentTypeId != 0 : (vm.savedAppId != null &&  vm.filteredTemplates().length > 1)\" class=input-lg ng-model=vm.templateId ng-options=\"t.TemplateId as t.Name for t in vm.filteredTemplates(vm.contentTypeId)\"></select><button ng-show=\"vm.templateId != null && vm.savedTemplateId != vm.templateId\" class=\"btn btn-primary btn-square\" ng-click=\"vm.persistTemplate(false, false);\" title=\"{{ 'TemplatePicker.Save' | translate }}\" type=button><i class=icon-ok></i></button> <button ng-show=\"vm.undoTemplateId != null\" class=\"btn btn-default btn-square\" ng-click=vm.cancelTemplateChange(); type=button title=\"{{ 'TemplatePicker.' + (vm.isContentApp ? 'Cancel' : 'Close') | translate }}\"><i class=icon-cancel></i></button></div></div><div class=sc-loading ng-show=vm.loading><i class=\"icon-sxc-spinner fa-spin\"></i></div><div style=\"position: relative\" ng-if=vm.showRemoteInstaller><iframe id=frGettingStarted ng-src={{vm.remoteInstallerUrl}} width=100% height=300px></iframe><div class=sc-loading id=pnlLoading style=display:none><i class=\"icon-sxc-spinner animate-spin\"></i><br><br><span class=sc-loading-label>installing <span id=packageName>.</span></span></div></div></div>"
+    "<div class=\"dnnFormMessage dnnFormInfo\"><tabset><tab select=\"vm.mode='content'\"><tab-heading><span><i icon=icon-ok></i> C</span></tab-heading></tab><tab select=\"vm.mode='app'\"><tab-heading><span><i icon=icon-remove></i> A</span></tab-heading></tab></tabset><div class=sc-selectors><div ng-show=!vm.isContentApp><select ng-model=vm.appId class=\"sc-selector-app input-lg\" ng-options=\"a.AppId as (a.Name.indexOf('TemplatePicker.') === 0 ? '[+] ' + (a.Name | translate) : a.Name) for a in vm.apps\" ng-disabled=\"vm.dashInfo.hasContent || vm.dashInfo.isList\"><option value=\"\" ng-disabled=\"vm.appId != null\" translate=TemplatePicker.AppPickerDefault></option></select><span><span ng-if=\"vm.showAdvanced && !vm.isContentApp\"><button type=button class=\"btn btn-default btn-square\" ng-if=\"vm.appId != null\" ng-click=vm.appSettings(); title=\"{{ 'Toolbar.App' | translate }}\"><i class=icon-settings></i></button> <button type=button class=\"btn btn-default btn-square\" ng-click=vm.installApp(); title=\"{{ 'TemplatePicker.GetMoreApps' | translate }}\"><i class=icon-plus></i></button> <button type=button class=\"btn btn-default btn-square\" ng-click=vm.manageApps(); title=\"{{ 'Toolbar.Zone' | translate }}\"><i class=icon-manage></i></button></span></span></div><select ng-show=vm.isContentApp ng-model=vm.contentTypeId class=input-lg ng-options=\"c.StaticName as c.Name for c in vm.contentTypes\" ng-disabled=\"vm.dashInfo.hasContent || vm.dashInfo.isList\"><option ng-disabled=\"vm.contentTypeId != ''\" value=\"\" translate=TemplatePicker.ContentTypePickerDefault></option></select><div><select ng-show=\"vm.isContentApp ? vm.contentTypeId != 0 : (vm.savedAppId != null &&  vm.filteredTemplates().length > 1)\" class=input-lg ng-model=vm.templateId ng-options=\"t.TemplateId as t.Name for t in vm.filteredTemplates(vm.contentTypeId)\"></select><button ng-show=\"vm.templateId != null && vm.savedTemplateId != vm.templateId\" class=\"btn btn-primary btn-square\" ng-click=\"vm.persistTemplate(false, false);\" title=\"{{ 'TemplatePicker.Save' | translate }}\" type=button><i class=icon-ok></i></button> <button ng-show=\"vm.undoTemplateId != null\" class=\"btn btn-default btn-square\" ng-click=vm.cancelTemplateChange(); type=button title=\"{{ 'TemplatePicker.' + (vm.isContentApp ? 'Cancel' : 'Close') | translate }}\"><i class=icon-cancel></i></button></div></div><div class=sc-loading ng-show=vm.loading><i class=\"icon-sxc-spinner fa-spin\"></i></div><div style=\"position: relative\" ng-if=vm.showRemoteInstaller><iframe id=frGettingStarted ng-src={{vm.remoteInstallerUrl}} width=100% height=300px></iframe><div class=sc-loading id=pnlLoading style=\"display: none\"><i class=\"icon-sxc-spinner animate-spin\"></i><br><br><span class=sc-loading-label>installing <span id=packageName>.</span></span></div></div></div>"
   );
 
 }]);
@@ -96,7 +96,8 @@ angular.module('SxcInpageTemplates', []).run(['$templateCache', function($templa
         "2sxc4ng",
         "pascalprecht.translate",
         "SxcInpageTemplates",
-        "EavConfiguration"
+        "EavConfiguration",
+        "ui.bootstrap"
     ]);
 
     module.config(["$translateProvider", "AppInstanceId", "$translatePartialLoaderProvider", "languages", function ($translateProvider, AppInstanceId, $translatePartialLoaderProvider, languages) {
@@ -191,12 +192,11 @@ angular.module('SxcInpageTemplates', []).run(['$templateCache', function($templa
 
             return {
                 dialogContainer: iframe,
-                window: window.parent, //iframe.parent,
+                window: window.parent, 
                 sxc: iframe.sxc,
                 contentBlock: iframe.sxc.manage.contentBlock,
                 getManageInfo: iframe.getManageInfo,
                 dashInfo: iframe.getAdditionalDashboardConfig,
-                //hide: iframe.justHide
             };
         };
     });
@@ -257,8 +257,8 @@ angular.module('SxcInpageTemplates', []).run(['$templateCache', function($templa
 
             return $q.all([getContentTypes, getTemplates])
                 .then(function(res) {
-                    vm.contentTypes = res[0].data;
-                    vm.templates = res[1].data;
+                    vm.contentTypes = res[0].data || [];
+                    vm.templates = res[1].data || [];
 
                     // Add option for no content type if there are templates without
                     if ($filter("filter")(vm.templates, { ContentTypeStaticName: "" }, true).length > 0) {
@@ -321,7 +321,8 @@ angular.module('SxcInpageTemplates', []).run(['$templateCache', function($templa
 
         // Optionally change the show state, then 
         // check if it should be shown and load/show
-        vm.show = function(stateChange) {
+        vm.show = function (stateChange) {
+            // todo 8.4 disabled this, as this info should never be set from here again...
             if (stateChange !== undefined)  // optionally change the show-state
                 vm.dashInfo.templateChooserVisible = stateChange;
 
@@ -365,7 +366,7 @@ angular.module('SxcInpageTemplates', []).run(['$templateCache', function($templa
             }
         };
 
-
+        // todo 8.4 - this should re-load state if re-shown
         vm.toggle = function () {
             if (vm.dashInfo.templateChooserVisible)
                 vm.cancelTemplateChange();

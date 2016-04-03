@@ -21,23 +21,23 @@ namespace ToSic.SexyContent.ContentBlock
 
         #region ContentBlock Definition Entity
 
-        private IEntity _contentBlockDefinition;
+        internal IEntity ContentBlockEntity;
         private string _appName;
         private Guid _contentGroupGuid;
         private Guid _previewTemplateGuid;
 
         private void ParseContentBlockDefinition(IEntity cbDefinition)
         {
-            _contentBlockDefinition = cbDefinition;
-            _appName = _contentBlockDefinition.GetBestValue(CbPropertyApp)?.ToString() ?? "";
+            ContentBlockEntity = cbDefinition;
+            _appName = ContentBlockEntity.GetBestValue(CbPropertyApp)?.ToString() ?? "";
 
-            string temp = _contentBlockDefinition.GetBestValue(CbPropertyContentGroup)?.ToString() ?? "";
+            string temp = ContentBlockEntity.GetBestValue(CbPropertyContentGroup)?.ToString() ?? "";
             Guid.TryParse(temp, out _contentGroupGuid);
 
-            temp = _contentBlockDefinition.GetBestValue(CbPropertyTemplate)?.ToString() ?? "";
+            temp = ContentBlockEntity.GetBestValue(CbPropertyTemplate)?.ToString() ?? "";
             Guid.TryParse(temp, out _previewTemplateGuid);
 
-            temp = _contentBlockDefinition.GetBestValue(CbPropertyShowChooser)?.ToString() ?? "";
+            temp = ContentBlockEntity.GetBestValue(CbPropertyShowChooser)?.ToString() ?? "";
             bool show;
             if (bool.TryParse(temp, out show))
                 ShowTemplateChooser = show;
@@ -89,6 +89,7 @@ namespace ToSic.SexyContent.ContentBlock
 
         public override SxcInstance SxcInstance => _sxcInstance ??
                                           (_sxcInstance = new SxcInstance(this, Parent.SxcInstance));
+
 
         public override bool IsContentApp => _appName == Constants.DefaultAppName;
 

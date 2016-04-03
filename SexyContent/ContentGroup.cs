@@ -106,14 +106,9 @@ namespace ToSic.SexyContent
         {
             get
             {
-                if (_contentGroupEntity != null)
-                {
-                    var list = ((EntityRelationship) _contentGroupEntity.GetBestValue(cContent)).ToList();
-                    if (list.Count > 0)
-                        return list;
-                }
-
-                return new List<IEntity> {null};
+                if (_contentGroupEntity == null) return new List<IEntity> {null};
+                var list = ((EntityRelationship) _contentGroupEntity.GetBestValue(cContent)).ToList();
+                return list.Count > 0 ? list : new List<IEntity> {null};
             }
         }
 

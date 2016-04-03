@@ -505,7 +505,9 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
         // ajax update/replace the content of the content-block
         replace: function(newContent) {
             try {
-                $(cbTag).html(newContent);
+                var newStuff = $(newContent);
+                $(cbTag).replaceWith(newStuff);
+                cbTag = newStuff;
             } catch (e) {
                 console.log("Error while rendering template:");
                 console.log(e);
@@ -596,18 +598,18 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
             });
         },
 
-        // todo: move to content-block
         // Cancel and reset back to original state
         cancelTemplateChange: function() {
             cb.templateId = cb.undoTemplateId;
             cb.contentTypeId = cb.undoContentTypeId;
 
-            // todo: dialog...
+            // dialog...
             sxc.manage.dialog.justHide();
             cb.setTemplateChooserState(false);
 
-            if (cb.isContentApp) // necessary to show the original template again
-                cb.reloadTemplates();
+            if (cb.editContext.ContentGroup.IsContent) // necessary to show the original template again
+                cb.reload()
+                    .then(cb.finalizeReplace);
         },
 
         dialogToggle: function () {
@@ -787,6 +789,16 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
         editManager.commands.init(editManager);
         editManager.contentBlock = $2sxc.contentBlock(sxc, editManager, cbTag);
 
+        editManager.tempCreateCB = function(parent, field, index, app) {
+            return sxc.webApi.get({
+                url: "view/module/generatecontentblock",
+                params: { parent: parent, field: field, sortOrder: index, app: app }
+            }).then(function(result) {
+                console.log(result);
+            });
+
+        };
+
         // attach & open the mini-dashboard iframe
         if (ec.ContentBlock.ShowTemplatePicker)
             editManager.action({ "action": "layout" });
@@ -823,53 +835,36 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
         diagBox.closeCallback = closeCallback;
         diagBox.sxc = sxc;
 
-        diagBox.getManageInfo = function() {
-            return diagBox.sxc.manage.dialogParameters;
-        };
+        //#region data bridge both ways
+        diagBox.getManageInfo = function() {    return diagBox.sxc.manage.dialogParameters; };
+
         diagBox.getAdditionalDashboardConfig = function () {
             return diagBox.sxc.manage.dashboardConfig;
         };
 
-        diagBox.getCommands = function() {
-            return diagBox.vm; // created by inner code
-        };
+        diagBox.getCommands = function() { return diagBox.vm;  };// created by inner code
 
+        //#endregion
+
+        //#region sync size - not completed yet
         // todo: sync sizes
         diagBox.syncHeight = function (height) {
             console.log("tried resize to " + height);
             diagBox.style.height = height + "px";
         };
 
-        diagBox.isVisible = function() {
-            return diagBox.style.display !== "none";
-        };
+        //#endregion
 
-        //diagBox.persistState = function () {
-        //    var currentlyShowing = diagBox.style.display !== "none";
-        //    if (sxc.manage && sxc.manage.rootCB && sxc.manage.editContext.ContentBlock.ShowTemplatePicker !== currentlyShowing)
-        //        sxc.manage.rootCB.setTemplateChooserState(currentlyShowing);
-        //};
+        //#region Visibility toggle & status
 
-        //diagBox.justToggle = function () {
-        //    diagBox.style.display = diagBox.style.display === "none" ? "" : "none";
-        //};
+        diagBox.isVisible = function() { return diagBox.style.display !== "none";   };
 
-        diagBox.toggle = function () {
-            diagBox.style.display = diagBox.style.display === "none" ? "" : "none";
-            // todo: probably stop toggling, or maybe in the future pass in reset configs
-            //diagBox.vm.toggle(); // tell the inner dashboard about this
-            //diagBox.persistState();
-        };
+        diagBox.toggle = function () { diagBox.style.display = diagBox.style.display === "none" ? "" : "none"; };
 
-        diagBox.justHide = function () {
-            diagBox.style.display = "none";
-            //diagBox.persistState();
-        };
+        diagBox.justHide = function () { diagBox.style.display = "none"; };
+        //#endregion
 
-
-        $(tag).prepend(diagBox);
-
-        //diagBox.persistState();
+        $(tag).before(diagBox);
 
         return diagBox;
     };

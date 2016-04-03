@@ -6,7 +6,7 @@ namespace ToSic.SexyContent.ContentBlock
 {
     internal class ContentBlockBase: IContentBlock
     {
-        internal IContentBlock Parent;
+        public IContentBlock Parent;// => SxcInstance;
 
         public int ZoneId { get; protected set; }
         public int AppId { get; protected set; }
@@ -15,9 +15,9 @@ namespace ToSic.SexyContent.ContentBlock
 
         public bool ContentGroupExists => ContentGroup?.Exists ?? false;
         public virtual ContentBlockManagerBase Manager => null;
-    
 
-        public bool ShowTemplateChooser { get; set; }
+
+        public bool ShowTemplateChooser { get; protected set; } = true;
         public virtual bool ParentIsEntity => false;
         public int ParentId { get; protected set; }
         public int ContentBlockId { get; protected set; }
@@ -60,8 +60,8 @@ namespace ToSic.SexyContent.ContentBlock
 
         // ReSharper disable once InconsistentNaming
         protected SxcInstance _sxcInstance;
-        public virtual SxcInstance SxcInstance => _sxcInstance ??
-                                          (_sxcInstance = new SxcInstance(this, Parent.SxcInstance));
+        public virtual SxcInstance SxcInstance => _sxcInstance 
+            ?? (_sxcInstance = new SxcInstance(this, Parent.SxcInstance));
 
         public virtual bool IsContentApp => false;
 

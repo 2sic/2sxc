@@ -84,7 +84,7 @@ namespace ToSic.SexyContent.Engines
         public string Render()
         {
             if (PreRenderStatus != RenderStatusType.Ok)
-                return "";
+                return AlternateRendering;
 
             var renderedTemplate = RenderTemplate();
             return HandleClientDependencyInjection(renderedTemplate);
@@ -170,13 +170,15 @@ namespace ToSic.SexyContent.Engines
 
             if (Template == null)
                 //{
-                throw new RenderingException("Template Configuration Missing"/* LocalizeString("TemplateConfigurationMissing.Text")*/);
+                throw new RenderingException("Template Configuration Missing");
 
             if (Template.ContentTypeStaticName != "" &&
                 Eav.DataSource.GetCache(App.ZoneId, App.AppId).GetContentType(Template.ContentTypeStaticName) == null)
                 throw new RenderingException("The contents of this module cannot be displayed because I couldn't find the assigned content-type.");
 
         }
+
+        internal string AlternateRendering;
 
         private void CheckExpectedNoRenderConditions()
         {
@@ -185,8 +187,9 @@ namespace ToSic.SexyContent.Engines
             {
                 PreRenderStatus = RenderStatusType.MissingData;
 
+                AlternateRendering = ToolbarForEmptyTemplate;
                 //var toolbar = ToolbarForEmptyTemplate;
-                throw new RenderingException(RenderStatusType.MissingData, "No demo item found ");// /*LocalizeString("NoDemoItem.Text")*/+ " " + toolbar);
+                //throw new RenderingException(RenderStatusType.MissingData, "No demo item found ");// /*LocalizeString("NoDemoItem.Text")*/+ " " + toolbar);
             }
         }
 

@@ -78,6 +78,9 @@ namespace ToSic.SexyContent
 
         private void CheckTemplateOverrides()
         {
+            // skif if not relevant or not yet initialized
+            if (IsContentApp || App == null) return;
+
             // #2 Change Template if URL contains the part in the metadata "ViewNameInUrl"
             var urlParams = HttpContext.Current.Request.QueryString; // todo: reduce dependency on context-current...
             var templateFromUrl = TryToGetTemplateBasedOnUrlParams(urlParams);
@@ -119,8 +122,7 @@ namespace ToSic.SexyContent
                 : new Environment.None.Permissions();
 
             // url-override of view / data
-            if(!IsContentApp)
-                CheckTemplateOverrides();   // allow view change on apps
+            CheckTemplateOverrides();   // allow view change on apps
         }
 
         internal SxcInstance(IContentBlock cb, SxcInstance runtimeInstance)
@@ -131,8 +133,7 @@ namespace ToSic.SexyContent
             Environment.Permissions = runtimeInstance.Environment.Permissions;
 
             // url-override of view / data
-            if (!IsContentApp)
-                CheckTemplateOverrides();   // allow view change on apps
+            CheckTemplateOverrides();   // allow view change on apps
         }
         #endregion
 
@@ -141,13 +142,19 @@ namespace ToSic.SexyContent
         private bool RenderWithEditMetadata => Environment.Permissions.UserMayEditContent;
         public HtmlString Render()
         {
-            var engine = GetRenderingEngine(InstancePurposes.WebView);
-            var renderHelp = new RenderingHelpers(this);//, ModuleInfo, ContentBlock.ContentGroupExists);//, ResolveUrl("~"));
+            string innerContent;
+            if (Template != null)   // when a content block is still new, there is no definition yet
+            {
+                var engine = GetRenderingEngine(InstancePurposes.WebView);
+                innerContent = engine.Render();
+            }
+            else innerContent = "";
+            var renderHelp = new RenderingHelpers(this);
             var editInfos = renderHelp.GetClientInfosAll();
             string result = (RenderWithDiv ? "<div class=\"sc-viewport sc-content-block\" data-cb-instance=\"" + ContentBlock.ParentId +  "\" data-cb-id=\"" + ContentBlock.ContentBlockId + "\"" 
                 + (RenderWithEditMetadata ? " data-edit-context=\'" + JsonConvert.SerializeObject(editInfos) + "'" : "") 
                 + ">\n" : "") 
-                + engine.Render() + 
+                + innerContent + 
                 (RenderWithDiv ? "\n</div>" : "");
             return new HtmlString(result);
         }

@@ -7,6 +7,8 @@ namespace ToSic.SexyContent.Internal
 {
     public class DnnStuffToRefactor
     {
+        // todo: try to cache the result of settings-stored in a static variable, this full check
+        // todo: shouldn't have to happen every time
 
         /// <summary>
         /// Returns true if the Portal HomeDirectory Contains the 2sxc Folder and this folder contains the web.config and a Content folder

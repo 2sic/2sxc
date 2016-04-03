@@ -207,7 +207,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             //var tempVisibleStatus = DnnStuffToRefactor.TryToGetReliableSetting(sxc.ModuleInfo,
             //    Settings.SettingsShowTemplateChooser);
             //var templateChooserVisible = bool.Parse(tempVisibleStatus ?? "true");
-            ContentBlock = new ClientInfoContentBlock(sxc.ContentBlock, /*templateChooserVisible, mic.ModuleID,*/ null, 0);
+            ContentBlock = new ClientInfoContentBlock(sxc.ContentBlock, null, 0);
             ContentGroup = new ClientInfoContentGroup(sxc, isCreated);
         }
     }

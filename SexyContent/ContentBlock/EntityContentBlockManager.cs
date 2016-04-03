@@ -33,8 +33,20 @@ namespace ToSic.SexyContent.ContentBlock
         internal override void SetAppId(int? appId)
         {
             UpdateValue(EntityContentBlock.CbPropertyApp, appId ?? 0);
-            // AppHelpers.SetAppIdForModule(SxcContext.ModuleInfo, appId);
         }
+
+        internal override Guid? SaveTemplateIdInContentGroup(bool isNew, Guid cgGuid)
+        {
+            //bool willCreate = !ContentGroup.Exists;
+            //var cgm = SxcContext.ContentBlock.App.ContentGroupManager;
+            //var cgGuid = cgm.SaveTemplateToContentGroup(ModuleID, ContentGroup, templateId);
+
+            if (isNew)
+                UpdateValue(EntityContentBlock.CbPropertyContentGroup, cgGuid);
+
+            return cgGuid;
+        }
+
         #endregion
 
         #region private helpers

@@ -33,6 +33,8 @@ namespace ToSic.SexyContent.Interfaces
         #endregion
         SxcInstance SxcInstance { get; }
 
+        // SxcInstance ContentBlockParentSxc {get;}
+
         bool ContentGroupExists { get; }
 
         ContentBlockManagerBase Manager { get; }

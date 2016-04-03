@@ -5,7 +5,6 @@ using DotNetNuke.Entities.Modules;
 using ToSic.Eav;
 using ToSic.Eav.BLL;
 using ToSic.Eav.DataSources;
-using DotNetNuke.Services.Localization;
 using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent
@@ -13,7 +12,6 @@ namespace ToSic.SexyContent
 	public class ContentGroupManager
 	{
 		private const string ContentGroupTypeName = "2SexyContent-ContentGroup";
-		//private const string PreviewTemplateIdString = "ToSIC_SexyContent_PreviewTemplateId";
 
 		private readonly int _zoneId;
 		private readonly int _appId;
@@ -50,9 +48,9 @@ namespace ToSic.SexyContent
 			return contentGroups.Any(p => p[type].Any(c => c != null));
 		}
 
-		public Guid CreateContentGroup(int moduleId, int? templateId)
+		public Guid CreateNewContentGroup(int? templateId)
 		{
-		    var context = EavDataController.Instance(_zoneId, _appId).Entities;//  EavContext.Instance(_zoneId, _appId);
+		    var context = EavDataController.Instance(_zoneId, _appId).Entities;
 			var contentType = DataSource.GetCache(_zoneId, _appId).GetContentType(ContentGroupTypeName);
 
 			var values = new Dictionary<string, object>
@@ -66,20 +64,17 @@ namespace ToSic.SexyContent
 
 			var entity = context.AddEntity(contentType.AttributeSetId, values, null, null);
 
-            // Update contentGroup Guid for this module
-            DnnStuffToRefactor.UpdateModuleSettingForAllLanguages(moduleId, Settings.ContentGroupGuidString, entity.EntityGUID.ToString());
-
             return entity.EntityGUID;
 		}
+        
 
-
-		/// <summary>
-		/// Saves a temporary templateId to the module's settings
-		/// This templateId will be used until a contentgroup exists
-		/// </summary>
-		/// <param name="moduleId"></param>
-		/// <param name="previewTemplateId"></param>
-		public void SetPreviewTemplateId(int moduleId, int previewTemplateId)
+        /// <summary>
+        /// Saves a temporary templateId to the module's settings
+        /// This templateId will be used until a contentgroup exists
+        /// </summary>
+        /// <param name="moduleId"></param>
+        /// <param name="previewTemplateId"></param>
+        public void SetPreviewTemplateId(int moduleId, int previewTemplateId)
 		{
             // todo: 2rm - I believe you are accidentally using uncached module settings access - pls check and probably change
             // todo: note: this is done ca. 3x in this class
@@ -99,28 +94,29 @@ namespace ToSic.SexyContent
 
 		public static void DeletePreviewTemplateId(int moduleId)
 		{
-            //var moduleController = new ModuleController();
-            //moduleController.DeleteModuleSetting(moduleId, PreviewTemplateIdString);
             DnnStuffToRefactor.UpdateModuleSettingForAllLanguages(moduleId, Settings.PreviewTemplateIdString, null);
 		}
 
-		public Guid SaveTemplateId(int moduleId, int templateId)
+		public Guid UpdateOrCreateContentGroup(ContentGroup contentGroup, int templateId)
 		{
-			// Remove the previewTemplateId (because it's not needed as soon Content is inserted)
-			DeletePreviewTemplateId(moduleId);
-
-
-			// Create a new contentgroup if it does not exist
-			var contentGroup = GetContentGroupForModule(moduleId);
-
-			if(!contentGroup.Exists)
-				return CreateContentGroup(moduleId, templateId);
-
-            contentGroup.UpdateTemplate(templateId);
+		    if (!contentGroup.Exists)
+		        return CreateNewContentGroup(templateId);
+		    
+		    contentGroup.UpdateTemplate(templateId);
 		    return contentGroup.ContentGroupGuid;
 		}
 
-        // todo: this doesn't look right, will have to mostly move to the new content-block
+	    internal void PersistContentGroupAndBlankTemplateToModule(int moduleId, bool wasCreated, Guid guid)
+	    {
+            // Remove the previewTemplateId (because it's not needed as soon Content is inserted)
+	        DeletePreviewTemplateId(moduleId);
+	        // Update contentGroup Guid for this module
+	        if (wasCreated)
+	            DnnStuffToRefactor.UpdateModuleSettingForAllLanguages(moduleId, Settings.ContentGroupGuidString,
+	                guid.ToString());
+	    }
+
+	    // todo: this doesn't look right, will have to mostly move to the new content-block
 		public ContentGroup GetContentGroupForModule(int moduleId)
 		{
 			var moduleControl = new ModuleController();

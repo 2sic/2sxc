@@ -15,7 +15,6 @@ namespace ToSic.SexyContent.ContentBlock
         protected int ModuleID;
 
         protected ContentGroup _cg;
-        #region methods which the entity-implementation must customize - so it's virtual
 
         protected ContentGroup ContentGroup
             => _cg ?? (_cg = SxcContext.ContentGroup);
@@ -25,31 +24,29 @@ namespace ToSic.SexyContent.ContentBlock
             return SxcContext.AppTemplates.GetAvailableTemplates(ContentGroup);
         }
 
+        #region methods which the entity-implementation must customize - so it's virtual
 
         protected virtual void SavePreviewTemplateId(int templateId)
         {
             throw new Exception("must be implemented first in inherited class");
-            // SxcContext.AppContentGroups.SetPreviewTemplateId(ModuleID, templateId);
         }
 
 
         internal virtual void SetTemplateChooserState(bool state)
         {
             throw new Exception("must be implemented first in inherited class");
-            // DnnStuffToRefactor.UpdateModuleSettingForAllLanguages(ModuleID, Settings.SettingsShowTemplateChooser, state.ToString());
         }
 
         internal virtual void SetAppId(int? appId)
         {
             throw new Exception("must be implemented first in inherited class");
-            // AppHelpers.SetAppIdForModule(SxcContext.ModuleInfo, appId);
         }
 
-        //protected virtual IEnumerable<Template> GetSelectableTemplatesForWebApi()
-        //{
-        //    throw new Exception("must be implemented first in inherited class");
-        //    // return SxcContext.AppTemplates.GetAvailableTemplatesForSelector(ModuleID, SxcContext.AppContentGroups);
-        //}
+
+        internal virtual Guid? SaveTemplateIdInContentGroup(bool isNew, Guid cgGuid)
+        {
+            throw new Exception("must be implemented first in inherited class");        
+        }
 
         #endregion
 
@@ -62,9 +59,17 @@ namespace ToSic.SexyContent.ContentBlock
         public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup, bool? newTemplateChooserState = null)
         {
             Guid? result = null;
-            var contentGroup = ContentGroup;// SxcContext.AppContentGroups.GetContentGroupForModule(ModuleID);
+            var contentGroup = ContentGroup;
             if (contentGroup.Exists || forceCreateContentGroup)
-                result = SxcContext.AppContentGroups.SaveTemplateId(ModuleID, templateId);
+            {
+                var willCreate = !ContentGroup.Exists;
+                var cgm = SxcContext.ContentBlock.App.ContentGroupManager;
+                var cgGuid = cgm.UpdateOrCreateContentGroup(ContentGroup, templateId);
+
+                SaveTemplateIdInContentGroup(willCreate, cgGuid);
+
+                result = cgGuid; 
+            }
             else
                 SavePreviewTemplateId(templateId);
 
@@ -74,8 +79,10 @@ namespace ToSic.SexyContent.ContentBlock
             return result;
         }
 
+
         public IEnumerable<object> GetSelectableTemplates()
         {
+            if (SxcContext.App == null) return null; // no app yet, so we also can't give a list of the app
             return GetSelectableTemplatesForWebApi().Select(t => new { t.TemplateId, t.Name, t.ContentTypeStaticName });
         }
 
@@ -100,7 +107,9 @@ namespace ToSic.SexyContent.ContentBlock
 
         public IEnumerable<object> GetSelectableContentTypes()
         {
-            return SxcContext.AppTemplates.GetAvailableContentTypesForVisibleTemplates().Select(p => new { p.StaticName, p.Name });
+            if (SxcContext.App == null) return null; // no app yet, so we also can't give a list of the app
+            return SxcContext.AppTemplates.GetAvailableContentTypesForVisibleTemplates()
+                    .Select(p => new {p.StaticName, p.Name});
         }
 
         public void ChangeOrder([FromUri] int sortOrder, int destinationSortOrder)

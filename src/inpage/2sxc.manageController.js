@@ -93,6 +93,16 @@
         editManager.commands.init(editManager);
         editManager.contentBlock = $2sxc.contentBlock(sxc, editManager, cbTag);
 
+        editManager.tempCreateCB = function(parent, field, index, app) {
+            return sxc.webApi.get({
+                url: "view/module/generatecontentblock",
+                params: { parent: parent, field: field, sortOrder: index, app: app }
+            }).then(function(result) {
+                console.log(result);
+            });
+
+        };
+
         // attach & open the mini-dashboard iframe
         if (ec.ContentBlock.ShowTemplatePicker)
             editManager.action({ "action": "layout" });

@@ -52,7 +52,7 @@ namespace ToSic.SexyContent.Internal
 
         public static void SetAppIdForModule(ModuleInfo module, int? appId)
         {
-            var moduleController = new ModuleController();
+            //var moduleController = new ModuleController();
 
             // Reset temporary template
             ContentGroupManager.DeletePreviewTemplateId(module.ModuleID);

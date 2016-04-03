@@ -167,8 +167,10 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
             }
 
             #region update-module-title
+
+            var contentBlockId = groupItems.FirstOrDefault()?.FirstOrDefault()?.Header?.Group?.ContentBlockId;
             // case 1: module
-            if (!(groupItems.FirstOrDefault()?.FirstOrDefault()?.Header?.Group?.ContentBlockIsEntity ?? false))
+            if ((contentBlockId ?? Dnn.Module.ModuleID) > 0 ) // if > 0 or not specified
             {
                 // check the contentGroup as to what should be the module title, then try to set it
                 // technically it could have multiple different groups to save in, 
@@ -183,6 +185,9 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
             }
             else
             {
+                // todo 8.5
+                // SxcContext.ContentBlock.Manager.UpdateTitle("");
+
                 // case entity... content block
                 // not handled yet
                 // would have to find the content-block in the ORIGINAL app and update that
