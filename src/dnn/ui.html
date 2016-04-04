@@ -80,19 +80,24 @@
             '../edit/eav-edit.min.js',
             '../sxc-edit/sxc-edit.min.js'
         ];
-        var miniDiagScripts = [
-            "../inpage/inpage-dialogs.min.js"
-        ];
-        if (dialogName === "dash-view")
-            scripts = scripts.concat(miniDiagScripts);
-
         var styles = [
             '../lib/angular/set.min.css',
             '../admin/eav-admin.min.css',
             '../edit/eav-edit.min.css',
-            '../sxc-edit/sxc-edit.min.css',
+            '../sxc-edit/sxc-edit.min.css'
+        ];
+
+        var miniDiagScripts = [
+            "../inpage/inpage-dialogs.min.js"
+        ];
+        var miniDiagStyles = [
             '../inpage/inpage-dialogs.min.css'
         ];
+        if (dialogName === "dash-view") {
+            scripts = scripts.concat(miniDiagScripts);
+            styles = styles.concat(miniDiagStyles);
+        }
+
         for (var s = 0; s < scripts.length; s++)
             addScript(scripts[s]);
         for (var s = 0; s < styles.length; s++)

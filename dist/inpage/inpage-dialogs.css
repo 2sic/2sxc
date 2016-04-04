@@ -1,10 +1,9 @@
 /* Template / ContentType / App-Selector */
 .sc-selectors-wrapper { position: relative;overflow: hidden; }
-.sc-selectors-wrapper .dnnFormInfo { overflow: hidden;padding: 9px;max-width:none; }
 .sc-selectors-wrapper a { cursor: pointer; }
-.sc-selectors { max-width: 100% !important;float: left;width: 300px; }
-.sc-selectors select { display: block;width: 100%;font-family: sans-serif;font-size: 13px;font-weight: 400;font-style: normal;color: #666;line-height: 16px;padding: 9px; }
-.sc-selectors .btn { padding:7px; }
+.sc-selectors { }
+.sc-selectors select { margin-right:4px; display: block;width: 100%; max-width:300px; font-family: sans-serif;font-size: 13px;font-weight: 400;font-style: normal;color: #666;line-height: 16px;padding: 9px; }
+.sc-selectors .btn { font-size:18px; padding:6px; margin-top:3px }
 
 .sc-selectors select[disabled] { opacity: 0.5 }
 .sc-selectors input[disabled] { opacity: 0.5 }
