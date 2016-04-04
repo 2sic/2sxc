@@ -430,6 +430,8 @@
     <Content Include="src\inpage\2sxc._actions.js" />
     <Content Include="src\inpage-dialogs\getting-started\getting-started.js" />
     <Content Include="src\inpage\inpage-icons-codes.css" />
+    <Content Include="src\sxc-admin\importexport\intro.controller.js" />
+    <Content Include="src\sxc-admin\importexport\_app.js" />
     <Content Include="src\sxc-edit\adam\adam-hint.html" />
     <Content Include="src\sxc-edit\adam\adam-hint.directive.js" />
     <Content Include="src\sxc-edit\app-icons-codes.css" />
@@ -474,9 +476,9 @@
     <Content Include="src\sxc-admin\app-settings\app-settings-controller.js" />
     <Content Include="src\sxc-admin\app-settings\app-settings.html" />
     <Content Include="src\sxc-admin\dialog-host\dialog-host-controller.js" />
-    <Content Include="src\sxc-admin\importexport\export.html" />
+    <Content Include="src\sxc-admin\importexport\export-app.html" />
     <Content Include="src\sxc-admin\filters\sxc-filters.js" />
-    <Content Include="src\sxc-admin\importexport\importexport-controller.js" />
+    <Content Include="src\sxc-admin\importexport\export-app.controller.js" />
     <Content Include="src\sxc-admin\importexport\import.html" />
     <Content Include="src\sxc-admin\importexport\intro.html" />
     <Content Include="src\sxc-admin\language-settings\language-settings.js" />

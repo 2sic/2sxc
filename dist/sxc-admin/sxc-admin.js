@@ -295,16 +295,32 @@
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
 
     angular.module("ImportExportApp", [
-        "EavConfiguration",     // config
-        "SxcTemplates",         // inline templates
-        "EavAdminUi",           // dialog (modal) controller
-        "EavServices",              // multi-language stuff
+        "EavConfiguration", // config
+        "SxcTemplates", // inline templates
+        "EavAdminUi", // dialog (modal) controller
+        "EavServices", // multi-language stuff
         "SxcServices"
-        //"SxcFilters",           // for inline unsafe urls
-    ])
+    ]);
+} ());
+(function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
+
+    angular.module("ImportExportApp")
+        .controller("ExportApp", ExportController)
+        ;
+
+    function ExportController(eavAdminDialogs, eavConfig, appId, $modalInstance) {
+        var vm = this;
+
+        vm.close = function () {
+            $modalInstance.dismiss("cancel");
+        };
+    }
+    ExportController.$inject = ["eavAdminDialogs", "eavConfig", "appId", "$modalInstance"];
+} ());
+(function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
+
+    angular.module("ImportExportApp")
         .controller("ImportExportIntro", IntroController)
-        .controller("Import", ImportController)
-        .controller("Export", ExportController)
         ;
 
     function IntroController(eavAdminDialogs, eavConfig, oldDialogs, appId) {
@@ -313,6 +329,17 @@
 
         vm.exportAll = function exp() {
             oldDialogs.appExport(appId, blankCallback);
+
+            // todo: 2tk probably afterwards
+            var resolve = eavAdminDialogs.CreateResolve({
+                appId: appId
+            });
+            return eavAdminDialogs.OpenModal(
+                "importexport/export-app.html",
+                "ExportApp as vm",
+                "lg",
+                resolve, blankCallback);
+
         };
 
         vm.import = function () {
@@ -338,30 +365,13 @@
             //});
             //return eavAdminDialogs.OpenModal(
             //    "importexport/export.html",
-            //    "Export as vm",
+            //    "ExportContent as vm",
             //    "lg",
             //    resolve, blankCallback);
         };
     }
     IntroController.$inject = ["eavAdminDialogs", "eavConfig", "oldDialogs", "appId"];
 
-    function ImportController(eavAdminDialogs, eavConfig, appId, $modalInstance) {
-        var vm = this;
-
-        vm.close = function () {
-            $modalInstance.dismiss("cancel");
-        };
-    }
-    ImportController.$inject = ["eavAdminDialogs", "eavConfig", "appId", "$modalInstance"];
-
-    function ExportController(eavAdminDialogs, eavConfig, appId, $modalInstance) {
-        var vm = this;
-
-        vm.close = function () {
-            $modalInstance.dismiss("cancel");
-        };
-    }
-    ExportController.$inject = ["eavAdminDialogs", "eavConfig", "appId", "$modalInstance"];
 } ());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
 
@@ -937,7 +947,7 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
   );
 
 
-  $templateCache.put('importexport/export.html',
+  $templateCache.put('importexport/export-app.html',
     "<div><div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=ImportExport.Export.Title></h3></div><div class=modal-body><div translate=ImportExport.Export.Intro></div><div translate=ImportExport.Export.FurtherHelp></div>todo: 2tk export stuff + messages, errors etc.</div></div>"
   );
 
