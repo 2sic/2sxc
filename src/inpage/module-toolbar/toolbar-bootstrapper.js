@@ -14,12 +14,9 @@ $(document).ready(function () {
     window.setTimeout(function () {
         modules.each(function () {
             try {
-                var moduleId = $(this).data("cb-instance");
-                var cbid = $(this).data("cb-id");
-                $2sxc(moduleId, cbid).manage.toolbar._processToolbars();
+                $2sxc(this).manage.toolbar._processToolbars(this);
             } catch (e) { // Make sure that if one app breaks, others continue to work
-                if (console && console.error)
-                    console.error(e);
+                if (console && console.error) console.error(e);
             }
         });
     }, 0);

@@ -42,7 +42,7 @@
             templateId: ec.ContentGroup.TemplateId,
             contentTypeId: ec.ContentGroup.ContentTypeName,
             templateChooserVisible: ec.ContentBlock.ShowTemplatePicker, // todo: maybe move to content-goup
-            user: { canDesign: ec.User.CanDesign, canDevelop: ec.User.CanDesign },
+            user: { canDesign: ec.User.CanDesign, canDevelop: ec.User.CanDesign }
         };
 
         var toolsAndButtons = $2sxc._toolbarManager(sxc, ec);
@@ -53,17 +53,12 @@
 
             dialogParameters: ngDialogParams, // used for various dialogs
             toolbarConfig: toolsAndButtons.config, // used to configure buttons / toolbars
-            updateContentGroupGuid: function(newGuid) {
-                ec.ContentGroup.Guid = newGuid;
-                toolsAndButtons.refreshConfig(); 
-                editManager.toolbarConfig = toolsAndButtons.config;
-            },
 
             editContext: ec, // metadata necessary to know what/how to edit
             dashboardConfig: dashConfig,
             commands: $2sxc._contentManagementCommands(sxc, cbTag),
 
-
+            // todo: move/refactor out of this, probably into commands...
             // Perform a toolbar button-action - basically get the configuration and execute it's action
             action: function(settings, event) {
                 var conf = editManager.toolbar.actions[settings.action];
@@ -87,33 +82,59 @@
             getButton: toolsAndButtons.getButton,
             createDefaultToolbar: toolsAndButtons.createDefaultToolbar,
             getToolbar: toolsAndButtons.getToolbar,
-            //_processToolbars: toolsAndButtons._processToolbars,
             //#endregion
 
-            initContentBlocks: function() {
-                // find the blocks / scope
+            // init this object 
+            init: function init() {
+                // finish init of sub-objects
+                editManager.commands.init(editManager);
+                editManager.contentBlock = $2sxc.contentBlock(sxc, editManager, cbTag);
+
+                // attach & open the mini-dashboard iframe
+                if (ec.ContentBlock.ShowTemplatePicker)
+                    editManager.action({ "action": "layout" });
+
+            },
+
+            // change config by replacing the guid, and refreshing dependend sub-objects
+            updateContentGroupGuid: function (newGuid) {
+                ec.ContentGroup.Guid = newGuid;
+                toolsAndButtons.refreshConfig(); 
+                editManager.toolbarConfig = toolsAndButtons.config;
             }
+
+
         };
 
-        // finish init of sub-objects
-        editManager.commands.init(editManager);
-        editManager.contentBlock = $2sxc.contentBlock(sxc, editManager, cbTag);
 
-        editManager.tempCreateCB = function(parent, field, index, app) {
+        editManager.tempCreateCB = function (parent, field, index, app) {
+            var listTag = $("div[sc-cbl-id='" + parent + "'][sc-cbl-field='" + field + "']");
+            if (listTag.length === 0) return alert("can't add content-block as we couldn't find the list");
+            //console.log(listTag[0]);
+            var cblockList = listTag.find("div.sc-content-block");
+            // console.log("found blocks: " + cblockList.length);
+
             return sxc.webApi.get({
                 url: "view/module/generatecontentblock",
                 params: { parentId: parent, field: field, sortOrder: index, app: app }
-            }).then(function(result) {
-                console.log(result);
-            });
+            }).then(function (result) {
+                var newTag = $(result);
+                // console.log(result);
+                if (cblockList.length > 0 && index > 0) 
+                    cblockList[cblockList.length > index + 1 ? index + 1: cblockList.length - 1]
+                        .after(newTag);
+                else 
+                    listTag.prepend(newTag);
+                
 
+                var sxcNew = $2sxc(newTag);
+                sxcNew.manage.toolbar._processToolbars(newTag);
+
+            });
         };
 
-        // attach & open the mini-dashboard iframe
-        if (ec.ContentBlock.ShowTemplatePicker)
-            editManager.action({ "action": "layout" });
 
-
+        editManager.init();
         return editManager;
     };
 

@@ -115,7 +115,7 @@
 
             id: id,
             cbid: cbid,
-            cacheKey: cbid,
+            cacheKey: cacheKey,
             source: null,
             isLoaded: false,
             lastRefresh: null,
