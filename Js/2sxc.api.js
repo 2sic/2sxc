@@ -244,7 +244,7 @@
         };
 
         // add manage property, but not within initializer, because inside the manage-initializer it may reference 2sxc again
-        controller.manage = $2sxc.getManageController ? $2sxc.getManageController(controller) : null,
+        controller.manage = $2sxc.getManageController ? $2sxc.getManageController(controller) : null;
 
         // Make sure back-reference to controller is set
         controller.data.controller = controller;
@@ -343,25 +343,28 @@
 
     // will find the controller based on the dom-element
     $2sxc.autoFind = function(domElement) {
-        var containerTag = $(domElement).closest(".sc-content-block")[0]; 
+        var containerTag = $(domElement).closest(".sc-content-block")[0];
         if (!containerTag) return null;
         var iid = containerTag.getAttribute("data-cb-instance"), cbid = containerTag.getAttribute("data-cb-id");
         if (!iid || !cbid) return null;
         return $2sxc(iid, cbid);
-    }
+    };
 
     // upgrade command
     $2sxc.system = {
-        finishUpgrade: function (domElement) {
+        finishUpgrade: function(domElement) {
             // todo: replace with newer $2sxc(domElement).webApi("url...")... syntax
             var mc = $2sxc(domElement);
             var url = mc.resolveServiceUrl("view/module/finishinstallation");
-            $.ajax({ type: "get", url: url, beforeSend: $.ServicesFramework(mc.id).setModuleHeaders
+            $.ajax({
+                type: "get",
+                url: url,
+                beforeSend: $.ServicesFramework(mc.id).setModuleHeaders
             }).success(function(result) {
                 alert("Upgrade ok, restarting the CMS and reloading...");
                 location.reload();
             });
             alert("starting upgrade. This could take a few minutes. You'll see an 'ok' when it's done. Please wait...");
         }
-    }
+    };
 })();

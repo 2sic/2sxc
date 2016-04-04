@@ -9,11 +9,12 @@ namespace ToSic.SexyContent.ContentBlock
     internal sealed class EntityContentBlock: ContentBlockBase
     {
         internal const string CbPropertyApp = "App";
+        internal const string CbPropertyTitle = "Title";
         internal const string CbPropertyContentGroup = "ContentGroup";
         internal const string CbPropertyTemplate = "Template";
         internal const string CbPropertyShowChooser = "ShowTemplateChooser";
 
-        public override ContentBlockManagerBase Manager => new EntityContentBlockManager(SxcInstance);
+        public override ContentGroupReferenceManagerBase Manager => new EntityContentGroupReferenceManager(SxcInstance);
         public override bool ParentIsEntity => false;
 
         public override ViewDataSource Data => _dataSource 

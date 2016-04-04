@@ -7,23 +7,27 @@
             contentTypeId: editContext.ContentGroup.ContentTypeName
         };
 
-        var toolbarConfig = {
-            portalId: editContext.Environment.WebsiteId,
-            tabId: editContext.Environment.PageId,
-            moduleId: editContext.Environment.InstanceId,
-            version: editContext.Environment.SxcVersion,
+        function createToolbarConfig() {
+            var toolbarConfig = {
+                portalId: editContext.Environment.WebsiteId,
+                tabId: editContext.Environment.PageId,
+                moduleId: editContext.Environment.InstanceId,
+                version: editContext.Environment.SxcVersion,
 
-            contentGroupId: editContext.ContentGroup.Guid,
-            cbIsEntity: editContext.ContentBlock.IsEntity,
-            cbId: editContext.ContentBlock.Id,
-            appPath: editContext.ContentGroup.AppUrl,
-            isList: editContext.ContentGroup.IsList,
-        };
+                contentGroupId: editContext.ContentGroup.Guid, // todo 8.4
+                cbIsEntity: editContext.ContentBlock.IsEntity,
+                cbId: editContext.ContentBlock.Id,
+                appPath: editContext.ContentGroup.AppUrl,
+                isList: editContext.ContentGroup.IsList,
+            };
+            return toolbarConfig;
+        }
 
         var allActions = $2sxc._actions.create(actionParams);
 
         var tb = {
-            config: toolbarConfig,
+            config: createToolbarConfig(),
+            refreshConfig: function() { tb.config = createToolbarConfig(); },
             actions: allActions,
             // Generate a button (an <a>-tag) for one specific toolbar-action. 
             // Expects: settings, an object containing the specs for the expected buton
@@ -77,7 +81,7 @@
 
                 buttons.add = function(verb) {
                     var add = allActions[verb].addCondition;
-                    if (add === undefined || ((typeof (add) === "function") ? add(settings, toolbarConfig) : add))
+                    if (add === undefined || ((typeof (add) === "function") ? add(settings, tb.config) : add))
                         buttons.push($2sxc._lib.extend({}, settings, { action: verb }));
                 };
 

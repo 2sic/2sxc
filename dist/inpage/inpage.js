@@ -358,23 +358,27 @@ $2sxc._contentManagementCommands = function (sxc, targetTag) {
             contentTypeId: editContext.ContentGroup.ContentTypeName
         };
 
-        var toolbarConfig = {
-            portalId: editContext.Environment.WebsiteId,
-            tabId: editContext.Environment.PageId,
-            moduleId: editContext.Environment.InstanceId,
-            version: editContext.Environment.SxcVersion,
+        function createToolbarConfig() {
+            var toolbarConfig = {
+                portalId: editContext.Environment.WebsiteId,
+                tabId: editContext.Environment.PageId,
+                moduleId: editContext.Environment.InstanceId,
+                version: editContext.Environment.SxcVersion,
 
-            contentGroupId: editContext.ContentGroup.Guid,
-            cbIsEntity: editContext.ContentBlock.IsEntity,
-            cbId: editContext.ContentBlock.Id,
-            appPath: editContext.ContentGroup.AppUrl,
-            isList: editContext.ContentGroup.IsList,
-        };
+                contentGroupId: editContext.ContentGroup.Guid, // todo 8.4
+                cbIsEntity: editContext.ContentBlock.IsEntity,
+                cbId: editContext.ContentBlock.Id,
+                appPath: editContext.ContentGroup.AppUrl,
+                isList: editContext.ContentGroup.IsList,
+            };
+            return toolbarConfig;
+        }
 
         var allActions = $2sxc._actions.create(actionParams);
 
         var tb = {
-            config: toolbarConfig,
+            config: createToolbarConfig(),
+            refreshConfig: function() { tb.config = createToolbarConfig(); },
             actions: allActions,
             // Generate a button (an <a>-tag) for one specific toolbar-action. 
             // Expects: settings, an object containing the specs for the expected buton
@@ -428,7 +432,7 @@ $2sxc._contentManagementCommands = function (sxc, targetTag) {
 
                 buttons.add = function(verb) {
                     var add = allActions[verb].addCondition;
-                    if (add === undefined || ((typeof (add) === "function") ? add(settings, toolbarConfig) : add))
+                    if (add === undefined || ((typeof (add) === "function") ? add(settings, tb.config) : add))
                         buttons.push($2sxc._lib.extend({}, settings, { action: verb }));
                 };
 
@@ -647,7 +651,8 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
 
         persistTemplate: function(forceCreate, selectorVisibility) {
             // Save only if the currently saved is not the same as the new
-            var groupExistsAndTemplateUnchanged = !!cb.editContext.ContentGroup.HasContent && (cb.undoTemplateId === cb.templateId);// !!cb.minfo.hasContent && (cb.undoTemplateId === cb.templateId);
+            var groupExistsAndTemplateUnchanged = !!cb.editContext.ContentGroup.HasContent
+                && (cb.undoTemplateId === cb.templateId);// !!cb.minfo.hasContent && (cb.undoTemplateId === cb.templateId);
             var promiseToSetState;
             if (groupExistsAndTemplateUnchanged)
                 promiseToSetState = (cb.editContext.ContentBlock.ShowTemplatePicker)//.minfo.templateChooserVisible)
@@ -667,8 +672,7 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
                         if (console)
                             console.log("created content group {" + newGuid + "}");
 
-                        // todo: will need more complexity / 2016-03-30 unsure if this is actually ever re-used...
-                        // cb.minfo.config.contentGroupId = newGuid; // update internal ContentGroupGuid 
+                        manage.updateContentGroupGuid(newGuid);
                     });
 
             var promiseToCorrectUi = promiseToSetState.then(function() {
@@ -749,6 +753,12 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
 
             dialogParameters: ngDialogParams, // used for various dialogs
             toolbarConfig: toolsAndButtons.config, // used to configure buttons / toolbars
+            updateContentGroupGuid: function(newGuid) {
+                ec.ContentGroup.Guid = newGuid;
+                toolsAndButtons.refreshConfig(); 
+                editManager.toolbarConfig = toolsAndButtons.config;
+            },
+
             editContext: ec, // metadata necessary to know what/how to edit
             dashboardConfig: dashConfig,
             commands: $2sxc._contentManagementCommands(sxc, cbTag),
@@ -792,7 +802,7 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
         editManager.tempCreateCB = function(parent, field, index, app) {
             return sxc.webApi.get({
                 url: "view/module/generatecontentblock",
-                params: { parent: parent, field: field, sortOrder: index, app: app }
+                params: { parentId: parent, field: field, sortOrder: index, app: app }
             }).then(function(result) {
                 console.log(result);
             });

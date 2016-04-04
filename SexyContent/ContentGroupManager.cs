@@ -74,7 +74,7 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <param name="moduleId"></param>
         /// <param name="previewTemplateId"></param>
-        public void SetPreviewTemplateId(int moduleId, int previewTemplateId)
+        public void SetModulePreviewTemplateId(int moduleId, Guid previewTemplateGuid)
 		{
             // todo: 2rm - I believe you are accidentally using uncached module settings access - pls check and probably change
             // todo: note: this is done ca. 3x in this class
@@ -85,8 +85,8 @@ namespace ToSic.SexyContent
 			if(settings[Settings.ContentGroupGuidString] != null)
 				throw new Exception("Preview template id cannot be set for a module that already has content.");
 
-			var dataSource = DataSource.GetInitialDataSource(_zoneId, _appId);
-			var previewTemplateGuid = dataSource.List[previewTemplateId].EntityGuid;
+			//var dataSource = DataSource.GetInitialDataSource(_zoneId, _appId);
+			//var previewTemplateGuid = dataSource.List[previewTemplateId].EntityGuid;
 
             //moduleController.UpdateModuleSetting(moduleId, PreviewTemplateIdString, previewTemplateGuid.ToString());
             DnnStuffToRefactor.UpdateModuleSettingForAllLanguages(moduleId, Settings.PreviewTemplateIdString, previewTemplateGuid.ToString());

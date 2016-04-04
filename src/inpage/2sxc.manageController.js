@@ -53,6 +53,12 @@
 
             dialogParameters: ngDialogParams, // used for various dialogs
             toolbarConfig: toolsAndButtons.config, // used to configure buttons / toolbars
+            updateContentGroupGuid: function(newGuid) {
+                ec.ContentGroup.Guid = newGuid;
+                toolsAndButtons.refreshConfig(); 
+                editManager.toolbarConfig = toolsAndButtons.config;
+            },
+
             editContext: ec, // metadata necessary to know what/how to edit
             dashboardConfig: dashConfig,
             commands: $2sxc._contentManagementCommands(sxc, cbTag),
@@ -96,7 +102,7 @@
         editManager.tempCreateCB = function(parent, field, index, app) {
             return sxc.webApi.get({
                 url: "view/module/generatecontentblock",
-                params: { parent: parent, field: field, sortOrder: index, app: app }
+                params: { parentId: parent, field: field, sortOrder: index, app: app }
             }).then(function(result) {
                 console.log(result);
             });

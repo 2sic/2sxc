@@ -10,7 +10,7 @@ namespace ToSic.SexyContent.ContentBlock
     {
         public ModuleInfo ModuleInfo;
 
-        public override ContentBlockManagerBase Manager => new ModuleContentBlockManager(SxcInstance);
+        public override ContentGroupReferenceManagerBase Manager => new ModuleContentGroupReferenceManager(SxcInstance);
 
         public override bool ParentIsEntity => false;
 

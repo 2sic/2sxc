@@ -316,14 +316,13 @@ namespace ToSic.SexyContent.Environment.Dnn7
         {
             IsCreated = isCreated;
             IsContent = sxc.IsContentApp;
-            if (isCreated)
-            {
-                Id = sxc.ContentGroup.ContentGroupId;
-                Guid = sxc.ContentGroup.ContentGroupGuid;
-                AppId = sxc.AppId ?? 0;                     // todo: check if the 0 (previously null) causes problems
-                AppUrl = sxc.App.Path + "/";
-                HasContent = sxc.Template != null && sxc.ContentGroup.Exists;
-            }
+
+            Id = sxc.ContentGroup?.ContentGroupId ?? 0;
+            Guid = sxc.ContentGroup?.ContentGroupGuid ?? Guid.Empty;
+            AppId = sxc.AppId ?? 0;                     
+            AppUrl = sxc.App?.Path ?? "" + "/" ;
+            HasContent = sxc.Template != null && sxc.ContentGroup.Exists;
+
             ZoneId = sxc.ZoneId ?? 0;
             TemplateId = sxc.Template?.TemplateId ?? 0;     // todo: check if the 0 (previously null) causes problems
             ContentTypeName = sxc.Template?.ContentTypeStaticName ?? "";

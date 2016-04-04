@@ -37,6 +37,6 @@ namespace ToSic.SexyContent.Interfaces
 
         bool ContentGroupExists { get; }
 
-        ContentBlockManagerBase Manager { get; }
+        ContentGroupReferenceManagerBase Manager { get; }
     }
 }

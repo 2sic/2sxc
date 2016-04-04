@@ -6,28 +6,27 @@ using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.ContentBlock
 {
-    internal class EntityContentBlockManager: ContentBlockManagerBase
+    internal class EntityContentGroupReferenceManager: ContentGroupReferenceManagerBase
     {
-        internal EntityContentBlockManager(SxcInstance sxc)
+        internal EntityContentGroupReferenceManager(SxcInstance sxc)
         {
             SxcContext = sxc;
             ModuleID = SxcContext.ModuleInfo.ModuleID;
         }
         #region methods which the entity-implementation must customize - so it's virtual
 
-        protected override void SavePreviewTemplateId(int templateId)
+        protected override void SavePreviewTemplateId(Guid templateGuid, bool? newTemplateChooserState = null)
         {
-            UpdateValue(EntityContentBlock.CbPropertyTemplate, templateId);
+            var vals = new Dictionary<string, object>();
+            vals.Add(EntityContentBlock.CbPropertyTemplate, templateGuid.ToString());
+            if (newTemplateChooserState.HasValue)
+                vals.Add(EntityContentBlock.CbPropertyShowChooser, newTemplateChooserState.Value); // must blank the template
+            Update(vals);
         }
 
         internal override void SetTemplateChooserState(bool state)
         {
             UpdateValue(EntityContentBlock.CbPropertyShowChooser, state);
-            // todo: update the value in the contentblock entity
-            //var vals = new Dictionary<string, object>();
-            //vals.Add(EntityContentBlock.CbPropertyShowChooser, state);
-            //Update(vals);
-            //((ContentBlockBase)SxcContext.ContentBlock).Parent.App.Data.Update(Math.Abs(SxcContext.ContentBlock.ContentBlockId), vals);
         }
 
         internal override void SetAppId(int? appId)
@@ -35,16 +34,9 @@ namespace ToSic.SexyContent.ContentBlock
             UpdateValue(EntityContentBlock.CbPropertyApp, appId ?? 0);
         }
 
-        internal override Guid? SaveTemplateIdInContentGroup(bool isNew, Guid cgGuid)
+        internal override void EnsureLinkToContentGroup(Guid cgGuid)
         {
-            //bool willCreate = !ContentGroup.Exists;
-            //var cgm = SxcContext.ContentBlock.App.ContentGroupManager;
-            //var cgGuid = cgm.SaveTemplateToContentGroup(ModuleID, ContentGroup, templateId);
-
-            if (isNew)
-                UpdateValue(EntityContentBlock.CbPropertyContentGroup, cgGuid);
-
-            return cgGuid;
+            // link to the CG
         }
 
         #endregion

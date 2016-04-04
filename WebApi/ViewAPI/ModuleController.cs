@@ -23,53 +23,53 @@ namespace ToSic.SexyContent.ViewAPI
     // had to disable this, as most requests now come from a lone page [SupportedModules("2sxc,2sxc-app")]
     public class ModuleController : SxcApiController
     {
-        private ContentBlockManagerBase _cbm;
-        private ContentBlockManagerBase ContentBlockManager => _cbm ?? (_cbm = SxcContext.ContentBlock.Manager);
+        private ContentGroupReferenceManagerBase _cbm;
+        private ContentGroupReferenceManagerBase ContentGroupReferenceManager => _cbm ?? (_cbm = SxcContext.ContentBlock.Manager);
 
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void AddItem([FromUri] int? sortOrder = null) 
-            => ContentBlockManager.AddItem(sortOrder);
+            => ContentGroupReferenceManager.AddItem(sortOrder);
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup, bool? newTemplateChooserState = null)
-            => ContentBlockManager.SaveTemplateId(templateId, forceCreateContentGroup, newTemplateChooserState);
+            => ContentGroupReferenceManager.SaveTemplateId(templateId, forceCreateContentGroup, newTemplateChooserState);
         
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void SetTemplateChooserState([FromUri] bool state)
-		    => ContentBlockManager.SetTemplateChooserState(state);
+		    => ContentGroupReferenceManager.SetTemplateChooserState(state);
 		
 
 		[HttpGet]
 		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public IEnumerable<object> GetSelectableApps()
-		    => ContentBlockManager.GetSelectableApps();
+		    => ContentGroupReferenceManager.GetSelectableApps();
 		
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void SetAppId(int? appId)
-            => ContentBlockManager.SetAppId(appId);
+            => ContentGroupReferenceManager.SetAppId(appId);
         
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public IEnumerable<object> GetSelectableContentTypes()
-            => ContentBlockManager.GetSelectableContentTypes();
+            => ContentGroupReferenceManager.GetSelectableContentTypes();
         
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public IEnumerable<object> GetSelectableTemplates()
-            => ContentBlockManager.GetSelectableTemplates();
+            => ContentGroupReferenceManager.GetSelectableTemplates();
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public string GenerateContentBlock(string parent, string field, int sortOrder, string app = "")
+        public string GenerateContentBlock(int parentId, string field, int sortOrder, string app = "")
         {
             var cgApp = SxcContext.App;
             var context = EavDataController.Instance(cgApp.ZoneId, cgApp.AppId).Entities;
@@ -78,17 +78,17 @@ namespace ToSic.SexyContent.ViewAPI
             var contentType = DataSource.GetCache(cgApp.ZoneId, cgApp.AppId).GetContentType(Settings.AttributeSetStaticNameContentBlockTypeName);
             var values = new Dictionary<string, object>
             {
-                {EntityContentBlock.CbPropertyApp, new[] { app }},
-                {EntityContentBlock.CbPropertyShowChooser, new[] { true }},
-                // { EntityContentBlock.CbPropertyTemplate, new int[] {}},
-                // { EntityContentBlock.CbPropertyContentGroup, new int[] {}},
+                {EntityContentBlock.CbPropertyTitle, ""},
+                {EntityContentBlock.CbPropertyApp, app},
+                {EntityContentBlock.CbPropertyShowChooser, true},
             };
 
             var entity = context.AddEntity(contentType.AttributeSetId, values, null, null);
             #endregion
 
             #region attach to the current list of items
-            var cbEnt = ((EntityContentBlock) SxcContext.ContentBlock).ContentBlockEntity;
+
+            var cbEnt = SxcContext.App.Data["Default"].List[parentId]; // ((EntityContentBlock) SxcContext.ContentBlock).ContentBlockEntity;
             var blockList = ((Eav.Data.EntityRelationship)cbEnt.GetBestValue(field)).ToList() ?? new List<IEntity>();
 
             var intList = blockList.Select(b => b.EntityId).ToList();
@@ -146,14 +146,14 @@ namespace ToSic.SexyContent.ViewAPI
 		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void ChangeOrder([FromUri] int sortOrder, int destinationSortOrder)
 		{
-            ContentBlockManager.ChangeOrder(sortOrder, destinationSortOrder);
+            ContentGroupReferenceManager.ChangeOrder(sortOrder, destinationSortOrder);
         }
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public bool Publish(string part, int sortOrder)
         {
-            return ContentBlockManager.Publish(part, sortOrder);
+            return ContentGroupReferenceManager.Publish(part, sortOrder);
 
         }
 
@@ -161,7 +161,7 @@ namespace ToSic.SexyContent.ViewAPI
 		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void RemoveFromList([FromUri] int sortOrder)
 		{
-            ContentBlockManager.RemoveFromList(sortOrder);
+            ContentGroupReferenceManager.RemoveFromList(sortOrder);
 		}
 
         [HttpGet]

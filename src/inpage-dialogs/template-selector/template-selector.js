@@ -97,7 +97,7 @@
 
             // App
             vm.persistTemplate(false)
-                .then(wrapper.window.location.reload); 
+                .then(function() { wrapper.window.location.reload(); }); //note: must be in a function, as the reload is a method of the location object
         });
 
         // Auto-set view-dropdown if content-type changed
@@ -116,7 +116,7 @@
                 return;
 
             svc.setAppId(newAppId)
-                .then(wrapper.window.location.reload);
+                .then(function () { wrapper.window.location.reload(); });
         });
 
         vm.manageApps = function() {    wrapper.sxc.manage.action({ "action": "zone" });    };

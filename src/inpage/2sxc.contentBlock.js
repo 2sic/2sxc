@@ -174,7 +174,8 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
 
         persistTemplate: function(forceCreate, selectorVisibility) {
             // Save only if the currently saved is not the same as the new
-            var groupExistsAndTemplateUnchanged = !!cb.editContext.ContentGroup.HasContent && (cb.undoTemplateId === cb.templateId);// !!cb.minfo.hasContent && (cb.undoTemplateId === cb.templateId);
+            var groupExistsAndTemplateUnchanged = !!cb.editContext.ContentGroup.HasContent
+                && (cb.undoTemplateId === cb.templateId);// !!cb.minfo.hasContent && (cb.undoTemplateId === cb.templateId);
             var promiseToSetState;
             if (groupExistsAndTemplateUnchanged)
                 promiseToSetState = (cb.editContext.ContentBlock.ShowTemplatePicker)//.minfo.templateChooserVisible)
@@ -194,8 +195,7 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
                         if (console)
                             console.log("created content group {" + newGuid + "}");
 
-                        // todo: will need more complexity / 2016-03-30 unsure if this is actually ever re-used...
-                        // cb.minfo.config.contentGroupId = newGuid; // update internal ContentGroupGuid 
+                        manage.updateContentGroupGuid(newGuid);
                     });
 
             var promiseToCorrectUi = promiseToSetState.then(function() {

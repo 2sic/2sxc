@@ -4,12 +4,13 @@ using System.Linq;
 using System.Web.Http;
 using System.Web.UI.WebControls;
 using DotNetNuke.Services.Exceptions;
+using ToSic.Eav;
 using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.ContentBlock
 {
 
-    internal abstract class ContentBlockManagerBase 
+    internal abstract class ContentGroupReferenceManagerBase 
     {
         protected SxcInstance SxcContext;
         protected int ModuleID;
@@ -26,7 +27,7 @@ namespace ToSic.SexyContent.ContentBlock
 
         #region methods which the entity-implementation must customize - so it's virtual
 
-        protected virtual void SavePreviewTemplateId(int templateId)
+        protected virtual void SavePreviewTemplateId(Guid templateGuid, bool? newTemplateChooserState = null)
         {
             throw new Exception("must be implemented first in inherited class");
         }
@@ -43,7 +44,7 @@ namespace ToSic.SexyContent.ContentBlock
         }
 
 
-        internal virtual Guid? SaveTemplateIdInContentGroup(bool isNew, Guid cgGuid)
+        internal virtual void EnsureLinkToContentGroup(Guid cgGuid)
         {
             throw new Exception("must be implemented first in inherited class");        
         }
@@ -60,21 +61,27 @@ namespace ToSic.SexyContent.ContentBlock
         {
             Guid? result = null;
             var contentGroup = ContentGroup;
+
+            // if it exists or has a force-create, then write to the Content-Group, otherwise it's just a preview
             if (contentGroup.Exists || forceCreateContentGroup)
             {
-                var willCreate = !ContentGroup.Exists;
-                var cgm = SxcContext.ContentBlock.App.ContentGroupManager;
-                var cgGuid = cgm.UpdateOrCreateContentGroup(ContentGroup, templateId);
+                var existedBeforeSettingTemplate = ContentGroup.Exists;
 
-                SaveTemplateIdInContentGroup(willCreate, cgGuid);
+                var contentGroupGuid = SxcContext.ContentBlock.App.ContentGroupManager
+                    .UpdateOrCreateContentGroup(ContentGroup, templateId);
 
-                result = cgGuid; 
+                if (!existedBeforeSettingTemplate)
+                    EnsureLinkToContentGroup(contentGroupGuid);
+
+                result = contentGroupGuid;
             }
             else
-                SavePreviewTemplateId(templateId);
-
-            if (newTemplateChooserState.HasValue)
-                SetTemplateChooserState(newTemplateChooserState.Value);
+            {
+                // only set preview / content-group-reference - but must use the guid
+                var dataSource = SxcContext.App.Data["Default"];
+                var templateGuid = dataSource.List[templateId].EntityGuid;
+                SavePreviewTemplateId(templateGuid, newTemplateChooserState);
+            }
 
             return result;
         }

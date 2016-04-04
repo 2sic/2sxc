@@ -4,18 +4,20 @@ using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.ContentBlock
 {
-    internal class ModuleContentBlockManager: ContentBlockManagerBase
+    internal class ModuleContentGroupReferenceManager: ContentGroupReferenceManagerBase
     {
-        internal ModuleContentBlockManager(SxcInstance sxc)
+        internal ModuleContentGroupReferenceManager(SxcInstance sxc)
         {
             SxcContext = sxc;
             ModuleID = SxcContext.ModuleInfo.ModuleID;
         }
         #region methods which the entity-implementation must customize - so it's virtual
 
-        protected override void SavePreviewTemplateId(int templateId)
+        protected override void SavePreviewTemplateId(Guid templateGuid, bool? newTemplateChooserState = null)
         {
-            SxcContext.AppContentGroups.SetPreviewTemplateId(ModuleID, templateId);
+            SxcContext.AppContentGroups.SetModulePreviewTemplateId(ModuleID, templateGuid);
+            if(newTemplateChooserState.HasValue)
+                SetTemplateChooserState(newTemplateChooserState.Value);
         }
 
         internal override void SetTemplateChooserState(bool state)
@@ -28,18 +30,10 @@ namespace ToSic.SexyContent.ContentBlock
             AppHelpers.SetAppIdForModule(SxcContext.ModuleInfo, appId);
         }
 
-        internal override Guid? SaveTemplateIdInContentGroup(bool isNew, Guid cgGuid)
+        internal override void EnsureLinkToContentGroup(Guid cgGuid)
         {
-            //bool willCreate = !ContentGroup.Exists;
-            //var cgm = SxcContext.ContentBlock.App.ContentGroupManager;
-            //var cgGuid = cgm.SaveTemplateToContentGroup(ModuleID,
-            //    ContentGroup,
-            //    templateId);
-
             SxcContext.ContentBlock.App.ContentGroupManager.PersistContentGroupAndBlankTemplateToModule(ModuleID,
-                isNew, cgGuid);
-
-            return cgGuid;
+                true, cgGuid);
         }
 
 

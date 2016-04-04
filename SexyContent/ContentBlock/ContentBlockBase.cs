@@ -14,7 +14,7 @@ namespace ToSic.SexyContent.ContentBlock
         public App App { get; protected set; }
 
         public bool ContentGroupExists => ContentGroup?.Exists ?? false;
-        public virtual ContentBlockManagerBase Manager => null;
+        public virtual ContentGroupReferenceManagerBase Manager => null;
 
 
         public bool ShowTemplateChooser { get; protected set; } = true;

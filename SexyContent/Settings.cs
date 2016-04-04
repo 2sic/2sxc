@@ -37,7 +37,7 @@ namespace ToSic.SexyContent
         public static readonly string AttributeSetStaticNameApps = "2SexyContent-App";
         public static readonly string AttributeSetStaticNameAppResources = "App-Resources";
         public static readonly string AttributeSetStaticNameAppSettings = "App-Settings";
-        internal static readonly string AttributeSetStaticNameContentBlockTypeName = "ContentBlock";
+        internal static readonly string AttributeSetStaticNameContentBlockTypeName = "ContentGroupReference";
         public static readonly string ToSexyDirectory = "~/DesktopModules/ToSIC_SexyContent";
         public static readonly string TemporaryDirectory = "~/DesktopModules/ToSIC_SexyContent/_";
 

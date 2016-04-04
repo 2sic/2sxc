@@ -63,7 +63,7 @@ $2sxc.ng = {
     findContentBlockId: function (el) {
         var cbid;
         while (el.getAttribute) { // loop as long as it knows this command
-            if (cbid = el.getAttribute($2sxc.ng.cbidAttrName)) return cbid;
+            if ((cbid = el.getAttribute($2sxc.ng.cbidAttrName))) return cbid;
             el = el.parentNode;
         }
         return null;

@@ -248,10 +248,10 @@
     <Compile Include="Interfaces\IApp.cs" />
     <Compile Include="Interfaces\IAppData.cs" />
     <Compile Include="Interfaces\IContentBlock.cs" />
-    <Compile Include="SexyContent\ContentBlock\ContentBlockManagerBase.cs" />
+    <Compile Include="SexyContent\ContentBlock\ContentGroupReferenceManagerBase.cs" />
     <Compile Include="SexyContent\ContentBlock\ContentBlockBase.cs" />
-    <Compile Include="SexyContent\ContentBlock\EntityContentBlockManager.cs" />
-    <Compile Include="SexyContent\ContentBlock\ModuleContentBlockManager.cs" />
+    <Compile Include="SexyContent\ContentBlock\EntityContentGroupReferenceManager.cs" />
+    <Compile Include="SexyContent\ContentBlock\ModuleContentGroupReferenceManager.cs" />
     <Compile Include="SexyContent\Internal\AppManagement.cs" />
     <Compile Include="SexyContent\ContentBlock\EntityContentBlock.cs" />
     <Compile Include="SexyContent\ContentBlock\ModuleContentBlock.cs" />
