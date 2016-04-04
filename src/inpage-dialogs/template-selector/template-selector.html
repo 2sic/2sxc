@@ -1,7 +1,7 @@
 ﻿
 
-<div class="dnnFormMessage dnnFormInfo">
-    <tabset>
+<div class="sc-selectors-wrapper">
+    <!--<tabset>
         <tab select="vm.mode='content'">
             <tab-heading>
                 <span>
@@ -16,7 +16,7 @@
                 </span>
             </tab-heading>
         </tab>
-    </tabset>
+    </tabset>-->
     <div class="sc-selectors">
         <!-- App Selector - only relevant in App-Mode -->
         <div ng-show="!vm.isContentApp">
@@ -67,14 +67,14 @@
                     ng-options="t.TemplateId as t.Name for t in vm.filteredTemplates(vm.contentTypeId)"></select>
 
             <button ng-show="vm.templateId != null && vm.savedTemplateId != vm.templateId"
-                    class="btn btn-primary btn-square"
+                    class="btn btn-primary"
                     ng-click="vm.persistTemplate(false, false);"
                     title="{{ 'TemplatePicker.Save' | translate }}"
                     type="button">
                 <i class="icon-ok"></i>
             </button>
             <button ng-show="vm.undoTemplateId != null"
-                    class="btn btn-default btn-square"
+                    class="btn btn-default"
                     ng-click="vm.cancelTemplateChange();"
                     type="button"
                     title="{{ 'TemplatePicker.' + (vm.isContentApp ? 'Cancel' : 'Close') | translate }}">

@@ -831,7 +831,7 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
     var diag = $2sxc._dialog = {
         mode: "iframe",
         templates: {
-            inline: "<iframe width='100%' height='200px' src='{{url}}'"
+            inline: "<iframe width='100%' height='100px' src='{{url}}'"
             // + "onload=\"this.syncHeight(this.contentWindow.document.body.scrollHeight);\""
             //+ "onload=\"this.style.height=this.contentWindow.document.body.scrollHeight + 'px';\""
             + "onresize=\"console.log('resize')\""
@@ -856,12 +856,21 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
 
         //#endregion
 
-        //#region sync size - not completed yet
-        // todo: sync sizes
-        diagBox.syncHeight = function (height) {
+        //#region sync size
+        diagBox.syncHeight = function () {
+            var height = diagBox.contentDocument.body.offsetHeight;
+            if (diagBox.previousHeight == height)
+                return;
+            window.diagBox = diagBox;
             console.log("tried resize to " + height);
-            diagBox.style.height = height + "px";
+            diagBox.height = height + 'px';
+            diagBox.previousHeight = height;
         };
+        diagBox.addEventListener('load', function () {
+            diagBox.syncHeight();
+            window.setInterval(diagBox.syncHeight, 200); // Not ideal - polling the document height may cause performance issues
+            //diagBox.contentDocument.body.addEventListener('resize', function () { diagBox.syncHeight(); }, true); // The resize event is not called reliable when the iframe content changes
+        });
 
         //#endregion
 

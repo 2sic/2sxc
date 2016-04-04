@@ -54,45 +54,6 @@
 }
 
 
-/* Template / ContentType / App-Selector */
-.sc-selector-wrapper { position: relative;overflow: hidden; }
-.sc-selector-wrapper .dnnFormInfo { overflow: hidden;padding: 9px;max-width:none; }
-.sc-selector-wrapper a { cursor: pointer; }
-.sc-selectors { max-width: 100% !important;float: left;width: 300px; }
-.sc-selectors select { display: block;width: 100%;font-family: sans-serif;font-size: 13px;font-weight: 400;font-style: normal;color: #666;line-height: 16px;padding: 9px; }
-.sc-selector-contenttype, .sc-selector-app { margin-bottom: 3px!important; }
-.sc-selector-app-actions { margin-top: 6px;height: 28px; }
-.sc-selector-actions { margin-top: 12px; }
-
-/* todo: change to font-icons */
-.sc-selector-actions a span, .sc-selector-app-actions a span {
-    display: inline-block;
-    width: 28px!important;
-    height: 28px!important;
-    line-height:28px!important;
-    border-style: solid; 
-    box-sizing: content-box;
-    border-radius: 3px;
-    -webkit-border-radius: 3px; 
-    -moz-border-radius: 3px;
-    color: #fff; 
-    text-align: center; 
-    /*padding: 2px;*/
-    font-size: 15px;
-    margin-left: 6px;
-}
-
-.sc-selector-actions a span {
-    background-color: #0088f4;
-}
-.sc-selector-app-actions a span {
-    background-color: #96D500;
-}
-
-.sc-selectors select[disabled] { opacity: 0.5 }
-.sc-selectors input[disabled] { opacity: 0.5 }
-
-
 /* Loading sign */
 .sc-loading { 
     position: absolute;

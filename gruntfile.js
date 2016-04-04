@@ -43,8 +43,8 @@ module.exports = function (grunt) {
         //dist: "dist/admin/",
         concatFile: "dist/inpage/inpage-dialogs.js",
         uglifyFile: "dist/inpage/inpage-dialogs.min.js",
-        //concatCss: "dist/inpage/inpage-dialog.css",
-        //concatCssMin: "dist/inpage/inpage-dialog.min.css"
+        concatCss: "dist/inpage/inpage-dialogs.css",
+        concatCssMin: "dist/inpage/inpage-dialogs.min.css"
     };
 
     var eavconf = {
@@ -240,6 +240,10 @@ module.exports = function (grunt) {
             inpageCss: {
                 src: inpage.cwd + "**/*.css",
                 dest: inpage.concatCss
+            },
+            inpageDialogsCss: {
+                src: inpDialog.cwd + "**/*.css",
+                dest: inpDialog.concatCss
             }
         },
 
@@ -333,6 +337,7 @@ module.exports = function (grunt) {
     // Default task(s).
     grunt.registerTask("build-css", [
         "concat:inpageCss",
+        "concat:inpageDialogsCss",
         "concat:adminCss",
         "cssmin:allInDist"
     ]);
