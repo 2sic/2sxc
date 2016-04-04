@@ -221,3 +221,44 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
 
     return cb;
 };
+
+
+// ToDo: Move this to correct location (just poc-code)
+var newBlockMenu = $("<div style='position:absolute; background:yellow; height: 30px; margin-top:-15px; opacity:0.5'><a>Add Content</a><a>Add app</a></div>");
+$("body").append(newBlockMenu);
+
+$("body").on('mousemove', function (e) {
+    // e.clientX, e.clientY holds the coordinates of the mouse
+    var maxDistance = 100; // Defines the maximal distance of the cursor when the menu is displayed
+
+    var nearest = null;
+
+    // Find nearest content block
+    $(".sc-content-block").each(function () {
+        var block = $(this);
+        var x = block.offset().left;
+        var w = block.width();
+        var y = block.offset().top;
+        var h = block.height();
+
+        var mouseX = e.clientX + $(window).scrollLeft();
+        var mouseY = e.clientY + $(window).scrollTop();
+
+        // First check x coordinates - must be within container
+        if (mouseX < x || mouseY > x + w)
+            return;
+
+        // Check if y coordinates are within boundaries
+        if (Math.abs(mouseY - y) < 100) {
+            nearest = newBlockMenu.css({
+                'left': x,
+                'top': y,
+                'width': w
+            }).show();
+        }
+    });
+
+    if(nearest === null)
+        newBlockMenu.hide();
+});
+
