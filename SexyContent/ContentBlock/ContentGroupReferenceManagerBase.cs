@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
-using System.Web.UI.WebControls;
 using DotNetNuke.Services.Exceptions;
-using ToSic.Eav;
 using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.ContentBlock
@@ -13,12 +11,12 @@ namespace ToSic.SexyContent.ContentBlock
     internal abstract class ContentGroupReferenceManagerBase 
     {
         protected SxcInstance SxcContext;
-        protected int ModuleID;
+        protected int ModuleId;
 
-        protected ContentGroup _cg;
+        protected ContentGroup CGroup;
 
         protected ContentGroup ContentGroup
-            => _cg ?? (_cg = SxcContext.ContentGroup);
+            => CGroup ?? (CGroup = SxcContext.ContentGroup);
 
         protected IEnumerable<Template> GetSelectableTemplatesForWebApi()
         {
@@ -27,28 +25,13 @@ namespace ToSic.SexyContent.ContentBlock
 
         #region methods which the entity-implementation must customize - so it's virtual
 
-        protected virtual void SavePreviewTemplateId(Guid templateGuid, bool? newTemplateChooserState = null)
-        {
-            throw new Exception("must be implemented first in inherited class");
-        }
+        protected abstract void SavePreviewTemplateId(Guid templateGuid, bool? newTemplateChooserState = null);
 
+        internal abstract void SetTemplateChooserState(bool state);
 
-        internal virtual void SetTemplateChooserState(bool state)
-        {
-            throw new Exception("must be implemented first in inherited class");
-        }
+        internal abstract void SetAppId(int? appId);
 
-        internal virtual void SetAppId(int? appId)
-        {
-            throw new Exception("must be implemented first in inherited class");
-        }
-
-
-        internal virtual void EnsureLinkToContentGroup(Guid cgGuid)
-        {
-            throw new Exception("must be implemented first in inherited class");        
-        }
-
+        internal abstract void EnsureLinkToContentGroup(Guid cgGuid);
         #endregion
 
         #region methods which are fairly stable / the same across content-block implementations
@@ -74,6 +57,9 @@ namespace ToSic.SexyContent.ContentBlock
                     EnsureLinkToContentGroup(contentGroupGuid);
 
                 result = contentGroupGuid;
+
+                if (newTemplateChooserState.HasValue && newTemplateChooserState.Value != SxcContext.ContentBlock.ShowTemplateChooser)
+                    SetTemplateChooserState(newTemplateChooserState.Value);
             }
             else
             {
@@ -81,7 +67,11 @@ namespace ToSic.SexyContent.ContentBlock
                 var dataSource = SxcContext.App.Data["Default"];
                 var templateGuid = dataSource.List[templateId].EntityGuid;
                 SavePreviewTemplateId(templateGuid, newTemplateChooserState);
+                result = null; // send null back
             }
+
+
+
 
             return result;
         }

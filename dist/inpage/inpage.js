@@ -313,7 +313,7 @@ $2sxc._contentManagementCommands = function (sxc, targetTag) {
         _openNgDialog: function (settings, event, closeCallback) {
 
             var callback = function () {
-                cmc.editManager.contentBlock.reload();
+                cmc.editManager.contentBlock.reloadAndReInitialize();
                 closeCallback();
             };
             var link = cmc._linkToNgDialog(settings);
@@ -328,6 +328,22 @@ $2sxc._contentManagementCommands = function (sxc, targetTag) {
             }
         },
 
+        executeAction: function (settings, event) {
+            var conf = cmc.editManager.toolbar.actions[settings.action];
+            settings = $2sxc._lib.extend({}, conf, settings); // merge conf & settings, but settings has higher priority
+            if (!settings.dialog) settings.dialog = settings.action; // old code uses "action" as the parameter, now use verb ? dialog
+            if (!settings.code) settings.code = cmc._openNgDialog; // decide what action to perform
+
+            var origEvent = event || window.event; // pre-save event because afterwards we have a promise, so the event-object changes; funky syntax is because of browser differences
+            if (conf.uiActionOnly)
+                return settings.code(settings, origEvent, cmc.editManager);
+
+            // if more than just a UI-action, then it needs to be sure the content-group is created first
+            cmc.editManager.contentBlock.prepareToAddContent()
+                .then(function () {
+                    return settings.code(settings, origEvent, cmc.editManager);
+                });
+        },
     };
 
     return cmc;
@@ -529,14 +545,17 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
         },
 
         // this one assumes a replace / change has already happened, but now must be finalized...
-        reloadAndFinalize: function () {
-            if (cb.editContext.ContentGroup.IsContent) // necessary to show the original template again
-                cb.reload()
+        reloadAndReInitialize: function () {
+            if (manage.reloadWithAjax) // necessary to show the original template again
+                return cb.reload()
                     .then(function() {
                         // create new sxc-object
                         cb.sxc = cb.sxc.recreate();
                         cb.sxc.manage.toolbar._processToolbars(); // sub-optimal deep dependency
                     });
+            else 
+                return window.location.reload();
+            
         },
 
         // retrieve new preview-content with alternate template and then show the result
@@ -550,7 +569,7 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
                 return null;
 
             // if reloading a non-content-app, re-load the page
-            if (!cb.editContext.ContentGroup.IsContent)
+            if (!manage.reloadWithAjax)
                 return window.location.reload();
 
             // remember for future persist/save/undo
@@ -634,7 +653,7 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
             // dialog...
             sxc.manage.dialog.justHide();
             cb._setTemplateChooserState(false)
-                .then(cb.reloadAndFinalize);
+                .then(cb.reloadAndReInitialize);
         },
 
         dialogToggle: function () {
@@ -704,7 +723,9 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
                 if (!cb.editContext.ContentGroup.HasContent) // if it didn't have content, then it only has now...
                     cb.editContext.ContentGroup.HasContent = forceCreate;
 
-                cb.reloadAndFinalize();
+                // only re-load on content, not on app as that was already re-loaded on the preview
+                if (!groupExistsAndTemplateUnchanged && manage.reloadWithAjax)      // necessary to show the original template again
+                    cb.reloadAndReInitialize();
             });
 
             return promiseToCorrectUi;
@@ -805,36 +826,22 @@ $("body").on('mousemove', function (e) {
         };
 
         var toolsAndButtons = $2sxc._toolbarManager(sxc, ec);
+        var cmds = $2sxc._contentManagementCommands(sxc, cbTag);
 
         var editManager = {
             // public method to find out if it's in edit-mode
             isEditMode: function () { return ec.Environment.IsEditable; },
+            reloadWithAjax: ec.ContentGroup.IsContent,  // for now, allow all content to use ajax, apps use page-reload
 
             dialogParameters: ngDialogParams, // used for various dialogs
             toolbarConfig: toolsAndButtons.config, // used to configure buttons / toolbars
 
             editContext: ec, // metadata necessary to know what/how to edit
             dashboardConfig: dashConfig,
-            commands: $2sxc._contentManagementCommands(sxc, cbTag),
+            commands: cmds,
 
-            // todo: move/refactor out of this, probably into commands...
             // Perform a toolbar button-action - basically get the configuration and execute it's action
-            action: function(settings, event) {
-                var conf = editManager.toolbar.actions[settings.action];
-                settings = $2sxc._lib.extend({}, conf, settings); // merge conf & settings, but settings has higher priority
-                if (!settings.dialog) settings.dialog = settings.action; // old code uses "action" as the parameter, now use verb ? dialog
-                if (!settings.code) settings.code = editManager.commands._openNgDialog; // decide what action to perform
-
-                var origEvent = event || window.event; // pre-save event because afterwards we have a promise, so the event-object changes; funky syntax is because of browser differences
-                if (conf.uiActionOnly)
-                    return settings.code(settings, origEvent, editManager);
-
-                // if more than just a UI-action, then it needs to be sure the content-group is created first
-                editManager.contentBlock.prepareToAddContent()
-                    .then(function() {
-                        return settings.code(settings, origEvent, editManager);
-                    });
-            },
+            action: cmds.executeAction,
 
             //#region toolbar quick-access commands - might be used by other scripts, so I'm keeping them here for the moment, but may just delete them later
             toolbar: toolsAndButtons, // should use this from now on when accessing from outside
@@ -869,9 +876,7 @@ $("body").on('mousemove', function (e) {
         editManager.tempCreateCB = function (parent, field, index, app) {
             var listTag = $("div[sc-cbl-id='" + parent + "'][sc-cbl-field='" + field + "']");
             if (listTag.length === 0) return alert("can't add content-block as we couldn't find the list");
-            //console.log(listTag[0]);
             var cblockList = listTag.find("div.sc-content-block");
-            // console.log("found blocks: " + cblockList.length);
 
             return sxc.webApi.get({
                 url: "view/module/generatecontentblock",
@@ -880,7 +885,7 @@ $("body").on('mousemove', function (e) {
                 var newTag = $(result);
                 // console.log(result);
                 if (cblockList.length > 0 && index > 0) 
-                    cblockList[cblockList.length > index + 1 ? index + 1: cblockList.length - 1]
+                    $(cblockList[cblockList.length > index - 1 ? index - 1: cblockList.length - 1])
                         .after(newTag);
                 else 
                     listTag.prepend(newTag);

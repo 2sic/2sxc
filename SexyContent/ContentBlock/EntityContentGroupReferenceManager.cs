@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using ToSic.Eav.Api.Api01;
-using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.ContentBlock
 {
@@ -11,14 +8,16 @@ namespace ToSic.SexyContent.ContentBlock
         internal EntityContentGroupReferenceManager(SxcInstance sxc)
         {
             SxcContext = sxc;
-            ModuleID = SxcContext.ModuleInfo.ModuleID;
+            ModuleId = SxcContext.ModuleInfo.ModuleID;
         }
         #region methods which the entity-implementation must customize - so it's virtual
 
         protected override void SavePreviewTemplateId(Guid templateGuid, bool? newTemplateChooserState = null)
         {
-            var vals = new Dictionary<string, object>();
-            vals.Add(EntityContentBlock.CbPropertyTemplate, templateGuid.ToString());
+            var vals = new Dictionary<string, object>
+            {
+                {EntityContentBlock.CbPropertyTemplate, templateGuid.ToString()}
+            };
             if (newTemplateChooserState.HasValue)
                 vals.Add(EntityContentBlock.CbPropertyShowChooser, newTemplateChooserState.Value); // must blank the template
             Update(vals);
@@ -46,15 +45,15 @@ namespace ToSic.SexyContent.ContentBlock
 
         private void UpdateValue(string key, object value)
         {
-            var vals = new Dictionary<string, object>();
-            vals.Add(key, value);
+            var vals = new Dictionary<string, object> {{key, value}};
             Update(vals);
 
         }
 
         private void Update(Dictionary<string, object> newValues)
         {
-            ((ContentBlockBase)SxcContext.ContentBlock).Parent.App.Data.Update(Math.Abs(SxcContext.ContentBlock.ContentBlockId), newValues); 
+            ((ContentBlockBase)SxcContext.ContentBlock).Parent.App
+                .Data.Update(Math.Abs(SxcContext.ContentBlock.ContentBlockId), newValues); 
         }
 
         #endregion

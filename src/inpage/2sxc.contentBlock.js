@@ -51,14 +51,17 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
         },
 
         // this one assumes a replace / change has already happened, but now must be finalized...
-        reloadAndFinalize: function () {
-            if (cb.editContext.ContentGroup.IsContent) // necessary to show the original template again
-                cb.reload()
+        reloadAndReInitialize: function () {
+            if (manage.reloadWithAjax) // necessary to show the original template again
+                return cb.reload()
                     .then(function() {
                         // create new sxc-object
                         cb.sxc = cb.sxc.recreate();
                         cb.sxc.manage.toolbar._processToolbars(); // sub-optimal deep dependency
                     });
+            else 
+                return window.location.reload();
+            
         },
 
         // retrieve new preview-content with alternate template and then show the result
@@ -72,7 +75,7 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
                 return null;
 
             // if reloading a non-content-app, re-load the page
-            if (!cb.editContext.ContentGroup.IsContent)
+            if (!manage.reloadWithAjax)
                 return window.location.reload();
 
             // remember for future persist/save/undo
@@ -156,7 +159,7 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
             // dialog...
             sxc.manage.dialog.justHide();
             cb._setTemplateChooserState(false)
-                .then(cb.reloadAndFinalize);
+                .then(cb.reloadAndReInitialize);
         },
 
         dialogToggle: function () {
@@ -226,7 +229,9 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
                 if (!cb.editContext.ContentGroup.HasContent) // if it didn't have content, then it only has now...
                     cb.editContext.ContentGroup.HasContent = forceCreate;
 
-                cb.reloadAndFinalize();
+                // only re-load on content, not on app as that was already re-loaded on the preview
+                if (!groupExistsAndTemplateUnchanged && manage.reloadWithAjax)      // necessary to show the original template again
+                    cb.reloadAndReInitialize();
             });
 
             return promiseToCorrectUi;
