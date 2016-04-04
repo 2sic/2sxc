@@ -42,7 +42,7 @@ namespace ToSic.SexyContent.ContentBlock
 
         public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup, bool? newTemplateChooserState = null)
         {
-            Guid? result = null;
+            Guid? result;
             var contentGroup = ContentGroup;
 
             // if it exists or has a force-create, then write to the Content-Group, otherwise it's just a preview

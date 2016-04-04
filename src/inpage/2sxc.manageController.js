@@ -87,23 +87,49 @@
                 ec.ContentGroup.Guid = newGuid;
                 toolsAndButtons.refreshConfig(); 
                 editManager.toolbarConfig = toolsAndButtons.config;
-            }
+            },
+
+            createContentBlock: function (parentId, fieldName, index, appName) {
+                // the wrapper, into which this will be placed and the list of pre-existing blocks
+                var listTag = $("div[sc-cbl-id='" + parentId + "'][sc-cbl-field='" + fieldName + "']");
+                if (listTag.length === 0) return alert("can't add content-block as we couldn't find the list");
+                var cblockList = listTag.find("div.sc-content-block");
+
+                return sxc.webApi.get({
+                    url: "view/module/generatecontentblock",
+                    params: { parentId: parentId, field: fieldName, sortOrder: index, app: appName }
+                }).then(function (result) {
+                    var newTag = $(result); // prepare tag for inserting
+
+                    // should I add it to a specific position...
+                    if (cblockList.length > 0 && index > 0) 
+                        $(cblockList[cblockList.length > index - 1 ? index - 1: cblockList.length - 1])
+                            .after(newTag);
+                    else    //...or just at the beginning?
+                        listTag.prepend(newTag);
+                
+
+                    var sxcNew = $2sxc(newTag);
+                    sxcNew.manage.toolbar._processToolbars(newTag);
+
+                });
+            },
 
 
         };
 
 
-        editManager.tempCreateCB = function (parent, field, index, app) {
-            var listTag = $("div[sc-cbl-id='" + parent + "'][sc-cbl-field='" + field + "']");
+        editManager.createContentBlock = function (parentId, fieldName, index, appName) {
+            // the wrapper, into which this will be placed and the list of pre-existing blocks
+            var listTag = $("div[sc-cbl-id='" + parentId + "'][sc-cbl-field='" + fieldName + "']");
             if (listTag.length === 0) return alert("can't add content-block as we couldn't find the list");
             var cblockList = listTag.find("div.sc-content-block");
 
             return sxc.webApi.get({
                 url: "view/module/generatecontentblock",
-                params: { parentId: parent, field: field, sortOrder: index, app: app }
+                params: { parentId: parentId, field: fieldName, sortOrder: index, app: appName }
             }).then(function (result) {
                 var newTag = $(result);
-                // console.log(result);
                 if (cblockList.length > 0 && index > 0) 
                     $(cblockList[cblockList.length > index - 1 ? index - 1: cblockList.length - 1])
                         .after(newTag);
