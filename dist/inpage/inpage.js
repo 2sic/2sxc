@@ -871,7 +871,7 @@ $("body").on('mousemove', function (e) {
 
             createContentBlock: function (parentId, fieldName, index, appName) {
                 // the wrapper, into which this will be placed and the list of pre-existing blocks
-                var listTag = $("div[sc-cbl-id='" + parentId + "'][sc-cbl-field='" + fieldName + "']");
+                var listTag = $("div[data-cbl-id='" + parentId + "'][data-cbl-field='" + fieldName + "']");
                 if (listTag.length === 0) return alert("can't add content-block as we couldn't find the list");
                 var cblockList = listTag.find("div.sc-content-block");
 
@@ -897,32 +897,6 @@ $("body").on('mousemove', function (e) {
 
 
         };
-
-
-        editManager.createContentBlock = function (parentId, fieldName, index, appName) {
-            // the wrapper, into which this will be placed and the list of pre-existing blocks
-            var listTag = $("div[sc-cbl-id='" + parentId + "'][sc-cbl-field='" + fieldName + "']");
-            if (listTag.length === 0) return alert("can't add content-block as we couldn't find the list");
-            var cblockList = listTag.find("div.sc-content-block");
-
-            return sxc.webApi.get({
-                url: "view/module/generatecontentblock",
-                params: { parentId: parentId, field: fieldName, sortOrder: index, app: appName }
-            }).then(function (result) {
-                var newTag = $(result);
-                if (cblockList.length > 0 && index > 0) 
-                    $(cblockList[cblockList.length > index - 1 ? index - 1: cblockList.length - 1])
-                        .after(newTag);
-                else 
-                    listTag.prepend(newTag);
-                
-
-                var sxcNew = $2sxc(newTag);
-                sxcNew.manage.toolbar._processToolbars(newTag);
-
-            });
-        };
-
 
         editManager.init();
         return editManager;
