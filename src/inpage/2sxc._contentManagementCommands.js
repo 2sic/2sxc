@@ -32,7 +32,7 @@ $2sxc._contentManagementCommands = function (sxc, targetTag) {
                 // this adds an item of the content-group, based on the group GUID and the sequence number
                 addContentGroupItem: function(guid, index, part, isAdd, isEntity, cbid, sectionLanguageKey) {
                     cmd.items.push({
-                        Group: { Guid: guid, Index: index, Part: part, Add: isAdd, ContentBlockIsEntity: isEntity, ContentBlockId: cbid },
+                        Group: { Guid: guid, Index: index, Part: part, Add: isAdd },
                         Title: $2sxc.translate(sectionLanguageKey)
                     });
                 },

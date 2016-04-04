@@ -62,10 +62,19 @@ namespace ToSic.SexyContent
 
         internal PortalSettings OwnerPortalSettings { get; set; }
 
-        public string AppGuid { get; set; } 
+        public string AppGuid { get; set; }
 
+        public App(PortalSettings ownerPortalSettings, int appId) : this(ownerPortalSettings, appId, -1)
+        {
+        }
 
-        public App(PortalSettings ownerPortalSettings, int appId, int zoneId = -1)
+        //public App(int zoneId, int appId, PortalSettings ownerPortalSettings): this(...)
+
+        // todo: I should change the order of the parameters app/zone because this is the only 
+        // system which reverses it with app-first
+        // better to create two overloads, but when I have two parameters, assume that zone is first
+        // 2016-04-04 2dm: wait with refactoring/correcting this till 2tk checks in his code
+        public App(PortalSettings ownerPortalSettings, int appId, int zoneId)
         {
             // require valid ownerPS - note: not sure what this is actually used for
             if (ownerPortalSettings == null)

@@ -37,6 +37,7 @@ namespace ToSic.SexyContent.ContentBlock
         internal override void EnsureLinkToContentGroup(Guid cgGuid)
         {
             // link to the CG
+            UpdateValue(EntityContentBlock.CbPropertyContentGroup, cgGuid);
         }
 
         #endregion
