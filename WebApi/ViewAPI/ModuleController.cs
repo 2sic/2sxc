@@ -94,11 +94,10 @@ namespace ToSic.SexyContent.ViewAPI
             var blockList = ((Eav.Data.EntityRelationship)cbEnt.GetBestValue(field)).ToList() ?? new List<IEntity>();
 
             var intList = blockList.Select(b => b.EntityId).ToList();
+            if (sortOrder > intList.Count) sortOrder = intList.Count;
             intList.Insert(sortOrder, entity.EntityID);
 
-            var updateDic = new Dictionary<string, int[]>();
-            updateDic.Add(field, intList.ToArray());
-
+            var updateDic = new Dictionary<string, int[]> {{field, intList.ToArray()}};
             eavDc.Entities.UpdateEntity(cbEnt.EntityGuid, updateDic);
             #endregion
 

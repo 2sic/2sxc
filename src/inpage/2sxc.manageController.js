@@ -94,7 +94,8 @@
                 var listTag = $("div[data-cbl-id='" + parentId + "'][data-cbl-field='" + fieldName + "']");
                 if (listTag.length === 0) return alert("can't add content-block as we couldn't find the list");
                 var cblockList = listTag.find("div.sc-content-block");
-
+                if (index > cblockList.length)
+                    index = cblockList.length; // make sure index is never greater than the amount of items
                 return sxc.webApi.get({
                     url: "view/module/generatecontentblock",
                     params: { parentId: parentId, field: fieldName, sortOrder: index, app: appName }
