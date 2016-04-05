@@ -245,11 +245,12 @@ $2sxc.contentBlock = function (sxc, manage, cbTag) {
 
 
 // ToDo: Move this to correct location (just poc-code)
-var newBlockMenu = $("<div class='sc-content-block-menu'><a>Add Content</a><a>Add app</a></div>");
+var newBlockMenu = $("<div class='sc-content-block-menu'><a class='sc-content-block-menu-addcontent'>Add Content</a><a class='sc-content-block-menu-addapp'>Add app</a></div>");
 $("body").append(newBlockMenu);
 
 newBlockMenu.find('a').click(function () {
     var list = newBlockMenu.actionsFor.closest('.sc-content-block-list');
+
     var actionConfig = JSON.parse(list.attr('data-sc-list'));
 
     $2sxc(newBlockMenu.actionsFor).manage.createContentBlock(actionConfig.id, actionConfig.field, 0, 'Default');
@@ -263,7 +264,6 @@ $("body").on('mousemove', function (e) {
     var nearestDistance = maxDistance;
 
     var contentBlocks = $(".sc-content-block").add(".sc-content-block-list");
-    //var contentBlocks = $(".sc-content-block-list");
 
     // Find nearest content block
     contentBlocks.each(function () {
