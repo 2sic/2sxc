@@ -15,8 +15,6 @@
 .sc-content-block-menu-addcontent { background:url(../../icon.png); /*background-size:contain;*/  }
 .sc-content-block-menu-addapp { background:url(../../icon-app.png); /*background-size:contain;*/ }
 
-.sc-content-block-list { min-height:50px; outline: dotted 2px #aaa; }
-
 /* this one is for buttons which can have a full/empty state */
 .sc-menu li a.empty i {opacity: 0.4} 
 
