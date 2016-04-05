@@ -1,7 +1,14 @@
 ﻿(function () {
     'use strict';
 
-    var newBlockMenu = $("<div class='sc-content-block-menu'><a class='sc-content-block-menu-addcontent' data-type='Default'>Add Content</a><a class='sc-content-block-menu-addapp' data-type=''>Add app</a></div>");
+    var newBlockMenu = $("<div class='sc-content-block-menu'></div>");
+    var blockActions = $("<a class='sc-content-block-menu-addcontent' data-type='Default'>Add Content</a><a class='sc-content-block-menu-addapp' data-type=''>Add app</a>");
+
+    // ToDo 2rm: Add menu definition for DNN modules (allow quick-insert of modules)
+    var moduleActions = blockActions.clone().attr('data-context', 'module').hide();
+    
+    newBlockMenu.append(blockActions).append(moduleActions);
+
     $("body").append(newBlockMenu);
 
     var menuDefinitions = [
@@ -19,7 +26,6 @@
                 $2sxc(list).manage.createContentBlock(actionConfig.id, actionConfig.field, index, type, list);
             }
         }
-        // ToDo 2rm: Add menu definition for DNN modules (allow quick-insert of modules)
     ];
 
     newBlockMenu.find('a').click(function () {
@@ -28,11 +34,7 @@
     });
 
     $("body").on('mousemove', function (e) {
-        // e.clientX, e.clientY holds the coordinates of the mouse
-        var maxDistance = 30; // Defines the maximal distance of the cursor when the menu is displayed
-
-        var nearest = null;
-        var nearestDistance = maxDistance;
+        
         var contentBlocks = [];
 
         menuDefinitions.forEach(function (e,i) {
@@ -44,49 +46,58 @@
             });
         });
 
-        // Find nearest content block
-        contentBlocks.each(function () {
-            var block = $(this);
-            var x = block.offset().left;
-            var w = block.width();
-            var y = block.offset().top;
-            var h = block.height();
+        var nearest = findNearest(contentBlocks, { x: e.clientX, y: e.clientY }, menuDefinitions[0].contentBlockSelector);
 
-            var mouseX = e.clientX + $(window).scrollLeft();
-            var mouseY = e.clientY + $(window).scrollTop();
+        if (nearest !== null) {
+            newBlockMenu.css({
+                'left': nearest.x,
+                'top': nearest.y,
+                'width': nearest.element.width()
+            }).show();
+
+            // Keep current block as current on menu
+            newBlockMenu.actionsFor = nearest.element;
+        }
+        else
+            newBlockMenu.hide();
+
+    });
+
+    // Return the nearest element to the mouse cursor from elements (jQuery elements)
+    function findNearest(elements, position, useBottomLineSelector) {
+        var maxDistance = 30; // Defines the maximal distance of the cursor when the menu is displayed
+
+        var nearest = null;
+        var nearestDistance = maxDistance;
+
+        // Find nearest element
+        elements.each(function () {
+            var element = $(this);
+            var x = element.offset().left;
+            var w = element.width();
+            var y = element.offset().top;
+            var h = element.height();
+
+            var posX = position.x + $(window).scrollLeft();
+            var posY = position.y + $(window).scrollTop();
 
             // First check x coordinates - must be within container
-            if (mouseX < x || mouseX > x + w)
+            if (posX < x || posX > x + w)
                 return;
 
             // For content-block elements, the menu must be visible at the end
             // For content-block-lists, the menu must be at top
-            var cmpHeight = block.is(block[0].menuDefinition.contentBlockSelector) ? y + h : y;
+            var cmpHeight = element.is(useBottomLineSelector) ? y + h : y;
 
             // Check if y coordinates are within boundaries
-            var distance = Math.abs(mouseY - cmpHeight);
+            var distance = Math.abs(posY - cmpHeight);
 
             if (distance < maxDistance && distance < nearestDistance) {
-
-                newBlockMenu.css({
-                    'left': x,
-                    'top': cmpHeight,
-                    'width': w
-                }).show();
-
-                // Add class if menu creates modules
-                //newBlockMenu.toggleClass('sc-content-block-menu-module', block.hasClass('sc-viewport'));
-
-                // Keep current block as current on menu
-                newBlockMenu.actionsFor = nearest = block;
-
+                nearest = { x: x, y: cmpHeight, element: element };
                 nearestDistance = distance;
             }
         });
 
-        if (nearest === null)
-            newBlockMenu.hide();
-    });
-
-
+        return nearest;
+    }
 })();
