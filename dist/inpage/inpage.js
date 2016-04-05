@@ -1004,10 +1004,9 @@ $(document).ready(function () {
 
                 var index = 0;
                 if (newBlockMenu.actionsFor.hasClass('sc-content-block'))
-                    // ToDo: Index might be wrong, +1?
-                    index = list.find('.sc-content-block').index(newBlockMenu.actionsFor[0]);
+                    index = list.find('.sc-content-block').index(newBlockMenu.actionsFor[0]) + 1;
 
-                $2sxc(newBlockMenu.actionsFor).manage.createContentBlock(actionConfig.id, actionConfig.field, index, type);
+                $2sxc(list).manage.createContentBlock(actionConfig.id, actionConfig.field, index, type);
             }
         }
     ];
