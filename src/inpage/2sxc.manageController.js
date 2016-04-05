@@ -42,78 +42,84 @@
             templateId: ec.ContentGroup.TemplateId,
             contentTypeId: ec.ContentGroup.ContentTypeName,
             templateChooserVisible: ec.ContentBlock.ShowTemplatePicker, // todo: maybe move to content-goup
-            user: { canDesign: ec.User.CanDesign, canDevelop: ec.User.CanDesign },
+            user: { canDesign: ec.User.CanDesign, canDevelop: ec.User.CanDesign }
         };
 
         var toolsAndButtons = $2sxc._toolbarManager(sxc, ec);
+        var cmds = $2sxc._contentManagementCommands(sxc, cbTag);
 
         var editManager = {
             // public method to find out if it's in edit-mode
             isEditMode: function () { return ec.Environment.IsEditable; },
+            reloadWithAjax: ec.ContentGroup.IsContent,  // for now, allow all content to use ajax, apps use page-reload
 
             dialogParameters: ngDialogParams, // used for various dialogs
             toolbarConfig: toolsAndButtons.config, // used to configure buttons / toolbars
-            updateContentGroupGuid: function(newGuid) {
-                ec.ContentGroup.Guid = newGuid;
-                toolsAndButtons.refreshConfig(); 
-                editManager.toolbarConfig = toolsAndButtons.config;
-            },
 
             editContext: ec, // metadata necessary to know what/how to edit
             dashboardConfig: dashConfig,
-            commands: $2sxc._contentManagementCommands(sxc, cbTag),
-
+            commands: cmds,
 
             // Perform a toolbar button-action - basically get the configuration and execute it's action
-            action: function(settings, event) {
-                var conf = editManager.toolbar.actions[settings.action];
-                settings = $2sxc._lib.extend({}, conf, settings); // merge conf & settings, but settings has higher priority
-                if (!settings.dialog) settings.dialog = settings.action; // old code uses "action" as the parameter, now use verb ? dialog
-                if (!settings.code) settings.code = editManager.commands._openNgDialog; // decide what action to perform
-
-                var origEvent = event || window.event; // pre-save event because afterwards we have a promise, so the event-object changes; funky syntax is because of browser differences
-                if (conf.uiActionOnly)
-                    return settings.code(settings, origEvent, editManager);
-
-                // if more than just a UI-action, then it needs to be sure the content-group is created first
-                editManager.contentBlock.prepareToAddContent()
-                    .then(function() {
-                        return settings.code(settings, origEvent, editManager);
-                    });
-            },
+            action: cmds.executeAction,
 
             //#region toolbar quick-access commands - might be used by other scripts, so I'm keeping them here for the moment, but may just delete them later
             toolbar: toolsAndButtons, // should use this from now on when accessing from outside
             getButton: toolsAndButtons.getButton,
             createDefaultToolbar: toolsAndButtons.createDefaultToolbar,
             getToolbar: toolsAndButtons.getToolbar,
-            //_processToolbars: toolsAndButtons._processToolbars,
             //#endregion
 
-            initContentBlocks: function() {
-                // find the blocks / scope
-            }
+            // init this object 
+            init: function init() {
+                // finish init of sub-objects
+                editManager.commands.init(editManager);
+                editManager.contentBlock = $2sxc.contentBlock(sxc, editManager, cbTag);
+
+                // attach & open the mini-dashboard iframe
+                if (ec.ContentBlock.ShowTemplatePicker)
+                    editManager.action({ "action": "layout" });
+
+            },
+
+            // change config by replacing the guid, and refreshing dependend sub-objects
+            updateContentGroupGuid: function (newGuid) {
+                ec.ContentGroup.Guid = newGuid;
+                toolsAndButtons.refreshConfig(); 
+                editManager.toolbarConfig = toolsAndButtons.config;
+            },
+
+            createContentBlock: function (parentId, fieldName, index, appName) {
+                // the wrapper, into which this will be placed and the list of pre-existing blocks
+                var listTag = $("div[data-cbl-id='" + parentId + "'][data-cbl-field='" + fieldName + "']");
+                if (listTag.length === 0) return alert("can't add content-block as we couldn't find the list");
+                var cblockList = listTag.find("div.sc-content-block");
+                if (index > cblockList.length)
+                    index = cblockList.length; // make sure index is never greater than the amount of items
+                return sxc.webApi.get({
+                    url: "view/module/generatecontentblock",
+                    params: { parentId: parentId, field: fieldName, sortOrder: index, app: appName }
+                }).then(function (result) {
+                    var newTag = $(result); // prepare tag for inserting
+
+                    // should I add it to a specific position...
+                    if (cblockList.length > 0 && index > 0) 
+                        $(cblockList[cblockList.length > index - 1 ? index - 1: cblockList.length - 1])
+                            .after(newTag);
+                    else    //...or just at the beginning?
+                        listTag.prepend(newTag);
+                
+
+                    var sxcNew = $2sxc(newTag);
+                    sxcNew.manage.toolbar._processToolbars(newTag);
+
+                });
+            },
+
+
         };
 
-        // finish init of sub-objects
-        editManager.commands.init(editManager);
-        editManager.contentBlock = $2sxc.contentBlock(sxc, editManager, cbTag);
-
-        editManager.tempCreateCB = function(parent, field, index, app) {
-            return sxc.webApi.get({
-                url: "view/module/generatecontentblock",
-                params: { parentId: parent, field: field, sortOrder: index, app: app }
-            }).then(function(result) {
-                console.log(result);
-            });
-
-        };
-
-        // attach & open the mini-dashboard iframe
-        if (ec.ContentBlock.ShowTemplatePicker)
-            editManager.action({ "action": "layout" });
-
-
+        editManager.init();
         return editManager;
     };
 

@@ -72,7 +72,9 @@ namespace ToSic.SexyContent.ViewAPI
         public string GenerateContentBlock(int parentId, string field, int sortOrder, string app = "")
         {
             var cgApp = SxcContext.App;
-            var context = EavDataController.Instance(cgApp.ZoneId, cgApp.AppId).Entities;
+            var eavDc = EavDataController.Instance(cgApp.ZoneId, cgApp.AppId);
+            eavDc.UserName = Environment.Dnn7.UserIdentity.CurrentUserIdentityToken;
+            //var context = sql.Entities;
 
             #region create the new entity --> note that it's the sql-type entity, not a standard ientity
             var contentType = DataSource.GetCache(cgApp.ZoneId, cgApp.AppId).GetContentType(Settings.AttributeSetStaticNameContentBlockTypeName);
@@ -83,7 +85,7 @@ namespace ToSic.SexyContent.ViewAPI
                 {EntityContentBlock.CbPropertyShowChooser, true},
             };
 
-            var entity = context.AddEntity(contentType.AttributeSetId, values, null, null);
+            var entity = eavDc.Entities.AddEntity(contentType.AttributeSetId, values, null, null);
             #endregion
 
             #region attach to the current list of items
@@ -92,12 +94,11 @@ namespace ToSic.SexyContent.ViewAPI
             var blockList = ((Eav.Data.EntityRelationship)cbEnt.GetBestValue(field)).ToList() ?? new List<IEntity>();
 
             var intList = blockList.Select(b => b.EntityId).ToList();
+            if (sortOrder > intList.Count) sortOrder = intList.Count;
             intList.Insert(sortOrder, entity.EntityID);
 
-            var updateDic = new Dictionary<string, int[]>();
-            updateDic.Add(field, intList.ToArray());
-
-            context.UpdateEntity(cbEnt.EntityGuid, updateDic);
+            var updateDic = new Dictionary<string, int[]> {{field, intList.ToArray()}};
+            eavDc.Entities.UpdateEntity(cbEnt.EntityGuid, updateDic);
             #endregion
 
             // now return a rendered instance

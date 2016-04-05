@@ -111,8 +111,9 @@
             },
 
             // find all toolbar-info-attributes in the HTML, convert to <ul><li> toolbar
-            _processToolbars: function() {
-                $(".sc-menu[data-toolbar]", $(".DnnModule-" + id)).each(function() {
+            _processToolbars: function (parentTag) {
+                parentTag = parentTag ? $(parentTag) : $(".DnnModule-" + id);
+                $(".sc-menu[data-toolbar]", parentTag).each(function() {
                     var toolbarSettings = $.parseJSON($(this).attr("data-toolbar"));
                     var toolbarTag = $(this);
                     toolbarTag.replaceWith($2sxc(toolbarTag).manage.getToolbar(toolbarSettings));

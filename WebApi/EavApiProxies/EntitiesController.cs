@@ -56,7 +56,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
                     newItems.Add(reqItem);
                     continue;
                 }
-                var app = new App(PortalSettings.Current, appId, -1);
+                var app = new App(PortalSettings.Current, appId);
                 
                 var contentGroup = app.ContentGroupManager.GetContentGroup(reqItem.Group.Guid);
                 var contentTypeStaticName = contentGroup.Template.GetTypeStaticName(reqItem.Group.Part);
@@ -111,7 +111,8 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
             // now assign all content-groups as needed
             var groupItems = items
                 .Where(i => i.Header.Group != null)
-                .GroupBy(i => i.Header.Group.Guid.ToString() + i.Header.Group.Index.ToString() + i.Header.Group.Add);
+                .GroupBy(i => i.Header.Group.Guid.ToString() + i.Header.Group.Index.ToString() + i.Header.Group.Add)
+                .ToList();
 
             if (groupItems.Any())
                 DoAdditionalGroupProcessing(appId, postSaveIds, groupItems);
@@ -121,7 +122,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 
         private void DoAdditionalGroupProcessing(int appId, Dictionary<Guid, int> postSaveIds, IEnumerable<IGrouping<string, EntityWithHeader>> groupItems)
         {
-            var app = new App(PortalSettings.Current, appId, -1);
+            var app = new App(PortalSettings.Current, appId);
 
             foreach (var entitySets in groupItems)
             {
@@ -136,6 +137,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
                 // Get group to assign to and parameters
                 var contentGroup = app.ContentGroupManager.GetContentGroup(contItem.Header.Group.Guid);
                 var partName = contItem.Header.Group.Part;
+
                 var part = contentGroup[partName];
                 var index = contItem.Header.Group.Index;
 
@@ -168,9 +170,11 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 
             #region update-module-title
 
-            var contentBlockId = groupItems.FirstOrDefault()?.FirstOrDefault()?.Header?.Group?.ContentBlockId;
+            //var contentBlockId = groupItems.FirstOrDefault()?.FirstOrDefault()?.Header?.Group?.ContentBlockId;
+            //if ((contentBlockId ?? Dnn.Module.ModuleID) > 0 ) // if > 0 or not specified
+
             // case 1: module
-            if ((contentBlockId ?? Dnn.Module.ModuleID) > 0 ) // if > 0 or not specified
+            if (SxcContext.ContentBlock.ParentIsEntity)
             {
                 // check the contentGroup as to what should be the module title, then try to set it
                 // technically it could have multiple different groups to save in, 

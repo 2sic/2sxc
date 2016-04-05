@@ -30,22 +30,38 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
         undoContentTypeId: ctid,
 
         // ajax update/replace the content of the content-block
-        replace: function(newContent) {
+        replace: function(newContent, justPreview) {
             try {
                 var newStuff = $(newContent);
+                // don't do this yet, too many side-effects
+                //if (justPreview) {    
+                //    newStuff.attr("data-cb-id", "preview" + newStuff.attr("data-cb-id"));
+                //    newStuff.Attr("data-cb-preview", true);
+                //}
                 $(cbTag).replaceWith(newStuff);
                 cbTag = newStuff;
+                //$2sxc(newStuff).manage.toolbar._processToolbars(newStuff); // init it...
             } catch (e) {
                 console.log("Error while rendering template:");
                 console.log(e);
             }
         },
+        replacePreview: function(newContent) {
+            cb.replace(newContent, true);
+        },
 
         // this one assumes a replace / change has already happened, but now must be finalized...
-        finalizeReplace: function() {
-            // create new sxc-object
-            cb.sxc = cb.sxc.recreate();
-            cb.sxc.manage.toolbar._processToolbars(); // sub-optimal deep dependency
+        reloadAndReInitialize: function () {
+            if (manage.reloadWithAjax) // necessary to show the original template again
+                return cb.reload()
+                    .then(function() {
+                        // create new sxc-object
+                        cb.sxc = cb.sxc.recreate();
+                        cb.sxc.manage.toolbar._processToolbars(); // sub-optimal deep dependency
+                    });
+            else 
+                return window.location.reload();
+            
         },
 
         // retrieve new preview-content with alternate template and then show the result
@@ -59,23 +75,18 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
                 return null;
 
             // if reloading a non-content-app, re-load the page
-            if (!cb.editContext.ContentGroup.IsContent)
+            if (!manage.reloadWithAjax)
                 return window.location.reload();
 
-            // remember for future persist/save
+            // remember for future persist/save/undo
             cb.templateId = templateId;
 
-            var lang = cb.editContext.Language.Current; 
-
             // ajax-call, then replace
-            return cb.sxc.webApi.get({
-                    url: "view/module/rendertemplate",
-                    params: { templateId: templateId, lang: lang, cbisentity: editContext.ContentBlock.IsEntity, cbid: editContext.ContentBlock.Id },
-                    dataType: "html"
-                })
+            return cb._getPreviewWithTemplate(templateId)
                 .then(cb.replace);
         },
 
+        //#region simple item commands like publish, remove, add, re-order
         // set a content-item in this block to published, then reload
         publish: function(part, sortOrder) {
             return cb.sxc.webApi.get({
@@ -100,18 +111,33 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
             }).then(cb.reload);
         },
 
-        setTemplateChooserState: function (state) {
-        	return cb.sxc.webApi.get({
-        		url: "View/Module/SetTemplateChooserState",
-        		params: { state: state }
-        	});
-        },
 
         addItem: function(sortOrder) {
         	return cb.sxc.webApi.get({
         		url: "View/Module/AddItem",
         		params: { sortOrder: sortOrder }
         	}).then(cb.reload);
+        },
+        //#endregion
+
+        _getPreviewWithTemplate: function(templateId) {
+            return cb.sxc.webApi.get({
+                url: "view/module/rendertemplate",
+                params: {
+                    templateId: templateId,
+                    lang: cb.editContext.Language.Current,
+                    cbisentity: editContext.ContentBlock.IsEntity,
+                    cbid: editContext.ContentBlock.Id
+                },
+                dataType: "html"
+            });
+        },
+
+        _setTemplateChooserState: function (state) {
+        	return cb.sxc.webApi.get({ 
+        		url: "view/module/SetTemplateChooserState",
+        		params: { state: state }
+        	});
         },
 
         _saveTemplate: function (templateId, forceCreateContentGroup, newTemplateChooserState) {
@@ -126,17 +152,14 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
         },
 
         // Cancel and reset back to original state
-        cancelTemplateChange: function() {
+        _cancelTemplateChange: function() {
             cb.templateId = cb.undoTemplateId;
             cb.contentTypeId = cb.undoContentTypeId;
 
             // dialog...
             sxc.manage.dialog.justHide();
-            cb.setTemplateChooserState(false);
-
-            if (cb.editContext.ContentGroup.IsContent) // necessary to show the original template again
-                cb.reload()
-                    .then(cb.finalizeReplace);
+            cb._setTemplateChooserState(false)
+                .then(cb.reloadAndReInitialize);
         },
 
         dialogToggle: function () {
@@ -158,16 +181,14 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
 
             var isVisible = diag.isVisible();
             if (manage.editContext.ContentBlock.ShowTemplatePicker !== isVisible)
-                cb.setTemplateChooserState(isVisible)
+                cb._setTemplateChooserState(isVisible)
                     .then(function() {
                         manage.editContext.ContentBlock.ShowTemplatePicker = isVisible;
                     });
 
-
         },
 
 
-        // todo...
         prepareToAddContent: function() {
             return cb.persistTemplate(true, false);
         },
@@ -179,7 +200,7 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
             var promiseToSetState;
             if (groupExistsAndTemplateUnchanged)
                 promiseToSetState = (cb.editContext.ContentBlock.ShowTemplatePicker)//.minfo.templateChooserVisible)
-                    ? cb.setTemplateChooserState(false) // hide in case it was visible
+                    ? cb._setTemplateChooserState(false) // hide in case it was visible
                     : $.when(null); // all is ok, create empty promise to allow chaining the result
             else
                 promiseToSetState = cb._saveTemplate(cb.templateId, forceCreate, selectorVisibility) 
@@ -189,11 +210,9 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
                             return;
                         }
                         var newGuid = data;
-                        if (newGuid === null)
-                            return;
+                        if (!newGuid) return;
                         newGuid = newGuid.replace(/[\",\']/g, ""); // fixes a special case where the guid is given with quotes (dependes on version of angularjs) issue #532
-                        if (console)
-                            console.log("created content group {" + newGuid + "}");
+                        if (console) console.log("created content group {" + newGuid + "}");
 
                         manage.updateContentGroupGuid(newGuid);
                     });
@@ -209,8 +228,10 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
 
                 if (!cb.editContext.ContentGroup.HasContent) // if it didn't have content, then it only has now...
                     cb.editContext.ContentGroup.HasContent = forceCreate;
-                // if (!cb.minfo.hasContent) // if it didn't have content, then it only has now...
-                //    cb.minfo.hasContent = forceCreate; // ...if we forced it to
+
+                // only re-load on content, not on app as that was already re-loaded on the preview
+                if (!groupExistsAndTemplateUnchanged && manage.reloadWithAjax)      // necessary to show the original template again
+                    cb.reloadAndReInitialize();
             });
 
             return promiseToCorrectUi;

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.ContentBlock
@@ -9,20 +8,20 @@ namespace ToSic.SexyContent.ContentBlock
         internal ModuleContentGroupReferenceManager(SxcInstance sxc)
         {
             SxcContext = sxc;
-            ModuleID = SxcContext.ModuleInfo.ModuleID;
+            ModuleId = SxcContext.ModuleInfo.ModuleID;
         }
         #region methods which the entity-implementation must customize - so it's virtual
 
         protected override void SavePreviewTemplateId(Guid templateGuid, bool? newTemplateChooserState = null)
         {
-            SxcContext.AppContentGroups.SetModulePreviewTemplateId(ModuleID, templateGuid);
+            SxcContext.AppContentGroups.SetModulePreviewTemplateId(ModuleId, templateGuid);
             if(newTemplateChooserState.HasValue)
                 SetTemplateChooserState(newTemplateChooserState.Value);
         }
 
         internal override void SetTemplateChooserState(bool state)
         {
-            DnnStuffToRefactor.UpdateModuleSettingForAllLanguages(ModuleID, Settings.SettingsShowTemplateChooser, state.ToString());
+            DnnStuffToRefactor.UpdateModuleSettingForAllLanguages(ModuleId, Settings.SettingsShowTemplateChooser, state.ToString());
         }
 
         internal override void SetAppId(int? appId)
@@ -32,7 +31,7 @@ namespace ToSic.SexyContent.ContentBlock
 
         internal override void EnsureLinkToContentGroup(Guid cgGuid)
         {
-            SxcContext.ContentBlock.App.ContentGroupManager.PersistContentGroupAndBlankTemplateToModule(ModuleID,
+            SxcContext.ContentBlock.App.ContentGroupManager.PersistContentGroupAndBlankTemplateToModule(ModuleId,
                 true, cgGuid);
         }
 

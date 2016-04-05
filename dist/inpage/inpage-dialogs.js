@@ -312,7 +312,7 @@ angular.module('SxcInpageTemplates', []).run(['$templateCache', function($templa
         };
 
         // Cancel and reset back to original state
-        vm.cancelTemplateChange = wrapper.contentBlock.cancelTemplateChange;
+        vm.cancelTemplateChange = wrapper.contentBlock._cancelTemplateChange;
 
         // store the template state to the server, optionally force create of content, and hide the selector
         vm.persistTemplate = wrapper.contentBlock.persistTemplate;

@@ -32,7 +32,7 @@ $2sxc._contentManagementCommands = function (sxc, targetTag) {
                 // this adds an item of the content-group, based on the group GUID and the sequence number
                 addContentGroupItem: function(guid, index, part, isAdd, isEntity, cbid, sectionLanguageKey) {
                     cmd.items.push({
-                        Group: { Guid: guid, Index: index, Part: part, Add: isAdd, ContentBlockIsEntity: isEntity, ContentBlockId: cbid },
+                        Group: { Guid: guid, Index: index, Part: part, Add: isAdd },
                         Title: $2sxc.translate(sectionLanguageKey)
                     });
                 },
@@ -93,7 +93,7 @@ $2sxc._contentManagementCommands = function (sxc, targetTag) {
         _openNgDialog: function (settings, event, closeCallback) {
 
             var callback = function () {
-                cmc.editManager.contentBlock.reload();
+                cmc.editManager.contentBlock.reloadAndReInitialize();
                 closeCallback();
             };
             var link = cmc._linkToNgDialog(settings);
@@ -108,6 +108,22 @@ $2sxc._contentManagementCommands = function (sxc, targetTag) {
             }
         },
 
+        executeAction: function (settings, event) {
+            var conf = cmc.editManager.toolbar.actions[settings.action];
+            settings = $2sxc._lib.extend({}, conf, settings); // merge conf & settings, but settings has higher priority
+            if (!settings.dialog) settings.dialog = settings.action; // old code uses "action" as the parameter, now use verb ? dialog
+            if (!settings.code) settings.code = cmc._openNgDialog; // decide what action to perform
+
+            var origEvent = event || window.event; // pre-save event because afterwards we have a promise, so the event-object changes; funky syntax is because of browser differences
+            if (conf.uiActionOnly)
+                return settings.code(settings, origEvent, cmc.editManager);
+
+            // if more than just a UI-action, then it needs to be sure the content-group is created first
+            cmc.editManager.contentBlock.prepareToAddContent()
+                .then(function () {
+                    return settings.code(settings, origEvent, cmc.editManager);
+                });
+        },
     };
 
     return cmc;

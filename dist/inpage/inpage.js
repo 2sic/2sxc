@@ -252,7 +252,7 @@ $2sxc._contentManagementCommands = function (sxc, targetTag) {
                 // this adds an item of the content-group, based on the group GUID and the sequence number
                 addContentGroupItem: function(guid, index, part, isAdd, isEntity, cbid, sectionLanguageKey) {
                     cmd.items.push({
-                        Group: { Guid: guid, Index: index, Part: part, Add: isAdd, ContentBlockIsEntity: isEntity, ContentBlockId: cbid },
+                        Group: { Guid: guid, Index: index, Part: part, Add: isAdd },
                         Title: $2sxc.translate(sectionLanguageKey)
                     });
                 },
@@ -313,7 +313,7 @@ $2sxc._contentManagementCommands = function (sxc, targetTag) {
         _openNgDialog: function (settings, event, closeCallback) {
 
             var callback = function () {
-                cmc.editManager.contentBlock.reload();
+                cmc.editManager.contentBlock.reloadAndReInitialize();
                 closeCallback();
             };
             var link = cmc._linkToNgDialog(settings);
@@ -328,6 +328,22 @@ $2sxc._contentManagementCommands = function (sxc, targetTag) {
             }
         },
 
+        executeAction: function (settings, event) {
+            var conf = cmc.editManager.toolbar.actions[settings.action];
+            settings = $2sxc._lib.extend({}, conf, settings); // merge conf & settings, but settings has higher priority
+            if (!settings.dialog) settings.dialog = settings.action; // old code uses "action" as the parameter, now use verb ? dialog
+            if (!settings.code) settings.code = cmc._openNgDialog; // decide what action to perform
+
+            var origEvent = event || window.event; // pre-save event because afterwards we have a promise, so the event-object changes; funky syntax is because of browser differences
+            if (conf.uiActionOnly)
+                return settings.code(settings, origEvent, cmc.editManager);
+
+            // if more than just a UI-action, then it needs to be sure the content-group is created first
+            cmc.editManager.contentBlock.prepareToAddContent()
+                .then(function () {
+                    return settings.code(settings, origEvent, cmc.editManager);
+                });
+        },
     };
 
     return cmc;
@@ -462,8 +478,9 @@ $2sxc._contentManagementCommands = function (sxc, targetTag) {
             },
 
             // find all toolbar-info-attributes in the HTML, convert to <ul><li> toolbar
-            _processToolbars: function() {
-                $(".sc-menu[data-toolbar]", $(".DnnModule-" + id)).each(function() {
+            _processToolbars: function (parentTag) {
+                parentTag = parentTag ? $(parentTag) : $(".DnnModule-" + id);
+                $(".sc-menu[data-toolbar]", parentTag).each(function() {
                     var toolbarSettings = $.parseJSON($(this).attr("data-toolbar"));
                     var toolbarTag = $(this);
                     toolbarTag.replaceWith($2sxc(toolbarTag).manage.getToolbar(toolbarSettings));
@@ -507,22 +524,38 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
         undoContentTypeId: ctid,
 
         // ajax update/replace the content of the content-block
-        replace: function(newContent) {
+        replace: function(newContent, justPreview) {
             try {
                 var newStuff = $(newContent);
+                // don't do this yet, too many side-effects
+                //if (justPreview) {    
+                //    newStuff.attr("data-cb-id", "preview" + newStuff.attr("data-cb-id"));
+                //    newStuff.Attr("data-cb-preview", true);
+                //}
                 $(cbTag).replaceWith(newStuff);
                 cbTag = newStuff;
+                //$2sxc(newStuff).manage.toolbar._processToolbars(newStuff); // init it...
             } catch (e) {
                 console.log("Error while rendering template:");
                 console.log(e);
             }
         },
+        replacePreview: function(newContent) {
+            cb.replace(newContent, true);
+        },
 
         // this one assumes a replace / change has already happened, but now must be finalized...
-        finalizeReplace: function() {
-            // create new sxc-object
-            cb.sxc = cb.sxc.recreate();
-            cb.sxc.manage.toolbar._processToolbars(); // sub-optimal deep dependency
+        reloadAndReInitialize: function () {
+            if (manage.reloadWithAjax) // necessary to show the original template again
+                return cb.reload()
+                    .then(function() {
+                        // create new sxc-object
+                        cb.sxc = cb.sxc.recreate();
+                        cb.sxc.manage.toolbar._processToolbars(); // sub-optimal deep dependency
+                    });
+            else 
+                return window.location.reload();
+            
         },
 
         // retrieve new preview-content with alternate template and then show the result
@@ -536,23 +569,18 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
                 return null;
 
             // if reloading a non-content-app, re-load the page
-            if (!cb.editContext.ContentGroup.IsContent)
+            if (!manage.reloadWithAjax)
                 return window.location.reload();
 
-            // remember for future persist/save
+            // remember for future persist/save/undo
             cb.templateId = templateId;
 
-            var lang = cb.editContext.Language.Current; 
-
             // ajax-call, then replace
-            return cb.sxc.webApi.get({
-                    url: "view/module/rendertemplate",
-                    params: { templateId: templateId, lang: lang, cbisentity: editContext.ContentBlock.IsEntity, cbid: editContext.ContentBlock.Id },
-                    dataType: "html"
-                })
+            return cb._getPreviewWithTemplate(templateId)
                 .then(cb.replace);
         },
 
+        //#region simple item commands like publish, remove, add, re-order
         // set a content-item in this block to published, then reload
         publish: function(part, sortOrder) {
             return cb.sxc.webApi.get({
@@ -577,18 +605,33 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
             }).then(cb.reload);
         },
 
-        setTemplateChooserState: function (state) {
-        	return cb.sxc.webApi.get({
-        		url: "View/Module/SetTemplateChooserState",
-        		params: { state: state }
-        	});
-        },
 
         addItem: function(sortOrder) {
         	return cb.sxc.webApi.get({
         		url: "View/Module/AddItem",
         		params: { sortOrder: sortOrder }
         	}).then(cb.reload);
+        },
+        //#endregion
+
+        _getPreviewWithTemplate: function(templateId) {
+            return cb.sxc.webApi.get({
+                url: "view/module/rendertemplate",
+                params: {
+                    templateId: templateId,
+                    lang: cb.editContext.Language.Current,
+                    cbisentity: editContext.ContentBlock.IsEntity,
+                    cbid: editContext.ContentBlock.Id
+                },
+                dataType: "html"
+            });
+        },
+
+        _setTemplateChooserState: function (state) {
+        	return cb.sxc.webApi.get({ 
+        		url: "view/module/SetTemplateChooserState",
+        		params: { state: state }
+        	});
         },
 
         _saveTemplate: function (templateId, forceCreateContentGroup, newTemplateChooserState) {
@@ -603,17 +646,14 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
         },
 
         // Cancel and reset back to original state
-        cancelTemplateChange: function() {
+        _cancelTemplateChange: function() {
             cb.templateId = cb.undoTemplateId;
             cb.contentTypeId = cb.undoContentTypeId;
 
             // dialog...
             sxc.manage.dialog.justHide();
-            cb.setTemplateChooserState(false);
-
-            if (cb.editContext.ContentGroup.IsContent) // necessary to show the original template again
-                cb.reload()
-                    .then(cb.finalizeReplace);
+            cb._setTemplateChooserState(false)
+                .then(cb.reloadAndReInitialize);
         },
 
         dialogToggle: function () {
@@ -635,16 +675,14 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
 
             var isVisible = diag.isVisible();
             if (manage.editContext.ContentBlock.ShowTemplatePicker !== isVisible)
-                cb.setTemplateChooserState(isVisible)
+                cb._setTemplateChooserState(isVisible)
                     .then(function() {
                         manage.editContext.ContentBlock.ShowTemplatePicker = isVisible;
                     });
 
-
         },
 
 
-        // todo...
         prepareToAddContent: function() {
             return cb.persistTemplate(true, false);
         },
@@ -656,7 +694,7 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
             var promiseToSetState;
             if (groupExistsAndTemplateUnchanged)
                 promiseToSetState = (cb.editContext.ContentBlock.ShowTemplatePicker)//.minfo.templateChooserVisible)
-                    ? cb.setTemplateChooserState(false) // hide in case it was visible
+                    ? cb._setTemplateChooserState(false) // hide in case it was visible
                     : $.when(null); // all is ok, create empty promise to allow chaining the result
             else
                 promiseToSetState = cb._saveTemplate(cb.templateId, forceCreate, selectorVisibility) 
@@ -666,11 +704,9 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
                             return;
                         }
                         var newGuid = data;
-                        if (newGuid === null)
-                            return;
+                        if (!newGuid) return;
                         newGuid = newGuid.replace(/[\",\']/g, ""); // fixes a special case where the guid is given with quotes (dependes on version of angularjs) issue #532
-                        if (console)
-                            console.log("created content group {" + newGuid + "}");
+                        if (console) console.log("created content group {" + newGuid + "}");
 
                         manage.updateContentGroupGuid(newGuid);
                     });
@@ -686,8 +722,10 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
 
                 if (!cb.editContext.ContentGroup.HasContent) // if it didn't have content, then it only has now...
                     cb.editContext.ContentGroup.HasContent = forceCreate;
-                // if (!cb.minfo.hasContent) // if it didn't have content, then it only has now...
-                //    cb.minfo.hasContent = forceCreate; // ...if we forced it to
+
+                // only re-load on content, not on app as that was already re-loaded on the preview
+                if (!groupExistsAndTemplateUnchanged && manage.reloadWithAjax)      // necessary to show the original template again
+                    cb.reloadAndReInitialize();
             });
 
             return promiseToCorrectUi;
@@ -784,78 +822,84 @@ $("body").on('mousemove', function (e) {
             templateId: ec.ContentGroup.TemplateId,
             contentTypeId: ec.ContentGroup.ContentTypeName,
             templateChooserVisible: ec.ContentBlock.ShowTemplatePicker, // todo: maybe move to content-goup
-            user: { canDesign: ec.User.CanDesign, canDevelop: ec.User.CanDesign },
+            user: { canDesign: ec.User.CanDesign, canDevelop: ec.User.CanDesign }
         };
 
         var toolsAndButtons = $2sxc._toolbarManager(sxc, ec);
+        var cmds = $2sxc._contentManagementCommands(sxc, cbTag);
 
         var editManager = {
             // public method to find out if it's in edit-mode
             isEditMode: function () { return ec.Environment.IsEditable; },
+            reloadWithAjax: ec.ContentGroup.IsContent,  // for now, allow all content to use ajax, apps use page-reload
 
             dialogParameters: ngDialogParams, // used for various dialogs
             toolbarConfig: toolsAndButtons.config, // used to configure buttons / toolbars
-            updateContentGroupGuid: function(newGuid) {
-                ec.ContentGroup.Guid = newGuid;
-                toolsAndButtons.refreshConfig(); 
-                editManager.toolbarConfig = toolsAndButtons.config;
-            },
 
             editContext: ec, // metadata necessary to know what/how to edit
             dashboardConfig: dashConfig,
-            commands: $2sxc._contentManagementCommands(sxc, cbTag),
-
+            commands: cmds,
 
             // Perform a toolbar button-action - basically get the configuration and execute it's action
-            action: function(settings, event) {
-                var conf = editManager.toolbar.actions[settings.action];
-                settings = $2sxc._lib.extend({}, conf, settings); // merge conf & settings, but settings has higher priority
-                if (!settings.dialog) settings.dialog = settings.action; // old code uses "action" as the parameter, now use verb ? dialog
-                if (!settings.code) settings.code = editManager.commands._openNgDialog; // decide what action to perform
-
-                var origEvent = event || window.event; // pre-save event because afterwards we have a promise, so the event-object changes; funky syntax is because of browser differences
-                if (conf.uiActionOnly)
-                    return settings.code(settings, origEvent, editManager);
-
-                // if more than just a UI-action, then it needs to be sure the content-group is created first
-                editManager.contentBlock.prepareToAddContent()
-                    .then(function() {
-                        return settings.code(settings, origEvent, editManager);
-                    });
-            },
+            action: cmds.executeAction,
 
             //#region toolbar quick-access commands - might be used by other scripts, so I'm keeping them here for the moment, but may just delete them later
             toolbar: toolsAndButtons, // should use this from now on when accessing from outside
             getButton: toolsAndButtons.getButton,
             createDefaultToolbar: toolsAndButtons.createDefaultToolbar,
             getToolbar: toolsAndButtons.getToolbar,
-            //_processToolbars: toolsAndButtons._processToolbars,
             //#endregion
 
-            initContentBlocks: function() {
-                // find the blocks / scope
-            }
+            // init this object 
+            init: function init() {
+                // finish init of sub-objects
+                editManager.commands.init(editManager);
+                editManager.contentBlock = $2sxc.contentBlock(sxc, editManager, cbTag);
+
+                // attach & open the mini-dashboard iframe
+                if (ec.ContentBlock.ShowTemplatePicker)
+                    editManager.action({ "action": "layout" });
+
+            },
+
+            // change config by replacing the guid, and refreshing dependend sub-objects
+            updateContentGroupGuid: function (newGuid) {
+                ec.ContentGroup.Guid = newGuid;
+                toolsAndButtons.refreshConfig(); 
+                editManager.toolbarConfig = toolsAndButtons.config;
+            },
+
+            createContentBlock: function (parentId, fieldName, index, appName) {
+                // the wrapper, into which this will be placed and the list of pre-existing blocks
+                var listTag = $("div[data-cbl-id='" + parentId + "'][data-cbl-field='" + fieldName + "']");
+                if (listTag.length === 0) return alert("can't add content-block as we couldn't find the list");
+                var cblockList = listTag.find("div.sc-content-block");
+                if (index > cblockList.length)
+                    index = cblockList.length; // make sure index is never greater than the amount of items
+                return sxc.webApi.get({
+                    url: "view/module/generatecontentblock",
+                    params: { parentId: parentId, field: fieldName, sortOrder: index, app: appName }
+                }).then(function (result) {
+                    var newTag = $(result); // prepare tag for inserting
+
+                    // should I add it to a specific position...
+                    if (cblockList.length > 0 && index > 0) 
+                        $(cblockList[cblockList.length > index - 1 ? index - 1: cblockList.length - 1])
+                            .after(newTag);
+                    else    //...or just at the beginning?
+                        listTag.prepend(newTag);
+                
+
+                    var sxcNew = $2sxc(newTag);
+                    sxcNew.manage.toolbar._processToolbars(newTag);
+
+                });
+            },
+
+
         };
 
-        // finish init of sub-objects
-        editManager.commands.init(editManager);
-        editManager.contentBlock = $2sxc.contentBlock(sxc, editManager, cbTag);
-
-        editManager.tempCreateCB = function(parent, field, index, app) {
-            return sxc.webApi.get({
-                url: "view/module/generatecontentblock",
-                params: { parentId: parent, field: field, sortOrder: index, app: app }
-            }).then(function(result) {
-                console.log(result);
-            });
-
-        };
-
-        // attach & open the mini-dashboard iframe
-        if (ec.ContentBlock.ShowTemplatePicker)
-            editManager.action({ "action": "layout" });
-
-
+        editManager.init();
         return editManager;
     };
 
@@ -974,12 +1018,9 @@ $(document).ready(function () {
     window.setTimeout(function () {
         modules.each(function () {
             try {
-                var moduleId = $(this).data("cb-instance");
-                var cbid = $(this).data("cb-id");
-                $2sxc(moduleId, cbid).manage.toolbar._processToolbars();
+                $2sxc(this).manage.toolbar._processToolbars(this);
             } catch (e) { // Make sure that if one app breaks, others continue to work
-                if (console && console.error)
-                    console.error(e);
+                if (console && console.error) console.error(e);
             }
         });
     }, 0);
