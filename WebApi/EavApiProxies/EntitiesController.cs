@@ -176,16 +176,17 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
             // case 1: module
             if (SxcContext.ContentBlock.ParentIsEntity)
             {
-                // check the contentGroup as to what should be the module title, then try to set it
-                // technically it could have multiple different groups to save in, 
-                // ...but for now we'll just update the current modules title
-                // note: it also correctly handles published/unpublished, but I'm not sure why :)
-                var modContentGroup = app.ContentGroupManager.GetContentGroupForModule(Dnn.Module.ModuleID);
+                SxcContext.ContentBlock.Manager.UpdateTitle("");
+                //// check the contentGroup as to what should be the module title, then try to set it
+                //// technically it could have multiple different groups to save in, 
+                //// ...but for now we'll just update the current modules title
+                //// note: it also correctly handles published/unpublished, but I'm not sure why :)
+                //var modContentGroup = app.ContentGroupManager.GetContentGroupForModule(Dnn.Module.ModuleID);
 
-                var titleItem = modContentGroup.ListContent.FirstOrDefault() ?? modContentGroup.Content.FirstOrDefault();
+                //var titleItem = modContentGroup.ListContent.FirstOrDefault() ?? modContentGroup.Content.FirstOrDefault();
 
-                if (titleItem != null && titleItem.GetBestValue("EntityTitle") != null)
-                    Dnn.Module.ModuleTitle = titleItem.GetBestValue("EntityTitle").ToString();
+                //if (titleItem != null && titleItem.GetBestValue("EntityTitle") != null)
+                //    Dnn.Module.ModuleTitle = titleItem.GetBestValue("EntityTitle").ToString();
             }
             else
             {

@@ -6,11 +6,10 @@ namespace ToSic.SexyContent.ContentBlock
 {
     internal class EntityContentGroupReferenceManager: ContentGroupReferenceManagerBase
     {
-        internal EntityContentGroupReferenceManager(SxcInstance sxc)
+        public EntityContentGroupReferenceManager(SxcInstance sxc) : base(sxc)
         {
-            SxcContext = sxc;
-            ModuleId = SxcContext.ModuleInfo.ModuleID;
         }
+
         #region methods which the entity-implementation must customize - so it's virtual
 
         protected override void SavePreviewTemplateId(Guid templateGuid, bool? newTemplateChooserState = null)
@@ -25,24 +24,25 @@ namespace ToSic.SexyContent.ContentBlock
         }
 
         internal override void SetTemplateChooserState(bool state)
-        {
-            UpdateValue(EntityContentBlock.CbPropertyShowChooser, state);
-        }
+            => UpdateValue(EntityContentBlock.CbPropertyShowChooser, state);
+        
 
         internal override void SetAppId(int? appId)
-        {
-            UpdateValue(EntityContentBlock.CbPropertyApp, appId ?? 0);
-        }
+            => UpdateValue(EntityContentBlock.CbPropertyApp, appId ?? 0);
+        
 
         internal override void EnsureLinkToContentGroup(Guid cgGuid)
+            => UpdateValue(EntityContentBlock.CbPropertyContentGroup, cgGuid);
+        
+
+        internal override void UpdateTitle(string newTitle)
         {
-            // link to the CG
-            UpdateValue(EntityContentBlock.CbPropertyContentGroup, cgGuid);
+            throw new Exception("not working");
         }
 
         #endregion
 
-        #region private helpers
+            #region private helpers
 
         private void UpdateValue(string key, object value)
         {

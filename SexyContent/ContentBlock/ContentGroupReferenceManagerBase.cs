@@ -15,6 +15,12 @@ namespace ToSic.SexyContent.ContentBlock
 
         protected ContentGroup CGroup;
 
+        internal ContentGroupReferenceManagerBase(SxcInstance sxc)
+        {
+            SxcContext = sxc;
+            ModuleId = SxcContext.ModuleInfo.ModuleID;
+        }
+
         protected ContentGroup ContentGroup
             => CGroup ?? (CGroup = SxcContext.ContentGroup);
 
@@ -32,6 +38,7 @@ namespace ToSic.SexyContent.ContentBlock
         internal abstract void SetAppId(int? appId);
 
         internal abstract void EnsureLinkToContentGroup(Guid cgGuid);
+        internal abstract void UpdateTitle(string newTitle);
         #endregion
 
         #region methods which are fairly stable / the same across content-block implementations
