@@ -355,6 +355,7 @@
         finishUpgrade: function(domElement) {
             // todo: replace with newer $2sxc(domElement).webApi("url...")... syntax
             var mc = $2sxc(domElement);
+            console.log(domElement);
             var url = mc.resolveServiceUrl("view/module/finishinstallation");
             $.ajax({
                 type: "get",
