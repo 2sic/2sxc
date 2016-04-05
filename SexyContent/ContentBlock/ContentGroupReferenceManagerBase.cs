@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using DotNetNuke.Services.Exceptions;
+using ToSic.Eav;
 using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.ContentBlock
@@ -21,13 +22,7 @@ namespace ToSic.SexyContent.ContentBlock
             ModuleId = SxcContext.ModuleInfo.ModuleID;
         }
 
-        protected ContentGroup ContentGroup
-            => CGroup ?? (CGroup = SxcContext.ContentGroup);
-
-        protected IEnumerable<Template> GetSelectableTemplatesForWebApi()
-        {
-            return SxcContext.AppTemplates.GetAvailableTemplates(ContentGroup);
-        }
+        
 
         #region methods which the entity-implementation must customize - so it's virtual
 
@@ -38,14 +33,20 @@ namespace ToSic.SexyContent.ContentBlock
         internal abstract void SetAppId(int? appId);
 
         internal abstract void EnsureLinkToContentGroup(Guid cgGuid);
-        internal abstract void UpdateTitle(string newTitle);
+        internal abstract void UpdateTitle(IEntity titleItem);
         #endregion
 
         #region methods which are fairly stable / the same across content-block implementations
+
+        protected ContentGroup ContentGroup
+            => CGroup ?? (CGroup = SxcContext.ContentGroup);
+
+        protected IEnumerable<Template> GetSelectableTemplatesForWebApi()
+            => SxcContext.AppTemplates.GetAvailableTemplates(ContentGroup);
+
         public void AddItem(int? sortOrder = null)
-        {
-            ContentGroup.AddContentAndPresentationEntity("content", sortOrder, null, null);
-        }
+            => ContentGroup.AddContentAndPresentationEntity("content", sortOrder, null, null);
+        
 
         public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup, bool? newTemplateChooserState = null)
         {
@@ -177,6 +178,25 @@ namespace ToSic.SexyContent.ContentBlock
         }
 
         #endregion
+
+        internal void UpdateTitle()
+        {
+            // check the contentGroup as to what should be the module title, then try to set it
+            // technically it could have multiple different groups to save in, 
+            // ...but for now we'll just update the current modules title
+            // note: it also correctly handles published/unpublished, but I'm not sure why :)
+
+            // re-load the content-group so we have the new title
+            var app = SxcContext.App;
+            var contentGroup = app.ContentGroupManager.GetContentGroup(ContentGroup.ContentGroupGuid);// .GetContentGroupForModule(SxcContext.ModuleInfo.ModuleID);
+
+            IEntity titleItem = contentGroup.ListContent.FirstOrDefault() ?? contentGroup.Content.FirstOrDefault();
+
+            UpdateTitle(titleItem);
+            if (titleItem?.GetBestValue("EntityTitle") != null)
+                SxcContext.ModuleInfo.ModuleTitle = titleItem.GetBestValue("EntityTitle").ToString();
+        }
+
 
     }
 }

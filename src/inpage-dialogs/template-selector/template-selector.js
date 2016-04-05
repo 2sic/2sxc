@@ -13,7 +13,7 @@
                 sxc: iframe.sxc,
                 contentBlock: iframe.sxc.manage.contentBlock,
                 getManageInfo: iframe.getManageInfo,
-                dashInfo: iframe.getAdditionalDashboardConfig,
+                dashInfo: iframe.getAdditionalDashboardConfig
             };
         };
     });
@@ -45,7 +45,7 @@
             //: di.contentTypeId;// vm.manageInfo.contentTypeId;
         vm.undoContentTypeId = vm.contentTypeId;
 
-        vm.appId = vm.dashInfo.appId;
+        vm.appId = vm.dashInfo.appId !== 0 ? vm.dashInfo.appId : null;
         vm.savedAppId = vm.dashInfo.appId;
 
 
@@ -94,6 +94,9 @@
             // Content (ajax, don't save the changed value)
             if (vm.isContentApp)
                 return vm.renderTemplate(newTemplateId);
+
+            // ToDo: Not sure why we need to set this value before calling persistTemplate. Clean up
+            wrapper.contentBlock.templateId = vm.templateId;
 
             // App
             vm.persistTemplate(false)

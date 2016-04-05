@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using ToSic.Eav;
 using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.ContentBlock
@@ -31,22 +32,16 @@ namespace ToSic.SexyContent.ContentBlock
             => SxcContext.ContentBlock.App.ContentGroupManager.PersistContentGroupAndBlankTemplateToModule(ModuleId,
                 true, cgGuid);
 
-        internal override void UpdateTitle(string newTitle)
+        internal override void UpdateTitle(IEntity titleItem)
         {
-            // check the contentGroup as to what should be the module title, then try to set it
-            // technically it could have multiple different groups to save in, 
-            // ...but for now we'll just update the current modules title
-            // note: it also correctly handles published/unpublished, but I'm not sure why :)
-            var app = SxcContext.App;
-            var modContentGroup = app.ContentGroupManager.GetContentGroupForModule(SxcContext.ModuleInfo.ModuleID);
-
-            var titleItem = modContentGroup.ListContent.FirstOrDefault() ?? modContentGroup.Content.FirstOrDefault();
-
+            // todo: this should probably do the more complex stuff
+            // to ensure that it happens on all versions of this module (all languages)
+            // used to work once...
             if (titleItem?.GetBestValue("EntityTitle") != null)
                 SxcContext.ModuleInfo.ModuleTitle = titleItem.GetBestValue("EntityTitle").ToString();
-
         }
 
+        
 
         #endregion
 

@@ -42,7 +42,7 @@ namespace ToSic.SexyContent.Internal
             var dummy = baseCache.LastRefresh;
 
             if (IsNullOrEmpty(appName))
-                appName = Constants.DefaultAppName;
+                return 0; // 2016-04-05 2rm changed behaviour to return 0 if appName is blank. Previous code: appName = Constants.DefaultAppName;
 
             var appId = baseCache.ZoneApps[zoneId].Apps
                     .Where(p => p.Value == appName).Select(p => p.Key).FirstOrDefault();

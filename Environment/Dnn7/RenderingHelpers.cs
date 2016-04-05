@@ -319,7 +319,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
             Id = sxc.ContentGroup?.ContentGroupId ?? 0;
             Guid = sxc.ContentGroup?.ContentGroupGuid ?? Guid.Empty;
-            AppId = sxc.AppId ?? 0;                     
+            AppId = sxc.AppId ?? 0;
             AppUrl = sxc.App?.Path ?? "" + "/" ;
             HasContent = sxc.Template != null && sxc.ContentGroup.Exists;
 

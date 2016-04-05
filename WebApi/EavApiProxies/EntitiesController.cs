@@ -123,6 +123,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
         private void DoAdditionalGroupProcessing(int appId, Dictionary<Guid, int> postSaveIds, IEnumerable<IGrouping<string, EntityWithHeader>> groupItems)
         {
             var app = new App(PortalSettings.Current, appId);
+            string newTitle = null;
 
             foreach (var entitySets in groupItems)
             {
@@ -138,7 +139,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
                 var contentGroup = app.ContentGroupManager.GetContentGroup(contItem.Header.Group.Guid);
                 var partName = contItem.Header.Group.Part;
 
-                var part = contentGroup[partName];
+                // var part = contentGroup[partName];
                 var index = contItem.Header.Group.Index;
 
                 // Get saved entity (to get its ID)
@@ -173,30 +174,32 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
             //var contentBlockId = groupItems.FirstOrDefault()?.FirstOrDefault()?.Header?.Group?.ContentBlockId;
             //if ((contentBlockId ?? Dnn.Module.ModuleID) > 0 ) // if > 0 or not specified
 
-            // case 1: module
-            if (SxcContext.ContentBlock.ParentIsEntity)
-            {
-                SxcContext.ContentBlock.Manager.UpdateTitle("");
-                //// check the contentGroup as to what should be the module title, then try to set it
-                //// technically it could have multiple different groups to save in, 
-                //// ...but for now we'll just update the current modules title
-                //// note: it also correctly handles published/unpublished, but I'm not sure why :)
-                //var modContentGroup = app.ContentGroupManager.GetContentGroupForModule(Dnn.Module.ModuleID);
 
-                //var titleItem = modContentGroup.ListContent.FirstOrDefault() ?? modContentGroup.Content.FirstOrDefault();
+            SxcContext.ContentBlock.Manager.UpdateTitle();
 
-                //if (titleItem != null && titleItem.GetBestValue("EntityTitle") != null)
-                //    Dnn.Module.ModuleTitle = titleItem.GetBestValue("EntityTitle").ToString();
-            }
-            else
-            {
-                // todo 8.5
-                // SxcContext.ContentBlock.Manager.UpdateTitle("");
+            //// case 1: module
+            //if (SxcContext.ContentBlock.ParentIsEntity)
+            //{
+            //    //// check the contentGroup as to what should be the module title, then try to set it
+            //    //// technically it could have multiple different groups to save in, 
+            //    //// ...but for now we'll just update the current modules title
+            //    //// note: it also correctly handles published/unpublished, but I'm not sure why :)
+            //    //var modContentGroup = app.ContentGroupManager.GetContentGroupForModule(Dnn.Module.ModuleID);
 
-                // case entity... content block
-                // not handled yet
-                // would have to find the content-block in the ORIGINAL app and update that
-            }
+            //    //var titleItem = modContentGroup.ListContent.FirstOrDefault() ?? modContentGroup.Content.FirstOrDefault();
+
+            //    //if (titleItem != null && titleItem.GetBestValue("EntityTitle") != null)
+            //    //    Dnn.Module.ModuleTitle = titleItem.GetBestValue("EntityTitle").ToString();
+            //}
+            //else
+            //{
+            //    // todo 8.5
+            //    // SxcContext.ContentBlock.Manager.UpdateTitle("");
+
+            //    // case entity... content block
+            //    // not handled yet
+            //    // would have to find the content-block in the ORIGINAL app and update that
+            //}
 
             #endregion
         }

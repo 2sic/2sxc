@@ -25,11 +25,10 @@
                     ng-disabled="vm.dashInfo.hasContent || vm.dashInfo.isList">
                 <option value="" ng-disabled="vm.appId != null" translate="TemplatePicker.AppPickerDefault"></option>
             </select>
-
             <span>
                     <span ng-if="vm.showAdvanced && !vm.isContentApp">
                         <button type="button" class="btn btn-default"
-                                ng-if="vm.appId != null"
+                                ng-show="vm.appId != null"
                                 ng-click="vm.appSettings();"
                                 title="{{ 'Toolbar.App' | translate }}">
                             <i class="icon-settings"></i>
