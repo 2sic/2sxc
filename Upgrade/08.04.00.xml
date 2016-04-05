@@ -5,7 +5,7 @@
     <Dimensions />
   </Header>
   <AttributeSets>
-    <AttributeSet StaticName="ContentGroupReference" Name="ContentGroupReference" Description="A pointer / reference to a content group" Scope="2SexyContent-System">
+    <AttributeSet StaticName="ContentGroupReference" Name="ContentGroupReference" Description="A pointer / reference to a content group" Scope="2SexyContent-System" AlwaysShareConfiguration="true">
       <Attributes>
         <Attribute StaticName="Title" Type="String" IsTitle="true">
           <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@All" AttributeSetName="@All" EntityGUID="5495987f-e290-47d4-a1e6-8426b49f2be3" KeyNumber="3239">
