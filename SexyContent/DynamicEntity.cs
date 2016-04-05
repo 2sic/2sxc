@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
@@ -6,6 +7,7 @@ using System.Web;
 using DotNetNuke.Entities.Portals;
 using Newtonsoft.Json;
 using ToSic.Eav;
+using ToSic.SexyContent.ContentBlock;
 using ToSic.SexyContent.EAVExtensions;
 
 namespace ToSic.SexyContent
@@ -106,36 +108,6 @@ namespace ToSic.SexyContent
             return result;
 
 
-            // 2016-02-27 2dm - fixed to use the full standard ValueConverter - this is mostly the old stuff
-            // #region handle 2sxc special conversions for file names and entity-lists
-//            propertyNotFound = result == null;
-//            if (!propertyNotFound)
-//            {
-//                if (Entity.Attributes.ContainsKey(attributeName))
-//                {
-//                    var attribute = Entity.Attributes[attributeName];
-//                    //if (attribute.Type == "Hyperlink" && result is string)
-//                    //    result = SexyContent.ResolveHyperlinkValues((string)result,
-//                    //     SexyContext == null ? PortalSettings.Current : SexyContext.OwnerPS);
-
-//                    if (attribute.Type == "Entity" && result is EntityRelationship)
-//                        // Convert related entities to Dynamics
-//                        result = ((EntityRelationship)result).Select(
-//                         p => new DynamicEntity(p, _dimensions, SexyContext)
-//                         ).ToList();
-//                }
-
-//                return result;
-//            }
-//#endregion
-
-
-
-//            #region all failed, return null
-//            propertyNotFound = true;
-//            return null;
-
-//            #endregion
 
 
         }
@@ -154,20 +126,11 @@ namespace ToSic.SexyContent
             }
         }
 
-        public int EntityId
-        {
-            get { return Entity.EntityId; }
-        }
+        public int EntityId => Entity.EntityId;
 
-        public Guid EntityGuid
-        {
-            get { return Entity.EntityGuid; }
-        }
+        public Guid EntityGuid => Entity.EntityGuid;
 
-        public object EntityTitle
-        {
-            get { return Entity.Title[_dimensions]; }
-        }
+        public object EntityTitle => Entity.Title[_dimensions];
 
         public dynamic GetDraft()
         {
@@ -216,5 +179,94 @@ namespace ToSic.SexyContent
             return dictionary;
         }
 
+        public HtmlString Render()
+        {
+            if (Entity.Type.Name == Settings.AttributeSetStaticNameContentBlockTypeName)
+            {
+                var cb = new EntityContentBlock(_sxcInstance.ContentBlock, Entity);
+                return cb.SxcInstance.Render();
+            }
+            else
+                return new HtmlString("<!-- auto-render of item " + EntityId + " -->");
+        }
     }
+
+    public class DynamicEntityList : IList<DynamicEntity>
+    {
+        private IList<DynamicEntity> list;
+        private IEntity parent;
+        private string field;
+        public DynamicEntityList(IEntity parentEntity, string fieldName, IList<DynamicEntity> innerList)
+        {
+            list = innerList;
+            parent = parentEntity;
+            field = fieldName;
+        }
+
+        public string betaListTag
+        {
+            get { return "{ \"parent\": \"" + "\""; }
+        }
+
+        public IEnumerator<DynamicEntity> GetEnumerator()
+        {
+            return list.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public void Add(DynamicEntity item)
+        {
+            list.Add(item);
+        }
+
+        public void Clear()
+        {
+            list.Clear();
+        }
+
+        public bool Contains(DynamicEntity item)
+        {
+            return list.Contains(item);
+        }
+
+        public void CopyTo(DynamicEntity[] array, int arrayIndex)
+        {
+            list.CopyTo(array, arrayIndex);
+        }
+
+        public bool Remove(DynamicEntity item)
+        {
+            return list.Remove(item);
+        }
+
+        public int Count => list.Count;
+
+        public bool IsReadOnly => list.IsReadOnly;
+
+        public int IndexOf(DynamicEntity item)
+        {
+            return list.IndexOf(item);
+        }
+
+        public void Insert(int index, DynamicEntity item)
+        {
+            list.Insert(index, item);
+        }
+
+        public void RemoveAt(int index)
+        {
+            list.RemoveAt(index);
+        }
+
+        public DynamicEntity this[int index]
+        {
+            get { return list[index]; }
+            set { list[index] = value;  }
+        }
+    }
+
 }

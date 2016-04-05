@@ -251,20 +251,5 @@ namespace ToSic.SexyContent
             return new AdamNavigator(_sxcInstance, App, Dnn.Portal, entity.EntityGuid, fieldName);
         }
         #endregion
-
-        #region ContentBlock
-        // todo:
-        // probably needs overloads with dynamic, list<dynamic> and list<ientity> 
-
-        public SxcInstance AsContentBlock(IEntity entity)
-        {
-            var cb = new EntityContentBlock(_sxcInstance.ContentBlock, entity);
-            return cb.SxcInstance;
-        }
-        public SxcInstance AsContentBlock(DynamicEntity entity)
-        {
-            return AsContentBlock(entity.Entity);
-        }
-        #endregion
     }
 }
