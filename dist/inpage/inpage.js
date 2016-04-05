@@ -1009,9 +1009,8 @@ $(document).ready(function () {
                 $2sxc(list).manage.createContentBlock(actionConfig.id, actionConfig.field, index, type);
             }
         }
+        // ToDo 2rm: Add menu definition for DNN modules (allow quick-insert of modules)
     ];
-
-    
 
     newBlockMenu.find('a').click(function () {
         var type = $(this).data("type");
