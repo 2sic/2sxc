@@ -7,15 +7,13 @@
 
 /* Content block menu */
 .sc-content-block-menu { position:absolute; height: 40px; margin-top:-20px; opacity:0.8; text-align:center; }
-.sc-content-block-menu a { width:32px; height:32px; margin:0px 8px; display:inline-block; text-indent:-9999px; /*padding:5px;*/ border-radius:3px; }
-.sc-content-block-menu:before, .sc-content-block-menu:after { height:2px; background:black; width:60px; display:block; content:' '; position:absolute; left:50%; top:19px; }
+.sc-content-block-menu a {  cursor:pointer; width:32px; height:32px; margin:0px 8px; display:inline-block; text-indent:-9999px; /*padding:5px;*/ border-radius:3px; }
+.sc-content-block-menu:before, .sc-content-block-menu:after { height:2px; background:#0088f4; width:60px; display:block; content:' '; position:absolute; left:50%; top:19px; }
 .sc-content-block-menu:before { margin-left:-150px; }
 .sc-content-block-menu:after { margin-left:90px; }
 .sc-content-block-menu-module { background:black; }
 .sc-content-block-menu-addcontent { background:url(../../icon.png); /*background-size:contain;*/  }
 .sc-content-block-menu-addapp { background:url(../../icon-app.png); /*background-size:contain;*/ }
-
-.sc-content-block-list { min-height:50px; outline: dotted 2px #aaa; }
 
 /* this one is for buttons which can have a full/empty state */
 .sc-menu li a.empty i {opacity: 0.4} 
