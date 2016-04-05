@@ -153,8 +153,8 @@ namespace ToSic.SexyContent
             var dictionary = ((from d in entity.Attributes select d.Value).ToDictionary(k => k.Name, v =>
             {
                 var value = dynamicEntity.GetEntityValue(v.Name, out propertyNotFound);
-                if (v.Type == "Entity" && value is List<DynamicEntity>)
-                    return ((List<DynamicEntity>)value).Select(p => new { p.EntityId, p.EntityTitle });
+                if (v.Type == "Entity" && value is IList<DynamicEntity>)
+                    return ((IList<DynamicEntity>)value).Select(p => new { p.EntityId, p.EntityTitle });
                 return value;
             }));
 

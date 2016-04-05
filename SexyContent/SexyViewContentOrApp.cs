@@ -172,14 +172,17 @@ namespace ToSic.SexyContent
 			}
 		}
 
-		protected void ShowError(string Error, Panel pnlError, string NonHostError = "", bool ShowOnlyEdit = true)
+		protected void ShowError(string error, Panel pnlError, string nonHostError = "", bool showOnlyEdit = true)
 		{
-			if (String.IsNullOrEmpty(NonHostError))
-				NonHostError = Error;
+            // add 2sxc-wrapper for 2sxc to work
+		    error = "<div class='sc-content-block' data-cb-instance='" + ModuleConfiguration.ModuleID + "' data-cb-id='" + ModuleConfiguration.ModuleID + "'>" + error + "</div>";
 
-			if (!ShowOnlyEdit || UserMayEditThisModule)
+			if (String.IsNullOrEmpty(nonHostError))
+				nonHostError = error;
+
+			if (!showOnlyEdit || UserMayEditThisModule)
 			{
-				pnlError.Controls.Add(new LiteralControl(UserInfo.IsSuperUser ? Error : NonHostError));
+				pnlError.Controls.Add(new LiteralControl(UserInfo.IsSuperUser ? error : nonHostError));
 				pnlError.Visible = true;
 			}
 		}

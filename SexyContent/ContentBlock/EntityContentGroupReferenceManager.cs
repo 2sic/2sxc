@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ToSic.Eav.BLL;
 
 namespace ToSic.SexyContent.ContentBlock
 {
@@ -52,8 +53,13 @@ namespace ToSic.SexyContent.ContentBlock
 
         private void Update(Dictionary<string, object> newValues)
         {
-            ((ContentBlockBase)SxcContext.ContentBlock).Parent.App
-                .Data.Update(Math.Abs(SxcContext.ContentBlock.ContentBlockId), newValues); 
+            var cgApp = ((ContentBlockBase) SxcContext.ContentBlock).Parent.App;
+            var eavDc = EavDataController.Instance(cgApp.ZoneId, cgApp.AppId);
+
+            eavDc.Entities.UpdateEntity(Math.Abs( SxcContext.ContentBlock.ContentBlockId), newValues);
+
+            //((ContentBlockBase)SxcContext.ContentBlock).Parent.App
+            //    .Data.Update(Math.Abs(SxcContext.ContentBlock.ContentBlockId), newValues); 
         }
 
         #endregion

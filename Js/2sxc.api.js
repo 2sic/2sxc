@@ -244,7 +244,9 @@
         };
 
         // add manage property, but not within initializer, because inside the manage-initializer it may reference 2sxc again
-        controller.manage = $2sxc.getManageController ? $2sxc.getManageController(controller) : null;
+        try { // sometimes the manage can't be build, like before installing
+            controller.manage = $2sxc.getManageController ? $2sxc.getManageController(controller) : null;
+        } catch (e) {}
 
         // Make sure back-reference to controller is set
         controller.data.controller = controller;
