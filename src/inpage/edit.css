@@ -5,6 +5,14 @@
 .sc-menu li { list-style-type:none; padding:0!important; margin:0!important; display:inline; }
 .sc-menu a { display:inline-block!important; margin-right:4px!important;cursor: pointer;margin-left: 0 !important; }
 
+/* Content block menu */
+.sc-content-block-menu { position:absolute; height: 30px; margin-top:-15px; opacity:0.5; text-align:center; }
+.sc-content-block-menu a { width:20px; height:20px; background:yellow; }
+.sc-content-block-menu:before, .sc-content-block-menu:after { height:2px; background:black; width:60px; display:block; content:' '; position:absolute; left:50%; top:14px; }
+.sc-content-block-menu:before { margin-left:-150px; }
+.sc-content-block-menu:after { margin-left:90px; }
+.sc-content-block-menu-module { background:black; }
+
 /* this one is for buttons which can have a full/empty state */
 .sc-menu li a.empty i {opacity: 0.4} 
 

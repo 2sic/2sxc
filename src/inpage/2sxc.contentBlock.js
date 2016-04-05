@@ -9,28 +9,28 @@
  * it should be able to render itself
  */
 
-$2sxc.contentBlock = function(sxc, manage, cbTag) {
-	//#region loads of old stuff, should be cleaned, mostly just copied from the angulare coe
+$2sxc.contentBlock = function (sxc, manage, cbTag) {
+    //#region loads of old stuff, should be cleaned, mostly just copied from the angulare coe
 
-	var cViewWithoutContent = "_LayoutElement"; // needed to differentiate the "select item" from the "empty-is-selected" which are both empty
+    var cViewWithoutContent = "_LayoutElement"; // needed to differentiate the "select item" from the "empty-is-selected" which are both empty
     var editContext = manage.editContext;
     var ctid = (editContext.ContentGroup.ContentTypeName === "" && editContext.ContentGroup.TemplateId !== null)
         ? cViewWithoutContent // has template but no content, use placeholder
         : editContext.ContentGroup.ContentTypeName;// manageInfo.contentTypeId;
 
-	//#endregion
+    //#endregion
 
     var cb = {
         sxc: sxc,
         editContext: editContext,    // todo: not ideal depedency, but ok...
 
         templateId: editContext.ContentGroup.TemplateId,
-        undoTemplateId: editContext.ContentGroup.TemplateId, 
+        undoTemplateId: editContext.ContentGroup.TemplateId,
         contentTypeId: ctid,
         undoContentTypeId: ctid,
 
         // ajax update/replace the content of the content-block
-        replace: function(newContent, justPreview) {
+        replace: function (newContent, justPreview) {
             try {
                 var newStuff = $(newContent);
                 // don't do this yet, too many side-effects
@@ -46,7 +46,7 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
                 console.log(e);
             }
         },
-        replacePreview: function(newContent) {
+        replacePreview: function (newContent) {
             cb.replace(newContent, true);
         },
 
@@ -54,18 +54,18 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
         reloadAndReInitialize: function () {
             if (manage.reloadWithAjax) // necessary to show the original template again
                 return cb.reload()
-                    .then(function() {
+                    .then(function () {
                         // create new sxc-object
                         cb.sxc = cb.sxc.recreate();
                         cb.sxc.manage.toolbar._processToolbars(); // sub-optimal deep dependency
                     });
-            else 
+            else
                 return window.location.reload();
-            
+
         },
 
         // retrieve new preview-content with alternate template and then show the result
-        reload: function(templateId) {
+        reload: function (templateId) {
             // if nothing specified, use stored id
             if (!templateId)
                 templateId = cb.templateId;
@@ -88,7 +88,7 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
 
         //#region simple item commands like publish, remove, add, re-order
         // set a content-item in this block to published, then reload
-        publish: function(part, sortOrder) {
+        publish: function (part, sortOrder) {
             return cb.sxc.webApi.get({
                 url: "view/module/publish",
                 params: { part: part, sortOrder: sortOrder }
@@ -96,7 +96,7 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
         },
 
         // remove an item from a list, then reload
-        removeFromList: function(sortOrder) {
+        removeFromList: function (sortOrder) {
             return cb.sxc.webApi.get({
                 url: "view/module/removefromlist",
                 params: { sortOrder: sortOrder }
@@ -104,7 +104,7 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
         },
 
         // change the order of an item in a list, then reload
-        changeOrder: function(sortOrder, destinationSortOrder) {
+        changeOrder: function (sortOrder, destinationSortOrder) {
             return cb.sxc.webApi.get({
                 url: "view/module/changeorder",
                 params: { sortOrder: sortOrder, destinationSortOrder: destinationSortOrder }
@@ -112,15 +112,15 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
         },
 
 
-        addItem: function(sortOrder) {
-        	return cb.sxc.webApi.get({
-        		url: "View/Module/AddItem",
-        		params: { sortOrder: sortOrder }
-        	}).then(cb.reload);
+        addItem: function (sortOrder) {
+            return cb.sxc.webApi.get({
+                url: "View/Module/AddItem",
+                params: { sortOrder: sortOrder }
+            }).then(cb.reload);
         },
         //#endregion
 
-        _getPreviewWithTemplate: function(templateId) {
+        _getPreviewWithTemplate: function (templateId) {
             return cb.sxc.webApi.get({
                 url: "view/module/rendertemplate",
                 params: {
@@ -134,10 +134,10 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
         },
 
         _setTemplateChooserState: function (state) {
-        	return cb.sxc.webApi.get({ 
-        		url: "view/module/SetTemplateChooserState",
-        		params: { state: state }
-        	});
+            return cb.sxc.webApi.get({
+                url: "view/module/SetTemplateChooserState",
+                params: { state: state }
+            });
         },
 
         _saveTemplate: function (templateId, forceCreateContentGroup, newTemplateChooserState) {
@@ -152,7 +152,7 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
         },
 
         // Cancel and reset back to original state
-        _cancelTemplateChange: function() {
+        _cancelTemplateChange: function () {
             cb.templateId = cb.undoTemplateId;
             cb.contentTypeId = cb.undoContentTypeId;
 
@@ -182,18 +182,18 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
             var isVisible = diag.isVisible();
             if (manage.editContext.ContentBlock.ShowTemplatePicker !== isVisible)
                 cb._setTemplateChooserState(isVisible)
-                    .then(function() {
+                    .then(function () {
                         manage.editContext.ContentBlock.ShowTemplatePicker = isVisible;
                     });
 
         },
 
 
-        prepareToAddContent: function() {
+        prepareToAddContent: function () {
             return cb.persistTemplate(true, false);
         },
 
-        persistTemplate: function(forceCreate, selectorVisibility) {
+        persistTemplate: function (forceCreate, selectorVisibility) {
             // Save only if the currently saved is not the same as the new
             var groupExistsAndTemplateUnchanged = !!cb.editContext.ContentGroup.HasContent
                 && (cb.undoTemplateId === cb.templateId);// !!cb.minfo.hasContent && (cb.undoTemplateId === cb.templateId);
@@ -203,9 +203,9 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
                     ? cb._setTemplateChooserState(false) // hide in case it was visible
                     : $.when(null); // all is ok, create empty promise to allow chaining the result
             else
-                promiseToSetState = cb._saveTemplate(cb.templateId, forceCreate, selectorVisibility) 
+                promiseToSetState = cb._saveTemplate(cb.templateId, forceCreate, selectorVisibility)
                     .then(function (data, textStatus, xhr) {
-                    	if (xhr.status !== 200) { // only continue if ok
+                        if (xhr.status !== 200) { // only continue if ok
                             alert("error - result not ok, was not able to create ContentGroup");
                             return;
                         }
@@ -217,14 +217,14 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
                         manage.updateContentGroupGuid(newGuid);
                     });
 
-            var promiseToCorrectUi = promiseToSetState.then(function() {
+            var promiseToCorrectUi = promiseToSetState.then(function () {
                 cb.undoTemplateId = cb.templateId; // remember for future undo
                 cb.undoContentTypeId = cb.contentTypeId; // remember ...
-                
+
                 cb.editContext.ContentBlock.ShowTemplatePicker = false; // cb.minfo.templateChooserVisible = false;
 
                 if (manage.dialog)
-                	manage.dialog.justHide();
+                    manage.dialog.justHide();
 
                 if (!cb.editContext.ContentGroup.HasContent) // if it didn't have content, then it only has now...
                     cb.editContext.ContentGroup.HasContent = forceCreate;
@@ -245,17 +245,28 @@ $2sxc.contentBlock = function(sxc, manage, cbTag) {
 
 
 // ToDo: Move this to correct location (just poc-code)
-var newBlockMenu = $("<div style='position:absolute; background:yellow; height: 30px; margin-top:-15px; opacity:0.5'><a>Add Content</a><a>Add app</a></div>");
+var newBlockMenu = $("<div class='sc-content-block-menu'><a>Add Content</a><a>Add app</a></div>");
 $("body").append(newBlockMenu);
+
+newBlockMenu.find('a').click(function () {
+    var list = newBlockMenu.actionsFor.closest('.sc-content-block-list');
+    var actionConfig = JSON.parse(list.attr('data-sc-list'));
+
+    $2sxc(newBlockMenu.actionsFor).manage.createContentBlock(actionConfig.id, actionConfig.field, 0, 'Default');
+});
 
 $("body").on('mousemove', function (e) {
     // e.clientX, e.clientY holds the coordinates of the mouse
-    var maxDistance = 100; // Defines the maximal distance of the cursor when the menu is displayed
+    var maxDistance = 30; // Defines the maximal distance of the cursor when the menu is displayed
 
     var nearest = null;
+    var nearestDistance = maxDistance;
+
+    var contentBlocks = $(".sc-content-block").add(".sc-content-block-list");
+    //var contentBlocks = $(".sc-content-block-list");
 
     // Find nearest content block
-    $(".sc-content-block").each(function () {
+    contentBlocks.each(function () {
         var block = $(this);
         var x = block.offset().left;
         var w = block.width();
@@ -266,20 +277,35 @@ $("body").on('mousemove', function (e) {
         var mouseY = e.clientY + $(window).scrollTop();
 
         // First check x coordinates - must be within container
-        if (mouseX < x || mouseY > x + w)
+        if (mouseX < x || mouseX > x + w)
             return;
 
+        // For content-block elements, the menu must be visible at the end
+        // For content-block-lists, the menu must be at top
+        var cmpHeight = block.hasClass('sc-content-block') ? y + h : y;
+
         // Check if y coordinates are within boundaries
-        if (Math.abs(mouseY - y) < 100) {
-            nearest = newBlockMenu.css({
+        var distance = Math.abs(mouseY - cmpHeight);
+
+        if (distance < maxDistance && distance < nearestDistance) {
+
+            newBlockMenu.css({
                 'left': x,
-                'top': y,
+                'top': cmpHeight,
                 'width': w
             }).show();
+
+            // Add class if menu creates modules
+            //newBlockMenu.toggleClass('sc-content-block-menu-module', block.hasClass('sc-viewport'));
+
+            // Keep current block as current on menu
+            newBlockMenu.actionsFor = nearest = block;
+
+            nearestDistance = distance;
         }
     });
 
-    if(nearest === null)
+    if (nearest === null)
         newBlockMenu.hide();
 });
 
