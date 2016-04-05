@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using ToSic.Eav;
 using ToSic.Eav.BLL;
+using ToSic.Eav.DataSources.Caches;
 
 namespace ToSic.SexyContent.ContentBlock
 {
@@ -31,7 +33,14 @@ namespace ToSic.SexyContent.ContentBlock
 
         internal override void SetAppId(int? appId)
         {
-            UpdateValue(EntityContentBlock.CbPropertyApp, appId ?? 0);
+            // 2rm 2016-04-05 added resolver for app guid here (discuss w/ 2dm, I'm not sure why the id was saved before)
+            var appName = "";
+            if (appId.HasValue)
+            {
+                var zoneAppId = ((BaseCache)DataSource.GetCache(0, 0)).GetZoneAppId(null, appId);
+                appName = ((BaseCache)DataSource.GetCache(0, 0)).ZoneApps[zoneAppId.Item1].Apps[appId.Value];
+            }
+            UpdateValue(EntityContentBlock.CbPropertyApp, appName);
         }
 
         internal override void EnsureLinkToContentGroup(Guid cgGuid)
