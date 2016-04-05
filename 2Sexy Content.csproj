@@ -505,7 +505,7 @@
     <Content Include="SqlDataProvider\08.03.02.SqlDataProvider" />
     <Content Include="src\inpage\2sxc._lib.js" />
     <Content Include="src\inpage\2sxc.contentBlock.js" />
-    <Content Include="src\inpage\2sxc.translate.js" />
+    <Content Include="src\inpage\2sxc._translate.js" />
     <Content Include="src\inpage\2sxc._contentManagementCommands.js" />
     <None Include="src\sxc-develop\source-editor\README.md" />
     <Content Include="src\sxc-develop\source-editor\toArray-filter.js" />
@@ -522,6 +522,7 @@
     <Content Include="src\sxc-admin\web-api\web-api.html" />
     <Content Include="src\sxc-edit\fields\dnn-bridge\dnn-bridge.service.js" />
     <Content Include="src\sxc-edit\fields\dnn-bridge\web-forms-bridge.directive.js" />
+    <Content Include="src\sxc-edit\fields\entity\entity-content-blocks.js" />
     <Content Include="src\sxc-edit\fields\hyperlink\dropzone-custom.css" />
     <Content Include="src\sxc-edit\fields\hyperlink\hyperlink-library.controller.js" />
     <Content Include="src\sxc-edit\fields\hyperlink\hyperlink.css" />
@@ -648,6 +649,7 @@
     <Content Include="Administration\App_LocalResources\WebApiHelp.ascx.resx" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="src\inpage-libs\i18n\" />
     <Folder Include="Upgrade\Log\" />
   </ItemGroup>
   <ItemGroup>

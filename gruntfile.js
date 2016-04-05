@@ -103,6 +103,12 @@ module.exports = function (grunt) {
                         cwd: "src",
                         src: ["*/**", "!**/*Spec.js"],
                         dest: "tmp"
+                    },
+                    {
+                        expand: true,
+                        cwd: "src",
+                        src: "inpage-libs/*/**",
+                        dest: "tmp/inpage"
                     }
                 ]
             }

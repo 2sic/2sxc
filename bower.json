@@ -5,7 +5,10 @@
     "2sxc-eav-languages": "2sic/2sxc-eav-languages#c8347db",
     "2sxc-icons": "2sic/2sxc-icons#0fc26a5",
     "angular-ui-ace": "0.2.3",
-    "angular-ui-tinymce": "0.0.12"
+    "angular-ui-tinymce": "0.0.12",
+    "i18next": "2.4.1",
+    "i18next-xhr-backend": "0.5.3",
+    "jquery-i18next": "0.2.0"
   },
   "private": true
 }

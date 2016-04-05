@@ -58,14 +58,16 @@
                 var button = $("<a />", {
                     'class': "sc-" + btnSettings.action + " " + showClasses + (conf.dynamicClasses ? " " + conf.dynamicClasses(btnSettings) : ""),
                     'onclick': "javascript:$2sxc(" + id + ", " + cbid + ").manage.action(" + JSON.stringify(btnSettings) + ", event);",
-                    'title': $2sxc.translate(conf.title)
+                    'data-i18n': "[title]" + conf.title
+                    //'title': $2sxc.translate(conf.title)
                 });
 
                 // todo: move the following lines into the button-config and just call from here
                 // if publish-button and not published yet, show button (otherwise hidden) & change icon
                 if (btnSettings.action === "publish" && btnSettings.isPublished === false) {
                     button.addClass("show-default").removeClass("show-edit")
-                        .attr("title", $2sxc.translate("Toolbar.Unpublished"));
+                        .attr("data-i18n", "[title]Toolbar.Unpublished");
+                        //.attr("title", $2sxc.translate("Toolbar.Unpublished"));
                     symbol.removeClass(conf.iclass).addClass(conf.iclass2);
                 }
 
