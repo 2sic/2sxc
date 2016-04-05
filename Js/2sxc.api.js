@@ -254,7 +254,7 @@
 
     $2sxc._controllers = {};
     $2sxc.metaName = "The 2sxc Controller object";
-    $2sxc.metaVersion = "08.03.07";
+    $2sxc.metaVersion = "08.04.00";
     $2sxc.beta = {};
     $2sxc._data = {};
     
@@ -355,6 +355,7 @@
         finishUpgrade: function(domElement) {
             // todo: replace with newer $2sxc(domElement).webApi("url...")... syntax
             var mc = $2sxc(domElement);
+            console.log(domElement);
             var url = mc.resolveServiceUrl("view/module/finishinstallation");
             $.ajax({
                 type: "get",
