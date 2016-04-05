@@ -16,7 +16,7 @@
                 if (newBlockMenu.actionsFor.hasClass('sc-content-block'))
                     index = list.find('.sc-content-block').index(newBlockMenu.actionsFor[0]) + 1;
 
-                $2sxc(list).manage.createContentBlock(actionConfig.id, actionConfig.field, index, type);
+                $2sxc(list).manage.createContentBlock(actionConfig.id, actionConfig.field, index, type, list);
             }
         }
         // ToDo 2rm: Add menu definition for DNN modules (allow quick-insert of modules)

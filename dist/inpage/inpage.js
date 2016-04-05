@@ -829,9 +829,9 @@ $2sxc.contentBlock = function (sxc, manage, cbTag) {
                 editManager.toolbarConfig = toolsAndButtons.config;
             },
 
-            createContentBlock: function (parentId, fieldName, index, appName) {
+            createContentBlock: function (parentId, fieldName, index, appName, container) {
                 // the wrapper, into which this will be placed and the list of pre-existing blocks
-                var listTag = $("div[data-cbl-id='" + parentId + "'][data-cbl-field='" + fieldName + "']");
+                var listTag = container;
                 if (listTag.length === 0) return alert("can't add content-block as we couldn't find the list");
                 var cblockList = listTag.find("div.sc-content-block");
                 if (index > cblockList.length)
@@ -1006,7 +1006,7 @@ $(document).ready(function () {
                 if (newBlockMenu.actionsFor.hasClass('sc-content-block'))
                     index = list.find('.sc-content-block').index(newBlockMenu.actionsFor[0]) + 1;
 
-                $2sxc(list).manage.createContentBlock(actionConfig.id, actionConfig.field, index, type);
+                $2sxc(list).manage.createContentBlock(actionConfig.id, actionConfig.field, index, type, list);
             }
         }
         // ToDo 2rm: Add menu definition for DNN modules (allow quick-insert of modules)

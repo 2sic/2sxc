@@ -89,9 +89,9 @@
                 editManager.toolbarConfig = toolsAndButtons.config;
             },
 
-            createContentBlock: function (parentId, fieldName, index, appName) {
+            createContentBlock: function (parentId, fieldName, index, appName, container) {
                 // the wrapper, into which this will be placed and the list of pre-existing blocks
-                var listTag = $("div[data-cbl-id='" + parentId + "'][data-cbl-field='" + fieldName + "']");
+                var listTag = container;
                 if (listTag.length === 0) return alert("can't add content-block as we couldn't find the list");
                 var cblockList = listTag.find("div.sc-content-block");
                 if (index > cblockList.length)
