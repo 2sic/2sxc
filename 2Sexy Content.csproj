@@ -279,6 +279,7 @@
     <Compile Include="SexyContent\Internal\SecurityHelpers.cs" />
     <Compile Include="SexyContent\Internal\TemplateManager.cs" />
     <Compile Include="SexyContent\Internal\ZoneHelpers.cs" />
+    <Compile Include="WebApi\ImportExportController.cs" />
     <Compile Include="WebApi\SxcWebApiExceptionHandling.cs" />
     <Compile Include="WebApi\ViewAPI\TemplateController.cs" />
     <Compile Include="SexyContent\ViewManager\TemplateEditor.cs" />
@@ -430,6 +431,12 @@
     <Content Include="src\inpage\2sxc._actions.js" />
     <Content Include="src\inpage-dialogs\getting-started\getting-started.js" />
     <Content Include="src\inpage\inpage-icons-codes.css" />
+    <Content Include="src\sxc-admin\importexport\export-content.controller.js" />
+    <Content Include="src\sxc-admin\importexport\export-content.html" />
+    <Content Include="src\sxc-admin\importexport\export-content.service.js" />
+    <Content Include="src\sxc-admin\importexport\import-content.controller.js" />
+    <Content Include="src\sxc-admin\importexport\import-content.service.js" />
+    <Content Include="src\sxc-admin\importexport\import-export.directives.js" />
     <Content Include="src\sxc-admin\importexport\intro.controller.js" />
     <Content Include="src\sxc-admin\importexport\_app.js" />
     <Content Include="src\sxc-edit\adam\adam-hint.html" />
@@ -479,7 +486,7 @@
     <Content Include="src\sxc-admin\importexport\export-app.html" />
     <Content Include="src\sxc-admin\filters\sxc-filters.js" />
     <Content Include="src\sxc-admin\importexport\export-app.controller.js" />
-    <Content Include="src\sxc-admin\importexport\import.html" />
+    <Content Include="src\sxc-admin\importexport\import-content.html" />
     <Content Include="src\sxc-admin\importexport\intro.html" />
     <Content Include="src\sxc-admin\language-settings\language-settings.js" />
     <Content Include="src\sxc-admin\language-settings\languages.html" />
@@ -504,6 +511,7 @@
     <Content Include="src\inpage\2sxc.contentBlock.js" />
     <Content Include="src\inpage\2sxc.translate.js" />
     <Content Include="src\inpage\2sxc._contentManagementCommands.js" />
+    <Content Include="src\sxc-admin\importexport\export-app.service.js" />
     <None Include="src\sxc-develop\source-editor\README.md" />
     <Content Include="src\sxc-develop\source-editor\toArray-filter.js" />
     <Content Include="src\sxc-admin\templates\edit.html" />

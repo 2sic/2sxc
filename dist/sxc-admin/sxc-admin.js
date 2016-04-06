@@ -1,5 +1,6 @@
 (function() { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
 
+    MainController.$inject = ["eavAdminDialogs", "eavConfig", "appId", "debugState", "appDialogConfigSvc", "$modalInstance"];
     angular.module("MainSxcApp", [
             "EavConfiguration", // config
             "SxcTemplates", // inline templates
@@ -9,7 +10,7 @@
             "ContentTypesApp",
             "PipelineManagement",
             "TemplatesApp",
-            "ImportExportApp",
+            "ImportExport",
             "AppSettingsApp",
             "SystemSettingsApp",
             "WebApiApp"
@@ -42,11 +43,11 @@
             $modalInstance.dismiss("cancel");
         };
     }
-    MainController.$inject = ["eavAdminDialogs", "eavConfig", "appId", "debugState", "appDialogConfigSvc", "$modalInstance"];
 
 } ());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
 
+    AppSettingsController.$inject = ["appSettings", "appId"];
     angular.module("AppSettingsApp", [
         "EavConfiguration",     // 
         "EavServices",
@@ -106,11 +107,11 @@
         //};
 
     }
-    AppSettingsController.$inject = ["appSettings", "appId"];
 
 } ());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
 
+    AppListController.$inject = ["appsSvc", "eavAdminDialogs", "sxcDialogs", "eavConfig", "appSettings", "zoneId", "oldDialogs", "$modalInstance", "$translate"];
     angular.module("AppsManagementApp", [
         "EavServices",
         "EavConfiguration",
@@ -192,11 +193,11 @@
 
         vm.close = function () { $modalInstance.dismiss("cancel");};
     }
-    AppListController.$inject = ["appsSvc", "eavAdminDialogs", "sxcDialogs", "eavConfig", "appSettings", "zoneId", "oldDialogs", "$modalInstance", "$translate"];
 
 } ());
 (function () { 
 
+    DialogHostController.$inject = ["zoneId", "appId", "items", "$2sxc", "dialog", "sxcDialogs", "contentTypeName", "eavAdminDialogs", "$ocLazyLoad"];
     angular.module("DialogHost", [
         "SxcAdminUi",
         "EavAdminUi",
@@ -272,7 +273,6 @@
                 throw "Trying to open a dialog, don't know which one";
         }
     }
-    DialogHostController.$inject = ["zoneId", "appId", "items", "$2sxc", "dialog", "sxcDialogs", "contentTypeName", "eavAdminDialogs", "$ocLazyLoad"];
 
 } ());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
@@ -294,32 +294,280 @@
 } ());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
 
-    angular.module("ImportExportApp", [
-        "EavConfiguration", // config
-        "SxcTemplates", // inline templates
-        "EavAdminUi", // dialog (modal) controller
-        "EavServices", // multi-language stuff
+    angular.module("ImportExport", [
+        "EavConfiguration", // Config
+        "SxcTemplates",     // Inline templates
+        "EavAdminUi",       // Dialog (modal) controller
+        "EavServices",      // Multi-language stuff
         "SxcServices"
     ]);
 } ());
-(function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
+(function () {
 
-    angular.module("ImportExportApp")
-        .controller("ExportApp", ExportController)
+    ExportAppController.$inject = ["ExportAppService", "eavAdminDialogs", "eavConfig", "$modalInstance"];
+    angular.module("ImportExport")
+        .controller("ExportApp", ExportAppController)
         ;
+  
 
-    function ExportController(eavAdminDialogs, eavConfig, appId, $modalInstance) {
+    function ExportAppController(ExportAppService, eavAdminDialogs, eavConfig, $modalInstance) {
         var vm = this;
 
-        vm.close = function () {
+        vm.IncludeContentGroups = false;
+        vm.ResetAppGuid = false;
+
+        vm.AppInfo = {};
+
+        vm.getAppInfo = getAppInfo;
+        vm.exportApp = exportApp;
+
+        vm.close = close;
+
+
+        activate();
+
+        function activate() {
+            getAppInfo();
+        }
+
+        function getAppInfo() {
+            return ExportAppService.getAppInfo().then(function (result) {
+                vm.AppInfo = result;
+            });
+        }
+
+        function exportApp() {
+            return ExportAppService.exportApp(vm.IncludeContentGroups, vm.ResetAppGuid);
+        }
+
+        function close() {
             $modalInstance.dismiss("cancel");
+        }
+    }
+}());
+(function () {
+    ExportAppService.$inject = ["appId", "zoneId", "eavConfig", "$http", "$q"];
+    angular.module("ImportExport")
+        .factory("ExportAppService", ExportAppService)
+    ;
+
+
+    function ExportAppService(appId, zoneId, eavConfig, $http, $q) {
+        var srvc = {
+            getAppInfo: getAppInfo,
+            exportApp: exportApp
+        };
+        return srvc;
+
+        function getAppInfo() {
+            return $http.get(eavConfig.getUrlPrefix("api") + "/app/ImportExport/GetAppInfo", { params: { appId: appId, zoneId: zoneId } }).then(function (result) { return result.data; });
+        }
+
+        function exportApp(includeContentGroups, resetAppGuid) {
+            window.open(eavConfig.getUrlPrefix("api") + "/app/ImportExport/ExportApp?appId=" + appId + "&zoneId=" + zoneId + "&includeContentGroups=" + includeContentGroups + "&resetAppGuid=" + resetAppGuid, "_self", "");
+            return $q.when(true);
+        }
+    }
+}());
+(function () {
+
+    ExportContentController.$inject = ["ExportContentService", "eavAdminDialogs", "eavConfig", "debugState", "$modalInstance", "$filter", "$scope"];
+    angular.module("ImportExport")
+        .controller("ExportContent", ExportContentController)
+        ;
+
+
+    function ExportContentController(ExportContentService, eavAdminDialogs, eavConfig, debugState, $modalInstance, $filter, $scope) {
+        var vm = this;
+
+        vm.debug = debugState;
+
+        vm.ExportScope = "2SexyContent";
+
+        vm.ContentInfo = null;
+
+        vm.getContentInfo = getContentInfo;
+        vm.exportContent = exportContent;
+        vm.changeExportScope = changeExportScope;
+
+        vm.close = close;
+
+
+        activate();
+
+        function activate() {
+            getContentInfo();
+        }
+
+
+        function getContentInfo() {
+            return ExportContentService.getContentInfo(vm.ExportScope).then(function (result) { vm.ContentInfo = result; });
+        }
+
+        function exportContent() {     
+            var contentTypeIds = selectedContentTypes().map(function (item) { return item.Id; });
+            var templateIds = selectedTemplates().map(function (item) { return item.Id; });
+            var entityIds = selectedEntities().map(function (item) { return item.EntityId; });
+            entityIds = entityIds.concat(templateIds);
+            console.log(entityIds);
+            return ExportContentService.exportContent(contentTypeIds, entityIds, templateIds);
+        }
+
+
+        function selectedContentTypes() {
+            return $filter("filter")(vm.ContentInfo.ContentTypes, { _export: true });
+        }
+
+        function selectedEntities() {
+            var entities = [];
+            angular.forEach(vm.ContentInfo.ContentTypes, function (item) {
+                entities = entities.concat(
+                    $filter("filter")(item.Entities, { _export: true })
+                );
+            });
+            return entities;
+        }
+
+        function selectedTemplates() {
+            // The ones with...
+            var templates = [];
+            angular.forEach(vm.ContentInfo.ContentTypes, function (item) {
+                templates = templates.concat(
+                    $filter("filter")(item.Templates, { _export: true })
+                );
+            });
+            // ...and without content types
+            templates = templates.concat($filter("filter")(vm.ContentInfo.TemplatesWithoutContentTypes, { _export: true }));
+            return templates;
+        }
+
+        function changeExportScope() {
+            var newExportScope = prompt("Enter an new dcope for export");
+            if (newExportScope) {
+                vm.ExportScope = newExportScope;
+            }
+            return getContentInfo();
+        }
+
+        function close() {
+            $modalInstance.dismiss("cancel");
+        }
+    }
+
+}());
+(function () {
+
+    ExportContentService.$inject = ["appId", "zoneId", "eavConfig", "$http", "$q"];
+    angular.module("ImportExport")
+        .factory("ExportContentService", ExportContentService)
+    ;
+
+
+    function ExportContentService(appId, zoneId, eavConfig, $http, $q) {
+        var srvc = {
+            getContentInfo: getContentInfo,
+            exportContent: exportContent
+        };
+        return srvc;
+
+
+        function getContentInfo(scope) {
+            return $http.get(eavConfig.getUrlPrefix("api") + "/app/ImportExport/GetContentInfo", { params: { appId: appId, zoneId: zoneId, scope: scope || "2SexyContent" } }).then(function (result) { return result.data; });
+        }
+
+        function exportContent(contentTypeIds, entityIds, templateIds) {
+            window.open(eavConfig.getUrlPrefix("api") + "/app/ImportExport/ExportContent?appId=" + appId + "&zoneId=" + zoneId + "&contentTypeIdsString=" + contentTypeIds.join(";") + "&entityIdsString=" + entityIds.join(";") + "&templateIdsString=" + templateIds.join(";"), "_self", "");
+            return $q.when(true);
+        }
+    }
+
+}());
+(function () {
+
+    ImportContentController.$inject = ["ImportContentService", "eavAdminDialogs", "eavConfig", "$modalInstance"];
+    angular.module("ImportExport")
+        .controller("ImportContent", ImportContentController)
+    ;
+
+
+    function ImportContentController(ImportContentService, eavAdminDialogs, eavConfig, $modalInstance) {
+        var vm = this;
+
+        vm.ImportFile = {};
+        vm.ImportResult = {};
+
+        vm.importContent = importContent;
+
+        vm.close = close;
+
+
+        function importContent() {
+            return ImportContentService.importContent(vm.ImportFile.Name, vm.ImportFile.Data).then(function (result) {
+                vm.ImportResult = result.data;
+            });
+        }
+
+        function close() {
+            $modalInstance.dismiss("cancel");
+        }
+    }
+
+}());
+(function () {
+
+    ImportContentService.$inject = ["appId", "zoneId", "eavConfig", "$http", "$q"];
+    angular.module("ImportExport")
+        .factory("ImportContentService", ImportContentService)
+    ;
+
+
+    function ImportContentService(appId, zoneId, eavConfig, $http, $q) {
+        var srvc = {
+            importContent: importContent
+        };
+        return srvc;
+
+
+        function importContent(fileName, fileData) {
+            return $http.post("app/ImportExport/ImportContent", { AppId: appId, ZoneId: zoneId, FileName: fileName, FileData: fileData });
+        }
+    }
+
+}());
+(function () {
+
+    angular.module("ImportExport")
+        .directive("sxcFileRead", FileReadDirective)
+        ;
+
+    function FileReadDirective() {
+        return {
+            scope: {
+                sxcFileRead: "="
+            },
+            link: function (scope, element, attributes) {
+
+                element.bind("change", function (e) {
+                    var file = e.target.files[0];
+                    var fileReader = new FileReader();
+                    fileReader.onload = function (e) {
+                        scope.$apply(function () {
+                            scope.sxcFileRead = {
+                                Name: file.name,
+                                Data: e.target.result
+                            };
+                        });
+                    };
+                    fileReader.readAsDataURL(file);
+                });
+            }
         };
     }
-    ExportController.$inject = ["eavAdminDialogs", "eavConfig", "appId", "$modalInstance"];
-} ());
+}());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
 
-    angular.module("ImportExportApp")
+    IntroController.$inject = ["eavAdminDialogs", "eavConfig", "oldDialogs", "appId"];
+    angular.module("ImportExport")
         .controller("ImportExportIntro", IntroController)
         ;
 
@@ -328,9 +576,6 @@
         function blankCallback() { }
 
         vm.exportAll = function exp() {
-            oldDialogs.appExport(appId, blankCallback);
-
-            // todo: 2tk probably afterwards
             var resolve = eavAdminDialogs.CreateResolve({
                 appId: appId
             });
@@ -346,35 +591,32 @@
             oldDialogs.importPartial(appId, blankCallback);
 
             // probably afterwards
-            //var resolve = eavAdminDialogs.CreateResolve({
-            //    appId: appId
-            //});
-            //return eavAdminDialogs.OpenModal(
-            //    "importexport/import.html",
-            //    "Import as vm",
-            //    "lg",
-            //    resolve, blankCallback);
+            var resolve = eavAdminDialogs.CreateResolve({
+                appId: appId
+            });
+            return eavAdminDialogs.OpenModal(
+                "importexport/import-content.html",
+                "ImportContent as vm",
+                "lg",
+                resolve, blankCallback);
         };
 
         vm.export = function () {
-            oldDialogs.exportPartial(appId, blankCallback);
-
-            // probably afterwards
-            //var resolve = eavAdminDialogs.CreateResolve({
-            //    appId: appId
-            //});
-            //return eavAdminDialogs.OpenModal(
-            //    "importexport/export.html",
-            //    "ExportContent as vm",
-            //    "lg",
-            //    resolve, blankCallback);
+            var resolve = eavAdminDialogs.CreateResolve({
+                appId: appId
+            });
+            return eavAdminDialogs.OpenModal(
+                "importexport/export-content.html",
+                "ExportContent as vm",
+                "lg",
+                resolve, blankCallback);
         };
     }
-    IntroController.$inject = ["eavAdminDialogs", "eavConfig", "oldDialogs", "appId"];
 
 } ());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
 
+    LanguagesSettingsController.$inject = ["languagesSvc", "eavConfig", "appId"];
     angular.module("SystemSettingsApp", [
         "EavConfiguration",     // 
         "EavServices",
@@ -400,11 +642,11 @@
 
         vm.save = svc.save;
     }
-    LanguagesSettingsController.$inject = ["languagesSvc", "eavConfig", "appId"];
 
 } ());
 (function () {
 
+    ManageContentController.$inject = ["appId", "item", "contentGroupSvc", "eavAdminDialogs", "$modalInstance", "$translate"];
     angular.module("ReorderContentApp", [
             "SxcServices",
             "EavAdminUi" // dialog (modal) controller
@@ -485,11 +727,11 @@
         vm.close = function () { $modalInstance.dismiss("cancel"); };
 
     }
-    ManageContentController.$inject = ["appId", "item", "contentGroupSvc", "eavAdminDialogs", "$modalInstance", "$translate"];
 
 } ());
 (function () { 
 
+    ReplaceContentController.$inject = ["appId", "item", "contentGroupSvc", "eavAdminDialogs", "$modalInstance", "$filter"];
     angular.module("ReplaceContentApp", [
             "SxcServices",
             "EavAdminUi"         // dialog (modal) controller
@@ -545,7 +787,6 @@
             });
         };
     }
-    ReplaceContentController.$inject = ["appId", "item", "contentGroupSvc", "eavAdminDialogs", "$modalInstance", "$filter"];
 
 } ());
 // Init the main eav services module
@@ -948,17 +1189,64 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
 
 
   $templateCache.put('importexport/export-app.html',
-    "<div><div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=ImportExport.Export.Title></h3></div><div class=modal-body><div translate=ImportExport.Export.Intro></div><div translate=ImportExport.Export.FurtherHelp></div>todo: 2tk export stuff + messages, errors etc.</div></div>"
+    "<div><div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=ImportExport.ExportApp.Title></h3></div><div class=modal-body><div translate=ImportExport.ExportApp.Intro></div><div translate=ImportExport.ExportApp.FurtherHelp></div><h5>{{\"ImportExport.ExportApp.Specifications.Title\" | translate}}</h5><ul><li>{{\"ImportExport.ExportApp.Specifications.AppName\" | translate}} {{vm.AppInfo.Name}}</li><li>{{\"ImportExport.ExportApp.Specifications.AppGuid\" | translate}} {{vm.AppInfo.Guid}}</li><li>{{\"ImportExport.ExportApp.Specifications.AppVersion\" | translate}} {{vm.AppInfo.Version}}</li></ul><h5>{{\"ImportExport.ExportApp.Content.Title\" | translate}}</h5><ul><li>{{vm.AppInfo.EntitiesCount}} {{\"ImportExport.ExportApp.Content.EntitiesCount\" | translate}}</li><li>{{vm.AppInfo.LanguagesCount}} {{\"ImportExport.ExportApp.Content.LanguagesCount\" | translate}}</li><li>{{vm.AppInfo.TemplatesCount}} {{\"ImportExport.ExportApp.Content.TemplatesCount\" | translate}} ({{\"ImportExport.ExportApp.Content.TokenTemplates\" | translate}} {{vm.AppInfo.HasTokenTemplates}}, {{\"ImportExport.ExportApp.Content.RazorTemplates\" | translate}} {{vm.AppInfo.HasRazorTemplates}})</li><li>{{vm.AppInfo.TransferableFilesCount}} {{\"ImportExport.ExportApp.Content.TransferableFilesCount\" | translate}}</li><li>{{vm.AppInfo.FilesCount}} {{\"ImportExport.ExportApp.Content.FilesCount\" | translate}}</li></ul><div><input ng-model=vm.IncludeContentGroups type=\"checkbox\"> {{\"ImportExport.ExportApp.Options.IncludeContentGroups\" | translate}}</div><div><input ng-model=vm.ResetAppGuid type=\"checkbox\"> {{\"ImportExport.ExportApp.Options.ResetAppGuid\" | translate}}</div></div><div class=modal-footer><button type=button class=\"btn btn-primary pull-left\" ng-click=vm.exportApp() translate=ImportExport.ExportApp.Commands.Export></button></div></div>"
   );
 
 
-  $templateCache.put('importexport/import.html',
-    "<div><div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=ImportExport.Import.Title></h3></div><div class=modal-body>todo import<div translate=ImportExport.Import.Explanation></div>todo 2tk - upload, and following messages, errors etc.</div></div>"
+  $templateCache.put('importexport/export-content.html',
+    "<div ng-click=vm.debug.autoEnableAsNeeded($event)><div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=ImportExport.ExportContent.Title></h3></div><div class=modal-body><span class=btn-group ng-if=vm.debug.on><button icon=record type=button class=\"btn btn-square\" ng-click=vm.changeExportScope()></button></span><div translate=ImportExport.ExportContent.Intro></div><div translate=ImportExport.ExportContent.FurtherHelp></div><h5 translate=ImportExport.ExportContent.ContentTypes.Title></h5><ul class=sc-export-content-list><li ng-repeat=\"contentType in vm.ContentInfo.ContentTypes\"><label ng-class=\"{ 'active': contentType._export }\"><input type=checkbox ng-model=\"contentType._export\"> {{contentType.Name}} ({{contentType.Id}})</label><div ng-if=contentType.Templates.length class=sc-export-content-list-inner><h6 translate=ImportExport.ExportContent.ContentTypes.Templates></h6><ul><li ng-repeat=\"template in contentType.Templates\"><label ng-class=\"{ 'active': template._export }\"><input type=checkbox ng-model=\"template._export\"> {{template.Name}} ({{template.Id}})</label></li></ul></div><div ng-if=contentType.Entities.length class=sc-export-content-list-inner><h6 translate=ImportExport.ExportContent.ContentTypes.Entities></h6><ul><li ng-repeat=\"entity in contentType.Entities\"><label ng-class=\"{ 'active': entity._export }\"><input type=checkbox ng-model=\"entity._export\"> {{entity._2sxcEditInformation.title}} ({{entity.EntityId}})</label></li></ul></div></li></ul><h5 translate=ImportExport.ExportContent.TemplatesWithoutContentTypes.Title></h5><ul class=sc-export-content-list><li ng-repeat=\"template in vm.ContentInfo.TemplatesWithoutContentTypes\"><label ng-class=\"{ 'active': template._export }\"><input type=checkbox ng-model=\"template._export\"> {{template.Name}} ({{template.Id}})</label></li></ul></div><div class=modal-footer><button type=button class=\"btn btn-primary pull-left\" ng-click=vm.exportContent() translate=ImportExport.ExportContent.Commands.Export></button></div><show-debug-availability class=pull-right></show-debug-availability></div><style>.sc-export-content-list { list-style-type: none; margin: 0; padding: 0; border-top: 1px solid #DDD; }\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "    .sc-export-content-list-inner { padding: 0 0 0 40px; }\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "    .sc-export-content-list > li { margin: 0; padding: 0; border-bottom: 1px solid #DDD; font-weight: bold; }\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "    .sc-export-content-list h6 { font-size: inherit; font-weight: bold; margin: 0; padding: 5px; }\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "    .sc-export-content-list label { display: block; padding: 10px; margin: 0; font-size: inherit; font-weight: normal; }\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "    .sc-export-content-list label:hover { background: #EEE; }\r" +
+    "\n" +
+    "    .sc-export-content-list label.active { background: #E6F7E7; }\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "    .sc-export-content-list > li ul { list-style-type: none; margin: 0; padding: 0; }\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "    .sc-export-content-list > li li { font-weight: normal; padding: 0; margin: 0; }</style>"
+  );
+
+
+  $templateCache.put('importexport/import-content.html',
+    "<div><div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=ImportExport.ImportContent.Title></h3></div><div ng-if=!vm.ImportResult.Messages><div class=modal-body><div translate=ImportExport.ImportContent.Intro></div><div translate=ImportExport.ImportContent.FurtherHelp></div><br><span class=\"btn btn-default btn-file\"><span ng-hide=vm.ImportFile.Data>{{\"ImportExport.ImportContent.Commands.SelectFile\" | translate}}</span> <span ng-show=vm.ImportFile.Data>{{vm.ImportFile.Name}}</span> <input type=file sxc-file-read=\"vm.ImportFile\"></span><br></div><div class=modal-footer><button type=button class=\"btn btn-primary pull-left\" ng-click=vm.importContent() ng-disabled=!vm.ImportFile.Name translate=ImportExport.ImportContent.Commands.Import></button></div></div><div ng-if=vm.ImportResult.Messages><div class=modal-body><div ng-if=vm.ImportResult.Succeeded class=\"dnnFormMessage dnnFormInfo\">{{\"ImportExport.ImportContent.Messages.ImportSucceeded\" | translate}} (<a ng-click=\"vm.ImportResult._hideSuccessMessages = !vm.ImportResult._hideSuccessMessages\">{{\"ImportExport.ImportContent.Commands.ToggleSuccessMessages\" | translate}}</a>)</div><div ng-if=!vm.ImportResult.Succeeded class=\"dnnFormMessage dnnFormValidationSummary\">{{\"ImportExport.ImportContent.Messages.ImportFailed\" | translate}}</div><div ng-repeat=\"message in vm.ImportResult.Messages\" class=dnnFormMessage ng-class=\"{ 'dnnFormWarning': message.MessageType == 0, 'dnnFormSuccess': message.MessageType == 1, 'dnnFormValidationSummary': message.MessageType == 2}\">{{message.Message}}</div></div><div class=modal-footer></div></div></div><style>.dnnFormMessage { display: block; padding: 18px 18px; margin-bottom: 18px; border: 1px solid rgba(2, 139, 255, 0.2); border-radius: 3px; background: rgba(2,139,255,0.15); max-width: 980px; }\r" +
+    "\n" +
+    "    \r" +
+    "\n" +
+    "    .dnnFormSuccess.dnnFormMessage { background-color: rgba(0,255,0,0.15); border-color: rgba(0, 255, 0, 0.5); }\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "    .dnnFormWarning.dnnFormMessage { background-color: rgba(255,255,0,0.15); border-color: #CDB21F; }\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "    .dnnFormValidationSummary.dnnFormMessage { background-color: rgba(255,0,0,0.15); border-color: rgba(255, 0, 0, 0.2); }</style>"
   );
 
 
   $templateCache.put('importexport/intro.html',
-    "<div class=modal-body><div><div class=\"pull-left btn-group-vertical\"><button tooltip=\"{{'AppConfig.Export.Button' | translate}}\" ng-click=vm.exportAll() class=\"btn btn-square btn-primary\" type=button><i icon=export></i></button></div><div style=\"margin-left: 50px\"><h4 class=modal-title translate=AppConfig.Export.Title></h4><div translate=AppConfig.Export.Intro></div></div></div><br><div><div class=\"pull-left btn-group-vertical\"><button tooltip=\"{{'ImportExport.Buttons.Export' | translate}}\" ng-click=vm.export() class=\"btn btn-square btn-primary\" type=button><i icon=export></i></button> <button tooltip=\"{{'ImportExport.Buttons.Import' | translate}}\" ng-click=vm.import() class=\"btn btn-square btn-primary\" type=button><i icon=import></i></button></div><div style=\"margin-left: 50px\"><h4 class=modal-title translate=ImportExport.Title></h4><div translate=ImportExport.Intro></div><div translate=ImportExport.FurtherHelp></div></div></div></div>"
+    "<div class=modal-body><div><div class=\"pull-left btn-group-vertical\"><button tooltip=\"{{'AppConfig.Export.Button' | translate}}\" ng-click=vm.exportAll() class=\"btn btn-square btn-primary\" type=button><i icon=export></i></button></div><div style=\"margin-left: 50px\"><h4 class=modal-title translate=AppConfig.Export.Title></h4><div translate=AppConfig.Export.Intro></div></div></div><br><div><div class=\"pull-left btn-group-vertical\"><button tooltip=\"{{'ImportExport.Buttons.Export' | translate}}\" ng-click=vm.export() class=\"btn btn-square btn-primary\" type=button><i icon=export></i></button> <button tooltip=\"{{'ImportExport.Buttons.Import' | translate}}\" ng-click=vm.import() class=\"btn btn-square btn-primary\" type=button><i icon=import></i></button></div><div style=\"margin-left: 50px\"><h4 class=modal-title translate=ImportExport.Title></h4><div translate=ImportExport.Intro></div></div></div><br></div>"
   );
 
 
@@ -1019,6 +1307,7 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
 
 (function () { 
 
+    TemplateListController.$inject = ["templatesSvc", "eavAdminDialogs", "eavConfig", "appId", "debugState", "oldDialogs", "$translate", "$modalInstance", "$sce"];
     angular.module("TemplatesApp", [
         "SxcServices",
         "EavConfiguration",
@@ -1076,11 +1365,11 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
             $modalInstance.dismiss("cancel");
         };
     }
-    TemplateListController.$inject = ["templatesSvc", "eavAdminDialogs", "eavConfig", "appId", "debugState", "oldDialogs", "$translate", "$modalInstance", "$sce"];
 
 } ());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
 
+    TemplateEditController.$inject = ["svc", "eavAdminDialogs", "eavConfig", "appId", "$modalInstance"];
     angular.module("TemplatesApp")
         .controller("TemplateEdit", TemplateEditController)
         ;
@@ -1094,11 +1383,11 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
             $modalInstance.dismiss("cancel");
         };
     }
-    TemplateEditController.$inject = ["svc", "eavAdminDialogs", "eavConfig", "appId", "$modalInstance"];
 
 } ());
 (function () { 
 
+    WebApiMainController.$inject = ["appId", "webApiSvc", "eavAdminDialogs", "$modalInstance", "$translate"];
     angular.module("WebApiApp", [
         "SxcServices",
         //"EavConfiguration",
@@ -1131,6 +1420,5 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
             $modalInstance.dismiss("cancel");
         };
     }
-    WebApiMainController.$inject = ["appId", "webApiSvc", "eavAdminDialogs", "$modalInstance", "$translate"];
 
 } ());

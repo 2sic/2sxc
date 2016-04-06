@@ -185,5 +185,77 @@
 			"Title": "Snippets",
 			"Intro": "click on any snippet to insert"
 		}
-	}
+	},
+
+
+
+
+
+
+
+
+
+
+    "ImportExport": {
+        "Title": "Export or Import <em>parts</em> of this App",
+		"Intro": "Create an xml containing parts of the app, e.g. content and templates.<br/>Import parts from such an xml into this app.",
+        "ImportContent": {
+            "Title": "Import Content and Templates into this App",
+            "Intro": "Import content and templates from a content export (zip) or partial export (xml) to this app. The entire content of the selected file will be imported. If you want to import an entire app, go to the <em>App-Management</em>.",
+            "FurtherHelp": "For further help visit <a href='http://2sxc.org/en/help?tag=import' target='_blank'>2sxc Help</a>.",
+            "Messages": {
+                "ImportSucceeded": "The import has been done. See the messages below for more information.",
+                "ImportFailed": "The import failed. See the messages below for more information."
+            },
+            "Commands": {
+                "SelectFile": "Select file",
+                "ToggleSuccessMessages": "Toggle success messages",
+                "Import": "Import"
+            }
+        },
+        "ExportContent": {
+            "Title": "Export Content and Templates from this App",
+            "Intro": "This is an advanced feature to export parts of the app. The export will create an <em>xml</em> file which can be imported into another site or app. To export the entire content of the app (for example when duplicating the entire site), go to the app export.",
+            "FurtherHelp": "For further help visit <a href='http://2sxc.org/en/help?tag=export' target='_blank'>2sxc Help</a>.",
+            "ContentTypes": {
+                "Title": "Content Types",
+                "Templates": "Templates",
+                "Entities": "Entities"
+            },
+            "TemplatesWithoutContentTypes": {
+                "Title": "Templates Without Content Types"
+            },
+            "Commands": {
+                "Export": "Export"
+            }
+        },      
+        "ExportApp": {
+            "Title": "Export App",
+            "Intro": "Pack the entire app to a <em>zip</em> folder which can be imported again to another site.",
+            "FurtherHelp": "For further help visit <a href='http://2sxc.org/en/help?tag=export-app' target='_blank'>2sxc Help</a>.",
+            "Specifications": {
+                "Title": "Specs",
+                "AppName": "Name:",
+                "AppGuid": "Guid:",
+                "AppVersion": "Version:"
+            },
+            "Content": {
+                "Title": "Contains",
+                "EntitiesCount": "entities",
+                "LanguagesCount": "languages",
+                "TemplatesCount": "templates",
+                "TokenTemplates": "Token:",
+                "RazorTemplates": "Razor:",
+                "TransferableFilesCount": "files to export",
+                "FilesCount": "files in the app folder totally"
+            },
+            "Options": {
+                "IncludeContentGroups": "Include all content-groups to re-import the app in an exact copy of this site. Only select this option when you copy an entire DNN site.",
+                "ResetAppGuid": "Reset the app GUID to zero. You only need this option for special tutorial apps, and usually must not select it."
+            },
+            "Commands": {
+                "Export": "Export"
+            }
+        }         
+    }
 }

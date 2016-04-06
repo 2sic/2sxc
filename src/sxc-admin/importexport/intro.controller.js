@@ -1,6 +1,6 @@
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
 
-    angular.module("ImportExportApp")
+    angular.module("ImportExport")
         .controller("ImportExportIntro", IntroController)
         ;
 
@@ -9,9 +9,6 @@
         function blankCallback() { }
 
         vm.exportAll = function exp() {
-            oldDialogs.appExport(appId, blankCallback);
-
-            // todo: 2tk probably afterwards
             var resolve = eavAdminDialogs.CreateResolve({
                 appId: appId
             });
@@ -27,28 +24,25 @@
             oldDialogs.importPartial(appId, blankCallback);
 
             // probably afterwards
-            //var resolve = eavAdminDialogs.CreateResolve({
-            //    appId: appId
-            //});
-            //return eavAdminDialogs.OpenModal(
-            //    "importexport/import.html",
-            //    "Import as vm",
-            //    "lg",
-            //    resolve, blankCallback);
+            var resolve = eavAdminDialogs.CreateResolve({
+                appId: appId
+            });
+            return eavAdminDialogs.OpenModal(
+                "importexport/import-content.html",
+                "ImportContent as vm",
+                "lg",
+                resolve, blankCallback);
         };
 
         vm.export = function () {
-            oldDialogs.exportPartial(appId, blankCallback);
-
-            // probably afterwards
-            //var resolve = eavAdminDialogs.CreateResolve({
-            //    appId: appId
-            //});
-            //return eavAdminDialogs.OpenModal(
-            //    "importexport/export.html",
-            //    "ExportContent as vm",
-            //    "lg",
-            //    resolve, blankCallback);
+            var resolve = eavAdminDialogs.CreateResolve({
+                appId: appId
+            });
+            return eavAdminDialogs.OpenModal(
+                "importexport/export-content.html",
+                "ExportContent as vm",
+                "lg",
+                resolve, blankCallback);
         };
     }
 
