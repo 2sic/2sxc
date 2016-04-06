@@ -45,7 +45,14 @@
       </Attributes>
     </AttributeSet>
   </AttributeSets>
-  <Entities />
+  <Entities>
+    <Entity AssignmentObjectType="Default" AttributeSetStaticName="ContentType-InputType" AttributeSetName="ContentType-InputType" EntityGUID="f1c3d80b-02ce-4fcc-93a4-8e5b06689793">
+      <Value Key="Type" Value="entity-content-blocks" Type="String" />
+      <Value Key="Label" Value="Content Block Items" Type="String" />
+      <Value Key="Description" Value="Use this to manage inner content-blocks - discover more on 2sxc.org/help?tag=content-blocks" Type="String" />
+      <Value Key="Assets" Value="" Type="String" />
+    </Entity>
+  </Entities>
   <PortalFiles />
   <PortalFolders>
   </PortalFolders>
