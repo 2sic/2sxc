@@ -252,7 +252,6 @@
     <Compile Include="SexyContent\ContentBlock\ContentBlockBase.cs" />
     <Compile Include="SexyContent\ContentBlock\EntityContentGroupReferenceManager.cs" />
     <Compile Include="SexyContent\ContentBlock\ModuleContentGroupReferenceManager.cs" />
-    <Compile Include="SexyContent\DynamicEntityList.cs" />
     <Compile Include="SexyContent\Internal\AppManagement.cs" />
     <Compile Include="SexyContent\ContentBlock\EntityContentBlock.cs" />
     <Compile Include="SexyContent\ContentBlock\ModuleContentBlock.cs" />
@@ -280,6 +279,7 @@
     <Compile Include="SexyContent\Internal\SecurityHelpers.cs" />
     <Compile Include="SexyContent\Internal\TemplateManager.cs" />
     <Compile Include="SexyContent\Internal\ZoneHelpers.cs" />
+    <Compile Include="WebApi\ImportExportController.cs" />
     <Compile Include="WebApi\SxcWebApiExceptionHandling.cs" />
     <Compile Include="WebApi\ViewAPI\TemplateController.cs" />
     <Compile Include="SexyContent\ViewManager\TemplateEditor.cs" />
@@ -418,7 +418,6 @@
     <Content Include="grunt-tasks\i18n.gruntfile.js" />
     <Content Include="gruntfile.js" />
     <Content Include="js\iframe.html" />
-    <Content Include="src\inpage-dialogs\template-selector\template-selector.css" />
     <Content Include="src\inpage\2sxc._toolbarManager.js" />
     <Content Include="src\inpage\dialog.js" />
     <Content Include="SexyContent\ImportExport\Instructions\License.txt" />
@@ -432,7 +431,15 @@
     <Content Include="src\inpage\2sxc._actions.js" />
     <Content Include="src\inpage-dialogs\getting-started\getting-started.js" />
     <Content Include="src\inpage\inpage-icons-codes.css" />
-    <Content Include="src\inpage\quick-insert.js" />
+    <Content Include="src\sxc-admin\importexport\export-content.controller.js" />
+    <Content Include="src\sxc-admin\importexport\export-content.html" />
+    <Content Include="src\sxc-admin\importexport\export-content.service.js" />
+    <Content Include="src\sxc-admin\importexport\import-app.controller.js" />
+    <Content Include="src\sxc-admin\importexport\import-app.html" />
+    <Content Include="src\sxc-admin\importexport\import-app.service.js" />
+    <Content Include="src\sxc-admin\importexport\import-content.controller.js" />
+    <Content Include="src\sxc-admin\importexport\import-content.service.js" />
+    <Content Include="src\sxc-admin\importexport\import-export.directives.js" />
     <Content Include="src\sxc-admin\importexport\intro.controller.js" />
     <Content Include="src\sxc-admin\importexport\_app.js" />
     <Content Include="src\sxc-edit\adam\adam-hint.html" />
@@ -482,7 +489,7 @@
     <Content Include="src\sxc-admin\importexport\export-app.html" />
     <Content Include="src\sxc-admin\filters\sxc-filters.js" />
     <Content Include="src\sxc-admin\importexport\export-app.controller.js" />
-    <Content Include="src\sxc-admin\importexport\import.html" />
+    <Content Include="src\sxc-admin\importexport\import-content.html" />
     <Content Include="src\sxc-admin\importexport\intro.html" />
     <Content Include="src\sxc-admin\language-settings\language-settings.js" />
     <Content Include="src\sxc-admin\language-settings\languages.html" />
@@ -505,8 +512,9 @@
     <Content Include="SqlDataProvider\08.03.02.SqlDataProvider" />
     <Content Include="src\inpage\2sxc._lib.js" />
     <Content Include="src\inpage\2sxc.contentBlock.js" />
-    <Content Include="src\inpage\2sxc._translate.js" />
+    <Content Include="src\inpage\2sxc.translate.js" />
     <Content Include="src\inpage\2sxc._contentManagementCommands.js" />
+    <Content Include="src\sxc-admin\importexport\export-app.service.js" />
     <None Include="src\sxc-develop\source-editor\README.md" />
     <Content Include="src\sxc-develop\source-editor\toArray-filter.js" />
     <Content Include="src\sxc-admin\templates\edit.html" />
@@ -522,7 +530,6 @@
     <Content Include="src\sxc-admin\web-api\web-api.html" />
     <Content Include="src\sxc-edit\fields\dnn-bridge\dnn-bridge.service.js" />
     <Content Include="src\sxc-edit\fields\dnn-bridge\web-forms-bridge.directive.js" />
-    <Content Include="src\sxc-edit\fields\entity\entity-content-blocks.js" />
     <Content Include="src\sxc-edit\fields\hyperlink\dropzone-custom.css" />
     <Content Include="src\sxc-edit\fields\hyperlink\hyperlink-library.controller.js" />
     <Content Include="src\sxc-edit\fields\hyperlink\hyperlink.css" />
@@ -558,7 +565,6 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Upgrade\08.03.05.xml" />
-    <Content Include="Upgrade\08.04.00.xml" />
     <Content Include="View.ascx" />
     <Content Include="WebConfigTemplate.config" />
     <None Include="SqlDataProvider\01.00.01.SqlDataProvider" />
@@ -649,7 +655,6 @@
     <Content Include="Administration\App_LocalResources\WebApiHelp.ascx.resx" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="src\inpage-libs\i18n\" />
     <Folder Include="Upgrade\Log\" />
   </ItemGroup>
   <ItemGroup>
