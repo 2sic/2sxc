@@ -1026,60 +1026,121 @@ $(document).ready(function () {
 
     var newBlockMenu = $("<div class='sc-content-block-menu'></div>");
     var blockActions = $("<a class='sc-content-block-menu-addcontent' data-type='Default'>Add Content</a><a class='sc-content-block-menu-addapp' data-type=''>Add app</a>");
-
-    // ToDo 2rm: Add menu definition for DNN modules (allow quick-insert of modules)
-    var moduleActions = blockActions.clone().attr('data-context', 'module').hide();
-    
+    var moduleActions = blockActions.clone().attr('data-context', 'module').addClass('sc-content-block-menu-module');
     newBlockMenu.append(blockActions).append(moduleActions);
 
     $("body").append(newBlockMenu);
 
-    var menuDefinitions = [
-        {
-            listContainerSelector: '.sc-content-block-list',
-            contentBlockSelector: '.sc-content-block',
-            action: function (type) {
-                var list = newBlockMenu.actionsFor.closest('.sc-content-block-list');
-                var actionConfig = JSON.parse(list.attr('data-sc-list'));
+    var selectors = {
+        listContainerSelector: '.sc-content-block-list',
+        contentBlockSelector: '.sc-content-block',
+        moduleSelector: '.DnnModule',
+        paneSelector: '.contentPane'
+    };
 
-                var index = 0;
-                if (newBlockMenu.actionsFor.hasClass('sc-content-block'))
-                    index = list.find('.sc-content-block').index(newBlockMenu.actionsFor[0]) + 1;
-
-                $2sxc(list).manage.createContentBlock(actionConfig.id, actionConfig.field, index, type, list);
-            }
-        }
-    ];
-
-    newBlockMenu.find('a').click(function () {
+    blockActions.click(function () {
         var type = $(this).data("type");
-        newBlockMenu.actionsFor[0].menuDefinition.action(type);
+        var list = newBlockMenu.actionsForCb.closest(selectors.listContainerSelector);
+        var actionConfig = JSON.parse(list.attr('data-sc-list'));
+
+        var index = 0;
+        if (newBlockMenu.actionsForCb.hasClass('sc-content-block'))
+            index = list.find('.sc-content-block').index(newBlockMenu.actionsForCb[0]) + 1;
+
+        $2sxc(list).manage.createContentBlock(actionConfig.id, actionConfig.field, index, type, list);
+    });
+
+    moduleActions.click(function () {
+        var type = $(this).data("type");
+        var pane = newBlockMenu.actionsForModule.closest(selectors.paneSelector);
+
+        var index = 0;
+        if (newBlockMenu.actionsForModule.hasClass('DnnModule'))
+            index = pane.find('.DnnModule').index(newBlockMenu.actionsForModule[0]) + 1;
+
+        var service = $.dnnSF();
+        var serviceUrl = service.getServiceRoot('internalservices') + 'controlbar/';
+
+        $.ajax({
+            url: serviceUrl + 'GetPortalDesktopModules',
+            type: 'GET',
+            data: 'category=All',
+            beforeSend: service.setModuleHeaders,
+            success: function (desktopModules) {
+                var moduleToFind = type == 'Default' ? ' Content' : ' App';
+                var module = null;
+                
+                desktopModules.forEach(function (e,i) {
+                    if (e.ModuleName === moduleToFind)
+                        module = e;
+                });
+
+                if (module === null)
+                    alert(moduleToFind + ' module not found.');
+
+                var postData = {
+                    Module: module.ModuleID, // moduleid?
+                    Page: '', //pageid?
+                    Pane: 'ContentPane', // pane name
+                    Position: -1,
+                    Sort: index,
+                    Visibility: 0,
+                    AddExistingModule: false,
+                    CopyModule: false
+                };
+
+
+
+                $.ajax({
+                    url: serviceUrl + 'AddModule',
+                    type: 'POST',
+                    data: postData,
+                    beforeSend: service.setModuleHeaders,
+                    success: function (d) {
+                        window.location.reload();
+                    },
+                    error: function (xhr) {
+                        alert('Error while adding module.');
+                        console.log(xhr);
+                    }
+                });
+            },
+            error: function (xhr) {
+                alert('Error while adding module.');
+                console.log(xhr);
+            }
+        });
+
+        
+
     });
 
     $("body").on('mousemove', function (e) {
-        
-        var contentBlocks = [];
 
-        menuDefinitions.forEach(function (e,i) {
-            var definition = e;
-            contentBlocks = $(definition.listContainerSelector).find(definition.contentBlockSelector)
-                .add(definition.listContainerSelector);
-            contentBlocks.each(function () {
-                this.menuDefinition = definition;
-            });
-        });
+        var contentBlocks = $(selectors.listContainerSelector).find(selectors.contentBlockSelector)
+                .add(selectors.listContainerSelector);
 
-        var nearest = findNearest(contentBlocks, { x: e.clientX, y: e.clientY }, menuDefinitions[0].contentBlockSelector);
+        var modules = $(selectors.paneSelector).find(selectors.moduleSelector)
+                .add(selectors.paneSelector);
 
-        if (nearest !== null) {
+        var nearestCb = findNearest(contentBlocks, { x: e.clientX, y: e.clientY }, selectors.contentBlockSelector);
+        var nearestModule = findNearest(modules, { x: e.clientX, y: e.clientY }, selectors.moduleSelector);
+
+        moduleActions.toggle(nearestModule !== null);
+        blockActions.toggle(nearestCb !== null);
+
+        if (nearestCb !== null || nearestModule !== null) {
+            var alignTo = nearestCb || nearestModule;
+
             newBlockMenu.css({
-                'left': nearest.x,
-                'top': nearest.y,
-                'width': nearest.element.width()
+                'left': alignTo.x,
+                'top': alignTo.y,
+                'width': alignTo.element.width()
             }).show();
 
             // Keep current block as current on menu
-            newBlockMenu.actionsFor = nearest.element;
+            newBlockMenu.actionsForCb = nearestCb ? nearestCb.element : null;
+            newBlockMenu.actionsForModule = nearestModule ? nearestModule.element : null;
         }
         else
             newBlockMenu.hide();
