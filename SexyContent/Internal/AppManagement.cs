@@ -176,9 +176,9 @@ namespace ToSic.SexyContent.Internal
                 throw new Exception("This app does not belong to portal " + ps.PortalId);
 
             //var sexy = new SxcInstance(zoneId, appId);// 2016-03-26 2dm this used to have a third parameter false = don't enable caching, which hasn't been respected for a while; removed it
-            var eavContext = EavDataController.Instance(zoneId, AppHelpers.GetDefaultAppId(zoneId));
+            var eavContext = EavDataController.Instance(zoneId, appId);
 
-            if (appId != eavContext.AppId)
+            if (appId != eavContext.AppId)  // this only happens if there is some kind of id-fallback
                 throw new Exception("An app can only be removed inside of it's own context.");
 
             if (appId == AppHelpers.GetDefaultAppId(zoneId))
