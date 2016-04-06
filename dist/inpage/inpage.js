@@ -511,8 +511,6 @@ $2sxc._contentManagementCommands = function (sxc, targetTag) {
                     whitelist: ["en", "de", "fr", "it", "uk"],
                     preload: ["en"],
                     backend: {
-                        // path where resources get loaded from
-                        // loadPath: '/locales/{{lng}}/{{ns}}.json',
                         loadPath: manage.editContext.Environment.SxcRootUrl + "desktopmodules/tosic_sexycontent/dist/i18n/inpage-{{lng}}.js"
                     }
                 }, function (err, t) {
@@ -522,6 +520,7 @@ $2sxc._contentManagementCommands = function (sxc, targetTag) {
                     // start localizing, details:
                     // https://github.com/i18next/jquery-i18next#usage-of-selector-function
                     $('ul.sc-menu').localize();
+                    $('.sc-i18n').localize();
                 });
             initialized = true;
         }
@@ -1023,10 +1022,10 @@ $(document).ready(function () {
 
 (function () {
     'use strict';
-    var strButtons = "<a class='sc-content-block-menu-addcontent' data-type='Default' data-i18n='[title]QuickInsertMenu.AddBlockContent'>Add Content</a><a class='sc-content-block-menu-addapp' data-type='' data-i18n='[title]QuickInsertMenu.AddBlockApp'>Add app</a>";
+    var strButtons = "<a class='sc-content-block-menu-addcontent sc-i18n' data-type='Default' data-i18n='[title]QuickInsertMenu.AddBlockContent'>content</a><a class='sc-content-block-menu-addapp sc-i18n' data-type='' data-i18n='[title]QuickInsertMenu.AddBlockApp'>app</a>";
     var blockActions = $(strButtons);
     var newBlockMenu = $("<div class='sc-content-block-menu'></div>");
-    var moduleActions = $(strButtons.replace("QuickInsertMenu.AddBlock", "QuickInsertMenu.AddModule")).attr('data-context', 'module').addClass('sc-content-block-menu-module');
+    var moduleActions = $(strButtons.replace(/QuickInsertMenu.AddBlock/g, "QuickInsertMenu.AddModule")).attr('data-context', 'module').addClass('sc-content-block-menu-module');
     newBlockMenu.append(blockActions).append(moduleActions);
 
     $("body").append(newBlockMenu);

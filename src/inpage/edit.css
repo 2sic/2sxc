@@ -13,7 +13,7 @@
 .sc-content-block-menu:after { margin-left:90px; }
 .sc-content-block-menu-addcontent { background:url(../../icon.png); /*background-size:contain;*/  }
 .sc-content-block-menu-addapp { background:url(../../icon-app.png); /*background-size:contain;*/ }
-.sc-content-block-menu-module { background-color:black; }
+.sc-content-block-menu-module { -webkit-filter: grayscale(100%); filter: grayscale(100%); }
 
 /* this one is for buttons which can have a full/empty state */
 .sc-menu li a.empty i {opacity: 0.4} 

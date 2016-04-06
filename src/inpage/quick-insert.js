@@ -1,9 +1,9 @@
 ﻿(function () {
     'use strict';
-    var strButtons = "<a class='sc-content-block-menu-addcontent' data-type='Default' data-i18n='[title]QuickInsertMenu.AddBlockContent'>Add Content</a><a class='sc-content-block-menu-addapp' data-type='' data-i18n='[title]QuickInsertMenu.AddBlockApp'>Add app</a>";
+    var strButtons = "<a class='sc-content-block-menu-addcontent sc-i18n' data-type='Default' data-i18n='[title]QuickInsertMenu.AddBlockContent'>content</a><a class='sc-content-block-menu-addapp sc-i18n' data-type='' data-i18n='[title]QuickInsertMenu.AddBlockApp'>app</a>";
     var blockActions = $(strButtons);
     var newBlockMenu = $("<div class='sc-content-block-menu'></div>");
-    var moduleActions = $(strButtons.replace("QuickInsertMenu.AddBlock", "QuickInsertMenu.AddModule")).attr('data-context', 'module').addClass('sc-content-block-menu-module');
+    var moduleActions = $(strButtons.replace(/QuickInsertMenu.AddBlock/g, "QuickInsertMenu.AddModule")).attr('data-context', 'module').addClass('sc-content-block-menu-module');
     newBlockMenu.append(blockActions).append(moduleActions);
 
     $("body").append(newBlockMenu);

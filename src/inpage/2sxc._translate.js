@@ -15,8 +15,6 @@
                     whitelist: ["en", "de", "fr", "it", "uk"],
                     preload: ["en"],
                     backend: {
-                        // path where resources get loaded from
-                        // loadPath: '/locales/{{lng}}/{{ns}}.json',
                         loadPath: manage.editContext.Environment.SxcRootUrl + "desktopmodules/tosic_sexycontent/dist/i18n/inpage-{{lng}}.js"
                     }
                 }, function (err, t) {
@@ -26,6 +24,7 @@
                     // start localizing, details:
                     // https://github.com/i18next/jquery-i18next#usage-of-selector-function
                     $('ul.sc-menu').localize();
+                    $('.sc-i18n').localize();
                 });
             initialized = true;
         }
