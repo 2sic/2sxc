@@ -27,13 +27,13 @@
     <!-- RESULT -->
     <div ng-if="vm.ImportResult.Messages">
         <div class="modal-body">
-            <div ng-if="vm.ImportResult.Succeeded" class="dnnFormMessage dnnFormInfo">
+            <div ng-if="vm.ImportResult.Succeeded" class="sxc-message sxc-message-info">
                 {{"ImportExport.ImportContent.Messages.ImportSucceeded" | translate}} (<a ng-click="vm.ImportResult._hideSuccessMessages = !vm.ImportResult._hideSuccessMessages">{{"ImportExport.ImportContent.Commands.ToggleSuccessMessages" | translate}}</a>)
             </div>
-            <div ng-if="!vm.ImportResult.Succeeded" class="dnnFormMessage dnnFormValidationSummary">
+            <div ng-if="!vm.ImportResult.Succeeded" class="sxc-message sxc-message-error">
                 {{"ImportExport.ImportContent.Messages.ImportFailed" | translate}}
             </div>
-            <div ng-repeat="message in vm.ImportResult.Messages" class="dnnFormMessage" ng-class="{ 'dnnFormWarning': message.MessageType == 0, 'dnnFormSuccess': message.MessageType == 1, 'dnnFormValidationSummary': message.MessageType == 2}">
+            <div ng-repeat="message in vm.ImportResult.Messages" class="sxc-message" ng-class="{ 'sxc-message-warning': message.MessageType == 0, 'sxc-message-success': message.MessageType == 1, 'sxc-message-error': message.MessageType == 2, 'sxc-message-success-hidden': vm.ImportResult._hideSuccessMessages }">
                 {{message.Message}}
             </div>
         </div>
@@ -45,11 +45,13 @@
 
 
 <style>
-    .dnnFormMessage { display: block; padding: 18px 18px; margin-bottom: 18px; border: 1px solid rgba(2, 139, 255, 0.2); border-radius: 3px; background: rgba(2,139,255,0.15); max-width: 980px; }
+    .sxc-message { display: block; padding: 18px 18px; margin-bottom: 18px; border: 1px solid rgba(2, 139, 255, 0.2); border-radius: 3px; background: rgba(2,139,255,0.15); max-width: 980px; }
     
-    .dnnFormSuccess.dnnFormMessage { background-color: rgba(0,255,0,0.15); border-color: rgba(0, 255, 0, 0.5); }
+    .sxc-message-success.sxc-message { background-color: rgba(0,255,0,0.15); border-color: rgba(0, 255, 0, 0.5); }
+    
+    .sxc-message-success.sxc-message-success-hidden { display: none; }
+    
+    .sxc-message-warning.sxc-message { background-color: rgba(255,255,0,0.15); border-color: #CDB21F; }
 
-    .dnnFormWarning.dnnFormMessage { background-color: rgba(255,255,0,0.15); border-color: #CDB21F; }
-
-    .dnnFormValidationSummary.dnnFormMessage { background-color: rgba(255,0,0,0.15); border-color: rgba(255, 0, 0, 0.2); }
+    .sxc-message-error.sxc-message { background-color: rgba(255,0,0,0.15); border-color: rgba(255, 0, 0, 0.2); }
 </style>

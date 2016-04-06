@@ -1290,36 +1290,44 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
 
 
   $templateCache.put('importexport/import-app.html',
-    "<div><div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=ImportExport.ImportApp.Title></h3></div><div ng-if=!vm.ImportResult.Messages><div class=modal-body><div translate=ImportExport.ImportApp.Intro></div><div translate=ImportExport.ImportApp.FurtherHelp></div><br><span class=\"btn btn-default btn-file\"><span ng-hide=vm.ImportFile.Data>{{\"ImportExport.ImportApp.Commands.SelectFile\" | translate}}</span> <span ng-show=vm.ImportFile.Data>{{vm.ImportFile.Name}}</span> <input type=file sxc-file-read=\"vm.ImportFile\"></span><br></div><div class=modal-footer><button type=button class=\"btn btn-primary pull-left\" ng-click=vm.importApp() ng-disabled=!vm.ImportFile.Data translate=ImportExport.ImportApp.Commands.Import></button></div></div><div ng-if=vm.ImportResult.Messages><div class=modal-body><div ng-if=vm.ImportResult.Succeeded class=\"dnnFormMessage dnnFormInfo\">{{\"ImportExport.ImportContent.Messages.ImportSucceeded\" | translate}} (<a ng-click=\"vm.ImportResult._hideSuccessMessages = !vm.ImportResult._hideSuccessMessages\">{{\"ImportExport.ImportContent.Commands.ToggleSuccessMessages\" | translate}}</a>)</div><div ng-if=!vm.ImportResult.Succeeded class=\"dnnFormMessage dnnFormValidationSummary\">{{\"ImportExport.ImportContent.Messages.ImportFailed\" | translate}}</div><div ng-repeat=\"message in vm.ImportResult.Messages\" class=dnnFormMessage ng-class=\"{ 'dnnFormWarning': message.MessageType == 0, 'dnnFormSuccess': message.MessageType == 1, 'dnnFormValidationSummary': message.MessageType == 2}\">{{message.Message}}</div></div><div class=modal-footer></div></div></div><style>.dnnFormMessage { display: block; padding: 18px 18px; margin-bottom: 18px; border: 1px solid rgba(2, 139, 255, 0.2); border-radius: 3px; background: rgba(2,139,255,0.15); max-width: 980px; }\r" +
+    "<div><div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=ImportExport.ImportApp.Title></h3></div><div ng-if=!vm.ImportResult.Messages><div class=modal-body><div translate=ImportExport.ImportApp.Intro></div><div translate=ImportExport.ImportApp.FurtherHelp></div><br><span class=\"btn btn-default btn-file\"><span ng-hide=vm.ImportFile.Data>{{\"ImportExport.ImportApp.Commands.SelectFile\" | translate}}</span> <span ng-show=vm.ImportFile.Data>{{vm.ImportFile.Name}}</span> <input type=file sxc-file-read=\"vm.ImportFile\"></span><br></div><div class=modal-footer><button type=button class=\"btn btn-primary pull-left\" ng-click=vm.importApp() ng-disabled=!vm.ImportFile.Data translate=ImportExport.ImportApp.Commands.Import></button></div></div><div ng-if=vm.ImportResult.Messages><div class=modal-body><div ng-if=vm.ImportResult.Succeeded class=\"sxc-message sxc-message-info\">{{\"ImportExport.ImportContent.Messages.ImportSucceeded\" | translate}} (<a ng-click=\"vm.ImportResult._hideSuccessMessages = !vm.ImportResult._hideSuccessMessages\">{{\"ImportExport.ImportContent.Commands.ToggleSuccessMessages\" | translate}}</a>)</div><div ng-if=!vm.ImportResult.Succeeded class=\"sxc-message sxc-message-error\">{{\"ImportExport.ImportContent.Messages.ImportFailed\" | translate}}</div><div ng-repeat=\"message in vm.ImportResult.Messages\" class=sxc-message ng-class=\"{ 'sxc-message-warning': message.MessageType == 0, 'sxc-message-success': message.MessageType == 1, 'sxc-message-error': message.MessageType == 2, 'sxc-message-success-hidden': vm.ImportResult._hideSuccessMessages }\">{{message.Message}}</div></div><div class=modal-footer></div></div></div><style>.sxc-message { display: block; padding: 18px 18px; margin-bottom: 18px; border: 1px solid rgba(2, 139, 255, 0.2); border-radius: 3px; background: rgba(2,139,255,0.15); max-width: 980px; }\r" +
     "\n" +
     "\r" +
     "\n" +
-    "    .dnnFormSuccess.dnnFormMessage { background-color: rgba(0,255,0,0.15); border-color: rgba(0, 255, 0, 0.5); }\r" +
+    "    .sxc-message-success.sxc-message { background-color: rgba(0,255,0,0.15); border-color: rgba(0, 255, 0, 0.5); }\r" +
+    "\n" +
+    "    \r" +
+    "\n" +
+    "    .sxc-message-success.sxc-message-success-hidden { display: none; }\r" +
+    "\n" +
+    "    \r" +
+    "\n" +
+    "    .sxc-message-warning.sxc-message { background-color: rgba(255,255,0,0.15); border-color: #CDB21F; }\r" +
     "\n" +
     "\r" +
     "\n" +
-    "    .dnnFormWarning.dnnFormMessage { background-color: rgba(255,255,0,0.15); border-color: #CDB21F; }\r" +
-    "\n" +
-    "\r" +
-    "\n" +
-    "    .dnnFormValidationSummary.dnnFormMessage { background-color: rgba(255,0,0,0.15); border-color: rgba(255, 0, 0, 0.2); }</style>"
+    "    .sxc-message-error.sxc-message { background-color: rgba(255,0,0,0.15); border-color: rgba(255, 0, 0, 0.2); }</style>"
   );
 
 
   $templateCache.put('importexport/import-content.html',
-    "<div><div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=ImportExport.ImportContent.Title></h3></div><div ng-if=!vm.ImportResult.Messages><div class=modal-body><div translate=ImportExport.ImportContent.Intro></div><div translate=ImportExport.ImportContent.FurtherHelp></div><br><span class=\"btn btn-default btn-file\"><span ng-hide=vm.ImportFile.Data>{{\"ImportExport.ImportContent.Commands.SelectFile\" | translate}}</span> <span ng-show=vm.ImportFile.Data>{{vm.ImportFile.Name}}</span> <input type=file sxc-file-read=\"vm.ImportFile\"></span><br></div><div class=modal-footer><button type=button class=\"btn btn-primary pull-left\" ng-click=vm.importContent() ng-disabled=!vm.ImportFile.Data translate=ImportExport.ImportContent.Commands.Import></button></div></div><div ng-if=vm.ImportResult.Messages><div class=modal-body><div ng-if=vm.ImportResult.Succeeded class=\"dnnFormMessage dnnFormInfo\">{{\"ImportExport.ImportContent.Messages.ImportSucceeded\" | translate}} (<a ng-click=\"vm.ImportResult._hideSuccessMessages = !vm.ImportResult._hideSuccessMessages\">{{\"ImportExport.ImportContent.Commands.ToggleSuccessMessages\" | translate}}</a>)</div><div ng-if=!vm.ImportResult.Succeeded class=\"dnnFormMessage dnnFormValidationSummary\">{{\"ImportExport.ImportContent.Messages.ImportFailed\" | translate}}</div><div ng-repeat=\"message in vm.ImportResult.Messages\" class=dnnFormMessage ng-class=\"{ 'dnnFormWarning': message.MessageType == 0, 'dnnFormSuccess': message.MessageType == 1, 'dnnFormValidationSummary': message.MessageType == 2}\">{{message.Message}}</div></div><div class=modal-footer></div></div></div><style>.dnnFormMessage { display: block; padding: 18px 18px; margin-bottom: 18px; border: 1px solid rgba(2, 139, 255, 0.2); border-radius: 3px; background: rgba(2,139,255,0.15); max-width: 980px; }\r" +
+    "<div><div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=ImportExport.ImportContent.Title></h3></div><div ng-if=!vm.ImportResult.Messages><div class=modal-body><div translate=ImportExport.ImportContent.Intro></div><div translate=ImportExport.ImportContent.FurtherHelp></div><br><span class=\"btn btn-default btn-file\"><span ng-hide=vm.ImportFile.Data>{{\"ImportExport.ImportContent.Commands.SelectFile\" | translate}}</span> <span ng-show=vm.ImportFile.Data>{{vm.ImportFile.Name}}</span> <input type=file sxc-file-read=\"vm.ImportFile\"></span><br></div><div class=modal-footer><button type=button class=\"btn btn-primary pull-left\" ng-click=vm.importContent() ng-disabled=!vm.ImportFile.Data translate=ImportExport.ImportContent.Commands.Import></button></div></div><div ng-if=vm.ImportResult.Messages><div class=modal-body><div ng-if=vm.ImportResult.Succeeded class=\"sxc-message sxc-message-info\">{{\"ImportExport.ImportContent.Messages.ImportSucceeded\" | translate}} (<a ng-click=\"vm.ImportResult._hideSuccessMessages = !vm.ImportResult._hideSuccessMessages\">{{\"ImportExport.ImportContent.Commands.ToggleSuccessMessages\" | translate}}</a>)</div><div ng-if=!vm.ImportResult.Succeeded class=\"sxc-message sxc-message-error\">{{\"ImportExport.ImportContent.Messages.ImportFailed\" | translate}}</div><div ng-repeat=\"message in vm.ImportResult.Messages\" class=sxc-message ng-class=\"{ 'sxc-message-warning': message.MessageType == 0, 'sxc-message-success': message.MessageType == 1, 'sxc-message-error': message.MessageType == 2, 'sxc-message-success-hidden': vm.ImportResult._hideSuccessMessages }\">{{message.Message}}</div></div><div class=modal-footer></div></div></div><style>.sxc-message { display: block; padding: 18px 18px; margin-bottom: 18px; border: 1px solid rgba(2, 139, 255, 0.2); border-radius: 3px; background: rgba(2,139,255,0.15); max-width: 980px; }\r" +
     "\n" +
     "    \r" +
     "\n" +
-    "    .dnnFormSuccess.dnnFormMessage { background-color: rgba(0,255,0,0.15); border-color: rgba(0, 255, 0, 0.5); }\r" +
+    "    .sxc-message-success.sxc-message { background-color: rgba(0,255,0,0.15); border-color: rgba(0, 255, 0, 0.5); }\r" +
+    "\n" +
+    "    \r" +
+    "\n" +
+    "    .sxc-message-success.sxc-message-success-hidden { display: none; }\r" +
+    "\n" +
+    "    \r" +
+    "\n" +
+    "    .sxc-message-warning.sxc-message { background-color: rgba(255,255,0,0.15); border-color: #CDB21F; }\r" +
     "\n" +
     "\r" +
     "\n" +
-    "    .dnnFormWarning.dnnFormMessage { background-color: rgba(255,255,0,0.15); border-color: #CDB21F; }\r" +
-    "\n" +
-    "\r" +
-    "\n" +
-    "    .dnnFormValidationSummary.dnnFormMessage { background-color: rgba(255,0,0,0.15); border-color: rgba(255, 0, 0, 0.2); }</style>"
+    "    .sxc-message-error.sxc-message { background-color: rgba(255,0,0,0.15); border-color: rgba(255, 0, 0, 0.2); }</style>"
   );
 
 
