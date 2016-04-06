@@ -12,6 +12,7 @@ using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Api;
 using ToSic.Eav;
 using ToSic.Eav.BLL;
+using ToSic.Eav.Import;
 using ToSic.SexyContent.ContentBlock;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Internal;
@@ -24,43 +25,45 @@ namespace ToSic.SexyContent.ViewAPI
     public class ModuleController : SxcApiController
     {
         private ContentGroupReferenceManagerBase _cbm;
-        private ContentGroupReferenceManagerBase ContentGroupReferenceManager => _cbm ?? (_cbm = SxcContext.ContentBlock.Manager);
+
+        private ContentGroupReferenceManagerBase ContentGroupReferenceManager
+            => _cbm ?? (_cbm = SxcContext.ContentBlock.Manager);
 
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public void AddItem([FromUri] int? sortOrder = null) 
+        public void AddItem([FromUri] int? sortOrder = null)
             => ContentGroupReferenceManager.AddItem(sortOrder);
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup, bool? newTemplateChooserState = null)
             => ContentGroupReferenceManager.SaveTemplateId(templateId, forceCreateContentGroup, newTemplateChooserState);
-        
+
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void SetTemplateChooserState([FromUri] bool state)
-		    => ContentGroupReferenceManager.SetTemplateChooserState(state);
-		
+            => ContentGroupReferenceManager.SetTemplateChooserState(state);
 
-		[HttpGet]
-		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+
+        [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public IEnumerable<object> GetSelectableApps()
-		    => ContentGroupReferenceManager.GetSelectableApps();
-		
+            => ContentGroupReferenceManager.GetSelectableApps();
+
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void SetAppId(int? appId)
             => ContentGroupReferenceManager.SetAppId(appId);
-        
+
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public IEnumerable<object> GetSelectableContentTypes()
             => ContentGroupReferenceManager.GetSelectableContentTypes();
-        
+
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
@@ -77,7 +80,10 @@ namespace ToSic.SexyContent.ViewAPI
             //var context = sql.Entities;
 
             #region create the new entity --> note that it's the sql-type entity, not a standard ientity
-            var contentType = DataSource.GetCache(cgApp.ZoneId, cgApp.AppId).GetContentType(Settings.AttributeSetStaticNameContentBlockTypeName);
+
+            var contentType =
+                DataSource.GetCache(cgApp.ZoneId, cgApp.AppId)
+                    .GetContentType(Settings.AttributeSetStaticNameContentBlockTypeName);
             var values = new Dictionary<string, object>
             {
                 {EntityContentBlock.CbPropertyTitle, ""},
@@ -86,12 +92,14 @@ namespace ToSic.SexyContent.ViewAPI
             };
 
             var entity = eavDc.Entities.AddEntity(contentType.AttributeSetId, values, null, null);
+
             #endregion
 
             #region attach to the current list of items
 
-            var cbEnt = SxcContext.App.Data["Default"].List[parentId]; // ((EntityContentBlock) SxcContext.ContentBlock).ContentBlockEntity;
-            var blockList = ((Eav.Data.EntityRelationship)cbEnt.GetBestValue(field)).ToList() ?? new List<IEntity>();
+            var cbEnt = SxcContext.App.Data["Default"].List[parentId];
+                // ((EntityContentBlock) SxcContext.ContentBlock).ContentBlockEntity;
+            var blockList = ((Eav.Data.EntityRelationship) cbEnt.GetBestValue(field)).ToList() ?? new List<IEntity>();
 
             var intList = blockList.Select(b => b.EntityId).ToList();
             if (sortOrder > intList.Count) sortOrder = intList.Count;
@@ -99,12 +107,47 @@ namespace ToSic.SexyContent.ViewAPI
 
             var updateDic = new Dictionary<string, int[]> {{field, intList.ToArray()}};
             eavDc.Entities.UpdateEntity(cbEnt.EntityGuid, updateDic);
+
             #endregion
 
             // now return a rendered instance
             var newContentBlock = new EntityContentBlock(SxcContext.ContentBlock, entity.EntityID);
             return newContentBlock.SxcInstance.Render().ToString();
 
+        }
+
+        [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        public bool MoveContentBlock(int parentId, string field, int indexFrom, int indexTo)
+        {
+            var parentEntity = SxcContext.App.Data["Default"].List[parentId];
+
+            var parentField = parentEntity.GetBestValue(field);
+            var fieldList = parentField as ToSic.Eav.Data.EntityRelationship;
+
+            if (fieldList == null)
+                throw new Exception("field " + field + " doesn't seem to be a list of content-items, must abort");
+
+            var ids = fieldList.EntityIds.ToList();
+
+            if(ids.Count == 0 || ids.Count < indexFrom + 1 || ids.Count < indexTo + 1)
+                throw new Exception("the amount of items in the parent field is smaller than needed for this move-operation; must abort");
+
+            // do actualy re-ordering
+            var oldId = ids[indexFrom];
+            ids.RemoveAt(indexFrom);
+            if (indexTo > indexFrom) indexTo--; // the actual index could have shifted due to the removal
+            ids.Insert(indexTo, oldId);
+
+            // save
+            var values = new Dictionary<string, object> {{field, ids.ToArray()}};
+            var cgApp = SxcContext.App;
+            var eavDc = EavDataController.Instance(cgApp.ZoneId, cgApp.AppId);
+            eavDc.UserName = Environment.Dnn7.UserIdentity.CurrentUserIdentityToken;
+
+            eavDc.Entities.UpdateEntity(parentEntity.EntityGuid, values);
+
+            return true;
         }
 
 

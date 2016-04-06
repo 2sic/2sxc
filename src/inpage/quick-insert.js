@@ -1,8 +1,12 @@
 ﻿(function () {
     'use strict';
-    var strButtons = "<a class='sc-content-block-menu-addcontent sc-i18n' data-type='Default' data-i18n='[title]QuickInsertMenu.AddBlockContent'>content</a><a class='sc-content-block-menu-addapp sc-i18n' data-type='' data-i18n='[title]QuickInsertMenu.AddBlockApp'>app</a>";
+    var strButtons = "<a class='sc-content-block-menu-addcontent' data-type='Default' data-i18n='[title]QuickInsertMenu.AddBlockContent'>content</a>"
+        + "<a class='sc-content-block-menu-addapp' data-type='' data-i18n='[title]QuickInsertMenu.AddBlockApp'>app</a>"
+        + "<a class='sc-content-block-menu-btn sc-cb-action icon-sxc-scissors' data-action='cut' data-i18n='[title]QuickInsertMenu.Cut'></a>"
+        + "<a class='sc-content-block-menu-btn sc-cb-action icon-sxc-paste sc-invisible' data-action='paste' data-i18n='[title]QuickInsertMenu.Cut'></a>"
+        + "<a class='sc-content-block-menu-btn sc-cb-action icon-sxc-trash sc-invisible' data-action='delete' data-i18n='[title]QuickInsertMenu.Cut'></a>";
     var blockActions = $(strButtons);
-    var newBlockMenu = $("<div class='sc-content-block-menu'></div>");
+    var newBlockMenu = $("<div class='sc-content-block-menu sc-i18n'></div>");
     var moduleActions = $(strButtons.replace(/QuickInsertMenu.AddBlock/g, "QuickInsertMenu.AddModule")).attr('data-context', 'module').addClass('sc-content-block-menu-module');
     newBlockMenu.append(blockActions).append(moduleActions);
 
@@ -21,13 +25,45 @@
         var type = $(this).data("type");
         var list = newBlockMenu.actionsForCb.closest(selectors.listContainerSelector);
         var actionConfig = JSON.parse(list.attr(selectors.listDataAttr));
-
         var index = 0;
+
         if (newBlockMenu.actionsForCb.hasClass(selectors.contentBlockClass))
             index = list.find(selectors.contentBlockSelector).index(newBlockMenu.actionsForCb[0]) + 1;
 
-        $2sxc(list).manage.createContentBlock(actionConfig.parent, actionConfig.field, index, type, list);
+        // check cut/paste
+        var cbAction = $(this).data("action");
+        if (!cbAction)
+            $2sxc(list).manage.createContentBlock(actionConfig.parent, actionConfig.field, index, type, list);
+        else
+        // this is a cut/paste action
+        {
+            if (cbAction === "cut") {
+                $2sxc._cbClipboard = { index: index, guid: 'todo later' };
+                setSecondaryActionsState("inline-block!important");
+            }
+            if (cbAction === "paste") {
+                var from = $2sxc._cbClipboard.index, to = index;
+                if (from === to || from + 1 === to) // this moves it to the same spot, so ignore
+                    return;
+
+                $2sxc(list).manage.moveContentBlock(actionConfig.parent, actionConfig.field, from, to);
+                $2sxc._cbClipboard = null;
+            }
+            if (cbAction === "delete") {
+                alert("todo not implemented yet");
+            }
+            return;
+        } 
     });
+
+    function setSecondaryActionsState(state) {
+        var btns = $("a.sc-content-block-menu-btn");
+        btns = btns.filter(".icon-sxc-paste");// later also : , .icon-sxc-trash"); // only on the main one...?
+        if (state) 
+            btns.removeClass("sc-invisible");
+        else 
+            btns.addClass("sc-invisible");
+    }
 
     moduleActions.click(function () {
         var type = $(this).data("type");
