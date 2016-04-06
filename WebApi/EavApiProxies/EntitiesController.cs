@@ -210,7 +210,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
         public void Delete(string contentType, int id, int appId)
         {
             EnsureSerializerHasSxc();
-            _entitiesController.Delete(contentType, id, App.AppId);
+            _entitiesController.Delete(contentType, id, appId);
         }
         [HttpDelete]
         [HttpGet]
@@ -218,7 +218,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
         public void Delete(string contentType, Guid guid, int appId)
         {
             EnsureSerializerHasSxc();
-            _entitiesController.Delete(contentType, guid, App.AppId);
+            _entitiesController.Delete(contentType, guid, appId);
         }
 
 
