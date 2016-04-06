@@ -248,7 +248,8 @@
             controller.manage = $2sxc.getManageController ? $2sxc.getManageController(controller) : null;
         } catch (e) {}
 
-        if ($2sxc._initTranslate) $2sxc._initTranslate(controller.manage);    // init translate, not really nice, but ok for now
+        // this only works when manage exists (not installing) and translator exists too
+        if ($2sxc._initTranslate && controller.manage) $2sxc._initTranslate(controller.manage);    // init translate, not really nice, but ok for now
 
         // Make sure back-reference to controller is set
         controller.data.controller = controller;

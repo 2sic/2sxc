@@ -15,14 +15,8 @@
 		"ErrorWhileSaving": "There was an error while saving.",
 		"WillPublish": "will publish when saving",
 		"WontPublish": "will not publish when saving",
-		"PleaseCreateDefLang": "please edit this in the default language first.",
-		"ExitOk": "do you really want to exit?",
-		"Deleting": "deleting...",
-		"Ok": "ok",
-		"Error": "error",
-		"CantSaveProcessing": "can't save because something else is still being processed",
-		"CantSaveInvalid": "form not valid, can't save - errors on: <ul>{0}</ul>",
-		"FieldErrorList": "<li>{field} ({error})</li>"
+		"PleaseCreateDefLang": "Please edit this in the default language first.",
+		"ExitOk": "Do you really want to exit?"
 	},
 	"Errors": {
 		"UnclearError": "Something went wrong - maybe parts worked, maybe not. Sorry :(",
@@ -38,8 +32,8 @@
 	},
 	"FieldType": {
 		"Entity": {
-			"Choose": "add existing item",
-			"New": "create new",
+			"Choose": "-- choose item to add --",
+			"New": "-- create new --",
 			"EntityNotFound": "(item not found)",
 			"DragMove": "drag to re-order the list",
 			"Edit": "edit this item",

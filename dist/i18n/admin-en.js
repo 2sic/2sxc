@@ -116,8 +116,7 @@
 			"Label": "Label",
 			"InputType": "Input Type",
 			"Notes": "Notes",
-			"Sort": "Sort",
-			"Action": ""
+			"Sort": "Sort"
 		},
 		"General": "General"
 	},

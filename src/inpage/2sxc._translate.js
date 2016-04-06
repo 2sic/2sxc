@@ -23,8 +23,8 @@
                     jqueryI18next.init(i18next, $);
                     // start localizing, details:
                     // https://github.com/i18next/jquery-i18next#usage-of-selector-function
-                    $('ul.sc-menu').localize();
-                    $('.sc-i18n').localize();
+                    $('ul.sc-menu').localize(); // inline toolbars
+                    $('.sc-i18n').localize();   // quick-insert menus
                 });
             initialized = true;
         }

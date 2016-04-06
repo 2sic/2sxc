@@ -123,7 +123,7 @@ namespace ToSic.SexyContent.ViewAPI
             var parentEntity = SxcContext.App.Data["Default"].List[parentId];
 
             var parentField = parentEntity.GetBestValue(field);
-            var fieldList = parentField as ToSic.Eav.Data.EntityRelationship;
+            var fieldList = parentField as Eav.Data.EntityRelationship;
 
             if (fieldList == null)
                 throw new Exception("field " + field + " doesn't seem to be a list of content-items, must abort");
