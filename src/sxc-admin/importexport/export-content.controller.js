@@ -5,7 +5,7 @@
         ;
 
 
-    function ExportContentController(ExportContentService, eavAdminDialogs, eavConfig, debugState, $modalInstance, $filter, $scope) {
+    function ExportContentController(ExportContentService, eavAdminDialogs, eavConfig, debugState, $modalInstance, $filter) {
         var vm = this;
 
         vm.debug = debugState;

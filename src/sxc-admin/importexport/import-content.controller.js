@@ -26,5 +26,4 @@
             $modalInstance.dismiss("cancel");
         }
     }
-
 }());

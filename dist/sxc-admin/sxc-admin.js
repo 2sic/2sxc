@@ -111,7 +111,7 @@
 } ());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
 
-    AppListController.$inject = ["appsSvc", "eavAdminDialogs", "sxcDialogs", "eavConfig", "appSettings", "zoneId", "oldDialogs", "$modalInstance", "$translate"];
+    AppListController.$inject = ["appsSvc", "eavAdminDialogs", "sxcDialogs", "eavConfig", "appSettings", "appId", "zoneId", "oldDialogs", "$modalInstance", "$translate"];
     angular.module("AppsManagementApp", [
         "EavServices",
         "EavConfiguration",
@@ -128,8 +128,10 @@
         .controller("AppList", AppListController)
         ;
 
-    function AppListController(appsSvc, eavAdminDialogs, sxcDialogs, eavConfig, appSettings, zoneId, oldDialogs, $modalInstance, $translate) {
+    function AppListController(appsSvc, eavAdminDialogs, sxcDialogs, eavConfig, appSettings, appId, zoneId, oldDialogs, $modalInstance, $translate) {
         var vm = this;
+
+        function blankCallback() { }
 
         var svc = appsSvc(zoneId);
         vm.items = svc.liveList();
@@ -179,12 +181,26 @@
         };
 
         vm.import = function imp() {
-            oldDialogs.appImport(svc.liveListReload);
+
+            var resolve = eavAdminDialogs.CreateResolve({
+                appId: appId
+            });
+            return eavAdminDialogs.OpenModal(
+                "importexport/import-app.html",
+                "ImportApp as vm",
+                "lg",
+                resolve, blankCallback);
         };
 
-        vm.export = function exp(item)
-        {
-            oldDialogs.appExport(item.Id, svc.liveListReload);
+        vm.export = function exp(item) {
+            var resolve = eavAdminDialogs.CreateResolve({
+                appId: appId
+            });
+            return eavAdminDialogs.OpenModal(
+                "importexport/export-app.html",
+                "ExportApp as vm",
+                "lg",
+                resolve, blankCallback);
         };
 
         vm.languages = function languages() {
@@ -371,13 +387,13 @@
 }());
 (function () {
 
-    ExportContentController.$inject = ["ExportContentService", "eavAdminDialogs", "eavConfig", "debugState", "$modalInstance", "$filter", "$scope"];
+    ExportContentController.$inject = ["ExportContentService", "eavAdminDialogs", "eavConfig", "debugState", "$modalInstance", "$filter"];
     angular.module("ImportExport")
         .controller("ExportContent", ExportContentController)
         ;
 
 
-    function ExportContentController(ExportContentService, eavAdminDialogs, eavConfig, debugState, $modalInstance, $filter, $scope) {
+    function ExportContentController(ExportContentService, eavAdminDialogs, eavConfig, debugState, $modalInstance, $filter) {
         var vm = this;
 
         vm.debug = debugState;
@@ -484,6 +500,55 @@
 }());
 (function () {
 
+    ImportAppController.$inject = ["ImportAppService", "eavAdminDialogs", "eavConfig", "$modalInstance"];
+    angular.module("ImportExport")
+        .controller("ImportApp", ImportAppController)
+    ;
+
+    function ImportAppController(ImportAppService, eavAdminDialogs, eavConfig, $modalInstance) {
+        var vm = this;
+
+        vm.ImportFile = {};
+        vm.ImportResult = {};
+
+        vm.importApp = importApp;
+
+        vm.close = close;
+
+
+        function importApp() {
+            return ImportAppService.importApp(vm.ImportFile.Name, vm.ImportFile.Data).then(function (result) {
+                vm.ImportResult = result.data;
+            });
+        }
+
+        function close() {
+            $modalInstance.dismiss("cancel");
+        }
+    }
+}());
+(function () {
+
+    ImportAppService.$inject = ["appId", "zoneId", "eavConfig", "$http", "$q"];
+    angular.module("ImportExport")
+        .factory("ImportAppService", ImportAppService)
+    ;
+
+
+    function ImportAppService(appId, zoneId, eavConfig, $http, $q) {
+        var srvc = {
+            importApp: importApp
+        };
+        return srvc;
+
+
+        function importApp(fileName, fileData) {
+            return $http.post("app/ImportExport/ImportApp", { AppId: appId, ZoneId: zoneId, FileName: fileName, FileData: fileData });
+        }
+    }
+}());
+(function () {
+
     ImportContentController.$inject = ["ImportContentService", "eavAdminDialogs", "eavConfig", "$modalInstance"];
     angular.module("ImportExport")
         .controller("ImportContent", ImportContentController)
@@ -511,7 +576,6 @@
             $modalInstance.dismiss("cancel");
         }
     }
-
 }());
 (function () {
 
@@ -588,9 +652,6 @@
         };
 
         vm.import = function () {
-            oldDialogs.importPartial(appId, blankCallback);
-
-            // probably afterwards
             var resolve = eavAdminDialogs.CreateResolve({
                 appId: appId
             });
@@ -1228,8 +1289,25 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
   );
 
 
+  $templateCache.put('importexport/import-app.html',
+    "<div><div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=ImportExport.ImportApp.Title></h3></div><div ng-if=!vm.ImportResult.Messages><div class=modal-body><div translate=ImportExport.ImportApp.Intro></div><div translate=ImportExport.ImportApp.FurtherHelp></div><br><span class=\"btn btn-default btn-file\"><span ng-hide=vm.ImportFile.Data>{{\"ImportExport.ImportApp.Commands.SelectFile\" | translate}}</span> <span ng-show=vm.ImportFile.Data>{{vm.ImportFile.Name}}</span> <input type=file sxc-file-read=\"vm.ImportFile\"></span><br></div><div class=modal-footer><button type=button class=\"btn btn-primary pull-left\" ng-click=vm.importApp() ng-disabled=!vm.ImportFile.Data translate=ImportExport.ImportApp.Commands.Import></button></div></div><div ng-if=vm.ImportResult.Messages><div class=modal-body><div ng-if=vm.ImportResult.Succeeded class=\"dnnFormMessage dnnFormInfo\">{{\"ImportExport.ImportContent.Messages.ImportSucceeded\" | translate}} (<a ng-click=\"vm.ImportResult._hideSuccessMessages = !vm.ImportResult._hideSuccessMessages\">{{\"ImportExport.ImportContent.Commands.ToggleSuccessMessages\" | translate}}</a>)</div><div ng-if=!vm.ImportResult.Succeeded class=\"dnnFormMessage dnnFormValidationSummary\">{{\"ImportExport.ImportContent.Messages.ImportFailed\" | translate}}</div><div ng-repeat=\"message in vm.ImportResult.Messages\" class=dnnFormMessage ng-class=\"{ 'dnnFormWarning': message.MessageType == 0, 'dnnFormSuccess': message.MessageType == 1, 'dnnFormValidationSummary': message.MessageType == 2}\">{{message.Message}}</div></div><div class=modal-footer></div></div></div><style>.dnnFormMessage { display: block; padding: 18px 18px; margin-bottom: 18px; border: 1px solid rgba(2, 139, 255, 0.2); border-radius: 3px; background: rgba(2,139,255,0.15); max-width: 980px; }\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "    .dnnFormSuccess.dnnFormMessage { background-color: rgba(0,255,0,0.15); border-color: rgba(0, 255, 0, 0.5); }\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "    .dnnFormWarning.dnnFormMessage { background-color: rgba(255,255,0,0.15); border-color: #CDB21F; }\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "    .dnnFormValidationSummary.dnnFormMessage { background-color: rgba(255,0,0,0.15); border-color: rgba(255, 0, 0, 0.2); }</style>"
+  );
+
+
   $templateCache.put('importexport/import-content.html',
-    "<div><div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=ImportExport.ImportContent.Title></h3></div><div ng-if=!vm.ImportResult.Messages><div class=modal-body><div translate=ImportExport.ImportContent.Intro></div><div translate=ImportExport.ImportContent.FurtherHelp></div><br><span class=\"btn btn-default btn-file\"><span ng-hide=vm.ImportFile.Data>{{\"ImportExport.ImportContent.Commands.SelectFile\" | translate}}</span> <span ng-show=vm.ImportFile.Data>{{vm.ImportFile.Name}}</span> <input type=file sxc-file-read=\"vm.ImportFile\"></span><br></div><div class=modal-footer><button type=button class=\"btn btn-primary pull-left\" ng-click=vm.importContent() ng-disabled=!vm.ImportFile.Name translate=ImportExport.ImportContent.Commands.Import></button></div></div><div ng-if=vm.ImportResult.Messages><div class=modal-body><div ng-if=vm.ImportResult.Succeeded class=\"dnnFormMessage dnnFormInfo\">{{\"ImportExport.ImportContent.Messages.ImportSucceeded\" | translate}} (<a ng-click=\"vm.ImportResult._hideSuccessMessages = !vm.ImportResult._hideSuccessMessages\">{{\"ImportExport.ImportContent.Commands.ToggleSuccessMessages\" | translate}}</a>)</div><div ng-if=!vm.ImportResult.Succeeded class=\"dnnFormMessage dnnFormValidationSummary\">{{\"ImportExport.ImportContent.Messages.ImportFailed\" | translate}}</div><div ng-repeat=\"message in vm.ImportResult.Messages\" class=dnnFormMessage ng-class=\"{ 'dnnFormWarning': message.MessageType == 0, 'dnnFormSuccess': message.MessageType == 1, 'dnnFormValidationSummary': message.MessageType == 2}\">{{message.Message}}</div></div><div class=modal-footer></div></div></div><style>.dnnFormMessage { display: block; padding: 18px 18px; margin-bottom: 18px; border: 1px solid rgba(2, 139, 255, 0.2); border-radius: 3px; background: rgba(2,139,255,0.15); max-width: 980px; }\r" +
+    "<div><div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=ImportExport.ImportContent.Title></h3></div><div ng-if=!vm.ImportResult.Messages><div class=modal-body><div translate=ImportExport.ImportContent.Intro></div><div translate=ImportExport.ImportContent.FurtherHelp></div><br><span class=\"btn btn-default btn-file\"><span ng-hide=vm.ImportFile.Data>{{\"ImportExport.ImportContent.Commands.SelectFile\" | translate}}</span> <span ng-show=vm.ImportFile.Data>{{vm.ImportFile.Name}}</span> <input type=file sxc-file-read=\"vm.ImportFile\"></span><br></div><div class=modal-footer><button type=button class=\"btn btn-primary pull-left\" ng-click=vm.importContent() ng-disabled=!vm.ImportFile.Data translate=ImportExport.ImportContent.Commands.Import></button></div></div><div ng-if=vm.ImportResult.Messages><div class=modal-body><div ng-if=vm.ImportResult.Succeeded class=\"dnnFormMessage dnnFormInfo\">{{\"ImportExport.ImportContent.Messages.ImportSucceeded\" | translate}} (<a ng-click=\"vm.ImportResult._hideSuccessMessages = !vm.ImportResult._hideSuccessMessages\">{{\"ImportExport.ImportContent.Commands.ToggleSuccessMessages\" | translate}}</a>)</div><div ng-if=!vm.ImportResult.Succeeded class=\"dnnFormMessage dnnFormValidationSummary\">{{\"ImportExport.ImportContent.Messages.ImportFailed\" | translate}}</div><div ng-repeat=\"message in vm.ImportResult.Messages\" class=dnnFormMessage ng-class=\"{ 'dnnFormWarning': message.MessageType == 0, 'dnnFormSuccess': message.MessageType == 1, 'dnnFormValidationSummary': message.MessageType == 2}\">{{message.Message}}</div></div><div class=modal-footer></div></div></div><style>.dnnFormMessage { display: block; padding: 18px 18px; margin-bottom: 18px; border: 1px solid rgba(2, 139, 255, 0.2); border-radius: 3px; background: rgba(2,139,255,0.15); max-width: 980px; }\r" +
     "\n" +
     "    \r" +
     "\n" +

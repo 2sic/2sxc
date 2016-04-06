@@ -21,9 +21,6 @@
         };
 
         vm.import = function () {
-            oldDialogs.importPartial(appId, blankCallback);
-
-            // probably afterwards
             var resolve = eavAdminDialogs.CreateResolve({
                 appId: appId
             });

@@ -212,6 +212,20 @@
                 "ToggleSuccessMessages": "Toggle success messages",
                 "Import": "Import"
             }
+		},
+        "ImportApp": {
+            "Title": "Import App",
+            "Intro": "Select an app package (zip) from your computer to import an app. New apps can be downloaded on <a href='http://2sxc.org/apps'>http://2sxc.org/apps</a>.",
+            "FurtherHelp": "For further help visit <a href='http://2sxc.org/en/help?tag=import-app' target='_blank'>2sxc Help</a>.",
+            "Messages": {
+                "ImportSucceeded": "The import has been done. See the messages below for more information.",
+                "ImportFailed": "The import failed. See the messages below for more information."
+            },
+            "Commands": {
+                "SelectFile": "Select file",
+                "ToggleSuccessMessages": "Toggle success messages",
+                "Import": "Import"
+            }
         },
         "ExportContent": {
             "Title": "Export Content and Templates from this App",

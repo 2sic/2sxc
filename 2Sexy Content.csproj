@@ -434,6 +434,9 @@
     <Content Include="src\sxc-admin\importexport\export-content.controller.js" />
     <Content Include="src\sxc-admin\importexport\export-content.html" />
     <Content Include="src\sxc-admin\importexport\export-content.service.js" />
+    <Content Include="src\sxc-admin\importexport\import-app.controller.js" />
+    <Content Include="src\sxc-admin\importexport\import-app.html" />
+    <Content Include="src\sxc-admin\importexport\import-app.service.js" />
     <Content Include="src\sxc-admin\importexport\import-content.controller.js" />
     <Content Include="src\sxc-admin\importexport\import-content.service.js" />
     <Content Include="src\sxc-admin\importexport\import-export.directives.js" />

@@ -1,17 +1,18 @@
 ﻿<div>
     <div class="modal-header">
         <button icon="remove" class="btn pull-right" type="button" ng-click="vm.close()"></button>
-        <h3 class="modal-title" translate="ImportExport.ImportContent.Title"></h3>
+        <h3 class="modal-title" translate="ImportExport.ImportApp.Title"></h3>
     </div>
 
     <!-- IMPORT -->
     <div ng-if="!vm.ImportResult.Messages">
         <div class="modal-body">
-            <div translate="ImportExport.ImportContent.Intro"></div>
-            <div translate="ImportExport.ImportContent.FurtherHelp"></div>
+            <div translate="ImportExport.ImportApp.Intro"></div>
+            <div translate="ImportExport.ImportApp.FurtherHelp"></div>
             <br />
+
             <span class="btn btn-default btn-file">
-                <span ng-hide="vm.ImportFile.Data">{{"ImportExport.ImportContent.Commands.SelectFile" | translate}}</span>
+                <span ng-hide="vm.ImportFile.Data">{{"ImportExport.ImportApp.Commands.SelectFile" | translate}}</span>
                 <span ng-show="vm.ImportFile.Data">{{vm.ImportFile.Name}}</span>
                 <input type="file" sxc-file-read="vm.ImportFile" />
             </span>
@@ -19,10 +20,11 @@
         </div>
 
         <div class="modal-footer">
-            <button type="button" class="btn btn-primary pull-left" ng-click="vm.importContent()" ng-disabled="!vm.ImportFile.Data" translate="ImportExport.ImportContent.Commands.Import"></button>
+            <button type="button" class="btn btn-primary pull-left" ng-click="vm.importApp()" ng-disabled="!vm.ImportFile.Data" translate="ImportExport.ImportApp.Commands.Import"></button>
         </div>
     </div>
     <!-- END IMPORT -->
+
 
     <!-- RESULT -->
     <div ng-if="vm.ImportResult.Messages">
@@ -46,7 +48,7 @@
 
 <style>
     .dnnFormMessage { display: block; padding: 18px 18px; margin-bottom: 18px; border: 1px solid rgba(2, 139, 255, 0.2); border-radius: 3px; background: rgba(2,139,255,0.15); max-width: 980px; }
-    
+
     .dnnFormSuccess.dnnFormMessage { background-color: rgba(0,255,0,0.15); border-color: rgba(0, 255, 0, 0.5); }
 
     .dnnFormWarning.dnnFormMessage { background-color: rgba(255,255,0,0.15); border-color: #CDB21F; }

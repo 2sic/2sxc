@@ -165,7 +165,12 @@ namespace ToSic.SexyContent.WebApi
         {
             InitController(args.AppId, args.ZoneId);
 
-            return null;
+            var result = new ImportResult();
+            using (var fileStream = new MemoryStream(GetArrayFromBase64Url(args.FileData)))
+            {
+                result.Succeeded = zipImport.ImportApp(fileStream, HttpContext.Current.Server, app.OwnerPortalSettings, result.Messages);
+            }
+            return result;
         }
 
         [HttpPost]
@@ -250,7 +255,7 @@ namespace ToSic.SexyContent.WebApi
 
         private byte[] GetArrayFromBase64Url(string base64Url)
         {
-            var base64Data = Regex.Match(base64Url, @"data:(?<media>.+?)/(?<type>.+?),(?<data>.+)").Groups["data"].Value;
+            var base64Data = base64Url.Substring(base64Url.IndexOf(',') + 1); // or Regex.Match(base64Url, @"[data:(?<media>.+?)/(?<type>.+?),](?<data>.+)").Groups["data"].Value;
             // Correct transfer errors!
             base64Data = base64Data.Replace('-', '+').Replace('_', '/').Trim('=');
             var base64Padding = base64Data.Length % 4;
