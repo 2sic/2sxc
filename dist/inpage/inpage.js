@@ -1033,21 +1033,23 @@ $(document).ready(function () {
 
     var selectors = {
         listContainerSelector: '.sc-content-block-list',
+        contentBlockClass: 'sc-content-block',
         contentBlockSelector: '.sc-content-block',
         moduleSelector: '.DnnModule',
-        paneSelector: '.contentPane'
+        paneSelector: '.contentPane',
+        listDataAttr: 'data-list-context',
     };
 
     blockActions.click(function () {
         var type = $(this).data("type");
         var list = newBlockMenu.actionsForCb.closest(selectors.listContainerSelector);
-        var actionConfig = JSON.parse(list.attr('data-sc-list'));
+        var actionConfig = JSON.parse(list.attr(selectors.listDataAttr));
 
         var index = 0;
-        if (newBlockMenu.actionsForCb.hasClass('sc-content-block'))
-            index = list.find('.sc-content-block').index(newBlockMenu.actionsForCb[0]) + 1;
+        if (newBlockMenu.actionsForCb.hasClass(selectors.contentBlockClass))
+            index = list.find(selectors.contentBlockSelector).index(newBlockMenu.actionsForCb[0]) + 1;
 
-        $2sxc(list).manage.createContentBlock(actionConfig.id, actionConfig.field, index, type, list);
+        $2sxc(list).manage.createContentBlock(actionConfig.parent, actionConfig.field, index, type, list);
     });
 
     moduleActions.click(function () {
@@ -1064,10 +1066,10 @@ $(document).ready(function () {
         $.ajax({
             url: serviceUrl + 'GetPortalDesktopModules',
             type: 'GET',
-            data: 'category=All',
+            data: 'category=All&loadingStartIndex=0&loadingPageSize=100&searchTerm=',
             beforeSend: service.setModuleHeaders,
             success: function (desktopModules) {
-                var moduleToFind = type == 'Default' ? ' Content' : ' App';
+                var moduleToFind = type === 'Default' ? ' Content' : ' App';
                 var module = null;
                 
                 desktopModules.forEach(function (e,i) {
