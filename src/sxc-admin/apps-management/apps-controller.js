@@ -16,8 +16,10 @@
         .controller("AppList", AppListController)
         ;
 
-    function AppListController(appsSvc, eavAdminDialogs, sxcDialogs, eavConfig, appSettings, zoneId, oldDialogs, $modalInstance, $translate) {
+    function AppListController(appsSvc, eavAdminDialogs, sxcDialogs, eavConfig, appSettings, appId, zoneId, oldDialogs, $modalInstance, $translate) {
         var vm = this;
+
+        function blankCallback() { }
 
         var svc = appsSvc(zoneId);
         vm.items = svc.liveList();
@@ -67,12 +69,26 @@
         };
 
         vm.import = function imp() {
-            oldDialogs.appImport(svc.liveListReload);
+
+            var resolve = eavAdminDialogs.CreateResolve({
+                appId: appId
+            });
+            return eavAdminDialogs.OpenModal(
+                "importexport/import-app.html",
+                "ImportApp as vm",
+                "lg",
+                resolve, blankCallback);
         };
 
-        vm.export = function exp(item)
-        {
-            oldDialogs.appExport(item.Id, svc.liveListReload);
+        vm.export = function exp(item) {
+            var resolve = eavAdminDialogs.CreateResolve({
+                appId: appId
+            });
+            return eavAdminDialogs.OpenModal(
+                "importexport/export-app.html",
+                "ExportApp as vm",
+                "lg",
+                resolve, blankCallback);
         };
 
         vm.languages = function languages() {

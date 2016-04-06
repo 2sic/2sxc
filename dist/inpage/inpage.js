@@ -1023,10 +1023,10 @@ $(document).ready(function () {
 
 (function () {
     'use strict';
-
+    var strButtons = "<a class='sc-content-block-menu-addcontent' data-type='Default' data-i18n='[title]QuickInsertMenu.AddBlockContent'>Add Content</a><a class='sc-content-block-menu-addapp' data-type='' data-i18n='[title]QuickInsertMenu.AddBlockApp'>Add app</a>";
+    var blockActions = $(strButtons);
     var newBlockMenu = $("<div class='sc-content-block-menu'></div>");
-    var blockActions = $("<a class='sc-content-block-menu-addcontent' data-type='Default'>Add Content</a><a class='sc-content-block-menu-addapp' data-type=''>Add app</a>");
-    var moduleActions = blockActions.clone().attr('data-context', 'module').addClass('sc-content-block-menu-module');
+    var moduleActions = $(strButtons.replace("QuickInsertMenu.AddBlock", "QuickInsertMenu.AddModule")).attr('data-context', 'module').addClass('sc-content-block-menu-module');
     newBlockMenu.append(blockActions).append(moduleActions);
 
     $("body").append(newBlockMenu);

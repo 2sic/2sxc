@@ -2,7 +2,7 @@
   "name": "ToSic.2sxc",
   "version": "8.02.00",
   "dependencies": {
-    "2sxc-eav-languages": "2sic/2sxc-eav-languages#c8347db",
+    "2sxc-eav-languages": "2sic/2sxc-eav-languages#0b2f737",
     "2sxc-icons": "2sic/2sxc-icons#0fc26a5",
     "angular-ui-ace": "0.2.3",
     "angular-ui-tinymce": "0.0.12",
