@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using ToSic.Eav;
 using ToSic.SexyContent.ContentBlock;
 using ToSic.SexyContent.EAVExtensions;
+using static System.String;
 
 namespace ToSic.SexyContent
 {
@@ -99,10 +100,13 @@ namespace ToSic.SexyContent
             var result = Entity.GetBestValue(attributeName, _dimensions, true);
 
             if (result is Eav.Data.EntityRelationship)
-                    result = ((Eav.Data.EntityRelationship)result).Select(
-                        p => new DynamicEntity(p, _dimensions, _sxcInstance)
-                        ).ToList();
-            
+            {
+                var relList = ((Eav.Data.EntityRelationship) result).Select(
+                    p => new DynamicEntity(p, _dimensions, _sxcInstance)
+                    ).ToList();
+                result = new DynamicEntityList(Entity, attributeName, relList, _sxcInstance.Environment.Permissions.UserMayEditContent);
+            }
+
             //set out-information
             propertyNotFound = result == null;
             return result;
@@ -191,82 +195,6 @@ namespace ToSic.SexyContent
         }
     }
 
-    public class DynamicEntityList : IList<DynamicEntity>
-    {
-        private IList<DynamicEntity> list;
-        private IEntity parent;
-        private string field;
-        public DynamicEntityList(IEntity parentEntity, string fieldName, IList<DynamicEntity> innerList)
-        {
-            list = innerList;
-            parent = parentEntity;
-            field = fieldName;
-        }
 
-        public string betaListTag
-        {
-            get { return "{ \"parent\": \"" + "\""; }
-        }
-
-        public IEnumerator<DynamicEntity> GetEnumerator()
-        {
-            return list.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-        public void Add(DynamicEntity item)
-        {
-            list.Add(item);
-        }
-
-        public void Clear()
-        {
-            list.Clear();
-        }
-
-        public bool Contains(DynamicEntity item)
-        {
-            return list.Contains(item);
-        }
-
-        public void CopyTo(DynamicEntity[] array, int arrayIndex)
-        {
-            list.CopyTo(array, arrayIndex);
-        }
-
-        public bool Remove(DynamicEntity item)
-        {
-            return list.Remove(item);
-        }
-
-        public int Count => list.Count;
-
-        public bool IsReadOnly => list.IsReadOnly;
-
-        public int IndexOf(DynamicEntity item)
-        {
-            return list.IndexOf(item);
-        }
-
-        public void Insert(int index, DynamicEntity item)
-        {
-            list.Insert(index, item);
-        }
-
-        public void RemoveAt(int index)
-        {
-            list.RemoveAt(index);
-        }
-
-        public DynamicEntity this[int index]
-        {
-            get { return list[index]; }
-            set { list[index] = value;  }
-        }
-    }
 
 }
