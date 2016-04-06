@@ -1,42 +1,14 @@
-(function () {
+(function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
 
-    angular.module("ImportExport")
-        .controller("ExportApp", ExportAppController)
+    angular.module("ImportExportApp")
+        .controller("ExportApp", ExportController)
         ;
-  
 
-    function ExportAppController(ExportAppService, eavAdminDialogs, eavConfig, $modalInstance) {
+    function ExportController(eavAdminDialogs, eavConfig, appId, $modalInstance) {
         var vm = this;
 
-        vm.IncludeContentGroups = false;
-        vm.ResetAppGuid = false;
-
-        vm.AppInfo = {};
-
-        vm.getAppInfo = getAppInfo;
-        vm.exportApp = exportApp;
-
-        vm.close = close;
-
-
-        activate();
-
-        function activate() {
-            getAppInfo();
-        }
-
-        function getAppInfo() {
-            return ExportAppService.getAppInfo().then(function (result) {
-                vm.AppInfo = result;
-            });
-        }
-
-        function exportApp() {
-            return ExportAppService.exportApp(vm.IncludeContentGroups, vm.ResetAppGuid);
-        }
-
-        function close() {
+        vm.close = function () {
             $modalInstance.dismiss("cancel");
-        }
+        };
     }
-}());
+} ());
