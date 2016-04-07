@@ -1075,7 +1075,7 @@ $(document).ready(function () {
         {
             if (cbAction === "cut") {
                 $2sxc._cbClipboard = { index: index, guid: 'todo later' };
-                setSecondaryActionsState("inline-block!important");
+                setSecondaryActionsState(true);
             }
             if (cbAction === "paste") {
                 var from = $2sxc._cbClipboard.index, to = index;
@@ -1095,10 +1095,7 @@ $(document).ready(function () {
     function setSecondaryActionsState(state) {
         var btns = $("a.sc-content-block-menu-btn");
         btns = btns.filter(".icon-sxc-paste");// later also : , .icon-sxc-trash"); // only on the main one...?
-        if (state) 
-            btns.removeClass("sc-invisible");
-        else 
-            btns.addClass("sc-invisible");
+        btns.toggleClass("sc-invisible", !state);
     }
 
     moduleActions.click(function () {
@@ -1176,7 +1173,7 @@ $(document).ready(function () {
                     refreshMenu(e);
                     refreshTimeout = null;
                 });
-            }, 60);
+            }, 20);
 
     });
 
