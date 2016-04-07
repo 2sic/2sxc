@@ -8,6 +8,8 @@
     function ImportContentController(ImportContentService, eavAdminDialogs, eavConfig, $modalInstance) {
         var vm = this;
 
+        vm.IsImporting = false;
+
         vm.ImportFile = {};
         vm.ImportResult = {};
 
@@ -17,8 +19,13 @@
 
 
         function importContent() {
+            vm.IsImporting = true;
             return ImportContentService.importContent(vm.ImportFile.Name, vm.ImportFile.Data).then(function (result) {
                 vm.ImportResult = result.data;
+                vm.IsImporting = false;
+            }).catch(function (error) {
+                console.log(error);
+                vm.IsImporting = false;
             });
         }
 

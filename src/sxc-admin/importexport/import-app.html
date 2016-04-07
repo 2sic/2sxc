@@ -20,7 +20,7 @@
         </div>
 
         <div class="modal-footer">
-            <button type="button" class="btn btn-primary pull-left" ng-click="vm.importApp()" ng-disabled="!vm.ImportFile.Data" translate="ImportExport.ImportApp.Commands.Import"></button>
+            <button type="button" class="btn btn-primary pull-left" ng-click="vm.importApp()" ng-disabled="!vm.ImportFile.Data || vm.IsImporting" translate="ImportExport.ImportApp.Commands.Import"></button>
         </div>
     </div>
     <!-- END IMPORT -->
@@ -43,6 +43,10 @@
         </div>
     </div>
     <!-- END RESULT -->
+
+    <div class="sc-loading" ng-show="vm.IsImporting">
+        <i class="icon-sxc-spinner fa-spin"></i>
+    </div>
 </div>
 
 <style>

@@ -247,6 +247,10 @@
     <Compile Include="SexyContent\DataSources\ConfigurationProvider.cs" />
     <Compile Include="SexyContent\DataSources\DnnSqlDataSource.cs" />
     <Compile Include="SexyContent\DataSources\DnnFormAndList.cs" />
+    <Compile Include="WebApi\HttpResponseMessageHelper.cs" />
+    <Compile Include="WebApi\ImportRequestArgs.cs" />
+    <Compile Include="WebApi\ImportResult.cs" />
+    <Compile Include="WebApi\SxcAppWrapper.cs" />
     <Compile Include="WebApi\EavApiProxies\ContentExportController.cs" />
     <Compile Include="WebApi\EavApiProxies\ContentImportController.cs" />
     <Compile Include="WebApi\EavApiProxies\MetadataController.cs" />
