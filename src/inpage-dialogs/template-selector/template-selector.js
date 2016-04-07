@@ -12,15 +12,16 @@
                 window: window.parent, 
                 sxc: iframe.sxc,
                 contentBlock: iframe.sxc.manage.contentBlock,
-                getManageInfo: iframe.getManageInfo,
+                // getManageInfo: iframe.getManageInfo,
                 dashInfo: iframe.getAdditionalDashboardConfig
             };
         };
     });
 
-    module.controller("TemplateSelectorCtrl", function ($scope, /* $attrs, */ moduleApiService, AppInstanceId, sxc, $filter, $q, $window, $translate, $sce, contentBlockLink) {
+    module.controller("TemplateSelectorCtrl", function ($scope, moduleApiService, AppInstanceId, sxc, $filter, $q, $window, $translate, $sce, contentBlockLink) {
         //#region constants
         var cViewWithoutContent = "_LayoutElement"; // needed to differentiate the "select item" from the "empty-is-selected" which are both empty
+        var cAppActionManage = -2, cAppActionImport = -1, cAppActionCreate = -3;
         //#endregion
 
         var realScope = $scope;
@@ -39,9 +40,6 @@
         vm.templateId = di.templateId;
         vm.undoTemplateId = di.templateId;
         vm.contentTypeId = di.contentTypeId;
-        // (vm.manageInfo.contentTypeId === "" && vm.manageInfo.templateId !== null)
-            //? cViewWithoutContent // has template but no content, use placeholder
-            //: di.contentTypeId;// vm.manageInfo.contentTypeId;
         vm.undoContentTypeId = vm.contentTypeId;
 
         vm.appId = vm.dashInfo.appId !== 0 ? vm.dashInfo.appId : null;
@@ -104,7 +102,7 @@
 
         // Auto-set view-dropdown if content-type changed
         realScope.$watch("vm.contentTypeId", function (newContentTypeId, oldContentTypeId) {
-        	if (newContentTypeId == oldContentTypeId)
+        	if (newContentTypeId === oldContentTypeId)
         		return;
         	// Select first template if contentType changed
         	var firstTemplateId = vm.filteredTemplates(newContentTypeId)[0].TemplateId; 
@@ -117,6 +115,11 @@
             if (newAppId === oldAppId || newAppId === null)
                 return;
 
+            // special case: add app
+            if (newAppId === cAppActionImport) {
+                return vm.appImport();
+            }
+
             svc.setAppId(newAppId)
                 .then(function () { wrapper.window.location.reload(); });
         });
@@ -124,12 +127,6 @@
         vm.manageApps = function() {    wrapper.sxc.manage.action({ "action": "zone" });    };
         vm.appSettings = function() {   wrapper.sxc.manage.action({ "action": "app" });     };
         vm.appImport = function() {   wrapper.sxc.manage.action({ "action": "app-import" });     };
-
-        // this is the one we must refactor out, as the import-command doesn't exist here
-        //vm.installApp = function () {
-        //    wrapper.window.location = importCommand; // actually does a dnnModal.show...
-        //    return;
-        //};
 
         // Cancel and reset back to original state
         vm.cancelTemplateChange = wrapper.contentBlock._cancelTemplateChange;
@@ -200,6 +197,12 @@
                 .then(function(data) {
                     vm.apps = data.data;
                     vm.appCount = data.data.length; // needed in the future to check if it shows getting started
+
+                    if (vm.showAdvanced) {
+                        vm.apps.push({ Name: "TemplatePicker.GetMoreApps", AppId: cAppActionImport });
+                        //vm.apps.push({ Name: "create your own app...", AppId: cAppActionCreate }); // todo: i18n
+                        //vm.apps.push({ Name: "manage apps...", AppId: cAppActionManage }); // todo: i18n
+                    }
                 });
         };
 

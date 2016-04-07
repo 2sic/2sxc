@@ -91,11 +91,7 @@ angular.module("SxcAdminUi", [
         // the app-level dialog showing all app content-items, templates, web-api etc.
         svc.openAppImport = function oam(closeCallback) {
             var resolve = eavAdminDialogs.CreateResolve({}); // { appId: appId }});
-            return eavAdminDialogs.OpenModal(
-                "importexport/import-app.html",
-                "ImportApp as vm",
-                "lg",
-                resolve, closeCallback);
+            return eavAdminDialogs.OpenModal( "importexport/import-app.html", "ImportApp as vm", "lg", resolve, closeCallback);
         };
 
         //#region Total-Popup open / close
