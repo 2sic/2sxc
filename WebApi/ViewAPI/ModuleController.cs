@@ -12,9 +12,7 @@ using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Api;
 using ToSic.Eav;
 using ToSic.Eav.BLL;
-using ToSic.Eav.Import;
 using ToSic.SexyContent.ContentBlock;
-using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Internal;
 using ToSic.SexyContent.WebApi;
 using Assembly = System.Reflection.Assembly;
@@ -74,22 +72,34 @@ namespace ToSic.SexyContent.ViewAPI
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public string GenerateContentBlock(int parentId, string field, int sortOrder, string app = "")
         {
-            var cgApp = SxcContext.App;
-            var eavDc = EavDataController.Instance(cgApp.ZoneId, cgApp.AppId);
-            eavDc.UserName = Environment.Dnn7.UserIdentity.CurrentUserIdentityToken;
-            //var context = sql.Entities;
-
-            #region create the new entity --> note that it's the sql-type entity, not a standard ientity
-
-            var contentType =
-                DataSource.GetCache(cgApp.ZoneId, cgApp.AppId)
-                    .GetContentType(Settings.AttributeSetStaticNameContentBlockTypeName);
+            var contentTypeName = Settings.AttributeSetStaticNameContentBlockTypeName;
             var values = new Dictionary<string, object>
             {
                 {EntityContentBlock.CbPropertyTitle, ""},
                 {EntityContentBlock.CbPropertyApp, app},
                 {EntityContentBlock.CbPropertyShowChooser, true},
             };
+
+            var entity = CreateItemAndAddToList(parentId, field, sortOrder, contentTypeName, values);
+
+            // now return a rendered instance
+            var newContentBlock = new EntityContentBlock(SxcContext.ContentBlock, entity.EntityID);
+            return newContentBlock.SxcInstance.Render().ToString();
+
+        }
+
+        private Entity CreateItemAndAddToList(int parentId, string field, int sortOrder, string contentTypeName,
+            Dictionary<string, object> values)
+        {
+            var cgApp = SxcContext.App;
+            var eavDc = EavDataController.Instance(cgApp.ZoneId, cgApp.AppId);
+            eavDc.UserName = Environment.Dnn7.UserIdentity.CurrentUserIdentityToken;
+
+            #region create the new entity --> note that it's the sql-type entity, not a standard ientity
+
+            var contentType =
+                DataSource.GetCache(cgApp.ZoneId, cgApp.AppId)
+                    .GetContentType(contentTypeName);
 
             var entity = eavDc.Entities.AddEntity(contentType.AttributeSetId, values, null, null);
 
@@ -98,7 +108,7 @@ namespace ToSic.SexyContent.ViewAPI
             #region attach to the current list of items
 
             var cbEnt = SxcContext.App.Data["Default"].List[parentId];
-                // ((EntityContentBlock) SxcContext.ContentBlock).ContentBlockEntity;
+            // ((EntityContentBlock) SxcContext.ContentBlock).ContentBlockEntity;
             var blockList = ((Eav.Data.EntityRelationship) cbEnt.GetBestValue(field)).ToList() ?? new List<IEntity>();
 
             var intList = blockList.Select(b => b.EntityId).ToList();
@@ -110,15 +120,40 @@ namespace ToSic.SexyContent.ViewAPI
 
             #endregion
 
-            // now return a rendered instance
-            var newContentBlock = new EntityContentBlock(SxcContext.ContentBlock, entity.EntityID);
-            return newContentBlock.SxcInstance.Render().ToString();
-
+            return entity;
         }
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public bool MoveContentBlock(int parentId, string field, int indexFrom, int indexTo)
+        {
+            MoveItemInList(parentId, field, indexFrom, indexTo);
+
+            return true;
+        }
+
+        private void MoveItemInList(int parentId, string field, int indexFrom, int indexTo)
+        {
+            var action = new MoveItem(indexFrom, indexTo);
+
+            ModifyItemList(parentId, field, action);
+        }
+
+        /// <summary>
+        /// 2016-04-07 2dm: note: remove was never tested! UI not clear yet
+        /// </summary>
+        /// <param name="parentId"></param>
+        /// <param name="field"></param>
+        /// <param name="index"></param>
+        private void RemoveItemInList(int parentId, string field, int index)
+        {
+            var action = new RemoveItem(index);
+
+            ModifyItemList(parentId, field, action);
+        }
+
+
+        private void ModifyItemList(int parentId, string field, IItemListAction actionToPerform)
         {
             var parentEntity = SxcContext.App.Data["Default"].List[parentId];
 
@@ -130,14 +165,7 @@ namespace ToSic.SexyContent.ViewAPI
 
             var ids = fieldList.EntityIds.ToList();
 
-            if(ids.Count == 0 || ids.Count < indexFrom + 1 || ids.Count < indexTo + 1)
-                throw new Exception("the amount of items in the parent field is smaller than needed for this move-operation; must abort");
-
-            // do actualy re-ordering
-            var oldId = ids[indexFrom];
-            ids.RemoveAt(indexFrom);
-            if (indexTo > indexFrom) indexTo--; // the actual index could have shifted due to the removal
-            ids.Insert(indexTo, oldId);
+            if (!actionToPerform.Change(ids)) return;
 
             // save
             var values = new Dictionary<string, object> {{field, ids.ToArray()}};
@@ -146,10 +174,7 @@ namespace ToSic.SexyContent.ViewAPI
             eavDc.UserName = Environment.Dnn7.UserIdentity.CurrentUserIdentityToken;
 
             eavDc.Entities.UpdateEntity(parentEntity.EntityGuid, values);
-
-            return true;
         }
-
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
@@ -278,6 +303,58 @@ namespace ToSic.SexyContent.ViewAPI
             Installer.FinishAbortedUpgrade();
 
             return true;
+        }
+    }
+
+    internal interface IItemListAction
+    {
+        bool Change(List<int?> ids);
+    }
+
+    internal class MoveItem : IItemListAction
+    {
+        private int _indexFrom, _indexTo;
+        public MoveItem(int from, int to)
+        {
+            _indexFrom = from;
+            _indexTo = to;
+        }
+        public bool Change(List<int?> ids)
+        {
+            if (_indexFrom >= ids.Count) // this is if you set cut after the last item
+                _indexFrom = ids.Count - 1;
+            if (_indexTo >= ids.Count)
+                _indexTo = ids.Count;
+            if (_indexFrom == _indexTo)
+                return false;
+
+            // do actualy re-ordering
+            var oldId = ids[_indexFrom];
+            ids.RemoveAt(_indexFrom);
+            if (_indexTo > _indexFrom) _indexTo--; // the actual index could have shifted due to the removal
+            ids.Insert(_indexTo, oldId);
+            return true;
+
+        }
+    }
+
+    internal class RemoveItem : IItemListAction
+    {
+        private int _index;
+        public RemoveItem(int index)
+        {
+            _index = index;
+        }
+        public bool Change(List<int?> ids)
+        {
+            // don't allow rmove outside of index
+            if (_index < 0 || _index >= ids.Count) 
+                return false;
+
+            // do actualy re-ordering
+            ids.RemoveAt(_index);
+            return true;
+
         }
     }
 }

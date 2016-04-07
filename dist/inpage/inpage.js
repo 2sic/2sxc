@@ -893,13 +893,12 @@ $2sxc.contentBlock = function (sxc, manage, cbTag) {
             },
 
             moveContentBlock: function(parentId, field, indexFrom, indexTo) {
-                // todo: server call
                 sxc.webApi.get({
                     url: "view/module/movecontentblock",
                     params: { parentId: parentId, field: field, indexFrom: indexFrom, indexTo: indexTo }
                 }).then(function(result) {
                     console.log("done moving!");
-                    // todo: move dom - nicer than a reload
+                    window.location.reload();
                     
                 });
 
