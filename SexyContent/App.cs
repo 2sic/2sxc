@@ -64,7 +64,7 @@ namespace ToSic.SexyContent
 
         public string AppGuid { get; set; }
 
-        public App(PortalSettings ownerPortalSettings, int appId) : this(ownerPortalSettings, appId, -1)
+        public App(PortalSettings ownerPortalSettings, int appId) : this(-1, appId, ownerPortalSettings)
         {
         }
 
@@ -74,7 +74,7 @@ namespace ToSic.SexyContent
         // system which reverses it with app-first
         // better to create two overloads, but when I have two parameters, assume that zone is first
         // 2016-04-04 2dm: wait with refactoring/correcting this till 2tk checks in his code
-        public App(PortalSettings ownerPortalSettings, int appId, int zoneId)
+        public App(int zoneId, int appId, PortalSettings ownerPortalSettings, bool allowSideEffects = true)
         {
             // require valid ownerPS - note: not sure what this is actually used for
             if (ownerPortalSettings == null)
@@ -99,16 +99,17 @@ namespace ToSic.SexyContent
             if (AppGuid == Constants.DefaultAppName)
                 Name = Folder = ContentAppName;
             else
-                InitializeResourcesSettingsAndMetadata();
+                InitializeResourcesSettingsAndMetadata(allowSideEffects);
         }
 
         /// <summary>
         /// Assign all kinds of metadata / resources / settings (App-Mode only)
         /// </summary>
-        private void InitializeResourcesSettingsAndMetadata()
+        private void InitializeResourcesSettingsAndMetadata(bool allowSideEffects)
         {
-            // if it's a real App (not content/default), do more
-            AppManagement.EnsureAppIsConfigured(ZoneId, AppId); // make sure additional settings etc. exist
+            if (allowSideEffects)
+                // if it's a real App (not content/default), do more
+                AppManagement.EnsureAppIsConfigured(ZoneId, AppId); // make sure additional settings etc. exist
 
             // Get app-describing entity
             var appMetaData =

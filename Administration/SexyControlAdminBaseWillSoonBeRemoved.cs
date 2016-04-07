@@ -40,7 +40,7 @@ namespace ToSic.SexyContent.Administration
             //    AppId = AppHelpers.GetAppIdFromModule(ModuleConfiguration); 
 
             if (AppId.HasValue)
-                App = new App(PortalSettings, AppId.Value, ZoneId ?? -1);
+                App = new App(ZoneId ?? -1, AppId.Value,  PortalSettings);
 
             IsContentApp = ModuleConfiguration.DesktopModule.ModuleName == "2sxc";
         }

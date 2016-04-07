@@ -182,20 +182,6 @@
     <Compile Include="Adam\IAdamItem.cs" />
     <Compile Include="Adam\AdamManager.cs" />
     <Compile Include="Adam\UploadResult.cs" />
-    <Compile Include="Administration\Apps\AppExport.ascx.cs">
-      <DependentUpon>AppExport.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Administration\Apps\AppExport.ascx.designer.cs">
-      <DependentUpon>AppExport.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="Administration\Apps\AppImport.ascx.cs">
-      <DependentUpon>AppImport.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Administration\Apps\AppImport.ascx.designer.cs">
-      <DependentUpon>AppImport.ascx</DependentUpon>
-    </Compile>
     <Compile Include="Administration\ContentTypeAndDemoSelector.ascx.cs">
       <DependentUpon>ContentTypeAndDemoSelector.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -307,20 +293,6 @@
     <Compile Include="SexyContent\AppAndDataHelpers.cs" />
     <Compile Include="SexyContent\SxcHelper.cs" />
     <Compile Include="SexyContent\Template.cs" />
-    <Compile Include="Administration\Export.ascx.cs">
-      <DependentUpon>Export.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Administration\Export.ascx.designer.cs">
-      <DependentUpon>Export.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="Administration\Import.ascx.cs">
-      <DependentUpon>Import.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Administration\Import.ascx.designer.cs">
-      <DependentUpon>Import.ascx</DependentUpon>
-    </Compile>
     <Compile Include="SexyContent\App.cs" />
     <Compile Include="SexyContent\DataPublishing.cs" />
     <Compile Include="SexyContent\DataSources\ModuleDataSource.cs" />
@@ -395,8 +367,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />
-    <Content Include="Administration\Apps\AppExport.ascx" />
-    <Content Include="Administration\Apps\AppImport.ascx" />
     <Content Include="Administration\Export.js" />
     <Content Include="Administration\ContentTypeAndDemoSelector.ascx" />
     <Content Include="API\Services.asmx" />
@@ -405,7 +375,6 @@
     <Content Include="DnnWebForms\PagePicker.ascx" />
     <Content Include="DnnWebForms\WebFormsBridge.ascx" />
     <Content Include="DnnWebForms\Wysiwyg.ascx" />
-    <Content Include="Administration\Export.ascx" />
     <Content Include="Extensions\404.png" />
     <Content Include="Extensions\Imazen_ImageResizer\ImageResizer.txt" />
     <Content Include="Extensions\Imazen_ImageResizer\license.txt" />
@@ -432,7 +401,6 @@
     <Content Include="SqlDataProvider\08.01.00.SqlDataProvider" />
     <Content Include="icon-app.png" />
     <Content Include="icon.png" />
-    <Content Include="Administration\Import.ascx" />
     <Content Include="src\inpage\2sxc._actions.js" />
     <Content Include="src\inpage-dialogs\getting-started\getting-started.js" />
     <Content Include="src\inpage\inpage-icons-codes.css" />
@@ -622,24 +590,12 @@
     <Content Include="App_LocalResources\View.ascx.de-DE.resx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Administration\App_LocalResources\Export.ascx.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Administration\App_LocalResources\Import.ascx.resx" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="App_LocalResources\EditTemplateFile.ascx.resx">
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_LocalResources\EditTemplateFile.ascx.de-DE.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Administration\App_LocalResources\Export.ascx.de-DE.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Administration\App_LocalResources\Import.ascx.de-DE.resx" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
@@ -652,19 +608,10 @@
     <Content Include="Administration\App_LocalResources\ContentTypeAndDemoSelector.ascx.de-DE.resx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Administration\App_LocalResources\Registers.ascx.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Administration\App_LocalResources\Registers.ascx.de-DE.resx" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Administration\App_LocalResources\WebApiHelp.ascx.resx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Upgrade\Log\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Administration\Apps\App_LocalResources\AppImport.ascx.resx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="SexyContent\ImportExport\Instructions\ReleaseNotes.txt" />

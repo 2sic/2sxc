@@ -21,28 +21,17 @@ namespace ToSic.SexyContent.WebApi
 {
     public class ImportExportController : DnnApiController
     {
-        private App app;
+        private App app; // todo: refactor, shouldn't be passed around in the background as too many side effects
 
-        private ZipExport zipExport;
-
-        private ZipImport zipImport;
-
-        private XmlImport xmlImport;
-
-
-        private void InitController(int appId, int zoneId)
+        private void InitController(int appId)
         {
             app = Environment.Dnn7.Factory.App(appId) as App;
 
-            zipExport = new ZipExport(zoneId, appId);
-            zipImport = new ZipImport(zoneId, appId, app.OwnerPortalSettings.UserInfo.IsSuperUser);
-
-            xmlImport = new XmlImport(app.OwnerPortalSettings.DefaultLanguage, Environment.Dnn7.UserIdentity.CurrentUserIdentityToken);
         }
 
         private void EnsureUserIsAdmin()
         {
-            if (!app.OwnerPortalSettings.UserInfo.Roles.Contains("Administrators"))
+            if (!PortalSettings.UserInfo.Roles.Contains("Administrators"))
                 throw new AuthenticationException();
         }
 
@@ -51,7 +40,9 @@ namespace ToSic.SexyContent.WebApi
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public dynamic GetAppInfo(int appId, int zoneId)
         {
-            InitController(appId, zoneId);
+            var zipExport = new ZipExport(zoneId, appId);
+
+            InitController(appId);
 
             var info = new
             {
@@ -63,8 +54,8 @@ namespace ToSic.SexyContent.WebApi
                 TemplatesCount  = GetTemplates().Count(),
                 HasRazorTemplates = GetRazorTemplates().Count() > 0,
                 HasTokenTemplates = GetTokenTemplates().Count() > 0,
-                FilesCount        = GetExportFiles().Count(),
-                TransferableFilesCount = GetTransferableExportFiles().Count()
+                FilesCount        = GetExportFiles(zipExport).Count(),
+                TransferableFilesCount = GetTransferableExportFiles(zipExport).Count()
             };
             return info;
         }
@@ -73,7 +64,7 @@ namespace ToSic.SexyContent.WebApi
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public dynamic GetContentInfo(int appId, int zoneId, string scope)
         {
-            InitController(appId, zoneId);
+            InitController(appId);
 
             var contentTypes = GetContentTypes(scope);
             var entities = GetEntities();
@@ -105,7 +96,9 @@ namespace ToSic.SexyContent.WebApi
         [HttpGet]
         public HttpResponseMessage ExportApp(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
         {
-            InitController(appId, zoneId);
+            var zipExport = new ZipExport(zoneId, appId);
+
+            InitController(appId);  // todo: maybe remove
             EnsureUserIsAdmin();
 
             var fileName = string.Format("2scxApp_{0}_{1}.zip", GetAppNameWithoutSpecialChars(), GetAppVersion());
@@ -119,7 +112,7 @@ namespace ToSic.SexyContent.WebApi
         [HttpGet]
         public HttpResponseMessage ExportContent(int appId, int zoneId, string contentTypeIdsString, string entityIdsString, string templateIdsString)
         {
-            InitController(appId, zoneId);
+            InitController(appId);
             EnsureUserIsAdmin();
 
             var fileName = string.Format("2scxContentExport_{0}_{1}.xml", GetAppNameWithoutSpecialChars(), GetAppVersion());
@@ -163,12 +156,12 @@ namespace ToSic.SexyContent.WebApi
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public ImportResult ImportApp(ImportArgs args)
         {
-            InitController(args.AppId, args.ZoneId);
+            var zipImport = new ZipImport(args.ZoneId, args.AppId, PortalSettings.UserInfo.IsSuperUser);
 
             var result = new ImportResult();
             using (var fileStream = new MemoryStream(GetArrayFromBase64Url(args.FileData)))
             {
-                result.Succeeded = zipImport.ImportApp(fileStream, HttpContext.Current.Server, app.OwnerPortalSettings, result.Messages);
+                result.Succeeded = zipImport.ImportApp(fileStream, HttpContext.Current.Server, PortalSettings, result.Messages);
             }
             return result;
         }
@@ -177,7 +170,10 @@ namespace ToSic.SexyContent.WebApi
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public ImportResult ImportContent(ImportArgs args)
         {
-            InitController(args.AppId, args.ZoneId);
+            var zipImport = new ZipImport(args.ZoneId, args.AppId, PortalSettings.UserInfo.IsSuperUser);
+            var xmlImport = new XmlImport(PortalSettings.DefaultLanguage, Environment.Dnn7.UserIdentity.CurrentUserIdentityToken);
+
+            InitController(args.AppId);
 
             var result = new ImportResult();
             using (var fileStream = new MemoryStream(GetArrayFromBase64Url(args.FileData)))
@@ -232,12 +228,12 @@ namespace ToSic.SexyContent.WebApi
             return app.TemplateManager.GetAllTemplates().Where(t => !t.IsRazor);
         }
 
-        private IEnumerable<string> GetExportFiles()
+        private IEnumerable<string> GetExportFiles(ZipExport zipExport)
         {
             return zipExport.FileManager.AllFiles;
         }
 
-        private IEnumerable<string> GetTransferableExportFiles()
+        private IEnumerable<string> GetTransferableExportFiles(ZipExport zipExport)
         {
             return zipExport.FileManager.AllTransferableFiles;
         }

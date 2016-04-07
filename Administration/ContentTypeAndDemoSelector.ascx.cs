@@ -85,7 +85,7 @@ namespace ToSic.SexyContent
                 // 2016-03-27 new
                 if (ZoneId == 0 || AppId == 0)
                     throw new ArgumentNullException("ZoneId and AppId must be set.");
-                var app = new App(PortalSettings, AppId, ZoneId);
+                var app = new App(ZoneId, AppId, PortalSettings);
                 var AttributeSets = app.TemplateManager.GetAvailableContentTypes(SexyContent.Settings.AttributeSetScope);
 
                 // 2016-03-27 old

@@ -149,7 +149,7 @@ namespace ToSic.SexyContent.ImportExport
                                 }
 
                                 //var sexy = new SxcInstance(_zoneId, appId.Value);
-                                var app = new App(PortalSettings.Current, appId.Value, _zoneId);
+                                var app = new App(_zoneId, appId.Value,  PortalSettings.Current, false);
 
                                 // Copy all files in 2sexy folder to (portal file system) 2sexy folder
                                 var templateRoot = server.MapPath(Internal.TemplateManager.GetTemplatePathRoot(Settings.TemplateLocations.PortalFileSystem, app));

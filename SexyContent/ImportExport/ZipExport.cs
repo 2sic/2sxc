@@ -31,7 +31,7 @@ namespace ToSic.SexyContent.ImportExport
             _appId = appId;
             _zoneId = zoneId;
             //_sexy = new SxcInstance(_zoneId, _appId);
-            App = new App(PortalSettings.Current, appId, zoneId);
+            App = new App(zoneId, appId, PortalSettings.Current);
             FileManager = new FileManager(App.PhysicalPath);
         }
 

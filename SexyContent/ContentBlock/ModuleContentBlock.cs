@@ -38,7 +38,7 @@ namespace ToSic.SexyContent.ContentBlock
             if (AppId != 0)
             {
                 // try to load the app - if possible
-                App = new App(PortalSettings, AppId, ZoneId);
+                App = new App( ZoneId, AppId, PortalSettings);
                 ContentGroup = App.ContentGroupManager.GetContentGroupForModule(moduleInfo.ModuleID);
 
                 // use the content-group template, which already covers stored data + module-level stored settings

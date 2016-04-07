@@ -75,7 +75,7 @@ namespace ToSic.SexyContent.Internal
             if (appId.HasValue)
             {
                 //var sexyForNewApp = new SxcInstance(zoneId.Value, appId.Value);// 2016-03-26 2dm this used to have a third parameter false = don't enable caching, which hasn't been respected for a while; removed it
-                var app = new App(PortalSettings.Current, appId.Value, zoneId.Value);
+                var app = new App(zoneId.Value, appId.Value, PortalSettings.Current);
                 var templates = app.TemplateManager.GetAvailableTemplatesForSelector(module.ModuleID, app.ContentGroupManager).ToList();
                 if (templates.Any())
                     app.ContentGroupManager.SetModulePreviewTemplateId(module.ModuleID, templates.First().Guid /* .TemplateId */);

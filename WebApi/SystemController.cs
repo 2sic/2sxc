@@ -54,7 +54,7 @@ namespace ToSic.SexyContent.WebApi
             var zoneId = ZoneHelpers.GetZoneID(portalId);
 	        var cache = DataSource.GetCache(zoneId.Value);
             //var sexy = new SxcInstance(zoneId.Value, cache.AppId);
-            var app = new App(PortalSettings, cache.AppId, zoneId.Value);
+            var app = new App(zoneId.Value, cache.AppId, PortalSettings );
             var cultureText = LocaleController.Instance.GetLocale(cultureCode).Text;
 
             app.EavContext.Dimensions.AddOrUpdateLanguage(cultureCode, cultureText, enable, PortalSettings.PortalId);
@@ -85,7 +85,7 @@ namespace ToSic.SexyContent.WebApi
         private string GetPath(int zoneId, int appId)
         {
             //var sexy = new SxcInstance(zoneId, appId);
-            var app = new App(PortalSettings, appId, zoneId);
+            var app = new App(zoneId, appId , PortalSettings);
             return app.Path;
         }
 
@@ -100,7 +100,7 @@ namespace ToSic.SexyContent.WebApi
         [HttpPost]
         public void App(int zoneId, string name)
         {
-            AppManagement.AddApp(zoneId, name, new PortalSettings(ActiveModule.OwnerPortalID));
+            AppManagement.AddBrandNewApp(zoneId, name, new PortalSettings(ActiveModule.OwnerPortalID));
         }
 
         #endregion

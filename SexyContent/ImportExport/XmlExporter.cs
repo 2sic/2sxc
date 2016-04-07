@@ -53,7 +53,7 @@ namespace ToSic.SexyContent.ImportExport
             _appId = appId;
             _isAppExport = appExport;
             //Sexy = new SxcInstance(_zoneId, _appId);
-            App = new App(PortalSettings.Current, _appId, _zoneId);
+            App = new App(_zoneId, _appId, PortalSettings.Current);
             EavAppContext = App.EavContext;
             AttributeSetIDs = attrSetIds;
             EntityIDs = entityIds;
