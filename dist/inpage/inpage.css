@@ -6,8 +6,8 @@
 .sc-menu a { display:inline-block!important; margin-right:4px!important;cursor: pointer;margin-left: 0 !important; }
 
 /* Content block menu */
-.sc-content-block-menu { position:absolute; height: 40px; margin-top:-20px; opacity:0.8; text-align:center; }
-.sc-content-block-menu a {  cursor:pointer; width:32px; height:32px; margin:0px 8px; display:inline-block; text-indent:-9999px; }
+.sc-content-block-menu { position:absolute; height: 40px; margin-top:-20px; opacity:0.8; text-align:center; pointer-events:none; }
+.sc-content-block-menu a {  cursor:pointer; width:32px; height:32px; margin:0px 8px; display:inline-block; text-indent:-9999px; pointer-events:auto; }
 .sc-content-block-menu:before, .sc-content-block-menu:after { height:2px; background:#0088f4; width:60px; display:block; content:' '; position:absolute; left:50%; top:19px; }
 .sc-content-block-menu:before { margin-left:-150px; }
 .sc-content-block-menu:after { margin-left:90px; }

@@ -69,7 +69,6 @@
         var type = $(this).data("type");
         var pane = newBlockMenu.actionsForModule.closest(selectors.paneSelector);
         var paneName = pane.attr('id').replace('dnn_', '');
-        alert(paneName);
 
         var index = 0;
         if (newBlockMenu.actionsForModule.hasClass('DnnModule'))
@@ -132,38 +131,48 @@
 
     });
 
-    $("body").on('mousemove', function(e) {
-        requestAnimationFrame(function () { // ToDo: Performance is not solved with requestAnimationFrame, needs throttling (or more performant selectors etc.)
-            var contentBlocks = $(selectors.listContainerSelector).find(selectors.contentBlockSelector)
-                    .add(selectors.listContainerSelector);
-
-            var modules = $(selectors.paneSelector).find(selectors.moduleSelector)
-                    .add(selectors.paneSelector);
-
-            var nearestCb = findNearest(contentBlocks, { x: e.clientX, y: e.clientY }, selectors.contentBlockSelector);
-            var nearestModule = findNearest(modules, { x: e.clientX, y: e.clientY }, selectors.moduleSelector);
-
-            moduleActions.toggle(nearestModule !== null);
-            blockActions.toggle(nearestCb !== null);
-
-            if (nearestCb !== null || nearestModule !== null) {
-                var alignTo = nearestCb || nearestModule;
-
-                newBlockMenu.css({
-                    'left': alignTo.x,
-                    'top': alignTo.y,
-                    'width': alignTo.element.width()
-                }).show();
-
-                // Keep current block as current on menu
-                newBlockMenu.actionsForCb = nearestCb ? nearestCb.element : null;
-                newBlockMenu.actionsForModule = nearestModule ? nearestModule.element : null;
-            }
-            else
-                newBlockMenu.hide();
-        });
+    var refreshTimeout = null;
+    $("body").on('mousemove', function (e) {
+        
+        if (refreshTimeout === null)
+            refreshTimeout = window.setTimeout(function () {
+                requestAnimationFrame(function () {
+                    refreshMenu(e);
+                    refreshTimeout = null;
+                });
+            }, 60);
 
     });
+
+    function refreshMenu(e) { // ToDo: Performance is not solved with requestAnimationFrame, needs throttling (or more performant selectors etc.)
+        var contentBlocks = $(selectors.listContainerSelector).find(selectors.contentBlockSelector)
+                .add(selectors.listContainerSelector);
+
+        var modules = $(selectors.paneSelector).find(selectors.moduleSelector)
+                .add(selectors.paneSelector);
+
+        var nearestCb = findNearest(contentBlocks, { x: e.clientX, y: e.clientY }, selectors.contentBlockSelector);
+        var nearestModule = findNearest(modules, { x: e.clientX, y: e.clientY }, selectors.moduleSelector);
+
+        moduleActions.toggle(nearestModule !== null);
+        blockActions.toggle(nearestCb !== null);
+
+        if (nearestCb !== null || nearestModule !== null) {
+            var alignTo = nearestCb || nearestModule;
+
+            newBlockMenu.css({
+                'left': alignTo.x,
+                'top': alignTo.y,
+                'width': alignTo.element.width()
+            }).show();
+
+            // Keep current block as current on menu
+            newBlockMenu.actionsForCb = nearestCb ? nearestCb.element : null;
+            newBlockMenu.actionsForModule = nearestModule ? nearestModule.element : null;
+        }
+        else
+            newBlockMenu.hide();
+    }
 
     // Return the nearest element to the mouse cursor from elements (jQuery elements)
     function findNearest(elements, position, useBottomLineSelector) {
