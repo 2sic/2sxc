@@ -87,7 +87,7 @@ namespace ToSic.SexyContent.WebApi
             var appWrapper = new SxcAppWrapper(appId);
             var zipExport = new ZipExport(zoneId, appId);
 
-            var fileName = string.Format("2scxApp_{0}_{1}.zip", appWrapper.GetNameWithoutSpecialChars(), appWrapper.GetVersion());
+            var fileName = string.Format("2sxcApp_{0}_{1}.zip", appWrapper.GetNameWithoutSpecialChars(), appWrapper.GetVersion());
             using (var fileStream = zipExport.ExportApp(includeContentGroups, resetAppGuid))
             {
                 var fileBytes = fileStream.ToArray();
@@ -102,7 +102,7 @@ namespace ToSic.SexyContent.WebApi
 
             var appWrapper = new SxcAppWrapper(appId);
 
-            var fileName = string.Format("2scxContentExport_{0}_{1}.xml", appWrapper.GetNameWithoutSpecialChars(), appWrapper.GetVersion());
+            var fileName = string.Format("2sxcContentExport_{0}_{1}.xml", appWrapper.GetNameWithoutSpecialChars(), appWrapper.GetVersion());
             var fileXml = new XmlExporter
             (
                 zoneId,

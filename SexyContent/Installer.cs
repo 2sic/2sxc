@@ -318,7 +318,7 @@ namespace ToSic.SexyContent
                     var newSexyContentFolder = new DirectoryInfo(Path.Combine(newSexyFolder.FullName, "Content"));
                     if (oldSexyFolder.Exists && !newSexyFolder.Exists)
                     {
-                        // Move 2sexy directory to 2scx/Content
+                        // Move 2sexy directory to 2sxc/Content
                         DirectoryCopy(oldSexyFolder.FullName, newSexyContentFolder.FullName, true);
 
                         // Leave info message in the content folder
