@@ -189,11 +189,14 @@
 	"TemplatePicker": {
 		"AppPickerDefault": "&lt;Choose App&gt;",
 		"ContentTypePickerDefault": "&lt;Choose Content Type&gt;",
-		"GetMoreApps": "get more apps...",
 		"LayoutElement": "Layout element",
 		"Save": "Save and close",
 		"Cancel": "Cancel change",
-		"Close": "Close"
+		"Close": "Close",
+		"Install": "install more apps...",
+		"Catalog": "browse app catalog",
+		"App": "configure app",
+		"Zone": "manage all apps"
 	},
 	"ImportExport": {
 		"Title": "Export or Import <em>parts</em> of this App",

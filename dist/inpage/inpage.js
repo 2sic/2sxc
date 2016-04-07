@@ -899,7 +899,7 @@ $2sxc.contentBlock = function (sxc, manage, cbTag) {
                     params: { parentId: parentId, field: field, indexFrom: indexFrom, indexTo: indexTo }
                 }).then(function(result) {
                     console.log("done moving!");
-                    // todo: move dom
+                    // todo: move dom - nicer than a reload
                     
                 });
 
@@ -1039,8 +1039,8 @@ $(document).ready(function () {
     var strButtons = "<a class='sc-content-block-menu-addcontent sc-invisible' data-type='Default' data-i18n='[title]QuickInsertMenu.AddBlockContent'>content</a>"
         + "<a class='sc-content-block-menu-addapp sc-invisible' data-type='' data-i18n='[title]QuickInsertMenu.AddBlockApp'>app</a>"
         + "<a class='sc-content-block-menu-btn sc-cb-action icon-sxc-scissors sc-invisible' data-action='cut' data-i18n='[title]QuickInsertMenu.Cut'></a>"
-        + "<a class='sc-content-block-menu-btn sc-cb-action icon-sxc-paste sc-invisible sc-unavailable' data-action='paste' data-i18n='[title]QuickInsertMenu.Cut'></a>"
-        + "<a class='sc-content-block-menu-btn sc-cb-action icon-sxc-trash sc-invisible sc-unavailable' data-action='delete' data-i18n='[title]QuickInsertMenu.Cut'></a>";
+        + "<a class='sc-content-block-menu-btn sc-cb-action icon-sxc-paste sc-invisible sc-unavailable' data-action='paste' data-i18n='[title]QuickInsertMenu.Paste'></a>"
+        + "<a class='sc-content-block-menu-btn sc-cb-action icon-sxc-trash sc-invisible sc-unavailable' data-action='delete' data-i18n='[title]QuickInsertMenu.Delete'></a>";
     var blockActions = $(strButtons);
     var newBlockMenu = $("<div class='sc-content-block-menu sc-i18n'></div>");
     var moduleActions = $(strButtons.replace(/QuickInsertMenu.AddBlock/g, "QuickInsertMenu.AddModule")).attr('data-context', 'module').addClass('sc-content-block-menu-module');

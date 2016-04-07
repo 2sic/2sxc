@@ -202,7 +202,7 @@
                     vm.appCount = data.data.length; // needed in the future to check if it shows getting started
 
                     if (vm.showAdvanced) {
-                        vm.apps.push({ Name: "TemplatePicker.GetMoreApps", AppId: cAppActionImport });
+                        vm.apps.push({ Name: "TemplatePicker.Install", AppId: cAppActionImport });
                         //vm.apps.push({ Name: "create your own app...", AppId: cAppActionCreate }); // todo: i18n
                         //vm.apps.push({ Name: "manage apps...", AppId: cAppActionManage }); // todo: i18n
                     }
