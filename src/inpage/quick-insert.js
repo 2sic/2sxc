@@ -17,7 +17,7 @@
         contentBlockClass: 'sc-content-block',
         contentBlockSelector: '.sc-content-block',
         moduleSelector: '.DnnModule',
-        paneSelector: '.contentPane',
+        paneSelector: '.DNNEmptyPane, :has(>.DnnModule)', // Found no better way to get all panes - the hidden variable does not exist when not in edit page mode
         listDataAttr: 'data-list-context',
     };
 
@@ -68,6 +68,8 @@
     moduleActions.click(function () {
         var type = $(this).data("type");
         var pane = newBlockMenu.actionsForModule.closest(selectors.paneSelector);
+        var paneName = pane.attr('id').replace('dnn_', '');
+        alert(paneName);
 
         var index = 0;
         if (newBlockMenu.actionsForModule.hasClass('DnnModule'))
@@ -94,9 +96,9 @@
                     alert(moduleToFind + ' module not found.');
 
                 var postData = {
-                    Module: module.ModuleID, // moduleid?
-                    Page: '', //pageid?
-                    Pane: 'ContentPane', // pane name
+                    Module: module.ModuleID,
+                    Page: '',
+                    Pane: paneName,
                     Position: -1,
                     Sort: index,
                     Visibility: 0,
@@ -130,35 +132,36 @@
 
     });
 
-    $("body").on('mousemove', function (e) {
+    $("body").on('mousemove', function(e) {
+        requestAnimationFrame(function () { // ToDo: Performance is not solved with requestAnimationFrame, needs throttling (or more performant selectors etc.)
+            var contentBlocks = $(selectors.listContainerSelector).find(selectors.contentBlockSelector)
+                    .add(selectors.listContainerSelector);
 
-        var contentBlocks = $(selectors.listContainerSelector).find(selectors.contentBlockSelector)
-                .add(selectors.listContainerSelector);
+            var modules = $(selectors.paneSelector).find(selectors.moduleSelector)
+                    .add(selectors.paneSelector);
 
-        var modules = $(selectors.paneSelector).find(selectors.moduleSelector)
-                .add(selectors.paneSelector);
+            var nearestCb = findNearest(contentBlocks, { x: e.clientX, y: e.clientY }, selectors.contentBlockSelector);
+            var nearestModule = findNearest(modules, { x: e.clientX, y: e.clientY }, selectors.moduleSelector);
 
-        var nearestCb = findNearest(contentBlocks, { x: e.clientX, y: e.clientY }, selectors.contentBlockSelector);
-        var nearestModule = findNearest(modules, { x: e.clientX, y: e.clientY }, selectors.moduleSelector);
+            moduleActions.toggle(nearestModule !== null);
+            blockActions.toggle(nearestCb !== null);
 
-        moduleActions.toggle(nearestModule !== null);
-        blockActions.toggle(nearestCb !== null);
+            if (nearestCb !== null || nearestModule !== null) {
+                var alignTo = nearestCb || nearestModule;
 
-        if (nearestCb !== null || nearestModule !== null) {
-            var alignTo = nearestCb || nearestModule;
+                newBlockMenu.css({
+                    'left': alignTo.x,
+                    'top': alignTo.y,
+                    'width': alignTo.element.width()
+                }).show();
 
-            newBlockMenu.css({
-                'left': alignTo.x,
-                'top': alignTo.y,
-                'width': alignTo.element.width()
-            }).show();
-
-            // Keep current block as current on menu
-            newBlockMenu.actionsForCb = nearestCb ? nearestCb.element : null;
-            newBlockMenu.actionsForModule = nearestModule ? nearestModule.element : null;
-        }
-        else
-            newBlockMenu.hide();
+                // Keep current block as current on menu
+                newBlockMenu.actionsForCb = nearestCb ? nearestCb.element : null;
+                newBlockMenu.actionsForModule = nearestModule ? nearestModule.element : null;
+            }
+            else
+                newBlockMenu.hide();
+        });
 
     });
 
