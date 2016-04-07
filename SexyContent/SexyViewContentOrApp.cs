@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Modules.Actions;
 using DotNetNuke.Security;
@@ -33,31 +30,6 @@ namespace ToSic.SexyContent
         protected Template Template => _sxcInstance.Template;
         #endregion
 
-        protected void Page_Init(object sender, EventArgs e)
-        {
-            ContentBlock = new ModuleContentBlock(ModuleConfiguration);
-        }
-
-  //      protected void Page_Load(object sender, EventArgs e)
-		//{
-  //          // always do this, part of the guarantee that everything will work
-		//	ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
-  //          if (!UserMayEditThisModule) return;
-
-
-		//	// If logged in, inject Edit JavaScript, and delete / add items
-  //          // register scripts and css
-  //          try
-  //          {
-  //              var renderHelp = new RenderingHelpers(_sxcInstance);
-  //              renderHelp.RegisterClientDependencies(Page, string.IsNullOrEmpty(Request.QueryString["debug"]));
-  //          }
-  //          catch (Exception ex)
-  //          {
-  //              Exceptions.ProcessModuleLoadException(this, ex);
-  //          }
-		//}
-
 
         private SxcInstance _sxcInstanceForSecurityChecks;
         protected bool UserMayEditThisModule 
@@ -71,7 +43,7 @@ namespace ToSic.SexyContent
             }
         }
 
-        private string GetRenderedTemplateOrJson()
+        internal string GetRenderedTemplateOrJson()
 	    {
             // note that initializing the engine will also initialize any custom data-changes
             // so this is needed, even if we will only render to JSON afterwards
@@ -135,57 +107,32 @@ namespace ToSic.SexyContent
         /// <summary>
         /// Get the content data and render it with the given template to the page.
         /// </summary>
-        protected void ProcessView(PlaceHolder phOutput, Panel pnlError)
-        {
-            try
-            {
-                var renderedTemplate = GetRenderedTemplateOrJson();
-
-                // If standalone is specified, output just the template without anything else
-                if (Request.QueryString["standalone"] == "true")
-                {
-                    Response.Clear();
-                    Response.Write(renderedTemplate);
-                    Response.Flush();
-                    Response.SuppressContent = true;
-                    HttpContext.Current.ApplicationInstance.CompleteRequest();
-                }
-                else
-                    phOutput.Controls.Add(new LiteralControl(renderedTemplate));
-            }
-            catch (Exception Ex)
-            {
-                ShowError(LocalizeString("TemplateError.Text") + ": " + HttpUtility.HtmlEncode(Ex.ToString()), pnlError, LocalizeString("TemplateError.Text"), false);
-                Exceptions.LogException(Ex);
-            }
-            
-        }
 
 
-        #region Show Message or Errors on THIS DNN-Page
-        protected void ShowMessage(string Message, PlaceHolder pnlMessage, bool ShowOnlyEdit = true)
-		{
-			if (!ShowOnlyEdit || UserMayEditThisModule)
-			{
-				pnlMessage.Controls.Add(new LiteralControl(Message));
-				pnlMessage.Visible = true;
-			}
-		}
+        #region commented - Show Message or Errors on THIS DNN-Page
+  //      protected void ShowMessage(string Message, PlaceHolder pnlMessage, bool ShowOnlyEdit = true)
+		//{
+		//	if (!ShowOnlyEdit || UserMayEditThisModule)
+		//	{
+		//		pnlMessage.Controls.Add(new LiteralControl(Message));
+		//		pnlMessage.Visible = true;
+		//	}
+		//}
 
-		protected void ShowError(string error, Panel pnlError, string nonHostError = "", bool showOnlyEdit = true)
-		{
-            // add 2sxc-wrapper for 2sxc to work
-		    error = "<div class='sc-content-block' data-cb-instance='" + ModuleConfiguration.ModuleID + "' data-cb-id='" + ModuleConfiguration.ModuleID + "'>" + error + "</div>";
+		//protected void ShowError(string error, Panel pnlError, string nonHostError = "", bool showOnlyEdit = true)
+		//{
+  //          // add 2sxc-wrapper for 2sxc to work
+		//    error = "<div class='sc-content-block' data-cb-instance='" + ModuleConfiguration.ModuleID + "' data-cb-id='" + ModuleConfiguration.ModuleID + "'>" + error + "</div>";
 
-			if (String.IsNullOrEmpty(nonHostError))
-				nonHostError = error;
+		//	if (String.IsNullOrEmpty(nonHostError))
+		//		nonHostError = error;
 
-			if (!showOnlyEdit || UserMayEditThisModule)
-			{
-				pnlError.Controls.Add(new LiteralControl(UserInfo.IsSuperUser ? error : nonHostError));
-				pnlError.Visible = true;
-			}
-		}
+		//	if (!showOnlyEdit || UserMayEditThisModule)
+		//	{
+		//		pnlError.Controls.Add(new LiteralControl(UserInfo.IsSuperUser ? error : nonHostError));
+		//		pnlError.Visible = true;
+		//	}
+		//}
 		#endregion
 
 		#region ModuleActions on THIS DNN-Module

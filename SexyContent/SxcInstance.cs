@@ -1,4 +1,5 @@
-﻿using System.Collections.Specialized;
+﻿using System;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Web;
 using DotNetNuke.Entities.Modules;
@@ -118,7 +119,7 @@ namespace ToSic.SexyContent
             ModuleInfo = runtimeModuleInfo;
             // Build up the environment. If we know the module context, then use permissions from there
             Environment.Permissions = (ModuleInfo != null)
-                ? (IPermissions)new Environment.Dnn7.Permissions(ModuleInfo)
+                ? (IPermissions)new Permissions(ModuleInfo)
                 : new Environment.None.Permissions();
 
             // url-override of view / data
@@ -142,21 +143,58 @@ namespace ToSic.SexyContent
         private bool RenderWithEditMetadata => Environment.Permissions.UserMayEditContent;
         public HtmlString Render()
         {
-            string innerContent;
-            if (Template != null)   // when a content block is still new, there is no definition yet
-            {
-                var engine = GetRenderingEngine(InstancePurposes.WebView);
-                innerContent = engine.Render();
-            }
-            else innerContent = "";
             var renderHelp = new RenderingHelpers(this);
-            var editInfos = renderHelp.GetClientInfosAll();
-            string result = (RenderWithDiv ? "<div class=\"sc-viewport sc-content-block\" data-cb-instance=\"" + ContentBlock.ParentId +  "\" data-cb-id=\"" + ContentBlock.ContentBlockId + "\"" 
-                + (RenderWithEditMetadata ? " data-edit-context=\'" + JsonConvert.SerializeObject(editInfos) + "'" : "") 
-                + ">\n" : "") 
-                + innerContent + 
-                (RenderWithDiv ? "\n</div>" : "");
-            return new HtmlString(result);
+
+            try
+            {
+                string innerContent = null;
+
+                #region do pre-check to see if system is stable & ready
+                var notReady = Installer.CheckUpgradeMessage(PortalSettings.Current.UserInfo.IsSuperUser);
+                if (!string.IsNullOrEmpty(notReady))
+                    innerContent = renderHelp.DesignErrorMessage(new Exception(notReady), true, "Error - needs admin to fix this", false, false);
+
+                #endregion
+
+                #region try to render the block or generate the error message
+                if(innerContent == null)
+                    try
+                    {
+                        if (Template != null) // when a content block is still new, there is no definition yet
+                        {
+                            var engine = GetRenderingEngine(InstancePurposes.WebView);
+                            innerContent = engine.Render();
+                        }
+                        else innerContent = "";
+                    }
+                    catch (Exception ex)
+                    {
+                        innerContent = renderHelp.DesignErrorMessage(ex, true, "Error rendering template", false, true);
+                    }
+                #endregion
+
+                #region Wrap it all up into a nice wrapper tag
+                var editInfos = JsonConvert.SerializeObject(renderHelp.GetClientInfosAll());
+                var startTag = (RenderWithDiv
+                    ? $"<div class=\"sc-viewport sc-content-block\" data-cb-instance=\"{ContentBlock.ParentId}\" " +
+                      $" data-cb-id=\"{ContentBlock.ContentBlockId}\""
+                      +
+                      (RenderWithEditMetadata
+                          ? " data-edit-context=\'" + editInfos + "'"
+                          : "")
+                      + ">\n"
+                    : "");
+                var endTag = (RenderWithDiv ? "\n</div>" : "");
+                string result = startTag + innerContent + endTag;
+                #endregion
+
+                return new HtmlString(result);
+            }
+            catch (Exception ex)
+            {
+                // todo: i18n
+                return new HtmlString(renderHelp.DesignErrorMessage(ex, true, null, true, true));
+            }
         }
 
         public IEngine GetRenderingEngine(InstancePurposes renderingPurpose)
