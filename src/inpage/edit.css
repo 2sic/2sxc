@@ -11,8 +11,18 @@
 .sc-content-block-menu:before, .sc-content-block-menu:after { height:2px; background:#0088f4; width:60px; display:block; content:' '; position:absolute; left:50%; top:19px; }
 .sc-content-block-menu:before { margin-left:-150px; }
 .sc-content-block-menu:after { margin-left:90px; }
-.sc-content-block-menu-addcontent { background:url(../../icon.png);  }
-.sc-content-block-menu-addapp { background:url(../../icon-app.png);  }
+.sc-content-block-menu-addcontent {
+     background:url(../../icon.png);  background-size: 32px 32px;
+}
+.sc-content-block-menu-addcontent.sc-content-block-menu-module {
+    background: url(../../icon-black.png); background-size: 32px 32px;
+}
+.sc-content-block-menu-addapp {
+     background:url(../../icon-app.png);  background-size: 32px 32px;
+}
+.sc-content-block-menu-addapp.sc-content-block-menu-module {
+    background: url(../../icon-app-black.png); background-size: 32px 32px;
+}
 a.sc-content-block-menu-btn {
     background: #2F9BF2;
     border-top-left-radius: 10px;
@@ -22,13 +32,15 @@ a.sc-content-block-menu-btn {
 }
 .sc-invisible { display:none !important; }
 
+.sc-cb-action {
+    -webkit-filter: grayscale(75%); filter: grayscale(75%);
+}
+
+
 /* this is needed to disable the paste button till it can be used */
 .sc-unavailable {
     display: none!important;
 }
-
-/* this colors the module-items in gray instead of blue */
-.sc-content-block-menu-module { -webkit-filter: grayscale(100%); filter: grayscale(100%); }
 
 /* this rule disables copy/paste on module, as it's not supported (only on blocks) */
 a.sc-content-block-menu-module.sc-cb-action {

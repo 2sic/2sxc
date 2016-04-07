@@ -1,11 +1,4 @@
 {
-	"TemplatePicker": {
-		"AppPickerDefault": "<App auswählen>",
-		"ContentTypePickerDefault": "<Typ des Inhalts auswählen>",
-		"Save": "Speichern",
-		"Cancel": "Abbrechen",
-		"Close": "Schliessen"
-	},
 	"Toolbar": {
 		"Edit": "bearbeiten",
 		"New": "neuer Eintrag",
@@ -31,5 +24,15 @@
 		"Presentation": "Anzeige-Einstellungen",
 		"ListContent": "Liste",
 		"ListPresentation": "Listenanzeige-Einstellungen"
+	},
+	"QuickInsertMenu": {
+		"AddBlockContent": "neuer Inhaltsblock",
+		"AddBlockApp": "neuer App-Block",
+		"AddModuleContent": "neues Inhaltsmodul",
+		"AddModuleApp": "neues App-Modul",
+		"Cut": "ausschneiden",
+		"Paste": "einfügen",
+		"Delete": "löschen",
+		"More": "mehr"
 	}
 }

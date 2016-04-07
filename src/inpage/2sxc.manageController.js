@@ -123,7 +123,7 @@
                     params: { parentId: parentId, field: field, indexFrom: indexFrom, indexTo: indexTo }
                 }).then(function(result) {
                     console.log("done moving!");
-                    // todo: move dom
+                    // todo: move dom - nicer than a reload
                     
                 });
 

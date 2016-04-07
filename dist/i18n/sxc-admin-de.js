@@ -176,5 +176,12 @@
 				}
 			}
 		}
+	},
+	"TemplatePicker": {
+		"AppPickerDefault": "<App auswählen>",
+		"ContentTypePickerDefault": "<Typ des Inhalts auswählen>",
+		"Save": "Speichern",
+		"Cancel": "Abbrechen",
+		"Close": "Schliessen"
 	}
 }

@@ -1,13 +1,4 @@
 {
-	"TemplatePicker": {
-		"AppPickerDefault": "&lt;Choose App&gt;",
-		"ContentTypePickerDefault": "&lt;Choose Content Type&gt;",
-		"GetMoreApps": "get more apps...",
-		"LayoutElement": "Layout element",
-		"Save": "Save and close",
-		"Cancel": "Cancel change",
-		"Close": "Close"
-	},
 	"Toolbar": {
 		"Edit": "edit",
 		"New": "new",
@@ -28,17 +19,21 @@
 		"MoreActions": "more actions",
 		"ConfirmRemove": "This will remove this content-item from this list, but not delete it (so you can add it again later). \nSee 2sxc.org/help for more. \n\nOk to remove?"
 	},
-	"QuickInsertMenu": {
-		"AddBlockContent": "add content block",
-		"AddBlockApp": "add app block",
-		"AddModuleContent": "add content module",
-		"AddModuleApp": "add app module"
-	},
 	"EditFormTitle": {
 		"Content": "Content",
 		"Presentation": "Presentation Settings",
 		"ListContent": "List Header Content",
 		"ListPresentation": "List Presentation Settings",
 		"Metadata": "Add / Edit Metadata"
+	},
+	"QuickInsertMenu": {
+		"AddBlockContent": "add content block",
+		"AddBlockApp": "add app block",
+		"AddModuleContent": "add content module",
+		"AddModuleApp": "add app module",
+		"Cut": "cut",
+		"Paste": "paste",
+		"Delete": "delete",
+		"More": "more"
 	}
 }

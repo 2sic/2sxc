@@ -63,8 +63,6 @@
 	"LangWrapper": {
 		"CreateValueInDefFirst": "Please create the value for '{{fieldname}}' in the default language before translating it."
 	},
-	"Dialog1": {},
-	"dialog2": {},
 	"Extension.TinyMce": {
 		"Link.AdamFile": "Link ADAM-file (recommended)",
 		"Link.AdamFile.Tooltip": "Link using ADAM - just drop files using the Automatic Digital Assets Manager",

@@ -186,6 +186,15 @@
 			"Intro": "click on any snippet to insert"
 		}
 	},
+	"TemplatePicker": {
+		"AppPickerDefault": "&lt;Choose App&gt;",
+		"ContentTypePickerDefault": "&lt;Choose Content Type&gt;",
+		"GetMoreApps": "get more apps...",
+		"LayoutElement": "Layout element",
+		"Save": "Save and close",
+		"Cancel": "Cancel change",
+		"Close": "Close"
+	},
 	"ImportExport": {
 		"Title": "Export or Import <em>parts</em> of this App",
 		"Intro": "Create an xml containing parts of the app, e.g. content and templates.<br/>Import parts from such an xml into this app.",
