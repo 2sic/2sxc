@@ -286,9 +286,6 @@
     <Compile Include="WebApi\EavApiProxies\PipelineDesignerController.cs" />
     <Compile Include="SexyContent\DataSources\App.cs" />
     <Compile Include="SexyContent\DnnHelper.cs" />
-    <Compile Include="SexyContent\SexyViewContentOrApp.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
     <Compile Include="SexyContent\IAppAndDataHelpers.cs" />
     <Compile Include="SexyContent\AppAndDataHelpers.cs" />
     <Compile Include="SexyContent\SxcHelper.cs" />
