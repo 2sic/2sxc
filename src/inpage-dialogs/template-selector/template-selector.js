@@ -135,6 +135,9 @@
         vm.persistTemplate = wrapper.contentBlock.persistTemplate;
         vm.renderTemplate = wrapper.contentBlock.reload;  // just map to that method
 
+        vm.appStore = function() {
+            window.open("http://2sxc.org/en/apps");
+        };
 
         // Optionally change the show state, then 
         // check if it should be shown and load/show

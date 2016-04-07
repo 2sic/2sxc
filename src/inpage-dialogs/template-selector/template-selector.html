@@ -34,9 +34,16 @@
                             <i class="icon-settings"></i>
                         </button>
                         <button type="button" class="btn btn-default"
+                                ng-if="vm.showAdvanced"
                                 ng-click="vm.appImport();"
                                 title="{{ 'TemplatePicker.GetMoreApps' | translate }}">
                             <i class="icon-plus"></i>
+                        </button>
+                        <button type="button" class="btn btn-default"
+                                ng-if="vm.showAdvanced"
+                                ng-click="vm.appStore();"
+                                title="{{ 'TemplatePicker.GetMoreApps' | translate }}">
+                            <i class="icon-cart-arrow-down"></i>
                         </button>
                         <button type="button" class="btn btn-default"
                                 ng-click="vm.manageApps();"
