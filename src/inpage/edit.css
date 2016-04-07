@@ -20,10 +20,11 @@ a.sc-content-block-menu-btn {
     text-indent: 0!important;
     color: white;
 }
+.sc-invisible { display:none !important; }
 
 /* this is needed to disable the paste button till it can be used */
-.sc-invisible {
-    display: none !important;
+.sc-unavailable {
+    display: none!important;
 }
 
 /* this colors the module-items in gray instead of blue */
