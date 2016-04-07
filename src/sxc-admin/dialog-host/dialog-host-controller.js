@@ -40,6 +40,10 @@
                     sxcDialogs.openAppMain(appId, vm.close);
                 });
                 break;
+            case "app-import":
+                // this is the zone-config dialog showing mainly all the apps
+                sxcDialogs.openAppImport(vm.close);
+                break;
             case "replace":
                 // this is the "replace item in a list" dialog
                 sxcDialogs.openReplaceContent(items[0], vm.close);

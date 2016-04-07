@@ -25,7 +25,6 @@
 
         var realScope = $scope;
         var svc = moduleApiService;
-        var importCommand = null; // todo! // $attrs.importappdialog; // note: ugly dependency, should find a way to remove
 
         //#region vm and basic values / variables attached to vm
         var vm = this;
@@ -124,12 +123,13 @@
 
         vm.manageApps = function() {    wrapper.sxc.manage.action({ "action": "zone" });    };
         vm.appSettings = function() {   wrapper.sxc.manage.action({ "action": "app" });     };
+        vm.appImport = function() {   wrapper.sxc.manage.action({ "action": "app-import" });     };
 
         // this is the one we must refactor out, as the import-command doesn't exist here
-        vm.installApp = function () {
-            wrapper.window.location = importCommand; // actually does a dnnModal.show...
-            return;
-        };
+        //vm.installApp = function () {
+        //    wrapper.window.location = importCommand; // actually does a dnnModal.show...
+        //    return;
+        //};
 
         // Cancel and reset back to original state
         vm.cancelTemplateChange = wrapper.contentBlock._cancelTemplateChange;

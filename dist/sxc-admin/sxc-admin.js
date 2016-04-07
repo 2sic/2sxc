@@ -179,16 +179,9 @@
             window.open("http://2sxc.org/apps");
         };
 
-        vm.import = function imp() {
 
-            var resolve = eavAdminDialogs.CreateResolve({
-                appId: appId
-            });
-            return eavAdminDialogs.OpenModal(
-                "importexport/import-app.html",
-                "ImportApp as vm",
-                "lg",
-                resolve, blankCallback);
+        vm.import = function imp() {
+            sxcDialogs.openAppImport(vm.refresh);
         };
 
         vm.export = function exp(item) {
@@ -252,6 +245,10 @@
                 preLoadAgGrid($ocLazyLoad).then(function() {
                     sxcDialogs.openAppMain(appId, vm.close);
                 });
+                break;
+            case "app-import":
+                // this is the zone-config dialog showing mainly all the apps
+                sxcDialogs.openAppImport(vm.close);
                 break;
             case "replace":
                 // this is the "replace item in a list" dialog
@@ -1137,6 +1134,16 @@ angular.module("SxcAdminUi", [
         svc.openAppMain = function oam(appId, closeCallback) {
             var resolve = eavAdminDialogs.CreateResolve({ appId: appId });
             return eavAdminDialogs.OpenModal("app-main/app-main.html", "AppMain as vm", "xlg", resolve, closeCallback);
+        };
+
+        // the app-level dialog showing all app content-items, templates, web-api etc.
+        svc.openAppImport = function oam(closeCallback) {
+            var resolve = eavAdminDialogs.CreateResolve({}); // { appId: appId }});
+            return eavAdminDialogs.OpenModal(
+                "importexport/import-app.html",
+                "ImportApp as vm",
+                "lg",
+                resolve, closeCallback);
         };
 
         //#region Total-Popup open / close

@@ -68,16 +68,9 @@
             window.open("http://2sxc.org/apps");
         };
 
-        vm.import = function imp() {
 
-            var resolve = eavAdminDialogs.CreateResolve({
-                appId: appId
-            });
-            return eavAdminDialogs.OpenModal(
-                "importexport/import-app.html",
-                "ImportApp as vm",
-                "lg",
-                resolve, blankCallback);
+        vm.import = function imp() {
+            sxcDialogs.openAppImport(vm.refresh);
         };
 
         vm.export = function exp(item) {

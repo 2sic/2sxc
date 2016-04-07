@@ -8,7 +8,7 @@ namespace ToSic.SexyContent
     /// <summary>
     /// More or less just an overload of IList-of-DynamicEntity providing edit-context-commands
     /// </summary>
-    public class DynamicEntityList : IList<DynamicEntity>
+    public class DynamicEntityList : List<DynamicEntity>, IList<DynamicEntity>
     {
         private readonly string _jsonTemplate = "data-list-context='{{ `parent`: {0}, `field`: `{1}`, `type`: `{2}`}}'".Replace("`", "\"");
 
