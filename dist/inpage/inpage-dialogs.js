@@ -2,7 +2,7 @@
 // note: this is code which still uses jQuery etc., so it's not really clean
 // because of this we're including it as simple code and not packaging it as a service quite yet...
 
-function processInstallMessage(event, modId) {
+function processInstallMessage(event, modId, progressIndicator, $http) {
     var regExToCheckOrigin = /^(http|https):\/\/((gettingstarted|[a-z]*)\.)?(2sexycontent|2sxc)\.org(\/.*)?$/gi;
     if (!regExToCheckOrigin.test(event.origin)) {
         console.error("can't execute, wrong source domain");
@@ -12,12 +12,13 @@ function processInstallMessage(event, modId) {
     // Data is sent as text because IE8 and 9 cannot send objects through postMessage
     var data = JSON.parse(event.data);
 
+    modId = Number(modId);
     // If message does not belong to this module, return
     if (data.moduleId !== modId)
         return;
 
     if (data.action === "install") {
-        var sf = $.ServicesFramework(modId);
+        // var sf = $.ServicesFramework(modId);
 
         var packages = data.packages;
         var packagesDisplayNames = "";
@@ -31,12 +32,11 @@ function processInstallMessage(event, modId) {
             + packagesDisplayNames + "\nThis could take 10 to 60 seconds per package, "
             + "please don't reload the page while it's installing. "
             + "You will see a message once it's done and progess is logged to the JS-console.")) {
-            $(".DnnModule-" + modId + " #pnlLoading").show();
-            var label = $(".DnnModule-" + modId + " #packageName");
 
-            label.html("...");
+            progressIndicator.show = true;
+            progressIndicator.label = ".....";
 
-            runOneInstallJob(packages, 0, sf, label);
+            runOneInstallJob(packages, 0, progressIndicator, $http);
         }
 
     }
@@ -45,34 +45,36 @@ function processInstallMessage(event, modId) {
 }
 
 function resizeIFrame(modId, height) {
-    $(".DnnModule-" + modId + " #frGettingStarted").height(height);
+    // todo 8.4
+    //$(".DnnModule-" + modId + " #frGettingStarted").height(height);
 }
 
-function runOneInstallJob(packages, i, sf, label) {
+function runOneInstallJob(packages, i, progressIndicator, $http) {
     var currentPackage = packages[i];
     console.log(currentPackage.displayName + "(" + i + ") started");
-    label.html(currentPackage.displayName);
-    return $.ajax({
-        type: "GET",
-        dataType: "json",
-        async: true,
-        url: sf.getServiceRoot('2sxc') + "Installer/" + "InstallPackage",
-        data: "packageUrl=" + currentPackage.url,
-        beforeSend: sf.setModuleHeaders
-    })
-    .complete(function (jqXHR, textStatus) {
+    progressIndicator.label = currentPackage.displayName;
+    return $http.get("app/installer/installpackage",
+        { params: { "packageUrl": currentPackage.url } })
+    //$.ajax({
+    //    type: "GET",
+    //    dataType: "json",
+    //    async: true,
+    //    url: sf.getServiceRoot('2sxc') + "Installer/" + "InstallPackage",
+    //    data: "packageUrl=" + currentPackage.url,
+    //    beforeSend: sf.setModuleHeaders
+    //})
+    .then(function (response) {
         console.log(currentPackage.displayName + "(" + i + ") completed");
         if (i + 1 < packages.length) {
-            runOneInstallJob(packages, i + 1, sf, label);
+            runOneInstallJob(packages, i + 1, progressIndicator, $http);
         } else {
             alert("Done installing. If you saw no errors, everything worked.");
             window.location.reload();
         }
-    })
-    .error(function (xhr, result, status) {
+    }, function (xhr) {
         var errorMessage = "Something went wrong while installing '" + currentPackage.displayName + "': " + status;
         if (xhr.responseText && xhr.responseText !== "") {
-            var response = $.parseJSON(xhr.responseText);
+            var response = JSON.parse(xhr.responseText);
             if (response.messages)
                 errorMessage = errorMessage + " - " + response.messages[0].Message;
             else if (response.Message)
@@ -86,7 +88,7 @@ angular.module('SxcInpageTemplates', []).run(['$templateCache', function($templa
   'use strict';
 
   $templateCache.put('template-selector/template-selector.html',
-    "<div class=sc-selectors-wrapper><div class=sc-selectors><div ng-show=!vm.isContentApp style=overflow:hidden><select ng-model=vm.appId class=\"sc-selector-app input-lg pull-left\" ng-options=\"a.AppId as (a.Name.indexOf('TemplatePicker.') === 0 ? '[+] ' + (a.Name | translate) : a.Name) for a in vm.apps\" ng-disabled=\"vm.dashInfo.hasContent || vm.dashInfo.isList\"><option value=\"\" ng-disabled=\"vm.appId != null\" translate=TemplatePicker.AppPickerDefault></option></select><span><span ng-if=\"vm.showAdvanced && !vm.isContentApp\"><button type=button class=\"btn btn-default\" ng-show=\"vm.appId != null\" ng-click=vm.appSettings(); title=\"{{ 'TemplatePicker.App' | translate }}\"><i class=icon-settings></i></button> <button type=button class=\"btn btn-default\" ng-click=vm.appImport(); title=\"{{ 'TemplatePicker.Install' | translate }}\"><i class=icon-plus></i></button> <button type=button class=\"btn btn-default\" ng-click=vm.appStore(); title=\"{{ 'TemplatePicker.Catalog' | translate }}\"><i class=icon-cart-arrow-down></i></button> <button type=button class=\"btn btn-default\" ng-click=vm.manageApps(); title=\"{{ 'TemplatePicker.Zone' | translate }}\"><i class=icon-manage></i></button></span></span></div><select ng-show=vm.isContentApp ng-model=vm.contentTypeId class=input-lg ng-options=\"c.StaticName as c.Name for c in vm.contentTypes\" ng-disabled=\"vm.dashInfo.hasContent || vm.dashInfo.isList\"><option ng-disabled=\"vm.contentTypeId != ''\" value=\"\" translate=TemplatePicker.ContentTypePickerDefault></option></select><div><select ng-show=\"vm.isContentApp ? vm.contentTypeId != 0 : (vm.savedAppId != null &&  vm.filteredTemplates().length > 1)\" class=\"input-lg pull-left\" ng-model=vm.templateId ng-options=\"t.TemplateId as t.Name for t in vm.filteredTemplates(vm.contentTypeId)\"></select><button ng-show=\"vm.templateId != null && vm.savedTemplateId != vm.templateId\" class=\"btn btn-primary\" ng-click=\"vm.persistTemplate(false, false);\" title=\"{{ 'TemplatePicker.Save' | translate }}\" type=button><i class=icon-ok></i></button> <button ng-show=\"vm.undoTemplateId != null\" class=\"btn btn-default\" ng-click=vm.cancelTemplateChange(); type=button title=\"{{ 'TemplatePicker.' + (vm.isContentApp ? 'Cancel' : 'Close') | translate }}\"><i class=icon-cancel></i></button></div></div><div class=sc-loading ng-show=vm.loading><i class=\"icon-sxc-spinner fa-spin\"></i></div><div style=\"position: relative\" ng-if=vm.showRemoteInstaller><iframe id=frGettingStarted ng-src={{vm.remoteInstallerUrl}} width=100% height=300px></iframe><div class=sc-loading id=pnlLoading style=\"display: none\"><i class=\"icon-sxc-spinner animate-spin\"></i><br><br><span class=sc-loading-label>installing <span id=packageName>.</span></span></div></div></div>"
+    "<div class=sc-selectors-wrapper><div class=sc-selectors><div ng-show=!vm.isContentApp style=overflow:hidden><select ng-model=vm.appId class=\"sc-selector-app input-lg pull-left\" ng-options=\"a.AppId as (a.Name.indexOf('TemplatePicker.') === 0 ? '[+] ' + (a.Name | translate) : a.Name) for a in vm.apps\" ng-disabled=\"vm.dashInfo.hasContent || vm.dashInfo.isList\"><option value=\"\" ng-disabled=\"vm.appId != null\" translate=TemplatePicker.AppPickerDefault></option></select><span><span ng-if=\"vm.showAdvanced && !vm.isContentApp\"><button type=button class=\"btn btn-default\" ng-show=\"vm.appId != null\" ng-click=vm.appSettings(); title=\"{{ 'TemplatePicker.App' | translate }}\"><i class=icon-settings></i></button> <button type=button class=\"btn btn-default\" ng-click=vm.appImport(); title=\"{{ 'TemplatePicker.Install' | translate }}\"><i class=icon-plus></i></button> <button type=button class=\"btn btn-default\" ng-click=vm.appStore(); title=\"{{ 'TemplatePicker.Catalog' | translate }}\"><i class=icon-cart-arrow-down></i></button> <button type=button class=\"btn btn-default\" ng-click=vm.manageApps(); title=\"{{ 'TemplatePicker.Zone' | translate }}\"><i class=icon-manage></i></button></span></span></div><select ng-show=vm.isContentApp ng-model=vm.contentTypeId class=input-lg ng-options=\"c.StaticName as c.Name for c in vm.contentTypes\" ng-disabled=\"vm.dashInfo.hasContent || vm.dashInfo.isList\"><option ng-disabled=\"vm.contentTypeId != ''\" value=\"\" translate=TemplatePicker.ContentTypePickerDefault></option></select><div><select ng-show=\"vm.isContentApp ? vm.contentTypeId != 0 : (vm.savedAppId != null &&  vm.filteredTemplates().length > 1)\" class=\"input-lg pull-left\" ng-model=vm.templateId ng-options=\"t.TemplateId as t.Name for t in vm.filteredTemplates(vm.contentTypeId)\"></select><button ng-show=\"vm.templateId != null && vm.savedTemplateId != vm.templateId\" class=\"btn btn-primary\" ng-click=\"vm.persistTemplate(false, false);\" title=\"{{ 'TemplatePicker.Save' | translate }}\" type=button><i class=icon-ok></i></button> <button ng-show=\"vm.undoTemplateId != null\" class=\"btn btn-default\" ng-click=vm.cancelTemplateChange(); type=button title=\"{{ 'TemplatePicker.' + (vm.isContentApp ? 'Cancel' : 'Close') | translate }}\"><i class=icon-cancel></i></button></div></div><div class=sc-loading ng-show=vm.loading><i class=\"icon-sxc-spinner fa-spin\"></i></div><div style=\"position: relative\" ng-if=vm.showRemoteInstaller><iframe id=frGettingStarted ng-src={{vm.remoteInstallerUrl}} width=100% height=300px></iframe><div class=sc-loading id=pnlLoading ng-if=vm.progressIndicator.show><i class=\"icon-spinner animate-spin\"></i><br><br><span class=sc-loading-label>installing <span id=packageName>{{vm.progressIndicator.label}}</span></span></div></div></div>"
   );
 
 }]);
@@ -207,7 +209,7 @@ angular.module('SxcInpageTemplates', []).run(['$templateCache', function($templa
         };
     });
 
-    module.controller("TemplateSelectorCtrl", ["$scope", "moduleApiService", "AppInstanceId", "sxc", "$filter", "$q", "$window", "$translate", "$sce", "contentBlockLink", function ($scope, moduleApiService, AppInstanceId, sxc, $filter, $q, $window, $translate, $sce, contentBlockLink) {
+    module.controller("TemplateSelectorCtrl", ["$scope", "$interval", "moduleApiService", "AppInstanceId", "sxc", "$filter", "$q", "$window", "$translate", "$sce", "contentBlockLink", "$http", function($scope, $interval, moduleApiService, AppInstanceId, sxc, $filter, $q, $window, $translate, $sce, contentBlockLink, $http) {
         //#region constants
         var cViewWithoutContent = "_LayoutElement"; // needed to differentiate the "select item" from the "empty-is-selected" which are both empty
         var cAppActionManage = -2, cAppActionImport = -1, cAppActionCreate = -3;
@@ -239,6 +241,18 @@ angular.module('SxcInpageTemplates', []).run(['$templateCache', function($templa
         vm.remoteInstallerUrl = "";
 
         vm.loading = 0;
+        vm.progressIndicator = {
+            show: false,
+            label: "..."
+        };
+        //#endregion
+
+        //#region installer
+        function enableProgressIndicator() {
+            vm.progressIndicator.updater = $interval(function() {
+                // don't do anything, this is just to ensure the digest happens
+            }, 200);
+        }
         //#endregion
 
 
@@ -361,7 +375,7 @@ angular.module('SxcInpageTemplates', []).run(['$templateCache', function($templa
 
             configureCallback: function setupCallback() {
                 window.addEventListener("message", function forwardMessage(event) {
-                    processInstallMessage(event, AppInstanceId); // this calls an external, non-angular method to handle resizing & installation...
+                    processInstallMessage(event, AppInstanceId, vm.progressIndicator, $http); // this calls an external, non-angular method to handle resizing & installation...
                 }, false);
             },
 
@@ -369,6 +383,7 @@ angular.module('SxcInpageTemplates', []).run(['$templateCache', function($templa
                 svc.gettingStartedUrl().then(function(result) {
                     vm.externalInstaller.configureCallback();
                     vm.showRemoteInstaller = true;
+                    enableProgressIndicator();
                     vm.remoteInstallerUrl = $sce.trustAsResourceUrl(result.data);
                     console.log(result.data);
                 });

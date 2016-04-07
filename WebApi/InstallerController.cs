@@ -18,7 +18,7 @@ namespace ToSic.SexyContent.WebApi
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public HttpResponseMessage InstallPackage(string packageUrl)
         {
             var zoneId = ZoneHelpers.GetZoneID(ActiveModule.PortalID).Value;

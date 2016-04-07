@@ -18,7 +18,7 @@
         };
     });
 
-    module.controller("TemplateSelectorCtrl", function ($scope, moduleApiService, AppInstanceId, sxc, $filter, $q, $window, $translate, $sce, contentBlockLink) {
+    module.controller("TemplateSelectorCtrl", function($scope, $interval, moduleApiService, AppInstanceId, sxc, $filter, $q, $window, $translate, $sce, contentBlockLink, $http) {
         //#region constants
         var cViewWithoutContent = "_LayoutElement"; // needed to differentiate the "select item" from the "empty-is-selected" which are both empty
         var cAppActionManage = -2, cAppActionImport = -1, cAppActionCreate = -3;
@@ -50,6 +50,18 @@
         vm.remoteInstallerUrl = "";
 
         vm.loading = 0;
+        vm.progressIndicator = {
+            show: false,
+            label: "..."
+        };
+        //#endregion
+
+        //#region installer
+        function enableProgressIndicator() {
+            vm.progressIndicator.updater = $interval(function() {
+                // don't do anything, this is just to ensure the digest happens
+            }, 200);
+        }
         //#endregion
 
 
@@ -172,7 +184,7 @@
 
             configureCallback: function setupCallback() {
                 window.addEventListener("message", function forwardMessage(event) {
-                    processInstallMessage(event, AppInstanceId); // this calls an external, non-angular method to handle resizing & installation...
+                    processInstallMessage(event, AppInstanceId, vm.progressIndicator, $http); // this calls an external, non-angular method to handle resizing & installation...
                 }, false);
             },
 
@@ -180,6 +192,7 @@
                 svc.gettingStartedUrl().then(function(result) {
                     vm.externalInstaller.configureCallback();
                     vm.showRemoteInstaller = true;
+                    enableProgressIndicator();
                     vm.remoteInstallerUrl = $sce.trustAsResourceUrl(result.data);
                     console.log(result.data);
                 });
