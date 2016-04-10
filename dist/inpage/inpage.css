@@ -36,6 +36,12 @@ a.sc-content-block-menu-btn {
     -webkit-filter: grayscale(75%); filter: grayscale(75%);
 }
 
+.sc-cb-highlight-for-insert {
+    background-color: rgba(47,155,242,0.1);
+    filter: blur(1px);
+    -webkit-filter: blur(1px);
+}
+
 
 /* this is needed to disable the paste button till it can be used */
 .sc-unavailable {

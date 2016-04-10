@@ -1,5 +1,5 @@
 ﻿(function () {
-    'use strict';
+    "use strict";
     var strButtons = "<a class='sc-content-block-menu-addcontent sc-invisible' data-type='Default' data-i18n='[title]QuickInsertMenu.AddBlockContent'>content</a>"
         + "<a class='sc-content-block-menu-addapp sc-invisible' data-type='' data-i18n='[title]QuickInsertMenu.AddBlockApp'>app</a>"
         + "<a class='sc-content-block-menu-btn sc-cb-action icon-sxc-scissors sc-invisible' data-action='cut' data-i18n='[title]QuickInsertMenu.Cut'></a>"
@@ -7,18 +7,18 @@
         + "<a class='sc-content-block-menu-btn sc-cb-action icon-sxc-trash sc-invisible sc-unavailable' data-action='delete' data-i18n='[title]QuickInsertMenu.Delete'></a>";
     var blockActions = $(strButtons);
     var newBlockMenu = $("<div class='sc-content-block-menu sc-i18n'></div>");
-    var moduleActions = $(strButtons.replace(/QuickInsertMenu.AddBlock/g, "QuickInsertMenu.AddModule")).attr('data-context', 'module').addClass('sc-content-block-menu-module');
+    var moduleActions = $(strButtons.replace(/QuickInsertMenu.AddBlock/g, "QuickInsertMenu.AddModule")).attr("data-context", "module").addClass("sc-content-block-menu-module");
     newBlockMenu.append(blockActions).append(moduleActions);
 
     $("body").append(newBlockMenu);
 
     var selectors = {
-        listContainerSelector: '.sc-content-block-list',
-        contentBlockClass: 'sc-content-block',
-        contentBlockSelector: '.sc-content-block',
-        moduleSelector: '.DnnModule',
-        paneSelector: '.DNNEmptyPane, :has(>.DnnModule)', // Found no better way to get all panes - the hidden variable does not exist when not in edit page mode
-        listDataAttr: 'data-list-context',
+        listContainerSelector: ".sc-content-block-list",
+        contentBlockClass: "sc-content-block",
+        contentBlockSelector: ".sc-content-block",
+        moduleSelector: ".DnnModule",
+        paneSelector: ".DNNEmptyPane, :has(>.DnnModule)", // Found no better way to get all panes - the hidden variable does not exist when not in edit page mode
+        listDataAttr: "data-list-context",
     };
 
     blockActions.click(function () {
@@ -38,7 +38,7 @@
         // this is a cut/paste action
         {
             if (cbAction === "cut") {
-                $2sxc._cbClipboard = { index: index, guid: 'todo later' };
+                $2sxc._cbClipboard = { index: index, guid: "todo later" };
                 setSecondaryActionsState(true);
             }
             if (cbAction === "paste") {
@@ -65,22 +65,24 @@
     moduleActions.click(function () {
         var type = $(this).data("type");
         var pane = newBlockMenu.actionsForModule.closest(selectors.paneSelector);
-        var paneName = pane.attr('id').replace('dnn_', '');
+        var paneName = pane.attr("id").replace("dnn_", "");
 
         var index = 0;
-        if (newBlockMenu.actionsForModule.hasClass('DnnModule'))
-            index = pane.find('.DnnModule').index(newBlockMenu.actionsForModule[0]) + 1;
+        if (newBlockMenu.actionsForModule.hasClass("DnnModule"))
+            index = pane.find(".DnnModule").index(newBlockMenu.actionsForModule[0]) + 1;
 
+        // todo: try to use $2sxc(...).webApi instead of custom re-assembling these common build-up things
+        // how: create a object containing the url, data, then just use the sxc.webApi(yourobject)
         var service = $.dnnSF();
-        var serviceUrl = service.getServiceRoot('internalservices') + 'controlbar/';
+        var serviceUrl = service.getServiceRoot("internalservices") + "controlbar/";
 
         $.ajax({
-            url: serviceUrl + 'GetPortalDesktopModules',
-            type: 'GET',
-            data: 'category=All&loadingStartIndex=0&loadingPageSize=100&searchTerm=',
+            url: serviceUrl + "GetPortalDesktopModules",
+            type: "GET",
+            data: "category=All&loadingStartIndex=0&loadingPageSize=100&searchTerm=",
             beforeSend: service.setModuleHeaders,
             success: function (desktopModules) {
-                var moduleToFind = type === 'Default' ? ' Content' : ' App';
+                var moduleToFind = type === "Default" ? " Content" : " App";
                 var module = null;
                 
                 desktopModules.forEach(function (e,i) {
@@ -88,12 +90,12 @@
                         module = e;
                 });
 
-                if (module === null)
-                    alert(moduleToFind + ' module not found.');
+                if (!module)
+                    return alert(moduleToFind + " module not found.");
 
                 var postData = {
                     Module: module.ModuleID,
-                    Page: '',
+                    Page: "",
                     Pane: paneName,
                     Position: -1,
                     Sort: index,
@@ -105,21 +107,21 @@
 
 
                 $.ajax({
-                    url: serviceUrl + 'AddModule',
-                    type: 'POST',
+                    url: serviceUrl + "AddModule",
+                    type: "POST",
                     data: postData,
                     beforeSend: service.setModuleHeaders,
                     success: function (d) {
                         window.location.reload();
                     },
                     error: function (xhr) {
-                        alert('Error while adding module.');
+                        alert("Error while adding module.");
                         console.log(xhr);
                     }
                 });
             },
             error: function (xhr) {
-                alert('Error while adding module.');
+                alert("Error while adding module.");
                 console.log(xhr);
             }
         });
@@ -129,7 +131,7 @@
     });
 
     var refreshTimeout = null;
-    $("body").on('mousemove', function (e) {
+    $("body").on("mousemove", function (e) {
         
         if (refreshTimeout === null)
             refreshTimeout = window.setTimeout(function () {
@@ -150,12 +152,15 @@
 
         var nearestCb = findNearest(contentBlocks, { x: e.clientX, y: e.clientY }, selectors.contentBlockSelector);
         var nearestModule = findNearest(modules, { x: e.clientX, y: e.clientY }, selectors.moduleSelector);
-
+        
         moduleActions.toggleClass("sc-invisible", nearestModule === null);
         blockActions.toggleClass("sc-invisible", nearestCb === null);
 
         if (nearestCb !== null || nearestModule !== null) {
             var alignTo = nearestCb || nearestModule;
+
+            // find parent pane to highlight
+            var parentPane = $(alignTo.element).closest(selectors.paneSelector);
 
             newBlockMenu.css({
                 'left': alignTo.x,
@@ -166,9 +171,12 @@
             // Keep current block as current on menu
             newBlockMenu.actionsForCb = nearestCb ? nearestCb.element : null;
             newBlockMenu.actionsForModule = nearestModule ? nearestModule.element : null;
-        }
-        else
+            newBlockMenu.parentPane = parentPane;
+            $(parentPane).addClass("sc-cb-highlight-for-insert");
+        } else {
+            if (newBlockMenu.parentPane) $(newBlockMenu.parentPane).removeClass("sc-cb-highlight-for-insert");
             newBlockMenu.hide();
+        }
     }
 
     // Return the nearest element to the mouse cursor from elements (jQuery elements)
