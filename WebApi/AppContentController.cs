@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ToSic.Eav;
 using ToSic.Eav.Data;
@@ -13,6 +15,7 @@ using ToSic.Eav.DataSources.Caches;
 using ToSic.Eav.WebApi;
 using ToSic.SexyContent.Security;
 using ToSic.SexyContent.Serializers;
+using ToSic.SexyContent.WebApi.ToRefactorDeliverCBDataLight;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -55,6 +58,39 @@ namespace ToSic.SexyContent.WebApi
             PerformSecurityCheck(contentType, PermissionGrant.Read, true);
             return _entitiesController.GetEntities(contentType, cultureCode);
         }
+
+        [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
+	    public HttpResponseMessage GetContentBlockData()
+        {
+            InitEavAndSerializer();
+            // Important note: we are NOT supporting url-view switch at the moment for this
+            // reason is, that this kind of data-access is fairly special
+            // and not recommended for future use cases, where we have the query etc.
+            // IF you want to support View-switching in this, do a deep review w/2dm first!
+            // - note that it's really not needed, as you can always use a query or something similar instead
+            // - not also that if ever you do support view switching, you will need to ensure security checks
+
+            var dataHandler = new GetContentBlockDataLight(SxcContext);
+
+            var dataSource = SxcContext.Data;
+            string json;
+            if (dataSource.Publish.Enabled)
+            {
+                var publishedStreams = dataSource.Publish.Streams;
+                var streamList = publishedStreams.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
+                json = dataHandler.GetJsonFromStreams(dataSource, streamList);
+            }
+            else
+            {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Forbidden)
+                { ReasonPhrase = dataHandler.GeneratePleaseEnableDataError(SxcContext.ModuleInfo.ModuleID,
+                    SxcContext.ModuleInfo.ModuleTitle)});
+            }
+            var response = this.Request.CreateResponse(HttpStatusCode.OK);
+            response.Content = new StringContent(json, Encoding.UTF8, "application/json");
+            return response;
+    }
 
         /// <summary>
         /// Check if a user may do something - and throw an error if the permission is not given

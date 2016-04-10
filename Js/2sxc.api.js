@@ -7,9 +7,8 @@
         if ("object" === typeof id)
             return window.$2sxc.autoFind(id);
 
-        // neutralize the id from old "34" format to the new "35-mod:353" format
-        var cacheKey = id + ":" + cbid;
-        if (!cbid) cbid = id;
+        if (!cbid) cbid = id;           // if content-block is unknown, use id of module
+        var cacheKey = id + ":" + cbid; // neutralize the id from old "34" format to the new "35:353" format
 
         if (!$2sxc._data[cacheKey])
             $2sxc._data[cacheKey] = {};
@@ -32,11 +31,8 @@
             },
             data: {
                 // source path defaulting to current page + optional params
-                sourceUrl: function(params) {
-                    var url = window.location.href;
-                    if (url.indexOf("#"))
-                        url = url.substr(0, url.indexOf("#"));
-                    url += (window.location.href.indexOf("?") !== -1 ? "&" : "?") + "mid=" + id + "&standalone=true&popUp=true&type=data";
+                sourceUrl: function (params) {
+                    var url = controller.resolveServiceUrl("app/appcontent/GetContentBlockData");
                     if (typeof params == "string") // text like 'id=7'
                         url += "&" + params;
                     return url;
@@ -81,20 +77,18 @@
                             controller.lastRefresh = new Date();
                             controller.data._triggerLoaded();
                         };
-                        source.error = function(request) {
-                            alert(JSON.parse(request.responseText).error);
-                        };
+                        source.error = function(request) {  alert(request.statusText); };
+                        source.preventAutoFail = true; // use our fail message
                         controller.data.source = source;
                         return controller.data.reload();
                     }
                 },
 
-                reload: function(optionalCallback) {
-                    if (optionalCallback)
-                        controller.data.source.success = optionalCallback;
-
-                    $.ajax(controller.data.source);
+                reload: function() {
+                    controller.webApi.get(controller.data.source)
+                        .then(controller.data.source.success, controller.data.source.error);
                     return controller.data;
+
                 },
 
                 on: function(events, callback) {
@@ -128,18 +122,10 @@
                 return $2sxc(controller.id, controller.cbid);   // generate new
             },
             webApi: {
-                get: function (settings, params, data, preventAutoFail) {
-                    return controller.webApi._action(settings, params, data, preventAutoFail, "GET");
-                },
-                post: function (settings, params, data, preventAutoFail) {
-                    return controller.webApi._action(settings, params, data, preventAutoFail, "POST");
-                },
-                "delete": function (settings, params, data, preventAutoFail) {
-                    return controller.webApi._action(settings, params, data, preventAutoFail, "DELETE");
-                },
-                put: function (settings, params, data, preventAutoFail) {
-                    return controller.webApi._action(settings, params, data, preventAutoFail, "PUT");
-                },
+                get: function (s, p, d, paf) { return controller.webApi._action(s, p, d, paf, "GET"); },
+                post: function (s, p, d, paf) { return controller.webApi._action(s, p, d, paf, "POST"); },
+                "delete": function (s, p, d, paf) { return controller.webApi._action(s, p, d, paf, "DELETE"); },
+                put: function (s, p, d, paf) { return controller.webApi._action(s, p, d, paf, "PUT"); },
                 _action: function (settings, params, data, preventAutoFail, method) {
 
                     // Url parameter: autoconvert a single value (instead of object of values) to an id=... parameter
@@ -319,7 +305,7 @@
                 var matches = window.location.pathname.match(new RegExp("/" + name + "/([^/]+)", "i"));
 
                 // Check if we found anything, if we do find it, we must reverse the results so we get the "last" one in case there are multiple hits
-                if (matches !== null && matches.length > 1)
+                if (matches && matches.length > 1)
                     results = matches.reverse()[0];
             } else
                 results = results[1];
@@ -355,22 +341,21 @@
         return $2sxc(iid, cbid);
     };
 
-    // upgrade command
+    //#region System Commands - at the moment only finishUpgrade
     $2sxc.system = {
+        // upgrade command - started when an error contains a link to start this
         finishUpgrade: function(domElement) {
-            // todo: replace with newer $2sxc(domElement).webApi("url...")... syntax
             var mc = $2sxc(domElement);
-            console.log(domElement);
-            var url = mc.resolveServiceUrl("view/module/finishinstallation");
             $.ajax({
                 type: "get",
-                url: url,
+                url: mc.resolveServiceUrl("view/module/finishinstallation"),
                 beforeSend: $.ServicesFramework(mc.id).setModuleHeaders
-            }).success(function(result) {
+            }).success(function() {
                 alert("Upgrade ok, restarting the CMS and reloading...");
                 location.reload();
             });
             alert("starting upgrade. This could take a few minutes. You'll see an 'ok' when it's done. Please wait...");
         }
     };
+    //#endregion
 })();
