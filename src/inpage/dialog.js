@@ -31,10 +31,9 @@
         //#region sync size
         diagBox.syncHeight = function () {
             var height = diagBox.contentDocument.body.offsetHeight;
-            if (diagBox.previousHeight == height)
+            if (diagBox.previousHeight === height)
                 return;
             window.diagBox = diagBox;
-            console.log("tried resize to " + height);
             diagBox.height = height + 'px';
             diagBox.previousHeight = height;
         };

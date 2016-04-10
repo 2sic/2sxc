@@ -92,7 +92,7 @@ $2sxc.contentBlock = function (sxc, manage, cbTag) {
             return cb.sxc.webApi.get({
                 url: "view/module/publish",
                 params: { part: part, sortOrder: sortOrder }
-            }).then(cb.reload);
+            }).then(cb.reloadAndReInitialize);
         },
 
         // remove an item from a list, then reload
@@ -100,7 +100,7 @@ $2sxc.contentBlock = function (sxc, manage, cbTag) {
             return cb.sxc.webApi.get({
                 url: "view/module/removefromlist",
                 params: { sortOrder: sortOrder }
-            }).then(cb.reload);
+            }).then(cb.reloadAndReInitialize);
         },
 
         // change the order of an item in a list, then reload
@@ -108,7 +108,7 @@ $2sxc.contentBlock = function (sxc, manage, cbTag) {
             return cb.sxc.webApi.get({
                 url: "view/module/changeorder",
                 params: { sortOrder: sortOrder, destinationSortOrder: destinationSortOrder }
-            }).then(cb.reload);
+            }).then(cb.reloadAndReInitialize);
         },
 
 
@@ -116,7 +116,7 @@ $2sxc.contentBlock = function (sxc, manage, cbTag) {
             return cb.sxc.webApi.get({
                 url: "View/Module/AddItem",
                 params: { sortOrder: sortOrder }
-            }).then(cb.reload);
+            }).then(cb.reloadAndReInitialize);
         },
         //#endregion
 

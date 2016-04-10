@@ -46,15 +46,16 @@
                 addCondition: function (settings, modConfig) {
                     return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; // don't provide new on the header-item
                 },
-                code: function (settings, event, toolbarManager) {
-                    toolbarManager._openNgDialog($2sxc._lib.extend({}, settings, { sortOrder: settings.sortOrder + 1 }), event);
+                code: function (settings, event, manager) {
+                    // todo - should refactor this to be a toolbarManager.contentBlock command
+                    manager.commands._openNgDialog($2sxc._lib.extend({}, settings, { sortOrder: settings.sortOrder + 1 }), event);
                 }
             }),
             // add brings no dialog, just add an empty item
             'add': createActionConfig("add", "AddDemo", "plus-circled", "edit", false, {
                 addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; },
-                code: function (settings, event, tbContr) {
-                    tbContr.contentBlock 
+                code: function (settings, event, manager) {
+                    manager.contentBlock 
                         .addItem(settings.sortOrder + 1);
                 }
             }),
@@ -81,9 +82,9 @@
                 disabled: true,
                 showOn: "edit",
                 addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; },
-                code: function (settings, event, tbContr) {
+                code: function (settings, event, manager) {
                     if (confirm($2sxc.translate("Toolbar.ConfirmRemove"))) {
-                        tbContr.contentBlock
+                        manager.contentBlock
                             .removeFromList(settings.sortOrder);
                     }
                 }
@@ -109,8 +110,8 @@
                 disabled: false,
                 showOn: "edit",
                 addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1 && settings.sortOrder !== 0; },
-                code: function (settings, event, tbContr) {
-                    tbContr.contentBlock
+                code: function (settings, event, manager) {
+                    manager.contentBlock
                         .changeOrder(settings.sortOrder, Math.max(settings.sortOrder - 1, 0));
                 }
             },
@@ -120,9 +121,8 @@
                 disabled: false,
                 showOn: "edit",
                 addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; },
-                code: function (settings, event, tbContr) {
-                    tbContr.contentBlock
-                        .changeOrder(settings.sortOrder, settings.sortOrder + 1);
+                code: function (settings, event, manager) {
+                    manager.contentBlock.changeOrder(settings.sortOrder, settings.sortOrder + 1);
                 }
             },
             'sort': {
@@ -134,15 +134,14 @@
             'publish': createActionConfig("publish", "Published", "eye", "edit", false, {
                 iclass2: "icon-sxc-eye-off",
                 disabled: true,
-                code: function (settings, event, tbContr) {
+                code: function (settings, event, manager) {
                     if (settings.isPublished) {
                         alert($2sxc.translate("Toolbar.AlreadyPublished"));
                         return;
                     }
                     var part = settings.sortOrder === -1 ? "listcontent" : "content";
                     var index = settings.sortOrder === -1 ? 0 : settings.sortOrder;
-                    tbContr.contentBlock
-                        .publish(part, index);
+                    manager.contentBlock.publish(part, index);
                 }
             }),
             'replace': createActionConfig("replace", "Replace", "replace", "edit", false, {
@@ -155,10 +154,6 @@
                 uiActionOnly: true, // so it doesn't create the content when used
                 code: function (settings, event, manager) {
                     manager.contentBlock.dialogToggle();
-                    //if (!manager.dialog)
-                    //    manager.dialog = manager.action({ "action": "dash-view" });
-                    //else
-                    //    manager.dialog.toggle();
                 }
             },
             'develop': createActionConfig("develop", "Develop", "code", "admin", true, {
@@ -202,7 +197,7 @@
                 iclass: "icon-sxc-options btn-mode",
                 showOn: "default,edit,design,admin",
                 uiActionOnly: true, // so it doesn't create the content when clicked
-                code: function (settings, event, toolbarManager) {
+                code: function (settings, event) {
                     var fullMenu = $(event.target).closest("ul.sc-menu"); // todo: slightly nasty dependency...
                     var oldState = Number(fullMenu.attr("data-state") || 0);
                     var newState = oldState + 1;
@@ -399,22 +394,20 @@ $2sxc._contentManagementCommands = function (sxc, targetTag) {
             actions: allActions,
             // Generate a button (an <a>-tag) for one specific toolbar-action. 
             // Expects: settings, an object containing the specs for the expected buton
-            getButton: function(btnSettings) {
+            getButton: function(actDef) {
                 // if the button belongs to a content-item, move the specs up to the item into the settings-object
-                if (btnSettings.entity && btnSettings.entity._2sxcEditInformation) {
-                    if (btnSettings.entity._2sxcEditInformation.entityId) {
-                        btnSettings.entityId = btnSettings.entity._2sxcEditInformation.entityId;
-                        btnSettings.useModuleList = false;
-                    }
-                    if (btnSettings.entity._2sxcEditInformation.sortOrder) {
-                        btnSettings.sortOrder = btnSettings.entity._2sxcEditInformation.sortOrder;
-                        btnSettings.useModuleList = true;
-                    }
-                    delete btnSettings.entity;
+                if (actDef.entity && actDef.entity._2sxcEditInformation) {
+                    var editInfo = actDef.entity._2sxcEditInformation;
+                    actDef.useModuleList = (editInfo.sortOrder !== undefined); // has sort-order, so use list
+                    if (editInfo.entityId !== undefined)
+                        actDef.entityId = editInfo.entityId;
+                    if (editInfo.sortOrder !== undefined)
+                        actDef.sortOrder = editInfo.sortOrder;
+                    delete actDef.entity;   // clean up edit-info
                 }
 
                 // retrieve configuration for this button
-                var conf = allActions[btnSettings.action],
+                var conf = allActions[actDef.action],
                     showClasses = "",
                     classesList = conf.showOn.split(","),
                     box = $("<div/>"),
@@ -424,15 +417,15 @@ $2sxc._contentManagementCommands = function (sxc, targetTag) {
                     showClasses += " show-" + classesList[c];
 
                 var button = $("<a />", {
-                    'class': "sc-" + btnSettings.action + " " + showClasses + (conf.dynamicClasses ? " " + conf.dynamicClasses(btnSettings) : ""),
-                    'onclick': "javascript:$2sxc(" + id + ", " + cbid + ").manage.action(" + JSON.stringify(btnSettings) + ", event);",
+                    'class': "sc-" + actDef.action + " " + showClasses + (conf.dynamicClasses ? " " + conf.dynamicClasses(actDef) : ""),
+                    'onclick': "javascript:$2sxc(" + id + ", " + cbid + ").manage.action(" + JSON.stringify(actDef) + ", event);",
                     'data-i18n': "[title]" + conf.title
                     //'title': $2sxc.translate(conf.title)
                 });
 
                 // todo: move the following lines into the button-config and just call from here
                 // if publish-button and not published yet, show button (otherwise hidden) & change icon
-                if (btnSettings.action === "publish" && btnSettings.isPublished === false) {
+                if (actDef.action === "publish" && actDef.isPublished === false) {
                     button.addClass("show-default").removeClass("show-edit")
                         .attr("data-i18n", "[title]Toolbar.Unpublished");
                         //.attr("title", $2sxc.translate("Toolbar.Unpublished"));
@@ -465,7 +458,7 @@ $2sxc._contentManagementCommands = function (sxc, targetTag) {
             // Builds the toolbar and returns it as HTML
             // expects settings - either for 1 button or for an array of buttons
             getToolbar: function(settings) {
-                var buttons = settings.action
+                var actionList = settings.action
                     ? [settings] // if single item with specified action, use this as our button-list
                     : $.isArray(settings)
                     ? settings // if it is an array, use that. Otherwise assume that we auto-generate all buttons with supplied settings
@@ -474,8 +467,8 @@ $2sxc._contentManagementCommands = function (sxc, targetTag) {
                 var tbClasses = "sc-menu show-set-0" + ((settings.sortOrder === -1) ? " listContent" : "");
                 var toolbar = $("<ul />", { 'class': tbClasses, 'onclick': "javascript: var e = arguments[0] || window.event; e.stopPropagation();" });
 
-                for (var i = 0; i < buttons.length; i++)
-                    toolbar.append($("<li />").append($(tb.getButton(buttons[i]))));
+                for (var i = 0; i < actionList.length; i++)
+                    toolbar.append($("<li />").append($(tb.getButton(actionList[i]))));
 
                 return toolbar[0].outerHTML;
             },
@@ -622,7 +615,7 @@ $2sxc.contentBlock = function (sxc, manage, cbTag) {
             return cb.sxc.webApi.get({
                 url: "view/module/publish",
                 params: { part: part, sortOrder: sortOrder }
-            }).then(cb.reload);
+            }).then(cb.reloadAndReInitialize);
         },
 
         // remove an item from a list, then reload
@@ -630,7 +623,7 @@ $2sxc.contentBlock = function (sxc, manage, cbTag) {
             return cb.sxc.webApi.get({
                 url: "view/module/removefromlist",
                 params: { sortOrder: sortOrder }
-            }).then(cb.reload);
+            }).then(cb.reloadAndReInitialize);
         },
 
         // change the order of an item in a list, then reload
@@ -638,7 +631,7 @@ $2sxc.contentBlock = function (sxc, manage, cbTag) {
             return cb.sxc.webApi.get({
                 url: "view/module/changeorder",
                 params: { sortOrder: sortOrder, destinationSortOrder: destinationSortOrder }
-            }).then(cb.reload);
+            }).then(cb.reloadAndReInitialize);
         },
 
 
@@ -646,7 +639,7 @@ $2sxc.contentBlock = function (sxc, manage, cbTag) {
             return cb.sxc.webApi.get({
                 url: "View/Module/AddItem",
                 params: { sortOrder: sortOrder }
-            }).then(cb.reload);
+            }).then(cb.reloadAndReInitialize);
         },
         //#endregion
 
@@ -946,10 +939,9 @@ $2sxc.contentBlock = function (sxc, manage, cbTag) {
         //#region sync size
         diagBox.syncHeight = function () {
             var height = diagBox.contentDocument.body.offsetHeight;
-            if (diagBox.previousHeight == height)
+            if (diagBox.previousHeight === height)
                 return;
             window.diagBox = diagBox;
-            console.log("tried resize to " + height);
             diagBox.height = height + 'px';
             diagBox.previousHeight = height;
         };

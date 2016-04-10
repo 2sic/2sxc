@@ -232,7 +232,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             ZoneId = sxc.ZoneId ?? 0;
             TemplateId = sxc.Template?.TemplateId ?? 0;     // todo: check if the 0 (previously null) causes problems
             ContentTypeName = sxc.Template?.ContentTypeStaticName ?? "";
-            IsList = isCreated && ((sxc.ContentGroup?.Content?.Count ?? 0) > 1);
+            IsList = sxc.ContentGroup?.Template?.UseForList ?? false;//  isCreated && ((sxc.ContentGroup?.Content?.Count ?? 0) > 1);
         }
     }
 
