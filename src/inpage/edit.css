@@ -36,10 +36,17 @@ a.sc-content-block-menu-btn {
     -webkit-filter: grayscale(75%); filter: grayscale(75%);
 }
 
-.sc-cb-highlight-for-insert {
+.sc-cb-is-selected {
+    filter: blur(5px);
+    -webkit-filter: blur(5px);
+}
+
+div.sc-content-block-list.sc-cb-highlight-for-insert {
     background-color: rgba(47,155,242,0.1);
-    filter: blur(1px);
-    -webkit-filter: blur(1px);
+}
+
+div.sc-cb-highlight-for-insert {
+    background-color: rgba(128,128,128,0.1);
 }
 
 

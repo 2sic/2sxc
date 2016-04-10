@@ -1027,6 +1027,7 @@ $(document).ready(function () {
 
 (function () {
     "use strict";
+    var enableModuleMove = true;
     var strButtons = "<a class='sc-content-block-menu-addcontent sc-invisible' data-type='Default' data-i18n='[title]QuickInsertMenu.AddBlockContent'>content</a>"
         + "<a class='sc-content-block-menu-addapp sc-invisible' data-type='' data-i18n='[title]QuickInsertMenu.AddBlockApp'>app</a>"
         + "<a class='sc-content-block-menu-btn sc-cb-action icon-sxc-scissors sc-invisible' data-action='cut' data-i18n='[title]QuickInsertMenu.Cut'></a>"
@@ -1046,42 +1047,69 @@ $(document).ready(function () {
         moduleSelector: ".DnnModule",
         paneSelector: ".DNNEmptyPane, :has(>.DnnModule)", // Found no better way to get all panes - the hidden variable does not exist when not in edit page mode
         listDataAttr: "data-list-context",
+        selected: "sc-cb-is-selected"
     };
 
+
     blockActions.click(function () {
-        var type = $(this).data("type");
         var list = newBlockMenu.actionsForCb.closest(selectors.listContainerSelector);
+        var listItems = list.find(selectors.contentBlockSelector);
         var actionConfig = JSON.parse(list.attr(selectors.listDataAttr));
         var index = 0;
 
         if (newBlockMenu.actionsForCb.hasClass(selectors.contentBlockClass))
-            index = list.find(selectors.contentBlockSelector).index(newBlockMenu.actionsForCb[0]) + 1;
+            index = listItems.index(newBlockMenu.actionsForCb[0]) + 1;
 
         // check cut/paste
         var cbAction = $(this).data("action");
-        if (!cbAction)
-            $2sxc(list).manage.createContentBlock(actionConfig.parent, actionConfig.field, index, type, list);
-        else
+        if (!cbAction) {
+            var appOrContent = $(this).data("type");
+            $2sxc(list).manage.createContentBlock(actionConfig.parent, actionConfig.field, index, appOrContent, list);
+        } else
         // this is a cut/paste action
         {
-            if (cbAction === "cut") {
-                $2sxc._cbClipboard = { index: index, guid: "todo later" };
-                setSecondaryActionsState(true);
-            }
-            if (cbAction === "paste") {
-                var from = $2sxc._cbClipboard.index, to = index;
-                if (from === to || from + 1 === to) // this moves it to the same spot, so ignore
-                    return;
-
-                $2sxc(list).manage.moveContentBlock(actionConfig.parent, actionConfig.field, from, to);
-                $2sxc._cbClipboard = null;
-            }
-            if (cbAction === "delete") {
-                alert("todo not implemented yet");
-            }
-            return;
-        } 
+            return copyPasteInPage(cbAction, list, index);
+        }
     });
+
+    function copyPasteInPage(cbAction, list, index) {
+        var listItems = list.find(selectors.contentBlockSelector);
+        var actionConfig = JSON.parse(list.attr(selectors.listDataAttr));
+        var currentItem = listItems[index];
+
+        // action!
+        if (cbAction === "cut") {
+            selectCbOrModule(currentItem);
+            $2sxc._cbClipboard = { index: index, guid: "todo later", type: "cb", item: currentItem };
+        } else if (cbAction === "paste") {
+            var from = $2sxc._cbClipboard.index, to = index;
+            if (!from || !to || from === to || from + 1 === to) // this moves it to the same spot, so ignore
+                return;
+
+            $2sxc(list).manage.moveContentBlock(actionConfig.parent, actionConfig.field, from, to);
+            unselectAll();
+            $2sxc._cbClipboard = null;
+        } else if (cbAction === "cancel") // todo: ui not implemented yet
+            unselectAll();
+        else if (cbAction === "delete") {
+            alert("todo not implemented yet");
+        }
+    }
+
+    function selectCbOrModule(element) {
+        $("." + selectors.selected).removeClass(selectors.selected);
+        var cb = $(element);
+        cb.addClass(selectors.selected);
+        if (cb.prev().is("iframe"))
+            cb.prev().addClass(selectors.selected);
+        setSecondaryActionsState(true);
+    }
+
+    function unselectAll() {
+        $("." + selectors.selected).removeClass(selectors.selected);
+        $2sxc._cbClipboard = {};
+        setSecondaryActionsState(false);
+    }
 
     function setSecondaryActionsState(state) {
         var btns = $("a.sc-content-block-menu-btn");
@@ -1183,11 +1211,17 @@ $(document).ready(function () {
         moduleActions.toggleClass("sc-invisible", nearestModule === null);
         blockActions.toggleClass("sc-invisible", nearestCb === null);
 
+        // if previously a parent-pane was highlighted, un-highlight it now
+        if (newBlockMenu.parentContainer)
+            $(newBlockMenu.parentContainer).removeClass("sc-cb-highlight-for-insert");
+
         if (nearestCb !== null || nearestModule !== null) {
             var alignTo = nearestCb || nearestModule;
 
             // find parent pane to highlight
             var parentPane = $(alignTo.element).closest(selectors.paneSelector);
+            var parentCbList = $(alignTo.element).closest(selectors.listContainerSelector);
+            var parentContainer = (parentCbList.length ? parentCbList : parentPane)[0];
 
             newBlockMenu.css({
                 'left': alignTo.x,
@@ -1198,10 +1232,9 @@ $(document).ready(function () {
             // Keep current block as current on menu
             newBlockMenu.actionsForCb = nearestCb ? nearestCb.element : null;
             newBlockMenu.actionsForModule = nearestModule ? nearestModule.element : null;
-            newBlockMenu.parentPane = parentPane;
-            $(parentPane).addClass("sc-cb-highlight-for-insert");
+            newBlockMenu.parentContainer = parentContainer;
+            $(parentContainer).addClass("sc-cb-highlight-for-insert");
         } else {
-            if (newBlockMenu.parentPane) $(newBlockMenu.parentPane).removeClass("sc-cb-highlight-for-insert");
             newBlockMenu.hide();
         }
     }
