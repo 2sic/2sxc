@@ -1045,7 +1045,7 @@ $(document).ready(function () {
         contentBlockClass: "sc-content-block",
         contentBlockSelector: ".sc-content-block",
         moduleSelector: ".DnnModule",
-        paneSelector: ".DNNEmptyPane, :has(>.DnnModule)", // Found no better way to get all panes - the hidden variable does not exist when not in edit page mode
+        paneSelector: ".DNNEmptyPane, .dnnDropEmptyPanes, :has(>.DnnModule)", // Found no better way to get all panes - the hidden variable does not exist when not in edit page mode
         listDataAttr: "data-list-context",
         selected: "sc-cb-is-selected"
     };
@@ -1197,9 +1197,7 @@ $(document).ready(function () {
             }, 20);
 
     });
-
-    console.log(offset);
-    console.log(body.offset());
+    
 
     function refreshMenu(e) { // ToDo: Performance is not solved with requestAnimationFrame, needs throttling (or more performant selectors etc.)
 
