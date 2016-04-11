@@ -1027,7 +1027,7 @@ $(document).ready(function () {
 
 (function () {
     "use strict";
-    var enableModuleMove = true;
+    var enableModuleMove = false; // not implemented yet
     var strButtons = "<a class='sc-content-block-menu-addcontent sc-invisible' data-type='Default' data-i18n='[title]QuickInsertMenu.AddBlockContent'>content</a>"
         + "<a class='sc-content-block-menu-addapp sc-invisible' data-type='' data-i18n='[title]QuickInsertMenu.AddBlockApp'>app</a>"
         + "<a class='sc-content-block-menu-btn sc-cb-action icon-sxc-scissors sc-invisible' data-action='cut' data-i18n='[title]QuickInsertMenu.Cut'></a>"
@@ -1080,11 +1080,11 @@ $(document).ready(function () {
         // action!
         if (cbAction === "cut") {
             selectCbOrModule(currentItem);
-            $2sxc._cbClipboard = { index: index, guid: "todo later", type: "cb", item: currentItem };
+            $2sxc._cbClipboard = { type: "cb", index: index, item: currentItem };
         } else if (cbAction === "paste") {
             var from = $2sxc._cbClipboard.index, to = index;
             if (!from || !to || from === to || from + 1 === to) // this moves it to the same spot, so ignore
-                return;
+                return unselectAll(); // don't do anything
 
             $2sxc(list).manage.moveContentBlock(actionConfig.parent, actionConfig.field, from, to);
             unselectAll();
