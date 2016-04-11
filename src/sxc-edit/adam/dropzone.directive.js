@@ -1,7 +1,7 @@
 ﻿/* js/fileAppDirectives */
 
 angular.module("Adam")
-    .directive("dropzone", function (sxc, tabId, dragClass, adamSvc, $timeout) {
+    .directive("dropzone", function (sxc, tabId,AppInstanceId, ContentBlockId, dragClass, adamSvc, $timeout) {
         return {
             restrict: "C",
             link: function(scope, element, attrs, controller) {
@@ -19,8 +19,9 @@ angular.module("Adam")
                     maxThumbnailFilesize: 10,
 
                     headers: {
-                        "ModuleId": sxc.id,
-                        "TabId": tabId
+                        "ModuleId": AppInstanceId,
+                        "TabId": tabId,
+                        "ContentBlockId": ContentBlockId
                     },
 
                     dictDefaultMessage: "",

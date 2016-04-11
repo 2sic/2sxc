@@ -4,23 +4,7 @@
         "SxcServices",
         "EavConfiguration", // config
         "EavServices", // multi-language stuff
-        //"InitSxcParametersFromUrl"
-            //"SxcTemplates", // inline templates
-            //"EavAdminUi", // dialog (modal) controller
-            //"SxcFilters", // for inline unsafe urls
-            //"ContentTypesApp",
-            //"PipelineManagement",
-            //"TemplatesApp",
-            //"ImportExportApp",
-            //"AppSettingsApp",
-            //"SystemSettingsApp",
-            //"WebApiApp"
         ])
-        //.config(function($translatePartialLoaderProvider) {
-        //    // ensure the language pack is loaded
-        //    $translatePartialLoaderProvider.addPart("sxc-admin");
-        //})
-        //.controller("AppMain", MainController);
         ;
 
 } ());
@@ -358,7 +342,7 @@ angular.module("Adam")
 /* js/fileAppDirectives */
 
 angular.module("Adam")
-    .directive("dropzone", ["sxc", "tabId", "dragClass", "adamSvc", "$timeout", function (sxc, tabId, dragClass, adamSvc, $timeout) {
+    .directive("dropzone", ["sxc", "tabId", "AppInstanceId", "ContentBlockId", "dragClass", "adamSvc", "$timeout", function (sxc, tabId,AppInstanceId, ContentBlockId, dragClass, adamSvc, $timeout) {
         return {
             restrict: "C",
             link: function(scope, element, attrs, controller) {
@@ -376,8 +360,9 @@ angular.module("Adam")
                     maxThumbnailFilesize: 10,
 
                     headers: {
-                        "ModuleId": sxc.id,
-                        "TabId": tabId
+                        "ModuleId": AppInstanceId,
+                        "TabId": tabId,
+                        "ContentBlockId": ContentBlockId
                     },
 
                     dictDefaultMessage: "",
