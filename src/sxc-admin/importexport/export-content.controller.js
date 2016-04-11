@@ -10,6 +10,8 @@
 
         vm.debug = debugState;
 
+        vm.IsExporting = false;
+
         vm.ExportScope = "2SexyContent";
 
         vm.ContentInfo = null;
@@ -37,8 +39,13 @@
             var templateIds = selectedTemplates().map(function (item) { return item.Id; });
             var entityIds = selectedEntities().map(function (item) { return item.EntityId; });
             entityIds = entityIds.concat(templateIds);
-            console.log(entityIds);
-            return ExportContentService.exportContent(contentTypeIds, entityIds, templateIds);
+            
+            vm.IsExporting = true;
+            return ExportContentService.exportContent(contentTypeIds, entityIds, templateIds).then(function () {
+                vm.IsExporting = false;
+            }).catch(function () {
+                vm.IsExporting = false;
+            });
         }
 
 
