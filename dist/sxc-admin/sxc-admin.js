@@ -1,5 +1,6 @@
 (function() { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
 
+    MainController.$inject = ["eavAdminDialogs", "eavConfig", "appId", "debugState", "appDialogConfigSvc", "$modalInstance"];
     angular.module("MainSxcApp", [
             "EavConfiguration", // config
             "SxcTemplates", // inline templates
@@ -42,11 +43,11 @@
             $modalInstance.dismiss("cancel");
         };
     }
-    MainController.$inject = ["eavAdminDialogs", "eavConfig", "appId", "debugState", "appDialogConfigSvc", "$modalInstance"];
 
 } ());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
 
+    AppSettingsController.$inject = ["appSettings", "appId"];
     angular.module("AppSettingsApp", [
         "EavConfiguration",     // 
         "EavServices",
@@ -106,11 +107,11 @@
         //};
 
     }
-    AppSettingsController.$inject = ["appSettings", "appId"];
 
 } ());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
 
+    AppListController.$inject = ["appsSvc", "eavAdminDialogs", "sxcDialogs", "eavConfig", "appSettings", "appId", "zoneId", "oldDialogs", "$modalInstance", "$translate"];
     angular.module("AppsManagementApp", [
         "EavServices",
         "EavConfiguration",
@@ -201,11 +202,11 @@
 
         vm.close = function () { $modalInstance.dismiss("cancel");};
     }
-    AppListController.$inject = ["appsSvc", "eavAdminDialogs", "sxcDialogs", "eavConfig", "appSettings", "appId", "zoneId", "oldDialogs", "$modalInstance", "$translate"];
 
 } ());
 (function () { 
 
+    DialogHostController.$inject = ["zoneId", "appId", "items", "$2sxc", "dialog", "sxcDialogs", "contentTypeName", "eavAdminDialogs", "$ocLazyLoad"];
     angular.module("DialogHost", [
         "SxcAdminUi",
         "EavAdminUi",
@@ -285,7 +286,6 @@
                 throw "Trying to open a dialog, don't know which one";
         }
     }
-    DialogHostController.$inject = ["zoneId", "appId", "items", "$2sxc", "dialog", "sxcDialogs", "contentTypeName", "eavAdminDialogs", "$ocLazyLoad"];
 
 } ());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
@@ -317,6 +317,7 @@
 } ());
 (function () {
 
+    ExportAppController.$inject = ["ExportAppService", "eavAdminDialogs", "eavConfig", "$modalInstance"];
     angular.module("ImportExport")
         .controller("ExportApp", ExportAppController)
         ;
@@ -324,6 +325,8 @@
 
     function ExportAppController(ExportAppService, eavAdminDialogs, eavConfig, $modalInstance) {
         var vm = this;
+
+        vm.IsExporting = false;
 
         vm.IncludeContentGroups = false;
         vm.ResetAppGuid = false;
@@ -349,16 +352,21 @@
         }
 
         function exportApp() {
-            return ExportAppService.exportApp(vm.IncludeContentGroups, vm.ResetAppGuid);
+            vm.IsExporting = true;
+            return ExportAppService.exportApp(vm.IncludeContentGroups, vm.ResetAppGuid).then(function () {
+                vm.IsExporting = false;
+            }).catch(function () {
+                vm.IsExporting = false;
+            });
         }
 
         function close() {
             $modalInstance.dismiss("cancel");
         }
     }
-    ExportAppController.$inject = ["ExportAppService", "eavAdminDialogs", "eavConfig", "$modalInstance"];
 }());
 (function () {
+    ExportAppService.$inject = ["appId", "zoneId", "eavConfig", "$http", "$q"];
     angular.module("ImportExport")
         .factory("ExportAppService", ExportAppService)
     ;
@@ -380,10 +388,10 @@
             return $q.when(true);
         }
     }
-    ExportAppService.$inject = ["appId", "zoneId", "eavConfig", "$http", "$q"];
 }());
 (function () {
 
+    ExportContentController.$inject = ["ExportContentService", "eavAdminDialogs", "eavConfig", "debugState", "$modalInstance", "$filter"];
     angular.module("ImportExport")
         .controller("ExportContent", ExportContentController)
         ;
@@ -393,6 +401,8 @@
         var vm = this;
 
         vm.debug = debugState;
+
+        vm.IsExporting = false;
 
         vm.ExportScope = "2SexyContent";
 
@@ -421,8 +431,13 @@
             var templateIds = selectedTemplates().map(function (item) { return item.Id; });
             var entityIds = selectedEntities().map(function (item) { return item.EntityId; });
             entityIds = entityIds.concat(templateIds);
-            console.log(entityIds);
-            return ExportContentService.exportContent(contentTypeIds, entityIds, templateIds);
+            
+            vm.IsExporting = true;
+            return ExportContentService.exportContent(contentTypeIds, entityIds, templateIds).then(function () {
+                vm.IsExporting = false;
+            }).catch(function () {
+                vm.IsExporting = false;
+            });
         }
 
 
@@ -465,11 +480,11 @@
             $modalInstance.dismiss("cancel");
         }
     }
-    ExportContentController.$inject = ["ExportContentService", "eavAdminDialogs", "eavConfig", "debugState", "$modalInstance", "$filter"];
 
 }());
 (function () {
 
+    ExportContentService.$inject = ["appId", "zoneId", "eavConfig", "$http", "$q"];
     angular.module("ImportExport")
         .factory("ExportContentService", ExportContentService)
     ;
@@ -492,11 +507,11 @@
             return $q.when(true);
         }
     }
-    ExportContentService.$inject = ["appId", "zoneId", "eavConfig", "$http", "$q"];
 
 }());
 (function () {
 
+    ImportAppController.$inject = ["ImportAppService", "eavAdminDialogs", "eavConfig", "$modalInstance"];
     angular.module("ImportExport")
         .controller("ImportApp", ImportAppController)
     ;
@@ -520,7 +535,6 @@
                 vm.ImportResult = result.data;
                 vm.IsImporting = false;
             }).catch(function (error) {
-                console.log(error);
                 vm.IsImporting = false;
             });
         }
@@ -529,10 +543,10 @@
             $modalInstance.dismiss("cancel");
         }
     }
-    ImportAppController.$inject = ["ImportAppService", "eavAdminDialogs", "eavConfig", "$modalInstance"];
 }());
 (function () {
 
+    ImportAppService.$inject = ["appId", "zoneId", "eavConfig", "$http", "$q"];
     angular.module("ImportExport")
         .factory("ImportAppService", ImportAppService)
     ;
@@ -549,10 +563,10 @@
             return $http.post("app/ImportExport/ImportApp", { AppId: appId, ZoneId: zoneId, FileName: fileName, FileData: fileData });
         }
     }
-    ImportAppService.$inject = ["appId", "zoneId", "eavConfig", "$http", "$q"];
 }());
 (function () {
 
+    ImportContentController.$inject = ["ImportContentService", "eavAdminDialogs", "eavConfig", "$modalInstance"];
     angular.module("ImportExport")
         .controller("ImportContent", ImportContentController)
     ;
@@ -586,10 +600,10 @@
             $modalInstance.dismiss("cancel");
         }
     }
-    ImportContentController.$inject = ["ImportContentService", "eavAdminDialogs", "eavConfig", "$modalInstance"];
 }());
 (function () {
 
+    ImportContentService.$inject = ["appId", "zoneId", "eavConfig", "$http", "$q"];
     angular.module("ImportExport")
         .factory("ImportContentService", ImportContentService)
     ;
@@ -606,7 +620,6 @@
             return $http.post("app/ImportExport/ImportContent", { AppId: appId, ZoneId: zoneId, FileName: fileName, FileData: fileData });
         }
     }
-    ImportContentService.$inject = ["appId", "zoneId", "eavConfig", "$http", "$q"];
 
 }());
 (function () {
@@ -641,6 +654,7 @@
 }());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
 
+    IntroController.$inject = ["eavAdminDialogs", "eavConfig", "oldDialogs", "appId"];
     angular.module("ImportExport")
         .controller("ImportExportIntro", IntroController)
         ;
@@ -683,11 +697,11 @@
                 resolve, blankCallback);
         };
     }
-    IntroController.$inject = ["eavAdminDialogs", "eavConfig", "oldDialogs", "appId"];
 
 } ());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
 
+    LanguagesSettingsController.$inject = ["languagesSvc", "eavConfig", "appId"];
     angular.module("SystemSettingsApp", [
         "EavConfiguration",     // 
         "EavServices",
@@ -713,11 +727,11 @@
 
         vm.save = svc.save;
     }
-    LanguagesSettingsController.$inject = ["languagesSvc", "eavConfig", "appId"];
 
 } ());
 (function () {
 
+    ManageContentController.$inject = ["appId", "item", "contentGroupSvc", "eavAdminDialogs", "$modalInstance", "$translate"];
     angular.module("ReorderContentApp", [
             "SxcServices",
             "EavAdminUi" // dialog (modal) controller
@@ -798,11 +812,11 @@
         vm.close = function () { $modalInstance.dismiss("cancel"); };
 
     }
-    ManageContentController.$inject = ["appId", "item", "contentGroupSvc", "eavAdminDialogs", "$modalInstance", "$translate"];
 
 } ());
 (function () { 
 
+    ReplaceContentController.$inject = ["appId", "item", "contentGroupSvc", "eavAdminDialogs", "$modalInstance", "$filter"];
     angular.module("ReplaceContentApp", [
             "SxcServices",
             "EavAdminUi"         // dialog (modal) controller
@@ -858,7 +872,6 @@
             });
         };
     }
-    ReplaceContentController.$inject = ["appId", "item", "contentGroupSvc", "eavAdminDialogs", "$modalInstance", "$filter"];
 
 } ());
 // Init the main eav services module
@@ -1267,12 +1280,12 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
 
 
   $templateCache.put('importexport/export-app.html',
-    "<div><div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=ImportExport.ExportApp.Title></h3></div><div class=modal-body><div translate=ImportExport.ExportApp.Intro></div><div translate=ImportExport.ExportApp.FurtherHelp></div><h5>{{\"ImportExport.ExportApp.Specifications.Title\" | translate}}</h5><ul><li>{{\"ImportExport.ExportApp.Specifications.AppName\" | translate}} {{vm.AppInfo.Name}}</li><li>{{\"ImportExport.ExportApp.Specifications.AppGuid\" | translate}} {{vm.AppInfo.Guid}}</li><li>{{\"ImportExport.ExportApp.Specifications.AppVersion\" | translate}} {{vm.AppInfo.Version}}</li></ul><h5>{{\"ImportExport.ExportApp.Content.Title\" | translate}}</h5><ul><li>{{vm.AppInfo.EntitiesCount}} {{\"ImportExport.ExportApp.Content.EntitiesCount\" | translate}}</li><li>{{vm.AppInfo.LanguagesCount}} {{\"ImportExport.ExportApp.Content.LanguagesCount\" | translate}}</li><li>{{vm.AppInfo.TemplatesCount}} {{\"ImportExport.ExportApp.Content.TemplatesCount\" | translate}} ({{\"ImportExport.ExportApp.Content.TokenTemplates\" | translate}} {{vm.AppInfo.HasTokenTemplates}}, {{\"ImportExport.ExportApp.Content.RazorTemplates\" | translate}} {{vm.AppInfo.HasRazorTemplates}})</li><li>{{vm.AppInfo.TransferableFilesCount}} {{\"ImportExport.ExportApp.Content.TransferableFilesCount\" | translate}}</li><li>{{vm.AppInfo.FilesCount}} {{\"ImportExport.ExportApp.Content.FilesCount\" | translate}}</li></ul><div><input ng-model=vm.IncludeContentGroups type=\"checkbox\"> {{\"ImportExport.ExportApp.Options.IncludeContentGroups\" | translate}}</div><div><input ng-model=vm.ResetAppGuid type=\"checkbox\"> {{\"ImportExport.ExportApp.Options.ResetAppGuid\" | translate}}</div></div><div class=modal-footer><button type=button class=\"btn btn-primary pull-left\" ng-click=vm.exportApp() translate=ImportExport.ExportApp.Commands.Export></button></div></div>"
+    "<div><div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=ImportExport.ExportApp.Title></h3></div><div class=modal-body><div translate=ImportExport.ExportApp.Intro></div><div translate=ImportExport.ExportApp.FurtherHelp></div><h5>{{\"ImportExport.ExportApp.Specifications.Title\" | translate}}</h5><ul><li>{{\"ImportExport.ExportApp.Specifications.AppName\" | translate}} {{vm.AppInfo.Name}}</li><li>{{\"ImportExport.ExportApp.Specifications.AppGuid\" | translate}} {{vm.AppInfo.Guid}}</li><li>{{\"ImportExport.ExportApp.Specifications.AppVersion\" | translate}} {{vm.AppInfo.Version}}</li></ul><h5>{{\"ImportExport.ExportApp.Content.Title\" | translate}}</h5><ul><li>{{vm.AppInfo.EntitiesCount}} {{\"ImportExport.ExportApp.Content.EntitiesCount\" | translate}}</li><li>{{vm.AppInfo.LanguagesCount}} {{\"ImportExport.ExportApp.Content.LanguagesCount\" | translate}}</li><li>{{vm.AppInfo.TemplatesCount}} {{\"ImportExport.ExportApp.Content.TemplatesCount\" | translate}} ({{\"ImportExport.ExportApp.Content.TokenTemplates\" | translate}} {{vm.AppInfo.HasTokenTemplates}}, {{\"ImportExport.ExportApp.Content.RazorTemplates\" | translate}} {{vm.AppInfo.HasRazorTemplates}})</li><li>{{vm.AppInfo.TransferableFilesCount}} {{\"ImportExport.ExportApp.Content.TransferableFilesCount\" | translate}}</li><li>{{vm.AppInfo.FilesCount}} {{\"ImportExport.ExportApp.Content.FilesCount\" | translate}}</li></ul><div><input ng-model=vm.IncludeContentGroups type=\"checkbox\"> {{\"ImportExport.ExportApp.Options.IncludeContentGroups\" | translate}}</div><div><input ng-model=vm.ResetAppGuid type=\"checkbox\"> {{\"ImportExport.ExportApp.Options.ResetAppGuid\" | translate}}</div></div><div class=modal-footer><button type=button class=\"btn btn-primary pull-left\" ng-click=vm.exportApp() translate=ImportExport.ExportApp.Commands.Export ng-disabled=vm.IsExporting></button></div></div>"
   );
 
 
   $templateCache.put('importexport/export-content.html',
-    "<div ng-click=vm.debug.autoEnableAsNeeded($event)><div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=ImportExport.ExportContent.Title></h3></div><div class=modal-body><span class=btn-group ng-if=vm.debug.on><button icon=record type=button class=\"btn btn-square\" ng-click=vm.changeExportScope()></button></span><div translate=ImportExport.ExportContent.Intro></div><div translate=ImportExport.ExportContent.FurtherHelp></div><h5 translate=ImportExport.ExportContent.ContentTypes.Title></h5><ul class=sc-export-content-list><li ng-repeat=\"contentType in vm.ContentInfo.ContentTypes\"><label ng-class=\"{ 'active': contentType._export }\"><input type=checkbox ng-model=\"contentType._export\"> {{contentType.Name}} ({{contentType.Id}})</label><div ng-if=contentType.Templates.length class=sc-export-content-list-inner><h6 translate=ImportExport.ExportContent.ContentTypes.Templates></h6><ul><li ng-repeat=\"template in contentType.Templates\"><label ng-class=\"{ 'active': template._export }\"><input type=checkbox ng-model=\"template._export\"> {{template.Name}} ({{template.Id}})</label></li></ul></div><div ng-if=contentType.Entities.length class=sc-export-content-list-inner><h6 translate=ImportExport.ExportContent.ContentTypes.Entities></h6><ul><li ng-repeat=\"entity in contentType.Entities\"><label ng-class=\"{ 'active': entity._export }\"><input type=checkbox ng-model=\"entity._export\"> {{entity._2sxcEditInformation.title}} ({{entity.EntityId}})</label></li></ul></div></li></ul><h5 translate=ImportExport.ExportContent.TemplatesWithoutContentTypes.Title></h5><ul class=sc-export-content-list><li ng-repeat=\"template in vm.ContentInfo.TemplatesWithoutContentTypes\"><label ng-class=\"{ 'active': template._export }\"><input type=checkbox ng-model=\"template._export\"> {{template.Name}} ({{template.Id}})</label></li></ul></div><div class=modal-footer><button type=button class=\"btn btn-primary pull-left\" ng-click=vm.exportContent() translate=ImportExport.ExportContent.Commands.Export></button></div><show-debug-availability class=pull-right></show-debug-availability></div><style>.sc-export-content-list { list-style-type: none; margin: 0; padding: 0; border-top: 1px solid #DDD; }\r" +
+    "<div ng-click=vm.debug.autoEnableAsNeeded($event)><div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=ImportExport.ExportContent.Title></h3></div><div class=modal-body><span class=btn-group ng-if=vm.debug.on><button icon=record type=button class=\"btn btn-square\" ng-click=vm.changeExportScope()></button></span><div translate=ImportExport.ExportContent.Intro></div><div translate=ImportExport.ExportContent.FurtherHelp></div><h5 translate=ImportExport.ExportContent.ContentTypes.Title></h5><ul class=sc-export-content-list><li ng-repeat=\"contentType in vm.ContentInfo.ContentTypes\"><label ng-class=\"{ 'active': contentType._export }\"><input type=checkbox ng-model=\"contentType._export\"> {{contentType.Name}} ({{contentType.Id}})</label><div ng-if=contentType.Templates.length class=sc-export-content-list-inner><h6 translate=ImportExport.ExportContent.ContentTypes.Templates></h6><ul><li ng-repeat=\"template in contentType.Templates\"><label ng-class=\"{ 'active': template._export }\"><input type=checkbox ng-model=\"template._export\"> {{template.Name}} ({{template.Id}})</label></li></ul></div><div ng-if=contentType.Entities.length class=sc-export-content-list-inner><h6 translate=ImportExport.ExportContent.ContentTypes.Entities></h6><ul><li ng-repeat=\"entity in contentType.Entities\"><label ng-class=\"{ 'active': entity._export }\"><input type=checkbox ng-model=\"entity._export\"> {{entity._2sxcEditInformation.title}} ({{entity.EntityId}})</label></li></ul></div></li></ul><h5 translate=ImportExport.ExportContent.TemplatesWithoutContentTypes.Title></h5><ul class=sc-export-content-list><li ng-repeat=\"template in vm.ContentInfo.TemplatesWithoutContentTypes\"><label ng-class=\"{ 'active': template._export }\"><input type=checkbox ng-model=\"template._export\"> {{template.Name}} ({{template.Id}})</label></li></ul></div><div class=modal-footer><button type=button class=\"btn btn-primary pull-left\" ng-click=vm.exportContent() translate=ImportExport.ExportContent.Commands.Export ng-disabled=vm.IsExporting></button></div><show-debug-availability class=pull-right></show-debug-availability></div><style>.sc-export-content-list { list-style-type: none; margin: 0; padding: 0; border-top: 1px solid #DDD; }\r" +
     "\n" +
     "\r" +
     "\n" +
@@ -1307,7 +1320,7 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
 
 
   $templateCache.put('importexport/import-app.html',
-    "<div><div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=ImportExport.ImportApp.Title></h3></div><div ng-if=!vm.ImportResult.Messages><div class=modal-body><div translate=ImportExport.ImportApp.Intro></div><div translate=ImportExport.ImportApp.FurtherHelp></div><br><span class=\"btn btn-default btn-file\"><span ng-hide=vm.ImportFile.Data>{{\"ImportExport.ImportApp.Commands.SelectFile\" | translate}}</span> <span ng-show=vm.ImportFile.Data>{{vm.ImportFile.Name}}</span> <input type=file sxc-file-read=\"vm.ImportFile\"></span><br></div><div class=modal-footer><button type=button class=\"btn btn-primary pull-left\" ng-click=vm.importApp() ng-disabled=\"!vm.ImportFile.Data || vm.IsImporting\" translate=ImportExport.ImportApp.Commands.Import></button></div></div><div ng-if=vm.ImportResult.Messages><div class=modal-body><div ng-if=vm.ImportResult.Succeeded class=\"sxc-message sxc-message-info\">{{\"ImportExport.ImportContent.Messages.ImportSucceeded\" | translate}} (<a ng-click=\"vm.ImportResult._hideSuccessMessages = !vm.ImportResult._hideSuccessMessages\">{{\"ImportExport.ImportContent.Commands.ToggleSuccessMessages\" | translate}}</a>)</div><div ng-if=!vm.ImportResult.Succeeded class=\"sxc-message sxc-message-error\">{{\"ImportExport.ImportContent.Messages.ImportFailed\" | translate}}</div><div ng-repeat=\"message in vm.ImportResult.Messages\" class=sxc-message ng-class=\"{ 'sxc-message-warning': message.MessageType == 0, 'sxc-message-success': message.MessageType == 1, 'sxc-message-error': message.MessageType == 2, 'sxc-message-success-hidden': vm.ImportResult._hideSuccessMessages }\">{{message.Message}}</div></div><div class=modal-footer></div></div><div class=sc-loading ng-show=vm.IsImporting><i class=\"icon-sxc-spinner fa-spin\"></i></div></div><style>.sxc-message { display: block; padding: 18px 18px; margin-bottom: 18px; border: 1px solid rgba(2, 139, 255, 0.2); border-radius: 3px; background: rgba(2,139,255,0.15); max-width: 980px; }\r" +
+    "<div><div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=ImportExport.ImportApp.Title></h3></div><div ng-if=!vm.ImportResult.Messages><div class=modal-body><div translate=ImportExport.ImportApp.Intro></div><div translate=ImportExport.ImportApp.FurtherHelp></div><br><span class=\"btn btn-default btn-file\"><span ng-hide=vm.ImportFile.Data>{{\"ImportExport.ImportApp.Commands.SelectFile\" | translate}}</span> <span ng-show=vm.ImportFile.Data>{{vm.ImportFile.Name}}</span> <input type=file sxc-file-read=\"vm.ImportFile\"></span><br></div><div class=modal-footer><button type=button class=\"btn btn-primary pull-left\" ng-click=vm.importApp() ng-disabled=\"!vm.ImportFile.Data || vm.IsImporting\" translate=ImportExport.ImportApp.Commands.Import></button></div></div><div ng-if=vm.ImportResult.Messages><div class=modal-body><div ng-if=vm.ImportResult.Succeeded class=\"sxc-message sxc-message-info\">{{\"ImportExport.ImportContent.Messages.ImportSucceeded\" | translate}} (<a ng-click=\"vm.ImportResult._hideSuccessMessages = !vm.ImportResult._hideSuccessMessages\">{{\"ImportExport.ImportContent.Commands.ToggleSuccessMessages\" | translate}}</a>)</div><div ng-if=!vm.ImportResult.Succeeded class=\"sxc-message sxc-message-error\">{{\"ImportExport.ImportContent.Messages.ImportFailed\" | translate}}</div><div ng-repeat=\"message in vm.ImportResult.Messages\" class=sxc-message ng-class=\"{ 'sxc-message-warning': message.MessageType == 0, 'sxc-message-success': message.MessageType == 1, 'sxc-message-error': message.MessageType == 2, 'sxc-message-success-hidden': vm.ImportResult._hideSuccessMessages }\">{{message.Message}}</div></div><div class=modal-footer></div></div></div><style>.sxc-message { display: block; padding: 18px 18px; margin-bottom: 18px; border: 1px solid rgba(2, 139, 255, 0.2); border-radius: 3px; background: rgba(2,139,255,0.15); max-width: 980px; }\r" +
     "\n" +
     "\r" +
     "\n" +
@@ -1328,7 +1341,7 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
 
 
   $templateCache.put('importexport/import-content.html',
-    "<div><div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=ImportExport.ImportContent.Title></h3></div><div ng-if=!vm.ImportResult.Messages><div class=modal-body><div translate=ImportExport.ImportContent.Intro></div><div translate=ImportExport.ImportContent.FurtherHelp></div><br><span class=\"btn btn-default btn-file\"><span ng-hide=vm.ImportFile.Data>{{\"ImportExport.ImportContent.Commands.SelectFile\" | translate}}</span> <span ng-show=vm.ImportFile.Data>{{vm.ImportFile.Name}}</span> <input type=file sxc-file-read=\"vm.ImportFile\"></span><br></div><div class=modal-footer><button type=button class=\"btn btn-primary pull-left\" ng-click=vm.importContent() ng-disabled=\"!vm.ImportFile.Data || vm.IsImporting\" translate=ImportExport.ImportContent.Commands.Import></button></div></div><div ng-if=vm.ImportResult.Messages><div class=modal-body><div ng-if=vm.ImportResult.Succeeded class=\"sxc-message sxc-message-info\">{{\"ImportExport.ImportContent.Messages.ImportSucceeded\" | translate}} (<a ng-click=\"vm.ImportResult._hideSuccessMessages = !vm.ImportResult._hideSuccessMessages\">{{\"ImportExport.ImportContent.Commands.ToggleSuccessMessages\" | translate}}</a>)</div><div ng-if=!vm.ImportResult.Succeeded class=\"sxc-message sxc-message-error\">{{\"ImportExport.ImportContent.Messages.ImportFailed\" | translate}}</div><div ng-repeat=\"message in vm.ImportResult.Messages\" class=sxc-message ng-class=\"{ 'sxc-message-warning': message.MessageType == 0, 'sxc-message-success': message.MessageType == 1, 'sxc-message-error': message.MessageType == 2, 'sxc-message-success-hidden': vm.ImportResult._hideSuccessMessages }\">{{message.Message}}</div></div><div class=modal-footer></div></div><div class=sc-loading ng-show=vm.IsImporting><i class=\"icon-sxc-spinner fa-spin\"></i></div></div><style>.sxc-message { display: block; padding: 18px 18px; margin-bottom: 18px; border: 1px solid rgba(2, 139, 255, 0.2); border-radius: 3px; background: rgba(2,139,255,0.15); max-width: 980px; }\r" +
+    "<div><div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=ImportExport.ImportContent.Title></h3></div><div ng-if=!vm.ImportResult.Messages><div class=modal-body><div translate=ImportExport.ImportContent.Intro></div><div translate=ImportExport.ImportContent.FurtherHelp></div><br><span class=\"btn btn-default btn-file\"><span ng-hide=vm.ImportFile.Data>{{\"ImportExport.ImportContent.Commands.SelectFile\" | translate}}</span> <span ng-show=vm.ImportFile.Data>{{vm.ImportFile.Name}}</span> <input type=file sxc-file-read=\"vm.ImportFile\"></span><br></div><div class=modal-footer><button type=button class=\"btn btn-primary pull-left\" ng-click=vm.importContent() ng-disabled=\"!vm.ImportFile.Data || vm.IsImporting\" translate=ImportExport.ImportContent.Commands.Import></button></div></div><div ng-if=vm.ImportResult.Messages><div class=modal-body><div ng-if=vm.ImportResult.Succeeded class=\"sxc-message sxc-message-info\">{{\"ImportExport.ImportContent.Messages.ImportSucceeded\" | translate}} (<a ng-click=\"vm.ImportResult._hideSuccessMessages = !vm.ImportResult._hideSuccessMessages\">{{\"ImportExport.ImportContent.Commands.ToggleSuccessMessages\" | translate}}</a>)</div><div ng-if=!vm.ImportResult.Succeeded class=\"sxc-message sxc-message-error\">{{\"ImportExport.ImportContent.Messages.ImportFailed\" | translate}}</div><div ng-repeat=\"message in vm.ImportResult.Messages\" class=sxc-message ng-class=\"{ 'sxc-message-warning': message.MessageType == 0, 'sxc-message-success': message.MessageType == 1, 'sxc-message-error': message.MessageType == 2, 'sxc-message-success-hidden': vm.ImportResult._hideSuccessMessages }\">{{message.Message}}</div></div><div class=modal-footer></div></div></div><style>.sxc-message { display: block; padding: 18px 18px; margin-bottom: 18px; border: 1px solid rgba(2, 139, 255, 0.2); border-radius: 3px; background: rgba(2,139,255,0.15); max-width: 980px; }\r" +
     "\n" +
     "    \r" +
     "\n" +
@@ -1410,6 +1423,7 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
 
 (function () { 
 
+    TemplateListController.$inject = ["templatesSvc", "eavAdminDialogs", "eavConfig", "appId", "debugState", "oldDialogs", "$translate", "$modalInstance", "$sce"];
     angular.module("TemplatesApp", [
         "SxcServices",
         "EavConfiguration",
@@ -1467,11 +1481,11 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
             $modalInstance.dismiss("cancel");
         };
     }
-    TemplateListController.$inject = ["templatesSvc", "eavAdminDialogs", "eavConfig", "appId", "debugState", "oldDialogs", "$translate", "$modalInstance", "$sce"];
 
 } ());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
 
+    TemplateEditController.$inject = ["svc", "eavAdminDialogs", "eavConfig", "appId", "$modalInstance"];
     angular.module("TemplatesApp")
         .controller("TemplateEdit", TemplateEditController)
         ;
@@ -1485,11 +1499,11 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
             $modalInstance.dismiss("cancel");
         };
     }
-    TemplateEditController.$inject = ["svc", "eavAdminDialogs", "eavConfig", "appId", "$modalInstance"];
 
 } ());
 (function () { 
 
+    WebApiMainController.$inject = ["appId", "webApiSvc", "eavAdminDialogs", "$modalInstance", "$translate"];
     angular.module("WebApiApp", [
         "SxcServices",
         //"EavConfiguration",
@@ -1522,6 +1536,5 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
             $modalInstance.dismiss("cancel");
         };
     }
-    WebApiMainController.$inject = ["appId", "webApiSvc", "eavAdminDialogs", "$modalInstance", "$translate"];
 
 } ());

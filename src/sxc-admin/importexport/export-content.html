@@ -46,7 +46,7 @@
     </div>
 
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary pull-left" ng-click="vm.exportContent()" translate="ImportExport.ExportContent.Commands.Export"></button>
+        <button type="button" class="btn btn-primary pull-left" ng-click="vm.exportContent()" translate="ImportExport.ExportContent.Commands.Export" ng-disabled="vm.IsExporting"></button>
     </div>
 
     <show-debug-availability class="pull-right"></show-debug-availability>

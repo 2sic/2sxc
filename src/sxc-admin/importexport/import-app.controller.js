@@ -23,7 +23,6 @@
                 vm.ImportResult = result.data;
                 vm.IsImporting = false;
             }).catch(function (error) {
-                console.log(error);
                 vm.IsImporting = false;
             });
         }
