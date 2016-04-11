@@ -51,8 +51,16 @@ namespace ToSic.SexyContent
 
 			return new Template(templateEntity);
 		}
+        public Template GetTemplate(Guid templateGuid)
+        {
+            return
+                TemplateDataSource()
+                    .List.Where(t => t.Value.EntityGuid == templateGuid)
+                    .Select(t => new Template(t.Value))
+                    .FirstOrDefault();
+        }
 
-		public bool DeleteTemplate(int templateId)
+        public bool DeleteTemplate(int templateId)
 		{
 			var template = GetTemplate(templateId);
             var eavContext = EavDataController.Instance(_zoneId, _appId).Entities; ; //EavContext.Instance(_zoneId, _appId);
@@ -113,23 +121,29 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <param name="module"></param>
         /// <returns></returns>
-        public IEnumerable<Template> GetAvailableTemplatesForSelector(/*ModuleInfo module,*/ int modId, ContentGroupManager cgContentGroups)
+        public IEnumerable<Template> GetAvailableTemplatesForSelector(int modId, ContentGroupManager cgContentGroups)
         {
-            IEnumerable<Template> availableTemplates;
-            var contentGroup = cgContentGroups.GetContentGroupForModule(modId /*module.ModuleID*/);
-            var items = contentGroup.Content;
-
-            if (items.Any(e => e != null))
-                availableTemplates = GetCompatibleTemplates(contentGroup).Where(p => !p.IsHidden);
-            else if (items.Count <= 1)
-                availableTemplates = GetVisibleTemplates();
-            else
-                availableTemplates = GetVisibleTemplates().Where(p => p.UseForList);
-
-            return availableTemplates;
+            // IEnumerable<Template> availableTemplates;
+            var contentGroup = cgContentGroups.GetContentGroupForModule(modId);
+            return GetAvailableTemplates(contentGroup);
         }
 
-        private IEnumerable<Template> GetCompatibleTemplates(ContentGroup contentGroup)
+	    internal IEnumerable<Template> GetAvailableTemplates(ContentGroup contentGroup)
+	    {
+	        IEnumerable<Template> availableTemplates;
+	        var items = contentGroup.Content;
+
+	        if (items.Any(e => e != null))
+	            availableTemplates = GetCompatibleTemplates(contentGroup).Where(p => !p.IsHidden);
+	        else if (items.Count <= 1)
+	            availableTemplates = GetVisibleTemplates();
+	        else
+	            availableTemplates = GetVisibleTemplates().Where(p => p.UseForList);
+
+	        return availableTemplates;
+	    }
+
+	    private IEnumerable<Template> GetCompatibleTemplates(ContentGroup contentGroup)
         {
             var isList = contentGroup.Content.Count > 1;
 

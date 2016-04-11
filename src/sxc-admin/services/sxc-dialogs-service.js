@@ -88,6 +88,12 @@ angular.module("SxcAdminUi", [
             return eavAdminDialogs.OpenModal("app-main/app-main.html", "AppMain as vm", "xlg", resolve, closeCallback);
         };
 
+        // the app-level dialog showing all app content-items, templates, web-api etc.
+        svc.openAppImport = function oam(closeCallback) {
+            var resolve = eavAdminDialogs.CreateResolve({}); // { appId: appId }});
+            return eavAdminDialogs.OpenModal( "importexport/import-app.html", "ImportApp as vm", "lg", resolve, closeCallback);
+        };
+
         //#region Total-Popup open / close
         svc.openTotal = function openTotal(url, callback) {
             return $2sxc.totalPopup.open(svc.browserFixUrlCaching(url), callback);

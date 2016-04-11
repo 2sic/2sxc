@@ -7,19 +7,21 @@ namespace ToSic.SexyContent.Internal
 {
     public class DnnStuffToRefactor
     {
+        // todo: try to cache the result of settings-stored in a static variable, this full check
+        // todo: shouldn't have to happen every time
 
         /// <summary>
         /// Returns true if the Portal HomeDirectory Contains the 2sxc Folder and this folder contains the web.config and a Content folder
         /// </summary>
         public void EnsurePortalIsConfigured(SxcInstance sxc, HttpServerUtility server, string controlPath)
         {
-            var sexyFolder = new DirectoryInfo(server.MapPath(Path.Combine(sxc.PortalSettingsOfOriginalModule.HomeDirectory, Settings.TemplateFolder)));
+            var sexyFolder = new DirectoryInfo(server.MapPath(Path.Combine(sxc.AppPortalSettings.HomeDirectory, Settings.TemplateFolder)));
             var contentFolder = new DirectoryInfo(Path.Combine(sexyFolder.FullName, "Content"));
             var webConfigTemplate = new FileInfo(Path.Combine(sexyFolder.FullName, Settings.WebConfigFileName));
             if (!(sexyFolder.Exists && webConfigTemplate.Exists && contentFolder.Exists))
             {
                 // configure it
-                var tm = new TemplateManager(sxc);
+                var tm = new TemplateManager(sxc.App);
                 tm.EnsureTemplateFolderExists(server, Settings.TemplateLocations.PortalFileSystem);
             };
         }
@@ -34,10 +36,7 @@ namespace ToSic.SexyContent.Internal
 
             // if not found, it could be a caching issue
             var settings = new ModuleController().GetModuleSettings(module.ModuleID);
-            if (settings.ContainsKey(settingName))
-                return settings[settingName].ToString();
-
-            return null;
+            return settings.ContainsKey(settingName) ? settings[settingName].ToString() : null;
         }
 
 

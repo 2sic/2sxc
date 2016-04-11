@@ -17,7 +17,8 @@ namespace ToSic.SexyContent.DataSources
             get
             {
                 if(_sxcContext == null)
-                    _sxcContext = new SxcInstance(In["Default"].Source.ZoneId, In["Default"].Source.AppId);
+                    throw new Exception("SxcContent is still null - can't access the SxcContent before initializing it");
+                    // old: _sxcContext = new SxcInstance(In["Default"].Source.ZoneId, In["Default"].Source.AppId);
                 return _sxcContext;
             }
             set { _sxcContext = value; }
@@ -28,11 +29,18 @@ namespace ToSic.SexyContent.DataSources
 		{
             get
             {
-				if (!ModuleId.HasValue)
-					throw new Exception("Looking up ContentGroup failed because ModuleId is null.");
-				if (_contentGroup == null)
-					_contentGroup = SxcContext.AppContentGroups.GetContentGroupForModule(ModuleId.Value);
-				return _contentGroup;
+                if (_contentGroup == null)
+                {
+                    if (UseSxcInstanceContentGroup)
+                        _contentGroup = SxcContext.ContentGroup;
+                    else
+                    {
+                        if (!ModuleId.HasValue)
+                            throw new Exception("Looking up ContentGroup failed because ModuleId is null.");
+                        _contentGroup = SxcContext.AppContentGroups.GetContentGroupForModule(ModuleId.Value);
+                    }
+                }
+                return _contentGroup;
             }
         }
 
@@ -91,18 +99,18 @@ namespace ToSic.SexyContent.DataSources
         {
 			get
 			{
-				if (_template == null)
-					_template = OverrideTemplateId.HasValue
-						? SxcContext.AppTemplates.GetTemplate(OverrideTemplateId.Value)
-						: ContentGroup.Template;
-				return _template;
+			    return _template ?? (_template = OverrideTemplate ?? ContentGroup.Template);
+			    //_template = OverrideTemplateId.HasValue
+					//	? SxcContext.AppTemplates.GetTemplate(OverrideTemplateId.Value)
+					//	: ContentGroup.Template;
 			}
-		}
+        }
 
 		private IDictionary<int, IEntity> GetStream(List<IEntity> content, IEntity contentDemoEntity, List<IEntity> presentation, IEntity presentationDemoEntity, bool isListHeader = false)
         {
 			var entitiesToDeliver = new Dictionary<int, IEntity>();
-			if (ContentGroup.Template == null && !OverrideTemplateId.HasValue) return entitiesToDeliver;
+            // if no template is defined, return empty list
+			if (ContentGroup.Template == null && OverrideTemplate == null /*!OverrideTemplateId.HasValue*/) return entitiesToDeliver;
 
 			var contentEntities = content.ToList(); // Create copy of list (not in cache) because it will get modified
 
@@ -117,9 +125,7 @@ namespace ToSic.SexyContent.DataSources
 	            var contentEntity = contentEntities[i];
 
                 // use demo-entites where available
-				var entityId = contentEntity != null
-					? contentEntity.EntityId :
-					(contentDemoEntity != null ? contentDemoEntity.EntityId : new int?());
+				var entityId = contentEntity?.EntityId ?? contentDemoEntity?.EntityId;
 
                 // We can't deliver entities that are not delivered by base (original stream), so continue
                 if (!entityId.HasValue || !originals.ContainsKey(entityId.Value))
@@ -170,7 +176,10 @@ namespace ToSic.SexyContent.DataSources
             set { Configuration["ModuleId"] = value.ToString(); }
         }
 
-        public int? OverrideTemplateId { get; set; }
+	    public bool UseSxcInstanceContentGroup = false;
 
+        //public int? OverrideTemplateId { get; set; }
+
+        public Template OverrideTemplate { get; set; }
     }
 }

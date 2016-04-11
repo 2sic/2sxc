@@ -5,6 +5,7 @@ using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav;
+using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -16,10 +17,11 @@ namespace ToSic.SexyContent.WebApi
 	    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 	    public IEnumerable<object> GetAll(int appId)
 	    {
-            var sxc = Request.GetSxcOfModuleContext(appId);
+            var zoneId = ZoneHelpers.GetZoneID(Dnn.Module.OwnerPortalID).Value;
+            var tm = new TemplateManager(zoneId, appId);
 
-            var attributeSetList = sxc.AppTemplates.GetAvailableContentTypes(Settings.AttributeSetScope).ToList();
-            var templateList = sxc.AppTemplates.GetAllTemplates();
+            var attributeSetList = tm.GetAvailableContentTypes(Settings.AttributeSetScope).ToList();
+            var templateList = tm.GetAllTemplates();
             var templates = from c in templateList
                             select new
                             {

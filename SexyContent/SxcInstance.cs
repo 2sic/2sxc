@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Specialized;
-using System.Configuration;
 using System.Linq;
 using System.Web;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
-using ToSic.Eav;
+using Newtonsoft.Json;
 using ToSic.Eav.BLL;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Engines;
+using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Environment.Interfaces;
-using ToSic.SexyContent.Internal;
+using ToSic.SexyContent.Interfaces;
 
 namespace ToSic.SexyContent
 {
@@ -23,26 +23,30 @@ namespace ToSic.SexyContent
     /// </summary>
     public class SxcInstance :ISxcInstance
     {
-        #region Properties
+        #region App-level information
+
         /// <summary>
         /// The Content Data Context pointing to a full EAV, pre-configured for this specific App
         /// </summary>
-        public EavDataController EavAppContext;
+        public EavDataController EavAppContext => App.EavContext;
 
-        internal int? ZoneId { get; set; }
+        internal int? ZoneId => ContentBlock.ZoneId;
 
-        internal int? AppId { get; }
+        internal int? AppId => ContentBlock.AppId;
 
-        public TemplateManager AppTemplates { get; set; }
+        public App App => ContentBlock.App;
 
-		public ContentGroupManager AppContentGroups { get; set; }
+        public bool IsContentApp => ContentBlock.IsContentApp;
 
-        private ContentGroup _contentGroup;
-        public ContentGroup ContentGroup => _contentGroup ??
-                                               (_contentGroup = AppContentGroups.GetContentGroupForModule(ModuleInfo.ModuleID));
+        public TemplateManager AppTemplates => App.TemplateManager; // todo: remove, use App...
 
-        private App _app;
-        public App App => _app ?? (_app = AppHelpers.GetApp(ZoneId.Value, AppId.Value, PortalSettingsOfOriginalModule));
+        public ContentGroupManager AppContentGroups => App.ContentGroupManager; // todo: remove, use App...
+
+        #endregion
+
+        #region Info for current runtime instance
+        public ContentGroup ContentGroup => ContentBlock.ContentGroup;
+
 
         /// <summary>
         /// Environment - should be the place to refactor everything into, which is the host around 2sxc
@@ -51,78 +55,46 @@ namespace ToSic.SexyContent
 
         internal ModuleInfo ModuleInfo { get; }
 
-        public bool IsContentApp => ModuleInfo.DesktopModule.ModuleName == "2sxc";
+        internal IContentBlock ContentBlock { get; }
 
 
         /// <summary>
         /// This returns the PS of the original module. When a module is mirrored across portals,
         /// then this will be different from the PortalSettingsOfVisitedPage, otherwise they are the same
         /// </summary>
-        internal PortalSettings PortalSettingsOfOriginalModule { get; set; }
+        internal PortalSettings AppPortalSettings => ContentBlock.PortalSettings; // maybe pass in
 
-        private ViewDataSource _dataSource;
-        public ViewDataSource Data
-        {
-            get
-            {
-                if(ModuleInfo == null)
-                    throw new Exception("Can't get data source, module context unknown. Please only use this on a 2sxc-object which was initialized in a dnn-module context");
-
-                return _dataSource ??
-                       (_dataSource =
-                           ViewDataSource.ForModule(ModuleInfo.ModuleID, SecurityHelpers.HasEditPermission(ModuleInfo), Template, this));
-            }
-        }
+        public ViewDataSource Data => ContentBlock.Data;
 
 
         #endregion
 
-        #region current template - must get most of this code out of this class...
-        // todo: try to refactor most of the template-stuff out of this class again
-
-        private bool AllowAutomaticTemplateChangeBasedOnUrlParams => !IsContentApp; 
-        private Template _template;
-        private bool _templateLoaded;
+        #region  template helpers 
 
         public Template Template
         {
-            get
-            {
-                if (_template != null || _templateLoaded) return _template;
-
-                if (!AppId.HasValue)
-                    return null;
-
-                // Change Template if URL contains "ViewNameInUrl"
-                if (AllowAutomaticTemplateChangeBasedOnUrlParams)
-                {
-                    var urlParams =  HttpContext.Current.Request.QueryString;
-                    var templateFromUrl = TryToGetTemplateBasedOnUrlParams(urlParams);
-                    if (templateFromUrl != null)
-                        _template = templateFromUrl;
-                }
-                if (_template == null)
-                    _template = ContentGroup.Template;
-                _templateLoaded = true;
-                return _template;
-            }
-            internal set
-            {
-                _template = value;
-                _templateLoaded = true;
-                _dataSource = null; // reset this
-            }
+            get { return ContentBlock.Template; }
+            set { ContentBlock.Template = value; }
         }
 
-        /// <summary>
-        /// combine all QueryString Params to a list of key/value lowercase and search for a template having this ViewNameInUrl
-        /// QueryString is never blank in DNN so no there's no test for it
-        /// </summary>
+        private void CheckTemplateOverrides()
+        {
+            // skif if not relevant or not yet initialized
+            if (IsContentApp || App == null) return;
+
+            // #2 Change Template if URL contains the part in the metadata "ViewNameInUrl"
+            var urlParams = HttpContext.Current.Request.QueryString; // todo: reduce dependency on context-current...
+            var templateFromUrl = TryToGetTemplateBasedOnUrlParams(urlParams);
+            if (templateFromUrl != null)
+                Template = templateFromUrl;
+        }
+
         private Template TryToGetTemplateBasedOnUrlParams(NameValueCollection urlParams)
         {
-            var urlParameterDict = urlParams.AllKeys.ToDictionary(key => key?.ToLower() ?? "", key => string.Format("{0}/{1}", key, urlParams[key]).ToLower());
+            var urlParameterDict = urlParams.AllKeys.ToDictionary(key => key?.ToLower() ?? "", key =>
+                $"{key}/{urlParams[key]}".ToLower());
 
-            foreach (var template in AppTemplates.GetAllTemplates().Where(t => !string.IsNullOrEmpty(t.ViewNameInUrl)))
+            foreach (var template in App.TemplateManager.GetAllTemplates().Where(t => !string.IsNullOrEmpty(t.ViewNameInUrl)))
             {
                 var desiredFullViewName = template.ViewNameInUrl.ToLower();
                 if (desiredFullViewName.EndsWith("/.*"))   // match details/.* --> e.g. details/12
@@ -138,60 +110,91 @@ namespace ToSic.SexyContent
             return null;
         }
 
-
         #endregion
 
         #region Constructor
-
-
-        /// <summary>
-        /// Instanciates Content and Template-Contexts
-        /// </summary>
-        internal SxcInstance(int zoneId, int appId, bool enableCaching = true, int? ownerPortalId = null, ModuleInfo moduleInfo = null)
+        internal SxcInstance(IContentBlock cb, ModuleInfo runtimeModuleInfo)
         {
-            ModuleInfo = moduleInfo;
-            PortalSettingsOfOriginalModule = ownerPortalId.HasValue ? new PortalSettings(ownerPortalId.Value) : PortalSettings.Current;
-
-            if (zoneId == 0)
-                if (PortalSettingsOfOriginalModule == null || !ZoneHelpers.GetZoneID(PortalSettingsOfOriginalModule.PortalId).HasValue)
-                    zoneId = Constants.DefaultZoneId;
-                else
-                    zoneId = ZoneHelpers.GetZoneID(PortalSettingsOfOriginalModule.PortalId).Value;
-
-            if (appId == 0)
-                appId = AppHelpers.GetDefaultAppId(zoneId);
-
-            ZoneId = zoneId;
-            AppId = appId;
-            AppTemplates = new TemplateManager(zoneId, appId);
-			AppContentGroups = new ContentGroupManager(zoneId, appId);
-
-            // Set Properties on ContentContext
-            EavAppContext = EavDataController.Instance(zoneId, appId); // EavContext.Instance(zoneId, appId);
-            EavAppContext.UserName = SexyContent.Environment.Dnn7.UserIdentity.CurrentUserIdentityToken;// (HttpContext.Current == null || HttpContext.Current.User == null) ? Settings.InternalUserName : HttpContext.Current.User.Identity.Name;
-
-
-
-            #region Prepare Environment information 
-            // 2016-01 2dm - this is new, the environment is where much code should go to later on
-
+            ContentBlock = cb;
+            ModuleInfo = runtimeModuleInfo;
             // Build up the environment. If we know the module context, then use permissions from there
-            Environment.Permissions = (moduleInfo != null)
-                ? (IPermissions) new Environment.Dnn7.Permissions(moduleInfo)
+            Environment.Permissions = (ModuleInfo != null)
+                ? (IPermissions)new Permissions(ModuleInfo)
                 : new Environment.None.Permissions();
-            #endregion
+
+            // url-override of view / data
+            CheckTemplateOverrides();   // allow view change on apps
         }
 
+        internal SxcInstance(IContentBlock cb, SxcInstance runtimeInstance)
+        {
+            ContentBlock = cb;
+            ModuleInfo = runtimeInstance.ModuleInfo;
+            // Build up the environment. If we know the module context, then use permissions from there
+            Environment.Permissions = runtimeInstance.Environment.Permissions;
 
+            // url-override of view / data
+            CheckTemplateOverrides();   // allow view change on apps
+        }
         #endregion
 
         #region RenderEngine
-
-        public string Render()
+        private bool RenderWithDiv = true;
+        private bool RenderWithEditMetadata => Environment.Permissions.UserMayEditContent;
+        public HtmlString Render()
         {
-            var engine = GetRenderingEngine(InstancePurposes.WebView);
+            var renderHelp = new RenderingHelpers(this);
 
-            return engine.Render();
+            try
+            {
+                string innerContent = null;
+
+                #region do pre-check to see if system is stable & ready
+                var notReady = Installer.CheckUpgradeMessage(PortalSettings.Current.UserInfo.IsSuperUser);
+                if (!string.IsNullOrEmpty(notReady))
+                    innerContent = renderHelp.DesignErrorMessage(new Exception(notReady), true, "Error - needs admin to fix this", false, false);
+
+                #endregion
+
+                #region try to render the block or generate the error message
+                if(innerContent == null)
+                    try
+                    {
+                        if (Template != null) // when a content block is still new, there is no definition yet
+                        {
+                            var engine = GetRenderingEngine(InstancePurposes.WebView);
+                            innerContent = engine.Render();
+                        }
+                        else innerContent = "";
+                    }
+                    catch (Exception ex)
+                    {
+                        innerContent = renderHelp.DesignErrorMessage(ex, true, "Error rendering template", false, true);
+                    }
+                #endregion
+
+                #region Wrap it all up into a nice wrapper tag
+                var editInfos = JsonConvert.SerializeObject(renderHelp.GetClientInfosAll());
+                var startTag = (RenderWithDiv
+                    ? $"<div class=\"sc-viewport sc-content-block\" data-cb-instance=\"{ContentBlock.ParentId}\" " +
+                      $" data-cb-id=\"{ContentBlock.ContentBlockId}\""
+                      +
+                      (RenderWithEditMetadata
+                          ? " data-edit-context=\'" + editInfos + "'"
+                          : "")
+                      + ">\n"
+                    : "");
+                var endTag = (RenderWithDiv ? "\n</div>" : "");
+                string result = startTag + innerContent + endTag;
+                #endregion
+
+                return new HtmlString(result);
+            }
+            catch (Exception ex)
+            {
+                // todo: i18n
+                return new HtmlString(renderHelp.DesignErrorMessage(ex, true, null, true, true));
+            }
         }
 
         public IEngine GetRenderingEngine(InstancePurposes renderingPurpose)

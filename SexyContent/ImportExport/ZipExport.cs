@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using DotNetNuke.Entities.Portals;
 using ICSharpCode.SharpZipLib.Zip;
 using ToSic.Eav;
 using ToSic.SexyContent.Internal;
@@ -15,7 +16,8 @@ namespace ToSic.SexyContent.ImportExport
     {
         private readonly int _appId;
         private readonly int _zoneId;
-        private readonly SxcInstance _sexy;
+        //private readonly SxcInstance _sexy;
+        private readonly App App;
         private string _sexycontentContentgroupName = "2SexyContent-ContentGroup";
         private string _blankGuid = Guid.Empty.ToString();// "00000000-0000-0000-0000-000000000000";
         private string _zipFolderForPortalFiles = "PortalFiles";
@@ -28,14 +30,15 @@ namespace ToSic.SexyContent.ImportExport
         {
             _appId = appId;
             _zoneId = zoneId;
-            _sexy = new SxcInstance(_zoneId, _appId);
-            FileManager = new FileManager(_sexy.App.PhysicalPath);
+            //_sexy = new SxcInstance(_zoneId, _appId);
+            App = new App(zoneId, appId, PortalSettings.Current);
+            FileManager = new FileManager(App.PhysicalPath);
         }
 
         public MemoryStream ExportApp(bool includeContentGroups = false, bool resetAppGuid = false)
         {
             // Get Export XML
-            var attributeSets = _sexy.AppTemplates.GetAvailableContentTypes(true);
+            var attributeSets = App.TemplateManager.GetAvailableContentTypes(true);
             attributeSets = attributeSets.Where(a => !a.ConfigurationIsOmnipresent);
 
             var attributeSetIds = attributeSets.Select(p => p.AttributeSetId.ToString()).ToArray();
@@ -74,14 +77,14 @@ namespace ToSic.SexyContent.ImportExport
             AddInstructionsToPackageFolder(temporaryDirectoryPath);
 
             var tempDirectory = new DirectoryInfo(temporaryDirectoryPath);
-            var appDirectory = tempDirectory.CreateSubdirectory("Apps/" + _sexy.App.Folder + "/");
+            var appDirectory = tempDirectory.CreateSubdirectory("Apps/" + App.Folder + "/");
             
             var sexyDirectory = appDirectory.CreateSubdirectory(_zipFolderForAppStuff);
             
             var portalFilesDirectory = appDirectory.CreateSubdirectory(_zipFolderForPortalFiles);
 
             // Copy app folder
-            if (Directory.Exists(_sexy.App.PhysicalPath))
+            if (Directory.Exists(App.PhysicalPath))
             {
                 FileManager.CopyAllFiles(sexyDirectory.FullName, false, messages);
             }

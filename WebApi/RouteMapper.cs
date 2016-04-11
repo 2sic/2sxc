@@ -1,9 +1,6 @@
 ﻿using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using DotNetNuke.Web.Api;
-using Microsoft.Practices.Unity;
-using ToSic.Eav.Implementations.ValueConverter;
-using ToSic.SexyContent.EAV.Implementation.ValueConverter;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -37,13 +34,6 @@ namespace ToSic.SexyContent.WebApi
 			mapRouteManager.MapHttpRoute("2sxc", "app", "app/{controller}/{action}", new[] { "ToSic.SexyContent.WebApi" });
 			mapRouteManager.MapHttpRoute("2sxc", "dnn", "dnn/{controller}/{action}", new[] { "ToSic.SexyContent.WebApi.Dnn" });
             mapRouteManager.MapHttpRoute("2sxc", "default", "{controller}/{action}", new[] { "ToSic.SexyContent.WebApi" });
-
-
-            /*
-            mapRouteManager.MapHttpRoute("2sxc", "named-app-query", "app/{apppath}/query/{name}", new { controller = "AppQuery" }, new[] { "ToSic.SexyContent.WebApi" });
-            mapRouteManager.MapHttpRoute("2sxc", "named-app-api", "app/{apppath}/api/{controller}/{action}", new[] { "ToSic.SexyContent.Apps" });
-            mapRouteManager.MapHttpRoute("2sxc", "named-app-content", "app/{apppath}/{contenttype}/{id}", new { controller = "AppContent", id = RouteParameter.Optional }, new[] { "ToSic.SexyContent.WebApi" });
-            */
 
             var config = GlobalConfiguration.Configuration;
             var previousSelector = config.Services.GetService(typeof(IHttpControllerSelector)) as IHttpControllerSelector;

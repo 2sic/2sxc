@@ -7,6 +7,7 @@ using ToSic.Eav;
 using ToSic.SexyContent.Serializers;
 using ToSic.SexyContent.WebApi;
 using System.Linq;
+using DotNetNuke.Entities.Portals;
 using ToSic.Eav.WebApi.Formats;
 
 namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
@@ -17,17 +18,17 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 	[SupportedModules("2sxc,2sxc-app")]
 	public class EntitiesController : SxcApiController // DnnApiController
 	{
-	    private Eav.WebApi.EntitiesController entitiesController = new Eav.WebApi.EntitiesController();
+	    private readonly Eav.WebApi.EntitiesController _entitiesController = new Eav.WebApi.EntitiesController();
 
 		public EntitiesController(): base()
 		{
 			Eav.Configuration.SetConnectionString("SiteSqlServer");
-            entitiesController.SetUser(Environment.Dnn7.UserIdentity.CurrentUserIdentityToken);
+            _entitiesController.SetUser(Environment.Dnn7.UserIdentity.CurrentUserIdentityToken);
 		}
 
 	    private void EnsureSerializerHasSxc()
 	    {
-            (entitiesController.Serializer as Serializer).Sxc = SxcContext;
+            (_entitiesController.Serializer as Serializer).Sxc = SxcContext;
 	    }
 
         [HttpGet]
@@ -35,7 +36,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
         public Dictionary<string, object> GetOne(string contentType, int id, int appId, string cultureCode = null)
         {
             EnsureSerializerHasSxc();
-            return entitiesController.GetOne(contentType, id, appId, cultureCode);
+            return _entitiesController.GetOne(contentType, id, appId, cultureCode);
         }
 
 
@@ -55,8 +56,9 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
                     newItems.Add(reqItem);
                     continue;
                 }
+                var app = new App(PortalSettings.Current, appId);
                 
-                var contentGroup = SxcContext.AppContentGroups.GetContentGroup(reqItem.Group.Guid);
+                var contentGroup = app.ContentGroupManager.GetContentGroup(reqItem.Group.Guid);
                 var contentTypeStaticName = contentGroup.Template.GetTypeStaticName(reqItem.Group.Part);
 
                 // if there is no content-type for this, then skip it (don't deliver anything)
@@ -88,7 +90,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
             }
 
             // Now get all
-            return entitiesController.GetManyForEditing(appId, newItems);
+            return _entitiesController.GetManyForEditing(appId, newItems);
 
             // todo: find out how to handle "Presentation" items
             
@@ -104,21 +106,24 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
         {
             // first, save all to do it in 1 transaction
             // note that it won't save the SlotIsEmpty ones, as these won't be needed
-            var postSaveIds = entitiesController.SaveMany(appId, items.Select(i => new EntityWithHeader { Header = i.Header, Entity = i.Entity }).ToList());
+            var postSaveIds = _entitiesController.SaveMany(appId, items.Select(i => new EntityWithHeader { Header = i.Header, Entity = i.Entity }).ToList());
 
             // now assign all content-groups as needed
             var groupItems = items
                 .Where(i => i.Header.Group != null)
-                .GroupBy(i => i.Header.Group.Guid.ToString() + i.Header.Group.Index.ToString() + i.Header.Group.Add);
+                .GroupBy(i => i.Header.Group.Guid.ToString() + i.Header.Group.Index.ToString() + i.Header.Group.Add)
+                .ToList();
 
             if (groupItems.Any())
-                DoAdditionalGroupProcessing(postSaveIds, groupItems);
+                DoAdditionalGroupProcessing(appId, postSaveIds, groupItems);
 
             return postSaveIds;
         }
 
-        private void DoAdditionalGroupProcessing(Dictionary<Guid, int> postSaveIds, IEnumerable<IGrouping<string, EntityWithHeader>> groupItems)
+        private void DoAdditionalGroupProcessing(int appId, Dictionary<Guid, int> postSaveIds, IEnumerable<IGrouping<string, EntityWithHeader>> groupItems)
         {
+            var app = new App(PortalSettings.Current, appId);
+
             foreach (var entitySets in groupItems)
             {
                 var contItem = entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == "content") ??
@@ -130,9 +135,10 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
                               entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == "listpresentation");
 
                 // Get group to assign to and parameters
-                var contentGroup = SxcContext.AppContentGroups.GetContentGroup(contItem.Header.Group.Guid);
+                var contentGroup = app.ContentGroupManager.GetContentGroup(contItem.Header.Group.Guid);
                 var partName = contItem.Header.Group.Part;
-                var part = contentGroup[partName];
+
+                // var part = contentGroup[partName];
                 var index = contItem.Header.Group.Index;
 
                 // Get saved entity (to get its ID)
@@ -162,18 +168,8 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 
             }
 
-            #region update-module-title
-            // check the contentGroup as to what should be the module title, then try to set it
-            // technically it could have multiple different groups to save in, 
-            // ...but for now we'll just update the current modules title
-            // note: it also correctly handles published/unpublished, but I'm not sure why :)
-            var modContentGroup = SxcContext.AppContentGroups.GetContentGroupForModule(Dnn.Module.ModuleID);
-
-            var titleItem = modContentGroup.ListContent.FirstOrDefault() ?? modContentGroup.Content.FirstOrDefault();
-
-            if (titleItem != null && titleItem.GetBestValue("EntityTitle") != null)
-                Dnn.Module.ModuleTitle = titleItem.GetBestValue("EntityTitle").ToString();
-            #endregion
+            // update-module-title
+            SxcContext.ContentBlock.Manager.UpdateTitle();
         }
 
         /// <summary>
@@ -184,7 +180,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
         public IEnumerable<Dictionary<string, object>> GetEntities(string contentType, int appId, string cultureCode = null)
 		{
             EnsureSerializerHasSxc();
-			return entitiesController.GetEntities(contentType, cultureCode, appId);
+			return _entitiesController.GetEntities(contentType, cultureCode, appId);
 		}
 
 	    [HttpGet]
@@ -192,7 +188,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
         public IEnumerable<Dictionary<string, object>> GetAllOfTypeForAdmin(int appId, string contentType)
 	    {
 	        EnsureSerializerHasSxc();
-	        return entitiesController.GetAllOfTypeForAdmin(appId, contentType);
+	        return _entitiesController.GetAllOfTypeForAdmin(appId, contentType);
 	    }
 
 
@@ -214,7 +210,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
         public void Delete(string contentType, int id, int appId)
         {
             EnsureSerializerHasSxc();
-            entitiesController.Delete(contentType, id, App.AppId);
+            _entitiesController.Delete(contentType, id, appId);
         }
         [HttpDelete]
         [HttpGet]
@@ -222,7 +218,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
         public void Delete(string contentType, Guid guid, int appId)
         {
             EnsureSerializerHasSxc();
-            entitiesController.Delete(contentType, guid, App.AppId);
+            _entitiesController.Delete(contentType, guid, appId);
         }
 
 

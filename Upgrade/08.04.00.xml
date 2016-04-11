@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<SexyContent FileVersion="07.00.00" MinimumRequiredVersion="07.00.00" ModuleVersion="08.03.07" ExportDate="2016-04-05T01:11:22.7479687+02:00">
+  <Header>
+    <Language Default="en-US" />
+    <Dimensions />
+  </Header>
+  <AttributeSets>
+    <AttributeSet StaticName="ContentGroupReference" Name="ContentGroupReference" Description="A pointer / reference to a content group" Scope="2SexyContent-System" AlwaysShareConfiguration="true">
+      <Attributes>
+        <Attribute StaticName="Title" Type="String" IsTitle="true">
+          <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@All" AttributeSetName="@All" EntityGUID="5495987f-e290-47d4-a1e6-8426b49f2be3" KeyNumber="3239">
+            <Value Key="Name" Value="Title" Type="String" />
+            <Value Key="VisibleInEditUI" Value="True" Type="Boolean" />
+            <Value Key="InputType" Value="string-default" Type="String" />
+          </Entity>
+        </Attribute>
+        <Attribute StaticName="App" Type="String" IsTitle="false">
+          <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@All" AttributeSetName="@All" EntityGUID="269cbea9-2795-4a4c-bc45-6fe7a4d637f0" KeyNumber="3150">
+            <Value Key="Name" Value="App" Type="String" />
+            <Value Key="VisibleInEditUI" Value="True" Type="Boolean" />
+            <Value Key="InputType" Value="string-default" Type="String" />
+          </Entity>
+        </Attribute>
+        <Attribute StaticName="ContentGroup" Type="String" IsTitle="false">
+          <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@All" AttributeSetName="@All" EntityGUID="01c3b987-3605-4429-b3c7-c3633bbf5410" KeyNumber="3151">
+            <Value Key="Name" Value="ContentGroup" Type="String" />
+            <Value Key="VisibleInEditUI" Value="True" Type="Boolean" />
+            <Value Key="InputType" Value="string-default" Type="String" />
+          </Entity>
+        </Attribute>
+        <Attribute StaticName="ShowTemplateChooser" Type="Boolean" IsTitle="false">
+          <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@All" AttributeSetName="@All" EntityGUID="62c0d641-2ac6-4466-9908-bca3079fbf8f" KeyNumber="3179">
+            <Value Key="Name" Value="ShowTemplateChooser" Type="String" />
+            <Value Key="VisibleInEditUI" Value="True" Type="Boolean" />
+            <Value Key="InputType" Value="boolean-default" Type="String" />
+          </Entity>
+        </Attribute>
+        <Attribute StaticName="Template" Type="String" IsTitle="false">
+          <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@All" AttributeSetName="@All" EntityGUID="1b13a029-06c9-4687-85e4-b4fb51d8b377" KeyNumber="3178">
+            <Value Key="Name" Value="Template" Type="String" />
+            <Value Key="VisibleInEditUI" Value="True" Type="Boolean" />
+            <Value Key="InputType" Value="string-default" Type="String" />
+          </Entity>
+        </Attribute>
+      </Attributes>
+    </AttributeSet>
+  </AttributeSets>
+  <Entities>
+    <Entity AssignmentObjectType="Default" AttributeSetStaticName="ContentType-InputType" AttributeSetName="ContentType-InputType" EntityGUID="f1c3d80b-02ce-4fcc-93a4-8e5b06689793">
+      <Value Key="Type" Value="entity-content-blocks" Type="String" />
+      <Value Key="Label" Value="Content Block Items" Type="String" />
+      <Value Key="Description" Value="Use this to manage inner content-blocks - discover more on 2sxc.org/help?tag=content-blocks" Type="String" />
+      <Value Key="Assets" Value="" Type="String" />
+    </Entity>
+  </Entities>
+  <PortalFiles />
+  <PortalFolders>
+  </PortalFolders>
+</SexyContent>

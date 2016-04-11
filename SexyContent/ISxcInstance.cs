@@ -1,4 +1,5 @@
-﻿using ToSic.SexyContent.DataSources;
+﻿using System.Web;
+using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Engines;
 
 namespace ToSic.SexyContent
@@ -27,7 +28,7 @@ namespace ToSic.SexyContent
         Template Template { get; }
 
 
-        string Render();
+        HtmlString Render();
 
     }
 }

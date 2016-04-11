@@ -4,6 +4,7 @@ using System.Linq;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Localization;
 using ToSic.Eav;
+using ToSic.Eav.BLL;
 
 namespace ToSic.SexyContent.Internal
 {
@@ -52,14 +53,18 @@ namespace ToSic.SexyContent.Internal
 
         public static List<Zone> GetZones()
         {
-            return new SxcInstance(Constants.DefaultZoneId, AppHelpers.GetDefaultAppId(Constants.DefaultZoneId)).EavAppContext.Zone.GetZones();
+            return EavDataController.Instance(Constants.DefaultZoneId, AppHelpers.GetDefaultAppId(Constants.DefaultZoneId)).Zone.GetZones();
+
+            //return new SxcInstance(Constants.DefaultZoneId, AppHelpers.GetDefaultAppId(Constants.DefaultZoneId)).EavAppContext.Zone.GetZones();
         }
 
         public static Zone AddZone(string zoneName)
         {
-            return
-                new SxcInstance(Constants.DefaultZoneId, AppHelpers.GetDefaultAppId(Constants.DefaultZoneId)).EavAppContext.Zone
+            return EavDataController.Instance(Constants.DefaultZoneId, AppHelpers.GetDefaultAppId(Constants.DefaultZoneId)).Zone
                     .AddZone(zoneName).Item1;
+            //return
+            //    new SxcInstance(Constants.DefaultZoneId, AppHelpers.GetDefaultAppId(Constants.DefaultZoneId)).EavAppContext.Zone
+            //        .AddZone(zoneName).Item1;
         }
 
         /// <summary>
@@ -68,7 +73,8 @@ namespace ToSic.SexyContent.Internal
         public static List<CulturesWithActiveState> GetCulturesWithActiveState(int portalId, int zoneId)
         {
             //var DefaultLanguageID = ContentContext.GetLanguageId();
-            var AvailableEAVLanguages = new SxcInstance(zoneId, AppHelpers.GetDefaultAppId(zoneId)).EavAppContext.Dimensions.GetLanguages();
+            var AvailableEAVLanguages = EavDataController.Instance(zoneId, AppHelpers.GetDefaultAppId(zoneId)).Dimensions.GetLanguages();
+            // var AvailableEAVLanguages = new SxcInstance(zoneId, AppHelpers.GetDefaultAppId(zoneId)).EavAppContext.Dimensions.GetLanguages();
             var DefaultLanguageCode = new PortalSettings(portalId).DefaultLanguage;
             var DefaultLanguage = AvailableEAVLanguages.Where(p => p.ExternalKey == DefaultLanguageCode).FirstOrDefault();
             var DefaultLanguageIsActive = DefaultLanguage != null && DefaultLanguage.Active;

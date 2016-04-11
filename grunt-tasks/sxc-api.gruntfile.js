@@ -20,17 +20,21 @@ module.exports = function (grunt) {
         },
 
         uglify: {
-            Sxc4ng: {
-                files: {
-                    'js/AngularJS/2sxc4ng.min.js': ["js/AngularJS/2sxc4ng.annotated.js"]
-                }
-            },
+            //Sxc4ng: {
+            //    files: {
+            //        'js/AngularJS/2sxc4ng.min.js': ["js/AngularJS/2sxc4ng.annotated.js"]
+            //    }
+            //},
             SxcCore: {
                 files: {
                     'js/2sxc.api.min.js': ["js/2sxc.api.js"],
+                    'js/AngularJS/2sxc4ng.min.js': ["js/AngularJS/2sxc4ng.annotated.js"]
                 }
             }
         },
 
     });
+
+    grunt.registerTask("2sxc-api-and-ng", ["jshint:Sxc", "ngAnnotate:Sxc4ng", "uglify:SxcCore" ]);
+
 };

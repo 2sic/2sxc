@@ -15,10 +15,10 @@ namespace ToSic.SexyContent.Internal
 
         public SxcInstance _sxcInstance;
         public App App;
-        public TemplateManager(SxcInstance sxc)
+        public TemplateManager(App app)
         {
-            _sxcInstance = sxc;
-            App = sxc.App;
+            ///_sxcInstance = sxc;
+            App = app;//sxc.App;
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace ToSic.SexyContent.Internal
         /// <param name="templateLocation"></param>
         internal void EnsureTemplateFolderExists(HttpServerUtility server, string templateLocation)
         {
-            var portalPath = templateLocation == Settings.TemplateLocations.HostFileSystem ? server.MapPath(Settings.PortalHostDirectory) : _sxcInstance.PortalSettingsOfOriginalModule.HomeDirectoryMapPath;
+            var portalPath = templateLocation == Settings.TemplateLocations.HostFileSystem ? server.MapPath(Settings.PortalHostDirectory) : App.OwnerPortalSettings.HomeDirectoryMapPath;
             var sexyFolderPath = Path.Combine(portalPath, Settings.TemplateFolder);
 
             var sexyFolder = new DirectoryInfo(sexyFolderPath);
@@ -127,7 +127,7 @@ namespace ToSic.SexyContent.Internal
         /// </summary>
         public static string GetTemplatePathRoot(string locationId, App app)
         {
-            var rootFolder = (locationId == Settings.TemplateLocations.PortalFileSystem ? app.OwnerPS.HomeDirectory : Settings.PortalHostDirectory);
+            var rootFolder = (locationId == Settings.TemplateLocations.PortalFileSystem ? app.OwnerPortalSettings.HomeDirectory : Settings.PortalHostDirectory);
             rootFolder += Settings.TemplateFolder + "/" + app.Folder;
             return rootFolder;
         }

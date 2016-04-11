@@ -53,10 +53,11 @@ namespace ToSic.SexyContent.WebApi
             var portalId = PortalSettings.PortalId;
             var zoneId = ZoneHelpers.GetZoneID(portalId);
 	        var cache = DataSource.GetCache(zoneId.Value);
-            var sexy = new SxcInstance(zoneId.Value, cache.AppId);
+            //var sexy = new SxcInstance(zoneId.Value, cache.AppId);
+            var app = new App(zoneId.Value, cache.AppId, PortalSettings );
             var cultureText = LocaleController.Instance.GetLocale(cultureCode).Text;
 
-            sexy.EavAppContext.Dimensions.AddOrUpdateLanguage(cultureCode, cultureText, enable, PortalSettings.PortalId);
+            app.EavContext.Dimensions.AddOrUpdateLanguage(cultureCode, cultureText, enable, PortalSettings.PortalId);
 	    }
 
 
@@ -65,7 +66,7 @@ namespace ToSic.SexyContent.WebApi
         [HttpGet]
         public dynamic Apps(int zoneId)
         {
-            var list = AppHelpers.GetApps(zoneId, true, new PortalSettings(ActiveModule.OwnerPortalID));
+            var list = AppManagement.GetApps(zoneId, true, new PortalSettings(ActiveModule.OwnerPortalID));
             return list.Select(a => new
             {
                 Id = a.AppId,
@@ -83,8 +84,9 @@ namespace ToSic.SexyContent.WebApi
 
         private string GetPath(int zoneId, int appId)
         {
-            var sexy = new SxcInstance(zoneId, appId);
-            return sexy.App.Path;
+            //var sexy = new SxcInstance(zoneId, appId);
+            var app = new App(zoneId, appId , PortalSettings);
+            return app.Path;
         }
 
         [HttpGet]
@@ -92,13 +94,13 @@ namespace ToSic.SexyContent.WebApi
         {
             var userId = PortalSettings.Current.UserId;
             //var portalId = this.PortalSettings.PortalId;
-            AppHelpers.RemoveApp(zoneId, appId, this.PortalSettings, userId);
+            AppManagement.RemoveApp(zoneId, appId, this.PortalSettings, userId);
         }
 
         [HttpPost]
         public void App(int zoneId, string name)
         {
-            AppHelpers.AddApp(zoneId, name, new PortalSettings(ActiveModule.OwnerPortalID));
+            AppManagement.AddBrandNewApp(zoneId, name, new PortalSettings(ActiveModule.OwnerPortalID));
         }
 
         #endregion
@@ -108,14 +110,15 @@ namespace ToSic.SexyContent.WebApi
         [HttpGet]
         public dynamic DialogSettings(int appId)
         {
-            var sxc = Request.GetSxcOfModuleContext(appId);
+            //var sxc = Request.GetSxcOfModuleContext(appId);
+            var App = new App(PortalSettings.Current, appId);
 
             return new
             {
-                IsContent = sxc.App.AppGuid == "Default",
+                IsContent = /*sxc.*/App.AppGuid == "Default",
                 Language = PortalSettings.Current.CultureCode,
                 LanguageDefault = PortalSettings.Current.DefaultLanguage,
-                GettingStartedUrl = GettingStartedUrl(sxc.App)
+                GettingStartedUrl = GettingStartedUrl(/*sxc.*/App)
             };
         }
 
@@ -161,8 +164,10 @@ namespace ToSic.SexyContent.WebApi
         [HttpGet]
         public List<string> WebAPiFiles(int appId)
         {
-            var sxc = Request.GetSxcOfModuleContext(appId);
-            var path = Path.Combine(sxc.App.PhysicalPath, "Api");
+            var App = new App(PortalSettings.Current, appId);
+
+            //var sxc = Request.GetSxcOfModuleContext(appId);
+            var path = Path.Combine(/*sxc.*/App.PhysicalPath, "Api");
             if (Directory.Exists(path))
                 return Directory.GetFiles(path, "*.cs")
                     .Select(Path.GetFileName)

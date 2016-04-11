@@ -35,6 +35,18 @@ module.exports = function (grunt) {
         concatCss: "dist/inpage/inpage.css",
         concatCssMin: "dist/inpage/inpage.min.css"
     };
+    var inpDialog = {
+        cwd: "src/inpage-dialogs/",
+        cwdJs: ["src/inpage-dialogs/**/*.js"],
+        tmp: "tmp/inpage-dialogs/",
+        templates: "tmp/inpage-dialogs/inpage-templates.js",
+        //dist: "dist/admin/",
+        concatFile: "dist/inpage/inpage-dialogs.js",
+        uglifyFile: "dist/inpage/inpage-dialogs.min.js",
+        concatCss: "dist/inpage/inpage-dialogs.css",
+        concatCssMin: "dist/inpage/inpage-dialogs.min.css"
+    };
+
     var eavconf = {
         cwd: "src/config/",
         cwdJs: ["src/config/**/*.js"],
@@ -75,7 +87,7 @@ module.exports = function (grunt) {
                 laxbreak: true,
                 scripturl: true
             },
-            all: ["gruntfile.js", sxcadmin.cwd, inpage.cwd, eavconf.cwd, sxcedit.cwd, designer.cwd]
+            all: ["gruntfile.js", sxcadmin.cwd, inpage.cwd, inpDialog.cwd, eavconf.cwd, sxcedit.cwd, designer.cwd]
         },
 
         clean: {
@@ -91,6 +103,12 @@ module.exports = function (grunt) {
                         cwd: "src",
                         src: ["*/**", "!**/*Spec.js"],
                         dest: "tmp"
+                    },
+                    {
+                        expand: true,
+                        cwd: "src",
+                        src: "inpage-libs/*/**",
+                        dest: "tmp/inpage"
                     }
                 ]
             }
@@ -170,7 +188,7 @@ module.exports = function (grunt) {
                     }
                 ]
             },
-            inpage: {
+            inpDialog: {
                 options: {
                     module: "SxcInpageTemplates",
                     append: true,
@@ -188,9 +206,9 @@ module.exports = function (grunt) {
                 },
                 files: [
                     {
-                        cwd: inpage.tmp,
+                        cwd: inpDialog.tmp,
                         src: ["**/*.html"],
-                        dest: inpage.templates
+                        dest: inpDialog.templates
                     }
                 ]
             }
@@ -209,6 +227,10 @@ module.exports = function (grunt) {
                 src: inpage.tmp + "**/*.js",
                 dest: inpage.concatFile
             },
+            inpDialog: {
+                src: inpDialog.tmp + "**/*.js",
+                dest: inpDialog.concatFile
+            },
             eavconf: {
                 src: eavconf.tmp + "**/*.js",
                 dest: eavconf.concatFile
@@ -224,6 +246,10 @@ module.exports = function (grunt) {
             inpageCss: {
                 src: inpage.cwd + "**/*.css",
                 dest: inpage.concatCss
+            },
+            inpageDialogsCss: {
+                src: inpDialog.cwd + "**/*.css",
+                dest: inpDialog.concatCss
             }
         },
 
@@ -235,7 +261,7 @@ module.exports = function (grunt) {
             },
             sxcadmin: {
                 expand: true,
-                src: [sxcadmin.concatFile, sxcedit.concatFile, inpage.concatFile, eavconf.concatFile, designer.concatFile],
+                src: [sxcadmin.concatFile, sxcedit.concatFile, inpage.concatFile, inpDialog.concatFile, eavconf.concatFile, designer.concatFile],
                 extDot: "last"          // Extensions in filenames begin after the last dot 
             }
         },
@@ -249,6 +275,7 @@ module.exports = function (grunt) {
             sxcedit: {  src: sxcedit.concatFile,    dest: sxcedit.uglifyFile    },
             designer: { src: designer.concatFile,   dest: designer.uglifyFile    },
             inpage: {   src: inpage.concatFile,     dest: inpage.uglifyFile     },
+            inpDialog: {   src: inpDialog.concatFile,     dest: inpDialog.uglifyFile     },
             eavconf: {  src: eavconf.concatFile,    dest: eavconf.uglifyFile    }
         },
         
@@ -316,6 +343,7 @@ module.exports = function (grunt) {
     // Default task(s).
     grunt.registerTask("build-css", [
         "concat:inpageCss",
+        "concat:inpageDialogsCss",
         "concat:adminCss",
         "cssmin:allInDist"
     ]);
@@ -327,10 +355,11 @@ module.exports = function (grunt) {
         "ngtemplates:default",
         "ngtemplates:sxcedit",
         "ngtemplates:designer",
-        "ngtemplates:inpage",
+        "ngtemplates:inpDialog",
         "concat:default",
         "concat:sxcedit",
         "concat:inpage",
+        "concat:inpDialog",
         "concat:eavconf",
         "concat:designer",
         "ngAnnotate:sxcadmin",

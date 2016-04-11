@@ -1,0 +1,37 @@
+﻿<div>
+    <div class="modal-header">
+        <button icon="remove" class="btn pull-right" type="button" ng-click="vm.close()"></button>
+        <h3 class="modal-title" translate="ImportExport.ExportApp.Title"></h3>
+    </div>
+    <div class="modal-body">
+        <div translate="ImportExport.ExportApp.Intro"></div>
+        <div translate="ImportExport.ExportApp.FurtherHelp"></div>
+
+        <h5>{{"ImportExport.ExportApp.Specifications.Title" | translate}}</h5>
+        <ul>
+            <li>{{"ImportExport.ExportApp.Specifications.AppName" | translate}} {{vm.AppInfo.Name}}</li>
+            <li>{{"ImportExport.ExportApp.Specifications.AppGuid" | translate}} {{vm.AppInfo.Guid}}</li>
+            <li>{{"ImportExport.ExportApp.Specifications.AppVersion" | translate}} {{vm.AppInfo.Version}}</li>
+        </ul>
+
+        <h5>{{"ImportExport.ExportApp.Content.Title" | translate}}</h5>
+        <ul>
+            <li>{{vm.AppInfo.EntitiesCount}} {{"ImportExport.ExportApp.Content.EntitiesCount" | translate}}</li>
+            <li>{{vm.AppInfo.LanguagesCount}} {{"ImportExport.ExportApp.Content.LanguagesCount" | translate}}</li>
+            <li>{{vm.AppInfo.TemplatesCount}} {{"ImportExport.ExportApp.Content.TemplatesCount" | translate}} ({{"ImportExport.ExportApp.Content.TokenTemplates" | translate}} {{vm.AppInfo.HasTokenTemplates}}, {{"ImportExport.ExportApp.Content.RazorTemplates" | translate}} {{vm.AppInfo.HasRazorTemplates}})</li>
+            <li>{{vm.AppInfo.TransferableFilesCount}} {{"ImportExport.ExportApp.Content.TransferableFilesCount" | translate}}</li>
+            <li>{{vm.AppInfo.FilesCount}} {{"ImportExport.ExportApp.Content.FilesCount" | translate}}</li>
+        </ul>
+
+        <div>
+            <input ng-model="vm.IncludeContentGroups" type="checkbox" /> {{"ImportExport.ExportApp.Options.IncludeContentGroups" | translate}}
+        </div>
+        <div>
+            <input ng-model="vm.ResetAppGuid" type="checkbox" /> {{"ImportExport.ExportApp.Options.ResetAppGuid" | translate}}
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary pull-left" ng-click="vm.exportApp()" translate="ImportExport.ExportApp.Commands.Export"></button>
+    </div>
+</div>

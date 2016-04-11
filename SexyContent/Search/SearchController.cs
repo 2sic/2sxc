@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -7,6 +8,7 @@ using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.Search.Entities;
 using ToSic.Eav;
+using ToSic.SexyContent.ContentBlock;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Engines;
@@ -33,12 +35,17 @@ namespace ToSic.SexyContent.Search
 
             if (!isContentModule)
             {
-	            appId = AppHelpers.GetAppIdFromModule(moduleInfo);
+	            appId = AppHelpers.GetAppIdFromModule(moduleInfo, zoneId.Value);
 				if (!appId.HasValue)
 		            return searchDocuments;
             }
 
-            var sexy = new SxcInstance(zoneId.Value, appId.Value, true, moduleInfo.OwnerPortalID, moduleInfo);
+            // new 2016-03-27
+            var mcb = new ModuleContentBlock(moduleInfo);
+            var sexy = mcb.SxcInstance;
+
+            // old 2016-03-27
+            //var sexy = new SxcInstance(zoneId.Value, appId.Value, moduleInfo);
             var language = moduleInfo.CultureCode;
 	        var contentGroup = sexy.AppContentGroups.GetContentGroupForModule(moduleInfo.ModuleID);
             var template = contentGroup.Template;

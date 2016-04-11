@@ -50,20 +50,20 @@ namespace ToSic.SexyContent
 		public int ZoneId { get; set; }
 		public int AppId { get; set; }
 
-		private SxcInstance _sexy;
-		public SxcInstance Sexy
-		{
-			get
-			{
-				if (_sexy == null)
-				{
-					if (ZoneId == 0 || AppId == 0)
-						throw new ArgumentNullException("ZoneId and AppId must be set.");
-					_sexy = new SxcInstance(ZoneId, AppId);
-				}
-				return _sexy;
-			}
-		}
+		//private SxcInstance _sexy;
+		//private SxcInstance Sexy
+		//{
+		//	get
+		//	{
+		//		if (_sexy == null)
+		//		{
+		//			if (ZoneId == 0 || AppId == 0)
+		//				throw new ArgumentNullException("ZoneId and AppId must be set.");
+		//			_sexy = new SxcInstance(ZoneId, AppId);
+		//		}
+		//		return _sexy;
+		//	}
+		//}
 
 		protected void Page_Load(object sender, EventArgs e)
 		{
@@ -81,8 +81,15 @@ namespace ToSic.SexyContent
 				if (EnableNoContentTypeOption)
 					ddlContentTypes.Items.Add(new ListItem("< no ContentType >", "-1"));
 
-				// DataBind Content Types
-				var AttributeSets = Sexy.AppTemplates.GetAvailableContentTypes(ToSic.SexyContent.Settings.AttributeSetScope);
+                // DataBind Content Types
+                // 2016-03-27 new
+                if (ZoneId == 0 || AppId == 0)
+                    throw new ArgumentNullException("ZoneId and AppId must be set.");
+                var app = new App(ZoneId, AppId, PortalSettings);
+                var AttributeSets = app.TemplateManager.GetAvailableContentTypes(SexyContent.Settings.AttributeSetScope);
+
+                // 2016-03-27 old
+                //var AttributeSets = Sexy.AppTemplates.GetAvailableContentTypes(ToSic.SexyContent.Settings.AttributeSetScope);
 				ddlContentTypes.DataSource = AttributeSets;
 
 				if (AttributeSets.Any(a => a.StaticName == _ContentTypeStaticName))

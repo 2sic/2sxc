@@ -148,10 +148,11 @@ namespace ToSic.SexyContent.ImportExport
                                     xmlIndex++;
                                 }
 
-                                var sexy = new SxcInstance(_zoneId, appId.Value);
+                                //var sexy = new SxcInstance(_zoneId, appId.Value);
+                                var app = new App(_zoneId, appId.Value,  PortalSettings.Current, false);
 
                                 // Copy all files in 2sexy folder to (portal file system) 2sexy folder
-                                var templateRoot = server.MapPath(Internal.TemplateManager.GetTemplatePathRoot(Settings.TemplateLocations.PortalFileSystem, sexy.App));
+                                var templateRoot = server.MapPath(Internal.TemplateManager.GetTemplatePathRoot(Settings.TemplateLocations.PortalFileSystem, app));
                                 var appTemplateRoot = Path.Combine(appDirectory, "2sexy");
                                 if (Directory.Exists(appTemplateRoot))
                                     (new FileManager(appTemplateRoot)).CopyAllFiles(templateRoot, false, messages);
@@ -281,7 +282,7 @@ namespace ToSic.SexyContent.ImportExport
                     }
                     catch (Exception e)
                     {
-                        messages.Add(new ExportImportMessage("Can't copy file '" + destinationFileName + "' because of an unkown error. The exception has been logged to the event log.", ExportImportMessage.MessageTypes.Warning));
+                        messages.Add(new ExportImportMessage("Can't copy file '" + destinationFileName + "' because of an unkown error. It's likely that your files and folders are not in sync with DNN, usually re-syncing will fix the issue.", ExportImportMessage.MessageTypes.Warning));
                         Exceptions.LogException(e);
                     }
                 }

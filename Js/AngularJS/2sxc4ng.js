@@ -8,30 +8,34 @@ $2sxc.ng = {
     appAttribute: "sxc-app",
     ngAttrPrefixes: ["ng-", "data-ng-", "ng:", "x-ng-"],
     iidAttrNames: ["app-instanceid", "data-instanceid", "id"],
+    cbidAttrName: "data-cb-id",
     ngAttrDependencies: "dependencies", 
 
     // bootstrap: an App-Start-Help; normally you won't call this manually as it will be auto-bootstrapped. 
     // All params optional except for 'element'
     bootstrap: function (element, ngModName, iid, dependencies, config) {
         // first, try to get moduleId from function-param or from from URL
-        iid = iid || $2sxc.ng.findInstanceId(element) || $2sxc.urlParams.get("mid"); 
+        iid = iid || $2sxc.ng.findInstanceId(element) || $2sxc.urlParams.get("mid");
 
+        var cbid = $2sxc.ng.findContentBlockId(element) || $2sxc.urlParams.get("cbid") || iid;
         // then provide access to the dnn-services framework (or a fake thereof)
         var sf = $.ServicesFramework(iid);
 
         // create a micro-module to configure sxc-init parameters, add to dependencies. Note that the order is important!
-        angular.module("confSxcApp" + iid, [])
+        var confMod = angular.module("confSxcApp" + iid + "-" + cbid, [])
             .constant("AppInstanceId", iid)
+            .constant("ContentBlockId", cbid)
             .constant("AppServiceFramework", sf)
             .constant("HttpHeaders", {
                 "ModuleId": iid,
+                "ContentBlockId": cbid,
                 "TabId": sf.getTabId(),
                 "RequestVerificationToken": sf.getAntiForgeryValue(),
                 "Debugging-Hint": "bootstrapped by 2sxc4ng",
                 "Cache-Control": "no-cache", // had to add because of browser ajax caching issue #437
                 "Pragma": "no-cache"
             });
-        var allDependencies = ["confSxcApp" + iid, "2sxc4ng"].concat(dependencies || [ngModName]);
+        var allDependencies = [confMod.name, "2sxc4ng"].concat(dependencies || [ngModName]);
 
         angular.element(document).ready(function () {
 			try {
@@ -46,12 +50,28 @@ $2sxc.ng = {
     // find instance Id in an attribute of the tag - typically with id="app-700" or something and use the number as IID
     findInstanceId: function findInstanceId(element) {
         var attrib, ngElement = angular.element(element);
-        for (var i = 0; i < $2sxc.ng.iidAttrNames.length; i++)
+        for (var i = 0; i < $2sxc.ng.iidAttrNames.length; i++) {
             attrib = ngElement.attr($2sxc.ng.iidAttrNames[i]);
-        if (attrib) {
-            var iid = parseInt(attrib.toString().replace(/\D/g, "")); // filter all characters if necessary
-            if (!iid) throw "iid or instanceId (the DNN moduleid) not supplied and automatic lookup failed. Please set app-tag attribute iid or give id in bootstrap call";
-            return iid;
+            if (attrib) {
+                var iid = parseInt(attrib.toString().replace(/\D/g, "")); // filter all characters if necessary
+                if (!iid) throw "iid or instanceId (the DNN moduleid) not supplied and automatic lookup failed. Please set app-tag attribute iid or give id in bootstrap call";
+                return iid;
+            }
+        }
+    },
+
+    findContentBlockId: function (el) {
+        var cbid;
+        while (el.getAttribute) { // loop as long as it knows this command
+            if ((cbid = el.getAttribute($2sxc.ng.cbidAttrName))) return cbid;
+            el = el.parentNode;
+        }
+        return null;
+    },
+    _closest: function(el, fn) {
+        while (el) {
+            if (fn(el)) return el; 
+            el = el.parentNode;
         }
     },
 

@@ -1,18 +1,31 @@
-﻿using System.Net.Http;
+﻿using System.Linq;
+using System.Net.Http;
+using System.Web;
+using DotNetNuke.Entities.Portals;
 using DotNetNuke.Web.Api;
-using ToSic.SexyContent.Internal;
+using ToSic.SexyContent.ContentBlock;
+using ToSic.SexyContent.Interfaces;
 
 namespace ToSic.SexyContent.WebApi
 {
     public static class HttpRequestMessageExtensions
     {
-        internal static SxcInstance GetSxcOfModuleContext(this HttpRequestMessage request, int? appId = null)
+        internal static SxcInstance GetSxcOfModuleContext(this HttpRequestMessage request)
         {
+            string cbidHeader = "ContentBlockId";
             var moduleInfo = request.FindModuleInfo();
-            if(!appId.HasValue)
-                appId = AppHelpers.GetAppIdFromModule(moduleInfo);
-            var zoneId = ZoneHelpers.GetZoneID(moduleInfo.PortalID);
-            return new SxcInstance(zoneId.Value, appId.Value, true, moduleInfo.OwnerPortalID, moduleInfo);
+            IContentBlock contentBlock = new ModuleContentBlock(moduleInfo);
+
+            // check if we need an inner block
+            if (request.Headers.Contains(cbidHeader)) { 
+                var cbidh = request.Headers.GetValues(cbidHeader).FirstOrDefault();
+                int cbid;
+                int.TryParse(cbidh, out cbid);
+                if (cbid < 0)   // negative id, so it's an inner block
+                    contentBlock = new EntityContentBlock(contentBlock, cbid);
+            }
+
+            return contentBlock.SxcInstance;
         }
 
     }

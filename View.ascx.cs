@@ -1,29 +1,46 @@
 ﻿using System;
-using System.Linq;
+using System.Web;
+using System.Web.UI;
 using DotNetNuke.Entities.Modules;
+using DotNetNuke.Entities.Modules.Actions;
+using DotNetNuke.Framework;
+using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
+using ToSic.SexyContent.ContentBlock;
+using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent
 {
-    public partial class View : SexyViewContentOrApp, IActionable
+    public partial class View : PortalModuleBase, IActionable
     {
+        private SxcInstance _sxci;
+        protected SxcInstance SxcI => _sxci ?? (_sxci = new ModuleContentBlock(ModuleConfiguration).SxcInstance);
+
         /// <summary>
         /// Page Load event - preload template chooser if necessary
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected new void Page_Load(object sender, EventArgs e)
+        protected void Page_Load(object sender, EventArgs e)
         {
-            // Reset messages visible states on every reload
-            //pnlMessage.Visible = false;
-            pnlError.Visible = false;
+            // always do this, part of the guarantee that everything will work
+            ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
 
-            var notReady = Installer.CheckUpgradeMessage(UserInfo.IsSuperUser);
-            if(!string.IsNullOrEmpty(notReady))
-                ShowError(notReady, pnlError, notReady, false);
+            if (!UserMayEditThisModule) return;
 
-            base.Page_Load(sender, e);
+            #region If logged in, inject Edit JavaScript, and delete / add items
+            // register scripts and css
+            try
+            {
+                var renderHelp = new RenderingHelpers(SxcI);
+                renderHelp.RegisterClientDependencies(Page, string.IsNullOrEmpty(Request.QueryString["debug"]));
+            }
+            catch (Exception ex)
+            {
+                Exceptions.ProcessModuleLoadException(this, ex);
+            }
+            #endregion
         }
 
         /// <summary>
@@ -33,46 +50,123 @@ namespace ToSic.SexyContent
         /// <param name="e"></param>
         protected void Page_PreRender(object sender, EventArgs e)
         {
-
-            if (!Installer.UpgradeComplete)
-                return;
-
             try
             {
-                var isSharedModule = ModuleConfiguration.PortalID != ModuleConfiguration.OwnerPortalID;
-
                 // check things if it's a module of this portal (ensure everything is ok, etc.)
-                if (!isSharedModule)
-                {
-                    // if editable, include template chooser
-                    if (UserMayEditThisModule)
-                        pnlTemplateChooser.Visible = true;
+                var isSharedModule = ModuleConfiguration.PortalID != ModuleConfiguration.OwnerPortalID;
+                if (!isSharedModule && !SxcI.ContentBlock.ContentGroupExists)
+                    new DnnStuffToRefactor().EnsurePortalIsConfigured(SxcI, Server, ControlPath);
 
-                    if (SettingsAreStored)// AppId.HasValue)
-                        new DnnStuffToRefactor().EnsurePortalIsConfigured(_sxcInstance, Server, ControlPath);
-                }
+                var renderedTemplate = SxcI.Render().ToString();
 
-                if (SettingsAreStored) // AppId.HasValue)
-                {
-                    if (ContentGroup.Content.Any() && Template != null)
-                        ProcessView(phOutput, pnlError);//, pnlMessage);
-                    else if (!IsContentApp && UserMayEditThisModule)
-                    // Select first available template automatically if it's not set yet - then refresh page
-                    {
-                        var templates = _sxcInstance.AppTemplates.GetAvailableTemplatesForSelector(ModuleConfiguration.ModuleID, _sxcInstance.AppContentGroups).ToList();
-                        if (templates.Any())
-                        {
-                            _sxcInstance.AppContentGroups.SetPreviewTemplateId(ModuleConfiguration.ModuleID, templates.First().TemplateId);
-                            Response.Redirect(Request.RawUrl);
-                        }
-                    }
-                }
+                // If standalone is specified, output just the template without anything else
+                if (Request.QueryString["standalone"] == "true")
+                    SendStandalone(renderedTemplate);
+                else
+                    phOutput.Controls.Add(new LiteralControl(renderedTemplate));
             }
             catch (Exception ex)
             {
                 Exceptions.ProcessModuleLoadException(this, ex);
             }
         }
+
+
+        private void SendStandalone(string renderedTemplate)
+        {
+            Response.Clear();
+            Response.Write(renderedTemplate);
+            Response.Flush();
+            Response.SuppressContent = true;
+            HttpContext.Current.ApplicationInstance.CompleteRequest();
+        }
+
+
+
+        #region Security Check
+        protected bool UserMayEditThisModule => SxcI?.Environment?.Permissions.UserMayEditContent ?? false;
+        #endregion
+
+
+        #region ModuleActions on THIS DNN-Module
+
+        /// <summary>
+        /// Causes DNN to create the menu with all actions like edit entity, new, etc.
+        /// </summary>
+        private ModuleActionCollection _moduleActions;
+        public ModuleActionCollection ModuleActions
+        {
+            get
+            {
+                try
+                {
+                    if (ModuleConfiguration.PortalID != ModuleConfiguration.OwnerPortalID)
+                        _moduleActions = new ModuleActionCollection();
+
+                    if (_moduleActions != null) return _moduleActions;
+
+                    InitModuleActions();
+                    return _moduleActions;
+                }
+                catch (Exception e)
+                {
+                    Exceptions.LogException(e);
+                    return new ModuleActionCollection();
+                }
+            }
+        }
+
+        private void InitModuleActions()
+        {
+            _moduleActions = new ModuleActionCollection();
+            var actions = _moduleActions;
+            var appIsKnown = (SxcI.AppId.HasValue);
+
+            if (appIsKnown)
+            {
+                // Edit item
+                if (!SxcI.Template?.UseForList ?? false)
+                    actions.Add(GetNextActionID(), LocalizeString("ActionEdit.Text"), "", "", "edit.gif",
+                        "javascript:$2sxcActionMenuMapper(" + ModuleId + ").edit();", "test", true,
+                        SecurityAccessLevel.Edit, true, false);
+
+                // Add Item
+                if (SxcI.Template?.UseForList ?? false)
+                    actions.Add(GetNextActionID(), LocalizeString("ActionAdd.Text"), "", "", "add.gif",
+                        "javascript:$2sxcActionMenuMapper(" + ModuleId + ").addItem();", true, SecurityAccessLevel.Edit, true,
+                        false);
+
+                // Change layout button
+                actions.Add(GetNextActionID(), LocalizeString("ActionChangeLayoutOrContent.Text"), "", "", "action_settings.gif",
+                    "javascript:$2sxcActionMenuMapper(" + ModuleId + ").changeLayoutOrContent();", false,
+                    SecurityAccessLevel.Edit, true, false);
+            }
+
+            if (!SecurityHelpers.SexyContentDesignersGroupConfigured(PortalId) ||
+                SecurityHelpers.IsInSexyContentDesignersGroup(UserInfo))
+            {
+                // Edit Template Button
+                if (appIsKnown && SxcI.Template != null)
+                    actions.Add(GetNextActionID(), LocalizeString("ActionEditTemplateFile.Text"), ModuleActionType.EditContent,
+                        "templatehelp", "edit.gif", "javascript:$2sxcActionMenuMapper(" + ModuleId + ").develop();", "test",
+                        true,
+                        SecurityAccessLevel.Edit, true, false);
+
+                // App management
+                if (appIsKnown)
+                    actions.Add(GetNextActionID(), "Admin" + (SxcI.IsContentApp ? "" : " " + SxcI.App.Name), "",
+                        "", "edit.gif", "javascript:$2sxcActionMenuMapper(" + ModuleId + ").adminApp();", "", true,
+                        SecurityAccessLevel.Admin, true, false);
+
+                // Zone management (app list)
+                if (!SxcI.IsContentApp)
+                    actions.Add(GetNextActionID(), "Apps Management", "AppManagement.Action", "", "action_settings.gif",
+                        "javascript:$2sxcActionMenuMapper(" + ModuleId + ").adminZone();", "", true,
+                        SecurityAccessLevel.Admin, true, false);
+            }
+        }
+
+        #endregion
 
     }
 }

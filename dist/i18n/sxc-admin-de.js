@@ -176,5 +176,17 @@
 				}
 			}
 		}
+	},
+	"TemplatePicker": {
+		"AppPickerDefault": "<App auswählen>",
+		"ContentTypePickerDefault": "<Typ des Inhalts auswählen>",
+		"LayoutElement": "Design-Element",
+		"Save": "Speichern",
+		"Cancel": "Abbrechen",
+		"Close": "Schliessen",
+		"Install": "weitere Apps installieren...",
+		"Catalog": "App Katalog durchsuchen",
+		"App": "App Konfigurieren",
+		"Zone": "Apps verwalten"
 	}
 }

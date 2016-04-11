@@ -5,6 +5,62 @@
 .sc-menu li { list-style-type:none; padding:0!important; margin:0!important; display:inline; }
 .sc-menu a { display:inline-block!important; margin-right:4px!important;cursor: pointer;margin-left: 0 !important; }
 
+/* Content block menu */
+.sc-content-block-menu { position:absolute; height: 40px; margin-top:-20px; opacity:0.8; text-align:center; pointer-events:none; line-height:35px; }
+.sc-content-block-menu a {  cursor:pointer; width:32px; height:32px; margin:0px 3px; display:inline-block; text-indent:-9999px; pointer-events:auto; font-size:18px; }
+.sc-content-block-menu:before, .sc-content-block-menu:after { height:2px; background:#0088f4; width:60px; display:block; content:' '; position:absolute; left:50%; top:19px; }
+.sc-content-block-menu:before { margin-left:-150px; }
+.sc-content-block-menu:after { margin-left:90px; }
+.sc-content-block-menu-addcontent {
+     background:url(../../icon.png);  background-size: 32px 32px;
+}
+.sc-content-block-menu-addcontent.sc-content-block-menu-module {
+    background: url(../../icon-black.png); background-size: 32px 32px;
+}
+.sc-content-block-menu-addapp {
+     background:url(../../icon-app.png);  background-size: 32px 32px;
+}
+.sc-content-block-menu-addapp.sc-content-block-menu-module {
+    background: url(../../icon-app-black.png); background-size: 32px 32px;
+}
+a.sc-content-block-menu-btn {
+    background: #2F9BF2;
+    border-top-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    text-indent: 0!important;
+    color: white;
+}
+.sc-invisible { display:none !important; }
+
+.sc-cb-action {
+    -webkit-filter: grayscale(75%); filter: grayscale(75%);
+}
+
+.sc-cb-is-selected {
+    filter: blur(5px);
+    -webkit-filter: blur(5px);
+}
+
+div.sc-content-block-list.sc-cb-highlight-for-insert {
+    background-color: rgba(47,155,242,0.1);
+}
+
+div.sc-cb-highlight-for-insert {
+    background-color: rgba(128,128,128,0.1);
+}
+
+
+/* this is needed to disable the paste button till it can be used */
+.sc-unavailable {
+    display: none!important;
+}
+
+/* this rule disables copy/paste on module, as it's not supported (only on blocks) */
+a.sc-content-block-menu-module.sc-cb-action {
+    display: none !important;
+}
+
+
 /* this one is for buttons which can have a full/empty state */
 .sc-menu li a.empty i {opacity: 0.4} 
 
@@ -54,178 +110,9 @@
 }
 
 
-/* Template / ContentType / App-Selector */
-.sc-selector-wrapper { position: relative;overflow: hidden; }
-.sc-selector-wrapper .dnnFormInfo { overflow: hidden;padding: 9px;max-width:none; }
-.sc-selector-wrapper a { cursor: pointer; }
-.sc-selectors { max-width: 100% !important;float: left;width: 300px; }
-.sc-selectors select { display: block;width: 100%;font-family: sans-serif;font-size: 13px;font-weight: 400;font-style: normal;color: #666;line-height: 16px;padding: 9px; }
-.sc-selector-contenttype, .sc-selector-app { margin-bottom: 3px!important; }
-.sc-selector-app-actions { margin-top: 6px;height: 28px; }
-.sc-selector-actions { margin-top: 12px; }
-
-/* todo: change to font-icons */
-.sc-selector-actions a span, .sc-selector-app-actions a span {
-    display: inline-block;
-    width: 28px!important;
-    height: 28px!important;
-    line-height:28px!important;
-    border-style: solid; 
-    box-sizing: content-box;
-    border-radius: 3px;
-    -webkit-border-radius: 3px; 
-    -moz-border-radius: 3px;
-    color: #fff; 
-    text-align: center; 
-    /*padding: 2px;*/
-    font-size: 15px;
-    margin-left: 6px;
-}
-
-.sc-selector-actions a span {
-    background-color: #0088f4;
-}
-.sc-selector-app-actions a span {
-    background-color: #96D500;
-}
-
-.sc-selectors select[disabled] { opacity: 0.5 }
-.sc-selectors input[disabled] { opacity: 0.5 }
 
 
-/* Loading sign */
-.sc-loading { 
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    color: #0088f4;
 
-    /* temp till we get it corrected*/
-    text-align: center;
-    /*padding-left: 50%;*/
-    padding-top: 20px;
-}
-
-.sc-loading-label {
-    padding: 5px;
-    background-color: white;
-}
-
-/* >>> spinner css copied from from font-awesome */
-/*.fa-spin {
-  -webkit-animation: fa-spin 2s infinite linear;
-  animation: fa-spin 2s infinite linear;
-}
-@-webkit-keyframes fa-spin {
-  0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(359deg);
-    transform: rotate(359deg);
-  }
-}
-@keyframes fa-spin {
-  0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(359deg);
-    transform: rotate(359deg);
-  }
-}*/
-/* <<< spinner CSS  */
-
-/* New spinner... */
-/*
-   Animation example, for spinners
-*/
-.animate-spin {
-  -moz-animation: spin 2s infinite linear;
-  -o-animation: spin 2s infinite linear;
-  -webkit-animation: spin 2s infinite linear;
-  animation: spin 2s infinite linear;
-  display: inline-block;
-}
-@-moz-keyframes spin {
-  0% {
-    -moz-transform: rotate(0deg);
-    -o-transform: rotate(0deg);
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-
-  100% {
-    -moz-transform: rotate(359deg);
-    -o-transform: rotate(359deg);
-    -webkit-transform: rotate(359deg);
-    transform: rotate(359deg);
-  }
-}
-@-webkit-keyframes spin {
-  0% {
-    -moz-transform: rotate(0deg);
-    -o-transform: rotate(0deg);
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-
-  100% {
-    -moz-transform: rotate(359deg);
-    -o-transform: rotate(359deg);
-    -webkit-transform: rotate(359deg);
-    transform: rotate(359deg);
-  }
-}
-@-o-keyframes spin {
-  0% {
-    -moz-transform: rotate(0deg);
-    -o-transform: rotate(0deg);
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-
-  100% {
-    -moz-transform: rotate(359deg);
-    -o-transform: rotate(359deg);
-    -webkit-transform: rotate(359deg);
-    transform: rotate(359deg);
-  }
-}
-@-ms-keyframes spin {
-  0% {
-    -moz-transform: rotate(0deg);
-    -o-transform: rotate(0deg);
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-
-  100% {
-    -moz-transform: rotate(359deg);
-    -o-transform: rotate(359deg);
-    -webkit-transform: rotate(359deg);
-    transform: rotate(359deg);
-  }
-}
-@keyframes spin {
-  0% {
-    -moz-transform: rotate(0deg);
-    -o-transform: rotate(0deg);
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-
-  100% {
-    -moz-transform: rotate(359deg);
-    -o-transform: rotate(359deg);
-    -webkit-transform: rotate(359deg);
-    transform: rotate(359deg);
-  }
-}
 
 
 /* Prevent scrolling when sxc popup is open */

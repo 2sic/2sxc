@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
@@ -6,7 +7,9 @@ using System.Web;
 using DotNetNuke.Entities.Portals;
 using Newtonsoft.Json;
 using ToSic.Eav;
+using ToSic.SexyContent.ContentBlock;
 using ToSic.SexyContent.EAVExtensions;
+using static System.String;
 
 namespace ToSic.SexyContent
 {
@@ -46,7 +49,7 @@ namespace ToSic.SexyContent
             }
         }
         private readonly string[] _dimensions;
-        private SxcInstance _sxcInstance { get; set; }
+        private SxcInstance _sxcInstance { get; }
 
         /// <summary>
         /// Constructor with EntityModel and DimensionIds
@@ -97,45 +100,18 @@ namespace ToSic.SexyContent
             var result = Entity.GetBestValue(attributeName, _dimensions, true);
 
             if (result is Eav.Data.EntityRelationship)
-                    result = ((Eav.Data.EntityRelationship)result).Select(
-                        p => new DynamicEntity(p, _dimensions, _sxcInstance)
-                        ).ToList();
-            
+            {
+                var relList = ((Eav.Data.EntityRelationship) result).Select(
+                    p => new DynamicEntity(p, _dimensions, _sxcInstance)
+                    ).ToList();
+                result = new DynamicEntityList(Entity, attributeName, relList, _sxcInstance.Environment.Permissions.UserMayEditContent);
+            }
+
             //set out-information
             propertyNotFound = result == null;
             return result;
 
 
-            // 2016-02-27 2dm - fixed to use the full standard ValueConverter - this is mostly the old stuff
-            // #region handle 2sxc special conversions for file names and entity-lists
-//            propertyNotFound = result == null;
-//            if (!propertyNotFound)
-//            {
-//                if (Entity.Attributes.ContainsKey(attributeName))
-//                {
-//                    var attribute = Entity.Attributes[attributeName];
-//                    //if (attribute.Type == "Hyperlink" && result is string)
-//                    //    result = SexyContent.ResolveHyperlinkValues((string)result,
-//                    //     SexyContext == null ? PortalSettings.Current : SexyContext.OwnerPS);
-
-//                    if (attribute.Type == "Entity" && result is EntityRelationship)
-//                        // Convert related entities to Dynamics
-//                        result = ((EntityRelationship)result).Select(
-//                         p => new DynamicEntity(p, _dimensions, SexyContext)
-//                         ).ToList();
-//                }
-
-//                return result;
-//            }
-//#endregion
-
-
-
-//            #region all failed, return null
-//            propertyNotFound = true;
-//            return null;
-
-//            #endregion
 
 
         }
@@ -154,20 +130,11 @@ namespace ToSic.SexyContent
             }
         }
 
-        public int EntityId
-        {
-            get { return Entity.EntityId; }
-        }
+        public int EntityId => Entity.EntityId;
 
-        public Guid EntityGuid
-        {
-            get { return Entity.EntityGuid; }
-        }
+        public Guid EntityGuid => Entity.EntityGuid;
 
-        public object EntityTitle
-        {
-            get { return Entity.Title[_dimensions]; }
-        }
+        public object EntityTitle => Entity.Title[_dimensions];
 
         public dynamic GetDraft()
         {
@@ -190,8 +157,8 @@ namespace ToSic.SexyContent
             var dictionary = ((from d in entity.Attributes select d.Value).ToDictionary(k => k.Name, v =>
             {
                 var value = dynamicEntity.GetEntityValue(v.Name, out propertyNotFound);
-                if (v.Type == "Entity" && value is List<DynamicEntity>)
-                    return ((List<DynamicEntity>)value).Select(p => new { p.EntityId, p.EntityTitle });
+                if (v.Type == "Entity" && value is IList<DynamicEntity>)
+                    return ((IList<DynamicEntity>)value).Select(p => new { p.EntityId, p.EntityTitle });
                 return value;
             }));
 
@@ -216,5 +183,18 @@ namespace ToSic.SexyContent
             return dictionary;
         }
 
+        public HtmlString Render()
+        {
+            if (Entity.Type.Name == Settings.AttributeSetStaticNameContentBlockTypeName)
+            {
+                var cb = new EntityContentBlock(_sxcInstance.ContentBlock, Entity);
+                return cb.SxcInstance.Render();
+            }
+            else
+                return new HtmlString("<!-- auto-render of item " + EntityId + " -->");
+        }
     }
+
+
+
 }

@@ -9,7 +9,7 @@
             "ContentTypesApp",
             "PipelineManagement",
             "TemplatesApp",
-            "ImportExportApp",
+            "ImportExport",
             "AppSettingsApp",
             "SystemSettingsApp",
             "WebApiApp"

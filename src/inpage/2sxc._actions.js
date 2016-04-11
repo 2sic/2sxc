@@ -28,10 +28,13 @@
     }
 
     $2sxc._actions = {};
-    var thisObj = $2sxc._actions.create = function (manageInfo) {
-        var enableTools = manageInfo.user.canDesign;
+    var thisObj = $2sxc._actions.create = function (actionParams) {
+        var enableTools = actionParams.canDesign;
 
         var act = {
+            // show the basic dashboard which allows view-changing
+            "dash-view": createActionConfig("dash", "Dashboard", "", "", true, { inlineWindow: true }),
+            "app-import": createActionConfig("app-import", "Dashboard", "", "", true, {}),
             'edit': createActionConfig("edit", "Edit", "pencil", "default", false, { params: { mode: "edit" } }),
             // new is a dialog to add something, and will not add if cancelled
             // new can also be used for mini-toolbars which just add an entity not attached to a module
@@ -43,15 +46,17 @@
                 addCondition: function (settings, modConfig) {
                     return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; // don't provide new on the header-item
                 },
-                code: function (settings, event, toolbarManager) {
-                    toolbarManager._openNgDialog($2sxc._lib.extend({}, settings, { sortOrder: settings.sortOrder + 1 }), event);
+                code: function (settings, event, manager) {
+                    // todo - should refactor this to be a toolbarManager.contentBlock command
+                    manager.commands._openNgDialog($2sxc._lib.extend({}, settings, { sortOrder: settings.sortOrder + 1 }), event);
                 }
             }),
             // add brings no dialog, just add an empty item
             'add': createActionConfig("add", "AddDemo", "plus-circled", "edit", false, {
                 addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; },
-                code: function (settings, event, toolbarManager) {
-                    toolbarManager._getAngularVm().addItem(settings.sortOrder + 1);
+                code: function (settings, event, manager) {
+                    manager.contentBlock 
+                        .addItem(settings.sortOrder + 1);
                 }
             }),
             "metadata": createActionConfig("metadata", "Metadata", "tag", "default", false, {
@@ -77,9 +82,10 @@
                 disabled: true,
                 showOn: "edit",
                 addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; },
-                code: function (settings, event, tbContr) {
-                    if (confirm(tbContr.translate("Toolbar.ConfirmRemove"))) {
-                        tbContr._getAngularVm().removeFromList(settings.sortOrder);
+                code: function (settings, event, manager) {
+                    if (confirm($2sxc.translate("Toolbar.ConfirmRemove"))) {
+                        manager.contentBlock
+                            .removeFromList(settings.sortOrder);
                     }
                 }
             },
@@ -104,8 +110,9 @@
                 disabled: false,
                 showOn: "edit",
                 addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1 && settings.sortOrder !== 0; },
-                code: function (settings, event, toolbarManager) {
-                    toolbarManager._getAngularVm().changeOrder(settings.sortOrder, Math.max(settings.sortOrder - 1, 0));
+                code: function (settings, event, manager) {
+                    manager.contentBlock
+                        .changeOrder(settings.sortOrder, Math.max(settings.sortOrder - 1, 0));
                 }
             },
             'movedown': {
@@ -114,8 +121,8 @@
                 disabled: false,
                 showOn: "edit",
                 addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; },
-                code: function (settings, event, toolbarManager) {
-                    toolbarManager._getAngularVm().changeOrder(settings.sortOrder, settings.sortOrder + 1);
+                code: function (settings, event, manager) {
+                    manager.contentBlock.changeOrder(settings.sortOrder, settings.sortOrder + 1);
                 }
             },
             'sort': {
@@ -127,14 +134,14 @@
             'publish': createActionConfig("publish", "Published", "eye", "edit", false, {
                 iclass2: "icon-sxc-eye-off",
                 disabled: true,
-                code: function (settings, event, toolbarManager) {
+                code: function (settings, event, manager) {
                     if (settings.isPublished) {
-                        alert(toolbarManager.translate("Toolbar.AlreadyPublished"));
+                        alert($2sxc.translate("Toolbar.AlreadyPublished"));
                         return;
                     }
                     var part = settings.sortOrder === -1 ? "listcontent" : "content";
                     var index = settings.sortOrder === -1 ? 0 : settings.sortOrder;
-                    toolbarManager._getAngularVm().publish(part, index);
+                    manager.contentBlock.publish(part, index);
                 }
             }),
             'replace': createActionConfig("replace", "Replace", "replace", "edit", false, {
@@ -145,15 +152,15 @@
                 iclass: "icon-sxc-glasses",
                 showOn: "default",
                 uiActionOnly: true, // so it doesn't create the content when used
-                code: function (settings, event, toolbarManager) {
-                    toolbarManager._getAngularVm().toggle();
+                code: function (settings, event, manager) {
+                    manager.contentBlock.dialogToggle();
                 }
             },
             'develop': createActionConfig("develop", "Develop", "code", "admin", true, {
                 newWindow: true,
                 addCondition: enableTools,
                 configureCommand: function (cmd) {
-                    cmd.items = [{ EntityId: manageInfo.templateId }];
+                    cmd.items = [{ EntityId: actionParams.templateId }];
                 }
             }),
             'contenttype': {
@@ -167,9 +174,9 @@
                 title: "Toolbar.ContentItems",
                 iclass: "icon-sxc-table",
                 showOn: "admin",
-                params: { contentTypeName: manageInfo.contentTypeId },
+                params: { contentTypeName: actionParams.contentTypeId },
                 uiActionOnly: true, // so it doesn't create the content when used
-                addCondition: enableTools && manageInfo.contentTypeId,
+                addCondition: enableTools && actionParams.contentTypeId,
             },
             'app': {
                 title: "Toolbar.App",
@@ -190,7 +197,7 @@
                 iclass: "icon-sxc-options btn-mode",
                 showOn: "default,edit,design,admin",
                 uiActionOnly: true, // so it doesn't create the content when clicked
-                code: function (settings, event, toolbarManager) {
+                code: function (settings, event) {
                     var fullMenu = $(event.target).closest("ul.sc-menu"); // todo: slightly nasty dependency...
                     var oldState = Number(fullMenu.attr("data-state") || 0);
                     var newState = oldState + 1;

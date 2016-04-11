@@ -10,6 +10,7 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.FileSystem;
 using Telerik.Web.Data.Extensions;
 using ToSic.Eav;
+using ToSic.Eav.BLL;
 using ToSic.SexyContent.Adam;
 using ToSic.SexyContent.Razor.Helpers;
 
@@ -22,7 +23,9 @@ namespace ToSic.SexyContent.ImportExport
     public class XmlExporter
     {
         // initialize data context
-        private readonly SxcInstance Sexy;
+        //private readonly SxcInstance Sexy;
+        private readonly App App;
+        private readonly EavDataController EavAppContext;
         private List<int> _referencedFileIds = new List<int>();
         private List<int> _referencedFolderIds = new List<int>();
         public List<IFileInfo> ReferencedFiles = new List<IFileInfo>();
@@ -49,7 +52,9 @@ namespace ToSic.SexyContent.ImportExport
             _zoneId = zoneId;
             _appId = appId;
             _isAppExport = appExport;
-            Sexy = new SxcInstance(_zoneId, _appId);
+            //Sexy = new SxcInstance(_zoneId, _appId);
+            App = new App(_zoneId, _appId, PortalSettings.Current);
+            EavAppContext = App.EavContext;
             AttributeSetIDs = attrSetIds;
             EntityIDs = entityIds;
         }
@@ -102,11 +107,11 @@ namespace ToSic.SexyContent.ImportExport
 
                 #region Header
 
-                var Dimensions = Sexy.EavAppContext.Dimensions.GetDimensionChildren("Culture");
+                var Dimensions = EavAppContext.Dimensions.GetDimensionChildren("Culture");
                 var Header = new XElement(XmlConstants.Header,
-                    _isAppExport && Sexy.App.AppGuid != "Default"
+                    _isAppExport && App.AppGuid != "Default"
                         ? new XElement(XmlConstants.App,
-                            new XAttribute(XmlConstants.Guid, Sexy.App.AppGuid)
+                            new XAttribute(XmlConstants.Guid, App.AppGuid)
                             )
                         : null,
                     new XElement("Language", new XAttribute("Default", Portal.DefaultLanguage)),
@@ -129,11 +134,11 @@ namespace ToSic.SexyContent.ImportExport
                 foreach (var AttributeSetID in AttributeSetIDs)
                 {
                     var ID = int.Parse(AttributeSetID);
-                    var Set = Sexy.EavAppContext.AttribSet.GetAttributeSet(ID);
+                    var Set = EavAppContext.AttribSet.GetAttributeSet(ID);
                     var Attributes = new XElement("Attributes");
 
                     // Add all Attributes to AttributeSet including meta informations
-                    foreach (var x in Sexy.EavAppContext.Attributes.GetAttributesInSet(ID))
+                    foreach (var x in EavAppContext.Attributes.GetAttributesInSet(ID))
                     {
                         var Attribute = new XElement("Attribute",
                             new XAttribute("StaticName", x.Attribute.StaticName),
@@ -141,7 +146,7 @@ namespace ToSic.SexyContent.ImportExport
                             new XAttribute("IsTitle", x.IsTitle),
                             // Add Attribute MetaData
                             from c in
-                                Sexy.EavAppContext.Entities.GetEntities(Constants.AssignmentObjectTypeIdFieldProperties,
+                                EavAppContext.Entities.GetEntities(Constants.AssignmentObjectTypeIdFieldProperties,
                                     x.AttributeID).ToList()
                             select GetEntityXElement(c)
                             );
@@ -160,7 +165,7 @@ namespace ToSic.SexyContent.ImportExport
                     // Add Ghost-Info if content type inherits from another content type
                     if (Set.UsesConfigurationOfAttributeSet.HasValue)
                     {
-                        var parentAttributeSet = Sexy.EavAppContext.SqlDb.AttributeSets.First(a => a.AttributeSetID ==  Set.UsesConfigurationOfAttributeSet.Value && a.ChangeLogDeleted == null);
+                        var parentAttributeSet = EavAppContext.SqlDb.AttributeSets.First(a => a.AttributeSetID ==  Set.UsesConfigurationOfAttributeSet.Value && a.ChangeLogDeleted == null);
                         AttributeSet.Add(new XAttribute("UsesConfigurationOfAttributeSet", parentAttributeSet.StaticName));
                     }
 
@@ -179,14 +184,14 @@ namespace ToSic.SexyContent.ImportExport
                     var ID = int.Parse(EntityID);
 
                     // Get the entity and ContentType from ContentContext add Add it to ContentItems
-                    var Entity = Sexy.EavAppContext.Entities.GetEntity(ID);
+                    var Entity = EavAppContext.Entities.GetEntity(ID);
                     Entities.Add(GetEntityXElement(Entity));
                 }
 
                 #endregion
 
                 #region Adam files
-                var adam = new AdamManager(Portal.PortalId, Sexy.App);
+                var adam = new AdamManager(Portal.PortalId, App);
                 var adamIds = adam.Export.AppFiles;
                 adamIds.ForEach(AddFileAndFolderToQueue);
 
@@ -218,7 +223,7 @@ namespace ToSic.SexyContent.ImportExport
         private XElement GetEntityXElement(Entity e)
         {
             //var attributeSet = Sexy.ContentContext.GetAttributeSet(e.AttributeSetID);
-            var entityXElement = new Eav.ImportExport.XmlExport(Sexy.EavAppContext).GetEntityXElement(e.EntityID);
+            var entityXElement = new Eav.ImportExport.XmlExport(EavAppContext).GetEntityXElement(e.EntityID);
 
             foreach (var value in entityXElement.Elements("Value"))
             {
@@ -232,12 +237,12 @@ namespace ToSic.SexyContent.ImportExport
                     switch (valueKey)
                     {
                         case "ContentTypeID":
-                            var attributeSet = Sexy.EavAppContext.AttribSet.GetAllAttributeSets().FirstOrDefault(a => a.AttributeSetID == int.Parse(valueString));
+                            var attributeSet = EavAppContext.AttribSet.GetAllAttributeSets().FirstOrDefault(a => a.AttributeSetID == int.Parse(valueString));
                             value.Attribute("Value").SetValue(attributeSet != null ? attributeSet.StaticName : String.Empty);
                             break;
                         case "DemoEntityID":
                             var entityID = int.Parse(valueString);
-                            var demoEntity = Sexy.EavAppContext.SqlDb.Entities.FirstOrDefault(en => en.EntityID == entityID);
+                            var demoEntity = EavAppContext.SqlDb.Entities.FirstOrDefault(en => en.EntityID == entityID);
                             value.Attribute("Value").SetValue(demoEntity != null ? demoEntity.EntityGUID.ToString() : String.Empty);
                             break;
                     }
@@ -286,12 +291,14 @@ namespace ToSic.SexyContent.ImportExport
                     var file = DnnFiles.GetFile(fileNum);
                     AddFolderToQueue(file.FolderId);
                 }
-                finally
+                catch
                 {
+                    // don't do anything, because if the file doesn't exist, its FOLDER should also not land in the queue
                 }
             }
-            finally
+            catch
             {
+                // don't do anything, because if the file doesn't exist, it should also not land in the queue
             }
         }
 

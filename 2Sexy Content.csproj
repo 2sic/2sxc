@@ -182,20 +182,6 @@
     <Compile Include="Adam\IAdamItem.cs" />
     <Compile Include="Adam\AdamManager.cs" />
     <Compile Include="Adam\UploadResult.cs" />
-    <Compile Include="Administration\Apps\AppExport.ascx.cs">
-      <DependentUpon>AppExport.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Administration\Apps\AppExport.ascx.designer.cs">
-      <DependentUpon>AppExport.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="Administration\Apps\AppImport.ascx.cs">
-      <DependentUpon>AppImport.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Administration\Apps\AppImport.ascx.designer.cs">
-      <DependentUpon>AppImport.ascx</DependentUpon>
-    </Compile>
     <Compile Include="Administration\ContentTypeAndDemoSelector.ascx.cs">
       <DependentUpon>ContentTypeAndDemoSelector.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -247,11 +233,24 @@
     <Compile Include="Environment\None\Permissions.cs" />
     <Compile Include="Interfaces\IApp.cs" />
     <Compile Include="Interfaces\IAppData.cs" />
+    <Compile Include="Interfaces\IContentBlock.cs" />
+    <Compile Include="SexyContent\ContentBlock\ContentGroupReferenceManagerBase.cs" />
+    <Compile Include="SexyContent\ContentBlock\ContentBlockBase.cs" />
+    <Compile Include="SexyContent\ContentBlock\EntityContentGroupReferenceManager.cs" />
+    <Compile Include="SexyContent\ContentBlock\ModuleContentGroupReferenceManager.cs" />
+    <Compile Include="SexyContent\DynamicEntityList.cs" />
+    <Compile Include="SexyContent\Internal\AppManagement.cs" />
+    <Compile Include="SexyContent\ContentBlock\EntityContentBlock.cs" />
+    <Compile Include="SexyContent\ContentBlock\ModuleContentBlock.cs" />
     <Compile Include="SexyContent\ContentGroup.cs" />
     <Compile Include="SexyContent\ContentGroupManager.cs" />
     <Compile Include="SexyContent\DataSources\ConfigurationProvider.cs" />
     <Compile Include="SexyContent\DataSources\DnnSqlDataSource.cs" />
     <Compile Include="SexyContent\DataSources\DnnFormAndList.cs" />
+    <Compile Include="WebApi\ImportExport\HttpResponseMessageHelper.cs" />
+    <Compile Include="WebApi\ImportExport\ImportRequestArgs.cs" />
+    <Compile Include="WebApi\ImportExport\ImportResult.cs" />
+    <Compile Include="WebApi\ImportExport\SxcAppWrapper.cs" />
     <Compile Include="WebApi\EavApiProxies\ContentExportController.cs" />
     <Compile Include="WebApi\EavApiProxies\ContentImportController.cs" />
     <Compile Include="WebApi\EavApiProxies\MetadataController.cs" />
@@ -271,7 +270,9 @@
     <Compile Include="SexyContent\Internal\SecurityHelpers.cs" />
     <Compile Include="SexyContent\Internal\TemplateManager.cs" />
     <Compile Include="SexyContent\Internal\ZoneHelpers.cs" />
+    <Compile Include="WebApi\ImportExportController.cs" />
     <Compile Include="WebApi\SxcWebApiExceptionHandling.cs" />
+    <Compile Include="WebApi\ToRefactorDeliverCBDataLight\GetContentBlockDataLight.cs" />
     <Compile Include="WebApi\ViewAPI\TemplateController.cs" />
     <Compile Include="SexyContent\ViewManager\TemplateEditor.cs" />
     <Compile Include="SexyContent\UnityConfig.cs" />
@@ -290,27 +291,10 @@
     <Compile Include="WebApi\EavApiProxies\PipelineDesignerController.cs" />
     <Compile Include="SexyContent\DataSources\App.cs" />
     <Compile Include="SexyContent\DnnHelper.cs" />
-    <Compile Include="SexyContent\SexyViewContentOrApp.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
     <Compile Include="SexyContent\IAppAndDataHelpers.cs" />
     <Compile Include="SexyContent\AppAndDataHelpers.cs" />
     <Compile Include="SexyContent\SxcHelper.cs" />
     <Compile Include="SexyContent\Template.cs" />
-    <Compile Include="Administration\Export.ascx.cs">
-      <DependentUpon>Export.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Administration\Export.ascx.designer.cs">
-      <DependentUpon>Export.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="Administration\Import.ascx.cs">
-      <DependentUpon>Import.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Administration\Import.ascx.designer.cs">
-      <DependentUpon>Import.ascx</DependentUpon>
-    </Compile>
     <Compile Include="SexyContent\App.cs" />
     <Compile Include="SexyContent\DataPublishing.cs" />
     <Compile Include="SexyContent\DataSources\ModuleDataSource.cs" />
@@ -352,9 +336,6 @@
     <Compile Include="Administration\SexyControlAdminBaseWillSoonBeRemoved.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="SexyContent\SexyControlEditBase.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
     <Compile Include="SexyContent\TemplateDefault.cs" />
     <Compile Include="WebApi\ViewAPI\ModuleController.cs" />
     <Compile Include="WebApi\HttpRequestMessageExtensions.cs" />
@@ -388,8 +369,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />
-    <Content Include="Administration\Apps\AppExport.ascx" />
-    <Content Include="Administration\Apps\AppImport.ascx" />
     <Content Include="Administration\Export.js" />
     <Content Include="Administration\ContentTypeAndDemoSelector.ascx" />
     <Content Include="API\Services.asmx" />
@@ -398,7 +377,6 @@
     <Content Include="DnnWebForms\PagePicker.ascx" />
     <Content Include="DnnWebForms\WebFormsBridge.ascx" />
     <Content Include="DnnWebForms\Wysiwyg.ascx" />
-    <Content Include="Administration\Export.ascx" />
     <Content Include="Extensions\404.png" />
     <Content Include="Extensions\Imazen_ImageResizer\ImageResizer.txt" />
     <Content Include="Extensions\Imazen_ImageResizer\license.txt" />
@@ -411,6 +389,13 @@
     <Content Include="grunt-tasks\import-languages.gruntfile.js" />
     <Content Include="grunt-tasks\i18n.gruntfile.js" />
     <Content Include="gruntfile.js" />
+    <Content Include="js\iframe.html" />
+    <Content Include="src\inpage-libs\i18n\i18next.min.js" />
+    <Content Include="src\inpage-libs\i18n\i18nextXHRBackend.min.js" />
+    <Content Include="src\inpage-libs\i18n\jquery-i18next.min.js" />
+    <Content Include="src\inpage\2sxc._toolbarManager.js" />
+    <Content Include="src\inpage\2sxc._translate.js" />
+    <Content Include="src\inpage\dialog.js" />
     <Content Include="SexyContent\ImportExport\Instructions\License.txt" />
     <Content Include="SqlDataProvider\07.03.01.SqlDataProvider" />
     <Content Include="SqlDataProvider\07.03.03.SqlDataProvider" />
@@ -418,10 +403,21 @@
     <Content Include="SqlDataProvider\08.01.00.SqlDataProvider" />
     <Content Include="icon-app.png" />
     <Content Include="icon.png" />
-    <Content Include="Administration\Import.ascx" />
     <Content Include="src\inpage\2sxc._actions.js" />
-    <Content Include="src\inpage\getting-started\getting-started.js" />
+    <Content Include="src\inpage-dialogs\getting-started\getting-started.js" />
     <Content Include="src\inpage\inpage-icons-codes.css" />
+    <Content Include="src\inpage\quick-insert.js" />
+    <Content Include="src\sxc-admin\importexport\export-content.controller.js" />
+    <Content Include="src\sxc-admin\importexport\export-content.html" />
+    <Content Include="src\sxc-admin\importexport\export-content.service.js" />
+    <Content Include="src\sxc-admin\importexport\import-app.controller.js" />
+    <Content Include="src\sxc-admin\importexport\import-app.html" />
+    <Content Include="src\sxc-admin\importexport\import-app.service.js" />
+    <Content Include="src\sxc-admin\importexport\import-content.controller.js" />
+    <Content Include="src\sxc-admin\importexport\import-content.service.js" />
+    <Content Include="src\sxc-admin\importexport\import-export.directives.js" />
+    <Content Include="src\sxc-admin\importexport\intro.controller.js" />
+    <Content Include="src\sxc-admin\importexport\_app.js" />
     <Content Include="src\sxc-edit\adam\adam-hint.html" />
     <Content Include="src\sxc-edit\adam\adam-hint.directive.js" />
     <Content Include="src\sxc-edit\app-icons-codes.css" />
@@ -435,22 +431,15 @@
     <Content Include="src\sxc-edit\adam\dropzone.directive.js" />
     <Content Include="src\sxc-edit\adam\_adam.js" />
     <Content Include="src\inpage\dnn-menu-helper\dnn-inpage-edit.js" />
-    <Content Include="src\inpage\module-toolbar\inpage-toolbar.js" />
+    <Content Include="src\inpage\2sxc.manageController.js" />
     <Content Include="src\inpage\module-toolbar\toolbar-bootstrapper.js" />
-    <Content Include="src\inpage\template-selector\moduleService.js" />
-    <Content Include="src\inpage\template-selector\2sxc.view_app.js" />
-    <Content Include="src\inpage\template-selector\template-selector.html" />
-    <Content Include="src\inpage\template-selector\template-selector.js" />
-    <Content Include="js\angularjs\2sxc4ng.annotated.js" />
+    <Content Include="src\inpage-dialogs\template-selector\moduleService.js" />
+    <Content Include="src\inpage-dialogs\template-selector\2sxc.view_app.js" />
+    <Content Include="src\inpage-dialogs\template-selector\template-selector.html" />
+    <Content Include="src\inpage-dialogs\template-selector\template-selector.js" />
     <Content Include="js\angularjs\2sxc4ng.js" />
-    <Content Include="js\angularjs\angular-animate.min.js" />
-    <Content Include="js\angularjs\angular-resource.min.js" />
-    <Content Include="js\angularjs\angular-ui-tree.min.css" />
-    <Content Include="js\angularjs\angular-ui-tree.min.js" />
-    <Content Include="js\angularjs\angular.min.js" />
     <Content Include="js\angularjs\toaster.css" />
     <Content Include="js\angularjs\toaster.js" />
-    <Content Include="js\ItemForm.js" />
     <Content Include="license.txt" />
     <Content Include="src\inpage\edit.css" />
     <Content Include="Administration\EditTemplate.ascx" />
@@ -461,7 +450,6 @@
     <Content Include="BuildScripts\ModulePackage.Targets" />
     <Content Include="BuildScripts\MSBuild.Community.Tasks.targets" />
     <Content Include="package.json" />
-    <Content Include="js\angularjs\2sxc4ng.min.js.map" />
     <Content Include="README.md" />
     <Content Include="src\config\eav-configuration-in-sxc.js" />
     <Content Include="bower.json" />
@@ -474,10 +462,10 @@
     <Content Include="src\sxc-admin\app-settings\app-settings-controller.js" />
     <Content Include="src\sxc-admin\app-settings\app-settings.html" />
     <Content Include="src\sxc-admin\dialog-host\dialog-host-controller.js" />
-    <Content Include="src\sxc-admin\importexport\export.html" />
+    <Content Include="src\sxc-admin\importexport\export-app.html" />
     <Content Include="src\sxc-admin\filters\sxc-filters.js" />
-    <Content Include="src\sxc-admin\importexport\importexport-controller.js" />
-    <Content Include="src\sxc-admin\importexport\import.html" />
+    <Content Include="src\sxc-admin\importexport\export-app.controller.js" />
+    <Content Include="src\sxc-admin\importexport\import-content.html" />
     <Content Include="src\sxc-admin\importexport\intro.html" />
     <Content Include="src\sxc-admin\language-settings\language-settings.js" />
     <Content Include="src\sxc-admin\language-settings\languages.html" />
@@ -499,6 +487,9 @@
     <Content Include="src\sxc-admin\services\templates-service.js" />
     <Content Include="SqlDataProvider\08.03.02.SqlDataProvider" />
     <Content Include="src\inpage\2sxc._lib.js" />
+    <Content Include="src\inpage\2sxc.contentBlock.js" />
+    <Content Include="src\inpage\2sxc._contentManagementCommands.js" />
+    <Content Include="src\sxc-admin\importexport\export-app.service.js" />
     <None Include="src\sxc-develop\source-editor\README.md" />
     <Content Include="src\sxc-develop\source-editor\toArray-filter.js" />
     <Content Include="src\sxc-admin\templates\edit.html" />
@@ -549,6 +540,7 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Upgrade\08.03.05.xml" />
+    <Content Include="Upgrade\08.04.00.xml" />
     <Content Include="View.ascx" />
     <Content Include="WebConfigTemplate.config" />
     <None Include="SqlDataProvider\01.00.01.SqlDataProvider" />
@@ -600,24 +592,12 @@
     <Content Include="App_LocalResources\View.ascx.de-DE.resx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Administration\App_LocalResources\Export.ascx.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Administration\App_LocalResources\Import.ascx.resx" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="App_LocalResources\EditTemplateFile.ascx.resx">
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_LocalResources\EditTemplateFile.ascx.de-DE.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Administration\App_LocalResources\Export.ascx.de-DE.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Administration\App_LocalResources\Import.ascx.de-DE.resx" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
@@ -630,19 +610,10 @@
     <Content Include="Administration\App_LocalResources\ContentTypeAndDemoSelector.ascx.de-DE.resx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Administration\App_LocalResources\Registers.ascx.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Administration\App_LocalResources\Registers.ascx.de-DE.resx" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Administration\App_LocalResources\WebApiHelp.ascx.resx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Upgrade\Log\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Administration\Apps\App_LocalResources\AppImport.ascx.resx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="SexyContent\ImportExport\Instructions\ReleaseNotes.txt" />

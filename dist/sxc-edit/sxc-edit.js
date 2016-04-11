@@ -120,7 +120,6 @@ angular.module("Adam")
     /* jshint laxbreak:true */
     "use strict";
 
-    BrowserController.$inject = ["$scope", "adamSvc", "debugState", "eavConfig", "eavAdminDialogs", "appRoot", "fileType"];
     var app = angular.module("Adam"); 
 
     // The controller for the main form directive
@@ -293,6 +292,7 @@ angular.module("Adam")
 
         vm.activate();
     }
+    BrowserController.$inject = ["$scope", "adamSvc", "debugState", "eavConfig", "eavAdminDialogs", "appRoot", "fileType"];
 
 })();
 
@@ -589,6 +589,27 @@ angular.module("sxcFieldTemplates")
 		};
 	}]);
 
+})();
+(function() {
+    "use strict";
+
+    angular.module("sxcFieldTemplates")
+        .config(["formlyConfigProvider", function(formlyConfigProvider) {
+
+            formlyConfigProvider.setType({
+                name: "entity-content-blocks",
+                templateUrl: "fields/entity/entity-default.html",
+                wrapper: ["eavLabel", "bootstrapHasError", "collapsible"],
+                controller: "FieldTemplate-EntityContentBlockCtrl"
+            });
+        }])
+        .controller("FieldTemplate-EntityContentBlockCtrl", ["$controller", "$scope", "$http", "$filter", "$translate", "$modal", "appId", "eavAdminDialogs", "eavDefaultValueService", function($controller, $scope, $http, $filter, $translate, $modal, appId, eavAdminDialogs, eavDefaultValueService) {
+            // use "inherited" controller just like described in http://stackoverflow.com/questions/18461263/can-an-angularjs-controller-inherit-from-another-controller-in-the-same-module
+            $controller('FieldTemplate-EntityCtrl', { $scope: $scope });
+
+            $scope.to.settings.merged.EnableRemove = true;
+            $scope.to.settings.merged.AllowMultiValue = true;
+        }]);
 })();
 
 (function() {
@@ -901,7 +922,6 @@ angular.module("eavFieldTemplates")
 	"use strict";
 
     // Register in Angular Formly
-    FieldWysiwygTinyMceController.$inject = ["$scope", "dnnBridgeSvc", "languages", "$translate"];
     angular.module("sxcFieldTemplates")
         .config(["formlyConfigProvider", function(formlyConfigProvider) {
             formlyConfigProvider.setType({
@@ -1102,6 +1122,7 @@ angular.module("eavFieldTemplates")
 
         vm.activate();
     }
+    FieldWysiwygTinyMceController.$inject = ["$scope", "dnnBridgeSvc", "languages", "$translate"];
 
     // Initialize the tinymce resources which we translate ourselves
     function initLangResources(editor, language, $translate) {

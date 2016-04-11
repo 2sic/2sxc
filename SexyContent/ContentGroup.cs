@@ -49,10 +49,7 @@ namespace ToSic.SexyContent
         /// Returns true if a content group entity for this group really exists
         /// Means for example, that the app can't be changed anymore
         /// </summary>
-        public bool Exists
-        {
-            get { return _contentGroupEntity != null; }
-        }
+        public bool Exists => _contentGroupEntity != null;
 
         #region Template stuff
 
@@ -99,15 +96,9 @@ namespace ToSic.SexyContent
         #endregion
 
 
-        public int ContentGroupId
-        {
-            get { return _contentGroupEntity.EntityId; }
-        }
+        public int ContentGroupId => _contentGroupEntity?.EntityId ?? 0;
 
-        public Guid ContentGroupGuid
-        {
-            get { return _contentGroupEntity == null ? Guid.Empty : _contentGroupEntity.EntityGuid; }
-        }
+        public Guid ContentGroupGuid => _contentGroupEntity?.EntityGuid ?? Guid.Empty;
 
         #region Retrieve the lists - either as object or by the type-indexer
 
@@ -115,46 +106,17 @@ namespace ToSic.SexyContent
         {
             get
             {
-                if (_contentGroupEntity != null)
-                {
-                    var list = ((EntityRelationship) _contentGroupEntity.GetBestValue(cContent)).ToList();
-                    if (list.Count > 0)
-                        return list;
-                }
-
-                return new List<IEntity> {null};
+                if (_contentGroupEntity == null) return new List<IEntity> {null};
+                var list = ((EntityRelationship) _contentGroupEntity.GetBestValue(cContent)).ToList();
+                return list.Count > 0 ? list : new List<IEntity> {null};
             }
         }
 
-        public List<IEntity> Presentation
-        {
-            get
-            {
-                if (_contentGroupEntity == null)
-                    return new List<IEntity>();
-                return ((EntityRelationship) _contentGroupEntity.GetBestValue(cPresentation)).ToList();
-            }
-        }
+        public List<IEntity> Presentation => ((EntityRelationship) _contentGroupEntity?.GetBestValue(cPresentation))?.ToList() ?? new List<IEntity>();
 
-        public List<IEntity> ListContent
-        {
-            get
-            {
-                if (_contentGroupEntity == null)
-                    return new List<IEntity>();
-                return ((EntityRelationship) _contentGroupEntity.GetBestValue(cListC)).ToList();
-            }
-        }
+        public List<IEntity> ListContent => ((EntityRelationship) _contentGroupEntity?.GetBestValue(cListC))?.ToList() ?? new List<IEntity>();
 
-        public List<IEntity> ListPresentation
-        {
-            get
-            {
-                if (_contentGroupEntity == null)
-                    return new List<IEntity>();
-                return ((EntityRelationship) _contentGroupEntity.GetBestValue(cListP)).ToList();
-            }
-        }
+        public List<IEntity> ListPresentation => ((EntityRelationship) _contentGroupEntity?.GetBestValue(cListP))?.ToList() ?? new List<IEntity>();
 
         public List<IEntity> this[string type]
         {

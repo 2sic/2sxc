@@ -7,108 +7,178 @@ using System.Text;
 using System.Web.Http;
 using DotNetNuke.Common;
 using DotNetNuke.Entities.Controllers;
-using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Api;
-using ToSic.SexyContent.Engines;
+using ToSic.Eav;
+using ToSic.Eav.BLL;
+using ToSic.SexyContent.ContentBlock;
 using ToSic.SexyContent.Internal;
 using ToSic.SexyContent.WebApi;
 using Assembly = System.Reflection.Assembly;
 
 namespace ToSic.SexyContent.ViewAPI
 {
-    [SupportedModules("2sxc,2sxc-app")]
+    // had to disable this, as most requests now come from a lone page [SupportedModules("2sxc,2sxc-app")]
     public class ModuleController : SxcApiController
     {
+        private ContentGroupReferenceManagerBase _cbm;
+
+        private ContentGroupReferenceManagerBase ContentGroupReferenceManager
+            => _cbm ?? (_cbm = SxcContext.ContentBlock.Manager);
+
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        [ValidateAntiForgeryToken]
         public void AddItem([FromUri] int? sortOrder = null)
-        {
-			var contentGroup = SxcContext.AppContentGroups.GetContentGroupForModule(ActiveModule.ModuleID);
-			contentGroup.AddContentAndPresentationEntity("content", sortOrder, null, null);
-        }
+            => ContentGroupReferenceManager.AddItem(sortOrder);
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        [ValidateAntiForgeryToken]
-		public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup, bool? newTemplateChooserState = null)
-        {
-            Guid? result = null;
-            var contentGroup = SxcContext.AppContentGroups.GetContentGroupForModule(ActiveModule.ModuleID);
-            if (contentGroup.Exists || forceCreateContentGroup)
-                result = SxcContext.AppContentGroups.SaveTemplateId(ActiveModule.ModuleID, templateId);
-            else
-                SxcContext.AppContentGroups.SetPreviewTemplateId(ActiveModule.ModuleID, templateId);
+        public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup, bool? newTemplateChooserState = null)
+            => ContentGroupReferenceManager.SaveTemplateId(templateId, forceCreateContentGroup, newTemplateChooserState);
 
-            if(newTemplateChooserState.HasValue)
-                SetTemplateChooserState(newTemplateChooserState.Value);
-
-            return result;
-        }
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        [ValidateAntiForgeryToken]
-		public void SetTemplateChooserState([FromUri] bool state)
-		{
-            DnnStuffToRefactor.UpdateModuleSettingForAllLanguages(ActiveModule.ModuleID, Settings.SettingsShowTemplateChooser, state.ToString());
+        public void SetTemplateChooserState([FromUri] bool state)
+            => ContentGroupReferenceManager.SetTemplateChooserState(state);
 
-			//new DotNetNuke.Entities.Modules.ModuleController().UpdateModuleSetting(ActiveModule.ModuleID,
-			//	SexyContent.SettingsShowTemplateChooser, state.ToString());
-		}
 
-		[HttpGet]
-		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-		[ValidateAntiForgeryToken]
+        [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public IEnumerable<object> GetSelectableApps()
-        {
-            try
-            {
-                var zoneId = ZoneHelpers.GetZoneID(ActiveModule.PortalID);
-				return
-					AppHelpers.GetApps(zoneId.Value, false, new PortalSettings(ActiveModule.OwnerPortalID))
-                        .Where(a => !a.Hidden)
-						.Select(a => new {a.Name, a.AppId});
-            }
-            catch (Exception e)
-            {
-				Exceptions.LogException(e);
-                throw e;
-            }
-        }
+            => ContentGroupReferenceManager.GetSelectableApps();
+
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        [ValidateAntiForgeryToken]
         public void SetAppId(int? appId)
-        {
-            AppHelpers.SetAppIdForModule(ActiveModule, appId);
-            }
+            => ContentGroupReferenceManager.SetAppId(appId);
+
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        [ValidateAntiForgeryToken]
         public IEnumerable<object> GetSelectableContentTypes()
-        {
-			return SxcContext.AppTemplates.GetAvailableContentTypesForVisibleTemplates().Select(p => new {p.StaticName, p.Name});
-        }
+            => ContentGroupReferenceManager.GetSelectableContentTypes();
+
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        [ValidateAntiForgeryToken]
         public IEnumerable<object> GetSelectableTemplates()
+            => ContentGroupReferenceManager.GetSelectableTemplates();
+
+        [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        public string GenerateContentBlock(int parentId, string field, int sortOrder, string app = "")
         {
-            var availableTemplates = SxcContext.AppTemplates.GetAvailableTemplatesForSelector(ActiveModule.ModuleID, SxcContext.AppContentGroups);
-			return availableTemplates.Select(t => new {t.TemplateId, t.Name, t.ContentTypeStaticName});
+            var contentTypeName = Settings.AttributeSetStaticNameContentBlockTypeName;
+            var values = new Dictionary<string, object>
+            {
+                {EntityContentBlock.CbPropertyTitle, ""},
+                {EntityContentBlock.CbPropertyApp, app},
+                {EntityContentBlock.CbPropertyShowChooser, true},
+            };
+
+            var entity = CreateItemAndAddToList(parentId, field, sortOrder, contentTypeName, values);
+
+            // now return a rendered instance
+            var newContentBlock = new EntityContentBlock(SxcContext.ContentBlock, entity.EntityID);
+            return newContentBlock.SxcInstance.Render().ToString();
+
+        }
+
+        private Entity CreateItemAndAddToList(int parentId, string field, int sortOrder, string contentTypeName,
+            Dictionary<string, object> values)
+        {
+            var cgApp = SxcContext.App;
+            var eavDc = EavDataController.Instance(cgApp.ZoneId, cgApp.AppId);
+            eavDc.UserName = Environment.Dnn7.UserIdentity.CurrentUserIdentityToken;
+
+            #region create the new entity --> note that it's the sql-type entity, not a standard ientity
+
+            var contentType =
+                DataSource.GetCache(cgApp.ZoneId, cgApp.AppId)
+                    .GetContentType(contentTypeName);
+
+            var entity = eavDc.Entities.AddEntity(contentType.AttributeSetId, values, null, null);
+
+            #endregion
+
+            #region attach to the current list of items
+
+            var cbEnt = SxcContext.App.Data["Default"].List[parentId];
+            // ((EntityContentBlock) SxcContext.ContentBlock).ContentBlockEntity;
+            var blockList = ((Eav.Data.EntityRelationship) cbEnt.GetBestValue(field)).ToList() ?? new List<IEntity>();
+
+            var intList = blockList.Select(b => b.EntityId).ToList();
+            if (sortOrder > intList.Count) sortOrder = intList.Count;
+            intList.Insert(sortOrder, entity.EntityID);
+
+            var updateDic = new Dictionary<string, int[]> {{field, intList.ToArray()}};
+            eavDc.Entities.UpdateEntity(cbEnt.EntityGuid, updateDic);
+
+            #endregion
+
+            return entity;
         }
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        [ValidateAntiForgeryToken]
-		public HttpResponseMessage RenderTemplate([FromUri] int templateId, [FromUri] string lang)
+        public bool MoveContentBlock(int parentId, string field, int indexFrom, int indexTo)
+        {
+            MoveItemInList(parentId, field, indexFrom, indexTo);
+
+            return true;
+        }
+
+        private void MoveItemInList(int parentId, string field, int indexFrom, int indexTo)
+        {
+            var action = new MoveItem(indexFrom, indexTo);
+
+            ModifyItemList(parentId, field, action);
+        }
+
+        /// <summary>
+        /// 2016-04-07 2dm: note: remove was never tested! UI not clear yet
+        /// </summary>
+        /// <param name="parentId"></param>
+        /// <param name="field"></param>
+        /// <param name="index"></param>
+        private void RemoveItemInList(int parentId, string field, int index)
+        {
+            var action = new RemoveItem(index);
+
+            ModifyItemList(parentId, field, action);
+        }
+
+
+        private void ModifyItemList(int parentId, string field, IItemListAction actionToPerform)
+        {
+            var parentEntity = SxcContext.App.Data["Default"].List[parentId];
+
+            var parentField = parentEntity.GetBestValue(field);
+            var fieldList = parentField as Eav.Data.EntityRelationship;
+
+            if (fieldList == null)
+                throw new Exception("field " + field + " doesn't seem to be a list of content-items, must abort");
+
+            var ids = fieldList.EntityIds.ToList();
+
+            if (!actionToPerform.Change(ids)) return;
+
+            // save
+            var values = new Dictionary<string, object> {{field, ids.ToArray()}};
+            var cgApp = SxcContext.App;
+            var eavDc = EavDataController.Instance(cgApp.ZoneId, cgApp.AppId);
+            eavDc.UserName = Environment.Dnn7.UserIdentity.CurrentUserIdentityToken;
+
+            eavDc.Entities.UpdateEntity(parentEntity.EntityGuid, values);
+        }
+
+        [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        public HttpResponseMessage RenderTemplate([FromUri] int templateId, [FromUri] string lang, bool cbIsEntity = false)
         {
             try
             {
@@ -122,51 +192,16 @@ namespace ToSic.SexyContent.ViewAPI
                     // Fallback / ignore if the language specified has not been found
                     catch (System.Globalization.CultureNotFoundException) { }
 
+                var cbToRender = SxcContext.ContentBlock;
+                var template = cbToRender.App.TemplateManager.GetTemplate(templateId);
+                cbToRender.SxcInstance.Template = template;
 
-                var template = SxcContext.AppTemplates.GetTemplate(templateId);
-                SxcContext.Template = template;
-                var engine = SxcContext.GetRenderingEngine(InstancePurposes.WebView);
+                var rendered = cbToRender.SxcInstance.Render().ToString();
 
-                #region 2016-03-01 old code
-                //var engine = EngineFactory.CreateEngine(template);
-                //    // before 2016-02-27 2dm: 
-                //    //var dataSource =
-                //    //	(ViewDataSource)
-                //    //		Sexy.GetViewDataSource(ActiveModule.ModuleID, SecurityHelpers.HasEditPermission(ActiveModule), template);
-                //var dataSource = SxcContext.DataSource; //(ViewDataSource) ViewDataSource.ForModule(ActiveModule.ModuleID, SecurityHelpers.HasEditPermission(ActiveModule), template, SxcContext);
-                //engine.Init(template, SxcContext.App, ActiveModule, dataSource, InstancePurposes.WebView, SxcContext);
-                //engine.CustomizeData();
-
-                //if (template.ContentTypeStaticName != "" && template.ContentDemoEntity == null &&
-                //    !SxcContext.DataSource["Default"].List.Any()) // .Count == 0)
-                //{
-                //    var toolbar = "<ul class='sc-menu' data-toolbar='" +
-                //                  JsonConvert.SerializeObject(new { sortOrder = 0, useModuleList = true, action = "edit" }) + "'></ul>";
-                //    return new HttpResponseMessage(HttpStatusCode.OK)
-                //    {
-                //        Content =
-                //        new StringContent("<div class='dnnFormMessage dnnFormInfo'>No demo item exists for the selected template. " +
-                //                          toolbar + "</div>")
-                //    };
-                //}
-                #endregion
-
-                string rendered = engine.Render();
                 return new HttpResponseMessage(HttpStatusCode.OK)
                 {
                     Content = new StringContent(rendered, Encoding.UTF8, "text/plain")
                 };
-                //return response;
-            }
-            catch (RenderingException e)
-            {
-                if (e.RenderStatus == RenderStatusType.MissingData)
-                    return new HttpResponseMessage(HttpStatusCode.OK)
-                    {
-                        Content = new StringContent(EngineBase.ToolbarForEmptyTemplate)
-                    };
-				Exceptions.LogException(e);
-                throw e;
 
             }
             catch (Exception e)
@@ -178,76 +213,28 @@ namespace ToSic.SexyContent.ViewAPI
 
 		[HttpGet]
 		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-		[ValidateAntiForgeryToken]
-		public void ChangeOrder([FromUri] int sortOrder, int destinationSortOrder)
+        public void ChangeOrder([FromUri] int sortOrder, int destinationSortOrder)
 		{
-			try
-			{
-				var contentGroup = SxcContext.AppContentGroups.GetContentGroupForModule(ActiveModule.ModuleID);
-				contentGroup.ReorderEntities(sortOrder, destinationSortOrder);
-			}
-			catch (Exception e)
-			{
-				Exceptions.LogException(e);
-				throw;
-			}
-		}
+            ContentGroupReferenceManager.ChangeOrder(sortOrder, destinationSortOrder);
+        }
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        [ValidateAntiForgeryToken]
         public bool Publish(string part, int sortOrder)
         {
-            try
-            {
-                var contentGroup = SxcContext.AppContentGroups.GetContentGroupForModule(ActiveModule.ModuleID);
-                var contEntity = contentGroup[part][sortOrder];
-                var presKey = part.ToLower() == "content" ? "presentation" : "listpresentation";
-                var presEntity = contentGroup[presKey][sortOrder];
+            return ContentGroupReferenceManager.Publish(part, sortOrder);
 
-                var hasPresentation = presEntity != null;
-
-                // make sure we really have the draft item an not the live one
-                var contDraft = contEntity.IsPublished ? contEntity.GetDraft() : contEntity;
-                if (contEntity != null && !contDraft.IsPublished)
-                    SxcContext.EavAppContext.Publishing.PublishDraftInDbEntity(contDraft.RepositoryId, !hasPresentation); // don't save yet if has pres...
-
-                if (hasPresentation)
-                {
-                    var presDraft = presEntity.IsPublished ? presEntity.GetDraft() : presEntity;
-                    if (!presDraft.IsPublished)
-                        SxcContext.EavAppContext.Publishing.PublishDraftInDbEntity(presDraft.RepositoryId, true);
-                }
-
-                return true;
-            }
-            catch (Exception e)
-            {
-                Exceptions.LogException(e);
-                throw;
-            }
         }
 
         [HttpGet]
 		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-		[ValidateAntiForgeryToken]
-		public void RemoveFromList([FromUri] int sortOrder)
+        public void RemoveFromList([FromUri] int sortOrder)
 		{
-			try
-			{
-				var contentGroup = SxcContext.AppContentGroups.GetContentGroupForModule(ActiveModule.ModuleID);
-				contentGroup.RemoveContentAndPresentationEntities("content", sortOrder);
-			}
-			catch (Exception e)
-			{
-				Exceptions.LogException(e);
-				throw;
-			}
+            ContentGroupReferenceManager.RemoveFromList(sortOrder);
 		}
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        [ValidateAntiForgeryToken]
         public string RemoteInstallDialogUrl(string dialog)
         {
             // note / warning: some duplicate code with SystemController.cs
@@ -307,7 +294,7 @@ namespace ToSic.SexyContent.ViewAPI
         /// <returns></returns>
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-        [ValidateAntiForgeryToken]
+        // had to disable this, as most requests now come from a lone page [ValidateAntiForgeryToken]
         public bool FinishInstallation()
         {
             if (Installer.IsUpgradeRunning)
@@ -316,6 +303,58 @@ namespace ToSic.SexyContent.ViewAPI
             Installer.FinishAbortedUpgrade();
 
             return true;
+        }
+    }
+
+    internal interface IItemListAction
+    {
+        bool Change(List<int?> ids);
+    }
+
+    internal class MoveItem : IItemListAction
+    {
+        private int _indexFrom, _indexTo;
+        public MoveItem(int from, int to)
+        {
+            _indexFrom = from;
+            _indexTo = to;
+        }
+        public bool Change(List<int?> ids)
+        {
+            if (_indexFrom >= ids.Count) // this is if you set cut after the last item
+                _indexFrom = ids.Count - 1;
+            if (_indexTo >= ids.Count)
+                _indexTo = ids.Count;
+            if (_indexFrom == _indexTo)
+                return false;
+
+            // do actualy re-ordering
+            var oldId = ids[_indexFrom];
+            ids.RemoveAt(_indexFrom);
+            if (_indexTo > _indexFrom) _indexTo--; // the actual index could have shifted due to the removal
+            ids.Insert(_indexTo, oldId);
+            return true;
+
+        }
+    }
+
+    internal class RemoveItem : IItemListAction
+    {
+        private int _index;
+        public RemoveItem(int index)
+        {
+            _index = index;
+        }
+        public bool Change(List<int?> ids)
+        {
+            // don't allow rmove outside of index
+            if (_index < 0 || _index >= ids.Count) 
+                return false;
+
+            // do actualy re-ordering
+            ids.RemoveAt(_index);
+            return true;
+
         }
     }
 }

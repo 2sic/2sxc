@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using Telerik.Charting.Styles;
 using ToSic.Eav;
 
 namespace ToSic.SexyContent
@@ -13,8 +14,10 @@ namespace ToSic.SexyContent
         public static readonly string AppIDString = "AppId";
         public static readonly string AppNameString = "ToSIC_SexyContent_AppName";
         public static readonly string SettingsShowTemplateChooser = "ToSIC_SexyContent_ShowTemplateChooser";
-        public static readonly string InternalUserName = "Internal";
+        public static readonly string PreviewTemplateIdString = "ToSIC_SexyContent_PreviewTemplateId";
+        internal static readonly string InternalUserName = "Internal";
 
+        //internal static readonly string ContentAppName = "Default";
 
         public static readonly string PortalHostDirectory = "~/Portals/_default/";
         public static readonly string TemplateFolder = "2sxc";
@@ -34,6 +37,7 @@ namespace ToSic.SexyContent
         public static readonly string AttributeSetStaticNameApps = "2SexyContent-App";
         public static readonly string AttributeSetStaticNameAppResources = "App-Resources";
         public static readonly string AttributeSetStaticNameAppSettings = "App-Settings";
+        internal static readonly string AttributeSetStaticNameContentBlockTypeName = "ContentGroupReference";
         public static readonly string ToSexyDirectory = "~/DesktopModules/ToSIC_SexyContent";
         public static readonly string TemporaryDirectory = "~/DesktopModules/ToSIC_SexyContent/_";
 
