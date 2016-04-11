@@ -1,5 +1,6 @@
 (function() { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
 
+    MainController.$inject = ["eavAdminDialogs", "eavConfig", "appId", "debugState", "appDialogConfigSvc", "$modalInstance"];
     angular.module("MainSxcApp", [
             "EavConfiguration", // config
             "SxcTemplates", // inline templates
@@ -42,11 +43,11 @@
             $modalInstance.dismiss("cancel");
         };
     }
-    MainController.$inject = ["eavAdminDialogs", "eavConfig", "appId", "debugState", "appDialogConfigSvc", "$modalInstance"];
 
 } ());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
 
+    AppSettingsController.$inject = ["appSettings", "appId"];
     angular.module("AppSettingsApp", [
         "EavConfiguration",     // 
         "EavServices",
@@ -106,11 +107,11 @@
         //};
 
     }
-    AppSettingsController.$inject = ["appSettings", "appId"];
 
 } ());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
 
+    AppListController.$inject = ["appsSvc", "eavAdminDialogs", "sxcDialogs", "eavConfig", "appSettings", "appId", "zoneId", "oldDialogs", "$modalInstance", "$translate"];
     angular.module("AppsManagementApp", [
         "EavServices",
         "EavConfiguration",
@@ -201,11 +202,11 @@
 
         vm.close = function () { $modalInstance.dismiss("cancel");};
     }
-    AppListController.$inject = ["appsSvc", "eavAdminDialogs", "sxcDialogs", "eavConfig", "appSettings", "appId", "zoneId", "oldDialogs", "$modalInstance", "$translate"];
 
 } ());
 (function () { 
 
+    DialogHostController.$inject = ["zoneId", "appId", "items", "$2sxc", "dialog", "sxcDialogs", "contentTypeName", "eavAdminDialogs", "$ocLazyLoad"];
     angular.module("DialogHost", [
         "SxcAdminUi",
         "EavAdminUi",
@@ -285,7 +286,6 @@
                 throw "Trying to open a dialog, don't know which one";
         }
     }
-    DialogHostController.$inject = ["zoneId", "appId", "items", "$2sxc", "dialog", "sxcDialogs", "contentTypeName", "eavAdminDialogs", "$ocLazyLoad"];
 
 } ());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
@@ -317,6 +317,7 @@
 } ());
 (function () {
 
+    ExportAppController.$inject = ["ExportAppService", "eavAdminDialogs", "eavConfig", "$modalInstance"];
     angular.module("ImportExport")
         .controller("ExportApp", ExportAppController)
         ;
@@ -356,9 +357,9 @@
             $modalInstance.dismiss("cancel");
         }
     }
-    ExportAppController.$inject = ["ExportAppService", "eavAdminDialogs", "eavConfig", "$modalInstance"];
 }());
 (function () {
+    ExportAppService.$inject = ["appId", "zoneId", "eavConfig", "$http", "$q"];
     angular.module("ImportExport")
         .factory("ExportAppService", ExportAppService)
     ;
@@ -380,10 +381,10 @@
             return $q.when(true);
         }
     }
-    ExportAppService.$inject = ["appId", "zoneId", "eavConfig", "$http", "$q"];
 }());
 (function () {
 
+    ExportContentController.$inject = ["ExportContentService", "eavAdminDialogs", "eavConfig", "debugState", "$modalInstance", "$filter"];
     angular.module("ImportExport")
         .controller("ExportContent", ExportContentController)
         ;
@@ -465,11 +466,11 @@
             $modalInstance.dismiss("cancel");
         }
     }
-    ExportContentController.$inject = ["ExportContentService", "eavAdminDialogs", "eavConfig", "debugState", "$modalInstance", "$filter"];
 
 }());
 (function () {
 
+    ExportContentService.$inject = ["appId", "zoneId", "eavConfig", "$http", "$q"];
     angular.module("ImportExport")
         .factory("ExportContentService", ExportContentService)
     ;
@@ -492,11 +493,11 @@
             return $q.when(true);
         }
     }
-    ExportContentService.$inject = ["appId", "zoneId", "eavConfig", "$http", "$q"];
 
 }());
 (function () {
 
+    ImportAppController.$inject = ["ImportAppService", "eavAdminDialogs", "eavConfig", "$modalInstance"];
     angular.module("ImportExport")
         .controller("ImportApp", ImportAppController)
     ;
@@ -529,10 +530,10 @@
             $modalInstance.dismiss("cancel");
         }
     }
-    ImportAppController.$inject = ["ImportAppService", "eavAdminDialogs", "eavConfig", "$modalInstance"];
 }());
 (function () {
 
+    ImportAppService.$inject = ["appId", "zoneId", "eavConfig", "$http", "$q"];
     angular.module("ImportExport")
         .factory("ImportAppService", ImportAppService)
     ;
@@ -549,10 +550,10 @@
             return $http.post("app/ImportExport/ImportApp", { AppId: appId, ZoneId: zoneId, FileName: fileName, FileData: fileData });
         }
     }
-    ImportAppService.$inject = ["appId", "zoneId", "eavConfig", "$http", "$q"];
 }());
 (function () {
 
+    ImportContentController.$inject = ["ImportContentService", "eavAdminDialogs", "eavConfig", "$modalInstance"];
     angular.module("ImportExport")
         .controller("ImportContent", ImportContentController)
     ;
@@ -586,10 +587,10 @@
             $modalInstance.dismiss("cancel");
         }
     }
-    ImportContentController.$inject = ["ImportContentService", "eavAdminDialogs", "eavConfig", "$modalInstance"];
 }());
 (function () {
 
+    ImportContentService.$inject = ["appId", "zoneId", "eavConfig", "$http", "$q"];
     angular.module("ImportExport")
         .factory("ImportContentService", ImportContentService)
     ;
@@ -606,7 +607,6 @@
             return $http.post("app/ImportExport/ImportContent", { AppId: appId, ZoneId: zoneId, FileName: fileName, FileData: fileData });
         }
     }
-    ImportContentService.$inject = ["appId", "zoneId", "eavConfig", "$http", "$q"];
 
 }());
 (function () {
@@ -641,6 +641,7 @@
 }());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
 
+    IntroController.$inject = ["eavAdminDialogs", "eavConfig", "oldDialogs", "appId"];
     angular.module("ImportExport")
         .controller("ImportExportIntro", IntroController)
         ;
@@ -683,11 +684,11 @@
                 resolve, blankCallback);
         };
     }
-    IntroController.$inject = ["eavAdminDialogs", "eavConfig", "oldDialogs", "appId"];
 
 } ());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
 
+    LanguagesSettingsController.$inject = ["languagesSvc", "eavConfig", "appId"];
     angular.module("SystemSettingsApp", [
         "EavConfiguration",     // 
         "EavServices",
@@ -713,11 +714,11 @@
 
         vm.save = svc.save;
     }
-    LanguagesSettingsController.$inject = ["languagesSvc", "eavConfig", "appId"];
 
 } ());
 (function () {
 
+    ManageContentController.$inject = ["appId", "item", "contentGroupSvc", "eavAdminDialogs", "$modalInstance", "$translate"];
     angular.module("ReorderContentApp", [
             "SxcServices",
             "EavAdminUi" // dialog (modal) controller
@@ -798,11 +799,11 @@
         vm.close = function () { $modalInstance.dismiss("cancel"); };
 
     }
-    ManageContentController.$inject = ["appId", "item", "contentGroupSvc", "eavAdminDialogs", "$modalInstance", "$translate"];
 
 } ());
 (function () { 
 
+    ReplaceContentController.$inject = ["appId", "item", "contentGroupSvc", "eavAdminDialogs", "$modalInstance", "$filter"];
     angular.module("ReplaceContentApp", [
             "SxcServices",
             "EavAdminUi"         // dialog (modal) controller
@@ -858,7 +859,6 @@
             });
         };
     }
-    ReplaceContentController.$inject = ["appId", "item", "contentGroupSvc", "eavAdminDialogs", "$modalInstance", "$filter"];
 
 } ());
 // Init the main eav services module
@@ -1410,6 +1410,7 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
 
 (function () { 
 
+    TemplateListController.$inject = ["templatesSvc", "eavAdminDialogs", "eavConfig", "appId", "debugState", "oldDialogs", "$translate", "$modalInstance", "$sce"];
     angular.module("TemplatesApp", [
         "SxcServices",
         "EavConfiguration",
@@ -1467,11 +1468,11 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
             $modalInstance.dismiss("cancel");
         };
     }
-    TemplateListController.$inject = ["templatesSvc", "eavAdminDialogs", "eavConfig", "appId", "debugState", "oldDialogs", "$translate", "$modalInstance", "$sce"];
 
 } ());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
 
+    TemplateEditController.$inject = ["svc", "eavAdminDialogs", "eavConfig", "appId", "$modalInstance"];
     angular.module("TemplatesApp")
         .controller("TemplateEdit", TemplateEditController)
         ;
@@ -1485,11 +1486,11 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
             $modalInstance.dismiss("cancel");
         };
     }
-    TemplateEditController.$inject = ["svc", "eavAdminDialogs", "eavConfig", "appId", "$modalInstance"];
 
 } ());
 (function () { 
 
+    WebApiMainController.$inject = ["appId", "webApiSvc", "eavAdminDialogs", "$modalInstance", "$translate"];
     angular.module("WebApiApp", [
         "SxcServices",
         //"EavConfiguration",
@@ -1522,6 +1523,5 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
             $modalInstance.dismiss("cancel");
         };
     }
-    WebApiMainController.$inject = ["appId", "webApiSvc", "eavAdminDialogs", "$modalInstance", "$translate"];
 
 } ());

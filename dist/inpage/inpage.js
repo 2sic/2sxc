@@ -1198,7 +1198,18 @@ $(document).ready(function () {
 
     });
 
+    console.log(offset);
+    console.log(body.offset());
+
     function refreshMenu(e) { // ToDo: Performance is not solved with requestAnimationFrame, needs throttling (or more performant selectors etc.)
+
+        // Prepare offset calculation based on body positioning
+        var body = $('body');
+        var bodyPos = body.css('position');
+        var offset = bodyPos == 'relative' || bodyPos == 'absolute' ?
+        { x: body.offset().left, y: body.offset().top } :
+        { x: 0, y: 0 };
+
         var contentBlocks = $(selectors.listContainerSelector).find(selectors.contentBlockSelector)
                 .add(selectors.listContainerSelector);
 
@@ -1224,8 +1235,8 @@ $(document).ready(function () {
             var parentContainer = (parentCbList.length ? parentCbList : parentPane)[0];
 
             newBlockMenu.css({
-                'left': alignTo.x,
-                'top': alignTo.y,
+                'left': alignTo.x - offset.x,
+                'top': alignTo.y - offset.y,
                 'width': alignTo.element.width()
             }).show();
 
