@@ -18,7 +18,7 @@
         contentBlockClass: "sc-content-block",
         contentBlockSelector: ".sc-content-block",
         moduleSelector: ".DnnModule",
-        paneSelector: ".DNNEmptyPane, :has(>.DnnModule)", // Found no better way to get all panes - the hidden variable does not exist when not in edit page mode
+        paneSelector: ".DNNEmptyPane, .dnnDropEmptyPanes, :has(>.DnnModule)", // Found no better way to get all panes - the hidden variable does not exist when not in edit page mode
         listDataAttr: "data-list-context",
         selected: "sc-cb-is-selected"
     };
@@ -170,8 +170,17 @@
             }, 20);
 
     });
+    
 
     function refreshMenu(e) { // ToDo: Performance is not solved with requestAnimationFrame, needs throttling (or more performant selectors etc.)
+
+        // Prepare offset calculation based on body positioning
+        var body = $('body');
+        var bodyPos = body.css('position');
+        var offset = bodyPos == 'relative' || bodyPos == 'absolute' ?
+        { x: body.offset().left, y: body.offset().top } :
+        { x: 0, y: 0 };
+
         var contentBlocks = $(selectors.listContainerSelector).find(selectors.contentBlockSelector)
                 .add(selectors.listContainerSelector);
 
@@ -197,8 +206,8 @@
             var parentContainer = (parentCbList.length ? parentCbList : parentPane)[0];
 
             newBlockMenu.css({
-                'left': alignTo.x,
-                'top': alignTo.y,
+                'left': alignTo.x - offset.x,
+                'top': alignTo.y - offset.y,
                 'width': alignTo.element.width()
             }).show();
 

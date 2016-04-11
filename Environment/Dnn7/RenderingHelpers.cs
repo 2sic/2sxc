@@ -33,15 +33,23 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         }
 
+        /// <summary>
+        /// Return true if the URL is a debug URL
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        internal static bool IsDebugUrl(HttpRequest request)
+        {
+            return string.IsNullOrEmpty(request.QueryString["debug"]);
+        }
 
 
-
-        internal void RegisterClientDependencies(Page page, bool useDebug)
+        internal static void RegisterClientDependencies(Page page)
         {
             var root = "~/desktopmodules/tosic_sexycontent/";
             root = page.ResolveUrl(root);
             var breakCache = "?sxcver=" + Settings.Version;
-            var ext = (useDebug? ".min.js" : ".js" + breakCache);
+            var ext = (IsDebugUrl(page.Request) ? ".min.js" : ".js" + breakCache);
             var ver = Settings.Version.ToString();
 
             // add edit-mode CSS

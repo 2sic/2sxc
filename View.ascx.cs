@@ -33,8 +33,8 @@ namespace ToSic.SexyContent
             // register scripts and css
             try
             {
-                var renderHelp = new RenderingHelpers(SxcI);
-                renderHelp.RegisterClientDependencies(Page, string.IsNullOrEmpty(Request.QueryString["debug"]));
+                //var renderHelp = new RenderingHelpers(SxcI);
+                RenderingHelpers.RegisterClientDependencies(Page);
             }
             catch (Exception ex)
             {
