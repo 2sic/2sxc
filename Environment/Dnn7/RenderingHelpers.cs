@@ -23,7 +23,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         internal RenderingHelpers(SxcInstance sxc)
         {
-            string appRoot = VirtualPathUtility.ToAbsolute("~");
+            string appRoot = VirtualPathUtility.ToAbsolute("~/");
             _moduleInfo = sxc.ModuleInfo;// mi;// mic.Configuration;
             _sxcInstance = sxc;
             _portalSettings = PortalSettings.Current; // mic.PortalSettings;// PortalSettings.Current;

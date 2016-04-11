@@ -4,23 +4,7 @@
         "SxcServices",
         "EavConfiguration", // config
         "EavServices", // multi-language stuff
-        //"InitSxcParametersFromUrl"
-            //"SxcTemplates", // inline templates
-            //"EavAdminUi", // dialog (modal) controller
-            //"SxcFilters", // for inline unsafe urls
-            //"ContentTypesApp",
-            //"PipelineManagement",
-            //"TemplatesApp",
-            //"ImportExportApp",
-            //"AppSettingsApp",
-            //"SystemSettingsApp",
-            //"WebApiApp"
         ])
-        //.config(function($translatePartialLoaderProvider) {
-        //    // ensure the language pack is loaded
-        //    $translatePartialLoaderProvider.addPart("sxc-admin");
-        //})
-        //.controller("AppMain", MainController);
         ;
 
 } ());
@@ -120,7 +104,6 @@ angular.module("Adam")
     /* jshint laxbreak:true */
     "use strict";
 
-    BrowserController.$inject = ["$scope", "adamSvc", "debugState", "eavConfig", "eavAdminDialogs", "appRoot", "fileType"];
     var app = angular.module("Adam"); 
 
     // The controller for the main form directive
@@ -293,6 +276,7 @@ angular.module("Adam")
 
         vm.activate();
     }
+    BrowserController.$inject = ["$scope", "adamSvc", "debugState", "eavConfig", "eavAdminDialogs", "appRoot", "fileType"];
 
 })();
 
@@ -358,7 +342,7 @@ angular.module("Adam")
 /* js/fileAppDirectives */
 
 angular.module("Adam")
-    .directive("dropzone", ["sxc", "tabId", "dragClass", "adamSvc", "$timeout", function (sxc, tabId, dragClass, adamSvc, $timeout) {
+    .directive("dropzone", ["sxc", "tabId", "AppInstanceId", "ContentBlockId", "dragClass", "adamSvc", "$timeout", function (sxc, tabId,AppInstanceId, ContentBlockId, dragClass, adamSvc, $timeout) {
         return {
             restrict: "C",
             link: function(scope, element, attrs, controller) {
@@ -376,8 +360,9 @@ angular.module("Adam")
                     maxThumbnailFilesize: 10,
 
                     headers: {
-                        "ModuleId": sxc.id,
-                        "TabId": tabId
+                        "ModuleId": AppInstanceId,
+                        "TabId": tabId,
+                        "ContentBlockId": ContentBlockId
                     },
 
                     dictDefaultMessage: "",
@@ -609,6 +594,8 @@ angular.module("sxcFieldTemplates")
 
             $scope.to.settings.merged.EnableRemove = true;
             $scope.to.settings.merged.AllowMultiValue = true;
+            $scope.to.enableCollapseField = true;   // ui option to allow collapsing
+            $scope.to.collapseField = true;   // ui option to allow collapsing
         }]);
 })();
 
@@ -922,7 +909,6 @@ angular.module("eavFieldTemplates")
 	"use strict";
 
     // Register in Angular Formly
-    FieldWysiwygTinyMceController.$inject = ["$scope", "dnnBridgeSvc", "languages", "$translate"];
     angular.module("sxcFieldTemplates")
         .config(["formlyConfigProvider", function(formlyConfigProvider) {
             formlyConfigProvider.setType({
@@ -982,6 +968,7 @@ angular.module("eavFieldTemplates")
                 "nonbreaking",  // add button to insert &nbsp; https://www.tinymce.com/docs/plugins/nonbreaking/
                 "searchreplace",// search/replace https://www.tinymce.com/docs/plugins/searchreplace/
                 "table",        // https://www.tinymce.com/docs/plugins/searchreplace/
+                "lists",        // should fix bug with fonts in list-items (https://github.com/tinymce/tinymce/issues/2330)
 
             ];
 
@@ -1123,6 +1110,7 @@ angular.module("eavFieldTemplates")
 
         vm.activate();
     }
+    FieldWysiwygTinyMceController.$inject = ["$scope", "dnnBridgeSvc", "languages", "$translate"];
 
     // Initialize the tinymce resources which we translate ourselves
     function initLangResources(editor, language, $translate) {
