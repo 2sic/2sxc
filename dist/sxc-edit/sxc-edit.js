@@ -594,6 +594,8 @@ angular.module("sxcFieldTemplates")
 
             $scope.to.settings.merged.EnableRemove = true;
             $scope.to.settings.merged.AllowMultiValue = true;
+            $scope.to.enableCollapseField = true;   // ui option to allow collapsing
+            $scope.to.collapseField = true;   // ui option to allow collapsing
         }]);
 })();
 

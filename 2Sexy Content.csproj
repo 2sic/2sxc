@@ -513,6 +513,7 @@
     <Content Include="src\sxc-admin\web-api\web-api.html" />
     <Content Include="src\sxc-edit\fields\dnn-bridge\dnn-bridge.service.js" />
     <Content Include="src\sxc-edit\fields\dnn-bridge\web-forms-bridge.directive.js" />
+    <Content Include="src\sxc-edit\fields\entity\entity-content-blocks.js" />
     <Content Include="src\sxc-edit\fields\hyperlink\dropzone-custom.css" />
     <Content Include="src\sxc-edit\fields\hyperlink\hyperlink-library.controller.js" />
     <Content Include="src\sxc-edit\fields\hyperlink\hyperlink.css" />
