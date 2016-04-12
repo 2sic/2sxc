@@ -10,6 +10,7 @@ using System.Net.Http.Headers;
 using System.Security.Authentication;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Xml.Linq;
@@ -116,39 +117,49 @@ namespace ToSic.SexyContent.WebApi
         }
 
 
-
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public ImportResult ImportApp(ImportRequestArgs args)
+        public ImportResult ImportApp()
         {
             var result = new ImportResult();
-            using (var fileStream = new MemoryStream(GetArrayFromBase64Url(args.FileData)))
+
+            var request = HttpContext.Current.Request;
+
+            var appId   = int.Parse(request["AppId"]);
+            var zoneId  = int.Parse(request["ZoneId"]);
+            if (request.Files.Count > 0)
             {
-                var zipImport = new ZipImport(args.ZoneId, null, PortalSettings.UserInfo.IsSuperUser);
-                result.Succeeded = zipImport.ImportApp(fileStream, HttpContext.Current.Server, PortalSettings, result.Messages);
+                var zipImport = new ZipImport(zoneId, null, PortalSettings.UserInfo.IsSuperUser);
+                result.Succeeded = zipImport.ImportApp(request.Files[0].InputStream, HttpContext.Current.Server, PortalSettings, result.Messages);
             }
             return result;
         }
 
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public ImportResult ImportContent(ImportRequestArgs args)
+        public ImportResult ImportContent()
         {
             var result = new ImportResult();
-            using (var fileStream = new MemoryStream(GetArrayFromBase64Url(args.FileData)))
+
+            var request = HttpContext.Current.Request;
+
+            var appId = int.Parse(request["AppId"]);
+            var zoneId = int.Parse(request["ZoneId"]);
+            if (request.Files.Count > 0)
             {
-                if (args.FileName.EndsWith(".zip"))
+                var file = request.Files[0];
+                if (file.FileName.EndsWith(".zip"))
                 {   // ZIP
-                    var zipImport = new ZipImport(args.ZoneId, args.AppId, PortalSettings.UserInfo.IsSuperUser);
-                    result.Succeeded = zipImport.ImportZip(fileStream, HttpContext.Current.Server, PortalSettings, result.Messages);
+                    var zipImport = new ZipImport(zoneId, appId, PortalSettings.UserInfo.IsSuperUser);
+                    result.Succeeded = zipImport.ImportZip(file.InputStream, HttpContext.Current.Server, PortalSettings, result.Messages);
                 }
                 else
                 {   // XML
-                    using (var fileStreamReader = new StreamReader(fileStream))
+                    using (var fileStreamReader = new StreamReader(file.InputStream))
                     {
                         var xmlImport = new XmlImport(PortalSettings.DefaultLanguage, UserIdentity.CurrentUserIdentityToken);
                         var xmlDocument = XDocument.Parse(fileStreamReader.ReadToEnd());
-                        result.Succeeded = xmlImport.ImportXml(args.ZoneId, args.AppId, xmlDocument);
+                        result.Succeeded = xmlImport.ImportXml(zoneId, appId, xmlDocument);
                         result.Messages = xmlImport.ImportLog;
                     }
                 }
@@ -161,20 +172,6 @@ namespace ToSic.SexyContent.WebApi
         {
             if (!PortalSettings.UserInfo.Roles.Contains("Administrators"))
                 throw new AuthenticationException();
-        }
-
-        private byte[] GetArrayFromBase64Url(string base64Url)
-        {
-            var base64Data = base64Url.Substring(base64Url.IndexOf(',') + 1); // or Regex.Match(base64Url, @"[data:(?<media>.+?)/(?<type>.+?),](?<data>.+)").Groups["data"].Value;
-            // Correct transfer errors!
-            base64Data = base64Data.Replace('-', '+').Replace('_', '/').Trim('=');
-            var base64Padding = base64Data.Length % 4;
-            if (base64Padding > 0)
-            {
-                base64Data += new string('=', 4 - base64Padding);
-            }
-
-            return Convert.FromBase64String(base64Data);
         }
     }
 }

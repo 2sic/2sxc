@@ -7,13 +7,25 @@
 
     function ImportAppService(appId, zoneId, eavConfig, $http, $q) {
         var srvc = {
-            importApp: importApp
+            importApp: importApp,
         };
         return srvc;
 
 
-        function importApp(fileName, fileData) {
-            return $http.post("app/ImportExport/ImportApp", { AppId: appId, ZoneId: zoneId, FileName: fileName, FileData: fileData });
+        function importApp(file) {
+            return $http({
+                method: "POST",
+                url: "app/ImportExport/ImportApp",
+                headers: { "Content-Type": undefined },
+                transformRequest: function (data) {
+                    var formData = new FormData();
+                    formData.append("AppId", data.AppId);
+                    formData.append("ZoneId", data.ZoneId);
+                    formData.append("File", data.File);
+                    return formData;
+                },
+                data: { AppId: appId, ZoneId: zoneId, File: file }
+            });
         }
     }
 }());

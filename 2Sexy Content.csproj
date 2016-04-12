@@ -255,7 +255,6 @@
     <Compile Include="SexyContent\DataSources\DnnSqlDataSource.cs" />
     <Compile Include="SexyContent\DataSources\DnnFormAndList.cs" />
     <Compile Include="WebApi\ImportExport\HttpResponseMessageHelper.cs" />
-    <Compile Include="WebApi\ImportExport\ImportRequestArgs.cs" />
     <Compile Include="WebApi\ImportExport\ImportResult.cs" />
     <Compile Include="WebApi\ImportExport\SxcAppWrapper.cs" />
     <Compile Include="WebApi\EavApiProxies\ContentExportController.cs" />
@@ -424,6 +423,7 @@
     <Content Include="src\sxc-admin\importexport\import-app.service.js" />
     <Content Include="src\sxc-admin\importexport\import-content.controller.js" />
     <Content Include="src\sxc-admin\importexport\import-content.service.js" />
+    <Content Include="src\sxc-edit\import-export.css" />
     <Content Include="src\sxc-admin\importexport\import-export.directives.js" />
     <Content Include="src\sxc-admin\importexport\intro.controller.js" />
     <Content Include="src\sxc-admin\importexport\_app.js" />

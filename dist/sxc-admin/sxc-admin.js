@@ -531,7 +531,7 @@
 
         function importApp() {
             vm.IsImporting = true;
-            return ImportAppService.importApp(vm.ImportFile.Name, vm.ImportFile.Data).then(function (result) {
+            return ImportAppService.importApp(vm.ImportFile).then(function (result) {
                 vm.ImportResult = result.data;
                 vm.IsImporting = false;
             }).catch(function (error) {
@@ -554,13 +554,25 @@
 
     function ImportAppService(appId, zoneId, eavConfig, $http, $q) {
         var srvc = {
-            importApp: importApp
+            importApp: importApp,
         };
         return srvc;
 
 
-        function importApp(fileName, fileData) {
-            return $http.post("app/ImportExport/ImportApp", { AppId: appId, ZoneId: zoneId, FileName: fileName, FileData: fileData });
+        function importApp(file) {
+            return $http({
+                method: "POST",
+                url: "app/ImportExport/ImportApp",
+                headers: { "Content-Type": undefined },
+                transformRequest: function (data) {
+                    var formData = new FormData();
+                    formData.append("AppId", data.AppId);
+                    formData.append("ZoneId", data.ZoneId);
+                    formData.append("File", data.File);
+                    return formData;
+                },
+                data: { AppId: appId, ZoneId: zoneId, File: file }
+            });
         }
     }
 }());
@@ -587,7 +599,7 @@
 
         function importContent() {
             vm.IsImporting = true;
-            return ImportContentService.importContent(vm.ImportFile.Name, vm.ImportFile.Data).then(function (result) {
+            return ImportContentService.importContent(vm.ImportFile).then(function (result) {
                 vm.ImportResult = result.data;
                 vm.IsImporting = false;
             }).catch(function (error) {
@@ -616,8 +628,20 @@
         return srvc;
 
 
-        function importContent(fileName, fileData) {
-            return $http.post("app/ImportExport/ImportContent", { AppId: appId, ZoneId: zoneId, FileName: fileName, FileData: fileData });
+        function importContent(file) {
+            return $http({
+                method: "POST",
+                url: "app/ImportExport/ImportContent",
+                headers: { "Content-Type": undefined },
+                transformRequest: function (data) {
+                    var formData = new FormData();
+                    formData.append("AppId", data.AppId);
+                    formData.append("ZoneId", data.ZoneId);
+                    formData.append("File", data.File);
+                    return formData;
+                },
+                data: { AppId: appId, ZoneId: zoneId, File: file }
+            });
         }
     }
 
@@ -626,6 +650,7 @@
 
     angular.module("ImportExport")
         .directive("sxcFileRead", FileReadDirective)
+        .directive("sxcFileInput", FileInputDirective)
         ;
 
     function FileReadDirective() {
@@ -647,6 +672,21 @@
                         });
                     };
                     fileReader.readAsDataURL(file);
+                });
+            }
+        };
+    }
+
+
+    function FileInputDirective() {
+        return {
+            scope: {
+                sxcFileInput: "="
+            },
+            link: function (scope, element, attributes) {
+                element.bind("change", function (e) {
+                    scope.sxcFileInput = e.target.files[0];
+                    scope.$apply();
                 });
             }
         };
@@ -1320,7 +1360,7 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
 
 
   $templateCache.put('importexport/import-app.html',
-    "<div><div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=ImportExport.ImportApp.Title></h3></div><div ng-if=!vm.ImportResult.Messages><div class=modal-body><div translate=ImportExport.ImportApp.Intro></div><div translate=ImportExport.ImportApp.FurtherHelp></div><br><span class=\"btn btn-default btn-file\"><span ng-hide=vm.ImportFile.Data>{{\"ImportExport.ImportApp.Commands.SelectFile\" | translate}}</span> <span ng-show=vm.ImportFile.Data>{{vm.ImportFile.Name}}</span> <input type=file sxc-file-read=\"vm.ImportFile\"></span><br></div><div class=modal-footer><button type=button class=\"btn btn-primary pull-left\" ng-click=vm.importApp() ng-disabled=\"!vm.ImportFile.Data || vm.IsImporting\" translate=ImportExport.ImportApp.Commands.Import></button></div></div><div ng-if=vm.ImportResult.Messages><div class=modal-body><div ng-if=vm.ImportResult.Succeeded class=\"sxc-message sxc-message-info\">{{\"ImportExport.ImportContent.Messages.ImportSucceeded\" | translate}} (<a ng-click=\"vm.ImportResult._hideSuccessMessages = !vm.ImportResult._hideSuccessMessages\">{{\"ImportExport.ImportContent.Commands.ToggleSuccessMessages\" | translate}}</a>)</div><div ng-if=!vm.ImportResult.Succeeded class=\"sxc-message sxc-message-error\">{{\"ImportExport.ImportContent.Messages.ImportFailed\" | translate}}</div><div ng-repeat=\"message in vm.ImportResult.Messages\" class=sxc-message ng-class=\"{ 'sxc-message-warning': message.MessageType == 0, 'sxc-message-success': message.MessageType == 1, 'sxc-message-error': message.MessageType == 2, 'sxc-message-success-hidden': vm.ImportResult._hideSuccessMessages }\">{{message.Message}}</div></div><div class=modal-footer></div></div></div><style>.sxc-message { display: block; padding: 18px 18px; margin-bottom: 18px; border: 1px solid rgba(2, 139, 255, 0.2); border-radius: 3px; background: rgba(2,139,255,0.15); max-width: 980px; }\r" +
+    "<div><div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=ImportExport.ImportApp.Title></h3></div><div class=sxc-spinner ng-show=vm.IsImporting class=sxc-import-spinner><i class=\"icon-spinner animate-spin\"></i></div><div ng-if=!vm.ImportResult.Messages><div class=modal-body><div translate=ImportExport.ImportApp.Intro></div><div translate=ImportExport.ImportApp.FurtherHelp></div><br><span class=\"btn btn-default btn-file\"><span ng-hide=vm.ImportFile.name>{{\"ImportExport.ImportApp.Commands.SelectFile\" | translate}}</span> <span ng-show=vm.ImportFile.name>{{vm.ImportFile.name}}</span> <input type=file sxc-file-input=\"vm.ImportFile\"></span><br></div><div class=modal-footer><button type=button class=\"btn btn-primary pull-left\" ng-click=vm.importApp() ng-disabled=\"!vm.ImportFile.name || vm.IsImporting\" translate=ImportExport.ImportApp.Commands.Import></button></div></div><div ng-if=vm.ImportResult.Messages><div class=modal-body><div ng-if=vm.ImportResult.Succeeded class=\"sxc-message sxc-message-info\">{{\"ImportExport.ImportContent.Messages.ImportSucceeded\" | translate}} (<a ng-click=\"vm.ImportResult._hideSuccessMessages = !vm.ImportResult._hideSuccessMessages\">{{\"ImportExport.ImportContent.Commands.ToggleSuccessMessages\" | translate}}</a>)</div><div ng-if=!vm.ImportResult.Succeeded class=\"sxc-message sxc-message-error\">{{\"ImportExport.ImportContent.Messages.ImportFailed\" | translate}}</div><div ng-repeat=\"message in vm.ImportResult.Messages\" class=sxc-message ng-class=\"{ 'sxc-message-warning': message.MessageType == 0, 'sxc-message-success': message.MessageType == 1, 'sxc-message-error': message.MessageType == 2, 'sxc-message-success-hidden': vm.ImportResult._hideSuccessMessages }\">{{message.Message}}</div></div><div class=modal-footer></div></div></div><style>.sxc-message { display: block; padding: 18px 18px; margin-bottom: 18px; border: 1px solid rgba(2, 139, 255, 0.2); border-radius: 3px; background: rgba(2,139,255,0.15); max-width: 980px; }\r" +
     "\n" +
     "\r" +
     "\n" +
@@ -1341,23 +1381,7 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
 
 
   $templateCache.put('importexport/import-content.html',
-    "<div><div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=ImportExport.ImportContent.Title></h3></div><div ng-if=!vm.ImportResult.Messages><div class=modal-body><div translate=ImportExport.ImportContent.Intro></div><div translate=ImportExport.ImportContent.FurtherHelp></div><br><span class=\"btn btn-default btn-file\"><span ng-hide=vm.ImportFile.Data>{{\"ImportExport.ImportContent.Commands.SelectFile\" | translate}}</span> <span ng-show=vm.ImportFile.Data>{{vm.ImportFile.Name}}</span> <input type=file sxc-file-read=\"vm.ImportFile\"></span><br></div><div class=modal-footer><button type=button class=\"btn btn-primary pull-left\" ng-click=vm.importContent() ng-disabled=\"!vm.ImportFile.Data || vm.IsImporting\" translate=ImportExport.ImportContent.Commands.Import></button></div></div><div ng-if=vm.ImportResult.Messages><div class=modal-body><div ng-if=vm.ImportResult.Succeeded class=\"sxc-message sxc-message-info\">{{\"ImportExport.ImportContent.Messages.ImportSucceeded\" | translate}} (<a ng-click=\"vm.ImportResult._hideSuccessMessages = !vm.ImportResult._hideSuccessMessages\">{{\"ImportExport.ImportContent.Commands.ToggleSuccessMessages\" | translate}}</a>)</div><div ng-if=!vm.ImportResult.Succeeded class=\"sxc-message sxc-message-error\">{{\"ImportExport.ImportContent.Messages.ImportFailed\" | translate}}</div><div ng-repeat=\"message in vm.ImportResult.Messages\" class=sxc-message ng-class=\"{ 'sxc-message-warning': message.MessageType == 0, 'sxc-message-success': message.MessageType == 1, 'sxc-message-error': message.MessageType == 2, 'sxc-message-success-hidden': vm.ImportResult._hideSuccessMessages }\">{{message.Message}}</div></div><div class=modal-footer></div></div></div><style>.sxc-message { display: block; padding: 18px 18px; margin-bottom: 18px; border: 1px solid rgba(2, 139, 255, 0.2); border-radius: 3px; background: rgba(2,139,255,0.15); max-width: 980px; }\r" +
-    "\n" +
-    "    \r" +
-    "\n" +
-    "    .sxc-message-success.sxc-message { background-color: rgba(0,255,0,0.15); border-color: rgba(0, 255, 0, 0.5); }\r" +
-    "\n" +
-    "    \r" +
-    "\n" +
-    "    .sxc-message-success.sxc-message-success-hidden { display: none; }\r" +
-    "\n" +
-    "    \r" +
-    "\n" +
-    "    .sxc-message-warning.sxc-message { background-color: rgba(255,255,0,0.15); border-color: #CDB21F; }\r" +
-    "\n" +
-    "\r" +
-    "\n" +
-    "    .sxc-message-error.sxc-message { background-color: rgba(255,0,0,0.15); border-color: rgba(255, 0, 0, 0.2); }</style>"
+    "<div><div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=ImportExport.ImportContent.Title></h3></div><div ng-show=\"true || vm.IsImporting\" class=sxc-import-spinner><i class=\"icon-spinner animate-spin\"></i></div><div ng-if=!vm.ImportResult.Messages><div class=modal-body><div translate=ImportExport.ImportContent.Intro></div><div translate=ImportExport.ImportContent.FurtherHelp></div><br><span class=\"btn btn-default btn-file\"><span ng-hide=vm.ImportFile.name>{{\"ImportExport.ImportContent.Commands.SelectFile\" | translate}}</span> <span ng-show=vm.ImportFile.name>{{vm.ImportFile.name}}</span> <input type=file sxc-file-input=\"vm.ImportFile\"></span><br></div><div class=modal-footer><button type=button class=\"btn btn-primary pull-left\" ng-click=vm.importContent() ng-disabled=\"!vm.ImportFile.name || vm.IsImporting\" translate=ImportExport.ImportContent.Commands.Import></button></div></div><div ng-if=vm.ImportResult.Messages><div class=modal-body><div ng-if=vm.ImportResult.Succeeded class=\"sxc-message sxc-message-info\">{{\"ImportExport.ImportContent.Messages.ImportSucceeded\" | translate}} (<a ng-click=\"vm.ImportResult._hideSuccessMessages = !vm.ImportResult._hideSuccessMessages\">{{\"ImportExport.ImportContent.Commands.ToggleSuccessMessages\" | translate}}</a>)</div><div ng-if=!vm.ImportResult.Succeeded class=\"sxc-message sxc-message-error\">{{\"ImportExport.ImportContent.Messages.ImportFailed\" | translate}}</div><div ng-repeat=\"message in vm.ImportResult.Messages\" class=sxc-message ng-class=\"{ 'sxc-message-warning': message.MessageType == 0, 'sxc-message-success': message.MessageType == 1, 'sxc-message-error': message.MessageType == 2, 'sxc-message-success-hidden': vm.ImportResult._hideSuccessMessages }\">{{message.Message}}</div></div><div class=modal-footer></div></div></div>"
   );
 
 

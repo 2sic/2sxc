@@ -1,0 +1,14 @@
+﻿/* IMPORT MESSAGES */
+.sxc-message { display: block; padding: 18px 18px; margin-bottom: 18px; border: 1px solid rgba(2, 139, 255, 0.2); border-radius: 3px; background: rgba(2,139,255,0.15); max-width: 980px; }
+
+.sxc-message-success.sxc-message { background-color: rgba(0,255,0,0.15); border-color: rgba(0, 255, 0, 0.5); }
+
+.sxc-message-success.sxc-message-success-hidden { display: none; }
+
+.sxc-message-warning.sxc-message { background-color: rgba(255,255,0,0.15); border-color: #CDB21F; }
+
+.sxc-message-error.sxc-message { background-color: rgba(255,0,0,0.15); border-color: rgba(255, 0, 0, 0.2); }
+/* END IMPORT MESSAGES */
+
+/* SPINNER ANIMATED */
+.sxc-import-spinner { margin: 0 auto; position: absolute; left: 50%; top: 50%; }
