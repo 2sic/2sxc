@@ -8,6 +8,8 @@
     function ExportAppController(ExportAppService, eavAdminDialogs, eavConfig, $modalInstance) {
         var vm = this;
 
+        vm.IsExporting = false;
+
         vm.IncludeContentGroups = false;
         vm.ResetAppGuid = false;
 
@@ -32,7 +34,12 @@
         }
 
         function exportApp() {
-            return ExportAppService.exportApp(vm.IncludeContentGroups, vm.ResetAppGuid);
+            vm.IsExporting = true;
+            return ExportAppService.exportApp(vm.IncludeContentGroups, vm.ResetAppGuid).then(function () {
+                vm.IsExporting = false;
+            }).catch(function () {
+                vm.IsExporting = false;
+            });
         }
 
         function close() {

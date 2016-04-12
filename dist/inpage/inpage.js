@@ -1025,21 +1025,11 @@ $(document).ready(function () {
     window.EavEditDialogs = [];
 });
 
-(function () {
+$(function () {
     "use strict";
     var enableModuleMove = false; // not implemented yet
-    var strButtons = "<a class='sc-content-block-menu-addcontent sc-invisible' data-type='Default' data-i18n='[title]QuickInsertMenu.AddBlockContent'>content</a>"
-        + "<a class='sc-content-block-menu-addapp sc-invisible' data-type='' data-i18n='[title]QuickInsertMenu.AddBlockApp'>app</a>"
-        + "<a class='sc-content-block-menu-btn sc-cb-action icon-sxc-scissors sc-invisible' data-action='cut' data-i18n='[title]QuickInsertMenu.Cut'></a>"
-        + "<a class='sc-content-block-menu-btn sc-cb-action icon-sxc-paste sc-invisible sc-unavailable' data-action='paste' data-i18n='[title]QuickInsertMenu.Paste'></a>"
-        + "<a class='sc-content-block-menu-btn sc-cb-action icon-sxc-trash sc-invisible sc-unavailable' data-action='delete' data-i18n='[title]QuickInsertMenu.Delete'></a>";
-    var blockActions = $(strButtons);
-    var newBlockMenu = $("<div class='sc-content-block-menu sc-i18n'></div>");
-    var moduleActions = $(strButtons.replace(/QuickInsertMenu.AddBlock/g, "QuickInsertMenu.AddModule")).attr("data-context", "module").addClass("sc-content-block-menu-module");
-    newBlockMenu.append(blockActions).append(moduleActions);
-
-    $("body").append(newBlockMenu);
-
+    var enableCb = true;
+    var enableMod = true;
     var selectors = {
         listContainerSelector: ".sc-content-block-list",
         contentBlockClass: "sc-content-block",
@@ -1049,6 +1039,27 @@ $(document).ready(function () {
         listDataAttr: "data-list-context",
         selected: "sc-cb-is-selected"
     };
+
+    // if it has inner-content, then it's probably a details page, where quickly adding modules
+    // would be a problem, so for now, disable modules in this case
+    if ($(selectors.listContainerSelector).length > 0)
+        enableMod = false;
+
+    var newBlockMenu = $("<div class='sc-content-block-menu sc-i18n'></div>");
+    var strButtons = "<a class='sc-content-block-menu-addcontent sc-invisible' data-type='Default' data-i18n='[title]QuickInsertMenu.AddBlockContent'>content</a>"
+        + "<a class='sc-content-block-menu-addapp sc-invisible' data-type='' data-i18n='[title]QuickInsertMenu.AddBlockApp'>app</a>"
+        + "<a class='sc-content-block-menu-btn sc-cb-action icon-sxc-scissors sc-invisible' data-action='cut' data-i18n='[title]QuickInsertMenu.Cut'></a>"
+        + "<a class='sc-content-block-menu-btn sc-cb-action icon-sxc-paste sc-invisible sc-unavailable' data-action='paste' data-i18n='[title]QuickInsertMenu.Paste'></a>"
+        + "<a class='sc-content-block-menu-btn sc-cb-action icon-sxc-trash sc-invisible sc-unavailable' data-action='delete' data-i18n='[title]QuickInsertMenu.Delete'></a>";
+    var blockActions = $(strButtons);
+    if (enableCb)
+        newBlockMenu.append(blockActions);
+
+    var moduleActions = $(strButtons.replace(/QuickInsertMenu.AddBlock/g, "QuickInsertMenu.AddModule")).attr("data-context", "module").addClass("sc-content-block-menu-module");
+    if (enableMod) 
+        newBlockMenu.append(moduleActions);
+
+    $("body").append(newBlockMenu);
 
 
     blockActions.click(function () {
@@ -1202,21 +1213,24 @@ $(document).ready(function () {
     function refreshMenu(e) { // ToDo: Performance is not solved with requestAnimationFrame, needs throttling (or more performant selectors etc.)
 
         // Prepare offset calculation based on body positioning
-        var body = $('body');
-        var bodyPos = body.css('position');
-        var offset = bodyPos == 'relative' || bodyPos == 'absolute' ?
-        { x: body.offset().left, y: body.offset().top } :
-        { x: 0, y: 0 };
+        var body = $("body"), nearestCb = null, nearestModule = null;
+        var bodyPos = body.css("position");
+        var offset = bodyPos === "relative" || bodyPos === "absolute"
+            ? { x: body.offset().left, y: body.offset().top }
+            : { x: 0, y: 0 };
 
-        var contentBlocks = $(selectors.listContainerSelector).find(selectors.contentBlockSelector)
+        if (enableCb) {
+            var contentBlocks = $(selectors.listContainerSelector).find(selectors.contentBlockSelector)
                 .add(selectors.listContainerSelector);
+            nearestCb = findNearest(contentBlocks, { x: e.clientX, y: e.clientY }, selectors.contentBlockSelector);
+        }
 
-        var modules = $(selectors.paneSelector).find(selectors.moduleSelector)
+        if (enableMod) {
+            var modules = $(selectors.paneSelector).find(selectors.moduleSelector)
                 .add(selectors.paneSelector);
+            nearestModule = findNearest(modules, { x: e.clientX, y: e.clientY }, selectors.moduleSelector);
+        }
 
-        var nearestCb = findNearest(contentBlocks, { x: e.clientX, y: e.clientY }, selectors.contentBlockSelector);
-        var nearestModule = findNearest(modules, { x: e.clientX, y: e.clientY }, selectors.moduleSelector);
-        
         moduleActions.toggleClass("sc-invisible", nearestModule === null);
         blockActions.toggleClass("sc-invisible", nearestCb === null);
 
@@ -1285,4 +1299,4 @@ $(document).ready(function () {
 
         return nearest;
     }
-})();
+});
