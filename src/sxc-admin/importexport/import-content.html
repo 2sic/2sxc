@@ -1,11 +1,10 @@
-﻿<link rel="stylesheet" href="/DesktopModules/ToSIC_SexyContent/src/sxc-admin/importexport/import-export.css" />
-<div>
+﻿<div>
     <div class="modal-header">
         <button icon="remove" class="btn pull-right" type="button" ng-click="vm.close()"></button>
         <h3 class="modal-title" translate="ImportExport.ImportContent.Title"></h3>
     </div>
 
-    <div class="sxc-spinner" ng-show="vm.IsImporting"><i class="icon-spinner"></i></div>
+    <div ng-show="true || vm.IsImporting" class="sxc-import-spinner"><i class="icon-spinner animate-spin"></i></div>
 
     <!-- IMPORT -->
     <div ng-if="!vm.ImportResult.Messages">
