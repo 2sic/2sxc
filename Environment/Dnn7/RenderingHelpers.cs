@@ -188,14 +188,15 @@ namespace ToSic.SexyContent.Environment.Dnn7
             Primary = ps.DefaultLanguage.ToLower();
             All = ZoneHelpers.GetCulturesWithActiveState(ps.PortalId, zoneId)
                     .Where(c => c.Active)
-                    .Select(c => new ClientInfoLanguage() { Key = c.Code.ToLower(), Name = c.Text });
+                    .Select(c => new ClientInfoLanguage() { key = c.Code.ToLower(), name = c.Text });
         }
     }
 
     public class ClientInfoLanguage
     {
-        public string Key;
-        public string Name;
+        // key and name must be lowercase, has side effects in EAV
+        public string key;
+        public string name;
     }
 
     public class ClientInfoContentBlock //: ClientInfoEntity
