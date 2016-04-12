@@ -193,8 +193,8 @@ namespace ToSic.SexyContent.ContentBlock
             IEntity titleItem = contentGroup.ListContent.FirstOrDefault() ?? contentGroup.Content.FirstOrDefault();
 
             UpdateTitle(titleItem);
-            if (titleItem?.GetBestValue("EntityTitle") != null)
-                SxcContext.ModuleInfo.ModuleTitle = titleItem.GetBestValue("EntityTitle").ToString();
+            //if (titleItem?.GetBestValue("EntityTitle") != null)
+            //    SxcContext.ModuleInfo.ModuleTitle = titleItem.GetBestValue("EntityTitle").ToString();
         }
 
 

@@ -1216,7 +1216,7 @@ $(function () {
         ? { x: body.offset().left, y: body.offset().top }
         : { x: 0, y: 0 };
 
-    // Refresh content block and modules array
+    // Refresh content block and modules elements
     function findAllContentBlocksAndModules() {
         if(enableCb)
             contentBlocks = $(selectors.listContainerSelector).find(selectors.contentBlockSelector).add(selectors.listContainerSelector);

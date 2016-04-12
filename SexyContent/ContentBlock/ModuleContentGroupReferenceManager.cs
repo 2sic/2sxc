@@ -37,8 +37,37 @@ namespace ToSic.SexyContent.ContentBlock
             // todo: this should probably do the more complex stuff
             // to ensure that it happens on all versions of this module (all languages)
             // used to work once...
-            if (titleItem?.GetBestValue("EntityTitle") != null)
-                SxcContext.ModuleInfo.ModuleTitle = titleItem.GetBestValue("EntityTitle").ToString();
+            //if (titleItem?.GetBestValue("EntityTitle") != null)
+            //    SxcContext.ModuleInfo.ModuleTitle = titleItem.GetBestValue("EntityTitle").ToString();
+
+            var languages = ZoneHelpers.GetCulturesWithActiveState(SxcContext.ModuleInfo.PortalID, SxcContext.ZoneId.Value);
+
+            // Find Module for default language
+            var moduleController = new DotNetNuke.Entities.Modules.ModuleController();
+            var originalModule = moduleController.GetModule(SxcContext.ModuleInfo.ModuleID);
+
+            foreach (var dimension in languages)
+            {
+                if (!originalModule.IsDefaultLanguage)
+                    originalModule = originalModule.DefaultLanguageModule;
+
+                // Break if default language module is null
+                if (originalModule == null)
+                    return;
+
+                // Get Title value of Entitiy in current language
+                var titleValue = titleItem.Title[dimension.Code].ToString();
+
+                // Find module for given Culture
+                var moduleByCulture = moduleController.GetModuleByCulture(originalModule.ModuleID, originalModule.TabID, SxcContext.ModuleInfo.PortalID, DotNetNuke.Services.Localization.LocaleController.Instance.GetLocale(dimension.Code));
+
+                // Break if no title module found
+                if (moduleByCulture == null || titleValue == null)
+                    return;
+
+                moduleByCulture.ModuleTitle = titleValue;
+                moduleController.UpdateModule(moduleByCulture);
+            }
         }
 
         
