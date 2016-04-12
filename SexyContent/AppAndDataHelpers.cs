@@ -35,7 +35,7 @@ namespace ToSic.SexyContent
 
             #region Assemble the mapping of the data-stream "default"/Presentation to the List object and the "ListContent" too
 	        List = new List<Element>();
-            if (data != null)
+            if (data != null && sexy.Template != null)
 	        {
 		        if (data.Out.ContainsKey("Default"))
 		        {
