@@ -20,7 +20,7 @@
 
         function importContent() {
             vm.IsImporting = true;
-            return ImportContentService.importContent(vm.ImportFile.Name, vm.ImportFile.Data).then(function (result) {
+            return ImportContentService.importContent(vm.ImportFile).then(function (result) {
                 vm.ImportResult = result.data;
                 vm.IsImporting = false;
             }).catch(function (error) {

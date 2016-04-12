@@ -19,7 +19,7 @@
 
         function importApp() {
             vm.IsImporting = true;
-            return ImportAppService.importApp(vm.ImportFile.Name, vm.ImportFile.Data).then(function (result) {
+            return ImportAppService.importApp(vm.ImportFile).then(function (result) {
                 vm.ImportResult = result.data;
                 vm.IsImporting = false;
             }).catch(function (error) {

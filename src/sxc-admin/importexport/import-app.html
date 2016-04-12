@@ -12,15 +12,15 @@
             <br />
 
             <span class="btn btn-default btn-file">
-                <span ng-hide="vm.ImportFile.Data">{{"ImportExport.ImportApp.Commands.SelectFile" | translate}}</span>
-                <span ng-show="vm.ImportFile.Data">{{vm.ImportFile.Name}}</span>
-                <input type="file" sxc-file-read="vm.ImportFile" />
+                <span ng-hide="vm.ImportFile.name">{{"ImportExport.ImportApp.Commands.SelectFile" | translate}}</span>
+                <span ng-show="vm.ImportFile.name">{{vm.ImportFile.name}}</span>
+                <input type="file" sxc-file-input="vm.ImportFile" />
             </span>
             <br />
         </div>
 
         <div class="modal-footer">
-            <button type="button" class="btn btn-primary pull-left" ng-click="vm.importApp()" ng-disabled="!vm.ImportFile.Data || vm.IsImporting" translate="ImportExport.ImportApp.Commands.Import"></button>
+            <button type="button" class="btn btn-primary pull-left" ng-click="vm.importApp()" ng-disabled="!vm.ImportFile.name || vm.IsImporting" translate="ImportExport.ImportApp.Commands.Import"></button>
         </div>
     </div>
     <!-- END IMPORT -->

@@ -2,6 +2,7 @@
 
     angular.module("ImportExport")
         .directive("sxcFileRead", FileReadDirective)
+        .directive("sxcFileInput", FileInputDirective)
         ;
 
     function FileReadDirective() {
@@ -23,6 +24,21 @@
                         });
                     };
                     fileReader.readAsDataURL(file);
+                });
+            }
+        };
+    }
+
+
+    function FileInputDirective() {
+        return {
+            scope: {
+                sxcFileInput: "="
+            },
+            link: function (scope, element, attributes) {
+                element.bind("change", function (e) {
+                    scope.sxcFileInput = e.target.files[0];
+                    scope.$apply();
                 });
             }
         };

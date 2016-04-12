@@ -12,8 +12,20 @@
         return srvc;
 
 
-        function importContent(fileName, fileData) {
-            return $http.post("app/ImportExport/ImportContent", { AppId: appId, ZoneId: zoneId, FileName: fileName, FileData: fileData });
+        function importContent(file) {
+            return $http({
+                method: "POST",
+                url: "app/ImportExport/ImportContent",
+                headers: { "Content-Type": undefined },
+                transformRequest: function (data) {
+                    var formData = new FormData();
+                    formData.append("AppId", data.AppId);
+                    formData.append("ZoneId", data.ZoneId);
+                    formData.append("File", data.File);
+                    return formData;
+                },
+                data: { AppId: appId, ZoneId: zoneId, File: file }
+            });
         }
     }
 

@@ -255,7 +255,6 @@
     <Compile Include="SexyContent\DataSources\DnnSqlDataSource.cs" />
     <Compile Include="SexyContent\DataSources\DnnFormAndList.cs" />
     <Compile Include="WebApi\ImportExport\HttpResponseMessageHelper.cs" />
-    <Compile Include="WebApi\ImportExport\ImportRequestArgs.cs" />
     <Compile Include="WebApi\ImportExport\ImportResult.cs" />
     <Compile Include="WebApi\ImportExport\SxcAppWrapper.cs" />
     <Compile Include="WebApi\EavApiProxies\ContentExportController.cs" />
