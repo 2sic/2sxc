@@ -13,6 +13,7 @@ using ToSic.Eav;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources.Caches;
 using ToSic.Eav.WebApi;
+using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Security;
 using ToSic.SexyContent.Serializers;
 using ToSic.SexyContent.WebApi.ToRefactorDeliverCBDataLight;
@@ -72,6 +73,10 @@ namespace ToSic.SexyContent.WebApi
             // - not also that if ever you do support view switching, you will need to ensure security checks
 
             var dataHandler = new GetContentBlockDataLight(SxcContext);
+
+            // must access engine to ensure pre-processing of data has happened, 
+            // especially if the cshtml contains a override void CustomizeData()
+            SxcContext.GetRenderingEngine(InstancePurposes.PublishData);  
 
             var dataSource = SxcContext.Data;
             string json;
