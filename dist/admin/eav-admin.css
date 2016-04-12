@@ -142,6 +142,7 @@
 .icon-pencil:before { content: '\e844'; } /* '' */
 .icon-link:before { content: '\e845'; } /* '' */
 .icon-unlink:before { content: '\e846'; } /* '' */
+.icon-cart-arrow-down:before { content: '\e847'; } /* '' */
 /* try to override problem CSS of bootstrap
 
     in this case especially the woff2 format which many iis don't deliver
