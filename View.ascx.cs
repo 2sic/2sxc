@@ -34,7 +34,7 @@ namespace ToSic.SexyContent
             try
             {
                 //var renderHelp = new RenderingHelpers(SxcI);
-                RenderingHelpers.RegisterClientDependencies(Page);
+                new RenderingHelpers(SxcI).RegisterClientDependencies(Page);
             }
             catch (Exception ex)
             {

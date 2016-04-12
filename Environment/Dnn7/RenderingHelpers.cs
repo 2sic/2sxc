@@ -24,7 +24,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         internal RenderingHelpers(SxcInstance sxc)
         {
             string appRoot = VirtualPathUtility.ToAbsolute("~");
-            _moduleInfo = sxc.ModuleInfo;// mi;// mic.Configuration;
+            _moduleInfo = sxc?.ModuleInfo;// mi;// mic.Configuration;
             _sxcInstance = sxc;
             _portalSettings = PortalSettings.Current; // mic.PortalSettings;// PortalSettings.Current;
 
@@ -44,7 +44,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         }
 
 
-        internal static void RegisterClientDependencies(Page page)
+        internal void RegisterClientDependencies(Page page)
         {
             var root = "~/desktopmodules/tosic_sexycontent/";
             root = page.ResolveUrl(root);
@@ -61,13 +61,13 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         #region add scripts / css with bypassing the official ClientResourceManager
 
-        public static void RegisterJs(Page page, string version, string path)
+        private void RegisterJs(Page page, string version, string path)
         {
             var url = string.Format("{0}{1}v={2}", path, path.IndexOf('?') > 0 ? '&' : '?', version);
             page.ClientScript.RegisterClientScriptInclude(typeof(Page), path, url);
         }
 
-        public static void RegisterCss(Page page, string version, string path)
+        private void RegisterCss(Page page, string version, string path)
         {
             ClientResourceManager.RegisterStyleSheet(page, path);
         }

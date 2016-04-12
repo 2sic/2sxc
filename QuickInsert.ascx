@@ -1,1 +1,0 @@
-﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="QuickInsert.ascx.cs" Inherits="ToSic.SexyContent.QuickInsert" %>
