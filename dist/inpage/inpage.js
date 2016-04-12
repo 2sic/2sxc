@@ -1209,25 +1209,34 @@ $(function () {
 
     });
     
+    // Prepare offset calculation based on body positioning
+    var body = $("body"), nearestCb = null, nearestModule = null, contentBlocks = null, modules = null;
+    var bodyPos = body.css("position");
+    var offset = bodyPos === "relative" || bodyPos === "absolute"
+        ? { x: body.offset().left, y: body.offset().top }
+        : { x: 0, y: 0 };
+
+    // Refresh content block and modules array
+    function findAllContentBlocksAndModules() {
+        if(enableCb)
+            contentBlocks = $(selectors.listContainerSelector).find(selectors.contentBlockSelector).add(selectors.listContainerSelector);
+        if(enableMod)
+            modules = $(selectors.paneSelector).find(selectors.moduleSelector).add(selectors.paneSelector);
+    }
 
     function refreshMenu(e) { // ToDo: Performance is not solved with requestAnimationFrame, needs throttling (or more performant selectors etc.)
 
-        // Prepare offset calculation based on body positioning
-        var body = $("body"), nearestCb = null, nearestModule = null;
-        var bodyPos = body.css("position");
-        var offset = bodyPos === "relative" || bodyPos === "absolute"
-            ? { x: body.offset().left, y: body.offset().top }
-            : { x: 0, y: 0 };
+        if (!findAllContentBlocksAndModules.lastCall || (new Date() - findAllContentBlocksAndModules.lastCall > 2000)) {
+            console.log('refreshed contentblock and modules');
+            findAllContentBlocksAndModules.lastCall = new Date();
+            findAllContentBlocksAndModules();
+        }
 
-        if (enableCb) {
-            var contentBlocks = $(selectors.listContainerSelector).find(selectors.contentBlockSelector)
-                .add(selectors.listContainerSelector);
+        if (enableCb && contentBlocks) {
             nearestCb = findNearest(contentBlocks, { x: e.clientX, y: e.clientY }, selectors.contentBlockSelector);
         }
 
-        if (enableMod) {
-            var modules = $(selectors.paneSelector).find(selectors.moduleSelector)
-                .add(selectors.paneSelector);
+        if (enableMod && modules) {
             nearestModule = findNearest(modules, { x: e.clientX, y: e.clientY }, selectors.moduleSelector);
         }
 
