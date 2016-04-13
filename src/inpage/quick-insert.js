@@ -7,6 +7,7 @@
         contentBlockClass: "sc-content-block",
         contentBlockSelector: ".sc-content-block",
         moduleSelector: ".DnnModule",
+        eitherCbOrMod: ".DnnModule, .sc-content-block",
         paneSelector: ".DNNEmptyPane, .dnnDropEmptyPanes, :has(>.DnnModule)", // Found no better way to get all panes - the hidden variable does not exist when not in edit page mode
         listDataAttr: "data-list-context",
         selected: "sc-cb-is-selected"
@@ -32,7 +33,7 @@
             + "<a class='sc-content-block-menu-addapp sc-invisible' data-type='' data-i18n='[title]QuickInsertMenu.AddBlockApp'>x</a>"
             + btn("cut", "scissors", "Cut", true)
             + btn("paste", "paste", "Paste", true, true),
-        selected: $("<div class='sc-content-block-menu sc-content-block-selected-menu sc-i18n'> selected! </div>")
+        selected: $("<div class='sc-content-block-menu sc-content-block-selected-menu sc-i18n'></div>")
             .append(btn("cancel", "cancel", "Cancel") + btn("delete", "trash-empty", "Delete")),
         contentBlocks: null,
         modules: null,
@@ -63,11 +64,25 @@
 
     qi.selected.toggle = function(target) {
         if (!target)
-            return selected.hide();
+            return qi.selected.hide();
 
-        qi.positionAndAlign(qi.selected, target).show();
+        var coords = qi.getCoordinates(target);
+        coords.yh = coords.y + 20;
+        qi.positionAndAlign(qi.selected, coords);
         qi.selected.target = target;
     };
+    
+    $("a", qi.selected).click(function () {
+        var action = $(this).data("action");
+        var clip = qi.clipboard.data;
+        switch(action) {
+            case "cancel":
+                return qi.clipboard.clear();
+            case "delete":
+                $2sxc(clip.list).manage.deleteContentBlock(clip.parent, clip.field, clip.index);
+
+        }
+    });
 
     qi.cbActions.click(function () {
         var list = qi.main.actionsForCb.closest(selectors.listContainerSelector);
@@ -84,51 +99,52 @@
             var appOrContent = $(this).data("type");
             return $2sxc(list).manage.createContentBlock(actionConfig.parent, actionConfig.field, index, appOrContent, list);
         } else
-        // this is a cut/paste action
-        {
-            return qi.copyPasteInPage(cbAction, list, index);
-        }
+            // this is a cut/paste action
+            return qi.copyPasteInPage(cbAction, list, index, "contentblock");
     });
 
-    qi.copyPasteInPage = function(cbAction, list, index) {
-        var listItems = list.find(selectors.contentBlockSelector);
-        var actionConfig = JSON.parse(list.attr(selectors.listDataAttr));
-        var currentItem = listItems[index];
+    qi.copyPasteInPage = function (cbAction, list, index, type) {
+        function clipSpecs(type, list, index) {
+            var listItems = list.find(selectors.contentBlockSelector);
+            if (index >= listItems.length) index = listItems.length; // sometimes the index is 1 larger than the length, then select last
+            var currentItem = listItems[index];
+            var actionConfig = JSON.parse(list.attr(selectors.listDataAttr));
+            return { parent: actionConfig.parent, field: actionConfig.field, list: list, item: currentItem, index: index, type: type };
+        }
+
+        var clip = clipSpecs(type, list, index);
 
         // action!
         if (cbAction === "cut") {
-            qi.selectCbOrMod(currentItem);
-            $2sxc._cbClipboard = { type: "cb", index: index, item: currentItem };
+            qi.clipboard.mark(clip); 
         } else if (cbAction === "paste") {
-            var from = $2sxc._cbClipboard.index, to = index;
+            var from = qi.clipboard.data.index, to = index;
             if (isNaN(from) || isNaN(to) || from === to || from + 1 === to) // this moves it to the same spot, so ignore
-                return qi.unselectAll(); // don't do anything
+                return qi.clipboard.clear(); // don't do anything
 
-            $2sxc(list).manage.moveContentBlock(actionConfig.parent, actionConfig.field, from, to);
-            qi.unselectAll();
-            $2sxc._cbClipboard = null;
-        } else if (cbAction === "cancel") // todo: ui not implemented yet
-            qi.unselectAll();
-        else if (cbAction === "delete") {
-            alert("todo not implemented yet");
+            $2sxc(list).manage.moveContentBlock(clip.parent, clip.field, from, to);
+            qi.clipboard.clear();
+        } 
+    };
+
+    qi.clipboard = {
+        data: {},
+        mark: function (newData) {
+            if(newData) qi.clipboard.data = newData;
+            $("." + selectors.selected).removeClass(selectors.selected); // clear previous markings
+            var cb = $(qi.clipboard.data.item);
+            cb.addClass(selectors.selected);
+            if (cb.prev().is("iframe"))
+                cb.prev().addClass(selectors.selected);
+            qi.setSecondaryActionsState(true);
+            qi.selected.toggle(cb);
+        },
+        clear: function() {
+            $("." + selectors.selected).removeClass(selectors.selected);
+            qi.clipboard.data = null;
+            qi.setSecondaryActionsState(false);
+            qi.selected.toggle(false);
         }
-    };
-
-    qi.selectCbOrMod = function(element) {
-        $("." + selectors.selected).removeClass(selectors.selected);
-        var cb = $(element);
-        cb.addClass(selectors.selected);
-        if (cb.prev().is("iframe"))
-            cb.prev().addClass(selectors.selected);
-        qi.setSecondaryActionsState(true);
-        qi.selected.toggle(cb);
-    };
-
-    qi.unselectAll = function() {
-        $("." + selectors.selected).removeClass(selectors.selected);
-        $2sxc._cbClipboard = {};
-        qi.setSecondaryActionsState(false);
-        qi.selected.toggle(false);
     };
 
     qi.setSecondaryActionsState = function(state) {
@@ -235,18 +251,20 @@
             qi.modules = $(selectors.paneSelector).find(selectors.moduleSelector).add(selectors.paneSelector);
     };
 
-    qi.positionAndAlign = function(element, alignTo) {
+    // position, align and show a menu linked to another item
+    qi.positionAndAlign = function(element, coords) {
         return element.css({
-            'left': alignTo.offset().left - qi.bodyOffset.x,
-            'top': alignTo.offset().top - qi.bodyOffset.y,
-            'width': alignTo.width()
-        });
+            'left': coords.x - qi.bodyOffset.x,
+            'top': coords.yh - qi.bodyOffset.y,
+            'width': coords.element.width()
+        }).show();
     };
 
-    qi.refresh = function(e) { // ToDo: Performance is not solved with requestAnimationFrame, needs throttling (or more performant selectors etc.)
+    // Refresh positioning / visibility of the quick-insert bar
+    qi.refresh = function(e) {
 
         if (!qi.refreshDomObjects.lastCall || (new Date() - qi.refreshDomObjects.lastCall > 1000)) {
-            console.log('refreshed contentblock and modules');
+            // console.log('refreshed contentblock and modules');
             qi.refreshDomObjects.lastCall = new Date();
             qi.refreshDomObjects();
         }
@@ -274,13 +292,7 @@
             var parentCbList = $(alignTo.element).closest(selectors.listContainerSelector);
             var parentContainer = (parentCbList.length ? parentCbList : parentPane)[0];
 
-            //qi.positionAndAlign(qi.main, alignTo.element).show();
-            console.log(alignTo.y + "vs." + alignTo.element.offset().top);
-            qi.main.css({
-                'left': alignTo.x - qi.bodyOffset.x,
-                'top': alignTo.y - qi.bodyOffset.y,
-                'width': alignTo.element.width()
-            }).show();
+            qi.positionAndAlign(qi.main, alignTo, true);
 
             // Keep current block as current on menu
             qi.main.actionsForCb = qi.nearestCb ? qi.nearestCb.element : null;
@@ -293,41 +305,45 @@
     };
 
     // Return the nearest element to the mouse cursor from elements (jQuery elements)
-    qi.findNearest = function(elements, position, useBottomLineSelector) {
+    qi.findNearest = function (elements, position) {
         var maxDistance = 30; // Defines the maximal distance of the cursor when the menu is displayed
 
-        var nearest = null;
+        var nearestItem = null;
         var nearestDistance = maxDistance;
 
         var posX = position.x + qi.win.scrollLeft();
         var posY = position.y + qi.win.scrollTop();
 
         // Find nearest element
-        elements.each(function() {
-            var element = $(this),
-                x = element.offset().left,
-                w = element.width(),
-                y = element.offset().top,
-                cmpHeight = y + (element.is(useBottomLineSelector) ? element.height() : 0);
+        elements.each(function () {
+            var e = qi.getCoordinates($(this));
 
             // First check x coordinates - must be within container
-            if (posX < x || posX > x + w)
+            if (posX < e.x || posX > e.x + e.w)
                 return;
 
-            // For content-block elements, the menu must be visible at the end
-            // For content-block-lists, the menu must be at top
-
             // Check if y coordinates are within boundaries
-            var distance = Math.abs(posY - cmpHeight);
+            var distance = Math.abs(posY - e.yh);
 
             if (distance < maxDistance && distance < nearestDistance) {
-                nearest = { x: x, y: cmpHeight, element: element };
+                nearestItem = e;
                 nearestDistance = distance;
             }
         });
 
 
-        return nearest;
+        return nearestItem;
     };
 
+    qi.getCoordinates = function (element) {
+        return {
+            element: element,
+            x: element.offset().left,
+            w: element.width(),
+            y: element.offset().top,
+            // For content-block ITEMS, the menu must be visible at the end
+            // For content-block-LISTS, the menu must be at top
+            yh: element.offset().top + (element.is(selectors.eitherCbOrMod) ? element.height() : 0)
+        };
+    };
 });

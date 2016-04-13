@@ -117,15 +117,25 @@
             },
 
             moveContentBlock: function(parentId, field, indexFrom, indexTo) {
-                sxc.webApi.get({
-                    url: "view/module/movecontentblock",
+                return sxc.webApi.get({
+                    url: "view/module/MoveItemInList",
                     params: { parentId: parentId, field: field, indexFrom: indexFrom, indexTo: indexTo }
                 }).then(function(result) {
                     console.log("done moving!");
                     window.location.reload();
-                    
                 });
+            },
 
+            // delete a content-block inside a list of content-blocks
+            deleteContentBlock: function (parentId, field, index) {
+                if (confirm("delete?")) // todo i18n
+                    return sxc.webApi.get({
+                        url: "view/module/RemoveItemInList",
+                        params: { parentId: parentId, field: field, index: index }
+                    }).then(function(result) {
+                        console.log("done deleting!");
+                        window.location.reload();
+                    });
             }
 
 

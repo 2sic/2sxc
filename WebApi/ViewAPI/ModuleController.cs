@@ -123,20 +123,20 @@ namespace ToSic.SexyContent.ViewAPI
             return entity;
         }
 
+        //public bool MoveContentBlock(int parentId, string field, int indexFrom, int indexTo)
+        //{
+        //    MoveItemInList(parentId, field, indexFrom, indexTo);
+
+        //    return true;
+        //}
+
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public bool MoveContentBlock(int parentId, string field, int indexFrom, int indexTo)
-        {
-            MoveItemInList(parentId, field, indexFrom, indexTo);
-
-            return true;
-        }
-
-        private void MoveItemInList(int parentId, string field, int indexFrom, int indexTo)
+        public bool MoveItemInList(int parentId, string field, int indexFrom, int indexTo)
         {
             var action = new MoveItem(indexFrom, indexTo);
-
             ModifyItemList(parentId, field, action);
+            return true;
         }
 
         /// <summary>
@@ -145,11 +145,13 @@ namespace ToSic.SexyContent.ViewAPI
         /// <param name="parentId"></param>
         /// <param name="field"></param>
         /// <param name="index"></param>
-        private void RemoveItemInList(int parentId, string field, int index)
+        [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        public bool RemoveItemInList(int parentId, string field, int index)
         {
             var action = new RemoveItem(index);
-
             ModifyItemList(parentId, field, action);
+            return true;
         }
 
 

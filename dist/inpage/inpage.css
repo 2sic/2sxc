@@ -93,11 +93,7 @@ div.sc-cb-highlight-for-insert {    background-color: rgba(128,128,128,0.1);    
 /* this rule disables copy/paste on module, as it's not supported (only on blocks) */
 a.sc-content-block-menu-module.sc-cb-action {   display: none !important;   }
 
-.sc-content-block-selected-menu {
-    background-color: red;
-    top: 500px;
-    left: 500px;
-}
+.sc-content-block-selected-menu {   display: none;  }
 
 
 
