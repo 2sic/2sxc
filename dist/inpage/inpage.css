@@ -1,66 +1,19 @@
+/*
+    These are all the styles that end up going in-page
+    They should all have the prefix sc (short for sxc) to ensure that they never conflict with other styles in the page
+*/
+
+/****** the in-page toolbar and positioning / visibility thereof */
 .sc-element { position:relative; }
 .sc-element .sc-menu { position:absolute; right:5px; top:5px; display:none; }
 .sc-element:hover .sc-menu { display: block; }
-.sc-element:hover .sc-element:not(:hover) .sc-menu { display: none; }
+.sc-element:hover .sc-element:not(:hover) .sc-menu { display: none; }   /* prevent hover of a parent, when the item itself is not hovered */
+
 .sc-menu { list-style-type:none; margin:0; padding:0px;display: inline;z-index: 1499; }
 .sc-menu li { list-style-type:none; padding:0!important; margin:0!important; display:inline; }
 .sc-menu a { display:inline-block!important; margin-right:4px!important;cursor: pointer;margin-left: 0 !important; }
 
-/* Content block menu */
-.sc-content-block-menu { position:absolute; height: 40px; opacity:0.8; text-align:center; pointer-events:none; line-height:35px; padding:0; margin:-20px 0 0 0; }
-.sc-content-block-menu a {  cursor:pointer; width:32px; height:32px; margin:0 3px!important; padding:0!important; display:inline-block; text-indent:-9999px; pointer-events:auto; font-size:18px; }
-.sc-content-block-menu:before, .sc-content-block-menu:after { height:2px; background:#0088f4; width:60px; display:block; content:' '; position:absolute; left:50%; top:19px; }
-.sc-content-block-menu:before { margin-left:-150px; }
-.sc-content-block-menu:after { margin-left:90px; }
-.sc-content-block-menu-addcontent {
-     background:url(../../icon.png);  background-size: 32px 32px;
-}
-.sc-content-block-menu-addcontent.sc-content-block-menu-module {
-    background: url(../../icon-black.png); background-size: 32px 32px;
-}
-.sc-content-block-menu-addapp {
-     background:url(../../icon-app.png);  background-size: 32px 32px;
-}
-.sc-content-block-menu-addapp.sc-content-block-menu-module {
-    background: url(../../icon-app-black.png); background-size: 32px 32px;
-}
-a.sc-content-block-menu-btn {
-    background: #2F9BF2;
-    border-top-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-    text-indent: 0!important;
-    color: white;
-}
-.sc-invisible { display:none !important; }
-
-.sc-cb-action {
-    -webkit-filter: grayscale(75%); filter: grayscale(75%);
-}
-
-.sc-cb-is-selected {
-    filter: blur(5px);
-    -webkit-filter: blur(5px);
-}
-
-div.sc-content-block-list.sc-cb-highlight-for-insert {
-    background-color: rgba(47,155,242,0.1);
-}
-
-div.sc-cb-highlight-for-insert {
-    background-color: rgba(128,128,128,0.1);
-}
-
-
-/* this is needed to disable the paste button till it can be used */
-.sc-unavailable {
-    display: none!important;
-}
-
-/* this rule disables copy/paste on module, as it's not supported (only on blocks) */
-a.sc-content-block-menu-module.sc-cb-action {
-    display: none !important;
-}
-
+.sc-menu a { display: none!important } /* not sure why this rule is separate, don't dare to combine it yet - pls check / fix */
 
 /* this one is for buttons which can have a full/empty state */
 .sc-menu li a.empty i {opacity: 0.4} 
@@ -70,9 +23,6 @@ a.sc-content-block-menu-module.sc-cb-action {
     height: 28px!important;
     line-height:28px!important;
     background-color: #0088f4;
-    /*background-color: #96D500; 
-    border-color: #96D500;*/ 
-    /* border-width: 3px;  */
     border-style: solid; 
     box-sizing: content-box;
     border-radius: 3px;
@@ -80,7 +30,6 @@ a.sc-content-block-menu-module.sc-cb-action {
     -moz-border-radius: 3px;
     color: #fff; 
     text-align: center; 
-    /*padding: 2px;*/ 
     font-size: 15px }
 .sc-menu a div i {
     margin-left: auto;
@@ -88,7 +37,6 @@ a.sc-content-block-menu-module.sc-cb-action {
 }
 
 .sc-menu.listContent a span {background-color: #96D500; border-color: #96D500;}
-.sc-menu a { display: none!important }
 .show-set-0 a.show-default { display: inline-block!important}
 .show-set-1 a.show-edit { display: inline-block!important}
 .show-set-2 a.show-design {display: inline-block!important}
@@ -111,12 +59,54 @@ a.sc-content-block-menu-module.sc-cb-action {
 }
 
 
+/****** Content block menu */
+.sc-content-block-menu { position:absolute; height: 40px; opacity:0.8; text-align:center; pointer-events:none; line-height:35px; padding:0; margin:-20px 0 0 0; }
+.sc-content-block-menu a {  cursor:pointer; width:32px; height:32px; margin:0 3px!important; padding:0!important; display:inline-block; text-indent:-9999px; pointer-events:auto; font-size:18px; }
+.sc-content-block-quick-insert:before, .sc-content-block-quick-insert:after { height:2px; background:#0088f4; width:60px; display:block; content:' '; position:absolute; left:50%; top:19px; }
+.sc-content-block-quick-insert:before { margin-left:-150px; }
+.sc-content-block-quick-insert:after { margin-left:90px; }
+.sc-content-block-menu-addcontent {                                 background:url(../../icon.png);  background-size: 32px 32px;    }
+.sc-content-block-menu-addcontent.sc-content-block-menu-module {    background: url(../../icon-black.png); background-size: 32px 32px; }
+.sc-content-block-menu-addapp {                                     background:url(../../icon-app.png);  background-size: 32px 32px;    }
+.sc-content-block-menu-addapp.sc-content-block-menu-module {        background: url(../../icon-app-black.png); background-size: 32px 32px;  }
+a.sc-content-block-menu-btn {
+    background: #2F9BF2;
+    border-top-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    text-indent: 0!important;
+    color: white;
+}
+.sc-invisible { display:none !important; }
+
+.sc-cb-action { -webkit-filter: grayscale(75%); filter: grayscale(75%); }
+
+.sc-cb-is-selected { filter: blur(5px); -webkit-filter: blur(5px);  }
+
+div.sc-content-block-list.sc-cb-highlight-for-insert {  background-color: rgba(47,155,242,0.1); }
+
+div.sc-cb-highlight-for-insert {    background-color: rgba(128,128,128,0.1);    }
+
+
+/* this is needed to disable the paste button till it can be used */
+.sc-unavailable {   display: none!important;    }
+
+/* this rule disables copy/paste on module, as it's not supported (only on blocks) */
+a.sc-content-block-menu-module.sc-cb-action {   display: none !important;   }
+
+.sc-content-block-selected-menu {
+    background-color: red;
+    top: 500px;
+    left: 500px;
+}
 
 
 
 
 
-/* Prevent scrolling when sxc popup is open */
+
+
+
+/****** Prevent scrolling when sxc popup is open */
 .sxc-popup-open { overflow:hidden; }
 
 

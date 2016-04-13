@@ -1,5 +1,6 @@
-﻿$(function() {
+﻿$(function () {
     "use strict";
+
     //var enableModuleMove = false; // not implemented yet
     var selectors = {
         listContainerSelector: ".sc-content-block-list",
@@ -12,17 +13,27 @@
     };
 
     var hasContentBlocks = ($(selectors.listContainerSelector).length > 0);
+
+    function btn(action, icon, i18n, invisible, unavailable, classes) {
+        return "<a class='sc-content-block-menu-btn sc-cb-action icon-sxc-" + icon + " " 
+            + (invisible ? " sc-invisible " : "") 
+            + (unavailable ? " sc-unavailable " : "")
+            + classes + "' data-action='" + action + "' data-i18n='[title]QuickInsertMenu." + i18n + "'></a>";
+    }
+
     // the quick-insert object
     var qi = {
         enableCb: hasContentBlocks, // for now, ContentBlocks are only enabled if they exist on the page
         enableMod: !hasContentBlocks,   // if it has inner-content, then it's probably a details page, where quickly adding modules would be a problem, so for now, disable modules in this case
         body: $("body"),
-        main: $("<div class='sc-content-block-menu sc-i18n'></div>"),
-        template: "<a class='sc-content-block-menu-addcontent sc-invisible' data-type='Default' data-i18n='[title]QuickInsertMenu.AddBlockContent'>content</a>"
-            + "<a class='sc-content-block-menu-addapp sc-invisible' data-type='' data-i18n='[title]QuickInsertMenu.AddBlockApp'>app</a>"
-            + "<a class='sc-content-block-menu-btn sc-cb-action icon-sxc-scissors sc-invisible' data-action='cut' data-i18n='[title]QuickInsertMenu.Cut'></a>"
-            + "<a class='sc-content-block-menu-btn sc-cb-action icon-sxc-paste sc-invisible sc-unavailable' data-action='paste' data-i18n='[title]QuickInsertMenu.Paste'></a>"
-            + "<a class='sc-content-block-menu-btn sc-cb-action icon-sxc-trash sc-invisible sc-unavailable' data-action='delete' data-i18n='[title]QuickInsertMenu.Delete'></a>",
+        win: $(window),
+        main: $("<div class='sc-content-block-menu sc-content-block-quick-insert sc-i18n'></div>"),
+        template: "<a class='sc-content-block-menu-addcontent sc-invisible' data-type='Default' data-i18n='[title]QuickInsertMenu.AddBlockContent'>x</a>"
+            + "<a class='sc-content-block-menu-addapp sc-invisible' data-type='' data-i18n='[title]QuickInsertMenu.AddBlockApp'>x</a>"
+            + btn("cut", "scissors", "Cut", true)
+            + btn("paste", "paste", "Paste", true, true),
+        selected: $("<div class='sc-content-block-menu sc-content-block-selected-menu sc-i18n'> selected! </div>")
+            .append(btn("cancel", "cancel", "Cancel") + btn("delete", "trash-empty", "Delete")),
         contentBlocks: null,
         modules: null,
         nearestCb: null, 
@@ -37,6 +48,7 @@
 
     qi.init = function() {
         qi.body.append(qi.main);
+        qi.body.append(qi.selected);
 
         // content blocks actions
         if (qi.enableCb)
@@ -48,6 +60,14 @@
     };
 
     qi.init();
+
+    qi.selected.toggle = function(target) {
+        if (!target)
+            return selected.hide();
+
+        qi.positionAndAlign(qi.selected, target).show();
+        qi.selected.target = target;
+    };
 
     qi.cbActions.click(function () {
         var list = qi.main.actionsForCb.closest(selectors.listContainerSelector);
@@ -101,12 +121,14 @@
         if (cb.prev().is("iframe"))
             cb.prev().addClass(selectors.selected);
         qi.setSecondaryActionsState(true);
+        qi.selected.toggle(cb);
     };
 
     qi.unselectAll = function() {
         $("." + selectors.selected).removeClass(selectors.selected);
         $2sxc._cbClipboard = {};
         qi.setSecondaryActionsState(false);
+        qi.selected.toggle(false);
     };
 
     qi.setSecondaryActionsState = function(state) {
@@ -213,6 +235,14 @@
             qi.modules = $(selectors.paneSelector).find(selectors.moduleSelector).add(selectors.paneSelector);
     };
 
+    qi.positionAndAlign = function(element, alignTo) {
+        return element.css({
+            'left': alignTo.offset().left - qi.bodyOffset.x,
+            'top': alignTo.offset().top - qi.bodyOffset.y,
+            'width': alignTo.width()
+        });
+    };
+
     qi.refresh = function(e) { // ToDo: Performance is not solved with requestAnimationFrame, needs throttling (or more performant selectors etc.)
 
         if (!qi.refreshDomObjects.lastCall || (new Date() - qi.refreshDomObjects.lastCall > 1000)) {
@@ -244,6 +274,8 @@
             var parentCbList = $(alignTo.element).closest(selectors.listContainerSelector);
             var parentContainer = (parentCbList.length ? parentCbList : parentPane)[0];
 
+            //qi.positionAndAlign(qi.main, alignTo.element).show();
+            console.log(alignTo.y + "vs." + alignTo.element.offset().top);
             qi.main.css({
                 'left': alignTo.x - qi.bodyOffset.x,
                 'top': alignTo.y - qi.bodyOffset.y,
@@ -267,16 +299,16 @@
         var nearest = null;
         var nearestDistance = maxDistance;
 
+        var posX = position.x + qi.win.scrollLeft();
+        var posY = position.y + qi.win.scrollTop();
+
         // Find nearest element
         elements.each(function() {
-            var element = $(this);
-            var x = element.offset().left;
-            var w = element.width();
-            var y = element.offset().top;
-            var h = element.height();
-
-            var posX = position.x + $(window).scrollLeft();
-            var posY = position.y + $(window).scrollTop();
+            var element = $(this),
+                x = element.offset().left,
+                w = element.width(),
+                y = element.offset().top,
+                cmpHeight = y + (element.is(useBottomLineSelector) ? element.height() : 0);
 
             // First check x coordinates - must be within container
             if (posX < x || posX > x + w)
@@ -284,7 +316,6 @@
 
             // For content-block elements, the menu must be visible at the end
             // For content-block-lists, the menu must be at top
-            var cmpHeight = element.is(useBottomLineSelector) ? y + h : y;
 
             // Check if y coordinates are within boundaries
             var distance = Math.abs(posY - cmpHeight);
@@ -295,6 +326,8 @@
             }
         });
 
+
         return nearest;
     };
+
 });
