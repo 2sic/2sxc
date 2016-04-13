@@ -1068,10 +1068,10 @@ $(function () {
         main: $("<div class='sc-content-block-menu sc-content-block-quick-insert sc-i18n'></div>"),
         template: "<a class='sc-content-block-menu-addcontent sc-invisible' data-type='Default' data-i18n='[title]QuickInsertMenu.AddBlockContent'>x</a>"
             + "<a class='sc-content-block-menu-addapp sc-invisible' data-type='' data-i18n='[title]QuickInsertMenu.AddBlockApp'>x</a>"
-            + btn("cut", "scissors", "Cut", true)
+            + btn("select", "ok", "Select", true)
             + btn("paste", "paste", "Paste", true, true),
         selected: $("<div class='sc-content-block-menu sc-content-block-selected-menu sc-i18n'></div>")
-            .append(btn("cancel", "cancel", "Cancel") + btn("delete", "trash-empty", "Delete")),
+            .append(btn("cancel", "ok", "Cancel") + btn("delete", "trash-empty", "Delete")),
         contentBlocks: null,
         modules: null,
         nearestCb: null, 
@@ -1109,6 +1109,7 @@ $(function () {
         qi.selected.target = target;
     };
     
+    // give all actions
     $("a", qi.selected).click(function () {
         var action = $(this).data("action");
         var clip = qi.clipboard.data;
@@ -1141,21 +1142,13 @@ $(function () {
     });
 
     qi.copyPasteInPage = function (cbAction, list, index, type) {
-        function clipSpecs(type, list, index) {
-            var listItems = list.find(selectors.contentBlockSelector);
-            if (index >= listItems.length) index = listItems.length; // sometimes the index is 1 larger than the length, then select last
-            var currentItem = listItems[index];
-            var actionConfig = JSON.parse(list.attr(selectors.listDataAttr));
-            return { parent: actionConfig.parent, field: actionConfig.field, list: list, item: currentItem, index: index, type: type };
-        }
-
-        var clip = clipSpecs(type, list, index);
+        var clip = qi.clipboard.createSpecs(type, list, index);
 
         // action!
-        if (cbAction === "cut") {
+        if (cbAction === "select") {
             qi.clipboard.mark(clip); 
         } else if (cbAction === "paste") {
-            var from = qi.clipboard.data.index, to = index;
+            var from = qi.clipboard.data.index, to = clip.index;
             if (isNaN(from) || isNaN(to) || from === to || from + 1 === to) // this moves it to the same spot, so ignore
                 return qi.clipboard.clear(); // don't do anything
 
@@ -1167,7 +1160,12 @@ $(function () {
     qi.clipboard = {
         data: {},
         mark: function (newData) {
-            if(newData) qi.clipboard.data = newData;
+            if (newData) {
+                // if it was already selected with the same thing, then release it
+                if (qi.clipboard.data && qi.clipboard.data.item === newData.item)
+                    return qi.clipboard.clear();
+                qi.clipboard.data = newData;
+            }
             $("." + selectors.selected).removeClass(selectors.selected); // clear previous markings
             var cb = $(qi.clipboard.data.item);
             cb.addClass(selectors.selected);
@@ -1181,6 +1179,13 @@ $(function () {
             qi.clipboard.data = null;
             qi.setSecondaryActionsState(false);
             qi.selected.toggle(false);
+        },
+        createSpecs: function (type, list, index) {
+            var listItems = list.find(selectors.contentBlockSelector);
+            if (index >= listItems.length) index = listItems.length - 1; // sometimes the index is 1 larger than the length, then select last
+            var currentItem = listItems[index];
+            var actionConfig = JSON.parse(list.attr(selectors.listDataAttr));
+            return { parent: actionConfig.parent, field: actionConfig.field, list: list, item: currentItem, index: index, type: type };
         }
     };
 

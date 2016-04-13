@@ -94,6 +94,7 @@ div.sc-cb-highlight-for-insert {    background-color: rgba(128,128,128,0.1);    
 a.sc-content-block-menu-module.sc-cb-action {   display: none !important;   }
 
 .sc-content-block-selected-menu {   display: none;  }
+a.sc-content-block-selected-menu.sc-content-block-menu-btn {    -webkit-filter: grayscale(0%); filter: grayscale(0%);   }
 
 
 
