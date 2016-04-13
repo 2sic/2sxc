@@ -3,17 +3,30 @@
 
     //var enableModuleMove = false; // not implemented yet
     var selectors = {
-        listContainerSelector: ".sc-content-block-list",
-        contentBlockClass: "sc-content-block",
-        contentBlockSelector: ".sc-content-block",
-        moduleSelector: ".DnnModule",
+        // listContainerSelector: ".sc-content-block-list",
+        //contentBlockSelector: ".sc-content-block",
+        // moduleSelector: ".DnnModule",
+        // paneSelector: ".DNNEmptyPane, .dnnDropEmptyPanes, :has(>.DnnModule)", // Found no better way to get all panes - the hidden variable does not exist when not in edit page mode
+        cb: {
+            id: "cb",
+            "class": "sc-content-block",
+            selector: ".sc-content-block",
+            listSelector: ".sc-content-block-list",
+            context: "data-list-context",
+        },
+        mod: {
+            id: "mod",
+            "class": "DnnModule",
+            selector: ".DnnModule",
+            listSelector: ".DNNEmptyPane, .dnnDropEmptyPanes, :has(>.DnnModule)", // Found no better way to get all panes - the hidden variable does not exist when not in edit page mode
+            context: null,
+        },
         eitherCbOrMod: ".DnnModule, .sc-content-block",
-        paneSelector: ".DNNEmptyPane, .dnnDropEmptyPanes, :has(>.DnnModule)", // Found no better way to get all panes - the hidden variable does not exist when not in edit page mode
-        listDataAttr: "data-list-context",
+        // listDataAttr: "data-list-context",
         selected: "sc-cb-is-selected"
     };
 
-    var hasContentBlocks = ($(selectors.listContainerSelector).length > 0);
+    var hasContentBlocks = ($(selectors.cb.listSelector).length > 0);
 
     function btn(action, icon, i18n, invisible, unavailable, classes) {
         return "<a class='sc-content-block-menu-btn sc-cb-action icon-sxc-" + icon + " " 
@@ -34,7 +47,7 @@
             + btn("select", "ok", "Select", true)
             + btn("paste", "paste", "Paste", true, true),
         selected: $("<div class='sc-content-block-menu sc-content-block-selected-menu sc-i18n'></div>")
-            .append(btn("cancel", "ok", "Cancel") + btn("delete", "trash-empty", "Delete")),
+            .append(/*btn("cancel", "ok", "Cancel") + */ btn("delete", "trash-empty", "Delete")),
         contentBlocks: null,
         modules: null,
         nearestCb: null, 
@@ -80,18 +93,38 @@
             case "cancel":
                 return qi.clipboard.clear();
             case "delete":
-                $2sxc(clip.list).manage.deleteContentBlock(clip.parent, clip.field, clip.index);
-
+                qi.cmds[clip.type].delete(clip);
         }
     });
 
+    qi.cmds = {
+        cb: {
+            "delete": function(clip) {
+                return $2sxc(clip.list).manage.deleteContentBlock(clip.parent, clip.field, clip.index);
+            }
+        },
+        mod: {
+            "delete": function (clip) {
+                alert("module delete not implemented yet");
+                // todo: get tabid and mod id, then call delete
+                //if (confirm("delete?")) { // todo i18n
+                //    var apiCmd = { url: "dnn/module/delete", params: { tabId: 0, modId: 17 } };
+                //    var sxc = $2sxc(0).webApi.get(apiCmd)
+                //}
+            },
+            move: function(clip, etc) {
+                // todo
+            }
+        }
+    };
+
     qi.cbActions.click(function () {
-        var list = qi.main.actionsForCb.closest(selectors.listContainerSelector);
-        var listItems = list.find(selectors.contentBlockSelector);
-        var actionConfig = JSON.parse(list.attr(selectors.listDataAttr));
+        var list = qi.main.actionsForCb.closest(selectors.cb.listSelector);
+        var listItems = list.find(selectors.cb.selector);
+        var actionConfig = JSON.parse(list.attr(selectors.cb.context));
         var index = 0;
 
-        if (qi.main.actionsForCb.hasClass(selectors.contentBlockClass))
+        if (qi.main.actionsForCb.hasClass(selectors.cb.class))
             index = listItems.index(qi.main.actionsForCb[0]) + 1;
 
         // check cut/paste
@@ -101,7 +134,7 @@
             return $2sxc(list).manage.createContentBlock(actionConfig.parent, actionConfig.field, index, appOrContent, list);
         } else
             // this is a cut/paste action
-            return qi.copyPasteInPage(cbAction, list, index, "contentblock");
+            return qi.copyPasteInPage(cbAction, list, index, selectors.cb.id);
     });
 
     qi.copyPasteInPage = function (cbAction, list, index, type) {
@@ -144,28 +177,32 @@
             qi.selected.toggle(false);
         },
         createSpecs: function (type, list, index) {
-            var listItems = list.find(selectors.contentBlockSelector);
+            var listItems = list.find(selectors[type].selector);
             if (index >= listItems.length) index = listItems.length - 1; // sometimes the index is 1 larger than the length, then select last
             var currentItem = listItems[index];
-            var actionConfig = JSON.parse(list.attr(selectors.listDataAttr));
-            return { parent: actionConfig.parent, field: actionConfig.field, list: list, item: currentItem, index: index, type: type };
+            var editContext = JSON.parse(list.attr(selectors.cb.context) || null) || { parent: "dnn", field: list.id };
+            return { parent: editContext.parent, field: editContext.field, list: list, item: currentItem, index: index, type: type };
         }
     };
 
     qi.setSecondaryActionsState = function(state) {
         var btns = $("a.sc-content-block-menu-btn");
-        btns = btns.filter(".icon-sxc-paste"); // later also : , .icon-sxc-trash"); // only on the main one...?
+        btns = btns.filter(".icon-sxc-paste"); 
         btns.toggleClass("sc-unavailable", !state);
     };
 
     qi.modActions.click(function () {
         var type = $(this).data("type");
-        var pane = qi.main.actionsForModule.closest(selectors.paneSelector);
+        var pane = qi.main.actionsForModule.closest(selectors.mod.listSelector);
         var paneName = pane.attr("id").replace("dnn_", "");
 
         var index = 0;
         if (qi.main.actionsForModule.hasClass("DnnModule"))
             index = pane.find(".DnnModule").index(qi.main.actionsForModule[0]) + 1;
+
+        var cbAction = $(this).data("action");
+        if (cbAction)
+            return qi.copyPasteInPage(cbAction, pane, index, selectors.mod.id);
 
         // todo: try to use $2sxc(...).webApi instead of custom re-assembling these common build-up things
         // how: create a object containing the url, data, then just use the sxc.webApi(yourobject)
@@ -251,9 +288,9 @@
     qi.refreshDomObjects = function() {
         qi.bodyOffset = qi.getBodyPosition(); // must update this, as sometimes after finishing page load the position changes, like when dnn adds the toolbar
         if (qi.enableCb)
-            qi.contentBlocks = $(selectors.listContainerSelector).find(selectors.contentBlockSelector).add(selectors.listContainerSelector);
+            qi.contentBlocks = $(selectors.cb.listSelector).find(selectors.cb.selector).add(selectors.cb.listSelector);
         if (qi.enableMod)
-            qi.modules = $(selectors.paneSelector).find(selectors.moduleSelector).add(selectors.paneSelector);
+            qi.modules = $(selectors.mod.listSelector).find(selectors.mod.selector).add(selectors.mod.listSelector);
     };
 
     // position, align and show a menu linked to another item
@@ -275,11 +312,11 @@
         }
 
         if (qi.enableCb && qi.contentBlocks) {
-            qi.nearestCb = qi.findNearest(qi.contentBlocks, { x: e.clientX, y: e.clientY }, selectors.contentBlockSelector);
+            qi.nearestCb = qi.findNearest(qi.contentBlocks, { x: e.clientX, y: e.clientY }, selectors.cb.selector);
         }
 
         if (qi.enableMod && qi.modules) {
-            qi.nearestMod = qi.findNearest(qi.modules, { x: e.clientX, y: e.clientY }, selectors.moduleSelector);
+            qi.nearestMod = qi.findNearest(qi.modules, { x: e.clientX, y: e.clientY }, selectors.mod.selector);
         }
 
         qi.modActions.toggleClass("sc-invisible", qi.nearestMod === null);
@@ -293,8 +330,8 @@
             var alignTo = qi.nearestCb || qi.nearestMod;
 
             // find parent pane to highlight
-            var parentPane = $(alignTo.element).closest(selectors.paneSelector);
-            var parentCbList = $(alignTo.element).closest(selectors.listContainerSelector);
+            var parentPane = $(alignTo.element).closest(selectors.mod.listSelector);
+            var parentCbList = $(alignTo.element).closest(selectors.cb.listSelector);
             var parentContainer = (parentCbList.length ? parentCbList : parentPane)[0];
 
             qi.positionAndAlign(qi.main, alignTo, true);

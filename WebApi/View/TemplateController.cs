@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Security.Cryptography.X509Certificates;
+﻿using System.Collections.Generic;
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using ToSic.Eav;
 using ToSic.SexyContent.ViewManager;
-using ToSic.SexyContent.WebApi;
 
-namespace ToSic.SexyContent.ViewAPI
+namespace ToSic.SexyContent.WebApi.View
 {
     [SupportedModules("2sxc,2sxc-app")]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]

@@ -30,9 +30,10 @@
 		"AddBlockApp": "neuer App-Block",
 		"AddModuleContent": "neues Inhaltsmodul",
 		"AddModuleApp": "neues App-Modul",
-		"Cut": "ausschneiden",
+		"Select": "auswählen",
 		"Paste": "einfügen",
 		"Delete": "löschen",
-		"More": "mehr"
+		"More": "mehr",
+		"ConfirmDelete": "löschen?"
 	}
 }

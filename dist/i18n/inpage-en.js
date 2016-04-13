@@ -31,9 +31,10 @@
 		"AddBlockApp": "add app block",
 		"AddModuleContent": "add content module",
 		"AddModuleApp": "add app module",
-		"Cut": "cut",
+		"Select": "select",
 		"Paste": "paste",
 		"Delete": "delete",
-		"More": "more"
+		"More": "more",
+		"ConfirmDelete": "delete?"
 	}
 }

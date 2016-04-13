@@ -14,10 +14,9 @@ using ToSic.Eav;
 using ToSic.Eav.BLL;
 using ToSic.SexyContent.ContentBlock;
 using ToSic.SexyContent.Internal;
-using ToSic.SexyContent.WebApi;
 using Assembly = System.Reflection.Assembly;
 
-namespace ToSic.SexyContent.ViewAPI
+namespace ToSic.SexyContent.WebApi.View
 {
     // had to disable this, as most requests now come from a lone page [SupportedModules("2sxc,2sxc-app")]
     public class ModuleController : SxcApiController

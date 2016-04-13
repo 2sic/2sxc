@@ -254,6 +254,7 @@
     <Compile Include="SexyContent\DataSources\ConfigurationProvider.cs" />
     <Compile Include="SexyContent\DataSources\DnnSqlDataSource.cs" />
     <Compile Include="SexyContent\DataSources\DnnFormAndList.cs" />
+    <Compile Include="WebApi\Dnn\ModuleController.cs" />
     <Compile Include="WebApi\ImportExport\HttpResponseMessageHelper.cs" />
     <Compile Include="WebApi\ImportExport\ImportResult.cs" />
     <Compile Include="WebApi\ImportExport\SxcAppWrapper.cs" />
@@ -279,7 +280,7 @@
     <Compile Include="WebApi\ImportExportController.cs" />
     <Compile Include="WebApi\SxcWebApiExceptionHandling.cs" />
     <Compile Include="WebApi\ToRefactorDeliverCBDataLight\GetContentBlockDataLight.cs" />
-    <Compile Include="WebApi\ViewAPI\TemplateController.cs" />
+    <Compile Include="WebApi\View\TemplateController.cs" />
     <Compile Include="SexyContent\ViewManager\TemplateEditor.cs" />
     <Compile Include="SexyContent\UnityConfig.cs" />
     <Compile Include="WebApi\SystemController.cs" />
@@ -343,7 +344,7 @@
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="SexyContent\TemplateDefault.cs" />
-    <Compile Include="WebApi\ViewAPI\ModuleController.cs" />
+    <Compile Include="WebApi\View\ModuleController.cs" />
     <Compile Include="WebApi\HttpRequestMessageExtensions.cs" />
     <Compile Include="WebApi\SxcApiController.cs" />
     <Compile Include="WebApi\AppApiControllerSelector.cs" />

@@ -128,7 +128,7 @@
 
             // delete a content-block inside a list of content-blocks
             deleteContentBlock: function (parentId, field, index) {
-                if (confirm("delete?")) // todo i18n
+                if (confirm($2sxc.translate("QuickInsertMenu.ConfirmDelete"))) // todo i18n
                     return sxc.webApi.get({
                         url: "view/module/RemoveItemInList",
                         params: { parentId: parentId, field: field, index: index }
