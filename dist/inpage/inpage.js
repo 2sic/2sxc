@@ -1060,7 +1060,6 @@ $(function() {
     $2sxc._lib.extend(qi, {
         cbActions: $(qi.template),
         modActions: $(qi.template.replace(/QuickInsertMenu.AddBlock/g, "QuickInsertMenu.AddModule")).attr("data-context", "module").addClass("sc-content-block-menu-module"),
-
     });
 
     qi.init = function() {
@@ -1109,7 +1108,7 @@ $(function() {
             $2sxc._cbClipboard = { type: "cb", index: index, item: currentItem };
         } else if (cbAction === "paste") {
             var from = $2sxc._cbClipboard.index, to = index;
-            if (!from || !to || from === to || from + 1 === to) // this moves it to the same spot, so ignore
+            if (isNaN(from) || isNaN(to) || from === to || from + 1 === to) // this moves it to the same spot, so ignore
                 return qi.unselectAll(); // don't do anything
 
             $2sxc(list).manage.moveContentBlock(actionConfig.parent, actionConfig.field, from, to);
