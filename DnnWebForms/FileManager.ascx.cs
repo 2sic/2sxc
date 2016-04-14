@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Web;
@@ -45,11 +44,18 @@ namespace ToSic.SexyContent.EAV.FormlyEditUI.FieldTemplates.WebForms
 
 		private void InitEditorProvider()
 		{
-			_editorProvider = new EditorProvider();
+		    try
+		    {
+		        _editorProvider = new EditorProvider();
 
-			_editorProvider.Initialize();
-			_imageManagerConfiguration = _editorProvider._editor.ImageManager;
-			_documentManagerConfiguration = _editorProvider._editor.DocumentManager;
+		        _editorProvider.Initialize();
+		        _imageManagerConfiguration = _editorProvider._editor.ImageManager;
+		        _documentManagerConfiguration = _editorProvider._editor.DocumentManager;
+		    }
+		    catch (Exception ex)
+		    {
+		        throw new Exception("had trouble initializing the editor provider (telerik) - you're probably using dnn 8 and didn't install the old telerik extension.", ex);
+		    }
 		}
 
 		private void InitDialogOpener()

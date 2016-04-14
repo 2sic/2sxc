@@ -30,7 +30,11 @@
 
 			    elem[0].src = webFormsBridgeUrl + "&type=" + scope.type + (scope.bridge.params ? "&" + params : "");
 				elem.on("load", function () {					
-					var w = elem[0].contentWindow || elem[0];
+				    var w = elem[0].contentWindow || elem[0];
+                    // test if the connectBridge works, if not, it's usually a telerik-not-installed issue
+				    if (!w.connectBridge)
+				        return alert("can't connect to the dialog - you are probably running a new DNN (v.8+) and didn't activate the old Telerik components. Please install these in the host > extensions to get this to work");
+				    
 					w.connectBridge(scope.bridge);
 
 					// Sync height
