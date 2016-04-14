@@ -54,7 +54,7 @@ namespace ToSic.SexyContent
             {
                 // check things if it's a module of this portal (ensure everything is ok, etc.)
                 var isSharedModule = ModuleConfiguration.PortalID != ModuleConfiguration.OwnerPortalID;
-                if (!isSharedModule && !SxcI.ContentBlock.ContentGroupExists)
+                if (!isSharedModule && !SxcI.ContentBlock.ContentGroupExists && SxcI.App != null)
                     new DnnStuffToRefactor().EnsurePortalIsConfigured(SxcI, Server, ControlPath);
 
                 var renderedTemplate = SxcI.Render().ToString();
