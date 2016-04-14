@@ -26,8 +26,9 @@ namespace ToSic.SexyContent
                 _jsonTemplate = "";
         }
 
-        public HtmlString EditContext => new HtmlString(string.Format(
+        public HtmlString EditContext() => new HtmlString(string.Format(
             _jsonTemplate, _parent.EntityId, _field, Settings.AttributeSetStaticNameContentBlockTypeName));
+
 
         public IEnumerator<DynamicEntity> GetEnumerator()
         {
