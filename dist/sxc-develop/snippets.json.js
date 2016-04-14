@@ -1949,8 +1949,16 @@
             "subset": "entity",
             "name": "show title of first item if exists",
             "title": "",
-            "content": "@(${1:var}.${2:prop} as ToSic.SexyContent.DynamicEntityList).FirstOrDefault()?.Title",
+            "content": "@(${1:var}.${2:prop}.Count > 0 ? ${1:var}.${2:prop}[0].Title : \"\")",
             "help": "This is a shorthand for try-to-get-and-if-null-don’t-show"
+        },
+        {
+            "set": "@\\InputType",
+            "subset": "entity-content-blocks",
+            "name": "render first if it exists",
+            "title": "",
+            "content": "@(${1:var}.${2:prop}.Count > 0 ? ${1:var}.${2:prop}[0].Render() : \"\")",
+            "help": "This is a shorthand for try-to-render-first-and-if-null-don’t-show"
         }
     ]
 }
