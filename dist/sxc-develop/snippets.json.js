@@ -1253,7 +1253,23 @@
             "subset": "Basics",
             "name": "using",
             "title": "",
-            "content": "@using ${1:System.Data.Linq}",
+            "content": "@using ${1:System.Linq}",
+            "help": ""
+        },
+        {
+            "set": "@C#",
+            "subset": "Basics",
+            "name": "using 2sxc namespace",
+            "title": "",
+            "content": "@using ToSic.SexyContent;\r\n",
+            "help": "The 2sxc namespace, in case you explicitly want to work with 2sxc objects"
+        },
+        {
+            "set": "@C#",
+            "subset": "Basics",
+            "name": "using Linq",
+            "title": "",
+            "content": "@using System.Linq;",
             "help": ""
         },
         {
@@ -1871,6 +1887,70 @@
             "title": "",
             "content": "<img src=\"[${101:var}:${102:prop}]?w=${1:200}&h=${2:200}&mode=${3:crop}\">",
             "help": "Thumbnail IMG tag with crop-mode"
+        },
+        {
+            "set": "@\\InputType",
+            "subset": "entity-content-blocks",
+            "name": "content block with inpage editing",
+            "title": "",
+            "content": "<div class=\"sc-content-block-list\" @${101:var}.${102:prop}.EditContext()>\r\n    @foreach(var contentBlock in ${101:var}.${102:prop}){\r\n        @contentBlock.Render()\r\n    }\r\n</div>\r\n",
+            "help": "Content blocks with in-page editing"
+        },
+        {
+            "set": "@\\InputType",
+            "subset": "entity-content-blocks",
+            "name": "render entity",
+            "title": "",
+            "content": "@${101:var}.render()",
+            "help": "Render a content-block entity (remember that you can't render the list, this only renders one item).\r\nNote that if you try to render any kind of entity, this will not throw an error, but just render an HTML comment as there is no definition for how to render other types of entities as of now."
+        },
+        {
+            "set": "@\\InputType",
+            "subset": "entity",
+            "name": "loop through items",
+            "title": "",
+            "content": "@foreach(var ${103:item} in ${101:var}.${102:prop}){\r\n    @${103:item}.Render()\r\n}\r\n",
+            "help": ""
+        },
+        {
+            "set": "@\\InputType",
+            "subset": "entity-content-blocks",
+            "name": "edit context",
+            "title": "",
+            "content": "@${101:var}.${102:prop}.EditContext()",
+            "help": "This should be used inside a <div> tag to provide additional information to the in-page editing ui"
+        },
+        {
+            "set": "@\\InputType",
+            "subset": "entity",
+            "name": "item count",
+            "title": "",
+            "content": "@${101:var}.${102:prop}.Count",
+            "help": "This will give you the count of items"
+        },
+        {
+            "set": "@\\InputType",
+            "subset": "entity",
+            "name": "get item number 0",
+            "title": "",
+            "content": "@${101:var}.${102:prop}[0]",
+            "help": "Note that this only works, if there are items, otherwise you'll get an error"
+        },
+        {
+            "set": "@\\InputType",
+            "subset": "entity",
+            "name": "get first item",
+            "title": "",
+            "content": "@${101:var}.${102:prop}[0]",
+            "help": "This also requires a @using Tosic.SexyContent; at the beginning of your cshtml"
+        },
+        {
+            "set": "@\\InputType",
+            "subset": "entity",
+            "name": "show title of first item if exists",
+            "title": "",
+            "content": "@(${1:var}.${2:prop} as ToSic.SexyContent.DynamicEntityList).FirstOrDefault()?.Title",
+            "help": "This is a shorthand for try-to-get-and-if-null-don’t-show"
         }
     ]
 }

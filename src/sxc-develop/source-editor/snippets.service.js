@@ -224,7 +224,14 @@ angular.module("SourceEditor")
 
                 attachSnippets: function(target, prefix, fieldname, inputType, snipDefaults) {
                     var genericSnippet = itsh.inputTypeSnippets[inputType];
-
+                    if (inputType.indexOf("-")) {   // if it's a sub-type, let's also get the master-type
+                        var fieldType = inputType.substr(0, inputType.indexOf("-"));
+                        if (fieldType) {
+                            var typeSnips = itsh.inputTypeSnippets[fieldType];
+                            if (typeSnips)
+                                genericSnippet = genericSnippet ? genericSnippet.concat(typeSnips) : typeSnips;
+                        }
+                    }
                     if (!genericSnippet)
                         return;
 
