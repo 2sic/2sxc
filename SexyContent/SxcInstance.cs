@@ -10,6 +10,7 @@ using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Environment.Interfaces;
+using ToSic.SexyContent.Installer;
 using ToSic.SexyContent.Interfaces;
 
 namespace ToSic.SexyContent
@@ -150,7 +151,7 @@ namespace ToSic.SexyContent
                 string innerContent = null;
 
                 #region do pre-check to see if system is stable & ready
-                var notReady = Installer.CheckUpgradeMessage(PortalSettings.Current.UserInfo.IsSuperUser);
+                var notReady = new InstallationController().CheckUpgradeMessage(PortalSettings.Current.UserInfo.IsSuperUser);
                 if (!string.IsNullOrEmpty(notReady))
                     innerContent = renderHelp.DesignErrorMessage(new Exception(notReady), true, "Error - needs admin to fix this", false, false);
 

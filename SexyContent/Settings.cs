@@ -50,6 +50,19 @@ namespace ToSic.SexyContent
             public const string HostFileSystem = "Host File System";
         }
 
+        public class Installation
+        {
+            internal const string LogDirectory = "~/DesktopModules/ToSIC_SexyContent/Upgrade/Log/";
+            // todo: Maybe this list can somehow be extracted from the module manifest or placed there...
+
+            internal static readonly string[] UpgradeVersionList =
+            {
+                "07.00.00", "07.00.03", "07.02.00", "07.02.02", "07.03.00", "07.03.01", "07.03.02", "07.03.03", "07.03.04",
+                "08.00.00", "08.00.01", "08.00.02", "08.00.03", "08.00.04", "08.00.05", "08.00.06", "08.00.07", "08.00.08", "08.00.09", "08.00.10", "08.00.11", "08.00.12",
+                "08.01.00", "08.01.01", "08.01.02", "08.01.03", "08.02.00", "08.02.01", "08.02.02", "08.02.03",
+                "08.03.00", "08.03.01", "08.03.02", "08.03.03", "08.03.04", "08.03.05", "08.03.06", "08.03.07", "08.04.00"
+            };
+        }
 
         #region System Initialization
 
