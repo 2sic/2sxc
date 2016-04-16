@@ -27,7 +27,8 @@ namespace ToSic.SexyContent.ContentBlock
             ContentBlockId = ParentId;
 
             // Ensure we know what portal the stuff is coming from
-            PortalSettings = moduleInfo.OwnerPortalID != moduleInfo.PortalID
+            // PortalSettings is null, when in search mode
+            PortalSettings = DotNetNuke.Entities.Portals.PortalSettings.Current == null || moduleInfo.OwnerPortalID != moduleInfo.PortalID
                 ? new PortalSettings(moduleInfo.OwnerPortalID)
                 : PortalSettings.Current;
 

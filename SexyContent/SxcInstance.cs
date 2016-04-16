@@ -84,7 +84,8 @@ namespace ToSic.SexyContent
             if (IsContentApp || App == null) return;
 
             // #2 Change Template if URL contains the part in the metadata "ViewNameInUrl"
-            var urlParams = HttpContext.Current.Request.QueryString; // todo: reduce dependency on context-current...
+            var urlParams = HttpContext.Current?.Request?.QueryString; // todo: reduce dependency on context-current...
+            if (urlParams == null) return;
             var templateFromUrl = TryToGetTemplateBasedOnUrlParams(urlParams);
             if (templateFromUrl != null)
                 Template = templateFromUrl;
@@ -119,7 +120,8 @@ namespace ToSic.SexyContent
             ContentBlock = cb;
             ModuleInfo = runtimeModuleInfo;
             // Build up the environment. If we know the module context, then use permissions from there
-            Environment.Permissions = (ModuleInfo != null)
+            // modinfo is null in cases where things are not known yet, portalsettings are null in search-scenarios
+            Environment.Permissions = (ModuleInfo != null) && (PortalSettings.Current != null)
                 ? (IPermissions)new Permissions(ModuleInfo)
                 : new Environment.None.Permissions();
 
