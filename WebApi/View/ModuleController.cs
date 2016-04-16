@@ -13,6 +13,7 @@ using DotNetNuke.Web.Api;
 using ToSic.Eav;
 using ToSic.Eav.BLL;
 using ToSic.SexyContent.ContentBlock;
+using ToSic.SexyContent.Installer;
 using ToSic.SexyContent.Internal;
 using Assembly = System.Reflection.Assembly;
 
@@ -298,10 +299,11 @@ namespace ToSic.SexyContent.WebApi.View
         // had to disable this, as most requests now come from a lone page [ValidateAntiForgeryToken]
         public bool FinishInstallation()
         {
-            if (Installer.IsUpgradeRunning)
+            var ic = new InstallationController();
+            if (ic.IsUpgradeRunning)
                 throw new Exception("There seems to be an upgrade running - please wait. If you still see this message after 10 minutes, please restart the web application.");
 
-            Installer.FinishAbortedUpgrade();
+            ic.FinishAbortedUpgrade();
 
             return true;
         }

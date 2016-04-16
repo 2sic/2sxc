@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Search.Entities;
+using ToSic.SexyContent.Installer;
 using ToSic.SexyContent.Search;
 
 namespace ToSic.SexyContent.Environment.Dnn7
@@ -39,7 +40,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         /// <returns></returns>
         public string UpgradeModule(string version)
         {
-            return Installer.UpgradeModule(version);
+            return new InstallationController().UpgradeModule(version);
         }
 
         #endregion
