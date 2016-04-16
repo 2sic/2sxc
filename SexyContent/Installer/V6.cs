@@ -5,14 +5,19 @@ using ToSic.Eav.Import;
 
 namespace ToSic.SexyContent.Installer
 {
-    public class V6
+    public class V6: VersionBase
     {
+        public V6(string version, Logger sharedLogger) : base(version, sharedLogger)  { }
+
+
         /// <summary>
         /// Add new Content Types for Pipeline Designer
         /// </summary>
         /// <remarks>Some Content Types are defined in EAV but some only in 2sxc. EAV.VersionUpgrade ensures Content Types are shared across all Apps.</remarks>
         internal void EnsurePipelineDesignerAttributeSets()
         {
+            logger.LogStep("06.00.00", "EnsurePipelineDesignerAttributeSets start", false);
+
             // Ensure DnnSqlDataSource Configuration
             var dsrcSqlDataSource = ImportAttributeSet.SystemAttributeSet("|Config ToSic.SexyContent.DataSources.DnnSqlDataSource", "used to configure a DNN SqlDataSource",
                 new List<ImportAttribute>
@@ -36,6 +41,8 @@ namespace ToSic.SexyContent.Installer
             // Run EAV Version Upgrade (also ensures Content Type sharing)
             var eavVersionUpgrade = new VersionUpgrade(Settings.InternalUserName);
             eavVersionUpgrade.EnsurePipelineDesignerAttributeSets();
+
+            logger.LogStep("06.00.00", "EnsurePipelineDesignerAttributeSets done", false);
         }
 
     }

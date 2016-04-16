@@ -15,24 +15,22 @@ using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.Installer
 {
-    internal class V7
+    internal class V7: VersionBase
     {
-        private Logger logger;
-
-        internal V7(Logger sharedLogger)
-        {
-            logger = sharedLogger;
-        }
+        public V7(string version, Logger sharedLogger) : base(version, sharedLogger)  { }
 
         /// <summary>
         /// Add ContentTypes for ContentGroup and move all 2sxc data to EAV
         /// </summary>
         internal void Version070000()
         {
+            logger.LogStep("07.00.00", "Start", false);
+
             var userName = "System-ModuleUpgrade-070000";
 
             #region 1. Import new ContentTypes for ContentGroups and Templates
 
+            logger.LogStep("07.00.00", "1. Import new ContentTypes for ContentGroups and Templates", false);
             if (DataSource.GetCache(Constants.DefaultZoneId, Constants.MetaDataAppId).GetContentType("2SexyContent-Template") == null)
             {
 
@@ -56,6 +54,7 @@ namespace ToSic.SexyContent.Installer
             // 2. Move all existing data to the new ContentTypes - Append new IDs to old data (ensures that we can fix things that went wrong after upgrading the module)
 
             #region Prepare Templates
+            logger.LogStep("07.00.00", "2. Move all existing data to the new ContentTypes - Append new IDs to old data (ensures that we can fix things that went wrong after upgrading the module)", false);
 
             var sqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString);
             var templates = new DataTable();
@@ -143,6 +142,7 @@ WHERE        (ToSIC_SexyContent_Templates.SysDeleted IS NULL) AND ((SELECT COUNT
 
 
             #region Prepare ContentGroups
+            logger.LogStep("07.00.00", "2. Prepare Content Groups", false);
 
             var contentGroupItemsTable = new DataTable();
             const string sqlCommandContentGroups = @"SELECT DISTINCT        ToSIC_SexyContent_ContentGroupItems.ContentGroupItemID, ToSIC_SexyContent_ContentGroupItems.ContentGroupID, 
@@ -200,6 +200,7 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
 
 
             // Import all entities
+            logger.LogStep("07.00.00", "2. Import all entities", false);
             var apps = existingTemplates.Select(p => p.AppId).ToList();
             apps.AddRange(existingContentGroups.Select(p => p.AppId));
             apps = apps.Distinct().ToList();
@@ -269,11 +270,13 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
 
                 logger.LogStep("07.00.00", "Migrated data for app " + app);
             }
-
+            logger.LogStep("07.00.00", "Done", false);
         }
 
         internal  void Version070003()
         {
+            logger.LogStep("07.00.03", "Start", false);
+
             var userName = "System-ModuleUpgrade-070003";
 
             // Import new ContentType for permissions
@@ -292,11 +295,15 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
                     throw new Exception("The 2sxc module upgrade to 07.00.03 failed: " + messages);
                 }
             }
+            logger.LogStep("07.00.03", "Done", false);
+
 
         }
 
         internal void Version070200()
         {
+            logger.LogStep("07.02.00", "Start", false);
+
             var userName = "System-ModuleUpgrade-070200";
 
             // Import new ContentType for permissions
@@ -315,11 +322,14 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
                     throw new Exception("The 2sxc module upgrade to 07.02.00 failed: " + messages);
                 }
             }
+            logger.LogStep("07.02.00", "Done", false);
 
         }
 
         internal void Version070303()
         {
+            logger.LogStep("07.03.03", "Start", false);
+
             var userName = "System-ModuleUpgrade-070303";
 
             // 1. Import new Attributes for @All content type
@@ -358,7 +368,10 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
                 throw new Exception("The 2sxc module upgrade to 07.03.03-03 failed: " + messages);
             }
 
+            logger.LogStep("07.03.03", "Done", false);
+
 
         }
+
     }
 }

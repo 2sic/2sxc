@@ -12,17 +12,14 @@ namespace ToSic.SexyContent.Installer
 {
 
 
-    internal class V8
+    internal class V8: VersionBase
     {
-        private Logger logger;
-
-        internal V8(Logger sharedLogger)
-        {
-            logger = sharedLogger;
-        }
+        public V8(string version, Logger sharedLogger) : base(version, sharedLogger)  { }
 
         internal void Version080002()
         {
+            logger.LogStep("08.00.02", "Start", false);
+
             var userName = "System-ModuleUpgrade-080002";
 
             // Fix AddressMask field in GPS settings content type
@@ -37,11 +34,14 @@ namespace ToSic.SexyContent.Installer
                 throw new Exception("The 2sxc module upgrade to 08.00.02 failed: " + messages);
             }
 
+            logger.LogStep("08.00.02", "Done", false);
 
         }
 
         internal void Version080004()
         {
+            logger.LogStep("08.00.04", "Start", false);
+
             var userName = "System-ModuleUpgrade-080004";
 
             // Fix AddressMask field in GPS settings content type
@@ -56,16 +56,22 @@ namespace ToSic.SexyContent.Installer
                 throw new Exception("The 2sxc module upgrade to 08.00.04 failed: " + messages);
             }
 
-
+            logger.LogStep("08.00.02", "Done", false);
         }
 
         internal void Version080007()
         {
+            logger.LogStep("08.00.07", "Start", false);
+
             RemoveModuleControls(new[] { "settings", "settingswrapper" });
+
+            logger.LogStep("08.00.07", "Done", false);
         }
 
         internal void Version080100()
         {
+            logger.LogStep("08.01.00", "Start", false);
+
             var userName = "System-ModuleUpgrade-080100";
 
             // Add new content types and entities
@@ -86,6 +92,8 @@ namespace ToSic.SexyContent.Installer
 
         internal void Version080302()
         {
+            logger.LogStep("08.03.02", "Start", false);
+
             var userName = "System-ModuleUpgrade-080302";
 
             // Add new content types and entities
@@ -114,6 +122,8 @@ namespace ToSic.SexyContent.Installer
 
         internal void Version080303()
         {
+            logger.LogStep("08.03.03", "Start", false);
+
             var userName = "System-ModuleUpgrade-080303";
 
             // Change "Author" to "Owner" (permissions content type)
@@ -131,6 +141,8 @@ namespace ToSic.SexyContent.Installer
 
         private void RemoveModuleControls(IEnumerable<string> controls)
         {
+            logger.LogStep("08.--.--", "RemoveModuleControlls - Start", false);
+
             var desktopModuleNames = new[] { "2sxc", "2sxc-app" };
 
             // Remove settings and settingswrapper control

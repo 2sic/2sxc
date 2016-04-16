@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Web;
+﻿using System.IO;
 using System.Web.Hosting;
 
 namespace ToSic.SexyContent.Installer
@@ -14,7 +10,11 @@ namespace ToSic.SexyContent.Installer
         private FileStream _lockFile;
 
         internal FileStream Set()
-            => _lockFile ?? (_lockFile = new FileStream(LockFileName, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read));
+        {
+            return _lockFile ??
+                   (_lockFile =
+                       new FileStream(LockFileName, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read));
+        }
 
         internal void Release() => _lockFile?.Close();
 
@@ -33,6 +33,9 @@ namespace ToSic.SexyContent.Installer
                 try
                 {
                     stream = new FileStream(lockFilePath, FileMode.Open, FileAccess.ReadWrite, FileShare.Read);
+                    stream.Close();
+                    stream = null;
+                    // delete doesn't seem to work... File.Delete(lockFilePath);
                 }
                 catch (IOException)
                 {

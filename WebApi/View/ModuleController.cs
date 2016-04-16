@@ -299,10 +299,11 @@ namespace ToSic.SexyContent.WebApi.View
         // had to disable this, as most requests now come from a lone page [ValidateAntiForgeryToken]
         public bool FinishInstallation()
         {
-            if (InstallationController.IsUpgradeRunning)
+            var ic = new InstallationController();
+            if (ic.IsUpgradeRunning)
                 throw new Exception("There seems to be an upgrade running - please wait. If you still see this message after 10 minutes, please restart the web application.");
 
-            new InstallationController().FinishAbortedUpgrade();
+            ic.FinishAbortedUpgrade();
 
             return true;
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Web.Hosting;
@@ -7,35 +8,34 @@ namespace ToSic.SexyContent.Installer
 {
     public class Logger
     {
-        private string _detailedLog;
+        // private string _detailedLog;
         private readonly bool _saveUnimportantDetails;
 
         private StreamWriter _fileStreamWriter;
         private StreamWriter FileStreamWriter => _fileStreamWriter ?? OpenLogFiles();
 
-        private  FileStream upgradeFileHandle = null;
+        //private StreamWriter _detailedStreameWriter;
+        //private StreamWriter DetailedStreamWriter => _detailedStreameWriter ?? OpenLogFiles(true);
+        // private  FileStream _upgradeFileHandle;
 
         public Logger(bool saveDetails)
         {
             _saveUnimportantDetails = saveDetails;
         }
 
-        internal void Add(string newLine)
-        {
-            _detailedLog += "\n" + newLine;
-        }
+        //internal void Add(string newLine)
+        //{
+        //    _detailedLog += "\n" + newLine;
+        //}
 
 
         internal void CloseLogFiles()
         {
             FileStreamWriter.BaseStream.Close();
-            // upgradeFileHandle.Close();
-            //var renamedLockFilePath = NewLogFileName();
-            //File.Move(LockFileName, renamedLockFilePath);
         }
 
-        private string _lfn;
-        private string LogFileName => _lfn ?? (_lfn = GenerateNewLogFileName());
+        //private string _lfn;
+        //private string LogFileName => _lfn ?? (_lfn = GenerateNewLogFileName());
 
         private static string GenerateNewLogFileName()
         {
@@ -46,14 +46,17 @@ namespace ToSic.SexyContent.Installer
         }
 
 
-        internal StreamWriter OpenLogFiles()
+        internal StreamWriter OpenLogFiles()//bool returnDetailed = false)
         {
             if (_fileStreamWriter == null)
             {
-                upgradeFileHandle = new FileStream(LogFileName, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read);
-                _fileStreamWriter = new StreamWriter(upgradeFileHandle);
+                var fileHandle = new FileStream(GenerateNewLogFileName(), FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read);
+                _fileStreamWriter = new StreamWriter(fileHandle);
+
+                //fileHandle = new FileStream(GenerateNewLogFileName().Replace(".log", ".log.detailed"), FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read);
+                //_detailedStreameWriter = new StreamWriter(fileHandle);
             }
-            return FileStreamWriter;
+            return _fileStreamWriter;// returnDetailed ? _detailedStreameWriter : _fileStreamWriter;
         }
 
 
@@ -65,40 +68,64 @@ namespace ToSic.SexyContent.Installer
         internal void LogStep(string version, string message, bool isImportant = true)
         {
             var niceLine = FormatLogMessage(version, message);
-            Add(niceLine);
+
+            //DetailedStreamWriter.WriteLine(niceLine);
+            //DetailedStreamWriter.Flush();
+            //Add(niceLine);
             //DetailedLog += "\n" + niceLine;
 
-            if (!isImportant && (isImportant || !_saveUnimportantDetails)) return;
+            if (!isImportant && !_saveUnimportantDetails) return;
 
             // sometimes a detail would be logged, when the file isn't open yet; then don't save
-            if (!(FileStreamWriter?.BaseStream?.CanWrite ?? false)) return;
+            // if (!(FileStreamWriter?.BaseStream?.CanWrite ?? false)) return;
 
             FileStreamWriter.WriteLine(niceLine);
             FileStreamWriter.Flush();
         }
 
 
-        internal void SaveDetailedLog()
+        //internal void SaveDetailedLog()
+        //{
+        //    EnsureLogDirectoryExists();
+
+        //    var logFilePath = HostingEnvironment.MapPath(Settings.Installation.LogDirectory + DateTime.Now.ToString("yyyy-MM-dd hh-mm-ss") + " detailed.resources");
+        //    // if (appendToFile || !File.Exists(logFilePath))
+        //    File.AppendAllText(logFilePath, _detailedLog, Encoding.UTF8);
+
+        //}
+
+        internal void LogVersionCompletedToPreventRerunningTheUpgrade(string version, bool appendToFile = true)
         {
-            if (!Directory.Exists(HostingEnvironment.MapPath(Settings.Installation.LogDirectory)))
-                Directory.CreateDirectory(HostingEnvironment.MapPath(Settings.Installation.LogDirectory));
-
-            var logFilePath = HostingEnvironment.MapPath(Settings.Installation.LogDirectory + DateTime.Now.ToString("yyyy-MM-dd hh-mm-ss") + " detailed.resources");
-            // if (appendToFile || !File.Exists(logFilePath))
-            File.AppendAllText(logFilePath, _detailedLog, Encoding.UTF8);
-
-        }
-
-        internal void LogSuccessfulUpgrade(string version, bool appendToFile = true)
-        {
-            if (!Directory.Exists(HostingEnvironment.MapPath(Settings.Installation.LogDirectory)))
-                Directory.CreateDirectory(HostingEnvironment.MapPath(Settings.Installation.LogDirectory));
+            EnsureLogDirectoryExists();
 
             var logFilePath = HostingEnvironment.MapPath(Settings.Installation.LogDirectory + version + ".resources");
             if (appendToFile || !File.Exists(logFilePath))
                 File.AppendAllText(logFilePath, DateTime.UtcNow.ToString(@"yyyy-MM-ddTHH\:mm\:ss.fffffffzzz"), Encoding.UTF8);
         }
 
+        private static void EnsureLogDirectoryExists()
+        {
+            // if (!Directory.Exists(HostingEnvironment.MapPath(Settings.Installation.LogDirectory)))
+            Directory.CreateDirectory(HostingEnvironment.MapPath(Settings.Installation.LogDirectory));
+        }
+
+        internal void DeleteAllLogFiles()
+        {
+            if (Directory.Exists(HostingEnvironment.MapPath(Settings.Installation.LogDirectory)))
+            {
+                var files = new List<string>(Directory.GetFiles(HostingEnvironment.MapPath(Settings.Installation.LogDirectory)));
+                files.ForEach(x =>
+                {
+                    try
+                    {
+                        File.Delete(x);
+                    }
+                    catch
+                    {
+                    }
+                });
+            }
+        }
 
     }
 }

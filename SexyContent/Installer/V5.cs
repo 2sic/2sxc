@@ -5,20 +5,27 @@ using DotNetNuke.Entities.Portals;
 
 namespace ToSic.SexyContent.Installer
 {
-    internal class V5
+    internal class V5: VersionBase
     {
+
+        public V5(string version, Logger sharedLogger) : base(version, sharedLogger)  { }
+
 
         /// <summary>
         /// While upgrading to 05.04.02, make sure the template folders get renamed to "2sxc"
         /// </summary>
         internal void Version050500()
         {
+            logger.LogStep("05.05.00", "Starting", false);
+
             var portalController = new PortalController();
             var portals = portalController.GetPortals();
             var pathsToCopy = portals.Cast<PortalInfo>().Select(p => p.HomeDirectoryMapPath).ToList();
             pathsToCopy.Add(HttpContext.Current.Server.MapPath("~/Portals/_default/"));
+            logger.LogStep("05.05.00", "Starting paths for " + pathsToCopy.Count + " paths", false);
             foreach (var path in pathsToCopy)
             {
+                logger.LogStep("05.05.00", "Path: " + path, false);
                 var portalFolder = new DirectoryInfo(path);
                 if (portalFolder.Exists)
                 {
@@ -27,6 +34,8 @@ namespace ToSic.SexyContent.Installer
                     var newSexyContentFolder = new DirectoryInfo(Path.Combine(newSexyFolder.FullName, "Content"));
                     if (oldSexyFolder.Exists && !newSexyFolder.Exists)
                     {
+                        logger.LogStep("05.05.00", "Path: " + path + " will copy from 2Sexy to 2sxc", false);
+
                         // Move 2sexy directory to 2sxc/Content
                         Helpers.DirectoryCopy(oldSexyFolder.FullName, newSexyContentFolder.FullName, true);
 
@@ -40,6 +49,7 @@ namespace ToSic.SexyContent.Installer
                     }
                 }
             }
+            logger.LogStep("05.05.00", "Paths done", false);
         }
 
     }

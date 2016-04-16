@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Web;
 using System.Web.Hosting;
 using DotNetNuke.Web.Client.ClientResourceManagement;
@@ -8,11 +8,11 @@ using ToSic.Eav;
 
 namespace ToSic.SexyContent.Installer
 {
-    public class InstallationController
+    internal class InstallationController
     {
-        public static bool SaveUnimportantDetails = true;
+        public bool SaveUnimportantDetails = true;
 
-        private static Logger logger = new Logger(SaveUnimportantDetails);
+        private readonly Logger _logger;
 
         /// <summary>
         /// This static initializer will do a one-time check to see if everything is ready,
@@ -20,24 +20,43 @@ namespace ToSic.SexyContent.Installer
         /// </summary>
         static InstallationController()
         {
-            UpgradeComplete = IsUpgradeComplete(Settings.ModuleVersion);
+            UpgradeComplete = new InstallationController().IsUpgradeComplete(Settings.ModuleVersion, "- static check");
+        }
+
+        /// <summary>
+        /// Instance initializers...
+        /// </summary>
+        public InstallationController()
+        {
+            _logger = new Logger(SaveUnimportantDetails);
         }
 
         internal string UpgradeModule(string version)
         {
-            logger.LogStep(version, "UpgradeModule starting", false);
+            _logger.LogStep(version, "UpgradeModule starting", false);
 
             // Configure Unity
             new UnityConfig().Configure();
 
-            if (version != "01.00.00" && IsUpgradeComplete(version)) // Abort upgrade if it's already done - if version is 01.00.00, the module has probably been uninstalled - continue in this case.
-                throw new Exception("2sxc upgrade for version " + version + " started, but it looks like the upgrade for this version is already complete. Aborting upgrade.");
+            // Abort upgrade if it's already done - if version is 01.00.00, the module has probably been uninstalled - continue in this case.
+            if (version != "01.00.00" && IsUpgradeComplete(version, "- Check on Start UpgradeModule"))
+            {
+                _logger.LogStep(version, "Apparently trying to update this version, but this versions upgrade is apparently compeleted, will abort");
+                throw new Exception("2sxc upgrade for version " + version +
+                                    " started, but it looks like the upgrade for this version is already complete. Aborting upgrade.");
+            }
+            _logger.LogStep(version, "version / upgrade-complete test passed");
 
             if (IsUpgradeRunning)
-                throw new Exception("2sxc upgrade for version " + version + " started, but the upgrade is already running. Aborting upgrade.");
+            {
+                _logger.LogStep(version, "Apparently upgrade is running, will abort");
+                throw new Exception("2sxc upgrade for version " + version +
+                                    " started, but the upgrade is already running. Aborting upgrade.");
+            }
+            _logger.LogStep(version, "is-upgrade-running test passed");
 
             IsUpgradeRunning = true;
-            logger.LogStep(version, "----- Upgrade to " + version + " started -----");
+            _logger.LogStep(version, "----- Upgrade to " + version + " started -----");
 
             try
             {
@@ -48,52 +67,52 @@ namespace ToSic.SexyContent.Installer
                         MaybeResetUpgradeLogsToStartAgainFromV1();
                         break;
                     case "05.05.00":
-                        new V5().Version050500();
+                        new V5(version, _logger).Version050500();
                         break;
                     case "06.06.00":
                     case "06.06.04":
-                        new V6().EnsurePipelineDesignerAttributeSets();
+                        new V6(version, _logger).EnsurePipelineDesignerAttributeSets();
                         break;
                     case "07.00.00":
-                        new V7(logger).Version070000();
+                        new V7(version, _logger).Version070000();
                         break;
                     case "07.00.03":
-                        new V7(logger).Version070003();
+                        new V7(version, _logger).Version070003();
                         break;
                     case "07.02.00":
-                        new V7(logger).Version070200();
+                        new V7(version, _logger).Version070200();
                         break;
                     case "07.02.02":
                         // Make sure upgrades FROM BETWEEN 07.00.00 and 07.02.02 do not run again (create log files for each of them)
-                        logger.LogSuccessfulUpgrade("07.00.00", false);
-                        logger.LogSuccessfulUpgrade("07.00.03", false);
-                        logger.LogSuccessfulUpgrade("07.02.00", false);
+                        _logger.LogVersionCompletedToPreventRerunningTheUpgrade("07.00.00", false);
+                        _logger.LogVersionCompletedToPreventRerunningTheUpgrade("07.00.03", false);
+                        _logger.LogVersionCompletedToPreventRerunningTheUpgrade("07.02.00", false);
                         break;
                     case "07.03.01":
-                        new V6().EnsurePipelineDesignerAttributeSets(); // Need to ensure this again because of upgrade problems
+                        new V6(version, _logger).EnsurePipelineDesignerAttributeSets(); // Need to ensure this again because of upgrade problems
                         break;
                     case "07.03.03":
-                        new V7(logger).Version070303();
+                        new V7(version, _logger).Version070303();
                         break;
                     case "08.00.02":
-                        new V8(logger).Version080002();
+                        new V8(version, _logger).Version080002();
                         break;
                     case "08.00.04":
-                        new V8(logger).Version080004();
+                        new V8(version, _logger).Version080004();
                         break;
                     case "08.00.07":
-                        new V8(logger).Version080007();
+                        new V8(version, _logger).Version080007();
                         break;
                     case "08.01.00":
-                        new V8(logger).Version080100();
+                        new V8(version, _logger).Version080100();
                         break;
                     case "08.03.00":
                         break;
                     case "08.03.02":
-                        new V8(logger).Version080302();
+                        new V8(version, _logger).Version080302();
                         break;
                     case "08.03.03":
-                        new V8(logger).Version080303();
+                        new V8(version, _logger).Version080303();
                         break;
                     case "08.03.05":
                         Helpers.ImportXmlSchemaOfVersion("08.03.05", false);
@@ -102,66 +121,64 @@ namespace ToSic.SexyContent.Installer
                         Helpers.ImportXmlSchemaOfVersion("08.04.00", false);
                         break;
                 }
+                _logger.LogStep(version, "version-list check / switch done", false);
 
                 // Increase ClientDependency version upon each upgrade (System and all Portals)
                 // prevents browsers caching old JS and CSS files for editing, which could cause several errors
-                ClientResourceManager.UpdateVersion();
+                // 2016-04-16 2dm only do this on the last version, as we don't use this any more... or only on last item
+                if (version == Settings.Installation.UpgradeVersionList.Last())
+                {
+                    _logger.LogStep(version, "ClientResourceManager- seems to be last item in version-list, will clear");
+                    ClientResourceManager.UpdateVersion();
+                    _logger.LogStep(version, "ClientResourceManager- done clearing");
+                }
 
-                logger.LogSuccessfulUpgrade(version);
-                logger.LogStep(version, "----- Upgrade to " + version + " completed -----");
+                _logger.LogVersionCompletedToPreventRerunningTheUpgrade(version);
+                _logger.LogStep(version, "----- Upgrade to " + version + " completed -----");
 
             }
             catch (Exception e)
             {
-                logger.LogStep(version, "Upgrade failed - " + e.Message);
+                _logger.LogStep(version, "Upgrade failed - " + e.Message);
                 throw;
             }
             finally
             {
                 IsUpgradeRunning = false;
             }
-
+            _logger.LogStep(version, "UpgradeModule done / returning");
             return version;
         }
 
         internal void MaybeResetUpgradeLogsToStartAgainFromV1()
         {
+            _logger.LogStep("", "Maybe reset logs start");
             // this condition only applies, if 2sxc upgrade 7 didn't happen yet
-            if (
-                DataSource.GetCache(Constants.DefaultZoneId, Constants.MetaDataAppId)
+            if (DataSource.GetCache(Constants.DefaultZoneId, Constants.MetaDataAppId)
                     .GetContentType("2SexyContent-Template") != null) return;
 
-            if (Directory.Exists(HostingEnvironment.MapPath(Settings.Installation.LogDirectory)))
-            {
-                var files = new List<string>(Directory.GetFiles(HostingEnvironment.MapPath(Settings.Installation.LogDirectory)));
-                files.ForEach(x =>
-                {
-                    try
-                    {
-                        File.Delete(x);
-                    }
-                    catch
-                    {
-                    }
-                });
-            }
-            return;
+            _logger.LogStep("", "Will reset all logs now");
+            _logger.DeleteAllLogFiles();
+            _logger.LogStep("", "Maybe Reset logs done");
         }
+
 
         internal void FinishAbortedUpgrade()
         {
-            logger.LogStep("", "FinishAbortedUpgrade starting", false);
-
+            _logger.LogStep("", "FinishAbortedUpgrade starting", false);
+            _logger.LogStep("", "Will handle " + Settings.Installation.UpgradeVersionList.Length + " versions");
             // Run upgrade again for all versions that do not have a corresponding logfile
             foreach (var upgradeVersion in Settings.Installation.UpgradeVersionList)
             {
-                if (!IsUpgradeComplete(upgradeVersion))
+                var complete = IsUpgradeComplete(upgradeVersion, "- check for FinishAbortedUpgrade");
+                _logger.LogStep("", "Status for version " + upgradeVersion + " is " + complete);
+                if (!complete)
                     UpgradeModule(upgradeVersion);
             }
 
-            logger.LogStep("", "FinishAbortedUpgrade done", false);
+            _logger.LogStep("", "FinishAbortedUpgrade done", false);
 
-            logger.SaveDetailedLog();
+            //_logger.SaveDetailedLog();
             // Restart application
             HttpRuntime.UnloadAppDomain();
         }
@@ -184,18 +201,23 @@ namespace ToSic.SexyContent.Installer
         #region Status Stuff
         internal static readonly bool UpgradeComplete;
 
-        internal static bool IsUpgradeComplete(string version)
+        internal bool IsUpgradeComplete(string version, string note = "")
         {
-            logger.LogStep(version, "IsUgradeComplete checking", false);
+            _logger.LogStep(version, "IsUgradeComplete checking " + note, false);
             var logFilePath = HostingEnvironment.MapPath(Settings.Installation.LogDirectory + version + ".resources");
             var complete = File.Exists(logFilePath);
-            logger.LogStep(version, "IsUgradeComplete: " + complete, false);
+            _logger.LogStep(version, "IsUgradeComplete: " + complete, false);
             return complete;
         }
 
         // cache the status
         private static bool? _running;
-        internal static bool IsUpgradeRunning
+        /// <summary>
+        /// Set / Check if it's running, by storing the static info but also creating/releasing a lock-file
+        /// We need the lock file in case another system would try to read the status, which doesn't share
+        /// this running static instance
+        /// </summary>
+        internal bool IsUpgradeRunning
         {
             get
             {
@@ -203,11 +225,24 @@ namespace ToSic.SexyContent.Installer
             }
             private set
             {
-                if (value)
-                    new Lock().Set();
-                else
-                    new Lock().Release();
-                _running = value;
+                try
+                {
+                    _logger.LogStep("", "set upgrade running - " + value);
+
+                    if (value)
+                        new Lock().Set();
+                    else
+                        new Lock().Release();
+                    _logger.LogStep("", "set upgrade running - " + value + " - done");
+                }
+                catch
+                {
+                    _logger.LogStep("", "set upgrade running - " + value + " - error!");
+                }
+                finally
+                {
+                    _running = value;
+                }
             }
         }
         #endregion
