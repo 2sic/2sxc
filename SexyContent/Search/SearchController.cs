@@ -14,7 +14,7 @@ using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.Search
 {
-    public class SearchController
+    internal class SearchController
     {
         /// <summary>
         /// Get search info for each dnn module containing 2sxc data
@@ -62,6 +62,7 @@ namespace ToSic.SexyContent.Search
             var engine = EngineFactory.CreateEngine(template);
             engine.Init(template, sexy.App, moduleInfo, dataSource, InstancePurposes.IndexingForSearch, sexy);
 
+            // see if data customization inside the cshtml works
             try
             {
                 engine.CustomizeData();
@@ -110,6 +111,7 @@ namespace ToSic.SexyContent.Search
                 }));
             }
 
+            // check if the cshtml has search customizations
             try
             {
                 engine.CustomizeSearch(searchInfoDictionary, moduleInfo, beginDate);
@@ -119,6 +121,7 @@ namespace ToSic.SexyContent.Search
                 Exceptions.LogException(new SearchIndexException(moduleInfo, e));
             }
 
+            // reduce load by only keeping recently modified ites
             foreach (var searchInfoList in searchInfoDictionary)
             {
                 // Filter by Date - take only SearchDocuments that changed since beginDate
