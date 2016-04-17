@@ -16,7 +16,12 @@ namespace ToSic.SexyContent.Search
 {
     public class SearchController
     {
-
+        /// <summary>
+        /// Get search info for each dnn module containing 2sxc data
+        /// </summary>
+        /// <param name="moduleInfo"></param>
+        /// <param name="beginDate"></param>
+        /// <returns></returns>
         public IList<SearchDocument> GetModifiedSearchDocuments(ModuleInfo moduleInfo, DateTime beginDate)
         {
             var searchDocuments = new List<SearchDocument>();
