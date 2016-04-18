@@ -92,7 +92,8 @@ BEGIN
 		,@sysLogID int
 		,@newData xml
 	
-	IF SERVERPROPERTY(''edition'') <> ''SQL Azure''
+	-- Mod 2016-04-18 2dm change sql-azr detection to only apply exception on V12 as V14 supports the ContextInfo
+	IF SERVERPROPERTY(''edition'') <> ''SQL Azure'' OR CAST(SERVERPROPERTY(''ProductVersion'') AS CHAR(2)) >= ''12''
 	BEGIN
 		IF CONTEXT_INFO() IS NULL
 			BEGIN
@@ -143,7 +144,8 @@ END');
 
 EXEC ToSIC_EAV_ChangeLogAdd 'System'
 DECLARE @ChangeLogID int
-IF SERVERPROPERTY('edition') <> 'SQL Azure'
+-- Mod 2016-04-18 2dm change sql-azr detection to only apply exception on V12 as V14 supports the ContextInfo
+IF SERVERPROPERTY('edition') <> 'SQL Azure' OR CAST(SERVERPROPERTY('ProductVersion') AS CHAR(2)) >= '12'
 	Set @ChangeLogID = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
 ELSE
 	SET @ChangeLogID = 1

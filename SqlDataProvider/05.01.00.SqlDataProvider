@@ -137,7 +137,8 @@ BEGIN
 		,@sysLogID int
 		,@newData xml
 	
-	IF SERVERPROPERTY(''edition'') <> ''SQL Azure''
+	-- Mod 2016-04-18 2dm change sql-azr detection to only apply exception on V12 as V14 supports the ContextInfo
+	IF SERVERPROPERTY(''edition'') <> ''SQL Azure'' OR CAST(SERVERPROPERTY(''ProductVersion'') AS CHAR(2)) >= ''12''
 	BEGIN
 		IF CONTEXT_INFO() IS NULL
 			BEGIN
@@ -211,7 +212,8 @@ BEGIN
 		,@sysLogID int
 		,@newData xml
 	
-	IF SERVERPROPERTY(''edition'') <> ''SQL Azure''
+	-- Mod 2016-04-18 2dm change sql-azr detection to only apply exception on V12 as V14 supports the ContextInfo
+	IF SERVERPROPERTY(''edition'') <> ''SQL Azure'' OR CAST(SERVERPROPERTY(''ProductVersion'') AS CHAR(2)) >= ''12''
 	BEGIN
 		IF CONTEXT_INFO() IS NULL
 			BEGIN
@@ -286,7 +288,8 @@ BEGIN
 		,@sysLogID int
 		,@newData xml
 	
-	IF SERVERPROPERTY(''edition'') <> ''SQL Azure''
+	-- Mod 2016-04-18 2dm change sql-azr detection to only apply exception on V12 as V14 supports the ContextInfo
+	IF SERVERPROPERTY(''edition'') <> ''SQL Azure'' OR CAST(SERVERPROPERTY(''ProductVersion'') AS CHAR(2)) >= ''12''
 	BEGIN
 		IF CONTEXT_INFO() IS NULL
 			BEGIN
@@ -362,7 +365,8 @@ BEGIN
 		,@sysLogID int
 		,@newData xml
 	
-	IF SERVERPROPERTY(''edition'') <> ''SQL Azure''
+	-- Mod 2016-04-18 2dm change sql-azr detection to only apply exception on V12 as V14 supports the ContextInfo
+	IF SERVERPROPERTY(''edition'') <> ''SQL Azure'' OR CAST(SERVERPROPERTY(''ProductVersion'') AS CHAR(2)) >= ''12''
 	BEGIN
 		IF CONTEXT_INFO() IS NULL
 			BEGIN
@@ -437,7 +441,8 @@ BEGIN
 		,@sysLogID int
 		,@newData xml
 	
-	IF SERVERPROPERTY(''edition'') <> ''SQL Azure''
+	-- Mod 2016-04-18 2dm change sql-azr detection to only apply exception on V12 as V14 supports the ContextInfo
+	IF SERVERPROPERTY(''edition'') <> ''SQL Azure'' OR CAST(SERVERPROPERTY(''ProductVersion'') AS CHAR(2)) >= ''12''
 	BEGIN
 		IF CONTEXT_INFO() IS NULL
 			BEGIN
@@ -512,7 +517,8 @@ BEGIN
 		,@sysLogID int
 		,@newData xml
 	
-	IF SERVERPROPERTY(''edition'') <> ''SQL Azure''
+	-- Mod 2016-04-18 2dm change sql-azr detection to only apply exception on V12 as V14 supports the ContextInfo
+	IF SERVERPROPERTY(''edition'') <> ''SQL Azure'' OR CAST(SERVERPROPERTY(''ProductVersion'') AS CHAR(2)) >= ''12''
 	BEGIN
 		IF CONTEXT_INFO() IS NULL
 			BEGIN
@@ -587,7 +593,8 @@ BEGIN
 		,@sysLogID int
 		,@newData xml
 
-	IF SERVERPROPERTY(''edition'') <> ''SQL Azure''
+	-- Mod 2016-04-18 2dm change sql-azr detection to only apply exception on V12 as V14 supports the ContextInfo
+	IF SERVERPROPERTY(''edition'') <> ''SQL Azure'' OR CAST(SERVERPROPERTY(''ProductVersion'') AS CHAR(2)) >= ''12''
 	BEGIN
 		IF CONTEXT_INFO() IS NULL
 			BEGIN
@@ -662,7 +669,8 @@ BEGIN
 		,@sysLogID int
 		,@newData xml
 
-	IF SERVERPROPERTY(''edition'') <> ''SQL Azure''
+	-- Mod 2016-04-18 2dm change sql-azr detection to only apply exception on V12 as V14 supports the ContextInfo
+	IF SERVERPROPERTY(''edition'') <> ''SQL Azure'' OR CAST(SERVERPROPERTY(''ProductVersion'') AS CHAR(2)) >= ''12''
 	BEGIN
 		IF CONTEXT_INFO() IS NULL
 			BEGIN
@@ -737,7 +745,8 @@ BEGIN
 		,@sysLogID int
 		,@newData xml
 	
-	IF SERVERPROPERTY(''edition'') <> ''SQL Azure''
+	-- Mod 2016-04-18 2dm change sql-azr detection to only apply exception on V12 as V14 supports the ContextInfo
+	IF SERVERPROPERTY(''edition'') <> ''SQL Azure'' OR CAST(SERVERPROPERTY(''ProductVersion'') AS CHAR(2)) >= ''12''
 	BEGIN
 		IF CONTEXT_INFO() IS NULL
 			BEGIN
@@ -812,7 +821,8 @@ BEGIN
 		,@sysLogID int
 		,@newData xml
 
-	IF SERVERPROPERTY(''edition'') <> ''SQL Azure''
+	-- Mod 2016-04-18 2dm change sql-azr detection to only apply exception on V12 as V14 supports the ContextInfo
+	IF SERVERPROPERTY(''edition'') <> ''SQL Azure'' OR CAST(SERVERPROPERTY(''ProductVersion'') AS CHAR(2)) >= ''12''
 	BEGIN
 		IF CONTEXT_INFO() IS NULL
 			BEGIN
@@ -887,7 +897,8 @@ BEGIN
 		,@sysLogID int
 		,@newData xml
 	
-	IF SERVERPROPERTY(''edition'') <> ''SQL Azure''
+	-- Mod 2016-04-18 2dm change sql-azr detection to only apply exception on V12 as V14 supports the ContextInfo
+	IF SERVERPROPERTY(''edition'') <> ''SQL Azure'' OR CAST(SERVERPROPERTY(''ProductVersion'') AS CHAR(2)) >= ''12''
 	BEGIN
 		IF CONTEXT_INFO() IS NULL
 			BEGIN
@@ -976,13 +987,17 @@ EXEC('SET QUOTED_IDENTIFIER ON');
 -- Author:		Benjamin Gemperle
 -- Create date: 2013-06-14
 -- Description:	Set 
+-- 
+-- Special Note 2016-04-18 2dm
+-- changed the server-type detection from SQL-Azr to SQL-Azr-V12
+-- because only that old version needs this special code
 -- =============================================
 EXEC('CREATE PROCEDURE [dbo].[ToSIC_EAV_ChangeLogSet] 
 	-- Add the parameters for the stored procedure here
 	@ChangeID int
 AS
 BEGIN
-	IF SERVERPROPERTY(''edition'') <> ''SQL Azure''
+	IF SERVERPROPERTY(''edition'') <> ''SQL Azure'' OR CAST(SERVERPROPERTY(''ProductVersion'') AS CHAR(2)) >= ''12''
 	BEGIN
 		EXEC(''IF CONTEXT_INFO() IS NOT NULL
 		BEGIN

@@ -48,6 +48,8 @@ namespace ToSic.SexyContent.Installer
 
         internal StreamWriter OpenLogFiles()//bool returnDetailed = false)
         {
+            EnsureLogDirectoryExists();
+
             if (_fileStreamWriter == null)
             {
                 var fileHandle = new FileStream(GenerateNewLogFileName(), FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read);

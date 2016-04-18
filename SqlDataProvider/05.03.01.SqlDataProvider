@@ -32,7 +32,8 @@ BEGIN TRANSACTION SexyContentUpdate;
 -- Correct Attribute descriptions for FileFilter and Paths (@File AttributeSet)
 EXEC ToSIC_EAV_ChangeLogAdd 'System'
 DECLARE @ChangeLogID int
-IF SERVERPROPERTY('edition') <> 'SQL Azure'
+-- Mod 2016-04-18 2dm change sql-azr detection to only apply exception on V12 as V14 supports the ContextInfo
+IF SERVERPROPERTY('edition') <> 'SQL Azure' OR CAST(SERVERPROPERTY('ProductVersion') AS CHAR(2)) >= '12'
 	Set @ChangeLogID = CONVERT(int,CONVERT(varbinary(4),CONTEXT_INFO()))
 ELSE
 	Set @ChangeLogID = 1

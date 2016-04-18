@@ -12,7 +12,11 @@ EXEC('CREATE TABLE [dbo].[ToSIC_EAV_ContextInfo] (
 )')
 
 -- Update ToSIC_EAV_ChangeLogSet for SQL Azure Compatibility
-EXEC('ALTER PROCEDURE [dbo].ToSIC_EAV_ChangeLogSet
+-- 
+-- Special Note 2016-04-18 2dm
+-- changed the server-type detection from SQL-Azr to SQL-Azr-V12
+-- because only that old version needs this special code
+EXEC('ALTER PROCEDURE [dbo].[ToSIC_EAV_ChangeLogSet]
   @ChangeID int
 AS
 
@@ -21,7 +25,8 @@ SET NOCOUNT ON
 -- Remove all context items older than an 5 minutes ago
 DELETE FROM [dbo].[ToSIC_EAV_ContextInfo] WHERE [UpdatedAt] < DATEADD(mi, -5, GETUTCDATE())
 
-IF SERVERPROPERTY(''edition'') <> ''SQL Azure''
+-- Mod 2016-04-18 2dm change sql-azr detection to only apply exception on V12 as V14 supports the ContextInfo
+IF SERVERPROPERTY(''edition'') <> ''SQL Azure'' OR CAST(SERVERPROPERTY(''ProductVersion'') AS CHAR(2)) >= ''12''
 BEGIN
     DECLARE @b varbinary(128)
     SET @b = CONVERT(varbinary(128),newid())
