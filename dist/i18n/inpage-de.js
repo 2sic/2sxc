@@ -28,8 +28,8 @@
 	"QuickInsertMenu": {
 		"AddBlockContent": "neuer Inhaltsblock",
 		"AddBlockApp": "neuer App-Block",
-		"AddModuleContent": "neues Inhaltsmodul",
-		"AddModuleApp": "neues App-Modul",
+		"AddModuleContent": "Inhalt in {0} einfügen",
+		"AddModuleApp": "App in {0} einfügen",
 		"Select": "auswählen",
 		"Paste": "einfügen",
 		"Delete": "löschen",
