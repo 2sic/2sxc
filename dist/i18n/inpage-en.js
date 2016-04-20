@@ -29,8 +29,8 @@
 	"QuickInsertMenu": {
 		"AddBlockContent": "add content block",
 		"AddBlockApp": "add app block",
-		"AddModuleContent": "add content module",
-		"AddModuleApp": "add app module",
+		"AddModuleContent": "add content module to {0}",
+		"AddModuleApp": "add app module to {0}",
 		"Select": "select",
 		"Paste": "paste",
 		"Delete": "delete",

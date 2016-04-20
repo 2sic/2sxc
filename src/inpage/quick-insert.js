@@ -3,36 +3,31 @@
 
     //var enableModuleMove = false; // not implemented yet
     var selectors = {
-        // listContainerSelector: ".sc-content-block-list",
-        //contentBlockSelector: ".sc-content-block",
-        // moduleSelector: ".DnnModule",
-        // paneSelector: ".DNNEmptyPane, .dnnDropEmptyPanes, :has(>.DnnModule)", // Found no better way to get all panes - the hidden variable does not exist when not in edit page mode
         cb: {
             id: "cb",
             "class": "sc-content-block",
             selector: ".sc-content-block",
             listSelector: ".sc-content-block-list",
-            context: "data-list-context",
+            context: "data-list-context"
         },
         mod: {
             id: "mod",
             "class": "DnnModule",
             selector: ".DnnModule",
             listSelector: ".DNNEmptyPane, .dnnDropEmptyPanes, :has(>.DnnModule)", // Found no better way to get all panes - the hidden variable does not exist when not in edit page mode
-            context: null,
+            context: null
         },
         eitherCbOrMod: ".DnnModule, .sc-content-block",
-        // listDataAttr: "data-list-context",
         selected: "sc-cb-is-selected"
     };
 
     var hasContentBlocks = ($(selectors.cb.listSelector).length > 0);
 
-    function btn(action, icon, i18n, invisible, unavailable, classes) {
+    function btn(action, icon, i18N, invisible, unavailable, classes) {
         return "<a class='sc-content-block-menu-btn sc-cb-action icon-sxc-" + icon + " " 
             + (invisible ? " sc-invisible " : "") 
             + (unavailable ? " sc-unavailable " : "")
-            + classes + "' data-action='" + action + "' data-i18n='[title]QuickInsertMenu." + i18n + "'></a>";
+            + classes + "' data-action='" + action + "' data-i18n='[title]QuickInsertMenu." + i18N + "'></a>";
     }
 
     // the quick-insert object
@@ -42,8 +37,8 @@
         body: $("body"),
         win: $(window),
         main: $("<div class='sc-content-block-menu sc-content-block-quick-insert sc-i18n'></div>"),
-        template: "<a class='sc-content-block-menu-addcontent sc-invisible' data-type='Default' data-i18n='[title]QuickInsertMenu.AddBlockContent'>x</a>"
-            + "<a class='sc-content-block-menu-addapp sc-invisible' data-type='' data-i18n='[title]QuickInsertMenu.AddBlockApp'>x</a>"
+        template: "<a class='sc-content-block-menu-addcontent sc-invisible' data-type='Default' data-i18n='[titleTemplate]QuickInsertMenu.AddBlockContent'>x</a>"
+            + "<a class='sc-content-block-menu-addapp sc-invisible' data-type='' data-i18n='[titleTemplate]QuickInsertMenu.AddBlockApp'>x</a>"
             + btn("select", "ok", "Select", true)
             + btn("paste", "paste", "Paste", true, true),
         selected: $("<div class='sc-content-block-menu sc-content-block-selected-menu sc-i18n'></div>")
@@ -57,7 +52,7 @@
     // add stuff which must be added in a second run
     $2sxc._lib.extend(qi, {
         cbActions: $(qi.template),
-        modActions: $(qi.template.replace(/QuickInsertMenu.AddBlock/g, "QuickInsertMenu.AddModule")).attr("data-context", "module").addClass("sc-content-block-menu-module"),
+        modActions: $(qi.template.replace(/QuickInsertMenu.AddBlock/g, "QuickInsertMenu.AddModule")).attr("data-context", "module").addClass("sc-content-block-menu-module")
     });
 
     qi.init = function() {
@@ -333,6 +328,15 @@
             var parentPane = $(alignTo.element).closest(selectors.mod.listSelector);
             var parentCbList = $(alignTo.element).closest(selectors.cb.listSelector);
             var parentContainer = (parentCbList.length ? parentCbList : parentPane)[0];
+
+            if (parentPane.length > 0) {
+                var paneName = parentPane.attr("id") || "";
+                if (paneName.length > 4) paneName = paneName.substr(4);
+                qi.modActions.filter("[titleTemplate]").each(function() {
+                    var t = $(this);
+                    t.attr("title", t.attr("titleTemplate").replace("{0}", paneName));
+                });
+            }
 
             qi.positionAndAlign(qi.main, alignTo, true);
 
