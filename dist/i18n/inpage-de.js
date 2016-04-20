@@ -16,8 +16,8 @@
 		"Develop": "Vorlage bearbeiten",
 		"ContentType": "Felder des Inhaltstypen",
 		"Zone": "apps verwalten",
-		"MoreActions": "more actions",
-		"ConfirmRemove": "This will remove this content-item from this list, but not delete it (so you can add it again later). \nSee 2sxc.org/help for more. \n\nOk to remove?"
+		"MoreActions": "weitere Aktionen",
+		"ConfirmRemove": "Dieses Inhalts-Element von der Liste wird entfernt, aber nicht gelöscht. So kann man es später wieder hinzufügen. \nSiehe auch 2sxc.org/help. \n\nEntfernen ok?"
 	},
 	"EditFormTitle": {
 		"Content": "Inhalt",

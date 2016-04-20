@@ -500,7 +500,7 @@ $2sxc._contentManagementCommands = function (sxc, targetTag) {
             window.i18next
                 .use(window.i18nextXHRBackend)
                 .init({
-                    lng: "en", // todo: automate
+                    lng: manage.editContext.Language.Current.substr(0,2), // "en",
                     fallbackLng: "en",
                     whitelist: ["en", "de", "fr", "it", "uk"],
                     preload: ["en"],
