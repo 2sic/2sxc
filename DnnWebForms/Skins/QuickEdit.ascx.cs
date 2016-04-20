@@ -3,7 +3,7 @@ using ToSic.SexyContent.Environment.Dnn7;
 
 namespace ToSic.SexyContent.DnnWebForms.Skins
 {
-    public partial class QuickInsert : System.Web.UI.UserControl
+    public partial class QuickEdit : System.Web.UI.UserControl
     {
         protected void Page_Load(object sender, EventArgs e)
         {

@@ -795,7 +795,9 @@ angular.module("eavFieldTemplates")
         //#region load additional resources
         function loadAdditionalResources(files) {
             files = files || "";
-            var mapped = files.replace("[App:Path]/", appRoot).replace("//", "/");
+            var mapped = files.replace("[App:Path]", appRoot)
+                .replace(/([\w])\/\/([\w])/g,   // match any double // but not if part of https or just "//" at the beginning
+                "$1/$2");
             var fileList = mapped ? mapped.split("\n") : [];
             return $ocLazyLoad.load(fileList);
         }

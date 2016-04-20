@@ -10,6 +10,6 @@
 namespace ToSic.SexyContent.DnnWebForms.Skins {
     
     
-    public partial class QuickInsert {
+    public partial class QuickEdit {
     }
 }
