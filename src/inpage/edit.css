@@ -3,6 +3,13 @@
     They should all have the prefix sc (short for sxc) to ensure that they never conflict with other styles in the page
 */
 
+/* enable DNNEmptyPane for Quick-Edit */
+.DNNEmptyPane { 
+    width: auto; 
+    special-instructions: "read more on 2sxc.org/help?tag=quick-edit"
+}
+
+
 /****** the in-page toolbar and positioning / visibility thereof */
 .sc-element { position:relative; }
 .sc-element .sc-menu { position:absolute; right:5px; top:5px; display:none; }
