@@ -861,6 +861,7 @@ div.dropzone div.input-group div.tooltip-inner {
     border-radius: 4px;
     padding: 8px;
     font-size: larger;
+    overflow: auto;
 }
 
 
