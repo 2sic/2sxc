@@ -2,15 +2,16 @@
 	"General": {
 		"Buttons": {
 			"Add": "Hinzufügen",
-			"Refresh": "Aktualisieren",
-			"System": "Erweitere System-Funktionen",
-			"Save": "Speichern",
 			"Cancel": "Abbrechen",
-			"Permissions": "Berechtigungen",
-			"Edit": "Bearbeiten",
-			"Delete": "Löschen",
 			"Copy": "Kopieren",
-			"Rename": "Umbenennen"
+			"Delete": "Löschen",
+			"Edit": "Bearbeiten",
+			"NotSave": "Nicht speichern",
+			"Permissions": "Berechtigungen",
+			"Refresh": "Aktualisieren",
+			"Rename": "Umbenennen",
+			"Save": "Speichern",
+			"System": "Erweitere System-Funktionen"
 		},
 		"Messages": {
 			"Loading": "wird geladen...",

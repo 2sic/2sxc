@@ -542,8 +542,7 @@ angular.module("eavFieldTemplates")
 
                         // set slot value - must be inverte for boolean-switch
                         var grp = vm.items[i].Header.Group;
-                        vm.items[i].slotIsUsed = (grp === null
-                            || grp.SlotIsEmpty !== true);
+                        vm.items[i].slotIsUsed = (grp === null || grp === undefined || grp.SlotIsEmpty !== true);
                     });
                     vm.willPublish = vm.items[0].Entity.IsPublished;
                 });
@@ -586,9 +585,10 @@ angular.module("eavFieldTemplates")
                 if (close)
                     vm.afterSaveEvent(result);
                 vm.isWorking--;
-            }, function errorWhileSaving(response) {
+            }, function errorWhileSaving() {
                 vm.isWorking--;
             });
+            return null;
         };
 
         // things to do after saving
@@ -600,7 +600,7 @@ angular.module("eavFieldTemplates")
         // check if form is valid
         vm.isValid = function () {
             var valid = true;
-            angular.forEach(vm.registeredControls, function (e, i) {
+            angular.forEach(vm.registeredControls, function (e) {
                 if (!e.isValid())
                     valid = false;
             });
@@ -609,7 +609,7 @@ angular.module("eavFieldTemplates")
 
         vm.formErrors = function () {
             var list = [];
-            angular.forEach(vm.registeredControls, function (e, i) {
+            angular.forEach(vm.registeredControls, function (e) {
                 if (!e.isValid())
                     list.push(e.error());
             });
@@ -619,7 +619,7 @@ angular.module("eavFieldTemplates")
         // check if dirty
         $scope.state.isDirty = function() {
             var dirty = false;
-            angular.forEach(vm.registeredControls, function(e, i) {
+            angular.forEach(vm.registeredControls, function(e) {
                 if (e.isDirty())
                     dirty = true;
             });
@@ -628,18 +628,54 @@ angular.module("eavFieldTemplates")
 
         // set to not-dirty (pristine)
         $scope.state.setPristine = function() {
-            angular.forEach(vm.registeredControls, function(e, i) {
+            angular.forEach(vm.registeredControls, function(e) {
                 e.setPristine();
             });
         };
         //#endregion
 
         // monitor for changes in publish-state and set it for all items being edited
-        $scope.$watch('vm.willPublish', function (newValue, oldValue) {
+        $scope.$watch("vm.willPublish", function () {
             angular.forEach(vm.items, function (v, i) {
                 vm.items[i].Entity.IsPublished = vm.willPublish;
             });
         });
+
+        // handle maybe-leave
+        vm.maybeLeave = {
+            save: function() { vm.save(true); },
+            quit: $scope.close,
+            handleClick: function(event) {
+                var target = event.target || event.srcElement;
+                if (target.id === "save" || target.id === "quit") {
+                    vm.allowCloseWithoutAsking = true;
+                    vm.maybeLeave[target.id]();
+                }
+            },
+            ask: function(e) {
+                if (vm.allowCloseWithoutAsking)
+                    return;
+                var template = "<div>"  // note: this variable must be inside this method, to ensure that translate is pre-loaded before we call it
+                    + $translate.instant("Errors.UnsavedChanges") + "<br>"
+                    + "<button type='button' id='save' class='btn btn-primary' ><i class='icon-ok'></i>" +  $translate.instant("General.Buttons.Save") + "</button> &nbsp;"
+                    + "<button type='button' id='quit' class='btn btn-default' ><i class= 'icon-cancel'></i>" + $translate.instant("General.Buttons.NotSave") + "</button>"
+                    + "</div>";
+                if (vm.dialog && vm.dialog.isOpened)
+                    toastr.clear(vm.dialog);
+                vm.dialog = toastr.warning(template, {
+                    allowHtml: true,
+                    timeOut: 3000,
+                    onShown: function (toast) {
+                        toast.el[0].onclick = vm.maybeLeave.handleClick;
+                    }
+                });
+                e.preventDefault();
+            }
+        };
+        
+        $scope.$on("modal.closing", vm.maybeLeave.ask);
+
+
 
         /// toggle / change if a section (slot) is in use or not (like an unused presentation)
         vm.toggleSlotIsEmpty = function (item) {
@@ -669,7 +705,8 @@ angular.module("eavFieldTemplates")
             scope: {
                 itemList: "=",
                 afterSaveEvent: "=",
-                state: "="
+                state: "=",
+                close: "="
             },
             controller: "EditEntities",
             controllerAs: "vm"
@@ -886,7 +923,7 @@ angular.module("eavFieldTemplates")
 	var app = angular.module("eavEditEntity");
 
 	// The controller for the main form directive
-	app.controller("EditEntityWrapperCtrl", ["$q", "$http", "$scope", "items", "$modalInstance", "$window", "$translate", function editEntityCtrl($q, $http, $scope, items, $modalInstance, $window, $translate) {
+	app.controller("EditEntityWrapperCtrl", ["$q", "$http", "$scope", "items", "$modalInstance", "$window", "$translate", "toastr", function editEntityCtrl($q, $http, $scope, items, $modalInstance, $window, $translate, toastr) {
 
 	    var vm = this;
 	    vm.itemList = items;
@@ -911,13 +948,40 @@ angular.module("eavFieldTemplates")
 		};
 
 
-	    vm.maybeLeave = function maybeLeave(e) {
-	        var unsavedChangesText = $translate.instant("Errors.UnsavedChanges");
-	        if (vm.state.isDirty() && !confirm(unsavedChangesText + " " + $translate.instant("Message.ExitOk")))
-	            e.preventDefault();
-	    };
+	    //vm.maybeLeave = function maybeLeave(e) {
+	    //    if (vm.state.isDirty() && !confirm(unsavedChangesText + " " + $translate.instant("Message.ExitOk")))
+	    //        e.preventDefault();
+	    //};
 
-	    $scope.$on('modal.closing', vm.maybeLeave);
+	    //vm.showMaybeLeaveToaster = function(e) {
+	    //    var quickQuit = "<div>"
+        //        + $translate.instant("Errors.UnsavedChanges")
+	    //        + "<button type=\"button\" id=\"save\" class=\"btn btn-primary\" ><i class=\"icon-ok\"></i>save</button> &nbsp;"
+	    //        + "<button type=\"button\" id=\"quit\" class=\"btn btn-default\" ><i class= \"icon-cancel\"></i>don't save</button>"
+	    //        + "</div>";
+	    //    toastr.warning(quickQuit, "leaving i18n?", {
+	    //        allowHtml: true,
+	    //        closeButton: true,
+	    //        tapToDismiss: false,
+	    //        autoDismiss: false,
+	    //        progressBar: true,
+	    //        timeOut: 50000,
+	    //        extendedTimeOut: 50000,
+	    //        onTap: vm.handleLeaveToasterTap,
+	    //        onShown: function (toast) {
+	    //            var div = toast.el[0].children[1].children[1].children[0];
+	    //            var save = div.children[0];
+	    //            var quit = div.children[1];
+	    //            save.onclick = function () { alert("save!") };
+	    //            quit.onclick = function () { alert("quit!!!!!") };
+	    //        }
+	    //    });
+
+	    //};
+
+
+	    //$scope.$on('modal.closing', vm.maybeLeave);
+
 	    $window.addEventListener('beforeunload', function (e) {
 	        var unsavedChangesText = $translate.instant("Errors.UnsavedChanges");
 	        if (vm.state.isDirty()) {
@@ -1554,12 +1618,12 @@ angular.module("eavFieldTemplates")
 
         return createFieldMask;
     });
-angular.module("eavEditTemplates", []).run(["$templateCache", function($templateCache) {$templateCache.put("form/edit-many-entities.html","<div ng-if=\"vm.items != null\" ng-click=\"vm.debug.autoEnableAsNeeded($event)\">\r\n    <eav-language-switcher is-disabled=\"!vm.isValid()\"></eav-language-switcher>\r\n\r\n    <div ng-repeat=\"p in vm.items\" class=\"group-entity\">\r\n        <h3 class=\"clickable\" ng-click=\"p.collapse = !p.collapse\">\r\n            {{p.Header.Title ? p.Header.Title : \'EditEntity.DefaultTitle\' | translate }}&nbsp;\r\n            <span ng-if=\"p.Header.Group.SlotCanBeEmpty\" ng-click=\"vm.toggleSlotIsEmpty(p)\" stop-event=\"click\">\r\n                <switch ng-model=\"p.slotIsUsed\" class=\"tosic-blue\" style=\"top: 6px;\" tooltip=\"{{\'EditEntity.SlotUsed\' + p.slotIsUsed | translate}}\"></switch>\r\n            </span>\r\n            <span class=\"pull-right clickable\" style=\"font-size: smaller\">\r\n                <span class=\"low-priority collapse-entity-button\" ng-if=\"p.collapse\" icon=\"plus-sign\"></span>\r\n                <span class=\"collapse-entity-button\" ng-if=\"!p.collapse\" icon=\"minus-sign\"></span>\r\n            </span>\r\n        </h3>\r\n        <eav-edit-entity-form entity=\"p.Entity\" header=\"p.Header\" register-edit-control=\"vm.registerEditControl\" ng-hide=\"p.collapse\"></eav-edit-entity-form>\r\n    </div>\r\n\r\n\r\n    <div>\r\n        <!-- note: the buttons are not really disabled, because we want to be able to click them and see the error message -->\r\n        <button ng-class=\"{ \'disabled\': !vm.isValid() || vm.isWorking > 0}\" ng-click=\"vm.save(true)\" type=\"button\" class=\"btn btn-primary btn-lg submit-button\">\r\n            <span icon=\"ok\" tooltip=\"{{ \'Button.Save\' | translate }}\"></span> &nbsp;<span translate=\"Button.Save\"></span>\r\n        </button>\r\n        &nbsp;\r\n        <button ng-class=\"{ \'disabled\': !vm.isValid() || vm.isWorking > 0}\" class=\"btn btn-default btn-lg btn-square\" type=\"button\" ng-click=\"vm.save(false)\">\r\n            <span icon=\"check\" tooltip=\"{{ \'Button.SaveAndKeepOpen\' | translate }}\"></span>\r\n        </button>\r\n        &nbsp;\r\n        <!-- note: published status will apply to all - so the first is taken for identification if published -->\r\n        <switch ng-model=\"vm.willPublish\" class=\"tosic-blue\" style=\"top: 13px;\"></switch>\r\n        &nbsp;\r\n        <span ng-click=\"vm.willPublish = !vm.willPublish;\" class=\"save-published-icon\">\r\n            <i ng-if=\"vm.willPublish\" icon=\"eye-open\" tooltip=\"{{ \'Status.Published\' | translate }} - {{ \'Message.WillPublish\' | translate }}\"></i>\r\n            <i ng-if=\"!vm.willPublish\" icon=\"eye-close\" tooltip=\"{{ \'Status.Unpublished\' | translate }} - {{ \'Message.WontPublish\' | translate }}\"></i>\r\n        </span>\r\n\r\n\r\n        <span ng-if=\"vm.debug.on\">\r\n            <button tooltip=\"debug\" icon=\"zoom-in\" class=\"btn\" ng-click=\"vm.showDebugItems = !vm.showDebugItems\"></button>\r\n        </span>\r\n        <show-debug-availability class=\"pull-right\" style=\"margin-top: 20px;\"></show-debug-availability>\r\n    </div>\r\n    <div ng-if=\"vm.debug.on && vm.showDebugItems\">\r\n        <div>\r\n            isValid: {{vm.isValid()}}<br/>\r\n            isWorking: {{vm.isWorking}}\r\n        </div>\r\n        <pre>{{ vm.items | json }}</pre>\r\n    </div>\r\n</div>");
-$templateCache.put("form/edit-single-entity.html","<div ng-show=\"vm.editInDefaultLanguageFirst()\" translate=\"Message.PleaseCreateDefLang\">\r\n	\r\n</div>\r\n<div ng-show=\"!vm.editInDefaultLanguageFirst()\">\r\n    <formly-form ng-if=\"vm.formFields && vm.formFields.length\" ng-submit=\"vm.onSubmit()\" form=\"vm.form\" model=\"vm.entity.Attributes\" fields=\"vm.formFields\"></formly-form>\r\n</div>");
-$templateCache.put("form/main-form.html","<div class=\"modal-body\">\r\n    <span class=\"pull-right\">\r\n        <span style=\"display: inline-block; position: relative; left:15px\">\r\n            <button class=\"btn btn-default btn-square btn-subtle\" type=\"button\" ng-click=\"vm.close()\"><i icon=\"remove\"></i></button>\r\n        </span>\r\n    </span>\r\n    <eav-edit-entities item-list=\"vm.itemList\" after-save-event=\"vm.afterSave\" state=\"vm.state\"></eav-edit-entities>\r\n</div>");
-$templateCache.put("localization/formly-localization-wrapper.html","<eav-localization-scope-control></eav-localization-scope-control>\r\n<div ng-if=\"!!value\">\r\n    <formly-transclude></formly-transclude>\r\n    <eav-localization-menu form-model=\"model\" field-model=\"model[options.key]\" options=\"options\" value=\"value\" index=\"index\"></eav-localization-menu>\r\n</div>\r\n<p class=\"bg-info\" style=\"padding:12px;\" ng-if=\"!value\" translate=\"LangWrapper.CreateValueInDefFirst\" translate-values=\"{ fieldname: \'{{to.label}}\' }\">Please... <i>\'{{to.label}}\'</i> in the def...</p>");
+angular.module("eavEditTemplates", []).run(["$templateCache", function($templateCache) {$templateCache.put("localization/formly-localization-wrapper.html","<eav-localization-scope-control></eav-localization-scope-control>\r\n<div ng-if=\"!!value\">\r\n    <formly-transclude></formly-transclude>\r\n    <eav-localization-menu form-model=\"model\" field-model=\"model[options.key]\" options=\"options\" value=\"value\" index=\"index\"></eav-localization-menu>\r\n</div>\r\n<p class=\"bg-info\" style=\"padding:12px;\" ng-if=\"!value\" translate=\"LangWrapper.CreateValueInDefFirst\" translate-values=\"{ fieldname: \'{{to.label}}\' }\">Please... <i>\'{{to.label}}\'</i> in the def...</p>");
 $templateCache.put("localization/language-switcher.html","<tabset>\r\n    <tab ng-repeat=\"l in languages.languages\" heading=\"{{ l.name.substring(0, l.name.indexOf(\'(\') > 0 ? l.name.indexOf(\'(\') - 1 : 100 ) }}\" ng-click=\"!isDisabled ? languages.currentLanguage = l.key : false;\" disable=\"isDisabled\" active=\"languages.currentLanguage == l.key\" tooltip=\"{{l.name}}\"></tab>\r\n</tabset>");
 $templateCache.put("localization/localization-menu.html","<div dropdown is-open=\"status.isopen\" class=\"eav-localization\"> <!--style=\"z-index:{{1000 - index}};\"-->\r\n	<a class=\"eav-localization-lock\" ng-click=\"vm.actions.toggleTranslate();\" ng-if=\"vm.isDefaultLanguage()\" title=\"{{vm.tooltip()}}\" ng-class=\"{ \'eav-localization-lock-open\': !options.templateOptions.disabled }\" dropdown-toggle>\r\n        {{vm.infoMessage()}} <i class=\"glyphicon glyphicon-globe\"></i>\r\n	</a>\r\n    <ul class=\"dropdown-menu multi-level pull-right eav-localization-dropdown\" role=\"menu\" aria-labelledby=\"single-button\">\r\n        <li role=\"menuitem\"><a ng-click=\"vm.actions.translate()\" translate=\"LangMenu.Unlink\"></a></li>\r\n        <li role=\"menuitem\"><a ng-click=\"vm.actions.linkDefault()\" translate=\"LangMenu.LinkDefault\"></a></li>\r\n        <!-- Google translate is disabled because there is no longer a free version\r\n            <li role=\"menuitem\" class=\"dropdown-submenu\">\r\n            <a href=\"#\" translate=\"LangMenu.GoogleTranslate\"></a>\r\n            <ul class=\"dropdown-menu\">\r\n                <li ng-repeat=\"language in vm.languages.languages\" role=\"menuitem\">\r\n                    <a ng-click=\"vm.actions.autoTranslate(language.key)\" title=\"{{language.name}}\" href=\"#\">{{language.key}}</a>\r\n                </li>\r\n            </ul>\r\n        </li>-->\r\n        <li role=\"menuitem\" class=\"dropdown-submenu\">\r\n            <a href=\"#\" translate=\"LangMenu.Copy\"></a>\r\n            <ul class=\"dropdown-menu\">\r\n                <li ng-repeat=\"language in vm.languages.languages\" ng-class=\"{ disabled: options.templateOptions.disabled || !vm.hasLanguage(language.key) }\" role=\"menuitem\">\r\n                    <a ng-click=\"vm.actions.copyFrom(language.key)\" title=\"{{language.name}}\" href=\"#\">{{language.key}}</a>\r\n                </li>\r\n            </ul>\r\n        </li>\r\n        <li role=\"menuitem\" class=\"dropdown-submenu\">\r\n            <a href=\"#\" translate=\"LangMenu.Use\"></a>\r\n            <ul class=\"dropdown-menu\">\r\n                <li ng-repeat=\"language in vm.languages.languages\" ng-class=\"{ disabled: !vm.hasLanguage(language.key) }\" role=\"menuitem\">\r\n                    <a ng-click=\"vm.actions.useFrom(language.key)\" title=\"{{language.name}}\" href=\"#\">{{language.key}}</a>\r\n                </li>\r\n            </ul>\r\n        </li>\r\n        <li role=\"menuitem\" class=\"dropdown-submenu\">\r\n            <a href=\"#\" translate=\"LangMenu.Share\"></a>\r\n            <ul class=\"dropdown-menu\">\r\n                <li ng-repeat=\"language in vm.languages.languages\" ng-class=\"{ disabled: !vm.hasLanguage(language.key) }\" role=\"menuitem\">\r\n                    <a ng-click=\"vm.actions.shareFrom(language.key)\" title=\"{{language.name}}\" href=\"#\">{{language.key}}</a>\r\n                </li>\r\n            </ul>\r\n        </li>\r\n        <!-- All fields -->\r\n        <li class=\"divider\"></li>\r\n        <li role=\"menuitem\" class=\"dropdown-submenu\">\r\n            <a href=\"#\" translate=\"LangMenu.AllFields\"></a>\r\n            <ul class=\"dropdown-menu\">\r\n                <li role=\"menuitem\"><a ng-click=\"vm.actions.all.translate()\" translate=\"LangMenu.Unlink\"></a></li>\r\n                <li role=\"menuitem\"><a ng-click=\"vm.actions.all.linkDefault()\" translate=\"LangMenu.LinkDefault\"></a></li>\r\n                <li role=\"menuitem\" class=\"dropdown-submenu\">\r\n                    <a href=\"#\" translate=\"LangMenu.Copy\"></a>\r\n                    <ul class=\"dropdown-menu\">\r\n                        <li ng-repeat=\"language in vm.languages.languages\" role=\"menuitem\">\r\n                            <a ng-click=\"vm.actions.all.copyFrom(language.key)\" title=\"{{language.name}}\" href=\"#\">{{language.key}}</a>\r\n                        </li>\r\n                    </ul>\r\n                </li>\r\n                <li role=\"menuitem\" class=\"dropdown-submenu\">\r\n                    <a href=\"#\" translate=\"LangMenu.Use\"></a>\r\n                    <ul class=\"dropdown-menu\">\r\n                        <li ng-repeat=\"language in vm.languages.languages\" role=\"menuitem\">\r\n                            <a ng-click=\"vm.actions.all.useFrom(language.key)\" title=\"{{language.name}}\" href=\"#\">{{language.key}}</a>\r\n                        </li>\r\n                    </ul>\r\n                </li>\r\n                <li role=\"menuitem\" class=\"dropdown-submenu\">\r\n                    <a href=\"#\" translate=\"LangMenu.Share\"></a>\r\n                    <ul class=\"dropdown-menu\">\r\n                        <li ng-repeat=\"language in vm.languages.languages\" role=\"menuitem\">\r\n                            <a ng-click=\"vm.actions.all.shareFrom(language.key)\" title=\"{{language.name}}\" href=\"#\">{{language.key}}</a>\r\n                        </li>\r\n                    </ul>\r\n                </li>\r\n            </ul>\r\n        </li>\r\n    </ul>\r\n</div>");
+$templateCache.put("form/edit-many-entities.html","<div ng-if=\"vm.items != null\" ng-click=\"vm.debug.autoEnableAsNeeded($event)\">\r\n    <eav-language-switcher is-disabled=\"!vm.isValid()\"></eav-language-switcher>\r\n\r\n    <div ng-repeat=\"p in vm.items\" class=\"group-entity\">\r\n        <h3 class=\"clickable\" ng-click=\"p.collapse = !p.collapse\">\r\n            {{p.Header.Title ? p.Header.Title : \'EditEntity.DefaultTitle\' | translate }}&nbsp;\r\n            <span ng-if=\"p.Header.Group.SlotCanBeEmpty\" ng-click=\"vm.toggleSlotIsEmpty(p)\" stop-event=\"click\">\r\n                <switch ng-model=\"p.slotIsUsed\" class=\"tosic-blue\" style=\"top: 6px;\" tooltip=\"{{\'EditEntity.SlotUsed\' + p.slotIsUsed | translate}}\"></switch>\r\n            </span>\r\n            <span class=\"pull-right clickable\" style=\"font-size: smaller\">\r\n                <span class=\"low-priority collapse-entity-button\" ng-if=\"p.collapse\" icon=\"plus-sign\"></span>\r\n                <span class=\"collapse-entity-button\" ng-if=\"!p.collapse\" icon=\"minus-sign\"></span>\r\n            </span>\r\n        </h3>\r\n        <eav-edit-entity-form entity=\"p.Entity\" header=\"p.Header\" register-edit-control=\"vm.registerEditControl\" ng-hide=\"p.collapse\"></eav-edit-entity-form>\r\n    </div>\r\n\r\n\r\n    <div>\r\n        <!-- note: the buttons are not really disabled, because we want to be able to click them and see the error message -->\r\n        <button ng-class=\"{ \'disabled\': !vm.isValid() || vm.isWorking > 0}\" ng-click=\"vm.save(true)\" type=\"button\" class=\"btn btn-primary btn-lg submit-button\">\r\n            <span icon=\"ok\" tooltip=\"{{ \'Button.Save\' | translate }}\"></span> &nbsp;<span translate=\"Button.Save\"></span>\r\n        </button>\r\n        &nbsp;\r\n        <button ng-class=\"{ \'disabled\': !vm.isValid() || vm.isWorking > 0}\" class=\"btn btn-default btn-lg btn-square\" type=\"button\" ng-click=\"vm.save(false)\">\r\n            <span icon=\"check\" tooltip=\"{{ \'Button.SaveAndKeepOpen\' | translate }}\"></span>\r\n        </button>\r\n        &nbsp;\r\n        <!-- note: published status will apply to all - so the first is taken for identification if published -->\r\n        <switch ng-model=\"vm.willPublish\" class=\"tosic-blue\" style=\"top: 13px;\"></switch>\r\n        &nbsp;\r\n        <span ng-click=\"vm.willPublish = !vm.willPublish;\" class=\"save-published-icon\">\r\n            <i ng-if=\"vm.willPublish\" icon=\"eye-open\" tooltip=\"{{ \'Status.Published\' | translate }} - {{ \'Message.WillPublish\' | translate }}\"></i>\r\n            <i ng-if=\"!vm.willPublish\" icon=\"eye-close\" tooltip=\"{{ \'Status.Unpublished\' | translate }} - {{ \'Message.WontPublish\' | translate }}\"></i>\r\n        </span>\r\n\r\n\r\n        <span ng-if=\"vm.debug.on\">\r\n            <button tooltip=\"debug\" icon=\"zoom-in\" class=\"btn\" ng-click=\"vm.showDebugItems = !vm.showDebugItems\"></button>\r\n        </span>\r\n        <show-debug-availability class=\"pull-right\" style=\"margin-top: 20px;\"></show-debug-availability>\r\n    </div>\r\n    <div ng-if=\"vm.debug.on && vm.showDebugItems\">\r\n        <div>\r\n            isValid: {{vm.isValid()}}<br/>\r\n            isWorking: {{vm.isWorking}}\r\n        </div>\r\n        <pre>{{ vm.items | json }}</pre>\r\n    </div>\r\n</div>");
+$templateCache.put("form/edit-single-entity.html","<div ng-show=\"vm.editInDefaultLanguageFirst()\" translate=\"Message.PleaseCreateDefLang\">\r\n	\r\n</div>\r\n<div ng-show=\"!vm.editInDefaultLanguageFirst()\">\r\n    <formly-form ng-if=\"vm.formFields && vm.formFields.length\" ng-submit=\"vm.onSubmit()\" form=\"vm.form\" model=\"vm.entity.Attributes\" fields=\"vm.formFields\"></formly-form>\r\n</div>");
+$templateCache.put("form/main-form.html","<div class=\"modal-body\">\r\n    <span class=\"pull-right\">\r\n        <span style=\"display: inline-block; position: relative; left:15px\">\r\n            <button class=\"btn btn-default btn-square btn-subtle\" type=\"button\" ng-click=\"vm.close()\"><i icon=\"remove\"></i></button>\r\n        </span>\r\n    </span>\r\n    <eav-edit-entities item-list=\"vm.itemList\" after-save-event=\"vm.afterSave\" state=\"vm.state\" close=\"vm.close\"></eav-edit-entities>\r\n</div>");
 $templateCache.put("wrappers/collapsible.html","<div ng-show=\"!to.collapse\" class=\"group-field-set\">\r\n    <formly-transclude></formly-transclude>\r\n</div>");
 $templateCache.put("wrappers/disablevisually.html","<div visually-disabled=\"{{to.disabled}}\">\r\n    <formly-transclude></formly-transclude>\r\n</div>");
 $templateCache.put("wrappers/eav-label.html","<div>\r\n    <label for=\"{{id}}\" class=\"control-label eav-label {{to.labelSrOnly ? \'sr-only\' : \'\'}} {{to.type}}\"\r\n           ng-if=\"to.label\"\r\n            ng-click=\"to.collapseField = !to.collapseField\">\r\n        {{to.label}}\r\n        {{to.required ? \'*\' : \'\'}}\r\n        <a tabindex=\"-1\" ng-click=\"to.showDescription = !to.showDescription\" href=\"javascript:void(0);\" ng-if=\"to.description && to.description != \'\'\">\r\n            <i icon=\"info-sign\" class=\"low-priority\"></i>\r\n        </a>\r\n        <span class=\"btn-sm\" ng-if=\"to.enableCollapseField\">\r\n            <span ng-if=\"to.collapseField\" class=\"low-priority collapse-fieldgroup-button\" icon=\"plus-sign\"></span>\r\n            <span ng-if=\"!to.collapseField\" class=\"low-priority collapse-fieldgroup-button\" icon=\"minus-sign\"></span>\r\n        </span>\r\n    </label>\r\n    <p ng-if=\"to.showDescription\" class=\"bg-info\" style=\"padding: 5px;\" ng-bind-html=\"to.description\">\r\n    </p>\r\n    <div ng-show=\"!(to.collapseField && to.enableCollapseField)\">\r\n        <formly-transclude></formly-transclude>\r\n    </div>\r\n</div>");

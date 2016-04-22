@@ -2,15 +2,16 @@
 	"General": {
 		"Buttons": {
 			"Add": "add",
-			"Refresh": "refresh",
-			"System": "advanced system functions",
-			"Save": "save",
 			"Cancel": "cancel",
-			"Permissions": "permissions",
-			"Edit": "edit",
-			"Delete": "delete",
 			"Copy": "copy",
-			"Rename": "rename"
+			"Delete": "delete",
+			"Edit": "edit",
+			"NotSave": "not save",
+			"Permissions": "permissions",
+			"Refresh": "refresh",
+			"Rename": "rename",
+			"Save": "save",
+			"System": "advanced system functions"
 		},
 		"Messages": {
 			"Loading": "loading...",
