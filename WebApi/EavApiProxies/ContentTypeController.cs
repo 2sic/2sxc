@@ -132,6 +132,12 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
         }
         #endregion
 
+        [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        public void Rename(int appId, int contentTypeId, int attributeId, string newName)
+        {
+            eavCtc.Rename(appId, contentTypeId, attributeId, newName);
+        }
 
     }
 }

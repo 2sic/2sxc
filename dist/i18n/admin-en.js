@@ -21,6 +21,7 @@
 		"Questions": {
 			"Delete": "are you sure you want to delete {{target}}?",
 			"DeleteEntity": "delete '{{title}}' ({{id}}?",
+			"Rename": "what new name would you like for {{target}}?",
 			"SystemInput": "This is for very advanced operations. Only use this if you know what you're doing. \n\n Enter admin commands:"
 		},
 		"Terms": {
@@ -86,7 +87,8 @@
 			"Name": "Name",
 			"Description": "Description",
 			"Fields": "Fields",
-			"Items": "Items"
+			"Items": "Items",
+			"Actions": "Actions"
 		},
 		"TitleExportImport": "Export / Import",
 		"Buttons": {
