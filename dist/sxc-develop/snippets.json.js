@@ -1309,7 +1309,7 @@
             "subset": "General",
             "name": "ToolbarFloat",
             "title": "",
-            "content": "<div class=\\sc-element\\>[${1:Content}:Toolbar]</div>",
+            "content": "<div class=\"sc-element\">[${1:Content}:Toolbar]</div>",
             "help": ""
         },
         {
@@ -1325,7 +1325,7 @@
             "subset": "Header",
             "name": "List-ToolbarFloat",
             "title": "",
-            "content": "<div class=\\sc-element\\>[List:Toolbar]</div>",
+            "content": "<div class=\"sc-element\">[List:Toolbar]</div>",
             "help": ""
         },
         {
@@ -1333,7 +1333,7 @@
             "subset": "Repeater",
             "name": "Repeater",
             "title": "",
-            "content": "<repeat repeat=\\${1:Employee} in Data:${2:Default}\\>...[${1}:Title]...</repeat>",
+            "content": "<repeat repeat=\"${1:Employee} in Data:${2:Default}\">...[${1}:Title]...</repeat>",
             "help": ""
         },
         {
