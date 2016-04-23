@@ -54,7 +54,7 @@
             "name": "Toolbar",
             "title": "",
             "content": "@${1:Content}.Toolbar",
-            "help": ""
+            "help": "Show an inline-toolbar. If you wat it hovering, make sure you have an HTML-element around it with the class sc-element"
         },
         {
             "set": "@Content",
@@ -62,7 +62,7 @@
             "name": "ToolbarFloat",
             "title": "",
             "content": "<div class=\"sc-element\">\r\n    @${1:Content}.Toolbar\r\n</div>",
-            "help": ""
+            "help": "Show an inline toolbar, floating. Note that this is just an example, the div with the class sc-element can be further away, it doesn't have to be the direct container. "
         },
         {
             "set": "@List",
@@ -1302,7 +1302,7 @@
             "name": "Toolbar",
             "title": "",
             "content": "[${1:Content}:Toolbar]",
-            "help": ""
+            "help": "Show an inline-toolbar. If you wat it hovering, make sure you have an HTML-element around it with the class sc-element"
         },
         {
             "set": "[Content",
@@ -1310,7 +1310,7 @@
             "name": "ToolbarFloat",
             "title": "",
             "content": "<div class=\"sc-element\">[${1:Content}:Toolbar]</div>",
-            "help": ""
+            "help": "Show an inline toolbar, floating. Note that this is just an example, the div with the class sc-element can be further away, it doesn't have to be the direct container. "
         },
         {
             "set": "[List",
@@ -1334,7 +1334,7 @@
             "name": "Repeater",
             "title": "",
             "content": "<repeat repeat=\"${1:Employee} in Data:${2:Default}\">...[${1}:Title]...</repeat>",
-            "help": ""
+            "help": "Loop over a list of items in one of the input streams. The first value is the token-name inside the loop, the value after Data: is the stream name. Common use is Repeat=\"Item in Data:Default\""
         },
         {
             "set": "[List",
@@ -1342,7 +1342,7 @@
             "name": "Count",
             "title": "",
             "content": "[${1:Employee}:Repeater:Count]",
-            "help": ""
+            "help": "Get the count"
         },
         {
             "set": "[List",
@@ -1350,7 +1350,7 @@
             "name": "Index",
             "title": "",
             "content": "[${1:Employee}:Repeater:Index]",
-            "help": ""
+            "help": "Get the index of the current item, zero based. So the number start with 0, 1, 2, …"
         },
         {
             "set": "[List",
@@ -1358,7 +1358,7 @@
             "name": "Index1",
             "title": "",
             "content": "[${1:Employee}:Repeater:Index1]",
-            "help": ""
+            "help": "Get the index of the current item, one based. So the number start with 1, 2, 3, …"
         },
         {
             "set": "[List",
@@ -1366,7 +1366,7 @@
             "name": "IsFirst",
             "title": "",
             "content": "[${1:Employee}:Repeater:IsFirst]",
-            "help": ""
+            "help": "Find out if this is the first item"
         },
         {
             "set": "[List",
@@ -1374,7 +1374,7 @@
             "name": "IsLast",
             "title": "",
             "content": "[${1:Employee}:Repeater:IsLast]",
-            "help": ""
+            "help": "Find out if this is the last item"
         },
         {
             "set": "[List",
@@ -1382,7 +1382,7 @@
             "name": "Alternator2",
             "title": "",
             "content": "[${1:Employee}:Repeater:Alternator2]",
-            "help": ""
+            "help": "Use this to alternate between 0, 1 - often used to color table rows"
         },
         {
             "set": "[List",
@@ -1390,7 +1390,7 @@
             "name": "Alternator3",
             "title": "",
             "content": "[${1:Employee}:Repeater:Alternator3]",
-            "help": ""
+            "help": "Use this to alternate between 0, 1 and 2 - often used to have 3 items side-by side, followed by a new line"
         },
         {
             "set": "[List",
