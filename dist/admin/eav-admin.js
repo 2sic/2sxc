@@ -362,7 +362,7 @@
 (function () {
 	'use strict';
 
-	contentItemsListController.$inject = ["contentItemsSvc", "eavConfig", "appId", "contentType", "eavAdminDialogs", "debugState", "$modalInstance", "$q", "$modalStack"];
+	contentItemsListController.$inject = ["contentItemsSvc", "eavConfig", "appId", "contentType", "eavAdminDialogs", "toastr", "debugState", "$modalInstance", "$q", "$modalStack", "$translate"];
 	angular.module("ContentItemsAppAgnostic", [
         "EavConfiguration",
         "EavAdminUi",
@@ -372,7 +372,7 @@
         .controller("ContentItemsList", contentItemsListController)
 	;
 
-	function contentItemsListController(contentItemsSvc, eavConfig, appId, contentType, eavAdminDialogs, debugState, $modalInstance, $q, $modalStack) {
+	function contentItemsListController(contentItemsSvc, eavConfig, appId, contentType, eavAdminDialogs, toastr, debugState, $modalInstance, $q, $modalStack, $translate) {
 		/* jshint validthis:true */
 		var vm = angular.extend(this, {
 			debug: debugState,
@@ -424,7 +424,12 @@
 				width: 70,
 				suppressSorting: true,
 				suppressMenu: true,
-				template: '<button type="button" class="btn btn-xs btn-square" ng-click="vm.openDuplicate(data)" tooltip-append-to-body="true" tooltip="{{ \'General.Buttons.Copy\' | translate }}"><i icon="duplicate"></i></button> <button type="button" class="btn btn-xs btn-square" ng-click="vm.tryToDelete(data)" tooltip-append-to-body="true" tooltip="{{ \'General.Buttons.Delete\' | translate }}"><i icon="remove"></i> </button>'
+				template: '<button type="button" class="btn btn-xs btn-square" ng-click="vm.openDuplicate(data)" tooltip-append-to-body="true" tooltip="{{ \'General.Buttons.Copy\' | translate }}">'
+                    + '<i icon="duplicate"></i>'
+                    + '</button> '
+                    + '<button type="button" class="btn btn-xs btn-square" ng-click="vm.tryToDelete(data, false)" tooltip-append-to-body="true" tooltip="{{ \'General.Buttons.Delete\' | translate }}">'
+                    + '<i icon="remove"></i> '
+                    + '</button>'
 			}
 		];
 
@@ -599,8 +604,37 @@
 		// #endregion
 
 		function tryToDelete(item) {
-			if (confirm("Delete '" + item.Title + "' (" + item.RepositoryId + ") ?"))
-				svc.delete(item.RepositoryId).then(setRowData);
+            // todo: i18n
+		    var msg = $translate.instant("General.Questions.DeleteEntity", { title: item.Title, id: item.RepositoryId });
+			if (confirm(msg))
+			    svc.delete(item.RepositoryId, false)
+                    .then(function (result) {
+			            if (result.status === 200) {
+			                setRowData();
+			                return;
+			            }
+
+                        // if delete failed, ask to force-delete in a toaster
+			            var msg = "<div>" + $translate.instant("General.Questions.ForceDelete", { title: item.Title, id: item.RepositoryId}) + "<br/>"
+			                + "<button type='button' id='del' class='btn btn-default' ><i class= 'icon-ok'></i>" + $translate.instant("General.Buttons.ForceDelete") + "</button>"
+			                + "</div>";
+
+			            toastr.warning(msg, {
+			                    allowHtml: true,
+			                    timeOut: 5000,
+			                    onShown: function (toast) {
+                                    // this checks for the click on the button in the toaster
+			                        toast.el[0].onclick = function(event) {
+			                            var target = event.target || event.srcElement;
+			                            if (target.id === "del")
+			                                svc.delete(item.RepositoryId, true)
+			                                    .then(setRowData);
+			                        }
+			                    }
+
+
+			                });
+			        });
 		}
 
 		function openDuplicate(item) {
@@ -1864,9 +1898,10 @@ angular.module("EavServices")
                 }));
                 
                 // delete, then reload
-                svc.delete = function del(id) {
-                    return entitiesSvc.delete(svc.contentType, id) // for now must work with get :( - delete doesn't work well in dnn
-                        .then(svc.liveListReload);
+                svc.delete = function del(id, tryForce) {
+                    return entitiesSvc.delete(svc.contentType, id, tryForce); // for now must work with get :( - delete doesn't work well in dnn
+                        //.then(svc.liveListReload, null);
+                //});
                 };
 
                 // todo: should use the ContentTypeService instead

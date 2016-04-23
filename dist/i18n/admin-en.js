@@ -6,6 +6,7 @@
 			"Copy": "copy",
 			"Delete": "delete",
 			"Edit": "edit",
+			"ForceDelete": "force delete",
 			"NotSave": "not save",
 			"Permissions": "permissions",
 			"Refresh": "refresh",
@@ -20,9 +21,10 @@
 		},
 		"Questions": {
 			"Delete": "are you sure you want to delete {{target}}?",
-			"DeleteEntity": "delete '{{title}}' ({{id}}?",
+			"DeleteEntity": "delete '{{title}}' ({{id}})?",
 			"Rename": "what new name would you like for {{target}}?",
-			"SystemInput": "This is for very advanced operations. Only use this if you know what you're doing. \n\n Enter admin commands:"
+			"SystemInput": "This is for very advanced operations. Only use this if you know what you're doing. \n\n Enter admin commands:",
+			"ForceDelete": "do you want to force delete '{{title}}' ({{id}})?"
 		},
 		"Terms": {
 			"Title": "title"

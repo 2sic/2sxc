@@ -6,6 +6,7 @@
 			"Copy": "Kopieren",
 			"Delete": "Löschen",
 			"Edit": "Bearbeiten",
+			"ForceDelete": "zwangs-löschen",
 			"NotSave": "Nicht speichern",
 			"Permissions": "Berechtigungen",
 			"Refresh": "Aktualisieren",
@@ -20,8 +21,9 @@
 		},
 		"Questions": {
 			"Delete": "Wirklich löschen? {{target}}",
-			"DeleteEntity": "Löschen '{{title}}' ({{id}}?",
-			"SystemInput": "Das ist für fortgeschrittene Benutzer. Benutze es nur, wenn du weisst, was du machst. \n\n Befehl eingeben:"
+			"DeleteEntity": "'{{title}}' ({{id}}) löschen?",
+			"SystemInput": "Das ist für fortgeschrittene Benutzer. Benutze es nur, wenn du weisst, was du machst. \n\n Befehl eingeben:",
+			"ForceDelete": "möchtest du '{{title}}' ({{id}}) zwangs-löschen?"
 		},
 		"Terms": {
 			"Title": "Titel"

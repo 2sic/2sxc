@@ -207,18 +207,18 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
         [HttpDelete]
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public void Delete(string contentType, int id, int appId)
+        public void Delete(string contentType, int id, int appId, bool force = false)
         {
             EnsureSerializerHasSxc();
-            _entitiesController.Delete(contentType, id, appId);
+            _entitiesController.Delete(contentType, id, appId, force);
         }
         [HttpDelete]
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public void Delete(string contentType, Guid guid, int appId)
+        public void Delete(string contentType, Guid guid, int appId, bool force = false)
         {
             EnsureSerializerHasSxc();
-            _entitiesController.Delete(contentType, guid, appId);
+            _entitiesController.Delete(contentType, guid, appId, force);
         }
 
 
