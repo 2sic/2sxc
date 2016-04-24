@@ -24,10 +24,10 @@
         </ul>
 
         <div>
-            <input ng-model="vm.IncludeContentGroups" type="checkbox" /> {{"ImportExport.ExportApp.Options.IncludeContentGroups" | translate}}
+            <input ng-model="vm.IncludeContentGroups" type="checkbox" ng-disabled="vm.ResetAppGuid" /> {{"ImportExport.ExportApp.Options.IncludeContentGroups" | translate}}
         </div>
         <div>
-            <input ng-model="vm.ResetAppGuid" type="checkbox" /> {{"ImportExport.ExportApp.Options.ResetAppGuid" | translate}}
+            <input ng-model="vm.ResetAppGuid" type="checkbox" ng-disabled="vm.IncludeContentGroups"/> {{"ImportExport.ExportApp.Options.ResetAppGuid" | translate}}
         </div>
     </div>
 
