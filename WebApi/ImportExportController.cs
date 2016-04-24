@@ -1,23 +1,15 @@
-﻿using DotNetNuke.Security;
+﻿using System;
+using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Security.Authentication;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Xml.Linq;
-using ToSic.Eav;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.ImportExport;
-using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -33,14 +25,14 @@ namespace ToSic.SexyContent.WebApi
 
             return new
             {
-                Name = appWrapper.App.Name,
+                appWrapper.App.Name,
                 Guid = appWrapper.App.AppGuid,
                 Version = appWrapper.GetVersion(),
-                EntitiesCount = appWrapper.GetEntities().Count(),
+                EntitiesCount = appWrapper.GetEntities().Count,
                 LanguagesCount = appWrapper.GetActiveLanguages().Count(),
                 TemplatesCount = appWrapper.GetTemplates().Count(),
-                HasRazorTemplates = appWrapper.GetRazorTemplates().Count() > 0,
-                HasTokenTemplates = appWrapper.GetTokenTemplates().Count() > 0,
+                HasRazorTemplates = appWrapper.GetRazorTemplates().Any(),
+                HasTokenTemplates = appWrapper.GetTokenTemplates().Any(),
                 FilesCount = zipExport.FileManager.AllFiles.Count(),
                 TransferableFilesCount = zipExport.FileManager.AllTransferableFiles.Count()
             };
@@ -55,26 +47,26 @@ namespace ToSic.SexyContent.WebApi
             var contentTypes = appWrapper.GetContentTypes(scope);
             var entities = appWrapper.GetEntities();
             var templates = appWrapper.GetTemplates();
-            var dimensions = new string[] { appWrapper.GetCultureCode() };
+            var dimensions = new[] { appWrapper.GetCultureCode() };
 
             return new
             {
                 ContentTypes = contentTypes.Select(c => new
                 {
                     Id = c.AttributeSetId,
-                    Name = c.Name,
-                    StaticName = c.StaticName,
+                    c.Name,
+                    c.StaticName,
                     Templates = templates.Where(t => t.ContentTypeStaticName == c.StaticName).Select(t => new
                     {
                         Id = t.TemplateId,
-                        Name = t.Name
+                        t.Name
                     }),
                     Entities = entities.Where(e => e.Value.Type.AttributeSetId == c.AttributeSetId).Select(e => new DynamicEntity(e.Value, dimensions, null).ToDictionary())
                 }),
                 TemplatesWithoutContentTypes = templates.Where(t => !string.IsNullOrEmpty(t.ContentTypeStaticName)).Select(t => new
                 {
                     Id = t.TemplateId,
-                    Name = t.Name
+                    t.Name
                 })
             };
         }
@@ -87,8 +79,10 @@ namespace ToSic.SexyContent.WebApi
 
             var appWrapper = new SxcAppWrapper(appId);
             var zipExport = new ZipExport(zoneId, appId);
+            var addOnWhenContainingContent = includeContentGroups ? "_withPageContent_" + DateTime.Now.ToString("yyyy-MM-ddTHHmm") : "";
 
-            var fileName = string.Format("2sxcApp_{0}_{1}.zip", appWrapper.GetNameWithoutSpecialChars(), appWrapper.GetVersion());
+            var fileName =
+                $"2sxcApp_{appWrapper.GetNameWithoutSpecialChars()}_{appWrapper.GetVersion()}{addOnWhenContainingContent}.zip";
             using (var fileStream = zipExport.ExportApp(includeContentGroups, resetAppGuid))
             {
                 var fileBytes = fileStream.ToArray();
@@ -103,14 +97,14 @@ namespace ToSic.SexyContent.WebApi
 
             var appWrapper = new SxcAppWrapper(appId);
 
-            var fileName = string.Format("2sxcContentExport_{0}_{1}.xml", appWrapper.GetNameWithoutSpecialChars(), appWrapper.GetVersion());
+            var fileName = $"2sxcContentExport_{appWrapper.GetNameWithoutSpecialChars()}_{appWrapper.GetVersion()}.xml";
             var fileXml = new XmlExporter
             (
                 zoneId,
                 appId,
                 false,
-                contentTypeIdsString == null ? new string[0] : contentTypeIdsString.Split(';'),
-                entityIdsString == null ? new string[0] : entityIdsString.Split(';')
+                contentTypeIdsString?.Split(';') ?? new string[0],
+                entityIdsString?.Split(';') ?? new string[0]
             ).GenerateNiceXml();
 
             return HttpResponseMessageHelper.GetAttachmentHttpResponseMessage(fileName, "text/xml", fileXml);
@@ -125,7 +119,7 @@ namespace ToSic.SexyContent.WebApi
 
             var request = HttpContext.Current.Request;
 
-            var appId   = int.Parse(request["AppId"]);
+            //var appId   = int.Parse(request["AppId"]);
             var zoneId  = int.Parse(request["ZoneId"]);
             if (request.Files.Count > 0)
             {
