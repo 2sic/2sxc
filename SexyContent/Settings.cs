@@ -41,6 +41,8 @@ namespace ToSic.SexyContent
         public static readonly string ToSexyDirectory = "~/DesktopModules/ToSIC_SexyContent";
         public static readonly string TemporaryDirectory = "~/DesktopModules/ToSIC_SexyContent/_";
 
+        internal static readonly int DataIsMissingInDb = -100;
+
         /// <summary>
         /// Collection of Template Locations
         /// </summary>

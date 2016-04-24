@@ -16,10 +16,13 @@ namespace ToSic.SexyContent.ContentBlock
         public bool ContentGroupExists => ContentGroup?.Exists ?? false;
         public virtual ContentGroupReferenceManagerBase Manager => null;
 
-
         public bool ShowTemplateChooser { get; protected set; } = true;
         public virtual bool ParentIsEntity => false;
         public int ParentId { get; protected set; }
+
+        protected bool _dataIsMissing = false;
+        public bool DataIsMissing => _dataIsMissing;
+
         public int ContentBlockId { get; protected set; }
         public string ParentFieldName => null;
         public int ParentFieldSortOrder => 0;

@@ -67,11 +67,25 @@ namespace ToSic.SexyContent.ContentBlock
 
             AppId = AppHelpers.GetAppIdFromName(ZoneId, _appName); // should be 0 if unknown, must test
 
+            if (AppId == Settings.DataIsMissingInDb)
+            {
+                _dataIsMissing = true;
+                return;
+            }
+
             if (AppId != 0)
             {
                 // try to load the app - if possible
                 App = new App(ZoneId, AppId, PortalSettings);
                 ContentGroup = App.ContentGroupManager.GetContentGroupOrGeneratePreview(_contentGroupGuid, _previewTemplateGuid);
+
+                // handle cases where the content group is missing - usually because of uncomplete import
+                if (ContentGroup.DataIsMissing)
+                {
+                    _dataIsMissing = true;
+                    App = null;
+                    return;
+                }
 
                 // use the content-group template, which already covers stored data + module-level stored settings
                 Template = ContentGroup.Template;

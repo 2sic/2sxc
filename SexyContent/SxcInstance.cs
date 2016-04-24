@@ -159,8 +159,27 @@ namespace ToSic.SexyContent
 
                 #endregion
 
+                #region todo: maybe check if the content-group exists (sometimes it's missing if a site is being imported and the data isn't in yet
+
+                if (ContentBlock.DataIsMissing)
+                {
+                    if (Environment.Permissions.UserMayEditContent)
+                    {
+                        innerContent = ""; // stop further processing
+                    }
+                    else // end users should see server error as no js-side processing will happen
+                    {
+                        var ex =
+                            new Exception(
+                                "Data is missing - usually when a site is copied but the content / apps have not been imported yet - check 2sxc.org/help?tag=export-import");
+                        innerContent = renderHelp.DesignErrorMessage(ex, true,
+                            "Error - needs admin to fix", false, true);
+                    }
+                }
+                #endregion
+
                 #region try to render the block or generate the error message
-                if(innerContent == null)
+                if (innerContent == null)
                     try
                     {
                         if (Template != null) // when a content block is still new, there is no definition yet

@@ -841,16 +841,33 @@ $2sxc.contentBlock = function (sxc, manage, cbTag) {
 
             // init this object 
             init: function init() {
+                // enhance UI in case there are known errors / issues
+                if (ec.error.type)
+                    editManager.handleErrors(ec.error.type, cbTag);
+
                 // finish init of sub-objects
                 editManager.commands.init(editManager);
                 editManager.contentBlock = $2sxc.contentBlock(sxc, editManager, cbTag);
 
                 // attach & open the mini-dashboard iframe
-                if (ec.ContentBlock.ShowTemplatePicker)
+                if (!ec.error.type && ec.ContentBlock.ShowTemplatePicker)
                     editManager.action({ "action": "layout" });
 
             },
-
+            handleErrors: function (errType, cbTag) {
+                var errWrapper = $("<div class=\"dnnFormMessage dnnFormWarning sc-element\"></div>");
+                var msg = "";
+                var toolbar = $("<ul class='sc-menu'></ul>");
+                var actions = [];
+                if (errType === "DataIsMissing") {
+                    msg = "Error: System.Exception: Data is missing - usually when a site is copied but the content / apps have not been imported yet - check 2sxc.org/help?tag=export-import";
+                    actions = ["zone", "more"];
+                    toolbar.attr("data-toolbar", '[{\"action\": \"zone\"}, {\"action\": \"more\"}]');
+                }
+                errWrapper.append(msg);
+                errWrapper.append(toolbar);
+                $(cbTag).append(errWrapper);
+            },
             // change config by replacing the guid, and refreshing dependend sub-objects
             updateContentGroupGuid: function (newGuid) {
                 ec.ContentGroup.Guid = newGuid;
@@ -889,7 +906,7 @@ $2sxc.contentBlock = function (sxc, manage, cbTag) {
                 return sxc.webApi.get({
                     url: "view/module/MoveItemInList",
                     params: { parentId: parentId, field: field, indexFrom: indexFrom, indexTo: indexTo }
-                }).then(function(result) {
+                }).then(function() {
                     console.log("done moving!");
                     window.location.reload();
                 });
@@ -901,10 +918,11 @@ $2sxc.contentBlock = function (sxc, manage, cbTag) {
                     return sxc.webApi.get({
                         url: "view/module/RemoveItemInList",
                         params: { parentId: parentId, field: field, index: index }
-                    }).then(function(result) {
+                    }).then(function() {
                         console.log("done deleting!");
                         window.location.reload();
                     });
+                return null;
             }
 
 

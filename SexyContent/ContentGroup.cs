@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Telerik.Web.UI;
 using ToSic.Eav;
 using ToSic.Eav.BLL;
 using EntityRelationship = ToSic.Eav.Data.EntityRelationship;
@@ -28,7 +29,7 @@ namespace ToSic.SexyContent
         public ContentGroup(IEntity contentGroupEntity, int zoneId, int appId)
         {
             if (contentGroupEntity == null)
-                throw new Exception("ContentGroup entity is null");
+                throw new Exception("ContentGroup entity is null. This usually happens when you are duplicating a site, and have not yet imported the other content/apps. If that is your issue, check 2sxc.org/help?tag=export-import");
 
             _contentGroupEntity = contentGroupEntity;
             _zoneId = zoneId;
@@ -51,6 +52,7 @@ namespace ToSic.SexyContent
         /// </summary>
         public bool Exists => _contentGroupEntity != null;
 
+        internal bool DataIsMissing = false;
         #region Template stuff
 
         private Template _template;

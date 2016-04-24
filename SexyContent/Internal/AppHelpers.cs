@@ -47,7 +47,7 @@ namespace ToSic.SexyContent.Internal
             var appId = baseCache.ZoneApps[zoneId].Apps
                     .Where(p => p.Value == appName).Select(p => p.Key).FirstOrDefault();
 
-            return appId;
+            return appId > 0 ? appId : Settings.DataIsMissingInDb;
         }
 
         public static void SetAppIdForModule(ModuleInfo module, int? appId)

@@ -28,7 +28,7 @@ namespace ToSic.SexyContent.ContentBlock
 
             // Ensure we know what portal the stuff is coming from
             // PortalSettings is null, when in search mode
-            PortalSettings = DotNetNuke.Entities.Portals.PortalSettings.Current == null || moduleInfo.OwnerPortalID != moduleInfo.PortalID
+            PortalSettings = PortalSettings.Current == null || moduleInfo.OwnerPortalID != moduleInfo.PortalID
                 ? new PortalSettings(moduleInfo.OwnerPortalID)
                 : PortalSettings.Current;
 
@@ -36,11 +36,24 @@ namespace ToSic.SexyContent.ContentBlock
             
             AppId = AppHelpers.GetAppIdFromModule(moduleInfo, ZoneId) ?? 0;// fallback/undefined YET
 
+            if (AppId == Settings.DataIsMissingInDb)
+            {
+                _dataIsMissing = true;
+                return;
+            }
+
             if (AppId != 0)
             {
                 // try to load the app - if possible
-                App = new App( ZoneId, AppId, PortalSettings);
+                App = new App(ZoneId, AppId, PortalSettings);
                 ContentGroup = App.ContentGroupManager.GetContentGroupForModule(moduleInfo.ModuleID);
+
+                if (ContentGroup.DataIsMissing)
+                {
+                    _dataIsMissing = true;
+                    App = null;
+                    return;
+                }
 
                 // use the content-group template, which already covers stored data + module-level stored settings
                 Template = ContentGroup.Template;

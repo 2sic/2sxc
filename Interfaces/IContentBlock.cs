@@ -12,6 +12,8 @@ namespace ToSic.SexyContent.Interfaces
         bool ParentIsEntity { get; }   // alternative is module
         int ParentId { get; }
 
+        bool DataIsMissing { get; }
+
         int ContentBlockId { get; }
         string ParentFieldName { get; }
         int ParentFieldSortOrder { get; }
@@ -32,8 +34,6 @@ namespace ToSic.SexyContent.Interfaces
         bool IsContentApp { get; }
         #endregion
         SxcInstance SxcInstance { get; }
-
-        // SxcInstance ContentBlockParentSxc {get;}
 
         bool ContentGroupExists { get; }
 

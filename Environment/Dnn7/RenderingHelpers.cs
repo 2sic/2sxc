@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -53,7 +54,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             var ver = Settings.Version.ToString();
 
             // add edit-mode CSS
-            RegisterCss(page, Settings.Version.ToString(), root + "dist/inpage/inpage.min.css");
+            RegisterCss(page, root + "dist/inpage/inpage.min.css");
 
             RegisterJs(page, ver, root + "js/2sxc.api" + ext);
             RegisterJs(page, ver, root + "dist/inpage/inpage" + ext);
@@ -63,11 +64,11 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         private void RegisterJs(Page page, string version, string path)
         {
-            var url = string.Format("{0}{1}v={2}", path, path.IndexOf('?') > 0 ? '&' : '?', version);
+            var url = $"{path}{(path.IndexOf('?') > 0 ? '&' : '?')}v={version}";
             page.ClientScript.RegisterClientScriptInclude(typeof(Page), path, url);
         }
 
-        private void RegisterCss(Page page, string version, string path)
+        private void RegisterCss(Page page, string path)
         {
             ClientResourceManager.RegisterStyleSheet(page, path);
         }
@@ -119,6 +120,8 @@ namespace ToSic.SexyContent.Environment.Dnn7
         public ClientInfosLanguages Language;
         public ClientInfoContentBlock ContentBlock; // todo: still not sure if these should be separate...
         public ClientInfoContentGroup ContentGroup;
+        // ReSharper disable once InconsistentNaming
+        public ClientInfosError error;
 
         public ClientInfosAll(string systemRootUrl, PortalSettings ps, ModuleInfo mic, SxcInstance sxc, UserInfo uinfo, int zoneId, bool isCreated)
         {
@@ -128,6 +131,21 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
             ContentBlock = new ClientInfoContentBlock(sxc.ContentBlock, null, 0);
             ContentGroup = new ClientInfoContentGroup(sxc, isCreated);
+            error = new ClientInfosError(sxc.ContentBlock);
+        }
+    }
+
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
+    public class ClientInfosError
+    {
+        public string type;
+
+        internal ClientInfosError(IContentBlock cb)
+        {
+            if (cb.DataIsMissing)
+            {
+                type = "DataIsMissing";
+            }
         }
     }
 
@@ -192,6 +210,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         }
     }
 
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public class ClientInfoLanguage
     {
         // key and name must be lowercase, has side effects in EAV
@@ -206,6 +225,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         public int Id;
         public string ParentFieldName;
         public int ParentFieldSortOrder;
+        // public bool DataIsMissing;
 
         internal ClientInfoContentBlock(IContentBlock contentBlock, string parentFieldName, int indexInField)
         {
@@ -214,6 +234,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             Id = contentBlock.ContentBlockId;
             ParentFieldName = parentFieldName;
             ParentFieldSortOrder = indexInField;
+            // DataIsMissing = contentBlock.DataIsMissing;
         }
     };
 

@@ -39,7 +39,10 @@ namespace ToSic.SexyContent
 		{
 			var dataSource = ContentGroupSource();
 			// ToDo: Should use an indexed guid source
-			return new ContentGroup(dataSource.List.FirstOrDefault(e => e.Value.EntityGuid == contentGroupGuid).Value, _zoneId, _appId);
+		    var groupEntity = dataSource.List.FirstOrDefault(e => e.Value.EntityGuid == contentGroupGuid).Value;
+		    return groupEntity != null 
+                ? new ContentGroup(groupEntity, _zoneId, _appId) 
+                : new ContentGroup(Guid.Empty, _zoneId, _appId) {DataIsMissing = true};
 		}
 
 		public bool IsConfigurationInUse(int templateId, string type)
@@ -135,17 +138,11 @@ namespace ToSic.SexyContent
 
 	    internal ContentGroup GetContentGroupOrGeneratePreview(Guid groupGuid, Guid previewTemplateGuid)
 	    {
-            // Return a "faked" ContentGroup if it does not exist yet (with the preview templateId)
-	        if (groupGuid == Guid.Empty) // maybeGuid == null)
-	        {
-	            return new ContentGroup(previewTemplateGuid,
-	                _zoneId, _appId);
-	        }
-
-	        // settings = moduleControl.GetModuleSettings(moduleId);
-	        return GetContentGroup(groupGuid); // Guid.Parse(maybeGuid.ToString()));
+	        // Return a "faked" ContentGroup if it does not exist yet (with the preview templateId)
+	        return groupGuid == Guid.Empty 
+                ? new ContentGroup(previewTemplateGuid, _zoneId, _appId)
+                : GetContentGroup(groupGuid);
 	    }
-
 
 	}
 }
