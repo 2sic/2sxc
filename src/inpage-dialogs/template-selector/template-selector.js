@@ -189,12 +189,14 @@
             },
 
             setup: function() {
-                svc.gettingStartedUrl().then(function(result) {
-                    vm.externalInstaller.configureCallback();
-                    vm.showRemoteInstaller = true;
-                    enableProgressIndicator();
-                    vm.remoteInstallerUrl = $sce.trustAsResourceUrl(result.data);
-                    console.log(result.data);
+                svc.gettingStartedUrl().then(function (result) {
+                    if (result.data) {  // only show getting started if it's really still a blank system, otherwise the server will return null, then don't do anything
+                        vm.externalInstaller.configureCallback();
+                        vm.showRemoteInstaller = true;
+                        enableProgressIndicator();
+                        vm.remoteInstallerUrl = $sce.trustAsResourceUrl(result.data);
+                        console.log(result.data);
+                    }
                 });
             }
         };

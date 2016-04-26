@@ -244,10 +244,27 @@ namespace ToSic.SexyContent.WebApi.View
             if (dialog != "gettingstarted")
                 throw new Exception("unknown dialog name: " + dialog);
 
+
             var moduleInfo = Request.FindModuleInfo();
             var modName = moduleInfo.DesktopModule.ModuleName;
 
             var isContent = modName == "2sxc";
+            // new: check if it should allow this
+            // it should only be allowed, if the current situation is either
+            // Content - and no views exist (even invisible ones)
+            // App - and no apps exist - this is already checked on client side, so I won't include a check here
+            if (isContent)
+            {
+                // we'll usually run into errors if nothing is installed yet, so on errors, we'll continue
+                try
+                {
+                    var all = SxcContext.AppTemplates.GetAllTemplates();
+                    if (all.Any())
+                        return null;
+                }
+                catch { }
+            }
+
             var gettingStartedSrc = "//gettingstarted.2sxc.org/router.aspx?";
 
             // Add desired destination

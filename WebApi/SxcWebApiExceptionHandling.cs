@@ -14,12 +14,7 @@ namespace ToSic.SexyContent.WebApi
         public override void OnException(HttpActionExecutedContext context)
         {
             var exception = context.Exception;
-            var exWrapper = new Exception("An error occurred while executing the request. Please consult the event log for details.", context.Exception);
-            // Log errors to DNN log
-            DotNetNuke.Services.Exceptions.Exceptions.LogException(exWrapper);
-
-            // if(SxcInstance)
-            // throw exception;
+            DotNetNuke.Services.Exceptions.Exceptions.LogException(exception);
 
             // special manual exception maker, because otherwise IIS at runtime removes all messages
             // without this, debug-infos like what entity is causing the problem will not be shown to the client

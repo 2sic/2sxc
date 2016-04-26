@@ -106,7 +106,11 @@ namespace ToSic.SexyContent.WebApi
         #endregion
 
         #region Dialog Helpers
-
+        /// <summary>
+        /// This seems to be the subsystem which delivers the getting-started app-iframe with instructions etc.
+        /// </summary>
+        /// <param name="appId"></param>
+        /// <returns></returns>
         [HttpGet]
         public dynamic DialogSettings(int appId)
         {
