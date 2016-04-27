@@ -20,7 +20,10 @@ namespace ToSic.SexyContent.WebApi
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public dynamic GetAppInfo(int appId, int zoneId)
         {
-            var appWrapper = new SxcAppWrapper(appId);
+            var appWrapper = (UserInfo.IsSuperUser)
+                ? new SxcAppWrapper(zoneId, appId)  // only super-user may switch to another zone for export
+                : new SxcAppWrapper(appId);
+
             var zipExport = new ZipExport(zoneId, appId);
 
             return new
@@ -42,7 +45,9 @@ namespace ToSic.SexyContent.WebApi
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public dynamic GetContentInfo(int appId, int zoneId, string scope)
         {
-            var appWrapper = new SxcAppWrapper(appId);
+            var appWrapper = (UserInfo.IsSuperUser)
+                ? new SxcAppWrapper(zoneId, appId)  // only super-user may switch to another zone for export
+                : new SxcAppWrapper(appId);
 
             var contentTypes = appWrapper.GetContentTypes(scope);
             var entities = appWrapper.GetEntities();
@@ -77,7 +82,10 @@ namespace ToSic.SexyContent.WebApi
         {
             EnsureUserIsAdmin();
 
-            var appWrapper = new SxcAppWrapper(appId);
+            var appWrapper = (UserInfo.IsSuperUser)
+                ? new SxcAppWrapper(zoneId, appId)  // only super-user may switch to another zone for export
+                : new SxcAppWrapper(appId);
+
             var zipExport = new ZipExport(zoneId, appId);
             var addOnWhenContainingContent = includeContentGroups ? "_withPageContent_" + DateTime.Now.ToString("yyyy-MM-ddTHHmm") : "";
 
@@ -95,7 +103,10 @@ namespace ToSic.SexyContent.WebApi
         {
             EnsureUserIsAdmin();
 
-            var appWrapper = new SxcAppWrapper(appId);
+
+            var appWrapper = (UserInfo.IsSuperUser)
+                ? new SxcAppWrapper(zoneId, appId)  // only super-user may switch to another zone for export
+                : new SxcAppWrapper(appId);
 
             var fileName = $"2sxcContentExport_{appWrapper.GetNameWithoutSpecialChars()}_{appWrapper.GetVersion()}.xml";
             var fileXml = new XmlExporter
