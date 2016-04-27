@@ -132,8 +132,28 @@ angular.module("eavFieldTemplates")
         formlyConfigProvider.setType({
             name: "empty-default",
             templateUrl: "fields/empty/empty-default.html",
-            wrapper: ["fieldGroup"]
+            wrapper: ["fieldGroup"],
+            controller: "FieldTemplate-TitleController"
         });
+    }])
+    .controller("FieldTemplate-TitleController", ["$scope", "debugState", function($scope, debugState) {
+        if (!$scope.to.settings.merged)
+            $scope.to.settings.merged = {};
+
+        //$scope.to.settings.merged.DefaultCollapsed = true;// = "show";
+
+
+        $scope.set = function(newState) {
+            $scope.to.collapseGroup = newState;
+        };
+
+        $scope.toggle = function() {
+            $scope.to.collapseGroup = !$scope.to.collapseGroup;
+        };
+
+        if ($scope.to.settings.merged.DefaultCollapsed === true) 
+            $scope.set(true);
+
     }]);
 /* 
  * Field: Entity - Default
@@ -148,17 +168,7 @@ angular.module("eavFieldTemplates")
             name: "entity-default",
             templateUrl: "fields/entity/entity-default.html",
             wrapper: ["eavLabel", "bootstrapHasError", "collapsible"],
-            controller: "FieldTemplate-EntityCtrl",
-            //defaultOptions: {
-            //    validators: {
-            //        required: function (viewValue, modelValue, scope) {
-            //            var value = viewValue || modelValue;
-            //            if (!Array.isArray(value))
-            //                return true;
-            //            return value.length > 0;
-            //        }
-            //    }
-            //}
+            controller: "FieldTemplate-EntityCtrl"
         });
 
 
@@ -784,12 +794,48 @@ angular.module("eavFieldTemplates")
 		        });
 		};
 
+	    vm.initCustomJavaScript = function(field) {
+	        var jsobject,
+                cjs = field.Metadata.merged.CustomJavaScript;
+	        if (!cjs) return;
+	        if (cjs.indexOf("/* compatibility: 1.0 */") < 0) {
+	            console.log("found custom js for field '" + field.StaticName + "', but didn't find correct version support; ignore");
+	            return;
+	        }
+
+	        try {
+	            var fn = new Function(cjs); // jshint ignore:line
+	            jsobject = fn();
+	        }
+            catch (ex) {
+                console.log("wasn't able to process the custom javascript for field '" + field.StaticName + "'. tried: " + cjs);
+            }
+	        if (jsobject === undefined || jsobject === null)
+	            return;
+
+	        var context = {
+	            field: field,
+	            formVm: vm,
+	            formlyConfig: formlyConfig,
+	            appId: appId,
+	            module: app, // pass in this current module in case something complex is wanted
+	        };
+
+	        // now cjs should be the initiliazed object...
+	        if (jsobject && jsobject.init)
+	            jsobject.init(context);
+	        
+
+	    };
+
 	    vm.registerAllFieldsFromReturnedDefinition = function raffrd(result) {
 	        var lastGroupHeadingId = 0;
 	        angular.forEach(result.data, function (e, i) {
 
 	            if (e.Metadata.All === undefined)
 	                e.Metadata.All = {};
+
+	            vm.initCustomJavaScript(e);
 
 	            var fieldType = e.InputType;
 
@@ -1627,16 +1673,19 @@ $templateCache.put("form/main-form.html","<div class=\"modal-body\">\r\n    <spa
 $templateCache.put("localization/formly-localization-wrapper.html","<eav-localization-scope-control></eav-localization-scope-control>\r\n<div ng-if=\"!!value\">\r\n    <formly-transclude></formly-transclude>\r\n    <eav-localization-menu form-model=\"model\" field-model=\"model[options.key]\" options=\"options\" value=\"value\" index=\"index\"></eav-localization-menu>\r\n</div>\r\n<p class=\"bg-info\" style=\"padding:12px;\" ng-if=\"!value\" translate=\"LangWrapper.CreateValueInDefFirst\" translate-values=\"{ fieldname: \'{{to.label}}\' }\">Please... <i>\'{{to.label}}\'</i> in the def...</p>");
 $templateCache.put("localization/language-switcher.html","<tabset>\r\n    <tab ng-repeat=\"l in languages.languages\" heading=\"{{ l.name.substring(0, l.name.indexOf(\'(\') > 0 ? l.name.indexOf(\'(\') - 1 : 100 ) }}\" ng-click=\"!isDisabled ? languages.currentLanguage = l.key : false;\" disable=\"isDisabled\" active=\"languages.currentLanguage == l.key\" tooltip=\"{{l.name}}\"></tab>\r\n</tabset>");
 $templateCache.put("localization/localization-menu.html","<div dropdown is-open=\"status.isopen\" class=\"eav-localization\"> <!--style=\"z-index:{{1000 - index}};\"-->\r\n	<a class=\"eav-localization-lock\" ng-click=\"vm.actions.toggleTranslate();\" ng-if=\"vm.isDefaultLanguage()\" title=\"{{vm.tooltip()}}\" ng-class=\"{ \'eav-localization-lock-open\': !options.templateOptions.disabled }\" dropdown-toggle>\r\n        {{vm.infoMessage()}} <i class=\"glyphicon glyphicon-globe\"></i>\r\n	</a>\r\n    <ul class=\"dropdown-menu multi-level pull-right eav-localization-dropdown\" role=\"menu\" aria-labelledby=\"single-button\">\r\n        <li role=\"menuitem\"><a ng-click=\"vm.actions.translate()\" translate=\"LangMenu.Unlink\"></a></li>\r\n        <li role=\"menuitem\"><a ng-click=\"vm.actions.linkDefault()\" translate=\"LangMenu.LinkDefault\"></a></li>\r\n        <!-- Google translate is disabled because there is no longer a free version\r\n            <li role=\"menuitem\" class=\"dropdown-submenu\">\r\n            <a href=\"#\" translate=\"LangMenu.GoogleTranslate\"></a>\r\n            <ul class=\"dropdown-menu\">\r\n                <li ng-repeat=\"language in vm.languages.languages\" role=\"menuitem\">\r\n                    <a ng-click=\"vm.actions.autoTranslate(language.key)\" title=\"{{language.name}}\" href=\"#\">{{language.key}}</a>\r\n                </li>\r\n            </ul>\r\n        </li>-->\r\n        <li role=\"menuitem\" class=\"dropdown-submenu\">\r\n            <a href=\"#\" translate=\"LangMenu.Copy\"></a>\r\n            <ul class=\"dropdown-menu\">\r\n                <li ng-repeat=\"language in vm.languages.languages\" ng-class=\"{ disabled: options.templateOptions.disabled || !vm.hasLanguage(language.key) }\" role=\"menuitem\">\r\n                    <a ng-click=\"vm.actions.copyFrom(language.key)\" title=\"{{language.name}}\" href=\"#\">{{language.key}}</a>\r\n                </li>\r\n            </ul>\r\n        </li>\r\n        <li role=\"menuitem\" class=\"dropdown-submenu\">\r\n            <a href=\"#\" translate=\"LangMenu.Use\"></a>\r\n            <ul class=\"dropdown-menu\">\r\n                <li ng-repeat=\"language in vm.languages.languages\" ng-class=\"{ disabled: !vm.hasLanguage(language.key) }\" role=\"menuitem\">\r\n                    <a ng-click=\"vm.actions.useFrom(language.key)\" title=\"{{language.name}}\" href=\"#\">{{language.key}}</a>\r\n                </li>\r\n            </ul>\r\n        </li>\r\n        <li role=\"menuitem\" class=\"dropdown-submenu\">\r\n            <a href=\"#\" translate=\"LangMenu.Share\"></a>\r\n            <ul class=\"dropdown-menu\">\r\n                <li ng-repeat=\"language in vm.languages.languages\" ng-class=\"{ disabled: !vm.hasLanguage(language.key) }\" role=\"menuitem\">\r\n                    <a ng-click=\"vm.actions.shareFrom(language.key)\" title=\"{{language.name}}\" href=\"#\">{{language.key}}</a>\r\n                </li>\r\n            </ul>\r\n        </li>\r\n        <!-- All fields -->\r\n        <li class=\"divider\"></li>\r\n        <li role=\"menuitem\" class=\"dropdown-submenu\">\r\n            <a href=\"#\" translate=\"LangMenu.AllFields\"></a>\r\n            <ul class=\"dropdown-menu\">\r\n                <li role=\"menuitem\"><a ng-click=\"vm.actions.all.translate()\" translate=\"LangMenu.Unlink\"></a></li>\r\n                <li role=\"menuitem\"><a ng-click=\"vm.actions.all.linkDefault()\" translate=\"LangMenu.LinkDefault\"></a></li>\r\n                <li role=\"menuitem\" class=\"dropdown-submenu\">\r\n                    <a href=\"#\" translate=\"LangMenu.Copy\"></a>\r\n                    <ul class=\"dropdown-menu\">\r\n                        <li ng-repeat=\"language in vm.languages.languages\" role=\"menuitem\">\r\n                            <a ng-click=\"vm.actions.all.copyFrom(language.key)\" title=\"{{language.name}}\" href=\"#\">{{language.key}}</a>\r\n                        </li>\r\n                    </ul>\r\n                </li>\r\n                <li role=\"menuitem\" class=\"dropdown-submenu\">\r\n                    <a href=\"#\" translate=\"LangMenu.Use\"></a>\r\n                    <ul class=\"dropdown-menu\">\r\n                        <li ng-repeat=\"language in vm.languages.languages\" role=\"menuitem\">\r\n                            <a ng-click=\"vm.actions.all.useFrom(language.key)\" title=\"{{language.name}}\" href=\"#\">{{language.key}}</a>\r\n                        </li>\r\n                    </ul>\r\n                </li>\r\n                <li role=\"menuitem\" class=\"dropdown-submenu\">\r\n                    <a href=\"#\" translate=\"LangMenu.Share\"></a>\r\n                    <ul class=\"dropdown-menu\">\r\n                        <li ng-repeat=\"language in vm.languages.languages\" role=\"menuitem\">\r\n                            <a ng-click=\"vm.actions.all.shareFrom(language.key)\" title=\"{{language.name}}\" href=\"#\">{{language.key}}</a>\r\n                        </li>\r\n                    </ul>\r\n                </li>\r\n            </ul>\r\n        </li>\r\n    </ul>\r\n</div>");
-$templateCache.put("wrappers/collapsible.html","<div ng-show=\"!to.collapse\" class=\"group-field-set\">\r\n    <formly-transclude></formly-transclude>\r\n</div>");
+$templateCache.put("wrappers/collapsible.html","<!-- hide entire field if necessary-->\r\n<div ng-show=\"!to.collapse\" class=\"group-field-set\">\r\n    <formly-transclude></formly-transclude>\r\n</div>");
 $templateCache.put("wrappers/disablevisually.html","<div visually-disabled=\"{{to.disabled}}\">\r\n    <formly-transclude></formly-transclude>\r\n</div>");
 $templateCache.put("wrappers/eav-label.html","<div>\r\n    <label for=\"{{id}}\" class=\"control-label eav-label {{to.labelSrOnly ? \'sr-only\' : \'\'}} {{to.type}}\"\r\n           ng-if=\"to.label\"\r\n            ng-click=\"to.collapseField = !to.collapseField\">\r\n        {{to.label}}\r\n        {{to.required ? \'*\' : \'\'}}\r\n        <a tabindex=\"-1\" ng-click=\"to.showDescription = !to.showDescription\" href=\"javascript:void(0);\" ng-if=\"to.description && to.description != \'\'\">\r\n            <i icon=\"info-sign\" class=\"low-priority\"></i>\r\n        </a>\r\n        <span class=\"btn-sm\" ng-if=\"to.enableCollapseField\">\r\n            <span ng-if=\"to.collapseField\" class=\"low-priority collapse-fieldgroup-button\" icon=\"plus-sign\"></span>\r\n            <span ng-if=\"!to.collapseField\" class=\"low-priority collapse-fieldgroup-button\" icon=\"minus-sign\"></span>\r\n        </span>\r\n    </label>\r\n    <p ng-if=\"to.showDescription\" class=\"bg-info\" style=\"padding: 5px;\" ng-bind-html=\"to.description\">\r\n    </p>\r\n    <div ng-show=\"!(to.collapseField && to.enableCollapseField)\">\r\n        <formly-transclude></formly-transclude>\r\n    </div>\r\n</div>");
-$templateCache.put("wrappers/field-group.html","<div>\r\n    <h4 class=\"clickable\" ng-click=\"to.collapseGroup = !to.collapseGroup\">\r\n        {{to.label}}\r\n        <span class=\"pull-right btn-sm\">\r\n            <span ng-if=\"to.collapseGroup\" class=\"low-priority collapse-fieldgroup-button\" icon=\"plus-sign\"></span>\r\n            <span ng-if=\"!to.collapseGroup\" class=\"low-priority collapse-fieldgroup-button\" icon=\"minus-sign\"></span>\r\n        </span>\r\n    </h4>\r\n    <div ng-if=\"!to.collapseGroup\" style=\"padding: 5px;\" ng-bind-html=\"to.description\">\r\n    </div>\r\n    <formly-transclude></formly-transclude>\r\n</div>");
+$templateCache.put("wrappers/field-group.html","<div>\r\n    <h4 class=\"clickable\" ng-click=\"toggle()\">\r\n        {{to.label}}\r\n        <span class=\"pull-right btn-sm\">\r\n            <span ng-if=\"to.collapseGroup\" class=\"low-priority collapse-fieldgroup-button\" icon=\"plus-sign\"></span>\r\n            <span ng-if=\"!to.collapseGroup\" class=\"low-priority collapse-fieldgroup-button\" icon=\"minus-sign\"></span>\r\n        </span>\r\n    </h4>\r\n    <div ng-if=\"!to.collapseGroup\" style=\"padding: 5px;\" ng-bind-html=\"to.description\">\r\n    </div>\r\n    <formly-transclude></formly-transclude>\r\n</div>");
 $templateCache.put("fields/boolean/boolean-default.html","<div class=\"checkbox checkbox-labeled\">\r\n    <!--<label>-->\r\n        <switch class=\"tosic-green pull-left\" ng-model=\"value.Value\"></switch>\r\n    <!-- maybe need the (hidden) input to ensure the label actually switches the boolean -->\r\n        <!--<input type=\"checkbox\" class=\"formly-field-checkbox\" ng-model=\"value.Value\" style=\"display: none\">-->\r\n        <div ng-include=\"\'wrappers/eav-label.html\'\"></div>\r\n        <!--{{to.label}} {{to.required ? \'*\' : \'\'}}-->\r\n    <!--</label>-->\r\n</div>");
 $templateCache.put("fields/custom/custom-default.html","<div class=\"alert alert-danger\">\r\n    ERROR - This is a custom field, you shouldn\'t see this. You only see this because the custom-dialog is missing.\r\n</div>\r\n<input class=\"form-control input-lg\" ng-pattern=\"vm.regexPattern\" ng-model=\"value.Value\">");
-$templateCache.put("fields/entity/entity-default.html","<div class=\"eav-entityselect\">\r\n\r\n    <div ui-tree=\"options\" data-empty-placeholder-enabled=\"false\" ng-show=\"to.settings.merged.EnableCreate || chosenEntities.length > 0\">\r\n        <table ui-tree-nodes ng-model=\"chosenEntities\" entity-validation ng-required=\"false\" class=\"table eav-entityselect-table\" style=\"table-layout:fixed;\">\r\n            <thead>\r\n                <tr>\r\n                    <th></th>\r\n                    <th></th>\r\n                    <th></th>\r\n                </tr>\r\n            </thead>\r\n            <tr ng-repeat=\"item in chosenEntities track by $id(item)\" ui-tree-node class=\"eav-entityselect-item\" ui-tree-handle>\r\n                <td>\r\n                    <i title=\"{{ \'FieldType.Entity.DragMove\' | translate }}\" class=\"icon-link pull-left eav-entityselect-icon\" ng-show=\"to.settings.Entity.AllowMultiValue\"></i>\r\n                </td>\r\n                <td>\r\n                    <span class=\"eav-entityselect-item-title\" title=\"{{getEntityText(item) + \' (\' + item + \')\'}}\">{{getEntityText(item)}}</span>\r\n                </td>\r\n                <td style=\"text-align:right;\">\r\n                    <ul class=\"eav-entityselect-item-actions\" data-nodrag>\r\n                        <li>\r\n                            <a title=\"{{ \'FieldType.Entity.Edit\' | translate }}\" ng-click=\"edit(item, index)\" ng-if=\"to.settings.merged.EnableEdit\">\r\n                                <i class=\"icon-pencil\"></i>\r\n                            </a>\r\n                        </li>\r\n                        <li>\r\n                            <a title=\"{{ \'FieldType.Entity.Remove\' | translate }}\" ng-click=\"removeSlot(item, $index)\" class=\"eav-entityselect-item-remove\" ng-if=\"to.settings.merged.EnableRemove\">\r\n                                <i ng-class=\"{ \'icon-minus-circled\': to.settings.merged.AllowMultiValue, \'icon-down-dir\': !to.settings.merged.AllowMultiValue  }\"></i>\r\n                            </a>\r\n                        </li>\r\n                        <li>\r\n                            <!-- todo: i18n, code in action, icon-visiblity/alignment -->\r\n                            <a title=\"{{ \'FieldType.Entity.Delete\' | translate }}\" ng-click=\"deleteItemInSlot(item, $index)\" class=\"eav-entityselect-item-remove\" ng-if=\"to.settings.merged.EnableDelete\">\r\n                                <i class=\"icon-cancel\"></i>\r\n                            </a>\r\n                        </li>\r\n                    </ul>\r\n                </td>\r\n            </tr>\r\n        </table>\r\n    </div>\r\n    <ol>\r\n        <!-- add existing entity to this list--><!--ng-if=\"to.settings.merged.EnableAddExisting\"-->\r\n        <li class=\"eav-entityselect-item subtle-till-mouseover\"\r\n            ng-show=\"to.settings.merged.EnableAddExisting && (to.settings.merged.AllowMultiValue || chosenEntities.length < 1)\">\r\n            <div>\r\n                <i class=\"icon-plus-circled pull-left eav-entityselect-icon-before-select\"></i>\r\n                <div class=\"eav-entityselect-selector-wrapper\">\r\n                    <select class=\"eav-entityselect-selector form-control input-lg\"\r\n                            formly-skip-ng-model-attrs-manipulator\r\n                            ng-model=\"selectedEntity\"\r\n                            ng-change=\"addEntity()\">\r\n                        <option value=\"\" translate=\"FieldType.Entity.Choose\"></option>\r\n                        <option ng-repeat=\"item in availableEntities\" ng-disabled=\"chosenEntities.indexOf(item.Value) != -1\" value=\"{{item.Value}}\">{{item.Text}}</option>\r\n                    </select>\r\n                </div>\r\n            </div>\r\n        </li>\r\n\r\n        <!-- create new entity to add to this list -->\r\n        <li ng-if=\"to.settings.merged.EnableCreate && (to.settings.merged.AllowMultiValue || chosenEntities.length < 1)\"\r\n            class=\"eav-entityselect-item eav-entityselect-create subtle-till-mouseover\">\r\n            <div ng-click=\"openNewEntityDialog()\">\r\n                <i class=\"icon-plus pull-left eav-entityselect-icon\"></i>\r\n                <span>{{ \'FieldType.Entity.New\' | translate }}&nbsp;</span>\r\n            </div>\r\n        </li>\r\n    </ol>\r\n</div>");
 $templateCache.put("fields/empty/empty-default.html","<span></span>");
+$templateCache.put("fields/entity/entity-default.html","<div class=\"eav-entityselect\">\r\n\r\n    <div ui-tree=\"options\" data-empty-placeholder-enabled=\"false\" ng-show=\"to.settings.merged.EnableCreate || chosenEntities.length > 0\">\r\n        <table ui-tree-nodes ng-model=\"chosenEntities\" entity-validation ng-required=\"false\" class=\"table eav-entityselect-table\" style=\"table-layout:fixed;\">\r\n            <thead>\r\n                <tr>\r\n                    <th></th>\r\n                    <th></th>\r\n                    <th></th>\r\n                </tr>\r\n            </thead>\r\n            <tr ng-repeat=\"item in chosenEntities track by $id(item)\" ui-tree-node class=\"eav-entityselect-item\" ui-tree-handle>\r\n                <td>\r\n                    <i title=\"{{ \'FieldType.Entity.DragMove\' | translate }}\" class=\"icon-link pull-left eav-entityselect-icon\" ng-show=\"to.settings.Entity.AllowMultiValue\"></i>\r\n                </td>\r\n                <td>\r\n                    <span class=\"eav-entityselect-item-title\" title=\"{{getEntityText(item) + \' (\' + item + \')\'}}\">{{getEntityText(item)}}</span>\r\n                </td>\r\n                <td style=\"text-align:right;\">\r\n                    <ul class=\"eav-entityselect-item-actions\" data-nodrag>\r\n                        <li>\r\n                            <a title=\"{{ \'FieldType.Entity.Edit\' | translate }}\" ng-click=\"edit(item, index)\" ng-if=\"to.settings.merged.EnableEdit\">\r\n                                <i class=\"icon-pencil\"></i>\r\n                            </a>\r\n                        </li>\r\n                        <li>\r\n                            <a title=\"{{ \'FieldType.Entity.Remove\' | translate }}\" ng-click=\"removeSlot(item, $index)\" class=\"eav-entityselect-item-remove\" ng-if=\"to.settings.merged.EnableRemove\">\r\n                                <i ng-class=\"{ \'icon-minus-circled\': to.settings.merged.AllowMultiValue, \'icon-down-dir\': !to.settings.merged.AllowMultiValue  }\"></i>\r\n                            </a>\r\n                        </li>\r\n                        <li>\r\n                            <!-- todo: i18n, code in action, icon-visiblity/alignment -->\r\n                            <a title=\"{{ \'FieldType.Entity.Delete\' | translate }}\" ng-click=\"deleteItemInSlot(item, $index)\" class=\"eav-entityselect-item-remove\" ng-if=\"to.settings.merged.EnableDelete\">\r\n                                <i class=\"icon-cancel\"></i>\r\n                            </a>\r\n                        </li>\r\n                    </ul>\r\n                </td>\r\n            </tr>\r\n        </table>\r\n    </div>\r\n    <ol>\r\n        <!-- add existing entity to this list--><!--ng-if=\"to.settings.merged.EnableAddExisting\"-->\r\n        <li class=\"eav-entityselect-item subtle-till-mouseover\"\r\n            ng-show=\"to.settings.merged.EnableAddExisting && (to.settings.merged.AllowMultiValue || chosenEntities.length < 1)\">\r\n            <div>\r\n                <i class=\"icon-plus-circled pull-left eav-entityselect-icon-before-select\"></i>\r\n                <div class=\"eav-entityselect-selector-wrapper\">\r\n                    <select class=\"eav-entityselect-selector form-control input-lg\"\r\n                            formly-skip-ng-model-attrs-manipulator\r\n                            ng-model=\"selectedEntity\"\r\n                            ng-change=\"addEntity()\">\r\n                        <option value=\"\" translate=\"FieldType.Entity.Choose\"></option>\r\n                        <option ng-repeat=\"item in availableEntities\" ng-disabled=\"chosenEntities.indexOf(item.Value) != -1\" value=\"{{item.Value}}\">{{item.Text}}</option>\r\n                    </select>\r\n                </div>\r\n            </div>\r\n        </li>\r\n\r\n        <!-- create new entity to add to this list -->\r\n        <li ng-if=\"to.settings.merged.EnableCreate && (to.settings.merged.AllowMultiValue || chosenEntities.length < 1)\"\r\n            class=\"eav-entityselect-item eav-entityselect-create subtle-till-mouseover\">\r\n            <div ng-click=\"openNewEntityDialog()\">\r\n                <i class=\"icon-plus pull-left eav-entityselect-icon\"></i>\r\n                <span>{{ \'FieldType.Entity.New\' | translate }}&nbsp;</span>\r\n            </div>\r\n        </li>\r\n    </ol>\r\n</div>");
 $templateCache.put("ml-entities/tests/SpecRunner.html","<!DOCTYPE html>\r\n<html>\r\n<head>\r\n  <meta charset=\"utf-8\">\r\n  <title>Jasmine Spec Runner v2.3.4</title>\r\n    <!--\r\n  <link rel=\"shortcut icon\" type=\"image/png\" href=\"lib/jasmine-2.3.4/jasmine_favicon.png\">\r\n  <link rel=\"stylesheet\" href=\"lib/jasmine-2.3.4/jasmine.css\">\r\n\r\n  <script src=\"lib/jasmine-2.3.4/jasmine.js\"></script>\r\n  <script src=\"lib/jasmine-2.3.4/jasmine-html.js\"></script>\r\n  <script src=\"lib/jasmine-2.3.4/boot.js\"></script>\r\n        -->\r\n\r\n    <link rel=\"stylesheet\" href=\"../../../../node_modules\\grunt-contrib-jasmine\\node_modules\\jasmine-core/lib/jasmine-core/jasmine.css\">\r\n    <script src=\"../../../../node_modules\\grunt-contrib-jasmine\\node_modules\\jasmine-core/lib/jasmine-core/jasmine.js\"></script>\r\n    <script src=\"../../../../node_modules\\grunt-contrib-jasmine\\node_modules\\jasmine-core/lib/jasmine-core/jasmine-html.js\"></script>\r\n    <script src=\"../../../../node_modules\\grunt-contrib-jasmine\\node_modules\\jasmine-core/lib/jasmine-core/boot.js\"></script>\r\n  <!-- include source files here... -->\r\n    <!--\r\n  <script src=\"src/Player.js\"></script>\r\n  <script src=\"src/Song.js\"></script>\r\n    -->\r\n    <script src=\"../entity-enhancer.js\"></script>\r\n\r\n\r\n  <!-- include spec files here... -->\r\n    <!--\r\n  <script src=\"spec/SpecHelper.js\"></script>\r\n  <script src=\"spec/PlayerSpec.js\"></script>\r\n        -->\r\n    <script src=\"../specs/eav-content-ml.spec.js\"></script>\r\n\r\n</head>\r\n\r\n<body>\r\n</body>\r\n</html>\r\n");}]);
-
+/*
+ * This wrapper should be around all fields, so that they can collapse 
+ * when a field-group-title requires collapsing
+ */
 (function () {
     "use strict";
 
@@ -1673,6 +1722,11 @@ $templateCache.put("ml-entities/tests/SpecRunner.html","<!DOCTYPE html>\r\n<html
         }]);
 })();
 
+/*
+ * This is the label-wrapper of a group-title, 
+ * and in the html allows show/hide of the entire group
+ * show-hide works over the options property to.collapseGroup
+ */
 (function() {
 	"use strict";
 
