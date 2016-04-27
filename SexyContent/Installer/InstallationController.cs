@@ -120,6 +120,9 @@ namespace ToSic.SexyContent.Installer
                     case "08.04.00":
                         Helpers.ImportXmlSchemaOfVersion("08.04.00", false);
                         break;
+                    case "08.04.03":
+                        Helpers.ImportXmlSchemaOfVersion("08.04.03", false);
+                        break;
                 }
                 _logger.LogStep(version, "version-list check / switch done", false);
 
