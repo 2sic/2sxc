@@ -172,9 +172,9 @@ angular.module("SourceEditor")
                     if (templateConfiguration.HasList) {
                         sets.List = angular.extend({}, sets.List, { Fields: {}, PresentationFields: {} });
                         if (templateConfiguration.TypeList)
-                            svc.loadContentType(sets.List.Fields, templateConfiguration.TypeList, "List");
+                            svc.loadContentType(sets.List.Fields, templateConfiguration.TypeList, "ListContent");
                         if (templateConfiguration.TypeListPresentation)
-                            svc.loadContentType(sets.List.PresentationFields, templateConfiguration.TypeListPresentation, "List.Presentation");
+                            svc.loadContentType(sets.List.PresentationFields, templateConfiguration.TypeListPresentation, "ListContent.Presentation");
                     } else 
                         delete sets.List;
 

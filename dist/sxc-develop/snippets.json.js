@@ -69,7 +69,7 @@
             "subset": "Header",
             "name": "List-Toolbar",
             "title": "Header toolbar",
-            "content": "@List.Toolbar",
+            "content": "@ListContent.Toolbar",
             "help": "Outputs the toolbar to edit list information - place in a <div> to float like other toolbars"
         },
         {
@@ -77,7 +77,7 @@
             "subset": "Header",
             "name": "List-ToolbarFloat",
             "title": "",
-            "content": "<div class=\"sc-element\">\r\n    @List.Toolbar\r\n</div>",
+            "content": "<div class=\"sc-element\">\r\n    @ListContent.Toolbar\r\n</div>",
             "help": ""
         },
         {
