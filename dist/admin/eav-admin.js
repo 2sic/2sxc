@@ -609,7 +609,7 @@
 			if (confirm(msg))
 			    svc.delete(item.RepositoryId, false)
                     .then(function (result) {
-			            if (result.status === 200) {
+			            if (result.status >= 200 && result.status < 300) {
 			                setRowData();
 			                return;
 			            }
