@@ -612,7 +612,7 @@ angular.module("sxcFieldTemplates")
             formlyConfigProvider.setType({
                 name: "hyperlink-default",
                 templateUrl: "fields/hyperlink/hyperlink-default.html",
-                wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"],
+                wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization", "collapsible"],
                 controller: "FieldTemplate-HyperlinkCtrl as vm"
             });
         }])
@@ -711,7 +711,8 @@ angular.module("sxcFieldTemplates")
             formlyConfigProvider.setType({
                 name: "hyperlink-library",
                 templateUrl: "fields/hyperlink/hyperlink-library.html",
-                wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"],
+                // todo: check if we could use the defaultFieldWrappers instead
+                wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization", "collapsible"],
                 controller: "FieldTemplate-Library as vm"
             });
 
@@ -850,7 +851,8 @@ angular.module("eavFieldTemplates")
             formlyConfigProvider.setType({
                 name: "string-wysiwyg-adv",
                 templateUrl: "fields/string/string-wysiwyg-adv.html",
-                wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"]
+                // todo: check if we could use the defaultFieldWrappers instead
+                wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization", "collapsible"]
             });
 
 
@@ -871,7 +873,8 @@ angular.module("eavFieldTemplates")
 		formlyConfigProvider.setType({
 			name: "string-wysiwyg-dnn",
 			templateUrl: "fields/string/string-wysiwyg-dnn.html",
-			wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"],
+		    // todo: check if we could use the defaultFieldWrappers instead
+			wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization", "collapsible"],
 			controller: "FieldTemplate-WysiwygCtrl as vm"
 		});
 
@@ -920,7 +923,8 @@ angular.module("eavFieldTemplates")
             formlyConfigProvider.setType({
                 name: "string-wysiwyg-tinymce",
                 templateUrl: "fields/string/string-wysiwyg-tinymce.html",
-                wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"],
+                // todo: check if we could use the defaultFieldWrappers instead
+                wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization", "collapsible"],
                 controller: "FieldWysiwygTinyMce as vm"
             });
         }])

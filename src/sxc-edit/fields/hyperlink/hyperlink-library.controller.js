@@ -8,7 +8,8 @@
             formlyConfigProvider.setType({
                 name: "hyperlink-library",
                 templateUrl: "fields/hyperlink/hyperlink-library.html",
-                wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"],
+                // todo: check if we could use the defaultFieldWrappers instead
+                wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization", "collapsible"],
                 controller: "FieldTemplate-Library as vm"
             });
 

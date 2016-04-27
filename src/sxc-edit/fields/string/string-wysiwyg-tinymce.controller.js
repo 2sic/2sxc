@@ -8,7 +8,8 @@
             formlyConfigProvider.setType({
                 name: "string-wysiwyg-tinymce",
                 templateUrl: "fields/string/string-wysiwyg-tinymce.html",
-                wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"],
+                // todo: check if we could use the defaultFieldWrappers instead
+                wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization", "collapsible"],
                 controller: "FieldWysiwygTinyMce as vm"
             });
         })

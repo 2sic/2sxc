@@ -12,7 +12,8 @@
 		formlyConfigProvider.setType({
 			name: "string-wysiwyg-dnn",
 			templateUrl: "fields/string/string-wysiwyg-dnn.html",
-			wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"],
+		    // todo: check if we could use the defaultFieldWrappers instead
+			wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization", "collapsible"],
 			controller: "FieldTemplate-WysiwygCtrl as vm"
 		});
 

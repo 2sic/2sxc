@@ -11,7 +11,8 @@
             formlyConfigProvider.setType({
                 name: "string-wysiwyg-adv",
                 templateUrl: "fields/string/string-wysiwyg-adv.html",
-                wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"]
+                // todo: check if we could use the defaultFieldWrappers instead
+                wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization", "collapsible"]
             });
 
 

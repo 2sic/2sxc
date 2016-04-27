@@ -8,7 +8,7 @@
             formlyConfigProvider.setType({
                 name: "hyperlink-default",
                 templateUrl: "fields/hyperlink/hyperlink-default.html",
-                wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization"],
+                wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization", "collapsible"],
                 controller: "FieldTemplate-HyperlinkCtrl as vm"
             });
         })
