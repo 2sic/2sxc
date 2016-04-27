@@ -247,6 +247,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         public string AppUrl;
         public bool IsContent;
         public bool HasContent;
+        public bool SupportsAjax;
 
         public ClientInfoContentGroup(SxcInstance sxc, bool isCreated)
         {
@@ -263,6 +264,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             TemplateId = sxc.Template?.TemplateId ?? 0;     // todo: check if the 0 (previously null) causes problems
             ContentTypeName = sxc.Template?.ContentTypeStaticName ?? "";
             IsList = sxc.ContentGroup?.Template?.UseForList ?? false;//  isCreated && ((sxc.ContentGroup?.Content?.Count ?? 0) > 1);
+            SupportsAjax = sxc.IsContentApp || sxc.App?.Configuration?.SupportsAjaxReload ?? false;
         }
     }
 

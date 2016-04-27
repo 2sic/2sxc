@@ -36,6 +36,7 @@
 
         var di = vm.dashInfo = wrapper.dashInfo();
         vm.isContentApp = di.isContent;
+        vm.supportsAjax = vm.isContentApp || di.supportsAjax;
         vm.showAdvanced = di.user.canDesign;
         vm.templateId = di.templateId;
         vm.undoTemplateId = di.templateId;
@@ -101,7 +102,7 @@
                 return;
 
             // Content (ajax, don't save the changed value)
-            if (vm.isContentApp)
+            if (vm.supportsAjax)
                 return vm.renderTemplate(newTemplateId);
 
             // ToDo: Not sure why we need to set this value before calling persistTemplate. Clean up
@@ -109,7 +110,9 @@
 
             // App
             vm.persistTemplate(false)
-                .then(function() { wrapper.window.location.reload(); }); //note: must be in a function, as the reload is a method of the location object
+                .then(function() {
+                    return wrapper.window.location.reload(); //note: must be in a function, as the reload is a method of the location object
+                });
         });
 
         // Auto-set view-dropdown if content-type changed
@@ -132,8 +135,16 @@
                 return vm.appImport();
             }
 
+            // find new app specs
+            var newApp = $filter('filter')(vm.apps, { AppId: newAppId })[0];
+
             svc.setAppId(newAppId)
-                .then(function () { wrapper.window.location.reload(); });
+                .then(function() {
+                    if (newApp.SupportsAjaxReload)
+                        vm.reInitAll(true);// special code to force app-change/reload
+                    else
+                        wrapper.window.location.reload(); 
+                });
         });
 
         vm.manageApps = function() {    wrapper.sxc.manage.action({ "action": "zone" });    };
@@ -146,6 +157,7 @@
         // store the template state to the server, optionally force create of content, and hide the selector
         vm.persistTemplate = wrapper.contentBlock.persistTemplate;
         vm.renderTemplate = wrapper.contentBlock.reload;  // just map to that method
+        vm.reInitAll = wrapper.contentBlock.reloadAndReInitialize;  // just map to that method
 
         vm.appStore = function() {
             window.open("http://2sxc.org/en/apps");

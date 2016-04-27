@@ -42,7 +42,8 @@
             templateId: ec.ContentGroup.TemplateId,
             contentTypeId: ec.ContentGroup.ContentTypeName,
             templateChooserVisible: ec.ContentBlock.ShowTemplatePicker, // todo: maybe move to content-goup
-            user: { canDesign: ec.User.CanDesign, canDevelop: ec.User.CanDesign }
+            user: { canDesign: ec.User.CanDesign, canDevelop: ec.User.CanDesign },
+            supportsAjax: ec.ContentGroup.SupportsAjax
         };
 
         var toolsAndButtons = $2sxc._toolbarManager(sxc, ec);
@@ -51,7 +52,7 @@
         var editManager = {
             // public method to find out if it's in edit-mode
             isEditMode: function () { return ec.Environment.IsEditable; },
-            reloadWithAjax: ec.ContentGroup.IsContent,  // for now, allow all content to use ajax, apps use page-reload
+            reloadWithAjax: ec.ContentGroup.SupportsAjax,  // for now, allow all content to use ajax, apps use page-reload
 
             dialogParameters: ngDialogParams, // used for various dialogs
             toolbarConfig: toolsAndButtons.config, // used to configure buttons / toolbars

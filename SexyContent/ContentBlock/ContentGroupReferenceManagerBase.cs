@@ -100,7 +100,7 @@ namespace ToSic.SexyContent.ContentBlock
                 return
                     AppManagement.GetApps(zoneId.Value, false, SxcContext.ContentBlock.PortalSettings)
                         .Where(a => !a.Hidden)
-                        .Select(a => new { a.Name, a.AppId });
+                        .Select(a => new { a.Name, a.AppId, SupportsAjaxReload = a.Configuration.SupportsAjaxReload ?? false });
             }
             catch (Exception e)
             {

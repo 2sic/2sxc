@@ -574,9 +574,14 @@ $2sxc.contentBlock = function (sxc, manage, cbTag) {
         },
 
         // this one assumes a replace / change has already happened, but now must be finalized...
-        reloadAndReInitialize: function () {
+        reloadAndReInitialize: function (forceAjax) {
+            if (forceAjax)
+                manage.reloadWithAjax = true;
+
             if (manage.reloadWithAjax) // necessary to show the original template again
-                return cb.reload()
+                return (forceAjax
+                    ? cb.reload(-1) // -1 is important to it doesn't try to use the old templateid
+                    : cb.reload())
                     .then(function () {
                         // create new sxc-object
                         cb.sxc = cb.sxc.recreate();
@@ -598,7 +603,7 @@ $2sxc.contentBlock = function (sxc, manage, cbTag) {
                 return null;
 
             // if reloading a non-content-app, re-load the page
-            if (!manage.reloadWithAjax)
+            if (!manage.reloadWithAjax) // special code to force ajax-app-change
                 return window.location.reload();
 
             // remember for future persist/save/undo
@@ -811,7 +816,8 @@ $2sxc.contentBlock = function (sxc, manage, cbTag) {
             templateId: ec.ContentGroup.TemplateId,
             contentTypeId: ec.ContentGroup.ContentTypeName,
             templateChooserVisible: ec.ContentBlock.ShowTemplatePicker, // todo: maybe move to content-goup
-            user: { canDesign: ec.User.CanDesign, canDevelop: ec.User.CanDesign }
+            user: { canDesign: ec.User.CanDesign, canDevelop: ec.User.CanDesign },
+            supportsAjax: ec.ContentGroup.SupportsAjax
         };
 
         var toolsAndButtons = $2sxc._toolbarManager(sxc, ec);
@@ -820,7 +826,7 @@ $2sxc.contentBlock = function (sxc, manage, cbTag) {
         var editManager = {
             // public method to find out if it's in edit-mode
             isEditMode: function () { return ec.Environment.IsEditable; },
-            reloadWithAjax: ec.ContentGroup.IsContent,  // for now, allow all content to use ajax, apps use page-reload
+            reloadWithAjax: ec.ContentGroup.SupportsAjax,  // for now, allow all content to use ajax, apps use page-reload
 
             dialogParameters: ngDialogParams, // used for various dialogs
             toolbarConfig: toolsAndButtons.config, // used to configure buttons / toolbars

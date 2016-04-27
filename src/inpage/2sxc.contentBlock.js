@@ -51,9 +51,14 @@ $2sxc.contentBlock = function (sxc, manage, cbTag) {
         },
 
         // this one assumes a replace / change has already happened, but now must be finalized...
-        reloadAndReInitialize: function () {
+        reloadAndReInitialize: function (forceAjax) {
+            if (forceAjax)
+                manage.reloadWithAjax = true;
+
             if (manage.reloadWithAjax) // necessary to show the original template again
-                return cb.reload()
+                return (forceAjax
+                    ? cb.reload(-1) // -1 is important to it doesn't try to use the old templateid
+                    : cb.reload())
                     .then(function () {
                         // create new sxc-object
                         cb.sxc = cb.sxc.recreate();
@@ -75,7 +80,7 @@ $2sxc.contentBlock = function (sxc, manage, cbTag) {
                 return null;
 
             // if reloading a non-content-app, re-load the page
-            if (!manage.reloadWithAjax)
+            if (!manage.reloadWithAjax) // special code to force ajax-app-change
                 return window.location.reload();
 
             // remember for future persist/save/undo

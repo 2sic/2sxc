@@ -195,8 +195,13 @@ namespace ToSic.SexyContent.WebApi.View
                     catch (System.Globalization.CultureNotFoundException) { }
 
                 var cbToRender = SxcContext.ContentBlock;
-                var template = cbToRender.App.TemplateManager.GetTemplate(templateId);
-                cbToRender.SxcInstance.Template = template;
+
+                // if a real templateid was specified, swap to that
+                if (templateId > 0)
+                {
+                    var template = cbToRender.App.TemplateManager.GetTemplate(templateId);
+                    cbToRender.SxcInstance.Template = template;
+                }
 
                 var rendered = cbToRender.SxcInstance.Render().ToString();
 
