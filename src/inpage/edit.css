@@ -5,7 +5,8 @@
 
 /* enable DNNEmptyPane for Quick-Edit */
 .DNNEmptyPane { 
-    width: auto; 
+    /*width: auto;*/
+    disablednote: "temporary disabled as it has side-effects";
     special-instructions: "read more on 2sxc.org/help?tag=quick-edit"
 }
 
