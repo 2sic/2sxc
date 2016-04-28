@@ -11,11 +11,12 @@
         }
     };
 
-    diag.create = function (sxc, tag, url, closeCallback) {
+    diag.create = function (sxc, wrapperTag, url, closeCallback) {
         var diagBox = $(diag.templates.inline.replace("{{url}}", url))[0];    // build iframe tag
 
         diagBox.closeCallback = closeCallback;
         diagBox.sxc = sxc;
+        // diagBox.attr("data-for-manual-debug", "app: " + sxc.manage.ContentGroup.AppUrl);
 
         //#region data bridge both ways
         diagBox.getManageInfo = function() {    return diagBox.sxc.manage.dialogParameters; };
@@ -37,11 +38,13 @@
             diagBox.height = height + 'px';
             diagBox.previousHeight = height;
         };
-        diagBox.addEventListener('load', function () {
+
+        function loadEventListener()  {
             diagBox.syncHeight();
-            window.setInterval(diagBox.syncHeight, 200); // Not ideal - polling the document height may cause performance issues
+            diagBox.resizeInterval = window.setInterval(diagBox.syncHeight, 200); // Not ideal - polling the document height may cause performance issues
             //diagBox.contentDocument.body.addEventListener('resize', function () { diagBox.syncHeight(); }, true); // The resize event is not called reliable when the iframe content changes
-        });
+        }
+        diagBox.addEventListener('load', loadEventListener);
 
         //#endregion
 
@@ -54,7 +57,13 @@
         diagBox.justHide = function () { diagBox.style.display = "none"; };
         //#endregion
 
-        $(tag).before(diagBox);
+        // remove the diagBox - important when replacing the app with ajax, and the diag needs to be re-initialized
+        diagBox.destroy = function () {
+            window.clearInterval(diagBox.resizeInterval);   // clear this first, to prevent errors
+            diagBox.remove(); // use the jquery remove for this
+        };
+
+        $(wrapperTag).before(diagBox);
 
         return diagBox;
     };

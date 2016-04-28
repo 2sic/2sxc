@@ -60,6 +60,7 @@ $2sxc.contentBlock = function (sxc, manage, cbTag) {
                     ? cb.reload(-1) // -1 is important to it doesn't try to use the old templateid
                     : cb.reload())
                     .then(function () {
+                        if (forceAjax) sxc.manage.dialog.destroy(); // only remove on force, which is an app-change
                         // create new sxc-object
                         cb.sxc = cb.sxc.recreate();
                         cb.sxc.manage.toolbar._processToolbars(); // sub-optimal deep dependency
