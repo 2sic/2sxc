@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -32,9 +33,22 @@ namespace ToSic.SexyContent.Adam
         {
             return folderManager.FolderExists(_portalId, path);
         }
-        internal IFolderInfo Add(string path)
+        internal void Add(string path)
         {
-            return folderManager.AddFolder(_portalId, path);
+            try
+            {
+                folderManager.AddFolder(_portalId, path);
+            }
+            catch (SqlException ex)
+            {
+                // don't do anything - this happens when multiple processes try to add the folder at the same time
+                // like when two fields in a dialog cause the web-api to create the folders in parallel calls
+                // see also https://github.com/2sic/2sxc/issues/811
+            }
+            catch (NullReferenceException ex)
+            {
+                // also catch this, as it's an additional exception which also happens in the AddFolder when a folder already existed
+            }
         }
 
         internal IFolderInfo Get(string path)
