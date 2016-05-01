@@ -224,12 +224,11 @@ namespace ToSic.SexyContent
         {
             get
             {
-                if (_queries == null)
-                {
-                    if(ConfigurationProvider == null)
-                        throw new Exception("Can't use app-queries, because the necessary configuration provider hasn't been initialized. Call EnableQuery first.");
-                    _queries = DataPipeline.AllPipelines(ZoneId, AppId, ConfigurationProvider);
-                }
+                if (_queries != null) return _queries;
+
+                if(ConfigurationProvider == null)
+                    throw new Exception("Can't use app-queries, because the necessary configuration provider hasn't been initialized. Call EnableQuery first.");
+                _queries = DataPipeline.AllPipelines(ZoneId, AppId, ConfigurationProvider);
                 return _queries;
             }
         }

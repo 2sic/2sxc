@@ -8,7 +8,7 @@ using ToSic.SexyContent.EAVExtensions;
 namespace ToSic.SexyContent.DataSources
 {
 	[PipelineDesigner]
-    public class ModuleDataSource : BaseDataSource
+    public sealed class ModuleDataSource : BaseDataSource
     {
         private SxcInstance _sxcContext;
 
@@ -16,12 +16,16 @@ namespace ToSic.SexyContent.DataSources
         {
             get
             {
-                if(_sxcContext == null)
-                    throw new Exception("SxcContent is still null - can't access the SxcContent before initializing it");
-                    // old: _sxcContext = new SxcInstance(In["Default"].Source.ZoneId, In["Default"].Source.AppId);
+                if (_sxcContext == null)
+                {
+                    var provider = ConfigurationProvider as SxcValueCollectionProvider;
+                    _sxcContext = provider?.SxcInstance;
+                    if (provider == null)
+                        throw new Exception("SxcContent is still null - can't access the SxcContent before initializing it");
+                }
                 return _sxcContext;
             }
-            set { _sxcContext = value; }
+            //set { _sxcContext = value; }
         }
 
 		private ContentGroup _contentGroup;
@@ -37,7 +41,7 @@ namespace ToSic.SexyContent.DataSources
                     {
                         if (!ModuleId.HasValue)
                             throw new Exception("Looking up ContentGroup failed because ModuleId is null.");
-                        _contentGroup = SxcContext.AppContentGroups.GetContentGroupForModule(ModuleId.Value);
+                        _contentGroup = new ContentGroupManager(ZoneId, AppId).GetContentGroupForModule(ModuleId.Value);
                     }
                 }
                 return _contentGroup;
@@ -56,57 +60,44 @@ namespace ToSic.SexyContent.DataSources
         private IDictionary<int, IEntity> _content;
         private IDictionary<int, IEntity> GetContent()
         {
-            if (_content == null)
-            {
-                _content = GetStream(ContentGroup.Content, Template.ContentDemoEntity, ContentGroup.Presentation, Template.PresentationDemoEntity);
-            }
-            return _content;
+            return _content ??
+                   (_content =
+                       GetStream(ContentGroup.Content, Template.ContentDemoEntity, ContentGroup.Presentation,
+                           Template.PresentationDemoEntity));
         }
 
-        private IDictionary<int, IEntity> _presentation;
-        private IDictionary<int, IEntity> GetPresentation()
-        {
-            if (_presentation == null)
-            {
-                _presentation = GetStream(ContentGroup.Presentation, Template.PresentationDemoEntity, null, null);
-            }
-            return _presentation;
-        }
+        // 2016-05-01 2dm - as far as I see this is deprecated, will comment
+	    //private IDictionary<int, IEntity> _presentation;
+     //   private IDictionary<int, IEntity> GetPresentation()
+     //   {
+     //       return _presentation ??
+     //              (_presentation = GetStream(ContentGroup.Presentation, Template.PresentationDemoEntity, null, null));
+     //   }
 
-        private IDictionary<int, IEntity> _listContent;
+	    private IDictionary<int, IEntity> _listContent;
         private IDictionary<int, IEntity> GetListContent()
         {
-            if (_listContent == null)
-            {
-                _listContent = GetStream(ContentGroup.ListContent, Template.ListContentDemoEntity, ContentGroup.ListPresentation, Template.ListPresentationDemoEntity, true);
-            }
-            return _listContent;
+            return _listContent ??
+                   (_listContent =
+                       GetStream(ContentGroup.ListContent, Template.ListContentDemoEntity, ContentGroup.ListPresentation,
+                           Template.ListPresentationDemoEntity, true));
         }
 
-        private IDictionary<int, IEntity> _listPresentation;
-        private IDictionary<int, IEntity> GetListPresentation()
-        {
-            if (_listPresentation == null)
-            {
-                _listPresentation = GetStream(ContentGroup.ListPresentation, Template.ListPresentationDemoEntity, null, null, true);
-            }
-            return _listPresentation;
-        }
-        #endregion
+        // 2016-05-01 2dm - as far as I see this is deprecated, will comment
+        //private IDictionary<int, IEntity> _listPresentation;
+        //private IDictionary<int, IEntity> GetListPresentation()
+        //{
+        //    return _listPresentation ??
+        //           (_listPresentation =
+        //               GetStream(ContentGroup.ListPresentation, Template.ListPresentationDemoEntity, null, null, true));
+        //}
+
+	    #endregion
 
         private Template _template;
-		private Template Template
-        {
-			get
-			{
-			    return _template ?? (_template = OverrideTemplate ?? ContentGroup.Template);
-			    //_template = OverrideTemplateId.HasValue
-					//	? SxcContext.AppTemplates.GetTemplate(OverrideTemplateId.Value)
-					//	: ContentGroup.Template;
-			}
-        }
+		private Template Template => _template ?? (_template = OverrideTemplate ?? ContentGroup.Template);
 
-		private IDictionary<int, IEntity> GetStream(List<IEntity> content, IEntity contentDemoEntity, List<IEntity> presentation, IEntity presentationDemoEntity, bool isListHeader = false)
+	    private IDictionary<int, IEntity> GetStream(List<IEntity> content, IEntity contentDemoEntity, List<IEntity> presentation, IEntity presentationDemoEntity, bool isListHeader = false)
         {
 			var entitiesToDeliver = new Dictionary<int, IEntity>();
             // if no template is defined, return empty list
@@ -177,8 +168,6 @@ namespace ToSic.SexyContent.DataSources
         }
 
 	    public bool UseSxcInstanceContentGroup = false;
-
-        //public int? OverrideTemplateId { get; set; }
 
         public Template OverrideTemplate { get; set; }
     }
