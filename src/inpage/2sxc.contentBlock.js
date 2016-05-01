@@ -52,15 +52,17 @@ $2sxc.contentBlock = function (sxc, manage, cbTag) {
 
         // this one assumes a replace / change has already happened, but now must be finalized...
         reloadAndReInitialize: function (forceAjax) {
+            // force ajax is set when a new app was chosen, and the new app supports ajax
+            // this value can only be true, or not exist at all
             if (forceAjax)
                 manage.reloadWithAjax = true;
 
             if (manage.reloadWithAjax) // necessary to show the original template again
-                return (forceAjax
+                return (manage.reloadWithAjax
                     ? cb.reload(-1) // -1 is important to it doesn't try to use the old templateid
                     : cb.reload())
                     .then(function () {
-                        if (forceAjax) sxc.manage.dialog.destroy(); // only remove on force, which is an app-change
+                        if (manage.reloadWithAjax) sxc.manage.dialog.destroy(); // only remove on force, which is an app-change
                         // create new sxc-object
                         cb.sxc = cb.sxc.recreate();
                         cb.sxc.manage.toolbar._processToolbars(); // sub-optimal deep dependency
