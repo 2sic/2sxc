@@ -22,7 +22,7 @@ namespace ToSic.SexyContent.WebApi.ToRefactorDeliverCBDataLight
         /// <summary>
         /// Returns a JSON string for the elements
         /// </summary>
-        public string GetJsonFromStreams(IDataSource source, string[] streamsToPublish)
+        internal string GetJsonFromStreams(IDataSource source, string[] streamsToPublish)
         {
             var language = Thread.CurrentThread.CurrentCulture.Name;
 
@@ -30,8 +30,8 @@ namespace ToSic.SexyContent.WebApi.ToRefactorDeliverCBDataLight
             {
                 List = (from c in source.Out[s].List select new DynamicEntity(c.Value, new[] { language }, _sxci).ToDictionary() /*Sexy.ToDictionary(c.Value, language)*/).ToList()
             });
-
-            return JsonConvert.SerializeObject(y);
+            // var jss = new JsonSerializerSettings {MaxDepth = 1};
+            return JsonConvert.SerializeObject(y);//, jss);
         }
 
 

@@ -92,16 +92,18 @@ namespace ToSic.SexyContent.WebApi
                 { ReasonPhrase = dataHandler.GeneratePleaseEnableDataError(SxcContext.ModuleInfo.ModuleID,
                     SxcContext.ModuleInfo.ModuleTitle)});
             }
-            var response = this.Request.CreateResponse(HttpStatusCode.OK);
+            var response = Request.CreateResponse(HttpStatusCode.OK);
             response.Content = new StringContent(json, Encoding.UTF8, "application/json");
             return response;
     }
 
-        /// <summary>
-        /// Check if a user may do something - and throw an error if the permission is not given
-        /// </summary>
-        /// <param name="contentType"></param>
-        /// <param name="grant"></param>
+	    /// <summary>
+	    /// Check if a user may do something - and throw an error if the permission is not given
+	    /// </summary>
+	    /// <param name="contentType"></param>
+	    /// <param name="grant"></param>
+	    /// <param name="autoAllowAdmin"></param>
+	    /// <param name="specificItem"></param>
 	    private void PerformSecurityCheck(string contentType, PermissionGrant grant, bool autoAllowAdmin = false, IEntity specificItem = null)
 	    {
             // Check if we can find this content-type

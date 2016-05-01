@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Specialized;
+using System.Web;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using ToSic.SexyContent.DataSources;
@@ -17,7 +19,9 @@ namespace ToSic.SexyContent.ContentBlock
         public override ViewDataSource Data => _dataSource 
             ?? (_dataSource = ViewDataSource.ForContentGroupInSxc(SxcInstance, Template, ModuleInfo.ModuleID));
 
-        public ModuleContentBlock(ModuleInfo moduleInfo)
+        private NameValueCollection _urlParams;
+
+        public ModuleContentBlock(ModuleInfo moduleInfo, NameValueCollection overrideParams = null)
         {
             if(moduleInfo == null)
                 throw new Exception("Need valid ModuleInfo / ModuleConfiguration of runtime");
@@ -25,6 +29,9 @@ namespace ToSic.SexyContent.ContentBlock
             ModuleInfo = moduleInfo;
             ParentId = moduleInfo.ModuleID;
             ContentBlockId = ParentId;
+
+            // url-params
+            _urlParams = overrideParams ?? HttpContext.Current?.Request?.QueryString;
 
             // Ensure we know what portal the stuff is coming from
             // PortalSettings is null, when in search mode
@@ -70,7 +77,7 @@ namespace ToSic.SexyContent.ContentBlock
         }
 
         public override SxcInstance SxcInstance => _sxcInstance ??
-                                          (_sxcInstance = new SxcInstance(this, ModuleInfo));
+                                          (_sxcInstance = new SxcInstance(this, ModuleInfo, _urlParams));
 
         public override bool IsContentApp => ModuleInfo.DesktopModule.ModuleName == "2sxc";
 

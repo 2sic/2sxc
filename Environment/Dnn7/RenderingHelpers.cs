@@ -155,6 +155,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         public string WebsiteUrl;
         public int PageId;          // aka TabId
         public string PageUrl;
+        // public Dictionary<string, string>  
 
         public int InstanceId;      // aka ModuleId
 
@@ -218,7 +219,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         public string name;
     }
 
-    public class ClientInfoContentBlock //: ClientInfoEntity
+    public class ClientInfoContentBlock 
     {
         public bool ShowTemplatePicker;
         public bool IsEntity;

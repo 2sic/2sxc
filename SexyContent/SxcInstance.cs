@@ -45,6 +45,11 @@ namespace ToSic.SexyContent
 
         #endregion
 
+        /// <summary>
+        /// The url-parameters (or alternative thereof) to use when picking views or anything
+        /// </summary>
+        internal NameValueCollection Parameters;
+
         #region Info for current runtime instance
         public ContentGroup ContentGroup => ContentBlock.ContentGroup;
 
@@ -84,17 +89,18 @@ namespace ToSic.SexyContent
             if (IsContentApp || App == null) return;
 
             // #2 Change Template if URL contains the part in the metadata "ViewNameInUrl"
-            var urlParams = HttpContext.Current?.Request?.QueryString; // todo: reduce dependency on context-current...
-            if (urlParams == null) return;
-            var templateFromUrl = TryToGetTemplateBasedOnUrlParams(urlParams);
+            if (Parameters == null) return;
+            var templateFromUrl = TryToGetTemplateBasedOnUrlParams();
             if (templateFromUrl != null)
                 Template = templateFromUrl;
         }
 
-        private Template TryToGetTemplateBasedOnUrlParams(NameValueCollection urlParams)
+        private Template TryToGetTemplateBasedOnUrlParams()
         {
-            var urlParameterDict = urlParams.AllKeys.ToDictionary(key => key?.ToLower() ?? "", key =>
-                $"{key}/{urlParams[key]}".ToLower());
+            if (Parameters == null) return null;
+
+            var urlParameterDict = Parameters.AllKeys.ToDictionary(key => key?.ToLower() ?? "", key =>
+                $"{key}/{Parameters[key]}".ToLower());
 
             foreach (var template in App.TemplateManager.GetAllTemplates().Where(t => !string.IsNullOrEmpty(t.ViewNameInUrl)))
             {
@@ -115,10 +121,15 @@ namespace ToSic.SexyContent
         #endregion
 
         #region Constructor
-        internal SxcInstance(IContentBlock cb, ModuleInfo runtimeModuleInfo)
+        internal SxcInstance(IContentBlock cb, ModuleInfo runtimeModuleInfo, NameValueCollection urlparams = null)
         {
             ContentBlock = cb;
             ModuleInfo = runtimeModuleInfo;
+
+            // try to get url parameters, because we may need them later for view-switching and more
+            Parameters = urlparams;
+            //if (Parameters == null)
+            //    Parameters = HttpContext.Current?.Request?.QueryString; // todo: reduce dependency on context-current...
             // Build up the environment. If we know the module context, then use permissions from there
             // modinfo is null in cases where things are not known yet, portalsettings are null in search-scenarios
             Environment.Permissions = (ModuleInfo != null) && (PortalSettings.Current != null)
@@ -132,8 +143,9 @@ namespace ToSic.SexyContent
         internal SxcInstance(IContentBlock cb, SxcInstance runtimeInstance)
         {
             ContentBlock = cb;
+            // Inherit various context information from the original SxcInstance
             ModuleInfo = runtimeInstance.ModuleInfo;
-            // Build up the environment. If we know the module context, then use permissions from there
+            Parameters = runtimeInstance.Parameters;
             Environment.Permissions = runtimeInstance.Environment.Permissions;
 
             // url-override of view / data

@@ -142,7 +142,8 @@
 			"Table": {
 				"Id": "ID",
 				"Name": "Name",
-				"Description": "Description"
+				"Description": "Description",
+				"Actions": ""
 			}
 		},
 		"Designer": {},
