@@ -11,6 +11,7 @@ using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Client.ClientResourceManagement;
 using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Internal;
+// ReSharper disable InconsistentNaming
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
@@ -155,7 +156,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         public string WebsiteUrl;
         public int PageId;          // aka TabId
         public string PageUrl;
-        // public Dictionary<string, string>  
+        public IEnumerable<KeyValuePair<string, string>> parameters;
 
         public int InstanceId;      // aka ModuleId
 
@@ -180,6 +181,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
             SxcRootUrl = systemRootUrl;
 
             IsEditable = sxc?.Environment?.Permissions.UserMayEditContent ?? false;
+            parameters = sxc?.Parameters;
         }
     }
 

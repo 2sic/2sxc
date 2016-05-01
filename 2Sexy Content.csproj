@@ -201,6 +201,7 @@
     <Compile Include="DnnWebForms\FileManager.ascx.designer.cs">
       <DependentUpon>FileManager.ascx</DependentUpon>
     </Compile>
+    <Compile Include="DnnWebForms\Helpers\SystemWeb.cs" />
     <Compile Include="DnnWebForms\PagePicker.ascx.cs">
       <DependentUpon>PagePicker.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Specialized;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using DotNetNuke.Entities.Modules;
@@ -47,8 +47,9 @@ namespace ToSic.SexyContent
 
         /// <summary>
         /// The url-parameters (or alternative thereof) to use when picking views or anything
+        /// Note that it's not the same type as the request.querystring to ease migration to future coding conventions
         /// </summary>
-        internal NameValueCollection Parameters;
+        internal IEnumerable<KeyValuePair<string, string>> Parameters;
 
         #region Info for current runtime instance
         public ContentGroup ContentGroup => ContentBlock.ContentGroup;
@@ -99,8 +100,13 @@ namespace ToSic.SexyContent
         {
             if (Parameters == null) return null;
 
-            var urlParameterDict = Parameters.AllKeys.ToDictionary(key => key?.ToLower() ?? "", key =>
-                $"{key}/{Parameters[key]}".ToLower());
+            // new 2016-05-01
+            var urlParameterDict = Parameters.ToDictionary(pair => pair.Key?.ToLower() ?? "", pair =>
+                $"{pair.Key}/{pair.Value}".ToLower());
+            
+            // old
+            //var urlParameterDict = Parameters.AllKeys.ToDictionary(key => key?.ToLower() ?? "", key =>
+            //    $"{key}/{Parameters[key]}".ToLower());
 
             foreach (var template in App.TemplateManager.GetAllTemplates().Where(t => !string.IsNullOrEmpty(t.ViewNameInUrl)))
             {
@@ -121,7 +127,7 @@ namespace ToSic.SexyContent
         #endregion
 
         #region Constructor
-        internal SxcInstance(IContentBlock cb, ModuleInfo runtimeModuleInfo, NameValueCollection urlparams = null)
+        internal SxcInstance(IContentBlock cb, ModuleInfo runtimeModuleInfo, IEnumerable<KeyValuePair<string, string>> urlparams = null)
         {
             ContentBlock = cb;
             ModuleInfo = runtimeModuleInfo;

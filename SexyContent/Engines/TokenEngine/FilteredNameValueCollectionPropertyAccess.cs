@@ -12,17 +12,14 @@ namespace ToSic.SexyContent.Engines.TokenEngine
     /// </summary>
     public class FilteredNameValueCollectionPropertyAccess : BaseValueProvider, IPropertyAccess
     {
-	    readonly NameValueCollection NameValueCollection;
+	    readonly NameValueCollection _nameValueCollection;
         public FilteredNameValueCollectionPropertyAccess(string name, NameValueCollection list)
         {
             Name = name;
-            NameValueCollection = list;
+            _nameValueCollection = list;
         }
 
-        public CacheLevel Cacheability
-        {
-            get { return CacheLevel.notCacheable; }
-        }
+        public CacheLevel Cacheability => CacheLevel.notCacheable;
 
         /// <summary>
         /// Get Property out of NameValueCollection
@@ -36,9 +33,9 @@ namespace ToSic.SexyContent.Engines.TokenEngine
         /// <returns></returns>
         public string GetProperty(string strPropertyName, string strFormat, CultureInfo formatProvider, UserInfo AccessingUser, Scope AccessLevel, ref bool PropertyNotFound)
         {
-            if (NameValueCollection == null)
+            if (_nameValueCollection == null)
                 return string.Empty;
-            var value = NameValueCollection[strPropertyName];
+            var value = _nameValueCollection[strPropertyName];
             //string OutputFormat = null;
             //if (strFormat == string.Empty)
             //{
@@ -60,9 +57,9 @@ namespace ToSic.SexyContent.Engines.TokenEngine
 
         public override string Get(string property, string format, ref bool propertyNotFound)
         {
-            if (NameValueCollection == null)
+            if (_nameValueCollection == null)
                 return string.Empty;
-            return FormatString(NameValueCollection[property], format);
+            return FormatString(_nameValueCollection[property], format);
         }
 
         public override bool Has(string property)

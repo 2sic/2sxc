@@ -1,9 +1,9 @@
-﻿using System.Globalization;
+﻿using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Globalization;
 using System.Threading;
 using System.Web;
 using DotNetNuke.Entities.Portals;
-using ToSic.Eav;
-using ToSic.Eav.DataSources;
 using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.Engines.TokenEngine;
 
@@ -13,7 +13,7 @@ namespace ToSic.SexyContent.DataSources
     {
         // note: not sure yet where the best place for this method is, so it's here for now
         // will probably move again some day
-        internal static ValueCollectionProvider GetConfigProviderForModule(int moduleId, /*PortalSettings portalSettings,*/ SexyContent.App App)
+        internal static ValueCollectionProvider GetConfigProviderForModule(int moduleId, SexyContent.App app, IEnumerable<KeyValuePair<string,string>> parameters )
         {
             var portalSettings = PortalSettings.Current;
 
@@ -23,7 +23,15 @@ namespace ToSic.SexyContent.DataSources
             if (HttpContext.Current != null)
             {
                 var request = HttpContext.Current.Request;
-                provider.Sources.Add("querystring", new FilteredNameValueCollectionPropertyAccess("querystring", request.QueryString));
+
+                // new
+                NameValueCollection paramList = new NameValueCollection();
+                if(parameters != null)
+                    foreach (var pair in parameters)
+                        paramList.Add(pair.Key, pair.Value);
+                provider.Sources.Add("querystring", new FilteredNameValueCollectionPropertyAccess("querystring", paramList));
+                // old
+                // provider.Sources.Add("querystring", new FilteredNameValueCollectionPropertyAccess("querystring", request.QueryString));
                 provider.Sources.Add("server", new FilteredNameValueCollectionPropertyAccess("server", request.ServerVariables));
                 provider.Sources.Add("form", new FilteredNameValueCollectionPropertyAccess("form", request.Form));
             }
@@ -33,14 +41,14 @@ namespace ToSic.SexyContent.DataSources
             {
                 var dnnUsr = portalSettings.UserInfo;
                 var dnnCult = Thread.CurrentThread.CurrentCulture;
-                var dnn = new TokenReplaceDnn(App, moduleId, portalSettings, dnnUsr);
+                var dnn = new TokenReplaceDnn(app, moduleId, portalSettings, dnnUsr);
                 var stdSources = dnn.PropertySources;
                 foreach (var propertyAccess in stdSources)
                     provider.Sources.Add(propertyAccess.Key,
                         new ValueProviderWrapperForPropertyAccess(propertyAccess.Key, propertyAccess.Value, dnnUsr, dnnCult));
             }
 
-            provider.Sources.Add("app", new AppPropertyAccess("app", App));
+            provider.Sources.Add("app", new AppPropertyAccess("app", app));
 
             // add module if it was not already added previously
             if (!provider.Sources.ContainsKey("module"))
@@ -49,8 +57,8 @@ namespace ToSic.SexyContent.DataSources
                 modulePropertyAccess.Properties.Add("ModuleID", moduleId.ToString(CultureInfo.InvariantCulture));
                 provider.Sources.Add(modulePropertyAccess.Name, modulePropertyAccess);
             }
-            var _valueCollectionProvider = provider;
-            return _valueCollectionProvider;
+            return provider;
+            //return _valueCollectionProvider;
         }
     }
 }

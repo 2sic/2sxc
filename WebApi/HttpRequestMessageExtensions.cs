@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Web;
-using DotNetNuke.Entities.Portals;
+using DotNetNuke.Common.Utilities;
 using DotNetNuke.Web.Api;
 using ToSic.SexyContent.ContentBlock;
 using ToSic.SexyContent.Interfaces;
@@ -20,8 +17,19 @@ namespace ToSic.SexyContent.WebApi
 
             // get url parameters and provide override values to ensure all configuration is 
             // preserved in AJAX calls
-            NameValueCollection urlParams = new NameValueCollection(); 
+            List<KeyValuePair<string, string>> urlParams = null;
             var requestParams = request.GetQueryNameValuePairs();
+            var origParams = requestParams.Where(p => p.Key == "originalparameters").ToList();
+            if (origParams.Any())
+            {
+                var paramSet = origParams.First().Value;
+                var items = Json.Deserialize<List<KeyValuePair<string, string>>>(paramSet);
+                urlParams = items.ToList();
+                //urlParams = requestParams
+                //    .Where(keyValuePair => keyValuePair.Key.IndexOf("orig", StringComparison.Ordinal) == 0)
+                //    .Select(pair => new KeyValuePair<string, string>(pair.Key.Substring(4), pair.Value))
+                //    .ToList();
+            }
             // first, check the special overrides
             //var origparams = requestParams.Select(np => np.Key == "urlparameters").ToList();
             //if (origparams.Any())
@@ -30,10 +38,9 @@ namespace ToSic.SexyContent.WebApi
             //}
 
             // then add remaining params
-            foreach (KeyValuePair<string, string> keyValuePair in requestParams.Where(keyValuePair => keyValuePair.Key.IndexOf("orig", StringComparison.Ordinal) == 0))
-                urlParams.Add(keyValuePair.Key.Substring(4), keyValuePair.Value);
 
-            IContentBlock contentBlock = new ModuleContentBlock(moduleInfo);
+
+            IContentBlock contentBlock = new ModuleContentBlock(moduleInfo, urlParams);
 
             // check if we need an inner block
             if (request.Headers.Contains(cbidHeader)) { 

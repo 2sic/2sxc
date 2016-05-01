@@ -58,9 +58,9 @@ namespace ToSic.SexyContent.Engines.TokenEngine
         #endregion
 
 
-        private AppAndDataHelpers dataHelper;
+        private AppAndDataHelpers _dataHelper;
 
-        private TokenReplaceEav tokenReplace;
+        private TokenReplaceEav _tokenReplace;
 
 
         protected override void Init()
@@ -72,20 +72,20 @@ namespace ToSic.SexyContent.Engines.TokenEngine
 
         private void InitDataHelper()
         {
-            dataHelper = new AppAndDataHelpers(Sexy);//, ModuleInfo, (ViewDataSource)DataSource);//, App);
+            _dataHelper = new AppAndDataHelpers(Sexy);
         }
 
         private void InitTokenReplace()
         {
-            var confProv = ConfigurationProvider.GetConfigProviderForModule(ModuleInfo.ModuleID, Sexy.App); //Sexy.GetConfigProviderForModule(ModuleInfo.ModuleID, Sexy.PS);
-            tokenReplace = new TokenReplaceEav(App, ModuleInfo.ModuleID, PortalSettings.Current, confProv);
+            var confProv = ConfigurationProvider.GetConfigProviderForModule(ModuleInfo.ModuleID, Sexy.App, Sexy.Parameters);
+            _tokenReplace = new TokenReplaceEav(App, ModuleInfo.ModuleID, PortalSettings.Current, confProv);
             
             // Add the Content and ListContent property sources used always
-            tokenReplace.ValueSources.Add(SourcePropertyName.ListContent, new DynamicEntityPropertyAccess(SourcePropertyName.ListContent, dataHelper.ListContent));
-            var contentProperty = dataHelper.List.FirstOrDefault();
+            _tokenReplace.ValueSources.Add(SourcePropertyName.ListContent, new DynamicEntityPropertyAccess(SourcePropertyName.ListContent, _dataHelper.ListContent));
+            var contentProperty = _dataHelper.List.FirstOrDefault();
             if (contentProperty != null)
             {
-                tokenReplace.ValueSources.Add(SourcePropertyName.Content, new DynamicEntityPropertyAccess(SourcePropertyName.Content, contentProperty.Content));
+                _tokenReplace.ValueSources.Add(SourcePropertyName.Content, new DynamicEntityPropertyAccess(SourcePropertyName.Content, contentProperty.Content));
             }
         }
 
@@ -141,7 +141,7 @@ namespace ToSic.SexyContent.Engines.TokenEngine
             {
                 // Create property sources for the current data item (for the current data item and its list information)
                 var propertySources = new Dictionary<string, IValueProvider>();
-                propertySources.Add(sourceName, new DynamicEntityPropertyAccess(sourceName, dataHelper.AsDynamic(dataItems.ElementAt(i).Value), i, itemsCount));
+                propertySources.Add(sourceName, new DynamicEntityPropertyAccess(sourceName, _dataHelper.AsDynamic(dataItems.ElementAt(i).Value), i, itemsCount));
                 builder.Append(RenderSection(template, propertySources));
             }
 
@@ -159,25 +159,25 @@ namespace ToSic.SexyContent.Engines.TokenEngine
             // they can be restored after rendering the section
             foreach(var src in valuesForThisInstanceOnly)
             {
-                if (tokenReplace.ValueSources.ContainsKey(src.Key))
+                if (_tokenReplace.ValueSources.ContainsKey(src.Key))
                 {
-                    var oldSource = tokenReplace.ValueSources[src.Key];
+                    var oldSource = _tokenReplace.ValueSources[src.Key];
                     propertySourcesBackup.Add(src.Key, oldSource); // tokenReplace.RemovePropertySource(src.Key));
                     if (oldSource != null)
-                        tokenReplace.ValueSources.Remove(src.Key);
+                        _tokenReplace.ValueSources.Remove(src.Key);
                 }
-                tokenReplace.ValueSources[src.Key] = src.Value;
+                _tokenReplace.ValueSources[src.Key] = src.Value;
             }
 
             // Render
-            var sectionRendered = tokenReplace.ReplaceTokens(template, 0);
+            var sectionRendered = _tokenReplace.ReplaceTokens(template, 0);
 
             // Restore values list to original state
             foreach (var src in valuesForThisInstanceOnly)
             {
-                tokenReplace.ValueSources.Remove(src.Key);
+                _tokenReplace.ValueSources.Remove(src.Key);
                 if(propertySourcesBackup.ContainsKey(src.Key))
-                    tokenReplace.ValueSources.Add(src.Key, src.Value);
+                    _tokenReplace.ValueSources.Add(src.Key, src.Value);
             }
             
             return sectionRendered;

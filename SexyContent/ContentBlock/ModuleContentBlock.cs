@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Specialized;
-using System.Web;
+using System.Collections.Generic;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using ToSic.SexyContent.DataSources;
@@ -19,9 +18,9 @@ namespace ToSic.SexyContent.ContentBlock
         public override ViewDataSource Data => _dataSource 
             ?? (_dataSource = ViewDataSource.ForContentGroupInSxc(SxcInstance, Template, ModuleInfo.ModuleID));
 
-        private NameValueCollection _urlParams;
+        private readonly IEnumerable<KeyValuePair<string, string>> _urlParams;
 
-        public ModuleContentBlock(ModuleInfo moduleInfo, NameValueCollection overrideParams = null)
+        public ModuleContentBlock(ModuleInfo moduleInfo, IEnumerable<KeyValuePair<string, string>> overrideParams = null)
         {
             if(moduleInfo == null)
                 throw new Exception("Need valid ModuleInfo / ModuleConfiguration of runtime");
@@ -31,7 +30,8 @@ namespace ToSic.SexyContent.ContentBlock
             ContentBlockId = ParentId;
 
             // url-params
-            _urlParams = overrideParams ?? HttpContext.Current?.Request?.QueryString;
+            _urlParams = overrideParams ?? DnnWebForms.Helpers.SystemWeb.GetUrlParams();
+            
 
             // Ensure we know what portal the stuff is coming from
             // PortalSettings is null, when in search mode
@@ -75,6 +75,7 @@ namespace ToSic.SexyContent.ContentBlock
                 App.InitData(SxcInstance.Environment.Permissions.UserMayEditContent, Data.ConfigurationProvider);
             }
         }
+
 
         public override SxcInstance SxcInstance => _sxcInstance ??
                                           (_sxcInstance = new SxcInstance(this, ModuleInfo, _urlParams));

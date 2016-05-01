@@ -656,8 +656,9 @@ $2sxc.contentBlock = function (sxc, manage, cbTag) {
                     templateId: templateId,
                     lang: cb.editContext.Language.Current,
                     cbisentity: editContext.ContentBlock.IsEntity,
-                    cbid: editContext.ContentBlock.Id
-                },
+                    cbid: editContext.ContentBlock.Id,
+                    originalparameters: JSON.stringify(editContext.Environment.parameters)
+        },
                 dataType: "html"
             });
         },
