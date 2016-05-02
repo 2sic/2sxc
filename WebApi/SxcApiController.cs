@@ -19,17 +19,7 @@ namespace ToSic.SexyContent.WebApi
         private AppAndDataHelpers AppAndDataHelpers => _appAndDataHelpers ?? (_appAndDataHelpers = new AppAndDataHelpers(SxcContext));
 
 	    // Sexy object should not be accessible for other assemblies - just internal use
-        internal SxcInstance SxcContext
-        {
-            get
-            {
-                if (_instanceContext == null)
-                {
-                    var k = 7;
-                }
-                return _instanceContext ?? (_instanceContext = Request.GetSxcOfModuleContext());
-            }
-        }
+        internal SxcInstance SxcContext => _instanceContext ?? (_instanceContext = Helpers.GetSxcOfApiRequest(Request));
 
 	    #region AppAndDataHelpers implementation
 

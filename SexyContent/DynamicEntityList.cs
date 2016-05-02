@@ -30,7 +30,7 @@ namespace ToSic.SexyContent
             _jsonTemplate, _parent.EntityId, _field, Settings.AttributeSetStaticNameContentBlockTypeName));
 
 
-        public IEnumerator<DynamicEntity> GetEnumerator()
+        public new IEnumerator<DynamicEntity> GetEnumerator()
         {
             return _list.GetEnumerator();
         }
@@ -40,51 +40,51 @@ namespace ToSic.SexyContent
             return GetEnumerator();
         }
 
-        public void Add(DynamicEntity item)
+        public new void Add(DynamicEntity item)
         {
             _list.Add(item);
         }
 
-        public void Clear()
+        public new void Clear()
         {
             _list.Clear();
         }
 
-        public bool Contains(DynamicEntity item)
+        public new bool Contains(DynamicEntity item)
         {
             return _list.Contains(item);
         }
 
-        public void CopyTo(DynamicEntity[] array, int arrayIndex)
+        public new void CopyTo(DynamicEntity[] array, int arrayIndex)
         {
             _list.CopyTo(array, arrayIndex);
         }
 
-        public bool Remove(DynamicEntity item)
+        public new bool Remove(DynamicEntity item)
         {
             return _list.Remove(item);
         }
 
-        public int Count => _list.Count;
+        public new int Count => _list.Count;
 
         public bool IsReadOnly => _list.IsReadOnly;
 
-        public int IndexOf(DynamicEntity item)
+        public new int IndexOf(DynamicEntity item)
         {
             return _list.IndexOf(item);
         }
 
-        public void Insert(int index, DynamicEntity item)
+        public new void Insert(int index, DynamicEntity item)
         {
             _list.Insert(index, item);
         }
 
-        public void RemoveAt(int index)
+        public new void RemoveAt(int index)
         {
             _list.RemoveAt(index);
         }
 
-        public DynamicEntity this[int index]
+        public new DynamicEntity this[int index]
         {
             get { return _list[index]; }
             set { _list[index] = value; }

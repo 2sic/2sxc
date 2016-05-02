@@ -9,6 +9,7 @@ using ToSic.Eav.DataSources;
 using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.Adam;
 using ToSic.SexyContent.DataSources;
+using ToSic.SexyContent.Edit.InPageEditingSystem;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Environment.Interfaces;
 using ToSic.SexyContent.Razor.Helpers;
@@ -16,6 +17,10 @@ using ToSic.SexyContent.Search;
 
 namespace ToSic.SexyContent.Razor
 {
+    /// <summary>
+    /// The core page type for delivering a 2sxc page
+    /// Provides context infos like the Dnn object, helpers like Edit and much more. 
+    /// </summary>
     public abstract class SexyContentWebPage : WebPageBase, IAppAndDataHelpers
     {
         #region Helpers
@@ -41,13 +46,17 @@ namespace ToSic.SexyContent.Razor
             Context = parentPage.Context;
 
             // Return if parent page is not a SexyContentWebPage
-            if (!(parentPage is SexyContentWebPage)) return;    // 2016-02-22 believe this is necessary with dnn 8 because this razor uses a more complex inheritance with Type<T>
+
+            // 2016-05-02 if (!(parentPage is SexyContentWebPage)) return;    // 2016-02-22 believe this is necessary with dnn 8 because this razor uses a more complex inheritance with Type<T>
             //if (parentPage.GetType().BaseType != typeof(SexyContentWebPage)) return;
-            
-            Html = ((SexyContentWebPage) parentPage).Html;
-            Url = ((SexyContentWebPage) parentPage).Url;
-            Sexy = ((SexyContentWebPage) parentPage).Sexy;
-            AppAndDataHelpers = ((SexyContentWebPage)parentPage).AppAndDataHelpers;
+
+            var typedParent = parentPage as SexyContentWebPage;
+            if (typedParent == null) return;
+
+            Html = typedParent.Html;
+            Url = typedParent.Url;
+            Sexy = typedParent.Sexy;
+            AppAndDataHelpers = typedParent.AppAndDataHelpers;
         }
 
         #endregion
@@ -119,10 +128,10 @@ namespace ToSic.SexyContent.Razor
         /// <param name="entities">List of entities</param>
         /// <returns></returns>
         public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => AppAndDataHelpers.AsDynamic(entities);
-        
+
         #endregion
 
-
+        #region Data Source Stuff
         public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, IValueCollectionProvider configurationProvider = null)
         {
             return AppAndDataHelpers.CreateSource(typeName, inSource, configurationProvider);
@@ -141,7 +150,10 @@ namespace ToSic.SexyContent.Razor
 		/// <returns></returns>
 		public T CreateSource<T>(IDataStream inStream) =>  AppAndDataHelpers.CreateSource<T>(inStream);
 
-		public dynamic Content => AppAndDataHelpers.Content;
+        #endregion
+
+        #region Content, Presentation, ListContent, ListPresentation and List
+        public dynamic Content => AppAndDataHelpers.Content;
 
         public dynamic Presentation => AppAndDataHelpers.Presentation;
 
@@ -150,6 +162,7 @@ namespace ToSic.SexyContent.Razor
         public dynamic ListPresentation => AppAndDataHelpers.ListPresentation;
 
         public List<Element> List => AppAndDataHelpers.List;
+        #endregion
 
         #endregion
 
@@ -224,10 +237,18 @@ namespace ToSic.SexyContent.Razor
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
         public AdamNavigator AsAdam(IEntity entity, string fieldName) =>  AppAndDataHelpers.AsAdam(entity, fieldName);
-        
+
         #endregion
 
+        #region Edit
 
+        /// <summary>
+        /// Helper commands to enable in-page editing functionality
+        /// Use it to check if edit is enabled, generate context-json infos and provide toolbar buttons
+        /// </summary>
+        public IInPageEditingSystem Edit => AppAndDataHelpers.Edit;
+
+        #endregion
     }
 
 

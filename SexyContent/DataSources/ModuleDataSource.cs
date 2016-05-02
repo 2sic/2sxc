@@ -25,7 +25,6 @@ namespace ToSic.SexyContent.DataSources
                 }
                 return _sxcContext;
             }
-            //set { _sxcContext = value; }
         }
 
 		private ContentGroup _contentGroup;
@@ -66,14 +65,6 @@ namespace ToSic.SexyContent.DataSources
                            Template.PresentationDemoEntity));
         }
 
-        // 2016-05-01 2dm - as far as I see this is deprecated, will comment
-	    //private IDictionary<int, IEntity> _presentation;
-     //   private IDictionary<int, IEntity> GetPresentation()
-     //   {
-     //       return _presentation ??
-     //              (_presentation = GetStream(ContentGroup.Presentation, Template.PresentationDemoEntity, null, null));
-     //   }
-
 	    private IDictionary<int, IEntity> _listContent;
         private IDictionary<int, IEntity> GetListContent()
         {
@@ -82,15 +73,6 @@ namespace ToSic.SexyContent.DataSources
                        GetStream(ContentGroup.ListContent, Template.ListContentDemoEntity, ContentGroup.ListPresentation,
                            Template.ListPresentationDemoEntity, true));
         }
-
-        // 2016-05-01 2dm - as far as I see this is deprecated, will comment
-        //private IDictionary<int, IEntity> _listPresentation;
-        //private IDictionary<int, IEntity> GetListPresentation()
-        //{
-        //    return _listPresentation ??
-        //           (_listPresentation =
-        //               GetStream(ContentGroup.ListPresentation, Template.ListPresentationDemoEntity, null, null, true));
-        //}
 
 	    #endregion
 

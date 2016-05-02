@@ -5,6 +5,7 @@ using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.DataSources;
+using ToSic.SexyContent.Internal;
 using ToSic.SexyContent.Security;
 
 namespace ToSic.SexyContent.WebApi
@@ -15,22 +16,24 @@ namespace ToSic.SexyContent.WebApi
     /// </summary>
     /// 
     // todo: ensure that high-permitted users get the query even if not specified
-    [SupportedModules("2sxc,2sxc-app")]
+    //[SupportedModules("2sxc,2sxc-app")] // disabled, as now could be any razor host
+    [AllowAnonymous]
     public class AppQueryController : SxcApiController
     {
+        private App _queryApp;
+
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]   // will check security internally, so assume no requirements
         [ValidateAntiForgeryToken]                                          // currently only available for modules, so always require the security token
         public dynamic Query([FromUri] string name)
         {
-            // Try to find the query, abort if not found
-            if (!App.Query.ContainsKey(name))
-                throw new Exception("Can't find Query with name '" + name + "'");
+            if (_queryApp == null)
+                _queryApp = App;
 
-            // Get query, check what permissions were assigned to the query-definition
-            var query = App.Query[name] as DeferredPipelineQuery;
+            var query = GetQueryByName(name);
+
             var queryConf = query.QueryDefinition;
-            var permissionChecker = new PermissionController(App.ZoneId, App.AppId, queryConf.EntityGuid, Dnn.Module);
+            var permissionChecker = new PermissionController(_queryApp.ZoneId, _queryApp.AppId, queryConf.EntityGuid, Dnn.Module);
             var readAllowed = permissionChecker.UserMay(PermissionGrant.Read);
 
             var isAdmin = DotNetNuke.Security.Permissions.ModulePermissionController.CanAdminModule(Dnn.Module);
@@ -46,7 +49,33 @@ namespace ToSic.SexyContent.WebApi
                 }); 
         }
 
+        //[AllowAnonymous]
+        //[HttpGet]
+        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]   // will check security internally, so assume no requirements
+        //public dynamic PublicQuery([FromUri] string appname, [FromUri] string name)
+        //{
+        //    // todo: get app from appname
+        //    var zid = ZoneHelpers.GetZoneID(PortalSettings.PortalId);
+        //    if (zid == null)
+        //        throw new Exception("zone not found");
+        //    var aid = AppHelpers.GetAppIdFromName(zid.Value, appname);
+        //    _queryApp = new App(PortalSettings, aid);
+        //    return "ok!";// Query(name);
+
+        //}
 
 
+        private DeferredPipelineQuery GetQueryByName(string name)
+        {
+            // Try to find the query, abort if not found
+            if (!_queryApp.Query.ContainsKey(name))
+                throw new Exception("Can't find Query with name '" + name + "'");
+
+            // Get query, check what permissions were assigned to the query-definition
+            var query = _queryApp.Query[name] as DeferredPipelineQuery;
+            if (query == null)
+                throw new Exception("can't find query with name '" + name + "'");
+            return query;
+        }
     }
 }

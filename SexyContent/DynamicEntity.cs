@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
@@ -9,7 +8,6 @@ using Newtonsoft.Json;
 using ToSic.Eav;
 using ToSic.SexyContent.ContentBlock;
 using ToSic.SexyContent.EAVExtensions;
-using static System.String;
 
 namespace ToSic.SexyContent
 {
@@ -21,11 +19,11 @@ namespace ToSic.SexyContent
             get
             {
                 // if it's neither in a running context nor in a running portal, no toolbar
-                if (_sxcInstance == null || PortalSettings.Current == null)
+                if (SxcInstance == null || PortalSettings.Current == null)
                     return new HtmlString("");
 
                 // If we're not in a running context, of which we know the permissions, no toolbar
-                if (!_sxcInstance.Environment.Permissions.UserMayEditContent)
+                if (!SxcInstance.Environment.Permissions.UserMayEditContent)
                     return new HtmlString("");
 
                 if (Entity is IHasEditingData)
@@ -49,7 +47,7 @@ namespace ToSic.SexyContent
             }
         }
         private readonly string[] _dimensions;
-        private SxcInstance _sxcInstance { get; }
+        private SxcInstance SxcInstance { get; }
 
         /// <summary>
         /// Constructor with EntityModel and DimensionIds
@@ -58,7 +56,7 @@ namespace ToSic.SexyContent
         {
             Entity = entityModel;
             _dimensions = dimensions;
-            _sxcInstance = sexy;
+            SxcInstance = sexy;
         }
 
         public override bool TryGetMember(GetMemberBinder binder, out object result)
@@ -68,7 +66,7 @@ namespace ToSic.SexyContent
 
         public bool TryGetMember(string memberName, out object result)
         {
-            var propertyNotFound = false;
+            bool propertyNotFound;
             result = GetEntityValue(memberName, out propertyNotFound);
 
             if (propertyNotFound)
@@ -90,7 +88,7 @@ namespace ToSic.SexyContent
                 case "Presentation":
                     var inContentGroup = Entity as EntityInContentGroup;
                     return (inContentGroup != null)
-                        ? new DynamicEntity(inContentGroup.Presentation, _dimensions, _sxcInstance)
+                        ? new DynamicEntity(inContentGroup.Presentation, _dimensions, SxcInstance)
                         : null;
             }
             #endregion
@@ -102,9 +100,9 @@ namespace ToSic.SexyContent
             if (result is Eav.Data.EntityRelationship)
             {
                 var relList = ((Eav.Data.EntityRelationship) result).Select(
-                    p => new DynamicEntity(p, _dimensions, _sxcInstance)
+                    p => new DynamicEntity(p, _dimensions, SxcInstance)
                     ).ToList();
-                result = new DynamicEntityList(Entity, attributeName, relList, _sxcInstance.Environment.Permissions.UserMayEditContent);
+                result = relList;// new DynamicEntityList(Entity, attributeName, relList, _sxcInstance.Environment.Permissions.UserMayEditContent);
             }
 
             //set out-information
@@ -136,30 +134,23 @@ namespace ToSic.SexyContent
 
         public object EntityTitle => Entity.Title[_dimensions];
 
-        public dynamic GetDraft()
-        {
-            return new DynamicEntity(Entity.GetDraft(), _dimensions, _sxcInstance);
-        }
-
-        public dynamic GetPublished()
-        {
-            return new DynamicEntity(Entity.GetPublished(), _dimensions, _sxcInstance);
-        }
+        public dynamic GetDraft() => new DynamicEntity(Entity.GetDraft(), _dimensions, SxcInstance);
+        
+        public dynamic GetPublished() => new DynamicEntity(Entity.GetPublished(), _dimensions, SxcInstance);
 
         internal Dictionary<string, object> ToDictionary()
         {
             var dynamicEntity = this;
-            var entity = this.Entity;
-            // var dynamicEntity = new DynamicEntity(entity, new[] { language }, this);
+            var entity = Entity;
             bool propertyNotFound;
 
             // Convert DynamicEntity to dictionary
             var dictionary = ((from d in entity.Attributes select d.Value).ToDictionary(k => k.Name, v =>
             {
                 var value = dynamicEntity.GetEntityValue(v.Name, out propertyNotFound);
-                if (v.Type == "Entity" && value is IList<DynamicEntity>)
-                    return ((IList<DynamicEntity>)value).Select(p => new { p.EntityId, p.EntityTitle });
-                return value;
+                return (v.Type == "Entity" && value is IList<DynamicEntity>)
+                    ? ((IList<DynamicEntity>) value).Select(p => new {p.EntityId, p.EntityTitle}).ToList()  // convert to a light list for optimal serialization
+                    : value;
             }));
 
             dictionary.Add("EntityId", entity.EntityId);
@@ -170,7 +161,7 @@ namespace ToSic.SexyContent
                 var entityInGroup = (EntityInContentGroup)entity;
                 if (entityInGroup.Presentation != null)
                 {
-                    var subItm = new DynamicEntity(entityInGroup, _dimensions, _sxcInstance);
+                    var subItm = new DynamicEntity(entityInGroup, _dimensions, SxcInstance);
                     dictionary.Add("Presentation", subItm.ToDictionary());
                 }
             }
@@ -187,7 +178,7 @@ namespace ToSic.SexyContent
         {
             if (Entity.Type.Name == Settings.AttributeSetStaticNameContentBlockTypeName)
             {
-                var cb = new EntityContentBlock(_sxcInstance.ContentBlock, Entity);
+                var cb = new EntityContentBlock(SxcInstance.ContentBlock, Entity);
                 return cb.SxcInstance.Render();
             }
             else

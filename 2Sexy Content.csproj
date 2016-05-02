@@ -223,6 +223,9 @@
     <Compile Include="DnnWebForms\Wysiwyg.ascx.designer.cs">
       <DependentUpon>Wysiwyg.ascx</DependentUpon>
     </Compile>
+    <Compile Include="Edit\InPageEditingSystem\IInPageEditingSystem.cs" />
+    <Compile Include="Edit\InPageEditingSystem\InPageEditingHelper.cs" />
+    <Compile Include="Edit\InPageEditingSystem\InPageEditingHelperBase.cs" />
     <Compile Include="Environment\Base\Permissions.cs" />
     <Compile Include="Environment\Dnn7\DnnBusinessController.cs" />
     <Compile Include="Environment\Dnn7\RenderingHelpers.cs" />
@@ -247,7 +250,6 @@
     <Compile Include="SexyContent\ContentBlock\EntityContentGroupReferenceManager.cs" />
     <Compile Include="SexyContent\ContentBlock\ModuleContentGroupReferenceManager.cs" />
     <Compile Include="SexyContent\DataSources\SxcValueCollectionProvider.cs" />
-    <Compile Include="SexyContent\DynamicEntityList.cs" />
     <Compile Include="SexyContent\Installer\Helpers.cs" />
     <Compile Include="SexyContent\Installer\Lock.cs" />
     <Compile Include="SexyContent\Installer\Logger.cs" />
@@ -265,6 +267,7 @@
     <Compile Include="SexyContent\DataSources\ConfigurationProvider.cs" />
     <Compile Include="SexyContent\DataSources\DnnSqlDataSource.cs" />
     <Compile Include="SexyContent\DataSources\DnnFormAndList.cs" />
+    <Compile Include="WebApi\AppWithoutModuleQueryController.cs" />
     <Compile Include="WebApi\Dnn\ModuleController.cs" />
     <Compile Include="WebApi\ImportExport\HttpResponseMessageHelper.cs" />
     <Compile Include="WebApi\ImportExport\ImportResult.cs" />
@@ -356,7 +359,7 @@
     </Compile>
     <Compile Include="SexyContent\TemplateDefault.cs" />
     <Compile Include="WebApi\View\ModuleController.cs" />
-    <Compile Include="WebApi\HttpRequestMessageExtensions.cs" />
+    <Compile Include="WebApi\Helpers.cs" />
     <Compile Include="WebApi\SxcApiController.cs" />
     <Compile Include="WebApi\AppApiControllerSelector.cs" />
     <Compile Include="TemplateHelpGrid.ascx.cs">

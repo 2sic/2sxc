@@ -8,9 +8,9 @@ using ToSic.SexyContent.Interfaces;
 
 namespace ToSic.SexyContent.WebApi
 {
-    public static class HttpRequestMessageExtensions
+    public static class Helpers
     {
-        internal static SxcInstance GetSxcOfModuleContext(this HttpRequestMessage request)
+        internal static SxcInstance GetSxcOfApiRequest(HttpRequestMessage request)
         {
             string cbidHeader = "ContentBlockId";
             var moduleInfo = request.FindModuleInfo();

@@ -44,7 +44,7 @@ namespace ToSic.SexyContent.WebApi
                 try
                 {
                     var portalSettings = PortalSettings.Current;
-                    var sexy = request.GetSxcOfModuleContext();
+                    var sexy = Helpers.GetSxcOfApiRequest(request);// request.GetSxcOfModuleContext();
 
                     // previously we assumed that there is a sub-folder with a future-app-id, but 2015-05-15 decided it's probably not worth trying, because each request currently needs tokens anyhow
                     // if ((string) routeData.Values["appFolder"] != "auto-detect-app" && (string) routeData.Values["appFolder"] != sexy.App.Folder)

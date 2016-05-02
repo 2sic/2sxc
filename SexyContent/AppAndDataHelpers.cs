@@ -7,9 +7,9 @@ using ToSic.Eav;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.Adam;
-using ToSic.SexyContent.ContentBlock;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.EAVExtensions;
+using ToSic.SexyContent.Edit.InPageEditingSystem;
 using ToSic.SexyContent.Internal;
 using ToSic.SexyContent.Razor.Helpers;
 
@@ -28,6 +28,7 @@ namespace ToSic.SexyContent
             Data = sexy.Data;// data;
             Dnn = new DnnHelper(module);
 			Sxc = new SxcHelper(sexy);
+            Edit = new InPageEditingHelper(sexy);
 
             // If PortalSettings is null - for example, while search index runs - HasEditPermission would fail
             // But in search mode, it shouldn't show drafts, so this is ok.
@@ -86,10 +87,10 @@ namespace ToSic.SexyContent
 		    return el;
 	    }
 
-        public App App { get; private set; }
-        public ViewDataSource Data { get; private set; }
-        public DnnHelper Dnn { get; private set; }
-		public SxcHelper Sxc { get; private set; }
+        public App App { get; }
+        public ViewDataSource Data { get; }
+        public DnnHelper Dnn { get; }
+		public SxcHelper Sxc { get; }
 
 
         #region AsDynamic overrides
@@ -250,6 +251,16 @@ namespace ToSic.SexyContent
         {
             return new AdamNavigator(_sxcInstance, App, Dnn.Portal, entity.EntityGuid, fieldName);
         }
+        #endregion
+
+
+        #region Edit
+
+        /// <summary>
+        /// Helper commands to enable in-page editing functionality
+        /// Use it to check if edit is enabled, generate context-json infos and provide toolbar buttons
+        /// </summary>
+        public IInPageEditingSystem Edit { get; private set; }
         #endregion
     }
 }
