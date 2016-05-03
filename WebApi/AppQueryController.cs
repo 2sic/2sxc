@@ -15,9 +15,6 @@ namespace ToSic.SexyContent.WebApi
     /// In charge of delivering Pipeline-Queries on the fly
     /// They will only be delivered if the security is confirmed - it must be publicly available
     /// </summary>
-    /// 
-    // todo: ensure that high-permitted users get the query even if not specified
-    //[SupportedModules("2sxc,2sxc-app")] // disabled, as now could be any razor host
     [AllowAnonymous]
     public class AppQueryController : SxcApiController
     {
@@ -50,7 +47,7 @@ namespace ToSic.SexyContent.WebApi
                 });
 
             return new Serializer().Prepare(query);
-            // 2016-05-03 2dm - if it turns out that the serializer on Sxc is better (can't find a reason why)...
+            // 2016-05-03 2dm - if it turns out that the serializer on the Sxc-object is better (can't find a reason why)...
             // ...then I would need this variation below:
             //return _useModuleAndCheckModulePermissions
             //    ? Sxc.Serializer.Prepare(query)
