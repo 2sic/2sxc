@@ -7,6 +7,7 @@ using DotNetNuke.Web.Api;
 using ToSic.Eav.DataSources;
 using ToSic.SexyContent.Internal;
 using ToSic.SexyContent.Security;
+using ToSic.SexyContent.Serializers;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -21,48 +22,63 @@ namespace ToSic.SexyContent.WebApi
     public class AppQueryController : SxcApiController
     {
         private App _queryApp;
+        private bool _useModuleAndCheckModulePermissions = true; // by default, try to check module stuff too
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]   // will check security internally, so assume no requirements
         [ValidateAntiForgeryToken]                                          // currently only available for modules, so always require the security token
         public dynamic Query([FromUri] string name)
         {
+            // use the previously defined query, or just get it from the request (module-mode)
             if (_queryApp == null)
                 _queryApp = App;
 
             var query = GetQueryByName(name);
 
             var queryConf = query.QueryDefinition;
-            var permissionChecker = new PermissionController(_queryApp.ZoneId, _queryApp.AppId, queryConf.EntityGuid, Dnn.Module);
+            var permissionChecker = new PermissionController(_queryApp.ZoneId, _queryApp.AppId, queryConf.EntityGuid, _useModuleAndCheckModulePermissions ? Dnn.Module : null);
             var readAllowed = permissionChecker.UserMay(PermissionGrant.Read);
 
-            var isAdmin = DotNetNuke.Security.Permissions.ModulePermissionController.CanAdminModule(Dnn.Module);
+            var isAdmin = _useModuleAndCheckModulePermissions && DotNetNuke.Security.Permissions.ModulePermissionController.CanAdminModule(Dnn.Module);
 
             // Only return query if permissions ok
-            if (readAllowed || isAdmin)
-                return Sxc.Serializer.Prepare(query);
-            else
+            if (!(readAllowed || isAdmin))
                 throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.Unauthorized)
                 {
                     Content = new StringContent("Request not allowed. User does not have read permissions for query '" + name + "'"),
                     ReasonPhrase = "Request not allowed"
-                }); 
+                });
+
+            return new Serializer().Prepare(query);
+            // 2016-05-03 2dm - if it turns out that the serializer on Sxc is better (can't find a reason why)...
+            // ...then I would need this variation below:
+            //return _useModuleAndCheckModulePermissions
+            //    ? Sxc.Serializer.Prepare(query)
+            //    : new Serializer().Prepare(query);
         }
 
-        //[AllowAnonymous]
-        //[HttpGet]
-        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]   // will check security internally, so assume no requirements
-        //public dynamic PublicQuery([FromUri] string appname, [FromUri] string name)
-        //{
-        //    // todo: get app from appname
-        //    var zid = ZoneHelpers.GetZoneID(PortalSettings.PortalId);
-        //    if (zid == null)
-        //        throw new Exception("zone not found");
-        //    var aid = AppHelpers.GetAppIdFromName(zid.Value, appname);
-        //    _queryApp = new App(PortalSettings, aid);
-        //    return "ok!";// Query(name);
+        [AllowAnonymous]
+        [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]   // will check security internally, so assume no requirements
+        public dynamic PublicQuery([FromUri] string appname, [FromUri] string name)
+        {
+            // check zone
+            var zid = ZoneHelpers.GetZoneID(PortalSettings.PortalId);
+            if (zid == null)
+                throw new Exception("zone not found");
 
-        //}
+            // get app from appname
+            var aid = AppHelpers.GetAppIdFromGuidName(zid.Value, appname, true);
+            _queryApp = new App(PortalSettings, aid);
+
+            // ensure the queries can be executed (needs configuration provider, usually given in SxcInstance, but we don't hav that here)
+            var config = DataSources.ConfigurationProvider.GetConfigProviderForModule(0, _queryApp, null);
+            _queryApp.InitData(false, config);
+            _useModuleAndCheckModulePermissions = false;    // disable module level permission check, as there is no module which can give more permissions
+
+            // now just run the default query check and serializer
+            return Query(name);
+        }
 
 
         private DeferredPipelineQuery GetQueryByName(string name)

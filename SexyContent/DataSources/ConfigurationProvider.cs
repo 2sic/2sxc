@@ -26,9 +26,11 @@ namespace ToSic.SexyContent.DataSources
 
                 // new
                 NameValueCollection paramList = new NameValueCollection();
-                if(sxc.Parameters != null)
+                if(sxc?.Parameters != null)
                     foreach (var pair in sxc.Parameters)
                         paramList.Add(pair.Key, pair.Value);
+                else
+                    paramList = request.QueryString;
                 provider.Sources.Add("querystring", new FilteredNameValueCollectionPropertyAccess("querystring", paramList));
                 // old
                 // provider.Sources.Add("querystring", new FilteredNameValueCollectionPropertyAccess("querystring", request.QueryString));

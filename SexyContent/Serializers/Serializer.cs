@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using DotNetNuke.Entities.Portals;
-using DotNetNuke.Entities.Users;
 using ToSic.Eav;
 using ToSic.SexyContent.EAVExtensions;
 

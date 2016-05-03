@@ -20,7 +20,7 @@ namespace ToSic.SexyContent.WebApi
     //[SupportedModules("2sxc,2sxc-app")]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
     [AllowAnonymous]
-    public class AppWithoutModuleQueryController : DnnApiController
+    public class AppWithoutModuleQueryController  : SxcApiController
     {
         private App _queryApp;
 
@@ -61,7 +61,7 @@ namespace ToSic.SexyContent.WebApi
             var zid = ZoneHelpers.GetZoneID(PortalSettings.PortalId);
             if(zid == null)
                 throw new Exception("zone not found");
-            var aid = AppHelpers.GetAppIdFromName(zid.Value, appname);
+            var aid = AppHelpers.GetAppIdFromGuidName(zid.Value, appname);
             _queryApp = new App(PortalSettings, aid);
             return "ok!";// Query(name);
 

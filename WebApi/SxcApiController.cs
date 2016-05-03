@@ -9,15 +9,15 @@ using ToSic.SexyContent.Razor.Helpers;
 
 namespace ToSic.SexyContent.WebApi
 {
-	[SupportedModules("2sxc,2sxc-app")]
+	// disabled - as it is now accessible from many other modules and sometimes without a specific module [SupportedModules("2sxc,2sxc-app")]
     [SxcWebApiExceptionHandling]
     public abstract class SxcApiController : DnnApiController, IAppAndDataHelpers
     {
-        private SxcInstance _instanceContext;
 
         private AppAndDataHelpers _appAndDataHelpers;
         private AppAndDataHelpers AppAndDataHelpers => _appAndDataHelpers ?? (_appAndDataHelpers = new AppAndDataHelpers(SxcContext));
 
+        private SxcInstance _instanceContext;
 	    // Sexy object should not be accessible for other assemblies - just internal use
         internal SxcInstance SxcContext => _instanceContext ?? (_instanceContext = Helpers.GetSxcOfApiRequest(Request));
 
@@ -53,12 +53,12 @@ namespace ToSic.SexyContent.WebApi
         /// <returns></returns>
         public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) =>  AppAndDataHelpers.AsDynamic(entityKeyValuePair.Value);
 
-        /// <summary>
-        /// In case AsDynamic is used with Data["name"]
-        /// </summary>
-        /// <param name="list"></param>
-        /// <returns></returns>
-        public IEnumerable<dynamic> AsDynamic(IDataStream stream) =>  AppAndDataHelpers.AsDynamic(stream.List);
+	    /// <summary>
+	    /// In case AsDynamic is used with Data["name"]
+	    /// </summary>
+	    /// <param name="stream"></param>
+	    /// <returns></returns>
+	    public IEnumerable<dynamic> AsDynamic(IDataStream stream) =>  AppAndDataHelpers.AsDynamic(stream.List);
 
         /// <summary>
         /// In case AsDynamic is used with Data["name"].List
@@ -109,7 +109,7 @@ namespace ToSic.SexyContent.WebApi
 	    #endregion
 
 
-        #region Adam (beta / experimental)
+        #region Adam
 
 	    /// <summary>
 	    /// Provides an Adam instance for this item and field
