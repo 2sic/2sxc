@@ -960,7 +960,7 @@ angular.module("eavFieldTemplates")
         var vm = this;
 
         vm.activate = function () {
-            var availableLanguages = "de,es,fr,it,uk".split(",");
+            var availableLanguages = "de,es,fr,it,uk,nl".split(",");
 
             var plugins = [
                 "code",         // allow view / edit source
