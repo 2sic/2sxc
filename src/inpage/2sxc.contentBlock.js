@@ -28,6 +28,7 @@ $2sxc.contentBlock = function (sxc, manage, cbTag) {
         undoTemplateId: editContext.ContentGroup.TemplateId,
         contentTypeId: ctid,
         undoContentTypeId: ctid,
+        buttonsAreLoaded: true,
 
         // ajax update/replace the content of the content-block
         replace: function (newContent, justPreview) {
@@ -40,6 +41,7 @@ $2sxc.contentBlock = function (sxc, manage, cbTag) {
                 //}
                 $(cbTag).replaceWith(newStuff);
                 cbTag = newStuff;
+                cb.buttonsAreLoaded = false;
                 //$2sxc(newStuff).manage.toolbar._processToolbars(newStuff); // init it...
             } catch (e) {
                 console.log("Error while rendering template:");
@@ -58,7 +60,7 @@ $2sxc.contentBlock = function (sxc, manage, cbTag) {
                 manage.reloadWithAjax = true;
 
             if (manage.reloadWithAjax) // necessary to show the original template again
-                return (manage.reloadWithAjax
+                return (forceAjax
                     ? cb.reload(-1) // -1 is important to it doesn't try to use the old templateid
                     : cb.reload())
                     .then(function () {
@@ -66,6 +68,7 @@ $2sxc.contentBlock = function (sxc, manage, cbTag) {
                         // create new sxc-object
                         cb.sxc = cb.sxc.recreate();
                         cb.sxc.manage.toolbar._processToolbars(); // sub-optimal deep dependency
+                        cb.buttonsAreLoaded = true;
                     });
             else
                 return window.location.reload();
@@ -205,7 +208,7 @@ $2sxc.contentBlock = function (sxc, manage, cbTag) {
         persistTemplate: function (forceCreate, selectorVisibility) {
             // Save only if the currently saved is not the same as the new
             var groupExistsAndTemplateUnchanged = !!cb.editContext.ContentGroup.HasContent
-                && (cb.undoTemplateId === cb.templateId);// !!cb.minfo.hasContent && (cb.undoTemplateId === cb.templateId);
+                && (cb.undoTemplateId === cb.templateId);
             var promiseToSetState;
             if (groupExistsAndTemplateUnchanged)
                 promiseToSetState = (cb.editContext.ContentBlock.ShowTemplatePicker)//.minfo.templateChooserVisible)
@@ -239,7 +242,7 @@ $2sxc.contentBlock = function (sxc, manage, cbTag) {
                     cb.editContext.ContentGroup.HasContent = forceCreate;
 
                 // only re-load on content, not on app as that was already re-loaded on the preview
-                if (!groupExistsAndTemplateUnchanged && manage.reloadWithAjax)      // necessary to show the original template again
+                if (!cb.buttonsAreLoaded || (!groupExistsAndTemplateUnchanged && manage.reloadWithAjax))      // necessary to show the original template again
                     cb.reloadAndReInitialize();
             });
 

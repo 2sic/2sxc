@@ -5,7 +5,7 @@
         "EavAdminUi",
         "oc.lazyLoad",
 
-        "eavEditEntity" // new it must be added here, so it's available in the entire application
+        "eavEditEntity" // new it must be added here, so it's available in the entire application - not good architecture, must fix someday
     ])
          
         .controller("DialogHost", DialogHostController)
