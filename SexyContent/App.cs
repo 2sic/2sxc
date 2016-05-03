@@ -32,7 +32,7 @@ namespace ToSic.SexyContent
         public dynamic Settings { get; internal set; }
         public dynamic Resources { get; internal set; } 
         private IValueCollectionProvider ConfigurationProvider { get; set; }
-        private bool showDraftsInData { get; set; }
+        private bool ShowDraftsInData { get; set; }
 
         #region App-Level TemplateManager, ContentGroupManager, EavContext
         private TemplateManager _templateManager;
@@ -112,18 +112,16 @@ namespace ToSic.SexyContent
                 AppManagement.EnsureAppIsConfigured(ZoneId, AppId); // make sure additional settings etc. exist
 
             // Get app-describing entity
-            var appMetaData =
-                DataSource.GetMetaDataSource(ZoneId, AppId)
+            var mds = DataSource.GetMetaDataSource(ZoneId, AppId);
+            var appMetaData = mds
                     .GetAssignedEntities(ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp, AppId,
                         SexyContent.Settings.AttributeSetStaticNameApps)
                     .FirstOrDefault();
-            var appResources =
-                DataSource.GetMetaDataSource(ZoneId, AppId)
+            var appResources = mds
                     .GetAssignedEntities(ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp, AppId,
                         SexyContent.Settings.AttributeSetStaticNameAppResources)
                     .FirstOrDefault();
-            var appSettings =
-                DataSource.GetMetaDataSource(ZoneId, AppId)
+            var appSettings = mds 
                     .GetAssignedEntities(ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp, AppId,
                         SexyContent.Settings.AttributeSetStaticNameAppSettings)
                     .FirstOrDefault();
@@ -149,10 +147,11 @@ namespace ToSic.SexyContent
         /// todo: later this should be moved to initialization of this object
         /// </summary>
         /// <param name="showDrafts"></param>
+        /// <param name="configurationValues">this is needed for providing parameters to the data-query-system</param>
         internal void InitData(bool showDrafts, IValueCollectionProvider configurationValues)
         {
             ConfigurationProvider = configurationValues;
-            showDraftsInData = showDrafts;
+            ShowDraftsInData = showDrafts;
         }
 
         private void ConfigureDataOnDemand()
@@ -163,7 +162,7 @@ namespace ToSic.SexyContent
             if (_data == null)
             {
                 // ModulePermissionController does not work when indexing, return false for search
-                var initialSource = DataSource.GetInitialDataSource(ZoneId, AppId, showDraftsInData);
+                var initialSource = DataSource.GetInitialDataSource(ZoneId, AppId, ShowDraftsInData);
 
                 // todo: probably use th efull configuration provider from function params, not from initial source?
                 _data = DataSource.GetDataSource<DataSources.App>(initialSource.ZoneId,
@@ -173,7 +172,7 @@ namespace ToSic.SexyContent
                     ZoneHelpers.GetCulturesWithActiveState(OwnerPortalSettings.PortalId, ZoneId).Any(c => c.Active);
                 if (languagesActive)
                     defaultLanguage = OwnerPortalSettings.DefaultLanguage;
-                var xData = Data as DataSources.App;
+                var xData = (DataSources.App) Data;
                 xData.DefaultLanguage = defaultLanguage;
                 xData.CurrentUserName = Environment.Dnn7.UserIdentity.CurrentUserIdentityToken /*OwnerPS.UserInfo.Username*/;
             }
@@ -227,7 +226,7 @@ namespace ToSic.SexyContent
                 if (_queries != null) return _queries;
 
                 if(ConfigurationProvider == null)
-                    throw new Exception("Can't use app-queries, because the necessary configuration provider hasn't been initialized. Call EnableQuery first.");
+                    throw new Exception("Can't use app-queries, because the necessary configuration provider hasn't been initialized. Call InitData first.");
                 _queries = DataPipeline.AllPipelines(ZoneId, AppId, ConfigurationProvider);
                 return _queries;
             }

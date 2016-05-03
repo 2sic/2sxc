@@ -1,11 +1,8 @@
-﻿using System;
-using System.Web;
-using DotNetNuke.Entities.Modules;
+﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.ContentBlock;
 using ToSic.SexyContent.Interfaces;
-using ToSic.SexyContent.Internal;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
@@ -26,10 +23,6 @@ namespace ToSic.SexyContent.Environment.Dnn7
         {
             ModuleContentBlock mcb = new ModuleContentBlock(moduleInfo);
             return mcb.SxcInstance;
-            //var appId = AppHelpers.GetAppIdFromModule(moduleInfo).Value;
-            //var zoneId = ZoneHelpers.GetZoneID(moduleInfo.PortalID).Value;
-            //ISxcInstance sxcSxcInstance = new SxcInstance(zoneId, appId, moduleInfo);
-            //return sxcSxcInstance;
         }
 
         public static IAppAndDataHelpers CodingHelpers(ISxcInstance sxc)
@@ -51,14 +44,6 @@ namespace ToSic.SexyContent.Environment.Dnn7
 
         public static IApp App(int appId, PortalSettings ownerPortalSettings)
         {
-            //if(ownerPortalSettings == null)
-            //    throw new Exception("no portal settings received");
-
-            //var zoneId = ZoneHelpers.GetZoneID(ownerPortalSettings.PortalId);
-
-            //if (!zoneId.HasValue)
-            //    throw new Exception("Cannot find zone-id for portal specified");
-
             var appStuff = new App(ownerPortalSettings, appId);
 
             var provider = new ValueCollectionProvider(); // use blank provider for now

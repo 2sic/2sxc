@@ -177,7 +177,7 @@ namespace ToSic.SexyContent
 
                 #endregion
 
-                #region todo: maybe check if the content-group exists (sometimes it's missing if a site is being imported and the data isn't in yet
+                #region check if the content-group exists (sometimes it's missing if a site is being imported and the data isn't in yet
 
                 if (ContentBlock.DataIsMissing)
                 {

@@ -65,7 +65,7 @@ namespace ToSic.SexyContent.ContentBlock
             ZoneId = Parent.ZoneId;
 
 
-            AppId = AppHelpers.GetAppIdFromName(ZoneId, _appName); // should be 0 if unknown, must test
+            AppId = AppHelpers.GetAppIdFromGuidName(ZoneId, _appName); // should be 0 if unknown, must test
 
             if (AppId == Settings.DataIsMissingInDb)
             {
