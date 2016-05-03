@@ -141,7 +141,6 @@
             svc.setAppId(newAppId)
                 .then(function() {
                     if (newApp.SupportsAjaxReload) {
-                        manage.reloadWithAjax = true;
                         vm.reInitAll(true); // special code to force app-change/reload
                     } else
                         wrapper.window.location.reload();
