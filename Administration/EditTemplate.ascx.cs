@@ -45,18 +45,10 @@ namespace ToSic.SexyContent
 
         protected void Page_PreRender(object sender, EventArgs e)
         {
-            lblPublishSource.HelpText = LocalizeString("lblPublishSource.Help").Replace("[JSONTestLink]", GetJsonUrl());
+            lblPublishSource.HelpText = LocalizeString("lblPublishSource.Help");
             lblPublishSource.Text = LocalizeString("lblPublishSource.Text");
             lblPublishSource.ResourceKey = "-";
 
-        }
-
-        protected string GetJsonUrl()
-        {
-            var url = Globals.NavigateURL(TabId);
-            url += (url.Contains("?") ? "&" : "?") + "mid=" + ModuleId +
-                   "&standalone=true&type=data&popUp=true";
-            return url;
         }
 
         /// <summary>
@@ -68,7 +60,7 @@ namespace ToSic.SexyContent
         protected void Page_Load(object sender, EventArgs e)
         {
             // set DotNetNuke modal window Url for cancel link
-	        hlkManagePipelines.NavigateUrl = "";// ToDo: Fix previous ToSic.SexyContent.EAV.PipelineDesigner.PipelineManagementDnnWrapper.GetEditUrl(this, AppId.Value);
+	        // hlkManagePipelines.NavigateUrl = "";// ToDo: Fix previous ToSic.SexyContent.EAV.PipelineDesigner.PipelineManagementDnnWrapper.GetEditUrl(this, AppId.Value);
 
             InitializeForm();
 

@@ -57,10 +57,13 @@ namespace ToSic.SexyContent
                 if (!isSharedModule && !SxcI.ContentBlock.ContentGroupExists && SxcI.App != null)
                     new DnnStuffToRefactor().EnsurePortalIsConfigured(SxcI, Server, ControlPath);
 
+                var renderNaked = (Request.QueryString["standalone"] == "true");
+                if (renderNaked)
+                    SxcI.RenderWithDiv = false;
                 var renderedTemplate = SxcI.Render().ToString();
 
                 // If standalone is specified, output just the template without anything else
-                if (Request.QueryString["standalone"] == "true")
+                if (renderNaked)
                     SendStandalone(renderedTemplate);
                 else
                     phOutput.Controls.Add(new LiteralControl(renderedTemplate));

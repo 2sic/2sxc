@@ -160,7 +160,7 @@ namespace ToSic.SexyContent
         #endregion
 
         #region RenderEngine
-        private bool RenderWithDiv = true;
+        internal bool RenderWithDiv = true;
         private bool RenderWithEditMetadata => Environment.Permissions.UserMayEditContent;
         public HtmlString Render()
         {
