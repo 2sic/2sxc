@@ -209,7 +209,9 @@
     angular.module("DialogHost", [
         "SxcAdminUi",
         "EavAdminUi",
-        "oc.lazyLoad"
+        "oc.lazyLoad",
+
+        "eavEditEntity" // new it must be added here, so it's available in the entire application
     ])
          
         .controller("DialogHost", DialogHostController)

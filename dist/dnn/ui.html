@@ -77,12 +77,18 @@
             '../config/config.min.js',
             '../admin/eav-admin.min.js',            // Main parts like eav-admin, sxc-admin and eav-edit
             '../sxc-admin/sxc-admin.min.js',
+        ];
+        var editScripts = [
             '../edit/eav-edit.min.js',
             '../sxc-edit/sxc-edit.min.js'
         ];
         var styles = [
             '../lib/angular/set.min.css',
             '../admin/eav-admin.min.css',
+            '../edit/eav-edit.min.css',
+            '../sxc-edit/sxc-edit.min.css'
+        ];
+        var editStyles = [
             '../edit/eav-edit.min.css',
             '../sxc-edit/sxc-edit.min.css'
         ];
@@ -93,9 +99,13 @@
         var miniDiagStyles = [
             '../inpage/inpage-dialogs.min.css'
         ];
+
         if (dialogName === "dash-view") {
             scripts = scripts.concat(miniDiagScripts);
             styles = styles.concat(miniDiagStyles);
+        } else {
+            scripts = scripts.concat(editScripts);
+            styles = styles.concat(editStyles);
         }
 
         for (var s = 0; s < scripts.length; s++)
