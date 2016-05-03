@@ -1893,7 +1893,7 @@
             "subset": "entity-content-blocks",
             "name": "content block with inpage editing",
             "title": "",
-            "content": "<div class=\"sc-content-block-list\" @${101:var}.${102:prop}.EditContext()>\r\n    @foreach(var contentBlock in ${101:var}.${102:prop}){\r\n        @contentBlock.Render()\r\n    }\r\n</div>\r\n",
+            "content": "<div class=\"sc-content-block-list\" @Edit.ContextAttributes(${101:var}, \"${102:prop}\")>\r\n    @foreach(var contentBlock in ${101:var}.${102:prop}){\r\n        @contentBlock.Render()\r\n    }\r\n</div>\r\n",
             "help": "Content blocks with in-page editing"
         },
         {
@@ -1917,7 +1917,7 @@
             "subset": "entity-content-blocks",
             "name": "edit context",
             "title": "",
-            "content": "@${101:var}.${102:prop}.EditContext()",
+            "content": "@Edit.ContextAttributes(${101:var}, \"${102:prop}\")",
             "help": "This should be used inside a <div> tag to provide additional information to the in-page editing ui"
         },
         {
