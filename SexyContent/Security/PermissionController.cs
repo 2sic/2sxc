@@ -141,6 +141,11 @@ namespace ToSic.SexyContent.Security
                 {
                     var salWord = condition.Substring(_salPrefix.Length);
                     var sal = (SecurityAccessLevel)Enum.Parse(typeof(SecurityAccessLevel), salWord);
+                    // check anonymous - this is always valid, even if not in a module context
+                    if (sal == SecurityAccessLevel.Anonymous)
+                        return true;
+                    
+                    // check within module context
                     return DotNetNuke.Security.Permissions.ModulePermissionController
                         .HasModuleAccess(sal, CustomPermissionKey, Module);
                 }
