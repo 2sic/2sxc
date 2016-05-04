@@ -12,6 +12,7 @@ using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Edit.InPageEditingSystem;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Environment.Interfaces;
+using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Razor.Helpers;
 using ToSic.SexyContent.Search;
 
@@ -28,6 +29,8 @@ namespace ToSic.SexyContent.Razor
         protected internal HtmlHelper Html { get; internal set; }
 
         protected internal UrlHelper Url { get; internal set; }
+
+        protected internal ILinkHelper Link => AppAndDataHelpers.Link;
 
         // <2sic>
         protected internal SxcInstance Sexy { get; set; }

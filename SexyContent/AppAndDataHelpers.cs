@@ -8,8 +8,10 @@ using ToSic.Eav.DataSources;
 using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.Adam;
 using ToSic.SexyContent.DataSources;
+using ToSic.SexyContent.DnnWebForms.Helpers;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Edit.InPageEditingSystem;
+using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Internal;
 using ToSic.SexyContent.Razor.Helpers;
 
@@ -27,6 +29,7 @@ namespace ToSic.SexyContent
             App = sexy.App;// app;
             Data = sexy.Data;// data;
             Dnn = new DnnHelper(module);
+            Link = new DnnLinkHelper(Dnn);
 			Sxc = new SxcHelper(sexy);
             Edit = new InPageEditingHelper(sexy);
 
@@ -91,6 +94,7 @@ namespace ToSic.SexyContent
         public ViewDataSource Data { get; }
         public DnnHelper Dnn { get; }
 		public SxcHelper Sxc { get; }
+        public ILinkHelper Link { get; }
 
 
         #region AsDynamic overrides
@@ -99,84 +103,54 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public dynamic AsDynamic(IEntity entity)
-        {
-            return new DynamicEntity(entity, new[] { Thread.CurrentThread.CurrentCulture.Name }, _sxcInstance);
-        }
+        public dynamic AsDynamic(IEntity entity) => new DynamicEntity(entity, new[] { Thread.CurrentThread.CurrentCulture.Name }, _sxcInstance);
+        
 
         /// <summary>
         /// Makes sure a dynamicEntity could be wrapped in AsDynamic()
         /// </summary>
         /// <param name="dynamicEntity"></param>
         /// <returns></returns>
-        public dynamic AsDynamic(dynamic dynamicEntity)
-        {
-            return dynamicEntity;
-        }
+        public dynamic AsDynamic(dynamic dynamicEntity) => dynamicEntity;
 
         /// <summary>
         /// Returns the value of a KeyValuePair as DynamicEntity
         /// </summary>
         /// <param name="entityKeyValuePair"></param>
         /// <returns></returns>
-        public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair)
-        {
-            return AsDynamic(entityKeyValuePair.Value);
-        }
+        public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => AsDynamic(entityKeyValuePair.Value);
 
         /// <summary>
         /// In case AsDynamic is used with Data["name"]
         /// </summary>
-        /// <param name="list"></param>
         /// <returns></returns>
-        public IEnumerable<dynamic> AsDynamic(IDataStream stream)
-        {
-            return AsDynamic(stream.List);
-        }
+        public IEnumerable<dynamic> AsDynamic(IDataStream stream) => AsDynamic(stream.List);
 
         /// <summary>
         /// In case AsDynamic is used with Data["name"].List
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        public IEnumerable<dynamic> AsDynamic(IDictionary<int, IEntity> list)
-        {
-            return list.Select(e => AsDynamic(e.Value));
-        }
+        public IEnumerable<dynamic> AsDynamic(IDictionary<int, IEntity> list) => list.Select(e => AsDynamic(e.Value));
 
         /// <summary>
         /// Transform a DynamicEntity dynamic object back to a IEntity instance
         /// </summary>
         /// <param name="dynamicEntity"></param>
         /// <returns></returns>
-        public IEntity AsEntity(dynamic dynamicEntity)
-        {
-            return ((DynamicEntity)dynamicEntity).Entity;
-        }
+        public IEntity AsEntity(dynamic dynamicEntity) => ((DynamicEntity) dynamicEntity).Entity;
 
         /// <summary>
         /// Returns a list of DynamicEntities
         /// </summary>
         /// <param name="entities">List of entities</param>
         /// <returns></returns>
-        public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities)
-        {
-            return entities.Select(e => AsDynamic(e));
-        }
+        public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => entities.Select(e => AsDynamic(e));
         #endregion
 
         private IValueCollectionProvider _configurationProvider;
-        private IValueCollectionProvider ConfigurationProvider
-        {
-            get
-            {
-                if (_configurationProvider == null)
-                {
-                    _configurationProvider = Data.In["Default"].Source.ConfigurationProvider;
-                }
-                return _configurationProvider;
-            }
-        }
+        private IValueCollectionProvider ConfigurationProvider => _configurationProvider ??
+                                                                  (_configurationProvider = Data.In["Default"].Source.ConfigurationProvider);
 
         public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, IValueCollectionProvider configurationProvider = null)
         {
@@ -221,11 +195,11 @@ namespace ToSic.SexyContent
 
         #region basic properties like Content, Presentation, ListContent, ListPresentation
 
-        public dynamic Content { get; set; }
-		public dynamic Presentation { get; set; }
-		public dynamic ListContent { get; set; }
-		public dynamic ListPresentation { get; set; }
-		public List<Element> List { get; set; }
+        public dynamic Content { get; private set; }
+		public dynamic Presentation { get; private set; }
+		public dynamic ListContent { get; private set; }
+		public dynamic ListPresentation { get; private set; }
+		public List<Element> List { get; private set; }
         #endregion
 
         #region Adam
@@ -237,9 +211,8 @@ namespace ToSic.SexyContent
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
         public AdamNavigator AsAdam(DynamicEntity entity, string fieldName)
-        {
-            return AsAdam(AsEntity(entity), fieldName);
-        }
+            => AsAdam(AsEntity(entity), fieldName);
+
 
         /// <summary>
         /// Provides an Adam instance for this item and field
@@ -248,9 +221,7 @@ namespace ToSic.SexyContent
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
         public AdamNavigator AsAdam(IEntity entity, string fieldName)
-        {
-            return new AdamNavigator(_sxcInstance, App, Dnn.Portal, entity.EntityGuid, fieldName);
-        }
+            => new AdamNavigator(_sxcInstance, App, Dnn.Portal, entity.EntityGuid, fieldName);
         #endregion
 
 

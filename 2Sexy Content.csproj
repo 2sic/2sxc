@@ -201,6 +201,7 @@
     <Compile Include="DnnWebForms\FileManager.ascx.designer.cs">
       <DependentUpon>FileManager.ascx</DependentUpon>
     </Compile>
+    <Compile Include="DnnWebForms\Helpers\DnnLinkHelper.cs" />
     <Compile Include="DnnWebForms\Helpers\SystemWeb.cs" />
     <Compile Include="DnnWebForms\PagePicker.ascx.cs">
       <DependentUpon>PagePicker.ascx</DependentUpon>
@@ -245,6 +246,7 @@
     <Compile Include="DnnWebForms\Skins\QuickEdit.ascx.designer.cs">
       <DependentUpon>QuickEdit.ascx</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\ILinkHelper.cs" />
     <Compile Include="SexyContent\ContentBlock\ContentGroupReferenceManagerBase.cs" />
     <Compile Include="SexyContent\ContentBlock\ContentBlockBase.cs" />
     <Compile Include="SexyContent\ContentBlock\EntityContentGroupReferenceManager.cs" />
