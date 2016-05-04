@@ -51,25 +51,49 @@
         {
             "set": "@Content",
             "subset": "General",
-            "name": "Toolbar",
+            "name": "Toolbar for an item",
             "title": "",
-            "content": "@${1:Content}.Toolbar",
+            "content": "@Edit.Toolbar(${1:Content})",
             "help": "Show an inline-toolbar. If you wat it hovering, make sure you have an HTML-element around it with the class sc-element"
         },
         {
             "set": "@Content",
             "subset": "General",
-            "name": "ToolbarFloat",
+            "name": "ToolbarFloat for an item",
             "title": "",
-            "content": "<div class=\"sc-element\">\r\n    @${1:Content}.Toolbar\r\n</div>",
+            "content": "<div class=\"sc-element\">\r\n    @Edit.Toolbar(${1:Content})\r\n</div>",
             "help": "Show an inline toolbar, floating. Note that this is just an example, the div with the class sc-element can be further away, it doesn't have to be the direct container. "
+        },
+        {
+            "set": "@Content",
+            "subset": "General",
+            "name": "Toolbar for item with edit / replace only",
+            "title": "",
+            "content": "@Edit.Toolbar(${1:Content}, actions: \"edit,replace\")",
+            "help": "Toolbar with edit and replace buttons only"
+        },
+        {
+            "set": "@Content",
+            "subset": "General",
+            "name": "Toolbar to create new only",
+            "title": "",
+            "content": "@Edit.Toolbar(actions: \"new\", contentType: \"${10:BlogPost}\")",
+            "help": "Toolbar with edit and replace buttons only"
+        },
+        {
+            "set": "@Content",
+            "subset": "General",
+            "name": "Toolbar to create new and prefill",
+            "title": "",
+            "content": "@Edit.Toolbar(actions: \"new\", contentType: \"${10:BlogPost}\", prefill: new { Title = \"Hello\", Color = \"red\" } )",
+            "help": "Toolbar with new and prefill example"
         },
         {
             "set": "@List",
             "subset": "Header",
             "name": "List-Toolbar",
             "title": "Header toolbar",
-            "content": "@ListContent.Toolbar",
+            "content": "@Edit.Toolbar(ListContent)",
             "help": "Outputs the toolbar to edit list information - place in a <div> to float like other toolbars"
         },
         {
@@ -77,7 +101,7 @@
             "subset": "Header",
             "name": "List-ToolbarFloat",
             "title": "",
-            "content": "<div class=\"sc-element\">\r\n    @ListContent.Toolbar\r\n</div>",
+            "content": "<div class=\"sc-element\">\r\n    @Edit.Toolbar(ListContent)\r\n</div>",
             "help": ""
         },
         {
@@ -85,7 +109,7 @@
             "subset": "Repeater",
             "name": "foreach loop",
             "title": "",
-            "content": "@foreach(var ${1:cont} in AsDynamic(Data[\"${2:Default}\"])){\r\n    <div class=\"sc-element\">\r\n        @${1}.EntityTitle\r\n        @${1}.Toolbar\r\n    </div>\r\n}…",
+            "content": "@foreach(var ${1:cont} in AsDynamic(Data[\"${2:Default}\"])){\r\n    <div class=\"sc-element\">\r\n        @${1}.EntityTitle\r\n        @$Edit.Toolbar({1})\r\n    </div>\r\n}…",
             "help": ""
         },
         {

@@ -98,8 +98,8 @@
                 var actionList = settings.action
                     ? [settings] // if single item with specified action, use this as our button-list
                     : $.isArray(settings)
-                    ? settings // if it is an array, use that. Otherwise assume that we auto-generate all buttons with supplied settings
-                    : tb.createDefaultToolbar(settings);
+                        ? settings // if it is an array, use that. Otherwise assume that we auto-generate all buttons with supplied settings
+                        : tb.createDefaultToolbar(settings);
 
                 var tbClasses = "sc-menu show-set-0" + ((settings.sortOrder === -1) ? " listContent" : "");
                 var toolbar = $("<ul />", { 'class': tbClasses, 'onclick': "javascript: var e = arguments[0] || window.event; e.stopPropagation();" });

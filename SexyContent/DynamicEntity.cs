@@ -4,13 +4,15 @@ using System.Dynamic;
 using System.Linq;
 using System.Web;
 using DotNetNuke.Entities.Portals;
-using Newtonsoft.Json;
 using ToSic.Eav;
 using ToSic.SexyContent.ContentBlock;
 using ToSic.SexyContent.EAVExtensions;
+using ToSic.SexyContent.Edit.Toolbar;
 
 namespace ToSic.SexyContent
 {
+
+
     public class DynamicEntity : DynamicObject
     {
         public ContentConfiguration Configuration = new ContentConfiguration();
@@ -26,24 +28,27 @@ namespace ToSic.SexyContent
                 if (!SxcInstance.Environment.Permissions.UserMayEditContent)
                     return new HtmlString("");
 
-                if (Entity is IHasEditingData)
-                    return new HtmlString("<ul class=\"sc-menu\" data-toolbar='"
-                                          + JsonConvert.SerializeObject(new
-                                          {
-                                              sortOrder = ((IHasEditingData) Entity).SortOrder,
-                                              useModuleList = true,
-                                              isPublished = Entity.IsPublished
-                                          }) 
-                                          + "'></ul>");
+                var toolbar = new ItemToolbar(this).Toolbar;
+                return new HtmlString(toolbar);
 
-                return new HtmlString("<ul class=\"sc-menu\" data-toolbar='"
-                                      + JsonConvert.SerializeObject(new
-                                      {
-                                          entityId = Entity.EntityId,
-                                          isPublished = Entity.IsPublished,
-                                          contentType = Entity.Type.Name
-                                      })
-                                      + "'></ul>");
+                //if (Entity is IHasEditingData)
+                //    return new HtmlString("<ul class=\"sc-menu\" data-toolbar='"
+                //                          + JsonConvert.SerializeObject(new
+                //                          {
+                //                              sortOrder = ((IHasEditingData) Entity).SortOrder,
+                //                              useModuleList = true,
+                //                              isPublished = Entity.IsPublished
+                //                          }) 
+                //                          + "'></ul>");
+
+                //return new HtmlString("<ul class=\"sc-menu\" data-toolbar='"
+                //                      + JsonConvert.SerializeObject(new
+                //                      {
+                //                          entityId = Entity.EntityId,
+                //                          isPublished = Entity.IsPublished,
+                //                          contentType = Entity.Type.Name
+                //                      })
+                //                      + "'></ul>");
             }
         }
         private readonly string[] _dimensions;
