@@ -1,5 +1,6 @@
 {
 	"General": {
+		"Note2Translator": "these are the main keys for buttons and short messages, used in various dialogs",
 		"Buttons": {
 			"Add": "add",
 			"Cancel": "cancel",

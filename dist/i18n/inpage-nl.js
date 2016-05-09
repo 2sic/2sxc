@@ -20,10 +20,10 @@
 		"ConfirmRemove": "Dit verwijdert dit content item van de lijst, maar verwijdert deze niet helemaal (zodat je deze later weer kunt toevoegen). \nSee 2sxc.org/help for more. \n\nOk to remove?"
 	},
 	"EditFormTitle": {
-		"Content": "Content",
-		"Presentation": "Presentatie instellingen",
-		"ListContent": "Lijst Header Content",
-		"ListPresentation": "Lijst Presentatie Instellingen",
+		"Content": "Inhoud",
+		"Presentation": "Opmaak instellingen",
+		"ListContent": "Lijst basis inhoud",
+		"ListPresentation": "Lijst opmaak instellingen",
 		"Metadata": "Toevoegen / Bewerken Metadata"
 	},
 	"QuickInsertMenu": {
