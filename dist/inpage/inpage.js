@@ -502,7 +502,7 @@ $2sxc._contentManagementCommands = function (sxc, targetTag) {
                 .init({
                     lng: manage.editContext.Language.Current.substr(0,2), // "en",
                     fallbackLng: "en",
-                    whitelist: ["en", "de", "fr", "it", "uk"],
+                    whitelist: ["en", "de", "fr", "it", "uk", "nl"],
                     preload: ["en"],
                     backend: {
                         loadPath: manage.editContext.Environment.SxcRootUrl + "desktopmodules/tosic_sexycontent/dist/i18n/inpage-{{lng}}.js"
