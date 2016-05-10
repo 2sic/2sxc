@@ -920,6 +920,13 @@ div.dropzone div.input-group div.tooltip-inner {
     content:"\f179"
 }
 
+
+/* content block placeholders */
+/* added in 08.04.06 - purpose still secret :)*/
+hr[sxc] {
+    background-color: #B0DCFF; /* temporary color */
+    height: 25px;
+}
 /* IMPORT MESSAGES */
 .sxc-message { display: block; padding: 18px 18px; margin-bottom: 18px; border: 1px solid rgba(2, 139, 255, 0.2); border-radius: 3px; background: rgba(2,139,255,0.15); max-width: 980px; }
 

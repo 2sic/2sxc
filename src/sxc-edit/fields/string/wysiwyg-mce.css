@@ -59,3 +59,11 @@
 
     content:"\f179"
 }
+
+
+/* content block placeholders */
+/* added in 08.04.06 - purpose still secret :)*/
+hr[sxc] {
+    background-color: #B0DCFF; /* temporary color */
+    height: 25px;
+}

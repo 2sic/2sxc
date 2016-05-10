@@ -1017,8 +1017,11 @@ angular.module("eavFieldTemplates")
                 contextmenu: modes.standard.contextmenu, //"link image | charmap hr adamimage",
                 autosave_ask_before_unload: false,
                 paste_as_text: true,
-                extended_valid_elements: '@[class],i', // allow classes on all elements, allow i elements (allows icon-font tags like <i class="fa fa-...">)
-                
+                extended_valid_elements: '@[class]' // allow classes on all elements, 
+                    + ',i' // allow i elements (allows icon-font tags like <i class="fa fa-...">)
+                    + ",hr[sxc|guid]", // experimental: allow inline content-blocks
+                custom_elements: "hr[sxc|guid]",
+
                 // Url Rewriting in images and pages
                 //convert_urls: false,  // don't use this, would keep the domain which is often a test-domain
                 relative_urls: false, // keep urls with full path so starting with a "/" - otherwise it would rewrite them to a "../../.." syntax
