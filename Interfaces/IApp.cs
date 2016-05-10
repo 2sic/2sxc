@@ -1,4 +1,7 @@
-﻿namespace ToSic.SexyContent.Interfaces
+﻿using System.Collections.Generic;
+using ToSic.Eav.DataSources;
+
+namespace ToSic.SexyContent.Interfaces
 {
     public interface IApp
     {
@@ -21,7 +24,8 @@
 
         IAppData Data { get; }
 
-        
+        IDictionary<string, IDataSource> Query { get; }
+
 
     }
 }
