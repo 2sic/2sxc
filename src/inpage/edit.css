@@ -68,7 +68,7 @@
 
 
 /****** Content block menu */
-.sc-content-block-menu { position:absolute; height: 40px; opacity:0.8; text-align:center; pointer-events:none; line-height:35px; padding:0; margin:-20px 0 0 0; }
+.sc-content-block-menu { position:absolute; height: 40px; opacity:0.8; text-align:center; pointer-events:none; line-height:35px; padding:0; margin:-20px 0 0 0; z-index:9999; }
 .sc-content-block-menu a {  cursor:pointer; width:32px; height:32px; margin:0 3px!important; padding:0!important; display:inline-block; text-indent:-9999px; pointer-events:auto; font-size:18px; }
 .sc-content-block-quick-insert:before, .sc-content-block-quick-insert:after { height:2px; background:#0088f4; width:60px; display:block; content:' '; position:absolute; left:50%; top:19px; }
 .sc-content-block-quick-insert:before { margin-left:-150px; }
