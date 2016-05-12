@@ -13,8 +13,8 @@ namespace ToSic.SexyContent.Serializers
         /// <summary>
         /// Standard constructor, important for Unity when opening this class in dependency-injection mode
         /// </summary>
-	    public Serializer() : base()
-	    {
+	    public Serializer()
+        {
 	        
 	    }
 
@@ -45,7 +45,9 @@ namespace ToSic.SexyContent.Serializers
         /// </summary>
         public Dictionary<string, object> Prepare(DynamicEntity dynamicEntity)
         {
-            return Prepare(dynamicEntity.Entity);
+            var language = Thread.CurrentThread.CurrentCulture.Name;
+            return GetDictionaryFromEntity(dynamicEntity.Entity, language);
+            // return Prepare(dynamicEntity.Entity);
         }
         #endregion
 
@@ -65,7 +67,7 @@ namespace ToSic.SexyContent.Serializers
 			}
 
             // Add additional information in case we're in edit mode
-            if(DotNetNuke.Common.Globals.IsEditMode())
+            if(DotNetNuke.Common.Globals.IsEditMode() || (Sxc?.Environment?.Permissions?.UserMayEditContent ?? false))
 		    {
                 dictionary.Add("Modified", entity.Modified);
                 
