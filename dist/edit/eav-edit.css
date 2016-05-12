@@ -95,9 +95,6 @@
 
 [visually-disabled='true'] { opacity: 0.3; -webkit-filter: grayscale(100%); filter: grayscale(100%); }
 .ng-touched.ng-invalid { border-color:red; }
-/* must hide help-block because of duplicate description */
-.help-block { display:none; }
-.eav-label { padding-right:150px; }
 .formly-field { position:relative; }
 .eav-localization { position:absolute; top:0; right:0; }
 .eav-localization-lock { float: right; display: inline-block; }
@@ -155,6 +152,9 @@
     -moz-border-radius: 6px 0 6px 6px;
     border-radius: 6px 0 6px 6px;
 }
+/* must hide help-block because of duplicate description */
+.help-block { display:none; }
+.eav-label { padding-right:150px; }
 .checkbox.checkbox-labeled input[type='checkbox'] { margin-left:0; }
 .eav-entityselect { margin-top: 1px; border-color: rgb(170, 178, 189); border-width: 1px; border-style: solid; border-radius: 4px; font-size: 18px; }
 .eav-entityselect ol { list-style-type: none; margin: 0; padding: 0; }

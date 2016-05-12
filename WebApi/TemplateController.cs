@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using DotNetNuke.Security;
@@ -17,10 +16,9 @@ namespace ToSic.SexyContent.WebApi
 	    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 	    public IEnumerable<object> GetAll(int appId)
 	    {
-            var zoneId = ZoneHelpers.GetZoneID(Dnn.Module.OwnerPortalID).Value;
-            var tm = new TemplateManager(zoneId, appId);
+            var tm = TemplateManager(appId);
 
-            var attributeSetList = tm.GetAvailableContentTypes(Settings.AttributeSetScope).ToList();
+	        var attributeSetList = tm.GetAvailableContentTypes(Settings.AttributeSetScope).ToList();
             var templateList = tm.GetAllTemplates();
             var templates = from c in templateList
                             select new
@@ -37,6 +35,13 @@ namespace ToSic.SexyContent.WebApi
                                 c.Guid
                             };
 	        return templates;
+	    }
+
+	    private TemplateManager TemplateManager(int appId)
+	    {
+	        var zoneId = ZoneHelpers.GetZoneID(PortalSettings.PortalId).Value;
+	        var tm = new TemplateManager(zoneId, appId);
+	        return tm;
 	    }
 
 	    /// <summary>
@@ -62,9 +67,10 @@ namespace ToSic.SexyContent.WebApi
 
 	    [HttpGet, HttpDelete]
 	    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-	    public bool Delete(int id)
+	    public bool Delete(int appId, int id)
 	    {
-            SxcContext.AppTemplates.DeleteTemplate(id);
+            var tm = TemplateManager(appId);
+            tm.DeleteTemplate(id);
 	        return true;
 	    }
         
