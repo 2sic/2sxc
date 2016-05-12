@@ -27,7 +27,7 @@
 	"Errors": {
 		"UnclearError": "Er is iets misgegaan - misschien dat delen werken, misschien niet. Sorry :(",
 		"InnerControlMustOverride": "Inner control moet deze functie overschrijven.",
-		"UnsavedChanges": "Je hebt wijziging die nog niet opgeslagen zijn.",
+		"UnsavedChanges": "Je hebt wijzigingen die nog niet opgeslagen zijn.",
 		"DefLangNotFound": "Waarde in standaard taal niet gevonden, maar meerdere waarden gevonden - kan niet wijzigen voor"
 	},
 	"General": {},
