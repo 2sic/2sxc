@@ -45,8 +45,7 @@ function processInstallMessage(event, modId, progressIndicator, $http) {
 }
 
 function resizeIFrame(modId, height) {
-    // todo 8.4
-    //$(".DnnModule-" + modId + " #frGettingStarted").height(height);
+    document.getElementById("frGettingStarted").style.height = (height + 10) + "px";
 }
 
 function runOneInstallJob(packages, i, progressIndicator, $http) {
