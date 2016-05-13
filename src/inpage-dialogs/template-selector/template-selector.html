@@ -65,7 +65,9 @@
 
         <!-- View / template selector -->
         <div>
-            <select ng-show="vm.isContentApp ? vm.contentTypeId != 0 : (vm.savedAppId != null &&  vm.filteredTemplates().length > 1)"
+            <select ng-show="vm.isContentApp ? vm.contentTypeId != 0 : (vm.savedAppId != null)" 
+                    x="( && vm.filteredTemplates().length > 1)"
+                    ng-disabled="vm.filteredTemplates().length <= 1"
                     class="input-lg pull-left"
                     ng-model="vm.templateId"
                     ng-options="t.TemplateId as t.Name for t in vm.filteredTemplates(vm.contentTypeId)"></select>
