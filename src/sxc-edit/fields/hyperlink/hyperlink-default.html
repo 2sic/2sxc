@@ -1,16 +1,17 @@
 ﻿<div>
     <div class="dropzone">
+        <div ng-if="value.Value && vm.isImage()" class="input-group-addon btn-default thumbnail-before-input" style="background-image: url('{{vm.thumbnailUrl(1)}}')" ng-mouseover="vm.showPreview = true" ng-mouseleave="vm.showPreview = false"> </div>
+        <a ng-if="value.Value && !vm.isImage()"
+           class="input-group-addon btn-default icon-before-input"
+           href="{{vm.testLink}}"
+           target="_blank" tabindex="-1"
+           tooltip-html-unsafe="{{vm.tooltipUrl(vm.testLink)}}"
+           tooltip-placement="right"
+           ng-class="vm.isImage() ? '':vm.icon()"
+           ng-style="vm.isImage() ? 'background-image: url(\'' + vm.thumbnailUrl(1) +'\')': ''">
+        </a>        
         <div class="input-group" dropdown>
-            <div ng-if="value.Value && vm.isImage()" class="input-group-addon btn-default thumbnail-before-input" style="background-image: url('{{vm.thumbnailUrl(1)}}')" ng-mouseover="vm.showPreview = true" ng-mouseleave="vm.showPreview = false"> </div>
-            <a ng-if="value.Value && !vm.isImage()"
-               class="input-group-addon btn-default icon-before-input"
-               href="{{vm.testLink}}"
-               target="_blank" tabindex="-1"
-               tooltip-html-unsafe="{{vm.tooltipUrl(vm.testLink)}}"
-               tooltip-placement="right"
-               ng-class="vm.isImage() ? '':vm.icon()"
-               ng-style="vm.isImage() ? 'background-image: url(\'' + vm.thumbnailUrl(1) +'\')': ''">
-                </a>
+
             <input type="text" class="form-control input-lg" ng-model="value.Value" tooltip="{{'Edit.Fields.Hyperlink.Default.Tooltip1' | translate }}
 {{'Edit.Fields.Hyperlink.Default.Tooltip2' | translate }}
 ADAM - sponsored with ♥ by 2sic.com">
@@ -31,7 +32,7 @@ ADAM - sponsored with ♥ by 2sic.com">
         </div>
         <div ng-if="vm.showPreview" style="position: relative">
             <div style="position: absolute; z-index: 100; background: white; top: 10px; text-align: center; left: 0; right: 0;">
-                <img ng-src="{{vm.thumbnailUrl(2)}}" />
+                <img ng-src="{{vm.thumbnailUrl(2)}}"/>
             </div>
         </div>
 
@@ -53,8 +54,7 @@ ADAM - sponsored with ♥ by 2sic.com">
             sub-folder=""
             update-callback="vm.setValue"
             register-self="vm.registerAdam"
-            ng-disabled="to.disabled"
-        ></adam-browser>
+            ng-disabled="to.disabled"></adam-browser>
 
         <!-- the preview of the uploader -->
         <dropzone-upload-preview></dropzone-upload-preview>

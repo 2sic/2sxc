@@ -2,7 +2,7 @@
  * Field: String - font-icon picker
  */
 
-angular.module("eavFieldTemplates")
+angular.module("sxcFieldTemplates")
     .config(function(formlyConfigProvider, defaultFieldWrappers) {
 
         formlyConfigProvider.setType({

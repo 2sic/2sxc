@@ -9,6 +9,16 @@
     overflow: auto;
 }
 
+/* note: most of this definition should be the same as the definition of the standard input box */
+div.wrap-float-label .field-string-wysiwyg-mce-box {
+    border: 0;
+    border-bottom: 1px;
+    border-bottom-color: #ddd; /* #8DCAFA; /* todo: define the official color  #0087F4; */
+    border-bottom-style: solid;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    padding-left: 0;
+}
 
 .mce-tinymce.mce-container.mce-tinymce-inline {
     background-color: #0087F4;

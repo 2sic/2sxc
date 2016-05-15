@@ -8,7 +8,7 @@
 }
 
 .thumbnail-before-input {
-    width: 46px; 
+    /*width: 46px;*/
     padding-top: 0; 
     padding-bottom: 0; 
     border-top-width: 0; 
@@ -17,6 +17,13 @@
     border-left-width: 0; 
     border-bottom-width: 0; 
     background-color: transparent; 
+
+    /* new */
+    width: 64px;
+    height: 64px;
+    position: absolute;
+    top: -8px;
+    border-radius: 0;
 }
 
 div.dropzone div.input-group div.tooltip-inner {

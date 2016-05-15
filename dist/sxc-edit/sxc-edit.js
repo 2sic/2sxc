@@ -449,6 +449,7 @@ angular.module("Adam")
         "2sxc4ng",
         "SxcEditTemplates",     // temp - was because of bad template-converter, remove once I update grunt
         "EavConfiguration",
+        "eavFieldTemplates",
         "SxcServices",
         "Adam",
         //"ui.tinymce",   // connector to tiny-mce for angular
@@ -607,12 +608,12 @@ angular.module("sxcFieldTemplates")
     "use strict";
 
     angular.module("sxcFieldTemplates")
-        .config(["formlyConfigProvider", function(formlyConfigProvider) {
+        .config(["formlyConfigProvider", "fieldWrappersWithPreview", function (formlyConfigProvider, fieldWrappersWithPreview) {
 
             formlyConfigProvider.setType({
                 name: "hyperlink-default",
                 templateUrl: "fields/hyperlink/hyperlink-default.html",
-                wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization", "collapsible"],
+                wrapper: fieldWrappersWithPreview,
                 controller: "FieldTemplate-HyperlinkCtrl as vm"
             });
         }])
@@ -625,7 +626,7 @@ angular.module("sxcFieldTemplates")
             vm.isImage = function () { return fileType.isImage(vm.testLink); };
             vm.thumbnailUrl = function thumbnailUrl(size) {
                 if (size === 1)
-                    return vm.testLink + "?w=46&h=46&mode=crop";
+                    return vm.testLink + "?w=64&h=64&mode=crop";
                 if (size === 2)
                     return vm.testLink + "?w=500&h=400&mode=max";
             };
@@ -748,7 +749,7 @@ angular.module("sxcFieldTemplates")
  * Field: String - font-icon picker
  */
 
-angular.module("eavFieldTemplates")
+angular.module("sxcFieldTemplates")
     .config(["formlyConfigProvider", "defaultFieldWrappers", function(formlyConfigProvider, defaultFieldWrappers) {
 
         formlyConfigProvider.setType({
@@ -919,12 +920,12 @@ angular.module("eavFieldTemplates")
 
     // Register in Angular Formly
     angular.module("sxcFieldTemplates")
-        .config(["formlyConfigProvider", function(formlyConfigProvider) {
+        .config(["formlyConfigProvider", "defaultFieldWrappers", function (formlyConfigProvider, defaultFieldWrappers) {
             formlyConfigProvider.setType({
                 name: "string-wysiwyg-tinymce",
                 templateUrl: "fields/string/string-wysiwyg-tinymce.html",
                 // todo: check if we could use the defaultFieldWrappers instead
-                wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization", "collapsible"],
+                wrapper: defaultFieldWrappers, // ["eavLabel", "bootstrapHasError", "eavLocalization", "collapsible"],
                 controller: "FieldWysiwygTinyMce as vm"
             });
         }])
@@ -1441,7 +1442,7 @@ angular.module('SxcEditTemplates', []).run(['$templateCache', function($template
 
 
   $templateCache.put('fields/hyperlink/hyperlink-default.html',
-    "<div><div class=dropzone><div class=input-group dropdown><div ng-if=\"value.Value && vm.isImage()\" class=\"input-group-addon btn-default thumbnail-before-input\" style=\"background-image: url('{{vm.thumbnailUrl(1)}}')\" ng-mouseover=\"vm.showPreview = true\" ng-mouseleave=\"vm.showPreview = false\"></div><a ng-if=\"value.Value && !vm.isImage()\" class=\"input-group-addon btn-default icon-before-input\" href={{vm.testLink}} target=_blank tabindex=-1 tooltip-html-unsafe={{vm.tooltipUrl(vm.testLink)}} tooltip-placement=right ng-class=\"vm.isImage() ? '':vm.icon()\" ng-style=\"vm.isImage() ? 'background-image: url(\\'' + vm.thumbnailUrl(1) +'\\')': ''\"></a> <input type=text class=\"form-control input-lg\" ng-model=value.Value tooltip=\"{{'Edit.Fields.Hyperlink.Default.Tooltip1' | translate }}\r" +
+    "<div><div class=dropzone><div ng-if=\"value.Value && vm.isImage()\" class=\"input-group-addon btn-default thumbnail-before-input\" style=\"background-image: url('{{vm.thumbnailUrl(1)}}')\" ng-mouseover=\"vm.showPreview = true\" ng-mouseleave=\"vm.showPreview = false\"></div><a ng-if=\"value.Value && !vm.isImage()\" class=\"input-group-addon btn-default icon-before-input\" href={{vm.testLink}} target=_blank tabindex=-1 tooltip-html-unsafe={{vm.tooltipUrl(vm.testLink)}} tooltip-placement=right ng-class=\"vm.isImage() ? '':vm.icon()\" ng-style=\"vm.isImage() ? 'background-image: url(\\'' + vm.thumbnailUrl(1) +'\\')': ''\"></a><div class=input-group dropdown><input type=text class=\"form-control input-lg\" ng-model=value.Value tooltip=\"{{'Edit.Fields.Hyperlink.Default.Tooltip1' | translate }}\r" +
     "\n" +
     "{{'Edit.Fields.Hyperlink.Default.Tooltip2' | translate }}\r" +
     "\n" +
