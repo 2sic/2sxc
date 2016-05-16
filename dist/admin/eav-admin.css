@@ -143,23 +143,20 @@
 .icon-link:before { content: '\e845'; } /* '' */
 .icon-unlink:before { content: '\e846'; } /* '' */
 .icon-cart-arrow-down:before { content: '\e847'; } /* '' */
-/* try to override problem CSS of bootstrap
+/* load all glyphicons from CDN 
 
-    in this case especially the woff2 format which many iis don't deliver
-
-    note that I don't want WOFF2 and no SVG and want WOFF as first priority
+    note that we'll remove these soon anyhow
 */
 
-@font-face {
-  font-family: 'Glyphicons Halflings';
 
-    src: url('../lib/fonts/glyphicons-halflings-regular.woff') format('woff'),
-        url('../lib/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'),
-      /*url('../fonts/glyphicons-halflings-regular.woff2') format('woff2'),*/
-         
-         url('../lib/fonts/glyphicons-halflings-regular.ttf') format('truetype');
-}
 
+@font-face{font-family:'Glyphicons Halflings';
+           src:url(//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/fonts/glyphicons-halflings-regular.eot);
+           src:url(//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/fonts/glyphicons-halflings-regular.eot?#iefix) format('embedded-opentype'),
+               url(//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/fonts/glyphicons-halflings-regular.woff2) format('woff2'),
+               url(//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/fonts/glyphicons-halflings-regular.woff) format('woff'),
+               url(//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/fonts/glyphicons-halflings-regular.ttf) format('truetype'),
+               url(//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular) format('svg')}
 /* These are helpers to create larger dialogs than available by default in boostrap*/
 .modal-xlg {
      width: 95%;

@@ -97,7 +97,14 @@
 .ng-touched.ng-invalid { border-color:red; }
 
 
-
+/* the new round buttons on any field */
+.btn-lg.icon-field-button {
+    width: 44px;
+    height: 44px;
+    border-radius: 22px;
+    padding-right: 10px;
+    padding-left: 8px;
+}
 .formly-field { position:relative; }
 .eav-localization { position:absolute; top:0; right:0; }
 .eav-localization-lock { float: right; display: inline-block; }
@@ -156,8 +163,13 @@
     border-radius: 6px 0 6px 6px;
 }
 /* must hide help-block because of duplicate description */
-.help-block { display:none; }
-.eav-label { padding-right:150px; }
+.help-block {
+    display:none;
+}
+.eav-label {
+    padding-right:150px;
+    color: #ccc;
+}
 /****** new floating label styles ******/
 
 /* the input with just a thin line under the information */
@@ -250,10 +262,6 @@ div.preview-area {
 .checkbox.checkbox-labeled input[type='checkbox'] { margin-left:0; }
 .eav-entityselect {
      margin-top: 1px; 
-     /*border-color: rgb(170, 178, 189); 
-     border-width: 1px; 
-     border-style: solid; 
-     border-radius: 4px;*/ 
      font-size: 18px;
     border-bottom-color: #ddd;
     border-bottom-style: solid;
