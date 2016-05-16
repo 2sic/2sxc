@@ -263,6 +263,7 @@ div.preview-area {
 .eav-entityselect-table tr,
 table.eav-entityselect-table tr td {
     border: 0!important;
+    padding-left: 0;
 }
 
 .eav-entityselect ol {
@@ -271,7 +272,7 @@ table.eav-entityselect-table tr td {
 
 
 .eav-entityselect-create { cursor: cell; }
-.eav-entityselect-item > div { padding: 5px 4px 5px 4px; position: relative; line-height: 25px; }
+.eav-entityselect-item > div { padding: 5px 4px 5px 0; position: relative; line-height: 25px; }
 .eav-entityselect-item > div:hover { background: #8DCAFA; }
 .eav-entityselect-item-title { display: block; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; font-weight: normal; }
 

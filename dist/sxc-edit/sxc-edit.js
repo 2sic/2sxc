@@ -750,12 +750,12 @@ angular.module("sxcFieldTemplates")
  */
 
 angular.module("sxcFieldTemplates")
-    .config(["formlyConfigProvider", "defaultFieldWrappers", function(formlyConfigProvider, defaultFieldWrappers) {
+    .config(["formlyConfigProvider", "fieldWrappersWithPreview", function (formlyConfigProvider, fieldWrappersWithPreview) {
 
         formlyConfigProvider.setType({
             name: "string-font-icon-picker",
             templateUrl: "fields/string/string-font-icon-picker.html",
-            wrapper: defaultFieldWrappers,
+            wrapper: fieldWrappersWithPreview,
             controller: "FieldTemplate-String-Font-Icon-Picker as vm"
         });
 
@@ -1442,7 +1442,7 @@ angular.module('SxcEditTemplates', []).run(['$templateCache', function($template
 
 
   $templateCache.put('fields/hyperlink/hyperlink-default.html',
-    "<div><div class=dropzone><div ng-if=\"value.Value && vm.isImage()\" class=\"input-group-addon btn-default thumbnail-before-input\" style=\"background-image: url('{{vm.thumbnailUrl(1)}}')\" ng-mouseover=\"vm.showPreview = true\" ng-mouseleave=\"vm.showPreview = false\"></div><a ng-if=\"value.Value && !vm.isImage()\" class=\"input-group-addon btn-default icon-before-input\" href={{vm.testLink}} target=_blank tabindex=-1 tooltip-html-unsafe={{vm.tooltipUrl(vm.testLink)}} tooltip-placement=right ng-class=\"vm.isImage() ? '':vm.icon()\" ng-style=\"vm.isImage() ? 'background-image: url(\\'' + vm.thumbnailUrl(1) +'\\')': ''\"></a><div class=input-group dropdown><input type=text class=\"form-control input-lg\" ng-model=value.Value tooltip=\"{{'Edit.Fields.Hyperlink.Default.Tooltip1' | translate }}\r" +
+    "<div><div class=dropzone><div ng-if=\"value.Value && vm.isImage()\" class=thumbnail-before-input style=\"background-image: url('{{vm.thumbnailUrl(1)}}')\" ng-mouseover=\"vm.showPreview = true\" ng-mouseleave=\"vm.showPreview = false\"></div><a ng-if=\"value.Value && !vm.isImage()\" class=icon-before-input href={{vm.testLink}} target=_blank tabindex=-1 tooltip-html-unsafe={{vm.tooltipUrl(vm.testLink)}} tooltip-placement=right ng-class=\"vm.isImage() ? '':vm.icon()\" ng-style=\"vm.isImage() ? 'background-image: url(\\'' + vm.thumbnailUrl(1) +'\\')': ''\"></a><div ng-if=!value.Value class=\"thumbnail-before-input empty-placeholder\"></div><div class=input-group dropdown><input type=text class=\"form-control input-lg\" ng-model=value.Value tooltip=\"{{'Edit.Fields.Hyperlink.Default.Tooltip1' | translate }}\r" +
     "\n" +
     "{{'Edit.Fields.Hyperlink.Default.Tooltip2' | translate }}\r" +
     "\n" +
@@ -1456,7 +1456,7 @@ angular.module('SxcEditTemplates', []).run(['$templateCache', function($template
 
 
   $templateCache.put('fields/string/string-font-icon-picker.html',
-    "<div><div dropdown keyboard-nav auto-close=outsideClick is-open=vm.selectorIsOpen><button type=button class=\"btn btn-default btn-lg\" tooltip={{value.Value}} dropdown-toggle><i class=\"{{vm.previewPrefix}} {{value.Value}}\" ng-show=value.Value></i> <span ng-show=!value.Value>&nbsp;&nbsp;</span></button><ul class=\"dropdown-menu icons-menu-columns\" role=menu><li class=input-group disable-auto-close><span class=\"input-group-addon btn-default btn\" ng-click=\"value.Value = ''\"><i class=icon-cancel></i></span> <input type=search ng-model=vm.iconFilter class=\"makePaymentDropdownSearchBox form-control input-lg\" placeholder=\"search...\"></li><li ng-repeat=\"icn in vm.icons\" role=menuitem ng-show=\"icn.class.indexOf(vm.iconFilter) !== -1\"><a ng-click=vm.setIcon(icn.class) xng-click=\"value.Value = icn.class; status.isopen = false;\"><i class=\"{{vm.previewPrefix}} {{icn.class}}\"></i> <span tooltip={{icn.class}}>...{{icn.class.substring(vm.prefix.length-1,25)}}</span></a></li></ul></div><div ng-if=vm.debug.on>Infos: found {{vm.icons.length}} items for prefix \"{{vm.prefix}}\" and will use \"{{vm.previewPrefix}}\" as a preview class. Selected is \"{{value.Value}}\" and files are: {{vm.files}}</div></div>"
+    "<div><div dropdown keyboard-nav auto-close=outsideClick is-open=vm.selectorIsOpen><div class=\"thumbnail-before-input icon-preview\"><button type=button tooltip={{value.Value}} dropdown-toggle><i class=\"{{vm.previewPrefix}} {{value.Value}}\" ng-show=value.Value></i> <span ng-show=!value.Value>&nbsp;&nbsp;</span></button></div><div class=input-group><input type=text class=\"form-control input-lg\" ng-model=value.Value ng-disabled=false dropdown-toggle></div><ul class=\"dropdown-menu icons-menu-columns\" role=menu><li class=input-group disable-auto-close><span class=\"input-group-addon btn-default btn\" ng-click=\"value.Value = ''\"><i class=icon-cancel></i></span> <input type=search ng-model=vm.iconFilter class=\"makePaymentDropdownSearchBox form-control input-lg\" placeholder=\"search...\"></li><li ng-repeat=\"icn in vm.icons\" role=menuitem ng-show=\"icn.class.indexOf(vm.iconFilter) !== -1\"><a ng-click=vm.setIcon(icn.class) xng-click=\"value.Value = icn.class; status.isopen = false;\"><i class=\"{{vm.previewPrefix}} {{icn.class}}\"></i> <span tooltip={{icn.class}}>...{{icn.class.substring(vm.prefix.length-1,25)}}</span></a></li></ul></div><div ng-if=vm.debug.on>Infos: found {{vm.icons.length}} items for prefix \"{{vm.prefix}}\" and will use \"{{vm.previewPrefix}}\" as a preview class. Selected is \"{{value.Value}}\" and files are: {{vm.files}}</div></div>"
   );
 
 

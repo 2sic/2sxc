@@ -3,12 +3,12 @@
  */
 
 angular.module("sxcFieldTemplates")
-    .config(function(formlyConfigProvider, defaultFieldWrappers) {
+    .config(function (formlyConfigProvider, fieldWrappersWithPreview) {
 
         formlyConfigProvider.setType({
             name: "string-font-icon-picker",
             templateUrl: "fields/string/string-font-icon-picker.html",
-            wrapper: defaultFieldWrappers,
+            wrapper: fieldWrappersWithPreview,
             controller: "FieldTemplate-String-Font-Icon-Picker as vm"
         });
 

@@ -8,7 +8,6 @@
 }
 
 .thumbnail-before-input {
-    /*width: 46px;*/
     padding-top: 0; 
     padding-bottom: 0; 
     border-top-width: 0; 
@@ -22,8 +21,13 @@
     width: 64px;
     height: 64px;
     position: absolute;
-    top: -8px;
+    top: 0; /* important to add this, because of paddings which are auto-added */
     border-radius: 0;
+}
+
+/* design/style the empty placeholder - for now don't do anything '*/
+.thumbnail-before-input.empty-placeholder {
+    /*background-color: pink;*/
 }
 
 div.dropzone div.input-group div.tooltip-inner {
