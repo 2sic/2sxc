@@ -27,6 +27,7 @@ ADAM - sponsored with ♥ by 2sic.com">
                 <button type="button" class="btn btn-primary btn-lg icon-field-button" ng-disabled="to.disabled" tooltip="{{'Edit.Fields.Hyperlink.Default.AdamUploadLabel' | translate }}" ng-click="vm.toggleAdam()">
                     <i class="icon-apple"></i>
                 </button>
+                
                 <button tabindex="-1" type="button" class="btn btn-default dropdown-toggle btn-lg btn-square icon-field-button" dropdown-toggle ng-disabled="to.disabled">
                     <i class="icon-options"></i>
                 </button>
@@ -40,29 +41,28 @@ ADAM - sponsored with ♥ by 2sic.com">
         </div>
         <div ng-if="vm.showPreview" style="position: relative">
             <div style="position: absolute; z-index: 100; background: white; top: 10px; text-align: center; left: 0; right: 0;">
-                <img ng-src="{{vm.thumbnailUrl(2)}}"/>
+                <img ng-src="{{vm.thumbnailUrl(2)}}" />
             </div>
         </div>
 
-        <adam-hint></adam-hint>
+        <adam-hint class="field-hints"></adam-hint>
 
-        <div ng-if="value.Value">
+        <div ng-if="value.Value" class="field-hints">
             <a href="{{vm.testLink}}" target="_blank" tabindex="-1" tooltip-html-unsafe="{{vm.tooltipUrl(vm.testLink)}}">
                 <span>&nbsp;... {{vm.testLink.substr(vm.testLink.lastIndexOf("/"), 100)}}</span>
             </a>
         </div>
 
         <!-- The ADAM file browser, requires the uploader wrapped around it -->
-        <adam-browser
-            content-type-name="to.header.ContentTypeName"
-            entity-guid="to.header.Guid"
-            field-name="options.key"
-            auto-load="false"
-            folder-depth="0"
-            sub-folder=""
-            update-callback="vm.setValue"
-            register-self="vm.registerAdam"
-            ng-disabled="to.disabled"></adam-browser>
+        <adam-browser content-type-name="to.header.ContentTypeName"
+                      entity-guid="to.header.Guid"
+                      field-name="options.key"
+                      auto-load="false"
+                      folder-depth="0"
+                      sub-folder=""
+                      update-callback="vm.setValue"
+                      register-self="vm.registerAdam"
+                      ng-disabled="to.disabled"></adam-browser>
 
         <!-- the preview of the uploader -->
         <dropzone-upload-preview></dropzone-upload-preview>

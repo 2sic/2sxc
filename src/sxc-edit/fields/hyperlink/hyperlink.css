@@ -33,3 +33,12 @@
 div.dropzone div.input-group div.tooltip-inner {
     word-wrap: break-word;
 }
+
+.field-hints {
+    visibility: hidden;
+}
+
+
+div.focused .field-hints {
+    visibility: visible;
+}
