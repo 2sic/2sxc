@@ -20,7 +20,7 @@ namespace ToSic.SexyContent.Edit.InPageEditingSystem
         {
             if (criticalParameter != Constants.RandomProtectionParameter)
                 throw new Exception(
-                    "when using the toolbar command, please use named parameters - otherwise you are relying on the parameter order staying the same.");
+                    "when using this command, please use named parameters - otherwise you are relying on the parameter order staying the same.");
         }
 
         public bool Enabled => _sxcInstance?.Environment?.Permissions?.UserMayEditContent ?? false;

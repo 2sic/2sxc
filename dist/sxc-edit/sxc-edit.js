@@ -1471,7 +1471,7 @@ angular.module('SxcEditTemplates', []).run(['$templateCache', function($template
 
 
   $templateCache.put('fields/string/string-wysiwyg-tinymce.html',
-    "<div><div class=dropzone><div ui-tinymce=tinymceOptions ng-model=value.Value class=field-string-wysiwyg-mce-box></div><adam-browser content-type-name=to.header.ContentTypeName entity-guid=to.header.Guid field-name=options.key auto-load=false folder-depth=0 sub-folder=\"\" update-callback=vm.setValue register-self=vm.registerAdam show-images-only=vm.adamModeImage ng-disabled=to.disabled></adam-browser><span id=dummyfocus tabindex=-1></span><dropzone-upload-preview></dropzone-upload-preview><adam-hint></adam-hint></div></div>"
+    "<div><div class=dropzone><div ui-tinymce=tinymceOptions ng-model=value.Value class=field-string-wysiwyg-mce-box></div><adam-browser content-type-name=to.header.ContentTypeName entity-guid=to.header.Guid field-name=options.key auto-load=false folder-depth=0 sub-folder=\"\" update-callback=vm.setValue register-self=vm.registerAdam show-images-only=vm.adamModeImage ng-disabled=to.disabled></adam-browser><span id=dummyfocus tabindex=-1></span><dropzone-upload-preview></dropzone-upload-preview><adam-hint class=field-hints></adam-hint></div></div>"
   );
 
 }]);
