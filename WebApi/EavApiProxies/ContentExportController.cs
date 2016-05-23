@@ -32,7 +32,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
             LanguageReferenceExport languageReferences)
         {
             // do security check
-            if(!PortalSettings.UserInfo.IsInRole("Administrators")) // note: user.isinrole didn't work
+            if(!PortalSettings.UserInfo.IsInRole(PortalSettings.AdministratorRoleName))// todo: copy to 8.5 "Administrators")) // note: user.isinrole didn't work
                 throw new HttpRequestException("Needs admin permissions to do this");
             return eavCtc.ExportContent(appId, language, defaultLanguage, contentType, recordExport, resourcesReferences,
                 languageReferences);
