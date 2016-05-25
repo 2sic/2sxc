@@ -104,6 +104,7 @@ angular.module("Adam")
     /* jshint laxbreak:true */
     "use strict";
 
+    BrowserController.$inject = ["$scope", "adamSvc", "debugState", "eavConfig", "eavAdminDialogs", "appRoot", "fileType"];
     var app = angular.module("Adam"); 
 
     // The controller for the main form directive
@@ -276,7 +277,6 @@ angular.module("Adam")
 
         vm.activate();
     }
-    BrowserController.$inject = ["$scope", "adamSvc", "debugState", "eavConfig", "eavAdminDialogs", "appRoot", "fileType"];
 
 })();
 
@@ -918,6 +918,7 @@ angular.module("eavFieldTemplates")
 	"use strict";
 
     // Register in Angular Formly
+    FieldWysiwygTinyMceController.$inject = ["$scope", "dnnBridgeSvc", "languages", "$translate"];
     angular.module("sxcFieldTemplates")
         .config(["formlyConfigProvider", function(formlyConfigProvider) {
             formlyConfigProvider.setType({
@@ -1020,7 +1021,7 @@ angular.module("eavFieldTemplates")
                 extended_valid_elements: '@[class]' // allow classes on all elements, 
                     + ',i' // allow i elements (allows icon-font tags like <i class="fa fa-...">)
                     + ",hr[sxc|guid]", // experimental: allow inline content-blocks
-                custom_elements: "hr[sxc|guid]",
+                //custom_elements: "hr[sxc|guid]" 2016-05-25 commented line because of https://github.com/2sic/2sxc/issues/846. Don't know yet if the syntax is wrong or if it's a bug in TinyMCE.
 
                 // Url Rewriting in images and pages
                 //convert_urls: false,  // don't use this, would keep the domain which is often a test-domain
@@ -1123,7 +1124,6 @@ angular.module("eavFieldTemplates")
 
         vm.activate();
     }
-    FieldWysiwygTinyMceController.$inject = ["$scope", "dnnBridgeSvc", "languages", "$translate"];
 
     // Initialize the tinymce resources which we translate ourselves
     function initLangResources(editor, language, $translate) {
