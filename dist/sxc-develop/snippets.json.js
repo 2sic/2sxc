@@ -108,9 +108,9 @@
             "set": "@List",
             "subset": "Repeater",
             "name": "foreach loop",
-            "title": "",
-            "content": "@foreach(var ${1:cont} in AsDynamic(Data[\"${2:Default}\"])){\r\n    <div class=\"sc-element\">\r\n        @${1}.EntityTitle\r\n        @$Edit.Toolbar({1})\r\n    </div>\r\n}…",
-            "help": ""
+            "title": "for-each on the default list",
+            "content": "@foreach(var ${1:cont} in AsDynamic(Data[\"${2:Default}\"])){\r\n    <div class=\"sc-element\">\r\n        @${1}.EntityTitle\r\n        @$Edit.Toolbar({1})\r\n    </div>\r\n}",
+            "help": "simple loop to show all items in the default list"
         },
         {
             "set": "@DnnRazor",
@@ -1829,7 +1829,7 @@
             "subset": "Resources",
             "name": "css, style-sheet",
             "title": "",
-            "content": "<link rel=\"stylesheet\" href=\"[App:Path]/assets/AppCatalog.css\" data-enableoptimizations=\"100\"/>",
+            "content": "<link rel=\"stylesheet\" href=\"[App:Path]/dist/AppCatalog.css\" data-enableoptimizations=\"100\"/>",
             "help": ""
         },
         {
@@ -1845,7 +1845,7 @@
             "subset": "Resources",
             "name": "css, style-sheet",
             "title": "",
-            "content": "<link rel=\"stylesheet\" href=\"@App.Path/assets/AppCatalog.css\" data-enableoptimizations=\"100\"/>",
+            "content": "<link rel=\"stylesheet\" href=\"@App.Path/dist/AppCatalog.css\" data-enableoptimizations=\"100\"/>",
             "help": ""
         },
         {
@@ -1917,7 +1917,7 @@
             "subset": "entity-content-blocks",
             "name": "content block with inpage editing",
             "title": "",
-            "content": "<div class=\"sc-content-block-list\" @Edit.ContextAttributes(${101:var}, field: \"${102:prop}\")>\r\n    @foreach(var contentBlock in ${101:var}.${102:prop}){\r\n        @contentBlock.Render()\r\n    }\r\n</div>\r\n",
+            "content": "<div class=\"sc-content-block-list\" @Edit.ContextAttributes(${101:var}, field: \"${102:prop}\")>\r\n    @foreach(var contentBlock in AsDynamic(${101:var}.${102:prop})){\r\n        @contentBlock.Render()\r\n    }\r\n</div>\r\n",
             "help": "Content blocks with in-page editing"
         },
         {
@@ -1933,8 +1933,8 @@
             "subset": "entity",
             "name": "loop through items",
             "title": "",
-            "content": "@foreach(var ${103:item} in ${101:var}.${102:prop}){\r\n    @${103:item}.Render()\r\n}\r\n",
-            "help": ""
+            "content": "@foreach(var ${103:item} in AsDynamic(${101:var}.${102:prop})){\r\n    @${103:item}.EntityId\r\n}\r\n",
+            "help": "loop over a list of sub-items"
         },
         {
             "set": "@\\InputType",
