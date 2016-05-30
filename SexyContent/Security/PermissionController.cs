@@ -28,20 +28,7 @@ namespace ToSic.SexyContent.Security
         public int ZoneId { get; private set; }
         public Guid TypeGuid { get; private set; }
 
-        // private IEntity _targetItem;
-
         public IEntity TargetItem { get; set; }
-        //{
-        //    get
-        //    {
-        //        return _targetItem;
-        //    }
-        //    set
-        //    {
-        //        _targetItem = value;
-        //        // TargetGuid = _targetItem.EntityGuid;
-        //    } 
-        //}
 
         private IEnumerable<IEntity> _permissionList;
 
@@ -155,7 +142,7 @@ namespace ToSic.SexyContent.Security
                 // check owner conditions
                 if (condition == _keyOwner)
                     // if it's an entity, possibly also check owner-permissions
-                    if (TargetItem != null && TargetItem.Owner == Environment.Dnn7.UserIdentity.CurrentUserIdentityToken/* PortalSettings.Current.UserInfo.Username*/)
+                    if (TargetItem != null && TargetItem.Owner == Environment.Dnn7.UserIdentity.CurrentUserIdentityToken)
                         return true;
             }
             catch
