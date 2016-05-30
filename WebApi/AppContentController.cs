@@ -109,12 +109,10 @@ namespace ToSic.SexyContent.WebApi
             // Check if we can find this content-type
             var ctc = new ContentTypeController();
             ctc.SetAppIdAndUser(App.AppId);
-            // var source = InitialDS;
+
             var cache = DataSource.GetCache(null, App.AppId);
             var ct = cache.GetContentType(contentType);
 
-
-            // dynamic ct = new Eav.WebApi.ContentTypeController().GetSingle(App.AppId, contentType, null);
             if (ct == null)
                 ThrowHttpError(HttpStatusCode.NotFound, "Could not find Content Type '" + contentType + "'.", "content-types");
             
@@ -125,7 +123,7 @@ namespace ToSic.SexyContent.WebApi
                 ThrowHttpError(HttpStatusCode.Unauthorized, "Content Type '" + contentType + "' is not a standard Content Type - no permissions possible.");
 
             // Check permissions in 2sxc - or check if the user has admin-right (in which case he's always granted access for these types of content)
-            var permissionChecker = new PermissionController(App.ZoneId, App.AppId, ctGuid, Dnn.Module);
+            var permissionChecker = new PermissionController(App.ZoneId, App.AppId, ctGuid, specificItem, Dnn.Module);
             var allowed = permissionChecker.UserMay(grant);
 
             var isAdmin = autoAllowAdmin && DotNetNuke.Security.Permissions.ModulePermissionController.CanAdminModule(Dnn.Module);

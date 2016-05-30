@@ -26,22 +26,22 @@ namespace ToSic.SexyContent.Security
 
         public int AppId { get; private set; }
         public int ZoneId { get; private set; }
-        public Guid TargetGuid { get; private set; }
+        public Guid TypeGuid { get; private set; }
 
-        private IEntity _targetItem;
+        // private IEntity _targetItem;
 
-        public IEntity TargetItem
-        {
-            get
-            {
-                return _targetItem;
-            }
-            set
-            {
-                _targetItem = value;
-                TargetGuid = _targetItem.EntityGuid;
-            } 
-        }
+        public IEntity TargetItem { get; set; }
+        //{
+        //    get
+        //    {
+        //        return _targetItem;
+        //    }
+        //    set
+        //    {
+        //        _targetItem = value;
+        //        // TargetGuid = _targetItem.EntityGuid;
+        //    } 
+        //}
 
         private IEnumerable<IEntity> _permissionList;
 
@@ -52,7 +52,7 @@ namespace ToSic.SexyContent.Security
                 if (_permissionList == null)
                 {
                     var ds = DataSource.GetMetaDataSource(ZoneId, AppId);
-                    _permissionList = ds.GetAssignedEntities(AssignmentObjectId, TargetGuid, ContentTypeName);
+                    _permissionList = ds.GetAssignedEntities(AssignmentObjectId, TypeGuid, ContentTypeName);
                 }
                 return _permissionList;
             }
@@ -67,21 +67,23 @@ namespace ToSic.SexyContent.Security
         /// </summary>
         /// <param name="zoneId">EAV Zone</param>
         /// <param name="appId">EAV APP</param>
-        /// <param name="targetGuid">Entity GUID to check permissions against</param>
+        /// <param name="typeGuid">Entity GUID to check permissions against</param>
         /// <param name="module">DNN Module - necessary for SecurityAccessLevel checks</param>
-        public PermissionController(int zoneId, int appId, Guid targetGuid, ModuleInfo module = null)
+        public PermissionController(int zoneId, int appId, Guid typeGuid, ModuleInfo module = null)
         {
             ZoneId = zoneId;
             AppId = appId;
-            TargetGuid = targetGuid;
+            TypeGuid = typeGuid;
             Module = module;
         }
 
-        public PermissionController(int zoneId, int appId, IEntity targetItem, ModuleInfo module = null)
+        public PermissionController(int zoneId, int appId, Guid typeGuid, IEntity targetItem, ModuleInfo module = null)
         {
             ZoneId = zoneId;
             AppId = appId;
-            TargetItem = targetItem;
+            TypeGuid = typeGuid;
+            if (targetItem != null)
+                TargetItem = targetItem;
             Module = module;
         }
 
