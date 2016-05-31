@@ -27,7 +27,6 @@ namespace ToSic.SexyContent.WebApi
 	/// todo: security
 	/// </summary>
 	[SupportedModules("2sxc,2sxc-app")]
-	// [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
 	public class AppContentController : SxcApiController
 	{
 	    private EntitiesController _entitiesController;
@@ -55,6 +54,7 @@ namespace ToSic.SexyContent.WebApi
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
         public IEnumerable<Dictionary<string, object>> GetEntities(string contentType, string cultureCode = null)
         {
+            // todo: check if we could change it to optionally also just deliver the "own" entities - as of now, not supported
             InitEavAndSerializer();
             PerformSecurityCheck(contentType, PermissionGrant.Read, true);
             return _entitiesController.GetEntities(contentType, cultureCode);
@@ -164,7 +164,8 @@ namespace ToSic.SexyContent.WebApi
 	    public void Delete(string contentType, int id)
         {
             InitEavAndSerializer();
-            PerformSecurityCheck(contentType, PermissionGrant.Delete, true);
+            IEntity itm = _entitiesController.GetEntityOrThrowError(contentType, id, appId: App.AppId);
+            PerformSecurityCheck(contentType, PermissionGrant.Delete, true, itm);
             _entitiesController.Delete(contentType, id);
         }
         [HttpDelete]
@@ -172,7 +173,10 @@ namespace ToSic.SexyContent.WebApi
         public void Delete(string contentType, Guid guid)
         {
             InitEavAndSerializer();
-            PerformSecurityCheck(contentType, PermissionGrant.Delete, true);
+            // todo: this doesn't support permissions yet!
+            // IEntity itm = _entitiesController.GetEntityOrThrowError(contentType, id, appId: App.AppId);
+
+            PerformSecurityCheck(contentType, PermissionGrant.Delete, true/*, itm*/);
             _entitiesController.Delete(contentType, guid);
         }
 
@@ -182,7 +186,8 @@ namespace ToSic.SexyContent.WebApi
 	    public Dictionary<string, object> GetOne(string contentType, int id)
 	    {
             InitEavAndSerializer();
-            PerformSecurityCheck(contentType, PermissionGrant.Read, true);
+            IEntity itm = _entitiesController.GetEntityOrThrowError(contentType, id, appId: App.AppId);
+            PerformSecurityCheck(contentType, PermissionGrant.Read, true, itm);
 	        return _entitiesController.GetOne(contentType, id);
 	    }
 
