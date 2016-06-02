@@ -1833,6 +1833,22 @@
             "help": ""
         },
         {
+            "set": "[\\InputType",
+            "subset": "hyperlink-default",
+            "name": "thumbnail url",
+            "title": "",
+            "content": "[${101:var}:${102:prop}]?w=${1:200}&h=${2:200}&mode=${3:crop}",
+            "help": "Thumbnail URL with crop-mode"
+        },
+        {
+            "set": "[\\InputType",
+            "subset": "hyperlink-default",
+            "name": "thumbnail IMG tag",
+            "title": "",
+            "content": "<img src=\"[${101:var}:${102:prop}]?w=${1:200}&h=${2:200}&mode=${3:crop}\">",
+            "help": "Thumbnail IMG tag with crop-mode"
+        },
+        {
             "set": "@Html",
             "subset": "Resources",
             "name": "script",
@@ -1897,20 +1913,20 @@
             "help": "Output the html as html, not as text"
         },
         {
-            "set": "[\\InputType",
-            "subset": "hyperlink-default",
-            "name": "thumbnail url",
+            "set": "@\\InputType",
+            "subset": "string-url-path",
+            "name": "link to url as parameter",
             "title": "",
-            "content": "[${101:var}:${102:prop}]?w=${1:200}&h=${2:200}&mode=${3:crop}",
-            "help": "Thumbnail URL with crop-mode"
+            "content": "@Link.To(parameters: \"${10:id}=\" + ${1:var}.${2:prop})",
+            "help": "Link to the same page but use this value as a url parameter"
         },
         {
-            "set": "[\\InputType",
-            "subset": "hyperlink-default",
-            "name": "thumbnail IMG tag",
+            "set": "@\\InputType",
+            "subset": "datetime",
+            "name": "yyyy-MM-dd",
             "title": "",
-            "content": "<img src=\"[${101:var}:${102:prop}]?w=${1:200}&h=${2:200}&mode=${3:crop}\">",
-            "help": "Thumbnail IMG tag with crop-mode"
+            "content": "@${1:var}.${2:prop}.ToString(\"yyyy-MM-dd\")",
+            "help": "format date with yyyy-MM-dd"
         },
         {
             "set": "@\\InputType",
