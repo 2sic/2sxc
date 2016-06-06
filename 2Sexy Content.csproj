@@ -153,10 +153,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\eav\ToSic.Eav.ManagementUI\bin\ToSic.Eav.ImportExport.dll</HintPath>
     </Reference>
-    <Reference Include="ToSic.Eav.ManagementUI, Version=4.0.0.16, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\eav\ToSic.Eav.ManagementUI\bin\ToSic.Eav.ManagementUI.dll</HintPath>
-    </Reference>
     <Reference Include="ToSic.Eav.Persistence.EF4, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\eav\ToSic.Eav.ManagementUI\bin\ToSic.Eav.Persistence.EF4.dll</HintPath>

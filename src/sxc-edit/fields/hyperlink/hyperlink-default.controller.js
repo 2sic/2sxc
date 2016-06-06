@@ -3,12 +3,12 @@
     "use strict";
 
     angular.module("sxcFieldTemplates")
-        .config(function (formlyConfigProvider, fieldWrappersWithPreview) {
+        .config(function(formlyConfigProvider) {
 
             formlyConfigProvider.setType({
                 name: "hyperlink-default",
                 templateUrl: "fields/hyperlink/hyperlink-default.html",
-                wrapper: fieldWrappersWithPreview,
+                wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization", "collapsible"],
                 controller: "FieldTemplate-HyperlinkCtrl as vm"
             });
         })
@@ -21,7 +21,7 @@
             vm.isImage = function () { return fileType.isImage(vm.testLink); };
             vm.thumbnailUrl = function thumbnailUrl(size) {
                 if (size === 1)
-                    return vm.testLink + "?w=64&h=64&mode=crop";
+                    return vm.testLink + "?w=46&h=46&mode=crop";
                 if (size === 2)
                     return vm.testLink + "?w=500&h=400&mode=max";
             };

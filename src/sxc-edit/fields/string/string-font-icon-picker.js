@@ -2,13 +2,13 @@
  * Field: String - font-icon picker
  */
 
-angular.module("sxcFieldTemplates")
-    .config(function (formlyConfigProvider, fieldWrappersWithPreview) {
+angular.module("eavFieldTemplates")
+    .config(function(formlyConfigProvider, defaultFieldWrappers) {
 
         formlyConfigProvider.setType({
             name: "string-font-icon-picker",
             templateUrl: "fields/string/string-font-icon-picker.html",
-            wrapper: fieldWrappersWithPreview,
+            wrapper: defaultFieldWrappers,
             controller: "FieldTemplate-String-Font-Icon-Picker as vm"
         });
 
