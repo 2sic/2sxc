@@ -175,8 +175,8 @@ namespace ToSic.SexyContent.WebApi
 
         private void EnsureUserIsAdmin()
         {
-            if (!PortalSettings.UserInfo.Roles.Contains(PortalSettings.AdministratorRoleName) && !PortalSettings.UserInfo.IsSuperUser) // todo: add to 8.5
-                throw new AuthenticationException("user doesn't seem to be admin or super-user");
+            if (!PortalSettings.UserInfo.Roles.Contains("Administrators"))
+                throw new AuthenticationException();
         }
     }
 }

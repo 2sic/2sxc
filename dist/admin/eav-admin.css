@@ -71,95 +71,103 @@
 }
 /* #endregion */
 
-.icon-folder-empty:before { content: '\e800'; } /* '' */
-.icon-file-word:before { content: '\e801'; } /* '' */
-.icon-file-pdf:before { content: '\e802'; } /* '' */
-.icon-file-excel:before { content: '\e803'; } /* '' */
-.icon-file:before { content: '\e804'; } /* '' */
-.icon-file-powerpoint:before { content: '\e805'; } /* '' */
-.icon-file-archive:before { content: '\e806'; } /* '' */
-.icon-file-text:before { content: '\e807'; } /* '' */
-.icon-level-up:before { content: '\e808'; } /* '' */
-.icon-align-left:before { content: '\e809'; } /* '' */
-.icon-up-circled2:before { content: '\e80a'; } /* '' */
-.icon-plus:before { content: '\e80b'; } /* '' */
-.icon-plus-circled:before { content: '\e80c'; } /* '' */
-.icon-minus:before { content: '\e80d'; } /* '' */
-.icon-minus-circled:before { content: '\e80e'; } /* '' */
-.icon-file-code:before { content: '\e80f'; } /* '' */
-.icon-file-video:before { content: '\e810'; } /* '' */
-.icon-file-audio:before { content: '\e811'; } /* '' */
-.icon-star:before { content: '\e812'; } /* '' */
-.icon-star-empty:before { content: '\e813'; } /* '' */
-.icon-star-half-alt:before { content: '\e814'; } /* '' */
-.icon-tag:before { content: '\e815'; } /* '' */
-.icon-pro:before { content: '\e816'; } /* '' */
-.icon-plus-squared:before { content: '\e817'; } /* '' */
-.icon-minus-squared:before { content: '\e818'; } /* '' */
-.icon-apple:before { content: '\e819'; } /* '' */
-.icon-align-center:before { content: '\e81a'; } /* '' */
-.icon-align-right:before { content: '\e81b'; } /* '' */
-.icon-cancel:before { content: '\e81c'; } /* '' */
-.icon-ok:before { content: '\e81d'; } /* '' */
-.icon-link-ext:before { content: '\e81e'; } /* '' */
-.icon-heart:before { content: '\e81f'; } /* '' */
-.icon-options:before { content: '\e820'; } /* '' */
-.icon-file-vcard:before { content: '\e821'; } /* '' */
-.icon-settings:before { content: '\e822'; } /* '' */
-.icon-manage:before { content: '\e823'; } /* '' */
-.icon-smile:before { content: '\e824'; } /* '' */
-.icon-anchor:before { content: '\e825'; } /* '' */
-.icon-sitemap:before { content: '\e826'; } /* '' */
-.icon-resize-horizontal:before { content: '\e827'; } /* '' */
-.icon-spinner:before { content: '\e828'; } /* '' */
-.icon-file-image:before { content: '\e829'; } /* '' */
-.icon-image:before { content: '\e82a'; } /* '' */
-.icon-fields:before { content: '\e82b'; } /* '' */
-.icon-th-list:before { content: '\e82c'; } /* '' */
-.icon-heart-empty:before { content: '\e82d'; } /* '' */
-.icon-circle-empty:before { content: '\e82e'; } /* '' */
-.icon-circle:before { content: '\e82f'; } /* '' */
-.icon-eye:before { content: '\e830'; } /* '' */
-.icon-dot-circled:before { content: '\e831'; } /* '' */
-.icon-code:before { content: '\e832'; } /* '' */
-.icon-lock:before { content: '\e833'; } /* '' */
-.icon-eye-close:before { content: '\e834'; } /* '' */
-.icon-import:before { content: '\e835'; } /* '' */
-.icon-user:before { content: '\e836'; } /* '' */
-.icon-home:before { content: '\e837'; } /* '' */
-.icon-table:before { content: '\e838'; } /* '' */
-.icon-glasses:before { content: '\e839'; } /* '' */
-.icon-globe:before { content: '\e83a'; } /* '' */
-.icon-language:before { content: '\e83b'; } /* '' */
-.icon-fire:before { content: '\e83c'; } /* '' */
-.icon-circle-half:before { content: '\e83d'; } /* '' */
-.icon-export:before { content: '\e83e'; } /* '' */
-.icon-reload:before { content: '\e83f'; } /* '' */
-.icon-flash:before { content: '\e840'; } /* '' */
-.icon-ghost:before { content: '\e841'; } /* '' */
-.icon-down-dir:before { content: '\e842'; } /* '' */
-.icon-tags:before { content: '\e843'; } /* '' */
-.icon-pencil:before { content: '\e844'; } /* '' */
-.icon-link:before { content: '\e845'; } /* '' */
-.icon-unlink:before { content: '\e846'; } /* '' */
-.icon-cart-arrow-down:before { content: '\e847'; } /* '' */
-/* try to override problem CSS of bootstrap
+.icon-eye:before { content: '\e800'; } /* '' */
+.icon-eye-close:before { content: '\e801'; } /* '' */
+.icon-align-left:before { content: '\e802'; } /* '' */
+.icon-align-center:before { content: '\e803'; } /* '' */
+.icon-align-right:before { content: '\e804'; } /* '' */
+.icon-apple:before { content: '\e805'; } /* '' */
+.icon-ghost:before { content: '\e806'; } /* '' */
+.icon-heart:before { content: '\e807'; } /* '' */
+.icon-heart-empty:before { content: '\e808'; } /* '' */
+.icon-star:before { content: '\e809'; } /* '' */
+.icon-star-empty:before { content: '\e80a'; } /* '' */
+.icon-star-half-alt:before { content: '\e80b'; } /* '' */
+.icon-user:before { content: '\e80c'; } /* '' */
+.icon-image:before { content: '\e80d'; } /* '' */
+.icon-th-list:before { content: '\e80e'; } /* '' */
+.icon-ok:before { content: '\e80f'; } /* '' */
+.icon-cancel:before { content: '\e810'; } /* '' */
+.icon-plus:before { content: '\e811'; } /* '' */
+.icon-plus-circled:before { content: '\e812'; } /* '' */
+.icon-plus-squared:before { content: '\e813'; } /* '' */
+.icon-minus:before { content: '\e814'; } /* '' */
+.icon-minus-circled:before { content: '\e815'; } /* '' */
+.icon-minus-squared:before { content: '\e816'; } /* '' */
+.icon-home:before { content: '\e817'; } /* '' */
+.icon-link:before { content: '\e818'; } /* '' */
+.icon-unlink:before { content: '\e819'; } /* '' */
+.icon-link-ext:before { content: '\e81a'; } /* '' */
+.icon-lock:before { content: '\e81b'; } /* '' */
+.icon-tag:before { content: '\e81c'; } /* '' */
+.icon-tags:before { content: '\e81d'; } /* '' */
+.icon-code:before { content: '\e81e'; } /* '' */
+.icon-file:before { content: '\e81f'; } /* '' */
+.icon-file-text:before { content: '\e820'; } /* '' */
+.icon-file-pdf:before { content: '\e821'; } /* '' */
+.icon-file-word:before { content: '\e822'; } /* '' */
+.icon-file-excel:before { content: '\e823'; } /* '' */
+.icon-file-powerpoint:before { content: '\e824'; } /* '' */
+.icon-file-image:before { content: '\e825'; } /* '' */
+.icon-file-archive:before { content: '\e826'; } /* '' */
+.icon-file-audio:before { content: '\e827'; } /* '' */
+.icon-file-video:before { content: '\e828'; } /* '' */
+.icon-file-code:before { content: '\e829'; } /* '' */
+.icon-folder-empty:before { content: '\e82a'; } /* '' */
+.icon-settings:before { content: '\e82b'; } /* '' */
+.icon-manage:before { content: '\e82c'; } /* '' */
+.icon-resize-horizontal:before { content: '\e82d'; } /* '' */
+.icon-up-circled2:before { content: '\e82e'; } /* '' */
+.icon-down-dir:before { content: '\e82f'; } /* '' */
+.icon-reload:before { content: '\e830'; } /* '' */
+.icon-level-up:before { content: '\e831'; } /* '' */
+.icon-globe:before { content: '\e832'; } /* '' */
+.icon-table:before { content: '\e833'; } /* '' */
+.icon-circle-half:before { content: '\e834'; } /* '' */
+.icon-circle:before { content: '\e835'; } /* '' */
+.icon-circle-empty:before { content: '\e836'; } /* '' */
+.icon-dot-circled:before { content: '\e837'; } /* '' */
+.icon-fire:before { content: '\e838'; } /* '' */
+.icon-sitemap:before { content: '\e839'; } /* '' */
+.icon-spinner:before { content: '\e83a'; } /* '' */
+.icon-smile:before { content: '\e83b'; } /* '' */
+.icon-anchor:before { content: '\e83c'; } /* '' */
+.icon-pro:before { content: '\e83d'; } /* '' */
+.icon-file-vcard:before { content: '\e83e'; } /* '' */
+.icon-options:before { content: '\e83f'; } /* '' */
+.icon-language:before { content: '\e840'; } /* '' */
+.icon-fields:before { content: '\e841'; } /* '' */
+.icon-pencil:before { content: '\e842'; } /* '' */
+.icon-flash:before { content: '\e843'; } /* '' */
+.icon-glasses:before { content: '\e844'; } /* '' */
+.icon-cart-arrow-down:before { content: '\e845'; } /* '' */
+.icon-import:before { content: '\e846'; } /* '' */
+.icon-sliders:before { content: '\e847'; } /* '' */
+.icon-export:before { content: '\e848'; } /* '' */
+.icon-trash:before { content: '\e849'; } /* '' */
+.icon-docs:before { content: '\e84a'; } /* '' */
+.icon-shuffle:before { content: '\e84b'; } /* '' */
+.icon-filter:before { content: '\e84c'; } /* '' */
+.icon-calendar:before { content: '\e84d'; } /* '' */
+.icon-ok-circled2:before { content: '\e84e'; } /* '' */
+.icon-ok-circled:before { content: '\e84f'; } /* '' */
+.icon-ok-squared:before { content: '\e850'; } /* '' */
+.icon-toggle-off:before { content: '\e851'; } /* '' */
+.icon-toggle-on:before { content: '\e852'; } /* '' */
+/* load all glyphicons from CDN 
 
-    in this case especially the woff2 format which many iis don't deliver
-
-    note that I don't want WOFF2 and no SVG and want WOFF as first priority
+    note that we'll remove these soon anyhow
 */
 
-@font-face {
-  font-family: 'Glyphicons Halflings';
 
-    src: url('../lib/fonts/glyphicons-halflings-regular.woff') format('woff'),
-        url('../lib/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'),
-      /*url('../fonts/glyphicons-halflings-regular.woff2') format('woff2'),*/
-         
-         url('../lib/fonts/glyphicons-halflings-regular.ttf') format('truetype');
-}
 
+@font-face{font-family:'Glyphicons Halflings';
+           src:url(//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/fonts/glyphicons-halflings-regular.eot);
+           src:url(//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/fonts/glyphicons-halflings-regular.eot?#iefix) format('embedded-opentype'),
+               url(//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/fonts/glyphicons-halflings-regular.woff2) format('woff2'),
+               url(//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/fonts/glyphicons-halflings-regular.woff) format('woff'),
+               url(//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/fonts/glyphicons-halflings-regular.ttf) format('truetype'),
+               url(//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular) format('svg')}
 /* These are helpers to create larger dialogs than available by default in boostrap*/
 .modal-xlg {
      width: 95%;
@@ -259,17 +267,39 @@ a { cursor: pointer; }
     padding-left: 9px;
 }
 
+/* new class, will have to replace all uses of btn-square when icons are done */
+.btn-icon-square {
+    width: 36px;
+    height: 36px;
+    padding-left: 0;
+    padding-right: 0;
+}
+
 .btn-icon {
     height: 34px;
     width: 34px;
     padding-left: 6px;
 }
+
+/* old glyphicon... */
 .btn-lg.btn-square {
     height: 46px;
     width: 46px;
     padding-left: 13px;
     padding-top: 11px;
 }
+
+/* new icon... */
+.btn-lg.btn-icon-square {
+    height: 46px;
+    width: 46px;
+    padding-left: 0;
+    padding-top: 0;
+    font-size: 28px;
+    vertical-align: bottom;
+}
+
+
 
 .btn-xs.btn-square {
     height: 22px;
@@ -289,7 +319,10 @@ a { cursor: pointer; }
 .clickable:hover { text-decoration: underline }
 .clickable-row:hover td.clickable { text-decoration: underline }
 
-.low-priority .glyphicon, .low-priority.glyphicon {
+/* old glyphicon */
+.low-priority .glyphicon, .low-priority.glyphicon,
+/* new icon set */
+i.low-priority {
     color: lightgray;
 }
 

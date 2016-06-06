@@ -95,6 +95,16 @@
 
 [visually-disabled='true'] { opacity: 0.3; -webkit-filter: grayscale(100%); filter: grayscale(100%); }
 .ng-touched.ng-invalid { border-color:red; }
+
+
+/* the new round buttons on any field */
+.btn-lg.icon-field-button {
+    width: 44px;
+    height: 44px;
+    border-radius: 22px;
+    padding-right: 10px;
+    padding-left: 8px;
+}
 .formly-field { position:relative; }
 .eav-localization { position:absolute; top:0; right:0; }
 .eav-localization-lock { float: right; display: inline-block; }
@@ -153,19 +163,124 @@
     border-radius: 6px 0 6px 6px;
 }
 /* must hide help-block because of duplicate description */
-.help-block { display:none; }
-.eav-label { padding-right:150px; }
-.checkbox.checkbox-labeled input[type='checkbox'] { margin-left:0; }
-.eav-entityselect { margin-top: 1px; border-color: rgb(170, 178, 189); border-width: 1px; border-style: solid; border-radius: 4px; font-size: 18px; }
-.eav-entityselect ol { list-style-type: none; margin: 0; padding: 0; }
+.help-block {
+    display:none;
+}
+.eav-label {
+    padding-right:150px;
+    color: #ccc;
+}
+/****** new floating label styles ******/
 
-/*li.eav-entityselect-item { width: auto; padding-top: 2px; padding-bottom: 2px; }
-li.eav-entityselect-item:first-child { margin-top: -2px; }
-li.eav-entityselect-item:last-child { margin-bottom: -2px; }*/
+/* the input with just a thin line under the information */
+div.wrap-float-label input {
+    border: 0;
+    border-bottom: 1px;
+    border-bottom-color: #ddd; /* #8DCAFA; /* todo: define the official color  #0087F4; */
+    border-bottom-style: solid;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    padding-left: 0;
+
+    background-color: transparent;
+}
+
+/* when focussed, make the line thicker and blue */
+div.wrap-float-label input:focus {
+    border-bottom: 2px;
+    border-bottom-style: solid;
+    border-bottom-color:  #0087F4;
+}
+
+/* error state: when the input has an error, make it strongly visible */
+.has-error div.wrap-float-label input {
+    border-bottom-color: red;
+}
+
+/* error state: the label should be red too */
+.has-error div.wrap-float-label label,
+.has-error div.wrap-float-label.focused label,
+div.wrap-float-label.focused.ng-invalid.ng-touched label
+ {
+    color: red;
+}
+
+/****** the label ******/
+
+/* float it - but at the same spot when on top */
+div.wrap-float-label.float-disabled label {
+    position: absolute;
+    top: 0;
+    font-size: 14px;
+}
+
+/* the label will be floating in this mode, so we need to add the space with a padding on the container */
+div.wrap-float-label {
+    padding-top: 8px;
+}
+
+/* when really floating, the label must move down to the line and be live a background-text */
+div.wrap-float-label label {
+    position: absolute;
+    top: 20px;
+    font-size: 18px;
+    opacity: 0.4;
+}
+
+
+/* when focussed, the label should glow blue */
+div.wrap-float-label.focused label {
+    color: #0087f4;
+    opacity: 1;
+}
+
+/* when floating, the info-wrapper must move down some*/
+div.wrap-float-label div.info-wrapper {
+    padding-top: 12px;
+}
+
+/* remove some strange padding on the help-text, which duplicates again on all P tags in the help text (these are commmon, as they are added with the wysiwyg */
+div.wrap-float-label p.bg-info,
+div.wrap-float-label p.bg-info p {
+    margin-bottom: 0;
+}
+.preview-default {
+    display: table;
+    width: 100%;
+}
+
+div.preview-area {
+    display: block;
+    float: left;
+    width: 64px;
+    height: 64px;
+    /*border: solid;*/
+    margin-right: 8px;
+    margin-bottom: 8px;
+    background-color: #eee;
+}
+.checkbox.checkbox-labeled input[type='checkbox'] { margin-left:0; }
+.eav-entityselect {
+     margin-top: 1px; 
+     font-size: 18px;
+    border-bottom-color: #ddd;
+    border-bottom-style: solid;
+    border-bottom: 1px;
+}
+
+.eav-entityselect-table tr,
+table.eav-entityselect-table tr td {
+    border: 0!important;
+    padding-left: 0;
+}
+
+.eav-entityselect ol {
+     list-style-type: none; margin: 0; padding: 0;
+}
 
 
 .eav-entityselect-create { cursor: cell; }
-.eav-entityselect-item > div { padding: 5px 4px 5px 4px; position: relative; line-height: 25px; }
+.eav-entityselect-item > div { padding: 5px 4px 5px 0; position: relative; line-height: 25px; }
 .eav-entityselect-item > div:hover { background: #8DCAFA; }
 .eav-entityselect-item-title { display: block; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; font-weight: normal; }
 
@@ -181,12 +296,9 @@ li.eav-entityselect-item:last-child { margin-bottom: -2px; }*/
 
 .eav-entityselect-item-actions {
     display: inline-block;
-    /*position: absolute;
-    right: 0;
-    top: 0;*/
     cursor: pointer;
     padding: 0;
-    opacity: 0.2;
+    opacity: 0;
     list-style-type:none;
     line-height:14px;
     margin:0;

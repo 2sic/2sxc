@@ -1,17 +1,21 @@
 ﻿<div>
     <div dropdown keyboard-nav auto-close="outsideClick" is-open="vm.selectorIsOpen">
-        <button type="button" class="btn btn-default btn-lg" tooltip="{{value.Value}}" dropdown-toggle>
-            <i class="{{vm.previewPrefix}} {{value.Value}}" ng-show="value.Value"></i>
-            <span ng-show="!value.Value">&nbsp;&nbsp;</span>
-            
-        </button>
-
+        <div class="thumbnail-before-input icon-preview">
+            <button type="button" class="" tooltip="{{value.Value}}" dropdown-toggle>
+                <i class="{{vm.previewPrefix}} {{value.Value}}" ng-show="value.Value"></i>
+                <span ng-show="!value.Value">&nbsp;&nbsp;</span>
+            </button>
+        </div>
+        <div class="input-group">
+            <input type="text" class="form-control input-lg" ng-model="value.Value" ng-disabled="false" dropdown-toggle>
+        </div>
+        <!-- the search ui -->
         <ul class="dropdown-menu icons-menu-columns" role="menu">
             <li class="input-group" disable-auto-close>
-                <span class="input-group-addon btn-default btn"  ng-click="value.Value = ''">
+                <span class="input-group-addon btn-default btn" ng-click="value.Value = ''">
                     <i class="icon-cancel"></i>
                 </span>
-                <input type="search" ng-model="vm.iconFilter" class="makePaymentDropdownSearchBox form-control input-lg" placeholder="search..."/>
+                <input type="search" ng-model="vm.iconFilter" class="makePaymentDropdownSearchBox form-control input-lg" placeholder="search..." />
             </li>
 
             <li ng-repeat="icn in vm.icons" role="menuitem"
