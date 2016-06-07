@@ -1,14 +1,12 @@
-﻿<%@ WebHandler Language="C#" Class="VCardHandler" %>
+<%@ WebHandler Language="C#" Class="VCardHandler" %>
 
 using System;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web;
-using Encoder = System.Drawing.Imaging.Encoder;
 
 public class VCardHandler : IHttpHandler
 {
@@ -59,7 +57,7 @@ public class VCardHandler : IHttpHandler
 
 		var cardString = card.ToString();
 		var inputEncoding = Encoding.Default;
-		var outputEncoding = Encoding.GetEncoding("windows-1257");
+		var outputEncoding = Encoding.GetEncoding(28591);
 		var cardBytes = inputEncoding.GetBytes(cardString);
 		var outputBytes = Encoding.Convert(inputEncoding, outputEncoding, cardBytes);
 
@@ -91,22 +89,22 @@ public class VCardHandler : IHttpHandler
 			builder.AppendLine("BEGIN:VCARD");
 			builder.AppendLine("VERSION:2.1");
 			// Name
-			builder.AppendLine("N:" + LastName + ";" + FirstName);
+			builder.AppendLine("N;CHARSET=iso-8859-1:" + LastName + ";" + FirstName);
 			// Full name
 			if (string.IsNullOrWhiteSpace(FirstName) && string.IsNullOrWhiteSpace(FirstName))
-				builder.AppendLine("FN:" + Organization);
+				builder.AppendLine("FN;CHARSET=iso-8859-1:" + Organization);
 			else
-				builder.AppendLine("FN:" + FirstName + " " + LastName);
+				builder.AppendLine("FN;CHARSET=iso-8859-1:" + FirstName + " " + LastName);
 			// Address
-			builder.Append("ADR;" + AddressType + ";PREF:;;");
+			builder.Append("ADR;" + AddressType + ";PREF;CHARSET=iso-8859-1:;;");
 			builder.Append(StreetAddress + ";");
 			builder.Append(City + ";;");
 			builder.Append(Zip + ";");
 			builder.AppendLine(CountryName);
 			// Other data
-			builder.AppendLine("ORG:" + Organization);
-			builder.AppendLine("TITLE:" + JobTitle);
-			builder.AppendLine("TEL;" + AddressType + ";VOICE:" + Phone);
+			builder.AppendLine("ORG;CHARSET=iso-8859-1:" + Organization);
+			builder.AppendLine("TITLE;CHARSET=iso-8859-1:" + JobTitle);
+			builder.AppendLine("TEL;" + AddressType + ";VOICE;CHARSET=iso-8859-1:" + Phone);
 			if (!string.IsNullOrWhiteSpace(PhoneCompany))
 				builder.AppendLine("X-MS-TEL;VOICE;COMPANY:" + PhoneCompany);
 			builder.AppendLine("TEL;CELL;VOICE:" + Mobile);
@@ -160,7 +158,7 @@ public class VCardHandler : IHttpHandler
 
 		var bmpOut = new Bitmap(lnNewWidth, lnNewHeight);
 		var g = Graphics.FromImage(bmpOut);
-		g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+		g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
 		g.FillRectangle(Brushes.White, 0, 0, lnNewWidth, lnNewHeight);
 		g.DrawImage(loBmp, 0, 0, lnNewWidth, lnNewHeight);
 		loBmp.Dispose();
@@ -171,7 +169,7 @@ public class VCardHandler : IHttpHandler
 			// Save the bitmap as a JPG file with zero quality level compression.
 			// Source: http://msdn.microsoft.com/en-us/library/bb882583.aspx
 			var myEncoderParameters = new EncoderParameters(1);
-			var myEncoder = Encoder.Quality;
+			var myEncoder = System.Drawing.Imaging.Encoder.Quality;
 			var myEncoderParameter = new EncoderParameter(myEncoder, 93L);
 			myEncoderParameters.Param[0] = myEncoderParameter;
 
