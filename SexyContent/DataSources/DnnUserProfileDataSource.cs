@@ -58,7 +58,7 @@ namespace ToSic.SexyContent.DataSources
 
 			// read user Profiles
 			var portalId = PortalSettings.Current.PortalId;
-			var users = UserController.GetUsers(false, false, portalId);
+			var users = UserController.GetUsers(portalId);
 
 			// convert Profiles to Entities
 			var result = new List<IEntity>();
