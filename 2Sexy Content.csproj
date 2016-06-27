@@ -250,6 +250,7 @@
     <Compile Include="SexyContent\ContentBlock\ContentBlockBase.cs" />
     <Compile Include="SexyContent\ContentBlock\EntityContentGroupReferenceManager.cs" />
     <Compile Include="SexyContent\ContentBlock\ModuleContentGroupReferenceManager.cs" />
+    <Compile Include="SexyContent\DataSources\DnnUserProfileDataSource.cs" />
     <Compile Include="SexyContent\DataSources\SxcValueCollectionProvider.cs" />
     <Compile Include="SexyContent\Installer\Helpers.cs" />
     <Compile Include="SexyContent\Installer\Lock.cs" />
