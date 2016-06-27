@@ -8,7 +8,7 @@ using ToSic.Eav.DataSources;
 namespace ToSic.SexyContent.DataSources
 {
 	[PipelineDesigner]
-	public class DnnUserProfileDataSource : BaseDataSource
+	public class DnnUserProfileDataSource : ExternalDataDataSource
 	{
 		#region Configuration-properties
 		private const string PropertiesKey = "Properties";
