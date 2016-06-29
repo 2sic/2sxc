@@ -185,6 +185,8 @@ font-size: large;position: absolute;right: -15px;top: 50px;font-size: 1.8em;
 .icon-left-dir:before { content: '\e855'; } /* '' */
 .icon-up-dir:before { content: '\e856'; } /* '' */
 .icon-side-marker:before { content: '\e857'; } /* '' */
+.icon-git-branch:before { content: '\e858'; } /* '' */
+.icon-git-pull-request:before { content: '\e859'; } /* '' */
 @font-face {
   font-family: 'app-icons';
     src: url('../lib/fonts/app-icons.woff?87396608') format('woff');

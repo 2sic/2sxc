@@ -87,3 +87,5 @@
 .icon-left-dir:before { content: '\e855'; } /* '' */
 .icon-up-dir:before { content: '\e856'; } /* '' */
 .icon-side-marker:before { content: '\e857'; } /* '' */
+.icon-git-branch:before { content: '\e858'; } /* '' */
+.icon-git-pull-request:before { content: '\e859'; } /* '' */
