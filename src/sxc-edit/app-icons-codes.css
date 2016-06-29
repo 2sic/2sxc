@@ -83,3 +83,7 @@
 .icon-toggle-off:before { content: '\e851'; } /* '' */
 .icon-toggle-on:before { content: '\e852'; } /* '' */
 .icon-info-circled:before { content: '\e853'; } /* '' */
+.icon-right-dir:before { content: '\e854'; } /* '' */
+.icon-left-dir:before { content: '\e855'; } /* '' */
+.icon-up-dir:before { content: '\e856'; } /* '' */
+.icon-side-marker:before { content: '\e857'; } /* '' */

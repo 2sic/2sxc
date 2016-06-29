@@ -47,13 +47,15 @@
 .collapse-entity-button {
     position: relative;
     top: 0;
-    padding-top: 8px;
-    background-color: white;
-    color: white;
+    padding-top: 8px;    
+}
+.hide-till-mouseover {
+    opacity: 0;
+    color: #0087F4;
 }
 
-.clickable:hover .collapse-entity-button {
-    color: #0087F4;
+.clickable:hover .hide-till-mouseover {
+    opacity: 1;
 }
 
 .collapse-fieldgroup-button {
@@ -65,7 +67,7 @@
 
 /* shrink space a bit in input boxes as it's too large by default '*/
 .input-lg {
-     padding-left: 8px;
+    padding-left: 8px;
     padding-right: 8px;
     border-radius: 4px;
 }
@@ -98,12 +100,99 @@
 
 
 /* the new round buttons on any field */
-.btn-lg.icon-field-button {
+button.icon-field-button {
     width: 44px;
     height: 44px;
     border-radius: 22px;
     padding-right: 10px;
     padding-left: 8px;
+    border-color: transparent!important;
+    background-color: transparent!important;
+    font-size: 24px;
+    text-indent: -3px;
+}
+button.icon-field-button:hover {
+    border-color: transparent !important;
+    background-color: #0087F4!important;
+    color: white!important;
+}
+
+button.icon-field-button.btn-primary {
+    color: #0087F4;
+}
+
+/* main container around all input-forms */
+.form-container-multi {
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
+.form-container-multi .input-lg {
+    padding-top: 25px;
+}
+
+/* Titles and title decorations */
+.form-ci-title {
+    color: #0087F4;
+    font-size: 24px;
+    font-family: Roboto Light;
+    height: 40px;
+}
+.form-ci-title .decoration {
+    width: 40px;
+    height: 40px;
+    font-size: 32px;
+    color: #0087F4;
+    float: left;
+    position: absolute;
+    left: -54px;
+}
+
+.form-ci-title .decoration.state {
+    color: white; 
+    font-size: 12px; 
+    padding-top: 6px;
+    padding-left: 12px;
+}
+
+.form-ci-subtitle {
+    color: #0087F4;
+    font-family: Roboto Light;
+    font-size: 14px;
+    margin-top: 40px;
+}
+.form-ci-subtitle .decoration {
+    position: absolute;
+    left: -47px;
+    color: #0087F4;
+    font-size: 16px;
+}
+.form-ci-subtitle .decoration.state {
+    font-size: 12px;
+    left: -23px;
+}
+
+/* grid per field */
+
+.form-field-grid-keeper {
+    min-height: 48px;
+}
+
+/* labels on fields */
+label.eav-label {
+    font-size: 12px;
+    font-family: Roboto Light;
+    font-weight: normal;
+    padding-right:150px;
+    color: #888;
+}
+
+/* buttons */
+
+/* fields with preview */
+
+.after-preview {
+    height: 80px;
 }
 .formly-field { position:relative; }
 .eav-localization { position:absolute; top:0; right:0; }
@@ -166,10 +255,7 @@
 .help-block {
     display:none;
 }
-.eav-label {
-    padding-right:150px;
-    color: #ccc;
-}
+
 /****** new floating label styles ******/
 
 /* the input with just a thin line under the information */

@@ -181,6 +181,10 @@ font-size: large;position: absolute;right: -15px;top: 50px;font-size: 1.8em;
 .icon-toggle-off:before { content: '\e851'; } /* '' */
 .icon-toggle-on:before { content: '\e852'; } /* '' */
 .icon-info-circled:before { content: '\e853'; } /* '' */
+.icon-right-dir:before { content: '\e854'; } /* '' */
+.icon-left-dir:before { content: '\e855'; } /* '' */
+.icon-up-dir:before { content: '\e856'; } /* '' */
+.icon-side-marker:before { content: '\e857'; } /* '' */
 @font-face {
   font-family: 'app-icons';
     src: url('../lib/fonts/app-icons.woff?87396608') format('woff');
@@ -849,13 +853,14 @@ div.focused .field-hints {
 
 /* note: most of this definition should be the same as the definition of the standard input box */
 div.wrap-float-label .field-string-wysiwyg-mce-box {
-    border: 0;
-    border-bottom: 1px;
-    border-bottom-color: #ddd; /* #8DCAFA; /* todo: define the official color  #0087F4; */
-    border-bottom-style: solid;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-    padding-left: 0;
+    border-width: 1px;
+    /*border-bottom: 1px;*/
+    border-color: #ddd; /* #8DCAFA; /* todo: define the official color  #0087F4; */
+    border-style: solid;
+    border-radius: 0;
+    border-radius: 0;
+    /*padding-left: 0;*/
+    margin-top: 12px;
 }
 
 .mce-tinymce.mce-container.mce-tinymce-inline {
