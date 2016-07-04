@@ -4,12 +4,12 @@
 
     // Register in Angular Formly
     angular.module("sxcFieldTemplates")
-        .config(function (formlyConfigProvider, defaultFieldWrappers) {
+        .config(function(formlyConfigProvider) {
             formlyConfigProvider.setType({
                 name: "string-wysiwyg-tinymce",
                 templateUrl: "fields/string/string-wysiwyg-tinymce.html",
                 // todo: check if we could use the defaultFieldWrappers instead
-                wrapper: defaultFieldWrappers, // ["eavLabel", "bootstrapHasError", "eavLocalization", "collapsible"],
+                wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization", "collapsible"],
                 controller: "FieldWysiwygTinyMce as vm"
             });
         })
@@ -105,7 +105,7 @@
                 extended_valid_elements: '@[class]' // allow classes on all elements, 
                     + ',i' // allow i elements (allows icon-font tags like <i class="fa fa-...">)
                     + ",hr[sxc|guid]", // experimental: allow inline content-blocks
-                custom_elements: "hr[sxc|guid]",
+                //custom_elements: "hr[sxc|guid]" 2016-05-25 commented line because of https://github.com/2sic/2sxc/issues/846. Don't know yet if the syntax is wrong or if it's a bug in TinyMCE.
 
                 // Url Rewriting in images and pages
                 //convert_urls: false,  // don't use this, would keep the domain which is often a test-domain

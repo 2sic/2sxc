@@ -12,7 +12,6 @@
         "2sxc4ng",
         "SxcEditTemplates",     // temp - was because of bad template-converter, remove once I update grunt
         "EavConfiguration",
-        "eavFieldTemplates",
         "SxcServices",
         "Adam",
         //"ui.tinymce",   // connector to tiny-mce for angular

@@ -27,7 +27,6 @@ namespace ToSic.SexyContent.WebApi
 	/// todo: security
 	/// </summary>
 	[SupportedModules("2sxc,2sxc-app")]
-	// [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
 	public class AppContentController : SxcApiController
 	{
 	    private EntitiesController _entitiesController;
@@ -55,6 +54,7 @@ namespace ToSic.SexyContent.WebApi
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
         public IEnumerable<Dictionary<string, object>> GetEntities(string contentType, string cultureCode = null)
         {
+            // todo: check if we could change it to optionally also just deliver the "own" entities - as of now, not supported
             InitEavAndSerializer();
             PerformSecurityCheck(contentType, PermissionGrant.Read, true);
             return _entitiesController.GetEntities(contentType, cultureCode);
@@ -109,12 +109,10 @@ namespace ToSic.SexyContent.WebApi
             // Check if we can find this content-type
             var ctc = new ContentTypeController();
             ctc.SetAppIdAndUser(App.AppId);
-            // var source = InitialDS;
+
             var cache = DataSource.GetCache(null, App.AppId);
             var ct = cache.GetContentType(contentType);
 
-
-            // dynamic ct = new Eav.WebApi.ContentTypeController().GetSingle(App.AppId, contentType, null);
             if (ct == null)
                 ThrowHttpError(HttpStatusCode.NotFound, "Could not find Content Type '" + contentType + "'.", "content-types");
             
@@ -125,7 +123,7 @@ namespace ToSic.SexyContent.WebApi
                 ThrowHttpError(HttpStatusCode.Unauthorized, "Content Type '" + contentType + "' is not a standard Content Type - no permissions possible.");
 
             // Check permissions in 2sxc - or check if the user has admin-right (in which case he's always granted access for these types of content)
-            var permissionChecker = new PermissionController(App.ZoneId, App.AppId, ctGuid, Dnn.Module);
+            var permissionChecker = new PermissionController(App.ZoneId, App.AppId, ctGuid, specificItem, Dnn.Module);
             var allowed = permissionChecker.UserMay(grant);
 
             var isAdmin = autoAllowAdmin && DotNetNuke.Security.Permissions.ModulePermissionController.CanAdminModule(Dnn.Module);
@@ -166,7 +164,8 @@ namespace ToSic.SexyContent.WebApi
 	    public void Delete(string contentType, int id)
         {
             InitEavAndSerializer();
-            PerformSecurityCheck(contentType, PermissionGrant.Delete, true);
+            IEntity itm = _entitiesController.GetEntityOrThrowError(contentType, id, appId: App.AppId);
+            PerformSecurityCheck(contentType, PermissionGrant.Delete, true, itm);
             _entitiesController.Delete(contentType, id);
         }
         [HttpDelete]
@@ -174,7 +173,10 @@ namespace ToSic.SexyContent.WebApi
         public void Delete(string contentType, Guid guid)
         {
             InitEavAndSerializer();
-            PerformSecurityCheck(contentType, PermissionGrant.Delete, true);
+            // todo: this doesn't support permissions yet!
+            // IEntity itm = _entitiesController.GetEntityOrThrowError(contentType, id, appId: App.AppId);
+
+            PerformSecurityCheck(contentType, PermissionGrant.Delete, true/*, itm*/);
             _entitiesController.Delete(contentType, guid);
         }
 
@@ -184,7 +186,8 @@ namespace ToSic.SexyContent.WebApi
 	    public Dictionary<string, object> GetOne(string contentType, int id)
 	    {
             InitEavAndSerializer();
-            PerformSecurityCheck(contentType, PermissionGrant.Read, true);
+            IEntity itm = _entitiesController.GetEntityOrThrowError(contentType, id, appId: App.AppId);
+            PerformSecurityCheck(contentType, PermissionGrant.Read, true, itm);
 	        return _entitiesController.GetOne(contentType, id);
 	    }
 
