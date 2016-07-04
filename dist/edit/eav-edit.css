@@ -108,7 +108,7 @@ button.icon-field-button.btn-primary {
 /* Titles and title decorations */
 .form-ci-title {
     color: #0087F4;
-    font-size: 24px;
+    font-size: 28px;
     font-family: Roboto Light;
     height: 40px;
     cursor: pointer;
@@ -132,7 +132,7 @@ button.icon-field-button.btn-primary {
 .form-ci-subtitle {
     color: #0087F4;
     font-family: Roboto Light;
-    font-size: 14px;
+    font-size: 16px;
     margin-top: 40px;
     cursor: pointer;
 }
@@ -155,10 +155,11 @@ button.icon-field-button.btn-primary {
 
 /* labels on fields */
 label.eav-label {
-    font-size: 12px;
+    font-size: 14px;
     font-family: Roboto Light;
     font-weight: normal;
     padding-right:150px;
+    padding-top: 2px;
     color: #888;
 }
 
@@ -172,8 +173,9 @@ label.eav-label {
 /* input fields new */
 input.material {
     height: 46px;
-    font-size: 18px;
+    font-size: 20px;
     padding-top: 20px;
+    padding-bottom: 10px;
 }
 
 /* drop-downs */
@@ -301,8 +303,8 @@ div.wrap-float-label {
 div.wrap-float-label label {
     position: absolute;
     top: 20px;
-    font-size: 18px;
-    opacity: 0.4;
+    font-size: 20px;
+    /* opacity: 0.4;*/
 }
 
 
@@ -340,7 +342,7 @@ div.preview-area {
 .checkbox.checkbox-labeled input[type='checkbox'] { margin-left:0; }
 .eav-entityselect {
      margin-top: 1px; 
-     font-size: 18px;
+     font-size: 20px;
     border-bottom-color: #ddd;
     border-bottom-style: solid;
     border-bottom: 1px;
@@ -366,7 +368,10 @@ table.eav-entityselect-table tr td {
 .eav-entityselect-table tr th:last-child { width: 110px; text-align: right; }
 .eav-entityselect-table th { padding:0!important; line-height:0!important; border:0!important; }
 
-.eav-entityselect-icon { margin-right: 4px; }
+.eav-entityselect-icon {
+    margin-right: 4px;
+    color: #ccc;
+}
 .eav-entityselect-icon-before-select { margin-right: 0; }
 
 .subtle-till-mouseover { opacity: 0.2; }
@@ -393,3 +398,13 @@ table.eav-entityselect-table tr td {
 
 .eav-entityselect-selector option[disabled], .eav-entityselect-selector option:disabled { color: #dddddd; }
 .angular-ui-tree-placeholder { margin: 0; border:1px dotted #DDD; background:#EFEFEF }
+
+table.eav-entityselect-table {
+    width: 100%;
+}
+
+table.eav-entityselect-table tr.eav-entityselect-item td {
+    padding-top: 2px;
+    padding-bottom: 4px;
+    line-height: 24px;
+}
