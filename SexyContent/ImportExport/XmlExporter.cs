@@ -8,11 +8,9 @@ using System.Xml;
 using System.Xml.Linq;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.FileSystem;
-using Telerik.Web.Data.Extensions;
 using ToSic.Eav;
 using ToSic.Eav.BLL;
 using ToSic.SexyContent.Adam;
-using ToSic.SexyContent.Razor.Helpers;
 
 namespace ToSic.SexyContent.ImportExport
 {
@@ -33,7 +31,7 @@ namespace ToSic.SexyContent.ImportExport
         private int _appId;
         private readonly bool _isAppExport;
 
-        private IFolderManager DnnFolders = DotNetNuke.Services.FileSystem.FolderManager.Instance;
+        // private IFolderManager DnnFolders = DotNetNuke.Services.FileSystem.FolderManager.Instance;
         private IFileManager DnnFiles = DotNetNuke.Services.FileSystem.FileManager.Instance;
 
         public string[] AttributeSetIDs;
@@ -62,10 +60,6 @@ namespace ToSic.SexyContent.ImportExport
         /// <summary>
         /// Exports given AttributeSets, Entities and Templates to an XML and returns the XML as string.
         /// </summary>
-        /// <param name="AttributeSetIDs"></param>
-        /// <param name="EntityIDs"></param>
-        /// <param name="TemplateIDs"></param>
-        /// <param name="Messages"></param>
         /// <returns></returns>
         public string GenerateNiceXml()
         {
@@ -141,12 +135,12 @@ namespace ToSic.SexyContent.ImportExport
                     foreach (var x in EavAppContext.Attributes.GetAttributesInSet(ID))
                     {
                         var Attribute = new XElement("Attribute",
-                            new XAttribute("StaticName", x.Attribute.StaticName),
-                            new XAttribute("Type", x.Attribute.Type),
-                            new XAttribute("IsTitle", x.IsTitle),
+                            new XAttribute(Const2.Static, x.Attribute.StaticName),
+                            new XAttribute(Const2.Type, x.Attribute.Type),
+                            new XAttribute(Const2.IsTitle, x.IsTitle),
                             // Add Attribute MetaData
                             from c in
-                                EavAppContext.Entities.GetEntities(Constants.AssignmentObjectTypeIdFieldProperties,
+                                EavAppContext.Entities.GetEntities(Eav.Constants.AssignmentObjectTypeIdFieldProperties,
                                     x.AttributeID).ToList()
                             select GetEntityXElement(c)
                             );
@@ -156,10 +150,11 @@ namespace ToSic.SexyContent.ImportExport
 
                     // Add AttributeSet / Content Type
                     var AttributeSet = new XElement("AttributeSet",
-                        new XAttribute("StaticName", Set.StaticName),
-                        new XAttribute("Name", Set.Name),
-                        new XAttribute("Description", Set.Description),
-                        new XAttribute("Scope", Set.Scope),
+                        new XAttribute(Const2.Static, Set.StaticName),
+                        new XAttribute(Const2.Name, Set.Name),
+                        new XAttribute(Const2.Description, Set.Description),
+                        new XAttribute(Const2.Scope, Set.Scope),
+                        new XAttribute(Const2.AlwaysShareConfig, Set.AlwaysShareConfiguration),
                         Attributes);
 
                     // Add Ghost-Info if content type inherits from another content type
@@ -232,18 +227,18 @@ namespace ToSic.SexyContent.ImportExport
                 var valueKey = value.Attribute("Key").Value;
 
                 // Special cases for Template ContentTypes
-                if (e.Set.StaticName == "2SexyContent-Template-ContentTypes" && !String.IsNullOrEmpty(valueString))
+                if (e.Set.StaticName == "2SexyContent-Template-ContentTypes" && !string.IsNullOrEmpty(valueString))
                 {
                     switch (valueKey)
                     {
                         case "ContentTypeID":
                             var attributeSet = EavAppContext.AttribSet.GetAllAttributeSets().FirstOrDefault(a => a.AttributeSetID == int.Parse(valueString));
-                            value.Attribute("Value").SetValue(attributeSet != null ? attributeSet.StaticName : String.Empty);
+                            value.Attribute("Value").SetValue(attributeSet != null ? attributeSet.StaticName : string.Empty);
                             break;
                         case "DemoEntityID":
                             var entityID = int.Parse(valueString);
                             var demoEntity = EavAppContext.SqlDb.Entities.FirstOrDefault(en => en.EntityID == entityID);
-                            value.Attribute("Value").SetValue(demoEntity != null ? demoEntity.EntityGUID.ToString() : String.Empty);
+                            value.Attribute("Value").SetValue(demoEntity?.EntityGUID.ToString() ?? string.Empty);
                             break;
                     }
                 }

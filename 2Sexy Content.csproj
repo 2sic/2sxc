@@ -252,6 +252,7 @@
     <Compile Include="SexyContent\ContentBlock\ModuleContentGroupReferenceManager.cs" />
     <Compile Include="SexyContent\DataSources\DnnUserProfileDataSource.cs" />
     <Compile Include="SexyContent\DataSources\SxcValueCollectionProvider.cs" />
+    <Compile Include="SexyContent\ImportExport\Const2.cs" />
     <Compile Include="SexyContent\Installer\Helpers.cs" />
     <Compile Include="SexyContent\Installer\Lock.cs" />
     <Compile Include="SexyContent\Installer\Logger.cs" />
