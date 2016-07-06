@@ -450,6 +450,7 @@ angular.module("Adam")
         "SxcEditTemplates",     // temp - was because of bad template-converter, remove once I update grunt
         "EavConfiguration",
         "SxcServices",
+        "eavFieldTemplates",
         "Adam",
         //"ui.tinymce",   // connector to tiny-mce for angular
         "oc.lazyLoad"   // needed to lazy-load the MCE editor from the cloud
@@ -607,12 +608,12 @@ angular.module("sxcFieldTemplates")
     "use strict";
 
     angular.module("sxcFieldTemplates")
-        .config(["formlyConfigProvider", function(formlyConfigProvider) {
+        .config(["formlyConfigProvider", "fieldWrappersWithPreview", function (formlyConfigProvider, fieldWrappersWithPreview) {
 
             formlyConfigProvider.setType({
                 name: "hyperlink-default",
                 templateUrl: "fields/hyperlink/hyperlink-default.html",
-                wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization", "collapsible"],
+                wrapper: fieldWrappersWithPreview,
                 controller: "FieldTemplate-HyperlinkCtrl as vm"
             });
         }])
@@ -625,7 +626,7 @@ angular.module("sxcFieldTemplates")
             vm.isImage = function () { return fileType.isImage(vm.testLink); };
             vm.thumbnailUrl = function thumbnailUrl(size) {
                 if (size === 1)
-                    return vm.testLink + "?w=46&h=46&mode=crop";
+                    return vm.testLink + "?w=64&h=64&mode=crop";
                 if (size === 2)
                     return vm.testLink + "?w=500&h=400&mode=max";
             };
@@ -748,13 +749,13 @@ angular.module("sxcFieldTemplates")
  * Field: String - font-icon picker
  */
 
-angular.module("eavFieldTemplates")
-    .config(["formlyConfigProvider", "defaultFieldWrappers", function(formlyConfigProvider, defaultFieldWrappers) {
+angular.module("sxcFieldTemplates")
+    .config(["formlyConfigProvider", "fieldWrappersWithPreview", function (formlyConfigProvider, fieldWrappersWithPreview) {
 
         formlyConfigProvider.setType({
             name: "string-font-icon-picker",
             templateUrl: "fields/string/string-font-icon-picker.html",
-            wrapper: defaultFieldWrappers,
+            wrapper: fieldWrappersWithPreview,
             controller: "FieldTemplate-String-Font-Icon-Picker as vm"
         });
 
@@ -919,12 +920,12 @@ angular.module("eavFieldTemplates")
 
     // Register in Angular Formly
     angular.module("sxcFieldTemplates")
-        .config(["formlyConfigProvider", function(formlyConfigProvider) {
+        .config(["formlyConfigProvider", "defaultFieldWrappers", function (formlyConfigProvider, defaultFieldWrappers) {
             formlyConfigProvider.setType({
                 name: "string-wysiwyg-tinymce",
                 templateUrl: "fields/string/string-wysiwyg-tinymce.html",
                 // todo: check if we could use the defaultFieldWrappers instead
-                wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization", "collapsible"],
+                wrapper: defaultFieldWrappers, // ["eavLabel", "bootstrapHasError", "eavLocalization", "collapsible"],
                 controller: "FieldWysiwygTinyMce as vm"
             });
         }])
@@ -1020,7 +1021,7 @@ angular.module("eavFieldTemplates")
                 extended_valid_elements: '@[class]' // allow classes on all elements, 
                     + ',i' // allow i elements (allows icon-font tags like <i class="fa fa-...">)
                     + ",hr[sxc|guid]", // experimental: allow inline content-blocks
-                //custom_elements: "hr[sxc|guid]" 2016-05-25 commented line because of https://github.com/2sic/2sxc/issues/846. Don't know yet if the syntax is wrong or if it's a bug in TinyMCE.
+                custom_elements: "hr[sxc|guid]",
 
                 // Url Rewriting in images and pages
                 //convert_urls: false,  // don't use this, would keep the domain which is often a test-domain
@@ -1455,7 +1456,7 @@ angular.module('SxcEditTemplates', []).run(['$templateCache', function($template
 
 
   $templateCache.put('fields/string/string-font-icon-picker.html',
-    "<div><div dropdown keyboard-nav auto-close=outsideClick is-open=vm.selectorIsOpen><button type=button class=\"btn btn-default btn-lg\" tooltip={{value.Value}} dropdown-toggle><i class=\"{{vm.previewPrefix}} {{value.Value}}\" ng-show=value.Value></i> <span ng-show=!value.Value>&nbsp;&nbsp;</span></button><ul class=\"dropdown-menu icons-menu-columns\" role=menu><li class=input-group disable-auto-close><span class=\"input-group-addon btn-default btn\" ng-click=\"value.Value = ''\"><i class=icon-cancel></i></span> <input type=search ng-model=vm.iconFilter class=\"makePaymentDropdownSearchBox form-control input-lg\" placeholder=\"search...\"></li><li ng-repeat=\"icn in vm.icons\" role=menuitem ng-show=\"icn.class.indexOf(vm.iconFilter) !== -1\"><a ng-click=vm.setIcon(icn.class) xng-click=\"value.Value = icn.class; status.isopen = false;\"><i class=\"{{vm.previewPrefix}} {{icn.class}}\"></i> <span tooltip={{icn.class}}>...{{icn.class.substring(vm.prefix.length-1,25)}}</span></a></li></ul></div><div ng-if=vm.debug.on>Infos: found {{vm.icons.length}} items for prefix \"{{vm.prefix}}\" and will use \"{{vm.previewPrefix}}\" as a preview class. Selected is \"{{value.Value}}\" and files are: {{vm.files}}</div></div>"
+    "<div><div dropdown keyboard-nav auto-close=outsideClick is-open=vm.selectorIsOpen><div class=\"thumbnail-before-input icon-preview\"><button type=button tooltip={{value.Value}} dropdown-toggle><i class=\"{{vm.previewPrefix}} {{value.Value}}\" ng-show=value.Value></i> <span ng-show=!value.Value>&nbsp;&nbsp;</span></button></div><div class=input-group><input type=text class=\"form-control input-lg\" ng-model=value.Value ng-disabled=false dropdown-toggle></div><ul class=\"dropdown-menu icons-menu-columns\" role=menu><li class=input-group disable-auto-close><span class=\"input-group-addon btn-default btn\" ng-click=\"value.Value = ''\"><i class=icon-cancel></i></span> <input type=search ng-model=vm.iconFilter class=\"makePaymentDropdownSearchBox form-control input-lg\" placeholder=\"search...\"></li><li ng-repeat=\"icn in vm.icons\" role=menuitem ng-show=\"icn.class.indexOf(vm.iconFilter) !== -1\"><a ng-click=vm.setIcon(icn.class) xng-click=\"value.Value = icn.class; status.isopen = false;\"><i class=\"{{vm.previewPrefix}} {{icn.class}}\"></i> <span tooltip={{icn.class}}>...{{icn.class.substring(vm.prefix.length-1,25)}}</span></a></li></ul></div><div ng-if=vm.debug.on>Infos: found {{vm.icons.length}} items for prefix \"{{vm.prefix}}\" and will use \"{{vm.previewPrefix}}\" as a preview class. Selected is \"{{value.Value}}\" and files are: {{vm.files}}</div></div>"
   );
 
 
@@ -1470,7 +1471,7 @@ angular.module('SxcEditTemplates', []).run(['$templateCache', function($template
 
 
   $templateCache.put('fields/string/string-wysiwyg-tinymce.html',
-    "<div><div class=dropzone><div ui-tinymce=tinymceOptions ng-model=value.Value class=field-string-wysiwyg-mce-box></div><adam-browser content-type-name=to.header.ContentTypeName entity-guid=to.header.Guid field-name=options.key auto-load=false folder-depth=0 sub-folder=\"\" update-callback=vm.setValue register-self=vm.registerAdam show-images-only=vm.adamModeImage ng-disabled=to.disabled></adam-browser><span id=dummyfocus tabindex=-1></span><dropzone-upload-preview></dropzone-upload-preview><adam-hint></adam-hint></div></div>"
+    "<div><div class=dropzone><div ui-tinymce=tinymceOptions ng-model=value.Value class=field-string-wysiwyg-mce-box></div><adam-browser content-type-name=to.header.ContentTypeName entity-guid=to.header.Guid field-name=options.key auto-load=false folder-depth=0 sub-folder=\"\" update-callback=vm.setValue register-self=vm.registerAdam show-images-only=vm.adamModeImage ng-disabled=to.disabled></adam-browser><span id=dummyfocus tabindex=-1></span><dropzone-upload-preview></dropzone-upload-preview><adam-hint class=field-hints></adam-hint></div></div>"
   );
 
 }]);

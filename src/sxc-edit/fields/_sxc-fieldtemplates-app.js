@@ -13,6 +13,7 @@
         "SxcEditTemplates",     // temp - was because of bad template-converter, remove once I update grunt
         "EavConfiguration",
         "SxcServices",
+        "eavFieldTemplates",
         "Adam",
         //"ui.tinymce",   // connector to tiny-mce for angular
         "oc.lazyLoad"   // needed to lazy-load the MCE editor from the cloud
