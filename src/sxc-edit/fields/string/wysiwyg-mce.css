@@ -5,20 +5,23 @@
     border-color: rgb(170,178,189);
     border-radius: 4px;
     padding: 8px;
+    padding-left: 0;
     font-size: larger;
     overflow: auto;
 }
 
 /* note: most of this definition should be the same as the definition of the standard input box */
 div.wrap-float-label .field-string-wysiwyg-mce-box {
-    border-width: 1px;
-    /*border-bottom: 1px;*/
-    border-color: #ddd; /* #8DCAFA; /* todo: define the official color  #0087F4; */
-    border-style: solid;
+    border: none;
     border-radius: 0;
-    border-radius: 0;
-    /*padding-left: 0;*/
+    -moz-box-shadow: inset 0 -10px 10px -10px #888;
+    -webkit-box-shadow: inset 0 -10px 10px -10px #888;
+    box-shadow: inset 0 -10px 10px -10px #888;
     margin-top: 12px;
+}
+
+div.wrap-float-label .field-string-wysiwyg-mce-box.mce-edit-focus {
+    padding-left: 8px;
 }
 
 .mce-tinymce.mce-container.mce-tinymce-inline {
