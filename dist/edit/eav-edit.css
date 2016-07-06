@@ -188,6 +188,12 @@ select.material {
     padding-left: 0;
     padding-top: 14px;
 }
+
+/* disabled - try to override the default bootstrap... */
+.form-control[disabled], .form-control[readonly], .fieldset[disabled] .form-control {
+    background: transparent !important;
+    border-bottom: 0;
+}
 .formly-field { position:relative; }
 .eav-localization { position:absolute; top:0; right:0; }
 .eav-localization-lock { float: right; display: inline-block; }

@@ -543,7 +543,7 @@ font-size: large;position: absolute;right: -15px;top: 50px;font-size: 1.8em;
       .dropzone .dz-preview:hover .dz-details {
         opacity: 1; }
     .dropzone .dz-preview.dz-file-preview .dz-image {
-      border-radius: 20px;
+        border-radius: 6px; /* original before 2016-07-06 2dm: 20px;*/
       background: #999;
       background: linear-gradient(to bottom, #eee, #ddd); }
     .dropzone .dz-preview.dz-file-preview .dz-details {
@@ -605,7 +605,7 @@ font-size: large;position: absolute;right: -15px;top: 50px;font-size: 1.8em;
       -webkit-filter: blur(8px);
       filter: blur(8px); }
     .dropzone .dz-preview .dz-image {
-      border-radius: 20px;
+        border-radius: 6px; /* original before 2016-07-06 2dm: 20px;*/
       overflow: hidden;
       width: 120px;
       height: 120px;
@@ -725,13 +725,16 @@ font-size: large;position: absolute;right: -15px;top: 50px;font-size: 1.8em;
         border-left: 6px solid transparent;
         border-right: 6px solid transparent;
         border-bottom: 6px solid #be2626; }
-.icon-before-input {
+.thumbnail-before-input.icon-before-input {
     width: 46px;
-    font-size: x-large;
-    padding-left: 6px;
+    font-size: 42px;
+    padding-left: 2px;
     padding-right: 5px;
     padding-top: 2px;
     padding-bottom: 3px;
+}
+.icon-before-input a {
+    color: #444;
 }
 
 .thumbnail-before-input {

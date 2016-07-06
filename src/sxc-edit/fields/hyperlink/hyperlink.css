@@ -1,10 +1,13 @@
-﻿.icon-before-input {
+﻿.thumbnail-before-input.icon-before-input {
     width: 46px;
-    font-size: x-large;
-    padding-left: 6px;
+    font-size: 42px;
+    padding-left: 2px;
     padding-right: 5px;
     padding-top: 2px;
     padding-bottom: 3px;
+}
+.icon-before-input a {
+    color: #444;
 }
 
 .thumbnail-before-input {

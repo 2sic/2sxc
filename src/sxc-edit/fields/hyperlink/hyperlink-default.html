@@ -6,15 +6,16 @@
              ng-mouseover="vm.showPreview = true"
              ng-mouseleave="vm.showPreview = false">
         </div>
-        <a ng-if="value.Value && !vm.isImage()"
-           class="icon-before-input"
-           href="{{vm.testLink}}"
-           target="_blank" tabindex="-1"
-           tooltip-html-unsafe="{{vm.tooltipUrl(vm.testLink)}}"
-           tooltip-placement="right"
-           ng-class="vm.isImage() ? '':vm.icon()"
-           ng-style="vm.isImage() ? 'background-image: url(\'' + vm.thumbnailUrl(1) +'\')': ''">
-        </a>
+
+        <div ng-if="value.Value && !vm.isImage()"
+           class="thumbnail-before-input icon-before-input">
+            <a href="{{vm.testLink}}"
+               target="_blank" tabindex="-1"
+               tooltip-html-unsafe="{{vm.tooltipUrl(vm.testLink)}}"
+               tooltip-placement="right"
+               ng-class="vm.icon()">
+            </a>            
+        </div>
         <div ng-if="!value.Value"
              class="thumbnail-before-input empty-placeholder">
         </div>
