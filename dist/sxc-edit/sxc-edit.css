@@ -834,6 +834,7 @@ div.focused .field-hints {
     background-color:white; /* #656d78; */ border-bottom:none
 }
 
+/* todo: merge this with the other thumbnail-before-input stuff */
 .thumbnail-before-input.icon-preview {
     display: block;
     position: absolute;
