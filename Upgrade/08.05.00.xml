@@ -85,6 +85,32 @@
             <Value Key="RowCount" Value="1" Type="Number" />
           </Entity>
         </Attribute>
+        <Attribute StaticName="Take" Type="String" IsTitle="false">
+          <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@All" AttributeSetName="@All" EntityGUID="926af450-46a8-4f7d-91b4-1bc7c79f6bdb" KeyNumber="4590">
+            <Value Key="Name" Value="Take / Stop after so many" Type="String" />
+            <Value Key="Notes" Value="&lt;p&gt;Get only 1 or whatever amount you need. This improves performance if you have many thousand items, and only need a few. Leave blank to take all.&lt;/p&gt;" Type="String" />
+            <Value Key="VisibleInEditUI" Value="True" Type="Boolean" />
+            <Value Key="Required" Value="False" Type="Boolean" />
+            <Value Key="DefaultValue" Value="" Type="String" />
+            <Value Key="Disabled" Value="False" Type="Boolean" />
+            <Value Key="InputType" Value="string-default" Type="String" />
+            <Value Key="ValidationRegExJavaScript" Value="" Type="String" />
+            <Value Key="CustomJavaScript" Value="" Type="String" />
+          </Entity>
+          <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@String" AttributeSetName="@String" EntityGUID="49fc6c3a-c5f0-4c86-be57-5504d83485c4" KeyNumber="4590">
+            <Value Key="ValidationRegEx" Value="" Type="String" />
+            <Value Key="RowCount" Value="1" Type="Number" />
+            <Value Key="ValidationRegExJavaScript" Value="" Type="String" />
+            <Value Key="DropdownValues" Value="" Type="String" />
+            <Value Key="InputType" Value="" Type="String" />
+            <Value Key="ValidationAutomatic" Value="" Type="String" />
+            <Value Key="WysiwygHeight" Value="" Type="Number" />
+            <Value Key="WysiwygWidth" Value="" Type="Number" />
+          </Entity>
+          <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@string-default" AttributeSetName="@string-default" EntityGUID="f92ce3b1-daf5-43d7-aa4d-419cd758c73f" KeyNumber="4590">
+            <Value Key="RowCount" Value="1" Type="Number" />
+          </Entity>
+        </Attribute>
       </Attributes>
     </AttributeSet>
     <AttributeSet StaticName="|Config ToSic.SexyContent.DataSources.DnnUserProfileDataSource" Name="|Config ToSic.SexyContent.DataSources.DnnUserProfileDataSource" Description="Configuration for DNN UserProfile DataSource" Scope="System" AlwaysShareConfiguration="true">
