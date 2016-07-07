@@ -3,13 +3,13 @@
     "use strict";
 
     angular.module("sxcFieldTemplates")
-        .config(function(formlyConfigProvider) {
+        .config(function (formlyConfigProvider, defaultFieldWrappersNoFloat) {
 
             formlyConfigProvider.setType({
                 name: "hyperlink-library",
                 templateUrl: "fields/hyperlink/hyperlink-library.html",
                 // todo: check if we could use the defaultFieldWrappers instead
-                wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization", "collapsible"],
+                wrapper: defaultFieldWrappersNoFloat,// ["eavLabel", "bootstrapHasError", "eavLocalization", "collapsible"],
                 controller: "FieldTemplate-Library as vm"
             });
 

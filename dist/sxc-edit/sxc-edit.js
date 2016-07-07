@@ -707,13 +707,13 @@ angular.module("sxcFieldTemplates")
     "use strict";
 
     angular.module("sxcFieldTemplates")
-        .config(["formlyConfigProvider", function(formlyConfigProvider) {
+        .config(["formlyConfigProvider", "defaultFieldWrappersNoFloat", function (formlyConfigProvider, defaultFieldWrappersNoFloat) {
 
             formlyConfigProvider.setType({
                 name: "hyperlink-library",
                 templateUrl: "fields/hyperlink/hyperlink-library.html",
                 // todo: check if we could use the defaultFieldWrappers instead
-                wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization", "collapsible"],
+                wrapper: defaultFieldWrappersNoFloat,// ["eavLabel", "bootstrapHasError", "eavLocalization", "collapsible"],
                 controller: "FieldTemplate-Library as vm"
             });
 
@@ -1442,7 +1442,7 @@ angular.module('SxcEditTemplates', []).run(['$templateCache', function($template
 
 
   $templateCache.put('fields/hyperlink/hyperlink-default.html',
-    "<div class=dropzone><div><div ng-if=\"value.Value && vm.isImage()\" class=thumbnail-before-input style=\"background-image: url('{{vm.thumbnailUrl(1)}}')\" ng-mouseover=\"vm.showPreview = true\" ng-mouseleave=\"vm.showPreview = false\"></div><div ng-if=\"value.Value && !vm.isImage()\" class=\"thumbnail-before-input icon-before-input\"><a href={{vm.testLink}} target=_blank tabindex=-1 tooltip-html-unsafe={{vm.tooltipUrl(vm.testLink)}} tooltip-placement=right ng-class=vm.icon()></a></div><div ng-if=!value.Value class=\"thumbnail-before-input empty-placeholder\"></div><div class=after-preview><div class=input-group dropdown><input type=text class=\"form-control input-lg\" ng-model=value.Value tooltip=\"{{'Edit.Fields.Hyperlink.Default.Tooltip1' | translate }}\r" +
+    "<div class=dropzone><div class=clearfix><div ng-if=\"value.Value && vm.isImage()\" class=thumbnail-before-input style=\"background-image: url('{{vm.thumbnailUrl(1)}}')\" ng-mouseover=\"vm.showPreview = true\" ng-mouseleave=\"vm.showPreview = false\"></div><div ng-if=\"value.Value && !vm.isImage()\" class=\"thumbnail-before-input icon-before-input\"><a href={{vm.testLink}} target=_blank tabindex=-1 tooltip-html-unsafe={{vm.tooltipUrl(vm.testLink)}} tooltip-placement=right ng-class=vm.icon()></a></div><div ng-if=!value.Value class=\"thumbnail-before-input empty-placeholder\"></div><div class=after-preview><div class=input-group dropdown><input type=text class=\"form-control input-lg\" ng-model=value.Value tooltip=\"{{'Edit.Fields.Hyperlink.Default.Tooltip1' | translate }}\r" +
     "\n" +
     "{{'Edit.Fields.Hyperlink.Default.Tooltip2' | translate }}\r" +
     "\n" +
