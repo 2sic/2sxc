@@ -85,7 +85,8 @@
             <Value Key="RowCount" Value="1" Type="Number" />
           </Entity>
         </Attribute>
-        <Attribute StaticName="Take" Type="String" IsTitle="false">
+
+      <Attribute StaticName="Take" Type="String" IsTitle="false">
           <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@All" AttributeSetName="@All" EntityGUID="926af450-46a8-4f7d-91b4-1bc7c79f6bdb" KeyNumber="4590">
             <Value Key="Name" Value="Take / Stop after so many" Type="String" />
             <Value Key="Notes" Value="&lt;p&gt;Get only 1 or whatever amount you need. This improves performance if you have many thousand items, and only need a few. Leave blank to take all.&lt;/p&gt;" Type="String" />
@@ -216,6 +217,62 @@
             <Value Key="WysiwygWidth" Value="" Type="Number" />
           </Entity>
           <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@string-default" AttributeSetName="@string-default" EntityGUID="aedffcdd-bf55-4876-9dc3-f73fc9156198" KeyNumber="4588">
+            <Value Key="RowCount" Value="1" Type="Number" />
+          </Entity>
+        </Attribute>
+      </Attributes>
+    </AttributeSet>
+    <AttributeSet StaticName="|Config ToSic.Eav.DataSources.App" Name="|Config ToSic.Eav.DataSources.App" Description="used to configure an App DataSource" Scope="System" AlwaysShareConfiguration="true">
+      <Attributes>
+        <Attribute StaticName="AppSwitch" Type="String" IsTitle="true">
+          <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@All" AttributeSetName="@All" EntityGUID="aa156f28-47c1-4f5a-b3fa-e930eb06662c" KeyNumber="4603">
+            <Value Key="Name" Value="App Switch" Type="String" />
+            <Value Key="Notes" Value="&lt;p&gt;Leave blank by default (to get data from current app). If you give this an&amp;nbsp;App number then the data provided by this source will come from that app. &lt;a href=&quot;http://2sxc.org/help?tag=ToSic.Eav.DataSources.App&quot; target=&quot;_blank&quot;&gt;Learn more in help&lt;/a&gt;.&lt;/p&gt;" Type="String" />
+            <Value Key="VisibleInEditUI" Value="True" Type="Boolean" />
+            <Value Key="Required" Value="False" Type="Boolean" />
+            <Value Key="DefaultValue" Value="" Type="String" />
+            <Value Key="Disabled" Value="False" Type="Boolean" />
+            <Value Key="InputType" Value="string-default" Type="String" />
+            <Value Key="ValidationRegExJavaScript" Value="" Type="String" />
+            <Value Key="CustomJavaScript" Value="" Type="String" />
+          </Entity>
+          <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@String" AttributeSetName="@String" EntityGUID="b14afec3-3f23-4374-b87a-80183286b45f" KeyNumber="4603">
+            <Value Key="ValidationRegEx" Value="" Type="String" />
+            <Value Key="RowCount" Value="1" Type="Number" />
+            <Value Key="ValidationRegExJavaScript" Value="" Type="String" />
+            <Value Key="DropdownValues" Value="" Type="String" />
+            <Value Key="InputType" Value="" Type="String" />
+            <Value Key="ValidationAutomatic" Value="" Type="String" />
+            <Value Key="WysiwygHeight" Value="" Type="Number" />
+            <Value Key="WysiwygWidth" Value="" Type="Number" />
+          </Entity>
+          <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@string-default" AttributeSetName="@string-default" EntityGUID="75bd688c-08e5-405e-8dc6-d62d3ef8bd92" KeyNumber="4603">
+            <Value Key="RowCount" Value="1" Type="Number" />
+          </Entity>
+        </Attribute>
+        <Attribute StaticName="ZoneSwitch" Type="String" IsTitle="false">
+          <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@All" AttributeSetName="@All" EntityGUID="fb8b3adc-d720-42c9-a40f-68c94cca4779" KeyNumber="4604">
+            <Value Key="Name" Value="Zone Switch" Type="String" />
+            <Value Key="Notes" Value="&lt;p&gt;If you need&amp;nbsp;to access an app from another zone then set the zone number here. Note that the zone-number is not identical to the portal-id. For more help, &lt;a href=&quot;http://2sxc.org/help?tag=ToSic.Eav.DataSources.App&quot; target=&quot;_blank&quot;&gt;read&amp;nbsp;the instructions&lt;/a&gt;.&lt;/p&gt;" Type="String" />
+            <Value Key="VisibleInEditUI" Value="True" Type="Boolean" />
+            <Value Key="Required" Value="False" Type="Boolean" />
+            <Value Key="DefaultValue" Value="" Type="String" />
+            <Value Key="Disabled" Value="False" Type="Boolean" />
+            <Value Key="InputType" Value="string-default" Type="String" />
+            <Value Key="ValidationRegExJavaScript" Value="" Type="String" />
+            <Value Key="CustomJavaScript" Value="" Type="String" />
+          </Entity>
+          <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@String" AttributeSetName="@String" EntityGUID="7eb084bc-32da-4f59-97de-8b4602442c69" KeyNumber="4604">
+            <Value Key="ValidationRegEx" Value="" Type="String" />
+            <Value Key="RowCount" Value="1" Type="Number" />
+            <Value Key="ValidationRegExJavaScript" Value="" Type="String" />
+            <Value Key="DropdownValues" Value="" Type="String" />
+            <Value Key="InputType" Value="" Type="String" />
+            <Value Key="ValidationAutomatic" Value="" Type="String" />
+            <Value Key="WysiwygHeight" Value="" Type="Number" />
+            <Value Key="WysiwygWidth" Value="" Type="Number" />
+          </Entity>
+          <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@string-default" AttributeSetName="@string-default" EntityGUID="0d595197-1a7b-4ad8-b37a-c5963e1c8c5f" KeyNumber="4604">
             <Value Key="RowCount" Value="1" Type="Number" />
           </Entity>
         </Attribute>
