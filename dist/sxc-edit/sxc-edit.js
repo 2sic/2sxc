@@ -634,6 +634,14 @@ angular.module("sxcFieldTemplates")
             vm.icon = function () { return fileType.getIconClass(vm.testLink); };
             vm.tooltipUrl = function (str) { return str.replace(/\//g, "/&#8203;"); };
 
+            function ensureDefaultConfig() {
+                var merged = $scope.to.settings.merged;
+                if (merged.ShowAdam === undefined || merged.ShowAdam === null) merged.ShowAdam = true;
+                if (merged.Buttons === undefined || merged.Buttons === null) merged.Buttons = "adam,more";
+            }
+
+            ensureDefaultConfig();
+
             // Update test-link if necessary - both when typing or if link was set by dialogs
             $scope.$watch("value.Value", function(newValue, oldValue) {
                 if (!newValue)
@@ -690,7 +698,9 @@ angular.module("sxcFieldTemplates")
             vm.setValue = function(fileItem) {
                 $scope.value.Value = "File:" + fileItem.Id;
             };
+
             $scope.afterUpload = vm.setValue;   // binding for dropzone
+
             vm.toggleAdam = function toggle() {
                 vm.adam.toggle();
             };
@@ -1446,7 +1456,7 @@ angular.module('SxcEditTemplates', []).run(['$templateCache', function($template
     "\n" +
     "{{'Edit.Fields.Hyperlink.Default.Tooltip2' | translate }}\r" +
     "\n" +
-    "ADAM - sponsored with ♥ by 2sic.com\"> <span class=input-group-btn style=\"vertical-align: top\"><button type=button class=\"btn btn-default icon-field-button\" ng-disabled=to.disabled tooltip=\"{{'Edit.Fields.Hyperlink.Default.AdamUploadLabel' | translate }}\" ng-click=vm.toggleAdam()><i class=icon-apple></i></button> <button tabindex=-1 type=button class=\"btn btn-default dropdown-toggle icon-field-button\" dropdown-toggle ng-disabled=to.disabled><i class=icon-options></i></button></span><ul class=\"dropdown-menu pull-right\" role=menu><li role=menuitem><a class=dropzone-adam href=javascript:void(0);><i class=icon-apple></i> <span translate=Edit.Fields.Hyperlink.Default.MenuAdam></span></a></li><li role=menuitem ng-if=\"to.settings['merged'].ShowPagePicker\"><a ng-click=\"vm.openDialog('pagepicker')\" href=javascript:void(0)><i class=icon-sitemap xicon=home></i> <span translate=Edit.Fields.Hyperlink.Default.MenuPage></span></a></li><li role=menuitem ng-if=\"to.settings['merged'].ShowImageManager\"><a ng-click=\"vm.openDialog('imagemanager')\" href=javascript:void(0)><i class=icon-file-image xicon=picture></i> <span translate=Edit.Fields.Hyperlink.Default.MenuImage></span></a></li><li role=menuitem ng-if=\"to.settings['merged'].ShowFileManager\"><a ng-click=\"vm.openDialog('documentmanager')\" href=javascript:void(0)><i class=icon-file xicon=file></i> <span translate=Edit.Fields.Hyperlink.Default.MenuDocs></span></a></li></ul></div><div ng-if=vm.showPreview style=\"position: relative\"><div style=\"position: absolute; z-index: 100; background: white; top: 10px; text-align: center; left: 0; right: 0\"><img ng-src=\"{{vm.thumbnailUrl(2)}}\"></div></div><adam-hint class=field-hints></adam-hint><div ng-if=value.Value class=field-hints><a href={{vm.testLink}} target=_blank tabindex=-1 tooltip-html-unsafe={{vm.tooltipUrl(vm.testLink)}}><span>&nbsp;... {{vm.testLink.substr(vm.testLink.lastIndexOf(\"/\"), 100)}}</span></a></div></div></div><div><adam-browser content-type-name=to.header.ContentTypeName entity-guid=to.header.Guid field-name=options.key auto-load=false folder-depth=0 sub-folder=\"\" update-callback=vm.setValue register-self=vm.registerAdam ng-disabled=to.disabled></adam-browser><dropzone-upload-preview></dropzone-upload-preview></div></div>"
+    "ADAM - sponsored with ♥ by 2sic.com\"> <span class=input-group-btn style=\"vertical-align: top\"><button ng-if=\"to.settings['merged'].Buttons.indexOf('adam') > -1\" type=button class=\"btn btn-default icon-field-button\" ng-disabled=to.disabled tooltip=\"{{'Edit.Fields.Hyperlink.Default.AdamUploadLabel' | translate }}\" ng-click=vm.toggleAdam()><i class=icon-apple></i></button> <button ng-if=\"to.settings['merged'].Buttons.indexOf('page') > -1\" type=button class=\"btn btn-default icon-field-button\" ng-disabled=to.disabled tooltip=\"{{'Edit.Fields.Hyperlink.Default.AdamUploadLabel' | translate }}\" ng-click=\"vm.openDialog('pagepicker')\"><i class=icon-sitemap></i></button> <button ng-if=\"to.settings['merged'].Buttons.indexOf('more') > -1\" tabindex=-1 type=button class=\"btn btn-default dropdown-toggle icon-field-button\" dropdown-toggle ng-disabled=to.disabled><i class=icon-options></i></button></span><ul class=\"dropdown-menu pull-right\" role=menu><li role=menuitem ng-if=\"to.settings['merged'].ShowAdam\"><a class=dropzone-adam ng-click=vm.toggleAdam() href=javascript:void(0);><i class=icon-apple></i> <span translate=Edit.Fields.Hyperlink.Default.MenuAdam></span></a></li><li role=menuitem ng-if=\"to.settings['merged'].ShowPagePicker\"><a ng-click=\"vm.openDialog('pagepicker')\" href=javascript:void(0)><i class=icon-sitemap xicon=home></i> <span translate=Edit.Fields.Hyperlink.Default.MenuPage></span></a></li><li role=menuitem ng-if=\"to.settings['merged'].ShowImageManager\"><a ng-click=\"vm.openDialog('imagemanager')\" href=javascript:void(0)><i class=icon-file-image xicon=picture></i> <span translate=Edit.Fields.Hyperlink.Default.MenuImage></span></a></li><li role=menuitem ng-if=\"to.settings['merged'].ShowFileManager\"><a ng-click=\"vm.openDialog('documentmanager')\" href=javascript:void(0)><i class=icon-file xicon=file></i> <span translate=Edit.Fields.Hyperlink.Default.MenuDocs></span></a></li></ul></div><div ng-if=vm.showPreview style=\"position: relative\"><div style=\"position: absolute; z-index: 100; background: white; top: 10px; text-align: center; left: 0; right: 0\"><img ng-src=\"{{vm.thumbnailUrl(2)}}\"></div></div><adam-hint class=field-hints></adam-hint><div ng-if=value.Value class=field-hints><a href={{vm.testLink}} target=_blank tabindex=-1 tooltip-html-unsafe={{vm.tooltipUrl(vm.testLink)}}><span>&nbsp;... {{vm.testLink.substr(vm.testLink.lastIndexOf(\"/\"), 100)}}</span></a></div></div></div><div><adam-browser content-type-name=to.header.ContentTypeName entity-guid=to.header.Guid field-name=options.key auto-load=false folder-depth=0 sub-folder=\"\" update-callback=vm.setValue register-self=vm.registerAdam ng-disabled=to.disabled></adam-browser><dropzone-upload-preview></dropzone-upload-preview></div></div>"
   );
 
 

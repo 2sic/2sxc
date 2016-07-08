@@ -29,6 +29,14 @@
             vm.icon = function () { return fileType.getIconClass(vm.testLink); };
             vm.tooltipUrl = function (str) { return str.replace(/\//g, "/&#8203;"); };
 
+            function ensureDefaultConfig() {
+                var merged = $scope.to.settings.merged;
+                if (merged.ShowAdam === undefined || merged.ShowAdam === null) merged.ShowAdam = true;
+                if (merged.Buttons === undefined || merged.Buttons === null) merged.Buttons = "adam,more";
+            }
+
+            ensureDefaultConfig();
+
             // Update test-link if necessary - both when typing or if link was set by dialogs
             $scope.$watch("value.Value", function(newValue, oldValue) {
                 if (!newValue)
@@ -85,7 +93,9 @@
             vm.setValue = function(fileItem) {
                 $scope.value.Value = "File:" + fileItem.Id;
             };
+
             $scope.afterUpload = vm.setValue;   // binding for dropzone
+
             vm.toggleAdam = function toggle() {
                 vm.adam.toggle();
             };
