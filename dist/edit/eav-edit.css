@@ -189,6 +189,15 @@ select.material {
     padding-top: 14px;
 }
 
+textarea.material {
+    font-size: 20px;
+    border-radius: 0;
+    border: none;
+    border-bottom: 1px solid #ddd;
+    padding: 0;
+    padding-top: 12px;
+}
+
 /* disabled - try to override the default bootstrap... */
 .form-control[disabled], .form-control[readonly], .fieldset[disabled] .form-control {
     background: transparent !important;
