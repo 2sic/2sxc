@@ -341,12 +341,12 @@ namespace ToSic.SexyContent.ImportExport
 				// Add AttributeSet
                 importAttributeSets.Add(new ImportAttributeSet
 				{
-					StaticName = attributeSet.Attribute("StaticName").Value,
-					Name = attributeSet.Attribute("Name").Value,
-					Description = attributeSet.Attribute("Description").Value,
+					StaticName = attributeSet.Attribute(Const2.Static).Value,
+					Name = attributeSet.Attribute(Const2.Name).Value,
+					Description = attributeSet.Attribute(Const2.Description).Value,
 					Attributes = attributes,
-					Scope = attributeSet.Attributes("Scope").Any() ? attributeSet.Attribute("Scope").Value : Settings.AttributeSetScope,
-					AlwaysShareConfiguration = AllowSystemChanges && attributeSet.Attributes("AlwaysShareConfiguration").Any() && Parse(attributeSet.Attribute("AlwaysShareConfiguration").Value),
+					Scope = attributeSet.Attributes(Const2.Scope).Any() ? attributeSet.Attribute(Const2.Scope).Value : Settings.AttributeSetScope,
+					AlwaysShareConfiguration = AllowSystemChanges && attributeSet.Attributes(Const2.AlwaysShareConfig).Any() && Parse(attributeSet.Attribute(Const2.AlwaysShareConfig).Value),
                     UsesConfigurationOfAttributeSet = attributeSet.Attributes("UsesConfigurationOfAttributeSet").Any() ? attributeSet.Attribute("UsesConfigurationOfAttributeSet").Value : "",
                     TitleAttribute = titleAttribute
 				});

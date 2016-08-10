@@ -1,36 +1,15 @@
-﻿/* for boostrap menus which should be scrollable and not unlimited length...*/
-/*.scrollable-menu {
-    height: auto;
-    max-height: 400px;
-    overflow-x: hidden;
-}*/
-
+﻿
 /* icons-menu classes */
   .icons-menu-columns {
-    /*height: auto;
-    max-height: 400px;
-    overflow-x: hidden;*/
     font-size: larger
   }
 
-  /*.icons-menu-columns li {
-      width: 150px;
-  }*/
-
-/*@media screen and (max-width: 600px) {
-  .icons-menu-columns {
-    height: auto;
-    max-height: 400px;
-    overflow-y: scroll;
-  }
-}*/
 
 @media screen and (min-width: 451px) {
   .icons-menu-columns {
     -moz-column-count: 2;
     -webkit-column-count: 2;
     column-count: 2;
-    /*width: 500px;*/
   }
 }
 @media screen and (min-width: 701px) {
@@ -38,7 +17,6 @@
     -moz-column-count: 3;
     -webkit-column-count: 3;
     column-count: 3;
-    /*width: 500px;*/
   }
 }
 @media screen and (min-width: 951px) {
@@ -46,7 +24,6 @@
     -moz-column-count: 4;
     -webkit-column-count: 4;
     column-count: 4;
-    /*width: 500px;*/
   }
 }
 
@@ -75,7 +52,7 @@
 .dropdown-menu.icons-menu-columns li a:focus,
 .dropdown-menu.icons-menu-columns li a:hover {
     /*color:#fff;*/
-    background-color:#329ff6; /* white; /* #656d78; */  */ 
+    background-color:#329ff6; /* white; /* #656d78; */   
     outline:0
 }
 
@@ -83,40 +60,15 @@
     background-color:white; /* #656d78; */ border-bottom:none
 }
 
-/*.dropdown-menu .disabled a,.dropdown-menu .disabled a:focus,.dropdown-menu .disabled a:hover {
-    color: #656d78; 
-    cursor:default
-}*/
-
-
- /*.dropup .dropdown-menu {
-     margin-bottom:0;border-radius:4px 4px 0 0;-webkit-border-radius:4px 4px 0 0;-moz-border-radius:4px 4px 0 0
- }
- 
- .dropdown-submenu{position:relative}
- .dropdown-submenu .dropdown-menu {
-     top:0;left:100%;margin-top:-6px;margin-left:-1px;border-radius:0 4px 4px;-webkit-border-radius:0 4px 4px;-moz-border-radius:0 4px 4px
- }
- 
- .dropdown-submenu:hover .dropdown-menu {
-     display:block
- }
- .dropup .dropdown-submenu .dropdown-menu {
-     top:auto;bottom:0;margin-top:0;margin-bottom:-2px;border-radius:4px 4px 4px 0;-webkit-border-radius:4px 4px 4px 0;-moz-border-radius:4px 4px 4px 0
- }
- .dropdown-submenu>a:after {
-     display:block;float:right;width:0;height:0;margin-top:5px;margin-right:-10px;content:" ";border-color:transparent;border-style:solid;border-width:5px 0 5px 5px;border-left-color:#fff
- }
- .dropdown-default .dropdown-submenu>a:after {
-     border-left-color:#434a54
- }
- .dropdown-submenu:hover a:after {
-     border-left-color:#fff
- }
- .dropdown-submenu.pull-left {
-     float:none
- }
- .dropdown-submenu.pull-left 
- .dropdown-menu {
-     left:-100%;margin-left:10px;border-radius:4px 0 4px 4px;-webkit-border-radius:4px 0 4px 4px;-moz-border-radius:4px 0 4px 4px
- }*/
+/* todo: merge this with the other thumbnail-before-input stuff */
+.thumbnail-before-input.icon-preview {
+    display: block;
+    position: absolute;
+    top: -8px;
+}
+.thumbnail-before-input > button {
+    width: 64px;
+    height: 64px;
+    border: none;
+    font-size: 40px;
+}

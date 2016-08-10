@@ -8,11 +8,9 @@ using System.Xml;
 using System.Xml.Linq;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.FileSystem;
-using Telerik.Web.Data.Extensions;
 using ToSic.Eav;
 using ToSic.Eav.BLL;
 using ToSic.SexyContent.Adam;
-using ToSic.SexyContent.Razor.Helpers;
 
 namespace ToSic.SexyContent.ImportExport
 {
@@ -23,18 +21,15 @@ namespace ToSic.SexyContent.ImportExport
     public class XmlExporter
     {
         // initialize data context
-        //private readonly SxcInstance Sexy;
-        private readonly App App;
-        private readonly EavDataController EavAppContext;
-        private List<int> _referencedFileIds = new List<int>();
-        private List<int> _referencedFolderIds = new List<int>();
+        private readonly App _app;
+        private readonly EavDataController _eavAppContext;
+        private readonly List<int> _referencedFileIds = new List<int>();
+        private readonly List<int> _referencedFolderIds = new List<int>();
         public List<IFileInfo> ReferencedFiles = new List<IFileInfo>();
-        private int _zoneId;
-        private int _appId;
         private readonly bool _isAppExport;
 
-        private IFolderManager DnnFolders = DotNetNuke.Services.FileSystem.FolderManager.Instance;
-        private IFileManager DnnFiles = DotNetNuke.Services.FileSystem.FileManager.Instance;
+        // private IFolderManager DnnFolders = DotNetNuke.Services.FileSystem.FolderManager.Instance;
+        private readonly IFileManager _dnnFiles = DotNetNuke.Services.FileSystem.FileManager.Instance;
 
         public string[] AttributeSetIDs;
         public string[] EntityIDs;
@@ -49,12 +44,10 @@ namespace ToSic.SexyContent.ImportExport
 
         public XmlExporter(int zoneId, int appId, bool appExport, string[] attrSetIds, string[] entityIds)
         {
-            _zoneId = zoneId;
-            _appId = appId;
             _isAppExport = appExport;
             //Sexy = new SxcInstance(_zoneId, _appId);
-            App = new App(_zoneId, _appId, PortalSettings.Current);
-            EavAppContext = App.EavContext;
+            _app = new App(zoneId, appId, PortalSettings.Current);
+            _eavAppContext = _app.EavContext;
             AttributeSetIDs = attrSetIds;
             EntityIDs = entityIds;
         }
@@ -62,28 +55,26 @@ namespace ToSic.SexyContent.ImportExport
         /// <summary>
         /// Exports given AttributeSets, Entities and Templates to an XML and returns the XML as string.
         /// </summary>
-        /// <param name="AttributeSetIDs"></param>
-        /// <param name="EntityIDs"></param>
-        /// <param name="TemplateIDs"></param>
-        /// <param name="Messages"></param>
         /// <returns></returns>
         public string GenerateNiceXml()
         {
-            var Doc = ExportXDocument;
+            var doc = ExportXDocument;
 
             // Will be used to show an export protocoll in future
             Messages = null;
 
             // Write XDocument to string and return it
-            var xmlSettings = new XmlWriterSettings();
-            xmlSettings.Encoding = Encoding.UTF8;
-            xmlSettings.ConformanceLevel = ConformanceLevel.Document;
-            xmlSettings.Indent = true;
+            var xmlSettings = new XmlWriterSettings
+            {
+                Encoding = Encoding.UTF8,
+                ConformanceLevel = ConformanceLevel.Document,
+                Indent = true
+            };
 
             using (var stringWriter = new Utf8StringWriter())
             {
                 using (var writer = XmlWriter.Create(stringWriter, xmlSettings))
-                    Doc.Save(writer);
+                    doc.Save(writer);
                 return stringWriter.ToString();
             }
         }
@@ -103,19 +94,19 @@ namespace ToSic.SexyContent.ImportExport
                 //ReferencedFiles = new List<IFileInfo>();   
 
                 // Create XML document and declaration
-                var Doc = _exportDocument = new XDocument(new XDeclaration("1.0", "UTF-8", "yes"), null);
+                var doc = _exportDocument = new XDocument(new XDeclaration("1.0", "UTF-8", "yes"), null);
 
                 #region Header
 
-                var Dimensions = EavAppContext.Dimensions.GetDimensionChildren("Culture");
-                var Header = new XElement(XmlConstants.Header,
-                    _isAppExport && App.AppGuid != "Default"
+                var dimensions = _eavAppContext.Dimensions.GetDimensionChildren("Culture");
+                var header = new XElement(XmlConstants.Header,
+                    _isAppExport && _app.AppGuid != "Default"
                         ? new XElement(XmlConstants.App,
-                            new XAttribute(XmlConstants.Guid, App.AppGuid)
+                            new XAttribute(XmlConstants.Guid, _app.AppGuid)
                             )
                         : null,
                     new XElement("Language", new XAttribute("Default", Portal.DefaultLanguage)),
-                    new XElement("Dimensions", Dimensions.Select(d => new XElement("Dimension",
+                    new XElement("Dimensions", dimensions.Select(d => new XElement("Dimension",
                         new XAttribute("DimensionID", d.DimensionID),
                         new XAttribute("Name", d.Name),
                         new XAttribute("SystemKey", d.SystemKey ?? String.Empty),
@@ -128,70 +119,71 @@ namespace ToSic.SexyContent.ImportExport
 
                 #region Attribute Sets
 
-                var AttributeSets = new XElement("AttributeSets");
+                var attributeSets = new XElement("AttributeSets");
 
                 // Go through each AttributeSetID
-                foreach (var AttributeSetID in AttributeSetIDs)
+                foreach (var attributeSetId in AttributeSetIDs)
                 {
-                    var ID = int.Parse(AttributeSetID);
-                    var Set = EavAppContext.AttribSet.GetAttributeSet(ID);
-                    var Attributes = new XElement("Attributes");
+                    var id = int.Parse(attributeSetId);
+                    var set = _eavAppContext.AttribSet.GetAttributeSet(id);
+                    var attributes = new XElement("Attributes");
 
                     // Add all Attributes to AttributeSet including meta informations
-                    foreach (var x in EavAppContext.Attributes.GetAttributesInSet(ID))
+                    foreach (var x in _eavAppContext.Attributes.GetAttributesInSet(id))
                     {
-                        var Attribute = new XElement("Attribute",
-                            new XAttribute("StaticName", x.Attribute.StaticName),
-                            new XAttribute("Type", x.Attribute.Type),
-                            new XAttribute("IsTitle", x.IsTitle),
+                        var attribute = new XElement("Attribute",
+                            new XAttribute(Const2.Static, x.Attribute.StaticName),
+                            new XAttribute(Const2.Type, x.Attribute.Type),
+                            new XAttribute(Const2.IsTitle, x.IsTitle),
                             // Add Attribute MetaData
                             from c in
-                                EavAppContext.Entities.GetEntities(Constants.AssignmentObjectTypeIdFieldProperties,
+                                _eavAppContext.Entities.GetEntities(Constants.AssignmentObjectTypeIdFieldProperties,
                                     x.AttributeID).ToList()
                             select GetEntityXElement(c)
                             );
 
-                        Attributes.Add(Attribute);
+                        attributes.Add(attribute);
                     }
 
                     // Add AttributeSet / Content Type
-                    var AttributeSet = new XElement("AttributeSet",
-                        new XAttribute("StaticName", Set.StaticName),
-                        new XAttribute("Name", Set.Name),
-                        new XAttribute("Description", Set.Description),
-                        new XAttribute("Scope", Set.Scope),
-                        Attributes);
+                    var attributeSet = new XElement("AttributeSet",
+                        new XAttribute(Const2.Static, set.StaticName),
+                        new XAttribute(Const2.Name, set.Name),
+                        new XAttribute(Const2.Description, set.Description),
+                        new XAttribute(Const2.Scope, set.Scope),
+                        new XAttribute(Const2.AlwaysShareConfig, set.AlwaysShareConfiguration),
+                        attributes);
 
                     // Add Ghost-Info if content type inherits from another content type
-                    if (Set.UsesConfigurationOfAttributeSet.HasValue)
+                    if (set.UsesConfigurationOfAttributeSet.HasValue)
                     {
-                        var parentAttributeSet = EavAppContext.SqlDb.AttributeSets.First(a => a.AttributeSetID ==  Set.UsesConfigurationOfAttributeSet.Value && a.ChangeLogDeleted == null);
-                        AttributeSet.Add(new XAttribute("UsesConfigurationOfAttributeSet", parentAttributeSet.StaticName));
+                        var parentAttributeSet = _eavAppContext.SqlDb.AttributeSets.First(a => a.AttributeSetID ==  set.UsesConfigurationOfAttributeSet.Value && a.ChangeLogDeleted == null);
+                        attributeSet.Add(new XAttribute("UsesConfigurationOfAttributeSet", parentAttributeSet.StaticName));
                     }
 
-                    AttributeSets.Add(AttributeSet);
+                    attributeSets.Add(attributeSet);
                 }
 
                 #endregion
 
                 #region Entities
 
-                var Entities = new XElement("Entities");
+                var entities = new XElement("Entities");
 
                 // Go through each Entity
-                foreach (var EntityID in EntityIDs)
+                foreach (var entityId in EntityIDs)
                 {
-                    var ID = int.Parse(EntityID);
+                    var id = int.Parse(entityId);
 
                     // Get the entity and ContentType from ContentContext add Add it to ContentItems
-                    var Entity = EavAppContext.Entities.GetEntity(ID);
-                    Entities.Add(GetEntityXElement(Entity));
+                    var entity = _eavAppContext.Entities.GetEntity(id);
+                    entities.Add(GetEntityXElement(entity));
                 }
 
                 #endregion
 
                 #region Adam files
-                var adam = new AdamManager(Portal.PortalId, App);
+                var adam = new AdamManager(Portal.PortalId, _app);
                 var adamIds = adam.Export.AppFiles;
                 adamIds.ForEach(AddFileAndFolderToQueue);
 
@@ -201,17 +193,17 @@ namespace ToSic.SexyContent.ImportExport
                 #endregion
 
                 // Create root node "SexyContent" and add ContentTypes, ContentItems and Templates
-                Doc.Add(new XElement(XmlConstants.RootNode,
+                doc.Add(new XElement(XmlConstants.RootNode,
                     new XAttribute("FileVersion", ImportExport.FileVersion),
                     new XAttribute("MinimumRequiredVersion", ImportExport.MinimumRequiredVersion),
                     new XAttribute("ModuleVersion", Settings.ModuleVersion),
                     new XAttribute("ExportDate", DateTime.Now),
-                    Header,
-                    AttributeSets,
-                    Entities,
+                    header,
+                    attributeSets,
+                    entities,
                     GetFilesXElements(),
                     GetFoldersXElements()));
-                return Doc;
+                return doc;
             }
         }
 
@@ -223,7 +215,7 @@ namespace ToSic.SexyContent.ImportExport
         private XElement GetEntityXElement(Entity e)
         {
             //var attributeSet = Sexy.ContentContext.GetAttributeSet(e.AttributeSetID);
-            var entityXElement = new Eav.ImportExport.XmlExport(EavAppContext).GetEntityXElement(e.EntityID);
+            var entityXElement = new Eav.ImportExport.XmlExport(_eavAppContext).GetEntityXElement(e.EntityID);
 
             foreach (var value in entityXElement.Elements("Value"))
             {
@@ -232,18 +224,18 @@ namespace ToSic.SexyContent.ImportExport
                 var valueKey = value.Attribute("Key").Value;
 
                 // Special cases for Template ContentTypes
-                if (e.Set.StaticName == "2SexyContent-Template-ContentTypes" && !String.IsNullOrEmpty(valueString))
+                if (e.Set.StaticName == "2SexyContent-Template-ContentTypes" && !string.IsNullOrEmpty(valueString))
                 {
                     switch (valueKey)
                     {
                         case "ContentTypeID":
-                            var attributeSet = EavAppContext.AttribSet.GetAllAttributeSets().FirstOrDefault(a => a.AttributeSetID == int.Parse(valueString));
-                            value.Attribute("Value").SetValue(attributeSet != null ? attributeSet.StaticName : String.Empty);
+                            var attributeSet = _eavAppContext.AttribSet.GetAllAttributeSets().FirstOrDefault(a => a.AttributeSetID == int.Parse(valueString));
+                            value.Attribute("Value").SetValue(attributeSet != null ? attributeSet.StaticName : string.Empty);
                             break;
                         case "DemoEntityID":
-                            var entityID = int.Parse(valueString);
-                            var demoEntity = EavAppContext.SqlDb.Entities.FirstOrDefault(en => en.EntityID == entityID);
-                            value.Attribute("Value").SetValue(demoEntity != null ? demoEntity.EntityGUID.ToString() : String.Empty);
+                            var entityId = int.Parse(valueString);
+                            var demoEntity = _eavAppContext.SqlDb.Entities.FirstOrDefault(en => en.EntityID == entityId);
+                            value.Attribute("Value").SetValue(demoEntity?.EntityGUID.ToString() ?? string.Empty);
                             break;
                     }
                 }
@@ -288,7 +280,7 @@ namespace ToSic.SexyContent.ImportExport
                 // also try to remember the folder
                 try
                 {
-                    var file = DnnFiles.GetFile(fileNum);
+                    var file = _dnnFiles.GetFile(fileNum);
                     AddFolderToQueue(file.FolderId);
                 }
                 catch
@@ -345,7 +337,7 @@ namespace ToSic.SexyContent.ImportExport
         }
         private XElement GetFolderXElement(int folderId)
         {
-            var folderController = DotNetNuke.Services.FileSystem.FolderManager.Instance;
+            var folderController = FolderManager.Instance;
             var folder = folderController.GetFolder(folderId);
             if (folder != null)
             {
@@ -364,7 +356,7 @@ namespace ToSic.SexyContent.ImportExport
         /// </summary>
         public class Utf8StringWriter : StringWriter
         {
-            public override Encoding Encoding { get { return Encoding.UTF8; } }
+            public override Encoding Encoding => Encoding.UTF8;
         }
     }
 }

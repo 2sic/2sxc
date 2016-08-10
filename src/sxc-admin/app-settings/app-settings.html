@@ -3,7 +3,7 @@
     <h3 translate="AppConfig.Title"></h3>
     <div translate="AppConfig.Intro"></div>
 
-    <div>
+    <div class="clearfix">
         <div class="pull-left btn-group-vertical">
             <button tooltip="{{ 'AppConfig.Settings.Edit' | translate }}" ng-disabled="!vm.ready()" ng-click="vm.edit('App-Settings')" class="btn btn-primary btn-square" type="button">
                 <i icon="pencil"></i>
@@ -18,7 +18,7 @@
         </div>
     </div>
     <br/>
-    <div>
+    <div class="clearfix">
         <div class="pull-left btn-group-vertical">
             <button tooltip="{{'AppConfig.Resources.Edit' | translate}}" ng-disabled="!vm.ready()" ng-click="vm.edit('App-Resources')" class="btn btn-square btn-primary" type="button">
                 <i icon="pencil"></i>

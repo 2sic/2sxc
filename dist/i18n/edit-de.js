@@ -9,6 +9,11 @@
 		"Published": "Veröffentlicht",
 		"Unpublished": "Nicht veröffentlicht / Entwurf"
 	},
+	"SaveMode": {
+		"show": "element anzeigen",
+		"hide": "element ausblenden",
+		"branch": "nur änderungen ausblenden"
+	},
 	"Message": {
 		"Saving": "Speichern...",
 		"Saved": "Gespeichert",

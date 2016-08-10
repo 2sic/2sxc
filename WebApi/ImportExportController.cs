@@ -148,6 +148,8 @@ namespace ToSic.SexyContent.WebApi
 
             var request = HttpContext.Current.Request;
 
+            var allowSystemChanges = UserInfo.IsSuperUser;
+
             var appId = int.Parse(request["AppId"]);
             var zoneId = int.Parse(request["ZoneId"]);
             if (request.Files.Count > 0)
@@ -162,7 +164,7 @@ namespace ToSic.SexyContent.WebApi
                 {   // XML
                     using (var fileStreamReader = new StreamReader(file.InputStream))
                     {
-                        var xmlImport = new XmlImport(PortalSettings.DefaultLanguage, UserIdentity.CurrentUserIdentityToken);
+                        var xmlImport = new XmlImport(PortalSettings.DefaultLanguage, UserIdentity.CurrentUserIdentityToken, allowSystemChanges);
                         var xmlDocument = XDocument.Parse(fileStreamReader.ReadToEnd());
                         result.Succeeded = xmlImport.ImportXml(zoneId, appId, xmlDocument);
                         result.Messages = xmlImport.ImportLog;

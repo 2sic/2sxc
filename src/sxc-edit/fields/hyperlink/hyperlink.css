@@ -1,14 +1,16 @@
-﻿.icon-before-input {
+﻿.thumbnail-before-input.icon-before-input {
     width: 46px;
-    font-size: x-large;
-    padding-left: 6px;
+    font-size: 42px;
+    padding-left: 2px;
     padding-right: 5px;
     padding-top: 2px;
     padding-bottom: 3px;
 }
+.icon-before-input a {
+    color: #444;
+}
 
 .thumbnail-before-input {
-    width: 46px; 
     padding-top: 0; 
     padding-bottom: 0; 
     border-top-width: 0; 
@@ -17,8 +19,29 @@
     border-left-width: 0; 
     border-bottom-width: 0; 
     background-color: transparent; 
+
+    /* new */
+    width: 64px;
+    height: 64px;
+    position: absolute;
+    top: 0; /* important to add this, because of paddings which are auto-added */
+    border-radius: 0;
+}
+
+/* design/style the empty placeholder - for now don't do anything '*/
+.thumbnail-before-input.empty-placeholder {
+    /*background-color: pink;*/
 }
 
 div.dropzone div.input-group div.tooltip-inner {
     word-wrap: break-word;
+}
+
+.field-hints {
+    visibility: hidden;
+}
+
+
+div.focused .field-hints {
+    visibility: visible;
 }

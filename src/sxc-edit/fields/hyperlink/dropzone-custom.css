@@ -210,7 +210,7 @@
       .dropzone .dz-preview:hover .dz-details {
         opacity: 1; }
     .dropzone .dz-preview.dz-file-preview .dz-image {
-      border-radius: 20px;
+        border-radius: 6px; /* original before 2016-07-06 2dm: 20px;*/
       background: #999;
       background: linear-gradient(to bottom, #eee, #ddd); }
     .dropzone .dz-preview.dz-file-preview .dz-details {
@@ -272,7 +272,7 @@
       -webkit-filter: blur(8px);
       filter: blur(8px); }
     .dropzone .dz-preview .dz-image {
-      border-radius: 20px;
+        border-radius: 6px; /* original before 2016-07-06 2dm: 20px;*/
       overflow: hidden;
       width: 120px;
       height: 120px;

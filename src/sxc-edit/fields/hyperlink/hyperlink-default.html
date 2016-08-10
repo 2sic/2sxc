@@ -1,60 +1,74 @@
-﻿<div>
-    <div class="dropzone">
-        <div class="input-group" dropdown>
-            <div ng-if="value.Value && vm.isImage()" class="input-group-addon btn-default thumbnail-before-input" style="background-image: url('{{vm.thumbnailUrl(1)}}')" ng-mouseover="vm.showPreview = true" ng-mouseleave="vm.showPreview = false"> </div>
-            <a ng-if="value.Value && !vm.isImage()"
-               class="input-group-addon btn-default icon-before-input"
-               href="{{vm.testLink}}"
+﻿<div class="dropzone">
+    <div class="clearfix">
+        <div ng-if="value.Value && vm.isImage()"
+             class="thumbnail-before-input"
+             style="background-image: url('{{vm.thumbnailUrl(1)}}')"
+             ng-mouseover="vm.showPreview = true"
+             ng-mouseleave="vm.showPreview = false">
+        </div>
+
+        <div ng-if="value.Value && !vm.isImage()"
+           class="thumbnail-before-input icon-before-input">
+            <a href="{{vm.testLink}}"
                target="_blank" tabindex="-1"
                tooltip-html-unsafe="{{vm.tooltipUrl(vm.testLink)}}"
                tooltip-placement="right"
-               ng-class="vm.isImage() ? '':vm.icon()"
-               ng-style="vm.isImage() ? 'background-image: url(\'' + vm.thumbnailUrl(1) +'\')': ''">
-                </a>
-            <input type="text" class="form-control input-lg" ng-model="value.Value" tooltip="{{'Edit.Fields.Hyperlink.Default.Tooltip1' | translate }}
+               ng-class="vm.icon()">
+            </a>            
+        </div>
+        <div ng-if="!value.Value"
+             class="thumbnail-before-input empty-placeholder">
+        </div>
+        <div class="after-preview">
+            <div class="input-group" dropdown>
+
+                <input type="text" class="form-control input-lg" ng-model="value.Value" tooltip="{{'Edit.Fields.Hyperlink.Default.Tooltip1' | translate }}
 {{'Edit.Fields.Hyperlink.Default.Tooltip2' | translate }}
 ADAM - sponsored with ♥ by 2sic.com">
-            <span class="input-group-btn" style="vertical-align: top;">
-                <button type="button" class="btn btn-primary btn-lg temp-icon-fix" ng-disabled="to.disabled" tooltip="{{'Edit.Fields.Hyperlink.Default.AdamUploadLabel' | translate }}" ng-click="vm.toggleAdam()">
-                    <i class="icon-apple"></i>
-                </button>
-                <button tabindex="-1" type="button" class="btn btn-default dropdown-toggle btn-lg btn-square temp-icon-fix" dropdown-toggle ng-disabled="to.disabled">
-                    <i class="icon-options"></i>
-                </button>
-            </span>
-            <ul class="dropdown-menu pull-right" role="menu">
-                <li role="menuitem"><a class="dropzone-adam" href="javascript:void(0);"><i class="icon-apple"></i> <span translate="Edit.Fields.Hyperlink.Default.MenuAdam"></span></a></li>
-                <li role="menuitem" ng-if="to.settings['merged'].ShowPagePicker"><a ng-click="vm.openDialog('pagepicker')" href="javascript:void(0)"><i class="icon-sitemap" xicon="home"></i> <span translate="Edit.Fields.Hyperlink.Default.MenuPage"></span></a></li>
-                <li role="menuitem" ng-if="to.settings['merged'].ShowImageManager"><a ng-click="vm.openDialog('imagemanager')" href="javascript:void(0)"><i class="icon-file-image" xicon="picture"></i> <span translate="Edit.Fields.Hyperlink.Default.MenuImage"></span></a></li>
-                <li role="menuitem" ng-if="to.settings['merged'].ShowFileManager"><a ng-click="vm.openDialog('documentmanager')" href="javascript:void(0)"><i class="icon-file" xicon="file"></i> <span translate="Edit.Fields.Hyperlink.Default.MenuDocs"></span></a></li>
-            </ul>
-        </div>
-        <div ng-if="vm.showPreview" style="position: relative">
-            <div style="position: absolute; z-index: 100; background: white; top: 10px; text-align: center; left: 0; right: 0;">
-                <img ng-src="{{vm.thumbnailUrl(2)}}" />
+                <span class="input-group-btn" style="vertical-align: top;">
+                    <button ng-if="to.settings['merged'].Buttons.indexOf('adam') > -1" type="button" class="btn btn-default icon-field-button" ng-disabled="to.disabled" tooltip="{{'Edit.Fields.Hyperlink.Default.AdamUploadLabel' | translate }}" ng-click="vm.toggleAdam()">
+                        <i class="icon-apple"></i>
+                    </button>
+                    <button ng-if="to.settings['merged'].Buttons.indexOf('page') > -1" type="button" class="btn btn-default icon-field-button" ng-disabled="to.disabled" tooltip="{{'Edit.Fields.Hyperlink.Default.AdamUploadLabel' | translate }}" ng-click="vm.openDialog('pagepicker')">
+                        <i class="icon-sitemap"></i>
+                    </button>
+                    <button ng-if="to.settings['merged'].Buttons.indexOf('more') > -1" tabindex="-1" type="button" class="btn btn-default dropdown-toggle icon-field-button" dropdown-toggle ng-disabled="to.disabled">
+                        <i class="icon-options"></i>
+                    </button>
+                </span>
+                <ul class="dropdown-menu pull-right" role="menu">
+                    <li role="menuitem" ng-if="to.settings['merged'].ShowAdam"><a class="dropzone-adam" ng-click="vm.toggleAdam()" href="javascript:void(0);"><i class="icon-apple"></i> <span translate="Edit.Fields.Hyperlink.Default.MenuAdam"></span></a></li>
+                    <li role="menuitem" ng-if="to.settings['merged'].ShowPagePicker"><a ng-click="vm.openDialog('pagepicker')" href="javascript:void(0)"><i class="icon-sitemap" xicon="home"></i> <span translate="Edit.Fields.Hyperlink.Default.MenuPage"></span></a></li>
+                    <li role="menuitem" ng-if="to.settings['merged'].ShowImageManager"><a ng-click="vm.openDialog('imagemanager')" href="javascript:void(0)"><i class="icon-file-image" xicon="picture"></i> <span translate="Edit.Fields.Hyperlink.Default.MenuImage"></span></a></li>
+                    <li role="menuitem" ng-if="to.settings['merged'].ShowFileManager"><a ng-click="vm.openDialog('documentmanager')" href="javascript:void(0)"><i class="icon-file" xicon="file"></i> <span translate="Edit.Fields.Hyperlink.Default.MenuDocs"></span></a></li>
+                </ul>
+            </div>
+            <div ng-if="vm.showPreview" style="position: relative">
+                <div style="position: absolute; z-index: 100; background: white; top: 10px; text-align: center; left: 0; right: 0;">
+                    <img ng-src="{{vm.thumbnailUrl(2)}}" />
+                </div>
+            </div>
+
+            <adam-hint class="field-hints"></adam-hint>
+            <div ng-if="value.Value" class="field-hints">
+                <a href="{{vm.testLink}}" target="_blank" tabindex="-1" tooltip-html-unsafe="{{vm.tooltipUrl(vm.testLink)}}">
+                    <span>&nbsp;... {{vm.testLink.substr(vm.testLink.lastIndexOf("/"), 100)}}</span>
+                </a>
             </div>
         </div>
+    </div>
 
-        <adam-hint></adam-hint>
-
-        <div ng-if="value.Value">
-            <a href="{{vm.testLink}}" target="_blank" tabindex="-1" tooltip-html-unsafe="{{vm.tooltipUrl(vm.testLink)}}">
-                <span>&nbsp;... {{vm.testLink.substr(vm.testLink.lastIndexOf("/"), 100)}}</span>
-            </a>
-        </div>
-
+    <div>
         <!-- The ADAM file browser, requires the uploader wrapped around it -->
-        <adam-browser
-            content-type-name="to.header.ContentTypeName"
-            entity-guid="to.header.Guid"
-            field-name="options.key"
-            auto-load="false"
-            folder-depth="0"
-            sub-folder=""
-            update-callback="vm.setValue"
-            register-self="vm.registerAdam"
-            ng-disabled="to.disabled"
-        ></adam-browser>
+        <adam-browser content-type-name="to.header.ContentTypeName"
+                      entity-guid="to.header.Guid"
+                      field-name="options.key"
+                      auto-load="false"
+                      folder-depth="0"
+                      sub-folder=""
+                      update-callback="vm.setValue"
+                      register-self="vm.registerAdam"
+                      ng-disabled="to.disabled"></adam-browser>
 
         <!-- the preview of the uploader -->
         <dropzone-upload-preview></dropzone-upload-preview>

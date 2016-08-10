@@ -1,0 +1,16 @@
+diff a/src/sxc-edit/fields/hyperlink/hyperlink-default.controller.js b/src/sxc-edit/fields/hyperlink/hyperlink-default.controller.js	(rejected hunks)
+@@ -3,12 +3,12 @@
+     "use strict";
+ 
+     angular.module("sxcFieldTemplates")
+-        .config(function (formlyConfigProvider, fieldWrappersWithPreview) {
++        .config(function(formlyConfigProvider) {
+ 
+             formlyConfigProvider.setType({
+                 name: "hyperlink-default",
+                 templateUrl: "fields/hyperlink/hyperlink-default.html",
+-                wrapper: fieldWrappersWithPreview,
++                wrapper: ["eavLabel", "bootstrapHasError", "eavLocalization", "collapsible"],
+                 controller: "FieldTemplate-HyperlinkCtrl as vm"
+             });
+         })
