@@ -282,10 +282,15 @@
     // Refresh content block and modules elements
     qi.refreshDomObjects = function() {
         qi.bodyOffset = qi.getBodyPosition(); // must update this, as sometimes after finishing page load the position changes, like when dnn adds the toolbar
+
+        // Cache the panes (because panes can't change dynamically)
+        if (!qi.cachedPanes)
+            qi.cachedPanes = $(selectors.mod.listSelector);
+
         if (qi.enableCb)
             qi.contentBlocks = $(selectors.cb.listSelector).find(selectors.cb.selector).add(selectors.cb.listSelector);
         if (qi.enableMod)
-            qi.modules = $(selectors.mod.listSelector).find(selectors.mod.selector).add(selectors.mod.listSelector);
+            qi.modules = qi.cachedPanes.find(selectors.mod.selector).add(qi.cachedPanes);
     };
 
     // position, align and show a menu linked to another item
