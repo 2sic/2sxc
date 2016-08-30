@@ -207,6 +207,13 @@
         //#endregion
 
         vm.activate();
+
+        $scope.$watch("to.disabled", function (newValue, oldValue) {
+            if (newValue !== oldValue && vm.editor !== null) {
+                $scope.tinymceOptions.readonly = newValue;
+                $scope.$broadcast('$tinymce:refresh'); // Refresh tinymce instance to pick-up new readonly value
+            }
+        });
     }
 
     // Initialize the tinymce resources which we translate ourselves

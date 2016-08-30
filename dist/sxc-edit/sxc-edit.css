@@ -856,6 +856,7 @@ div.focused .field-hints {
     padding-left: 0;
     font-size: larger;
     overflow: auto;
+    width:100%;
 }
 
 /* note: most of this definition should be the same as the definition of the standard input box */
