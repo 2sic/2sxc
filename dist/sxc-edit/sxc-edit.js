@@ -1052,7 +1052,8 @@ angular.module("sxcFieldTemplates")
                     if ($scope.tinymceOptions.language)
                         initLangResources(editor, $scope.tinymceOptions.language, $translate);
                     addTinyMceToolbarButtons(editor, vm);
-                }
+                },
+                debounce: false // prevent slow update of model
             };
 
             // check if it's an additionally translated language
