@@ -92,21 +92,21 @@ namespace ToSic.SexyContent.DataSources
 				foreach (var property in properties)
 				{
 					string value;
-					switch (property)
+					switch (property.ToLower())
 					{
-						case "DisplayName":
+						case "displayname":
 							value = user.DisplayName;
 							break;
-						case "Email":
+						case "email":
 							value = user.Email;
 							break;
-						case "FirstName":
+						case "firstname":
 							value = user.FirstName;
 							break;
-						case "LastName":
+						case "lastname":
 							value = user.LastName;
 							break;
-						case "Username":
+						case "username":
 							value = user.Username;
 							break;
 						default:
