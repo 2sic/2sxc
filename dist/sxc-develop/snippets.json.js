@@ -1321,6 +1321,22 @@
             "help": ""
         },
         {
+            "set": "@C#",
+            "subset": "ASP.net Page",
+            "name": "Set page title",
+            "title": "",
+            "content": "// set page title\r\nvar page = HttpContext.Current.Handler as Page;\r\npage.Title = \"${1:This page title works}\";",
+            "help": ""
+        },
+        {
+            "set": "@C#",
+            "subset": "ASP.net Page",
+            "name": "Set header metadata",
+            "title": "",
+            "content": "// set MetaDescription - page variable must be declared before\r\nvar metaDescription = (HtmlMeta)page.FindControl(\"metaDescription\");\r\nmetaDescription.Content = \"${1:This MetaDescription works}\";",
+            "help": ""
+        },
+        {
             "set": "[Content",
             "subset": "General",
             "name": "Toolbar",
