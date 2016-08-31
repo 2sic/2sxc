@@ -74,7 +74,7 @@
         vm.addFolder = function () {
             if (vm.disabled)
                 return;
-            var folderName = window.prompt("Folder Name?"); // todo i18n
+            var folderName = window.prompt("Please enter a folder name"); // todo i18n
             if (folderName)
                 vm.svc.addFolder(folderName)
                     .then(vm.refresh);
@@ -83,7 +83,7 @@
         vm.del = function del(item) {
             if (vm.disabled)
                 return;
-            var ok = window.confirm("delete ok?"); // todo i18n
+            var ok = window.confirm("Are you sure you want to delete this item?"); // todo i18n
             if (ok)
                 vm.svc.delete(item);
         };

@@ -169,6 +169,7 @@ namespace ToSic.SexyContent.Environment.Dnn7
         public ClientInfosEnvironment(string systemRootUrl, PortalSettings ps, ModuleInfo mic, SxcInstance sxc)
         {
             WebsiteId = ps.PortalId;
+            
             WebsiteUrl = "//" + ps.PortalAlias.HTTPAlias + "/";
 
             PageId = mic.TabID;

@@ -1,4 +1,7 @@
 
+/* Include google font - Roboto */
+@import 'https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i';
+
 /* must correct checkbox labels */
 
 .checkbox label, .radio label {
@@ -101,15 +104,15 @@ button.icon-field-button.btn-primary {
     padding-right: 40px;
 }
 
-.form-container-multi .input-lg {
-    padding-top: 25px;
-}
+
+.input-hyperlink-default .input-lg { padding-bottom:0px; }
 
 /* Titles and title decorations */
 .form-ci-title {
     color: #0087F4;
     font-size: 28px;
-    font-family: Roboto Light;
+    font-family: Roboto;
+    font-weight:300;
     height: 40px;
     cursor: pointer;
 }
@@ -121,17 +124,19 @@ button.icon-field-button.btn-primary {
     float: left;
     position: absolute;
     left: -55px;
+    top:1px;
 }
 .form-ci-title .decoration.state {
     color: white; 
     font-size: 12px; 
-    padding-top: 6px;
+    padding-top: 7px;
     padding-left: 12px;
 }
 
 .form-ci-subtitle {
     color: #0087F4;
-    font-family: Roboto Light;
+    font-family: Roboto;
+    font-weight:300;
     font-size: 16px;
     margin-top: 40px;
     cursor: pointer;
@@ -156,8 +161,8 @@ button.icon-field-button.btn-primary {
 /* labels on fields */
 label.eav-label {
     font-size: 14px;
-    font-family: Roboto Light;
-    font-weight: normal;
+    font-family: Roboto;
+    font-weight:300;
     padding-right:150px;
     padding-top: 2px;
     color: #888;
@@ -169,13 +174,11 @@ label.eav-label {
 .after-preview {
     height: 64px;
 }
-
-/* input fields new */
+/* input fields new */ 
 input.material {
-    height: 46px;
-    font-size: 20px;
-    padding-top: 20px;
-    padding-bottom: 10px;
+    margin-top:11px;
+    font-size:20px;
+    height:auto;
 }
 
 /* drop-downs */

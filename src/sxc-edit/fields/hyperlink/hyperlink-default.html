@@ -2,7 +2,7 @@
     <div class="clearfix">
         <div ng-if="value.Value && vm.isImage()"
              class="thumbnail-before-input"
-             style="background-image: url('{{vm.thumbnailUrl(1)}}')"
+             ng-style="{ 'background-image': 'url(' + vm.thumbnailUrl(1) + ')' }"
              ng-mouseover="vm.showPreview = true"
              ng-mouseleave="vm.showPreview = false">
         </div>

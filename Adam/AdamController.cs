@@ -12,6 +12,8 @@ using DotNetNuke.Security;
 using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Web.Api;
 using ToSic.SexyContent.WebApi;
+using System.Configuration;
+using System.Web.Configuration;
 
 namespace ToSic.SexyContent.Adam
 {
@@ -32,9 +34,13 @@ namespace ToSic.SexyContent.Adam
             EntityBase = new EntityBase(SxcContext, App, Dnn.Portal, entityGuid, fieldName);
         }
 
-        // todo: centralize once it works
-        // todo:idea that it would auto-take a setting from app-settings if it exists :)
-        public const int MaxFileSizeMb = 10;
+        public int MaxFileSizeKb
+        {
+            get
+            {
+                return (ConfigurationManager.GetSection("system.web/httpRuntime") as HttpRuntimeSection).MaxRequestLength;
+            }
+        }
 
 
         [HttpPost]
@@ -87,7 +93,7 @@ namespace ToSic.SexyContent.Adam
 
                     #endregion
 
-                    if (originalFile.ContentLength > (1024 * 1024 * MaxFileSizeMb))
+                    if (originalFile.ContentLength > (1024 * MaxFileSizeKb))
                         return new UploadResult { Success = false, Error = App.Resources.UploadFileSizeLimitExceeded };
 
                     // remove forbidden / troubling file name characters

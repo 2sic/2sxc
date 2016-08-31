@@ -104,6 +104,7 @@ angular.module("Adam")
     /* jshint laxbreak:true */
     "use strict";
 
+    BrowserController.$inject = ["$scope", "adamSvc", "debugState", "eavConfig", "eavAdminDialogs", "appRoot", "fileType"];
     var app = angular.module("Adam"); 
 
     // The controller for the main form directive
@@ -176,7 +177,7 @@ angular.module("Adam")
         vm.addFolder = function () {
             if (vm.disabled)
                 return;
-            var folderName = window.prompt("Folder Name?"); // todo i18n
+            var folderName = window.prompt("Please enter a folder name"); // todo i18n
             if (folderName)
                 vm.svc.addFolder(folderName)
                     .then(vm.refresh);
@@ -185,7 +186,7 @@ angular.module("Adam")
         vm.del = function del(item) {
             if (vm.disabled)
                 return;
-            var ok = window.confirm("delete ok?"); // todo i18n
+            var ok = window.confirm("Are you sure you want to delete this item?"); // todo i18n
             if (ok)
                 vm.svc.delete(item);
         };
@@ -276,7 +277,6 @@ angular.module("Adam")
 
         vm.activate();
     }
-    BrowserController.$inject = ["$scope", "adamSvc", "debugState", "eavConfig", "eavAdminDialogs", "appRoot", "fileType"];
 
 })();
 
@@ -929,6 +929,7 @@ angular.module("sxcFieldTemplates")
 	"use strict";
 
     // Register in Angular Formly
+    FieldWysiwygTinyMceController.$inject = ["$scope", "dnnBridgeSvc", "languages", "$translate"];
     angular.module("sxcFieldTemplates")
         .config(["formlyConfigProvider", "defaultFieldWrappers", function (formlyConfigProvider, defaultFieldWrappers) {
             formlyConfigProvider.setType({
@@ -1031,7 +1032,7 @@ angular.module("sxcFieldTemplates")
                 extended_valid_elements: '@[class]' // allow classes on all elements, 
                     + ',i' // allow i elements (allows icon-font tags like <i class="fa fa-...">)
                     + ",hr[sxc|guid]", // experimental: allow inline content-blocks
-                custom_elements: "hr[sxc|guid]",
+                custom_elements: "hr",
 
                 // Url Rewriting in images and pages
                 //convert_urls: false,  // don't use this, would keep the domain which is often a test-domain
@@ -1051,7 +1052,8 @@ angular.module("sxcFieldTemplates")
                     if ($scope.tinymceOptions.language)
                         initLangResources(editor, $scope.tinymceOptions.language, $translate);
                     addTinyMceToolbarButtons(editor, vm);
-                }
+                },
+                debounce: false // prevent slow update of model
             };
 
             // check if it's an additionally translated language
@@ -1133,8 +1135,14 @@ angular.module("sxcFieldTemplates")
         //#endregion
 
         vm.activate();
+
+        $scope.$watch("to.disabled", function (newValue, oldValue) {
+            if (newValue !== oldValue && vm.editor !== null) {
+                $scope.tinymceOptions.readonly = newValue;
+                $scope.$broadcast('$tinymce:refresh'); // Refresh tinymce instance to pick-up new readonly value
+            }
+        });
     }
-    FieldWysiwygTinyMceController.$inject = ["$scope", "dnnBridgeSvc", "languages", "$translate"];
 
     // Initialize the tinymce resources which we translate ourselves
     function initLangResources(editor, language, $translate) {
@@ -1452,7 +1460,7 @@ angular.module('SxcEditTemplates', []).run(['$templateCache', function($template
 
 
   $templateCache.put('fields/hyperlink/hyperlink-default.html',
-    "<div class=dropzone><div class=clearfix><div ng-if=\"value.Value && vm.isImage()\" class=thumbnail-before-input style=\"background-image: url('{{vm.thumbnailUrl(1)}}')\" ng-mouseover=\"vm.showPreview = true\" ng-mouseleave=\"vm.showPreview = false\"></div><div ng-if=\"value.Value && !vm.isImage()\" class=\"thumbnail-before-input icon-before-input\"><a href={{vm.testLink}} target=_blank tabindex=-1 tooltip-html-unsafe={{vm.tooltipUrl(vm.testLink)}} tooltip-placement=right ng-class=vm.icon()></a></div><div ng-if=!value.Value class=\"thumbnail-before-input empty-placeholder\"></div><div class=after-preview><div class=input-group dropdown><input type=text class=\"form-control input-lg\" ng-model=value.Value tooltip=\"{{'Edit.Fields.Hyperlink.Default.Tooltip1' | translate }}\r" +
+    "<div class=dropzone><div class=clearfix><div ng-if=\"value.Value && vm.isImage()\" class=thumbnail-before-input ng-style=\"{ 'background-image': 'url(' + vm.thumbnailUrl(1) + ')' }\" ng-mouseover=\"vm.showPreview = true\" ng-mouseleave=\"vm.showPreview = false\"></div><div ng-if=\"value.Value && !vm.isImage()\" class=\"thumbnail-before-input icon-before-input\"><a href={{vm.testLink}} target=_blank tabindex=-1 tooltip-html-unsafe={{vm.tooltipUrl(vm.testLink)}} tooltip-placement=right ng-class=vm.icon()></a></div><div ng-if=!value.Value class=\"thumbnail-before-input empty-placeholder\"></div><div class=after-preview><div class=input-group dropdown><input type=text class=\"form-control input-lg\" ng-model=value.Value tooltip=\"{{'Edit.Fields.Hyperlink.Default.Tooltip1' | translate }}\r" +
     "\n" +
     "{{'Edit.Fields.Hyperlink.Default.Tooltip2' | translate }}\r" +
     "\n" +
@@ -1481,7 +1489,7 @@ angular.module('SxcEditTemplates', []).run(['$templateCache', function($template
 
 
   $templateCache.put('fields/string/string-wysiwyg-tinymce.html',
-    "<div><div class=dropzone><div ui-tinymce=tinymceOptions ng-model=value.Value class=field-string-wysiwyg-mce-box></div><adam-browser content-type-name=to.header.ContentTypeName entity-guid=to.header.Guid field-name=options.key auto-load=false folder-depth=0 sub-folder=\"\" update-callback=vm.setValue register-self=vm.registerAdam show-images-only=vm.adamModeImage ng-disabled=to.disabled></adam-browser><span id=dummyfocus tabindex=-1></span><dropzone-upload-preview></dropzone-upload-preview><adam-hint class=field-hints></adam-hint></div></div>"
+    "<div><div class=dropzone><div><div ui-tinymce=tinymceOptions ng-model=value.Value class=field-string-wysiwyg-mce-box></div></div><adam-browser content-type-name=to.header.ContentTypeName entity-guid=to.header.Guid field-name=options.key auto-load=false folder-depth=0 sub-folder=\"\" update-callback=vm.setValue register-self=vm.registerAdam show-images-only=vm.adamModeImage ng-disabled=to.disabled></adam-browser><span id=dummyfocus tabindex=-1></span><dropzone-upload-preview></dropzone-upload-preview><adam-hint class=field-hints></adam-hint></div></div>"
   );
 
 }]);

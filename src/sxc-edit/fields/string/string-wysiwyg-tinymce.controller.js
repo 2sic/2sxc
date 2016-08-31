@@ -105,7 +105,7 @@
                 extended_valid_elements: '@[class]' // allow classes on all elements, 
                     + ',i' // allow i elements (allows icon-font tags like <i class="fa fa-...">)
                     + ",hr[sxc|guid]", // experimental: allow inline content-blocks
-                custom_elements: "hr[sxc|guid]",
+                custom_elements: "hr",
 
                 // Url Rewriting in images and pages
                 //convert_urls: false,  // don't use this, would keep the domain which is often a test-domain
@@ -125,7 +125,8 @@
                     if ($scope.tinymceOptions.language)
                         initLangResources(editor, $scope.tinymceOptions.language, $translate);
                     addTinyMceToolbarButtons(editor, vm);
-                }
+                },
+                debounce: false // prevent slow update of model
             };
 
             // check if it's an additionally translated language
@@ -207,6 +208,13 @@
         //#endregion
 
         vm.activate();
+
+        $scope.$watch("to.disabled", function (newValue, oldValue) {
+            if (newValue !== oldValue && vm.editor !== null) {
+                $scope.tinymceOptions.readonly = newValue;
+                $scope.$broadcast('$tinymce:refresh'); // Refresh tinymce instance to pick-up new readonly value
+            }
+        });
     }
 
     // Initialize the tinymce resources which we translate ourselves
