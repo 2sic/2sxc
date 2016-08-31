@@ -1032,7 +1032,7 @@ angular.module("sxcFieldTemplates")
                 extended_valid_elements: '@[class]' // allow classes on all elements, 
                     + ',i' // allow i elements (allows icon-font tags like <i class="fa fa-...">)
                     + ",hr[sxc|guid]", // experimental: allow inline content-blocks
-                custom_elements: "hr[sxc|guid]",
+                custom_elements: "hr",
 
                 // Url Rewriting in images and pages
                 //convert_urls: false,  // don't use this, would keep the domain which is often a test-domain
@@ -1460,7 +1460,7 @@ angular.module('SxcEditTemplates', []).run(['$templateCache', function($template
 
 
   $templateCache.put('fields/hyperlink/hyperlink-default.html',
-    "<div class=dropzone><div class=clearfix><div ng-if=\"value.Value && vm.isImage()\" class=thumbnail-before-input style=\"background-image: url('{{vm.thumbnailUrl(1)}}')\" ng-mouseover=\"vm.showPreview = true\" ng-mouseleave=\"vm.showPreview = false\"></div><div ng-if=\"value.Value && !vm.isImage()\" class=\"thumbnail-before-input icon-before-input\"><a href={{vm.testLink}} target=_blank tabindex=-1 tooltip-html-unsafe={{vm.tooltipUrl(vm.testLink)}} tooltip-placement=right ng-class=vm.icon()></a></div><div ng-if=!value.Value class=\"thumbnail-before-input empty-placeholder\"></div><div class=after-preview><div class=input-group dropdown><input type=text class=\"form-control input-lg\" ng-model=value.Value tooltip=\"{{'Edit.Fields.Hyperlink.Default.Tooltip1' | translate }}\r" +
+    "<div class=dropzone><div class=clearfix><div ng-if=\"value.Value && vm.isImage()\" class=thumbnail-before-input ng-style=\"{ 'background-image': 'url(' + vm.thumbnailUrl(1) + ')' }\" ng-mouseover=\"vm.showPreview = true\" ng-mouseleave=\"vm.showPreview = false\"></div><div ng-if=\"value.Value && !vm.isImage()\" class=\"thumbnail-before-input icon-before-input\"><a href={{vm.testLink}} target=_blank tabindex=-1 tooltip-html-unsafe={{vm.tooltipUrl(vm.testLink)}} tooltip-placement=right ng-class=vm.icon()></a></div><div ng-if=!value.Value class=\"thumbnail-before-input empty-placeholder\"></div><div class=after-preview><div class=input-group dropdown><input type=text class=\"form-control input-lg\" ng-model=value.Value tooltip=\"{{'Edit.Fields.Hyperlink.Default.Tooltip1' | translate }}\r" +
     "\n" +
     "{{'Edit.Fields.Hyperlink.Default.Tooltip2' | translate }}\r" +
     "\n" +

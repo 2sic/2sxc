@@ -105,7 +105,7 @@
                 extended_valid_elements: '@[class]' // allow classes on all elements, 
                     + ',i' // allow i elements (allows icon-font tags like <i class="fa fa-...">)
                     + ",hr[sxc|guid]", // experimental: allow inline content-blocks
-                custom_elements: "hr[sxc|guid]",
+                custom_elements: "hr",
 
                 // Url Rewriting in images and pages
                 //convert_urls: false,  // don't use this, would keep the domain which is often a test-domain
