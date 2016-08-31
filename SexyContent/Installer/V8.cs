@@ -7,6 +7,8 @@ using System.Xml.Linq;
 using DotNetNuke.Entities.Modules;
 using ToSic.Eav;
 using ToSic.SexyContent.ImportExport;
+using System.Data.SqlClient;
+using System.Configuration;
 
 namespace ToSic.SexyContent.Installer
 {
@@ -137,6 +139,26 @@ namespace ToSic.SexyContent.Installer
                 var messages = String.Join("\r\n- ", xmlImport.ImportLog.Select(p => p.Message).ToArray());
                 throw new Exception("The 2sxc module upgrade to 08.03.03 failed: " + messages);
             }
+        }
+
+        internal void Version080501()
+        {
+            logger.LogStep("08.05.01", "Start", false);
+
+            var sql = @"INSERT INTO ModuleSettings (ModuleID,SettingName,SettingValue,CreatedByUserID,CreatedOnDate,LastModifiedByUserID,LastModifiedOnDate)
+SELECT Modules.ModuleID, 'ToSIC_SexyContent_ShowTemplateChooser' AS SettingName, 'False' AS SettingValue, NULL AS CreatedByUserID, GETDATE() AS CreatedOnDate, NULL AS LastModifiedByUserID, GETDATE() AS LastModifiedOnDate
+FROM Modules INNER JOIN
+    ModuleDefinitions ON Modules.ModuleDefID = ModuleDefinitions.ModuleDefID INNER JOIN
+    DesktopModules ON ModuleDefinitions.DesktopModuleID = DesktopModules.DesktopModuleID
+WHERE(DesktopModules.ModuleName = N'2sxc' OR DesktopModules.ModuleName = N'2sxc-app') AND(Modules.IsDeleted = 0) AND(NOT EXISTS
+    (SELECT 1 AS Expr1 FROM ModuleSettings AS ModuleSettings_1
+    WHERE(SettingName = 'ToSIC_SexyContent_ShowTemplateChooser') AND(ModuleID = Modules.ModuleID)))";
+
+            var sqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString);
+            sqlConnection.Open();
+            var sqlCommand = new SqlCommand(sql, sqlConnection);
+            sqlCommand.ExecuteNonQuery();
+            sqlConnection.Close();
         }
 
         private void RemoveModuleControls(IEnumerable<string> controls)
