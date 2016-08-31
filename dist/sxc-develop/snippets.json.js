@@ -1273,6 +1273,22 @@
             "help": ""
         },
         {
+            "set": "@User",
+            "subset": "Permissions",
+            "name": "User is in role",
+            "title": "",
+            "content": "@Dnn.User.IsInRole(\"${1:Administrators}\")",
+            "help": "Check if the current user is in a specific role"
+        },
+        {
+            "set": "@User",
+            "subset": "Permissions",
+            "name": "User is super user / host",
+            "title": "",
+            "content": "@Dnn.User.IsSuperUser",
+            "help": "Check if the current user is the super-user aka host"
+        },
+        {
             "set": "@C#",
             "subset": "Basics",
             "name": "using",
@@ -1326,15 +1342,15 @@
             "name": "Set page title",
             "title": "",
             "content": "// set page title\r\nvar page = HttpContext.Current.Handler as Page;\r\npage.Title = \"${1:This page title works}\";",
-            "help": ""
+            "help": "Set the page title of the dnn-page. Remember that this could happen multiple times, and the last one would always win."
         },
         {
             "set": "@C#",
             "subset": "ASP.net Page",
             "name": "Set header metadata",
             "title": "",
-            "content": "// set MetaDescription - page variable must be declared before\r\nvar metaDescription = (HtmlMeta)page.FindControl(\"metaDescription\");\r\nmetaDescription.Content = \"${1:This MetaDescription works}\";",
-            "help": ""
+            "content": "// set MetaDescription - page variable must be declared before\r\nvar metaDescription = (HtmlMeta)page.FindControl(\"${2:metaDescription}\");\r\nmetaDescription.Content = \"${1:This MetaDescription works}\";",
+            "help": "Set a meta-tag - in this case the Meta Description"
         },
         {
             "set": "[Content",
