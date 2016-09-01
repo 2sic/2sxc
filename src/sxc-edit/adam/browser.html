@@ -2,7 +2,7 @@
     <!-- info for dropping stuff here -->
     <div class="dz-preview dropzone-adam" ng-disabled="vm.disabled" tooltip="{{'Edit.Fields.Hyperlink.Default.AdamUploadLabel' | translate }}" ng-click="vm.openUpload()">
         <div class="dz-image adam-browse-background-icon adam-browse-background" xstyle="background-color: whitesmoke">
-            <i class="icon-up-circled2"></i>
+            <i class="eav-icon-up-circled2"></i>
             <div class="adam-short-label">drop files</div>
         </div>
     </div>
@@ -11,12 +11,12 @@
     <div ng-show="vm.allowCreateFolder() || vm.debug.on" class="dz-preview" ng-disabled="vm.disabled" ng-click="vm.addFolder()">
         <div class="dz-image adam-browse-background-icon adam-browse-background">
             <div class="">
-                <i class="icon-folder-empty"></i>
+                <i class="eav-icon-folder-empty"></i>
                 <div class="adam-short-label">new folder</div>
             </div>
         </div>
         <div class="adam-background adam-browse-background-icon">
-            <i class="icon-plus" style="font-size: 2em; top: 13px; position: relative;"></i>
+            <i class="eav-icon-plus" style="font-size: 2em; top: 13px; position: relative;"></i>
         </div>
         <div class="dz-details" style="opacity: 1">
 
@@ -26,23 +26,23 @@
     <!-- browse up a folder - not always shown -->
     <div ng-show="vm.showFolders || vm.debug.on" class="dz-preview" ng-disabled="vm.disabled" ng-if="vm.folders.length > 0" ng-click="vm.goUp()">
         <div class="dz-image  adam-browse-background-icon adam-browse-background">
-            <i class="icon-folder-empty"></i>
+            <i class="eav-icon-folder-empty"></i>
             <div class="adam-short-label">up</div>
         </div>
         <div class="adam-background adam-browse-background-icon">
-            <i class="icon-level-up" style="font-size: 2em; top: 13px; position: relative;"></i>
+            <i class="eav-icon-level-up" style="font-size: 2em; top: 13px; position: relative;"></i>
         </div>
     </div>
 
     <!-- folder list - not always shown -->
     <div ng-show="vm.showFolders || vm.debug.on" class="dz-preview" ng-repeat="item in vm.items | filter: { IsFolder: true }  | orderBy:'Name'" ng-click="vm.goIntoFolder(item)">
         <div class="dz-image adam-blur adam-browse-background-icon adam-browse-background">
-            <i class="icon-folder-empty"></i>
+            <i class="eav-icon-folder-empty"></i>
             <div class="short-label">{{ item.Name }}</div>
         </div>
 
         <div class="dz-details file-type-{{item.Type}}">
-            <span ng-click="vm.del(item)" stop-event="click" class="adam-delete-button"><i class="icon-cancel"></i></span>
+            <span ng-click="vm.del(item)" stop-event="click" class="adam-delete-button"><i class="eav-icon-cancel"></i></span>
             <div class="adam-full-name-area">
                 <div class="adam-full-name">{{ item.Name }}</div>
             </div>
@@ -53,7 +53,7 @@
               ng-if="vm.getMetadataType(item)"
               stop-event="click"
               tooltip="{{vm.getMetadataType(item)}}:{{item.MetadataId}}">
-            <i class="icon-tag" style="font-size: larger"></i>
+            <i class="eav-icon-tag" style="font-size: larger"></i>
         </span>
     </div>
 
@@ -72,7 +72,7 @@
 
 
         <div class="dz-details file-type-{{item.Type}}">
-            <span ng-click="vm.del(item)" stop-event="click" class="adam-delete-button"><i class="icon-cancel"></i></span>
+            <span ng-click="vm.del(item)" stop-event="click" class="adam-delete-button"><i class="eav-icon-cancel"></i></span>
             <div class="adam-full-name-area">
                 <div class="adam-full-name">{{ item.Name }}</div>
             </div>
@@ -86,7 +86,7 @@
               ng-if="vm.getMetadataType(item)"
               stop-event="click"
               tooltip="{{vm.getMetadataType(item)}}:{{item.MetadataId}}">
-            <i class="icon-tag" style="font-size: larger"></i>
+            <i class="eav-icon-tag" style="font-size: larger"></i>
         </span>
 
 
