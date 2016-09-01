@@ -112,9 +112,9 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public bool Reorder(int appId, int contentTypeId, int attributeId, string direction)
+        public bool Reorder(int appId, int contentTypeId, string newSortOrder)
         {
-            return eavCtc.Reorder(appId, contentTypeId, attributeId, direction);
+            return eavCtc.Reorder(appId, contentTypeId, newSortOrder);
         }
 
         [HttpGet]
