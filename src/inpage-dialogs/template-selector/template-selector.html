@@ -31,22 +31,22 @@
                                 ng-show="vm.appId != null"
                                 ng-click="vm.appSettings();"
                                 title="{{ 'TemplatePicker.App' | translate }}">
-                            <i class="icon-settings"></i>
+                            <i class="eav-icon-settings"></i>
                         </button>
                         <button type="button" class="btn btn-default"
                                 ng-click="vm.appImport();"
                                 title="{{ 'TemplatePicker.Install' | translate }}">
-                            <i class="icon-plus"></i>
+                            <i class="eav-icon-plus"></i>
                         </button>
                         <button type="button" class="btn btn-default"
                                 ng-click="vm.appStore();"
                                 title="{{ 'TemplatePicker.Catalog' | translate }}">
-                            <i class="icon-cart-arrow-down"></i>
+                            <i class="eav-icon-cart-arrow-down"></i>
                         </button>
                         <button type="button" class="btn btn-default"
                                 ng-click="vm.manageApps();"
                                 title="{{ 'TemplatePicker.Zone' | translate }}">
-                            <i class="icon-manage"></i>
+                            <i class="eav-icon-manage"></i>
                         </button>
 
                     </span>
@@ -77,14 +77,14 @@
                     ng-click="vm.persistTemplate(false, false);"
                     title="{{ 'TemplatePicker.Save' | translate }}"
                     type="button">
-                <i class="icon-ok"></i>
+                <i class="eav-icon-ok"></i>
             </button>
             <button ng-show="vm.undoTemplateId != null"
                     class="btn btn-default"
                     ng-click="vm.cancelTemplateChange();"
                     type="button"
                     title="{{ 'TemplatePicker.' + (vm.isContentApp ? 'Cancel' : 'Close') | translate }}">
-                <i class="icon-cancel"></i>
+                <i class="eav-icon-cancel"></i>
             </button>
         </div>
     </div>
@@ -92,14 +92,14 @@
 
 
     <div class="sc-loading" ng-show="vm.loading">
-        <i class="icon-spinner animate-spin"></i>
+        <i class="eav-icon-spinner animate-spin"></i>
     </div>
 
     <!-- the auto-installer IFrame, with spinner and everything -->
     <div style="position: relative;" ng-if="vm.showRemoteInstaller">
         <iframe id="frGettingStarted" ng-src="{{vm.remoteInstallerUrl}}" width="100%" height="300px"></iframe>
         <div class="sc-loading" id="pnlLoading" ng-if="vm.progressIndicator.show">
-            <i class="icon-spinner animate-spin"></i>
+            <i class="eav-icon-spinner animate-spin"></i>
             <br/>
             <br/>
             <span class="sc-loading-label">
