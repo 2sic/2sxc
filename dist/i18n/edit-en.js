@@ -33,7 +33,8 @@
 		"UnclearError": "Something went wrong - maybe parts worked, maybe not. Sorry :(",
 		"InnerControlMustOverride": "Inner control must override this function.",
 		"UnsavedChanges": "You have unsaved changes.",
-		"DefLangNotFound": "Default language value not found, but found multiple values - can't handle editing for"
+		"DefLangNotFound": "Default language value not found, but found multiple values - can't handle editing for",
+		"AdamUploadError": "The upload failed. The most likely cause is that the file you were trying to upload is bigger than the maximum upload size."
 	},
 	"General": {},
 	"EditEntity": {

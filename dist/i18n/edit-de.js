@@ -27,7 +27,8 @@
 		"UnclearError": "Da lief was falsch - vielleicht funktioniert ein Teil, vielleicht auch nicht. Entschuldigung :(",
 		"InnerControlMustOverride": "Inner control must override this function.",
 		"UnsavedChanges": "Du hast nicht gespeicherte Änderungen.",
-		"DefLangNotFound": "Default language value not found, but found multiple values - can't handle editing for"
+		"DefLangNotFound": "Default language value not found, but found multiple values - can't handle editing for",
+		"AdamUploadError": "Der Upload der Datei ist fehlgeschlagen. Möglicherweise ist die Datei zu gross."
 	},
 	"General": {},
 	"EditEntity": {
