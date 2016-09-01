@@ -1,7 +1,7 @@
 ﻿/* js/fileAppDirectives */
 
 angular.module("Adam")
-    .directive("dropzone", function (sxc, tabId,AppInstanceId, ContentBlockId, dragClass, adamSvc, $timeout) {
+    .directive("dropzone", function (sxc, tabId, AppInstanceId, ContentBlockId, dragClass, adamSvc, $timeout, $translate) {
         return {
             restrict: "C",
             link: function(scope, element, attrs, controller) {
@@ -54,6 +54,9 @@ angular.module("Adam")
                         } else {
                             alert("Upload failed because: " + response.Error);
                         }
+                    },
+                    'error': function (file, error, xhr) {
+                        alert($translate.instant("Errors.AdamUploadError"));
                     },
 
                     "queuecomplete": function(file) {
