@@ -2,7 +2,7 @@
   "name": "ToSic.2sxc",
   "version": "8.02.00",
   "dependencies": {
-    "2sxc-eav-languages": "2sic/2sxc-eav-languages#a5ba1ea",
+    "2sxc-eav-languages": "2sic/2sxc-eav-languages#87598ad",
     "2sxc-icons": "2sic/2sxc-icons#6252ac0",
     "angular-ui-ace": "0.2.3",
     "angular-ui-tinymce": "0.0.16",
@@ -13,7 +13,6 @@
   },
   "private": true,
   "resolutions": {
-    "tinymce-dist": "4.4.2",
-    "angular": "^1.2"
+    "tinymce-dist": "4.4.2"
   }
 }
