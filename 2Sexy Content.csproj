@@ -481,6 +481,7 @@
     <Content Include="src\config\eav-configuration-in-sxc.js" />
     <Content Include="bower.json" />
     <Content Include="packages.config" />
+    <Content Include=".bowerrc" />
     <None Include="SqlDataProvider\01.00.00.SqlDataProvider" />
     <Content Include="SqlDataProvider\05.02.01.SqlDataProvider" />
     <Content Include="src\dnn\ui.html" />
