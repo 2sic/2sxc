@@ -1,0 +1,5 @@
+{
+    "scripts": {
+        "postinstall": "grunt import-icons import-languages import-tinymce"
+    }
+}
