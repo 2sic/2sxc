@@ -10,6 +10,15 @@ namespace ToSic.SexyContent.WebApi
 {
     public static class Helpers
     {
+        /// <summary>
+        /// Workaround for deserializing KeyValuePair - it requires lowercase properties (case sensitive), which seems to be a bug in some Newtonsoft.Json versions: http://stackoverflow.com/questions/11266695/json-net-case-insensitive-property-deserialization
+        /// </summary>
+        public class UpperCaseStringKeyValuePair
+        {
+            public string Key { get; set; }
+            public string Value{ get; set; }
+        }
+
         internal static SxcInstance GetSxcOfApiRequest(HttpRequestMessage request)
         {
             string cbidHeader = "ContentBlockId";
@@ -23,8 +32,11 @@ namespace ToSic.SexyContent.WebApi
             if (origParams.Any())
             {
                 var paramSet = origParams.First().Value;
-                var items = Json.Deserialize<Dictionary<string, string>>(paramSet);
-                urlParams = items.ToList();
+
+                // Workaround for deserializing KeyValuePair -it requires lowercase properties(case sensitive), which seems to be a bug in some Newtonsoft.Json versions: http://stackoverflow.com/questions/11266695/json-net-case-insensitive-property-deserialization
+                var items = Json.Deserialize<List<UpperCaseStringKeyValuePair>>(paramSet);
+                urlParams = items.Select(a => new KeyValuePair<string, string>(a.Key, a.Value)).ToList();
+
                 //urlParams = requestParams
                 //    .Where(keyValuePair => keyValuePair.Key.IndexOf("orig", StringComparison.Ordinal) == 0)
                 //    .Select(pair => new KeyValuePair<string, string>(pair.Key.Substring(4), pair.Value))
