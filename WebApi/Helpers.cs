@@ -23,7 +23,7 @@ namespace ToSic.SexyContent.WebApi
             if (origParams.Any())
             {
                 var paramSet = origParams.First().Value;
-                var items = Json.Deserialize<List<KeyValuePair<string, string>>>(paramSet);
+                var items = Json.Deserialize<Dictionary<string, string>>(paramSet);
                 urlParams = items.ToList();
                 //urlParams = requestParams
                 //    .Where(keyValuePair => keyValuePair.Key.IndexOf("orig", StringComparison.Ordinal) == 0)
