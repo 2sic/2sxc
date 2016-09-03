@@ -1289,6 +1289,14 @@
             "help": "Check if the current user is the super-user aka host"
         },
         {
+            "set": "@User",
+            "subset": "Permissions",
+            "name": "User is authenticated",
+            "title": "",
+            "content": "@if (Request.IsAuthenticated) {\r\n <!-- you're logged in -->\r\n}\r\nelse {\r\n  <!-- you're not logged in -->\r\n}",
+            "help": "Check if the user is logged in."
+        },
+        {
             "set": "@C#",
             "subset": "Basics",
             "name": "using",
