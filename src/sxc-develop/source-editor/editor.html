@@ -1,14 +1,23 @@
 ﻿<div ng-click="vm.debug.autoEnableAsNeeded($event)">
     <div class="modal-header">
-        <!--<button class="btn btn-default btn-square btn-subtle pull-right" type="button" ng-click="vm.close()"><i icon="remove"></i></button>-->
         <h3 class="modal-title" translate="SourceEditor.Title"></h3>
     </div>
 
     <div class="modal-body">
         <div class="row">
             <div class="col-md-8">
-                <div tooltip="{{ vm.view.FileName }}">
-                    {{ vm.view.FileName.substr(vm.view.FileName.lastIndexOf("\\") + 1) }} ({{vm.view.Type }})
+                <div tooltip="{{ vm.view.FileName }}" ng-click="vm.browser.toggle()">
+                    {{ vm.view.FileName.substr(vm.view.FileName.lastIndexOf("\\") + 1) }}
+                    ({{vm.view.Type }})
+                    <i ng-class='{"eav-icon-plus-squared": !vm.browser.show, "eav-icon-minus-squared": vm.browser.show}'></i>
+                </div>
+                <div ng-if="vm.browser.show">
+                    <h4>quick-pick another file</h4>
+                    <ol>
+                        <li ng-repeat="asset in vm.assets" ng-click="vm.browser.editFile(asset)">
+                            {{asset}}
+                        </li>
+                    </ol>
                 </div>
                 <div ng-model="vm.view.Code" style="height: 600px;" ui-ace="{
                     useWrapMode : true,
@@ -54,11 +63,11 @@
                                 </div>
                                 <ul ng-if="showMore">
                                     <li ng-repeat="more in value.more | toArray | orderBy: '$key'" tooltip="{{ value.snip }}">
-                                    <span ng-click="vm.addSnippet(more.snip)">{{more.label}}</span>
-                                    <i icon="info-sign" style="opacity: 0.3" ng-click="show = !show" ng-show="more.help"></i>
-                                    <div ng-if="show">
-                                        <em>{{more.help}}</em>
-                                    </div>
+                                        <span ng-click="vm.addSnippet(more.snip)">{{more.label}}</span>
+                                        <i icon="info-sign" style="opacity: 0.3" ng-click="show = !show" ng-show="more.help"></i>
+                                        <div ng-if="show">
+                                            <em>{{more.help}}</em>
+                                        </div>
                                 </ul>
                             </li>
                         </ul>
@@ -85,16 +94,16 @@
 </div>
 
 <style>
-     /* helper to ensure that razor (which is correctly detected by ACE) is also highlighted */
-     .ace_razor {
-         background-color: yellow;
-     }
+    /* helper to ensure that razor (which is correctly detected by ACE) is also highlighted */
+    .ace_razor {
+        background-color: yellow;
+    }
 
-     /* make sure the highlighted text is also black, otherwise it a kind of gray */
+    /* make sure the highlighted text is also black, otherwise it a kind of gray */
     .ace_punctuation.ace_short.ace_razor {
         color: black;
     }
-    
+
     .ace_punctuation.ace_block.ace_razor {
         color: black;
     }

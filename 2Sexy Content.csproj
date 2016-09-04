@@ -444,6 +444,7 @@
     <Content Include="src\sxc-admin\importexport\import-app.service.js" />
     <Content Include="src\sxc-admin\importexport\import-content.controller.js" />
     <Content Include="src\sxc-admin\importexport\import-content.service.js" />
+    <Content Include="src\sxc-admin\services\app-assets-service.js" />
     <Content Include="src\sxc-edit\import-export.css" />
     <Content Include="src\sxc-admin\importexport\import-export.directives.js" />
     <Content Include="src\sxc-admin\importexport\intro.controller.js" />

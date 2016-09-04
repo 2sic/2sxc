@@ -20,7 +20,7 @@
         .controller("Editor", EditorController)
     ;
 
-    function EditorController(sourceSvc, snippetSvc, item, $modalInstance, $window, $scope, $translate, saveToastr, ctrlS, debugState) {
+    function EditorController(sourceSvc, snippetSvc, appAssetsSvc, appId, sxcDialogs, item, $modalInstance, $window, $scope, $translate, saveToastr, ctrlS, debugState) {
         $translate.refresh();   // necessary to load stuff added in this lazy-loaded app
 
         var vm = this;
@@ -95,10 +95,35 @@
 
         function activate() {
             // add ctrl+s to save
-            ctrlS(function() { vm.save(false); });
+            ctrlS(function () { vm.save(false); });
+
+
         }
 
+        //#region show file picker
+        vm.browser = {
+            show: false,
+            toggle: function() {
+      
+                vm.browser.show = !vm.browser.show;
+                var assetsSvc = appAssetsSvc(appId);
+                if (!vm.assets)
+                    vm.assets = assetsSvc.liveList();
+            },
+            editFile: function(filename) {
+                window.open(vm.browser.assembleUrl(filename));
+                vm.browser.toggle();
+            },
+            assembleUrl: function(newFileName) {
+                // note that as of now, we'll just use the initial url and change the path
+                // then open a new window
+                var url = window.location.href;
+                var newItems = JSON.stringify([{ Path: newFileName }]);
+                return url.replace(new RegExp("items=.*?%5d", "i"), "items=" + encodeURI(newItems)); // note: sometimes it doesn't have an appid, so it's [0-9]* instead of [0-9]+
+            }
+        };
 
+        //#endregion
 
         //#region snippets
         vm.addSnippet = function addSnippet(snippet) {
@@ -122,7 +147,7 @@
         };
 
     }
-    EditorController.$inject = ["sourceSvc", "snippetSvc", "item", "$modalInstance", "$window", "$scope", "$translate", "saveToastr", "ctrlS", "debugState"];
+    EditorController.$inject = ["sourceSvc", "snippetSvc", "appAssetsSvc", "appId", "sxcDialogs", "item", "$modalInstance", "$window", "$scope", "$translate", "saveToastr", "ctrlS", "debugState"];
 
 }());
 // This service delivers all snippets, translated etc. to the sourc-editor UI
@@ -401,7 +426,24 @@ angular.module("SourceEditor")
 
             var svc = {
                 get: function() {
-                    return $http.get("app/appassets/asset", { params: params });
+                    return $http.get("app/appassets/asset", { params: params })
+                        .then(function(result) {
+                            var data = result.data;
+                            if (data.Type.toLowerCase() === "auto") {
+                                switch(data.Extension.toLowerCase()) {
+                                    case ".cs":
+                                    case ".cshtml":
+                                        data.Type = "Razor";
+                                        break;
+                                    case ".html":
+                                    case ".css":
+                                    case ".js":
+                                        data.Type = "Token";
+                                        break;
+                                }
+                            }
+                            return result;
+                        });
                 },
 
                 save: function(item) {
@@ -442,7 +484,7 @@ angular.module('SourceEditor').run(['$templateCache', function($templateCache) {
   'use strict';
 
   $templateCache.put('source-editor/editor.html',
-    "<div ng-click=vm.debug.autoEnableAsNeeded($event)><div class=modal-header><h3 class=modal-title translate=SourceEditor.Title></h3></div><div class=modal-body><div class=row><div class=col-md-8><div tooltip=\"{{ vm.view.FileName }}\">{{ vm.view.FileName.substr(vm.view.FileName.lastIndexOf(\"\\\\\") + 1) }} ({{vm.view.Type }})</div><div ng-model=vm.view.Code style=\"height: 600px\" ui-ace=\"{\r" +
+    "<div ng-click=vm.debug.autoEnableAsNeeded($event)><div class=modal-header><h3 class=modal-title translate=SourceEditor.Title></h3></div><div class=modal-body><div class=row><div class=col-md-8><div tooltip=\"{{ vm.view.FileName }}\" ng-click=vm.browser.toggle()>{{ vm.view.FileName.substr(vm.view.FileName.lastIndexOf(\"\\\\\") + 1) }} ({{vm.view.Type }}) <i ng-class=\"{&quot;eav-icon-plus-squared&quot;: !vm.browser.show, &quot;eav-icon-minus-squared&quot;: vm.browser.show}\"></i></div><div ng-if=vm.browser.show><h4>quick-pick another file</h4><ol><li ng-repeat=\"asset in vm.assets\" ng-click=vm.browser.editFile(asset)>{{asset}}</li></ol></div><div ng-model=vm.view.Code style=\"height: 600px\" ui-ace=\"{\r" +
     "\n" +
     "                    useWrapMode : true,\r" +
     "\n" +
@@ -476,15 +518,15 @@ angular.module('SourceEditor').run(['$templateCache', function($templateCache) {
     "\n" +
     "                }\"></div></div><div class=\"pull-right col-md-4\"><div><strong translate=SourceEditor.SnippetsSection.Title></strong> <i icon=question-sign style=\"opacity: 0.3\" ng-click=\"showSnippetInfo = !showSnippetInfo\"></i><div ng-if=showSnippetInfo translate=SourceEditor.SnippetsSection.Intro></div></div><select class=input-lg style=\"width: 90%\" ng-model=vm.snippetSet ng-options=\"key as ('SourceEditorSnippets.' + key + '.Title' | translate) for (key , value) in vm.snippets\" tooltip=\"{{ 'SourceEditorSnippets.' + vm.snippetSet + '.Help'  | translate}}\"></select><div>&nbsp;</div><div style=\"height: 500px; overflow: auto\"><div ng-repeat=\"(subsetName, subsetValue) in vm.snippets[vm.snippetSet]\"><strong tooltip=\"{{ 'SourceEditorSnippets.' + vm.snippetSet + '.' + subsetName + '.Help'  | translate}}\">{{ 'SourceEditorSnippets.' + vm.snippetSet + '.' + subsetName + '.Title' | translate}}</strong><ul><li ng-repeat=\"value in subsetValue | toArray | orderBy: '$key'\" tooltip=\"{{ value.snip }}\"><span ng-click=vm.addSnippet(value.snip)>{{value.label}}</span> <a ng-show=value.more ng-click=\"showMore = !showMore\"><i icon=plus></i>more</a> <i icon=info-sign style=\"opacity: 0.3\" ng-click=\"show = !show\" ng-show=value.help></i><div ng-if=show><em>{{value.help}}</em></div><ul ng-if=showMore><li ng-repeat=\"more in value.more | toArray | orderBy: '$key'\" tooltip=\"{{ value.snip }}\"><span ng-click=vm.addSnippet(more.snip)>{{more.label}}</span> <i icon=info-sign style=\"opacity: 0.3\" ng-click=\"show = !show\" ng-show=more.help></i><div ng-if=show><em>{{more.help}}</em></div></li></ul></li></ul></div></div></div></div></div><div class=modal-footer><div class=pull-left><button class=\"btn btn-primary btn-lg xxbtn-square\" type=button ng-click=vm.save(false)><span icon=check tooltip=\"{{ 'Button.SaveAndKeepOpen' | translate }}\"></span> {{ 'Button.SaveAndKeepOpen' | translate }}</button> also supports Ctrl+S</div></div><show-debug-availability class=pull-right></show-debug-availability><div ng-if=vm.debug.on><pre>{{vm.view.Code}}</pre></div></div><style>/* helper to ensure that razor (which is correctly detected by ACE) is also highlighted */\r" +
     "\n" +
-    "     .ace_razor {\r" +
+    "    .ace_razor {\r" +
     "\n" +
-    "         background-color: yellow;\r" +
+    "        background-color: yellow;\r" +
     "\n" +
-    "     }\r" +
+    "    }\r" +
     "\n" +
     "\r" +
     "\n" +
-    "     /* make sure the highlighted text is also black, otherwise it a kind of gray */\r" +
+    "    /* make sure the highlighted text is also black, otherwise it a kind of gray */\r" +
     "\n" +
     "    .ace_punctuation.ace_short.ace_razor {\r" +
     "\n" +
@@ -492,7 +534,7 @@ angular.module('SourceEditor').run(['$templateCache', function($templateCache) {
     "\n" +
     "    }\r" +
     "\n" +
-    "    \r" +
+    "\r" +
     "\n" +
     "    .ace_punctuation.ace_block.ace_razor {\r" +
     "\n" +

@@ -12,7 +12,24 @@ angular.module("SourceEditor")
 
             var svc = {
                 get: function() {
-                    return $http.get("app/appassets/asset", { params: params });
+                    return $http.get("app/appassets/asset", { params: params })
+                        .then(function(result) {
+                            var data = result.data;
+                            if (data.Type.toLowerCase() === "auto") {
+                                switch(data.Extension.toLowerCase()) {
+                                    case ".cs":
+                                    case ".cshtml":
+                                        data.Type = "Razor";
+                                        break;
+                                    case ".html":
+                                    case ".css":
+                                    case ".js":
+                                        data.Type = "Token";
+                                        break;
+                                }
+                            }
+                            return result;
+                        });
                 },
 
                 save: function(item) {

@@ -22,11 +22,13 @@ namespace ToSic.SexyContent.AppAssets
             TypeList,
             TypeListPresentation;
 
-        public string Type = "Token";
+        public string Type = "Auto";
         public bool HasList;
         public bool HasApp;
         public int AppId;
         public Dictionary<string, string> Streams = new Dictionary<string, string>();
+
+        public string Extension => Path.GetExtension(FileName);
 
         public AssetEditInfo(int appId, string appName, string fileName)
         {
@@ -43,7 +45,7 @@ namespace ToSic.SexyContent.AppAssets
                 if (string.IsNullOrWhiteSpace(FileName))
                     return true;
 
-                var ext = Path.GetExtension(FileName);
+                var ext = Extension;
                 if (ext == "")  // no extension
                     return true;
 

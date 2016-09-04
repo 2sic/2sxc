@@ -51,7 +51,7 @@ namespace ToSic.SexyContent.WebApi
                     .Select(Path.GetFullPath)
                 )
                 .Select(p => EnsurePathIsInsideApp(p, appPath))
-                .Select(x => x.Replace(appPath, ""))
+                .Select(x => x.Replace(appPath + "\\", ""))
                 .ToList();
         }
 

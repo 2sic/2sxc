@@ -4,7 +4,7 @@
         .controller("Editor", EditorController)
     ;
 
-    function EditorController(sourceSvc, snippetSvc, item, $modalInstance, $window, $scope, $translate, saveToastr, ctrlS, debugState) {
+    function EditorController(sourceSvc, snippetSvc, appAssetsSvc, appId, sxcDialogs, item, $modalInstance, $window, $scope, $translate, saveToastr, ctrlS, debugState) {
         $translate.refresh();   // necessary to load stuff added in this lazy-loaded app
 
         var vm = this;
@@ -79,10 +79,35 @@
 
         function activate() {
             // add ctrl+s to save
-            ctrlS(function() { vm.save(false); });
+            ctrlS(function () { vm.save(false); });
+
+
         }
 
+        //#region show file picker
+        vm.browser = {
+            show: false,
+            toggle: function() {
+      
+                vm.browser.show = !vm.browser.show;
+                var assetsSvc = appAssetsSvc(appId);
+                if (!vm.assets)
+                    vm.assets = assetsSvc.liveList();
+            },
+            editFile: function(filename) {
+                window.open(vm.browser.assembleUrl(filename));
+                vm.browser.toggle();
+            },
+            assembleUrl: function(newFileName) {
+                // note that as of now, we'll just use the initial url and change the path
+                // then open a new window
+                var url = window.location.href;
+                var newItems = JSON.stringify([{ Path: newFileName }]);
+                return url.replace(new RegExp("items=.*?%5d", "i"), "items=" + encodeURI(newItems)); // note: sometimes it doesn't have an appid, so it's [0-9]* instead of [0-9]+
+            }
+        };
 
+        //#endregion
 
         //#region snippets
         vm.addSnippet = function addSnippet(snippet) {
