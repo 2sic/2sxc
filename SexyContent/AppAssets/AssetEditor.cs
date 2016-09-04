@@ -48,7 +48,7 @@ namespace ToSic.SexyContent.AppAssets
         /// <summary>
         /// Check permissions and if not successful, give detailed explanation
         /// </summary>
-        public void EnsureUserMayEditAsset()
+        public void EnsureUserMayEditAsset(string fullPath = null)
         {
             // check super user permissions - then all is allowed
             if (_userInfo.IsSuperUser)
@@ -65,6 +65,16 @@ namespace ToSic.SexyContent.AppAssets
             // if not super user, check if cross-portal storage (not allowed; super user only)
             if(EditInfo.LocationScope != Settings.TemplateLocations.PortalFileSystem)
                 throw new AccessViolationException("current user may not edit templates in central storage - requires super user");
+
+            // optionally check if the file is really in the poprtal
+            if (fullPath == null) return;
+
+            var path = new FileInfo(fullPath);
+            if(path.Directory == null)
+                throw new AccessViolationException("path is null");
+
+            if (path.Directory.FullName.IndexOf(_sexy.App.PhysicalPath, StringComparison.InvariantCultureIgnoreCase) != 0)
+                throw new AccessViolationException("current user may not edit files outside of the app-scope");
         }
 
         private AssetEditInfo TemplateAssetsInfo(Template templ)
@@ -97,7 +107,7 @@ namespace ToSic.SexyContent.AppAssets
         {
             get
             {
-                EnsureUserMayEditAsset();
+                EnsureUserMayEditAsset(InternalPath);
                 if (File.Exists(InternalPath))
                     return File.ReadAllText(InternalPath);
 
@@ -109,7 +119,7 @@ namespace ToSic.SexyContent.AppAssets
             }
             set
             {
-                EnsureUserMayEditAsset();
+                EnsureUserMayEditAsset(InternalPath);
 
                 if (File.Exists(InternalPath))
                     File.WriteAllText(InternalPath, value);
