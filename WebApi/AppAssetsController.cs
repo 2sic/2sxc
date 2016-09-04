@@ -65,18 +65,21 @@ namespace ToSic.SexyContent.WebApi
 
         #region Template --> later neutralize to standard asset-editing
         [HttpGet]
-        public AssetEditInfo Template(int templateId)
+        public AssetEditInfo Asset(int templateId = 0, string path = null)
         {
-            var assetEditor = new AssetEditor(SxcContext, templateId, UserInfo, PortalSettings);
+            var assetEditor = (templateId != 0 && path == null)
+                ? new AssetEditor(SxcContext, templateId, UserInfo, PortalSettings)
+                : new AssetEditor(SxcContext, path, UserInfo, PortalSettings);
             assetEditor.EnsureUserMayEditAsset();
-            return assetEditor.EditInfo();
+            return assetEditor.EditInfoWithSource;
         }
 
-
         [HttpPost]
-        public bool Template([FromUri] int templateId, AssetEditInfo template)
+        public bool Asset([FromBody] AssetEditInfo template,[FromUri] int templateId = 0, [FromUri] string path = null)
         {
-            var assetEditor = new AssetEditor(SxcContext, templateId, UserInfo, PortalSettings);
+            var assetEditor = (templateId != 0 && path == null)
+                ? new AssetEditor(SxcContext, templateId, UserInfo, PortalSettings)
+                : new AssetEditor(SxcContext, path, UserInfo, PortalSettings);
             assetEditor.EnsureUserMayEditAsset();
             assetEditor.Source = template.Code;
             return true;

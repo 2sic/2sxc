@@ -26,7 +26,10 @@
         var vm = this;
         vm.debug = debugState;
 
-        var svc = sourceSvc(item.EntityId);
+        // if item is an object with EntityId, it referrs to a template, otherwise it's a relative path
+
+        var svc = sourceSvc(item.EntityId !== undefined ? item.EntityId : item.Path);
+
         vm.view = {};
         vm.tempCodeBecauseOfBug = "";
         vm.editor = null;
@@ -389,16 +392,21 @@ angular.module("SourceEditor")
     .factory("sourceSvc", ["$http", function($http) {
 
         // Construct a service for this specific appId
-        return function createSvc(templateId) {
+        return function createSvc(key) {
+
+            // if the key is a string, then it's to be used as a path, otherwise as a template-id
+            var params = isNaN(key)
+                ? { path: key }
+                : { templateId: key };
+
             var svc = {
                 get: function() {
-                    return $http.get("app/appassets/template", { params: { templateId: templateId } });
+                    return $http.get("app/appassets/asset", { params: params });
                 },
 
                 save: function(item) {
-                    return $http.post("app/appassets/template", item, { params: { templateId: templateId } });
+                    return $http.post("app/appassets/asset", item, { params: params });
                 }
-
             };
 
             return svc;

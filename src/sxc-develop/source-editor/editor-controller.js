@@ -10,7 +10,10 @@
         var vm = this;
         vm.debug = debugState;
 
-        var svc = sourceSvc(item.EntityId);
+        // if item is an object with EntityId, it referrs to a template, otherwise it's a relative path
+
+        var svc = sourceSvc(item.EntityId !== undefined ? item.EntityId : item.Path);
+
         vm.view = {};
         vm.tempCodeBecauseOfBug = "";
         vm.editor = null;
