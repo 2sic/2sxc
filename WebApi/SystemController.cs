@@ -9,7 +9,6 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Localization;
 using DotNetNuke.Web.Api;
-using DotNetNuke.Web.UI.WebControls;
 using ToSic.Eav;
 using ToSic.SexyContent.Internal;
 using Assembly = System.Reflection.Assembly;
@@ -39,14 +38,11 @@ namespace ToSic.SexyContent.WebApi
 	        return cultures;
 	    }
 
-	    /// <summary>
-	    /// Helper to prepare a quick-info about 1 content type
-	    /// </summary>
-	    /// <param name="allCTs"></param>
-	    /// <param name="staticName"></param>
-	    /// <param name="maybeEntity"></param>
-	    /// <returns></returns>
-	    [HttpGet]
+        /// <summary>
+        /// Helper to prepare a quick-info about 1 content type
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
         public void SwitchLanguage(string cultureCode, bool enable)
 	    {
             // Activate or Deactivate the Culture
@@ -78,7 +74,7 @@ namespace ToSic.SexyContent.WebApi
                 IsHidden = a.Hidden,
                 //Tokens = a.Settings?.AllowTokenTemplates ?? false,
                 //Razor = a.Configuration?.AllowRazorTemplates ?? false,
-                ConfigurationId = a.Configuration?.EntityId ?? null
+                ConfigurationId = a.Configuration?.EntityId
             }).ToList();
         }
 
@@ -94,7 +90,7 @@ namespace ToSic.SexyContent.WebApi
         {
             var userId = PortalSettings.Current.UserId;
             //var portalId = this.PortalSettings.PortalId;
-            AppManagement.RemoveApp(zoneId, appId, this.PortalSettings, userId);
+            AppManagement.RemoveApp(zoneId, appId, PortalSettings, userId);
         }
 
         [HttpPost]
@@ -114,15 +110,14 @@ namespace ToSic.SexyContent.WebApi
         [HttpGet]
         public dynamic DialogSettings(int appId)
         {
-            //var sxc = Request.GetSxcOfModuleContext(appId);
-            var App = new App(PortalSettings.Current, appId);
+            var app = new App(PortalSettings.Current, appId);
 
             return new
             {
-                IsContent = /*sxc.*/App.AppGuid == "Default",
+                IsContent = app.AppGuid == "Default",
                 Language = PortalSettings.Current.CultureCode,
                 LanguageDefault = PortalSettings.Current.DefaultLanguage,
-                GettingStartedUrl = GettingStartedUrl(/*sxc.*/App)
+                GettingStartedUrl = GettingStartedUrl(app)
             };
         }
 
@@ -146,7 +141,6 @@ namespace ToSic.SexyContent.WebApi
                         + "&ZoneID=" + app.ZoneId
                         + "&DefaultLanguage=" + dnn.DefaultLanguage
                         + "&CurrentLanguage=" + dnn.CultureCode;
-            ;
             // Add AppStaticName and Version
             if (mod.DesktopModule.ModuleName != "2sxc")
             {
@@ -160,24 +154,46 @@ namespace ToSic.SexyContent.WebApi
                 }
             }
 
-            var HostSettings = HostController.Instance.GetSettingsDictionary();
-            gsUrl += HostSettings.ContainsKey("GUID") ? "&DnnGUID=" + HostSettings["GUID"] : "";
+            var hostSettings = HostController.Instance.GetSettingsDictionary();
+            gsUrl += hostSettings.ContainsKey("GUID") ? "&DnnGUID=" + hostSettings["GUID"] : "";
             return gsUrl;
         }
 
         [HttpGet]
-        public List<string> WebAPiFiles(int appId)
+        public List<string> AppAssets(int appId, string path = null, string mask = "*.*", bool withSubfolders = false, bool returnFolders = false)
         {
-            var App = new App(PortalSettings.Current, appId);
+            var app = new App(PortalSettings.Current, appId);
 
-            //var sxc = Request.GetSxcOfModuleContext(appId);
-            var path = Path.Combine(/*sxc.*/App.PhysicalPath, "Api");
-            if (Directory.Exists(path))
-                return Directory.GetFiles(path, "*.cs")
-                    .Select(Path.GetFileName)
-                    .ToList<string>();
+            // make sure the folder-param is not null if it's missing
+            if (string.IsNullOrEmpty(path)) path = "";
 
-            return new List<string>();
+            var fullPath = Path.Combine(app.PhysicalPath, path);
+
+            // make sure the resulting path is still inside 2sxc
+            if(fullPath.IndexOf("2sxc", StringComparison.InvariantCultureIgnoreCase) == -1)
+                throw new DirectoryNotFoundException("Folder was not inside 2sxc-scope any more - must cancel");
+
+            if (!Directory.Exists(fullPath)) return new List<string>();
+
+            var opt = withSubfolders 
+                ? SearchOption.AllDirectories 
+                : SearchOption.TopDirectoryOnly;
+
+            return (returnFolders
+                ? Directory.GetDirectories(fullPath, mask, opt)
+                    .Select(Path.GetDirectoryName)
+                : Directory.GetFiles(fullPath, mask, opt)
+                    .Select(Path.GetFullPath)
+                )
+                .Select(p =>
+                {
+                    // security check, to ensure no results leak from outside the app
+                    if (p.IndexOf(app.PhysicalPath, StringComparison.InvariantCultureIgnoreCase) != 0)
+                        throw new DirectoryNotFoundException("Result was not inside the app any more - must cancel");
+                    return p;
+                })
+                .Select(x => x.Replace(app.PhysicalPath, ""))
+                .ToList();
         } 
         #endregion
 
