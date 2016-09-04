@@ -38,7 +38,8 @@ namespace ToSic.SexyContent.AppAssets
         public AssetEditInfo EditInfoWithSource
 
         {
-            get {
+            get
+            {
                 EditInfo.Code = Source; // do this later, because it relies on the edit-info to exist
                 return EditInfo;
             }
@@ -62,7 +63,7 @@ namespace ToSic.SexyContent.AppAssets
                 throw new AccessViolationException("current user may not edit razor templates - requires super user");
 
             // if not super user, check if cross-portal storage (not allowed; super user only)
-            if(EditInfo.LocationScope == Settings.TemplateLocations.PortalFileSystem)
+            if(EditInfo.LocationScope != Settings.TemplateLocations.PortalFileSystem)
                 throw new AccessViolationException("current user may not edit templates in central storage - requires super user");
         }
 
