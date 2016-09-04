@@ -296,6 +296,7 @@
     <Compile Include="SexyContent\Internal\ZoneHelpers.cs" />
     <Compile Include="WebApi\ImportExportController.cs" />
     <Compile Include="WebApi\SxcWebApiExceptionHandling.cs" />
+    <Compile Include="WebApi\AppAssetsController.cs" />
     <Compile Include="WebApi\ToRefactorDeliverCBDataLight\GetContentBlockDataLight.cs" />
     <Compile Include="WebApi\View\TemplateController.cs" />
     <Compile Include="SexyContent\ViewManager\TemplateEditor.cs" />

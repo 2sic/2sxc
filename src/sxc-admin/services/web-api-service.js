@@ -8,7 +8,7 @@ angular.module("SxcServices")
             };
 
             svc = angular.extend(svc, svcCreator.implementLiveList(function getAll() {
-                return $http.get("app/system/AppAssets", { params: { appId: svc.appId, path: "api", mask: "*.cs" } });
+                return $http.get("app/appassets/list", { params: { appId: svc.appId, path: "api", mask: "*.cs" } });
             }));
 
             return svc;

@@ -159,42 +159,42 @@ namespace ToSic.SexyContent.WebApi
             return gsUrl;
         }
 
-        [HttpGet]
-        public List<string> AppAssets(int appId, string path = null, string mask = "*.*", bool withSubfolders = false, bool returnFolders = false)
-        {
-            var app = new App(PortalSettings.Current, appId);
+        //[HttpGet]
+        //public List<string> AppAssets(int appId, string path = null, string mask = "*.*", bool withSubfolders = false, bool returnFolders = false)
+        //{
+        //    var app = new App(PortalSettings.Current, appId);
 
-            // make sure the folder-param is not null if it's missing
-            if (string.IsNullOrEmpty(path)) path = "";
+        //    // make sure the folder-param is not null if it's missing
+        //    if (string.IsNullOrEmpty(path)) path = "";
 
-            var fullPath = Path.Combine(app.PhysicalPath, path);
+        //    var fullPath = Path.Combine(app.PhysicalPath, path);
 
-            // make sure the resulting path is still inside 2sxc
-            if(fullPath.IndexOf("2sxc", StringComparison.InvariantCultureIgnoreCase) == -1)
-                throw new DirectoryNotFoundException("Folder was not inside 2sxc-scope any more - must cancel");
+        //    // make sure the resulting path is still inside 2sxc
+        //    if(fullPath.IndexOf("2sxc", StringComparison.InvariantCultureIgnoreCase) == -1)
+        //        throw new DirectoryNotFoundException("Folder was not inside 2sxc-scope any more - must cancel");
 
-            if (!Directory.Exists(fullPath)) return new List<string>();
+        //    if (!Directory.Exists(fullPath)) return new List<string>();
 
-            var opt = withSubfolders 
-                ? SearchOption.AllDirectories 
-                : SearchOption.TopDirectoryOnly;
+        //    var opt = withSubfolders 
+        //        ? SearchOption.AllDirectories 
+        //        : SearchOption.TopDirectoryOnly;
 
-            return (returnFolders
-                ? Directory.GetDirectories(fullPath, mask, opt)
-                    .Select(Path.GetDirectoryName)
-                : Directory.GetFiles(fullPath, mask, opt)
-                    .Select(Path.GetFullPath)
-                )
-                .Select(p =>
-                {
-                    // security check, to ensure no results leak from outside the app
-                    if (p.IndexOf(app.PhysicalPath, StringComparison.InvariantCultureIgnoreCase) != 0)
-                        throw new DirectoryNotFoundException("Result was not inside the app any more - must cancel");
-                    return p;
-                })
-                .Select(x => x.Replace(app.PhysicalPath, ""))
-                .ToList();
-        } 
+        //    return (returnFolders
+        //        ? Directory.GetDirectories(fullPath, mask, opt)
+        //            .Select(Path.GetDirectoryName)
+        //        : Directory.GetFiles(fullPath, mask, opt)
+        //            .Select(Path.GetFullPath)
+        //        )
+        //        .Select(p =>
+        //        {
+        //            // security check, to ensure no results leak from outside the app
+        //            if (p.IndexOf(app.PhysicalPath, StringComparison.InvariantCultureIgnoreCase) != 0)
+        //                throw new DirectoryNotFoundException("Result was not inside the app any more - must cancel");
+        //            return p;
+        //        })
+        //        .Select(x => x.Replace(app.PhysicalPath, ""))
+        //        .ToList();
+        //} 
         #endregion
 
 
