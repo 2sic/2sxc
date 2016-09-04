@@ -6,6 +6,7 @@ using System.Web.Http;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
+using ToSic.SexyContent.AppAssets;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -15,16 +16,16 @@ namespace ToSic.SexyContent.WebApi
 	[SupportedModules("2sxc,2sxc-app")]
     [SxcWebApiExceptionHandling]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public class AppAssetsController : DnnApiController
-	{
+    public class AppAssetsController : SxcApiController
+    {
         // todo: Create the create-api
         // todo: create the delete-file/folder api
         // todo: create the copy file api
 
-        #region Dialog Helpers
+        #region Public API
 
         [HttpGet]
-        public List<string> List(int appId, string path = null, string mask = "*.*", bool withSubfolders = false, bool returnFolders = false)
+        public  List<string> List(int appId, string path = null, string mask = "*.*", bool withSubfolders = false, bool returnFolders = false)
         {
             // make sure the folder-param is not null if it's missing
             if (string.IsNullOrEmpty(path)) path = "";
@@ -49,13 +50,44 @@ namespace ToSic.SexyContent.WebApi
                 : Directory.GetFiles(fullPath, mask, opt)
                     .Select(Path.GetFullPath)
                 )
-                .Select(p => EnsureScopeIsInsideApp(p, appPath))
+                .Select(p => EnsurePathIsInsideApp(p, appPath))
                 .Select(x => x.Replace(appPath, ""))
                 .ToList();
         }
 
-        private static string EnsureScopeIsInsideApp(string p, string appPath)
+
+        public void Create(int appId, string path, string content = "")
         {
+            
+        }
+
+        #endregion
+
+        #region Template --> later neutralize to standard asset-editing
+        [HttpGet]
+        public AssetEditInfo Template(int templateId)
+        {
+            var assetEditor = new AssetEditor(SxcContext, templateId, UserInfo, PortalSettings);
+            assetEditor.EnsureUserMayEditAsset();
+            return assetEditor.EditInfo();
+        }
+
+
+        [HttpPost]
+        public bool Template([FromUri] int templateId, AssetEditInfo template)
+        {
+            var assetEditor = new AssetEditor(SxcContext, templateId, UserInfo, PortalSettings);
+            assetEditor.EnsureUserMayEditAsset();
+            assetEditor.Source = template.Code;
+            return true;
+        }
+
+        #endregion
+
+        #region Helpers
+        private static string EnsurePathIsInsideApp(string p, string appPath)
+        {
+            if (appPath == null) throw new ArgumentNullException(nameof(appPath));
             // security check, to ensure no results leak from outside the app
             if (p.IndexOf(appPath, StringComparison.InvariantCultureIgnoreCase) != 0)
                 throw new DirectoryNotFoundException("Result was not inside the app any more - must cancel");

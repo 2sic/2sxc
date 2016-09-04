@@ -246,6 +246,7 @@
       <DependentUpon>QuickEdit.ascx</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\ILinkHelper.cs" />
+    <Compile Include="SexyContent\AppAssets\AssetEditInfo.cs" />
     <Compile Include="SexyContent\ContentBlock\ContentGroupReferenceManagerBase.cs" />
     <Compile Include="SexyContent\ContentBlock\ContentBlockBase.cs" />
     <Compile Include="SexyContent\ContentBlock\EntityContentGroupReferenceManager.cs" />
@@ -299,10 +300,9 @@
     <Compile Include="WebApi\AppAssetsController.cs" />
     <Compile Include="WebApi\ToRefactorDeliverCBDataLight\GetContentBlockDataLight.cs" />
     <Compile Include="WebApi\View\TemplateController.cs" />
-    <Compile Include="SexyContent\ViewManager\TemplateEditor.cs" />
+    <Compile Include="SexyContent\AppAssets\AssetEditor.cs" />
     <Compile Include="SexyContent\UnityConfig.cs" />
     <Compile Include="WebApi\SystemController.cs" />
-    <Compile Include="WebApi\TemplateController.cs" />
     <Compile Include="WebApi\ContentGroupController.cs" />
     <Compile Include="WebApi\EavApiProxies\ContentTypeController.cs" />
     <Compile Include="WebApi\Dnn\HyperlinkController.cs" />

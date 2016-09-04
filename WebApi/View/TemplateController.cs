@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Web.Http;
+﻿using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using ToSic.SexyContent.ViewManager;
+using ToSic.SexyContent.AppAssets;
 
 namespace ToSic.SexyContent.WebApi.View
 {
@@ -11,58 +10,23 @@ namespace ToSic.SexyContent.WebApi.View
     public class TemplateController : SxcApiController
     {
 
-        [HttpGet]
-        public TemplateInfo Template(int templateId)
-        {
-            var viewEditor = new TemplateEditor(SxcContext, templateId, UserInfo, PortalSettings);
-
-            viewEditor.EnsureUserMayEditTemplate();
-            var templ = viewEditor.Template;
-
-            var t = new TemplateInfo();
-            t.Type = templ.Type;
-            t.FileName = templ.Path;
-            t.Code = viewEditor.Code;
-            t.Name = templ.Name;
-            t.HasList = templ.UseForList;
-            t.HasApp = App.Name != "Content";
-            t.AppId = App.AppId;
-            t.TypeContent = templ.ContentTypeStaticName;
-            t.TypeContentPresentation = templ.PresentationTypeStaticName;
-            t.TypeList = templ.ListContentTypeStaticName;
-            t.TypeListPresentation = templ.ListPresentationTypeStaticName;
-
-            return t;
-        }
+        //[HttpGet]
+        //public AssetEditInfo Template(int templateId)
+        //{
+        //    var assetEditor = new AssetEditor(SxcContext, templateId, UserInfo, PortalSettings);
+        //    assetEditor.EnsureUserMayEditAsset();
+        //    return assetEditor.EditInfo();
+        //}
 
 
-        [HttpPost]
-        public bool Template([FromUri] int templateId, TemplateInfo template)
-        {
-            var viewEditor = new TemplateEditor(SxcContext, templateId, UserInfo, PortalSettings);
-
-            viewEditor.EnsureUserMayEditTemplate();
-
-            viewEditor.Code = template.Code;
-
-            return true;
-        }
+        //[HttpPost]
+        //public bool Template([FromUri] int templateId, AssetEditInfo template)
+        //{
+        //    var assetEditor = new AssetEditor(SxcContext, templateId, UserInfo, PortalSettings);
+        //    assetEditor.EnsureUserMayEditAsset();
+        //    assetEditor.Source = template.Code;
+        //    return true;
+        //}
     }
 
-    public class TemplateInfo
-    {
-        public string 
-            Name,
-            Code,
-            FileName,
-            TypeContent,
-            TypeContentPresentation,
-            TypeList,
-            TypeListPresentation;
-        public string Type = "Token";
-        public bool HasList;
-        public bool HasApp;
-        public int AppId;
-        public Dictionary<string,string> Streams = new Dictionary<string, string>();
-    }
 }
