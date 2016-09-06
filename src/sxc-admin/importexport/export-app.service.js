@@ -7,7 +7,8 @@
     function ExportAppService(appId, zoneId, eavConfig, $http, $q) {
         var srvc = {
             getAppInfo: getAppInfo,
-            exportApp: exportApp
+            exportApp: exportApp,
+            exportForVersionControl: exportForVersionControl
         };
         return srvc;
 
@@ -18,6 +19,12 @@
         function exportApp(includeContentGroups, resetAppGuid) {
             window.open(eavConfig.getUrlPrefix("api") + "/app/ImportExport/ExportApp?appId=" + appId + "&zoneId=" + zoneId + "&includeContentGroups=" + includeContentGroups + "&resetAppGuid=" + resetAppGuid, "_self", "");
             return $q.when(true);
+        }
+
+        function exportForVersionControl(includeContentGroups, resetAppGuid) {
+            // todo: put params in nice params object
+            return $http.get("app/ImportExport/ExportForVersionControl?appId=" + appId + "&zoneId=" + zoneId + "&includeContentGroups=" + includeContentGroups + "&resetAppGuid=" + resetAppGuid);
+
         }
     }
 }());

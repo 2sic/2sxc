@@ -99,6 +99,21 @@ namespace ToSic.SexyContent.WebApi
         }
 
         [HttpGet]
+        public bool ExportForVersionControl(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
+        {
+            EnsureUserIsAdmin();
+
+            var appWrapper = (UserInfo.IsSuperUser)
+                ? new SxcAppWrapper(zoneId, appId)  // only super-user may switch to another zone for export
+                : new SxcAppWrapper(appId);
+
+            var zipExport = new ZipExport(zoneId, appId);
+            zipExport.ExportForSourceControl(includeContentGroups, resetAppGuid);
+
+            return true;
+        }
+
+        [HttpGet]
         public HttpResponseMessage ExportContent(int appId, int zoneId, string contentTypeIdsString, string entityIdsString, string templateIdsString)
         {
             EnsureUserIsAdmin();

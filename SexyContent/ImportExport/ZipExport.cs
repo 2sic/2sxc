@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
-using System.Xml.Linq;
 using System.Xml.XPath;
 using DotNetNuke.Entities.Portals;
 using ICSharpCode.SharpZipLib.Zip;
@@ -16,10 +15,11 @@ namespace ToSic.SexyContent.ImportExport
     {
         private readonly int _appId;
         private readonly int _zoneId;
-        //private readonly SxcInstance _sexy;
-        private readonly App App;
+        private readonly App _app;
         private string _sexycontentContentgroupName = "2SexyContent-ContentGroup";
-        private string _blankGuid = Guid.Empty.ToString();// "00000000-0000-0000-0000-000000000000";
+        private string _sourceControlDataFolder = ".data";
+        private string _sourceControlDataFile = "app.xml"; // lower case
+        private readonly string _blankGuid = Guid.Empty.ToString();
         private string _zipFolderForPortalFiles = "PortalFiles";
         private string _zipFolderForAppStuff = "2sexy";
         private string _AppXmlFileName = "App.xml";
@@ -31,44 +31,33 @@ namespace ToSic.SexyContent.ImportExport
             _appId = appId;
             _zoneId = zoneId;
             //_sexy = new SxcInstance(_zoneId, _appId);
-            App = new App(zoneId, appId, PortalSettings.Current);
-            FileManager = new FileManager(App.PhysicalPath);
+            _app = new App(zoneId, appId, PortalSettings.Current);
+            FileManager = new FileManager(_app.PhysicalPath);
+        }
+
+        public void ExportForSourceControl(bool includeContentGroups = false, bool resetAppGuid = false)
+        {
+            var path = _app.PhysicalPath + "\\" + _sourceControlDataFolder;
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
+            // generate the XML & save
+            var xmlExport = GenerateExportXml(includeContentGroups, resetAppGuid);
+            string xml = xmlExport.GenerateNiceXml();
+            File.WriteAllText(Path.Combine(path, _sourceControlDataFile), xml);
+
         }
 
         public MemoryStream ExportApp(bool includeContentGroups = false, bool resetAppGuid = false)
         {
-            // Get Export XML
-            var attributeSets = App.TemplateManager.GetAvailableContentTypes(true);
-            attributeSets = attributeSets.Where(a => !a.ConfigurationIsOmnipresent);
-
-            var attributeSetIds = attributeSets.Select(p => p.AttributeSetId.ToString()).ToArray();
-			var entities = DataSource.GetInitialDataSource(_zoneId, _appId).Out["Default"].List.Where(e => e.Value.AssignmentObjectTypeId != ContentTypeHelpers.AssignmentObjectTypeIDSexyContentTemplate
-				&& e.Value.AssignmentObjectTypeId != Constants.AssignmentObjectTypeIdFieldProperties).ToList();
-
-	        if (!includeContentGroups)
-	            entities = entities.Where(p => p.Value.Type.StaticName != _sexycontentContentgroupName).ToList();
-
-            var entityIds = entities
-                .Select(e => e.Value.EntityId.ToString()).ToArray();
-
-            var messages = new List<ExportImportMessage>();
-            var xmlExport = new XmlExporter(_zoneId, _appId, true,attributeSetIds, entityIds);
-
-
-            #region reset App Guid if necessary
-            if (resetAppGuid)
-            {
-                var root = xmlExport.ExportXDocument;//.Root;
-                var appGuid = root.XPathSelectElement("/SexyContent/Header/App").Attribute("Guid");
-                appGuid.Value = _blankGuid;
-            }
-            #endregion
-
-            string xml = xmlExport.GenerateNiceXml();
+            // generate the XML
+            var xmlExport = GenerateExportXml(includeContentGroups, resetAppGuid);
 
             #region Copy needed files to temporary directory
 
+            var messages = new List<ExportImportMessage>();
             var randomShortFolderName = Guid.NewGuid().ToString().Substring(0, 4);
+
             var temporaryDirectoryPath = HttpContext.Current.Server.MapPath(Path.Combine(Settings.TemporaryDirectory, randomShortFolderName));
 
             if (!Directory.Exists(temporaryDirectoryPath))
@@ -77,14 +66,14 @@ namespace ToSic.SexyContent.ImportExport
             AddInstructionsToPackageFolder(temporaryDirectoryPath);
 
             var tempDirectory = new DirectoryInfo(temporaryDirectoryPath);
-            var appDirectory = tempDirectory.CreateSubdirectory("Apps/" + App.Folder + "/");
+            var appDirectory = tempDirectory.CreateSubdirectory("Apps/" + _app.Folder + "/");
             
             var sexyDirectory = appDirectory.CreateSubdirectory(_zipFolderForAppStuff);
             
             var portalFilesDirectory = appDirectory.CreateSubdirectory(_zipFolderForPortalFiles);
 
             // Copy app folder
-            if (Directory.Exists(App.PhysicalPath))
+            if (Directory.Exists(_app.PhysicalPath))
             {
                 FileManager.CopyAllFiles(sexyDirectory.FullName, false, messages);
             }
@@ -110,11 +99,13 @@ namespace ToSic.SexyContent.ImportExport
                     }
                 }
             }
-            
+            #endregion
+
+
             // Save export xml
+            string xml = xmlExport.GenerateNiceXml();
             File.AppendAllText(Path.Combine(appDirectory.FullName, _AppXmlFileName), xml);
 
-            #endregion
 
             // Zip directory and return as stream
             var stream = new MemoryStream();
@@ -126,6 +117,38 @@ namespace ToSic.SexyContent.ImportExport
             tempDirectory.Delete(true);
 
             return stream;
+        }
+
+        private XmlExporter GenerateExportXml(bool includeContentGroups, bool resetAppGuid)
+        {
+// Get Export XML
+            var attributeSets = _app.TemplateManager.GetAvailableContentTypes(true);
+            attributeSets = attributeSets.Where(a => !a.ConfigurationIsOmnipresent);
+
+            var attributeSetIds = attributeSets.Select(p => p.AttributeSetId.ToString()).ToArray();
+            var entities =
+                DataSource.GetInitialDataSource(_zoneId, _appId).Out["Default"].List.Where(
+                    e => e.Value.AssignmentObjectTypeId != ContentTypeHelpers.AssignmentObjectTypeIDSexyContentTemplate
+                         && e.Value.AssignmentObjectTypeId != Constants.AssignmentObjectTypeIdFieldProperties).ToList();
+
+            if (!includeContentGroups)
+                entities = entities.Where(p => p.Value.Type.StaticName != _sexycontentContentgroupName).ToList();
+
+            var entityIds = entities
+                .Select(e => e.Value.EntityId.ToString()).ToArray();
+
+            var xmlExport = new XmlExporter(_zoneId, _appId, true, attributeSetIds, entityIds);
+
+            #region reset App Guid if necessary
+
+            if (resetAppGuid)
+            {
+                var root = xmlExport.ExportXDocument; //.Root;
+                var appGuid = root.XPathSelectElement("/SexyContent/Header/App").Attribute("Guid");
+                appGuid.Value = _blankGuid;
+            }
+            return xmlExport;
+            #endregion
         }
 
         /// <summary>
@@ -143,21 +166,21 @@ namespace ToSic.SexyContent.ImportExport
 
         }
 
-        public static void ZipFolder(string RootFolder, string CurrentFolder, ZipOutputStream zStream)
+        public static void ZipFolder(string rootFolder, string currentFolder, ZipOutputStream zStream)
         {
 
-            var SubFolders = Directory.GetDirectories(CurrentFolder);
+            var SubFolders = Directory.GetDirectories(currentFolder);
             foreach (var Folder in SubFolders)
-                ZipFolder(RootFolder, Folder, zStream);
+                ZipFolder(rootFolder, Folder, zStream);
 
-            var relativePath = CurrentFolder.Substring(RootFolder.Length) + "\\";
+            var relativePath = currentFolder.Substring(rootFolder.Length) + "\\";
 
             if (relativePath.Length > 1)
             {
                 var dirEntry = new ZipEntry(relativePath);
                 dirEntry.DateTime = DateTime.Now;
             }
-            foreach (var file in Directory.GetFiles(CurrentFolder))
+            foreach (var file in Directory.GetFiles(currentFolder))
             {
                 AddFileToZip(zStream, relativePath, file);
             }
@@ -184,39 +207,5 @@ namespace ToSic.SexyContent.ImportExport
             }
         }
 
-        //public MemoryStream GetZipStream()
-        //{
-        //    var stream = new MemoryStream();
-        //    var zipStream = new ZipOutputStream(stream);
-        //    zipStream.SetLevel(0);
-
-        //    foreach (string file in Files)
-        //    {
-
-        //        string entryName = (file.Substring(file.LastIndexOf('/')));
-        //        entryName = ZipEntry.CleanName(entryName);
-        //        var entry = new ZipEntry(entryName) { DateTime = DateTime.Now };
-        //        // To permit the zip to be unpacked by built-in extractor in WinXP and Server2003, WinZip 8, Java, and other older code,
-        //        // you need to do one of the following: Specify UseZip64.Off, or set the Size.
-        //        // If the file may be bigger than 4GB, or you do not need WinXP built-in compatibility, you do not need either,
-        //        // but the zip will be in Zip64 format which not all utilities can understand.
-        //        // ZipStream.UseZip64 = UseZip64.Off;
-        //        // Entry.Size = FileInfo.Stream.Length;
-
-        //        zipStream.PutNextEntry(entry);
-        //        FileInfo.Stream.CopyTo(zipStream);
-        //        zipStream.CloseEntry();
-        //        FileInfo.Stream.Close();
-        //    }
-
-        //    //Response.AddHeader("content-disposition", "attachment;filename=Images_" + Product.ArtNr + ".zip");
-        //    //Response.ContentType = ContentType;
-        //    //ZipStream.IsStreamOwner = true;
-        //    zipStream.Close();
-        //    //Response.Flush();
-        //    //Response.Close();
-
-        //    return stream;
-        //}
     }
 }

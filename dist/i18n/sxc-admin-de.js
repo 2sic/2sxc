@@ -152,9 +152,11 @@
 		"Intro": "Wenn der Inhalt mit einem bestehenden Inhalt ersetzt wird, kann derselbe Eintrag in verschiedenen Modulen angezeigt und verändert werden.",
 		"ChooseItem": "Inhalt auswählen:"
 	},
-	"ReorderContentList": {
-		"Title": "Inhalte in der Liste neu anordnen",
-		"Intro": "Sortiere die Liste per Drag-and-Drop (ziehen und ablegen), danach kann gespeichert werden."
+	"ManageContentList": {
+		"Title": "Inhaltsliste verwalten",
+		"HeaderIntro": "Hier können Listen-Einstellungen und Kopfdaten (sofern vorhanden) verwaltet und Listen-Einträge manuell sortiert werden.",
+		"NoHeaderInThisList": "(Diese Liste hat keine Einstellungen oder Kopfdaten)",
+		"Intro": "Listen-Einträge"
 	},
 	"Edit": {
 		"Fields": {

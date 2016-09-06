@@ -1,4 +1,4 @@
-﻿<div>
+﻿<div ng-click="vm.debug.autoEnableAsNeeded($event)">
     <div class="modal-header">
         <button icon="remove" class="btn pull-right" type="button" ng-click="vm.close()"></button>
         <h3 class="modal-title" translate="ImportExport.ExportApp.Title"></h3>
@@ -33,5 +33,11 @@
 
     <div class="modal-footer">
         <button type="button" class="btn btn-primary pull-left" ng-click="vm.exportApp()" translate="ImportExport.ExportApp.Commands.Export" ng-disabled="vm.IsExporting"></button>
+        <button type="button" class="btn pull-left" ng-click="vm.exportGit()"
+                translate="ImportExport.ExportApp.Commands.ExportForVersionControl"
+                ng-disabled="vm.IsExporting"
+                ng-show="vm.debug.on"
+                ></button>
     </div>
+    <show-debug-availability class="pull-right"></show-debug-availability>
 </div>

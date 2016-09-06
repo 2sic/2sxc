@@ -59,33 +59,6 @@
 		"QuickStart": "For a quick start, we recommend that you install the WebApi demo-app. It contains some WebAPI controllers with various actions and some example views to use these controllers. Download <a href='http://2sxc.org/en/Apps/tag/WebApi' target='_blank'>WebApi demos in the App-Catalog</a> or read more about it in <a href='http://2sxc.org/en/help?tag=webapi' target='_blank'>help</a>",
 		"AddDoesntExist": "there is no automatic add yet - please do it manually in the 'api' folder. Just copy one of an existing project to get started."
 	},
-	"ImportExportOLDRemoveAfter84IsStable": {
-		"Title": "Export or Import <em>parts</em> of this App/Content",
-		"Intro": "Create an xml or zip containing <em>parts</em> of this app, to import into another app or content. Or import such a parts-package.",
-		"FurtherHelp": "For further help visit <a href='http://2sxc.org/en/help?tag=import' target='_blank'>2sxc Help</a>.",
-		"Buttons": {
-			"Import": "import",
-			"Export": "export"
-		},
-		"Import": {
-			"Title": "Import a content export (.zip) or a partial export (.xml)",
-			"Explanation": "This import will add Content-Types, Templates and Content-Items to the current Content or App.",
-			"Select": "select file to import",
-			"Choose": "Choose file"
-		},
-		"Export": {
-			"Title": "Partial Export of Content Types, Template Configuration and Content",
-			"Intro": "This is an advanced export feature to export parts of this Content / App. It will create an XML-file for you which you can import into another site or App",
-			"FurtherHelp": "For further help visit <a href='http://2sxc.org/en/help?tag=export' target='_blank'>2sxc Help</a>.",
-			"Data": {
-				"GroupHeading": "Content Type: {{name}} ({{id}}",
-				"Templates": "Templates",
-				"Items": "Content Items",
-				"SimpleTemplates": "Templates without content type"
-			},
-			"ButtonExport": "Export"
-		}
-	},
 	"Portal": {
 		"Title": "Virtual Database (VDB)",
 		"VdbLabel": "Virtual Database for this Portal",
@@ -270,7 +243,8 @@
 				"ResetAppGuid": "Reset the app GUID to zero. You only need this option for special tutorial apps, and usually must not select it."
 			},
 			"Commands": {
-				"Export": "Export"
+				"Export": "Export",
+				"ExportForVersionControl": "Save data for version control"
 			}
 		}
 	}

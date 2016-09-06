@@ -38,7 +38,7 @@
 	},
 	"FieldType": {
 		"Entity": {
-			"Choose": "-- Element hinzufügen --",
+			"Choose": "-- Element auswählen --",
 			"New": "-- Neues Element erstellen --",
 			"EntityNotFound": "(Element nicht gefunden)",
 			"DragMove": "Ziehen um die Liste neu anzuordnen",

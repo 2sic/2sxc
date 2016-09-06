@@ -214,8 +214,16 @@ namespace ToSic.SexyContent.ImportExport
         /// <returns></returns>
         private XElement GetEntityXElement(Entity e)
         {
-            //var attributeSet = Sexy.ContentContext.GetAttributeSet(e.AttributeSetID);
-            var entityXElement = new Eav.ImportExport.XmlExport(_eavAppContext).GetEntityXElement(e.EntityID);
+            //Note that this often throws errors in a dev environment, where the data may be mangled manually in the DB
+            XElement entityXElement;
+            try
+            {
+                entityXElement = new Eav.ImportExport.XmlExport(_eavAppContext).GetEntityXElement(e.EntityID);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("failed on entity id '" + e.EntityID + "' of set-type '" + e.AttributeSetID + "'", ex);
+            }
 
             foreach (var value in entityXElement.Elements("Value"))
             {

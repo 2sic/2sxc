@@ -324,8 +324,9 @@
         ;
   
 
-    function ExportAppController(ExportAppService, eavAdminDialogs, eavConfig, $modalInstance) {
+    function ExportAppController(ExportAppService, eavAdminDialogs, debugState, eavConfig, $modalInstance) {
         var vm = this;
+        vm.debug = debugState;
 
         vm.IsExporting = false;
 
@@ -336,7 +337,7 @@
 
         vm.getAppInfo = getAppInfo;
         vm.exportApp = exportApp;
-
+        vm.exportGit = exportGit;
         vm.close = close;
 
 
@@ -346,12 +347,14 @@
             getAppInfo();
         }
 
+        // retrieve additional statistics & metadata about this app
         function getAppInfo() {
             return ExportAppService.getAppInfo().then(function (result) {
                 vm.AppInfo = result;
             });
         }
 
+        // this will call the export-app on the server
         function exportApp() {
             vm.IsExporting = true;
             return ExportAppService.exportApp(vm.IncludeContentGroups, vm.ResetAppGuid).then(function () {
@@ -361,11 +364,22 @@
             });
         }
 
+        // this will tell the server to export the data in the DB so it can be used in version control
+        function exportGit() {
+            vm.IsExporting = true;
+            return ExportAppService.exportForVersionControl(vm.IncludeContentGroups, vm.ResetAppGuid).then(function () {
+                vm.IsExporting = false;
+                alert("done - please check you '.data' folder");
+            }).catch(function () {
+                vm.IsExporting = false;
+            });
+        }
+
         function close() {
             $modalInstance.dismiss("cancel");
         }
     }
-    ExportAppController.$inject = ["ExportAppService", "eavAdminDialogs", "eavConfig", "$modalInstance"];
+    ExportAppController.$inject = ["ExportAppService", "eavAdminDialogs", "debugState", "eavConfig", "$modalInstance"];
 }());
 (function () {
     angular.module("ImportExport")
@@ -376,7 +390,8 @@
     function ExportAppService(appId, zoneId, eavConfig, $http, $q) {
         var srvc = {
             getAppInfo: getAppInfo,
-            exportApp: exportApp
+            exportApp: exportApp,
+            exportForVersionControl: exportForVersionControl
         };
         return srvc;
 
@@ -387,6 +402,12 @@
         function exportApp(includeContentGroups, resetAppGuid) {
             window.open(eavConfig.getUrlPrefix("api") + "/app/ImportExport/ExportApp?appId=" + appId + "&zoneId=" + zoneId + "&includeContentGroups=" + includeContentGroups + "&resetAppGuid=" + resetAppGuid, "_self", "");
             return $q.when(true);
+        }
+
+        function exportForVersionControl(includeContentGroups, resetAppGuid) {
+            // todo: put params in nice params object
+            return $http.get("app/ImportExport/ExportForVersionControl?appId=" + appId + "&zoneId=" + zoneId + "&includeContentGroups=" + includeContentGroups + "&resetAppGuid=" + resetAppGuid);
+
         }
     }
     ExportAppService.$inject = ["appId", "zoneId", "eavConfig", "$http", "$q"];
@@ -1343,7 +1364,7 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
 
 
   $templateCache.put('importexport/export-app.html',
-    "<div><div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=ImportExport.ExportApp.Title></h3></div><div class=modal-body><div translate=ImportExport.ExportApp.Intro></div><div translate=ImportExport.ExportApp.FurtherHelp></div><h5>{{\"ImportExport.ExportApp.Specifications.Title\" | translate}}</h5><ul><li>{{\"ImportExport.ExportApp.Specifications.AppName\" | translate}} {{vm.AppInfo.Name}}</li><li>{{\"ImportExport.ExportApp.Specifications.AppGuid\" | translate}} {{vm.AppInfo.Guid}}</li><li>{{\"ImportExport.ExportApp.Specifications.AppVersion\" | translate}} {{vm.AppInfo.Version}}</li></ul><h5>{{\"ImportExport.ExportApp.Content.Title\" | translate}}</h5><ul><li>{{vm.AppInfo.EntitiesCount}} {{\"ImportExport.ExportApp.Content.EntitiesCount\" | translate}}</li><li>{{vm.AppInfo.LanguagesCount}} {{\"ImportExport.ExportApp.Content.LanguagesCount\" | translate}}</li><li>{{vm.AppInfo.TemplatesCount}} {{\"ImportExport.ExportApp.Content.TemplatesCount\" | translate}} ({{\"ImportExport.ExportApp.Content.TokenTemplates\" | translate}} {{vm.AppInfo.HasTokenTemplates}}, {{\"ImportExport.ExportApp.Content.RazorTemplates\" | translate}} {{vm.AppInfo.HasRazorTemplates}})</li><li>{{vm.AppInfo.TransferableFilesCount}} {{\"ImportExport.ExportApp.Content.TransferableFilesCount\" | translate}}</li><li>{{vm.AppInfo.FilesCount}} {{\"ImportExport.ExportApp.Content.FilesCount\" | translate}}</li></ul><div><input ng-model=vm.IncludeContentGroups type=checkbox ng-disabled=\"vm.ResetAppGuid\"> {{\"ImportExport.ExportApp.Options.IncludeContentGroups\" | translate}}</div><div><input ng-model=vm.ResetAppGuid type=checkbox ng-disabled=\"vm.IncludeContentGroups\"> {{\"ImportExport.ExportApp.Options.ResetAppGuid\" | translate}}</div></div><div class=modal-footer><button type=button class=\"btn btn-primary pull-left\" ng-click=vm.exportApp() translate=ImportExport.ExportApp.Commands.Export ng-disabled=vm.IsExporting></button></div></div>"
+    "<div ng-click=vm.debug.autoEnableAsNeeded($event)><div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=ImportExport.ExportApp.Title></h3></div><div class=modal-body><div translate=ImportExport.ExportApp.Intro></div><div translate=ImportExport.ExportApp.FurtherHelp></div><h5>{{\"ImportExport.ExportApp.Specifications.Title\" | translate}}</h5><ul><li>{{\"ImportExport.ExportApp.Specifications.AppName\" | translate}} {{vm.AppInfo.Name}}</li><li>{{\"ImportExport.ExportApp.Specifications.AppGuid\" | translate}} {{vm.AppInfo.Guid}}</li><li>{{\"ImportExport.ExportApp.Specifications.AppVersion\" | translate}} {{vm.AppInfo.Version}}</li></ul><h5>{{\"ImportExport.ExportApp.Content.Title\" | translate}}</h5><ul><li>{{vm.AppInfo.EntitiesCount}} {{\"ImportExport.ExportApp.Content.EntitiesCount\" | translate}}</li><li>{{vm.AppInfo.LanguagesCount}} {{\"ImportExport.ExportApp.Content.LanguagesCount\" | translate}}</li><li>{{vm.AppInfo.TemplatesCount}} {{\"ImportExport.ExportApp.Content.TemplatesCount\" | translate}} ({{\"ImportExport.ExportApp.Content.TokenTemplates\" | translate}} {{vm.AppInfo.HasTokenTemplates}}, {{\"ImportExport.ExportApp.Content.RazorTemplates\" | translate}} {{vm.AppInfo.HasRazorTemplates}})</li><li>{{vm.AppInfo.TransferableFilesCount}} {{\"ImportExport.ExportApp.Content.TransferableFilesCount\" | translate}}</li><li>{{vm.AppInfo.FilesCount}} {{\"ImportExport.ExportApp.Content.FilesCount\" | translate}}</li></ul><div><input ng-model=vm.IncludeContentGroups type=checkbox ng-disabled=\"vm.ResetAppGuid\"> {{\"ImportExport.ExportApp.Options.IncludeContentGroups\" | translate}}</div><div><input ng-model=vm.ResetAppGuid type=checkbox ng-disabled=\"vm.IncludeContentGroups\"> {{\"ImportExport.ExportApp.Options.ResetAppGuid\" | translate}}</div></div><div class=modal-footer><button type=button class=\"btn btn-primary pull-left\" ng-click=vm.exportApp() translate=ImportExport.ExportApp.Commands.Export ng-disabled=vm.IsExporting></button> <button type=button class=\"btn pull-left\" ng-click=vm.exportGit() translate=ImportExport.ExportApp.Commands.ExportForVersionControl ng-disabled=vm.IsExporting ng-show=vm.debug.on></button></div><show-debug-availability class=pull-right></show-debug-availability></div>"
   );
 
 
