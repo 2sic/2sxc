@@ -174,6 +174,10 @@
 	"ImportExport": {
 		"Title": "Export or Import <em>parts</em> of this App",
 		"Intro": "Create an xml containing parts of the app, e.g. content and templates.<br/>Import parts from such an xml into this app.",
+		"Buttons": {
+			"Export": "export parts",
+			"Import": "import parts"
+		},
 		"ImportContent": {
 			"Title": "Import Content and Templates into this App",
 			"Intro": "Import content and templates from a content export (zip) or partial export (xml) to this app. The entire content of the selected file will be imported. If you want to import an entire app, go to the <em>App-Management</em>.",
