@@ -467,7 +467,7 @@
     <Content Include="src\inpage-dialogs\template-selector\moduleService.js" />
     <Content Include="src\inpage-dialogs\template-selector\2sxc.view_app.js" />
     <Content Include="src\inpage-dialogs\template-selector\template-selector.html" />
-    <Content Include="src\inpage-dialogs\template-selector\template-selector.js" />
+    <Content Include="src\inpage-dialogs\template-selector\template-selector-controller.js" />
     <Content Include="js\angularjs\2sxc4ng.js" />
     <Content Include="js\angularjs\toaster.css" />
     <Content Include="js\angularjs\toaster.js" />
