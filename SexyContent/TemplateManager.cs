@@ -5,6 +5,8 @@ using ToSic.Eav;
 using ToSic.Eav.BLL;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Caches;
+using ToSic.Eav.Serializers;
+using ToSic.Eav.WebApi;
 
 namespace ToSic.SexyContent
 {
@@ -21,11 +23,15 @@ namespace ToSic.SexyContent
 			_appId = appId;
 		}
 
+	    private IDataSource _templateDs;
 		private IDataSource TemplateDataSource()
 		{
+            if(_templateDs!= null)return _templateDs;
+		    // ReSharper disable once RedundantArgumentDefaultValue
 			var dataSource = DataSource.GetInitialDataSource(_zoneId, _appId, false);
 			dataSource = DataSource.GetDataSource<EntityTypeFilter>(_zoneId, _appId, dataSource);
 			((EntityTypeFilter)dataSource).TypeName = TemplateTypeName;
+		    _templateDs = dataSource;
 			return dataSource;
 		}
 
@@ -34,10 +40,11 @@ namespace ToSic.SexyContent
             return TemplateDataSource().List.Select(p => new Template(p.Value)).OrderBy(p => p.Name);
         }
 
-		public IEnumerable<Template> GetVisibleTemplates()
-		{
-			return GetAllTemplates().Where(t => !t.IsHidden);
-		}
+        // 2016-09-08 2dm disabled this, because we actually need all templates to be sent, and have the UI hide the hidden ones - part of https://github.com/2sic/2sxc/issues/831
+  //      public IEnumerable<Template> GetVisibleTemplates()
+		//{
+		//	return GetAllTemplates().Where(t => !t.IsHidden);
+		//}
 
 		public Template GetTemplate(int templateId)
 		{
@@ -63,7 +70,7 @@ namespace ToSic.SexyContent
         public bool DeleteTemplate(int templateId)
 		{
 			var template = GetTemplate(templateId);
-            var eavContext = EavDataController.Instance(_zoneId, _appId).Entities; ; //EavContext.Instance(_zoneId, _appId);
+            var eavContext = EavDataController.Instance(_zoneId, _appId).Entities; //EavContext.Instance(_zoneId, _appId);
 			var canDelete = eavContext.CanDeleteEntity(template.TemplateId);
 			if(!canDelete.Item1)
 				throw new Exception(canDelete.Item2);
@@ -114,31 +121,29 @@ namespace ToSic.SexyContent
 		}
 
 
-
-
-        /// <summary>
-        /// Returns all templates that should be available in the template selector
-        /// </summary>
-        /// <param name="module"></param>
-        /// <returns></returns>
-        public IEnumerable<Template> GetAvailableTemplatesForSelector(int modId, ContentGroupManager cgContentGroups)
+	    /// <summary>
+	    /// Returns all templates that should be available in the template selector
+	    /// </summary>
+	    /// <returns></returns>
+	    public IEnumerable<Template> GetAvailableTemplatesForSelector(int modId, ContentGroupManager cgContentGroups)
         {
             // IEnumerable<Template> availableTemplates;
             var contentGroup = cgContentGroups.GetContentGroupForModule(modId);
             return GetAvailableTemplates(contentGroup);
         }
 
-	    internal IEnumerable<Template> GetAvailableTemplates(ContentGroup contentGroup)
+        // 2016-09-08 2dm - changed to deliver hidden as well, because of https://github.com/2sic/2sxc/issues/831
+        internal IEnumerable<Template> GetAvailableTemplates(ContentGroup contentGroup)
 	    {
 	        IEnumerable<Template> availableTemplates;
 	        var items = contentGroup.Content;
 
 	        if (items.Any(e => e != null))
-	            availableTemplates = GetCompatibleTemplates(contentGroup).Where(p => !p.IsHidden);
+	            availableTemplates = GetCompatibleTemplates(contentGroup); //.Where(p => !p.IsHidden);
 	        else if (items.Count <= 1)
-	            availableTemplates = GetVisibleTemplates();
+	            availableTemplates = GetAllTemplates(); // GetVisibleTemplates();
 	        else
-	            availableTemplates = GetVisibleTemplates().Where(p => p.UseForList);
+	            availableTemplates = GetAllTemplates() /* GetVisibleTemplates() */.Where(p => p.UseForList);
 
 	        return availableTemplates;
 	    }
@@ -157,11 +162,29 @@ namespace ToSic.SexyContent
             return compatibleTemplates;
         }
 
-        public IEnumerable<IContentType> GetAvailableContentTypesForVisibleTemplates()
+        // todo: check if this call could be replaced with the normal ContentTypeController.Get to prevent redundant code
+        public IEnumerable<object> GetContentTypesWithStatus()
         {
-            var AvailableTemplates = GetVisibleTemplates();
-            return GetAvailableContentTypes(Settings.AttributeSetScope).Where(p => AvailableTemplates.Any(t => t.ContentTypeStaticName == p.StaticName)).OrderBy(p => p.Name);
+            // 2016-09-08 2dm - changed to use all templates, because of https://github.com/2sic/2sxc/issues/831
+            var availableTemplates = GetAllTemplates();// GetVisibleTemplates();
+            var visTemplates = availableTemplates.Where(t => !t.IsHidden).ToList();
+            var mdCache = TemplateDataSource().Cache;
+            var ctc = new ContentTypeController();
+            var ser = new Serializer();
+
+            return GetAvailableContentTypes(Settings.AttributeSetScope)
+                .Where(p => availableTemplates.Any(t => t.ContentTypeStaticName == p.StaticName)) // must exist in at least 1 template
+                .OrderBy(p => p.Name)
+                .Select(p => new
+                {
+                    p.StaticName,
+                    p.Name,
+                    IsHidden = !(visTemplates.Any(t => t.ContentTypeStaticName == p.StaticName)), // must check if *any* template is visible, otherise tell the UI that it's hidden
+                    Metadata = ser.Prepare(ctc.GetMetadata(p, mdCache))
+                });
         }
+
+
 
         public IEnumerable<IContentType> GetAvailableContentTypes(string scope, bool includeAttributeTypes = false)
         {

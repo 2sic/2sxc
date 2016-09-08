@@ -88,7 +88,7 @@ namespace ToSic.SexyContent.ContentBlock
         public IEnumerable<object> GetSelectableTemplates()
         {
             if (SxcContext.App == null) return null; // no app yet, so we also can't give a list of the app
-            return GetSelectableTemplatesForWebApi().Select(t => new { t.TemplateId, t.Name, t.ContentTypeStaticName });
+            return GetSelectableTemplatesForWebApi().Select(t => new { t.TemplateId, t.Name, t.ContentTypeStaticName, t.IsHidden });
         }
 
 
@@ -111,11 +111,10 @@ namespace ToSic.SexyContent.ContentBlock
 
 
         public IEnumerable<object> GetSelectableContentTypes()
-        {
-            if (SxcContext.App == null) return null; // no app yet, so we also can't give a list of the app
-            return SxcContext.AppTemplates.GetAvailableContentTypesForVisibleTemplates()
-                    .Select(p => new {p.StaticName, p.Name});
-        }
+            => SxcContext.App == null
+                ? null // no app yet, so we also can't give a list of the app
+                : SxcContext.AppTemplates.GetContentTypesWithStatus();
+        
 
         public void ChangeOrder([FromUri] int sortOrder, int destinationSortOrder)
         {

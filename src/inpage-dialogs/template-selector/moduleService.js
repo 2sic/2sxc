@@ -25,7 +25,17 @@
             },
 
             getSelectableContentTypes: function() {
-                return $http.get("View/Module/GetSelectableContentTypes");
+                return $http.get("View/Module/GetSelectableContentTypes")
+                    .then(function(result) {
+                        if (result.data && result.data.length) {
+                            angular.forEach(result.data, function(value, key) {
+                                value.Label = (value.Metadata && value.Metadata.Label)
+                                    ? value.Metadata.Label
+                                    : value.Name;
+                            });
+                        }
+                        return result;
+                    });
             },
 
             getSelectableTemplates: function() {

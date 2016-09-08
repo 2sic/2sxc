@@ -103,6 +103,8 @@ if (window.angular) // needed because the file is also included in older non-ang
                 },
                 metadataOfEntity: 4,
                 metadataOfAttribute: 2,
+                metadataOfContentType: 5,
+                metadataOfApp: 3,
                 metadataOfCmsObject: 10,
 
                 contentType: {

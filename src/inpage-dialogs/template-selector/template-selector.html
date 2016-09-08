@@ -58,7 +58,7 @@
         <!-- Content Type selector, only for Content-Mode -->
         <select ng-show="vm.isContentApp" ng-model="vm.contentTypeId"
                 class="input-lg"
-                ng-options="c.StaticName as c.Name for c in vm.contentTypes"
+                ng-options="c.StaticName as c.Label for c in vm.contentTypes | orderBy: 'Label'"
                 ng-disabled="vm.dashInfo.hasContent || vm.dashInfo.isList">
             <option ng-disabled="vm.contentTypeId != ''" value="" translate="TemplatePicker.ContentTypePickerDefault"></option>
         </select>
