@@ -76,16 +76,26 @@
         };
 
 
-        vm.reloadTemplates = function() {
+        vm.reloadTemplatesAndContentTypes = function() {
 
             vm.loading++;
             var getContentTypes = svc.getSelectableContentTypes();
             var getTemplates = svc.getSelectableTemplates();
 
             return $q.all([getContentTypes, getTemplates])
-                .then(function(res) {
+                .then(function (res) {
+                    // map to view-model
                     vm.contentTypes = res[0].data || [];
                     vm.templates = res[1].data || [];
+
+                    // if the currently selected content-type/template is configured to hidden, 
+                    // re-show it, so that it can be used in the selectors
+                    function findAndUnhide(filter) {
+                        var found = vm.contentTypes.filter(filter);
+                        if (found && found[0] && found[0].IsHidden) found[0].IsHidden = false;                        
+                    }
+                    findAndUnhide(function (item) { return item.StaticName === vm.contentTypeId; });
+                    findAndUnhide(function(item) { return item.TemplateId === vm.templateId; });
 
                     // Add option for no content type if there are templates without
                     if ($filter("filter")(vm.templates, { ContentTypeStaticName: "" }, true).length > 0) {
@@ -173,7 +183,7 @@
             if (vm.dashInfo.templateChooserVisible) {
                 var promises = [];
                 if (vm.appId !== null) // if an app had already been chosen OR the content-app (always chosen)
-                    promises.push(vm.reloadTemplates()); 
+                    promises.push(vm.reloadTemplatesAndContentTypes()); 
 
                 // if it's the app-dialog and the app's haven't been loaded yet...
                 if (!vm.isContentApp && vm.apps.length === 0)
@@ -182,7 +192,7 @@
             }
         };
 
-        // some helpers to show the i-frame and link up the ablity to then install stuff
+        //#region some *Installer* helpers to show the i-frame and link up the ablity to then install stuff
         vm.externalInstaller = {
             // based on situation, decide if we should show the auto-install IFrame
             showIfConfigIsEmpty: function () {
@@ -212,6 +222,7 @@
                 });
             }
         };
+        //#endregion
 
         // todo 8.4 - this should re-load state if re-shown
         vm.toggle = function () {
