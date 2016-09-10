@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<SexyContent FileVersion="07.00.00" MinimumRequiredVersion="07.00.00" ModuleVersion="08.05.01" ExportDate="2016-09-08T11:22:40.3564719+02:00">
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<SexyContent FileVersion="07.00.00" MinimumRequiredVersion="07.00.00" ModuleVersion="08.05.01" ExportDate="2016-09-10T07:09:13.5090768+02:00">
   <Header>
     <Language Default="en-US" />
     <Dimensions />
@@ -154,5 +154,14 @@
       </Attributes>
     </AttributeSet>
   </AttributeSets>
-  <Entities />
+  <Entities>
+    <Entity AssignmentObjectType="ContentType" AttributeSetStaticName="ContentType" AttributeSetName="ContentType" EntityGUID="8cc9928e-033a-4d3d-b97d-9e4320d00363" KeyNumber="12867">
+      <Value Key="Label" Value="ContentType" Type="String" />
+      <Value Key="Description" Value="Metadata for a content-type" Type="String" />
+      <Value Key="Icon" Value="" Type="Hyperlink" />
+      <Value Key="Notes" Value="" Type="String" />
+      <Value Key="Link" Value="" Type="Hyperlink" />
+      <Value Key="EditInstructions" Value="&lt;p&gt;ContentType Metadata lets you provide additional information about a content-type, which is then used in various dialogs. For an up-to date info regarding the functionalities, check out the help in &lt;a href=&quot;//2sxc.org/help?tag=content-type&quot; target=&quot;_blank&quot;&gt;2sxc.org/help?tag=content-type&lt;/a&gt;.&amp;nbsp;&lt;/p&gt;" Type="String" />
+    </Entity>
+  </Entities>
 </SexyContent>
