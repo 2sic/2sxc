@@ -13,7 +13,8 @@
 			"Refresh": "refresh",
 			"Rename": "rename",
 			"Save": "save",
-			"System": "advanced system functions"
+			"System": "advanced system functions",
+			"Metadata": "metadata"
 		},
 		"Messages": {
 			"Loading": "loading...",
