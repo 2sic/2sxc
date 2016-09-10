@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using DotNetNuke.Common;
@@ -29,6 +27,7 @@ namespace ToSic.SexyContent.WebApi
 	    {
 	        var portalId = PortalSettings.PortalId;
             var zoneId = ZoneHelpers.GetZoneID(portalId);
+	        // ReSharper disable once PossibleInvalidOperationException
             var cultures = ZoneHelpers.GetCulturesWithActiveState(portalId, zoneId.Value).Select(c => new
             {
                 c.Code,
@@ -48,9 +47,10 @@ namespace ToSic.SexyContent.WebApi
             // Activate or Deactivate the Culture
             var portalId = PortalSettings.PortalId;
             var zoneId = ZoneHelpers.GetZoneID(portalId);
+            // ReSharper disable once PossibleInvalidOperationException
 	        var cache = DataSource.GetCache(zoneId.Value);
             //var sexy = new SxcInstance(zoneId.Value, cache.AppId);
-            var app = new App(zoneId.Value, cache.AppId, PortalSettings );
+            var app = new App(zoneId.Value, cache.AppId, PortalSettings, false);
             var cultureText = LocaleController.Instance.GetLocale(cultureCode).Text;
 
             app.EavContext.Dimensions.AddOrUpdateLanguage(cultureCode, cultureText, enable, PortalSettings.PortalId);
@@ -110,14 +110,19 @@ namespace ToSic.SexyContent.WebApi
         [HttpGet]
         public dynamic DialogSettings(int appId)
         {
-            var app = new App(PortalSettings.Current, appId);
+            App app = null;
+            try
+            {
+                app = new App(PortalSettings.Current, appId);
+            }
+            catch (KeyNotFoundException) {}
 
             return new
             {
-                IsContent = app.AppGuid == "Default",
+                IsContent = app?.AppGuid == "Default",
                 Language = PortalSettings.Current.CultureCode,
                 LanguageDefault = PortalSettings.Current.DefaultLanguage,
-                GettingStartedUrl = GettingStartedUrl(app)
+                GettingStartedUrl = app == null ? "" : GettingStartedUrl(app)
             };
         }
 
