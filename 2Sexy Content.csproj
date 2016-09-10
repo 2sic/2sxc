@@ -298,8 +298,8 @@
     <Compile Include="WebApi\ImportExportController.cs" />
     <Compile Include="WebApi\SxcWebApiExceptionHandling.cs" />
     <Compile Include="WebApi\AppAssetsController.cs" />
+    <Compile Include="WebApi\TemplateController.cs" />
     <Compile Include="WebApi\ToRefactorDeliverCBDataLight\GetContentBlockDataLight.cs" />
-    <Compile Include="WebApi\View\TemplateController.cs" />
     <Compile Include="SexyContent\AppAssets\AssetEditor.cs" />
     <Compile Include="SexyContent\UnityConfig.cs" />
     <Compile Include="WebApi\SystemController.cs" />
@@ -559,23 +559,6 @@
     <Content Include="src\sxc-edit\fields\string\string-wysiwyg-dnn.html" />
     <Content Include="src\sxc-edit\temp-icon-fix.css" />
     <Content Include="TemplateHelpGrid.ascx" />
-    <Content Include="Upgrade\07.00.00.xml" />
-    <Content Include="Upgrade\07.02.00.xml" />
-    <Content Include="Upgrade\07.00.03.xml" />
-    <Content Include="Upgrade\08.00.02.xml" />
-    <Content Include="Upgrade\07.03.03-02.xml" />
-    <Content Include="Upgrade\07.03.03-01.xml" />
-    <Content Include="Upgrade\07.03.03-03.xml" />
-    <Content Include="Upgrade\08.00.04.xml" />
-    <Content Include="Upgrade\08.01.00.xml" />
-    <Content Include="Upgrade\08.03.02.xml" />
-    <Content Include="Upgrade\08.03.03.xml">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Upgrade\08.03.05.xml" />
-    <Content Include="Upgrade\08.04.00.xml" />
-    <Content Include="Upgrade\08.04.03.xml" />
-    <Content Include="Upgrade\08.05.00.xml" />
     <Content Include="View.ascx" />
     <Content Include="WebConfigTemplate.config" />
     <None Include="SqlDataProvider\01.00.01.SqlDataProvider" />
@@ -647,9 +630,7 @@
   <ItemGroup>
     <Content Include="Administration\App_LocalResources\WebApiHelp.ascx.resx" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Upgrade\Log\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="SexyContent\ImportExport\Instructions\ReleaseNotes.txt" />
   </ItemGroup>
