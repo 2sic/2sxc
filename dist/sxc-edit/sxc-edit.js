@@ -1206,7 +1206,7 @@ angular.module("sxcFieldTemplates")
         // group with adam-link, dnn-link
         editor.addButton("linkfiles", {
             type: "splitbutton",
-            icon: " icon-file-pdf",
+            icon: " eav-icon-file-pdf",
             title: "Link.AdamFile.Tooltip",
             onclick: function() {
                 vm.toggleAdam(false);
@@ -1215,14 +1215,14 @@ angular.module("sxcFieldTemplates")
                 {
                     text: "Link.AdamFile",
                     tooltip: "Link.AdamFile.Tooltip",
-                    icon: " icon-file-pdf",
+                    icon: " eav-icon-file-pdf",
                     onclick: function() {
                         vm.toggleAdam(false);
                     }
                 }, {
                     text: "Link.DnnFile",
                     tooltip: "Link.DnnFile.Tooltip",
-                    icon: " icon-file",
+                    icon: " eav-icon-file",
                     onclick: function () {
                         vm.openDnnDialog("documentmanager");
                     }
@@ -1245,7 +1245,7 @@ angular.module("sxcFieldTemplates")
             {
                 text: "Link.Page",
                 tooltip: "Link.Page.Tooltip",
-                icon: " icon-sitemap",
+                icon: " eav-icon-sitemap",
                 onclick: function() {
                     vm.openDnnDialog("pagepicker");
                 }
@@ -1253,7 +1253,7 @@ angular.module("sxcFieldTemplates")
         ]
         };
         var linkgroupPro = angular.copy(linkgroup);
-        linkgroupPro.menu.push({ icon: " icon-anchor", text: "Anchor", tooltip: "Link.Anchor.Tooltip", onclick: function() { editor.execCommand("mceAnchor"); } });
+        linkgroupPro.menu.push({ icon: " eav-icon-anchor", text: "Anchor", tooltip: "Link.Anchor.Tooltip", onclick: function() { editor.execCommand("mceAnchor"); } });
         editor.addButton("linkgroup", linkgroup);
         editor.addButton("linkgrouppro", linkgroupPro);
         //#endregion
@@ -1326,13 +1326,13 @@ angular.module("sxcFieldTemplates")
         }
 
         editor.addButton("modestandard", {
-            icon: " icon-cancel",
+            icon: " eav-icon-cancel",
             tooltip: "SwitchMode.Standard",
             onclick: function () { switchModes("standard"); }
         });
 
         editor.addButton("modeadvanced", {
-            icon: " icon-pro",
+            icon: " eav-icon-pro",
             tooltip: "SwitchMode.Pro",
             onclick: function () {  switchModes("advanced");    }
         });
@@ -1381,15 +1381,15 @@ angular.module("sxcFieldTemplates")
 
 
         //#region image alignment / size buttons
-        editor.addButton("alignimgleft", { icon: " icon-align-left", tooltip: "Align left", cmd: "JustifyLeft", onPostRender: initOnPostRender("alignleft") });
-        editor.addButton("alignimgcenter", { icon: " icon-align-center", tooltip: "Align center", cmd: "justifycenter", onPostRender: initOnPostRender("aligncenter") });
-        editor.addButton("alignimgright", { icon: " icon-align-right", tooltip: "Align right", cmd: "justifyright", onPostRender: initOnPostRender("alignright") });
+        editor.addButton("alignimgleft", { icon: " eav-icon-align-left", tooltip: "Align left", cmd: "JustifyLeft", onPostRender: initOnPostRender("alignleft") });
+        editor.addButton("alignimgcenter", { icon: " eav-icon-align-center", tooltip: "Align center", cmd: "justifycenter", onPostRender: initOnPostRender("aligncenter") });
+        editor.addButton("alignimgright", { icon: " eav-icon-align-right", tooltip: "Align right", cmd: "justifyright", onPostRender: initOnPostRender("alignright") });
 
         var imgMenuArray = [];
         function makeImgFormatCall(size) { return function() { editor.formatter.apply("imgwidth" + size); }; }
         for (var is = 0; is < imgSizes.length; is++) {
             var config = {
-                icon: " icon-resize-horizontal",
+                icon: " eav-icon-resize-horizontal",
                 tooltip: imgSizes[is] + "%",
                 text: imgSizes[is] + "%",
                 onclick: makeImgFormatCall(imgSizes[is]),
@@ -1399,7 +1399,7 @@ angular.module("sxcFieldTemplates")
             imgMenuArray.push(config);
         }
 
-        editor.addButton("resizeimg100", {icon: " icon-resize-horizontal", tooltip: "100%",
+        editor.addButton("resizeimg100", {icon: " eav-icon-resize-horizontal", tooltip: "100%",
             onclick: function() {   editor.formatter.apply("imgwidth100");  },
             onPostRender: initOnPostRender("imgwidth100")
         });
