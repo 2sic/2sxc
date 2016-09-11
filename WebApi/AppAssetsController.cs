@@ -55,10 +55,12 @@ namespace ToSic.SexyContent.WebApi
                 .ToList();
         }
 
-
-        public void Create(int appId, string path, string content = "")
+        [HttpPost]
+        public void Create([FromUri] int appId, [FromUri] string path, string content = "")
         {
-            
+            var assetEditor = new AssetEditor(SxcContext, path, UserInfo, PortalSettings);
+            assetEditor.EnsureUserMayEditAsset(path);
+            assetEditor.Create(content);
         }
 
         #endregion

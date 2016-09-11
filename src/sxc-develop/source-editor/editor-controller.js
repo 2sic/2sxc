@@ -87,12 +87,12 @@
         //#region show file picker
         vm.browser = {
             show: false,
+            svc: appAssetsSvc(appId),
             toggle: function() {
       
                 vm.browser.show = !vm.browser.show;
-                var assetsSvc = appAssetsSvc(appId);
                 if (!vm.assets)
-                    vm.assets = assetsSvc.liveList();
+                    vm.assets = vm.browser.svc.liveList();
             },
             editFile: function(filename) {
                 window.open(vm.browser.assembleUrl(filename));
@@ -104,6 +104,13 @@
                 var url = window.location.href;
                 var newItems = JSON.stringify([{ Path: newFileName }]);
                 return url.replace(new RegExp("items=.*?%5d", "i"), "items=" + encodeURI(newItems)); // note: sometimes it doesn't have an appid, so it's [0-9]* instead of [0-9]+
+            },
+            addFile: function () {
+                // todo: i18n
+                var result = prompt("please enter full file name"); // $translate.instant("AppManagement.Prompt.NewApp"));
+                if (result)
+                    vm.browser.svc.create(result);
+
             }
         };
 

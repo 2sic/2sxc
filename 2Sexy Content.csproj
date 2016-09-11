@@ -596,7 +596,6 @@
     <None Include="SqlDataProvider\Uninstall.SqlDataProvider" />
     <Content Include="web.config" />
     <Content Include="src\sxc-admin\services\_sxc-services.js" />
-    <Content Include="src\i18n\source-editor-snippets-en.json" />
     <Content Include="src\sxc-develop\source-editor\snippets.xlsx" />
   </ItemGroup>
   <ItemGroup>

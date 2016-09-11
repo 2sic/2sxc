@@ -18,6 +18,10 @@
                             {{asset}}
                         </li>
                     </ol>
+                    <ul>
+                        <li ng-click="vm.browser.addFile()">create file <span class="eav-icon-plus-circled"></span></li>
+                        <li>for copy, rename etc. please use the dnn file manager</li>
+                    </ul>
                 </div>
                 <div ng-model="vm.view.Code" style="height: 600px;" ui-ace="{
                     useWrapMode : true,

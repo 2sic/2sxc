@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Web;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
@@ -133,5 +134,32 @@ namespace ToSic.SexyContent.AppAssets
             }
         }
 
+        public bool Create(string contents)
+        {
+            // todo: maybe add some security for special dangerous file names like .cs, etc.?
+            EditInfo.FileName = Regex.Replace(EditInfo.FileName, @"[?:\/*""<>|]", "");
+            var absolutePath = InternalPath;// server.MapPath(Path.Combine(GetTemplatePathRoot(location, App), templatePath));
+
+            // don't create if it already exits
+            if (File.Exists(absolutePath)) return false;
+
+            // check if the folder to it already exists, or create it...
+            var foundFolder = absolutePath.LastIndexOf("\\", StringComparison.InvariantCulture);
+            if (foundFolder > -1)
+            {
+                var folderPath = absolutePath.Substring(0, foundFolder);
+
+                if (!Directory.Exists(folderPath))
+                    Directory.CreateDirectory(folderPath);
+            }
+
+            // now create the file
+            var stream = new StreamWriter(File.Create(absolutePath));
+            stream.Write(contents);
+            stream.Flush();
+            stream.Close();
+
+            return true;
+        }
     }
 }

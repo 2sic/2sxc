@@ -103,12 +103,12 @@
         //#region show file picker
         vm.browser = {
             show: false,
+            svc: appAssetsSvc(appId),
             toggle: function() {
       
                 vm.browser.show = !vm.browser.show;
-                var assetsSvc = appAssetsSvc(appId);
                 if (!vm.assets)
-                    vm.assets = assetsSvc.liveList();
+                    vm.assets = vm.browser.svc.liveList();
             },
             editFile: function(filename) {
                 window.open(vm.browser.assembleUrl(filename));
@@ -120,6 +120,13 @@
                 var url = window.location.href;
                 var newItems = JSON.stringify([{ Path: newFileName }]);
                 return url.replace(new RegExp("items=.*?%5d", "i"), "items=" + encodeURI(newItems)); // note: sometimes it doesn't have an appid, so it's [0-9]* instead of [0-9]+
+            },
+            addFile: function () {
+                // todo: i18n
+                var result = prompt("please enter full file name"); // $translate.instant("AppManagement.Prompt.NewApp"));
+                if (result)
+                    vm.browser.svc.create(result);
+
             }
         };
 
@@ -484,7 +491,7 @@ angular.module('SourceEditor').run(['$templateCache', function($templateCache) {
   'use strict';
 
   $templateCache.put('source-editor/editor.html',
-    "<div ng-click=vm.debug.autoEnableAsNeeded($event)><div class=modal-header><h3 class=modal-title translate=SourceEditor.Title></h3></div><div class=modal-body><div class=row><div class=col-md-8><div tooltip=\"{{ vm.view.FileName }}\" ng-click=vm.browser.toggle()>{{ vm.view.FileName.substr(vm.view.FileName.lastIndexOf(\"\\\\\") + 1) }} ({{vm.view.Type }}) <i ng-class=\"{&quot;eav-icon-plus-squared&quot;: !vm.browser.show, &quot;eav-icon-minus-squared&quot;: vm.browser.show}\"></i></div><div ng-if=vm.browser.show><h4>quick-pick another file</h4><ol><li ng-repeat=\"asset in vm.assets\" ng-click=vm.browser.editFile(asset)>{{asset}}</li></ol></div><div ng-model=vm.view.Code style=\"height: 600px\" ui-ace=\"{\r" +
+    "<div ng-click=vm.debug.autoEnableAsNeeded($event)><div class=modal-header><h3 class=modal-title translate=SourceEditor.Title></h3></div><div class=modal-body><div class=row><div class=col-md-8><div tooltip=\"{{ vm.view.FileName }}\" ng-click=vm.browser.toggle()>{{ vm.view.FileName.substr(vm.view.FileName.lastIndexOf(\"\\\\\") + 1) }} ({{vm.view.Type }}) <i ng-class=\"{&quot;eav-icon-plus-squared&quot;: !vm.browser.show, &quot;eav-icon-minus-squared&quot;: vm.browser.show}\"></i></div><div ng-if=vm.browser.show><h4>quick-pick another file</h4><ol><li ng-repeat=\"asset in vm.assets\" ng-click=vm.browser.editFile(asset)>{{asset}}</li></ol><ul><li ng-click=vm.browser.addFile()>create file <span class=eav-icon-plus-circled></span></li><li>for copy, rename etc. please use the dnn file manager</li></ul></div><div ng-model=vm.view.Code style=\"height: 600px\" ui-ace=\"{\r" +
     "\n" +
     "                    useWrapMode : true,\r" +
     "\n" +
