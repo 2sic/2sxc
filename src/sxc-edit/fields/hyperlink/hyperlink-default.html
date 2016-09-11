@@ -27,20 +27,20 @@
 ADAM - sponsored with ♥ by 2sic.com">
                 <span class="input-group-btn" style="vertical-align: top;">
                     <button ng-if="to.settings['merged'].Buttons.indexOf('adam') > -1" type="button" class="btn btn-default icon-field-button" ng-disabled="to.disabled" tooltip="{{'Edit.Fields.Hyperlink.Default.AdamUploadLabel' | translate }}" ng-click="vm.toggleAdam()">
-                        <i class="eav-icon-apple"></i>
+                        <i class="icon-eav-apple"></i>
                     </button>
                     <button ng-if="to.settings['merged'].Buttons.indexOf('page') > -1" type="button" class="btn btn-default icon-field-button" ng-disabled="to.disabled" tooltip="{{'Edit.Fields.Hyperlink.Default.AdamUploadLabel' | translate }}" ng-click="vm.openDialog('pagepicker')">
-                        <i class="eav-icon-sitemap"></i>
+                        <i class="icon-eav-sitemap"></i>
                     </button>
                     <button ng-if="to.settings['merged'].Buttons.indexOf('more') > -1" tabindex="-1" type="button" class="btn btn-default dropdown-toggle icon-field-button" dropdown-toggle ng-disabled="to.disabled">
-                        <i class="eav-icon-options"></i>
+                        <i class="icon-eav-options"></i>
                     </button>
                 </span>
                 <ul class="dropdown-menu pull-right" role="menu">
-                    <li role="menuitem" ng-if="to.settings['merged'].ShowAdam"><a class="dropzone-adam" ng-click="vm.toggleAdam()" href="javascript:void(0);"><i class="eav-icon-apple"></i> <span translate="Edit.Fields.Hyperlink.Default.MenuAdam"></span></a></li>
-                    <li role="menuitem" ng-if="to.settings['merged'].ShowPagePicker"><a ng-click="vm.openDialog('pagepicker')" href="javascript:void(0)"><i class="eav-icon-sitemap" xicon="home"></i> <span translate="Edit.Fields.Hyperlink.Default.MenuPage"></span></a></li>
-                    <li role="menuitem" ng-if="to.settings['merged'].ShowImageManager"><a ng-click="vm.openDialog('imagemanager')" href="javascript:void(0)"><i class="eav-icon-file-image" xicon="picture"></i> <span translate="Edit.Fields.Hyperlink.Default.MenuImage"></span></a></li>
-                    <li role="menuitem" ng-if="to.settings['merged'].ShowFileManager"><a ng-click="vm.openDialog('documentmanager')" href="javascript:void(0)"><i class="eav-icon-file" xicon="file"></i> <span translate="Edit.Fields.Hyperlink.Default.MenuDocs"></span></a></li>
+                    <li role="menuitem" ng-if="to.settings['merged'].ShowAdam"><a class="dropzone-adam" ng-click="vm.toggleAdam()" href="javascript:void(0);"><i class="icon-eav-apple"></i> <span translate="Edit.Fields.Hyperlink.Default.MenuAdam"></span></a></li>
+                    <li role="menuitem" ng-if="to.settings['merged'].ShowPagePicker"><a ng-click="vm.openDialog('pagepicker')" href="javascript:void(0)"><i class="icon-eav-sitemap" xicon="home"></i> <span translate="Edit.Fields.Hyperlink.Default.MenuPage"></span></a></li>
+                    <li role="menuitem" ng-if="to.settings['merged'].ShowImageManager"><a ng-click="vm.openDialog('imagemanager')" href="javascript:void(0)"><i class="icon-eav-file-image" xicon="picture"></i> <span translate="Edit.Fields.Hyperlink.Default.MenuImage"></span></a></li>
+                    <li role="menuitem" ng-if="to.settings['merged'].ShowFileManager"><a ng-click="vm.openDialog('documentmanager')" href="javascript:void(0)"><i class="icon-eav-file" xicon="file"></i> <span translate="Edit.Fields.Hyperlink.Default.MenuDocs"></span></a></li>
                 </ul>
             </div>
             <div ng-if="vm.showPreview" style="position: relative">

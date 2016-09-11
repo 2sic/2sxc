@@ -9,7 +9,7 @@
                 <div tooltip="{{ vm.view.FileName }}" ng-click="vm.browser.toggle()">
                     {{ vm.view.FileName.substr(vm.view.FileName.lastIndexOf("\\") + 1) }}
                     ({{vm.view.Type }})
-                    <i ng-class='{"eav-icon-plus-squared": !vm.browser.show, "eav-icon-minus-squared": vm.browser.show}'></i>
+                    <i ng-class='{"icon-eav-plus-squared": !vm.browser.show, "icon-eav-minus-squared": vm.browser.show}'></i>
                 </div>
                 <div ng-if="vm.browser.show">
                     <h4>quick-pick another file</h4>
@@ -19,7 +19,7 @@
                         </li>
                     </ol>
                     <ul>
-                        <li ng-click="vm.browser.addFile()">create file <span class="eav-icon-plus-circled"></span></li>
+                        <li ng-click="vm.browser.addFile()">create file <span class="icon-eav-plus-circled"></span></li>
                         <li>for copy, rename etc. please use the dnn file manager</li>
                     </ul>
                 </div>
