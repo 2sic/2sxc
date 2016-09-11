@@ -1,0 +1,14 @@
+﻿<div>
+    testing template picker
+    <select class="form-control input-material material"
+            ng-model="value.Value">
+        <option value="">(none)</option>
+        <option
+            ng-repeat="item in templates"
+            ng-selected="{{item == value.Value}}"
+            value="{{item}}">
+            {{item}}
+        </option>
+    </select>
+    <button>add</button>
+</div>
