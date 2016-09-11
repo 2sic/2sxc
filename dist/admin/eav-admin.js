@@ -2073,14 +2073,6 @@ angular.module("EavServices")
             svc.types = svcCreator.implementLiveList(svc.typeListRetrieve);
 
 
-            //svc.moveUp = function moveUp(item) {
-            //    return $http.get("eav/contenttype/reorder", { params: { appid: svc.appId, contentTypeId: svc.contentType.Id, attributeId: item.Id, direction: "up" } })
-            //        .then(svc.liveListReload);
-            //};
-            //svc.moveDown = function moveDown(item) {
-            //    return $http.get("eav/contenttype/reorder", { params: { appid: svc.appId, contentTypeId: svc.contentType.Id, attributeId: item.Id, direction: "down" } })
-            //        .then(svc.liveListReload);
-            //};
             svc.reOrder = function reOrder(idArray) {
                 console.log(idArray);
                 return $http.get("eav/contenttype/reorder", { params: { appid: svc.appId, contentTypeId: svc.contentType.Id, newSortOrder: JSON.stringify(idArray) } })
@@ -2095,7 +2087,7 @@ angular.module("EavServices")
             svc.addMany = function add(items, count) {
                 return $http.get("eav/contenttype/addfield/", { params: items[count] })
                     .then(function() {
-                        if (items.length == ++count)
+                        if (items.length === ++count)
                             svc.liveListReload();
                         else
                             svc.addMany(items, count);
