@@ -1,0 +1,32 @@
+-- make sure sql rolls back automatically in case of error.
+SET XACT_ABORT ON
+
+BEGIN TRANSACTION SexyContentUpdate;
+
+EXEC ToSIC_EAV_ChangeLogAdd 'System'
+
+-- Create new AssignmentObjectType for Entities
+UPDATE       ToSIC_EAV_AssignmentObjectTypes
+SET                Name = N'ContentType', Description = N'Metadata for ContentTypes'
+WHERE        (AssignmentObjectTypeID = 5)
+
+-- Reserve AssignmentObjectTypes for 11-100
+DECLARE @currentId AS INT = 11
+SET IDENTITY_INSERT ToSIC_EAV_AssignmentObjectTypes ON
+
+WHILE @currentId <= 100
+BEGIN
+   IF NOT EXISTS (SELECT * FROM ToSIC_EAV_AssignmentObjectTypes
+                   WHERE AssignmentObjectTypeID = @currentId)
+   BEGIN
+       INSERT INTO ToSIC_EAV_AssignmentObjectTypes (AssignmentObjectTypeID, Name, Description)
+       VALUES (@currentId, 'Reserved', 'Reserved')
+   END
+   SET @currentId = @currentId + 1
+END
+
+SET IDENTITY_INSERT ToSIC_EAV_AssignmentObjectTypes OFF
+
+-- Commit the transaction
+COMMIT TRANSACTION SexyContentUpdate;
+--ROLLBACK TRANSACTION SexyContentUpdate;

@@ -524,6 +524,7 @@
     <Content Include="src\inpage\2sxc.contentBlock.js" />
     <Content Include="src\inpage\2sxc._contentManagementCommands.js" />
     <Content Include="src\sxc-admin\importexport\export-app.service.js" />
+    <Content Include="SqlDataProvider\08.05.02.SqlDataProvider" />
     <None Include="src\sxc-develop\source-editor\README.md" />
     <Content Include="src\sxc-develop\source-editor\toArray-filter.js" />
     <Content Include="src\sxc-admin\templates\edit.html" />

@@ -196,6 +196,11 @@
               <name>08.03.02.SqlDataProvider</name>
               <version>08.03.02</version>
             </script>
+            <script type="Install">
+              <path>SqlDataProvider</path>
+              <name>08.05.02.SqlDataProvider</name>
+              <version>08.05.02</version>
+            </script>
             <script type="UnInstall">
               <path>SqlDataProvider</path>
               <name>Uninstall.SqlDataProvider</name>
