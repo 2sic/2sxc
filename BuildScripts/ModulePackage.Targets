@@ -41,6 +41,7 @@
       <DefaultExclude Include="src\**" />
       <DefaultExclude Include="tmp\**" />
       <DefaultExclude Include=".vs\**" />
+			<DefaultExclude Include="_\**" />
     </ItemGroup>
 
     <ItemGroup>
