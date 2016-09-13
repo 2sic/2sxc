@@ -512,17 +512,17 @@ namespace ToSic.SexyContent.ImportExport
 		{
             #region retrieve optional metadata keys in the import - must happen before we apply corrections like AppId
             Guid? keyGuid = null;
-            if (entityNode.Attribute("KeyGuid") != null)
-                keyGuid = Guid.Parse(entityNode.Attribute("KeyGuid").Value);
+            if (entityNode.Attribute(XmlConstants.KeyGuid) != null)
+                keyGuid = Guid.Parse(entityNode.Attribute(XmlConstants.KeyGuid).Value);
             int? keyNumber = null;
-            if (entityNode.Attribute("KeyNumber") != null)
-                keyNumber = int.Parse(entityNode.Attribute("KeyNumber").Value);
+            if (entityNode.Attribute(XmlConstants.KeyNumber) != null)
+                keyNumber = int.Parse(entityNode.Attribute(XmlConstants.KeyNumber).Value);
 
-            string keyString = entityNode.Attribute("KeyString")?.Value;
+            string keyString = entityNode.Attribute(XmlConstants.KeyString)?.Value;
             #endregion
 
             #region check if the xml has an own assignment object type (then we wouldn't use the default)
-            switch (entityNode.Attribute("AssignmentObjectType").Value)
+            switch (entityNode.Attribute(XmlConstants.KeyTargetType).Value)
 			{
 				// Special case: App AttributeSets must be assigned to the current app
 				case XmlConstants.App:
@@ -531,10 +531,13 @@ namespace ToSic.SexyContent.ImportExport
 					break;
                 case XmlConstants.Entity:
                 case "Data Pipeline": // this one is an old key, remove some time in the future; was probably almost never used...
-					assignmentObjectTypeId = Constants.AssignmentObjectTypeEntity;
+					assignmentObjectTypeId = Constants.MetadataForEntity;
 					break;
-                case "CmsObject":
-			        assignmentObjectTypeId = Constants.AssignmentObjectTypeCmsObject;
+                case XmlConstants.ContentType:
+			        assignmentObjectTypeId = Constants.MetadataForContentType;
+                    break;
+                case XmlConstants.CmsObject:
+			        assignmentObjectTypeId = Constants.MetadataForContentType;
 
                     if(keyString == null)
                         throw new Exception("found cms object, but couldn't find metadata-key of type string, will abort");

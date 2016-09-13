@@ -14,8 +14,16 @@
         public const string AttSetStatic = "AttributeSetStaticName";
         public const string Entities = "Entities";
         public const string Entity = "Entity";
+        public const string ContentType = "ContentType";
+        public const string CmsObject = "CmsObject";
         public const string Attributes = "Attributes";
         public const string Attribute = "Attribute";
+
+        // Keys for metadata
+        public const string KeyTargetType = "AssignmentObjectType";
+        public const string KeyGuid = "KeyGuid";
+        public const string KeyNumber = "KeyNumber";
+        public const string KeyString = "KeyString";
 
         // files
         public const string PortalFiles = "PortalFiles";
