@@ -880,8 +880,8 @@
                 : {
                     ContentTypeName: metadataType,        // otherwise the content type for new-assegnment
                     Metadata: {
-                        Key: item.Id,
-                        KeyType: "number",
+                        Key: item.StaticName,
+                        KeyType: "string",
                         TargetType: eavConfig.metadataOfContentType
                     },
                     Title: title,
