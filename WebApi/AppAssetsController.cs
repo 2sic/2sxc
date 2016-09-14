@@ -24,32 +24,25 @@ namespace ToSic.SexyContent.WebApi
 
         #region Public API
 
-        private bool allowFullAccess = false;
+        private bool _allowFullAccess;
         [HttpGet]
         public  List<string> List(int appId, bool global = false, string path = null, string mask = "*.*", bool withSubfolders = false, bool returnFolders = false)
         {
+            // set global access security if ok...
+            _allowFullAccess = UserInfo.IsSuperUser;
+
             // make sure the folder-param is not null if it's missing
             if (string.IsNullOrEmpty(path)) path = "";
-
-            var thisApp = new App(PortalSettings.Current, appId);
-            allowFullAccess = UserInfo.IsSuperUser;
-
-            if (global && !allowFullAccess)
-                throw new NotSupportedException("only host user may access area 0");
-
-            var appPath = Internal.TemplateManager.GetTemplatePathRoot(global ? Settings.TemplateLocations.HostFileSystem : Settings.TemplateLocations.PortalFileSystem, thisApp); // get root in global system
-
-            appPath = System.Web.Hosting.HostingEnvironment.MapPath(appPath);
-
+            var appPath = ResolveAppPath(appId, global);
             var fullPath = Path.Combine(appPath, path);
 
             // make sure the resulting path is still inside 2sxc
-            if(!allowFullAccess && fullPath.Contains("2sxc"))
+            if(!_allowFullAccess && fullPath.Contains("2sxc"))
                 throw new DirectoryNotFoundException("Folder was not inside 2sxc-scope any more - must cancel");
 
-            
-
-            if (!Directory.Exists(fullPath)) return new List<string>();
+            // if the directory doesn't exist, return empty list
+            if (!Directory.Exists(fullPath))
+                return new List<string>();
 
             var opt = withSubfolders 
                 ? SearchOption.AllDirectories 
@@ -61,11 +54,28 @@ namespace ToSic.SexyContent.WebApi
                 : Directory.GetFiles(fullPath, mask, opt)
                     .Select(Path.GetFullPath)
                 )
-                .Select(p => EnsurePathMayBeAccessed(p, appPath))
-                .Select(x => x.Replace(appPath + "\\", ""))
+                .Select(p => EnsurePathMayBeAccessed(p, appPath))   // do another security check
+                .Select(x => x.Replace(appPath + "\\", ""))         // truncate / remove internal server root path
                 .ToList();
         }
 
+        private string ResolveAppPath(int appId, bool global)
+        {
+            var thisApp = new App(PortalSettings.Current, appId);
+
+            if (global && !_allowFullAccess)
+                throw new NotSupportedException("only host user may access area 0");
+
+            var appPath = Internal.TemplateManager.GetTemplatePathRoot(global
+                ? Settings.TemplateLocations.HostFileSystem
+                : Settings.TemplateLocations.PortalFileSystem
+                , thisApp); // get root in global system
+
+            appPath = System.Web.Hosting.HostingEnvironment.MapPath(appPath);
+            return appPath;
+        }
+
+        // todo: add global support
         [HttpPost]
         public void Create([FromUri] int appId, [FromUri] string path, string content = "")
         {
@@ -76,6 +86,8 @@ namespace ToSic.SexyContent.WebApi
 
         #endregion
 
+
+        // todo: add global support
         #region Template --> later neutralize to standard asset-editing
         [HttpGet]
         public AssetEditInfo Asset(int templateId = 0, string path = null)
@@ -87,6 +99,7 @@ namespace ToSic.SexyContent.WebApi
             return assetEditor.EditInfoWithSource;
         }
 
+        // todo: add global support
         [HttpPost]
         public bool Asset([FromBody] AssetEditInfo template,[FromUri] int templateId = 0, [FromUri] string path = null)
         {
@@ -105,7 +118,7 @@ namespace ToSic.SexyContent.WebApi
         {
             if (appPath == null) throw new ArgumentNullException(nameof(appPath));
             // security check, to ensure no results leak from outside the app
-            if (!allowFullAccess && !p.StartsWith(appPath))
+            if (!_allowFullAccess && !p.StartsWith(appPath))
                 throw new DirectoryNotFoundException("Result was not inside the app any more - must cancel");
             return p;
         }

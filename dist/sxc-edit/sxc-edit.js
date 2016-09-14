@@ -877,8 +877,8 @@ angular.module("sxcFieldTemplates")
             $scope.setFileConfig("Token"); // use token setting as default, till the UI tells us otherwise
 
             // set change-watchers to the other values
-            var scriptType = fieldMask("[Type]", $scope, $scope.setFileConfig);
-            var location = fieldMask("[Location]", $scope, $scope.onLocationChange);
+            $scope.typeWatcher = fieldMask("[Type]", $scope, $scope.setFileConfig);
+            $scope.locWatcher = fieldMask("[Location]", $scope, $scope.onLocationChange);
 
             // create initial list for binding
             $scope.templates = [];
@@ -886,17 +886,22 @@ angular.module("sxcFieldTemplates")
             $scope.svcApp = appAssetsSvc(appId, false);
             $scope.svcGlobal = appAssetsSvc(appId, true);
 
-            $scope.templates = $scope.svcApp.liveList();
+            $scope.onLocationChange(); // set initial file list
+            //$scope.templates = $scope.svcApp.liveList();
         }
+
+        $scope.readyToUse = function() {
+            return $scope.typeWatcher.current && $scope.locWatcher.current; // check if these have real values inside
+        };
 
         $scope.setFileConfig = function(type) {
             switch (type) {
             case "Token":
-                $scope.fileExt = "html";
+                $scope.fileExt = ".html";
                 $scope.filePrefix = "";
                 break;
             case "C# Razor":
-                $scope.fileExt = "cshtml";
+                $scope.fileExt = ".cshtml";
                 $scope.filePrefix = "_";
                 break;
             }
@@ -907,9 +912,40 @@ angular.module("sxcFieldTemplates")
         //};
 
         $scope.onLocationChange = function(loc) {
-            $scope.templates = (loc === "Host File System") 
-                ? $scope.svcGlobal.liveList()
-                : $scope.svcApp.liveList();
+            $scope.svcCurrent = (loc === "Host File System") 
+                ? $scope.svcGlobal
+                : $scope.svcApp;
+
+            $scope.templates = $scope.svcCurrent.liveList();
+        };
+
+        $scope.add = function() {
+            var fileName = prompt("enter new file name"); // todo: i18n
+
+            if (!fileName)
+                return;
+
+            // 1. check for folders
+            var path = "";
+            fileName = fileName.replace("/", "\\");
+            var foundSlash = fileName.lastIndexOf("\\");
+            if (foundSlash > -1) {
+                path = fileName.substring(0, foundSlash);
+                fileName = fileName.substring(foundSlash + 1);
+            }
+
+            // 2. check if extension already provided, otherwise or if not perfect, just attach default
+            if (fileName.indexOf($scope.fileExt) !== fileName.length - $scope.fileExt)
+                fileName += $scope.fileExt;
+
+            // todo: check if cshtmls have a "_" in the file name (not folder, must be the file name part)
+            if ($scope.fileExt === ".cshtml" && fileName[0] !== "_")
+                fileName = "_" + fileName;
+
+            var result = path + fileName;
+            console.log(result);
+            // todo: tell service to create
+            $scope.svcCurrent.create(result, "test content");
         };
 
         activate();
@@ -921,8 +957,7 @@ angular.module("sxcFieldTemplates")
 
         // Create the return function
         // set the required parameter name to **number**
-        return function(paths, extension) {
-            var ext = "." + extension;
+        return function(paths, ext) {
             var out = [];
             angular.forEach(paths, function(path) {
                 if (path.slice(path.length - ext.length) === ext)
@@ -1562,7 +1597,7 @@ angular.module('SxcEditTemplates', []).run(['$templateCache', function($template
 
 
   $templateCache.put('fields/string/string-template-picker.html',
-    "<div>testing template picker<select class=\"form-control input-material material\" ng-model=value.Value><option value=\"\">(none)</option><option ng-repeat=\"item in templates | isValidFile:fileExt\" ng-selected=\"{{item == value.Value}}\" value={{item}}>{{item}}</option></select><button>add</button></div>"
+    "<div><div class=input-group><select class=\"form-control input-material material\" ng-model=value.Value ng-disabled=!readyToUse()><option value=\"\">(no file selected)</option><option ng-repeat=\"item in templates | isValidFile:fileExt\" ng-selected=\"{{item == value.Value}}\" value={{item}}>{{item}}</option></select><span class=input-group-btn style=\"vertical-align: top\"><button class=\"btn btn-default icon-field-button\" type=button ng-click=todo() ng-disabled=!readyToUse()><span class=icon-eav-plus></span></button></span></div></div>"
   );
 
 
