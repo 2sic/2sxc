@@ -45,7 +45,11 @@ angular.module("eavFieldTemplates",
         "ui.bootstrap",
         "eavLocalization",
         "eavEditTemplates",
-        "ui.tree"
+        "ui.tree",
+
+        // testing for the entity-picker dropdown
+        "ui.select",
+        "ngSanitize"
     ]
 )
     // important: order of use is backwards, so the last is around the second-last, etc.
@@ -211,12 +215,22 @@ angular.module("eavFieldTemplates")
 
 
     }])
-    .controller("FieldTemplate-EntityCtrl", ["$scope", "$http", "$filter", "$translate", "$modal", "appId", "eavAdminDialogs", "eavDefaultValueService", function ($scope, $http, $filter, $translate, $modal, appId, eavAdminDialogs, eavDefaultValueService) {
-        // ensure settings are merged
-        if (!$scope.to.settings.merged)
-            $scope.to.settings.merged = {};
+    .controller("FieldTemplate-EntityCtrl", ["$scope", "$http", "$filter", "$translate", "$modal", "appId", "eavAdminDialogs", "eavDefaultValueService", "fieldMask", "$q", function ($scope, $http, $filter, $translate, $modal, appId, eavAdminDialogs, eavDefaultValueService, fieldMask, $q) {
+        var contentType, lastContentType;
 
-        $scope.availableEntities = [];
+        function activate() {
+            // ensure settings are merged
+            if (!$scope.to.settings.merged)
+                $scope.to.settings.merged = {};
+
+            // Initialize entities
+            var sourceMask = $scope.to.settings.merged.EntityType || null;
+            contentType = fieldMask(sourceMask, $scope.model, null, $scope, $scope.maybeReload);// this will contain the auto-resolve type (based on other contentType-field)
+            lastContentType = contentType.resolve();
+
+            $scope.availableEntities = [];
+        }
+
 
         // of no real data-model exists yet for this value (list of chosen entities), then create a blank
         if ($scope.model[$scope.options.key] === undefined || $scope.model[$scope.options.key].Values[0].Value === "")
@@ -227,10 +241,13 @@ angular.module("eavFieldTemplates")
         $scope.selectedEntity = null;
 
         // add an just-picked entity to the selected list
-        $scope.addEntity = function () {
-            if ($scope.selectedEntity !== null) {
-                $scope.chosenEntities.push($scope.selectedEntity);
-                $scope.selectedEntity = null;
+        $scope.addEntity = function (item) {
+            //console.log(item);
+            if (!item) item = $scope.selectedEntity; // if not provided by ui-select, use the property which was set by the old select
+            //console.log(item);
+            if (item !== null) {
+                $scope.chosenEntities.push(item);
+                $scope.selectedEntity = null;        // reset, for old method
             }
         };
 
@@ -242,27 +259,29 @@ angular.module("eavFieldTemplates")
 
         // open the dialog for a new item
         $scope.openNewEntityDialog = function() {
-            function reload(result) {
+            function reloadAfterAdd(result) {
                 if (!result || result.data === null || result.data === undefined)
                     return;
 
-                $scope.getAvailableEntities().then(function () {
+                $scope.maybeReload().then(function () {
                     $scope.chosenEntities.push(Object.keys(result.data)[0]);
                 });
             }
 
-            eavAdminDialogs.openItemNew($scope.to.settings.merged.EntityType, reload);
+            eavAdminDialogs.openItemNew(contentType.resolve(), reloadAfterAdd);
 
         };
 
         // ajax call to get all entities
-        // todo: move to a service some time
-        $scope.getAvailableEntities = function() {
+        // todo: move to a service some time + enhance to provide more fields if needed
+        $scope.getAvailableEntities = function (ctName) {
+            if (!ctName)
+                ctName = contentType.resolve();
             return $http({
                 method: "GET",
                 url: "eav/EntityPicker/getavailableentities",
                 params: {
-                    contentTypeName: $scope.to.settings.merged.EntityType,
+                    contentTypeName: ctName,// mask.resolve(),// $scope.to.settings.merged.EntityType,
                     appId: appId
                     // ToDo: dimensionId: $scope.configuration.DimensionId
                 }
@@ -270,6 +289,15 @@ angular.module("eavFieldTemplates")
                 $scope.availableEntities = data.data;
             });
         };
+        $scope.maybeReload = function () {
+            var newMask = contentType.resolve();
+            if (lastContentType !== newMask) {
+                lastContentType = newMask;
+                return $scope.getAvailableEntities(newMask);
+            }
+            return $q.when();
+        };
+
 
         // get a nice label for any entity, including non-existing ones
         $scope.getEntityText = function (entityId) {
@@ -298,9 +326,10 @@ angular.module("eavFieldTemplates")
             return eavAdminDialogs.openItemEditWithEntityId(id, $scope.getAvailableEntities);
         };
 
-        // Initialize entities
-        $scope.getAvailableEntities();
 
+
+
+        activate();
     }])
 
     .directive("entityValidation", [function () {
@@ -510,7 +539,8 @@ angular.module("eavFieldTemplates")
         //#endregion
 
 
-        vm.activate = function() {
+        vm.activate = function () {
+            // TODO: use new functionality on the fieldMask instead!
             // add a watch for each field in the field-mask
             angular.forEach(mask.fieldList() /* vm.getFieldsOfMask(sourceMask)*/, function(e, i) {
                 $scope.$watch("model." + e + "._currentValue.Value", function() {
@@ -1726,27 +1756,37 @@ function enhanceEntity(entity) {
  */
 
 angular.module("eavFieldTemplates")
-    .factory("fieldMask", function() {
-        function createFieldMask(mask, model, overloadPreCleanValues) {
+    .factory("fieldMask", ["debugState", function (debugState) {
+        // mask: a string like "[FirstName] [LastName]"
+        // model: usually the $scope.model, passed into here
+        // overloadPreCleanValues: a function which will "scrub" the found field-values
+        // 
+        // use: first create an object like mask = fieldMask.createFieldMask("[FirstName]", $scope.model);
+        //      then: access result in your timer or whatever with mask.resolve();
+        function createFieldMask(mask, model, overloadPreCleanValues, $scope, changeEvent) {
             var srv = {
                 mask: mask,
                 model: model,
+                fields: [],
+                value: undefined,
                 findFields: /\[.*?\]/ig,
                 unwrapField: /[\[\]]/ig
             };
 
+            // resolves a mask to the final value
             srv.resolve = function getNewAutoValue() {
-                var mask = srv.mask;
-                angular.forEach(srv.fieldList(), function(e, i) {
+                var value = srv.mask;
+                angular.forEach(srv.fields, function(e, i) {
                     var replaceValue = (srv.model.hasOwnProperty(e) && srv.model[e] && srv.model[e]._currentValue && srv.model[e]._currentValue.Value)
                         ? srv.model[e]._currentValue.Value : "";
                     var cleaned = srv.preClean(e, replaceValue);
-                    mask = mask.replace(e, cleaned);
+                    value = value.replace("[" + e + "]", cleaned);
                 });
 
-                return mask;
+                return value;
             };
 
+            // retrieves a list of all fields used in the mask
             srv.fieldList = function() {
                 var result = [];
                 if (!srv.mask) return result;
@@ -1762,14 +1802,43 @@ angular.module("eavFieldTemplates")
                 return value;
             };
 
-            if (overloadPreCleanValues) // got an overload...
-                srv.preClean = overloadPreCleanValues;
+            // change-event - will only fire if it really changes
+            srv.onChange = function() {
+                var maybeNew = srv.resolve();
+                if (srv.value !== maybeNew)
+                    changeEvent(maybeNew);
+                srv.value = maybeNew;
+            };
+
+            // add watcher and execute onChange
+            srv.watchAllFields = function() {
+                // add a watch for each field in the field-mask
+                angular.forEach(srv.fields, function (e, i) {
+                    $scope.$watch("model." + e + "._currentValue.Value", function () {
+                        if (debugState.on) console.log("url-path: " + e + " changed...");
+                        srv.onChange();
+                    });
+                });
+            };
+
+            function activate() {
+                srv.fields = srv.fieldList();
+
+                if (overloadPreCleanValues) // got an overload...
+                    srv.preClean = overloadPreCleanValues;
+
+                // bind auto-watch only if needed...
+                if ($scope && srv.onChange)
+                    srv.watchAllFields();
+            }
+
+            activate();
 
             return srv;
         }
 
         return createFieldMask;
-    });
+    }]);
 angular.module("eavEditTemplates", []).run(["$templateCache", function($templateCache) {$templateCache.put("form/edit-many-entities.html","<div ng-if=\"vm.items != null\" ng-click=\"vm.debug.autoEnableAsNeeded($event)\" class=\"form-container-multi\">\r\n    <eav-language-switcher is-disabled=\"!vm.isValid()\"></eav-language-switcher>\r\n\r\n    <div ng-repeat=\"p in vm.items\" class=\"group-entity\">\r\n        <div class=\"form-ci-title unhide-area\" ng-click=\"p.collapse = !p.collapse\">\r\n            <span style=\"position: relative\">\r\n                <i class=\"decoration icon-eav-side-marker\"></i>\r\n                <i class=\"decoration state icon-eav-minus collapse-entity-button hide-till-mouseover\" ng-if=\"!p.collapse\"></i>\r\n                <i class=\"decoration state icon-eav-plus collapse-entity-button\" ng-if=\"p.collapse\"></i>\r\n            </span>\r\n\r\n            {{p.Header.Title ? p.Header.Title : \'EditEntity.DefaultTitle\' | translate }}&nbsp;\r\n            <span ng-if=\"p.Header.Group.SlotCanBeEmpty\" ng-click=\"vm.toggleSlotIsEmpty(p)\" stop-event=\"click\">\r\n                <i class=\"icon-eav-toggle-off\" ng-class=\" p.slotIsUsed ? \'icon-eav-toggle-on\' : \'icon-eav-toggle-off\' \" ng-click=\"p.slotIsUsed = !p.slotIsUsed\" tooltip=\"{{\'EditEntity.SlotUsed\' + p.slotIsUsed | translate}}\"></i>\r\n            </span>\r\n        </div>\r\n        <div ng-if=\"vm.itemsHelp[$index]\" ng-bind-html=\"vm.itemsHelp[$index]\"></div>\r\n        <eav-edit-entity-form entity=\"p.Entity\" header=\"p.Header\" register-edit-control=\"vm.registerEditControl\" ng-hide=\"p.collapse\"></eav-edit-entity-form>\r\n    </div>\r\n\r\n\r\n    <div>\r\n        <!-- note: the buttons are not really disabled, because we want to be able to click them and see the error message -->\r\n        <div class=\"btn-group\" dropdown>\r\n            <button ng-class=\"{ \'disabled\': !vm.isValid() || vm.isWorking > 0}\" ng-click=\"vm.save(true)\" type=\"button\" class=\"btn btn-primary btn-lg submit-button\">\r\n                <span class=\"icon-eav-ok\" tooltip=\"{{ \'Button.Save\' | translate }}\"></span> &nbsp;<span translate=\"Button.Save\"></span>\r\n            </button>\r\n            <button class=\"dropdown-toggle btn btn-primary btn-lg\" ng-class=\"{ \'disabled\': !vm.isValid() || vm.isWorking > 0}\" dropdown-toggle><i class=\"caret\"></i></button>\r\n            <ul class=\"dropdown-menu\" role=\"menu\">\r\n                <li><a ng-click=\"vm.save(true)\"><i class=\"icon-eav-ok\"></i> {{ \'Button.Save\' | translate }}</a></li>\r\n                <li><a ng-click=\"vm.save(false)\"><i class=\"icon-eav-ok-circled2\"></i> {{ \'Button.SaveAndKeepOpen\' | translate }}</a></li>\r\n            </ul>\r\n        </div>\r\n        <!--&nbsp;\r\n        <button ng-class=\"{ \'disabled\': !vm.isValid() || vm.isWorking > 0}\" class=\"btn btn-default btn-lg btn-icon-square\" type=\"button\" ng-click=\"vm.save(false)\">\r\n            <span class=\"icon-eav-ok-circled2\" tooltip=\"{{ \'Button.SaveAndKeepOpen\' | translate }}\"></span>\r\n        </button>-->\r\n        &nbsp;\r\n        <!-- note: published status will apply to all - so the first is taken for identification if published -->\r\n        &nbsp;\r\n        <div class=\"btn-group\" dropdown>\r\n            <a class=\"dropdown-toggle\" dropdown-toggle><i ng-class=\"{\'icon-eav-eye\': vm.publishMode === \'show\', \'icon-eav-eye-close\': vm.publishMode === \'hide\', \'icon-eav-git-branch\': vm.publishMode === \'branch\'}\"></i> {{ \'SaveMode.\' + vm.publishMode |translate }}<i class=\"caret\"></i></a>\r\n            <ul class=\"dropdown-menu\" role=\"menu\">\r\n                <li><a ng-click=\"vm.publishMode = \'show\'\"><i class=\"icon-eav-eye\"></i> {{ \'SaveMode.show\' |translate }}</a></li>\r\n                <li><a ng-click=\"vm.publishMode = \'hide\'\"><i class=\"icon-eav-eye-close\"></i> {{ \'SaveMode.hide\' |translate }}</a></li>\r\n                <li ng-show=\"vm.enableDraft\"><a ng-click=\"vm.publishMode = \'branch\'\"><i class=\"icon-eav-git-branch\"></i> {{ \'SaveMode.branch\' |translate }}</a></li>\r\n            </ul>\r\n        </div>\r\n\r\n\r\n\r\n        <span ng-if=\"vm.debug.on\">\r\n            <button class=\"icon-eav-flash btn\" tooltip=\"debug\" ng-click=\"vm.showDebugItems = !vm.showDebugItems\"></button>\r\n        </span>\r\n        <show-debug-availability class=\"pull-right\" style=\"margin-top: 20px;\"></show-debug-availability>\r\n    </div>\r\n    <div ng-if=\"vm.debug.on && vm.showDebugItems\">\r\n        <div>\r\n            isValid: {{vm.isValid()}}<br />\r\n            isWorking: {{vm.isWorking}}\r\n        </div>\r\n        <pre>{{ vm.items | json }}</pre>\r\n    </div>\r\n</div>");
 $templateCache.put("form/edit-single-entity.html","<div ng-show=\"vm.editInDefaultLanguageFirst()\" translate=\"Message.PleaseCreateDefLang\">\r\n	\r\n</div>\r\n<div ng-show=\"!vm.editInDefaultLanguageFirst()\">\r\n    <formly-form ng-if=\"vm.formFields && vm.formFields.length\" ng-submit=\"vm.onSubmit()\" form=\"vm.form\" model=\"vm.entity.Attributes\" fields=\"vm.formFields\"></formly-form>\r\n</div>\r\n");
 $templateCache.put("form/main-form.html","<div class=\"modal-body-disabled\">\r\n    <span class=\"pull-right\">\r\n        <span style=\"display: inline-block; position: relative; left:0px\">\r\n            <button class=\"btn btn-default btn-icon-square btn-subtle\" type=\"button\" ng-click=\"vm.close()\">\r\n                <i class=\"icon-eav-cancel\"></i>\r\n            </button>\r\n        </span>\r\n    </span>\r\n    <eav-edit-entities item-list=\"vm.itemList\" after-save-event=\"vm.afterSave\" state=\"vm.state\" close=\"vm.close\"></eav-edit-entities>\r\n</div>");
@@ -1789,7 +1858,7 @@ $templateCache.put("fields/custom/custom-default.html","<div class=\"alert alert
 $templateCache.put("fields/boolean/boolean-default.html","<div class=\"checkbox checkbox-labeled\">\r\n    <!--<label>-->\r\n        <switch class=\"tosic-green pull-left\" ng-model=\"value.Value\"></switch>\r\n    <!-- maybe need the (hidden) input to ensure the label actually switches the boolean -->\r\n        <!--<input type=\"checkbox\" class=\"formly-field-checkbox\" ng-model=\"value.Value\" style=\"display: none\">-->\r\n        <div ng-include=\"\'wrappers/eav-label.html\'\"></div>\r\n        <!--{{to.label}} {{to.required ? \'*\' : \'\'}}-->\r\n    <!--</label>-->\r\n</div>");
 $templateCache.put("fields/datetime/datetime-default.html","<div>\r\n    <div class=\"input-group\" style=\"width: 100%\">\r\n\r\n\r\n\r\n        <input class=\"form-control input-lg\" ng-model=\"value.Value\" is-open=\"to.isOpen\" datepicker-options=\"to.datepickerOptions\" datepicker-popup />\r\n\r\n        <span class=\"input-group-btn\" style=\"vertical-align: top;\">\r\n            <button type=\"button\" class=\"btn btn-default icon-eav-field-button pull-right\"\r\n                    ng-disabled=\"to.disabled\"\r\n                    ng-click=\"to.isOpen = true;\">\r\n                <i class=\"icon-eav-calendar\"></i>\r\n            </button>\r\n        </span>\r\n            <!--<div class=\"input-group-addon\" style=\"cursor: pointer;\" ng-click=\"to.isOpen = true;\">\r\n            <i class=\"glyphicon glyphicon-calendar\"></i>\r\n        </div>-->\r\n       <timepicker ng-show=\"to.settings.merged.UseTimePicker\" ng-model=\"value.Value\" show-meridian=\"ismeridian\"></timepicker>\r\n</div>\r\n</div>\r\n");
 $templateCache.put("fields/empty/empty-default.html","<span></span>");
-$templateCache.put("fields/entity/entity-default.html","<div class=\"eav-entityselect\">\r\n\r\n    <div ui-tree=\"options\" data-empty-placeholder-enabled=\"false\" ng-show=\"to.settings.merged.EnableCreate || chosenEntities.length > 0\">\r\n        <table ui-tree-nodes ng-model=\"chosenEntities\" entity-validation ng-required=\"false\" class=\"eav-entityselect-table\" style=\"table-layout:fixed;\">\r\n            <thead>\r\n                <tr>\r\n                    <th></th>\r\n                    <th></th>\r\n                    <th></th>\r\n                </tr>\r\n            </thead>\r\n            <tr ng-repeat=\"item in chosenEntities track by $id(item)\" ui-tree-node class=\"eav-entityselect-item\" ui-tree-handle>\r\n                <td>\r\n                    <i title=\"{{ \'FieldType.Entity.DragMove\' | translate }}\" class=\"icon-eav-link pull-left eav-entityselect-icon\" ng-show=\"to.settings.Entity.AllowMultiValue\"></i>\r\n                    <i title=\"\" class=\"icon-eav-link pull-left eav-entityselect-icon\" ng-show=\"!to.settings.Entity.AllowMultiValue\"></i>\r\n                </td>\r\n                <td>\r\n                    <span class=\"eav-entityselect-item-title\" title=\"{{getEntityText(item) + \' (\' + item + \')\'}}\">{{getEntityText(item)}}</span>\r\n                </td>\r\n                <td style=\"text-align:right;\">\r\n                    <ul class=\"eav-entityselect-item-actions\" data-nodrag>\r\n                        <li>\r\n                            <a title=\"{{ \'FieldType.Entity.Edit\' | translate }}\" ng-click=\"edit(item, index)\" ng-if=\"to.settings.merged.EnableEdit\">\r\n                                <i class=\"icon-eav-pencil\"></i>\r\n                            </a>\r\n                        </li>\r\n                        <li>\r\n                            <a title=\"{{ \'FieldType.Entity.Remove\' | translate }}\" ng-click=\"removeSlot(item, $index)\" class=\"eav-entityselect-item-remove\" ng-if=\"to.settings.merged.EnableRemove\">\r\n                                <i ng-class=\"{ \'icon-eav-minus-circled\': to.settings.merged.AllowMultiValue, \'icon-eav-down-dir\': !to.settings.merged.AllowMultiValue  }\"></i>\r\n                            </a>\r\n                        </li>\r\n                        <li>\r\n                            <!-- todo: i18n, code in action, icon-eav-visiblity/alignment -->\r\n                            <a title=\"{{ \'FieldType.Entity.Delete\' | translate }}\" ng-click=\"deleteItemInSlot(item, $index)\" class=\"eav-entityselect-item-remove\" ng-if=\"to.settings.merged.EnableDelete\">\r\n                                <i class=\"icon-eav-cancel\"></i>\r\n                            </a>\r\n                        </li>\r\n                    </ul>\r\n                </td>\r\n            </tr>\r\n        </table>\r\n    </div>\r\n    <ol>\r\n        <!-- test - want to re-align how two add-scenarios work; ideally side-by side -->\r\n        <li class=\"eav-entityselect-item subtle-till-mouseover\"\r\n            ng-show=\"(to.settings.merged.EnableAddExisting && (to.settings.merged.AllowMultiValue || chosenEntities.length < 1)) || (to.settings.merged.EnableCreate && (to.settings.merged.AllowMultiValue || chosenEntities.length < 1))\">\r\n\r\n            <!-- create new entity to add to this list -->\r\n            <div ng-if=\"to.settings.merged.EnableCreate && (to.settings.merged.AllowMultiValue || chosenEntities.length < 1)\"\r\n                 class=\"eav-entityselect-item eav-entityselect-create\"\r\n                 ng-click=\"openNewEntityDialog()\"\r\n                 style=\"width: 50%; float: left\"\r\n                 >\r\n                <i class=\"icon-eav-plus pull-left eav-entityselect-icon\"></i>\r\n                <span>{{ \'FieldType.Entity.New\' | translate }}&nbsp;</span>\r\n            </div>\r\n\r\n            <div\r\n                style=\"width: 50%; float: left;\"\r\n                class=\"eav-entityselect-item\"\r\n                ng-show=\"to.settings.merged.EnableAddExisting && (to.settings.merged.AllowMultiValue || chosenEntities.length < 1)\">\r\n                    <i class=\"icon-eav-plus-circled pull-left eav-entityselect-icon-before-select\"></i>\r\n                    <div class=\"eav-entityselect-selector-wrapper\">\r\n                        <select class=\"eav-entityselect-selector form-control input-lg\"\r\n                                formly-skip-ng-model-attrs-manipulator\r\n                                ng-model=\"selectedEntity\"\r\n                                ng-change=\"addEntity()\">\r\n                            <option selected=\"selected\" value=\"\" translate=\"FieldType.Entity.Choose\"></option>\r\n                            <option ng-repeat=\"item in availableEntities\" ng-disabled=\"chosenEntities.indexOf(item.Value) != -1\" value=\"{{item.Value}}\">{{item.Text}}</option>\r\n                        </select>\r\n                </div>\r\n            </div>\r\n        </li>\r\n        <!-- add existing entity to this list--><!--ng-if=\"to.settings.merged.EnableAddExisting\"-->\r\n        <!--<li class=\"eav-entityselect-item subtle-till-mouseover\"\r\n            ng-show=\"to.settings.merged.EnableAddExisting && (to.settings.merged.AllowMultiValue || chosenEntities.length < 1)\">\r\n            <div>\r\n                <i class=\"icon-eav-plus-circled pull-left eav-entityselect-icon-before-select\"></i>\r\n                <div class=\"eav-entityselect-selector-wrapper\">\r\n                    <select class=\"eav-entityselect-selector form-control input-lg\"\r\n                            formly-skip-ng-model-attrs-manipulator\r\n                            ng-model=\"selectedEntity\"\r\n                            ng-change=\"addEntity()\">\r\n                        <option value=\"\" translate=\"FieldType.Entity.Choose\"></option>\r\n                        <option ng-repeat=\"item in availableEntities\" ng-disabled=\"chosenEntities.indexOf(item.Value) != -1\" value=\"{{item.Value}}\">{{item.Text}}</option>\r\n                    </select>\r\n                </div>\r\n            </div>\r\n        </li>-->\r\n\r\n        <!-- create new entity to add to this list -->\r\n        <!--<li ng-if=\"to.settings.merged.EnableCreate && (to.settings.merged.AllowMultiValue || chosenEntities.length < 1)\"\r\n            class=\"eav-entityselect-item eav-entityselect-create subtle-till-mouseover\">\r\n            <div ng-click=\"openNewEntityDialog()\">\r\n                <i class=\"icon-eav-plus pull-left eav-entityselect-icon\"></i>\r\n                <span>{{ \'FieldType.Entity.New\' | translate }}&nbsp;</span>\r\n            </div>\r\n        </li>-->\r\n    </ol>\r\n</div>");
+$templateCache.put("fields/entity/entity-default.html","<div class=\"eav-entityselect\">\r\n    <div>\r\n        <div ui-tree=\"options\" data-empty-placeholder-enabled=\"false\" ng-show=\"to.settings.merged.EnableCreate || chosenEntities.length > 0\">\r\n            <table ui-tree-nodes ng-model=\"chosenEntities\" entity-validation ng-required=\"false\" class=\"eav-entityselect-table\" style=\"table-layout: fixed;\">\r\n                <thead>\r\n                <tr>\r\n                    <th></th>\r\n                    <th></th>\r\n                    <th></th>\r\n                </tr>\r\n                </thead>\r\n                <tr ng-repeat=\"item in chosenEntities track by $id(item)\" ui-tree-node class=\"eav-entityselect-item\" ui-tree-handle>\r\n                    <td>\r\n                        <i title=\"{{ \'FieldType.Entity.DragMove\' | translate }}\" class=\"icon-eav-link pull-left eav-entityselect-icon\" ng-show=\"to.settings.Entity.AllowMultiValue\"></i>\r\n                        <i title=\"\" class=\"icon-eav-link pull-left eav-entityselect-icon\" ng-show=\"!to.settings.Entity.AllowMultiValue\"></i>\r\n                    </td>\r\n                    <td>\r\n                        <span class=\"eav-entityselect-item-title\" title=\"{{getEntityText(item) + \' (\' + item + \')\'}}\">{{getEntityText(item)}}</span>\r\n                    </td>\r\n                    <td style=\"text-align: right;\">\r\n                        <ul class=\"eav-entityselect-item-actions\" data-nodrag>\r\n                            <li>\r\n                                <a title=\"{{ \'FieldType.Entity.Edit\' | translate }}\" ng-click=\"edit(item, index)\" ng-if=\"to.settings.merged.EnableEdit\">\r\n                                    <i class=\"icon-eav-pencil\"></i>\r\n                                </a>\r\n                            </li>\r\n                            <li>\r\n                                <a title=\"{{ \'FieldType.Entity.Remove\' | translate }}\" ng-click=\"removeSlot(item, $index)\" class=\"eav-entityselect-item-remove\" ng-if=\"to.settings.merged.EnableRemove\">\r\n                                    <i ng-class=\"{ \'icon-eav-minus-circled\': to.settings.merged.AllowMultiValue, \'icon-eav-down-dir\': !to.settings.merged.AllowMultiValue  }\"></i>\r\n                                </a>\r\n                            </li>\r\n                            <li>\r\n                                <!-- todo: i18n, code in action, icon-eav-visiblity/alignment -->\r\n                                <a title=\"{{ \'FieldType.Entity.Delete\' | translate }}\" ng-click=\"deleteItemInSlot(item, $index)\" class=\"eav-entityselect-item-remove\" ng-if=\"to.settings.merged.EnableDelete\">\r\n                                    <i class=\"icon-eav-cancel\"></i>\r\n                                </a>\r\n                            </li>\r\n                        </ul>\r\n                    </td>\r\n                </tr>\r\n            </table>\r\n        </div>\r\n        <ol>\r\n            <!-- test - want to re-align how two add-scenarios work; ideally side-by side -->\r\n            <li class=\"eav-entityselect-item subtle-till-mouseover\"\r\n                ng-show=\"(to.settings.merged.EnableAddExisting && (to.settings.merged.AllowMultiValue || chosenEntities.length < 1)) || (to.settings.merged.EnableCreate && (to.settings.merged.AllowMultiValue || chosenEntities.length < 1))\">\r\n\r\n                <!-- create new entity to add to this list -->\r\n                <div ng-if=\"to.settings.merged.EnableCreate && (to.settings.merged.AllowMultiValue || chosenEntities.length < 1)\"\r\n                     class=\"eav-entityselect-item eav-entityselect-create\"\r\n                     ng-click=\"openNewEntityDialog()\"\r\n                     style=\"width: 50%; float: left\">\r\n                    <i class=\"icon-eav-plus pull-left eav-entityselect-icon\"></i>\r\n                    <span>{{ \'FieldType.Entity.New\' | translate }}&nbsp;</span>\r\n                </div>\r\n\r\n                <!-- pick existing entity -->\r\n                <div style=\"width: 50%; float: left;\"\r\n                     class=\"eav-entityselect-item\"\r\n                     ng-show=\"to.settings.merged.EnableAddExisting && (to.settings.merged.AllowMultiValue || chosenEntities.length < 1)\">\r\n                    <!--<i class=\"icon-eav-plus-circled pull-left eav-entityselect-icon-before-select\"></i>-->\r\n                    <div class=\"eav-entityselect-selector-wrapper\">\r\n\r\n                        <!-- previous edition, without search and without dynamic loading -->\r\n                        <!--<select class=\"eav-entityselect-selector form-control input-lg\"\r\n                                    formly-skip-ng-model-attrs-manipulator\r\n                                    ng-model=\"selectedEntity\"\r\n                                    ng-change=\"addEntity()\"\r\n                                    ng-focus=\"maybeReload()\">\r\n                            <option selected=\"selected\" value=\"\" translate=\"FieldType.Entity.Choose\"></option>\r\n                            <option ng-repeat=\"item in availableEntities\" ng-disabled=\"chosenEntities.indexOf(item.Value) != -1\" value=\"{{item.Value}}\">{{item.Text}}</option>\r\n                        </select>-->\r\n                        <!-- new 2016-09-14 for v08.05.03 -->\r\n                        <ui-select theme=\"bootstrap\" style=\"\"\r\n                                   ng-model=\"selectedEntity\"\r\n                                   on-highlight=\"maybeReload()\"\r\n                                   on-select=\"addEntity($select.selected.Value)\">\r\n                            <ui-select-match placeholder=\"{{ \'FieldType.Entity.Choose\' | translate }}\">\r\n                                <span ng-bind=\"$select.selected.Text\"></span>\r\n                            </ui-select-match>\r\n                            <ui-select-choices repeat=\"item in availableEntities | filter: { Text : $select.search } track by item.Value\"\r\n                                               refresh=\"maybeReload()\"\r\n                                               refresh-delay=\"0\"\r\n                                               minimum-input-length=\"0\"\r\n                                               ui-disable-choice=\"chosenEntities.indexOf(item.Value) != -1\">\r\n                                <span ng-bind=\"item.Text\"></span>\r\n                            </ui-select-choices>\r\n                        </ui-select>\r\n\r\n                    </div>\r\n                </div>\r\n                \r\n            </li>\r\n            <li>\r\n\r\n            </li>\r\n            <!-- add existing entity to this list--><!--ng-if=\"to.settings.merged.EnableAddExisting\"-->\r\n            <!--<li class=\"eav-entityselect-item subtle-till-mouseover\"\r\n                    ng-show=\"to.settings.merged.EnableAddExisting && (to.settings.merged.AllowMultiValue || chosenEntities.length < 1)\">\r\n                <div>\r\n                    <i class=\"icon-eav-plus-circled pull-left eav-entityselect-icon-before-select\"></i>\r\n                    <div class=\"eav-entityselect-selector-wrapper\">\r\n                        <select class=\"eav-entityselect-selector form-control input-lg\"\r\n                                formly-skip-ng-model-attrs-manipulator\r\n                                ng-model=\"selectedEntity\"\r\n                                ng-change=\"addEntity()\">\r\n                            <option value=\"\" translate=\"FieldType.Entity.Choose\"></option>\r\n                            <option ng-repeat=\"item in availableEntities\" ng-disabled=\"chosenEntities.indexOf(item.Value) != -1\" value=\"{{item.Value}}\">{{item.Text}}</option>\r\n                        </select>\r\n                    </div>\r\n                </div>\r\n            </li>-->\r\n            <!-- create new entity to add to this list -->\r\n            <!--<li ng-if=\"to.settings.merged.EnableCreate && (to.settings.merged.AllowMultiValue || chosenEntities.length < 1)\"\r\n                    class=\"eav-entityselect-item eav-entityselect-create subtle-till-mouseover\">\r\n                <div ng-click=\"openNewEntityDialog()\">\r\n                    <i class=\"icon-eav-plus pull-left eav-entityselect-icon\"></i>\r\n                    <span>{{ \'FieldType.Entity.New\' | translate }}&nbsp;</span>\r\n                </div>\r\n            </li>-->\r\n        </ol>\r\n    </div>\r\n</div>");
 $templateCache.put("fields/string/string-contenttype.html","<div>\r\n    <select class=\"form-control input-material material\"\r\n            ng-model=\"value.Value\">\r\n        <option value=\"\">(none)</option>\r\n        <option\r\n            ng-repeat=\"item in contentTypes\"\r\n            ng-selected=\"{{item.StaticName == value.Value}}\"\r\n            value=\"{{item.StaticName}}\">\r\n            {{item.Label}}\r\n        </option>\r\n    </select>\r\n</div>");
 $templateCache.put("ml-entities/tests/SpecRunner.html","<!DOCTYPE html>\r\n<html>\r\n<head>\r\n  <meta charset=\"utf-8\">\r\n  <title>Jasmine Spec Runner v2.3.4</title>\r\n    <!--\r\n  <link rel=\"shortcut icon\" type=\"image/png\" href=\"lib/jasmine-2.3.4/jasmine_favicon.png\">\r\n  <link rel=\"stylesheet\" href=\"lib/jasmine-2.3.4/jasmine.css\">\r\n\r\n  <script src=\"lib/jasmine-2.3.4/jasmine.js\"></script>\r\n  <script src=\"lib/jasmine-2.3.4/jasmine-html.js\"></script>\r\n  <script src=\"lib/jasmine-2.3.4/boot.js\"></script>\r\n        -->\r\n\r\n    <link rel=\"stylesheet\" href=\"../../../../node_modules\\grunt-contrib-jasmine\\node_modules\\jasmine-core/lib/jasmine-core/jasmine.css\">\r\n    <script src=\"../../../../node_modules\\grunt-contrib-jasmine\\node_modules\\jasmine-core/lib/jasmine-core/jasmine.js\"></script>\r\n    <script src=\"../../../../node_modules\\grunt-contrib-jasmine\\node_modules\\jasmine-core/lib/jasmine-core/jasmine-html.js\"></script>\r\n    <script src=\"../../../../node_modules\\grunt-contrib-jasmine\\node_modules\\jasmine-core/lib/jasmine-core/boot.js\"></script>\r\n  <!-- include source files here... -->\r\n    <!--\r\n  <script src=\"src/Player.js\"></script>\r\n  <script src=\"src/Song.js\"></script>\r\n    -->\r\n    <script src=\"../entity-enhancer.js\"></script>\r\n\r\n\r\n  <!-- include spec files here... -->\r\n    <!--\r\n  <script src=\"spec/SpecHelper.js\"></script>\r\n  <script src=\"spec/PlayerSpec.js\"></script>\r\n        -->\r\n    <script src=\"../specs/eav-content-ml.spec.js\"></script>\r\n\r\n</head>\r\n\r\n<body>\r\n</body>\r\n</html>\r\n");}]);
 /*
