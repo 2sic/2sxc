@@ -22,14 +22,17 @@ angular.module("sxcFieldTemplates")
 
             $scope.setFileConfig("Token"); // use token setting as default, till the UI tells us otherwise
 
-            var scriptType = fieldMask("[Type]", $scope, $scope.onTypeChange);
+            // set change-watchers to the other values
+            var scriptType = fieldMask("[Type]", $scope, $scope.setFileConfig);
             var location = fieldMask("[Location]", $scope, $scope.onLocationChange);
 
             // create initial list for binding
             $scope.templates = [];
 
-            var svc = appAssetsSvc(appId);
-            $scope.templates = svc.liveList();
+            $scope.svcApp = appAssetsSvc(appId, false);
+            $scope.svcGlobal = appAssetsSvc(appId, true);
+
+            $scope.templates = $scope.svcApp.liveList();
         }
 
         $scope.setFileConfig = function(type) {
@@ -45,20 +48,21 @@ angular.module("sxcFieldTemplates")
             }
         };
 
-        $scope.onTypeChange = function(currentType) {
-            console.log("type changed");
-            $scope.setFileConfig(currentType);
-        };
+        //$scope.onTypeChange = function(currentType) {
+        //    $scope.setFileConfig(currentType);
+        //};
 
-        $scope.onLocationChange = function() {
-            console.log("location changed");
+        $scope.onLocationChange = function(loc) {
+            $scope.templates = (loc === "Host File System") 
+                ? $scope.svcGlobal.liveList()
+                : $scope.svcApp.liveList();
         };
 
         activate();
 
     })
 
-    // Setup the filter
+    // filter to only show files which are applicable to this
     .filter("isValidFile", function() {
 
         // Create the return function

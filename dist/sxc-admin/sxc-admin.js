@@ -948,18 +948,21 @@ angular.module("SxcServices")
     .factory("appAssetsSvc", ["$http", "eavConfig", "svcCreator", function($http, eavConfig, svcCreator) {
 
         // Construct a service for this specific appId
-        return function createSvc(appId) {
+        return function createSvc(appId, global) {
             var svc = {
-                appId: appId
+                params: {
+                    appId: appId,
+                    global: global || false
+                }
             };
 
             // ReSharper disable once UseOfImplicitGlobalInFunctionScope
             svc = angular.extend(svc, svcCreator.implementLiveList(function getAll() {
-                return $http.get("app/appassets/list", { params: { appId: svc.appId, withSubfolders: true } });
+                return $http.get("app/appassets/list", { params: angular.extend({}, svc.params, { withSubfolders: true }) });
             }));
 
             svc.create = function create(path, content) {
-                return $http.post("app/appassets/create", content || "", { params: { appId: svc.appId, path: path } })
+                return $http.post("app/appassets/create", content || "", { params: angular.extend({}, svc.params, { path: path }) })
                     .then(svc.liveListReload);
             };
 

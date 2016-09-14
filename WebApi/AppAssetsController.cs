@@ -24,19 +24,30 @@ namespace ToSic.SexyContent.WebApi
 
         #region Public API
 
+        private bool allowFullAccess = false;
         [HttpGet]
-        public  List<string> List(int appId, string path = null, string mask = "*.*", bool withSubfolders = false, bool returnFolders = false)
+        public  List<string> List(int appId, bool global = false, string path = null, string mask = "*.*", bool withSubfolders = false, bool returnFolders = false)
         {
             // make sure the folder-param is not null if it's missing
             if (string.IsNullOrEmpty(path)) path = "";
 
-            //var app = ;
-            var appPath = (new App(PortalSettings.Current, appId)).PhysicalPath;
+            var thisApp = new App(PortalSettings.Current, appId);
+            allowFullAccess = UserInfo.IsSuperUser;
+
+            if (global && !allowFullAccess)
+                throw new NotSupportedException("only host user may access area 0");
+
+            var appPath = Internal.TemplateManager.GetTemplatePathRoot(global ? Settings.TemplateLocations.HostFileSystem : Settings.TemplateLocations.PortalFileSystem, thisApp); // get root in global system
+
+            appPath = System.Web.Hosting.HostingEnvironment.MapPath(appPath);
+
             var fullPath = Path.Combine(appPath, path);
 
             // make sure the resulting path is still inside 2sxc
-            if(fullPath.IndexOf("2sxc", StringComparison.InvariantCultureIgnoreCase) == -1)
+            if(!allowFullAccess && fullPath.Contains("2sxc"))
                 throw new DirectoryNotFoundException("Folder was not inside 2sxc-scope any more - must cancel");
+
+            
 
             if (!Directory.Exists(fullPath)) return new List<string>();
 
@@ -50,7 +61,7 @@ namespace ToSic.SexyContent.WebApi
                 : Directory.GetFiles(fullPath, mask, opt)
                     .Select(Path.GetFullPath)
                 )
-                .Select(p => EnsurePathIsInsideApp(p, appPath))
+                .Select(p => EnsurePathMayBeAccessed(p, appPath))
                 .Select(x => x.Replace(appPath + "\\", ""))
                 .ToList();
         }
@@ -90,11 +101,11 @@ namespace ToSic.SexyContent.WebApi
         #endregion
 
         #region Helpers
-        private static string EnsurePathIsInsideApp(string p, string appPath)
+        private string EnsurePathMayBeAccessed(string p, string appPath)
         {
             if (appPath == null) throw new ArgumentNullException(nameof(appPath));
             // security check, to ensure no results leak from outside the app
-            if (p.IndexOf(appPath, StringComparison.InvariantCultureIgnoreCase) != 0)
+            if (!allowFullAccess && !p.StartsWith(appPath))
                 throw new DirectoryNotFoundException("Result was not inside the app any more - must cancel");
             return p;
         }
