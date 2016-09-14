@@ -867,18 +867,67 @@ angular.module("sxcFieldTemplates")
         });
 
     }])
-    .controller("FieldTemplate-String-TemplatePicker", ["$scope", "appAssetsSvc", "appId", function ($scope, appAssetsSvc, appId) { //, $http, $filter, $translate, $modal, eavAdminDialogs, eavDefaultValueService) {
-        // ensure settings are merged
-        if (!$scope.to.settings.merged)
-            $scope.to.settings.merged = {};
+    .controller("FieldTemplate-String-TemplatePicker", ["$scope", "appAssetsSvc", "appId", "fieldMask", function($scope, appAssetsSvc, appId, fieldMask) { //, $http, $filter, $translate, $modal, eavAdminDialogs, eavDefaultValueService) {
 
-        // create initial list for binding
-        $scope.templates = [];
+        function activate() {
+            // ensure settings are merged
+            if (!$scope.to.settings.merged)
+                $scope.to.settings.merged = {};
 
-        var svc = appAssetsSvc(appId);
-        $scope.templates = svc.liveList();
+            $scope.setFileConfig("Token"); // use token setting as default, till the UI tells us otherwise
 
-    }]);
+            var scriptType = fieldMask("[Type]", $scope, $scope.onTypeChange);
+            var location = fieldMask("[Location]", $scope, $scope.onLocationChange);
+
+            // create initial list for binding
+            $scope.templates = [];
+
+            var svc = appAssetsSvc(appId);
+            $scope.templates = svc.liveList();
+        }
+
+        $scope.setFileConfig = function(type) {
+            switch (type) {
+            case "Token":
+                $scope.fileExt = "html";
+                $scope.filePrefix = "";
+                break;
+            case "C# Razor":
+                $scope.fileExt = "cshtml";
+                $scope.filePrefix = "_";
+                break;
+            }
+        };
+
+        $scope.onTypeChange = function(currentType) {
+            console.log("type changed");
+            $scope.setFileConfig(currentType);
+        };
+
+        $scope.onLocationChange = function() {
+            console.log("location changed");
+        };
+
+        activate();
+
+    }])
+
+    // Setup the filter
+    .filter("isValidFile", function() {
+
+        // Create the return function
+        // set the required parameter name to **number**
+        return function(paths, extension) {
+            var ext = "." + extension;
+            var out = [];
+            angular.forEach(paths, function(path) {
+                if (path.slice(path.length - ext.length) === ext)
+                    out.push(path);
+            });
+            return out;
+        };
+    });
+
 
 (function () {
 	"use strict";
@@ -1509,7 +1558,7 @@ angular.module('SxcEditTemplates', []).run(['$templateCache', function($template
 
 
   $templateCache.put('fields/string/string-template-picker.html',
-    "<div>testing template picker<select class=\"form-control input-material material\" ng-model=value.Value><option value=\"\">(none)</option><option ng-repeat=\"item in templates\" ng-selected=\"{{item == value.Value}}\" value={{item}}>{{item}}</option></select><button>add</button></div>"
+    "<div>testing template picker<select class=\"form-control input-material material\" ng-model=value.Value><option value=\"\">(none)</option><option ng-repeat=\"item in templates | isValidFile:fileExt\" ng-selected=\"{{item == value.Value}}\" value={{item}}>{{item}}</option></select><button>add</button></div>"
   );
 
 

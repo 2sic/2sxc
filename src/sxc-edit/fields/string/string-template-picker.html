@@ -4,7 +4,7 @@
             ng-model="value.Value">
         <option value="">(none)</option>
         <option
-            ng-repeat="item in templates"
+            ng-repeat="item in templates | isValidFile:fileExt"
             ng-selected="{{item == value.Value}}"
             value="{{item}}">
             {{item}}

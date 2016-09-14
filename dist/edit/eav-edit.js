@@ -225,7 +225,7 @@ angular.module("eavFieldTemplates")
 
             // Initialize entities
             var sourceMask = $scope.to.settings.merged.EntityType || null;
-            contentType = fieldMask(sourceMask, $scope.model, null, $scope, $scope.maybeReload);// this will contain the auto-resolve type (based on other contentType-field)
+            contentType = fieldMask(sourceMask, $scope, $scope.maybeReload, null);// this will contain the auto-resolve type (based on other contentType-field)
             lastContentType = contentType.resolve();
 
             $scope.availableEntities = [];
@@ -494,7 +494,9 @@ angular.module("eavFieldTemplates")
         // get configured
         var controlSettings = $scope.to.settings["string-url-path"];
         var sourceMask = (controlSettings) ? controlSettings.AutoGenerateMask || null : null;
-        var mask = fieldMask(sourceMask, $scope.model, function preCleane(key, value) {
+
+        // todo: change to include the change-detection
+        var mask = fieldMask(sourceMask, $scope, null, function preCleane(key, value) {
             return value.replace("/", "-").replace("\\", "-"); // this will remove slashes which could look like path-parts
         });
 
@@ -1763,10 +1765,10 @@ angular.module("eavFieldTemplates")
         // 
         // use: first create an object like mask = fieldMask.createFieldMask("[FirstName]", $scope.model);
         //      then: access result in your timer or whatever with mask.resolve();
-        function createFieldMask(mask, model, overloadPreCleanValues, $scope, changeEvent) {
+        function createFieldMask(mask, $scope, changeEvent, overloadPreCleanValues) {
             var srv = {
                 mask: mask,
-                model: model,
+                model: $scope.model,
                 fields: [],
                 value: undefined,
                 findFields: /\[.*?\]/ig,
