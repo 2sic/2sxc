@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'app-icons';
-    src: url('../lib/fonts/app-icons.woff?87396608') format('woff');
+    src: url('../lib/fonts/app-icons.woff?78331217') format('woff');
   font-weight: normal;
   font-style: normal;
 }
@@ -18,6 +18,7 @@
 .icon-lg {
     font-size: 120%;
 }
+
  [class^="icon-"]:before, [class*=" icon-"]:before {
   font-family: "app-icons";
   font-style: normal;

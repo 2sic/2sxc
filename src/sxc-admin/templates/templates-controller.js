@@ -16,29 +16,22 @@
 
         var svc = templatesSvc(appId);
 
-        vm.edit = function edit(item) {
+        vm.editOld = function editOld(item) {
             oldDialogs.editTemplate(item.Id, svc.liveListReload);
-            // eavAdminDialogs.openItemEditWithEntityId(item.Id, svc.liveListReload);
+        };
+        vm.edit = function edit(item) {
+            eavAdminDialogs.openItemEditWithEntityId(item.Id, svc.liveListReload);
+        };
+        
+
+
+        vm.addOld = function add() {
+            oldDialogs.editTemplate(0, svc.liveListReload);
+            return;
         };
 
-        vm.add = function add() {
-            oldDialogs.editTemplate(0, svc.liveListReload);
-
-            return;
-            // templ till the edit dialog is JS-only
-            //window.open(vm.getOldEditUrl());
-
-            //// probably afterwards
-            //var resolve = eavAdminDialogs.CreateResolve({
-            //    appId: appId,
-            //    svc: svc
-            //});
-            //return eavAdminDialogs.OpenModal(
-            //    "templates/edit.html",
-            //    "TemplateEdit as vm",
-            //    "lg",
-            //    resolve,
-            //    svc.liveListReload);
+        vm.add = function addNew() {
+            eavAdminDialogs.openItemNew("2SexyContent-Template", svc.liveListReload);
         };
 
         vm.items = svc.liveList();

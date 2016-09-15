@@ -1463,17 +1463,8 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
   );
 
 
-  $templateCache.put('templates/edit.html',
-    "<div class=modal-header><button class=\"btn pull-right\" type=button ng-click=vm.close()><span class=\"glyphicon glyphicon-remove\"></span></button><h3 class=modal-title translate=TemplateEdit.Title></h3></div><div class=modal-body>For template metadata - not for source... todo todo todo</div><style>.tooltip-inner {\r" +
-    "\n" +
-    "    white-space:pre-wrap;\r" +
-    "\n" +
-    "}</style>"
-  );
-
-
   $templateCache.put('templates/templates.html',
-    "<div class=modal-body><button icon=plus type=button class=\"btn btn-primary btn-square\" ng-click=vm.add()></button> <span class=btn-group ng-if=vm.debug.on><button icon=repeat type=button class=\"btn btn-square\" ng-click=vm.refresh()></button></span><table class=\"table table-hover\"><thead><tr><th translate=Templates.Table.TName></th><th translate=Templates.Table.TPath></th><th translate=Templates.Table.CType></th><th translate=Templates.Table.DemoC></th><th><span tooltip=\"{{'Templates.Table.Show' | translate}}\"><i icon=eye-open></i></span></th><th translate=Templates.Table.UrlKey></th><th translate=Templates.Table.Actions></th></tr></thead><tbody><tr ng-repeat=\"item in vm.items | orderBy:['ContentType.Name','Name']\" class=clickable-row ng-click=vm.edit(item)><td class=clickable>{{item.Name}}</td><td class=clickable><span tooltip={{item.TemplatePath}}>...{{item.TemplatePath.split(\"/\").pop()}}</span></td><td class=clickable><span tooltip=\"\r" +
+    "<div class=modal-body><button icon=plus type=button class=\"btn btn-primary btn-square\" ng-click=vm.add()></button> <span class=btn-group ng-if=vm.debug.on><button icon=repeat type=button class=\"btn btn-square\" ng-click=vm.refresh()></button> <button icon=plus type=button class=\"btn btn-square btn-warning\" ng-click=vm.addOld() tooltip=\"old add dialog\"></button></span><table class=\"table table-hover\"><thead><tr><th translate=Templates.Table.TName></th><th translate=Templates.Table.TPath></th><th translate=Templates.Table.CType></th><th translate=Templates.Table.DemoC></th><th><span tooltip=\"{{'Templates.Table.Show' | translate}}\"><i icon=eye-open></i></span></th><th translate=Templates.Table.UrlKey></th><th translate=Templates.Table.Actions></th></tr></thead><tbody><tr ng-repeat=\"item in vm.items | orderBy:['ContentType.Name','Name']\" class=clickable-row ng-click=vm.edit(item)><td class=clickable>{{item.Name}}</td><td class=clickable><span tooltip={{item.TemplatePath}}>...{{item.TemplatePath.split(\"/\").pop()}}</span></td><td class=clickable><span tooltip=\"\r" +
     "\n" +
     "Cont: {{item.ContentType.Name}} ({{item.ContentType.Id}})\r" +
     "\n" +
@@ -1493,7 +1484,7 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
     "\n" +
     "ListP: {{item.ListPresentationType.DemoTitle}} ({{item.ListPresentationType.DemoId}})\r" +
     "\n" +
-    "\">{{item.ContentType.DemoId}}</span></td><td><span icon=\"{{ item.IsHidden ? 'close' : 'eye-open'}}\"></span></td><td class=clickable><span tooltip={{item.ViewNameInUrl}}>{{item.ViewNameInUrl}}</span></td><td class=text-nowrap stop-event=click><button type=button class=\"btn btn-xs btn-square\" ng-click=vm.permissions(item)><i icon=user></i></button> <button type=button class=\"btn btn-xs btn-square\" ng-click=vm.tryToDelete(item)><span icon=remove></span></button></td></tr><tr ng-if=!vm.items.length><td colspan=100 translate=General.Messages.NothingFound></td></tr></tbody></table><div translate=Templates.InfoHideAdvanced></div></div>"
+    "\">{{item.ContentType.DemoId}}</span></td><td><span icon=\"{{ item.IsHidden ? 'close' : 'eye-open'}}\"></span></td><td class=clickable><span tooltip={{item.ViewNameInUrl}}>{{item.ViewNameInUrl}}</span></td><td class=text-nowrap stop-event=click><button type=button class=\"btn btn-xs btn-square\" ng-click=vm.permissions(item)><i icon=user></i></button> <button type=button class=\"btn btn-xs btn-square\" ng-click=vm.tryToDelete(item)><span icon=remove></span></button> <button ng-if=vm.debug.on type=button class=\"btn btn-xs btn-square btn-warning\" ng-click=vm.editOld(item)><span icon=pencil></span></button></td></tr><tr ng-if=!vm.items.length><td colspan=100 translate=General.Messages.NothingFound></td></tr></tbody></table><div translate=Templates.InfoHideAdvanced></div></div>"
   );
 
 
@@ -1521,29 +1512,22 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
 
         var svc = templatesSvc(appId);
 
-        vm.edit = function edit(item) {
+        vm.editOld = function editOld(item) {
             oldDialogs.editTemplate(item.Id, svc.liveListReload);
-            // eavAdminDialogs.openItemEditWithEntityId(item.Id, svc.liveListReload);
+        };
+        vm.edit = function edit(item) {
+            eavAdminDialogs.openItemEditWithEntityId(item.Id, svc.liveListReload);
+        };
+        
+
+
+        vm.addOld = function add() {
+            oldDialogs.editTemplate(0, svc.liveListReload);
+            return;
         };
 
-        vm.add = function add() {
-            oldDialogs.editTemplate(0, svc.liveListReload);
-
-            return;
-            // templ till the edit dialog is JS-only
-            //window.open(vm.getOldEditUrl());
-
-            //// probably afterwards
-            //var resolve = eavAdminDialogs.CreateResolve({
-            //    appId: appId,
-            //    svc: svc
-            //});
-            //return eavAdminDialogs.OpenModal(
-            //    "templates/edit.html",
-            //    "TemplateEdit as vm",
-            //    "lg",
-            //    resolve,
-            //    svc.liveListReload);
+        vm.add = function addNew() {
+            eavAdminDialogs.openItemNew("2SexyContent-Template", svc.liveListReload);
         };
 
         vm.items = svc.liveList();
@@ -1563,24 +1547,6 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
         };
     }
     TemplateListController.$inject = ["templatesSvc", "eavAdminDialogs", "eavConfig", "appId", "debugState", "oldDialogs", "$translate", "$modalInstance", "$sce"];
-
-} ());
-(function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
-
-    angular.module("TemplatesApp")
-        .controller("TemplateEdit", TemplateEditController)
-        ;
-
-    function TemplateEditController(svc, eavAdminDialogs, eavConfig, appId, $modalInstance) {
-        var vm = this;
-
-        vm.items = svc.liveList();
-
-        vm.close = function () {
-            $modalInstance.dismiss("cancel");
-        };
-    }
-    TemplateEditController.$inject = ["svc", "eavAdminDialogs", "eavConfig", "appId", "$modalInstance"];
 
 } ());
 (function () { 
