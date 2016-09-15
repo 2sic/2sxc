@@ -16,7 +16,7 @@ angular.module("SxcServices")
             }));
 
             svc.create = function create(path, content) {
-                return $http.post("app/appassets/create", content || "", { params: angular.extend({}, svc.params, { path: path }) })
+                return $http.post("app/appassets/create", { content: content || "" }, { params: angular.extend({}, svc.params, { path: path }) })
                     .then(svc.liveListReload);
             };
 

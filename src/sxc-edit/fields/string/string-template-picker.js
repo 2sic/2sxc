@@ -37,7 +37,7 @@ angular.module("sxcFieldTemplates")
         }
 
         $scope.readyToUse = function() {
-            return $scope.typeWatcher.current && $scope.locWatcher.current; // check if these have real values inside
+            return $scope.typeWatcher.value && $scope.locWatcher.value; // check if these have real values inside
         };
 
         $scope.setFileConfig = function(type) {
@@ -45,10 +45,12 @@ angular.module("sxcFieldTemplates")
             case "Token":
                 $scope.fileExt = ".html";
                 $scope.filePrefix = "";
+                $scope.fileBody = "<p>You successfully created your own template. Start editing it by hovering the \"Manage\" button and opening the \"Edit Template\" dialog.</p>";
                 break;
             case "C# Razor":
                 $scope.fileExt = ".cshtml";
                 $scope.filePrefix = "_";
+                $scope.fileBody = "<p>You successfully created your own template. Start editing it by hovering the \"Manage\" button and opening the \"Edit Template\" dialog.</p>";
                 break;
             }
         };
@@ -76,7 +78,7 @@ angular.module("sxcFieldTemplates")
             fileName = fileName.replace("/", "\\");
             var foundSlash = fileName.lastIndexOf("\\");
             if (foundSlash > -1) {
-                path = fileName.substring(0, foundSlash);
+                path = fileName.substring(0, foundSlash + 1); // path with slash
                 fileName = fileName.substring(foundSlash + 1);
             }
 
@@ -84,14 +86,17 @@ angular.module("sxcFieldTemplates")
             if (fileName.indexOf($scope.fileExt) !== fileName.length - $scope.fileExt)
                 fileName += $scope.fileExt;
 
-            // todo: check if cshtmls have a "_" in the file name (not folder, must be the file name part)
-            if ($scope.fileExt === ".cshtml" && fileName[0] !== "_")
-                fileName = "_" + fileName;
+            // 3. check if cshtmls have a "_" in the file name (not folder, must be the file name part)
+            if ($scope.filePrefix !== "" && fileName[0] !== $scope.filePrefix)
+                fileName = $scope.filePrefix + fileName;
 
             var result = path + fileName;
             console.log(result);
-            // todo: tell service to create
-            $scope.svcCurrent.create(result, "test content");
+
+            // 4. tell service to create it
+            $scope.svcCurrent.create(result, $scope.fileBody).then(function () {
+                $scope.value.Value = result;    // set the dropdown to the new file
+            });
         };
 
         activate();
