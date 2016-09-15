@@ -15,7 +15,7 @@ namespace ToSic.SexyContent.AppAssets
         public string
             Name,
             Code,
-            LocationScope = Settings.TemplateLocations.PortalFileSystem,
+            LocationScope,// = Settings.TemplateLocations.PortalFileSystem,
             FileName,
             TypeContent,
             TypeContentPresentation,
@@ -30,11 +30,14 @@ namespace ToSic.SexyContent.AppAssets
 
         public string Extension => Path.GetExtension(FileName);
 
-        public AssetEditInfo(int appId, string appName, string fileName)
+        public AssetEditInfo(int appId, string appName, string fileName, bool global)
         {
             AppId = appId;
             FileName = fileName;
             HasApp = appName != "Content";
+            LocationScope = global
+                ? Settings.TemplateLocations.HostFileSystem
+                : Settings.TemplateLocations.PortalFileSystem;
         }
 
         // check if this file is safe - meaning it can be edited by non-host users

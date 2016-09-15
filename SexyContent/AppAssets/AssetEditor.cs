@@ -17,23 +17,30 @@ namespace ToSic.SexyContent.AppAssets
 
         private readonly SxcInstance _sexy;
 
-        public AssetEditor(SxcInstance sexy, int templateId, UserInfo userInfo, PortalSettings portalSettings)
+        /// <summary>
+        /// This tells us if the file is in the apps global area (in portal _default) or in the local area (current portal)
+        /// </summary>
+        //public bool Global { get; }
+
+        public AssetEditor(SxcInstance sexy, int templateId, UserInfo userInfo, PortalSettings portalSettings)//, bool global = false)
         {
             _sexy = sexy;
             _userInfo = userInfo;
             _portalSettings = portalSettings;
+            //Global = global;
 
             var template = _sexy.AppTemplates.GetTemplate(templateId);
             EditInfo = TemplateAssetsInfo(template);
         }
 
-        public AssetEditor(SxcInstance sexy, string path, UserInfo userInfo, PortalSettings portalSettings)
+        public AssetEditor(SxcInstance sexy, string path, UserInfo userInfo, PortalSettings portalSettings, bool global = false)
         {
             _sexy = sexy;
             _userInfo = userInfo;
             _portalSettings = portalSettings;
+            //Global = global;
 
-            EditInfo = new AssetEditInfo(_sexy.App.AppId, _sexy.App.Name, path);
+            EditInfo = new AssetEditInfo(_sexy.App.AppId, _sexy.App.Name, path, global);
         }
 
         public AssetEditInfo EditInfoWithSource
@@ -80,7 +87,7 @@ namespace ToSic.SexyContent.AppAssets
 
         private AssetEditInfo TemplateAssetsInfo(Template templ)
         {
-            var t = new AssetEditInfo(_sexy.App.AppId,_sexy.App.Name, templ.Path)
+            var t = new AssetEditInfo(_sexy.App.AppId,_sexy.App.Name, templ.Path, templ.Location == Settings.TemplateLocations.HostFileSystem)
             {
                 // Template specific properties, not really available in other files
                 LocationScope = templ.Location,

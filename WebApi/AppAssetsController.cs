@@ -37,8 +37,8 @@ namespace ToSic.SexyContent.WebApi
             var fullPath = Path.Combine(appPath, path);
 
             // make sure the resulting path is still inside 2sxc
-            if(!_allowFullAccess && fullPath.Contains("2sxc"))
-                throw new DirectoryNotFoundException("Folder was not inside 2sxc-scope any more - must cancel");
+            if (!_allowFullAccess && !fullPath.Contains("2sxc"))
+                throw new DirectoryNotFoundException("the folder is not inside 2sxc-scope any more and the current user doesn't have the permissions - must cancel");
 
             // if the directory doesn't exist, return empty list
             if (!Directory.Exists(fullPath))
@@ -64,7 +64,7 @@ namespace ToSic.SexyContent.WebApi
             var thisApp = new App(PortalSettings.Current, appId);
 
             if (global && !_allowFullAccess)
-                throw new NotSupportedException("only host user may access area 0");
+                throw new NotSupportedException("only host user may access global files");
 
             var appPath = Internal.TemplateManager.GetTemplatePathRoot(global
                 ? Settings.TemplateLocations.HostFileSystem
@@ -77,11 +77,14 @@ namespace ToSic.SexyContent.WebApi
 
         // todo: add global support
         [HttpPost]
-        public bool Create([FromUri] int appId, [FromUri] string path,[FromBody] ContentHelper content)
+        public bool Create([FromUri] int appId, [FromUri] string path,[FromBody] ContentHelper content, bool global = false)
         {
+            // set global access security if ok...
+            _allowFullAccess = UserInfo.IsSuperUser;
+
             if (content.Content == null)
                 content.Content = "";
-            var assetEditor = new AssetEditor(SxcContext, path, UserInfo, PortalSettings);
+            var assetEditor = new AssetEditor(SxcContext, path, UserInfo, PortalSettings, global);
             assetEditor.EnsureUserMayEditAsset(path);
             return assetEditor.Create(content.Content);
         }
@@ -97,22 +100,28 @@ namespace ToSic.SexyContent.WebApi
         // todo: add global support
         #region Template --> later neutralize to standard asset-editing
         [HttpGet]
-        public AssetEditInfo Asset(int templateId = 0, string path = null)
+        public AssetEditInfo Asset(int templateId = 0, string path = null, bool global = false)
         {
+            // set global access security if ok...
+            _allowFullAccess = UserInfo.IsSuperUser;
+
             var assetEditor = (templateId != 0 && path == null)
                 ? new AssetEditor(SxcContext, templateId, UserInfo, PortalSettings)
-                : new AssetEditor(SxcContext, path, UserInfo, PortalSettings);
+                : new AssetEditor(SxcContext, path, UserInfo, PortalSettings, global);
             assetEditor.EnsureUserMayEditAsset();
             return assetEditor.EditInfoWithSource;
         }
 
         // todo: add global support
         [HttpPost]
-        public bool Asset([FromBody] AssetEditInfo template,[FromUri] int templateId = 0, [FromUri] string path = null)
+        public bool Asset([FromBody] AssetEditInfo template,[FromUri] int templateId = 0, [FromUri] bool global = false, [FromUri] string path = null)
         {
+            // set global access security if ok...
+            _allowFullAccess = UserInfo.IsSuperUser;
+
             var assetEditor = (templateId != 0 && path == null)
                 ? new AssetEditor(SxcContext, templateId, UserInfo, PortalSettings)
-                : new AssetEditor(SxcContext, path, UserInfo, PortalSettings);
+                : new AssetEditor(SxcContext, path, UserInfo, PortalSettings, global);
             assetEditor.EnsureUserMayEditAsset();
             assetEditor.Source = template.Code;
             return true;
@@ -125,6 +134,7 @@ namespace ToSic.SexyContent.WebApi
         {
             if (appPath == null) throw new ArgumentNullException(nameof(appPath));
             // security check, to ensure no results leak from outside the app
+
             if (!_allowFullAccess && !p.StartsWith(appPath))
                 throw new DirectoryNotFoundException("Result was not inside the app any more - must cancel");
             return p;
