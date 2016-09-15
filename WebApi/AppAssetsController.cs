@@ -44,10 +44,12 @@ namespace ToSic.SexyContent.WebApi
             if (!Directory.Exists(fullPath))
                 return new List<string>();
 
+
             var opt = withSubfolders 
                 ? SearchOption.AllDirectories 
                 : SearchOption.TopDirectoryOnly;
 
+            // return folders or files (depending on setting) with/without subfolders
             return (returnFolders
                 ? Directory.GetDirectories(fullPath, mask, opt)
                     .Select(Path.GetDirectoryName)
@@ -75,7 +77,15 @@ namespace ToSic.SexyContent.WebApi
             return appPath;
         }
 
-        // todo: add global support
+
+        /// <summary>
+        /// Create a new file (if it doesn't exist yet) and optionally prefill it with contetn
+        /// </summary>
+        /// <param name="appId"></param>
+        /// <param name="path"></param>
+        /// <param name="content"></param>
+        /// <param name="global">this determines, if the app-file store is the global in _default or the local in the current app</param>
+        /// <returns></returns>
         [HttpPost]
         public bool Create([FromUri] int appId, [FromUri] string path,[FromBody] ContentHelper content, bool global = false)
         {
@@ -89,6 +99,9 @@ namespace ToSic.SexyContent.WebApi
             return assetEditor.Create(content.Content);
         }
 
+        /// <summary>
+        /// helper class, because it's really hard to get a post-body in a web-api call if it's not in a json-object format
+        /// </summary>
         public class ContentHelper
         {
             public string Content;
@@ -97,7 +110,14 @@ namespace ToSic.SexyContent.WebApi
         #endregion
 
 
-        // todo: add global support
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="templateId"></param>
+        /// <param name="path"></param>
+        /// <param name="global"></param>
+        /// <returns></returns>
         #region Template --> later neutralize to standard asset-editing
         [HttpGet]
         public AssetEditInfo Asset(int templateId = 0, string path = null, bool global = false)
@@ -112,7 +132,15 @@ namespace ToSic.SexyContent.WebApi
             return assetEditor.EditInfoWithSource;
         }
 
-        // todo: add global support
+
+        /// <summary>
+        /// Get details and source code
+        /// </summary>
+        /// <param name="template"></param>
+        /// <param name="templateId"></param>
+        /// <param name="global">this determines, if the app-file store is the global in _default or the local in the current app</param>
+        /// <param name="path"></param>
+        /// <returns></returns>
         [HttpPost]
         public bool Asset([FromBody] AssetEditInfo template,[FromUri] int templateId = 0, [FromUri] bool global = false, [FromUri] string path = null)
         {
