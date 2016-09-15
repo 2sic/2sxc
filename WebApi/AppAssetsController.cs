@@ -77,13 +77,13 @@ namespace ToSic.SexyContent.WebApi
 
         // todo: add global support
         [HttpPost]
-        public void Create([FromUri] int appId, [FromUri] string path,[FromBody] ContentHelper content)
+        public bool Create([FromUri] int appId, [FromUri] string path,[FromBody] ContentHelper content)
         {
             if (content.Content == null)
                 content.Content = "";
             var assetEditor = new AssetEditor(SxcContext, path, UserInfo, PortalSettings);
             assetEditor.EnsureUserMayEditAsset(path);
-            assetEditor.Create(content.Content);
+            return assetEditor.Create(content.Content);
         }
 
         public class ContentHelper

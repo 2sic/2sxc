@@ -963,6 +963,11 @@ angular.module("SxcServices")
 
             svc.create = function create(path, content) {
                 return $http.post("app/appassets/create", { content: content || "" }, { params: angular.extend({}, svc.params, { path: path }) })
+                    .then(function(result) {
+                        if (result.data === false) // must check for an explicit false, to avoid undefineds
+                            alert("server reported that create failed - the file probably already exists"); // todo: i18n
+                        return result;
+                    })
                     .then(svc.liveListReload);
             };
 
