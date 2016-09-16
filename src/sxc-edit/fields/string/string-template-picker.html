@@ -3,7 +3,7 @@
 
         <select class="form-control input-material material"
                 ng-model="value.Value"
-                 ng-disabled="!readyToUse()">
+                ng-disabled="!readyToUse()">
             <option value="">(no file selected)</option>
             <option ng-repeat="item in templates | isValidFile:file.ext"
                     ng-selected="{{item == value.Value}}"
@@ -12,7 +12,6 @@
             </option>
         </select>
         <span class="input-group-btn" style="vertical-align: top;">
-
             <button class="btn btn-default icon-field-button" type="button" ng-click="add()" ng-disabled="!readyToUse()">
                 <span class="icon-eav-plus"></span>
             </button>
