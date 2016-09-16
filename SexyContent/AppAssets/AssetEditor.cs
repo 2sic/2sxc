@@ -15,32 +15,32 @@ namespace ToSic.SexyContent.AppAssets
 
         private readonly PortalSettings _portalSettings;
 
-        private readonly SxcInstance _sexy;
+        private readonly App _app;
 
         /// <summary>
         /// This tells us if the file is in the apps global area (in portal _default) or in the local area (current portal)
         /// </summary>
         //public bool Global { get; }
 
-        public AssetEditor(SxcInstance sexy, int templateId, UserInfo userInfo, PortalSettings portalSettings)//, bool global = false)
+        public AssetEditor(App app, int templateId, UserInfo userInfo, PortalSettings portalSettings)//, bool global = false)
         {
-            _sexy = sexy;
+            _app = app;
             _userInfo = userInfo;
             _portalSettings = portalSettings;
             //Global = global;
 
-            var template = _sexy.AppTemplates.GetTemplate(templateId);
+            var template = _app.TemplateManager.GetTemplate(templateId);
             EditInfo = TemplateAssetsInfo(template);
         }
 
-        public AssetEditor(SxcInstance sexy, string path, UserInfo userInfo, PortalSettings portalSettings, bool global = false)
+        public AssetEditor(App app, string path, UserInfo userInfo, PortalSettings portalSettings, bool global = false)
         {
-            _sexy = sexy;
+            _app = app;
             _userInfo = userInfo;
             _portalSettings = portalSettings;
             //Global = global;
 
-            EditInfo = new AssetEditInfo(_sexy.App.AppId, _sexy.App.Name, path, global);
+            EditInfo = new AssetEditInfo(_app.AppId, _app.Name, path, global);
         }
 
         public AssetEditInfo EditInfoWithSource
@@ -81,13 +81,14 @@ namespace ToSic.SexyContent.AppAssets
             if(path.Directory == null)
                 throw new AccessViolationException("path is null");
 
-            if (path.Directory.FullName.IndexOf(_sexy.App.PhysicalPath, StringComparison.InvariantCultureIgnoreCase) != 0)
+            if (path.Directory.FullName.IndexOf(_app.PhysicalPath, StringComparison.InvariantCultureIgnoreCase) != 0)
                 throw new AccessViolationException("current user may not edit files outside of the app-scope");
         }
 
         private AssetEditInfo TemplateAssetsInfo(Template templ)
         {
-            var t = new AssetEditInfo(_sexy.App.AppId,_sexy.App.Name, templ.Path, templ.Location == Settings.TemplateLocations.HostFileSystem)
+            var t = new AssetEditInfo(_app.AppId, _app.Name, templ.Path,
+                templ.Location == Settings.TemplateLocations.HostFileSystem)
             {
                 // Template specific properties, not really available in other files
                 LocationScope = templ.Location,
@@ -104,7 +105,7 @@ namespace ToSic.SexyContent.AppAssets
 
         public string InternalPath => HttpContext.Current.Server.MapPath(
             Path.Combine(
-                Internal.TemplateManager.GetTemplatePathRoot(EditInfo.LocationScope, _sexy.App),
+                Internal.TemplateManager.GetTemplatePathRoot(EditInfo.LocationScope, _app),
                 EditInfo.FileName));
 
 

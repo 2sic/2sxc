@@ -867,7 +867,7 @@ angular.module("sxcFieldTemplates")
         });
 
     }])
-    .controller("FieldTemplate-String-TemplatePicker", ["$scope", "appAssetsSvc", "appId", "fieldMask", function($scope, appAssetsSvc, appId, fieldMask) { //, $http, $filter, $translate, $modal, eavAdminDialogs, eavDefaultValueService) {
+    .controller("FieldTemplate-String-TemplatePicker", ["$scope", "appAssetsSvc", "appId", "fieldMask", function($scope, appAssetsSvc, appId, fieldMask) { 
 
         function activate() {
             // ensure settings are merged
@@ -875,6 +875,13 @@ angular.module("sxcFieldTemplates")
                 $scope.to.settings.merged = {};
 
             $scope.setFileConfig("Token"); // use token setting as default, till the UI tells us otherwise
+
+            // clean up existing paths, because some used "/" and some "\" for paths, so it wouldn't match in the drop-down
+            if ($scope.options && $scope.options.value())
+                angular.forEach($scope.options.value().Values, function(v, i) {
+                    v.Value = v.Value.replace("\\", "/");
+                });
+            
 
             // set change-watchers to the other values
             $scope.typeWatcher = fieldMask("[Type]", $scope, $scope.setFileConfig);
@@ -894,21 +901,13 @@ angular.module("sxcFieldTemplates")
             return $scope.typeWatcher.value && $scope.locWatcher.value; // check if these have real values inside
         };
 
-        $scope.setFileConfig = function(type) {
-            switch (type) {
-            case "Token":
-                $scope.fileExt = ".html";
-                $scope.filePrefix = "";
-                $scope.fileSuggestion = "yourfile.html";
-                $scope.fileBody = "<p>You successfully created your own template. Start editing it by hovering the \"Manage\" button and opening the \"Edit Template\" dialog.</p>";
-                break;
-            case "C# Razor":
-                $scope.fileExt = ".cshtml";
-                $scope.filePrefix = "_";
-                $scope.fileSuggestion = "_yourfile.cshtml";
-                $scope.fileBody = "<p>You successfully created your own template. Start editing it by hovering the \"Manage\" button and opening the \"Edit Template\" dialog.</p>";
-                break;
-            }
+        $scope.setFileConfig = function (type) {
+            var specs = {
+                "Token": { ext: ".html", prefix: "", suggestion: "yourfile.html", body: "<p>You successfully created your own template. Start editing it by hovering the \"Manage\" button and opening the \"Edit Template\" dialog.</p>" },
+                "C# Razor": { ext: ".cshtml", prefix: "_", suggestion: "_yourfile.cshtml", body: "<p>You successfully created your own template. Start editing it by hovering the \"Manage\" button and opening the \"Edit Template\" dialog.</p>" }
+            };
+            $scope.file = specs[type];
+
         };
 
         // when the watcher says the location changed, reset stuff
@@ -922,35 +921,36 @@ angular.module("sxcFieldTemplates")
 
         // ask for a new file name and 
         $scope.add = function() {
-            var fileName = prompt("enter new file name", $scope.fileSuggestion); // todo: i18n
+            var fileName = prompt("enter new file name", $scope.file.suggestion); // todo: i18n
 
             if (!fileName)
                 return;
 
             // 1. check for folders
             var path = "";
-            fileName = fileName.replace("/", "\\");
-            var foundSlash = fileName.lastIndexOf("\\");
+            fileName = fileName.replace("\\", "/");
+            var foundSlash = fileName.lastIndexOf("/");
             if (foundSlash > -1) {
                 path = fileName.substring(0, foundSlash + 1); // path with slash
                 fileName = fileName.substring(foundSlash + 1);
             }
 
             // 2. check if extension already provided, otherwise or if not perfect, just attach default
-            if (fileName.indexOf($scope.fileExt) !== fileName.length - $scope.fileExt.length)
-                fileName += $scope.fileExt;
+            if (!fileName.endsWith($scope.file.ext))// fileName.indexOf($scope.fileExt) !== fileName.length - $scope.fileExt.length)
+                fileName += $scope.file.ext;
 
             // 3. check if cshtmls have a "_" in the file name (not folder, must be the file name part)
-            if ($scope.filePrefix !== "" && fileName[0] !== $scope.filePrefix)
-                fileName = $scope.filePrefix + fileName;
+            if ($scope.file.prefix !== "" && fileName[0] !== $scope.file.prefix)
+                fileName = $scope.file.prefix + fileName;
 
             var fullPath = path + fileName;
             console.log(fullPath);
 
             // 4. tell service to create it
-            $scope.svcCurrent.create(fullPath, $scope.fileBody).then(function () {
-                $scope.value.Value = fullPath;    // set the dropdown to the new file
-            });
+            $scope.svcCurrent.create(fullPath, $scope.file.body)
+                .then(function() {
+                    $scope.value.Value = fullPath; // set the dropdown to the new file
+                });
         };
 
         activate();
@@ -1602,7 +1602,7 @@ angular.module('SxcEditTemplates', []).run(['$templateCache', function($template
 
 
   $templateCache.put('fields/string/string-template-picker.html',
-    "<div><div class=input-group><select class=\"form-control input-material material\" ng-model=value.Value ng-disabled=!readyToUse()><option value=\"\">(no file selected)</option><option ng-repeat=\"item in templates | isValidFile:fileExt\" ng-selected=\"{{item == value.Value}}\" value={{item}}>{{item}}</option></select><span class=input-group-btn style=\"vertical-align: top\"><button class=\"btn btn-default icon-field-button\" type=button ng-click=add() ng-disabled=!readyToUse()><span class=icon-eav-plus></span></button></span></div></div>"
+    "<div><div class=input-group><select class=\"form-control input-material material\" ng-model=value.Value ng-disabled=!readyToUse()><option value=\"\">(no file selected)</option><option ng-repeat=\"item in templates | isValidFile:file.ext\" ng-selected=\"{{item == value.Value}}\" value={{item}}>{{item}}</option></select><span class=input-group-btn style=\"vertical-align: top\"><button class=\"btn btn-default icon-field-button\" type=button ng-click=add() ng-disabled=!readyToUse()><span class=icon-eav-plus></span></button></span></div></div>"
   );
 
 

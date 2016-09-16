@@ -42,7 +42,7 @@ namespace ToSic.SexyContent.ContentBlock
             => CGroup ?? (CGroup = SxcContext.ContentGroup);
 
         protected IEnumerable<Template> GetSelectableTemplatesForWebApi()
-            => SxcContext.AppTemplates.GetAvailableTemplates(ContentGroup);
+            => SxcContext.App.TemplateManager/*.AppTemplates*/.GetAvailableTemplates(ContentGroup);
 
         public void AddItem(int? sortOrder = null)
             => ContentGroup.AddContentAndPresentationEntity("content", sortOrder, null, null);
@@ -111,9 +111,7 @@ namespace ToSic.SexyContent.ContentBlock
 
 
         public IEnumerable<object> GetSelectableContentTypes()
-            => SxcContext.App == null
-                ? null // no app yet, so we also can't give a list of the app
-                : SxcContext.AppTemplates.GetContentTypesWithStatus();
+            => SxcContext.App?.TemplateManager./*AppTemplates.*/GetContentTypesWithStatus();
         
 
         public void ChangeOrder([FromUri] int sortOrder, int destinationSortOrder)

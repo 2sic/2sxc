@@ -58,6 +58,7 @@ namespace ToSic.SexyContent.WebApi
                 )
                 .Select(p => EnsurePathMayBeAccessed(p, appPath))   // do another security check
                 .Select(x => x.Replace(appPath + "\\", ""))         // truncate / remove internal server root path
+                .Select(x => x.Replace("\\", "/"))                  // tip the slashes to web-convention - important, because old entries for templates used that slash
                 .ToList();
         }
 
@@ -92,9 +93,13 @@ namespace ToSic.SexyContent.WebApi
             // set global access security if ok...
             _allowFullAccess = UserInfo.IsSuperUser;
 
+            path = path.Replace("/", "\\");
+
+            var thisApp = new App(PortalSettings.Current, appId);
+
             if (content.Content == null)
                 content.Content = "";
-            var assetEditor = new AssetEditor(SxcContext, path, UserInfo, PortalSettings, global);
+            var assetEditor = new AssetEditor(thisApp, path, UserInfo, PortalSettings, global);
             assetEditor.EnsureUserMayEditAsset(path);
             return assetEditor.Create(content.Content);
         }
@@ -126,8 +131,8 @@ namespace ToSic.SexyContent.WebApi
             _allowFullAccess = UserInfo.IsSuperUser;
 
             var assetEditor = (templateId != 0 && path == null)
-                ? new AssetEditor(SxcContext, templateId, UserInfo, PortalSettings)
-                : new AssetEditor(SxcContext, path, UserInfo, PortalSettings, global);
+                ? new AssetEditor(SxcContext.App, templateId, UserInfo, PortalSettings)
+                : new AssetEditor(SxcContext.App, path, UserInfo, PortalSettings, global);
             assetEditor.EnsureUserMayEditAsset();
             return assetEditor.EditInfoWithSource;
         }
@@ -148,8 +153,8 @@ namespace ToSic.SexyContent.WebApi
             _allowFullAccess = UserInfo.IsSuperUser;
 
             var assetEditor = (templateId != 0 && path == null)
-                ? new AssetEditor(SxcContext, templateId, UserInfo, PortalSettings)
-                : new AssetEditor(SxcContext, path, UserInfo, PortalSettings, global);
+                ? new AssetEditor(SxcContext.App, templateId, UserInfo, PortalSettings)
+                : new AssetEditor(SxcContext.App, path, UserInfo, PortalSettings, global);
             assetEditor.EnsureUserMayEditAsset();
             assetEditor.Source = template.Code;
             return true;

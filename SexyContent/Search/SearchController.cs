@@ -49,7 +49,7 @@ namespace ToSic.SexyContent.Search
 
             // old 2016-03-27
             var language = moduleInfo.CultureCode;
-	        var contentGroup = sexy.AppContentGroups.GetContentGroupForModule(moduleInfo.ModuleID);
+	        var contentGroup = sexy.App.ContentGroupManager./*AppContentGroups.*/GetContentGroupForModule(moduleInfo.ModuleID);
             var template = contentGroup.Template;
 
             // This list will hold all EAV entities to be indexed

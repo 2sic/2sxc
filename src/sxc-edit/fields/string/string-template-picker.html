@@ -5,7 +5,7 @@
                 ng-model="value.Value"
                  ng-disabled="!readyToUse()">
             <option value="">(no file selected)</option>
-            <option ng-repeat="item in templates | isValidFile:fileExt"
+            <option ng-repeat="item in templates | isValidFile:file.ext"
                     ng-selected="{{item == value.Value}}"
                     value="{{item}}">
                 {{item}}

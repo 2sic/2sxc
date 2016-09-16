@@ -14,7 +14,7 @@ namespace ToSic.SexyContent.ContentBlock
 
         protected override void SavePreviewTemplateId(Guid templateGuid, bool? newTemplateChooserState = null)
         {
-            SxcContext.AppContentGroups.SetModulePreviewTemplateId(ModuleId, templateGuid);
+            SxcContext.App.ContentGroupManager./*AppContentGroups.*/SetModulePreviewTemplateId(ModuleId, templateGuid);
             if(newTemplateChooserState.HasValue)
                 SetTemplateChooserState(newTemplateChooserState.Value);
         }

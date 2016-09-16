@@ -263,7 +263,7 @@ namespace ToSic.SexyContent.WebApi.View
                 // we'll usually run into errors if nothing is installed yet, so on errors, we'll continue
                 try
                 {
-                    var all = SxcContext.AppTemplates.GetAllTemplates();
+                    var all = SxcContext.App.TemplateManager /*.AppTemplates*/.GetAllTemplates();
                     if (all.Any())
                         return null;
                 }
