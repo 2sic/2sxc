@@ -2,6 +2,8 @@
 angular.module("SxcServices", [
     "ng",                   // Angular for $http etc.
     "EavConfiguration",     // global configuration
-	"EavServices"
+	"EavServices",
+    "InitSxcParametersFromUrl",
+    "InitParametersFromUrl"
 //    "pascalprecht.translate",
 ]);

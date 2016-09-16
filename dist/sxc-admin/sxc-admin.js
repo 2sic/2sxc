@@ -12,22 +12,25 @@
             "ImportExport",
             "AppSettingsApp",
             "SystemSettingsApp",
-            "WebApiApp"
+            "WebApiApp",
+            "SxcServices"
         ])
         .config(["$translatePartialLoaderProvider", function($translatePartialLoaderProvider) {
             // ensure the language pack is loaded
             $translatePartialLoaderProvider.addPart("sxc-admin");
         }])
         .controller("AppMain", MainController)
-        .factory("appDialogConfigSvc", ["appId", "$http", function(appId, $http) {
-            var svc = {};
 
-            // this will retrieve an advanced getting-started url to use in an the iframe
-            svc.getDialogSettings = function gettingStartedUrl() {
-                return $http.get("app/system/dialogsettings", { params: { appId: appId } });
-            };
-            return svc;
-        }]);
+        //.factory("appDialogConfigSvc", function(appId, $http) {
+        //    var svc = {};
+
+        //    // this will retrieve an advanced getting-started url to use in an the iframe
+        //    svc.getDialogSettings = function gettingStartedUrl() {
+        //        return $http.get("app/system/dialogsettings", { params: { appId: appId } });
+        //    };
+        //    return svc;
+        //})
+    ;
 
     function MainController(eavAdminDialogs, eavConfig, appId, debugState, appDialogConfigSvc, $modalInstance) {
         var vm = this;
@@ -941,9 +944,21 @@
 angular.module("SxcServices", [
     "ng",                   // Angular for $http etc.
     "EavConfiguration",     // global configuration
-	"EavServices"
+	"EavServices",
+    "InitSxcParametersFromUrl",
+    "InitParametersFromUrl"
 //    "pascalprecht.translate",
 ]);
+angular.module("SxcServices")
+    .factory("appDialogConfigSvc", ["appId", "$http", function (appId, $http) {
+        var svc = {};
+
+        // this will retrieve an advanced getting-started url to use in an the iframe
+        svc.getDialogSettings = function gettingStartedUrl() {
+            return $http.get("app/system/dialogsettings", { params: { appId: appId } });
+        };
+        return svc;
+    }]);
 angular.module("SxcServices")
     .factory("appAssetsSvc", ["$http", "eavConfig", "svcCreator", function($http, eavConfig, svcCreator) {
 
