@@ -5,7 +5,7 @@
     <Dimensions />
   </Header>
   <AttributeSets>
-    <AttributeSet StaticName="2SexyContent-Template" Name="2SexyContent-Template" Description="Contains all registered 2sxc templates" Scope="2SexyContent-System" AlwaysShareConfiguration="true">
+    <AttributeSet StaticName="2SexyContent-Template" Name="2SexyContent-Template" Description="Contains all registered 2sxc templates" Scope="2SexyContent-System" AlwaysShareConfiguration="true" SortAttributes="true">
       <Attributes>
         <Attribute StaticName="Name" Type="String" IsTitle="true">
           <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@All" AttributeSetName="@All" EntityGUID="06c96a88-1fe5-4bcf-a88c-26e26f005ca0" KeyNumber="1138">
@@ -73,6 +73,7 @@
           </Entity>
           <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@Boolean" AttributeSetName="@Boolean" EntityGUID="bc7a124e-87e7-45be-9348-b6241279c6ae" KeyNumber="1149" />
         </Attribute>
+
         <Attribute StaticName="SpecsTemplate" Type="Empty" IsTitle="false">
           <Entity AssignmentObjectType="EAV Field Properties" AttributeSetStaticName="@All" AttributeSetName="@All" EntityGUID="010e97d2-bc29-4457-ab0f-bba93542eb63" KeyNumber="4621">
             <Value Key="Name" Value="Template" Type="String" />

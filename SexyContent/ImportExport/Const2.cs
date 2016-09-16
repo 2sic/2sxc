@@ -9,5 +9,6 @@
         public const string Description = "Description";
         public const string Scope = "Scope";
         public const string AlwaysShareConfig = "AlwaysShareConfiguration";
+        public const string SortAttributes = "SortAttributes";
     }
 }

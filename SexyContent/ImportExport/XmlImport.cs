@@ -47,17 +47,9 @@ namespace ToSic.SexyContent.ImportExport
 		/// <summary>
 		/// The id of the current portal
 		/// </summary>
-		private int? PortalId
-		{
-			get
-			{
-				if (PortalSettings.Current != null)
-					return PortalSettings.Current.PortalId;
-				return new int?();
-			}
-		}
+		private int? PortalId => PortalSettings.Current != null ? PortalSettings.Current.PortalId : new int?();
 
-		private bool AllowSystemChanges { get; }
+        private bool AllowSystemChanges { get; }
 
 		#region Prerequisites
 
@@ -295,19 +287,20 @@ namespace ToSic.SexyContent.ImportExport
 			return true;
 		}
 
-		/// <summary>
-		/// Maps EAV import messages to 2sxc import messages
-		/// </summary>
-		/// <param name="importLog"></param>
-		/// <returns></returns>
-		public IEnumerable<ExportImportMessage> GetExportImportMessagesFromImportLog(List<ImportLogItem> importLog)
-		{
-			return importLog.Select(l => new ExportImportMessage(l.Message,
-				l.EntryType == EventLogEntryType.Error ? ExportImportMessage.MessageTypes.Error :
-				l.EntryType == EventLogEntryType.Information ? ExportImportMessage.MessageTypes.Information :
-				ExportImportMessage.MessageTypes.Warning
-				));
-		}
+        /// <summary>
+        /// Maps EAV import messages to 2sxc import messages
+        /// </summary>
+        /// <param name="importLog"></param>
+        /// <returns></returns>
+        public IEnumerable<ExportImportMessage> GetExportImportMessagesFromImportLog(List<ImportLogItem> importLog)
+            => importLog.Select(l => new ExportImportMessage(l.Message,
+                l.EntryType == EventLogEntryType.Error
+                    ? ExportImportMessage.MessageTypes.Error
+                    : l.EntryType == EventLogEntryType.Information
+                        ? ExportImportMessage.MessageTypes.Information
+                        : ExportImportMessage.MessageTypes.Warning
+                ));
+		
 
 		#region AttributeSets
 
@@ -321,14 +314,14 @@ namespace ToSic.SexyContent.ImportExport
 				var attributes = new List<ImportAttribute>();
                 var titleAttribute = new ImportAttribute();
 			    var attsetElem = attributeSet.Element(XmlConstants.Attributes);
-                if (attsetElem != null)// attributeSet.Elements(XmlConstants.Attributes).Any())
-                    foreach (var xElementAttribute in /*attributeSet.Element(XmlConstants.Attributes)*/attsetElem.Elements(XmlConstants.Attribute))
+                if (attsetElem != null)
+                    foreach (var xElementAttribute in attsetElem.Elements(XmlConstants.Attribute))
                     {
                         var attribute = new ImportAttribute
                         {
                             StaticName = xElementAttribute.Attribute("StaticName").Value,
                             Type = xElementAttribute.Attribute("Type").Value,
-                            AttributeMetaData = GetImportEntities(xElementAttribute.Elements(XmlConstants.Entity), Constants.AssignmentObjectTypeIdFieldProperties)
+                            AttributeMetaData = GetImportEntities(xElementAttribute.Elements(XmlConstants.Entity), Constants.MetadataForField)//.AssignmentObjectTypeIdFieldProperties)
                         };
 
                         attributes.Add(attribute);
@@ -348,7 +341,8 @@ namespace ToSic.SexyContent.ImportExport
 					Scope = attributeSet.Attributes(Const2.Scope).Any() ? attributeSet.Attribute(Const2.Scope).Value : Settings.AttributeSetScope,
 					AlwaysShareConfiguration = AllowSystemChanges && attributeSet.Attributes(Const2.AlwaysShareConfig).Any() && Parse(attributeSet.Attribute(Const2.AlwaysShareConfig).Value),
                     UsesConfigurationOfAttributeSet = attributeSet.Attributes("UsesConfigurationOfAttributeSet").Any() ? attributeSet.Attribute("UsesConfigurationOfAttributeSet").Value : "",
-                    TitleAttribute = titleAttribute
+                    TitleAttribute = titleAttribute,
+                    SortAttributes = attributeSet.Attributes(Const2.SortAttributes).Any() && bool.Parse(attributeSet.Attribute(Const2.SortAttributes).Value)
 				});
 			}
 
@@ -497,9 +491,8 @@ namespace ToSic.SexyContent.ImportExport
         /// <param name="assignmentObjectTypeId"></param>
         /// <returns></returns>
         private List<ImportEntity> GetImportEntities(IEnumerable<XElement> entities, int assignmentObjectTypeId)
-		{
-			return entities.Select(e => GetImportEntity(e, assignmentObjectTypeId)).ToList();
-		}
+            => entities.Select(e => GetImportEntity(e, assignmentObjectTypeId)).ToList();
+		
 
 
         /// <summary>
@@ -518,7 +511,7 @@ namespace ToSic.SexyContent.ImportExport
             if (entityNode.Attribute(XmlConstants.KeyNumber) != null)
                 keyNumber = int.Parse(entityNode.Attribute(XmlConstants.KeyNumber).Value);
 
-            string keyString = entityNode.Attribute(XmlConstants.KeyString)?.Value;
+            var keyString = entityNode.Attribute(XmlConstants.KeyString)?.Value;
             #endregion
 
             #region check if the xml has an own assignment object type (then we wouldn't use the default)
