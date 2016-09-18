@@ -627,11 +627,14 @@ angular.module("sxcFieldTemplates")
             vm.testLink = "";
 
             vm.isImage = function () { return fileType.isImage(vm.testLink); };
-            vm.thumbnailUrl = function thumbnailUrl(size) {
+            vm.thumbnailUrl = function thumbnailUrl(size, quote) {
+                var result = vm.testLink;
                 if (size === 1)
-                    return vm.testLink + "?w=64&h=64&mode=crop";
+                    result = result + "?w=64&h=64&mode=crop";
                 if (size === 2)
-                    return vm.testLink + "?w=500&h=400&mode=max";
+                    result = result + "?w=500&h=400&mode=max";
+                var qt = quote ? "\"" : "";
+                return qt + result + qt;
             };
 
             vm.icon = function () { return fileType.getIconClass(vm.testLink); };
@@ -1583,7 +1586,7 @@ angular.module('SxcEditTemplates', []).run(['$templateCache', function($template
 
 
   $templateCache.put('fields/hyperlink/hyperlink-default.html',
-    "<div class=dropzone><div class=clearfix><div ng-if=\"value.Value && vm.isImage()\" class=thumbnail-before-input ng-style=\"{ 'background-image': 'url(' + vm.thumbnailUrl(1) + ')' }\" ng-mouseover=\"vm.showPreview = true\" ng-mouseleave=\"vm.showPreview = false\"></div><div ng-if=\"value.Value && !vm.isImage()\" class=\"thumbnail-before-input icon-before-input\"><a href={{vm.testLink}} target=_blank tabindex=-1 tooltip-html-unsafe={{vm.tooltipUrl(vm.testLink)}} tooltip-placement=right ng-class=vm.icon()></a></div><div ng-if=!value.Value class=\"thumbnail-before-input empty-placeholder\"></div><div class=after-preview><div class=input-group dropdown><input type=text class=\"form-control input-lg\" ng-model=value.Value tooltip=\"{{'Edit.Fields.Hyperlink.Default.Tooltip1' | translate }}\r" +
+    "<div class=dropzone><div class=clearfix><div ng-if=\"value.Value && vm.isImage()\" class=thumbnail-before-input ng-style=\"{ 'background-image': 'url(' + vm.thumbnailUrl(1, true) + ')' }\" ng-mouseover=\"vm.showPreview = true\" ng-mouseleave=\"vm.showPreview = false\"></div><div ng-if=\"value.Value && !vm.isImage()\" class=\"thumbnail-before-input icon-before-input\"><a href={{vm.testLink}} target=_blank tabindex=-1 tooltip-html-unsafe={{vm.tooltipUrl(vm.testLink)}} tooltip-placement=right ng-class=vm.icon()></a></div><div ng-if=!value.Value class=\"thumbnail-before-input empty-placeholder\"></div><div class=after-preview><div class=input-group dropdown><input type=text class=\"form-control input-lg\" ng-model=value.Value tooltip=\"{{'Edit.Fields.Hyperlink.Default.Tooltip1' | translate }}\r" +
     "\n" +
     "{{'Edit.Fields.Hyperlink.Default.Tooltip2' | translate }}\r" +
     "\n" +

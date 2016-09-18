@@ -19,11 +19,14 @@
             vm.testLink = "";
 
             vm.isImage = function () { return fileType.isImage(vm.testLink); };
-            vm.thumbnailUrl = function thumbnailUrl(size) {
+            vm.thumbnailUrl = function thumbnailUrl(size, quote) {
+                var result = vm.testLink;
                 if (size === 1)
-                    return vm.testLink + "?w=64&h=64&mode=crop";
+                    result = result + "?w=64&h=64&mode=crop";
                 if (size === 2)
-                    return vm.testLink + "?w=500&h=400&mode=max";
+                    result = result + "?w=500&h=400&mode=max";
+                var qt = quote ? "\"" : "";
+                return qt + result + qt;
             };
 
             vm.icon = function () { return fileType.getIconClass(vm.testLink); };
