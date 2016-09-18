@@ -134,7 +134,8 @@
 			"Name": "Name",
 			"Id": "ID",
 			"Condition": "Condition",
-			"Grant": "Grant"
+			"Grant": "Grant",
+			"Actions": "Actions"
 		}
 	},
 	"Pipeline": {

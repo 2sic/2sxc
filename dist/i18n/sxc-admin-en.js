@@ -247,8 +247,8 @@
 				"ResetAppGuid": "Reset the app GUID to zero. You only need this option for special tutorial apps, and usually must not select it."
 			},
 			"Commands": {
-				"Export": "Export",
-				"ExportForVersionControl": "Save data for version control"
+				"Export": "Export App",
+				"ExportForVersionControl": "Export Data for Github versioning"
 			}
 		}
 	}
