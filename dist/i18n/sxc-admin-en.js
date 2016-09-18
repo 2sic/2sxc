@@ -139,6 +139,7 @@
 					"Tooltip2": "for help see 2sxc.org/help?tag=adam",
 					"Tooltip3": "ADAM - sponsored with love by 2sic.com",
 					"AdamUploadLabel": "quick-upload using ADAM",
+					"PageLabel": "pick a page",
 					"MenuAdam": "Upload file with Adam",
 					"MenuPage": "Page Picker",
 					"MenuImage": "Image Manager",
