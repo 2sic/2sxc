@@ -247,6 +247,7 @@
     </Compile>
     <Compile Include="Interfaces\ILinkHelper.cs" />
     <Compile Include="SexyContent\AppAssets\AssetEditInfo.cs" />
+    <Compile Include="SexyContent\Constants.cs" />
     <Compile Include="SexyContent\ContentBlock\ContentGroupReferenceManagerBase.cs" />
     <Compile Include="SexyContent\ContentBlock\ContentBlockBase.cs" />
     <Compile Include="SexyContent\ContentBlock\EntityContentGroupReferenceManager.cs" />

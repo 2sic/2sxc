@@ -49,18 +49,75 @@ namespace ToSic.SexyContent.WebApi
                 ? SearchOption.AllDirectories 
                 : SearchOption.TopDirectoryOnly;
 
+            // try to collect all files, ignoring long paths errors and similar etc.
+            var files = new List<FileInfo>();  // List that will hold the files and subfiles in path
+            var folders = new List<DirectoryInfo>(); // List that hold direcotries that cannot be accessed
+            var di = new DirectoryInfo(fullPath);
+            FullDirList(di, mask, folders, files, opt);
+
             // return folders or files (depending on setting) with/without subfolders
             return (returnFolders
-                ? Directory.GetDirectories(fullPath, mask, opt)
-                    .Select(Path.GetDirectoryName)
-                : Directory.GetFiles(fullPath, mask, opt)
-                    .Select(Path.GetFullPath)
+                ? folders
+                    .Select(f => f.FullName) 
+                // Directory.GetDirectories(fullPath, mask, opt)
+                    //.Select(Path.GetDirectoryName)
+                : files.Select(f => f.FullName)
+                //Directory.GetFiles(fullPath, mask, opt)
+                //    .Select(Path.GetFullPath)
                 )
                 .Select(p => EnsurePathMayBeAccessed(p, appPath))   // do another security check
                 .Select(x => x.Replace(appPath + "\\", ""))         // truncate / remove internal server root path
                 .Select(x => x.Replace("\\", "/"))                  // tip the slashes to web-convention - important, because old entries for templates used that slash
                 .ToList();
         }
+
+        private void FullDirList(DirectoryInfo dir, string searchPattern, List<DirectoryInfo> folders, List<FileInfo> files, SearchOption opt)
+        {
+            // Console.WriteLine("Directory {0}", dir.FullName);
+            // list the files
+            try
+            {
+                foreach (var f in dir.GetFiles(searchPattern))
+                {
+                    try
+                    {
+                        files.Add(f);
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
+                }
+            }
+            catch
+            {
+                // ignore errors
+                // Console.WriteLine("Directory {0}  \n could not be accessed!!!!", dir.FullName);
+                return;  // We alredy got an error trying to access dir so dont try to access it again
+            }
+
+            // process each directory
+            // If I have been able to see the files in the directory I should also be able 
+            // to look at its directories so I dont think I should place this in a try catch block
+            if (opt != SearchOption.AllDirectories) return;
+
+            foreach (var d in dir.GetDirectories())
+            {
+                try
+                {
+                    if (!Constants.ExcludeFolders.Contains(d.Name))
+                    {
+                        folders.Add(d);
+                        FullDirList(d, searchPattern, folders, files, opt);
+                    }
+                }
+                catch
+                {
+                    // ignored
+                }
+            }
+        }
+
 
         private string ResolveAppPath(int appId, bool global)
         {
