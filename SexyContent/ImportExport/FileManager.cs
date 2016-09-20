@@ -17,18 +17,16 @@ namespace ToSic.SexyContent.ImportExport
         /// <summary>
         /// Folder-names of folders which won't be exported or imported
         /// </summary>
-        public string[] ExcludeFolders = { ".git", "node_modules", "bower_components", ".vs", ".data" };
 
         private readonly string _sourceFolder;
 
         /// <summary>
         /// Copy all files from SourceFolder to DestinationFolder (directly on the file system)
         /// </summary>
-        /// <param name="sourceFolder"></param>
         /// <param name="destinationFolder"></param>
         /// <param name="overwriteFiles"></param>
         /// <param name="messages"></param>
-        public void CopyAllFiles(string destinationFolder, Boolean overwriteFiles, List<ExportImportMessage> messages)
+        public void CopyAllFiles(string destinationFolder, bool overwriteFiles, List<ExportImportMessage> messages)
         {
             var filteredFiles = AllTransferableFiles;
 
@@ -59,7 +57,7 @@ namespace ToSic.SexyContent.ImportExport
                 if (_allTransferableFiles == null)
                 {
                     // add folder slashes to ensure the term is part of a folder, not within a file-name
-                    var excFolderFilter = ExcludeFolders.Select(f => "\\" + f + "\\").ToArray();
+                    var excFolderFilter = Constants.ExcludeFolders.Select(f => "\\" + f + "\\").ToArray();
 
                     _allTransferableFiles = from f in AllFiles
                         where !excFolderFilter.Any(ex => f.ToLowerInvariant().Contains(ex))
