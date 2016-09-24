@@ -353,134 +353,186 @@ namespace ToSic.SexyContent.ImportExport
 
 		#region Templates
 
-		private void ImportXmlTemplates(XElement root)
-		{
-			var templates = root.Element(XmlConstants.Templates);
-		    if (templates == null) return;
+        private void ImportXmlTemplates(XElement root)
+        {
+            var templates = root.Element(XmlConstants.Templates);
+            if (templates == null) return;
 
-			var cache = DataSource.GetCache(_zoneId, _appId);
+            var cache = DataSource.GetCache(_zoneId, _appId);
 
-			foreach (var template in templates.Elements(XmlConstants.Template))
-			{
-				var name = template.Attribute("Name").Value;
-				var path = template.Attribute("Path").Value;
+            foreach (var template in templates.Elements(XmlConstants.Template))
+            {
+                var name = "";
+                try
+                {
+                    name = template.Attribute("Name").Value;
+                    var path = template.Attribute("Path").Value;
 
-				var contentTypeStaticName = template.Attribute(XmlConstants.AttSetStatic).Value;
+                    var contentTypeStaticName = template.Attribute(XmlConstants.AttSetStatic).Value;
 
-				if (!IsNullOrEmpty(contentTypeStaticName) && cache.GetContentType(contentTypeStaticName) == null)
-				{
-					ImportLog.Add(
-							new ExportImportMessage(
-								"Content Type for Template '" + name +
-								"' could not be found. The template has not been imported.",
-								ExportImportMessage.MessageTypes.Warning));
-					continue;
-				}
-
-				var demoEntityGuid = template.Attribute("DemoEntityGUID").Value;
-				var demoEntityId = new int?();
-
-				if (!IsNullOrEmpty(demoEntityGuid))
-				{
-					var entityGuid = Guid.Parse(demoEntityGuid);
-					if (/*App.*/_eavContext.Entities.EntityExists(entityGuid))
-						demoEntityId = /*App.*/_eavContext.Entities.GetEntity(entityGuid).EntityID;
-					else
-						ImportLog.Add(
-							new ExportImportMessage(
-								"Demo Entity for Template '" + name + "' could not be found. (Guid: " + demoEntityGuid +
-								")", ExportImportMessage.MessageTypes.Information));
-
-				}
-
-				var type = template.Attribute("Type").Value;
-				var isHidden = Parse(template.Attribute("IsHidden").Value);
-				var location = template.Attribute("Location").Value;
-				var publishData = Parse(template.Attribute("PublishData") == null ? "False" : template.Attribute("PublishData").Value);
-				var streamsToPublish = template.Attribute("StreamsToPublish") == null ? "" : template.Attribute("StreamsToPublish").Value;
-				var viewNameInUrl = template.Attribute("ViewNameInUrl") == null ? null : template.Attribute("ViewNameInUrl").Value;
-
-				var pipelineEntityGuid = template.Attribute("PipelineEntityGUID");
-				var pipelineEntityId = new int?();
-
-				if (!IsNullOrEmpty(pipelineEntityGuid?.Value))
-				{
-					var entityGuid = Guid.Parse(pipelineEntityGuid.Value);
-					if (_eavContext.Entities.EntityExists(entityGuid))
-						pipelineEntityId = _eavContext.Entities.GetEntity(entityGuid).EntityID;
-					else
-						ImportLog.Add(
-							new ExportImportMessage(
-								"Pipeline Entity for Template '" + name + "' could not be found. (Guid: " + pipelineEntityGuid.Value +
-								")", ExportImportMessage.MessageTypes.Information));
-				}
-
-				var useForList = false;
-				if (template.Attribute("UseForList") != null)
-					useForList = Parse(template.Attribute("UseForList").Value);
-
-				var templateDefaults = template.Elements(XmlConstants.Entity).Select(e =>
-				{
-					var xmlItemType = e.Elements("Value").FirstOrDefault(v => v.Attribute("Key").Value == "ItemType")?.Attribute("Value").Value;
-					var xmlContentTypeStaticName = e.Elements("Value").FirstOrDefault(v => v.Attribute("Key").Value == "ContentTypeID")?.Attribute("Value").Value;
-					var xmlDemoEntityGuidString = e.Elements("Value").FirstOrDefault(v => v.Attribute("Key").Value == "DemoEntityID")?.Attribute("Value").Value;
-				    if (xmlItemType == null || xmlContentTypeStaticName == null || xmlDemoEntityGuidString == null)
-				    {
-                        ImportLog.Add(new ExportImportMessage("trouble with template - either type, static or guid are null ", ExportImportMessage.MessageTypes.Error));
-                        return null;
+                    if (!IsNullOrEmpty(contentTypeStaticName) && cache.GetContentType(contentTypeStaticName) == null)
+                    {
+                        ImportLog.Add(
+                            new ExportImportMessage(
+                                "Content Type for Template '" + name +
+                                "' could not be found. The template has not been imported.",
+                                ExportImportMessage.MessageTypes.Warning));
+                        continue;
                     }
-                    var xmlDemoEntityId = new int?();
-					if (xmlDemoEntityGuidString != "0" && xmlDemoEntityGuidString != "")
-					{
-						var xmlDemoEntityGuid = Guid.Parse(xmlDemoEntityGuidString);
-						if (_eavContext.Entities.EntityExists(xmlDemoEntityGuid))
-							xmlDemoEntityId = _eavContext.Entities.GetEntity(xmlDemoEntityGuid).EntityID;
-					}
 
-					return new
-					{
-						ItemType = xmlItemType,
-						ContentTypeStaticName = xmlContentTypeStaticName == "0" || xmlContentTypeStaticName == "" ? "" : xmlContentTypeStaticName,
-						DemoEntityId = xmlDemoEntityId
-					};
-				}).ToList();
+                    var demoEntityGuid = template.Attribute("DemoEntityGUID").Value;
+                    var demoEntityId = new int?();
 
-				var presentationTypeStaticName = "";
-				var presentationDemoEntityId = new int?();
-				var presentationDefault = templateDefaults.FirstOrDefault(t => t.ItemType == "Presentation");
-				if (presentationDefault != null)
-				{
-					presentationTypeStaticName = presentationDefault.ContentTypeStaticName;
-					presentationDemoEntityId = presentationDefault.DemoEntityId;
-				}
+                    if (!IsNullOrEmpty(demoEntityGuid))
+                    {
+                        var entityGuid = Guid.Parse(demoEntityGuid);
+                        if ( /*App.*/_eavContext.Entities.EntityExists(entityGuid))
+                            demoEntityId = /*App.*/ _eavContext.Entities.GetEntity(entityGuid).EntityID;
+                        else
+                            ImportLog.Add(
+                                new ExportImportMessage(
+                                    "Demo Entity for Template '" + name + "' could not be found. (Guid: " +
+                                    demoEntityGuid +
+                                    ")", ExportImportMessage.MessageTypes.Information));
 
-				var listContentTypeStaticName = "";
-				var listContentDemoEntityId = new int?();
-				var listContentDefault = templateDefaults.FirstOrDefault(t => t.ItemType == "ListContent");
-				if (listContentDefault != null)
-				{
-					listContentTypeStaticName = listContentDefault.ContentTypeStaticName;
-					listContentDemoEntityId = listContentDefault.DemoEntityId;
-				}
+                    }
 
-				var listPresentationTypeStaticName = "";
-				var listPresentationDemoEntityId = new int?();
-				var listPresentationDefault = templateDefaults.FirstOrDefault(t => t.ItemType == "ListPresentation");
-				if (listPresentationDefault != null)
-				{
-					listPresentationTypeStaticName = listPresentationDefault.ContentTypeStaticName;
-					listPresentationDemoEntityId = listPresentationDefault.DemoEntityId;
-				}
+                    var type = template.Attribute("Type").Value;
+                    var isHidden = Parse(template.Attribute("IsHidden").Value);
+                    var location = template.Attribute("Location").Value;
+                    var publishData =
+                        Parse(template.Attribute("PublishData") == null
+                            ? "False"
+                            : template.Attribute("PublishData").Value);
+                    var streamsToPublish = template.Attribute("StreamsToPublish") == null
+                        ? ""
+                        : template.Attribute("StreamsToPublish").Value;
+                    var viewNameInUrl = template.Attribute("ViewNameInUrl") == null
+                        ? null
+                        : template.Attribute("ViewNameInUrl").Value;
 
-                var tm = new TemplateManager(_eavContext.ZoneId, _eavContext.AppId);
-				tm.UpdateTemplate(null, name, path, contentTypeStaticName, demoEntityId, presentationTypeStaticName, presentationDemoEntityId, listContentTypeStaticName, listContentDemoEntityId, listPresentationTypeStaticName, listPresentationDemoEntityId, type, isHidden, location, useForList, publishData, streamsToPublish, pipelineEntityId, viewNameInUrl);
+                    var pipelineEntityGuid = template.Attribute("PipelineEntityGUID");
+                    var pipelineEntityId = new int?();
 
-				ImportLog.Add(new ExportImportMessage("Template '" + name + "' successfully imported.",
-													 ExportImportMessage.MessageTypes.Information));
-			}
-		}
+                    if (!IsNullOrEmpty(pipelineEntityGuid?.Value))
+                    {
+                        var entityGuid = Guid.Parse(pipelineEntityGuid.Value);
+                        if (_eavContext.Entities.EntityExists(entityGuid))
+                            pipelineEntityId = _eavContext.Entities.GetEntity(entityGuid).EntityID;
+                        else
+                            ImportLog.Add(
+                                new ExportImportMessage(
+                                    "Pipeline Entity for Template '" + name + "' could not be found. (Guid: " +
+                                    pipelineEntityGuid.Value +
+                                    ")", ExportImportMessage.MessageTypes.Information));
+                    }
 
-		#endregion
+                    var useForList = false;
+                    if (template.Attribute("UseForList") != null)
+                        useForList = Parse(template.Attribute("UseForList").Value);
+
+                    var lstTemplateDefaults = template.Elements(XmlConstants.Entity).Select(e =>
+                    {
+                        var xmlItemType =
+                            e.Elements("Value")
+                                .FirstOrDefault(v => v.Attribute("Key").Value == "ItemType")?
+                                .Attribute("Value")
+                                .Value;
+                        var xmlContentTypeStaticName =
+                            e.Elements("Value")
+                                .FirstOrDefault(v => v.Attribute("Key").Value == "ContentTypeID")?
+                                .Attribute("Value")
+                                .Value;
+                        var xmlDemoEntityGuidString =
+                            e.Elements("Value")
+                                .FirstOrDefault(v => v.Attribute("Key").Value == "DemoEntityID")?
+                                .Attribute("Value")
+                                .Value;
+                        if (xmlItemType == null || xmlContentTypeStaticName == null || xmlDemoEntityGuidString == null)
+                        {
+                            ImportLog.Add(new ExportImportMessage(
+                                $"trouble with template '{name}' - either type, static or guid are null", ExportImportMessage.MessageTypes.Error));
+                            return null;
+                        }
+                        var xmlDemoEntityId = new int?();
+                        if (xmlDemoEntityGuidString != "0" && xmlDemoEntityGuidString != "")
+                        {
+                            var xmlDemoEntityGuid = Guid.Parse(xmlDemoEntityGuidString);
+                            if (_eavContext.Entities.EntityExists(xmlDemoEntityGuid))
+                                xmlDemoEntityId = _eavContext.Entities.GetEntity(xmlDemoEntityGuid).EntityID;
+                        }
+
+                        return new TemplateDefault
+                        {
+                            ItemType = xmlItemType,
+                            ContentTypeStaticName =
+                                xmlContentTypeStaticName == "0" || xmlContentTypeStaticName == ""
+                                    ? ""
+                                    : xmlContentTypeStaticName,
+                            DemoEntityId = xmlDemoEntityId
+                        };
+                    }).ToList();
+
+                    // Array lstTemplateDefaults has null objects 
+
+                    //Remove null objects if any
+                    var templateDefaults = new List<TemplateDefault>();
+                    foreach (var lstItem in lstTemplateDefaults)
+                    {
+                        if (lstItem != null)
+                        {
+                            templateDefaults.Add(lstItem);
+                        }
+                    }
+
+                    var presentationTypeStaticName = "";
+                    var presentationDemoEntityId = new int?();
+                    //if list templateDefaults would have null objects, we would have an exception
+                    var presentationDefault = templateDefaults.FirstOrDefault(t => t.ItemType == "Presentation");
+                    if (presentationDefault != null)
+                    {
+                        presentationTypeStaticName = presentationDefault.ContentTypeStaticName;
+                        presentationDemoEntityId = presentationDefault.DemoEntityId;
+                    }
+
+                    var listContentTypeStaticName = "";
+                    var listContentDemoEntityId = new int?();
+                    var listContentDefault = templateDefaults.FirstOrDefault(t => t.ItemType == "ListContent");
+                    if (listContentDefault != null)
+                    {
+                        listContentTypeStaticName = listContentDefault.ContentTypeStaticName;
+                        listContentDemoEntityId = listContentDefault.DemoEntityId;
+                    }
+
+                    var listPresentationTypeStaticName = "";
+                    var listPresentationDemoEntityId = new int?();
+                    var listPresentationDefault = templateDefaults.FirstOrDefault(t => t.ItemType == "ListPresentation");
+                    if (listPresentationDefault != null)
+                    {
+                        listPresentationTypeStaticName = listPresentationDefault.ContentTypeStaticName;
+                        listPresentationDemoEntityId = listPresentationDefault.DemoEntityId;
+                    }
+
+                    var tm = new TemplateManager(_eavContext.ZoneId, _eavContext.AppId);
+                    tm.UpdateTemplate(null, name, path, contentTypeStaticName, demoEntityId, presentationTypeStaticName,
+                        presentationDemoEntityId, listContentTypeStaticName, listContentDemoEntityId,
+                        listPresentationTypeStaticName, listPresentationDemoEntityId, type, isHidden, location,
+                        useForList, publishData, streamsToPublish, pipelineEntityId, viewNameInUrl);
+
+                    ImportLog.Add(new ExportImportMessage("Template '" + name + "' successfully imported.",
+                        ExportImportMessage.MessageTypes.Information));
+                }
+
+                catch (Exception e)
+                {
+                    ImportLog.Add(new ExportImportMessage("Import for template '" + name + "' failed.",
+                        ExportImportMessage.MessageTypes.Information));
+                }
+
+            }
+        }
+
+        #endregion
 
 		#region Entities
 
@@ -602,4 +654,13 @@ namespace ToSic.SexyContent.ImportExport
 
 	    #endregion
 	}
+
+    public class TemplateDefault
+    {
+
+        public string ItemType;
+        public string ContentTypeStaticName;
+        public int? DemoEntityId;
+
+    }
 }
