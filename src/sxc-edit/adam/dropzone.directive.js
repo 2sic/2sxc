@@ -1,10 +1,19 @@
 ﻿/* js/fileAppDirectives */
+(function() {
+    angular.module("Adam")
+        .directive("dropzone", function (sxc, tabId, AppInstanceId, ContentBlockId, dragClass, adamSvc, $timeout, $translate) {
 
-angular.module("Adam")
-    .directive("dropzone", function (sxc, tabId, AppInstanceId, ContentBlockId, dragClass, adamSvc, $timeout, $translate) {
-        return {
-            restrict: "C",
-            link: function(scope, element, attrs, controller) {
+            return {
+                restrict: "C",
+                link: postLink,
+
+                // This controller is needed, because it needs an API which can talk to other directives
+                controller: controller
+            };
+
+
+            // this is the method called after linking the directive, which initializes Dropzone
+            function postLink(scope, element, attrs, controller) {
                 var header = scope.$parent.to.header;
                 var field = scope.$parent.options.key;
                 var entityGuid = header.Guid;
@@ -32,24 +41,23 @@ angular.module("Adam")
                 };
 
 
-
                 var eventHandlers = {
                     'addedfile': function (file) {
-                        $timeout(function() {
+                        $timeout(function () {
                             // anything you want can go here and will safely be run on the next digest.
-                            scope.$apply(function() { // this must run in a timeout
+                            scope.$apply(function () { // this must run in a timeout
                                 scope.uploading = true;
                             });
                         });
                     },
 
-                    "processing": function(file) {
+                    "processing": function (file) {
                         this.options.url = svc.uploadUrl(controller.adam.subFolder);
                     },
 
-                    'success': function(file, response) {
+                    'success': function (file, response) {
                         if (response.Success) {
-                            svc.addFullPath(response);  // calculate additional infos
+                            svc.addFullPath(response); // calculate additional infos
                             scope.$parent.afterUpload(response);
                         } else {
                             alert("Upload failed because: " + response.Error);
@@ -59,7 +67,7 @@ angular.module("Adam")
                         alert($translate.instant("Errors.AdamUploadError"));
                     },
 
-                    "queuecomplete": function(file) {
+                    "queuecomplete": function (file) {
                         if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
                             scope.uploading = false;
                             controller.adam.refresh();
@@ -67,33 +75,33 @@ angular.module("Adam")
                     }
                 };
 
-                var dropzone = new Dropzone(element[0], config);
+                // delay building the dropszone till the DOM is ready
+                $timeout(function() {
+                    var dropzone = new Dropzone(element[0], config);
 
-                angular.forEach(eventHandlers, function(handler, event) {
-                    dropzone.on(event, handler);
-                });
+                    angular.forEach(eventHandlers, function(handler, event) {
+                        dropzone.on(event, handler);
+                    });
 
-                scope.processDropzone = function() {
-                    dropzone.processQueue();
-                };
+                    scope.processDropzone = function() { dropzone.processQueue(); };
+                    scope.resetDropzone = function() { dropzone.removeAllFiles(); };
+                    controller.openUpload = function() { dropzone.hiddenFileInput.click(); };
 
-                scope.resetDropzone = function() {
-                    dropzone.removeAllFiles();
-                };
+                }, 0);
+            }
 
-                controller.openUpload = function() {
-                    dropzone.hiddenFileInput.click();
-                };
-            },
 
-            // This controller is needed, because it needs an API which can talk to other directives
-            controller: function() {
+            function controller() {
                 var vm = this;
                 vm.adam = {
                     show: false,
                     subFolder: "",
                     refresh: function () { }
                 };
+
             }
-        };
-    });
+
+        });
+
+
+})();

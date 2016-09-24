@@ -4,7 +4,7 @@
         .controller("ImportExportIntro", IntroController)
         ;
 
-    function IntroController(eavAdminDialogs, eavConfig, oldDialogs, appId) {
+    function IntroController(eavAdminDialogs, eavConfig, appId) {
         var vm = this;
         function blankCallback() { }
 

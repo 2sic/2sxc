@@ -11,7 +11,7 @@
            class="thumbnail-before-input icon-before-input">
             <a href="{{vm.testLink}}"
                target="_blank" tabindex="-1"
-               tooltip-html-unsafe="{{vm.tooltipUrl(vm.testLink)}}"
+               tooltip-html="{{vm.tooltipUrl(vm.testLink)}}"
                tooltip-placement="right"
                ng-class="vm.icon()">
             </a>            
@@ -51,7 +51,7 @@ ADAM - sponsored with ♥ by 2sic.com">
 
             <adam-hint class="field-hints"></adam-hint>
             <div ng-if="value.Value" class="field-hints">
-                <a href="{{vm.testLink}}" target="_blank" tabindex="-1" tooltip-html-unsafe="{{vm.tooltipUrl(vm.testLink)}}">
+                <a href="{{vm.testLink}}" target="_blank" tabindex="-1" tooltip-html="{{vm.tooltipUrl(vm.testLink)}}">
                     <span>&nbsp;... {{vm.testLink.substr(vm.testLink.lastIndexOf("/"), 100)}}</span>
                 </a>
             </div>
