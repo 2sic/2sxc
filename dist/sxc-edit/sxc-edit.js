@@ -353,6 +353,7 @@ angular.module("Adam")
             };
 
 
+            // this is the method called after linking the directive, which initializes Dropzone
             function postLink(scope, element, attrs, controller) {
                 var header = scope.$parent.to.header;
                 var field = scope.$parent.options.key;
@@ -414,11 +415,6 @@ angular.module("Adam")
                         }
                     }
                 };
-
-                //var pc = document.querySelectorAll(config.previewsContainer);
-                //console.log('will log preview container');
-                //console.log(pc);
-                //config.previewsContainer = pc[0];
 
                 // delay building the dropszone till the DOM is ready
                 $timeout(function() {

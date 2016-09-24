@@ -80,34 +80,6 @@
 
         vm.editPackage = svc.editPackage;
 
-        //vm.export = function exp() {
-        //    oldDialogs.appExport(appId, svc.liveListReload);
-        //};
-
-        //vm.importParts = function() {
-        //    // probably afterwards
-        //    var resolve = eavAdminDialogs.CreateResolve({
-        //        appId: appId
-        //    });
-        //    return eavAdminDialogs.OpenModal(
-        //        "importexport/import.html",
-        //        "Import as vm",
-        //        "lg",
-        //        resolve);
-        //};
-
-        //vm.exportParts = function() {
-        //    // probably afterwards
-        //    var resolve = eavAdminDialogs.CreateResolve({
-        //        appId: appId
-        //    });
-        //    return eavAdminDialogs.OpenModal(
-        //        "importexport/export.html",
-        //        "Export as vm",
-        //        "lg",
-        //        resolve);
-        //};
-
     }
     AppSettingsController.$inject = ["appSettings", "appId"];
 
@@ -130,7 +102,7 @@
         .controller("AppList", AppListController)
         ;
 
-    function AppListController(appsSvc, eavAdminDialogs, sxcDialogs, eavConfig, appSettings, appId, zoneId, oldDialogs, $modalInstance, $translate) {
+    function AppListController(appsSvc, eavAdminDialogs, sxcDialogs, eavConfig, appSettings, appId, zoneId, $modalInstance, $translate) {
         var vm = this;
 
         function blankCallback() { }
@@ -204,7 +176,7 @@
 
         vm.close = function () { $modalInstance.dismiss("cancel");};
     }
-    AppListController.$inject = ["appsSvc", "eavAdminDialogs", "sxcDialogs", "eavConfig", "appSettings", "appId", "zoneId", "oldDialogs", "$modalInstance", "$translate"];
+    AppListController.$inject = ["appsSvc", "eavAdminDialogs", "sxcDialogs", "eavConfig", "appSettings", "appId", "zoneId", "$modalInstance", "$translate"];
 
 } ());
 (function () { 
@@ -723,7 +695,7 @@
         .controller("ImportExportIntro", IntroController)
         ;
 
-    function IntroController(eavAdminDialogs, eavConfig, oldDialogs, appId) {
+    function IntroController(eavAdminDialogs, eavConfig, appId) {
         var vm = this;
         function blankCallback() { }
 
@@ -761,7 +733,7 @@
                 resolve, blankCallback);
         };
     }
-    IntroController.$inject = ["eavAdminDialogs", "eavConfig", "oldDialogs", "appId"];
+    IntroController.$inject = ["eavAdminDialogs", "eavConfig", "appId"];
 
 } ());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
@@ -1201,64 +1173,6 @@ angular.module("SxcAdminUi", [
     "sxcFieldTemplates",
     "EavAdminUi", // dialog (modal) controller
 ])
-    .factory("oldDialogs", ["tabId", "AppInstanceId", "appId", "websiteRoot", "$q", function (tabId, AppInstanceId, appId, websiteRoot, $q) {
-        var svc = {};
-
-        // todo: maybe needs something to get the real root-address
-        svc.oldRootUrl = (websiteRoot + "Default.aspx?tabid={{tabid}}&mid={{mid}}&ctl={{ctl}}&appid={{appid}}" + "&dnnprintmode=true&SkinSrc=%5bG%5dSkins%2f_default%2fNo+Skin&ContainerSrc=%5bG%5dContainers%2f_default%2fNo+Container") // "&popUp=true"
-            .replace("{{tabid}}", tabId)
-            .replace("{{mid}}", AppInstanceId);
-
-            svc.getUrl = function getUrl(ctlName, alternateAppId) {
-                return svc.oldRootUrl.replace("{{appid}}", alternateAppId || appId).replace("{{ctl}}", ctlName);
-            };
-
-            svc.showInfoOld = function showInfoOld() {
-                // alert("Info! \n\n This dialog still uses the old DNN-dialogs. It will open in a new window. After saving/closing that, please refresh this page to see changes made.");
-            };
-
-            
-        // this will open a browser-window as a modal-promise dialog
-        // this is needed for all older, not-yet-migrated ascx-parts
-            svc.openPromiseWindow = function opw(url, callback) {
-                // note that Success & error both should do the callback, mostly a list-refresh
-                if(!window.Promise) // Special workaround to enable promiseWindow in IE without jQuery
-                    PromiseWindow.defaultConfig.promiseProvider = PromiseWindow.getAPlusPromiseProvider($q);
-                PromiseWindow.open(url).then(callback, callback);
-            };
-
-            svc.editTemplate = function edit(itemId, callback) {
-                svc.showInfoOld();
-                var url = svc.getUrl("edittemplate")
-                    + ((itemId === 0) ? "" : "&templateid=" + itemId); // must leave parameter away if we want a new-dialog
-                svc.openPromiseWindow(url, callback);
-            };
-
-            svc.appExport = function appExport(altAppId, callback) {
-                svc.showInfoOld();
-                var url = svc.getUrl("appexport", altAppId);
-                svc.openPromiseWindow(url, callback);
-            };
-
-            svc.appImport = function appImport(altAppId, callback) {
-                svc.showInfoOld();
-                var url = svc.getUrl("appimport", altAppId);
-                svc.openPromiseWindow(url, callback);
-            };
-
-            svc.exportPartial = function exportPartial(callback) {
-                svc.showInfoOld();
-                var url = svc.getUrl("export", 0);
-                svc.openPromiseWindow(url, callback);
-            };
-
-            svc.importPartial = function importPartial(altAppId, callback) {
-                svc.showInfoOld();
-                var url = svc.getUrl("import", altAppId);
-                svc.openPromiseWindow(url, callback);
-            };
-            return svc;
-    }])
 
     .factory("sxcDialogs", ["$modal", "eavAdminDialogs", function ($modal, eavAdminDialogs) {
         var svc = {};
@@ -1478,7 +1392,7 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
 
 
   $templateCache.put('templates/templates.html',
-    "<div class=modal-body><button icon=plus type=button class=\"btn btn-primary btn-square\" ng-click=vm.add()></button> <span class=btn-group ng-if=vm.debug.on><button icon=repeat type=button class=\"btn btn-square\" ng-click=vm.refresh()></button> <button icon=plus type=button class=\"btn btn-square btn-warning\" ng-click=vm.addOld() tooltip=\"old add dialog\"></button></span><table class=\"table table-hover\"><thead><tr><th translate=Templates.Table.TName></th><th translate=Templates.Table.TPath></th><th translate=Templates.Table.CType></th><th translate=Templates.Table.DemoC></th><th><span tooltip=\"{{'Templates.Table.Show' | translate}}\"><i icon=eye-open></i></span></th><th translate=Templates.Table.UrlKey></th><th translate=Templates.Table.Actions></th></tr></thead><tbody><tr ng-repeat=\"item in vm.items | orderBy:['ContentType.Name','Name']\" class=clickable-row ng-click=vm.edit(item)><td class=clickable>{{item.Name}}</td><td class=clickable><span tooltip={{item.TemplatePath}}>...{{item.TemplatePath.split(\"/\").pop()}}</span></td><td class=clickable><span tooltip=\"\r" +
+    "<div class=modal-body><button icon=plus type=button class=\"btn btn-primary btn-square\" ng-click=vm.add()></button> <span class=btn-group ng-if=vm.debug.on><button icon=repeat type=button class=\"btn btn-square\" ng-click=vm.refresh()></button></span><table class=\"table table-hover\"><thead><tr><th translate=Templates.Table.TName></th><th translate=Templates.Table.TPath></th><th translate=Templates.Table.CType></th><th translate=Templates.Table.DemoC></th><th><span tooltip=\"{{'Templates.Table.Show' | translate}}\"><i icon=eye-open></i></span></th><th translate=Templates.Table.UrlKey></th><th translate=Templates.Table.Actions></th></tr></thead><tbody><tr ng-repeat=\"item in vm.items | orderBy:['ContentType.Name','Name']\" class=clickable-row ng-click=vm.edit(item)><td class=clickable>{{item.Name}}</td><td class=clickable><span tooltip={{item.TemplatePath}}>...{{item.TemplatePath.split(\"/\").pop()}}</span></td><td class=clickable><span tooltip=\"\r" +
     "\n" +
     "Cont: {{item.ContentType.Name}} ({{item.ContentType.Id}})\r" +
     "\n" +
@@ -1498,7 +1412,7 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
     "\n" +
     "ListP: {{item.ListPresentationType.DemoTitle}} ({{item.ListPresentationType.DemoId}})\r" +
     "\n" +
-    "\">{{item.ContentType.DemoId}}</span></td><td><span icon=\"{{ item.IsHidden ? 'close' : 'eye-open'}}\"></span></td><td class=clickable><span tooltip={{item.ViewNameInUrl}}>{{item.ViewNameInUrl}}</span></td><td class=text-nowrap stop-event=click><button type=button class=\"btn btn-xs btn-square\" ng-click=vm.permissions(item)><i icon=user></i></button> <button type=button class=\"btn btn-xs btn-square\" ng-click=vm.tryToDelete(item)><span icon=remove></span></button> <button ng-if=vm.debug.on type=button class=\"btn btn-xs btn-square btn-warning\" ng-click=vm.editOld(item)><span icon=pencil></span></button></td></tr><tr ng-if=!vm.items.length><td colspan=100 translate=General.Messages.NothingFound></td></tr></tbody></table><div translate=Templates.InfoHideAdvanced></div></div>"
+    "\">{{item.ContentType.DemoId}}</span></td><td><span icon=\"{{ item.IsHidden ? 'close' : 'eye-open'}}\"></span></td><td class=clickable><span tooltip={{item.ViewNameInUrl}}>{{item.ViewNameInUrl}}</span></td><td class=text-nowrap stop-event=click><button type=button class=\"btn btn-xs btn-square\" ng-click=vm.permissions(item)><i icon=user></i></button> <button type=button class=\"btn btn-xs btn-square\" ng-click=vm.tryToDelete(item)><span icon=remove></span></button></td></tr><tr ng-if=!vm.items.length><td colspan=100 translate=General.Messages.NothingFound></td></tr></tbody></table><div translate=Templates.InfoHideAdvanced></div></div>"
   );
 
 
@@ -1520,25 +1434,17 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
         .controller("TemplateList", TemplateListController)
         ;
 
-    function TemplateListController(templatesSvc, eavAdminDialogs, eavConfig, appId, debugState, oldDialogs, $translate, $modalInstance, $sce) {
+    function TemplateListController(templatesSvc, eavAdminDialogs, eavConfig, appId, debugState, $translate, $modalInstance, $sce) {
         var vm = this;
         vm.debug = debugState;
 
         var svc = templatesSvc(appId);
 
-        vm.editOld = function editOld(item) {
-            oldDialogs.editTemplate(item.Id, svc.liveListReload);
-        };
         vm.edit = function edit(item) {
             eavAdminDialogs.openItemEditWithEntityId(item.Id, svc.liveListReload);
         };
         
 
-
-        vm.addOld = function add() {
-            oldDialogs.editTemplate(0, svc.liveListReload);
-            return;
-        };
 
         vm.add = function addNew() {
             eavAdminDialogs.openItemNew("2SexyContent-Template", svc.liveListReload);
@@ -1560,7 +1466,7 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
             $modalInstance.dismiss("cancel");
         };
     }
-    TemplateListController.$inject = ["templatesSvc", "eavAdminDialogs", "eavConfig", "appId", "debugState", "oldDialogs", "$translate", "$modalInstance", "$sce"];
+    TemplateListController.$inject = ["templatesSvc", "eavAdminDialogs", "eavConfig", "appId", "debugState", "$translate", "$modalInstance", "$sce"];
 
 } ());
 (function () { 
