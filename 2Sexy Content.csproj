@@ -178,13 +178,6 @@
     <Compile Include="Adam\IAdamItem.cs" />
     <Compile Include="Adam\AdamManager.cs" />
     <Compile Include="Adam\UploadResult.cs" />
-    <Compile Include="Administration\ContentTypeAndDemoSelector.ascx.cs">
-      <DependentUpon>ContentTypeAndDemoSelector.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Administration\ContentTypeAndDemoSelector.ascx.designer.cs">
-      <DependentUpon>ContentTypeAndDemoSelector.ascx</DependentUpon>
-    </Compile>
     <Compile Include="API\SecurityContext.cs" />
     <Compile Include="API\Services.asmx.cs">
       <DependentUpon>Services.asmx</DependentUpon>
@@ -359,21 +352,11 @@
     <Compile Include="SexyContent\Search\SearchIndexException.cs" />
     <Compile Include="SexyContent\Search\SearchInfo.cs" />
     <Compile Include="SexyContent\SexyContentException.cs" />
-    <Compile Include="Administration\SexyControlAdminBaseWillSoonBeRemoved.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
     <Compile Include="SexyContent\TemplateDefault.cs" />
     <Compile Include="WebApi\View\ModuleController.cs" />
     <Compile Include="WebApi\Helpers.cs" />
     <Compile Include="WebApi\SxcApiController.cs" />
     <Compile Include="WebApi\AppApiControllerSelector.cs" />
-    <Compile Include="TemplateHelpGrid.ascx.cs">
-      <DependentUpon>TemplateHelpGrid.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="TemplateHelpGrid.ascx.designer.cs">
-      <DependentUpon>TemplateHelpGrid.ascx</DependentUpon>
-    </Compile>
     <Compile Include="View.ascx.cs">
       <DependentUpon>View.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -381,14 +364,7 @@
     <Compile Include="View.ascx.designer.cs">
       <DependentUpon>View.ascx</DependentUpon>
     </Compile>
-    <Compile Include="Administration\EditTemplate.ascx.designer.cs">
-      <DependentUpon>EditTemplate.ascx</DependentUpon>
-    </Compile>
     <Compile Include="SexyContent\SxcInstance.cs" />
-    <Compile Include="Administration\EditTemplate.ascx.cs">
-      <DependentUpon>EditTemplate.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\FilteredNameValueCollectionPropertyAccess.cs" />
     <Compile Include="SexyContent\Engines\TokenEngine\TokenReplaceDnn.cs" />
@@ -396,7 +372,6 @@
   <ItemGroup>
     <Content Include=".gitignore" />
     <Content Include="Administration\Export.js" />
-    <Content Include="Administration\ContentTypeAndDemoSelector.ascx" />
     <Content Include="API\Services.asmx" />
     <Content Include="BuildScripts\MSBuild.Community.Tasks.dll" />
     <Content Include="DnnWebForms\FileManager.ascx" />
@@ -477,7 +452,6 @@
     <Content Include="js\angularjs\toaster.js" />
     <Content Include="license.txt" />
     <Content Include="src\inpage\edit.css" />
-    <Content Include="Administration\EditTemplate.ascx" />
     <Content Include="ReleaseNotes.txt" />
     <Content Include="Extensions\Thumbnailer.aspx" />
     <Content Include="js\2sxc.api.js" />
@@ -560,7 +534,6 @@
     <Content Include="src\sxc-edit\fields\hyperlink\hyperlink-default.html" />
     <Content Include="src\sxc-edit\fields\string\string-wysiwyg-dnn.html" />
     <Content Include="src\sxc-edit\temp-icon-fix.css" />
-    <Content Include="TemplateHelpGrid.ascx" />
     <Content Include="View.ascx" />
     <Content Include="WebConfigTemplate.config" />
     <None Include="SqlDataProvider\01.00.01.SqlDataProvider" />
@@ -601,35 +574,14 @@
     <Content Include="src\sxc-develop\source-editor\snippets.xlsx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Administration\App_LocalResources\EditTemplate.ascx.resx" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="App_LocalResources\View.ascx.resx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Administration\App_LocalResources\EditTemplate.ascx.de-DE.resx" />
     <Content Include="App_LocalResources\View.ascx.de-DE.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_LocalResources\EditTemplateFile.ascx.resx">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_LocalResources\EditTemplateFile.ascx.de-DE.resx" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Administration\App_LocalResources\ContentTypeAndDemoSelector.ascx.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Administration\App_LocalResources\ContentTypeAndDemoSelector.ascx.de-DE.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Administration\App_LocalResources\WebApiHelp.ascx.resx" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
