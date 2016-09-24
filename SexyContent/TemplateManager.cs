@@ -58,14 +58,16 @@ namespace ToSic.SexyContent
 
 			return new Template(templateEntity);
 		}
-        public Template GetTemplate(Guid templateGuid)
-        {
-            return
-                TemplateDataSource()
-                    .List.Where(t => t.Value.EntityGuid == templateGuid)
-                    .Select(t => new Template(t.Value))
-                    .FirstOrDefault();
-        }
+
+        // 2016-09-24 2dm seems unused now
+        //public Template GetTemplate(Guid templateGuid)
+        //{
+        //    return
+        //        TemplateDataSource()
+        //            .List.Where(t => t.Value.EntityGuid == templateGuid)
+        //            .Select(t => new Template(t.Value))
+        //            .FirstOrDefault();
+        //}
 
         public bool DeleteTemplate(int templateId)
 		{
@@ -166,7 +168,7 @@ namespace ToSic.SexyContent
         public IEnumerable<object> GetContentTypesWithStatus()
         {
             // 2016-09-08 2dm - changed to use all templates, because of https://github.com/2sic/2sxc/issues/831
-            var availableTemplates = GetAllTemplates();// GetVisibleTemplates();
+            var availableTemplates = GetAllTemplates().ToList();// GetVisibleTemplates();
             var visTemplates = availableTemplates.Where(t => !t.IsHidden).ToList();
             var mdCache = TemplateDataSource().Cache;
             var ctc = new ContentTypeController();
