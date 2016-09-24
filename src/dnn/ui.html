@@ -4,8 +4,8 @@
     <title>Content Editing UI</title>
     <meta charset="utf-8" />
     <!-- first load the main 2sxc because it contains some url-param methods -->
-    <!--<script src="../../js/2sxc.api.js"></script>-->
-    <script src="../../js/2sxc.api.min.js"></script>
+    <!--<script src="../../js/2sxc.api.js?sxcver=08.05.03"></script>-->
+    <script src="../../js/2sxc.api.min.js?sxcver=08.05.03"></script>
     <script>
         // the version to append to each asset, to ensure reload after an upgrade
         var sxcVersionParam = "sxcver=" + $2sxc.urlParams.require("sxcver");
@@ -33,7 +33,7 @@
         function addScript(src) {
             var script = document.createElement('script');
             script.type = 'text/javascript';
-            script.src = toMinOrNotToMin(src) + "?" + sxcVersionParam;
+            script.src = toMinOrNotToMin(src);
             document.write(script.outerHTML); // needs doc.write to ensure in-sync loading of the files
         }
 
@@ -42,14 +42,15 @@
             var style = document.createElement("link");
             style.setAttribute("rel", "stylesheet");
             style.setAttribute("type", "text/css");
-            style.setAttribute("href", src + "?" + sxcVersionParam);
+            style.setAttribute("href", toMinOrNotToMin(src));// + "?" + sxcVersionParam);
             document.getElementsByTagName("head")[0].appendChild(style);
         }
 
         //var noMin = ($2sxc.urlParams.get("debug") === "true");
         function toMinOrNotToMin(url) {
-            return (url.indexOf("lib") > -1) ?
-                url : $2sxc.debug.renameScript(url);
+            return $2sxc.parts.getUrl(url, (url.indexOf("lib") > -1)); // never unmin the lib-stuff, as it doesn't have the unminified included
+            return (url.indexOf("lib") > -1) ?  // never unmin the lib-stuff, as it doesn't have the unminified included
+                url : $2sxc.parts.getUrl(url);
         }
 
     </script>
@@ -76,7 +77,7 @@
             '../../js/angularjs/2sxc4ng.min.js',    // 2sxc stuff like bootloader, configuration
             '../config/config.min.js',
             '../admin/eav-admin.min.js',            // Main parts like eav-admin, sxc-admin and eav-edit
-            '../sxc-admin/sxc-admin.min.js',
+            '../sxc-admin/sxc-admin.min.js'
         ];
         var editScripts = [
             '../edit/eav-edit.min.js',

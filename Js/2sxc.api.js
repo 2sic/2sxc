@@ -288,8 +288,8 @@
 
     $2sxc.urlParams = {
         get: function getParameterByName(name) {
-            // warning: this method is duplicated in 3 places - keep them in sync. 
-            // locations are eav, 2sxc4ng and ui.html
+            // warning: this method is duplicated in 2 places - keep them in sync. 
+            // locations are eav and 2sxc4ng 
             name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
             var searchRx = new RegExp("[\\?&]" + name + "=([^&#]*)", "i");
             var results = searchRx.exec(location.search);
@@ -327,8 +327,20 @@
     // debug state which is needed in various places
     $2sxc.debug = {
         load: ($2sxc.urlParams.get("debug") === "true"),
-        renameScript: function toMinOrNotToMin(url) {
-            return (!$2sxc.debug.load) ? url : url.replace(".min", "");
+        uncache: $2sxc.urlParams.get("sxcver"),
+        //renameScript: function toMinOrNotToMin(url, preventUnmin) {
+        //    var r = (!$2sxc.debug.load && !preventUnmin) ? url : url.replace(".min", ""); // use min or not
+        //    if ($2sxc.debug.uncache && r.indexOf("sxcver") === -1)
+        //        r = r + ((r.indexOf("?") === -1) ? "?" : "&") + "sxcver=" + $2sxc.debug.uncache;
+        //    return r;
+        //}
+    };
+    $2sxc.parts = {
+        getUrl: function improveUrl(url, preventUnmin) {
+            var r = (preventUnmin || !$2sxc.debug.load) ? url : url.replace(".min", ""); // use min or not
+            if ($2sxc.debug.uncache && r.indexOf("sxcver") === -1)
+                r = r + ((r.indexOf("?") === -1) ? "?" : "&") + "sxcver=" + $2sxc.debug.uncache;
+            return r;
         }
     };
 

@@ -265,8 +265,7 @@
             case "develop":
                 // lazy load this to ensure the module is "registered" inside 2sxc
                 $ocLazyLoad.load([
-                        //"../lib/angular-ui-ace/ui-ace.min.js",
-                        $2sxc.debug.renameScript("../sxc-develop/sxc-develop.min.js")
+                        $2sxc.parts.getUrl("../sxc-develop/sxc-develop.min.js")
                     ])
                     .then(function() {
                         sxcDialogs.openDevelop(items[0], vm.close);
