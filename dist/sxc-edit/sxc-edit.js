@@ -310,7 +310,7 @@ angular.module("Adam")
                     folderDepth: "=", 
                     metadataContentTypes: "=",
                     allowAssetsInRoot: "=",
-                    showImagesOnly: "=",
+                    showImagesOnly: "=?",
 
                     // binding and cross-component communication
                     autoLoad: "=",
@@ -340,12 +340,20 @@ angular.module("Adam")
         });
 })();
 /* js/fileAppDirectives */
+(function() {
+    angular.module("Adam")
+        .directive("dropzone", ["sxc", "tabId", "AppInstanceId", "ContentBlockId", "dragClass", "adamSvc", "$timeout", "$translate", function (sxc, tabId, AppInstanceId, ContentBlockId, dragClass, adamSvc, $timeout, $translate) {
 
-angular.module("Adam")
-    .directive("dropzone", ["sxc", "tabId", "AppInstanceId", "ContentBlockId", "dragClass", "adamSvc", "$timeout", "$translate", function (sxc, tabId, AppInstanceId, ContentBlockId, dragClass, adamSvc, $timeout, $translate) {
-        return {
-            restrict: "C",
-            link: function(scope, element, attrs, controller) {
+            return {
+                restrict: "C",
+                link: postLink,
+
+                // This controller is needed, because it needs an API which can talk to other directives
+                controller: controller
+            };
+
+
+            function postLink(scope, element, attrs, controller) {
                 var header = scope.$parent.to.header;
                 var field = scope.$parent.options.key;
                 var entityGuid = header.Guid;
@@ -373,24 +381,23 @@ angular.module("Adam")
                 };
 
 
-
                 var eventHandlers = {
                     'addedfile': function (file) {
-                        $timeout(function() {
+                        $timeout(function () {
                             // anything you want can go here and will safely be run on the next digest.
-                            scope.$apply(function() { // this must run in a timeout
+                            scope.$apply(function () { // this must run in a timeout
                                 scope.uploading = true;
                             });
                         });
                     },
 
-                    "processing": function(file) {
+                    "processing": function (file) {
                         this.options.url = svc.uploadUrl(controller.adam.subFolder);
                     },
 
-                    'success': function(file, response) {
+                    'success': function (file, response) {
                         if (response.Success) {
-                            svc.addFullPath(response);  // calculate additional infos
+                            svc.addFullPath(response); // calculate additional infos
                             scope.$parent.afterUpload(response);
                         } else {
                             alert("Upload failed because: " + response.Error);
@@ -400,7 +407,7 @@ angular.module("Adam")
                         alert($translate.instant("Errors.AdamUploadError"));
                     },
 
-                    "queuecomplete": function(file) {
+                    "queuecomplete": function (file) {
                         if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
                             scope.uploading = false;
                             controller.adam.refresh();
@@ -408,36 +415,41 @@ angular.module("Adam")
                     }
                 };
 
-                var dropzone = new Dropzone(element[0], config);
+                //var pc = document.querySelectorAll(config.previewsContainer);
+                //console.log('will log preview container');
+                //console.log(pc);
+                //config.previewsContainer = pc[0];
 
-                angular.forEach(eventHandlers, function(handler, event) {
-                    dropzone.on(event, handler);
-                });
+                // delay building the dropszone till the DOM is ready
+                $timeout(function() {
+                    var dropzone = new Dropzone(element[0], config);
 
-                scope.processDropzone = function() {
-                    dropzone.processQueue();
-                };
+                    angular.forEach(eventHandlers, function(handler, event) {
+                        dropzone.on(event, handler);
+                    });
 
-                scope.resetDropzone = function() {
-                    dropzone.removeAllFiles();
-                };
+                    scope.processDropzone = function() { dropzone.processQueue(); };
+                    scope.resetDropzone = function() { dropzone.removeAllFiles(); };
+                    controller.openUpload = function() { dropzone.hiddenFileInput.click(); };
 
-                controller.openUpload = function() {
-                    dropzone.hiddenFileInput.click();
-                };
-            },
+                }, 0);
+            }
 
-            // This controller is needed, because it needs an API which can talk to other directives
-            controller: function() {
+
+            function controller() {
                 var vm = this;
                 vm.adam = {
                     show: false,
                     subFolder: "",
                     refresh: function () { }
                 };
+
             }
-        };
-    }]);
+
+        }]);
+
+
+})();
 
 (function () {
 	"use strict";
@@ -1567,7 +1579,7 @@ angular.module('SxcEditTemplates', []).run(['$templateCache', function($template
 
 
   $templateCache.put('adam/dropzone-upload-preview.html',
-    "<div ng-show=uploading><div class=dropzone-previews></div><span class=invisible-clickable data-note=\"just a fake, invisble area for dropzone\"></span></div>"
+    "<div ng-show=uploading><div class=dropzone-previews></div><span class=invisible-clickable data-note=\"just a fake, invisible area for dropzone\"></span></div>"
   );
 
 
@@ -1586,11 +1598,11 @@ angular.module('SxcEditTemplates', []).run(['$templateCache', function($template
 
 
   $templateCache.put('fields/hyperlink/hyperlink-default.html',
-    "<div class=dropzone><div class=clearfix><div ng-if=\"value.Value && vm.isImage()\" class=thumbnail-before-input ng-style=\"{ 'background-image': 'url(' + vm.thumbnailUrl(1, true) + ')' }\" ng-mouseover=\"vm.showPreview = true\" ng-mouseleave=\"vm.showPreview = false\"></div><div ng-if=\"value.Value && !vm.isImage()\" class=\"thumbnail-before-input icon-before-input\"><a href={{vm.testLink}} target=_blank tabindex=-1 tooltip-html-unsafe={{vm.tooltipUrl(vm.testLink)}} tooltip-placement=right ng-class=vm.icon()></a></div><div ng-if=!value.Value class=\"thumbnail-before-input empty-placeholder\"></div><div class=after-preview><div class=input-group dropdown><input type=text class=\"form-control input-lg\" ng-model=value.Value tooltip=\"{{'Edit.Fields.Hyperlink.Default.Tooltip1' | translate }}\r" +
+    "<div class=dropzone><div class=clearfix><div ng-if=\"value.Value && vm.isImage()\" class=thumbnail-before-input ng-style=\"{ 'background-image': 'url(' + vm.thumbnailUrl(1, true) + ')' }\" ng-mouseover=\"vm.showPreview = true\" ng-mouseleave=\"vm.showPreview = false\"></div><div ng-if=\"value.Value && !vm.isImage()\" class=\"thumbnail-before-input icon-before-input\"><a href={{vm.testLink}} target=_blank tabindex=-1 tooltip-html={{vm.tooltipUrl(vm.testLink)}} tooltip-placement=right ng-class=vm.icon()></a></div><div ng-if=!value.Value class=\"thumbnail-before-input empty-placeholder\"></div><div class=after-preview><div class=input-group dropdown><input type=text class=\"form-control input-lg\" ng-model=value.Value tooltip=\"{{'Edit.Fields.Hyperlink.Default.Tooltip1' | translate }}\r" +
     "\n" +
     "{{'Edit.Fields.Hyperlink.Default.Tooltip2' | translate }}\r" +
     "\n" +
-    "ADAM - sponsored with ♥ by 2sic.com\"> <span class=input-group-btn style=\"vertical-align: top\"><button ng-if=\"to.settings['merged'].Buttons.indexOf('adam') > -1\" type=button class=\"btn btn-default icon-field-button\" ng-disabled=to.disabled tooltip=\"{{'Edit.Fields.Hyperlink.Default.AdamUploadLabel' | translate }}\" ng-click=vm.toggleAdam()><i class=icon-eav-apple></i></button> <button ng-if=\"to.settings['merged'].Buttons.indexOf('page') > -1\" type=button class=\"btn btn-default icon-field-button\" ng-disabled=to.disabled tooltip=\"{{'Edit.Fields.Hyperlink.Default.PageLabel' | translate }}\" ng-click=\"vm.openDialog('pagepicker')\"><i class=icon-eav-sitemap></i></button> <button ng-if=\"to.settings['merged'].Buttons.indexOf('more') > -1\" tabindex=-1 type=button class=\"btn btn-default dropdown-toggle icon-field-button\" dropdown-toggle ng-disabled=to.disabled><i class=icon-eav-options></i></button></span><ul class=\"dropdown-menu pull-right\" role=menu><li role=menuitem ng-if=\"to.settings['merged'].ShowAdam\"><a class=dropzone-adam ng-click=vm.toggleAdam() href=javascript:void(0);><i class=icon-eav-apple></i> <span translate=Edit.Fields.Hyperlink.Default.MenuAdam></span></a></li><li role=menuitem ng-if=\"to.settings['merged'].ShowPagePicker\"><a ng-click=\"vm.openDialog('pagepicker')\" href=javascript:void(0)><i class=icon-eav-sitemap xicon=home></i> <span translate=Edit.Fields.Hyperlink.Default.MenuPage></span></a></li><li role=menuitem ng-if=\"to.settings['merged'].ShowImageManager\"><a ng-click=\"vm.openDialog('imagemanager')\" href=javascript:void(0)><i class=icon-eav-file-image xicon=picture></i> <span translate=Edit.Fields.Hyperlink.Default.MenuImage></span></a></li><li role=menuitem ng-if=\"to.settings['merged'].ShowFileManager\"><a ng-click=\"vm.openDialog('documentmanager')\" href=javascript:void(0)><i class=icon-eav-file xicon=file></i> <span translate=Edit.Fields.Hyperlink.Default.MenuDocs></span></a></li></ul></div><div ng-if=vm.showPreview style=\"position: relative\"><div style=\"position: absolute; z-index: 100; background: white; top: 10px; text-align: center; left: 0; right: 0\"><img ng-src=\"{{vm.thumbnailUrl(2)}}\"></div></div><adam-hint class=field-hints></adam-hint><div ng-if=value.Value class=field-hints><a href={{vm.testLink}} target=_blank tabindex=-1 tooltip-html-unsafe={{vm.tooltipUrl(vm.testLink)}}><span>&nbsp;... {{vm.testLink.substr(vm.testLink.lastIndexOf(\"/\"), 100)}}</span></a></div></div></div><div><adam-browser content-type-name=to.header.ContentTypeName entity-guid=to.header.Guid field-name=options.key auto-load=false folder-depth=0 sub-folder=\"\" update-callback=vm.setValue register-self=vm.registerAdam ng-disabled=to.disabled></adam-browser><dropzone-upload-preview></dropzone-upload-preview></div></div>"
+    "ADAM - sponsored with ♥ by 2sic.com\"> <span class=input-group-btn style=\"vertical-align: top\"><button ng-if=\"to.settings['merged'].Buttons.indexOf('adam') > -1\" type=button class=\"btn btn-default icon-field-button\" ng-disabled=to.disabled tooltip=\"{{'Edit.Fields.Hyperlink.Default.AdamUploadLabel' | translate }}\" ng-click=vm.toggleAdam()><i class=icon-eav-apple></i></button> <button ng-if=\"to.settings['merged'].Buttons.indexOf('page') > -1\" type=button class=\"btn btn-default icon-field-button\" ng-disabled=to.disabled tooltip=\"{{'Edit.Fields.Hyperlink.Default.PageLabel' | translate }}\" ng-click=\"vm.openDialog('pagepicker')\"><i class=icon-eav-sitemap></i></button> <button ng-if=\"to.settings['merged'].Buttons.indexOf('more') > -1\" tabindex=-1 type=button class=\"btn btn-default dropdown-toggle icon-field-button\" dropdown-toggle ng-disabled=to.disabled><i class=icon-eav-options></i></button></span><ul class=\"dropdown-menu pull-right\" role=menu><li role=menuitem ng-if=\"to.settings['merged'].ShowAdam\"><a class=dropzone-adam ng-click=vm.toggleAdam() href=javascript:void(0);><i class=icon-eav-apple></i> <span translate=Edit.Fields.Hyperlink.Default.MenuAdam></span></a></li><li role=menuitem ng-if=\"to.settings['merged'].ShowPagePicker\"><a ng-click=\"vm.openDialog('pagepicker')\" href=javascript:void(0)><i class=icon-eav-sitemap xicon=home></i> <span translate=Edit.Fields.Hyperlink.Default.MenuPage></span></a></li><li role=menuitem ng-if=\"to.settings['merged'].ShowImageManager\"><a ng-click=\"vm.openDialog('imagemanager')\" href=javascript:void(0)><i class=icon-eav-file-image xicon=picture></i> <span translate=Edit.Fields.Hyperlink.Default.MenuImage></span></a></li><li role=menuitem ng-if=\"to.settings['merged'].ShowFileManager\"><a ng-click=\"vm.openDialog('documentmanager')\" href=javascript:void(0)><i class=icon-eav-file xicon=file></i> <span translate=Edit.Fields.Hyperlink.Default.MenuDocs></span></a></li></ul></div><div ng-if=vm.showPreview style=\"position: relative\"><div style=\"position: absolute; z-index: 100; background: white; top: 10px; text-align: center; left: 0; right: 0\"><img ng-src=\"{{vm.thumbnailUrl(2)}}\"></div></div><adam-hint class=field-hints></adam-hint><div ng-if=value.Value class=field-hints><a href={{vm.testLink}} target=_blank tabindex=-1 tooltip-html={{vm.tooltipUrl(vm.testLink)}}><span>&nbsp;... {{vm.testLink.substr(vm.testLink.lastIndexOf(\"/\"), 100)}}</span></a></div></div></div><div><adam-browser content-type-name=to.header.ContentTypeName entity-guid=to.header.Guid field-name=options.key auto-load=false folder-depth=0 sub-folder=\"\" update-callback=vm.setValue register-self=vm.registerAdam ng-disabled=to.disabled></adam-browser><dropzone-upload-preview></dropzone-upload-preview></div></div>"
   );
 
 
