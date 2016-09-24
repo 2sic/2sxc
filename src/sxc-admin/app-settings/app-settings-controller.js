@@ -30,34 +30,6 @@
 
         vm.editPackage = svc.editPackage;
 
-        //vm.export = function exp() {
-        //    oldDialogs.appExport(appId, svc.liveListReload);
-        //};
-
-        //vm.importParts = function() {
-        //    // probably afterwards
-        //    var resolve = eavAdminDialogs.CreateResolve({
-        //        appId: appId
-        //    });
-        //    return eavAdminDialogs.OpenModal(
-        //        "importexport/import.html",
-        //        "Import as vm",
-        //        "lg",
-        //        resolve);
-        //};
-
-        //vm.exportParts = function() {
-        //    // probably afterwards
-        //    var resolve = eavAdminDialogs.CreateResolve({
-        //        appId: appId
-        //    });
-        //    return eavAdminDialogs.OpenModal(
-        //        "importexport/export.html",
-        //        "Export as vm",
-        //        "lg",
-        //        resolve);
-        //};
-
     }
 
 } ());

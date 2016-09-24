@@ -4,8 +4,6 @@
     <button icon="plus" type="button" class="btn btn-primary btn-square" ng-click="vm.add()"> </button>
     <span class="btn-group" ng-if="vm.debug.on">
         <button icon="repeat" type="button" class="btn btn-square" ng-click="vm.refresh()"></button>
-        <!-- temporary provide old edit in case needed -->
-        <button icon="plus" type="button" class="btn btn-square btn-warning" ng-click="vm.addOld()" tooltip="old add dialog"></button>
     </span>
     <table class="table table-hover">
         <thead>
@@ -52,10 +50,6 @@ ListP: {{item.ListPresentationType.DemoTitle}} ({{item.ListPresentationType.Demo
 
                 <button type="button" class="btn btn-xs btn-square" ng-click="vm.tryToDelete(item)">
                     <span icon="remove"></span>
-                </button>
-                <!-- temporary provide old edit in case needed -->
-                <button ng-if="vm.debug.on" type="button" class="btn btn-xs btn-square btn-warning" ng-click="vm.editOld(item)">
-                    <span icon="pencil"></span>
                 </button>
             </td>
         </tr>

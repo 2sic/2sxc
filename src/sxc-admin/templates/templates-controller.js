@@ -10,25 +10,17 @@
         .controller("TemplateList", TemplateListController)
         ;
 
-    function TemplateListController(templatesSvc, eavAdminDialogs, eavConfig, appId, debugState, oldDialogs, $translate, $modalInstance, $sce) {
+    function TemplateListController(templatesSvc, eavAdminDialogs, eavConfig, appId, debugState, $translate, $modalInstance, $sce) {
         var vm = this;
         vm.debug = debugState;
 
         var svc = templatesSvc(appId);
 
-        vm.editOld = function editOld(item) {
-            oldDialogs.editTemplate(item.Id, svc.liveListReload);
-        };
         vm.edit = function edit(item) {
             eavAdminDialogs.openItemEditWithEntityId(item.Id, svc.liveListReload);
         };
         
 
-
-        vm.addOld = function add() {
-            oldDialogs.editTemplate(0, svc.liveListReload);
-            return;
-        };
 
         vm.add = function addNew() {
             eavAdminDialogs.openItemNew("2SexyContent-Template", svc.liveListReload);

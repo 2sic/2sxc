@@ -14,64 +14,6 @@ angular.module("SxcAdminUi", [
     "sxcFieldTemplates",
     "EavAdminUi", // dialog (modal) controller
 ])
-    .factory("oldDialogs", function (tabId, AppInstanceId, appId, websiteRoot, $q) {
-        var svc = {};
-
-        // todo: maybe needs something to get the real root-address
-        svc.oldRootUrl = (websiteRoot + "Default.aspx?tabid={{tabid}}&mid={{mid}}&ctl={{ctl}}&appid={{appid}}" + "&dnnprintmode=true&SkinSrc=%5bG%5dSkins%2f_default%2fNo+Skin&ContainerSrc=%5bG%5dContainers%2f_default%2fNo+Container") // "&popUp=true"
-            .replace("{{tabid}}", tabId)
-            .replace("{{mid}}", AppInstanceId);
-
-            svc.getUrl = function getUrl(ctlName, alternateAppId) {
-                return svc.oldRootUrl.replace("{{appid}}", alternateAppId || appId).replace("{{ctl}}", ctlName);
-            };
-
-            svc.showInfoOld = function showInfoOld() {
-                // alert("Info! \n\n This dialog still uses the old DNN-dialogs. It will open in a new window. After saving/closing that, please refresh this page to see changes made.");
-            };
-
-            
-        // this will open a browser-window as a modal-promise dialog
-        // this is needed for all older, not-yet-migrated ascx-parts
-            svc.openPromiseWindow = function opw(url, callback) {
-                // note that Success & error both should do the callback, mostly a list-refresh
-                if(!window.Promise) // Special workaround to enable promiseWindow in IE without jQuery
-                    PromiseWindow.defaultConfig.promiseProvider = PromiseWindow.getAPlusPromiseProvider($q);
-                PromiseWindow.open(url).then(callback, callback);
-            };
-
-            svc.editTemplate = function edit(itemId, callback) {
-                svc.showInfoOld();
-                var url = svc.getUrl("edittemplate")
-                    + ((itemId === 0) ? "" : "&templateid=" + itemId); // must leave parameter away if we want a new-dialog
-                svc.openPromiseWindow(url, callback);
-            };
-
-            svc.appExport = function appExport(altAppId, callback) {
-                svc.showInfoOld();
-                var url = svc.getUrl("appexport", altAppId);
-                svc.openPromiseWindow(url, callback);
-            };
-
-            svc.appImport = function appImport(altAppId, callback) {
-                svc.showInfoOld();
-                var url = svc.getUrl("appimport", altAppId);
-                svc.openPromiseWindow(url, callback);
-            };
-
-            svc.exportPartial = function exportPartial(callback) {
-                svc.showInfoOld();
-                var url = svc.getUrl("export", 0);
-                svc.openPromiseWindow(url, callback);
-            };
-
-            svc.importPartial = function importPartial(altAppId, callback) {
-                svc.showInfoOld();
-                var url = svc.getUrl("import", altAppId);
-                svc.openPromiseWindow(url, callback);
-            };
-            return svc;
-    })
 
     .factory("sxcDialogs", function ($modal, eavAdminDialogs) {
         var svc = {};
