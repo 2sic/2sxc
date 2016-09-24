@@ -245,7 +245,7 @@
 
     $2sxc._controllers = {};
     $2sxc.metaName = "The 2sxc Controller object";
-    $2sxc.metaVersion = "08.05.03";
+    $2sxc.metaVersion = "08.05.04";
     $2sxc.beta = {};
     $2sxc._data = {};
     
@@ -330,8 +330,6 @@
         uncache: $2sxc.urlParams.get("sxcver"),
         //renameScript: function toMinOrNotToMin(url, preventUnmin) {
         //    var r = (!$2sxc.debug.load && !preventUnmin) ? url : url.replace(".min", ""); // use min or not
-        //    if ($2sxc.debug.uncache && r.indexOf("sxcver") === -1)
-        //        r = r + ((r.indexOf("?") === -1) ? "?" : "&") + "sxcver=" + $2sxc.debug.uncache;
         //    return r;
         //}
     };
