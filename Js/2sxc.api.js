@@ -199,7 +199,7 @@
 
 
                 // if it's an unspecified 0-error, it's probably not an error but a cancelled request, (happens when closing popups containing angularJS)
-                if (result.status === 0)
+                if (result.status === 0 || result.status === -1)
                     return;
 
                 // let's try to show good messages in most cases
