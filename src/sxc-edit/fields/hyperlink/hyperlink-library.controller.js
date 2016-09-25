@@ -14,7 +14,7 @@
             });
 
         })
-        .controller("FieldTemplate-Library", function($modal, $scope, $http, sxc, adamSvc, debugState) {
+        .controller("FieldTemplate-Library", function($uibModal, $scope, $http, sxc, adamSvc, debugState) {
 
             var vm = this;
             vm.debug = debugState;

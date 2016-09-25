@@ -1,13 +1,13 @@
 ﻿<div>
-    <div dropdown keyboard-nav auto-close="outsideClick" is-open="vm.selectorIsOpen">
+    <div uib-dropdown uib-keyboard-nav auto-close="outsideClick" is-open="vm.selectorIsOpen">
         <div class="thumbnail-before-input icon-preview">
-            <button type="button" class="" tooltip="{{value.Value}}" dropdown-toggle>
+            <button type="button" class="" uib-tooltip="{{value.Value}}" uib-dropdown-toggle>
                 <i class="{{vm.previewPrefix}} {{value.Value}}" ng-show="value.Value"></i>
                 <span ng-show="!value.Value">&nbsp;&nbsp;</span>
             </button>
         </div>
         <div class="input-group">
-            <input type="text" class="form-control input-lg" ng-model="value.Value" ng-disabled="false" dropdown-toggle>
+            <input type="text" class="form-control input-lg" ng-model="value.Value" ng-disabled="false" uib-dropdown-toggle>
         </div>
         <!-- the search ui -->
         <ul class="dropdown-menu icons-menu-columns" role="menu">
@@ -21,7 +21,7 @@
             <li ng-repeat="icn in vm.icons" role="menuitem"
                 ng-show="icn.class.indexOf(vm.iconFilter) !== -1">
                 <a ng-click="vm.setIcon(icn.class)" xng-click="value.Value = icn.class; status.isopen = false;">
-                    <i class="{{vm.previewPrefix}} {{icn.class}}"></i> <span tooltip="{{icn.class}}">...{{icn.class.substring(vm.prefix.length-1,25)}}</span>
+                    <i class="{{vm.previewPrefix}} {{icn.class}}"></i> <span uib-tooltip="{{icn.class}}">...{{icn.class.substring(vm.prefix.length-1,25)}}</span>
                 </a>
             </li>
         </ul>

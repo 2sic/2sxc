@@ -10,7 +10,7 @@
         .controller("WebApiMain", WebApiMainController)
         ;
 
-    function WebApiMainController(appId, webApiSvc, eavAdminDialogs, $modalInstance, $translate) {
+    function WebApiMainController(appId, webApiSvc, eavAdminDialogs, $uibModalInstance, $translate) {
         var vm = this;
         
         var svc = webApiSvc(appId);
@@ -29,7 +29,7 @@
         };
 
         vm.close = function () {
-            $modalInstance.dismiss("cancel");
+            $uibModalInstance.dismiss("cancel");
         };
     }
 

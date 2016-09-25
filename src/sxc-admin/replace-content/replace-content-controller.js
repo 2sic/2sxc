@@ -6,7 +6,7 @@
         ])
         .controller("ReplaceDialog", ReplaceContentController);
 
-    function ReplaceContentController(appId, item, contentGroupSvc, eavAdminDialogs, $modalInstance, $filter) {
+    function ReplaceContentController(appId, item, contentGroupSvc, eavAdminDialogs, $uibModalInstance, $filter) {
         var vm = this;
         vm.options = [];
         vm.item = {
@@ -30,7 +30,7 @@
             svc.saveItem(vm.item).then(vm.close);
         };
         
-        vm.close = function () { $modalInstance.dismiss("cancel"); };
+        vm.close = function () { $uibModalInstance.dismiss("cancel"); };
 
         vm.convertToInt = function (id) {
             return parseInt(id);

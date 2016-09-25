@@ -9,11 +9,11 @@
                 <span icon="search"></span> {{ 'AppManagement.Buttons.Browse' | translate }}
             </button>
             <button type="button" class="btn" ng-click="vm.import()">
-                <span icon="import" tooltip="{{ 'AppManagement.Buttons.Import' | translate }}"></span>
+                <span icon="import" uib-tooltip="{{ 'AppManagement.Buttons.Import' | translate }}"></span>
             </button>
 
             <button type="button" class="btn" ng-click="vm.add()">
-                <span icon="plus" tooltip="{{ 'AppManagement.Buttons.Create' | translate }}"></span>
+                <span icon="plus" uib-tooltip="{{ 'AppManagement.Buttons.Create' | translate }}"></span>
             </button>
             <button type="button" class="btn" ng-click="vm.refresh()">
                 <span icon="repeat"></span>
@@ -28,14 +28,14 @@
                 <th translate="AppManagement.Table.Name"></th>
                 <th translate="AppManagement.Table.Folder"></th>
                 <!--<th translate="AppManagement.Table.Templates"></th>-->
-                <th> <span icon="eye-open" tooltip="{{ 'AppManagement.Table.Show' | translate }}"></span></th>
+                <th> <span icon="eye-open" uib-tooltip="{{ 'AppManagement.Table.Show' | translate }}"></span></th>
                 <th translate="AppManagement.Table.Actions"></th>
             </tr>
             </thead>
             <tbody>
             <tr ng-repeat="item in vm.items | orderBy:'Title'" ng-click="vm.manage(item)">
                 <td class="clickable">
-                    <span tooltip="
+                    <span uib-tooltip="
 Id: {{item.Id}}
 Guid: {{item.Guid}}">{{item.Name}}</span>
                 </td>

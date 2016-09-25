@@ -5,7 +5,7 @@
         ;
 
 
-    function ExportContentController(ExportContentService, eavAdminDialogs, eavConfig, debugState, $modalInstance, $filter) {
+    function ExportContentController(ExportContentService, eavAdminDialogs, eavConfig, debugState, $uibModalInstance, $filter) {
         var vm = this;
 
         vm.debug = debugState;
@@ -85,7 +85,7 @@
         }
 
         function close() {
-            $modalInstance.dismiss("cancel");
+            $uibModalInstance.dismiss("cancel");
         }
     }
 

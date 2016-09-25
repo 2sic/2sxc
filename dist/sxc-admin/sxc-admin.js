@@ -32,7 +32,7 @@
         //})
     ;
 
-    function MainController(eavAdminDialogs, eavConfig, appId, debugState, appDialogConfigSvc, $modalInstance) {
+    function MainController(eavAdminDialogs, eavConfig, appId, debugState, appDialogConfigSvc, $uibModalInstance) {
         var vm = this;
         vm.debug = debugState;
         vm.view = "start";
@@ -42,10 +42,10 @@
         });
 
         vm.close = function () {
-            $modalInstance.dismiss("cancel");
+            $uibModalInstance.dismiss("cancel");
         };
     }
-    MainController.$inject = ["eavAdminDialogs", "eavConfig", "appId", "debugState", "appDialogConfigSvc", "$modalInstance"];
+    MainController.$inject = ["eavAdminDialogs", "eavConfig", "appId", "debugState", "appDialogConfigSvc", "$uibModalInstance"];
 
 } ());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
@@ -102,7 +102,7 @@
         .controller("AppList", AppListController)
         ;
 
-    function AppListController(appsSvc, eavAdminDialogs, sxcDialogs, eavConfig, appSettings, appId, zoneId, $modalInstance, $translate) {
+    function AppListController(appsSvc, eavAdminDialogs, sxcDialogs, eavConfig, appSettings, appId, zoneId, $uibModalInstance, $translate) {
         var vm = this;
 
         function blankCallback() { }
@@ -174,9 +174,9 @@
             sxcDialogs.openLanguages(zoneId, vm.refresh);
         };
 
-        vm.close = function () { $modalInstance.dismiss("cancel");};
+        vm.close = function () { $uibModalInstance.dismiss("cancel");};
     }
-    AppListController.$inject = ["appsSvc", "eavAdminDialogs", "sxcDialogs", "eavConfig", "appSettings", "appId", "zoneId", "$modalInstance", "$translate"];
+    AppListController.$inject = ["appsSvc", "eavAdminDialogs", "sxcDialogs", "eavConfig", "appSettings", "appId", "zoneId", "$uibModalInstance", "$translate"];
 
 } ());
 (function () { 
@@ -298,7 +298,7 @@
         ;
   
 
-    function ExportAppController(ExportAppService, eavAdminDialogs, debugState, eavConfig, $modalInstance) {
+    function ExportAppController(ExportAppService, eavAdminDialogs, debugState, eavConfig, $uibModalInstance) {
         var vm = this;
         vm.debug = debugState;
 
@@ -350,10 +350,10 @@
         }
 
         function close() {
-            $modalInstance.dismiss("cancel");
+            $uibModalInstance.dismiss("cancel");
         }
     }
-    ExportAppController.$inject = ["ExportAppService", "eavAdminDialogs", "debugState", "eavConfig", "$modalInstance"];
+    ExportAppController.$inject = ["ExportAppService", "eavAdminDialogs", "debugState", "eavConfig", "$uibModalInstance"];
 }());
 (function () {
     angular.module("ImportExport")
@@ -393,7 +393,7 @@
         ;
 
 
-    function ExportContentController(ExportContentService, eavAdminDialogs, eavConfig, debugState, $modalInstance, $filter) {
+    function ExportContentController(ExportContentService, eavAdminDialogs, eavConfig, debugState, $uibModalInstance, $filter) {
         var vm = this;
 
         vm.debug = debugState;
@@ -473,10 +473,10 @@
         }
 
         function close() {
-            $modalInstance.dismiss("cancel");
+            $uibModalInstance.dismiss("cancel");
         }
     }
-    ExportContentController.$inject = ["ExportContentService", "eavAdminDialogs", "eavConfig", "debugState", "$modalInstance", "$filter"];
+    ExportContentController.$inject = ["ExportContentService", "eavAdminDialogs", "eavConfig", "debugState", "$uibModalInstance", "$filter"];
 
 }());
 (function () {
@@ -512,7 +512,7 @@
         .controller("ImportApp", ImportAppController)
     ;
 
-    function ImportAppController(ImportAppService, eavAdminDialogs, eavConfig, $modalInstance) {
+    function ImportAppController(ImportAppService, eavAdminDialogs, eavConfig, $uibModalInstance) {
         var vm = this;
 
         vm.IsImporting = false;
@@ -536,10 +536,10 @@
         }
 
         function close() {
-            $modalInstance.dismiss("cancel");
+            $uibModalInstance.dismiss("cancel");
         }
     }
-    ImportAppController.$inject = ["ImportAppService", "eavAdminDialogs", "eavConfig", "$modalInstance"];
+    ImportAppController.$inject = ["ImportAppService", "eavAdminDialogs", "eavConfig", "$uibModalInstance"];
 }());
 (function () {
 
@@ -580,7 +580,7 @@
     ;
 
 
-    function ImportContentController(ImportContentService, eavAdminDialogs, eavConfig, $modalInstance) {
+    function ImportContentController(ImportContentService, eavAdminDialogs, eavConfig, $uibModalInstance) {
         var vm = this;
 
         vm.IsImporting = false;
@@ -605,10 +605,10 @@
         }
 
         function close() {
-            $modalInstance.dismiss("cancel");
+            $uibModalInstance.dismiss("cancel");
         }
     }
-    ImportContentController.$inject = ["ImportContentService", "eavAdminDialogs", "eavConfig", "$modalInstance"];
+    ImportContentController.$inject = ["ImportContentService", "eavAdminDialogs", "eavConfig", "$uibModalInstance"];
 }());
 (function () {
 
@@ -780,7 +780,7 @@
 
         .controller("ManageContentList", ManageContentController);
 
-    function ManageContentController(appId, item, contentGroupSvc, eavAdminDialogs, $modalInstance, $translate) {
+    function ManageContentController(appId, item, contentGroupSvc, eavAdminDialogs, $uibModalInstance, $translate) {
         var vm = this;
         vm.items = [];
         vm.header = {};
@@ -845,10 +845,10 @@
             eavAdminDialogs.openItemEditWithEntityId(id, vm.reload);
         };
 
-        vm.close = function () { $modalInstance.dismiss("cancel"); };
+        vm.close = function () { $uibModalInstance.dismiss("cancel"); };
 
     }
-    ManageContentController.$inject = ["appId", "item", "contentGroupSvc", "eavAdminDialogs", "$modalInstance", "$translate"];
+    ManageContentController.$inject = ["appId", "item", "contentGroupSvc", "eavAdminDialogs", "$uibModalInstance", "$translate"];
 
 } ());
 (function () { 
@@ -859,7 +859,7 @@
         ])
         .controller("ReplaceDialog", ReplaceContentController);
 
-    function ReplaceContentController(appId, item, contentGroupSvc, eavAdminDialogs, $modalInstance, $filter) {
+    function ReplaceContentController(appId, item, contentGroupSvc, eavAdminDialogs, $uibModalInstance, $filter) {
         var vm = this;
         vm.options = [];
         vm.item = {
@@ -883,7 +883,7 @@
             svc.saveItem(vm.item).then(vm.close);
         };
         
-        vm.close = function () { $modalInstance.dismiss("cancel"); };
+        vm.close = function () { $uibModalInstance.dismiss("cancel"); };
 
         vm.convertToInt = function (id) {
             return parseInt(id);
@@ -908,7 +908,7 @@
             });
         };
     }
-    ReplaceContentController.$inject = ["appId", "item", "contentGroupSvc", "eavAdminDialogs", "$modalInstance", "$filter"];
+    ReplaceContentController.$inject = ["appId", "item", "contentGroupSvc", "eavAdminDialogs", "$uibModalInstance", "$filter"];
 
 } ());
 // Init the main eav services module
@@ -1162,7 +1162,7 @@ angular.module("SxcServices")
 
 angular.module("SxcAdminUi", [
     "ng",
-    "ui.bootstrap", // for the $modal etc.
+    "ui.bootstrap", // for the $uibModal etc.
     "MainSxcApp",
     "AppsManagementApp",
     "ReplaceContentApp",
@@ -1174,7 +1174,7 @@ angular.module("SxcAdminUi", [
     "EavAdminUi", // dialog (modal) controller
 ])
 
-    .factory("sxcDialogs", ["$modal", "eavAdminDialogs", function ($modal, eavAdminDialogs) {
+    .factory("sxcDialogs", ["$uibModal", "eavAdminDialogs", function ($uibModal, eavAdminDialogs) {
         var svc = {};
 
         // the portal-level dialog showing all apps
@@ -1287,17 +1287,17 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
   'use strict';
 
   $templateCache.put('app-main/app-main.html',
-    "<div ng-click=vm.debug.autoEnableAsNeeded($event)><div class=modal-header><button class=\"btn btn-default btn-square btn-subtle pull-right\" type=button ng-click=vm.close()><i icon=remove></i></button><h3 class=modal-title translate=Main.Title></h3></div><div class=modal-body><div><tabset><tab><tab-heading><span tooltip=\"{{'Main.Tab.GettingStarted' | translate }}\"><i icon=home></i> {{'Main.Tab.GS' | translate | trustHtml }}</span></tab-heading><iframe ng-src=\"{{ vm.config.GettingStartedUrl | trustAsResourceUrl }}\" style=\"border: none; width: 100%; height: 500px\"></iframe><div ng-hide=true>original script, maybe we need it $(document).ready(function () { $(window).bind(\"resize\", function () { var GettingStartedFrame = $(\".sc-iframe-gettingstarted\"); GettingStartedFrame.height($(window).height() - 50); }); $(window).trigger(\"resize\"); });</div></tab><tab select=\"vm.view='content'\"><tab-heading><span icon=list tooltip=\"{{'Main.Tab.ContentData' | translate }}\"></span> {{'Main.Tab.CD' | translate }}</tab-heading><div ng-if=\"vm.view == 'content'\"><div ng-controller=\"List as vm\" ng-include=\"'content-types/content-types.html'\"></div></div></tab><tab select=\"vm.view='query'\" ng-if=!vm.config.IsContent><tab-heading><span icon=filter tooltip=\"{{'Main.Tab.Query' | translate }}\"></span> {{'Main.Tab.Q' | translate }}</tab-heading><div ng-if=\"vm.view == 'query'\"><div ng-controller=\"PipelineManagement as vm\" ng-include=\"'pipelines/pipelines.html'\"></div></div></tab><tab select=\"vm.view='view'\"><tab-heading><span icon=picture tooltip=\"{{'Main.Tab.ViewsTemplates' | translate }}\"></span> {{'Main.Tab.VT' | translate }}</tab-heading><div ng-if=\"vm.view == 'view'\"><div ng-controller=\"TemplateList as vm\" ng-include=\"'templates/templates.html'\"></div></div></tab><tab select=\"vm.view='webapi'\" ng-if=!vm.config.IsContent><tab-heading><span icon=flash tooltip=\"{{'Main.Tab.WebApi' | translate }}\"></span> {{'Main.Tab.WA' | translate }}</tab-heading><div ng-if=\"vm.view == 'webapi'\"><div ng-controller=\"WebApiMain as vm\" ng-include=\"'web-api/web-api.html'\"></div></div></tab><tab select=\"vm.view='app'\"><tab-heading><span icon=unchecked tooltip=\"{{'Main.Tab.AppSettings' | translate }}\"></span> {{'Main.Tab.AS' | translate }}</tab-heading><div ng-if=\"vm.view == 'app'\"><div ng-if=!vm.config.IsContent><div ng-controller=\"AppSettings as vm\" ng-include=\"'app-settings/app-settings.html'\"></div><br></div><div ng-controller=\"ImportExportIntro as vm\" ng-include=\"'importexport/intro.html'\"></div></div></tab><tab select=\"vm.view='portal'\"><tab-heading><span icon=globe tooltip=\"{{'Main.Tab.PortalLanguages' | translate }}\"></span> {{'Main.Tab.PL' | translate }}</tab-heading><div ng-if=\"vm.view == 'portal'\"><h3 translate=Main.Portal.Title></h3><div translate=Main.Portal.Intro></div><div ng-controller=\"LanguageSettings as vm\" ng-include=\"'language-settings/languages.html'\"></div></div></tab></tabset></div></div><show-debug-availability class=pull-right></show-debug-availability></div>"
+    "<div ng-click=vm.debug.autoEnableAsNeeded($event)><div class=modal-header><button class=\"btn btn-default btn-square btn-subtle pull-right\" type=button ng-click=vm.close()><i icon=remove></i></button><h3 class=modal-title translate=Main.Title></h3></div><div class=modal-body><div><uib-tabset><uib-tab><uib-tab-heading><span uib-tooltip=\"{{'Main.Tab.GettingStarted' | translate }}\"><i icon=home></i> {{'Main.Tab.GS' | translate | trustHtml }}</span></uib-tab-heading><iframe ng-src=\"{{ vm.config.GettingStartedUrl | trustAsResourceUrl }}\" style=\"border: none; width: 100%; height: 500px\"></iframe><div ng-hide=true>original script, maybe we need it $(document).ready(function () { $(window).bind(\"resize\", function () { var GettingStartedFrame = $(\".sc-iframe-gettingstarted\"); GettingStartedFrame.height($(window).height() - 50); }); $(window).trigger(\"resize\"); });</div></uib-tab><uib-tab select=\"vm.view='content'\"><uib-tab-heading><span icon=list uib-tooltip=\"{{'Main.Tab.ContentData' | translate }}\"></span> {{'Main.Tab.CD' | translate }}</uib-tab-heading><div ng-if=\"vm.view == 'content'\"><div ng-controller=\"List as vm\" ng-include=\"'content-types/content-types.html'\"></div></div></uib-tab><uib-tab select=\"vm.view='query'\" ng-if=!vm.config.IsContent><uib-tab-heading><span icon=filter uib-tooltip=\"{{'Main.Tab.Query' | translate }}\"></span> {{'Main.Tab.Q' | translate }}</uib-tab-heading><div ng-if=\"vm.view == 'query'\"><div ng-controller=\"PipelineManagement as vm\" ng-include=\"'pipelines/pipelines.html'\"></div></div></uib-tab><uib-tab select=\"vm.view='view'\"><uib-tab-heading><span icon=picture uib-tooltip=\"{{'Main.Tab.ViewsTemplates' | translate }}\"></span> {{'Main.Tab.VT' | translate }}</uib-tab-heading><div ng-if=\"vm.view == 'view'\"><div ng-controller=\"TemplateList as vm\" ng-include=\"'templates/templates.html'\"></div></div></uib-tab><uib-tab select=\"vm.view='webapi'\" ng-if=!vm.config.IsContent><uib-tab-heading><span icon=flash uib-tooltip=\"{{'Main.Tab.WebApi' | translate }}\"></span> {{'Main.Tab.WA' | translate }}</uib-tab-heading><div ng-if=\"vm.view == 'webapi'\"><div ng-controller=\"WebApiMain as vm\" ng-include=\"'web-api/web-api.html'\"></div></div></uib-tab><uib-tab select=\"vm.view='app'\"><uib-tab-heading><span icon=unchecked uib-tooltip=\"{{'Main.Tab.AppSettings' | translate }}\"></span> {{'Main.Tab.AS' | translate }}</uib-tab-heading><div ng-if=\"vm.view == 'app'\"><div ng-if=!vm.config.IsContent><div ng-controller=\"AppSettings as vm\" ng-include=\"'app-settings/app-settings.html'\"></div><br></div><div ng-controller=\"ImportExportIntro as vm\" ng-include=\"'importexport/intro.html'\"></div></div></uib-tab><uib-tab select=\"vm.view='portal'\"><uib-tab-heading><span icon=globe uib-tooltip=\"{{'Main.Tab.PortalLanguages' | translate }}\"></span> {{'Main.Tab.PL' | translate }}</uib-tab-heading><div ng-if=\"vm.view == 'portal'\"><h3 translate=Main.Portal.Title></h3><div translate=Main.Portal.Intro></div><div ng-controller=\"LanguageSettings as vm\" ng-include=\"'language-settings/languages.html'\"></div></div></uib-tab></uib-tabset></div></div><show-debug-availability class=pull-right></show-debug-availability></div>"
   );
 
 
   $templateCache.put('app-settings/app-settings.html',
-    "<div class=modal-body><h3 translate=AppConfig.Title></h3><div translate=AppConfig.Intro></div><div class=clearfix><div class=\"pull-left btn-group-vertical\"><button tooltip=\"{{ 'AppConfig.Settings.Edit' | translate }}\" ng-disabled=!vm.ready() ng-click=\"vm.edit('App-Settings')\" class=\"btn btn-primary btn-square\" type=button><i icon=pencil></i></button> <button tooltip=\"{{ 'AppConfig.Settings.Config' | translate }}\" ng-disabled=!vm.ready() ng-click=\"vm.config('App-Settings')\" class=\"btn btn-default btn-square\" type=button><i icon=cog></i></button></div><div style=\"margin-left: 50px\"><h4 class=modal-title translate=AppConfig.Settings.Title></h4><div translate=AppConfig.Settings.Intro></div></div></div><br><div class=clearfix><div class=\"pull-left btn-group-vertical\"><button tooltip=\"{{'AppConfig.Resources.Edit' | translate}}\" ng-disabled=!vm.ready() ng-click=\"vm.edit('App-Resources')\" class=\"btn btn-square btn-primary\" type=button><i icon=pencil></i></button> <button tooltip=\"{{'AppConfig.Resources.Config' | translate}}\" ng-disabled=!vm.ready() ng-click=\"vm.config('App-Resources')\" class=\"btn btn-square btn-default\" type=button><i icon=cog></i></button></div><div style=\"margin-left: 50px\"><h4 class=modal-title translate=AppConfig.Resources.Title></h4><div translate=AppConfig.Resources.Intro></div></div></div><br><div><div class=\"pull-left btn-group-vertical\"><button tooltip=\"{{'AppConfig.Definition.Edit' | translate}}\" ng-disabled=!vm.ready() ng-click=vm.editPackage() class=\"btn btn-primary btn-square\" type=button><i icon=cog></i></button></div><div style=\"margin-left: 50px\"><h4 class=modal-title translate=AppConfig.Definition.Title></h4><div translate=AppConfig.Definition.Intro></div></div></div></div>"
+    "<div class=modal-body><h3 translate=AppConfig.Title></h3><div translate=AppConfig.Intro></div><div class=clearfix><div class=\"pull-left btn-group-vertical\"><button uib-tooltip=\"{{ 'AppConfig.Settings.Edit' | translate }}\" ng-disabled=!vm.ready() ng-click=\"vm.edit('App-Settings')\" class=\"btn btn-primary btn-square\" type=button><i icon=pencil></i></button> <button uib-tooltip=\"{{ 'AppConfig.Settings.Config' | translate }}\" ng-disabled=!vm.ready() ng-click=\"vm.config('App-Settings')\" class=\"btn btn-default btn-square\" type=button><i icon=cog></i></button></div><div style=\"margin-left: 50px\"><h4 class=modal-title translate=AppConfig.Settings.Title></h4><div translate=AppConfig.Settings.Intro></div></div></div><br><div class=clearfix><div class=\"pull-left btn-group-vertical\"><button uib-tooltip=\"{{'AppConfig.Resources.Edit' | translate}}\" ng-disabled=!vm.ready() ng-click=\"vm.edit('App-Resources')\" class=\"btn btn-square btn-primary\" type=button><i icon=pencil></i></button> <button uib-tooltip=\"{{'AppConfig.Resources.Config' | translate}}\" ng-disabled=!vm.ready() ng-click=\"vm.config('App-Resources')\" class=\"btn btn-square btn-default\" type=button><i icon=cog></i></button></div><div style=\"margin-left: 50px\"><h4 class=modal-title translate=AppConfig.Resources.Title></h4><div translate=AppConfig.Resources.Intro></div></div></div><br><div><div class=\"pull-left btn-group-vertical\"><button uib-tooltip=\"{{'AppConfig.Definition.Edit' | translate}}\" ng-disabled=!vm.ready() ng-click=vm.editPackage() class=\"btn btn-primary btn-square\" type=button><i icon=cog></i></button></div><div style=\"margin-left: 50px\"><h4 class=modal-title translate=AppConfig.Definition.Title></h4><div translate=AppConfig.Definition.Intro></div></div></div></div>"
   );
 
 
   $templateCache.put('apps-management/apps.html',
-    "<div><div class=modal-header><button icon=remove class=\"btn btn-default btn-square btn-subtle pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=AppManagement.Title></h3></div><div class=modal-body><span class=btn-group><button type=button class=\"btn btn-primary\" ng-click=vm.browseCatalog()><span icon=search></span> {{ 'AppManagement.Buttons.Browse' | translate }}</button> <button type=button class=btn ng-click=vm.import()><span icon=import tooltip=\"{{ 'AppManagement.Buttons.Import' | translate }}\"></span></button> <button type=button class=btn ng-click=vm.add()><span icon=plus tooltip=\"{{ 'AppManagement.Buttons.Create' | translate }}\"></span></button> <button type=button class=btn ng-click=vm.refresh()><span icon=repeat></span></button> <button type=button class=btn ng-click=vm.languages()><span icon=globe></span></button></span><table class=\"table table-hover\"><thead><tr><th translate=AppManagement.Table.Name></th><th translate=AppManagement.Table.Folder></th><th><span icon=eye-open tooltip=\"{{ 'AppManagement.Table.Show' | translate }}\"></span></th><th translate=AppManagement.Table.Actions></th></tr></thead><tbody><tr ng-repeat=\"item in vm.items | orderBy:'Title'\" ng-click=vm.manage(item)><td class=clickable><span tooltip=\"\r" +
+    "<div><div class=modal-header><button icon=remove class=\"btn btn-default btn-square btn-subtle pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=AppManagement.Title></h3></div><div class=modal-body><span class=btn-group><button type=button class=\"btn btn-primary\" ng-click=vm.browseCatalog()><span icon=search></span> {{ 'AppManagement.Buttons.Browse' | translate }}</button> <button type=button class=btn ng-click=vm.import()><span icon=import uib-tooltip=\"{{ 'AppManagement.Buttons.Import' | translate }}\"></span></button> <button type=button class=btn ng-click=vm.add()><span icon=plus uib-tooltip=\"{{ 'AppManagement.Buttons.Create' | translate }}\"></span></button> <button type=button class=btn ng-click=vm.refresh()><span icon=repeat></span></button> <button type=button class=btn ng-click=vm.languages()><span icon=globe></span></button></span><table class=\"table table-hover\"><thead><tr><th translate=AppManagement.Table.Name></th><th translate=AppManagement.Table.Folder></th><th><span icon=eye-open uib-tooltip=\"{{ 'AppManagement.Table.Show' | translate }}\"></span></th><th translate=AppManagement.Table.Actions></th></tr></thead><tbody><tr ng-repeat=\"item in vm.items | orderBy:'Title'\" ng-click=vm.manage(item)><td class=clickable><span uib-tooltip=\"\r" +
     "\n" +
     "Id: {{item.Id}}\r" +
     "\n" +
@@ -1372,7 +1372,7 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
 
 
   $templateCache.put('importexport/intro.html',
-    "<div class=modal-body><div><div class=\"pull-left btn-group-vertical\"><button tooltip=\"{{'AppConfig.Export.Button' | translate}}\" ng-click=vm.exportAll() class=\"btn btn-square btn-primary\" type=button><i icon=export></i></button></div><div style=\"margin-left: 50px\"><h4 class=modal-title translate=AppConfig.Export.Title></h4><div translate=AppConfig.Export.Intro></div></div></div><br><div><div class=\"pull-left btn-group-vertical\"><button tooltip=\"{{'ImportExport.Buttons.Export' | translate}}\" ng-click=vm.export() class=\"btn btn-square btn-primary\" type=button><i icon=export></i></button> <button tooltip=\"{{'ImportExport.Buttons.Import' | translate}}\" ng-click=vm.import() class=\"btn btn-square btn-primary\" type=button><i icon=import></i></button></div><div style=\"margin-left: 50px\"><h4 class=modal-title translate=ImportExport.Title></h4><div translate=ImportExport.Intro></div></div></div><br></div>"
+    "<div class=modal-body><div><div class=\"pull-left btn-group-vertical\"><button uib-tooltip=\"{{'AppConfig.Export.Button' | translate}}\" ng-click=vm.exportAll() class=\"btn btn-square btn-primary\" type=button><i icon=export></i></button></div><div style=\"margin-left: 50px\"><h4 class=modal-title translate=AppConfig.Export.Title></h4><div translate=AppConfig.Export.Intro></div></div></div><br><div><div class=\"pull-left btn-group-vertical\"><button uib-tooltip=\"{{'ImportExport.Buttons.Export' | translate}}\" ng-click=vm.export() class=\"btn btn-square btn-primary\" type=button><i icon=export></i></button> <button uib-tooltip=\"{{'ImportExport.Buttons.Import' | translate}}\" ng-click=vm.import() class=\"btn btn-square btn-primary\" type=button><i icon=import></i></button></div><div style=\"margin-left: 50px\"><h4 class=modal-title translate=ImportExport.Title></h4><div translate=ImportExport.Intro></div></div></div><br></div>"
   );
 
 
@@ -1392,7 +1392,7 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
 
 
   $templateCache.put('templates/templates.html',
-    "<div class=modal-body><button icon=plus type=button class=\"btn btn-primary btn-square\" ng-click=vm.add()></button> <span class=btn-group ng-if=vm.debug.on><button icon=repeat type=button class=\"btn btn-square\" ng-click=vm.refresh()></button></span><table class=\"table table-hover\"><thead><tr><th translate=Templates.Table.TName></th><th translate=Templates.Table.TPath></th><th translate=Templates.Table.CType></th><th translate=Templates.Table.DemoC></th><th><span tooltip=\"{{'Templates.Table.Show' | translate}}\"><i icon=eye-open></i></span></th><th translate=Templates.Table.UrlKey></th><th translate=Templates.Table.Actions></th></tr></thead><tbody><tr ng-repeat=\"item in vm.items | orderBy:['ContentType.Name','Name']\" class=clickable-row ng-click=vm.edit(item)><td class=clickable>{{item.Name}}</td><td class=clickable><span tooltip={{item.TemplatePath}}>...{{item.TemplatePath.split(\"/\").pop()}}</span></td><td class=clickable><span tooltip=\"\r" +
+    "<div class=modal-body><button icon=plus type=button class=\"btn btn-primary btn-square\" ng-click=vm.add()></button> <span class=btn-group ng-if=vm.debug.on><button icon=repeat type=button class=\"btn btn-square\" ng-click=vm.refresh()></button></span><table class=\"table table-hover\"><thead><tr><th translate=Templates.Table.TName></th><th translate=Templates.Table.TPath></th><th translate=Templates.Table.CType></th><th translate=Templates.Table.DemoC></th><th><span uib-tooltip=\"{{'Templates.Table.Show' | translate}}\"><i icon=eye-open></i></span></th><th translate=Templates.Table.UrlKey></th><th translate=Templates.Table.Actions></th></tr></thead><tbody><tr ng-repeat=\"item in vm.items | orderBy:['ContentType.Name','Name']\" class=clickable-row ng-click=vm.edit(item)><td class=clickable>{{item.Name}}</td><td class=clickable><span uib-tooltip={{item.TemplatePath}}>...{{item.TemplatePath.split(\"/\").pop()}}</span></td><td class=clickable><span uib-tooltip=\"\r" +
     "\n" +
     "Cont: {{item.ContentType.Name}} ({{item.ContentType.Id}})\r" +
     "\n" +
@@ -1402,7 +1402,7 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
     "\n" +
     "ListP: {{item.ListPresentationType.Name}} ({{item.ListPresentationType.Id}})\r" +
     "\n" +
-    "\">{{item.ContentType.Name}}</span></td><td class=clickable><span tooltip=\"\r" +
+    "\">{{item.ContentType.Name}}</span></td><td class=clickable><span uib-tooltip=\"\r" +
     "\n" +
     "Demo: {{item.ContentType.DemoTitle}} ({{item.ContentType.DemoId}})\r" +
     "\n" +
@@ -1412,12 +1412,12 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
     "\n" +
     "ListP: {{item.ListPresentationType.DemoTitle}} ({{item.ListPresentationType.DemoId}})\r" +
     "\n" +
-    "\">{{item.ContentType.DemoId}}</span></td><td><span icon=\"{{ item.IsHidden ? 'close' : 'eye-open'}}\"></span></td><td class=clickable><span tooltip={{item.ViewNameInUrl}}>{{item.ViewNameInUrl}}</span></td><td class=text-nowrap stop-event=click><button type=button class=\"btn btn-xs btn-square\" ng-click=vm.permissions(item)><i icon=user></i></button> <button type=button class=\"btn btn-xs btn-square\" ng-click=vm.tryToDelete(item)><span icon=remove></span></button></td></tr><tr ng-if=!vm.items.length><td colspan=100 translate=General.Messages.NothingFound></td></tr></tbody></table><div translate=Templates.InfoHideAdvanced></div></div>"
+    "\">{{item.ContentType.DemoId}}</span></td><td><span icon=\"{{ item.IsHidden ? 'close' : 'eye-open'}}\"></span></td><td class=clickable><span uib-tooltip={{item.ViewNameInUrl}}>{{item.ViewNameInUrl}}</span></td><td class=text-nowrap stop-event=click><button type=button class=\"btn btn-xs btn-square\" ng-click=vm.permissions(item)><i icon=user></i></button> <button type=button class=\"btn btn-xs btn-square\" ng-click=vm.tryToDelete(item)><span icon=remove></span></button></td></tr><tr ng-if=!vm.items.length><td colspan=100 translate=General.Messages.NothingFound></td></tr></tbody></table><div translate=Templates.InfoHideAdvanced></div></div>"
   );
 
 
   $templateCache.put('web-api/web-api.html',
-    "<div class=modal-header><h3 class=modal-title translate=WebApi.Title></h3></div><div class=modal-body><p translate=WebApi.Intro></p><button icon=plus type=button class=\"btn btn-square\" ng-click=vm.add()></button> <button icon=repeat type=button class=\"btn btn-square\" ng-click=vm.refresh()></button><table class=\"table table-hover\"><thead><tr><th translate=WebApi.ListTitle></th></tr></thead><tbody><tr ng-repeat=\"item in vm.items | orderBy:['ContentType.Name','Name']\"><td><span tooltip={{item.TemplatePath}}>{{item}}</span></td></tr><tr ng-if=!vm.items.length><td colspan=100 translate=General.Messages.NothingFound></td></tr></tbody></table><p translate=WebApi.QuickStart></p></div>"
+    "<div class=modal-header><h3 class=modal-title translate=WebApi.Title></h3></div><div class=modal-body><p translate=WebApi.Intro></p><button icon=plus type=button class=\"btn btn-square\" ng-click=vm.add()></button> <button icon=repeat type=button class=\"btn btn-square\" ng-click=vm.refresh()></button><table class=\"table table-hover\"><thead><tr><th translate=WebApi.ListTitle></th></tr></thead><tbody><tr ng-repeat=\"item in vm.items | orderBy:['ContentType.Name','Name']\"><td><span uib-tooltip={{item.TemplatePath}}>{{item}}</span></td></tr><tr ng-if=!vm.items.length><td colspan=100 translate=General.Messages.NothingFound></td></tr></tbody></table><p translate=WebApi.QuickStart></p></div>"
   );
 
 }]);
@@ -1434,7 +1434,7 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
         .controller("TemplateList", TemplateListController)
         ;
 
-    function TemplateListController(templatesSvc, eavAdminDialogs, eavConfig, appId, debugState, $translate, $modalInstance, $sce) {
+    function TemplateListController(templatesSvc, eavAdminDialogs, eavConfig, appId, debugState, $translate, $uibModalInstance) {
         var vm = this;
         vm.debug = debugState;
 
@@ -1463,10 +1463,10 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
         };
 
         vm.close = function () {
-            $modalInstance.dismiss("cancel");
+            $uibModalInstance.dismiss("cancel");
         };
     }
-    TemplateListController.$inject = ["templatesSvc", "eavAdminDialogs", "eavConfig", "appId", "debugState", "$translate", "$modalInstance", "$sce"];
+    TemplateListController.$inject = ["templatesSvc", "eavAdminDialogs", "eavConfig", "appId", "debugState", "$translate", "$uibModalInstance"];
 
 } ());
 (function () { 
@@ -1481,7 +1481,7 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
         .controller("WebApiMain", WebApiMainController)
         ;
 
-    function WebApiMainController(appId, webApiSvc, eavAdminDialogs, $modalInstance, $translate) {
+    function WebApiMainController(appId, webApiSvc, eavAdminDialogs, $uibModalInstance, $translate) {
         var vm = this;
         
         var svc = webApiSvc(appId);
@@ -1500,9 +1500,9 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
         };
 
         vm.close = function () {
-            $modalInstance.dismiss("cancel");
+            $uibModalInstance.dismiss("cancel");
         };
     }
-    WebApiMainController.$inject = ["appId", "webApiSvc", "eavAdminDialogs", "$modalInstance", "$translate"];
+    WebApiMainController.$inject = ["appId", "webApiSvc", "eavAdminDialogs", "$uibModalInstance", "$translate"];
 
 } ());

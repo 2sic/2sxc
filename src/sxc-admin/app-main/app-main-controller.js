@@ -32,7 +32,7 @@
         //})
     ;
 
-    function MainController(eavAdminDialogs, eavConfig, appId, debugState, appDialogConfigSvc, $modalInstance) {
+    function MainController(eavAdminDialogs, eavConfig, appId, debugState, appDialogConfigSvc, $uibModalInstance) {
         var vm = this;
         vm.debug = debugState;
         vm.view = "start";
@@ -42,7 +42,7 @@
         });
 
         vm.close = function () {
-            $modalInstance.dismiss("cancel");
+            $uibModalInstance.dismiss("cancel");
         };
     }
 

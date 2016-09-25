@@ -5,7 +5,7 @@
     ;
 
 
-    function ImportContentController(ImportContentService, eavAdminDialogs, eavConfig, $modalInstance) {
+    function ImportContentController(ImportContentService, eavAdminDialogs, eavConfig, $uibModalInstance) {
         var vm = this;
 
         vm.IsImporting = false;
@@ -30,7 +30,7 @@
         }
 
         function close() {
-            $modalInstance.dismiss("cancel");
+            $uibModalInstance.dismiss("cancel");
         }
     }
 }());

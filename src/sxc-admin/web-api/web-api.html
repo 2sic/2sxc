@@ -15,7 +15,7 @@
         </thead>
         <tbody>
             <tr ng-repeat="item in vm.items | orderBy:['ContentType.Name','Name']">
-                <td><span tooltip="{{item.TemplatePath}}">{{item}}</span></td>
+                <td><span uib-tooltip="{{item.TemplatePath}}">{{item}}</span></td>
             </tr>
             <tr ng-if="!vm.items.length">
                 <td colspan="100" translate="General.Messages.NothingFound"></td>

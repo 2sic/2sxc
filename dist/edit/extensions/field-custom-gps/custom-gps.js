@@ -181,7 +181,7 @@ angular.module('nemLogging').provider('nemSimpleLogger', [
             //libraries: 'weather,geometry,visualization'
         });
     }]);
-    app.controller("FieldTemplate-CustomGpsController", ["$scope", "$filter", "$modal", "appId", "debugState", "eavAdminDialogs", "addtemplatestocache", "uiGmapGoogleMapApi", function ($scope, $filter, $modal, appId, debugState, eavAdminDialogs, addtemplatestocache, uiGmapGoogleMapApi) {
+    app.controller("FieldTemplate-CustomGpsController", ["$scope", "$filter", "$uibModal", "appId", "debugState", "eavAdminDialogs", "addtemplatestocache", "uiGmapGoogleMapApi", function ($scope, $filter, $uibModal, appId, debugState, eavAdminDialogs, addtemplatestocache, uiGmapGoogleMapApi) {
 
         var latField, lngField;
         
@@ -296,3 +296,4 @@ angular.module('nemLogging').provider('nemSimpleLogger', [
 
     ;
 })();
+angular.module("templates", []).run(["$templateCache", function($templateCache) {$templateCache.put("fields/custom-gps/custom-gps.html","<div>\r\n    <div ng-if=\"debug.on\">\r\n        <h4>debug info</h4>\r\n        <div>lat field name: \'{{latField}}\' long-field name: \'{{longField}}\' </div>\r\n    </div>\r\n</div>");}]);

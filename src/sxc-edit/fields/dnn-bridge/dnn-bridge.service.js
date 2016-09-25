@@ -1,7 +1,7 @@
 // This is the service which allows opening dnn-bridge dialogs and processes the results
 
 angular.module("sxcFieldTemplates")
-    .factory("dnnBridgeSvc", function ($modal, $http, promiseToastr, eavConfig, sxc) {
+    .factory("dnnBridgeSvc", function ($uibModal, $http, promiseToastr, eavConfig, sxc) {
         var svc = {};
         svc.open = function open(type, oldValue, params, callback) {
             var template = type === "pagepicker" ? "pagepicker" : "filemanager";
@@ -19,7 +19,7 @@ angular.module("sxcFieldTemplates")
 
             connector.params.CurrentValue = oldValue;
 
-            connector.modalInstance = $modal.open({
+            connector.modalInstance = $uibModal.open({
                 templateUrl: "fields/dnn-bridge/hyperlink-default-" + template + ".html",
                 resolve: {
                     bridge: function () {

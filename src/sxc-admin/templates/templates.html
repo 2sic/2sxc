@@ -13,7 +13,7 @@
             <th translate="Templates.Table.CType"></th>
             <th translate="Templates.Table.DemoC"></th>
             <th>
-                <span tooltip="{{'Templates.Table.Show' | translate}}"><i icon="eye-open"></i></span>
+                <span uib-tooltip="{{'Templates.Table.Show' | translate}}"><i icon="eye-open"></i></span>
             </th>
             <th translate="Templates.Table.UrlKey"></th>
             <th translate="Templates.Table.Actions"></th>
@@ -22,9 +22,9 @@
         <tbody>
         <tr ng-repeat="item in vm.items | orderBy:['ContentType.Name','Name']" class="clickable-row" ng-click="vm.edit(item)">
             <td class="clickable">{{item.Name}}</td>
-            <td class="clickable"><span tooltip="{{item.TemplatePath}}">...{{item.TemplatePath.split("/").pop()}}</span></td>
+            <td class="clickable"><span uib-tooltip="{{item.TemplatePath}}">...{{item.TemplatePath.split("/").pop()}}</span></td>
             <td class="clickable">
-                <span tooltip="
+                <span uib-tooltip="
 Cont: {{item.ContentType.Name}} ({{item.ContentType.Id}})
 Pres: {{item.PresentationType.Name}} ({{item.PresentationType.Id}})
 ListC: {{item.ListContentType.Name}} ({{item.ListContentType.Id}})
@@ -32,7 +32,7 @@ ListP: {{item.ListPresentationType.Name}} ({{item.ListPresentationType.Id}})
 ">{{item.ContentType.Name}}</span>
             </td>
             <td class="clickable">
-                <span tooltip="
+                <span uib-tooltip="
 Demo: {{item.ContentType.DemoTitle}} ({{item.ContentType.DemoId}})
 Pres: {{item.PresentationType.DemoTitle}} ({{item.PresentationType.DemoId}})
 ListC: {{item.ListContentType.DemoTitle}} ({{item.ListContentType.DemoId}})
@@ -42,7 +42,7 @@ ListP: {{item.ListPresentationType.DemoTitle}} ({{item.ListPresentationType.Demo
             <td>
                 <span icon="{{ item.IsHidden ? 'close' : 'eye-open'}}"></span>
             </td>
-            <td class="clickable"><span tooltip="{{item.ViewNameInUrl}}">{{item.ViewNameInUrl}}</span></td>
+            <td class="clickable"><span uib-tooltip="{{item.ViewNameInUrl}}">{{item.ViewNameInUrl}}</span></td>
             <td class="text-nowrap" stop-event="click">
                 <button type="button" class="btn btn-xs btn-square" ng-click="vm.permissions(item)">
                     <i icon="user"></i>

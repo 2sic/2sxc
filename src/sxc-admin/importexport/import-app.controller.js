@@ -4,7 +4,7 @@
         .controller("ImportApp", ImportAppController)
     ;
 
-    function ImportAppController(ImportAppService, eavAdminDialogs, eavConfig, $modalInstance) {
+    function ImportAppController(ImportAppService, eavAdminDialogs, eavConfig, $uibModalInstance) {
         var vm = this;
 
         vm.IsImporting = false;
@@ -28,7 +28,7 @@
         }
 
         function close() {
-            $modalInstance.dismiss("cancel");
+            $uibModalInstance.dismiss("cancel");
         }
     }
 }());

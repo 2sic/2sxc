@@ -12,7 +12,7 @@
                 controller: "FieldTemplate-HyperlinkCtrl as vm"
             });
         })
-        .controller("FieldTemplate-HyperlinkCtrl", function ($modal, $scope, $http, sxc, adamSvc, debugState, dnnBridgeSvc, fileType) {
+        .controller("FieldTemplate-HyperlinkCtrl", function ($uibModal, $scope, $http, sxc, adamSvc, debugState, dnnBridgeSvc, fileType) {
 
             var vm = this;
             vm.debug = debugState;

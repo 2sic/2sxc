@@ -16,7 +16,7 @@
         .controller("AppList", AppListController)
         ;
 
-    function AppListController(appsSvc, eavAdminDialogs, sxcDialogs, eavConfig, appSettings, appId, zoneId, $modalInstance, $translate) {
+    function AppListController(appsSvc, eavAdminDialogs, sxcDialogs, eavConfig, appSettings, appId, zoneId, $uibModalInstance, $translate) {
         var vm = this;
 
         function blankCallback() { }
@@ -88,7 +88,7 @@
             sxcDialogs.openLanguages(zoneId, vm.refresh);
         };
 
-        vm.close = function () { $modalInstance.dismiss("cancel");};
+        vm.close = function () { $uibModalInstance.dismiss("cancel");};
     }
 
 } ());

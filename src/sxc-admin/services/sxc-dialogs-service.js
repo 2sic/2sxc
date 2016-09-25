@@ -3,7 +3,7 @@
 
 angular.module("SxcAdminUi", [
     "ng",
-    "ui.bootstrap", // for the $modal etc.
+    "ui.bootstrap", // for the $uibModal etc.
     "MainSxcApp",
     "AppsManagementApp",
     "ReplaceContentApp",
@@ -15,7 +15,7 @@ angular.module("SxcAdminUi", [
     "EavAdminUi", // dialog (modal) controller
 ])
 
-    .factory("sxcDialogs", function ($modal, eavAdminDialogs) {
+    .factory("sxcDialogs", function ($uibModal, eavAdminDialogs) {
         var svc = {};
 
         // the portal-level dialog showing all apps

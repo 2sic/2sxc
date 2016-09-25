@@ -4,7 +4,7 @@
         .controller("Editor", EditorController)
     ;
 
-    function EditorController(sourceSvc, snippetSvc, appAssetsSvc, appId, sxcDialogs, item, $modalInstance, $window, $scope, $translate, saveToastr, ctrlS, debugState) {
+    function EditorController(sourceSvc, snippetSvc, appAssetsSvc, appId, sxcDialogs, item, $uibModalInstance, $window, $scope, $translate, saveToastr, ctrlS, debugState) {
         $translate.refresh();   // necessary to load stuff added in this lazy-loaded app
 
         var vm = this;

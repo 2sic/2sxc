@@ -12,7 +12,7 @@
 
         .controller("ManageContentList", ManageContentController);
 
-    function ManageContentController(appId, item, contentGroupSvc, eavAdminDialogs, $modalInstance, $translate) {
+    function ManageContentController(appId, item, contentGroupSvc, eavAdminDialogs, $uibModalInstance, $translate) {
         var vm = this;
         vm.items = [];
         vm.header = {};
@@ -77,7 +77,7 @@
             eavAdminDialogs.openItemEditWithEntityId(id, vm.reload);
         };
 
-        vm.close = function () { $modalInstance.dismiss("cancel"); };
+        vm.close = function () { $uibModalInstance.dismiss("cancel"); };
 
     }
 
