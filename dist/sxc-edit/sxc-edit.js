@@ -879,7 +879,7 @@ angular.module("sxcFieldTemplates")
             cs.context = context;
 
             // get angular injector to get a service
-            var inj = context.$injector;// angular.element(document).find("div").injector();
+            var inj = context.$injector;
 
             var appDialogConfigSvc = inj.get("appDialogConfigSvc");
 
