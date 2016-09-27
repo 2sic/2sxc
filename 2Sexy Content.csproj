@@ -238,6 +238,7 @@
     <Compile Include="DnnWebForms\Skins\QuickEdit.ascx.designer.cs">
       <DependentUpon>QuickEdit.ascx</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\IDynamicEntity.cs" />
     <Compile Include="Interfaces\ILinkHelper.cs" />
     <Compile Include="SexyContent\AppAssets\AssetEditInfo.cs" />
     <Compile Include="SexyContent\Constants.cs" />

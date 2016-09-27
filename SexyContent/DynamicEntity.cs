@@ -8,12 +8,13 @@ using ToSic.Eav;
 using ToSic.SexyContent.ContentBlock;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Edit.Toolbar;
+using ToSic.SexyContent.Interfaces;
 
 namespace ToSic.SexyContent
 {
 
 
-    public class DynamicEntity : DynamicObject
+    public class DynamicEntity : DynamicObject, IDynamicEntity
     {
         public ContentConfiguration Configuration = new ContentConfiguration();
         public IEntity Entity { get; set; }
@@ -65,9 +66,7 @@ namespace ToSic.SexyContent
         }
 
         public override bool TryGetMember(GetMemberBinder binder, out object result)
-        {
-            return TryGetMember(binder.Name, out result);
-        }
+            => TryGetMember(binder.Name, out result);
 
         public bool TryGetMember(string memberName, out object result)
         {
