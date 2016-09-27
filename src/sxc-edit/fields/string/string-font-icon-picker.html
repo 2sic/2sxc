@@ -6,21 +6,21 @@
                 <span ng-show="!value.Value">&nbsp;&nbsp;</span>
             </button>
         </div>
-        <div class="input-group">
-            <input type="text" class="form-control input-lg" ng-model="value.Value" ng-disabled="false" uib-dropdown-toggle>
+        <div class="input-group" uib-dropdown-toggle>
+            <input type="text" class="form-control input-lg" ng-model="value.Value" ng-disabled="false" >
         </div>
         <!-- the search ui -->
-        <ul class="dropdown-menu icons-menu-columns" role="menu">
-            <li class="input-group" disable-auto-close>
-                <span class="input-group-addon btn-default btn" ng-click="value.Value = ''">
+        <ul class="dropdown-menu icons-menu-columns" role="menu" uib-dropdown-menu>
+            <li class="input-group">
+                <span class="input-group-addon btn-default btn" ng-click="vm.selectorIsOpen = false; value.Value = ''">
                     <i class="icon-eav-cancel"></i>
                 </span>
-                <input type="search" ng-model="vm.iconFilter" class="makePaymentDropdownSearchBox form-control input-lg" placeholder="search..." />
+                <input type="search" ng-model="vm.iconFilter" class="form-control input-lg" placeholder="search..." />
             </li>
 
             <li ng-repeat="icn in vm.icons" role="menuitem"
                 ng-show="icn.class.indexOf(vm.iconFilter) !== -1">
-                <a ng-click="vm.setIcon(icn.class)" xng-click="value.Value = icn.class; status.isopen = false;">
+                <a ng-click="vm.setIcon(icn.class)" xng-click="value.Value = icn.class; vm.selectorIsOpen = false;">
                     <i class="{{vm.previewPrefix}} {{icn.class}}"></i> <span uib-tooltip="{{icn.class}}">...{{icn.class.substring(vm.prefix.length-1,25)}}</span>
                 </a>
             </li>

@@ -13,7 +13,7 @@
   },
   "private": true,
   "resolutions": {
-    "tinymce-dist": "4.4.2",
+    "tinymce-dist": "4.4.3",
     "tinymce": "~4.4.3"
   }
 }

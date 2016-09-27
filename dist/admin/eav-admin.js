@@ -362,7 +362,7 @@
 (function () {
 	'use strict';
 
-	contentItemsListController.$inject = ["contentItemsSvc", "eavConfig", "appId", "contentType", "eavAdminDialogs", "toastr", "debugState", "$uibModalInstance", "$q", "$modalStack", "$translate"];
+	contentItemsListController.$inject = ["contentItemsSvc", "eavConfig", "appId", "contentType", "eavAdminDialogs", "toastr", "debugState", "$uibModalInstance", "$q", "$translate", "entitiesSvc"];
 	angular.module("ContentItemsAppAgnostic", [
         "EavConfiguration",
         "EavAdminUi",
@@ -372,7 +372,7 @@
         .controller("ContentItemsList", contentItemsListController)
 	;
 
-	function contentItemsListController(contentItemsSvc, eavConfig, appId, contentType, eavAdminDialogs, toastr, debugState, $uibModalInstance, $q, $modalStack, $translate) {
+	function contentItemsListController(contentItemsSvc, eavConfig, appId, contentType, eavAdminDialogs, toastr, debugState, $uibModalInstance, $q, $translate, entitiesSvc) {
 		/* jshint validthis:true */
 		var vm = angular.extend(this, {
 			debug: debugState,
@@ -604,37 +604,40 @@
 		// #endregion
 
 		function tryToDelete(item) {
+
+		    entitiesSvc.tryDeleteAndAskForce(contentType, item.RepositoryId, item.Title).then(setRowData);
+
             // todo: i18n
-		    var msg = $translate.instant("General.Questions.DeleteEntity", { title: item.Title, id: item.RepositoryId });
-			if (confirm(msg))
-			    svc.delete(item.RepositoryId, false)
-                    .then(function (result) {
-			            if (result.status >= 200 && result.status < 300) {
-			                setRowData();
-			                return;
-			            }
+		    //var msg = $translate.instant("General.Questions.DeleteEntity", { title: item.Title, id: item.RepositoryId });
+			//if (confirm(msg))
+			//    svc.delete(item.RepositoryId, false)
+            //        .then(function (result) {
+			//            //if (result.status >= 200 && result.status < 300) {
+			//            //    setRowData();
+			//            //    return;
+			//            //}
 
-                        // if delete failed, ask to force-delete in a toaster
-			            var msg = "<div>" + $translate.instant("General.Questions.ForceDelete", { title: item.Title, id: item.RepositoryId}) + "<br/>"
-			                + "<button type='button' id='del' class='btn btn-default' ><i class= 'icon-eav-ok'></i>" + $translate.instant("General.Buttons.ForceDelete") + "</button>"
-			                + "</div>";
+            //            //// if delete failed, ask to force-delete in a toaster
+			//            //var msg = "<div>" + $translate.instant("General.Questions.ForceDelete", { title: item.Title, id: item.RepositoryId}) + "<br/>"
+			//            //    + "<button type='button' id='del' class='btn btn-default' ><i class= 'icon-eav-ok'></i>" + $translate.instant("General.Buttons.ForceDelete") + "</button>"
+			//            //    + "</div>";
 
-			            toastr.warning(msg, {
-			                    allowHtml: true,
-			                    timeOut: 5000,
-			                    onShown: function (toast) {
-                                    // this checks for the click on the button in the toaster
-			                        toast.el[0].onclick = function(event) {
-			                            var target = event.target || event.srcElement;
-			                            if (target.id === "del")
-			                                svc.delete(item.RepositoryId, true)
-			                                    .then(setRowData);
-			                        };
-			                    }
+			//            //toastr.warning(msg, {
+			//            //        allowHtml: true,
+			//            //        timeOut: 5000,
+			//            //        onShown: function (toast) {
+            //            //            // this checks for the click on the button in the toaster
+			//            //            toast.el[0].onclick = function(event) {
+			//            //                var target = event.target || event.srcElement;
+			//            //                if (target.id === "del")
+			//            //                    svc.delete(item.RepositoryId, true)
+			//            //                        .then(setRowData);
+			//            //            };
+			//            //        }
 
 
-			                });
-			        });
+			//            //    });
+			//        });
 		}
 
 		function openDuplicate(item) {
