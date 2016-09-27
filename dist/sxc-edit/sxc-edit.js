@@ -104,6 +104,7 @@ angular.module("Adam")
     /* jshint laxbreak:true */
     "use strict";
 
+    BrowserController.$inject = ["$scope", "adamSvc", "debugState", "eavConfig", "eavAdminDialogs", "appRoot", "fileType"];
     var app = angular.module("Adam"); 
 
     // The controller for the main form directive
@@ -276,7 +277,6 @@ angular.module("Adam")
 
         vm.activate();
     }
-    BrowserController.$inject = ["$scope", "adamSvc", "debugState", "eavConfig", "eavAdminDialogs", "appRoot", "fileType"];
 
 })();
 
@@ -496,9 +496,9 @@ angular.module("sxcFieldTemplates")
                         return connector;
                     }
                 },
-                controller: function ($scope, bridge) {
+                controller: ["$scope", "bridge", function ($scope, bridge) {
                     $scope.bridge = bridge;
-                },
+                }],
                 windowClass: "sxc-dialog-filemanager"
             });
 
@@ -1099,6 +1099,7 @@ angular.module("sxcFieldTemplates")
 	"use strict";
 
     // Register in Angular Formly
+    FieldWysiwygTinyMceController.$inject = ["$scope", "dnnBridgeSvc", "languages", "$translate"];
     angular.module("sxcFieldTemplates")
         .config(["formlyConfigProvider", "defaultFieldWrappers", function (formlyConfigProvider, defaultFieldWrappers) {
             formlyConfigProvider.setType({
@@ -1312,7 +1313,6 @@ angular.module("sxcFieldTemplates")
             }
         });
     }
-    FieldWysiwygTinyMceController.$inject = ["$scope", "dnnBridgeSvc", "languages", "$translate"];
 
     // Initialize the tinymce resources which we translate ourselves
     function initLangResources(editor, language, $translate) {
@@ -1644,7 +1644,7 @@ angular.module('SxcEditTemplates', []).run(['$templateCache', function($template
 
 
   $templateCache.put('fields/string/string-font-icon-picker.html',
-    "<div><div uib-dropdown uib-keyboard-nav auto-close=outsideClick is-open=vm.selectorIsOpen><div class=\"thumbnail-before-input icon-preview\"><button type=button uib-tooltip={{value.Value}} uib-dropdown-toggle><i class=\"{{vm.previewPrefix}} {{value.Value}}\" ng-show=value.Value></i> <span ng-show=!value.Value>&nbsp;&nbsp;</span></button></div><div class=input-group><input type=text class=\"form-control input-lg\" ng-model=value.Value ng-disabled=false uib-dropdown-toggle></div><ul class=\"dropdown-menu icons-menu-columns\" role=menu><li class=input-group disable-auto-close><span class=\"input-group-addon btn-default btn\" ng-click=\"value.Value = ''\"><i class=icon-eav-cancel></i></span> <input type=search ng-model=vm.iconFilter class=\"makePaymentDropdownSearchBox form-control input-lg\" placeholder=\"search...\"></li><li ng-repeat=\"icn in vm.icons\" role=menuitem ng-show=\"icn.class.indexOf(vm.iconFilter) !== -1\"><a ng-click=vm.setIcon(icn.class) xng-click=\"value.Value = icn.class; status.isopen = false;\"><i class=\"{{vm.previewPrefix}} {{icn.class}}\"></i> <span uib-tooltip={{icn.class}}>...{{icn.class.substring(vm.prefix.length-1,25)}}</span></a></li></ul></div><div ng-if=vm.debug.on>Infos: found {{vm.icons.length}} items for prefix \"{{vm.prefix}}\" and will use \"{{vm.previewPrefix}}\" as a preview class. Selected is \"{{value.Value}}\" and files are: {{vm.files}}</div></div>"
+    "<div><div uib-dropdown uib-keyboard-nav auto-close=outsideClick is-open=vm.selectorIsOpen><div class=\"thumbnail-before-input icon-preview\"><button type=button uib-tooltip={{value.Value}} uib-dropdown-toggle><i class=\"{{vm.previewPrefix}} {{value.Value}}\" ng-show=value.Value></i> <span ng-show=!value.Value>&nbsp;&nbsp;</span></button></div><div class=input-group uib-dropdown-toggle><input type=text class=\"form-control input-lg\" ng-model=value.Value ng-disabled=false></div><ul class=\"dropdown-menu icons-menu-columns\" role=menu uib-dropdown-menu><li class=input-group><span class=\"input-group-addon btn-default btn\" ng-click=\"vm.selectorIsOpen = false; value.Value = ''\"><i class=icon-eav-cancel></i></span> <input type=search ng-model=vm.iconFilter class=\"form-control input-lg\" placeholder=\"search...\"></li><li ng-repeat=\"icn in vm.icons\" role=menuitem ng-show=\"icn.class.indexOf(vm.iconFilter) !== -1\"><a ng-click=vm.setIcon(icn.class) xng-click=\"value.Value = icn.class; vm.selectorIsOpen = false;\"><i class=\"{{vm.previewPrefix}} {{icn.class}}\"></i> <span uib-tooltip={{icn.class}}>...{{icn.class.substring(vm.prefix.length-1,25)}}</span></a></li></ul></div><div ng-if=vm.debug.on>Infos: found {{vm.icons.length}} items for prefix \"{{vm.prefix}}\" and will use \"{{vm.previewPrefix}}\" as a preview class. Selected is \"{{value.Value}}\" and files are: {{vm.files}}</div></div>"
   );
 
 
