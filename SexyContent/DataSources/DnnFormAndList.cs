@@ -7,7 +7,6 @@ namespace ToSic.SexyContent.DataSources
     /// Delivers UDT-data (now known as Form and List) to the templating engine
     /// </summary>
     [Obsolete("This class was moved to the Environment.Dnn7.DataSources Namespace")]
-    [PipelineDesigner]
     public class DnnFormAndList : Environment.Dnn7.DataSources.DnnFormAndList
     {
         // Todo: leave this helper class/message in till 2sxc 09.00, then either extract into an own DLL
