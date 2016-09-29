@@ -220,6 +220,8 @@
     <Compile Include="Edit\Toolbar\ItemToolbar.cs" />
     <Compile Include="Edit\Toolbar\ItemToolbarAction.cs" />
     <Compile Include="Environment\Base\Permissions.cs" />
+    <Compile Include="Environment\Dnn7\DataSources\DnnSqlDataSource.cs" />
+    <Compile Include="Environment\Dnn7\DataSources\DnnUserProfileDataSource.cs" />
     <Compile Include="Environment\Dnn7\DnnBusinessController.cs" />
     <Compile Include="Environment\Dnn7\RenderingHelpers.cs" />
     <Compile Include="Environment\Dnn7\Factory.cs" />
@@ -246,7 +248,7 @@
     <Compile Include="SexyContent\ContentBlock\ContentBlockBase.cs" />
     <Compile Include="SexyContent\ContentBlock\EntityContentGroupReferenceManager.cs" />
     <Compile Include="SexyContent\ContentBlock\ModuleContentGroupReferenceManager.cs" />
-    <Compile Include="SexyContent\DataSources\DnnUserProfileDataSource.cs" />
+    <Compile Include="SexyContent\DataSources\DnnFormAndList.cs" />
     <Compile Include="SexyContent\DataSources\SxcValueCollectionProvider.cs" />
     <Compile Include="SexyContent\ImportExport\Const2.cs" />
     <Compile Include="SexyContent\Installer\Helpers.cs" />
@@ -265,7 +267,7 @@
     <Compile Include="SexyContent\ContentGroupManager.cs" />
     <Compile Include="SexyContent\DataSources\ConfigurationProvider.cs" />
     <Compile Include="SexyContent\DataSources\DnnSqlDataSource.cs" />
-    <Compile Include="SexyContent\DataSources\DnnFormAndList.cs" />
+    <Compile Include="Environment\Dnn7\DataSources\DnnFormAndList.cs" />
     <Compile Include="WebApi\AppWithoutModuleQueryController.cs" />
     <Compile Include="WebApi\Dnn\ModuleController.cs" />
     <Compile Include="WebApi\ImportExport\HttpResponseMessageHelper.cs" />

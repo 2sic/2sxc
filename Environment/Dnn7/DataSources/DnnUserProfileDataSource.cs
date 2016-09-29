@@ -7,7 +7,7 @@ using DotNetNuke.Entities.Users;
 using ToSic.Eav;
 using ToSic.Eav.DataSources;
 
-namespace ToSic.SexyContent.DataSources
+namespace ToSic.SexyContent.Environment.Dnn7.DataSources
 {
 	[PipelineDesigner]
 	public class DnnUserProfileDataSource : ExternalDataDataSource
