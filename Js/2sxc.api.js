@@ -1,4 +1,7 @@
-﻿
+﻿// this is the 2sxc-javascript API
+// 2sxc will include this automatically when a user has edit-rights
+// a template developer will typically use this to use the data-api to read 2sxc-data from the server
+// read more about this in the wiki: https://github.com/2sic/2sxc/wiki/JavaScript-%242sxc
 (function () {
     if (window.$2sxc) return;   // prevent double execution
 
@@ -61,10 +64,11 @@
                         source.success = function(data) {
 
                             for (var dataSetName in data) {
-                                if (data[dataSetName].List !== null) {
-                                    controller.data["in"][dataSetName] = data[dataSetName];
-                                    controller.data["in"][dataSetName].name = dataSetName;
-                                }
+                                if (data.hasOwnProperty(dataSetName)) 
+                                    if (data[dataSetName].List !== null) {
+                                        controller.data["in"][dataSetName] = data[dataSetName];
+                                        controller.data["in"][dataSetName].name = dataSetName;
+                                    }
                             }
 
                             if (controller.data["in"].Default)
@@ -200,32 +204,34 @@
 
                 // if it's an unspecified 0-error, it's probably not an error but a cancelled request, (happens when closing popups containing angularJS)
                 if (result.status === 0 || result.status === -1)
-                    return;
+                    return result;
 
                 // let's try to show good messages in most cases
                 var infoText = "Had an error talking to the server (status " + result.status + ").";
                 var srvResp = result.responseText ?
                     JSON.parse(result.responseText) // for jquery ajax errors
                     : result.data;                  // for angular $http
-                            if (srvResp) {
-                                var msg = srvResp.Message;
-                                if (msg) infoText += "\nMessage: " + msg;
-                                var msgDet = srvResp.MessageDetail || srvResp.ExceptionMessage;
-                                if (msgDet) infoText += "\nDetail: " + msgDet;
+                if (srvResp) {
+                    var msg = srvResp.Message;
+                    if (msg) infoText += "\nMessage: " + msg;
+                    var msgDet = srvResp.MessageDetail || srvResp.ExceptionMessage;
+                    if (msgDet) infoText += "\nDetail: " + msgDet;
 
 
-                                if (msgDet && msgDet.indexOf("No action was found") === 0)
-                                    if (msgDet.indexOf("that matches the name") > 0)
-                                        infoText += "\n\nTip from 2sxc: you probably got the action-name wrong in your JS.";
-                                    else if (msgDet.indexOf("that matches the request.") > 0)
-                                        infoText += "\n\nTip from 2sxc: Seems like the parameters are the wrong amount or type.";
+                    if (msgDet && msgDet.indexOf("No action was found") === 0)
+                        if (msgDet.indexOf("that matches the name") > 0)
+                            infoText += "\n\nTip from 2sxc: you probably got the action-name wrong in your JS.";
+                        else if (msgDet.indexOf("that matches the request.") > 0)
+                            infoText += "\n\nTip from 2sxc: Seems like the parameters are the wrong amount or type.";
                                 
-                                if (msg && msg.indexOf("Controller") === 0 && msg.indexOf("not found") > 0)
-                                    infoText += "\n\nTip from 2sxc: you probably spelled the controller name wrong or forgot to remove the word 'controller' from the call in JS. To call a controller called 'DemoController' only use 'Demo'.";
+                    if (msg && msg.indexOf("Controller") === 0 && msg.indexOf("not found") > 0)
+                        infoText += "\n\nTip from 2sxc: you probably spelled the controller name wrong or forgot to remove the word 'controller' from the call in JS. To call a controller called 'DemoController' only use 'Demo'.";
 
-                            }
-                            infoText += "\n\nif you are an advanced user you can learn more about what went wrong - discover how on 2sxc.org/help?tag=debug";
-                            alert(infoText);
+                }
+                infoText += "\n\nif you are an advanced user you can learn more about what went wrong - discover how on 2sxc.org/help?tag=debug";
+                alert(infoText);
+
+                return result;
             }
         };
 
@@ -310,7 +316,7 @@
             } else
                 results = results[1];
 
-            return results === null ? "" : decodeURIComponent(results.replace(/\+/g, " "));
+            return results === null || results === undefined ? "" : decodeURIComponent(results.replace(/\+/g, " "));
         },
 
         require: function getRequiredParameter(name) {
@@ -327,12 +333,10 @@
     // debug state which is needed in various places
     $2sxc.debug = {
         load: ($2sxc.urlParams.get("debug") === "true"),
-        uncache: $2sxc.urlParams.get("sxcver"),
-        //renameScript: function toMinOrNotToMin(url, preventUnmin) {
-        //    var r = (!$2sxc.debug.load && !preventUnmin) ? url : url.replace(".min", ""); // use min or not
-        //    return r;
-        //}
+        uncache: $2sxc.urlParams.get("sxcver")
     };
+
+    // mini-helpers to manage 2sxc parts, a bit like a dependency loader which will optimize to load min/max depending on debug state
     $2sxc.parts = {
         getUrl: function improveUrl(url, preventUnmin) {
             var r = (preventUnmin || !$2sxc.debug.load) ? url : url.replace(".min", ""); // use min or not
