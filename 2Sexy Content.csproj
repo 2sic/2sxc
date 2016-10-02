@@ -425,6 +425,8 @@
     <Content Include="src\sxc-admin\importexport\import-content.service.js" />
     <Content Include="src\sxc-admin\services\app-assets-service.js" />
     <Content Include="src\sxc-admin\services\app- dialog-config-service.js" />
+    <Content Include="src\sxc-develop\source-editor\dev-files.component.js" />
+    <Content Include="src\sxc-develop\source-editor\dev-files.html" />
     <Content Include="src\sxc-develop\source-editor\snippets.component.js" />
     <Content Include="src\sxc-develop\source-editor\snippets.html" />
     <Content Include="src\sxc-edit\fields\string\string-template-picker-field-scripts.js" />

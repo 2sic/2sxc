@@ -1,0 +1,17 @@
+﻿<div uib-tooltip="{{ vm.fileName }}" ng-click="vm.toggle()">
+    {{ vm.fileName.substr(vm.fileName.lastIndexOf("\\") + 1) }}
+    ({{vm.type }})
+    <i ng-class='{"icon-eav-plus-squared": !vm.show, "icon-eav-minus-squared": vm.show}'></i>
+</div>
+<div ng-if="vm.show">
+    <h4>quick-pick another file</h4>
+    <ol>
+        <li ng-repeat="asset in vm.assets" ng-click="vm.editFile(asset)">
+            {{asset}}
+        </li>
+    </ol>
+    <ul>
+        <li ng-click="vm.addFile()">create file <span class="icon-eav-plus-circled"></span></li>
+        <li>for copy, rename etc. please use the dnn file manager</li>
+    </ul>
+</div>

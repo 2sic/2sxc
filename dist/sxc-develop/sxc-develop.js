@@ -14,6 +14,50 @@
         }]);
 
 } ());
+
+
+angular.module('SourceEditor').component('devFiles', {
+    templateUrl: 'source-editor/dev-files.html',
+    controller: function (appAssetsSvc, appId) {
+        var vm = angular.extend(this, {
+            show: false,
+            svc: appAssetsSvc(appId),
+
+            toggle: function() {
+                vm.show = !vm.show;
+                if (!vm.assets)
+                    vm.assets = vm.svc.liveList();
+            },
+
+            editFile: function(filename) {
+                window.open(vm.assembleUrl(filename));
+                vm.toggle();
+            },
+
+            assembleUrl: function(newFileName) {
+                // note that as of now, we'll just use the initial url and change the path
+                // then open a new window
+                var url = window.location.href;
+                var newItems = JSON.stringify([{ Path: newFileName }]);
+                return url.replace(new RegExp("items=.*?%5d", "i"), "items=" + encodeURI(newItems)); // note: sometimes it doesn't have an appid, so it's [0-9]* instead of [0-9]+
+            },
+
+            addFile: function() {
+                // todo: i18n
+                var result = prompt("please enter full file name"); // $translate.instant("AppManagement.Prompt.NewApp"));
+                if (result)
+                    vm.svc.create(result);
+
+            }
+        });
+
+    },
+    controllerAs: "vm",
+    bindings: {
+        fileName: "<",
+        type: "<"
+    }
+});
 (function () {
 
     angular.module("SourceEditor")
@@ -97,45 +141,7 @@
 
         }
 
-        //#region show file picker
-        vm.browser = {
-            show: false,
-            svc: appAssetsSvc(appId),
-            toggle: function() {
-      
-                vm.browser.show = !vm.browser.show;
-                if (!vm.assets)
-                    vm.assets = vm.browser.svc.liveList();
-            },
-            editFile: function(filename) {
-                window.open(vm.browser.assembleUrl(filename));
-                vm.browser.toggle();
-            },
-            assembleUrl: function(newFileName) {
-                // note that as of now, we'll just use the initial url and change the path
-                // then open a new window
-                var url = window.location.href;
-                var newItems = JSON.stringify([{ Path: newFileName }]);
-                return url.replace(new RegExp("items=.*?%5d", "i"), "items=" + encodeURI(newItems)); // note: sometimes it doesn't have an appid, so it's [0-9]* instead of [0-9]+
-            },
-            addFile: function () {
-                // todo: i18n
-                var result = prompt("please enter full file name"); // $translate.instant("AppManagement.Prompt.NewApp"));
-                if (result)
-                    vm.browser.svc.create(result);
-
-            }
-        };
-
-        //#endregion
-
         //#region snippets
-        vm.addSnippet = function addSnippet(snippet) {
-            var snippetManager = ace.require("ace/snippets").snippetManager;
-            snippetManager.insertSnippet(vm.editor, snippet);
-            vm.editor.focus();
-        };
-
         vm.registerSnippets = function registerSnippets() {
             // ensure we have everything first (this may be called multiple times), then register them
             if (!(vm.snipSvc && vm.editor))
@@ -519,8 +525,13 @@ angular.module("SourceEditor")
 angular.module('SourceEditor').run(['$templateCache', function($templateCache) {
   'use strict';
 
+  $templateCache.put('source-editor/dev-files.html',
+    "<div uib-tooltip=\"{{ vm.fileName }}\" ng-click=vm.toggle()>{{ vm.fileName.substr(vm.fileName.lastIndexOf(\"\\\\\") + 1) }} ({{vm.type }}) <i ng-class=\"{&quot;icon-eav-plus-squared&quot;: !vm.show, &quot;icon-eav-minus-squared&quot;: vm.show}\"></i></div><div ng-if=vm.show><h4>quick-pick another file</h4><ol><li ng-repeat=\"asset in vm.assets\" ng-click=vm.editFile(asset)>{{asset}}</li></ol><ul><li ng-click=vm.addFile()>create file <span class=icon-eav-plus-circled></span></li><li>for copy, rename etc. please use the dnn file manager</li></ul></div>"
+  );
+
+
   $templateCache.put('source-editor/editor.html',
-    "<div ng-click=vm.debug.autoEnableAsNeeded($event)><div class=modal-header><h3 class=modal-title translate=SourceEditor.Title></h3></div><div class=modal-body><div class=row><div class=col-md-8><div uib-tooltip=\"{{ vm.view.FileName }}\" ng-click=vm.browser.toggle()>{{ vm.view.FileName.substr(vm.view.FileName.lastIndexOf(\"\\\\\") + 1) }} ({{vm.view.Type }}) <i ng-class=\"{&quot;icon-eav-plus-squared&quot;: !vm.browser.show, &quot;icon-eav-minus-squared&quot;: vm.browser.show}\"></i></div><div ng-if=vm.browser.show><h4>quick-pick another file</h4><ol><li ng-repeat=\"asset in vm.assets\" ng-click=vm.browser.editFile(asset)>{{asset}}</li></ol><ul><li ng-click=vm.browser.addFile()>create file <span class=icon-eav-plus-circled></span></li><li>for copy, rename etc. please use the dnn file manager</li></ul></div><div ng-model=vm.view.Code style=\"height: 600px\" ui-ace=\"{\r" +
+    "<div ng-click=vm.debug.autoEnableAsNeeded($event)><div class=modal-header><h3 class=modal-title translate=SourceEditor.Title></h3></div><div class=modal-body><div class=row><div class=col-md-8><dev-files file-name=vm.view.FileName type=vm.view.Type></dev-files><div ng-model=vm.view.Code style=\"height: 600px\" ui-ace=\"{\r" +
     "\n" +
     "                    useWrapMode : true,\r" +
     "\n" +

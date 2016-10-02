@@ -81,45 +81,7 @@
 
         }
 
-        //#region show file picker
-        vm.browser = {
-            show: false,
-            svc: appAssetsSvc(appId),
-            toggle: function() {
-      
-                vm.browser.show = !vm.browser.show;
-                if (!vm.assets)
-                    vm.assets = vm.browser.svc.liveList();
-            },
-            editFile: function(filename) {
-                window.open(vm.browser.assembleUrl(filename));
-                vm.browser.toggle();
-            },
-            assembleUrl: function(newFileName) {
-                // note that as of now, we'll just use the initial url and change the path
-                // then open a new window
-                var url = window.location.href;
-                var newItems = JSON.stringify([{ Path: newFileName }]);
-                return url.replace(new RegExp("items=.*?%5d", "i"), "items=" + encodeURI(newItems)); // note: sometimes it doesn't have an appid, so it's [0-9]* instead of [0-9]+
-            },
-            addFile: function () {
-                // todo: i18n
-                var result = prompt("please enter full file name"); // $translate.instant("AppManagement.Prompt.NewApp"));
-                if (result)
-                    vm.browser.svc.create(result);
-
-            }
-        };
-
-        //#endregion
-
         //#region snippets
-        vm.addSnippet = function addSnippet(snippet) {
-            var snippetManager = ace.require("ace/snippets").snippetManager;
-            snippetManager.insertSnippet(vm.editor, snippet);
-            vm.editor.focus();
-        };
-
         vm.registerSnippets = function registerSnippets() {
             // ensure we have everything first (this may be called multiple times), then register them
             if (!(vm.snipSvc && vm.editor))
