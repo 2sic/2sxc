@@ -1,6 +1,6 @@
 {
-  "name": "ToSic_ToSxc",
-  "version": "7.2.0",
+  "name": "2sic/2sxc",
+  "version": "8.5.5",
   "description": "Create awesome, responsive content for DNN",
   "main": "index.js",
   "scripts": {
@@ -39,7 +39,8 @@
     "grunt-contrib-compress": "0.13.0",
     "grunt-contrib-cssmin": "0.13.0",
 
-    
-    "json.excel": "0.0.3"
+
+    "json.excel": "0.0.3",
+    "typescript": "^1.5"
   }
 }

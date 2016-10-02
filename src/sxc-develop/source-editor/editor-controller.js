@@ -27,10 +27,7 @@
         svc.initSnippets = function (template) {
             vm.snipSvc = snippetSvc(template, ace);
             vm.snipSvc.getSnippets().then(function (result) {
-                vm.snippets = result;
-                vm.snippetSet = "Content";    // select default
-                vm.snippetHelp = vm.snipSvc.help;
-                vm.snippetLabel = vm.snipSvc.label;
+                vm.snippets = result;   // prep for binding to the snippet-selector
 
                 // now register the snippets in the editor
                 vm.registerSnippets();

@@ -104,7 +104,6 @@ angular.module("Adam")
     /* jshint laxbreak:true */
     "use strict";
 
-    BrowserController.$inject = ["$scope", "adamSvc", "debugState", "eavConfig", "eavAdminDialogs", "appRoot", "fileType"];
     var app = angular.module("Adam"); 
 
     // The controller for the main form directive
@@ -277,6 +276,7 @@ angular.module("Adam")
 
         vm.activate();
     }
+    BrowserController.$inject = ["$scope", "adamSvc", "debugState", "eavConfig", "eavAdminDialogs", "appRoot", "fileType"];
 
 })();
 
@@ -496,9 +496,9 @@ angular.module("sxcFieldTemplates")
                         return connector;
                     }
                 },
-                controller: ["$scope", "bridge", function ($scope, bridge) {
+                controller: function ($scope, bridge) {
                     $scope.bridge = bridge;
-                }],
+                },
                 windowClass: "sxc-dialog-filemanager"
             });
 
@@ -1099,7 +1099,6 @@ angular.module("sxcFieldTemplates")
 	"use strict";
 
     // Register in Angular Formly
-    FieldWysiwygTinyMceController.$inject = ["$scope", "dnnBridgeSvc", "languages", "$translate"];
     angular.module("sxcFieldTemplates")
         .config(["formlyConfigProvider", "defaultFieldWrappers", function (formlyConfigProvider, defaultFieldWrappers) {
             formlyConfigProvider.setType({
@@ -1313,6 +1312,7 @@ angular.module("sxcFieldTemplates")
             }
         });
     }
+    FieldWysiwygTinyMceController.$inject = ["$scope", "dnnBridgeSvc", "languages", "$translate"];
 
     // Initialize the tinymce resources which we translate ourselves
     function initLangResources(editor, language, $translate) {

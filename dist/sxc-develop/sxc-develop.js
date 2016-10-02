@@ -16,7 +16,6 @@
 } ());
 (function () {
 
-    EditorController.$inject = ["sourceSvc", "snippetSvc", "appAssetsSvc", "appId", "sxcDialogs", "item", "$uibModalInstance", "$window", "$scope", "$translate", "saveToastr", "ctrlS", "debugState"];
     angular.module("SourceEditor")
         .controller("Editor", EditorController)
     ;
@@ -44,10 +43,7 @@
         svc.initSnippets = function (template) {
             vm.snipSvc = snippetSvc(template, ace);
             vm.snipSvc.getSnippets().then(function (result) {
-                vm.snippets = result;
-                vm.snippetSet = "Content";    // select default
-                vm.snippetHelp = vm.snipSvc.help;
-                vm.snippetLabel = vm.snipSvc.label;
+                vm.snippets = result;   // prep for binding to the snippet-selector
 
                 // now register the snippets in the editor
                 vm.registerSnippets();
@@ -155,8 +151,41 @@
         };
 
     }
+    EditorController.$inject = ["sourceSvc", "snippetSvc", "appAssetsSvc", "appId", "sxcDialogs", "item", "$uibModalInstance", "$window", "$scope", "$translate", "saveToastr", "ctrlS", "debugState"];
 
 }());
+
+
+angular.module('SourceEditor').component('snippets', {
+    templateUrl: 'source-editor/snippets.html',
+    controller: function () {
+        var vm = this;
+
+        // default set
+        vm.snippetSet = "Content";
+
+        vm.addSnippet = function addSnippet(snippet) {
+            var snippetManager = ace.require("ace/snippets").snippetManager;
+            snippetManager.insertSnippet(vm.editor, snippet);
+            vm.editor.focus();
+        };
+
+        vm.$onInit = function () {
+            console.log("component snip loading");
+            console.log("def set" + vm.snippetSet);
+        };
+
+        vm.$onChanges = function() {
+            console.log("def set" + vm.snippetSet);
+        };
+
+    },
+    controllerAs: "vm",
+    bindings: {
+        snippets: "<",
+        editor: "<"
+    }
+});
 // This service delivers all snippets, translated etc. to the sourc-editor UI
 angular.module("SourceEditor")
     .factory("snippetSvc", ["$http", "eavConfig", "svcCreator", "$translate", "contentTypeFieldSvc", "$q", function ($http, eavConfig, svcCreator, $translate, contentTypeFieldSvc, $q) {
@@ -523,7 +552,7 @@ angular.module('SourceEditor').run(['$templateCache', function($templateCache) {
     "\n" +
     "                    }\r" +
     "\n" +
-    "                }\"></div></div><div class=\"pull-right col-md-4\"><div><strong translate=SourceEditor.SnippetsSection.Title></strong> <i icon=question-sign style=\"opacity: 0.3\" ng-click=\"showSnippetInfo = !showSnippetInfo\"></i><div ng-if=showSnippetInfo translate=SourceEditor.SnippetsSection.Intro></div></div><select class=input-lg style=\"width: 90%\" ng-model=vm.snippetSet ng-options=\"key as ('SourceEditorSnippets.' + key + '.Title' | translate) for (key , value) in vm.snippets\" uib-tooltip=\"{{ 'SourceEditorSnippets.' + vm.snippetSet + '.Help'  | translate}}\"></select><div>&nbsp;</div><div style=\"height: 500px; overflow: auto\"><div ng-repeat=\"(subsetName, subsetValue) in vm.snippets[vm.snippetSet]\"><strong uib-tooltip=\"{{ 'SourceEditorSnippets.' + vm.snippetSet + '.' + subsetName + '.Help'  | translate}}\">{{ 'SourceEditorSnippets.' + vm.snippetSet + '.' + subsetName + '.Title' | translate}}</strong><ul><li ng-repeat=\"value in subsetValue | toArray | orderBy: '$key'\" uib-tooltip=\"{{ value.snip }}\"><span ng-click=vm.addSnippet(value.snip)>{{value.label}}</span> <a ng-show=value.more ng-click=\"showMore = !showMore\"><i icon=plus></i>more</a> <i icon=info-sign style=\"opacity: 0.3\" ng-click=\"show = !show\" ng-show=value.help></i><div ng-if=show><em>{{value.help}}</em></div><ul ng-if=showMore><li ng-repeat=\"more in value.more | toArray | orderBy: '$key'\" uib-tooltip=\"{{ value.snip }}\"><span ng-click=vm.addSnippet(more.snip)>{{more.label}}</span> <i icon=info-sign style=\"opacity: 0.3\" ng-click=\"show = !show\" ng-show=more.help></i><div ng-if=show><em>{{more.help}}</em></div></li></ul></li></ul></div></div></div></div></div><div class=modal-footer><div class=pull-left><button class=\"btn btn-primary btn-lg xxbtn-square\" type=button ng-click=vm.save(false)><span icon=check uib-tooltip=\"{{ 'Button.SaveAndKeepOpen' | translate }}\"></span> {{ 'Button.SaveAndKeepOpen' | translate }}</button> also supports Ctrl+S</div></div><show-debug-availability class=pull-right></show-debug-availability><div ng-if=vm.debug.on><pre>{{vm.view.Code}}</pre></div></div><style>/* helper to ensure that razor (which is correctly detected by ACE) is also highlighted */\r" +
+    "                }\"></div></div><div class=\"pull-right col-md-4\"><snippets ng-if=vm.snippets snippets=vm.snippets editor=vm.editor></snippets></div></div></div><div class=modal-footer><div class=pull-left><button class=\"btn btn-primary btn-lg xxbtn-square\" type=button ng-click=vm.save(false)><span icon=check uib-tooltip=\"{{ 'Button.SaveAndKeepOpen' | translate }}\"></span> {{ 'Button.SaveAndKeepOpen' | translate }}</button> also supports Ctrl+S</div></div><show-debug-availability class=pull-right></show-debug-availability><div ng-if=vm.debug.on><pre>{{vm.view.Code}}</pre></div></div><style>/* helper to ensure that razor (which is correctly detected by ACE) is also highlighted */\r" +
     "\n" +
     "    .ace_razor {\r" +
     "\n" +
@@ -548,6 +577,11 @@ angular.module('SourceEditor').run(['$templateCache', function($templateCache) {
     "        color: black;\r" +
     "\n" +
     "    }</style>"
+  );
+
+
+  $templateCache.put('source-editor/snippets.html',
+    "<div><strong translate=SourceEditor.SnippetsSection.Title></strong> <i icon=question-sign style=\"opacity: 0.3\" ng-click=\"showSnippetInfo = !showSnippetInfo\"></i><div ng-if=showSnippetInfo translate=SourceEditor.SnippetsSection.Intro></div></div><select class=input-lg style=\"width: 90%\" ng-model=vm.snippetSet ng-options=\"key as ('SourceEditorSnippets.' + key + '.Title' | translate) for (key , value) in vm.snippets\" uib-tooltip=\"{{ 'SourceEditorSnippets.' + vm.snippetSet + '.Help'  | translate}}\"></select><div>&nbsp;</div><div style=\"height: 500px; overflow: auto\"><div ng-repeat=\"(subsetName, subsetValue) in vm.snippets[vm.snippetSet]\"><strong uib-tooltip=\"{{ 'SourceEditorSnippets.' + vm.snippetSet + '.' + subsetName + '.Help'  | translate}}\">{{ 'SourceEditorSnippets.' + vm.snippetSet + '.' + subsetName + '.Title' | translate}}</strong><ul><li ng-repeat=\"value in subsetValue | toArray | orderBy: '$key'\" uib-tooltip=\"{{ value.snip }}\"><span ng-click=vm.addSnippet(value.snip)>{{value.label}}</span> <a ng-show=value.more ng-click=\"showMore = !showMore\"><i icon=plus></i>more</a> <i icon=info-sign style=\"opacity: 0.3\" ng-click=\"show = !show\" ng-show=value.help></i><div ng-if=show><em>{{value.help}}</em></div><ul ng-if=showMore><li ng-repeat=\"more in value.more | toArray | orderBy: '$key'\" uib-tooltip=\"{{ value.snip }}\"><span ng-click=vm.addSnippet(more.snip)>{{more.label}}</span> <i icon=info-sign style=\"opacity: 0.3\" ng-click=\"show = !show\" ng-show=more.help></i><div ng-if=show><em>{{more.help}}</em></div></li></ul></li></ul></div></div>"
   );
 
 }]);
