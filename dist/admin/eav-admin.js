@@ -2474,6 +2474,16 @@ angular.module("EavAdminUi", ["ng",
         // Will open a modal window. Has various specials, like
         // 1. If the templateUrl begins with "~/" - this will be re-mapped to the ng-app root. Only use this for not-inline stuff
         // 2. The controller can be written as "something as vm" and this will be split and configured corectly
+            svc.openModalComponent = function (componentName, size, values, callbacks) {
+                var modalInstance = $uibModal.open({
+                        component: componentName,
+                        resolve: svc.CreateResolve(values),
+                        size: size,
+                    }
+                );
+                return svc._attachCallbacks(modalInstance, callbacks);
+            };
+
             svc.OpenModal = function openModal(templateUrl, controller, size, resolveValues, callbacks) {
                 var foundAs = controller.indexOf(" as ");
                 var contAs = foundAs > 0 ?

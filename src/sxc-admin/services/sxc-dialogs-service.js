@@ -68,8 +68,9 @@ angular.module("SxcAdminUi", [
 
 
         svc.openDevelop = function ove(item, closeCallback) {
-            var resolve = eavAdminDialogs.CreateResolve({ item: item });
-            return eavAdminDialogs.OpenModal("source-editor/editor.html", "Editor as vm", "max", resolve, closeCallback);
+            eavAdminDialogs.openModalComponent("editor", "max", { item: item }, closeCallback);
+            //var resolve = eavAdminDialogs.CreateResolve({ item: item });
+            //return eavAdminDialogs.OpenModal("source-editor/editor.html", "Editor as vm", "max", resolve, closeCallback);
         };
 
         // 2dm 2015-10-07 - don't think this is in use, remove

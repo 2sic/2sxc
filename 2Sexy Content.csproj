@@ -427,6 +427,7 @@
     <Content Include="src\sxc-admin\services\app- dialog-config-service.js" />
     <Content Include="src\sxc-develop\source-editor\dev-files.component.js" />
     <Content Include="src\sxc-develop\source-editor\dev-files.html" />
+    <Content Include="src\sxc-develop\source-editor\editor.component.js" />
     <Content Include="src\sxc-develop\source-editor\snippets-links.component.js" />
     <Content Include="src\sxc-develop\source-editor\snippets-links.html" />
     <Content Include="src\sxc-develop\source-editor\snippets.component.js" />
@@ -516,7 +517,6 @@
     <Content Include="src\sxc-develop\source-editor\toArray-filter.js" />
     <Content Include="src\sxc-admin\templates\templates-controller.js" />
     <Content Include="src\sxc-admin\templates\templates.html" />
-    <Content Include="src\sxc-develop\source-editor\editor-controller.js" />
     <Content Include="src\sxc-develop\source-editor\source-service.js" />
     <Content Include="src\sxc-develop\source-editor\snippets.service.js" />
     <Content Include="src\sxc-develop\source-editor\editor.html" />
