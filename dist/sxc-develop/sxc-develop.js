@@ -63,13 +63,12 @@ angular.module('SourceEditor').component('devFiles', {
 angular.module("SourceEditor").component("editor", {
     templateUrl: "source-editor/editor.html",
     controller: EditorController,
-    controllerAs: "vm",
-    //bindings: {
-    //    item: "<"
-    //}
+    controllerAs: "vm"
 });
 
 function EditorController(sourceSvc, snippetSvc, appAssetsSvc, appId, sxcDialogs, items, $uibModalInstance, $window, $scope, $translate, saveToastr, ctrlS, debugState) {
+
+    // todo: must re-think this, nicer would be if it's a proper parameter
     var item = items[0];
 
     $translate.refresh();   // necessary to load stuff added in this lazy-loaded app
