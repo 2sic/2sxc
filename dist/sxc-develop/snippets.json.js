@@ -7,7 +7,7 @@
             "title": "returns the url to the current app",
             "content": "@App.Path",
             "help": "path for integrating scripts,  images etc. For example  use as @App.Path/scripts/knockout.js",
-            "links": ""
+            "links": "read API docs: https://github.com/2sic/2sxc/wiki/Razor-App"
         },
         {
             "set": "@App",
@@ -16,7 +16,7 @@
             "title": "physical path",
             "content": "@App.PhysicalPath",
             "help": "physical path in c:\\",
-            "links": ""
+            "links": "read API docs: https://github.com/2sic/2sxc/wiki/Razor-App"
         },
         {
             "set": "@App",
@@ -25,7 +25,7 @@
             "title": "App Guid",
             "content": "@App.AppGuid",
             "help": "internal GUID - should stay the same across all systems for this specific App",
-            "links": ""
+            "links": "read API docs: https://github.com/2sic/2sxc/wiki/Razor-App"
         },
         {
             "set": "@App",
@@ -34,7 +34,7 @@
             "title": "App Id",
             "content": "@App.AppId",
             "help": "Id in the current data base. Is a different number in every App-Installation",
-            "links": ""
+            "links": "read API docs: https://github.com/2sic/2sxc/wiki/Razor-App"
         },
         {
             "set": "@App",
@@ -43,7 +43,7 @@
             "title": "App Name",
             "content": "@App.Name",
             "help": "internal name",
-            "links": ""
+            "links": "read API docs: https://github.com/2sic/2sxc/wiki/Razor-App"
         },
         {
             "set": "@App",
@@ -52,7 +52,7 @@
             "title": "folder of the 2sxc-app",
             "content": "@App.Folder",
             "help": "often used to create paths to scripts or join some values. if you only need to reference a script,  please use App.Path",
-            "links": ""
+            "links": "read API docs: https://github.com/2sic/2sxc/wiki/Razor-App"
         },
         {
             "set": "@Content",
@@ -60,8 +60,8 @@
             "name": "Toolbar for an item",
             "title": "",
             "content": "@Edit.Toolbar(${1:Content})",
-            "help": "Show an inline-toolbar. If you wat it hovering, make sure you have an HTML-element around it with the class sc-element.",
-            "links": "api: https://github.com/2sic/2sxc/wiki/Razor-Edit"
+            "help": "Show an inline-toolbar. If you want it hovering, make sure you have an HTML-element around it with the class sc-element.",
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Edit"
         },
         {
             "set": "@Content",
@@ -70,7 +70,7 @@
             "title": "",
             "content": "<div class=\"sc-element\">\r\n    @Edit.Toolbar(${1:Content})\r\n</div>",
             "help": "Show an inline toolbar, floating. Note that this is just an example, the div with the class sc-element can be further away, it doesn't have to be the direct container. ",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Edit"
         },
         {
             "set": "@Content",
@@ -79,7 +79,7 @@
             "title": "",
             "content": "@Edit.Toolbar(${1:Content}, actions: \"edit,replace\")",
             "help": "Toolbar with edit and replace buttons only",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Edit"
         },
         {
             "set": "@Content",
@@ -88,7 +88,7 @@
             "title": "",
             "content": "@Edit.Toolbar(actions: \"new\", contentType: \"${10:BlogPost}\")",
             "help": "Toolbar with edit and replace buttons only",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Edit"
         },
         {
             "set": "@Content",
@@ -97,7 +97,7 @@
             "title": "",
             "content": "@Edit.Toolbar(actions: \"new\", contentType: \"${10:BlogPost}\", prefill: new { Title = \"Hello\", Color = \"red\" } )",
             "help": "Toolbar with new and prefill example",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Edit"
         },
         {
             "set": "@List",
@@ -124,7 +124,7 @@
             "title": "for-each on the default list",
             "content": "@foreach(var ${1:cont} in AsDynamic(Data[\"${2:Default}\"])){\r\n    <div class=\"sc-element\">\r\n        @${1}.EntityTitle\r\n        @$Edit.Toolbar({1})\r\n    </div>\r\n}",
             "help": "simple loop to show all items in the default list",
-            "links": ""
+            "links": "read API docs: https://github.com/2sic/2sxc/wiki/Razor-Data"
         },
         {
             "set": "@DnnRazor",
@@ -133,7 +133,7 @@
             "title": "",
             "content": "@Dnn.Module.AllModules",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -142,7 +142,7 @@
             "title": "",
             "content": "@Dnn.Module.AllTabs",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -151,7 +151,7 @@
             "title": "",
             "content": "@Dnn.Module.Border",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -160,7 +160,7 @@
             "title": "",
             "content": "@Dnn.Module.Cacheability",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -169,7 +169,7 @@
             "title": "",
             "content": "@Dnn.Module.CacheMethod",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -178,7 +178,7 @@
             "title": "",
             "content": "@Dnn.Module.CacheTime",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -187,7 +187,7 @@
             "title": "",
             "content": "@Dnn.Module.ContainerPath",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -196,7 +196,7 @@
             "title": "",
             "content": "@Dnn.Module.ContainerSrc",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -205,7 +205,7 @@
             "title": "",
             "content": "@Dnn.Module.DefaultCacheTime",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -214,7 +214,7 @@
             "title": "",
             "content": "@Dnn.Module.DesktopModule",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -223,7 +223,7 @@
             "title": "",
             "content": "@Dnn.Module.DesktopModuleId",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -232,7 +232,7 @@
             "title": "",
             "content": "@Dnn.Module.DisplayTitle",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -241,7 +241,7 @@
             "title": "",
             "content": "@Dnn.Module.EndDate",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -250,7 +250,7 @@
             "title": "",
             "content": "@Dnn.Module.Footer",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -259,7 +259,7 @@
             "title": "",
             "content": "@Dnn.Module.Header",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -268,7 +268,7 @@
             "title": "",
             "content": "@Dnn.Module.ModuleControl",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -277,7 +277,7 @@
             "title": "",
             "content": "@Dnn.Module.ModuleControlId",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -286,7 +286,7 @@
             "title": "",
             "content": "@Dnn.Module.ModuleDefID",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -295,7 +295,7 @@
             "title": "",
             "content": "@Dnn.Module.ModuleDefinition",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -304,7 +304,7 @@
             "title": "",
             "content": "@Dnn.Module.ModuleID",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -313,7 +313,7 @@
             "title": "",
             "content": "@Dnn.Module.ModuleName",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -322,7 +322,7 @@
             "title": "",
             "content": "@Dnn.Module.ModuleOrder",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -331,7 +331,7 @@
             "title": "",
             "content": "@Dnn.Module.ModulePermissions",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -340,7 +340,7 @@
             "title": "",
             "content": "@Dnn.Module.ModuleSettings",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -349,7 +349,7 @@
             "title": "",
             "content": "@Dnn.Module.ModuleTitle",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -358,7 +358,7 @@
             "title": "",
             "content": "@Dnn.Module.PaneModuleCount",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -367,7 +367,7 @@
             "title": "",
             "content": "@Dnn.Module.PaneModuleIndex",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -376,7 +376,7 @@
             "title": "",
             "content": "@Dnn.Module.PaneName",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -385,7 +385,7 @@
             "title": "",
             "content": "@Dnn.Module.ParentTab",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -394,7 +394,7 @@
             "title": "",
             "content": "@Dnn.Module.PortalID",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -403,7 +403,7 @@
             "title": "",
             "content": "@Dnn.Module.StartDate",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -412,7 +412,7 @@
             "title": "",
             "content": "@Dnn.Module.TabID",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -421,7 +421,7 @@
             "title": "",
             "content": "@Dnn.Module.TabModuleID",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -430,7 +430,7 @@
             "title": "",
             "content": "@Dnn.Module.TabModuleSettings",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -439,7 +439,7 @@
             "title": "",
             "content": "@Dnn.Module.UniqueId",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -448,7 +448,7 @@
             "title": "",
             "content": "@Dnn.Module.Visibility",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -457,7 +457,7 @@
             "title": "",
             "content": "@Dnn.Tab.ChildModules",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -466,7 +466,7 @@
             "title": "",
             "content": "@Dnn.Tab.ContainerPath",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -475,7 +475,7 @@
             "title": "",
             "content": "@Dnn.Tab.ContainerSrc",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -484,7 +484,7 @@
             "title": "",
             "content": "@Dnn.Tab.CultureCode",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -493,7 +493,7 @@
             "title": "",
             "content": "@Dnn.Tab.DefaultLanguageGuid",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -502,7 +502,7 @@
             "title": "",
             "content": "@Dnn.Tab.DefaultLanguageTab",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -511,7 +511,7 @@
             "title": "",
             "content": "@Dnn.Tab.Description",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -520,7 +520,7 @@
             "title": "",
             "content": "@Dnn.Tab.EndDate",
             "help": "for automatic hiding of the page",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -529,7 +529,7 @@
             "title": "",
             "content": "@Dnn.Tab.FullUrl",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -538,7 +538,7 @@
             "title": "",
             "content": "@Dnn.Tab.HasChildren",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -547,7 +547,7 @@
             "title": "",
             "content": "@Dnn.Tab.IsDefaultLanguage",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -556,7 +556,7 @@
             "title": "",
             "content": "@Dnn.Tab.IsDeleted",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -565,7 +565,7 @@
             "title": "",
             "content": "@Dnn.Tab.IsNeutralCulture",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -574,7 +574,7 @@
             "title": "",
             "content": "@Dnn.Tab.IsSecure",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -583,7 +583,7 @@
             "title": "",
             "content": "@Dnn.Tab.IsTranslated",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -592,7 +592,7 @@
             "title": "",
             "content": "@Dnn.Tab.IsVisible",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -601,7 +601,7 @@
             "title": "",
             "content": "@Dnn.Tab.KeyWords",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -610,7 +610,7 @@
             "title": "",
             "content": "@Dnn.Tab.Level",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -619,7 +619,7 @@
             "title": "",
             "content": "@Dnn.Tab.LocalizedTabName",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -628,7 +628,7 @@
             "title": "",
             "content": "@Dnn.Tab.LocalizedTabs",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -637,7 +637,7 @@
             "title": "",
             "content": "@Dnn.Tab.Modules",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -646,7 +646,7 @@
             "title": "",
             "content": "@Dnn.Tab.PageHeadtext",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -655,7 +655,7 @@
             "title": "",
             "content": "@Dnn.Tab.Panes",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -664,7 +664,7 @@
             "title": "",
             "content": "@Dnn.Tab.ParentId",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -673,7 +673,7 @@
             "title": "",
             "content": "@Dnn.Tab.PermanentRedirect",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -682,7 +682,7 @@
             "title": "",
             "content": "@Dnn.Tab.PortalID",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -691,7 +691,7 @@
             "title": "",
             "content": "@Dnn.Tab.RefreshInterval",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -700,7 +700,7 @@
             "title": "",
             "content": "@Dnn.Tab.SiteMapPriority",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -709,7 +709,7 @@
             "title": "",
             "content": "@Dnn.Tab.SkinDoctype",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -718,7 +718,7 @@
             "title": "",
             "content": "@Dnn.Tab.SkinPath",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -727,7 +727,7 @@
             "title": "",
             "content": "@Dnn.Tab.SkinSrc",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -736,7 +736,7 @@
             "title": "",
             "content": "@Dnn.Tab.StartDate",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -745,7 +745,7 @@
             "title": "",
             "content": "@Dnn.Tab.TabID",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -754,7 +754,7 @@
             "title": "",
             "content": "@Dnn.Tab.TabName",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -763,7 +763,7 @@
             "title": "",
             "content": "@Dnn.Tab.TabOrder",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -772,7 +772,7 @@
             "title": "",
             "content": "@Dnn.Tab.TabPath",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -781,7 +781,7 @@
             "title": "",
             "content": "@Dnn.Tab.TabPermissions",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -790,7 +790,7 @@
             "title": "",
             "content": "@Dnn.Tab.TabSettings",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -799,7 +799,7 @@
             "title": "",
             "content": "@Dnn.Tab.TabType",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -808,7 +808,7 @@
             "title": "",
             "content": "@Dnn.Tab.Title",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -817,7 +817,7 @@
             "title": "",
             "content": "@Dnn.Tab.UniqueId",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -826,7 +826,7 @@
             "title": "",
             "content": "@Dnn.Tab.Url",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -835,7 +835,7 @@
             "title": "",
             "content": "@Dnn.Portal.ActiveTab",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -844,7 +844,7 @@
             "title": "",
             "content": "@Dnn.Portal.AdministratorId",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -853,7 +853,7 @@
             "title": "",
             "content": "@Dnn.Portal.AdministratorRoleId",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -862,7 +862,7 @@
             "title": "",
             "content": "@Dnn.Portal.AdministratoRoleName",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -871,7 +871,7 @@
             "title": "",
             "content": "@Dnn.Portal.AdminTabId",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -880,7 +880,7 @@
             "title": "",
             "content": "@Dnn.Portal.CultureCode",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -889,7 +889,7 @@
             "title": "",
             "content": "@Dnn.Portal.Currency",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -898,7 +898,7 @@
             "title": "",
             "content": "@Dnn.Portal.Current",
             "help": "static method returning the current portal portal-settings",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -907,7 +907,7 @@
             "title": "",
             "content": "@Dnn.Portal.Default",
             "help": "(AdminContainer, AdminSkin, ControlPanelMode, etc.)",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -916,7 +916,7 @@
             "title": "",
             "content": "@Dnn.Portal.DefaultLanguage",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -925,7 +925,7 @@
             "title": "",
             "content": "@Dnn.Portal.DefaultModuleId",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -934,7 +934,7 @@
             "title": "",
             "content": "@Dnn.Portal.DefaultPortalContainer",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -943,7 +943,7 @@
             "title": "",
             "content": "@Dnn.Portal.DefaultTabId",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -952,7 +952,7 @@
             "title": "",
             "content": "@Dnn.Portal.Description",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -961,7 +961,7 @@
             "title": "",
             "content": "@Dnn.Portal.Email",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -970,7 +970,7 @@
             "title": "",
             "content": "@Dnn.Portal.EnableBrowserLanguage",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -979,7 +979,7 @@
             "title": "",
             "content": "@Dnn.Portal.EnableUrlLanguage",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -988,7 +988,7 @@
             "title": "",
             "content": "@Dnn.Portal.ExpiryDate",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -997,7 +997,7 @@
             "title": "",
             "content": "@Dnn.Portal.FooterText",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -1006,7 +1006,7 @@
             "title": "",
             "content": "@Dnn.Portal.GUID - notice all large letters",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -1015,7 +1015,7 @@
             "title": "",
             "content": "@Dnn.Portal.HomeDirectory",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -1024,7 +1024,7 @@
             "title": "",
             "content": "@Dnn.Portal.HomeDirectoryMapPath",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -1033,7 +1033,7 @@
             "title": "",
             "content": "@Dnn.Portal.HomeTabId",
             "help": "the root page",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -1042,7 +1042,7 @@
             "title": "",
             "content": "@Dnn.Portal.KeyWords",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -1051,7 +1051,7 @@
             "title": "",
             "content": "@Dnn.Portal.LoginTabId",
             "help": "where the normal login usually goes to",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -1060,7 +1060,7 @@
             "title": "",
             "content": "@Dnn.Portal.LogoFile",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -1069,7 +1069,7 @@
             "title": "",
             "content": "@Dnn.Portal.Pages",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -1078,7 +1078,7 @@
             "title": "",
             "content": "@Dnn.Portal.PortalAlias",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -1087,7 +1087,7 @@
             "title": "",
             "content": "@Dnn.Portal.PortalId",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -1096,7 +1096,7 @@
             "title": "",
             "content": "@Dnn.Portal.PortalName",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -1105,7 +1105,7 @@
             "title": "",
             "content": "@Dnn.Portal.PortalSkin",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -1114,7 +1114,7 @@
             "title": "",
             "content": "@Dnn.Portal.RegisteredRoleId",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -1123,7 +1123,7 @@
             "title": "",
             "content": "@Dnn.Portal.RegisteredRoleName",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -1132,7 +1132,7 @@
             "title": "",
             "content": "@Dnn.Portal.RegisterTabId",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -1141,7 +1141,7 @@
             "title": "",
             "content": "@Dnn.Portal.Search.something",
             "help": "various values like IncludeCommon, IncludeTagInfoFilter etc.",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -1150,7 +1150,7 @@
             "title": "",
             "content": "@Dnn.Portal.SearchTabId",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -1159,7 +1159,7 @@
             "title": "",
             "content": "@Dnn.Portal.SiteLogHistory",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -1168,7 +1168,7 @@
             "title": "",
             "content": "@Dnn.Portal.SplashTabId",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -1177,7 +1177,7 @@
             "title": "",
             "content": "@Dnn.Portal.SSLEnabled",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -1186,7 +1186,7 @@
             "title": "",
             "content": "@Dnn.Portal.SSLEnforced",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -1195,7 +1195,7 @@
             "title": "",
             "content": "@Dnn.Portal.SSLURL",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -1204,7 +1204,7 @@
             "title": "",
             "content": "@Dnn.Portal.STDURL",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -1213,7 +1213,7 @@
             "title": "",
             "content": "@Dnn.Portal.SuperTabId",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -1222,7 +1222,7 @@
             "title": "",
             "content": "@Dnn.Portal.TimeZoneOffset",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -1231,7 +1231,7 @@
             "title": "",
             "content": "@Dnn.Portal.UserId",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -1240,7 +1240,7 @@
             "title": "",
             "content": "@Dnn.Portal.UserInfo",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -1249,7 +1249,7 @@
             "title": "",
             "content": "@Dnn.Portal.UserMode",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -1258,7 +1258,7 @@
             "title": "",
             "content": "@Dnn.Portal.UserQuota",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -1267,7 +1267,7 @@
             "title": "",
             "content": "@Dnn.Portal.UserRegistration",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -1276,7 +1276,7 @@
             "title": "",
             "content": "@Dnn.Portal.Users",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@DnnRazor",
@@ -1285,7 +1285,7 @@
             "title": "",
             "content": "@Dnn.Portal.UserTabId",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@User",
@@ -1294,7 +1294,7 @@
             "title": "",
             "content": "@Dnn.User.DisplayName",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@User",
@@ -1303,7 +1303,7 @@
             "title": "",
             "content": "@Dnn.User.Email",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@User",
@@ -1312,7 +1312,7 @@
             "title": "",
             "content": "@Dnn.User.FirstName",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@User",
@@ -1321,7 +1321,7 @@
             "title": "",
             "content": "@Dnn.User.FullName",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@User",
@@ -1330,7 +1330,7 @@
             "title": "",
             "content": "@Dnn.User.IsDeleted",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@User",
@@ -1339,7 +1339,7 @@
             "title": "",
             "content": "@Dnn.User.IsInRole(string RoleName)",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@User",
@@ -1348,7 +1348,7 @@
             "title": "",
             "content": "@Dnn.User.IsSuperUser",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@User",
@@ -1357,7 +1357,7 @@
             "title": "",
             "content": "@Dnn.User.LastName",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@User",
@@ -1366,7 +1366,7 @@
             "title": "",
             "content": "@Dnn.User.Membership",
             "help": "these are asp.net memberships, you probably don't need them",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@User",
@@ -1375,7 +1375,7 @@
             "title": "",
             "content": "@Dnn.User.PortalId",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@User",
@@ -1384,7 +1384,7 @@
             "title": "",
             "content": "@Dnn.User.Roles",
             "help": "these are DNN roles",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@User",
@@ -1393,7 +1393,7 @@
             "title": "",
             "content": "@Dnn.User.UserID",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@User",
@@ -1402,7 +1402,7 @@
             "title": "",
             "content": "@Dnn.User.Username",
             "help": "",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@User",
@@ -1411,7 +1411,7 @@
             "title": "",
             "content": "@Dnn.User.Profile.GetPropertyValue(\\${1:City}\\)",
             "help": "any property of the user profile as configured in your portal",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@User",
@@ -1438,7 +1438,7 @@
             "title": "",
             "content": "@Dnn.User.IsInRole(\"${1:Administrators}\")",
             "help": "Check if the current user is in a specific role",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@User",
@@ -1447,7 +1447,7 @@
             "title": "",
             "content": "@Dnn.User.IsSuperUser",
             "help": "Check if the current user is the super-user aka host",
-            "links": ""
+            "links": "read api-docs:https://github.com/2sic/2sxc/wiki/Razor-Dnn"
         },
         {
             "set": "@User",

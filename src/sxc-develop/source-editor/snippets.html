@@ -13,11 +13,23 @@
         <strong uib-tooltip="{{ 'SourceEditorSnippets.' + vm.snippetSet + '.' + subsetName + '.Help'  | translate}}">{{ 'SourceEditorSnippets.' + vm.snippetSet + '.' + subsetName + '.Title' | translate}}</strong>
         <ul>
             <li ng-repeat="value in subsetValue | toArray | orderBy: '$key'" uib-tooltip="{{ value.snip }}">
-                <span ng-click="vm.addSnippet(value.snip)">{{value.label}}</span>
-                <a ng-show="value.more" ng-click="showMore = !showMore"><i icon="plus"></i>more</a>
-                <i icon="info-sign" style="opacity: 0.3" ng-click="show = !show" ng-show="value.help"></i>
+                <span ng-mouseover="showAdd = true" ng-click="show = !show" ng-mouseout="showAdd = false">
+                    <i class="icon-eav-plus-squared"
+                       ng-click="vm.addSnippet(value.snip)"
+                       ng-show="showAdd"
+                       stop-event="click"></i>
+                    {{value.label}}
+
+                    <i icon="info-sign" style="opacity: 0.3" ng-show="value.help"></i>
+                    <a ng-show="value.more"
+                       ng-click="showMore = !showMore"
+                       stop-event="click">
+                        <i icon="plus"></i>more
+                    </a>
+                </span>
                 <div ng-if="show">
                     <em>{{value.help}}</em>
+                    <snippets-links links="value.links" ng-if="value.links"></snippets-links>
                 </div>
                 <ul ng-if="showMore">
                     <li ng-repeat="more in value.more | toArray | orderBy: '$key'" uib-tooltip="{{ value.snip }}">
@@ -25,6 +37,7 @@
                         <i icon="info-sign" style="opacity: 0.3" ng-click="show = !show" ng-show="more.help"></i>
                         <div ng-if="show">
                             <em>{{more.help}}</em>
+                            <snippets-links links="more.links" ng-if="more.links"></snippets-links>
                         </div>
                 </ul>
             </li>

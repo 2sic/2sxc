@@ -81,13 +81,37 @@ angular.module("SourceEditor")
                             tree[o.set] = {};
                         if (tree[o.set][o.subset] === undefined)
                             tree[o.set][o.subset] = [];
-                        var reformatted = { "key": o.name, "label": svc.label(o.set, o.subset, o.name), "snip": o.content, "help": o.help || svc.help(o.set, o.subset, o.name) };
+                        var reformatted = {
+                            "key": o.name,
+                            "label": svc.label(o.set, o.subset, o.name),
+                            "snip": o.content,
+                            "help": o.help || svc.help(o.set, o.subset, o.name),
+                            "links": svc.linksList(o.links)
+                        };
 
                         tree[o.set][o.subset].push(reformatted);
                     }
                     return tree;
                 },
                 // #endregion
+
+                // #region links
+                linksList: function prepareLinks(linksString) {
+                    if (!linksString)
+                        return null;
+                    var links = [];
+                    var llist = linksString.split("n");
+                    for (var i = 0; i < llist.length; i++) {
+                        var pair = llist[i].split(":");
+                        if (pair.length === 3) {
+                            links.push({"name": pair[0].trim(), "url": pair[1].trim() + ":"+ pair[2].trim()});
+                        }
+                    }
+                    if (links.length === 0) return null;
+                    return links;
+                },
+
+                // #endregion links
 
                 //#region help / translate
                 help: function help(set, subset, snip) {

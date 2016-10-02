@@ -162,6 +162,18 @@ angular.module('SourceEditor').component('devFiles', {
 }());
 
 
+angular.module('SourceEditor').component('snippetsLinks', {
+    templateUrl: 'source-editor/snippets-links.html',
+    controller: function () {
+        //var vm = this;
+    },
+    controllerAs: "vm",
+    bindings: {
+        links: "<"
+    }
+});
+
+
 angular.module('SourceEditor').component('snippets', {
     templateUrl: 'source-editor/snippets.html',
     controller: function () {
@@ -275,13 +287,37 @@ angular.module("SourceEditor")
                             tree[o.set] = {};
                         if (tree[o.set][o.subset] === undefined)
                             tree[o.set][o.subset] = [];
-                        var reformatted = { "key": o.name, "label": svc.label(o.set, o.subset, o.name), "snip": o.content, "help": o.help || svc.help(o.set, o.subset, o.name) };
+                        var reformatted = {
+                            "key": o.name,
+                            "label": svc.label(o.set, o.subset, o.name),
+                            "snip": o.content,
+                            "help": o.help || svc.help(o.set, o.subset, o.name),
+                            "links": svc.linksList(o.links)
+                        };
 
                         tree[o.set][o.subset].push(reformatted);
                     }
                     return tree;
                 },
                 // #endregion
+
+                // #region links
+                linksList: function prepareLinks(linksString) {
+                    if (!linksString)
+                        return null;
+                    var links = [];
+                    var llist = linksString.split("n");
+                    for (var i = 0; i < llist.length; i++) {
+                        var pair = llist[i].split(":");
+                        if (pair.length === 3) {
+                            links.push({"name": pair[0].trim(), "url": pair[1].trim() + ":"+ pair[2].trim()});
+                        }
+                    }
+                    if (links.length === 0) return null;
+                    return links;
+                },
+
+                // #endregion links
 
                 //#region help / translate
                 help: function help(set, subset, snip) {
@@ -591,8 +627,13 @@ angular.module('SourceEditor').run(['$templateCache', function($templateCache) {
   );
 
 
+  $templateCache.put('source-editor/snippets-links.html',
+    "<div><div ng-repeat=\"link in vm.links\">&gt; <a href={{link.url}} target=_blank>{{link.name}}</a></div></div>"
+  );
+
+
   $templateCache.put('source-editor/snippets.html',
-    "<div><strong translate=SourceEditor.SnippetsSection.Title></strong> <i icon=question-sign style=\"opacity: 0.3\" ng-click=\"showSnippetInfo = !showSnippetInfo\"></i><div ng-if=showSnippetInfo translate=SourceEditor.SnippetsSection.Intro></div></div><select class=input-lg style=\"width: 90%\" ng-model=vm.snippetSet ng-options=\"key as ('SourceEditorSnippets.' + key + '.Title' | translate) for (key , value) in vm.snippets\" uib-tooltip=\"{{ 'SourceEditorSnippets.' + vm.snippetSet + '.Help'  | translate}}\"></select><div>&nbsp;</div><div style=\"height: 500px; overflow: auto\"><div ng-repeat=\"(subsetName, subsetValue) in vm.snippets[vm.snippetSet]\"><strong uib-tooltip=\"{{ 'SourceEditorSnippets.' + vm.snippetSet + '.' + subsetName + '.Help'  | translate}}\">{{ 'SourceEditorSnippets.' + vm.snippetSet + '.' + subsetName + '.Title' | translate}}</strong><ul><li ng-repeat=\"value in subsetValue | toArray | orderBy: '$key'\" uib-tooltip=\"{{ value.snip }}\"><span ng-click=vm.addSnippet(value.snip)>{{value.label}}</span> <a ng-show=value.more ng-click=\"showMore = !showMore\"><i icon=plus></i>more</a> <i icon=info-sign style=\"opacity: 0.3\" ng-click=\"show = !show\" ng-show=value.help></i><div ng-if=show><em>{{value.help}}</em></div><ul ng-if=showMore><li ng-repeat=\"more in value.more | toArray | orderBy: '$key'\" uib-tooltip=\"{{ value.snip }}\"><span ng-click=vm.addSnippet(more.snip)>{{more.label}}</span> <i icon=info-sign style=\"opacity: 0.3\" ng-click=\"show = !show\" ng-show=more.help></i><div ng-if=show><em>{{more.help}}</em></div></li></ul></li></ul></div></div>"
+    "<div><strong translate=SourceEditor.SnippetsSection.Title></strong> <i icon=question-sign style=\"opacity: 0.3\" ng-click=\"showSnippetInfo = !showSnippetInfo\"></i><div ng-if=showSnippetInfo translate=SourceEditor.SnippetsSection.Intro></div></div><select class=input-lg style=\"width: 90%\" ng-model=vm.snippetSet ng-options=\"key as ('SourceEditorSnippets.' + key + '.Title' | translate) for (key , value) in vm.snippets\" uib-tooltip=\"{{ 'SourceEditorSnippets.' + vm.snippetSet + '.Help'  | translate}}\"></select><div>&nbsp;</div><div style=\"height: 500px; overflow: auto\"><div ng-repeat=\"(subsetName, subsetValue) in vm.snippets[vm.snippetSet]\"><strong uib-tooltip=\"{{ 'SourceEditorSnippets.' + vm.snippetSet + '.' + subsetName + '.Help'  | translate}}\">{{ 'SourceEditorSnippets.' + vm.snippetSet + '.' + subsetName + '.Title' | translate}}</strong><ul><li ng-repeat=\"value in subsetValue | toArray | orderBy: '$key'\" uib-tooltip=\"{{ value.snip }}\"><span ng-mouseover=\"showAdd = true\" ng-click=\"show = !show\" ng-mouseout=\"showAdd = false\"><i class=icon-eav-plus-squared ng-click=vm.addSnippet(value.snip) ng-show=showAdd stop-event=click></i> {{value.label}} <i icon=info-sign style=\"opacity: 0.3\" ng-show=value.help></i> <a ng-show=value.more ng-click=\"showMore = !showMore\" stop-event=click><i icon=plus></i>more</a></span><div ng-if=show><em>{{value.help}}</em><snippets-links links=value.links ng-if=value.links></snippets-links></div><ul ng-if=showMore><li ng-repeat=\"more in value.more | toArray | orderBy: '$key'\" uib-tooltip=\"{{ value.snip }}\"><span ng-click=vm.addSnippet(more.snip)>{{more.label}}</span> <i icon=info-sign style=\"opacity: 0.3\" ng-click=\"show = !show\" ng-show=more.help></i><div ng-if=show><em>{{more.help}}</em><snippets-links links=more.links ng-if=more.links></snippets-links></div></li></ul></li></ul></div></div>"
   );
 
 }]);
