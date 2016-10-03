@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using DotNetNuke.Web.Api;
 using ToSic.Eav;
 using ToSic.Eav.DataSources;
@@ -6,22 +7,23 @@ using ToSic.Eav.ValueProvider;
 using ToSic.SexyContent.Adam;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Razor.Helpers;
+using ToSic.SexyContent.WebApi.Dnn;
 
 namespace ToSic.SexyContent.WebApi
 {
 	// disabled - as it is now accessible from many other modules and sometimes without a specific module [SupportedModules("2sxc,2sxc-app")]
     [SxcWebApiExceptionHandling]
-    public abstract class SxcApiController : DnnApiController, IAppAndDataHelpers
+    public abstract class SxcApiController : DnnApiControllerWithFixes, IAppAndDataHelpers
     {
 
-        private AppAndDataHelpers _appAndDataHelpers;
         private AppAndDataHelpers AppAndDataHelpers => _appAndDataHelpers ?? (_appAndDataHelpers = new AppAndDataHelpers(SxcContext));
+        private AppAndDataHelpers _appAndDataHelpers;
 
-        private SxcInstance _instanceContext;
 	    // Sexy object should not be accessible for other assemblies - just internal use
         internal SxcInstance SxcContext => _instanceContext ?? (_instanceContext = Helpers.GetSxcOfApiRequest(Request));
+        private SxcInstance _instanceContext;
 
-	    #region AppAndDataHelpers implementation
+        #region AppAndDataHelpers implementation
 
         public DnnHelper Dnn => AppAndDataHelpers.Dnn;
 
@@ -128,6 +130,5 @@ namespace ToSic.SexyContent.WebApi
         /// <returns>An Adam object for navigating the assets</returns>
         public AdamNavigator AsAdam(IEntity entity, string fieldName) => AppAndDataHelpers.AsAdam(entity, fieldName);
         #endregion
-
     }
 }

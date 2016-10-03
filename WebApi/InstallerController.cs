@@ -8,12 +8,13 @@ using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Api;
 using ToSic.SexyContent.ImportExport;
 using ToSic.SexyContent.Internal;
+using ToSic.SexyContent.WebApi.Dnn;
 
 namespace ToSic.SexyContent.WebApi
 {
     [SupportedModules("2sxc,2sxc-app")]
     [SxcWebApiExceptionHandling]
-    public class InstallerController : DnnApiController
+    public class InstallerController : DnnApiControllerWithFixes// DnnApiController
     {
 
         [HttpGet]

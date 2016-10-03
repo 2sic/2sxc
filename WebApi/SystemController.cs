@@ -9,6 +9,7 @@ using DotNetNuke.Services.Localization;
 using DotNetNuke.Web.Api;
 using ToSic.Eav;
 using ToSic.SexyContent.Internal;
+using ToSic.SexyContent.WebApi.Dnn;
 using Assembly = System.Reflection.Assembly;
 
 namespace ToSic.SexyContent.WebApi
@@ -19,8 +20,8 @@ namespace ToSic.SexyContent.WebApi
 	[SupportedModules("2sxc,2sxc-app")]
     [SxcWebApiExceptionHandling]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public class SystemController : DnnApiController
-	{
+    public class SystemController : DnnApiControllerWithFixes//DnnApiController
+    {
 
 	    [HttpGet]
 	    public dynamic GetLanguages()

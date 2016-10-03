@@ -10,10 +10,11 @@ using System.Web.Http;
 using System.Xml.Linq;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.ImportExport;
+using ToSic.SexyContent.WebApi.Dnn;
 
 namespace ToSic.SexyContent.WebApi
 {
-    public class ImportExportController : DnnApiController
+    public class ImportExportController : DnnApiControllerWithFixes//DnnApiController
     {
 
         [HttpGet]

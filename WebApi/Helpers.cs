@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Web;
 using DotNetNuke.Common.Utilities;
 using DotNetNuke.Web.Api;
 using ToSic.SexyContent.ContentBlock;
@@ -58,7 +60,7 @@ namespace ToSic.SexyContent.WebApi
             if (request.Headers.Contains(cbidHeader)) { 
                 var cbidh = request.Headers.GetValues(cbidHeader).FirstOrDefault();
                 int cbid;
-                int.TryParse(cbidh, out cbid);
+                Int32.TryParse(cbidh, out cbid);
                 if (cbid < 0)   // negative id, so it's an inner block
                     contentBlock = new EntityContentBlock(contentBlock, cbid);
             }
@@ -66,5 +68,13 @@ namespace ToSic.SexyContent.WebApi
             return contentBlock.SxcInstance;
         }
 
+
+        internal static void RemoveLanguageChangingCookie()
+        {
+            // this is to fix a dnn-bug, which adds a cookie to set the language
+            // but always defaults to the main language, which is simply wrong. 
+            var cookies = System.Web.HttpContext.Current?.Response.Cookies;
+            cookies?.Remove("language"); // try to remove, otherwise no exception will be thrown
+        }
     }
 }

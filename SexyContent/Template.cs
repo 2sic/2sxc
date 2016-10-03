@@ -19,7 +19,7 @@ namespace ToSic.SexyContent
 
 		public int TemplateId => _templateEntity.EntityId;
 
-        public string Name => (string)_templateEntity.GetBestValue("Name", new [] { Thread.CurrentThread.CurrentCulture.Name});
+        public string Name => (string)_templateEntity.GetBestValue("Name", new [] { Thread.CurrentThread.CurrentUICulture.Name});
         public string Path => (string) _templateEntity.GetBestValue("Path");
 
         public string ContentTypeStaticName => (string)_templateEntity.GetBestValue("ContentTypeStaticName");
