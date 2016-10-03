@@ -18,7 +18,8 @@
 
 angular.module('SourceEditor').component('devFiles', {
     templateUrl: 'source-editor/dev-files.html',
-    controller: function (appAssetsSvc, appId) {
+    /*@ngInject*/
+    controller: ["appAssetsSvc", "appId", function (appAssetsSvc, appId) {
         var vm = angular.extend(this, {
             show: false,
             svc: appAssetsSvc(appId),
@@ -51,7 +52,7 @@ angular.module('SourceEditor').component('devFiles', {
             }
         });
 
-    },
+    }],
     controllerAs: "vm",
     bindings: {
         fileName: "<",
@@ -66,8 +67,8 @@ angular.module("SourceEditor").component("editor", {
     controllerAs: "vm"
 });
 
+    /*@ngInject*/
 function EditorController(sourceSvc, snippetSvc, appAssetsSvc, appId, sxcDialogs, items, $uibModalInstance, $window, $scope, $translate, saveToastr, ctrlS, debugState) {
-
     // todo: must re-think this, nicer would be if it's a proper parameter
     var item = items[0];
 
@@ -163,6 +164,7 @@ function EditorController(sourceSvc, snippetSvc, appAssetsSvc, appId, sxcDialogs
     };
 
 }
+EditorController.$inject = ["sourceSvc", "snippetSvc", "appAssetsSvc", "appId", "sxcDialogs", "items", "$uibModalInstance", "$window", "$scope", "$translate", "saveToastr", "ctrlS", "debugState"];
 
 
 }());
@@ -170,6 +172,7 @@ function EditorController(sourceSvc, snippetSvc, appAssetsSvc, appId, sxcDialogs
 
 angular.module('SourceEditor').component('snippetsLinks', {
     templateUrl: 'source-editor/snippets-links.html',
+    /*@ngInject*/
     controller: function () {
         //var vm = this;
     },
@@ -182,6 +185,7 @@ angular.module('SourceEditor').component('snippetsLinks', {
 
 angular.module('SourceEditor').component('snippets', {
     templateUrl: 'source-editor/snippets.html',
+    /*@ngInject*/
     controller: function () {
         var vm = this;
 

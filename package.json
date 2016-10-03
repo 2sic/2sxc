@@ -27,7 +27,7 @@
   "homepage": "https://github.com/2sic/2sxc",
   "devDependencies": {
     "grunt": "0.4.5",
-    "grunt-ng-annotate": "1.0.1",
+    "grunt-ng-annotate": "2.0.2",
     "grunt-contrib-jasmine": "^0.9.1",
     "grunt-contrib-jshint": "^0.11.2",
     "grunt-contrib-watch": "^0.6.1",

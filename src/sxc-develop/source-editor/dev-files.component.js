@@ -2,6 +2,7 @@
 
 angular.module('SourceEditor').component('devFiles', {
     templateUrl: 'source-editor/dev-files.html',
+    /*@ngInject*/
     controller: function (appAssetsSvc, appId) {
         var vm = angular.extend(this, {
             show: false,

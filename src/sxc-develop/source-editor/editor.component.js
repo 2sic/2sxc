@@ -6,8 +6,8 @@ angular.module("SourceEditor").component("editor", {
     controllerAs: "vm"
 });
 
+    /*@ngInject*/
 function EditorController(sourceSvc, snippetSvc, appAssetsSvc, appId, sxcDialogs, items, $uibModalInstance, $window, $scope, $translate, saveToastr, ctrlS, debugState) {
-
     // todo: must re-think this, nicer would be if it's a proper parameter
     var item = items[0];
 

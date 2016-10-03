@@ -2,6 +2,7 @@
 
 angular.module('SourceEditor').component('snippets', {
     templateUrl: 'source-editor/snippets.html',
+    /*@ngInject*/
     controller: function () {
         var vm = this;
 
