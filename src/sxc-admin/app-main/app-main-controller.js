@@ -1,4 +1,4 @@
-(function() { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
+(function() { 
 
     angular.module("MainSxcApp", [
             "EavConfiguration", // config

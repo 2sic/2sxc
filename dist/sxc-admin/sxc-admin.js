@@ -1,4 +1,4 @@
-(function() { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
+(function() { 
 
     angular.module("MainSxcApp", [
             "EavConfiguration", // config
@@ -154,9 +154,11 @@
             sxcDialogs.openAppImport(vm.refresh);
         };
 
+        // export is disabled for now, because it actually doesn't use the id given here, but the 
+        // original appId - part of #887
         vm.export = function exp(item) {
             var resolve = eavAdminDialogs.CreateResolve({
-                appId: appId
+                appId: item.Id
             });
             return eavAdminDialogs.OpenModal(
                 "importexport/export-app.html",
@@ -1329,7 +1331,7 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
     "\n" +
     "Id: {{item.Id}}\r" +
     "\n" +
-    "Guid: {{item.Guid}}\">{{item.Name}}</span></td><td class=clickable>{{item.Folder}}</td><td><span icon=\"{{ item.IsHidden ? 'eye-close' : 'eye-open' }}\"></span></td><td stop-event=click><button icon=export class=\"btn btn-xs\" type=button ng-click=vm.export(item)></button> <button icon=remove ng-disabled={{!item.IsApp}} type=button class=\"btn btn-xs\" ng-click=vm.tryToDelete(item)></button></td></tr><tr ng-if=!vm.items.length><td colspan=100 translate=General.Messages.NothingFound></td></tr></tbody></table></div></div>"
+    "Guid: {{item.Guid}}\">{{item.Name}}</span></td><td class=clickable>{{item.Folder}}</td><td><span icon=\"{{ item.IsHidden ? 'eye-close' : 'eye-open' }}\"></span></td><td stop-event=click><button icon=remove ng-disabled={{!item.IsApp}} type=button class=\"btn btn-xs\" ng-click=vm.tryToDelete(item)></button></td></tr><tr ng-if=!vm.items.length><td colspan=100 translate=General.Messages.NothingFound></td></tr></tbody></table></div></div>"
   );
 
 

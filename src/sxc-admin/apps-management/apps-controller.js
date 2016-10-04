@@ -75,9 +75,11 @@
             sxcDialogs.openAppImport(vm.refresh);
         };
 
+        // export is disabled for now, because it actually doesn't use the id given here, but the 
+        // original appId - part of #887
         vm.export = function exp(item) {
             var resolve = eavAdminDialogs.CreateResolve({
-                appId: appId
+                appId: item.Id
             });
             return eavAdminDialogs.OpenModal(
                 "importexport/export-app.html",
