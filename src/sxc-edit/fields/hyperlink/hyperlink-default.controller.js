@@ -12,6 +12,7 @@
                 controller: "FieldTemplate-HyperlinkCtrl as vm"
             });
         })
+        /*@ngInject*/
         .controller("FieldTemplate-HyperlinkCtrl", function ($uibModal, $scope, $http, sxc, adamSvc, debugState, dnnBridgeSvc, fileType) {
 
             var vm = this;

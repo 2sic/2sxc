@@ -21,6 +21,7 @@
 	})
 
 
+    /*@ngInject*/
 	.controller("FieldTemplate-WysiwygCtrl", function ($scope) {
 
 		var vm = this;

@@ -8,7 +8,8 @@
             "pascalprecht.translate",
             "ui.ace"
         ])
-        .config(["$translatePartialLoaderProvider", function($translatePartialLoaderProvider) {
+        /*@ngInject*/
+        .config(["$translatePartialLoaderProvider", function ($translatePartialLoaderProvider) {
             // ensure the language pack is loaded
             $translatePartialLoaderProvider.addPart("source-editor-snippets");
         }]);
@@ -67,7 +68,7 @@ angular.module("SourceEditor").component("editor", {
     controllerAs: "vm"
 });
 
-    /*@ngInject*/
+/*@ngInject*/
 function EditorController(sourceSvc, snippetSvc, appAssetsSvc, appId, sxcDialogs, items, $uibModalInstance, $window, $scope, $translate, saveToastr, ctrlS, debugState) {
     // todo: must re-think this, nicer would be if it's a proper parameter
     var item = items[0];
@@ -216,6 +217,7 @@ angular.module('SourceEditor').component('snippets', {
 });
 // This service delivers all snippets, translated etc. to the sourc-editor UI
 angular.module("SourceEditor")
+    /*@ngInject*/
     .factory("snippetSvc", ["$http", "eavConfig", "svcCreator", "$translate", "contentTypeFieldSvc", "$q", function ($http, eavConfig, svcCreator, $translate, contentTypeFieldSvc, $q) {
 
         // Construct a service for this specific appId
@@ -502,7 +504,8 @@ angular.module("SourceEditor")
     }]);
 
 angular.module("SourceEditor")
-    .factory("sourceSvc", ["$http", function($http) {
+    /*@ngInject*/
+    .factory("sourceSvc", ["$http", function ($http) {
 
         // Construct a service for this specific appId
         return function createSvc(key) {

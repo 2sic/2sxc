@@ -2,7 +2,8 @@
     /* jshint laxbreak:true*/
 
     angular.module("Adam", [])
-        .directive("adamHint", function() {
+        /*@ngInject*/
+        .directive("adamHint", function () {
             return {
                 restrict: "E",
                 replace: false,

@@ -8,7 +8,8 @@
             "pascalprecht.translate",
             "ui.ace"
         ])
-        .config(function($translatePartialLoaderProvider) {
+        /*@ngInject*/
+        .config(function ($translatePartialLoaderProvider) {
             // ensure the language pack is loaded
             $translatePartialLoaderProvider.addPart("source-editor-snippets");
         });

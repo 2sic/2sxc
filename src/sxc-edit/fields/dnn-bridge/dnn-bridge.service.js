@@ -1,6 +1,7 @@
 // This is the service which allows opening dnn-bridge dialogs and processes the results
 
 angular.module("sxcFieldTemplates")
+    /*@ngInject*/
     .factory("dnnBridgeSvc", function ($uibModal, $http, promiseToastr, eavConfig, sxc) {
         var svc = {};
         svc.open = function open(type, oldValue, params, callback) {
@@ -19,6 +20,8 @@ angular.module("sxcFieldTemplates")
 
             connector.params.CurrentValue = oldValue;
 
+            console.log("before open");
+            console.log($uibModal);
             connector.modalInstance = $uibModal.open({
                 templateUrl: "fields/dnn-bridge/hyperlink-default-" + template + ".html",
                 resolve: {
@@ -26,11 +29,13 @@ angular.module("sxcFieldTemplates")
                         return connector;
                     }
                 },
+                /*@ngInject*/
                 controller: function ($scope, bridge) {
                     $scope.bridge = bridge;
                 },
                 windowClass: "sxc-dialog-filemanager"
             });
+            console.log("after open");
 
             return connector.modalInstance;
         };

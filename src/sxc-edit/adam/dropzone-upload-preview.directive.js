@@ -1,7 +1,8 @@
 ﻿(function() {
     /* jshint laxbreak:true*/
     angular.module("Adam")
-        .directive("dropzoneUploadPreview", function() {
+        /*@ngInject*/
+        .directive("dropzoneUploadPreview", function () {
             return {
                 restrict: "E",
                 templateUrl: "adam/dropzone-upload-preview.html",

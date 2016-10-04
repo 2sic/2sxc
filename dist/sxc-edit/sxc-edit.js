@@ -12,7 +12,8 @@
     /* jshint laxbreak:true*/
 
     angular.module("Adam", [])
-        .directive("adamHint", function() {
+        /*@ngInject*/
+        .directive("adamHint", function () {
             return {
                 restrict: "E",
                 replace: false,
@@ -22,7 +23,8 @@
         });
 })();
 angular.module("Adam")
-    .factory("adamSvc", ["$http", "eavConfig", "sxc", "svcCreator", "appRoot", function($http, eavConfig, sxc, svcCreator, appRoot) {
+    /*@ngInject*/
+    .factory("adamSvc", ["$http", "eavConfig", "sxc", "svcCreator", "appRoot", function ($http, eavConfig, sxc, svcCreator, appRoot) {
 
         // Construct a service for this specific appId
         return function createSvc(contentType, entityGuid, field, subfolder) {
@@ -109,6 +111,7 @@ angular.module("Adam")
     // The controller for the main form directive
     app.controller("BrowserController", BrowserController);
     
+    /*@ngInject*/
     function BrowserController($scope, adamSvc, debugState, eavConfig, eavAdminDialogs, appRoot, fileType) {
         var vm = this;
         vm.debug = debugState;
@@ -284,7 +287,8 @@ angular.module("Adam")
     /* jshint laxbreak:true*/
 
     angular.module("Adam")
-        .directive("adamBrowser", function() {
+        /*@ngInject*/
+        .directive("adamBrowser", function () {
             return {
                 restrict: "E",
                 templateUrl: "adam/browser.html",
@@ -330,7 +334,8 @@ angular.module("Adam")
 (function() {
     /* jshint laxbreak:true*/
     angular.module("Adam")
-        .directive("dropzoneUploadPreview", function() {
+        /*@ngInject*/
+        .directive("dropzoneUploadPreview", function () {
             return {
                 restrict: "E",
                 templateUrl: "adam/dropzone-upload-preview.html",
@@ -342,6 +347,7 @@ angular.module("Adam")
 /* js/fileAppDirectives */
 (function() {
     angular.module("Adam")
+        /*@ngInject*/
         .directive("dropzone", ["sxc", "tabId", "AppInstanceId", "ContentBlockId", "dragClass", "adamSvc", "$timeout", "$translate", function (sxc, tabId, AppInstanceId, ContentBlockId, dragClass, adamSvc, $timeout, $translate) {
 
             return {
@@ -431,7 +437,7 @@ angular.module("Adam")
                 }, 0);
             }
 
-
+            /*@ngInject*/
             function controller() {
                 var vm = this;
                 vm.adam = {
@@ -471,6 +477,7 @@ angular.module("Adam")
 // This is the service which allows opening dnn-bridge dialogs and processes the results
 
 angular.module("sxcFieldTemplates")
+    /*@ngInject*/
     .factory("dnnBridgeSvc", ["$uibModal", "$http", "promiseToastr", "eavConfig", "sxc", function ($uibModal, $http, promiseToastr, eavConfig, sxc) {
         var svc = {};
         svc.open = function open(type, oldValue, params, callback) {
@@ -489,6 +496,8 @@ angular.module("sxcFieldTemplates")
 
             connector.params.CurrentValue = oldValue;
 
+            console.log("before open");
+            console.log($uibModal);
             connector.modalInstance = $uibModal.open({
                 templateUrl: "fields/dnn-bridge/hyperlink-default-" + template + ".html",
                 resolve: {
@@ -496,11 +505,13 @@ angular.module("sxcFieldTemplates")
                         return connector;
                     }
                 },
-                controller: function ($scope, bridge) {
+                /*@ngInject*/
+                controller: ["$scope", "bridge", function ($scope, bridge) {
                     $scope.bridge = bridge;
-                },
+                }],
                 windowClass: "sxc-dialog-filemanager"
             });
+            console.log("after open");
 
             return connector.modalInstance;
         };
@@ -537,6 +548,7 @@ angular.module("sxcFieldTemplates")
 	angular.module("sxcFieldTemplates")
 
 
+    /*@ngInject*/
 	.directive("webFormsBridge", ["sxc", "portalRoot", function (sxc, portalRoot) {
 	    var webFormsBridgeUrl = portalRoot + "Default.aspx?tabid=" + $2sxc.urlParams.require("tid") + "&ctl=webformsbridge&mid=" + sxc.id + "&dnnprintmode=true&SkinSrc=%5bG%5dSkins%2f_default%2fNo+Skin&ContainerSrc=%5bG%5dContainers%2f_default%2fNo+Container"; //"&popUp=true";
 
@@ -604,6 +616,7 @@ angular.module("sxcFieldTemplates")
                 controller: "FieldTemplate-EntityContentBlockCtrl"
             });
         }])
+        /*@ngInject*/
         .controller("FieldTemplate-EntityContentBlockCtrl", ["$controller", "$scope", "$http", "$filter", "$translate", "$uibModal", "appId", "eavAdminDialogs", "eavDefaultValueService", function($controller, $scope, $http, $filter, $translate, $uibModal, appId, eavAdminDialogs, eavDefaultValueService) {
             // use "inherited" controller just like described in http://stackoverflow.com/questions/18461263/can-an-angularjs-controller-inherit-from-another-controller-in-the-same-module
             $controller('FieldTemplate-EntityCtrl', { $scope: $scope });
@@ -628,6 +641,7 @@ angular.module("sxcFieldTemplates")
                 controller: "FieldTemplate-HyperlinkCtrl as vm"
             });
         }])
+        /*@ngInject*/
         .controller("FieldTemplate-HyperlinkCtrl", ["$uibModal", "$scope", "$http", "sxc", "adamSvc", "debugState", "dnnBridgeSvc", "fileType", function ($uibModal, $scope, $http, sxc, adamSvc, debugState, dnnBridgeSvc, fileType) {
 
             var vm = this;
@@ -742,7 +756,8 @@ angular.module("sxcFieldTemplates")
             });
 
         }])
-        .controller("FieldTemplate-Library", ["$uibModal", "$scope", "$http", "sxc", "adamSvc", "debugState", function($uibModal, $scope, $http, sxc, adamSvc, debugState) {
+        /*@ngInject*/
+        .controller("FieldTemplate-Library", ["$uibModal", "$scope", "$http", "sxc", "adamSvc", "debugState", function ($uibModal, $scope, $http, sxc, adamSvc, debugState) {
 
             var vm = this;
             vm.debug = debugState;
@@ -784,6 +799,7 @@ angular.module("sxcFieldTemplates")
         });
 
     }])
+    /*@ngInject*/
     .controller("FieldTemplate-String-Font-Icon-Picker", ["$scope", "debugState", "$ocLazyLoad", "appRoot", function ($scope, debugState, $ocLazyLoad, appRoot) {
         var vm = angular.extend(this, {
             iconFilter: "", // used for in-line search
@@ -914,7 +930,8 @@ angular.module("sxcFieldTemplates")
         });
 
     }])
-    .controller("FieldTemplate-String-TemplatePicker", ["$scope", "appAssetsSvc", "appId", "fieldMask", function($scope, appAssetsSvc, appId, fieldMask) { 
+    /*@ngInject*/
+    .controller("FieldTemplate-String-TemplatePicker", ["$scope", "appAssetsSvc", "appId", "fieldMask", function ($scope, appAssetsSvc, appId, fieldMask) {
 
         function activate() {
             // ensure settings are merged
@@ -1063,6 +1080,7 @@ angular.module("sxcFieldTemplates")
 	}])
 
 
+    /*@ngInject*/
 	.controller("FieldTemplate-WysiwygCtrl", ["$scope", function ($scope) {
 
 		var vm = this;
@@ -1137,6 +1155,7 @@ angular.module("sxcFieldTemplates")
     // these are the sizes we can auto-resize to
     var imgSizes = [100, 75, 70, 66, 60, 50, 40, 33, 30, 25, 10];
 
+    /*@ngInject*/
     function FieldWysiwygTinyMceController($scope, dnnBridgeSvc, languages, $translate) {
         var vm = this;
 

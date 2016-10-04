@@ -13,6 +13,7 @@ angular.module("sxcFieldTemplates")
         });
 
     })
+    /*@ngInject*/
     .controller("FieldTemplate-String-Font-Icon-Picker", function ($scope, debugState, $ocLazyLoad, appRoot) {
         var vm = angular.extend(this, {
             iconFilter: "", // used for in-line search

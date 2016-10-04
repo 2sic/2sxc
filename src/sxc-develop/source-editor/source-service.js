@@ -1,6 +1,7 @@
 
 angular.module("SourceEditor")
-    .factory("sourceSvc", function($http) {
+    /*@ngInject*/
+    .factory("sourceSvc", function ($http) {
 
         // Construct a service for this specific appId
         return function createSvc(key) {

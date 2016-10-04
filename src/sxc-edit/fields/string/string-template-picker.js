@@ -13,7 +13,8 @@ angular.module("sxcFieldTemplates")
         });
 
     })
-    .controller("FieldTemplate-String-TemplatePicker", function($scope, appAssetsSvc, appId, fieldMask) { 
+    /*@ngInject*/
+    .controller("FieldTemplate-String-TemplatePicker", function ($scope, appAssetsSvc, appId, fieldMask) {
 
         function activate() {
             // ensure settings are merged

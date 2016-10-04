@@ -14,7 +14,8 @@
             });
 
         })
-        .controller("FieldTemplate-Library", function($uibModal, $scope, $http, sxc, adamSvc, debugState) {
+        /*@ngInject*/
+        .controller("FieldTemplate-Library", function ($uibModal, $scope, $http, sxc, adamSvc, debugState) {
 
             var vm = this;
             vm.debug = debugState;

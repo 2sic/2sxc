@@ -7,6 +7,7 @@
     // The controller for the main form directive
     app.controller("BrowserController", BrowserController);
     
+    /*@ngInject*/
     function BrowserController($scope, adamSvc, debugState, eavConfig, eavAdminDialogs, appRoot, fileType) {
         var vm = this;
         vm.debug = debugState;

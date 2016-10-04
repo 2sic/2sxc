@@ -11,6 +11,7 @@
                 controller: "FieldTemplate-EntityContentBlockCtrl"
             });
         })
+        /*@ngInject*/
         .controller("FieldTemplate-EntityContentBlockCtrl", function($controller, $scope, $http, $filter, $translate, $uibModal, appId, eavAdminDialogs, eavDefaultValueService) {
             // use "inherited" controller just like described in http://stackoverflow.com/questions/18461263/can-an-angularjs-controller-inherit-from-another-controller-in-the-same-module
             $controller('FieldTemplate-EntityCtrl', { $scope: $scope });

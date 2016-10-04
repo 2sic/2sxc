@@ -1,5 +1,6 @@
 angular.module("Adam")
-    .factory("adamSvc", function($http, eavConfig, sxc, svcCreator, appRoot) {
+    /*@ngInject*/
+    .factory("adamSvc", function ($http, eavConfig, sxc, svcCreator, appRoot) {
 
         // Construct a service for this specific appId
         return function createSvc(contentType, entityGuid, field, subfolder) {

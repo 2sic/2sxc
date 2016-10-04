@@ -1,6 +1,7 @@
 ﻿/* js/fileAppDirectives */
 (function() {
     angular.module("Adam")
+        /*@ngInject*/
         .directive("dropzone", function (sxc, tabId, AppInstanceId, ContentBlockId, dragClass, adamSvc, $timeout, $translate) {
 
             return {
@@ -90,7 +91,7 @@
                 }, 0);
             }
 
-
+            /*@ngInject*/
             function controller() {
                 var vm = this;
                 vm.adam = {

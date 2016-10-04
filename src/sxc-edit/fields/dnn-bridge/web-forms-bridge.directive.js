@@ -7,6 +7,7 @@
 	angular.module("sxcFieldTemplates")
 
 
+    /*@ngInject*/
 	.directive("webFormsBridge", function (sxc, portalRoot) {
 	    var webFormsBridgeUrl = portalRoot + "Default.aspx?tabid=" + $2sxc.urlParams.require("tid") + "&ctl=webformsbridge&mid=" + sxc.id + "&dnnprintmode=true&SkinSrc=%5bG%5dSkins%2f_default%2fNo+Skin&ContainerSrc=%5bG%5dContainers%2f_default%2fNo+Container"; //"&popUp=true";
 

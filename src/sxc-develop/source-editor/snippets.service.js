@@ -1,5 +1,6 @@
 // This service delivers all snippets, translated etc. to the sourc-editor UI
 angular.module("SourceEditor")
+    /*@ngInject*/
     .factory("snippetSvc", function ($http, eavConfig, svcCreator, $translate, contentTypeFieldSvc, $q) {
 
         // Construct a service for this specific appId

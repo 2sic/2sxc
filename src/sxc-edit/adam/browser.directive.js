@@ -2,7 +2,8 @@
     /* jshint laxbreak:true*/
 
     angular.module("Adam")
-        .directive("adamBrowser", function() {
+        /*@ngInject*/
+        .directive("adamBrowser", function () {
             return {
                 restrict: "E",
                 templateUrl: "adam/browser.html",

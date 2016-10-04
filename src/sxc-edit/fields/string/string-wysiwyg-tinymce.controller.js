@@ -41,6 +41,7 @@
     // these are the sizes we can auto-resize to
     var imgSizes = [100, 75, 70, 66, 60, 50, 40, 33, 30, 25, 10];
 
+    /*@ngInject*/
     function FieldWysiwygTinyMceController($scope, dnnBridgeSvc, languages, $translate) {
         var vm = this;
 
