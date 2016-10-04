@@ -1,6 +1,7 @@
 
 angular.module("SxcServices")
-    .factory("contentGroupSvc", function($http, eavConfig, svcCreator, $resource) {
+    /*@ngInject*/
+    .factory("contentGroupSvc", function ($http) {
 
         // Construct a service for this specific appId
         return function createSvc(appId) {

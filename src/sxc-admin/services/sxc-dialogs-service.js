@@ -15,6 +15,7 @@ angular.module("SxcAdminUi", [
     "EavAdminUi", // dialog (modal) controller
 ])
 
+    /*@ngInject*/
     .factory("sxcDialogs", function ($uibModal, eavAdminDialogs) {
         var svc = {};
 

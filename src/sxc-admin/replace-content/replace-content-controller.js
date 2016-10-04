@@ -6,6 +6,7 @@
         ])
         .controller("ReplaceDialog", ReplaceContentController);
 
+    /*@ngInject*/
     function ReplaceContentController(appId, item, contentGroupSvc, eavAdminDialogs, $uibModalInstance, $filter) {
         var vm = this;
         vm.options = [];

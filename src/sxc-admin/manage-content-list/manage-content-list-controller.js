@@ -5,13 +5,15 @@
             "EavAdminUi" // dialog (modal) controller
     ])
 
-        .config(function($translatePartialLoaderProvider) {
+        /*@ngInject*/
+        .config(function ($translatePartialLoaderProvider) {
             // ensure the language pack is loaded
             $translatePartialLoaderProvider.addPart("inpage");
         })
 
         .controller("ManageContentList", ManageContentController);
 
+    /*@ngInject*/
     function ManageContentController(appId, item, contentGroupSvc, eavAdminDialogs, $uibModalInstance, $translate) {
         var vm = this;
         vm.items = [];

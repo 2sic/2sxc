@@ -11,25 +11,31 @@
 
 //(function () {
     angular.module("InitSxcParametersFromUrl", ["2sxc4ng"])
-        .factory("dialog", function($2sxc) {
+        /*@ngInject*/
+        .factory("dialog", function ($2sxc) {
             return $2sxc.urlParams.get("dialog");
         })
-        .factory("tabId", function($2sxc) {
+        /*@ngInject*/
+        .factory("tabId", function ($2sxc) {
             return $2sxc.urlParams.get("tid");
         })
-
+        /*@ngInject*/
         .factory("websiteRoot", function ($2sxc) {
             return $2sxc.urlParams.get("websiteroot");
         })
+        /*@ngInject*/
         .factory("systemRoot", function (websiteRoot) {
             return websiteRoot + "desktopmodules/tosic_sexycontent/";
         })
+        /*@ngInject*/
         .factory("portalRoot", function ($2sxc) {
             return $2sxc.urlParams.get("portalroot");
         })
+        /*@ngInject*/
         .factory("appRoot", function ($2sxc) {
                 return $2sxc.urlParams.get("appRoot");
         })
+        /*@ngInject*/
         .factory("items", function ($2sxc) {
                 var found = $2sxc.urlParams.get("items");
                 if (found)

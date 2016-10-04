@@ -11,6 +11,7 @@
         .controller("LanguageSettings", LanguagesSettingsController)
         ;
 
+    /*@ngInject*/
     function LanguagesSettingsController(languagesSvc, eavConfig, appId) {
         var vm = this;
         var svc = languagesSvc();

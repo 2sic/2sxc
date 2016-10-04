@@ -5,6 +5,7 @@
         ;
 
 
+    /*@ngInject*/
     function ExportContentController(ExportContentService, eavAdminDialogs, eavConfig, debugState, $uibModalInstance, $filter) {
         var vm = this;
 

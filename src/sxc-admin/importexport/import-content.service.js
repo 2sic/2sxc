@@ -5,6 +5,7 @@
     ;
 
 
+    /*@ngInject*/
     function ImportContentService(appId, zoneId, eavConfig, $http, $q) {
         var srvc = {
             importContent: importContent

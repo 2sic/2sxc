@@ -5,6 +5,7 @@
     ;
 
 
+    /*@ngInject*/
     function ImportContentController(ImportContentService, eavAdminDialogs, eavConfig, $uibModalInstance) {
         var vm = this;
 

@@ -8,6 +8,7 @@
         "EavAdminUi",           // dialog (modal) controller
         "SxcAdminUi"
     ])
+        /*@ngInject*/
         .config(function ($translatePartialLoaderProvider) {
             // ensure the language pack is loaded
             $translatePartialLoaderProvider.addPart("sxc-admin");
@@ -16,6 +17,7 @@
         .controller("AppList", AppListController)
         ;
 
+    /*@ngInject*/
     function AppListController(appsSvc, eavAdminDialogs, sxcDialogs, eavConfig, appSettings, appId, zoneId, $uibModalInstance, $translate) {
         var vm = this;
 

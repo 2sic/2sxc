@@ -95,7 +95,8 @@ angular.module('SxcInpageTemplates', []).run(['$templateCache', function($templa
             "EavConfiguration",
             "ui.bootstrap"
         ])
-        .config(["$translatePartialLoaderProvider", function($translatePartialLoaderProvider) {
+        /*@ngInject*/
+        .config(["$translatePartialLoaderProvider", function ($translatePartialLoaderProvider) {
             $translatePartialLoaderProvider.addPart("sxc-admin");
         }])
     ;
@@ -104,7 +105,8 @@ angular.module('SxcInpageTemplates', []).run(['$templateCache', function($templa
 (function () {
     var module = angular.module("2sxc.view");
 
-    module.factory("moduleApiService", ["$http", function($http) {
+    /*@ngInject*/
+    module.factory("moduleApiService", ["$http", function ($http) {
         return {
 
             //saveTemplate: function (templateId, forceCreateContentGroup, newTemplateChooserState) {
@@ -176,6 +178,7 @@ angular.module('SxcInpageTemplates', []).run(['$templateCache', function($templa
 (function () {
     var module = angular.module("2sxc.view");
 
+    /*@ngInject*/
     module.factory("contentBlockLink", function () {
         return function (vm) {
             // will generate an object necessary to communicate with the outer system
@@ -193,7 +196,8 @@ angular.module('SxcInpageTemplates', []).run(['$templateCache', function($templa
         };
     });
 
-    module.controller("TemplateSelectorCtrl", ["$scope", "$interval", "moduleApiService", "AppInstanceId", "sxc", "$filter", "$q", "$window", "$translate", "$sce", "contentBlockLink", "$http", function($scope, $interval, moduleApiService, AppInstanceId, sxc, $filter, $q, $window, $translate, $sce, contentBlockLink, $http) {
+    /*@ngInject*/
+    module.controller("TemplateSelectorCtrl", ["$scope", "$interval", "moduleApiService", "AppInstanceId", "sxc", "$filter", "$q", "$window", "$translate", "$sce", "contentBlockLink", "$http", function ($scope, $interval, moduleApiService, AppInstanceId, sxc, $filter, $q, $window, $translate, $sce, contentBlockLink, $http) {
         //#region constants
         var cViewWithoutContent = "_LayoutElement"; // needed to differentiate the "select item" from the "empty-is-selected" which are both empty
         var cAppActionManage = -2, cAppActionImport = -1, cAppActionCreate = -3;

@@ -7,7 +7,8 @@
             "EavConfiguration",
             "ui.bootstrap"
         ])
-        .config(function($translatePartialLoaderProvider) {
+        /*@ngInject*/
+        .config(function ($translatePartialLoaderProvider) {
             $translatePartialLoaderProvider.addPart("sxc-admin");
         })
     ;

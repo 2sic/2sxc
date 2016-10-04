@@ -19,6 +19,7 @@
 
     }
 
+    /*@ngInject*/
     function DialogHostController(zoneId, appId, items, $2sxc, dialog, sxcDialogs, contentTypeName, eavAdminDialogs, $ocLazyLoad) {
         var vm = this;
         vm.dialog = dialog;

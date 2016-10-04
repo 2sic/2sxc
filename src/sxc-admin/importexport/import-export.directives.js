@@ -5,6 +5,7 @@
         .directive("sxcFileInput", FileInputDirective)
         ;
 
+    /*@ngInject*/
     function FileReadDirective() {
         return {
             scope: {

@@ -1,6 +1,7 @@
 ﻿(function () {
     var module = angular.module("2sxc.view");
 
+    /*@ngInject*/
     module.factory("contentBlockLink", function () {
         return function (vm) {
             // will generate an object necessary to communicate with the outer system
@@ -18,7 +19,8 @@
         };
     });
 
-    module.controller("TemplateSelectorCtrl", function($scope, $interval, moduleApiService, AppInstanceId, sxc, $filter, $q, $window, $translate, $sce, contentBlockLink, $http) {
+    /*@ngInject*/
+    module.controller("TemplateSelectorCtrl", function ($scope, $interval, moduleApiService, AppInstanceId, sxc, $filter, $q, $window, $translate, $sce, contentBlockLink, $http) {
         //#region constants
         var cViewWithoutContent = "_LayoutElement"; // needed to differentiate the "select item" from the "empty-is-selected" which are both empty
         var cAppActionManage = -2, cAppActionImport = -1, cAppActionCreate = -3;

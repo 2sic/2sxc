@@ -1,7 +1,8 @@
 ﻿(function () {
     var module = angular.module("2sxc.view");
 
-    module.factory("moduleApiService", function($http) {
+    /*@ngInject*/
+    module.factory("moduleApiService", function ($http) {
         return {
 
             //saveTemplate: function (templateId, forceCreateContentGroup, newTemplateChooserState) {

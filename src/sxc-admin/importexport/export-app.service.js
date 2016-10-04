@@ -4,6 +4,7 @@
     ;
 
 
+    /*@ngInject*/
     function ExportAppService(appId, zoneId, eavConfig, $http, $q) {
         var srvc = {
             getAppInfo: getAppInfo,

@@ -10,6 +10,7 @@
         .controller("WebApiMain", WebApiMainController)
         ;
 
+    /*@ngInject*/
     function WebApiMainController(appId, webApiSvc, eavAdminDialogs, $uibModalInstance, $translate) {
         var vm = this;
         

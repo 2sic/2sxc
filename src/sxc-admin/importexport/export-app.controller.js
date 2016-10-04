@@ -5,6 +5,7 @@
         ;
   
 
+    /*@ngInject*/
     function ExportAppController(ExportAppService, eavAdminDialogs, debugState, eavConfig, $uibModalInstance) {
         var vm = this;
         vm.debug = debugState;

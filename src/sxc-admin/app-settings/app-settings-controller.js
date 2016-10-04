@@ -10,6 +10,7 @@
         .controller("AppSettings", AppSettingsController)
         ;
 
+    /*@ngInject*/
     function AppSettingsController(appSettings, appId) {
         var vm = this;
         var svc = appSettings(appId);

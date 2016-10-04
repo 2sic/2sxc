@@ -1,4 +1,5 @@
 angular.module("SxcServices")
+    /*@ngInject*/
     .factory("appDialogConfigSvc", function (appId, $http) {
         var svc = {};
 

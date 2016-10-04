@@ -15,23 +15,15 @@
             "WebApiApp",
             "SxcServices"
         ])
-        .config(["$translatePartialLoaderProvider", function($translatePartialLoaderProvider) {
+        /*@ngInject*/
+        .config(["$translatePartialLoaderProvider", function ($translatePartialLoaderProvider) {
             // ensure the language pack is loaded
             $translatePartialLoaderProvider.addPart("sxc-admin");
         }])
         .controller("AppMain", MainController)
-
-        //.factory("appDialogConfigSvc", function(appId, $http) {
-        //    var svc = {};
-
-        //    // this will retrieve an advanced getting-started url to use in an the iframe
-        //    svc.getDialogSettings = function gettingStartedUrl() {
-        //        return $http.get("app/system/dialogsettings", { params: { appId: appId } });
-        //    };
-        //    return svc;
-        //})
     ;
 
+    /*@ngInject*/
     function MainController(eavAdminDialogs, eavConfig, appId, debugState, appDialogConfigSvc, $uibModalInstance) {
         var vm = this;
         vm.debug = debugState;
@@ -60,6 +52,7 @@
         .controller("AppSettings", AppSettingsController)
         ;
 
+    /*@ngInject*/
     function AppSettingsController(appSettings, appId) {
         var vm = this;
         var svc = appSettings(appId);
@@ -94,6 +87,7 @@
         "EavAdminUi",           // dialog (modal) controller
         "SxcAdminUi"
     ])
+        /*@ngInject*/
         .config(["$translatePartialLoaderProvider", function ($translatePartialLoaderProvider) {
             // ensure the language pack is loaded
             $translatePartialLoaderProvider.addPart("sxc-admin");
@@ -102,6 +96,7 @@
         .controller("AppList", AppListController)
         ;
 
+    /*@ngInject*/
     function AppListController(appsSvc, eavAdminDialogs, sxcDialogs, eavConfig, appSettings, appId, zoneId, $uibModalInstance, $translate) {
         var vm = this;
 
@@ -200,6 +195,7 @@
 
     }
 
+    /*@ngInject*/
     function DialogHostController(zoneId, appId, items, $2sxc, dialog, sxcDialogs, contentTypeName, eavAdminDialogs, $ocLazyLoad) {
         var vm = this;
         vm.dialog = dialog;
@@ -269,19 +265,21 @@
     angular.module("SxcFilters", [])
         .constant("createdBy", "2sic") // just a demo how to use constant or value configs in AngularJS
         .constant("license", "MIT") // these wouldn't be necessary, just added for learning exprience
-        .filter('trustAsResourceUrl', ["$sce", function($sce) {
+        /*@ngInject*/
+        .filter('trustAsResourceUrl', ["$sce", function ($sce) {
             return function(val) {
                 return $sce.trustAsResourceUrl(val);
             };
         }])
-        .filter('trustHtml', ["$sce", function($sce) {
+        /*@ngInject*/
+        .filter('trustHtml', ["$sce", function ($sce) {
             return function(text) {
                 return $sce.trustAsHtml(text);
             };
         }]);
 
 } ());
-(function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
+(function () { 
 
     angular.module("ImportExport", [
         "EavConfiguration", // Config
@@ -298,6 +296,7 @@
         ;
   
 
+    /*@ngInject*/
     function ExportAppController(ExportAppService, eavAdminDialogs, debugState, eavConfig, $uibModalInstance) {
         var vm = this;
         vm.debug = debugState;
@@ -361,6 +360,7 @@
     ;
 
 
+    /*@ngInject*/
     function ExportAppService(appId, zoneId, eavConfig, $http, $q) {
         var srvc = {
             getAppInfo: getAppInfo,
@@ -393,6 +393,7 @@
         ;
 
 
+    /*@ngInject*/
     function ExportContentController(ExportContentService, eavAdminDialogs, eavConfig, debugState, $uibModalInstance, $filter) {
         var vm = this;
 
@@ -486,6 +487,7 @@
     ;
 
 
+    /*@ngInject*/
     function ExportContentService(appId, zoneId, eavConfig, $http, $q) {
         var srvc = {
             getContentInfo: getContentInfo,
@@ -512,6 +514,7 @@
         .controller("ImportApp", ImportAppController)
     ;
 
+    /*@ngInject*/
     function ImportAppController(ImportAppService, eavAdminDialogs, eavConfig, $uibModalInstance) {
         var vm = this;
 
@@ -580,6 +583,7 @@
     ;
 
 
+    /*@ngInject*/
     function ImportContentController(ImportContentService, eavAdminDialogs, eavConfig, $uibModalInstance) {
         var vm = this;
 
@@ -617,6 +621,7 @@
     ;
 
 
+    /*@ngInject*/
     function ImportContentService(appId, zoneId, eavConfig, $http, $q) {
         var srvc = {
             importContent: importContent
@@ -650,6 +655,7 @@
         .directive("sxcFileInput", FileInputDirective)
         ;
 
+    /*@ngInject*/
     function FileReadDirective() {
         return {
             scope: {
@@ -689,12 +695,13 @@
         };
     }
 }());
-(function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
+(function () { 
 
     angular.module("ImportExport")
         .controller("ImportExportIntro", IntroController)
         ;
 
+    /*@ngInject*/
     function IntroController(eavAdminDialogs, eavConfig, appId) {
         var vm = this;
         function blankCallback() { }
@@ -749,6 +756,7 @@
         .controller("LanguageSettings", LanguagesSettingsController)
         ;
 
+    /*@ngInject*/
     function LanguagesSettingsController(languagesSvc, eavConfig, appId) {
         var vm = this;
         var svc = languagesSvc();
@@ -773,13 +781,15 @@
             "EavAdminUi" // dialog (modal) controller
     ])
 
-        .config(["$translatePartialLoaderProvider", function($translatePartialLoaderProvider) {
+        /*@ngInject*/
+        .config(["$translatePartialLoaderProvider", function ($translatePartialLoaderProvider) {
             // ensure the language pack is loaded
             $translatePartialLoaderProvider.addPart("inpage");
         }])
 
         .controller("ManageContentList", ManageContentController);
 
+    /*@ngInject*/
     function ManageContentController(appId, item, contentGroupSvc, eavAdminDialogs, $uibModalInstance, $translate) {
         var vm = this;
         vm.items = [];
@@ -859,6 +869,7 @@
         ])
         .controller("ReplaceDialog", ReplaceContentController);
 
+    /*@ngInject*/
     function ReplaceContentController(appId, item, contentGroupSvc, eavAdminDialogs, $uibModalInstance, $filter) {
         var vm = this;
         vm.options = [];
@@ -921,6 +932,7 @@ angular.module("SxcServices", [
 //    "pascalprecht.translate",
 ]);
 angular.module("SxcServices")
+    /*@ngInject*/
     .factory("appDialogConfigSvc", ["appId", "$http", function (appId, $http) {
         var svc = {};
 
@@ -931,7 +943,8 @@ angular.module("SxcServices")
         return svc;
     }]);
 angular.module("SxcServices")
-    .factory("appAssetsSvc", ["$http", "eavConfig", "svcCreator", function($http, eavConfig, svcCreator) {
+    /*@ngInject*/
+    .factory("appAssetsSvc", ["$http", "eavConfig", "svcCreator", function ($http, eavConfig, svcCreator) {
 
         // Construct a service for this specific appId
         return function createSvc(appId, global) {
@@ -966,6 +979,7 @@ angular.module("SxcServices")
         };
     }]);
 angular.module("SxcServices")
+    /*@ngInject*/
     .factory("appSettings", ["$http", "eavConfig", "svcCreator", "contentTypeSvc", "contentItemsSvc", "eavAdminDialogs", "$filter", function ($http, eavConfig, svcCreator, contentTypeSvc, contentItemsSvc, eavAdminDialogs, $filter) {
 
         // Construct a service for this specific appId
@@ -1006,7 +1020,8 @@ angular.module("SxcServices")
         };
     }]);
 angular.module("SxcServices")
-    .factory("appsSvc", ["$http", "eavConfig", "svcCreator", function($http, eavConfig, svcCreator) {
+    /*@ngInject*/
+    .factory("appsSvc", ["$http", "eavConfig", "svcCreator", function ($http, eavConfig, svcCreator) {
 
         // Construct a service for this specific appId
         return function createSvc(zoneId) {
@@ -1035,7 +1050,8 @@ angular.module("SxcServices")
     }]);
 
 angular.module("SxcServices")
-    .factory("contentGroupSvc", ["$http", "eavConfig", "svcCreator", "$resource", function($http, eavConfig, svcCreator, $resource) {
+    /*@ngInject*/
+    .factory("contentGroupSvc", ["$http", function ($http) {
 
         // Construct a service for this specific appId
         return function createSvc(appId) {
@@ -1065,8 +1081,9 @@ angular.module("SxcServices")
             return svc;
         };
     }]);
-angular.module("SxcServices")//, ['ng', 'eavNgSvcs', "EavConfiguration"])
-    .factory("importExportSvc", ["$http", "eavConfig", "svcCreator", function($http, eavConfig, svcCreator) {
+angular.module("SxcServices")
+    /*@ngInject*/
+    .factory("importExportSvc", ["$http", "eavConfig", "svcCreator", function ($http, eavConfig, svcCreator) {
 
         // Construct a service for this specific appId
         return function createSvc(appId) {
@@ -1101,25 +1118,31 @@ angular.module("SxcServices")//, ['ng', 'eavNgSvcs', "EavConfiguration"])
 
 //(function () {
     angular.module("InitSxcParametersFromUrl", ["2sxc4ng"])
-        .factory("dialog", ["$2sxc", function($2sxc) {
+        /*@ngInject*/
+        .factory("dialog", ["$2sxc", function ($2sxc) {
             return $2sxc.urlParams.get("dialog");
         }])
-        .factory("tabId", ["$2sxc", function($2sxc) {
+        /*@ngInject*/
+        .factory("tabId", ["$2sxc", function ($2sxc) {
             return $2sxc.urlParams.get("tid");
         }])
-
+        /*@ngInject*/
         .factory("websiteRoot", ["$2sxc", function ($2sxc) {
             return $2sxc.urlParams.get("websiteroot");
         }])
+        /*@ngInject*/
         .factory("systemRoot", ["websiteRoot", function (websiteRoot) {
             return websiteRoot + "desktopmodules/tosic_sexycontent/";
         }])
+        /*@ngInject*/
         .factory("portalRoot", ["$2sxc", function ($2sxc) {
             return $2sxc.urlParams.get("portalroot");
         }])
+        /*@ngInject*/
         .factory("appRoot", ["$2sxc", function ($2sxc) {
                 return $2sxc.urlParams.get("appRoot");
         }])
+        /*@ngInject*/
         .factory("items", ["$2sxc", function ($2sxc) {
                 var found = $2sxc.urlParams.get("items");
                 if (found)
@@ -1131,7 +1154,8 @@ angular.module("SxcServices")//, ['ng', 'eavNgSvcs', "EavConfiguration"])
 
 // }());
 angular.module("SxcServices")
-    .factory("languagesSvc", ["$http", "eavConfig", "svcCreator", function($http, eavConfig, svcCreator) {
+    /*@ngInject*/
+    .factory("languagesSvc", ["$http", "eavConfig", "svcCreator", function ($http, eavConfig, svcCreator) {
 
         // Construct a service for this specific appId
         return function createSvc(appId) {
@@ -1174,6 +1198,7 @@ angular.module("SxcAdminUi", [
     "EavAdminUi", // dialog (modal) controller
 ])
 
+    /*@ngInject*/
     .factory("sxcDialogs", ["$uibModal", "eavAdminDialogs", function ($uibModal, eavAdminDialogs) {
         var svc = {};
 
@@ -1247,8 +1272,9 @@ angular.module("SxcAdminUi", [
     }])
 
 ;
-angular.module("SxcServices")//, ['ng', 'eavNgSvcs', "EavConfiguration"])
-    .factory("templatesSvc", ["$http", "eavConfig", "svcCreator", function($http, eavConfig, svcCreator) {
+angular.module("SxcServices")
+    /*@ngInject*/
+    .factory("templatesSvc", ["$http", "eavConfig", "svcCreator", function ($http, eavConfig, svcCreator) {
 
         // Construct a service for this specific appId
         return function createSvc(appId) {
@@ -1269,7 +1295,8 @@ angular.module("SxcServices")//, ['ng', 'eavNgSvcs', "EavConfiguration"])
         };
     }]);
 angular.module("SxcServices")
-    .factory("webApiSvc", ["$http", "eavConfig", "svcCreator", function($http, eavConfig, svcCreator) {
+    /*@ngInject*/
+    .factory("webApiSvc", ["$http", "eavConfig", "svcCreator", function ($http, eavConfig, svcCreator) {
 
         // Construct a service for this specific appId
         return function createSvc(appId) {
@@ -1435,6 +1462,7 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
         .controller("TemplateList", TemplateListController)
         ;
 
+    /*@ngInject*/
     function TemplateListController(templatesSvc, eavAdminDialogs, eavConfig, appId, debugState, $translate, $uibModalInstance) {
         var vm = this;
         vm.debug = debugState;
@@ -1482,6 +1510,7 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
         .controller("WebApiMain", WebApiMainController)
         ;
 
+    /*@ngInject*/
     function WebApiMainController(appId, webApiSvc, eavAdminDialogs, $uibModalInstance, $translate) {
         var vm = this;
         

@@ -10,6 +10,7 @@
         .controller("TemplateList", TemplateListController)
         ;
 
+    /*@ngInject*/
     function TemplateListController(templatesSvc, eavAdminDialogs, eavConfig, appId, debugState, $translate, $uibModalInstance) {
         var vm = this;
         vm.debug = debugState;

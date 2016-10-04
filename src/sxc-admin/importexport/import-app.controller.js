@@ -4,6 +4,7 @@
         .controller("ImportApp", ImportAppController)
     ;
 
+    /*@ngInject*/
     function ImportAppController(ImportAppService, eavAdminDialogs, eavConfig, $uibModalInstance) {
         var vm = this;
 

@@ -1,4 +1,5 @@
 angular.module("SxcServices")
+    /*@ngInject*/
     .factory("appSettings", function ($http, eavConfig, svcCreator, contentTypeSvc, contentItemsSvc, eavAdminDialogs, $filter) {
 
         // Construct a service for this specific appId
