@@ -24,7 +24,7 @@ gulp.task("import-libs", function() {
     importDependencies();
 });
 
-gulp.task("watch-snippets", function() {
+gulp.task("try-build-snippets", function() {
     watchSnippets();
 });
 
@@ -37,7 +37,7 @@ function watchDnnUi() {
     });
 }
 function watchSnippets() {
-    var root = "sxc-develop/source-editor/snippets.";
+    var root = "src/sxc-develop/source-editor/snippets.";
     var src = root + "xlsx";
 //    gulp.watch(src, function () {
         gulp.src(src)
@@ -139,19 +139,22 @@ function packageJs(set) {
         result = result.pipe($.sort());
 
     result = result.pipe($.concat(set.js.concat))
-        .pipe(gulp.dest(set.dist))
-        .pipe($.rename({ extname: ".min.js" }));
-    // 2016-04-23 2dm had to disable source-maps for now, something is buggy inside
-    // 2016-09-07 2dm re-enabled it, seems to work now...
-    // 2016-09-08 2rm had to disable it again, sourcmap generator throws an error
-    if (set.js.alsoRunMin)
-        result = result
-//                .pipe($.sourcemaps.init({ loadMaps: true }))
+        .pipe(gulp.dest(set.dist));
+
+    if (set.js.alsoRunMin) {
+        gulp.src(set.dist + set.js.concat)  // reload the dist as new src for source-map
+        .pipe($.rename({ extname: ".min.js" }))
+        // 2016-04-23 2dm had to disable source-maps for now, something is buggy inside
+        // 2016-09-07 2dm re-enabled it, seems to work now...
+        // 2016-09-08 2rm had to disable it again, sourcmap generator throws an error
+        // 2016-10-08 2dm enabled it again, now that we're not loading previous maps I think it should work
+        
+            .pipe($.sourcemaps.init())//{ loadMaps: true }))
                 .pipe($.uglify())
                 .on("error", $.util.log)
-//             .pipe($.sourcemaps.write("./"))
+            .pipe($.sourcemaps.write("./"))
             .pipe(gulp.dest(set.dist));
-
+    }
     if (config.debug) console.log($.util.colors.cyan("bundling done: " + set.name));
 
     return result;
