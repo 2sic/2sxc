@@ -238,7 +238,7 @@ function createSetsForOurCode() {
     sets.push(eavConf);
 
     // setup inpage dialogs
-    var develop = createConfig("sxc-develop", "SourceEditor");
+    var develop = createConfig("sxc-develop", "DevTemplates");
     sets.push(develop);
 
     var api = createConfig("2sxc.api", "templates", "js/", undefined, undefined, "src/js-api/2sxc.api/");
