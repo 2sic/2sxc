@@ -386,14 +386,14 @@
     <Content Include="Extensions\Imazen_ImageResizer\ImageResizer.txt" />
     <Content Include="Extensions\Imazen_ImageResizer\license.txt" />
     <Content Include="grunt-tasks\develop.gruntfile.js" />
-    <Content Include="gruntfileX.js" />
+    <Content Include="gruntfile.js" />
     <Content Include="icon-app-black.png" />
     <Content Include="icon-black.png" />
     <Content Include="DnnWebForms\Skins\QuickEdit.ascx" />
     <Content Include="src\inpage-dialogs\template-selector\template-selector.css" />
-    <Content Include="src\inpage-libs\i18n\i18next.min.js" />
-    <Content Include="src\inpage-libs\i18n\i18nextXHRBackend.min.js" />
-    <Content Include="src\inpage-libs\i18n\jquery-i18next.min.js" />
+    <Content Include="src\inpage\i18n\i18next.min.js" />
+    <Content Include="src\inpage\i18n\i18nextXHRBackend.min.js" />
+    <Content Include="src\inpage\i18n\jquery-i18next.min.js" />
     <Content Include="src\inpage\2sxc._toolbarManager.js" />
     <Content Include="src\inpage\2sxc._translate.js" />
     <Content Include="src\inpage\dialog.js" />
@@ -594,7 +594,9 @@
   <ItemGroup>
     <Content Include="gulpfile.js" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="src\inpage-libs\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

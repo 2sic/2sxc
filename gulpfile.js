@@ -146,10 +146,10 @@ function packageJs(set) {
     // 2016-09-08 2rm had to disable it again, sourcmap generator throws an error
     if (set.js.alsoRunMin)
         result = result
-                .pipe($.sourcemaps.init({ loadMaps: true }))
+//                .pipe($.sourcemaps.init({ loadMaps: true }))
                 .pipe($.uglify())
                 .on("error", $.util.log)
-             .pipe($.sourcemaps.write("./"))
+//             .pipe($.sourcemaps.write("./"))
             .pipe(gulp.dest(set.dist));
 
     if (config.debug) console.log($.util.colors.cyan("bundling done: " + set.name));
@@ -210,12 +210,12 @@ function createWatchCallback(set, part) {
 function createSetsForOurCode() {
     var sets = [];
     // setup admin, exclude pipeline css (later also exclude pipeline js)
-    var admin = createConfig("sxc-admin", "sxcTemplates");
+    var admin = createConfig("sxc-admin", "SxcTemplates");
     //admin.css.files.push("!" + admin.cwd + "**/pipeline*.css");
     sets.push(admin);
 
     // setup edit & extended
-    var edit = createConfig("sxc-edit", "sxcTemplates");
+    var edit = createConfig("sxc-edit", "SxcEditTemplates");
     sets.push(edit);
 
     // setup inpage stuff
@@ -223,7 +223,7 @@ function createSetsForOurCode() {
     sets.push(inpage);
 
     // setup inpage dialogs
-    var inpDialog = createConfig("inpage-dialogs", "templates", "dist/inpage/");
+    var inpDialog = createConfig("inpage-dialogs", "SxcInpageTemplates", "dist/inpage/");
     sets.push(inpDialog);
 
     // setup inpage dialogs
@@ -231,7 +231,7 @@ function createSetsForOurCode() {
     sets.push(eavConf);
 
     // setup inpage dialogs
-    var develop = createConfig("sxc-develop", "templates");
+    var develop = createConfig("sxc-develop", "SourceEditor");
     sets.push(develop);
 
     var api = createConfig("2sxc.api", "templates", "js/", undefined, undefined, "src/js-api/2sxc.api/");
