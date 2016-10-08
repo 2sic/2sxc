@@ -1,7 +1,7 @@
 ﻿// Initial variables, constants, etc.
 var gulp = require("gulp"),
     $ = require("gulp-load-plugins")({ lazy: false }),
-    packageJSON = require('./package'),
+    packageJSON = require("./package"),
     // would need this to always auto-publish after compile... runSequence = require('run-sequence'),
     jshintConfig = packageJSON.jshintConfig,
     merge = require("merge-stream"),
@@ -17,19 +17,69 @@ var gulp = require("gulp"),
 // register all watches & run them
 gulp.task("watch-our-code", function () {
     watchSet(createSetsForOurCode());
+    watchDnnUi();
 });
 
-// test something - add your code here to test it
-gulp.task("test-something", function () {
-
+gulp.task("import-libs", function() {
+    importDependencies();
 });
 
-//gulp.task("clean-dist", function () {
-    // disabled 2016-03-13 to prevent mistakes as gulp doesn't generate everything yet
-    //gulp.src(config.rootDist)
-    //    .pipe($.clean());
-//});
+gulp.task("watch-snippets", function() {
+    watchSnippets();
+});
 
+
+// watch the dnn ui.html for changes and republish
+function watchDnnUi() {
+    gulp.watch("src/dnn/" + "**/*", function() {
+        gulp.src("src/dnn/**")
+            .pipe(gulp.dest(config.rootDist + "dnn"));
+    });
+}
+function watchSnippets() {
+    var root = "sxc-develop/source-editor/snippets.";
+    var src = root + "xlsx";
+//    gulp.watch(src, function () {
+        gulp.src(src)
+            .pipe($.jsXlsx.run({ parseWorksheet: "row_array" }))
+            .pipe($.rename({ extname: ".json.js" }))
+            .pipe(gulp.dest(config.rootDist + "sxc-develop/"));
+//    });
+}
+
+
+function importDependencies() {
+    var bwr = "bower_components/";
+    //gulp.watch("src/dnn/" + "**/*", function() {
+    gulp.src(bwr + "angular-ui-tinymce/dist/tinymce.min.js")
+        .pipe($.concat("set.js"))
+        .pipe(gulp.dest(config.rootDist + "edit/extensions/field-string-wysiwyg-tinymce/"));
+
+    // icon-fonts and font-definitions
+    var src = bwr + "2sxc-icons/";
+    gulp.src([src + "**/*.woff", src + "**/*.ttf", src + "**/*.eot"])
+        .pipe($.rename({ dirname: "" }))
+        .pipe(gulp.dest(config.rootDist + "lib/fonts"));
+
+    // icon-definition file for app-icons
+    gulp.src(src + "full-system/css/app-icons-codes.css")
+        .pipe(gulp.dest("src/sxc-edit/"));
+
+    // icon-definition for inpage-icons
+    gulp.src(src + "in-page-icons/css/inpage-icons-codes.css")
+        .pipe(gulp.dest("src/inpage/"));
+
+    // i18n files
+    gulp.src(bwr + "2sxc-eav-languages/dist/i18n/**/*.js")
+        .pipe(gulp.dest(config.rootDist + "i18n/"));
+
+
+    // lib angular-ui-ace
+    gulp.src(bwr + "angular-ui-ace/*.js")
+        .pipe(gulp.dest(config.rootDist + "lib/angular-ui-ace/"));
+
+    //});
+}
 
 //#region basic functions I'll need a lot
 function createConfig(key, tmplSetName, altDistPath, altJsName, libFiles, cwd) {
@@ -129,7 +179,7 @@ function packageCss(set) {
             // minify and save
             .pipe($.rename({ extname: ".min.css" }))
             .pipe($.sourcemaps.init())
-            .pipe($.cleanCss({ compatibility: "*", processImportFrom: ['!fonts.googleapis.com'] /* ie9 compatibility */ }))
+            .pipe($.cleanCss({ compatibility: "*", processImportFrom: ["!fonts.googleapis.com"] /* ie9 compatibility */ }))
             .pipe($.sourcemaps.write("./"))
             .pipe(gulp.dest(set.dist));
     ;

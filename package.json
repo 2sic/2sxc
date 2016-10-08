@@ -38,9 +38,9 @@
     "grunt-angular-templates": "0.5.9",
     "grunt-contrib-compress": "0.13.0",
     "grunt-contrib-cssmin": "0.13.0",
-
-
     "json.excel": "0.0.3",
+
+
     "typescript": "^1.5",
 
 
@@ -62,7 +62,12 @@
     "gulp-if": "2.0.0",
     "jshint": "2.9.1",
     "jshint-stylish": "2.1.0",
-    "merge-stream": "1.0.0"
+    "merge-stream": "1.0.0",
+
+
+    "gulp-js-xlsx": "0.1.0"
+
+
   },
   "jshintConfig": {
     "laxbreak": true

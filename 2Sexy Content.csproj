@@ -385,13 +385,8 @@
     <Content Include="Extensions\404.png" />
     <Content Include="Extensions\Imazen_ImageResizer\ImageResizer.txt" />
     <Content Include="Extensions\Imazen_ImageResizer\license.txt" />
-    <Content Include="grunt-tasks\dnn.gruntfile.js" />
-    <Content Include="grunt-tasks\field-string-wysiwyg-tinymce.gruntfile.js" />
-    <Content Include="grunt-tasks\fonts.gruntfile.js" />
     <Content Include="grunt-tasks\develop.gruntfile.js" />
-    <Content Include="grunt-tasks\import-languages.gruntfile.js" />
-    <Content Include="grunt-tasks\i18n.gruntfile.js" />
-    <Content Include="gruntfile.js" />
+    <Content Include="gruntfileX.js" />
     <Content Include="icon-app-black.png" />
     <Content Include="icon-black.png" />
     <Content Include="DnnWebForms\Skins\QuickEdit.ascx" />
