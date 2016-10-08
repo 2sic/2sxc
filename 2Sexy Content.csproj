@@ -453,12 +453,10 @@
     <Content Include="src\inpage-dialogs\template-selector\2sxc.view_app.js" />
     <Content Include="src\inpage-dialogs\template-selector\template-selector.html" />
     <Content Include="src\inpage-dialogs\template-selector\template-selector-controller.js" />
-    <Content Include="js\angularjs\2sxc4ng.js" />
     <Content Include="license.txt" />
     <Content Include="src\inpage\edit.css" />
     <Content Include="ReleaseNotes.txt" />
     <Content Include="Extensions\Thumbnailer.aspx" />
-    <Content Include="js\2sxc.api.js" />
     <Content Include="Extensions\ToSic_vCard\vCard.ashx" />
     <Content Include="BuildScripts\ModulePackage.Targets" />
     <Content Include="BuildScripts\MSBuild.Community.Tasks.targets" />
