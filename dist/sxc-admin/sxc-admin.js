@@ -1,5 +1,6 @@
 (function() { 
 
+    MainController.$inject = ["eavAdminDialogs", "eavConfig", "appId", "debugState", "appDialogConfigSvc", "$uibModalInstance"];
     angular.module("MainSxcApp", [
             "EavConfiguration", // config
             "SxcTemplates", // inline templates
@@ -37,11 +38,11 @@
             $uibModalInstance.dismiss("cancel");
         };
     }
-    MainController.$inject = ["eavAdminDialogs", "eavConfig", "appId", "debugState", "appDialogConfigSvc", "$uibModalInstance"];
 
 } ());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
 
+    AppSettingsController.$inject = ["appSettings", "appId"];
     angular.module("AppSettingsApp", [
         "EavConfiguration",     // 
         "EavServices",
@@ -74,11 +75,11 @@
         vm.editPackage = svc.editPackage;
 
     }
-    AppSettingsController.$inject = ["appSettings", "appId"];
 
 } ());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
 
+    AppListController.$inject = ["appsSvc", "eavAdminDialogs", "sxcDialogs", "eavConfig", "appSettings", "appId", "zoneId", "$uibModalInstance", "$translate"];
     angular.module("AppsManagementApp", [
         "EavServices",
         "EavConfiguration",
@@ -173,11 +174,11 @@
 
         vm.close = function () { $uibModalInstance.dismiss("cancel");};
     }
-    AppListController.$inject = ["appsSvc", "eavAdminDialogs", "sxcDialogs", "eavConfig", "appSettings", "appId", "zoneId", "$uibModalInstance", "$translate"];
 
 } ());
 (function () { 
 
+    DialogHostController.$inject = ["zoneId", "appId", "items", "$2sxc", "dialog", "sxcDialogs", "contentTypeName", "eavAdminDialogs", "$ocLazyLoad"];
     angular.module("DialogHost", [
         "SxcAdminUi",
         "EavAdminUi",
@@ -259,7 +260,6 @@
                 throw "Trying to open a dialog, don't know which one";
         }
     }
-    DialogHostController.$inject = ["zoneId", "appId", "items", "$2sxc", "dialog", "sxcDialogs", "contentTypeName", "eavAdminDialogs", "$ocLazyLoad"];
 
 } ());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
@@ -293,6 +293,7 @@
 } ());
 (function () {
 
+    ExportAppController.$inject = ["ExportAppService", "eavAdminDialogs", "debugState", "eavConfig", "$uibModalInstance"];
     angular.module("ImportExport")
         .controller("ExportApp", ExportAppController)
         ;
@@ -354,9 +355,9 @@
             $uibModalInstance.dismiss("cancel");
         }
     }
-    ExportAppController.$inject = ["ExportAppService", "eavAdminDialogs", "debugState", "eavConfig", "$uibModalInstance"];
 }());
 (function () {
+    ExportAppService.$inject = ["appId", "zoneId", "eavConfig", "$http", "$q"];
     angular.module("ImportExport")
         .factory("ExportAppService", ExportAppService)
     ;
@@ -386,10 +387,10 @@
 
         }
     }
-    ExportAppService.$inject = ["appId", "zoneId", "eavConfig", "$http", "$q"];
 }());
 (function () {
 
+    ExportContentController.$inject = ["ExportContentService", "eavAdminDialogs", "eavConfig", "debugState", "$uibModalInstance", "$filter"];
     angular.module("ImportExport")
         .controller("ExportContent", ExportContentController)
         ;
@@ -479,11 +480,11 @@
             $uibModalInstance.dismiss("cancel");
         }
     }
-    ExportContentController.$inject = ["ExportContentService", "eavAdminDialogs", "eavConfig", "debugState", "$uibModalInstance", "$filter"];
 
 }());
 (function () {
 
+    ExportContentService.$inject = ["appId", "zoneId", "eavConfig", "$http", "$q"];
     angular.module("ImportExport")
         .factory("ExportContentService", ExportContentService)
     ;
@@ -507,11 +508,11 @@
             return $q.when(true);
         }
     }
-    ExportContentService.$inject = ["appId", "zoneId", "eavConfig", "$http", "$q"];
 
 }());
 (function () {
 
+    ImportAppController.$inject = ["ImportAppService", "eavAdminDialogs", "eavConfig", "$uibModalInstance"];
     angular.module("ImportExport")
         .controller("ImportApp", ImportAppController)
     ;
@@ -544,10 +545,10 @@
             $uibModalInstance.dismiss("cancel");
         }
     }
-    ImportAppController.$inject = ["ImportAppService", "eavAdminDialogs", "eavConfig", "$uibModalInstance"];
 }());
 (function () {
 
+    ImportAppService.$inject = ["appId", "zoneId", "eavConfig", "$http", "$q"];
     angular.module("ImportExport")
         .factory("ImportAppService", ImportAppService)
     ;
@@ -576,10 +577,10 @@
             });
         }
     }
-    ImportAppService.$inject = ["appId", "zoneId", "eavConfig", "$http", "$q"];
 }());
 (function () {
 
+    ImportContentController.$inject = ["ImportContentService", "eavAdminDialogs", "eavConfig", "$uibModalInstance"];
     angular.module("ImportExport")
         .controller("ImportContent", ImportContentController)
     ;
@@ -614,10 +615,10 @@
             $uibModalInstance.dismiss("cancel");
         }
     }
-    ImportContentController.$inject = ["ImportContentService", "eavAdminDialogs", "eavConfig", "$uibModalInstance"];
 }());
 (function () {
 
+    ImportContentService.$inject = ["appId", "zoneId", "eavConfig", "$http", "$q"];
     angular.module("ImportExport")
         .factory("ImportContentService", ImportContentService)
     ;
@@ -647,7 +648,6 @@
             });
         }
     }
-    ImportContentService.$inject = ["appId", "zoneId", "eavConfig", "$http", "$q"];
 
 }());
 (function () {
@@ -699,6 +699,7 @@
 }());
 (function () { 
 
+    IntroController.$inject = ["eavAdminDialogs", "eavConfig", "appId"];
     angular.module("ImportExport")
         .controller("ImportExportIntro", IntroController)
         ;
@@ -742,11 +743,11 @@
                 resolve, blankCallback);
         };
     }
-    IntroController.$inject = ["eavAdminDialogs", "eavConfig", "appId"];
 
 } ());
 (function () { // TN: this is a helper construct, research iife or read https://github.com/johnpapa/angularjs-styleguide#iife
 
+    LanguagesSettingsController.$inject = ["languagesSvc", "eavConfig", "appId"];
     angular.module("SystemSettingsApp", [
         "EavConfiguration",     // 
         "EavServices",
@@ -773,11 +774,11 @@
 
         vm.save = svc.save;
     }
-    LanguagesSettingsController.$inject = ["languagesSvc", "eavConfig", "appId"];
 
 } ());
 (function () {
 
+    ManageContentController.$inject = ["appId", "item", "contentGroupSvc", "eavAdminDialogs", "$uibModalInstance", "$translate"];
     angular.module("ReorderContentApp", [
             "SxcServices",
             "EavAdminUi" // dialog (modal) controller
@@ -860,11 +861,11 @@
         vm.close = function () { $uibModalInstance.dismiss("cancel"); };
 
     }
-    ManageContentController.$inject = ["appId", "item", "contentGroupSvc", "eavAdminDialogs", "$uibModalInstance", "$translate"];
 
 } ());
 (function () { 
 
+    ReplaceContentController.$inject = ["appId", "item", "contentGroupSvc", "eavAdminDialogs", "$uibModalInstance", "$filter"];
     angular.module("ReplaceContentApp", [
             "SxcServices",
             "EavAdminUi"         // dialog (modal) controller
@@ -921,7 +922,6 @@
             });
         };
     }
-    ReplaceContentController.$inject = ["appId", "item", "contentGroupSvc", "eavAdminDialogs", "$uibModalInstance", "$filter"];
 
 } ());
 // Init the main eav services module
@@ -1313,147 +1313,22 @@ angular.module("SxcServices")
             return svc;
         };
     }]);
-angular.module('SxcTemplates', []).run(['$templateCache', function($templateCache) {
-  'use strict';
-
-  $templateCache.put('app-main/app-main.html',
-    "<div ng-click=vm.debug.autoEnableAsNeeded($event)><div class=modal-header><button class=\"btn btn-default btn-square btn-subtle pull-right\" type=button ng-click=vm.close()><i icon=remove></i></button><h3 class=modal-title translate=Main.Title></h3></div><div class=modal-body><div><uib-tabset><uib-tab><uib-tab-heading><span uib-tooltip=\"{{'Main.Tab.GettingStarted' | translate }}\"><i icon=home></i> {{'Main.Tab.GS' | translate | trustHtml }}</span></uib-tab-heading><iframe ng-src=\"{{ vm.config.GettingStartedUrl | trustAsResourceUrl }}\" style=\"border: none; width: 100%; height: 500px\"></iframe><div ng-hide=true>original script, maybe we need it $(document).ready(function () { $(window).bind(\"resize\", function () { var GettingStartedFrame = $(\".sc-iframe-gettingstarted\"); GettingStartedFrame.height($(window).height() - 50); }); $(window).trigger(\"resize\"); });</div></uib-tab><uib-tab select=\"vm.view='content'\"><uib-tab-heading><span icon=list uib-tooltip=\"{{'Main.Tab.ContentData' | translate }}\"></span> {{'Main.Tab.CD' | translate }}</uib-tab-heading><div ng-if=\"vm.view == 'content'\"><div ng-controller=\"List as vm\" ng-include=\"'content-types/content-types.html'\"></div></div></uib-tab><uib-tab select=\"vm.view='query'\" ng-if=!vm.config.IsContent><uib-tab-heading><span icon=filter uib-tooltip=\"{{'Main.Tab.Query' | translate }}\"></span> {{'Main.Tab.Q' | translate }}</uib-tab-heading><div ng-if=\"vm.view == 'query'\"><div ng-controller=\"PipelineManagement as vm\" ng-include=\"'pipelines/pipelines.html'\"></div></div></uib-tab><uib-tab select=\"vm.view='view'\"><uib-tab-heading><span icon=picture uib-tooltip=\"{{'Main.Tab.ViewsTemplates' | translate }}\"></span> {{'Main.Tab.VT' | translate }}</uib-tab-heading><div ng-if=\"vm.view == 'view'\"><div ng-controller=\"TemplateList as vm\" ng-include=\"'templates/templates.html'\"></div></div></uib-tab><uib-tab select=\"vm.view='webapi'\" ng-if=!vm.config.IsContent><uib-tab-heading><span icon=flash uib-tooltip=\"{{'Main.Tab.WebApi' | translate }}\"></span> {{'Main.Tab.WA' | translate }}</uib-tab-heading><div ng-if=\"vm.view == 'webapi'\"><div ng-controller=\"WebApiMain as vm\" ng-include=\"'web-api/web-api.html'\"></div></div></uib-tab><uib-tab select=\"vm.view='app'\"><uib-tab-heading><span icon=unchecked uib-tooltip=\"{{'Main.Tab.AppSettings' | translate }}\"></span> {{'Main.Tab.AS' | translate }}</uib-tab-heading><div ng-if=\"vm.view == 'app'\"><div ng-if=!vm.config.IsContent><div ng-controller=\"AppSettings as vm\" ng-include=\"'app-settings/app-settings.html'\"></div><br></div><div ng-controller=\"ImportExportIntro as vm\" ng-include=\"'importexport/intro.html'\"></div></div></uib-tab><uib-tab select=\"vm.view='portal'\"><uib-tab-heading><span icon=globe uib-tooltip=\"{{'Main.Tab.PortalLanguages' | translate }}\"></span> {{'Main.Tab.PL' | translate }}</uib-tab-heading><div ng-if=\"vm.view == 'portal'\"><h3 translate=Main.Portal.Title></h3><div translate=Main.Portal.Intro></div><div ng-controller=\"LanguageSettings as vm\" ng-include=\"'language-settings/languages.html'\"></div></div></uib-tab></uib-tabset></div></div><show-debug-availability class=pull-right></show-debug-availability></div>"
-  );
-
-
-  $templateCache.put('app-settings/app-settings.html',
-    "<div class=modal-body><h3 translate=AppConfig.Title></h3><div translate=AppConfig.Intro></div><div class=clearfix><div class=\"pull-left btn-group-vertical\"><button uib-tooltip=\"{{ 'AppConfig.Settings.Edit' | translate }}\" ng-disabled=!vm.ready() ng-click=\"vm.edit('App-Settings')\" class=\"btn btn-primary btn-square\" type=button><i icon=pencil></i></button> <button uib-tooltip=\"{{ 'AppConfig.Settings.Config' | translate }}\" ng-disabled=!vm.ready() ng-click=\"vm.config('App-Settings')\" class=\"btn btn-default btn-square\" type=button><i icon=cog></i></button></div><div style=\"margin-left: 50px\"><h4 class=modal-title translate=AppConfig.Settings.Title></h4><div translate=AppConfig.Settings.Intro></div></div></div><br><div class=clearfix><div class=\"pull-left btn-group-vertical\"><button uib-tooltip=\"{{'AppConfig.Resources.Edit' | translate}}\" ng-disabled=!vm.ready() ng-click=\"vm.edit('App-Resources')\" class=\"btn btn-square btn-primary\" type=button><i icon=pencil></i></button> <button uib-tooltip=\"{{'AppConfig.Resources.Config' | translate}}\" ng-disabled=!vm.ready() ng-click=\"vm.config('App-Resources')\" class=\"btn btn-square btn-default\" type=button><i icon=cog></i></button></div><div style=\"margin-left: 50px\"><h4 class=modal-title translate=AppConfig.Resources.Title></h4><div translate=AppConfig.Resources.Intro></div></div></div><br><div><div class=\"pull-left btn-group-vertical\"><button uib-tooltip=\"{{'AppConfig.Definition.Edit' | translate}}\" ng-disabled=!vm.ready() ng-click=vm.editPackage() class=\"btn btn-primary btn-square\" type=button><i icon=cog></i></button></div><div style=\"margin-left: 50px\"><h4 class=modal-title translate=AppConfig.Definition.Title></h4><div translate=AppConfig.Definition.Intro></div></div></div></div>"
-  );
-
-
-  $templateCache.put('apps-management/apps.html',
-    "<div><div class=modal-header><button icon=remove class=\"btn btn-default btn-square btn-subtle pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=AppManagement.Title></h3></div><div class=modal-body><span class=btn-group><button type=button class=\"btn btn-primary\" ng-click=vm.browseCatalog()><span icon=search></span> {{ 'AppManagement.Buttons.Browse' | translate }}</button> <button type=button class=btn ng-click=vm.import()><span icon=import uib-tooltip=\"{{ 'AppManagement.Buttons.Import' | translate }}\"></span></button> <button type=button class=btn ng-click=vm.add()><span icon=plus uib-tooltip=\"{{ 'AppManagement.Buttons.Create' | translate }}\"></span></button> <button type=button class=btn ng-click=vm.refresh()><span icon=repeat></span></button> <button type=button class=btn ng-click=vm.languages()><span icon=globe></span></button></span><table class=\"table table-hover\"><thead><tr><th translate=AppManagement.Table.Name></th><th translate=AppManagement.Table.Folder></th><th><span icon=eye-open uib-tooltip=\"{{ 'AppManagement.Table.Show' | translate }}\"></span></th><th translate=AppManagement.Table.Actions></th></tr></thead><tbody><tr ng-repeat=\"item in vm.items | orderBy:'Title'\" ng-click=vm.manage(item)><td class=clickable><span uib-tooltip=\"\r" +
-    "\n" +
-    "Id: {{item.Id}}\r" +
-    "\n" +
-    "Guid: {{item.Guid}}\">{{item.Name}}</span></td><td class=clickable>{{item.Folder}}</td><td><span icon=\"{{ item.IsHidden ? 'eye-close' : 'eye-open' }}\"></span></td><td stop-event=click><button icon=remove ng-disabled={{!item.IsApp}} type=button class=\"btn btn-xs\" ng-click=vm.tryToDelete(item)></button></td></tr><tr ng-if=!vm.items.length><td colspan=100 translate=General.Messages.NothingFound></td></tr></tbody></table></div></div>"
-  );
-
-
-  $templateCache.put('importexport/export-app.html',
-    "<div ng-click=vm.debug.autoEnableAsNeeded($event)><div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=ImportExport.ExportApp.Title></h3></div><div class=modal-body><div translate=ImportExport.ExportApp.Intro></div><div translate=ImportExport.ExportApp.FurtherHelp></div><h5>{{\"ImportExport.ExportApp.Specifications.Title\" | translate}}</h5><ul><li>{{\"ImportExport.ExportApp.Specifications.AppName\" | translate}} {{vm.AppInfo.Name}}</li><li>{{\"ImportExport.ExportApp.Specifications.AppGuid\" | translate}} {{vm.AppInfo.Guid}}</li><li>{{\"ImportExport.ExportApp.Specifications.AppVersion\" | translate}} {{vm.AppInfo.Version}}</li></ul><h5>{{\"ImportExport.ExportApp.Content.Title\" | translate}}</h5><ul><li>{{vm.AppInfo.EntitiesCount}} {{\"ImportExport.ExportApp.Content.EntitiesCount\" | translate}}</li><li>{{vm.AppInfo.LanguagesCount}} {{\"ImportExport.ExportApp.Content.LanguagesCount\" | translate}}</li><li>{{vm.AppInfo.TemplatesCount}} {{\"ImportExport.ExportApp.Content.TemplatesCount\" | translate}} ({{\"ImportExport.ExportApp.Content.TokenTemplates\" | translate}} {{vm.AppInfo.HasTokenTemplates}}, {{\"ImportExport.ExportApp.Content.RazorTemplates\" | translate}} {{vm.AppInfo.HasRazorTemplates}})</li><li>{{vm.AppInfo.TransferableFilesCount}} {{\"ImportExport.ExportApp.Content.TransferableFilesCount\" | translate}}</li><li>{{vm.AppInfo.FilesCount}} {{\"ImportExport.ExportApp.Content.FilesCount\" | translate}}</li></ul><div><input ng-model=vm.IncludeContentGroups type=checkbox ng-disabled=\"vm.ResetAppGuid\"> {{\"ImportExport.ExportApp.Options.IncludeContentGroups\" | translate}}</div><div><input ng-model=vm.ResetAppGuid type=checkbox ng-disabled=\"vm.IncludeContentGroups\"> {{\"ImportExport.ExportApp.Options.ResetAppGuid\" | translate}}</div></div><div class=modal-footer><button type=button class=\"btn btn-primary pull-left\" ng-click=vm.exportApp() translate=ImportExport.ExportApp.Commands.Export ng-disabled=vm.IsExporting></button> <button type=button class=\"btn btn-default pull-left\" ng-click=vm.exportGit() translate=ImportExport.ExportApp.Commands.ExportForVersionControl ng-disabled=vm.IsExporting xxxng-show=vm.debug.on></button></div><show-debug-availability class=pull-right></show-debug-availability></div>"
-  );
-
-
-  $templateCache.put('importexport/export-content.html',
-    "<div ng-click=vm.debug.autoEnableAsNeeded($event)><div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=ImportExport.ExportContent.Title></h3></div><div class=modal-body><span class=btn-group ng-if=vm.debug.on><button icon=record type=button class=\"btn btn-square\" ng-click=vm.changeExportScope()></button></span><div translate=ImportExport.ExportContent.Intro></div><div translate=ImportExport.ExportContent.FurtherHelp></div><h5 translate=ImportExport.ExportContent.ContentTypes.Title></h5><ul class=sc-export-content-list><li ng-repeat=\"contentType in vm.ContentInfo.ContentTypes\"><label ng-class=\"{ 'active': contentType._export }\"><input type=checkbox ng-model=\"contentType._export\"> {{contentType.Name}} ({{contentType.Id}})</label><div ng-if=contentType.Templates.length class=sc-export-content-list-inner><h6 translate=ImportExport.ExportContent.ContentTypes.Templates></h6><ul><li ng-repeat=\"template in contentType.Templates\"><label ng-class=\"{ 'active': template._export }\"><input type=checkbox ng-model=\"template._export\"> {{template.Name}} ({{template.Id}})</label></li></ul></div><div ng-if=contentType.Entities.length class=sc-export-content-list-inner><h6 translate=ImportExport.ExportContent.ContentTypes.Entities></h6><ul><li ng-repeat=\"entity in contentType.Entities\"><label ng-class=\"{ 'active': entity._export }\"><input type=checkbox ng-model=\"entity._export\"> {{entity._2sxcEditInformation.title}} ({{entity.EntityId}})</label></li></ul></div></li></ul><h5 translate=ImportExport.ExportContent.TemplatesWithoutContentTypes.Title></h5><ul class=sc-export-content-list><li ng-repeat=\"template in vm.ContentInfo.TemplatesWithoutContentTypes\"><label ng-class=\"{ 'active': template._export }\"><input type=checkbox ng-model=\"template._export\"> {{template.Name}} ({{template.Id}})</label></li></ul></div><div class=modal-footer><button type=button class=\"btn btn-primary pull-left\" ng-click=vm.exportContent() translate=ImportExport.ExportContent.Commands.Export ng-disabled=vm.IsExporting></button></div><show-debug-availability class=pull-right></show-debug-availability></div><style>.sc-export-content-list { list-style-type: none; margin: 0; padding: 0; border-top: 1px solid #DDD; }\r" +
-    "\n" +
-    "\r" +
-    "\n" +
-    "    .sc-export-content-list-inner { padding: 0 0 0 40px; }\r" +
-    "\n" +
-    "\r" +
-    "\n" +
-    "    .sc-export-content-list > li { margin: 0; padding: 0; border-bottom: 1px solid #DDD; font-weight: bold; }\r" +
-    "\n" +
-    "\r" +
-    "\n" +
-    "    .sc-export-content-list h6 { font-size: inherit; font-weight: bold; margin: 0; padding: 5px; }\r" +
-    "\n" +
-    "\r" +
-    "\n" +
-    "    .sc-export-content-list label { display: block; padding: 10px; margin: 0; font-size: inherit; font-weight: normal; }\r" +
-    "\n" +
-    "\r" +
-    "\n" +
-    "    .sc-export-content-list label:hover { background: #EEE; }\r" +
-    "\n" +
-    "    .sc-export-content-list label.active { background: #E6F7E7; }\r" +
-    "\n" +
-    "\r" +
-    "\n" +
-    "    .sc-export-content-list > li ul { list-style-type: none; margin: 0; padding: 0; }\r" +
-    "\n" +
-    "\r" +
-    "\n" +
-    "    .sc-export-content-list > li li { font-weight: normal; padding: 0; margin: 0; }</style>"
-  );
-
-
-  $templateCache.put('importexport/import-app.html',
-    "<div><div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=ImportExport.ImportApp.Title></h3></div><div class=sxc-spinner ng-show=vm.IsImporting class=sxc-import-spinner><i class=\"icon-eav-spinner animate-spin\"></i></div><div ng-if=!vm.ImportResult.Messages><div class=modal-body><div translate=ImportExport.ImportApp.Intro></div><div translate=ImportExport.ImportApp.FurtherHelp></div><br><span class=\"btn btn-default btn-file\"><span ng-hide=vm.ImportFile.name>{{\"ImportExport.ImportApp.Commands.SelectFile\" | translate}}</span> <span ng-show=vm.ImportFile.name>{{vm.ImportFile.name}}</span> <input type=file sxc-file-input=\"vm.ImportFile\"></span><br></div><div class=modal-footer><button type=button class=\"btn btn-primary pull-left\" ng-click=vm.importApp() ng-disabled=\"!vm.ImportFile.name || vm.IsImporting\" translate=ImportExport.ImportApp.Commands.Import></button></div></div><div ng-if=vm.ImportResult.Messages><div class=modal-body><div ng-if=vm.ImportResult.Succeeded class=\"sxc-message sxc-message-info\">{{\"ImportExport.ImportContent.Messages.ImportSucceeded\" | translate}} (<a ng-click=\"vm.ImportResult._hideSuccessMessages = !vm.ImportResult._hideSuccessMessages\">{{\"ImportExport.ImportContent.Commands.ToggleSuccessMessages\" | translate}}</a>)</div><div ng-if=!vm.ImportResult.Succeeded class=\"sxc-message sxc-message-error\">{{\"ImportExport.ImportContent.Messages.ImportFailed\" | translate}}</div><div ng-repeat=\"message in vm.ImportResult.Messages\" class=sxc-message ng-class=\"{ 'sxc-message-warning': message.MessageType == 0, 'sxc-message-success': message.MessageType == 1, 'sxc-message-error': message.MessageType == 2, 'sxc-message-success-hidden': vm.ImportResult._hideSuccessMessages }\">{{message.Message}}</div></div><div class=modal-footer></div></div></div><style>.sxc-message { display: block; padding: 18px 18px; margin-bottom: 18px; border: 1px solid rgba(2, 139, 255, 0.2); border-radius: 3px; background: rgba(2,139,255,0.15); max-width: 980px; }\r" +
-    "\n" +
-    "\r" +
-    "\n" +
-    "    .sxc-message-success.sxc-message { background-color: rgba(0,255,0,0.15); border-color: rgba(0, 255, 0, 0.5); }\r" +
-    "\n" +
-    "    \r" +
-    "\n" +
-    "    .sxc-message-success.sxc-message-success-hidden { display: none; }\r" +
-    "\n" +
-    "    \r" +
-    "\n" +
-    "    .sxc-message-warning.sxc-message { background-color: rgba(255,255,0,0.15); border-color: #CDB21F; }\r" +
-    "\n" +
-    "\r" +
-    "\n" +
-    "    .sxc-message-error.sxc-message { background-color: rgba(255,0,0,0.15); border-color: rgba(255, 0, 0, 0.2); }</style>"
-  );
-
-
-  $templateCache.put('importexport/import-content.html',
-    "<div><div class=modal-header><button icon=remove class=\"btn pull-right\" type=button ng-click=vm.close()></button><h3 class=modal-title translate=ImportExport.ImportContent.Title></h3></div><div ng-show=\"true || vm.IsImporting\" class=sxc-import-spinner><i class=\"icon-eav-spinner animate-spin\"></i></div><div ng-if=!vm.ImportResult.Messages><div class=modal-body><div translate=ImportExport.ImportContent.Intro></div><div translate=ImportExport.ImportContent.FurtherHelp></div><br><span class=\"btn btn-default btn-file\"><span ng-hide=vm.ImportFile.name>{{\"ImportExport.ImportContent.Commands.SelectFile\" | translate}}</span> <span ng-show=vm.ImportFile.name>{{vm.ImportFile.name}}</span> <input type=file sxc-file-input=\"vm.ImportFile\"></span><br></div><div class=modal-footer><button type=button class=\"btn btn-primary pull-left\" ng-click=vm.importContent() ng-disabled=\"!vm.ImportFile.name || vm.IsImporting\" translate=ImportExport.ImportContent.Commands.Import></button></div></div><div ng-if=vm.ImportResult.Messages><div class=modal-body><div ng-if=vm.ImportResult.Succeeded class=\"sxc-message sxc-message-info\">{{\"ImportExport.ImportContent.Messages.ImportSucceeded\" | translate}} (<a ng-click=\"vm.ImportResult._hideSuccessMessages = !vm.ImportResult._hideSuccessMessages\">{{\"ImportExport.ImportContent.Commands.ToggleSuccessMessages\" | translate}}</a>)</div><div ng-if=!vm.ImportResult.Succeeded class=\"sxc-message sxc-message-error\">{{\"ImportExport.ImportContent.Messages.ImportFailed\" | translate}}</div><div ng-repeat=\"message in vm.ImportResult.Messages\" class=sxc-message ng-class=\"{ 'sxc-message-warning': message.MessageType == 0, 'sxc-message-success': message.MessageType == 1, 'sxc-message-error': message.MessageType == 2, 'sxc-message-success-hidden': vm.ImportResult._hideSuccessMessages }\">{{message.Message}}</div></div><div class=modal-footer></div></div></div>"
-  );
-
-
-  $templateCache.put('importexport/intro.html',
-    "<div class=modal-body><div><div class=\"pull-left btn-group-vertical\"><button uib-tooltip=\"{{'AppConfig.Export.Button' | translate}}\" ng-click=vm.exportAll() class=\"btn btn-square btn-primary\" type=button><i icon=export></i></button></div><div style=\"margin-left: 50px\"><h4 class=modal-title translate=AppConfig.Export.Title></h4><div translate=AppConfig.Export.Intro></div></div></div><br><div><div class=\"pull-left btn-group-vertical\"><button uib-tooltip=\"{{'ImportExport.Buttons.Export' | translate}}\" ng-click=vm.export() class=\"btn btn-square btn-primary\" type=button><i icon=export></i></button> <button uib-tooltip=\"{{'ImportExport.Buttons.Import' | translate}}\" ng-click=vm.import() class=\"btn btn-square btn-primary\" type=button><i icon=import></i></button></div><div style=\"margin-left: 50px\"><h4 class=modal-title translate=ImportExport.Title></h4><div translate=ImportExport.Intro></div></div></div><br></div>"
-  );
-
-
-  $templateCache.put('language-settings/languages.html',
-    "<div><div class=modal-header><h4 translate=Language.Title></h4></div><div class=modal-body><div translate=Language.Intro></div><table class=\"table table-hover\"><thead><tr><th translate=Language.Table.Code></th><th translate=Language.Table.Culture></th><th translate=Language.Table.Status></th></tr></thead><tbody><tr ng-repeat=\"item in vm.items | orderBy:['ContentType.Name','Name']\" class=clickable-row ng-click=vm.toggle(item)><td class=clickable>{{item.Code}}</td><td class=clickable>{{item.Culture}}</td><td class=\"clickable text-nowrap\"><span ng-click=vm.save(item) stop-event=click><switch ng-model=item.IsEnabled></switch></span></td></tr><tr ng-if=!vm.items.length><td colspan=100 translate=General.Messages.NothingFound></td></tr></tbody></table>&nbsp;</div></div>"
-  );
-
-
-  $templateCache.put('manage-content-list/manage-content-list.html',
-    "<div class=modal-header><button class=\"btn btn-default btn-square btn-subtle pull-right\" type=button ng-click=vm.close()><i icon=remove></i></button><h3 class=modal-title translate=ManageContentList.Title></h3></div><div><div class=modal-body><div><p translate=ManageContentList.HeaderIntro></p><div><a ng-if=vm.header.Type ng-click=vm.editHeader()>{{ vm.header.Title }} <i icon=pencil class=pull-right></i></a> <span ng-if=!vm.header.Type translate=ManageContentList.NoHeaderInThisList></span></div><br></div><div><p translate=ManageContentList.Intro></p><div ui-tree=options data-empty-placeholder-enabled=false><ol ui-tree-nodes ng-model=vm.items><li ng-repeat=\"item in vm.items\" ui-tree-node class=eav-entityselect-item style=\"width: 100%\"><div ui-tree-handle><i icon=move title=\"{{ 'FieldType.Entity.DragMove' | translate }}\" class=\"pull-left eav-entityselect-sort\"></i> <span>&nbsp;{{item.Title}} ({{item.Id}})</span> <span class=eav-entityselect-item-actions><span ng-if=\"item.Id !== 0\" data-nodrag title=\"{{ 'FieldType.Entity.Edit' | translate }}\" ng-click=vm.edit(item.Id)><i icon=pencil></i></span></span></div></li></ol></div></div></div></div><div class=modal-footer><button class=\"btn btn-primary btn-square btn-lg pull-left\" type=button ng-click=vm.ok()><i icon=ok></i></button></div>"
-  );
-
-
-  $templateCache.put('replace-content/replace-content.html',
-    "<div class=modal-header><button class=\"btn btn-default btn-square btn-subtle pull-right\" type=button ng-click=vm.close()><i icon=remove></i></button><h3 class=modal-title translate=ReplaceContent.Title></h3></div><div><div class=modal-body><p translate=ReplaceContent.Intro></p><div translate=ReplaceContent.ChooseItem></div><div><select class=input-lg ng-model=vm.item.id ng-options=\"vm.convertToInt(key) as ((value || '[?]') + ' (' + key + ')') for (key,value) in vm.options\" style=\"max-width: 100%\"></select>&nbsp;<button type=button class=\"btn btn-lg\" ng-click=vm.copySelected()><i icon=duplicate></i></button></div></div></div><div class=modal-footer><button class=\"btn btn-primary btn-square btn-lg pull-left\" type=button ng-click=vm.ok()><i icon=ok></i></button></div>"
-  );
-
-
-  $templateCache.put('templates/templates.html',
-    "<div class=modal-body><button icon=plus type=button class=\"btn btn-primary btn-square\" ng-click=vm.add()></button> <span class=btn-group ng-if=vm.debug.on><button icon=repeat type=button class=\"btn btn-square\" ng-click=vm.refresh()></button></span><table class=\"table table-hover\"><thead><tr><th translate=Templates.Table.TName></th><th translate=Templates.Table.TPath></th><th translate=Templates.Table.CType></th><th translate=Templates.Table.DemoC></th><th><span uib-tooltip=\"{{'Templates.Table.Show' | translate}}\"><i icon=eye-open></i></span></th><th translate=Templates.Table.UrlKey></th><th translate=Templates.Table.Actions></th></tr></thead><tbody><tr ng-repeat=\"item in vm.items | orderBy:['ContentType.Name','Name']\" class=clickable-row ng-click=vm.edit(item)><td class=clickable>{{item.Name}}</td><td class=clickable><span uib-tooltip={{item.TemplatePath}}>...{{item.TemplatePath.split(\"/\").pop()}}</span></td><td class=clickable><span uib-tooltip=\"\r" +
-    "\n" +
-    "Cont: {{item.ContentType.Name}} ({{item.ContentType.Id}})\r" +
-    "\n" +
-    "Pres: {{item.PresentationType.Name}} ({{item.PresentationType.Id}})\r" +
-    "\n" +
-    "ListC: {{item.ListContentType.Name}} ({{item.ListContentType.Id}})\r" +
-    "\n" +
-    "ListP: {{item.ListPresentationType.Name}} ({{item.ListPresentationType.Id}})\r" +
-    "\n" +
-    "\">{{item.ContentType.Name}}</span></td><td class=clickable><span uib-tooltip=\"\r" +
-    "\n" +
-    "Demo: {{item.ContentType.DemoTitle}} ({{item.ContentType.DemoId}})\r" +
-    "\n" +
-    "Pres: {{item.PresentationType.DemoTitle}} ({{item.PresentationType.DemoId}})\r" +
-    "\n" +
-    "ListC: {{item.ListContentType.DemoTitle}} ({{item.ListContentType.DemoId}})\r" +
-    "\n" +
-    "ListP: {{item.ListPresentationType.DemoTitle}} ({{item.ListPresentationType.DemoId}})\r" +
-    "\n" +
-    "\">{{item.ContentType.DemoId}}</span></td><td><span icon=\"{{ item.IsHidden ? 'close' : 'eye-open'}}\"></span></td><td class=clickable><span uib-tooltip={{item.ViewNameInUrl}}>{{item.ViewNameInUrl}}</span></td><td class=text-nowrap stop-event=click><button type=button class=\"btn btn-xs btn-square\" ng-click=vm.permissions(item)><i icon=user></i></button> <button type=button class=\"btn btn-xs btn-square\" ng-click=vm.tryToDelete(item)><span icon=remove></span></button></td></tr><tr ng-if=!vm.items.length><td colspan=100 translate=General.Messages.NothingFound></td></tr></tbody></table><div translate=Templates.InfoHideAdvanced></div></div>"
-  );
-
-
-  $templateCache.put('web-api/web-api.html',
-    "<div class=modal-header><h3 class=modal-title translate=WebApi.Title></h3></div><div class=modal-body><p translate=WebApi.Intro></p><button icon=plus type=button class=\"btn btn-square\" ng-click=vm.add()></button> <button icon=repeat type=button class=\"btn btn-square\" ng-click=vm.refresh()></button><table class=\"table table-hover\"><thead><tr><th translate=WebApi.ListTitle></th></tr></thead><tbody><tr ng-repeat=\"item in vm.items | orderBy:['ContentType.Name','Name']\"><td><span uib-tooltip={{item.TemplatePath}}>{{item}}</span></td></tr><tr ng-if=!vm.items.length><td colspan=100 translate=General.Messages.NothingFound></td></tr></tbody></table><p translate=WebApi.QuickStart></p></div>"
-  );
-
-}]);
-
+angular.module("sxcTemplates", []).run(["$templateCache", function($templateCache) {$templateCache.put("app-main/app-main.html","<div ng-click=\"vm.debug.autoEnableAsNeeded($event)\">\r\n    <div class=\"modal-header\">\r\n        <button class=\"btn btn-default btn-square btn-subtle pull-right\" type=\"button\" ng-click=\"vm.close()\">\r\n            <i icon=\"remove\"></i>\r\n        </button>\r\n        <h3 class=\"modal-title\" translate=\"Main.Title\"></h3>\r\n    </div>\r\n    <div class=\"modal-body\">\r\n        <div>\r\n            <uib-tabset>\r\n                <uib-tab>\r\n                    <uib-tab-heading>\r\n                        <span uib-tooltip=\"{{\'Main.Tab.GettingStarted\' | translate }}\">\r\n                            <i icon=\"home\"></i> {{\'Main.Tab.GS\' | translate | trustHtml }}\r\n                        </span>\r\n                    </uib-tab-heading>\r\n\r\n                    <iframe ng-src=\"{{ vm.config.GettingStartedUrl | trustAsResourceUrl }}\" style=\"border: none; width: 100%; height: 500px\"></iframe>\r\n\r\n                    <div ng-hide=\"true\">\r\n                        original script, maybe we need it\r\n                        $(document).ready(function () {\r\n                        $(window).bind(\"resize\", function () {\r\n                        var GettingStartedFrame = $(\".sc-iframe-gettingstarted\");\r\n                        GettingStartedFrame.height($(window).height() - 50);\r\n                        });\r\n\r\n                        $(window).trigger(\"resize\");\r\n                        });\r\n                    </div>\r\n                </uib-tab>\r\n\r\n                <uib-tab select=\"vm.view=\'content\'\">\r\n                    <uib-tab-heading>\r\n                        <span icon=\"list\" uib-tooltip=\"{{\'Main.Tab.ContentData\' | translate }}\"></span> {{\'Main.Tab.CD\' | translate }}\r\n                    </uib-tab-heading>\r\n                    <div ng-if=\"vm.view == \'content\'\">\r\n                        <div ng-controller=\"List as vm\" ng-include=\"\'content-types/content-types.html\'\"></div>\r\n                    </div>\r\n                </uib-tab>\r\n\r\n\r\n                <uib-tab select=\"vm.view=\'query\'\" ng-if=\"!vm.config.IsContent\">\r\n                    <uib-tab-heading>\r\n                        <span icon=\"filter\" uib-tooltip=\"{{\'Main.Tab.Query\' | translate }}\"></span> {{\'Main.Tab.Q\' | translate }}\r\n                    </uib-tab-heading>\r\n                    <div ng-if=\"vm.view == \'query\'\">\r\n                        <div ng-controller=\"PipelineManagement as vm\" ng-include=\"\'pipelines/pipelines.html\'\"></div>\r\n\r\n                    </div>\r\n                </uib-tab>\r\n\r\n                <uib-tab select=\"vm.view=\'view\'\">\r\n                    <uib-tab-heading>\r\n                        <span icon=\"picture\" uib-tooltip=\"{{\'Main.Tab.ViewsTemplates\' | translate }}\"></span> {{\'Main.Tab.VT\' | translate }}\r\n                    </uib-tab-heading>\r\n                    <div ng-if=\"vm.view == \'view\'\">\r\n                        <div ng-controller=\"TemplateList as vm\" ng-include=\"\'templates/templates.html\'\"></div>\r\n\r\n                    </div>\r\n                </uib-tab>\r\n\r\n\r\n\r\n\r\n                <uib-tab select=\"vm.view=\'webapi\'\" ng-if=\"!vm.config.IsContent\">\r\n                    <uib-tab-heading>\r\n                        <span icon=\"flash\" uib-tooltip=\"{{\'Main.Tab.WebApi\' | translate }}\"></span> {{\'Main.Tab.WA\' | translate }}\r\n                    </uib-tab-heading>\r\n                    <div ng-if=\"vm.view == \'webapi\'\">\r\n                        <div ng-controller=\"WebApiMain as vm\" ng-include=\"\'web-api/web-api.html\'\"></div>\r\n                    </div>\r\n                </uib-tab>\r\n\r\n\r\n                <uib-tab select=\"vm.view=\'app\'\">\r\n                    <uib-tab-heading>\r\n                        <span icon=\"unchecked\" uib-tooltip=\"{{\'Main.Tab.AppSettings\' | translate }}\"></span> {{\'Main.Tab.AS\' | translate }}\r\n                    </uib-tab-heading>\r\n                    <div ng-if=\"vm.view == \'app\'\">\r\n                        <div ng-if=\"!vm.config.IsContent\">\r\n                            <div ng-controller=\"AppSettings as vm\" ng-include=\"\'app-settings/app-settings.html\'\"></div>\r\n                            <br />                            \r\n                        </div>\r\n                        <div ng-controller=\"ImportExportIntro as vm\" ng-include=\"\'importexport/intro.html\'\"></div>\r\n                    </div>\r\n                </uib-tab>\r\n\r\n                <uib-tab select=\"vm.view=\'portal\'\">\r\n                    <uib-tab-heading>\r\n                        <span icon=\"globe\" uib-tooltip=\"{{\'Main.Tab.PortalLanguages\' | translate }}\"></span> {{\'Main.Tab.PL\' | translate }}\r\n                    </uib-tab-heading>\r\n                    <div ng-if=\"vm.view == \'portal\'\">\r\n                        <h3 translate=\"Main.Portal.Title\"></h3>\r\n                        <div translate=\"Main.Portal.Intro\"></div>\r\n                        <div ng-controller=\"LanguageSettings as vm\" ng-include=\"\'language-settings/languages.html\'\"></div>\r\n\r\n                    </div>\r\n                </uib-tab>\r\n\r\n            </uib-tabset>\r\n\r\n        </div>\r\n\r\n\r\n    </div>\r\n    <show-debug-availability class=\"pull-right\"></show-debug-availability>\r\n</div>");
+$templateCache.put("app-settings/app-settings.html","    \r\n<div class=\"modal-body\">\r\n    <h3 translate=\"AppConfig.Title\"></h3>\r\n    <div translate=\"AppConfig.Intro\"></div>\r\n\r\n    <div class=\"clearfix\">\r\n        <div class=\"pull-left btn-group-vertical\">\r\n            <button uib-tooltip=\"{{ \'AppConfig.Settings.Edit\' | translate }}\" ng-disabled=\"!vm.ready()\" ng-click=\"vm.edit(\'App-Settings\')\" class=\"btn btn-primary btn-square\" type=\"button\">\r\n                <i icon=\"pencil\"></i>\r\n            </button>\r\n            <button uib-tooltip=\"{{ \'AppConfig.Settings.Config\' | translate }}\" ng-disabled=\"!vm.ready()\" ng-click=\"vm.config(\'App-Settings\')\" class=\"btn btn-default btn-square\" type=\"button\">\r\n                <i icon=\"cog\"></i>\r\n            </button>\r\n        </div>\r\n        <div style=\"margin-left: 50px\">\r\n            <h4 class=\"modal-title\" translate=\"AppConfig.Settings.Title\"></h4>\r\n            <div translate=\"AppConfig.Settings.Intro\"></div>\r\n        </div>\r\n    </div>\r\n    <br/>\r\n    <div class=\"clearfix\">\r\n        <div class=\"pull-left btn-group-vertical\">\r\n            <button uib-tooltip=\"{{\'AppConfig.Resources.Edit\' | translate}}\" ng-disabled=\"!vm.ready()\" ng-click=\"vm.edit(\'App-Resources\')\" class=\"btn btn-square btn-primary\" type=\"button\">\r\n                <i icon=\"pencil\"></i>\r\n            </button>\r\n\r\n            <button uib-tooltip=\"{{\'AppConfig.Resources.Config\' | translate}}\" ng-disabled=\"!vm.ready()\" ng-click=\"vm.config(\'App-Resources\')\" class=\"btn btn-square btn-default\" type=\"button\">\r\n                <i icon=\"cog\"></i>\r\n            </button>\r\n        </div>\r\n        <div style=\"margin-left: 50px\">\r\n            <h4 class=\"modal-title\" translate=\"AppConfig.Resources.Title\"></h4>\r\n            <div translate=\"AppConfig.Resources.Intro\"></div>\r\n        </div>\r\n    </div>\r\n    <br/>\r\n    <div>\r\n        <div class=\"pull-left btn-group-vertical\">\r\n            <button uib-tooltip=\"{{\'AppConfig.Definition.Edit\' | translate}}\" ng-disabled=\"!vm.ready()\" ng-click=\"vm.editPackage()\" class=\"btn btn-primary btn-square\" type=\"button\">\r\n                <i icon=\"cog\"></i>\r\n            </button>\r\n        </div>\r\n        <div style=\"margin-left: 50px\">\r\n\r\n            <h4 class=\"modal-title\" translate=\"AppConfig.Definition.Title\"></h4>\r\n            <div translate=\"AppConfig.Definition.Intro\"></div>\r\n        </div>\r\n    </div>\r\n\r\n</div>");
+$templateCache.put("apps-management/apps.html","<div>\r\n    <div class=\"modal-header\">\r\n        <button icon=\"remove\" class=\"btn btn-default btn-square btn-subtle pull-right\" type=\"button\" ng-click=\"vm.close()\"></button>\r\n        <h3 class=\"modal-title\" translate=\"AppManagement.Title\"></h3>\r\n    </div>\r\n    <div class=\"modal-body\">\r\n        <span class=\"btn-group\">\r\n            <button type=\"button\" class=\"btn btn-primary\" ng-click=\"vm.browseCatalog()\">\r\n                <span icon=\"search\"></span> {{ \'AppManagement.Buttons.Browse\' | translate }}\r\n            </button>\r\n            <button type=\"button\" class=\"btn\" ng-click=\"vm.import()\">\r\n                <span icon=\"import\" uib-tooltip=\"{{ \'AppManagement.Buttons.Import\' | translate }}\"></span>\r\n            </button>\r\n\r\n            <button type=\"button\" class=\"btn\" ng-click=\"vm.add()\">\r\n                <span icon=\"plus\" uib-tooltip=\"{{ \'AppManagement.Buttons.Create\' | translate }}\"></span>\r\n            </button>\r\n            <button type=\"button\" class=\"btn\" ng-click=\"vm.refresh()\">\r\n                <span icon=\"repeat\"></span>\r\n            </button>\r\n            <button type=\"button\" class=\"btn\" ng-click=\"vm.languages()\">\r\n                <span icon=\"globe\"></span>\r\n            </button>\r\n        </span>\r\n        <table class=\"table table-hover\">\r\n            <thead>\r\n            <tr>\r\n                <th translate=\"AppManagement.Table.Name\"></th>\r\n                <th translate=\"AppManagement.Table.Folder\"></th>\r\n                <!--<th translate=\"AppManagement.Table.Templates\"></th>-->\r\n                <th> <span icon=\"eye-open\" uib-tooltip=\"{{ \'AppManagement.Table.Show\' | translate }}\"></span></th>\r\n                <th translate=\"AppManagement.Table.Actions\"></th>\r\n            </tr>\r\n            </thead>\r\n            <tbody>\r\n            <tr ng-repeat=\"item in vm.items | orderBy:\'Title\'\" ng-click=\"vm.manage(item)\">\r\n                <td class=\"clickable\">\r\n                    <span uib-tooltip=\"\r\nId: {{item.Id}}\r\nGuid: {{item.Guid}}\">{{item.Name}}</span>\r\n                </td>\r\n                <td class=\"clickable\">{{item.Folder}}</td>\r\n                <!--<td></td>-->\r\n                <td><span icon=\"{{ item.IsHidden ? \'eye-close\' : \'eye-open\' }}\"></span> </td>\r\n                <td stop-event=\"click\">\r\n                    <!--<button icon=\"cog\" ng-disabled=\"!item.IsApp\" type=\"button\" class=\"btn btn-xs\" ng-click=\"vm.config(item)\"></button>-->\r\n                    <!-- disabled export because there\'s no good way to pass the app-id to the dialog with dependency injection - part of #887 -->\r\n                    <!--<button icon=\"export\" class=\"btn btn-xs\" type=\"button\" ng-click=\"vm.export(item)\"></button>-->\r\n                    <button icon=\"remove\" ng-disabled=\"{{!item.IsApp}}\" type=\"button\" class=\"btn btn-xs\" ng-click=\"vm.tryToDelete(item)\"></button>\r\n                </td>\r\n            </tr>\r\n            <tr ng-if=\"!vm.items.length\">\r\n                <td colspan=\"100\" translate=\"General.Messages.NothingFound\"></td>\r\n            </tr>\r\n            </tbody>\r\n        </table>\r\n    </div>\r\n</div>");
+$templateCache.put("importexport/export-app.html","<div ng-click=\"vm.debug.autoEnableAsNeeded($event)\">\r\n    <div class=\"modal-header\">\r\n        <button icon=\"remove\" class=\"btn pull-right\" type=\"button\" ng-click=\"vm.close()\"></button>\r\n        <h3 class=\"modal-title\" translate=\"ImportExport.ExportApp.Title\"></h3>\r\n    </div>\r\n    <div class=\"modal-body\">\r\n        <div translate=\"ImportExport.ExportApp.Intro\"></div>\r\n        <div translate=\"ImportExport.ExportApp.FurtherHelp\"></div>\r\n\r\n        <h5>{{\"ImportExport.ExportApp.Specifications.Title\" | translate}}</h5>\r\n        <ul>\r\n            <li>{{\"ImportExport.ExportApp.Specifications.AppName\" | translate}} {{vm.AppInfo.Name}}</li>\r\n            <li>{{\"ImportExport.ExportApp.Specifications.AppGuid\" | translate}} {{vm.AppInfo.Guid}}</li>\r\n            <li>{{\"ImportExport.ExportApp.Specifications.AppVersion\" | translate}} {{vm.AppInfo.Version}}</li>\r\n        </ul>\r\n\r\n        <h5>{{\"ImportExport.ExportApp.Content.Title\" | translate}}</h5>\r\n        <ul>\r\n            <li>{{vm.AppInfo.EntitiesCount}} {{\"ImportExport.ExportApp.Content.EntitiesCount\" | translate}}</li>\r\n            <li>{{vm.AppInfo.LanguagesCount}} {{\"ImportExport.ExportApp.Content.LanguagesCount\" | translate}}</li>\r\n            <li>{{vm.AppInfo.TemplatesCount}} {{\"ImportExport.ExportApp.Content.TemplatesCount\" | translate}} ({{\"ImportExport.ExportApp.Content.TokenTemplates\" | translate}} {{vm.AppInfo.HasTokenTemplates}}, {{\"ImportExport.ExportApp.Content.RazorTemplates\" | translate}} {{vm.AppInfo.HasRazorTemplates}})</li>\r\n            <li>{{vm.AppInfo.TransferableFilesCount}} {{\"ImportExport.ExportApp.Content.TransferableFilesCount\" | translate}}</li>\r\n            <li>{{vm.AppInfo.FilesCount}} {{\"ImportExport.ExportApp.Content.FilesCount\" | translate}}</li>\r\n        </ul>\r\n\r\n        <div>\r\n            <input ng-model=\"vm.IncludeContentGroups\" type=\"checkbox\" ng-disabled=\"vm.ResetAppGuid\" /> {{\"ImportExport.ExportApp.Options.IncludeContentGroups\" | translate}}\r\n        </div>\r\n        <div>\r\n            <input ng-model=\"vm.ResetAppGuid\" type=\"checkbox\" ng-disabled=\"vm.IncludeContentGroups\"/> {{\"ImportExport.ExportApp.Options.ResetAppGuid\" | translate}}\r\n        </div>\r\n    </div>\r\n\r\n    <div class=\"modal-footer\">\r\n        <button type=\"button\" class=\"btn btn-primary pull-left\" ng-click=\"vm.exportApp()\" translate=\"ImportExport.ExportApp.Commands.Export\" ng-disabled=\"vm.IsExporting\"></button>\r\n        <button type=\"button\" class=\"btn btn-default pull-left\" ng-click=\"vm.exportGit()\"\r\n                translate=\"ImportExport.ExportApp.Commands.ExportForVersionControl\"\r\n                ng-disabled=\"vm.IsExporting\"\r\n                xxxng-show=\"vm.debug.on\"\r\n                ></button>\r\n    </div>\r\n    <show-debug-availability class=\"pull-right\"></show-debug-availability>\r\n</div>\r\n");
+$templateCache.put("importexport/export-content.html","<div ng-click=\"vm.debug.autoEnableAsNeeded($event)\">\r\n\r\n    <div class=\"modal-header\">\r\n        <button icon=\"remove\" class=\"btn pull-right\" type=\"button\" ng-click=\"vm.close()\"></button>\r\n        <h3 class=\"modal-title\" translate=\"ImportExport.ExportContent.Title\"></h3>\r\n    </div>\r\n    <div class=\"modal-body\">\r\n         \r\n        <span class=\"btn-group\" ng-if=\"vm.debug.on\">\r\n            <button icon=\"record\" type=\"button\" class=\"btn btn-square\" ng-click=\"vm.changeExportScope()\"></button>\r\n        </span>\r\n\r\n        <div translate=\"ImportExport.ExportContent.Intro\"></div>\r\n        <div translate=\"ImportExport.ExportContent.FurtherHelp\"></div>\r\n\r\n        <h5 translate=\"ImportExport.ExportContent.ContentTypes.Title\"></h5>\r\n        <ul class=\"sc-export-content-list\">\r\n            <li ng-repeat=\"contentType in vm.ContentInfo.ContentTypes\">\r\n                <label ng-class=\"{ \'active\': contentType._export }\"><input type=\"checkbox\" ng-model=\"contentType._export\" /> {{contentType.Name}} ({{contentType.Id}})</label>\r\n                <div ng-if=\"contentType.Templates.length\" class=\"sc-export-content-list-inner\">\r\n                    <h6 translate=\"ImportExport.ExportContent.ContentTypes.Templates\"></h6>\r\n                    <ul>\r\n                        <li ng-repeat=\"template in contentType.Templates\">\r\n                            <label ng-class=\"{ \'active\': template._export }\"><input type=\"checkbox\" ng-model=\"template._export\" /> {{template.Name}} ({{template.Id}})</label>\r\n                        </li>\r\n                    </ul>\r\n                </div>\r\n                <div ng-if=\"contentType.Entities.length\" class=\"sc-export-content-list-inner\">\r\n                    <h6 translate=\"ImportExport.ExportContent.ContentTypes.Entities\"></h6>\r\n                    <ul>\r\n                        <li ng-repeat=\"entity in contentType.Entities\">\r\n                            <label ng-class=\"{ \'active\': entity._export }\"><input type=\"checkbox\" ng-model=\"entity._export\" /> {{entity._2sxcEditInformation.title}} ({{entity.EntityId}})</label>\r\n                        </li>\r\n                    </ul>\r\n                </div>\r\n\r\n            </li>\r\n        </ul>\r\n\r\n        <h5 translate=\"ImportExport.ExportContent.TemplatesWithoutContentTypes.Title\"></h5>\r\n        <ul class=\"sc-export-content-list\">\r\n            <li ng-repeat=\"template in vm.ContentInfo.TemplatesWithoutContentTypes\">\r\n                <label ng-class=\"{ \'active\': template._export }\"><input type=\"checkbox\" ng-model=\"template._export\" /> {{template.Name}} ({{template.Id}})</label>\r\n            </li>\r\n        </ul>\r\n    </div>\r\n\r\n    <div class=\"modal-footer\">\r\n        <button type=\"button\" class=\"btn btn-primary pull-left\" ng-click=\"vm.exportContent()\" translate=\"ImportExport.ExportContent.Commands.Export\" ng-disabled=\"vm.IsExporting\"></button>\r\n    </div>\r\n\r\n    <show-debug-availability class=\"pull-right\"></show-debug-availability>\r\n</div>\r\n\r\n\r\n\r\n<style>\r\n    .sc-export-content-list { list-style-type: none; margin: 0; padding: 0; border-top: 1px solid #DDD; }\r\n\r\n    .sc-export-content-list-inner { padding: 0 0 0 40px; }\r\n\r\n    .sc-export-content-list > li { margin: 0; padding: 0; border-bottom: 1px solid #DDD; font-weight: bold; }\r\n\r\n    .sc-export-content-list h6 { font-size: inherit; font-weight: bold; margin: 0; padding: 5px; }\r\n\r\n    .sc-export-content-list label { display: block; padding: 10px; margin: 0; font-size: inherit; font-weight: normal; }\r\n\r\n    .sc-export-content-list label:hover { background: #EEE; }\r\n    .sc-export-content-list label.active { background: #E6F7E7; }\r\n\r\n    .sc-export-content-list > li ul { list-style-type: none; margin: 0; padding: 0; }\r\n\r\n    .sc-export-content-list > li li { font-weight: normal; padding: 0; margin: 0; }\r\n</style>");
+$templateCache.put("importexport/import-app.html","<div>\r\n    <div class=\"modal-header\">\r\n        <button icon=\"remove\" class=\"btn pull-right\" type=\"button\" ng-click=\"vm.close()\"></button>\r\n        <h3 class=\"modal-title\" translate=\"ImportExport.ImportApp.Title\"></h3>\r\n    </div>\r\n\r\n    <div class=\"sxc-spinner\" ng-show=\"vm.IsImporting\" class=\"sxc-import-spinner\"><i class=\"icon-eav-spinner animate-spin\"></i></div>\r\n\r\n    <!-- IMPORT -->\r\n    <div ng-if=\"!vm.ImportResult.Messages\">\r\n\r\n        <div class=\"modal-body\">\r\n\r\n            <div translate=\"ImportExport.ImportApp.Intro\"></div>\r\n            <div translate=\"ImportExport.ImportApp.FurtherHelp\"></div>\r\n            <br />\r\n\r\n            <span class=\"btn btn-default btn-file\">\r\n                <span ng-hide=\"vm.ImportFile.name\">{{\"ImportExport.ImportApp.Commands.SelectFile\" | translate}}</span>\r\n                <span ng-show=\"vm.ImportFile.name\">{{vm.ImportFile.name}}</span>\r\n                <input type=\"file\" sxc-file-input=\"vm.ImportFile\" />\r\n            </span>\r\n            <br />\r\n        </div>\r\n\r\n        <div class=\"modal-footer\">\r\n            <button type=\"button\" class=\"btn btn-primary pull-left\" ng-click=\"vm.importApp()\" ng-disabled=\"!vm.ImportFile.name || vm.IsImporting\" translate=\"ImportExport.ImportApp.Commands.Import\"></button>\r\n        </div>\r\n    </div>\r\n    <!-- END IMPORT -->\r\n\r\n\r\n    <!-- RESULT -->\r\n    <div ng-if=\"vm.ImportResult.Messages\">\r\n        <div class=\"modal-body\">\r\n            <div ng-if=\"vm.ImportResult.Succeeded\" class=\"sxc-message sxc-message-info\">\r\n                {{\"ImportExport.ImportContent.Messages.ImportSucceeded\" | translate}} (<a ng-click=\"vm.ImportResult._hideSuccessMessages = !vm.ImportResult._hideSuccessMessages\">{{\"ImportExport.ImportContent.Commands.ToggleSuccessMessages\" | translate}}</a>)\r\n            </div>\r\n            <div ng-if=\"!vm.ImportResult.Succeeded\" class=\"sxc-message sxc-message-error\">\r\n                {{\"ImportExport.ImportContent.Messages.ImportFailed\" | translate}}\r\n            </div>\r\n            <div ng-repeat=\"message in vm.ImportResult.Messages\" class=\"sxc-message\" ng-class=\"{ \'sxc-message-warning\': message.MessageType == 0, \'sxc-message-success\': message.MessageType == 1, \'sxc-message-error\': message.MessageType == 2, \'sxc-message-success-hidden\': vm.ImportResult._hideSuccessMessages }\">\r\n                {{message.Message}}\r\n            </div>\r\n        </div>\r\n        <div class=\"modal-footer\">\r\n        </div>\r\n    </div>\r\n    <!-- END RESULT -->\r\n\r\n\r\n</div>\r\n\r\n<style>\r\n    .sxc-message { display: block; padding: 18px 18px; margin-bottom: 18px; border: 1px solid rgba(2, 139, 255, 0.2); border-radius: 3px; background: rgba(2,139,255,0.15); max-width: 980px; }\r\n\r\n    .sxc-message-success.sxc-message { background-color: rgba(0,255,0,0.15); border-color: rgba(0, 255, 0, 0.5); }\r\n    \r\n    .sxc-message-success.sxc-message-success-hidden { display: none; }\r\n    \r\n    .sxc-message-warning.sxc-message { background-color: rgba(255,255,0,0.15); border-color: #CDB21F; }\r\n\r\n    .sxc-message-error.sxc-message { background-color: rgba(255,0,0,0.15); border-color: rgba(255, 0, 0, 0.2); }\r\n</style>");
+$templateCache.put("importexport/import-content.html","<div>\r\n    <div class=\"modal-header\">\r\n        <button icon=\"remove\" class=\"btn pull-right\" type=\"button\" ng-click=\"vm.close()\"></button>\r\n        <h3 class=\"modal-title\" translate=\"ImportExport.ImportContent.Title\"></h3>\r\n    </div>\r\n\r\n    <div ng-show=\"true || vm.IsImporting\" class=\"sxc-import-spinner\"><i class=\"icon-eav-spinner animate-spin\"></i></div>\r\n\r\n    <!-- IMPORT -->\r\n    <div ng-if=\"!vm.ImportResult.Messages\">\r\n\r\n        <div class=\"modal-body\">\r\n            <div translate=\"ImportExport.ImportContent.Intro\"></div>\r\n            <div translate=\"ImportExport.ImportContent.FurtherHelp\"></div>\r\n            <br />\r\n            <span class=\"btn btn-default btn-file\">\r\n                <span ng-hide=\"vm.ImportFile.name\">{{\"ImportExport.ImportContent.Commands.SelectFile\" | translate}}</span>\r\n                <span ng-show=\"vm.ImportFile.name\">{{vm.ImportFile.name}}</span>\r\n                <input type=\"file\" sxc-file-input=\"vm.ImportFile\" />\r\n            </span>\r\n            <br />\r\n        </div>\r\n\r\n        <div class=\"modal-footer\">\r\n            <button type=\"button\" class=\"btn btn-primary pull-left\" ng-click=\"vm.importContent()\" ng-disabled=\"!vm.ImportFile.name || vm.IsImporting\" translate=\"ImportExport.ImportContent.Commands.Import\"></button>\r\n        </div>\r\n    </div>\r\n    <!-- END IMPORT -->\r\n\r\n    <!-- RESULT -->\r\n    <div ng-if=\"vm.ImportResult.Messages\">\r\n        <div class=\"modal-body\">\r\n            <div ng-if=\"vm.ImportResult.Succeeded\" class=\"sxc-message sxc-message-info\">\r\n                {{\"ImportExport.ImportContent.Messages.ImportSucceeded\" | translate}} (<a ng-click=\"vm.ImportResult._hideSuccessMessages = !vm.ImportResult._hideSuccessMessages\">{{\"ImportExport.ImportContent.Commands.ToggleSuccessMessages\" | translate}}</a>)\r\n            </div>\r\n            <div ng-if=\"!vm.ImportResult.Succeeded\" class=\"sxc-message sxc-message-error\">\r\n                {{\"ImportExport.ImportContent.Messages.ImportFailed\" | translate}}\r\n            </div>\r\n            <div ng-repeat=\"message in vm.ImportResult.Messages\" class=\"sxc-message\" ng-class=\"{ \'sxc-message-warning\': message.MessageType == 0, \'sxc-message-success\': message.MessageType == 1, \'sxc-message-error\': message.MessageType == 2, \'sxc-message-success-hidden\': vm.ImportResult._hideSuccessMessages }\">\r\n                {{message.Message}}\r\n            </div>\r\n        </div>\r\n        <div class=\"modal-footer\">\r\n        </div>\r\n    </div>\r\n    <!-- END RESULT -->\r\n</div>");
+$templateCache.put("importexport/intro.html","<div class=\"modal-body\">\r\n    <div>\r\n        <div class=\"pull-left btn-group-vertical\">\r\n            <button uib-tooltip=\"{{\'AppConfig.Export.Button\' | translate}}\" ng-click=\"vm.exportAll()\" class=\"btn btn-square btn-primary\" type=\"button\">\r\n                <i icon=\"export\"></i>\r\n            </button>\r\n        </div>\r\n        <div style=\"margin-left: 50px\">\r\n            <h4 class=\"modal-title\" translate=\"AppConfig.Export.Title\"></h4>\r\n            <div translate=\"AppConfig.Export.Intro\"></div>\r\n        </div>\r\n    </div>\r\n\r\n    <br />\r\n\r\n    <div>\r\n        <div class=\"pull-left btn-group-vertical\">\r\n            <button uib-tooltip=\"{{\'ImportExport.Buttons.Export\' | translate}}\" ng-click=\"vm.export()\" class=\"btn btn-square btn-primary\" type=\"button\">\r\n                <i icon=\"export\"></i>\r\n            </button>\r\n\r\n            <button uib-tooltip=\"{{\'ImportExport.Buttons.Import\' | translate}}\" ng-click=\"vm.import()\" class=\"btn btn-square btn-primary\" type=\"button\">\r\n                <i icon=\"import\"></i>\r\n            </button>\r\n        </div>\r\n        <div style=\"margin-left: 50px\">\r\n            <h4 class=\"modal-title\" translate=\"ImportExport.Title\"></h4>\r\n            <div translate=\"ImportExport.Intro\"></div>\r\n        </div>\r\n    </div>\r\n\r\n    <br />\r\n\r\n</div>");
+$templateCache.put("language-settings/languages.html","<div>\r\n    <div class=\"modal-header\">\r\n        <h4 translate=\"Language.Title\"></h4>        \r\n    </div>\r\n    <div class=\"modal-body\">\r\n        <div translate=\"Language.Intro\"></div>\r\n\r\n        <table class=\"table table-hover\">\r\n            <thead>\r\n                <tr>\r\n                    <th translate=\"Language.Table.Code\"></th>\r\n                    <th translate=\"Language.Table.Culture\"></th>\r\n                    <th translate=\"Language.Table.Status\"></th>\r\n                </tr>\r\n            </thead>\r\n            <tbody>\r\n                <tr ng-repeat=\"item in vm.items | orderBy:[\'ContentType.Name\',\'Name\']\" class=\"clickable-row\" ng-click=\"vm.toggle(item)\">\r\n                    <td class=\"clickable\">{{item.Code}}</td>\r\n                    <td class=\"clickable\">{{item.Culture}}</span></td>\r\n                    <td class=\"clickable text-nowrap\">\r\n                        <span ng-click=\"vm.save(item)\" stop-event=\"click\">\r\n                            <switch ng-model=\"item.IsEnabled\"></switch>\r\n                        </span>\r\n                    </td>\r\n                </tr>\r\n                <tr ng-if=\"!vm.items.length\">\r\n                    <td colspan=\"100\" translate=\"General.Messages.NothingFound\"></td>\r\n                </tr>\r\n            </tbody>\r\n        </table>\r\n        &nbsp;\r\n    </div>\r\n</div>");
+$templateCache.put("manage-content-list/manage-content-list.html","<div class=\"modal-header\">\r\n    <button class=\"btn btn-default btn-square btn-subtle pull-right\" type=\"button\" ng-click=\"vm.close()\"><i icon=\"remove\"></i></button>\r\n    <h3 class=\"modal-title\" translate=\"ManageContentList.Title\"></h3>\r\n</div>\r\n<div>\r\n    <div class=\"modal-body\">\r\n        <div>\r\n            <p translate=\"ManageContentList.HeaderIntro\"></p>\r\n            <div>\r\n                <a ng-if=\"vm.header.Type\" ng-click=\"vm.editHeader()\"> {{ vm.header.Title }} <i icon=\"pencil\" class=\"pull-right\"></i></a>\r\n                <span ng-if=\"!vm.header.Type\" translate=\"ManageContentList.NoHeaderInThisList\"></span>\r\n            </div>\r\n            <br/>\r\n        </div>\r\n        <div>\r\n            <p translate=\"ManageContentList.Intro\"></p>\r\n            <div ui-tree=\"options\" data-empty-placeholder-enabled=\"false\">\r\n                <ol ui-tree-nodes ng-model=\"vm.items\">\r\n                    <li ng-repeat=\"item in vm.items\" ui-tree-node class=\"eav-entityselect-item\" style=\"width: 100%\">\r\n                        <div ui-tree-handle>\r\n                            <i icon=\"move\" title=\"{{ \'FieldType.Entity.DragMove\' | translate }}\" class=\"pull-left eav-entityselect-sort\"></i>\r\n                            <span>&nbsp;{{item.Title}} ({{item.Id}})</span>\r\n                            <span class=\"eav-entityselect-item-actions\">\r\n                                <span ng-if=\"item.Id !== 0\" data-nodrag title=\"{{ \'FieldType.Entity.Edit\' | translate }}\" ng-click=\"vm.edit(item.Id)\">\r\n                                    <i icon=\"pencil\"></i>\r\n                                </span>\r\n                            </span>\r\n                        </div>\r\n                    </li>\r\n                </ol>\r\n\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>\r\n<div class=\"modal-footer\">\r\n    <button class=\"btn btn-primary btn-square btn-lg pull-left\" type=\"button\" ng-click=\"vm.ok()\"><i icon=\"ok\"></i></button>\r\n</div>");
+$templateCache.put("replace-content/replace-content.html","<div class=\"modal-header\">\r\n    <button class=\"btn btn-default btn-square btn-subtle pull-right\" type=\"button\" ng-click=\"vm.close()\"><i icon=\"remove\"></i></button>\r\n    <h3 class=\"modal-title\" translate=\"ReplaceContent.Title\"></h3>\r\n</div>\r\n<div>\r\n    <div class=\"modal-body\">\r\n        <p translate=\"ReplaceContent.Intro\"></p>\r\n        <div translate=\"ReplaceContent.ChooseItem\"></div>\r\n        <div>\r\n            <select class=\"input-lg\"\r\n                    ng-model=\"vm.item.id\"\r\n                    ng-options=\"vm.convertToInt(key) as ((value || \'[?]\') + \' (\' + key + \')\') for (key,value) in vm.options\"\r\n                    style=\"max-width: 100%\"></select>\r\n            &nbsp;<button type=\"button\" class=\"btn btn-lg\" ng-click=\"vm.copySelected()\">\r\n                <i icon=\"duplicate\"></i>\r\n            </button>\r\n        </div>\r\n    </div>\r\n</div>\r\n<div class=\"modal-footer\">\r\n    <button class=\"btn btn-primary btn-square btn-lg pull-left\" type=\"button\" ng-click=\"vm.ok()\"><i icon=\"ok\"></i></button>\r\n</div>");
+$templateCache.put("templates/templates.html","\r\n\r\n<div class=\"modal-body\">\r\n    <button icon=\"plus\" type=\"button\" class=\"btn btn-primary btn-square\" ng-click=\"vm.add()\"> </button>\r\n    <span class=\"btn-group\" ng-if=\"vm.debug.on\">\r\n        <button icon=\"repeat\" type=\"button\" class=\"btn btn-square\" ng-click=\"vm.refresh()\"></button>\r\n    </span>\r\n    <table class=\"table table-hover\">\r\n        <thead>\r\n        <tr>\r\n            <th translate=\"Templates.Table.TName\"></th>\r\n            <th translate=\"Templates.Table.TPath\"></th>\r\n            <th translate=\"Templates.Table.CType\"></th>\r\n            <th translate=\"Templates.Table.DemoC\"></th>\r\n            <th>\r\n                <span uib-tooltip=\"{{\'Templates.Table.Show\' | translate}}\"><i icon=\"eye-open\"></i></span>\r\n            </th>\r\n            <th translate=\"Templates.Table.UrlKey\"></th>\r\n            <th translate=\"Templates.Table.Actions\"></th>\r\n        </tr>\r\n        </thead>\r\n        <tbody>\r\n        <tr ng-repeat=\"item in vm.items | orderBy:[\'ContentType.Name\',\'Name\']\" class=\"clickable-row\" ng-click=\"vm.edit(item)\">\r\n            <td class=\"clickable\">{{item.Name}}</td>\r\n            <td class=\"clickable\"><span uib-tooltip=\"{{item.TemplatePath}}\">...{{item.TemplatePath.split(\"/\").pop()}}</span></td>\r\n            <td class=\"clickable\">\r\n                <span uib-tooltip=\"\r\nCont: {{item.ContentType.Name}} ({{item.ContentType.Id}})\r\nPres: {{item.PresentationType.Name}} ({{item.PresentationType.Id}})\r\nListC: {{item.ListContentType.Name}} ({{item.ListContentType.Id}})\r\nListP: {{item.ListPresentationType.Name}} ({{item.ListPresentationType.Id}})\r\n\">{{item.ContentType.Name}}</span>\r\n            </td>\r\n            <td class=\"clickable\">\r\n                <span uib-tooltip=\"\r\nDemo: {{item.ContentType.DemoTitle}} ({{item.ContentType.DemoId}})\r\nPres: {{item.PresentationType.DemoTitle}} ({{item.PresentationType.DemoId}})\r\nListC: {{item.ListContentType.DemoTitle}} ({{item.ListContentType.DemoId}})\r\nListP: {{item.ListPresentationType.DemoTitle}} ({{item.ListPresentationType.DemoId}})\r\n\">{{item.ContentType.DemoId}}</span>\r\n            </td>\r\n            <td>\r\n                <span icon=\"{{ item.IsHidden ? \'close\' : \'eye-open\'}}\"></span>\r\n            </td>\r\n            <td class=\"clickable\"><span uib-tooltip=\"{{item.ViewNameInUrl}}\">{{item.ViewNameInUrl}}</span></td>\r\n            <td class=\"text-nowrap\" stop-event=\"click\">\r\n                <button type=\"button\" class=\"btn btn-xs btn-square\" ng-click=\"vm.permissions(item)\">\r\n                    <i icon=\"user\"></i>\r\n                </button>\r\n\r\n                <button type=\"button\" class=\"btn btn-xs btn-square\" ng-click=\"vm.tryToDelete(item)\">\r\n                    <span icon=\"remove\"></span>\r\n                </button>\r\n            </td>\r\n        </tr>\r\n        <tr ng-if=\"!vm.items.length\">\r\n            <td colspan=\"100\" translate=\"General.Messages.NothingFound\"></td>\r\n        </tr>\r\n        </tbody>\r\n    </table>\r\n\r\n    <div class=\"\" translate=\"Templates.InfoHideAdvanced\"></div>\r\n</div>");
+$templateCache.put("web-api/web-api.html","<div class=\"modal-header\">\r\n    <h3 class=\"modal-title\" translate=\"WebApi.Title\"></h3>\r\n</div>\r\n\r\n<div class=\"modal-body\">\r\n    <p translate=\"WebApi.Intro\"></p>\r\n    <button icon=\"plus\" type=\"button\" class=\"btn btn-square\" ng-click=\"vm.add()\"> </button>\r\n    <button icon=\"repeat\" type=\"button\" class=\"btn btn-square\" ng-click=\"vm.refresh()\"></button>\r\n\r\n    <table class=\"table table-hover\">\r\n        <thead>\r\n            <tr>\r\n                <th translate=\"WebApi.ListTitle\"></th>\r\n            </tr>\r\n        </thead>\r\n        <tbody>\r\n            <tr ng-repeat=\"item in vm.items | orderBy:[\'ContentType.Name\',\'Name\']\">\r\n                <td><span uib-tooltip=\"{{item.TemplatePath}}\">{{item}}</span></td>\r\n            </tr>\r\n            <tr ng-if=\"!vm.items.length\">\r\n                <td colspan=\"100\" translate=\"General.Messages.NothingFound\"></td>\r\n            </tr>\r\n        </tbody>\r\n    </table>\r\n    <p translate=\"WebApi.QuickStart\"></p>\r\n\r\n</div>\r\n\r\n");}]);
 (function () { 
 
+    TemplateListController.$inject = ["templatesSvc", "eavAdminDialogs", "eavConfig", "appId", "debugState", "$translate", "$uibModalInstance"];
     angular.module("TemplatesApp", [
         "SxcServices",
         "EavConfiguration",
@@ -1497,11 +1372,11 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
             $uibModalInstance.dismiss("cancel");
         };
     }
-    TemplateListController.$inject = ["templatesSvc", "eavAdminDialogs", "eavConfig", "appId", "debugState", "$translate", "$uibModalInstance"];
 
 } ());
 (function () { 
 
+    WebApiMainController.$inject = ["appId", "webApiSvc", "eavAdminDialogs", "$uibModalInstance", "$translate"];
     angular.module("WebApiApp", [
         "SxcServices",
         //"EavConfiguration",
@@ -1535,6 +1410,5 @@ angular.module('SxcTemplates', []).run(['$templateCache', function($templateCach
             $uibModalInstance.dismiss("cancel");
         };
     }
-    WebApiMainController.$inject = ["appId", "webApiSvc", "eavAdminDialogs", "$uibModalInstance", "$translate"];
 
 } ());

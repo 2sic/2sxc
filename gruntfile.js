@@ -4,26 +4,26 @@ module.exports = function (grunt) {
     var distRoot = "dist/";
     var tmpRoot = "tmp/";
 
-    var sxcadmin = {
-        cwd: "src/sxc-admin/",
-        cwdJs: ["src/sxc-admin/**/*.js"],
-        tmp: "tmp/sxc-admin/",
-        templates: "tmp/sxc-admin/sxc-templates.js",
-        dist: "dist/sxc-admin/",
-        concatFile: "dist/sxc-admin/sxc-admin.js",
-        uglifyFile: "dist/sxc-admin/sxc-admin.min.js"
-    };
-    var sxcedit = {
-        cwd: "src/sxc-edit/",
-        cwdJs: ["src/sxc-edit/**/*.js"],
-        tmp: "tmp/sxc-edit/",
-        templates: "tmp/sxc-edit/sxc-templates.js",
-        dist: "dist/sxc-edit/",
-        concatFile: "dist/sxc-edit/sxc-edit.js",
-        uglifyFile: "dist/sxc-edit/sxc-edit.min.js",
-        concatCss: "dist/sxc-edit/sxc-edit.css",
-        concatCssMin: "dist/admin/sxc-edit.min.css"
-    };
+    //var sxcadmin = {
+    //    cwd: "src/sxc-admin/",
+    //    cwdJs: ["src/sxc-admin/**/*.js"],
+    //    tmp: "tmp/sxc-admin/",
+    //    templates: "tmp/sxc-admin/sxc-templates.js",
+    //    dist: "dist/sxc-admin/",
+    //    concatFile: "dist/sxc-admin/sxc-admin.js",
+    //    uglifyFile: "dist/sxc-admin/sxc-admin.min.js"
+    //};
+    //var sxcedit = {
+    //    cwd: "src/sxc-edit/",
+    //    cwdJs: ["src/sxc-edit/**/*.js"],
+    //    tmp: "tmp/sxc-edit/",
+    //    templates: "tmp/sxc-edit/sxc-templates.js",
+    //    dist: "dist/sxc-edit/",
+    //    concatFile: "dist/sxc-edit/sxc-edit.js",
+    //    uglifyFile: "dist/sxc-edit/sxc-edit.min.js",
+    //    concatCss: "dist/sxc-edit/sxc-edit.css",
+    //    concatCssMin: "dist/admin/sxc-edit.min.css"
+    //};
     var inpage = {
         cwd: "src/inpage/",
         cwdJs: ["src/inpage/**/*.js"],
