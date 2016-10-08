@@ -220,6 +220,10 @@ function createSetsForOurCode() {
 
     // setup inpage stuff
     var inpage = createConfig("inpage", "templates");
+    inpage.js.files.push("!src/inpage/i18n/**"); // excl. libs because we don't want to lint them
+    inpage.js.libs = [
+        "src/inpage/i18n/**.js"
+    ];
     sets.push(inpage);
 
     // setup inpage dialogs
