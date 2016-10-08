@@ -24,7 +24,7 @@ gulp.task("import-libs", function() {
     importDependencies();
 });
 
-gulp.task("try-build-snippets", function() {
+gulp.task("watch-snippets", function() {
     watchSnippets();
 });
 
