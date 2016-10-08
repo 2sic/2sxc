@@ -119,9 +119,9 @@ $2sxc.ng.autoRunBootstrap();
 
 angular.module("2sxc4ng", ["ng"])
     // Configure $http for DNN web services (security tokens etc.)
-    .config(["$httpProvider", "HttpHeaders", function ($httpProvider, HttpHeaders) {
+    .config(function ($httpProvider, HttpHeaders) {
         angular.extend($httpProvider.defaults.headers.common, HttpHeaders);
-        $httpProvider.interceptors.push(["$q", "sxc", function ($q, sxc) {
+        $httpProvider.interceptors.push(function ($q, sxc) {
             return {
                 // Rewrite 2sxc-urls if necessary
                 'request': function (config) {
@@ -136,9 +136,9 @@ angular.module("2sxc4ng", ["ng"])
                     return $q.reject(rejection);
                 }
             };
-        }]);
+        });
 
-    }])
+    })
 
     // provide the global $2sxc object to angular modules as a clear, clean dependency
     .factory("$2sxc", function () {
@@ -147,15 +147,15 @@ angular.module("2sxc4ng", ["ng"])
     })
 
     // Provide the app-specific sxc helper for this module
-    .factory("sxc", ["AppInstanceId", "$2sxc", function (AppInstanceId, $2sxc) {
+    .factory("sxc", function (AppInstanceId, $2sxc) {
         if(window.console) console.log("creating sxc service for id: " + AppInstanceId);
         var ngSxc = $2sxc(AppInstanceId);    // make this service be the 2sxc-controller for this module
         return ngSxc;
-    }])
+    })
 
 
     /// Standard entity commands like get one, many etc.
-    .factory("content", ["$http", function ($http) {
+    .factory("content", function ($http) {
         // construct a service just for this content-type
         return function (contentType) {
             var oneType = {};
@@ -178,10 +178,10 @@ angular.module("2sxc4ng", ["ng"])
             };
             return oneType;
         };
-    }])
+    })
 
     /// simple helper service which will call a query
-    .factory("query", ["$http", function ($http) {
+    .factory("query", function ($http) {
         return function (name) {
             var qry = {};
             qry.root = "app-query/" + name;
@@ -191,11 +191,11 @@ angular.module("2sxc4ng", ["ng"])
             };
             return qry;
         };
-    }])
+    })
 
 
     // BETA - not final. SXC-Toolbar, not ready for production use
-    .directive('sxcToolbar', ["AppInstanceId", function SxcToolbar(AppInstanceId) {
+    .directive('sxcToolbar', function SxcToolbar(AppInstanceId) {
         return {
             restrict: 'E',
             scope: {
@@ -225,5 +225,5 @@ angular.module("2sxc4ng", ["ng"])
                 element.html(toolbar);
             }
         };
-    }])
+    })
 ;

@@ -24,46 +24,46 @@ module.exports = function (grunt) {
     //    concatCss: "dist/sxc-edit/sxc-edit.css",
     //    concatCssMin: "dist/admin/sxc-edit.min.css"
     //};
-    var inpage = {
-        cwd: "src/inpage/",
-        cwdJs: ["src/inpage/**/*.js"],
-        tmp: "tmp/inpage/",
-        templates: "tmp/inpage/inpage-templates.js",
-        dist: "dist/admin/",
-        concatFile: "dist/inpage/inpage.js",
-        uglifyFile: "dist/inpage/inpage.min.js",
-        concatCss: "dist/inpage/inpage.css",
-        concatCssMin: "dist/inpage/inpage.min.css"
-    };
-    var inpDialog = {
-        cwd: "src/inpage-dialogs/",
-        cwdJs: ["src/inpage-dialogs/**/*.js"],
-        tmp: "tmp/inpage-dialogs/",
-        templates: "tmp/inpage-dialogs/inpage-templates.js",
-        //dist: "dist/admin/",
-        concatFile: "dist/inpage/inpage-dialogs.js",
-        uglifyFile: "dist/inpage/inpage-dialogs.min.js",
-        concatCss: "dist/inpage/inpage-dialogs.css",
-        concatCssMin: "dist/inpage/inpage-dialogs.min.css"
-    };
-
-    var eavconf = {
-        cwd: "src/config/",
-        cwdJs: ["src/config/**/*.js"],
-        tmp: "tmp/config/",
-        dist: "dist/config/",
-        concatFile: "dist/config/config.js",
-        uglifyFile: "dist/config/config.min.js"
-    };
-    var designer = {
-        cwd: "src/sxc-develop/",
-        cwdJs: ["src/sxc-develop/**/*.js"],
-        tmp: "tmp/sxc-develop/",
-        templates: "tmp/sxc-develop/sxc-templates.js",
-        dist: "dist/sxc-develop/",
-        concatFile: "dist/sxc-develop/sxc-develop.js",
-        uglifyFile: "dist/sxc-develop/sxc-develop.min.js"
-    };
+    //var inpage = {
+    //    cwd: "src/inpage/",
+    //    cwdJs: ["src/inpage/**/*.js"],
+    //    tmp: "tmp/inpage/",
+    //    templates: "tmp/inpage/inpage-templates.js",
+    //    dist: "dist/admin/",
+    //    concatFile: "dist/inpage/inpage.js",
+    //    uglifyFile: "dist/inpage/inpage.min.js",
+    //    concatCss: "dist/inpage/inpage.css",
+    //    concatCssMin: "dist/inpage/inpage.min.css"
+    //};
+    //var inpDialog = {
+    //    cwd: "src/inpage-dialogs/",
+    //    cwdJs: ["src/inpage-dialogs/**/*.js"],
+    //    tmp: "tmp/inpage-dialogs/",
+    //    templates: "tmp/inpage-dialogs/inpage-templates.js",
+    //    //dist: "dist/admin/",
+    //    concatFile: "dist/inpage/inpage-dialogs.js",
+    //    uglifyFile: "dist/inpage/inpage-dialogs.min.js",
+    //    concatCss: "dist/inpage/inpage-dialogs.css",
+    //    concatCssMin: "dist/inpage/inpage-dialogs.min.css"
+    //};
+    //
+    //var eavconf = {
+    //    cwd: "src/config/",
+    //    cwdJs: ["src/config/**/*.js"],
+    //    tmp: "tmp/config/",
+    //    dist: "dist/config/",
+    //    concatFile: "dist/config/config.js",
+    //    uglifyFile: "dist/config/config.min.js"
+    //};
+    //var designer = {
+    //    cwd: "src/sxc-develop/",
+    //    cwdJs: ["src/sxc-develop/**/*.js"],
+    //    tmp: "tmp/sxc-develop/",
+    //    templates: "tmp/sxc-develop/sxc-templates.js",
+    //    dist: "dist/sxc-develop/",
+    //    concatFile: "dist/sxc-develop/sxc-develop.js",
+    //    uglifyFile: "dist/sxc-develop/sxc-develop.min.js"
+    //};
 
 
   // Project configuration.

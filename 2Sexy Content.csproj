@@ -385,18 +385,15 @@
     <Content Include="Extensions\404.png" />
     <Content Include="Extensions\Imazen_ImageResizer\ImageResizer.txt" />
     <Content Include="Extensions\Imazen_ImageResizer\license.txt" />
+    <Content Include="grunt-tasks\dnn.gruntfile.js" />
     <Content Include="grunt-tasks\field-string-wysiwyg-tinymce.gruntfile.js" />
     <Content Include="grunt-tasks\fonts.gruntfile.js" />
-    <Content Include="grunt-tasks\sxc-api.gruntfile.js" />
-    <Content Include="grunt-tasks\dnn.gruntfile.js" />
     <Content Include="grunt-tasks\develop.gruntfile.js" />
-    <Content Include="grunt-tasks\inpage.gruntfile.js" />
     <Content Include="grunt-tasks\import-languages.gruntfile.js" />
     <Content Include="grunt-tasks\i18n.gruntfile.js" />
     <Content Include="gruntfile.js" />
     <Content Include="icon-app-black.png" />
     <Content Include="icon-black.png" />
-    <Content Include="js\iframe.html" />
     <Content Include="DnnWebForms\Skins\QuickEdit.ascx" />
     <Content Include="src\inpage-dialogs\template-selector\template-selector.css" />
     <Content Include="src\inpage-libs\i18n\i18next.min.js" />
@@ -416,6 +413,8 @@
     <Content Include="src\inpage-dialogs\getting-started\getting-started.js" />
     <Content Include="src\inpage\inpage-icons-codes.css" />
     <Content Include="src\inpage\quick-insert.js" />
+    <Content Include="src\js-api\2sxc.api\2sxc.api.js" />
+    <Content Include="src\js-api\angular1\2sxc4ng.js" />
     <Content Include="src\sxc-admin\importexport\export-content.controller.js" />
     <Content Include="src\sxc-admin\importexport\export-content.html" />
     <Content Include="src\sxc-admin\importexport\export-content.service.js" />
@@ -460,8 +459,6 @@
     <Content Include="src\inpage-dialogs\template-selector\template-selector.html" />
     <Content Include="src\inpage-dialogs\template-selector\template-selector-controller.js" />
     <Content Include="js\angularjs\2sxc4ng.js" />
-    <Content Include="js\angularjs\toaster.css" />
-    <Content Include="js\angularjs\toaster.js" />
     <Content Include="license.txt" />
     <Content Include="src\inpage\edit.css" />
     <Content Include="ReleaseNotes.txt" />
@@ -602,6 +599,7 @@
   <ItemGroup>
     <Content Include="gulpfile.js" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

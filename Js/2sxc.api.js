@@ -1,4 +1,4 @@
-﻿// this is the 2sxc-javascript API
+// this is the 2sxc-javascript API
 // 2sxc will include this automatically when a user has edit-rights
 // a template developer will typically use this to use the data-api to read 2sxc-data from the server
 // read more about this in the wiki: https://github.com/2sic/2sxc/wiki/JavaScript-%242sxc
@@ -275,13 +275,13 @@
             ifrm.setAttribute("style", "top: 0;left: 0;width: 100%;height: 100%;");
             ifrm.setAttribute("src", url);
             wrapper.appendChild(ifrm);
-            document.body.className += ' sxc-popup-open';
+            document.body.className += " sxc-popup-open";
             $2sxc.totalPopup.frame = ifrm;
             $2sxc.totalPopup.callback = callback;
         },
         close: function closeTotalPopup() {
             if ($2sxc.totalPopup.frame) {
-                document.body.className = document.body.className.replace('sxc-popup-open', '');
+                document.body.className = document.body.className.replace("sxc-popup-open", "");
                 var frm = $2sxc.totalPopup.frame;
                 frm.parentNode.parentNode.removeChild(frm.parentNode);
                 $2sxc.totalPopup.callback();

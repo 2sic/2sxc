@@ -32,8 +32,8 @@ gulp.task("test-something", function () {
 
 
 //#region basic functions I'll need a lot
-function createConfig(key, tmplSetName, altDistPath, altJsName, libFiles) {
-    var cwd = "src/" + key + "/";
+function createConfig(key, tmplSetName, altDistPath, altJsName, libFiles, cwd) {
+    cwd = cwd || "src/" + key + "/";
     return {
         name: key,
         cwd: cwd,
@@ -168,16 +168,27 @@ function createSetsForOurCode() {
     var edit = createConfig("sxc-edit", "sxcTemplates");
     sets.push(edit);
 
-    sets = [];
     // setup inpage stuff
     var inpage = createConfig("inpage", "templates");
     sets.push(inpage);
 
     // setup inpage dialogs
     var inpDialog = createConfig("inpage-dialogs", "templates", "dist/inpage/");
-
     sets.push(inpDialog);
 
+    // setup inpage dialogs
+    var eavConf = createConfig("config", "templates");
+    sets.push(eavConf);
+
+    // setup inpage dialogs
+    var develop = createConfig("sxc-develop", "templates");
+    sets.push(develop);
+
+    var api = createConfig("2sxc.api", "templates", "js/", undefined, undefined, "src/js-api/2sxc.api/");
+    sets.push(api);
+
+    var ang1 = createConfig("2sxc4ng", "templates", "js/angularjs", undefined, undefined, "src/js-api/angular1/");
+    sets.push(ang1);
 
     return sets;
 }
