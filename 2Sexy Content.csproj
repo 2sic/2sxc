@@ -390,11 +390,15 @@
     <Content Include="DnnWebForms\Skins\QuickEdit.ascx" />
     <Content Include="src\inpage-dialogs\template-selector\template-selector.css" />
     <Content Include="src\inpage\2sxc.cms.js" />
+    <Content Include="src\inpage\toolbar\_toolbarManager.toolbarTemplate.js" />
+    <Content Include="src\inpage\toolbar\_toolbarManager.helpers.js" />
+    <Content Include="src\inpage\toolbar\_toolbarManager.standardButtons.js" />
+    <Content Include="src\inpage\toolbar\_toolbarManager.{}.js" />
     <Content Include="src\inpage\translate\2sxc.translate.js" />
     <Content Include="src\inpage\translate\libs\i18next.min.js" />
     <Content Include="src\inpage\translate\libs\i18nextXHRBackend.min.js" />
     <Content Include="src\inpage\translate\libs\jquery-i18next.min.js" />
-    <Content Include="src\inpage\toolbar\2sxc._toolbarManager.js" />
+    <Content Include="src\inpage\toolbar\_toolbarManager.create.js" />
     <Content Include="src\inpage\translate\2sxc._translateInit.js" />
     <Content Include="src\inpage\inpage-dialog\2sxc._dialog.js" />
     <Content Include="SexyContent\ImportExport\Instructions\License.txt" />

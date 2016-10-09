@@ -334,7 +334,7 @@ $2sxc._contentBlock.create = function (sxc, manage, cbTag) {
             supportsAjax: editContext.ContentGroup.SupportsAjax
         };
 
-        var toolsAndButtons = $2sxc._toolbarManager(sxc, editContext);
+        var toolsAndButtons = $2sxc._toolbarManager.create(sxc, editContext);
         var cmds = $2sxc._contentManagementCommands(sxc, contentBlockTag);
 
         var editManager = {
@@ -598,7 +598,7 @@ $2sxc._contentBlock.create = function (sxc, manage, cbTag) {
                 showOn: "edit",
                 addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; }
             },
-            'unpublish-auto': createActionConfig("publish", "Unpublished", "eye-off", "edit", false, {
+            'publish-auto': createActionConfig("publish", "Unpublished", "eye-off", "default", false, {
                 icon2: "icon-sxc-eye-off",
                 disabled: true,
                 addCondition: function (settings, modConfig) {
@@ -700,13 +700,22 @@ $2sxc._contentBlock.create = function (sxc, manage, cbTag) {
                 showOn: "default,edit,design,admin",
                 uiActionOnly: true, // so it doesn't create the content when clicked
                 code: function (settings, event) {
-                    var fullMenu = $(event.target).closest("ul.sc-menu"); // todo: slightly nasty dependency...
+                    var btn = $(event.target);
+                    var fullMenu = btn.closest("ul.sc-menu"); // todo: slightly nasty dependency...
                     var oldState = Number(fullMenu.attr("data-state") || 0);
                     var newState = oldState + 1;
+                    var max = btn.data("groups");
                     if (newState === 2) newState = 3; // state 1 doesn't exist yet - skip
                     newState = newState % (enableTools ? 4 : 3); // if tools are enabled, there are 4 states
+
+                    // todo: refactoring, the state-count could be very dynamic now...
+                    fullMenu.removeClass("group-" + oldState)
+                        .addClass("group-" + newState);
+
                     fullMenu.removeClass("show-set-" + oldState)
                         .addClass("show-set-" + newState)
+
+                        // still needed
                         .attr("data-state", newState);
                 }
             }
@@ -1366,30 +1375,35 @@ $(function () {
         };
     };
 });
+// the toolbar manager is an internal helper
+// taking care of toolbars, buttons etc.
+
+(function () {
+    $2sxc._toolbarManager = {};
+})();
 (function() {
-    $2sxc._toolbarManager = function (sxc, editContext) {
+    $2sxc._toolbarManager.create = function (sxc, editContext) {
         var id = sxc.id, cbid = sxc.cbid;
-        var actionParams = {
+        var allActions = $2sxc._actions.create({
             canDesign: editContext.User.CanDesign,
             templateId: editContext.ContentGroup.TemplateId,
             contentTypeId: editContext.ContentGroup.ContentTypeName
-        };
+        });
 
         // #region helper functions
-        function createToolbarConfig() {
-            var toolbarConfig = {
-                portalId: editContext.Environment.WebsiteId,
-                tabId: editContext.Environment.PageId,
-                moduleId: editContext.Environment.InstanceId,
-                version: editContext.Environment.SxcVersion,
+        function createToolbarConfig(context) {
+            return {
+                portalId: context.Environment.WebsiteId,
+                tabId: context.Environment.PageId,
+                moduleId: context.Environment.InstanceId,
+                version: context.Environment.SxcVersion,
 
-                contentGroupId: editContext.ContentGroup.Guid, // todo 8.4
-                cbIsEntity: editContext.ContentBlock.IsEntity,
-                cbId: editContext.ContentBlock.Id,
-                appPath: editContext.ContentGroup.AppUrl,
-                isList: editContext.ContentGroup.IsList
+                contentGroupId: context.ContentGroup.Guid, // todo 8.4
+                cbIsEntity: context.ContentBlock.IsEntity,
+                cbId: context.ContentBlock.Id,
+                appPath: context.ContentGroup.AppUrl,
+                isList: context.ContentGroup.IsList
             };
-            return toolbarConfig;
         }
 
         // does some clean-up work on a button-definition object
@@ -1405,12 +1419,14 @@ $(function () {
                 delete actDef.entity;   // clean up edit-info
             }
         }
+
+
         //#endregion helper functions
 
-        var allActions = $2sxc._actions.create(actionParams);
+
 
         var tb = {
-            config: createToolbarConfig(),
+            config: createToolbarConfig(editContext),
             refreshConfig: function() { tb.config = createToolbarConfig(); },
             actions: allActions,
             // Generate a button (an <a>-tag) for one specific toolbar-action. 
@@ -1421,29 +1437,22 @@ $(function () {
 
                 // retrieve configuration for this button
                 var conf = allActions[actDef.action],
-                    showClasses = "",
+                    groupId = actDef.groupId,
+                    showClasses = "group-" + groupId,
                     classesList = conf.showOn.split(","),
                     box = $("<div/>"),
                     symbol = $("<i class=\"" + conf.icon + "\" aria-hidden=\"true\"></i>");
 
-                for (var c = 0; c < classesList.length; c++)
-                    showClasses += " show-" + classesList[c];
+                //for (var c = 0; c < classesList.length; c++)
+                //    showClasses += " show-" + classesList[c];
 
                 var button = $("<a />", {
                     'class': "sc-" + actDef.action + " " + showClasses + (conf.dynamicClasses ? " " + conf.dynamicClasses(actDef) : ""),
-                    'onclick': "$2sxc(" + id + ", " + cbid + ").manage.action(" + JSON.stringify(actDef) + ", event);",
+                    'onclick': "$2sxc(" + id + ", " + cbid + ").manage.action(" + JSON.stringify(actDef, function (key,value) { return key === "group" ? undefined : value; }) + ", event);",
                     'data-i18n': "[title]" + conf.title
                 });
 
-                // 2016-10-09 2dm moved to the unpublish-auto action
-                //// todo: move the following lines into the button-config and just call from here
-                //// if publish-button and not published yet, show button (otherwise hidden) & change icon
-                //if (actDef.action === "publish" && actDef.isPublished === false) {
-                //    button.addClass("show-default").removeClass("show-edit")
-                //        .attr("data-i18n", "[title]Toolbar.Unpublished");
-                //        //.attr("title", $2sxc.translate("Toolbar.Unpublished"));
-                //    symbol.removeClass(conf.icon).addClass(conf.icon);
-                //}
+                button.data("groups", actDef.groups);
 
                 button.html(box.html(symbol));
 
@@ -1452,57 +1461,33 @@ $(function () {
 
             // Assemble a default toolbar instruction set
             createDefaultToolbar: function (settings) {
-                var defTb = [
-                    {
-                        name: "default",
-                        buttons: "edit,new,metadata,unpublish-auto,more"
-                    },
-                    {
-                        name: "list",
-                        buttons: "add,remove,moveup,movedown,sort,replace,more"
-                    },
-                    {
-                        name: "instance",
-                        buttons: "develop,contenttype,contentitems,more" // todo: add templatesettings, query
-                    },
-                    {
-                        name: "app",
-                        buttons: "app,zone,more" // todo: add multilanguage-resources & settings
-                    }
-                ];
-
-                // Create a standard menu with all standard buttons
-                var buttons = [], buttons2 = [];
-
-                buttons.add = function (verb) {
-                    // if this action has an add-condition, check that first
-                    var add = allActions[verb].addCondition;
-                    if (add === undefined || ((typeof (add) === "function") ? add(settings, tb.config) : add))
-                        buttons.push($2sxc._lib.extend({}, settings, { action: verb }));
-                };
-
-                buttons2.add = function (verb, group) {
-                    // if this action has an add-condition, check that first
-                    if (!allActions[verb])
-                        return console.log("can't add button for verb: '" + verb + "'. action not found.");
-                    var add = allActions[verb].addCondition;
-                    if (add === undefined || ((typeof (add) === "function") ? add(settings, tb.config) : add))
-                        buttons2.push($2sxc._lib.extend({}, settings, { action: verb, group: group }));
-                };
-
-                for (var btn in allActions)
-                    if (allActions.hasOwnProperty(btn))
-                        buttons.add(btn);
-
-                for (var s = 0; s < defTb.length; s++) {
-                    var bs = defTb[s].buttons.split(",");
-                    for (var v = 0; v < bs.length; v++)
-                        buttons2.add(bs[v].trim(), defTb[s].name);
-                }
-
-                return buttons2;
+                var defTb = $2sxc._toolbarManager.standardButtons(editContext);
+                return tb._buildGroupedToolbar(defTb, settings);
             },
 
+            _buildGroupedToolbar: function (groups, settings) {
+                return $2sxc._toolbarManager.buttonHelpers
+                    .createFlatList(groups, allActions, settings, tb.config);
+
+                //var flatList = [];
+
+                //function addButton(verb, groupId, groups, group) {
+                //    // if this action has an add-condition, check that first
+                //    if (!allActions[verb])
+                //        return console.log("can't add button for verb: '" + verb + "'. action not found.");
+                //    var add = allActions[verb].addCondition;
+                //    if (add === undefined || ((typeof (add) === "function") ? add(settings, tb.config) : add))
+                //        flatList.push($2sxc._lib.extend({}, settings, { action: verb, groupId: groupId, groups: groups, group: group }));
+                //}
+
+                //for (var s = 0; s < groups.length; s++) {
+                //    var bs = groups[s].buttons.split(",");
+                //    for (var v = 0; v < bs.length; v++)
+                //        addButton(bs[v].trim(), s, groups.length, groups[s].name);
+                //}
+
+                //return flatList;
+            },
             // Builds the toolbar and returns it as HTML
             // expects settings - either for 1 button or for an array of buttons
             getToolbar: function(settings) {
@@ -1512,7 +1497,7 @@ $(function () {
                         ? settings // if it is an array, use that. Otherwise assume that we auto-generate all buttons with supplied settings
                         : tb.createDefaultToolbar(settings);
 
-                var tbClasses = "sc-menu show-set-0" + ((settings.sortOrder === -1) ? " listContent" : "");
+                var tbClasses = "sc-menu group-0 show-set-0" + ((settings.sortOrder === -1) ? " listContent" : "");
                 var toolbar = $("<ul />", { 'class': tbClasses, 'onclick': "var e = arguments[0] || window.event; e.stopPropagation();" });
 
                 for (var i = 0; i < actionList.length; i++)
@@ -1540,6 +1525,175 @@ $(function () {
 
 
 })();
+// the toolbar manager is an internal helper
+// taking care of toolbars, buttons etc.
+
+(function () {
+    var tools = $2sxc._toolbarManager.buttonHelpers = {
+
+
+        createDef: function(verb, icon, label, decorations, group) {
+            return {
+                verb: verb,
+                icon: icon,
+                label: label,
+                decorations: decorations,
+                group: group
+            };
+        },
+
+        expandDef: function(groups) {
+            for (var i = 0; i < groups.length; i++) {
+                var group = groups[i];
+
+                // first expand buttons if it's a string
+                if (typeof group.buttons === "string") 
+                    group.buttons = group.buttons.split(",");
+
+                for (var b = 0; b < group.buttons.length; b++) {
+                    var btn = group.buttons[b];
+                    if (typeof btn === "string")
+                        btn = tools.createDef(btn);
+
+                    if (group.defaults)
+                        $2sxc._lib.extend(btn, group.defaults);
+
+                    group.buttons[b] = btn;
+                }
+            }
+        },
+
+        createFlatList: function(groups, allActions, settings, config) {
+            //var tools = $2sxc._toolbarManager.buttonHelpers;
+            //var flat = tools.flattenList(groups);
+            //flat = tools.removeInvalidButtons(flat, allActions, settings, tb.config);
+            //flat = tools.addSettings(flat, settings);
+            //return flat;
+
+            var flatList = [];
+
+            function addButton(verb, groupId, groups, group) {
+                // if this action has an add-condition, check that first
+                if (!allActions[verb]) {
+                    console.log("can't add button for verb: '" + verb + "'. action not found.");
+                    return;
+                }
+                var add = allActions[verb].addCondition;
+                if (add === undefined || ((typeof (add) === "function") ? add(settings, config) : add))
+                    flatList.push($2sxc._lib.extend({}, settings, { action: verb, groupId: groupId, groups: groups, group: group }));
+            }
+
+            for (var s = 0; s < groups.length; s++) {
+                var bs = groups[s].buttons.split(",");
+                for (var v = 0; v < bs.length; v++)
+                    addButton(bs[v].trim(), s, groups.length, groups[s].name);
+            }
+
+            return flatList;
+        },
+
+
+        flattenList: function(btnGroups) {
+            var flatList = [];
+
+            function addButton(verb, groupId, groups, group) {
+                // var add = allActions[verb].addCondition;
+                // if (add === undefined || ((typeof (add) === "function") ? add(settings, tb.config) : add))
+                    flatList.push($2sxc._lib.extend({} /*, settings*/, { verb: verb, action: verb, groupId: groupId, groups: groups /*, group: group */ }));
+            }
+
+            for (var s = 0; s < btnGroups.length; s++) {
+                // first, enrich the set so it knows about it's context
+                var grp = btnGroups[s];
+                grp.index = s;
+                grp.groups = btnGroups;
+
+                // now process the butons
+                var bs = grp.buttons.split(",");
+                for (var v = 0; v < bs.length; v++)
+                    addButton(bs[v].trim(), btnGroups);
+            }
+
+            return flatList;
+        },
+
+        // remove buttons which are not valid based on a condition
+        removeInvalidButtons: function(btnList, actions, settings, config) {
+
+            for (var i = 0; i < btnList.length; i++) {
+                var btn = btnList[i];
+                // if this action has an add-condition, check that first
+                if (!actions[btn.verb]) {
+                    console.log("can't add button for verb: '" + verb + "'. action not found.");
+                    btnList.splice(i, 1);
+                    i--;
+                    continue;
+                }
+                var add = actions[btn.verb].addCondition;
+                if (add !== undefined && (typeof (add) === "function"))
+                    if (add(settings, config)) {
+                        btnList.splice(i, 1);
+                        i--;
+                    }
+            }
+            return btnList;
+        },
+
+        // enhance the button with settings for this instance
+        addSettings: function(btnList, settings) {
+            for (var i = 0; i < btnList.length; i++) {
+                var btn = btnList[i];
+
+                $2sxc._lib.extend(btn, settings);
+            }
+            return btnList;
+        }
+    };
+
+})();
+// the toolbar manager is an internal helper
+// taking care of toolbars, buttons etc.
+
+(function () {
+
+    $2sxc._toolbarManager.standardButtons = function(editContext) {
+        var btns = $2sxc._toolbarManager.toolbarTemplate;
+        if (!editContext.User.CanDesign)
+            btns.splice(2, 1); // remove this menu
+        return btns;
+    };
+
+})();
+// the default / initial buttons in a standard toolbar
+
+(function () {
+    $2sxc._toolbarManager.toolbarTemplate = [
+        {
+            name: "default",
+            buttons: "edit,new,metadata,publish-auto,more"
+        },
+        {
+            name: "list",
+            buttons: "add,remove,moveup,movedown,sort,replace,more"
+        },
+        {
+            name: "instance",
+            // todo: add templatesettings, query
+            buttons: "develop,contenttype,contentitems,more",
+            defaults: {
+                decorations: "group-pro"
+            }
+        },
+        {
+            name: "app",
+            // todo: add multilanguage-resources & settings
+            buttons: "app,zone,more",
+            defaults: {
+                decorations: "group-pro"
+            }
+        }
+    ];
+})();
 
 // Toolbar bootstrapping (initialize all toolbars after loading page)
 $(document).ready(function () {
@@ -1555,11 +1709,13 @@ $(document).ready(function () {
     // Ensure the _processToolbar is called after the next event cycle to make sure that the Angular app (template selector) is loaded first
     window.setTimeout(function () {
         modules.each(function () {
-            try {
-                $2sxc(this).manage.toolbar._processToolbars(this);
-            } catch (e) { // Make sure that if one app breaks, others continue to work
-                if (console && console.error) console.error(e);
-            }
+            // 2016-10-09 2dm disabled try, as it only makes debugging harder...
+            // not sure if we really need it
+            //try {
+            $2sxc(this).manage.toolbar._processToolbars(this);
+            //} catch (e) { // Make sure that if one app breaks, others continue to work
+            //    if (console && console.error) console.error(e);
+            //}
         });
     }, 0);
 

@@ -139,7 +139,7 @@
                 showOn: "edit",
                 addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; }
             },
-            'unpublish-auto': createActionConfig("publish", "Unpublished", "eye-off", "edit", false, {
+            'publish-auto': createActionConfig("publish", "Unpublished", "eye-off", "default", false, {
                 icon2: "icon-sxc-eye-off",
                 disabled: true,
                 addCondition: function (settings, modConfig) {
@@ -241,13 +241,22 @@
                 showOn: "default,edit,design,admin",
                 uiActionOnly: true, // so it doesn't create the content when clicked
                 code: function (settings, event) {
-                    var fullMenu = $(event.target).closest("ul.sc-menu"); // todo: slightly nasty dependency...
+                    var btn = $(event.target);
+                    var fullMenu = btn.closest("ul.sc-menu"); // todo: slightly nasty dependency...
                     var oldState = Number(fullMenu.attr("data-state") || 0);
                     var newState = oldState + 1;
+                    var max = btn.data("groups");
                     if (newState === 2) newState = 3; // state 1 doesn't exist yet - skip
                     newState = newState % (enableTools ? 4 : 3); // if tools are enabled, there are 4 states
+
+                    // todo: refactoring, the state-count could be very dynamic now...
+                    fullMenu.removeClass("group-" + oldState)
+                        .addClass("group-" + newState);
+
                     fullMenu.removeClass("show-set-" + oldState)
                         .addClass("show-set-" + newState)
+
+                        // still needed
                         .attr("data-state", newState);
                 }
             }

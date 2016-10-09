@@ -52,7 +52,7 @@
             supportsAjax: editContext.ContentGroup.SupportsAjax
         };
 
-        var toolsAndButtons = $2sxc._toolbarManager(sxc, editContext);
+        var toolsAndButtons = $2sxc._toolbarManager.create(sxc, editContext);
         var cmds = $2sxc._contentManagementCommands(sxc, contentBlockTag);
 
         var editManager = {

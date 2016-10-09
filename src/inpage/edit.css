@@ -51,6 +51,18 @@
 .show-set-3 a.show-admin {display: inline-block!important}
 .show-set-3 a.show-admin div { display: inline-block !important; background-color: #96D500}
 
+/* new show/hide */
+.group-0 a.group-0 {display: inline-block!important}
+.group-1 a.group-1 {display: inline-block!important}
+.group-2 a.group-2 {display: inline-block!important}
+.group-3 a.group-3 {display: inline-block!important}
+.group-4 a.group-4 {display: inline-block!important}
+.group-5 a.group-5 {display: inline-block!important}
+
+a.group-default div {background-color: #0088f4}
+a.group-pro div {background-color: #96D500}
+a.group-alert div {background-color: #ff0000}
+
 .sc-menu span.disabled { color: #aaa}
 
 .show-set-1 i.btn-mode:before { 
