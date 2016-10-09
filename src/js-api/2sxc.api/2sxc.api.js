@@ -237,11 +237,11 @@
 
         // add manage property, but not within initializer, because inside the manage-initializer it may reference 2sxc again
         try { // sometimes the manage can't be build, like before installing
-            controller.manage = $2sxc.getManageController ? $2sxc.getManageController(controller) : null;
+            controller.manage = $2sxc._getManageController ? $2sxc._getManageController(controller) : null;
         } catch (e) {}
 
         // this only works when manage exists (not installing) and translator exists too
-        if ($2sxc._initTranslate && controller.manage) $2sxc._initTranslate(controller.manage);    // init translate, not really nice, but ok for now
+        if ($2sxc._translateInit && controller.manage) $2sxc._translateInit(controller.manage);    // init translate, not really nice, but ok for now
 
         // Make sure back-reference to controller is set
         controller.data.controller = controller;

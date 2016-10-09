@@ -76,7 +76,7 @@ $2sxc._contentManagementCommands = function (sxc, targetTag) {
 
         // create a dialog link
         _linkToNgDialog: function(specialSettings) {
-            var cmd = cmc.editManager.commands.create(specialSettings);
+            var cmd = cmc.editManager._commands.create(specialSettings);
 
             if (cmd.settings.useModuleList)
                 cmd.addContentGroupItemSetsToEditList(true);
@@ -108,7 +108,12 @@ $2sxc._contentManagementCommands = function (sxc, targetTag) {
             }
         },
 
-        executeAction: function (settings, event) {
+        executeAction: function (optionalName, settings, event) {
+            // check if name is name (string) or object (settings)
+            if (typeof (optionalName) === "string")
+                settings = $2sxc._lib.extend(settings || {}, { "action": optionalName });
+            else { event = settings; settings = optionalName; }
+
             var conf = cmc.editManager.toolbar.actions[settings.action];
             settings = $2sxc._lib.extend({}, conf, settings); // merge conf & settings, but settings has higher priority
             if (!settings.dialog) settings.dialog = settings.action; // old code uses "action" as the parameter, now use verb ? dialog
@@ -123,7 +128,7 @@ $2sxc._contentManagementCommands = function (sxc, targetTag) {
                 .then(function () {
                     return settings.code(settings, origEvent, cmc.editManager);
                 });
-        },
+        }
     };
 
     return cmc;

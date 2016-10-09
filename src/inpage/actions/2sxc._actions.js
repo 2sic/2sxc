@@ -6,7 +6,7 @@
  * - the indexer in the array (usually the same as the name)
  * - name (created in the buttonConfig)
  * - title - actually the translation key to retrieve the title (buttonConfig)
- * - iclass - the icon-class
+ * - icon - the icon-class
  * - showOn - comma separated list of values on which toolbar state to show this on
  * - uiActionOnly - true/false if this is just something visual; otherwise a webservice will ensure that a content-group exists (for editing etc.)
  * - addCondition(settings, moduleConfiguration) - would conditionally prevent adding this button by default
@@ -21,14 +21,14 @@
         return $2sxc._lib.extend({
             name: name,
             title: "Toolbar." + translateKey,
-            iclass: "icon-sxc-" + icon,
+            icon: "icon-sxc-" + icon,
             showOn: show,
             uiActionOnly: uiOnly
         }, more);
     }
 
     $2sxc._actions = {};
-    var thisObj = $2sxc._actions.create = function (actionParams) {
+    $2sxc._actions.create = function (actionParams) {
         var enableTools = actionParams.canDesign;
 
         var act = {
@@ -48,12 +48,14 @@
                 },
                 code: function (settings, event, manager) {
                     // todo - should refactor this to be a toolbarManager.contentBlock command
-                    manager.commands._openNgDialog($2sxc._lib.extend({}, settings, { sortOrder: settings.sortOrder + 1 }), event);
+                    manager._commands._openNgDialog($2sxc._lib.extend({}, settings, { sortOrder: settings.sortOrder + 1 }), event);
                 }
             }),
             // add brings no dialog, just add an empty item
             'add': createActionConfig("add", "AddDemo", "plus-circled", "edit", false, {
-                addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; },
+                addCondition: function(settings, modConfig) {
+                    return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1;
+                },
                 code: function (settings, event, manager) {
                     manager.contentBlock 
                         .addItem(settings.sortOrder + 1);
@@ -67,7 +69,9 @@
                     return settings.entityId ? "" : "empty";
                     // return settings.items && settings.items[0].entityId ? "" : "empty";
                 },
-                addCondition: function (settings) { return !!settings.metadata; }, // only add a metadata-button if it has metadata-infos
+                addCondition: function(settings) {
+                    return !!settings.metadata;
+                }, // only add a metadata-button if it has metadata-infos
                 configureCommand: function (cmd) {
                     var itm = {
                         Title: "EditFormTitle.Metadata",
@@ -78,10 +82,12 @@
             }),
             'remove': {
                 title: "Toolbar.Remove",
-                iclass: "icon-sxc-minus-circled",
+                icon: "icon-sxc-minus-circled",
                 disabled: true,
                 showOn: "edit",
-                addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; },
+                addCondition: function(settings, modConfig) {
+                    return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1;
+                },
                 code: function (settings, event, manager) {
                     if (confirm($2sxc.translate("Toolbar.ConfirmRemove"))) {
                         manager.contentBlock
@@ -93,7 +99,7 @@
             // todo: work in progress related to https://github.com/2sic/2sxc/issues/618
             //'delete': {
             //    title: "Toolbar.Delete",
-            //    iclass: "icon-sxc-cancel",
+            //    icon: "icon-sxc-cancel",
             //    disabled: true,
             //    showOn: "edit",
             //    addCondition: function (settings) { return !settings.useModuleList; },
@@ -106,10 +112,12 @@
 
             'moveup': {
                 title: "Toolbar.MoveUp",
-                iclass: "icon-sxc-move-up",
+                icon: "icon-sxc-move-up",
                 disabled: false,
                 showOn: "edit",
-                addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1 && settings.sortOrder !== 0; },
+                addCondition: function(settings, modConfig) {
+                    return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1 && settings.sortOrder !== 0;
+                },
                 code: function (settings, event, manager) {
                     manager.contentBlock
                         .changeOrder(settings.sortOrder, Math.max(settings.sortOrder - 1, 0));
@@ -117,7 +125,7 @@
             },
             'movedown': {
                 title: "Toolbar.MoveDown",
-                iclass: "icon-sxc-move-down",
+                icon: "icon-sxc-move-down",
                 disabled: false,
                 showOn: "edit",
                 addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; },
@@ -127,13 +135,16 @@
             },
             'sort': {
                 title: "Toolbar.Sort",
-                iclass: "icon-sxc-list-numbered",
+                icon: "icon-sxc-list-numbered",
                 showOn: "edit",
                 addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; }
             },
-            'publish': createActionConfig("publish", "Published", "eye", "edit", false, {
-                iclass2: "icon-sxc-eye-off",
+            'unpublish-auto': createActionConfig("publish", "Unpublished", "eye-off", "edit", false, {
+                icon2: "icon-sxc-eye-off",
                 disabled: true,
+                addCondition: function (settings, modConfig) {
+                    return settings.isPublished === false;
+                },
                 code: function (settings, event, manager) {
                     if (settings.isPublished) {
                         alert($2sxc.translate("Toolbar.AlreadyPublished"));
@@ -144,12 +155,44 @@
                     manager.contentBlock.publish(part, index);
                 }
             }),
+            'publish': createActionConfig("publish", "Published", "eye-off", "edit", false, {
+                icon2: "icon-sxc-eye-off",
+                disabled: true,
+                addCondition: function(settings, modConfig) {
+                    return true; 
+                },
+                code: function (settings, event, manager) {
+                    if (settings.isPublished) {
+                        alert($2sxc.translate("Toolbar.AlreadyPublished"));
+                        return;
+                    }
+                    var part = settings.sortOrder === -1 ? "listcontent" : "content";
+                    var index = settings.sortOrder === -1 ? 0 : settings.sortOrder;
+                    manager.contentBlock.publish(part, index);
+                }
+            }),
+            //'unpublish': createActionConfig("publish", "Published", "eye", "edit", false, {
+            //    icon2: "icon-sxc-eye-off",
+            //    disabled: true,
+            //    addCondition: function(settings, modConfig) {
+            //        return true; 
+            //    },
+            //    code: function (settings, event, manager) {
+            //        if (settings.isPublished) {
+            //            alert($2sxc.translate("Toolbar.AlreadyPublished"));
+            //            return;
+            //        }
+            //        var part = settings.sortOrder === -1 ? "listcontent" : "content";
+            //        var index = settings.sortOrder === -1 ? 0 : settings.sortOrder;
+            //        manager.contentBlock.publish(part, index);
+            //    }
+            //}),
             'replace': createActionConfig("replace", "Replace", "replace", "edit", false, {
-                addCondition: function (settings) { return settings.useModuleList; },
+                addCondition: function (settings) { return settings.useModuleList; }
             }),
             'layout': {
                 title: "Toolbar.ChangeLayout",
-                iclass: "icon-sxc-glasses",
+                icon: "icon-sxc-glasses",
                 showOn: "default",
                 uiActionOnly: true, // so it doesn't create the content when used
                 code: function (settings, event, manager) {
@@ -165,36 +208,36 @@
             }),
             'contenttype': {
                 title: "Toolbar.ContentType",
-                iclass: "icon-sxc-fields",
+                icon: "icon-sxc-fields",
                 showOn: "admin",
                 uiActionOnly: true,
-                addCondition: enableTools,
+                addCondition: enableTools
             },
             'contentitems': {
                 title: "Toolbar.ContentItems",
-                iclass: "icon-sxc-table",
+                icon: "icon-sxc-table",
                 showOn: "admin",
                 params: { contentTypeName: actionParams.contentTypeId },
                 uiActionOnly: true, // so it doesn't create the content when used
-                addCondition: enableTools && actionParams.contentTypeId,
+                addCondition: enableTools && actionParams.contentTypeId
             },
             'app': {
                 title: "Toolbar.App",
-                iclass: "icon-sxc-settings",
+                icon: "icon-sxc-settings",
                 showOn: "admin",
                 uiActionOnly: true, // so it doesn't create the content when used
-                addCondition: enableTools,
+                addCondition: enableTools
             },
             'zone': {
                 title: "Toolbar.Zone",
-                iclass: "icon-sxc-manage",
+                icon: "icon-sxc-manage",
                 showOn: "admin",
                 uiActionOnly: true, // so it doesn't create the content when used
-                addCondition: enableTools,
+                addCondition: enableTools
             },
             "more": {
                 title: "Toolbar.MoreActions",
-                iclass: "icon-sxc-options btn-mode",
+                icon: "icon-sxc-options btn-mode",
                 showOn: "default,edit,design,admin",
                 uiActionOnly: true, // so it doesn't create the content when clicked
                 code: function (settings, event) {

@@ -1,5 +1,11 @@
 ﻿// A helper-controller in charge of opening edit-dialogs + creating the toolbars for it
 // all in-page toolbars etc.
+// if loaded, it's found under the $2sxc(module).manage
+// it has commands to
+// - getButton
+// - getToolbar
+// - action(...)
+
 (function () {
     //#region helper functions
     function getContentBlockTag(sxci) {
@@ -13,53 +19,53 @@
     //#endregion
 
 
-    $2sxc.getManageController = function (sxc) {
-        var cbTag = getContentBlockTag(sxc);
-        var ec = getContextInfo(cbTag);
+    $2sxc._getManageController = function (sxc) {
+        var contentBlockTag = getContentBlockTag(sxc);
+        var editContext = getContextInfo(contentBlockTag);
 
         // assemble all parameters needed for the dialogs if we open anything
         var ngDialogParams = {
-            zoneId: ec.ContentGroup.ZoneId,
-            appId: ec.ContentGroup.AppId,
-            tid: ec.Environment.PageId,
-            mid: ec.Environment.InstanceId,
+            zoneId: editContext.ContentGroup.ZoneId,
+            appId: editContext.ContentGroup.AppId,
+            tid: editContext.Environment.PageId,
+            mid: editContext.Environment.InstanceId,
             cbid: sxc.cbid,
-            lang: ec.Language.Current,
-            langpri: ec.Language.Primary,
-            langs: JSON.stringify(ec.Language.All),
-            portalroot: ec.Environment.WebsiteUrl,
-            websiteroot: ec.Environment.SxcRootUrl,
+            lang: editContext.Language.Current,
+            langpri: editContext.Language.Primary,
+            langs: JSON.stringify(editContext.Language.All),
+            portalroot: editContext.Environment.WebsiteUrl,
+            websiteroot: editContext.Environment.SxcRootUrl,
             // todo: probably move the user into the dashboard info
-            user: { canDesign: ec.User.CanDesign, canDevelop: ec.User.CanDesign },
-            approot: ec.ContentGroup.AppUrl || null // this is the only value which doesn't have a slash by default.  note that the app-root doesn't exist when opening "manage-app"
+            user: { canDesign: editContext.User.CanDesign, canDevelop: editContext.User.CanDesign },
+            approot: editContext.ContentGroup.AppUrl || null // this is the only value which doesn't have a slash by default.  note that the app-root doesn't exist when opening "manage-app"
         };
 
         var dashConfig = {
-            appId: ec.ContentGroup.AppId,
-            isContent: ec.ContentGroup.IsContent,
-            hasContent: ec.ContentGroup.HasContent,
-            isList: ec.ContentGroup.IsList,
-            templateId: ec.ContentGroup.TemplateId,
-            contentTypeId: ec.ContentGroup.ContentTypeName,
-            templateChooserVisible: ec.ContentBlock.ShowTemplatePicker, // todo: maybe move to content-goup
-            user: { canDesign: ec.User.CanDesign, canDevelop: ec.User.CanDesign },
-            supportsAjax: ec.ContentGroup.SupportsAjax
+            appId: editContext.ContentGroup.AppId,
+            isContent: editContext.ContentGroup.IsContent,
+            hasContent: editContext.ContentGroup.HasContent,
+            isList: editContext.ContentGroup.IsList,
+            templateId: editContext.ContentGroup.TemplateId,
+            contentTypeId: editContext.ContentGroup.ContentTypeName,
+            templateChooserVisible: editContext.ContentBlock.ShowTemplatePicker, // todo: maybe move to content-goup
+            user: { canDesign: editContext.User.CanDesign, canDevelop: editContext.User.CanDesign },
+            supportsAjax: editContext.ContentGroup.SupportsAjax
         };
 
-        var toolsAndButtons = $2sxc._toolbarManager(sxc, ec);
-        var cmds = $2sxc._contentManagementCommands(sxc, cbTag);
+        var toolsAndButtons = $2sxc._toolbarManager(sxc, editContext);
+        var cmds = $2sxc._contentManagementCommands(sxc, contentBlockTag);
 
         var editManager = {
             // public method to find out if it's in edit-mode
-            isEditMode: function () { return ec.Environment.IsEditable; },
-            reloadWithAjax: ec.ContentGroup.SupportsAjax,  // for now, allow all content to use ajax, apps use page-reload
+            isEditMode: function () { return editContext.Environment.IsEditable; },
+            reloadWithAjax: editContext.ContentGroup.SupportsAjax,  // for now, allow all content to use ajax, apps use page-reload
 
             dialogParameters: ngDialogParams, // used for various dialogs
             toolbarConfig: toolsAndButtons.config, // used to configure buttons / toolbars
 
-            editContext: ec, // metadata necessary to know what/how to edit
+            editContext: editContext, // metadata necessary to know what/how to edit
             dashboardConfig: dashConfig,
-            commands: cmds,
+            _commands: cmds,
 
             // Perform a toolbar button-action - basically get the configuration and execute it's action
             action: cmds.executeAction,
@@ -74,19 +80,21 @@
             // init this object 
             init: function init() {
                 // enhance UI in case there are known errors / issues
-                if (ec.error.type)
-                    editManager.handleErrors(ec.error.type, cbTag);
+                if (editContext.error.type)
+                    editManager._handleErrors(editContext.error.type, contentBlockTag);
 
                 // finish init of sub-objects
-                editManager.commands.init(editManager);
-                editManager.contentBlock = $2sxc.contentBlock(sxc, editManager, cbTag);
+                editManager._commands.init(editManager);
+                editManager.contentBlock = $2sxc._contentBlock.create(sxc, editManager, contentBlockTag);
 
                 // attach & open the mini-dashboard iframe
-                if (!ec.error.type && ec.ContentBlock.ShowTemplatePicker)
-                    editManager.action({ "action": "layout" });
+                if (!editContext.error.type && editContext.ContentBlock.ShowTemplatePicker)
+                    editManager.action("layout");
 
             },
-            handleErrors: function (errType, cbTag) {
+
+            // private: show error
+            _handleErrors: function (errType, cbTag) {
                 var errWrapper = $("<div class=\"dnnFormMessage dnnFormWarning sc-element\"></div>");
                 var msg = "";
                 var toolbar = $("<ul class='sc-menu'></ul>");
@@ -100,9 +108,10 @@
                 errWrapper.append(toolbar);
                 $(cbTag).append(errWrapper);
             },
+
             // change config by replacing the guid, and refreshing dependend sub-objects
             updateContentGroupGuid: function (newGuid) {
-                ec.ContentGroup.Guid = newGuid;
+                editContext.ContentGroup.Guid = newGuid;
                 toolsAndButtons.refreshConfig(); 
                 editManager.toolbarConfig = toolsAndButtons.config;
             },

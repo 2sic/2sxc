@@ -5,22 +5,22 @@
 var $2sxcActionMenuMapper = function (moduleId) {
     return {
         changeLayoutOrContent: function () {
-            $2sxc(moduleId).manage.action({ "action": "layout" });
+            $2sxc(moduleId).manage.action("layout");
         },
         addItem: function () {
-            $2sxc(moduleId).manage.action({ "action": "add", "useModuleList": true, "sortOrder": 0 });
+            $2sxc(moduleId).manage.action("add", { "useModuleList": true, "sortOrder": 0 });
         },
         edit: function () {
-            $2sxc(moduleId).manage.action({ "action": "edit", "useModuleList": true, "sortOrder": 0 });
+            $2sxc(moduleId).manage.action("edit", { "useModuleList": true, "sortOrder": 0 });
         },
         adminApp: function () {
-            $2sxc(moduleId).manage.action({ "action": "app" });
+            $2sxc(moduleId).manage.action("app");
         },
         adminZone: function () {
-            $2sxc(moduleId).manage.action({ "action": "zone" });
+            $2sxc(moduleId).manage.action("zone");
         },
         develop: function () {
-            $2sxc(moduleId).manage.action({ "action": "develop" });
+            $2sxc(moduleId).manage.action("develop");
         }
     };
 };

@@ -21,5 +21,4 @@ $(document).ready(function () {
         });
     }, 0);
 
-    window.EavEditDialogs = [];
 });

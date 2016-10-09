@@ -223,9 +223,9 @@ function createSetsForOurCode() {
 
     // setup inpage stuff
     var inpage = createConfig("inpage", "templates");
-    inpage.js.files.push("!src/inpage/i18n/**"); // excl. libs because we don't want to lint them
+    inpage.js.files.push("!src/inpage/translate/libs/**"); // excl. libs because we don't want to lint them
     inpage.js.libs = [
-        "src/inpage/i18n/**.js"
+        "src/inpage/translate/libs/**.js"
     ];
     sets.push(inpage);
 
