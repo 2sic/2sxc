@@ -54,14 +54,14 @@
 
                 // retrieve configuration for this button
                 var conf = allActions[actDef.action],
-                    groupId = actDef.groupId,
+                    groupId = actDef.group.index,// actDef.groupId,
                     showClasses = "group-" + groupId,
-                    classesList = conf.showOn.split(","),
+                    classesList = (actDef.decorations || "").split(','),// conf.showOn.split(","),
                     box = $("<div/>"),
                     symbol = $("<i class=\"" + conf.icon + "\" aria-hidden=\"true\"></i>");
 
-                //for (var c = 0; c < classesList.length; c++)
-                //    showClasses += " show-" + classesList[c];
+                for (var c = 0; c < classesList.length; c++)
+                    showClasses += " show-" + classesList[c];
 
                 var button = $("<a />", {
                     'class': "sc-" + actDef.action + " " + showClasses + (conf.dynamicClasses ? " " + conf.dynamicClasses(actDef) : ""),
@@ -69,7 +69,7 @@
                     'data-i18n': "[title]" + conf.title
                 });
 
-                button.data("groups", actDef.groups);
+                button.data("groups", actDef.group.groups);// actDef.groups);
 
                 button.html(box.html(symbol));
 

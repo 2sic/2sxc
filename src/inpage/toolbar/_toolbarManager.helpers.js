@@ -37,44 +37,49 @@
         },
 
         createFlatList: function(groups, allActions, settings, config) {
-            //var tools = $2sxc._toolbarManager.buttonHelpers;
-            //var flat = tools.flattenList(groups);
-            //flat = tools.removeInvalidButtons(flat, allActions, settings, tb.config);
-            //flat = tools.addSettings(flat, settings);
-            //return flat;
+            var flat = tools.flattenList(groups);
+            flat = tools.removeInvalidButtons(flat, allActions, settings, config);
+            flat = tools.addSettings(flat, settings);
+            return flat;
 
-            var flatList = [];
-
-            function addButton(verb, groupId, groups, group) {
-                // if this action has an add-condition, check that first
-                if (!allActions[verb]) {
-                    console.log("can't add button for verb: '" + verb + "'. action not found.");
-                    return;
-                }
-                var add = allActions[verb].addCondition;
-                if (add === undefined || ((typeof (add) === "function") ? add(settings, config) : add))
-                    flatList.push($2sxc._lib.extend({}, settings, { action: verb, groupId: groupId, groups: groups, group: group }));
-            }
-
-            for (var s = 0; s < groups.length; s++) {
-                var bs = groups[s].buttons.split(",");
-                for (var v = 0; v < bs.length; v++)
-                    addButton(bs[v].trim(), s, groups.length, groups[s].name);
-            }
-
-            return flatList;
+            // old full code
+            //var flatList = [];
+            //
+            //function addButton(verb, group) { //groupId, groups, group) {
+            //    // if this action has an add-condition, check that first
+            //    if (!allActions[verb]) {
+            //        console.log("can't add button for verb: '" + verb + "'. action not found.");
+            //        return;
+            //    }
+            //    var add = allActions[verb].addCondition;
+            //    if (add === undefined || ((typeof (add) === "function") ? add(settings, config) : add))
+            //        flatList.push($2sxc._lib.extend({}, settings, { action: verb, group: group }));// groupId: groupId, groups: groups, group: group }));
+            //}
+            //
+            //for (var s = 0; s < groups.length; s++) {
+            //    // first, enrich the set so it knows about it's context
+            //    var grp = groups[s];
+            //    grp.index = s;
+            //    grp.groups = groups;
+            //
+            //    var bs = groups[s].buttons.split(",");
+            //    for (var v = 0; v < bs.length; v++)
+            //        addButton(bs[v].trim(), grp);// s, groups.length, groups[s].name);
+            //}
+            //
+            //return flatList;
         },
 
 
         flattenList: function(btnGroups) {
             var flatList = [];
 
-            function addButton(verb, groupId, groups, group) {
-                // var add = allActions[verb].addCondition;
-                // if (add === undefined || ((typeof (add) === "function") ? add(settings, tb.config) : add))
-                    flatList.push($2sxc._lib.extend({} /*, settings*/, { verb: verb, action: verb, groupId: groupId, groups: groups /*, group: group */ }));
+            function addButton(verb, group) {
+                flatList.push($2sxc._lib.extend({}, { action: verb, verb:verb,group: group }));//action: verb, groupId: groupId, groups: groups /*, group: group */ }));
             }
 
+
+            // todo: continue here!!!
             for (var s = 0; s < btnGroups.length; s++) {
                 // first, enrich the set so it knows about it's context
                 var grp = btnGroups[s];
@@ -84,7 +89,7 @@
                 // now process the butons
                 var bs = grp.buttons.split(",");
                 for (var v = 0; v < bs.length; v++)
-                    addButton(bs[v].trim(), btnGroups);
+                    addButton(bs[v].trim(), grp);
             }
 
             return flatList;
@@ -104,7 +109,7 @@
                 }
                 var add = actions[btn.verb].addCondition;
                 if (add !== undefined && (typeof (add) === "function"))
-                    if (add(settings, config)) {
+                    if (!add(settings, config)) {
                         btnList.splice(i, 1);
                         i--;
                     }

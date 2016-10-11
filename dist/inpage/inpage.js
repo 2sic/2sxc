@@ -1437,14 +1437,14 @@ $(function () {
 
                 // retrieve configuration for this button
                 var conf = allActions[actDef.action],
-                    groupId = actDef.groupId,
+                    groupId = actDef.group.index,// actDef.groupId,
                     showClasses = "group-" + groupId,
-                    classesList = conf.showOn.split(","),
+                    classesList = (actDef.decorations || "").split(','),// conf.showOn.split(","),
                     box = $("<div/>"),
                     symbol = $("<i class=\"" + conf.icon + "\" aria-hidden=\"true\"></i>");
 
-                //for (var c = 0; c < classesList.length; c++)
-                //    showClasses += " show-" + classesList[c];
+                for (var c = 0; c < classesList.length; c++)
+                    showClasses += " show-" + classesList[c];
 
                 var button = $("<a />", {
                     'class': "sc-" + actDef.action + " " + showClasses + (conf.dynamicClasses ? " " + conf.dynamicClasses(actDef) : ""),
@@ -1452,7 +1452,7 @@ $(function () {
                     'data-i18n': "[title]" + conf.title
                 });
 
-                button.data("groups", actDef.groups);
+                button.data("groups", actDef.group.groups);// actDef.groups);
 
                 button.html(box.html(symbol));
 
@@ -1564,44 +1564,49 @@ $(function () {
         },
 
         createFlatList: function(groups, allActions, settings, config) {
-            //var tools = $2sxc._toolbarManager.buttonHelpers;
-            //var flat = tools.flattenList(groups);
-            //flat = tools.removeInvalidButtons(flat, allActions, settings, tb.config);
-            //flat = tools.addSettings(flat, settings);
-            //return flat;
+            var flat = tools.flattenList(groups);
+            flat = tools.removeInvalidButtons(flat, allActions, settings, config);
+            flat = tools.addSettings(flat, settings);
+            return flat;
 
-            var flatList = [];
-
-            function addButton(verb, groupId, groups, group) {
-                // if this action has an add-condition, check that first
-                if (!allActions[verb]) {
-                    console.log("can't add button for verb: '" + verb + "'. action not found.");
-                    return;
-                }
-                var add = allActions[verb].addCondition;
-                if (add === undefined || ((typeof (add) === "function") ? add(settings, config) : add))
-                    flatList.push($2sxc._lib.extend({}, settings, { action: verb, groupId: groupId, groups: groups, group: group }));
-            }
-
-            for (var s = 0; s < groups.length; s++) {
-                var bs = groups[s].buttons.split(",");
-                for (var v = 0; v < bs.length; v++)
-                    addButton(bs[v].trim(), s, groups.length, groups[s].name);
-            }
-
-            return flatList;
+            // old full code
+            //var flatList = [];
+            //
+            //function addButton(verb, group) { //groupId, groups, group) {
+            //    // if this action has an add-condition, check that first
+            //    if (!allActions[verb]) {
+            //        console.log("can't add button for verb: '" + verb + "'. action not found.");
+            //        return;
+            //    }
+            //    var add = allActions[verb].addCondition;
+            //    if (add === undefined || ((typeof (add) === "function") ? add(settings, config) : add))
+            //        flatList.push($2sxc._lib.extend({}, settings, { action: verb, group: group }));// groupId: groupId, groups: groups, group: group }));
+            //}
+            //
+            //for (var s = 0; s < groups.length; s++) {
+            //    // first, enrich the set so it knows about it's context
+            //    var grp = groups[s];
+            //    grp.index = s;
+            //    grp.groups = groups;
+            //
+            //    var bs = groups[s].buttons.split(",");
+            //    for (var v = 0; v < bs.length; v++)
+            //        addButton(bs[v].trim(), grp);// s, groups.length, groups[s].name);
+            //}
+            //
+            //return flatList;
         },
 
 
         flattenList: function(btnGroups) {
             var flatList = [];
 
-            function addButton(verb, groupId, groups, group) {
-                // var add = allActions[verb].addCondition;
-                // if (add === undefined || ((typeof (add) === "function") ? add(settings, tb.config) : add))
-                    flatList.push($2sxc._lib.extend({} /*, settings*/, { verb: verb, action: verb, groupId: groupId, groups: groups /*, group: group */ }));
+            function addButton(verb, group) {
+                flatList.push($2sxc._lib.extend({}, { action: verb, verb:verb,group: group }));//action: verb, groupId: groupId, groups: groups /*, group: group */ }));
             }
 
+
+            // todo: continue here!!!
             for (var s = 0; s < btnGroups.length; s++) {
                 // first, enrich the set so it knows about it's context
                 var grp = btnGroups[s];
@@ -1611,7 +1616,7 @@ $(function () {
                 // now process the butons
                 var bs = grp.buttons.split(",");
                 for (var v = 0; v < bs.length; v++)
-                    addButton(bs[v].trim(), btnGroups);
+                    addButton(bs[v].trim(), grp);
             }
 
             return flatList;
@@ -1631,7 +1636,7 @@ $(function () {
                 }
                 var add = actions[btn.verb].addCondition;
                 if (add !== undefined && (typeof (add) === "function"))
-                    if (add(settings, config)) {
+                    if (!add(settings, config)) {
                         btnList.splice(i, 1);
                         i--;
                     }
