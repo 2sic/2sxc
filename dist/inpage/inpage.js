@@ -591,7 +591,7 @@ $2sxc._contentBlock.create = function (sxc, manage, cbTag) {
             'sort': action("sort", "Sort", "list-numbered", "edit", false, {
                 addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; }
             }),
-            'publish-auto': action("publish-auto", "Unpublished", "eye-off", "default", false, {
+            'publish': action("publish", "Unpublished", "eye-off", "default", false, {
                 addCondition: function (settings, modConfig) {
                     return settings.isPublished === false;
                 },
@@ -605,19 +605,20 @@ $2sxc._contentBlock.create = function (sxc, manage, cbTag) {
                     manager.contentBlock.publish(part, index);
                 }
             }),
-            'publish': action("publish", "Published", "eye-off", "edit", false, {
-                icon2: "icon-sxc-eye-off",
-                disabled: true,
-                code: function (settings, event, manager) {
-                    if (settings.isPublished) {
-                        alert($2sxc.translate("Toolbar.AlreadyPublished"));
-                        return;
-                    }
-                    var part = settings.sortOrder === -1 ? "listcontent" : "content";
-                    var index = settings.sortOrder === -1 ? 0 : settings.sortOrder;
-                    manager.contentBlock.publish(part, index);
-                }
-            }),
+
+            //'publish': action("publish", "Published", "eye-off", "edit", false, {
+            //    icon2: "icon-sxc-eye-off",
+            //    disabled: true,
+            //    code: function (settings, event, manager) {
+            //        if (settings.isPublished) {
+            //            alert($2sxc.translate("Toolbar.AlreadyPublished"));
+            //            return;
+            //        }
+            //        var part = settings.sortOrder === -1 ? "listcontent" : "content";
+            //        var index = settings.sortOrder === -1 ? 0 : settings.sortOrder;
+            //        manager.contentBlock.publish(part, index);
+            //    }
+            //}),
 
             //'unpublish': createActionConfig("publish", "Published", "eye", "edit", false, {
             //    icon2: "icon-sxc-eye-off",
@@ -1596,29 +1597,29 @@ $(function () {
 
 (function () {
     $2sxc._toolbarManager.toolbarTemplate = [
-        {
-            name: "test",
-            buttons: [
-                {
-                    action: "edit",
-                    icon: "icon-sxc-code",
-                    title: "just quick edit!"
-                },
-                "inexisting-action",
-                {
-                    action: "something fake"
-                },
-                "edit",
-                {
-                    action: "publish-auto",
-                    addCondition: true
-                },
-                "more"
-            ]
-        },
+        //{
+        //    name: "test",
+        //    buttons: [
+        //        {
+        //            action: "edit",
+        //            icon: "icon-sxc-code",
+        //            title: "just quick edit!"
+        //        },
+        //        "inexisting-action",
+        //        {
+        //            action: "something fake"
+        //        },
+        //        "edit",
+        //        {
+        //            action: "publish-auto",
+        //            addCondition: true
+        //        },
+        //        "more"
+        //    ]
+        //},
         {
             name: "default",
-            buttons: "edit,new,metadata,publish-auto,more"
+            buttons: "edit,new,metadata,publish,more"
         },
         {
             name: "list",

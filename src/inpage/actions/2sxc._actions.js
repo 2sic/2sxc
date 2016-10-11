@@ -131,7 +131,7 @@
             'sort': action("sort", "Sort", "list-numbered", "edit", false, {
                 addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; }
             }),
-            'publish-auto': action("publish-auto", "Unpublished", "eye-off", "default", false, {
+            'publish': action("publish", "Unpublished", "eye-off", "default", false, {
                 addCondition: function (settings, modConfig) {
                     return settings.isPublished === false;
                 },
@@ -145,19 +145,20 @@
                     manager.contentBlock.publish(part, index);
                 }
             }),
-            'publish': action("publish", "Published", "eye-off", "edit", false, {
-                icon2: "icon-sxc-eye-off",
-                disabled: true,
-                code: function (settings, event, manager) {
-                    if (settings.isPublished) {
-                        alert($2sxc.translate("Toolbar.AlreadyPublished"));
-                        return;
-                    }
-                    var part = settings.sortOrder === -1 ? "listcontent" : "content";
-                    var index = settings.sortOrder === -1 ? 0 : settings.sortOrder;
-                    manager.contentBlock.publish(part, index);
-                }
-            }),
+
+            //'publish': action("publish", "Published", "eye-off", "edit", false, {
+            //    icon2: "icon-sxc-eye-off",
+            //    disabled: true,
+            //    code: function (settings, event, manager) {
+            //        if (settings.isPublished) {
+            //            alert($2sxc.translate("Toolbar.AlreadyPublished"));
+            //            return;
+            //        }
+            //        var part = settings.sortOrder === -1 ? "listcontent" : "content";
+            //        var index = settings.sortOrder === -1 ? 0 : settings.sortOrder;
+            //        manager.contentBlock.publish(part, index);
+            //    }
+            //}),
 
             //'unpublish': createActionConfig("publish", "Published", "eye", "edit", false, {
             //    icon2: "icon-sxc-eye-off",

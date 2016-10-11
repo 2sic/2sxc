@@ -2,29 +2,29 @@
 
 (function () {
     $2sxc._toolbarManager.toolbarTemplate = [
-        {
-            name: "test",
-            buttons: [
-                {
-                    action: "edit",
-                    icon: "icon-sxc-code",
-                    title: "just quick edit!"
-                },
-                "inexisting-action",
-                {
-                    action: "something fake"
-                },
-                "edit",
-                {
-                    action: "publish-auto",
-                    addCondition: true
-                },
-                "more"
-            ]
-        },
+        //{
+        //    name: "test",
+        //    buttons: [
+        //        {
+        //            action: "edit",
+        //            icon: "icon-sxc-code",
+        //            title: "just quick edit!"
+        //        },
+        //        "inexisting-action",
+        //        {
+        //            action: "something fake"
+        //        },
+        //        "edit",
+        //        {
+        //            action: "publish-auto",
+        //            addCondition: true
+        //        },
+        //        "more"
+        //    ]
+        //},
         {
             name: "default",
-            buttons: "edit,new,metadata,publish-auto,more"
+            buttons: "edit,new,metadata,publish,more"
         },
         {
             name: "list",
