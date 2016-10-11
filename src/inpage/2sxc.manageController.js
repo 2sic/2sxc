@@ -73,7 +73,8 @@
             //#region toolbar quick-access commands - might be used by other scripts, so I'm keeping them here for the moment, but may just delete them later
             toolbar: toolsAndButtons, // should use this from now on when accessing from outside
             getButton: toolsAndButtons.getButton,
-            createDefaultToolbar: toolsAndButtons.createDefaultToolbar,
+            // 2016-10-11 maybe breaking change, but shoudn't be exposed
+            //createDefaultToolbar: toolsAndButtons.defaultButtonList,
             getToolbar: toolsAndButtons.getToolbar,
             //#endregion
 

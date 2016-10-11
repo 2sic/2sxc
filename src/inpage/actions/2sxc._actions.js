@@ -158,6 +158,7 @@
                     manager.contentBlock.publish(part, index);
                 }
             }),
+
             //'unpublish': createActionConfig("publish", "Published", "eye", "edit", false, {
             //    icon2: "icon-sxc-eye-off",
             //    disabled: true,
@@ -216,7 +217,7 @@
                     var fullMenu = btn.closest("ul.sc-menu"); // todo: slightly nasty dependency...
                     var oldState = Number(fullMenu.attr("data-state") || 0);
                     var newState = oldState + 1;
-                    var max = fullMenu.data("groups").length;//4;//btn.data("groups").length;
+                    var max = Number(fullMenu.attr("group-count"));//.length;//4;//btn.data("groups").length;
                     //if (newState === 2) newState = 3; // state 1 doesn't exist yet - skip
                     newState = newState % max;// (enableTools ? 4 : 3); // if tools are enabled, there are 4 states
 

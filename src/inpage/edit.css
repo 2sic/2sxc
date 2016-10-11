@@ -44,14 +44,15 @@
     margin-right: auto;
 }
 
+/* 2016-10-11 should be un-necessary atm...
 .sc-menu.listContent a span {background-color: #96D500; border-color: #96D500;}
 .show-set-0 a.show-default { display: inline-block!important}
 .show-set-1 a.show-edit { display: inline-block!important}
 .show-set-2 a.show-design {display: inline-block!important}
 .show-set-3 a.show-admin {display: inline-block!important}
-.show-set-3 a.show-admin div { display: inline-block !important; background-color: #96D500}
+.show-set-3 a.show-admin div { display: inline-block !important; background-color: #96D500}*/
 
-/* new show/hide */
+/* 2016-10-11 new show/hide */
 .group-0 a.group-0 {display: inline-block!important}
 .group-1 a.group-1 {display: inline-block!important}
 .group-2 a.group-2 {display: inline-block!important}

@@ -355,7 +355,8 @@ $2sxc._contentBlock.create = function (sxc, manage, cbTag) {
             //#region toolbar quick-access commands - might be used by other scripts, so I'm keeping them here for the moment, but may just delete them later
             toolbar: toolsAndButtons, // should use this from now on when accessing from outside
             getButton: toolsAndButtons.getButton,
-            createDefaultToolbar: toolsAndButtons.createDefaultToolbar,
+            // 2016-10-11 maybe breaking change, but shoudn't be exposed
+            //createDefaultToolbar: toolsAndButtons.defaultButtonList,
             getToolbar: toolsAndButtons.getToolbar,
             //#endregion
 
@@ -617,6 +618,7 @@ $2sxc._contentBlock.create = function (sxc, manage, cbTag) {
                     manager.contentBlock.publish(part, index);
                 }
             }),
+
             //'unpublish': createActionConfig("publish", "Published", "eye", "edit", false, {
             //    icon2: "icon-sxc-eye-off",
             //    disabled: true,
@@ -675,7 +677,7 @@ $2sxc._contentBlock.create = function (sxc, manage, cbTag) {
                     var fullMenu = btn.closest("ul.sc-menu"); // todo: slightly nasty dependency...
                     var oldState = Number(fullMenu.attr("data-state") || 0);
                     var newState = oldState + 1;
-                    var max = fullMenu.data("groups").length;//4;//btn.data("groups").length;
+                    var max = Number(fullMenu.attr("group-count"));//.length;//4;//btn.data("groups").length;
                     //if (newState === 2) newState = 3; // state 1 doesn't exist yet - skip
                     newState = newState % max;// (enableTools ? 4 : 3); // if tools are enabled, there are 4 states
 
@@ -1407,32 +1409,29 @@ $(function () {
                 flattenActionDefinition(actDef);
 
                 // retrieve configuration for this button
-                var conf = allActions[actDef.action],
-                    groupId = actDef.group.index,// actDef.groupId,
+                var //conf = allActions[actDef.action],
+                    groupId = actDef.group.index,
                     showClasses = "group-" + groupId,
-                    classesList = (actDef.decorations || "").split(","),
+                    classesList = (actDef.classes || "").split(","),
                     box = $("<div/>"),
-                    symbol = $("<i class=\"" + conf.icon + "\" aria-hidden=\"true\"></i>");
+                    symbol = $("<i class=\"" + actDef.icon + "\" aria-hidden=\"true\"></i>");
 
                 for (var c = 0; c < classesList.length; c++)
                     showClasses += /*" show-" +*/ " " + classesList[c];
 
                 var button = $("<a />", {
-                    'class': "sc-" + actDef.action + " " + showClasses + (conf.dynamicClasses ? " " + conf.dynamicClasses(actDef) : ""),
+                    'class': "sc-" + actDef.action + " " + showClasses + (actDef.dynamicClasses ? " " + actDef.dynamicClasses(actDef) : ""),
                     'onclick': "$2sxc(" + id + ", " + cbid + ").manage.action(" + JSON.stringify(actDef, function (key,value) { return key === "group" ? undefined : value; }) + ", event);",
-                    'data-i18n': "[title]" + conf.title
+                    'data-i18n': "[title]" + actDef.title
                 });
-
-                button.data("groups", actDef.group.groups);// actDef.groups);
 
                 button.html(box.html(symbol));
 
-                // careful: maybe breaking change
-                return button;//[0].outerHTML;
+                return button[0].outerHTML;
             },
 
             // Assemble a default toolbar instruction set
-            createDefaultToolbar: function (settings) {
+            defaultButtonList: function (settings) {
                 var defTb = $2sxc._toolbarManager.standardButtons(editContext);
 
                 return $2sxc._toolbarManager.buttonHelpers
@@ -1447,18 +1446,18 @@ $(function () {
                     ? [settings] // if single item with specified action, use this as our button-list
                     : $.isArray(settings)
                         ? settings // if it is an array, use that. Otherwise assume that we auto-generate all buttons with supplied settings
-                        : tb.createDefaultToolbar(settings);
+                        : tb.defaultButtonList(settings);
 
-                var tbClasses = "sc-menu group-0 show-set-0" + ((settings.sortOrder === -1) ? " listContent" : "");
+                var tbClasses = "sc-menu group-0 " + ((settings.sortOrder === -1) ? " listContent" : "");
                 var toolbar = $("<ul />", { 'class': tbClasses, 'onclick': "var e = arguments[0] || window.event; e.stopPropagation();" });
 
                 for (var i = 0; i < actionList.length; i++)
                     toolbar.append($("<li />").append($(tb.getButton(actionList[i]))));
 
                 toolbar.data("groups", actionList[0] && actionList[0].group.groups);
+                toolbar.attr("group-count", actionList[0] && actionList[0].group.groups.length);
 
-                // careful: maybe breaking change
-                return toolbar;//[0].outerHTML;
+                return toolbar[0].outerHTML;
             },
 
             // find all toolbar-info-attributes in the HTML, convert to <ul><li> toolbar
@@ -1487,43 +1486,14 @@ $(function () {
 (function () {
     var tools = $2sxc._toolbarManager.buttonHelpers = {
 
-
-        createDef: function(action, icon, label, decorations, group) {
-            return {
-                action: action,
-                icon: icon,
-                label: label,
-                decorations: decorations,
-                group: group
-            };
-        },
-
-        expandDef: function(groups) {
-            for (var i = 0; i < groups.length; i++) {
-                var group = groups[i];
-
-                // first expand buttons if it's a string
-                if (typeof group.buttons === "string") 
-                    group.buttons = group.buttons.split(",");
-
-                for (var b = 0; b < group.buttons.length; b++) {
-                    var btn = group.buttons[b];
-                    if (typeof btn === "string")
-                        btn = tools.createDef(btn);
-
-                    if (group.defaults)
-                        $2sxc._lib.extend(btn, group.defaults);
-
-                    group.buttons[b] = btn;
-                }
-            }
-        },
-
         createFlatList: function(groups, actions, itemSettings, config) {
             var flat = tools.flattenList(groups);
-            tools.removeInvalidButtons(flat, actions, itemSettings, config);
+            tools.removeInexistingActions(flat, actions);
+
             tools.addSettings(flat, itemSettings);
             tools.fallbackAllSettings(flat, actions);
+
+            tools.removeInvalidButtons(flat, actions, itemSettings, config);
             return flat;
         },
 
@@ -1534,34 +1504,44 @@ $(function () {
                 // first, enrich the set so it knows about it's context
                 var grp = $2sxc._lib.extend(btnGroups[s], { index: s, groups: btnGroups});
 
-                // now process the butons
-                var bs = grp.buttons.split(",");
-                for (var v = 0; v < bs.length; v++)
-                    flatList.push({ action: bs[v].trim(), group: grp });
+                // now process the buttons if string-format
+                var btns = grp.buttons;
+                if (typeof btns === "string")
+                    btns = btns.split(",");
+
+                // add each button - check if it's already an object or just the string
+                for (var v = 0; v < btns.length; v++) {
+                    // replace the item on the index with a correct object
+                    if(typeof btns[v] === "string")
+                        btns[v] = { action: btns[v].trim() };
+                    btns[v].group = grp;    // attach group reference
+                    flatList.push(btns[v]);
+                }
+                grp.buttons = btns; // ensure the internal def is also an array now
             }
             return flatList;
         },
 
+        // filter out buttons whose actions don't exist
+        removeInexistingActions: function(btnList, actions) {
+            for (var i = 0; i < btnList.length; i) 
+                if (!actions[btnList[i].action]) {
+                    console.log("can't add button for action: '" + btnList[i].action + "'. action not found.");
+                    btnList.splice(i, 1);
+                }
+                else i++;
+        },
+
         // remove buttons which are not valid based on add condition
         removeInvalidButtons: function(btnList, actions, settings, config) {
-
             for (var i = 0; i < btnList.length; i++) {
-                var btn = btnList[i];
-                // if this action has an add-condition, check that first
-                if (!actions[btn.action]) {
-                    console.log("can't add button for action: '" + btn.action + "'. action not found.");
-                    btnList.splice(i, 1);
-                    i--;
-                    continue;
-                }
-                var add = actions[btn.action].addCondition;
+                var add = btnList[i].addCondition;
                 if (add !== undefined && (typeof (add) === "function"))
                     if (!add(settings, config)) {
                         btnList.splice(i, 1);
                         i--;
                     }
             }
-            return btnList;
         },
 
         // enhance the button with settings for this instance
@@ -1574,7 +1554,13 @@ $(function () {
             return btnList;
         },
 
-        properties: ["decorations"],
+        properties: [
+            "classes",
+            "icon",
+            "title",
+            "dynamicClasses",
+            "addCondition"
+        ],
 
         fallbackAllSettings: function(btnList, actions) {
             for (var i = 0; i < btnList.length; i++) {
@@ -1584,8 +1570,11 @@ $(function () {
             }
         },
 
+        // 
         fallbackOneSetting: function(btn, actions, propName) {//}, groupProp, actions, actProp) {
-            btn[propName] = btn[propName] || (btn.group.defaults && btn.group.defaults[propName]) || actions[propName];
+            btn[propName] = btn[propName]
+                || (btn.group.defaults && btn.group.defaults[propName])
+                || actions[btn.action][propName];
         }
     };
 
@@ -1608,6 +1597,26 @@ $(function () {
 (function () {
     $2sxc._toolbarManager.toolbarTemplate = [
         {
+            name: "test",
+            buttons: [
+                {
+                    action: "edit",
+                    icon: "icon-sxc-code",
+                    title: "just quick edit!"
+                },
+                "inexisting-action",
+                {
+                    action: "something fake"
+                },
+                "edit",
+                {
+                    action: "publish-auto",
+                    addCondition: true
+                },
+                "more"
+            ]
+        },
+        {
             name: "default",
             buttons: "edit,new,metadata,publish-auto,more"
         },
@@ -1620,7 +1629,7 @@ $(function () {
             // todo: add templatesettings, query
             buttons: "develop,contenttype,contentitems,more",
             defaults: {
-                decorations: "group-pro"
+                classes: "group-pro"
             }
         },
         {
@@ -1628,7 +1637,7 @@ $(function () {
             // todo: add multilanguage-resources & settings
             buttons: "app,zone,more",
             defaults: {
-                decorations: "group-pro"
+                classes: "group-pro"
             }
         }
     ];

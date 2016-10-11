@@ -3,6 +3,26 @@
 (function () {
     $2sxc._toolbarManager.toolbarTemplate = [
         {
+            name: "test",
+            buttons: [
+                {
+                    action: "edit",
+                    icon: "icon-sxc-code",
+                    title: "just quick edit!"
+                },
+                "inexisting-action",
+                {
+                    action: "something fake"
+                },
+                "edit",
+                {
+                    action: "publish-auto",
+                    addCondition: true
+                },
+                "more"
+            ]
+        },
+        {
             name: "default",
             buttons: "edit,new,metadata,publish-auto,more"
         },
@@ -15,7 +35,7 @@
             // todo: add templatesettings, query
             buttons: "develop,contenttype,contentitems,more",
             defaults: {
-                decorations: "group-pro"
+                classes: "group-pro"
             }
         },
         {
@@ -23,7 +43,7 @@
             // todo: add multilanguage-resources & settings
             buttons: "app,zone,more",
             defaults: {
-                decorations: "group-pro"
+                classes: "group-pro"
             }
         }
     ];
