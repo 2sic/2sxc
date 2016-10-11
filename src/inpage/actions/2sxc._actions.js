@@ -7,7 +7,6 @@
  * - name (created in the buttonConfig)
  * - title - actually the translation key to retrieve the title (buttonConfig)
  * - icon - the icon-class
- * - showOn - comma separated list of values on which toolbar state to show this on
  * - uiActionOnly - true/false if this is just something visual; otherwise a webservice will ensure that a content-group exists (for editing etc.)
  * - addCondition(settings, moduleConfiguration) - would conditionally prevent adding this button by default
  * - code(settings, event) - the code executed on click, if it's not the default action
@@ -17,35 +16,34 @@
 
 (function () {
     // helper function to create the configuration object
-    function createActionConfig(name, translateKey, icon, show, uiOnly, more) {
+    function action(name, translateKey, icon, show, uiOnly, more) {
         return $2sxc._lib.extend({
             name: name,
             title: "Toolbar." + translateKey,
             icon: "icon-sxc-" + icon,
-            showOn: show,
             uiActionOnly: uiOnly
         }, more);
     }
 
     $2sxc._actions = {};
-    $2sxc._actions.create = function (actionParams) {
-        var enableTools = actionParams.canDesign;
+    $2sxc._actions.create = function (editContext) {
+        var enableTools = editContext.canDesign;
 
         var act = {
             // show the basic dashboard which allows view-changing
-            "dash-view": createActionConfig("dash", "Dashboard", "", "", true, { inlineWindow: true }),
+            "dash-view": action("dash", "Dashboard", "", "", true, { inlineWindow: true }),
 
             // open the import dialog
-            "app-import": createActionConfig("app-import", "Dashboard", "", "", true, {}),
+            "app-import": action("app-import", "Dashboard", "", "", true, {}),
 
             // open an edit-item dialog
-            'edit': createActionConfig("edit", "Edit", "pencil", "default", false, { params: { mode: "edit" } }),
+            'edit': action("edit", "Edit", "pencil", "default", false, { params: { mode: "edit" } }),
 
             // new is a dialog to add something, and will not add if cancelled
             // new can also be used for mini-toolbars which just add an entity not attached to a module
             // in that case it's essential to add a contentType like 
             // <ul class="sc-menu" data-toolbar='{"action":"new", "contentType": "Category"}'></ul>
-            'new': createActionConfig("new", "New", "plus", "default", false, {
+            'new': action("new", "New", "plus", "default", false, {
                 params: { mode: "new" },
                 dialog: "edit", // don't use "new" (default) but use "edit"
                 addCondition: function (settings, modConfig) {
@@ -58,7 +56,7 @@
             }),
 
             // add brings no dialog, just add an empty item
-            'add': createActionConfig("add", "AddDemo", "plus-circled", "edit", false, {
+            'add': action("add", "AddDemo", "plus-circled", "edit", false, {
                 addCondition: function(settings, modConfig) {
                     return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1;
                 },
@@ -69,7 +67,7 @@
             }),
 
             // create a metadata toolbar
-            "metadata": createActionConfig("metadata", "Metadata", "tag", "default", false, {
+            "metadata": action("metadata", "Metadata", "tag", "default", false, {
                 params: { mode: "new" },
                 dialog: "edit", // don't use "new" (default) but use "edit"
                 dynamicClasses: function (settings) {
@@ -90,11 +88,7 @@
             }),
 
             // remove an item from the placeholder (usually for lists)
-            'remove': createActionConfig("remove", "Remove", "minus-circled", "edit", false, {
-                //title: "Toolbar.Remove",
-                //icon: "icon-sxc-minus-circled",
-                //disabled: true,
-                //showOn: "edit",
+            'remove': action("remove", "Remove", "minus-circled", "edit", false, {
                 addCondition: function(settings, modConfig) {
                     return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1;
                 },
@@ -111,7 +105,6 @@
             //    title: "Toolbar.Delete",
             //    icon: "icon-sxc-cancel",
             //    disabled: true,
-            //    showOn: "edit",
             //    addCondition: function (settings) { return !settings.useModuleList; },
             //    code: function (settings, event) {
             //        if (confirm(tbContr.translate("Toolbar.ReallyDelete"))) {
@@ -120,11 +113,7 @@
             //    }
             //},
 
-            'moveup': createActionConfig("moveup", "MoveUp", "move-up", "edit", false, {
-                //title: "Toolbar.MoveUp",
-                //icon: "icon-sxc-move-up",
-                //disabled: false,
-                //showOn: "edit",
+            'moveup': action("moveup", "MoveUp", "move-up", "edit", false, {
                 addCondition: function(settings, modConfig) {
                     return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1 && settings.sortOrder !== 0;
                 },
@@ -133,25 +122,16 @@
                         .changeOrder(settings.sortOrder, Math.max(settings.sortOrder - 1, 0));
                 }
             }),
-            'movedown': createActionConfig("movedown", "MoveDown", "move-down", "edit", false, {
-                //title: "Toolbar.MoveDown",
-                //icon: "icon-sxc-move-down",
-                //disabled: false,
-                //showOn: "edit",
+            'movedown': action("movedown", "MoveDown", "move-down", "edit", false, {
                 addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; },
                 code: function (settings, event, manager) {
                     manager.contentBlock.changeOrder(settings.sortOrder, settings.sortOrder + 1);
                 }
             }),
-            'sort': createActionConfig("sort", "Sort", "list-numbered", "edit", false, {
-                //title: "Toolbar.Sort",
-                //icon: "icon-sxc-list-numbered",
-                //showOn: "edit",
+            'sort': action("sort", "Sort", "list-numbered", "edit", false, {
                 addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; }
             }),
-            'publish-auto': createActionConfig("publish", "Unpublished", "eye-off", "default", false, {
-                icon2: "icon-sxc-eye-off",
-                //disabled: true,
+            'publish-auto': action("publish-auto", "Unpublished", "eye-off", "default", false, {
                 addCondition: function (settings, modConfig) {
                     return settings.isPublished === false;
                 },
@@ -165,12 +145,9 @@
                     manager.contentBlock.publish(part, index);
                 }
             }),
-            'publish': createActionConfig("publish", "Published", "eye-off", "edit", false, {
+            'publish': action("publish", "Published", "eye-off", "edit", false, {
                 icon2: "icon-sxc-eye-off",
                 disabled: true,
-                addCondition: function(settings, modConfig) {
-                    return true; 
-                },
                 code: function (settings, event, manager) {
                     if (settings.isPublished) {
                         alert($2sxc.translate("Toolbar.AlreadyPublished"));
@@ -197,66 +174,50 @@
             //        manager.contentBlock.publish(part, index);
             //    }
             //}),
-            'replace': createActionConfig("replace", "Replace", "replace", "edit", false, {
+
+            'replace': action("replace", "Replace", "replace", "edit", false, {
                 addCondition: function (settings) { return settings.useModuleList; }
             }),
-            'layout': createActionConfig("layout", "ChangeLayout", "glasses", "default", true, {
-                //title: "Toolbar.ChangeLayout",
-                //icon: "icon-sxc-glasses",
-                //showOn: "default",
-                //uiActionOnly: true, // so it doesn't create the content when used
+
+            'layout': action("layout", "ChangeLayout", "glasses", "default", true, {
                 code: function (settings, event, manager) {
                     manager.contentBlock.dialogToggle();
                 }
             }),
-            'develop': createActionConfig("develop", "Develop", "code", "admin", true, {
+
+            'develop': action("develop", "Develop", "code", "admin", true, {
                 newWindow: true,
                 addCondition: enableTools,
                 configureCommand: function (cmd) {
-                    cmd.items = [{ EntityId: actionParams.templateId }];
+                    cmd.items = [{ EntityId: editContext.templateId }];
                 }
             }),
-            'contenttype': createActionConfig("contenttype", "ContentType", "fields", "admin", true, {
-                //title: "Toolbar.ContentType",
-                //icon: "icon-sxc-fields",
-                //showOn: "admin",
-                //uiActionOnly: true,
+
+            'contenttype': action("contenttype", "ContentType", "fields", "admin", true, {
                 addCondition: enableTools
             }),
-            'contentitems': createActionConfig("contentitems", "ContentItems", "table", "admin", true, {
-                //title: "Toolbar.ContentItems",
-                //icon: "icon-sxc-table",
-                //showOn: "admin",
-                params: { contentTypeName: actionParams.contentTypeId },
-                //uiActionOnly: true, // so it doesn't create the content when used
-                addCondition: enableTools && actionParams.contentTypeId
+
+            'contentitems': action("contentitems", "ContentItems", "table", "admin", true, {
+                params: { contentTypeName: editContext.contentTypeId },
+                addCondition: enableTools && editContext.contentTypeId
             }),
-            'app': createActionConfig("app", "App", "settings", "admin", true, {
-                //title: "Toolbar.App",
-                //icon: "icon-sxc-settings",
-                //showOn: "admin",
-                //uiActionOnly: true, // so it doesn't create the content when used
+
+            'app': action("app", "App", "settings", "admin", true, {
                 addCondition: enableTools
             }),
-            'zone': createActionConfig("zone", "Zone", "manage", "admin", true, {
-                //title: "Toolbar.Zone",
-                //icon: "icon-sxc-manage",
-                //showOn: "admin",
-                //uiActionOnly: true, // so it doesn't create the content when used
+
+            'zone': action("zone", "Zone", "manage", "admin", true, {
                 addCondition: enableTools
             }),
-            "more": createActionConfig("more", "MoreActions", "options btn-mode", "default,edit,design,admin", true, {
-                //title: "Toolbar.MoreActions",
-                //icon: "icon-sxc-options btn-mode",
-                //showOn: "default,edit,design,admin",
-                //uiActionOnly: true, // so it doesn't create the content when clicked
+
+            "more": action("more", "MoreActions", "options btn-mode", "default,edit,design,admin", true, {
                 code: function (settings, event) {
                     var btn = $(event.target);
                     var fullMenu = btn.closest("ul.sc-menu"); // todo: slightly nasty dependency...
                     var oldState = Number(fullMenu.attr("data-state") || 0);
                     var newState = oldState + 1;
-                    var max = 4;//btn.data("groups").length;
-                    if (newState === 2) newState = 3; // state 1 doesn't exist yet - skip
+                    var max = fullMenu.data("groups").length;//4;//btn.data("groups").length;
+                    //if (newState === 2) newState = 3; // state 1 doesn't exist yet - skip
                     newState = newState % max;// (enableTools ? 4 : 3); // if tools are enabled, there are 4 states
 
                     // todo: refactoring, the state-count could be very dynamic now...

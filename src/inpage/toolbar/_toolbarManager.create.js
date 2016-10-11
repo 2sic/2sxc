@@ -56,7 +56,7 @@
                 var conf = allActions[actDef.action],
                     groupId = actDef.group.index,// actDef.groupId,
                     showClasses = "group-" + groupId,
-                    classesList = (actDef.decorations || "").split(","),// conf.showOn.split(","),
+                    classesList = (actDef.decorations || "").split(","),
                     box = $("<div/>"),
                     symbol = $("<i class=\"" + conf.icon + "\" aria-hidden=\"true\"></i>");
 
@@ -73,19 +73,19 @@
 
                 button.html(box.html(symbol));
 
+                // careful: maybe breaking change
                 return button;//[0].outerHTML;
             },
 
             // Assemble a default toolbar instruction set
             createDefaultToolbar: function (settings) {
                 var defTb = $2sxc._toolbarManager.standardButtons(editContext);
-                return tb._buildGroupedToolbar(defTb, settings);
+
+                return $2sxc._toolbarManager.buttonHelpers
+                    .createFlatList(defTb, allActions, settings, tb.config);
             },
 
-            _buildGroupedToolbar: function (groups, settings) {
-                return $2sxc._toolbarManager.buttonHelpers
-                    .createFlatList(groups, allActions, settings, tb.config);
-            },
+
             // Builds the toolbar and returns it as HTML
             // expects settings - either for 1 button or for an array of buttons
             getToolbar: function(settings) {
@@ -101,6 +101,9 @@
                 for (var i = 0; i < actionList.length; i++)
                     toolbar.append($("<li />").append($(tb.getButton(actionList[i]))));
 
+                toolbar.data("groups", actionList[0] && actionList[0].group.groups);
+
+                // careful: maybe breaking change
                 return toolbar;//[0].outerHTML;
             },
 
@@ -110,9 +113,10 @@
                 $(".sc-menu[data-toolbar]", parentTag).each(function() {
                     var toolbarSettings = $.parseJSON($(this).attr("data-toolbar"));
                     var toolbarTag = $(this);
-                    toolbarTag.replaceWith($2sxc(toolbarTag).manage.getToolbar(toolbarSettings));
+                    var newTb = $2sxc(toolbarTag).manage.getToolbar(toolbarSettings);
+                    toolbarTag.replaceWith(newTb);
                 });
-            },
+            }
 
 
         };
