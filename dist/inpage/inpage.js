@@ -493,8 +493,13 @@ $2sxc._contentBlock.create = function (sxc, manage, cbTag) {
         var act = {
             // show the basic dashboard which allows view-changing
             "dash-view": createActionConfig("dash", "Dashboard", "", "", true, { inlineWindow: true }),
+
+            // open the import dialog
             "app-import": createActionConfig("app-import", "Dashboard", "", "", true, {}),
+
+            // open an edit-item dialog
             'edit': createActionConfig("edit", "Edit", "pencil", "default", false, { params: { mode: "edit" } }),
+
             // new is a dialog to add something, and will not add if cancelled
             // new can also be used for mini-toolbars which just add an entity not attached to a module
             // in that case it's essential to add a contentType like 
@@ -510,6 +515,7 @@ $2sxc._contentBlock.create = function (sxc, manage, cbTag) {
                     manager._commands._openNgDialog($2sxc._lib.extend({}, settings, { sortOrder: settings.sortOrder + 1 }), event);
                 }
             }),
+
             // add brings no dialog, just add an empty item
             'add': createActionConfig("add", "AddDemo", "plus-circled", "edit", false, {
                 addCondition: function(settings, modConfig) {
@@ -520,6 +526,8 @@ $2sxc._contentBlock.create = function (sxc, manage, cbTag) {
                         .addItem(settings.sortOrder + 1);
                 }
             }),
+
+            // create a metadata toolbar
             "metadata": createActionConfig("metadata", "Metadata", "tag", "default", false, {
                 params: { mode: "new" },
                 dialog: "edit", // don't use "new" (default) but use "edit"
@@ -539,11 +547,13 @@ $2sxc._contentBlock.create = function (sxc, manage, cbTag) {
                     $2sxc._lib.extend(cmd.items[0], itm);
                 }
             }),
-            'remove': {
-                title: "Toolbar.Remove",
-                icon: "icon-sxc-minus-circled",
-                disabled: true,
-                showOn: "edit",
+
+            // remove an item from the placeholder (usually for lists)
+            'remove': createActionConfig("remove", "Remove", "minus-circled", "edit", false, {
+                //title: "Toolbar.Remove",
+                //icon: "icon-sxc-minus-circled",
+                //disabled: true,
+                //showOn: "edit",
                 addCondition: function(settings, modConfig) {
                     return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1;
                 },
@@ -553,7 +563,7 @@ $2sxc._contentBlock.create = function (sxc, manage, cbTag) {
                             .removeFromList(settings.sortOrder);
                     }
                 }
-            },
+            }),
 
             // todo: work in progress related to https://github.com/2sic/2sxc/issues/618
             //'delete': {
@@ -569,11 +579,11 @@ $2sxc._contentBlock.create = function (sxc, manage, cbTag) {
             //    }
             //},
 
-            'moveup': {
-                title: "Toolbar.MoveUp",
-                icon: "icon-sxc-move-up",
-                disabled: false,
-                showOn: "edit",
+            'moveup': createActionConfig("moveup", "MoveUp", "move-up", "edit", false, {
+                //title: "Toolbar.MoveUp",
+                //icon: "icon-sxc-move-up",
+                //disabled: false,
+                //showOn: "edit",
                 addCondition: function(settings, modConfig) {
                     return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1 && settings.sortOrder !== 0;
                 },
@@ -581,26 +591,26 @@ $2sxc._contentBlock.create = function (sxc, manage, cbTag) {
                     manager.contentBlock
                         .changeOrder(settings.sortOrder, Math.max(settings.sortOrder - 1, 0));
                 }
-            },
-            'movedown': {
-                title: "Toolbar.MoveDown",
-                icon: "icon-sxc-move-down",
-                disabled: false,
-                showOn: "edit",
+            }),
+            'movedown': createActionConfig("movedown", "MoveDown", "move-down", "edit", false, {
+                //title: "Toolbar.MoveDown",
+                //icon: "icon-sxc-move-down",
+                //disabled: false,
+                //showOn: "edit",
                 addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; },
                 code: function (settings, event, manager) {
                     manager.contentBlock.changeOrder(settings.sortOrder, settings.sortOrder + 1);
                 }
-            },
-            'sort': {
-                title: "Toolbar.Sort",
-                icon: "icon-sxc-list-numbered",
-                showOn: "edit",
+            }),
+            'sort': createActionConfig("sort", "Sort", "list-numbered", "edit", false, {
+                //title: "Toolbar.Sort",
+                //icon: "icon-sxc-list-numbered",
+                //showOn: "edit",
                 addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; }
-            },
+            }),
             'publish-auto': createActionConfig("publish", "Unpublished", "eye-off", "default", false, {
                 icon2: "icon-sxc-eye-off",
-                disabled: true,
+                //disabled: true,
                 addCondition: function (settings, modConfig) {
                     return settings.isPublished === false;
                 },
@@ -649,15 +659,15 @@ $2sxc._contentBlock.create = function (sxc, manage, cbTag) {
             'replace': createActionConfig("replace", "Replace", "replace", "edit", false, {
                 addCondition: function (settings) { return settings.useModuleList; }
             }),
-            'layout': {
-                title: "Toolbar.ChangeLayout",
-                icon: "icon-sxc-glasses",
-                showOn: "default",
-                uiActionOnly: true, // so it doesn't create the content when used
+            'layout': createActionConfig("layout", "ChangeLayout", "glasses", "default", true, {
+                //title: "Toolbar.ChangeLayout",
+                //icon: "icon-sxc-glasses",
+                //showOn: "default",
+                //uiActionOnly: true, // so it doesn't create the content when used
                 code: function (settings, event, manager) {
                     manager.contentBlock.dialogToggle();
                 }
-            },
+            }),
             'develop': createActionConfig("develop", "Develop", "code", "admin", true, {
                 newWindow: true,
                 addCondition: enableTools,
@@ -665,48 +675,48 @@ $2sxc._contentBlock.create = function (sxc, manage, cbTag) {
                     cmd.items = [{ EntityId: actionParams.templateId }];
                 }
             }),
-            'contenttype': {
-                title: "Toolbar.ContentType",
-                icon: "icon-sxc-fields",
-                showOn: "admin",
-                uiActionOnly: true,
+            'contenttype': createActionConfig("contenttype", "ContentType", "fields", "admin", true, {
+                //title: "Toolbar.ContentType",
+                //icon: "icon-sxc-fields",
+                //showOn: "admin",
+                //uiActionOnly: true,
                 addCondition: enableTools
-            },
-            'contentitems': {
-                title: "Toolbar.ContentItems",
-                icon: "icon-sxc-table",
-                showOn: "admin",
+            }),
+            'contentitems': createActionConfig("contentitems", "ContentItems", "table", "admin", true, {
+                //title: "Toolbar.ContentItems",
+                //icon: "icon-sxc-table",
+                //showOn: "admin",
                 params: { contentTypeName: actionParams.contentTypeId },
-                uiActionOnly: true, // so it doesn't create the content when used
+                //uiActionOnly: true, // so it doesn't create the content when used
                 addCondition: enableTools && actionParams.contentTypeId
-            },
-            'app': {
-                title: "Toolbar.App",
-                icon: "icon-sxc-settings",
-                showOn: "admin",
-                uiActionOnly: true, // so it doesn't create the content when used
+            }),
+            'app': createActionConfig("app", "App", "settings", "admin", true, {
+                //title: "Toolbar.App",
+                //icon: "icon-sxc-settings",
+                //showOn: "admin",
+                //uiActionOnly: true, // so it doesn't create the content when used
                 addCondition: enableTools
-            },
-            'zone': {
-                title: "Toolbar.Zone",
-                icon: "icon-sxc-manage",
-                showOn: "admin",
-                uiActionOnly: true, // so it doesn't create the content when used
+            }),
+            'zone': createActionConfig("zone", "Zone", "manage", "admin", true, {
+                //title: "Toolbar.Zone",
+                //icon: "icon-sxc-manage",
+                //showOn: "admin",
+                //uiActionOnly: true, // so it doesn't create the content when used
                 addCondition: enableTools
-            },
-            "more": {
-                title: "Toolbar.MoreActions",
-                icon: "icon-sxc-options btn-mode",
-                showOn: "default,edit,design,admin",
-                uiActionOnly: true, // so it doesn't create the content when clicked
+            }),
+            "more": createActionConfig("more", "MoreActions", "options btn-mode", "default,edit,design,admin", true, {
+                //title: "Toolbar.MoreActions",
+                //icon: "icon-sxc-options btn-mode",
+                //showOn: "default,edit,design,admin",
+                //uiActionOnly: true, // so it doesn't create the content when clicked
                 code: function (settings, event) {
                     var btn = $(event.target);
                     var fullMenu = btn.closest("ul.sc-menu"); // todo: slightly nasty dependency...
                     var oldState = Number(fullMenu.attr("data-state") || 0);
                     var newState = oldState + 1;
-                    var max = btn.data("groups");
+                    var max = 4;//btn.data("groups").length;
                     if (newState === 2) newState = 3; // state 1 doesn't exist yet - skip
-                    newState = newState % (enableTools ? 4 : 3); // if tools are enabled, there are 4 states
+                    newState = newState % max;// (enableTools ? 4 : 3); // if tools are enabled, there are 4 states
 
                     // todo: refactoring, the state-count could be very dynamic now...
                     fullMenu.removeClass("group-" + oldState)
@@ -718,7 +728,7 @@ $2sxc._contentBlock.create = function (sxc, manage, cbTag) {
                         // still needed
                         .attr("data-state", newState);
                 }
-            }
+            })
         };
         return act;
     };
@@ -1439,12 +1449,12 @@ $(function () {
                 var conf = allActions[actDef.action],
                     groupId = actDef.group.index,// actDef.groupId,
                     showClasses = "group-" + groupId,
-                    classesList = (actDef.decorations || "").split(','),// conf.showOn.split(","),
+                    classesList = (actDef.decorations || "").split(","),// conf.showOn.split(","),
                     box = $("<div/>"),
                     symbol = $("<i class=\"" + conf.icon + "\" aria-hidden=\"true\"></i>");
 
                 for (var c = 0; c < classesList.length; c++)
-                    showClasses += " show-" + classesList[c];
+                    showClasses += /*" show-" +*/ " " + classesList[c];
 
                 var button = $("<a />", {
                     'class': "sc-" + actDef.action + " " + showClasses + (conf.dynamicClasses ? " " + conf.dynamicClasses(actDef) : ""),
@@ -1456,7 +1466,7 @@ $(function () {
 
                 button.html(box.html(symbol));
 
-                return button[0].outerHTML;
+                return button;//[0].outerHTML;
             },
 
             // Assemble a default toolbar instruction set
@@ -1468,25 +1478,6 @@ $(function () {
             _buildGroupedToolbar: function (groups, settings) {
                 return $2sxc._toolbarManager.buttonHelpers
                     .createFlatList(groups, allActions, settings, tb.config);
-
-                //var flatList = [];
-
-                //function addButton(verb, groupId, groups, group) {
-                //    // if this action has an add-condition, check that first
-                //    if (!allActions[verb])
-                //        return console.log("can't add button for verb: '" + verb + "'. action not found.");
-                //    var add = allActions[verb].addCondition;
-                //    if (add === undefined || ((typeof (add) === "function") ? add(settings, tb.config) : add))
-                //        flatList.push($2sxc._lib.extend({}, settings, { action: verb, groupId: groupId, groups: groups, group: group }));
-                //}
-
-                //for (var s = 0; s < groups.length; s++) {
-                //    var bs = groups[s].buttons.split(",");
-                //    for (var v = 0; v < bs.length; v++)
-                //        addButton(bs[v].trim(), s, groups.length, groups[s].name);
-                //}
-
-                //return flatList;
             },
             // Builds the toolbar and returns it as HTML
             // expects settings - either for 1 button or for an array of buttons
@@ -1503,7 +1494,7 @@ $(function () {
                 for (var i = 0; i < actionList.length; i++)
                     toolbar.append($("<li />").append($(tb.getButton(actionList[i]))));
 
-                return toolbar[0].outerHTML;
+                return toolbar;//[0].outerHTML;
             },
 
             // find all toolbar-info-attributes in the HTML, convert to <ul><li> toolbar
@@ -1532,9 +1523,9 @@ $(function () {
     var tools = $2sxc._toolbarManager.buttonHelpers = {
 
 
-        createDef: function(verb, icon, label, decorations, group) {
+        createDef: function(action, icon, label, decorations, group) {
             return {
-                verb: verb,
+                action: action,
                 icon: icon,
                 label: label,
                 decorations: decorations,
@@ -1563,78 +1554,42 @@ $(function () {
             }
         },
 
-        createFlatList: function(groups, allActions, settings, config) {
+        createFlatList: function(groups, actions, itemSettings, config) {
             var flat = tools.flattenList(groups);
-            flat = tools.removeInvalidButtons(flat, allActions, settings, config);
-            flat = tools.addSettings(flat, settings);
+            tools.removeInvalidButtons(flat, actions, itemSettings, config);
+            tools.addSettings(flat, itemSettings);
+            tools.fallbackAllSettings(flat, actions);
             return flat;
-
-            // old full code
-            //var flatList = [];
-            //
-            //function addButton(verb, group) { //groupId, groups, group) {
-            //    // if this action has an add-condition, check that first
-            //    if (!allActions[verb]) {
-            //        console.log("can't add button for verb: '" + verb + "'. action not found.");
-            //        return;
-            //    }
-            //    var add = allActions[verb].addCondition;
-            //    if (add === undefined || ((typeof (add) === "function") ? add(settings, config) : add))
-            //        flatList.push($2sxc._lib.extend({}, settings, { action: verb, group: group }));// groupId: groupId, groups: groups, group: group }));
-            //}
-            //
-            //for (var s = 0; s < groups.length; s++) {
-            //    // first, enrich the set so it knows about it's context
-            //    var grp = groups[s];
-            //    grp.index = s;
-            //    grp.groups = groups;
-            //
-            //    var bs = groups[s].buttons.split(",");
-            //    for (var v = 0; v < bs.length; v++)
-            //        addButton(bs[v].trim(), grp);// s, groups.length, groups[s].name);
-            //}
-            //
-            //return flatList;
         },
 
-
+        // change a hierarchy of buttons into a flat, simpler list
         flattenList: function(btnGroups) {
             var flatList = [];
-
-            function addButton(verb, group) {
-                flatList.push($2sxc._lib.extend({}, { action: verb, verb:verb,group: group }));//action: verb, groupId: groupId, groups: groups /*, group: group */ }));
-            }
-
-
-            // todo: continue here!!!
             for (var s = 0; s < btnGroups.length; s++) {
                 // first, enrich the set so it knows about it's context
-                var grp = btnGroups[s];
-                grp.index = s;
-                grp.groups = btnGroups;
+                var grp = $2sxc._lib.extend(btnGroups[s], { index: s, groups: btnGroups});
 
                 // now process the butons
                 var bs = grp.buttons.split(",");
                 for (var v = 0; v < bs.length; v++)
-                    addButton(bs[v].trim(), grp);
+                    flatList.push({ action: bs[v].trim(), group: grp });
             }
-
             return flatList;
         },
 
-        // remove buttons which are not valid based on a condition
+        // remove buttons which are not valid based on add condition
         removeInvalidButtons: function(btnList, actions, settings, config) {
 
             for (var i = 0; i < btnList.length; i++) {
                 var btn = btnList[i];
                 // if this action has an add-condition, check that first
-                if (!actions[btn.verb]) {
-                    console.log("can't add button for verb: '" + verb + "'. action not found.");
+                if (!actions[btn.action]) {
+                    console.log("can't add button for action: '" + btn.action + "'. action not found.");
                     btnList.splice(i, 1);
                     i--;
                     continue;
                 }
-                var add = actions[btn.verb].addCondition;
+                var add = actions[btn.action].addCondition;
                 if (add !== undefined && (typeof (add) === "function"))
                     if (!add(settings, config)) {
                         btnList.splice(i, 1);
@@ -1652,6 +1607,20 @@ $(function () {
                 $2sxc._lib.extend(btn, settings);
             }
             return btnList;
+        },
+
+        properties: ["decorations"],
+
+        fallbackAllSettings: function(btnList, actions) {
+            for (var i = 0; i < btnList.length; i++) {
+                var btn = btnList[i];
+                for (var d = 0; d < tools.properties.length; d++)
+                    tools.fallbackOneSetting(btn, actions, tools.properties[d]);
+            }
+        },
+
+        fallbackOneSetting: function(btn, actions, propName) {//}, groupProp, actions, actProp) {
+            btn[propName] = btn[propName] || (btn.group.defaults && btn.group.defaults[propName]) || actions[propName];
         }
     };
 

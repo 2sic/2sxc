@@ -56,12 +56,12 @@
                 var conf = allActions[actDef.action],
                     groupId = actDef.group.index,// actDef.groupId,
                     showClasses = "group-" + groupId,
-                    classesList = (actDef.decorations || "").split(','),// conf.showOn.split(","),
+                    classesList = (actDef.decorations || "").split(","),// conf.showOn.split(","),
                     box = $("<div/>"),
                     symbol = $("<i class=\"" + conf.icon + "\" aria-hidden=\"true\"></i>");
 
                 for (var c = 0; c < classesList.length; c++)
-                    showClasses += " show-" + classesList[c];
+                    showClasses += /*" show-" +*/ " " + classesList[c];
 
                 var button = $("<a />", {
                     'class': "sc-" + actDef.action + " " + showClasses + (conf.dynamicClasses ? " " + conf.dynamicClasses(actDef) : ""),
@@ -73,7 +73,7 @@
 
                 button.html(box.html(symbol));
 
-                return button[0].outerHTML;
+                return button;//[0].outerHTML;
             },
 
             // Assemble a default toolbar instruction set
@@ -85,25 +85,6 @@
             _buildGroupedToolbar: function (groups, settings) {
                 return $2sxc._toolbarManager.buttonHelpers
                     .createFlatList(groups, allActions, settings, tb.config);
-
-                //var flatList = [];
-
-                //function addButton(verb, groupId, groups, group) {
-                //    // if this action has an add-condition, check that first
-                //    if (!allActions[verb])
-                //        return console.log("can't add button for verb: '" + verb + "'. action not found.");
-                //    var add = allActions[verb].addCondition;
-                //    if (add === undefined || ((typeof (add) === "function") ? add(settings, tb.config) : add))
-                //        flatList.push($2sxc._lib.extend({}, settings, { action: verb, groupId: groupId, groups: groups, group: group }));
-                //}
-
-                //for (var s = 0; s < groups.length; s++) {
-                //    var bs = groups[s].buttons.split(",");
-                //    for (var v = 0; v < bs.length; v++)
-                //        addButton(bs[v].trim(), s, groups.length, groups[s].name);
-                //}
-
-                //return flatList;
             },
             // Builds the toolbar and returns it as HTML
             // expects settings - either for 1 button or for an array of buttons
@@ -120,7 +101,7 @@
                 for (var i = 0; i < actionList.length; i++)
                     toolbar.append($("<li />").append($(tb.getButton(actionList[i]))));
 
-                return toolbar[0].outerHTML;
+                return toolbar;//[0].outerHTML;
             },
 
             // find all toolbar-info-attributes in the HTML, convert to <ul><li> toolbar

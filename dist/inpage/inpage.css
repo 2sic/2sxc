@@ -59,9 +59,9 @@
 .group-4 a.group-4 {display: inline-block!important}
 .group-5 a.group-5 {display: inline-block!important}
 
-a.group-default div {background-color: #0088f4}
-a.group-pro div {background-color: #96D500}
-a.group-alert div {background-color: #ff0000}
+.sc-menu a.group-default div {background-color: #0088f4}
+.sc-menu a.group-pro div {background-color: #96D500}
+.sc-menu a.group-alert div {background-color: #ff0000}
 
 .sc-menu span.disabled { color: #aaa}
 
