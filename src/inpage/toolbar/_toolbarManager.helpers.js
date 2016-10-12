@@ -7,14 +7,25 @@
         createFlatList: function (unstructuredConfig, actions, itemSettings, config) {
             var realConfig = tools.ensureHierarchy(unstructuredConfig);
 
-            var flat = tools.flattenList(realConfig);
-            tools.warnAboutInexistingActions(flat, actions);
+            var btnList = tools.flattenList(realConfig);
+            for (var i = 0; i < btnList.length; i++) {
+                // warn about buttons which don't have an action or an own click-event
+                tools.btnWarnUnknownAction(btnList[i], actions);
 
-            tools.addCurrentItemSettings(flat, itemSettings);
-            tools.fallbackAllSettings(flat, actions);
+                // enhance the button with settings for this instance
+                tools.btnAddItemSettings(btnList[i], itemSettings);
 
-            tools.hideIfShowConditionNotMet(flat, itemSettings, config);
-            return flat;
+                // ensure all buttons have either own settings, or the fallbacks
+                tools.btnAttachMissingSettings(btnList[i], actions);
+            }
+
+            //tools.warnAboutInexistingActions(btnList, actions);
+
+            //tools.addCurrentItemSettings(btnList, itemSettings);
+            //tools.fallbackAllSettings(btnList, actions);
+
+            tools.removeButtonsWithUnmetConditions(btnList, itemSettings, config);
+            return btnList;
         },
 
         ensureHierarchy: function (original) {
@@ -50,20 +61,8 @@
 
                 // add each button - check if it's already an object or just the string
                 for (var v = 0; v < btns.length; v++) {
-                    var current = btns[v];
-                    
-                    // if just a name, turn into a command
-                    if(typeof current === "string")
-                        current = { action: current };
-
-                    // if it's a command w/action, wrap into command + trim
-                    if (typeof current.action === "string")
-                        $2sxc._lib.extend(current, { command: { action: current.action.trim() } });
-
-                    // some clean-up
-                    delete current.action;  // remove the action property
-                    current.group = grp;    // attach group reference
-                    btns[v] = current;  
+                    btns[v] = tools.expandButtonConfig(btns[v]);
+                    btns[v].group = grp;    // attach group reference
                     flatList.push(btns[v]);
                 }
                 grp.buttons = btns; // ensure the internal def is also an array now
@@ -72,15 +71,38 @@
             return flatList;
         },
 
+        // takes an object like "actionname" or { action: "actionname", ... } and changes it to a { command: { action: "actionname" }, ... }
+        expandButtonConfig: function (original) {
+            if (original._expanded)
+                return original;
+
+            // if just a name, turn into a command
+            if (typeof original === "string")
+                original = { action: original };
+
+            // if it's a command w/action, wrap into command + trim
+            if (typeof original.action === "string")
+                $2sxc._lib.extend(original, { command: { action: original.action.trim() } });
+
+            // some clean-up
+            delete original.action;  // remove the action property
+            original._expanded = true;
+            return original;
+        },
+
         // warn about buttons which don't have an action or an own click-event
-        warnAboutInexistingActions: function (btnList, actions) {
-            for(var i = 0; btnList[i]; i++) 
-                if (!(btnList[i].onclick || actions[btnList[i].command.action]))
-                    console.log("warning: toolbar-button without 'onclick' or known action-name: '" + btnList[i].action);
+        //warnAboutInexistingActions: function (btnList, actions) {
+        //    for (var i = 0; i < btnList.length; i++)
+        //        tools.btnWarnUnknownAction(btnList[i], actions);
+        //},
+
+        btnWarnUnknownAction: function(btn, actions) {
+            if (!(actions[btn.command.action]))
+                console.log("warning: toolbar-button with unknown action-name: '" + btn.command.action);
         },
 
         // remove buttons which are not valid based on add condition
-        hideIfShowConditionNotMet: function(btnList, settings, config) {
+        removeButtonsWithUnmetConditions: function(btnList, settings, config) {
             for (var i = 0; i < btnList.length; i++) {
                 var add = btnList[i].showCondition;
                 if (add !== undefined && (typeof (add) === "function"))
@@ -92,9 +114,13 @@
         },
 
         // enhance the button with settings for this instance
-        addCurrentItemSettings: function(btnList, settings) {
-            for (var i = 0; i < btnList.length; i++) 
-                $2sxc._lib.extend(btnList[i].command, settings);
+        //addCurrentItemSettings: function(btnList, settings) {
+        //    for (var i = 0; i < btnList.length; i++)
+        //        tools.btnAddItemSettings(btnList[i], settings);
+        //},
+
+        btnAddItemSettings: function(btn, itemSettings) {
+            $2sxc._lib.extend(btn.command, itemSettings);
         },
 
         btnProperties: [
@@ -109,12 +135,16 @@
         ],
 
         // ensure all buttons have either own settings, or the fallbacks
-        fallbackAllSettings: function(btnList, actions) {
-            for (var i = 0; i < btnList.length; i++) {
-                var btn = btnList[i];
-                for (var d = 0; d < tools.btnProperties.length; d++)
-                    tools.fallbackOneSetting(btn, actions, tools.btnProperties[d]);
-            }
+//        fallbackAllSettings: function(btnList, actions) {
+//            for (var i = 0; i < btnList.length; i++) //{
+////                var btn = btnList[i];
+//                tools.btnAttachMissingSettings(btnList[i], actions);
+////            }
+//        },
+
+        btnAttachMissingSettings: function(btn, actions) {
+            for (var d = 0; d < tools.btnProperties.length; d++)
+                tools.fallbackOneSetting(btn, actions, tools.btnProperties[d]);
         },
 
         // configure missing button properties with various fallback options

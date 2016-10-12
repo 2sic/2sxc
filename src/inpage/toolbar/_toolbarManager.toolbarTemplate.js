@@ -3,29 +3,30 @@
 (function () {
     $2sxc._toolbarManager.toolbarTemplate = {
         groups: [
-            {
-                name: "test",
-                buttons: [
-                    {
-                        action: "edit",
-                        icon: "icon-sxc-code",
-                        title: "just quick edit!"
-                    },
-                    "inexisting-action",
-                    "edit",
-                    {
-                        action: "publish",
-                        showCondition: true,
-                        title: "forced publish button"
-                    },
-                    {
-                        action: "something",
-                        icon: "icon-sxc-list",
-                        onclick: "alert('custom button!')"
-                    },
-                    "more"
-                ]
-            },
+            //{
+            //    name: "test",
+            //    buttons: [
+            //        {
+            //            action: "edit",
+            //            icon: "icon-sxc-code",
+            //            title: "just quick edit!"
+            //        },
+            //        "inexisting-action",
+            //        "edit",
+            //        {
+            //            action: "publish",
+            //            showCondition: true,
+            //            title: "forced publish button"
+            //        },
+            //        {
+            //            command: {
+            //                action: "custom",
+            //                customCode: "alert('custom button!')"
+            //            }
+            //        },
+            //        "more"
+            //    ]
+            //},
             {
                 name: "default",
                 buttons: "edit,new,metadata,publish,more"

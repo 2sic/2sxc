@@ -198,24 +198,28 @@
                 showCondition: enableTools
             }),
 
+            'custom': action("custom", "Custom", "bomb", "admin", true, {
+                code: function (settings, event, manager) {
+                    console.log("custom action with code - BETA feature, may change");
+                    if (!settings.customCode) {
+                        console.log("custom code action, but no onclick found to run");
+                        return;
+                    }
+                    eval(settings.customCode); // jshint ignore:line
+                }
+            }),
+
             "more": action("more", "MoreActions", "options btn-mode", "default,edit,design,admin", true, {
                 code: function (settings, event) {
                     var btn = $(event.target);
-                    var fullMenu = btn.closest("ul.sc-menu"); // todo: slightly nasty dependency...
+                    var fullMenu = btn.closest("ul.sc-menu"); 
                     var oldState = Number(fullMenu.attr("data-state") || 0);
                     var newState = oldState + 1;
-                    var max = Number(fullMenu.attr("group-count"));//.length;//4;//btn.data("groups").length;
-                    //if (newState === 2) newState = 3; // state 1 doesn't exist yet - skip
-                    newState = newState % max;// (enableTools ? 4 : 3); // if tools are enabled, there are 4 states
+                    var max = Number(fullMenu.attr("group-count"));
+                    newState = newState % max;
 
-                    // todo: refactoring, the state-count could be very dynamic now...
                     fullMenu.removeClass("group-" + oldState)
-                        .addClass("group-" + newState);
-
-                    fullMenu.removeClass("show-set-" + oldState)
-                        .addClass("show-set-" + newState)
-
-                        // still needed
+                        .addClass("group-" + newState)
                         .attr("data-state", newState);
                 }
             })

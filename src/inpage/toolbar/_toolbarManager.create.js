@@ -59,7 +59,7 @@
                     classesList = (actDef.classes || "").split(","),
                     box = $("<div/>"),
                     symbol = $("<i class=\"" + actDef.icon + "\" aria-hidden=\"true\"></i>"),
-                    onclick = actDef.onclick || "$2sxc(" + id + ", " + cbid + ").manage.action(" + JSON.stringify(actDef.command /*, tb._jsonifyFilterGroup*/) + ", event);";
+                    onclick = actDef.onclick || "$2sxc(" + id + ", " + cbid + ").manage.action(" + JSON.stringify(actDef.command) + ", event);";
 
                 for (var c = 0; c < classesList.length; c++)
                     showClasses += " " + classesList[c];

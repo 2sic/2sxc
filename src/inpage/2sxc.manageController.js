@@ -69,6 +69,7 @@
 
             // Perform a toolbar button-action - basically get the configuration and execute it's action
             action: cmds.executeAction,
+            run: cmds.executeAction,        // test in 08.06, alternative to "action" for more consistent naming
 
             //#region toolbar quick-access commands - might be used by other scripts, so I'm keeping them here for the moment, but may just delete them later
             toolbar: toolsAndButtons, // should use this from now on when accessing from outside

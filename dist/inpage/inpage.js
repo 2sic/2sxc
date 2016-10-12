@@ -351,6 +351,7 @@ $2sxc._contentBlock.create = function (sxc, manage, cbTag) {
 
             // Perform a toolbar button-action - basically get the configuration and execute it's action
             action: cmds.executeAction,
+            run: cmds.executeAction,        // test in 08.06, alternative to "action" for more consistent naming
 
             //#region toolbar quick-access commands - might be used by other scripts, so I'm keeping them here for the moment, but may just delete them later
             toolbar: toolsAndButtons, // should use this from now on when accessing from outside
@@ -658,24 +659,28 @@ $2sxc._contentBlock.create = function (sxc, manage, cbTag) {
                 showCondition: enableTools
             }),
 
+            'custom': action("custom", "Custom", "bomb", "admin", true, {
+                code: function (settings, event, manager) {
+                    console.log("custom action with code - BETA feature, may change");
+                    if (!settings.customCode) {
+                        console.log("custom code action, but no onclick found to run");
+                        return;
+                    }
+                    eval(settings.customCode); // jshint ignore:line
+                }
+            }),
+
             "more": action("more", "MoreActions", "options btn-mode", "default,edit,design,admin", true, {
                 code: function (settings, event) {
                     var btn = $(event.target);
-                    var fullMenu = btn.closest("ul.sc-menu"); // todo: slightly nasty dependency...
+                    var fullMenu = btn.closest("ul.sc-menu"); 
                     var oldState = Number(fullMenu.attr("data-state") || 0);
                     var newState = oldState + 1;
-                    var max = Number(fullMenu.attr("group-count"));//.length;//4;//btn.data("groups").length;
-                    //if (newState === 2) newState = 3; // state 1 doesn't exist yet - skip
-                    newState = newState % max;// (enableTools ? 4 : 3); // if tools are enabled, there are 4 states
+                    var max = Number(fullMenu.attr("group-count"));
+                    newState = newState % max;
 
-                    // todo: refactoring, the state-count could be very dynamic now...
                     fullMenu.removeClass("group-" + oldState)
-                        .addClass("group-" + newState);
-
-                    fullMenu.removeClass("show-set-" + oldState)
-                        .addClass("show-set-" + newState)
-
-                        // still needed
+                        .addClass("group-" + newState)
                         .attr("data-state", newState);
                 }
             })
@@ -1402,7 +1407,7 @@ $(function () {
                     classesList = (actDef.classes || "").split(","),
                     box = $("<div/>"),
                     symbol = $("<i class=\"" + actDef.icon + "\" aria-hidden=\"true\"></i>"),
-                    onclick = actDef.onclick || "$2sxc(" + id + ", " + cbid + ").manage.action(" + JSON.stringify(actDef.command /*, tb._jsonifyFilterGroup*/) + ", event);";
+                    onclick = actDef.onclick || "$2sxc(" + id + ", " + cbid + ").manage.action(" + JSON.stringify(actDef.command) + ", event);";
 
                 for (var c = 0; c < classesList.length; c++)
                     showClasses += " " + classesList[c];
@@ -1483,14 +1488,25 @@ $(function () {
         createFlatList: function (unstructuredConfig, actions, itemSettings, config) {
             var realConfig = tools.ensureHierarchy(unstructuredConfig);
 
-            var flat = tools.flattenList(realConfig);
-            tools.warnAboutInexistingActions(flat, actions);
+            var btnList = tools.flattenList(realConfig);
+            for (var i = 0; i < btnList.length; i++) {
+                // warn about buttons which don't have an action or an own click-event
+                tools.btnWarnUnknownAction(btnList[i], actions);
 
-            tools.addCurrentItemSettings(flat, itemSettings);
-            tools.fallbackAllSettings(flat, actions);
+                // enhance the button with settings for this instance
+                tools.btnAddItemSettings(btnList[i], itemSettings);
 
-            tools.hideIfShowConditionNotMet(flat, itemSettings, config);
-            return flat;
+                // ensure all buttons have either own settings, or the fallbacks
+                tools.btnAttachMissingSettings(btnList[i], actions);
+            }
+
+            //tools.warnAboutInexistingActions(btnList, actions);
+
+            //tools.addCurrentItemSettings(btnList, itemSettings);
+            //tools.fallbackAllSettings(btnList, actions);
+
+            tools.removeButtonsWithUnmetConditions(btnList, itemSettings, config);
+            return btnList;
         },
 
         ensureHierarchy: function (original) {
@@ -1526,20 +1542,8 @@ $(function () {
 
                 // add each button - check if it's already an object or just the string
                 for (var v = 0; v < btns.length; v++) {
-                    var current = btns[v];
-                    
-                    // if just a name, turn into a command
-                    if(typeof current === "string")
-                        current = { action: current };
-
-                    // if it's a command w/action, wrap into command + trim
-                    if (typeof current.action === "string")
-                        $2sxc._lib.extend(current, { command: { action: current.action.trim() } });
-
-                    // some clean-up
-                    delete current.action;  // remove the action property
-                    current.group = grp;    // attach group reference
-                    btns[v] = current;  
+                    btns[v] = tools.expandButtonConfig(btns[v]);
+                    btns[v].group = grp;    // attach group reference
                     flatList.push(btns[v]);
                 }
                 grp.buttons = btns; // ensure the internal def is also an array now
@@ -1548,15 +1552,38 @@ $(function () {
             return flatList;
         },
 
+        // takes an object like "actionname" or { action: "actionname", ... } and changes it to a { command: { action: "actionname" }, ... }
+        expandButtonConfig: function (original) {
+            if (original._expanded)
+                return original;
+
+            // if just a name, turn into a command
+            if (typeof original === "string")
+                original = { action: original };
+
+            // if it's a command w/action, wrap into command + trim
+            if (typeof original.action === "string")
+                $2sxc._lib.extend(original, { command: { action: original.action.trim() } });
+
+            // some clean-up
+            delete original.action;  // remove the action property
+            original._expanded = true;
+            return original;
+        },
+
         // warn about buttons which don't have an action or an own click-event
-        warnAboutInexistingActions: function (btnList, actions) {
-            for(var i = 0; btnList[i]; i++) 
-                if (!(btnList[i].onclick || actions[btnList[i].command.action]))
-                    console.log("warning: toolbar-button without 'onclick' or known action-name: '" + btnList[i].action);
+        //warnAboutInexistingActions: function (btnList, actions) {
+        //    for (var i = 0; i < btnList.length; i++)
+        //        tools.btnWarnUnknownAction(btnList[i], actions);
+        //},
+
+        btnWarnUnknownAction: function(btn, actions) {
+            if (!(actions[btn.command.action]))
+                console.log("warning: toolbar-button with unknown action-name: '" + btn.command.action);
         },
 
         // remove buttons which are not valid based on add condition
-        hideIfShowConditionNotMet: function(btnList, settings, config) {
+        removeButtonsWithUnmetConditions: function(btnList, settings, config) {
             for (var i = 0; i < btnList.length; i++) {
                 var add = btnList[i].showCondition;
                 if (add !== undefined && (typeof (add) === "function"))
@@ -1568,9 +1595,13 @@ $(function () {
         },
 
         // enhance the button with settings for this instance
-        addCurrentItemSettings: function(btnList, settings) {
-            for (var i = 0; i < btnList.length; i++) 
-                $2sxc._lib.extend(btnList[i].command, settings);
+        //addCurrentItemSettings: function(btnList, settings) {
+        //    for (var i = 0; i < btnList.length; i++)
+        //        tools.btnAddItemSettings(btnList[i], settings);
+        //},
+
+        btnAddItemSettings: function(btn, itemSettings) {
+            $2sxc._lib.extend(btn.command, itemSettings);
         },
 
         btnProperties: [
@@ -1585,12 +1616,16 @@ $(function () {
         ],
 
         // ensure all buttons have either own settings, or the fallbacks
-        fallbackAllSettings: function(btnList, actions) {
-            for (var i = 0; i < btnList.length; i++) {
-                var btn = btnList[i];
-                for (var d = 0; d < tools.btnProperties.length; d++)
-                    tools.fallbackOneSetting(btn, actions, tools.btnProperties[d]);
-            }
+//        fallbackAllSettings: function(btnList, actions) {
+//            for (var i = 0; i < btnList.length; i++) //{
+////                var btn = btnList[i];
+//                tools.btnAttachMissingSettings(btnList[i], actions);
+////            }
+//        },
+
+        btnAttachMissingSettings: function(btn, actions) {
+            for (var d = 0; d < tools.btnProperties.length; d++)
+                tools.fallbackOneSetting(btn, actions, tools.btnProperties[d]);
         },
 
         // configure missing button properties with various fallback options
@@ -1620,29 +1655,30 @@ $(function () {
 (function () {
     $2sxc._toolbarManager.toolbarTemplate = {
         groups: [
-            {
-                name: "test",
-                buttons: [
-                    {
-                        action: "edit",
-                        icon: "icon-sxc-code",
-                        title: "just quick edit!"
-                    },
-                    "inexisting-action",
-                    "edit",
-                    {
-                        action: "publish",
-                        showCondition: true,
-                        title: "forced publish button"
-                    },
-                    {
-                        action: "something",
-                        icon: "icon-sxc-list",
-                        onclick: "alert('custom button!')"
-                    },
-                    "more"
-                ]
-            },
+            //{
+            //    name: "test",
+            //    buttons: [
+            //        {
+            //            action: "edit",
+            //            icon: "icon-sxc-code",
+            //            title: "just quick edit!"
+            //        },
+            //        "inexisting-action",
+            //        "edit",
+            //        {
+            //            action: "publish",
+            //            showCondition: true,
+            //            title: "forced publish button"
+            //        },
+            //        {
+            //            command: {
+            //                action: "custom",
+            //                customCode: "alert('custom button!')"
+            //            }
+            //        },
+            //        "more"
+            //    ]
+            //},
             {
                 name: "default",
                 buttons: "edit,new,metadata,publish,more"
