@@ -1,5 +1,6 @@
-﻿(function() {
-    $2sxc._toolbarManager.create = function (sxc, editContext) {
+﻿(function () {
+    var tbManager = $2sxc._toolbarManager;
+    tbManager.create = function (sxc, editContext) {
         var id = sxc.id, cbid = sxc.cbid;
         var allActions = $2sxc._actions.create({
             canDesign: editContext.User.CanDesign,
@@ -53,19 +54,19 @@
                 flattenActionDefinition(actDef);
 
                 // retrieve configuration for this button
-                var //conf = allActions[actDef.action],
-                    groupId = actDef.group.index,
+                var groupId = actDef.group.index,
                     showClasses = "group-" + groupId,
                     classesList = (actDef.classes || "").split(","),
                     box = $("<div/>"),
-                    symbol = $("<i class=\"" + actDef.icon + "\" aria-hidden=\"true\"></i>");
+                    symbol = $("<i class=\"" + actDef.icon + "\" aria-hidden=\"true\"></i>"),
+                    onclick = actDef.onclick || "$2sxc(" + id + ", " + cbid + ").manage.action(" + JSON.stringify(actDef.command /*, tb._jsonifyFilterGroup*/) + ", event);";
 
                 for (var c = 0; c < classesList.length; c++)
-                    showClasses += /*" show-" +*/ " " + classesList[c];
+                    showClasses += " " + classesList[c];
 
                 var button = $("<a />", {
                     'class': "sc-" + actDef.action + " " + showClasses + (actDef.dynamicClasses ? " " + actDef.dynamicClasses(actDef) : ""),
-                    'onclick': "$2sxc(" + id + ", " + cbid + ").manage.action(" + JSON.stringify(actDef, function (key,value) { return key === "group" ? undefined : value; }) + ", event);",
+                    'onclick': onclick,
                     'data-i18n': "[title]" + actDef.title
                 });
 
@@ -74,13 +75,16 @@
                 return button[0].outerHTML;
             },
 
-            // Assemble a default toolbar instruction set
-            defaultButtonList: function (settings) {
-                var defTb = $2sxc._toolbarManager.standardButtons(editContext);
-
-                return $2sxc._toolbarManager.buttonHelpers
-                    .createFlatList(defTb, allActions, settings, tb.config);
+            _jsonifyFilterGroup: function(key, value) {
+                return key === "group" || key === "icon" || key === "title" ? undefined : value;
             },
+
+            // Assemble a default toolbar instruction set
+            //defaultButtonList: function () {
+            //    return tbManager.standardButtons(editContext.User.CanDesign);
+            //    //return tbManager.buttonHelpers
+            //    //    .createFlatList(defTb, allActions, settings, tb.config);
+            //},
 
 
             // Builds the toolbar and returns it as HTML
@@ -90,16 +94,19 @@
                     ? [settings] // if single item with specified action, use this as our button-list
                     : $.isArray(settings)
                         ? settings // if it is an array, use that. Otherwise assume that we auto-generate all buttons with supplied settings
-                        : tb.defaultButtonList(settings);
+                        : tbManager.standardButtons(editContext.User.CanDesign);
+
+                var btns = tbManager.buttonHelpers.createFlatList(actionList, allActions, settings, tb.config);
+                
 
                 var tbClasses = "sc-menu group-0 " + ((settings.sortOrder === -1) ? " listContent" : "");
                 var toolbar = $("<ul />", { 'class': tbClasses, 'onclick': "var e = arguments[0] || window.event; e.stopPropagation();" });
 
-                for (var i = 0; i < actionList.length; i++)
-                    toolbar.append($("<li />").append($(tb.getButton(actionList[i]))));
+                for (var i = 0; i < btns.length; i++)
+                    toolbar.append($("<li />").append($(tb.getButton(btns[i]))));
 
-                toolbar.data("groups", actionList[0] && actionList[0].group.groups);
-                toolbar.attr("group-count", actionList[0] && actionList[0].group.groups.length);
+                //toolbar.data("groups", btns[0] && btns[0].group.groups);
+                toolbar.attr("group-count", btns[0] && btns[0].group.groups.length);
 
                 return toolbar[0].outerHTML;
             },

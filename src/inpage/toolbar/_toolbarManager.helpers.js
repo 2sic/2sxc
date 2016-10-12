@@ -4,19 +4,40 @@
 (function () {
     var tools = $2sxc._toolbarManager.buttonHelpers = {
 
-        createFlatList: function(groups, actions, itemSettings, config) {
-            var flat = tools.flattenList(groups);
-            tools.removeInexistingActions(flat, actions);
+        createFlatList: function (unstructuredConfig, actions, itemSettings, config) {
+            var realConfig = tools.ensureHierarchy(unstructuredConfig);
 
-            tools.addSettings(flat, itemSettings);
+            var flat = tools.flattenList(realConfig);
+            tools.warnAboutInexistingActions(flat, actions);
+
+            tools.addCurrentItemSettings(flat, itemSettings);
             tools.fallbackAllSettings(flat, actions);
 
-            tools.removeInvalidButtons(flat, actions, itemSettings, config);
+            tools.hideIfShowConditionNotMet(flat, itemSettings, config);
             return flat;
         },
 
+        ensureHierarchy: function (original) {
+            // goal: return an object with this structure
+            var fullSet = {
+                name: "my toolbar",
+                groups: [],
+                defaults: {}
+            };
+
+            // the second simplest case: just an array of buttons, each configured
+            if (Array.isArray(original)) {
+                fullSet.groups = original;
+                return fullSet;
+            }
+            return original;
+        },
+
+
+
         // change a hierarchy of buttons into a flat, simpler list
-        flattenList: function(btnGroups) {
+        flattenList: function (full) {
+            var btnGroups = full.groups;
             var flatList = [];
             for (var s = 0; s < btnGroups.length; s++) {
                 // first, enrich the set so it knows about it's context
@@ -29,31 +50,39 @@
 
                 // add each button - check if it's already an object or just the string
                 for (var v = 0; v < btns.length; v++) {
-                    // replace the item on the index with a correct object
-                    if(typeof btns[v] === "string")
-                        btns[v] = { action: btns[v].trim() };
-                    btns[v].group = grp;    // attach group reference
+                    var current = btns[v];
+                    
+                    // if just a name, turn into a command
+                    if(typeof current === "string")
+                        current = { action: current };
+
+                    // if it's a command w/action, wrap into command + trim
+                    if (typeof current.action === "string")
+                        $2sxc._lib.extend(current, { command: { action: current.action.trim() } });
+
+                    // some clean-up
+                    delete current.action;  // remove the action property
+                    current.group = grp;    // attach group reference
+                    btns[v] = current;  
                     flatList.push(btns[v]);
                 }
                 grp.buttons = btns; // ensure the internal def is also an array now
             }
+            full.flat = flatList;
             return flatList;
         },
 
-        // filter out buttons whose actions don't exist
-        removeInexistingActions: function(btnList, actions) {
-            for (var i = 0; i < btnList.length; i) 
-                if (!actions[btnList[i].action]) {
-                    console.log("can't add button for action: '" + btnList[i].action + "'. action not found.");
-                    btnList.splice(i, 1);
-                }
-                else i++;
+        // warn about buttons which don't have an action or an own click-event
+        warnAboutInexistingActions: function (btnList, actions) {
+            for(var i = 0; btnList[i]; i++) 
+                if (!(btnList[i].onclick || actions[btnList[i].command.action]))
+                    console.log("warning: toolbar-button without 'onclick' or known action-name: '" + btnList[i].action);
         },
 
         // remove buttons which are not valid based on add condition
-        removeInvalidButtons: function(btnList, actions, settings, config) {
+        hideIfShowConditionNotMet: function(btnList, settings, config) {
             for (var i = 0; i < btnList.length; i++) {
-                var add = btnList[i].addCondition;
+                var add = btnList[i].showCondition;
                 if (add !== undefined && (typeof (add) === "function"))
                     if (!add(settings, config)) {
                         btnList.splice(i, 1);
@@ -63,36 +92,36 @@
         },
 
         // enhance the button with settings for this instance
-        addSettings: function(btnList, settings) {
-            for (var i = 0; i < btnList.length; i++) {
-                var btn = btnList[i];
-
-                $2sxc._lib.extend(btn, settings);
-            }
-            return btnList;
+        addCurrentItemSettings: function(btnList, settings) {
+            for (var i = 0; i < btnList.length; i++) 
+                $2sxc._lib.extend(btnList[i].command, settings);
         },
 
-        properties: [
+        btnProperties: [
             "classes",
             "icon",
             "title",
             "dynamicClasses",
-            "addCondition"
+            "showCondition"
+        ],
+        actProperties: [
+            "params"    // todo: maybe different!
         ],
 
+        // ensure all buttons have either own settings, or the fallbacks
         fallbackAllSettings: function(btnList, actions) {
             for (var i = 0; i < btnList.length; i++) {
                 var btn = btnList[i];
-                for (var d = 0; d < tools.properties.length; d++)
-                    tools.fallbackOneSetting(btn, actions, tools.properties[d]);
+                for (var d = 0; d < tools.btnProperties.length; d++)
+                    tools.fallbackOneSetting(btn, actions, tools.btnProperties[d]);
             }
         },
 
-        // 
-        fallbackOneSetting: function(btn, actions, propName) {//}, groupProp, actions, actProp) {
-            btn[propName] = btn[propName]
-                || (btn.group.defaults && btn.group.defaults[propName])
-                || actions[btn.action][propName];
+        // configure missing button properties with various fallback options
+        fallbackOneSetting: function(btn, actions, propName) {
+            btn[propName] = btn[propName]   // by if already defined, use the already defined propery
+                || (btn.group.defaults && btn.group.defaults[propName])     // if the group has defaults, try use use that property
+                || (actions[btn.command.action] && actions[btn.command.action][propName]); // if there is an action, try to use that property name
         }
     };
 

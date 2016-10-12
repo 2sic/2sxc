@@ -3,10 +3,10 @@
 
 (function () {
 
-    $2sxc._toolbarManager.standardButtons = function(editContext) {
+    $2sxc._toolbarManager.standardButtons = function(canDesign) {
         var btns = $2sxc._toolbarManager.toolbarTemplate;
-        if (!editContext.User.CanDesign)
-            btns.splice(2, 1); // remove this menu
+        if (!canDesign)
+            btns.groups.splice(2, 1); // remove this menu
         return btns;
     };
 

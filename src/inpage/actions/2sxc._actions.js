@@ -8,7 +8,7 @@
  * - title - actually the translation key to retrieve the title (buttonConfig)
  * - icon - the icon-class
  * - uiActionOnly - true/false if this is just something visual; otherwise a webservice will ensure that a content-group exists (for editing etc.)
- * - addCondition(settings, moduleConfiguration) - would conditionally prevent adding this button by default
+ * - showCondition(settings, moduleConfiguration) - would conditionally prevent adding this button by default
  * - code(settings, event) - the code executed on click, if it's not the default action
  * - dynamicClasses(settings) - can conditionally add more css-class names to add to the button, like the "empty" added if something doesn't have metadata
  * - params - ...
@@ -46,7 +46,7 @@
             'new': action("new", "New", "plus", "default", false, {
                 params: { mode: "new" },
                 dialog: "edit", // don't use "new" (default) but use "edit"
-                addCondition: function (settings, modConfig) {
+                showCondition: function (settings, modConfig) {
                     return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; // don't provide new on the header-item
                 },
                 code: function (settings, event, manager) {
@@ -57,7 +57,7 @@
 
             // add brings no dialog, just add an empty item
             'add': action("add", "AddDemo", "plus-circled", "edit", false, {
-                addCondition: function(settings, modConfig) {
+                showCondition: function(settings, modConfig) {
                     return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1;
                 },
                 code: function (settings, event, manager) {
@@ -75,7 +75,7 @@
                     return settings.entityId ? "" : "empty";
                     // return settings.items && settings.items[0].entityId ? "" : "empty";
                 },
-                addCondition: function(settings) {
+                showCondition: function(settings) {
                     return !!settings.metadata;
                 }, // only add a metadata-button if it has metadata-infos
                 configureCommand: function (cmd) {
@@ -89,7 +89,7 @@
 
             // remove an item from the placeholder (usually for lists)
             'remove': action("remove", "Remove", "minus-circled", "edit", false, {
-                addCondition: function(settings, modConfig) {
+                showCondition: function(settings, modConfig) {
                     return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1;
                 },
                 code: function (settings, event, manager) {
@@ -105,7 +105,7 @@
             //    title: "Toolbar.Delete",
             //    icon: "icon-sxc-cancel",
             //    disabled: true,
-            //    addCondition: function (settings) { return !settings.useModuleList; },
+            //    showCondition: function (settings) { return !settings.useModuleList; },
             //    code: function (settings, event) {
             //        if (confirm(tbContr.translate("Toolbar.ReallyDelete"))) {
             //            tbContr._getAngularVm().reallyDelete(settings.entityId);
@@ -114,7 +114,7 @@
             //},
 
             'moveup': action("moveup", "MoveUp", "move-up", "edit", false, {
-                addCondition: function(settings, modConfig) {
+                showCondition: function(settings, modConfig) {
                     return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1 && settings.sortOrder !== 0;
                 },
                 code: function (settings, event, manager) {
@@ -123,16 +123,16 @@
                 }
             }),
             'movedown': action("movedown", "MoveDown", "move-down", "edit", false, {
-                addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; },
+                showCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; },
                 code: function (settings, event, manager) {
                     manager.contentBlock.changeOrder(settings.sortOrder, settings.sortOrder + 1);
                 }
             }),
             'sort': action("sort", "Sort", "list-numbered", "edit", false, {
-                addCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; }
+                showCondition: function (settings, modConfig) { return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1; }
             }),
             'publish': action("publish", "Unpublished", "eye-off", "default", false, {
-                addCondition: function (settings, modConfig) {
+                showCondition: function (settings, modConfig) {
                     return settings.isPublished === false;
                 },
                 code: function (settings, event, manager) {
@@ -146,24 +146,10 @@
                 }
             }),
 
-            //'publish': action("publish", "Published", "eye-off", "edit", false, {
-            //    icon2: "icon-sxc-eye-off",
-            //    disabled: true,
-            //    code: function (settings, event, manager) {
-            //        if (settings.isPublished) {
-            //            alert($2sxc.translate("Toolbar.AlreadyPublished"));
-            //            return;
-            //        }
-            //        var part = settings.sortOrder === -1 ? "listcontent" : "content";
-            //        var index = settings.sortOrder === -1 ? 0 : settings.sortOrder;
-            //        manager.contentBlock.publish(part, index);
-            //    }
-            //}),
-
             //'unpublish': createActionConfig("publish", "Published", "eye", "edit", false, {
             //    icon2: "icon-sxc-eye-off",
             //    disabled: true,
-            //    addCondition: function(settings, modConfig) {
+            //    showCondition: function(settings, modConfig) {
             //        return true; 
             //    },
             //    code: function (settings, event, manager) {
@@ -178,7 +164,7 @@
             //}),
 
             'replace': action("replace", "Replace", "replace", "edit", false, {
-                addCondition: function (settings) { return settings.useModuleList; }
+                showCondition: function (settings) { return settings.useModuleList; }
             }),
 
             'layout': action("layout", "ChangeLayout", "glasses", "default", true, {
@@ -189,27 +175,27 @@
 
             'develop': action("develop", "Develop", "code", "admin", true, {
                 newWindow: true,
-                addCondition: enableTools,
+                showCondition: enableTools,
                 configureCommand: function (cmd) {
                     cmd.items = [{ EntityId: editContext.templateId }];
                 }
             }),
 
             'contenttype': action("contenttype", "ContentType", "fields", "admin", true, {
-                addCondition: enableTools
+                showCondition: enableTools
             }),
 
             'contentitems': action("contentitems", "ContentItems", "table", "admin", true, {
                 params: { contentTypeName: editContext.contentTypeId },
-                addCondition: enableTools && editContext.contentTypeId
+                showCondition: enableTools && editContext.contentTypeId
             }),
 
             'app': action("app", "App", "settings", "admin", true, {
-                addCondition: enableTools
+                showCondition: enableTools
             }),
 
             'zone': action("zone", "Zone", "manage", "admin", true, {
-                addCondition: enableTools
+                showCondition: enableTools
             }),
 
             "more": action("more", "MoreActions", "options btn-mode", "default,edit,design,admin", true, {
