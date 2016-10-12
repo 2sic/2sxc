@@ -22,8 +22,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 
 		public EntitiesController(): base()
 		{
-            //2016-10-4 disabled this, as I moved the eav.configuration...to the DnnApi...fixes class
-            //Eav.Configuration.SetConnectionString("SiteSqlServer");
+			Eav.Configuration.SetConnectionString("SiteSqlServer");
             _entitiesController.SetUser(Environment.Dnn7.UserIdentity.CurrentUserIdentityToken);
 		}
 

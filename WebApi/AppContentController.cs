@@ -31,13 +31,12 @@ namespace ToSic.SexyContent.WebApi
 	{
 	    private EntitiesController _entitiesController;
 
-        //2016-10-4 disabled this, as I moved the eav.configuration...to the DnnApi...fixes class
-		//public AppContentController()
-		//{
-			// Eav.Configuration.SetConnectionString("SiteSqlServer");
+		public AppContentController()
+		{
+			Eav.Configuration.SetConnectionString("SiteSqlServer");
             // Improve the serializer so it's aware of the 2sxc-context (module, portal etc.)
             //		    (eavWebApi.Serializer as Serializer).Sxc = Sexy;
-		//}
+		}
 
 	    private void InitEavAndSerializer()
 	    {
