@@ -1427,13 +1427,6 @@ $(function () {
                 return key === "group" || key === "icon" || key === "title" ? undefined : value;
             },
 
-            // Assemble a default toolbar instruction set
-            //defaultButtonList: function () {
-            //    return tbManager.standardButtons(editContext.User.CanDesign);
-            //    //return tbManager.buttonHelpers
-            //    //    .createFlatList(defTb, allActions, settings, tb.config);
-            //},
-
 
             // Builds the toolbar and returns it as HTML
             // expects settings - either for 1 button or for an array of buttons
@@ -1489,24 +1482,22 @@ $(function () {
             var realConfig = tools.ensureHierarchy(unstructuredConfig);
 
             var btnList = tools.flattenList(realConfig);
-            for (var i = 0; i < btnList.length; i++) {
-                // warn about buttons which don't have an action or an own click-event
-                tools.btnWarnUnknownAction(btnList[i], actions);
-
-                // enhance the button with settings for this instance
-                tools.btnAddItemSettings(btnList[i], itemSettings);
-
-                // ensure all buttons have either own settings, or the fallbacks
-                tools.btnAttachMissingSettings(btnList[i], actions);
-            }
-
-            //tools.warnAboutInexistingActions(btnList, actions);
-
-            //tools.addCurrentItemSettings(btnList, itemSettings);
-            //tools.fallbackAllSettings(btnList, actions);
+            for (var i = 0; i < btnList.length; i++) 
+                tools.btnCleanVariousInputFormats(btnList[i], actions, itemSettings);
 
             tools.removeButtonsWithUnmetConditions(btnList, itemSettings, config);
             return btnList;
+        },
+
+        btnCleanVariousInputFormats: function(btn, actions, itemSettings) {
+            // warn about buttons which don't have an action or an own click-event
+            tools.btnWarnUnknownAction(btn, actions);
+
+            // enhance the button with settings for this instance
+            tools.btnAddItemSettings(btn, itemSettings);
+
+            // ensure all buttons have either own settings, or the fallbacks
+            tools.btnAttachMissingSettings(btn, actions);            
         },
 
         ensureHierarchy: function (original) {
@@ -1571,12 +1562,6 @@ $(function () {
             return original;
         },
 
-        // warn about buttons which don't have an action or an own click-event
-        //warnAboutInexistingActions: function (btnList, actions) {
-        //    for (var i = 0; i < btnList.length; i++)
-        //        tools.btnWarnUnknownAction(btnList[i], actions);
-        //},
-
         btnWarnUnknownAction: function(btn, actions) {
             if (!(actions[btn.command.action]))
                 console.log("warning: toolbar-button with unknown action-name: '" + btn.command.action);
@@ -1594,12 +1579,6 @@ $(function () {
             }
         },
 
-        // enhance the button with settings for this instance
-        //addCurrentItemSettings: function(btnList, settings) {
-        //    for (var i = 0; i < btnList.length; i++)
-        //        tools.btnAddItemSettings(btnList[i], settings);
-        //},
-
         btnAddItemSettings: function(btn, itemSettings) {
             $2sxc._lib.extend(btn.command, itemSettings);
         },
@@ -1612,16 +1591,8 @@ $(function () {
             "showCondition"
         ],
         actProperties: [
-            "params"    // todo: maybe different!
+            "params"    // todo: maybe different! DOESN'T WORK YET - MUST IMPLEMENT
         ],
-
-        // ensure all buttons have either own settings, or the fallbacks
-//        fallbackAllSettings: function(btnList, actions) {
-//            for (var i = 0; i < btnList.length; i++) //{
-////                var btn = btnList[i];
-//                tools.btnAttachMissingSettings(btnList[i], actions);
-////            }
-//        },
 
         btnAttachMissingSettings: function(btn, actions) {
             for (var d = 0; d < tools.btnProperties.length; d++)

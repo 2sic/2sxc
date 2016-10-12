@@ -79,13 +79,6 @@
                 return key === "group" || key === "icon" || key === "title" ? undefined : value;
             },
 
-            // Assemble a default toolbar instruction set
-            //defaultButtonList: function () {
-            //    return tbManager.standardButtons(editContext.User.CanDesign);
-            //    //return tbManager.buttonHelpers
-            //    //    .createFlatList(defTb, allActions, settings, tb.config);
-            //},
-
 
             // Builds the toolbar and returns it as HTML
             // expects settings - either for 1 button or for an array of buttons
