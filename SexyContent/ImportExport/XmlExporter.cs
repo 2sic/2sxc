@@ -50,6 +50,9 @@ namespace ToSic.SexyContent.ImportExport
             _eavAppContext = _app.EavContext;
             AttributeSetIDs = attrSetIds;
             EntityIDs = entityIds;
+
+            // this must happen very early, to ensure that the file-lists etc. are correct for exporting when used externally
+            InitExportXDocument();
         }
 
         /// <summary>
@@ -81,130 +84,133 @@ namespace ToSic.SexyContent.ImportExport
 
         private XDocument _exportDocument;
 
-        public XDocument ExportXDocument 
+        public XDocument ExportXDocument => _exportDocument;
+
+        private void InitExportXDocument()
         {
-            get
+
+            //_referencedFileIds = new List<int>();
+            //_referencedFolderIds = new List<int>();
+            //ReferencedFiles = new List<IFileInfo>();   
+
+            // Create XML document and declaration
+            var doc = _exportDocument = new XDocument(new XDeclaration("1.0", "UTF-8", "yes"), null);
+
+            #region Header
+
+            var dimensions = _eavAppContext.Dimensions.GetDimensionChildren("Culture");
+            var header = new XElement(XmlConstants.Header,
+                _isAppExport && _app.AppGuid != "Default"
+                    ? new XElement(XmlConstants.App,
+                        new XAttribute(XmlConstants.Guid, _app.AppGuid)
+                        )
+                    : null,
+                new XElement("Language", new XAttribute("Default", Portal.DefaultLanguage)),
+                new XElement("Dimensions", dimensions.Select(d => new XElement("Dimension",
+                    new XAttribute("DimensionID", d.DimensionID),
+                    new XAttribute("Name", d.Name),
+                    new XAttribute("SystemKey", d.SystemKey ?? String.Empty),
+                    new XAttribute("ExternalKey", d.ExternalKey ?? String.Empty),
+                    new XAttribute("Active", d.Active)
+                    )))
+                );
+
+            #endregion
+
+            #region Attribute Sets
+
+            var attributeSets = new XElement("AttributeSets");
+
+            // Go through each AttributeSetID
+            foreach (var attributeSetId in AttributeSetIDs)
             {
-                // if this is the second time we're accessing this, just return the one we already created
-                if (_exportDocument != null)
-                    return _exportDocument;
+                var id = int.Parse(attributeSetId);
+                var set = _eavAppContext.AttribSet.GetAttributeSet(id);
+                var attributes = new XElement("Attributes");
 
-                //_referencedFileIds = new List<int>();
-                //_referencedFolderIds = new List<int>();
-                //ReferencedFiles = new List<IFileInfo>();   
-
-                // Create XML document and declaration
-                var doc = _exportDocument = new XDocument(new XDeclaration("1.0", "UTF-8", "yes"), null);
-
-                #region Header
-
-                var dimensions = _eavAppContext.Dimensions.GetDimensionChildren("Culture");
-                var header = new XElement(XmlConstants.Header,
-                    _isAppExport && _app.AppGuid != "Default"
-                        ? new XElement(XmlConstants.App,
-                            new XAttribute(XmlConstants.Guid, _app.AppGuid)
-                            )
-                        : null,
-                    new XElement("Language", new XAttribute("Default", Portal.DefaultLanguage)),
-                    new XElement("Dimensions", dimensions.Select(d => new XElement("Dimension",
-                        new XAttribute("DimensionID", d.DimensionID),
-                        new XAttribute("Name", d.Name),
-                        new XAttribute("SystemKey", d.SystemKey ?? String.Empty),
-                        new XAttribute("ExternalKey", d.ExternalKey ?? String.Empty),
-                        new XAttribute("Active", d.Active)
-                        )))
-                    );
-
-                #endregion
-
-                #region Attribute Sets
-
-                var attributeSets = new XElement("AttributeSets");
-
-                // Go through each AttributeSetID
-                foreach (var attributeSetId in AttributeSetIDs)
+                // Add all Attributes to AttributeSet including meta informations
+                foreach (var x in _eavAppContext.Attributes.GetAttributesInSet(id))
                 {
-                    var id = int.Parse(attributeSetId);
-                    var set = _eavAppContext.AttribSet.GetAttributeSet(id);
-                    var attributes = new XElement("Attributes");
+                    var attribute = new XElement("Attribute",
+                        new XAttribute(Const2.Static, x.Attribute.StaticName),
+                        new XAttribute(Const2.Type, x.Attribute.Type),
+                        new XAttribute(Const2.IsTitle, x.IsTitle),
+                        // Add Attribute MetaData
+                        from c in
+                            _eavAppContext.Entities.GetEntities(Constants.AssignmentObjectTypeIdFieldProperties,
+                                x.AttributeID).ToList()
+                        select GetEntityXElement(c)
+                        );
 
-                    // Add all Attributes to AttributeSet including meta informations
-                    foreach (var x in _eavAppContext.Attributes.GetAttributesInSet(id))
-                    {
-                        var attribute = new XElement("Attribute",
-                            new XAttribute(Const2.Static, x.Attribute.StaticName),
-                            new XAttribute(Const2.Type, x.Attribute.Type),
-                            new XAttribute(Const2.IsTitle, x.IsTitle),
-                            // Add Attribute MetaData
-                            from c in
-                                _eavAppContext.Entities.GetEntities(Constants.AssignmentObjectTypeIdFieldProperties,
-                                    x.AttributeID).ToList()
-                            select GetEntityXElement(c)
-                            );
-
-                        attributes.Add(attribute);
-                    }
-
-                    // Add AttributeSet / Content Type
-                    var attributeSet = new XElement("AttributeSet",
-                        new XAttribute(Const2.Static, set.StaticName),
-                        new XAttribute(Const2.Name, set.Name),
-                        new XAttribute(Const2.Description, set.Description),
-                        new XAttribute(Const2.Scope, set.Scope),
-                        new XAttribute(Const2.AlwaysShareConfig, set.AlwaysShareConfiguration),
-                        attributes);
-
-                    // Add Ghost-Info if content type inherits from another content type
-                    if (set.UsesConfigurationOfAttributeSet.HasValue)
-                    {
-                        var parentAttributeSet = _eavAppContext.SqlDb.AttributeSets.First(a => a.AttributeSetID ==  set.UsesConfigurationOfAttributeSet.Value && a.ChangeLogDeleted == null);
-                        attributeSet.Add(new XAttribute("UsesConfigurationOfAttributeSet", parentAttributeSet.StaticName));
-                    }
-
-                    attributeSets.Add(attributeSet);
+                    attributes.Add(attribute);
                 }
 
-                #endregion
+                // Add AttributeSet / Content Type
+                var attributeSet = new XElement("AttributeSet",
+                    new XAttribute(Const2.Static, set.StaticName),
+                    new XAttribute(Const2.Name, set.Name),
+                    new XAttribute(Const2.Description, set.Description),
+                    new XAttribute(Const2.Scope, set.Scope),
+                    new XAttribute(Const2.AlwaysShareConfig, set.AlwaysShareConfiguration),
+                    attributes);
 
-                #region Entities
-
-                var entities = new XElement("Entities");
-
-                // Go through each Entity
-                foreach (var entityId in EntityIDs)
+                // Add Ghost-Info if content type inherits from another content type
+                if (set.UsesConfigurationOfAttributeSet.HasValue)
                 {
-                    var id = int.Parse(entityId);
-
-                    // Get the entity and ContentType from ContentContext add Add it to ContentItems
-                    var entity = _eavAppContext.Entities.GetEntity(id);
-                    entities.Add(GetEntityXElement(entity));
+                    var parentAttributeSet =
+                        _eavAppContext.SqlDb.AttributeSets.First(
+                            a =>
+                                a.AttributeSetID == set.UsesConfigurationOfAttributeSet.Value &&
+                                a.ChangeLogDeleted == null);
+                    attributeSet.Add(new XAttribute("UsesConfigurationOfAttributeSet", parentAttributeSet.StaticName));
                 }
 
-                #endregion
-
-                #region Adam files
-                var adam = new AdamManager(Portal.PortalId, _app);
-                var adamIds = adam.Export.AppFiles;
-                adamIds.ForEach(AddFileAndFolderToQueue);
-
-                // also add folders in adam - because empty folders may also have metadata assigned
-                var adamFolders = adam.Export.AppFolders;
-                adamFolders.ForEach(AddFolderToQueue);
-                #endregion
-
-                // Create root node "SexyContent" and add ContentTypes, ContentItems and Templates
-                doc.Add(new XElement(XmlConstants.RootNode,
-                    new XAttribute("FileVersion", ImportExport.FileVersion),
-                    new XAttribute("MinimumRequiredVersion", ImportExport.MinimumRequiredVersion),
-                    new XAttribute("ModuleVersion", Settings.ModuleVersion),
-                    new XAttribute("ExportDate", DateTime.Now),
-                    header,
-                    attributeSets,
-                    entities,
-                    GetFilesXElements(),
-                    GetFoldersXElements()));
-                return doc;
+                attributeSets.Add(attributeSet);
             }
+
+            #endregion
+
+            #region Entities
+
+            var entities = new XElement("Entities");
+
+            // Go through each Entity
+            foreach (var entityId in EntityIDs)
+            {
+                var id = int.Parse(entityId);
+
+                // Get the entity and ContentType from ContentContext add Add it to ContentItems
+                var entity = _eavAppContext.Entities.GetEntity(id);
+                entities.Add(GetEntityXElement(entity));
+            }
+
+            #endregion
+
+            // init ADAM files (add to queue)
+            AddAdamFilesToExportQueue();
+
+            // Create root node "SexyContent" and add ContentTypes, ContentItems and Templates
+            doc.Add(new XElement(XmlConstants.RootNode,
+                new XAttribute("FileVersion", ImportExport.FileVersion),
+                new XAttribute("MinimumRequiredVersion", ImportExport.MinimumRequiredVersion),
+                new XAttribute("ModuleVersion", Settings.ModuleVersion),
+                new XAttribute("ExportDate", DateTime.Now),
+                header,
+                attributeSets,
+                entities,
+                GetFilesXElements(),
+                GetFoldersXElements()));
+        }
+
+        private void AddAdamFilesToExportQueue()
+        {
+            var adam = new AdamManager(Portal.PortalId, _app);
+            var adamIds = adam.Export.AppFiles;
+            adamIds.ForEach(AddFileAndFolderToQueue);
+
+            // also add folders in adam - because empty folders may also have metadata assigned
+            var adamFolders = adam.Export.AppFolders;
+            adamFolders.ForEach(AddFolderToQueue);
         }
 
         /// <summary>
