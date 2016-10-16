@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "2Sexy Content Razor", "2Sexy Content Razor\2Sexy Content Razor.csproj", "{78A558AF-F274-4E3C-95FE-8DE9226E0EBC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "2Sexy Content", "2Sexy Content.csproj", "{D4250011-B9BE-4326-9736-4F0122C79802}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "2sxc-ui", "..\..\..\..\2sxc-ui\2sxc-ui.csproj", "{49FD2D87-9DC5-45BD-B683-955359A8C543}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{D4250011-B9BE-4326-9736-4F0122C79802}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4250011-B9BE-4326-9736-4F0122C79802}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4250011-B9BE-4326-9736-4F0122C79802}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49FD2D87-9DC5-45BD-B683-955359A8C543}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49FD2D87-9DC5-45BD-B683-955359A8C543}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49FD2D87-9DC5-45BD-B683-955359A8C543}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49FD2D87-9DC5-45BD-B683-955359A8C543}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
