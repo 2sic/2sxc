@@ -1,8 +1,0 @@
-﻿
-/* temporary fix till icons and icon classes / buttons are replaced in EAV with font-icons */
-
-.temp-icon-fix, 
-.btn-lg.btn-square.temp-icon-fix {
-    padding-left: 10px;
-    padding-right: 13px;
-}

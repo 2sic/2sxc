@@ -15,18 +15,18 @@ var gulp = require("gulp"),
 
 
 // register all watches & run them
-gulp.task("watch-our-code", function () {
-    watchSet(createSetsForOurCode());
-    watchDnnUi();
-});
+//gulp.task("watch-our-code", function () {
+//    watchSet(createSetsForOurCode());
+//    watchDnnUi();
+//});
 
-gulp.task("import-libs", function() {
-    importDependencies();
-});
+//gulp.task("import-libs", function() {
+//    importDependencies();
+//});
 
-gulp.task("watch-snippets", function() {
-    watchSnippets();
-});
+//gulp.task("watch-snippets", function() {
+//    watchSnippets();
+//});
 
 
 // watch the dnn ui.html for changes and republish
