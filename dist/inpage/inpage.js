@@ -267,7 +267,7 @@ $2sxc._contentBlock.create = function (sxc, manage, cbTag) {
                 // execute the action
                 sxc.manage.action(actionName, config, event);
             }
-
+             
         };
 
         sxc.inlineUi = {
