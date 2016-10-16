@@ -26,12 +26,6 @@
   },
   "homepage": "https://github.com/2sic/2sxc",
   "devDependencies": {
-    "gulp": "3.9.1",
-    "gulp-concat": "2.6.0",
-    "gulp-rename": "1.2.2",
-    "gulp-sort": "2.0.0",
-    "gulp-util": "3.0.7",
-    "merge-stream": "1.0.0"
   },
   "jshintConfig": {
     "laxbreak": true

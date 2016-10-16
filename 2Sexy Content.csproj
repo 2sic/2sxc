@@ -401,13 +401,11 @@
     <Content Include="Extensions\ToSic_vCard\vCard.ashx" />
     <Content Include="BuildScripts\ModulePackage.Targets" />
     <Content Include="BuildScripts\MSBuild.Community.Tasks.targets" />
-    <Content Include="package.json" />
     <Content Include="README.md" />
-    <Content Include="bower.json" />
     <Content Include="packages.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include=".bowerrc" />
+    <Content Include="package.json" />
     <None Include="SqlDataProvider\01.00.00.SqlDataProvider" />
     <Content Include="SqlDataProvider\05.02.01.SqlDataProvider" />
     <Content Include="SqlDataProvider\08.03.02.SqlDataProvider" />
@@ -460,9 +458,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="SexyContent\ImportExport\Instructions\ReleaseNotes.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="gulpfile.js" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>
