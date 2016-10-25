@@ -101,9 +101,13 @@
 
                     // Add option for no content type if there are templates without
                     if ($filter("filter")(vm.templates, { ContentTypeStaticName: "" }, true).length > 0) {
-                        vm.contentTypes.push({ StaticName: cViewWithoutContent, Name: $translate.instant("TemplatePicker.LayoutElement") }); 
-                        vm.contentTypes = $filter("orderBy")(vm.contentTypes, "Name");
+                        var le = { StaticName: cViewWithoutContent, Name: $translate.instant("TemplatePicker.LayoutElement"), IsHidden: false };
+                        le.Label = le.Name;
+                        vm.contentTypes.push(le); 
                     }
+
+                    // sort them now
+                    vm.contentTypes = $filter("orderBy")(vm.contentTypes, "Name");
 
                     vm.loading--;
                 });

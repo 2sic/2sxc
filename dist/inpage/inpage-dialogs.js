@@ -200,6 +200,7 @@ angular.module('SxcInpageTemplates', []).run(['$templateCache', function($templa
     module.controller("TemplateSelectorCtrl", ["$scope", "$interval", "moduleApiService", "AppInstanceId", "sxc", "$filter", "$q", "$window", "$translate", "$sce", "contentBlockLink", "$http", function ($scope, $interval, moduleApiService, AppInstanceId, sxc, $filter, $q, $window, $translate, $sce, contentBlockLink, $http) {
         //#region constants
         var cViewWithoutContent = "_LayoutElement"; // needed to differentiate the "select item" from the "empty-is-selected" which are both empty
+        // note: duplicate with moduleService.js
         var cAppActionManage = -2, cAppActionImport = -1, cAppActionCreate = -3;
         //#endregion
 
@@ -278,9 +279,13 @@ angular.module('SxcInpageTemplates', []).run(['$templateCache', function($templa
 
                     // Add option for no content type if there are templates without
                     if ($filter("filter")(vm.templates, { ContentTypeStaticName: "" }, true).length > 0) {
-                        vm.contentTypes.push({ StaticName: cViewWithoutContent, Name: $translate.instant("TemplatePicker.LayoutElement") }); 
-                        vm.contentTypes = $filter("orderBy")(vm.contentTypes, "Name");
+                        var le = { StaticName: cViewWithoutContent, Name: $translate.instant("TemplatePicker.LayoutElement"), IsHidden: false };
+                        le.Label = le.Name;
+                        vm.contentTypes.push(le); 
                     }
+
+                    // sort them now
+                    vm.contentTypes = $filter("orderBy")(vm.contentTypes, "Name");
 
                     vm.loading--;
                 });
