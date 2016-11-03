@@ -230,7 +230,7 @@
                 // this is the "replace item in a list" dialog
                 sxcDialogs.openReplaceContent(items[0], vm.close);
                 break;
-            case "sort":
+            case "instance-list":
                 sxcDialogs.openManageContentList(items[0], vm.close);
                 break;
             case "develop":

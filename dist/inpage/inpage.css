@@ -44,14 +44,6 @@
     margin-right: auto;
 }
 
-/* 2016-10-11 should be un-necessary atm...
-.sc-menu.listContent a span {background-color: #96D500; border-color: #96D500;}
-.show-set-0 a.show-default { display: inline-block!important}
-.show-set-1 a.show-edit { display: inline-block!important}
-.show-set-2 a.show-design {display: inline-block!important}
-.show-set-3 a.show-admin {display: inline-block!important}
-.show-set-3 a.show-admin div { display: inline-block !important; background-color: #96D500}*/
-
 /* 2016-10-11 new show/hide */
 .group-0 a.group-0 {display: inline-block!important}
 .group-1 a.group-1 {display: inline-block!important}
@@ -66,17 +58,17 @@
 
 .sc-menu span.disabled { color: #aaa}
 
-.show-set-1 i.btn-mode:before { 
-    -ms-transform: rotate(45deg); /* IE 9 */
+.group-1 i.btn-mode:before, .group-5 i.btn-mode:before { 
     transform: rotate(45deg);
+    -ms-transform: rotate(45deg); /* IE 9 */
 }
-.show-set-2 i.btn-mode:before { 
-    -ms-transform: rotate(90deg); /* IE 9 */
+.group-2 i.btn-mode:before, .group-6 i.btn-mode:before { 
     transform: rotate(90deg);
+    -ms-transform: rotate(90deg); /* IE 9 */
 }
-.show-set-3 i.btn-mode:before { 
-    -ms-transform: rotate(135deg); /* IE 9 */
+.group-3 i.btn-mode:before, .group-7 i.btn-mode:before { 
     transform: rotate(135deg);
+    -ms-transform: rotate(135deg); /* IE 9 */
 }
 
 

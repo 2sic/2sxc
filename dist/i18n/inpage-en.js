@@ -18,6 +18,10 @@
 		"ContentItems": "content items",
 		"Zone": "manage apps",
 		"MoreActions": "more actions",
+		"QueryEdit": "edit data query",
+		"TemplateSettings": "template settings",
+		"AppSettings": "app settings",
+		"AppResources": "app resources in all languages",
 		"ConfirmRemove": "This will remove this content-item from this list, but not delete it (so you can add it again later). \nSee 2sxc.org/help for more. \n\nOk to remove?"
 	},
 	"EditFormTitle": {
