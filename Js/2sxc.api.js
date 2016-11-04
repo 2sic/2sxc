@@ -119,7 +119,7 @@
             lastRefresh: null,
             manage: null, // initialize correctly later on
             isEditMode: function () {
-                return controller.manage && controller.manage.isEditMode();
+                return controller.manage && controller.manage._isEditMode();
             },
             recreate: function() {
                 delete $2sxc._controllers[cacheKey];    // clear cache
@@ -237,7 +237,7 @@
 
         // add manage property, but not within initializer, because inside the manage-initializer it may reference 2sxc again
         try { // sometimes the manage can't be build, like before installing
-            controller.manage = $2sxc._getManageController ? $2sxc._getManageController(controller) : null;
+            controller.manage = $2sxc._manage ? $2sxc._manage.create(controller) : null;
         } catch (e) {}
 
         // this only works when manage exists (not installing) and translator exists too
@@ -251,7 +251,7 @@
 
     $2sxc._controllers = {};
     $2sxc.metaName = "The 2sxc Controller object";
-    $2sxc.metaVersion = "08.05.06";
+    $2sxc.metaVersion = "08.06.00";
     $2sxc.beta = {};
     $2sxc._data = {};
     

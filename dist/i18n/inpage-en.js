@@ -19,9 +19,12 @@
 		"Zone": "manage apps",
 		"MoreActions": "more actions",
 		"QueryEdit": "edit data query",
+		"QueryEditDisabled": "view doesn't use query",
 		"TemplateSettings": "template settings",
 		"AppSettings": "app settings",
+		"AppSettingsDisabled": "no app settings to configure",
 		"AppResources": "app resources in all languages",
+		"AppResourcesDisabled": "no app-resources to translate",
 		"ConfirmRemove": "This will remove this content-item from this list, but not delete it (so you can add it again later). \nSee 2sxc.org/help for more. \n\nOk to remove?"
 	},
 	"EditFormTitle": {
