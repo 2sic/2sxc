@@ -13,15 +13,23 @@
 
 /****** the in-page toolbar and positioning / visibility thereof */
 .sc-element { position:relative; }
-.sc-element .sc-menu { position:absolute; right:5px; top:5px; display:none; }
-.sc-element:hover .sc-menu { display: block; }
-.sc-element:hover .sc-element:not(:hover) .sc-menu { display: none; }   /* prevent hover of a parent, when the item itself is not hovered */
+.sc-element .sc-menu.sc-tb-hover-right { position:absolute; left: auto; right: 5px;top: 5px; }
+.sc-element .sc-menu.sc-tb-hover-left { position:absolute; left: 5px;right: auto;top: 5px; }
+.sc-element .sc-menu.sc-tb-hover-center { position:absolute;margin-left: 0;margin-right: 0; top: 5px; display: inline-block }
+.sc-element .sc-menu.sc-tb-hover-none { position:relative; right:auto;top: auto; }
 
-.sc-menu { list-style-type:none; margin:0; padding:0px;display: inline;z-index: 1499; }
+
+.sc-element .sc-menu.sc-tb-show-always, 
+    .sc-element:hover .sc-menu.sc-tb-show-always  { display: initial; }
+.sc-element .sc-menu.sc-tb-show-hover { display: none; }
+body.sc-tb-show-all .sc-element .sc-menu { display: initial !important; }
+.sc-element:hover .sc-menu.sc-tb-show-hover { display: block; }
+.sc-element:hover .sc-element:not(:hover) .sc-menu.sc-tb-show-hover { display: none; }   /* prevent hover of a parent, when the item itself is not hovered */
+
+.sc-menu { list-style-type:none; margin:0; padding:0;display: inline;z-index: 1499; }
 .sc-menu li { list-style-type:none; padding:0!important; margin:0!important; display:inline; }
-.sc-menu a { display:inline-block!important; margin-right:4px!important;cursor: pointer;margin-left: 0 !important; }
-
-.sc-menu a { display: none!important } /* not sure why this rule is separate, don't dare to combine it yet - pls check / fix */
+/* hide all links by default, later show them group-wise*/
+.sc-menu a { display:none; margin-right:4px!important;cursor: pointer;margin-left: 0 !important; }
 
 /* this one is for buttons which can have a full/empty state */
 .sc-menu li a.empty i {opacity: 0.4} 
@@ -45,12 +53,12 @@
 }
 
 /* 2016-10-11 new show/hide */
-.group-0 a.group-0 {display: inline-block!important}
-.group-1 a.group-1 {display: inline-block!important}
-.group-2 a.group-2 {display: inline-block!important}
-.group-3 a.group-3 {display: inline-block!important}
-.group-4 a.group-4 {display: inline-block!important}
-.group-5 a.group-5 {display: inline-block!important}
+.group-0 a.group-0 {display: inline-block}
+.group-1 a.group-1 {display: inline-block}
+.group-2 a.group-2 {display: inline-block}
+.group-3 a.group-3 {display: inline-block}
+.group-4 a.group-4 {display: inline-block}
+.group-5 a.group-5 {display: inline-block}
 
 .sc-menu a.group-default div {background-color: #0088f4}
 .sc-menu a.group-pro div {background-color: #96D500}

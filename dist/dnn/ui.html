@@ -2,10 +2,12 @@
 <html>
 <head>
     <title>Content Editing UI</title>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
+    <script>
+        var jsVersionCacheId = window.location.search;    // use this to prevent
+        document.write('<script src="../../js/2sxc.api.min.js' + jsVersionCacheId +'"></scr' + 'ipt>');
+    </script>
     <!-- first load the main 2sxc because it contains some url-param methods -->
-    <!--<script src="../../js/2sxc.api.js?sxcver=08.06.00"></script>-->
-    <script src="../../js/2sxc.api.min.js?sxcver=08.06.00"></script>
     <script>
         // the version to append to each asset, to ensure reload after an upgrade
         var sxcVersionParam = "sxcver=" + $2sxc.urlParams.require("sxcver");
@@ -46,11 +48,8 @@
             document.getElementsByTagName("head")[0].appendChild(style);
         }
 
-        //var noMin = ($2sxc.urlParams.get("debug") === "true");
         function toMinOrNotToMin(url) {
             return $2sxc.parts.getUrl(url, (url.indexOf("lib") > -1)); // never unmin the lib-stuff, as it doesn't have the unminified included
-            return (url.indexOf("lib") > -1) ?  // never unmin the lib-stuff, as it doesn't have the unminified included
-                url : $2sxc.parts.getUrl(url);
         }
 
     </script>
@@ -59,10 +58,6 @@
     <script>
         // check if we must load jquery - if we do, it has to happen very early!
         var dialogName = $2sxc.urlParams.require("dialog");
-
-        // load jquery first - but only needed by the pipeline designers - otherwise not
-        if (dialogName === "pipeline-designer") 
-            addScript("../lib/pipeline/jq.min.js");
     </script>
     <script>
         // this must come close to the end, after a closed script which might load jQuery

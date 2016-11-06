@@ -13,12 +13,13 @@
         if (!cbid) cbid = id;           // if content-block is unknown, use id of module
         var cacheKey = id + ":" + cbid; // neutralize the id from old "34" format to the new "35:353" format
 
-        if (!$2sxc._data[cacheKey])
-            $2sxc._data[cacheKey] = {};
-
         // either get the cached controller from previous calls, or create a new one
         if ($2sxc._controllers[cacheKey])
             return $2sxc._controllers[cacheKey];
+
+        // also init the data-cache in case it's ever needed
+        if (!$2sxc._data[cacheKey])
+            $2sxc._data[cacheKey] = {};
 
         var controller = $2sxc._controllers[cacheKey] = {
             serviceScopes: ["app", "app-api", "app-query", "app-content", "eav", "view", "dnn"],
@@ -237,8 +238,10 @@
 
         // add manage property, but not within initializer, because inside the manage-initializer it may reference 2sxc again
         try { // sometimes the manage can't be build, like before installing
-            controller.manage = $2sxc._manage ? $2sxc._manage.create(controller) : null;
-        } catch (e) {}
+            controller.manage = null;
+            if ($2sxc._manage) $2sxc._manage.attach(controller);
+        } catch (e) {
+            throw e; }
 
         // this only works when manage exists (not installing) and translator exists too
         if ($2sxc._translateInit && controller.manage) $2sxc._translateInit(controller.manage);    // init translate, not really nice, but ok for now
@@ -250,8 +253,8 @@
     };
 
     $2sxc._controllers = {};
-    $2sxc.metaName = "The 2sxc Controller object";
-    $2sxc.metaVersion = "08.06.00";
+    $2sxc.name = "The 2sxc Controller object";
+    // $2sxc.version = "08.06.00";   // todo: get from url param
     $2sxc.beta = {};
     $2sxc._data = {};
     

@@ -1123,35 +1123,12 @@ angular.module("sxcFieldTemplates")
             formlyConfigProvider.setType({
                 name: "string-wysiwyg-tinymce",
                 templateUrl: "fields/string/string-wysiwyg-tinymce.html",
-                // todo: check if we could use the defaultFieldWrappers instead
-                wrapper: defaultFieldWrappers, // ["eavLabel", "bootstrapHasError", "eavLocalization", "collapsible"],
+                wrapper: defaultFieldWrappers, 
                 controller: "FieldWysiwygTinyMce as vm"
             });
         }])
 
         .controller("FieldWysiwygTinyMce", FieldWysiwygTinyMceController);
-
-    // these are the translation keys we must import from angular-translate
-    // as of now we can't just read the content of the json because angular-translate doesn't give external access to the list
-    var translationsMce = [
-            "Link.AdamFile",
-            "Link.AdamFile.Tooltip",
-            "Image.AdamImage",
-            "Image.AdamImage.Tooltip",
-            "Link.DnnFile",
-            "Link.DnnFile.Tooltip",
-            "Link.Page",
-            "Link.Page.Tooltip",
-            "Image.DnnImage",
-            "Image.DnnImage.Tooltip",
-            "Link.Anchor.Tooltip",
-            "SwitchMode.Pro",
-            "SwitchMode.Standard",
-            "H1",
-            "H2",
-            "H3",
-            "Remove"
-    ];
 
     // these are the sizes we can auto-resize to
     var imgSizes = [100, 75, 70, 66, 60, 50, 40, 33, 30, 25, 10];
@@ -1161,6 +1138,7 @@ angular.module("sxcFieldTemplates")
         var vm = this;
 
         vm.activate = function () {
+            var defaultLanguage = "en";
             var availableLanguages = "de,es,fr,it,uk,nl".split(",");
 
             var plugins = [
@@ -1179,8 +1157,8 @@ angular.module("sxcFieldTemplates")
                 "nonbreaking",  // add button to insert &nbsp; https://www.tinymce.com/docs/plugins/nonbreaking/
                 "searchreplace",// search/replace https://www.tinymce.com/docs/plugins/searchreplace/
                 "table",        // https://www.tinymce.com/docs/plugins/searchreplace/
-                "lists",        // should fix bug with fonts in list-items (https://github.com/tinymce/tinymce/issues/2330)
-
+                "lists",        // should fix bug with fonts in list-items (https://github.com/tinymce/tinymce/issues/2330),
+                "textpattern",  // enable typing like "1. text" to create lists etc.
             ];
 
             var modes = {
@@ -1189,10 +1167,10 @@ angular.module("sxcFieldTemplates")
                     toolbar: " undo redo removeformat "
                     + "| bold formatgroup "
                     + "| h1 h2 hgroup " 
-                    + "| numlist "// not needed since now context senitive: " outdent indent "
+                    + "| listgroup "// not needed since now context senitive: " outdent indent "
                     + "| linkfiles linkgroup "
                     + "| modeadvanced ",
-                    contextmenu: "charmap hr",
+                    contextmenu: "charmap hr"
                 },
                 advanced: {
                     menubar: true,
@@ -1203,7 +1181,7 @@ angular.module("sxcFieldTemplates")
                     + "| bullist numlist outdent indent "
                     + "| images linkfiles linkgrouppro "
                     + "| code modestandard ",
-                    contextmenu: "link image | charmap hr adamimage",
+                    contextmenu: "link image | charmap hr adamimage"
                 }
             };
 
@@ -1234,12 +1212,12 @@ angular.module("sxcFieldTemplates")
                 theme: "modern",
                 // statusbar: true,    // doesn't work in inline :(
 
-                language: "en",
+                language: defaultLanguage,
 
                 setup: function(editor) {
                     vm.editor = editor;
                     if ($scope.tinymceOptions.language)
-                        initLangResources(editor, $scope.tinymceOptions.language, $translate);
+                        initLangResources(editor, defaultLanguage, $scope.tinymceOptions.language, $translate);
                     addTinyMceToolbarButtons(editor, vm);
                 },
                 debounce: false // prevent slow update of model
@@ -1249,7 +1227,7 @@ angular.module("sxcFieldTemplates")
             var lang2 = languages.currentLanguage.substr(0, 2);
 
             // test a specific language quickly
-             // lang2 = "de";
+            // lang2 = "de";
 
             if (availableLanguages.indexOf(lang2) >= 0)
                 angular.extend($scope.tinymceOptions, {
@@ -1334,39 +1312,41 @@ angular.module("sxcFieldTemplates")
     }
 
     // Initialize the tinymce resources which we translate ourselves
-    function initLangResources(editor, language, $translate) {
-        var keys = [], mceTransObject = {}, prefix = "Extension.TinyMce.";
+    function initLangResources(editor, primaryLan, language, $translate) {
+        var keys = [], mceTranslations = {}, prefix = "Extension.TinyMce.", pLen = prefix.length;
 
-        // create array to request values from $translate
-        for (var k = 0; k < translationsMce.length; k++)
-            keys.push(prefix + translationsMce[k]);
+        // find all relevant keys by querying the primary language
+        var all = $translate.getTranslationTable(primaryLan);
+        // ReSharper disable once MissingHasOwnPropertyInForeach
+        for (var key in all)    
+            if (key.indexOf(prefix) === 0) 
+                keys.push(key);
+
         var translations = $translate.instant(keys);
 
-        // reconvert to the keys / structure which tinyMce needs and hand it in
-        for (k = 0; k < translationsMce.length; k++)
-            mceTransObject[translationsMce[k]] = translations[prefix + translationsMce[k]];
-        tinymce.addI18n(language, mceTransObject);
+        for (var k = 0; k < keys.length; k++)
+            mceTranslations[keys[k].substring(pLen)] = translations[keys[k]];
+        tinymce.addI18n(language, mceTranslations);
     }
 
     function addTinyMceToolbarButtons(editor, vm) {
         //#region helpers like initOnPostRender(name)
 
         // helper function to add activate/deactivate to buttons like alignleft, alignright etc.
-        function initOnPostRender(name) { // copied from https://github.com/tinymce/tinymce/blob/ddfa0366fc700334f67b2c57f8c6e290abf0b222/js/tinymce/classes/ui/FormatControls.js#L232-L249
+        function initOnPostRender(name) { // copied/modified from https://github.com/tinymce/tinymce/blob/ddfa0366fc700334f67b2c57f8c6e290abf0b222/js/tinymce/classes/ui/FormatControls.js#L232-L249
             return function () {
-                var self = this;
+                var self = this; // keep ref to the current button?
 
-                if (editor.formatter) {
+                function watchChange() {
                     editor.formatter.formatChanged(name, function (state) {
                         self.active(state);
                     });
-                } else {
-                    editor.on("init", function () {
-                        editor.formatter.formatChanged(name, function (state) {
-                            self.active(state);
-                        });
-                    });
                 }
+
+                if (editor.formatter) 
+                    watchChange();
+                else 
+                    editor.on("init", watchChange());
             };
         }
 
@@ -1488,6 +1468,22 @@ angular.module("sxcFieldTemplates")
                 { icon: "strikethrough", text: "Strikethrough", onclick: function () { editor.execCommand("strikethrough"); } },
                 {   icon: "superscript", text: "Superscript", onclick: function() { editor.execCommand("superscript"); }  },
                 {   icon: "subscript", text: "Subscript", onclick: function() { editor.execCommand("subscript"); }  }
+            ]
+
+        });
+
+        // drop-down with italic, strikethrough, ...
+        editor.addButton("listgroup", {
+            type: "splitbutton",
+            tooltip: "Numbered list",  // official tinymce key
+            text: "",
+            icon: "numlist",
+            cmd: "InsertOrderedList",
+            onPostRender: initOnPostRender("numlist"),  // for unknown reasons, this just doesn't activate correctly :( - neither does the bullist
+            menu: [
+                { icon: "bullist", text: "Bullet list", onPostRender: initOnPostRender("bullist"), onclick: function () { editor.execCommand("InsertUnorderedList"); } },
+                { icon: "outdent", text: "Outdent", onclick: function () { editor.execCommand("Outdent"); } },
+                { icon: "indent", text: "Indent", onclick: function () { editor.execCommand("Indent"); } }
             ]
 
         });

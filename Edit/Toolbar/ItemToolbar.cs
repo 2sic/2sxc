@@ -1,35 +1,57 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using Newtonsoft.Json;
 
 namespace ToSic.SexyContent.Edit.Toolbar
 {
     internal class ItemToolbar
     {
-        public List<ItemToolbarAction> Actions = new List<ItemToolbarAction>();
+        private readonly List<ItemToolbarAction> _actions = new List<ItemToolbarAction>();
+        private readonly object _fullConfig;
+        private readonly object _fullSettings;
 
-        public ItemToolbar(DynamicEntity dynamicEntity, string actions = null, string newType = null, object prefill = null)
+        public ItemToolbar(DynamicEntity dynamicEntity, string actions = null, string newType = null, object prefill = null, object toolbar = null, object settings = null)
         {
-            if (actions == null)
-                Actions.Add(new ItemToolbarAction(dynamicEntity) {contentType =  newType, prefill = prefill});
-            else
+            _fullSettings = settings;
+
+            if (toolbar != null)
             {
-                var actList = actions.Split(',').Select(p => p.Trim()).ToList();
-                foreach (string act in actList)
-                    Actions.Add(new ItemToolbarAction(dynamicEntity) {action = act, contentType = newType, prefill = prefill});
+                // check conflicting parameters
+                if (actions != null || newType != null || prefill != null)
+                    throw new Exception(
+                        "trying to build toolbar but got both toolbar and actions/prefill/newType - this is conflicting, cannot continue");
+                _fullConfig = toolbar;
+            }
+            else // build a toolbar based on the actions or just from empty definition
+            {
+                if (actions == null)
+                    _actions.Add(new ItemToolbarAction(dynamicEntity) {contentType = newType, prefill = prefill});
+                else
+                {
+                    var actList = actions.Split(',').Select(p => p.Trim()).ToList();
+                    foreach (string act in actList)
+                        _actions.Add(new ItemToolbarAction(dynamicEntity)
+                        {
+                            action = act,
+                            contentType = newType,
+                            prefill = prefill
+                        });
+                }
             }
 
         }
 
-        public string Json  =>  JsonConvert.SerializeObject((Actions.Count == 1) ? Actions.First() : (object)Actions); 
+        private string ToolbarJson  =>  JsonConvert.SerializeObject(_fullConfig ??
+            ((_actions.Count == 1) ? _actions.First() : (object)_actions));
+
+        private string SettingsJson => JsonConvert.SerializeObject(_fullSettings);
 
         [JsonIgnore]
-        public string ToolbarTemplate = "<ul class=\"sc-menu\" data-toolbar='{0}'></ul>";
+        public string ToolbarTemplate = "<ul class=\"sc-menu\" toolbar='{0}' settings='{1}'></ul>";
 
         [JsonIgnore]
-        public string Toolbar => string.Format(ToolbarTemplate, Json);
+        public string Toolbar => string.Format(ToolbarTemplate, ToolbarJson, SettingsJson);
 
     }
 }

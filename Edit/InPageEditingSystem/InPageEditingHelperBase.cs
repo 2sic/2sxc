@@ -16,9 +16,10 @@ namespace ToSic.SexyContent.Edit.InPageEditingSystem
             _sxcInstance = sxc;
         }
 
-        private void protectAgainstMissingParameterNames(string criticalParameter)
+        // ReSharper disable once UnusedParameter.Local
+        private void ProtectAgainstMissingParameterNames(string criticalParameter)
         {
-            if (criticalParameter != Constants.RandomProtectionParameter)
+            if (criticalParameter == null || criticalParameter != Constants.RandomProtectionParameter)
                 throw new Exception(
                     "when using the toolbar command, please use named parameters - otherwise you are relying on the parameter order staying the same.");
         }
@@ -29,14 +30,16 @@ namespace ToSic.SexyContent.Edit.InPageEditingSystem
             string dontRelyOnParameterOrder = Constants.RandomProtectionParameter, 
             string actions = null,
             string contentType = null, 
-            object prefill = null)
+            object prefill = null,
+            object toolbar = null,
+            object settings = null)
         {
             if (!Enabled) return null;
-            protectAgainstMissingParameterNames(dontRelyOnParameterOrder);
+            ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder);
 
-            var toolbar = new ItemToolbar(target, actions, contentType, prefill);
+            var itmToolbar = new ItemToolbar(target, actions, contentType, prefill, toolbar, settings);
 
-            return new HtmlString(toolbar.Toolbar);
+            return new HtmlString(itmToolbar.Toolbar);
         }
 
 
@@ -46,7 +49,7 @@ namespace ToSic.SexyContent.Edit.InPageEditingSystem
             string contentType = null)
         {
             if (!Enabled) return null;
-            protectAgainstMissingParameterNames(dontRelyOnParameterOrder);
+            ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder);
 
             if(field == null) throw new Exception("need parameter field");
 

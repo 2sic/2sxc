@@ -61,7 +61,7 @@
                 },
                 code: function (settings, event, sxc) {
                     // todo - should refactor this to be a toolbarManager.contentBlock command
-                    sxc._commands._openNgDialog($2sxc._lib.extend({}, settings, { sortOrder: settings.sortOrder + 1 }), event);
+                    sxc.manage._commands._openNgDialog($2sxc._lib.extend({}, settings, { sortOrder: settings.sortOrder + 1 }), event);
                 }
             }),
 
@@ -71,7 +71,7 @@
                     return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1;
                 },
                 code: function (settings, event, sxc) {
-                    sxc.contentBlock 
+                    sxc.manage.contentBlock
                         .addItem(settings.sortOrder + 1);
                 }
             }),
@@ -104,7 +104,7 @@
                 },
                 code: function (settings, event, sxc) {
                     if (confirm($2sxc.translate("Toolbar.ConfirmRemove"))) {
-                        sxc.contentBlock
+                        sxc.manage.contentBlock
                             .removeFromList(settings.sortOrder);
                     }
                 }
@@ -128,7 +128,7 @@
                     return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1 && settings.sortOrder !== 0;
                 },
                 code: function (settings, event, sxc) {
-                    sxc.contentBlock
+                    sxc.manage.contentBlock
                         .changeOrder(settings.sortOrder, Math.max(settings.sortOrder - 1, 0));
                 }
             }),
@@ -137,7 +137,7 @@
                     return modConfig.isList && settings.useModuleList && settings.sortOrder !== -1;
                 },
                 code: function (settings, event, sxc) {
-                    sxc.contentBlock.changeOrder(settings.sortOrder, settings.sortOrder + 1);
+                    sxc.manage.contentBlock.changeOrder(settings.sortOrder, settings.sortOrder + 1);
                 }
             }),
 
@@ -156,7 +156,7 @@
                     }
                     var part = settings.sortOrder === -1 ? "listcontent" : "content";
                     var index = settings.sortOrder === -1 ? 0 : settings.sortOrder;
-                    sxc.contentBlock.publish(part, index);
+                    sxc.manage.contentBlock.publish(part, index);
                 }
             }),
 
@@ -266,7 +266,7 @@
             //#region UI actions: layout, more
             'layout': makeDef("layout", "ChangeLayout", "glasses", true, {
                 code: function (settings, event, sxc) {
-                    sxc.contentBlock.dialogToggle();
+                    sxc.manage.contentBlock.dialogToggle();
                 }
             }),
 
@@ -822,7 +822,7 @@ if($ && $.fn && $.fn.dnnModuleDragDrop)
 
 (function () {
     $2sxc._manage = {};
-    $2sxc._manage.create = function (sxc) {
+    $2sxc._manage.attach = function (sxc) {
         var contentBlockTag = getContentBlockTag(sxc);
         var editContext = getContextInfo(contentBlockTag);
 
@@ -858,7 +858,7 @@ if($ && $.fn && $.fn.dnnModuleDragDrop)
         var toolsAndButtons = $2sxc._toolbarManager.create(sxc, editContext);
         var cmds = $2sxc._commands.engine(sxc, contentBlockTag);
 
-        var editManager = {
+        var editManager = sxc.manage = {
             //#region Official, public properties and commands, which are stable for use from the outside
 
             // run a command - often used in toolbars and custom buttons
@@ -1425,6 +1425,136 @@ $(function () {
         };
     };
 });
+/*
+ * Author: Alex Gibson
+ * https://github.com/alexgibson/shake.js
+ * License: MIT license
+ */
+
+(function(global, factory) {
+    if (typeof define === 'function' && define.amd) {
+        define(function() {
+            return factory(global, global.document);
+        });
+    } else if (typeof module !== 'undefined' && module.exports) {
+        module.exports = factory(global, global.document);
+    } else {
+        global.Shake = factory(global, global.document);
+    }
+} (typeof window !== 'undefined' ? window : this, function (window, document) {
+
+    'use strict';
+
+    function Shake(options) {
+        //feature detect
+        this.hasDeviceMotion = 'ondevicemotion' in window;
+
+        this.options = {
+            threshold: 15, //default velocity threshold for shake to register
+            timeout: 1000 //default interval between events
+        };
+
+        if (typeof options === 'object') {
+            for (var i in options) {
+                if (options.hasOwnProperty(i)) {
+                    this.options[i] = options[i];
+                }
+            }
+        }
+
+        //use date to prevent multiple shakes firing
+        this.lastTime = new Date();
+
+        //accelerometer values
+        this.lastX = null;
+        this.lastY = null;
+        this.lastZ = null;
+
+        //create custom event
+        if (typeof document.CustomEvent === 'function') {
+            this.event = new document.CustomEvent('shake', {
+                bubbles: true,
+                cancelable: true
+            });
+        } else if (typeof document.createEvent === 'function') {
+            this.event = document.createEvent('Event');
+            this.event.initEvent('shake', true, true);
+        } else {
+            return false;
+        }
+    }
+
+    //reset timer values
+    Shake.prototype.reset = function () {
+        this.lastTime = new Date();
+        this.lastX = null;
+        this.lastY = null;
+        this.lastZ = null;
+    };
+
+    //start listening for devicemotion
+    Shake.prototype.start = function () {
+        this.reset();
+        if (this.hasDeviceMotion) {
+            window.addEventListener('devicemotion', this, false);
+        }
+    };
+
+    //stop listening for devicemotion
+    Shake.prototype.stop = function () {
+        if (this.hasDeviceMotion) {
+            window.removeEventListener('devicemotion', this, false);
+        }
+        this.reset();
+    };
+
+    //calculates if shake did occur
+    Shake.prototype.devicemotion = function (e) {
+        var current = e.accelerationIncludingGravity;
+        var currentTime;
+        var timeDifference;
+        var deltaX = 0;
+        var deltaY = 0;
+        var deltaZ = 0;
+
+        if ((this.lastX === null) && (this.lastY === null) && (this.lastZ === null)) {
+            this.lastX = current.x;
+            this.lastY = current.y;
+            this.lastZ = current.z;
+            return;
+        }
+
+        deltaX = Math.abs(this.lastX - current.x);
+        deltaY = Math.abs(this.lastY - current.y);
+        deltaZ = Math.abs(this.lastZ - current.z);
+
+        if (((deltaX > this.options.threshold) && (deltaY > this.options.threshold)) || ((deltaX > this.options.threshold) && (deltaZ > this.options.threshold)) || ((deltaY > this.options.threshold) && (deltaZ > this.options.threshold))) {
+            //calculate time in milliseconds since last shake registered
+            currentTime = new Date();
+            timeDifference = currentTime.getTime() - this.lastTime.getTime();
+
+            if (timeDifference > this.options.timeout) {
+                window.dispatchEvent(this.event);
+                this.lastTime = new Date();
+            }
+        }
+
+        this.lastX = current.x;
+        this.lastY = current.y;
+        this.lastZ = current.z;
+
+    };
+
+    //event handler
+    Shake.prototype.handleEvent = function (e) {
+        if (typeof (this[e.type]) === 'function') {
+            return this[e.type](e);
+        }
+    };
+
+    return Shake;
+}));
+
 
 // Toolbar bootstrapping (initialize all toolbars after loading page)
 $(document).ready(function () {
@@ -1443,12 +1573,27 @@ $(document).ready(function () {
             // 2016-10-09 2dm disabled try, as it only makes debugging harder...
             // not sure if we really need it
             //try {
-            $2sxc(this).manage._toolbar._processToolbars(this);
+            var ctl = $2sxc(this);
+            if(ctl.manage)
+                ctl.manage._toolbar._processToolbars(this);
             //} catch (e) { // Make sure that if one app breaks, others continue to work
             //    if (console && console.error) console.error(e);
             //}
         });
     }, 0);
+
+    // start shake-event monitoring, which will then generate a window-event
+    var myShakeEvent = new Shake();
+    myShakeEvent.start();
+
+    // this will add a css-class to auto-show all toolbars (or remove it again)
+    function toggleAllToolbars() {
+        $(document.body).toggleClass("sc-tb-show-all");
+    }
+
+    window.addEventListener("shake", toggleAllToolbars, false);
+
+
 
 });
 
@@ -1548,23 +1693,34 @@ $(document).ready(function () {
 
             // Builds the toolbar and returns it as HTML
             // expects settings - either for 1 button or for an array of buttons
-            getToolbar: function (settings) {
+            getToolbar: function (tbConfig, moreSettings) {
                 //if ($2sxc.debug.load) {
                 //    console.log("creating toolbar");
                 //    console.log(settings);
                 //}
 
                 // if it has an action or is an array, keep that. Otherwise get standard buttons
-                settings = settings || {};// if null/undefined, use empty object
-                var btnList = settings; 
-                if (!settings.action && !settings.groups && !settings.buttons && !Array.isArray(settings))
-                    btnList = tbManager.standardButtons(editContext.User.CanDesign, settings);
+                tbConfig = tbConfig || {};// if null/undefined, use empty object
+                var btnList = tbConfig; 
+                if (!tbConfig.action && !tbConfig.groups && !tbConfig.buttons && !Array.isArray(tbConfig))
+                    btnList = tbManager.standardButtons(editContext.User.CanDesign, tbConfig);
 
-                var tlbDef = tbManager.buttonHelpers.buildFullDefinition(btnList, allActions, /*settings,*/ tb.config);
+                // whatever we had, if more settings were provided, override with these...
+                //if (moreSettings)
+                //    $2sxc._lib.extend(btnList.settings, moreSettings);
+
+                var tlbDef = tbManager.buttonHelpers.buildFullDefinition(btnList, allActions, tb.config, moreSettings);
                 var btnGroups = tlbDef.groups;
+                var behaviourClasses = " sc-tb-hover-" + tlbDef.settings.hover
+                    + " sc-tb-show-" + tlbDef.settings.show;
+
+
 
                 // todo: this settings assumes it's not in an array...
-                var tbClasses = "sc-menu group-0 " + ((settings.sortOrder === -1) ? " listContent" : "");
+                var tbClasses = "sc-menu group-0 "
+                    + behaviourClasses + " "
+                    + ((tbConfig.sortOrder === -1) ? " listContent" : "")
+                    + (tlbDef.settings.classes ? " " + tlbDef.settings.classes: "");
                 var toolbar = $("<ul />", { 'class': tbClasses, 'onclick': "var e = arguments[0] || window.event; e.stopPropagation();" });
 
                 for (var g = 0; g < btnGroups.length; g++) {
@@ -1581,32 +1737,51 @@ $(document).ready(function () {
             // find all toolbar-info-attributes in the HTML, convert to <ul><li> toolbar
             _processToolbars: function (parentTag) {
                 parentTag = parentTag ? $(parentTag) : $(".DnnModule-" + id);
-                function getToolbars() { return $(".sc-menu[data-toolbar]", parentTag); }
+                function getToolbars() { return $(".sc-menu[toolbar],.sc-menu[data-toolbar]", parentTag); }
 
-                var toolbars = getToolbars();
+                var toolbars = getToolbars(),
+                    settingsForEmptyToolbar = {
+                        hover: "left",
+                        autoAddMore: "left"
+                    };
                 if (toolbars.length === 0) // no toolbars found, must help a bit because otherwise editing is hard
                 {
                     console.warn("didn't find a toolbar, so will create an automatic one to help for the block", parentTag);
                     var outsideCb = !parentTag.hasClass('sc-content-block');
                     var contentTag = outsideCb ? parentTag.find("div.sc-content-block") : parentTag;
                     contentTag.addClass("sc-element");
-                    contentTag.prepend($("<ul class='sc-menu' data-toolbar=''/>"));
+                    // todo: make the empty-toolbar-default-settings used below as well...
+                    var  settingsString = JSON.stringify(settingsForEmptyToolbar);
+                    contentTag.prepend($("<ul class='sc-menu' toolbar='' xsettings='" + settingsString + "'/>"));
                     toolbars = getToolbars();
                 }
 
                 function initToolbar() {
                     try {
-                        var toolbarTag = $(this), data = toolbarTag.attr("data-toolbar"), toolbarSettings;
+                        var tag = $(this), data, toolbarConfig, toolbarSettings;
+
                         try {
-                            toolbarSettings = data ? JSON.parse(data) : {};
+                            data = tag.attr("toolbar") || tag.attr("data-toolbar");
+                            toolbarConfig = data ? JSON.parse(data) : {};
                         }
                         catch(err) {
                             console.error("error on toolbar JSON - probably invalid - make sure you also quote your properties like \"name\": ...", data, err);
                             return;
                         }
 
-                        var newTb = $2sxc(toolbarTag).manage.getToolbar(toolbarSettings);
-                        toolbarTag.replaceWith(newTb);
+                        try {
+                            data = tag.attr("settings") || tag.attr("data-settings");
+                            toolbarSettings = data ? JSON.parse(data) : {};
+                            if (toolbarConfig === {} && toolbarSettings === {})
+                                toolbarSettings = settingsForEmptyToolbar;
+                        }
+                        catch (err) {
+                            console.error("error on settings JSON - probably invalid - make sure you also quote your properties like \"name\": ...", data, err);
+                            return;
+                        }
+
+                        var newTb = $2sxc(tag).manage.getToolbar(toolbarConfig, toolbarSettings);
+                        tag.replaceWith(newTb);
                     } catch (err) {
                         // note: errors can happen a lot on custom toolbars, must be sure the others are still rendered
                         console.error("error creating toolbar - will skip this one", err);
@@ -1630,6 +1805,13 @@ $(document).ready(function () {
 (function () {
     var tools = $2sxc._toolbarManager.buttonHelpers = {
 
+        defaultSettings: {
+            autoAddMore: null,     // null | "right" | "start" | true
+            hover: "right",         // right | left | none
+            show: "hover",          // always | hover
+            // order or reverse, still thinking about this --> order: "default"    // default | reverse
+        },
+
         // take any common input format and convert it to a full toolbar-structure definition
         // can handle the following input formats (the param unstructuredConfig):
         // complete tree (detected by "groups): { groups: [ {}, {}], name: ..., defaults: {...} } 
@@ -1638,17 +1820,21 @@ $(document).ready(function () {
         // button (detected by "command"): { command: ""|[], icon: "..", ... }
         // just a command (detected by "action"): { entityId: 17, action: "edit" }
         // array of commands: [{entityId: 17, action: "edit"}, {contentType: "blog", action: "new"}]
-        buildFullDefinition: function (unstructuredConfig, actions, config) {
+        buildFullDefinition: function (unstructuredConfig, allActions, instanceConfig, moreSettings) {
             if (unstructuredConfig.debug)
                 console.log("toolbar: detailed debug on; start build full Def");
-            var fullConfig = tools.ensureDefinitionTree(unstructuredConfig);
-            tools.expandButtonGroups(fullConfig, actions);
-            tools.removeButtonsWithUnmetConditions(fullConfig, config);
+            var fullConfig = tools.ensureDefinitionTree(unstructuredConfig, moreSettings);
+            tools.expandButtonGroups(fullConfig, allActions);
+            tools.removeButtonsWithUnmetConditions(fullConfig, instanceConfig);
             if (fullConfig.debug)
                 console.log("after remove: ", fullConfig);
+
+            tools.customize(fullConfig);
+
             return fullConfig;
         },
 
+        //#region build initial toolbar object
         // this will take an input which could already be a tree, but it could also be a 
         // button-definition, or just a string, and make sure that afterwards it's a tree with groups
         // the groups could still be in compact form, or already expanded, dependending on the input
@@ -1656,7 +1842,7 @@ $(document).ready(function () {
         // - groups containing buttons[], but buttons could still be very flat
         // - defaults, already officially formatted
         // - params, officially formatted 
-        ensureDefinitionTree: function (original) {
+        ensureDefinitionTree: function (original, moreSettings) {
             // original is null/undefined, just return empty set
             if (!original) throw ("preparing toolbar, with nothing to work on: " + original);
 
@@ -1683,9 +1869,11 @@ $(document).ready(function () {
                 debug: original.debug || false,     // show more debug info
                 groups: original.groups || [],      // the groups of buttons
                 defaults: original.defaults || {},  // the button defaults like icon, etc.
-                params: original.params || {}       // these are the default command parameters
+                params: original.params || {},      // these are the default command parameters
+                settings: $2sxc._lib.extend({}, tools.defaultSettings, moreSettings, original.settings)
             };
         },
+        //#endregion inital toolbar object
 
         // this will traverse a groups-tree and expand each group
         // so if groups were just strings like "edit,new" or compact buttons, they will be expanded afterwards
@@ -1693,7 +1881,7 @@ $(document).ready(function () {
             // by now we should have a structure, let's check/fix the buttons
             for (var g = 0; g < fullSet.groups.length; g++) {
                 // expand a verb-list like "edit,new" into objects like [{ action: "edit" }, {action: "new"}]
-                tools.expandButtonList(fullSet.groups[g]);
+                tools.expandButtonList(fullSet.groups[g], fullSet.settings);
 
                 // fix all the buttons
                 var btns = fullSet.groups[g].buttons;
@@ -1714,8 +1902,7 @@ $(document).ready(function () {
         // on the in is a object with buttons, which are either:
         // - a string like "edit" or multi-value "layout,more"
         // - an array of such strings incl. optional complex objects which are
-        // 
-        expandButtonList: function (root) {
+        expandButtonList: function (root, settings) {
             // var root = grp; // the root object which has all params of the command
             var btns = [], sharedProperties = null;
 
@@ -1740,6 +1927,15 @@ $(document).ready(function () {
                 delete sharedProperties.action; //
             } else {
                 btns = root.buttons;
+            }
+
+            // optionally add a more-button in each group
+            if (settings.autoAddMore) {
+                if (settings.autoAddMore === "right")
+                    btns.push("more");
+                else {
+                    btns.unshift("more");
+                }
             }
 
             // add each button - check if it's already an object or just the string
@@ -1823,6 +2019,20 @@ $(document).ready(function () {
                     || (actions[btn.command.action] && actions[btn.command.action][propName]); // if there is an action, try to use that property name
             }
         },
+
+        customize: function(toolbar) {
+            //if (!toolbar.settings) return;
+            //var set = toolbar.settings;
+            //if (set.autoAddMore) {
+            //    console.log("auto-more");
+            //    var grps = toolbar.groups;
+            //    for (var g = 0; g < grps.length; g++) {
+            //        var btns = grps[g];
+            //        for (var i = 0; i < btns.length; i++) {
+            //        }
+            //    }
+            //}
+        }
     };
 
 })();
@@ -1872,31 +2082,34 @@ $(document).ready(function () {
             //},
             {
                 name: "default",
-                buttons: "edit,new,metadata,publish,layout,more"
+                buttons: "edit,new,metadata,publish,layout"
             },
             {
                 name: "list",
-                buttons: "add,remove,moveup,movedown,instance-list,replace,more"
+                buttons: "add,remove,moveup,movedown,instance-list,replace"
             },
             {
                 name: "instance",
-                // todo: add templatesettings, query
-                buttons: "template-develop,template-settings,contentitems,template-query,contenttype,more",
+                buttons: "template-develop,template-settings,contentitems,template-query,contenttype",
                 defaults: {
                     classes: "group-pro"
                 }
             },
             {
                 name: "app",
-                // todo: add multilanguage-resources & settings
-                buttons: "app,app-settings,app-resources,zone,more",
+                buttons: "app,app-settings,app-resources,zone",
                 defaults: {
                     classes: "group-pro"
                 }
             }
         ],
         defaults: {},
-        params: {}
+        params: {},
+        settings: {
+            autoAddMore: "right",
+            // these are defaults, don't set again
+            //hover: "right",
+        }
     };
 })();
 // initialize the translation system; ensure toolbars etc. are translated
