@@ -173,7 +173,11 @@
 
             'contentitems': makeDef("contentitems", "ContentItems", "table", true, {
                 params: { contentTypeName: editContext.contentTypeId },
-                showCondition: enableTools && editContext.contentTypeId
+                showCondition: enableTools && editContext.contentTypeId,
+                configureCommand: function (cmd) {
+                    if (cmd.settings.contentType)    // optionally override with custom type
+                        cmd.params.contentTypeName = cmd.settings.contentType;
+                }
             }),
 
 
@@ -1565,7 +1569,7 @@ $(document).ready(function () {
 
     var modules = $("div[data-edit-context]");
 
-    if (console) console.log("found " + modules.length + " content blocks");
+    if ($2sxc.debug.load && console) console.log("found " + modules.length + " content blocks");
 
     // Ensure the _processToolbar is called after the next event cycle to make sure that the Angular app (template selector) is loaded first
     window.setTimeout(function () {
@@ -1870,7 +1874,7 @@ $(document).ready(function () {
                 groups: original.groups || [],      // the groups of buttons
                 defaults: original.defaults || {},  // the button defaults like icon, etc.
                 params: original.params || {},      // these are the default command parameters
-                settings: $2sxc._lib.extend({}, tools.defaultSettings, moreSettings, original.settings)
+                settings: $2sxc._lib.extend({}, tools.defaultSettings, original.settings, moreSettings)
             };
         },
         //#endregion inital toolbar object
