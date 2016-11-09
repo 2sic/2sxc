@@ -33,10 +33,15 @@
 
         // add a script right then and there to the document
         function addScript(src) {
+            var async = src.async || false;
+            src = typeof src === "string" ? src : src.url;
             var script = document.createElement('script');
             script.type = 'text/javascript';
             script.src = toMinOrNotToMin(src);
-            document.write(script.outerHTML); // needs doc.write to ensure in-sync loading of the files
+            if (async)
+                document.getElementsByTagName("head")[0].appendChild(script);
+            else
+                document.write(script.outerHTML); // needs doc.write to ensure in-sync loading of the files
         }
 
         // add a style to the document header
@@ -58,8 +63,7 @@
     <script>
         // check if we must load jquery - if we do, it has to happen very early!
         var dialogName = $2sxc.urlParams.require("dialog");
-    </script>
-    <script>
+
         // this must come close to the end, after a closed script which might load jQuery
         var apiUrl = $2sxc.urlParams.require("portalroot") + "desktopmodules/2sxc/api/";
         createFakeSf(apiUrl);
@@ -76,7 +80,8 @@
         ];
         var editScripts = [
             '../edit/eav-edit.min.js',
-            '../sxc-edit/sxc-edit.min.js'
+            '../sxc-edit/sxc-edit.min.js',
+            { url: 'http://cdn.tinymce.com/4/tinymce.min.js', async: true }   // testing
         ];
         var styles = [
             '../lib/angular/set.min.css',
@@ -120,8 +125,8 @@
 
         // scripts needed only by the template
         if (dialogName === "develop") {
-            addScript("//cdn.jsdelivr.net/ace/1.2.3/noconflict/ace.js");
-            addScript("//cdn.jsdelivr.net/ace/1.2.3/noconflict/ext-language_tools.js");
+            addScript({ url: "//cdn.jsdelivr.net/ace/1.2.3/noconflict/ace.js", async: true });
+            addScript({ url: "//cdn.jsdelivr.net/ace/1.2.3/noconflict/ext-language_tools.js", async: true });
             addScript("../lib/angular-ui-ace/ui-ace.min.js");
             addScript("../sxc-develop/sxc-develop.min.js");
         }

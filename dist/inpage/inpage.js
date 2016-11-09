@@ -406,18 +406,15 @@
                 }
             },
 
-            executeAction: function(nameOrSettings, settings, event) {
+            executeAction: function (nameOrSettings, settings, event) {
                 // check if name is name (string) or object (settings)
-                if (!event && settings && settings.altKey) { // no event param, but settings, which is an event
-                    event = settings;
-                    settings = {};
+                if (!event && settings && (typeof settings.altKey !== "undefined")) { // no event param, but settings contains the event-object
+                    event = settings;   // move it to the correct variable
+                    settings = {};      // clear the settings variable
                 }
-                if (typeof (nameOrSettings) === "string") {
-                    settings = $2sxc._lib.extend(settings || {}, { "action": nameOrSettings });
-                } else {
-                    //event = settings;
-                    settings = nameOrSettings;
-                }
+                settings = (typeof (nameOrSettings) === "string") 
+                    ? $2sxc._lib.extend(settings || {}, { "action": nameOrSettings }) // place the name as an action-name into a command-object
+                    : nameOrSettings;
 
                 var conf = cmc.manage._toolbar.actions[settings.action];
                 settings = $2sxc._lib.extend({}, conf, settings); // merge conf & settings, but settings has higher priority
@@ -1456,7 +1453,7 @@ $(function () {
         this.options = {
             threshold: 15, //default velocity threshold for shake to register
             timeout: 1000,
-            callback: null // optional callback - will only be used if provided, otherwise generate event // function() {}//default interval between events
+            callback: null // callback - will only be used if provided, otherwise generate event // function() {}//default interval between events
         };
 
         if (typeof options === 'object') {
@@ -1474,21 +1471,6 @@ $(function () {
         this.lastX = null;
         this.lastY = null;
         this.lastZ = null;
-
-        //create custom event - but only if no callback provided
-        if(!this.options.callback) {
-            if (typeof document.CustomEvent === 'function') {
-                this.event = new document.CustomEvent('shake', {
-                    bubbles: true,
-                    cancelable: true
-                });
-            } else if (typeof document.createEvent === 'function') {
-                this.event = document.createEvent('Event');
-                this.event.initEvent('shake', true, true);
-            } else {
-                return false;
-            }
-        }
     }
 
     //reset timer values
@@ -1539,16 +1521,14 @@ $(function () {
             //calculate time in milliseconds since last shake registered
             currentTime = new Date();
             timeDifference = currentTime.getTime() - this.lastTime.getTime();
-
-            
             
             if (timeDifference > this.options.timeout) {
-                // once triggered, execute either the callback, or dispatch the event
+                // once triggered, execute  the callback
                 if( typeof this.options.callback === 'function' ) {
                     this.options.callback();
                 }
                 else
-                    window.dispatchEvent(this.event);
+                    console.log("shake event without callback detected");
                 this.lastTime = new Date();
             }
         }
@@ -1556,7 +1536,6 @@ $(function () {
         this.lastX = current.x;
         this.lastY = current.y;
         this.lastZ = current.z;
-
     };
 
     //event handler

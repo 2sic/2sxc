@@ -250,7 +250,7 @@ textarea.material {
     padding: 0;
     padding-right: 10px;
     padding-top: 14px;
-    word-break:break-all;
+    /*word-break:break-all; - disabled because of https://github.com/2sic/2sxc/issues/960 */
 }
 
 .no-label-space .responsive-optional .eav-label {

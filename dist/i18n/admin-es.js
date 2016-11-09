@@ -1,16 +1,20 @@
 {
 	"General": {
+		"Note2Translator": "these are the main keys for buttons and short messages, used in various dialogs",
 		"Buttons": {
 			"Add": "añadir",
-			"Refresh": "refrescar",
-			"System": "funciones avanzadas del sistema",
-			"Save": "guardar",
 			"Cancel": "cancelar",
-			"Permissions": "permisos",
-			"Edit": "editar",
-			"Delete": "borrar",
 			"Copy": "copiar",
-			"Rename": "renombrar"
+			"Delete": "borrar",
+			"Edit": "editar",
+			"ForceDelete": "forzar eliminar",
+			"NotSave": "no guardar",
+			"Permissions": "permisos",
+			"Refresh": "refrescar",
+			"Rename": "renombrar",
+			"Save": "guardar",
+			"System": "funciones avanzadas del sistema",
+			"Metadata": "metadata"
 		},
 		"Messages": {
 			"Loading": "cargando...",
@@ -19,8 +23,9 @@
 		},
 		"Questions": {
 			"Delete": "¿seguro que quiere borrar {{target}}?",
-			"DeleteEntity": "borrar '{{title}}' ({{id}}?",
-			"SystemInput": "Esto es para operaciones muy avanzadas. Úselo sólo si sabe qué está haciendo. \n\n Escriba sentencias de administración:"
+			"DeleteEntity": "¿borrar '{{title}}' ({{id}}?",
+			"SystemInput": "Esto es para operaciones muy avanzadas. Úselo sólo si sabe qué está haciendo. \n\n Escriba sentencias de administración:",
+			"ForceDelete": "¿quiere forzar la eliminación '{{title}}' ({{id}})?"
 		},
 		"Terms": {
 			"Title": "título"
@@ -294,6 +299,8 @@
 			"Title": "Historia de {{id}}",
 			"Table": {
 				"Id": "#",
+				"When": "Cuándo",
+				"User": "Usuario",
 				"Cuándo": "When",
 				"Usuario": "User",
 				"Acciones": ""
@@ -302,9 +309,10 @@
 	},
 	"AdvancedMode": {
 		"Info": {
-			"Disponible": "esta ventana tiene un modo avanzado / depuración para usuarios avanzados - lea más en 2sxc.org/help?tag=debug-mode",
+			"Available": "esta ventana tiene un modo avanzado / depuración para usuarios avanzados - lea más en 2sxc.org/help?tag=debug-mode",
 			"TurnOn": "modo avanzado / depuración activo",
-			"TurnOff": "modo avanzado / depuración desactivado"
+			"TurnOff": "modo avanzado / depuración desactivado",
+			"Disponible": "esta ventana tiene un modo avanzado / depuración para usuarios avanzados - lea más en 2sxc.org/help?tag=debug-mode"
 		}
 	}
 }

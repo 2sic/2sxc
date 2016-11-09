@@ -999,7 +999,7 @@ angular.module("eavFieldTemplates")
 	    };
 
 	    vm.registerAllFieldsFromReturnedDefinition = function raffrd(result) {
-	        var lastGroupHeadingId = 0;
+	        var lastGroupHeadingId = null; 
 	        angular.forEach(result.data, function (e, i) {
 
 	            if (e.Metadata.All === undefined)
@@ -1013,7 +1013,8 @@ angular.module("eavFieldTemplates")
 	            var isFieldHeading = (fieldType === "empty-default");
 	            if (isFieldHeading)
 	                lastGroupHeadingId = i;
-                
+
+
 	            var nextField = {
 	                key: e.StaticName,
 	                type: fieldType,
@@ -1023,8 +1024,8 @@ angular.module("eavFieldTemplates")
 	                    description: $sce.trustAsHtml(e.Metadata.All.Notes),
 	                    settings: e.Metadata,
 	                    header: $scope.header,
-	                    canCollapse: lastGroupHeadingId > 0 && !isFieldHeading,
-	                    fieldGroup: vm.formFields[lastGroupHeadingId],
+	                    canCollapse: (lastGroupHeadingId !== null) && !isFieldHeading,
+	                    fieldGroup: vm.formFields[lastGroupHeadingId || 0],
 	                    disabled: e.Metadata.All.Disabled,
 	                    langReadOnly: false, // Will be set by the language directive to override the disabled state
 

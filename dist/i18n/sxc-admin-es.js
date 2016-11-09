@@ -69,7 +69,7 @@
 		},
 		"Import": {
 			"Title": "Importar una exportación de contenido (.zip) o una exportación parcial (.xml)",
-			"Explanation": "Esta importación añadirá Content-Types, Plantillas y elementos de contenido al contenido o app actual.",
+			"Explanation": "Esta importación añadirá Tipos de Contenidos, Plantillas y elementos de contenido al contenido o app actual.",
 			"Select": "seleccine archivo para importar",
 			"Choose": "Elija archivo"
 		},
