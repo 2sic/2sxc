@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using System;
+using System.Web;
 
 namespace ToSic.SexyContent.Edit.InPageEditingSystem
 {
@@ -13,6 +14,10 @@ namespace ToSic.SexyContent.Edit.InPageEditingSystem
             object toolbar = null,
             object settings = null);
         
-        HtmlString ContextAttributes(DynamicEntity target, string dontRelyOnParameterOrder = Constants.RandomProtectionParameter, string field = null, string contentType = null);
+        HtmlString ContextAttributes(DynamicEntity target, 
+            string dontRelyOnParameterOrder = Constants.RandomProtectionParameter, 
+            string field = null, 
+            string contentType = null,
+            Guid? newGuid = null);
     }
 }

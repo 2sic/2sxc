@@ -183,6 +183,7 @@
       <DependentUpon>Services.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Beta\InTextContentBlocks.cs" />
     <Compile Include="DnnWebForms\FileManager.ascx.cs">
       <DependentUpon>FileManager.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
