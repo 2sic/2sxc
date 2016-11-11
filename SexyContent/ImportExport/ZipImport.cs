@@ -179,7 +179,7 @@ namespace ToSic.SexyContent.ImportExport
                     // Finally delete the temporary directory
                     Directory.Delete(temporaryDirectory, true);
                 }
-                catch(IOException e)
+                catch(Exception ex) when (ex is FormatException || ex is OverflowException) 
                 {
                     // The folder itself or files inside may be used by other processes.
                     // Deleting the folder recursively will fail in such cases
