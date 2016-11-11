@@ -97,6 +97,13 @@ a.sc-content-block-menu-btn {
     text-indent: 0!important;
     color: white;
 }
+
+/* show in-text placeholders when they are still empty */
+div.sc-content-block-list.show-placeholder:empty { 
+    height: 20px; 
+    background-color: rgba(47,155,242,0.1);
+}
+
 .sc-invisible { display:none !important; }
 
 .sc-cb-action { -webkit-filter: grayscale(75%); filter: grayscale(75%); }

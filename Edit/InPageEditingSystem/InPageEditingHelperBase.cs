@@ -7,7 +7,7 @@ namespace ToSic.SexyContent.Edit.InPageEditingSystem
     public class InPageEditingHelperBase : IInPageEditingSystem
     {
         private readonly string _jsonTemplate =
-            "data-list-context='{{ `parent`: {0}, `field`: `{1}`, `type`: `{2}`}}'".Replace("`", "\"");
+            "data-list-context='{{ `parent`: {0}, `field`: `{1}`, `type`: `{2}`, `guid`: `{3}`}}'".Replace("`", "\"");
 
         private readonly SxcInstance _sxcInstance;
 
@@ -46,7 +46,8 @@ namespace ToSic.SexyContent.Edit.InPageEditingSystem
         public HtmlString ContextAttributes(DynamicEntity target,
             string dontRelyOnParameterOrder = Constants.RandomProtectionParameter, 
             string field = null,
-            string contentType = null)
+            string contentType = null, 
+            Guid? newGuid = null)
         {
             if (!Enabled) return null;
             ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder);
@@ -54,8 +55,11 @@ namespace ToSic.SexyContent.Edit.InPageEditingSystem
             if(field == null) throw new Exception("need parameter field");
 
             return new HtmlString(string.Format(
-                _jsonTemplate, target.EntityId, field,
-                contentType ?? Settings.AttributeSetStaticNameContentBlockTypeName));
+                _jsonTemplate, 
+                target.EntityId, 
+                field,
+                contentType ?? Settings.AttributeSetStaticNameContentBlockTypeName,
+                newGuid));
         }
     }
 }

@@ -70,7 +70,7 @@ namespace ToSic.SexyContent.WebApi.View
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public string GenerateContentBlock(int parentId, string field, int sortOrder, string app = "")
+        public string GenerateContentBlock(int parentId, string field, int sortOrder, string app = "", Guid? guid = null)
         {
             var contentTypeName = Settings.AttributeSetStaticNameContentBlockTypeName;
             var values = new Dictionary<string, object>
@@ -80,7 +80,7 @@ namespace ToSic.SexyContent.WebApi.View
                 {EntityContentBlock.CbPropertyShowChooser, true},
             };
 
-            var entity = CreateItemAndAddToList(parentId, field, sortOrder, contentTypeName, values);
+            var entity = CreateItemAndAddToList(parentId, field, sortOrder, contentTypeName, values, guid);
 
             // now return a rendered instance
             var newContentBlock = new EntityContentBlock(SxcContext.ContentBlock, entity.EntityID);
@@ -89,7 +89,7 @@ namespace ToSic.SexyContent.WebApi.View
         }
 
         private Entity CreateItemAndAddToList(int parentId, string field, int sortOrder, string contentTypeName,
-            Dictionary<string, object> values)
+            Dictionary<string, object> values, Guid? newGuid)
         {
             var cgApp = SxcContext.App;
             var eavDc = EavDataController.Instance(cgApp.ZoneId, cgApp.AppId);
@@ -101,7 +101,7 @@ namespace ToSic.SexyContent.WebApi.View
                 DataSource.GetCache(cgApp.ZoneId, cgApp.AppId)
                     .GetContentType(contentTypeName);
 
-            var entity = eavDc.Entities.AddEntity(contentType.AttributeSetId, values, null, null);
+            var entity = eavDc.Entities.AddEntity(contentType.AttributeSetId, values, null, null, entityGuid: newGuid);
 
             #endregion
 

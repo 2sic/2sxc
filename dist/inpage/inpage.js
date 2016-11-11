@@ -565,7 +565,7 @@ $2sxc._contentBlock.create = function (sxc, manage, cbTag) {
 
         addItem: function (sortOrder) {
             return cb.sxc.webApi.get({
-                url: "View/Module/AddItem",
+                url: "view/module/additem",
                 params: { sortOrder: sortOrder }
             }).then(cb.reloadAndReInitialize);
         },
@@ -696,6 +696,74 @@ $2sxc._contentBlock.create = function (sxc, manage, cbTag) {
 };
 
 
+// contains commands to create/move/delete a contentBlock in a page
+
+$2sxc._contentBlock.manipulator = function(sxc) {
+    return {
+        create: function(parentId, fieldName, index, appName, container, newGuid) {
+            // the wrapper, into which this will be placed and the list of pre-existing blocks
+            var listTag = container;
+            if (listTag.length === 0) return alert("can't add content-block as we couldn't find the list");
+            var cblockList = listTag.find("div.sc-content-block");
+            if (index > cblockList.length)
+                index = cblockList.length; // make sure index is never greater than the amount of items
+            return sxc.webApi.get({
+                url: "view/module/generatecontentblock",
+                params: {
+                    parentId: parentId,
+                    field: fieldName,
+                    sortOrder: index,
+                    app: appName,
+                    guid: newGuid
+                }
+            }).then(function(result) {
+                var newTag = $(result); // prepare tag for inserting
+
+                // should I add it to a specific position...
+                if (cblockList.length > 0 && index > 0)
+                    $(cblockList[cblockList.length > index - 1 ? index - 1 : cblockList.length - 1])
+                        .after(newTag);
+                else //...or just at the beginning?
+                    listTag.prepend(newTag);
+
+
+                var sxcNew = $2sxc(newTag);
+                sxcNew.manage._toolbar._processToolbars(newTag);
+
+            });
+        },
+
+
+        move: function(parentId, field, indexFrom, indexTo) {
+            // todo: need sxc!
+            return sxc.webApi.get({
+                url: "view/module/moveiteminlist",
+                params: {
+                    parentId: parentId,
+                    field: field,
+                    indexFrom: indexFrom,
+                    indexTo: indexTo
+                }
+            }).then(function() {
+                console.log("done moving!");
+                window.location.reload();
+            });
+        },
+
+        // delete a content-block inside a list of content-blocks
+        "delete": function(parentId, field, index) {
+            if (confirm($2sxc.translate("QuickInsertMenu.ConfirmDelete")))
+                return sxc.webApi.get({
+                    url: "view/module/RemoveItemInList",
+                    params: { parentId: parentId, field: field, index: index }
+                }).then(function() {
+                    console.log("done deleting!");
+                    window.location.reload();
+                });
+            return null;
+        }
+    };
+};
 
 
 
@@ -941,57 +1009,60 @@ if($ && $.fn && $.fn.dnnModuleDragDrop)
                 editManager._toolbarConfig = toolsAndButtons.config;
             },
 
+            _getCbManipulator: function() {
+                return $2sxc._contentBlock.manipulator(sxc);
+            },
             //#region ContentBlock commands: create, move, delete --> should probably move out of the manage-class
 
-            _createContentBlock: function (parentId, fieldName, index, appName, container) {
-                // the wrapper, into which this will be placed and the list of pre-existing blocks
-                var listTag = container;
-                if (listTag.length === 0) return alert("can't add content-block as we couldn't find the list");
-                var cblockList = listTag.find("div.sc-content-block");
-                if (index > cblockList.length)
-                    index = cblockList.length; // make sure index is never greater than the amount of items
-                return sxc.webApi.get({
-                    url: "view/module/generatecontentblock",
-                    params: { parentId: parentId, field: fieldName, sortOrder: index, app: appName }
-                }).then(function (result) {
-                    var newTag = $(result); // prepare tag for inserting
+            //_createContentBlock: function (parentId, fieldName, index, appName, container) {
+            //    // the wrapper, into which this will be placed and the list of pre-existing blocks
+            //    var listTag = container;
+            //    if (listTag.length === 0) return alert("can't add content-block as we couldn't find the list");
+            //    var cblockList = listTag.find("div.sc-content-block");
+            //    if (index > cblockList.length)
+            //        index = cblockList.length; // make sure index is never greater than the amount of items
+            //    return sxc.webApi.get({
+            //        url: "view/module/generatecontentblock",
+            //        params: { parentId: parentId, field: fieldName, sortOrder: index, app: appName }
+            //    }).then(function (result) {
+            //        var newTag = $(result); // prepare tag for inserting
 
-                    // should I add it to a specific position...
-                    if (cblockList.length > 0 && index > 0) 
-                        $(cblockList[cblockList.length > index - 1 ? index - 1: cblockList.length - 1])
-                            .after(newTag);
-                    else    //...or just at the beginning?
-                        listTag.prepend(newTag);
+            //        // should I add it to a specific position...
+            //        if (cblockList.length > 0 && index > 0) 
+            //            $(cblockList[cblockList.length > index - 1 ? index - 1: cblockList.length - 1])
+            //                .after(newTag);
+            //        else    //...or just at the beginning?
+            //            listTag.prepend(newTag);
                 
 
-                    var sxcNew = $2sxc(newTag);
-                    sxcNew.manage._toolbar._processToolbars(newTag);
+            //        var sxcNew = $2sxc(newTag);
+            //        sxcNew.manage._toolbar._processToolbars(newTag);
 
-                });
-            },
+            //    });
+            //},
 
-            _moveContentBlock: function(parentId, field, indexFrom, indexTo) {
-                return sxc.webApi.get({
-                    url: "view/module/MoveItemInList",
-                    params: { parentId: parentId, field: field, indexFrom: indexFrom, indexTo: indexTo }
-                }).then(function() {
-                    console.log("done moving!");
-                    window.location.reload();
-                });
-            },
+            //_moveContentBlock: function(parentId, field, indexFrom, indexTo) {
+            //    return sxc.webApi.get({
+            //        url: "view/module/MoveItemInList",
+            //        params: { parentId: parentId, field: field, indexFrom: indexFrom, indexTo: indexTo }
+            //    }).then(function() {
+            //        console.log("done moving!");
+            //        window.location.reload();
+            //    });
+            //},
 
             // delete a content-block inside a list of content-blocks
-            _deleteContentBlock: function (parentId, field, index) {
-                if (confirm($2sxc.translate("QuickInsertMenu.ConfirmDelete")))
-                    return sxc.webApi.get({
-                        url: "view/module/RemoveItemInList",
-                        params: { parentId: parentId, field: field, index: index }
-                    }).then(function() {
-                        console.log("done deleting!");
-                        window.location.reload();
-                    });
-                return null;
-            },
+            //_deleteContentBlock: function (parentId, field, index) {
+            //    if (confirm($2sxc.translate("QuickInsertMenu.ConfirmDelete")))
+            //        return sxc.webApi.get({
+            //            url: "view/module/RemoveItemInList",
+            //            params: { parentId: parentId, field: field, index: index }
+            //        }).then(function() {
+            //            console.log("done deleting!");
+            //            window.location.reload();
+            //        });
+            //    return null;
+            //},
             //#endregion
 
             //#region deprecated properties - these all should have been undocumented/ private till now
@@ -1029,14 +1100,20 @@ if($ && $.fn && $.fn.dnnModuleDragDrop)
 $(function () {
     "use strict";
 
-    //var enableModuleMove = false; // not implemented yet
-    var selectors = {
+    // the Wonderful In Page Editing object
+    var $quickE = window.$quickE = {};
+
+
+    // selectors used all over the in-page-editing
+    // var enableModuleMove = false; // not implemented yet
+    $quickE.selectors = {
         cb: {
             id: "cb",
             "class": "sc-content-block",
             selector: ".sc-content-block",
             listSelector: ".sc-content-block-list",
-            context: "data-list-context"
+            context: "data-list-context",
+            singleItem: "single-item"
         },
         mod: {
             id: "mod",
@@ -1049,81 +1126,145 @@ $(function () {
         selected: "sc-cb-is-selected"
     };
 
-    var hasContentBlocks = ($(selectors.cb.listSelector).length > 0);
 
-    function btn(action, icon, i18N, invisible, unavailable, classes) {
-        return "<a class='sc-content-block-menu-btn sc-cb-action icon-sxc-" + icon + " " 
-            + (invisible ? " sc-invisible " : "") 
+    $quickE.btn = function(action, icon, i18N, invisible, unavailable, classes) {
+        return "<a class='sc-content-block-menu-btn sc-cb-action icon-sxc-" + icon + " "
+            + (invisible ? " sc-invisible " : "")
             + (unavailable ? " sc-unavailable " : "")
             + classes + "' data-action='" + action + "' data-i18n='[title]QuickInsertMenu." + i18N + "'></a>";
-    }
+    };
 
     // the quick-insert object
-    var qi = {
-        enableCb: hasContentBlocks, // for now, ContentBlocks are only enabled if they exist on the page
-        enableMod: !hasContentBlocks,   // if it has inner-content, then it's probably a details page, where quickly adding modules would be a problem, so for now, disable modules in this case
+    $2sxc._lib.extend($quickE, {
         body: $("body"),
         win: $(window),
         main: $("<div class='sc-content-block-menu sc-content-block-quick-insert sc-i18n'></div>"),
         template: "<a class='sc-content-block-menu-addcontent sc-invisible' data-type='Default' data-i18n='[titleTemplate]QuickInsertMenu.AddBlockContent'>x</a>"
             + "<a class='sc-content-block-menu-addapp sc-invisible' data-type='' data-i18n='[titleTemplate]QuickInsertMenu.AddBlockApp'>x</a>"
-            + btn("select", "ok", "Select", true)
-            + btn("paste", "paste", "Paste", true, true),
+            + $quickE.btn("select", "ok", "Select", true)
+            + $quickE.btn("paste", "paste", "Paste", true, true),
         selected: $("<div class='sc-content-block-menu sc-content-block-selected-menu sc-i18n'></div>")
-            .append(/*btn("cancel", "ok", "Cancel") + */ btn("delete", "trash-empty", "Delete")),
+            .append(/*$quickE.btn("cancel", "ok", "Cancel") + */ $quickE.btn("delete", "trash-empty", "Delete")),
         contentBlocks: null,
         modules: null,
         nearestCb: null, 
         nearestMod: null
-    };
-
-    // add stuff which must be added in a second run
-    $2sxc._lib.extend(qi, {
-        cbActions: $(qi.template),
-        modActions: $(qi.template.replace(/QuickInsertMenu.AddBlock/g, "QuickInsertMenu.AddModule")).attr("data-context", "module").addClass("sc-content-block-menu-module")
     });
 
-    qi.init = function() {
-        qi.body.append(qi.main);
-        qi.body.append(qi.selected);
+    // add stuff which must be added in a second run
+    $2sxc._lib.extend($quickE, {
+        cbActions: $($quickE.template),
+        modActions: $($quickE.template.replace(/QuickInsertMenu.AddBlock/g, "QuickInsertMenu.AddModule")).attr("data-context", "module").addClass("sc-content-block-menu-module")
+    });
+
+    // build the toolbar (hidden, but ready to show)
+    $quickE.prepareToolbarInDom = function() {
+        $quickE.body.append($quickE.main);
+        $quickE.body.append($quickE.selected);
 
         // content blocks actions
-        if (qi.enableCb)
-            qi.main.append(qi.cbActions);
+        if ($quickE.config.innerBlocks.enable)
+            $quickE.main.append($quickE.cbActions);
 
         // module actions
-        if (qi.enableMod)
-            qi.main.append(qi.modActions);
+        if ($quickE.config.modules.enable)
+            $quickE.main.append($quickE.modActions);
     };
 
-    qi.init();
+});
+// add a clipboard to the WInPE
+$(function () {
 
-    qi.selected.toggle = function(target) {
+    // perform copy and paste commands - needs the clipboard
+    $quickE.copyPasteInPage = function (cbAction, list, index, type) {
+        var clip = $quickE.clipboard.createSpecs(type, list, index);
+
+        // action!
+        if (cbAction === "select") {
+            $quickE.clipboard.mark(clip);
+        } else if (cbAction === "paste") {
+            var from = $quickE.clipboard.data.index, to = clip.index;
+            if (isNaN(from) || isNaN(to) || from === to || from + 1 === to) // this moves it to the same spot, so ignore
+                return $quickE.clipboard.clear(); // don't do anything
+
+            $2sxc(list).manage._getCbManipulator().move/*._moveContentBlock*/(clip.parent, clip.field, from, to);
+            $quickE.clipboard.clear();
+        }
+    };
+
+    // clipboard object - remembers what module (or content-block) was previously copied / needs to be pasted
+    $quickE.clipboard = {
+        data: {},
+        mark: function (newData) {
+            if (newData) {
+                // if it was already selected with the same thing, then release it
+                if ($quickE.clipboard.data && $quickE.clipboard.data.item === newData.item)
+                    return $quickE.clipboard.clear();
+                $quickE.clipboard.data = newData;
+            }
+            $("." + $quickE.selectors.selected).removeClass($quickE.selectors.selected); // clear previous markings
+            var cb = $($quickE.clipboard.data.item);
+            cb.addClass($quickE.selectors.selected);
+            if (cb.prev().is("iframe"))
+                cb.prev().addClass($quickE.selectors.selected);
+            $quickE.setSecondaryActionsState(true);
+            $quickE.selected.toggle(cb);
+        },
+        clear: function () {
+            $("." + $quickE.selectors.selected).removeClass($quickE.selectors.selected);
+            $quickE.clipboard.data = null;
+            $quickE.setSecondaryActionsState(false);
+            $quickE.selected.toggle(false);
+        },
+        createSpecs: function (type, list, index) {
+            var listItems = list.find($quickE.selectors[type].selector);
+            if (index >= listItems.length) index = listItems.length - 1; // sometimes the index is 1 larger than the length, then select last
+            var currentItem = listItems[index];
+            var editContext = JSON.parse(list.attr($quickE.selectors.cb.context) || null) || { parent: "dnn", field: list.id };
+            return { parent: editContext.parent, field: editContext.field, list: list, item: currentItem, index: index, type: type };
+        }
+    };
+
+
+    $quickE.setSecondaryActionsState = function (state) {
+        var btns = $("a.sc-content-block-menu-btn");
+        btns = btns.filter(".icon-sxc-paste");
+        btns.toggleClass("sc-unavailable", !state);
+    };
+
+
+    $quickE.selected.toggle = function (target) {
         if (!target)
-            return qi.selected.hide();
+            return $quickE.selected.hide();
 
-        var coords = qi.getCoordinates(target);
+        var coords = $quickE.getCoordinates(target);
         coords.yh = coords.y + 20;
-        qi.positionAndAlign(qi.selected, coords);
-        qi.selected.target = target;
+        $quickE.positionAndAlign($quickE.selected, coords);
+        $quickE.selected.target = target;
     };
-    
+
     // give all actions
-    $("a", qi.selected).click(function () {
+    $("a", $quickE.selected).click(function () {
         var action = $(this).data("action");
-        var clip = qi.clipboard.data;
-        switch(action) {
+        var clip = $quickE.clipboard.data;
+        switch (action) {
             case "cancel":
-                return qi.clipboard.clear();
+                return $quickE.clipboard.clear();
             case "delete":
-                qi.cmds[clip.type].delete(clip);
+                $quickE.cmds[clip.type].delete(clip);
         }
     });
 
-    qi.cmds = {
+});
+// extend the wonderful in-page editing with the core commands
+$(function () {
+    $quickE.cmds = {
         cb: {
-            "delete": function(clip) {
-                return $2sxc(clip.list).manage._deleteContentBlock(clip.parent, clip.field, clip.index);
+            "delete": function (clip) {
+                return $2sxc(clip.list).manage._getCbManipulator().delete /*_deleteContentBlock*/(clip.parent, clip.field, clip.index);
+            },
+            "create": function(parent, field, index, appOrContent, list, newGuid) {
+                return $2sxc(list).manage._getCbManipulator().create/*_createContentBlock*/(parent, field, index, appOrContent, list, newGuid);
             }
         },
         mod: {
@@ -1135,104 +1276,101 @@ $(function () {
                 //    var sxc = $2sxc(0).webApi.get(apiCmd)
                 //}
             },
-            move: function(clip, etc) {
+            move: function (clip, etc) {
                 // todo
             }
         }
     };
+});
+$(function () {
 
-    qi.cbActions.click(function () {
-        var list = qi.main.actionsForCb.closest(selectors.cb.listSelector);
-        var listItems = list.find(selectors.cb.selector);
-        var actionConfig = JSON.parse(list.attr(selectors.cb.context));
+
+    // any inner blocks found? will currently affect if modules can be inserted...
+    var hasInnerCBs = ($($quickE.selectors.cb.listSelector).length > 0);
+    var conf = $quickE.config = {
+        enable: true,
+        innerBlocks: {
+            enable: null    // default: auto-detect
+        },
+        modules: {
+            enable: null    // default: auto-detect
+        }
+    };
+
+    $quickE._readPageConfig = function () {
+        var configAttr = "quick-edit-config";
+        var configs = $("[" + configAttr + "]"), finalConfig = {}, confJ, confO;
+        if (configs.length > 0) {
+            // go through reverse list, as the last is the most important...
+            for (var c = configs.length; c >= 0; c--) {
+                confJ = configs[0].getAttribute(configAttr);
+                try {
+                    confO = JSON.parse(confJ);
+                    $.extend(finalConfig, confO);
+                } catch (e) {
+                    console.warn('had trouble with json', e);
+                }
+            }
+            $.extend(conf, finalConfig);
+        }
+
+        // re-check "auto" or "null"
+        // if it has inner-content, then it's probably a details page, where quickly adding modules would be a problem, so for now, disable modules in this case
+        if (conf.modules.enable === null || conf.modules.enable === "auto")
+            conf.modules.enable = !hasInnerCBs;
+
+        // for now, ContentBlocks are only enabled if they exist on the page
+        if (conf.innerBlocks.enable === null || conf.innerBlocks.enable === "auto")
+            conf.innerBlocks.enable = hasInnerCBs;  
+    };
+
+});
+// content-block specific stuff like actions
+$(function () {
+    $quickE.cbActions.click(function () {
+        var list = $quickE.main.actionsForCb.closest($quickE.selectors.cb.listSelector);
+        var listItems = list.find($quickE.selectors.cb.selector);
+        var actionConfig = JSON.parse(list.attr($quickE.selectors.cb.context));
         var index = 0;
 
-        if (qi.main.actionsForCb.hasClass(selectors.cb.class))
-            index = listItems.index(qi.main.actionsForCb[0]) + 1;
+        if ($quickE.main.actionsForCb.hasClass($quickE.selectors.cb.class))
+            index = listItems.index($quickE.main.actionsForCb[0]) + 1;
+
+        var newGuid = actionConfig.guid || null;
 
         // check cut/paste
         var cbAction = $(this).data("action");
         if (!cbAction) {
             var appOrContent = $(this).data("type");
-            return $2sxc(list).manage._createContentBlock(actionConfig.parent, actionConfig.field, index, appOrContent, list);
+            return $quickE.cmds.cb.create(actionConfig.parent, actionConfig.field, index, appOrContent, list, newGuid);
         } else
             // this is a cut/paste action
-            return qi.copyPasteInPage(cbAction, list, index, selectors.cb.id);
+            return $quickE.copyPasteInPage(cbAction, list, index, $quickE.selectors.cb.id);
     });
 
-    qi.copyPasteInPage = function (cbAction, list, index, type) {
-        var clip = qi.clipboard.createSpecs(type, list, index);
+});
+// module specific stuff
+$(function () {
 
-        // action!
-        if (cbAction === "select") {
-            qi.clipboard.mark(clip); 
-        } else if (cbAction === "paste") {
-            var from = qi.clipboard.data.index, to = clip.index;
-            if (isNaN(from) || isNaN(to) || from === to || from + 1 === to) // this moves it to the same spot, so ignore
-                return qi.clipboard.clear(); // don't do anything
-
-            $2sxc(list).manage._moveContentBlock(clip.parent, clip.field, from, to);
-            qi.clipboard.clear();
-        } 
-    };
-
-    qi.clipboard = {
-        data: {},
-        mark: function (newData) {
-            if (newData) {
-                // if it was already selected with the same thing, then release it
-                if (qi.clipboard.data && qi.clipboard.data.item === newData.item)
-                    return qi.clipboard.clear();
-                qi.clipboard.data = newData;
-            }
-            $("." + selectors.selected).removeClass(selectors.selected); // clear previous markings
-            var cb = $(qi.clipboard.data.item);
-            cb.addClass(selectors.selected);
-            if (cb.prev().is("iframe"))
-                cb.prev().addClass(selectors.selected);
-            qi.setSecondaryActionsState(true);
-            qi.selected.toggle(cb);
-        },
-        clear: function() {
-            $("." + selectors.selected).removeClass(selectors.selected);
-            qi.clipboard.data = null;
-            qi.setSecondaryActionsState(false);
-            qi.selected.toggle(false);
-        },
-        createSpecs: function (type, list, index) {
-            var listItems = list.find(selectors[type].selector);
-            if (index >= listItems.length) index = listItems.length - 1; // sometimes the index is 1 larger than the length, then select last
-            var currentItem = listItems[index];
-            var editContext = JSON.parse(list.attr(selectors.cb.context) || null) || { parent: "dnn", field: list.id };
-            return { parent: editContext.parent, field: editContext.field, list: list, item: currentItem, index: index, type: type };
-        }
-    };
-
-    qi.setSecondaryActionsState = function(state) {
-        var btns = $("a.sc-content-block-menu-btn");
-        btns = btns.filter(".icon-sxc-paste"); 
-        btns.toggleClass("sc-unavailable", !state);
-    };
-
-    qi.modActions.click(function () {
+    $quickE.modActions.click(function () {
         var type = $(this).data("type");
-        var pane = qi.main.actionsForModule.closest(selectors.mod.listSelector);
+        var pane = $quickE.main.actionsForModule.closest($quickE.selectors.mod.listSelector);
         var paneName = pane.attr("id").replace("dnn_", "");
 
         var index = 0;
-        if (qi.main.actionsForModule.hasClass("DnnModule"))
-            index = pane.find(".DnnModule").index(qi.main.actionsForModule[0]) + 1;
+        if ($quickE.main.actionsForModule.hasClass("DnnModule"))
+            index = pane.find(".DnnModule").index($quickE.main.actionsForModule[0]) + 1;
 
         var cbAction = $(this).data("action");
         if (cbAction)
-            return qi.copyPasteInPage(cbAction, pane, index, selectors.mod.id);
+            return $quickE.copyPasteInPage(cbAction, pane, index, $quickE.selectors.mod.id);
 
         // todo: try to use $2sxc(...).webApi instead of custom re-assembling these common build-up things
         // how: create a object containing the url, data, then just use the sxc.webApi(yourobject)
         var service = $.dnnSF();
         var serviceUrl = service.getServiceRoot("internalservices") + "controlbar/";
 
-        var xhrError = function(xhr) {
+        var xhrError = function (xhr) {
             alert("Error while adding module.");
             console.log(xhr);
         };
@@ -1244,8 +1382,8 @@ $(function () {
             success: function (desktopModules) {
                 var moduleToFind = type === "Default" ? " Content" : " App";
                 var module = null;
-                
-                desktopModules.forEach(function (e,i) {
+
+                desktopModules.forEach(function (e, i) {
                     if (e.ModuleName === moduleToFind)
                         module = e;
                 });
@@ -1280,122 +1418,125 @@ $(function () {
             error: xhrError
         });
 
-        
+
 
     });
 
-    var refreshTimeout = null;
-    $("body").on("mousemove", function (e) {
-        
-        if (refreshTimeout === null)
-            refreshTimeout = window.setTimeout(function () {
-                requestAnimationFrame(function () {
-                    qi.refresh(e);
-                    refreshTimeout = null;
-                });
-            }, 20);
+});
+// everything related to positioning the wonderful in-page editing
+$(function () {
 
-    });
-    
+
     // Prepare offset calculation based on body positioning
-    qi.getBodyPosition = function() {
-        var bodyPos = qi.body.css("position");
+    $quickE.getBodyPosition = function () {
+        var bodyPos = $quickE.body.css("position");
         return bodyPos === "relative" || bodyPos === "absolute"
-            ? { x: qi.body.offset().left, y: qi.body.offset().top }
+            ? { x: $quickE.body.offset().left, y: $quickE.body.offset().top }
             : { x: 0, y: 0 };
     };
 
-    qi.bodyOffset = qi.getBodyPosition();
+    // todo: this should be in an init/start method
+    $quickE.bodyOffset = $quickE.getBodyPosition();
 
     // Refresh content block and modules elements
-    qi.refreshDomObjects = function() {
-        qi.bodyOffset = qi.getBodyPosition(); // must update this, as sometimes after finishing page load the position changes, like when dnn adds the toolbar
+    $quickE.refreshDomObjects = function () {
+        $quickE.bodyOffset = $quickE.getBodyPosition(); // must update this, as sometimes after finishing page load the position changes, like when dnn adds the toolbar
 
         // Cache the panes (because panes can't change dynamically)
-        if (!qi.cachedPanes)
-            qi.cachedPanes = $(selectors.mod.listSelector);
+        if (!$quickE.cachedPanes)
+            $quickE.cachedPanes = $($quickE.selectors.mod.listSelector);
 
-        if (qi.enableCb)
-            qi.contentBlocks = $(selectors.cb.listSelector).find(selectors.cb.selector).add(selectors.cb.listSelector);
-        if (qi.enableMod)
-            qi.modules = qi.cachedPanes.find(selectors.mod.selector).add(qi.cachedPanes);
+        if ($quickE.config.innerBlocks.enable) {
+            // get all content-block lists which are empty, or which allow multiple child-items
+            var lists = $($quickE.selectors.cb.listSelector)
+                .filter(":not(." + $quickE.selectors.cb.singleItem + "), :empty");
+            $quickE.contentBlocks = lists // $($quickE.selectors.cb.listSelector)
+                .find($quickE.selectors.cb.selector)
+                .add(lists);// $quickE.selectors.cb.listSelector);
+        }
+        if ($quickE.config.modules.enable)
+            $quickE.modules = $quickE.cachedPanes
+                .find($quickE.selectors.mod.selector)
+                .add($quickE.cachedPanes);
     };
 
     // position, align and show a menu linked to another item
-    qi.positionAndAlign = function(element, coords) {
+    $quickE.positionAndAlign = function (element, coords) {
         return element.css({
-            'left': coords.x - qi.bodyOffset.x,
-            'top': coords.yh - qi.bodyOffset.y,
+            'left': coords.x - $quickE.bodyOffset.x,
+            'top': coords.yh - $quickE.bodyOffset.y,
             'width': coords.element.width()
         }).show();
     };
 
     // Refresh positioning / visibility of the quick-insert bar
-    qi.refresh = function(e) {
+    $quickE.refresh = function (e) {
+        var highlightClass = "sc-cb-highlight-for-insert";
 
-        if (!qi.refreshDomObjects.lastCall || (new Date() - qi.refreshDomObjects.lastCall > 1000)) {
+        if (!$quickE.refreshDomObjects.lastCall || (new Date() - $quickE.refreshDomObjects.lastCall > 1000)) {
             // console.log('refreshed contentblock and modules');
-            qi.refreshDomObjects.lastCall = new Date();
-            qi.refreshDomObjects();
+            $quickE.refreshDomObjects.lastCall = new Date();
+            $quickE.refreshDomObjects();
         }
 
-        if (qi.enableCb && qi.contentBlocks) {
-            qi.nearestCb = qi.findNearest(qi.contentBlocks, { x: e.clientX, y: e.clientY }, selectors.cb.selector);
+        if ($quickE.config.innerBlocks.enable && $quickE.contentBlocks) {
+            $quickE.nearestCb = $quickE.findNearest($quickE.contentBlocks, { x: e.clientX, y: e.clientY }, $quickE.selectors.cb.selector);
         }
 
-        if (qi.enableMod && qi.modules) {
-            qi.nearestMod = qi.findNearest(qi.modules, { x: e.clientX, y: e.clientY }, selectors.mod.selector);
+        if ($quickE.config.modules.enable && $quickE.modules) {
+            $quickE.nearestMod = $quickE.findNearest($quickE.modules, { x: e.clientX, y: e.clientY }, $quickE.selectors.mod.selector);
         }
 
-        qi.modActions.toggleClass("sc-invisible", qi.nearestMod === null);
-        qi.cbActions.toggleClass("sc-invisible", qi.nearestCb === null);
+        $quickE.modActions.toggleClass("sc-invisible", $quickE.nearestMod === null);
+        $quickE.cbActions.toggleClass("sc-invisible", $quickE.nearestCb === null);
 
         // if previously a parent-pane was highlighted, un-highlight it now
-        if (qi.main.parentContainer)
-            $(qi.main.parentContainer).removeClass("sc-cb-highlight-for-insert");
+        if ($quickE.main.parentContainer)
+            $($quickE.main.parentContainer).removeClass(highlightClass);
 
-        if (qi.nearestCb !== null || qi.nearestMod !== null) {
-            var alignTo = qi.nearestCb || qi.nearestMod;
+        if ($quickE.nearestCb !== null || $quickE.nearestMod !== null) {
+            var alignTo = $quickE.nearestCb || $quickE.nearestMod;
 
             // find parent pane to highlight
-            var parentPane = $(alignTo.element).closest(selectors.mod.listSelector);
-            var parentCbList = $(alignTo.element).closest(selectors.cb.listSelector);
+            var parentPane = $(alignTo.element).closest($quickE.selectors.mod.listSelector);
+            var parentCbList = $(alignTo.element).closest($quickE.selectors.cb.listSelector);
             var parentContainer = (parentCbList.length ? parentCbList : parentPane)[0];
 
+            // put part of the pane-name into the button-labels
             if (parentPane.length > 0) {
                 var paneName = parentPane.attr("id") || "";
                 if (paneName.length > 4) paneName = paneName.substr(4);
-                qi.modActions.filter("[titleTemplate]").each(function() {
+                $quickE.modActions.filter("[titleTemplate]").each(function () {
                     var t = $(this);
                     t.attr("title", t.attr("titleTemplate").replace("{0}", paneName));
                 });
             }
 
-            qi.positionAndAlign(qi.main, alignTo, true);
+            $quickE.positionAndAlign($quickE.main, alignTo, true);
 
             // Keep current block as current on menu
-            qi.main.actionsForCb = qi.nearestCb ? qi.nearestCb.element : null;
-            qi.main.actionsForModule = qi.nearestMod ? qi.nearestMod.element : null;
-            qi.main.parentContainer = parentContainer;
-            $(parentContainer).addClass("sc-cb-highlight-for-insert");
+            $quickE.main.actionsForCb = $quickE.nearestCb ? $quickE.nearestCb.element : null;
+            $quickE.main.actionsForModule = $quickE.nearestMod ? $quickE.nearestMod.element : null;
+            $quickE.main.parentContainer = parentContainer;
+            $(parentContainer).addClass(highlightClass);
         } else {
-            qi.main.hide();
+            $quickE.main.hide();
         }
     };
 
     // Return the nearest element to the mouse cursor from elements (jQuery elements)
-    qi.findNearest = function (elements, position) {
+    $quickE.findNearest = function (elements, position) {
         var maxDistance = 30; // Defines the maximal distance of the cursor when the menu is displayed
 
         var nearestItem = null;
         var nearestDistance = maxDistance;
 
-        var posX = position.x + qi.win.scrollLeft();
-        var posY = position.y + qi.win.scrollTop();
+        var posX = position.x + $quickE.win.scrollLeft();
+        var posY = position.y + $quickE.win.scrollTop();
 
         // Find nearest element
         elements.each(function () {
-            var e = qi.getCoordinates($(this));
+            var e = $quickE.getCoordinates($(this));
 
             // First check x coordinates - must be within container
             if (posX < e.x || posX > e.x + e.w)
@@ -1414,7 +1555,7 @@ $(function () {
         return nearestItem;
     };
 
-    qi.getCoordinates = function (element) {
+    $quickE.getCoordinates = function (element) {
         return {
             element: element,
             x: element.offset().left,
@@ -1422,9 +1563,39 @@ $(function () {
             y: element.offset().top,
             // For content-block ITEMS, the menu must be visible at the end
             // For content-block-LISTS, the menu must be at top
-            yh: element.offset().top + (element.is(selectors.eitherCbOrMod) ? element.height() : 0)
+            yh: element.offset().top + (element.is($quickE.selectors.eitherCbOrMod) ? element.height() : 0)
         };
     };
+});
+$(function () {
+    $quickE.enable = function () {
+        $quickE.prepareToolbarInDom();
+
+        // start watching for mouse-move
+        var refreshTimeout = null;
+        $("body").on("mousemove", function(e) {
+            if (refreshTimeout === null)
+                refreshTimeout = window.setTimeout(function() {
+                    requestAnimationFrame(function() {
+                        $quickE.refresh(e);
+                        refreshTimeout = null;
+                    });
+                }, 20);
+        });
+    };
+
+    $quickE.start = function() {
+        try {
+            $quickE._readPageConfig();
+            if ($quickE.config.enable)
+                $quickE.enable();
+        } catch (e) {
+            console.error("couldn't start quick-edit", e);
+        }
+    };
+
+    // run on-load
+    $($quickE.start);
 });
 /*
  * Author: Alex Gibson
@@ -1736,7 +1907,7 @@ $(document).ready(function () {
                     };
                 if (toolbars.length === 0) // no toolbars found, must help a bit because otherwise editing is hard
                 {
-                    console.warn("didn't find a toolbar, so will create an automatic one to help for the block", parentTag);
+                    console.log("didn't find a toolbar, so will create an automatic one to help for the block", parentTag);
                     var outsideCb = !parentTag.hasClass('sc-content-block');
                     var contentTag = outsideCb ? parentTag.find("div.sc-content-block") : parentTag;
                     contentTag.addClass("sc-element");
