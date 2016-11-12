@@ -220,10 +220,13 @@
                 disabled: editContext.appSettingsId === null,
                 title: "Toolbar.AppSettings" + (editContext.appSettingsId === null ? "Disabled" : ""),
                 showCondition: function(settings, modConfig) {
-                    return enableTools && !isContent && editContext.appSettingsId !== null; // only if settings exist, or are 0 (to be created)
+                    return enableTools && !isContent /*&& editContext.appSettingsId !== null*/; // only if settings exist, or are 0 (to be created)
                 },
                 configureCommand: function (cmd) {
                     cmd.items = [{ EntityId: editContext.appSettingsId }];
+                },
+                dynamicClasses: function (settings) {
+                    return editContext.appSettingsId !== null ? "" : "empty";  // if it doesn't have a query, make it less strong
                 }
             }),
 
@@ -232,10 +235,13 @@
                 disabled: editContext.appResourcesId === null,
                 title: "Toolbar.AppResources" + (editContext.appResourcesId === null ? "Disabled" : ""),
                 showCondition: function (settings, modConfig) {
-                    return enableTools && !isContent && editContext.appResourcesId !== null; // only if resources exist or are 0 (to be created)...
+                    return enableTools && !isContent /*&& editContext.appResourcesId !== null*/; // only if resources exist or are 0 (to be created)...
                 },
                 configureCommand: function (cmd) {
                     cmd.items = [{ EntityId: editContext.appResourcesId }];
+                },
+                dynamicClasses: function (settings) {
+                    return editContext.appResourcesId !== null ? "" : "empty";  // if it doesn't have a query, make it less strong
                 }
             }),
             //#endregion

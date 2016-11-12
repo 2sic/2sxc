@@ -1150,6 +1150,10 @@ angular.module("SxcServices")
                 if (found)
                     return (found) ? JSON.parse(found) : null;
         }])
+        /*@ngInject*/
+        .factory("beta", ["$2sxc", function ($2sxc) {
+            return $2sxc.urlParams.get("beta");
+        }])
     ;
 
 

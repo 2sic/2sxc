@@ -80,15 +80,15 @@ namespace ToSic.SexyContent.WebApi.View
                 {EntityContentBlock.CbPropertyShowChooser, true},
             };
 
-            var entity = CreateItemAndAddToList(parentId, field, sortOrder, contentTypeName, values, guid);
+            var entityId = CreateItemAndAddToList(parentId, field, sortOrder, contentTypeName, values, guid);
 
             // now return a rendered instance
-            var newContentBlock = new EntityContentBlock(SxcContext.ContentBlock, entity.EntityID);
+            var newContentBlock = new EntityContentBlock(SxcContext.ContentBlock, entityId);
             return newContentBlock.SxcInstance.Render().ToString();
 
         }
 
-        private Entity CreateItemAndAddToList(int parentId, string field, int sortOrder, string contentTypeName,
+        private int CreateItemAndAddToList(int parentId, string field, int sortOrder, string contentTypeName,
             Dictionary<string, object> values, Guid? newGuid)
         {
             var cgApp = SxcContext.App;
@@ -101,7 +101,24 @@ namespace ToSic.SexyContent.WebApi.View
                 DataSource.GetCache(cgApp.ZoneId, cgApp.AppId)
                     .GetContentType(contentTypeName);
 
-            var entity = eavDc.Entities.AddEntity(contentType.AttributeSetId, values, null, null, entityGuid: newGuid);
+            int entityId;
+            // check that it doesn't exist yet...
+            if (newGuid.HasValue && eavDc.Entities.EntityExists(newGuid.Value))
+            {
+                // check if it's deleted - if yes, resurrect
+                var existingEnt = eavDc.Entities.GetEntitiesByGuid(newGuid.Value).First();
+                if (existingEnt.ChangeLogDeleted != null)
+                    existingEnt.ChangeLogDeleted = null;
+
+                entityId = existingEnt.EntityID;
+                // todo: check if it exists on this list, or elsewhere. if it's elsewhere, then map it
+                // throw new Exception("can't create this - already exists");
+            }
+            else
+            {
+                var entity = eavDc.Entities.AddEntity(contentType.AttributeSetId, values, null, null, entityGuid: newGuid);
+                entityId = entity.EntityID;
+            }
 
             #endregion
 
@@ -112,15 +129,18 @@ namespace ToSic.SexyContent.WebApi.View
             var blockList = ((Eav.Data.EntityRelationship) cbEnt.GetBestValue(field)).ToList() ?? new List<IEntity>();
 
             var intList = blockList.Select(b => b.EntityId).ToList();
-            if (sortOrder > intList.Count) sortOrder = intList.Count;
-            intList.Insert(sortOrder, entity.EntityID);
-
+            // add only if it's not already in the list (could happen if http requests are run again)
+            if (!intList.Contains(entityId))
+            {
+                if (sortOrder > intList.Count) sortOrder = intList.Count;
+                intList.Insert(sortOrder, entityId);
+            }
             var updateDic = new Dictionary<string, int[]> {{field, intList.ToArray()}};
             eavDc.Entities.UpdateEntity(cbEnt.EntityGuid, updateDic);
 
             #endregion
 
-            return entity;
+            return entityId;
         }
 
         //public bool MoveContentBlock(int parentId, string field, int indexFrom, int indexTo)
