@@ -1054,12 +1054,10 @@ if($ && $.fn && $.fn.dnnModuleDragDrop)
 $(function () {
     "use strict";
 
-    // the Wonderful In Page Editing object
+    // the quick-edit object
     var $quickE = window.$quickE = {};
 
-
-    // selectors used all over the in-page-editing
-    // var enableModuleMove = false; // not implemented yet
+    // selectors used all over the in-page-editing, centralized to ensure consistency
     $quickE.selectors = {
         cb: {
             id: "cb",
@@ -1089,7 +1087,7 @@ $(function () {
     };
 
     // the quick-insert object
-    $2sxc._lib.extend($quickE, {
+    $.extend($quickE, {
         body: $("body"),
         win: $(window),
         main: $("<div class='sc-content-block-menu sc-content-block-quick-insert sc-i18n'></div>"),
@@ -1098,8 +1096,13 @@ $(function () {
             + $quickE.btn("select", "ok", "Select", true)
             + $quickE.btn("paste", "paste", "Paste", true, true),
         selected: $("<div class='sc-content-block-menu sc-content-block-selected-menu sc-i18n'></div>")
-            .append(/*$quickE.btn("cancel", "ok", "Cancel") + */ $quickE.btn("delete", "trash-empty", "Delete")),
+            .append(
+                $quickE.btn("delete", "trash-empty", "Delete"),
+                $quickE.btn("sendToPane", "export", "Move", null, null, "sc-cb-mod-only"),
+                "<div id='paneList'></div>"
+            ),
         contentBlocks: null,
+        cachedPanes: null,
         modules: null,
         nearestCb: null, 
         nearestMod: null,
@@ -1107,9 +1110,11 @@ $(function () {
     });
 
     // add stuff which dependes on other values to create
-    $2sxc._lib.extend($quickE, {
+    $.extend($quickE, {
         cbActions: $($quickE.template),
-        modActions: $($quickE.template.replace(/QuickInsertMenu.AddBlock/g, "QuickInsertMenu.AddModule")).attr("data-context", "module").addClass("sc-content-block-menu-module")
+        modActions: $($quickE.template.replace(/QuickInsertMenu.AddBlock/g, "QuickInsertMenu.AddModule"))
+            .attr("data-context", "module")
+            .addClass("sc-content-block-menu-module")
     });
 
     // build the toolbar (hidden, but ready to show)
@@ -1124,10 +1129,14 @@ $(function () {
         // module actions
         if ($quickE.config.modules.enable)
             $quickE.main.append($quickE.modActions);
+
+        // Cache the panes (because panes can't change dynamically)
+        if (!$quickE.cachedPanes)
+            $quickE.cachedPanes = $($quickE.selectors.mod.listSelector);
     };
 
 });
-// add a clipboard to the WInPE
+// add a clipboard to the quick edit
 $(function () {
 
     // perform copy and paste commands - needs the clipboard
@@ -1135,23 +1144,32 @@ $(function () {
         var newClip = $quickE.clipboard.createSpecs(type, list, index);
 
         // action!
-        if (cbAction === "select") {
-            $quickE.clipboard.mark(newClip);
-        } else if (cbAction === "paste") {
-            var from = $quickE.clipboard.data.index, to = newClip.index;
-            // check that we only move block-to-block or module to module
-            if ($quickE.clipboard.data.type !== newClip.type)
-                return alert("can't move module-to-block; move only works from module-to-module or block-to-block");
+        switch (cbAction) {
+            case "select":
+                $quickE.clipboard.mark(newClip);
+                break;
+            case "paste":
+                var from = $quickE.clipboard.data.index, to = newClip.index;
+                // check that we only move block-to-block or module to module
+                if ($quickE.clipboard.data.type !== newClip.type)
+                    return alert("can't move module-to-block; move only works from module-to-module or block-to-block");
 
-            if (isNaN(from) || isNaN(to) || from === to || from + 1 === to) // this moves it to the same spot, so ignore
-                return $quickE.clipboard.clear(); // don't do anything
+                if (isNaN(from) || isNaN(to) || from === to) // || from + 1 === to) // this moves it to the same spot, so ignore
+                    return $quickE.clipboard.clear(); // don't do anything
 
-            if (type === $quickE.selectors.cb.type) {
-                $2sxc(list).manage._getCbManipulator().move(newClip.parent, newClip.field, from, to);
-            } else {
-                $quickE.cmds.mod.move($quickE.clipboard.data, newClip, from, to);
-            }
-            $quickE.clipboard.clear();
+                // cb-numbering is a bit different, because the selector is at the bottom
+                // only there we should also skip on +1;
+                if(newClip.type === $quickE.selectors.cb.id && from + 1 === to)
+                    return $quickE.clipboard.clear(); // don't do anything
+
+                if (type === $quickE.selectors.cb.type) {
+                    $2sxc(list).manage._getCbManipulator().move(newClip.parent, newClip.field, from, to);
+                } else {
+                    $quickE.cmds.mod.move($quickE.clipboard.data, newClip, from, to);
+                }
+                $quickE.clipboard.clear();
+                break;
+            default:
         }
         return null;
     };
@@ -1172,7 +1190,7 @@ $(function () {
             if (cb.prev().is("iframe"))
                 cb.prev().addClass($quickE.selectors.selected);
             $quickE.setSecondaryActionsState(true);
-            $quickE.selected.toggle(cb);
+            $quickE.selected.toggle(cb, $quickE.clipboard.data.type);
         },
         clear: function () {
             $("." + $quickE.selectors.selected).removeClass($quickE.selectors.selected);
@@ -1208,20 +1226,20 @@ $(function () {
         $quickE.selected.target = target;
     };
 
-    // give all actions
+    // bind clipboard actions 
     $("a", $quickE.selected).click(function () {
         var action = $(this).data("action");
         var clip = $quickE.clipboard.data;
         switch (action) {
-            case "cancel":
-                return $quickE.clipboard.clear();
             case "delete":
-                $quickE.cmds[clip.type].delete(clip);
+                return $quickE.cmds[clip.type].delete(clip);
+            case "sendToPane":
+                return $quickE.cmds.mod.sendToPane(clip);
         }
     });
 
 });
-// extend the wonderful in-page editing with the core commands
+// extend the quick edit with the core commands
 $(function () {
     $quickE.cmds = {
         cb: {
@@ -1236,21 +1254,29 @@ $(function () {
             "delete": function (clip) {
                 if (!confirm("are you sure?"))
                     return;
-                var modId = getModuleId(clip.item.className);
+                var modId = $quickE.modManage.getModuleId(clip.item.className);
                 $quickE.modManage.delete(modId);
             },
+            // todo: unsure if this is a good place for this bit of code...
             move: function (oldClip, newClip, from, to) {
-                var modId = getModuleId(oldClip.item.className);
+                var modId = $quickE.modManage.getModuleId(oldClip.item.className);
                 var pane = $quickE.modManage.getPaneName(newClip.list);
                 $quickE.modManage.move(modId, pane, to);
+            },
+            sendToPane: function() {
+                var pane = $quickE.main.actionsForModule.closest($quickE.selectors.mod.listSelector);
+
+                // show the pane-options
+                var pl = $quickE.selected.find("#paneList");
+                if (!pl.is(":empty"))
+                    pl.empty();
+                pl.append($quickE.modManage.getMoveButtons($quickE.modManage.getPaneName(pane)));
+
             }
         }
     };
 
-    function getModuleId(classes) {
-        var result = classes.match(/DnnModule-([0-9]+)(?:\W|$)/);
-        return (result && result.length === 2) ? result[1] : null;
-    }
+
 
 });
 $(function () {
@@ -1298,16 +1324,16 @@ $(function () {
 });
 // content-block specific stuff like actions
 $(function () {
-    $quickE.cbActions.click(function () {
-        var list = $quickE.main.actionsForCb.closest($quickE.selectors.cb.listSelector);
-        var listItems = list.find($quickE.selectors.cb.selector);
-        var actionConfig = JSON.parse(list.attr($quickE.selectors.cb.context));
-        var index = 0;
+
+    function onCbButtonClick () {
+        var list = $quickE.main.actionsForCb.closest($quickE.selectors.cb.listSelector),
+            listItems = list.find($quickE.selectors.cb.selector),
+            actionConfig = JSON.parse(list.attr($quickE.selectors.cb.context)),
+            index = 0,
+            newGuid = actionConfig.guid || null;
 
         if ($quickE.main.actionsForCb.hasClass($quickE.selectors.cb.class))
             index = listItems.index($quickE.main.actionsForCb[0]) + 1;
-
-        var newGuid = actionConfig.guid || null;
 
         // check cut/paste
         var cbAction = $(this).data("action");
@@ -1318,8 +1344,9 @@ $(function () {
             var appOrContent = $(this).data("type");
             return $quickE.cmds.cb.create(actionConfig.parent, actionConfig.field, index, appOrContent, list, newGuid);
         } 
-    });
+    }
 
+    $quickE.cbActions.click(onCbButtonClick);
 });
 // module specific stuff
 $(function () {
@@ -1329,10 +1356,21 @@ $(function () {
         "delete": deleteMod,
         create: createModWithTypeName,
         move: moveMod,
-        getPaneName: function(pane) {
-            return pane.attr("id").replace("dnn_", "");
-        }
+        getPaneName: getPaneName,
+        getModuleId: getModuleId,
+        getMoveButtons: generatePaneMoveButtons
     };
+
+
+    function getPaneName(pane) {
+        return $(pane).attr("id").replace("dnn_", "");
+    }
+
+
+    function getModuleId(classes) {
+        var result = classes.match(/DnnModule-([0-9]+)(?:\W|$)/);
+        return (result && result.length === 2) ? result[1] : null;
+    }
 
     function xhrError (xhr, optionalMessage) {
         alert(optionalMessage || "Error while talking to server.");
@@ -1428,11 +1466,35 @@ $(function () {
         });
     }
 
+    function generatePaneMoveButtons(current) {
+        var pns = $quickE.cachedPanes;
+        // generate list of panes as links
+        var targets = $("<div>");
+        for (var p = 0; p < pns.length; p++) {
+            var pName = $quickE.modManage.getPaneName(pns[p]),
+                selected = (current === pName) ? " selected " : "";
+            if (!selected)
+                targets.append("<a data='" + pName + "'>" + pName + "</a>");
+        }
+
+        // attach click event...
+        targets.find("a").click(function (d) {
+            var link = $(this),
+                clip = $quickE.clipboard.data,
+                modId = $quickE.modManage.getModuleId(clip.item.className),
+                newPane = link.attr("data");
+
+            $quickE.modManage.move(modId, newPane, 0);
+        });
+
+        return targets;
+    }
+
 });
 // module specific stuff
 $(function () {
-    "use strict";
-    $quickE.modActions.click(function () {
+
+    function onModuleButtonClick() {
         var type = $(this).data("type"),
             dnnMod = $quickE.main.actionsForModule,
             pane = dnnMod.closest($quickE.selectors.mod.listSelector),
@@ -1446,8 +1508,10 @@ $(function () {
             return $quickE.copyPasteInPage(cbAction, pane, index, $quickE.selectors.mod.id);
 
         return $quickE.modManage.create($quickE.modManage.getPaneName(pane), index, type);
-    });
+    }
 
+    // bind module actions click
+    $quickE.modActions.click(onModuleButtonClick);
 });
 // everything related to positioning the quick-edit in-page editing
 $(function () {
@@ -1468,9 +1532,9 @@ $(function () {
     $quickE.refreshDomObjects = function () {
         $quickE.bodyOffset = $quickE.getBodyPosition(); // must update this, as sometimes after finishing page load the position changes, like when dnn adds the toolbar
 
-        // Cache the panes (because panes can't change dynamically)
-        if (!$quickE.cachedPanes)
-            $quickE.cachedPanes = $($quickE.selectors.mod.listSelector);
+        //// Cache the panes (because panes can't change dynamically)
+        //if (!$quickE.cachedPanes)
+        //    $quickE.cachedPanes = $($quickE.selectors.mod.listSelector);
 
         if ($quickE.config.innerBlocks.enable) {
             // get all content-block lists which are empty, or which allow multiple child-items
@@ -1592,6 +1656,7 @@ $(function () {
             yh: element.offset().top + (element.is($quickE.selectors.eitherCbOrMod) ? element.height() : 0)
         };
     };
+
 });
 $(function () {
     $quickE.enable = function () {
@@ -1933,13 +1998,13 @@ $(document).ready(function () {
                     };
                 if (toolbars.length === 0) // no toolbars found, must help a bit because otherwise editing is hard
                 {
-                    console.log("didn't find a toolbar, so will create an automatic one to help for the block", parentTag);
+                    //console.log("didn't find a toolbar, so will create an automatic one to help for the block", parentTag);
                     var outsideCb = !parentTag.hasClass('sc-content-block');
                     var contentTag = outsideCb ? parentTag.find("div.sc-content-block") : parentTag;
                     contentTag.addClass("sc-element");
                     // todo: make the empty-toolbar-default-settings used below as well...
                     var  settingsString = JSON.stringify(settingsForEmptyToolbar);
-                    contentTag.prepend($("<ul class='sc-menu' toolbar='' xsettings='" + settingsString + "'/>"));
+                    contentTag.prepend($("<ul class='sc-menu' toolbar='' settings='" + settingsString + "'/>"));
                     toolbars = getToolbars();
                 }
 

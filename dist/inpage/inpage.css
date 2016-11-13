@@ -97,9 +97,9 @@ body.sc-tb-show-all .sc-element .sc-menu { display: initial !important; }
 /* only use the WOFF, as all modern browsers support that */
 @font-face {
   font-family: 'inpage-icons';
-  src: url('../lib/fonts/inpage-icons.woff?4236189') format('woff'),
-       url('../lib/fonts/inpage-icons.eot?4236189#iefix') format('embedded-opentype'),
-       url('../lib/fonts/inpage-icons.ttf?4236189') format('truetype');
+  src: url('../lib/fonts/inpage-icons.woff?08.07.00') format('woff'),
+       url('../lib/fonts/inpage-icons.eot?08.07.00#iefix') format('embedded-opentype'),
+       url('../lib/fonts/inpage-icons.ttf?08.07.00') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
@@ -171,7 +171,9 @@ body.sc-tb-show-all .sc-element .sc-menu { display: initial !important; }
 .icon-sxc-scissors:before { content: '\e81b'; } /* '' */
 .icon-sxc-paste:before { content: '\e81c'; } /* '' */
 .icon-sxc-trash-empty:before { content: '\e81d'; } /* '' */
+.icon-sxc-export:before { content: '\e81e'; } /* '' */
 .icon-sxc-cart-arrow-down:before { content: '\e81f'; } /* '' */
+.icon-sxc-share:before { content: '\e820'; } /* '' */
 .icon-sxc-bomb:before { content: '\f1e2'; } /* '' */
 /****** Content block menu */
 
@@ -216,11 +218,13 @@ body.sc-tb-show-all .sc-element .sc-menu { display: initial !important; }
 
 
 
+/* select dropdowns */
+.sc-content-block-menu select { text-indent: 0 !important; }
+.sc-content-block-menu #paneList a { text-indent: 0 !important;width: initial;}
 
 
 
-
-/* icons */
+/*#region icons */
 .sc-content-block-menu-addcontent {
     background: url(../../icon.png);
     background-size: 32px 32px;
@@ -240,7 +244,7 @@ body.sc-tb-show-all .sc-element .sc-menu { display: initial !important; }
     background: url(../../icon-app-black.png);
     background-size: 32px 32px;
 }
-
+/*#endregion */
 
 
 a.sc-content-block-menu-btn {
@@ -281,14 +285,10 @@ div.sc-cb-highlight-for-insert { background-color: rgba(128, 128, 128, 0.1); }
 /* this is needed to disable the paste button till it can be used */
 .sc-unavailable { display: none !important; }
 
-/* this rule disables copy/paste on module, as it's not supported (only on blocks) */
-/* todo 2016-11-13 should already work, but postpone to next release 
-a.sc-content-block-menu-module.sc-cb-action { display: none !important; }*/
-
 .sc-content-block-selected-menu { display: none; }
 
 a.sc-content-block-selected-menu.sc-content-block-menu-btn {
-    -webkit-filter: grayscale(0%);
-    filter: grayscale(0%);
+    -webkit-filter: grayscale(0);
+    filter: grayscale(0);
 }
 

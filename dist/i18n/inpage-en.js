@@ -43,6 +43,7 @@
 		"Paste": "paste",
 		"Delete": "delete",
 		"More": "more",
-		"ConfirmDelete": "delete?"
+		"ConfirmDelete": "delete?",
+		"Move": "move"
 	}
 }
