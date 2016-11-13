@@ -1018,58 +1018,6 @@ if($ && $.fn && $.fn.dnnModuleDragDrop)
             _getCbManipulator: function() {
                 return $2sxc._contentBlock.manipulator(sxc);
             },
-            //#region ContentBlock commands: create, move, delete --> should probably move out of the manage-class
-
-            //_createContentBlock: function (parentId, fieldName, index, appName, container) {
-            //    // the wrapper, into which this will be placed and the list of pre-existing blocks
-            //    var listTag = container;
-            //    if (listTag.length === 0) return alert("can't add content-block as we couldn't find the list");
-            //    var cblockList = listTag.find("div.sc-content-block");
-            //    if (index > cblockList.length)
-            //        index = cblockList.length; // make sure index is never greater than the amount of items
-            //    return sxc.webApi.get({
-            //        url: "view/module/generatecontentblock",
-            //        params: { parentId: parentId, field: fieldName, sortOrder: index, app: appName }
-            //    }).then(function (result) {
-            //        var newTag = $(result); // prepare tag for inserting
-
-            //        // should I add it to a specific position...
-            //        if (cblockList.length > 0 && index > 0) 
-            //            $(cblockList[cblockList.length > index - 1 ? index - 1: cblockList.length - 1])
-            //                .after(newTag);
-            //        else    //...or just at the beginning?
-            //            listTag.prepend(newTag);
-                
-
-            //        var sxcNew = $2sxc(newTag);
-            //        sxcNew.manage._toolbar._processToolbars(newTag);
-
-            //    });
-            //},
-
-            //_moveContentBlock: function(parentId, field, indexFrom, indexTo) {
-            //    return sxc.webApi.get({
-            //        url: "view/module/MoveItemInList",
-            //        params: { parentId: parentId, field: field, indexFrom: indexFrom, indexTo: indexTo }
-            //    }).then(function() {
-            //        console.log("done moving!");
-            //        window.location.reload();
-            //    });
-            //},
-
-            // delete a content-block inside a list of content-blocks
-            //_deleteContentBlock: function (parentId, field, index) {
-            //    if (confirm($2sxc.translate("QuickInsertMenu.ConfirmDelete")))
-            //        return sxc.webApi.get({
-            //            url: "view/module/RemoveItemInList",
-            //            params: { parentId: parentId, field: field, index: index }
-            //        }).then(function() {
-            //            console.log("done deleting!");
-            //            window.location.reload();
-            //        });
-            //    return null;
-            //},
-            //#endregion
 
             //#region deprecated properties - these all should have been undocumented/ private till now
             
@@ -1154,10 +1102,11 @@ $(function () {
         contentBlocks: null,
         modules: null,
         nearestCb: null, 
-        nearestMod: null
+        nearestMod: null,
+        modManage: null // will be populated later in the module section
     });
 
-    // add stuff which must be added in a second run
+    // add stuff which dependes on other values to create
     $2sxc._lib.extend($quickE, {
         cbActions: $($quickE.template),
         modActions: $($quickE.template.replace(/QuickInsertMenu.AddBlock/g, "QuickInsertMenu.AddModule")).attr("data-context", "module").addClass("sc-content-block-menu-module")
@@ -1183,19 +1132,28 @@ $(function () {
 
     // perform copy and paste commands - needs the clipboard
     $quickE.copyPasteInPage = function (cbAction, list, index, type) {
-        var clip = $quickE.clipboard.createSpecs(type, list, index);
+        var newClip = $quickE.clipboard.createSpecs(type, list, index);
 
         // action!
         if (cbAction === "select") {
-            $quickE.clipboard.mark(clip);
+            $quickE.clipboard.mark(newClip);
         } else if (cbAction === "paste") {
-            var from = $quickE.clipboard.data.index, to = clip.index;
+            var from = $quickE.clipboard.data.index, to = newClip.index;
+            // check that we only move block-to-block or module to module
+            if ($quickE.clipboard.data.type !== newClip.type)
+                return alert("can't move module-to-block; move only works from module-to-module or block-to-block");
+
             if (isNaN(from) || isNaN(to) || from === to || from + 1 === to) // this moves it to the same spot, so ignore
                 return $quickE.clipboard.clear(); // don't do anything
 
-            $2sxc(list).manage._getCbManipulator().move/*._moveContentBlock*/(clip.parent, clip.field, from, to);
+            if (type === $quickE.selectors.cb.type) {
+                $2sxc(list).manage._getCbManipulator().move(newClip.parent, newClip.field, from, to);
+            } else {
+                $quickE.cmds.mod.move($quickE.clipboard.data, newClip, from, to);
+            }
             $quickE.clipboard.clear();
         }
+        return null;
     };
 
     // clipboard object - remembers what module (or content-block) was previously copied / needs to be pasted
@@ -1222,6 +1180,7 @@ $(function () {
             $quickE.setSecondaryActionsState(false);
             $quickE.selected.toggle(false);
         },
+
         createSpecs: function (type, list, index) {
             var listItems = list.find($quickE.selectors[type].selector);
             if (index >= listItems.length) index = listItems.length - 1; // sometimes the index is 1 larger than the length, then select last
@@ -1267,26 +1226,32 @@ $(function () {
     $quickE.cmds = {
         cb: {
             "delete": function (clip) {
-                return $2sxc(clip.list).manage._getCbManipulator().delete /*_deleteContentBlock*/(clip.parent, clip.field, clip.index);
+                return $2sxc(clip.list).manage._getCbManipulator().delete(clip.parent, clip.field, clip.index);
             },
             "create": function(parent, field, index, appOrContent, list, newGuid) {
-                return $2sxc(list).manage._getCbManipulator().create/*_createContentBlock*/(parent, field, index, appOrContent, list, newGuid);
+                return $2sxc(list).manage._getCbManipulator().create(parent, field, index, appOrContent, list, newGuid);
             }
         },
         mod: {
             "delete": function (clip) {
-                alert("module delete not implemented yet");
-                // todo: get tabid and mod id, then call delete
-                //if (confirm("delete?")) { // todo i18n
-                //    var apiCmd = { url: "dnn/module/delete", params: { tabId: 0, modId: 17 } };
-                //    var sxc = $2sxc(0).webApi.get(apiCmd)
-                //}
+                if (!confirm("are you sure?"))
+                    return;
+                var modId = getModuleId(clip.item.className);
+                $quickE.modManage.delete(modId);
             },
-            move: function (clip, etc) {
-                // todo
+            move: function (oldClip, newClip, from, to) {
+                var modId = getModuleId(oldClip.item.className);
+                var pane = $quickE.modManage.getPaneName(newClip.list);
+                $quickE.modManage.move(modId, pane, to);
             }
         }
     };
+
+    function getModuleId(classes) {
+        var result = classes.match(/DnnModule-([0-9]+)(?:\W|$)/);
+        return (result && result.length === 2) ? result[1] : null;
+    }
+
 });
 $(function () {
 
@@ -1346,45 +1311,38 @@ $(function () {
 
         // check cut/paste
         var cbAction = $(this).data("action");
-        if (!cbAction) {
-            var appOrContent = $(this).data("type");
-            return $quickE.cmds.cb.create(actionConfig.parent, actionConfig.field, index, appOrContent, list, newGuid);
-        } else
+        if (cbAction)
             // this is a cut/paste action
             return $quickE.copyPasteInPage(cbAction, list, index, $quickE.selectors.cb.id);
+        else {
+            var appOrContent = $(this).data("type");
+            return $quickE.cmds.cb.create(actionConfig.parent, actionConfig.field, index, appOrContent, list, newGuid);
+        } 
     });
 
 });
 // module specific stuff
 $(function () {
+    "use strict";
 
-    $quickE.modActions.click(function () {
-        var type = $(this).data("type");
-        var pane = $quickE.main.actionsForModule.closest($quickE.selectors.mod.listSelector);
-        var paneName = pane.attr("id").replace("dnn_", "");
+    $quickE.modManage = {
+        "delete": deleteMod,
+        create: createModWithTypeName,
+        move: moveMod,
+        getPaneName: function(pane) {
+            return pane.attr("id").replace("dnn_", "");
+        }
+    };
 
-        var index = 0;
-        if ($quickE.main.actionsForModule.hasClass("DnnModule"))
-            index = pane.find(".DnnModule").index($quickE.main.actionsForModule[0]) + 1;
+    function xhrError (xhr, optionalMessage) {
+        alert(optionalMessage || "Error while talking to server.");
+        console.log(xhr);
+    }
 
-        var cbAction = $(this).data("action");
-        if (cbAction)
-            return $quickE.copyPasteInPage(cbAction, pane, index, $quickE.selectors.mod.id);
-
-        // todo: try to use $2sxc(...).webApi instead of custom re-assembling these common build-up things
-        // how: create a object containing the url, data, then just use the sxc.webApi(yourobject)
-        var service = $.dnnSF();
-        var serviceUrl = service.getServiceRoot("internalservices") + "controlbar/";
-
-        var xhrError = function (xhr) {
-            alert("Error while adding module.");
-            console.log(xhr);
-        };
-        $.ajax({
-            url: serviceUrl + "GetPortalDesktopModules",
-            type: "GET",
+    // service calls we'll need
+    function createModWithTypeName(paneName, index, type) {
+        return sendDnnAjax("controlbar/GetPortalDesktopModules", {
             data: "category=All&loadingStartIndex=0&loadingPageSize=100&searchTerm=",
-            beforeSend: service.setModuleHeaders,
             success: function (desktopModules) {
                 var moduleToFind = type === "Default" ? " Content" : " App";
                 var module = null;
@@ -1394,42 +1352,104 @@ $(function () {
                         module = e;
                 });
 
-                if (!module)
-                    return alert(moduleToFind + " module not found.");
+                return (!module)
+                    ? alert(moduleToFind + " module not found.")
+                    : createMod(paneName, index, module.ModuleID);
+            }
+        });
+    }
 
-                var postData = {
-                    Module: module.ModuleID,
-                    Page: "",
-                    Pane: paneName,
-                    Position: -1,
-                    Sort: index,
-                    Visibility: 0,
-                    AddExistingModule: false,
-                    CopyModule: false
-                };
+    function moveMod(modId, pane, order) {
+        var service = $.dnnSF();
+        var tabId = service.getTabId();
+        var dataVar = {
+            TabId: tabId,
+            ModuleId: modId,
+            Pane: pane,
+            ModuleOrder: (2 * order + 4) // strange formula, copied from DNN https://github.com/dnnsoftware/Dnn.Platform/blob/fd225b8de07042837f7473cd49fba13de42a3cc0/Website/admin/Menus/ModuleActions/ModuleActions.js#L70
+        };
 
-
-
-                $.ajax({
-                    url: serviceUrl + "AddModule",
-                    type: "POST",
-                    data: postData,
-                    beforeSend: service.setModuleHeaders,
-                    success: function (d) {
-                        window.location.reload();
-                    },
-                    error: xhrError
-                });
-            },
-            error: xhrError
+        sendDnnAjax("ModuleService/MoveModule", {
+            type: "POST",
+            data: dataVar,
+            success: function () {
+                window.location.reload();
+            }
         });
 
+        //fire window resize to reposition action menus
+        $(window).resize();
+    }
+    
 
+    function deleteMod(modId) {
+        var service = $.dnnSF();
+        var tabId = service.getTabId();
+        return sendDnnAjax("2sxc/dnn/module/delete", {
+            url: $.dnnSF().getServiceRoot("2sxc") + "dnn/module/delete",
+            type: "GET",
+            data: {
+                tabId: tabId,
+                modId: modId
+            },
+            success: function(d) {
+                window.location.reload();
+            }
+        });
+    }
 
+    function sendDnnAjax(serviceName, options) {
+         var service = $.dnnSF();
+        return $.ajax($.extend( {
+            type: "GET",
+            url: service.getServiceRoot("internalservices") + serviceName,
+            beforeSend: service.setModuleHeaders,
+            error: xhrError
+        }, options));
+    }
+
+    function createMod(paneName, position, moduleId) {
+        var postData = {
+            Module: moduleId,
+            Page: "",
+            Pane: paneName,
+            Position: -1,
+            Sort: position,
+            Visibility: 0,
+            AddExistingModule: false,
+            CopyModule: false
+        };
+        return sendDnnAjax("controlbar/AddModule", {
+            type: "POST",
+            data: postData,
+            success: function (d) {
+                window.location.reload();
+            }
+        });
+    }
+
+});
+// module specific stuff
+$(function () {
+    "use strict";
+    $quickE.modActions.click(function () {
+        var type = $(this).data("type"),
+            dnnMod = $quickE.main.actionsForModule,
+            pane = dnnMod.closest($quickE.selectors.mod.listSelector),
+            index = 0;
+
+        if (dnnMod.hasClass("DnnModule"))
+            index = pane.find(".DnnModule").index(dnnMod[0]) + 1;
+
+        var cbAction = $(this).data("action");
+        if (cbAction)  // copy/paste
+            return $quickE.copyPasteInPage(cbAction, pane, index, $quickE.selectors.mod.id);
+
+        return $quickE.modManage.create($quickE.modManage.getPaneName(pane), index, type);
     });
 
 });
-// everything related to positioning the wonderful in-page editing
+// everything related to positioning the quick-edit in-page editing
 $(function () {
 
 
@@ -1469,9 +1489,9 @@ $(function () {
     // position, align and show a menu linked to another item
     $quickE.positionAndAlign = function (element, coords) {
         return element.css({
-            'left': coords.x - $quickE.bodyOffset.x,
-            'top': coords.yh - $quickE.bodyOffset.y,
-            'width': coords.element.width()
+            left: coords.x - $quickE.bodyOffset.x,
+            top: coords.yh - $quickE.bodyOffset.y,
+            width: coords.element.width()
         }).show();
     };
 

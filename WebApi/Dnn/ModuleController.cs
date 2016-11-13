@@ -4,8 +4,10 @@ using DotNetNuke.Web.Api;
 
 namespace ToSic.SexyContent.WebApi.Dnn
 {
-	[SupportedModules("2sxc,2sxc-app")]
-	public class ModuleController: DnnApiControllerWithFixes
+	// support all modules now... [SupportedModules("2sxc,2sxc-app")]
+	[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+    [AllowAnonymous]
+    public class ModuleController: DnnApiControllerWithFixes
     {
 
 		[HttpGet]

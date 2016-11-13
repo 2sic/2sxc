@@ -80,50 +80,6 @@ body.sc-tb-show-all .sc-element .sc-menu { display: initial !important; }
 }
 
 
-/****** Content block menu */
-.sc-content-block-menu { position:absolute; height: 40px; opacity:0.8; text-align:center; pointer-events:none; line-height:35px; padding:0; margin:-20px 0 0 0; z-index:999; }
-.sc-content-block-menu a {  cursor:pointer; width:32px; height:32px; margin:0 3px!important; padding:0!important; display:inline-block; text-indent:-9999px; pointer-events:auto; font-size:18px; }
-.sc-content-block-quick-insert:before, .sc-content-block-quick-insert:after { height:2px; background:#0088f4; width:60px; display:block; content:' '; position:absolute; left:50%; top:19px; }
-.sc-content-block-quick-insert:before { margin-left:-150px; }
-.sc-content-block-quick-insert:after { margin-left:90px; }
-.sc-content-block-menu-addcontent {                                 background:url(../../icon.png);  background-size: 32px 32px;    }
-.sc-content-block-menu-addcontent.sc-content-block-menu-module {    background: url(../../icon-black.png); background-size: 32px 32px; }
-.sc-content-block-menu-addapp {                                     background:url(../../icon-app.png);  background-size: 32px 32px;    }
-.sc-content-block-menu-addapp.sc-content-block-menu-module {        background: url(../../icon-app-black.png); background-size: 32px 32px;  }
-a.sc-content-block-menu-btn {
-    background: #2F9BF2;
-    border-top-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-    text-indent: 0!important;
-    color: white;
-}
-
-/* show in-text placeholders when they are still empty */
-div.sc-content-block-list.show-placeholder:empty { 
-    height: 20px; 
-    background-color: rgba(47,155,242,0.1);
-}
-
-.sc-invisible { display:none !important; }
-
-.sc-cb-action { -webkit-filter: grayscale(75%); filter: grayscale(75%); }
-
-.sc-cb-is-selected { filter: blur(5px); -webkit-filter: blur(5px);  }
-
-div.sc-content-block-list.sc-cb-highlight-for-insert {  background-color: rgba(47,155,242,0.1); }
-
-div.sc-cb-highlight-for-insert {    background-color: rgba(128,128,128,0.1);    }
-
-
-/* this is needed to disable the paste button till it can be used */
-.sc-unavailable {   display: none!important;    }
-
-/* this rule disables copy/paste on module, as it's not supported (only on blocks) */
-a.sc-content-block-menu-module.sc-cb-action {   display: none !important;   }
-
-.sc-content-block-selected-menu {   display: none;  }
-a.sc-content-block-selected-menu.sc-content-block-menu-btn {    -webkit-filter: grayscale(0%); filter: grayscale(0%);   }
-
 
 
 
@@ -217,3 +173,122 @@ a.sc-content-block-selected-menu.sc-content-block-menu-btn {    -webkit-filter: 
 .icon-sxc-trash-empty:before { content: '\e81d'; } /* '' */
 .icon-sxc-cart-arrow-down:before { content: '\e81f'; } /* '' */
 .icon-sxc-bomb:before { content: '\f1e2'; } /* '' */
+/****** Content block menu */
+
+.sc-content-block-menu {
+    height: 40px;
+    line-height: 35px;
+    margin: -20px 0 0 0;
+    opacity: 0.8;
+    padding: 0;
+    pointer-events: none;
+    position: absolute;
+    text-align: center;
+    z-index: 999;
+}
+
+.sc-content-block-menu a {
+    cursor: pointer;
+    display: inline-block;
+    font-size: 18px;
+    height: 32px;
+    margin: 0 3px !important;
+    padding: 0 !important;
+    pointer-events: auto;
+    text-indent: -9999px;
+    width: 32px;
+}
+
+.sc-content-block-quick-insert:before, .sc-content-block-quick-insert:after {
+    background: #0088f4;
+    content: ' ';
+    display: block;
+    height: 2px;
+    left: 50%;
+    position: absolute;
+    top: 19px;
+    width: 60px;
+}
+
+.sc-content-block-quick-insert:before { margin-left: -150px; }
+
+.sc-content-block-quick-insert:after { margin-left: 90px; }
+
+
+
+
+
+
+
+/* icons */
+.sc-content-block-menu-addcontent {
+    background: url(../../icon.png);
+    background-size: 32px 32px;
+}
+
+.sc-content-block-menu-addcontent.sc-content-block-menu-module {
+    background: url(../../icon-black.png);
+    background-size: 32px 32px;
+}
+
+.sc-content-block-menu-addapp {
+    background: url(../../icon-app.png);
+    background-size: 32px 32px;
+}
+
+.sc-content-block-menu-addapp.sc-content-block-menu-module {
+    background: url(../../icon-app-black.png);
+    background-size: 32px 32px;
+}
+
+
+
+a.sc-content-block-menu-btn {
+    background: #2F9BF2;
+    border-bottom-right-radius: 10px;
+    border-top-left-radius: 10px;
+    color: white;
+    text-indent: 0 !important;
+}
+
+/* show in-text placeholders when they are still empty */
+
+
+
+
+div.sc-content-block-list.show-placeholder:empty {
+    background-color: rgba(47, 155, 242, 0.1);
+    height: 20px;
+}
+
+.sc-invisible { display: none !important; }
+
+.sc-cb-action {
+    -webkit-filter: grayscale(75%);
+    filter: grayscale(75%);
+}
+
+.sc-cb-is-selected {
+    -webkit-filter: blur(5px);
+    filter: blur(5px);
+}
+
+div.sc-content-block-list.sc-cb-highlight-for-insert { background-color: rgba(47, 155, 242, 0.1); }
+
+div.sc-cb-highlight-for-insert { background-color: rgba(128, 128, 128, 0.1); }
+
+
+/* this is needed to disable the paste button till it can be used */
+.sc-unavailable { display: none !important; }
+
+/* this rule disables copy/paste on module, as it's not supported (only on blocks) */
+/* todo 2016-11-13 should already work, but postpone to next release 
+a.sc-content-block-menu-module.sc-cb-action { display: none !important; }*/
+
+.sc-content-block-selected-menu { display: none; }
+
+a.sc-content-block-selected-menu.sc-content-block-menu-btn {
+    -webkit-filter: grayscale(0%);
+    filter: grayscale(0%);
+}
+
