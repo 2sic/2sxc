@@ -20,7 +20,7 @@ namespace ToSic.SexyContent.Installer
         /// </summary>
         static InstallationController()
         {
-            UpgradeComplete = new InstallationController().IsUpgradeComplete(Settings.ModuleVersion, "- static check");
+            UpgradeComplete = new InstallationController().IsUpgradeComplete(Settings.Installation.LastVersionWithServerChanges /* Settings.ModuleVersion */, "- static check");
         }
 
         /// <summary>
@@ -141,6 +141,8 @@ namespace ToSic.SexyContent.Installer
                     case "08.05.05":
                         Helpers.ImportXmlSchemaOfVersion("08.05.05", false);
                         break;
+
+                        // warning!!! when you add a new case, make sure you upgrade the version number on Settings.Installation.LastVersionWithServerChanges!!!
                 }
                 _logger.LogStep(version, "version-list check / switch done", false);
 
