@@ -263,6 +263,10 @@ textarea.material {
     border: 1px black dashed;
 }
 .checkbox.checkbox-labeled input[type='checkbox'] { margin-left:0; }
+.uib-datepicker-popup { background-color:#FFF; }
+.icon-field-button-calendar { padding: 0 !important; text-indent:0!important; }
+.icon-field-button-calendar i { text-indent:0; }
+
 .eav-entityselect { margin-top: 1px; font-size: 20px; padding-top: 12px; }
 .eav-entityselect .btn { font-size:20px; }
 .eav-entityselect-table tr, table.eav-entityselect-table tr td { border: 0; padding-left: 0; }
