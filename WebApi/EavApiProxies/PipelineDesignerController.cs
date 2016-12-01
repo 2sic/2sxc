@@ -44,35 +44,31 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 			return _controller.GetInstalledDataSources();
 		}
 
-		/// <summary>
-		/// Save Pipeline
-		/// </summary>
-		/// <param name="data">JSON object { pipeline: pipeline, dataSources: dataSources }</param>
-		/// <param name="appId">AppId this Pipeline belogs to</param>
-		/// <param name="id">PipelineEntityId</param>
-		[HttpPost]
-		public Dictionary<string, object> SavePipeline([FromBody] dynamic data, int appId, int? id = null)
-		{
-			return _controller.SavePipeline(data, appId, id);
-		}
+	    /// <summary>
+	    /// Save Pipeline
+	    /// </summary>
+	    /// <param name="data">JSON object { pipeline: pipeline, dataSources: dataSources }</param>
+	    /// <param name="appId">AppId this Pipeline belogs to</param>
+	    /// <param name="id">PipelineEntityId</param>
+	    [HttpPost]
+	    public Dictionary<string, object> SavePipeline([FromBody] dynamic data, int appId, int? id = null)
+	        => _controller.SavePipeline(data, appId, id);
 
-		/// <summary>
-		/// Query the Result of a Pipline using Test-Parameters
-		/// </summary>
-		[HttpGet]
-		public dynamic QueryPipeline(int appId, int id)
-		{
-			return _controller.QueryPipeline(appId, id);
-		}
 
-		/// <summary>
-		/// Clone a Pipeline with all DataSources and their configurations
-		/// </summary>
-		[HttpGet]
-		public object ClonePipeline(int appId, int id)
-		{
-			return _controller.ClonePipeline(appId, id);
-		}
+	    /// <summary>
+	    /// Query the Result of a Pipline using Test-Parameters
+	    /// </summary>
+	    [HttpGet]
+	    public dynamic QueryPipeline(int appId, int id)
+	        => _controller.QueryPipeline(appId, id);
+
+	    /// <summary>
+	    /// Clone a Pipeline with all DataSources and their configurations
+	    /// </summary>
+	    [HttpGet]
+	    public object ClonePipeline(int appId, int id)
+	        => _controller.ClonePipeline(appId, id);
+	
 
 		/// <summary>
 		/// Delete a Pipeline with the Pipeline Entity, Pipeline Parts and their Configurations. Stops if the if the Pipeline Entity has relationships to other Entities or is in use in a 2sxc-Template.

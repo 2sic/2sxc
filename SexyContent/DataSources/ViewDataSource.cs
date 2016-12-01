@@ -9,7 +9,7 @@ namespace ToSic.SexyContent.DataSources
 
         internal static ViewDataSource ForContentGroupInSxc(SxcInstance sxc, Template overrideTemplate, int moduleId = 0)
         {
-            bool showDrafts = sxc.Environment.Permissions.UserMayEditContent;
+            var showDrafts = sxc.Environment.Permissions.UserMayEditContent;
             var configurationProvider = DataSources.ConfigurationProvider.GetConfigProviderForModule(moduleId, sxc.App, sxc);
 
             // Get ModuleDataSource
@@ -36,7 +36,7 @@ namespace ToSic.SexyContent.DataSources
 
                 // Append Streams of the Data-Pipeline (this doesn't require a change of the viewDataSource itself)
                 if (overrideTemplate.Pipeline != null)
-                    DataPipelineFactory.GetDataSource(sxc.AppId ?? -999, overrideTemplate.Pipeline.EntityId, configurationProvider, viewDataSource);
+                    DataPipelineFactory.GetDataSource(sxc.AppId ?? -999, overrideTemplate.Pipeline.EntityId, configurationProvider, viewDataSource, showDrafts: showDrafts);
             }
 
             return viewDataSource;
