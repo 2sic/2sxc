@@ -105,6 +105,10 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
         // todo: should refactor to save all items in 1 transaction
         public Dictionary<Guid, int> SaveMany([FromUri] int appId, [FromBody] List<EntityWithHeader> items)
         {
+            // before we create/save/update it, we must check if it's new, in case we must add it to a group
+            // only add if the header wants it, AND we started with ID unknown
+            // var allowAddGroup = items.First().Entity.Id == 0;
+
             // first, save all to do it in 1 transaction
             // note that it won't save the SlotIsEmpty ones, as these won't be needed
             var postSaveIds = _entitiesController.SaveMany(appId, items.Select(i => new EntityWithHeader { Header = i.Header, Entity = i.Entity }).ToList());
@@ -112,12 +116,12 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
             // now assign all content-groups as needed
             var groupItems = items
                 .Where(i => i.Header.Group != null)
-                .GroupBy(i => i.Header.Group.Guid.ToString() + i.Header.Group.Index.ToString() + i.Header.Group.Add)
+                .GroupBy(i => i.Header.Group.Guid.ToString() + i.Header.Group.Index.ToString() +  i.Header.Group.Add)
                 .ToList();
 
             if (groupItems.Any())
                 DoAdditionalGroupProcessing(appId, postSaveIds, groupItems);
-
+            
             return postSaveIds;
         }
 
@@ -159,7 +163,9 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
                     // use null if it shouldn't have one
                 }
 
-                if (contItem.Header.Group.Add) // this cannot be auto-detected, it must be specified
+                // add or update slots
+                var reallyAddGroup = contItem.Entity.Id == 0; // only really add if it's really new
+                if (contItem.Header.Group.Add && reallyAddGroup) // this cannot be auto-detected, it must be specified
                 {
                     contentGroup.AddContentAndPresentationEntity(partName, index, postSaveId, presentationId);
                 }
