@@ -58,13 +58,19 @@
 		"GoogleTranslate": "Online Übersetzung (Google)",
 		"Copy": "Kopieren von",
 		"Use": "Verwenden von",
-		"Share": "Teilen mit"
+		"Share": "Teilen mit",
+		"AllFields": "alle Felder"
 	},
 	"LangWrapper": {
 		"CreateValueInDefFirst": "Bitte das Feld '{{fieldname}}' zuerst in der Standardsprache befüllen vor dem Übersetzen."
 	},
 	"Dialog1": {},
 	"dialog2": {},
+	"CalendarPopup": {
+		"ClearButton": "Löschen",
+		"CloseButton": "Fertig",
+		"CurrentButton": "Heute"
+	},
 	"Extension.TinyMce": {
 		"Link.AdamFile": "ADAM-Datei (empfohlen)",
 		"Link.AdamFile.Tooltip": "ADAM-Dateien verlinken - Dateien einfach hierhin ziehen - verwendet den Automatic Digital Assets Manager",

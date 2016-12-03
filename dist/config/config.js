@@ -107,6 +107,8 @@ if (window.angular) // needed because the file is also included in older non-ang
                 metadataOfApp: 3,
                 metadataOfCmsObject: 10,
 
+                versionInfo: "v" + $2sxc.urlParams.get("sxcver"),
+
                 contentType: {
                     defaultScope: "2SexyContent",
                     template: "2SexyContent-Template"

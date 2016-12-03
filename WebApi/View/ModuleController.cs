@@ -248,10 +248,13 @@ namespace ToSic.SexyContent.WebApi.View
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public bool Publish(string part, int sortOrder)
-        {
-            return ContentGroupReferenceManager.Publish(part, sortOrder);
+            => ContentGroupReferenceManager.Publish(part, sortOrder);
 
-        }
+        [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        public bool Publish(int id)
+            => ContentGroupReferenceManager.Publish(id);
+    
 
         [HttpGet]
 		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]

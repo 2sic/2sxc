@@ -128,6 +128,12 @@ namespace ToSic.SexyContent.ContentBlock
             }
         }
 
+        public bool Publish(int repositoryId)
+        {
+            SxcContext.EavAppContext.Publishing.PublishDraftInDbEntity(repositoryId, true);
+            return true;
+        }
+
         public bool Publish(string part, int sortOrder)
         {
             try

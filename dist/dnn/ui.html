@@ -73,7 +73,7 @@
 
         var langTwoLetter = $2sxc.urlParams.get("lang") ? $2sxc.urlParams.get("lang").split('-')[0] : "en";
         var availableLanguages = ['en', 'de', 'es', 'fr', 'it', 'nl', 'uk'];
-        if (availableLanguages.indexOf(langTwoLetter) == -1)
+        if (availableLanguages.indexOf(langTwoLetter) === -1)
             langTwoLetter = 'en';
 
         var scripts = [
@@ -131,8 +131,8 @@
 
         // scripts needed only by the template
         if (dialogName === "develop") {
-            addScript({ url: "//cdn.jsdelivr.net/ace/1.2.3/noconflict/ace.js", async: true });
-            addScript({ url: "//cdn.jsdelivr.net/ace/1.2.3/noconflict/ext-language_tools.js", async: true });
+            addScript({ url: "//cdn.jsdelivr.net/ace/1.2.5/noconflict/ace.js", async: false });
+            addScript({ url: "//cdn.jsdelivr.net/ace/1.2.5/noconflict/ext-language_tools.js", async: true });
             addScript("../lib/angular-ui-ace/ui-ace.min.js");
             addScript("../sxc-develop/sxc-develop.min.js");
         }

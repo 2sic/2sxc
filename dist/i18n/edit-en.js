@@ -64,10 +64,16 @@
 		"GoogleTranslate": "machine-translate (Google)",
 		"Copy": "copy from",
 		"Use": "use from",
-		"Share": "share from"
+		"Share": "share from",
+		"AllFields": "all fields"
 	},
 	"LangWrapper": {
 		"CreateValueInDefFirst": "Please create the value for '{{fieldname}}' in the default language before translating it."
+	},
+	"CalendarPopup": {
+		"ClearButton": "Clear",
+		"CloseButton": "Done",
+		"CurrentButton": "Today"
 	},
 	"Extension.TinyMce": {
 		"Link.AdamFile": "Link ADAM-file (recommended)",
