@@ -220,7 +220,8 @@
 					"Label": "Export data",
 					"Options": {
 						"Blank": "No, just export blank data schema (for new data import)",
-						"All": "Yes, export all content-items"
+						"All": "Yes, export all content-items",
+						"Selection": "Export selected {{count}} items"
 					}
 				}
 			}

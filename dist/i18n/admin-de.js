@@ -218,7 +218,8 @@
 					"Label": "Daten exportieren",
 					"Options": {
 						"Blank": "Nein, nur Schema exportieren (für den Import von neuen Datensätzen)",
-						"All": "Ja, alle Inhalte exportieren"
+						"All": "Ja, alle Inhalte exportieren",
+						"Selection": "Nur ausgewählte {{count}} Elemente"
 					}
 				}
 			}

@@ -30,13 +30,13 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
         [AllowAnonymous]
         public HttpResponseMessage ExportContent(int appId, string language, string defaultLanguage, string contentType,
             RecordExport recordExport, ResourceReferenceExport resourcesReferences,
-            LanguageReferenceExport languageReferences)
+            LanguageReferenceExport languageReferences, string selectedIds = null)
         {
             // do security check
             if(!PortalSettings.UserInfo.IsInRole(PortalSettings.AdministratorRoleName))// todo: copy to 8.5 "Administrators")) // note: user.isinrole didn't work
                 throw new HttpRequestException("Needs admin permissions to do this");
             return eavCtc.ExportContent(appId, language, defaultLanguage, contentType, recordExport, resourcesReferences,
-                languageReferences);
+                languageReferences, selectedIds);
         }
 
 
