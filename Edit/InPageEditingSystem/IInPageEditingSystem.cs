@@ -19,5 +19,9 @@ namespace ToSic.SexyContent.Edit.InPageEditingSystem
             string field = null, 
             string contentType = null,
             Guid? newGuid = null);
+
+        string Attribute(string name, string value);
+
+        string Attribute(string name, object value);
     }
 }

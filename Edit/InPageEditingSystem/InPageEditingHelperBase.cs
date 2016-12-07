@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web;
+using Newtonsoft.Json;
 using ToSic.SexyContent.Edit.Toolbar;
 
 namespace ToSic.SexyContent.Edit.InPageEditingSystem
@@ -61,5 +62,26 @@ namespace ToSic.SexyContent.Edit.InPageEditingSystem
                 contentType ?? Settings.AttributeSetStaticNameContentBlockTypeName,
                 newGuid));
         }
+
+        /// <summary>
+        /// Generate an HTML attribute 
+        /// - but only if in edit mode
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public string Attribute(string name, string value)
+            => !Enabled ? null : name + "='" + value.Replace("'", "\\'") + "'";
+
+        /// <summary>
+        /// Generate an HTML attribute by converting the value to JSON 
+        /// - but only in edit mode
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public string Attribute(string name, object value)
+            => !Enabled ? null : Attribute(name, JsonConvert.SerializeObject(value));
+
     }
 }
