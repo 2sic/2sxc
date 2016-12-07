@@ -78,7 +78,7 @@ namespace ToSic.SexyContent.WebApi
             var results = dataSource.List.ToDictionary(p => p.Value.EntityId,
                 p => p.Value.GetBestValue("EntityTitle")?.ToString() ?? "");
 
-            var selectedId = set[index]?.EntityId;
+            var selectedId = set.Count == 0 ? null : set[index]?.EntityId;
 
             return new ReplaceSet
             {
