@@ -95,16 +95,23 @@ namespace ToSic.SexyContent.DataSources
 
             for (var i = 0; i < contentEntities.Count; i++)
             {
-	            var contentEntity = contentEntities[i];
+                // get the entity, if null: try to substitute with the demo item
+                var contentEntity = contentEntities[i];
 
-                // use demo-entites where available
-				var entityId = contentEntity?.EntityId ?? contentDemoEntity?.EntityId;
+                // check if it "exists" in the in-stream. if not, then it's probably unpublished
+                // so try revert back to the demo-item (assuming it exists...)
+                if (contentEntity == null || !originals.ContainsKey(contentEntity.EntityId))
+                    contentEntity = contentDemoEntity;
 
-                // We can't deliver entities that are not delivered by base (original stream), so continue
-                if (!entityId.HasValue || !originals.ContainsKey(entityId.Value))
+                // now check again...
+                // ...we can't deliver entities that are not delivered by base (original stream), so continue
+                if (contentEntity == null || !originals.ContainsKey(contentEntity.EntityId))
                     continue;
 
-	            IEntity presentationEntity = null;
+                // use demo-entites where available
+                var entityId = contentEntity.EntityId;
+
+                IEntity presentationEntity = null;
 
 	            if (presentation != null)
 	            {
@@ -119,16 +126,16 @@ namespace ToSic.SexyContent.DataSources
 	            }
 
 
-	            var key = entityId.Value;
+	            var key = entityId;
 
                 // This ensures that if an entity is added more than once, the dictionary doesn't complain because of duplicate keys
                 while (entitiesToDeliver.ContainsKey(key))
                     key += 1000000000;
 
-				entitiesToDeliver.Add(key, new EntityInContentGroup(originals[entityId.Value])
+				entitiesToDeliver.Add(key, new EntityInContentGroup(originals[entityId])
 				{
 				    SortOrder = isListHeader ? -1 : i, 
-                    ContentGroupItemModified = originals[entityId.Value].Modified, 
+                    ContentGroupItemModified = originals[entityId].Modified, 
                     Presentation = presentationEntity, 
                     GroupId = ContentGroup.ContentGroupGuid
 				});
