@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using ToSic.Eav;
-using ToSic.Eav.DataSources;
 
 namespace ToSic.SexyContent.WebApi
 {
@@ -40,7 +37,7 @@ namespace ToSic.SexyContent.WebApi
 
         private ContentGroup GetContentGroup(Guid contentGroupGuid)
         {
-            var contentGroup = SxcContext.App.ContentGroupManager./*AppContentGroups.*/GetContentGroup(contentGroupGuid);
+            var contentGroup = SxcContext.App.ContentGroupManager.GetContentGroup(contentGroupGuid);
 
             if (contentGroup == null)
                 throw new Exception("ContentGroup with Guid " + contentGroupGuid + " does not exist.");
@@ -67,14 +64,14 @@ namespace ToSic.SexyContent.WebApi
                 : contentGroup.Template.ListContentTypeStaticName;
 
             // if no type was defined in this set, then return an empty list as there is nothing to choose from
-            if (String.IsNullOrEmpty(attributeSetName))
+            if (string.IsNullOrEmpty(attributeSetName))
                 return null;
 
-            var cache = App.Data.Cache; // DataSource.GetCache()
+            var cache = App.Data.Cache; 
             var ct = cache.GetContentType(attributeSetName);
 
 
-            var dataSource = App.Data[ct.Name]; // attributeSetName];
+            var dataSource = App.Data[ct.Name]; 
             var results = dataSource.List.ToDictionary(p => p.Value.EntityId,
                 p => p.Value.GetBestValue("EntityTitle")?.ToString() ?? "");
 
@@ -87,17 +84,12 @@ namespace ToSic.SexyContent.WebApi
             };
         }
 
-        public class ReplaceSet
-        {
-            public int? SelectedId { get; set; }
-            public Dictionary<int, string> Items { get; set; }
-        }
 
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void Replace(Guid guid, string part, int index, int entityId)
         {
-            var contentGroup = SxcContext.App.ContentGroupManager./*AppContentGroups.*/GetContentGroup(guid);
+            var contentGroup = SxcContext.App.ContentGroupManager.GetContentGroup(guid);
             contentGroup.UpdateEntityIfChanged(part, index, entityId, false, null);
         }
 
@@ -122,11 +114,11 @@ namespace ToSic.SexyContent.WebApi
 
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public bool ItemList([FromUri] Guid guid, List<SortedEntityItem> List)
+        public bool ItemList([FromUri] Guid guid, List<SortedEntityItem> list)
         {
             var cg = GetContentGroup(guid);
 
-            var sequence = List.Select(i => i.Index).ToArray();
+            var sequence = list.Select(i => i.Index).ToArray();
 
             cg.ReorderAll(sequence);
             return true;
@@ -151,6 +143,13 @@ namespace ToSic.SexyContent.WebApi
         }
 
 
+        #region helper classes for data transport / json interface
+        public class ReplaceSet
+        {
+            public int? SelectedId { get; set; }
+            public Dictionary<int, string> Items { get; set; }
+        }
+
         public class SortedEntityItem
         {
             public int Index;
@@ -159,5 +158,7 @@ namespace ToSic.SexyContent.WebApi
             public string Title;
             public string Type;
         }
+
+        #endregion
     }
 }
