@@ -195,7 +195,7 @@ angular.module("2sxc4ng", ["ng"])
 
                 return qry;
             };
-
+        
             return createQueryObj;
         }])
 
