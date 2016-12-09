@@ -17,6 +17,11 @@ namespace ToSic.SexyContent.Internal
         /// <returns></returns>
         public static int? GetZoneID(int portalId)
         {
+            // additional protection agains invalid portalid which may come from bad dnn configs and execute in search-index mode
+            // see https://github.com/2sic/2sxc/issues/1054
+            if (portalId < 0)
+                throw new Exception("Can't get zone for invalid portal ID: " + portalId);
+
             var zoneSettingKey = Settings.PortalSettingsPrefix + "ZoneID";
             var c = PortalController.GetPortalSettingsDictionary(portalId);
             var portalSettings = new PortalSettings(portalId);

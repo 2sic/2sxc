@@ -1,3 +1,2 @@
 <p>Read the <a href="https://github.com/2sic/2sxc/releases" target="_blank">release notes on Github</a><br/>
-If this happens the installation cannot finish, but it can resume from the point where it stopped. To make it resume, just install the 2sxc 8 package AGAIN and it will auto-continue where it left off. 
 </p>
