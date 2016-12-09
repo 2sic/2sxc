@@ -41,7 +41,9 @@ namespace ToSic.SexyContent.WebApi
             config.Services.Replace(typeof(IHttpControllerSelector), new AppApiControllerSelector(config) { PreviousSelector = previousSelector });
 
             // Also register Unity Dependency-Injection here, since this will certainly run once early during bootup
-            new UnityConfig().Configure();
+            // do this by accessing a setting, which registers everything
+            Settings.EnsureSystemIsInitialized();
+            //new UnityConfig().Configure();
         }
 
     }

@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Microsoft.Practices.Unity;
+﻿using Microsoft.Practices.Unity;
 using ToSic.Eav.Implementations.ValueConverter;
 using ToSic.SexyContent.EAV.Implementation.ValueConverter;
 
 namespace ToSic.SexyContent
 {
+    /// <summary>
+    /// this configures unity (the IoC container)
+    /// Never call this directly! always go through Settings.Ensure...
+    /// </summary>
     public class UnityConfig
     {
-        private static bool _alreadyConfigured = false;
+        private static bool _alreadyConfigured;
 
         /// <summary>
         /// Configure Unity for 2sxc. If it's already configured, do nothing.

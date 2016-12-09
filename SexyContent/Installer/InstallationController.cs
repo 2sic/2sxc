@@ -35,8 +35,9 @@ namespace ToSic.SexyContent.Installer
         {
             _logger.LogStep(version, "UpgradeModule starting", false);
 
-            // Configure Unity
-            new UnityConfig().Configure();
+            // Configure Unity / eav, etc.
+            Settings.EnsureSystemIsInitialized();
+            // new UnityConfig().Configure();
 
             // Abort upgrade if it's already done - if version is 01.00.00, the module has probably been uninstalled - continue in this case.
             if (version != "01.00.00" && IsUpgradeComplete(version, "- Check on Start UpgradeModule"))
