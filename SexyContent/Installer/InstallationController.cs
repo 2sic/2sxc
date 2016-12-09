@@ -20,6 +20,11 @@ namespace ToSic.SexyContent.Installer
         /// </summary>
         static InstallationController()
         {
+            UpdateUpgradeCompleteStatus();
+        }
+
+        private static void UpdateUpgradeCompleteStatus()
+        {
             UpgradeComplete = new InstallationController().IsUpgradeComplete(Settings.Installation.LastVersionWithServerChanges /* Settings.ModuleVersion */, "- static check");
         }
 
@@ -149,12 +154,15 @@ namespace ToSic.SexyContent.Installer
 
                 // Increase ClientDependency version upon each upgrade (System and all Portals)
                 // prevents browsers caching old JS and CSS files for editing, which could cause several errors
-                // 2016-04-16 2dm only do this on the last version, as we don't use this any more... or only on last item
+                // only set this on the last upgraded version, to prevent crazy updating the client-resource-cache while upgrading
                 if (version == Settings.Installation.UpgradeVersionList.Last())
                 {
                     _logger.LogStep(version, "ClientResourceManager- seems to be last item in version-list, will clear");
                     ClientResourceManager.UpdateVersion();
                     _logger.LogStep(version, "ClientResourceManager- done clearing");
+
+                    UpdateUpgradeCompleteStatus();
+                    _logger.LogStep(version, "updated upgrade-complete status");
                 }
 
                 _logger.LogVersionCompletedToPreventRerunningTheUpgrade(version);
@@ -223,7 +231,7 @@ namespace ToSic.SexyContent.Installer
         }
 
         #region Status Stuff
-        internal static readonly bool UpgradeComplete;
+        internal static bool UpgradeComplete;
 
         internal bool IsUpgradeComplete(string version, string note = "")
         {
