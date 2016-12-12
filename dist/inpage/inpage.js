@@ -1514,7 +1514,7 @@ $(function () {
             AddExistingModule: false,
             CopyModule: false
         };
-        return sendDnnAjax(modId, "controlbar/AddModule", {
+        return sendDnnAjax(null, "controlbar/AddModule", {
             type: "POST",
             data: postData,
             success: function (d) {
