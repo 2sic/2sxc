@@ -4,14 +4,15 @@ using DotNetNuke.Web.Api;
 
 namespace ToSic.SexyContent.WebApi.Dnn
 {
-	// support all modules now... [SupportedModules("2sxc,2sxc-app")]
+    // support all modules now... 
+    [SupportedModules("2sxc,2sxc-app")]
 	[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    [AllowAnonymous]
     public class ModuleController: DnnApiControllerWithFixes
     {
 
 		[HttpGet]
-		[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        // 2016-12-09 testing - had to disable this because the additional security brock in dnn9
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 		public bool Delete(int tabId, int modId)
 		{
 		    var mc = new DotNetNuke.Entities.Modules.ModuleController();

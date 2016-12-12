@@ -158,9 +158,9 @@
         // All params optional except for 'element'
         bootstrap: function(element, ngModName, iid, dependencies, config) {
             // first, try to get moduleId from function-param or from from URL
-            iid = iid || ng.findInstanceId(element) || $2sxc.urlParams.get("mid");
+            iid = iid || findInstanceId(element) || $2sxc.urlParams.get("mid") || autoFindId(element);
 
-            var cbid = ng.findContentBlockId(element) || $2sxc.urlParams.get("cbid") || iid;
+            var cbid = findContentBlockId(element) || $2sxc.urlParams.get("cbid") || iid;
             // then provide access to the dnn-services framework (or a fake thereof)
             var sf = $.ServicesFramework(iid);
 
@@ -190,47 +190,15 @@
             });
         },
 
-        // find instance Id in an attribute of the tag - typically with id="app-700" or something and use the number as IID
-        // if it doesn't find a manual value, it will auto-detect using the $2sxc-context
-        findInstanceId: function findInstanceId(element) {
-            var attrib, ngElement = angular.element(element), iid;
-            // first: check if an ID was specifically provided by the programmer in one of the given attributes
-            for (var i = 0; i < ng.iidAttrNames.length; i++) {
-                attrib = ngElement.attr(ng.iidAttrNames[i]);
-                if (attrib) {
-                    iid = parseInt(attrib.toString().replace(/\D/g, "")); // filter all characters if necessary
-                    if (iid) return iid; // stop if found
-                }
-            }
-
-            // if we get here, it was not manually provided so use auto-detect
-            var sxc = $2sxc(element);
-            iid = sxc && sxc.id; // null or a number
-
-            // if still not found throw error
-            if (!iid)
-                throw "iid or instanceId (the DNN moduleid) not supplied and automatic lookup failed. Please set app-tag attribute iid or give id in bootstrap call";
-            return iid;
-        },
-
-        findContentBlockId: function(el) {
-            var cbid;
-            while (el.getAttribute) { // loop as long as it knows this command
-                if ((cbid = el.getAttribute(ng.cbidAttrName))) return cbid;
-                el = el.parentNode;
-            }
-            return null;
-        },
-
         // Auto-bootstrap all sub-tags having an 'sxc-app' attribute - for Multiple-Apps-per-Page
         bootstrapAll: function bootstrapAll(element) {
             element = element || document;
             var allAppTags = element.querySelectorAll("[" + ng.appAttribute + "]");
             angular.forEach(allAppTags, function(appTag) {
                 var ngModName = appTag.getAttribute(ng.appAttribute);
-                var configDependencyInjection = { strictDi: ng.getNgAttribute(appTag, "strict-di") !== null };
+                var configDependencyInjection = { strictDi: getNgAttribute(appTag, "strict-di") !== null };
 
-                var dependencies = ng.getNgAttribute(appTag, ng.ngAttrDependencies);
+                var dependencies = getNgAttribute(appTag, ng.ngAttrDependencies);
                 if (dependencies) dependencies = dependencies.split(",");
                 ng.bootstrap(appTag, ngModName, null, dependencies, configDependencyInjection);
             });
@@ -250,18 +218,51 @@
                 });
         },
 
-        // Helper function to try various attribute-prefixes
-        getNgAttribute: function getNgAttribute(element, ngAttr) {
-            var attr, i, ii = ng.ngAttrPrefixes.length;
-            element = angular.element(element);
-            for (i = 0; i < ii; ++i) {
-                attr = ng.ngAttrPrefixes[i] + ngAttr;
-                if (typeof (attr = element.attr(attr)) == "string")
-                    return attr;
-            }
-            return null;
-        }
     };
+
+
+    // Helper function to try various attribute-prefixes
+    function getNgAttribute(element, ngAttr) {
+        var attr, i, ii = ng.ngAttrPrefixes.length;
+        element = angular.element(element);
+        for (i = 0; i < ii; ++i) {
+            attr = ng.ngAttrPrefixes[i] + ngAttr;
+            if (typeof (attr = element.attr(attr)) == "string")
+                return attr;
+        }
+        return null;
+    }
+
+    // find instance Id in an attribute of the tag - typically with id="app-700" or something and use the number as IID
+    function findInstanceId(element) {
+        var attrib, ngElement = angular.element(element);
+        for (var i = 0; i < ng.iidAttrNames.length; i++) {
+            attrib = ngElement.attr(ng.iidAttrNames[i]);
+            if (attrib) {
+                var iid = parseInt(attrib.toString().replace(/\D/g, "")); // filter all characters if necessary
+                if (!iid) throw "iid or instanceId (the DNN moduleid) not supplied and automatic lookup failed. Please set app-tag attribute iid or give id in bootstrap call";
+                return iid;
+            }
+        }
+        return null;
+    }
+
+    function findContentBlockId(el) {
+        var cbid;
+        while (el.getAttribute) { // loop as long as it knows this command
+            if ((cbid = el.getAttribute(ng.cbidAttrName))) return cbid;
+            el = el.parentNode;
+        }
+        return null;
+    }
+
+    // this can't be in the find-instance-id, because it needs jQuery internally and only works on the real page
+    function autoFindId(element) {
+        if (!$) return null;
+        var sxc = $2sxc(element);
+        return sxc && sxc.id;
+    }
+
 
     ng.autoRunBootstrap();
 
