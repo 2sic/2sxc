@@ -70,8 +70,10 @@ namespace ToSic.SexyContent.Edit.InPageEditingSystem
         /// <param name="name"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public string Attribute(string name, string value)
-            => !Enabled ? null : name + "='" + value.Replace("'", "\\'") + "'";
+        public HtmlString Attribute(string name, string value)
+        {
+            return !Enabled ? null : new HtmlString(name + "='" + value.Replace("'", "\\'") + "'");
+        }
 
         /// <summary>
         /// Generate an HTML attribute by converting the value to JSON 
@@ -80,7 +82,7 @@ namespace ToSic.SexyContent.Edit.InPageEditingSystem
         /// <param name="name"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public string Attribute(string name, object value)
+        public HtmlString Attribute(string name, object value)
             => !Enabled ? null : Attribute(name, JsonConvert.SerializeObject(value));
 
     }

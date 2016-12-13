@@ -20,8 +20,8 @@ namespace ToSic.SexyContent.Edit.InPageEditingSystem
             string contentType = null,
             Guid? newGuid = null);
 
-        string Attribute(string name, string value);
+        HtmlString Attribute(string name, string value);
 
-        string Attribute(string name, object value);
+        HtmlString Attribute(string name, object value);
     }
 }
