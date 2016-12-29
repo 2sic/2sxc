@@ -63,7 +63,7 @@ namespace ToSic.SexyContent.WebApi
             }
             catch (Exception e)
             {
-                var exception = new Exception("Error while selecting / compiling a controller for the request. Pls check the code. See the inner exception for more details.", e);
+                var exception = new Exception("Error while selecting / compiling a controller for the request. Pls check the event-log and the code. See the inner exception for more details.", e);
                 DotNetNuke.Services.Exceptions.Exceptions.LogException(exception);
                 throw new HttpResponseException(request.CreateErrorResponse(HttpStatusCode.InternalServerError, exception.Message, e));
             }
