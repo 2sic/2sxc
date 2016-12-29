@@ -91,11 +91,7 @@ namespace ToSic.SexyContent
                 case "Toolbar":
                     return Toolbar.ToString();
                 case Constants.PresentationKey:
-                    // todo: move out, as this code returns a _different_ presentation object each time!
-                    var inContentGroup = Entity as EntityInContentGroup;
-                    return (inContentGroup != null)
-                        ? new DynamicEntity(inContentGroup.Presentation, _dimensions, SxcInstance)
-                        : null;
+                    return Presentation;
             }
             #endregion
 
@@ -119,6 +115,12 @@ namespace ToSic.SexyContent
 
 
         }
+
+        private DynamicEntity _presentation;
+        private DynamicEntity Presentation => _presentation ??
+                                              (_presentation = (Entity is EntityInContentGroup)
+                                                  ? new DynamicEntity(((EntityInContentGroup) Entity).Presentation, _dimensions, SxcInstance)
+                                                  : null);
 
         /// <summary>
         /// Configuration class for this expando
