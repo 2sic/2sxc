@@ -74,14 +74,14 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
                     reqItem.EntityId = part[reqItem.Group.Index].EntityId;
 
                 // tell the UI that it should not actually use this data yet, keep it locked
-                if (reqItem.Group.Part.ToLower().Contains("presentation")) {
+                if (reqItem.Group.Part.ToLower().Contains(Constants.PresentationKeyLower)) {
                     reqItem.Group.SlotCanBeEmpty = true;  // all presentations can always be locked
                     if (reqItem.EntityId == 0)
                     {
                         reqItem.Group.SlotIsEmpty = true; // if it is blank, then lock this one to begin with
                         
                         reqItem.DuplicateEntity =
-                            reqItem.Group.Part.ToLower() == "presentation"
+                            reqItem.Group.Part.ToLower() == Constants.PresentationKeyLower
                             ? contentGroup.Template.PresentationDemoEntity?.EntityId as int?
                             : contentGroup.Template.ListPresentationDemoEntity?.EntityId as int?;
                     }
@@ -93,7 +93,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
             // Now get all
             return _entitiesController.GetManyForEditing(appId, newItems);
 
-            // todo: find out how to handle "Presentation" items
+            // todo: find out how to handle Presentation items
             
 
         }
@@ -136,7 +136,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
                 if (contItem == null)
                     throw new Exception("unexpected group-entity assigment, cannot figure it out");
 
-                var presItem = entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == "presentation") ??
+                var presItem = entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == Constants.PresentationKeyLower) ??
                               entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == "listpresentation");
 
                 // Get group to assign to and parameters

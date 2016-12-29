@@ -39,7 +39,7 @@ namespace ToSic.SexyContent
             {
                 case "content":
                     return ContentTypeStaticName;
-                case "presentation":
+                case Constants.PresentationKeyLower: 
                     return PresentationTypeStaticName;
                 case "listcontent":
                     return ListContentTypeStaticName;

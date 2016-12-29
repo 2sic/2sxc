@@ -59,11 +59,11 @@ namespace ToSic.SexyContent.Serializers
             var dictionary = base.GetDictionaryFromEntity(entity, language);
 
             // Add full presentation object if it has one...because there we need more than just id/title
-			if (entity is EntityInContentGroup && !dictionary.ContainsKey("Presentation"))
+			if (entity is EntityInContentGroup && !dictionary.ContainsKey(Constants.PresentationKey))
 			{
 				var entityInGroup = (EntityInContentGroup)entity;
 				if (entityInGroup.Presentation != null)
-					dictionary.Add("Presentation", GetDictionaryFromEntity(entityInGroup.Presentation, language));
+					dictionary.Add(Constants.PresentationKey, GetDictionaryFromEntity(entityInGroup.Presentation, language));
 			}
 
             // Add additional information in case we're in edit mode
@@ -72,9 +72,9 @@ namespace ToSic.SexyContent.Serializers
                 dictionary.Add("Modified", entity.Modified);
                 
                 if (entity is IHasEditingData)
-		            dictionary.Add("_2sxcEditInformation", new {sortOrder = ((IHasEditingData) entity).SortOrder});
+		            dictionary.Add(Constants.JsonEntityEditNodeName, new {sortOrder = ((IHasEditingData) entity).SortOrder});
 		        else
-		            dictionary.Add("_2sxcEditInformation",
+		            dictionary.Add(Constants.JsonEntityEditNodeName,
 		                new {entityId = entity.EntityId, title = entity.Title != null ? entity.Title[language] : "(no title)"});
 		    }
 		    return dictionary;

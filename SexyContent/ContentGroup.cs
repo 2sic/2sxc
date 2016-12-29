@@ -13,7 +13,7 @@ namespace ToSic.SexyContent
         #region NamingConstants
 
         public const string cContent = "Content";
-        public const string cPresentation = "Presentation";
+        public const string cPresentation = Constants.PresentationKey;
         public const string cListC = "ListContent";
         public const string cListP = "ListPresentation";
 
@@ -128,7 +128,7 @@ namespace ToSic.SexyContent
                 {
                     case "content":
                         return Content;
-                    case "presentation":
+                    case Constants.PresentationKeyLower: 
                         return Presentation;
                     case "listcontent":
                         return ListContent;

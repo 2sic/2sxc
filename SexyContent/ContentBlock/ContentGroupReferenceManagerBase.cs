@@ -140,7 +140,7 @@ namespace ToSic.SexyContent.ContentBlock
             {
                 var contentGroup = ContentGroup;// SxcContext.AppContentGroups.GetContentGroupForModule(ModuleID);
                 var contEntity = contentGroup[part][sortOrder];
-                var presKey = part.ToLower() == "content" ? "presentation" : "listpresentation";
+                var presKey = part.ToLower() == "content" ? Constants.PresentationKeyLower : "listpresentation";
                 var presEntity = contentGroup[presKey][sortOrder];
 
                 var hasPresentation = presEntity != null;

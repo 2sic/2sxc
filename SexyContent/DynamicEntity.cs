@@ -89,7 +89,7 @@ namespace ToSic.SexyContent
             {
                 case "Toolbar":
                     return Toolbar.ToString();
-                case "Presentation":
+                case Constants.PresentationKey:
                     var inContentGroup = Entity as EntityInContentGroup;
                     return (inContentGroup != null)
                         ? new DynamicEntity(inContentGroup.Presentation, _dimensions, SxcInstance)
@@ -160,20 +160,20 @@ namespace ToSic.SexyContent
             dictionary.Add("EntityId", entity.EntityId);
             dictionary.Add("Modified", entity.Modified);
 
-            if (entity is EntityInContentGroup && !dictionary.ContainsKey("Presentation"))
+            if (entity is EntityInContentGroup && !dictionary.ContainsKey(Constants.PresentationKey)) 
             {
                 var entityInGroup = (EntityInContentGroup)entity;
                 if (entityInGroup.Presentation != null)
                 {
                     var subItm = new DynamicEntity(entityInGroup, _dimensions, SxcInstance);
-                    dictionary.Add("Presentation", subItm.ToDictionary());
+                    dictionary.Add(Constants.PresentationKey, subItm.ToDictionary());
                 }
             }
 
             if (entity is IHasEditingData)
-                dictionary.Add("_2sxcEditInformation", new { sortOrder = ((IHasEditingData)entity).SortOrder });
+                dictionary.Add(Constants.JsonEntityEditNodeName, new { sortOrder = ((IHasEditingData)entity).SortOrder });
             else
-                dictionary.Add("_2sxcEditInformation", new { entityId = entity.EntityId, title = entity.Title != null ? entity.Title[_dimensions[0]] : "(no title)" });
+                dictionary.Add(Constants.JsonEntityEditNodeName, new { entityId = entity.EntityId, title = entity.Title != null ? entity.Title[_dimensions[0]] : "(no title)" });
 
             return dictionary;
         }

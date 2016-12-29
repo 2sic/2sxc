@@ -76,7 +76,7 @@ namespace ToSic.SexyContent.Search
             var searchInfoDictionary = new Dictionary<string, List<ISearchInfo>>();
 
             // Get DNN SearchDocuments from 2Sexy SearchInfos
-            foreach (var stream in dataSource.Out.Where(p => p.Key != "Presentation" && p.Key != "ListPresentation" ))
+            foreach (var stream in dataSource.Out.Where(p => p.Key != Constants.PresentationKey && p.Key != "ListPresentation" ))
             {
                 
                 var entities = stream.Value.List.Select(p => p.Value);

@@ -488,7 +488,7 @@ namespace ToSic.SexyContent.ImportExport
                     var presentationTypeStaticName = "";
                     var presentationDemoEntityId = new int?();
                     //if list templateDefaults would have null objects, we would have an exception
-                    var presentationDefault = templateDefaults.FirstOrDefault(t => t.ItemType == "Presentation");
+                    var presentationDefault = templateDefaults.FirstOrDefault(t => t.ItemType == Constants.PresentationKey);
                     if (presentationDefault != null)
                     {
                         presentationTypeStaticName = presentationDefault.ContentTypeStaticName;

@@ -60,7 +60,7 @@ namespace ToSic.SexyContent
 			{
 				{"Template", templateId.HasValue ? new [] { templateId.Value } : new int[] {}},
 				{"Content", new int[] {}},
-				{"Presentation", new int[] {}},
+				{ Constants.PresentationKey, new int[] {}},
 				{"ListContent", new int[] {}},
 				{"ListPresentation", new int[] {}}
 			};
