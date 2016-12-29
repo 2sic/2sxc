@@ -25,64 +25,10 @@ namespace ToSic.SexyContent.Internal
             var sexyApps = eavApps.Select<KeyValuePair<int, string>, App>(eavApp => new App(zoneId, eavApp.Key, ownerPS));
 
             if (!includeDefaultApp)
-                sexyApps = sexyApps.Where(a => a.Name != "Content");
+                sexyApps = sexyApps.Where(a => a.Name != Constants.ContentAppName);
 
             return sexyApps.OrderBy(a => a.Name).ToList();
         }
-
-        //private static App GetApp(int zoneId, int appId, PortalSettings ownerPS)
-        //{
-        //    throw new Exception("Don't use this any more - now all in the new App() constructor 2016-03-27 2dm");
-
-        //    // Get appName from cache
-        //    var eavAppName = ((BaseCache)DataSource.GetCache(zoneId, null)).ZoneApps[zoneId].Apps[appId];
-        //    App sexyApp = null;
-
-        //    if (eavAppName != Constants.DefaultAppName)
-        //    {
-        //        EnsureAppIsConfigured(zoneId, appId);
-
-        //        // Get app-describing entity
-        //        var appMetaData = DataSource.GetMetaDataSource(zoneId, appId).GetAssignedEntities(ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp, appId, Settings.AttributeSetStaticNameApps).FirstOrDefault();
-        //        var appResources = DataSource.GetMetaDataSource(zoneId, appId).GetAssignedEntities(ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp, appId, Settings.AttributeSetStaticNameAppResources).FirstOrDefault();
-        //        var appSettings = DataSource.GetMetaDataSource(zoneId, appId).GetAssignedEntities(ContentTypeHelpers.AssignmentObjectTypeIDSexyContentApp, appId, Settings.AttributeSetStaticNameAppSettings).FirstOrDefault();
-
-        //        if (appMetaData != null)
-        //        {
-        //            dynamic appMetaDataDynamic = new DynamicEntity(appMetaData, new[] { Thread.CurrentThread.CurrentCulture.Name }, null);
-        //            dynamic appResourcesDynamic = appResources != null ? new DynamicEntity(appResources, new[] { Thread.CurrentThread.CurrentCulture.Name }, null) : null;
-        //            dynamic appSettingsDynamic = appResources != null ? new DynamicEntity(appSettings, new[] { Thread.CurrentThread.CurrentCulture.Name }, null) : null;
-
-        //            sexyApp = new App(ownerPS, appId, zoneId)
-        //            {
-        //                Name = appMetaDataDynamic.DisplayName,
-        //                Folder = appMetaDataDynamic.Folder,
-        //                Configuration = appMetaDataDynamic,
-        //                Resources = appResourcesDynamic,
-        //                Settings = appSettingsDynamic,
-        //                Hidden = appMetaDataDynamic.Hidden is bool ? appMetaDataDynamic.Hidden : false,
-        //                AppGuid = eavAppName
-        //            };
-        //        }
-        //    }
-        //    // Handle default app
-        //    else
-        //    {
-        //        sexyApp = new App(ownerPS, appId, zoneId)
-        //        {
-        //            AppId = appId,
-        //            Name = "Content",
-        //            Folder = "Content",
-        //            Configuration = null,
-        //            Resources = null,
-        //            Settings = null,
-        //            Hidden = true,
-        //            AppGuid = eavAppName
-        //        };
-        //    }
-
-        //    return sexyApp;
-        //}
 
         /// <summary>
         /// Create app-describing entity for configuration and add Settings and Resources Content Type
@@ -164,7 +110,7 @@ namespace ToSic.SexyContent.Internal
         /// <returns></returns>
         internal static App AddBrandNewApp(int zoneId, string appName, PortalSettings ownerPS)
         {
-            if (appName == "Content" || appName == "Default" || String.IsNullOrEmpty(appName) || !Regex.IsMatch(appName, "^[0-9A-Za-z -_]+$"))
+            if (appName == Constants.ContentAppName || appName == "Default" || String.IsNullOrEmpty(appName) || !Regex.IsMatch(appName, "^[0-9A-Za-z -_]+$"))
                 throw new ArgumentOutOfRangeException("appName '" + appName + "' not allowed");
 
             // Adding app to EAV

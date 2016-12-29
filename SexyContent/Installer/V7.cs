@@ -188,7 +188,7 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
                     itemsList.First().ZoneId,
                     ContentGroupId = id,
                     TemplateGuids = itemsList.First().TemplateEntityGuids,
-                    ContentGuids = itemsList.Where(p => p.Type == "Content").Select(p => p.EntityGuid).ToList(),
+                    ContentGuids = itemsList.Where(p => p.Type == Constants.ContentKey).Select(p => p.EntityGuid).ToList(),
                     PresentationGuids = itemsList.Where(p => p.Type == Constants.PresentationKey).Select(p => p.EntityGuid).ToList(),
                     ListContentGuids = itemsList.Where(p => p.Type == "ListContent").Select(p => p.EntityGuid).ToList(),
                     ListPresentationGuids = itemsList.Where(p => p.Type == "ListPresentation").Select(p => p.EntityGuid).ToList()
@@ -257,7 +257,7 @@ WHERE        (ToSIC_SexyContent_ContentGroupItems.SysDeleted IS NULL) AND (Modul
                     entity.Values = new Dictionary<string, List<IValueImportModel>>
                     {
                         {"Template", new List<IValueImportModel> {new ValueImportModel<List<Guid>>(entity) { Value = t.TemplateGuids }}},
-                        {"Content", new List<IValueImportModel> {new ValueImportModel<List<Guid?>>(entity) { Value = t.ContentGuids }}},
+                        {Constants.ContentKey, new List<IValueImportModel> {new ValueImportModel<List<Guid?>>(entity) { Value = t.ContentGuids }}},
                         {Constants.PresentationKey, new List<IValueImportModel> {new ValueImportModel<List<Guid?>>(entity) { Value = t.PresentationGuids }}},
                         {"ListContent", new List<IValueImportModel> {new ValueImportModel<List<Guid?>>(entity) { Value = t.ListContentGuids }}},
                         {"ListPresentation", new List<IValueImportModel> {new ValueImportModel<List<Guid?>>(entity) { Value = t.ListPresentationGuids }}}

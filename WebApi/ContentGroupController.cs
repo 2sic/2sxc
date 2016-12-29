@@ -52,14 +52,14 @@ namespace ToSic.SexyContent.WebApi
             var contentGroup = GetContentGroup(guid);
 
             // try to get the entityId. Sometimes it will try to get #0 which doesn't exist yet, that's why it has these checks
-            var set = part == "content" ? contentGroup.Content : contentGroup.ListContent;
+            var set = part == Constants.ContentKeyLower ? contentGroup.Content : contentGroup.ListContent;
 
             // not sure what this check is for, just leaving it in for now (2015-09-19 2dm)
             if (set == null || contentGroup.Template == null)
                 throw new Exception("Cannot find content group");
 
 
-            var attributeSetName = part == "content"
+            var attributeSetName = part == Constants.ContentKeyLower
                 ? contentGroup.Template.ContentTypeStaticName
                 : contentGroup.Template.ListContentTypeStaticName;
 

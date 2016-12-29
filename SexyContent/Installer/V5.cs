@@ -31,7 +31,7 @@ namespace ToSic.SexyContent.Installer
                 {
                     var oldSexyFolder = new DirectoryInfo(Path.Combine(path, "2sexy"));
                     var newSexyFolder = new DirectoryInfo(Path.Combine(path, "2sxc"));
-                    var newSexyContentFolder = new DirectoryInfo(Path.Combine(newSexyFolder.FullName, "Content"));
+                    var newSexyContentFolder = new DirectoryInfo(Path.Combine(newSexyFolder.FullName, Constants.ContentAppName));
                     if (oldSexyFolder.Exists && !newSexyFolder.Exists)
                     {
                         logger.LogStep("05.05.00", "Path: " + path + " will copy from 2Sexy to 2sxc", false);

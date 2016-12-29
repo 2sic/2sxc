@@ -37,7 +37,7 @@ namespace ToSic.SexyContent
         {
             switch(groupPart.ToLower())
             {
-                case "content":
+                case Constants.ContentKeyLower:
                     return ContentTypeStaticName;
                 case Constants.PresentationKeyLower: 
                     return PresentationTypeStaticName;

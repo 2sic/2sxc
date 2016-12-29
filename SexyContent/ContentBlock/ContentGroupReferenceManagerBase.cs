@@ -45,7 +45,7 @@ namespace ToSic.SexyContent.ContentBlock
             => SxcContext.App.TemplateManager/*.AppTemplates*/.GetAvailableTemplates(ContentGroup);
 
         public void AddItem(int? sortOrder = null)
-            => ContentGroup.AddContentAndPresentationEntity("content", sortOrder, null, null);
+            => ContentGroup.AddContentAndPresentationEntity(Constants.ContentKeyLower, sortOrder, null, null);
         
 
         public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup, bool? newTemplateChooserState = null)
@@ -140,7 +140,7 @@ namespace ToSic.SexyContent.ContentBlock
             {
                 var contentGroup = ContentGroup;// SxcContext.AppContentGroups.GetContentGroupForModule(ModuleID);
                 var contEntity = contentGroup[part][sortOrder];
-                var presKey = part.ToLower() == "content" ? Constants.PresentationKeyLower : "listpresentation";
+                var presKey = part.ToLower() == Constants.ContentKeyLower ? Constants.PresentationKeyLower : "listpresentation";
                 var presEntity = contentGroup[presKey][sortOrder];
 
                 var hasPresentation = presEntity != null;
@@ -171,7 +171,7 @@ namespace ToSic.SexyContent.ContentBlock
             try
             {
                 var contentGroup = ContentGroup;// SxcContext.AppContentGroups.GetContentGroupForModule(ModuleID);
-                contentGroup.RemoveContentAndPresentationEntities("content", sortOrder);
+                contentGroup.RemoveContentAndPresentationEntities(Constants.ContentKeyLower, sortOrder);
             }
             catch (Exception e)
             {

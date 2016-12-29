@@ -296,7 +296,7 @@ namespace ToSic.SexyContent.WebApi.View
             var gettingStartedSrc = "//gettingstarted.2sxc.org/router.aspx?";
 
             // Add desired destination
-            gettingStartedSrc += "destination=autoconfigure" + (isContent ? "content" : "app");
+            gettingStartedSrc += "destination=autoconfigure" + (isContent ? Constants.ContentAppName.ToLower() : "app");
 
             // Add DNN Version
             gettingStartedSrc += "&DnnVersion=" + Assembly.GetAssembly(typeof(Globals)).GetName().Version.ToString(4);

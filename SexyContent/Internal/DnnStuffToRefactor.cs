@@ -16,7 +16,7 @@ namespace ToSic.SexyContent.Internal
         public void EnsurePortalIsConfigured(SxcInstance sxc, HttpServerUtility server, string controlPath)
         {
             var sexyFolder = new DirectoryInfo(server.MapPath(Path.Combine(sxc.AppPortalSettings.HomeDirectory, Settings.TemplateFolder)));
-            var contentFolder = new DirectoryInfo(Path.Combine(sexyFolder.FullName, "Content"));
+            var contentFolder = new DirectoryInfo(Path.Combine(sexyFolder.FullName, Constants.ContentAppName));
             var webConfigTemplate = new FileInfo(Path.Combine(sexyFolder.FullName, Settings.WebConfigFileName));
             if (!(sexyFolder.Exists && webConfigTemplate.Exists && contentFolder.Exists))
             {

@@ -59,7 +59,7 @@ namespace ToSic.SexyContent
 			var values = new Dictionary<string, object>
 			{
 				{"Template", templateId.HasValue ? new [] { templateId.Value } : new int[] {}},
-				{"Content", new int[] {}},
+				{ Constants.ContentKey, new int[] {}},
 				{ Constants.PresentationKey, new int[] {}},
 				{"ListContent", new int[] {}},
 				{"ListPresentation", new int[] {}}

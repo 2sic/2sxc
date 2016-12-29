@@ -12,7 +12,7 @@ namespace ToSic.SexyContent
     {
         #region NamingConstants
 
-        public const string cContent = "Content";
+        public const string cContent = Constants.ContentKey;
         public const string cPresentation = Constants.PresentationKey;
         public const string cListC = "ListContent";
         public const string cListP = "ListPresentation";
@@ -126,7 +126,7 @@ namespace ToSic.SexyContent
             {
                 switch (type.ToLower())
                 {
-                    case "content":
+                    case Constants.ContentKeyLower:
                         return Content;
                     case Constants.PresentationKeyLower: 
                         return Presentation;
@@ -231,7 +231,7 @@ namespace ToSic.SexyContent
         /// Removes entities from a group. This will also remove the corresponding presentation entities.
         /// </summary>
         /// <param name="contentGroupGuid"></param>
-        /// <param name="type">Should be "Content" or "ListContent"</param>
+        /// <param name="type">Should be 'Content' or "ListContent"</param>
         /// <param name="sortOrder"></param>
         public void RemoveContentAndPresentationEntities(string type, int sortOrder)
         {

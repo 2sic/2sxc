@@ -34,7 +34,7 @@ namespace ToSic.SexyContent.AppAssets
         {
             AppId = appId;
             FileName = fileName;
-            HasApp = appName != "Content";
+            HasApp = appName != Constants.ContentAppName;
             LocationScope = global
                 ? Settings.TemplateLocations.HostFileSystem
                 : Settings.TemplateLocations.PortalFileSystem;

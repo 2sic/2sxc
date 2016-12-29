@@ -21,7 +21,8 @@ namespace ToSic.SexyContent
     public class App : IApp
     {
         #region Constants
-        private const string ContentAppName = "Content";
+
+        private const string ContentAppName = Constants.ContentAppName;
         #endregion
         public int AppId { get; internal set; }
         public int ZoneId { get; internal set; }

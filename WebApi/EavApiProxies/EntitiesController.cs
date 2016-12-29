@@ -131,7 +131,7 @@ namespace ToSic.SexyContent.EAVExtensions.EavApiProxies
 
             foreach (var entitySets in groupItems)
             {
-                var contItem = entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == "content") ??
+                var contItem = entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == Constants.ContentKeyLower) ??
                               entitySets.FirstOrDefault(e => e.Header.Group.Part.ToLower() == "listcontent");
                 if (contItem == null)
                     throw new Exception("unexpected group-entity assigment, cannot figure it out");

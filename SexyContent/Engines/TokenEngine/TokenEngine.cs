@@ -28,7 +28,7 @@ namespace ToSic.SexyContent.Engines.TokenEngine
         #region Regular Expressions / String Constants
 
         private static readonly dynamic SourcePropertyName =  new {
-            Content     = "content",
+            Content     = Constants.ContentKeyLower,
             ListContent = "listcontent"
         };
 
