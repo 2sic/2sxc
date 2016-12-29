@@ -9,6 +9,7 @@ using ToSic.SexyContent.ContentBlock;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Edit.Toolbar;
 using ToSic.SexyContent.Interfaces;
+using Serializer = ToSic.SexyContent.Serializers.Serializer;
 
 namespace ToSic.SexyContent
 {
@@ -90,6 +91,7 @@ namespace ToSic.SexyContent
                 case "Toolbar":
                     return Toolbar.ToString();
                 case Constants.PresentationKey:
+                    // todo: move out, as this code returns a _different_ presentation object each time!
                     var inContentGroup = Entity as EntityInContentGroup;
                     return (inContentGroup != null)
                         ? new DynamicEntity(inContentGroup.Presentation, _dimensions, SxcInstance)
@@ -144,6 +146,9 @@ namespace ToSic.SexyContent
 
         internal Dictionary<string, object> ToDictionary()
         {
+            // temp solution till we remove all dupl. code
+            var ser = new Serializer(SxcInstance, _dimensions);
+
             var dynamicEntity = this;
             var entity = Entity;
             bool propertyNotFound;
@@ -157,23 +162,12 @@ namespace ToSic.SexyContent
                     : value;
             }));
 
-            dictionary.Add("EntityId", entity.EntityId);
-            dictionary.Add("Modified", entity.Modified);
+            var dic2 = ser.GetDictionaryFromEntity(entity);
 
-            if (entity is EntityInContentGroup && !dictionary.ContainsKey(Constants.PresentationKey)) 
-            {
-                var entityInGroup = (EntityInContentGroup)entity;
-                if (entityInGroup.Presentation != null)
-                {
-                    var subItm = new DynamicEntity(entityInGroup, _dimensions, SxcInstance);
-                    dictionary.Add(Constants.PresentationKey, subItm.ToDictionary());
-                }
-            }
+            dictionary.Add(Constants.JsonEntityIdNodeName, entity.EntityId);
 
-            if (entity is IHasEditingData)
-                dictionary.Add(Constants.JsonEntityEditNodeName, new { sortOrder = ((IHasEditingData)entity).SortOrder });
-            else
-                dictionary.Add(Constants.JsonEntityEditNodeName, new { entityId = entity.EntityId, title = entity.Title != null ? entity.Title[_dimensions[0]] : "(no title)" });
+            ser.AddPresentation(entity, dictionary);
+            ser.AddEditInfo(entity, dictionary);
 
             return dictionary;
         }
@@ -185,8 +179,8 @@ namespace ToSic.SexyContent
                 var cb = new EntityContentBlock(SxcInstance.ContentBlock, Entity);
                 return cb.SxcInstance.Render();
             }
-            else
-                return new HtmlString("<!-- auto-render of item " + EntityId + " -->");
+
+            return new HtmlString("<!-- auto-render of item " + EntityId + " -->");
         }
     }
 

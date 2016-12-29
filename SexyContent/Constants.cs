@@ -15,6 +15,8 @@ namespace ToSic.SexyContent
 
         // additional json-node for metadata in serialized entities, if user has edit rights
         public const string JsonEntityEditNodeName = "_2sxcEditInformation";
+        public const string JsonModifiedNodeName = "Modified";
+        public const string JsonEntityIdNodeName = "EntityId";
 
         // Special use cases of entities
         public const string ContentKey = "Content";
