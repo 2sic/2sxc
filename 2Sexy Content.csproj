@@ -227,11 +227,13 @@
     <Compile Include="Environment\Base\Permissions.cs" />
     <Compile Include="Environment\Dnn7\DataSources\DnnSqlDataSource.cs" />
     <Compile Include="Environment\Dnn7\DataSources\DnnUserProfileDataSource.cs" />
+    <Compile Include="Environment\Dnn7\ClientDependencyManager.cs" />
     <Compile Include="Environment\Dnn7\DnnBusinessController.cs" />
     <Compile Include="Environment\Dnn7\RenderingHelpers.cs" />
     <Compile Include="Environment\Dnn7\Factory.cs" />
     <Compile Include="Environment\Dnn7\UserIdentity.cs" />
     <Compile Include="Environment\Environment.cs" />
+    <Compile Include="Environment\Interfaces\IClientDependencyManager.cs" />
     <Compile Include="Environment\Interfaces\IEnvironment.cs" />
     <Compile Include="Environment\Interfaces\IPermissions.cs" />
     <Compile Include="Environment\None\Permissions.cs" />
