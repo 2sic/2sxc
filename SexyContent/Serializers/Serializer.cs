@@ -61,7 +61,22 @@ namespace ToSic.SexyContent.Serializers
             return dictionary;
 		}
 
-	    internal void AddPresentation(IEntity entity, Dictionary<string, object> dictionary)
+        #region to enhance serializable IEntities with 2sxc specific infos
+
+        #region special "old" serializer which provides data in the older format
+        internal Dictionary<string, object> PrepareOldFormat(IEntity entity)
+        {
+            // var ser = new Serializer(SxcInstance, _dimensions);
+            var dicNew = GetDictionaryFromEntity(entity);
+            var dicToSerialize = ConvertNewSerRelToOldSerRel(dicNew);
+
+            dicToSerialize.Add(Constants.JsonEntityIdNodeName, entity.EntityId);
+
+            return dicToSerialize;
+        }
+        #endregion
+
+        internal void AddPresentation(IEntity entity, Dictionary<string, object> dictionary)
 	    {
             // Add full presentation object if it has one...because there we need more than just id/title
 	        if (entity is EntityInContentGroup && !dictionary.ContainsKey(Constants.PresentationKey))
@@ -91,13 +106,6 @@ namespace ToSic.SexyContent.Serializers
 	                    title = entity.Title != null ? entity.Title[Languages[0]] : "(no title)",
                         isPublished = entity.IsPublished,
                     });
-
-	            //if (entity is IHasEditingData)
-	            //dictionary.Add(Constants.JsonEntityEditNodeName, 
-	            //           new {sortOrder = ((IHasEditingData) entity).SortOrder});
-	            //else
-	            //    dictionary.Add(Constants.JsonEntityEditNodeName,
-	            //        new {entityId = entity.EntityId, title = entity.Title != null ? entity.Title[Languages[0]] : "(no title)"});
 	        }
 	    }
 
@@ -116,6 +124,7 @@ namespace ToSic.SexyContent.Serializers
             return dicToSerialize;
         }
 
+        #endregion
     }
 
 

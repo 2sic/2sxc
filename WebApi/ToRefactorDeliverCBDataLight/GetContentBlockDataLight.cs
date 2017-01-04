@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using System.Threading;
 using Newtonsoft.Json;
 using ToSic.Eav.DataSources;
+using ToSic.SexyContent.Serializers;
 
 namespace ToSic.SexyContent.WebApi.ToRefactorDeliverCBDataLight
 {
@@ -24,14 +24,16 @@ namespace ToSic.SexyContent.WebApi.ToRefactorDeliverCBDataLight
         /// </summary>
         internal string GetJsonFromStreams(IDataSource source, string[] streamsToPublish)
         {
-            var language = Thread.CurrentThread.CurrentCulture.Name;
+            var ser = new Serializer(_sxci);
 
-            var y = streamsToPublish.Where(k => source.Out.ContainsKey(k)).ToDictionary(k => k, s => new
-            {
-                List = (from c in source.Out[s].List select new DynamicEntity(c.Value, new[] { language }, _sxci).ToDictionary() /*Sexy.ToDictionary(c.Value, language)*/).ToList()
-            });
-            // var jss = new JsonSerializerSettings {MaxDepth = 1};
-            return JsonConvert.SerializeObject(y);//, jss);
+            var y = streamsToPublish
+                .Where(k => source.Out.ContainsKey(k))
+                .ToDictionary(k => k, s => new
+                {
+                    List = (from c in source.Out[s].List select ser.PrepareOldFormat(c.Value)).ToList()
+                });
+
+            return JsonConvert.SerializeObject(y);
         }
 
 

@@ -53,7 +53,7 @@ namespace ToSic.SexyContent.WebApi
             var contentTypes = appWrapper.GetContentTypes(scope);
             var entities = appWrapper.GetEntities();
             var templates = appWrapper.GetTemplates();
-            var dimensions = new[] { appWrapper.GetCultureCode() };
+            //var dimensions = new[] { appWrapper.GetCultureCode() };
 
             return new
             {
@@ -67,7 +67,13 @@ namespace ToSic.SexyContent.WebApi
                         Id = t.TemplateId,
                         t.Name
                     }),
-                    Entities = entities.Where(e => e.Value.Type.AttributeSetId == c.AttributeSetId).Select(e => new DynamicEntity(e.Value, dimensions, null).ToDictionary())
+                    Entities = entities
+                        .Where(e => e.Value.Type.AttributeSetId == c.AttributeSetId)
+                        .Select(e => new
+                        {
+                            Title = e.Value.GetBestValue(Eav.Constants.EntityFieldTitle),
+                            Id = e.Value.EntityId
+                        })
                 }),
                 TemplatesWithoutContentTypes = templates.Where(t => !string.IsNullOrEmpty(t.ContentTypeStaticName)).Select(t => new
                 {
@@ -104,6 +110,7 @@ namespace ToSic.SexyContent.WebApi
         {
             EnsureUserIsAdmin();
 
+            // ReSharper disable once UnusedVariable
             var appWrapper = (UserInfo.IsSuperUser)
                 ? new SxcAppWrapper(zoneId, appId)  // only super-user may switch to another zone for export
                 : new SxcAppWrapper(appId);

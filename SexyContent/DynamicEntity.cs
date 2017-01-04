@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Web;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
-using ToSic.Eav.Serializers;
 using ToSic.SexyContent.ContentBlock;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Edit.Toolbar;
 using ToSic.SexyContent.Interfaces;
-using Serializer = ToSic.SexyContent.Serializers.Serializer;
 
 namespace ToSic.SexyContent
 {
@@ -141,61 +138,6 @@ namespace ToSic.SexyContent
         public dynamic GetDraft() => new DynamicEntity(Entity.GetDraft(), _dimensions, SxcInstance);
         
         public dynamic GetPublished() => new DynamicEntity(Entity.GetPublished(), _dimensions, SxcInstance);
-
-        internal Dictionary<string, object> ToDictionary()
-        {
-            // 2017-01-04 new serialization, prevent dupl. code
-            var ser = new Serializer(SxcInstance, _dimensions);
-            var dicNew = ser.GetDictionaryFromEntity(Entity);
-            var dicToSerialize = ser.ConvertNewSerRelToOldSerRel(dicNew);
-
-            #region Old Serialization and test-code to see if new version is the same
-            // 2017-01-04 old code, mostly duplicate of serialization 
-            // Convert DynamicEntity to dictionary
-            //var dynamicEntity = this;
-            //var entity = Entity;
-            //bool propertyNotFound;
-            //var dicOldMethod = ((from d in entity.Attributes select d.Value).ToDictionary(k => k.Name, v =>
-            //{
-            //    var value = dynamicEntity.GetEntityValue(v.Name, out propertyNotFound);
-            //    return (v.Type == "Entity" && value is IList<DynamicEntity>)
-            //        ? ((IList<DynamicEntity>)value).Select(p => new SerializableRelationshipOld() { EntityId = p.EntityId, EntityTitle = p.EntityTitle }).ToList()  // convert to a light list for optimal serialization
-            //        : value;
-            //}));
-
-            // 2017-01-04 test to compare old serialization with newer - see if identical
-            //foreach (var key in dicToSerialize.Keys)
-            //{
-            //    if (!dicNew.ContainsKey(key))
-            //        throw new Exception("key not found in target");
-            //    var e1 = dicToSerialize[key];
-            //    var e2 = dicNew[key];
-            //    var origlist = e1 as List<SerializableRelationshipOld>;
-            //    var origrel = origlist?.FirstOrDefault();
-            //    var secondlist = e2 as List<SerializableRelationshipOld>;
-            //    var secondrel = secondlist?.FirstOrDefault();
-            //    if (origrel != null && secondrel != null)
-            //    {
-            //        if (!(
-            //            origrel.EntityId == secondrel.EntityId && origrel.EntityTitle == secondrel.EntityTitle))
-            //            throw new Exception("relationship with different stuff");
-            //    }
-            //    else if (e1 != null && e2 != null && !e1.Equals(e2))
-            //        if (key != "Languages") // special case, skip testing this
-            //            throw new Exception("not full match on " + key + " orig is " + e1);
-            //}
-            //if (dicNew.Keys.Any(key => key != "Id" && key != "Title" && !dicToSerialize.ContainsKey(key)))
-            //    throw new Exception("key in 2 not found in original");
-            #endregion
-
-            dicToSerialize.Add(Constants.JsonEntityIdNodeName, Entity.EntityId);
-
-            //ser.AddPresentation(Entity, dicToSerialize);
-            //ser.AddEditInfo(Entity, dicToSerialize);
-
-            return dicToSerialize;
-        }
-
 
         public HtmlString Render()
         {
