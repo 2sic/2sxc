@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav;
+using ToSic.Eav.Serializers;
 using ToSic.SexyContent.EAVExtensions;
 
 namespace ToSic.SexyContent.Serializers
@@ -85,5 +86,31 @@ namespace ToSic.SexyContent.Serializers
 	                    new {entityId = entity.EntityId, title = entity.Title != null ? entity.Title[Languages[0]] : "(no title)"});
 	        }
 	    }
-	}
+
+        internal Dictionary<string, object> ConvertNewSerRelToOldSerRel(Dictionary<string, object> dicNew)
+        {
+            // find all items which are of type List<SerializableRelationship>
+            // then convert to EntityId and EntityTitle to conform to "old" format
+            var dicToSerialize = new Dictionary<string, object>();
+            foreach (string key in dicNew.Keys)
+            {
+                var list = dicNew[key] as List<SerializableRelationship>;
+                dicToSerialize.Add(key,
+                    list?.Select(p => new SerializableRelationshipOld() { EntityId = p.Id, EntityTitle = p.Title }).ToList() ??
+                    dicNew[key]);
+            }
+            return dicToSerialize;
+        }
+
+    }
+
+
+    // Helper to provide old interface with "EntityId" and "EntityTitle" instead of 
+    // "Id" and "Title"
+    public class SerializableRelationshipOld
+    {
+        public int? EntityId;
+        public object EntityTitle;
+    }
+
 }

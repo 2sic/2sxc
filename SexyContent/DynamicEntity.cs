@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
+using ToSic.Eav.Serializers;
 using ToSic.SexyContent.ContentBlock;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Edit.Toolbar;
@@ -75,7 +76,7 @@ namespace ToSic.SexyContent
             result = GetEntityValue(memberName, out propertyNotFound);
 
             if (propertyNotFound)
-                result = null; // String.Format(Configuration.ErrorKeyMissing, memberName);
+                result = null;
 
             return true;
         }
@@ -86,17 +87,16 @@ namespace ToSic.SexyContent
             propertyNotFound = false;   // assume found, as that's usually the case
 
             #region check the two special cases which the EAV doesn't know
-            switch (attributeName)
-            {
-                case "Toolbar":
-                    return Toolbar.ToString();
-                case Constants.PresentationKey:
-                    return Presentation;
-            }
+
+            if (attributeName == "Toolbar")
+                return Toolbar.ToString();
+
+            if (attributeName == Constants.PresentationKey)
+                return Presentation;
+
             #endregion
 
 
-            // 2016-02-27 2dm - fixed to use the full standard ValueConverter - seems to fix some issues
             var result = Entity.GetBestValue(attributeName, _dimensions, true);
 
             if (result is Eav.Data.EntityRelationship)
@@ -104,16 +104,12 @@ namespace ToSic.SexyContent
                 var relList = ((Eav.Data.EntityRelationship) result).Select(
                     p => new DynamicEntity(p, _dimensions, SxcInstance)
                     ).ToList();
-                result = relList;// new DynamicEntityList(Entity, attributeName, relList, _sxcInstance.Environment.Permissions.UserMayEditContent);
+                result = relList;
             }
 
             //set out-information
             propertyNotFound = result == null;
             return result;
-
-
-
-
         }
 
         private DynamicEntity _presentation;
@@ -148,31 +144,58 @@ namespace ToSic.SexyContent
 
         internal Dictionary<string, object> ToDictionary()
         {
-            // temp solution till we remove all dupl. code
+            // 2017-01-04 new serialiszation, prevent dupl. code
             var ser = new Serializer(SxcInstance, _dimensions);
+            var dicNew = ser.GetDictionaryFromEntity(Entity);
+            var dicToSerialize = ser.ConvertNewSerRelToOldSerRel(dicNew);
 
-            var dynamicEntity = this;
-            var entity = Entity;
-            bool propertyNotFound;
-
+            #region Old Serialization and test-code to see if new version is the same
+            // 2017-01-04 old code, mostly duplicate of serialization 
             // Convert DynamicEntity to dictionary
-            var dictionary = ((from d in entity.Attributes select d.Value).ToDictionary(k => k.Name, v =>
-            {
-                var value = dynamicEntity.GetEntityValue(v.Name, out propertyNotFound);
-                return (v.Type == "Entity" && value is IList<DynamicEntity>)
-                    ? ((IList<DynamicEntity>) value).Select(p => new {p.EntityId, p.EntityTitle}).ToList()  // convert to a light list for optimal serialization
-                    : value;
-            }));
+            //var dynamicEntity = this;
+            //var entity = Entity;
+            //bool propertyNotFound;
+            //var dicOldMethod = ((from d in entity.Attributes select d.Value).ToDictionary(k => k.Name, v =>
+            //{
+            //    var value = dynamicEntity.GetEntityValue(v.Name, out propertyNotFound);
+            //    return (v.Type == "Entity" && value is IList<DynamicEntity>)
+            //        ? ((IList<DynamicEntity>)value).Select(p => new SerializableRelationshipOld() { EntityId = p.EntityId, EntityTitle = p.EntityTitle }).ToList()  // convert to a light list for optimal serialization
+            //        : value;
+            //}));
 
-            var dic2 = ser.GetDictionaryFromEntity(entity);
+            // 2017-01-04 test to compare old serialization with newer - see if identical
+            //foreach (var key in dicToSerialize.Keys)
+            //{
+            //    if (!dicNew.ContainsKey(key))
+            //        throw new Exception("key not found in target");
+            //    var e1 = dicToSerialize[key];
+            //    var e2 = dicNew[key];
+            //    var origlist = e1 as List<SerializableRelationshipOld>;
+            //    var origrel = origlist?.FirstOrDefault();
+            //    var secondlist = e2 as List<SerializableRelationshipOld>;
+            //    var secondrel = secondlist?.FirstOrDefault();
+            //    if (origrel != null && secondrel != null)
+            //    {
+            //        if (!(
+            //            origrel.EntityId == secondrel.EntityId && origrel.EntityTitle == secondrel.EntityTitle))
+            //            throw new Exception("relationship with different stuff");
+            //    }
+            //    else if (e1 != null && e2 != null && !e1.Equals(e2))
+            //        if (key != "Languages") // special case, skip testing this
+            //            throw new Exception("not full match on " + key + " orig is " + e1);
+            //}
+            //if (dicNew.Keys.Any(key => key != "Id" && key != "Title" && !dicToSerialize.ContainsKey(key)))
+            //    throw new Exception("key in 2 not found in original");
+            #endregion
 
-            dictionary.Add(Constants.JsonEntityIdNodeName, entity.EntityId);
+            dicToSerialize.Add(Constants.JsonEntityIdNodeName, Entity.EntityId);
 
-            ser.AddPresentation(entity, dictionary);
-            ser.AddEditInfo(entity, dictionary);
+            ser.AddPresentation(Entity, dicToSerialize);
+            ser.AddEditInfo(Entity, dicToSerialize);
 
-            return dictionary;
+            return dicToSerialize;
         }
+
 
         public HtmlString Render()
         {
@@ -185,7 +208,5 @@ namespace ToSic.SexyContent
             return new HtmlString("<!-- auto-render of item " + EntityId + " -->");
         }
     }
-
-
 
 }
