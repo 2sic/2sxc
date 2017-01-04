@@ -8,8 +8,9 @@ using System.Web.Hosting;
 using System.Web.UI;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
-using DotNetNuke.Entities.Users;
+using DotNetNuke.Web.Client;
 using DotNetNuke.Web.Client.ClientResourceManagement;
+using DotNetNuke.Web.Client.Providers;
 using Newtonsoft.Json;
 using ToSic.SexyContent.Search;
 using ToSic.SexyContent.Security;
@@ -90,6 +91,19 @@ namespace ToSic.SexyContent.Engines
             return HandleClientDependencyInjection(renderedTemplate);
         }
 
+        // pre-compile all reg-ex, to improve performance
+        private const string ClientDependencyRegex =
+            "\\sdata-enableoptimizations=('|\")(?<Priority>true|[0-9]+)?(?::)?(?<Position>bottom|head|body)?('|\")(>|\\s)";
+
+        private const string ScriptRegExFormula = "<script\\s([^>]*)src=('|\")(?<Src>.*?)('|\")(([^>]*/>)|[^>]*(>.*?</script>))";
+        private const string StyleRegExFormula = "<link\\s([^>]*)href=('|\")(?<Src>.*?)('|\")([^>]*)(>.*?</link>|/>)";
+        private const string StyleRelFormula = "('|\"|\\s)rel=('|\")stylesheet('|\")";
+
+        private static readonly Regex ScriptDetection = new Regex(ScriptRegExFormula, RegexOptions.IgnoreCase | RegexOptions.Singleline);
+        private static readonly Regex StyleDetection = new Regex(StyleRegExFormula, RegexOptions.IgnoreCase | RegexOptions.Singleline);
+        private static readonly  Regex StyleRelDetect = new Regex(StyleRelFormula, RegexOptions.IgnoreCase);
+        private static readonly Regex OptimizeDetection = new Regex(ClientDependencyRegex, RegexOptions.IgnoreCase);
+
         private string HandleClientDependencyInjection(string renderedTemplate)
         {
             if (HttpContext.Current == null || HttpContext.Current.CurrentHandler == null || !(HttpContext.Current.CurrentHandler is Page))
@@ -99,25 +113,26 @@ namespace ToSic.SexyContent.Engines
 
             #region  Handle Client Dependency injection
 
-            var clientDependencyRegex = "\\sdata-enableoptimizations=('|\")(?<Priority>true|[0-9]+)('|\")(>|\\s)";
-
             #region Scripts
-            var scriptMatches = Regex.Matches(renderedTemplate, "<script\\s([^>]*)src=('|\")(?<Src>.*?)('|\")(([^>]*/>)|[^>]*(>.*?</script>))", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+
+            var scriptMatches = ScriptDetection.Matches(renderedTemplate);// Regex.Matches(renderedTemplate, scriptRegExFormula, RegexOptions.IgnoreCase | RegexOptions.Singleline);
             var scriptMatchesToRemove = new List<Match>();
 
             foreach (Match match in scriptMatches)
             {
-                var clientDependencyMatch = Regex.Match(match.Value, clientDependencyRegex, RegexOptions.IgnoreCase);
-                if (!clientDependencyMatch.Success)
+                var optMatch = OptimizeDetection.Match(match.Value);// Regex.Match(match.Value, ClientDependencyRegex, RegexOptions.IgnoreCase);
+                if (!optMatch.Success)
                     continue;
 
-                var path = match.Groups["Src"].Value;
-                var priority = clientDependencyMatch.Groups["Priority"].Value;
+                //var defPos = "body";
+                //var position = (optMatch.Groups["Position"]?.Value ?? defPos).ToLower(); // default JS provider, see https://github.com/dnnsoftware/Dnn.Platform/blob/a142594a0c18a589cb5fb913a022eebe34549a8f/DNN%20Platform/DotNetNuke.Web.Client/ClientResourceManager.cs#L54
+                var providerName = GetProviderName(optMatch, "body");
 
-                if (priority == "true")
-                    ClientResourceManager.RegisterScript(page, path);
-                else
-                    ClientResourceManager.RegisterScript(page, path, int.Parse(priority));
+                var prio = GetPriority(optMatch, (int) FileOrder.Js.DefaultPriority);
+
+                if (prio <= 0) continue;    // don't register/remove if not within specs
+
+                ClientResourceManager.RegisterScript(page, match.Groups["Src"].Value, prio, providerName);
 
                 // Remove the script tag from the Rendered Template
                 scriptMatchesToRemove.Add(match);
@@ -129,26 +144,32 @@ namespace ToSic.SexyContent.Engines
 
             #region Styles
 
-            var styleMatches = Regex.Matches(renderedTemplate, "<link\\s([^>]*)href=('|\")(?<Src>.*?)('|\")([^>]*)(>.*?</link>|/>)", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+            var styleMatches = StyleDetection.Matches(renderedTemplate);// Regex.Matches(renderedTemplate, "<link\\s([^>]*)href=('|\")(?<Src>.*?)('|\")([^>]*)(>.*?</link>|/>)", RegexOptions.IgnoreCase | RegexOptions.Singleline);
             var styleMatchesToRemove = new List<Match>();
 
             foreach (Match match in styleMatches)
             {
-                var clientDependencyMatch = Regex.Match(match.Value, clientDependencyRegex, RegexOptions.IgnoreCase);
-                if (!clientDependencyMatch.Success)
+                var optMatch = OptimizeDetection.Match(match.Value);// Regex.Match(match.Value, ClientDependencyRegex, RegexOptions.IgnoreCase);
+                if (!optMatch.Success)
                     continue;
 
                 // Break If the Rel attribute is not stylesheet
-                if (!Regex.IsMatch(match.Value, "('|\"|\\s)rel=('|\")stylesheet('|\")", RegexOptions.IgnoreCase))
+                if (!StyleRelDetect.IsMatch(match.Value))// !Regex.IsMatch(match.Value, "('|\"|\\s)rel=('|\")stylesheet('|\")", RegexOptions.IgnoreCase))
                     continue;
 
-                var path = match.Groups["Src"].Value;
-                var priority = clientDependencyMatch.Groups["Priority"].Value;
+                // var position = (optMatch.Groups["Position"]?.Value ?? "head").ToLower(); // default CSS provider, see https://github.com/dnnsoftware/Dnn.Platform/blob/a142594a0c18a589cb5fb913a022eebe34549a8f/DNN%20Platform/DotNetNuke.Web.Client/ClientResourceManager.cs#L54
+                var providerName = GetProviderName(optMatch, "head");
 
-                if (priority == "true")
-                    ClientResourceManager.RegisterStyleSheet(page, path);
-                else
-                    ClientResourceManager.RegisterStyleSheet(page, path, int.Parse(priority));
+                var prio = GetPriority(optMatch, (int) FileOrder.Css.DefaultPriority);
+
+                //var priority = (clientDependencyMatch.Groups["Priority"]?.Value ?? "true").ToLower();
+                //var prio = (priority == "true" || priority == "")
+                //    ? (int) FileOrder.Css.DefaultPriority
+                //    : int.Parse(priority);
+
+                if (prio <= 0) continue;    // don't register/remove if not within specs
+
+                ClientResourceManager.RegisterStyleSheet(page, match.Groups["Src"].Value, prio, providerName);
 
                 // Remove the script tag from the Rendered Template
                 styleMatchesToRemove.Add(match);
@@ -161,6 +182,31 @@ namespace ToSic.SexyContent.Engines
             #endregion
 
             return renderedTemplate;
+        }
+
+        private int GetPriority(Match optMatch, int defValue)
+        {
+            var priority = (optMatch.Groups["Priority"]?.Value ?? "true").ToLower();
+            var prio = (priority == "true" || priority == "")
+                ? defValue
+                : int.Parse(priority);
+            return prio;
+        }
+
+        private string GetProviderName(Match optMatch, string defaultPosition)
+        {
+            var position = (optMatch.Groups["Position"]?.Value ?? defaultPosition).ToLower();
+
+            switch (position)
+            {
+                case "body":
+                    return DnnBodyProvider.DefaultName;
+                case "head":
+                    return DnnPageHeaderProvider.DefaultName;
+                case "bottom":
+                    return DnnFormBottomProvider.DefaultName;
+            }
+            return "";
         }
 
         // todo: i18n
