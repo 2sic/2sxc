@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav;
-using ToSic.Eav.Data;
 using ToSic.Eav.Interfaces;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.EAVExtensions
 {
     public abstract class EntityDecorator : IEntity
@@ -17,15 +17,13 @@ namespace ToSic.SexyContent.EAVExtensions
 
         #region IEntity Implementation
 
-        public IEntity GetDraft()
-        {
-            return _baseEntity.GetDraft();
-        }
+        public IEntity GetDraft() => _baseEntity.GetDraft();
+        
 
-        public IEntity GetPublished()
-        {
-            return _baseEntity.GetPublished();
-        }
+        public IEntity GetPublished() => _baseEntity.GetPublished();
+
+        public string GetBestTitle() => _baseEntity.GetBestTitle();
+        
 
         public int EntityId => _baseEntity.EntityId;
         public int RepositoryId => _baseEntity.RepositoryId;
@@ -42,21 +40,20 @@ namespace ToSic.SexyContent.EAVExtensions
 
         public IAttribute this[string attributeName] => _baseEntity[attributeName];
 
-        public ToSic.Eav.Interfaces.IRelationshipManager Relationships => _baseEntity.Relationships;
+        public IRelationshipManager Relationships => _baseEntity.Relationships;
+
         public bool IsPublished => _baseEntity.IsPublished;
 
         public string Owner => _baseEntity.Owner;
 
 
-        public object GetBestValue(string attributeName, bool resolveHyperlinks = false) 
-        {
-			return _baseEntity.GetBestValue(attributeName, resolveHyperlinks);
-        }
+        public object GetBestValue(string attributeName, bool resolveHyperlinks = false)
+            => _baseEntity.GetBestValue(attributeName, resolveHyperlinks);
 
-		public object GetBestValue(string attributeName, string[] dimensions, bool resolveHyperlinks = false)//, out bool propertyNotFound)
-        {
-			return _baseEntity.GetBestValue(attributeName, dimensions, resolveHyperlinks); //, out propertyNotFound);
-        }
+
+        public object GetBestValue(string attributeName, string[] dimensions, bool resolveHyperlinks = false)
+            => _baseEntity.GetBestValue(attributeName, dimensions, resolveHyperlinks); 
+
 
         #endregion
     }

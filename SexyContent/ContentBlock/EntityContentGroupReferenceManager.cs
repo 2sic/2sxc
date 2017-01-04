@@ -46,9 +46,9 @@ namespace ToSic.SexyContent.ContentBlock
 
         internal override void UpdateTitle(IEntity titleItem)
         {
-            if (titleItem?.GetBestValue("EntityTitle") == null) return;
+            if (titleItem?.GetBestTitle() == null) return;
 
-            UpdateValue(EntityContentBlock.CbPropertyTitle, titleItem.GetBestValue("EntityTitle"));
+            UpdateValue(EntityContentBlock.CbPropertyTitle, titleItem.GetBestTitle());
         }
 
         #endregion

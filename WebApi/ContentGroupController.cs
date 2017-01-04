@@ -73,7 +73,7 @@ namespace ToSic.SexyContent.WebApi
 
             var dataSource = App.Data[ct.Name]; 
             var results = dataSource.List.ToDictionary(p => p.Value.EntityId,
-                p => p.Value.GetBestValue("EntityTitle")?.ToString() ?? "");
+                p => p.Value.GetBestTitle() ?? "");
 
             var selectedId = set.Count == 0 ? null : set[index]?.EntityId;
 
@@ -104,7 +104,7 @@ namespace ToSic.SexyContent.WebApi
                 Index = index,
                 Id = c?.EntityId ?? 0,
                 Guid = c?.EntityGuid ?? Guid.Empty,
-                Title = c?.GetBestValue("EntityTitle")?.ToString() ?? "",
+                Title = c?.GetBestTitle() ?? "",
                 Type = c?.Type.StaticName ?? cg.Template.ContentTypeStaticName
             }).ToList();
 
@@ -137,7 +137,7 @@ namespace ToSic.SexyContent.WebApi
                 Index = 0,
                 Id = header?.EntityId ?? 0,
                 Guid = header?.EntityGuid ?? Guid.Empty,
-                Title = header?.GetBestValue("EntityTitle")?.ToString() ?? "",
+                Title = header?.GetBestTitle() ?? "",
                 Type = header?.Type.StaticName?? cg.Template.ListContentTypeStaticName
             };
         }

@@ -71,7 +71,7 @@ namespace ToSic.SexyContent.WebApi
                         .Where(e => e.Value.Type.AttributeSetId == c.AttributeSetId)
                         .Select(e => new
                         {
-                            Title = e.Value.GetBestValue(Eav.Constants.EntityFieldTitle),
+                            Title = e.Value.GetBestTitle(),
                             Id = e.Value.EntityId
                         })
                 }),
