@@ -79,11 +79,25 @@ namespace ToSic.SexyContent.Serializers
 	        {
 	            dictionary.Add(Constants.JsonModifiedNodeName, entity.Modified);
 
-	            if (entity is IHasEditingData)
-	                dictionary.Add(Constants.JsonEntityEditNodeName, new {sortOrder = ((IHasEditingData) entity).SortOrder});
-	            else
-	                dictionary.Add(Constants.JsonEntityEditNodeName,
-	                    new {entityId = entity.EntityId, title = entity.Title != null ? entity.Title[Languages[0]] : "(no title)"});
+	            //if (entity is IHasEditingData)
+	            dictionary.Add(Constants.JsonEntityEditNodeName, entity is IHasEditingData
+	                ? (object) new
+	                {
+	                    sortOrder = ((IHasEditingData) entity).SortOrder,
+                        isPublished = entity.IsPublished,
+	                }
+	                : new {
+	                    entityId = entity.EntityId,
+	                    title = entity.Title != null ? entity.Title[Languages[0]] : "(no title)",
+                        isPublished = entity.IsPublished,
+                    });
+
+	            //if (entity is IHasEditingData)
+	            //dictionary.Add(Constants.JsonEntityEditNodeName, 
+	            //           new {sortOrder = ((IHasEditingData) entity).SortOrder});
+	            //else
+	            //    dictionary.Add(Constants.JsonEntityEditNodeName,
+	            //        new {entityId = entity.EntityId, title = entity.Title != null ? entity.Title[Languages[0]] : "(no title)"});
 	        }
 	    }
 

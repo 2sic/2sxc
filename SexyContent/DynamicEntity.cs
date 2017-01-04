@@ -144,7 +144,7 @@ namespace ToSic.SexyContent
 
         internal Dictionary<string, object> ToDictionary()
         {
-            // 2017-01-04 new serialiszation, prevent dupl. code
+            // 2017-01-04 new serialization, prevent dupl. code
             var ser = new Serializer(SxcInstance, _dimensions);
             var dicNew = ser.GetDictionaryFromEntity(Entity);
             var dicToSerialize = ser.ConvertNewSerRelToOldSerRel(dicNew);
@@ -190,8 +190,8 @@ namespace ToSic.SexyContent
 
             dicToSerialize.Add(Constants.JsonEntityIdNodeName, Entity.EntityId);
 
-            ser.AddPresentation(Entity, dicToSerialize);
-            ser.AddEditInfo(Entity, dicToSerialize);
+            //ser.AddPresentation(Entity, dicToSerialize);
+            //ser.AddEditInfo(Entity, dicToSerialize);
 
             return dicToSerialize;
         }
