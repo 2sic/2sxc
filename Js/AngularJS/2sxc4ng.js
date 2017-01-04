@@ -240,8 +240,7 @@
             attrib = ngElement.attr(ng.iidAttrNames[i]);
             if (attrib) {
                 var iid = parseInt(attrib.toString().replace(/\D/g, "")); // filter all characters if necessary
-                if (!iid) throw "iid or instanceId (the DNN moduleid) not supplied and automatic lookup failed. Please set app-tag attribute iid or give id in bootstrap call";
-                return iid;
+                if(iid) return iid; // if it contained a number, use it, otherwise continue
             }
         }
         return null;
