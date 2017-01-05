@@ -5,27 +5,13 @@ using System.Web.UI;
 using DotNetNuke.Web.Client;
 using DotNetNuke.Web.Client.ClientResourceManagement;
 using DotNetNuke.Web.Client.Providers;
-using ToSic.SexyContent.Environment.Interfaces;
 
 namespace ToSic.SexyContent.Environment.Dnn7
 {
-    internal class ClientDependencyManager: IClientDependencyManager
+    internal class ClientDependencyManager: Base.ClientDepedencyManager
     {
-        #region RegEx formulas and static compiled RegEx objects (performance)
-        private const string ClientDependencyRegex =
-            "\\sdata-enableoptimizations=('|\")(?<Priority>true|[0-9]+)?(?::)?(?<Position>bottom|head|body)?('|\")(>|\\s)";
 
-        private const string ScriptRegExFormula = "<script\\s([^>]*)src=('|\")(?<Src>.*?)('|\")(([^>]*/>)|[^>]*(>.*?</script>))";
-        private const string StyleRegExFormula = "<link\\s([^>]*)href=('|\")(?<Src>.*?)('|\")([^>]*)(>.*?</link>|/>)";
-        private const string StyleRelFormula = "('|\"|\\s)rel=('|\")stylesheet('|\")";
-
-        private static readonly Regex ScriptDetection = new Regex(ScriptRegExFormula, RegexOptions.IgnoreCase | RegexOptions.Singleline);
-        private static readonly Regex StyleDetection = new Regex(StyleRegExFormula, RegexOptions.IgnoreCase | RegexOptions.Singleline);
-        private static readonly Regex StyleRelDetect = new Regex(StyleRelFormula, RegexOptions.IgnoreCase);
-        private static readonly Regex OptimizeDetection = new Regex(ClientDependencyRegex, RegexOptions.IgnoreCase);
-        #endregion
-
-        public string Process(string renderedTemplate)
+        public override string Process(string renderedTemplate)
         {
             if (HttpContext.Current == null || HttpContext.Current.CurrentHandler == null || !(HttpContext.Current.CurrentHandler is Page))
                 return renderedTemplate;

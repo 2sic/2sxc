@@ -224,6 +224,7 @@
     <Compile Include="Edit\InPageEditingSystem\InPageEditingHelperBase.cs" />
     <Compile Include="Edit\Toolbar\ItemToolbar.cs" />
     <Compile Include="Edit\Toolbar\ItemToolbarAction.cs" />
+    <Compile Include="Environment\Base\ClientDepedencyManager.cs" />
     <Compile Include="Environment\Base\Permissions.cs" />
     <Compile Include="Environment\Dnn7\DataSources\DnnSqlDataSource.cs" />
     <Compile Include="Environment\Dnn7\DataSources\DnnUserProfileDataSource.cs" />
