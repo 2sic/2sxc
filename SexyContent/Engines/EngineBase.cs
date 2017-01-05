@@ -2,14 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Hosting;
-using System.Web.UI;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
-using DotNetNuke.Entities.Users;
-using DotNetNuke.Web.Client.ClientResourceManagement;
 using Newtonsoft.Json;
 using ToSic.SexyContent.Search;
 using ToSic.SexyContent.Security;
@@ -87,81 +83,9 @@ namespace ToSic.SexyContent.Engines
                 return AlternateRendering;
 
             var renderedTemplate = RenderTemplate();
-            return HandleClientDependencyInjection(renderedTemplate);
+            return new Environment.Dnn7.ClientDependencyManager().Process(renderedTemplate);
         }
 
-        private string HandleClientDependencyInjection(string renderedTemplate)
-        {
-            if (HttpContext.Current == null || HttpContext.Current.CurrentHandler == null || !(HttpContext.Current.CurrentHandler is Page))
-                return renderedTemplate;
-
-            var page = (HttpContext.Current.CurrentHandler as Page);
-
-            #region  Handle Client Dependency injection
-
-            var clientDependencyRegex = "\\sdata-enableoptimizations=('|\")(?<Priority>true|[0-9]+)('|\")(>|\\s)";
-
-            #region Scripts
-            var scriptMatches = Regex.Matches(renderedTemplate, "<script\\s([^>]*)src=('|\")(?<Src>.*?)('|\")(([^>]*/>)|[^>]*(>.*?</script>))", RegexOptions.IgnoreCase | RegexOptions.Singleline);
-            var scriptMatchesToRemove = new List<Match>();
-
-            foreach (Match match in scriptMatches)
-            {
-                var clientDependencyMatch = Regex.Match(match.Value, clientDependencyRegex, RegexOptions.IgnoreCase);
-                if (!clientDependencyMatch.Success)
-                    continue;
-
-                var path = match.Groups["Src"].Value;
-                var priority = clientDependencyMatch.Groups["Priority"].Value;
-
-                if (priority == "true")
-                    ClientResourceManager.RegisterScript(page, path);
-                else
-                    ClientResourceManager.RegisterScript(page, path, int.Parse(priority));
-
-                // Remove the script tag from the Rendered Template
-                scriptMatchesToRemove.Add(match);
-            }
-
-            scriptMatchesToRemove.Reverse();
-            scriptMatchesToRemove.ForEach(p => renderedTemplate = renderedTemplate.Remove(p.Index, p.Length));
-            #endregion
-
-            #region Styles
-
-            var styleMatches = Regex.Matches(renderedTemplate, "<link\\s([^>]*)href=('|\")(?<Src>.*?)('|\")([^>]*)(>.*?</link>|/>)", RegexOptions.IgnoreCase | RegexOptions.Singleline);
-            var styleMatchesToRemove = new List<Match>();
-
-            foreach (Match match in styleMatches)
-            {
-                var clientDependencyMatch = Regex.Match(match.Value, clientDependencyRegex, RegexOptions.IgnoreCase);
-                if (!clientDependencyMatch.Success)
-                    continue;
-
-                // Break If the Rel attribute is not stylesheet
-                if (!Regex.IsMatch(match.Value, "('|\"|\\s)rel=('|\")stylesheet('|\")", RegexOptions.IgnoreCase))
-                    continue;
-
-                var path = match.Groups["Src"].Value;
-                var priority = clientDependencyMatch.Groups["Priority"].Value;
-
-                if (priority == "true")
-                    ClientResourceManager.RegisterStyleSheet(page, path);
-                else
-                    ClientResourceManager.RegisterStyleSheet(page, path, int.Parse(priority));
-
-                // Remove the script tag from the Rendered Template
-                styleMatchesToRemove.Add(match);
-            }
-
-            styleMatchesToRemove.Reverse();
-            styleMatchesToRemove.ForEach(p => renderedTemplate = renderedTemplate.Remove(p.Index, p.Length));
-
-            #endregion
-            #endregion
-
-            return renderedTemplate;
-        }
 
         // todo: i18n
         private void CheckExpectedTemplateErrors()
