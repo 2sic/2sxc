@@ -6,7 +6,7 @@ using DotNetNuke.Services.Exceptions;
 using ToSic.Eav;
 using ToSic.SexyContent.Internal;
 
-namespace ToSic.SexyContent.ContentBlock
+namespace ToSic.SexyContent.ContentBlocks
 {
 
     internal abstract class ContentGroupReferenceManagerBase 

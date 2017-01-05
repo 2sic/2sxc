@@ -699,9 +699,10 @@ angular.module("sxcFieldTemplates")
                     }
                     if (type === "file" || type === "image") {
                         dnnBridgeSvc.convertPathToId(value, type)
-                            .then(function(result) {
-                                if (result.data)
-                                    $scope.value.Value = "file:" + result.data.FileId;
+                            .then(function (result) {
+                                $scope.value.Value = (result.data)
+                                    ? "file:" + result.data.FileId // default case, found number for this
+                                    : value; // this happens when it couldn't be resolved, for example on a secure file ticket
                             });
                     }
                 });
@@ -1409,7 +1410,7 @@ angular.module("sxcFieldTemplates")
                 "searchreplace", // search/replace https://www.tinymce.com/docs/plugins/searchreplace/
                 "table", // https://www.tinymce.com/docs/plugins/searchreplace/
                 "lists", // should fix bug with fonts in list-items (https://github.com/tinymce/tinymce/issues/2330),
-                "textpattern", // enable typing like "1. text" to create lists etc.
+                "textpattern" // enable typing like "1. text" to create lists etc.
             ],
 
             // the WYSIWYG-modes we offer, standard with simple toolbar and advanced with much more
@@ -1439,7 +1440,7 @@ angular.module("sxcFieldTemplates")
 
             validateAlso: '@[class]' // allow classes on all elements, 
                     + ',i' // allow i elements (allows icon-font tags like <i class="fa fa-...">)
-                    + ",hr[sxc|guid]", // experimental: allow inline content-blocks
+                    + ",hr[sxc|guid]" // experimental: allow inline content-blocks
         };
 
         svc.getDefaultOptions = function() {
@@ -1473,7 +1474,7 @@ angular.module("sxcFieldTemplates")
 
                 language: svc.defaultLanguage,
 
-                debounce: false // prevent slow update of model
+                debounce: false // DONT slow-down model updates - otherwise we sometimes miss the last changes
             };
         };
 

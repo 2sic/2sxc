@@ -12,7 +12,7 @@ using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Web.Api;
 using ToSic.Eav;
 using ToSic.Eav.BLL;
-using ToSic.SexyContent.ContentBlock;
+using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.Installer;
 using ToSic.SexyContent.Internal;
 using Assembly = System.Reflection.Assembly;

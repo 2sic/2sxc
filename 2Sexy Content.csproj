@@ -187,7 +187,7 @@
       <DependentUpon>Services.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Beta\InTextContentBlocks.cs" />
+    <Compile Include="SexyContent\ContentBlocks\Renderers\InTextContentBlocks.cs" />
     <Compile Include="DnnWebForms\FileManager.ascx.cs">
       <DependentUpon>FileManager.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -252,10 +252,12 @@
     <Compile Include="Interfaces\ILinkHelper.cs" />
     <Compile Include="SexyContent\AppAssets\AssetEditInfo.cs" />
     <Compile Include="SexyContent\Constants.cs" />
-    <Compile Include="SexyContent\ContentBlock\ContentGroupReferenceManagerBase.cs" />
-    <Compile Include="SexyContent\ContentBlock\ContentBlockBase.cs" />
-    <Compile Include="SexyContent\ContentBlock\EntityContentGroupReferenceManager.cs" />
-    <Compile Include="SexyContent\ContentBlock\ModuleContentGroupReferenceManager.cs" />
+    <Compile Include="SexyContent\ContentBlocks\ContentGroupReferenceManagerBase.cs" />
+    <Compile Include="SexyContent\ContentBlocks\ContentBlockBase.cs" />
+    <Compile Include="SexyContent\ContentBlocks\EntityContentGroupReferenceManager.cs" />
+    <Compile Include="SexyContent\ContentBlocks\Render.cs" />
+    <Compile Include="SexyContent\ContentBlocks\ModuleContentGroupReferenceManager.cs" />
+    <Compile Include="SexyContent\ContentBlocks\Renderers\Simple.cs" />
     <Compile Include="SexyContent\DataSources\DnnFormAndList.cs" />
     <Compile Include="SexyContent\DataSources\SxcValueCollectionProvider.cs" />
     <Compile Include="SexyContent\ImportExport\Const2.cs" />
@@ -269,8 +271,8 @@
     <Compile Include="SexyContent\Installer\V8.cs" />
     <Compile Include="SexyContent\Installer\VersionBase.cs" />
     <Compile Include="SexyContent\Internal\AppManagement.cs" />
-    <Compile Include="SexyContent\ContentBlock\EntityContentBlock.cs" />
-    <Compile Include="SexyContent\ContentBlock\ModuleContentBlock.cs" />
+    <Compile Include="SexyContent\ContentBlocks\EntityContentBlock.cs" />
+    <Compile Include="SexyContent\ContentBlocks\ModuleContentBlock.cs" />
     <Compile Include="SexyContent\ContentGroup.cs" />
     <Compile Include="SexyContent\ContentGroupManager.cs" />
     <Compile Include="SexyContent\DataSources\ConfigurationProvider.cs" />
@@ -467,7 +469,9 @@
   <ItemGroup>
     <Content Include="SexyContent\ImportExport\Instructions\ReleaseNotes.txt" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Beta\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

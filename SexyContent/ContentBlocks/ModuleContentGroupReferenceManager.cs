@@ -2,7 +2,7 @@
 using ToSic.Eav;
 using ToSic.SexyContent.Internal;
 
-namespace ToSic.SexyContent.ContentBlock
+namespace ToSic.SexyContent.ContentBlocks
 {
     internal class ModuleContentGroupReferenceManager: ContentGroupReferenceManagerBase
     {

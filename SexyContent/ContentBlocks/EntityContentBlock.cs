@@ -4,7 +4,7 @@ using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Interfaces;
 using ToSic.SexyContent.Internal;
 
-namespace ToSic.SexyContent.ContentBlock
+namespace ToSic.SexyContent.ContentBlocks
 {
     internal sealed class EntityContentBlock: ContentBlockBase
     {

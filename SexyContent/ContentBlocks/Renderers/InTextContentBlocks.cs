@@ -5,47 +5,35 @@ using System.Text;
 using System.Text.RegularExpressions;
 using ToSic.SexyContent.Edit.InPageEditingSystem;
 
-namespace ToSic.SexyContent.Beta
+namespace ToSic.SexyContent.ContentBlocks.Renderers
 {
-    public class InTextContentBlocks
+    internal class InTextContentBlocks
     {
-        private readonly IInPageEditingSystem _edit;
-
         // RegEx formulas
         static readonly Regex InlineCbDetector = new Regex("<hr[^>]+sxc[^>]+>", RegexOptions.IgnoreCase | RegexOptions.Multiline);
         static readonly Regex  GuidExtractor = new Regex("guid=\\\"([^\\\"]*)\\\"", RegexOptions.IgnoreCase | RegexOptions.Multiline);
 
-        public InTextContentBlocks(IInPageEditingSystem edt)
-        {
-            _edit = edt;
-        }
-
-        private string InTextBlock(dynamic parent, string entityField, Guid guid, DynamicEntity subItem)
-        {
-            var area = "<div class='sc-content-block-list show-placeholder single-item' " + _edit.ContextAttributes(parent, field: entityField, newGuid: guid) + ">"
-                + (subItem?.Render().ToString() ?? "")
-                + "</div>";
-            return area;
-        }
-
-        public string RenderWithInnerContent(DynamicEntity content, string sourceText, string entityField)
+        internal string Render(DynamicEntity parent, string entityField, string textTemplate)
         {
             // do basic checking
-            if (!InlineCbDetector.IsMatch(sourceText))
-                return sourceText;
+            if (!InlineCbDetector.IsMatch(textTemplate))
+                return textTemplate;
 
             var result = new StringBuilder();
             var charProgress = 0;
 
-            var matches = InlineCbDetector.Matches(sourceText);
+            var matches = InlineCbDetector.Matches(textTemplate);
             if (matches.Count == 0)
-                return sourceText;
+                return textTemplate;
+
+            // create edit-object which is necessary for context attributes
+            var edit = new InPageEditingHelper(parent.SxcInstance);
 
             foreach (Match curMatch in matches)
             {
                 // Get characters before the first match
                 if (curMatch.Index > charProgress)
-                    result.Append(sourceText.Substring(charProgress, curMatch.Index - charProgress));
+                    result.Append(textTemplate.Substring(charProgress, curMatch.Index - charProgress));
                 charProgress = curMatch.Index + curMatch.Length;
 
                 // get the infos we need to retrieve the value, get it. 
@@ -64,7 +52,7 @@ namespace ToSic.SexyContent.Beta
 
                 object objFound;
                 DynamicEntity subitem = null;
-                var found = content.TryGetMember(entityField, out objFound);
+                var found = parent.TryGetMember(entityField, out objFound);
 
                 if (found)
                 {
@@ -73,11 +61,11 @@ namespace ToSic.SexyContent.Beta
                         subitem = itms.FirstOrDefault(i => i.EntityGuid == guid);
                 }
 
-                result.Append(InTextBlock(content, entityField, guid, subitem));
+                result.Append(Simple.RenderWithEditContext(parent, subitem, entityField,  guid, edit));
             }
 
             // attach the rest of the text (after the last match)
-            result.Append(sourceText.Substring(charProgress));
+            result.Append(textTemplate.Substring(charProgress));
 
             // Ready to finish, but first, ensure repeating if desired
             var finalResult = result.ToString();

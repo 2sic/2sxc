@@ -2,7 +2,7 @@
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Interfaces;
 
-namespace ToSic.SexyContent.ContentBlock
+namespace ToSic.SexyContent.ContentBlocks
 {
     internal class ContentBlockBase: IContentBlock
     {
