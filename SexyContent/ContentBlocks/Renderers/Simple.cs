@@ -24,19 +24,22 @@ namespace ToSic.SexyContent.ContentBlocks.Renderers
             return cb.SxcInstance.Render();
         }
 
-        private const string Div = "<div class='sc-content-block-list show-placeholder single-item' {0}>{1}</div>";
+        private const string WrapperTemplate = "<div class='{0}' {1}>{2}</div>";
+        private const string WrapperMultiItems = "sc-content-block-list"; // tells quickE that it's an editable area
+        private const string WrapperSingleItem = WrapperMultiItems + " show-placeholder single-item"; // enables a placeholder when empty, and limits one entry
 
         internal static string RenderWithEditContext(DynamicEntity parent, DynamicEntity subItem, string cbFieldName,  Guid? newGuid = null, IInPageEditingSystem edit = null)
         {
             if (edit == null)
                 edit = new InPageEditingHelper(parent.SxcInstance);
 
-            return string.Format(Div,
-                edit.ContextAttributes(parent, field: cbFieldName, newGuid: newGuid),
-                Render(subItem.SxcInstance.ContentBlock, subItem.Entity));
+            var attribs = edit.ContextAttributes(parent, field: cbFieldName, newGuid: newGuid);
+            var inner = (subItem == null) ? "": Render(parent.SxcInstance.ContentBlock, subItem.Entity).ToString();
+            var cbClasses = edit.Enabled ? WrapperSingleItem : "";
+            return string.Format(WrapperTemplate, new object[] { cbClasses, attribs, inner});
         }
 
-        private const string ListWrapperTemplate = "<div class='sc-content-block-list' {0}>{1}</div>";
+
 
         internal static string RenderListWithContext(DynamicEntity parent, string fieldName, IInPageEditingSystem edit = null)
         {
@@ -48,16 +51,19 @@ namespace ToSic.SexyContent.ContentBlocks.Renderers
                 var itms = objFound as IList<DynamicEntity>;
                 if(itms != null)
                     foreach (var cb in itms)
-                        innerBuilder.Append(cb.Render());
+                        innerBuilder.Append(Render(cb.SxcInstance.ContentBlock, cb.Entity));
             }
 
-            // create edit object if missing...
+            // create edit object if missing...to re-use in the wh
             if (edit == null)
                 edit = new InPageEditingHelper(parent.SxcInstance);
 
-            return string.Format(ListWrapperTemplate, 
-                edit.ContextAttributes(parent, field: fieldName), 
-                innerBuilder);
+            return string.Format(WrapperTemplate, new object[]
+            {
+                edit.Enabled ? WrapperMultiItems : "",
+                edit.ContextAttributes(parent, field: fieldName),
+                innerBuilder
+            });
 
         }
 

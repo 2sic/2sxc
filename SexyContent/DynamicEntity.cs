@@ -138,7 +138,7 @@ namespace ToSic.SexyContent
         
         public dynamic GetPublished() => new DynamicEntity(Entity.GetPublished(), _dimensions, SxcInstance);
 
-        public IHtmlString Render() => ContentBlocks.Render.One(this, this);
+        public IHtmlString Render() => ContentBlocks.Render.One(this);
         
     }
 

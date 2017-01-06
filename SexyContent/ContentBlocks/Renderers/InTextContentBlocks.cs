@@ -10,10 +10,10 @@ namespace ToSic.SexyContent.ContentBlocks.Renderers
     internal class InTextContentBlocks
     {
         // RegEx formulas
-        static readonly Regex InlineCbDetector = new Regex("<hr[^>]+sxc[^>]+>", RegexOptions.IgnoreCase | RegexOptions.Multiline);
-        static readonly Regex  GuidExtractor = new Regex("guid=\\\"([^\\\"]*)\\\"", RegexOptions.IgnoreCase | RegexOptions.Multiline);
+        static readonly Regex InlineCbDetector = new Regex("<hr[^>]+sxc[^>]+>", RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Compiled);
+        static readonly Regex  GuidExtractor = new Regex("guid=\\\"([^\\\"]*)\\\"", RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Compiled);
 
-        internal string Render(DynamicEntity parent, string entityField, string textTemplate)
+        internal static string Render(DynamicEntity parent, string entityField, string textTemplate)
         {
             // do basic checking
             if (!InlineCbDetector.IsMatch(textTemplate))

@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 
 namespace ToSic.SexyContent
 {
@@ -28,5 +29,15 @@ namespace ToSic.SexyContent
 
         // special uses of Apps
         public const string ContentAppName = "Content";
+
+        // Special constant to protect functions which should use named parameters
+        internal const string RandomProtectionParameter = "random-y023n";
+        // ReSharper disable once UnusedParameter.Local
+        internal static void ProtectAgainstMissingParameterNames(string criticalParameter, string protectedMethod)
+        {
+            if (criticalParameter == null || criticalParameter != RandomProtectionParameter)
+                throw new Exception("when using the command " + protectedMethod + ", please use named parameters - otherwise you are relying on the parameter order staying the same.");
+        }
+
     }
 }

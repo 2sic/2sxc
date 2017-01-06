@@ -218,7 +218,6 @@
     <Compile Include="DnnWebForms\Wysiwyg.ascx.designer.cs">
       <DependentUpon>Wysiwyg.ascx</DependentUpon>
     </Compile>
-    <Compile Include="Edit\Constants.cs" />
     <Compile Include="Edit\InPageEditingSystem\IInPageEditingSystem.cs" />
     <Compile Include="Edit\InPageEditingSystem\InPageEditingHelper.cs" />
     <Compile Include="Edit\InPageEditingSystem\InPageEditingHelperBase.cs" />
