@@ -930,13 +930,21 @@ div.wrap-float-label .field-string-wysiwyg-mce-box.mce-edit-focus {
 /* added in 08.04.06 - purpose still secret :)*/
 hr[sxc] {
     background-color: #B0DCFF; /* temporary color */
-    height: 25px;
+    height: 75px;
 }
 
-/*.mce-btn-addcontentblock.mce-btn {
-    display: none;
+hr[sxc]::after {
+    color: white;
+    content: "App / Content";
+    position: absolute;
+    text-align: center;
+    font-size: 25px;
+    display: inline-block;
+    width: 100%;
+    margin-top: 17px;
 }
 
+/*
 .feature-contentblocks .mce-btn-addcontentblock.mce-btn {
     display: inline-block;
 }*/

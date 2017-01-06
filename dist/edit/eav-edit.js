@@ -231,6 +231,14 @@ angular.module("eavFieldTemplates")
             if (!$scope.to.settings.merged)
                 $scope.to.settings.merged = {};
 
+            // of no real data-model exists yet for this value (list of chosen entities), then create a blank
+            if ($scope.model[$scope.options.key] === undefined || $scope.model[$scope.options.key].Values[0].Value === "")
+                $scope.model[$scope.options.key] = { Values: [{ Value: eavDefaultValueService($scope.options), Dimensions: {} }] };
+
+            // create short names for template
+            $scope.chosenEntities = $scope.model[$scope.options.key].Values[0].Value;
+            $scope.selectedEntity = null;
+
             // Initialize entities
             var sourceMask = $scope.to.settings.merged.EntityType || null;
             contentType = fieldMask(sourceMask, $scope, $scope.maybeReload, null);// this will contain the auto-resolve type (based on other contentType-field)
@@ -238,20 +246,6 @@ angular.module("eavFieldTemplates")
 
             $scope.availableEntities = [];
         }
-
-
-        //$scope.availableColors = ['Red', 'Green', 'Blue', 'Yellow', 'Magenta', 'Maroon', 'Umbra', 'Turquoise'];
-
-        //$scope.singleDemo = {};
-        //$scope.singleDemo.color = '';
-
-        // of no real data-model exists yet for this value (list of chosen entities), then create a blank
-        if ($scope.model[$scope.options.key] === undefined || $scope.model[$scope.options.key].Values[0].Value === "")
-            $scope.model[$scope.options.key] = { Values: [{ Value: eavDefaultValueService($scope.options), Dimensions: {} }] };
-
-        // create short names for template
-        $scope.chosenEntities = $scope.model[$scope.options.key].Values[0].Value;
-        $scope.selectedEntity = null;
 
         // add an just-picked entity to the selected list
         $scope.addEntity = function (item) {
@@ -281,12 +275,17 @@ angular.module("eavFieldTemplates")
         // todo: move to a service some time + enhance to provide more fields if needed
         $scope.getAvailableEntities = function (ctName) {
             if (!ctName)
-                ctName = contentType.resolve();
-            return $http({
-                method: "GET",
-                url: "eav/EntityPicker/getavailableentities",
+                ctName = contentType.resolve(); // pick up from linked drop-down
+
+            // check if we should get all or only the selected ones...
+            // if we can't add, then we only need one...
+            var itemFilter = $scope.to.settings.merged.EnableAddExisting
+                ? null
+                : $scope.model[$scope.options.key].Values[0].Value;
+
+            return $http.post("eav/EntityPicker/getavailableentities", itemFilter, {
                 params: {
-                    contentTypeName: ctName,// mask.resolve(),// $scope.to.settings.merged.EntityType,
+                    contentTypeName: ctName,
                     appId: appId
                     // ToDo: dimensionId: $scope.configuration.DimensionId
                 }
@@ -294,6 +293,7 @@ angular.module("eavFieldTemplates")
                 $scope.availableEntities = data.data;
             });
         };
+
         $scope.maybeReload = function (force) {
             var newMask = contentType.resolve();
             if (lastContentType !== newMask || force) {
