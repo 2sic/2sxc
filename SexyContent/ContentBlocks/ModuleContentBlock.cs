@@ -5,7 +5,7 @@ using DotNetNuke.Entities.Portals;
 using ToSic.SexyContent.DataSources;
 using ToSic.SexyContent.Internal;
 
-namespace ToSic.SexyContent.ContentBlock
+namespace ToSic.SexyContent.ContentBlocks
 {
     internal sealed class ModuleContentBlock: ContentBlockBase
     {

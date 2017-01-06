@@ -1,7 +1,7 @@
 ﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.ValueProvider;
-using ToSic.SexyContent.ContentBlock;
+using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.Interfaces;
 
 namespace ToSic.SexyContent.Environment.Dnn7

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Web;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav;
-using ToSic.SexyContent.ContentBlock;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Edit.Toolbar;
 using ToSic.SexyContent.Interfaces;
@@ -52,7 +51,7 @@ namespace ToSic.SexyContent
             }
         }
         private readonly string[] _dimensions;
-        private SxcInstance SxcInstance { get; }
+        internal SxcInstance SxcInstance { get; }   // must be internal for further use cases
 
         /// <summary>
         /// Constructor with EntityModel and DimensionIds
@@ -139,16 +138,8 @@ namespace ToSic.SexyContent
         
         public dynamic GetPublished() => new DynamicEntity(Entity.GetPublished(), _dimensions, SxcInstance);
 
-        public HtmlString Render()
-        {
-            if (Entity.Type.Name == Settings.AttributeSetStaticNameContentBlockTypeName)
-            {
-                var cb = new EntityContentBlock(SxcInstance.ContentBlock, Entity);
-                return cb.SxcInstance.Render();
-            }
-
-            return new HtmlString("<!-- auto-render of item " + EntityId + " -->");
-        }
+        public IHtmlString Render() => ContentBlocks.Render.One(this);
+        
     }
 
 }

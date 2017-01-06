@@ -6,7 +6,7 @@ using DotNetNuke.Entities.Modules.Actions;
 using DotNetNuke.Framework;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
-using ToSic.SexyContent.ContentBlock;
+using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.Environment.Dnn7;
 using ToSic.SexyContent.Internal;
 

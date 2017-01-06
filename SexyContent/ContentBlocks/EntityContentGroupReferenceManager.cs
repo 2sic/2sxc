@@ -4,7 +4,7 @@ using ToSic.Eav;
 using ToSic.Eav.BLL;
 using ToSic.Eav.DataSources.Caches;
 
-namespace ToSic.SexyContent.ContentBlock
+namespace ToSic.SexyContent.ContentBlocks
 {
     internal class EntityContentGroupReferenceManager : ContentGroupReferenceManagerBase
     {

@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Web;
 using DotNetNuke.Common.Utilities;
 using DotNetNuke.Web.Api;
-using ToSic.SexyContent.ContentBlock;
+using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.Interfaces;
 
 namespace ToSic.SexyContent.WebApi

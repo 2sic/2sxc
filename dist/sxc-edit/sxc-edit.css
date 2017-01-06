@@ -930,8 +930,24 @@ div.wrap-float-label .field-string-wysiwyg-mce-box.mce-edit-focus {
 /* added in 08.04.06 - purpose still secret :)*/
 hr[sxc] {
     background-color: #B0DCFF; /* temporary color */
-    height: 25px;
+    height: 75px;
 }
+
+hr[sxc]::after {
+    color: white;
+    content: "App / Content";
+    position: absolute;
+    text-align: center;
+    font-size: 25px;
+    display: inline-block;
+    width: 100%;
+    margin-top: 17px;
+}
+
+/*
+.feature-contentblocks .mce-btn-addcontentblock.mce-btn {
+    display: inline-block;
+}*/
 /* IMPORT MESSAGES */
 .sxc-message { display: block; padding: 18px 18px; margin-bottom: 18px; border: 1px solid rgba(2, 139, 255, 0.2); border-radius: 3px; background: rgba(2,139,255,0.15); max-width: 980px; }
 

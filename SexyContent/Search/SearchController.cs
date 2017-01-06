@@ -7,7 +7,7 @@ using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.Search.Entities;
 using ToSic.Eav;
-using ToSic.SexyContent.ContentBlock;
+using ToSic.SexyContent.ContentBlocks;
 using ToSic.SexyContent.EAVExtensions;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Internal;

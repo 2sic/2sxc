@@ -17,13 +17,6 @@ namespace ToSic.SexyContent.Edit.InPageEditingSystem
             _sxcInstance = sxc;
         }
 
-        // ReSharper disable once UnusedParameter.Local
-        private void ProtectAgainstMissingParameterNames(string criticalParameter)
-        {
-            if (criticalParameter == null || criticalParameter != Constants.RandomProtectionParameter)
-                throw new Exception(
-                    "when using the toolbar command, please use named parameters - otherwise you are relying on the parameter order staying the same.");
-        }
 
         public bool Enabled => _sxcInstance?.Environment?.Permissions?.UserMayEditContent ?? false;
 
@@ -36,7 +29,7 @@ namespace ToSic.SexyContent.Edit.InPageEditingSystem
             object settings = null)
         {
             if (!Enabled) return null;
-            ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder);
+            Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "Toolbar");
 
             var itmToolbar = new ItemToolbar(target, actions, contentType, prefill, toolbar, settings);
 
@@ -51,7 +44,7 @@ namespace ToSic.SexyContent.Edit.InPageEditingSystem
             Guid? newGuid = null)
         {
             if (!Enabled) return null;
-            ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder);
+            Constants.ProtectAgainstMissingParameterNames(dontRelyOnParameterOrder, "ContextAttributes");
 
             if(field == null) throw new Exception("need parameter field");
 
