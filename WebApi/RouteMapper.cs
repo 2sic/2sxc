@@ -28,7 +28,11 @@ namespace ToSic.SexyContent.WebApi
             mapRouteManager.MapHttpRoute("2sxc", "adam", "app-content/{contenttype}/{guid}/{field}", new { controller = "Adam" }, new[] { "ToSic.SexyContent.Adam" });
             mapRouteManager.MapHttpRoute("2sxc", "adam2", "app-content/{contenttype}/{guid}/{field}/{action}", new { controller = "Adam" }, new[] { "ToSic.SexyContent.Adam" });
 
-            mapRouteManager.MapHttpRoute("2sxc", "app-content", "app-content/{contenttype}/{id}", new { controller = "AppContent", id = RouteParameter.Optional }, new[] { "ToSic.SexyContent.WebApi" });
+            mapRouteManager.MapHttpRoute("2sxc", "app-content", "app-content/{contenttype}/{id}", new { controller = "AppContent", id = RouteParameter.Optional }, 
+                new { id = @"^\d+$" },   // Only matches if "id" is one or more digits.
+                new[] { "ToSic.SexyContent.WebApi" });
+            mapRouteManager.MapHttpRoute("2sxc", "app-content-guid", "app-content/{contenttype}/{guid}", new { controller = "AppContent" },
+                new[] { "ToSic.SexyContent.WebApi" });
             mapRouteManager.MapHttpRoute("2sxc", "app-api", "app-api/{controller}/{action}", new[] { "ToSic.SexyContent.Apps" });
             mapRouteManager.MapHttpRoute("2sxc", "app-query", "app-query/{name}", new { controller = "AppQuery"}, new[] { "ToSic.SexyContent.WebApi" });
             mapRouteManager.MapHttpRoute("2sxc", "app-query-nomod", "app-query/{appname}/{name}", new { controller = "AppQuery" }, new[] { "ToSic.SexyContent.WebApi" });

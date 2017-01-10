@@ -22,6 +22,44 @@
 
     }
 })();
+// this enhances the $2sxc client controller with stuff only needed when logged in
+(function() {
+    if ($2sxc) {
+
+        //#region contentItem Commands - at the moment only finishUpgrade
+        $2sxc.contentItems = {
+            // delete command - try to really delete a content-item
+            "delete": function (sxc, itemId, itemGuid) {
+                // first show main warning / get ok
+                // todo: i18n
+                var ok = confirm("This will really delete item " + itemId + ". This cannot be undone. Are you sure?");
+                if (!ok) return;
+                console.log('would delete now, but not implemented');
+                
+                
+
+                sxc.webApi.delete("app-content/any/" + itemGuid, null, null, true)
+                    .success(function () {
+                        alert("ok!");
+                        location.reload();
+                    }).error(function (error) {
+                        // check if it's a permission config problem
+                        console.log(error);
+                        if (error.status === 401) {
+                            // todo: i18n
+                            alert("permission missing, check information ...");
+                        }
+                        if (error.status === 400) {
+                            // todo: i18n
+                            alert("delete failed - item is probably in use, see ...");
+                        }
+                    });
+            }
+        };
+        //#endregion
+
+    }
+})();
 (function() {
     $2sxc._commands = {};
 })();
@@ -135,17 +173,17 @@
             }),
 
             // todo: work in progress related to https://github.com/2sic/2sxc/issues/618
-            //'delete': {
-            //    title: "Toolbar.Delete",
-            //    icon: "icon-sxc-cancel",
-            //    disabled: true,
-            //    showCondition: function (settings) { return !settings.useModuleList; },
-            //    code: function (settings, event) {
-            //        if (confirm(tbContr.translate("Toolbar.ReallyDelete"))) {
-            //            tbContr._getAngularVm().reallyDelete(settings.entityId);
-            //        }
-            //    }
-            //},
+            'deleteItem': makeDef("deleteItem", "Delete", "cancel", true, {
+                // disabled: true,
+                // showCondition: false, //function (settings) { return !settings.useModuleList; },
+                code: function (settings, event, sxc) {
+                    // $2sxc.contentItems.delete(sxc, settings.entityId);
+                    $2sxc.contentItems.delete(sxc, settings.entityId, settings.entityGuid);
+                    //if (confirm(tbContr.translate("Toolbar.ReallyDelete"))) {
+                    //    tbContr._getAngularVm().reallyDelete(settings.entityId);
+                    //}
+                }
+            }),
 
             'moveup': makeDef("moveup", "MoveUp", "move-up", false, {
                 showCondition: function(settings, modConfig) {

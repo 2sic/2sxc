@@ -7,10 +7,8 @@ using System.Text;
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ToSic.Eav;
-using ToSic.Eav.Data;
 using ToSic.Eav.DataSources.Caches;
 using ToSic.Eav.WebApi;
 using ToSic.SexyContent.Engines;
@@ -114,10 +112,14 @@ namespace ToSic.SexyContent.WebApi
             var cache = DataSource.GetCache(null, App.AppId);
             var ct = cache.GetContentType(contentType);
 
-            if (ct == null)
-                ThrowHttpError(HttpStatusCode.NotFound, "Could not find Content Type '" + contentType + "'.", "content-types");
-            
-            // Check if the content-type has a GUID as name - only these can have permission assignments
+	        if (ct == null)
+	        {
+	            ThrowHttpError(HttpStatusCode.NotFound, "Could not find Content Type '" + contentType + "'.",
+	                "content-types");
+	            return;
+	        }
+
+	        // Check if the content-type has a GUID as name - only these can have permission assignments
             Guid ctGuid;
 	        var staticNameIsGuid = Guid.TryParse(ct.StaticName, out ctGuid);
             if(!staticNameIsGuid)
@@ -162,27 +164,62 @@ namespace ToSic.SexyContent.WebApi
 
         [HttpDelete]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
-	    public void Delete(string contentType, int id)
+        public void Delete(string contentType, int id)
         {
             InitEavAndSerializer();
-            IEntity itm = _entitiesController.GetEntityOrThrowError(contentType, id, appId: App.AppId);
-            PerformSecurityCheck(contentType, PermissionGrant.Delete, true, itm);
+            IEntity itm = App.Data.Out["Default"].List[id];
+
+            contentType = Delete_SharedCode(contentType, itm);
+
             _entitiesController.Delete(contentType, id);
         }
-        [HttpDelete]
+
+	    private string Delete_SharedCode(string contentType, IEntity itm)
+	    {
+	        var autoAllowAdmin = true;
+	        // special case: contentType "any" - in this case it looks up the type
+	        if (contentType == "any")
+	        {
+	            autoAllowAdmin = false;
+	            contentType = itm?.Type.Name;
+	        }
+
+	        itm = _entitiesController.GetEntityOrThrowError(contentType, itm.EntityId, appId: App.AppId);
+	        PerformSecurityCheck(contentType, PermissionGrant.Delete, autoAllowAdmin, itm);
+	        return contentType;
+	    }
+
+	    [HttpDelete]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
         public void Delete(string contentType, Guid guid)
         {
             InitEavAndSerializer();
-            // todo: this doesn't support permissions yet!
-            // IEntity itm = _entitiesController.GetEntityOrThrowError(contentType, id, appId: App.AppId);
 
-            PerformSecurityCheck(contentType, PermissionGrant.Delete, true/*, itm*/);
+            // try to pre-fetch for security and content-type check
+            IEntity itm = App.Data.Out["Default"].LightList.FirstOrDefault(e => e.EntityGuid == guid);
+	        Delete_SharedCode(contentType, itm);
+
+            //var autoAllowAdmin = true;
+            //// special case: contentType "any" - in this case it looks up the type
+            //if (contentType == "any")
+            //{
+            //    autoAllowAdmin = false;
+            //    contentType = itm?.Type.Name;
+            //}
+
+            //if (string.IsNullOrEmpty(contentType))
+            //    ThrowHttpError(HttpStatusCode.NotFound, "item " + guid + " not found");
+
+            //// do additional check if type given matches the type of the id etc.
+            //itm = _entitiesController.GetEntityOrThrowError(contentType, itm.EntityId, appId: App.AppId);
+
+            //PerformSecurityCheck(contentType, PermissionGrant.Delete, autoAllowAdmin, itm);
             _entitiesController.Delete(contentType, guid);
         }
 
 
-	    [HttpGet]
+
+        [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Anonymous)]
 	    public Dictionary<string, object> GetOne(string contentType, int id)
 	    {
@@ -231,7 +268,7 @@ namespace ToSic.SexyContent.WebApi
 	    {
             // Retrieve content-type definition and check all the fields that this content-type has
 	        var cache = (BaseCache) DataSource.GetCache(App.ZoneId, App.AppId);
-	        var listOfTypes = cache.GetContentType(contentType) as ContentType;
+	        var listOfTypes = cache.GetContentType(contentType);// as ContentType;
 	        var attribs = listOfTypes.AttributeDefinitions;
 
 
@@ -329,6 +366,7 @@ namespace ToSic.SexyContent.WebApi
                     {
                         JObject jo = foundValue as JObject;
                         JToken foundId;
+                        // ReSharper disable once PossibleNullReferenceException
                         if (jo.TryGetValue("Id", out foundId))
                             foundNumber = (int) foundId;
                         else if (jo.TryGetValue("id", out foundId))
